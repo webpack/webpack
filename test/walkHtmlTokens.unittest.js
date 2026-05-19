@@ -1,5 +1,7 @@
 "use strict";
 
+// cspell:ignore apos
+
 const fs = require("fs");
 const path = require("path");
 const walkHtmlTokens = require("../lib/html/walkHtmlTokens");
@@ -563,5 +565,197 @@ describe("walkHtmlTokens", () => {
 			["open", "plaintext"],
 			["text", "<p>ignored</p></div>"]
 		]);
+	});
+
+	it("should handle named character references in text", () => {
+		const parts = [];
+		const html = "<p>Tom &amp; Jerry</p>";
+		walkHtmlTokens(html, 0, {
+			openTag: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			closeTag: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			text: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			}
+		});
+		expect(parts.join("")).toBe(html);
+	});
+
+	it("should handle named character references in double-quoted attributes", () => {
+		const attrs = [];
+		walkHtmlTokens('<a href="?a=1&amp;b=2">', 0, {
+			attribute: (input, ns, ne, vs, ve, qt) => {
+				attrs.push([input.slice(ns, ne), input.slice(vs, ve)]);
+				if (qt !== walkHtmlTokens.QUOTE_NONE) return ve + 1;
+				return ve;
+			}
+		});
+		expect(attrs).toEqual([["href", "?a=1&amp;b=2"]]);
+	});
+
+	it("should handle named character references in single-quoted attributes", () => {
+		const attrs = [];
+		walkHtmlTokens("<a href='?x=1&lt;2'>", 0, {
+			attribute: (input, ns, ne, vs, ve, qt) => {
+				attrs.push([input.slice(ns, ne), input.slice(vs, ve)]);
+				if (qt !== walkHtmlTokens.QUOTE_NONE) return ve + 1;
+				return ve;
+			}
+		});
+		expect(attrs).toEqual([["href", "?x=1&lt;2"]]);
+	});
+
+	it("should handle character references in unquoted attributes", () => {
+		const attrs = [];
+		walkHtmlTokens("<a href=foo&amp;bar>", 0, {
+			attribute: (input, ns, ne, vs, ve, qt) => {
+				attrs.push([input.slice(ns, ne), input.slice(vs, ve)]);
+				if (qt !== walkHtmlTokens.QUOTE_NONE) return ve + 1;
+				return ve;
+			}
+		});
+		expect(attrs).toEqual([["href", "foo&amp;bar"]]);
+	});
+
+	it("should handle decimal numeric character references", () => {
+		const parts = [];
+		const html = "<p>&#65;&#66;&#67;</p>";
+		walkHtmlTokens(html, 0, {
+			openTag: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			closeTag: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			text: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			}
+		});
+		expect(parts.join("")).toBe(html);
+	});
+
+	it("should handle hexadecimal character references", () => {
+		const parts = [];
+		const html = "<p>&#x41;&#X42;</p>";
+		walkHtmlTokens(html, 0, {
+			openTag: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			closeTag: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			text: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			}
+		});
+		expect(parts.join("")).toBe(html);
+	});
+
+	it("should handle bare ampersand (not a character reference)", () => {
+		const parts = [];
+		const html = "<p>bare & alone</p>";
+		walkHtmlTokens(html, 0, {
+			openTag: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			closeTag: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			text: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			}
+		});
+		expect(parts.join("")).toBe(html);
+	});
+
+	it("should handle unknown named character references", () => {
+		const parts = [];
+		const html = "<p>&unknown;</p>";
+		walkHtmlTokens(html, 0, {
+			openTag: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			closeTag: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			text: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			}
+		});
+		expect(parts.join("")).toBe(html);
+	});
+
+	it("should handle empty numeric character references (&#; and &#x;)", () => {
+		const parts = [];
+		const html = "<p>&#;&#x;</p>";
+		walkHtmlTokens(html, 0, {
+			openTag: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			closeTag: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			},
+			text: (input, start, end) => {
+				parts.push(input.slice(start, end));
+				return end;
+			}
+		});
+		expect(parts.join("")).toBe(html);
+	});
+
+	describe("decodeHtmlEntities", () => {
+		it("should decode minimal named entities", () => {
+			expect(
+				walkHtmlTokens.decodeHtmlEntities("&amp;&lt;&gt;&quot;&apos;&nbsp;")
+			).toBe("&<>\"'\u00A0");
+		});
+
+		it("should decode numeric decimal references", () => {
+			expect(walkHtmlTokens.decodeHtmlEntities("&#65;&#66;&#67;")).toBe("ABC");
+		});
+
+		it("should decode numeric hexadecimal references", () => {
+			expect(walkHtmlTokens.decodeHtmlEntities("&#x41;&#x42;&#x43;")).toBe(
+				"ABC"
+			);
+			expect(walkHtmlTokens.decodeHtmlEntities("&#X41;&#X42;&#X43;")).toBe(
+				"ABC"
+			);
+		});
+
+		it("should leave unknown or incomplete entities as literals", () => {
+			expect(walkHtmlTokens.decodeHtmlEntities("&unknown;")).toBe("&unknown;");
+			expect(walkHtmlTokens.decodeHtmlEntities("&#;")).toBe("&#;");
+			expect(walkHtmlTokens.decodeHtmlEntities("&#x;")).toBe("&#x;");
+			expect(walkHtmlTokens.decodeHtmlEntities("bare & alone")).toBe(
+				"bare & alone"
+			);
+		});
+
+		it("should handle mixed text and entities", () => {
+			expect(
+				walkHtmlTokens.decodeHtmlEntities("foo &amp; bar &#x41; baz")
+			).toBe("foo & bar A baz");
+		});
 	});
 });

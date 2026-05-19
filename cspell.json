@@ -5,9 +5,11 @@
     "RCDATA",
     "RAWTEXT",
     "noembed",
+    "AACA",
     "absolutify",
     "abortable",
     "acircular",
+    "amaro",
     "amdmodule",
     "analyse",
     "analysed",
@@ -245,6 +247,7 @@
     "referenceable",
     "referencer",
     "reparsed",
+    "reparsing",
     "repo",
     "repos",
     "repr",
@@ -362,7 +365,9 @@
     "publicpath",
     "Uninstantiated",
     "sccs",
-    "FEFF"
+    "FEFF",
+    "apos",
+    "Abaz"
   ],
   "ignoreRegExpList": [
     "/Author.+/",

@@ -1,5 +1,13 @@
 {
-  "compilerOptions": {
-    "rootDir": "./"
-  }
+	"compilerOptions": {
+		"noEmit": true,
+		"target": "esnext",
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"strict": true,
+		"allowImportingTsExtensions": true,
+		"erasableSyntaxOnly": true,
+		"verbatimModuleSyntax": true
+	},
+	"include": ["./**/*.ts"]
 }

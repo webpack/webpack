@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  Object {
+    "loc": "1:0-29",
+    "message": "Module not found: ValidationError: Invalid generator object. Asset Modules Plugin has been initialized using a generator object that does not match the API schema.
+ - generator has an unknown property 'filename'. These properties are valid:
+   object { binary?, dataUrl? }
+   -> Generator options for asset/inline modules.",
+    "moduleName": "./index.js",
+  },
+]
+`;

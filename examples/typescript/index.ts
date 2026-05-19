@@ -1,9 +1,7 @@
-const myName: string = "Junya";
-const age: number = 22;
+import { greet, type User } from "./greeter.ts";
 
-function getArray<T>(...args: T[]): T[] {
-	return [...args];
-}
+const alice: User = { name: "Alice", age: 31 };
+const bob: User = { name: "Bob", age: 27 };
 
-console.log(getArray("foo", "bar"));
-console.log(getArray(1, 2, 3));
+console.log(greet(alice));
+console.log(greet(bob));

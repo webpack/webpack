@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Inline Script Test</title>
+<script>
+var greeting = "hi";
+console.log("<b>hello</b>");
+</script>
+<script type="module">
+const arr = [1, 2, 3];
+const sum = arr.reduce((a, b) => a + b, 0);
+window.__inlineModuleSum = sum;
+// Non-ASCII source survives the data URI round-trip.
+window.__inlineModuleUnicode = "日本語 π";
+</script>
+<script type="text/javascript">
+// `<` characters inside JS must NOT be reparsed as HTML.
+var counter = 0;
+function lt(a, b) { return a < b; }
+var html = "<div><span>nested</span></div>";
+counter++;
+</script>
+<!-- Non-JS type stays untouched -->
+<script type="application/ld+json">
+{"@context": "https://schema.org"}
+</script>
+<script type="importmap">
+{"imports": {"foo": "./foo.js"}}
+</script>
+</head>
+<body>
+<p>Hi</p>
+<script>
+  /* second script */
+  document.body.appendChild(document.createTextNode("done"));
+</script>
+</body>
+</html>

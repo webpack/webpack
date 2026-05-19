@@ -200,7 +200,7 @@ exports[`ConfigTestCases html script-src-classic exported tests should rewrite s
 <body>
 <script src=\\"__html_cbe5b59d_1.chunk.js\\"></script>
 <script type=\\"text/javascript\\" src=\\"__html_cbe5b59d_2.chunk.js\\"></script>
-<script type=\\"module\\" src=\\"__html_cbe5b59d_3.chunk.js\\"></script>
+<script src=\\"__html_cbe5b59d_3.chunk.js\\"></script>
 <script type=\\"application/ld+json\\" src=\\"1aeae0731d54e523748c.jsonld\\"></script>
 </body>
 </html>

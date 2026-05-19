@@ -1,0 +1,7 @@
+{
+  "name": "my-lib",
+  "imports": {
+    "#internal/*": "./src/*.ts",
+    "#internal-other/*": "./src/*"
+  }
+}

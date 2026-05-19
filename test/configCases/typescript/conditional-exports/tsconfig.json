@@ -1,0 +1,10 @@
+{
+	"compilerOptions": {
+		"noEmit": true,
+		"target": "esnext",
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"erasableSyntaxOnly": true,
+		"verbatimModuleSyntax": true
+	}
+}

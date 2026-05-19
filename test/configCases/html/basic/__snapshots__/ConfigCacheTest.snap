@@ -23,7 +23,7 @@ exports[`ConfigCacheTestCases html basic exported tests should compile and expor
 	<li>Milk</li>
 </ol>
 
-<script>console.log({\\"json\\": \\"with \\\\\\"quotes\\\\\\" in value\\"})</script>
+<script src=\\"117.bundle0.js\\"></script>
 
 <!-- comment -->
 
@@ -34,7 +34,7 @@ exports[`ConfigCacheTestCases html basic exported tests should compile and expor
 
 <input type=\\"text\\" />
 
-<script>   console.log(1 + 2 + \`\${3 + 3}\`)   </script>
+<script src=\\"308.bundle0.js\\"></script>
 
 <picture>
 	<source media=\\"(min-width: 650px)\\" srcset=\\"31d6cfe0d16ae931b73c.png\\">
@@ -103,12 +103,8 @@ or
 <p >Text</p>
 <p   >Text</p>
 
-<script type=\\"module\\">
-	function test() {}
-</script>
-<script>
-	function test() {}
-</script>
+<script src=\\"319.bundle0.js\\"></script>
+<script src=\\"510.bundle0.js\\"></script>
 
 <img src=\\"#hash\\" />
 <img src='31d6cfe0d16ae931b73c.png#hash' />

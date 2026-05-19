@@ -5,6 +5,15 @@ const page = require("./page.html");
 
 const readChunk = (name) => fs.readFileSync(path.resolve(__dirname, name), "utf-8");
 
+// `String.prototype.matchAll` requires Node 12+; this test runs on Node
+// 10 too, so collect all matches via a `regex.exec` loop instead.
+const collectMatches = (str, regex) => {
+	const out = [];
+	let m;
+	while ((m = regex.exec(str)) !== null) out.push(m);
+	return out;
+};
+
 it("should rewrite script src attributes without changing the type attribute when output.module is off", () => {
 	expect(typeof page).toBe("string");
 	expect(page).toMatchSnapshot();
@@ -16,12 +25,13 @@ it("should rewrite script src attributes without changing the type attribute whe
 	// Classic <script src> (no type) stays without a type attribute — the
 	// auto type=module upgrade only runs when output.module is enabled.
 	expect(page).toMatch(/<script src="__html_[^"]+\.chunk\.js">/);
-	// type="text/javascript" stays as-is too.
+	// type="text/javascript" stays as-is too (classic-compatible).
 	expect(page).toMatch(
 		/<script type="text\/javascript" src="__html_[^"]+\.chunk\.js">/
 	);
-	// type="module" stays as-is.
-	expect(page).toMatch(/<script type="module" src="__html_[^"]+\.chunk\.js">/);
+	// type="module" is REMOVED — the emitted chunk is a classic IIFE,
+	// loading it under module semantics would be wrong.
+	expect(page).not.toMatch(/<script[^>]*\btype="module"/);
 	// Non-executable types still flow through HtmlSourceDependency.
 	expect(page).toMatch(/<script type="application\/ld\+json" src="[^"]+\.jsonld">/);
 });
@@ -41,15 +51,19 @@ it("should emit classic IIFE-wrapped chunks for <script src>", () => {
 });
 
 it("should emit IIFE-wrapped chunks for <script type=module src> too (still valid as ES modules)", () => {
-	const moduleChunkName = page.match(
-		/<script type="module" src="(__html_[^"]+\.chunk\.js)">/
-	)[1];
-	const moduleChunk = readChunk(moduleChunkName);
+	// `type="module"` is dropped from the rewritten tag when
+	// output.module is off, so we can't discriminate the module-origin
+	// chunk by tag shape anymore — find it by content instead.
+	const allChunkUrls = collectMatches(
+		page,
+		/<script[^>]*\bsrc="(__html_[^"]+\.chunk\.js)"/g
+	).map((m) => m[1]);
+	const moduleChunk = allChunkUrls
+		.map(readChunk)
+		.find((c) => c.includes('"module entry"'));
+	expect(moduleChunk).toBeDefined();
 	expect(moduleChunk).toMatchSnapshot();
 	// Chunk format follows output.module (off here) → IIFE.
 	expect(moduleChunk).toMatch(/^\/\*+\/ \(\(\) => \{/);
 	expect(moduleChunk).toContain("// webpackBootstrap");
-	// ESM source still goes through harmony helpers because of the dep
-	// category — only the chunk's outer wrapper changes with output.module.
-	expect(moduleChunk).toContain('"module entry"');
 });

@@ -1,4 +1,4 @@
-import { textA, textB, sheetA, sheetB, linkAClass, linkBClass, styleA, styleB } from "./lib.js";
+import { textA, textB, sheetA, sheetB, linkAClass, linkBClass, styleB } from "./lib.js";
 
 it("should handle HMR for all exportTypes with concatenation", function (done) {
 	// Verify modules are concatenated: only index.js and lib.js (+ update helper)
@@ -22,7 +22,6 @@ it("should handle HMR for all exportTypes with concatenation", function (done) {
 	expect(sheetB._cssText).toContain("color: purple");
 
 	// Initial state: style (style-a has @import of style-a-dep)
-	expect(typeof styleA).toBe("string");
 	expect(typeof styleB).toBe("string");
 	const allStyles = () => Array.from(window.document.getElementsByTagName("style")).map(s => s.textContent);
 	expect(allStyles().some(c => c.includes("color: red"))).toBe(true);
@@ -52,8 +51,8 @@ it("should handle HMR for all exportTypes with concatenation", function (done) {
 			expect(sheetB._cssText).toContain("color: violet");
 
 			// After HMR: style (style-a no longer has @import after update)
-			expect(typeof styleA).toBe("string");
 			expect(typeof styleB).toBe("string");
+			expect(allStyles().length).toBe(2);
 			expect(allStyles().some(c => c.includes("font-size: 12px"))).toBe(false);
 			expect(allStyles().some(c => c.includes("color: blue"))).toBe(true);
 

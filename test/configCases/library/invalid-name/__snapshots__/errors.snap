@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  Object {
+    "message": "Library name base (123-hello world) must be a valid identifier when using a var declaring library type. Either use a valid identifier (e. g. _123_hello_world) or use a different library type (e. g. 'type: \\"global\\"', which assign a property on the global scope instead of declaring a variable). Common configuration options that specific library names are 'output.library[.name]', 'entry.xyz.library[.name]', 'ModuleFederationPlugin.name' and 'ModuleFederationPlugin.library[.name]'.",
+  },
+]
+`;

@@ -1357,6 +1357,11 @@ export interface Experiments {
 	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
+	/**
+	 * Enable typescript support.
+	 * @experimental
+	 */
+	typescript?: boolean;
 	[k: string]: any;
 }
 /**
@@ -3465,6 +3470,11 @@ export interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
+	/**
+	 * Enable typescript support.
+	 * @experimental
+	 */
+	typescript?: boolean;
 }
 /**
  * Parser options for javascript modules.
@@ -3607,6 +3617,11 @@ export interface JavascriptParserOptions {
 	 * Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.
 	 */
 	system?: boolean;
+	/**
+	 * Enable typescript support.
+	 * @experimental
+	 */
+	typescript?: boolean;
 	/**
 	 * Enable warnings when using the require function in a not statically analyse-able way.
 	 */

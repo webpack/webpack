@@ -129,6 +129,7 @@ describe("snapshots", () => {
 		    "outputModule": false,
 		    "sourceImport": false,
 		    "syncWebAssembly": false,
+		    "typescript": undefined,
 		  },
 		  "externals": undefined,
 		  "externalsPresets": Object {
@@ -303,6 +304,7 @@ describe("snapshots", () => {
 		        "sourceImport": false,
 		        "strictExportPresence": undefined,
 		        "strictThisContextOnImports": false,
+		        "typescript": undefined,
 		        "unknownContextCritical": true,
 		        "unknownContextRecursive": true,
 		        "unknownContextRegExp": false,
@@ -2302,6 +2304,18 @@ describe("snapshots", () => {
 			+     "futureDefaults": true,
 			+     "html": true,
 			@@ ... @@
+			-     "typescript": undefined,
+			+     "typescript": true,
+			@@ ... @@
+			+         },
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "type": "javascript/esm",
 			+       },
 			+       Object {
 			+         "rules": Array [
@@ -2395,7 +2409,7 @@ describe("snapshots", () => {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
-			+         },
+			@@ ... @@
 			+       },
 			+       Object {
 			+         "resolve": Object {
@@ -2412,15 +2426,61 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "html",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "dependency": "html-style",
 			+         "parser": Object {
 			+           "exportType": "text",
 			+         },
-			+         "resolve": Object {
+			@@ ... @@
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
+			+       },
+			+       Object {
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "test": /\\.mts$/i,
+			+         "type": "javascript/esm",
+			+       },
+			+       Object {
+			+         "descriptionData": Object {
+			+           "type": "module",
+			+         },
+			+         "resolve": Object {
+			@@ ... @@
+			+         "test": /\\.ts$/i,
+			@@ ... @@
+			+         "test": /\\.cts$/i,
+			+         "type": "javascript/dynamic",
+			+       },
+			+       Object {
+			+         "descriptionData": Object {
+			+           "type": "commonjs",
+			+         },
+			+         "test": /\\.ts$/i,
+			+         "type": "javascript/dynamic",
+			+       },
+			+       Object {
+			+         "mimetype": Object {
+			+           "or": Array [
+			+             "text/typescript",
+			+             "application/typescript",
+			+           ],
+			+         },
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "type": "javascript/esm",
 			+       },
 			+       Object {
 			@@ ... @@
@@ -2467,7 +2527,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			@@ ... @@
+			+       },
 			+       "css/global": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -2483,9 +2543,11 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
+			@@ ... @@
+			-         "typescript": undefined,
+			+         "typescript": true,
 			@@ ... @@
 			-     "unsafeCache": false,
 			+     "unsafeCache": [Function anonymous],
@@ -2506,6 +2568,14 @@ describe("snapshots", () => {
 			-     "hashFunction": "md4",
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
 			@@ ... @@
 			+           "...",
 			+         ],
@@ -2557,8 +2627,54 @@ describe("snapshots", () => {
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
 			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
 			-     "cache": false,
 			+     "cache": true,
+			@@ ... @@
+			+     ],
+			+     "extensionAlias": Object {
+			+       ".cjs": Array [
+			+         ".cjs",
+			+         ".cts",
+			+       ],
+			+       ".js": Array [
+			+         ".js",
+			+         ".ts",
+			@@ ... @@
+			+       ".mjs": Array [
+			+         ".mjs",
+			+         ".mts",
+			+       ],
+			+     },
+			@@ ... @@
+			+     "tsconfig": true,
 			@@ ... @@
 			-     "cache": false,
 			+     "cache": true,
@@ -2918,6 +3034,19 @@ describe("snapshots", () => {
 			+     "futureDefaults": true,
 			+     "html": true,
 			@@ ... @@
+			-     "typescript": undefined,
+			+     "typescript": true,
+			@@ ... @@
+			+           ],
+			+         },
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "type": "javascript/esm",
 			+       },
 			+       Object {
 			+         "rules": Array [
@@ -2970,7 +3099,8 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "dependency": /css-import-local-module/,
 			+         "exclude": /\\.module\\.\\w+$/i,
 			+         "resolve": Object {
@@ -3039,6 +3169,46 @@ describe("snapshots", () => {
 			+         },
 			+       },
 			+       Object {
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "test": /\\.mts$/i,
+			+         "type": "javascript/esm",
+			+       },
+			+       Object {
+			+         "descriptionData": Object {
+			+           "type": "module",
+			+         },
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "test": /\\.ts$/i,
+			+         "type": "javascript/esm",
+			+       },
+			+       Object {
+			+         "test": /\\.cts$/i,
+			+         "type": "javascript/dynamic",
+			+       },
+			+       Object {
+			+         "descriptionData": Object {
+			+           "type": "commonjs",
+			+         },
+			+         "test": /\\.ts$/i,
+			+         "type": "javascript/dynamic",
+			+       },
+			+       Object {
+			+         "mimetype": Object {
+			+           "or": Array [
+			+             "text/typescript",
+			+             "application/typescript",
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -3101,6 +3271,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
+			-         "typescript": undefined,
+			+         "typescript": true,
+			@@ ... @@
 			-     "__dirname": "mock",
 			-     "__filename": "mock",
 			-     "global": true,
@@ -3117,6 +3290,14 @@ describe("snapshots", () => {
 			-     "hashFunction": "md4",
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
 			@@ ... @@
 			+           "...",
 			+         ],
@@ -3168,6 +3349,52 @@ describe("snapshots", () => {
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
 			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+     ],
+			+     "extensionAlias": Object {
+			+       ".cjs": Array [
+			+         ".cjs",
+			+         ".cts",
+			+       ],
+			+       ".js": Array [
+			+         ".js",
+			+         ".ts",
+			@@ ... @@
+			+       ".mjs": Array [
+			+         ".mjs",
+			+         ".mts",
+			+       ],
+			+     },
+			@@ ... @@
+			+     "tsconfig": true,
+			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
 		`)
@@ -3202,9 +3429,23 @@ describe("snapshots", () => {
 			+     "futureDefaults": true,
 			+     "html": true,
 			@@ ... @@
+			-     "typescript": undefined,
+			+     "typescript": true,
+			@@ ... @@
+			+           ],
+			+         },
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "type": "javascript/esm",
+			+       },
 			+       Object {
 			+         "rules": Array [
-			@@ ... @@
+			+           Object {
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
@@ -3247,8 +3488,51 @@ describe("snapshots", () => {
 			+         "type": "html",
 			+       },
 			+       Object {
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "test": /\\.mts$/i,
+			+         "type": "javascript/esm",
+			+       },
+			+       Object {
+			+         "descriptionData": Object {
+			+           "type": "module",
+			+         },
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "test": /\\.ts$/i,
+			+         "type": "javascript/esm",
+			+       },
+			+       Object {
+			+         "test": /\\.cts$/i,
+			+         "type": "javascript/dynamic",
+			+       },
+			+       Object {
+			+         "descriptionData": Object {
+			+           "type": "commonjs",
+			+         },
+			+         "test": /\\.ts$/i,
+			+         "type": "javascript/dynamic",
+			+       },
+			+       Object {
+			+         "mimetype": Object {
+			+           "or": Array [
+			+             "text/typescript",
+			+             "application/typescript",
 			@@ ... @@
 			+         "exportsPresence": "error",
+			@@ ... @@
+			-         "typescript": undefined,
+			+         "typescript": true,
 			@@ ... @@
 			-     "__dirname": "mock",
 			-     "__filename": "mock",
@@ -3264,6 +3548,59 @@ describe("snapshots", () => {
 			-     "hashFunction": "md4",
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+     "extensionAlias": Object {
+			+       ".cjs": Array [
+			+         ".cjs",
+			+         ".cts",
+			+       ],
+			+       ".js": Array [
+			+         ".js",
+			+         ".ts",
+			+       ],
+			+       ".mjs": Array [
+			+         ".mjs",
+			+         ".mts",
+			+       ],
+			+     },
+			@@ ... @@
+			+     "tsconfig": true,
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,

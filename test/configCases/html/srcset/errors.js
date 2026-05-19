@@ -19,6 +19,12 @@ module.exports = [
 	/Bad value for attribute "srcset" on element "img": Invalid srcset descriptor found in 'a \(,' at '\(,'/,
 	/Bad value for attribute "srcset" on element "img": Must contain one or more image candidate strings/,
 	/Bad value for attribute "srcset" on element "img": Must contain one or more image candidate strings/,
+
+	// TODO(html-entities): These regexes assert that numeric character references (e.g., `&#x9;`)
+	// are NOT decoded by the HTML parser before being passed to the `srcset` parser.
+	// If `HtmlParser.js` is ever updated to decode entities globally, these tests will
+	// fail because `&#x9;` will become `\t` (whitespace) and successfully parse as a valid srcset.
+	// Any future HTML decoding must be implemented selectively to preserve this behavior.
 	/Can't resolve '&#x9;&#x9;data:,a&#x9;&#x9;1x&#x9;&#x9;'/,
 	/Can't resolve '&#xA;&#xA;data:,a&#xA;&#xA;1x&#xA;&#xA;'/,
 	/Can't resolve '&#xB;&#xB;data:,a&#xB;&#xB;1x&#xB;&#xB;'/,
