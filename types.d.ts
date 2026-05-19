@@ -12781,7 +12781,15 @@ declare interface LStatFs {
 	): void;
 }
 declare interface LStatSync {
-	(path: PathLikeFs, options?: undefined): IStatsFs;
+	(path: PathLikeFs): IStatsFs;
+	(
+		path: PathLikeFs,
+		options?: StatSyncOptions & { bigint?: false; throwIfNoEntry?: true }
+	): IStatsFs;
+	(
+		path: PathLikeFs,
+		options: StatSyncOptions & { bigint: true; throwIfNoEntry?: true }
+	): IBigIntStatsFs;
 	(
 		path: PathLikeFs,
 		options?: StatSyncOptions & { bigint?: false; throwIfNoEntry: false }
@@ -12790,14 +12798,9 @@ declare interface LStatSync {
 		path: PathLikeFs,
 		options: StatSyncOptions & { bigint: true; throwIfNoEntry: false }
 	): undefined | IBigIntStatsFs;
-	(path: PathLikeFs, options?: StatSyncOptions & { bigint?: false }): IStatsFs;
 	(
 		path: PathLikeFs,
-		options: StatSyncOptions & { bigint: true }
-	): IBigIntStatsFs;
-	(
-		path: PathLikeFs,
-		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: false }
+		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: true }
 	): IStatsFs | IBigIntStatsFs;
 	(
 		path: PathLikeFs,
@@ -22474,6 +22477,15 @@ declare abstract class StackEntry {
 	/**
 	 * Walk the linked list looking for an entry with the same request shape.
 	 * Set-compatible: callers that used `stack.has(entry)` keep working.
+	 * NOTE: kept monomorphic on purpose. An earlier draft accepted a string
+	 * query too (so pre-5.21 plugins keeping their own `Set<string>` of
+	 * seen entries could probe the live stack with the formatted form),
+	 * but adding the second shape regressed `doResolve`'s heap profile by
+	 * ~1 MiB / 200 resolves on stack-churn — V8 keeps a polymorphic
+	 * call-site state for `parent.has(stackEntry)` once `has` has two
+	 * argument shapes. Plugins that need string membership can reach for
+	 * `[...stack].find(e => e.includes(formattedString))` via the
+	 * `String`-method proxies on `StackEntry` instead.
 	 */
 	has(query: StackEntry): boolean;
 
@@ -22483,8 +22495,10 @@ declare abstract class StackEntry {
 	get size(): number;
 
 	/**
-	 * Human-readable form used in recursion error messages and logs.
-	 * Matches the historical string format so existing log parsers stay valid.
+	 * Human-readable form used in recursion error messages, logs, and the
+	 * iterator above. Not memoized: caching would require an extra slot on
+	 * every `StackEntry`, which costs heap even on resolves that never look
+	 * at the formatted form.
 	 */
 	toString(): string;
 }
@@ -22639,7 +22653,15 @@ declare interface StatOptionsTypes {
 	bigint?: boolean;
 }
 declare interface StatSync {
-	(path: PathLikeFs, options?: undefined): IStatsFs;
+	(path: PathLikeFs): IStatsFs;
+	(
+		path: PathLikeFs,
+		options?: StatSyncOptions & { bigint?: false; throwIfNoEntry?: true }
+	): IStatsFs;
+	(
+		path: PathLikeFs,
+		options: StatSyncOptions & { bigint: true; throwIfNoEntry?: true }
+	): IBigIntStatsFs;
 	(
 		path: PathLikeFs,
 		options?: StatSyncOptions & { bigint?: false; throwIfNoEntry: false }
@@ -22648,14 +22670,9 @@ declare interface StatSync {
 		path: PathLikeFs,
 		options: StatSyncOptions & { bigint: true; throwIfNoEntry: false }
 	): undefined | IBigIntStatsFs;
-	(path: PathLikeFs, options?: StatSyncOptions & { bigint?: false }): IStatsFs;
 	(
 		path: PathLikeFs,
-		options: StatSyncOptions & { bigint: true }
-	): IBigIntStatsFs;
-	(
-		path: PathLikeFs,
-		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: false }
+		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: true }
 	): IStatsFs | IBigIntStatsFs;
 	(
 		path: PathLikeFs,
