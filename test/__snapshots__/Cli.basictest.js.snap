@@ -2055,6 +2055,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-generator-html-extract": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit the parsed and URL-rewritten HTML as a standalone \`.html\` output file alongside the module's JavaScript export. When unset, extraction defaults to \`true\` for HTML modules used as compilation entries (HTML entry points) and \`false\` for HTML modules imported from JavaScript. Filenames follow \`output.htmlFilename\` / \`output.htmlChunkFilename\`.",
+        "multiple": false,
+        "path": "module.generator.html.extract",
+        "type": "boolean",
+      },
+    ],
+    "description": "Emit the parsed and URL-rewritten HTML as a standalone \`.html\` output file alongside the module's JavaScript export. When unset, extraction defaults to \`true\` for HTML modules used as compilation entries (HTML entry points) and \`false\` for HTML modules imported from JavaScript. Filenames follow \`output.htmlFilename\` / \`output.htmlChunkFilename\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-generator-json-json-parse": Object {
     "configs": Array [
       Object {
@@ -7881,6 +7894,32 @@ Object {
       },
     ],
     "description": "The filename of the Hot Update Main File. It is inside the 'output.path' directory.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-html-chunk-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+        "multiple": false,
+        "path": "output.htmlChunkFilename",
+        "type": "string",
+      },
+    ],
+    "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-html-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+        "multiple": false,
+        "path": "output.htmlFilename",
+        "type": "string",
+      },
+    ],
+    "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
     "multiple": false,
     "simpleType": "string",
   },

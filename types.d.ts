@@ -8436,6 +8436,11 @@ declare interface GeneratorOptionsByModuleTypeKnown {
 	"css/module"?: CssModuleGeneratorOptions;
 
 	/**
+	 * Generator options for html modules.
+	 */
+	html?: HtmlGeneratorOptions;
+
+	/**
 	 * No generator options are supported for this module type.
 	 */
 	javascript?: EmptyGeneratorOptions;
@@ -8888,6 +8893,8 @@ declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
 declare abstract class HtmlGenerator extends Generator {
+	options: HtmlGeneratorOptions;
+
 	/**
 	 * Processes the provided module.
 	 */
@@ -8928,6 +8935,16 @@ declare abstract class HtmlGenerator extends Generator {
 		module: NormalModule,
 		generateContext: GenerateContext
 	): null | Source;
+}
+
+/**
+ * Generator options for html modules.
+ */
+declare interface HtmlGeneratorOptions {
+	/**
+	 * Emit the parsed and URL-rewritten HTML as a standalone `.html` output file alongside the module's JavaScript export. When unset, extraction defaults to `true` for HTML modules used as compilation entries (HTML entry points) and `false` for HTML modules imported from JavaScript. Filenames follow `output.htmlFilename` / `output.htmlChunkFilename`.
+	 */
+	extract?: boolean;
 }
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
@@ -17557,6 +17574,20 @@ declare interface Output {
 	hotUpdateMainFilename?: string;
 
 	/**
+	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	htmlChunkFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * Specifies the filename template of output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	htmlFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
 	 * Ignore warnings in the browser.
 	 */
 	ignoreBrowserWarnings?: boolean;
@@ -17878,6 +17909,20 @@ declare interface OutputNormalized {
 	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
 	 */
 	hotUpdateMainFilename?: string;
+
+	/**
+	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	htmlChunkFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * Specifies the filename template of output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	htmlFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
 	 * Ignore warnings in the browser.

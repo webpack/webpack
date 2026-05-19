@@ -591,6 +591,14 @@ export type HotUpdateGlobal = string;
  */
 export type HotUpdateMainFilename = string;
 /**
+ * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+ */
+export type HtmlChunkFilename = FilenameTemplate;
+/**
+ * Specifies the filename template of output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+ */
+export type HtmlFilename = FilenameTemplate;
+/**
  * Wrap javascript code into IIFE's to avoid leaking into global scope.
  */
 export type Iife = boolean;
@@ -2432,6 +2440,14 @@ export interface Output {
 	 */
 	hotUpdateMainFilename?: HotUpdateMainFilename;
 	/**
+	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	htmlChunkFilename?: HtmlChunkFilename;
+	/**
+	 * Specifies the filename template of output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	htmlFilename?: HtmlFilename;
+	/**
 	 * Ignore warnings in the browser.
 	 */
 	ignoreBrowserWarnings?: boolean;
@@ -3477,6 +3493,15 @@ export interface ExperimentsNormalized {
 	typescript?: boolean;
 }
 /**
+ * Generator options for html modules.
+ */
+export interface HtmlGeneratorOptions {
+	/**
+	 * Emit the parsed and URL-rewritten HTML as a standalone `.html` output file alongside the module's JavaScript export. When unset, extraction defaults to `true` for HTML modules used as compilation entries (HTML entry points) and `false` for HTML modules imported from JavaScript. Filenames follow `output.htmlFilename` / `output.htmlChunkFilename`.
+	 */
+	extract?: boolean;
+}
+/**
  * Parser options for javascript modules.
  */
 export interface JavascriptParserOptions {
@@ -3943,6 +3968,14 @@ export interface OutputNormalized {
 	 */
 	hotUpdateMainFilename?: HotUpdateMainFilename;
 	/**
+	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	htmlChunkFilename?: HtmlChunkFilename;
+	/**
+	 * Specifies the filename template of output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	htmlFilename?: HtmlFilename;
+	/**
 	 * Ignore warnings in the browser.
 	 */
 	ignoreBrowserWarnings?: boolean;
@@ -4236,6 +4269,10 @@ export interface GeneratorOptionsByModuleTypeKnown {
 	 * Generator options for css/module modules.
 	 */
 	"css/module"?: CssModuleGeneratorOptions;
+	/**
+	 * Generator options for html modules.
+	 */
+	html?: HtmlGeneratorOptions;
 	/**
 	 * No generator options are supported for this module type.
 	 */

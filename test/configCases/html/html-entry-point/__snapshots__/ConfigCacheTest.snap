@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html html-entry-point exported tests should emit page.html for an HTML entry without explicit extract: true 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>HTML entry point</title>
+<script src=\\"__html_cbe5b59d_0.chunk.js\\"></script>
+</head>
+<body>
+<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"image\\">
+</body>
+</html>
+"
+`;
