@@ -300,3 +300,20 @@ Required answer per section:
 - **Does this PR introduce a breaking change?** — yes/no + migration path if yes.
 - **If relevant, what needs to be documented…** — list doc updates or write `n/a`.
 - **Use of AI** — required. State that Claude Code was used and how (e.g. "Claude Code drafted the implementation under human review"). Per the [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md), omitting or misrepresenting this can get the PR closed.
+
+#### After opening the PR — wait for Copilot review
+
+> [!REQUIRED]
+
+Opening the PR is not the end of the task. Every webpack PR gets an automated **GitHub Copilot code review**, and you must **always** wait for it, then address every comment it leaves — no exceptions, even on docs-only or one-line changes. Skipping this step leaves reviewers to triage Copilot's findings manually and is a frequent cause of PRs stalling.
+
+Workflow:
+
+1. After `create_pull_request` succeeds, subscribe to the PR (`subscribe_pr_activity`) so Copilot's review wakes the session as a `<github-webhook-activity>` event. Do **not** poll with `sleep` or repeated status checks.
+2. When the Copilot review arrives, read every comment. For each one:
+   - If the suggestion is correct, push a fix in a new commit on the same branch (use the same CLA-compliant author identity as the original commits).
+   - If the suggestion is wrong or doesn't apply, reply on the thread (`add_reply_to_pull_request_comment`) with a short, specific reason — never ignore a comment silently.
+3. After pushing fixes, wait for Copilot to re-review and repeat until every thread is either resolved by a fix or answered with a reasoned reply.
+4. Only `unsubscribe_pr_activity` once every Copilot comment has been handled and CI is green, or when the user explicitly tells you to stop.
+
+Treat Copilot's comments the same way you would treat a human reviewer's — answering "always" means every comment on every PR, not just the ones that look important.
