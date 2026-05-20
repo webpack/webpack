@@ -2283,6 +2283,69 @@ describe("walkHtmlTokens", () => {
 			]);
 		});
 
+		it("reports eof-in-tag inside attribute name and emits attribute with correct range", () => {
+			/** @type {string[]} */
+			const codes = [];
+			/** @type {[string, string][]} */
+			const attrs = [];
+			walkHtmlTokens("<div data-x", 0, {
+				openTag: (input, start, end) => end,
+				attribute: (input, ns, ne, vs, ve) => {
+					attrs.push([
+						input.slice(ns, ne),
+						vs === -1 ? "" : input.slice(vs, ve)
+					]);
+					return ne;
+				},
+				parseError: (input, code) => codes.push(code)
+			});
+			expect(codes).toEqual(["eof-in-tag"]);
+			expect(attrs).toEqual([["data-x", ""]]);
+		});
+
+		it("reports eof-in-tag when EOF lands inside an attribute-value character reference", () => {
+			/** @type {string[]} */
+			const codes = [];
+			/** @type {string[]} */
+			const opens = [];
+			// `&amp` mid-attribute-value at EOF: returnState is the attribute
+			// value (double-quoted) state, so the EOF unwinds back to a partial
+			// open tag and emits eof-in-tag.
+			walkHtmlTokens('<a href="x&amp', 0, {
+				openTag: (input, start, end, ns, ne) => {
+					opens.push(input.slice(ns, ne));
+					return end;
+				},
+				attribute: (input, ns, ne, vs, ve, qt) => {
+					if (vs === -1) return ne;
+					if (qt !== walkHtmlTokens.QUOTE_NONE) return ve + 1;
+					return ve;
+				},
+				parseError: (input, code) => codes.push(code)
+			});
+			expect(codes).toEqual(["eof-in-tag"]);
+			expect(opens).toEqual(["a"]);
+		});
+
+		it("does NOT report eof-in-comment for bogus comments at EOF", () => {
+			// `<!x` enters bogus comment via the incorrectly-opened-comment path.
+			// EOF inside bogus-comment-state should emit the comment cleanly
+			// per spec (no `eof-in-comment` error).
+			/** @type {string[]} */
+			const codes = [];
+			/** @type {string[]} */
+			const comments = [];
+			walkHtmlTokens("<!x", 0, {
+				comment: (input, start, end) => {
+					comments.push(input.slice(start, end));
+					return end;
+				},
+				parseError: (input, code) => codes.push(code)
+			});
+			expect(codes).toEqual(["incorrectly-opened-comment"]);
+			expect(comments).toEqual(["<!x"]);
+		});
+
 		it("reports eof-in-cdata as an error", () => {
 			const errors = collectErrors("<![CDATA[unclosed");
 			expect(errors).toEqual([
