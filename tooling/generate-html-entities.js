@@ -6,12 +6,15 @@
 
 // cspell:disable
 
-// Generates `lib/html/htmlEntities.js` from the WHATWG named character
-// references table. Run with `node tooling/generate-html-entities.js` (or via
-// `yarn fix:special`) after the spec is updated.
+// Generates `lib/html/htmlEntities.js` from the vendored WHATWG named
+// character references table at `tooling/html-entities.json`.
 //
-// Source: https://html.spec.whatwg.org/entities.json — fetched live so the
-// table can be refreshed against the latest spec without vendoring the JSON.
+// Run as part of `yarn lint:special` to verify the generated file is in
+// sync, or with `--write` (via `yarn fix:special`) to update it in place.
+//
+// To refresh `tooling/html-entities.json` against the current spec, run
+// with `--fetch` (one-off, requires network access). Source URL:
+// https://html.spec.whatwg.org/entities.json (WHATWG HTML Standard).
 
 const fs = require("fs");
 const https = require("https");
@@ -20,6 +23,7 @@ const path = require("path");
 const SPEC_URL = "https://html.spec.whatwg.org/entities.json";
 const FALLBACK_URL =
 	"https://raw.githubusercontent.com/w3c/html/master/entities.json";
+const DATA_PATH = path.resolve(__dirname, "html-entities.json");
 const OUTPUT_PATH = path.resolve(
 	__dirname,
 	"..",
@@ -27,6 +31,9 @@ const OUTPUT_PATH = path.resolve(
 	"html",
 	"htmlEntities.js"
 );
+
+const doWrite = process.argv.includes("--write");
+const doFetch = process.argv.includes("--fetch");
 
 /**
  * @param {string} url URL to fetch
@@ -65,20 +72,13 @@ const fetchUrl = (url) =>
 			.on("error", reject);
 	});
 
-const fetchEntities = async () => {
-	try {
-		return await fetchUrl(SPEC_URL);
-	} catch (_err) {
-		return fetchUrl(FALLBACK_URL);
-	}
-};
-
-(async () => {
-	const body = await fetchEntities();
-	const entities = JSON.parse(body);
-
+/**
+ * @param {Record<string, { characters: string }>} entities raw WHATWG table
+ * @returns {string} new content of `lib/html/htmlEntities.js`
+ */
+const generate = (entities) => {
 	// Strip the leading `&` from each key; sort alphabetically so consecutive
-	// entries share long prefixes (e.g. `Aacute;` / `Aacute` / `aacute;` / `aacute`).
+	// entries share long prefixes (e.g. `Aacute;` / `Aacute` / `aacute;`).
 	const pairs = Object.keys(entities)
 		.map((k) => [k.slice(1), entities[k].characters])
 		.sort();
@@ -103,7 +103,7 @@ const fetchEntities = async () => {
 		prev = name;
 	}
 
-	const lines = [
+	return `${[
 		"/*",
 		"\tMIT License http://www.opensource.org/licenses/mit-license.php",
 		"*/",
@@ -161,11 +161,42 @@ const fetchEntities = async () => {
 		"\tcache = Object.freeze(map);",
 		"\treturn cache;",
 		"};"
-	];
+	].join("\n")}\n`;
+};
 
-	fs.writeFileSync(OUTPUT_PATH, `${lines.join("\n")}\n`);
+(async () => {
+	if (doFetch) {
+		let body;
+		try {
+			body = await fetchUrl(SPEC_URL);
+		} catch (_err) {
+			body = await fetchUrl(FALLBACK_URL);
+		}
+		// Round-trip through JSON.parse + stringify to validate and normalize.
+		const parsed = JSON.parse(body);
+		fs.writeFileSync(DATA_PATH, `${JSON.stringify(parsed, null, 2)}\n`);
+		console.error(`${path.relative(process.cwd(), DATA_PATH)} updated`);
+	}
 
-	console.log(`Wrote ${pairs.length} entities to ${OUTPUT_PATH}`);
+	const entities = JSON.parse(fs.readFileSync(DATA_PATH, "utf8"));
+	const newContent = generate(entities);
+	const currentContent = fs.existsSync(OUTPUT_PATH)
+		? fs.readFileSync(OUTPUT_PATH, "utf8")
+		: "";
+
+	if (newContent !== currentContent) {
+		if (doWrite) {
+			fs.writeFileSync(OUTPUT_PATH, newContent);
+			console.error(
+				`${path.relative(process.cwd(), OUTPUT_PATH)} updated (${Object.keys(entities).length} entities)`
+			);
+		} else {
+			console.error(
+				`${path.relative(process.cwd(), OUTPUT_PATH)} need to be updated`
+			);
+			process.exitCode = 1;
+		}
+	}
 })().catch((err) => {
 	throw err;
 });

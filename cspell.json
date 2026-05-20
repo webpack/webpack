@@ -391,6 +391,7 @@
     "**/**/*.snap",
     "test/cases/json/weird-properties/globals.json",
     "test/JavascriptParser.unittest.js",
+    "tooling/html-entities.json",
     "test/test262-cases/**",
     "**/*.svg",
     "*.log",

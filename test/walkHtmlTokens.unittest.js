@@ -2015,6 +2015,306 @@ describe("walkHtmlTokens", () => {
 		});
 	});
 
+	describe("parseError callback", () => {
+		/**
+		 * @param {string} html input
+		 * @returns {{ code: string, slice: string, severity: string }[]} list of reported errors
+		 */
+		const collectErrors = (html) => {
+			/** @type {{ code: string, slice: string, severity: string }[]} */
+			const errors = [];
+			walkHtmlTokens(html, 0, {
+				parseError: (input, code, start, end, severity) => {
+					errors.push({ code, slice: input.slice(start, end), severity });
+				}
+			});
+			return errors;
+		};
+
+		it("reports missing-attribute-value as a warning", () => {
+			const errors = collectErrors("<a foo=>");
+			expect(errors).toEqual([
+				{ code: "missing-attribute-value", slice: ">", severity: "warning" }
+			]);
+		});
+
+		it("reports unexpected-equals-sign-before-attribute-name as a warning", () => {
+			const errors = collectErrors("<a =foo>");
+			expect(errors).toEqual([
+				{
+					code: "unexpected-equals-sign-before-attribute-name",
+					slice: "=",
+					severity: "warning"
+				}
+			]);
+		});
+
+		it("reports missing-whitespace-between-attributes as a warning", () => {
+			const errors = collectErrors('<a foo="x"bar>');
+			expect(errors).toEqual([
+				{
+					code: "missing-whitespace-between-attributes",
+					slice: "b",
+					severity: "warning"
+				}
+			]);
+		});
+
+		it("reports unexpected-solidus-in-tag as a warning", () => {
+			const errors = collectErrors("<br /foo>");
+			expect(errors).toEqual([
+				{ code: "unexpected-solidus-in-tag", slice: "f", severity: "warning" }
+			]);
+		});
+
+		it("reports missing-end-tag-name as a warning", () => {
+			const errors = collectErrors("a</>b");
+			expect(errors).toEqual([
+				{ code: "missing-end-tag-name", slice: ">", severity: "warning" }
+			]);
+		});
+
+		it("reports unexpected-question-mark-instead-of-tag-name as a warning", () => {
+			const errors = collectErrors("a<?pi?>b");
+			expect(errors).toEqual([
+				{
+					code: "unexpected-question-mark-instead-of-tag-name",
+					slice: "?",
+					severity: "warning"
+				}
+			]);
+		});
+
+		it("reports invalid-first-character-of-tag-name as a warning", () => {
+			const errors = collectErrors("a< b");
+			expect(errors).toEqual([
+				{
+					code: "invalid-first-character-of-tag-name",
+					slice: " ",
+					severity: "warning"
+				}
+			]);
+		});
+
+		it("reports incorrectly-opened-comment as a warning (bogus comment)", () => {
+			const errors = collectErrors("a<!foo>b");
+			expect(errors).toEqual([
+				{ code: "incorrectly-opened-comment", slice: "<!", severity: "warning" }
+			]);
+		});
+
+		it("reports abrupt-closing-of-empty-comment as a warning", () => {
+			const errors = collectErrors("<!-->");
+			expect(errors).toEqual([
+				{
+					code: "abrupt-closing-of-empty-comment",
+					slice: ">",
+					severity: "warning"
+				}
+			]);
+		});
+
+		it("reports incorrectly-closed-comment as a warning", () => {
+			const errors = collectErrors("<!-- x --!>");
+			expect(errors).toEqual([
+				{ code: "incorrectly-closed-comment", slice: ">", severity: "warning" }
+			]);
+		});
+
+		it("reports nested-comment as a warning", () => {
+			const errors = collectErrors("<!--<!---->");
+			expect(errors.find((e) => e.code === "nested-comment")).toEqual({
+				code: "nested-comment",
+				slice: "-",
+				severity: "warning"
+			});
+		});
+
+		it("does not report nested-comment when followed by `>`", () => {
+			// `<!--<!-->` lands in comment-less-than-sign-bang-dash-dash with `>`
+			// next; the spec says reconsume in comment-end without an error.
+			expect(collectErrors("<!--<!-->")).toEqual([]);
+		});
+
+		it("reports missing-doctype-name as a warning", () => {
+			const errors = collectErrors("<!DOCTYPE>");
+			expect(errors).toEqual([
+				{ code: "missing-doctype-name", slice: ">", severity: "warning" }
+			]);
+		});
+
+		it("reports missing-whitespace-before-doctype-name as a warning", () => {
+			const errors = collectErrors("<!DOCTYPEhtml>");
+			expect(errors).toEqual([
+				{
+					code: "missing-whitespace-before-doctype-name",
+					slice: "h",
+					severity: "warning"
+				}
+			]);
+		});
+
+		it("reports invalid-character-sequence-after-doctype-name as a warning", () => {
+			const errors = collectErrors("<!DOCTYPE html FOO>");
+			expect(errors).toEqual([
+				{
+					code: "invalid-character-sequence-after-doctype-name",
+					slice: "F",
+					severity: "warning"
+				}
+			]);
+		});
+
+		it("reports DOCTYPE public/system identifier errors", () => {
+			expect(
+				collectErrors('<!DOCTYPE html PUBLIC"x">').map((e) => e.code)
+			).toContain("missing-whitespace-after-doctype-public-keyword");
+			expect(
+				collectErrors("<!DOCTYPE html PUBLIC>").map((e) => e.code)
+			).toContain("missing-doctype-public-identifier");
+			expect(
+				collectErrors('<!DOCTYPE html PUBLIC "abc>').map((e) => e.code)
+			).toContain("abrupt-doctype-public-identifier");
+			expect(
+				collectErrors('<!DOCTYPE html PUBLIC "p""s">').map((e) => e.code)
+			).toContain(
+				"missing-whitespace-between-doctype-public-and-system-identifiers"
+			);
+			expect(
+				collectErrors('<!DOCTYPE html PUBLIC "p" garbage>').map((e) => e.code)
+			).toContain("missing-quote-before-doctype-system-identifier");
+			expect(
+				collectErrors("<!DOCTYPE html SYSTEM>").map((e) => e.code)
+			).toContain("missing-doctype-system-identifier");
+			expect(
+				collectErrors('<!DOCTYPE html SYSTEM "abc>').map((e) => e.code)
+			).toContain("abrupt-doctype-system-identifier");
+			expect(
+				collectErrors('<!DOCTYPE html SYSTEM "s" garbage>').map((e) => e.code)
+			).toContain("unexpected-character-after-doctype-system-identifier");
+		});
+
+		it("reports absence-of-digits-in-numeric-character-reference as a warning", () => {
+			const errors = collectErrors("a&#x;b");
+			expect(errors).toEqual([
+				{
+					code: "absence-of-digits-in-numeric-character-reference",
+					slice: ";",
+					severity: "warning"
+				}
+			]);
+		});
+
+		it("reports missing-semicolon-after-character-reference as a warning", () => {
+			const errors = collectErrors("a&#65b");
+			expect(errors).toEqual([
+				{
+					code: "missing-semicolon-after-character-reference",
+					slice: "b",
+					severity: "warning"
+				}
+			]);
+		});
+
+		it("reports unknown-named-character-reference as a warning", () => {
+			const errors = collectErrors("a&zzz;b");
+			expect(errors).toEqual([
+				{
+					code: "unknown-named-character-reference",
+					slice: ";",
+					severity: "warning"
+				}
+			]);
+		});
+
+		it("reports eof-in-tag as an error and emits the partial open tag", () => {
+			/** @type {{ code: string, severity: string }[]} */
+			const errors = [];
+			/** @type {string[]} */
+			const opens = [];
+			walkHtmlTokens('<div class="x', 0, {
+				openTag: (input, start, end, ns, ne) => {
+					opens.push(input.slice(ns, ne));
+					return end;
+				},
+				attribute: (input, ns, ne, vs, ve, qt) => {
+					if (vs === -1) return ne;
+					if (qt !== walkHtmlTokens.QUOTE_NONE) return ve + 1;
+					return ve;
+				},
+				parseError: (input, code, start, end, severity) => {
+					errors.push({ code, severity });
+				}
+			});
+			expect(errors).toEqual([{ code: "eof-in-tag", severity: "error" }]);
+			expect(opens).toEqual(["div"]);
+		});
+
+		it("reports eof-in-tag for a close tag at EOF", () => {
+			/** @type {string[]} */
+			const codes = [];
+			/** @type {string[]} */
+			const closes = [];
+			walkHtmlTokens("<a></a", 0, {
+				closeTag: (input, start, end, ns, ne) => {
+					closes.push(input.slice(ns, ne));
+					return end;
+				},
+				openTag: (input, start, end) => end,
+				parseError: (input, code) => {
+					codes.push(code);
+				}
+			});
+			expect(codes).toEqual(["eof-in-tag"]);
+			expect(closes).toEqual(["a"]);
+		});
+
+		it("reports eof-in-comment as an error", () => {
+			const errors = collectErrors("<!-- unclosed");
+			expect(errors).toEqual([
+				{ code: "eof-in-comment", slice: "", severity: "error" }
+			]);
+		});
+
+		it("reports eof-in-doctype as an error", () => {
+			const errors = collectErrors("<!DOCTYPE html");
+			expect(errors).toEqual([
+				{ code: "eof-in-doctype", slice: "", severity: "error" }
+			]);
+		});
+
+		it("reports eof-in-cdata as an error", () => {
+			const errors = collectErrors("<![CDATA[unclosed");
+			expect(errors).toEqual([
+				{ code: "eof-in-cdata", slice: "", severity: "error" }
+			]);
+		});
+
+		it("reports eof-in-script-html-comment-like-text as an error", () => {
+			const errors = collectErrors("<script><!-- unclosed");
+			expect(errors).toEqual([
+				{
+					code: "eof-in-script-html-comment-like-text",
+					slice: "",
+					severity: "error"
+				}
+			]);
+		});
+
+		it("reports eof-before-tag-name as a warning for lone `<`", () => {
+			const errors = collectErrors("hello<");
+			expect(errors).toEqual([
+				{ code: "eof-before-tag-name", slice: "", severity: "warning" }
+			]);
+		});
+
+		it("does not report any error for well-formed HTML", () => {
+			expect(
+				collectErrors("<!DOCTYPE html><html><body>hi</body></html>")
+			).toEqual([]);
+		});
+	});
+
 	describe("decodeHtmlEntities", () => {
 		it("should decode core named entities", () => {
 			expect(
