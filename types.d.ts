@@ -16401,22 +16401,98 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	/**
 	 * Returns parser.
 	 */
-	getParser(type: string, parserOptions?: ParserOptions): ParserClass;
+	getParser<T extends string>(
+		type: T,
+		parserOptions?: ParserOptions
+	): (Record<"javascript/auto", JavascriptParser> &
+		Record<"javascript/dynamic", JavascriptParser> &
+		Record<"javascript/esm", JavascriptParser> &
+		Record<"json", JsonParser> &
+		Record<"asset", AssetParser> &
+		Record<"asset/inline", AssetParser> &
+		Record<"asset/resource", AssetParser> &
+		Record<"asset/source", AssetSourceParser> &
+		Record<"asset/bytes", AssetBytesParser> &
+		Record<"webassembly/async", AsyncWebAssemblyParser> &
+		Record<"webassembly/sync", WebAssemblyParser> &
+		Record<"css", CssParser> &
+		Record<"css/auto", CssParser> &
+		Record<"css/module", CssParser> &
+		Record<"css/global", CssParser> &
+		Record<"html", HtmlParser> &
+		Record<string, ParserClass>)[T];
 
 	/**
 	 * Creates a parser from the provided type.
 	 */
-	createParser(type: string, parserOptions?: ParserOptions): ParserClass;
+	createParser<T extends string>(
+		type: T,
+		parserOptions?: ParserOptions
+	): (Record<"javascript/auto", JavascriptParser> &
+		Record<"javascript/dynamic", JavascriptParser> &
+		Record<"javascript/esm", JavascriptParser> &
+		Record<"json", JsonParser> &
+		Record<"asset", AssetParser> &
+		Record<"asset/inline", AssetParser> &
+		Record<"asset/resource", AssetParser> &
+		Record<"asset/source", AssetSourceParser> &
+		Record<"asset/bytes", AssetBytesParser> &
+		Record<"webassembly/async", AsyncWebAssemblyParser> &
+		Record<"webassembly/sync", WebAssemblyParser> &
+		Record<"css", CssParser> &
+		Record<"css/auto", CssParser> &
+		Record<"css/module", CssParser> &
+		Record<"css/global", CssParser> &
+		Record<"html", HtmlParser> &
+		Record<string, ParserClass>)[T];
 
 	/**
 	 * Returns generator.
 	 */
-	getGenerator(type: string, generatorOptions?: GeneratorOptions): Generator;
+	getGenerator<T extends string>(
+		type: T,
+		generatorOptions?: GeneratorOptions
+	): (Record<"javascript/auto", JavascriptGenerator> &
+		Record<"javascript/dynamic", JavascriptGenerator> &
+		Record<"javascript/esm", JavascriptGenerator> &
+		Record<"json", JsonGenerator> &
+		Record<"asset", AssetGenerator> &
+		Record<"asset/inline", AssetGenerator> &
+		Record<"asset/resource", AssetGenerator> &
+		Record<"asset/source", AssetSourceGenerator> &
+		Record<"asset/bytes", AssetBytesGenerator> &
+		Record<"webassembly/async", Generator> &
+		Record<"webassembly/sync", Generator> &
+		Record<"css", CssGenerator> &
+		Record<"css/auto", CssGenerator> &
+		Record<"css/module", CssGenerator> &
+		Record<"css/global", CssGenerator> &
+		Record<"html", HtmlGenerator> &
+		Record<string, Generator>)[T];
 
 	/**
 	 * Creates a generator.
 	 */
-	createGenerator(type: string, generatorOptions?: GeneratorOptions): Generator;
+	createGenerator<T extends string>(
+		type: T,
+		generatorOptions?: GeneratorOptions
+	): (Record<"javascript/auto", JavascriptGenerator> &
+		Record<"javascript/dynamic", JavascriptGenerator> &
+		Record<"javascript/esm", JavascriptGenerator> &
+		Record<"json", JsonGenerator> &
+		Record<"asset", AssetGenerator> &
+		Record<"asset/inline", AssetGenerator> &
+		Record<"asset/resource", AssetGenerator> &
+		Record<"asset/source", AssetSourceGenerator> &
+		Record<"asset/bytes", AssetBytesGenerator> &
+		Record<"webassembly/async", Generator> &
+		Record<"webassembly/sync", Generator> &
+		Record<"css", CssGenerator> &
+		Record<"css/auto", CssGenerator> &
+		Record<"css/module", CssGenerator> &
+		Record<"css/global", CssGenerator> &
+		Record<"html", HtmlGenerator> &
+		Record<string, Generator>)[T];
 
 	/**
 	 * Returns the resolver.
