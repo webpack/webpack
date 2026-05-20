@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore apos notpre Elig reconsumes xyzabc zzzunknown codepoint
+// cspell:ignore apos notpre Elig reconsumes xyzabc zzzunknown codepoint DFFF ampx
 
 const fs = require("fs");
 const path = require("path");
@@ -2371,6 +2371,28 @@ describe("walkHtmlTokens", () => {
 			]);
 		});
 
+		it("reports end-tag-with-attributes as a warning", () => {
+			const errors = collectErrors("<div></div foo>");
+			expect(errors).toEqual([
+				{
+					code: "end-tag-with-attributes",
+					slice: "</div foo>",
+					severity: "warning"
+				}
+			]);
+		});
+
+		it("reports end-tag-with-attributes only once per close tag", () => {
+			const errors = collectErrors('<div></div a b c="x">');
+			expect(
+				errors.filter((e) => e.code === "end-tag-with-attributes")
+			).toHaveLength(1);
+		});
+
+		it("does not report end-tag-with-attributes when the close tag has no attributes", () => {
+			expect(collectErrors("<div></div>")).toEqual([]);
+		});
+
 		it("does not report any error for well-formed HTML", () => {
 			expect(
 				collectErrors("<!DOCTYPE html><html><body>hi</body></html>")
@@ -2450,6 +2472,43 @@ describe("walkHtmlTokens", () => {
 		it("should replace numeric references above U+10FFFF with U+FFFD", () => {
 			expect(walkHtmlTokens.decodeHtmlEntities("&#x110000;")).toBe("�");
 			expect(walkHtmlTokens.decodeHtmlEntities("&#1114112;")).toBe("�");
+		});
+
+		it("should replace NULL and surrogate numeric references with U+FFFD", () => {
+			expect(walkHtmlTokens.decodeHtmlEntities("&#0;")).toBe("�");
+			expect(walkHtmlTokens.decodeHtmlEntities("&#x0;")).toBe("�");
+			expect(walkHtmlTokens.decodeHtmlEntities("&#xD800;")).toBe("�");
+			expect(walkHtmlTokens.decodeHtmlEntities("&#xDFFF;")).toBe("�");
+			expect(walkHtmlTokens.decodeHtmlEntities("&#55296;")).toBe("�");
+		});
+
+		it("should remap C1 numeric references via the Windows-1252 table", () => {
+			// `&#x80;` (Windows-1252 euro sign) per WHATWG remaps to U+20AC.
+			expect(walkHtmlTokens.decodeHtmlEntities("&#x80;")).toBe("€");
+			// `&#x99;` remaps to U+2122 (trade mark sign).
+			expect(walkHtmlTokens.decodeHtmlEntities("&#x99;")).toBe("™");
+			// `&#x9F;` remaps to U+0178 (Ÿ).
+			expect(walkHtmlTokens.decodeHtmlEntities("&#x9F;")).toBe("Ÿ");
+			// C1 control codepoints with no remap entry pass through.
+			expect(walkHtmlTokens.decodeHtmlEntities("&#x81;")).toBe("");
+		});
+
+		it("should apply the consumed-as-part-of-an-attribute rule when asked", () => {
+			// In text context, `&amp=foo` decodes to `&=foo`.
+			expect(walkHtmlTokens.decodeHtmlEntities("&amp=foo")).toBe("&=foo");
+			// In attribute context, the same input stays literal.
+			expect(walkHtmlTokens.decodeHtmlEntities("&amp=foo", true)).toBe(
+				"&amp=foo"
+			);
+			// `&amp;=foo` (with semicolon) decodes regardless of context.
+			expect(walkHtmlTokens.decodeHtmlEntities("&amp;=foo", true)).toBe(
+				"&=foo"
+			);
+			// Longest-prefix leftover case: `&ampx` → `&amp` matches but leftover
+			// `x` is alphanumeric, so in attribute context this stays literal.
+			expect(walkHtmlTokens.decodeHtmlEntities("&ampX", true)).toBe("&ampX");
+			// In text context it still decodes the prefix.
+			expect(walkHtmlTokens.decodeHtmlEntities("&ampX")).toBe("&X");
 		});
 	});
 });
