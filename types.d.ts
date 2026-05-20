@@ -7125,6 +7125,7 @@ declare abstract class ExportInfo {
 	 * Sets used without info.
 	 */
 	setUsedWithoutInfo(runtime: RuntimeSpec): boolean;
+	setHasProvideInfo(): void;
 	setHasUseInfo(): void;
 
 	/**
