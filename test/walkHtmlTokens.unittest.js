@@ -2493,6 +2493,20 @@ describe("walkHtmlTokens", () => {
 			expect(walkHtmlTokens.decodeHtmlEntities("&#x81;")).toBe("");
 		});
 
+		it("should stay linear-time on long alphanumeric runs after `&`", () => {
+			// Regression: longest-prefix backtrack must be capped at the longest
+			// WHATWG entity name, otherwise inputs like `&` + thousands of chars
+			// trigger O(n²) substring allocations.
+			const longRun = "a".repeat(1000);
+			expect(walkHtmlTokens.decodeHtmlEntities(`&${longRun}`)).toBe(
+				`&${longRun}`
+			);
+			// `&amp` prefix at the start still decodes; the rest is appended verbatim.
+			expect(walkHtmlTokens.decodeHtmlEntities(`&amp${longRun}`)).toBe(
+				`&${longRun}`
+			);
+		});
+
 		it("should apply the consumed-as-part-of-an-attribute rule when asked", () => {
 			// In text context, `&amp=foo` decodes to `&=foo`.
 			expect(walkHtmlTokens.decodeHtmlEntities("&amp=foo")).toBe("&=foo");

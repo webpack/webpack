@@ -111,7 +111,7 @@ const renderRegion = (map) =>
 // strings (1–2 UTF-16 code units).
 // prettier-ignore
 // cspell:disable-next-line
-const HTML_ENTITIES = Object.freeze(${JSON.stringify(map)});
+const HTML_ENTITIES = /** @type {Readonly<Record<string, string>>} */ (Object.freeze(${JSON.stringify(map)}));
 // #endregion
 `;
 
