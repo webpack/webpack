@@ -4,6 +4,7 @@ const SourceMapSource = require("webpack-sources").SourceMapSource;
 const OriginalSource = require("webpack-sources").OriginalSource;
 const RawSource = require("webpack-sources").RawSource;
 const NormalModule = require("../lib/NormalModule");
+const HarmonyImportSideEffectDependency = require("../lib/dependencies/HarmonyImportSideEffectDependency");
 
 describe("NormalModule", () => {
 	let normalModule;
@@ -380,6 +381,92 @@ describe("NormalModule", () => {
 					});
 				});
 			});
+		});
+	});
+
+	describe("#getSideEffectsConnectionState", () => {
+		// Builds a synthetic linear chain of `count` side-effect-free modules
+		// linked by HarmonyImportSideEffectDependency. Walking the chain via
+		// the recursive form used 2 stack frames per module and overflowed on
+		// long chains (issue #20986).
+		const buildChain = (count) => {
+			const modules = [];
+			for (let i = 0; i < count; i++) {
+				const mod = new NormalModule({
+					type: "javascript/auto",
+					request: `/m${i}`,
+					userRequest: `/m${i}`,
+					rawRequest: `m${i}`,
+					loaders: [],
+					resource: `/m${i}`,
+					parser: { parse() {} },
+					generator: null,
+					resolveOptions: {}
+				});
+				mod.buildMeta = { sideEffectFree: true };
+				modules.push(mod);
+			}
+			const depToModule = new Map();
+			for (let i = 0; i < count - 1; i++) {
+				const dep = new HarmonyImportSideEffectDependency(
+					`m${i + 1}`,
+					0,
+					"evaluation"
+				);
+				modules[i].dependencies = [dep];
+				depToModule.set(dep, modules[i + 1]);
+			}
+			modules[count - 1].dependencies = [];
+			const moduleGraph = {
+				getModule: (dep) => depToModule.get(dep),
+				getOptimizationBailout: () => []
+			};
+			return { modules, moduleGraph };
+		};
+
+		it("handles deep linear chains without overflowing the stack", () => {
+			const { modules, moduleGraph } = buildChain(20000);
+			expect(modules[0].getSideEffectsConnectionState(moduleGraph)).toBe(false);
+		});
+
+		it("detects cycles in the side-effect graph", () => {
+			const { modules, moduleGraph } = buildChain(50);
+			// close the loop: last module's dep points to modules[0]
+			const lastDep = new HarmonyImportSideEffectDependency(
+				"m0",
+				0,
+				"evaluation"
+			);
+			modules[49].dependencies = [lastDep];
+			const originalGetModule = moduleGraph.getModule;
+			moduleGraph.getModule = (dep) =>
+				dep === lastDep ? modules[0] : originalGetModule(dep);
+			// Cycles fold to `false` (the accumulator's identity) when all
+			// participating modules are side-effect free — same as the original
+			// recursive behavior.
+			expect(modules[0].getSideEffectsConnectionState(moduleGraph)).toBe(false);
+			expect(modules[0]._isEvaluatingSideEffects).toBe(false);
+		});
+
+		it("reports the bailout dep when a chain member has side effects", () => {
+			const { modules, moduleGraph } = buildChain(10);
+			// Make module 5 have side effects.
+			modules[5].buildMeta = { sideEffectFree: false };
+			const bailouts = new Map();
+			moduleGraph.getOptimizationBailout = (mod) => {
+				if (!bailouts.has(mod)) bailouts.set(mod, []);
+				return bailouts.get(mod);
+			};
+			expect(modules[0].getSideEffectsConnectionState(moduleGraph)).toBe(true);
+			// Each ancestor in the chain (modules 0..4) records the bailout once
+			// for the dep that triggered descent, matching the recursive baseline.
+			for (let i = 0; i < 5; i++) {
+				const list = bailouts.get(modules[i]);
+				expect(list).toHaveLength(1);
+				expect(list[0]()).toMatch(
+					/Dependency \(harmony side effect evaluation\)/
+				);
+			}
 		});
 	});
 });
