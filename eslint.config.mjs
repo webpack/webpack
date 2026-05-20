@@ -44,7 +44,6 @@ export default defineConfig([
 
 		// Auto generation
 		"lib/util/semver.js",
-		"lib/html/htmlEntities.js",
 
 		// Ignore some examples files
 		"examples/**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,md}",
