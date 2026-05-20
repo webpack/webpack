@@ -1,5 +1,91 @@
 # webpack
 
+## 5.107.0
+
+### Minor Changes
+
+- Add `module.generator.javascript.anonymousDefaultExportName` option to control whether webpack sets `.name` to `"default"` for anonymous default export functions and classes per ES spec. Defaults to `true` for applications and `false` for libraries (when `output.library` is set) to avoid unnecessary bundle size overhead. Also extract anonymous default export `.name` fix-up into a shared runtime helper (`__webpack_require__.dn`), replacing repeated inline `Object.defineProperty` / `Object.getOwnPropertyDescriptor` calls with a single short call per module to reduce output size. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20894](https://github.com/webpack/webpack/pull/20894))
+
+- Support module concatenation (scope hoisting) for CSS modules with `text`, `css-style-sheet`, `style`, and `link` export types (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20851](https://github.com/webpack/webpack/pull/20851))
+
+- The `generator.exportsConvention` function form for CSS modules now accepts `string[]` in addition to `string`. (by [@alexander-akait](https://github.com/alexander-akait) in [#20914](https://github.com/webpack/webpack/pull/20914))
+
+- Add `linkInsert` hook to `CssLoadingRuntimeModule.getCompilationHooks(compilation)` so plugin developers can control where stylesheet `<link>` elements are inserted into the document. (by [@alexander-akait](https://github.com/alexander-akait) in [#20947](https://github.com/webpack/webpack/pull/20947))
+
+- Add `CssModulesPlugin.getCompilationHooks(compilation).orderModules` hook. (by [@alexander-akait](https://github.com/alexander-akait) in [#20978](https://github.com/webpack/webpack/pull/20978))
+
+- Add a `pure` parser option for `css/module` and `css/auto` types matching `postcss-modules-local-by-default`'s pure mode: every selector must contain at least one local class or id, otherwise webpack emits a build error. (by [@alexander-akait](https://github.com/alexander-akait) in [#20946](https://github.com/webpack/webpack/pull/20946))
+
+- Support CSS Modules `@value` identifiers as `@import` URLs and inside `url()` functions, e.g. `@value path: "./other.css"; @import path;` and `@value bg: "./image.png"; .a { background: url(bg); }` (by [@alexander-akait](https://github.com/alexander-akait) in [#20925](https://github.com/webpack/webpack/pull/20925))
+
+- Add experimental TypeScript support via `experiments.typescript: true` (auto-enabled by `experiments.futureDefaults`). Uses Node.js's built-in `module.stripTypeScriptTypes` (Node.js >= 22.6 with the stable `mode: "strip"` API, including Node.js 26) to transform `.ts`, `.cts`, `.mts`, `data:text/typescript`, and `data:application/typescript` modules — no type checking, only erasable TypeScript (types, generics, `import type`, casts). `.tsx`/JSX and non-erasable syntax (`enum`, `namespace`, parameter-property constructors, decorator metadata) are NOT supported; use a TSX-capable loader (e.g. `ts-loader`, `swc-loader`) for those. (by [@alexander-akait](https://github.com/alexander-akait) in [#20964](https://github.com/webpack/webpack/pull/20964))
+
+- Added an `experiments.html` flag that reserves the `html` module type for the first-class HTML entry-point support. (by [@aryanraj45](https://github.com/aryanraj45) in [#20902](https://github.com/webpack/webpack/pull/20902))
+
+- Preserve `defer` / `source` import phase keywords on external dependencies in ESM output, the same way import attributes are preserved. (by [@alexander-akait](https://github.com/alexander-akait) in [#20934](https://github.com/webpack/webpack/pull/20934))
+
+- Support the `#__NO_SIDE_EFFECTS__` annotation to mark functions as pure for better tree-shaking. (by [@hai-x](https://github.com/hai-x) in [#20775](https://github.com/webpack/webpack/pull/20775))
+
+- Add `module.generator.html.extract` for HTML modules and the matching `output.htmlFilename` / `output.htmlChunkFilename` filename templates (defaults derived from `output.filename` / `output.chunkFilename` with `.js` swapped for `.html`, mirroring the CSS pipeline). When extraction is on, the parsed and URL-rewritten HTML is emitted as a standalone `.html` output file alongside the module's JavaScript export. (by [@alexander-akait](https://github.com/alexander-akait) in [#20979](https://github.com/webpack/webpack/pull/20979))
+
+- Add `"module-sync"` to default `conditionNames` for resolver defaults to align with Node.js, which exposes the `module-sync` community condition for synchronously-loadable ESM. (by [@alexander-akait](https://github.com/alexander-akait) in [#20933](https://github.com/webpack/webpack/pull/20933))
+
+### Patch Changes
+
+- Fix CSS modules `composes` so `composes: foo from "./self.module.css"` from inside `self.module.css` no longer creates a duplicate module instance. Fix CSS modules `composes` parsing so `local()` and `global()` function wrappers are tracked per class name. Fix CSS modules `composes: ... from "<file>"` so the composed files load in an order consistent with every rule's local composes order, instead of source first-appearance order. (by [@alexander-akait](https://github.com/alexander-akait) in [#20929](https://github.com/webpack/webpack/pull/20929))
+
+- Avoid emitting the `__webpack_require__` runtime in CSS bundles when all imported CSS modules were concatenated into the same scope. (by [@alexander-akait](https://github.com/alexander-akait) in [#20936](https://github.com/webpack/webpack/pull/20936))
+
+- Recompute the CSS chunk's `[contenthash]` and the rendered CSS bytes when an asset referenced by `url()`/`src()`/string in CSS changes its hashed filename. (by [@alexander-akait](https://github.com/alexander-akait) in [#20938](https://github.com/webpack/webpack/pull/20938))
+
+- Embed an inline `sourceMappingURL` data URI inside the CSS when the `parser.exportType` option are `text`, `style`, or `css-style-sheet`. Also merge `@import`ed CSS at build time for `text` and `css-style-sheet` exportTypes so the bundle ships a single accurate inline source map covering every contributing file. Map each generated CSS-module class export line in the JS bundle back to its selector position in the original CSS file (e.g. `btn: "..."` → `.btn { ... }`). (by [@alexander-akait](https://github.com/alexander-akait) in [#20886](https://github.com/webpack/webpack/pull/20886))
+
+- Fix CSS modules deduplication so a `.module.<ext>` file imported both directly (JS) and via icss (`composes from` / `:import`) becomes a single module instance. (by [@alexander-akait](https://github.com/alexander-akait) in [#20929](https://github.com/webpack/webpack/pull/20929))
+
+- Preserve `@charset` at-rule when CSS modules use `exportType: "text"`. (by [@alexander-akait](https://github.com/alexander-akait) in [#20912](https://github.com/webpack/webpack/pull/20912))
+
+- Resolve `[hash]`/`[fullhash]` placeholders in `output.publicPath` when generating `url()` references for `experiments.css`. (by [@alexander-akait](https://github.com/alexander-akait) in [#20879](https://github.com/webpack/webpack/pull/20879))
+
+- Fix HMR for concatenated CSS modules with `style` exportType by using stable per-module identifiers for injected style elements and tracking inner module IDs of concatenated modules in HMR records (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#20911](https://github.com/webpack/webpack/pull/20911))
+
+- Fix CSS Modules `@value` resolution when the same local name is imported from multiple modules. (by [@alexander-akait](https://github.com/alexander-akait) in [#20940](https://github.com/webpack/webpack/pull/20940))
+
+- Fix `typeof ns.default` / `ns.default instanceof X` on a static `import defer * as ns from "./mod"` for `default-only` and `default-with-named` external modules under `optimization.concatenateModules`. The concatenated-module rewrite was collapsing `ns.default` to the deferred-namespace proxy itself instead of routing through the optimized `.a` getter (which lazily evaluates the module and returns its default value), so `typeof ns.default` observed `"object"` (the proxy) rather than the type of the default. The `dynamic` exportsType already used `.a` correctly; default-only and default-with-named now match. (by [@alexander-akait](https://github.com/alexander-akait) in [#20910](https://github.com/webpack/webpack/pull/20910))
+
+- Make `import defer * as ns` more spec-compliant: `ns.x = value` no longer triggers module evaluation (per the TC39 import-defer `[[Set]]` algorithm), and the deferred namespace is now a distinct object from the eager namespace, with the same Deferred Module Namespace Exotic Object shared across defer-import call sites for the same module. (by [@alexander-akait](https://github.com/alexander-akait) in [#20913](https://github.com/webpack/webpack/pull/20913))
+
+- Fixed spec deviations in the deferred namespace object returned by `__webpack_require__.z` (`import defer * as ns` / `import.defer(...)`). (by [@alexander-akait](https://github.com/alexander-akait) in [#20910](https://github.com/webpack/webpack/pull/20910))
+
+- Drop the `__webpack_require__`, `__webpack_require__.d`, and `__webpack_require__.o` runtime helpers from `library: { type: "module" }` bundles when the on-demand exports source they were emitted for ends up dropped (e.g. a single concatenated entry without an IIFE). (by [@alexander-akait](https://github.com/alexander-akait) in [#20901](https://github.com/webpack/webpack/pull/20901))
+
+- Resolve the static specifier of a dynamic `import()` whose argument is a side-effect-free `SequenceExpression`, e.g. `import((1, 0, "./mod.js"))` is now treated the same as `import("./mod.js")` instead of being rejected as unresolvable. (by [@alexander-akait](https://github.com/alexander-akait) in [#20917](https://github.com/webpack/webpack/pull/20917))
+
+- Stable shared module ids and runtime-chunk emission order. (by [@imccausl](https://github.com/imccausl) in [#20860](https://github.com/webpack/webpack/pull/20860))
+
+- Fix snapshot validity check for context dependencies in watch mode by treating watchpack's existence-only entries (`{}`) as cache misses. (by [@alexander-akait](https://github.com/alexander-akait) in [#20916](https://github.com/webpack/webpack/pull/20916))
+
+- Support no-expression template literals in computed member access (e.g. ``import.meta[`url`]``). (by [@alexander-akait](https://github.com/alexander-akait) in [#20889](https://github.com/webpack/webpack/pull/20889))
+
+- Improve tree-shaking in `isPure`: handle more expression types (`ArrayExpression`, `ObjectExpression`, `NewExpression`, `ChainExpression`, `UnaryExpression` (safe operators), `MetaProperty`, `TaggedTemplateExpression`, `BinaryExpression` (strict equality)), prevent `/*#__PURE__*/` comments from leaking across `ObjectExpression` properties, and detect PURE comments inside `TemplateLiteral` interpolations. (by [@alexander-akait](https://github.com/alexander-akait) in [#20723](https://github.com/webpack/webpack/pull/20723))
+
+- Reject `new import.defer(...)` and `new import.source(...)` as a parse-time `SyntaxError`, matching the spec — `ImportCall` is a `CallExpression` and is not a valid operand of `new`. Parenthesized forms (`new (import.defer(...))`) remain valid and continue to throw `TypeError` at runtime as before. (by [@alexander-akait](https://github.com/alexander-akait) in [#20917](https://github.com/webpack/webpack/pull/20917))
+
+- Escape `#` characters that appear inside a path-shaped request's directory portion before passing the request to the resolver, so projects located in directories like `/home/user/proj#1` (and tools like webpack-dev-server that build entry requests with query strings) resolve correctly. The escape only kicks in when the request contains both a `#` in the path portion and a `?` query string — paths without a query keep their existing semantics. (by [@alexander-akait](https://github.com/alexander-akait) in [#20980](https://github.com/webpack/webpack/pull/20980))
+
+- Silence unhandled rejection from the prefetch trigger when chunk loading fails. The `ensureChunkHandlers.prefetch` runtime created `Promise.all(promises).then(...)` whose result is discarded by `__webpack_require__.e`. If chunk loading rejected (e.g. `chunkLoadTimeout`), that dangling chain produced an unhandled rejection. Prefetch is best-effort, so a no-op rejection handler is now attached. (by [@alexander-akait](https://github.com/alexander-akait) in [#20898](https://github.com/webpack/webpack/pull/20898))
+
+- Align `require()` of an ES module with Node.js's [`require(esm)`](https://nodejs.org/docs/latest/api/modules.html#loading-ecmascript-modules-using-require) `"module.exports"` named-export convention. When CommonJS `require()` resolves to an ES module that exports a binding with the literal string name `"module.exports"` (e.g. `export { value as "module.exports" }`), `require()` now returns the value of that export instead of the module's namespace object — matching Node.js v22.12+/v23+ behavior and easing migration of dual ESM/CJS libraries that rely on `module.exports = …`. The unwrap applies to plain `require()`, `require().foo`, calls (`require()(…)`), destructuring, and to CJS wrappers like `module.exports = require(esm)` / `exports.x = require(esm)`. (by [@alexander-akait](https://github.com/alexander-akait) in [#20981](https://github.com/webpack/webpack/pull/20981))
+
+- Remove outdated `@types/eslint-scope` package from dependencies. (by [@alexander-akait](https://github.com/alexander-akait) in [#20869](https://github.com/webpack/webpack/pull/20869))
+
+- Fix `export *` resolution when a star-reexported module re-exports a name back to the importer cyclically. Previously, in a graph where `a` does `export * from "./b"; export * from "./c";` and `b` does `export { foo } from "./a";` while `c` provides the actual `foo` binding, webpack hoisted `foo` from `b` into `a`'s namespace without per-name cycle detection — emitting a getter chain (`a.foo` → `b.foo` → `a.foo`) that threw "Maximum call stack size exceeded" at runtime. The TC39 `ResolveExport` algorithm requires the cyclic branch to return null and the star loop to fall through to the non-cyclic source. (by [@alexander-akait](https://github.com/alexander-akait) in [#20959](https://github.com/webpack/webpack/pull/20959))
+
+- Preserve `using` declaration initializers when the inner graph optimization is enabled. (by [@hai-x](https://github.com/hai-x) in [#20906](https://github.com/webpack/webpack/pull/20906))
+
+- Fixed typescript types. (by [@alexander-akait](https://github.com/alexander-akait) in [#20880](https://github.com/webpack/webpack/pull/20880))
+
+- Bump `webpack-sources` to `^3.4.1` and feed asset bytes into hashes via the new `Source.prototype.buffers()` API. For large `ConcatSource`/`ReplaceSource` outputs this avoids the intermediate `Buffer.concat` that `source.buffer()` performs, removing a peak-memory spike equal to the source's total size on each hashed asset (`AssetGenerator.getFullContentHash`, `CssIcssExportDependency` content hashing, and `RealContentHashPlugin`). A small benchmark on a 64 MiB `ConcatSource` shows ~64 MiB lower peak external memory and ~45% faster hashing. (by [@alexander-akait](https://github.com/alexander-akait) in [#20897](https://github.com/webpack/webpack/pull/20897))
+
 ## 5.106.2
 
 ### Patch Changes
