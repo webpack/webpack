@@ -5033,6 +5033,7 @@ declare interface ContextTimestampAndHash {
 	symlinks?: Set<string>;
 }
 type ContextTypes = KnownContext & Record<any, any>;
+type CreateData = NormalModuleCreateData & { settings: ModuleSettings };
 type CreateReadStreamFSImplementation = FSImplementation & {
 	read: (...args: any[]) => any;
 };
@@ -16116,21 +16117,8 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		factorize: AsyncSeriesBailHook<[ResolveData], undefined | Module>;
 		beforeResolve: AsyncSeriesBailHook<[ResolveData], false | void>;
 		afterResolve: AsyncSeriesBailHook<[ResolveData], false | void>;
-		createModule: AsyncSeriesBailHook<
-			[
-				Partial<NormalModuleCreateData & { settings: ModuleSettings }>,
-				ResolveData
-			],
-			void | Module
-		>;
-		module: SyncWaterfallHook<
-			[
-				Module,
-				Partial<NormalModuleCreateData & { settings: ModuleSettings }>,
-				ResolveData
-			],
-			Module
-		>;
+		createModule: AsyncSeriesBailHook<[CreateData, ResolveData], void | Module>;
+		module: SyncWaterfallHook<[Module, CreateData, ResolveData], Module>;
 		createParser: TypedHookMap<
 			Record<
 				"javascript/auto",
@@ -16358,13 +16346,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				Record<string, SyncBailHook<[Generator, GeneratorOptions], void>>
 		>;
 		createModuleClass: HookMap<
-			SyncBailHook<
-				[
-					Partial<NormalModuleCreateData & { settings: ModuleSettings }>,
-					ResolveData
-				],
-				void | Module
-			>
+			SyncBailHook<[CreateData, ResolveData], void | Module>
 		>;
 	}>;
 	resolverFactory: ResolverFactory;
@@ -19823,7 +19805,7 @@ declare interface ResolveData {
 	attributes?: ImportAttributes;
 	dependencies: ModuleDependency[];
 	dependencyType: string;
-	createData: Partial<NormalModuleCreateData & { settings: ModuleSettings }>;
+	createData: Partial<CreateData>;
 	fileDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;
 	contextDependencies: LazySet<string>;
