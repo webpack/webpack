@@ -4440,7 +4440,7 @@ declare interface Configuration {
 				/**
 				 * Which asset type should receive this devtool value.
 				 */
-				type: "all" | "javascript" | "css";
+				type: "css" | "all" | "javascript";
 				/**
 				 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 				 */
@@ -5045,7 +5045,89 @@ declare interface ContextTimestampAndHash {
 	symlinks?: Set<string>;
 }
 type ContextTypes = KnownContext & Record<any, any>;
-type CreateData = NormalModuleCreateData & { settings: ModuleSettings };
+
+declare interface CreateData {
+	/**
+	 * an optional layer in which the module is
+	 */
+	layer?: string;
+
+	/**
+	 * module type. When deserializing, this is set to an empty string "".
+	 */
+	type: string;
+
+	/**
+	 * request string
+	 */
+	request: string;
+
+	/**
+	 * request intended by user (without loaders from config)
+	 */
+	userRequest: string;
+
+	/**
+	 * request without resolving
+	 */
+	rawRequest: string;
+
+	/**
+	 * list of loaders
+	 */
+	loaders: LoaderItem[];
+
+	/**
+	 * path + query of the real resource
+	 */
+	resource: string;
+
+	/**
+	 * resource resolve data
+	 */
+	resourceResolveData?: ResourceSchemeData & Partial<ResolveRequest>;
+
+	/**
+	 * context directory for resolving
+	 */
+	context: string;
+
+	/**
+	 * path + query of the matched resource (virtual)
+	 */
+	matchResource?: string;
+
+	/**
+	 * the parser used
+	 */
+	parser: ParserClass;
+
+	/**
+	 * the options of the parser used
+	 */
+	parserOptions?: ParserOptions;
+
+	/**
+	 * the generator used
+	 */
+	generator: Generator;
+
+	/**
+	 * the options of the generator used
+	 */
+	generatorOptions?: GeneratorOptions;
+
+	/**
+	 * options used for resolving requests from this module
+	 */
+	resolveOptions?: ResolveOptions;
+
+	/**
+	 * enable/disable extracting source map
+	 */
+	extractSourceMap: boolean;
+	settings: ModuleSettings;
+}
 type CreateReadStreamFSImplementation = FSImplementation & {
 	read: (...args: any[]) => any;
 };
@@ -15941,7 +16023,7 @@ declare interface NodeTemplatePluginOptions {
 type NodeWebpackOptions = false | NodeOptions;
 type NonNullable<T> = T & {};
 declare class NormalModule extends Module {
-	constructor(__0: NormalModuleCreateData);
+	constructor(__0: NormalModuleCreateDataNormalModuleObject_1<string>);
 	request: string;
 	userRequest: string;
 	rawRequest: string;
@@ -16037,7 +16119,9 @@ declare interface NormalModuleCompilationHooks {
 	>;
 	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
 }
-declare interface NormalModuleCreateData {
+declare interface NormalModuleCreateDataNormalModuleObject_1<
+	T extends string = string
+> {
 	/**
 	 * an optional layer in which the module is
 	 */
@@ -16046,7 +16130,7 @@ declare interface NormalModuleCreateData {
 	/**
 	 * module type. When deserializing, this is set to an empty string "".
 	 */
-	type: string;
+	type: T;
 
 	/**
 	 * request string
@@ -16091,22 +16175,86 @@ declare interface NormalModuleCreateData {
 	/**
 	 * the parser used
 	 */
-	parser: ParserClass;
+	parser: (Record<"javascript/auto", JavascriptParser> &
+		Record<"javascript/dynamic", JavascriptParser> &
+		Record<"javascript/esm", JavascriptParser> &
+		Record<"json", JsonParser> &
+		Record<"asset", AssetParser> &
+		Record<"asset/inline", AssetParser> &
+		Record<"asset/resource", AssetParser> &
+		Record<"asset/source", AssetSourceParser> &
+		Record<"asset/bytes", AssetBytesParser> &
+		Record<"webassembly/async", AsyncWebAssemblyParser> &
+		Record<"webassembly/sync", WebAssemblyParser> &
+		Record<"css", CssParser> &
+		Record<"css/auto", CssParser> &
+		Record<"css/module", CssParser> &
+		Record<"css/global", CssParser> &
+		Record<"html", HtmlParser> &
+		Record<string, ParserClass>)[T];
 
 	/**
 	 * the options of the parser used
 	 */
-	parserOptions?: ParserOptions;
+	parserOptions?: (Record<"javascript/auto", JavascriptParserOptions> &
+		Record<"javascript/dynamic", JavascriptParserOptions> &
+		Record<"javascript/esm", JavascriptParserOptions> &
+		Record<"json", JsonParserOptions> &
+		Record<"asset", AssetParserOptions> &
+		Record<"asset/inline", EmptyParserOptions> &
+		Record<"asset/resource", EmptyParserOptions> &
+		Record<"asset/source", EmptyParserOptions> &
+		Record<"asset/bytes", EmptyParserOptions> &
+		Record<"webassembly/async", EmptyParserOptions> &
+		Record<"webassembly/sync", EmptyParserOptions> &
+		Record<"css", CssParserOptions> &
+		Record<"css/auto", CssModuleParserOptions> &
+		Record<"css/module", CssModuleParserOptions> &
+		Record<"css/global", CssModuleParserOptions> &
+		Record<"html", EmptyParserOptions> &
+		Record<string, ParserOptions>)[T];
 
 	/**
 	 * the generator used
 	 */
-	generator: Generator;
+	generator: (Record<"javascript/auto", JavascriptGenerator> &
+		Record<"javascript/dynamic", JavascriptGenerator> &
+		Record<"javascript/esm", JavascriptGenerator> &
+		Record<"json", JsonGenerator> &
+		Record<"asset", AssetGenerator> &
+		Record<"asset/inline", AssetGenerator> &
+		Record<"asset/resource", AssetGenerator> &
+		Record<"asset/source", AssetSourceGenerator> &
+		Record<"asset/bytes", AssetBytesGenerator> &
+		Record<"webassembly/async", Generator> &
+		Record<"webassembly/sync", Generator> &
+		Record<"css", CssGenerator> &
+		Record<"css/auto", CssGenerator> &
+		Record<"css/module", CssGenerator> &
+		Record<"css/global", CssGenerator> &
+		Record<"html", HtmlGenerator> &
+		Record<string, Generator>)[T];
 
 	/**
 	 * the options of the generator used
 	 */
-	generatorOptions?: GeneratorOptions;
+	generatorOptions?: (Record<"javascript/auto", EmptyGeneratorOptions> &
+		Record<"javascript/dynamic", EmptyGeneratorOptions> &
+		Record<"javascript/esm", EmptyGeneratorOptions> &
+		Record<"json", JsonGeneratorOptions> &
+		Record<"asset", AssetGeneratorOptions> &
+		Record<"asset/inline", AssetGeneratorOptions> &
+		Record<"asset/resource", AssetGeneratorOptions> &
+		Record<"asset/source", EmptyGeneratorOptions> &
+		Record<"asset/bytes", EmptyGeneratorOptions> &
+		Record<"webassembly/async", EmptyGeneratorOptions> &
+		Record<"webassembly/sync", EmptyGeneratorOptions> &
+		Record<"css", CssGeneratorOptions> &
+		Record<"css/auto", CssModuleGeneratorOptions> &
+		Record<"css/module", CssModuleGeneratorOptions> &
+		Record<"css/global", CssModuleGeneratorOptions> &
+		Record<"html", HtmlGeneratorOptions> &
+		Record<string, GeneratorOptions>)[T];
 
 	/**
 	 * options used for resolving requests from this module
@@ -24437,7 +24585,7 @@ declare interface WebpackOptionsInterception {
 				/**
 				 * Which asset type should receive this devtool value.
 				 */
-				type: "all" | "javascript" | "css";
+				type: "css" | "all" | "javascript";
 				/**
 				 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 				 */
@@ -24489,7 +24637,7 @@ declare interface WebpackOptionsNormalized {
 				/**
 				 * Which asset type should receive this devtool value.
 				 */
-				type: "all" | "javascript" | "css";
+				type: "css" | "all" | "javascript";
 				/**
 				 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 				 */
@@ -24685,7 +24833,7 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 				/**
 				 * Which asset type should receive this devtool value.
 				 */
-				type: "all" | "javascript" | "css";
+				type: "css" | "all" | "javascript";
 				/**
 				 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 				 */
