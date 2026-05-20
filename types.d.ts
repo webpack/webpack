@@ -2531,6 +2531,18 @@ declare abstract class ChunkGroup {
 	compareTo(chunkGraph: ChunkGraph, otherGroup: ChunkGroup): 0 | 1 | -1;
 
 	/**
+	 * Aggregates per-block `*Order` options for the blocks that bridge this
+	 * chunk group to the given child chunk group. `*Order` options are tied to
+	 * the originating `import()` call and must not be sourced from the child's
+	 * shared options, otherwise a webpackPrefetch/Preload directive from one
+	 * parent would leak into other parents that share the child by name.
+	 */
+	getChildOrderOptions(
+		childGroup: ChunkGroup,
+		chunkGraph: ChunkGraph
+	): Record<string, number>;
+
+	/**
 	 * Groups child chunk groups by their `*Order` options and sorts each group
 	 * by descending order and deterministic chunk-group comparison.
 	 */
