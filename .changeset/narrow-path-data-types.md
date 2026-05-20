@@ -1,5 +1,5 @@
 ---
-"webpack": minor
+"webpack": patch
 ---
 
 Narrow `TemplatePathFn` callback types based on context. `TemplatePathFn` is now generic in the `PathData` shape (defaults to the existing loose `PathData`). New `PathDataChunk` and `PathDataModule` typedefs are exposed for callbacks that always receive a chunk or a module. Public option callbacks have been retyped to use the appropriate variant so that, for example, `output.filename`'s `pathData.chunk` is non-optional and `output.assetModuleFilename`'s `pathData.module` is non-optional.
