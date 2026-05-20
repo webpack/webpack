@@ -82,9 +82,6 @@
     "*.{js,cjs,mjs}": [
       "node node_modules/eslint/bin/eslint.js --cache --fix"
     ],
-    "{schemas/**/*.json,tooling/generate-runtime-code.js,tooling/generate-wasm-code.js}": [
-      "node tooling/lint-special-staged.js"
-    ],
     "*": [
       "node node_modules/prettier/bin/prettier.cjs --cache --write --ignore-unknown",
       "cspell --cache --no-must-find-files"
