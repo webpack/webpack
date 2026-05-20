@@ -1935,10 +1935,13 @@ describe("walkHtmlTokens", () => {
 		});
 
 		// --- NAMED_CHARACTER_REFERENCE safety cap on very long entities ---
-		it("nAMED_CHARACTER_REFERENCE: caps consumption at 33 chars", () => {
-			// Entity names in the WHATWG table are at most ~33 chars; the
-			// scanner has a safety cap that breaks out of the consume loop
-			// past 33 alphanumeric chars even without a closing semicolon.
+		it("nAMED_CHARACTER_REFERENCE: caps the alphanumeric run at MAX_ENTITY_NAME_LEN - 1", () => {
+			// The longest WHATWG entity name is 32 chars (with the trailing
+			// `;`); the alphanumeric run before the optional `;` is therefore
+			// at most 31 chars. The scanner bounds the consume loop at
+			// `MAX_ENTITY_NAME_LEN - 1 = 31` so pathological inputs (`&` plus
+			// thousands of alphanumerics) stay linear-time. Beyond the cap the
+			// bytes round-trip as text.
 			const longEntity = `&${"a".repeat(50)}`;
 			expect(roundtrip(longEntity)).toBe(longEntity);
 		});
@@ -2435,6 +2438,15 @@ describe("walkHtmlTokens", () => {
 		it("should decode numeric references without trailing semicolon", () => {
 			expect(walkHtmlTokens.decodeHtmlEntities("&#65")).toBe("A");
 			expect(walkHtmlTokens.decodeHtmlEntities("&#x41")).toBe("A");
+		});
+
+		it("should not let decimal references swallow trailing hex-letter chars", () => {
+			// Regression: a decimal numeric reference must consume only [0-9]+.
+			// `&#65b` should decode `&#65` → `A` and leave the trailing `b` as
+			// literal text (the earlier regex matched `[0-9a-fA-F]+` for both
+			// hex and decimal and incorrectly swallowed the `b`).
+			expect(walkHtmlTokens.decodeHtmlEntities("&#65b")).toBe("Ab");
+			expect(walkHtmlTokens.decodeHtmlEntities("&#1f")).toBe("f");
 		});
 
 		it("should decode numeric hexadecimal references", () => {
