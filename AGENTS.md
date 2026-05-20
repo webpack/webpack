@@ -4,7 +4,7 @@
 
 ## Conventions in this guide
 
-A `> [!REQUIRED]` callout placed immediately under a heading marks that whole section as **mandatory**: follow it exactly, do not paraphrase, do not skip, do not substitute a similar-looking convention from other tooling. Sections without the callout are normal guidance — apply judgement.
+A `> [!REQUIRED]` callout placed immediately under a heading marks that whole section as **mandatory and not optional**: follow it exactly, do not paraphrase, do not skip, do not substitute a similar-looking convention from other tooling. Reviewers have repeatedly flagged that REQUIRED sections (especially the [Pull request body](#pull-request-body)) are being skipped or partially filled in — doing so blocks the PR every time. Read each REQUIRED section in full whenever it applies; do not rely on memory or on a previous task's output. Sections without the callout are normal guidance — apply judgement.
 
 ## Project Overview
 
@@ -244,8 +244,6 @@ Do **NOT** add `Co-authored-by` lines — unrecognized co-author emails also bre
 #### Pull request body
 
 > [!REQUIRED]
-
-**This is not optional and not a suggestion.** Reviewers have repeatedly flagged that the PR template is being skipped, swapped for a generic "Summary / Test plan" layout, or partially filled in. Doing so blocks the PR. Read this section in full every time you open or update a PR — do not rely on memory or on a previous task's body.
 
 webpack uses an **org-wide** PR template from [`webpack/.github`](https://github.com/webpack/.github/blob/main/.github/pull_request_template.md). The GitHub web UI prefills it; the GitHub API / MCP / `gh pr create` path does **not**, so you must paste the template yourself when opening a PR programmatically. Every PR body must contain **every** section below, in this order, with the labels spelled exactly as written. If a section truly does not apply, write `n/a` under it. Do not delete sections, do not reorder, do not strip the HTML comment hints, and do not substitute a different template (e.g. `## Summary` / `## Test plan`).
 
