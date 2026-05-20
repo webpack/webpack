@@ -16272,11 +16272,11 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				> &
 				Record<
 					"webassembly/async",
-					SyncBailHook<[EmptyParserOptions], Generator>
+					SyncBailHook<[EmptyGeneratorOptions], Generator>
 				> &
 				Record<
 					"webassembly/sync",
-					SyncBailHook<[EmptyParserOptions], Generator>
+					SyncBailHook<[EmptyGeneratorOptions], Generator>
 				> &
 				Record<"css", SyncBailHook<[CssGeneratorOptions], CssGenerator>> &
 				Record<
@@ -16291,7 +16291,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 					"css/global",
 					SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>
 				> &
-				Record<"html", SyncBailHook<[EmptyGeneratorOptions], HtmlGenerator>> &
+				Record<"html", SyncBailHook<[HtmlGeneratorOptions], HtmlGenerator>> &
 				Record<string, SyncBailHook<[GeneratorOptions], Generator>>
 		>;
 		generator: TypedHookMap<
@@ -16333,11 +16333,11 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				> &
 				Record<
 					"webassembly/async",
-					SyncBailHook<[Generator, EmptyParserOptions], void>
+					SyncBailHook<[Generator, EmptyGeneratorOptions], void>
 				> &
 				Record<
 					"webassembly/sync",
-					SyncBailHook<[Generator, EmptyParserOptions], void>
+					SyncBailHook<[Generator, EmptyGeneratorOptions], void>
 				> &
 				Record<"css", SyncBailHook<[CssGenerator, CssGeneratorOptions], void>> &
 				Record<
@@ -16354,7 +16354,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				> &
 				Record<
 					"html",
-					SyncBailHook<[HtmlGenerator, EmptyGeneratorOptions], void>
+					SyncBailHook<[HtmlGenerator, HtmlGeneratorOptions], void>
 				> &
 				Record<string, SyncBailHook<[Generator, GeneratorOptions], void>>
 		>;
