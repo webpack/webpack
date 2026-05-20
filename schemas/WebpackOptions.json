@@ -144,7 +144,8 @@
       "anyOf": [
         {
           "type": "string",
-          "absolutePath": false
+          "absolutePath": false,
+          "minLength": 1
         },
         {
           "instanceof": "Function",
