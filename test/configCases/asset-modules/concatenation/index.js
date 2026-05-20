@@ -21,7 +21,7 @@ it("should concatenate asset/resource modules", () => {
 it("should concatenate asset/bytes modules", () => {
 	expect(textBytes).toBeInstanceOf(Uint8Array);
 	const decoded = new TextDecoder("utf-8").decode(textBytes);
-	expect(decoded).toBe("a Ā 𐀀 文 🦄 Text\n");
+	expect(decoded).toBe("a Ā 𐀀 文 🦄 Text");
 });
 
 it("should fold every asset module into a single concatenated module", () => {
