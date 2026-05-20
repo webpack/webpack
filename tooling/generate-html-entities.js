@@ -33,7 +33,10 @@ const TARGET_PATH = path.resolve(
 	"walkHtmlTokens.js"
 );
 
-const REGION_REGEXP = /\/\/ #region html entities\n[\s\S]+?\/\/ #endregion\n/;
+// Tolerate both LF and CRLF so the generator's `check` mode doesn't
+// false-fail on Windows checkouts where git normalized line endings to CRLF.
+const REGION_REGEXP =
+	/\/\/ #region html entities\r?\n[\s\S]+?\/\/ #endregion\r?\n/;
 
 const doWrite = process.argv.includes("--write");
 const doFetch = process.argv.includes("--fetch");
@@ -55,7 +58,17 @@ const fetchUrl = (url) =>
 						res.statusCode === 307 ||
 						res.statusCode === 308
 					) {
-						return fetchUrl(/** @type {string} */ (res.headers.location)).then(
+						const location = res.headers.location;
+						if (!location) {
+							return reject(
+								new Error(
+									`Redirect from ${url} with no Location header (HTTP ${res.statusCode})`
+								)
+							);
+						}
+						// `Location` may be relative; resolve against the current
+						// request URL so `https.get` receives an absolute URL.
+						return fetchUrl(new URL(location, url).toString()).then(
 							resolve,
 							reject
 						);
@@ -130,7 +143,6 @@ const HTML_ENTITIES = /** @type {Readonly<Record<string, string>>} */ (Object.fr
 
 	const entities = JSON.parse(fs.readFileSync(DATA_PATH, "utf8"));
 	const map = buildMap(entities);
-	const region = renderRegion(map);
 
 	const currentContent = fs.readFileSync(TARGET_PATH, "utf8");
 	if (!REGION_REGEXP.test(currentContent)) {
@@ -138,6 +150,10 @@ const HTML_ENTITIES = /** @type {Readonly<Record<string, string>>} */ (Object.fr
 			`Could not find the \`// #region html entities\` block in ${TARGET_PATH}`
 		);
 	}
+	// Preserve the file's existing EOL style (CRLF on Windows, LF elsewhere)
+	// so writing the regenerated region doesn't introduce mixed line endings.
+	const eol = currentContent.includes("\r\n") ? "\r\n" : "\n";
+	const region = renderRegion(map).replace(/\n/g, eol);
 	const newContent = currentContent.replace(REGION_REGEXP, region);
 
 	if (newContent !== currentContent) {
