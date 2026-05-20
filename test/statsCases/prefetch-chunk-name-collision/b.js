@@ -1,0 +1,1 @@
+import(/* webpackChunkName: "shared" */ "./shared");

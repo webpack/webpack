@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases prefetch-chunk-name-collision should print correct stats for prefetch-chunk-name-collision 1`] = `
+"Entrypoint a X KiB = a.js
+  prefetch: shared.js (name: shared)
+Entrypoint b X KiB = b.js
+chunk (runtime: b) b.js (b) X bytes (javascript) X KiB (runtime) >{804}< [entry] [rendered]
+chunk (runtime: a, b) shared.js (shared) X bytes <{199}> <{996}> [rendered]
+chunk (runtime: a) a.js (a) X bytes (javascript) X KiB (runtime) >{804}< (prefetch: {804}) [entry] [rendered]"
+`;
