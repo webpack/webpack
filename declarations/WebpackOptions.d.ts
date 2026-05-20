@@ -101,7 +101,9 @@ export type EntryFilename = FilenameTemplate;
  */
 export type FilenameTemplate =
 	| string
-	| import("../lib/TemplatedPathPlugin").TemplatePathFn;
+	| import("../lib/TemplatedPathPlugin").TemplatePathFn<
+			import("../lib/Compilation").PathDataChunk
+	  >;
 /**
  * Specifies the layer in which modules of this entrypoint are placed.
  */
@@ -484,7 +486,9 @@ export type OptimizationSplitChunksSizes =
  */
 export type AssetModuleFilename =
 	| string
-	| import("../lib/TemplatedPathPlugin").TemplatePathFn;
+	| import("../lib/TemplatedPathPlugin").TemplatePathFn<
+			import("../lib/Compilation").PathDataModule
+	  >;
 /**
  * Add charset attribute for script tag.
  */
@@ -779,7 +783,9 @@ export type AssetGeneratorOptions = AssetInlineGeneratorOptions &
  */
 export type AssetModuleOutputPath =
 	| string
-	| import("../lib/TemplatedPathPlugin").TemplatePathFn;
+	| import("../lib/TemplatedPathPlugin").TemplatePathFn<
+			import("../lib/Compilation").PathDataModule
+	  >;
 /**
  * Function that executes for module and should return whenever asset should be inlined as DataUrl.
  */
@@ -848,7 +854,9 @@ export type CssGeneratorExportsOnly = boolean;
  */
 export type CssGeneratorLocalIdentName =
 	| string
-	| import("../lib/TemplatedPathPlugin").TemplatePathFn;
+	| import("../lib/TemplatedPathPlugin").TemplatePathFn<
+			import("../lib/Compilation").PathDataModule
+	  >;
 /**
  * Options for defer import.
  */
@@ -2157,7 +2165,11 @@ export interface OptimizationSplitChunksOptions {
 	/**
 	 * Sets the template for the filename for created chunks.
 	 */
-	filename?: string | import("../lib/TemplatedPathPlugin").TemplatePathFn;
+	filename?:
+		| string
+		| import("../lib/TemplatedPathPlugin").TemplatePathFn<
+				import("../lib/Compilation").PathDataChunk
+		  >;
 	/**
 	 * Prevents exposing path info when creating names for parts splitted by maxSize.
 	 */
@@ -2233,7 +2245,11 @@ export interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Sets the template for the filename for created chunks.
 	 */
-	filename?: string | import("../lib/TemplatedPathPlugin").TemplatePathFn;
+	filename?:
+		| string
+		| import("../lib/TemplatedPathPlugin").TemplatePathFn<
+				import("../lib/Compilation").PathDataChunk
+		  >;
 	/**
 	 * Sets the hint for chunk id.
 	 */
@@ -3176,9 +3192,9 @@ export interface AssetResourceGeneratorOptions {
 	 */
 	emit?: boolean;
 	/**
-	 * Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
-	filename?: FilenameTemplate;
+	filename?: AssetModuleFilename;
 	/**
 	 * Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.
 	 */
