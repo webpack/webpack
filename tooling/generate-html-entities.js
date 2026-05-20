@@ -4,6 +4,8 @@
 
 "use strict";
 
+// cspell:disable
+
 // Generates `lib/html/htmlEntities.js` from the WHATWG named character
 // references table. Run with `node tooling/generate-html-entities.js` (or via
 // `yarn fix:special`) after the spec is updated.
@@ -75,15 +77,31 @@ const fetchEntities = async () => {
 	const body = await fetchEntities();
 	const entities = JSON.parse(body);
 
-	// Strip the leading `&` from each key; values are the decoded characters.
-	const pairs = Object.keys(entities).map((k) => [
-		k.slice(1),
-		entities[k].characters
-	]);
+	// Strip the leading `&` from each key; sort alphabetically so consecutive
+	// entries share long prefixes (e.g. `Aacute;` / `Aacute` / `aacute;` / `aacute`).
+	const pairs = Object.keys(entities)
+		.map((k) => [k.slice(1), entities[k].characters])
+		.sort();
 
-	// Sort longest-first, then alphabetically so the output is deterministic
-	// and allows linear longest-prefix matching by iteration if ever needed.
-	pairs.sort((a, b) => b[0].length - a[0].length || (a[0] < b[0] ? -1 : 1));
+	// Delta-encode each record as `<shared><suffix>\t<valueLen><value>`.
+	// `<shared>` is `String.fromCharCode(0x20 + sharedCount)` — the number of
+	// leading characters shared with the previous name. The longest name in
+	// the WHATWG table is 32 chars so sharedCount fits in [0,32] (ASCII
+	// 0x20..0x40). `<valueLen>` is `String.fromCharCode(0x30 + valueLength)`;
+	// every WHATWG entity value is 1 or 2 UTF-16 code units. We length-prefix
+	// the value so a record can contain raw `\t` or `\n` (as in `&Tab;`,
+	// `&NewLine;`) without needing a record terminator.
+	let source = "";
+	let prev = "";
+	for (const [name, chars] of pairs) {
+		let shared = 0;
+		const max = Math.min(name.length, prev.length);
+		while (shared < max && name[shared] === prev[shared]) shared++;
+		source += `${
+			String.fromCharCode(0x20 + shared) + name.slice(shared)
+		}\t${String.fromCharCode(0x30 + chars.length)}${chars}`;
+		prev = name;
+	}
 
 	const lines = [
 		"/*",
@@ -98,22 +116,52 @@ const fetchEntities = async () => {
 		"",
 		"// cspell:disable",
 		"",
+		"// Delta-encoded WHATWG named character references. Each record in",
+		"// SOURCE is `<sharedByte><suffix>\\t<valueLenByte><value>`:",
+		"//   - sharedByte    = String.fromCharCode(0x20 + n) where n is the",
+		"//                     count of leading chars shared with the previous",
+		"//                     record's name (range 0x20..0x40).",
+		"//   - suffix        = the rest of this record's name.",
+		"//   - valueLenByte  = String.fromCharCode(0x30 + len) where len is the",
+		"//                     UTF-16 code-unit length of the value (1 or 2).",
+		"//   - value         = `len` UTF-16 code units of the decoded characters.",
+		"// Names are sorted alphabetically so adjacent entries share long",
+		"// prefixes (e.g. `Aacute;` / `Aacute` / `aacute;` / `aacute`).",
+		`const SOURCE = ${JSON.stringify(source)};`,
+		"",
+		"/** @type {Readonly<Record<string, string>> | undefined} */",
+		"let cache;",
+		"",
 		"/**",
 		" * Named character references defined by the WHATWG HTML Standard.",
 		" *",
-		" * Keys are entity names WITHOUT the leading `&` (some keys end with `;`,",
-		" * others omit it for legacy entities that match without a closing semicolon).",
-		" * Values are the decoded character strings (1–2 code points each).",
-		" * @type {Readonly<Record<string, string>>}",
+		" * Keys are entity names WITHOUT the leading `&` (some end with `;`,",
+		" * others omit it for legacy entities that match without a closing",
+		" * semicolon). Values are the decoded character strings (1–2 code points).",
+		" *",
+		" * The table is decoded lazily from the compact source above on first",
+		" * call and cached for subsequent calls.",
+		" * @returns {Readonly<Record<string, string>>} entity name to characters",
 		" */",
-		"const HTML_ENTITIES = Object.freeze({"
+		"module.exports = () => {",
+		"\tif (cache !== undefined) return cache;",
+		"\t/** @type {Record<string, string>} */",
+		"\tconst map = Object.create(null);",
+		'\tlet prev = "";',
+		"\tlet i = 0;",
+		"\twhile (i < SOURCE.length) {",
+		"\t\tconst shared = SOURCE.charCodeAt(i++) - 0x20;",
+		'\t\tconst t = SOURCE.indexOf("\\t", i);',
+		"\t\tconst name = prev.slice(0, shared) + SOURCE.slice(i, t);",
+		"\t\tconst valueLen = SOURCE.charCodeAt(t + 1) - 0x30;",
+		"\t\tmap[name] = SOURCE.slice(t + 2, t + 2 + valueLen);",
+		"\t\tprev = name;",
+		"\t\ti = t + 2 + valueLen;",
+		"\t}",
+		"\tcache = Object.freeze(map);",
+		"\treturn cache;",
+		"};"
 	];
-	for (const [name, chars] of pairs) {
-		lines.push(`\t${JSON.stringify(name)}: ${JSON.stringify(chars)},`);
-	}
-	lines.push("});");
-	lines.push("");
-	lines.push("module.exports = HTML_ENTITIES;");
 
 	fs.writeFileSync(OUTPUT_PATH, `${lines.join("\n")}\n`);
 
