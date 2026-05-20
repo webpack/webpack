@@ -459,9 +459,9 @@ declare abstract class AssetGenerator extends Generator {
 				source: string | Buffer,
 				context: { filename: string; module: Module }
 		  ) => string);
-	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
-	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
-	outputPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	filename?: string | TemplatePathFn<PathDataModule>;
+	publicPath?: string | TemplatePathFn<PathData>;
+	outputPath?: string | TemplatePathFn<PathDataModule>;
 	emit?: boolean;
 
 	/**
@@ -571,19 +571,19 @@ declare interface AssetResourceGeneratorOptions {
 	emit?: boolean;
 
 	/**
-	 * Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
-	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	filename?: string | TemplatePathFn<PathDataModule>;
 
 	/**
 	 * Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.
 	 */
-	outputPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	outputPath?: string | TemplatePathFn<PathDataModule>;
 
 	/**
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
-	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	publicPath?: string | TemplatePathFn<PathData>;
 }
 declare abstract class AssetSourceGenerator extends Generator {
 	/**
@@ -1426,7 +1426,9 @@ declare interface CacheGroupSource {
 	minChunks?: number;
 	maxAsyncRequests?: number;
 	maxInitialRequests?: number;
-	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	filename?:
+		| string
+		| ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
 	idHint?: string;
 	automaticNameDelimiter?: string;
 	reuseExistingChunk?: boolean;
@@ -1563,10 +1565,10 @@ declare class Chunk {
 	preventIntegration: boolean;
 	filenameTemplate?:
 		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+		| ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
 	cssFilenameTemplate?:
 		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+		| ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
 	runtime: RuntimeSpec;
 	files: Set<string>;
 	auxiliaryFiles: Set<string>;
@@ -1833,6 +1835,9 @@ declare interface ChunkConditionMap {
 	[index: number]: boolean;
 	[index: string]: boolean;
 }
+type ChunkFilenameTemplate =
+	| string
+	| ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
 declare class ChunkGraph {
 	/**
 	 * Creates an instance of ChunkGraph.
@@ -3740,27 +3745,33 @@ declare class Compilation {
 	/**
 	 * Returns interpolated path.
 	 */
-	getPath(filename: TemplatePath, data?: PathData): string;
+	getPath<T extends PathData = PathData>(
+		filename: string | TemplatePathFn<T>,
+		data?: T
+	): string;
 
 	/**
 	 * Gets path with info.
 	 */
-	getPathWithInfo(
-		filename: TemplatePath,
-		data?: PathData
+	getPathWithInfo<T extends PathData = PathData>(
+		filename: string | TemplatePathFn<T>,
+		data?: T
 	): InterpolatedPathAndAssetInfo;
 
 	/**
 	 * Returns interpolated path.
 	 */
-	getAssetPath(filename: TemplatePath, data: PathData): string;
+	getAssetPath<T extends PathData = PathData>(
+		filename: string | TemplatePathFn<T>,
+		data: T
+	): string;
 
 	/**
 	 * Gets asset path with info.
 	 */
-	getAssetPathWithInfo(
-		filename: TemplatePath,
-		data: PathData
+	getAssetPathWithInfo<T extends PathData = PathData>(
+		filename: string | TemplatePathFn<T>,
+		data: T
 	): InterpolatedPathAndAssetInfo;
 	getWarnings(): Error[];
 	getErrors(): Error[];
@@ -5265,9 +5276,7 @@ declare interface CssModuleGeneratorOptions {
 	/**
 	 * Configure the generated local ident name.
 	 */
-	localIdentName?:
-		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	localIdentName?: string | TemplatePathFn<PathDataModule>;
 }
 
 /**
@@ -5380,7 +5389,7 @@ declare class CssModulesPlugin {
 	static getChunkFilenameTemplate(
 		chunk: Chunk,
 		outputOptions: OutputNormalizedWithDefaults
-	): TemplatePath;
+	): ChunkFilenameTemplate;
 
 	/**
 	 * Returns true, when the chunk has css.
@@ -6481,7 +6490,7 @@ declare interface EntryDescription {
 	/**
 	 * Specifies the filename of the output file on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
-	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	filename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
 	 * Module(s) that are loaded upon startup.
@@ -6501,7 +6510,7 @@ declare interface EntryDescription {
 	/**
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
-	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	publicPath?: string | TemplatePathFn<PathData>;
 
 	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
@@ -6541,7 +6550,7 @@ declare interface EntryDescriptionNormalized {
 	/**
 	 * Specifies the filename of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
-	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	filename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
 	 * Module(s) that are loaded upon startup. The last one is exported.
@@ -6561,7 +6570,7 @@ declare interface EntryDescriptionNormalized {
 	/**
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
-	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	publicPath?: string | TemplatePathFn<PathData>;
 
 	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
@@ -8486,14 +8495,17 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 		) =>
 			| string
 			| false
-			| ((pathData: PathData, assetInfo?: AssetInfo) => string),
+			| ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string),
 		allChunks: boolean
 	);
 	contentType: string;
 	global: string;
 	getFilenameForChunk: (
 		chunk: Chunk
-	) => string | false | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	) =>
+		| string
+		| false
+		| ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
 	allChunks: boolean;
 
 	/**
@@ -9760,7 +9772,7 @@ declare class JavascriptModulesPlugin {
 	static getChunkFilenameTemplate(
 		chunk: Chunk,
 		outputOptions: OutputNormalizedWithDefaults
-	): TemplatePath;
+	): ChunkFilenameTemplate;
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
 declare class JavascriptParser extends ParserClass {
@@ -17086,7 +17098,7 @@ declare interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Sets the template for the filename for created chunks.
 	 */
-	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	filename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
 	 * Sets the hint for chunk id.
@@ -17268,7 +17280,7 @@ declare interface OptimizationSplitChunksOptions {
 	/**
 	 * Sets the template for the filename for created chunks.
 	 */
-	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	filename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
 	 * Prevents exposing path info when creating names for parts splitted by maxSize.
@@ -17419,9 +17431,7 @@ declare interface Output {
 	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
-	assetModuleFilename?:
-		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	assetModuleFilename?: string | TemplatePathFn<PathDataModule>;
 
 	/**
 	 * Enable/disable creating async chunks that are loaded on demand.
@@ -17441,9 +17451,7 @@ declare interface Output {
 	/**
 	 * Specifies the filename template of output files of non-initial chunks on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
-	chunkFilename?:
-		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	chunkFilename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
 	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).
@@ -17483,16 +17491,12 @@ declare interface Output {
 	/**
 	 * Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
-	cssChunkFilename?:
-		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	cssChunkFilename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
 	 * Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
-	cssFilename?:
-		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	cssFilename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
@@ -17536,7 +17540,7 @@ declare interface Output {
 	/**
 	 * Specifies the filename of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
-	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	filename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
 	 * An expression which is used to address the global object/scope in runtime code.
@@ -17581,16 +17585,12 @@ declare interface Output {
 	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
-	htmlChunkFilename?:
-		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	htmlChunkFilename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
 	 * Specifies the filename template of output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
-	htmlFilename?:
-		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	htmlFilename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
 	 * Ignore warnings in the browser.
@@ -17645,7 +17645,7 @@ declare interface Output {
 	/**
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
-	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	publicPath?: string | TemplatePathFn<PathData>;
 
 	/**
 	 * This option enables loading async chunks via a custom script type, such as script type="module".
@@ -17761,9 +17761,7 @@ declare interface OutputNormalized {
 	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
-	assetModuleFilename?:
-		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	assetModuleFilename?: string | TemplatePathFn<PathDataModule>;
 
 	/**
 	 * Enable/disable creating async chunks that are loaded on demand.
@@ -17778,9 +17776,7 @@ declare interface OutputNormalized {
 	/**
 	 * Specifies the filename template of output files of non-initial chunks on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
-	chunkFilename?:
-		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	chunkFilename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
 	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).
@@ -17820,16 +17816,12 @@ declare interface OutputNormalized {
 	/**
 	 * Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
-	cssChunkFilename?:
-		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	cssChunkFilename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
 	 * Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
-	cssFilename?:
-		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	cssFilename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
@@ -17873,7 +17865,7 @@ declare interface OutputNormalized {
 	/**
 	 * Specifies the filename of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
-	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	filename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
 	 * An expression which is used to address the global object/scope in runtime code.
@@ -17918,16 +17910,12 @@ declare interface OutputNormalized {
 	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
-	htmlChunkFilename?:
-		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	htmlChunkFilename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
 	 * Specifies the filename template of output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
-	htmlFilename?:
-		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	htmlFilename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
 	 * Ignore warnings in the browser.
@@ -17972,7 +17960,7 @@ declare interface OutputNormalized {
 	/**
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
-	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	publicPath?: string | TemplatePathFn<PathData>;
 
 	/**
 	 * This option enables loading async chunks via a custom script type, such as script type="module".
@@ -18037,30 +18025,24 @@ declare interface OutputNormalized {
 }
 type OutputNormalizedWithDefaults = OutputNormalized & {
 	uniqueName: string;
-	filename: NonNullable<
-		undefined | string | ((pathData: PathData, assetInfo?: AssetInfo) => string)
-	>;
-	cssFilename: NonNullable<
-		undefined | string | ((pathData: PathData, assetInfo?: AssetInfo) => string)
-	>;
+	filename: NonNullable<undefined | string | TemplatePathFn<PathDataChunk>>;
+	cssFilename: NonNullable<undefined | string | TemplatePathFn<PathDataChunk>>;
 	chunkFilename: NonNullable<
-		undefined | string | ((pathData: PathData, assetInfo?: AssetInfo) => string)
+		undefined | string | TemplatePathFn<PathDataChunk>
 	>;
 	cssChunkFilename: NonNullable<
-		undefined | string | ((pathData: PathData, assetInfo?: AssetInfo) => string)
+		undefined | string | TemplatePathFn<PathDataChunk>
 	>;
 	hotUpdateChunkFilename: string;
 	hotUpdateGlobal: string;
 	assetModuleFilename: NonNullable<
-		undefined | string | ((pathData: PathData, assetInfo?: AssetInfo) => string)
+		undefined | string | TemplatePathFn<PathDataModule>
 	>;
 	webassemblyModuleFilename: string;
 	sourceMapFilename: string;
 	hotUpdateMainFilename: string;
 	devtoolNamespace: string;
-	publicPath: NonNullable<
-		undefined | string | ((pathData: PathData, assetInfo?: AssetInfo) => string)
-	>;
+	publicPath: NonNullable<undefined | string | TemplatePathFn<PathData>>;
 	workerPublicPath: string;
 	workerWasmLoading: NonNullable<undefined | string | false>;
 	workerChunkLoading: NonNullable<undefined | string | false>;
@@ -18284,6 +18266,11 @@ declare interface PathData {
 	local?: string;
 	prepareId?: (id: string | number) => string | number;
 }
+type PathDataChunk = PathData & { chunk: Chunk | ChunkPathData };
+type PathDataModule = PathData & {
+	module: Module | ModulePathData;
+	chunkGraph: ChunkGraph;
+};
 type PathLikeFs = string | Buffer | URL;
 type PathLikeTypes = string | URL_url | Buffer;
 type PathOrFileDescriptorFs = string | number | Buffer | URL;
@@ -19701,7 +19688,7 @@ declare interface RenderManifestEntryStatic {
 }
 declare interface RenderManifestEntryTemplated {
 	render: () => Source;
-	filenameTemplate: TemplatePath;
+	filenameTemplate: string | TemplatePathFn<any>;
 	pathOptions?: PathData;
 	info?: AssetInfo;
 	identifier: string;
@@ -22318,10 +22305,7 @@ declare class SourceMapDevToolPlugin {
 	 */
 	constructor(options?: SourceMapDevToolPluginOptions);
 	sourceMapFilename?: null | string | false;
-	sourceMappingURLComment:
-		| string
-		| false
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	sourceMappingURLComment: string | false | TemplatePathFn<PathData>;
 	moduleFilenameTemplate: DevtoolModuleFilenameTemplate;
 	fallbackModuleFilenameTemplate: DevtoolFallbackModuleFilenameTemplate;
 	namespace: string;
@@ -22336,11 +22320,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Appends the given value to the original asset. Usually the #sourceMappingURL comment. [url] is replaced with a URL to the source map file. false disables the appending.
 	 */
-	append?:
-		| null
-		| string
-		| false
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	append?: null | string | false | TemplatePathFn<PathData>;
 
 	/**
 	 * Indicates whether column mappings should be used (defaults to true).
@@ -22475,7 +22455,9 @@ declare interface SplitChunksOptions {
 	maxAsyncRequests: number;
 	maxInitialRequests: number;
 	hidePathInfo: boolean;
-	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	filename?:
+		| string
+		| ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
 	automaticNameDelimiter: string;
 	getCacheGroups: (
 		module: Module,
@@ -23683,9 +23665,10 @@ declare class Template {
 	static NUMBER_OF_IDENTIFIER_CONTINUATION_CHARS: number;
 	static NUMBER_OF_IDENTIFIER_START_CHARS: number;
 }
-type TemplatePath =
-	| string
-	| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+type TemplatePath = string | TemplatePathFn<PathData>;
+declare interface TemplatePathFn<T extends PathData = PathData> {
+	(pathData: T, assetInfo?: AssetInfo): string;
+}
 declare interface TimestampAndHash {
 	safeTime: number;
 	timestamp?: number;
@@ -25542,6 +25525,8 @@ declare namespace exports {
 		AssetInfo,
 		EntryOptions,
 		PathData,
+		PathDataChunk,
+		PathDataModule,
 		CodeGenerationResults,
 		Entrypoint,
 		ExternalItemFunctionData,

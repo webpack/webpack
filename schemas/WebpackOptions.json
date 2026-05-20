@@ -115,7 +115,7 @@
           "type": "boolean"
         },
         "filename": {
-          "$ref": "#/definitions/FilenameTemplate"
+          "$ref": "#/definitions/AssetModuleFilename"
         },
         "outputPath": {
           "$ref": "#/definitions/AssetModuleOutputPath"
@@ -144,11 +144,12 @@
       "anyOf": [
         {
           "type": "string",
-          "absolutePath": false
+          "absolutePath": false,
+          "minLength": 1
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
+          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
         }
       ]
     },
@@ -161,7 +162,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
+          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
         }
       ]
     },
@@ -213,7 +214,7 @@
           "type": "boolean"
         },
         "filename": {
-          "$ref": "#/definitions/FilenameTemplate"
+          "$ref": "#/definitions/AssetModuleFilename"
         },
         "outputPath": {
           "$ref": "#/definitions/AssetModuleOutputPath"
@@ -461,7 +462,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
+          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
         }
       ]
     },
@@ -1607,7 +1608,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
+          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
         }
       ]
     },
@@ -3276,7 +3277,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
+              "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
             }
           ]
         },
@@ -3599,7 +3600,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
+              "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
             }
           ]
         },

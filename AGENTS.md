@@ -96,13 +96,23 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 
 ## Auto-generated files
 
+> [!REQUIRED]
+
 These files are produced by `yarn fix:special` and must not be edited by hand:
 
 - `types.d.ts` — compiled from JSDoc + schemas.
 - `schemas/**/*.check.{js,d.ts}` — precompiled schema validators.
 - Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
 
-After changing schemas, JSDoc on public exports, or runtime templates, run `yarn fix:special` instead of editing the outputs. The hand-maintained type declarations (`declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`) _are_ editable.
+The hand-maintained type declarations (`declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`) _are_ editable.
+
+Whenever you touch any of the following, re-run `yarn fix:special` **before the next commit** — never edit the generated outputs by hand and never commit a source change without the matching regeneration. CI's `lint` job verifies the outputs are up to date and will fail the PR otherwise:
+
+- `schemas/**/*.json` — every JSON schema change reshapes `WebpackOptions.check.js`, the per-plugin `*.check.js` validators, `declarations/**/*.d.ts`, and `types.d.ts`.
+- `lib/**/*.js` JSDoc on anything reachable from a public export — `types.d.ts` is regenerated from it.
+- `tooling/generate-runtime-code.js`, `tooling/generate-wasm-code.js`, or any file they consume — they emit generated code under `lib/`.
+
+The combined `yarn fix` script runs `fix:code` + `fix:special` + `fmt` in one go; prefer it as the final step before any commit that touched the paths above.
 
 ## Adding or renaming a webpack option
 
@@ -165,15 +175,14 @@ If WebpackOptions were added or modified, consider adding or updating relevant e
 
 ### 5. Linting and Formatting
 
-Run linting, formatting, and type checking as the final step:
+Run linting, formatting, and type checking as the final step. Prefer the combined script — it covers everything CI verifies (including the auto-generated outputs):
 
 ```bash
-yarn fix:code      # ESLint autofix
-yarn fmt           # Prettier format
+yarn fix           # fix:code (ESLint) + fix:special (regenerate types/validators) + fmt (Prettier)
 yarn tsc           # TypeScript type check (catches type errors in JSDoc annotations)
 ```
 
-If any `lib/` file's exports (public API) were modified, also run `yarn fix:special` to regenerate types and validators. Or use `yarn fix` which combines all three (`fix:code` + `fix:special` + `fmt`).
+If you only ran `yarn fix:code` / `yarn fmt`, double-check that you didn't touch any path listed under [Auto-generated files](#auto-generated-files); if you did, `yarn fix:special` is mandatory or CI's `lint` job will fail.
 
 ### 6. Git Commit & Pull Request
 
