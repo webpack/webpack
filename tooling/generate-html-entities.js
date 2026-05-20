@@ -122,9 +122,13 @@ const renderRegion = (map) =>
 // leading \`&\` (some end with \`;\`, others omit it for legacy entities that
 // match without a closing semicolon). Values are the decoded character
 // strings (1–2 UTF-16 code units).
+// Built on a null prototype so bracket lookups (\`HTML_ENTITIES[name]\`)
+// can't be poisoned by inherited \`Object.prototype\` keys like \`toString\`,
+// \`constructor\`, or \`__proto__\` — without this, \`&toString;\` would falsely
+// look like a matched named character reference.
 // prettier-ignore
 // cspell:disable-next-line
-const HTML_ENTITIES = /** @type {Readonly<Record<string, string>>} */ (Object.freeze(${JSON.stringify(map)}));
+const HTML_ENTITIES = /** @type {Readonly<Record<string, string>>} */ (Object.freeze(Object.assign(Object.create(null), ${JSON.stringify(map)})));
 // #endregion
 `;
 
@@ -164,7 +168,7 @@ const HTML_ENTITIES = /** @type {Readonly<Record<string, string>>} */ (Object.fr
 			);
 		} else {
 			console.error(
-				`${path.relative(process.cwd(), TARGET_PATH)} need to be updated`
+				`${path.relative(process.cwd(), TARGET_PATH)} needs to be updated`
 			);
 			process.exitCode = 1;
 		}

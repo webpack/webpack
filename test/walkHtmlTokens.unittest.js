@@ -2469,6 +2469,22 @@ describe("walkHtmlTokens", () => {
 			);
 		});
 
+		it("should not match inherited Object.prototype keys as entities", () => {
+			// Regression: with a regular object literal, `HTML_ENTITIES["toString"]`
+			// would return `Object.prototype.toString` and the lookup would
+			// falsely treat the entity as matched. The generated table now uses
+			// a null prototype so these names stay literal.
+			expect(walkHtmlTokens.decodeHtmlEntities("&toString;")).toBe(
+				"&toString;"
+			);
+			expect(walkHtmlTokens.decodeHtmlEntities("&constructor;")).toBe(
+				"&constructor;"
+			);
+			expect(walkHtmlTokens.decodeHtmlEntities("&hasOwnProperty;")).toBe(
+				"&hasOwnProperty;"
+			);
+		});
+
 		it("should handle mixed text and entities", () => {
 			expect(
 				walkHtmlTokens.decodeHtmlEntities("foo &amp; bar &#x41; baz")
