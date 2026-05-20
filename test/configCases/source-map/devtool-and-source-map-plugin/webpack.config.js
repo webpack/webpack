@@ -38,5 +38,30 @@ module.exports = [
 				noSources: true
 			})
 		]
+	},
+	// 3. Three `SourceMapDevToolPlugin` instances on the same asset — exercises
+	// the `related.sourceMap` array-merge path where the asset info already
+	// has an array (rather than a single string) from the prior two plugins.
+	{
+		devtool: false,
+		entry: "./triple.js",
+		output: {
+			filename: "triple.js"
+		},
+		plugins: [
+			new webpack.SourceMapDevToolPlugin({
+				filename: "[file].a.map",
+				append: false
+			}),
+			new webpack.SourceMapDevToolPlugin({
+				filename: "[file].b.map",
+				append: false,
+				noSources: true
+			}),
+			new webpack.SourceMapDevToolPlugin({
+				filename: "[file].c.map",
+				sourceRoot: "triple"
+			})
+		]
 	}
 ];

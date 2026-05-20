@@ -2,6 +2,6 @@
 
 module.exports = {
 	findBundle() {
-		return ["primary.js", "dual.js"];
+		return ["primary.js", "dual.js", "triple.js"];
 	}
 };
