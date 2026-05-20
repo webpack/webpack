@@ -26,6 +26,10 @@ it("should DOM-patch document.body and document.title on hot update of an extrac
 				require("../../update")(done, true, () => {
 					expect(document.title).toBe("version 3");
 					expect(document.body.innerHTML).toContain("version 3");
+					// Body and title both changed but the head sans
+					// title is identical across all three versions, so
+					// the shim never falls back to a full reload.
+					expect(window.location.__reloadCount__ || 0).toBe(0);
 					done();
 				})
 			);
