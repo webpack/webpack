@@ -252,6 +252,7 @@ export type ExternalsType =
 	| "script"
 	| "node-commonjs"
 	| "asset"
+	| "asset-url"
 	| "css-import"
 	| "css-url";
 /**

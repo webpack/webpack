@@ -327,9 +327,9 @@ declare interface AllCodeGenerationSchemas {
 	chunkInitFragments: InitFragment<any>[];
 
 	/**
-	 * url for css and javascript modules
+	 * url for asset modules
 	 */
-	url: { javascript?: string; "css-url"?: string };
+	url: { javascript?: string; "asset-url"?: string };
 
 	/**
 	 * a filename for asset modules
@@ -435,7 +435,7 @@ declare abstract class AssetBytesGenerator extends Generator {
 }
 declare abstract class AssetBytesParser extends ParserClass {}
 declare interface AssetDependencyMeta {
-	sourceType: "css-url";
+	sourceType: "asset-url" | "css-url";
 }
 
 /**
@@ -4497,6 +4497,7 @@ declare interface Configuration {
 		| "script"
 		| "node-commonjs"
 		| "asset"
+		| "asset-url"
 		| "css-import"
 		| "css-url";
 
@@ -7788,6 +7789,7 @@ declare class ExternalsPlugin {
 			| "script"
 			| "node-commonjs"
 			| "asset"
+			| "asset-url"
 			| "css-import"
 			| "css-url"
 			| ((dependency: Dependency) => ExternalsType),
@@ -7817,6 +7819,7 @@ declare class ExternalsPlugin {
 		| "script"
 		| "node-commonjs"
 		| "asset"
+		| "asset-url"
 		| "css-import"
 		| "css-url"
 		| ((dependency: Dependency) => ExternalsType);
@@ -7905,6 +7908,7 @@ type ExternalsType =
 	| "script"
 	| "node-commonjs"
 	| "asset"
+	| "asset-url"
 	| "css-import"
 	| "css-url";
 
@@ -14595,6 +14599,7 @@ declare interface ModuleFederationPluginOptions {
 		| "script"
 		| "node-commonjs"
 		| "asset"
+		| "asset-url"
 		| "css-import"
 		| "css-url";
 
@@ -24489,6 +24494,7 @@ declare interface WebpackOptionsNormalized {
 		| "script"
 		| "node-commonjs"
 		| "asset"
+		| "asset-url"
 		| "css-import"
 		| "css-url";
 
@@ -24662,6 +24668,7 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 		| "script"
 		| "node-commonjs"
 		| "asset"
+		| "asset-url"
 		| "css-import"
 		| "css-url"
 	>;
