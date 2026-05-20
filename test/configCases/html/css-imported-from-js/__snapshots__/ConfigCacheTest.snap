@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html css-imported-from-js exported tests should emit a <link rel=stylesheet> for the entry chunk's CSS file 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>HTML entry with JS that imports CSS</title>
+<link rel=\\"stylesheet\\" href=\\"__html_cbe5b59d_0.css\\"><script src=\\"__html_cbe5b59d_0.chunk.js\\"></script>
+</head>
+<body><div class=\\"hero\\">Box</div></body>
+</html>
+"
+`;
