@@ -17,6 +17,7 @@ class FakeDocument {
 		this.head = this.createElement("head");
 		this.body = this.createElement("body");
 		this.baseURI = "https://test.cases/path/index.html";
+		this.title = "";
 		this._elementsByTagName = new Map([
 			["head", [this.head]],
 			["body", [this.body]]
@@ -135,6 +136,7 @@ class FakeElement {
 		this.parentNode = undefined;
 		this.sheet = type === "link" ? new FakeSheet(this, basePath) : undefined;
 		this._textContent = "";
+		this._innerHTML = "";
 	}
 
 	get nodeName() {
@@ -147,6 +149,17 @@ class FakeElement {
 
 	set textContent(value) {
 		this._textContent = value || "";
+	}
+
+	get innerHTML() {
+		return this._innerHTML;
+	}
+
+	set innerHTML(value) {
+		// FakeDocument doesn't parse HTML — the HMR DOM-patch test only
+		// asserts on the raw string passed in, so storing it verbatim is
+		// enough for verification.
+		this._innerHTML = String(value || "");
 	}
 
 	_attach(node) {
