@@ -45,6 +45,7 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
   - `lib/serialization/` — Persistent cache serialization.
   - `lib/sharing/` — Shared modules / Module Federation runtime.
   - `lib/stats/` — Stats output (default printer, JSON factories).
+  - `lib/typescript/` — Experimental TypeScript module support (strip types via the Node.js TypeScript API).
   - `lib/url/` — `new URL(asset, import.meta.url)` references.
   - `lib/util/` — Utility helpers.
   - `lib/wasm/`, `lib/wasm-async/`, `lib/wasm-sync/` — WebAssembly module support.
@@ -66,6 +67,7 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 - `test/configCases/` — Cases with explicit `webpack.config.js`.
 - `test/watchCases/` — Watch-mode incremental cases.
 - `test/hotCases/` — HMR runtime cases.
+- `test/hotPlayground/` — Hand-written HMR playground fixtures used by hot test infrastructure.
 - `test/statsCases/` — Stats output snapshots.
 - `test/typesCases/` — TypeScript type assertions against `types.d.ts`.
 - `test/test262-cases/` — JavaScript spec compliance (test262).
@@ -80,6 +82,7 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 **Auto-generated — do not edit by hand; regenerate via `yarn fix:special`**
 
 - `types.d.ts` — Compiled from JSDoc + schemas.
+- `declarations/` — Per-schema/plugin `*.d.ts` declarations (`declarations/index.d.ts`, `declarations/WebpackOptions.d.ts`, `declarations/LoaderContext.d.ts`, `declarations/plugins/**`) emitted from `schemas/**/*.json`.
 - `schemas/**/*.check.{js,d.ts}` — Precompiled schema validators.
 - Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
 
@@ -105,6 +108,7 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 These files are produced by `yarn fix:special` and must not be edited by hand:
 
 - `types.d.ts` — compiled from JSDoc + schemas.
+- `declarations/**/*.d.ts` — per-schema/plugin declarations emitted from `schemas/**/*.json`.
 - `schemas/**/*.check.{js,d.ts}` — precompiled schema validators.
 - Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
 
