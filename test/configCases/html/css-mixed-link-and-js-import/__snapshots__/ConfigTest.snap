@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html css-mixed-link-and-js-import exported tests should mix a <link rel=stylesheet> entry with CSS imported from a <script src> entry 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Mixed: link stylesheet + JS-imported CSS</title>
+<link rel=\\"stylesheet\\" href=\\"__html_cbe5b59d_0.chunk.css\\">
+<link rel=\\"stylesheet\\" href=\\"__html_cbe5b59d_1.css\\"><script src=\\"__html_cbe5b59d_1.chunk.js\\"></script>
+</head>
+<body><div class=\\"hero\\">Box</div></body>
+</html>
+"
+`;
