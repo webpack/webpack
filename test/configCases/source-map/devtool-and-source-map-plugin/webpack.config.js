@@ -63,5 +63,23 @@ module.exports = [
 				sourceRoot: "triple"
 			})
 		]
+	},
+	// 4. `debugIds: true` combined with a function `append` — exercises the
+	// branch that wraps the user's callback so the `//# debugId=` comment is
+	// prepended at call time instead of stringifying the function.
+	{
+		devtool: false,
+		entry: "./debug-fn.js",
+		output: {
+			filename: "debug-fn.js"
+		},
+		plugins: [
+			new webpack.SourceMapDevToolPlugin({
+				filename: "[file].map",
+				debugIds: true,
+				append: (pathData) =>
+					`\n//# sourceMappingURL=https://example.invalid/${pathData.filename}.map`
+			})
+		]
 	}
 ];
