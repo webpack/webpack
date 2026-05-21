@@ -34,42 +34,42 @@ Array [
   },
   Object {
     "loc": "229:0-109",
-    "message": "Expected URL in '@import layer(super.foo) supports(display: flex) screen and (min-width: 400px) url(\\"./style2.css?warning=6\\");'",
-    "moduleName": "css ./style.css",
-  },
-  Object {
-    "loc": "229:0-109",
-    "message": "Expected URL in '@import layer(super.foo) supports(display: flex) url(\\"./style2.css?warning=5\\") screen and (min-width: 400px);'",
-    "moduleName": "css ./style.css",
-  },
-  Object {
-    "loc": "229:0-109",
     "message": "Expected URL in '@import layer(super.foo) url(\\"./style2.css?warning=4\\") supports(display: flex) screen and (min-width: 400px);'",
     "moduleName": "css ./style.css",
   },
   Object {
-    "loc": "230:0-10",
+    "loc": "230:0-109",
+    "message": "Expected URL in '@import layer(super.foo) supports(display: flex) url(\\"./style2.css?warning=5\\") screen and (min-width: 400px);'",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "loc": "231:0-109",
+    "message": "Expected URL in '@import layer(super.foo) supports(display: flex) screen and (min-width: 400px) url(\\"./style2.css?warning=6\\");'",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "loc": "233:0-10",
     "message": "'@namespace' is not supported in bundled CSS",
     "moduleName": "css ./style.css",
   },
   Object {
-    "loc": "232:0-89",
-    "message": "Expected URL in '@import layer(test) supports(background: url(\\"./img.png\\")) screen and (min-width: 400px);'",
+    "loc": "235:0-47",
+    "message": "Expected URL in '@import supports(background: url(\\"./img.png\\"));'",
     "moduleName": "css ./style.css",
   },
   Object {
-    "loc": "232:0-38",
-    "message": "Expected URL in '@import screen and (min-width: 400px);'",
-    "moduleName": "css ./style.css",
-  },
-  Object {
-    "loc": "232:0-77",
+    "loc": "236:0-77",
     "message": "Expected URL in '@import supports(background: url(\\"./img.png\\")) screen and (min-width: 400px);'",
     "moduleName": "css ./style.css",
   },
   Object {
-    "loc": "232:0-47",
-    "message": "Expected URL in '@import supports(background: url(\\"./img.png\\"));'",
+    "loc": "237:0-89",
+    "message": "Expected URL in '@import layer(test) supports(background: url(\\"./img.png\\")) screen and (min-width: 400px);'",
+    "moduleName": "css ./style.css",
+  },
+  Object {
+    "loc": "238:0-38",
+    "message": "Expected URL in '@import screen and (min-width: 400px);'",
     "moduleName": "css ./style.css",
   },
   Object {
