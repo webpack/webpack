@@ -10,15 +10,13 @@ module.exports = {
 	module: {
 		parser: {
 			html: {
-				sources: {
-					list: [
-						"...",
-						{ tag: "img", attribute: "data-src", type: "src" },
-						{ tag: "img", attribute: "data-srcset", type: "srcset" },
-						// Omit `tag` to match any element.
-						{ attribute: "data-href", type: "src" }
-					]
-				}
+				sources: [
+					"...",
+					{ tag: "img", attribute: "data-src", type: "src" },
+					{ tag: "img", attribute: "data-srcset", type: "srcset" },
+					// Omit `tag` to match any element.
+					{ attribute: "data-href", type: "src" }
+				]
 			}
 		}
 	},

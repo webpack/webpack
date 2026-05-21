@@ -9134,32 +9134,33 @@ declare abstract class HtmlParser extends ParserClass {
  */
 declare interface HtmlParserOptions {
 	/**
-	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; `{ list }` lets you customize which `tag`/`attribute` pairs are treated as URLs (e.g. `data-src` for lazy-loaded images). Use the string `"..."` inside `list` to inline the defaults. Inline `<script>` and `<style>` bodies are always processed. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
+	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `"..."` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
 	 */
 	sources?:
 		| boolean
-		| {
-				/**
-				 * Sources to extract as webpack dependencies. Use `"..."` to inline the default source list.
-				 */
-				list: (
-					| "..."
-					| {
-							/**
-							 * Attribute name whose value is treated as a URL.
-							 */
-							attribute: string;
-							/**
-							 * Tag name to match. Omit to match any tag.
-							 */
-							tag?: string;
-							/**
-							 * How the attribute value should be parsed. `src` treats it as a single URL; `srcset` parses it as a `srcset`-style list of candidate URLs.
-							 */
-							type: "src" | "srcset";
-					  }
-				)[];
-		  };
+		| (
+				| "..."
+				| {
+						/**
+						 * Attribute name whose value is treated as a URL.
+						 */
+						attribute: string;
+						/**
+						 * Tag name to match. Omit to match any tag.
+						 */
+						tag?: string;
+						/**
+						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-inline` treats the attribute value as inline CSS text and bundles it through the CSS pipeline (the attribute's content is replaced with the processed CSS at render time, like an inline `<style>` body).
+						 */
+						type:
+							| "script"
+							| "src"
+							| "srcset"
+							| "script-module"
+							| "stylesheet"
+							| "stylesheet-inline";
+				  }
+		  )[];
 }
 
 /**
@@ -22707,6 +22708,13 @@ declare interface SourceItem {
 	filter?: (attributes: Map<string, string>) => boolean;
 	entry?: boolean | ((attributes: Map<string, string>) => boolean);
 	entryCategory?: string;
+	userType?:
+		| "script"
+		| "src"
+		| "srcset"
+		| "script-module"
+		| "stylesheet"
+		| "stylesheet-inline";
 }
 declare interface SourceLike {
 	/**
