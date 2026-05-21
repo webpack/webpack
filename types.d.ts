@@ -9123,7 +9123,10 @@ declare abstract class HtmlParser extends ParserClass {
 	context?: string;
 	outputModule?: boolean;
 	css?: boolean;
-	sources: boolean;
+	resolvedSources: null | {
+		byTag: Map<string, Map<string, SourceItem>>;
+		wildcard: Map<string, SourceItem>;
+	};
 }
 
 /**
@@ -9131,9 +9134,32 @@ declare abstract class HtmlParser extends ParserClass {
  */
 declare interface HtmlParserOptions {
 	/**
-	 * Enable/disable extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. When set to `false`, attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries. Inline `<script>` and `<style>` bodies are still processed. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
+	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; `{ list }` lets you customize which `tag`/`attribute` pairs are treated as URLs (e.g. `data-src` for lazy-loaded images). Use the string `"..."` inside `list` to inline the defaults. Inline `<script>` and `<style>` bodies are always processed. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
 	 */
-	sources?: boolean;
+	sources?:
+		| boolean
+		| {
+				/**
+				 * Sources to extract as webpack dependencies. Use `"..."` to inline the default source list.
+				 */
+				list: (
+					| "..."
+					| {
+							/**
+							 * Attribute name whose value is treated as a URL.
+							 */
+							attribute: string;
+							/**
+							 * Tag name to match. Use `"*"` to match any tag.
+							 */
+							tag?: string;
+							/**
+							 * How the attribute value should be parsed. `src` treats it as a single URL; `srcset` parses it as a `srcset`-style list of candidate URLs.
+							 */
+							type: "src" | "srcset";
+					  }
+				)[];
+		  };
 }
 
 /**
@@ -22675,6 +22701,12 @@ declare interface SourceAndMap {
 	 * map
 	 */
 	map: null | RawSourceMap;
+}
+declare interface SourceItem {
+	parse: (input: string) => undefined | [string, number, number][];
+	filter?: (attributes: Map<string, string>) => boolean;
+	entry?: boolean | ((attributes: Map<string, string>) => boolean);
+	entryCategory?: string;
 }
 declare interface SourceLike {
 	/**
