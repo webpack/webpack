@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  Object {
+    "message": "Identifier 'fs__WEBPACK_IMPORTED_MODULE_0__' has already been declared (151:27)",
+  },
+]
+`;

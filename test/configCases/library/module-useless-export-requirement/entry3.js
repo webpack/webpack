@@ -11,7 +11,7 @@ const stripModuleMarkers = (content) =>
 const RuntimeGlobals_Exports = "__webpack_exports__";
 const RuntimeGlobals_Require = "__webpack_require__";
 const exportsReg = new RegExp(
-	"var\\s+" + RuntimeGlobals_Exports + "\\s*="
+	"(?:var|let|const)\\s+" + RuntimeGlobals_Exports + "\\s*="
 );
 const definePropertyGettersReg = new RegExp(
 	RuntimeGlobals_Require + "\\.d\\s*="
@@ -20,7 +20,7 @@ const hasOwnPropertyReg = new RegExp(
 	RuntimeGlobals_Require + "\\.o\\s*="
 );
 const requireScopeReg = new RegExp(
-	"var\\s+" + RuntimeGlobals_Require + "\\s*=\\s*\\{"
+	"(?:var|let|const)\\s+" + RuntimeGlobals_Require + "\\s*=\\s*\\{"
 );
 const isNoConcat = /-no-concat\.mjs$/.test(__filename);
 

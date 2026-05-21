@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  Object {
+    "message": "Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules",
+    "moduleName": "css ./global.less",
+  },
+  Object {
+    "message": "Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules",
+    "moduleName": "css ./style3.module.less!=!./loader.js!./style3.module.js",
+  },
+  Object {
+    "message": "Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules",
+    "moduleName": "css ./style4.module.less!=!./loader.js!./style4.js",
+  },
+  Object {
+    "message": "Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules",
+    "moduleName": "css ./style1.module.less",
+  },
+  Object {
+    "message": "Module build failed (from ../../../../node_modules/less-loader/dist/cjs.js):
+NonErrorEmittedError: (Emitted value instead of an instance of Error) TypeError [ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG]: A dynamic import callback was invoked without --experimental-vm-modules",
+    "moduleName": "css ./style2.modules.less",
+  },
+]
+`;

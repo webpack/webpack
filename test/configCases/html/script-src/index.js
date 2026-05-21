@@ -57,8 +57,8 @@ it("should bundle classic <script src> through CommonJS resolution", () => {
 	const classicChunk = readChunk(scriptChunkUrls[0]);
 	expect(classicChunk).toMatchSnapshot();
 	expect(classicChunk).toContain('module.exports = "first entry";');
-	expect(classicChunk).toContain(
-		"var __webpack_exports__ = __webpack_require__"
+	expect(classicChunk).toMatch(
+		/(?:var|let|const) __webpack_exports__ = __webpack_require__/
 	);
 	expect(classicChunk).not.toContain(
 		"__webpack_require__.r(__webpack_exports__)"

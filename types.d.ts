@@ -6890,6 +6890,11 @@ declare interface Environment {
 	importMetaDirnameAndFilename?: boolean;
 
 	/**
+	 * The environment supports let for variable declarations.
+	 */
+	let?: boolean;
+
+	/**
 	 * The environment supports object method shorthand ('{ module() {} }').
 	 */
 	methodShorthand?: boolean;
@@ -21493,6 +21498,7 @@ declare abstract class RuntimeTemplate {
 	isModule(): boolean;
 	isNeutralPlatform(): boolean;
 	supportsConst(): boolean;
+	supportsLet(): boolean;
 	supportsMethodShorthand(): boolean;
 	supportsArrowFunction(): boolean;
 	supportsAsyncFunction(): boolean;
@@ -21511,9 +21517,14 @@ declare abstract class RuntimeTemplate {
 	renderNodePrefixForCoreModule(mod: string): string;
 
 	/**
-	 * Renders return const when it is supported, otherwise var.
+	 * Renders return const when it is supported, otherwise let when supported, otherwise var.
 	 */
-	renderConst(): "var" | "const";
+	renderConst(): "var" | "const" | "let";
+
+	/**
+	 * Renders return let when it is supported, otherwise var.
+	 */
+	renderLet(): "var" | "let";
 
 	/**
 	 * Returning function.
