@@ -176,8 +176,10 @@ module.exports = {
 				const literalMatch = expr.match(/^"([a-f0-9]+)"$/);
 				const fullhashFnMatch = expr.match(/^__webpack_require__\.h\(\)$/);
 				if (mapMatch) {
-					for (const m of mapMatch[1].matchAll(/"([^"]+)":"([a-f0-9]+)"/g)) {
-						pairs.push([m[1], m[2]]);
+					const pairRe = /"([^"]+)":"([a-f0-9]+)"/g;
+					let pairMatch;
+					while ((pairMatch = pairRe.exec(mapMatch[1])) !== null) {
+						pairs.push([pairMatch[1], pairMatch[2]]);
 					}
 				} else if (literalMatch) {
 					pairs.push([soloChunkName, literalMatch[1]]);
