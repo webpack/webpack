@@ -8,6 +8,10 @@ module.exports = {
 			name: "TestLib"
 		}
 	},
+	externals: {
+		util: "util"
+	},
+	externalsType: "umd",
 	experiments: {
 		lazyCompilation: {
 			entries: false
