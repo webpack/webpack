@@ -4,9 +4,13 @@
 
 ## Conventions in this guide
 
-A `> [!REQUIRED]` callout placed immediately under a heading marks that whole section as **mandatory**: follow it exactly, do not paraphrase, do not skip, do not substitute a similar-looking convention from other tooling. Sections without the callout are normal guidance — apply judgement.
+A `> [!REQUIRED]` callout placed immediately under a heading marks that whole section as **mandatory and not optional**: follow it exactly, do not paraphrase, do not skip, do not substitute a similar-looking convention from other tooling. Reviewers have repeatedly flagged that REQUIRED sections (especially the [Pull request body](#pull-request-body)) are being skipped or partially filled in — doing so blocks the PR every time. Read each REQUIRED section in full whenever it applies; do not rely on memory or on a previous task's output. Sections without the callout are normal guidance — apply judgement.
 
 ## Project Overview
+
+> [!REQUIRED]
+
+The directory listings below are the canonical map of the repository. **Whenever you add, rename, or remove a top-level directory** (under the repo root, under `lib/`, under `test/`, or under `schemas/`) you must update the matching bullet here in the same commit. CI does not check this — drift is only caught by humans, which is why it must be part of the change itself. If a new directory does not fit any existing group, add a new group rather than dropping the entry.
 
 webpack is a JavaScript module bundler. Package manager: **yarn**.
 
@@ -41,6 +45,7 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
   - `lib/serialization/` — Persistent cache serialization.
   - `lib/sharing/` — Shared modules / Module Federation runtime.
   - `lib/stats/` — Stats output (default printer, JSON factories).
+  - `lib/typescript/` — Experimental TypeScript module support (strip types via the Node.js TypeScript API).
   - `lib/url/` — `new URL(asset, import.meta.url)` references.
   - `lib/util/` — Utility helpers.
   - `lib/wasm/`, `lib/wasm-async/`, `lib/wasm-sync/` — WebAssembly module support.
@@ -62,6 +67,7 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 - `test/configCases/` — Cases with explicit `webpack.config.js`.
 - `test/watchCases/` — Watch-mode incremental cases.
 - `test/hotCases/` — HMR runtime cases.
+- `test/hotPlayground/` — Hand-written HMR playground fixtures used by hot test infrastructure.
 - `test/statsCases/` — Stats output snapshots.
 - `test/typesCases/` — TypeScript type assertions against `types.d.ts`.
 - `test/test262-cases/` — JavaScript spec compliance (test262).
@@ -76,6 +82,7 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 **Auto-generated — do not edit by hand; regenerate via `yarn fix:special`**
 
 - `types.d.ts` — Compiled from JSDoc + schemas.
+- `declarations/` — Per-schema/plugin `*.d.ts` declarations (`declarations/index.d.ts`, `declarations/WebpackOptions.d.ts`, `declarations/LoaderContext.d.ts`, `declarations/plugins/**`) emitted from `schemas/**/*.json`.
 - `schemas/**/*.check.{js,d.ts}` — Precompiled schema validators.
 - Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
 
@@ -101,6 +108,7 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 These files are produced by `yarn fix:special` and must not be edited by hand:
 
 - `types.d.ts` — compiled from JSDoc + schemas.
+- `declarations/**/*.d.ts` — per-schema/plugin declarations emitted from `schemas/**/*.json`.
 - `schemas/**/*.check.{js,d.ts}` — precompiled schema validators.
 - Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
 
@@ -169,6 +177,8 @@ Description of the change.
 
 Use `patch` for bug fixes, `minor` for new features, `major` for breaking changes. Do not prefix the description with `fix:`, `feat:`, etc. — the change type is already indicated by `patch`/`minor`/`major`.
 
+**Keep the description as short as possible** — ideally a single sentence, ≤ 80 characters, written in the imperative ("fix split-chunks cache key collision", "add `module.generator.html.extract` option"). Changesets are concatenated into the release `CHANGELOG.md` verbatim, so multi-paragraph rationale, "why" context, migration notes, repro steps, or links to discussions belong in the PR body, not the changeset. If a sentence needs commas to fit, it is already too long — split the work or shorten the wording.
+
 ### 4. Updating Examples (if needed)
 
 If WebpackOptions were added or modified, consider adding or updating relevant examples in `examples/`. Run `yarn build:examples` to ensure the examples build successfully.
@@ -185,6 +195,33 @@ yarn tsc           # TypeScript type check (catches type errors in JSDoc annotat
 If you only ran `yarn fix:code` / `yarn fmt`, double-check that you didn't touch any path listed under [Auto-generated files](#auto-generated-files); if you did, `yarn fix:special` is mandatory or CI's `lint` job will fail.
 
 ### 6. Git Commit & Pull Request
+
+#### Branch name
+
+> [!REQUIRED]
+
+Branch names must start with the **PR change-type prefix** from the [Pull request body](#pull-request-body) template (the answer to "What kind of change does this PR introduce?"), followed by `/` and a short kebab-case description:
+
+```
+<type>/<short-description>
+```
+
+Valid `<type>` values are exactly the ones listed in the PR template — `fix`, `feat`, `refactor`, `perf`, `test`, `chore`, `ci`, `build`, `style`, `revert`, `docs`. Pick the same one you will write under "What kind of change does this PR introduce?" in the PR body so the branch, the PR answer, and the eventual squash commit all agree.
+
+Do **not** use `claude/`, `claude-code/`, `bot/`, `ai/`, or any other tool / agent identifier as the prefix — those names are not in the allowed list and will be rejected in review. The branch should describe the change, not the author.
+
+Examples:
+
+- `fix/split-chunks-cache-key`
+- `feat/css-modules-named-exports`
+- `docs/improve-agents-md`
+- `refactor/normal-module-factory-hooks`
+
+If the task harness pre-created a branch with a different prefix (e.g. a random suffix or a tool name), rename it before the first push:
+
+```bash
+git branch -m <new-branch-name>
+```
 
 #### Commit author identity (required for CLA)
 
@@ -211,6 +248,16 @@ Do **NOT** add `Co-authored-by` lines — unrecognized co-author emails also bre
 > [!REQUIRED]
 
 webpack uses an **org-wide** PR template from [`webpack/.github`](https://github.com/webpack/.github/blob/main/.github/pull_request_template.md). The GitHub web UI prefills it; the GitHub API / MCP / `gh pr create` path does **not**, so you must paste the template yourself when opening a PR programmatically. Every PR body must contain **every** section below, in this order, with the labels spelled exactly as written. If a section truly does not apply, write `n/a` under it. Do not delete sections, do not reorder, do not strip the HTML comment hints, and do not substitute a different template (e.g. `## Summary` / `## Test plan`).
+
+Common ways agents get this wrong — all of them are PR-blocking:
+
+- Writing `## Summary` and `## Test plan` headings instead of the bold-labelled sections below (`**Summary**`, `**What kind of change does this PR introduce?**`, …).
+- Omitting **Use of AI** — this is mandatory under the [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md); a missing or vague answer can get the PR closed.
+- Omitting **What kind of change does this PR introduce?** or answering with something outside the allowed list (`fix`, `feat`, `refactor`, `perf`, `test`, `chore`, `ci`, `build`, `style`, `revert`, `docs`). The answer here must also match the branch-name prefix (see [Branch name](#branch-name)).
+- Dropping the HTML comment hints that sit under each label. Keep them — they are part of the template.
+- Leaving a section blank instead of writing `n/a`.
+
+Before every `create_pull_request` and every `update_pull_request` call, diff the body you are about to send against the template below. If any section is missing, add it before sending.
 
 If a PR already exists (e.g. it was opened from the GitHub web UI before you joined the task, or a human edited the body), agents must verify the body still matches the template before each push, and call `update_pull_request` to re-paste any missing section. Treat the PR body the same way you treat the commit message: every push is also a chance to fix a drifted PR body.
 
@@ -257,3 +304,20 @@ Required answer per section:
 - **Does this PR introduce a breaking change?** — yes/no + migration path if yes.
 - **If relevant, what needs to be documented…** — list doc updates or write `n/a`.
 - **Use of AI** — required. State that Claude Code was used and how (e.g. "Claude Code drafted the implementation under human review"). Per the [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md), omitting or misrepresenting this can get the PR closed.
+
+#### After opening the PR — wait for Copilot review
+
+> [!REQUIRED]
+
+Opening the PR is not the end of the task. Every webpack PR gets an automated **GitHub Copilot code review** on the initial commit **and on every subsequent push**, and you must **always** wait for it, then address every comment it leaves — no exceptions, even on docs-only or one-line changes. Skipping this step leaves reviewers to triage Copilot's findings manually and is a frequent cause of PRs stalling.
+
+Workflow:
+
+1. After `create_pull_request` succeeds, subscribe to the PR (`subscribe_pr_activity`) so Copilot's review wakes the session as a `<github-webhook-activity>` event. Do **not** poll with `sleep` or repeated status checks.
+2. When the Copilot review arrives, read every comment. For each one:
+   - If the suggestion is correct, push a fix in a new commit on the same branch (use the same CLA-compliant author identity as the original commits).
+   - If the suggestion is wrong or doesn't apply, reply on the thread (`add_reply_to_pull_request_comment`) with a short, specific reason — never ignore a comment silently.
+3. **After every push to the PR branch — not only the first one — Copilot will re-review.** Wait for that re-review the same way you waited for the first one and repeat step 2 against the new comments. The loop only ends when Copilot's latest review has zero outstanding threads.
+4. Only `unsubscribe_pr_activity` once every Copilot comment (across every round of review) has been handled and CI is green, or when the user explicitly tells you to stop.
+
+Treat Copilot's comments the same way you would treat a human reviewer's — answering "always" means every comment on every PR, not just the ones that look important.
