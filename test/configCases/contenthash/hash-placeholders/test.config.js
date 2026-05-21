@@ -129,60 +129,96 @@ module.exports = {
 			expect(path.basename(cssUrl)).toBe(bg);
 			expect(fs.existsSync(path.resolve(dir, cssUrl))).toBe(true);
 
-			// --- Main JS bundle's chunk URL map points at real files
+			// --- Main JS bundle's chunk URL helpers point at real files
 			// This is the *other* half of html-webpack-plugin#1814: the
-			// runtime in the main bundle holds a map from `chunkId` to
-			// hashed filename, and if those hashes drift from the actual
-			// emitted chunks the browser hits a 404 the moment it tries
-			// to lazy-load a chunk. Pull every hash literal that lives
-			// inside a `__webpack_require__.{u,k}` (JS) / `__webpack_require__.f.css`
-			// (CSS) helper, splice it into the templated filename, and
-			// confirm the result is a file that exists.
+			// runtime in the main bundle holds the chunkId-to-hash mapping
+			// used to build each chunk's URL, and if those hashes drift
+			// from the actual emitted chunks the browser hits a 404 the
+			// moment it tries to lazy-load. We pull the hash expression
+			// out of `__webpack_require__.u` (JS chunks) and
+			// `__webpack_require__.k` (CSS chunks), then verify every
+			// reachable filename it produces actually exists on disk.
 			const bundleContent = fs.readFileSync(path.join(dir, bundle), "utf8");
 
-			// Locate the JS chunk-URL helper (`__webpack_require__.u`).
-			// Three shapes show up across the variants:
-			//   a) per-chunk map (multiple chunks, [contenthash]/[chunkhash]):
-			//      `+ {"async_js":"<h>","async_css":"<h>"}[chunkId] + ".js"`
-			//   b) inlined literal (single chunk):
-			//      `+ "<h>" + ".js"`
-			//   c) compilation-hash helper ([fullhash]):
-			//      `+ __webpack_require__.h() + ".js"`
-			// Pattern (a) yields per-chunk hashes we can verify directly;
-			// (b) yields one literal hash; (c) defers to the runtime
-			// `__webpack_require__.h()`, whose value we read from the
-			// emitted runtime block.
-			const uHelperMatch = bundleContent.match(
-				/\.u\s*=\s*\(chunkId\)\s*=>\s*\{[\s\S]*?return\s+"[^"]+"\s*\+\s*chunkId\s*\+\s*"\."\s*\+\s*([\s\S]*?)\s*\+\s*"\.js";/
-			);
-			expect(uHelperMatch).not.toBeNull();
-			const uHashExpr = uHelperMatch[1];
-
-			/** @type {[string, string][]} */
-			const jsExpectedPairs = [];
-			const mapMatch = uHashExpr.match(/^\{([^}]+)\}\[chunkId\]$/);
-			const literalMatch = uHashExpr.match(/^"([a-f0-9]+)"$/);
-			const fullhashFnMatch = uHashExpr.match(/^__webpack_require__\.h\(\)$/);
-			if (mapMatch) {
-				for (const m of mapMatch[1].matchAll(/"([^"]+)":"([a-f0-9]+)"/g)) {
-					jsExpectedPairs.push([m[1], m[2]]);
-				}
-			} else if (literalMatch) {
-				// Only one async JS chunk; we know its name is `async_js`.
-				jsExpectedPairs.push(["async_js", literalMatch[1]]);
-			} else if (fullhashFnMatch) {
-				const hashFnMatch = bundleContent.match(
-					/__webpack_require__\.h\s*=\s*\(\s*\)\s*=>\s*\(?\s*"([a-f0-9]+)"/
+			// Locate a chunk-URL helper for a given property (`u` / `k`)
+			// and extension. Webpack emits the body as either
+			//   `(chunkId) => { … return "<dir>/async." + chunkId + "." + <expr> + ".<ext>"; }`
+			// or, when `output.environment.arrowFunction` is false, the
+			// equivalent `function (chunkId) { … }` form. We accept either
+			// — the regex anchors on `chunkId` and the `".<ext>"` tail,
+			// not on the surrounding function syntax. `<expr>` is one of:
+			//   a) per-chunk map: `{"async_js":"<h>","async_css":"<h>"}[chunkId]`
+			//   b) inlined literal: `"<h>"` (when only one chunk applies)
+			//   c) compilation-hash helper: `__webpack_require__.h()`
+			// Pattern (c) is used for `[fullhash]` configs; we follow it
+			// to the `__webpack_require__.h` definition, which itself may
+			// be an arrow or function form returning the hash literal.
+			const extractChunkHashExpr = (prop, ext) => {
+				const re = new RegExp(
+					`\\.${prop}\\s*=\\s*(?:\\(\\s*chunkId\\s*\\)|function\\s*\\(\\s*chunkId\\s*\\))[\\s\\S]*?return\\s+"[^"]+"\\s*\\+\\s*chunkId\\s*\\+\\s*"\\."\\s*\\+\\s*([\\s\\S]*?)\\s*\\+\\s*"\\.${ext}";`
 				);
-				expect(hashFnMatch).not.toBeNull();
-				jsExpectedPairs.push(["async_js", hashFnMatch[1]]);
-			} else {
-				throw new Error(`unrecognized chunk-URL hash expression: ${uHashExpr}`);
-			}
+				const m = bundleContent.match(re);
+				return m ? m[1] : null;
+			};
+
+			const resolveHashFn = () => {
+				const m = bundleContent.match(
+					/__webpack_require__\.h\s*=\s*(?:\(\s*\)|function\s*\(\s*\))\s*(?:=>\s*)?\(?\s*\{?\s*(?:return\s+)?"([a-f0-9]+)"/
+				);
+				expect(m).not.toBeNull();
+				return /** @type {RegExpMatchArray} */ (m)[1];
+			};
+
+			const collectPairs = (expr, soloChunkName) => {
+				/** @type {[string, string][]} */
+				const pairs = [];
+				const mapMatch = expr.match(/^\{([^}]+)\}\[chunkId\]$/);
+				const literalMatch = expr.match(/^"([a-f0-9]+)"$/);
+				const fullhashFnMatch = expr.match(/^__webpack_require__\.h\(\)$/);
+				if (mapMatch) {
+					for (const m of mapMatch[1].matchAll(/"([^"]+)":"([a-f0-9]+)"/g)) {
+						pairs.push([m[1], m[2]]);
+					}
+				} else if (literalMatch) {
+					pairs.push([soloChunkName, literalMatch[1]]);
+				} else if (fullhashFnMatch) {
+					pairs.push([soloChunkName, resolveHashFn()]);
+				} else {
+					throw new Error(`unrecognized chunk-URL hash expression: ${expr}`);
+				}
+				return pairs;
+			};
+
+			// `__webpack_require__.u` — JS chunks. With both `async.js` and
+			// `async.css` reachable, the helper resolves at minimum to the
+			// `async_js` chunk; the per-chunk map form additionally lists
+			// `async_css`'s JS wrapper.
+			const uHashExpr = extractChunkHashExpr("u", "js");
+			expect(uHashExpr).not.toBeNull();
+			const jsExpectedPairs = collectPairs(
+				/** @type {string} */ (uHashExpr),
+				"async_js"
+			);
 			expect(jsExpectedPairs.length).toBeGreaterThan(0);
 			for (const [chunkName, chunkHash] of jsExpectedPairs) {
 				expect(
 					fs.existsSync(path.join(dir, `async.${chunkName}.${chunkHash}.js`))
+				).toBe(true);
+			}
+
+			// `__webpack_require__.k` — CSS chunks. Only the async CSS chunk
+			// is reachable here, so the hash expression collapses to the
+			// inlined-literal or fullhash-helper form.
+			const kHashExpr = extractChunkHashExpr("k", "css");
+			expect(kHashExpr).not.toBeNull();
+			const cssExpectedPairs = collectPairs(
+				/** @type {string} */ (kHashExpr),
+				"async_css"
+			);
+			expect(cssExpectedPairs.length).toBeGreaterThan(0);
+			for (const [chunkName, chunkHash] of cssExpectedPairs) {
+				expect(
+					fs.existsSync(path.join(dir, `async.${chunkName}.${chunkHash}.css`))
 				).toBe(true);
 			}
 		}
