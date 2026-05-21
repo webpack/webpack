@@ -1823,7 +1823,7 @@
                             "minLength": 1
                           },
                           "tag": {
-                            "description": "Tag name to match. Use `\"*\"` to match any tag.",
+                            "description": "Tag name to match. Omit to match any tag.",
                             "type": "string",
                             "minLength": 1
                           },

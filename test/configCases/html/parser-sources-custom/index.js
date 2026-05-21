@@ -15,7 +15,7 @@ it("should parse custom srcset entries as srcset (not src)", () => {
 	expect(page).toMatch(/data-srcset="small\.png 1x,\s*large\.png 2x"/);
 });
 
-it("should match `tag: '*'` against any element", () => {
+it("should match a tagless entry against any element", () => {
 	expect(page).not.toContain('data-href="./linked.png"');
 	expect(page).toMatch(/<section data-href="linked\.png">/);
 });

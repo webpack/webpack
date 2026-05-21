@@ -15,7 +15,8 @@ module.exports = {
 						"...",
 						{ tag: "img", attribute: "data-src", type: "src" },
 						{ tag: "img", attribute: "data-srcset", type: "srcset" },
-						{ tag: "*", attribute: "data-href", type: "src" }
+						// Omit `tag` to match any element.
+						{ attribute: "data-href", type: "src" }
 					]
 				}
 			}

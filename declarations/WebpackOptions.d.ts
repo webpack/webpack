@@ -3543,7 +3543,7 @@ export interface HtmlParserOptions {
 							 */
 							attribute: string;
 							/**
-							 * Tag name to match. Use `"*"` to match any tag.
+							 * Tag name to match. Omit to match any tag.
 							 */
 							tag?: string;
 							/**
