@@ -429,6 +429,18 @@ describe("NormalModule", () => {
 			expect(modules[0].getSideEffectsConnectionState(moduleGraph)).toBe(false);
 		});
 
+		it("propagates bailout across the recursive→iterative crossover", () => {
+			// Chain length is chosen to exceed `SIDE_EFFECTS_RECURSION_LIMIT`,
+			// so the walker recurses for the head of the chain and switches
+			// to iteration deeper in. A bailout deep in the iterative tail
+			// must still propagate all the way back to module 0.
+			const { modules, moduleGraph } = buildChain(5000);
+			modules[4500].buildMeta = { sideEffectFree: false };
+			expect(modules[0].getSideEffectsConnectionState(moduleGraph)).toBe(true);
+			expect(modules[0]._isEvaluatingSideEffects).toBe(false);
+			expect(modules[4499]._isEvaluatingSideEffects).toBe(false);
+		});
+
 		it("detects cycles in the side-effect graph", () => {
 			const { modules, moduleGraph } = buildChain(50);
 			// close the loop: last module's dep points to modules[0]
@@ -467,6 +479,40 @@ describe("NormalModule", () => {
 					/Dependency \(harmony side effect evaluation\)/
 				);
 			}
+		});
+
+		it("aggregates state across branching deps", () => {
+			// Diamond: root depends on two side-effect-free leaves.
+			const make = (id) => {
+				const mod = new NormalModule({
+					type: "javascript/auto",
+					request: `/${id}`,
+					userRequest: `/${id}`,
+					rawRequest: id,
+					loaders: [],
+					resource: `/${id}`,
+					parser: { parse() {} },
+					generator: null,
+					resolveOptions: {}
+				});
+				mod.buildMeta = { sideEffectFree: true };
+				mod.dependencies = [];
+				return mod;
+			};
+			const root = make("root");
+			const a = make("a");
+			const b = make("b");
+			const depA = new HarmonyImportSideEffectDependency("a", 0, "evaluation");
+			const depB = new HarmonyImportSideEffectDependency("b", 1, "evaluation");
+			root.dependencies = [depA, depB];
+			const moduleGraph = {
+				getModule: (dep) => (dep === depA ? a : dep === depB ? b : undefined),
+				getOptimizationBailout: () => []
+			};
+			expect(root.getSideEffectsConnectionState(moduleGraph)).toBe(false);
+			expect(root._isEvaluatingSideEffects).toBe(false);
+			expect(a._isEvaluatingSideEffects).toBe(false);
+			expect(b._isEvaluatingSideEffects).toBe(false);
 		});
 	});
 });
