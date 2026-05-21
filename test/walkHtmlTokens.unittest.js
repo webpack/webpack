@@ -2272,6 +2272,30 @@ describe("walkHtmlTokens", () => {
 			expect(closes).toEqual(["a"]);
 		});
 
+		it("reports eof-in-tag with correct partial name in content-mode end-tag states", () => {
+			// Regression: EOF inside RCDATA/RAWTEXT/SCRIPT_DATA end-tag-name
+			// states must reset `tagNameEnd` (it carries stale values from the
+			// matching open tag), otherwise `emitCloseTag(len)` slices the
+			// wrong range. Verify the partial close-tag name is emitted for
+			// each content mode.
+			for (const [html, expectedClose] of [
+				["<title>x</tit", "tit"],
+				["<style>x</sty", "sty"],
+				["<script>x</scr", "scr"]
+			]) {
+				/** @type {string[]} */
+				const closes = [];
+				walkHtmlTokens(html, 0, {
+					openTag: (input, start, end) => end,
+					closeTag: (input, start, end, ns, ne) => {
+						closes.push(input.slice(ns, ne));
+						return end;
+					}
+				});
+				expect(closes).toEqual([expectedClose]);
+			}
+		});
+
 		it("reports eof-in-comment as an error", () => {
 			const errors = collectErrors("<!-- unclosed");
 			expect(errors).toEqual([
