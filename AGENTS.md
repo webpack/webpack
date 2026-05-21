@@ -177,7 +177,7 @@ Description of the change.
 
 Use `patch` for bug fixes, `minor` for new features, `major` for breaking changes. Do not prefix the description with `fix:`, `feat:`, etc. — the change type is already indicated by `patch`/`minor`/`major`.
 
-**Keep the description as short as possible** — ideally a single sentence, ≤ 80 characters, written in the imperative ("fix split-chunks cache key collision", "add `module.generator.html.extract` option"). Changesets are concatenated into the release `CHANGELOG.md` verbatim, so multi-paragraph rationale, "why" context, migration notes, repro steps, or links to discussions belong in the PR body, not the changeset. If a sentence needs commas to fit, it is already too long — split the work or shorten the wording.
+**Keep the description as short as possible** — ideally a single sentence, ≤ 80 characters, written in the imperative, with the **first character capitalized** and a **trailing period** ("Fix split-chunks cache key collision.", "Add `module.generator.html.extract` option."). Changesets are concatenated into the release `CHANGELOG.md` verbatim — sentence-case and the period are what makes them read as proper changelog entries rather than commit-message fragments. Multi-paragraph rationale, "why" context, migration notes, repro steps, or links to discussions belong in the PR body, not the changeset. If a sentence needs commas to fit, it is already too long — split the work or shorten the wording.
 
 ### 4. Updating Examples (if needed)
 
