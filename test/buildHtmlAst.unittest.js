@@ -215,4 +215,22 @@ describe("buildHtmlAst", () => {
 		expect(input.attributes[1].name).toBe("value");
 		expect(input.attributes[1].value).toBe("hello");
 	});
+
+	it("should parse raw-text elements correctly", () => {
+		const ast = buildHtmlAst("<script>var a = 1 < 2;</script>");
+		const script = ast.children[0];
+		expect(script.tagName).toBe("script");
+		expect(script.children).toHaveLength(1);
+		expect(script.children[0].type).toBe("text");
+		expect(script.children[0].data).toBe("var a = 1 < 2;");
+	});
+
+	it("should track end offsets correctly", () => {
+		const ast = buildHtmlAst("<div><span>text</div>");
+		const div = ast.children[0];
+		const span = div.children[0];
+		expect(span.tagName).toBe("span");
+		expect(span.end).toBeDefined();
+		expect(span.end).toBe(div.end);
+	});
 });

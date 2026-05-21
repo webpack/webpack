@@ -9004,6 +9004,74 @@ declare interface HotModuleReplacementPluginLoaderContext {
 declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
+
+/**
+ * Builds a WHATWG-aligned AST from an HTML source string.
+ * Uses walkHtmlTokens as the tokenizer and constructs a tree
+ * following the simplified tree construction algorithm from the
+ * WHATWG HTML spec (modeled after SWC's swc_html_parser).
+ */
+declare interface HtmlAttribute {
+	name: string;
+	value: string;
+	nameStart: number;
+	nameEnd: number;
+	valueStart: number;
+	valueEnd: number;
+}
+
+/**
+ * Builds a WHATWG-aligned AST from an HTML source string.
+ * Uses walkHtmlTokens as the tokenizer and constructs a tree
+ * following the simplified tree construction algorithm from the
+ * WHATWG HTML spec (modeled after SWC's swc_html_parser).
+ */
+declare interface HtmlComment {
+	type: "comment";
+	data: string;
+	start: number;
+	end: number;
+}
+
+/**
+ * Builds a WHATWG-aligned AST from an HTML source string.
+ * Uses walkHtmlTokens as the tokenizer and constructs a tree
+ * following the simplified tree construction algorithm from the
+ * WHATWG HTML spec (modeled after SWC's swc_html_parser).
+ */
+declare interface HtmlDoctype {
+	type: "doctype";
+	start: number;
+	end: number;
+}
+
+/**
+ * Builds a WHATWG-aligned AST from an HTML source string.
+ * Uses walkHtmlTokens as the tokenizer and constructs a tree
+ * following the simplified tree construction algorithm from the
+ * WHATWG HTML spec (modeled after SWC's swc_html_parser).
+ */
+declare interface HtmlDocument {
+	type: "document";
+	children: HtmlNode[];
+}
+
+/**
+ * Builds a WHATWG-aligned AST from an HTML source string.
+ * Uses walkHtmlTokens as the tokenizer and constructs a tree
+ * following the simplified tree construction algorithm from the
+ * WHATWG HTML spec (modeled after SWC's swc_html_parser).
+ */
+declare interface HtmlElement {
+	type: "element";
+	tagName: string;
+	namespace: number;
+	attributes: HtmlAttribute[];
+	children: HtmlNode[];
+	selfClosing: boolean;
+	start: number;
+	end: number;
+}
 declare abstract class HtmlGenerator extends Generator {
 	options: HtmlGeneratorOptions;
 
@@ -9058,12 +9126,26 @@ declare interface HtmlGeneratorOptions {
 	 */
 	extract?: boolean;
 }
+type HtmlNode = HtmlElement | HtmlText | HtmlComment | HtmlDoctype;
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
 	hashFunction?: string | typeof Hash;
 	context?: string;
 	outputModule?: boolean;
 	css?: boolean;
+}
+
+/**
+ * Builds a WHATWG-aligned AST from an HTML source string.
+ * Uses walkHtmlTokens as the tokenizer and constructs a tree
+ * following the simplified tree construction algorithm from the
+ * WHATWG HTML spec (modeled after SWC's swc_html_parser).
+ */
+declare interface HtmlText {
+	type: "text";
+	data: string;
+	start: number;
+	end: number;
 }
 
 /**
@@ -12435,6 +12517,11 @@ declare interface KnownBuildInfo {
 	 * top level declaration names
 	 */
 	topLevelDeclarations?: Set<string>;
+
+	/**
+	 * for html modules
+	 */
+	htmlAst?: HtmlDocument;
 }
 declare interface KnownBuildMeta {
 	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
