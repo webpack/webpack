@@ -40,6 +40,16 @@ it("should emit a <link rel=stylesheet> for the entry chunk's CSS file, copying 
 	expect(linkTag).not.toContain("defer");
 	expect(linkTag).not.toContain("integrity");
 
+	// The `<link>` must precede the `<script>` so the browser starts the
+	// stylesheet download before the script download — otherwise scripts
+	// race ahead and the stylesheet's render-blocking arrival is pushed
+	// out (the html-webpack-plugin#1813 concern, applied to JS-imported
+	// CSS in HTML entries).
+	const scriptIdx = extracted.indexOf("<script");
+	const linkIdx = extracted.indexOf('<link rel="stylesheet"');
+	expect(linkIdx).toBeGreaterThan(-1);
+	expect(linkIdx).toBeLessThan(scriptIdx);
+
 	// The referenced files actually exist on disk.
 	expect(() => readFile(scriptMatch[1])).not.toThrow();
 	const css = readFile(hrefMatch[1]);
