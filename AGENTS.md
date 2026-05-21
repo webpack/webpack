@@ -177,6 +177,8 @@ Description of the change.
 
 Use `patch` for bug fixes, `minor` for new features, `major` for breaking changes. Do not prefix the description with `fix:`, `feat:`, etc. — the change type is already indicated by `patch`/`minor`/`major`.
 
+**Keep the description as short as possible** — ideally a single sentence, ≤ 80 characters, written in the imperative ("fix split-chunks cache key collision", "add `module.generator.html.extract` option"). Changesets are concatenated into the release `CHANGELOG.md` verbatim, so multi-paragraph rationale, "why" context, migration notes, repro steps, or links to discussions belong in the PR body, not the changeset. If a sentence needs commas to fit, it is already too long — split the work or shorten the wording.
+
 ### 4. Updating Examples (if needed)
 
 If WebpackOptions were added or modified, consider adding or updating relevant examples in `examples/`. Run `yarn build:examples` to ensure the examples build successfully.
