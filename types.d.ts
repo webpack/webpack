@@ -9123,6 +9123,17 @@ declare abstract class HtmlParser extends ParserClass {
 	context?: string;
 	outputModule?: boolean;
 	css?: boolean;
+	sources: boolean;
+}
+
+/**
+ * Parser options for html modules.
+ */
+declare interface HtmlParserOptions {
+	/**
+	 * Enable/disable extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. When set to `false`, attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries. Inline `<script>` and `<style>` bodies are still processed. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
+	 */
+	sources?: boolean;
 }
 
 /**
@@ -18565,6 +18576,11 @@ declare interface ParserOptionsByModuleTypeKnown {
 	 * Parser options for css/auto and css/module modules.
 	 */
 	"css/module"?: CssAutoOrModuleParserOptions;
+
+	/**
+	 * Parser options for html modules.
+	 */
+	html?: HtmlParserOptions;
 
 	/**
 	 * Parser options for javascript modules.
