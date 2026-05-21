@@ -429,11 +429,10 @@ describe("NormalModule", () => {
 			expect(modules[0].getSideEffectsConnectionState(moduleGraph)).toBe(false);
 		});
 
-		it("propagates bailout across the recursive→iterative crossover", () => {
-			// Chain length is chosen to exceed `SIDE_EFFECTS_RECURSION_LIMIT`,
-			// so the walker recurses for the head of the chain and switches
-			// to iteration deeper in. A bailout deep in the iterative tail
-			// must still propagate all the way back to module 0.
+		it("propagates a deep-chain bailout all the way back to the root", () => {
+			// 5000 modules is far beyond what the recursive walker would walk
+			// using V8 stack frames; the linear-chain peeling code path must
+			// still propagate a bailout deep in the tail back to module 0.
 			const { modules, moduleGraph } = buildChain(5000);
 			modules[4500].buildMeta = { sideEffectFree: false };
 			expect(modules[0].getSideEffectsConnectionState(moduleGraph)).toBe(true);
