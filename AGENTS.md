@@ -249,6 +249,10 @@ Do **NOT** add `Co-authored-by` lines — unrecognized co-author emails also bre
 
 webpack uses an **org-wide** PR template from [`webpack/.github`](https://github.com/webpack/.github/blob/main/.github/pull_request_template.md). The GitHub web UI prefills it; the GitHub API / MCP / `gh pr create` path does **not**, so you must paste the template yourself when opening a PR programmatically. Every PR body must contain **every** section below, in this order, with the labels spelled exactly as written. If a section truly does not apply, write `n/a` under it. Do not delete sections, do not reorder, do not strip the HTML comment hints, and do not substitute a different template (e.g. `## Summary` / `## Test plan`).
 
+The template is mandatory for **every** PR — including PRs the user only asked you to "verify", "check", "test", "add a small assertion to", or otherwise framed as quick or one-off work. Task framing does not change PR-template requirements. The size of the diff does not change PR-template requirements. There is no "this one's too small for the template" carve-out.
+
+Titles are plain text, not HTML — use raw `<`, `>`, and other special characters directly. Never HTML-entity-encode them (`&lt;`, `&gt;`, `&amp;`) thinking GitHub will render the entities; it will not, the title will literally display the entity codes. Compare against the titles of recent webpack PRs as a sanity check.
+
 Common ways agents get this wrong — all of them are PR-blocking:
 
 - Writing `## Summary` and `## Test plan` headings instead of the bold-labelled sections below (`**Summary**`, `**What kind of change does this PR introduce?**`, …).
@@ -259,7 +263,9 @@ Common ways agents get this wrong — all of them are PR-blocking:
 
 Before every `create_pull_request` and every `update_pull_request` call, diff the body you are about to send against the template below. If any section is missing, add it before sending.
 
-If a PR already exists (e.g. it was opened from the GitHub web UI before you joined the task, or a human edited the body), agents must verify the body still matches the template before each push, and call `update_pull_request` to re-paste any missing section. Treat the PR body the same way you treat the commit message: every push is also a chance to fix a drifted PR body.
+If a PR already exists — opened from the GitHub web UI before you joined the task, edited by a human, **or auto-created by a webhook from your push** (webpack/webpack has this setup; pushing a new branch immediately opens a PR whose body is just the commit message, which never matches the template) — agents must verify the body still matches the template before each push, and call `update_pull_request` to re-paste any missing section. Treat the PR body the same way you treat the commit message: every push is also a chance to fix a drifted PR body.
+
+Push and template are inseparable. After every `git push` of a new branch, your very next action must be a `list_pull_requests` (filtered by `head: <owner>:<branch>`) followed by `update_pull_request` to install the full template. Do not wait for a reviewer (human, Copilot, CodSpeed, codecov, anything) to flag the missing template — the auto-created body never matches the template and an empty-template PR is PR-blocking. The same applies to follow-up pushes if the body ever drifts.
 
 Paste the body **inside** the fenced block below — only the lines between the ` ```markdown ` opener and the closing ` ``` ` (do **not** include the fence lines themselves; pasting them would render your whole PR body as a code block). Then fill in answers directly under each label:
 
