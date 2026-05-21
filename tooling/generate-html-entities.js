@@ -58,6 +58,9 @@ const fetchUrl = (url) =>
 						res.statusCode === 307 ||
 						res.statusCode === 308
 					) {
+						// Drain the response body so the socket is released
+						// before we open the follow-up request.
+						res.resume();
 						const location = res.headers.location;
 						if (!location) {
 							return reject(
@@ -74,6 +77,8 @@ const fetchUrl = (url) =>
 						);
 					}
 					if (res.statusCode !== 200) {
+						// Drain so the response body doesn't hold the socket open.
+						res.resume();
 						return reject(
 							new Error(`Failed to fetch ${url}: HTTP ${res.statusCode}`)
 						);
