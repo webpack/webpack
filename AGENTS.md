@@ -307,7 +307,7 @@ Required answer per section:
 
 > [!REQUIRED]
 
-Opening the PR is not the end of the task. Every webpack PR gets an automated **GitHub Copilot code review**, and you must **always** wait for it, then address every comment it leaves — no exceptions, even on docs-only or one-line changes. Skipping this step leaves reviewers to triage Copilot's findings manually and is a frequent cause of PRs stalling.
+Opening the PR is not the end of the task. Every webpack PR gets an automated **GitHub Copilot code review** on the initial commit **and on every subsequent push**, and you must **always** wait for it, then address every comment it leaves — no exceptions, even on docs-only or one-line changes. Skipping this step leaves reviewers to triage Copilot's findings manually and is a frequent cause of PRs stalling.
 
 Workflow:
 
@@ -315,7 +315,7 @@ Workflow:
 2. When the Copilot review arrives, read every comment. For each one:
    - If the suggestion is correct, push a fix in a new commit on the same branch (use the same CLA-compliant author identity as the original commits).
    - If the suggestion is wrong or doesn't apply, reply on the thread (`add_reply_to_pull_request_comment`) with a short, specific reason — never ignore a comment silently.
-3. After pushing fixes, wait for Copilot to re-review and repeat until every thread is either resolved by a fix or answered with a reasoned reply.
-4. Only `unsubscribe_pr_activity` once every Copilot comment has been handled and CI is green, or when the user explicitly tells you to stop.
+3. **After every push to the PR branch — not only the first one — Copilot will re-review.** Wait for that re-review the same way you waited for the first one and repeat step 2 against the new comments. The loop only ends when Copilot's latest review has zero outstanding threads.
+4. Only `unsubscribe_pr_activity` once every Copilot comment (across every round of review) has been handled and CI is green, or when the user explicitly tells you to stop.
 
 Treat Copilot's comments the same way you would treat a human reviewer's — answering "always" means every comment on every PR, not just the ones that look important.
