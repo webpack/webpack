@@ -513,5 +513,53 @@ describe("NormalModule", () => {
 			expect(a._isEvaluatingSideEffects).toBe(false);
 			expect(b._isEvaluatingSideEffects).toBe(false);
 		});
+
+		it("handles a deep cyclic chain whose modules have extra non-recursive deps", () => {
+			// Mirrors the canonical #20986 reproduction: each module has a
+			// HarmonyImportSideEffectDependency to the next module plus
+			// several other deps (modelled here by ConstDependency which
+			// reports `false` from `getModuleEvaluationSideEffectsState`).
+			// The last module's SideEffectDep closes the loop back to
+			// module 0. Pre-fix this overflowed V8's stack at ~1300 modules
+			// because the linear-chain walker only recognized 1-dep modules.
+			const ConstDependency = require("../lib/dependencies/ConstDependency");
+
+			const N = 5000;
+			const modules = [];
+			for (let i = 0; i < N; i++) {
+				const mod = new NormalModule({
+					type: "javascript/auto",
+					request: `/m${i}`,
+					userRequest: `/m${i}`,
+					rawRequest: `m${i}`,
+					loaders: [],
+					resource: `/m${i}`,
+					parser: { parse() {} },
+					generator: null,
+					resolveOptions: {}
+				});
+				mod.buildMeta = { sideEffectFree: true };
+				modules.push(mod);
+			}
+			const depToModule = new Map();
+			for (let i = 0; i < N; i++) {
+				const sideDep = new HarmonyImportSideEffectDependency(
+					`m${(i + 1) % N}`,
+					0,
+					"evaluation"
+				);
+				modules[i].dependencies = [
+					sideDep,
+					new ConstDependency("", [0, 0]),
+					new ConstDependency("", [0, 0])
+				];
+				depToModule.set(sideDep, modules[(i + 1) % N]);
+			}
+			const moduleGraph = {
+				getModule: (dep) => depToModule.get(dep),
+				getOptimizationBailout: () => []
+			};
+			expect(modules[0].getSideEffectsConnectionState(moduleGraph)).toBe(false);
+		});
 	});
 });
