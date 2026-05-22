@@ -16680,11 +16680,55 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
  */
 declare interface NormalModuleLoaderContext<OptionsType> {
 	version: number;
+
+	/**
+	 * Extracts and parses the options of the current loader.
+	 * Parses string options as JSON or a query string.
+	 * Extracts and parses the options of the current loader.
+	 * Parses string options as JSON or a query string, and optionally validates them against a provided schema.
+	 */
+
+	/**
+	 * Extracts and parses the options of the current loader.
+	 * Parses string options as JSON or a query string.
+	 */
 	getOptions(): OptionsType;
+
+	/**
+	 * Extracts and parses the options of the current loader.
+	 * Parses string options as JSON or a query string.
+	 * Extracts and parses the options of the current loader.
+	 * Parses string options as JSON or a query string, and optionally validates them against a provided schema.
+	 */
+
+	/**
+	 * Extracts and parses the options of the current loader.
+	 * Parses string options as JSON or a query string, and optionally validates them against a provided schema.
+	 */
 	getOptions(schema: Parameters<typeof validateFunction>[0]): OptionsType;
-	emitWarning(warning: Error): void;
-	emitError(error: Error): void;
+
+	/**
+	 * Emits a warning for this module.
+	 * The warning will be displayed to the user during compilation.
+	 */
+	emitWarning(warning: string | Error): void;
+
+	/**
+	 * Emits an error for this module.
+	 * The error will be displayed to the user and typically causes the compilation to fail.
+	 */
+	emitError(error: string | Error): void;
+
+	/**
+	 * Gets a logger instance scoped to this loader and module.
+	 * Useful for emitting debug or compilation information in a structured way.
+	 */
 	getLogger(name?: string): WebpackLogger;
+
+	/**
+	 * Resolves a module request (e.g., a relative path or module name) to an absolute file path.
+	 * It uses Webpack's internal resolver, taking into account configured aliases and extensions.
+	 */
 	resolve(
 		context: string,
 		request: string,
@@ -16694,6 +16738,11 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 			req?: ResolveRequest
 		) => void
 	): void;
+
+	/**
+	 * Creates a resolve function with specific options.
+	 * The returned function can be used as a Promise-based resolver or a callback-based resolver.
+	 */
 	getResolve(options?: ResolveOptionsWithDependencyType): {
 		(
 			context: string,
@@ -16706,6 +16755,11 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 		): void;
 		(context: string, request: string): Promise<string>;
 	};
+
+	/**
+	 * Emits a new file (asset) to the compilation output directory.
+	 * This allows loaders to generate additional files alongside the main module output.
+	 */
 	emitFile(
 		name: string,
 		content: string | Buffer,
