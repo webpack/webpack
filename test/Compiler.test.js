@@ -326,6 +326,34 @@ describe("Compiler", () => {
 		compiler.close(done);
 	});
 
+	it("should release codeGenerationResults on close while Stats stays usable (#15521)", (done) => {
+		const webpack = require("..");
+
+		const compiler = webpack({
+			context: path.join(__dirname, "fixtures"),
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/directory",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.run((err, stats) => {
+			if (err) return done(err);
+			const { compilation } = stats;
+			expect(compilation.codeGenerationResults.map.size).toBeGreaterThan(0);
+			// Keep the Stats reference across close: Compiler.close slims the
+			// retained compilation before dropping its own reference.
+			compiler.close((closeErr) => {
+				if (closeErr) return done(closeErr);
+				expect(compilation.codeGenerationResults.map.size).toBe(0);
+				expect(typeof stats.toJson().hash).toBe("string");
+				done();
+			});
+		});
+	});
+
 	it("should not emit on errors", (done) => {
 		const webpack = require("..");
 

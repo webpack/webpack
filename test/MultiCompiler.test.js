@@ -141,6 +141,61 @@ describe("MultiCompiler", () => {
 		});
 	});
 
+	it("should release per-child compilation memory as each child finishes (#15521)", (done) => {
+		const compiler = createMultiCompiler();
+		compiler.run((err, stats) => {
+			if (err) return done(err);
+			for (const childStats of stats.stats) {
+				const compilation = childStats.compilation;
+				// codeGenerationResults: only used during seal/emit, dropped.
+				expect(compilation.codeGenerationResults.map.size).toBe(0);
+				// Stats must still be usable on the slimmed compilation.
+				expect(typeof childStats.toJson().hash).toBe("string");
+			}
+			compiler.close(done);
+		});
+	});
+
+	it("should release a finished child's codeGenerationResults before a dependent sibling runs (#15521)", (done) => {
+		const compiler = webpack(
+			Object.assign(
+				[
+					{
+						name: "a",
+						context: path.join(__dirname, "fixtures"),
+						entry: "./a.js"
+					},
+					{
+						name: "b",
+						context: path.join(__dirname, "fixtures"),
+						entry: "./b.js",
+						dependencies: ["a"]
+					}
+				],
+				{ parallelism: 1 }
+			)
+		);
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.watchFileSystem = { watch(_a, _b, _c, _d, _e, _f, _g) {} };
+		const [a, b] = compiler.compilers;
+		let aCompilation;
+		a.hooks.done.tap("test", (stats) => {
+			aCompilation = stats.compilation;
+		});
+		// With dependencies + parallelism 1, b only starts after a is fully
+		// done (including a's afterDone release tap). Capture a's map size at
+		// that point: it must already be cleared while b is about to build.
+		let aMapSizeWhenBStarts;
+		b.hooks.run.tap("test", () => {
+			aMapSizeWhenBStarts = aCompilation.codeGenerationResults.map.size;
+		});
+		compiler.run((err) => {
+			if (err) return done(err);
+			expect(aMapSizeWhenBStarts).toBe(0);
+			compiler.close(done);
+		});
+	});
+
 	it("should watch again correctly after first compilation", (done) => {
 		const compiler = createMultiCompiler();
 		compiler.run((err, _stats) => {
