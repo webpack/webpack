@@ -9119,10 +9119,6 @@ declare interface HtmlGeneratorOptions {
 }
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
-	hashFunction?: string | typeof Hash;
-	context?: string;
-	outputModule?: boolean;
-	css?: boolean;
 	sourcesByTag: Record<string, Record<string, SourceItem>>;
 	anyTagSources?: Record<string, SourceItem>;
 }
