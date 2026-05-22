@@ -101,6 +101,16 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 
 `lib/` is CommonJS only. Use `module.exports` / `require()`, never `import`/`export` syntax. Types are declared via JSDoc — `@typedef {import("./Other")} Other` and friends — never TypeScript syntax inside `.js` files. The JSDoc annotations are compiled into `types.d.ts` by `yarn fix:special`.
 
+## Code comments
+
+> [!REQUIRED]
+
+Comments inside `lib/`, `hot/`, `tooling/`, and `test/` must be **as short as possible** — ideally one line, at most two short lines. Every line must add information a careful reader can't get from the code itself: a hidden invariant, a non-obvious ordering constraint, a workaround pinned to a specific upstream bug, the name of the higher-level concept the block implements. **Never** write multi-paragraph essays, restate what the next line obviously does, narrate the diff ("previously …, now …"), restate the PR description, or quote the user/task framing. If a reader would already understand the line without the comment, delete the comment.
+
+JSDoc on exported symbols stays as-is — that's the type contract, not commentary. The rule applies to free-standing `//` and `/* … */` comments, including the lead-in block above a function body.
+
+Reviewers have repeatedly flagged paragraph-long comments as a blocker; this rule applies on every commit, not just the first one.
+
 ## Auto-generated files
 
 > [!REQUIRED]
