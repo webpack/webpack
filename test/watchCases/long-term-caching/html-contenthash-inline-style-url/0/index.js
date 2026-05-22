@@ -1,5 +1,3 @@
-// Importing the HTML module triggers extraction so the `.html` file is
-// emitted to disk alongside the JS bundle.
 import "./page.html";
 
 it("should compile fine and emit an HTML file and a PNG asset", () => {

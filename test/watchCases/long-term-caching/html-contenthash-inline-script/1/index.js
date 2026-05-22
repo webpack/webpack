@@ -18,12 +18,6 @@ it("should change the inline-script entry chunk filename when its dep changes", 
 });
 
 it("should change HTML [contenthash] when the inline script's dep changes", () => {
-	// The rendered HTML embeds the inline-script entry chunk's filename
-	// inside the rewritten `<script src>` attribute. When the chunk's
-	// [contenthash] changes (because the imported module's bytes
-	// changed), the rendered HTML bytes change. The HTML's
-	// [contenthash] must reflect that — otherwise the HTML is served at
-	// a stale URL while embedding a fresh chunk filename.
 	const htmlAsset = STATS_JSON.assets.find(
 		(a) => /\.html$/.test(a.name) && a.name !== STATE.htmlName
 	);

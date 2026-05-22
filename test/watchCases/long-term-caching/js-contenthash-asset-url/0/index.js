@@ -1,6 +1,3 @@
-// Reference the asset via `new URL(asset, import.meta.url)` — the JS bundle
-// embeds the asset's hashed filename inline, so the JS chunk's [contenthash]
-// must reflect changes to the asset.
 const assetUrl = new URL("./logo.png", import.meta.url);
 
 it("should compile fine and emit a JS chunk and a PNG asset", () => {

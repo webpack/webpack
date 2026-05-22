@@ -10,11 +10,6 @@ it("should change PNG asset filename when its bytes change", () => {
 });
 
 it("should change HTML [contenthash] when an asset referenced from inline <style> changes", () => {
-	// The rendered HTML embeds the CSS `<style>` body verbatim, with
-	// `url(...)` rewritten to the asset's hashed filename. When the asset
-	// bytes change, its [contenthash] filename changes, so the rendered
-	// HTML bytes also change. The HTML's [contenthash] must reflect that
-	// — otherwise the HTML is served at a stale URL with fresh contents.
 	const htmlAsset = STATS_JSON.assets.find(a => /\.html$/.test(a.name));
 	expect(htmlAsset).toBeDefined();
 	expect(htmlAsset.name).not.toBe(STATE.htmlName);

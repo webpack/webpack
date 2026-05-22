@@ -3,10 +3,6 @@
 <head>
 <title>HTML inline script</title>
 <script>
-// Inline script body imports an external module. When `dep.js`'s bytes
-// change, the inline-script entry chunk gets a new [contenthash] — and
-// the rendered `<script src="…">` URL embedded into this HTML must
-// keep matching the asset on disk.
 import { value } from "./dep.js";
 console.log(value);
 </script>
