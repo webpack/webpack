@@ -1,5 +1,5 @@
 import { existsSync } from "./lib";
 
-it("hashes a concatenated external info with its runtimeCondition (assertions run in plugin)", () => {
+it("compiles with an external excluded from concatenation", () => {
 	expect(typeof existsSync).toBe("function");
 });
