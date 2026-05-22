@@ -99,6 +99,10 @@ Comments inside `lib/`, `hot/`, `tooling/`, and `test/` must be **as short as po
 
 JSDoc on exported symbols stays as-is — that's the type contract, not commentary.
 
+## Performance and memory
+
+webpack is a bundler — users measure it on build time and peak heap, and every line in `lib/` runs once per module (or per module × runtime, or per chunk × module) on user builds, so constant factors compound. Always weigh the time and memory cost of a change, including bug fixes and refactors: less allocation, smaller `Map`/`Set` footprints, and fewer closures retained on hot paths are wins worth pursuing — less is better. When introducing or holding any per-`Compilation` state, ask whether it can be released after seal/emit so user code holding `Stats` doesn't keep the whole graph pinned (#15521 is a worked example of getting this wrong).
+
 ## Auto-generated files
 
 > [!REQUIRED]
@@ -207,6 +211,8 @@ webpack uses an **org-wide** PR template. `gh pr create` does **not** prefill it
 
 The template is mandatory for **every** PR regardless of size or framing. Titles are plain text — use raw `<`, `>`, never HTML entities.
 
+**Keep every answer short — ideally one sentence, at most two or three.** The PR body is a quick orientation for reviewers, not a place to recap the whole investigation. No multi-paragraph essays, no bench tables, no code blocks, no walkthroughs of intermediate iterations or reverts. If something needs a longer explanation, drop it into a reply on the relevant inline review thread, link to a discussion issue, or let the squash-merge commit body carry it (the PR body itself becomes that commit body on merge — keep it short anyway). A reviewer should be able to read the entire PR body in well under 30 seconds; if yours takes longer, trim it.
+
 Common mistakes that block PRs:
 
 - Using `## Summary` headings instead of `**Summary**` bold labels.
@@ -249,14 +255,14 @@ Paste the body from the fenced block below (do **not** include the fence lines t
 Make sure to read our AI policy (https://github.com/webpack/governance/blob/main/AI_POLICY.md) or your Pull Request may be closed due to irresponsible use of AI. -->
 ```
 
-Required answer per section:
+Required answer per section — **one sentence each is the target, two or three the absolute maximum**:
 
-- **Summary** — motivation and what problem is solved; link the related issue (`Closes #…` / `Fixes #…`).
-- **What kind of change does this PR introduce?** — one of: fix, feat, refactor, perf, test, chore, ci, build, style, revert, docs.
-- **Did you add tests for your changes?** — yes/no + which test files.
-- **Does this PR introduce a breaking change?** — yes/no + migration path if yes.
-- **If relevant, what needs to be documented…** — list doc updates or write `n/a`.
-- **Use of AI** — state that AI was used and how. Per the [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md), omitting or misrepresenting this can get the PR closed.
+- **Summary** — one sentence on motivation (what problem / use case / gap) and one on what changed; link the issue (`Closes #…` / `Fixes #…`) if there is one. Phrase it for whatever change type this is — "broken / fixed" only fits `fix` PRs; `feat`/`refactor`/`perf`/`docs` should describe the missing capability or rationale instead. No bench tables, no code blocks, no narrative of intermediate attempts.
+- **What kind of change does this PR introduce?** — a single word: fix, feat, refactor, perf, test, chore, ci, build, style, revert, docs.
+- **Did you add tests for your changes?** — yes/no + the test file name. One line.
+- **Does this PR introduce a breaking change?** — yes/no, plus a one-sentence migration note if yes.
+- **If relevant, what needs to be documented…** — one-line list or write `n/a`.
+- **Use of AI** — required, one or two sentences. State that Claude Code was used and the broad role (e.g. "Claude Code drafted the implementation under human review"). Per the [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md), omitting or misrepresenting this can get the PR closed.
 
 #### After push — verify PR body
 
