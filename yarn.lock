@@ -3874,10 +3874,10 @@ enhanced-resolve@^5.0.0, enhanced-resolve@^5.17.1:
     graceful-fs "^4.2.4"
     tapable "^2.3.3"
 
-enhanced-resolve@^5.21.4:
-  version "5.21.5"
-  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.21.5.tgz#8f80167d009d8f01267ad61035e59fe5c94ac3a6"
-  integrity sha512-mLCNbrQli11K1ySUmuNt4ZUB3OpGIDq4q2vTBTf5cL2lpsRjI9QKqSD0ndjW8FyvcW/Jj46gMe9syyHAsvMa/A==
+enhanced-resolve@^5.22.0:
+  version "5.22.0"
+  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.22.0.tgz#43c5caad657c6fce58fc6142e5ca6fa8528ed460"
+  integrity sha512-xYcDWrpELkFzz9SpZ3PlI6Eu6eD93Yf0WLDRxikGhWJ3MAir2SNZTIVCVZqZ/NUyx8AdMc2gT9C0gPiw18kG+A==
   dependencies:
     graceful-fs "^4.2.4"
     tapable "^2.3.3"
