@@ -16,9 +16,7 @@ it("should compile fine and emit the extracted HTML and the inline-script entry 
 	STATE.inlineEntryName = inlineEntry.name;
 });
 
-// Match the full sentinel form (marker + hex chunk id + type + end) rather
-// than the bare marker, so this assertion file (bundled into main.*.js)
-// doesn't itself trigger the check.
+// Full sentinel form — the bare marker would match this file's own source.
 const SENTINEL_RE = /WEBPACK_HTML_CHUNK_URL__[0-9a-f]+__[a-z]+__END__/;
 
 it("should resolve every chunk-URL sentinel in the emitted HTML", () => {

@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fix HTML `[contenthash]` invalidation for referenced asset / inline-style URL changes.
+Fix HTML `[contenthash]` for referenced asset and inline-style URL changes.
