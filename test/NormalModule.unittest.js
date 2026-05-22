@@ -561,5 +561,62 @@ describe("NormalModule", () => {
 			};
 			expect(modules[0].getSideEffectsConnectionState(moduleGraph)).toBe(false);
 		});
+
+		it("falls back to iterative walk past the recursion limit on non-linear graphs", () => {
+			// Each module has two `HarmonyImportSideEffectDependency`s, so
+			// the linear-chain fast path can't apply: the module's first
+			// dep continues the chain, the second points to a shared
+			// side-effect-free leaf. The walker therefore enters the
+			// general for-loop, recurses one V8 frame per module, and
+			// must switch to `walkSideEffectsIterative` once depth crosses
+			// `SIDE_EFFECTS_RECURSION_LIMIT` (2000). 2500 modules is far
+			// enough past that boundary that any regression in the
+			// iterative fallback path will overflow V8's stack.
+			const N = 2500;
+			const make = (id) => {
+				const mod = new NormalModule({
+					type: "javascript/auto",
+					request: `/${id}`,
+					userRequest: `/${id}`,
+					rawRequest: id,
+					loaders: [],
+					resource: `/${id}`,
+					parser: { parse() {} },
+					generator: null,
+					resolveOptions: {}
+				});
+				mod.buildMeta = { sideEffectFree: true };
+				return mod;
+			};
+			const leaf = make("leaf");
+			leaf.dependencies = [];
+			const modules = [];
+			for (let i = 0; i < N; i++) modules.push(make(`m${i}`));
+			const depToModule = new Map();
+			for (let i = 0; i < N - 1; i++) {
+				const next = new HarmonyImportSideEffectDependency(
+					`m${i + 1}`,
+					0,
+					"evaluation"
+				);
+				const aside = new HarmonyImportSideEffectDependency(
+					"leaf",
+					1,
+					"evaluation"
+				);
+				modules[i].dependencies = [next, aside];
+				depToModule.set(next, modules[i + 1]);
+				depToModule.set(aside, leaf);
+			}
+			modules[N - 1].dependencies = [];
+			const moduleGraph = {
+				getModule: (dep) => depToModule.get(dep),
+				getOptimizationBailout: () => []
+			};
+			expect(modules[0].getSideEffectsConnectionState(moduleGraph)).toBe(false);
+			for (let i = 0; i < N; i++) {
+				expect(modules[i]._isEvaluatingSideEffects).toBe(false);
+			}
+		});
 	});
 });
