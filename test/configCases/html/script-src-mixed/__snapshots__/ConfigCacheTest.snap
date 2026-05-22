@@ -37,17 +37,17 @@ globalThis.__moduleA = moduleA;
 /******/ });
 /************************************************************************/
 /******/ // The module cache
-/******/ var __webpack_module_cache__ = {};
+/******/ const __webpack_module_cache__ = {};
 /******/ 
 /******/ // The require function
 /******/ function __webpack_require__(moduleId) {
 /******/ 	// Check if module is in cache
-/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 	if (cachedModule !== undefined) {
 /******/ 		return cachedModule.exports;
 /******/ 	}
 /******/ 	// Create a new module (and put it into the cache)
-/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 	const module = __webpack_module_cache__[moduleId] = {
 /******/ 		// no module.id needed
 /******/ 		// no module.loaded needed
 /******/ 		exports: {}
@@ -56,7 +56,7 @@ globalThis.__moduleA = moduleA;
 /******/ 	// Execute the module function
 /******/ 	if (!(moduleId in __webpack_modules__)) {
 /******/ 		delete __webpack_module_cache__[moduleId];
-/******/ 		var e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 		const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
 /******/ 		e.code = 'MODULE_NOT_FOUND';
 /******/ 		throw e;
 /******/ 	}
@@ -97,12 +97,12 @@ globalThis.__moduleA = moduleA;
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// [resolve, Promise] = chunk loading, 0 = chunk loaded
-/******/ 	var installedChunks = {
+/******/ 	const installedChunks = {
 /******/ 		\\"__html_cbe5b59d_1\\": 0
 /******/ 	};
 /******/ 	
-/******/ 	var installChunk = (data) => {
-/******/ 		var {__webpack_esm_ids__, __webpack_esm_modules__, __webpack_esm_runtime__} = data;
+/******/ 	const installChunk = (data) => {
+/******/ 		let {__webpack_esm_ids__, __webpack_esm_modules__, __webpack_esm_runtime__} = data;
 /******/ 		// add \\"modules\\" to the modules object,
 /******/ 		// then flag all \\"ids\\" as loaded and fire callback
 /******/ 		var moduleId, chunkId, i = 0;
@@ -141,7 +141,7 @@ globalThis.__moduleA = moduleA;
 /******/ // startup
 /******/ // Load entry module and return exports
 /******/ // This entry module is referenced by other modules so it can't be inlined
-/******/ var __webpack_exports__ = __webpack_require__(219);
+/******/ let __webpack_exports__ = __webpack_require__(219);
 /******/ 
 "
 `;
@@ -185,17 +185,17 @@ exports[`ConfigCacheTestCases html script-src-mixed exported tests should chain 
 "/******/ var __webpack_modules__ = ({});
 /************************************************************************/
 /******/ // The module cache
-/******/ var __webpack_module_cache__ = {};
+/******/ const __webpack_module_cache__ = {};
 /******/ 
 /******/ // The require function
 /******/ function __webpack_require__(moduleId) {
 /******/ 	// Check if module is in cache
-/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 	if (cachedModule !== undefined) {
 /******/ 		return cachedModule.exports;
 /******/ 	}
 /******/ 	// Create a new module (and put it into the cache)
-/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 	const module = __webpack_module_cache__[moduleId] = {
 /******/ 		// no module.id needed
 /******/ 		// no module.loaded needed
 /******/ 		exports: {}
@@ -204,7 +204,7 @@ exports[`ConfigCacheTestCases html script-src-mixed exported tests should chain 
 /******/ 	// Execute the module function
 /******/ 	if (!(moduleId in __webpack_modules__)) {
 /******/ 		delete __webpack_module_cache__[moduleId];
-/******/ 		var e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 		const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
 /******/ 		e.code = 'MODULE_NOT_FOUND';
 /******/ 		throw e;
 /******/ 	}
@@ -233,12 +233,12 @@ exports[`ConfigCacheTestCases html script-src-mixed exported tests should chain 
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// [resolve, Promise] = chunk loading, 0 = chunk loaded
-/******/ 	var installedChunks = {
+/******/ 	const installedChunks = {
 /******/ 		\\"__html_cbe5b59d_0\\": 0
 /******/ 	};
 /******/ 	
-/******/ 	var installChunk = (data) => {
-/******/ 		var {__webpack_esm_ids__, __webpack_esm_modules__, __webpack_esm_runtime__} = data;
+/******/ 	const installChunk = (data) => {
+/******/ 		let {__webpack_esm_ids__, __webpack_esm_modules__, __webpack_esm_runtime__} = data;
 /******/ 		// add \\"modules\\" to the modules object,
 /******/ 		// then flag all \\"ids\\" as loaded and fire callback
 /******/ 		var moduleId, chunkId, i = 0;
