@@ -22702,7 +22702,6 @@ declare interface SourceAndMap {
 	map: null | RawSourceMap;
 }
 declare interface SourceItem {
-	parse: (input: string) => undefined | [string, number, number][];
 	type: SourceTypeOrResolver;
 	filter?: (attributes: Map<string, string>) => boolean;
 }
@@ -22892,6 +22891,7 @@ declare interface SourcePosition {
 type SourceType =
 	| "script"
 	| "src"
+	| "srcset"
 	| "script-module"
 	| "stylesheet"
 	| "stylesheet-inline"
@@ -22899,6 +22899,7 @@ type SourceType =
 type SourceTypeOrResolver =
 	| "script"
 	| "src"
+	| "srcset"
 	| "script-module"
 	| "stylesheet"
 	| "stylesheet-inline"
