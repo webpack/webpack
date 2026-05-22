@@ -2886,6 +2886,22 @@ declare interface CleanPluginCompilationHooks {
 	 */
 	keep: SyncBailHook<[string], boolean | void>;
 }
+declare interface ClearCacheOptions {
+	/**
+	 * drop cached source maps (default `true`)
+	 */
+	maps?: boolean;
+
+	/**
+	 * drop cached source/buffer copies (default `true`)
+	 */
+	source?: boolean;
+
+	/**
+	 * drop the parsed object form of cached source maps on `SourceMapSource` instances (default `false` — re-parsing JSON is significantly more expensive than `toString`). Only takes effect when a serialized form (buffer or string) is also retained, so the data remains recoverable.
+	 */
+	parsedMap?: boolean;
+}
 declare interface CodeGenMapOverloads {
 	get: <K extends string>(key: K) => undefined | CodeGenValue<K>;
 	set: <K extends string>(
@@ -22548,6 +22564,19 @@ declare class Source {
 	map(options?: MapOptions): null | RawSourceMap;
 	sourceAndMap(options?: MapOptions): SourceAndMap;
 	updateHash(hash: HashLike): void;
+
+	/**
+	 * Release cached data held by this source. clearCache is a memory
+	 * hint: it never affects correctness or output, only how expensive
+	 * the next read is. Subclasses override; the base is a no-op so
+	 * every Source supports the call. Composite sources always recurse
+	 * into wrapped sources. When the same child is reachable via several
+	 * parents (e.g. modules shared across webpack chunks), pass a shared
+	 * `visited` WeakSet so each subtree is walked at most once.
+	 * Not safe to call concurrently with source/map/sourceAndMap/
+	 * streamChunks/updateHash on the same instance.
+	 */
+	clearCache(options?: ClearCacheOptions, visited?: WeakSet<Source>): void;
 }
 declare interface SourceAndMap {
 	/**
@@ -22595,6 +22624,11 @@ declare interface SourceLike {
 	 * hash updater
 	 */
 	updateHash?: (hash: HashLike) => void;
+
+	/**
+	 * clear cache
+	 */
+	clearCache?: (options?: ClearCacheOptions, visited?: WeakSet<Source>) => void;
 }
 declare class SourceMapDevToolPlugin {
 	/**
