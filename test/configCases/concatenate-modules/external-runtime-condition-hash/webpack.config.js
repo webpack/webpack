@@ -31,7 +31,7 @@ module.exports = {
 			const handler = (compilation) => {
 				compilation.hooks.afterSeal.tap("testcase", () => {
 					const concatenated =
-						/** @type {ConcatenatedModule} */
+						/** @type {EXPECTED_ANY} */
 						(
 							[...compilation.modules].find(
 								(m) => m instanceof ConcatenatedModule
@@ -52,6 +52,10 @@ module.exports = {
 					);
 					expect(externalInfo).toBeDefined();
 
+					/**
+					 * @param {string} overrideRuntimeCondition runtime condition
+					 * @returns {string} digest
+					 */
 					const hashWith = (overrideRuntimeCondition) => {
 						const original = concatenated._createConcatenationList;
 						concatenated._createConcatenationList = () =>
@@ -66,7 +70,7 @@ module.exports = {
 								chunkGraph: compilation.chunkGraph,
 								runtime: concatenated._runtime
 							});
-							return hash.digest("hex");
+							return /** @type {string} */ (hash.digest("hex"));
 						} finally {
 							concatenated._createConcatenationList = original;
 						}
