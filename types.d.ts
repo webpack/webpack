@@ -9123,10 +9123,8 @@ declare abstract class HtmlParser extends ParserClass {
 	context?: string;
 	outputModule?: boolean;
 	css?: boolean;
-	resolvedSources: {
-		byTag: Map<string, Map<string, SourceItem>>;
-		anyTag: Map<string, SourceItem>;
-	};
+	sourcesByTag: Record<string, Record<string, SourceItem>>;
+	anyTagSources?: Record<string, SourceItem>;
 }
 
 /**
@@ -22705,16 +22703,8 @@ declare interface SourceAndMap {
 }
 declare interface SourceItem {
 	parse: (input: string) => undefined | [string, number, number][];
+	type: SourceTypeOrResolver;
 	filter?: (attributes: Map<string, string>) => boolean;
-	entry?: boolean | ((attributes: Map<string, string>) => boolean);
-	entryCategory?: string;
-	userType?:
-		| "script"
-		| "src"
-		| "srcset"
-		| "script-module"
-		| "stylesheet"
-		| "stylesheet-inline";
 }
 declare interface SourceLike {
 	/**
@@ -22899,6 +22889,21 @@ declare interface SourcePosition {
 	line: number;
 	column?: number;
 }
+type SourceType =
+	| "script"
+	| "src"
+	| "script-module"
+	| "stylesheet"
+	| "stylesheet-inline"
+	| "modulepreload";
+type SourceTypeOrResolver =
+	| "script"
+	| "src"
+	| "script-module"
+	| "stylesheet"
+	| "stylesheet-inline"
+	| "modulepreload"
+	| ((attrs: Map<string, string>, css: boolean) => SourceType);
 type SourceValue = string | Buffer;
 declare interface SplitChunksOptions {
 	chunksFilter: (chunk: Chunk) => undefined | boolean;
