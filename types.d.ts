@@ -2886,22 +2886,6 @@ declare interface CleanPluginCompilationHooks {
 	 */
 	keep: SyncBailHook<[string], boolean | void>;
 }
-declare interface ClearCacheOptions {
-	/**
-	 * drop cached source maps (default `true`)
-	 */
-	maps?: boolean;
-
-	/**
-	 * drop cached source/buffer copies (default `true`)
-	 */
-	source?: boolean;
-
-	/**
-	 * drop the parsed object form of cached source maps on `SourceMapSource` instances (default `false` — re-parsing JSON is significantly more expensive than `toString`). Only takes effect when a serialized form (buffer or string) is also retained, so the data remains recoverable.
-	 */
-	parsedMap?: boolean;
-}
 declare interface CodeGenMapOverloads {
 	get: <K extends string>(key: K) => undefined | CodeGenValue<K>;
 	set: <K extends string>(
@@ -4053,27 +4037,6 @@ declare interface CompiledAliasOption {
 	 * true when `alias` is an array — precomputed so the hot path skips `Array.isArray`
 	 */
 	arrayAlias: boolean;
-}
-declare interface CompiledAliasOptions {
-	/**
-	 * declaration-ordered list
-	 */
-	all: CompiledAliasOption[];
-
-	/**
-	 * bucketed by first char code
-	 */
-	byFirstChar: Map<number, CompiledAliasOption[]>;
-
-	/**
-	 * true when an empty-prefix wildcard is present
-	 */
-	hasAnyFirstChar: boolean;
-
-	/**
-	 * true when the bucket fast-path should be used at resolve time
-	 */
-	useBuckets: boolean;
 }
 declare class Compiler {
 	/**
@@ -22806,19 +22769,6 @@ declare class Source {
 	map(options?: MapOptions): null | RawSourceMap;
 	sourceAndMap(options?: MapOptions): SourceAndMap;
 	updateHash(hash: HashLike): void;
-
-	/**
-	 * Release cached data held by this source. clearCache is a memory
-	 * hint: it never affects correctness or output, only how expensive
-	 * the next read is. Subclasses override; the base is a no-op so
-	 * every Source supports the call. Composite sources always recurse
-	 * into wrapped sources. When the same child is reachable via several
-	 * parents (e.g. modules shared across webpack chunks), pass a shared
-	 * `visited` WeakSet so each subtree is walked at most once.
-	 * Not safe to call concurrently with source/map/sourceAndMap/
-	 * streamChunks/updateHash on the same instance.
-	 */
-	clearCache(options?: ClearCacheOptions, visited?: WeakSet<Source>): void;
 }
 declare interface SourceAndMap {
 	/**
@@ -22870,11 +22820,6 @@ declare interface SourceLike {
 	 * hash updater
 	 */
 	updateHash?: (hash: HashLike) => void;
-
-	/**
-	 * clear cache
-	 */
-	clearCache?: (options?: ClearCacheOptions, visited?: WeakSet<Source>) => void;
 }
 declare class SourceMapDevToolPlugin {
 	/**
@@ -23103,15 +23048,6 @@ declare abstract class StackEntry {
 	/**
 	 * Walk the linked list looking for an entry with the same request shape.
 	 * Set-compatible: callers that used `stack.has(entry)` keep working.
-	 * NOTE: kept monomorphic on purpose. An earlier draft accepted a string
-	 * query too (so pre-5.21 plugins keeping their own `Set<string>` of
-	 * seen entries could probe the live stack with the formatted form),
-	 * but adding the second shape regressed `doResolve`'s heap profile by
-	 * ~1 MiB / 200 resolves on stack-churn — V8 keeps a polymorphic
-	 * call-site state for `parent.has(stackEntry)` once `has` has two
-	 * argument shapes. Plugins that need string membership can reach for
-	 * `[...stack].find(e => e.includes(formattedString))` via the
-	 * `String`-method proxies on `StackEntry` instead.
 	 */
 	has(query: StackEntry): boolean;
 
@@ -23121,10 +23057,8 @@ declare abstract class StackEntry {
 	get size(): number;
 
 	/**
-	 * Human-readable form used in recursion error messages, logs, and the
-	 * iterator above. Not memoized: caching would require an extra slot on
-	 * every `StackEntry`, which costs heap even on resolves that never look
-	 * at the formatted form.
+	 * Human-readable form used in recursion error messages and logs.
+	 * Matches the historical string format so existing log parsers stay valid.
 	 */
 	toString(): string;
 }
@@ -24321,7 +24255,7 @@ declare interface TsconfigPathsData {
 	/**
 	 * tsconfig file data
 	 */
-	alias: CompiledAliasOptions;
+	alias: CompiledAliasOption[];
 
 	/**
 	 * tsconfig file data
