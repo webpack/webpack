@@ -429,6 +429,17 @@ describe("NormalModule", () => {
 			expect(modules[0].getSideEffectsConnectionState(moduleGraph)).toBe(false);
 		});
 
+		it("propagates a deep-chain bailout all the way back to the root", () => {
+			// 5000 modules is far beyond what the recursive walker would walk
+			// using V8 stack frames; the linear-chain peeling code path must
+			// still propagate a bailout deep in the tail back to module 0.
+			const { modules, moduleGraph } = buildChain(5000);
+			modules[4500].buildMeta = { sideEffectFree: false };
+			expect(modules[0].getSideEffectsConnectionState(moduleGraph)).toBe(true);
+			expect(modules[0]._isEvaluatingSideEffects).toBe(false);
+			expect(modules[4499]._isEvaluatingSideEffects).toBe(false);
+		});
+
 		it("detects cycles in the side-effect graph", () => {
 			const { modules, moduleGraph } = buildChain(50);
 			// close the loop: last module's dep points to modules[0]
@@ -466,6 +477,145 @@ describe("NormalModule", () => {
 				expect(list[0]()).toMatch(
 					/Dependency \(harmony side effect evaluation\)/
 				);
+			}
+		});
+
+		it("aggregates state across branching deps", () => {
+			// Diamond: root depends on two side-effect-free leaves.
+			const make = (id) => {
+				const mod = new NormalModule({
+					type: "javascript/auto",
+					request: `/${id}`,
+					userRequest: `/${id}`,
+					rawRequest: id,
+					loaders: [],
+					resource: `/${id}`,
+					parser: { parse() {} },
+					generator: null,
+					resolveOptions: {}
+				});
+				mod.buildMeta = { sideEffectFree: true };
+				mod.dependencies = [];
+				return mod;
+			};
+			const root = make("root");
+			const a = make("a");
+			const b = make("b");
+			const depA = new HarmonyImportSideEffectDependency("a", 0, "evaluation");
+			const depB = new HarmonyImportSideEffectDependency("b", 1, "evaluation");
+			root.dependencies = [depA, depB];
+			const moduleGraph = {
+				getModule: (dep) => (dep === depA ? a : dep === depB ? b : undefined),
+				getOptimizationBailout: () => []
+			};
+			expect(root.getSideEffectsConnectionState(moduleGraph)).toBe(false);
+			expect(root._isEvaluatingSideEffects).toBe(false);
+			expect(a._isEvaluatingSideEffects).toBe(false);
+			expect(b._isEvaluatingSideEffects).toBe(false);
+		});
+
+		it("handles a deep cyclic chain whose modules have extra non-recursive deps", () => {
+			// Mirrors the canonical #20986 reproduction: each module has a
+			// HarmonyImportSideEffectDependency to the next module plus
+			// several other deps (modelled here by ConstDependency which
+			// reports `false` from `getModuleEvaluationSideEffectsState`).
+			// The last module's SideEffectDep closes the loop back to
+			// module 0. Pre-fix this overflowed V8's stack at ~1300 modules
+			// because the linear-chain walker only recognized 1-dep modules.
+			const ConstDependency = require("../lib/dependencies/ConstDependency");
+
+			const N = 5000;
+			const modules = [];
+			for (let i = 0; i < N; i++) {
+				const mod = new NormalModule({
+					type: "javascript/auto",
+					request: `/m${i}`,
+					userRequest: `/m${i}`,
+					rawRequest: `m${i}`,
+					loaders: [],
+					resource: `/m${i}`,
+					parser: { parse() {} },
+					generator: null,
+					resolveOptions: {}
+				});
+				mod.buildMeta = { sideEffectFree: true };
+				modules.push(mod);
+			}
+			const depToModule = new Map();
+			for (let i = 0; i < N; i++) {
+				const sideDep = new HarmonyImportSideEffectDependency(
+					`m${(i + 1) % N}`,
+					0,
+					"evaluation"
+				);
+				modules[i].dependencies = [
+					sideDep,
+					new ConstDependency("", [0, 0]),
+					new ConstDependency("", [0, 0])
+				];
+				depToModule.set(sideDep, modules[(i + 1) % N]);
+			}
+			const moduleGraph = {
+				getModule: (dep) => depToModule.get(dep),
+				getOptimizationBailout: () => []
+			};
+			expect(modules[0].getSideEffectsConnectionState(moduleGraph)).toBe(false);
+		});
+
+		it("falls back to iterative walk past the recursion limit on non-linear graphs", () => {
+			// Each module has two `HarmonyImportSideEffectDependency`s, so
+			// the linear-chain fast path can't apply: the module's first
+			// dep continues the chain, the second points to a shared
+			// side-effect-free leaf. The walker therefore enters the
+			// general for-loop, recurses one V8 frame per module, and
+			// must switch to `walkSideEffectsIterative` once depth crosses
+			// `SIDE_EFFECTS_RECURSION_LIMIT` (2000). 2500 modules is far
+			// enough past that boundary that any regression in the
+			// iterative fallback path will overflow V8's stack.
+			const N = 2500;
+			const make = (id) => {
+				const mod = new NormalModule({
+					type: "javascript/auto",
+					request: `/${id}`,
+					userRequest: `/${id}`,
+					rawRequest: id,
+					loaders: [],
+					resource: `/${id}`,
+					parser: { parse() {} },
+					generator: null,
+					resolveOptions: {}
+				});
+				mod.buildMeta = { sideEffectFree: true };
+				return mod;
+			};
+			const leaf = make("leaf");
+			leaf.dependencies = [];
+			const modules = [];
+			for (let i = 0; i < N; i++) modules.push(make(`m${i}`));
+			const depToModule = new Map();
+			for (let i = 0; i < N - 1; i++) {
+				const next = new HarmonyImportSideEffectDependency(
+					`m${i + 1}`,
+					0,
+					"evaluation"
+				);
+				const aside = new HarmonyImportSideEffectDependency(
+					"leaf",
+					1,
+					"evaluation"
+				);
+				modules[i].dependencies = [next, aside];
+				depToModule.set(next, modules[i + 1]);
+				depToModule.set(aside, leaf);
+			}
+			modules[N - 1].dependencies = [];
+			const moduleGraph = {
+				getModule: (dep) => depToModule.get(dep),
+				getOptimizationBailout: () => []
+			};
+			expect(modules[0].getSideEffectsConnectionState(moduleGraph)).toBe(false);
+			for (let i = 0; i < N; i++) {
+				expect(modules[i]._isEvaluatingSideEffects).toBe(false);
 			}
 		});
 	});
