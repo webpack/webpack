@@ -7716,6 +7716,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-let": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports let for variable declarations.",
+        "multiple": false,
+        "path": "output.environment.let",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports let for variable declarations.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-method-shorthand": Object {
     "configs": Array [
       Object {
