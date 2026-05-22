@@ -1,5 +1,4 @@
 const assetUrl = new URL("./logo.png", import.meta.url);
-const tag = "step1";
 
 const fs = __non_webpack_require__("fs");
 const path = __non_webpack_require__("path");
