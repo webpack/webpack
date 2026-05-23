@@ -7251,12 +7251,11 @@ declare abstract class ExportInfo {
 	canMangleUse?: boolean;
 
 	/**
-	 * CanInlineUse.HasInfo: collecting; no consumer has decided yet
-	 * CanInlineUse.Yes: at least one consumer accepts inlining, none rejected
-	 * CanInlineUse.No: at least one consumer rejected inlining
-	 * undefined: not yet determined
+	 * true: at least one consumer accepts inlining, none rejected
+	 * false: at least one consumer rejected inlining
+	 * undefined: collecting; no consumer has decided yet
 	 */
-	canInlineUse?: 0 | 1 | 2;
+	canInlineUse?: boolean;
 
 	/**
 	 * Only specific export info can be pure, so other_export_info.pure is always undefined.
