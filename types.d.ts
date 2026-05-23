@@ -25455,7 +25455,9 @@ declare namespace exports {
 						moduleGraphConnection: ModuleGraphConnection,
 						runtime: RuntimeSpec
 				  ) => ConnectionState);
-			export let getInnerGraph: (compilation: Compilation) => InnerGraphUtils;
+			export let getInnerGraphUtils: (
+				compilation: Compilation
+			) => InnerGraphUtils;
 			export { TopLevelSymbol, topLevelSymbolTag };
 		}
 		export {
