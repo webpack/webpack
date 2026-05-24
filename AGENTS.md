@@ -4,7 +4,7 @@
 
 ## Conventions in this guide
 
-`> [!REQUIRED]` under a heading makes that section mandatory — follow it exactly. Sections without the callout are normal guidance.
+A `> [!REQUIRED]` callout placed immediately under a heading marks that whole section as **mandatory and not optional**: follow it exactly, do not paraphrase, do not skip, do not substitute a similar-looking convention from other tooling. Read each REQUIRED section in full whenever it applies; do not rely on memory or on a previous task's output. Sections without the callout are normal guidance — apply judgement.
 
 ## Project Overview
 
