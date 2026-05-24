@@ -61,18 +61,9 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 - `schemas/plugins/*.json` — per-plugin option schemas (`BannerPlugin`, `IgnorePlugin`, `ProgressPlugin`, `SourceMapDevToolPlugin`, …).
 - `schemas/_container.json`, `schemas/_sharing.json` — Module Federation sub-schemas.
 
-**Tests** — see [TESTING_DOCS.md](TESTING_DOCS.md) for naming and how to run a single case.
+**Tests** — see [TESTING_DOCS.md](TESTING_DOCS.md) for directory structure, naming, and how to run a single case.
 
-- `test/cases/` — Default-config compilation cases.
-- `test/configCases/` — Cases with explicit `webpack.config.js`.
-- `test/watchCases/` — Watch-mode incremental cases.
-- `test/hotCases/` — HMR runtime cases.
-- `test/hotPlayground/` — Hand-written HMR playground fixtures used by hot test infrastructure.
-- `test/statsCases/` — Stats output snapshots.
-- `test/typesCases/` — TypeScript type assertions against `types.d.ts`.
-- `test/test262-cases/` — JavaScript spec compliance (test262).
-- `test/memoryLimitCases/`, `test/benchmarkCases/` — Heap-bounded and perf cases.
-- `test/__snapshots__/`, `test/fixtures/`, `test/helpers/`, `test/harness/` — Snapshots and shared utilities.
+- `test/` — All test suites (`cases/`, `configCases/`, `watchCases/`, `hotCases/`, `statsCases/`, `typesCases/`, `test262-cases/`, `benchmarkCases/`, `memoryLimitCases/`, etc.).
 
 **Examples & changesets**
 
