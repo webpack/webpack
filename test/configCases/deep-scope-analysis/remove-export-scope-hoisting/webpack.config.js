@@ -32,19 +32,15 @@ module.exports = {
 							if (
 								refModule &&
 								refModule.identifier().endsWith("reference.js") &&
-								referencedExports.some(
-									(names) =>
-										Array.isArray(names) &&
-										names.length === 1 &&
-										names[0] === "unused"
-								)
+								referencedExports.some((ref) => {
+									const names = Array.isArray(ref) ? ref : ref.name;
+									return names.length === 1 && names[0] === "unused";
+								})
 							) {
-								return referencedExports.filter(
-									(names) =>
-										(Array.isArray(names) && names.length !== 1) ||
-										/** @type {string[]} */
-										(names)[0] !== "unused"
-								);
+								return referencedExports.filter((ref) => {
+									const names = Array.isArray(ref) ? ref : ref.name;
+									return names.length !== 1 || names[0] !== "unused";
+								});
 							}
 							return referencedExports;
 						}

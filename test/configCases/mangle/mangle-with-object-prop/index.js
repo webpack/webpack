@@ -18,12 +18,11 @@ it("should mangle names and remove exports even with toString named export (ESM)
 	expect(__1).toBe("3 chars");
 	expect(
 		Object.keys(require.cache[moduleId].exports)
-			.map(p => p.length)
+			.map((p) => p.length)
 			.sort()
 	).toEqual(
-		OPTIMIZATION === "deterministic"
-			? [1, 2, 2, 2, 2, 2, 2]
-			: [1, 1, 1, 1, 1, 1, 1]
+		// `.abc` is inlined and the export is skipped
+		OPTIMIZATION === "deterministic" ? [1, 2, 2, 2, 2, 2] : [1, 1, 1, 1, 1, 1]
 	);
 });
 
@@ -39,7 +38,7 @@ it("should mangle names and remove exports even with toString named export (CJS)
 	expect(__12).toBe("3 chars");
 	expect(
 		Object.keys(require.cache[moduleId2].exports)
-			.map(p => p.length)
+			.map((p) => p.length)
 			.sort()
 	).toEqual(
 		OPTIMIZATION === "deterministic"

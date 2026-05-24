@@ -1,7 +1,7 @@
 import { testExport as importedTestExport } from "./index";
 
-export const testExport = 42;
+export const testExport = 'chunk-and-module';
 
 it("should compile with deprecations", () => {
-	expect(importedTestExport).toBe(42);
+	expect(importedTestExport).toBe('chunk-and-module');
 });
