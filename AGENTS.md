@@ -72,10 +72,7 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 
 **Auto-generated — do not edit by hand; regenerate via `yarn fix:special`**
 
-- `types.d.ts` — Compiled from JSDoc + schemas.
-- `declarations/` — Per-schema/plugin `*.d.ts` declarations (`declarations/index.d.ts`, `declarations/WebpackOptions.d.ts`, `declarations/LoaderContext.d.ts`, `declarations/plugins/**`) emitted from `schemas/**/*.json`.
-- `schemas/**/*.check.{js,d.ts}` — Precompiled schema validators.
-- Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
+- `types.d.ts`, `declarations/**/*.d.ts`, `schemas/**/*.check.{js,d.ts}`, generated runtime code under `lib/`.
 
 **Hand-maintained type declarations (these _are_ editable)**
 
