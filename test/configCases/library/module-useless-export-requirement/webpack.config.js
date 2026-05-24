@@ -18,7 +18,6 @@ const common = {
 	}
 };
 
-/** @type {Configuration[]} */
 const configs = [
 	{
 		name: "entry1",
