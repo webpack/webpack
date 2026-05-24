@@ -4,7 +4,7 @@
 
 ## Conventions in this guide
 
-A `> [!REQUIRED]` callout placed immediately under a heading marks that whole section as **mandatory and not optional**: follow it exactly, do not paraphrase, do not skip, do not substitute a similar-looking convention from other tooling. Read each REQUIRED section in full whenever it applies; do not rely on memory or on a previous task's output. Sections without the callout are normal guidance — apply judgement.
+A `> [!REQUIRED]` callout placed immediately under a heading marks that whole section as **mandatory and not optional**: follow it exactly, do not paraphrase, do not skip, do not substitute a similar-looking convention from other tooling. Reviewers have repeatedly flagged that REQUIRED sections (especially the [Pull request body](#pull-request-body)) are being skipped or partially filled in — doing so blocks the PR every time. Read each REQUIRED section in full whenever it applies; do not rely on memory or on a previous task's output. Sections without the callout are normal guidance — apply judgement.
 
 ## Project Overview
 
@@ -70,9 +70,12 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 - `examples/` — Usage examples (build with `yarn build:examples`).
 - `.changeset/` — Pending changeset files for the next release.
 
-**Auto-generated — do not edit by hand** (see [Auto-generated files](#auto-generated-files))
+**Auto-generated — do not edit by hand; regenerate via `yarn fix:special`**
 
-- `types.d.ts`, `declarations/**/*.d.ts`, `schemas/**/*.check.{js,d.ts}`, generated runtime code under `lib/`.
+- `types.d.ts` — Compiled from JSDoc + schemas.
+- `declarations/` — Per-schema/plugin `*.d.ts` declarations (`declarations/index.d.ts`, `declarations/WebpackOptions.d.ts`, `declarations/LoaderContext.d.ts`, `declarations/plugins/**`) emitted from `schemas/**/*.json`.
+- `schemas/**/*.check.{js,d.ts}` — Precompiled schema validators.
+- Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
 
 **Hand-maintained type declarations (these _are_ editable)**
 
