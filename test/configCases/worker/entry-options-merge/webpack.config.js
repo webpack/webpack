@@ -1,6 +1,12 @@
 "use strict";
 
+/** @typedef {import("../../../../").Compiler} Compiler */
+/** @typedef {import("../../../../").EntryOptions} EntryOptions */
+
 class AssertMergedEntryOptionsPlugin {
+	/**
+	 * @param {Compiler} compiler compiler
+	 */
 	apply(compiler) {
 		compiler.hooks.thisCompilation.tap(
 			"AssertMergedEntryOptionsPlugin",
@@ -17,10 +23,11 @@ class AssertMergedEntryOptionsPlugin {
 						}
 						// Set only by the second async block; the merge in
 						// buildChunkGraph must copy it onto the existing entrypoint.
-						if (entrypoint.options.asyncChunks !== false) {
+						const options = /** @type {EntryOptions} */ (entrypoint.options);
+						if (options.asyncChunks !== false) {
 							compilation.errors.push(
 								new Error(
-									`expected entrypoint.options.asyncChunks === false, got ${entrypoint.options.asyncChunks}`
+									`expected entrypoint.options.asyncChunks === false, got ${options.asyncChunks}`
 								)
 							);
 						}
