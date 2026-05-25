@@ -180,5 +180,48 @@ describe("Compilation", () => {
 			expect(chunk.files.has("standalone.js")).toBe(false);
 			expect(chunk.files.has("renamed.js")).toBe(true);
 		});
+
+		it("deleteAsset sweeps chunks the index missed (incomplete index)", () => {
+			const compilation = createCompilation();
+			const chunkA = compilation.addChunk("a");
+			const chunkB = compilation.addChunk("b");
+			compilation.emitAsset("a.js", new RawSource("// a"));
+			chunkA.files.add("a.js");
+			compilation.emitAsset("a.aux.js", new RawSource("// aux"));
+			chunkA.auxiliaryFiles.add("a.aux.js");
+			// Build the index while only chunkA holds the files.
+			compilation.emitAsset("marker.js", new RawSource("// marker"));
+			compilation.deleteAsset("marker.js");
+			// Attach the already-indexed names to chunkB directly (no emitAsset),
+			// leaving the cached index incomplete for these files.
+			chunkB.files.add("a.js");
+			chunkB.auxiliaryFiles.add("a.aux.js");
+
+			compilation.deleteAsset("a.js");
+			compilation.deleteAsset("a.aux.js");
+
+			expect(chunkA.files.has("a.js")).toBe(false);
+			expect(chunkB.files.has("a.js")).toBe(false);
+			expect(chunkA.auxiliaryFiles.has("a.aux.js")).toBe(false);
+			expect(chunkB.auxiliaryFiles.has("a.aux.js")).toBe(false);
+		});
+
+		it("renameAsset sweeps chunks the index missed (incomplete index)", () => {
+			const compilation = createCompilation();
+			const chunkA = compilation.addChunk("a");
+			const chunkB = compilation.addChunk("b");
+			compilation.emitAsset("a.js", new RawSource("// a"));
+			chunkA.files.add("a.js");
+			compilation.emitAsset("marker.js", new RawSource("// marker"));
+			compilation.deleteAsset("marker.js");
+			chunkB.files.add("a.js");
+
+			compilation.renameAsset("a.js", "b.js");
+
+			expect(chunkA.files.has("a.js")).toBe(false);
+			expect(chunkA.files.has("b.js")).toBe(true);
+			expect(chunkB.files.has("a.js")).toBe(false);
+			expect(chunkB.files.has("b.js")).toBe(true);
+		});
 	});
 });
