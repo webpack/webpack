@@ -1,5 +1,35 @@
 # webpack
 
+## 5.107.2
+
+### Patch Changes
+
+- Reduce per-file overhead in `ContextModuleFactory.resolveDependencies` by batching `alternativeRequests` hook calls. Previously the hook was invoked once per file in the context (with a single-item array), paying per-call overhead (closure allocation, `resolverFactory.get`, intermediate arrays in `RequireContextPlugin`) for every file. The hook is now invoked once per directory with all matched files in one batch — `RequireContextPlugin`'s tap already iterates the items array, so the output is unchanged. Steady-state rebuild on a 4000-file `require.context` drops a further ~15 ms (after the watch-mode purge fix in the same release). (by [@alexander-akait](https://github.com/alexander-akait) in [#21020](https://github.com/webpack/webpack/pull/21020))
+
+- Include each external info's `runtimeCondition` in `ConcatenatedModule#updateHash` so changes to a concatenated external's runtime condition invalidate persistent caches instead of slipping through with the module id alone. (by [@alexander-akait](https://github.com/alexander-akait) in [#21023](https://github.com/webpack/webpack/pull/21023))
+
+- Fix HTML `[contenthash]` for referenced asset and inline-style URL changes. (by [@alexander-akait](https://github.com/alexander-akait) in [#21018](https://github.com/webpack/webpack/pull/21018))
+
+- Resolve chunk-hash placeholders in chunk URLs embedded into extracted HTML. (by [@alexander-akait](https://github.com/alexander-akait) in [#21018](https://github.com/webpack/webpack/pull/21018))
+
+- Remove unnecessary `__webpack_require__` runtime helpers in ESM library output with multi-module chunks. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#21032](https://github.com/webpack/webpack/pull/21032))
+
+- Rewrite `NormalModule#getSideEffectsConnectionState` walk as an allocation-light iterative loop instead of a generator trampoline, restoring rebuild performance lost in #20993 while keeping deep import chains stack-safe. (by [@alexander-akait](https://github.com/alexander-akait) in [#21014](https://github.com/webpack/webpack/pull/21014))
+
+- Fix runtime `ReferenceError` on the first activation of a lazy-compiled module when `output.library.type` produces a closure-wrapped bundle (`umd`, `umd2`, `amd`, `amd-require`, `system`). (by [@alexander-akait](https://github.com/alexander-akait) in [#21013](https://github.com/webpack/webpack/pull/21013))
+
+  External modules of these types reference closure-bound identifiers like `__WEBPACK_EXTERNAL_MODULE_react__`, supplied by the library wrapper that is generated once per chunk. When `lazyCompilation` activates an entry or import for the first time, any external dependency the lazily-built module pulls in arrives in a hot-update chunk that lives outside the original wrapper closure, so its factory body cannot resolve the closure identifier and only a manual page refresh recovers.
+
+  The inactive `LazyCompilationProxyModule` now declares statically-enumerable externals (string and object forms of `externals`) as its own dependencies, so the initial entry chunk's library wrapper already exposes their closure identifiers. When activation later pulls in those externals through the lazily-compiled module, they resolve to the already-installed factories instead of throwing. Function and RegExp externals are not pre-populated because their effective request set isn't knowable up front.
+
+- Fill in missing `entryOptions` when an async block joins an existing entrypoint. (by [@alexander-akait](https://github.com/alexander-akait) in [#21026](https://github.com/webpack/webpack/pull/21026))
+
+- Release per-child `codeGenerationResults` in `MultiCompiler` and at `Compiler.close` to reduce memory retention. (by [@alexander-akait](https://github.com/alexander-akait) in [#21015](https://github.com/webpack/webpack/pull/21015))
+
+- Reduce peak memory of `SourceMapDevToolPlugin` on large builds (closes #20961). (by [@alexander-akait](https://github.com/alexander-akait) in [#20963](https://github.com/webpack/webpack/pull/20963))
+
+- Fix slow `require.context()` / dynamic `import()` rebuilds in watch mode (#13636). When a file inside a watched context directory changed, `NodeWatchFileSystem` would call `inputFileSystem.purge(contextDir)`. The enhanced-resolve `purge` implementation matches cache keys with `key.startsWith(contextDir)`, so the stat cache of every file under the directory was discarded on every rebuild — `ContextModuleFactory.resolveDependencies` then re-`stat`-ed the whole tree on each rebuild. Single-file rebuilds on a 4000-file context now reuse the warm stat cache, dropping median rebuild from ~1260 ms to ~650 ms in a local reproduction (≈49%). For directory items that are explicitly watched contexts, `purge` is now called with `{ exact: true }` (added in `enhanced-resolve@5.22.0`) so only the directory's own entry is invalidated; file-level changes in the same aggregated event continue to purge file stats and the parent `readdir` as before. (by [@alexander-akait](https://github.com/alexander-akait) in [#21020](https://github.com/webpack/webpack/pull/21020))
+
 ## 5.107.1
 
 ### Patch Changes
