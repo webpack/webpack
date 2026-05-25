@@ -114,6 +114,27 @@ describe("Compilation", () => {
 			expect(compilation._assetToChunkAuxiliaryIndex).toBeUndefined();
 		});
 
+		it("deleteAsset cleans every chunk for an asset shared via re-emit", () => {
+			const compilation = createCompilation();
+			const chunkA = compilation.addChunk("a");
+			const chunkB = compilation.addChunk("b");
+			const source = new RawSource("// shared");
+			compilation.emitAsset("shared.js", source);
+			chunkA.files.add("shared.js");
+			// Build the index while it only knows about chunkA.
+			compilation.emitAsset("marker.js", new RawSource("// marker"));
+			compilation.deleteAsset("marker.js");
+			// chunkB re-emits the same file (same content -> emitAsset early-return)
+			// then attaches it; emitAsset must still invalidate the index.
+			compilation.emitAsset("shared.js", source);
+			chunkB.files.add("shared.js");
+
+			compilation.deleteAsset("shared.js");
+
+			expect(chunkA.files.has("shared.js")).toBe(false);
+			expect(chunkB.files.has("shared.js")).toBe(false);
+		});
+
 		it("renameAsset skips chunks that no longer hold the file (stale index)", () => {
 			const compilation = createCompilation();
 			const chunk = compilation.addChunk("a");
