@@ -11,6 +11,15 @@ it("should leave URL attributes untouched when module.parser.html.sources is fal
 	expect(page).toContain('src="./image.png"');
 });
 
+it("should not let Object.prototype-named tags bypass sources:false", () => {
+	// `<constructor name="./proto-bypass.js">` must stay untouched — the
+	// lookup tables are null-prototype, so `constructor` doesn't resolve
+	// to an inherited value and never becomes a chunk entry (the file
+	// doesn't exist; a bogus entry would fail the build).
+	expect(page).toContain('name="./proto-bypass.js"');
+	expect(page).not.toMatch(/__html_[a-f0-9]+_\d+/);
+});
+
 it("should still bundle inline <script> bodies when sources is false", () => {
 	// `sources` controls URL-attribute extraction only; inline script
 	// bodies are not URLs and remain processed — the body becomes its
