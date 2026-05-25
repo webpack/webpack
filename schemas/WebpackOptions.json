@@ -1068,6 +1068,10 @@
           "description": "The environment supports `import.meta.dirname` and `import.meta.filename`.",
           "type": "boolean"
         },
+        "let": {
+          "description": "The environment supports let for variable declarations.",
+          "type": "boolean"
+        },
         "methodShorthand": {
           "description": "The environment supports object method shorthand ('{ module() {} }').",
           "type": "boolean"

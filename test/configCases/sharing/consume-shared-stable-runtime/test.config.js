@@ -14,9 +14,10 @@ module.exports = {
 			"utf8"
 		);
 
-		const block = /var moduleToHandlerMapping = \{([\s\S]*?)^[^\n]*?\};/m.exec(
-			src
-		);
+		const block =
+			/(?:var|let|const) moduleToHandlerMapping = \{([\s\S]*?)^[^\n]*?\};/m.exec(
+				src
+			);
 		expect(block).not.toBeNull();
 
 		const ids = [];

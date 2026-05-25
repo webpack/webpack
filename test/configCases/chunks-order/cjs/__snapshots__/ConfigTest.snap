@@ -41,7 +41,7 @@ var __webpack_require__ = require(\\"./runtime~nested-shared.js\\");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
 var __webpack_exports__ = __webpack_require__.X(0, [\\"shared\\",\\"nested-shared\\",\\"commons-dependency_js\\"], () => (__webpack_exec__(552)));
-var __webpack_export_target__ = exports;
+const __webpack_export_target__ = exports;
 for(var __webpack_i__ in __webpack_exports__) __webpack_export_target__[__webpack_i__] = __webpack_exports__[__webpack_i__];
 if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, \\"__esModule\\", { value: true });
 
