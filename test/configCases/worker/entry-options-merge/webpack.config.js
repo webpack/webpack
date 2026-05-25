@@ -38,6 +38,15 @@ class AssertMergedEntryOptionsPlugin {
 								)
 							);
 						}
+						// Prototype-polluting keys from the magic comment must not be
+						// gap-filled onto the entrypoint options.
+						for (const unsafe of ["prototype", "constructor"]) {
+							if (Object.prototype.hasOwnProperty.call(options, unsafe)) {
+								compilation.errors.push(
+									new Error(`entrypoint options must not carry "${unsafe}"`)
+								);
+							}
+						}
 					}
 				);
 			}

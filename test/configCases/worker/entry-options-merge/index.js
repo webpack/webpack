@@ -6,9 +6,10 @@ it("should merge entryOptions when two async blocks share an entrypoint name", a
 		new URL("./worker.js", import.meta.url)
 	);
 	const w2 = new Worker(
-		/* webpackEntryOptions: { name: "merged", runtime: "merged-rt", asyncChunks: false } */
+		/* webpackEntryOptions: { name: "merged", runtime: "merged-rt", asyncChunks: false, prototype: { polluted: true }, constructor: { polluted: true } } */
 		new URL("./worker.js", import.meta.url)
 	);
+	expect({}.polluted).toBeUndefined();
 	w1.postMessage("a");
 	w2.postMessage("b");
 	const [r1, r2] = await Promise.all([
