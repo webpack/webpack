@@ -1802,6 +1802,7 @@
               "description": "Sources to extract as webpack dependencies. Use `\"...\"` to inline the default source list.",
               "type": "array",
               "items": {
+                "description": "A source entry: either the string `\"...\"` to inline the built-in default sources, or an object describing a `tag`/`attribute` pair to extract and how to bundle it.",
                 "anyOf": [
                   {
                     "enum": ["..."]
