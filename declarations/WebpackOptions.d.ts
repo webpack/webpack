@@ -2628,6 +2628,10 @@ export interface Environment {
 	 */
 	importMetaDirnameAndFilename?: boolean;
 	/**
+	 * The environment supports let for variable declarations.
+	 */
+	let?: boolean;
+	/**
 	 * The environment supports object method shorthand ('{ module() {} }').
 	 */
 	methodShorthand?: boolean;
