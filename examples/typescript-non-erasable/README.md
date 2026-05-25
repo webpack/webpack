@@ -1,3 +1,17 @@
+# When to use this example
+
+Webpack 5 includes a built-in TypeScript transform via
+`experiments.typescript: true` (see the `examples/typescript` example).
+That transform uses Node.js's `module.stripTypeScriptTypes` and therefore
+only handles the **erasable** TypeScript subset — types, `import type`,
+`as`-casts, generics, etc. It rejects syntax that emits runtime code:
+`enum`, `namespace`, parameter-property constructors, `export =`, decorator
+metadata, JSX/`.tsx`.
+
+If your project uses any of that non-erasable syntax, keep using a real
+TypeScript transpiler. This example shows the classic setup with
+`ts-loader` plus `fork-ts-checker-webpack-plugin` for type checking.
+
 # example.js
 
 ```javascript
@@ -7,15 +21,41 @@ console.log(require("./index"));
 # index.ts
 
 ```typescript
-const myName: string = "Junya";
-const age: number = 22;
+// This example uses syntax that Node.js's built-in `stripTypeScriptTypes`
+// rejects (enums, parameter-property constructors, namespaces) — i.e. it
+// goes beyond the "erasable" subset enforced by tsconfig's
+// `erasableSyntaxOnly`. Projects that rely on these features still need a
+// real TypeScript transpiler such as `ts-loader` or `swc-loader`.
 
-function getArray<T>(...args: T[]): T[] {
-	return [...args];
+enum Role {
+	Admin = "admin",
+	Editor = "editor",
+	Viewer = "viewer"
 }
 
-console.log(getArray("foo", "bar"));
-console.log(getArray(1, 2, 3));
+class User {
+	constructor(
+		public readonly name: string,
+		public readonly role: Role
+	) {}
+
+	describe(): string {
+		return `${this.name} (${this.role})`;
+	}
+}
+
+function asArray<T>(...items: T[]): T[] {
+	return [...items];
+}
+
+const users = asArray(
+	new User("Alice", Role.Admin),
+	new User("Bob", Role.Viewer)
+);
+
+for (const user of users) {
+	console.log(user.describe());
+}
 ```
 
 # webpack.config.js
@@ -59,30 +99,40 @@ module.exports = config;
   !*** ./index.ts ***!
   \******************/
 /*! unknown exports (runtime-defined) */
-/*! runtime requirements: top-level-this-exports */
-/*! CommonJS bailout: this is used directly at 1:21-25 */
-/***/ (function() {
+/*! runtime requirements:  */
+/***/ (() => {
 
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
+"use strict";
+
+// This example uses syntax that Node.js's built-in `stripTypeScriptTypes`
+// rejects (enums, parameter-property constructors, namespaces) — i.e. it
+// goes beyond the "erasable" subset enforced by tsconfig's
+// `erasableSyntaxOnly`. Projects that rely on these features still need a
+// real TypeScript transpiler such as `ts-loader` or `swc-loader`.
+var Role;
+(function (Role) {
+    Role["Admin"] = "admin";
+    Role["Editor"] = "editor";
+    Role["Viewer"] = "viewer";
+})(Role || (Role = {}));
+class User {
+    name;
+    role;
+    constructor(name, role) {
+        this.name = name;
+        this.role = role;
     }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
-var myName = "Junya";
-var age = 22;
-function getArray() {
-    var args = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
+    describe() {
+        return `${this.name} (${this.role})`;
     }
-    return __spreadArray([], args, true);
 }
-console.log(getArray("foo", "bar"));
-console.log(getArray(1, 2, 3));
+function asArray(...items) {
+    return [...items];
+}
+const users = asArray(new User("Alice", Role.Admin), new User("Bob", Role.Viewer));
+for (const user of users) {
+    console.log(user.describe());
+}
 
 
 /***/ })
@@ -117,7 +167,7 @@ console.log(getArray(1, 2, 3));
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -149,10 +199,10 @@ console.log(__webpack_require__(/*! ./index */ 1));
 ## Unoptimized
 
 ```
-asset output.js 2.62 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 696 bytes [entry] [rendered]
+asset output.js 2.76 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 939 bytes [entry] [rendered]
   > ./example.js main
-  dependent modules 663 bytes [dependent] 1 module
+  dependent modules 906 bytes [dependent] 1 module
   ./example.js 33 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -162,10 +212,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 544 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 696 bytes [entry] [rendered]
+asset output.js 495 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 939 bytes [entry] [rendered]
   > ./example.js main
-  dependent modules 663 bytes [dependent] 1 module
+  dependent modules 906 bytes [dependent] 1 module
   ./example.js 33 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main

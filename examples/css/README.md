@@ -532,10 +532,10 @@ assets by path *.css 1.16 KiB
   asset 1.output.css 125 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 Entrypoint main 16.4 KiB (14.6 KiB) = output.js 15.4 KiB output.css 1.04 KiB 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 254 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-url) 42 bytes (css-import) 8.8 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js, output.css (main) 254 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (asset-url) 42 bytes (css-import) 8.8 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 8.8 KiB 9 modules
-  dependent modules 14.6 KiB (asset) 42 bytes (css-url) 454 bytes (css) 78 bytes (javascript) 42 bytes (css-import) [dependent] 6 modules
+  dependent modules 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 78 bytes (javascript) 42 bytes (css-import) [dependent] 6 modules
   ./example.js 176 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -560,10 +560,10 @@ assets by path *.css 475 bytes
   asset 822.output.css 24 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 Entrypoint main 3.53 KiB (14.6 KiB) = output.js 3.09 KiB output.css 451 bytes 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 454 bytes (css) 14.6 KiB (asset) 568 bytes (javascript) 42 bytes (css-url) 42 bytes (css-import) 8.54 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js, output.css (main) 454 bytes (css) 14.6 KiB (asset) 568 bytes (javascript) 42 bytes (asset-url) 42 bytes (css-import) 8.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 8.54 KiB 8 modules
-  dependent modules 14.6 KiB (asset) 42 bytes (javascript) 42 bytes (css-url) 79 bytes (css) 42 bytes (css-import) [dependent] 3 modules
+  dependent modules 14.6 KiB (asset) 42 bytes (javascript) 42 bytes (asset-url) 79 bytes (css) 42 bytes (css-import) [dependent] 3 modules
   built modules 526 bytes (javascript) 375 bytes (css) [built]
     ./example.js + 5 modules 435 bytes [not cacheable] [built] [code generated]
       [no exports]
