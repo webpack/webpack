@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="icon" href="./icon.png">
+<link rel="stylesheet" href="./styles.css">
+<script src="./entry.js"></script>
+<script>globalThis.__inlineSourcesDisabled = 42;</script>
+</head>
+<body>
+<img src="./image.png" alt="image">
+<!-- `constructor` is an Object.prototype key; a plain-object lookup
+     table would resolve it to the `Object` constructor (truthy) and
+     bypass `sources: false`, turning this into a bogus chunk entry for
+     a nonexistent file. The null-prototype tables must leave it be. -->
+<constructor name="./proto-bypass.js"></constructor>
+</body>
+</html>
