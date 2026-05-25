@@ -6532,6 +6532,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-inline-exports": Object {
+    "configs": Array [
+      Object {
+        "description": "Inline ESM exports that bind to small primitive constants (≤6-byte null/undefined/boolean/number/string). Inlining makes the import dependency inactive so DCE can drop the export and possibly the module.",
+        "multiple": false,
+        "path": "optimization.inlineExports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Inline ESM exports that bind to small primitive constants (≤6-byte null/undefined/boolean/number/string). Inlining makes the import dependency inactive so DCE can drop the export and possibly the module.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-inner-graph": Object {
     "configs": Array [
       Object {

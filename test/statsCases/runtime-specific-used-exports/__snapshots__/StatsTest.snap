@@ -4,11 +4,11 @@ exports[`StatsTestCases runtime-specific-used-exports should print correct stats
 "production:
   asset production-a.js X KiB [emitted] (name: a)
   asset production-b.js X KiB [emitted] (name: b)
-  asset production-dw_js-_a6170.js X KiB [emitted]
-  asset production-dw_js-_a6171.js X KiB [emitted]
-  asset production-dx_js.js X KiB [emitted]
-  asset production-dy_js.js X KiB [emitted]
-  asset production-dz_js.js X KiB [emitted]
+  asset production-dw_js-_a6170.js X bytes [emitted]
+  asset production-dw_js-_a6171.js X bytes [emitted]
+  asset production-dy_js.js X bytes [emitted]
+  asset production-dz_js.js X bytes [emitted]
+  asset production-dx_js.js X bytes [emitted]
   asset production-c.js X bytes [emitted] (name: c)
   chunk (runtime: a) production-a.js (a) X bytes (javascript) X KiB (runtime) [entry] [rendered]
     runtime modules X KiB 9 modules
@@ -171,10 +171,10 @@ development:
 global:
   asset global-a.js X KiB [emitted] (name: a)
   asset global-b.js X KiB [emitted] (name: b)
-  asset global-dw_js.js X KiB [emitted]
-  asset global-dx_js.js X KiB [emitted]
-  asset global-dy_js.js X KiB [emitted]
-  asset global-dz_js.js X KiB [emitted]
+  asset global-dw_js.js X bytes [emitted]
+  asset global-dx_js.js X bytes [emitted]
+  asset global-dy_js.js X bytes [emitted]
+  asset global-dz_js.js X bytes [emitted]
   asset global-c.js X bytes [emitted] (name: c)
   chunk (runtime: a) global-a.js (a) X bytes (javascript) X KiB (runtime) [entry] [rendered]
     runtime modules X KiB 9 modules
