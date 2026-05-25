@@ -14,16 +14,24 @@ it("should ignore <body> / <title> markers that appear inside HTML comments", (d
 
 	NEXT(
 		require("../../update")(done, true, () => {
-			// On hot update the shim's comment-stripping + tag regex
+			// On hot update the shim's comment-masking + tag regex
 			// picks up the REAL title (`real title v2`) and REAL body
 			// (`<h1>real body v2</h1>`), NOT the comment decoys.
 			expect(document.title).toBe("real title v2");
 			expect(document.body.innerHTML).toContain("real body v2");
 			expect(document.body.innerHTML).not.toContain("real body v1");
-			// And the comment decoys never leaked into the patched DOM.
+			// The title decoy in the head comment never became the title.
 			expect(document.title).not.toContain("fake-title");
-			expect(document.body.innerHTML).not.toContain("decoy");
+			// The `<body>` decoy in the *head* comment was never selected
+			// as the body element.
 			expect(document.body.innerHTML).not.toContain("fake body");
+			// The real comment that lives inside <body> is preserved
+			// verbatim — masking only hides comment contents from the
+			// tag-boundary regexes, exactly as a full page reload would
+			// render the body (comments and all).
+			expect(document.body.innerHTML).toContain(
+				"<!-- another decoy <body>decoy</body> -->"
+			);
 			// Head sans title is stable (just the static <meta>), so
 			// the shim took the DOM-patch path, not the reload path.
 			expect(window.location.__reloadCount__ || 0).toBe(0);

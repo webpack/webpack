@@ -159,7 +159,8 @@ class FakeElement {
 		// FakeDocument doesn't parse HTML — the HMR DOM-patch test only
 		// asserts on the raw string passed in, so storing it verbatim is
 		// enough for verification.
-		this._innerHTML = String(value || "");
+		this._innerHTML =
+			value === undefined || value === null ? "" : String(value);
 	}
 
 	_attach(node) {
