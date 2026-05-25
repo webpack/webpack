@@ -97,5 +97,38 @@ describe("Compilation", () => {
 			expect(chunk.files.has("late.js")).toBe(false);
 			expect(chunk.files.has("renamed.js")).toBe(true);
 		});
+
+		it("unseal drops the cached reverse index", () => {
+			const compilation = createCompilation();
+			const chunk = compilation.addChunk("a");
+			compilation.emitAsset("a.js", new RawSource("// a"));
+			chunk.files.add("a.js");
+			// Build the index.
+			compilation.emitAsset("marker.js", new RawSource("// marker"));
+			compilation.deleteAsset("marker.js");
+			expect(compilation._assetToChunkIndex).toBeDefined();
+
+			compilation.unseal();
+
+			expect(compilation._assetToChunkIndex).toBeUndefined();
+			expect(compilation._assetToChunkAuxiliaryIndex).toBeUndefined();
+		});
+
+		it("renameAsset skips chunks that no longer hold the file (stale index)", () => {
+			const compilation = createCompilation();
+			const chunk = compilation.addChunk("a");
+			compilation.emitAsset("a.js", new RawSource("// a"));
+			chunk.files.add("a.js");
+			// Build the index so it records a.js -> chunk.
+			compilation.emitAsset("marker.js", new RawSource("// marker"));
+			compilation.deleteAsset("marker.js");
+			// Drop the file from the chunk directly, making the cached index stale.
+			chunk.files.delete("a.js");
+
+			compilation.renameAsset("a.js", "b.js");
+
+			expect(chunk.files.has("a.js")).toBe(false);
+			expect(chunk.files.has("b.js")).toBe(false);
+		});
 	});
 });
