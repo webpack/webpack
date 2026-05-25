@@ -151,5 +151,34 @@ describe("Compilation", () => {
 			expect(chunk.files.has("a.js")).toBe(false);
 			expect(chunk.files.has("b.js")).toBe(false);
 		});
+
+		it("deleteAsset falls back to scanning when the file is not in the index", () => {
+			const compilation = createCompilation();
+			const chunk = compilation.addChunk("a");
+			compilation.emitAsset("standalone.js", new RawSource("// s"));
+			// Build the index while standalone.js is in no chunk.
+			compilation.emitAsset("marker.js", new RawSource("// marker"));
+			compilation.deleteAsset("marker.js");
+			// Attach the already-emitted asset directly, bypassing emitAsset.
+			chunk.files.add("standalone.js");
+
+			compilation.deleteAsset("standalone.js");
+
+			expect(chunk.files.has("standalone.js")).toBe(false);
+		});
+
+		it("renameAsset falls back to scanning when the file is not in the index", () => {
+			const compilation = createCompilation();
+			const chunk = compilation.addChunk("a");
+			compilation.emitAsset("standalone.js", new RawSource("// s"));
+			compilation.emitAsset("marker.js", new RawSource("// marker"));
+			compilation.deleteAsset("marker.js");
+			chunk.files.add("standalone.js");
+
+			compilation.renameAsset("standalone.js", "renamed.js");
+
+			expect(chunk.files.has("standalone.js")).toBe(false);
+			expect(chunk.files.has("renamed.js")).toBe(true);
+		});
 	});
 });
