@@ -18956,7 +18956,7 @@ declare class ProgressPlugin {
 	static createDefaultHandler: (
 		profile: undefined | null | boolean,
 		logger: WebpackLogger,
-		progressBar:
+		progressBar?:
 			| false
 			| Required<{
 					/**

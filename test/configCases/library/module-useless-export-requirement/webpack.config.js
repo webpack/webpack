@@ -18,7 +18,6 @@ const common = {
 	}
 };
 
-/** @type {Configuration[]} */
 const configs = [
 	{
 		name: "entry1",
@@ -34,16 +33,25 @@ const configs = [
 		optimization: {
 			avoidEntryIife: false
 		}
+	},
+	{
+		name: "entry4",
+		entry: "./entry4.js",
+		css: true
 	}
 ];
 
 module.exports = configs.reduce(
 	/** @type {(result: EXPECTED_ANY, config: EXPECTED_ANY) => Configuration[]} */ (
 		result,
-		{ name, entry, optimization }
+		{ name, entry, optimization, css }
 	) => {
+		const extra = css
+			? { experiments: { ...common.experiments, css: true } }
+			: {};
 		result.push({
 			...common,
+			...extra,
 			optimization: {
 				...optimization,
 				concatenateModules: true
@@ -54,6 +62,7 @@ module.exports = configs.reduce(
 		});
 		result.push({
 			...common,
+			...extra,
 			optimization: {
 				...optimization,
 				concatenateModules: false
