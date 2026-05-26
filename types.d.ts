@@ -9138,10 +9138,42 @@ declare interface HtmlGeneratorOptions {
 }
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
-	hashFunction?: string | typeof Hash;
-	context?: string;
-	outputModule?: boolean;
-	css?: boolean;
+	sourcesByTag: Record<string, Record<string, SourceItem>>;
+	anyTagSources?: Record<string, SourceItem>;
+}
+
+/**
+ * Parser options for html modules.
+ */
+declare interface HtmlParserOptions {
+	/**
+	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `"..."` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
+	 */
+	sources?:
+		| boolean
+		| (
+				| "..."
+				| {
+						/**
+						 * Attribute name whose value is treated as a URL.
+						 */
+						attribute: string;
+						/**
+						 * Tag name to match. Omit to match any tag.
+						 */
+						tag?: string;
+						/**
+						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-inline` treats the attribute value as inline CSS text and bundles it through the CSS pipeline (the attribute's content is replaced with the processed CSS at render time, like an inline `<style>` body).
+						 */
+						type:
+							| "script"
+							| "src"
+							| "srcset"
+							| "script-module"
+							| "stylesheet"
+							| "stylesheet-inline";
+				  }
+		  )[];
 }
 
 /**
@@ -14229,7 +14261,6 @@ declare class Module extends DependenciesBlock {
 	factoryMeta?: FactoryMeta;
 	useSourceMap: boolean;
 	useSimpleSourceMap: boolean;
-	hot: boolean;
 	buildMeta?: BuildMeta;
 	buildInfo?: BuildInfo;
 	presentationalDependencies?: Dependency[];
@@ -16176,6 +16207,7 @@ declare class NormalModule extends Module {
 	matchResource?: string;
 	loaders: LoaderItem[];
 	extractSourceMap: boolean;
+	hot: boolean;
 	error: null | Error;
 	getResource(): null | string;
 
@@ -18614,6 +18646,11 @@ declare interface ParserOptionsByModuleTypeKnown {
 	 * Parser options for css/auto and css/module modules.
 	 */
 	"css/module"?: CssAutoOrModuleParserOptions;
+
+	/**
+	 * Parser options for html modules.
+	 */
+	html?: HtmlParserOptions;
 
 	/**
 	 * Parser options for javascript modules.
@@ -22715,6 +22752,10 @@ declare interface SourceAndMap {
 	 */
 	map: null | RawSourceMap;
 }
+declare interface SourceItem {
+	type: SourceTypeOrResolver;
+	filter?: (attributes: Map<string, string>) => boolean;
+}
 declare interface SourceLike {
 	/**
 	 * source
@@ -22898,6 +22939,23 @@ declare interface SourcePosition {
 	line: number;
 	column?: number;
 }
+type SourceType =
+	| "script"
+	| "src"
+	| "srcset"
+	| "script-module"
+	| "stylesheet"
+	| "stylesheet-inline"
+	| "modulepreload";
+type SourceTypeOrResolver =
+	| "script"
+	| "src"
+	| "srcset"
+	| "script-module"
+	| "stylesheet"
+	| "stylesheet-inline"
+	| "modulepreload"
+	| ((attrs: Map<string, string>, css: boolean) => SourceType);
 type SourceValue = string | Buffer;
 declare interface SplitChunksOptions {
 	chunksFilter: (chunk: Chunk) => undefined | boolean;

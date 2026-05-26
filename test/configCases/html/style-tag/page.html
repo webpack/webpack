@@ -14,8 +14,9 @@ body { color: red; }
 this stays
 </style>
 <style>
-  /* second sheet */
+  /* second sheet — non-ASCII content must round-trip (UTF-8, not ASCII) */
   .baz { color: green; }
+  .qux::before { content: "café →"; }
 </style>
 </head>
 <body>
