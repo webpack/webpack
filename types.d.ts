@@ -9149,6 +9149,10 @@ declare interface HtmlGeneratorOptions {
 }
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
+	template?: (
+		source: string,
+		context: { module: Module; resource: string }
+	) => string;
 	sourcesByTag: Record<string, Record<string, SourceItem>>;
 	anyTagSources?: Record<string, SourceItem>;
 }
@@ -9185,6 +9189,14 @@ declare interface HtmlParserOptions {
 							| "stylesheet-inline";
 				  }
 		  )[];
+
+	/**
+	 * Transform the raw source before the html parser extracts dependencies. Receives the source string and a context (`{ module, resource }`) and must return the html string to parse. Useful for compiling a templating language (Handlebars, EJS, Eta, …) to html so that URLs the template emits are still picked up as webpack dependencies. Runs synchronously.
+	 */
+	template?: (
+		source: string,
+		context: { module: Module; resource: string }
+	) => string;
 }
 
 /**

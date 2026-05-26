@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>HTML modules</title>
+
+		<!-- External stylesheet: goes through webpack's CSS pipeline and the
+		     emitted `.css` chunk is referenced here. -->
+		<link rel="stylesheet" href="./styles.css" />
+
+		<!-- Inline <style>: bundled as a CSS module; its `url()` references
+		     become asset dependencies. -->
+		<style>
+			body {
+				font-family: sans-serif;
+				margin: 2rem;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>HTML modules</h1>
+
+		<!-- Plain image source -->
+		<img src="./logo.png" alt="logo" width="150" />
+
+		<!-- Responsive image: every candidate in `srcset` is bundled -->
+		<img
+			src="./logo.png"
+			srcset="./logo.png 1x, ./logo@2x.png 2x"
+			alt="responsive logo"
+			width="150"
+		/>
+
+		<!-- External script: turned into a webpack entry, tag rewritten to
+		     the emitted bundle. -->
+		<script src="./entry.js"></script>
+
+		<!-- Inline script: its body is bundled and the tag is rewritten to a
+		     `<script src>` pointing at the emitted chunk. -->
+		<script>
+			console.log("inline script, bundled by webpack");
+		</script>
+	</body>
+</html>

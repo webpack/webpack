@@ -3558,6 +3558,10 @@ export interface HtmlParserOptions {
 				  }
 		  )[]
 		| boolean;
+	/**
+	 * Transform the raw source before the html parser extracts dependencies. Receives the source string and a context (`{ module, resource }`) and must return the html string to parse. Useful for compiling a templating language (Handlebars, EJS, Eta, …) to html so that URLs the template emits are still picked up as webpack dependencies. Runs synchronously.
+	 */
+	template?: import("../lib/html/HtmlParser").HtmlTemplateFunction;
 }
 /**
  * Parser options for javascript modules.
