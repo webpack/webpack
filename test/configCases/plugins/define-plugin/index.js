@@ -187,6 +187,13 @@ it("should not inline the object when calling an unknown member (issue 15559)", 
 	expect(() => OBJECT.SUB1.UNKNOWN()).toThrow();
 	expect(() => new OBJECT.SUB1.UNKNOWN()).toThrow();
 });
+it("should keep inherited members of a defined object accessible (issue 15559)", function () {
+	// resolved via `in` (not own-property), so inherited members stay reachable
+	const a = function () { return OBJECT.SUB1.toString; };
+	expect(a.toString()).toBe('function () { return ({"a":1}).toString; }');
+	expect(OBJECT.SUB1.toString()).toBe("[object Object]");
+	expect(OBJECT.SUB1.hasOwnProperty("a")).toBe(true);
+});
 it("should define ARRAY", function () {
 	(donotcallme)
 	ARRAY;
