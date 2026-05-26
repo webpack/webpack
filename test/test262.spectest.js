@@ -1104,7 +1104,11 @@ const knownProductionBuildBugs = [
 	// Production concatenation inlines a re-exported deferred namespace as
 	// the eager namespace of the underlying module, so cross-file deferred
 	// namespaces are no longer the same object as the local Proxy.
-	"import/import-defer/deferred-namespace-object/identity.js"
+	"import/import-defer/deferred-namespace-object/identity.js",
+
+	// Production InlineExports: Support disable inline export annotation to keep the TDZ
+	"module-code/instn-named-bndng-const.js",
+	"module-code/instn-iee-bndng-const.js"
 ];
 /* cspell:enable */
 
