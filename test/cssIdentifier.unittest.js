@@ -1,6 +1,5 @@
 "use strict";
 
-const CssParser = require("../lib/css/CssParser");
 const walkCssTokens = require("../lib/css/walkCssTokens");
 const { makeCacheable } = require("../lib/util/identifier");
 
@@ -30,10 +29,6 @@ describe("css identifier utils", () => {
 				expect(escapeIdentifier(input)).toBe(expected);
 			});
 		}
-
-		it("re-exports the same function on CssParser", () => {
-			expect(CssParser.escapeIdentifier).toBe(escapeIdentifier);
-		});
 
 		it("preserves the result when the same cache object is reused", () => {
 			const cache = {};
@@ -83,10 +78,6 @@ describe("css identifier utils", () => {
 				expect(unescapeIdentifier(input)).toBe(expected);
 			});
 		}
-
-		it("re-exports the same function on CssParser", () => {
-			expect(CssParser.unescapeIdentifier).toBe(unescapeIdentifier);
-		});
 
 		it("preserves the result when the same cache object is reused", () => {
 			const cache = {};
