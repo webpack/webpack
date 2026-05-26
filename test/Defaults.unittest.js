@@ -2338,7 +2338,7 @@ describe("snapshots", () => {
 			+               "fullySpecified": true,
 			+             },
 			+           },
-			+         ],
+			@@ ... @@
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
 			+       },
@@ -2353,7 +2353,7 @@ describe("snapshots", () => {
 			+               "fullySpecified": true,
 			+             },
 			+           },
-			@@ ... @@
+			+         ],
 			+         "type": "webassembly/async",
 			+       },
 			+       Object {
@@ -2377,13 +2377,13 @@ describe("snapshots", () => {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
-			+         },
+			@@ ... @@
 			+         "type": "css",
 			+       },
 			+       Object {
 			+         "dependency": /css-import-local-module/,
 			+         "exclude": /\\.module\\.\\w+$/i,
-			+         "resolve": Object {
+			@@ ... @@
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
@@ -2416,7 +2416,8 @@ describe("snapshots", () => {
 			+         },
 			+         "parser": Object {
 			+           "exportType": "css-style-sheet",
-			@@ ... @@
+			+         },
+			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
@@ -2449,28 +2450,27 @@ describe("snapshots", () => {
 			+       },
 			+       Object {
 			+         "resolve": Object {
+			@@ ... @@
+			+         "test": /\\.mts$/i,
+			@@ ... @@
+			+         "descriptionData": Object {
+			+           "type": "module",
+			+         },
+			+         "resolve": Object {
 			+           "byDependency": Object {
 			+             "esm": Object {
 			+               "fullySpecified": true,
 			+             },
 			+           },
 			+         },
-			+         "test": /\\.mts$/i,
-			+         "type": "javascript/esm",
-			+       },
-			+       Object {
-			+         "descriptionData": Object {
-			+           "type": "module",
-			+         },
-			+         "resolve": Object {
-			@@ ... @@
 			+         "test": /\\.ts$/i,
-			@@ ... @@
+			+         "type": "javascript/esm",
 			+       },
 			+       Object {
 			+         "test": /\\.cts$/i,
 			+         "type": "javascript/dynamic",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "descriptionData": Object {
 			+           "type": "commonjs",
 			+         },
@@ -2531,7 +2531,7 @@ describe("snapshots", () => {
 			+         "import": true,
 			+         "namedExports": true,
 			+         "url": true,
-			+       },
+			@@ ... @@
 			+       "css/auto": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -2539,7 +2539,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			+       },
+			@@ ... @@
 			+       "css/global": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -2547,7 +2547,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			@@ ... @@
+			+       },
 			+       "css/module": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -2558,6 +2558,7 @@ describe("snapshots", () => {
 			+       },
 			+       "html": Object {
 			+         "sources": true,
+			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -2592,9 +2593,6 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           ".ts",
 			@@ ... @@
-			+           "...",
-			+         ],
-			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2606,7 +2604,8 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
 			+       },
@@ -2625,7 +2624,7 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			@@ ... @@
+			+       },
 			+       "css-import-local-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2645,7 +2644,21 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
+			+           ".html",
 			+           ".ts",
+			@@ ... @@
+			+           ".css",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".html",
+			+           ".ts",
+			@@ ... @@
+			+           ".css",
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -2657,24 +2670,21 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
+			+           ".html",
 			+           ".ts",
+			@@ ... @@
+			+           ".css",
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
+			+           ".html",
 			+           ".ts",
 			@@ ... @@
-			+           "typescript",
-			@@ ... @@
-			+           ".ts",
-			@@ ... @@
-			+           "typescript",
-			@@ ... @@
-			+           ".ts",
+			+           ".css",
 			@@ ... @@
 			-     "cache": false,
 			+     "cache": true,
 			@@ ... @@
-			+     ],
 			+     "extensionAlias": Object {
 			+       ".cjs": Array [
 			+         ".cjs",
@@ -2683,7 +2693,7 @@ describe("snapshots", () => {
 			+       ".js": Array [
 			+         ".js",
 			+         ".ts",
-			@@ ... @@
+			+       ],
 			+       ".mjs": Array [
 			+         ".mjs",
 			+         ".mts",
@@ -3274,7 +3284,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			+       },
+			@@ ... @@
 			+       "css/global": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -3293,6 +3303,7 @@ describe("snapshots", () => {
 			@@ ... @@
 			+       "html": Object {
 			+         "sources": true,
+			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -3324,9 +3335,6 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           ".ts",
 			@@ ... @@
-			+           "...",
-			+         ],
-			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -3354,10 +3362,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			@@ ... @@
+			+       },
 			+       "css-import-local-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -3377,7 +3386,21 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
+			+           ".html",
 			+           ".ts",
+			@@ ... @@
+			+           ".css",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".html",
+			+           ".ts",
+			@@ ... @@
+			+           ".css",
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -3389,30 +3412,28 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
+			+           ".html",
 			+           ".ts",
+			@@ ... @@
+			+           ".css",
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
+			+           ".html",
 			+           ".ts",
 			@@ ... @@
-			+           "typescript",
-			@@ ... @@
-			+           ".ts",
-			@@ ... @@
-			+           "typescript",
-			@@ ... @@
-			+           ".ts",
+			+           ".css",
 			@@ ... @@
 			+     ],
 			+     "extensionAlias": Object {
 			+       ".cjs": Array [
 			+         ".cjs",
 			+         ".cts",
-			+       ],
+			@@ ... @@
 			+       ".js": Array [
 			+         ".js",
 			+         ".ts",
-			@@ ... @@
+			+       ],
 			+       ".mjs": Array [
 			+         ".mjs",
 			+         ".mts",
@@ -3557,9 +3578,10 @@ describe("snapshots", () => {
 			@@ ... @@
 			+       "html": Object {},
 			@@ ... @@
+			+         },
+			@@ ... @@
 			+       "html": Object {
 			+         "sources": true,
-			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -3591,6 +3613,16 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
+			+           ".html",
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".html",
 			+           ".ts",
 			@@ ... @@
 			+           "typescript",
@@ -3603,20 +3635,15 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
+			+           ".html",
 			+           ".ts",
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
+			+           ".html",
 			+           ".ts",
 			@@ ... @@
-			+           "typescript",
-			@@ ... @@
-			+           ".ts",
-			@@ ... @@
-			+           "typescript",
-			@@ ... @@
-			+           ".ts",
-			@@ ... @@
+			+     ],
 			+     "extensionAlias": Object {
 			+       ".cjs": Array [
 			+         ".cjs",
@@ -3625,7 +3652,7 @@ describe("snapshots", () => {
 			+       ".js": Array [
 			+         ".js",
 			+         ".ts",
-			+       ],
+			@@ ... @@
 			+       ".mjs": Array [
 			+         ".mjs",
 			+         ".mts",

@@ -1350,7 +1350,7 @@ export interface Experiments {
 	 */
 	futureDefaults?: boolean;
 	/**
-	 * Enable experimental HTML support. This flag does not by itself make `.html` files usable directly as entry points without additional HTML handling.
+	 * Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points.
 	 * @experimental
 	 */
 	html?: boolean;
