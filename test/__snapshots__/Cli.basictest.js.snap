@@ -2619,6 +2619,88 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-html-sources": Object {
+    "configs": Array [
+      Object {
+        "description": "A source entry: either the string \`\\"...\\"\` to inline the built-in default sources, or an object describing a \`tag\`/\`attribute\` pair to extract and how to bundle it.",
+        "multiple": true,
+        "path": "module.parser.html.sources[]",
+        "type": "enum",
+        "values": Array [
+          "...",
+        ],
+      },
+      Object {
+        "description": "Configure extraction of URL-like attribute values (e.g. \`<img src>\`, \`<link href>\`, \`<script src>\`) as webpack dependencies. \`true\` (default) uses the built-in source list; \`false\` disables extraction entirely so attributes are left untouched and \`<script src>\` / \`<link rel=\\"modulepreload\\">\` / \`<link rel=\\"stylesheet\\">\` no longer become compilation entries; an array lets you customize which \`tag\`/\`attribute\` pairs are treated as URLs and how they are bundled. Use the string \`\\"...\\"\` inside the array to inline the defaults. Inline \`<script>\` and \`<style>\` bodies are always processed. Use \`webpackIgnore\` comments or \`IgnorePlugin\` to skip individual URLs.",
+        "multiple": false,
+        "path": "module.parser.html.sources",
+        "type": "boolean",
+      },
+    ],
+    "description": "A source entry: either the string \`\\"...\\"\` to inline the built-in default sources, or an object describing a \`tag\`/\`attribute\` pair to extract and how to bundle it. Configure extraction of URL-like attribute values (e.g. \`<img src>\`, \`<link href>\`, \`<script src>\`) as webpack dependencies. \`true\` (default) uses the built-in source list; \`false\` disables extraction entirely so attributes are left untouched and \`<script src>\` / \`<link rel=\\"modulepreload\\">\` / \`<link rel=\\"stylesheet\\">\` no longer become compilation entries; an array lets you customize which \`tag\`/\`attribute\` pairs are treated as URLs and how they are bundled. Use the string \`\\"...\\"\` inside the array to inline the defaults. Inline \`<script>\` and \`<style>\` bodies are always processed. Use \`webpackIgnore\` comments or \`IgnorePlugin\` to skip individual URLs.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-html-sources-attribute": Object {
+    "configs": Array [
+      Object {
+        "description": "Attribute name whose value is treated as a URL.",
+        "multiple": true,
+        "path": "module.parser.html.sources[].attribute",
+        "type": "string",
+      },
+    ],
+    "description": "Attribute name whose value is treated as a URL.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-html-sources-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'module.parser.html.sources' configuration. Sources to extract as webpack dependencies. Use \`\\"...\\"\` to inline the default source list.",
+        "multiple": false,
+        "path": "module.parser.html.sources",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'module.parser.html.sources' configuration. Sources to extract as webpack dependencies. Use \`\\"...\\"\` to inline the default source list.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-html-sources-tag": Object {
+    "configs": Array [
+      Object {
+        "description": "Tag name to match. Omit to match any tag.",
+        "multiple": true,
+        "path": "module.parser.html.sources[].tag",
+        "type": "string",
+      },
+    ],
+    "description": "Tag name to match. Omit to match any tag.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-html-sources-type": Object {
+    "configs": Array [
+      Object {
+        "description": "How the attribute value should be parsed and bundled. \`src\` extracts a single URL as a plain asset; \`srcset\` parses a \`srcset\`-style list of candidate URLs as plain assets; \`script\` and \`script-module\` emit a classic / ES-module chunk entry like \`<script src>\` and \`<script type=\\"module\\" src>\`; \`stylesheet\` emits a CSS chunk entry like \`<link rel=\\"stylesheet\\">\`; \`stylesheet-inline\` treats the attribute value as inline CSS text and bundles it through the CSS pipeline (the attribute's content is replaced with the processed CSS at render time, like an inline \`<style>\` body).",
+        "multiple": true,
+        "path": "module.parser.html.sources[].type",
+        "type": "enum",
+        "values": Array [
+          "src",
+          "srcset",
+          "script",
+          "script-module",
+          "stylesheet",
+          "stylesheet-inline",
+        ],
+      },
+    ],
+    "description": "How the attribute value should be parsed and bundled. \`src\` extracts a single URL as a plain asset; \`srcset\` parses a \`srcset\`-style list of candidate URLs as plain assets; \`script\` and \`script-module\` emit a classic / ES-module chunk entry like \`<script src>\` and \`<script type=\\"module\\" src>\`; \`stylesheet\` emits a CSS chunk entry like \`<link rel=\\"stylesheet\\">\`; \`stylesheet-inline\` treats the attribute value as inline CSS text and bundles it through the CSS pipeline (the attribute's content is replaced with the processed CSS at render time, like an inline \`<style>\` body).",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-javascript-amd": Object {
     "configs": Array [
       Object {
@@ -7713,6 +7795,19 @@ Object {
       },
     ],
     "description": "The environment supports \`import.meta.dirname\` and \`import.meta.filename\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-let": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports let for variable declarations.",
+        "multiple": false,
+        "path": "output.environment.let",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports let for variable declarations.",
     "multiple": false,
     "simpleType": "boolean",
   },

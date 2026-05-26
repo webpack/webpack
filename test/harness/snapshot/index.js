@@ -121,7 +121,7 @@ const matchKindSnapshot = function (caseDir, kind, received) {
 		getActiveSnapshotState() || expect.getState().snapshotState;
 
 	const kindState = new SnapshotState(snapshotPath, {
-		updateSnapshot: parentState._updateSnapshot,
+		updateSnapshot: parentState._updateSnapshot === "all" ? "all" : "none",
 		snapshotFormat: parentState.snapshotFormat,
 		expand: parentState.expand,
 		prettierPath: parentState._prettierPath,

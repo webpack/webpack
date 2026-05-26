@@ -19,6 +19,7 @@ module.exports = {
 			  "forOf": true,
 			  "globalThis": true,
 			  "importMetaDirnameAndFilename": true,
+			  "let": true,
 			  "methodShorthand": true,
 			  "module": true,
 			  "nodePrefixForCoreModules": true,
