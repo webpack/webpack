@@ -3,13 +3,10 @@
 const path = require("path");
 const { Eta } = require("eta");
 
-// `views` lets templates `include()` partials from ./src. `cache: false` keeps
-// Eta reading the partials on every render, so the dependency capture below
-// stays reliable across rebuilds.
+// Default Eta: standard `<% %>` tags, can `include()` partials from ./src.
+// `cache: false` keeps partials being read on every render so the dependency
+// capture in `renderWithDeps` stays reliable across rebuilds.
 const eta = new Eta({ views: path.resolve(__dirname, "src"), cache: false });
-
-// Data injected into the template. In a real project this might come from a
-// CMS, frontmatter, a JSON file, etc.
 const data = {
 	title: "webpack + Eta",
 	items: ["Modules", "Chunks", "Dependencies"],
@@ -17,10 +14,21 @@ const data = {
 	year: "2025"
 };
 
+// A differently-configured Eta for the "special" page: custom `{{ }}` tags and
+// `autoEscape` disabled (so `raw` is emitted as real markup). Wired to a single
+// file through `module.rules` below.
+const specialEta = new Eta({ tags: ["{{", "}}"], autoEscape: false });
+const specialData = {
+	title: "Special",
+	heading: "Special page",
+	raw: "<p><em>Unescaped</em> markup injected from the template data.</p>"
+};
+
 /**
- * Renders the template while recording every partial Eta reads (by wrapping
- * `eta.readFile`), then registers those files as build dependencies so editing
- * a partial like `footer.eta` triggers a rebuild and invalidates the cache.
+ * Renders with the default Eta while recording every partial Eta reads (by
+ * wrapping `eta.readFile`), then registers those files via `addDependency` so
+ * editing a partial like `footer.eta` triggers a rebuild and invalidates the
+ * cache — even though the partial never becomes a webpack module.
  * @param {string} source template source
  * @param {(dependency: string) => void} addDependency register a build dependency
  * @returns {string} rendered html
@@ -43,22 +51,35 @@ function renderWithDeps(source, addDependency) {
 
 /** @type {import("webpack").Configuration} */
 const config = {
-	entry: "./src/index.html",
+	entry: {
+		// HTML entry points only — no JavaScript entry.
+		index: "./src/index.html",
+		special: "./src/special.html"
+	},
 	experiments: {
 		html: true
 	},
 	module: {
 		parser: {
 			html: {
-				// `template` runs before webpack parses the HTML, so the Eta
-				// template (including its `include`d partials) is compiled to
-				// plain HTML first. URLs the template emits (here `logo` and the
-				// `<script src>`) are then picked up as regular webpack
-				// dependencies.
+				// Default for every html module: render with Eta and track the
+				// partials it includes.
 				template: (source, { addDependency }) =>
 					renderWithDeps(source, addDependency)
 			}
-		}
+		},
+		rules: [
+			{
+				// Per-file parser options: only `special.html` gets the
+				// differently-configured Eta and its own data. `rule.parser`
+				// merges over `module.parser.html`, so this `template` wins for
+				// the matched file while `index.html` keeps the default.
+				test: /special\.html$/,
+				parser: {
+					template: (source) => specialEta.renderString(source, specialData)
+				}
+			}
+		]
 	}
 };
 
