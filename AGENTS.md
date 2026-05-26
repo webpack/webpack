@@ -101,7 +101,7 @@ JSDoc on exported symbols stays as-is — that's the type contract, not commenta
 
 ## Performance and memory
 
-webpack is a bundler — users measure it on build time and peak heap, and every line in `lib/` runs once per module (or per module × runtime, or per chunk × module) on user builds, so constant factors compound. Always weigh the time and memory cost of a change, including bug fixes and refactors: less allocation, smaller `Map`/`Set` footprints, and fewer closures retained on hot paths are wins worth pursuing — less is better. When introducing or holding any per-`Compilation` state, ask whether it can be released after seal/emit so user code holding `Stats` doesn't keep the whole graph pinned (#15521 is a worked example of getting this wrong).
+webpack is a bundler — users measure it on build time and peak heap, and many changes in `lib/` end up on per-module hot paths (sometimes per module × runtime, or per chunk × module) on user builds, so constant factors compound. Always weigh the time and memory cost of a change, including bug fixes and refactors: less allocation, smaller `Map`/`Set` footprints, and fewer closures retained on hot paths are wins worth pursuing — less is better. When introducing or holding any per-`Compilation` state, ask whether it can be released after seal/emit so user code holding `Stats` doesn't keep the whole graph pinned (#15521 is a worked example of getting this wrong).
 
 ## Auto-generated files
 
