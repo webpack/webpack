@@ -6,12 +6,11 @@ const config = {
 	// `<link rel="stylesheet">` and the inline `<style>`).
 	target: "web",
 	entry: {
-		// HTML entry point: emitted as a standalone `dist/page.html` with all
-		// of its `<link>`, `<script>`, `<img>` and inline `<script>`/`<style>`
-		// references bundled and rewritten.
-		page: "./src/index.html",
-		// JavaScript entry that imports an HTML module as a string.
-		app: "./src/app.js"
+		// Only an HTML entry point — no JavaScript entry. Its stylesheet,
+		// scripts (external and inline), inline style and images are all
+		// discovered from the HTML and bundled, and `dist/index.html` is
+		// emitted with every reference rewritten.
+		page: "./src/index.html"
 	},
 	experiments: {
 		html: true,

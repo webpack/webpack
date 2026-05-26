@@ -32,8 +32,10 @@
 		/>
 
 		<!-- External script: turned into a webpack entry, tag rewritten to
-		     the emitted bundle. -->
-		<script src="./entry.js"></script>
+		     the emitted bundle. This one imports an HTML module as a string
+		     (see app.js), so HTML-via-import is exercised without a JS
+		     entry point. -->
+		<script src="./app.js"></script>
 
 		<!-- Inline script: its body is bundled and the tag is rewritten to a
 		     `<script src>` pointing at the emitted chunk. -->

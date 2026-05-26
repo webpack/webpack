@@ -5,9 +5,10 @@ This example demonstrates the experimental HTML modules support
   `dist/index.html`. Its `<link rel="stylesheet">`, inline `<style>`,
   `<script src>`, inline `<script>`, `<img src>` and `<img srcset>` are all
   bundled, and the references are rewritten to the emitted assets.
-- **HTML imported from JavaScript** (`./src/app.js` imports
-  `./src/fragment.html`): the HTML module exports its URL-rewritten HTML as a
-  string and is _not_ emitted as a standalone file.
+- **HTML imported from JavaScript**: the page's `<script src="./app.js">`
+  imports `./src/fragment.html`. An HTML module imported from JS exports its
+  URL-rewritten HTML as a string and is _not_ emitted as a standalone file.
+  There is no JavaScript entry point — the script is reached through the HTML.
 
 # webpack.config.js
 
