@@ -1,0 +1,1 @@
+<footer>Built with webpack — <%= it.year %></footer>
