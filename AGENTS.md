@@ -257,12 +257,12 @@ Make sure to read our AI policy (https://github.com/webpack/governance/blob/main
 
 Required answer per section — **one sentence each is the target, two or three the absolute maximum**:
 
-- **Summary** — one sentence on motivation (what problem / use case / gap) and one on what changed; link the issue (`Closes #…` / `Fixes #…`) if there is one. Phrase it for whatever change type this is — "broken / fixed" only fits `fix` PRs; `feat`/`refactor`/`perf`/`docs` should describe the missing capability or rationale instead. No bench tables, no code blocks, no narrative of intermediate attempts.
-- **What kind of change does this PR introduce?** — a single word: fix, feat, refactor, perf, test, chore, ci, build, style, revert, docs.
-- **Did you add tests for your changes?** — yes/no + the test file name. One line.
-- **Does this PR introduce a breaking change?** — yes/no, plus a one-sentence migration note if yes.
-- **If relevant, what needs to be documented…** — one-line list or write `n/a`.
-- **Use of AI** — required, one or two sentences. State that Claude Code was used and the broad role (e.g. "Claude Code drafted the implementation under human review"). Per the [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md), omitting or misrepresenting this can get the PR closed.
+- **Summary** — motivation and what problem is solved; link the related issue (`Closes #…` / `Fixes #…`).
+- **What kind of change does this PR introduce?** — one of: fix, feat, refactor, perf, test, chore, ci, build, style, revert, docs.
+- **Did you add tests for your changes?** — yes/no + which test files.
+- **Does this PR introduce a breaking change?** — yes/no + migration path if yes.
+- **If relevant, what needs to be documented…** — list doc updates or write `n/a`.
+- **Use of AI** — state that AI was used and how. Per the [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md), omitting or misrepresenting this can get the PR closed.
 
 #### After push — verify PR body
 
