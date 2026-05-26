@@ -211,7 +211,7 @@ webpack uses an **org-wide** PR template. `gh pr create` does **not** prefill it
 
 The template is mandatory for **every** PR regardless of size or framing. Titles are plain text — use raw `<`, `>`, never HTML entities.
 
-**Keep every answer short — ideally one sentence, at most two or three.** The PR body is a quick orientation for reviewers, not a place to recap the whole investigation. No multi-paragraph essays, no bench tables, no code blocks, no walkthroughs of intermediate iterations or reverts. If another section in this guide suggests putting multi-paragraph rationale in the PR body, treat that older wording as superseded by this rule: longer explanations belong in a reply on the relevant inline review thread, a linked discussion issue, or the squash-merge commit body instead. A reviewer should be able to read the entire PR body in well under 30 seconds; if yours takes longer, trim it.
+**Keep every answer short — ideally one sentence, at most two or three.** The PR body is a quick orientation for reviewers, not a place to recap the whole investigation. No multi-paragraph essays, no bench tables, no code blocks, no walkthroughs of intermediate iterations or reverts. If another section in this guide expects rationale in the PR body (for example, to summarize why a changeset exists), keep that rationale to a brief summary here and put any longer explanation in a linked issue/discussion, a reply on the relevant inline review thread, or the squash-merge commit body instead. A reviewer should be able to read the entire PR body in well under 30 seconds; if yours takes longer, trim it.
 
 Common mistakes that block PRs:
 
