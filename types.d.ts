@@ -9160,7 +9160,7 @@ declare abstract class HtmlParser extends ParserClass {
 	 * dependency offsets against it) and the generator (which renders from
 	 * `module.originalSource()`) stay in agreement.
 	 */
-	applyTemplate(source: string | Buffer, module: Module): string | Buffer;
+	applyTemplate(source: string | Buffer, module: NormalModule): string | Buffer;
 }
 
 /**
