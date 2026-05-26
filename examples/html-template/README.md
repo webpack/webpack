@@ -100,7 +100,8 @@ const config = {
 				// the matched file while `index.html` keeps the default.
 				test: /special\.html$/,
 				parser: {
-					template: (source) => specialEta.renderString(source, specialData)
+					template: (/** @type {string} */ source) =>
+						specialEta.renderString(source, specialData)
 				}
 			}
 		]

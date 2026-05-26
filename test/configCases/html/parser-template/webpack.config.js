@@ -8,20 +8,31 @@ module.exports = {
 			html: {
 				template: (
 					source,
-					{ module, resource, addDependency, emitWarning, emitError }
+					{
+						module,
+						resource,
+						addDependency,
+						addContextDependency,
+						addMissingDependency,
+						emitWarning,
+						emitError
+					}
 				) => {
 					if (typeof resource !== "string" || !module) {
 						throw new Error("Expected module and resource in the context");
 					}
 					if (
 						typeof addDependency !== "function" ||
+						typeof addContextDependency !== "function" ||
+						typeof addMissingDependency !== "function" ||
 						typeof emitWarning !== "function" ||
 						typeof emitError !== "function"
 					) {
 						throw new Error("Incomplete html template context");
 					}
-					// Exercise addDependency (harmless: the module's own resource).
+					// Exercise the dependency helpers (harmless paths).
 					addDependency(resource);
+					addContextDependency(require("path").dirname(resource));
 					return source
 						.replace(/\{\{title\}\}/g, "Hello world")
 						.replace(/\{\{image\}\}/g, "./image.png");

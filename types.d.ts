@@ -9152,6 +9152,15 @@ declare abstract class HtmlParser extends ParserClass {
 	template?: (source: string, context: HtmlTemplateContext) => string;
 	sourcesByTag: Record<string, Record<string, SourceItem>>;
 	anyTagSources?: Record<string, SourceItem>;
+
+	/**
+	 * Runs the `template` option over the source and returns the transformed
+	 * html. Called from HtmlModulesPlugin's `processResult`, where the return
+	 * value becomes the module's stored source so the parser (which records
+	 * dependency offsets against it) and the generator (which renders from
+	 * `module.originalSource()`) stay in agreement.
+	 */
+	applyTemplate(source: string | Buffer, module: Module): string | Buffer;
 }
 
 /**
@@ -9207,6 +9216,16 @@ declare interface HtmlTemplateContext {
 	 * register a file (e.g. a template partial) as a build dependency so editing it triggers a rebuild
 	 */
 	addDependency: (dependency: string) => void;
+
+	/**
+	 * register a directory as a build dependency
+	 */
+	addContextDependency: (dependency: string) => void;
+
+	/**
+	 * register a not-yet-existing path as a build dependency so creating it triggers a rebuild
+	 */
+	addMissingDependency: (dependency: string) => void;
 
 	/**
 	 * report a non-fatal warning on the module
