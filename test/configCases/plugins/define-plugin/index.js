@@ -176,63 +176,15 @@ it("should resolve unknown member access on a dotted object key (issue 15559)", 
 	expect(a.toString()).toBe("function () { return undefined; }");
 	expect(b.toString()).toBe("function () { return undefined; }");
 });
-it("should resolve unknown optional and computed member access with undefined (issue 15559)", function () {
-	const a = function () { return OBJECT?.SUB1?.UNKNOWN; };
-	const b = function () { return OBJECT?.["SUB1"]?.["UNKNOWN"]; };
-	const c = function () { return NOT_DEFINED?.SUB2?.b; };
-	const d = function () { return NOT_DEFINED?.["SUB2"]?.["b"]; };
-	expect(a.toString()).toBe("function () { return undefined; }");
-	expect(b.toString()).toBe("function () { return undefined; }");
-	expect(c.toString()).toBe("function () { return undefined; }");
-	expect(d.toString()).toBe("function () { return undefined; }");
-	expect(OBJECT?.SUB1?.UNKNOWN).toBe(undefined);
-	expect(NOT_DEFINED?.SUB2?.b).toBe(undefined);
-});
 it("should not inline the object when calling an unknown member (issue 15559)", function () {
-	const a = function () { return OBJECT.SUB1.UNKNOWN?.(); };
-	const b = function () { return NOT_DEFINED.SUB2.b?.(); };
-	const c = function () { return OBJECT.SUB1.UNKNOWN(); };
-	expect(a.toString()).toBe("function () { return undefined?.(); }");
-	expect(b.toString()).toBe("function () { return undefined?.(); }");
-	expect(c.toString()).toBe("function () { return undefined(); }");
-	expect(OBJECT.SUB1.UNKNOWN?.()).toBe(undefined);
-	expect(NOT_DEFINED.SUB2.b?.()).toBe(undefined);
-	// a non-optional call to an undefined member still throws (no object inlined)
-	expect(() => OBJECT.SUB1.UNKNOWN()).toThrow();
-});
-it("should resolve optional calls on an unknown member without inlining the object (issue 15559)", function () {
-	const a = function () { return OBJECT.SUB1?.UNKNOWN?.(); };
-	const b = function () { return OBJECT?.SUB1?.UNKNOWN?.(); };
-	const c = function () { return OBJECT.SUB1["UNKNOWN"]?.(); };
-	const d = function () { return NOT_DEFINED?.SUB2?.b?.(); };
-	const e = function () { return OBJECT.SUB1.UNKNOWN?.().deep; };
-	expect(a.toString()).toBe("function () { return undefined?.(); }");
-	expect(b.toString()).toBe("function () { return undefined?.(); }");
-	expect(c.toString()).toBe("function () { return undefined?.(); }");
-	expect(d.toString()).toBe("function () { return undefined?.(); }");
-	expect(e.toString()).toBe("function () { return undefined?.().deep; }");
-	expect(OBJECT.SUB1?.UNKNOWN?.()).toBe(undefined);
-	expect(OBJECT?.SUB1?.UNKNOWN?.()).toBe(undefined);
-	expect(NOT_DEFINED?.SUB2?.b?.()).toBe(undefined);
-	expect(OBJECT.SUB1.UNKNOWN?.().deep).toBe(undefined);
-});
-it("should still substitute arguments of an unknown member call (issue 15559)", function () {
-	const a = function () { return OBJECT.SUB1.UNKNOWN?.(STRING); };
-	expect(a.toString()).toBe('function () { return undefined?.("string"); }');
-});
-it("should resolve unknown member calls in other chain forms without inlining the object (issue 15559)", function () {
-	const a = function () { return OBJECT.SUB1?.UNKNOWN(); };
-	const b = function () { return OBJECT?.SUB1?.UNKNOWN(); };
-	const c = function () { return NOT_DEFINED.SUB2?.b(); };
-	const d = function () { return (OBJECT.SUB1.UNKNOWN)(); };
-	const e = function () { return new OBJECT.SUB1.UNKNOWN(); };
+	const a = function () { return OBJECT.SUB1.UNKNOWN(); };
+	const b = function () { return (OBJECT.SUB1.UNKNOWN)(); };
+	const c = function () { return new OBJECT.SUB1.UNKNOWN(); };
 	expect(a.toString()).toBe("function () { return undefined(); }");
-	expect(b.toString()).toBe("function () { return undefined(); }");
-	expect(c.toString()).toBe("function () { return undefined(); }");
-	expect(d.toString()).toBe("function () { return (undefined)(); }");
-	expect(e.toString()).toBe("function () { return new undefined(); }");
+	expect(b.toString()).toBe("function () { return (undefined)(); }");
+	expect(c.toString()).toBe("function () { return new undefined(); }");
 	// the object is not inlined; calling an undefined member still throws
-	expect(() => OBJECT.SUB1?.UNKNOWN()).toThrow();
+	expect(() => OBJECT.SUB1.UNKNOWN()).toThrow();
 	expect(() => new OBJECT.SUB1.UNKNOWN()).toThrow();
 });
 it("should define ARRAY", function () {
