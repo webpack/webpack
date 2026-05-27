@@ -99,6 +99,10 @@ Comments inside `lib/`, `hot/`, `tooling/`, and `test/` must be **as short as po
 
 JSDoc on exported symbols stays as-is — that's the type contract, not commentary.
 
+## Performance and memory
+
+webpack is a bundler — users measure it by build time and peak heap usage. Many changes in `lib/` end up on per-module hot paths (sometimes per module × runtime, or per chunk × module) on user builds, so constant factors compound. Always weigh the time and memory cost of a change, including bug fixes and refactors: less allocation, smaller `Map`/`Set` footprints, and fewer closures retained on hot paths are wins worth pursuing — less is better. When introducing or holding any per-`Compilation` state, ask whether it can be released after seal/emit so large compilation data structures are not retained longer than necessary. See #15521 for an example of how this class of memory issue can surface.
+
 ## Auto-generated files
 
 > [!REQUIRED]
@@ -207,6 +211,8 @@ webpack uses an **org-wide** PR template. `gh pr create` does **not** prefill it
 
 The template is mandatory for **every** PR regardless of size or framing. Titles are plain text — use raw `<`, `>`, never HTML entities.
 
+**Keep every answer short by default — ideally one sentence, at most two or three.** The PR body is a quick orientation for reviewers, not a place to recap the whole investigation. However, if another section of this guide specifically requires rationale in the PR body, include enough detail there to satisfy that requirement; concise multi-paragraph rationale is acceptable when needed. Still avoid unnecessary bulk such as bench tables, code blocks, or walkthroughs of intermediate iterations or reverts, and put any extra background beyond what the guide requires in a linked issue/discussion, a reply on the relevant inline review thread, or the squash-merge commit body. A reviewer should usually be able to read the entire PR body in well under 30 seconds; if yours takes longer without a guide-required reason, trim it.
+
 Common mistakes that block PRs:
 
 - Using `## Summary` headings instead of `**Summary**` bold labels.
@@ -249,7 +255,7 @@ Paste the body from the fenced block below (do **not** include the fence lines t
 Make sure to read our AI policy (https://github.com/webpack/governance/blob/main/AI_POLICY.md) or your Pull Request may be closed due to irresponsible use of AI. -->
 ```
 
-Required answer per section:
+Required answer per section — **one sentence each is the target, two or three the absolute maximum**:
 
 - **Summary** — motivation and what problem is solved; link the related issue (`Closes #…` / `Fixes #…`).
 - **What kind of change does this PR introduce?** — one of: fix, feat, refactor, perf, test, chore, ci, build, style, revert, docs.
