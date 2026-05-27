@@ -233,4 +233,89 @@ describe("buildHtmlAst", () => {
 		expect(span.end).toBeDefined();
 		expect(span.end).toBe(div.end);
 	});
+
+	it("should handle Foster Parenting for tables", () => {
+		const ast = buildHtmlAst(
+			"<table><div>Misplaced</div><tr><td>OK</td></tr></table>"
+		);
+		expect(ast.children).toHaveLength(2);
+		expect(ast.children[0].type).toBe("element");
+		expect(ast.children[0].tagName).toBe("div");
+		expect(ast.children[0].children[0].data).toBe("Misplaced");
+
+		expect(ast.children[1].type).toBe("element");
+		expect(ast.children[1].tagName).toBe("table");
+		expect(ast.children[1].children[0].tagName).toBe("tr");
+	});
+
+	it("should handle the Adoption Agency Algorithm", () => {
+		const ast = buildHtmlAst("<b>1<p>2</b>3</p>");
+
+		expect(ast.children).toHaveLength(1);
+		expect(ast.children[0].tagName).toBe("b");
+		expect(ast.children[0].children).toHaveLength(2);
+		expect(ast.children[0].children[0].data).toBe("1");
+
+		expect(ast.children[0].children[1].tagName).toBe("p");
+		const clone = ast.children[0].children[1].children[0];
+		expect(clone.tagName).toBe("b");
+		expect(clone.children[0].data).toBe("2");
+		expect(ast.children[0].children[1].children[1].data).toBe("3");
+	});
+
+	it("should handle Active Formatting Elements reconstruction", () => {
+		const ast = buildHtmlAst("<p>1<b>2</p>3</b>");
+		expect(ast.children).toHaveLength(2);
+		expect(ast.children[0].tagName).toBe("p");
+		expect(ast.children[0].children).toHaveLength(2);
+		expect(ast.children[0].children[0].data).toBe("1");
+		expect(ast.children[0].children[1].tagName).toBe("b");
+		expect(ast.children[0].children[1].children[0].data).toBe("2");
+
+		expect(ast.children[1].tagName).toBe("b");
+		expect(ast.children[1].children[0].data).toBe("3");
+	});
+
+	it("should handle Foster Parenting with adjacent text nodes", () => {
+		const ast = buildHtmlAst("Text<table>Misplaced</table>");
+		expect(ast.children).toHaveLength(2); // "TextMisplaced", <table>
+		expect(ast.children[0].data).toBe("TextMisplaced");
+		expect(ast.children[1].tagName).toBe("table");
+	});
+
+	it("should handle Noah's Ark limit of 3 formatting elements", () => {
+		const ast = buildHtmlAst("<b><b><b><b></b></b></b></b>");
+		expect(ast.children).toHaveLength(1);
+	});
+
+	it("should handle AAA when formatting element is not in openElements", () => {
+		const ast = buildHtmlAst("<p><b>1</p></b>");
+		expect(ast.children).toHaveLength(1);
+		expect(ast.children[0].tagName).toBe("p");
+		expect(ast.children[0].children[0].tagName).toBe("b");
+	});
+});
+
+describe("buildHtmlAst Edge Cases", () => {
+	it("should handle Foster Parenting before a non-text node", () => {
+		const ast = buildHtmlAst("<div></div><table>Misplaced</table>");
+		expect(ast.children).toHaveLength(3);
+		expect(ast.children[0].tagName).toBe("div");
+		expect(ast.children[1].data).toBe("Misplaced");
+		expect(ast.children[2].tagName).toBe("table");
+	});
+
+	it("should break reconstruction cleanly if prior active formatting element is still open", () => {
+		const ast = buildHtmlAst("<b>1<p><i>2</p>3</i></b>");
+		expect(ast.children).toHaveLength(1);
+		expect(ast.children[0].tagName).toBe("b");
+		expect(ast.children[0].children[2].tagName).toBe("i");
+		expect(ast.children[0].children[2].children[0].data).toBe("3");
+	});
+
+	it("should bail out of AAA if the formatting element was never opened", () => {
+		const ast = buildHtmlAst("<div></b></div>");
+		expect(ast.children).toHaveLength(1);
+		expect(ast.children[0].tagName).toBe("div");
+	});
 });
