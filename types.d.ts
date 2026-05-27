@@ -9154,16 +9154,13 @@ declare abstract class HtmlParser extends ParserClass {
 	anyTagSources?: Record<string, SourceItem>;
 
 	/**
-	 * Runs the `template` option over the source, replaces the module's stored
-	 * source with the result so the parser (which records dependency offsets
-	 * against it) and the generator (which renders from
-	 * `module.originalSource()`) stay in agreement, and returns it.
+	 * Runs the `template` option over the source and returns the transformed
+	 * html. Called from HtmlModulesPlugin's `processResult`, where the return
+	 * value becomes the module's stored source so the parser (which records
+	 * dependency offsets against it) and the generator (which renders from
+	 * `module.originalSource()`) stay in agreement.
 	 */
-	applyTemplate(
-		source: string,
-		module: NormalModule,
-		compilation: Compilation
-	): string;
+	applyTemplate(source: string | Buffer, module: NormalModule): string | Buffer;
 }
 
 /**
@@ -16324,13 +16321,6 @@ declare class NormalModule extends Module {
 			| (string | RegExp | ((content: string) => boolean))[],
 		request: string
 	): boolean;
-
-	/**
-	 * Replaces the module source produced by the loaders. Intended for parsers
-	 * that transform the source before generation (e.g. the html `template`
-	 * option), so the generated output stays in sync with what was parsed.
-	 */
-	setSource(source: Source): void;
 	static getCompilationHooks(
 		compilation: Compilation
 	): NormalModuleCompilationHooks;
