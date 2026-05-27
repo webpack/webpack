@@ -154,6 +154,46 @@ it("should define OBJECT.SUB.STRING", function () {
 		expect(sub.STRING).toBe("string");
 	})(OBJECT.SUB);
 });
+it("should replace unknown member access with undefined (issue 15559)", function () {
+	expect(typeof OBJECT.UNKNOWN).toBe("undefined");
+	const a = function () { return OBJECT.UNKNOWN.A; };
+	const b = function () { return OBJECT.SUB1.UNKNOWN; };
+	expect(a.toString()).toBe("function () { return undefined; }");
+	expect(b.toString()).toBe("function () { return undefined; }");
+	expect(OBJECT.SUB1.a).toBe(1);
+	expect(OBJECT.SUB2.a).toBe(1);
+	expect(OBJECT.SUB2.b).toBe(undefined);
+	expect(OBJECT.SUB2).toEqual({ a: 1 });
+	expect(NOT_DEFINED.SUB2.a).toBe(1);
+	expect(NOT_DEFINED.SUB2.b).toBe(undefined);
+	expect(NOT_DEFINED.SUB2).toEqual({ a: 1 });
+});
+it("should resolve unknown member access on a dotted object key (issue 15559)", function () {
+	// dotted key whose root also has a single-identifier object define
+	const a = function () { return OBJECT.SUB2.b; };
+	// dotted key whose root is only ever a dotted define (no inlining of the object)
+	const b = function () { return NOT_DEFINED.SUB2.b; };
+	expect(a.toString()).toBe("function () { return undefined; }");
+	expect(b.toString()).toBe("function () { return undefined; }");
+});
+it("should not inline the object when calling an unknown member (issue 15559)", function () {
+	const a = function () { return OBJECT.SUB1.UNKNOWN(); };
+	const b = function () { return (OBJECT.SUB1.UNKNOWN)(); };
+	const c = function () { return new OBJECT.SUB1.UNKNOWN(); };
+	expect(a.toString()).toBe("function () { return undefined(); }");
+	expect(b.toString()).toBe("function () { return (undefined)(); }");
+	expect(c.toString()).toBe("function () { return new undefined(); }");
+	// the object is not inlined; calling an undefined member still throws
+	expect(() => OBJECT.SUB1.UNKNOWN()).toThrow();
+	expect(() => new OBJECT.SUB1.UNKNOWN()).toThrow();
+});
+it("should keep inherited members of a defined object accessible (issue 15559)", function () {
+	// resolved via `in` (not own-property), so inherited members stay reachable
+	const a = function () { return OBJECT.SUB1.toString; };
+	expect(a.toString()).toBe('function () { return ({"a":1}).toString; }');
+	expect(OBJECT.SUB1.toString()).toBe("[object Object]");
+	expect(OBJECT.SUB1.hasOwnProperty("a")).toBe(true);
+});
 it("should define ARRAY", function () {
 	(donotcallme)
 	ARRAY;

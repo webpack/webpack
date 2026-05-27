@@ -332,17 +332,18 @@ module.exports = /*#__PURE__*/JSON.parse('{"name":"virtual-url-plugin"}');
 /*!************************************!*\
   !*** virtual:my-typescript-module ***!
   \************************************/
-/*! flagged exports */
-/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
+/*! namespace exports */
 /*! export default [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__ */
-/***/ ((__unused_webpack_module, exports) => {
+/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-var value = "value-from-typescript";
-exports["default"] = value;
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const value = "value-from-typescript";
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (value);
 
 
 /***/ }),
@@ -350,17 +351,17 @@ exports["default"] = value;
 /*!************************!*\
   !*** virtual:hello.ts ***!
   \************************/
-/*! flagged exports */
-/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
+/*! namespace exports */
 /*! export hello [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__ */
-/***/ ((__unused_webpack_module, exports) => {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.hello = void 0;
-exports.hello = 'hello';
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   hello: () => (/* binding */ hello)
+/* harmony export */ });
+const hello = 'hello';
 
 
 /***/ }),
@@ -709,13 +710,13 @@ module.exports = __webpack_require__.p + "logo.svg";
 ## Unoptimized
 
 ```
-asset output.js 20.1 KiB [emitted] (name: main)
+asset output.js 20.4 KiB [emitted] (name: main)
 asset 1.output.js 803 bytes [emitted]
 asset 2.output.js 803 bytes [emitted]
 asset logo.svg 78 bytes [emitted] [from: virtual:logo.svg] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 2.15 KiB (javascript) 78 bytes (asset) 4.24 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.98 KiB (javascript) 78 bytes (asset) 4.24 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  dependent modules 791 bytes (javascript) 78 bytes (asset) [dependent] 12 modules
+  dependent modules 617 bytes (javascript) 78 bytes (asset) [dependent] 12 modules
   runtime modules 4.24 KiB 8 modules
   ./example.js 1.38 KiB [built] [code generated]
     [no exports]
@@ -739,7 +740,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.7 KiB [emitted] [minimized] (name: main)
+asset output.js 2.73 KiB [emitted] [minimized] (name: main)
 asset 263.output.js 118 bytes [emitted] [minimized]
 asset 722.output.js 118 bytes [emitted] [minimized]
 asset logo.svg 78 bytes [emitted] [from: virtual:logo.svg] (auxiliary name: main)
@@ -753,9 +754,9 @@ chunk (runtime: main) 722.output.js 20 bytes [rendered]
   ./routes/b.js 20 bytes [built] [code generated]
     [exports: default]
     import() ./routes/b.js virtual:routes 2:9-32
-chunk (runtime: main) output.js (main) 2.15 KiB (javascript) 78 bytes (asset) 4.24 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.98 KiB (javascript) 78 bytes (asset) 4.24 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  dependent modules 791 bytes (javascript) 78 bytes (asset) [dependent] 11 modules
+  dependent modules 617 bytes (javascript) 78 bytes (asset) [dependent] 11 modules
   runtime modules 4.24 KiB 8 modules
   ./example.js 1.38 KiB [built] [code generated]
     [no exports]

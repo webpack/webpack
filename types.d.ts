@@ -6890,6 +6890,11 @@ declare interface Environment {
 	importMetaDirnameAndFilename?: boolean;
 
 	/**
+	 * The environment supports let for variable declarations.
+	 */
+	let?: boolean;
+
+	/**
 	 * The environment supports object method shorthand ('{ module() {} }').
 	 */
 	methodShorthand?: boolean;
@@ -7096,7 +7101,7 @@ declare interface Experiments {
 	futureDefaults?: boolean;
 
 	/**
-	 * Enable experimental HTML support. This flag does not by itself make `.html` files usable directly as entry points without additional HTML handling.
+	 * Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points.
 	 * @experimental
 	 */
 	html?: boolean;
@@ -7243,6 +7248,13 @@ declare abstract class ExportInfo {
 	 * undefined: it was not determined if it can be mangled
 	 */
 	canMangleUse?: boolean;
+
+	/**
+	 * Only specific export info can be pure, so other_export_info.pure is always undefined.
+	 * true: calling the export has no observable side effects
+	 * undefined: it was not determined whether the export is pure
+	 */
+	pureProvide?: boolean;
 	exportsInfoOwned: boolean;
 	exportsInfo?: ExportsInfo;
 	get canMangle(): boolean;
@@ -7407,6 +7419,11 @@ declare interface ExportSpec {
 	 * is the export a terminal binding that should be checked for export star conflicts
 	 */
 	terminalBinding?: boolean;
+
+	/**
+	 * calling this export has no observable side effects
+	 */
+	isPure?: boolean;
 
 	/**
 	 * nested exports
@@ -7623,6 +7640,11 @@ declare interface ExportsSpec {
 	 * are the exports terminal bindings that should be checked for export star conflicts
 	 */
 	terminalBinding?: boolean;
+
+	/**
+	 * calling these exports has no observable side effects
+	 */
+	isPure?: boolean;
 
 	/**
 	 * module on which the result depends on
@@ -9097,10 +9119,42 @@ declare interface HtmlGeneratorOptions {
 }
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
-	hashFunction?: string | typeof Hash;
-	context?: string;
-	outputModule?: boolean;
-	css?: boolean;
+	sourcesByTag: Record<string, Record<string, SourceItem>>;
+	anyTagSources?: Record<string, SourceItem>;
+}
+
+/**
+ * Parser options for html modules.
+ */
+declare interface HtmlParserOptions {
+	/**
+	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `"..."` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
+	 */
+	sources?:
+		| boolean
+		| (
+				| "..."
+				| {
+						/**
+						 * Attribute name whose value is treated as a URL.
+						 */
+						attribute: string;
+						/**
+						 * Tag name to match. Omit to match any tag.
+						 */
+						tag?: string;
+						/**
+						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-inline` treats the attribute value as inline CSS text and bundles it through the CSS pipeline (the attribute's content is replaced with the processed CSS at render time, like an inline `<style>` body).
+						 */
+						type:
+							| "script"
+							| "src"
+							| "srcset"
+							| "script-module"
+							| "stylesheet"
+							| "stylesheet-inline";
+				  }
+		  )[];
 }
 
 /**
@@ -9669,6 +9723,40 @@ declare class InitFragment<GenerateContext> {
 	static STAGE_PROVIDES: number;
 	static STAGE_ASYNC_DEPENDENCIES: number;
 	static STAGE_ASYNC_HARMONY_IMPORTS: number;
+}
+declare interface InnerGraphUtils {
+	enable: (parserState: ParserState) => void;
+	bailout: (parserState: ParserState) => void;
+	isEnabled: (parserState: ParserState) => boolean;
+	addUsage: (
+		parserState: ParserState,
+		symbol: null | TopLevelSymbol,
+		usage: Usage
+	) => void;
+	onUsage: (
+		parserState: ParserState,
+		onUsageCallback: (
+			value: undefined | boolean | Set<string>,
+			module: Module
+		) => void
+	) => void;
+	setTopLevelSymbol: (
+		parserState: ParserState,
+		symbol?: TopLevelSymbol
+	) => void;
+	getTopLevelSymbol: (parserState: ParserState) => void | TopLevelSymbol;
+	tagTopLevelSymbol: (
+		parser: JavascriptParser,
+		name: string,
+		pure?: boolean | ((compilation: Compilation, module: Module) => boolean)
+	) => undefined | TopLevelSymbol;
+	addVariableUsage: (
+		parser: JavascriptParser,
+		name: string,
+		usage: Usage
+	) => void;
+	inferDependencyUsage: (module: Module) => void;
+	release: (module: Module) => void;
 }
 
 /**
@@ -12475,6 +12563,11 @@ declare interface KnownBuildInfo {
 	 * top level declaration names
 	 */
 	topLevelDeclarations?: Set<string>;
+
+	/**
+	 * names of locally declared functions known to be free of side effects
+	 */
+	pureFunctions?: Set<string>;
 }
 declare interface KnownBuildMeta {
 	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
@@ -14130,7 +14223,6 @@ declare class Module extends DependenciesBlock {
 	factoryMeta?: FactoryMeta;
 	useSourceMap: boolean;
 	useSimpleSourceMap: boolean;
-	hot: boolean;
 	buildMeta?: BuildMeta;
 	buildInfo?: BuildInfo;
 	presentationalDependencies?: Dependency[];
@@ -16077,6 +16169,7 @@ declare class NormalModule extends Module {
 	matchResource?: string;
 	loaders: LoaderItem[];
 	extractSourceMap: boolean;
+	hot: boolean;
 	error: null | Error;
 	getResource(): null | string;
 
@@ -18506,6 +18599,11 @@ declare interface ParserOptionsByModuleTypeKnown {
 	"css/module"?: CssAutoOrModuleParserOptions;
 
 	/**
+	 * Parser options for html modules.
+	 */
+	html?: HtmlParserOptions;
+
+	/**
 	 * Parser options for javascript modules.
 	 */
 	javascript?: JavascriptParserOptions;
@@ -18851,7 +18949,7 @@ declare class ProgressPlugin {
 	static createDefaultHandler: (
 		profile: undefined | null | boolean,
 		logger: WebpackLogger,
-		progressBar:
+		progressBar?:
 			| false
 			| Required<{
 					/**
@@ -19002,6 +19100,9 @@ declare interface ProvidesConfig {
 declare interface ProvidesObject {
 	[index: string]: string | ProvidesConfig;
 }
+type PureCondition =
+	| boolean
+	| ((compilation: Compilation, module: Module) => boolean);
 declare interface RawChunkGroupOptions {
 	preloadOrder?: number;
 	prefetchOrder?: number;
@@ -20887,6 +20988,7 @@ declare interface RestoreProvidedDataExports {
 	provided?: null | boolean;
 	canMangleProvide?: boolean;
 	terminalBinding: boolean;
+	pureProvide?: boolean;
 	exportsInfo?: RestoreProvidedData;
 }
 type Rule = string | RegExp | ((str: string) => boolean);
@@ -21493,6 +21595,7 @@ declare abstract class RuntimeTemplate {
 	isModule(): boolean;
 	isNeutralPlatform(): boolean;
 	supportsConst(): boolean;
+	supportsLet(): boolean;
 	supportsMethodShorthand(): boolean;
 	supportsArrowFunction(): boolean;
 	supportsAsyncFunction(): boolean;
@@ -21511,9 +21614,14 @@ declare abstract class RuntimeTemplate {
 	renderNodePrefixForCoreModule(mod: string): string;
 
 	/**
-	 * Renders return const when it is supported, otherwise var.
+	 * Renders return const when it is supported, otherwise let when supported, otherwise var.
 	 */
-	renderConst(): "var" | "const";
+	renderConst(): "var" | "const" | "let";
+
+	/**
+	 * Renders return let when it is supported, otherwise var.
+	 */
+	renderLet(): "var" | "let";
 
 	/**
 	 * Returning function.
@@ -22589,6 +22697,10 @@ declare interface SourceAndMap {
 	 */
 	map: null | RawSourceMap;
 }
+declare interface SourceItem {
+	type: SourceTypeOrResolver;
+	filter?: (attributes: Map<string, string>) => boolean;
+}
 declare interface SourceLike {
 	/**
 	 * source
@@ -22772,6 +22884,23 @@ declare interface SourcePosition {
 	line: number;
 	column?: number;
 }
+type SourceType =
+	| "script"
+	| "src"
+	| "srcset"
+	| "script-module"
+	| "stylesheet"
+	| "stylesheet-inline"
+	| "modulepreload";
+type SourceTypeOrResolver =
+	| "script"
+	| "src"
+	| "srcset"
+	| "script-module"
+	| "stylesheet"
+	| "stylesheet-inline"
+	| "modulepreload"
+	| ((attrs: Map<string, string>, css: boolean) => SourceType);
 type SourceValue = string | Buffer;
 declare interface SplitChunksOptions {
 	chunksFilter: (chunk: Chunk) => undefined | boolean;
@@ -24009,8 +24138,19 @@ declare class TopLevelSymbol {
 	/**
 	 * Creates an instance of TopLevelSymbol.
 	 */
-	constructor(name: string);
+	constructor(
+		name: string,
+		pure?: boolean | ((compilation: Compilation, module: Module) => boolean)
+	);
 	name: string;
+	conditional: boolean;
+	pureFn?: (compilation: Compilation, module: Module) => boolean;
+
+	/**
+	 * Sets the pure condition
+	 */
+	setPure(pure: PureCondition): void;
+	isPure(compilation: Compilation, module: Module): boolean;
 }
 
 /**
@@ -25374,21 +25514,8 @@ declare namespace exports {
 	}
 	export namespace optimize {
 		export namespace InnerGraph {
-			export let addUsage: (
-				state: ParserState,
-				symbol: null | TopLevelSymbol,
-				usage: Usage
-			) => void;
-			export let addVariableUsage: (
-				parser: JavascriptParser,
-				name: string,
-				usage: Usage
-			) => void;
-			export let bailout: (parserState: ParserState) => void;
-			export let enable: (parserState: ParserState) => void;
 			export let getDependencyUsedByExportsCondition: (
 				dependency: Dependency,
-				usedByExports: undefined | boolean | Set<string>,
 				moduleGraph: ModuleGraph
 			) =>
 				| null
@@ -25397,29 +25524,9 @@ declare namespace exports {
 						moduleGraphConnection: ModuleGraphConnection,
 						runtime: RuntimeSpec
 				  ) => ConnectionState);
-			export let getTopLevelSymbol: (
-				state: ParserState
-			) => void | TopLevelSymbol;
-			export let inferDependencyUsage: (state: ParserState) => void;
-			export let isDependencyUsedByExports: (
-				dependency: Dependency,
-				usedByExports: undefined | boolean | Set<string>,
-				moduleGraph: ModuleGraph,
-				runtime: RuntimeSpec
-			) => boolean;
-			export let isEnabled: (parserState: ParserState) => boolean;
-			export let onUsage: (
-				state: ParserState,
-				onUsageCallback: (value?: boolean | Set<string>) => void
-			) => void;
-			export let setTopLevelSymbol: (
-				state: ParserState,
-				symbol?: TopLevelSymbol
-			) => void;
-			export let tagTopLevelSymbol: (
-				parser: JavascriptParser,
-				name: string
-			) => undefined | TopLevelSymbol;
+			export let getInnerGraphUtils: (
+				compilation: Compilation
+			) => InnerGraphUtils;
 			export { TopLevelSymbol, topLevelSymbolTag };
 		}
 		export {

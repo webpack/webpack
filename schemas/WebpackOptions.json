@@ -1068,6 +1068,10 @@
           "description": "The environment supports `import.meta.dirname` and `import.meta.filename`.",
           "type": "boolean"
         },
+        "let": {
+          "description": "The environment supports let for variable declarations.",
+          "type": "boolean"
+        },
         "methodShorthand": {
           "description": "The environment supports object method shorthand ('{ module() {} }').",
           "type": "boolean"
@@ -1138,7 +1142,7 @@
           "experimental": true
         },
         "html": {
-          "description": "Enable experimental HTML support. This flag does not by itself make `.html` files usable directly as entry points without additional HTML handling.",
+          "description": "Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points.",
           "type": "boolean",
           "experimental": true
         },
@@ -1783,6 +1787,62 @@
         "extract": {
           "description": "Emit the parsed and URL-rewritten HTML as a standalone `.html` output file alongside the module's JavaScript export. When unset, extraction defaults to `true` for HTML modules used as compilation entries (HTML entry points) and `false` for HTML modules imported from JavaScript. Filenames follow `output.htmlFilename` / `output.htmlChunkFilename`.",
           "type": "boolean"
+        }
+      }
+    },
+    "HtmlParserOptions": {
+      "description": "Parser options for html modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sources": {
+          "description": "Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel=\"modulepreload\">` / `<link rel=\"stylesheet\">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `\"...\"` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.",
+          "anyOf": [
+            {
+              "description": "Sources to extract as webpack dependencies. Use `\"...\"` to inline the default source list.",
+              "type": "array",
+              "items": {
+                "description": "A source entry: either the string `\"...\"` to inline the built-in default sources, or an object describing a `tag`/`attribute` pair to extract and how to bundle it.",
+                "anyOf": [
+                  {
+                    "enum": ["..."]
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "attribute": {
+                        "description": "Attribute name whose value is treated as a URL.",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "tag": {
+                        "description": "Tag name to match. Omit to match any tag.",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "type": {
+                        "description": "How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type=\"module\" src>`; `stylesheet` emits a CSS chunk entry like `<link rel=\"stylesheet\">`; `stylesheet-inline` treats the attribute value as inline CSS text and bundles it through the CSS pipeline (the attribute's content is replaced with the processed CSS at render time, like an inline `<style>` body).",
+                        "enum": [
+                          "src",
+                          "srcset",
+                          "script",
+                          "script-module",
+                          "stylesheet",
+                          "stylesheet-inline"
+                        ]
+                      }
+                    },
+                    "required": ["attribute", "type"]
+                  }
+                ]
+              },
+              "minItems": 1
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         }
       }
     },
@@ -4153,6 +4213,9 @@
         },
         "css/module": {
           "$ref": "#/definitions/CssAutoOrModuleParserOptions"
+        },
+        "html": {
+          "$ref": "#/definitions/HtmlParserOptions"
         },
         "javascript": {
           "$ref": "#/definitions/JavascriptParserOptions"

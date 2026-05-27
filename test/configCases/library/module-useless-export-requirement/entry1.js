@@ -4,7 +4,7 @@ const getFile = () => {
 };
 
 const RuntimeGlobals_Exports = "__webpack_exports__";
-const reg = new RegExp("var\\s" + RuntimeGlobals_Exports + "\\s=");
+const reg = new RegExp("(?:var|let|const)\\s" + RuntimeGlobals_Exports + "\\s=");
 
 it("should compile and run", () => {
 	const content = getFile();

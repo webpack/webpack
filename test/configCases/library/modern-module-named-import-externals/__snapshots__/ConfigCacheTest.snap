@@ -15,10 +15,10 @@ import * as __WEBPACK_EXTERNAL_MODULE_externals4__ from \\"externals4\\";
   \\\\*****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var x = (y) => {
-	var x = {}; __webpack_require__.d(x, y); return x
+const x = (y) => {
+	const x = {}; __webpack_require__.d(x, y); return x
 } 
-var y = (x) => (() => (x))
+const y = (x) => (() => (x))
 module.exports = x({ [\\"HomeLayout\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals0__.HomeLayout), [\\"a\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals0__.a) });
 
 /***/ }),
@@ -28,10 +28,10 @@ module.exports = x({ [\\"HomeLayout\\"]: () => (__WEBPACK_EXTERNAL_MODULE_extern
   \\\\*****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var x = (y) => {
-	var x = {}; __webpack_require__.d(x, y); return x
+const x = (y) => {
+	const x = {}; __webpack_require__.d(x, y); return x
 } 
-var y = (x) => (() => (x))
+const y = (x) => (() => (x))
 module.exports = x({ [\\"HomeLayout\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals1__.HomeLayout), [\\"a\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals1__.a) });
 
 /***/ }),
@@ -41,10 +41,10 @@ module.exports = x({ [\\"HomeLayout\\"]: () => (__WEBPACK_EXTERNAL_MODULE_extern
   \\\\*****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var x = (y) => {
-	var x = {}; __webpack_require__.d(x, y); return x
+const x = (y) => {
+	const x = {}; __webpack_require__.d(x, y); return x
 } 
-var y = (x) => (() => (x))
+const y = (x) => (() => (x))
 module.exports = x({ [\\"default\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals2__[\\"default\\"]) });
 
 /***/ }),
@@ -63,10 +63,10 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_externals3__;
   \\\\*****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var x = (y) => {
-	var x = {}; __webpack_require__.d(x, y); return x
+const x = (y) => {
+	const x = {}; __webpack_require__.d(x, y); return x
 } 
-var y = (x) => (() => (x))
+const y = (x) => (() => (x))
 module.exports = x({  });
 
 /***/ }),
@@ -106,17 +106,17 @@ console.log({ HomeLayout });
 /******/ ]);
 /************************************************************************/
 /******/ // The module cache
-/******/ var __webpack_module_cache__ = {};
+/******/ const __webpack_module_cache__ = {};
 /******/ 
 /******/ // The require function
 /******/ function __webpack_require__(moduleId) {
 /******/ 	// Check if module is in cache
-/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 	if (cachedModule !== undefined) {
 /******/ 		return cachedModule.exports;
 /******/ 	}
 /******/ 	// Create a new module (and put it into the cache)
-/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 	const module = __webpack_module_cache__[moduleId] = {
 /******/ 		// no module.id needed
 /******/ 		// no module.loaded needed
 /******/ 		exports: {}
@@ -125,7 +125,7 @@ console.log({ HomeLayout });
 /******/ 	// Execute the module function
 /******/ 	if (!(moduleId in __webpack_modules__)) {
 /******/ 		delete __webpack_module_cache__[moduleId];
-/******/ 		var e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 		const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
 /******/ 		e.code = 'MODULE_NOT_FOUND';
 /******/ 		throw e;
 /******/ 	}
@@ -154,7 +154,7 @@ console.log({ HomeLayout });
 /******/ })();
 /******/ 
 /************************************************************************/
-var __webpack_exports__ = {};
+let __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!*****************!*\\\\
@@ -220,10 +220,10 @@ import * as __WEBPACK_EXTERNAL_MODULE_externals4__ from \\"externals4\\";
   \\\\*****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var x = (y) => {
-	var x = {}; __webpack_require__.d(x, y); return x
+const x = (y) => {
+	const x = {}; __webpack_require__.d(x, y); return x
 } 
-var y = (x) => (() => (x))
+const y = (x) => (() => (x))
 module.exports = x({ [\\"HomeLayout\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals0__.HomeLayout), [\\"a\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals0__.a) });
 
 /***/ }),
@@ -233,10 +233,10 @@ module.exports = x({ [\\"HomeLayout\\"]: () => (__WEBPACK_EXTERNAL_MODULE_extern
   \\\\*****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var x = (y) => {
-	var x = {}; __webpack_require__.d(x, y); return x
+const x = (y) => {
+	const x = {}; __webpack_require__.d(x, y); return x
 } 
-var y = (x) => (() => (x))
+const y = (x) => (() => (x))
 module.exports = x({ [\\"HomeLayout\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals1__.HomeLayout), [\\"a\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals1__.a) });
 
 /***/ }),
@@ -246,10 +246,10 @@ module.exports = x({ [\\"HomeLayout\\"]: () => (__WEBPACK_EXTERNAL_MODULE_extern
   \\\\*****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var x = (y) => {
-	var x = {}; __webpack_require__.d(x, y); return x
+const x = (y) => {
+	const x = {}; __webpack_require__.d(x, y); return x
 } 
-var y = (x) => (() => (x))
+const y = (x) => (() => (x))
 module.exports = x({ [\\"default\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals2__[\\"default\\"]) });
 
 /***/ }),
@@ -268,10 +268,10 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_externals3__;
   \\\\*****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var x = (y) => {
-	var x = {}; __webpack_require__.d(x, y); return x
+const x = (y) => {
+	const x = {}; __webpack_require__.d(x, y); return x
 } 
-var y = (x) => (() => (x))
+const y = (x) => (() => (x))
 module.exports = x({  });
 
 /***/ }),
@@ -311,17 +311,17 @@ console.log({ HomeLayout });
 /******/ ]);
 /************************************************************************/
 /******/ // The module cache
-/******/ var __webpack_module_cache__ = {};
+/******/ const __webpack_module_cache__ = {};
 /******/ 
 /******/ // The require function
 /******/ function __webpack_require__(moduleId) {
 /******/ 	// Check if module is in cache
-/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 	if (cachedModule !== undefined) {
 /******/ 		return cachedModule.exports;
 /******/ 	}
 /******/ 	// Create a new module (and put it into the cache)
-/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 	const module = __webpack_module_cache__[moduleId] = {
 /******/ 		// no module.id needed
 /******/ 		// no module.loaded needed
 /******/ 		exports: {}
@@ -330,7 +330,7 @@ console.log({ HomeLayout });
 /******/ 	// Execute the module function
 /******/ 	if (!(moduleId in __webpack_modules__)) {
 /******/ 		delete __webpack_module_cache__[moduleId];
-/******/ 		var e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 		const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
 /******/ 		e.code = 'MODULE_NOT_FOUND';
 /******/ 		throw e;
 /******/ 	}
@@ -359,7 +359,7 @@ console.log({ HomeLayout });
 /******/ })();
 /******/ 
 /************************************************************************/
-var __webpack_exports__ = {};
+let __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!*****************!*\\\\
@@ -425,10 +425,10 @@ import * as __WEBPACK_EXTERNAL_MODULE_externals4__ from \\"externals4\\";
   \\\\*****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var x = (y) => {
-	var x = {}; __webpack_require__.d(x, y); return x
+const x = (y) => {
+	const x = {}; __webpack_require__.d(x, y); return x
 } 
-var y = (x) => (() => (x))
+const y = (x) => (() => (x))
 module.exports = x({ [\\"HomeLayout\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals0__.HomeLayout), [\\"a\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals0__.a) });
 
 /***/ }),
@@ -438,10 +438,10 @@ module.exports = x({ [\\"HomeLayout\\"]: () => (__WEBPACK_EXTERNAL_MODULE_extern
   \\\\*****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var x = (y) => {
-	var x = {}; __webpack_require__.d(x, y); return x
+const x = (y) => {
+	const x = {}; __webpack_require__.d(x, y); return x
 } 
-var y = (x) => (() => (x))
+const y = (x) => (() => (x))
 module.exports = x({ [\\"HomeLayout\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals1__.HomeLayout), [\\"a\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals1__.a) });
 
 /***/ }),
@@ -451,10 +451,10 @@ module.exports = x({ [\\"HomeLayout\\"]: () => (__WEBPACK_EXTERNAL_MODULE_extern
   \\\\*****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var x = (y) => {
-	var x = {}; __webpack_require__.d(x, y); return x
+const x = (y) => {
+	const x = {}; __webpack_require__.d(x, y); return x
 } 
-var y = (x) => (() => (x))
+const y = (x) => (() => (x))
 module.exports = x({ [\\"default\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals2__[\\"default\\"]) });
 
 /***/ }),
@@ -473,10 +473,10 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_externals3__;
   \\\\*****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var x = (y) => {
-	var x = {}; __webpack_require__.d(x, y); return x
+const x = (y) => {
+	const x = {}; __webpack_require__.d(x, y); return x
 } 
-var y = (x) => (() => (x))
+const y = (x) => (() => (x))
 module.exports = x({  });
 
 /***/ }),
@@ -516,17 +516,17 @@ console.log({ HomeLayout });
 /******/ ]);
 /************************************************************************/
 /******/ // The module cache
-/******/ var __webpack_module_cache__ = {};
+/******/ const __webpack_module_cache__ = {};
 /******/ 
 /******/ // The require function
 /******/ function __webpack_require__(moduleId) {
 /******/ 	// Check if module is in cache
-/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 	if (cachedModule !== undefined) {
 /******/ 		return cachedModule.exports;
 /******/ 	}
 /******/ 	// Create a new module (and put it into the cache)
-/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 	const module = __webpack_module_cache__[moduleId] = {
 /******/ 		// no module.id needed
 /******/ 		// no module.loaded needed
 /******/ 		exports: {}
@@ -535,7 +535,7 @@ console.log({ HomeLayout });
 /******/ 	// Execute the module function
 /******/ 	if (!(moduleId in __webpack_modules__)) {
 /******/ 		delete __webpack_module_cache__[moduleId];
-/******/ 		var e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 		const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
 /******/ 		e.code = 'MODULE_NOT_FOUND';
 /******/ 		throw e;
 /******/ 	}
@@ -564,7 +564,7 @@ console.log({ HomeLayout });
 /******/ })();
 /******/ 
 /************************************************************************/
-var __webpack_exports__ = {};
+let __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!*****************!*\\\\
@@ -630,10 +630,10 @@ import * as __WEBPACK_EXTERNAL_MODULE_externals4__ from \\"externals4\\";
   \\\\*****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var x = (y) => {
-	var x = {}; __webpack_require__.d(x, y); return x
+const x = (y) => {
+	const x = {}; __webpack_require__.d(x, y); return x
 } 
-var y = (x) => (() => (x))
+const y = (x) => (() => (x))
 module.exports = x({ [\\"HomeLayout\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals0__.HomeLayout), [\\"a\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals0__.a) });
 
 /***/ }),
@@ -643,10 +643,10 @@ module.exports = x({ [\\"HomeLayout\\"]: () => (__WEBPACK_EXTERNAL_MODULE_extern
   \\\\*****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var x = (y) => {
-	var x = {}; __webpack_require__.d(x, y); return x
+const x = (y) => {
+	const x = {}; __webpack_require__.d(x, y); return x
 } 
-var y = (x) => (() => (x))
+const y = (x) => (() => (x))
 module.exports = x({ [\\"HomeLayout\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals1__.HomeLayout), [\\"a\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals1__.a) });
 
 /***/ }),
@@ -656,10 +656,10 @@ module.exports = x({ [\\"HomeLayout\\"]: () => (__WEBPACK_EXTERNAL_MODULE_extern
   \\\\*****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var x = (y) => {
-	var x = {}; __webpack_require__.d(x, y); return x
+const x = (y) => {
+	const x = {}; __webpack_require__.d(x, y); return x
 } 
-var y = (x) => (() => (x))
+const y = (x) => (() => (x))
 module.exports = x({ [\\"default\\"]: () => (__WEBPACK_EXTERNAL_MODULE_externals2__[\\"default\\"]) });
 
 /***/ }),
@@ -678,10 +678,10 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_externals3__;
   \\\\*****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var x = (y) => {
-	var x = {}; __webpack_require__.d(x, y); return x
+const x = (y) => {
+	const x = {}; __webpack_require__.d(x, y); return x
 } 
-var y = (x) => (() => (x))
+const y = (x) => (() => (x))
 module.exports = x({  });
 
 /***/ }),
@@ -721,17 +721,17 @@ console.log({ HomeLayout });
 /******/ ]);
 /************************************************************************/
 /******/ // The module cache
-/******/ var __webpack_module_cache__ = {};
+/******/ const __webpack_module_cache__ = {};
 /******/ 
 /******/ // The require function
 /******/ function __webpack_require__(moduleId) {
 /******/ 	// Check if module is in cache
-/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 	if (cachedModule !== undefined) {
 /******/ 		return cachedModule.exports;
 /******/ 	}
 /******/ 	// Create a new module (and put it into the cache)
-/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 	const module = __webpack_module_cache__[moduleId] = {
 /******/ 		// no module.id needed
 /******/ 		// no module.loaded needed
 /******/ 		exports: {}
@@ -740,7 +740,7 @@ console.log({ HomeLayout });
 /******/ 	// Execute the module function
 /******/ 	if (!(moduleId in __webpack_modules__)) {
 /******/ 		delete __webpack_module_cache__[moduleId];
-/******/ 		var e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 		const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
 /******/ 		e.code = 'MODULE_NOT_FOUND';
 /******/ 		throw e;
 /******/ 	}
@@ -769,7 +769,7 @@ console.log({ HomeLayout });
 /******/ })();
 /******/ 
 /************************************************************************/
-var __webpack_exports__ = {};
+let __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!*****************!*\\\\

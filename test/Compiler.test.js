@@ -326,6 +326,42 @@ describe("Compiler", () => {
 		compiler.close(done);
 	});
 
+	it("should release codeGenerationResults on close while Stats stays usable and afterDone still sees them (#15521)", (done) => {
+		const webpack = require("..");
+
+		const compiler = webpack({
+			context: path.join(__dirname, "fixtures"),
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/directory",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		let sizeSeenByAfterDone;
+		compiler.hooks.afterDone.tap("Test", (stats) => {
+			sizeSeenByAfterDone = stats.compilation.codeGenerationResults.map.size;
+		});
+		compiler.run((err, stats) => {
+			if (err) return done(err);
+			const { compilation } = stats;
+			expect(compilation.codeGenerationResults.map.size).toBeGreaterThan(0);
+			// close() runs inside the run callback, i.e. before Compiler.run fires
+			// afterDone. The release is deferred a microtask, so afterDone still
+			// observes the results; assert via setTimeout once the defer ran.
+			compiler.close((closeErr) => {
+				if (closeErr) return done(closeErr);
+				setTimeout(() => {
+					expect(sizeSeenByAfterDone).toBeGreaterThan(0);
+					expect(compilation.codeGenerationResults.map.size).toBe(0);
+					expect(typeof stats.toJson().hash).toBe("string");
+					done();
+				}, 0);
+			});
+		});
+	});
+
 	it("should not emit on errors", (done) => {
 		const webpack = require("..");
 

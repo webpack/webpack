@@ -18,15 +18,21 @@ it("should process inline <style> tags through the CSS pipeline", () => {
 	// `<style type="text/foo">` content is left as-is.
 	expect(page).toContain("this stays");
 
+	// Non-ASCII CSS round-trips intact — the inline body is base64-encoded
+	// as UTF-8 into the data URI, so `decodeDataURI` reconstructs it
+	// without the ASCII-truncation mojibake an URL-encoded body would hit.
+	expect(page).toContain('content: "café →"');
+
 	// The original `<style>` tag wrappers survive — the close-tag count
 	// matches the four `<style>` openings.
 	expect((page.match(/<style[^>]*>/g) || []).length).toBe(4);
 	expect((page.match(/<\/style>/g) || []).length).toBe(4);
 
 	// The CSS-typed style tags (1, 2, 4) get routed through the CSS
-	// pipeline and emit a `data:text/css,…` source-comment header.
+	// pipeline and emit a `data:text/css;base64,…` source-comment header.
 	// Style 3 (`type="text/foo"`) stays raw. The marker only shows up
 	// three times.
-	const cssHeaderCount = (page.match(/css data:text\/css,/g) || []).length;
+	const cssHeaderCount = (page.match(/css data:text\/css;base64,/g) || [])
+		.length;
 	expect(cssHeaderCount).toBe(3);
 });

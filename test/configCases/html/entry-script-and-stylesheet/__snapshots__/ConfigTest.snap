@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html entry-script-and-stylesheet exported tests should emit page.html referencing both the bundled JS and CSS chunks 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>HTML entry with script and stylesheet</title>
+<link rel=\\"stylesheet\\" href=\\"__html_cbe5b59d_0.chunk.css\\">
+<script src=\\"__html_cbe5b59d_1.chunk.js\\"></script>
+</head>
+<body>
+<h1>Hello</h1>
+<div class=\\"box\\">Box</div>
+</body>
+</html>
+"
+`;
