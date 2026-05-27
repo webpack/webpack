@@ -1,1 +1,1 @@
-export const value = 42;
+export const value = 'issue-11856.2';

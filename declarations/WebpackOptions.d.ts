@@ -2006,6 +2006,10 @@ export interface Optimization {
 	 */
 	flagIncludedChunks?: boolean;
 	/**
+	 * Inline ESM exports that bind to small primitive constants (≤6-byte null/undefined/boolean/number/string). Inlining makes the import dependency inactive so DCE can drop the export and possibly the module.
+	 */
+	inlineExports?: boolean;
+	/**
 	 * Creates a module-internal dependency graph for top level symbols, exports and imports, to improve unused exports detection.
 	 */
 	innerGraph?: boolean;
@@ -3827,6 +3831,10 @@ export interface OptimizationNormalized {
 	 * Also flag chunks as loaded which contain a subset of the modules.
 	 */
 	flagIncludedChunks?: boolean;
+	/**
+	 * Inline ESM exports that bind to small primitive constants (≤6-byte null/undefined/boolean/number/string). Inlining makes the import dependency inactive so DCE can drop the export and possibly the module.
+	 */
+	inlineExports?: boolean;
 	/**
 	 * Creates a module-internal dependency graph for top level symbols, exports and imports, to improve unused exports detection.
 	 */

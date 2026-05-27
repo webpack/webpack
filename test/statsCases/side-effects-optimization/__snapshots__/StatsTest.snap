@@ -4,7 +4,7 @@ exports[`StatsTestCases side-effects-optimization should print correct stats for
 "asset main.js X bytes [emitted] [minimized] (name: main)
 orphan modules X KiB [orphan] 4 modules
 cacheable modules X KiB
-  ./index.js + 2 modules X KiB [built] [code generated]
+  ./index.js + 1 modules X KiB [built] [code generated]
     [no exports]
     [no exports used]
     ModuleConcatenation bailout: Cannot concat with ./node_modules/module-with-export/emptyModule.js: Module is not an ECMAScript module
@@ -12,8 +12,6 @@ cacheable modules X KiB
     |   [no exports]
     |   [no exports used]
     |   Statement (ExpressionStatement) with side effects in source code at 4:0-30
-    | ./node_modules/big-module/a.js X bytes [built]
-    |   [only some exports used: a]
     | ./node_modules/module-with-export/index.js X KiB [built]
     |   [only some exports used: smallVar]
   ./node_modules/module-with-export/emptyModule.js X bytes [built] [code generated]

@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  Object {
+    "message": "Target module of reexport from './re-export.barrel-side-effects.js' is not part of the concatenation (export 'REMOVE_s')
+Modules in the concatenation:
+ * concatenated ./constants.destructing.js
+ * concatenated ./constants.side-effects.js
+ * concatenated ./re-export.side-effects.js
+ * concatenated ./re-export.barrel-side-effects.js
+ * concatenated ./re-export.destructing-barrel-side-effects.js
+ * external ./constants.cjs
+ * concatenated ./constants.no-inline.js
+ * concatenated ./index.js",
+    "moduleName": "./index.js + 6 modules",
+  },
+]
+`;

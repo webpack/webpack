@@ -2944,6 +2944,10 @@
           "description": "Also flag chunks as loaded which contain a subset of the modules.",
           "type": "boolean"
         },
+        "inlineExports": {
+          "description": "Inline ESM exports that bind to small primitive constants (≤6-byte null/undefined/boolean/number/string). Inlining makes the import dependency inactive so DCE can drop the export and possibly the module.",
+          "type": "boolean"
+        },
         "innerGraph": {
           "description": "Creates a module-internal dependency graph for top level symbols, exports and imports, to improve unused exports detection.",
           "type": "boolean"
@@ -3110,6 +3114,10 @@
         },
         "flagIncludedChunks": {
           "description": "Also flag chunks as loaded which contain a subset of the modules.",
+          "type": "boolean"
+        },
+        "inlineExports": {
+          "description": "Inline ESM exports that bind to small primitive constants (≤6-byte null/undefined/boolean/number/string). Inlining makes the import dependency inactive so DCE can drop the export and possibly the module.",
           "type": "boolean"
         },
         "innerGraph": {
