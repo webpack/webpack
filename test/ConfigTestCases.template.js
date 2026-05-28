@@ -100,7 +100,7 @@ const describeCases = (config) => {
 								}
 								if (options.optimization.minimizer === undefined) {
 									options.optimization.minimizer = [
-										new (require("terser-webpack-plugin"))({
+										new (require("minimizer-webpack-plugin"))({
 											parallel: false
 										})
 									];
