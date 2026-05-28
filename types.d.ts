@@ -9228,6 +9228,11 @@ declare interface HtmlTemplateContext {
 	addMissingDependency: (dependency: string) => void;
 
 	/**
+	 * register a build dependency (e.g. a template engine config) so changing it invalidates the cache
+	 */
+	addBuildDependency: (dependency: string) => void;
+
+	/**
 	 * report a non-fatal warning on the module
 	 */
 	emitWarning: (warning: string | Error) => void;

@@ -14,6 +14,7 @@ module.exports = {
 						addDependency,
 						addContextDependency,
 						addMissingDependency,
+						addBuildDependency,
 						emitWarning,
 						emitError
 					}
@@ -25,6 +26,7 @@ module.exports = {
 						typeof addDependency !== "function" ||
 						typeof addContextDependency !== "function" ||
 						typeof addMissingDependency !== "function" ||
+						typeof addBuildDependency !== "function" ||
 						typeof emitWarning !== "function" ||
 						typeof emitError !== "function"
 					) {
@@ -33,6 +35,7 @@ module.exports = {
 					// Exercise the dependency helpers (harmless paths).
 					addDependency(resource);
 					addContextDependency(require("path").dirname(resource));
+					addBuildDependency(resource);
 					return source
 						.replace(/\{\{title\}\}/g, "Hello world")
 						.replace(/\{\{image\}\}/g, "./image.png");
