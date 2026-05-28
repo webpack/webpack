@@ -13,28 +13,93 @@ Array [
     "moduleName": "../../node_modules/loader-runner/lib/loadLoader.js",
   },
   Object {
-    "loc": "43:12-19",
+    "loc": "329:12-19",
     "message": "Critical dependency: require function is used in a way in which dependencies cannot be statically extracted",
     "moduleName": "../../node_modules/terser-webpack-plugin/dist/minify.js",
   },
   Object {
-    "loc": "599:10-30",
+    "loc": "637:10-30",
     "message": "Module not found: Error: Can't resolve '@swc/core' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
     "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
   },
   Object {
-    "loc": "659:18-51",
+    "loc": "697:18-51",
     "message": "Module not found: Error: Can't resolve '@swc/core/package.json' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
     "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
   },
   Object {
-    "loc": "700:14-32",
+    "loc": "744:14-32",
     "message": "Module not found: Error: Can't resolve 'esbuild' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
     "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
   },
   Object {
-    "loc": "736:18-49",
+    "loc": "780:18-49",
     "message": "Module not found: Error: Can't resolve 'esbuild/package.json' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
+  },
+  Object {
+    "loc": "905:20-48",
+    "message": "Module not found: Error: Can't resolve '@minify-html/node' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
+  },
+  Object {
+    "loc": "927:18-59",
+    "message": "Module not found: Error: Can't resolve '@minify-html/node/package.json' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
+  },
+  Object {
+    "loc": "972:18-38",
+    "message": "Module not found: Error: Can't resolve '@swc/html' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
+  },
+  Object {
+    "loc": "995:18-51",
+    "message": "Module not found: Error: Can't resolve '@swc/html/package.json' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
+  },
+  Object {
+    "loc": "1087:16-28",
+    "message": "Critical dependency: the request of a dependency is an expression",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
+  },
+  Object {
+    "loc": "1109:14-32",
+    "message": "Module not found: Error: Can't resolve 'cssnano' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
+  },
+  Object {
+    "loc": "1168:18-49",
+    "message": "Module not found: Error: Can't resolve 'cssnano/package.json' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
+  },
+  Object {
+    "loc": "1197:11-26",
+    "message": "Module not found: Error: Can't resolve 'csso' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
+  },
+  Object {
+    "loc": "1222:18-46",
+    "message": "Module not found: Error: Can't resolve 'csso/package.json' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
+  },
+  Object {
+    "loc": "1407:19-42",
+    "message": "Module not found: Error: Can't resolve 'lightningcss' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
+  },
+  Object {
+    "loc": "1449:18-54",
+    "message": "Module not found: Error: Can't resolve 'lightningcss/package.json' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
+  },
+  Object {
+    "loc": "1494:10-29",
+    "message": "Module not found: Error: Can't resolve '@swc/css' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
+    "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
+  },
+  Object {
+    "loc": "1533:18-50",
+    "message": "Module not found: Error: Can't resolve '@swc/css/package.json' in '<WEBPACK_ROOT>/node_modules/terser-webpack-plugin/dist'",
     "moduleName": "../../node_modules/terser-webpack-plugin/dist/utils.js",
   },
   Object {

@@ -19,8 +19,8 @@ cacheable modules X KiB
     ModuleConcatenation bailout: Module is not an ECMAScript module
 webpack x.x.x compiled successfully in X ms
 
-asset main.no-side.js X bytes [emitted] [minimized] (name: main)
-runtime modules X bytes 4 modules
+asset main.no-side.js X KiB [emitted] [minimized] (name: main)
+runtime modules X KiB 4 modules
 orphan modules X bytes [orphan] 2 modules
 cacheable modules X KiB
   modules by path ./node_modules/module-with-export/*.js X KiB
