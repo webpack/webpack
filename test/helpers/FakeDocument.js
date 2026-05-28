@@ -401,7 +401,7 @@ class FakeSheet {
 	get cssRules() {
 		if (this._cssRules) return this._cssRules;
 
-		const walkCssTokens = require("../../lib/css/walkCssTokens");
+		const { TokenStream } = require("../../lib/css/walkCssTokens");
 
 		const rules = [];
 		let currentRule = { getPropertyValue };
@@ -448,7 +448,7 @@ class FakeSheet {
 					"utf8"
 				);
 			});
-		for (const t of walkCssTokens(css, 0)) {
+		for (const t of TokenStream.tokenize(css, 0)) {
 			if (t.type === "leftCurlyBracket") {
 				if (selector === undefined) {
 					ruleStart = last; // Record the start of the rule (before the selector)
@@ -518,7 +518,7 @@ class CSSStyleSheet {
 	 * @param {string} cssText CSS text to parse
 	 */
 	_parseCssRules(cssText) {
-		const walkCssTokens = require("../../lib/css/walkCssTokens");
+		const { TokenStream } = require("../../lib/css/walkCssTokens");
 
 		const rules = [];
 		let currentRule = { getPropertyValue };
@@ -541,7 +541,7 @@ class CSSStyleSheet {
 
 		let ruleStart = 0;
 
-		for (const t of walkCssTokens(cleanCss, 0)) {
+		for (const t of TokenStream.tokenize(cleanCss, 0)) {
 			if (t.type === "leftCurlyBracket") {
 				if (selector === undefined) {
 					selector = cleanCss.slice(last, t.start).trim();

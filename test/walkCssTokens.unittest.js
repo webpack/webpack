@@ -2,10 +2,10 @@
 
 const fs = require("fs");
 const path = require("path");
-const walkCssTokens = require("../lib/css/walkCssTokens");
+const { TokenStream } = require("../lib/css/walkCssTokens");
 
 // Snapshot uses the spec-style kebab-case names for multi-word token
-// types; the generator emits camelCase. Map between them so the
+// types; the tokenizer emits camelCase. Map between them so the
 // existing snapshot files stay valid.
 const TYPE_TO_PRINTED = {
 	whitespace: "whitespace",
@@ -35,7 +35,7 @@ const TYPE_TO_PRINTED = {
 	badUrlToken: "bad-url-token"
 };
 
-describe("walkCssTokens", () => {
+describe("TokenStream.tokenize", () => {
 	const casesPath = path.resolve(__dirname, "./configCases/css/parsing/cases");
 	const tests = fs
 		.readdirSync(casesPath)
@@ -48,7 +48,7 @@ describe("walkCssTokens", () => {
 	for (const [name, code] of tests) {
 		it(`should parse and print "${name}"`, () => {
 			const results = [];
-			for (const t of walkCssTokens(code, 0)) {
+			for (const t of TokenStream.tokenize(code, 0)) {
 				const printed = TYPE_TO_PRINTED[t.type] || t.type;
 				if (t.type === "url") {
 					results.push([
