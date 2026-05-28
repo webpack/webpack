@@ -7,6 +7,11 @@ import * as reexportChain from "./reexport-chain";
 import * as reexportMixed from "./reexport-mixed";
 import * as reexportStar from "./reexport-star";
 import * as reexportCircular from "./reexport-circular";
+import * as defaultBinding from "./default-binding";
+import * as constDefault from "./const-default";
+import * as starMutable from "./star-mutable";
+import * as selfConst from "./self-const";
+import * as mutableForms from "./mutable-forms";
 
 function expectValueDescriptor(ns, key) {
 	const descriptor = Object.getOwnPropertyDescriptor(ns, key);
@@ -109,4 +114,64 @@ it("should keep star-exported function as getter", () => {
 it("should use getter for re-export from circular module", () => {
 	expectGetterDescriptor(reexportCircular, "reCircular");
 	expect(reexportCircular.reCircular).toBe("cyclic");
+});
+
+// === Live-binding edge cases ===
+
+it("should keep `export { let as default }` as a live binding", () => {
+	expectGetterDescriptor(defaultBinding, "default");
+	expect(defaultBinding.default).toBe(0);
+	defaultBinding.bumpDefault();
+	expect(defaultBinding.default).toBe(1);
+});
+
+it("should bind `export { const as default }` as a value", () => {
+	expectValueDescriptor(constDefault, "default");
+	expect(constDefault.default).toBe("const-default");
+});
+
+it("should keep mutable binding live through `export *`", () => {
+	expectGetterDescriptor(starMutable, "counter");
+	const before = starMutable.counter;
+	starMutable.increment();
+	expect(starMutable.counter).toBe(before + 1);
+});
+
+it("should keep mutable binding live through a two-hop re-export chain", () => {
+	expectGetterDescriptor(reexportChain, "chainedCounter");
+	const before = reexportChain.chainedCounter;
+	reexportChain.chainedIncrement();
+	expect(reexportChain.chainedCounter).toBe(before + 1);
+});
+
+it("should fall back to getter for const in a self-cycle and read correctly", () => {
+	expectGetterDescriptor(selfConst, "selfConst");
+	expect(selfConst.selfConst).toBe("self");
+	expect(selfConst.readSelf()).toBe("self");
+});
+
+it("should observe every mutation form (assign, compound, update) as live", () => {
+	expect(mutableForms.viaAssign).toBe(1);
+	expect(mutableForms.viaCompound).toBe(1);
+	expect(mutableForms.viaUpdate).toBe(1);
+	mutableForms.mutateAll();
+	expect(mutableForms.viaAssign).toBe(10);
+	expect(mutableForms.viaCompound).toBe(6);
+	expect(mutableForms.viaUpdate).toBe(2);
+});
+
+it("should enumerate value-bound and getter exports together", () => {
+	expect(Object.keys(mutableForms).sort()).toEqual([
+		"mutateAll",
+		"viaAssign",
+		"viaCompound",
+		"viaUpdate"
+	]);
+	expect(Object.keys(constExports).sort()).toEqual([
+		"arrayValue",
+		"destructured",
+		"literal",
+		"renamed",
+		"string-alias"
+	]);
 });
