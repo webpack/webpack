@@ -11,11 +11,11 @@ Array [
 		url(img.png),
 		url(img.png),
 		url(d4da020aedcd249a7a41.png);
-		url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=),
-		url(resource.png),
-		url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=),
-		url(7976064b7fcb4f6b3916.html),
-		url(https://example.com/img.png);
+		url('./inline.png'),
+		url('./resource.png'),
+		url('./source.text'),
+		url('data:text/html,%3Ch1%3EHello%2C%20World!%3C%2Fh1%3E'),
+		url('https://example.com/img.png');
 }
 
 .class-2 {
