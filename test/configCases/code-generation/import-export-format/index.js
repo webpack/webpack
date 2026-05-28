@@ -30,7 +30,8 @@ it("should use the same accessor syntax for import and export", function() {
 	// Note that there are no quotes around the "a" and "b" properties in the following lines.
 
 	// Checking harmonyexportinitfragment.js formation of standard export fragment
-	expectSourceToContain(source, "/* harmony export */   a: () => (/* binding */ bar)");
+	// Array format: "a", 0, bar (value) or "a", () => bar (getter)
+	expectSourceToMatch(source, `\\/\\* harmony export \\*\\/   "a", .*bar`);
 
 	// Checking formation of imports
 	expectSourceToContain(source, "harmony_module/* bar */.a;");

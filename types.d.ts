@@ -7268,6 +7268,12 @@ declare abstract class ExportInfo {
 	 * undefined: it was not determined whether the export is pure
 	 */
 	pureProvide?: boolean;
+
+	/**
+	 * true: the export binding never changes (eligible for value-based export)
+	 * undefined: not determined
+	 */
+	immutableBinding?: boolean;
 	exportsInfoOwned: boolean;
 	exportsInfo?: ExportsInfo;
 	get canMangle(): boolean;
@@ -7438,6 +7444,11 @@ declare interface ExportSpec {
 	 * calling this export has no observable side effects
 	 */
 	isPure?: boolean;
+
+	/**
+	 * the export binding never changes (eligible for value-based export instead of getter)
+	 */
+	immutableBinding?: boolean;
 
 	/**
 	 * nested exports
@@ -12606,6 +12617,16 @@ declare interface KnownBuildInfo {
 	 * whether this module was parsed with `optimization.inlineExports` enabled (gates inlining of its exports)
 	 */
 	inlineExports?: boolean;
+
+	/**
+	 * names of top-level variables declared with const
+	 */
+	constBindings?: Set<string>;
+
+	/**
+	 * true when the module is part of a circular dependency chain
+	 */
+	isCircular?: boolean;
 }
 declare interface KnownBuildMeta {
 	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
@@ -21044,6 +21065,7 @@ declare interface RestoreProvidedDataExports {
 	canInlineProvide?: InlinedValue;
 	terminalBinding: boolean;
 	pureProvide?: boolean;
+	immutableBinding?: boolean;
 	exportsInfo?: RestoreProvidedData;
 }
 type Rule = string | RegExp | ((str: string) => boolean);

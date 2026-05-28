@@ -2,7 +2,7 @@
 
 exports[`StatsTestCases tree-shaking should print correct stats for tree-shaking 1`] = `
 "asset bundle.js X KiB [emitted] (name: main)
-runtime modules X bytes 3 modules
+runtime modules X KiB 3 modules
 orphan modules X bytes [orphan] 1 module
 cacheable modules X bytes
   ./index.js X bytes [built] [code generated] [1 warning]
