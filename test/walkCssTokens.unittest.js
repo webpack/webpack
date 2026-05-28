@@ -49,6 +49,7 @@ describe("TokenStream.tokenize", () => {
 		it(`should parse and print "${name}"`, () => {
 			const results = [];
 			for (const t of new TokenStream(code).tokenize()) {
+				if (t.type === "EOF") break;
 				const printed = TYPE_TO_PRINTED[t.type] || t.type;
 				if (t.type === "url") {
 					results.push([
