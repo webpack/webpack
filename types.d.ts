@@ -9149,8 +9149,18 @@ declare interface HtmlGeneratorOptions {
 }
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
+	template?: (source: string, context: HtmlTemplateContext) => string;
 	sourcesByTag: Record<string, Record<string, SourceItem>>;
 	anyTagSources?: Record<string, SourceItem>;
+
+	/**
+	 * Runs the `template` option over the source and returns the transformed
+	 * html. Called from HtmlModulesPlugin's `processResult`, where the return
+	 * value becomes the module's stored source so the parser (which records
+	 * dependency offsets against it) and the generator (which renders from
+	 * `module.originalSource()`) stay in agreement.
+	 */
+	applyTemplate(source: string | Buffer, module: NormalModule): string | Buffer;
 }
 
 /**
@@ -9185,6 +9195,52 @@ declare interface HtmlParserOptions {
 							| "stylesheet-inline";
 				  }
 		  )[];
+
+	/**
+	 * Transform the raw source before the html parser extracts dependencies. Receives the source string and a context (`{ module, resource }`) and must return the html string to parse. Useful for compiling a templating language (Handlebars, EJS, Eta, …) to html so that URLs the template emits are still picked up as webpack dependencies. Runs synchronously.
+	 */
+	template?: (source: string, context: HtmlTemplateContext) => string;
+}
+declare interface HtmlTemplateContext {
+	/**
+	 * the html module being transformed
+	 */
+	module: Module;
+
+	/**
+	 * absolute path of the module's resource
+	 */
+	resource: string;
+
+	/**
+	 * register a file (e.g. a template partial) as a build dependency so editing it triggers a rebuild
+	 */
+	addDependency: (dependency: string) => void;
+
+	/**
+	 * register a directory as a build dependency
+	 */
+	addContextDependency: (dependency: string) => void;
+
+	/**
+	 * register a not-yet-existing path as a build dependency so creating it triggers a rebuild
+	 */
+	addMissingDependency: (dependency: string) => void;
+
+	/**
+	 * register a build dependency (e.g. a template engine config) so changing it invalidates the cache
+	 */
+	addBuildDependency: (dependency: string) => void;
+
+	/**
+	 * report a non-fatal warning on the module
+	 */
+	emitWarning: (warning: string | Error) => void;
+
+	/**
+	 * report an error on the module
+	 */
+	emitError: (error: string | Error) => void;
 }
 
 /**
