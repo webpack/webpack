@@ -1,0 +1,6 @@
+@import url("./imported.css");
+
+.url-class {
+	color: teal;
+	margin: 10px;
+}
