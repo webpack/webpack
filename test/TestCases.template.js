@@ -101,7 +101,7 @@ const describeCases = (config) => {
 							testConfig = require(testConfigPath);
 						}
 
-						const TerserPlugin = require("terser-webpack-plugin");
+						const TerserPlugin = require("minimizer-webpack-plugin");
 
 						const terserForTesting = new TerserPlugin({
 							parallel: false
