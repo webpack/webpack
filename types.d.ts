@@ -18931,6 +18931,7 @@ type ProblemType =
 	| "unknown-argument"
 	| "unexpected-non-array-in-path"
 	| "unexpected-non-object-in-path"
+	| "prototype-pollution-in-path"
 	| "multiple-values-unexpected"
 	| "invalid-value";
 declare interface ProcessAssetsAdditionalOptions {

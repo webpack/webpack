@@ -550,6 +550,48 @@ describe("Cli", () => {
 			]
 		`)
 		);
+
+		for (const key of ["__proto__", "constructor", "prototype"]) {
+			it(`should not pollute the prototype through a "${key}" path segment`, () => {
+				const args = {
+					"evil-flag": {
+						configs: [
+							{ type: "string", multiple: false, path: `${key}.polluted` }
+						],
+						simpleType: "string",
+						multiple: false
+					}
+				};
+				const config = {};
+				const problems = processArguments(args, config, {
+					"evil-flag": "PWNED"
+				});
+
+				expect({}.polluted).toBeUndefined();
+				expect(problems).toEqual([
+					expect.objectContaining({ type: "prototype-pollution-in-path" })
+				]);
+			});
+
+			it(`should not pollute the prototype through a trailing "${key}" path segment`, () => {
+				const args = {
+					"evil-flag": {
+						configs: [{ type: "string", multiple: false, path: key }],
+						simpleType: "string",
+						multiple: false
+					}
+				};
+				const config = {};
+				const problems = processArguments(args, config, {
+					"evil-flag": "PWNED"
+				});
+
+				expect({}.polluted).toBeUndefined();
+				expect(problems).toEqual([
+					expect.objectContaining({ type: "prototype-pollution-in-path" })
+				]);
+			});
+		}
 	});
 
 	describe("isColorSupported", () => {
