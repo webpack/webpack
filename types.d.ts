@@ -12212,6 +12212,11 @@ declare interface JavascriptParserOptions {
 	parse?: (code: string, options: ParseOptions) => ParseResult;
 
 	/**
+	 * Mark the listed top-level function names for pure-function-based tree shaking.
+	 */
+	pureFunctions?: string[];
+
+	/**
 	 * Specifies the behavior of invalid export names in "export ... from ...". This might be useful to disable during the migration from "export ... from ..." to "export type ... from ..." when reexporting types in TypeScript.
 	 */
 	reexportExportsPresence?: false | "auto" | "error" | "warn";
