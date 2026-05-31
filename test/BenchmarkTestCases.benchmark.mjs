@@ -692,6 +692,26 @@ const withCodSpeed = async (bench) => {
 			await bench.teardown?.(task, "run");
 
 			logTaskCompletion(uri, taskCompletionMessage());
+
+			// Release the just-measured task's closure-captured refs
+			// (webpack, config, watching, originalEntryContent) so the next
+			// task's measurement starts from a smaller heap. In memory mode
+			// every task shares one process, so without this drop each task's
+			// sample includes residue from every prior task and is sensitive
+			// to registration order. The drain mirrors the pre-measurement
+			// pattern: gc -> microtask three times, then setImmediate, then
+			// one final gc to sweep what finalizers / IO callbacks produced.
+			uriMap.delete(name);
+			for (let i = 0; i < 3; i++) {
+				global.gc?.();
+				await new Promise((resolve) => {
+					queueMicrotask(() => resolve(undefined));
+				});
+			}
+			await new Promise((resolve) => {
+				setImmediate(resolve);
+			});
+			global.gc?.();
 		};
 
 		/**
@@ -776,6 +796,14 @@ const withCodSpeed = async (bench) => {
 			bench.teardown?.(task, "run");
 
 			logTaskCompletion(uri, taskCompletionMessage());
+
+			// Release the just-measured task's closures — see the async path
+			// for the rationale. The sync path has no microtask queue to
+			// drain, so we just chain GCs.
+			uriMap.delete(name);
+			for (let i = 0; i < 4; i++) {
+				global.gc?.();
+			}
 		};
 
 		/**
