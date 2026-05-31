@@ -41,7 +41,7 @@ module.exports = config;
 # dist/MyDll.alpha.js
 
 ```javascript
-var alpha_8d3c9b718dbdd3092850;
+var alpha_82247e52df028d402846;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -100,17 +100,17 @@ module.exports = "module";
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
+/******/ 	const __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -119,7 +119,7 @@ module.exports = "module";
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -139,8 +139,8 @@ module.exports = "module";
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(0);
-/******/ 	alpha_8d3c9b718dbdd3092850 = __webpack_exports__;
+/******/ 	let __webpack_exports__ = __webpack_require__(0);
+/******/ 	alpha_82247e52df028d402846 = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -149,7 +149,7 @@ module.exports = "module";
 # dist/alpha-manifest.json
 
 ```javascript
-{"name":"alpha_8d3c9b718dbdd3092850","content":{"./alpha.js":{"id":1,"buildMeta":{"treatAsCommonJs":true}},"./a.js":{"id":2,"buildMeta":{"treatAsCommonJs":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"treatAsCommonJs":true}}}}
+{"name":"alpha_82247e52df028d402846","content":{"./alpha.js":{"id":1,"buildMeta":{"treatAsCommonJs":true}},"./a.js":{"id":2,"buildMeta":{"treatAsCommonJs":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"treatAsCommonJs":true}}}}
 ```
 
 # Info
@@ -158,7 +158,7 @@ module.exports = "module";
 
 ```
 asset MyDll.alpha.js 2.83 KiB [emitted] (name: alpha)
-asset MyDll.beta.js 2.8 KiB [emitted] (name: beta)
+asset MyDll.beta.js 2.81 KiB [emitted] (name: beta)
 chunk (runtime: alpha) MyDll.alpha.js (alpha) 85 bytes [entry] [rendered]
   > alpha
   dependent modules 73 bytes [dependent] 3 modules
@@ -179,8 +179,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset MyDll.alpha.js 307 bytes [emitted] [minimized] (name: alpha)
-asset MyDll.beta.js 301 bytes [emitted] [minimized] (name: beta)
+asset MyDll.alpha.js 321 bytes [emitted] [minimized] (name: alpha)
+asset MyDll.beta.js 315 bytes [emitted] [minimized] (name: beta)
 chunk (runtime: beta) MyDll.beta.js (beta) 81 bytes [entry] [rendered]
   > beta
   dependent modules 69 bytes [dependent] 3 modules

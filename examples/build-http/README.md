@@ -40,8 +40,8 @@ module.exports = config;
 ## Unoptimized
 
 ```
-asset output.js 82.7 KiB [emitted] (name: main)
-runtime modules 670 bytes 3 modules
+asset output.js 83.3 KiB [emitted] (name: main)
+runtime modules 1.11 KiB 3 modules
 modules by path https:// 30 KiB
   modules by path https://jspm.dev/ 16.1 KiB 12 modules
   modules by path https://cdn.esm.sh/ 6.15 KiB

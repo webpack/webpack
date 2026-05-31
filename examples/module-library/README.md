@@ -32,7 +32,7 @@ export function reset() {
 
 ```javascript
 /******/ // The require scope
-/******/ var __webpack_require__ = {};
+/******/ const __webpack_require__ = {};
 /******/ 
 ```
 
@@ -42,11 +42,26 @@ export function reset() {
 /************************************************************************/
 /******/ /* webpack/runtime/define property getters */
 /******/ (() => {
-/******/ 	// define getter functions for harmony exports
+/******/ 	// define getter/value functions for harmony exports
 /******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		for(var key in definition) {
-/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 		if(Array.isArray(definition)) {
+/******/ 			var i = 0;
+/******/ 			while(i < definition.length) {
+/******/ 				var key = definition[i++];
+/******/ 				var binding = definition[i++];
+/******/ 				if(!__webpack_require__.o(exports, key)) {
+/******/ 					if(binding === 0) {
+/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
+/******/ 					} else {
+/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
+/******/ 					}
+/******/ 				} else if(binding === 0) { i++; }
+/******/ 			}
+/******/ 		} else {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
 /******/ 			}
 /******/ 		}
 /******/ 	};
@@ -74,7 +89,7 @@ export function reset() {
 </details>
 
 ``` js
-var __webpack_exports__ = {};
+let __webpack_exports__ = {};
 /*!********************************!*\
   !*** ./example.js + 2 modules ***!
   \********************************/
@@ -125,10 +140,10 @@ let n=0;function o(){n++}function t(){n--}function e(){n=0}const s=n=>console.lo
 ## Unoptimized
 
 ```
-asset output.js 2.69 KiB [emitted] [javascript module] (name: main)
-chunk (runtime: main) output.js (main) 302 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
+asset output.js 3.29 KiB [emitted] [javascript module] (name: main)
+chunk (runtime: main) output.js (main) 302 bytes (javascript) 1.11 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 670 bytes 3 modules
+  runtime modules 1.11 KiB 3 modules
   ./example.js + 2 modules 302 bytes [built] [code generated]
     [exports: decrement, increment, print, reset, resetCounter, value]
     [used exports unknown]

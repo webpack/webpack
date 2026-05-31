@@ -37,7 +37,7 @@ module.exports = function() {
 /*! runtime requirements: module, __webpack_require__.o, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var map = {
+const map = {
 	"./a": 2,
 	"./a.js": 2,
 	"./b": 3,
@@ -48,12 +48,12 @@ var map = {
 
 
 function webpackContext(req) {
-	var id = webpackContextResolve(req);
+	const id = webpackContextResolve(req);
 	return __webpack_require__(id);
 }
 function webpackContextResolve(req) {
 	if(!__webpack_require__.o(map, req)) {
-		var e = new Error("Cannot find module '" + req + "'");
+		const e = new Error("Cannot find module '" + req + "'");
 		e.code = 'MODULE_NOT_FOUND';
 		throw e;
 	}
@@ -117,17 +117,17 @@ module.exports = function() {
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
+/******/ 	const __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -136,7 +136,7 @@ module.exports = function() {
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -181,7 +181,7 @@ console.log(getTemplate("b"));
 ## Unoptimized
 
 ```
-asset output.js 4.02 KiB [emitted] (name: main)
+asset output.js 4.04 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 603 bytes (javascript) 88 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 457 bytes [dependent] 4 modules
@@ -195,7 +195,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 814 bytes [emitted] [minimized] (name: main)
+asset output.js 830 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 603 bytes (javascript) 88 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 457 bytes [dependent] 4 modules

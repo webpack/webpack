@@ -233,17 +233,17 @@ module.exports = __webpack_require__.tb("PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmc
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
+/******/ 	const __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -252,7 +252,7 @@ module.exports = __webpack_require__.tb("PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmc
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -286,7 +286,7 @@ module.exports = __webpack_require__.tb("PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmc
 /******/ 	(() => {
 /******/ 		// define to binary helper
 /******/ 		const toImmutableBytes = (value) => {
-/******/ 			var {buffer} = value;
+/******/ 			let {buffer} = value;
 /******/ 			const throwErr = () => {
 /******/ 				throw new TypeError('ArrayBuffer is immutable');
 /******/ 			};
@@ -323,7 +323,7 @@ module.exports = __webpack_require__.tb("PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmc
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
-/******/ 		var installedChunks = {
+/******/ 		const installedChunks = {
 /******/ 			0: 0
 /******/ 		};
 /******/ 		
@@ -348,7 +348,7 @@ module.exports = __webpack_require__.tb("PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmc
 </details>
 
 ``` js
-var __webpack_exports__ = {};
+let __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
@@ -494,10 +494,10 @@ files.forEach(item => {
 asset output.js 20 KiB [emitted] (name: main)
 asset images/89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset images/afc10c70ed4ce2b33593.svg 656 bytes [emitted] [immutable] [from: images/url.svg] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 12.4 KiB (javascript) 15.2 KiB (asset) 1.85 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 12.4 KiB (javascript) 15.2 KiB (asset) 1.86 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 9.59 KiB (javascript) 15.2 KiB (asset) [dependent] 6 modules
-  runtime modules 1.85 KiB 5 modules
+  runtime modules 1.86 KiB 5 modules
   ./example.js 2.85 KiB [built] [code generated]
     [no exports]
     [used exports unknown]

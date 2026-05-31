@@ -51,7 +51,7 @@ module.exports = config;
 # dist/vendor.js
 
 ```javascript
-var vendor_a57be09d7363d35b58ec;
+var vendor_b6f652c20a866aadca15;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -97,17 +97,17 @@ module.exports = "Vendor2";
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
+/******/ 	const __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -116,7 +116,7 @@ module.exports = "Vendor2";
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -136,8 +136,8 @@ module.exports = "Vendor2";
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(0);
-/******/ 	vendor_a57be09d7363d35b58ec = __webpack_exports__;
+/******/ 	let __webpack_exports__ = __webpack_require__(0);
+/******/ 	vendor_b6f652c20a866aadca15 = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -163,18 +163,18 @@ module.exports = "pageA";
 /***/ }),
 /* 1 */
 /*!****************************************************************************!*\
-  !*** delegated ./vendor.js from dll-reference vendor_a57be09d7363d35b58ec ***!
+  !*** delegated ./vendor.js from dll-reference vendor_b6f652c20a866aadca15 ***!
   \****************************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_a57be09d7363d35b58ec */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_b6f652c20a866aadca15 */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**********************************************!*\
-  !*** external "vendor_a57be09d7363d35b58ec" ***!
+  !*** external "vendor_b6f652c20a866aadca15" ***!
   \**********************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -182,7 +182,7 @@ module.exports = (__webpack_require__(/*! dll-reference vendor_a57be09d7363d35b5
 /***/ ((module) => {
 
 "use strict";
-module.exports = vendor_a57be09d7363d35b58ec;
+module.exports = vendor_b6f652c20a866aadca15;
 
 /***/ })
 /******/ 	]);
@@ -193,17 +193,17 @@ module.exports = vendor_a57be09d7363d35b58ec;
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
+/******/ 	const __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -212,7 +212,7 @@ module.exports = vendor_a57be09d7363d35b58ec;
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -232,7 +232,7 @@ module.exports = vendor_a57be09d7363d35b58ec;
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(0);
+/******/ 	let __webpack_exports__ = __webpack_require__(0);
 /******/ 	
 /******/ })()
 ;
@@ -244,7 +244,7 @@ module.exports = vendor_a57be09d7363d35b58ec;
 
 ```
 vendor:
-  asset vendor.js 2.53 KiB [emitted] (name: main)
+  asset vendor.js 2.54 KiB [emitted] (name: main)
   chunk (runtime: main) vendor.js (main) 65 bytes [entry] [rendered]
     > main
     dependent modules 53 bytes [dependent] 2 modules
@@ -255,8 +255,8 @@ vendor:
   vendor (webpack X.X.X) compiled successfully
 
 app:
-  asset pageB.js 2.88 KiB [emitted] (name: pageB)
-  asset pageA.js 2.86 KiB [emitted] (name: pageA)
+  asset pageB.js 2.89 KiB [emitted] (name: pageB)
+  asset pageA.js 2.87 KiB [emitted] (name: pageA)
   asset pageC.js 1.85 KiB [emitted] (name: pageC)
   chunk (runtime: pageA) pageA.js (pageA) 143 bytes [entry] [rendered]
     > ./pageA pageA
@@ -285,7 +285,7 @@ app:
 
 ```
 vendor:
-  asset vendor.js 289 bytes [emitted] [minimized] (name: main)
+  asset vendor.js 303 bytes [emitted] [minimized] (name: main)
   chunk (runtime: main) vendor.js (main) 65 bytes [entry] [rendered]
     > main
     dependent modules 53 bytes [dependent] 2 modules
@@ -295,9 +295,9 @@ vendor:
   vendor (webpack X.X.X) compiled successfully
 
 app:
-  asset pageB.js 290 bytes [emitted] [minimized] (name: pageB)
-  asset pageA.js 288 bytes [emitted] [minimized] (name: pageA)
-  asset pageC.js 173 bytes [emitted] [minimized] (name: pageC)
+  asset pageB.js 300 bytes [emitted] [minimized] (name: pageB)
+  asset pageA.js 298 bytes [emitted] [minimized] (name: pageA)
+  asset pageC.js 183 bytes [emitted] [minimized] (name: pageC)
   chunk (runtime: pageB) pageB.js (pageB) 144 bytes [entry] [rendered]
     > ./pageB pageB
     dependent modules 84 bytes [dependent] 2 modules
