@@ -4,7 +4,7 @@
 module.exports = {
 	mode: "development",
 	output: {
-		pathinfo: true,
+		strictModuleResolution: true,
 		strictModuleErrorHandling: false
 	}
 };

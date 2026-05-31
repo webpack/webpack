@@ -18215,6 +18215,11 @@ declare interface Output {
 	strictModuleExceptionHandling?: boolean;
 
 	/**
+	 * Emit a runtime check that throws a 'MODULE_NOT_FOUND' error when a required module id is missing from the bundle.
+	 */
+	strictModuleResolution?: boolean;
+
+	/**
 	 * Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name.
 	 */
 	trustedTypes?: string | true | TrustedTypes;
@@ -18530,6 +18535,11 @@ declare interface OutputNormalized {
 	strictModuleExceptionHandling?: boolean;
 
 	/**
+	 * Emit a runtime check that throws a 'MODULE_NOT_FOUND' error when a required module id is missing from the bundle.
+	 */
+	strictModuleResolution?: boolean;
+
+	/**
 	 * Use a Trusted Types policy to create urls for chunks.
 	 */
 	trustedTypes?: TrustedTypes;
@@ -18605,6 +18615,7 @@ type OutputNormalizedWithDefaults = OutputNormalized & {
 	compareBeforeEmit: NonNullable<undefined | boolean>;
 	strictModuleErrorHandling: NonNullable<undefined | boolean>;
 	strictModuleExceptionHandling: NonNullable<undefined | boolean>;
+	strictModuleResolution: NonNullable<undefined | boolean>;
 	importFunctionName: string;
 	importMetaName: string;
 	environment: RecursiveNonNullable<Environment>;

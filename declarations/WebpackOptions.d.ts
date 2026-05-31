@@ -652,6 +652,10 @@ export type StrictModuleErrorHandling = boolean;
  */
 export type StrictModuleExceptionHandling = boolean;
 /**
+ * Emit a runtime check that throws a 'MODULE_NOT_FOUND' error when a required module id is missing from the bundle.
+ */
+export type StrictModuleResolution = boolean;
+/**
  * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
  */
 export type UniqueName = string;
@@ -2534,6 +2538,10 @@ export interface Output {
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
 	/**
+	 * Emit a runtime check that throws a 'MODULE_NOT_FOUND' error when a required module id is missing from the bundle.
+	 */
+	strictModuleResolution?: StrictModuleResolution;
+	/**
 	 * Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name.
 	 */
 	trustedTypes?: true | string | TrustedTypes;
@@ -4106,6 +4114,10 @@ export interface OutputNormalized {
 	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
+	/**
+	 * Emit a runtime check that throws a 'MODULE_NOT_FOUND' error when a required module id is missing from the bundle.
+	 */
+	strictModuleResolution?: StrictModuleResolution;
 	/**
 	 * Use a Trusted Types policy to create urls for chunks.
 	 */
