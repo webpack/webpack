@@ -3169,6 +3169,32 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-auto-pure-functions": Object {
+    "configs": Array [
+      Object {
+        "description": "A top-level function name in the module to treat as side-effect-free when called.",
+        "multiple": true,
+        "path": "module.parser.javascript/auto.pureFunctions[]",
+        "type": "string",
+      },
+    ],
+    "description": "A top-level function name in the module to treat as side-effect-free when called.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-auto-pure-functions-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'module.parser.javascript/auto.pureFunctions' configuration. Mark the listed top-level function names for pure-function-based tree shaking.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.pureFunctions",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'module.parser.javascript/auto.pureFunctions' configuration. Mark the listed top-level function names for pure-function-based tree shaking.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-auto-reexport-exports-presence": Object {
     "configs": Array [
       Object {
@@ -4042,6 +4068,32 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-dynamic-pure-functions": Object {
+    "configs": Array [
+      Object {
+        "description": "A top-level function name in the module to treat as side-effect-free when called.",
+        "multiple": true,
+        "path": "module.parser.javascript/dynamic.pureFunctions[]",
+        "type": "string",
+      },
+    ],
+    "description": "A top-level function name in the module to treat as side-effect-free when called.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-pure-functions-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'module.parser.javascript/dynamic.pureFunctions' configuration. Mark the listed top-level function names for pure-function-based tree shaking.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.pureFunctions",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'module.parser.javascript/dynamic.pureFunctions' configuration. Mark the listed top-level function names for pure-function-based tree shaking.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-dynamic-reexport-exports-presence": Object {
     "configs": Array [
       Object {
@@ -4774,6 +4826,32 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-esm-pure-functions": Object {
+    "configs": Array [
+      Object {
+        "description": "A top-level function name in the module to treat as side-effect-free when called.",
+        "multiple": true,
+        "path": "module.parser.javascript/esm.pureFunctions[]",
+        "type": "string",
+      },
+    ],
+    "description": "A top-level function name in the module to treat as side-effect-free when called.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-pure-functions-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'module.parser.javascript/esm.pureFunctions' configuration. Mark the listed top-level function names for pure-function-based tree shaking.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.pureFunctions",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'module.parser.javascript/esm.pureFunctions' configuration. Mark the listed top-level function names for pure-function-based tree shaking.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-esm-reexport-exports-presence": Object {
     "configs": Array [
       Object {
@@ -5310,6 +5388,32 @@ Object {
     "description": "Override the module to strict or non-strict. This may affect the behavior of the module (some behaviors differ between strict and non-strict), so please configure this option carefully.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-javascript-pure-functions": Object {
+    "configs": Array [
+      Object {
+        "description": "A top-level function name in the module to treat as side-effect-free when called.",
+        "multiple": true,
+        "path": "module.parser.javascript.pureFunctions[]",
+        "type": "string",
+      },
+    ],
+    "description": "A top-level function name in the module to treat as side-effect-free when called.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-pure-functions-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'module.parser.javascript.pureFunctions' configuration. Mark the listed top-level function names for pure-function-based tree shaking.",
+        "multiple": false,
+        "path": "module.parser.javascript.pureFunctions",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'module.parser.javascript.pureFunctions' configuration. Mark the listed top-level function names for pure-function-based tree shaking.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-javascript-reexport-exports-presence": Object {
     "configs": Array [
