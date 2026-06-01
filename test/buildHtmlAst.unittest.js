@@ -372,4 +372,24 @@ describe("buildHtmlAst Edge Cases", () => {
 		expect(ast.children).toHaveLength(1);
 		expect(ast.children[0].tagName).toBe("div");
 	});
+
+	it("should not duplicate an attribute span when a formatting element is cloned", () => {
+		// <a> is reopened around <div> by the adoption agency algorithm; the
+		// clone must not reuse the original's href source span, or the parser
+		// would emit two dependencies for the same position.
+		const ast = buildHtmlAst("<a href=x.png><div>y</a>");
+		/** @type {string[]} */
+		const spans = [];
+		const collect = (node) => {
+			if (node.type !== "element") return;
+			for (const attr of node.attributes) {
+				if (attr.valueStart !== -1) {
+					spans.push(`${attr.valueStart},${attr.valueEnd}`);
+				}
+			}
+			for (const child of node.children) collect(child);
+		};
+		for (const child of ast.children) collect(child);
+		expect(spans).toEqual([...new Set(spans)]);
+	});
 });
