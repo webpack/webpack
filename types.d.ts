@@ -146,6 +146,11 @@ declare class AbstractLibraryPlugin<T> {
 	parseOptions(library: LibraryOptions): T;
 
 	/**
+	 * Returns true when every entry dependency should be handled as a library entry.
+	 */
+	shouldProcessAllEntryModules(options: T): boolean;
+
+	/**
 	 * Finish entry module.
 	 */
 	finishEntryModule(
@@ -25566,6 +25571,7 @@ declare namespace exports {
 		export let makeDeferredNamespaceObject: "__webpack_require__.z";
 		export let makeNamespaceObject: "__webpack_require__.r";
 		export let makeOptimizedDeferredNamespaceObject: "__webpack_require__.zO";
+		export let mergeEntryExports: "merge-entry-exports";
 		export let module: "module";
 		export let moduleCache: "__webpack_require__.c";
 		export let moduleFactories: "__webpack_require__.m";
