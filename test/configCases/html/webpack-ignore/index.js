@@ -13,6 +13,10 @@ it("should support webpackIgnore magic comment in html modules", () => {
 	expect(page).toMatch(
 		/<img src="[a-f0-9]+\.png" alt="nested-not-ignored">/
 	);
+	// A magic comment inside a closed element must not leak to the next sibling.
+	expect(page).toMatch(
+		/<img src="[a-f0-9]+\.png" alt="after-nested-comment">/
+	);
 	// Ignored URLs remain unchanged in the output.
 	expect(page).toContain('<img src="./ignored.png" alt="ignored">');
 	expect(page).toContain(
