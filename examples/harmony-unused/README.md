@@ -154,17 +154,17 @@ function c() { console.log("c"); }
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
+/******/ 	const __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -173,7 +173,7 @@ function c() { console.log("c"); }
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -186,11 +186,26 @@ function c() { console.log("c"); }
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
+/******/ 		// define getter/value functions for harmony exports
 /******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			if(Array.isArray(definition)) {
+/******/ 				var i = 0;
+/******/ 				while(i < definition.length) {
+/******/ 					var key = definition[i++];
+/******/ 					var binding = definition[i++];
+/******/ 					if(!__webpack_require__.o(exports, key)) {
+/******/ 						if(binding === 0) {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
+/******/ 						} else {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, get: binding });
+/******/ 						}
+/******/ 					} else if(binding === 0) { i++; }
+/******/ 				}
+/******/ 			} else {
+/******/ 				for(var key in definition) {
+/******/ 					if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 					}
 /******/ 				}
 /******/ 			}
 /******/ 		};
@@ -218,7 +233,7 @@ function c() { console.log("c"); }
 </details>
 
 ``` js
-var __webpack_exports__ = {};
+let __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
@@ -245,7 +260,7 @@ _library__WEBPACK_IMPORTED_MODULE_1__.reexportedMultiply(1, 2);
 # dist/output.js
 
 ```javascript
-(()=>{"use strict";var r={627(r,e,t){function o(){for(var r=0,e=0,t=arguments,o=t.length;e<o;)r+=t[e++];return r}function n(){for(var r=1,e=0,t=arguments,o=t.length;e<o;)r*=t[e++];return r}t.d(e,{WQ:()=>o,lw:()=>n})}},e={};function t(o){var n=e[o];if(void 0!==n)return n.exports;var a=e[o]={exports:{}};return r[o](a,a.exports,t),a.exports}t.d=(r,e)=>{for(var o in e)t.o(e,o)&&!t.o(r,o)&&Object.defineProperty(r,o,{enumerable:!0,get:e[o]})},t.o=(r,e)=>Object.prototype.hasOwnProperty.call(r,e);var o=t(627);(0,o.WQ)(1,2),o.lw(1,2)})();
+(()=>{"use strict";var e={627(e,r,t){function o(){for(var e=0,r=0,t=arguments,o=t.length;r<o;)e+=t[r++];return e}function n(){for(var e=1,r=0,t=arguments,o=t.length;r<o;)e*=t[r++];return e}t.d(r,{WQ:()=>o,lw:()=>n})}};const r={};function t(o){const n=r[o];if(void 0!==n)return n.exports;const a=r[o]={exports:{}};return e[o](a,a.exports,t),a.exports}t.d=(e,r)=>{if(Array.isArray(r))for(var o=0;o<r.length;){var n=r[o++],a=r[o++];t.o(e,n)?0===a&&o++:0===a?Object.defineProperty(e,n,{enumerable:!0,value:r[o++]}):Object.defineProperty(e,n,{enumerable:!0,get:a})}else for(var n in r)t.o(r,n)&&!t.o(e,n)&&Object.defineProperty(e,n,{enumerable:!0,get:r[n]})},t.o=(e,r)=>Object.prototype.hasOwnProperty.call(e,r);var o=t(627);(0,o.WQ)(1,2),o.lw(1,2)})();
 ```
 
 # Info
@@ -253,11 +268,11 @@ _library__WEBPACK_IMPORTED_MODULE_1__.reexportedMultiply(1, 2);
 ## Unoptimized
 
 ```
-asset output.js 7.26 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 698 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
+asset output.js 7.88 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 698 bytes (javascript) 1.11 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 584 bytes [dependent] 3 modules
-  runtime modules 670 bytes 3 modules
+  runtime modules 1.11 KiB 3 modules
   ./example.js 114 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -268,10 +283,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 535 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 461 bytes (javascript) 396 bytes (runtime) [entry] [rendered]
+asset output.js 748 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 461 bytes (javascript) 859 bytes (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 396 bytes 2 modules
+  runtime modules 859 bytes 2 modules
   dependent modules 347 bytes [dependent] 1 module
   ./example.js 114 bytes [built] [code generated]
     [no exports]

@@ -46,7 +46,7 @@ export function square(n) {
 # dist/vendor.js
 
 ```javascript
-var vendor_lib_c74703445a44f12167cd;
+var vendor_lib_696b8f9b5fab819e8719;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -89,17 +89,17 @@ function square(n) {
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
+/******/ 	const __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -108,7 +108,7 @@ function square(n) {
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -121,11 +121,26 @@ function square(n) {
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
+/******/ 		// define getter/value functions for harmony exports
 /******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			if(Array.isArray(definition)) {
+/******/ 				var i = 0;
+/******/ 				while(i < definition.length) {
+/******/ 					var key = definition[i++];
+/******/ 					var binding = definition[i++];
+/******/ 					if(!__webpack_require__.o(exports, key)) {
+/******/ 						if(binding === 0) {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
+/******/ 						} else {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, get: binding });
+/******/ 						}
+/******/ 					} else if(binding === 0) { i++; }
+/******/ 				}
+/******/ 			} else {
+/******/ 				for(var key in definition) {
+/******/ 					if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 					}
 /******/ 				}
 /******/ 			}
 /******/ 		};
@@ -157,8 +172,8 @@ function square(n) {
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(0);
-/******/ 	vendor_lib_c74703445a44f12167cd = __webpack_exports__;
+/******/ 	let __webpack_exports__ = __webpack_require__(0);
+/******/ 	vendor_lib_696b8f9b5fab819e8719 = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -167,7 +182,7 @@ function square(n) {
 # dist/vendor-manifest.json
 
 ```javascript
-{"name":"vendor_lib_c74703445a44f12167cd","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
+{"name":"vendor_lib_696b8f9b5fab819e8719","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
 ```
 
 # Info
@@ -175,10 +190,10 @@ function square(n) {
 ## Unoptimized
 
 ```
-asset vendor.js 3.93 KiB [emitted] (name: main)
-chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
+asset vendor.js 4.55 KiB [emitted] (name: main)
+chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 1.11 KiB (runtime) [entry] [rendered]
   > main
-  runtime modules 670 bytes 3 modules
+  runtime modules 1.11 KiB 3 modules
   dependent modules 45 bytes [dependent] 1 module
   dll main 12 bytes [built] [code generated]
     [used exports unknown]
@@ -190,10 +205,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset vendor.js 647 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
+asset vendor.js 860 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 1.11 KiB (runtime) [entry] [rendered]
   > main
-  runtime modules 670 bytes 3 modules
+  runtime modules 1.11 KiB 3 modules
   dependent modules 45 bytes [dependent] 1 module
   dll main 12 bytes [built] [code generated]
     dll entry

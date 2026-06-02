@@ -185,7 +185,7 @@ assets by info 881 bytes [immutable]
   asset async_js.0eeb6882e0cf674fd1fc.js 873 bytes [emitted] [immutable] 1 related asset
   asset 3ee037f347c64cc372ad18857b0db91f.txt 4 bytes [emitted] [immutable] [from: foo.txt] (auxiliary name: main)
   asset a0145fafc7fab801e574.txt 4 bytes [emitted] [immutable] [from: bar.txt] (auxiliary name: main)
-asset output.js 15.4 KiB [emitted] (name: main) 1 related asset
+asset output.js 16.1 KiB [emitted] (name: main) 1 related asset
 asset manifest.json 601 bytes [emitted]
 asset manifest.yml 395 bytes [emitted]
 chunk (runtime: main) async_js.0eeb6882e0cf674fd1fc.js 24 bytes [rendered]
@@ -194,9 +194,9 @@ chunk (runtime: main) async_js.0eeb6882e0cf674fd1fc.js 24 bytes [rendered]
     [exports: default]
     [used exports unknown]
     import() ./async.js ./example.js 6:8-28
-chunk (runtime: main) output.js (main) 325 bytes (javascript) 4 bytes (asset) 7.67 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 325 bytes (javascript) 4 bytes (asset) 8.19 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 7.67 KiB 9 modules
+  runtime modules 8.19 KiB 9 modules
   dependent modules 4 bytes (asset) 122 bytes (javascript) [dependent] 2 modules
   ./example.js 203 bytes [built] [code generated]
     [exports: default]
@@ -208,8 +208,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-assets by path *.js 3.14 KiB
-  asset output.js 2.95 KiB [emitted] [minimized] (name: main) 1 related asset
+assets by path *.js 3.43 KiB
+  asset output.js 3.24 KiB [emitted] [minimized] (name: main) 1 related asset
   asset async_js.f5b4307c4a15ad5435bd.js 194 bytes [emitted] [immutable] [minimized] 1 related asset
 asset manifest.json 507 bytes [emitted]
 asset manifest.yml 309 bytes [emitted]
@@ -219,9 +219,9 @@ chunk (runtime: main) async_js.f5b4307c4a15ad5435bd.js 24 bytes [rendered]
   ./async.js 24 bytes [built] [code generated]
     [exports: default]
     import() ./async.js ./example.js 6:8-28
-chunk (runtime: main) output.js (main) 283 bytes (javascript) 7.59 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 283 bytes (javascript) 8.1 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 7.59 KiB 9 modules
+  runtime modules 8.1 KiB 9 modules
   dependent modules 80 bytes [dependent] 1 module
   ./example.js 203 bytes [built] [code generated]
     [exports: default]

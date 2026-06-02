@@ -36,7 +36,7 @@ module.exports = config;
 return /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The require scope
-/******/ 	var __webpack_require__ = {};
+/******/ 	const __webpack_require__ = {};
 /******/ 	
 ```
 
@@ -46,11 +46,26 @@ return /******/ (() => { // webpackBootstrap
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
+/******/ 		// define getter/value functions for harmony exports
 /******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			if(Array.isArray(definition)) {
+/******/ 				var i = 0;
+/******/ 				while(i < definition.length) {
+/******/ 					var key = definition[i++];
+/******/ 					var binding = definition[i++];
+/******/ 					if(!__webpack_require__.o(exports, key)) {
+/******/ 						if(binding === 0) {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
+/******/ 						} else {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, get: binding });
+/******/ 						}
+/******/ 					} else if(binding === 0) { i++; }
+/******/ 				}
+/******/ 			} else {
+/******/ 				for(var key in definition) {
+/******/ 					if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 					}
 /******/ 				}
 /******/ 			}
 /******/ 		};
@@ -78,7 +93,7 @@ return /******/ (() => { // webpackBootstrap
 </details>
 
 ``` js
-var __webpack_exports__ = {};
+let __webpack_exports__ = {};
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -111,10 +126,10 @@ function increment() {
 ## Unoptimized
 
 ```
-asset MyLibrary.umd.js 2.88 KiB [emitted] (name: main)
-chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
+asset MyLibrary.umd.js 3.5 KiB [emitted] (name: main)
+chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 1.11 KiB (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 670 bytes 3 modules
+  runtime modules 1.11 KiB 3 modules
   ./example.js 92 bytes [built] [code generated]
     [exports: default, increment, value]
     [used exports unknown]
@@ -126,10 +141,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset MyLibrary.umd.js 672 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
+asset MyLibrary.umd.js 881 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 1.11 KiB (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 670 bytes 3 modules
+  runtime modules 1.11 KiB 3 modules
   ./example.js 92 bytes [built] [code generated]
     [exports: default, increment, value]
     entry ./example main

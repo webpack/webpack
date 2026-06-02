@@ -72,17 +72,17 @@ module.exports = "alpha";
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
+/******/ 	const __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -91,7 +91,7 @@ module.exports = "alpha";
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -111,7 +111,7 @@ module.exports = "alpha";
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(0);
+/******/ 	let __webpack_exports__ = __webpack_require__(0);
 /******/ 	
 /******/ 	return __webpack_exports__;
 /******/ })()
@@ -155,17 +155,17 @@ module.exports = "beta";
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
+/******/ 	const __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -174,7 +174,7 @@ module.exports = "beta";
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -194,7 +194,7 @@ module.exports = "beta";
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(1);
+/******/ 	let __webpack_exports__ = __webpack_require__(1);
 /******/ 	
 /******/ 	return __webpack_exports__;
 /******/ })()
@@ -207,7 +207,7 @@ module.exports = "beta";
 ## Unoptimized
 
 ```
-asset MyLibrary.beta.js 2.31 KiB [emitted] (name: beta)
+asset MyLibrary.beta.js 2.32 KiB [emitted] (name: beta)
 asset MyLibrary.alpha.js 2.31 KiB [emitted] (name: alpha)
 chunk (runtime: alpha) MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
   > ./alpha alpha
@@ -229,8 +229,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset MyLibrary.alpha.js 420 bytes [emitted] [minimized] (name: alpha)
-asset MyLibrary.beta.js 418 bytes [emitted] [minimized] (name: beta)
+asset MyLibrary.alpha.js 434 bytes [emitted] [minimized] (name: alpha)
+asset MyLibrary.beta.js 432 bytes [emitted] [minimized] (name: beta)
 chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
   > ./beta beta
   ./beta.js 24 bytes [built] [code generated]

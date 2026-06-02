@@ -71,17 +71,17 @@ module.exports = Math.random();
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
+/******/ 	const __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			id: moduleId,
 /******/ 			loaded: false,
 /******/ 			exports: {}
@@ -90,7 +90,7 @@ module.exports = Math.random();
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -116,7 +116,7 @@ module.exports = Math.random();
 /******/ 	// module cache are used so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	var __webpack_exports__ = __webpack_require__(0);
+/******/ 	let __webpack_exports__ = __webpack_require__(0);
 /******/ 	
 /******/ })()
 ;
@@ -140,7 +140,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 307 bytes [emitted] [minimized] (name: main)
+asset output.js 317 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 313 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 31 bytes [dependent] 1 module

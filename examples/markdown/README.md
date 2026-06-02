@@ -433,17 +433,17 @@ module.exports = "# Example headings\n\n## Sample Section\n\n## This'll be a _He
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
+/******/ 	const __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -452,7 +452,7 @@ module.exports = "# Example headings\n\n## Sample Section\n\n## This'll be a _He
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -468,11 +468,26 @@ module.exports = "# Example headings\n\n## Sample Section\n\n## This'll be a _He
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
+/******/ 		// define getter/value functions for harmony exports
 /******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			if(Array.isArray(definition)) {
+/******/ 				var i = 0;
+/******/ 				while(i < definition.length) {
+/******/ 					var key = definition[i++];
+/******/ 					var binding = definition[i++];
+/******/ 					if(!__webpack_require__.o(exports, key)) {
+/******/ 						if(binding === 0) {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
+/******/ 						} else {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, get: binding });
+/******/ 						}
+/******/ 					} else if(binding === 0) { i++; }
+/******/ 				}
+/******/ 			} else {
+/******/ 				for(var key in definition) {
+/******/ 					if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 					}
 /******/ 				}
 /******/ 			}
 /******/ 		};
@@ -498,7 +513,7 @@ module.exports = "# Example headings\n\n## Sample Section\n\n## This'll be a _He
 /******/ 	(() => {
 /******/ 		// define to binary helper
 /******/ 		const toImmutableBytes = (value) => {
-/******/ 			var {buffer} = value;
+/******/ 			let {buffer} = value;
 /******/ 			const throwErr = () => {
 /******/ 				throw new TypeError('ArrayBuffer is immutable');
 /******/ 			};
@@ -535,7 +550,7 @@ module.exports = "# Example headings\n\n## Sample Section\n\n## This'll be a _He
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
-/******/ 		var installedChunks = {
+/******/ 		const installedChunks = {
 /******/ 			0: 0
 /******/ 		};
 /******/ 		
@@ -560,7 +575,7 @@ module.exports = "# Example headings\n\n## Sample Section\n\n## This'll be a _He
 </details>
 
 ``` js
-var __webpack_exports__ = {};
+let __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
@@ -669,11 +684,11 @@ toRawContainerUsingString.appendChild(markdownToRawText);
 ## Unoptimized
 
 ```
-asset output.js 18.9 KiB [emitted] (name: main)
+asset output.js 19.5 KiB [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 11.3 KiB (javascript) 14.6 KiB (asset) 2.16 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 11.3 KiB (javascript) 14.6 KiB (asset) 2.61 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.16 KiB 6 modules
+  runtime modules 2.61 KiB 6 modules
   dependent modules 8.89 KiB (javascript) 14.6 KiB (asset) [dependent] 4 modules
   ./example.js 2.39 KiB [built] [code generated]
     [no exports]

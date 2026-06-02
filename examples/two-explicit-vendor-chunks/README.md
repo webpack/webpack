@@ -65,17 +65,17 @@ module.exports = "Vendor1";
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
+/******/ 	const __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -84,7 +84,7 @@ module.exports = "Vendor1";
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -104,7 +104,7 @@ module.exports = "Vendor1";
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(0);
+/******/ 	let __webpack_exports__ = __webpack_require__(0);
 /******/ 	
 /******/ })()
 ;
@@ -149,17 +149,17 @@ __webpack_require__(/*! ./vendor1 */ 0);
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
+/******/ 	const __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -168,7 +168,7 @@ __webpack_require__(/*! ./vendor1 */ 0);
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -188,7 +188,7 @@ __webpack_require__(/*! ./vendor1 */ 0);
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(1);
+/******/ 	let __webpack_exports__ = __webpack_require__(1);
 /******/ 	
 /******/ })()
 ;
@@ -248,17 +248,17 @@ __webpack_require__(/*! ./vendor2 */ 1);
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
+/******/ 	const __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -267,7 +267,7 @@ __webpack_require__(/*! ./vendor2 */ 1);
 /******/ 		// Execute the module function
 /******/ 		if (!(moduleId in __webpack_modules__)) {
 /******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
 /******/ 			e.code = 'MODULE_NOT_FOUND';
 /******/ 			throw e;
 /******/ 		}
@@ -287,7 +287,7 @@ __webpack_require__(/*! ./vendor2 */ 1);
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(2);
+/******/ 	let __webpack_exports__ = __webpack_require__(2);
 /******/ 	
 /******/ })()
 ;
@@ -299,8 +299,8 @@ __webpack_require__(/*! ./vendor2 */ 1);
 
 ```
 asset pageA.js 2.68 KiB [emitted] (name: pageA)
-asset vendor2.js 2.25 KiB [emitted] (name: vendor2)
-asset vendor1.js 1.86 KiB [emitted] (name: vendor1)
+asset vendor2.js 2.26 KiB [emitted] (name: vendor2)
+asset vendor1.js 1.87 KiB [emitted] (name: vendor1)
 asset pageB.js 1.85 KiB [emitted] (name: pageB)
 asset pageC.js 1.85 KiB [emitted] (name: pageC)
 chunk (runtime: pageA) pageA.js (pageA) 147 bytes [entry] [rendered]
@@ -344,11 +344,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset pageA.js 256 bytes [emitted] [minimized] (name: pageA)
-asset vendor2.js 214 bytes [emitted] [minimized] (name: vendor2)
-asset vendor1.js 175 bytes [emitted] [minimized] (name: vendor1)
-asset pageB.js 173 bytes [emitted] [minimized] (name: pageB)
-asset pageC.js 173 bytes [emitted] [minimized] (name: pageC)
+asset pageA.js 266 bytes [emitted] [minimized] (name: pageA)
+asset vendor2.js 224 bytes [emitted] [minimized] (name: vendor2)
+asset vendor1.js 185 bytes [emitted] [minimized] (name: vendor1)
+asset pageB.js 183 bytes [emitted] [minimized] (name: pageB)
+asset pageC.js 183 bytes [emitted] [minimized] (name: pageC)
 chunk (runtime: vendor2) vendor2.js (vendor2) 77 bytes [entry] [rendered]
   > ./vendor2 vendor2
   dependent modules 27 bytes [dependent] 1 module
