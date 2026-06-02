@@ -55,15 +55,20 @@ jobs:
     steps:
       - name: Trigger webpack-doc-kit release
         uses: actions/github-script@d746ffe35508b1917358783b479e04febd2b8f71 # v9.0.0
+        env:
+          PUBLISHED_PACKAGES: ${{ needs.release.outputs.publishedPackages }}
         with:
           github-token: ${{ secrets.DISPATCH_TOKEN }}
           script: |
+            const packages = JSON.parse(process.env.PUBLISHED_PACKAGES);
+            const pkg = packages.find(p => p.name === "webpack");
+            if (!pkg) throw new Error("webpack package not found in published packages");
             await github.rest.actions.createWorkflowDispatch({
               owner: "webpack",
               repo: "webpack-doc-kit",
               workflow_id: "release.yml",
               ref: "main",
               inputs: {
-                tag: "v" + ${{ needs.release.outputs.publishedPackages }}[0].version,
+                tag: "v" + pkg.version,
               },
             });
