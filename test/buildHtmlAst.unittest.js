@@ -1,5 +1,24 @@
 "use strict";
 
+jest.mock("../lib/html/walkHtmlTokens", () => {
+	const actual = jest.requireActual("../lib/html/walkHtmlTokens");
+	const mockWalkHtmlTokens = jest.fn((input, pos, callbacks) => {
+		if (input === "<style>MOCK_SPLIT</style>") {
+			// Simulate the tokenizer splitting the rawtext body into two adjacent
+			// text tokens. The AST builder must merge them into a single text node
+			// that spans the complete content range [7, 17).
+			callbacks.openTag(input, 0, 7, 1, 6, false);
+			callbacks.text(input, 7, 12); // "MOCK_"
+			callbacks.text(input, 12, 17); // "SPLIT"
+			callbacks.closeTag(input, 17, 25, 19, 24);
+			return 25;
+		}
+		return actual(input, pos, callbacks);
+	});
+	Object.assign(mockWalkHtmlTokens, actual);
+	return mockWalkHtmlTokens;
+});
+
 const buildHtmlAst = require("../lib/html/buildHtmlAst");
 
 describe("buildHtmlAst", () => {
@@ -223,6 +242,22 @@ describe("buildHtmlAst", () => {
 		expect(script.children).toHaveLength(1);
 		expect(script.children[0].type).toBe("text");
 		expect(script.children[0].data).toBe("var a = 1 < 2;");
+	});
+
+	it("should merge adjacent text tokens inside a rawtext element", () => {
+		// The mock fires two consecutive text callbacks for the <style> body.
+		// buildHtmlAst must coalesce them into a single text node that covers
+		// the complete content span [7, 17), preventing silent content truncation.
+		const src = "<style>MOCK_SPLIT</style>";
+		const ast = buildHtmlAst(src);
+		const style = ast.children[0];
+		expect(style.tagName).toBe("style");
+		expect(style.children).toHaveLength(1);
+		const text = style.children[0];
+		expect(text.type).toBe("text");
+		expect(text.data).toBe("MOCK_SPLIT");
+		expect(text.start).toBe(7); // right after <style>
+		expect(text.end).toBe(17); // right before </style>
 	});
 
 	it("should track end offsets correctly", () => {
