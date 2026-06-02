@@ -112,6 +112,11 @@ const describeCases = (config) => {
 								if (typeof options.output.pathinfo === "undefined") {
 									options.output.pathinfo = true;
 								}
+								if (
+									typeof options.output.strictModuleResolution === "undefined"
+								) {
+									options.output.strictModuleResolution = true;
+								}
 								if (!options.output.filename) {
 									options.output.filename = `bundle${idx}${
 										options.experiments && options.experiments.outputModule
