@@ -1,5 +1,19 @@
 "use strict";
 
+jest.mock("../lib/html/walkHtmlTokens", () => {
+	const actual = jest.requireActual("../lib/html/walkHtmlTokens");
+	const mockWalkHtmlTokens = jest.fn((input, pos, callbacks) => {
+		if (input === "MOCK_ADJACENT_TEXT") {
+			callbacks.text(input, 0, 5);
+			callbacks.text(input, 5, 13);
+			return 13;
+		}
+		return actual(input, pos, callbacks);
+	});
+	Object.assign(mockWalkHtmlTokens, actual);
+	return mockWalkHtmlTokens;
+});
+
 const buildHtmlAst = require("../lib/html/buildHtmlAst");
 
 describe("buildHtmlAst", () => {
@@ -89,10 +103,10 @@ describe("buildHtmlAst", () => {
 	});
 
 	it("should merge adjacent text nodes", () => {
-		const ast = buildHtmlAst("hello world");
+		const ast = buildHtmlAst("MOCK_ADJACENT_TEXT");
 		expect(ast.children).toHaveLength(1);
 		expect(ast.children[0].type).toBe("text");
-		expect(ast.children[0].data).toBe("hello world");
+		expect(ast.children[0].data).toBe("MOCK_ADJACENT");
 	});
 
 	it("should detect SVG namespace", () => {
@@ -216,6 +230,17 @@ describe("buildHtmlAst", () => {
 		expect(input.attributes[1].value).toBe("hello");
 	});
 
+	it("should handle all attribute quote styles", () => {
+		const ast = buildHtmlAst("<input a=\"1\" b='2' c=3 disabled>");
+		const input = ast.children[0];
+		expect(input.attributes.map((attr) => attr.value)).toEqual([
+			"1",
+			"2",
+			"3",
+			""
+		]);
+	});
+
 	it("should parse raw-text elements correctly", () => {
 		const ast = buildHtmlAst("<script>var a = 1 < 2;</script>");
 		const script = ast.children[0];
@@ -294,6 +319,35 @@ describe("buildHtmlAst", () => {
 		expect(ast.children[0].tagName).toBe("p");
 		expect(ast.children[0].children[0].tagName).toBe("b");
 	});
+
+	it("should set tagEnd to end of opening tag", () => {
+		// <script> is 8 chars; tagEnd should point right after the >
+		const src = "<script>var x = 1;</script>";
+		const ast = buildHtmlAst(src);
+		const script = ast.children[0];
+		expect(script.tagName).toBe("script");
+		expect(script.tagEnd).toBe(8); // after '<script>'
+		expect(src[script.tagEnd - 1]).toBe(">");
+	});
+
+	it("should set nameEnd to end of tag name", () => {
+		// '<div ' — nameEnd is 4, right after 'div'
+		const src = '<div class="x"></div>';
+		const ast = buildHtmlAst(src);
+		const div = ast.children[0];
+		expect(div.tagName).toBe("div");
+		expect(div.nameEnd).toBe(4); // '<div' = positions 0-3, nameEnd = 4
+		expect(src.slice(1, div.nameEnd)).toBe("div");
+	});
+
+	it("should set tagEnd and nameEnd on void elements", () => {
+		const src = '<img src="a.png">';
+		const ast = buildHtmlAst(src);
+		const img = ast.children[0];
+		expect(img.tagName).toBe("img");
+		expect(img.tagEnd).toBe(src.length);
+		expect(src.slice(1, img.nameEnd)).toBe("img");
+	});
 });
 
 describe("buildHtmlAst Edge Cases", () => {
@@ -317,5 +371,25 @@ describe("buildHtmlAst Edge Cases", () => {
 		const ast = buildHtmlAst("<div></b></div>");
 		expect(ast.children).toHaveLength(1);
 		expect(ast.children[0].tagName).toBe("div");
+	});
+
+	it("should not duplicate an attribute span when a formatting element is cloned", () => {
+		// <a> is reopened around <div> by the adoption agency algorithm; the
+		// clone must not reuse the original's href source span, or the parser
+		// would emit two dependencies for the same position.
+		const ast = buildHtmlAst("<a href=x.png><div>y</a>");
+		/** @type {string[]} */
+		const spans = [];
+		const collect = (node) => {
+			if (node.type !== "element") return;
+			for (const attr of node.attributes) {
+				if (attr.valueStart !== -1) {
+					spans.push(`${attr.valueStart},${attr.valueEnd}`);
+				}
+			}
+			for (const child of node.children) collect(child);
+		};
+		for (const child of ast.children) collect(child);
+		expect(spans).toEqual([...new Set(spans)]);
 	});
 });

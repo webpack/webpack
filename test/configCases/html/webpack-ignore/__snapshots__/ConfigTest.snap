@@ -30,6 +30,11 @@ exports[`ConfigTestCases html webpack-ignore exported tests should support webpa
 	<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"nested-not-ignored\\">
 </div>
 
+<div>
+	<!-- webpackIgnore: true -->
+</div>
+<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"after-nested-comment\\">
+
 <!-- webpackIgnore: 1 -->
 <img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"warning-non-boolean\\">
 
