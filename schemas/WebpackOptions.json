@@ -2167,6 +2167,15 @@
           "instanceof": "Function",
           "tsType": "import('../lib/javascript/JavascriptParser').ParseFunction"
         },
+        "pureFunctions": {
+          "description": "Mark the listed top-level function names for pure-function-based tree shaking.",
+          "type": "array",
+          "items": {
+            "description": "A top-level function name in the module to treat as side-effect-free when called.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
         "reexportExportsPresence": {
           "description": "Specifies the behavior of invalid export names in \"export ... from ...\". This might be useful to disable during the migration from \"export ... from ...\" to \"export type ... from ...\" when reexporting types in TypeScript.",
           "enum": ["error", "warn", "auto", false]
