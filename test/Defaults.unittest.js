@@ -455,6 +455,7 @@ describe("snapshots", () => {
 		    "sourcePrefix": undefined,
 		    "strictModuleErrorHandling": false,
 		    "strictModuleExceptionHandling": false,
+		    "strictModuleResolution": false,
 		    "trustedTypes": undefined,
 		    "uniqueName": "webpack",
 		    "wasmLoading": "fetch",
@@ -968,6 +969,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "pathinfo": false,
 		+     "pathinfo": true,
+		@@ ... @@
+		-     "strictModuleResolution": false,
+		+     "strictModuleResolution": true,
 		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
@@ -2257,6 +2261,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "pathinfo": false,
 			+     "pathinfo": true,
+			@@ ... @@
+			-     "strictModuleResolution": false,
+			+     "strictModuleResolution": true,
 			@@ ... @@
 			-     "cache": false,
 			+     "cache": true,
