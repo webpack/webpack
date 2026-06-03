@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head><title>Edge cases</title></head>
+<body>
+
+<!-- Empty value: no dependency, left as-is -->
+<img src="" alt="empty">
+<link rel="icon" href="">
+<img srcset="" alt="empty-srcset">
+
+<!-- Hash-only: left untouched -->
+<img src="#anchor" alt="hash">
+
+<!-- Already a data URI: left untouched -->
+<img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="data-uri">
+
+<!-- Case-insensitive tag and attribute matching -->
+<IMG SRC="image.png" alt="upper-tag-attr">
+<img SRCSET="image.png 200w, image.png 400w" alt="upper-srcset">
+<IMG SRCSET="image.png 800w" alt="upper-tag-and-srcset">
+
+<!-- Sanity: a normal resolvable source still rewrites -->
+<img src="image.png" alt="ok">
+
+</body>
+</html>

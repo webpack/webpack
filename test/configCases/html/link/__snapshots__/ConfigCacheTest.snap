@@ -30,6 +30,8 @@ exports[`ConfigCacheTestCases html link exported tests should handle link tag 1`
 <!-- Stylesheet (multi-rel parsing) -->
 <link rel=\\"stylesheet\\" href=\\"117.bundle0.css\\">
 <link rel=\\"alternate stylesheet\\" href=\\"308.bundle0.css\\" title=\\"Alternate\\">
+<!-- webpackIgnore: true -->
+<link rel=\\"stylesheet\\" href=\\"./ignored.css\\">
 
 <!-- Prefetch / Preload -->
 <link rel=\\"prefetch\\" href=\\"handled-prefetch.png\\">

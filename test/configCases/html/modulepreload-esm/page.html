@@ -5,9 +5,13 @@
 <link rel="modulepreload" href="./preload.js">
 <link rel="modulepreload    " href="./preload-other.js">
 <link rel="modulepreload" href="data:text/javascript,export%20default%201">
+<!-- webpackIgnore: true -->
+<link rel="modulepreload" href="./ignored-preload.js">
 </head>
 <body>
 <h1>Hello</h1>
 <script type="module" src="./entry.js"></script>
+<!-- webpackIgnore: true -->
+<script type="module" src="./ignored-entry.js"></script>
 </body>
 </html>

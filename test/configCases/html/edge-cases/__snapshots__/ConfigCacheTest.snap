@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html edge-cases exported tests should skip non-resolvable URLs and match tags case-insensitively 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>Edge cases</title></head>
+<body>
+
+<!-- Empty value: no dependency, left as-is -->
+<img src=\\"\\" alt=\\"empty\\">
+<link rel=\\"icon\\" href=\\"\\">
+<img srcset=\\"\\" alt=\\"empty-srcset\\">
+
+<!-- Hash-only: left untouched -->
+<img src=\\"#anchor\\" alt=\\"hash\\">
+
+<!-- Already a data URI: left untouched -->
+<img src=\\"data:image/gif;base64,R0lGODlhAQABAAAAACw=\\" alt=\\"data-uri\\">
+
+<!-- Case-insensitive tag and attribute matching -->
+<IMG SRC=\\"09a1a1112c577c279435.png\\" alt=\\"upper-tag-attr\\">
+<img SRCSET=\\"09a1a1112c577c279435.png 200w, 09a1a1112c577c279435.png 400w\\" alt=\\"upper-srcset\\">
+<IMG SRCSET=\\"09a1a1112c577c279435.png 800w\\" alt=\\"upper-tag-and-srcset\\">
+
+<!-- Sanity: a normal resolvable source still rewrites -->
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"ok\\">
+
+</body>
+</html>
+"
+`;
