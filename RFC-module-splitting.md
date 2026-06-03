@@ -297,6 +297,44 @@ Add `experiments.moduleSplitting` (name TBD), off by default:
 
 Each phase is independently testable and stays behind the flag.
 
+### 7.1 Phase 1 mechanism — validated
+
+The Strategy-(A) mechanism was prototyped as a standalone plugin (tapping
+`finishModules`, before usage flagging) and verified end-to-end on the clean
+named-export shape:
+
+```
+lib.js:   export const A = {...}      // used eagerly (initial)
+          export const B = {...}      // used only via the async route
+route.js: import { B } from "./lib"   // route.js is the import() target
+entry.js: import { A } from "./lib"; import("./route.js")
+```
+
+The plugin creates a synthetic part-module for `B`, redirects `route.js`'s import
+connections (`moduleGraph.updateModule`) to it, and lets `buildChunkGraph` place it.
+Result (production, minified, `target: node`), identical correct runtime output in
+both builds (`A` from the initial chunk, `B` resolved through the async route):
+
+| Build                | `B` present in initial chunk? |
+| -------------------- | ----------------------------- |
+| baseline (no plugin) | yes                           |
+| with split plugin    | **no** — moved to async chunk |
+
+Key confirmations: (1) once the async importer is redirected, `lib` marks `B` as
+`/* unused harmony export B */` via the normal unused-export path, so the minifier
+drops it from the initial chunk with no special handling; (2) `buildChunkGraph`
+placed the part in the async chunk purely from graph reachability — no
+async-reachability logic of our own; (3) the only codegen subtlety was emitting the
+namespace via the part's own `module.exportsArgument`. On trivial fixtures the fixed
+per-part wrapper overhead can exceed the moved payload; the win scales with export
+size (e.g. a real component body).
+
+Not yet covered by the prototype (the remaining Phase 1→4 work): auto-detecting
+_which_ exports are safe to split (side-effect-free **and** self-contained — no
+references to other module-local bindings), reusing webpack's existing parser scope
+instead of re-parsing, `export default`, namespace facades, and the recursive
+re-export collapse that the vue shape needs.
+
 ## 8. Risks & constraints
 
 - **Performance / memory.** Splitting runs on user builds; fragment objects,
