@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       published: ${{ steps.changesets.outputs.published }}
+      publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
@@ -63,6 +64,10 @@ jobs:
         with:
           github-token: ${{ steps.app-token.outputs.token }}
           script: |
+            const packages = JSON.parse(process.env.PUBLISHED_PACKAGES);
+            const pkg = packages.find(p => p.name === "webpack");
+            if (!pkg) throw new Error("webpack package not found in published packages");
+
             await github.rest.actions.createWorkflowDispatch({
               owner: "webpack",
               repo: "webpack-doc-kit",
