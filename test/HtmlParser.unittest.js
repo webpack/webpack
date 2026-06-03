@@ -5,6 +5,7 @@ const path = require("path");
 jest.mock("../lib/html/buildHtmlAst", () => jest.fn());
 
 const HtmlInlineScriptDependency = require("../lib/dependencies/HtmlInlineScriptDependency");
+const HtmlInlineStyleDependency = require("../lib/dependencies/HtmlInlineStyleDependency");
 const HtmlParser = require("../lib/html/HtmlParser");
 const buildHtmlAst = require("../lib/html/buildHtmlAst");
 
@@ -113,5 +114,99 @@ describe("HtmlParser", () => {
 			modulepreload: [],
 			stylesheet: []
 		});
+	});
+
+	it("should span from the first text child to the last when a <style> has multiple text children", () => {
+		// Source layout: <style>(7)abc(10)<!-- X -->(20)def(23)</style>(31)
+		const source = "<style>abc<!-- X -->def</style>";
+		const firstText = "abc";
+		const secondText = "def";
+		const firstStart = source.indexOf(firstText); // 7
+		const secondStart = source.indexOf(
+			secondText,
+			firstStart + firstText.length
+		); // 20
+		const dependencies = [];
+		const module = {
+			resource: path.resolve(__dirname, "index.html"),
+			buildInfo: {},
+			buildMeta: {},
+			identifier() {
+				return this.resource;
+			},
+			addPresentationalDependency() {},
+			addDependency(dependency) {
+				dependencies.push(dependency);
+			},
+			addCodeGenerationDependency() {}
+		};
+
+		buildHtmlAst.mockReturnValue({
+			type: "document",
+			children: [
+				{
+					type: "element",
+					tagName: "style",
+					namespace: 0,
+					attributes: [],
+					children: [
+						{
+							type: "text",
+							data: firstText,
+							start: firstStart,
+							end: firstStart + firstText.length
+						},
+						{
+							type: "comment",
+							data: " X ",
+							start: firstStart + firstText.length,
+							end: secondStart
+						},
+						{
+							type: "text",
+							data: secondText,
+							start: secondStart,
+							end: secondStart + secondText.length
+						}
+					],
+					selfClosing: false,
+					start: 0,
+					end: source.length,
+					tagEnd: source.indexOf(">") + 1,
+					nameEnd: "<style".length
+				}
+			]
+		});
+
+		const parser = new HtmlParser({});
+		parser.parse(source, {
+			module,
+			compilation: {
+				outputOptions: {
+					hashFunction: "md4",
+					module: false
+				},
+				compiler: {
+					context: path.resolve(__dirname, "..")
+				},
+				options: {
+					experiments: {
+						css: true
+					}
+				}
+			}
+		});
+
+		const styleDeps = dependencies.filter(
+			(d) => d instanceof HtmlInlineStyleDependency
+		);
+		expect(styleDeps).toHaveLength(1);
+
+		const dep = styleDeps[0];
+		// range[0] must be the start of the FIRST text child (7), not
+		// the start of the second (20) — the regression the fix targets.
+		expect(dep.range[0]).toBe(firstStart);
+		// range[1] must reach the end of the LAST text child.
+		expect(dep.range[1]).toBe(secondStart + secondText.length);
 	});
 });
