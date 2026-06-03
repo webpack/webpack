@@ -21,7 +21,11 @@ const schema = {
 		mode: { const: "production" },
 		boolConst: { const: true },
 		numConst: { const: 5 }
-	}
+	},
+	// Conditional branches contribute their own flags.
+	if: { properties: { mode: { const: "production" } } },
+	then: { type: "object", properties: { whenProd: { type: "string" } } },
+	else: { type: "object", properties: { whenDev: { type: "boolean" } } }
 };
 
 // RegExp survives the JSON round-trip as a plain marker object.

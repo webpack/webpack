@@ -117,6 +117,12 @@ describe("WebpackCLI integration", () => {
 		expect(bad.errors).toMatch(/Expected: '5'/);
 	});
 
+	it("registers flags from both branches of an if/then/else schema", async () => {
+		const { config } = await run(["--when-prod", "hello", "--when-dev"]);
+		expect(config.whenProd).toBe("hello"); // from `then`
+		expect(config.whenDev).toBe(true); // from `else`
+	});
+
 	it("rejects an enum value outside the allowed set", async () => {
 		const { exitCode, errors } = await run(["--level", "nope"]);
 		expect(exitCode).toBe(2);
