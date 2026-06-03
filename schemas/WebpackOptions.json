@@ -1816,6 +1816,11 @@
                         "type": "string",
                         "minLength": 1
                       },
+                      "filter": {
+                        "description": "Called with the element's attribute map; return false to skip this source entry for that element.",
+                        "instanceof": "Function",
+                        "tsType": "(attributes: Map<string, string>) => boolean"
+                      },
                       "tag": {
                         "description": "Tag name to match. Omit to match any tag.",
                         "type": "string",
