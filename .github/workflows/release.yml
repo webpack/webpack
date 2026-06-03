@@ -19,7 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       published: ${{ steps.changesets.outputs.published }}
-      publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
@@ -42,27 +41,28 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: "" # https://github.com/changesets/changesets/issues/1152#issuecomment-3190884868
 
-  trigger-logic:
+  announce-release:
     needs: release
     if: needs.release.outputs.published == 'true'
     uses: ./.github/workflows/release-announcement.yml
     secrets: inherit
 
-  trigger-webpack-doc-kit:
+  trigger-documentation-update:
     needs: release
     if: needs.release.outputs.published == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger webpack-doc-kit release
-        uses: actions/github-script@d746ffe35508b1917358783b479e04febd2b8f71 # v9.0.0
-        env:
-          PUBLISHED_PACKAGES: ${{ needs.release.outputs.publishedPackages }}
+      - name: Generate Token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app-token
         with:
-          github-token: ${{ secrets.DISPATCH_TOKEN }}
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+      - name: Dispatch workflow
+        uses: actions/github-script@d746ffe35508b1917358783b479e04febd2b8f71 # v9.0.0
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
           script: |
-            const packages = JSON.parse(process.env.PUBLISHED_PACKAGES);
-            const pkg = packages.find(p => p.name === "webpack");
-            if (!pkg) throw new Error("webpack package not found in published packages");
             await github.rest.actions.createWorkflowDispatch({
               owner: "webpack",
               repo: "webpack-doc-kit",
