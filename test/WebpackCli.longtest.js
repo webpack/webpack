@@ -9,6 +9,22 @@ const MOCK_WEBPACK = path.resolve(
 	"fixtures/webpack-cli/mock-webpack.js"
 );
 
+// webpack-cli requires a newer Node than webpack itself, so skip on Node versions
+// it does not support (derived from webpack-cli's own `engines` field).
+const [reqMajor, reqMinor = 0, reqPatch = 0] =
+	require("webpack-cli/package.json")
+		.engines.node.match(/\d+(?:\.\d+)*/)[0]
+		.split(".")
+		.map(Number);
+
+const [major, minor, patch] = process.versions.node.split(".").map(Number);
+const supportsWebpackCli =
+	major !== reqMajor
+		? major > reqMajor
+		: minor !== reqMinor
+			? minor > reqMinor
+			: patch >= reqPatch;
+
 // Runs webpack-cli in-process against a mock webpack module injected via the
 // documented WEBPACK_PACKAGE env var (webpack-cli loads webpack through a native
 // import jest.mock cannot intercept). process.exit/console.error are spied so a
@@ -50,6 +66,14 @@ const run = async (args) => {
 };
 
 describe("WebpackCLI integration", () => {
+	// webpack-cli requires a newer Node than webpack itself; skip on older versions.
+	if (!supportsWebpackCli) {
+		// eslint-disable-next-line jest/no-disabled-tests
+		it.skip("requires a Node version supported by webpack-cli", () => {});
+
+		return;
+	}
+
 	it("parses every cli argument type into the webpack config", async () => {
 		const { config } = await run([
 			"--flag",
