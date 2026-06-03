@@ -1,105 +1,212 @@
 "use strict";
 
-// Inject a fake buildHtmlAst that, for the special sentinel source
-// "MOCK_MULTI_TEXT_STYLE", returns an AST with two text children
-// separated by a comment node inside a <style> element.  This
-// exercises the span-selection fix that keeps contentStart fixed at
-// the first text child and extends contentEnd to the last text child.
-jest.mock("../lib/html/buildHtmlAst", () => {
-	const actual = jest.requireActual("../lib/html/buildHtmlAst");
-	const NS_HTML = actual.NS_HTML;
+const path = require("path");
 
-	// Source layout for "MOCK_MULTI_TEXT_STYLE":
-	//   0-6   : <style>   (tagEnd = 7)
-	//   7-9   : abc       (text child 1: start=7, end=10)
-	//  10-19  : <!-- X --> (comment child: start=10, end=20)
-	//  20-22  : def       (text child 2: start=20, end=23)
-	//  23-30  : </style>
-	const mockFn = jest.fn((source) => {
-		if (source === "MOCK_MULTI_TEXT_STYLE") {
-			return {
-				type: "document",
-				children: [
-					{
-						type: "element",
-						tagName: "style",
-						namespace: NS_HTML,
-						attributes: [],
-						children: [
-							{ type: "text", data: "abc", start: 7, end: 10 },
-							{ type: "comment", data: " X ", start: 10, end: 20 },
-							{ type: "text", data: "def", start: 20, end: 23 }
-						],
-						selfClosing: false,
-						start: 0,
-						end: 7,
-						tagEnd: 7,
-						nameEnd: 6
-					}
-				]
-			};
-		}
-		return actual(source);
-	});
-	Object.assign(mockFn, actual);
-	return mockFn;
-});
+jest.mock("../lib/html/buildHtmlAst", () => jest.fn());
 
+const HtmlInlineScriptDependency = require("../lib/dependencies/HtmlInlineScriptDependency");
 const HtmlInlineStyleDependency = require("../lib/dependencies/HtmlInlineStyleDependency");
 const HtmlParser = require("../lib/html/HtmlParser");
+const buildHtmlAst = require("../lib/html/buildHtmlAst");
 
-describe("HtmlParser – inline <style> multi-text-node span", () => {
-	// The source string whose character positions match the mock AST.
-	// Positions: 0-6 = <style>, 7-9 = "abc", 10-19 = "<!-- X -->",
-	//            20-22 = "def", 23-30 = </style>
-	const SOURCE = "<style>abc<!-- X -->def</style>";
-
-	let parser;
-	let deps;
-	let mockState;
-
-	beforeEach(() => {
-		parser = new HtmlParser({ experiments: { css: true } });
-
-		deps = [];
-
-		const mockModule = {
-			resource: "/mock/page.html",
-			addDependency: (dep) => {
-				deps.push(dep);
-			},
-			addCodeGenerationDependency: () => {},
-			addPresentationalDependency: () => {},
+describe("HtmlParser", () => {
+	it("should aggregate inline script content across all text children", () => {
+		const source = "<script>const first = 1;\nconst second = 2;</script>";
+		const firstText = "const first = 1;\n";
+		const secondText = "const second = 2;";
+		const firstStart = source.indexOf(firstText);
+		const secondStart = source.indexOf(
+			secondText,
+			firstStart + firstText.length
+		);
+		const presentationalDependencies = [];
+		const dependencies = [];
+		const module = {
+			resource: path.resolve(__dirname, "index.html"),
 			buildInfo: {},
-			buildMeta: {}
-		};
-
-		mockState = {
-			module: mockModule,
-			compilation: {
-				outputOptions: { hashFunction: "md4", module: false },
-				options: { experiments: { css: true } },
-				compiler: { context: undefined }
+			buildMeta: {},
+			identifier() {
+				return this.resource;
+			},
+			addPresentationalDependency(dependency) {
+				presentationalDependencies.push(dependency);
+			},
+			addDependency(dependency) {
+				dependencies.push(dependency);
 			}
 		};
+
+		buildHtmlAst.mockReturnValue({
+			type: "document",
+			children: [
+				{
+					type: "element",
+					tagName: "script",
+					namespace: 0,
+					attributes: [],
+					children: [
+						{
+							type: "text",
+							data: firstText,
+							start: firstStart,
+							end: firstStart + firstText.length
+						},
+						{
+							type: "text",
+							data: secondText,
+							start: secondStart,
+							end: secondStart + secondText.length
+						}
+					],
+					selfClosing: false,
+					start: 0,
+					end: source.length,
+					tagEnd: source.indexOf(">") + 1,
+					nameEnd: "<script".length
+				}
+			]
+		});
+
+		const parser = new HtmlParser({});
+		parser.parse(source, {
+			module,
+			compilation: {
+				outputOptions: {
+					hashFunction: "md4",
+					module: false
+				},
+				compiler: {
+					context: path.resolve(__dirname, "..")
+				},
+				options: {
+					experiments: {
+						css: false
+					}
+				}
+			}
+		});
+
+		expect(buildHtmlAst).toHaveBeenCalledWith(source);
+		expect(dependencies).toHaveLength(1);
+		expect(presentationalDependencies).toHaveLength(1);
+
+		const dependency = presentationalDependencies[0];
+		expect(dependency).toBeInstanceOf(HtmlInlineScriptDependency);
+		expect(dependency.contentRange).toEqual([
+			firstStart,
+			secondStart + secondText.length
+		]);
+		expect(dependency.request).toBe(
+			`data:text/javascript;base64,${Buffer.from(
+				`${firstText}${secondText}`,
+				"utf8"
+			).toString("base64")}`
+		);
+		expect(module.buildInfo.htmlEntryScripts).toEqual({
+			script: [
+				{
+					request: dependency.request,
+					entryName: dependency.entryName,
+					type: "script"
+				}
+			],
+			"script-module": [],
+			modulepreload: [],
+			stylesheet: []
+		});
 	});
 
 	it("should span from the first text child to the last when a <style> has multiple text children", () => {
-		parser.parse(SOURCE, mockState);
+		// Source layout: <style>(7)abc(10)<!-- X -->(20)def(23)</style>(31)
+		const source = "<style>abc<!-- X -->def</style>";
+		const firstText = "abc";
+		const secondText = "def";
+		const firstStart = source.indexOf(firstText); // 7
+		const secondStart = source.indexOf(
+			secondText,
+			firstStart + firstText.length
+		); // 20
+		const dependencies = [];
+		const module = {
+			resource: path.resolve(__dirname, "index.html"),
+			buildInfo: {},
+			buildMeta: {},
+			identifier() {
+				return this.resource;
+			},
+			addPresentationalDependency() {},
+			addDependency(dependency) {
+				dependencies.push(dependency);
+			},
+			addCodeGenerationDependency() {}
+		};
 
-		// There must be exactly one HtmlInlineStyleDependency (plus one
-		// StaticExportsDependency added at the end of parse()).
-		const styleDeps = deps.filter(
+		buildHtmlAst.mockReturnValue({
+			type: "document",
+			children: [
+				{
+					type: "element",
+					tagName: "style",
+					namespace: 0,
+					attributes: [],
+					children: [
+						{
+							type: "text",
+							data: firstText,
+							start: firstStart,
+							end: firstStart + firstText.length
+						},
+						{
+							type: "comment",
+							data: " X ",
+							start: firstStart + firstText.length,
+							end: secondStart
+						},
+						{
+							type: "text",
+							data: secondText,
+							start: secondStart,
+							end: secondStart + secondText.length
+						}
+					],
+					selfClosing: false,
+					start: 0,
+					end: source.length,
+					tagEnd: source.indexOf(">") + 1,
+					nameEnd: "<style".length
+				}
+			]
+		});
+
+		const parser = new HtmlParser({});
+		parser.parse(source, {
+			module,
+			compilation: {
+				outputOptions: {
+					hashFunction: "md4",
+					module: false
+				},
+				compiler: {
+					context: path.resolve(__dirname, "..")
+				},
+				options: {
+					experiments: {
+						css: true
+					}
+				}
+			}
+		});
+
+		const styleDeps = dependencies.filter(
 			(d) => d instanceof HtmlInlineStyleDependency
 		);
 		expect(styleDeps).toHaveLength(1);
 
 		const dep = styleDeps[0];
 		// range[0] must be the start of the FIRST text child (7), not
-		// the start of the second (20) — the regression that the fix
-		// targets.
-		expect(dep.range[0]).toBe(7);
-		// range[1] must reach the end of the LAST text child (23).
-		expect(dep.range[1]).toBe(23);
+		// the start of the second (20) — the regression the fix targets.
+		expect(dep.range[0]).toBe(firstStart);
+		// range[1] must reach the end of the LAST text child.
+		expect(dep.range[1]).toBe(secondStart + secondText.length);
 	});
 });
