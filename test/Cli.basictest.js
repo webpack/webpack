@@ -95,6 +95,25 @@ describe("Cli", () => {
 
 			expect(getArguments(schema)).toMatchSnapshot();
 		});
+
+		it("reports the schema origin path in conflicting-schema errors", () => {
+			const schema = {
+				type: "object",
+				additionalProperties: false,
+				properties: {
+					foo: {
+						oneOf: [
+							{ type: "string" },
+							{ type: "array", items: { type: "string" } }
+						]
+					}
+				}
+			};
+
+			expect(() => getArguments(schema)).toThrow(
+				"Conflicting schema for foo[] (#/properties/foo/oneOf/1/items) with string type"
+			);
+		});
 	});
 
 	describe("processArguments", () => {
