@@ -174,6 +174,54 @@ partId)` pair to a chunk, and teach code generation to emit only the requested
 Strategy (A) reuses far more existing machinery and is recommended for the early
 phases; (B) may be revisited if (A)'s duplication / cache cost proves unacceptable.
 
+### 6.1a Architecture decision: minimal core hooks + opt-in plugin (zero cost when off)
+
+The whole feature ships as a **plugin** registered only when
+`experiments.moduleSplitting` is enabled — the same shape webpack already uses for
+scope hoisting (`ModuleConcatenationPlugin`), federation, and lazy compilation. This
+gives the property that matters operationally:
+
+- **Flag off → the plugin is never registered.** No analysis runs, no parts are
+  allocated, no extra hook taps fire. Steady-state time and memory are unchanged.
+  Tapable hooks with zero taps are effectively free (`SyncWaterfallHook` returns its
+  input; `SyncHook` is a no-op), so merely _exposing_ new extension points costs
+  nothing.
+- **Flag on → cost is paid only for modules that actually split**, scaling with the
+  number of split exports, not the graph size.
+
+Existing extension points the plugin reuses (no new core surface required for the
+self-contained subset):
+
+- Synthetic-module creation + connection redirect — already plugin-reachable, exactly
+  as `ModuleConcatenationPlugin` does (`updateModule`, `connectChunkAndModule`).
+- Per-chunk source rewriting —
+  `JavascriptModulesPlugin.getCompilationHooks(c).renderModuleContent` /
+  `renderModulePackage` (`lib/javascript/JavascriptModulesPlugin.js:331-379`,
+  `SyncWaterfallHook<[Source, Module, ModuleRenderContext]>`).
+
+The **one** structural gap for the _general_ (Strategy B) case: code generation is
+cached by `(module, runtime)` — `codeGenerationResults.get(module, chunk.runtime)`
+(`lib/Compilation.js:3766`) — not per chunk/part. Emitting different statements of a
+single module into different chunks would need a new hook there (e.g. a
+generator-level "emit only this part-set" tap). Strategy (A) avoids this entirely by
+making each part a real module with its own code generation, which is why (A) is the
+recommended starting point and likely needs **no new core hooks at all** for Phases
+1–3.
+
+Candidate _new_ hooks, only if/when needed for cooperation or Strategy (B):
+
+- `compilation.hooks.splitModule` (waterfall) — let plugins agree on a module's
+  partition before usage flagging, so multiple consumers compose.
+- a `JavascriptGenerator` part-filter hook — emit a subset of a module's statements
+  for a given part (Strategy B only).
+- a usage-granularity hook in `FlagDependencyUsagePlugin` — distinguish async-only
+  usage without synthetic modules (Strategy B only).
+
+Important caveat: hooks determine _where_ logic attaches and guarantee
+zero-cost-when-off; they do **not** dissolve the correctness work (TDZ, live bindings,
+evaluation order, namespace identity). That logic still lives in the plugin's taps and
+is the real engineering cost — see §8.
+
 ### 6.2 Where it hooks
 
 Perform the split in `compilation.hooks.finishModules` (after
