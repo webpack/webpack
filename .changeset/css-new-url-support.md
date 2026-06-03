@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Support `new URL("./style.css", import.meta.url)` by emitting CSS as its own chunk.
+Bundle CSS referenced via `new URL()` or CSS `url()` into its own chunk and resolve to its URL.
