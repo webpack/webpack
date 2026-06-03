@@ -2224,7 +2224,7 @@ section {
 .my-app-style_module_css-class{--my-app-style_module_css-foo:#fff5f5;.my-app-style_module_css-class{color:#f1f1f1}color:#f1f1f1;}
 .my-app-style_module_css-class{.my-app-style_module_css-class{color:#f1f1f1}--my-app-style_module_css-foo:#fff5f5;color:#f1f1f1;}
 /* TODO fix, but this syntax is not used anywhere */
-.my-app-style_module_css-class{--my-app-style_module_css-bar:{1, 'string', .my-app-style_module_css-class, #my-app-style_module_css-f1f1f1, #my-app-style_module_css-id}}
+.my-app-style_module_css-class{--my-app-style_module_css-bar:{1, 'string', .class, #f1f1f1, #id}}
 .my-app-style_module_css-class{--my-app-style_module_css-baz:[1, \\"string\\", .class, #f1f1f1, #id]}
 .my-app-style_module_css-class{--my-app-style_module_css-baz:(1, \\"string\\", .class, #f1f1f1, #id)}
 
@@ -10544,7 +10544,7 @@ section {
 .Vx2ADA{--LXyTj4:#fff5f5;.Vx2ADA{color:#f1f1f1}color:#f1f1f1;}
 .Vx2ADA{.Vx2ADA{color:#f1f1f1}--LXyTj4:#fff5f5;color:#f1f1f1;}
 /* TODO fix, but this syntax is not used anywhere */
-.Vx2ADA{--ueKKku:{1, 'string', .Vx2ADA, #_5YNl5V, #NRwndY}}
+.Vx2ADA{--ueKKku:{1, 'string', .class, #f1f1f1, #id}}
 .Vx2ADA{--v4rNLS:[1, \\"string\\", .class, #f1f1f1, #id]}
 .Vx2ADA{--v4rNLS:(1, \\"string\\", .class, #f1f1f1, #id)}
 
@@ -11240,7 +11240,6 @@ Object {
   "exportNameOtherFromKeywordWithFrom2": "my-app-style_module_css-exportNameOtherFromKeywordWithFrom2 my-app-classes_modules_css-from",
   "exportNameOtherNoSpaces": "my-app-style_module_css-exportNameOtherNoSpaces my-app-classes_modules_css-className beforeName my-app-style_module_css-className",
   "exportNameWeirdCharacters": "my-app-style_module_css-exportNameWeirdCharacters my-app-classes_modules_css-a my-app-classes_modules_css--b my-app-classes_modules_css-b- my-app-classes_modules_css---c my-app-classes_modules_css-c-- my-app-classes_modules_css-_d my-app-classes_modules_css-d%",
-  "f1f1f1": "my-app-style_module_css-f1f1f1",
   "feature": "my-app-style_module_css-feature",
   "first-nested": "my-app-style_module_css-first-nested",
   "first-nested-at-rule": "my-app-style_module_css-first-nested-at-rule",
@@ -11300,7 +11299,6 @@ Object {
   "highlighted": "my-app-style_module_css-highlighted",
   "horizontal-small": "my-app-style_module_css-horizontal-small",
   "horizontal-tiny": "my-app-style_module_css-horizontal-tiny",
-  "id": "my-app-style_module_css-id",
   "id-bar": "my-app-style_module_css-id-bar",
   "id-foo": "my-app-style_module_css-id-foo",
   "ident": "my-app-style_module_css-ident",
@@ -13562,7 +13560,7 @@ section {
 .my-app-style_module_css-class{--foo:#fff5f5;.my-app-style_module_css-class{color:#f1f1f1}color:#f1f1f1;}
 .my-app-style_module_css-class{.my-app-style_module_css-class{color:#f1f1f1}--foo:#fff5f5;color:#f1f1f1;}
 /* TODO fix, but this syntax is not used anywhere */
-.my-app-style_module_css-class{--bar:{1, 'string', .my-app-style_module_css-class, #my-app-style_module_css-f1f1f1, #my-app-style_module_css-id}}
+.my-app-style_module_css-class{--bar:{1, 'string', .class, #f1f1f1, #id}}
 .my-app-style_module_css-class{--baz:[1, \\"string\\", .class, #f1f1f1, #id]}
 .my-app-style_module_css-class{--baz:(1, \\"string\\", .class, #f1f1f1, #id)}
 

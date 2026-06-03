@@ -401,7 +401,7 @@ class FakeSheet {
 	get cssRules() {
 		if (this._cssRules) return this._cssRules;
 
-		const walkCssTokens = require("../../lib/css/walkCssTokens");
+		const { TokenStream } = require("../../lib/css/walkCssTokens");
 
 		const rules = [];
 		let currentRule = { getPropertyValue };
@@ -448,33 +448,28 @@ class FakeSheet {
 					"utf8"
 				);
 			});
-		walkCssTokens(css, 0, {
-			leftCurlyBracket(source, start, end) {
+		for (const t of new TokenStream(css).tokenize()) {
+			if (t.type === "leftCurlyBracket") {
 				if (selector === undefined) {
 					ruleStart = last; // Record the start of the rule (before the selector)
-					selector = source.slice(last, start).trim();
-					last = end;
+					selector = css.slice(last, t.start).trim();
+					last = t.end;
 				}
-				return end;
-			},
-			rightCurlyBracket(source, start, end) {
-				processDeclaration(source.slice(last, start));
+			} else if (t.type === "rightCurlyBracket") {
+				processDeclaration(css.slice(last, t.start));
 				rules.push({
 					selectorText: selector,
 					style: currentRule,
-					cssText: source.slice(ruleStart, end).trim()
+					cssText: css.slice(ruleStart, t.end).trim()
 				});
 				selector = undefined;
 				currentRule = { getPropertyValue };
-				last = end;
-				return end;
-			},
-			semicolon(source, start, end) {
-				processDeclaration(source.slice(last, start));
-				last = end;
-				return end;
+				last = t.end;
+			} else if (t.type === "semicolon") {
+				processDeclaration(css.slice(last, t.start));
+				last = t.end;
 			}
-		});
+		}
 		return rules;
 	}
 }
@@ -523,7 +518,7 @@ class CSSStyleSheet {
 	 * @param {string} cssText CSS text to parse
 	 */
 	_parseCssRules(cssText) {
-		const walkCssTokens = require("../../lib/css/walkCssTokens");
+		const { TokenStream } = require("../../lib/css/walkCssTokens");
 
 		const rules = [];
 		let currentRule = { getPropertyValue };
@@ -546,21 +541,19 @@ class CSSStyleSheet {
 
 		let ruleStart = 0;
 
-		walkCssTokens(cleanCss, 0, {
-			leftCurlyBracket(source, start, end) {
+		for (const t of new TokenStream(cleanCss).tokenize()) {
+			if (t.type === "leftCurlyBracket") {
 				if (selector === undefined) {
-					selector = source.slice(last, start).trim();
+					selector = cleanCss.slice(last, t.start).trim();
 					ruleStart = last;
-					last = end;
+					last = t.end;
 				}
-				return end;
-			},
-			rightCurlyBracket(source, start, end) {
-				processDeclaration(source.slice(last, start));
-				last = end;
+			} else if (t.type === "rightCurlyBracket") {
+				processDeclaration(cleanCss.slice(last, t.start));
+				last = t.end;
 
 				// Generate cssText for the entire rule
-				const ruleText = cleanCss.slice(ruleStart, end).trim();
+				const ruleText = cleanCss.slice(ruleStart, t.end).trim();
 				const cssText = `${selector} ${ruleText.slice(ruleText.indexOf("{"))}`;
 
 				rules.push({
@@ -570,14 +563,11 @@ class CSSStyleSheet {
 				});
 				selector = undefined;
 				currentRule = { getPropertyValue };
-				return end;
-			},
-			semicolon(source, start, end) {
-				processDeclaration(source.slice(last, start));
-				last = end;
-				return end;
+			} else if (t.type === "semicolon") {
+				processDeclaration(cleanCss.slice(last, t.start));
+				last = t.end;
 			}
-		});
+		}
 
 		this._cssRules = rules;
 	}
