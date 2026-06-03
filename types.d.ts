@@ -7113,6 +7113,12 @@ declare interface Experiments {
 	lazyCompilation?: boolean | LazyCompilationOptions;
 
 	/**
+	 * Split self-contained, side-effect-free named exports into their own modules so async-only exports can follow the async chunk instead of staying in the initial chunk.
+	 * @experimental
+	 */
+	moduleSplitting?: boolean;
+
+	/**
 	 * Allow output javascript files as module source type.
 	 * @experimental
 	 */
@@ -7194,6 +7200,12 @@ declare interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
+
+	/**
+	 * Split self-contained, side-effect-free named exports into their own modules so async-only exports can follow the async chunk instead of staying in the initial chunk.
+	 * @experimental
+	 */
+	moduleSplitting?: boolean;
 
 	/**
 	 * Allow output javascript files as module source type.

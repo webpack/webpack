@@ -290,7 +290,7 @@ Add `experiments.moduleSplitting` (name TBD), off by default:
 | Phase | Scope                                                                                                       | Fixes #20537? | Risk   |
 | ----- | ----------------------------------------------------------------------------------------------------------- | ------------- | ------ |
 | 0     | Decide model (A vs B); spike fragment creation + importer redirect                                          | no            | low    |
-| 1     | Named-export single-level split (`import { x }` only); no namespace consumers                               | no            | medium |
+| 1 ✅  | Named-export single-level split (`import { x }` only); no namespace consumers — **implemented**             | no            | medium |
 | 2     | Namespace facade for `import *` / `import()`                                                                | no            | high   |
 | 3     | Recursive re-export collapse (pure re-export layers) → **vue shape**                                        | **yes**       | high   |
 | 4     | Side-effecting & circular modules, `export default <expr>` self-containment, ConcatenatedModule interaction | yes           | high   |
@@ -329,7 +329,17 @@ namespace via the part's own `module.exportsArgument`. On trivial fixtures the f
 per-part wrapper overhead can exceed the moved payload; the win scales with export
 size (e.g. a real component body).
 
-Not yet covered by the prototype (the remaining Phase 1→4 work): auto-detecting
+**Phase 1 is now implemented in-core** behind `experiments.moduleSplitting` (off by
+default): `lib/optimize/ModuleSplittingPlugin.js` (+ `SplitExportModule.js`), with a
+conservative auto-detector (pure, self-contained `const` named exports) and a
+sync-reachability pass so only async-only exports are split. Covered by
+`test/configCases/module-splitting/named-export`. The plugin is registered only when
+the flag is on, so non-users pay nothing. Known Phase-1 limitations: re-parses module
+source for the self-containment analysis (should reuse the parser's scope), the
+importer scan is O(modules × deps), and persistent-cache/HMR interactions are
+untested.
+
+Not yet covered (the remaining Phase 2→4 work): auto-detecting
 _which_ exports are safe to split (side-effect-free **and** self-contained — no
 references to other module-local bindings), reusing webpack's existing parser scope
 instead of re-parsing, `export default`, namespace facades, and the recursive

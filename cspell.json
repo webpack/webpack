@@ -280,6 +280,7 @@
     "sourcemap",
     "sourcemapped",
     "spectest",
+    "splittable",
     "splitted",
     "srcset",
     "stylesheet",

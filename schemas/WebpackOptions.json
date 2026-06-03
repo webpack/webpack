@@ -1158,6 +1158,11 @@
           ],
           "experimental": true
         },
+        "moduleSplitting": {
+          "description": "Split self-contained, side-effect-free named exports into their own modules so async-only exports can follow the async chunk instead of staying in the initial chunk.",
+          "type": "boolean",
+          "experimental": true
+        },
         "outputModule": {
           "description": "Allow output javascript files as module source type.",
           "type": "boolean",
@@ -1239,6 +1244,11 @@
               "$ref": "#/definitions/LazyCompilationOptions"
             }
           ],
+          "experimental": true
+        },
+        "moduleSplitting": {
+          "description": "Split self-contained, side-effect-free named exports into their own modules so async-only exports can follow the async chunk instead of staying in the initial chunk.",
+          "type": "boolean",
           "experimental": true
         },
         "outputModule": {
