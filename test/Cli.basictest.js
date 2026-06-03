@@ -52,6 +52,22 @@ describe("Cli", () => {
 
 			expect(getArguments(schema)).toMatchSnapshot();
 		});
+
+		it("should generate flags for a schema using `const`", () => {
+			const schema = {
+				title: "custom CLI options",
+				type: "object",
+				additionalProperties: false,
+				properties: {
+					mode: {
+						const: "production",
+						description: "the const mode value"
+					}
+				}
+			};
+
+			expect(getArguments(schema)).toMatchSnapshot();
+		});
 	});
 
 	describe("processArguments", () => {

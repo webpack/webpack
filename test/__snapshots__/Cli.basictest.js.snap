@@ -1,5 +1,26 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`Cli getArguments should generate flags for a schema using \`const\` 1`] = `
+Object {
+  "mode": Object {
+    "configs": Array [
+      Object {
+        "description": "the const mode value",
+        "multiple": false,
+        "path": "mode",
+        "type": "enum",
+        "values": Array [
+          "production",
+        ],
+      },
+    ],
+    "description": "the const mode value",
+    "multiple": false,
+    "simpleType": "string",
+  },
+}
+`;
+
 exports[`Cli getArguments should generate the correct cli flags 1`] = `
 Object {
   "amd": Object {
