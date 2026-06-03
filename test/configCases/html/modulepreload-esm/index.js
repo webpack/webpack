@@ -24,6 +24,11 @@ it("should rewrite <link rel=modulepreload> and <script type=module src> to chun
 	expect(page).toMatch(/<script type="module" src="__html_[^"]+\.mjs">/);
 	// Data URI in modulepreload is also bundled.
 	expect(page).not.toContain('href="data:text/javascript');
+	// webpackIgnore leaves modulepreload and module-script entries untouched.
+	expect(page).toContain(
+		'<link rel="modulepreload" href="./ignored-preload.js">'
+	);
+	expect(page).toContain('<script type="module" src="./ignored-entry.js">');
 });
 
 it("should emit module-format chunks (no IIFE wrapper) when output.module is enabled", () => {

@@ -101,10 +101,14 @@ exports[`ConfigCacheTestCases html modulepreload-esm exported tests should rewri
 <link rel=\\"modulepreload\\" href=\\"__html_cbe5b59d_0.chunk.mjs\\">
 <link rel=\\"modulepreload    \\" href=\\"__html_cbe5b59d_1.chunk.mjs\\">
 <link rel=\\"modulepreload\\" href=\\"__html_cbe5b59d_2.chunk.mjs\\">
+<!-- webpackIgnore: true -->
+<link rel=\\"modulepreload\\" href=\\"./ignored-preload.js\\">
 </head>
 <body>
 <h1>Hello</h1>
 <script type=\\"module\\" src=\\"__html_cbe5b59d_3.chunk.mjs\\"></script>
+<!-- webpackIgnore: true -->
+<script type=\\"module\\" src=\\"./ignored-entry.js\\"></script>
 </body>
 </html>
 "
