@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html parser-sources-filter exported tests should apply sources[].filter to conditionally extract URLs 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>sources filter</title></head>
+<body>
+
+<!-- filter returns true: resolved -->
+<img src=\\"image.png\\" data-size=\\"large\\" alt=\\"hero\\">
+
+<!-- filter returns false: left untouched -->
+<img src=\\"./image.png\\" data-size=\\"small\\" alt=\\"hero-small\\">
+
+<!-- no data-size attr: filter returns false -->
+<img src=\\"./image.png\\" alt=\\"hero-no-attr\\">
+
+<!-- any-tag match with filter: resolved when rel=icon -->
+<link rel=\\"icon\\" href=\\"image.png\\">
+
+<!-- any-tag match with filter: left untouched when rel=other -->
+<link rel=\\"other\\" href=\\"./image.png\\">
+
+</body>
+</html>
+"
+`;

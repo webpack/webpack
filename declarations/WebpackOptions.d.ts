@@ -3542,6 +3542,10 @@ export interface HtmlParserOptions {
 						 */
 						attribute: string;
 						/**
+						 * Called with the element's attribute map; return false to skip this source entry for that element.
+						 */
+						filter?: (attributes: Map<string, string>) => boolean;
+						/**
 						 * Tag name to match. Omit to match any tag.
 						 */
 						tag?: string;
