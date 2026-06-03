@@ -1,5 +1,7 @@
 "use strict";
 
+const path = require("path");
+
 jest.mock("../lib/html/buildHtmlAst", () => jest.fn());
 
 const HtmlInlineScriptDependency = require("../lib/dependencies/HtmlInlineScriptDependency");
@@ -19,7 +21,7 @@ describe("HtmlParser", () => {
 		const presentationalDependencies = [];
 		const dependencies = [];
 		const module = {
-			resource: "/tmp/workspace/webpack/webpack/test/index.html",
+			resource: path.resolve(__dirname, "index.html"),
 			buildInfo: {},
 			buildMeta: {},
 			identifier() {
@@ -73,7 +75,7 @@ describe("HtmlParser", () => {
 					module: false
 				},
 				compiler: {
-					context: "/tmp/workspace/webpack/webpack"
+					context: path.resolve(__dirname, "..")
 				},
 				options: {
 					experiments: {
@@ -83,6 +85,7 @@ describe("HtmlParser", () => {
 			}
 		});
 
+		expect(buildHtmlAst).toHaveBeenCalledWith(source);
 		expect(dependencies).toHaveLength(1);
 		expect(presentationalDependencies).toHaveLength(1);
 
