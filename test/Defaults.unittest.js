@@ -2495,17 +2495,10 @@ describe("snapshots", () => {
 			+             "text/typescript",
 			+             "application/typescript",
 			@@ ... @@
+			+         "oneOf": Array [
 			+           Object {
 			+             "generator": Object {
 			+               "esModule": false,
-			+             },
-			+             "issuer": Object {
-			+               "not": Object {
-			+                 "or": Array [
-			+                   /\\.css$/i,
-			+                   /\\.html$/i,
-			+                 ],
-			+               },
 			+             },
 			+             "parser": Object {
 			+               "exportType": "url",
@@ -2518,17 +2511,9 @@ describe("snapshots", () => {
 			+             "test": /\\.css$/i,
 			+             "type": "css/auto",
 			+           },
-			@@ ... @@
+			+           Object {
 			+             "generator": Object {
 			+               "esModule": false,
-			+             },
-			+             "issuer": Object {
-			+               "not": Object {
-			+                 "or": Array [
-			+                   /\\.css$/i,
-			+                   /\\.html$/i,
-			+                 ],
-			+               },
 			+             },
 			+             "mimetype": "text/css",
 			+             "parser": Object {
@@ -2543,6 +2528,16 @@ describe("snapshots", () => {
 			+             "type": "css/auto",
 			+           },
 			+           Object {
+			+             "scheme": /^data$/,
+			+             "type": "asset/inline",
+			+           },
+			+           Object {
+			+             "type": "asset/resource",
+			+           },
+			+         ],
+			+       },
+			+       Object {
+			+         "dependency": "css-url",
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2575,12 +2570,12 @@ describe("snapshots", () => {
 			+       "html": Object {},
 			@@ ... @@
 			+         },
-			@@ ... @@
+			+       },
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
 			+         "url": true,
-			@@ ... @@
+			+       },
 			+       "css/auto": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -2588,7 +2583,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			+       },
+			@@ ... @@
 			+       "css/global": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -2596,7 +2591,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			+       },
+			@@ ... @@
 			+       "css/module": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -2642,6 +2637,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           ".ts",
 			@@ ... @@
+			+           "...",
+			+         ],
+			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2685,11 +2683,9 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			+           "...",
-			+         ],
+			@@ ... @@
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			+       },
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -2739,7 +2735,7 @@ describe("snapshots", () => {
 			+       ".cjs": Array [
 			+         ".cjs",
 			+         ".cts",
-			+       ],
+			@@ ... @@
 			+       ".js": Array [
 			+         ".js",
 			+         ".ts",
@@ -2747,7 +2743,7 @@ describe("snapshots", () => {
 			+       ".mjs": Array [
 			+         ".mjs",
 			+         ".mts",
-			@@ ... @@
+			+       ],
 			+     },
 			@@ ... @@
 			+     "tsconfig": true,
@@ -3293,14 +3289,6 @@ describe("snapshots", () => {
 			+             "generator": Object {
 			+               "esModule": false,
 			+             },
-			+             "issuer": Object {
-			+               "not": Object {
-			+                 "or": Array [
-			+                   /\\.css$/i,
-			+                   /\\.html$/i,
-			+                 ],
-			+               },
-			+             },
 			+             "parser": Object {
 			+               "exportType": "url",
 			+               "namedExports": false,
@@ -3316,14 +3304,6 @@ describe("snapshots", () => {
 			+             "generator": Object {
 			+               "esModule": false,
 			+             },
-			+             "issuer": Object {
-			+               "not": Object {
-			+                 "or": Array [
-			+                   /\\.css$/i,
-			+                   /\\.html$/i,
-			+                 ],
-			+               },
-			+             },
 			+             "mimetype": "text/css",
 			+             "parser": Object {
 			+               "exportType": "url",
@@ -3337,6 +3317,19 @@ describe("snapshots", () => {
 			+             "type": "css/auto",
 			+           },
 			+           Object {
+			@@ ... @@
+			+         "dependency": "css-url",
+			+         "oneOf": Array [
+			+           Object {
+			+             "scheme": /^data$/,
+			+             "type": "asset/inline",
+			+           },
+			+           Object {
+			+             "type": "asset/resource",
+			+           },
+			+         ],
+			+       },
+			+       Object {
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -3433,6 +3426,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           ".ts",
 			@@ ... @@
+			+           "...",
+			+         ],
+			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -3476,11 +3472,9 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			+           "...",
-			+         ],
+			@@ ... @@
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			+       },
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -3527,11 +3521,11 @@ describe("snapshots", () => {
 			+       ".cjs": Array [
 			+         ".cjs",
 			+         ".cts",
-			+       ],
+			@@ ... @@
 			+       ".js": Array [
 			+         ".js",
 			+         ".ts",
-			@@ ... @@
+			+       ],
 			+       ".mjs": Array [
 			+         ".mjs",
 			+         ".mts",
