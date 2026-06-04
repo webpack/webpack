@@ -129,10 +129,6 @@ import { Context as ContextImport } from "vm";
 declare interface Abortable {
 	signal?: AbortSignal;
 }
-
-/**
- * Represents AbstractLibraryPlugin.
- */
 declare class AbstractLibraryPlugin<T> {
 	/**
 	 * Creates an instance of AbstractLibraryPlugin.
@@ -359,11 +355,6 @@ type AnyLoaderContext = NormalModuleLoaderContext<any> &
 	LoaderRunnerLoaderContext<any> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
-
-/**
- * Tracks values across a stack of nested sets where child scopes can add new
- * values without mutating the sets created by their parents.
- */
 declare abstract class AppendOnlyStackedSet<T> {
 	/**
 	 * Adds a value to the current scope layer, creating that layer lazily when
@@ -618,10 +609,6 @@ declare class AsyncDependenciesBlock extends DependenciesBlock {
 	get circular(): boolean;
 	module: any;
 }
-
-/**
- * Represents AsyncQueue.
- */
 declare abstract class AsyncQueue<T, K, R> {
 	hooks: {
 		beforeAdd: AsyncSeriesHook<[T]>;
@@ -724,11 +711,6 @@ declare interface AsyncWebAssemblyModulesPluginOptions {
 	mangleImports?: boolean;
 }
 declare abstract class AsyncWebAssemblyParser extends ParserClass {}
-
-/**
- * Records modules from one compilation and adds them back as prefetch
- * dependencies in the next compilation.
- */
 declare class AutomaticPrefetchPlugin {
 	constructor();
 
@@ -743,11 +725,6 @@ declare interface BackendApi {
 	dispose: (callback: (err?: null | Error) => void) => void;
 	module: (module: Module) => ModuleResult;
 }
-
-/**
- * Prepends or appends banner text to emitted assets that match the configured
- * file filters.
- */
 declare class BannerPlugin {
 	/**
 	 * Normalizes banner options and compiles the configured banner source into a
@@ -870,11 +847,6 @@ declare interface BaseResolveRequest {
 	 * inner relative path for internal usage
 	 */
 	__innerRequest_relativePath?: string;
-
-	/**
-	 * internal: shared marker `RestrictionsPlugin` flips when it filters out an existing target, letting `ExportsFieldPlugin` fall back instead of erroring
-	 */
-	__restrictionsMarker?: { blocked: boolean };
 }
 declare interface BasenameCacheEntry {
 	/**
@@ -1297,11 +1269,6 @@ declare abstract class ByTypeGenerator extends Generator {
 	) => null | Source;
 }
 declare const CIRCULAR_CONNECTION: unique symbol;
-
-/**
- * Abstract cache interface backed by tapable hooks for reading, writing, idle
- * transitions, and shutdown across webpack cache implementations.
- */
 declare class CacheClass {
 	/**
 	 * Initializes the cache lifecycle hooks implemented by cache backends.
@@ -1585,11 +1552,6 @@ declare interface CallbackWebpackFunction_2<T, R = void> {
 	(err: null | Error, result?: T): R;
 }
 type Cell<T> = undefined | T;
-
-/**
- * A Chunk is a unit of encapsulation for Modules.
- * Chunks are "rendered" into bundles that get emitted when the build completes.
- */
 declare class Chunk {
 	/**
 	 * Creates an instance of Chunk.
@@ -2406,11 +2368,6 @@ declare class ChunkGraph {
 	 */
 	static clearChunkGraphForChunk(chunk: Chunk): void;
 }
-
-/**
- * Represents a connected group of chunks along with the parent/child
- * relationships, async blocks, and traversal metadata webpack tracks for it.
- */
 declare abstract class ChunkGroup {
 	groupDebugId: number;
 	options: ChunkGroupOptions;
@@ -2718,11 +2675,6 @@ declare interface ChunkPathData {
 	contentHash?: Record<string, string>;
 	contentHashWithLength?: Record<string, (length: number) => string>;
 }
-
-/**
- * Adds runtime support for chunk prefetch and preload relationships discovered
- * in the chunk graph.
- */
 declare class ChunkPrefetchPreloadPlugin {
 	constructor();
 
@@ -3052,11 +3004,6 @@ type CodeGenerationResultData = Omit<
 	"get" | "set" | "has" | "delete"
 > &
 	CodeGenMapOverloads;
-
-/**
- * Stores code generation results keyed by module and runtime so later stages
- * can retrieve emitted sources, metadata, and derived hashes.
- */
 declare abstract class CodeGenerationResults {
 	map: Map<Module, RuntimeSpecMap<CodeGenerationResult, CodeGenerationResult>>;
 
@@ -4437,11 +4384,6 @@ declare interface ConcatenationBailoutReasonContext {
 	 */
 	chunkGraph: ChunkGraph;
 }
-
-/**
- * Tracks the symbols and cross-module references needed while rendering a
- * concatenated module.
- */
 declare class ConcatenationScope {
 	/**
 	 * Creates the mutable scope object used while rendering a concatenated
@@ -5747,15 +5689,6 @@ declare class DelegatedPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * DependenciesBlock is the base class for all Module classes in webpack. It describes a
- * "block" of dependencies which are pointers to other DependenciesBlock instances. For example
- * when a Module has a CommonJs require statement, the DependencyBlock for the CommonJs module
- * would be added as a dependency to the Module. DependenciesBlock is inherited by two types of classes:
- * Module subclasses and AsyncDependenciesBlock subclasses. The only difference between the two is that
- * AsyncDependenciesBlock subclasses are used for code-splitting (async boundary) and Module subclasses are not.
- */
 declare abstract class DependenciesBlock {
 	dependencies: Dependency[];
 	blocks: AsyncDependenciesBlock[];
@@ -6601,11 +6534,6 @@ declare interface EnableLibraryPluginOptions {
 	 */
 	additionalApply?: () => void;
 }
-
-/**
- * Validates and enables named wasm loading backends by applying the plugin
- * implementations that provide their runtime support.
- */
 declare class EnableWasmLoadingPlugin {
 	/**
 	 * Stores the wasm loading backend name that should be enabled for the
@@ -6893,13 +6821,6 @@ declare interface EntryTypesIndex {
 	timestamp: number;
 	accuracy: number;
 }
-
-/**
- * Entrypoint serves as an encapsulation primitive for chunks that are
- * a part of a single ChunkGroup. They represent all bundles that need to be loaded for a
- * single instance of a page. Multi-page application architectures will typically yield multiple Entrypoint objects
- * inside of the compilation, whereas a Single Page App may only contain one with many lazy-loaded chunks.
- */
 declare abstract class Entrypoint extends ChunkGroup {
 	/**
 	 * Sets the runtimeChunk for an entrypoint.
@@ -8269,11 +8190,6 @@ declare interface FallbackCacheGroup {
 	maxInitialSize: SplitChunksSizes;
 	automaticNameDelimiter: string;
 }
-
-/**
- * Enables asynchronous WebAssembly loading through `fetch` for environments
- * that can instantiate fetched binaries at runtime.
- */
 declare class FetchCompileAsyncWasmPlugin {
 	constructor();
 
@@ -8283,11 +8199,6 @@ declare class FetchCompileAsyncWasmPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * Enables synchronous WebAssembly chunk loading that fetches `.wasm` files and
- * compiles them in browser-like environments.
- */
 declare class FetchCompileWasmPlugin {
 	/**
 	 * Stores options that affect generated synchronous WebAssembly runtime code.
@@ -8454,10 +8365,6 @@ declare interface FileSystem {
 	 */
 	realpath?: RealPathTypes;
 }
-
-/**
- * Used to access information about the filesystem in a cached way
- */
 declare abstract class FileSystemInfo {
 	fs: InputFileSystem;
 	logger?: WebpackLogger;
@@ -9207,11 +9114,6 @@ declare interface HashedModuleIdsPluginOptions {
 	 */
 	hashFunction?: string | typeof Hash;
 }
-
-/**
- * Base class for runtime modules that only emit helper functions and do not
- * need special staging or attachment behavior beyond `RuntimeModule`.
- */
 declare abstract class HelperRuntimeModule extends RuntimeModule {}
 declare class HotModuleReplacementPlugin {
 	constructor();
@@ -9904,10 +9806,6 @@ type InfrastructureLoggingNormalizedWithDefaults = InfrastructureLogging & {
 	colors: NonNullable<undefined | boolean>;
 	appendOnly: NonNullable<undefined | boolean>;
 };
-
-/**
- * Represents InitFragment.
- */
 declare class InitFragment<GenerateContext> {
 	/**
 	 * Creates an instance of InitFragment.
@@ -13504,12 +13402,6 @@ type LazyFunction<
 declare interface LazyOptions {
 	[index: string]: any;
 }
-
-/**
- * Like Set but with an addAll method to eventually add items from another iterable.
- * Access methods make sure that all delayed operations are executed.
- * Iteration methods deopts to normal Set performance until clear is called again (because of the chance of modifications during iteration).
- */
 declare class LazySet<T> {
 	/**
 	 * Seeds the set with an optional iterable while preparing internal queues for
@@ -15010,10 +14902,6 @@ declare class ModuleDependency extends Dependency {
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
 }
-
-/**
- * Represents ModuleExternalInitFragment.
- */
 declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
 	/**
 	 * Creates an instance of ModuleExternalInitFragment.
@@ -18413,6 +18301,11 @@ declare interface Output {
 	publicPath?: string | TemplatePathFn<PathData>;
 
 	/**
+	 * Project-wide defaults for `webpackPrefetch` / `webpackPreload` / `webpackFetchPriority` on URL-referenced assets (e.g. `new URL(..., import.meta.url)`, `url(...)` in CSS). Per-call magic comments still take precedence. Pass an array to scope hints to specific asset paths via `test` / `include` / `exclude`.
+	 */
+	resourceHints?: ResourceHintsRule | ResourceHintsRule[];
+
+	/**
 	 * This option enables loading async chunks via a custom script type, such as script type="module".
 	 */
 	scriptType?: false | "module" | "text/javascript";
@@ -18736,6 +18629,11 @@ declare interface OutputNormalized {
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: string | TemplatePathFn<PathData>;
+
+	/**
+	 * Project-wide defaults for `webpackPrefetch` / `webpackPreload` / `webpackFetchPriority` on URL-referenced assets (e.g. `new URL(..., import.meta.url)`, `url(...)` in CSS). Per-call magic comments still take precedence. Pass an array to scope hints to specific asset paths via `test` / `include` / `exclude`.
+	 */
+	resourceHints?: ResourceHintsRule | ResourceHintsRule[];
 
 	/**
 	 * This option enables loading async chunks via a custom script type, such as script type="module".
@@ -19116,11 +19014,6 @@ declare interface PitchLoaderDefinitionFunction<
 		data: object
 	): string | void | Buffer | Promise<string | Buffer>;
 }
-
-/**
- * Should be used only for "target === false" or
- * when you want to overwrite platform target properties
- */
 declare class PlatformPlugin {
 	/**
 	 * Creates an instance of PlatformPlugin.
@@ -20552,11 +20445,6 @@ declare class Replacement {
 declare interface RequestRecord {
 	[index: string]: string | string[];
 }
-
-/**
- * Shortens absolute or verbose request strings so diagnostics and stats output
- * can be rendered relative to a chosen base directory.
- */
 declare abstract class RequestShortener {
 	contextify: (value: string) => string;
 
@@ -21346,6 +21234,56 @@ declare interface ResourceDataWithData {
 	context?: string;
 	data: ResourceSchemeData & Partial<ResolveRequest>;
 }
+
+/**
+ * One resource-hint default rule. `test` / `include` / `exclude` match against the asset's request; omit all three to apply to every asset.
+ */
+declare interface ResourceHintsRule {
+	/**
+	 * A condition matcher.
+	 */
+	exclude?:
+		| string
+		| RegExp
+		| ((value: string) => boolean)
+		| RuleSetLogicalConditions
+		| RuleSetCondition[];
+
+	/**
+	 * Default fetchpriority for prefetch / preload links.
+	 */
+	fetchPriority?: false | "auto" | "low" | "high";
+
+	/**
+	 * A condition matcher.
+	 */
+	include?:
+		| string
+		| RegExp
+		| ((value: string) => boolean)
+		| RuleSetLogicalConditions
+		| RuleSetCondition[];
+
+	/**
+	 * When true, emit `<link rel="prefetch">` for matching assets without an explicit hint comment.
+	 */
+	prefetch?: boolean;
+
+	/**
+	 * When true, emit `<link rel="preload">` for matching assets without an explicit hint comment.
+	 */
+	preload?: boolean;
+
+	/**
+	 * A condition matcher.
+	 */
+	test?:
+		| string
+		| RegExp
+		| ((value: string) => boolean)
+		| RuleSetLogicalConditions
+		| RuleSetCondition[];
+}
 declare interface ResourceSchemeData {
 	/**
 	 * mime type of the resource
@@ -21917,10 +21855,6 @@ declare interface RuntimeRequirementsContext {
 	codeGenerationResults: CodeGenerationResults;
 }
 type RuntimeSpec = undefined | string | SortableSet<string>;
-
-/**
- * Represents RuntimeSpecMap.
- */
 declare class RuntimeSpecMap<T, R = T> {
 	/**
 	 * Creates an instance of RuntimeSpecMap.
@@ -22603,10 +22537,6 @@ declare interface ScopeInfo {
 declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
 }
-
-/**
- * Represents Serializer.
- */
 declare abstract class Serializer<DeserializedValue, SerializedValue, Context> {
 	serializeMiddlewares: SerializerMiddleware<any, any, any>[];
 	deserializeMiddlewares: SerializerMiddleware<any, any, any>[];
@@ -22628,10 +22558,6 @@ declare abstract class Serializer<DeserializedValue, SerializedValue, Context> {
 		context: Context & ExtendedContext
 	): Promise<DeserializedValue>;
 }
-
-/**
- * Represents SerializerMiddleware.
- */
 declare abstract class SerializerMiddleware<
 	DeserializedType,
 	SerializedType,
@@ -23050,10 +22976,6 @@ declare interface SnapshotOptionsWebpackOptions {
 declare interface SortFunction<T> {
 	(a: T, b: T): number;
 }
-
-/**
- * A subset of Set that offers sorting functionality
- */
 declare abstract class SortableSet<T> extends Set<T> {
 	/**
 	 * Sort with a comparer function
@@ -23407,11 +23329,6 @@ declare abstract class StackEntry {
 	 */
 	toString(): string;
 }
-
-/**
- * Layered map that supports child scopes while memoizing lookups from parent
- * scopes into the current layer.
- */
 declare abstract class StackedMap<K, V> {
 	map: Map<K, InternalCell<V>>;
 	stack: Map<K, InternalCell<V>>[];
@@ -25002,11 +24919,6 @@ declare abstract class Watching {
 	 */
 	close(callback: (err: null | Error, result?: void) => void): void;
 }
-
-/**
- * Stores values by tuple keys while using `WeakMap` for object elements so the
- * cache can release entries when those objects are collected.
- */
 declare abstract class WeakTupleMap<K extends any[], V> {
 	/**
 	 * Stores a value at the node identified by the provided tuple key.
@@ -25876,8 +25788,10 @@ declare namespace exports {
 		export let moduleLoaded: "module.loaded";
 		export let nodeModuleDecorator: "__webpack_require__.nmd";
 		export let onChunksLoaded: "__webpack_require__.O";
+		export let prefetchAsset: "__webpack_require__.PA";
 		export let prefetchChunk: "__webpack_require__.E";
 		export let prefetchChunkHandlers: "__webpack_require__.F";
+		export let preloadAsset: "__webpack_require__.LA";
 		export let preloadChunk: "__webpack_require__.G";
 		export let preloadChunkHandlers: "__webpack_require__.H";
 		export let publicPath: "__webpack_require__.p";
@@ -25890,6 +25804,7 @@ declare namespace exports {
 		export let setAnonymousDefaultName: "__webpack_require__.dn";
 		export let shareScopeMap: "__webpack_require__.S";
 		export let startup: "__webpack_require__.x";
+		export let startupAssetHints: "__webpack_require__.SAH";
 		export let startupEntrypoint: "__webpack_require__.X";
 		export let startupNoDefault: "__webpack_require__.x (no default handler)";
 		export let startupOnlyAfter: "__webpack_require__.x (only after)";
