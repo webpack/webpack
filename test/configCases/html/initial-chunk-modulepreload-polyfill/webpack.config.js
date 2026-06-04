@@ -22,9 +22,7 @@ module.exports = {
 		environment: {
 			modulePreload: false
 		},
-		html: {
-			resourceHints: true
-		}
+		resourceHints: true
 	},
 	optimization: {
 		chunkIds: "named",

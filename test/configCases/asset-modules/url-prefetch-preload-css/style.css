@@ -1,0 +1,15 @@
+.bg {
+	background-image: url(./image.png);
+}
+
+@font-face {
+	font-family: "MyFont";
+	src: url(./font.woff2) format("woff2");
+}
+
+/* `data.png` matches the PNG rule (would default to prefetch), but the
+   comment immediately before `url(...)` upgrades it to preload and forces
+   `as="fetch"` + `type="application/octet-stream"`. */
+.hero {
+	background-image: /* webpackPreload: true, webpackAs: "fetch", webpackType: "application/octet-stream" */ url("./data.png");
+}

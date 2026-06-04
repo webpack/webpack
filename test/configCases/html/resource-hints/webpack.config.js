@@ -1,6 +1,6 @@
 "use strict";
 
-// Custom `output.html.resourceHints` (array form): literal hrefs (preconnect,
+// Custom `output.resourceHints.chunks` (array form): literal hrefs (preconnect,
 // font), an `entry` reference (expanded to its chunk URLs) and a `chunk`
 // reference (resolved + de-duplicated against the auto initial-graph preload).
 
@@ -21,8 +21,10 @@ module.exports = {
 		chunkFilename: "[name].chunk.js",
 		crossOriginLoading: "anonymous",
 		html: {
-			integrity: true,
-			resourceHints: [
+			integrity: true
+		},
+		resourceHints: {
+			chunks: [
 				{ rel: "preconnect", href: "https://cdn.example.com" },
 				{
 					rel: "preload",

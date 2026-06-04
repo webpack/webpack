@@ -757,6 +757,7 @@ describe("snapshots", () => {
 		    "path": "<cwd>/dist",
 		    "pathinfo": false,
 		    "publicPath": "auto",
+		    "resourceHints": undefined,
 		    "scriptType": false,
 		    "sourceMapFilename": "[file].map[query]",
 		    "sourcePrefix": undefined,

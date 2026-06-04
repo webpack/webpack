@@ -626,6 +626,10 @@ export type Path = string;
  */
 export type Pathinfo = "verbose" | boolean;
 /**
+ * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">`) emission for extracted HTML entries *and* for URL-referenced assets in the bundle. `true` is shorthand for `{ chunks: true }` (preload the HTML entry's initial dependency chunks); `false` disables both. An object turns each channel on independently: `chunks` covers the entry's own JS/CSS chunks and `assets` matches URL-referenced assets (`new URL(...)`, CSS `url(...)`, HTML `<img src>`) via `test` / `include` / `exclude` rules. Asset hints emit into the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks; otherwise they fire at chunk startup from the JS runtime.
+ */
+export type ResourceHints = boolean | ResourceHintsObject;
+/**
  * This option enables loading async chunks via a custom script type, such as script type="module".
  */
 export type ScriptType = false | "text/javascript" | "module";
@@ -2560,6 +2564,10 @@ export interface Output {
 	 */
 	publicPath?: PublicPath;
 	/**
+	 * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">`) emission for extracted HTML entries *and* for URL-referenced assets in the bundle. `true` is shorthand for `{ chunks: true }` (preload the HTML entry's initial dependency chunks); `false` disables both. An object turns each channel on independently: `chunks` covers the entry's own JS/CSS chunks and `assets` matches URL-referenced assets (`new URL(...)`, CSS `url(...)`, HTML `<img src>`) via `test` / `include` / `exclude` rules. Asset hints emit into the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks; otherwise they fire at chunk startup from the JS runtime.
+	 */
+	resourceHints?: ResourceHints;
+	/**
 	 * This option enables loading async chunks via a custom script type, such as script type="module".
 	 */
 	scriptType?: ScriptType;
@@ -2799,19 +2807,6 @@ export interface OutputHtmlOptions {
 		[k: string]: string;
 	};
 	/**
-	 * Resource-hint `<link>` tags injected into the HTML `<head>`. Off by default (webpack already loads the initial chunks via parallel `<script>` tags). `true` preloads the entry's initial dependency chunks (runtime, vendor, split) with `<link rel="modulepreload">` (ES module output) or `<link rel="preload" as="script">` (classic output). An array of descriptors, or a function called per HTML page (with its entrypoint context and the auto `defaultHints` to spread in), provides custom hints. Each hint targets a literal `href`, a `chunk` name, or an `entry` name — chunk/entry URLs, content hashes, public path, `crossorigin` and SRI are resolved automatically. Dynamic `import()`s always stay on the on-demand runtime.
-	 */
-	resourceHints?:
-		| HtmlResourceHint[]
-		| boolean
-		| ((context: {
-				entryName: string;
-				entrypoint: import("../lib/Entrypoint");
-				chunks: import("../lib/Chunk")[];
-				compilation: import("../lib/Compilation");
-				defaultHints: {rel: "modulepreload" | "preload"; chunk: string}[];
-		  }) => import("../lib/dependencies/HtmlEntryDependency").HtmlResourceHint[]);
-	/**
 	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
 	 */
 	scriptLoading?: "auto" | "blocking" | "defer";
@@ -2819,6 +2814,72 @@ export interface OutputHtmlOptions {
 	 * Sets the `<title>` of the generated HTML page. Skipped if the HTML already contains a `<title>` element.
 	 */
 	title?: string;
+}
+/**
+ * Structured `output.resourceHints`. Each channel is independently opt-in.
+ */
+export interface ResourceHintsObject {
+	/**
+	 * Rules that add `webpackPrefetch` / `webpackPreload` / `webpackFetchPriority` defaults to URL-referenced assets (fonts, images, workers …) without an explicit magic comment. Per-call magic comments still win. Emitted as `<link>` in the HTML `<head>` for HTML entries, or from the JS chunk runtime otherwise.
+	 */
+	assets?: ResourceHintsAsset[] | ResourceHintsAsset;
+	/**
+	 * Resource hints for the HTML entry's initial dependency chunks (runtime, vendor, split — the entry chunk itself is skipped since it's already the `<script src>`). `"preload"` (or the alias `true`) auto-emits `<link rel="modulepreload">` (ES module output) or `<link rel="preload" as="script">` (classic output) for each. `"prefetch"` uses `<link rel="prefetch">` (idle-time hint). An array of descriptors, or a function called per HTML page (with its entrypoint context and the auto `defaultHints` to spread in), provides custom hints. Only applies to extracted HTML entries; a JS-only build has nothing to inject `<link>` into and this setting is a no-op there. For async `import()` chunks use `module.parser.javascript.dynamicImportPrefetch` / `dynamicImportPreload` / `dynamicImportFetchPriority` — those defaults route through webpack's existing on-demand chunk-load runtime.
+	 */
+	chunks?:
+		| HtmlResourceHint[]
+		| ("preload" | "prefetch")
+		| boolean
+		| ((context: {
+				entryName: string;
+				entrypoint: import("../lib/Entrypoint");
+				chunks: import("../lib/Chunk")[];
+				compilation: import("../lib/Compilation");
+				defaultHints: {
+					rel: "modulepreload" | "preload" | "prefetch";
+					chunk: string;
+				}[];
+		  }) => import("../lib/dependencies/HtmlEntryDependency").HtmlResourceHint[]);
+	/**
+	 * Filter / rewrite the resolved `<link>` descriptors for an entrypoint before they land in `stats.entrypoints[name].resourceHints`. Mirrors Vite's `build.modulePreload.resolveDependencies`. Called once per entrypoint with the combined `chunks` + `assets` descriptor list and a context (`hostType: "html"` when the entry has an extracted HTML page, else `"js"`); return a rewritten list (empty array = drop all). Common uses: swap URLs to a CDN, strip hints for routes served over slow connections, add SSR-only hints.
+	 */
+	resolveDependencies?: (
+		deps: import("../lib/prefetch/ResourceHintPlugin").EntrypointHint[],
+		context: {
+			entryName: string;
+			hostType: "html" | "js";
+			compilation: import("../lib/Compilation");
+		}
+	) => import("../lib/prefetch/ResourceHintPlugin").EntrypointHint[];
+}
+/**
+ * One resource-hint default rule for URL-referenced assets. `test` / `include` / `exclude` match against the asset's request; omit all three to apply to every asset.
+ */
+export interface ResourceHintsAsset {
+	/**
+	 * A condition matcher.
+	 */
+	exclude?: RuleSetCondition;
+	/**
+	 * Default fetchpriority for prefetch / preload links.
+	 */
+	fetchPriority?: "low" | "high" | "auto" | false;
+	/**
+	 * A condition matcher.
+	 */
+	include?: RuleSetCondition;
+	/**
+	 * When true, emit `<link rel="prefetch">` for matching assets without an explicit hint comment.
+	 */
+	prefetch?: boolean;
+	/**
+	 * When true, emit `<link rel="preload">` for matching assets without an explicit hint comment.
+	 */
+	preload?: boolean;
+	/**
+	 * A condition matcher.
+	 */
+	test?: RuleSetCondition;
 }
 /**
  * A custom resource-hint `<link>` for `output.html.resourceHints`. Exactly one of `href` / `chunk` / `entry` names the target.
@@ -3030,6 +3091,10 @@ export interface StatsOptions {
 	 * Limit of assets displayed in chunk groups.
 	 */
 	chunkGroupMaxAssets?: number;
+	/**
+	 * Include the resolved `<link>` resource-hint descriptors for each entrypoint (`entrypoints[name].resourceHints`). Combines `output.resourceHints.chunks` (initial-graph modulepreload/preload/prefetch) with `output.resourceHints.assets` (URL-referenced fonts / images / …). Lets SSR frameworks inject the hints server-side without walking the chunk graph themselves; the analogue of Vite's `build.ssrManifest`.
+	 */
+	chunkGroupResourceHints?: boolean;
 	/**
 	 * Display all chunk groups with the corresponding bundles.
 	 */
@@ -4360,6 +4425,10 @@ export interface OutputNormalized {
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: PublicPath;
+	/**
+	 * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">`) emission for extracted HTML entries *and* for URL-referenced assets in the bundle. `true` is shorthand for `{ chunks: true }` (preload the HTML entry's initial dependency chunks); `false` disables both. An object turns each channel on independently: `chunks` covers the entry's own JS/CSS chunks and `assets` matches URL-referenced assets (`new URL(...)`, CSS `url(...)`, HTML `<img src>`) via `test` / `include` / `exclude` rules. Asset hints emit into the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks; otherwise they fire at chunk startup from the JS runtime.
+	 */
+	resourceHints?: ResourceHints;
 	/**
 	 * This option enables loading async chunks via a custom script type, such as script type="module".
 	 */
