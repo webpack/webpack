@@ -97,7 +97,7 @@
     "acorn-import-phases": "^1.0.3",
     "browserslist": "^4.28.1",
     "chrome-trace-event": "^1.0.2",
-    "enhanced-resolve": "^5.22.0",
+    "enhanced-resolve": "^5.23.0",
     "es-module-lexer": "^2.1.0",
     "eslint-scope": "5.1.1",
     "events": "^3.2.0",

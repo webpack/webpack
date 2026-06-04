@@ -366,6 +366,12 @@
     "Context": {
       "description": "The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.",
       "type": "string",
+      "absolutePath": true,
+      "tsType": "string | URL"
+    },
+    "ContextNormalized": {
+      "description": "The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.",
+      "type": "string",
       "absolutePath": true
     },
     "CrossOriginLoading": {
@@ -718,7 +724,8 @@
             },
             {
               "type": "string",
-              "absolutePath": true
+              "absolutePath": true,
+              "tsType": "string | URL"
             }
           ]
         },
@@ -1478,19 +1485,22 @@
             "items": {
               "description": "Request to a dependency (resolved as directory relative to the context directory).",
               "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "tsType": "(string | URL)"
             }
           }
         },
         "cacheDirectory": {
           "description": "Base directory for the cache (defaults to node_modules/.cache/webpack).",
           "type": "string",
-          "absolutePath": true
+          "absolutePath": true,
+          "tsType": "string | URL"
         },
         "cacheLocation": {
           "description": "Locations for the cache (defaults to cacheDirectory / name).",
           "type": "string",
-          "absolutePath": true
+          "absolutePath": true,
+          "tsType": "string | URL"
         },
         "compression": {
           "description": "Compression type used for the cache files.",
@@ -1529,7 +1539,8 @@
               {
                 "description": "A path to an immutable directory (usually a package manager cache directory).",
                 "type": "string",
-                "absolutePath": true
+                "absolutePath": true,
+                "tsType": "string | URL"
               }
             ]
           }
@@ -1548,7 +1559,8 @@
               {
                 "description": "A path to a managed directory (usually a node_modules directory).",
                 "type": "string",
-                "absolutePath": true
+                "absolutePath": true,
+                "tsType": "string | URL"
               }
             ]
           }
@@ -1883,7 +1895,8 @@
             },
             {
               "type": "string",
-              "absolutePath": true
+              "absolutePath": true,
+              "tsType": "string | URL"
             }
           ]
         },
@@ -1894,7 +1907,8 @@
         "lockfileLocation": {
           "description": "Location of the lockfile.",
           "type": "string",
-          "absolutePath": true
+          "absolutePath": true,
+          "tsType": "string | URL"
         },
         "proxy": {
           "description": "Proxy configuration, which can be used to specify a proxy server to use for HTTP requests.",
@@ -2871,7 +2885,8 @@
               {
                 "description": "An absolute path, when the module starts with this path it is not parsed.",
                 "type": "string",
-                "absolutePath": true
+                "absolutePath": true,
+                "tsType": "string | URL"
               },
               {
                 "instanceof": "Function",
@@ -2889,7 +2904,8 @@
         {
           "description": "An absolute path, when the module starts with this path it is not parsed.",
           "type": "string",
-          "absolutePath": true
+          "absolutePath": true,
+          "tsType": "string | URL"
         },
         {
           "instanceof": "Function",
@@ -4148,7 +4164,7 @@
           "$ref": "#/definitions/OutputModule"
         },
         "path": {
-          "$ref": "#/definitions/Path"
+          "$ref": "#/definitions/PathNormalized"
         },
         "pathinfo": {
           "$ref": "#/definitions/Pathinfo"
@@ -4262,6 +4278,12 @@
       }
     },
     "Path": {
+      "description": "The output directory as **absolute path** (required).",
+      "type": "string",
+      "absolutePath": true,
+      "tsType": "string | URL"
+    },
+    "PathNormalized": {
       "description": "The output directory as **absolute path** (required).",
       "type": "string",
       "absolutePath": true
@@ -4392,7 +4414,8 @@
         },
         {
           "type": "string",
-          "absolutePath": true
+          "absolutePath": true,
+          "tsType": "string | URL"
         }
       ]
     },
@@ -4404,7 +4427,8 @@
         },
         {
           "type": "string",
-          "absolutePath": true
+          "absolutePath": true,
+          "tsType": "string | URL"
         }
       ]
     },
@@ -4416,7 +4440,8 @@
         },
         {
           "type": "string",
-          "absolutePath": true
+          "absolutePath": true,
+          "tsType": "string | URL"
         }
       ]
     },
@@ -4683,7 +4708,8 @@
           "items": {
             "description": "Folder name or directory path where to find modules.",
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "tsType": "(string | URL)"
           }
         },
         "plugins": {
@@ -4731,7 +4757,8 @@
               },
               {
                 "type": "string",
-                "absolutePath": true
+                "absolutePath": true,
+                "tsType": "string | URL"
               }
             ]
           }
@@ -4741,7 +4768,8 @@
           "type": "array",
           "items": {
             "description": "Directory in which requests that are server-relative URLs (starting with '/') are resolved.",
-            "type": "string"
+            "type": "string",
+            "tsType": "(string | URL)"
           }
         },
         "symlinks": {
@@ -4763,7 +4791,8 @@
               "properties": {
                 "configFile": {
                   "description": "A path to the tsconfig file.",
-                  "type": "string"
+                  "type": "string",
+                  "tsType": "string | URL"
                 },
                 "references": {
                   "description": "References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths.",
@@ -4856,7 +4885,8 @@
         },
         {
           "type": "string",
-          "absolutePath": true
+          "absolutePath": true,
+          "tsType": "string | URL"
         },
         {
           "instanceof": "Function",
@@ -5376,7 +5406,8 @@
               {
                 "description": "A path to an immutable directory (usually a package manager cache directory).",
                 "type": "string",
-                "absolutePath": true
+                "absolutePath": true,
+                "tsType": "string | URL"
               }
             ]
           }
@@ -5395,7 +5426,8 @@
               {
                 "description": "A path to a managed directory (usually a node_modules directory).",
                 "type": "string",
-                "absolutePath": true
+                "absolutePath": true,
+                "tsType": "string | URL"
               }
             ]
           }
@@ -5459,7 +5491,8 @@
               {
                 "description": "A path to an unmanaged directory.",
                 "type": "string",
-                "absolutePath": true
+                "absolutePath": true,
+                "tsType": "string | URL"
               }
             ]
           }
@@ -5623,7 +5656,8 @@
         "context": {
           "description": "Context directory for request shortening.",
           "type": "string",
-          "absolutePath": true
+          "absolutePath": true,
+          "tsType": "string | URL"
         },
         "dependentModules": {
           "description": "Show chunk modules that are dependencies of other modules of the chunk.",
@@ -6171,7 +6205,7 @@
           "$ref": "#/definitions/CacheOptionsNormalized"
         },
         "context": {
-          "$ref": "#/definitions/Context"
+          "$ref": "#/definitions/ContextNormalized"
         },
         "dependencies": {
           "$ref": "#/definitions/Dependencies"

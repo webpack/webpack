@@ -30,7 +30,7 @@ export type CacheOptionsNormalized =
 /**
  * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
  */
-export type Context = string;
+export type Context = string | URL;
 /**
  * References to other configurations to depend on.
  */
@@ -326,6 +326,7 @@ export type RuleSetConditionOrConditionsAbsolute =
 export type RuleSetConditionAbsolute =
 	| RegExp
 	| string
+	| URL
 	| import("../lib/rules/RuleSetCompiler").RuleSetConditionFn
 	| RuleSetLogicalConditionsAbsolute
 	| RuleSetConditionsAbsolute;
@@ -429,9 +430,10 @@ export type GeneratorOptionsByModuleType = GeneratorOptionsByModuleTypeKnown &
  * Don't parse files matching. It's matched against the full resolved request.
  */
 export type NoParse =
-	| (RegExp | string | import("../lib/NormalModule").NoParseFn)[]
+	| (RegExp | string | URL | import("../lib/NormalModule").NoParseFn)[]
 	| RegExp
 	| string
+	| URL
 	| import("../lib/NormalModule").NoParseFn;
 /**
  * Specify options for each parser.
@@ -626,7 +628,7 @@ export type OutputModule = boolean;
 /**
  * The output directory as **absolute path** (required).
  */
-export type Path = string;
+export type Path = string | URL;
 /**
  * Include comments with information about the modules.
  */
@@ -682,15 +684,15 @@ export type Profile = boolean;
 /**
  * Store compiler state to a json file.
  */
-export type RecordsInputPath = false | string;
+export type RecordsInputPath = false | string | URL;
 /**
  * Load compiler state from a json file.
  */
-export type RecordsOutputPath = false | string;
+export type RecordsOutputPath = false | string | URL;
 /**
  * Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. `recordsPath` is used for `recordsInputPath` and `recordsOutputPath` if they left undefined.
  */
-export type RecordsPath = false | string;
+export type RecordsPath = false | string | URL;
 /**
  * Options for the resolver.
  */
@@ -791,6 +793,10 @@ export type AssetModuleOutputPath =
  */
 export type AssetParserDataUrlFunction =
 	import("../lib/asset/AssetParser").AssetParserDataUrlFunction;
+/**
+ * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
+ */
+export type ContextNormalized = string;
 /**
  * Enable/disable renaming of `@keyframes`.
  */
@@ -896,6 +902,10 @@ export type OptimizationRuntimeChunkNormalized =
 			 */
 			name?: import("../lib/optimize/RuntimeChunkPlugin").RuntimeChunkFunction;
 	  };
+/**
+ * The output directory as **absolute path** (required).
+ */
+export type PathNormalized = string;
 /**
  * Add additional plugins to the compiler.
  */
@@ -1093,16 +1103,16 @@ export interface FileCacheOptions {
 		/**
 		 * List of dependencies the build depends on.
 		 */
-		[k: string]: string[];
+		[k: string]: (string | URL)[];
 	};
 	/**
 	 * Base directory for the cache (defaults to node_modules/.cache/webpack).
 	 */
-	cacheDirectory?: string;
+	cacheDirectory?: string | URL;
 	/**
 	 * Locations for the cache (defaults to cacheDirectory / name).
 	 */
-	cacheLocation?: string;
+	cacheLocation?: string | URL;
 	/**
 	 * Compression type used for the cache files.
 	 */
@@ -1126,11 +1136,11 @@ export interface FileCacheOptions {
 	/**
 	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
-	immutablePaths?: (RegExp | string)[];
+	immutablePaths?: (RegExp | string | URL)[];
 	/**
 	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
 	 */
-	managedPaths?: (RegExp | string)[];
+	managedPaths?: (RegExp | string | URL)[];
 	/**
 	 * Time for which unused cache entries stay in the filesystem cache at minimum (in milliseconds).
 	 */
@@ -1175,7 +1185,7 @@ export interface DotenvPluginOptions {
 	/**
 	 * The directory from which .env files are loaded. Can be an absolute path, false will disable the .env file loading.
 	 */
-	dir?: false | string;
+	dir?: false | string | URL;
 	/**
 	 * Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.
 	 */
@@ -1392,7 +1402,7 @@ export interface HttpUriOptions {
 	/**
 	 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
 	 */
-	cacheLocation?: false | string;
+	cacheLocation?: false | string | URL;
 	/**
 	 * When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.
 	 */
@@ -1400,7 +1410,7 @@ export interface HttpUriOptions {
 	/**
 	 * Location of the lockfile.
 	 */
-	lockfileLocation?: string;
+	lockfileLocation?: string | URL;
 	/**
 	 * Proxy configuration, which can be used to specify a proxy server to use for HTTP requests.
 	 */
@@ -1890,7 +1900,7 @@ export interface ResolveOptions {
 	/**
 	 * Folder names or directory paths where to find modules.
 	 */
-	modules?: string[];
+	modules?: (string | URL)[];
 	/**
 	 * Plugins for the resolver.
 	 */
@@ -1910,11 +1920,11 @@ export interface ResolveOptions {
 	/**
 	 * A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.
 	 */
-	restrictions?: (RegExp | string)[];
+	restrictions?: (RegExp | string | URL)[];
 	/**
 	 * A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.
 	 */
-	roots?: string[];
+	roots?: (string | URL)[];
 	/**
 	 * Enable resolving symlinks to the original location.
 	 */
@@ -1929,7 +1939,7 @@ export interface ResolveOptions {
 				/**
 				 * A path to the tsconfig file.
 				 */
-				configFile?: string;
+				configFile?: string | URL;
 				/**
 				 * References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths.
 				 */
@@ -2719,11 +2729,11 @@ export interface SnapshotOptions {
 	/**
 	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
-	immutablePaths?: (RegExp | string)[];
+	immutablePaths?: (RegExp | string | URL)[];
 	/**
 	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
 	 */
-	managedPaths?: (RegExp | string)[];
+	managedPaths?: (RegExp | string | URL)[];
 	/**
 	 * Options for snapshotting dependencies of modules to determine if they need to be built again.
 	 */
@@ -2766,7 +2776,7 @@ export interface SnapshotOptions {
 	/**
 	 * List of paths that are not managed by a package manager and the contents are subject to change.
 	 */
-	unmanagedPaths?: (RegExp | string)[];
+	unmanagedPaths?: (RegExp | string | URL)[];
 }
 /**
  * Stats options object.
@@ -2883,7 +2893,7 @@ export interface StatsOptions {
 	/**
 	 * Context directory for request shortening.
 	 */
-	context?: string;
+	context?: string | URL;
 	/**
 	 * Show chunk modules that are dependencies of other modules of the chunk.
 	 */
@@ -4076,7 +4086,7 @@ export interface OutputNormalized {
 	/**
 	 * The output directory as **absolute path** (required).
 	 */
-	path?: Path;
+	path?: PathNormalized;
 	/**
 	 * Include comments with information about the modules.
 	 */
@@ -4154,7 +4164,7 @@ export interface WebpackOptionsNormalized {
 	/**
 	 * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
 	 */
-	context?: Context;
+	context?: ContextNormalized;
 	/**
 	 * References to other configurations to depend on.
 	 */

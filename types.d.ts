@@ -311,10 +311,6 @@ declare interface AliasOption {
 	name: string;
 	onlyModule?: boolean;
 }
-type AliasOptionNewRequest = string | false | string[];
-declare interface AliasOptions {
-	[index: string]: AliasOptionNewRequest;
-}
 declare interface AllCodeGenerationSchemas {
 	/**
 	 * top level declarations for javascript modules
@@ -847,6 +843,11 @@ declare interface BaseResolveRequest {
 	 * inner relative path for internal usage
 	 */
 	__innerRequest_relativePath?: string;
+
+	/**
+	 * internal: shared marker `RestrictionsPlugin` flips when it filters out an existing target, letting `ExportsFieldPlugin` fall back instead of erroring
+	 */
+	__restrictionsMarker?: { blocked: boolean };
 }
 declare interface BasenameCacheEntry {
 	/**
@@ -4460,7 +4461,7 @@ declare interface Configuration {
 	/**
 	 * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
 	 */
-	context?: string;
+	context?: string | URL;
 
 	/**
 	 * References to other configurations to depend on.
@@ -4654,17 +4655,17 @@ declare interface Configuration {
 	/**
 	 * Store compiler state to a json file.
 	 */
-	recordsInputPath?: string | false;
+	recordsInputPath?: string | false | URL;
 
 	/**
 	 * Load compiler state from a json file.
 	 */
-	recordsOutputPath?: string | false;
+	recordsOutputPath?: string | false | URL;
 
 	/**
 	 * Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. `recordsPath` is used for `recordsInputPath` and `recordsOutputPath` if they left undefined.
 	 */
-	recordsPath?: string | false;
+	recordsPath?: string | false | URL;
 
 	/**
 	 * Options for the resolver.
@@ -5032,6 +5033,7 @@ declare class ContextReplacementPlugin {
 			| string
 			| boolean
 			| RegExp
+			| URL
 			| ((context: BeforeContextResolveData | AfterContextResolveData) => void),
 		newContentRecursive?: boolean | RegExp | NewContentCreateContextMap,
 		newContentRegExp?: RegExp
@@ -6186,7 +6188,7 @@ declare interface DllPluginOptions {
 	/**
 	 * Context of requests in the manifest file (defaults to the webpack context).
 	 */
-	context?: string;
+	context?: string | URL;
 
 	/**
 	 * If true, only entry points will be exposed (default: true).
@@ -6206,7 +6208,7 @@ declare interface DllPluginOptions {
 	/**
 	 * Absolute path to the manifest json file (output).
 	 */
-	path: string;
+	path: string | URL;
 
 	/**
 	 * Type of the dll bundle (external type, use value of 'output.libraryTarget').
@@ -6230,7 +6232,7 @@ type DllReferencePluginOptions =
 			/**
 			 * Context of requests in the manifest (or content property) as absolute path.
 			 */
-			context?: string;
+			context?: string | URL;
 			/**
 			 * Extensions used to resolve modules in the dll bundle (only used when using 'scope').
 			 */
@@ -6238,7 +6240,7 @@ type DllReferencePluginOptions =
 			/**
 			 * An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation.
 			 */
-			manifest: string | DllReferencePluginOptionsManifest;
+			manifest: string | URL | DllReferencePluginOptionsManifest;
 			/**
 			 * The name where the dll is exposed (external name, defaults to manifest.name).
 			 */
@@ -6278,7 +6280,7 @@ type DllReferencePluginOptions =
 			/**
 			 * Context of requests in the manifest (or content property) as absolute path.
 			 */
-			context?: string;
+			context?: string | URL;
 			/**
 			 * Extensions used to resolve modules in the dll bundle (only used when using 'scope').
 			 */
@@ -6388,7 +6390,7 @@ declare interface DotenvPluginOptions {
 	/**
 	 * The directory from which .env files are loaded. Can be an absolute path, false will disable the .env file loading.
 	 */
-	dir?: string | false;
+	dir?: string | false | URL;
 
 	/**
 	 * Only expose environment variables that start with these prefixes. Defaults to 'WEBPACK_'.
@@ -8187,17 +8189,17 @@ declare interface FileCacheOptions {
 	/**
 	 * Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack').
 	 */
-	buildDependencies?: { [index: string]: string[] };
+	buildDependencies?: { [index: string]: (string | URL)[] };
 
 	/**
 	 * Base directory for the cache (defaults to node_modules/.cache/webpack).
 	 */
-	cacheDirectory?: string;
+	cacheDirectory?: string | URL;
 
 	/**
 	 * Locations for the cache (defaults to cacheDirectory / name).
 	 */
-	cacheLocation?: string;
+	cacheLocation?: string | URL;
 
 	/**
 	 * Compression type used for the cache files.
@@ -8227,12 +8229,12 @@ declare interface FileCacheOptions {
 	/**
 	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
-	immutablePaths?: (string | RegExp)[];
+	immutablePaths?: (string | RegExp | URL)[];
 
 	/**
 	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
 	 */
-	managedPaths?: (string | RegExp)[];
+	managedPaths?: (string | RegExp | URL)[];
 
 	/**
 	 * Time for which unused cache entries stay in the filesystem cache at minimum (in milliseconds).
@@ -9040,7 +9042,7 @@ declare interface HashedModuleIdsPluginOptions {
 	/**
 	 * The context directory for creating names.
 	 */
-	context?: string;
+	context?: string | URL;
 
 	/**
 	 * The encoding to use when generating the hash, defaults to 'base64'. All encodings from Node.JS' hash.digest are supported.
@@ -9259,7 +9261,7 @@ declare interface HttpUriOptions {
 	/**
 	 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
 	 */
-	cacheLocation?: string | false;
+	cacheLocation?: string | false | URL;
 
 	/**
 	 * When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.
@@ -9269,7 +9271,7 @@ declare interface HttpUriOptions {
 	/**
 	 * Location of the lockfile.
 	 */
-	lockfileLocation?: string;
+	lockfileLocation?: string | URL;
 
 	/**
 	 * Proxy configuration, which can be used to specify a proxy server to use for HTTP requests.
@@ -13403,7 +13405,7 @@ declare interface LibManifestPluginOptions {
 	/**
 	 * Context of requests in the manifest file (defaults to the webpack context).
 	 */
-	context?: string;
+	context?: string | URL;
 
 	/**
 	 * If true, only entry points will be exposed (default: true).
@@ -13423,7 +13425,7 @@ declare interface LibManifestPluginOptions {
 	/**
 	 * Absolute path to the manifest json file (output).
 	 */
-	path: string;
+	path: string | URL;
 
 	/**
 	 * Type of the dll bundle (external type, use value of 'output.libraryTarget').
@@ -13683,7 +13685,7 @@ declare interface LoaderOptionsPluginOptions {
 		/**
 		 * The context that can be used to configure older loaders.
 		 */
-		context?: string;
+		context?: string | URL;
 	};
 }
 
@@ -13721,15 +13723,15 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	/**
 	 * Add a directory as dependency of the loader result.
 	 */
-	addContextDependency(context: string): void;
+	addContextDependency(context: string | URL): void;
 
 	/**
 	 * Adds a file as dependency of the loader result in order to make them watchable.
 	 * For example, html-loader uses this technique as it finds src and src-set attributes.
 	 * Then, it sets the url's for those attributes as dependencies of the html file that is parsed.
 	 */
-	addDependency(file: string): void;
-	addMissingDependency(context: string): void;
+	addDependency(file: string | URL): void;
+	addMissingDependency(context: string | URL): void;
 
 	/**
 	 * Make this loader async.
@@ -15539,8 +15541,9 @@ declare interface ModuleOptions {
 	noParse?:
 		| string
 		| RegExp
+		| URL
 		| ((content: string) => boolean)
-		| (string | RegExp | ((content: string) => boolean))[];
+		| (string | RegExp | URL | ((content: string) => boolean))[];
 
 	/**
 	 * Specify options for each parser.
@@ -15632,8 +15635,9 @@ declare interface ModuleOptionsNormalized {
 	noParse?:
 		| string
 		| RegExp
+		| URL
 		| ((content: string) => boolean)
-		| (string | RegExp | ((content: string) => boolean))[];
+		| (string | RegExp | URL | ((content: string) => boolean))[];
 
 	/**
 	 * Specify options for each parser.
@@ -16323,7 +16327,7 @@ declare class NormalModule extends Module {
 	): Source;
 	markModuleAsErrored(error: Error): void;
 	applyNoParseRule(
-		rule: string | RegExp | ((content: string) => boolean),
+		rule: string | RegExp | URL | ((content: string) => boolean),
 		content: string
 	): boolean;
 	shouldPreventParsing(
@@ -16331,8 +16335,9 @@ declare class NormalModule extends Module {
 			| undefined
 			| string
 			| RegExp
+			| URL
 			| ((content: string) => boolean)
-			| (string | RegExp | ((content: string) => boolean))[],
+			| (string | RegExp | URL | ((content: string) => boolean))[],
 		request: string
 	): boolean;
 	static getCompilationHooks(
@@ -16963,7 +16968,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	 * It uses Webpack's internal resolver, taking into account configured aliases and extensions.
 	 */
 	resolve(
-		context: string,
+		context: string | URL,
 		request: string,
 		callback: (
 			err: null | ErrorWithDetail,
@@ -16978,7 +16983,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	 */
 	getResolve(options?: ResolveOptionsWithDependencyType): {
 		(
-			context: string,
+			context: string | URL,
 			request: string,
 			callback: (
 				err: null | ErrorWithDetail,
@@ -16986,7 +16991,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 				req?: ResolveRequest
 			) => void
 		): void;
-		(context: string, request: string): Promise<string>;
+		(context: string | URL, request: string): Promise<string>;
 	};
 
 	/**
@@ -16999,10 +17004,10 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 		sourceMap?: string,
 		assetInfo?: AssetInfo
 	): void;
-	addBuildDependency(dep: string): void;
+	addBuildDependency(dep: string | URL): void;
 	utils: {
-		absolutify: (context: string, request: string) => string;
-		contextify: (context: string, request: string) => string;
+		absolutify: (context: string | URL, request: string) => string;
+		contextify: (context: string | URL, request: string) => string;
 		createHash: (algorithm?: string | typeof Hash) => Hash;
 	};
 	rootContext: string;
@@ -17024,10 +17029,10 @@ declare class NormalModuleReplacementPlugin {
 	 */
 	constructor(
 		resourceRegExp: RegExp,
-		newResource: string | ((resolveData: ResolveData) => void)
+		newResource: string | URL | ((resolveData: ResolveData) => void)
 	);
 	resourceRegExp: RegExp;
-	newResource: string | ((resolveData: ResolveData) => void);
+	newResource: string | URL | ((resolveData: ResolveData) => void);
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
@@ -17893,7 +17898,7 @@ declare interface Options {
 	source: string;
 
 	/**
-	 * absolute context path to which lib ident is relative to
+	 * absolute context path to which lib ident is relative to (file URLs already resolved)
 	 */
 	context: string;
 
@@ -18176,7 +18181,7 @@ declare interface Output {
 	/**
 	 * The output directory as **absolute path** (required).
 	 */
-	path?: string;
+	path?: string | URL;
 
 	/**
 	 * Include comments with information about the modules.
@@ -18817,10 +18822,10 @@ type PathDataModule = PathData & {
 	module: Module | ModulePathData;
 	chunkGraph: ChunkGraph;
 };
-type PathLikeFs = string | Buffer | URL;
+type PathLikeFs = string | URL | Buffer;
 type PathLikeTypes = string | URL_url | Buffer;
-type PathOrFileDescriptorFs = string | number | Buffer | URL;
-type PathOrFileDescriptorTypes = string | number | Buffer | URL_url;
+type PathOrFileDescriptorFs = string | number | URL | Buffer;
+type PathOrFileDescriptorTypes = string | number | URL_url | Buffer;
 type Pattern =
 	| Identifier
 	| MemberExpression
@@ -19040,7 +19045,7 @@ declare interface ProfilingPluginOptions {
 	/**
 	 * Path to the output file e.g. `path.resolve(__dirname, 'profiling/events.json')`. Defaults to `events.json`.
 	 */
-	outputPath?: string;
+	outputPath?: string | URL;
 }
 declare class ProgressPlugin {
 	/**
@@ -20533,7 +20538,7 @@ declare interface ResolveOptions {
 	/**
 	 * Folder names or directory paths where to find modules.
 	 */
-	modules?: string[];
+	modules?: (string | URL)[];
 
 	/**
 	 * Plugins for the resolver.
@@ -20573,12 +20578,12 @@ declare interface ResolveOptions {
 	/**
 	 * A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.
 	 */
-	restrictions?: (string | RegExp)[];
+	restrictions?: (string | RegExp | URL)[];
 
 	/**
 	 * A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.
 	 */
-	roots?: string[];
+	roots?: (string | URL)[];
 
 	/**
 	 * Enable resolving symlinks to the original location.
@@ -20595,7 +20600,7 @@ declare interface ResolveOptions {
 				/**
 				 * A path to the tsconfig file.
 				 */
-				configFile?: string;
+				configFile?: string | URL;
 				/**
 				 * References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths.
 				 */
@@ -20762,12 +20767,12 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 	/**
 	 * A list of module alias configurations or an object which maps key to value
 	 */
-	alias?: AliasOption[] | AliasOptions;
+	alias?: UserAliasOptions | UserAliasOptionEntry[];
 
 	/**
 	 * A list of module alias configurations or an object which maps key to value, applied only after modules option
 	 */
-	fallback?: AliasOption[] | AliasOptions;
+	fallback?: UserAliasOptions | UserAliasOptionEntry[];
 
 	/**
 	 * An object which maps extension to extension aliases
@@ -20845,9 +20850,9 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 	resolver?: Resolver;
 
 	/**
-	 * A list of directories to resolve modules from, can be absolute path or folder name
+	 * A list of directories to resolve modules from, can be absolute path, folder name, or a `file:` `URL` instance
 	 */
-	modules?: string | string[];
+	modules?: string | URL_url | (string | URL_url)[];
 
 	/**
 	 * A list of main fields in description files
@@ -20874,9 +20879,9 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 	pnpApi?: null | PnpApi;
 
 	/**
-	 * A list of root paths
+	 * A list of root paths, each an absolute path or a `file:` `URL` instance
 	 */
-	roots?: string[];
+	roots?: (string | URL_url)[];
 
 	/**
 	 * The request is already fully specified and no extensions or directories are resolved for it
@@ -20889,9 +20894,9 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 	resolveToContext?: boolean;
 
 	/**
-	 * A list of resolve restrictions
+	 * A list of resolve restrictions, each an absolute path, a `file:` `URL` instance, or a RegExp
 	 */
-	restrictions?: (string | RegExp)[];
+	restrictions?: (string | RegExp | URL_url)[];
 
 	/**
 	 * Use only the sync constraints of the file system calls
@@ -20909,9 +20914,9 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 	preferAbsolute?: boolean;
 
 	/**
-	 * TypeScript config file path or config object with configFile and references
+	 * TypeScript config file path (or `file:` `URL` instance) or config object with configFile and references
 	 */
-	tsconfig?: string | boolean | TsconfigOptions;
+	tsconfig?: string | boolean | URL_url | UserTsconfigOptions;
 }
 type ResolveOptionsWithDependencyType = ResolveOptions & {
 	dependencyType?: string;
@@ -21156,6 +21161,7 @@ type RuleSetConditionAbsolute =
 	| string
 	| RegExp
 	| ((value: string) => boolean)
+	| URL
 	| RuleSetLogicalConditionsAbsolute
 	| RuleSetConditionAbsolute[];
 type RuleSetConditionOrConditions =
@@ -21207,6 +21213,7 @@ declare interface RuleSetLogicalConditionsAbsolute {
 		| string
 		| RegExp
 		| ((value: string) => boolean)
+		| URL
 		| RuleSetLogicalConditionsAbsolute
 		| RuleSetConditionAbsolute[];
 
@@ -21262,6 +21269,7 @@ declare interface RuleSetRule {
 		| string
 		| RegExp
 		| ((value: string) => boolean)
+		| URL
 		| RuleSetLogicalConditionsAbsolute
 		| RuleSetConditionAbsolute[];
 
@@ -21282,6 +21290,7 @@ declare interface RuleSetRule {
 		| string
 		| RegExp
 		| ((value: string) => boolean)
+		| URL
 		| RuleSetLogicalConditionsAbsolute
 		| RuleSetConditionAbsolute[];
 
@@ -21292,6 +21301,7 @@ declare interface RuleSetRule {
 		| string
 		| RegExp
 		| ((value: string) => boolean)
+		| URL
 		| RuleSetLogicalConditionsAbsolute
 		| RuleSetConditionAbsolute[];
 
@@ -21357,6 +21367,7 @@ declare interface RuleSetRule {
 		| string
 		| RegExp
 		| ((value: string) => boolean)
+		| URL
 		| RuleSetLogicalConditionsAbsolute
 		| RuleSetConditionAbsolute[];
 
@@ -21372,6 +21383,7 @@ declare interface RuleSetRule {
 		| string
 		| RegExp
 		| ((value: string) => boolean)
+		| URL
 		| RuleSetLogicalConditionsAbsolute
 		| RuleSetConditionAbsolute[];
 
@@ -21422,6 +21434,7 @@ declare interface RuleSetRule {
 		| string
 		| RegExp
 		| ((value: string) => boolean)
+		| URL
 		| RuleSetLogicalConditionsAbsolute
 		| RuleSetConditionAbsolute[];
 
@@ -22636,9 +22649,9 @@ declare abstract class Snapshot {
 	getMissingIterable(): Iterable<string>;
 }
 type SnapshotNormalizedWithDefaults = SnapshotOptionsWebpackOptions & {
-	managedPaths: (string | RegExp)[];
-	unmanagedPaths: (string | RegExp)[];
-	immutablePaths: (string | RegExp)[];
+	managedPaths: (string | RegExp | URL)[];
+	unmanagedPaths: (string | RegExp | URL)[];
+	immutablePaths: (string | RegExp | URL)[];
 	resolveBuildDependencies: {
 		/**
 		 * Use hashes of the content of the files/directories to determine invalidation.
@@ -22727,12 +22740,12 @@ declare interface SnapshotOptionsWebpackOptions {
 	/**
 	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
-	immutablePaths?: (string | RegExp)[];
+	immutablePaths?: (string | RegExp | URL)[];
 
 	/**
 	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
 	 */
-	managedPaths?: (string | RegExp)[];
+	managedPaths?: (string | RegExp | URL)[];
 
 	/**
 	 * Options for snapshotting dependencies of modules to determine if they need to be built again.
@@ -22779,7 +22792,7 @@ declare interface SnapshotOptionsWebpackOptions {
 	/**
 	 * List of paths that are not managed by a package manager and the contents are subject to change.
 	 */
-	unmanagedPaths?: (string | RegExp)[];
+	unmanagedPaths?: (string | RegExp | URL)[];
 }
 declare interface SortFunction<T> {
 	(a: T, b: T): number;
@@ -23136,6 +23149,21 @@ declare abstract class StackEntry {
 	 * at the formatted form.
 	 */
 	toString(): string;
+
+	/**
+	 * Iterate entries from oldest (root) to newest (tip), matching how a
+	 * `Set` that was populated in insertion order would iterate. Pre-seeded
+	 * legacy `Set<string>` entries come first so error-message output stays
+	 * ordered oldest-to-newest.
+	 * Yields each entry as its formatted `toString()` form. Plugins written
+	 * against the pre-5.21 `Set<string>` shape — e.g.
+	 * `[...resolveContext.stack].find(a => a.includes("module:"))` — keep
+	 * working unchanged because each yielded value is a plain string with
+	 * all of `String.prototype` available natively. Resolves that never
+	 * iterate the stack pay nothing; iteration costs one `toString()`
+	 * allocation per stack frame.
+	 */
+	[Symbol.iterator](): IterableIterator<string>;
 }
 declare abstract class StackedMap<K, V> {
 	map: Map<K, InternalCell<V>>;
@@ -23712,7 +23740,7 @@ declare interface StatsOptions {
 	/**
 	 * Context directory for request shortening.
 	 */
-	context?: string;
+	context?: string | URL;
 
 	/**
 	 * Show chunk modules that are dependencies of other modules of the chunk.
@@ -24388,6 +24416,35 @@ declare interface UpdateHashContextGenerator {
 type Usage = string | true | TopLevelSymbol;
 type UsageStateType = 0 | 1 | 2 | 3 | 4;
 type UsedName = string | false | string[] | InlinedUsedName;
+declare interface UserAliasOptionEntry {
+	alias: UserAliasOptionNewRequest;
+	name: string;
+	onlyModule?: boolean;
+}
+type UserAliasOptionNewRequest =
+	| string
+	| false
+	| URL_url
+	| (string | URL_url)[];
+declare interface UserAliasOptions {
+	[index: string]: UserAliasOptionNewRequest;
+}
+declare interface UserTsconfigOptions {
+	/**
+	 * A path, or `file:` `URL` instance, pointing at the tsconfig file
+	 */
+	configFile?: string | URL_url;
+
+	/**
+	 * References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths or `file:` `URL` instances
+	 */
+	references?: "auto" | (string | URL_url)[];
+
+	/**
+	 * Override baseUrl from tsconfig.json with a path or `file:` `URL` instance
+	 */
+	baseUrl?: string | URL_url;
+}
 type Value = string | number | boolean | RegExp;
 type ValueCacheVersion = string | Set<string>;
 declare interface Values {
@@ -24566,7 +24623,7 @@ declare interface WatchIgnorePluginOptions {
 	/**
 	 * A list of RegExps or absolute paths to directories or files that should be ignored.
 	 */
-	paths: (string | RegExp)[];
+	paths: (string | RegExp | URL)[];
 }
 
 /**
@@ -25166,12 +25223,12 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Store compiler state to a json file.
 	 */
-	recordsInputPath?: string | false;
+	recordsInputPath?: string | false | URL;
 
 	/**
 	 * Load compiler state from a json file.
 	 */
-	recordsOutputPath?: string | false;
+	recordsOutputPath?: string | false | URL;
 
 	/**
 	 * Options for the resolver.
@@ -25271,8 +25328,8 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 	>;
 } & { watch: NonNullable<undefined | boolean> } & {
 	performance: NonNullable<undefined | false | PerformanceOptions>;
-} & { recordsInputPath: NonNullable<undefined | string | false> } & {
-	recordsOutputPath: NonNullable<undefined | string | false>;
+} & { recordsInputPath: NonNullable<undefined | string | false | URL> } & {
+	recordsOutputPath: NonNullable<undefined | string | false | URL>;
 } & { dotenv: NonNullable<undefined | boolean | DotenvPluginOptions> };
 
 /**

@@ -105,7 +105,8 @@
         "context": {
           "description": "Context of requests in the manifest (or content property) as absolute path.",
           "type": "string",
-          "absolutePath": true
+          "absolutePath": true,
+          "tsType": "string | URL"
         },
         "extensions": {
           "description": "Extensions used to resolve modules in the dll bundle (only used when using 'scope').",
@@ -120,7 +121,8 @@
           "anyOf": [
             {
               "type": "string",
-              "absolutePath": true
+              "absolutePath": true,
+              "tsType": "string | URL"
             },
             {
               "$ref": "#/definitions/DllReferencePluginOptionsManifest"
@@ -167,7 +169,8 @@
         "context": {
           "description": "Context of requests in the manifest (or content property) as absolute path.",
           "type": "string",
-          "absolutePath": true
+          "absolutePath": true,
+          "tsType": "string | URL"
         },
         "extensions": {
           "description": "Extensions used to resolve modules in the dll bundle (only used when using 'scope').",

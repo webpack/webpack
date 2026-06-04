@@ -16,7 +16,8 @@
             },
             {
               "type": "string",
-              "absolutePath": true
+              "absolutePath": true,
+              "tsType": "string | URL"
             }
           ]
         },
@@ -27,7 +28,8 @@
         "lockfileLocation": {
           "description": "Location of the lockfile.",
           "type": "string",
-          "absolutePath": true
+          "absolutePath": true,
+          "tsType": "string | URL"
         },
         "proxy": {
           "description": "Proxy configuration, which can be used to specify a proxy server to use for HTTP requests.",

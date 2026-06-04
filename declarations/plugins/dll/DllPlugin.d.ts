@@ -8,7 +8,7 @@ export interface DllPluginOptions {
 	/**
 	 * Context of requests in the manifest file (defaults to the webpack context).
 	 */
-	context?: string;
+	context?: string | URL;
 	/**
 	 * If true, only entry points will be exposed (default: true).
 	 */
@@ -24,7 +24,7 @@ export interface DllPluginOptions {
 	/**
 	 * Absolute path to the manifest json file (output).
 	 */
-	path: string;
+	path: string | URL;
 	/**
 	 * Type of the dll bundle (external type, use value of 'output.libraryTarget').
 	 */

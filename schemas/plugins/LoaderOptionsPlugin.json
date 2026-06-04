@@ -19,7 +19,8 @@
         "context": {
           "description": "The context that can be used to configure older loaders.",
           "type": "string",
-          "absolutePath": true
+          "absolutePath": true,
+          "tsType": "string | URL"
         }
       }
     }

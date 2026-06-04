@@ -73,7 +73,11 @@ export interface NormalModuleLoaderContext<OptionsType> {
 	 * @param request The module request string to resolve (e.g., './image.png', 'lodash')
 	 * @param callback A callback function invoked with the resolved absolute path, or false if ignored
 	 */
-	resolve(context: string, request: string, callback: ResolveCallback): void;
+	resolve(
+		context: string | URL,
+		request: string,
+		callback: ResolveCallback
+	): void;
 
 	/**
 	 * Creates a resolve function with specific options.
@@ -83,8 +87,12 @@ export interface NormalModuleLoaderContext<OptionsType> {
 	 */
 	getResolve(
 		options?: ResolveOptionsWithDependencyType
-	): ((context: string, request: string, callback: ResolveCallback) => void) &
-		((context: string, request: string) => Promise<string>);
+	): ((
+		context: string | URL,
+		request: string,
+		callback: ResolveCallback
+	) => void) &
+		((context: string | URL, request: string) => Promise<string>);
 
 	/**
 	 * Emits a new file (asset) to the compilation output directory.
@@ -100,10 +108,10 @@ export interface NormalModuleLoaderContext<OptionsType> {
 		sourceMap?: string,
 		assetInfo?: AssetInfo
 	): void;
-	addBuildDependency(dep: string): void;
+	addBuildDependency(dep: string | URL): void;
 	utils: {
-		absolutify: (context: string, request: string) => string;
-		contextify: (context: string, request: string) => string;
+		absolutify: (context: string | URL, request: string) => string;
+		contextify: (context: string | URL, request: string) => string;
 		createHash: (algorithm?: string | typeof Hash) => Hash;
 	};
 	rootContext: string;
@@ -159,16 +167,16 @@ export interface LoaderRunnerLoaderContext<OptionsType> {
 	/**
 	 * Add a directory as dependency of the loader result.
 	 */
-	addContextDependency(context: string): void;
+	addContextDependency(context: string | URL): void;
 
 	/**
 	 * Adds a file as dependency of the loader result in order to make them watchable.
 	 * For example, html-loader uses this technique as it finds src and src-set attributes.
 	 * Then, it sets the url's for those attributes as dependencies of the html file that is parsed.
 	 */
-	addDependency(file: string): void;
+	addDependency(file: string | URL): void;
 
-	addMissingDependency(context: string): void;
+	addMissingDependency(context: string | URL): void;
 
 	/**
 	 * Make this loader async.

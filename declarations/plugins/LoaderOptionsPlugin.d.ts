@@ -20,7 +20,7 @@ export interface LoaderOptionsPluginOptions {
 		/**
 		 * The context that can be used to configure older loaders.
 		 */
-		context?: string;
+		context?: string | URL;
 		[k: string]: any;
 	};
 	[k: string]: any;

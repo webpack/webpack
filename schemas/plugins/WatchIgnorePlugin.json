@@ -14,7 +14,8 @@
             "tsType": "RegExp"
           },
           {
-            "type": "string"
+            "type": "string",
+            "tsType": "string | URL"
           }
         ]
       },

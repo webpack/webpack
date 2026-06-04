@@ -9,7 +9,7 @@ export type DllReferencePluginOptions =
 			/**
 			 * Context of requests in the manifest (or content property) as absolute path.
 			 */
-			context?: string;
+			context?: string | URL;
 			/**
 			 * Extensions used to resolve modules in the dll bundle (only used when using 'scope').
 			 */
@@ -17,7 +17,7 @@ export type DllReferencePluginOptions =
 			/**
 			 * An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation.
 			 */
-			manifest: string | DllReferencePluginOptionsManifest;
+			manifest: string | URL | DllReferencePluginOptionsManifest;
 			/**
 			 * The name where the dll is exposed (external name, defaults to manifest.name).
 			 */
@@ -43,7 +43,7 @@ export type DllReferencePluginOptions =
 			/**
 			 * Context of requests in the manifest (or content property) as absolute path.
 			 */
-			context?: string;
+			context?: string | URL;
 			/**
 			 * Extensions used to resolve modules in the dll bundle (only used when using 'scope').
 			 */

@@ -25,7 +25,7 @@ export interface HttpUriOptions {
 	/**
 	 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
 	 */
-	cacheLocation?: false | string;
+	cacheLocation?: false | string | URL;
 	/**
 	 * When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.
 	 */
@@ -33,7 +33,7 @@ export interface HttpUriOptions {
 	/**
 	 * Location of the lockfile.
 	 */
-	lockfileLocation?: string;
+	lockfileLocation?: string | URL;
 	/**
 	 * Proxy configuration, which can be used to specify a proxy server to use for HTTP requests.
 	 */
