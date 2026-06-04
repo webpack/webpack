@@ -2343,6 +2343,82 @@ describe("walkHtmlTokens", () => {
 			expect(collectErrors("a&#65;b")).toEqual([]);
 		});
 
+		it("validates numeric references that end exactly at EOF", () => {
+			// The numeric-reference-end processing must still run when the
+			// reference is the last thing in the input (terminator consumed,
+			// loop exits) — verified against html5lib-tests.
+			expect(collectErrors("&#x0001;").map((e) => e.code)).toEqual([
+				"control-character-reference"
+			]);
+			expect(collectErrors("&#0000;").map((e) => e.code)).toEqual([
+				"null-character-reference"
+			]);
+			expect(collectErrors("&#xD800;").map((e) => e.code)).toEqual([
+				"surrogate-character-reference"
+			]);
+			// No `;` before EOF: missing-semicolon then the validation error.
+			expect(collectErrors("&#x0").map((e) => e.code)).toEqual([
+				"missing-semicolon-after-character-reference",
+				"null-character-reference"
+			]);
+			// No digits before EOF.
+			expect(collectErrors("&#").map((e) => e.code)).toEqual([
+				"absence-of-digits-in-numeric-character-reference"
+			]);
+		});
+
+		it("reports end-tag-with-trailing-solidus for a self-closing end tag", () => {
+			expect(collectErrors("</br/>")).toEqual([
+				{
+					code: "end-tag-with-trailing-solidus",
+					slice: "</br/>",
+					severity: "warning"
+				}
+			]);
+			// A self-closing start tag is not a tokenizer error here.
+			expect(collectErrors("<br/>")).toEqual([]);
+		});
+
+		it("does not report eof-in-doctype for EOF in a bogus DOCTYPE", () => {
+			// `x` after the name switches to bogus DOCTYPE; EOF then emits the
+			// token with no eof-in-doctype error (matches the bogus-comment rule).
+			expect(collectErrors("<!DOCTYPE a x").map((e) => e.code)).toEqual([
+				"invalid-character-sequence-after-doctype-name"
+			]);
+		});
+
+		it("reports incorrectly-opened-comment for EOF right after `<!`", () => {
+			// EOF in markup-declaration-open takes the spec's anything-else path
+			// (incorrectly-opened-comment + bogus comment), not eof-in-comment.
+			expect(collectErrors("<!")).toEqual([
+				{
+					code: "incorrectly-opened-comment",
+					slice: "<!",
+					severity: "warning"
+				}
+			]);
+		});
+
+		it("treats CR as whitespace (input-stream preprocessing)", () => {
+			// The spec converts CR to LF before tokenizing; a raw CR must behave
+			// as whitespace. `<!DOCTYPE a \r` therefore stays in the after-name
+			// state and only reports eof-in-doctype.
+			expect(collectErrors("<!DOCTYPE a \r").map((e) => e.code)).toEqual([
+				"eof-in-doctype"
+			]);
+			// CR after a quoted attribute value is whitespace, so no
+			// missing-whitespace-between-attributes is reported.
+			expect(collectErrors("<a a=''\r>")).toEqual([]);
+		});
+
+		it("reports unexpected-null-character for NULL in comment-end-dash", () => {
+			// Reaching comment-end-dash then a NULL must reconsume in the comment
+			// state, which flags the NULL.
+			expect(collectErrors("<!-- a-\0b -->")).toEqual([
+				{ code: "unexpected-null-character", slice: "\0", severity: "warning" }
+			]);
+		});
+
 		it("reports eof-in-tag as an error and emits the partial open tag", () => {
 			/** @type {{ code: string, severity: string }[]} */
 			const errors = [];
