@@ -2297,6 +2297,15 @@ describe("walkHtmlTokens", () => {
 			]);
 		});
 
+		it("processes character references in RCDATA but not RAWTEXT", () => {
+			// RCDATA (title/textarea) decodes entities, so an unknown reference
+			// reports unknown-named-character-reference; RAWTEXT (style) does not.
+			expect(
+				collectErrors("<title>&unknown;</title>").map((e) => e.code)
+			).toEqual(["unknown-named-character-reference"]);
+			expect(collectErrors("<style>&unknown;</style>")).toEqual([]);
+		});
+
 		it("reports numeric character reference validation errors", () => {
 			// Each error covers the whole reference span and is a warning. The
 			// scanner flags the error but does not substitute U+FFFD itself.
