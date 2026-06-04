@@ -1160,7 +1160,23 @@
         },
         "moduleSplitting": {
           "description": "Split self-contained, side-effect-free named exports into their own modules so async-only exports can follow the async chunk instead of staying in the initial chunk.",
-          "type": "boolean",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "exclude": {
+                  "$ref": "#/definitions/ModuleSplittingFilter"
+                },
+                "include": {
+                  "$ref": "#/definitions/ModuleSplittingFilter"
+                }
+              }
+            }
+          ],
           "experimental": true
         },
         "outputModule": {
@@ -1248,7 +1264,23 @@
         },
         "moduleSplitting": {
           "description": "Split self-contained, side-effect-free named exports into their own modules so async-only exports can follow the async chunk instead of staying in the initial chunk.",
-          "type": "boolean",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "exclude": {
+                  "$ref": "#/definitions/ModuleSplittingFilter"
+                },
+                "include": {
+                  "$ref": "#/definitions/ModuleSplittingFilter"
+                }
+              }
+            }
+          ],
           "experimental": true
         },
         "outputModule": {
@@ -2855,6 +2887,32 @@
         }
       },
       "required": ["defaultRules", "generator", "parser", "rules"]
+    },
+    "ModuleSplittingFilter": {
+      "description": "A condition matched against a module's resource path (string is matched as a substring).",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        {
+          "instanceof": "RegExp",
+          "tsType": "RegExp"
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "Name": {
       "description": "Name of the configuration. Used when loading multiple configurations.",
@@ -5103,6 +5161,10 @@
               "$ref": "#/definitions/RuleSetConditionOrConditions"
             }
           ]
+        },
+        "moduleSplitting": {
+          "description": "Allow or forbid splitting this module's self-contained async-only exports into separate modules (experiments.moduleSplitting).",
+          "type": "boolean"
         },
         "oneOf": {
           "description": "Only execute the first matching rule in this array.",
