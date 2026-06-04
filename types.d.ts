@@ -14618,7 +14618,11 @@ declare class Module extends DependenciesBlock {
 	 * Returns the source types this module can generate.
 	 */
 	getSourceTypes(): ReadonlySet<string>;
-	getSourceTypesDependOnIncomingConnections(): boolean;
+
+	/**
+	 * Freshly recomputed source types when they depend on incoming connections, for chunk-graph cache invalidation; undefined otherwise. #20800
+	 */
+	getReferencedSourceTypes(): undefined | ReadonlySet<string>;
 
 	/**
 	 * Basic source types are high-level categories like javascript, css, webassembly, etc.
