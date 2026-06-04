@@ -2,22 +2,11 @@
 
 // cspell:ignore urange
 
-// Runs the official css-parsing-tests suite (a git submodule, like
-// test262-cases / html5lib-tests) against webpack's CSS Syntax Level 3
-// implementation in `lib/css/walkCssTokens`.
-//
-// The suite encodes its expected output against an older CSS Syntax draft
-// (combined match tokens like `~=`, the removed `<urange>` token, NUL→U+FFFD
-// input preprocessing), so a byte-for-byte AST comparison is not meaningful
-// for a modern, offset-preserving parser. Instead this runner uses the suite
-// as a large real-world + adversarial corpus to assert the two properties the
-// parser must hold for every input:
-//   1. Token roundtrip — concatenating every token's source slice reproduces
-//      the input exactly (the tokenizer covers all input, losing nothing).
-//   2. Robustness — every high-level entry point (parse a stylesheet / a list
-//      of component values) terminates without throwing. A hang fails the
-//      suite via Jest's timeout. (This corpus has surfaced real infinite-loop
-//      and dropped-token bugs.)
+// Official css-parsing-tests suite (git submodule, like test262-cases) run
+// against `lib/css/walkCssTokens`. The suite targets an older CSS Syntax
+// draft, so instead of AST equality this asserts the two properties the parser
+// must hold for every input: token roundtrip (slices reproduce the input) and
+// termination without throwing (a hang fails via Jest's timeout).
 
 const fs = require("fs");
 const path = require("path");

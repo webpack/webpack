@@ -2,21 +2,13 @@
 
 // cspell:ignore noncharacter
 
-// Runs the official html5lib-tests tokenizer conformance suite (a git
-// submodule, like test262-cases) against `lib/html/walkHtmlTokens`.
-//
-// `walkHtmlTokens` is an offset scanner: it reports token offset ranges and
-// WHATWG parse errors, but does not decode entities or build the html5lib
-// token objects. So this runner checks the two things the scanner is
-// responsible for:
-//   1. Parse errors — the set of error codes must match the suite's expected
-//      `errors[].code` (minus the codes the scanner intentionally omits).
-//   2. Roundtrip — concatenating every emitted token slice must reproduce the
-//      exact input (the scanner must never drop or duplicate input).
-//
-// The suite is keyed by an initial tokenizer state; `walkHtmlTokens` always
-// starts in the data state, so content-mode cases are driven into the right
-// mode with a synthetic opener (`<title>`, `<script>`, `<![CDATA[`, …).
+// Official html5lib-tests tokenizer suite (git submodule, like test262-cases)
+// run against `lib/html/walkHtmlTokens`. The scanner emits offset ranges, not
+// decoded tokens, so this checks the two things it owns: parse-error codes
+// match the suite's `errors[].code` (minus intentionally-omitted codes), and
+// every emitted token slice concatenates back to the exact input.
+// Content-mode cases are driven in with a synthetic opener (`<title>`, …)
+// since `walkHtmlTokens` always starts in the data state.
 
 const fs = require("fs");
 const path = require("path");
@@ -27,9 +19,8 @@ const tokenizerDir = path.resolve(__dirname, "./html5lib-tests/tokenizer");
 // Files whose semantics are not plain WHATWG tokenization.
 const SKIP_FILES = new Set(["xmlViolation.test", "pendingSpecChanges.test"]);
 
-// Parse errors the offset scanner intentionally does not report (it keeps no
-// per-tag or tree state and does not scan raw code points); see the omissions
-// note in lib/html/walkHtmlTokens.js. Filtered out of the expected set.
+// Parse errors the offset scanner intentionally omits (no per-tag/tree state,
+// no raw-code-point scan); see the note in lib/html/walkHtmlTokens.js.
 const IGNORED_ERROR_CODES = new Set([
 	"control-character-in-input-stream",
 	"noncharacter-in-input-stream",
@@ -38,10 +29,8 @@ const IGNORED_ERROR_CODES = new Set([
 	"cdata-in-html-content"
 ]);
 
-// Cases where the scanner deliberately differs from the spec: at EOF inside an
-// in-progress tag it emits the partial tag (plus `eof-in-tag`) so consumers
-// still see it, instead of the spec's "flush the buffered characters as text".
-// Keyed by `${file} :: ${description}`.
+// Deliberate deviation (keyed by `${file} :: ${description}`): at EOF in an
+// in-progress tag we emit the partial tag + `eof-in-tag`, not flush-as-text.
 const KNOWN_DEVIATIONS = new Set([
 	"contentModelFlags.test :: End tag closing RCDATA or RAWTEXT (ending with EOF)"
 ]);
@@ -157,9 +146,9 @@ describe("html5lib-tests tokenizer", () => {
 
 			if (failures.length > 0) {
 				throw new Error(
-					`${failures.length} html5lib case(s) diverged in ${file}:\n${failures.join(
-						"\n"
-					)}`
+					`${
+						failures.length
+					} html5lib case(s) diverged in ${file}:\n${failures.join("\n")}`
 				);
 			}
 		});
