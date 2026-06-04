@@ -287,13 +287,13 @@ Add `experiments.moduleSplitting` (name TBD), off by default:
 
 ## 7. Phasing
 
-| Phase | Scope                                                                                                       | Fixes #20537? | Risk   |
-| ----- | ----------------------------------------------------------------------------------------------------------- | ------------- | ------ |
-| 0     | Decide model (A vs B); spike fragment creation + importer redirect                                          | no            | low    |
-| 1 ✅  | Named-export single-level split (`import { x }` only); no namespace consumers — **implemented**             | no            | medium |
-| 2 ✅  | Namespace facade for dynamic `import()` / `import *` — **implemented**                                      | no            | high   |
-| 3     | Recursive re-export collapse (pure re-export layers) → **vue shape**                                        | **yes**       | high   |
-| 4     | Side-effecting & circular modules, `export default <expr>` self-containment, ConcatenatedModule interaction | yes           | high   |
+| Phase | Scope                                                                                              | Fixes #20537? | Risk   |
+| ----- | -------------------------------------------------------------------------------------------------- | ------------- | ------ |
+| 0     | Decide model (A vs B); spike fragment creation + importer redirect                                 | no            | low    |
+| 1 ✅  | Named-export single-level split (`import { x }` only); no namespace consumers — **implemented**    | no            | medium |
+| 2 ✅  | Namespace facade for dynamic `import()` / `import *` — **implemented**                             | no            | high   |
+| 3 ⛔  | Recursive re-export collapse → **insufficient for real vue** (see §7.3)                            | no            | high   |
+| 4     | General statement-level fragmentation (impure / cross-referencing exports) — required for real vue | yes           | high   |
 
 Each phase is independently testable and stays behind the flag.
 
@@ -373,9 +373,33 @@ absent from the initial chunk and `import("./lib")` returns a complete, correct
 Conservative guards (bail, keeping today's behavior): the host's full export set must
 be statically known (`otherExportsInfo.provided === false`); every namespace consumer
 must be async-only; at least one export must actually move into a part; and the host
-must not be re-exported via `export *` — that recursive layer (Phase 3) is what the
-vue/#20537 shape still needs. Persistent-cache/HMR interactions with the synthetic
-facade + its dependency remain untested.
+must not be re-exported via `export *`. Persistent-cache/HMR interactions with the
+synthetic facade + its dependency remain untested. (Why this still does not fix the
+real vue/#20537 shape: see §7.3.)
+
+### 7.3 Phase 3 finding — re-export collapse is insufficient for real vue
+
+Phase 3 was prototyped as "resolve each export of a re-export layer to its origin
+(`ExportInfo.getTarget`) and split at the origin." Two findings, the second decisive:
+
+1. `getTarget` follows harmony re-export chains (`export { x } from`, `export default
+importedBinding`) but **not local-binding indirection**. vue-loader's wrapper does
+   `const x = script; export default x` (and augments `x`), so the default does not
+   resolve to a clean origin export.
+2. **Decisive:** real vue-loader output _assembles_ the component —
+   `export default (0, helper)(script, [["render", fn]])` — i.e. a `CallExpression`
+   combining the imported `script` and `render` through a helper. That initializer is
+   impure and references other module-local bindings, so it is **not** a pure,
+   self-contained export. No amount of re-export resolution reaches it.
+
+Conclusion: fixing the real #20537 reproduction is **not** a re-export-collapse
+problem; it requires **general statement-level fragmentation** — relocating impure,
+cross-referencing statements and rewriting their references into imports — which is
+the `ConcatenatedModule`-grade work in §5 (now Phase 4). That is the large core
+subsystem the maintainers deferred. Phases 1–2 (self-contained named/default exports;
+namespace facade for dynamic `import()`) are the shippable subset; barrel-file
+re-exports of self-contained exports are a natural Phase 3 follow-up where `getTarget`
+_does_ resolve, but they do not cover the assembled-component vue case.
 
 ## 8. Risks & constraints
 
