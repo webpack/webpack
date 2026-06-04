@@ -532,6 +532,10 @@ const withCodSpeed = async (bench) => {
 
 	const rawAdd = bench.add;
 	const uriMap = getOrCreateUriMap(bench);
+
+	const releaseClosuresAfterMeasure = codspeedRunnerMode === "memory";
+	const NO_OP_FN = () => {};
+
 	bench.add = (name, fn, options) => {
 		const callingFile = getCallingFile();
 		let uri = callingFile;
@@ -540,6 +544,9 @@ const withCodSpeed = async (bench) => {
 		}
 		uri += `::${name}`;
 		uriMap.set(name, { uri, fn, options });
+		if (releaseClosuresAfterMeasure) {
+			return rawAdd.bind(bench)(name, NO_OP_FN, {});
+		}
 		return rawAdd.bind(bench)(name, fn, options);
 	};
 	const rootCallingFile = getCallingFile();
@@ -638,7 +645,7 @@ const withCodSpeed = async (bench) => {
 		 * @param {string} uri URI
 		 */
 		const runTaskAsync = async (task, name, uri) => {
-			const { fn, options } =
+			let { fn, options } =
 				/** @type {TaskMeta} */
 				(uriMap.get(name));
 
@@ -693,14 +700,9 @@ const withCodSpeed = async (bench) => {
 
 			logTaskCompletion(uri, taskCompletionMessage());
 
-			// Release the just-measured task's closure-captured refs
-			// (webpack, config, watching, originalEntryContent) so the next
-			// task's measurement starts from a smaller heap. In memory mode
-			// every task shares one process, so without this drop each task's
-			// sample includes residue from every prior task and is sensitive
-			// to registration order. The drain mirrors the pre-measurement
-			// pattern: gc -> microtask three times, then setImmediate, then
-			// one final gc to sweep what finalizers / IO callbacks produced.
+			// Release this task's closures
+			fn = NO_OP_FN;
+			options = undefined;
 			uriMap.delete(name);
 			for (let i = 0; i < 3; i++) {
 				global.gc?.();
@@ -757,7 +759,7 @@ const withCodSpeed = async (bench) => {
 		 * @param {string} uri URI
 		 */
 		const runTaskSync = (task, name, uri) => {
-			const { fn, options } =
+			let { fn, options } =
 				/** @type {TaskMeta} */
 				(uriMap.get(name));
 
@@ -797,9 +799,9 @@ const withCodSpeed = async (bench) => {
 
 			logTaskCompletion(uri, taskCompletionMessage());
 
-			// Release the just-measured task's closures — see the async path
-			// for the rationale. The sync path has no microtask queue to
-			// drain, so we just chain GCs.
+			// Release this task's closures
+			fn = NO_OP_FN;
+			options = undefined;
 			uriMap.delete(name);
 			for (let i = 0; i < 4; i++) {
 				global.gc?.();
