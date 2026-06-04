@@ -2230,6 +2230,34 @@ describe("walkHtmlTokens", () => {
 			]);
 		});
 
+		it("reports missing-semicolon-after-character-reference for legacy named references", () => {
+			// `&amp` matches the legacy bare-form entity; the missing `;` is a
+			// parse error reported at the character where the `;` was expected.
+			const errors = collectErrors("a&amp b");
+			expect(errors).toEqual([
+				{
+					code: "missing-semicolon-after-character-reference",
+					slice: " ",
+					severity: "warning"
+				}
+			]);
+		});
+
+		it("does not report missing-semicolon for a named reference with a trailing semicolon", () => {
+			expect(collectErrors("a&amp;b")).toEqual([]);
+		});
+
+		it("applies the historical attribute rule for legacy named references", () => {
+			// In an attribute value, a bare `&amp` followed by `=` (or an ASCII
+			// alphanumeric) is left undecoded and reports no error.
+			expect(collectErrors('<a href="?x&amp=y">')).toEqual([]);
+			expect(collectErrors('<a href="?x&ampY">')).toEqual([]);
+			// In text context the same sequence reports the missing semicolon.
+			expect(collectErrors("&amp=y").map((e) => e.code)).toEqual([
+				"missing-semicolon-after-character-reference"
+			]);
+		});
+
 		it("reports eof-in-tag as an error and emits the partial open tag", () => {
 			/** @type {{ code: string, severity: string }[]} */
 			const errors = [];
@@ -2350,7 +2378,13 @@ describe("walkHtmlTokens", () => {
 				},
 				parseError: (input, code) => codes.push(code)
 			});
-			expect(codes).toEqual(["eof-in-tag"]);
+			// `&amp` matches the legacy entity without a trailing `;` (next char
+			// is EOF, so the historical attribute rule does not apply), then the
+			// unterminated tag reports eof-in-tag.
+			expect(codes).toEqual([
+				"missing-semicolon-after-character-reference",
+				"eof-in-tag"
+			]);
 			expect(opens).toEqual(["a"]);
 		});
 
