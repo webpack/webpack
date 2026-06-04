@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore apos notpre Elig reconsumes xyzabc zzzunknown codepoint DFFF ampx
+// cspell:ignore apos notpre Elig reconsumes xyzabc zzzunknown codepoint DFFF ampx noncharacter FFFE
 
 const fs = require("fs");
 const path = require("path");
@@ -2256,6 +2256,91 @@ describe("walkHtmlTokens", () => {
 			expect(collectErrors("&amp=y").map((e) => e.code)).toEqual([
 				"missing-semicolon-after-character-reference"
 			]);
+		});
+
+		it("reports unexpected-character-in-attribute-name for \", ', and <", () => {
+			for (const ch of ['"', "'", "<"]) {
+				expect(collectErrors(`<a foo${ch}bar>`)).toEqual([
+					{
+						code: "unexpected-character-in-attribute-name",
+						slice: ch,
+						severity: "warning"
+					}
+				]);
+			}
+		});
+
+		it("reports unexpected-character-in-unquoted-attribute-value for \", ', <, =, and `", () => {
+			for (const ch of ['"', "'", "<", "=", "`"]) {
+				expect(collectErrors(`<a foo=x${ch}y>`)).toEqual([
+					{
+						code: "unexpected-character-in-unquoted-attribute-value",
+						slice: ch,
+						severity: "warning"
+					}
+				]);
+			}
+		});
+
+		it("reports unexpected-null-character across data, tag, attribute, and comment states", () => {
+			expect(collectErrors("a\0b")).toEqual([
+				{ code: "unexpected-null-character", slice: "\0", severity: "warning" }
+			]);
+			expect(collectErrors("<di\0v>")).toEqual([
+				{ code: "unexpected-null-character", slice: "\0", severity: "warning" }
+			]);
+			expect(collectErrors('<a b="x\0y">')).toEqual([
+				{ code: "unexpected-null-character", slice: "\0", severity: "warning" }
+			]);
+			expect(collectErrors("<!-- a\0b -->")).toEqual([
+				{ code: "unexpected-null-character", slice: "\0", severity: "warning" }
+			]);
+		});
+
+		it("reports numeric character reference validation errors", () => {
+			// Each error covers the whole reference span and is a warning. The
+			// scanner flags the error but does not substitute U+FFFD itself.
+			expect(collectErrors("a&#0;b")).toEqual([
+				{
+					code: "null-character-reference",
+					slice: "&#0;",
+					severity: "warning"
+				}
+			]);
+			expect(collectErrors("a&#x110000;b")).toEqual([
+				{
+					code: "character-reference-outside-unicode-range",
+					slice: "&#x110000;",
+					severity: "warning"
+				}
+			]);
+			expect(collectErrors("a&#xD800;b")).toEqual([
+				{
+					code: "surrogate-character-reference",
+					slice: "&#xD800;",
+					severity: "warning"
+				}
+			]);
+			expect(collectErrors("a&#xFFFE;b")).toEqual([
+				{
+					code: "noncharacter-character-reference",
+					slice: "&#xFFFE;",
+					severity: "warning"
+				}
+			]);
+			// C0 control, CR (an ASCII-whitespace control the spec still flags),
+			// and a C1 control all report control-character-reference.
+			for (const ref of ["&#1;", "&#13;", "&#x80;"]) {
+				expect(collectErrors(`a${ref}b`)).toEqual([
+					{
+						code: "control-character-reference",
+						slice: ref,
+						severity: "warning"
+					}
+				]);
+			}
+			// A valid code point (U+0041 "A") reports nothing.
+			expect(collectErrors("a&#65;b")).toEqual([]);
 		});
 
 		it("reports eof-in-tag as an error and emits the partial open tag", () => {
