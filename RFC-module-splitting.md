@@ -291,7 +291,7 @@ Add `experiments.moduleSplitting` (name TBD), off by default:
 | ----- | ----------------------------------------------------------------------------------------------------------- | ------------- | ------ |
 | 0     | Decide model (A vs B); spike fragment creation + importer redirect                                          | no            | low    |
 | 1 ✅  | Named-export single-level split (`import { x }` only); no namespace consumers — **implemented**             | no            | medium |
-| 2 🔬  | Namespace facade for `import *` / `import()` — **mechanism validated, core port pending**                   | no            | high   |
+| 2 ✅  | Namespace facade for dynamic `import()` / `import *` — **implemented**                                      | no            | high   |
 | 3     | Recursive re-export collapse (pure re-export layers) → **vue shape**                                        | **yes**       | high   |
 | 4     | Side-effecting & circular modules, `export default <expr>` self-containment, ConcatenatedModule interaction | yes           | high   |
 
@@ -349,34 +349,33 @@ references to other module-local bindings), reusing webpack's existing parser sc
 instead of re-parsing, `export default`, namespace facades, and the recursive
 re-export collapse that the vue shape needs.
 
-### 7.2 Phase 2 mechanism — validated (prototype)
+### 7.2 Phase 2 namespace facade — implemented
 
-The namespace-facade approach was prototyped as a standalone plugin and verified
-end-to-end for a module consumed directly via a dynamic `import()`:
+When a host is consumed as a whole namespace (dynamic `import()` or `import *`), the
+plugin builds a synthetic **`NamespaceFacadeModule`** (`lib/optimize/NamespaceFacadeModule.js`)
+that re-exposes every export — splittable async-only ones from their parts, the rest
+from the host — and redirects the namespace consumers to it, so heavy split exports
+follow the async chunk:
 
 ```
-lib.js:  export const eager = "...";  export default { /* heavy */ }
-entry.js: import { eager } from "./lib"; // eager → initial
-          import("./lib").then((m) => m.default); // namespace consumer
+lib.js:   export const eager = "...";  export default { /* heavy */ }
+index.js: import { eager } from "./lib"; // eager → initial
+          import("./lib").then((m) => m.default); // namespace consumer → facade
 ```
 
-The prototype splits `default` into a part, builds a synthetic
-**`NamespaceFacadeModule`** that re-exposes every export (`eager` from the host,
-`default` from the part) via `__webpack_require__.r`/`.d` getters, wires the facade's
-outgoing edges with `moduleGraph.setParents` + `setResolvedModule`, emits the requires
-using `chunkGraph.getModuleId`, and redirects the dynamic `import()` to the facade.
+The facade wires its outgoing edges with `moduleGraph.setParents` +
+`setResolvedModule`, emits the source requires using `chunkGraph.getModuleId`, and
+keeps its own export names un-mangled (dynamic namespace access). Covered by
+`test/configCases/module-splitting/namespace-facade`: the heavy default payload is
+absent from the initial chunk and `import("./lib")` returns a complete, correct
+`{ eager, default }` namespace at runtime.
 
-Result (production, minified, `target: node`): the heavy default payload is **only in
-the async chunk**, absent from the initial chunk, and `import("./lib")` returns a
-correct `{ eager, default }` namespace at runtime. This confirms a synthetic module
-can carry proper outgoing connections (chunk placement + usage flagging) and that the
-facade reproduces namespace semantics.
-
-Still open for the core port: enumerating the host's full export set, choosing per
-export between host and part as the source, default-interop edge cases, namespace
-identity across multiple consumers, persistent-cache serialization of the facade + its
-synthetic dependency, and not yet the **recursive** `export *` layer (Phase 3) that
-the vue shape needs.
+Conservative guards (bail, keeping today's behavior): the host's full export set must
+be statically known (`otherExportsInfo.provided === false`); every namespace consumer
+must be async-only; at least one export must actually move into a part; and the host
+must not be re-exported via `export *` — that recursive layer (Phase 3) is what the
+vue/#20537 shape still needs. Persistent-cache/HMR interactions with the synthetic
+facade + its dependency remain untested.
 
 ## 8. Risks & constraints
 
