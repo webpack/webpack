@@ -30,8 +30,7 @@ const cvTypes = (src) => parseAListOfComponentValues(src).map((n) => n.type);
  * @param {string} src css source
  * @returns {number} the first token's type
  */
-const firstTokenType = (src) =>
-	new TokenStream(src).tokenize().next().value.type;
+const firstTokenType = (src) => new TokenStream(src).tokenize()[0].type;
 
 describe("walkCssTokens — component values (tokenToNode)", () => {
 	it("classifies each leaf token type", () => {
@@ -138,7 +137,7 @@ describe("walkCssTokens — parser entry points", () => {
 		expect(at.type).toBe(NodeType.AtRule);
 		expect(at.name).toBe("import");
 		expect(at.declarations).toBeNull();
-		expect(at.blockRange).toBeNull();
+		expect(at.blockStart).toBe(-1);
 	});
 
 	it("parseARule rejects empty input and trailing rules", () => {
