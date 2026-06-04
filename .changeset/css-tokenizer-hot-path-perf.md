@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Speed up CSS tokenization by trimming redundant char-code reads, lookups, and per-node allocations on the hot path.
+Speed up CSS parsing by reusing one lexer token on the tokenizer hot path and trimming redundant char-code reads and lookups.
