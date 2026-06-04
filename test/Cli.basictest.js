@@ -52,6 +52,68 @@ describe("Cli", () => {
 
 			expect(getArguments(schema)).toMatchSnapshot();
 		});
+
+		it("should generate flags for a schema using `const`", () => {
+			const schema = {
+				title: "custom CLI options",
+				type: "object",
+				additionalProperties: false,
+				properties: {
+					mode: {
+						const: "production",
+						description: "the const mode value"
+					}
+				}
+			};
+
+			expect(getArguments(schema)).toMatchSnapshot();
+		});
+
+		it("should generate flags for both branches of an `if/then/else` schema", () => {
+			const schema = {
+				title: "custom CLI options",
+				type: "object",
+				additionalProperties: false,
+				properties: {
+					mode: { enum: ["a", "b"], description: "the mode" }
+				},
+				if: { properties: { mode: { const: "a" } } },
+				// eslint-disable-next-line unicorn/no-thenable
+				then: {
+					type: "object",
+					properties: {
+						"only-when-a": { type: "string", description: "only when a" }
+					}
+				},
+				else: {
+					type: "object",
+					properties: {
+						"only-when-b": { type: "boolean", description: "only when b" }
+					}
+				}
+			};
+
+			expect(getArguments(schema)).toMatchSnapshot();
+		});
+
+		it("reports the schema origin path in conflicting-schema errors", () => {
+			const schema = {
+				type: "object",
+				additionalProperties: false,
+				properties: {
+					foo: {
+						oneOf: [
+							{ type: "string" },
+							{ type: "array", items: { type: "string" } }
+						]
+					}
+				}
+			};
+
+			expect(() => getArguments(schema)).toThrow(
+				"Conflicting schema for foo[] (#/properties/foo/oneOf/1/items) with string type"
+			);
+		});
 	});
 
 	describe("processArguments", () => {

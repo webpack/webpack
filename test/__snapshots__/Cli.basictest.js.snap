@@ -1,5 +1,74 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`Cli getArguments should generate flags for a schema using \`const\` 1`] = `
+Object {
+  "mode": Object {
+    "configs": Array [
+      Object {
+        "description": "the const mode value",
+        "multiple": false,
+        "path": "mode",
+        "type": "enum",
+        "values": Array [
+          "production",
+        ],
+      },
+    ],
+    "description": "the const mode value",
+    "multiple": false,
+    "simpleType": "string",
+  },
+}
+`;
+
+exports[`Cli getArguments should generate flags for both branches of an \`if/then/else\` schema 1`] = `
+Object {
+  "mode": Object {
+    "configs": Array [
+      Object {
+        "description": "the mode",
+        "multiple": false,
+        "path": "mode",
+        "type": "enum",
+        "values": Array [
+          "a",
+          "b",
+        ],
+      },
+    ],
+    "description": "the mode",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "only-when-a": Object {
+    "configs": Array [
+      Object {
+        "description": "only when a",
+        "multiple": false,
+        "path": "only-when-a",
+        "type": "string",
+      },
+    ],
+    "description": "only when a",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "only-when-b": Object {
+    "configs": Array [
+      Object {
+        "description": "only when b",
+        "multiple": false,
+        "path": "only-when-b",
+        "type": "boolean",
+      },
+    ],
+    "description": "only when b",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+}
+`;
+
 exports[`Cli getArguments should generate the correct cli flags 1`] = `
 Object {
   "amd": Object {
