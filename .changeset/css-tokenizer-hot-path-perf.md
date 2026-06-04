@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Reduce redundant char-code reads and per-node allocations on the CSS tokenizer hot path.
+Speed up CSS tokenization by trimming redundant char-code reads, lookups, and per-node allocations on the hot path.
