@@ -330,14 +330,18 @@ per-part wrapper overhead can exceed the moved payload; the win scales with expo
 size (e.g. a real component body).
 
 **Phase 1 is now implemented in-core** behind `experiments.moduleSplitting` (off by
-default): `lib/optimize/ModuleSplittingPlugin.js` (+ `SplitExportModule.js`), with a
-conservative auto-detector (pure, self-contained `const` named exports) and a
-sync-reachability pass so only async-only exports are split. Covered by
-`test/configCases/module-splitting/named-export`. The plugin is registered only when
-the flag is on, so non-users pay nothing. Known Phase-1 limitations: re-parses module
-source for the self-containment analysis (should reuse the parser's scope), the
-importer scan is O(modules × deps), and persistent-cache/HMR interactions are
-untested.
+default): `lib/optimize/ModuleSplittingPlugin.js` (+ `SplitExportModule.js`). A
+conservative auto-detector splits pure, self-contained named `const` exports **and
+`export default <expr>`**, gated by a sync-reachability pass so only async-only
+exports move. A reverse-dependency index marks a host **unsafe** when its whole
+namespace/exports are consumed (dynamic `import`, `export *`, or whole-namespace
+import) and bails — preserving namespace completeness and export identity (this is
+why the vue/#20537 shape, which re-exports via `export *`, correctly bails today).
+Covered by `test/configCases/module-splitting/{named,default}-export`. The plugin
+registers only when the flag is on, so non-users pay nothing. Known Phase-1
+limitations: re-parses module source for the self-containment analysis (should reuse
+the parser's scope), builds an incoming-dependency index per build, and
+persistent-cache/HMR interactions are untested.
 
 Not yet covered (the remaining Phase 2→4 work): auto-detecting
 _which_ exports are safe to split (side-effect-free **and** self-contained — no
