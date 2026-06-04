@@ -2,37 +2,65 @@
 
 const fs = require("fs");
 const path = require("path");
-const { TokenStream } = require("../lib/css/walkCssTokens");
+const {
+	TT_AT_KEYWORD,
+	TT_BAD_STRING_TOKEN,
+	TT_BAD_URL_TOKEN,
+	TT_CDC,
+	TT_CDO,
+	TT_COLON,
+	TT_COMMA,
+	TT_COMMENT,
+	TT_DELIM,
+	TT_DIMENSION,
+	TT_EOF,
+	TT_FUNCTION,
+	TT_HASH,
+	TT_IDENTIFIER,
+	TT_LEFT_CURLY_BRACKET,
+	TT_LEFT_PARENTHESIS,
+	TT_LEFT_SQUARE_BRACKET,
+	TT_NUMBER,
+	TT_PERCENTAGE,
+	TT_RIGHT_CURLY_BRACKET,
+	TT_RIGHT_PARENTHESIS,
+	TT_RIGHT_SQUARE_BRACKET,
+	TT_SEMICOLON,
+	TT_STRING,
+	TT_URL,
+	TT_WHITESPACE,
+	TokenStream
+} = require("../lib/css/walkCssTokens");
 
-// Snapshot uses the spec-style kebab-case names for multi-word token
-// types; the tokenizer emits camelCase. Map between them so the
-// existing snapshot files stay valid.
+// Snapshot uses the spec-style kebab-case names for multi-word token types;
+// the tokenizer emits numeric `TT_*` values. Map between them so the existing
+// snapshot files stay valid.
 const TYPE_TO_PRINTED = {
-	whitespace: "whitespace",
-	comment: "comment",
-	url: "url",
-	leftCurlyBracket: "left-curly-bracket",
-	rightCurlyBracket: "right-curly-bracket",
-	leftParenthesis: "left-parenthesis",
-	rightParenthesis: "right-parenthesis",
-	leftSquareBracket: "left-square-bracket",
-	rightSquareBracket: "right-square-bracket",
-	semicolon: "semicolon",
-	comma: "comma",
-	atKeyword: "at-keyword",
-	colon: "colon",
-	delim: "delim",
-	number: "number",
-	percentage: "percentage",
-	dimension: "dimension",
-	identifier: "identifier",
-	hash: "hash",
-	string: "string",
-	function: "function",
-	cdo: "cdo",
-	cdc: "cdc",
-	badStringToken: "bad-string-token",
-	badUrlToken: "bad-url-token"
+	[TT_WHITESPACE]: "whitespace",
+	[TT_COMMENT]: "comment",
+	[TT_URL]: "url",
+	[TT_LEFT_CURLY_BRACKET]: "left-curly-bracket",
+	[TT_RIGHT_CURLY_BRACKET]: "right-curly-bracket",
+	[TT_LEFT_PARENTHESIS]: "left-parenthesis",
+	[TT_RIGHT_PARENTHESIS]: "right-parenthesis",
+	[TT_LEFT_SQUARE_BRACKET]: "left-square-bracket",
+	[TT_RIGHT_SQUARE_BRACKET]: "right-square-bracket",
+	[TT_SEMICOLON]: "semicolon",
+	[TT_COMMA]: "comma",
+	[TT_AT_KEYWORD]: "at-keyword",
+	[TT_COLON]: "colon",
+	[TT_DELIM]: "delim",
+	[TT_NUMBER]: "number",
+	[TT_PERCENTAGE]: "percentage",
+	[TT_DIMENSION]: "dimension",
+	[TT_IDENTIFIER]: "identifier",
+	[TT_HASH]: "hash",
+	[TT_STRING]: "string",
+	[TT_FUNCTION]: "function",
+	[TT_CDO]: "cdo",
+	[TT_CDC]: "cdc",
+	[TT_BAD_STRING_TOKEN]: "bad-string-token",
+	[TT_BAD_URL_TOKEN]: "bad-url-token"
 };
 
 describe("TokenStream.tokenize", () => {
@@ -49,15 +77,15 @@ describe("TokenStream.tokenize", () => {
 		it(`should parse and print "${name}"`, () => {
 			const results = [];
 			for (const t of new TokenStream(code).tokenize()) {
-				if (t.type === "EOF") break;
+				if (t.type === TT_EOF) break;
 				const printed = TYPE_TO_PRINTED[t.type] || t.type;
-				if (t.type === "url") {
+				if (t.type === TT_URL) {
 					results.push([
 						printed,
 						code.slice(t.start, t.end),
 						code.slice(t.contentStart, t.contentEnd)
 					]);
-				} else if (t.type === "hash") {
+				} else if (t.type === TT_HASH) {
 					results.push([printed, code.slice(t.start, t.end), t.isId]);
 				} else {
 					results.push([printed, code.slice(t.start, t.end)]);

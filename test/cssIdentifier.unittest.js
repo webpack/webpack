@@ -21,11 +21,16 @@ describe("css identifier utils", () => {
 			["foo\tbar", "foo\\9 bar"],
 			["foo\nbar", "foo\\A bar"],
 			["foo\fbar", "foo\\C bar"],
-			["a\\b", "a\\\\b"]
+			["a\\b", "a\\\\b"],
+			// a `\HEX` escape followed by a non-hex char drops the redundant space
+			["\tz", "\\9z"],
+			["\nz", "\\Az"]
 		];
 
 		for (const [input, expected] of cases) {
-			it(`escapes ${JSON.stringify(input)} -> ${JSON.stringify(expected)}`, () => {
+			it(`escapes ${JSON.stringify(input)} -> ${JSON.stringify(
+				expected
+			)}`, () => {
 				expect(escapeIdentifier(input)).toBe(expected);
 			});
 		}
@@ -74,7 +79,9 @@ describe("css identifier utils", () => {
 		];
 
 		for (const [input, expected] of cases) {
-			it(`unescapes ${JSON.stringify(input)} -> ${JSON.stringify(expected)}`, () => {
+			it(`unescapes ${JSON.stringify(input)} -> ${JSON.stringify(
+				expected
+			)}`, () => {
 				expect(unescapeIdentifier(input)).toBe(expected);
 			});
 		}
