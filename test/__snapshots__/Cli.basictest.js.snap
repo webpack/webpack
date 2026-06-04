@@ -8709,6 +8709,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-strict-module-resolution": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit a runtime check that throws a 'MODULE_NOT_FOUND' error when a required module id is missing from the bundle.",
+        "multiple": false,
+        "path": "output.strictModuleResolution",
+        "type": "boolean",
+      },
+    ],
+    "description": "Emit a runtime check that throws a 'MODULE_NOT_FOUND' error when a required module id is missing from the bundle.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-trusted-types": Object {
     "configs": Array [
       Object {

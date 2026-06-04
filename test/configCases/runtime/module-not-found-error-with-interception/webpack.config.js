@@ -45,7 +45,7 @@ class ReactRefreshRuntimeModule extends RuntimeModule {
 module.exports = {
 	mode: "development",
 	output: {
-		pathinfo: true
+		strictModuleResolution: true
 	},
 	plugins: [
 		{

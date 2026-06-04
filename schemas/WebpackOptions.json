@@ -3979,6 +3979,9 @@
         "strictModuleExceptionHandling": {
           "$ref": "#/definitions/StrictModuleExceptionHandling"
         },
+        "strictModuleResolution": {
+          "$ref": "#/definitions/StrictModuleResolution"
+        },
         "trustedTypes": {
           "description": "Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name.",
           "anyOf": [
@@ -4170,6 +4173,9 @@
         },
         "strictModuleExceptionHandling": {
           "$ref": "#/definitions/StrictModuleExceptionHandling"
+        },
+        "strictModuleResolution": {
+          "$ref": "#/definitions/StrictModuleResolution"
         },
         "trustedTypes": {
           "$ref": "#/definitions/TrustedTypes"
@@ -5975,6 +5981,10 @@
       "description": "Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.",
       "type": "boolean",
       "deprecated": true
+    },
+    "StrictModuleResolution": {
+      "description": "Emit a runtime check that throws a 'MODULE_NOT_FOUND' error when a required module id is missing from the bundle.",
+      "type": "boolean"
     },
     "Target": {
       "description": "Environment to build for. An array of environments to build for all of them when possible.",
