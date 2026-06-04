@@ -60,7 +60,7 @@
     "test:integration": "yarn test:base --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\"",
     "test:integration:a": "yarn test:base --testMatch \"<rootDir>/test/*.{basictest,test}.js\"",
     "test:integration:b": "yarn test:base --testMatch \"<rootDir>/test/*.longtest.js\"",
-    "test:test262": "yarn test:base --testMatch \"<rootDir>/test/*.spectest.js\"",
+    "test:test262": "yarn test:base --testMatch \"<rootDir>/test/test262.spectest.js\"",
     "test:html5lib": "yarn test:base --testMatch \"<rootDir>/test/html5lib.spectest.js\"",
     "test:base:deno": "deno --allow-read --allow-env --allow-sys --allow-ffi --allow-write --allow-run --v8-flags='--max-old-space-size=4096' ./node_modules/jest-cli/bin/jest.js --logHeapUsage",
     "test:update-snapshots": "yarn test:base -u",
@@ -77,7 +77,8 @@
     "cover:integration": "yarn cover:base --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\" --coverage",
     "cover:integration:a": "yarn cover:base --testMatch \"<rootDir>/test/*.{basictest,test}.js\" --coverage",
     "cover:integration:b": "yarn cover:base --testMatch \"<rootDir>/test/*.longtest.js\" --coverage",
-    "cover:test262": "yarn cover:base --testMatch \"<rootDir>/test/*.spectest.js\" --coverage"
+    "cover:test262": "yarn cover:base --testMatch \"<rootDir>/test/test262.spectest.js\" --coverage",
+    "cover:html5lib": "yarn cover:base --testMatch \"<rootDir>/test/html5lib.spectest.js\" --coverage"
   },
   "lint-staged": {
     "*.{js,cjs,mjs}": [
