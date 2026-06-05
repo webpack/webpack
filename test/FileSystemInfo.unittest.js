@@ -499,6 +499,28 @@ ${details(snapshot)}`)
 				}
 			);
 		});
+
+		// #21084: a cyclic symlink graph (e.g. pnpm peer-variant back-edges) used
+		// to re-push already-visited targets forever, overflowing the context
+		// queue. The walk must visit each target once and terminate.
+		it("should terminate on a cyclic symlink graph", (done) => {
+			const fs = createFs();
+			fs.mkdirSync("/path/cycle/a", { recursive: true });
+			fs.mkdirSync("/path/cycle/b", { recursive: true });
+			fs.writeFileSync("/path/cycle/a/file.txt", "Hello A");
+			fs.writeFileSync("/path/cycle/b/file.txt", "Hello B");
+			// Relative targets, matching pnpm's symlink layout, so they resolve
+			// back into the cycle instead of being mangled by `join`.
+			fs.symlinkSync("../b", "/path/cycle/a/link", "dir");
+			fs.symlinkSync("../a", "/path/cycle/b/link", "dir");
+
+			const fsInfo = createFsInfo(fs);
+			fsInfo.getContextHash("/path/cycle/a", (err, hash) => {
+				if (err) return done(err);
+				expect(typeof hash).toBe("string");
+				done();
+			});
+		});
 	});
 
 	// Reproduces the type-lie discussed in webpack/webpack#16886:
