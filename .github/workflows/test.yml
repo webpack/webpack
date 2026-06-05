@@ -218,6 +218,82 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  html5lib:
+    needs: basic
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          submodules: true
+
+      - name: Use Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: lts/*
+          cache: yarn
+
+      - run: yarn --frozen-lockfile
+
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
+      - name: Cache jest result
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: .jest-cache
+          key: jest-html5lib-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
+          restore-keys: |
+            jest-html5lib-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
+            jest-html5lib-${{ runner.os }}-
+
+      - run: yarn cover:html5lib --ci --cacheDirectory .jest-cache
+
+      - name: Codecov
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
+        with:
+          flags: html5lib
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  css-parsing:
+    needs: basic
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          submodules: true
+
+      - name: Use Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: lts/*
+          cache: yarn
+
+      - run: yarn --frozen-lockfile
+
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
+      - name: Cache jest result
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: .jest-cache
+          key: jest-css-parsing-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
+          restore-keys: |
+            jest-css-parsing-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
+            jest-css-parsing-${{ runner.os }}-
+
+      - run: yarn cover:css-parsing --ci --cacheDirectory .jest-cache
+
+      - name: Codecov
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
+        with:
+          flags: css-parsing
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   integration:
     needs: basic
     strategy:

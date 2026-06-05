@@ -28,6 +28,7 @@ const {
 	TT_STRING,
 	TT_URL,
 	TT_WHITESPACE,
+	parseAListOfComponentValues,
 	readToken
 } = require("../lib/css/walkCssTokens");
 
@@ -101,4 +102,50 @@ describe("readToken", () => {
 			expect(results.map((item) => item[1]).join("")).toBe(code);
 		});
 	}
+});
+
+/**
+ * @param {string} input CSS source
+ * @returns {string} input reconstructed from token source slices
+ */
+const tokenRoundtrip = (input) => {
+	let out = "";
+	for (let pos = 0; ; ) {
+		const t = readToken(input, pos, {});
+		if (t === undefined) break;
+		pos = t.end;
+		out += input.slice(t.start, t.end);
+	}
+	return out;
+};
+
+// Regressions from the css-parsing-tests corpus: each input previously hung
+// the parser or dropped bytes from the token stream.
+describe("walkCssTokens regressions", () => {
+	const NUL = String.fromCharCode(0);
+	const C1 = String.fromCharCode(0x80); // U+0080: an ident-start code point
+
+	it("does not hang on a literal U+0080 ident-start code point", () => {
+		expect(parseAListOfComponentValues(C1, 0, {})).toHaveLength(1);
+		expect(parseAListOfComponentValues(`a${C1}b`, 0, {})).toHaveLength(1);
+	});
+
+	it("does not hang on a backslash at EOF inside a url token", () => {
+		expect(parseAListOfComponentValues("url(a\\", 0, {})).toHaveLength(1);
+		expect(parseAListOfComponentValues("url(\\", 0, {})).toHaveLength(1);
+	});
+
+	it("emits an unterminated comment at EOF so token ranges cover all input", () => {
+		expect(tokenRoundtrip("a /* unterminated")).toBe("a /* unterminated");
+		expect(tokenRoundtrip("/* x")).toBe("/* x");
+	});
+
+	it("emits a string with a trailing backslash at EOF", () => {
+		expect(tokenRoundtrip('"ab\\')).toBe('"ab\\');
+		expect(tokenRoundtrip("url('a\\")).toBe("url('a\\");
+	});
+
+	it("never drops input bytes around a NUL code point", () => {
+		expect(tokenRoundtrip(`a${NUL}b`)).toBe(`a${NUL}b`);
+	});
 });

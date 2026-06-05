@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore apos notpre Elig reconsumes xyzabc zzzunknown codepoint DFFF ampx
+// cspell:ignore apos notpre Elig reconsumes xyzabc zzzunknown codepoint DFFF ampx noncharacter FFFE
 
 const fs = require("fs");
 const path = require("path");
@@ -2230,6 +2230,204 @@ describe("walkHtmlTokens", () => {
 			]);
 		});
 
+		it("reports missing-semicolon-after-character-reference for legacy named references", () => {
+			// `&amp` matches the legacy bare-form entity; the missing `;` is a
+			// parse error reported at the character where the `;` was expected.
+			const errors = collectErrors("a&amp b");
+			expect(errors).toEqual([
+				{
+					code: "missing-semicolon-after-character-reference",
+					slice: " ",
+					severity: "warning"
+				}
+			]);
+		});
+
+		it("does not report missing-semicolon for a named reference with a trailing semicolon", () => {
+			expect(collectErrors("a&amp;b")).toEqual([]);
+		});
+
+		it("applies the historical attribute rule for legacy named references", () => {
+			// In an attribute value, a bare `&amp` followed by `=` (or an ASCII
+			// alphanumeric) is left undecoded and reports no error.
+			expect(collectErrors('<a href="?x&amp=y">')).toEqual([]);
+			expect(collectErrors('<a href="?x&ampY">')).toEqual([]);
+			// In text context the same sequence reports the missing semicolon.
+			expect(collectErrors("&amp=y").map((e) => e.code)).toEqual([
+				"missing-semicolon-after-character-reference"
+			]);
+		});
+
+		it("reports unexpected-character-in-attribute-name for \", ', and <", () => {
+			for (const ch of ['"', "'", "<"]) {
+				expect(collectErrors(`<a foo${ch}bar>`)).toEqual([
+					{
+						code: "unexpected-character-in-attribute-name",
+						slice: ch,
+						severity: "warning"
+					}
+				]);
+			}
+		});
+
+		it("reports unexpected-character-in-unquoted-attribute-value for \", ', <, =, and `", () => {
+			for (const ch of ['"', "'", "<", "=", "`"]) {
+				expect(collectErrors(`<a foo=x${ch}y>`)).toEqual([
+					{
+						code: "unexpected-character-in-unquoted-attribute-value",
+						slice: ch,
+						severity: "warning"
+					}
+				]);
+			}
+		});
+
+		it("reports unexpected-null-character across data, tag, attribute, and comment states", () => {
+			expect(collectErrors("a\0b")).toEqual([
+				{ code: "unexpected-null-character", slice: "\0", severity: "warning" }
+			]);
+			expect(collectErrors("<di\0v>")).toEqual([
+				{ code: "unexpected-null-character", slice: "\0", severity: "warning" }
+			]);
+			expect(collectErrors('<a b="x\0y">')).toEqual([
+				{ code: "unexpected-null-character", slice: "\0", severity: "warning" }
+			]);
+			expect(collectErrors("<!-- a\0b -->")).toEqual([
+				{ code: "unexpected-null-character", slice: "\0", severity: "warning" }
+			]);
+		});
+
+		it("processes character references in RCDATA but not RAWTEXT", () => {
+			// RCDATA (title/textarea) decodes entities, so an unknown reference
+			// reports unknown-named-character-reference; RAWTEXT (style) does not.
+			expect(
+				collectErrors("<title>&unknown;</title>").map((e) => e.code)
+			).toEqual(["unknown-named-character-reference"]);
+			expect(collectErrors("<style>&unknown;</style>")).toEqual([]);
+		});
+
+		it("reports numeric character reference validation errors", () => {
+			// Each error covers the whole reference span and is a warning. The
+			// scanner flags the error but does not substitute U+FFFD itself.
+			expect(collectErrors("a&#0;b")).toEqual([
+				{
+					code: "null-character-reference",
+					slice: "&#0;",
+					severity: "warning"
+				}
+			]);
+			expect(collectErrors("a&#x110000;b")).toEqual([
+				{
+					code: "character-reference-outside-unicode-range",
+					slice: "&#x110000;",
+					severity: "warning"
+				}
+			]);
+			expect(collectErrors("a&#xD800;b")).toEqual([
+				{
+					code: "surrogate-character-reference",
+					slice: "&#xD800;",
+					severity: "warning"
+				}
+			]);
+			expect(collectErrors("a&#xFFFE;b")).toEqual([
+				{
+					code: "noncharacter-character-reference",
+					slice: "&#xFFFE;",
+					severity: "warning"
+				}
+			]);
+			// C0 control, CR (an ASCII-whitespace control the spec still flags),
+			// and a C1 control all report control-character-reference.
+			for (const ref of ["&#1;", "&#13;", "&#x80;"]) {
+				expect(collectErrors(`a${ref}b`)).toEqual([
+					{
+						code: "control-character-reference",
+						slice: ref,
+						severity: "warning"
+					}
+				]);
+			}
+			// A valid code point (U+0041 "A") reports nothing.
+			expect(collectErrors("a&#65;b")).toEqual([]);
+		});
+
+		it("validates numeric references that end exactly at EOF", () => {
+			// The numeric-reference-end processing must still run when the
+			// reference is the last thing in the input (terminator consumed,
+			// loop exits) — verified against html5lib-tests.
+			expect(collectErrors("&#x0001;").map((e) => e.code)).toEqual([
+				"control-character-reference"
+			]);
+			expect(collectErrors("&#0000;").map((e) => e.code)).toEqual([
+				"null-character-reference"
+			]);
+			expect(collectErrors("&#xD800;").map((e) => e.code)).toEqual([
+				"surrogate-character-reference"
+			]);
+			// No `;` before EOF: missing-semicolon then the validation error.
+			expect(collectErrors("&#x0").map((e) => e.code)).toEqual([
+				"missing-semicolon-after-character-reference",
+				"null-character-reference"
+			]);
+			// No digits before EOF.
+			expect(collectErrors("&#").map((e) => e.code)).toEqual([
+				"absence-of-digits-in-numeric-character-reference"
+			]);
+		});
+
+		it("reports end-tag-with-trailing-solidus for a self-closing end tag", () => {
+			expect(collectErrors("</br/>")).toEqual([
+				{
+					code: "end-tag-with-trailing-solidus",
+					slice: "</br/>",
+					severity: "warning"
+				}
+			]);
+			// A self-closing start tag is not a tokenizer error here.
+			expect(collectErrors("<br/>")).toEqual([]);
+		});
+
+		it("does not report eof-in-doctype for EOF in a bogus DOCTYPE", () => {
+			// `x` after the name switches to bogus DOCTYPE; EOF then emits the
+			// token with no eof-in-doctype error (matches the bogus-comment rule).
+			expect(collectErrors("<!DOCTYPE a x").map((e) => e.code)).toEqual([
+				"invalid-character-sequence-after-doctype-name"
+			]);
+		});
+
+		it("reports incorrectly-opened-comment for EOF right after `<!`", () => {
+			// EOF in markup-declaration-open takes the spec's anything-else path
+			// (incorrectly-opened-comment + bogus comment), not eof-in-comment.
+			expect(collectErrors("<!")).toEqual([
+				{
+					code: "incorrectly-opened-comment",
+					slice: "<!",
+					severity: "warning"
+				}
+			]);
+		});
+
+		it("treats CR as whitespace (input-stream preprocessing)", () => {
+			// The spec converts CR to LF before tokenizing; a raw CR must behave
+			// as whitespace. `<!DOCTYPE a \r` therefore stays in the after-name
+			// state and only reports eof-in-doctype.
+			expect(collectErrors("<!DOCTYPE a \r").map((e) => e.code)).toEqual([
+				"eof-in-doctype"
+			]);
+			// CR after a quoted attribute value is whitespace, so no
+			// missing-whitespace-between-attributes is reported.
+			expect(collectErrors("<a a=''\r>")).toEqual([]);
+		});
+
+		it("reports unexpected-null-character for NULL in comment-end-dash", () => {
+			// Reaching comment-end-dash then a NULL must reconsume in the comment
+			// state, which flags the NULL.
+			expect(collectErrors("<!-- a-\0b -->")).toEqual([
+				{ code: "unexpected-null-character", slice: "\0", severity: "warning" }
+			]);
+		});
+
 		it("reports eof-in-tag as an error and emits the partial open tag", () => {
 			/** @type {{ code: string, severity: string }[]} */
 			const errors = [];
@@ -2350,7 +2548,13 @@ describe("walkHtmlTokens", () => {
 				},
 				parseError: (input, code) => codes.push(code)
 			});
-			expect(codes).toEqual(["eof-in-tag"]);
+			// `&amp` matches the legacy entity without a trailing `;` (next char
+			// is EOF, so the historical attribute rule does not apply), then the
+			// unterminated tag reports eof-in-tag.
+			expect(codes).toEqual([
+				"missing-semicolon-after-character-reference",
+				"eof-in-tag"
+			]);
 			expect(opens).toEqual(["a"]);
 		});
 
