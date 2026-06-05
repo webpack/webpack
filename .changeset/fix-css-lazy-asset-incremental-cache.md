@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Make CSS-referenced asset available in lazy JS chunk during incremental rebuilds.
+Invalidate cache when a module's source types change across incremental rebuilds.
