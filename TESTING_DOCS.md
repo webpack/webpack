@@ -67,12 +67,12 @@ This document explains the structure of the `test/` directory in the Webpack pro
 ### 12b. `html5lib-tests/`
 
 - **Purpose**: WHATWG html5lib-tests tokenizer conformance cases for `lib/html/walkHtmlTokens`.
-- **Usage**: Git submodule — initialize with `git submodule update --init test/html5lib-tests`. Runners (`yarn test:html5lib`): `test/html5lib.spectest.js` checks parse-error codes and input roundtrip; `test/html5lib-webpack.spectest.js` compiles every input as a webpack HTML entry to confirm the full pipeline handles it without crashing.
+- **Usage**: Git submodule — initialize with `git submodule update --init test/html5lib-tests`. Test runner: `test/html5lib-webpack.spectest.js` (`yarn test:html5lib`) compiles every input as a webpack HTML entry to confirm the full pipeline handles it without crashing.
 
 ### 12c. `css-parsing-tests/`
 
 - **Purpose**: CSS Syntax Level 3 conformance corpus for `lib/css/walkCssTokens`.
-- **Usage**: Git submodule — initialize with `git submodule update --init test/css-parsing-tests`. Runners (`yarn test:css-parsing`): `test/cssParsing.spectest.js` asserts token roundtrip and that every entry point terminates without throwing (the suite tracks an older draft, so AST equality is not asserted); `test/cssParsing-webpack.spectest.js` compiles every input as a webpack CSS entry to confirm the full pipeline handles it without crashing.
+- **Usage**: Git submodule — initialize with `git submodule update --init test/css-parsing-tests`. Test runner: `test/cssParsing-webpack.spectest.js` (`yarn test:css-parsing`) compiles every input as a webpack CSS entry to confirm the full pipeline handles it without crashing.
 
 ### 13. `watchCases/`
 
