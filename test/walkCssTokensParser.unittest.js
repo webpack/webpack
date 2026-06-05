@@ -18,7 +18,8 @@ const {
 	parseAListOfComponentValues,
 	parseARule,
 	parseAStylesheet,
-	parseAStylesheetsContents
+	parseAStylesheetsContents,
+	readToken
 } = require("../lib/css/walkCssTokens");
 
 /**
@@ -30,7 +31,7 @@ const cvTypes = (src) => parseAListOfComponentValues(src).map((n) => n.type);
  * @param {string} src css source
  * @returns {number} the first token's type
  */
-const firstTokenType = (src) => new TokenStream(src).tokenize()[0].type;
+const firstTokenType = (src) => readToken(src, 0, {}).type;
 
 describe("walkCssTokens — component values (tokenToNode)", () => {
 	it("classifies each leaf token type", () => {
@@ -395,9 +396,10 @@ describe("walkCssTokens — tokenizer edge cases", () => {
 		expect(firstTokenType("url(a b\\)c)")).toBe(TT_BAD_URL_TOKEN);
 	});
 
-	it("yields a trailing EOF token when fully consumed", () => {
-		const all = [...new TokenStream("a").tokenize()];
-		expect(all[all.length - 1].type).toBe(TT_EOF);
+	it("readToken returns undefined once the input is fully consumed", () => {
+		// "a" is a single 1-char ident token; reading past it (offset 1) is EOF.
+		expect(readToken("a", 0, {})).toBeDefined();
+		expect(readToken("a", 1, {})).toBeUndefined();
 	});
 
 	it("turns a newline inside a string into a bad-string token", () => {

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`TokenStream.tokenize should parse and print "at-rule.css" 1`] = `
+exports[`readToken should parse and print "at-rule.css" 1`] = `
 Array [
   Array [
     "at-keyword",
@@ -1881,7 +1881,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "bad-string-token.css" 1`] = `
+exports[`readToken should parse and print "bad-string-token.css" 1`] = `
 Array [
   Array [
     "delim",
@@ -1910,7 +1910,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "bad-url-token.css" 1`] = `
+exports[`readToken should parse and print "bad-url-token.css" 1`] = `
 Array [
   Array [
     "identifier",
@@ -2145,7 +2145,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "cdo-and-cdc.css" 1`] = `
+exports[`readToken should parse and print "cdo-and-cdc.css" 1`] = `
 Array [
   Array [
     "cdo",
@@ -2286,7 +2286,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "comment.css" 1`] = `
+exports[`readToken should parse and print "comment.css" 1`] = `
 Array [
   Array [
     "comment",
@@ -2638,7 +2638,7 @@ st*/",
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "dashed-ident.css" 1`] = `
+exports[`readToken should parse and print "dashed-ident.css" 1`] = `
 Array [
   Array [
     "colon",
@@ -2830,7 +2830,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "declaration.css" 1`] = `
+exports[`readToken should parse and print "declaration.css" 1`] = `
 Array [
   Array [
     "identifier",
@@ -3631,7 +3631,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "delim.css" 1`] = `
+exports[`readToken should parse and print "delim.css" 1`] = `
 Array [
   Array [
     "delim",
@@ -3804,7 +3804,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "dimension.css" 1`] = `
+exports[`readToken should parse and print "dimension.css" 1`] = `
 Array [
   Array [
     "identifier",
@@ -3933,7 +3933,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "function.css" 1`] = `
+exports[`readToken should parse and print "function.css" 1`] = `
 Array [
   Array [
     "identifier",
@@ -8981,7 +8981,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "hacks.css" 1`] = `
+exports[`readToken should parse and print "hacks.css" 1`] = `
 Array [
   Array [
     "identifier",
@@ -9182,7 +9182,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "hex-colors.css" 1`] = `
+exports[`readToken should parse and print "hex-colors.css" 1`] = `
 Array [
   Array [
     "identifier",
@@ -9471,7 +9471,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "important.css" 1`] = `
+exports[`readToken should parse and print "important.css" 1`] = `
 Array [
   Array [
     "delim",
@@ -9904,7 +9904,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "nesting.css" 1`] = `
+exports[`readToken should parse and print "nesting.css" 1`] = `
 Array [
   Array [
     "delim",
@@ -13667,7 +13667,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "newline-windows.css" 1`] = `
+exports[`readToken should parse and print "newline-windows.css" 1`] = `
 Array [
   Array [
     "identifier",
@@ -13846,7 +13846,7 @@ awesome string\\"",
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "number.css" 1`] = `
+exports[`readToken should parse and print "number.css" 1`] = `
 Array [
   Array [
     "identifier",
@@ -14783,7 +14783,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "pseudo-functions.css" 1`] = `
+exports[`readToken should parse and print "pseudo-functions.css" 1`] = `
 Array [
   Array [
     "colon",
@@ -14905,7 +14905,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "revers-solidus.css" 1`] = `
+exports[`readToken should parse and print "revers-solidus.css" 1`] = `
 Array [
   Array [
     "delim",
@@ -14914,7 +14914,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "selectors.css" 1`] = `
+exports[`readToken should parse and print "selectors.css" 1`] = `
 Array [
   Array [
     "left-square-bracket",
@@ -29552,7 +29552,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "urls.css" 1`] = `
+exports[`readToken should parse and print "urls.css" 1`] = `
 Array [
   Array [
     "identifier",
@@ -29806,7 +29806,7 @@ Array [
 ]
 `;
 
-exports[`TokenStream.tokenize should parse and print "values.css" 1`] = `
+exports[`readToken should parse and print "values.css" 1`] = `
 Array [
   Array [
     "identifier",

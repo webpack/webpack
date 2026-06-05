@@ -13,7 +13,6 @@ const {
 	TT_COMMENT,
 	TT_DELIM,
 	TT_DIMENSION,
-	TT_EOF,
 	TT_FUNCTION,
 	TT_HASH,
 	TT_IDENTIFIER,
@@ -29,7 +28,7 @@ const {
 	TT_STRING,
 	TT_URL,
 	TT_WHITESPACE,
-	TokenStream
+	readToken
 } = require("../lib/css/walkCssTokens");
 
 // Snapshot uses the spec-style kebab-case names for multi-word token types;
@@ -63,7 +62,7 @@ const TYPE_TO_PRINTED = {
 	[TT_BAD_URL_TOKEN]: "bad-url-token"
 };
 
-describe("TokenStream.tokenize", () => {
+describe("readToken", () => {
 	const casesPath = path.resolve(__dirname, "./configCases/css/parsing/cases");
 	const tests = fs
 		.readdirSync(casesPath)
@@ -76,8 +75,12 @@ describe("TokenStream.tokenize", () => {
 	for (const [name, code] of tests) {
 		it(`should parse and print "${name}"`, () => {
 			const results = [];
-			for (const t of new TokenStream(code).tokenize()) {
-				if (t.type === TT_EOF) break;
+			// Drive the lexer core directly: a fresh `out` per call collects the
+			// raw token list (comments included); `readToken` returns undefined at EOF.
+			for (let pos = 0; ; ) {
+				const t = readToken(code, pos, {});
+				if (t === undefined) break;
+				pos = t.end;
 				const printed = TYPE_TO_PRINTED[t.type] || t.type;
 				if (t.type === TT_URL) {
 					results.push([
