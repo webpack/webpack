@@ -405,7 +405,7 @@ class FakeSheet {
 			TT_LEFT_CURLY_BRACKET,
 			TT_RIGHT_CURLY_BRACKET,
 			TT_SEMICOLON,
-			TokenStream
+			readToken
 		} = require("../../lib/css/walkCssTokens");
 
 		const rules = [];
@@ -453,7 +453,10 @@ class FakeSheet {
 					"utf8"
 				);
 			});
-		for (const t of new TokenStream(css).tokenize()) {
+		for (let pos = 0; ; ) {
+			const t = readToken(css, pos, {});
+			if (t === undefined) break;
+			pos = t.end;
 			if (t.type === TT_LEFT_CURLY_BRACKET) {
 				if (selector === undefined) {
 					ruleStart = last; // Record the start of the rule (before the selector)
@@ -527,7 +530,7 @@ class CSSStyleSheet {
 			TT_LEFT_CURLY_BRACKET,
 			TT_RIGHT_CURLY_BRACKET,
 			TT_SEMICOLON,
-			TokenStream
+			readToken
 		} = require("../../lib/css/walkCssTokens");
 
 		const rules = [];
@@ -551,7 +554,10 @@ class CSSStyleSheet {
 
 		let ruleStart = 0;
 
-		for (const t of new TokenStream(cleanCss).tokenize()) {
+		for (let pos = 0; ; ) {
+			const t = readToken(cleanCss, pos, {});
+			if (t === undefined) break;
+			pos = t.end;
 			if (t.type === TT_LEFT_CURLY_BRACKET) {
 				if (selector === undefined) {
 					selector = cleanCss.slice(last, t.start).trim();
