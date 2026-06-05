@@ -3200,10 +3200,10 @@ declare interface ColorsOptions {
 	 */
 	useColor?: boolean;
 }
-declare interface CommentCssParser {
+declare abstract class CommentCssParser {
 	value: string;
 	range: [number, number];
-	loc: { start: Position; end: Position };
+	get loc(): { start: Position; end: Position };
 }
 type CommentJavascriptParser = CommentImport & {
 	start: number;
