@@ -8640,6 +8640,7 @@ declare class Generator {
 	 * Returns the source types available for this module.
 	 */
 	getTypes(module: NormalModule): ReadonlySet<string>;
+	getTypesDependOnIncomingConnections(): boolean;
 
 	/**
 	 * Returns the estimated size for the requested source type.
@@ -14725,6 +14726,11 @@ declare class Module extends DependenciesBlock {
 	 * Returns the source types this module can generate.
 	 */
 	getSourceTypes(): ReadonlySet<string>;
+
+	/**
+	 * Freshly recomputed source types when they depend on incoming connections, for chunk-graph cache invalidation; undefined otherwise. #20800
+	 */
+	getReferencedSourceTypes(): undefined | ReadonlySet<string>;
 
 	/**
 	 * Basic source types are high-level categories like javascript, css, webassembly, etc.
