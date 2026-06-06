@@ -7967,6 +7967,11 @@ declare interface ExportSpec {
 	exports?: (string | ExportSpec)[];
 
 	/**
+	 * when true, the nested exports list is not exhaustive and unknown properties should not trigger warnings
+	 */
+	partialExports?: boolean;
+
+	/**
 	 * when reexported: from which module
 	 */
 	from?: ModuleGraphConnection;
@@ -10939,7 +10944,7 @@ declare interface InnerGraphUtils {
 	onUsage: (
 		parserState: ParserState,
 		onUsageCallback: (
-			value: undefined | boolean | Set<string>,
+			value: undefined | boolean | Set<string> | Map<string, string[]>,
 			module: Module
 		) => void
 	) => void;
@@ -10958,6 +10963,8 @@ declare interface InnerGraphUtils {
 		name: string,
 		usage: Usage
 	) => void;
+	setPropertyContext: (parserState: ParserState, propertyName: string) => void;
+	clearPropertyContext: (parserState: ParserState) => void;
 	inferDependencyUsage: (module: Module) => void;
 	release: (module: Module) => void;
 }
@@ -14394,6 +14401,11 @@ declare interface KnownBuildInfo {
 	 * module uses top-level `for await…of` or `await using`, which can't be lowered to a generator
 	 */
 	usesTopLevelAwaitForOf?: boolean;
+
+	/**
+	 * maps export local name to static property names of object literal exports
+	 */
+	objectExportProperties?: Map<string, string[]>;
 }
 declare interface KnownBuildMeta {
 	exportsType?: "default" | "namespace" | "flagged" | "dynamic";
@@ -19501,6 +19513,11 @@ declare interface Optimization {
 	splitChunks?: false | OptimizationSplitChunksOptions;
 
 	/**
+	 * Track which properties of exported objects are used by consumers, enabling tree-shaking of unused properties in compound component patterns (e.g. Form.Item = Item).
+	 */
+	usedExportProperties?: boolean;
+
+	/**
 	 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, "global": analyse exports globally for all runtimes combined).
 	 */
 	usedExports?: boolean | "global";
@@ -19644,6 +19661,11 @@ declare interface OptimizationNormalized {
 	splitChunks?: false | OptimizationSplitChunksOptions;
 
 	/**
+	 * Track which properties of exported objects are used by consumers, enabling tree-shaking of unused properties in compound component patterns (e.g. Form.Item = Item).
+	 */
+	usedExportProperties?: boolean;
+
+	/**
 	 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, "global": analyse exports globally for all runtimes combined).
 	 */
 	usedExports?: boolean | "global";
@@ -19688,6 +19710,7 @@ type OptimizationNormalizedWithDefaults = OptimizationNormalized & {
 	mangleExports: NonNullable<undefined | boolean | "deterministic" | "size">;
 	innerGraph: NonNullable<undefined | boolean>;
 	inlineExports: NonNullable<undefined | boolean>;
+	usedExportProperties: NonNullable<undefined | boolean>;
 	concatenateModules: NonNullable<
 		undefined | boolean | ConcatenateModulesOptions
 	>;

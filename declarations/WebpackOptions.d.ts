@@ -2198,6 +2198,10 @@ export interface Optimization {
 	 */
 	splitChunks?: false | OptimizationSplitChunksOptions;
 	/**
+	 * Track which properties of exported objects are used by consumers, enabling tree-shaking of unused properties in compound component patterns (e.g. Form.Item = Item).
+	 */
+	usedExportProperties?: boolean;
+	/**
 	 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, "global": analyse exports globally for all runtimes combined).
 	 */
 	usedExports?: "global" | boolean;
@@ -4450,6 +4454,10 @@ export interface OptimizationNormalized {
 	 * Optimize duplication and caching by splitting chunks by shared modules and cache group.
 	 */
 	splitChunks?: false | OptimizationSplitChunksOptions;
+	/**
+	 * Track which properties of exported objects are used by consumers, enabling tree-shaking of unused properties in compound component patterns (e.g. Form.Item = Item).
+	 */
+	usedExportProperties?: boolean;
 	/**
 	 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, "global": analyse exports globally for all runtimes combined).
 	 */
