@@ -1,7 +1,5 @@
 "use strict";
 
-// cspell:ignore selectedcontent
-
 // Two html5lib conformance suites over the optional `test/html5lib-tests`
 // submodule; when it is absent each degrades to a single no-op test.
 //
@@ -11,11 +9,11 @@
 //    (Mirrors cssParsing-webpack.spectest.js; URL extraction is off so
 //    nothing needs to resolve — the point is no crash on malformed input.)
 // 2. "html5lib tree-construction" — compares buildHtmlAst's serialized tree
-//    to the expected html5lib tree for each tree-construction case. The only
-//    knowingly divergent cases (KNOWN_DIVERGENCES) are the brand-new
-//    `<selectedcontent>` feature; each is asserted to *still* diverge so
-//    accidentally fixing one flags the list as stale rather than silently
-//    passing.
+//    to the expected html5lib tree for every tree-construction case (only the
+//    scripting-enabled cases, which webpack does not run, are skipped).
+//    KNOWN_DIVERGENCES (currently empty) pins any intentional exception: a
+//    listed case is asserted to *still* diverge, so accidentally fixing one
+//    flags the list as stale.
 
 const fs = require("fs");
 const path = require("path");
@@ -182,17 +180,8 @@ const NS_PREFIX = {
 	[buildHtmlAst.NS_MATHML]: "math "
 };
 
-const KNOWN_DIVERGENCES = new Set([
-	// `<selectedcontent>` clones the selected `<option>`'s subtree into itself
-	// during parsing — a brand-new customizable-`<select>` feature that the
-	// reference parser (parse5) does not implement either and that is
-	// irrelevant to webpack's asset extraction, so it is intentionally skipped.
-	"webkit02.dat #44",
-	"webkit02.dat #45",
-	"webkit02.dat #46",
-	"webkit02.dat #47",
-	"webkit02.dat #48"
-]);
+/** @type {Set<string>} intentional, documented exceptions (currently none) */
+const KNOWN_DIVERGENCES = new Set();
 
 /**
  * Serialize an AST in the html5lib tree-construction format.
