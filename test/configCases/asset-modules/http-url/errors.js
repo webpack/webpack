@@ -17,6 +17,7 @@ module.exports = [
 	[
 		/http:\/\/localhost:9990\/redirect has an outdated lockfile entry, but lockfile is frozen/
 	],
+	[/while fetching http:\/\/localhost:9990\/resolve\.js\?error/],
 	[
 		/Module not found: Error: http:\/\/localhost:9990@127\.0\.0\.1:9100\/secret\.js doesn't match the allowedUris policy/
 	]

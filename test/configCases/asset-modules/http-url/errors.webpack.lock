@@ -7,5 +7,6 @@
   "http://localhost:9990/redirect": { "integrity": "sha512-BV/MK/QTq+NHRve1XpZyQ8V6cjRP/fwbtJvENRdm5C73qNYZ4i2/fw+soj7J4qxzBXMHDbvOnA6E0ShnX2hc1w==", "contentType": "text/javascript" },
   "http://localhost:9990/redirect.js": { "resolved": "http://localhost:9990/redirect", "integrity": "sha512-BV/MK/QTq+NHRve1XpZyQ8V6cjRP/fwbtJvENRdm5C73qNYZ4i2/fw+soj7J4qxzBXMHDbvOnA6E0ShnX2hc1w==", "contentType": "text/javascript" },
   "http://localhost:9990/resolve.js": { "integrity": "sha512-SHOULD_BE_INVALID", "contentType": "text/javascript" },
+  "http://localhost:9990/resolve.js?error": { "integrity": "sha512-SHOULD_BE_INVALID", "contentType": "text/javascript" },
   "version": 1
 }
