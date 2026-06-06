@@ -446,7 +446,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../lib/dependencies/CssIcssExportDependency').ExportsConventionFn"
+          "tsType": "import('../lib/dependencies/CssExportsDependency').ExportsConventionFn"
         }
       ]
     },

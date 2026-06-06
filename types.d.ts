@@ -5428,6 +5428,17 @@ declare interface CssModuleGeneratorOptions {
 	exportType?: "link" | "text" | "css-style-sheet" | "style";
 
 	/**
+	 * Specifies the convention of exported names.
+	 */
+	exportsConvention?:
+		| "as-is"
+		| "camel-case"
+		| "camel-case-only"
+		| "dashes"
+		| "dashes-only"
+		| ((name: string) => string | string[]);
+
+	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: boolean;
