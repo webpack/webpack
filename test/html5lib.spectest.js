@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore selectedcontent domjs
+// cspell:ignore selectedcontent
 
 // Two html5lib conformance suites over the optional `test/html5lib-tests`
 // submodule; when it is absent each degrades to a single no-op test.
@@ -15,13 +15,12 @@
 //    set of cases is knowingly divergent (KNOWN_DIVERGENCES); each is
 //    asserted to *still* diverge so accidentally fixing one flags the list
 //    as stale rather than silently passing. The buckets are:
-//     a. walkHtmlTokens deliberately emits a partial tag at EOF instead of
-//        the spec's per-character fallback, so truncated rawtext/script end
-//        tags (`<script></S`) keep different text — better for webpack's
-//        incremental/offset use and intentionally not "fixed" here.
-//     b. The foreign-content breakout for stray HTML `</p>`/`</br>` end tags.
-//     c. A handful of adversarial fragment/`selectedcontent`/`<`-in-tag-name
-//        edge cases not modelled by this builder.
+//     a. The foreign-content breakout for stray HTML `</p>`/`</br>` end tags
+//        (the implied element is left under the foreign element instead of
+//        being relocated to the common ancestor).
+//     b. `<selectedcontent>` option mirroring — a brand-new HTML feature.
+//     c. EOF inside a quoted attribute value, and `<input>` in a `select`
+//        fragment context.
 
 const fs = require("fs");
 const path = require("path");
@@ -189,40 +188,28 @@ const NS_PREFIX = {
 };
 
 const KNOWN_DIVERGENCES = new Set([
-	// a. tokenizer partial-tag-at-EOF (rawtext/script/RCDATA) — see header.
-	"tests16.dat #9",
-	"tests16.dat #16",
-	"tests16.dat #27",
-	"tests16.dat #44",
-	"tests16.dat #57",
-	"tests16.dat #108",
-	"tests16.dat #115",
-	"tests16.dat #126",
-	"tests16.dat #143",
-	"tests16.dat #154",
-	"tests2.dat #18",
-	"webkit02.dat #4",
-	// b. foreign-content breakout for stray `</p>` / `</br>`.
-	"tests26.dat #16",
-	"tests26.dat #17",
+	// a. foreign-content breakout for stray HTML `</p>` / `</br>` end tags: the
+	//    spec relocates the implied <p>/<br> to the foreign element's common
+	//    ancestor; this builder leaves it under the foreign element.
 	"foreign-fragment.dat #59",
 	"foreign-fragment.dat #60",
-	// c. adversarial fragment / selectedcontent / `<`-in-tag-name edges.
-	"domjs-unsafe.dat #36",
 	"foreign-fragment.dat #61",
 	"foreign-fragment.dat #62",
-	"noscript01.dat #14",
+	"tests26.dat #16",
+	"tests26.dat #17",
 	"tests26.dat #18",
 	"tests26.dat #19",
-	"tests_innerHTML_1.dat #76",
-	"tests_innerHTML_1.dat #77",
-	"webkit01.dat #3",
-	"webkit02.dat #18",
+	// b. <selectedcontent> mirrors its <option>'s subtree — a brand-new HTML
+	//    feature not modelled here.
 	"webkit02.dat #44",
 	"webkit02.dat #45",
 	"webkit02.dat #46",
 	"webkit02.dat #47",
-	"webkit02.dat #48"
+	"webkit02.dat #48",
+	// c. EOF inside a quoted attribute value (the tokenizer still emits the
+	//    tag); and `<input>` inside a `select` fragment context.
+	"webkit02.dat #4",
+	"tests_innerHTML_1.dat #75"
 ]);
 
 /**
