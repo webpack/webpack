@@ -1,41 +1,32 @@
 "use strict";
 
-jest.mock("../lib/html/walkHtmlTokens", () => {
-	const actual = jest.requireActual("../lib/html/walkHtmlTokens");
-	const mockWalkHtmlTokens = jest.fn((input, pos, callbacks) => {
-		if (input === "MOCK_ADJACENT_TEXT") {
-			callbacks.text(input, 0, 5);
-			callbacks.text(input, 5, 13);
-			return 13;
-		}
-		return actual(input, pos, callbacks);
-	});
-	Object.assign(mockWalkHtmlTokens, actual);
-	return mockWalkHtmlTokens;
-});
-
-const buildHtmlAst = require("../lib/html/buildHtmlAst");
+const {
+	NS_HTML,
+	NS_MATHML,
+	NS_SVG,
+	buildAst
+} = require("../lib/html/walkHtmlTokens");
 
 /**
- * @param {import("../lib/html/buildHtmlAst").HtmlNode[]} children children
+ * @param {import("../lib/html/walkHtmlTokens").HtmlNode[]} children children
  * @param {string} tagName tag name
- * @returns {import("../lib/html/buildHtmlAst").HtmlElement} the element
+ * @returns {import("../lib/html/walkHtmlTokens").HtmlElement} the element
  */
 const child = (children, tagName) =>
-	/** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
+	/** @type {import("../lib/html/walkHtmlTokens").HtmlElement} */ (
 		children.find((c) => c.type === "element" && c.tagName === tagName)
 	);
 
 // The tree builder always produces a full document (html > head, body); these
 // helpers reach the interesting subtrees.
-const html = (src) => child(buildHtmlAst(src).children, "html");
+const html = (src) => child(buildAst(src).children, "html");
 const body = (src) => child(html(src).children, "body").children;
 const head = (src) => child(html(src).children, "head").children;
 
 /**
  * @param {string} src source
  * @param {string} tagName tag name
- * @returns {import("../lib/html/buildHtmlAst").HtmlElement} first matching element anywhere
+ * @returns {import("../lib/html/walkHtmlTokens").HtmlElement} first matching element anywhere
  */
 const find = (src, tagName) => {
 	let found;
@@ -47,13 +38,13 @@ const find = (src, tagName) => {
 		}
 		for (const c of node.children) walk(c);
 	};
-	for (const c of buildHtmlAst(src).children) walk(c);
+	for (const c of buildAst(src).children) walk(c);
 	return found;
 };
 
-describe("buildHtmlAst", () => {
+describe("walkHtmlTokens.buildAst", () => {
 	it("should produce an empty document with html/head/body scaffolding", () => {
-		const ast = buildHtmlAst("");
+		const ast = buildAst("");
 		expect(ast.type).toBe("document");
 		const root = child(ast.children, "html");
 		expect(root.tagName).toBe("html");
@@ -102,13 +93,13 @@ describe("buildHtmlAst", () => {
 	});
 
 	it("should parse comments", () => {
-		const ast = buildHtmlAst("<!-- hello -->");
+		const ast = buildAst("<!-- hello -->");
 		expect(ast.children[0].type).toBe("comment");
 		expect(ast.children[0].data).toBe(" hello ");
 	});
 
 	it("should parse doctype", () => {
-		const ast = buildHtmlAst("<!DOCTYPE html><html></html>");
+		const ast = buildAst("<!DOCTYPE html><html></html>");
 		expect(ast.children[0].type).toBe("doctype");
 		expect(ast.children[0].name).toBe("html");
 	});
@@ -135,24 +126,26 @@ describe("buildHtmlAst", () => {
 	});
 
 	it("should merge adjacent text nodes", () => {
-		const nodes = body("MOCK_ADJACENT_TEXT");
-		expect(nodes).toHaveLength(1);
+		// Foster-parenting the table's text next to the leading text exercises
+		// the adjacent-text-node merge.
+		const nodes = body("Text<table>Misplaced</table>");
 		expect(nodes[0].type).toBe("text");
-		expect(nodes[0].data).toBe("MOCK_ADJACENT");
+		expect(nodes[0].data).toBe("TextMisplaced");
+		expect(child(nodes, "table").tagName).toBe("table");
 	});
 
 	it("should detect SVG namespace and adjust foreign tag names", () => {
 		const svg = body("<svg><lineargradient></lineargradient></svg>")[0];
-		expect(svg.namespace).toBe(buildHtmlAst.NS_SVG);
+		expect(svg.namespace).toBe(NS_SVG);
 		// SVG tag-name case is corrected per the foreign adjustment table.
 		expect(svg.children[0].tagName).toBe("linearGradient");
-		expect(svg.children[0].namespace).toBe(buildHtmlAst.NS_SVG);
+		expect(svg.children[0].namespace).toBe(NS_SVG);
 	});
 
 	it("should detect MathML namespace", () => {
 		const math = body("<math><mi>x</mi></math>")[0];
-		expect(math.namespace).toBe(buildHtmlAst.NS_MATHML);
-		expect(math.children[0].namespace).toBe(buildHtmlAst.NS_MATHML);
+		expect(math.namespace).toBe(NS_MATHML);
+		expect(math.children[0].namespace).toBe(NS_MATHML);
 	});
 
 	it("should route head and body content to the right place", () => {
@@ -164,9 +157,9 @@ describe("buildHtmlAst", () => {
 	});
 
 	it("should export namespace constants", () => {
-		expect(buildHtmlAst.NS_HTML).toBe(0);
-		expect(buildHtmlAst.NS_MATHML).toBe(1);
-		expect(buildHtmlAst.NS_SVG).toBe(2);
+		expect(NS_HTML).toBe(0);
+		expect(NS_MATHML).toBe(1);
+		expect(NS_SVG).toBe(2);
 	});
 
 	it("should handle valueless attributes", () => {
@@ -198,10 +191,10 @@ describe("buildHtmlAst", () => {
 			"<svg><foreignObject><div>html</div></foreignObject></svg>"
 		)[0];
 		const fo = svg.children[0];
-		expect(fo.namespace).toBe(buildHtmlAst.NS_SVG);
-		expect(fo.children[0].namespace).toBe(buildHtmlAst.NS_HTML);
+		expect(fo.namespace).toBe(NS_SVG);
+		expect(fo.children[0].namespace).toBe(NS_HTML);
 		const desc = body("<svg><desc><div>x</div></desc></svg>")[0].children[0];
-		expect(desc.children[0].namespace).toBe(buildHtmlAst.NS_HTML);
+		expect(desc.children[0].namespace).toBe(NS_HTML);
 	});
 
 	it("should keep CDATA text in foreign content", () => {
@@ -212,7 +205,7 @@ describe("buildHtmlAst", () => {
 
 	it("should treat bogus comments as comments", () => {
 		// A leading bogus comment is inserted into the document before <html>.
-		const ast = buildHtmlAst("<?bogus comment>");
+		const ast = buildAst("<?bogus comment>");
 		expect(ast.children[0].type).toBe("comment");
 		expect(ast.children[0].data).toBe("?bogus comment");
 	});

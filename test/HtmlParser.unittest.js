@@ -2,12 +2,12 @@
 
 const path = require("path");
 
-jest.mock("../lib/html/buildHtmlAst", () => jest.fn());
+jest.mock("../lib/html/walkHtmlTokens", () => ({ buildAst: jest.fn() }));
 
 const HtmlInlineScriptDependency = require("../lib/dependencies/HtmlInlineScriptDependency");
 const HtmlInlineStyleDependency = require("../lib/dependencies/HtmlInlineStyleDependency");
 const HtmlParser = require("../lib/html/HtmlParser");
-const buildHtmlAst = require("../lib/html/buildHtmlAst");
+const walkHtmlTokens = require("../lib/html/walkHtmlTokens");
 
 describe("HtmlParser", () => {
 	it("should aggregate inline script content across all text children", () => {
@@ -36,7 +36,7 @@ describe("HtmlParser", () => {
 			}
 		};
 
-		buildHtmlAst.mockReturnValue({
+		walkHtmlTokens.buildAst.mockReturnValue({
 			type: "document",
 			children: [
 				{
@@ -86,7 +86,7 @@ describe("HtmlParser", () => {
 			}
 		});
 
-		expect(buildHtmlAst).toHaveBeenCalledWith(source);
+		expect(walkHtmlTokens.buildAst).toHaveBeenCalledWith(source);
 		expect(dependencies).toHaveLength(1);
 		expect(presentationalDependencies).toHaveLength(1);
 
@@ -141,7 +141,7 @@ describe("HtmlParser", () => {
 			addCodeGenerationDependency() {}
 		};
 
-		buildHtmlAst.mockReturnValue({
+		walkHtmlTokens.buildAst.mockReturnValue({
 			type: "document",
 			children: [
 				{
