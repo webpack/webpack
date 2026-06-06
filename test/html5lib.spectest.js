@@ -11,16 +11,11 @@
 //    (Mirrors cssParsing-webpack.spectest.js; URL extraction is off so
 //    nothing needs to resolve — the point is no crash on malformed input.)
 // 2. "html5lib tree-construction" — compares buildHtmlAst's serialized tree
-//    to the expected html5lib tree for each tree-construction case. A small
-//    set of cases is knowingly divergent (KNOWN_DIVERGENCES); each is
-//    asserted to *still* diverge so accidentally fixing one flags the list
-//    as stale rather than silently passing. The buckets are:
-//     a. The foreign-content breakout for stray HTML `</p>`/`</br>` end tags
-//        (the implied element is left under the foreign element instead of
-//        being relocated to the common ancestor).
-//     b. `<selectedcontent>` option mirroring — a brand-new HTML feature.
-//     c. EOF inside a quoted attribute value, and `<input>` in a `select`
-//        fragment context.
+//    to the expected html5lib tree for each tree-construction case. The only
+//    knowingly divergent cases (KNOWN_DIVERGENCES) are the brand-new
+//    `<selectedcontent>` feature; each is asserted to *still* diverge so
+//    accidentally fixing one flags the list as stale rather than silently
+//    passing.
 
 const fs = require("fs");
 const path = require("path");
@@ -188,28 +183,15 @@ const NS_PREFIX = {
 };
 
 const KNOWN_DIVERGENCES = new Set([
-	// a. foreign-content breakout for stray HTML `</p>` / `</br>` end tags: the
-	//    spec relocates the implied <p>/<br> to the foreign element's common
-	//    ancestor; this builder leaves it under the foreign element.
-	"foreign-fragment.dat #59",
-	"foreign-fragment.dat #60",
-	"foreign-fragment.dat #61",
-	"foreign-fragment.dat #62",
-	"tests26.dat #16",
-	"tests26.dat #17",
-	"tests26.dat #18",
-	"tests26.dat #19",
-	// b. <selectedcontent> mirrors its <option>'s subtree — a brand-new HTML
-	//    feature not modelled here.
+	// `<selectedcontent>` clones the selected `<option>`'s subtree into itself
+	// during parsing — a brand-new customizable-`<select>` feature that the
+	// reference parser (parse5) does not implement either and that is
+	// irrelevant to webpack's asset extraction, so it is intentionally skipped.
 	"webkit02.dat #44",
 	"webkit02.dat #45",
 	"webkit02.dat #46",
 	"webkit02.dat #47",
-	"webkit02.dat #48",
-	// c. EOF inside a quoted attribute value (the tokenizer still emits the
-	//    tag); and `<input>` inside a `select` fragment context.
-	"webkit02.dat #4",
-	"tests_innerHTML_1.dat #75"
+	"webkit02.dat #48"
 ]);
 
 /**
