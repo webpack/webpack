@@ -848,7 +848,7 @@ export type CssGeneratorEsModule = boolean;
  */
 export type CssGeneratorExportsConvention =
 	| ("as-is" | "camel-case" | "camel-case-only" | "dashes" | "dashes-only")
-	| import("../lib/dependencies/CssExportsDependency").ExportsConventionFn;
+	| import("../lib/dependencies/CssIcssExportDependency").ExportsConventionFn;
 /**
  * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
  */
