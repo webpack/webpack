@@ -2,29 +2,17 @@
 
 exports[`errors 1`] = `
 Array [
-  Object {
-    "message": "Module build failed: UnhandledSchemeError: Reading from \\"https://test.cases/url-external.css\\" is not handled by plugins (Unhandled scheme).
+  "Module build failed: UnhandledSchemeError: Reading from \\"https://test.cases/url-external.css\\" is not handled by plugins (Unhandled scheme).
 Webpack supports \\"data:\\" and \\"file:\\" URIs by default.
 You may need an additional plugin to handle \\"https:\\" URIs.",
-    "moduleName": "https://test.cases/url-external.css",
-  },
-  Object {
-    "message": "Module build failed: UnhandledSchemeError: Reading from \\"https://test.cases/external.css\\" is not handled by plugins (Unhandled scheme).
+  "Module build failed: UnhandledSchemeError: Reading from \\"https://test.cases/external.css\\" is not handled by plugins (Unhandled scheme).
 Webpack supports \\"data:\\" and \\"file:\\" URIs by default.
 You may need an additional plugin to handle \\"https:\\" URIs.",
-    "moduleName": "https://test.cases/external.css",
-  },
-  Object {
-    "message": "Module build failed: UnhandledSchemeError: Reading from \\"https://test.cases/url-external.css\\" is not handled by plugins (Unhandled scheme).
+  "Module build failed: UnhandledSchemeError: Reading from \\"https://test.cases/url-external.css\\" is not handled by plugins (Unhandled scheme).
 Webpack supports \\"data:\\" and \\"file:\\" URIs by default.
 You may need an additional plugin to handle \\"https:\\" URIs.",
-    "moduleName": "https://test.cases/url-external.css",
-  },
-  Object {
-    "message": "Module build failed: UnhandledSchemeError: Reading from \\"https://test.cases/external.css\\" is not handled by plugins (Unhandled scheme).
+  "Module build failed: UnhandledSchemeError: Reading from \\"https://test.cases/external.css\\" is not handled by plugins (Unhandled scheme).
 Webpack supports \\"data:\\" and \\"file:\\" URIs by default.
 You may need an additional plugin to handle \\"https:\\" URIs.",
-    "moduleName": "https://test.cases/external.css",
-  },
 ]
 `;

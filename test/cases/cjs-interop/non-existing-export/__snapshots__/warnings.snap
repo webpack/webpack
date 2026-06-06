@@ -2,15 +2,7 @@
 
 exports[`warnings 1`] = `
 Array [
-  Object {
-    "loc": "5:8-13",
-    "message": "export 'named' (imported as 'named') was not found in './module' (possible exports: default)",
-    "moduleName": "./cjs-interop/non-existing-export/index.js",
-  },
-  Object {
-    "loc": "6:8-14",
-    "message": "export 'named' (imported as 'named2') was not found in './esModule' (possible exports: __esModule, default)",
-    "moduleName": "./cjs-interop/non-existing-export/index.js",
-  },
+  "export 'named' (imported as 'named') was not found in './module' (possible exports: default)",
+  "export 'named' (imported as 'named2') was not found in './esModule' (possible exports: __esModule, default)",
 ]
 `;

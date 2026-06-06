@@ -2,15 +2,7 @@
 
 exports[`errors 1`] = `
 Array [
-  Object {
-    "loc": "4:2-33",
-    "message": "Cannot statically analyse 'require(…, …)' in line 4",
-    "moduleName": "./parsing/unsupported-amd/index.js",
-  },
-  Object {
-    "loc": "12:2-17",
-    "message": "Cannot statically analyse 'require(…, …)' in line 12",
-    "moduleName": "./parsing/unsupported-amd/index.js",
-  },
+  "Cannot statically analyse 'require(…, …)' in line 4",
+  "Cannot statically analyse 'require(…, …)' in line 12",
 ]
 `;

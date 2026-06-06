@@ -2,9 +2,7 @@
 
 exports[`errors 1`] = `
 Array [
-  Object {
-    "loc": "40:23-50",
-    "message": "Module not found: Error: Recursion in resolving
+  "Module not found: Error: Recursion in resolving
 Stack:
   resolve: (<TEST_DIR>) recursive-file/a
   parsedResolve: (<TEST_DIR>) recursive-file/a module
@@ -27,11 +25,7 @@ Stack:
   rawResolve: (<TEST_DIR>/node_modules/recursive-file) ./a
   normalResolve: (<TEST_DIR>/node_modules/recursive-file) ./a
   relative: (<TEST_DIR>/node_modules/recursive-file/a)",
-    "moduleName": "./resolving/browser-field/index.js",
-  },
-  Object {
-    "loc": "41:23-50",
-    "message": "Module not found: Error: Recursion in resolving
+  "Module not found: Error: Recursion in resolving
 Stack:
   resolve: (<TEST_DIR>) recursive-file/b
   parsedResolve: (<TEST_DIR>) recursive-file/b module
@@ -54,11 +48,7 @@ Stack:
   rawResolve: (<TEST_DIR>/node_modules/recursive-file) ./b
   normalResolve: (<TEST_DIR>/node_modules/recursive-file) ./b
   relative: (<TEST_DIR>/node_modules/recursive-file/b)",
-    "moduleName": "./resolving/browser-field/index.js",
-  },
-  Object {
-    "loc": "42:23-50",
-    "message": "Module not found: Error: Recursion in resolving
+  "Module not found: Error: Recursion in resolving
 Stack:
   resolve: (<TEST_DIR>) recursive-file/c
   parsedResolve: (<TEST_DIR>) recursive-file/c module
@@ -89,11 +79,7 @@ Stack:
   describedResolve: (<TEST_DIR>/node_modules/recursive-file) ./c.js
   rawResolve: (<TEST_DIR>/node_modules/recursive-file) ./c.js
   internalResolve: (<TEST_DIR>/node_modules/recursive-file) ./d.js",
-    "moduleName": "./resolving/browser-field/index.js",
-  },
-  Object {
-    "loc": "43:23-50",
-    "message": "Module not found: Error: Recursion in resolving
+  "Module not found: Error: Recursion in resolving
 Stack:
   resolve: (<TEST_DIR>) recursive-file/d
   parsedResolve: (<TEST_DIR>) recursive-file/d module
@@ -123,7 +109,5 @@ Stack:
   describedRelative: (<TEST_DIR>/node_modules/recursive-file/d.js) 
   rawFile: (<TEST_DIR>/node_modules/recursive-file/d.js) 
   file: (<TEST_DIR>/node_modules/recursive-file/d.js)",
-    "moduleName": "./resolving/browser-field/index.js",
-  },
 ]
 `;

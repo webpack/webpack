@@ -2,25 +2,9 @@
 
 exports[`warnings 1`] = `
 Array [
-  Object {
-    "loc": "10:1-33",
-    "message": "Critical dependency: the request of a dependency is an expression",
-    "moduleName": "./index.js",
-  },
-  Object {
-    "loc": "10:1-33",
-    "message": "Critical dependency: the request of a dependency is an expression",
-    "moduleName": "./index.js",
-  },
-  Object {
-    "loc": "10:1-33",
-    "message": "Critical dependency: the request of a dependency is an expression",
-    "moduleName": "./index.js",
-  },
-  Object {
-    "loc": "10:1-33",
-    "message": "Critical dependency: the request of a dependency is an expression",
-    "moduleName": "./index.js",
-  },
+  "Critical dependency: the request of a dependency is an expression",
+  "Critical dependency: the request of a dependency is an expression",
+  "Critical dependency: the request of a dependency is an expression",
+  "Critical dependency: the request of a dependency is an expression",
 ]
 `;

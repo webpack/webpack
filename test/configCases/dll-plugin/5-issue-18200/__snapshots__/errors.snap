@@ -2,8 +2,6 @@
 
 exports[`errors 1`] = `
 Array [
-  Object {
-    "message": "each chunk must have a unique path",
-  },
+  "each chunk must have a unique path",
 ]
 `;

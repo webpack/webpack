@@ -2,15 +2,9 @@
 
 exports[`errors 1`] = `
 Array [
-  Object {
-    "message": "Module build failed (from ./errors/load-module-error/error-loader.js):
+  "Module build failed (from ./errors/load-module-error/error-loader.js):
 Error: err: abc",
-    "moduleName": "./errors/load-module-error/error-loader.js!./errors/load-module-error/b.json",
-  },
-  Object {
-    "message": "Module build failed (from ./errors/load-module-error/loader.js):
+  "Module build failed (from ./errors/load-module-error/loader.js):
 Error: The loaded module contains errors",
-    "moduleName": "./errors/load-module-error/loader.js!./errors/load-module-error/a.json",
-  },
 ]
 `;

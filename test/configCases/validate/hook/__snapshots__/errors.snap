@@ -2,8 +2,6 @@
 
 exports[`errors 1`] = `
 Array [
-  Object {
-    "message": "Validation failed",
-  },
+  "Validation failed",
 ]
 `;

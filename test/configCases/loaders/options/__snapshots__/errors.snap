@@ -2,17 +2,11 @@
 
 exports[`errors 1`] = `
 Array [
-  Object {
-    "message": "Module build failed (from ./loader-1.js):
+  "Module build failed (from ./loader-1.js):
 ValidationError: Invalid options object. Loader has been initialized using an options object that does not match the API schema.
  - options.arg6.bar.baz should be a string.",
-    "moduleName": "./error1.js",
-  },
-  Object {
-    "message": "Module build failed (from ./loader-2.js):
+  "Module build failed (from ./loader-2.js):
 ValidationError: Invalid configuration object. Custom Loader Name has been initialized using a configuration object that does not match the API schema.
  - configuration.arg should be true.",
-    "moduleName": "./error2.js",
-  },
 ]
 `;

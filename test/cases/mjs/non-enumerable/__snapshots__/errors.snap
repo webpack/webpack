@@ -2,15 +2,7 @@
 
 exports[`errors 1`] = `
 Array [
-  Object {
-    "loc": "20:8-21",
-    "message": "export '__esModule' (imported as 'm1') was not found in './analyzable-module.js' (possible exports: nonEnumerable, prop)",
-    "moduleName": "./mjs/non-enumerable/test.mjs?concatenated",
-  },
-  Object {
-    "loc": "20:8-21",
-    "message": "export '__esModule' (imported as 'm1') was not found in './analyzable-module.js' (possible exports: nonEnumerable, prop)",
-    "moduleName": "./mjs/non-enumerable/test.mjs?non-concatenated",
-  },
+  "export '__esModule' (imported as 'm1') was not found in './analyzable-module.js' (possible exports: nonEnumerable, prop)",
+  "export '__esModule' (imported as 'm1') was not found in './analyzable-module.js' (possible exports: nonEnumerable, prop)",
 ]
 `;
