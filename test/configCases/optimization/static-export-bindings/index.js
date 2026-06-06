@@ -9,6 +9,9 @@ import * as reexportStar from "./reexport-star";
 import * as reexportCircular from "./reexport-circular";
 import * as defaultBinding from "./default-binding";
 import * as constDefault from "./const-default";
+import * as defaultExpr from "./default-expr";
+import * as defaultFnDecl from "./default-fn-decl";
+import * as defaultFnAnon from "./default-fn-anon";
 import * as starMutable from "./star-mutable";
 import * as selfConst from "./self-const";
 import * as mutableForms from "./mutable-forms";
@@ -128,6 +131,21 @@ it("should keep `export { let as default }` as a live binding", () => {
 it("should bind `export { const as default }` as a value", () => {
 	expectValueDescriptor(constDefault, "default");
 	expect(constDefault.default).toBe("const-default");
+});
+
+it("should bind `export default expression` as a value", () => {
+	expectValueDescriptor(defaultExpr, "default");
+	expect(defaultExpr.default).toBe(42);
+});
+
+it("should keep `export default function fn(){}` as getter", () => {
+	expectGetterDescriptor(defaultFnDecl, "default");
+	expect(defaultFnDecl.default()).toBe("default-fn");
+});
+
+it("should keep `export default function(){}` as getter", () => {
+	expectGetterDescriptor(defaultFnAnon, "default");
+	expect(defaultFnAnon.default()).toBe("default-anon");
 });
 
 it("should keep mutable binding live through `export *`", () => {
