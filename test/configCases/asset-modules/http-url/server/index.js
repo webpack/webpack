@@ -35,7 +35,11 @@ function createServer() {
 		}
 		res.setHeader(
 			"Content-Type",
-			pathname.endsWith(".js") ? "text/javascript" : "text/css"
+			pathname.endsWith(".js")
+				? "text/javascript"
+				: pathname.endsWith("LICENSE")
+					? "text/plain"
+					: "text/css"
 		);
 		res.end(file);
 	});
