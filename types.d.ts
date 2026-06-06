@@ -5007,8 +5007,8 @@ declare interface ContextHash {
 	symlinks?: Set<string>;
 }
 type ContextMode =
-	| "weak"
 	| "eager"
+	| "weak"
 	| "lazy"
 	| "lazy-once"
 	| "sync"
@@ -5787,7 +5787,6 @@ declare interface DependenciesBlockLike {
 }
 declare class Dependency {
 	constructor();
-	weak: boolean;
 	optional?: boolean;
 
 	/**
@@ -12236,7 +12235,7 @@ declare interface JavascriptParserOptions {
 	/**
 	 * Specifies global mode for dynamic import.
 	 */
-	dynamicImportMode?: "weak" | "eager" | "lazy" | "lazy-once";
+	dynamicImportMode?: "eager" | "weak" | "lazy" | "lazy-once";
 
 	/**
 	 * Specifies global prefetch for dynamic import.
@@ -14889,6 +14888,7 @@ declare class ModuleDependency extends Dependency {
 	userRequest: string;
 	sourceOrder?: number;
 	range?: [number, number];
+	weak: boolean;
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
