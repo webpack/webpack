@@ -384,6 +384,7 @@ describe("snapshots", () => {
 		      "minSize": 10000,
 		      "usedExports": false,
 		    },
+		    "usedExportProperties": false,
 		    "usedExports": false,
 		  },
 		  "output": Object {
@@ -838,7 +839,9 @@ describe("snapshots", () => {
 		+       "minSize": 20000,
 		+       "usedExports": true,
 		@@ ... @@
+		-     "usedExportProperties": false,
 		-     "usedExports": false,
+		+     "usedExportProperties": true,
 		+     "usedExports": true,
 		@@ ... @@
 		-   "performance": false,
@@ -910,7 +913,9 @@ describe("snapshots", () => {
 		+       "minSize": 20000,
 		+       "usedExports": true,
 		@@ ... @@
+		-     "usedExportProperties": false,
 		-     "usedExports": false,
+		+     "usedExportProperties": true,
 		+     "usedExports": true,
 		@@ ... @@
 		-   "performance": false,

@@ -7413,6 +7413,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-used-export-properties": Object {
+    "configs": Array [
+      Object {
+        "description": "Track which properties of exported objects are used by consumers, enabling tree-shaking of unused properties in compound component patterns (e.g. Form.Item = Item).",
+        "multiple": false,
+        "path": "optimization.usedExportProperties",
+        "type": "boolean",
+      },
+    ],
+    "description": "Track which properties of exported objects are used by consumers, enabling tree-shaking of unused properties in compound component patterns (e.g. Form.Item = Item).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-used-exports": Object {
     "configs": Array [
       Object {
