@@ -6,7 +6,7 @@
 // reports the result; the builds run once in beforeAll, batched into shared
 // in-memory compilations. @import/url() extraction is off so nothing needs to
 // resolve — the point is that webpack handles malformed input without crashing
-// or throwing an internal exception. (Mirrors html5lib-webpack.spectest.js;
+// or throwing an internal exception. (Mirrors html5lib.spectest.js;
 // only fixture loading and the entry type differ.)
 
 const fs = require("fs");
