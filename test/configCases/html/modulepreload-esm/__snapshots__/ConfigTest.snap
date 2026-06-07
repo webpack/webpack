@@ -20,12 +20,13 @@ exports[`ConfigTestCases html modulepreload-esm exported tests should emit modul
   \\\\********************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   A: () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
 const value = \\"preload module\\";
 globalThis.__preloadLoaded = true;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (value);
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"A\\", 0, /* export default binding */ __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ ]);
 
 
 /***/ }
