@@ -153,12 +153,6 @@ __webpack_require__.e(/*! AMD require */ "shared_js").then(function() { var __WE
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -432,12 +426,6 @@ __webpack_require__.e(/*! require.ensure */ "shared_js").then((function(require)
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -693,12 +681,12 @@ module.exports = function(msg) {
 ## Unoptimized
 
 ```
-asset pageA.js 11 KiB [emitted] (name: pageA)
-asset pageB.js 10.9 KiB [emitted] (name: pageB)
+asset pageA.js 10.7 KiB [emitted] (name: pageA)
+asset pageB.js 10.6 KiB [emitted] (name: pageB)
 asset shared_js.js 503 bytes [emitted]
 asset commons.js 370 bytes [emitted] (name: commons) (id hint: commons)
-Entrypoint pageA 11.3 KiB = commons.js 370 bytes pageA.js 11 KiB
-Entrypoint pageB 11.3 KiB = commons.js 370 bytes pageB.js 10.9 KiB
+Entrypoint pageA 11.1 KiB = commons.js 370 bytes pageA.js 10.7 KiB
+Entrypoint pageB 11 KiB = commons.js 370 bytes pageB.js 10.6 KiB
 chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
   > ./pageA pageA
   > ./pageB pageB

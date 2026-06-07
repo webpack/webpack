@@ -46,7 +46,7 @@ export function square(n) {
 # dist/vendor.js
 
 ```javascript
-var vendor_lib_696b8f9b5fab819e8719;
+var vendor_lib_88dba09ad8e89ba15b12;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -106,12 +106,6 @@ function square(n) {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -173,7 +167,7 @@ function square(n) {
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	let __webpack_exports__ = __webpack_require__(0);
-/******/ 	vendor_lib_696b8f9b5fab819e8719 = __webpack_exports__;
+/******/ 	vendor_lib_88dba09ad8e89ba15b12 = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -182,7 +176,7 @@ function square(n) {
 # dist/vendor-manifest.json
 
 ```javascript
-{"name":"vendor_lib_696b8f9b5fab819e8719","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
+{"name":"vendor_lib_88dba09ad8e89ba15b12","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
 ```
 
 # Info
@@ -190,7 +184,7 @@ function square(n) {
 ## Unoptimized
 
 ```
-asset vendor.js 4.55 KiB [emitted] (name: main)
+asset vendor.js 4.3 KiB [emitted] (name: main)
 chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 1.11 KiB (runtime) [entry] [rendered]
   > main
   runtime modules 1.11 KiB 3 modules

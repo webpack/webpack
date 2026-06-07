@@ -450,12 +450,6 @@ module.exports = "# Example headings\n\n## Sample Section\n\n## This'll be a _He
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -684,7 +678,7 @@ toRawContainerUsingString.appendChild(markdownToRawText);
 ## Unoptimized
 
 ```
-asset output.js 19.5 KiB [emitted] (name: main)
+asset output.js 19.2 KiB [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: main)
 chunk (runtime: main) output.js (main) 11.3 KiB (javascript) 14.6 KiB (asset) 2.61 KiB (runtime) [entry] [rendered]
   > ./example.js main

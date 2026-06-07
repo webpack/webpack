@@ -142,12 +142,6 @@ module.exports = webpackAsyncContext;
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -406,7 +400,7 @@ getTemplate("baz.noimport");
 ## Unoptimized
 
 ```
-asset output.js 12.2 KiB [emitted] (name: main)
+asset output.js 11.9 KiB [emitted] (name: main)
 asset 717.output.js 846 bytes [emitted]
 asset 776.output.js 846 bytes [emitted]
 asset 0.output.js 844 bytes [emitted]

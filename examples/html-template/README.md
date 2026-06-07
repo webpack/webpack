@@ -215,9 +215,9 @@ Custom Eta tags (`{{= }}`) and unescaped output, selected by the rule.
 ## Unoptimized
 
 ```
-assets by path *.js 5.07 KiB
-  asset index.js 2.44 KiB [emitted] (name: index)
-  asset special.js 2.2 KiB [emitted] (name: special)
+assets by path *.js 4.57 KiB
+  asset index.js 2.18 KiB [emitted] (name: index)
+  asset special.js 1.95 KiB [emitted] (name: special)
   asset __html_6d047296_0.js 445 bytes [emitted] (name: __html_6d047296_0)
 assets by chunk 15 KiB (auxiliary name: index)
   asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: src/logo.png] (auxiliary name: index)

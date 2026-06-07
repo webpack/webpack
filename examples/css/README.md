@@ -72,12 +72,6 @@ __webpack_require__.r(module.exports = {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -525,14 +519,14 @@ body {
 ## Unoptimized
 
 ```
-assets by path *.js 15.8 KiB
-  asset output.js 15.5 KiB [emitted] (name: main)
+assets by path *.js 15.6 KiB
+  asset output.js 15.2 KiB [emitted] (name: main)
   asset 1.output.js 332 bytes [emitted]
 assets by path *.css 1.16 KiB
   asset output.css 1.04 KiB [emitted] (name: main)
   asset 1.output.css 125 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-Entrypoint main 16.5 KiB (14.6 KiB) = output.js 15.5 KiB output.css 1.04 KiB 1 auxiliary asset
+Entrypoint main 16.3 KiB (14.6 KiB) = output.js 15.2 KiB output.css 1.04 KiB 1 auxiliary asset
 chunk (runtime: main) output.js, output.css (main) 254 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (asset-url) 42 bytes (css-import) 8.87 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 8.87 KiB 9 modules

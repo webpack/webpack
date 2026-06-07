@@ -119,12 +119,6 @@ module.exports = webpackAsyncContext;
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -381,7 +375,7 @@ __webpack_require__(1)("./ba" + createContextVar).then(function(bar) {
 ## Unoptimized
 
 ```
-asset output.js 12.3 KiB [emitted] (name: main)
+asset output.js 12.1 KiB [emitted] (name: main)
 asset 792.output.js 846 bytes [emitted] (name: chunk-bar-baz2)
 asset 994.output.js 846 bytes [emitted] (name: chunk-bar-baz0)
 asset 45.output.js 845 bytes [emitted] (name: chunk-foo)

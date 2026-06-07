@@ -118,12 +118,6 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -164,7 +158,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
 ## Unoptimized
 
 ```
-asset output.js 3.53 KiB [emitted] (name: main)
+asset output.js 3.28 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 84 bytes [dependent] 2 modules

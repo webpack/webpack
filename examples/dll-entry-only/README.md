@@ -68,7 +68,7 @@ module.exports = config;
 # dist/dll.js
 
 ```javascript
-var dll_4283115625419b95a3dd;
+var dll_4f2c11fdd9651930a2af;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -167,12 +167,6 @@ exports.c = "c";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -234,7 +228,7 @@ exports.c = "c";
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	let __webpack_exports__ = __webpack_require__(0);
-/******/ 	dll_4283115625419b95a3dd = __webpack_exports__;
+/******/ 	dll_4f2c11fdd9651930a2af = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -243,7 +237,7 @@ exports.c = "c";
 # dist/dll-manifest.json
 
 ```javascript
-{"name":"dll_4283115625419b95a3dd","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
+{"name":"dll_4f2c11fdd9651930a2af","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
 ```
 
 # Info
@@ -251,7 +245,7 @@ exports.c = "c";
 ## Unoptimized
 
 ```
-asset dll.js 5.51 KiB [emitted] (name: dll)
+asset dll.js 5.26 KiB [emitted] (name: dll)
 chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 1.11 KiB (runtime) [entry] [rendered]
   > dll
   runtime modules 1.11 KiB 3 modules
