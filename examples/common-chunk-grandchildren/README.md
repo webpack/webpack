@@ -136,12 +136,6 @@ module.exports = config;
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -458,7 +452,7 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 9.33 KiB [emitted] (name: main)
+asset output.js 9.08 KiB [emitted] (name: main)
 asset pageB_js.output.js 760 bytes [emitted]
 asset pageA_js.output.js 565 bytes [emitted]
 asset pageC_js.output.js 547 bytes [emitted]

@@ -82,12 +82,6 @@ module.exports = "Vendor1";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -166,12 +160,6 @@ __webpack_require__(/*! ./vendor1 */ 0);
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -265,12 +253,6 @@ __webpack_require__(/*! ./vendor2 */ 1);
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -298,11 +280,11 @@ __webpack_require__(/*! ./vendor2 */ 1);
 ## Unoptimized
 
 ```
-asset pageA.js 2.68 KiB [emitted] (name: pageA)
-asset vendor2.js 2.26 KiB [emitted] (name: vendor2)
-asset vendor1.js 1.87 KiB [emitted] (name: vendor1)
-asset pageB.js 1.85 KiB [emitted] (name: pageB)
-asset pageC.js 1.85 KiB [emitted] (name: pageC)
+asset pageA.js 2.43 KiB [emitted] (name: pageA)
+asset vendor2.js 2.01 KiB [emitted] (name: vendor2)
+asset vendor1.js 1.62 KiB [emitted] (name: vendor1)
+asset pageB.js 1.6 KiB [emitted] (name: pageB)
+asset pageC.js 1.6 KiB [emitted] (name: pageC)
 chunk (runtime: pageA) pageA.js (pageA) 147 bytes [entry] [rendered]
   > ./pageA pageA
   dependent modules 77 bytes [dependent] 2 modules

@@ -497,12 +497,6 @@ module.exports = __webpack_require__.p + "logo.svg";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -725,7 +719,7 @@ module.exports = __webpack_require__.p + "logo.svg";
 ## Unoptimized
 
 ```
-asset output.js 21.1 KiB [emitted] (name: main)
+asset output.js 20.9 KiB [emitted] (name: main)
 asset 1.output.js 803 bytes [emitted]
 asset 2.output.js 803 bytes [emitted]
 asset logo.svg 78 bytes [emitted] [from: virtual:logo.svg] (auxiliary name: main)

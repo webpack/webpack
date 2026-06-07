@@ -224,12 +224,6 @@ module.exports = function (cssWithMappingToString) {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -334,7 +328,7 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ## Unoptimized
 
 ```
-asset output.js 9.82 KiB [emitted] (name: main)
+asset output.js 9.57 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 3.01 KiB (javascript) 1.37 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 2.81 KiB [dependent] 4 modules

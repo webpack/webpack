@@ -122,12 +122,6 @@ module.exports = webpackAsyncContext;
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -429,7 +423,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 ## Unoptimized
 
 ```
-asset output.js 14.6 KiB [emitted] (name: main)
+asset output.js 14.3 KiB [emitted] (name: main)
 asset 140.output.js 284 bytes [emitted]
 asset 197.output.js 284 bytes [emitted]
 asset 414.output.js 276 bytes [emitted]

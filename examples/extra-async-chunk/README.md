@@ -73,12 +73,6 @@ require.ensure(["./a"], function(require) {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -359,7 +353,7 @@ module.exports = "d";
 ## Unoptimized
 
 ```
-asset output.js 9.39 KiB [emitted] (name: main)
+asset output.js 9.14 KiB [emitted] (name: main)
 asset a_js-b_js.output.js 618 bytes [emitted]
 asset c_js.output.js 329 bytes [emitted]
 asset d_js.output.js 329 bytes [emitted]

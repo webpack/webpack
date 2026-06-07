@@ -162,12 +162,6 @@ function greet(user      )         {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -245,7 +239,7 @@ console.log(__webpack_require__(/*! ./index */ 1));
 ## Unoptimized
 
 ```
-asset output.js 5.08 KiB [emitted] (name: main)
+asset output.js 4.83 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 375 bytes (javascript) 1.11 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 1.11 KiB 3 modules

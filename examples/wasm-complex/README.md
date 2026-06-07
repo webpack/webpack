@@ -255,12 +255,6 @@ function getRandomNumber() {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -442,7 +436,7 @@ function getRandomNumber() {
 ## Unoptimized
 
 ```
-asset output.js 15 KiB [emitted] (name: main)
+asset output.js 14.8 KiB [emitted] (name: main)
 asset cf07fd0bebb4a2f09ee0.module.wasm 139 bytes [emitted] [immutable] (auxiliary name: main)
 chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 4.21 KiB (runtime) [entry] [rendered]
   > ./example.js main

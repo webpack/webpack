@@ -216,12 +216,6 @@ module.exports = __webpack_require__.v(exports, module.id, "7b2c601f4b203df3bce9
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -403,7 +397,7 @@ module.exports = __webpack_require__.v(exports, module.id, "7b2c601f4b203df3bce9
 ## Unoptimized
 
 ```
-asset output.js 14.2 KiB [emitted] (name: main)
+asset output.js 14 KiB [emitted] (name: main)
 asset 7b2c601f4b203df3bce9.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset 097acf8fdf462561c3a7.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 7210b1cf069a95877339.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)

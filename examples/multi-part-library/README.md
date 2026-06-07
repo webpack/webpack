@@ -89,12 +89,6 @@ module.exports = "alpha";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -172,12 +166,6 @@ module.exports = "beta";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -207,8 +195,8 @@ module.exports = "beta";
 ## Unoptimized
 
 ```
-asset MyLibrary.beta.js 2.32 KiB [emitted] (name: beta)
-asset MyLibrary.alpha.js 2.31 KiB [emitted] (name: alpha)
+asset MyLibrary.beta.js 2.07 KiB [emitted] (name: beta)
+asset MyLibrary.alpha.js 2.06 KiB [emitted] (name: alpha)
 chunk (runtime: alpha) MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
   > ./alpha alpha
   ./alpha.js 25 bytes [built] [code generated]

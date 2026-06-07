@@ -121,12 +121,6 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e"
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -202,7 +196,7 @@ function createImageElement(title, src) {
 ## webpack output
 
 ```
-asset output.js 4.07 KiB [emitted] (name: main)
+asset output.js 3.82 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 1.54 KiB (javascript) 274 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 915 bytes [dependent] 1 module

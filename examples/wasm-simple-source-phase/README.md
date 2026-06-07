@@ -242,12 +242,6 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -427,7 +421,7 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 ## Unoptimized
 
 ```
-asset output.js 15.1 KiB [emitted] (name: main)
+asset output.js 14.9 KiB [emitted] (name: main)
 asset 690d0ef01c3f29042287.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset f215af0bd9b5ea85aee7.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 0bb22d2508a3f5746503.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)

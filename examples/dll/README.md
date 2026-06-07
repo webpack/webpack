@@ -41,7 +41,7 @@ module.exports = config;
 # dist/MyDll.alpha.js
 
 ```javascript
-var alpha_82247e52df028d402846;
+var alpha_618b5a049155a2d0233b;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -117,12 +117,6 @@ module.exports = "module";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -140,7 +134,7 @@ module.exports = "module";
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	let __webpack_exports__ = __webpack_require__(0);
-/******/ 	alpha_82247e52df028d402846 = __webpack_exports__;
+/******/ 	alpha_618b5a049155a2d0233b = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -149,7 +143,7 @@ module.exports = "module";
 # dist/alpha-manifest.json
 
 ```javascript
-{"name":"alpha_82247e52df028d402846","content":{"./alpha.js":{"id":1,"buildMeta":{"treatAsCommonJs":true}},"./a.js":{"id":2,"buildMeta":{"treatAsCommonJs":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"treatAsCommonJs":true}}}}
+{"name":"alpha_618b5a049155a2d0233b","content":{"./alpha.js":{"id":1,"buildMeta":{"treatAsCommonJs":true}},"./a.js":{"id":2,"buildMeta":{"treatAsCommonJs":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"treatAsCommonJs":true}}}}
 ```
 
 # Info
@@ -157,8 +151,8 @@ module.exports = "module";
 ## Unoptimized
 
 ```
-asset MyDll.alpha.js 2.83 KiB [emitted] (name: alpha)
-asset MyDll.beta.js 2.81 KiB [emitted] (name: beta)
+asset MyDll.alpha.js 2.58 KiB [emitted] (name: alpha)
+asset MyDll.beta.js 2.55 KiB [emitted] (name: beta)
 chunk (runtime: alpha) MyDll.alpha.js (alpha) 85 bytes [entry] [rendered]
   > alpha
   dependent modules 73 bytes [dependent] 3 modules

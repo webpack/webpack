@@ -98,12 +98,6 @@ function add() {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -356,7 +350,7 @@ __webpack_require__.e(/*! import() */ 655).then(__webpack_require__.bind(__webpa
 ## Unoptimized
 
 ```
-asset output.js 12.6 KiB [emitted] (name: main)
+asset output.js 12.4 KiB [emitted] (name: main)
 asset 655.output.js 761 bytes [emitted]
 chunk (runtime: main) 655.output.js 24 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24

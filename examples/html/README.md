@@ -187,9 +187,9 @@ assets by chunk 35.9 KiB (auxiliary name: page)
   asset eda8c35d5b9a24e8efa6.png 19.6 KiB [emitted] [immutable] [from: src/logo@2x.png] (auxiliary name: page)
   asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: src/logo.png] (auxiliary name: __html_6d047296_1, page)
   asset index.html 1.7 KiB [emitted] (auxiliary name: page)
-assets by path *.js 12 KiB
-  asset __html_6d047296_1.js 7.13 KiB [emitted] (name: __html_6d047296_1)
-  asset page.js 3.82 KiB [emitted] (name: page)
+assets by path *.js 11.5 KiB
+  asset __html_6d047296_1.js 6.87 KiB [emitted] (name: __html_6d047296_1)
+  asset page.js 3.57 KiB [emitted] (name: page)
   asset __html_6d047296_2.js 1.01 KiB [emitted] (name: __html_6d047296_2)
 asset __html_6d047296_0.css 166 bytes [emitted] (name: __html_6d047296_0)
 chunk (runtime: __html_6d047296_0) __html_6d047296_0.css (__html_6d047296_0) 64 bytes (css) 0 bytes (runtime) [entry] [rendered]

@@ -87,12 +87,6 @@ module.exports = config;
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -413,11 +407,11 @@ __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.t.bind(__webpa
 ## Unoptimized
 
 ```
-asset runtime~main.[chunkhash].js 13.1 KiB [emitted] (name: runtime~main)
+asset runtime~main.[chunkhash].js 12.8 KiB [emitted] (name: runtime~main)
 asset main.[chunkhash].js 873 bytes [emitted] (name: main)
 asset 2.[chunkhash].js 285 bytes [emitted]
 asset 3.[chunkhash].js 267 bytes [emitted]
-Entrypoint main 13.9 KiB = runtime~main.[chunkhash].js 13.1 KiB main.[chunkhash].js 873 bytes
+Entrypoint main 13.7 KiB = runtime~main.[chunkhash].js 12.8 KiB main.[chunkhash].js 873 bytes
 chunk (runtime: runtime~main) main.[chunkhash].js (main) 55 bytes [initial] [rendered]
   > ./example main
   ./example.js 55 bytes [built] [code generated]

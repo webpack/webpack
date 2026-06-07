@@ -250,12 +250,6 @@ module.exports = __webpack_require__.tb("PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmc
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -491,7 +485,7 @@ files.forEach(item => {
 ## webpack output
 
 ```
-asset output.js 20 KiB [emitted] (name: main)
+asset output.js 19.8 KiB [emitted] (name: main)
 asset images/89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset images/afc10c70ed4ce2b33593.svg 656 bytes [emitted] [immutable] [from: images/url.svg] (auxiliary name: main)
 chunk (runtime: main) output.js (main) 12.4 KiB (javascript) 15.2 KiB (asset) 1.86 KiB (runtime) [entry] [rendered]

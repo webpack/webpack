@@ -206,12 +206,6 @@ const b = "b";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -303,7 +297,7 @@ console.log(
 ## Unoptimized
 
 ```
-asset output.js 9.4 KiB [emitted] (name: main)
+asset output.js 9.15 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 354 bytes (javascript) 1.11 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 214 bytes [dependent] 6 modules

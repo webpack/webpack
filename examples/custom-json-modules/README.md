@@ -192,12 +192,6 @@ module.exports = /*#__PURE__*/JSON.parse('{"title":"JSON5 Example","owner":{"nam
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -258,7 +252,7 @@ document.querySelector('#app').innerHTML = [_data_toml__WEBPACK_IMPORTED_MODULE_
 ## webpack output
 
 ```
-asset output.js 6.16 KiB [emitted] (name: main)
+asset output.js 5.91 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 919 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 565 bytes [dependent] 3 modules

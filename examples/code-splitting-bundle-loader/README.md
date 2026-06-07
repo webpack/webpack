@@ -72,12 +72,6 @@ __webpack_require__.e(/*! require.ensure */ "file_js").then((function(require) {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -304,7 +298,7 @@ module.exports = "It works";
 ## Unoptimized
 
 ```
-asset output.js 9.9 KiB [emitted] (name: main)
+asset output.js 9.64 KiB [emitted] (name: main)
 asset file_js.output.js 348 bytes [emitted]
 chunk (runtime: main) file_js.output.js 28 bytes [rendered]
   > ../../node_modules/bundle-loader/index.js!./file.js 7:0-14:2

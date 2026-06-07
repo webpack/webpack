@@ -65,12 +65,6 @@ require.ensure(["b"], function(require) {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -367,7 +361,7 @@ __webpack_require__.e(/*! require.ensure */ "node_modules_b_js-node_modules_d_js
 ## Unoptimized
 
 ```
-asset output.js 10.1 KiB [emitted] (name: main)
+asset output.js 9.85 KiB [emitted] (name: main)
 asset my own chunk.output.js 746 bytes [emitted] (name: my own chunk)
 asset node_modules_b_js-node_modules_d_js.output.js 562 bytes [emitted]
 chunk (runtime: main) output.js (main) 432 bytes (javascript) 4.95 KiB (runtime) [entry] [rendered]
