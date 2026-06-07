@@ -4408,6 +4408,24 @@ declare interface ConcatenatedModuleInfo {
 	 * runtime namespace object that detects "__esModule"
 	 */
 	interopDefaultAccessName?: string;
+
+	/**
+	 * memoized getExportsType(strict=true)
+	 */
+	exportsTypeStrict?:
+		| "namespace"
+		| "default-only"
+		| "default-with-named"
+		| "dynamic";
+
+	/**
+	 * memoized getExportsType(strict=false)
+	 */
+	exportsTypeNonStrict?:
+		| "namespace"
+		| "default-only"
+		| "default-with-named"
+		| "dynamic";
 }
 declare interface ConcatenationBailoutReasonContext {
 	/**
@@ -8017,6 +8035,24 @@ declare interface ExternalModuleInfo {
 	 * runtime namespace object that detects "__esModule"
 	 */
 	interopDefaultAccessName?: string;
+
+	/**
+	 * memoized getExportsType(strict=true)
+	 */
+	exportsTypeStrict?:
+		| "namespace"
+		| "default-only"
+		| "default-with-named"
+		| "dynamic";
+
+	/**
+	 * memoized getExportsType(strict=false)
+	 */
+	exportsTypeNonStrict?:
+		| "namespace"
+		| "default-only"
+		| "default-with-named"
+		| "dynamic";
 }
 type ExternalModuleRequest = string | string[] | RequestRecord;
 type Externals =
