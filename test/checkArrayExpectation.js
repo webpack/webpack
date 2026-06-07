@@ -64,19 +64,6 @@ const normalizeString = (str, testDirectory) => {
 };
 
 /**
- * Fields to include in snapshot serialization.
- * Only stable, meaningful fields should be listed here —
- * nondeterministic fields (e.g. moduleTrace, details) are excluded.
- * @type {ReadonlyArray<{ key: string, normalize?: boolean }>}
- */
-const SNAPSHOT_FIELDS = [
-	{ key: "message", normalize: true },
-	{ key: "moduleName", normalize: true },
-	{ key: "loc" },
-	{ key: "compilerPath" }
-];
-
-/**
  * Serializes an array of error/warning objects into a normalized form
  * suitable for Jest snapshot matching. Absolute paths are replaced with
  * placeholders so snapshots stay stable across environments.
@@ -85,17 +72,7 @@ const SNAPSHOT_FIELDS = [
  * @returns {EXPECTED_ANY[]} normalized items for snapshot comparison
  */
 const normalizeForSnapshot = (items, testDirectory) =>
-	items.map((item) => {
-		const result = {};
-		for (const { key, normalize } of SNAPSHOT_FIELDS) {
-			if (item[key]) {
-				result[key] = normalize
-					? normalizeString(item[key], testDirectory)
-					: item[key];
-			}
-		}
-		return result;
-	});
+	items.map((item) => normalizeString(item.message, testDirectory) || "");
 
 const check = (expected, actual) => {
 	if (expected instanceof RegExp) {
@@ -186,53 +163,15 @@ module.exports = function checkArrayExpectation(
 			expected = expected(options);
 		}
 		const diff = diffItems(array, expected, kind);
-		if (expected.length < array.length) {
+		if (diff) {
 			return (
 				done(
 					new Error(
-						`More ${kind}s (${array.length} instead of ${expected.length}) while compiling than expected:\n\n${diff}\n\nCheck expected ${kind}s: ${expectedFilename}`
+						`${upperCaseKind}s mismatch (${array.length} actual, ${expected.length} expected):\n\n${diff}\n\nCheck expected ${kind}s: ${expectedFilename}`
 					)
 				),
 				true
 			);
-		} else if (expected.length > array.length) {
-			return (
-				done(
-					new Error(
-						`Less ${kind}s (${array.length} instead of ${expected.length}) while compiling than expected:\n\n${diff}\n\nCheck expected ${kind}s: ${expectedFilename}`
-					)
-				),
-				true
-			);
-		}
-		for (let i = 0; i < array.length; i++) {
-			if (Array.isArray(expected[i])) {
-				for (const expectedItem of expected[i]) {
-					if (!check(expectedItem, array[i])) {
-						return (
-							done(
-								new Error(
-									`${upperCaseKind} ${i}: ${explain(
-										array[i]
-									)} doesn't match ${explain(expectedItem)}`
-								)
-							),
-							true
-						);
-					}
-				}
-			} else if (!check(expected[i], array[i])) {
-				return (
-					done(
-						new Error(
-							`${upperCaseKind} ${i}: ${explain(
-								array[i]
-							)} doesn't match ${explain(expected[i])}`
-						)
-					),
-					true
-				);
-			}
 		}
 	} else if (array.length > 0) {
 		if (kind === "error" || kind === "warning") {

@@ -2,25 +2,9 @@
 
 exports[`warnings 1`] = `
 Array [
-  Object {
-    "loc": "5:0-7",
-    "message": "Any '@import' rules must precede all other rules",
-    "moduleName": "css ./b.css",
-  },
-  Object {
-    "loc": "6:0-7",
-    "message": "Any '@import' rules must precede all other rules",
-    "moduleName": "css ./b.css",
-  },
-  Object {
-    "loc": "4:0-7",
-    "message": "Any '@import' rules must precede all other rules",
-    "moduleName": "css ./c.css",
-  },
-  Object {
-    "loc": "5:0-7",
-    "message": "Any '@import' rules must precede all other rules",
-    "moduleName": "css ./c.css",
-  },
+  "Any '@import' rules must precede all other rules",
+  "Any '@import' rules must precede all other rules",
+  "Any '@import' rules must precede all other rules",
+  "Any '@import' rules must precede all other rules",
 ]
 `;

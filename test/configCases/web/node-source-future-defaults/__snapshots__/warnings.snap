@@ -2,41 +2,17 @@
 
 exports[`warnings 1`] = `
 Array [
-  Object {
-    "loc": "4:15-21",
-    "message": "\\"global\\" has been used, it will be undefined in next major version.
+  "\\"global\\" has been used, it will be undefined in next major version.
 The global namespace object is a Node.js feature and isn't available in browsers.",
-    "moduleName": "./index.js",
-  },
-  Object {
-    "loc": "8:15-25",
-    "message": "\\"__filename\\" has been used, it will be undefined in next major version.
+  "\\"__filename\\" has been used, it will be undefined in next major version.
 __filename is a Node.js feature and isn't available in browsers.",
-    "moduleName": "./index.js",
-  },
-  Object {
-    "loc": "12:15-24",
-    "message": "\\"__dirname\\" has been used, it will be undefined in next major version.
+  "\\"__dirname\\" has been used, it will be undefined in next major version.
 __dirname is a Node.js feature and isn't available in browsers.",
-    "moduleName": "./index.js",
-  },
-  Object {
-    "loc": "4:15-21",
-    "message": "\\"global\\" has been used, it will be undefined in next major version.
+  "\\"global\\" has been used, it will be undefined in next major version.
 The global namespace object is a Node.js feature and isn't available in browsers.",
-    "moduleName": "./index.js",
-  },
-  Object {
-    "loc": "8:15-25",
-    "message": "\\"__filename\\" has been used, it will be undefined in next major version.
+  "\\"__filename\\" has been used, it will be undefined in next major version.
 __filename is a Node.js feature and isn't available in browsers.",
-    "moduleName": "./index.js",
-  },
-  Object {
-    "loc": "12:15-24",
-    "message": "\\"__dirname\\" has been used, it will be undefined in next major version.
+  "\\"__dirname\\" has been used, it will be undefined in next major version.
 __dirname is a Node.js feature and isn't available in browsers.",
-    "moduleName": "./index.js",
-  },
 ]
 `;

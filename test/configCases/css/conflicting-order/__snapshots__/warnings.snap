@@ -2,12 +2,10 @@
 
 exports[`warnings 1`] = `
 Array [
-  Object {
-    "message": "chunk css
+  "chunk css
 Conflicting order between css ./b.css and css ./c.css
 CSS modules are imported in:
   - css ./lazy1.css
   - css ./lazy2.css",
-  },
 ]
 `;

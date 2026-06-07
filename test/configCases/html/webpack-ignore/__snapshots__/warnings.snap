@@ -2,10 +2,6 @@
 
 exports[`warnings 1`] = `
 Array [
-  Object {
-    "loc": "35:0-25",
-    "message": "\`webpackIgnore\` expected a boolean, but received: 1.",
-    "moduleName": "./page.html",
-  },
+  "\`webpackIgnore\` expected a boolean, but received: 1.",
 ]
 `;

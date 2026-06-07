@@ -2,10 +2,6 @@
 
 exports[`warnings 1`] = `
 Array [
-  Object {
-    "loc": "3:8-47",
-    "message": "Critical dependency: Contexts can't use RegExps with the 'g' or 'y' flags.",
-    "moduleName": "./context/issue-5750/index.js",
-  },
+  "Critical dependency: Contexts can't use RegExps with the 'g' or 'y' flags.",
 ]
 `;

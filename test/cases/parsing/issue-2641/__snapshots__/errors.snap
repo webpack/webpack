@@ -2,10 +2,6 @@
 
 exports[`errors 1`] = `
 Array [
-  Object {
-    "loc": "11:1-19:3",
-    "message": "Module not found: Error: Can't resolve './missingModule' in '<TEST_DIR>'",
-    "moduleName": "./parsing/issue-2641/index.js",
-  },
+  "Module not found: Error: Can't resolve './missingModule' in '<TEST_DIR>'",
 ]
 `;

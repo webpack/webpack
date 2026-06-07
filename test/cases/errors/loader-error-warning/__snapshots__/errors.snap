@@ -2,15 +2,9 @@
 
 exports[`errors 1`] = `
 Array [
-  Object {
-    "message": "Module Error (from ./errors/loader-error-warning/error-loader.js):
+  "Module Error (from ./errors/loader-error-warning/error-loader.js):
 (Emitted value instead of an instance of Error) abc",
-    "moduleName": "./errors/loader-error-warning/error-loader.js?abc!./errors/loader-error-warning/a.js",
-  },
-  Object {
-    "message": "Module Error (from ./errors/loader-error-warning/error-loader.js):
+  "Module Error (from ./errors/loader-error-warning/error-loader.js):
 (Emitted value instead of an instance of Error) def",
-    "moduleName": "./errors/loader-error-warning/error-loader.js?def!./errors/loader-error-warning/a.js",
-  },
 ]
 `;

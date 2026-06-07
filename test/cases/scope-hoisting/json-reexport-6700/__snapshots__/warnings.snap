@@ -2,15 +2,7 @@
 
 exports[`warnings 1`] = `
 Array [
-  Object {
-    "loc": "9:0-13",
-    "message": "Should not import the named export 'a' (reexported as 'a') from default-exporting module (only default export is available soon)",
-    "moduleName": "./scope-hoisting/json-reexport-6700/json.js",
-  },
-  Object {
-    "loc": "11:0-29",
-    "message": "Should not import the named export 'b' (reexported as 'b') from default-exporting module (only default export is available soon)",
-    "moduleName": "./scope-hoisting/json-reexport-6700/json.js",
-  },
+  "Should not import the named export 'a' (reexported as 'a') from default-exporting module (only default export is available soon)",
+  "Should not import the named export 'b' (reexported as 'b') from default-exporting module (only default export is available soon)",
 ]
 `;

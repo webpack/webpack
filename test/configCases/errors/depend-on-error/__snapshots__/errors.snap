@@ -2,9 +2,6 @@
 
 exports[`errors 1`] = `
 Array [
-  Object {
-    "loc": "foo",
-    "message": "Module not found: Error: Can't resolve './file-does-not-exist.js' in '<TEST_DIR>'",
-  },
+  "Module not found: Error: Can't resolve './file-does-not-exist.js' in '<TEST_DIR>'",
 ]
 `;

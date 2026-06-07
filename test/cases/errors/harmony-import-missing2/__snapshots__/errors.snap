@@ -2,15 +2,7 @@
 
 exports[`errors 1`] = `
 Array [
-  Object {
-    "loc": "1:0-27",
-    "message": "Module not found: Error: Can't resolve './missing1' in '<TEST_DIR>'",
-    "moduleName": "./errors/harmony-import-missing2/module1.js",
-  },
-  Object {
-    "loc": "1:0-31",
-    "message": "Module not found: Error: Can't resolve './missing2' in '<TEST_DIR>'",
-    "moduleName": "./errors/harmony-import-missing2/module2.js",
-  },
+  "Module not found: Error: Can't resolve './missing1' in '<TEST_DIR>'",
+  "Module not found: Error: Can't resolve './missing2' in '<TEST_DIR>'",
 ]
 `;
