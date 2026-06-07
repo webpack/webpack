@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Speed up module concatenation by caching root chunks and per-module runtimes.
+Speed up module concatenation by caching repeated per-module computations.
