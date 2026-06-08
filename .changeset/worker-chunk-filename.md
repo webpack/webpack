@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `output.workerChunkFilename` to set the filename template of worker chunks.
+Add `output.workerChunkFilename` and `entry.worker` for worker chunk filenames.

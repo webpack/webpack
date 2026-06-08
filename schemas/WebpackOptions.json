@@ -849,6 +849,10 @@
         },
         "wasmLoading": {
           "$ref": "#/definitions/WasmLoading"
+        },
+        "worker": {
+          "description": "Mark this entry as a worker so its output file uses 'output.workerChunkFilename'.",
+          "type": "boolean"
         }
       },
       "required": ["import"]
@@ -908,6 +912,10 @@
         },
         "wasmLoading": {
           "$ref": "#/definitions/WasmLoading"
+        },
+        "worker": {
+          "description": "Mark this entry as a worker so its output file uses 'output.workerChunkFilename'.",
+          "type": "boolean"
         }
       }
     },

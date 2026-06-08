@@ -6742,6 +6742,11 @@ declare interface EntryDescription {
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	wasmLoading?: string | false;
+
+	/**
+	 * Mark this entry as a worker so its output file uses 'output.workerChunkFilename'.
+	 */
+	worker?: boolean;
 }
 
 /**
@@ -6802,6 +6807,11 @@ declare interface EntryDescriptionNormalized {
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	wasmLoading?: string | false;
+
+	/**
+	 * Mark this entry as a worker so its output file uses 'output.workerChunkFilename'.
+	 */
+	worker?: boolean;
 }
 type EntryItem = string | string[];
 type EntryLibIndex =
@@ -6845,7 +6855,7 @@ declare class EntryOptionPlugin {
 		desc: EntryDescriptionNormalized
 	): EntryOptions;
 }
-type EntryOptions = { name?: string; worker?: boolean } & Omit<
+type EntryOptions = { name?: string } & Omit<
 	EntryDescriptionNormalized,
 	"import"
 >;

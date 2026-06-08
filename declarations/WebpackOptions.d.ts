@@ -1250,6 +1250,10 @@ export interface EntryDescription {
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	wasmLoading?: WasmLoading;
+	/**
+	 * Mark this entry as a worker so its output file uses 'output.workerChunkFilename'.
+	 */
+	worker?: boolean;
 }
 /**
  * Options for library.
@@ -3453,6 +3457,10 @@ export interface EntryDescriptionNormalized {
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	wasmLoading?: WasmLoading;
+	/**
+	 * Mark this entry as a worker so its output file uses 'output.workerChunkFilename'.
+	 */
+	worker?: boolean;
 }
 /**
  * Multiple entry bundles are created. The key is the entry name. The value is an entry description object.
