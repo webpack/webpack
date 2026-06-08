@@ -439,6 +439,7 @@ describe("snapshots", () => {
 		    "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
 		    "hotUpdateGlobal": "webpackHotUpdatewebpack",
 		    "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
+		    "html": false,
 		    "htmlChunkFilename": "[name].html",
 		    "htmlFilename": "[name].html",
 		    "ignoreBrowserWarnings": undefined,

@@ -3910,6 +3910,10 @@
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
         },
+        "html": {
+          "description": "Generate an HTML file for each non-HTML entrypoint and inject the entrypoint's initial JS and CSS output chunks. The filename follows `output.htmlFilename`. HTML used as an entry is handled separately and is left untouched.",
+          "type": "boolean"
+        },
         "htmlChunkFilename": {
           "$ref": "#/definitions/HtmlChunkFilename"
         },
@@ -4124,6 +4128,10 @@
         },
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
+        },
+        "html": {
+          "description": "Generate an HTML file for each non-HTML entrypoint and inject the entrypoint's initial JS and CSS output chunks. The filename follows `output.htmlFilename`. HTML used as an entry is handled separately and is left untouched.",
+          "type": "boolean"
         },
         "htmlChunkFilename": {
           "$ref": "#/definitions/HtmlChunkFilename"

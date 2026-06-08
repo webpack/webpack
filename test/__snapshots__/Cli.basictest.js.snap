@@ -8179,6 +8179,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-html": Object {
+    "configs": Array [
+      Object {
+        "description": "Generate an HTML file for each non-HTML entrypoint and inject the entrypoint's initial JS and CSS output chunks. The filename follows \`output.htmlFilename\`. HTML used as an entry is handled separately and is left untouched.",
+        "multiple": false,
+        "path": "output.html",
+        "type": "boolean",
+      },
+    ],
+    "description": "Generate an HTML file for each non-HTML entrypoint and inject the entrypoint's initial JS and CSS output chunks. The filename follows \`output.htmlFilename\`. HTML used as an entry is handled separately and is left untouched.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-html-chunk-filename": Object {
     "configs": Array [
       Object {
