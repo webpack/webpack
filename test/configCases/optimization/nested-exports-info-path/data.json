@@ -1,0 +1,9 @@
+{
+	"used": {
+		"deep": { "leaf": 42, "other": 7 },
+		"sibling": 3
+	},
+	"partly": { "kept": "yes", "dropped": "no" },
+	"whole": { "m": 1, "n": 2 },
+	"unused": 1
+}
