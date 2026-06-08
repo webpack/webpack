@@ -328,121 +328,112 @@ describe("HotModuleReplacementPlugin", () => {
 		});
 	});
 
-	// Reproduces the TODO at lib/HotModuleReplacementPlugin.js (search "force load
-	// one of the chunks which contains the module").
-	//
 	// Two runtimes (entries `a` and `b`) initially share `shared`+`x` in one split
 	// chunk. On the second build `b` switches to `import("./shared")`, so for runtime
 	// `b` those modules leave the (loaded) `shared` chunk and move into a new async
-	// chunk `lazyShared` that the client has not loaded. The emitted `b` update therefore
-	// removes the `shared` chunk (`r`) but disposes nothing (`m` empty): `shared`/`x`
-	// stay loaded on the client with no installed chunk owning them, so later updates
-	// to them are never delivered to runtime `b`.
-	//
-	// `it.failing`: the assertion below states the desired behavior (the orphaned
-	// modules must be accounted for in `m`). It fails today, so the test is green.
-	// When the TODO is fixed (force-load the new chunk, or dispose the modules) this
-	// turns red — drop `.failing` and adjust the expectation to lock in the fix.
-	it.failing(
-		"should not orphan modules whose only loaded chunk is removed from a runtime",
-		async () => {
-			const dir = path.join(
-				__dirname,
-				"js",
-				"HotModuleReplacementPlugin",
-				"orphan-on-chunk-migration"
-			);
-			const src = path.join(dir, "src");
-			const out = path.join(dir, "dist");
-			const recordsFile = path.join(dir, "records.json");
-			fs.mkdirSync(src, { recursive: true });
-			try {
-				fs.unlinkSync(recordsFile);
-			} catch (_err) {
-				// empty
-			}
+	// chunk `lazyShared` that the client has not loaded. Without the force-load fix the
+	// `b` update would remove the `shared` chunk (`r`) yet dispose nothing (`m` empty),
+	// leaving `shared`/`x` loaded with no installed chunk owning them and cutting off
+	// their future HMR updates. The fix lists the new owning chunk in `f` so the client
+	// force-loads it.
+	it("should force-load the new owning chunk when a module's only loaded chunk is removed from a runtime", async () => {
+		const dir = path.join(
+			__dirname,
+			"js",
+			"HotModuleReplacementPlugin",
+			"orphan-on-chunk-migration"
+		);
+		const src = path.join(dir, "src");
+		const out = path.join(dir, "dist");
+		const recordsFile = path.join(dir, "records.json");
+		fs.mkdirSync(src, { recursive: true });
+		try {
+			fs.unlinkSync(recordsFile);
+		} catch (_err) {
+			// empty
+		}
 
-			fs.writeFileSync(path.join(src, "x.js"), "export default 1;\n");
-			fs.writeFileSync(
-				path.join(src, "shared.js"),
-				'import v from "./x";\nexport const g = () => v;\n'
-			);
-			fs.writeFileSync(
-				path.join(src, "a.js"),
-				'import { g } from "./shared";\nconsole.log("a", g());\nif (module.hot) module.hot.accept();\n'
-			);
-			// build 1: `b` statically imports `shared` -> shared chunk is {a, b}
-			fs.writeFileSync(
-				path.join(src, "b.js"),
-				'import { g } from "./shared";\nconsole.log("b", g());\nif (module.hot) module.hot.accept();\n'
-			);
+		fs.writeFileSync(path.join(src, "x.js"), "export default 1;\n");
+		fs.writeFileSync(
+			path.join(src, "shared.js"),
+			'import v from "./x";\nexport const g = () => v;\n'
+		);
+		fs.writeFileSync(
+			path.join(src, "a.js"),
+			'import { g } from "./shared";\nconsole.log("a", g());\nif (module.hot) module.hot.accept();\n'
+		);
+		// build 1: `b` statically imports `shared` -> shared chunk is {a, b}
+		fs.writeFileSync(
+			path.join(src, "b.js"),
+			'import { g } from "./shared";\nconsole.log("b", g());\nif (module.hot) module.hot.accept();\n'
+		);
 
-			const compiler = webpack({
-				mode: "development",
-				devtool: false,
-				cache: false,
-				context: dir,
-				entry: { a: "./src/a.js", b: "./src/b.js" },
-				output: { path: out, filename: "[name].js" },
-				recordsPath: recordsFile,
-				optimization: {
-					chunkIds: "named",
-					runtimeChunk: false,
-					splitChunks: {
-						chunks: "initial",
-						minSize: 0,
-						cacheGroups: {
-							shared: {
-								test: /shared|x\.js/,
-								name: "shared",
-								enforce: true
-							}
+		const compiler = webpack({
+			mode: "development",
+			devtool: false,
+			cache: false,
+			context: dir,
+			entry: { a: "./src/a.js", b: "./src/b.js" },
+			output: { path: out, filename: "[name].js" },
+			recordsPath: recordsFile,
+			optimization: {
+				chunkIds: "named",
+				runtimeChunk: false,
+				splitChunks: {
+					chunks: "initial",
+					minSize: 0,
+					cacheGroups: {
+						shared: {
+							test: /shared|x\.js/,
+							name: "shared",
+							enforce: true
 						}
 					}
-				},
-				plugins: [new webpack.HotModuleReplacementPlugin()]
-			});
-			const run = () =>
-				new Promise((resolve, reject) => {
-					compiler.run((err, stats) => {
-						if (err) return reject(err);
-						if (stats.hasErrors()) {
-							return reject(
-								new Error(stats.toString({ all: false, errors: true }))
-							);
-						}
-						resolve(stats);
-					});
+				}
+			},
+			plugins: [new webpack.HotModuleReplacementPlugin()]
+		});
+		const run = () =>
+			new Promise((resolve, reject) => {
+				compiler.run((err, stats) => {
+					if (err) return reject(err);
+					if (stats.hasErrors()) {
+						return reject(
+							new Error(stats.toString({ all: false, errors: true }))
+						);
+					}
+					resolve(stats);
 				});
-
-			await run();
-			const before = new Set(fs.readdirSync(out));
-
-			// build 2: `b` switches to a dynamic import -> shared/x migrate out of the
-			// loaded `shared` chunk into a b-only async chunk `lazyShared`.
-			fs.writeFileSync(
-				path.join(src, "b.js"),
-				'const p = import(/* webpackChunkName: "lazyShared" */ "./shared");\np.then(({ g }) => console.log("b", g()));\nif (module.hot) module.hot.accept();\n'
-			);
-			await run();
-
-			const bUpdate = fs
-				.readdirSync(out)
-				.find((f) => !before.has(f) && /^b\..*\.hot-update\.json$/.test(f));
-			expect(bUpdate).toBeDefined();
-			const manifest = JSON.parse(
-				fs.readFileSync(path.join(out, bUpdate), "utf8")
-			);
-
-			// The `shared` chunk is removed from runtime `b`...
-			expect(manifest.r).toContain("shared");
-			// ...so the modules it carried (no longer in any installed chunk for `b`)
-			// must be accounted for. Today `m` is empty -> they are orphaned (the bug).
-			await new Promise((resolve) => {
-				compiler.close(resolve);
 			});
-			expect(manifest.m.length).toBeGreaterThan(0);
-		},
-		120000
-	);
+
+		await run();
+		const before = new Set(fs.readdirSync(out));
+
+		// build 2: `b` switches to a dynamic import -> shared/x migrate out of the
+		// loaded `shared` chunk into a b-only async chunk `lazyShared`.
+		fs.writeFileSync(
+			path.join(src, "b.js"),
+			'const p = import(/* webpackChunkName: "lazyShared" */ "./shared");\np.then(({ g }) => console.log("b", g()));\nif (module.hot) module.hot.accept();\n'
+		);
+		await run();
+
+		const bUpdate = fs
+			.readdirSync(out)
+			.find((f) => !before.has(f) && /^b\..*\.hot-update\.json$/.test(f));
+		expect(bUpdate).toBeDefined();
+		const manifest = JSON.parse(
+			fs.readFileSync(path.join(out, bUpdate), "utf8")
+		);
+
+		await new Promise((resolve) => {
+			compiler.close(resolve);
+		});
+
+		// The `shared` chunk is removed from runtime `b`...
+		expect(manifest.r).toContain("shared");
+		// ...the migrated modules are not disposed (they still live in `b`)...
+		expect(manifest.m).toEqual([]);
+		// ...and the new owning chunk is force-loaded so they keep an installed owner.
+		expect(manifest.f).toContain("lazyShared");
+	}, 120000);
 });
