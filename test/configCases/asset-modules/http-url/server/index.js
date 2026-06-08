@@ -18,6 +18,15 @@ function createServer() {
 			/** @type {import("net").Socket} */ (res.socket).destroy();
 			return;
 		}
+		// must-revalidate redirect with a stable etag, to exercise the unchanged-redirect path
+		if (query === "redirect") {
+			res.statusCode = 301;
+			res.setHeader("Location", "/resolve.js");
+			res.setHeader("ETag", '"stable-redirect"');
+			res.setHeader("Cache-Control", "public, must-revalidate");
+			res.end();
+			return;
+		}
 		const pathname = "." + url.replace(/\?.*$/, "");
 		if (url.endsWith("?no-cache")) {
 			res.setHeader("Cache-Control", "no-cache, max-age=60");
