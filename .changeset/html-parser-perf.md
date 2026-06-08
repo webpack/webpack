@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Reduce HTML parser allocations and tokenizer per-character overhead.
+Speed up the experimental HTML parser and reduce its memory usage.
