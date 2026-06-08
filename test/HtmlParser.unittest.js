@@ -2,14 +2,14 @@
 
 const path = require("path");
 
-jest.mock("../lib/html/walkHtmlTokens", () => ({ buildAst: jest.fn() }));
+jest.mock("../lib/html/buildHtmlAst", () => jest.fn());
 
 const HtmlInlineScriptDependency = require("../lib/dependencies/HtmlInlineScriptDependency");
 const HtmlInlineStyleDependency = require("../lib/dependencies/HtmlInlineStyleDependency");
 const CommentCompilationWarning = require("../lib/errors/CommentCompilationWarning");
 const UnsupportedFeatureWarning = require("../lib/errors/UnsupportedFeatureWarning");
 const HtmlParser = require("../lib/html/HtmlParser");
-const walkHtmlTokens = require("../lib/html/walkHtmlTokens");
+const buildHtmlAst = require("../lib/html/buildHtmlAst");
 
 /**
  * @returns {{ module: EXPECTED_ANY, presentationalDependencies: EXPECTED_ANY[], dependencies: EXPECTED_ANY[], warnings: EXPECTED_ANY[], errors: EXPECTED_ANY[] }} test doubles
@@ -84,7 +84,7 @@ describe("HtmlParser", () => {
 			}
 		};
 
-		walkHtmlTokens.buildAst.mockReturnValue({
+		buildHtmlAst.mockReturnValue({
 			type: "document",
 			children: [
 				{
@@ -134,7 +134,7 @@ describe("HtmlParser", () => {
 			}
 		});
 
-		expect(walkHtmlTokens.buildAst).toHaveBeenCalledWith(source);
+		expect(buildHtmlAst).toHaveBeenCalledWith(source);
 		expect(dependencies).toHaveLength(1);
 		expect(presentationalDependencies).toHaveLength(1);
 
@@ -189,7 +189,7 @@ describe("HtmlParser", () => {
 			addCodeGenerationDependency() {}
 		};
 
-		walkHtmlTokens.buildAst.mockReturnValue({
+		buildHtmlAst.mockReturnValue({
 			type: "document",
 			children: [
 				{
@@ -333,7 +333,7 @@ describe("HtmlParser", () => {
 	it("warns on a malformed webpackIgnore magic comment", () => {
 		const source = "<!-- webpackIgnore: ) -->";
 		const { module, warnings } = makeModule();
-		walkHtmlTokens.buildAst.mockReturnValue({
+		buildHtmlAst.mockReturnValue({
 			type: "document",
 			children: [
 				{
@@ -354,7 +354,7 @@ describe("HtmlParser", () => {
 	it("warns when webpackIgnore is not a boolean", () => {
 		const source = "<!-- webpackIgnore: 5 -->";
 		const { module, warnings } = makeModule();
-		walkHtmlTokens.buildAst.mockReturnValue({
+		buildHtmlAst.mockReturnValue({
 			type: "document",
 			children: [
 				{
@@ -375,7 +375,7 @@ describe("HtmlParser", () => {
 	it("does not emit a dependency for a whitespace-only inline <style>", () => {
 		const source = "<style>   </style>";
 		const { module, dependencies } = makeModule();
-		walkHtmlTokens.buildAst.mockReturnValue({
+		buildHtmlAst.mockReturnValue({
 			type: "document",
 			children: [
 				{
@@ -402,16 +402,16 @@ describe("HtmlParser", () => {
 
 	it("accepts a Buffer source and strips a leading BOM", () => {
 		const { module } = makeModule();
-		walkHtmlTokens.buildAst.mockReturnValue({
+		buildHtmlAst.mockReturnValue({
 			type: "document",
 			children: []
 		});
 
 		new HtmlParser({}).parse(Buffer.from("<div></div>"), makeState(module));
-		expect(walkHtmlTokens.buildAst).toHaveBeenCalledWith("<div></div>");
+		expect(buildHtmlAst).toHaveBeenCalledWith("<div></div>");
 
 		new HtmlParser({}).parse("﻿<div></div>", makeState(module));
-		expect(walkHtmlTokens.buildAst).toHaveBeenLastCalledWith("<div></div>");
+		expect(buildHtmlAst).toHaveBeenLastCalledWith("<div></div>");
 	});
 
 	it("throws when given a preparsed (object) source", () => {
@@ -427,7 +427,7 @@ describe("HtmlParser", () => {
 	it("ignores a magic comment that has no webpackIgnore key", () => {
 		const source = "<!-- webpackPreload: true -->";
 		const { module, warnings } = makeModule();
-		walkHtmlTokens.buildAst.mockReturnValue({
+		buildHtmlAst.mockReturnValue({
 			type: "document",
 			children: [
 				{
@@ -446,7 +446,7 @@ describe("HtmlParser", () => {
 	it("does not emit a dependency for an empty inline <style>", () => {
 		const source = "<style></style>";
 		const { module, dependencies } = makeModule();
-		walkHtmlTokens.buildAst.mockReturnValue({
+		buildHtmlAst.mockReturnValue({
 			type: "document",
 			children: [
 				{
@@ -521,7 +521,7 @@ describe("HtmlParser", () => {
 		"drops a single-quoted/unquoted type=module for classic output (%s)",
 		(source) => {
 			const { module, presentationalDependencies } = makeModule();
-			walkHtmlTokens.buildAst.mockReturnValue(scriptWithType(source));
+			buildHtmlAst.mockReturnValue(scriptWithType(source));
 
 			new HtmlParser({}).parse(source, makeState(module));
 

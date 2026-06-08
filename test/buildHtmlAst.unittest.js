@@ -2,33 +2,30 @@
 
 // cspell:ignore selectedcontent
 
-const {
-	NS_HTML,
-	NS_MATHML,
-	NS_SVG,
-	buildAst
-} = require("../lib/html/walkHtmlTokens");
+const buildHtmlAst = require("../lib/html/buildHtmlAst");
+
+const { NS_HTML, NS_MATHML, NS_SVG } = buildHtmlAst;
 
 /**
- * @param {import("../lib/html/walkHtmlTokens").HtmlNode[]} children children
+ * @param {import("../lib/html/buildHtmlAst").HtmlNode[]} children children
  * @param {string} tagName tag name
- * @returns {import("../lib/html/walkHtmlTokens").HtmlElement} the element
+ * @returns {import("../lib/html/buildHtmlAst").HtmlElement} the element
  */
 const child = (children, tagName) =>
-	/** @type {import("../lib/html/walkHtmlTokens").HtmlElement} */ (
+	/** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
 		children.find((c) => c.type === "element" && c.tagName === tagName)
 	);
 
 // The tree builder always produces a full document (html > head, body); these
 // helpers reach the interesting subtrees.
-const html = (src) => child(buildAst(src).children, "html");
+const html = (src) => child(buildHtmlAst(src).children, "html");
 const body = (src) => child(html(src).children, "body").children;
 const head = (src) => child(html(src).children, "head").children;
 
 /**
  * @param {string} src source
  * @param {string} tagName tag name
- * @returns {import("../lib/html/walkHtmlTokens").HtmlElement} first matching element anywhere
+ * @returns {import("../lib/html/buildHtmlAst").HtmlElement} first matching element anywhere
  */
 const find = (src, tagName) => {
 	let found;
@@ -40,13 +37,13 @@ const find = (src, tagName) => {
 		}
 		for (const c of node.children) walk(c);
 	};
-	for (const c of buildAst(src).children) walk(c);
+	for (const c of buildHtmlAst(src).children) walk(c);
 	return found;
 };
 
-describe("walkHtmlTokens.buildAst", () => {
+describe("buildHtmlAst", () => {
 	it("should produce an empty document with html/head/body scaffolding", () => {
-		const ast = buildAst("");
+		const ast = buildHtmlAst("");
 		expect(ast.type).toBe("document");
 		const root = child(ast.children, "html");
 		expect(root.tagName).toBe("html");
@@ -95,13 +92,13 @@ describe("walkHtmlTokens.buildAst", () => {
 	});
 
 	it("should parse comments", () => {
-		const ast = buildAst("<!-- hello -->");
+		const ast = buildHtmlAst("<!-- hello -->");
 		expect(ast.children[0].type).toBe("comment");
 		expect(ast.children[0].data).toBe(" hello ");
 	});
 
 	it("should parse doctype", () => {
-		const ast = buildAst("<!DOCTYPE html><html></html>");
+		const ast = buildHtmlAst("<!DOCTYPE html><html></html>");
 		expect(ast.children[0].type).toBe("doctype");
 		expect(ast.children[0].name).toBe("html");
 	});
@@ -207,7 +204,7 @@ describe("walkHtmlTokens.buildAst", () => {
 
 	it("should treat bogus comments as comments", () => {
 		// A leading bogus comment is inserted into the document before <html>.
-		const ast = buildAst("<?bogus comment>");
+		const ast = buildHtmlAst("<?bogus comment>");
 		expect(ast.children[0].type).toBe("comment");
 		expect(ast.children[0].data).toBe("?bogus comment");
 	});
@@ -344,7 +341,7 @@ describe("walkHtmlTokens.buildAst", () => {
 	it("foster-parents stray text in a table fragment context", () => {
 		// Context is a `table`, so there is no `<table>` on the open stack: stray
 		// character data is fostered to the fragment root, beside the table rows.
-		const root = buildAst("<tr><td>a</td></tr>x", "table").children[0];
+		const root = buildHtmlAst("<tr><td>a</td></tr>x", "table").children[0];
 		const texts = root.children
 			.filter((c) => c.type === "text")
 			.map((c) => c.data);

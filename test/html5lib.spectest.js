@@ -19,9 +19,8 @@ const fs = require("fs");
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
-const walkHtmlTokens = require("../lib/html/walkHtmlTokens");
-
-const { buildAst, decodeHtmlEntities } = walkHtmlTokens;
+const buildHtmlAst = require("../lib/html/buildHtmlAst");
+const { decodeHtmlEntities } = require("../lib/html/walkHtmlTokens");
 
 const testsDir = path.resolve(__dirname, "./html5lib-tests");
 
@@ -177,8 +176,8 @@ describe("html5lib-tests webpack build", () => {
 const treeDir = path.join(testsDir, "tree-construction");
 
 const NS_PREFIX = {
-	[walkHtmlTokens.NS_SVG]: "svg ",
-	[walkHtmlTokens.NS_MATHML]: "math "
+	[buildHtmlAst.NS_SVG]: "svg ",
+	[buildHtmlAst.NS_MATHML]: "math "
 };
 
 /** @type {Set<string>} intentional, documented exceptions (currently none) */
@@ -186,13 +185,13 @@ const KNOWN_DIVERGENCES = new Set();
 
 /**
  * Serialize an AST in the html5lib tree-construction format.
- * @param {import("../lib/html/walkHtmlTokens").HtmlDocument} doc document
+ * @param {import("../lib/html/buildHtmlAst").HtmlDocument} doc document
  * @returns {string} serialized tree
  */
 const serialize = (doc) => {
 	const lines = [];
 	/**
-	 * @param {import("../lib/html/walkHtmlTokens").HtmlNode} node node
+	 * @param {import("../lib/html/buildHtmlAst").HtmlNode} node node
 	 * @param {number} depth depth
 	 */
 	const walk = (node, depth) => {
@@ -222,7 +221,9 @@ const serialize = (doc) => {
 		});
 		for (const a of attrs) {
 			lines.push(
-				`| ${"  ".repeat(depth + 1)}${a.serializedName || a.name}="${decodeHtmlEntities(a.value, true)}"`
+				`| ${"  ".repeat(depth + 1)}${
+					a.serializedName || a.name
+				}="${decodeHtmlEntities(a.value, true)}"`
 			);
 		}
 		if (node.templateContent) {
@@ -309,14 +310,14 @@ const parseDat = (text) => {
  * @returns {string} serialized tree
  */
 const runTreeCase = (c) => {
-	const doc = buildAst(c.data, c.fragment || undefined);
+	const doc = buildHtmlAst(c.data, c.fragment || undefined);
 	// In fragment mode the result is the children of the synthesized root.
 	const root =
 		c.fragment && doc.children[0]
-			? /** @type {import("../lib/html/walkHtmlTokens").HtmlDocument} */ ({
+			? /** @type {import("../lib/html/buildHtmlAst").HtmlDocument} */ ({
 					type: "document",
 					children:
-						/** @type {import("../lib/html/walkHtmlTokens").HtmlElement} */ (
+						/** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
 							doc.children[0]
 						).children
 				})
