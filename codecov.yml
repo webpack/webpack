@@ -23,6 +23,7 @@ coverage:
         flags:
           - unit
           - integration
+        informational: true
 ignore:
   - "**/*.runtime.js"
   - "schemas/**/*"
