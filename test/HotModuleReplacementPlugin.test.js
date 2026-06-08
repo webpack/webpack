@@ -436,4 +436,191 @@ describe("HotModuleReplacementPlugin", () => {
 		// ...and the new owning chunk is force-loaded so they keep an installed owner.
 		expect(manifest.f).toContain("lazyShared");
 	}, 120000);
+
+	// Counterpart to the force-load case: when the module no longer lives in the
+	// runtime at all, it is disposed (added to `m`), not force-loaded.
+	it("should dispose a module that no longer lives in a runtime its chunk left", async () => {
+		const dir = path.join(
+			__dirname,
+			"js",
+			"HotModuleReplacementPlugin",
+			"dispose-on-runtime-removal"
+		);
+		const src = path.join(dir, "src");
+		const out = path.join(dir, "dist");
+		const recordsFile = path.join(dir, "records.json");
+		fs.mkdirSync(src, { recursive: true });
+		try {
+			fs.unlinkSync(recordsFile);
+		} catch (_err) {
+			// empty
+		}
+
+		fs.writeFileSync(
+			path.join(src, "shared.js"),
+			"export const g = () => 1;\n"
+		);
+		fs.writeFileSync(
+			path.join(src, "a.js"),
+			'import { g } from "./shared";\nconsole.log("a", g());\nif (module.hot) module.hot.accept();\n'
+		);
+		fs.writeFileSync(
+			path.join(src, "b.js"),
+			'import { g } from "./shared";\nconsole.log("b", g());\nif (module.hot) module.hot.accept();\n'
+		);
+
+		const compiler = webpack({
+			mode: "development",
+			devtool: false,
+			cache: false,
+			context: dir,
+			entry: { a: "./src/a.js", b: "./src/b.js" },
+			output: { path: out, filename: "[name].js" },
+			recordsPath: recordsFile,
+			optimization: {
+				moduleIds: "named",
+				chunkIds: "named",
+				runtimeChunk: false,
+				splitChunks: {
+					chunks: "initial",
+					minSize: 0,
+					cacheGroups: {
+						shared: { test: /shared/, name: "shared", enforce: true }
+					}
+				}
+			},
+			plugins: [new webpack.HotModuleReplacementPlugin()]
+		});
+		const run = () =>
+			new Promise((resolve, reject) => {
+				compiler.run((err, stats) => {
+					if (err) return reject(err);
+					if (stats.hasErrors()) {
+						return reject(
+							new Error(stats.toString({ all: false, errors: true }))
+						);
+					}
+					resolve(stats);
+				});
+			});
+
+		await run();
+		const before = new Set(fs.readdirSync(out));
+
+		// build 2: `b` stops importing `shared`, so the shared chunk leaves runtime
+		// `b` entirely and the module no longer lives there.
+		fs.writeFileSync(
+			path.join(src, "b.js"),
+			'console.log("b");\nif (module.hot) module.hot.accept();\n'
+		);
+		await run();
+
+		const bUpdate = fs
+			.readdirSync(out)
+			.find((f) => !before.has(f) && /^b\..*\.hot-update\.json$/.test(f));
+		expect(bUpdate).toBeDefined();
+		const manifest = JSON.parse(
+			fs.readFileSync(path.join(out, bUpdate), "utf8")
+		);
+		await new Promise((resolve) => {
+			compiler.close(resolve);
+		});
+
+		expect(manifest.r).toContain("shared");
+		expect(manifest.m).toContain("./src/shared.js");
+		expect(manifest.f).toBeUndefined();
+	}, 120000);
+
+	// With a non-unique hotUpdateMainFilename the per-runtime updates collide and
+	// are merged (with a warning); the merge must carry force-load chunks too.
+	it("should merge force-load chunks across runtimes on hotUpdateMainFilename collision", async () => {
+		const dir = path.join(
+			__dirname,
+			"js",
+			"HotModuleReplacementPlugin",
+			"force-load-filename-collision"
+		);
+		const src = path.join(dir, "src");
+		const out = path.join(dir, "dist");
+		const recordsFile = path.join(dir, "records.json");
+		fs.mkdirSync(src, { recursive: true });
+		try {
+			fs.unlinkSync(recordsFile);
+		} catch (_err) {
+			// empty
+		}
+
+		fs.writeFileSync(path.join(src, "x.js"), "export default 1;\n");
+		fs.writeFileSync(
+			path.join(src, "shared.js"),
+			'import v from "./x";\nexport const g = () => v;\n'
+		);
+		fs.writeFileSync(
+			path.join(src, "a.js"),
+			'import { g } from "./shared";\nconsole.log("a", g());\nif (module.hot) module.hot.accept();\n'
+		);
+		fs.writeFileSync(
+			path.join(src, "b.js"),
+			'import { g } from "./shared";\nconsole.log("b", g());\nif (module.hot) module.hot.accept();\n'
+		);
+
+		const compiler = webpack({
+			mode: "development",
+			devtool: false,
+			cache: false,
+			context: dir,
+			entry: { a: "./src/a.js", b: "./src/b.js" },
+			output: {
+				path: out,
+				filename: "[name].js",
+				// no [runtime] -> both runtimes write the same update manifest filename
+				hotUpdateMainFilename: "[fullhash].hot-update.json"
+			},
+			recordsPath: recordsFile,
+			optimization: {
+				chunkIds: "named",
+				runtimeChunk: false,
+				splitChunks: {
+					chunks: "initial",
+					minSize: 0,
+					cacheGroups: {
+						shared: { test: /shared|x\.js/, name: "shared", enforce: true }
+					}
+				}
+			},
+			plugins: [new webpack.HotModuleReplacementPlugin()]
+		});
+		const run = () =>
+			new Promise((resolve, reject) => {
+				compiler.run((err, stats) => {
+					if (err) return reject(err);
+					if (stats.hasErrors()) {
+						return reject(
+							new Error(stats.toString({ all: false, errors: true }))
+						);
+					}
+					resolve(stats);
+				});
+			});
+
+		await run();
+		// build 2: `b` migrates `shared` into a b-only async chunk (force-load case)
+		fs.writeFileSync(
+			path.join(src, "b.js"),
+			'const p = import(/* webpackChunkName: "lazyShared" */ "./shared");\np.then(({ g }) => console.log("b", g()));\nif (module.hot) module.hot.accept();\n'
+		);
+		const stats = await run();
+		const { warnings } = stats.toJson({ all: false, warnings: true });
+		await new Promise((resolve) => {
+			compiler.close(resolve);
+		});
+
+		expect(
+			warnings.some((w) =>
+				(w.message || String(w)).includes(
+					"doesn't lead to unique filenames per runtime"
+				)
+			)
+		).toBe(true);
+	}, 120000);
 });
