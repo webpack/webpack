@@ -9249,7 +9249,6 @@ declare interface HtmlGeneratorOptions {
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
 	template?: (source: string, context: HtmlTemplateContext) => string;
-	scriptModule: boolean;
 	sourcesByTag: Record<string, Record<string, SourceItem>>;
 	anyTagSources?: Record<string, SourceItem>;
 
@@ -9267,11 +9266,6 @@ declare abstract class HtmlParser extends ParserClass {
  * Parser options for html modules.
  */
 declare interface HtmlParserOptions {
-	/**
-	 * Treat `<script src>` and inline `<script>` without an explicit `type` as ES module scripts (the tag is emitted as `type="module"` and the chunk is parsed/bundled as ESM). `false` (default) keeps them as classic scripts, matching the browser default where a module script must opt in via `type="module"`. Scripts that already set `type="module"` are always treated as modules, and ES-module output (`output.module`) always emits module scripts regardless of this option.
-	 */
-	scriptModule?: boolean;
-
 	/**
 	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `"..."` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
 	 */

@@ -2688,19 +2688,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "module-parser-html-script-module": Object {
-    "configs": Array [
-      Object {
-        "description": "Treat \`<script src>\` and inline \`<script>\` without an explicit \`type\` as ES module scripts (the tag is emitted as \`type=\\"module\\"\` and the chunk is parsed/bundled as ESM). \`false\` (default) keeps them as classic scripts, matching the browser default where a module script must opt in via \`type=\\"module\\"\`. Scripts that already set \`type=\\"module\\"\` are always treated as modules, and ES-module output (\`output.module\`) always emits module scripts regardless of this option.",
-        "multiple": false,
-        "path": "module.parser.html.scriptModule",
-        "type": "boolean",
-      },
-    ],
-    "description": "Treat \`<script src>\` and inline \`<script>\` without an explicit \`type\` as ES module scripts (the tag is emitted as \`type=\\"module\\"\` and the chunk is parsed/bundled as ESM). \`false\` (default) keeps them as classic scripts, matching the browser default where a module script must opt in via \`type=\\"module\\"\`. Scripts that already set \`type=\\"module\\"\` are always treated as modules, and ES-module output (\`output.module\`) always emits module scripts regardless of this option.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "module-parser-html-sources": Object {
     "configs": Array [
       Object {
