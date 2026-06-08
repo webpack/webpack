@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Support CommonJS reexports via `Object.defineProperty` value descriptors.
+Support CommonJS reexports via `Object.defineProperty` value and getter descriptors.
