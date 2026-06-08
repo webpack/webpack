@@ -18399,6 +18399,11 @@ declare interface Output {
 	webassemblyModuleFilename?: string;
 
 	/**
+	 * Specifies the filename template of non-initial output worker's files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	workerChunkFilename?: string | TemplatePathFn<PathDataChunk>;
+
+	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: string | false;
@@ -18714,6 +18719,11 @@ declare interface OutputNormalized {
 	webassemblyModuleFilename?: string;
 
 	/**
+	 * Specifies the filename template of non-initial output worker's files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	workerChunkFilename?: string | TemplatePathFn<PathDataChunk>;
+
+	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: string | false;
@@ -18749,6 +18759,9 @@ type OutputNormalizedWithDefaults = OutputNormalized & {
 	devtoolNamespace: string;
 	publicPath: NonNullable<undefined | string | TemplatePathFn<PathData>>;
 	workerPublicPath: string;
+	workerChunkFilename: NonNullable<
+		undefined | string | TemplatePathFn<PathDataChunk>
+	>;
 	workerWasmLoading: NonNullable<undefined | string | false>;
 	workerChunkLoading: NonNullable<undefined | string | false>;
 	chunkFormat: NonNullable<undefined | string | false>;
