@@ -24951,6 +24951,19 @@ declare abstract class WeakTupleMap<K extends any[], V> {
 	provide(...args: [K, ...((...args: K) => V)[]]): V;
 
 	/**
+	 * Memoizes `compute(thisArg, ...args)` under the tuple key `[compute,
+	 * ...args]`, computing it on a miss. Equivalent to `provide(compute, ...args,
+	 * () => compute(thisArg, ...args))` but without allocating that closure (or an
+	 * extra rest array) on every call — `ModuleGraph#cached` runs this on hot
+	 * paths where most calls hit the cache and the closure would be pure waste.
+	 */
+	cachedProvide(
+		compute: (thisArg: any, ...args: K) => V,
+		thisArg: any,
+		args: K
+	): V;
+
+	/**
 	 * Removes the value stored for the tuple key without pruning the trie.
 	 */
 	delete(...args: K): void;
