@@ -1,5 +1,7 @@
 "use strict";
 
+// cspell:ignore selectedcontent
+
 const {
 	NS_HTML,
 	NS_MATHML,
@@ -285,5 +287,68 @@ describe("walkHtmlTokens.buildAst", () => {
 			for (const node of nodes) collect(node);
 			expect(spans).toEqual([...new Set(spans)]);
 		});
+	});
+
+	it("should auto-close and close <dd>/<dt>", () => {
+		const dl = body("<dl><dd>a</dd><dt>b</dt></dl>")[0];
+		expect(dl.tagName).toBe("dl");
+		expect(dl.children.map((c) => c.tagName)).toEqual(["dd", "dt"]);
+		expect(dl.children[0].children[0].data).toBe("a");
+		expect(dl.children[1].children[0].data).toBe("b");
+	});
+
+	it("should keep <table> inside <p> in quirks mode (transitional doctype)", () => {
+		// A 4.01-Transitional public id (no system id) selects quirks mode, where
+		// `<table>` does NOT close an open `<p>`.
+		const quirks = body(
+			'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><p>x<table></table>'
+		);
+		expect(quirks).toHaveLength(1);
+		expect(quirks[0].tagName).toBe("p");
+		expect(child(quirks[0].children, "table")).toBeDefined();
+
+		// No-quirks: `<table>` closes the `<p>` so they are siblings.
+		const standard = body("<!DOCTYPE html><p>x<table></table>");
+		expect(standard.map((n) => n.tagName)).toEqual(["p", "table"]);
+	});
+
+	it("should mirror the selected <option> into <selectedcontent>", () => {
+		const select = body(
+			"<select><button><selectedcontent></button><option><span id=x>Y</span>"
+		)[0];
+		const selectedcontent = child(
+			child(select.children, "button").children,
+			"selectedcontent"
+		);
+		const span = selectedcontent.children[0];
+		expect(span.tagName).toBe("span");
+		expect(span.children[0].data).toBe("Y");
+		// The clone carries the attribute name/value but no source offsets, so
+		// the consumer never re-emits a dependency for it.
+		expect(span.attributes[0].name).toBe("id");
+		expect(span.attributes[0].value).toBe("x");
+		expect(span.attributes[0].valueStart).toBe(-1);
+	});
+
+	it("should mirror the last selected <option> into <selectedcontent>", () => {
+		const select = body(
+			"<select><button><selectedcontent></button><option>A<option selected>B"
+		)[0];
+		const selectedcontent = child(
+			child(select.children, "button").children,
+			"selectedcontent"
+		);
+		expect(selectedcontent.children[0].data).toBe("B");
+	});
+
+	it("foster-parents stray text in a table fragment context", () => {
+		// Context is a `table`, so there is no `<table>` on the open stack: stray
+		// character data is fostered to the fragment root, beside the table rows.
+		const root = buildAst("<tr><td>a</td></tr>x", "table").children[0];
+		const texts = root.children
+			.filter((c) => c.type === "text")
+			.map((c) => c.data);
+		expect(texts).toContain("x");
+		expect(child(root.children, "tbody")).toBeDefined();
 	});
 });
