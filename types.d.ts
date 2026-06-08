@@ -6845,7 +6845,7 @@ declare class EntryOptionPlugin {
 		desc: EntryDescriptionNormalized
 	): EntryOptions;
 }
-type EntryOptions = { name?: string } & Omit<
+type EntryOptions = { name?: string; worker?: boolean } & Omit<
 	EntryDescriptionNormalized,
 	"import"
 >;
