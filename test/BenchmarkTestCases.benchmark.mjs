@@ -317,12 +317,12 @@ function buildConfiguration(
 	) {
 		config.cache.cacheDirectory = path.resolve(config.output.path, ".cache");
 	}
-	// if (watch) {
-	// 	config.cache = {
-	// 		type: "memory",
-	// 		maxGenerations: 1
-	// 	};
-	// }
+	if (watch) {
+		config.cache = {
+			type: "memory",
+			maxGenerations: 1
+		};
+	}
 	return config;
 }
 
