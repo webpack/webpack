@@ -53,6 +53,14 @@ it("should not execute a reexported module until the getter is accessed", () => 
 	expect(counter.value).toBe(1);
 });
 
+it("should preserve the setter when a get/set descriptor wraps a reexport", () => {
+	const m = require("./reexport-getter-setter?1");
+	expect(m.value).toBe("abc"); // getter returns the reexported value
+	m.value = "written"; // setter must still exist (would throw if dropped)
+	expect(m.getLastSet()).toBe("written");
+	expect(m.value).toBe("abc"); // getter is unaffected by the write
+});
+
 it("should never execute a module behind an unused getter reexport", () => {
 	const counter = require("./counter");
 	counter.value = 0;
