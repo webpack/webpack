@@ -11,11 +11,11 @@ const {
 	TT_URL,
 	Token,
 	TokenStream,
-	consumeADeclarationList,
 	parseABlocksContents,
 	parseACommaSeparatedListOfComponentValues,
 	parseAComponentValue,
 	parseADeclaration,
+	parseADeclarationList,
 	parseAListOfComponentValues,
 	parseARule,
 	parseAStylesheet,
@@ -199,6 +199,15 @@ describe("walkCssTokens — parser entry points", () => {
 		expect(parseAStylesheetsContents("color:red")).toEqual([]);
 	});
 
+	it("parseAStylesheetsContents streams rules to onRule without collecting", () => {
+		const seen = [];
+		const result = parseAStylesheetsContents("a{x:1}b{y:2}", undefined, (r) =>
+			seen.push(r.type)
+		);
+		expect(result).toEqual([]);
+		expect(seen).toEqual([NodeType.QualifiedRule, NodeType.QualifiedRule]);
+	});
+
 	it("accepts a pre-built TokenStream as input", () => {
 		const ss = parseAStylesheet(new TokenStream("a{x:1}"));
 		expect(ss.rules).toHaveLength(1);
@@ -303,7 +312,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 		expect(seen).toEqual(["/*!c*/"]);
 	});
 
-	it("consume: consumeADeclarationList walks a bare declaration list (style attribute)", () => {
+	it("parse: parseADeclarationList walks a bare declaration list (style attribute)", () => {
 		const names = [];
 		const urls = [];
 		new SourceProcessor()
@@ -312,13 +321,13 @@ describe("walkCssTokens — SourceProcessor", () => {
 				[NodeType.Url]: (n) => urls.push(n.value)
 			})
 			.process("color: red; background: url(a.png)", {
-				consume: consumeADeclarationList
+				parse: parseADeclarationList
 			});
 		expect(names).toEqual(["color", "background"]);
 		expect(urls).toEqual(["a.png"]);
 	});
 
-	it("the default consumer treats a bare declaration list as a top-level parse error", () => {
+	it("the default parser treats a bare declaration list as a top-level parse error", () => {
 		const names = [];
 		new SourceProcessor()
 			.use({ [NodeType.Declaration]: (n) => names.push(n.name) })
