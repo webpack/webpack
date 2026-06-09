@@ -3200,10 +3200,9 @@ declare interface ColorsOptions {
 	 */
 	useColor?: boolean;
 }
-declare abstract class CommentCssParser {
+declare interface CommentCssParser {
 	value: string;
 	range: [number, number];
-	get loc(): { start: Position; end: Position };
 }
 type CommentJavascriptParser = CommentImport & {
 	start: number;
@@ -19102,10 +19101,6 @@ declare interface PnpApi {
 		issuer: string,
 		options: { considerBuiltins: boolean }
 	) => null | string;
-}
-declare interface Position {
-	line: number;
-	column: number;
 }
 declare class PrefetchPlugin {
 	/**
