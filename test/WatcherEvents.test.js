@@ -4,9 +4,23 @@ const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
 
+/**
+ * @param {import("../").Configuration | import("../").MultiConfiguration} config webpack config
+ * @returns {import("../").Compiler | import("../").MultiCompiler} compiler instance
+ */
 const createCompiler = (config) => {
-	const compiler = webpack(config);
-	compiler.outputFileSystem = createFsFromVolume(new Volume());
+	const compiler =
+		/** @type {import("../").Compiler | import("../").MultiCompiler} */ (
+			webpack(
+				/** @type {import("../").Configuration} */ (
+					/** @type {unknown} */ (config)
+				)
+			)
+		);
+	/** @type {import("../").Compiler} */ (compiler).outputFileSystem =
+		/** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 	return compiler;
 };
 
@@ -36,17 +50,22 @@ describe("WatcherEvents", () => {
 		let called = false;
 
 		const compiler = createSingleCompiler();
-		const watcher = compiler.watch({}, (err, _stats) => {
-			expect(called).toBe(true);
-			done(err);
-		});
+		const watcher = /** @type {import("../").Compiler} */ (compiler).watch(
+			{},
+			(err, _stats) => {
+				expect(called).toBe(true);
+				done(err);
+			}
+		);
 
 		compiler.hooks.watchClose.tap("WatcherEventsTest", () => {
 			called = true;
 		});
 
 		compiler.hooks.done.tap("WatcherEventsTest", () => {
-			watcher.close();
+			/** @type {{ close: () => void }} */ (
+				/** @type {unknown} */ (watcher)
+			).close();
 		});
 	});
 
@@ -54,17 +73,22 @@ describe("WatcherEvents", () => {
 		let called = false;
 
 		const compiler = createMultiCompiler();
-		const watcher = compiler.watch({}, (err, _stats) => {
-			expect(called).toBe(true);
-			done(err);
-		});
+		const watcher = /** @type {import("../").MultiCompiler} */ (compiler).watch(
+			{},
+			(err, _stats) => {
+				expect(called).toBe(true);
+				done(err);
+			}
+		);
 
 		compiler.hooks.watchClose.tap("WatcherEventsTest", () => {
 			called = true;
 		});
 
 		compiler.hooks.done.tap("WatcherEventsTest", () => {
-			watcher.close();
+			/** @type {{ close: () => void }} */ (
+				/** @type {unknown} */ (watcher)
+			).close();
 		});
 	});
 });

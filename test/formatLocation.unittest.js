@@ -85,7 +85,13 @@ describe("formatLocation", () => {
 	];
 	for (const testCase of testCases) {
 		it(`should format location correctly for ${testCase.name}`, () => {
-			expect(formatLocation(testCase.loc)).toEqual(testCase.result);
+			expect(
+				formatLocation(
+					/** @type {import("../lib/Dependency").DependencyLocation} */ (
+						testCase.loc
+					)
+				)
+			).toEqual(testCase.result);
 		});
 	}
 });

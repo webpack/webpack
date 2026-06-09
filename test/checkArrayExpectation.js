@@ -74,6 +74,11 @@ const normalizeString = (str, testDirectory) => {
 const normalizeForSnapshot = (items, testDirectory) =>
 	items.map((item) => normalizeString(item.message, testDirectory) || "");
 
+/**
+ * @param {EXPECTED_ANY} expected expected value or RegExp or array
+ * @param {EXPECTED_ANY} actual actual value
+ * @returns {boolean} whether actual matches expected
+ */
 const check = (expected, actual) => {
 	if (expected instanceof RegExp) {
 		expected = { message: expected };
@@ -90,6 +95,10 @@ const check = (expected, actual) => {
 	});
 };
 
+/**
+ * @param {EXPECTED_ANY} object stats item or RegExp
+ * @returns {string} explanation string
+ */
 const explain = (object) => {
 	if (object instanceof RegExp) {
 		object = { message: object };
@@ -109,6 +118,12 @@ const explain = (object) => {
 		.join("; ");
 };
 
+/**
+ * @param {EXPECTED_ANY[]} actual actual items
+ * @param {EXPECTED_ANY[]} expected expected items
+ * @param {string} kind error/warning/etc
+ * @returns {string} diff string
+ */
 const diffItems = (actual, expected, kind) => {
 	const tooMuch = [...actual];
 	const missing = [...expected];
@@ -135,6 +150,16 @@ ${tooMuch.map((item) => `${explain(item)}`).join("\n\n")}`);
 	return diff.join("\n\n");
 };
 
+/**
+ * @param {string} testDirectory test directory
+ * @param {EXPECTED_ANY} object stats object
+ * @param {string} kind error/warning/etc
+ * @param {string} filename filename or upperCaseKind when 6-arg form
+ * @param {string | EXPECTED_ANY} upperCaseKind upperCaseKind or options when 6-arg form
+ * @param {EXPECTED_ANY} options options or done when 6-arg form
+ * @param {EXPECTED_ANY=} done done callback
+ * @returns {boolean | undefined} true if expectation failed
+ */
 module.exports = function checkArrayExpectation(
 	testDirectory,
 	object,

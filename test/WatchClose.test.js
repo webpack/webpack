@@ -10,7 +10,9 @@ describe("WatchClose", () => {
 		const outputPath = path.join(__dirname, "js/WatchClose");
 		const filePath = path.join(fixturePath, "a.js");
 
+		/** @type {import("../").Compiler | null} */
 		let compiler;
+		/** @type {import("../").Watching} */
 		let watcher;
 
 		beforeEach(() => {
@@ -24,17 +26,24 @@ describe("WatchClose", () => {
 					filename: "bundle.js"
 				}
 			});
-			watcher = compiler.watch({ poll: 300 }, () => {});
+			watcher = /** @type {import("../").Watching} */ (
+				/** @type {import("../").Compiler} */ (compiler).watch(
+					{ poll: 300 },
+					() => {}
+				)
+			);
 		});
 
 		afterEach(() => {
-			watcher.close();
+			/** @type {{ close: () => void }} */ (
+				/** @type {unknown} */ (watcher)
+			).close();
 			compiler = null;
 		});
 
 		/**
 		 * @param {import("../").Watching} watcher watcher
-		 * @param {(err?: null | Error) -> void} callback callback
+		 * @param {(err?: null | Error) => void} callback callback
 		 * @returns {Promise<void>}
 		 */
 		function close(watcher, callback) {

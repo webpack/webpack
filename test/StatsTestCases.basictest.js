@@ -37,8 +37,11 @@ const tests = fs
 		return true;
 	});
 
+/** @typedef {{ toString(): string, toStringRaw(): string, restore(): void, data: string[], reset(): void }} CapturedStdio */
+
 describe("StatsTestCases", () => {
 	jest.setTimeout(30000);
+	/** @type {CapturedStdio} */
 	let stderr;
 
 	beforeEach(() => {
@@ -60,6 +63,7 @@ describe("StatsTestCases", () => {
 				const outputDirectory = path.join(outputBase, testName);
 				rimraf.sync(outputDirectory);
 				fs.mkdirSync(outputDirectory, { recursive: true });
+				/** @type {import("../").Configuration} */
 				let options = {
 					mode: "development",
 					entry: "./index",
@@ -70,6 +74,7 @@ describe("StatsTestCases", () => {
 				if (fs.existsSync(path.join(testDirectory, "webpack.config.js"))) {
 					options = require(path.join(testDirectory, "webpack.config.js"));
 				}
+				/** @type {{ validate?: (stats: import("../").Stats, stderr: string) => void }} */
 				let testConfig = {};
 				try {
 					// try to load a test file
@@ -104,46 +109,70 @@ describe("StatsTestCases", () => {
 					}
 				}
 				const c = webpack(options);
-				const compilers = c.compilers ? c.compilers : [c];
+				const cAny = /** @type {EXPECTED_ANY} */ (c);
+				const compilers = /** @type {import("../").Compiler[]} */ (
+					cAny.compilers ? cAny.compilers : [c]
+				);
 				for (const c of compilers) {
-					const ifs = c.inputFileSystem;
+					const ifs = /** @type {NonNullable<typeof c.inputFileSystem>} */ (
+						c.inputFileSystem
+					);
 					c.inputFileSystem = Object.create(ifs);
-					c.inputFileSystem.readFile = function readFile() {
+					/** @type {NonNullable<typeof c.inputFileSystem>} */ (
+						c.inputFileSystem
+					).readFile = function readFile() {
 						// eslint-disable-next-line prefer-rest-params
 						const args = Array.prototype.slice.call(arguments);
 						const callback = args.pop();
 						// eslint-disable-next-line no-useless-call
-						ifs.readFile.apply(ifs, [
+						/** @type {EXPECTED_ANY} */ (
+							/** @type {NonNullable<typeof ifs>} */ (ifs).readFile
+						).apply(ifs, [
 							...args,
-							(err, result) => {
+							(
+								/** @type {Error | null} */ err,
+								/** @type {Buffer | undefined} */ result
+							) => {
 								if (err) return callback(err);
 								if (!/\.(?:js|json|txt)$/.test(args[0])) {
 									return callback(null, result);
 								}
-								callback(null, result.toString("utf8").replace(/\r/g, ""));
+								callback(
+									null,
+									/** @type {Buffer} */ (result)
+										.toString("utf8")
+										.replace(/\r/g, "")
+								);
 							}
 						]);
 					};
-					c.hooks.compilation.tap("StatsTestCasesTest", (compilation) => {
-						for (const hook of [
-							"optimize",
-							"optimizeModules",
-							"optimizeChunks",
-							"afterOptimizeTree",
-							"afterOptimizeAssets",
-							"beforeHash"
-						]) {
-							compilation.hooks[hook].tap("TestCasesTest", () =>
-								compilation.checkConstraints()
-							);
+					c.hooks.compilation.tap(
+						"StatsTestCasesTest",
+						(/** @type {import("../").Compilation} */ compilation) => {
+							for (const hook of [
+								"optimize",
+								"optimizeModules",
+								"optimizeChunks",
+								"afterOptimizeTree",
+								"afterOptimizeAssets",
+								"beforeHash"
+							]) {
+								/** @type {Record<string, EXPECTED_ANY>} */ (compilation.hooks)[
+									hook
+								].tap("TestCasesTest", () => compilation.checkConstraints());
+							}
 						}
-					});
+					);
 				}
-				c.run((err, stats) => {
+				c.run((err, _stats) => {
 					if (err) return done(err);
-					for (const compilation of [
-						...(stats.stats ? stats.stats : [stats])
-					].map((s) => s.compilation)) {
+					const stats = /** @type {import("../").Stats} */ (_stats);
+					const statsAny = /** @type {EXPECTED_ANY} */ (stats);
+					for (const compilation of /** @type {import("../").Compilation[]} */ (
+						[...(statsAny.stats ? statsAny.stats : [stats])].map(
+							(/** @type {EXPECTED_ANY} */ s) => s.compilation
+						)
+					)) {
 						compilation.logging.delete("webpack.Compilation.ModuleProfile");
 					}
 					expect(stats.hasErrors()).toBe(testName.endsWith("error"));
@@ -169,13 +198,15 @@ describe("StatsTestCases", () => {
 						"utf8"
 					);
 
+					/** @type {EXPECTED_ANY} */
 					let toStringOptions = {
 						context: testDirectory,
 						colors: false
 					};
 					let hasColorSetting = false;
-					if (typeof c.options.stats !== "undefined") {
-						toStringOptions = c.options.stats;
+					const cOptions = /** @type {EXPECTED_ANY} */ (c.options);
+					if (typeof cOptions.stats !== "undefined") {
+						toStringOptions = cOptions.stats;
 						if (
 							toStringOptions === null ||
 							typeof toStringOptions !== "object"
@@ -187,17 +218,24 @@ describe("StatsTestCases", () => {
 						}
 						hasColorSetting = typeof toStringOptions.colors !== "undefined";
 					}
-					if (Array.isArray(c.options) && !toStringOptions.children) {
-						toStringOptions.children = c.options.map((o) => o.stats);
+					if (Array.isArray(cOptions) && !toStringOptions.children) {
+						toStringOptions.children = cOptions.map(
+							(/** @type {EXPECTED_ANY} */ o) => o.stats
+						);
 					}
 					// mock timestamps
-					for (const { compilation: s } of stats.stats
-						? stats.stats
+					for (const { compilation: s } of statsAny.stats
+						? statsAny.stats
 						: [stats]) {
-						expect(s.startTime).toBeGreaterThan(0);
-						expect(s.endTime).toBeGreaterThan(0);
-						s.endTime = new Date("04/20/1970, 12:42:42 PM").getTime();
-						s.startTime = s.endTime - 1234;
+						expect(/** @type {EXPECTED_ANY} */ (s).startTime).toBeGreaterThan(
+							0
+						);
+						expect(/** @type {EXPECTED_ANY} */ (s).endTime).toBeGreaterThan(0);
+						/** @type {EXPECTED_ANY} */ (s).endTime = new Date(
+							"04/20/1970, 12:42:42 PM"
+						).getTime();
+						/** @type {EXPECTED_ANY} */ (s).startTime =
+							/** @type {EXPECTED_ANY} */ (s).endTime - 1234;
 					}
 					let actual = stats.toString(toStringOptions);
 					expect(typeof actual).toBe("string");

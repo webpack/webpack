@@ -9,12 +9,20 @@ const makeModule = (convention = "as-is", localIdentName = "[local]") => ({
 	generator: { options: { exportsConvention: convention, localIdentName } }
 });
 
-const makeModuleGraph = (module, exportsInfo) => ({
-	getParentModule: () => module,
-	getExportsInfo: () => exportsInfo
-});
+const makeModuleGraph = (
+	/** @type {unknown} */ module,
+	/** @type {unknown} */ exportsInfo = undefined
+) =>
+	/** @type {import("../lib/ModuleGraph")} */ (
+		/** @type {unknown} */ ({
+			getParentModule: () => module,
+			getExportsInfo: () => exportsInfo
+		})
+	);
 
-const entry = (over) => ({
+const entry = (
+	/** @type {Partial<import("../lib/dependencies/CssIcssExportDependency").CssExportEntry>} */ over
+) => ({
 	name: "a",
 	value: "a",
 	range: undefined,
@@ -98,9 +106,12 @@ describe("CssIcssExportDependency", () => {
 					loc: { start: { line: 1, column: 0 } }
 				})
 			]);
-			const warnings = dep.getWarnings(
-				makeModuleGraph(makeModule(), { isExportProvided: () => false })
-			);
+			const warnings =
+				/** @type {NonNullable<ReturnType<typeof dep.getWarnings>>} */ (
+					dep.getWarnings(
+						makeModuleGraph(makeModule(), { isExportProvided: () => false })
+					)
+				);
 			expect(warnings).toHaveLength(1);
 			expect(warnings[0].message).toContain(
 				'Self-referencing name "missing" not found'
@@ -130,12 +141,28 @@ describe("CssIcssExportDependency", () => {
 
 	it("memoizes its hash contribution", () => {
 		const dep = new CssIcssExportDependency([entry({ range: [0, 1] })]);
+		/** @type {string[]} */
 		const updates = [];
-		const context = {
-			chunkGraph: { moduleGraph: makeModuleGraph(makeModule()) }
-		};
-		dep.updateHash({ update: (s) => updates.push(s) }, context);
-		dep.updateHash({ update: (s) => updates.push(s) }, context);
+		const context =
+			/** @type {import("../lib/Dependency").UpdateHashContext} */ ({
+				chunkGraph: { moduleGraph: makeModuleGraph(makeModule()) }
+			});
+		dep.updateHash(
+			/** @type {import("../lib/util/Hash")} */ (
+				/** @type {unknown} */ ({
+					update: (/** @type {string} */ s) => updates.push(s)
+				})
+			),
+			context
+		);
+		dep.updateHash(
+			/** @type {import("../lib/util/Hash")} */ (
+				/** @type {unknown} */ ({
+					update: (/** @type {string} */ s) => updates.push(s)
+				})
+			),
+			context
+		);
 		expect(updates).toHaveLength(2);
 		expect(updates[0]).toContain("exportsConvention");
 		expect(updates[1]).toBe(updates[0]);
@@ -159,11 +186,22 @@ describe("CssIcssExportDependency", () => {
 				exportType: EXPORT_TYPE.COMPOSES
 			})
 		]);
+		/** @type {unknown[]} */
 		const buffer = [];
-		dep.serialize({ write: (v) => buffer.push(v) });
+		dep.serialize(
+			/** @type {import("../lib/serialization/ObjectMiddleware").ObjectSerializerContext} */ (
+				/** @type {unknown} */ ({
+					write: (/** @type {unknown} */ v) => buffer.push(v)
+				})
+			)
+		);
 		let i = 0;
 		const restored = new CssIcssExportDependency([]);
-		restored.deserialize({ read: () => buffer[i++] });
+		restored.deserialize(
+			/** @type {import("../lib/serialization/ObjectMiddleware").ObjectDeserializerContext} */ (
+				/** @type {unknown} */ ({ read: () => buffer[i++] })
+			)
+		);
 		expect(restored.entries).toHaveLength(2);
 		expect(restored.entries[0].name).toBe("a");
 		expect(restored.entries[0].range).toEqual([0, 5]);

@@ -15,6 +15,7 @@ const getSnapshotPath = function (caseDir, suiteName) {
 	return path.join(caseDir, "__snapshots__", `${suiteName}.snap`);
 };
 
+/** @type {Array<{ caseDir: string, suiteName: string, originalState: SnapshotState, perCaseState: SnapshotState, snapshotPath: string }>} */
 const activeSnapshotContexts = [];
 
 /**
@@ -29,15 +30,21 @@ const createPerCaseSnapshotState = function (
 	suiteName,
 	originalState = expect.getState().snapshotState
 ) {
+	const s = /** @type {EXPECTED_ANY} */ (originalState);
 	return new SnapshotState(getSnapshotPath(caseDir, suiteName), {
-		updateSnapshot: originalState._updateSnapshot,
+		updateSnapshot: s._updateSnapshot,
 		snapshotFormat: originalState.snapshotFormat,
 		expand: originalState.expand,
-		prettierPath: originalState._prettierPath,
-		rootDir: originalState._rootDir || process.cwd()
+		prettierPath: s._prettierPath,
+		rootDir: s._rootDir || process.cwd()
 	});
 };
 
+/**
+ * @param {string} caseDir Absolute path to the test case directory
+ * @param {string} suiteName Name of the test suite
+ * @returns {{ caseDir: string, suiteName: string, originalState: SnapshotState, perCaseState: SnapshotState, snapshotPath: string }} snapshot context
+ */
 const activateSnapshotState = function (caseDir, suiteName) {
 	const originalState = expect.getState().snapshotState;
 	const snapshotContext = {
@@ -52,6 +59,9 @@ const activateSnapshotState = function (caseDir, suiteName) {
 	return snapshotContext;
 };
 
+/**
+ * @param {{ caseDir: string, suiteName: string, originalState: SnapshotState, perCaseState: SnapshotState, snapshotPath: string }} snapshotContext snapshot context
+ */
 const deactivateSnapshotState = function (snapshotContext) {
 	const index = activeSnapshotContexts.lastIndexOf(snapshotContext);
 	if (index >= 0) {
@@ -59,6 +69,9 @@ const deactivateSnapshotState = function (snapshotContext) {
 	}
 };
 
+/**
+ * @param {{ caseDir: string, suiteName: string, originalState: SnapshotState, perCaseState: SnapshotState, snapshotPath: string }} snapshotContext snapshot context
+ */
 const finalizePerCaseSnapshotState = function (snapshotContext) {
 	const { originalState, perCaseState } = snapshotContext;
 
@@ -86,6 +99,7 @@ const getActiveSnapshotState = function () {
  * @param {string} suiteName Name of the test suite
  */
 const registerPerCaseSnapshotHooks = function (caseDir, suiteName) {
+	/** @type {{ caseDir: string, suiteName: string, originalState: SnapshotState, perCaseState: SnapshotState, snapshotPath: string } | undefined} */
 	let snapshotContext;
 
 	beforeAll(() => {
@@ -100,7 +114,7 @@ const registerPerCaseSnapshotHooks = function (caseDir, suiteName) {
 		try {
 			finalizePerCaseSnapshotState(snapshotContext);
 		} finally {
-			deactivateSnapshotState(snapshotContext);
+			deactivateSnapshotState(/** @type {EXPECTED_ANY} */ (snapshotContext));
 			snapshotContext = undefined;
 		}
 	});
@@ -119,30 +133,33 @@ const matchKindSnapshot = function (caseDir, kind, received) {
 	const snapshotPath = path.join(caseDir, "__snapshots__", `${kind}.snap`);
 	const parentState =
 		getActiveSnapshotState() || expect.getState().snapshotState;
+	const ps = /** @type {EXPECTED_ANY} */ (parentState);
 
 	const kindState = new SnapshotState(snapshotPath, {
-		updateSnapshot: parentState._updateSnapshot === "all" ? "all" : "none",
+		updateSnapshot: ps._updateSnapshot === "all" ? "all" : "none",
 		snapshotFormat: parentState.snapshotFormat,
 		expand: parentState.expand,
-		prettierPath: parentState._prettierPath,
-		rootDir: parentState._rootDir || process.cwd()
+		prettierPath: ps._prettierPath,
+		rootDir: ps._rootDir || process.cwd()
 	});
 
 	// Call jest-snapshot's toMatchSnapshot directly with a controlled
 	// matcher context. Using `kind` as currentTestName produces the
 	// stable key "<kind> 1" (e.g. "errors 1"), independent of suite.
 	const { toMatchSnapshot } = require("jest-snapshot");
-	const context = {
+	const context = /** @type {EXPECTED_ANY} */ ({
 		snapshotState: kindState,
 		currentTestName: kind,
 		isNot: false,
 		promise: "",
 		utils: require("jest-matcher-utils"),
 		expand: false
-	};
+	});
 
 	try {
-		const result = toMatchSnapshot.call(context, received);
+		const result = /** @type {import("expect").SyncExpectationResult} */ (
+			toMatchSnapshot.call(context, received)
+		);
 		if (!result.pass) {
 			throw new Error(result.message());
 		}

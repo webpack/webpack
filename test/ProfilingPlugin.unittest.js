@@ -20,26 +20,34 @@ describe("Profiling Plugin", () => {
 	});
 
 	it("should handle when unable to require the inspector", () => {
+		// @ts-expect-error intentionally calling without required argument
 		const profiler = new ProfilingPlugin.Profiler();
 		return profiler.startProfiling();
 	});
 
 	it("should handle when unable to start a profiling session", () => {
-		const profiler = new ProfilingPlugin.Profiler({
-			Session() {
-				throw new Error("Sean Larkin was here.");
-			}
-		});
+		const profiler = new ProfilingPlugin.Profiler(
+			/** @type {EXPECTED_ANY} */ ({
+				Session() {
+					throw new Error("Sean Larkin was here.");
+				}
+			})
+		);
 
 		return profiler.startProfiling();
 	});
 
 	it("handles sending a profiling message when no session", () => {
+		// @ts-expect-error intentionally calling without required argument
 		const profiler = new ProfilingPlugin.Profiler();
-		return profiler.sendCommand("randy", "is awesome");
+		return profiler.sendCommand(
+			"randy",
+			/** @type {EXPECTED_OBJECT} */ (/** @type {unknown} */ ("is awesome"))
+		);
 	});
 
 	it("handles destroying when no session", () => {
+		// @ts-expect-error intentionally calling without required argument
 		const profiler = new ProfilingPlugin.Profiler();
 		return profiler.destroy();
 	});

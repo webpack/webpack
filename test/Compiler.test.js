@@ -9,76 +9,133 @@ const captureStdio = require("./helpers/captureStdio");
 const deprecationTracking = require("./helpers/deprecationTracking");
 
 describe("Compiler", () => {
+	/**
+	 * @typedef {{ mkdir: string[], writeFile: unknown[] }} CompileLogs
+	 * @typedef {import("../").StatsCompilation & { logs?: CompileLogs }} CompileStats
+	 */
+	/**
+	 * @param {string} entry entry file
+	 * @param {import("../").Configuration} options webpack options
+	 * @param {(stats: CompileStats, files: Record<string, string>, compilation: import("../").Compilation) => void} callback done callback
+	 */
 	function compile(entry, options, callback) {
 		const noOutputPath = !options.output || !options.output.path;
 
 		const webpack = require("..");
 
-		options = webpack.config.getNormalizedWebpackOptions(options);
-		if (!options.mode) options.mode = "production";
-		options.entry = entry;
-		options.context = path.join(__dirname, "fixtures");
-		if (noOutputPath) options.output.path = "/";
-		options.output.pathinfo = true;
-		options.optimization = {
+		/** @type {import("../").WebpackOptionsNormalized} */
+		const normalizedOptions =
+			webpack.config.getNormalizedWebpackOptions(options);
+		if (!normalizedOptions.mode) normalizedOptions.mode = "production";
+		normalizedOptions.entry = /** @type {import("../").EntryNormalized} */ (
+			/** @type {unknown} */ (entry)
+		);
+		normalizedOptions.context = path.join(__dirname, "fixtures");
+		if (noOutputPath) normalizedOptions.output.path = "/";
+		normalizedOptions.output.pathinfo = true;
+		normalizedOptions.optimization = {
 			minimize: false
 		};
+		/** @type {{ mkdir: string[], writeFile: unknown[] }} */
 		const logs = {
 			mkdir: [],
 			writeFile: []
 		};
 
-		const c = webpack(options);
+		const c = webpack(
+			/** @type {import("../").Configuration} */ (
+				/** @type {unknown} */ (normalizedOptions)
+			)
+		);
+		/** @type {Record<string, string>} */
 		const files = {};
-		c.outputFileSystem = {
-			mkdir(path, callback) {
-				logs.mkdir.push(path);
-				const err = new Error("error");
-				err.code = "EEXIST";
-				callback(err);
-			},
-			writeFile(name, content, callback) {
-				logs.writeFile.push(name, content);
-				files[name] = content.toString("utf8");
-				callback();
-			},
-			stat(path, callback) {
-				callback(new Error("ENOENT"));
-			}
-		};
+		c.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ ({
+				mkdir(
+					/** @type {string} */ path,
+					/** @type {(err: null | NodeJS.ErrnoException) => void} */ callback
+				) {
+					logs.mkdir.push(path);
+					const err = /** @type {NodeJS.ErrnoException} */ (new Error("error"));
+					err.code = "EEXIST";
+					callback(err);
+				},
+				writeFile(
+					/** @type {string} */ name,
+					/** @type {Buffer} */ content,
+					/** @type {() => void} */ callback
+				) {
+					logs.writeFile.push(name, content);
+					files[name] = content.toString("utf8");
+					callback();
+				},
+				stat(
+					/** @type {string} */ _path,
+					/** @type {(err: Error) => void} */ callback
+				) {
+					callback(new Error("ENOENT"));
+				}
+			})
+		);
 		c.hooks.compilation.tap(
 			"CompilerTest",
 			(compilation) => (compilation.bail = true)
 		);
-		c.run((err, stats) => {
-			if (err) throw err;
-			expect(typeof stats).toBe("object");
-			const compilation = stats.compilation;
-			stats = stats.toJson({
-				modules: true,
-				reasons: true
-			});
-			expect(typeof stats).toBe("object");
-			expect(stats).toHaveProperty("errors");
-			expect(Array.isArray(stats.errors)).toBe(true);
-			if (stats.errors.length > 0) {
-				expect(stats.errors[0]).toBeInstanceOf(Error);
-				throw stats.errors[0];
+		c.run(
+			(
+				err,
+				/** @type {import("../").Stats & import("../").StatsCompilation & { logs?: CompileLogs } | undefined} */
+				stats
+			) => {
+				if (err) throw err;
+				expect(typeof stats).toBe("object");
+				const compilation = /** @type {import("../").Stats} */ (stats)
+					.compilation;
+				stats =
+					/** @type {import("../").Stats & import("../").StatsCompilation & { logs?: CompileLogs }} */ (
+						/** @type {import("../").Stats} */ (stats).toJson({
+							modules: true,
+							reasons: true
+						})
+					);
+				expect(typeof stats).toBe("object");
+				expect(stats).toHaveProperty("errors");
+				expect(Array.isArray(stats.errors)).toBe(true);
+				if (
+					/** @type {import("../").StatsError[]} */ (stats.errors).length > 0
+				) {
+					const errors = /** @type {import("../").StatsError[]} */ (
+						stats.errors
+					);
+					expect(errors[0]).toBeInstanceOf(Error);
+					throw errors[0];
+				}
+				stats.logs = logs;
+				c.close((err) => {
+					if (err) {
+						return /** @type {(e: Error) => void} */ (
+							/** @type {unknown} */ (callback)
+						)(err);
+					}
+					callback(
+						/** @type {CompileStats} */ (stats),
+						files,
+						/** @type {import("../").Compilation} */ (compilation)
+					);
+				});
 			}
-			stats.logs = logs;
-			c.close((err) => {
-				if (err) return callback(err);
-				callback(stats, files, compilation);
-			});
-		});
+		);
 	}
 
+	/** @type {import("../").Compiler} */
 	let compiler;
 
 	afterEach((callback) => {
 		if (compiler) {
 			compiler.close(callback);
-			compiler = undefined;
+			compiler = /** @type {import("../").Compiler} */ (
+				/** @type {unknown} */ (undefined)
+			);
 		} else {
 			callback();
 		}
@@ -94,7 +151,10 @@ describe("Compiler", () => {
 				}
 			},
 			(stats, _files) => {
-				expect(stats.logs.mkdir).toEqual(["/what", "/what/the"]);
+				expect(/** @type {CompileLogs} */ (stats.logs).mkdir).toEqual([
+					"/what",
+					"/what/the"
+				]);
 				done();
 			}
 		);
@@ -208,6 +268,7 @@ describe("Compiler", () => {
 	});
 
 	describe("methods", () => {
+		/** @type {import("../").Compiler} */
 		let compiler;
 
 		beforeEach(() => {
@@ -226,7 +287,9 @@ describe("Compiler", () => {
 		afterEach((callback) => {
 			if (compiler) {
 				compiler.close(callback);
-				compiler = undefined;
+				compiler = /** @type {import("../").Compiler} */ (
+					/** @type {unknown} */ (undefined)
+				);
 			} else {
 				callback();
 			}
@@ -242,9 +305,10 @@ describe("Compiler", () => {
 		describe("purgeInputFileSystem", () => {
 			it("invokes purge() if inputFileSystem.purge", (done) => {
 				const mockPurge = jest.fn();
-				compiler.inputFileSystem = {
-					purge: mockPurge
-				};
+				compiler.inputFileSystem =
+					/** @type {import("../").InputFileSystem} */ (
+						/** @type {unknown} */ ({ purge: mockPurge })
+					);
 				compiler.purgeInputFileSystem();
 				expect(mockPurge).toHaveBeenCalledTimes(1);
 				done();
@@ -261,41 +325,45 @@ describe("Compiler", () => {
 
 		describe("isChild", () => {
 			it("returns booleanized this.parentCompilation", (done) => {
-				compiler.parentCompilation = "stringyStringString";
+				const c =
+					/** @type {Omit<import("../").Compiler, "parentCompilation"> & { parentCompilation: unknown }} */ (
+						/** @type {unknown} */ (compiler)
+					);
+				c.parentCompilation = "stringyStringString";
 				const response1 = compiler.isChild();
 				expect(response1).toBe(true);
 
-				compiler.parentCompilation = 123456789;
+				c.parentCompilation = 123456789;
 				const response2 = compiler.isChild();
 				expect(response2).toBe(true);
 
-				compiler.parentCompilation = {
+				c.parentCompilation = {
 					what: "I belong to an object"
 				};
 				const response3 = compiler.isChild();
 				expect(response3).toBe(true);
 
-				compiler.parentCompilation = ["Array", 123, true, null, [], () => {}];
+				c.parentCompilation = ["Array", 123, true, null, [], () => {}];
 				const response4 = compiler.isChild();
 				expect(response4).toBe(true);
 
-				compiler.parentCompilation = false;
+				c.parentCompilation = false;
 				const response5 = compiler.isChild();
 				expect(response5).toBe(false);
 
-				compiler.parentCompilation = 0;
+				c.parentCompilation = 0;
 				const response6 = compiler.isChild();
 				expect(response6).toBe(false);
 
-				compiler.parentCompilation = null;
+				c.parentCompilation = null;
 				const response7 = compiler.isChild();
 				expect(response7).toBe(false);
 
-				compiler.parentCompilation = "";
+				c.parentCompilation = "";
 				const response8 = compiler.isChild();
 				expect(response8).toBe(false);
 
-				compiler.parentCompilation = Number.NaN;
+				c.parentCompilation = Number.NaN;
 				const response9 = compiler.isChild();
 				expect(response9).toBe(false);
 				done();
@@ -306,23 +374,25 @@ describe("Compiler", () => {
 	it("platformPlugin", (done) => {
 		const webpack = require("..");
 
-		const compiler = webpack({
-			entry: "./c",
-			context: path.join(__dirname, "fixtures"),
-			output: {
-				path: "/directory"
-			},
-			plugins: [
-				new (require("../lib/PlatformPlugin"))({ node: true }),
-				(compiler) => {
-					compiler.hooks.afterEnvironment.tap("test", () => {
-						const platform = compiler.platform;
-						expect(platform.node).toBe(true);
-						expect(platform.web).toBe(true);
-					});
-				}
-			]
-		});
+		const compiler = webpack(
+			/** @type {import("../").Configuration} */ ({
+				entry: "./c",
+				context: path.join(__dirname, "fixtures"),
+				output: {
+					path: "/directory"
+				},
+				plugins: [
+					new (require("../lib/PlatformPlugin"))({ node: true }),
+					(compiler) => {
+						compiler.hooks.afterEnvironment.tap("test", () => {
+							const platform = compiler.platform;
+							expect(platform.node).toBe(true);
+							expect(platform.web).toBe(true);
+						});
+					}
+				]
+			})
+		);
 		compiler.close(done);
 	});
 
@@ -338,15 +408,24 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		/** @type {number} */
 		let sizeSeenByAfterDone;
 		compiler.hooks.afterDone.tap("Test", (stats) => {
-			sizeSeenByAfterDone = stats.compilation.codeGenerationResults.map.size;
+			sizeSeenByAfterDone = /** @type {import("../").CodeGenerationResults} */ (
+				stats.compilation.codeGenerationResults
+			).map.size;
 		});
 		compiler.run((err, stats) => {
 			if (err) return done(err);
-			const { compilation } = stats;
-			expect(compilation.codeGenerationResults.map.size).toBeGreaterThan(0);
+			const { compilation } = /** @type {import("../").Stats} */ (stats);
+			expect(
+				/** @type {import("../").CodeGenerationResults} */ (
+					compilation.codeGenerationResults
+				).map.size
+			).toBeGreaterThan(0);
 			// close() runs inside the run callback, i.e. before Compiler.run fires
 			// afterDone. The release is deferred a microtask, so afterDone still
 			// observes the results; assert via setTimeout once the defer ran.
@@ -354,8 +433,14 @@ describe("Compiler", () => {
 				if (closeErr) return done(closeErr);
 				setTimeout(() => {
 					expect(sizeSeenByAfterDone).toBeGreaterThan(0);
-					expect(compilation.codeGenerationResults.map.size).toBe(0);
-					expect(typeof stats.toJson().hash).toBe("string");
+					expect(
+						/** @type {import("../").CodeGenerationResults} */ (
+							compilation.codeGenerationResults
+						).map.size
+					).toBe(0);
+					expect(
+						typeof (/** @type {import("../").Stats} */ (stats).toJson().hash)
+					).toBe("string");
 					done();
 				}, 0);
 			});
@@ -374,10 +459,16 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
-		compiler.run((err, _stats) => {
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		/** @type {import("../").Compiler} */ (compiler).run((err, _stats) => {
 			if (err) return done(err);
-			if (compiler.outputFileSystem.existsSync("/bundle.js")) {
+			if (
+				/** @type {import("memfs").IFs} */ (
+					/** @type {import("../").Compiler} */ (compiler).outputFileSystem
+				).existsSync("/bundle.js")
+			) {
 				return done(new Error("Bundle should not be created on error"));
 			}
 			done();
@@ -387,7 +478,9 @@ describe("Compiler", () => {
 	it("should bubble up errors when wrapped in a promise and bail is true", async () => {
 		let errored;
 		try {
-			const createCompiler = (options) =>
+			const createCompiler = (
+				/** @type {import("../").Configuration} */ options
+			) =>
 				new Promise((resolve, reject) => {
 					const webpack = require("..");
 
@@ -427,18 +520,22 @@ describe("Compiler", () => {
 	});
 
 	it("should not emit compilation errors in async (watch)", async () => {
-		const createStats = (options) =>
+		const createStats = (/** @type {import("../").Configuration} */ options) =>
 			new Promise((resolve, reject) => {
 				const webpack = require("..");
 
 				const c = webpack(options);
-				c.outputFileSystem = createFsFromVolume(new Volume());
-				const watching = c.watch({}, (err, stats) => {
-					watching.close(() => {
-						if (err) return reject(err);
-						resolve(stats);
-					});
-				});
+				c.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+					/** @type {unknown} */ (createFsFromVolume(new Volume()))
+				);
+				const watching = /** @type {import("../").Watching} */ (
+					c.watch({}, (err, stats) => {
+						/** @type {import("../").Watching} */ (watching).close(() => {
+							if (err) return reject(err);
+							resolve(stats);
+						});
+					})
+				);
 			});
 		const stats = await createStats({
 			context: __dirname,
@@ -464,15 +561,25 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
-		const watching = compiler.watch({}, (err, _stats) => {
-			watching.close();
-			if (err) return done(err);
-			if (compiler.outputFileSystem.existsSync("/bundle.js")) {
-				return done(new Error("Bundle should not be created on error"));
-			}
-			done();
-		});
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		const watching = /** @type {import("../").Watching} */ (
+			compiler.watch({}, (err, _stats) => {
+				/** @type {{ close: () => void }} */ (
+					/** @type {unknown} */ (watching)
+				).close();
+				if (err) return done(err);
+				if (
+					/** @type {import("memfs").IFs} */ (
+						/** @type {import("../").Compiler} */ (compiler).outputFileSystem
+					).existsSync("/bundle.js")
+				) {
+					return done(new Error("Bundle should not be created on error"));
+				}
+				done();
+			})
+		);
 	});
 
 	it("should not be running twice at a time (run)", (done) => {
@@ -487,7 +594,9 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 		compiler.run((err, _stats) => {
 			if (err) return done(err);
 		});
@@ -508,7 +617,9 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 		compiler.watch({}, (err, _stats) => {
 			if (err) return done(err);
 		});
@@ -529,7 +640,9 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 		compiler.run((err, _stats) => {
 			if (err) return done(err);
 		});
@@ -550,7 +663,9 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 		compiler.watch({}, (err, _stats) => {
 			if (err) return done(err);
 		});
@@ -562,19 +677,23 @@ describe("Compiler", () => {
 	it("should not be running twice at a time (instance cb)", (done) => {
 		const webpack = require("..");
 
-		compiler = webpack(
-			{
-				context: __dirname,
-				mode: "production",
-				entry: "./c",
-				output: {
-					path: "/directory",
-					filename: "bundle.js"
-				}
-			},
-			() => {}
+		compiler = /** @type {import("../").Compiler} */ (
+			webpack(
+				{
+					context: __dirname,
+					mode: "production",
+					entry: "./c",
+					output: {
+						path: "/directory",
+						filename: "bundle.js"
+					}
+				},
+				() => {}
+			)
 		);
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 		compiler.run((err, _stats) => {
 			if (err) return done();
 		});
@@ -592,13 +711,17 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 		compiler.run((err, stats1) => {
 			if (err) return done(err);
 
 			compiler.run((err, _stats2) => {
 				if (err) return done(err);
-				expect(stats1.toString({ all: true })).toBeTypeOf("string");
+				expect(
+					/** @type {import("../").Stats} */ (stats1).toString({ all: true })
+				).toBeTypeOf("string");
 				done();
 			});
 		});
@@ -616,7 +739,9 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 		let idle = compiler.idle;
 		let idleWriteCount = 0;
 		Object.defineProperty(compiler, "idle", {
@@ -649,14 +774,18 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 		compiler.run((err, _stats) => {
 			if (err) return done(err);
 
-			const watching = compiler.watch({}, (err, _stats) => {
-				if (err) return done(err);
-				watching.close(done);
-			});
+			const watching = /** @type {import("../").Watching} */ (
+				compiler.watch({}, (err, _stats) => {
+					if (err) return done(err);
+					watching.close(done);
+				})
+			);
 		});
 	});
 
@@ -672,10 +801,14 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
-		const watching = compiler.watch({}, (err, _stats) => {
-			if (err) return done(err);
-		});
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		const watching = /** @type {import("../").Watching} */ (
+			compiler.watch({}, (err, _stats) => {
+				if (err) return done(err);
+			})
+		);
 		watching.close(() => {
 			compiler.run((err, _stats) => {
 				if (err) return done(err);
@@ -696,11 +829,15 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
-		const watching = compiler.watch({}, (err, _stats) => {
-			if (err) return done(err);
-			watching.close(done);
-		});
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		const watching = /** @type {import("../").Watching} */ (
+			compiler.watch({}, (err, _stats) => {
+				if (err) return done(err);
+				watching.close(done);
+			})
+		);
 		expect(compiler.watching).toBe(watching);
 	});
 
@@ -716,10 +853,14 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
-		const watching = compiler.watch({}, (err, _stats) => {
-			if (err) return done(err);
-		});
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		const watching = /** @type {import("../").Watching} */ (
+			compiler.watch({}, (err, _stats) => {
+				if (err) return done(err);
+			})
+		);
 		watching.close(() => {
 			compiler.watch({}, (err, _stats) => {
 				if (err) return done(err);
@@ -740,7 +881,9 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 		let once = true;
 		compiler.hooks.afterDone.tap("RunAgainTest", () => {
 			if (!once) return;
@@ -767,7 +910,9 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 		const runCb = jest.fn();
 		const doneHookCb = jest.fn();
 		compiler.hooks.done.tap("afterDoneRunTest", doneHookCb);
@@ -787,22 +932,26 @@ describe("Compiler", () => {
 
 		const webpack = require("..");
 
-		compiler = webpack(
-			{
-				context: __dirname,
-				mode: "production",
-				entry: "./c",
-				output: {
-					path: "/directory",
-					filename: "bundle.js"
+		compiler = /** @type {import("../").Compiler} */ (
+			webpack(
+				{
+					context: __dirname,
+					mode: "production",
+					entry: "./c",
+					output: {
+						path: "/directory",
+						filename: "bundle.js"
+					}
+				},
+				(err, _stats) => {
+					if (err) return done(err);
+					instanceCb();
 				}
-			},
-			(err, _stats) => {
-				if (err) return done(err);
-				instanceCb();
-			}
+			)
 		);
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 		const doneHookCb = jest.fn();
 		compiler.hooks.done.tap("afterDoneRunTest", doneHookCb);
 		compiler.hooks.afterDone.tap("afterDoneRunTest", () => {
@@ -824,7 +973,9 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 		const invalidHookCb = jest.fn();
 		const doneHookCb = jest.fn();
 		const watchCb = jest.fn();
@@ -838,10 +989,12 @@ describe("Compiler", () => {
 			expect(invalidateCb).toHaveBeenCalled();
 			watching.close(done);
 		});
-		const watching = compiler.watch({}, (err, _stats) => {
-			if (err) return done(err);
-			watchCb();
-		});
+		const watching = /** @type {import("../").Watching} */ (
+			compiler.watch({}, (err, _stats) => {
+				if (err) return done(err);
+				watchCb();
+			})
+		);
 		process.nextTick(() => {
 			watching.invalidate(invalidateCb);
 		});
@@ -859,7 +1012,9 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 		const invalidHookCb = jest.fn();
 		const watchCloseCb = jest.fn();
 		const watchCloseHookCb = jest.fn();
@@ -873,10 +1028,12 @@ describe("Compiler", () => {
 			expect(invalidateCb).toHaveBeenCalled();
 			done();
 		});
-		const watch = compiler.watch({}, (err, _stats) => {
-			if (err) return done(err);
-			watch.close(watchCloseCb);
-		});
+		const watch = /** @type {import("../").Watching} */ (
+			compiler.watch({}, (err, _stats) => {
+				if (err) return done(err);
+				watch.close(watchCloseCb);
+			})
+		);
 		process.nextTick(() => {
 			watch.invalidate(invalidateCb);
 		});
@@ -895,16 +1052,20 @@ describe("Compiler", () => {
 			}
 		});
 
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 
-		const watch = compiler.watch({}, (err) => {
-			if (err) return done(err);
-			expect(compiler.watchMode).toBeTruthy();
-			watch.close(() => {
-				expect(compiler.watchMode).toBeFalsy();
-				done();
-			});
-		});
+		const watch = /** @type {import("../").Watching} */ (
+			compiler.watch({}, (err) => {
+				if (err) return done(err);
+				expect(compiler.watchMode).toBeTruthy();
+				watch.close(() => {
+					expect(compiler.watchMode).toBeFalsy();
+					done();
+				});
+			})
+		);
 	});
 
 	it("should use cache on second run call", (done) => {
@@ -919,13 +1080,14 @@ describe("Compiler", () => {
 				path: "/directory"
 			}
 		});
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 		compiler.run(() => {
 			compiler.run(() => {
-				const result = compiler.outputFileSystem.readFileSync(
-					"/directory/main.js",
-					"utf8"
-				);
+				const result = /** @type {import("memfs").IFs} */ (
+					compiler.outputFileSystem
+				).readFileSync("/directory/main.js", "utf8");
 				expect(result).toContain("module.exports = 0;");
 				done();
 			});
@@ -948,7 +1110,9 @@ describe("Compiler", () => {
 			}
 		});
 		compiler.hooks.failed.tap("CompilerTest", failedSpy);
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 		compiler.run((err, _stats) => {
 			expect(err).toBeTruthy();
 			expect(failedSpy).toHaveBeenCalledTimes(1);
@@ -974,23 +1138,25 @@ describe("Compiler", () => {
 	});
 
 	describe("infrastructure logging", () => {
+		/** @type {ReturnType<typeof captureStdio>} */
 		let capture;
 
 		beforeEach(() => {
-			capture = captureStdio(process.stderr);
+			capture = captureStdio(process.stderr, undefined);
 		});
 
 		afterEach(() => {
 			capture.restore();
 		});
 
-		const escapeAnsi = (stringRaw) =>
+		const escapeAnsi = (/** @type {string} */ stringRaw) =>
 			stringRaw
 				.replace(/\u001B\[1m\u001B\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
 				.replace(/\u001B\[1m/g, "<CLR=BOLD>")
 				.replace(/\u001B\[39m\u001B\[22m/g, "</CLR>")
 				.replace(/\u001B\[([0-9;]*)m/g, "<CLR=$1>");
 		class MyPlugin {
+			/** @param {import("../").Compiler} compiler webpack compiler */
 			apply(compiler) {
 				const logger = compiler.getInfrastructureLogger("MyPlugin");
 				logger.time("Time");
@@ -1023,7 +1189,10 @@ describe("Compiler", () => {
 				},
 				plugins: [new MyPlugin()]
 			});
-			compiler.outputFileSystem = createFsFromVolume(new Volume());
+			compiler.outputFileSystem =
+				/** @type {import("../").OutputFileSystem} */ (
+					/** @type {unknown} */ (createFsFromVolume(new Volume()))
+				);
 			compiler.run((_err, _stats) => {
 				expect(capture.toString().replace(/[\d.]+ ms/, "X ms"))
 					.toMatchInlineSnapshot(`
@@ -1057,7 +1226,10 @@ describe("Compiler", () => {
 				},
 				plugins: [new MyPlugin()]
 			});
-			compiler.outputFileSystem = createFsFromVolume(new Volume());
+			compiler.outputFileSystem =
+				/** @type {import("../").OutputFileSystem} */ (
+					/** @type {unknown} */ (createFsFromVolume(new Volume()))
+				);
 			compiler.run((_err, _stats) => {
 				expect(capture.toString().replace(/[\d.]+ ms/, "X ms"))
 					.toMatchInlineSnapshot(`
@@ -1091,7 +1263,10 @@ describe("Compiler", () => {
 				},
 				plugins: [new MyPlugin()]
 			});
-			compiler.outputFileSystem = createFsFromVolume(new Volume());
+			compiler.outputFileSystem =
+				/** @type {import("../").OutputFileSystem} */ (
+					/** @type {unknown} */ (createFsFromVolume(new Volume()))
+				);
 			compiler.run((_err, _stats) => {
 				expect(capture.toString()).toMatchInlineSnapshot('""');
 				done();
@@ -1114,7 +1289,10 @@ describe("Compiler", () => {
 				},
 				plugins: [new MyPlugin()]
 			});
-			compiler.outputFileSystem = createFsFromVolume(new Volume());
+			compiler.outputFileSystem =
+				/** @type {import("../").OutputFileSystem} */ (
+					/** @type {unknown} */ (createFsFromVolume(new Volume()))
+				);
 			compiler.run((_err, _stats) => {
 				expect(escapeAnsi(capture.toStringRaw()).replace(/[\d.]+ ms/, "X ms"))
 					.toMatchInlineSnapshot(`
@@ -1149,7 +1327,10 @@ describe("Compiler", () => {
 				},
 				plugins: [new MyPlugin()]
 			});
-			compiler.outputFileSystem = createFsFromVolume(new Volume());
+			compiler.outputFileSystem =
+				/** @type {import("../").OutputFileSystem} */ (
+					/** @type {unknown} */ (createFsFromVolume(new Volume()))
+				);
 			compiler.run((_err, _stats) => {
 				expect(escapeAnsi(capture.toStringRaw()).replace(/[\d.]+ ms/, "X ms"))
 					.toMatchInlineSnapshot(`

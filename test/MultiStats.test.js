@@ -4,20 +4,30 @@ require("./helpers/warmup-webpack");
 
 const { Volume, createFsFromVolume } = require("memfs");
 
+/**
+ * @param {import("../").Configuration | import("../").MultiConfiguration} options options
+ * @returns {Promise<import("../").MultiStats>} stats
+ */
 const compile = (options) =>
-	new Promise((resolve, reject) => {
-		const webpack = require("..");
+	/** @type {Promise<import("../").MultiStats>} */ (
+		new Promise((resolve, reject) => {
+			const webpack = require("..");
 
-		const compiler = webpack(options);
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
-		compiler.run((err, stats) => {
-			if (err) {
-				reject(err);
-			} else {
-				resolve(stats);
-			}
-		});
-	});
+			const compiler = /** @type {import("../").MultiCompiler} */ (
+				/** @type {unknown} */ (webpack(/** @type {EXPECTED_ANY} */ (options)))
+			);
+			compiler.outputFileSystem = /** @type {EXPECTED_ANY} */ (
+				createFsFromVolume(new Volume())
+			);
+			compiler.run((err, stats) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(/** @type {import("../").MultiStats} */ (stats));
+				}
+			});
+		})
+	);
 
 describe("MultiStats", () => {
 	it("should create JSON of children stats", async () => {
@@ -187,9 +197,11 @@ describe("MultiStats", () => {
 			}
 		]);
 
-		const statsOptions = {
-			children: ["none", "none"]
-		};
+		const statsOptions = /** @type {import("../").StatsOptions} */ (
+			/** @type {unknown} */ ({
+				children: ["none", "none"]
+			})
+		);
 
 		expect(stats.toJson(statsOptions)).toMatchInlineSnapshot(`
 		Object {

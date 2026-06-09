@@ -9,38 +9,55 @@ const cacheDirectory = path.resolve(__dirname, "js/buildDepsCache");
 const outputDirectory = path.resolve(__dirname, "js/buildDeps");
 const inputDirectory = path.resolve(__dirname, "js/buildDepsInput");
 
-const exec = (n, options = {}) =>
+/** @typedef {{ warnings?: RegExp[] | false | undefined, ignoreErrors?: boolean, invalidBuildDependencies?: boolean, definedValue?: string, buildTwice?: boolean }} ExecOptions */
+
+const exec = (
+	/** @type {string} */ n,
+	/** @type {ExecOptions} */ options = {}
+) =>
 	new Promise((resolve, reject) => {
 		const webpack = require("../");
 
 		const coverageEnabled = webpack.toString().includes("++");
 
-		const p = childProcess.execFile(
-			process.execPath,
-			[
-				...(coverageEnabled
-					? [
-							require.resolve("nyc/bin/nyc.js"),
-							"--silent",
-							"--no-clean",
-							"--cache-dir",
-							".jest-cache/nyc",
-							process.execPath
-						]
-					: []),
-				path.resolve(__dirname, "fixtures/buildDependencies/run.js"),
-				n,
-				JSON.stringify(options)
-			],
-			{
-				stdio: ["ignore", "pipe", "pipe"]
-			}
+		const execArgs = /** @type {string[]} */ ([
+			...(coverageEnabled
+				? [
+						require.resolve("nyc/bin/nyc.js"),
+						"--silent",
+						"--no-clean",
+						"--cache-dir",
+						".jest-cache/nyc",
+						process.execPath
+					]
+				: []),
+			path.resolve(__dirname, "fixtures/buildDependencies/run.js"),
+			n,
+			JSON.stringify(options)
+		]);
+		const p = /** @type {import("child_process").ChildProcess} */ (
+			/** @type {EXPECTED_ANY} */ (childProcess.execFile)(
+				process.execPath,
+				execArgs,
+				/** @type {import("child_process").ExecFileOptions} */ ({
+					stdio: ["ignore", "pipe", "pipe"]
+				})
+			)
 		);
+		/** @type {string[]} */
 		const chunks = [];
-		p.stderr.on("data", (chunk) => chunks.push(chunk));
-		p.stdout.on("data", (chunk) => chunks.push(chunk));
+		/** @type {import("stream").Readable} */ (p.stderr).on(
+			"data",
+			(/** @type {string} */ chunk) => chunks.push(chunk)
+		);
+		/** @type {import("stream").Readable} */ (p.stdout).on(
+			"data",
+			(/** @type {string} */ chunk) => chunks.push(chunk)
+		);
 		p.once("exit", (code) => {
+			/** @type {string[]} */
 			const errors = [];
+			/** @type {string[]} */
 			const warnings = [];
 			const rawStdout = chunks.join("");
 			const stdout = rawStdout.replace(
@@ -216,8 +233,8 @@ export default 0;`
 		await exec("7", {
 			definedValue: "other"
 		});
-		let now4;
-		let now5;
+		let now4 = 0;
+		let now5 = 0;
 		if (supportsEsm) {
 			fs.writeFileSync(
 				path.resolve(inputDirectory, "esm-dependency.js"),

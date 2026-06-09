@@ -53,6 +53,7 @@ describe("util/identifier", () => {
 	});
 
 	describe("getUndoPath", () => {
+		/** @type {[string, string, boolean?][]} */
 		const cases = [
 			["file.js", ""],
 			["file.js", "./", true],
@@ -83,7 +84,11 @@ describe("util/identifier", () => {
 					"C:\\a\\b\\c\\d\\"
 				]) {
 					expect(
-						identifierUtil.getUndoPath(filename, outputPath, enforceRelative)
+						identifierUtil.getUndoPath(
+							filename,
+							outputPath,
+							/** @type {boolean} */ (enforceRelative)
+						)
 					).toBe(expected);
 				}
 			});

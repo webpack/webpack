@@ -11,11 +11,11 @@ const MOCK_WEBPACK = path.resolve(
 
 // webpack-cli requires a newer Node than webpack itself, so skip on Node versions
 // it does not support (derived from webpack-cli's own `engines` field).
-const [reqMajor, reqMinor = 0, reqPatch = 0] =
-	require("webpack-cli/package.json")
-		.engines.node.match(/\d+(?:\.\d+)*/)[0]
-		.split(".")
-		.map(Number);
+const [reqMajor, reqMinor = 0, reqPatch = 0] = /** @type {RegExpMatchArray} */ (
+	require("webpack-cli/package.json").engines.node.match(/\d+(?:\.\d+)*/)
+)[0]
+	.split(".")
+	.map(Number);
 
 const [major, minor, patch] = process.versions.node.split(".").map(Number);
 const supportsWebpackCli =
@@ -29,6 +29,10 @@ const supportsWebpackCli =
 // documented WEBPACK_PACKAGE env var (webpack-cli loads webpack through a native
 // import jest.mock cannot intercept). process.exit/console.error are spied so a
 // validation failure surfaces as an exit code plus the captured messages.
+/**
+ * @param {string[]} args args
+ * @returns {Promise<{ config: Record<string, EXPECTED_ANY>, exitCode: number, errors: string }>} result
+ */
 const run = async (args) => {
 	const dir = fs.mkdtempSync(path.join(os.tmpdir(), "wp-cli-"));
 	const capture = path.join(dir, "config.json");
@@ -36,11 +40,13 @@ const run = async (args) => {
 	process.env.WEBPACK_CLI_TEST_CAPTURE = capture;
 	jest.resetModules();
 
+	/** @type {EXPECTED_ANY} */
 	const WebpackCLI = require("webpack-cli").default;
 
 	const exitSpy = jest.spyOn(process, "exit").mockImplementation((code) => {
 		throw new Error(`__exit__ ${code}`);
 	});
+	/** @type {string[]} */
 	const errors = [];
 	const errorSpy = jest
 		.spyOn(console, "error")
@@ -49,7 +55,7 @@ const run = async (args) => {
 	try {
 		await new WebpackCLI().run(["node", "webpack", "build", ...args]);
 	} catch (error) {
-		const match = /__exit__ (\d+)/.exec(error.message);
+		const match = /__exit__ (\d+)/.exec(/** @type {Error} */ (error).message);
 		if (!match) throw error;
 		exitCode = Number(match[1]);
 	} finally {

@@ -2,15 +2,23 @@
 
 const path = require("path");
 
-module.exports = ({ outputDirectory }) =>
+module.exports = (
+	/** @type {{ outputDirectory: string }} */ { outputDirectory }
+) =>
 	class Worker {
+		/**
+		 * @param {string | URL} resource worker resource
+		 * @param {{ type?: string, originalURL?: URL }} options worker options
+		 */
 		constructor(resource, options = {}) {
-			const isFileURL = /^file:/i.test(resource);
-			const isBlobURL = /^blob:/i.test(resource);
+			const isFileURL = /^file:/i.test(/** @type {string} */ (resource));
+			const isBlobURL = /^blob:/i.test(/** @type {string} */ (resource));
 
 			if (!isFileURL && !isBlobURL) {
-				expect(resource.origin).toBe("https://test.cases");
-				expect(resource.pathname.startsWith("/path/")).toBe(true);
+				expect(/** @type {URL} */ (resource).origin).toBe("https://test.cases");
+				expect(
+					/** @type {URL} */ (resource).pathname.startsWith("/path/")
+				).toBe(true);
 			}
 
 			this.url = resource;
@@ -19,8 +27,8 @@ module.exports = ({ outputDirectory }) =>
 				: path.resolve(
 						outputDirectory,
 						isBlobURL
-							? options.originalURL.pathname.slice(6)
-							: resource.pathname.slice(6)
+							? /** @type {URL} */ (options.originalURL).pathname.slice(6)
+							: /** @type {URL} */ (resource).pathname.slice(6)
 					);
 
 			const workerBootstrap = `
@@ -96,11 +104,12 @@ if (${options.type === "module"}) {
 				eval: true
 			});
 
+			/** @type {((data: unknown) => void) | undefined} */
 			this._onmessage = undefined;
 		}
 
 		// eslint-disable-next-line accessor-pairs
-		set onmessage(value) {
+		set onmessage(/** @type {(event: { data: unknown }) => void} */ value) {
 			if (this._onmessage) this.worker.off("message", this._onmessage);
 			this.worker.on(
 				"message",
@@ -112,7 +121,7 @@ if (${options.type === "module"}) {
 			);
 		}
 
-		postMessage(data) {
+		postMessage(/** @type {unknown} */ data) {
 			this.worker.postMessage(data);
 		}
 

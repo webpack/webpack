@@ -13,7 +13,7 @@ const dynamicImport = new Function("specifier", "return import(specifier)");
 
 /**
  * @param {string} projectDir a project directory
- * @returns {EXPECTED_ANY | undefined} webpack options
+ * @returns {Promise<EXPECTED_ANY | undefined>} webpack options
  */
 async function loadConfiguration(projectDir) {
 	const paths = [
@@ -107,29 +107,33 @@ describe("Examples", () => {
 
 			const webpack = require("..");
 
-			await new Promise((resolve, reject) => {
-				webpack(options, (err, stats) => {
-					if (err) {
-						reject(err);
-						return;
-					}
-					if (stats.hasErrors()) {
-						reject(
-							new Error(
-								stats.toString({
-									all: false,
-									errors: true,
-									errorDetails: true,
-									errorStacks: true
-								})
-							)
-						);
-						return;
-					}
+			await /** @type {Promise<void>} */ (
+				new Promise((resolve, reject) => {
+					webpack(options, (err, stats) => {
+						if (err) {
+							reject(err);
+							return;
+						}
+						if (/** @type {import("../").Stats} */ (stats).hasErrors()) {
+							reject(
+								new Error(
+									/** @type {import("../").Stats} */ (stats).toString(
+										/** @type {import("../").StatsOptions} */ ({
+											all: false,
+											errors: true,
+											errorDetails: true,
+											errorStacks: true
+										})
+									)
+								)
+							);
+							return;
+						}
 
-					resolve();
-				});
-			});
+						resolve();
+					});
+				})
+			);
 		}, 90000);
 	}
 });

@@ -1,31 +1,44 @@
 "use strict";
 
+/** @typedef {(...args: unknown[]) => unknown} AnyFn */
+
 module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 	const state = global.JEST_STATE_SYMBOL;
+	/** @type {import("@jest/types").Circus.DescribeBlock} */
 	let currentDescribeBlock;
+	/** @type {import("@jest/types").Circus.TestEntry | null | undefined} */
 	let currentlyRunningTest;
 	let runTests = -1;
+	/** @type {(() => void)[]} */
 	const disposables = [];
 
 	// this function allows to release memory in fn context
 	// manually, usually after the suite has been run.
+	/**
+	 * @param {AnyFn | undefined} fn test or hook function
+	 * @param {boolean=} isTest whether this wraps a test (vs a hook)
+	 * @returns {((done: AnyFn) => void) | (() => unknown) | null} wrapped function
+	 */
 	const createDisposableFn = (fn, isTest) => {
 		if (!fn) return null;
+		/** @type {AnyFn | null} */
+		let f = fn;
 		const rfn =
-			fn.length >= 1
-				? (done) => {
-						fn((...args) => {
+			f.length >= 1
+				? (/** @type {AnyFn} */ done) => {
+						/** @type {AnyFn} */
+						(f)((/** @type {unknown[]} */ ...args) => {
 							if (isTest) runTests++;
 							done(...args);
 						});
 					}
 				: () => {
-						const r = fn();
+						const r = /** @type {AnyFn} */ (f)();
 						if (isTest) runTests++;
 						return r;
 					};
 		disposables.push(() => {
-			fn = null;
+			f = null;
 		});
 		return rfn;
 	};
@@ -48,6 +61,10 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		}
 	);
 	let numberOfTests = 0;
+	/**
+	 * @param {() => void} fn function to run inside the exported suite scope
+	 * @returns {void}
+	 */
 	const inSuite = (fn) => {
 		const {
 			currentDescribeBlock: oldCurrentDescribeBlock,
@@ -62,7 +79,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		} catch (err) {
 			/* eslint-disable no-unused-expressions */
 			// avoid leaking memory
-			/** @type {EXPECTED_ANY} */
+			/** @type {Error} */
 			(err).stack;
 			/* eslint-enable no-unused-expressions */
 			throw err;
@@ -71,6 +88,10 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		state.currentlyRunningTest = oldCurrentlyRunningTest;
 		state.hasStarted = oldHasStarted;
 	};
+	/**
+	 * @param {import("@jest/types").Circus.TestEntry | import("@jest/types").Circus.Hook} block test or hook entry
+	 * @returns {void}
+	 */
 	const fixAsyncError = (block) => {
 		// By default jest leaks memory as it stores asyncError
 		// for each "it" call to track the origin test suite
@@ -89,10 +110,13 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		getNumberOfTests() {
 			return numberOfTests;
 		},
-		it(...args) {
+		it(/** @type {unknown[]} */ ...args) {
 			numberOfTests++;
 			if (runTests >= numberOfTests) throw new Error("it called too late");
-			args[1] = createDisposableFn(args[1], true);
+			args[1] = createDisposableFn(
+				/** @type {AnyFn | undefined} */ (args[1]),
+				true
+			);
 			args[2] = args[2] || globalTimeout;
 			inSuite(() => {
 				// @ts-expect-error expected
@@ -102,11 +126,11 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 				);
 			});
 		},
-		beforeEach(...args) {
+		beforeEach(/** @type {unknown[]} */ ...args) {
 			if (runTests >= numberOfTests) {
 				throw new Error("beforeEach called too late");
 			}
-			args[0] = createDisposableFn(args[0]);
+			args[0] = createDisposableFn(/** @type {AnyFn | undefined} */ (args[0]));
 			inSuite(() => {
 				// @ts-expect-error expected
 				beforeEach(...args);
@@ -115,11 +139,11 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 				);
 			});
 		},
-		afterEach(...args) {
+		afterEach(/** @type {unknown[]} */ ...args) {
 			if (runTests >= numberOfTests) {
 				throw new Error("afterEach called too late");
 			}
-			args[0] = createDisposableFn(args[0]);
+			args[0] = createDisposableFn(/** @type {AnyFn | undefined} */ (args[0]));
 			inSuite(() => {
 				// @ts-expect-error expected
 				afterEach(...args);

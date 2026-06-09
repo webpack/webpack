@@ -4,6 +4,7 @@ const path = require("path");
 const ModuleDependencyError = require("../lib/errors/ModuleDependencyError");
 
 describe("ModuleDependencyError", () => {
+	/** @type {{ error?: Error, moduleDependencyError?: InstanceType<typeof ModuleDependencyError> }} */
 	let env;
 
 	beforeEach(() => {
@@ -14,9 +15,13 @@ describe("ModuleDependencyError", () => {
 		beforeEach(() => {
 			env.error = new Error("Error Message");
 			env.moduleDependencyError = new ModuleDependencyError(
-				"myModule",
+				/** @type {import("../lib/Module")} */ (
+					/** @type {unknown} */ ("myModule")
+				),
 				env.error,
-				"Location"
+				/** @type {import("../lib/Dependency").DependencyLocation} */ (
+					/** @type {unknown} */ ("Location")
+				)
 			);
 		});
 
@@ -25,29 +30,52 @@ describe("ModuleDependencyError", () => {
 		});
 
 		it("has a name property", () => {
-			expect(env.moduleDependencyError.name).toBe("ModuleDependencyError");
+			expect(env.moduleDependencyError).toBeDefined();
+			expect(
+				/** @type {NonNullable<typeof env.moduleDependencyError>} */ (
+					env.moduleDependencyError
+				).name
+			).toBe("ModuleDependencyError");
 		});
 
 		it("has a message property", () => {
-			expect(env.moduleDependencyError.message).toBe("Error Message");
+			expect(
+				/** @type {NonNullable<typeof env.moduleDependencyError>} */ (
+					env.moduleDependencyError
+				).message
+			).toBe("Error Message");
 		});
 
 		it("has a loc property", () => {
-			expect(env.moduleDependencyError.loc).toBe("Location");
+			expect(
+				/** @type {NonNullable<typeof env.moduleDependencyError>} */ (
+					env.moduleDependencyError
+				).loc
+			).toBe("Location");
 		});
 
 		it("has a details property", () => {
-			expect(env.moduleDependencyError.details).toMatch(
-				path.join("test", "ModuleDependencyError.unittest.js:")
-			);
+			expect(
+				/** @type {NonNullable<typeof env.moduleDependencyError>} */ (
+					env.moduleDependencyError
+				).details
+			).toMatch(path.join("test", "ModuleDependencyError.unittest.js:"));
 		});
 
 		it("has an module property", () => {
-			expect(env.moduleDependencyError.module).toBe("myModule");
+			expect(
+				/** @type {NonNullable<typeof env.moduleDependencyError>} */ (
+					env.moduleDependencyError
+				).module
+			).toBe("myModule");
 		});
 
 		it("has an error property", () => {
-			expect(env.moduleDependencyError.error).toBe(env.error);
+			expect(
+				/** @type {NonNullable<typeof env.moduleDependencyError>} */ (
+					env.moduleDependencyError
+				).error
+			).toBe(env.error);
 		});
 	});
 });

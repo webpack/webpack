@@ -1,7 +1,9 @@
 "use strict";
 
 module.exports = () => {
+	/** @type {string[]} */
 	const warnings = [];
+	/** @type {typeof console.warn} */
 	let oldWarn;
 
 	beforeEach((done) => {
@@ -16,6 +18,10 @@ module.exports = () => {
 		done();
 	});
 
+	/**
+	 * @param {...(string | RegExp)} regexp expected warning patterns
+	 * @returns {void}
+	 */
 	const expectWarning = (...regexp) => {
 		expect(warnings).toEqual(regexp.map((r) => expect.stringMatching(r)));
 		warnings.length = 0;

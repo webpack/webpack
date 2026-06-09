@@ -40,7 +40,7 @@ util.deprecate = (fn, message, _code) => {
 };
 
 /**
- * @returns {() => EXPECTED_ANY} result
+ * @returns {() => { code: string, message: string, stack: string }[]} result
  */
 module.exports.start = () => {
 	interception = new Map();
