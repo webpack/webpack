@@ -63,7 +63,7 @@ describe("Persistent Caching", () => {
 		}
 	};
 
-	const compile = async (/** @type {Partial<import("../").Configuration>} */ configAdditions = {}) =>
+	const compile = async (/** @type {EXPECTED_ANY} */ configAdditions = {}) =>
 		new Promise((resolve, reject) => {
 			const webpack = require("../");
 
@@ -73,8 +73,9 @@ describe("Persistent Caching", () => {
 					...configAdditions,
 					cache: { ...config.cache, .../** @type {EXPECTED_ANY} */ (configAdditions).cache }
 				})),
-				(/** @type {Error | null} */ err, /** @type {import("../").Stats} */ stats) => {
+				(/** @type {Error | null} */ err, /** @type {import("../").Stats | undefined} */ _stats) => {
 					if (err) return reject(err);
+					const stats = /** @type {import("../").Stats} */ (_stats);
 					if (stats.hasErrors()) {
 						return reject(stats.toString({ preset: "errors-only" }));
 					}

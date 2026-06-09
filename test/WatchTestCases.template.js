@@ -218,7 +218,8 @@ const describeCases = (config) => {
 
 							const currentWatchStepModule = require("./helpers/currentWatchStep");
 
-							let compilationFinished = done;
+							/** @type {(err?: Error | null) => void} */
+							let compilationFinished = /** @type {EXPECTED_ANY} */ (done);
 							(/** @type {{ step: string | undefined }} */ (currentWatchStepModule)).step = run.name;
 							copyDiff(path.join(testDirectory, run.name), tempDirectory, true);
 
@@ -351,15 +352,15 @@ const describeCases = (config) => {
 										});
 										await Promise.all(results);
 
-										if (run.getNumberOfTests() < 1) {
+										if (/** @type {() => number} */ (run.getNumberOfTests)() < 1) {
 											return compilationFinished(
 												new Error("No tests exported by test case")
 											);
 										}
 
-										run.it(
+										/** @type {EXPECTED_ANY} */ (run.it)(
 											"should compile the next step",
-											(/** @type {(err?: Error) => void} */ done) => {
+											(/** @type {(err?: Error | null) => void} */ done) => {
 												runIdx++;
 												if (runIdx < runs.length) {
 													run = runs[runIdx];
@@ -367,7 +368,7 @@ const describeCases = (config) => {
 													setTimeout(() => {
 														waitMode = false;
 														compilationFinished = done;
-														currentWatchStepModule.step = run.name;
+														(/** @type {{ step: string | undefined }} */ (currentWatchStepModule)).step = run.name;
 														copyDiff(
 															path.join(testDirectory, run.name),
 															tempDirectory,

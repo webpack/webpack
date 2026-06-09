@@ -96,7 +96,8 @@ describe("MemoryLimitTestCases", () => {
 			}
 			const heapSizeStart = process.memoryUsage().heapUsed;
 			const c = webpack(options);
-			const compilers = c.compilers ? c.compilers : [c];
+			const cAny = /** @type {EXPECTED_ANY} */ (c);
+			const compilers = /** @type {import("../").Compiler[]} */ (cAny.compilers ? cAny.compilers : [c]);
 			for (const c of compilers) {
 				const ifs = /** @type {NonNullable<typeof c.inputFileSystem>} */ (c.inputFileSystem);
 				c.inputFileSystem = Object.create(ifs);

@@ -4,6 +4,7 @@ require("./helpers/warmup-webpack");
 
 const path = require("path");
 const fs = require("graceful-fs");
+/** @type {{ sync: (path: string) => void }} */
 const rimraf = require("rimraf");
 
 let fixtureCount = 0;
@@ -15,7 +16,7 @@ describe("Compiler (filesystem caching)", () => {
 		"temp-filesystem-cache-fixture"
 	);
 
-	function compile(entry, onSuccess, onError) {
+	function compile(/** @type {string} */ entry, /** @type {(stats: import("../types").StatsCompilation) => void} */ onSuccess, /** @type {(err: Error) => void} */ onError) {
 		const webpack = require("..");
 
 		const options = webpack.config.getNormalizedWebpackOptions({});
@@ -28,7 +29,7 @@ describe("Compiler (filesystem caching)", () => {
 		options.output.path = path.join(tempFixturePath, "dist");
 		options.output.filename = "bundle.js";
 		options.output.pathinfo = true;
-		options.module = {
+		options.module = /** @type {import("../types").ModuleOptionsNormalized} */ (/** @type {unknown} */ ({
 			rules: [
 				{
 					test: /\.svg$/,
@@ -38,7 +39,7 @@ describe("Compiler (filesystem caching)", () => {
 					}
 				}
 			]
-		};
+		}));
 
 		const isBigIntSupported = typeof BigInt !== "undefined";
 		const isErrorCaseSupported =
@@ -62,7 +63,8 @@ describe("Compiler (filesystem caching)", () => {
 							async () => {
 								const cache = compilation.getCache(name);
 								const ident = "test.ext";
-								const cacheItem = cache.getItemCache(ident, null);
+								const cacheItem_ = cache.getItemCache(ident, null);
+								const cacheItem = /** @type {{ getPromise(id: string): Promise<Record<string, unknown>>, storePromise(v: unknown): Promise<void> }} */ (/** @type {unknown} */ (cacheItem_));
 
 								const result = await cacheItem.getPromise(ident);
 

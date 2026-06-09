@@ -361,23 +361,25 @@ describe("Compiler", () => {
 	it("platformPlugin", (done) => {
 		const webpack = require("..");
 
-		const compiler = webpack({
-			entry: "./c",
-			context: path.join(__dirname, "fixtures"),
-			output: {
-				path: "/directory"
-			},
-			plugins: [
-				new (require("../lib/PlatformPlugin"))({ node: true }),
-				(compiler) => {
-					compiler.hooks.afterEnvironment.tap("test", () => {
-						const platform = compiler.platform;
-						expect(platform.node).toBe(true);
-						expect(platform.web).toBe(true);
-					});
-				}
-			]
-		});
+		const compiler = webpack(
+			/** @type {import("../").Configuration} */ ({
+				entry: "./c",
+				context: path.join(__dirname, "fixtures"),
+				output: {
+					path: "/directory"
+				},
+				plugins: [
+					new (require("../lib/PlatformPlugin"))({ node: true }),
+					(compiler) => {
+						compiler.hooks.afterEnvironment.tap("test", () => {
+							const platform = compiler.platform;
+							expect(platform.node).toBe(true);
+							expect(platform.web).toBe(true);
+						});
+					}
+				]
+			})
+		);
 		compiler.close(done);
 	});
 
@@ -397,14 +399,23 @@ describe("Compiler", () => {
 			/** @type {import("../").OutputFileSystem} */ (
 				/** @type {unknown} */ (createFsFromVolume(new Volume()))
 			);
+		/** @type {number} */
 		let sizeSeenByAfterDone;
 		compiler.hooks.afterDone.tap("Test", (stats) => {
-			sizeSeenByAfterDone = stats.compilation.codeGenerationResults.map.size;
+			sizeSeenByAfterDone =
+				/** @type {import("../").CodeGenerationResults} */ (
+					stats.compilation.codeGenerationResults
+				).map.size;
 		});
 		compiler.run((err, stats) => {
 			if (err) return done(err);
-			const { compilation } = stats;
-			expect(compilation.codeGenerationResults.map.size).toBeGreaterThan(0);
+			const { compilation } =
+				/** @type {import("../").Stats} */ (stats);
+			expect(
+				/** @type {import("../").CodeGenerationResults} */ (
+					compilation.codeGenerationResults
+				).map.size
+			).toBeGreaterThan(0);
 			// close() runs inside the run callback, i.e. before Compiler.run fires
 			// afterDone. The release is deferred a microtask, so afterDone still
 			// observes the results; assert via setTimeout once the defer ran.
@@ -412,8 +423,14 @@ describe("Compiler", () => {
 				if (closeErr) return done(closeErr);
 				setTimeout(() => {
 					expect(sizeSeenByAfterDone).toBeGreaterThan(0);
-					expect(compilation.codeGenerationResults.map.size).toBe(0);
-					expect(typeof stats.toJson().hash).toBe("string");
+					expect(
+						/** @type {import("../").CodeGenerationResults} */ (
+							compilation.codeGenerationResults
+						).map.size
+					).toBe(0);
+					expect(
+						typeof /** @type {import("../").Stats} */ (stats).toJson().hash
+					).toBe("string");
 					done();
 				}, 0);
 			});
@@ -436,9 +453,13 @@ describe("Compiler", () => {
 			/** @type {import("../").OutputFileSystem} */ (
 				/** @type {unknown} */ (createFsFromVolume(new Volume()))
 			);
-		compiler.run((err, _stats) => {
+		/** @type {import("../").Compiler} */ (compiler).run((err, _stats) => {
 			if (err) return done(err);
-			if (compiler.outputFileSystem.existsSync("/bundle.js")) {
+			if (
+				/** @type {import("memfs").IFs} */ (
+					/** @type {import("../").Compiler} */ (compiler).outputFileSystem
+				).existsSync("/bundle.js")
+			) {
 				return done(new Error("Bundle should not be created on error"));
 			}
 			done();

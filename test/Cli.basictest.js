@@ -772,7 +772,7 @@ describe("Cli", () => {
 
 		it("simple", () => {
 			for (const [name, open, close] of colorsMap) {
-				expect(/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (colors)[name](name)).toBe(open + name + close);
+				expect(/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (/** @type {unknown} */ (colors))[name](name)).toBe(open + name + close);
 			}
 		});
 
@@ -824,7 +824,7 @@ describe("Cli", () => {
 
 		it("simple (no colors)", () => {
 			for (const [name] of colorsMap) {
-				expect(/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (noColors)[name](name)).toBe(name);
+				expect(/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (/** @type {unknown} */ (noColors))[name](name)).toBe(name);
 			}
 		});
 
@@ -832,7 +832,7 @@ describe("Cli", () => {
 
 		it("simple (colors by default)", () => {
 			for (const [name, open, close] of colorsMap) {
-				expect(/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (defaultColors)[name](name)).toBe(open + name + close);
+				expect(/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (/** @type {unknown} */ (defaultColors))[name](name)).toBe(open + name + close);
 			}
 		});
 	});

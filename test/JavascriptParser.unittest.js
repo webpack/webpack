@@ -267,7 +267,7 @@ describe("JavascriptParser", () => {
 			source = source.slice(13, -1).trim();
 			const state = testCases[name][1];
 
-			const testParser = new JavascriptParser({});
+			const testParser = new JavascriptParser(/** @type {"auto"} */ (/** @type {unknown} */ ({})));
 			testParser.hooks.canRename
 				.for("abc")
 				.tap("JavascriptParserTest", (_expr) => true);
