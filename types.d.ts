@@ -7481,7 +7481,7 @@ declare abstract class ExportInfo {
 		resolveTargetFilter: (target: TargetItemWithConnection) => boolean,
 		updateOriginalConnection?: (
 			target: TargetItemWithConnection
-		) => ModuleGraphConnection
+		) => undefined | ModuleGraphConnection
 	): undefined | TargetItemWithConnection;
 
 	/**
