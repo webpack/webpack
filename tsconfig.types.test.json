@@ -6,6 +6,7 @@
   "include": [
     "declarations.d.ts",
     "declarations/*.d.ts",
+    "test/helpers/**/*.js",
     "test/**/webpack.config.js",
     "test/cases/**/*loader*.js",
     "test/watchCases/**/*loader*.js",

@@ -1,5 +1,12 @@
 "use strict";
 
+/** @typedef {{ run: number, options?: EXPECTED_ANY }} Config */
+
+/**
+ * @param {string} log log line
+ * @param {Config} config config
+ * @returns {string | undefined} error message
+ */
 const PERSISTENCE_CACHE_INVALIDATE_ERROR = (log, config) => {
 	if (config.run < 2) return;
 	const match =
@@ -14,10 +21,11 @@ const errorsFilter = [PERSISTENCE_CACHE_INVALIDATE_ERROR];
 
 /**
  * @param {string[]} logs logs
- * @param {TODO} config config
- * @returns {string[]} errors
+ * @param {Config} config config
+ * @returns {{ message: string }[]} errors
  */
 module.exports = function filterInfraStructureErrors(logs, config) {
+	/** @type {{ message: string }[]} */
 	const results = [];
 	for (const log of logs) {
 		for (const filter of errorsFilter) {

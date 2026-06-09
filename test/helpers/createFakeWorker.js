@@ -2,8 +2,16 @@
 
 const path = require("path");
 
+/**
+ * @param {{ outputDirectory: string }} options factory options
+ * @returns {EXPECTED_ANY} fake Worker class
+ */
 module.exports = ({ outputDirectory }) =>
 	class Worker {
+		/**
+		 * @param {EXPECTED_ANY} resource worker resource (URL or string)
+		 * @param {EXPECTED_ANY} options worker options
+		 */
 		constructor(resource, options = {}) {
 			const isFileURL = /^file:/i.test(resource);
 			const isBlobURL = /^blob:/i.test(resource);
@@ -96,15 +104,16 @@ if (${options.type === "module"}) {
 				eval: true
 			});
 
+			/** @type {((data: EXPECTED_ANY) => void) | undefined} */
 			this._onmessage = undefined;
 		}
 
 		// eslint-disable-next-line accessor-pairs
-		set onmessage(value) {
+		set onmessage(/** @type {EXPECTED_FUNCTION} */ value) {
 			if (this._onmessage) this.worker.off("message", this._onmessage);
 			this.worker.on(
 				"message",
-				(this._onmessage = (data) => {
+				(this._onmessage = (/** @type {EXPECTED_ANY} */ data) => {
 					value({
 						data
 					});
@@ -112,7 +121,7 @@ if (${options.type === "module"}) {
 			);
 		}
 
-		postMessage(data) {
+		postMessage(/** @type {EXPECTED_ANY} */ data) {
 			this.worker.postMessage(data);
 		}
 

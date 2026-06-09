@@ -2,9 +2,17 @@
 
 const PluginEnvironment = require("./PluginEnvironment");
 
+/**
+ * @this {EXPECTED_ANY}
+ * @param {EXPECTED_ANY} Plugin plugin constructor
+ * @returns {EXPECTED_ANY} recorded event bindings
+ */
 module.exports = function applyPluginWithOptions(Plugin) {
-	// eslint-disable-next-line prefer-rest-params
-	const plugin = new (Function.prototype.bind.apply(Plugin, arguments))();
+	const plugin = new (Function.prototype.bind.apply(
+		Plugin,
+		// eslint-disable-next-line prefer-rest-params
+		/** @type {EXPECTED_ANY} */ (arguments)
+	))();
 	const pluginEnvironment = new PluginEnvironment();
 	plugin.apply(pluginEnvironment.getEnvironmentStub());
 

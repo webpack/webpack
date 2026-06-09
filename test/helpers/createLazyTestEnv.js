@@ -2,19 +2,27 @@
 
 module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 	const state = global.JEST_STATE_SYMBOL;
+	/** @type {import("@jest/types").Circus.DescribeBlock} */
 	let currentDescribeBlock;
+	/** @type {import("@jest/types").Circus.TestEntry | null | undefined} */
 	let currentlyRunningTest;
 	let runTests = -1;
+	/** @type {(() => void)[]} */
 	const disposables = [];
 
 	// this function allows to release memory in fn context
 	// manually, usually after the suite has been run.
+	/**
+	 * @param {EXPECTED_FUNCTION} fn test or hook function
+	 * @param {boolean=} isTest whether this wraps a test (vs a hook)
+	 * @returns {EXPECTED_ANY} wrapped function
+	 */
 	const createDisposableFn = (fn, isTest) => {
 		if (!fn) return null;
 		const rfn =
 			fn.length >= 1
-				? (done) => {
-						fn((...args) => {
+				? (/** @type {EXPECTED_FUNCTION} */ done) => {
+						fn((/** @type {EXPECTED_ANY[]} */ ...args) => {
 							if (isTest) runTests++;
 							done(...args);
 						});
@@ -25,7 +33,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 						return r;
 					};
 		disposables.push(() => {
-			fn = null;
+			fn = /** @type {EXPECTED_ANY} */ (null);
 		});
 		return rfn;
 	};
@@ -48,6 +56,10 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		}
 	);
 	let numberOfTests = 0;
+	/**
+	 * @param {() => void} fn function to run inside the exported suite scope
+	 * @returns {void}
+	 */
 	const inSuite = (fn) => {
 		const {
 			currentDescribeBlock: oldCurrentDescribeBlock,
@@ -71,6 +83,10 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		state.currentlyRunningTest = oldCurrentlyRunningTest;
 		state.hasStarted = oldHasStarted;
 	};
+	/**
+	 * @param {import("@jest/types").Circus.TestEntry | import("@jest/types").Circus.Hook} block test or hook entry
+	 * @returns {void}
+	 */
 	const fixAsyncError = (block) => {
 		// By default jest leaks memory as it stores asyncError
 		// for each "it" call to track the origin test suite
@@ -89,7 +105,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		getNumberOfTests() {
 			return numberOfTests;
 		},
-		it(...args) {
+		it(/** @type {EXPECTED_ANY[]} */ ...args) {
 			numberOfTests++;
 			if (runTests >= numberOfTests) throw new Error("it called too late");
 			args[1] = createDisposableFn(args[1], true);
@@ -102,7 +118,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 				);
 			});
 		},
-		beforeEach(...args) {
+		beforeEach(/** @type {EXPECTED_ANY[]} */ ...args) {
 			if (runTests >= numberOfTests) {
 				throw new Error("beforeEach called too late");
 			}
@@ -115,7 +131,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 				);
 			});
 		},
-		afterEach(...args) {
+		afterEach(/** @type {EXPECTED_ANY[]} */ ...args) {
 			if (runTests >= numberOfTests) {
 				throw new Error("afterEach called too late");
 			}

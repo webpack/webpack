@@ -1,7 +1,11 @@
 "use strict";
 
 const System = {
-	register: (name, deps, fn) => {
+	register: (
+		/** @type {EXPECTED_ANY} */ name,
+		/** @type {EXPECTED_ANY} */ deps,
+		/** @type {EXPECTED_ANY} */ fn
+	) => {
 		if (!System.registry) {
 			throw new Error("System is no initialized");
 		}
@@ -14,7 +18,7 @@ const System = {
 			fn = deps;
 			deps = [];
 		}
-		const dynamicExport = (result) => {
+		const dynamicExport = (/** @type {EXPECTED_ANY} */ result) => {
 			if (System.registry[name] !== entry) {
 				throw new Error(`Module ${name} calls dynamicExport too late`);
 			}
@@ -64,20 +68,22 @@ const System = {
 		};
 		System.registry[name] = entry;
 	},
-	set: (name, exports) => {
+	set: (/** @type {string} */ name, /** @type {EXPECTED_ANY} */ exports) => {
 		System.registry[name] = {
 			name,
 			executed: true,
 			exports
 		};
 	},
-	registry: undefined,
+	/** @type {Record<string, EXPECTED_ANY>} */
+	registry: /** @type {EXPECTED_ANY} */ (undefined),
+	/** @type {((name: string) => void) | undefined} */
 	_require: undefined,
 	_nextName: "(anonym)",
-	setRequire: (req) => {
+	setRequire: (/** @type {(name: string) => void} */ req) => {
 		System._require = req;
 	},
-	init: (modules) => {
+	init: (/** @type {Record<string, EXPECTED_ANY>=} */ modules) => {
 		System.registry = {};
 		if (modules) {
 			for (const name of Object.keys(modules)) {
@@ -88,13 +94,13 @@ const System = {
 			}
 		}
 	},
-	execute: (name) => {
+	execute: (/** @type {string} */ name) => {
 		const m = System.registry[name];
 		if (!m) throw new Error(`Module ${name} not registered`);
 		if (m.executed) throw new Error(`Module ${name} was already executed`);
 		return System.ensureExecuted(name);
 	},
-	ensureExecuted: (name) => {
+	ensureExecuted: (/** @type {string} */ name) => {
 		let m = System.registry[name];
 		if (!m && System._require) {
 			const oldName = System._nextName;

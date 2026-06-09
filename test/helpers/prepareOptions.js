@@ -1,5 +1,9 @@
 "use strict";
 
+/**
+ * @param {EXPECTED_ANY} options options
+ * @returns {EXPECTED_ANY} options
+ */
 const handleExport = (options) => {
 	const isES6DefaultExported =
 		typeof options === "object" &&
@@ -9,6 +13,11 @@ const handleExport = (options) => {
 	return options;
 };
 
+/**
+ * @param {EXPECTED_ANY} options options
+ * @param {EXPECTED_ANY} argv argv
+ * @returns {EXPECTED_ANY} options
+ */
 const handleFunction = (options, argv) => {
 	if (typeof options === "function") {
 		options = options(argv.env, argv);
@@ -16,6 +25,11 @@ const handleFunction = (options, argv) => {
 	return options;
 };
 
+/**
+ * @param {EXPECTED_ANY} options options
+ * @param {EXPECTED_ANY=} argv argv
+ * @returns {EXPECTED_ANY} options
+ */
 module.exports = (options, argv) => {
 	argv = argv || {};
 

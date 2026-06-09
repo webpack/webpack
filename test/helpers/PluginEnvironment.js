@@ -28,6 +28,7 @@ module.exports = function PluginEnvironment() {
 	}
 
 	this.getEnvironmentStub = function getEnvironmentStub() {
+		/** @type {Map<string | symbol, EXPECTED_ANY>} */
 		const hooks = new Map();
 		return {
 			plugin: addEvent,
@@ -41,15 +42,24 @@ module.exports = function PluginEnvironment() {
 					get(target, hookName) {
 						let hook = hooks.get(hookName);
 						if (hook === undefined) {
-							const eventName = getEventName(hookName);
+							const eventName = getEventName(/** @type {string} */ (hookName));
 							hook = {
-								tap(_, handler) {
+								tap(
+									/** @type {EXPECTED_ANY} */ _,
+									/** @type {EXPECTED_FUNCTION} */ handler
+								) {
 									addEvent(eventName, handler);
 								},
-								tapAsync(_, handler) {
+								tapAsync(
+									/** @type {EXPECTED_ANY} */ _,
+									/** @type {EXPECTED_FUNCTION} */ handler
+								) {
 									addEvent(eventName, handler);
 								},
-								tapPromise(_, handler) {
+								tapPromise(
+									/** @type {EXPECTED_ANY} */ _,
+									/** @type {EXPECTED_FUNCTION} */ handler
+								) {
 									addEvent(eventName, handler);
 								}
 							};
