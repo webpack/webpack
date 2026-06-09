@@ -139,7 +139,10 @@ describe("HotModuleReplacementPlugin", () => {
 			},
 			plugins: [new webpack.HotModuleReplacementPlugin()]
 		});
-		const callback = (/** @type {Error | null} */ err, /** @type {import("../").Stats | undefined} */ _stats) => {
+		const callback = (
+			/** @type {Error | null} */ err,
+			/** @type {import("../").Stats | undefined} */ _stats
+		) => {
 			if (err) return done(err);
 			const stats = /** @type {import("../").Stats} */ (_stats);
 			const jsonStats = stats.toJson();
@@ -224,7 +227,9 @@ describe("HotModuleReplacementPlugin", () => {
 			const stats = /** @type {import("../").Stats} */ (_stats);
 			const jsonStats = stats.toJson();
 			const hash = jsonStats.hash;
-			const chunkName = Object.keys(/** @type {Record<string, string[]>} */ (jsonStats.assetsByChunkName))[0];
+			const chunkName = Object.keys(
+				/** @type {Record<string, string[]>} */ (jsonStats.assetsByChunkName)
+			)[0];
 			fs.writeFileSync(statsFile3, stats.toString());
 			compiler.run((err, _stats) => {
 				if (err) throw err;
@@ -633,10 +638,11 @@ describe("HotModuleReplacementPlugin", () => {
 		});
 
 		expect(
-			/** @type {import("../").StatsError[]} */ (warnings).some((/** @type {import("../").StatsError} */ w) =>
-				(w.message || String(w)).includes(
-					"doesn't lead to unique filenames per runtime"
-				)
+			/** @type {import("../").StatsError[]} */ (warnings).some(
+				(/** @type {import("../").StatsError} */ w) =>
+					(w.message || String(w)).includes(
+						"doesn't lead to unique filenames per runtime"
+					)
 			)
 		).toBe(true);
 	}, 120000);

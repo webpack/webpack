@@ -8,7 +8,10 @@ const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
 const captureStdio = require("./helpers/captureStdio");
 
-const createMultiCompiler = (/** @type {Record<string, unknown> | undefined} */ progressOptions = undefined, /** @type {Record<string, unknown> | undefined} */ configOptions = undefined) => {
+const createMultiCompiler = (
+	/** @type {Record<string, unknown> | undefined} */ progressOptions = undefined,
+	/** @type {Record<string, unknown> | undefined} */ configOptions = undefined
+) => {
 	const compiler = webpack(
 		Object.assign(
 			[
@@ -24,14 +27,18 @@ const createMultiCompiler = (/** @type {Record<string, unknown> | undefined} */ 
 			configOptions
 		)
 	);
-	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (/** @type {unknown} */ (createFsFromVolume(new Volume())));
+	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		/** @type {unknown} */ (createFsFromVolume(new Volume()))
+	);
 
 	new webpack.ProgressPlugin(progressOptions).apply(compiler);
 
 	return compiler;
 };
 
-const createSimpleCompiler = (/** @type {Record<string, unknown> | undefined} */ progressOptions = undefined) => {
+const createSimpleCompiler = (
+	/** @type {Record<string, unknown> | undefined} */ progressOptions = undefined
+) => {
 	const compiler = webpack({
 		context: path.join(__dirname, "fixtures"),
 		entry: "./a.js",
@@ -46,18 +53,24 @@ const createSimpleCompiler = (/** @type {Record<string, unknown> | undefined} */
 		]
 	});
 
-	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (/** @type {unknown} */ (createFsFromVolume(new Volume())));
+	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		/** @type {unknown} */ (createFsFromVolume(new Volume()))
+	);
 
 	return compiler;
 };
 
-const createSimpleCompilerWithCustomHandler = (/** @type {Record<string, unknown> | undefined} */ options = undefined) => {
+const createSimpleCompilerWithCustomHandler = (
+	/** @type {Record<string, unknown> | undefined} */ options = undefined
+) => {
 	const compiler = webpack({
 		context: path.join(__dirname, "fixtures"),
 		entry: "./a.js"
 	});
 
-	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (/** @type {unknown} */ (createFsFromVolume(new Volume())));
+	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		/** @type {unknown} */ (createFsFromVolume(new Volume()))
+	);
 	const logger = compiler.getInfrastructureLogger("custom test logger");
 	new webpack.ProgressPlugin({
 		activeModules: true,
@@ -68,9 +81,12 @@ const createSimpleCompilerWithCustomHandler = (/** @type {Record<string, unknown
 	return compiler;
 };
 
-const getLogs = (/** @type {string} */ logsStr) => logsStr.split(/\r/).filter((/** @type {string} */ v) => v !== " ");
+const getLogs = (/** @type {string} */ logsStr) =>
+	logsStr.split(/\r/).filter((/** @type {string} */ v) => v !== " ");
 
-const runCompilerAsync = (/** @type {import("../").Compiler | import("../").MultiCompiler} */ compiler) =>
+const runCompilerAsync = (
+	/** @type {import("../").Compiler | import("../").MultiCompiler} */ compiler
+) =>
 	new Promise((resolve, reject) => {
 		compiler.run((/** @type {Error | null} */ err) => {
 			if (err) {
@@ -101,14 +117,16 @@ describe("ProgressPlugin", () => {
 		stdout && stdout.restore();
 	});
 
-	const nanTest = (/** @type {Function} */ createCompiler) => () => {
-		const compiler = createCompiler();
+	const nanTest =
+		(/** @type {(...args: EXPECTED_ANY[]) => EXPECTED_ANY} */ createCompiler) =>
+		() => {
+			const compiler = createCompiler();
 
-		return runCompilerAsync(compiler).then(() => {
-			expect(stderr.toString()).toContain("%");
-			expect(stderr.toString()).not.toContain("NaN");
-		});
-	};
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).toContain("%");
+				expect(stderr.toString()).not.toContain("NaN");
+			});
+		};
 
 	it(
 		"should not contain NaN as a percentage when it is applied to Compiler",
@@ -166,27 +184,29 @@ describe("ProgressPlugin", () => {
 		});
 	});
 
-	const monotonicTest = (/** @type {Function} */ createCompiler) => () => {
-		/** @type {{ value: number, text: string }[]} */
-		const handlerCalls = [];
-		const compiler = createCompiler({
-			handler: (/** @type {number} */ p, /** @type {string[]} */ ...args) => {
-				handlerCalls.push({ value: p, text: `${p}% ${args.join(" ")}` });
-			}
-		});
-
-		return runCompilerAsync(compiler).then(() => {
-			let lastLine = handlerCalls[0];
-			for (const line of handlerCalls) {
-				if (line.value < lastLine.value) {
-					throw new Error(
-						`Progress value is not monotonic increasing:\n${lastLine.text}\n${line.text}`
-					);
+	const monotonicTest =
+		(/** @type {(...args: EXPECTED_ANY[]) => EXPECTED_ANY} */ createCompiler) =>
+		() => {
+			/** @type {{ value: number, text: string }[]} */
+			const handlerCalls = [];
+			const compiler = createCompiler({
+				handler: (/** @type {number} */ p, /** @type {string[]} */ ...args) => {
+					handlerCalls.push({ value: p, text: `${p}% ${args.join(" ")}` });
 				}
-				lastLine = line;
-			}
-		});
-	};
+			});
+
+			return runCompilerAsync(compiler).then(() => {
+				let lastLine = handlerCalls[0];
+				for (const line of handlerCalls) {
+					if (line.value < lastLine.value) {
+						throw new Error(
+							`Progress value is not monotonic increasing:\n${lastLine.text}\n${line.text}`
+						);
+					}
+					lastLine = line;
+				}
+			});
+		};
 
 	it(
 		"should have monotonic increasing progress",
@@ -200,7 +220,9 @@ describe("ProgressPlugin", () => {
 
 	it(
 		"should have monotonic increasing progress (multi compiler, parallelism)",
-		monotonicTest((/** @type {Record<string, unknown>} */ o) => createMultiCompiler(o, { parallelism: 1 }))
+		monotonicTest((/** @type {Record<string, unknown>} */ o) =>
+			createMultiCompiler(o, { parallelism: 1 })
+		)
 	);
 
 	it("should not print lines longer than stderr.columns", () => {
@@ -232,7 +254,9 @@ describe("ProgressPlugin", () => {
 			const logs = getLogs(stderr.toString());
 
 			expect(logs.length).toBeGreaterThan(20);
-			expect(/** @type {string} */ (_.maxBy(logs, "length")).length).not.toBeGreaterThan(40);
+			expect(
+				/** @type {string} */ (_.maxBy(logs, "length")).length
+			).not.toBeGreaterThan(40);
 		});
 	});
 

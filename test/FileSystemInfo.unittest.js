@@ -138,20 +138,31 @@ describe("FileSystemInfo", () => {
 	};
 
 	const createFsInfo = (/** @type {IFs} */ fs) => {
-		/** @type {import("../lib/logging/Logger").Logger & Record<string, Function>} */
-		const logger = /** @type {import("../lib/logging/Logger").Logger & Record<string, Function>} */ (/** @type {unknown} */ ({
-			error: (/** @type {unknown[]} */ ...args) => {
-				throw new Error(util.format(...args));
-			}
-		}));
+		/** @type {import("../lib/logging/Logger").Logger & Record<string, (...args: unknown[]) => unknown>} */
+		const logger =
+			/** @type {import("../lib/logging/Logger").Logger & Record<string, (...args: unknown[]) => unknown>} */ (
+				/** @type {unknown} */ ({
+					error: (/** @type {unknown[]} */ ...args) => {
+						throw new Error(util.format(...args));
+					}
+				})
+			);
 		/** @type {import("../lib/FileSystemInfo") & Record<string, unknown>} */
-		const fsInfo = /** @type {import("../lib/FileSystemInfo") & Record<string, unknown>} */ (new FileSystemInfo(/** @type {import("../lib/util/fs").InputFileSystem} */ (/** @type {unknown} */ (fs)), {
-			logger,
-			unmanagedPaths,
-			managedPaths,
-			immutablePaths,
-			hashFunction: "sha256"
-		}));
+		const fsInfo =
+			/** @type {import("../lib/FileSystemInfo") & Record<string, unknown>} */ (
+				new FileSystemInfo(
+					/** @type {import("../lib/util/fs").InputFileSystem} */ (
+						/** @type {unknown} */ (fs)
+					),
+					{
+						logger,
+						unmanagedPaths,
+						managedPaths,
+						immutablePaths,
+						hashFunction: "sha256"
+					}
+				)
+			);
 		for (const method of ["warn", "info", "log", "debug"]) {
 			fsInfo.logs = [];
 			fsInfo[method] = [];
@@ -165,7 +176,11 @@ describe("FileSystemInfo", () => {
 		return fsInfo;
 	};
 
-	const createSnapshot = (/** @type {IFs} */ fs, /** @type {SnapshotOptions} */ options, /** @type {(err?: Error | null, snapshot?: Snapshot | null, snapshot2?: Snapshot | null) => void} */ callback) => {
+	const createSnapshot = (
+		/** @type {IFs} */ fs,
+		/** @type {SnapshotOptions} */ options,
+		/** @type {(err?: Error | null, snapshot?: Snapshot | null, snapshot2?: Snapshot | null) => void} */ callback
+	) => {
 		const fsInfo = createFsInfo(fs);
 		fsInfo.createSnapshot(
 			Date.now() + 10000,
@@ -175,7 +190,8 @@ describe("FileSystemInfo", () => {
 			options,
 			(err, snapshot) => {
 				if (err) return callback(err);
-				/** @type {Snapshot & Record<string, unknown>} */ (snapshot).name = "initial snapshot";
+				/** @type {Snapshot & Record<string, unknown>} */ (snapshot).name =
+					"initial snapshot";
 				// create another one to test the caching
 				fsInfo.createSnapshot(
 					Date.now() + 10000,
@@ -185,7 +201,8 @@ describe("FileSystemInfo", () => {
 					options,
 					(err, snapshot2) => {
 						if (err) return callback(err);
-						/** @type {Snapshot & Record<string, unknown>} */ (snapshot2).name = "cached snapshot";
+						/** @type {Snapshot & Record<string, unknown>} */ (snapshot2).name =
+							"cached snapshot";
 						callback(null, snapshot, snapshot2);
 					}
 				);
@@ -193,7 +210,7 @@ describe("FileSystemInfo", () => {
 		);
 	};
 
-	const clone = (/** @type {object} */ object) => {
+	const clone = (/** @type {Record<string, unknown>} */ object) => {
 		const serialized = buffersSerializer.serialize(object, {});
 		return buffersSerializer.deserialize(serialized, {});
 	};
@@ -212,46 +229,75 @@ describe("FileSystemInfo", () => {
 		});
 	};
 
-	const expectSnapshotState = (/** @type {IFs} */ fs, /** @type {Snapshot | null | undefined} */ snapshot, /** @type {boolean} */ expected, /** @type {(err?: Error | null) => void} */ callback) => {
+	const expectSnapshotState = (
+		/** @type {IFs} */ fs,
+		/** @type {Snapshot | null | undefined} */ snapshot,
+		/** @type {boolean} */ expected,
+		/** @type {(err?: Error | null) => void} */ callback
+	) => {
 		const fsInfo = createFsInfo(fs);
-		const details = (/** @type {unknown} */ snapshot) => `${/** @type {string[]} */ (/** @type {Record<string, unknown>} */ (fsInfo).logs).join("\n")}
+		const details = (
+			/** @type {unknown} */ snapshot
+		) => `${/** @type {string[]} */ (/** @type {Record<string, unknown>} */ (fsInfo).logs).join("\n")}
 ${util.inspect(snapshot, false, Infinity, true)}`;
-		fsInfo.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
-			if (err) return callback(err);
-			if (valid !== expected) {
-				return callback(
-					new Error(`Expected snapshot to be ${
-						expected ? "valid" : "invalid"
-					} but it is ${valid ? "valid" : "invalid"}:
-${details(snapshot)}`)
-				);
-			}
-			// Another try to check if direct caching works
-			fsInfo.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
+		fsInfo.checkSnapshotValid(
+			/** @type {Snapshot} */ (snapshot),
+			(err, valid) => {
 				if (err) return callback(err);
 				if (valid !== expected) {
 					return callback(
-						new Error(`Expected snapshot lead to the same result when directly cached:
+						new Error(`Expected snapshot to be ${
+							expected ? "valid" : "invalid"
+						} but it is ${valid ? "valid" : "invalid"}:
 ${details(snapshot)}`)
 					);
 				}
-				// Another try to check if indirect caching works
-				fsInfo.checkSnapshotValid(/** @type {Snapshot} */ (/** @type {unknown} */ (clone(/** @type {object} */ (snapshot)))), (err, valid) => {
-					if (err) return callback(err);
-					if (valid !== expected) {
-						return callback(
-							new Error(`Expected snapshot lead to the same result when indirectly cached:
+				// Another try to check if direct caching works
+				fsInfo.checkSnapshotValid(
+					/** @type {Snapshot} */ (snapshot),
+					(err, valid) => {
+						if (err) return callback(err);
+						if (valid !== expected) {
+							return callback(
+								new Error(`Expected snapshot lead to the same result when directly cached:
 ${details(snapshot)}`)
+							);
+						}
+						// Another try to check if indirect caching works
+						fsInfo.checkSnapshotValid(
+							/** @type {Snapshot} */ (
+								/** @type {unknown} */ (
+									clone(
+										/** @type {Record<string, unknown>} */ (
+											/** @type {unknown} */ (snapshot)
+										)
+									)
+								)
+							),
+							(err, valid) => {
+								if (err) return callback(err);
+								if (valid !== expected) {
+									return callback(
+										new Error(`Expected snapshot lead to the same result when indirectly cached:
+${details(snapshot)}`)
+									);
+								}
+								callback();
+							}
 						);
 					}
-					callback();
-				});
-			});
-		});
+				);
+			}
+		);
 	};
 
-	const updateFile = (/** @type {IFs} */ fs, /** @type {string} */ filename) => {
-		const oldContent = /** @type {string} */ (/** @type {unknown} */ (fs.readFileSync(filename, "utf8")));
+	const updateFile = (
+		/** @type {IFs} */ fs,
+		/** @type {string} */ filename
+	) => {
+		const oldContent = /** @type {string} */ (
+			/** @type {unknown} */ (fs.readFileSync(filename, "utf8"))
+		);
 		if (filename.endsWith(".json")) {
 			const data = JSON.parse(oldContent);
 			fs.writeFileSync(
@@ -422,7 +468,9 @@ ${details(snapshot)}`)
 		it("should return same iterable for getFileIterable()", (done) => {
 			getSnapshot((err, snapshot) => {
 				if (err) done(err);
-				expect(/** @type {Snapshot} */ (snapshot).getFileIterable()).toEqual(/** @type {Snapshot} */ (snapshot).getFileIterable());
+				expect(/** @type {Snapshot} */ (snapshot).getFileIterable()).toEqual(
+					/** @type {Snapshot} */ (snapshot).getFileIterable()
+				);
 				done();
 			});
 		});
@@ -440,7 +488,9 @@ ${details(snapshot)}`)
 		it("should return same iterable for getMissingIterable()", (done) => {
 			getSnapshot((err, snapshot) => {
 				if (err) done(err);
-				expect(/** @type {Snapshot} */ (snapshot).getFileIterable()).toEqual(/** @type {Snapshot} */ (snapshot).getFileIterable());
+				expect(/** @type {Snapshot} */ (snapshot).getFileIterable()).toEqual(
+					/** @type {Snapshot} */ (snapshot).getFileIterable()
+				);
 				done();
 			});
 		});
@@ -463,16 +513,21 @@ ${details(snapshot)}`)
 			jest.spyOn(fs, "readlink").mockImplementation((path, callback) => {
 				if (path === "/path/context/sub/symlink-error" && i < 2) {
 					i += 1;
-					/** @type {Function} */ (callback)(new Error("test"));
+					/** @type {(err: Error) => void} */ (callback)(new Error("test"));
 					return;
 				}
 
-				(/** @type {Function} */ (originalReadlink))(path, callback);
+				/** @type {(path: string, cb: unknown) => void} */ (originalReadlink)(
+					/** @type {string} */ (path),
+					callback
+				);
 			});
 
 			createSnapshot(
 				fs,
-				/** @type {SnapshotOptions} */ (/** @type {unknown} */ (["timestamp", { timestamp: true }])),
+				/** @type {SnapshotOptions} */ (
+					/** @type {unknown} */ (["timestamp", { timestamp: true }])
+				),
 				(err, snapshot, snapshot2) => {
 					if (err) return done(err);
 					expectSnapshotsState(fs, snapshot, snapshot2, true, done);
@@ -490,7 +545,7 @@ ${details(snapshot)}`)
 			);
 
 			jest.spyOn(fs, "readlink").mockImplementation((path, callback) => {
-				/** @type {Function} */ (callback)(new Error("test"));
+				/** @type {(err: Error) => void} */ (callback)(new Error("test"));
 			});
 
 			const fsInfo = createFsInfo(fs);
@@ -499,7 +554,9 @@ ${details(snapshot)}`)
 				files,
 				directories,
 				missing,
-				/** @type {SnapshotOptions} */ (/** @type {unknown} */ (["timestamp", { timestamp: true }])),
+				/** @type {SnapshotOptions} */ (
+					/** @type {unknown} */ (["timestamp", { timestamp: true }])
+				),
 				(err, snapshot) => {
 					expect(snapshot).toBeNull();
 					done();
@@ -537,7 +594,9 @@ ${details(snapshot)}`)
 	// `timestampHash`. Cache lookups now treat existence-only entries as a
 	// cache miss and re-read from disk so snapshots stay valid.
 	describe("existence-only watchpack entries", () => {
-		const buildFsInfoWithSnapshot = (/** @type {(err?: Error | null, fs?: IFs, snapshot?: Snapshot | null) => void} */ callback) => {
+		const buildFsInfoWithSnapshot = (
+			/** @type {(err?: Error | null, fs?: IFs, snapshot?: Snapshot | null) => void} */ callback
+		) => {
 			const fs = createFs();
 			const fsInfo = createFsInfo(fs);
 			fsInfo.createSnapshot(
@@ -545,7 +604,9 @@ ${details(snapshot)}`)
 				files,
 				directories,
 				missing,
-				/** @type {SnapshotOptions} */ (/** @type {unknown} */ (["timestamp", { timestamp: true }])),
+				/** @type {SnapshotOptions} */ (
+					/** @type {unknown} */ (["timestamp", { timestamp: true }])
+				),
 				(err, snapshot) => {
 					if (err) return callback(err);
 					callback(null, fs, snapshot);
@@ -553,7 +614,8 @@ ${details(snapshot)}`)
 			);
 		};
 
-		const onlyNonIgnored = (/** @type {string[]} */ paths) => paths.filter((/** @type {string} */ p) => !ignored.includes(p));
+		const onlyNonIgnored = (/** @type {string[]} */ paths) =>
+			paths.filter((/** @type {string} */ p) => !ignored.includes(p));
 
 		it("keeps the snapshot valid when watchpack reports `{}` for context dirs", (done) => {
 			buildFsInfoWithSnapshot((err, fs, snapshot) => {
@@ -561,11 +623,14 @@ ${details(snapshot)}`)
 				const fsInfo = createFsInfo(/** @type {IFs} */ (fs));
 				const map = new Map(directories.map((d) => [d, {}]));
 				fsInfo.addContextTimestamps(map, true);
-				fsInfo.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
-					if (err) return done(err);
-					expect(valid).toBe(true);
-					done();
-				});
+				fsInfo.checkSnapshotValid(
+					/** @type {Snapshot} */ (snapshot),
+					(err, valid) => {
+						if (err) return done(err);
+						expect(valid).toBe(true);
+						done();
+					}
+				);
 			});
 		});
 
@@ -575,11 +640,14 @@ ${details(snapshot)}`)
 				const fsInfo = createFsInfo(/** @type {IFs} */ (fs));
 				const map = new Map(onlyNonIgnored(files).map((f) => [f, {}]));
 				fsInfo.addFileTimestamps(map, true);
-				fsInfo.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
-					if (err) return done(err);
-					expect(valid).toBe(true);
-					done();
-				});
+				fsInfo.checkSnapshotValid(
+					/** @type {Snapshot} */ (snapshot),
+					(err, valid) => {
+						if (err) return done(err);
+						expect(valid).toBe(true);
+						done();
+					}
+				);
 			});
 		});
 
@@ -593,11 +661,14 @@ ${details(snapshot)}`)
 					new Map([["/path/context+files", { safeTime: 1 }]]),
 					true
 				);
-				fsInfo.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
-					if (err) return done(err);
-					expect(valid).toBe(true);
-					done();
-				});
+				fsInfo.checkSnapshotValid(
+					/** @type {Snapshot} */ (snapshot),
+					(err, valid) => {
+						if (err) return done(err);
+						expect(valid).toBe(true);
+						done();
+					}
+				);
 			});
 		});
 
@@ -610,7 +681,9 @@ ${details(snapshot)}`)
 				files,
 				directories,
 				missing,
-				/** @type {SnapshotOptions} */ (/** @type {unknown} */ (["timestamp", { timestamp: true }])),
+				/** @type {SnapshotOptions} */ (
+					/** @type {unknown} */ (["timestamp", { timestamp: true }])
+				),
 				(err, snapshot) => {
 					if (err) return done(err);
 					const fsInfo2 = createFsInfo(fs);
@@ -618,11 +691,14 @@ ${details(snapshot)}`)
 						new Map([["/path/context+files", { safeTime: startTime + 5000 }]]),
 						true
 					);
-					fsInfo2.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
-						if (err) return done(err);
-						expect(valid).toBe(false);
-						done();
-					});
+					fsInfo2.checkSnapshotValid(
+						/** @type {Snapshot} */ (snapshot),
+						(err, valid) => {
+							if (err) return done(err);
+							expect(valid).toBe(false);
+							done();
+						}
+					);
 				}
 			);
 		});
@@ -663,7 +739,9 @@ ${details(snapshot)}`)
 				files,
 				directories,
 				missing,
-				/** @type {SnapshotOptions} */ (/** @type {unknown} */ (["timestamp", { timestamp: true }])),
+				/** @type {SnapshotOptions} */ (
+					/** @type {unknown} */ (["timestamp", { timestamp: true }])
+				),
 				(err, snapshot) => {
 					if (err) return done(err);
 					const fsInfo2 = createFsInfo(fs);
@@ -674,11 +752,14 @@ ${details(snapshot)}`)
 						new Map([["/path/package.json", {}]]),
 						true
 					);
-					fsInfo2.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
-						if (err) return done(err);
-						expect(valid).toBe(true);
-						done();
-					});
+					fsInfo2.checkSnapshotValid(
+						/** @type {Snapshot} */ (snapshot),
+						(err, valid) => {
+							if (err) return done(err);
+							expect(valid).toBe(true);
+							done();
+						}
+					);
 				}
 			);
 		});
@@ -691,17 +772,22 @@ ${details(snapshot)}`)
 				files,
 				directories,
 				missing,
-				/** @type {SnapshotOptions} */ (/** @type {unknown} */ (["timestamp", { timestamp: true }])),
+				/** @type {SnapshotOptions} */ (
+					/** @type {unknown} */ (["timestamp", { timestamp: true }])
+				),
 				(err, snapshot) => {
 					if (err) return done(err);
 					// Create the missing file and re-check.
 					fs.writeFileSync("/path/package.json", "{}");
 					const fsInfo2 = createFsInfo(fs);
-					fsInfo2.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
-						if (err) return done(err);
-						expect(valid).toBe(false);
-						done();
-					});
+					fsInfo2.checkSnapshotValid(
+						/** @type {Snapshot} */ (snapshot),
+						(err, valid) => {
+							if (err) return done(err);
+							expect(valid).toBe(false);
+							done();
+						}
+					);
 				}
 			);
 		});
@@ -735,7 +821,9 @@ ${details(snapshot)}`)
 				files,
 				directories,
 				missing,
-				/** @type {SnapshotOptions} */ (/** @type {unknown} */ (["timestamp", { timestamp: true }])),
+				/** @type {SnapshotOptions} */ (
+					/** @type {unknown} */ (["timestamp", { timestamp: true }])
+				),
 				(err, snapshot) => {
 					if (err) return done(err);
 					const stored = /** @type {Map<string, EXPECTED_ANY>} */ (
@@ -778,21 +866,27 @@ ${details(snapshot)}`)
 						updateFile(fs, changedFile);
 						// Sanity: without ignoring, the change invalidates the snapshot.
 						const control = createFsInfo(fs);
-						control.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
-							if (err) return done(err);
-							expect(valid).toBe(false);
-							// Mark the directory ignored: the snapshot stays valid.
-							const fsInfo2 = createFsInfo(fs);
-							fsInfo2.addContextTimestamps(
-								new Map([[ignoredDir, "ignore"]]),
-								true
-							);
-							fsInfo2.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
+						control.checkSnapshotValid(
+							/** @type {Snapshot} */ (snapshot),
+							(err, valid) => {
 								if (err) return done(err);
-								expect(valid).toBe(true);
-								done();
-							});
-						});
+								expect(valid).toBe(false);
+								// Mark the directory ignored: the snapshot stays valid.
+								const fsInfo2 = createFsInfo(fs);
+								fsInfo2.addContextTimestamps(
+									new Map([[ignoredDir, "ignore"]]),
+									true
+								);
+								fsInfo2.checkSnapshotValid(
+									/** @type {Snapshot} */ (snapshot),
+									(err, valid) => {
+										if (err) return done(err);
+										expect(valid).toBe(true);
+										done();
+									}
+								);
+							}
+						);
 					}
 				);
 			});
@@ -821,8 +915,13 @@ ${details(snapshot)}`)
 	});
 
 	describe("cache maintenance", () => {
-		/** @typedef {import("../lib/FileSystemInfo") & Record<string, unknown>} FsInfoExt */
-		const buildWithStats = (/** @type {(err: Error | null | undefined, fsInfo?: FsInfoExt) => void} */ callback) => {
+		/**
+		 * @typedef {import("../lib/FileSystemInfo") & Record<string, unknown>} FsInfoExt
+		 * @param {(err: Error | null | undefined, fsInfo?: FsInfoExt) => void} callback result callback
+		 */
+		const buildWithStats = (
+			/** @type {(err: Error | null | undefined, fsInfo?: FsInfoExt) => void} */ callback
+		) => {
 			const fs = createFs();
 			const fsInfo = createFsInfo(fs);
 			// Two overlapping snapshots populate the optimization statistics so
@@ -855,9 +954,11 @@ ${details(snapshot)}`)
 				if (err) return done(err);
 				const fsInfo = /** @type {FsInfoExt} */ (fsInfo_);
 				expect(() => fsInfo.logStatistics()).not.toThrow();
-				expect(/** @type {string[]} */ (fsInfo.log).some((/** @type {string} */ m) => /new snapshots created/.test(m))).toBe(
-					true
-				);
+				expect(
+					/** @type {string[]} */ (fsInfo.log).some((/** @type {string} */ m) =>
+						/new snapshots created/.test(m)
+					)
+				).toBe(true);
 				done();
 			});
 		});
@@ -934,9 +1035,17 @@ ${details(snapshot)}`)
 						options,
 						(err, s2) => {
 							if (err) return done(err);
-							const merged = fsInfo.mergeSnapshots(/** @type {Snapshot} */ (s1), /** @type {Snapshot} */ (s2));
+							const merged = fsInfo.mergeSnapshots(
+								/** @type {Snapshot} */ (s1),
+								/** @type {Snapshot} */ (s2)
+							);
 							expect(merged.startTime).toBe(
-								Math.min(/** @type {number} */ (/** @type {Snapshot} */ (s1).startTime), /** @type {number} */ (/** @type {Snapshot} */ (s2).startTime))
+								Math.min(
+									/** @type {number} */ (
+										/** @type {Snapshot} */ (s1).startTime
+									),
+									/** @type {number} */ (/** @type {Snapshot} */ (s2).startTime)
+								)
 							);
 							// both inputs are cached as valid → so is the merge
 							expect(fsInfo._snapshotCache.get(merged)).toBe(true);
@@ -970,15 +1079,28 @@ ${details(snapshot)}`)
 						{ timestamp: true },
 						(err, withStart) => {
 							if (err) return done(err);
-							expect(/** @type {Snapshot} */ (noStart).hasStartTime()).toBe(false);
-							expect(fsInfo.mergeSnapshots(/** @type {Snapshot} */ (noStart), /** @type {Snapshot} */ (withStart)).startTime).toBe(
-								/** @type {Snapshot} */ (withStart).startTime
-							);
-							expect(fsInfo.mergeSnapshots(/** @type {Snapshot} */ (withStart), /** @type {Snapshot} */ (noStart)).startTime).toBe(
-								/** @type {Snapshot} */ (withStart).startTime
+							expect(/** @type {Snapshot} */ (noStart).hasStartTime()).toBe(
+								false
 							);
 							expect(
-								fsInfo.mergeSnapshots(/** @type {Snapshot} */ (noStart), /** @type {Snapshot} */ (noStart)).hasStartTime()
+								fsInfo.mergeSnapshots(
+									/** @type {Snapshot} */ (noStart),
+									/** @type {Snapshot} */ (withStart)
+								).startTime
+							).toBe(/** @type {Snapshot} */ (withStart).startTime);
+							expect(
+								fsInfo.mergeSnapshots(
+									/** @type {Snapshot} */ (withStart),
+									/** @type {Snapshot} */ (noStart)
+								).startTime
+							).toBe(/** @type {Snapshot} */ (withStart).startTime);
+							expect(
+								fsInfo
+									.mergeSnapshots(
+										/** @type {Snapshot} */ (noStart),
+										/** @type {Snapshot} */ (noStart)
+									)
+									.hasStartTime()
 							).toBe(false);
 							done();
 						}
@@ -994,7 +1116,10 @@ ${details(snapshot)}`)
 			const fsInfo = createFsInfo(fs);
 			// Fixed start time so the shared-snapshot start-time guard always passes.
 			const startTime = Date.now() + 10000;
-			const make = (/** @type {string[]} */ fileList, /** @type {(err?: Error | null, snapshot?: Snapshot | null) => void} */ cb) =>
+			const make = (
+				/** @type {string[]} */ fileList,
+				/** @type {(err?: Error | null, snapshot?: Snapshot | null) => void} */ cb
+			) =>
 				fsInfo.createSnapshot(
 					startTime,
 					fileList,
@@ -1057,16 +1182,24 @@ ${details(snapshot)}`)
 		};
 
 		const createProjectFsInfo = (/** @type {IFs} */ fs) => {
-			/** @type {import("../lib/logging/Logger").Logger & Record<string, Function>} */
-			const logger = /** @type {import("../lib/logging/Logger").Logger & Record<string, Function>} */ (/** @type {unknown} */ ({
-				error: (/** @type {unknown[]} */ ...args) => {
-					throw new Error(util.format(...args));
-				}
-			}));
+			/** @type {import("../lib/logging/Logger").Logger & Record<string, (...args: unknown[]) => unknown>} */
+			const logger =
+				/** @type {import("../lib/logging/Logger").Logger & Record<string, (...args: unknown[]) => unknown>} */ (
+					/** @type {unknown} */ ({
+						error: (/** @type {unknown[]} */ ...args) => {
+							throw new Error(util.format(...args));
+						}
+					})
+				);
 			for (const method of ["warn", "info", "log", "debug"]) {
 				logger[method] = () => {};
 			}
-			return new FileSystemInfo(/** @type {import("../lib/util/fs").InputFileSystem} */ (/** @type {unknown} */ (fs)), { logger, hashFunction: "sha256" });
+			return new FileSystemInfo(
+				/** @type {import("../lib/util/fs").InputFileSystem} */ (
+					/** @type {unknown} */ (fs)
+				),
+				{ logger, hashFunction: "sha256" }
+			);
 		};
 
 		it("collects files, directories and resolve results across cjs/esm", (done) => {
@@ -1077,7 +1210,10 @@ ${details(snapshot)}`)
 				["/proj/entry.js", "/proj/", "/proj/empty-dir/"],
 				(err, result_) => {
 					if (err) return done(err);
-					const result = /** @type {import("../lib/FileSystemInfo").ResolveBuildDependenciesResult} */ (result_);
+					const result =
+						/** @type {import("../lib/FileSystemInfo").ResolveBuildDependenciesResult} */ (
+							result_
+						);
 					expect(result.files).toContain("/proj/entry.js");
 					expect(result.files).toContain("/proj/lib.mjs");
 					expect(result.files).toContain("/proj/node_modules/dep/index.js");
@@ -1106,7 +1242,10 @@ ${details(snapshot)}`)
 			const fsInfo = createProjectFsInfo(fs);
 			fsInfo.resolveBuildDependencies("/proj", ["/proj/"], (err, result_) => {
 				if (err) return done(err);
-				const result = /** @type {import("../lib/FileSystemInfo").ResolveBuildDependenciesResult} */ (result_);
+				const result =
+					/** @type {import("../lib/FileSystemInfo").ResolveBuildDependenciesResult} */ (
+						result_
+					);
 				// Create the previously-missing optional dependency.
 				fs.mkdirSync("/proj/node_modules/missing-dep", { recursive: true });
 				fs.writeFileSync(
@@ -1147,12 +1286,15 @@ ${details(snapshot)}`)
 				JSON.stringify({ name: "normal", version: "1.0.0" })
 			);
 			extra(/** @type {IFs} */ (/** @type {unknown} */ (fs)));
-			/** @type {import("../lib/logging/Logger").Logger & Record<string, Function>} */
-			const logger = /** @type {import("../lib/logging/Logger").Logger & Record<string, Function>} */ (/** @type {unknown} */ ({
-				error: (/** @type {unknown[]} */ ...args) => {
-					throw new Error(util.format(...args));
-				}
-			}));
+			/** @type {import("../lib/logging/Logger").Logger & Record<string, (...args: unknown[]) => unknown>} */
+			const logger =
+				/** @type {import("../lib/logging/Logger").Logger & Record<string, (...args: unknown[]) => unknown>} */ (
+					/** @type {unknown} */ ({
+						error: (/** @type {unknown[]} */ ...args) => {
+							throw new Error(util.format(...args));
+						}
+					})
+				);
 			/** @type {string[]} */
 			const warnings = [];
 			for (const method of ["warn", "info", "log", "debug"]) {
@@ -1160,15 +1302,24 @@ ${details(snapshot)}`)
 					if (method === "warn") warnings.push(util.format(...args));
 				};
 			}
-			const fsInfo = new FileSystemInfo(/** @type {import("../lib/util/fs").InputFileSystem} */ (/** @type {unknown} */ (fs)), {
-				logger,
-				managedPaths: ["/root/node_modules"],
-				hashFunction: "sha256"
-			});
+			const fsInfo = new FileSystemInfo(
+				/** @type {import("../lib/util/fs").InputFileSystem} */ (
+					/** @type {unknown} */ (fs)
+				),
+				{
+					logger,
+					managedPaths: ["/root/node_modules"],
+					hashFunction: "sha256"
+				}
+			);
 			return { fs, fsInfo, warnings };
 		};
 
-		const snapshotFiles = (/** @type {import("../lib/FileSystemInfo")} */ fsInfo, /** @type {string[]} */ fileList, /** @type {(err?: Error | null, snapshot?: Snapshot | null) => void} */ callback) => {
+		const snapshotFiles = (
+			/** @type {import("../lib/FileSystemInfo")} */ fsInfo,
+			/** @type {string[]} */ fileList,
+			/** @type {(err?: Error | null, snapshot?: Snapshot | null) => void} */ callback
+		) => {
 			fsInfo.createSnapshot(
 				Date.now() + 10000,
 				fileList,
@@ -1194,7 +1345,9 @@ ${details(snapshot)}`)
 				],
 				(err, snapshot) => {
 					if (err) return done(err);
-					const info = /** @type {Map<string, string>} */ (/** @type {Snapshot} */ (snapshot).managedItemInfo);
+					const info = /** @type {Map<string, string>} */ (
+						/** @type {Snapshot} */ (snapshot).managedItemInfo
+					);
 					expect(info.get("/root/node_modules/normal")).toBe("normal@1.0.0");
 					expect(info.get("/root/node_modules/group")).toBe("*nested");
 					done();
@@ -1214,7 +1367,9 @@ ${details(snapshot)}`)
 				(err, snapshot) => {
 					if (err) return done(err);
 					expect(
-						/** @type {Map<string, string>} */ (/** @type {Snapshot} */ (snapshot).managedItemInfo).get("/root/node_modules/sub/node_modules")
+						/** @type {Map<string, string>} */ (
+							/** @type {Snapshot} */ (snapshot).managedItemInfo
+						).get("/root/node_modules/sub/node_modules")
 					).toBe("*node_modules");
 					done();
 				}
@@ -1381,7 +1536,16 @@ ${details(snapshot)}`)
 									base.setManagedMissing(new Set(["/mm"]));
 									// Two children → the iterator's multi-child queue path.
 									base.setChildren(new Set([cA, cB]));
-									const restored = /** @type {Snapshot & Record<string, Function>} */ (/** @type {unknown} */ (clone(base)));
+									const restored =
+										/** @type {Snapshot & Record<string, (...args: unknown[]) => unknown>} */ (
+											/** @type {unknown} */ (
+												clone(
+													/** @type {Record<string, unknown>} */ (
+														/** @type {unknown} */ (base)
+													)
+												)
+											)
+										);
 									for (const has of [
 										"hasStartTime",
 										"hasFileTimestamps",
@@ -1432,9 +1596,11 @@ ${details(snapshot)}`)
 				if (err) return done(err);
 				expect(hash).toBe("directory");
 				jest.spyOn(fs, "readFile").mockImplementation((p, cb) => {
-					const err = /** @type {Error & { code: string }} */ (new Error("denied"));
+					const err = /** @type {Error & { code: string }} */ (
+						new Error("denied")
+					);
 					err.code = "EACCES";
-					/** @type {Function} */ (cb)(err);
+					/** @type {(err: Error & { code: string }) => void} */ (cb)(err);
 				});
 				fsInfo.createSnapshot(
 					Date.now() + 10000,
@@ -1454,9 +1620,11 @@ ${details(snapshot)}`)
 			const fs = createFs();
 			const fsInfo = createFsInfo(fs);
 			jest.spyOn(fs, "stat").mockImplementation((p, cb) => {
-				const err = /** @type {Error & { code: string }} */ (new Error("denied"));
+				const err = /** @type {Error & { code: string }} */ (
+					new Error("denied")
+				);
 				err.code = "EACCES";
-				/** @type {Function} */ (cb)(err);
+				/** @type {(err: Error & { code: string }) => void} */ (cb)(err);
 			});
 			fsInfo.createSnapshot(
 				Date.now() + 10000,

@@ -50,7 +50,13 @@ describe("Cli", () => {
 				}
 			};
 
-			expect(getArguments(/** @type {Parameters<typeof getArguments>[0]} */ (/** @type {unknown} */ (schema)))).toMatchSnapshot();
+			expect(
+				getArguments(
+					/** @type {Parameters<typeof getArguments>[0]} */ (
+						/** @type {unknown} */ (schema)
+					)
+				)
+			).toMatchSnapshot();
 		});
 
 		it("should generate flags for a schema using `const`", () => {
@@ -66,7 +72,13 @@ describe("Cli", () => {
 				}
 			};
 
-			expect(getArguments(/** @type {Parameters<typeof getArguments>[0]} */ (/** @type {unknown} */ (schema)))).toMatchSnapshot();
+			expect(
+				getArguments(
+					/** @type {Parameters<typeof getArguments>[0]} */ (
+						/** @type {unknown} */ (schema)
+					)
+				)
+			).toMatchSnapshot();
 		});
 
 		it("should generate flags for both branches of an `if/then/else` schema", () => {
@@ -93,7 +105,13 @@ describe("Cli", () => {
 				}
 			};
 
-			expect(getArguments(/** @type {Parameters<typeof getArguments>[0]} */ (/** @type {unknown} */ (schema)))).toMatchSnapshot();
+			expect(
+				getArguments(
+					/** @type {Parameters<typeof getArguments>[0]} */ (
+						/** @type {unknown} */ (schema)
+					)
+				)
+			).toMatchSnapshot();
 		});
 
 		it("reports the schema origin path in conflicting-schema errors", () => {
@@ -110,17 +128,32 @@ describe("Cli", () => {
 				}
 			};
 
-			expect(() => getArguments(/** @type {Parameters<typeof getArguments>[0]} */ (/** @type {unknown} */ (schema)))).toThrow(
+			expect(() =>
+				getArguments(
+					/** @type {Parameters<typeof getArguments>[0]} */ (
+						/** @type {unknown} */ (schema)
+					)
+				)
+			).toThrow(
 				"Conflicting schema for foo[] (#/properties/foo/oneOf/1/items) with string type"
 			);
 		});
 	});
 
 	describe("processArguments", () => {
-		const test = (/** @type {string} */ name, /** @type {import("../lib/cli").Values} */ values, /** @type {import("../").Configuration} */ config, /** @type {(e: EXPECTED_ANY) => void} */ fn) => {
+		const test = (
+			/** @type {string} */ name,
+			/** @type {Record<string, EXPECTED_ANY>} */ values,
+			/** @type {import("../").Configuration} */ config,
+			/** @type {(e: EXPECTED_ANY) => void} */ fn
+		) => {
 			it(`should correctly process arguments for ${name}`, () => {
 				const args = getArguments();
-				const problems = processArguments(args, config, values);
+				const problems = processArguments(
+					args,
+					config,
+					/** @type {import("../lib/cli").Values} */ (values)
+				);
 				fn(expect(problems || config));
 			});
 		};
@@ -620,16 +653,30 @@ describe("Cli", () => {
 					"evil-flag": {
 						description: undefined,
 						configs: [
-							{ type: /** @type {import("../lib/cli").SimpleType} */ ("string"), multiple: false, path: `${key}.polluted` }
+							{
+								type: /** @type {import("../lib/cli").SimpleType} */ ("string"),
+								multiple: false,
+								path: `${key}.polluted`
+							}
 						],
-						simpleType: /** @type {import("../lib/cli").SimpleType} */ ("string"),
+						simpleType: /** @type {import("../lib/cli").SimpleType} */ (
+							"string"
+						),
 						multiple: false
 					}
 				};
 				const config = {};
-				const problems = processArguments(args, config, /** @type {import("../lib/cli").Values} */ (/** @type {unknown} */ ({"evil-flag": "PWNED"})));
+				const problems = processArguments(
+					args,
+					config,
+					/** @type {import("../lib/cli").Values} */ (
+						/** @type {unknown} */ ({ "evil-flag": "PWNED" })
+					)
+				);
 
-				expect(/** @type {Record<string, unknown>} */ ({}).polluted).toBeUndefined();
+				expect(
+					/** @type {Record<string, unknown>} */ ({}).polluted
+				).toBeUndefined();
 				expect(problems).toEqual([
 					expect.objectContaining({ type: "prototype-pollution-in-path" })
 				]);
@@ -640,15 +687,31 @@ describe("Cli", () => {
 				const args = {
 					"evil-flag": {
 						description: undefined,
-						configs: [{ type: /** @type {import("../lib/cli").SimpleType} */ ("string"), multiple: false, path: key }],
-						simpleType: /** @type {import("../lib/cli").SimpleType} */ ("string"),
+						configs: [
+							{
+								type: /** @type {import("../lib/cli").SimpleType} */ ("string"),
+								multiple: false,
+								path: key
+							}
+						],
+						simpleType: /** @type {import("../lib/cli").SimpleType} */ (
+							"string"
+						),
 						multiple: false
 					}
 				};
 				const config = {};
-				const problems = processArguments(args, config, /** @type {import("../lib/cli").Values} */ (/** @type {unknown} */ ({"evil-flag": "PWNED"})));
+				const problems = processArguments(
+					args,
+					config,
+					/** @type {import("../lib/cli").Values} */ (
+						/** @type {unknown} */ ({ "evil-flag": "PWNED" })
+					)
+				);
 
-				expect(/** @type {Record<string, unknown>} */ ({}).polluted).toBeUndefined();
+				expect(
+					/** @type {Record<string, unknown>} */ ({}).polluted
+				).toBeUndefined();
 				expect(problems).toEqual([
 					expect.objectContaining({ type: "prototype-pollution-in-path" })
 				]);
@@ -772,7 +835,11 @@ describe("Cli", () => {
 
 		it("simple", () => {
 			for (const [name, open, close] of colorsMap) {
-				expect(/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (/** @type {unknown} */ (colors))[name](name)).toBe(open + name + close);
+				expect(
+					/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (
+						/** @type {unknown} */ (colors)
+					)[name](name)
+				).toBe(open + name + close);
 			}
 		});
 
@@ -824,7 +891,11 @@ describe("Cli", () => {
 
 		it("simple (no colors)", () => {
 			for (const [name] of colorsMap) {
-				expect(/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (/** @type {unknown} */ (noColors))[name](name)).toBe(name);
+				expect(
+					/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (
+						/** @type {unknown} */ (noColors)
+					)[name](name)
+				).toBe(name);
 			}
 		});
 
@@ -832,7 +903,11 @@ describe("Cli", () => {
 
 		it("simple (colors by default)", () => {
 			for (const [name, open, close] of colorsMap) {
-				expect(/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (/** @type {unknown} */ (defaultColors))[name](name)).toBe(open + name + close);
+				expect(
+					/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (
+						/** @type {unknown} */ (defaultColors)
+					)[name](name)
+				).toBe(open + name + close);
 			}
 		});
 	});

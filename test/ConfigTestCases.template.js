@@ -22,7 +22,6 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 /** @type {{ sync: (p: string) => void }} */
-// @ts-ignore no declaration file for rimraf
 const rimraf = require("rimraf");
 const { parseResource } = require("../lib/util/identifier");
 const checkArrayExpectation = require("./checkArrayExpectation");
@@ -114,10 +113,12 @@ const describeCases = (config) => {
 						registerPerCaseSnapshotHooks(testDirectory, config.name);
 
 						beforeAll(() => {
-							options = /** @type {import("../").Configuration} */ (prepareOptions(
-								require(path.join(testDirectory, "webpack.config.js")),
-								{ testPath: outputDirectory }
-							));
+							options = /** @type {import("../").Configuration} */ (
+								prepareOptions(
+									require(path.join(testDirectory, "webpack.config.js")),
+									{ testPath: outputDirectory }
+								)
+							);
 							optionsArr = [...(Array.isArray(options) ? options : [options])];
 							for (const [idx, options] of optionsArr.entries()) {
 								if (!options.context) options.context = testDirectory;
@@ -157,7 +158,9 @@ const describeCases = (config) => {
 										cacheDirectory,
 										name:
 											options.cache && options.cache !== true
-												? /** @type {import("../").FileCacheOptions} */ (options.cache).name
+												? /** @type {import("../").FileCacheOptions} */ (
+														options.cache
+													).name
 												: `config-${idx}`,
 										...config.cache
 									};
@@ -183,7 +186,10 @@ const describeCases = (config) => {
 									);
 									if (
 										fs.existsSync(
-											path.join(/** @type {string} */ (output.path), `bundle${i}${ext}`)
+											path.join(
+												/** @type {string} */ (output.path),
+												`bundle${i}${ext}`
+											)
 										)
 									) {
 										return `./bundle${i}${ext}`;
@@ -259,9 +265,7 @@ const describeCases = (config) => {
 									if (infrastructureLogging) {
 										return done(
 											new Error(
-												`Errors/Warnings during build:\n${
-													infrastructureLogging
-												}`
+												`Errors/Warnings during build:\n${infrastructureLogging}`
 											)
 										);
 									}
@@ -303,20 +307,21 @@ const describeCases = (config) => {
 
 								compiler.run((err, stats) => {
 									deprecationTracker();
-									if (err) return handleFatalError(/** @type {Error} */ (err), done);
-									const { modules, children, errorsCount } = /** @type {import("../").Stats} */ (stats).toJson({
-										all: false,
-										modules: true,
-										errorsCount: true
-									});
+									if (err) {
+										return handleFatalError(/** @type {Error} */ (err), done);
+									}
+									const { modules, children, errorsCount } =
+										/** @type {import("../").Stats} */ (stats).toJson({
+											all: false,
+											modules: true,
+											errorsCount: true
+										});
 									if (errorsCount === 0) {
 										const infrastructureLogging = stderr.toString();
 										if (infrastructureLogging) {
 											return done(
 												new Error(
-													`Errors/Warnings during build:\n${
-														infrastructureLogging
-													}`
+													`Errors/Warnings during build:\n${infrastructureLogging}`
 												)
 											);
 										}
@@ -324,23 +329,31 @@ const describeCases = (config) => {
 											? children.reduce(
 													(all, { modules }) => [
 														...all,
-														...(/** @type {import("../").StatsModule[]} */ (modules || []))
+														.../** @type {import("../").StatsModule[]} */ (
+															modules || []
+														)
 													],
-													/** @type {import("../").StatsModule[]} */ (modules || [])
+													/** @type {import("../").StatsModule[]} */ (
+														modules || []
+													)
 												)
 											: modules;
 										if (
-											/** @type {import("../").StatsModule[]} */ (allModules).some(
-												(m) => m.type !== "cached modules" && !m.cached
-											)
+											/** @type {import("../").StatsModule[]} */ (
+												allModules
+											).some((m) => m.type !== "cached modules" && !m.cached)
 										) {
 											return done(
 												new Error(
-													`Some modules were not cached:\n${/** @type {import("../").Stats} */ (stats).toString({
-														all: false,
-														modules: true,
-														modulesSpace: 100
-													})}`
+													`Some modules were not cached:\n${
+														/** @type {import("../").Stats} */ (stats).toString(
+															{
+																all: false,
+																modules: true,
+																modulesSpace: 100
+															}
+														)
+													}`
 												)
 											);
 										}
@@ -379,7 +392,10 @@ const describeCases = (config) => {
 							fs.mkdirSync(outputDirectory, { recursive: true });
 							infraStructureLog.length = 0;
 							const deprecationTracker = deprecationTracking.start();
-							const onCompiled = (/** @type {Error | null} */ err, /** @type {import("../").Stats} */ stats) => {
+							const onCompiled = (
+								/** @type {Error | null} */ err,
+								/** @type {import("../").Stats} */ stats
+							) => {
 								const deprecations = deprecationTracker();
 								if (err) return handleFatalError(err, done);
 								const statOptions = {
@@ -491,11 +507,13 @@ const describeCases = (config) => {
 										}
 									},
 									getBundlePaths: (i, options) =>
-										/** @type {NonNullable<TestConfig["findBundle"]>} */ (testConfig.findBundle)(i, options)
+										/** @type {NonNullable<TestConfig["findBundle"]>} */ (
+											testConfig.findBundle
+										)(i, options)
 								});
 								// give a free pass to compilation that generated an error
 								if (
-									!/** @type {EXPECTED_ANY[]} */ (jsonStats.errors).length &&
+									!(/** @type {EXPECTED_ANY[]} */ (jsonStats.errors).length) &&
 									filesCount !== optionsArr.length
 								) {
 									return done(
@@ -510,8 +528,11 @@ const describeCases = (config) => {
 											testConfig.afterExecute(options);
 										}
 										for (const key of Object.keys(global)) {
-											if (key.includes("webpack"))
-												delete (/** @type {Record<string, unknown>} */ (global))[key];
+											if (key.includes("webpack")) {
+												delete (
+													/** @type {Record<string, unknown>} */ (global)[key]
+												);
+											}
 										}
 										if (getNumberOfTests() < filesCount) {
 											return done(new Error("No tests exported by test case"));
@@ -525,11 +546,21 @@ const describeCases = (config) => {
 									const compiler = require("..")(options);
 
 									compiler.run((err) => {
-										if (err) return handleFatalError(/** @type {Error} */ (err), done);
+										if (err) {
+											return handleFatalError(/** @type {Error} */ (err), done);
+										}
 										compiler.run((error, stats) => {
 											compiler.close((err) => {
-												if (err) return handleFatalError(/** @type {Error} */ (err), done);
-												onCompiled(/** @type {Error | null} */ (error), /** @type {import("../").Stats} */ (stats));
+												if (err) {
+													return handleFatalError(
+														/** @type {Error} */ (err),
+														done
+													);
+												}
+												onCompiled(
+													/** @type {Error | null} */ (error),
+													/** @type {import("../").Stats} */ (stats)
+												);
 											});
 										});
 									});
@@ -537,7 +568,10 @@ const describeCases = (config) => {
 									handleFatalError(/** @type {Error} */ (err), done);
 								}
 							} else {
-								require("..")(options, /** @type {EXPECTED_ANY} */ (onCompiled));
+								require("..")(
+									options,
+									/** @type {EXPECTED_ANY} */ (onCompiled)
+								);
 							}
 						}, 30000);
 

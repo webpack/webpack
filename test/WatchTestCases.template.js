@@ -19,7 +19,6 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 /** @type {{ sync: (p: string) => void, (p: string, cb: (err: EXPECTED_ANY) => void): void }} */
-// @ts-ignore no declaration file for rimraf
 const rimraf = require("rimraf");
 const { parseResource } = require("../lib/util/identifier");
 const checkArrayExpectation = require("./checkArrayExpectation");
@@ -126,7 +125,7 @@ const describeCases = (config) => {
 							testName
 						);
 						const testDirectory = path.join(casesPath, category.name, testName);
-						/** @type {Array<{ name: string, done?: boolean, stats?: import("../").Stats, it?: EXPECTED_ANY, getNumberOfTests?: () => number }>} */
+						/** @type {{ name: string, done?: boolean, stats?: import("../").Stats, it?: EXPECTED_ANY, getNumberOfTests?: () => number }[]} */
 						const runs = fs
 							.readdirSync(testDirectory)
 							.sort()
@@ -158,7 +157,10 @@ const describeCases = (config) => {
 									srcPath: tempDirectory
 								});
 							}
-							const applyConfig = (/** @type {import("../").Configuration} */ options, /** @type {number} */ idx) => {
+							const applyConfig = (
+								/** @type {import("../").Configuration} */ options,
+								/** @type {number} */ idx
+							) => {
 								if (!options.mode) options.mode = "development";
 								if (!options.context) options.context = tempDirectory;
 								if (!options.entry) options.entry = "./index.js";
@@ -178,24 +180,41 @@ const describeCases = (config) => {
 											: ".js"
 									}`;
 								}
-								if (options.cache && /** @type {import("../").FileCacheOptions} */ (options.cache).type === "filesystem") {
+								if (
+									options.cache &&
+									/** @type {import("../").FileCacheOptions} */ (options.cache)
+										.type === "filesystem"
+								) {
 									const cacheDirectory = path.join(tempDirectory, ".cache");
-									/** @type {import("../").FileCacheOptions} */ (options.cache).cacheDirectory = cacheDirectory;
-									/** @type {import("../").FileCacheOptions} */ (options.cache).name = `config-${idx}`;
+									/** @type {import("../").FileCacheOptions} */ (
+										options.cache
+									).cacheDirectory = cacheDirectory;
+									/** @type {import("../").FileCacheOptions} */ (
+										options.cache
+									).name = `config-${idx}`;
 								}
 								if (config.experiments) {
 									if (!options.experiments) options.experiments = {};
 									for (const key of Object.keys(config.experiments)) {
-										if ((/** @type {EXPECTED_ANY} */ (options.experiments))[key] === undefined) {
-											(/** @type {EXPECTED_ANY} */ (options.experiments))[key] = config.experiments[key];
+										if (
+											/** @type {EXPECTED_ANY} */ (options.experiments)[key] ===
+											undefined
+										) {
+											/** @type {EXPECTED_ANY} */ (options.experiments)[key] =
+												config.experiments[key];
 										}
 									}
 								}
 								if (config.optimization) {
 									if (!options.optimization) options.optimization = {};
 									for (const key of Object.keys(config.optimization)) {
-										if ((/** @type {EXPECTED_ANY} */ (options.optimization))[key] === undefined) {
-											(/** @type {EXPECTED_ANY} */ (options.optimization))[key] = config.optimization[key];
+										if (
+											/** @type {EXPECTED_ANY} */ (options.optimization)[
+												key
+											] === undefined
+										) {
+											/** @type {EXPECTED_ANY} */ (options.optimization)[key] =
+												config.optimization[key];
 										}
 									}
 								}
@@ -220,7 +239,9 @@ const describeCases = (config) => {
 
 							/** @type {(err?: Error | null) => void} */
 							let compilationFinished = /** @type {EXPECTED_ANY} */ (done);
-							(/** @type {{ step: string | undefined }} */ (currentWatchStepModule)).step = run.name;
+							/** @type {{ step: string | undefined }} */ (
+								currentWatchStepModule
+							).step = run.name;
 							copyDiff(path.join(testDirectory, run.name), tempDirectory, true);
 
 							setTimeout(() => {
@@ -251,9 +272,7 @@ const describeCases = (config) => {
 										if (run.done && lastHash !== stats.hash) {
 											return compilationFinished(
 												new Error(
-													`Compilation changed but no change was issued ${
-														lastHash
-													} != ${stats.hash} (run ${runIdx})\n` +
+													`Compilation changed but no change was issued ${lastHash} != ${stats.hash} (run ${runIdx})\n` +
 														`Triggering change: ${triggeringFilename}`
 												)
 											);
@@ -348,11 +367,15 @@ const describeCases = (config) => {
 												});
 											},
 											getBundlePaths: (i, options) =>
-												testConfig.findBundle(i, options)
+												/** @type {NonNullable<WatchTestConfig["findBundle"]>} */ (
+													testConfig.findBundle
+												)(i, options)
 										});
 										await Promise.all(results);
 
-										if (/** @type {() => number} */ (run.getNumberOfTests)() < 1) {
+										if (
+											/** @type {() => number} */ (run.getNumberOfTests)() < 1
+										) {
 											return compilationFinished(
 												new Error("No tests exported by test case")
 											);
@@ -368,7 +391,9 @@ const describeCases = (config) => {
 													setTimeout(() => {
 														waitMode = false;
 														compilationFinished = done;
-														(/** @type {{ step: string | undefined }} */ (currentWatchStepModule)).step = run.name;
+														/** @type {{ step: string | undefined }} */ (
+															currentWatchStepModule
+														).step = run.name;
 														copyDiff(
 															path.join(testDirectory, run.name),
 															tempDirectory,

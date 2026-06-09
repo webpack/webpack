@@ -6,7 +6,13 @@ const { ItemCacheFacade, MultiItemCache } = require("../lib/CacheFacade");
 describe("MultiItemCache", () => {
 	it("throws when getting items from an empty Cache", () => {
 		const multiItemCache = new MultiItemCache(generateItemCaches(0));
-		expect(() => multiItemCache.get(/** @type {EXPECTED_ANY} */ ((/** @type {unknown} */ _) => /** @type {Function} */ (_)()))).toThrow(/_ is not a function/);
+		expect(() =>
+			multiItemCache.get(
+				/** @type {EXPECTED_ANY} */ (
+					(/** @type {unknown} */ _) => /** @type {() => unknown} */ (_)()
+				)
+			)
+		).toThrow(/_ is not a function/);
 	});
 
 	it("returns the single ItemCacheFacade when passed an array of length 1", () => {
@@ -18,7 +24,10 @@ describe("MultiItemCache", () => {
 	it("retrieves items from the underlying Cache when get is called", () => {
 		const itemCaches = generateItemCaches(10);
 		const multiItemCache = new MultiItemCache(itemCaches);
-		const callback = (/** @type {Error | null | undefined} */ err, /** @type {unknown} */ res) => {
+		const callback = (
+			/** @type {Error | null | undefined} */ err,
+			/** @type {unknown} */ res
+		) => {
 			expect(err).toBeNull();
 			expect(res).toBeInstanceOf(Object);
 		};
@@ -31,7 +40,10 @@ describe("MultiItemCache", () => {
 		const itemCaches = generateItemCaches(10000, () => undefined);
 		const multiItemCache = new MultiItemCache(itemCaches);
 		let callbacks = 0;
-		const callback = (/** @type {Error | null | undefined} */ err, /** @type {unknown} */ res) => {
+		const callback = (
+			/** @type {Error | null | undefined} */ err,
+			/** @type {unknown} */ res
+		) => {
 			expect(err).toBeNull();
 			expect(res).toBeUndefined();
 			++callbacks;

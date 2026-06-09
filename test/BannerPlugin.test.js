@@ -41,10 +41,16 @@ describe("BannerPlugin", () => {
 			compiler.run((err, stats) => {
 				const { assets } = /** @type {import("../").Stats} */ (stats).toJson();
 				const assetsList = /** @type {import("../").StatsAsset[]} */ (assets);
-				expect(/** @type {import("../").StatsAsset} */ (assetsList.find((as) => as.name === "entry1.js")).emitted).toBe(
-					false
-				);
-				expect(/** @type {import("../").StatsAsset} */ (assetsList.find((as) => as.name === "entry2.js")).emitted).toBe(true);
+				expect(
+					/** @type {import("../").StatsAsset} */ (
+						assetsList.find((as) => as.name === "entry1.js")
+					).emitted
+				).toBe(false);
+				expect(
+					/** @type {import("../").StatsAsset} */ (
+						assetsList.find((as) => as.name === "entry2.js")
+					).emitted
+				).toBe(true);
 				done(err);
 			});
 		});

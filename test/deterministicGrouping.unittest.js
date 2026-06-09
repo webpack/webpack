@@ -3,15 +3,26 @@
 const deterministicGrouping = require("../lib/util/deterministicGrouping");
 
 describe("deterministicGrouping", () => {
-	const group = (/** @type {Record<string, number>[]} */ items, /** @type {Record<string, number>} */ minSize, /** @type {Record<string, number>} */ maxSize) =>
+	const group = (
+		/** @type {Record<string, number>[]} */ items,
+		/** @type {Record<string, number>} */ minSize,
+		/** @type {Record<string, number>} */ maxSize
+	) =>
 		deterministicGrouping({
-			items: items.map((/** @type {Record<string, number>} */ item, /** @type {number} */ i) => /** @type {[number, Record<string, number>]} */ ([i, item])),
+			items: items.map(
+				(/** @type {Record<string, number>} */ item, /** @type {number} */ i) =>
+					/** @type {[number, Record<string, number>]} */ ([i, item])
+			),
 			minSize,
 			maxSize,
-			getKey: (/** @type {[number, Record<string, number>]} */ [key]) => `${100000 + key}`,
-			getSize: (/** @type {[number, Record<string, number>]} */ [, size]) => size
+			getKey: (/** @type {[number, Record<string, number>]} */ [key]) =>
+				`${100000 + key}`,
+			getSize: (/** @type {[number, Record<string, number>]} */ [, size]) =>
+				size
 		}).map((group) => ({
-			items: group.items.map((/** @type {[number, Record<string, number>]} */ [i]) => i),
+			items: group.items.map(
+				(/** @type {[number, Record<string, number>]} */ [i]) => i
+			),
 			size: group.size
 		}));
 

@@ -8,9 +8,12 @@ const {
 describe("LocalModulesHelpers", () => {
 	describe("addLocalModule", () => {
 		it("returns a module var without special characters", () => {
-			const state = /** @type {import("../lib/javascript/JavascriptParser").JavascriptParserState} */ (/** @type {unknown} */ ({
-				localModules: ["first", "second"]
-			}));
+			const state =
+				/** @type {import("../lib/javascript/JavascriptParser").JavascriptParserState} */ (
+					/** @type {unknown} */ ({
+						localModules: ["first", "second"]
+					})
+				);
 			const localModule = addLocalModule(state, "local_module_sample");
 			expect(localModule).toBeInstanceOf(Object);
 			expect(localModule).toMatchObject({
@@ -24,32 +27,38 @@ describe("LocalModulesHelpers", () => {
 
 	describe("getLocalModule", () => {
 		it("returns `null` if names information doesn't match", () => {
-			const state = /** @type {import("../lib/javascript/JavascriptParser").JavascriptParserState} */ (/** @type {unknown} */ ({
-				module: "module_sample",
-				localModules: [
-					{
-						name: "first"
-					},
-					{
-						name: "second"
-					}
-				]
-			}));
+			const state =
+				/** @type {import("../lib/javascript/JavascriptParser").JavascriptParserState} */ (
+					/** @type {unknown} */ ({
+						module: "module_sample",
+						localModules: [
+							{
+								name: "first"
+							},
+							{
+								name: "second"
+							}
+						]
+					})
+				);
 			expect(getLocalModule(state, "local_module_sample")).toBeNull();
 		});
 
 		it("returns local module information", () => {
-			const state = /** @type {import("../lib/javascript/JavascriptParser").JavascriptParserState} */ (/** @type {unknown} */ ({
-				module: "module_sample",
-				localModules: [
-					{
-						name: "first"
-					},
-					{
-						name: "second"
-					}
-				]
-			}));
+			const state =
+				/** @type {import("../lib/javascript/JavascriptParser").JavascriptParserState} */ (
+					/** @type {unknown} */ ({
+						module: "module_sample",
+						localModules: [
+							{
+								name: "first"
+							},
+							{
+								name: "second"
+							}
+						]
+					})
+				);
 			expect(getLocalModule(state, "first")).toEqual({
 				name: "first"
 			});

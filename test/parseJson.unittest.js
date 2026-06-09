@@ -11,9 +11,20 @@ const currentNodeMajor = Number.parseInt(
 // value where the current major version is >= the latest key. eg: in node 24,
 // for the input {20:1, 22:2}, this will return 2 if not match is found it will
 // return the value of the `default` key.
-const getLatestMatchingNode = (/** @type {Record<string, unknown> & { default?: unknown }} */ { default: defaultNode, ...majors }) => {
-	for (const major of Object.keys(majors).sort((a, b) => /** @type {number} */ (/** @type {unknown} */ (b)) - /** @type {number} */ (/** @type {unknown} */ (a)))) {
-		if (currentNodeMajor >= /** @type {number} */ (/** @type {unknown} */ (major))) {
+const getLatestMatchingNode = (
+	/** @type {Record<string, unknown> & { default?: unknown }} */ {
+		default: defaultNode,
+		...majors
+	}
+) => {
+	for (const major of Object.keys(majors).sort(
+		(a, b) =>
+			/** @type {number} */ (/** @type {unknown} */ (b)) -
+			/** @type {number} */ (/** @type {unknown} */ (a))
+	)) {
+		if (
+			currentNodeMajor >= /** @type {number} */ (/** @type {unknown} */ (major))
+		) {
 			return majors[major];
 		}
 	}
@@ -21,20 +32,29 @@ const getLatestMatchingNode = (/** @type {Record<string, unknown> & { default?: 
 	return defaultNode;
 };
 
-const expectMessage = (/** @type {Array<string | RegExp | Record<string, unknown>>} */ ...args) =>
+const expectMessage = (
+	/** @type {(string | RegExp | Record<string, unknown>)[]} */ ...args
+) =>
 	new RegExp(
 		args
 			.map((rawValue) => {
 				const value =
 					rawValue.constructor === Object
-						? getLatestMatchingNode(/** @type {Record<string, unknown> & { default?: unknown }} */ (rawValue))
+						? getLatestMatchingNode(
+								/** @type {Record<string, unknown> & { default?: unknown }} */ (
+									rawValue
+								)
+							)
 						: rawValue;
 				return value instanceof RegExp ? value.source : value;
 			})
 			.join("")
 	);
 
-const jsonThrows = (/** @type {unknown} */ data, /** @type {Array<unknown>} */ ...args) => {
+const jsonThrows = (
+	/** @type {unknown} */ data,
+	/** @type {unknown[]} */ ...args
+) => {
 	/** @type {number | undefined} */
 	let context;
 
@@ -46,7 +66,11 @@ const jsonThrows = (/** @type {unknown} */ data, /** @type {Array<unknown>} */ .
 
 	// If expected is an Error constructor or instance, use it directly
 	if (typeof expected === "function" || expected instanceof Error) {
-		expect(() => /** @type {Function} */ (/** @type {unknown} */ (parseJson))(data, null, context)).toThrow(/** @type {Error} */ (/** @type {unknown} */ (expected)));
+		expect(() =>
+			/** @type {(data: unknown, reviver: null, context: number | undefined) => unknown} */ (
+				/** @type {unknown} */ (parseJson)
+			)(data, null, context)
+		).toThrow(/** @type {Error} */ (/** @type {unknown} */ (expected)));
 		return;
 	}
 
@@ -54,7 +78,9 @@ const jsonThrows = (/** @type {unknown} */ data, /** @type {Array<unknown>} */ .
 	let err = {};
 
 	try {
-		/** @type {Function} */ (/** @type {unknown} */ (parseJson))(data, null, context);
+		/** @type {(data: unknown, reviver: null, context: number | undefined) => unknown} */ (
+			/** @type {unknown} */ (parseJson)
+		)(data, null, context);
 	} catch (err_) {
 		err = /** @type {Record<string, unknown>} */ (err_);
 	}
@@ -120,8 +146,16 @@ describe("parseJson", () => {
 		const data = Buffer.from(str);
 		const bom = Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), data]);
 
-		expect(JSON.stringify(parseJson(/** @type {string} */ (/** @type {unknown} */ (data))))).toBe(str);
-		expect(JSON.stringify(parseJson(/** @type {string} */ (/** @type {unknown} */ (bom))))).toBe(str);
+		expect(
+			JSON.stringify(
+				parseJson(/** @type {string} */ (/** @type {unknown} */ (data)))
+			)
+		).toBe(str);
+		expect(
+			JSON.stringify(
+				parseJson(/** @type {string} */ (/** @type {unknown} */ (bom)))
+			)
+		).toBe(str);
 	});
 
 	it("better errors when faced with repeated BOM bytes and trailing \\b characters", () => {

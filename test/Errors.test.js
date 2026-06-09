@@ -27,7 +27,10 @@ function cleanError(err) {
 	}
 
 	if (result.stack) {
-		result.stack = /** @type {string} */ (result.stack).replace(ERROR_STACK_PATTERN, "");
+		result.stack = /** @type {string} */ (result.stack).replace(
+			ERROR_STACK_PATTERN,
+			""
+		);
 	}
 
 	return result;
@@ -38,7 +41,12 @@ function cleanError(err) {
  * @returns {string} serialized value
  */
 function serialize(received) {
-	return prettyFormat(received, /** @type {import("pretty-format").Options} */ (/** @type {unknown} */ (prettyFormatOptions)))
+	return prettyFormat(
+		received,
+		/** @type {import("pretty-format").Options} */ (
+			/** @type {unknown} */ (prettyFormatOptions)
+		)
+	)
 		.replace(CWD_PATTERN, "<cwd>")
 		.trim();
 }
@@ -92,13 +100,23 @@ const defaults = {
 		}
 	},
 	outputFileSystem: /** @type {import("../").OutputFileSystem} */ ({
-		mkdir(/** @type {string} */ dir, /** @type {Function} */ callback) {
+		mkdir(
+			/** @type {string} */ dir,
+			/** @type {(err?: Error | null) => void} */ callback
+		) {
 			callback();
 		},
-		writeFile(/** @type {string} */ file, /** @type {string | Buffer} */ content, /** @type {Function} */ callback) {
+		writeFile(
+			/** @type {string} */ file,
+			/** @type {string | Buffer} */ content,
+			/** @type {(err?: Error | null) => void} */ callback
+		) {
 			callback();
 		},
-		stat(/** @type {string} */ file, /** @type {Function} */ callback) {
+		stat(
+			/** @type {string} */ file,
+			/** @type {(err: Error | null, stats?: import("fs").Stats) => void} */ callback
+		) {
 			callback(new Error("ENOENT"));
 		}
 	})
@@ -110,7 +128,12 @@ const defaults = {
  */
 async function compile(options) {
 	const stats = await new Promise((resolve, reject) => {
-		const compiler = webpack(/** @type {import("../").Configuration} */ ({ ...defaults.options, ...options }));
+		const compiler = webpack(
+			/** @type {import("../").Configuration} */ ({
+				...defaults.options,
+				...options
+			})
+		);
 		if (options.mode === "production") {
 			if (options.optimization) options.optimization.minimize = true;
 			else options.optimization = { minimize: true };

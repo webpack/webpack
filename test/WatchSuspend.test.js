@@ -25,11 +25,13 @@ describe("WatchSuspend", () => {
 		const outputPath = path.join(__dirname, "js/WatchSuspend");
 		const outputFile = path.join(outputPath, "bundle.js");
 		/** @type {import("../").Compiler} */
-		let compiler =
-			/** @type {import("../").Compiler} */ (/** @type {unknown} */ (null));
+		let compiler = /** @type {import("../").Compiler} */ (
+			/** @type {unknown} */ (null)
+		);
 		/** @type {import("../").Watching} */
-		let watching =
-			/** @type {import("../").Watching} */ (/** @type {unknown} */ (null));
+		let watching = /** @type {import("../").Watching} */ (
+			/** @type {unknown} */ (null)
+		);
 		/** @type {(() => void) | null} */
 		let onChange = null;
 
@@ -57,10 +59,9 @@ describe("WatchSuspend", () => {
 					filename: "bundle.js"
 				}
 			});
-			watching =
-				/** @type {import("../").Watching} */ (
-					compiler.watch({ aggregateTimeout: 50 }, () => {})
-				);
+			watching = /** @type {import("../").Watching} */ (
+				compiler.watch({ aggregateTimeout: 50 }, () => {})
+			);
 
 			compiler.hooks.done.tap("WatchSuspendTest", () => {
 				if (onChange) onChange();
@@ -68,8 +69,12 @@ describe("WatchSuspend", () => {
 		});
 
 		afterAll(() => {
-			/** @type {{ close: () => void }} */ (/** @type {unknown} */ (watching)).close();
-			compiler = /** @type {import("../").Compiler} */ (/** @type {unknown} */ (null));
+			/** @type {{ close: () => void }} */ (
+				/** @type {unknown} */ (watching)
+			).close();
+			compiler = /** @type {import("../").Compiler} */ (
+				/** @type {unknown} */ (null)
+			);
 			try {
 				fs.unlinkSync(filePath);
 			} catch (_err) {
@@ -118,12 +123,11 @@ describe("WatchSuspend", () => {
 					//  So set-up new watcher and wait when initial compilation is done
 					await new Promise((resolve) => {
 						watching.close(() => {
-							watching =
-								/** @type {import("../").Watching} */ (
-									compiler.watch({ aggregateTimeout: 1000 }, () => {
-										resolve(undefined);
-									})
-								);
+							watching = /** @type {import("../").Watching} */ (
+								compiler.watch({ aggregateTimeout: 1000 }, () => {
+									resolve(undefined);
+								})
+							);
 						});
 					});
 					return /** @type {Promise<void>} */ (
@@ -133,8 +137,9 @@ describe("WatchSuspend", () => {
 								watching.suspend();
 								fs.writeFileSync(filePath, "'baz'", "utf8");
 
-								onChange =
-									/** @type {null} */ (/** @type {unknown} */ ("throw"));
+								onChange = /** @type {null} */ (
+									/** @type {unknown} */ ("throw")
+								);
 								setTimeout(() => {
 									onChange = () => {
 										expect(fs.readFileSync(outputFile, "utf8")).toContain(

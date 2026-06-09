@@ -4,7 +4,7 @@ require("./helpers/warmup-webpack");
 
 const path = require("path");
 const fs = require("graceful-fs");
-// @ts-ignore
+// @ts-expect-error no types for rimraf
 const rimraf = require("rimraf");
 
 describe("Profiling Plugin", () => {
@@ -63,13 +63,19 @@ describe("Profiling Plugin", () => {
 
 				const data = require(finalPath);
 
-				const maxTs = data.reduce((/** @type {number} */ max, /** @type {EXPECTED_ANY} */ entry) => Math.max(max, entry.ts), 0);
+				const maxTs = data.reduce(
+					(/** @type {number} */ max, /** @type {EXPECTED_ANY} */ entry) =>
+						Math.max(max, entry.ts),
+					0
+				);
 				const minTs = data[0].ts;
 				const duration = maxTs - minTs;
 				expect(duration).toBeLessThan(
 					testDuration[0] * 1000000 + testDuration[1] / 1000
 				);
-				const cpuProfile = data.find((/** @type {EXPECTED_ANY} */ entry) => entry.name === "CpuProfile");
+				const cpuProfile = data.find(
+					(/** @type {EXPECTED_ANY} */ entry) => entry.name === "CpuProfile"
+				);
 				expect(cpuProfile).toBeTypeOf("object");
 				const profile = cpuProfile.args.data.cpuProfile;
 				expect(profile.startTime).toBeGreaterThanOrEqual(minTs);

@@ -10,12 +10,14 @@ const MultiWatching = require("../lib/MultiWatching");
  * @returns {Watching} watching
  */
 const createWatching = () =>
-	/** @type {Watching} */ (/** @type {unknown} */ ({
-		invalidate: jest.fn(),
-		suspend: jest.fn(),
-		resume: jest.fn(),
-		close: jest.fn()
-	}));
+	/** @type {Watching} */ (
+		/** @type {unknown} */ ({
+			invalidate: jest.fn(),
+			suspend: jest.fn(),
+			resume: jest.fn(),
+			close: jest.fn()
+		})
+	);
 
 /**
  * @returns {MultiCompiler} compiler

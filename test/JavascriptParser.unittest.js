@@ -9,7 +9,13 @@ const JavascriptParser = require("../lib/javascript/JavascriptParser");
 describe("JavascriptParser", () => {
 	/* eslint-disable no-undef */
 	/* eslint-disable no-unused-vars */
-	const testCases = {
+	/** @type {EXPECTED_ANY} */ var abc;
+	/** @type {EXPECTED_ANY} */ var cde;
+	/** @type {EXPECTED_ANY} */ var fgh;
+	/** @type {EXPECTED_ANY} */ var memberExpr;
+	/** @type {EXPECTED_ANY} */ var ijk;
+	/** @type {EXPECTED_ANY} */ var xyz;
+	const testCases = /** @type {EXPECTED_ANY} */ ({
 		"call ident": [
 			function () {
 				abc("test");
@@ -70,9 +76,11 @@ describe("JavascriptParser", () => {
 		],
 		"member expression": [
 			function () {
+				// @ts-expect-error
 				test[memberExpr];
 
 				// eslint-disable-next-line no-implicit-coercion
+				// @ts-expect-error
 				test[+memberExpr];
 			},
 			{
@@ -82,10 +90,14 @@ describe("JavascriptParser", () => {
 		"in function definition": [
 			function () {
 				(function (abc, cde, fgh) {
+					// @ts-expect-error
 					abc("test");
+					// @ts-expect-error
 					cde.abc("test");
+					// @ts-expect-error
 					cde.ddd.abc("test");
 					fgh;
+					// @ts-expect-error
 					fgh.sub;
 				})();
 			},
@@ -95,10 +107,14 @@ describe("JavascriptParser", () => {
 			function () {
 				// eslint-disable-next-line one-var
 				let abc, cde, fgh;
+				// @ts-expect-error
 				abc("test");
+				// @ts-expect-error
 				cde.abc("test");
+				// @ts-expect-error
 				cde.ddd.abc("test");
 				fgh;
+				// @ts-expect-error
 				fgh.sub;
 			},
 			{}
@@ -107,10 +123,14 @@ describe("JavascriptParser", () => {
 			function () {
 				// eslint-disable-next-line one-var
 				let abc, cde, fgh;
+				// @ts-expect-error
 				abc("test");
+				// @ts-expect-error
 				cde.abc("test");
+				// @ts-expect-error
 				cde.ddd.abc("test");
 				fgh;
+				// @ts-expect-error
 				fgh.sub;
 			},
 			{}
@@ -122,10 +142,14 @@ describe("JavascriptParser", () => {
 				function cde() {}
 
 				function fgh() {}
+				// @ts-expect-error
 				abc("test");
+				// @ts-expect-error
 				cde.abc("test");
+				// @ts-expect-error
 				cde.ddd.abc("test");
 				fgh;
+				// @ts-expect-error
 				fgh.sub;
 			},
 			{}
@@ -154,6 +178,7 @@ describe("JavascriptParser", () => {
 					fgh.sub;
 					fgh;
 
+					// @ts-expect-error
 					function test(ttt) {
 						fgh.sub;
 						fgh;
@@ -197,6 +222,7 @@ describe("JavascriptParser", () => {
 		],
 		"renaming with IIFE": [
 			function () {
+				// @ts-expect-error
 				!(function (xyz) {
 					xyz("test");
 				})(abc);
@@ -207,6 +233,7 @@ describe("JavascriptParser", () => {
 		],
 		"renaming arguments with IIFE (called)": [
 			function () {
+				// @ts-expect-error
 				!function (xyz) {
 					xyz("test");
 				}.call(fgh, abc);
@@ -218,7 +245,9 @@ describe("JavascriptParser", () => {
 		],
 		"renaming this's properties with IIFE (called)": [
 			function () {
+				// @ts-expect-error
 				!function () {
+					// @ts-expect-error
 					this.sub;
 				}.call(ijk);
 			},
@@ -228,9 +257,13 @@ describe("JavascriptParser", () => {
 		],
 		"renaming this's properties with nested IIFE (called)": [
 			function () {
+				// @ts-expect-error
 				!function () {
+					// @ts-expect-error
 					!function () {
+						// @ts-expect-error
 						this.sub;
+					// @ts-expect-error
 					}.call(this);
 				}.call(ijk);
 			},
@@ -257,15 +290,15 @@ describe("JavascriptParser", () => {
 				fgh: ["xyz"]
 			}
 		]
-	};
+	});
 	/* eslint-enable no-undef */
 	/* eslint-enable no-unused-vars */
 
 	for (const name of Object.keys(testCases)) {
 		it(`should parse ${name}`, () => {
-			let source = testCases[name][0].toString();
+			let source = /** @type {Record<string, EXPECTED_ANY[]>} */ (testCases)[name][0].toString();
 			source = source.slice(13, -1).trim();
-			const state = testCases[name][1];
+			const state = /** @type {Record<string, EXPECTED_ANY[]>} */ (testCases)[name][1];
 
 			const testParser = new JavascriptParser(/** @type {"auto"} */ (/** @type {unknown} */ ({})));
 			testParser.hooks.canRename
@@ -276,7 +309,7 @@ describe("JavascriptParser", () => {
 				.tap("JavascriptParserTest", (_expr) => true);
 			testParser.hooks.call.for("abc").tap("JavascriptParserTest", (expr) => {
 				if (!testParser.state.abc) testParser.state.abc = [];
-				testParser.state.abc.push(testParser.parseString(expr.arguments[0]));
+				testParser.state.abc.push(testParser.parseString(/** @type {import("estree").Expression} */ (expr.arguments[0])));
 				return true;
 			});
 			testParser.hooks.call
@@ -284,7 +317,7 @@ describe("JavascriptParser", () => {
 				.tap("JavascriptParserTest", (expr) => {
 					if (!testParser.state.cdeabc) testParser.state.cdeabc = [];
 					testParser.state.cdeabc.push(
-						testParser.parseString(expr.arguments[0])
+						testParser.parseString(/** @type {import("estree").Expression} */ (expr.arguments[0]))
 					);
 					return true;
 				});
@@ -293,7 +326,7 @@ describe("JavascriptParser", () => {
 				.tap("JavascriptParserTest", (expr) => {
 					if (!testParser.state.cdedddabc) testParser.state.cdedddabc = [];
 					testParser.state.cdedddabc.push(
-						testParser.parseString(expr.arguments[0])
+						testParser.parseString(/** @type {import("estree").Expression} */ (expr.arguments[0]))
 					);
 					return true;
 				});
@@ -326,15 +359,15 @@ describe("JavascriptParser", () => {
 				.for("memberExpr")
 				.tap("JavascriptParserTest", (expr) => {
 					if (!testParser.state.expressions) testParser.state.expressions = [];
-					testParser.state.expressions.push(expr.name);
+					testParser.state.expressions.push(/** @type {import("estree").Identifier} */ (expr).name);
 					return true;
 				});
 			testParser.hooks.new.for("xyz").tap("JavascriptParserTest", (expr) => {
 				if (!testParser.state.xyz) testParser.state.xyz = [];
-				testParser.state.xyz.push(testParser.parseString(expr.arguments[0]));
+				testParser.state.xyz.push(testParser.parseString(/** @type {import("estree").Expression} */ (expr.arguments[0])));
 				return true;
 			});
-			const actual = testParser.parse(source, {});
+			const actual = testParser.parse(source, /** @type {import("../lib/Parser").ParserState} */ (/** @type {unknown} */ ({})));
 			expect(typeof actual).toBe("object");
 			expect(actual).toEqual(state);
 		});
@@ -353,14 +386,14 @@ describe("JavascriptParser", () => {
 			}
 		];
 
-		const testParser = new JavascriptParser({});
+		const testParser = new JavascriptParser(/** @type {"auto"} */ (/** @type {unknown} */ ({})));
 
 		testParser.hooks.program.tap("JavascriptParserTest", (ast, comments) => {
 			if (!testParser.state.comments) testParser.state.comments = comments;
 			return true;
 		});
 
-		const actual = testParser.parse(source, {});
+		const actual = testParser.parse(source, /** @type {import("../lib/Parser").ParserState} */ (/** @type {unknown} */ ({})));
 		expect(typeof actual).toBe("object");
 		expect(typeof actual.comments).toBe("object");
 		for (const [index, element] of actual.comments.entries()) {
@@ -374,7 +407,7 @@ describe("JavascriptParser", () => {
 	describe("expression evaluation", () => {
 		/**
 		 * @param {string} source source
-		 * @returns {import("../lib/javascript/JavascriptParser").ParserState} the parser state
+		 * @returns {import("../lib/javascript/BasicEvaluatedExpression")} the evaluated expression
 		 */
 		function evaluateInParser(source) {
 			const parser = new JavascriptParser();
@@ -386,14 +419,14 @@ describe("JavascriptParser", () => {
 				.tap("JavascriptParserTest", (expr) =>
 					new BasicEvaluatedExpression()
 						.setString("aString")
-						.setRange(expr.range)
+						.setRange(/** @type {import("../lib/javascript/JavascriptParser").Range} */ (expr.range))
 				);
 			parser.hooks.evaluateIdentifier
 				.for("b.Number")
 				.tap("JavascriptParserTest", (expr) =>
-					new BasicEvaluatedExpression().setNumber(123).setRange(expr.range)
+					new BasicEvaluatedExpression().setNumber(123).setRange(/** @type {import("../lib/javascript/JavascriptParser").Range} */ (expr.range))
 				);
-			return parser.parse(`test(${source});`, {}).result;
+			return parser.parse(`test(${source});`, /** @type {import("../lib/Parser").ParserState} */ (/** @type {unknown} */ ({}))).result;
 		}
 
 		const testCases = {
@@ -596,26 +629,26 @@ describe("JavascriptParser", () => {
 				if (evalExpr.isRegExp()) result.push(`regExp=${evalExpr.regExp}`);
 				if (evalExpr.isConditional()) {
 					result.push(
-						`options=[${evalExpr.options.map(evalExprToString).join("],[")}]`
+						`options=[${/** @type {import("../lib/javascript/BasicEvaluatedExpression")[]} */ (evalExpr.options).map(evalExprToString).join("],[")}]`
 					);
 				}
 				if (evalExpr.isArray()) {
 					result.push(
-						`items=[${evalExpr.items.map(evalExprToString).join("],[")}]`
+						`items=[${/** @type {import("../lib/javascript/BasicEvaluatedExpression")[]} */ (evalExpr.items).map(evalExprToString).join("],[")}]`
 					);
 				}
 				if (evalExpr.isConstArray()) {
-					result.push(`array=[${evalExpr.array.join("],[")}]`);
+					result.push(`array=[${/** @type {(string | number | boolean | null | RegExp | bigint)[]} */ (evalExpr.array).join("],[")}]`);
 				}
 				if (evalExpr.isTemplateString()) {
 					result.push(
-						`template=[${evalExpr.quasis.map(evalExprToString).join("],[")}]`
+						`template=[${/** @type {import("../lib/javascript/BasicEvaluatedExpression")[]} */ (evalExpr.quasis).map(evalExprToString).join("],[")}]`
 					);
 				}
 				if (evalExpr.isWrapped()) {
 					result.push(
-						`wrapped=[${evalExprToString(evalExpr.prefix)}]+[${evalExprToString(
-							evalExpr.postfix
+						`wrapped=[${evalExprToString(/** @type {import("../lib/javascript/BasicEvaluatedExpression")} */ (evalExpr.prefix))}]+[${evalExprToString(
+							/** @type {import("../lib/javascript/BasicEvaluatedExpression")} */ (evalExpr.postfix)
 						)}]`
 					);
 				}
@@ -633,7 +666,7 @@ describe("JavascriptParser", () => {
 			it(`should eval ${key}`, () => {
 				const evalExpr = evaluateInParser(key);
 				expect(evalExprToString(evalExpr)).toBe(
-					testCases[key] ? `${key} ${testCases[key]}` : key
+					/** @type {Record<string, string>} */ (testCases)[key] ? `${key} ${/** @type {Record<string, string>} */ (testCases)[key]}` : key
 				);
 			});
 		}
@@ -649,10 +682,10 @@ describe("JavascriptParser", () => {
 			};
 			const parser = new JavascriptParser();
 			for (const name of Object.keys(cases)) {
-				const expr = cases[name];
+				const expr = /** @type {Record<string, string>} */ (cases)[name];
 
 				it(name, () => {
-					const actual = parser.parse(expr, {});
+					const actual = parser.parse(expr, /** @type {import("../lib/Parser").ParserState} */ (/** @type {unknown} */ ({})));
 					expect(typeof actual).toBe("object");
 				});
 			}
@@ -686,8 +719,8 @@ describe("JavascriptParser", () => {
 
 			for (const name of Object.keys(cases)) {
 				it(name, () => {
-					const actual = parser.parse(cases[name][0], {});
-					expect(actual).toEqual(cases[name][1]);
+					const actual = parser.parse(/** @type {Record<string, EXPECTED_ANY[]>} */ (cases)[name][0], /** @type {import("../lib/Parser").ParserState} */ (/** @type {unknown} */ ({})));
+					expect(actual).toEqual(/** @type {Record<string, EXPECTED_ANY[]>} */ (cases)[name][1]);
 				});
 			}
 		});
@@ -700,16 +733,17 @@ describe("JavascriptParser", () => {
 				"object rest": "({...obj} = foo)"
 			};
 			for (const name of Object.keys(cases)) {
-				const expr = cases[name];
+				const expr = /** @type {Record<string, string>} */ (cases)[name];
 
 				it(name, () => {
-					const actual = JavascriptParser._parse(expr, {});
+					const actual = JavascriptParser._parse(expr, /** @type {import("../lib/javascript/JavascriptParser").InternalParseOptions} */ (/** @type {unknown} */ ({})));
 					expect(typeof actual).toBe("object");
 				});
 			}
 		});
 
 		it("should collect definitions from identifiers introduced in object patterns", () => {
+			/** @type {EXPECTED_ANY} */
 			let definitions;
 
 			const parser = new JavascriptParser();
@@ -719,7 +753,7 @@ describe("JavascriptParser", () => {
 				return true;
 			});
 
-			parser.parse("const { a, ...rest } = { a: 1, b: 2 };", {});
+			parser.parse("const { a, ...rest } = { a: 1, b: 2 };", /** @type {import("../lib/Parser").ParserState} */ (/** @type {unknown} */ ({})));
 
 			expect(definitions.has("a")).toBe(true);
 			expect(definitions.has("rest")).toBe(true);
@@ -832,13 +866,13 @@ describe("JavascriptParser", () => {
 				}
 			};
 			for (const name of Object.keys(cases)) {
-				const expr = cases[name];
+				const expr = /** @type {Record<string, EXPECTED_ANY>} */ (cases)[name];
 
 				it(name, () => {
 					const parser = new JavascriptParser();
-					const { ast } = JavascriptParser._parse(expr.code, { ranges: true });
+					const { ast } = JavascriptParser._parse(expr.code, /** @type {import("../lib/javascript/JavascriptParser").InternalParseOptions} */ ({ ranges: true }));
 					expect(typeof ast).toBe("object");
-					expect(parser.parseCalculatedString(ast.body[0].expression)).toEqual(
+					expect(parser.parseCalculatedString(/** @type {import("estree").Expression} */ (/** @type {EXPECTED_ANY} */ (ast.body[0]).expression))).toEqual(
 						expr.result
 					);
 				});
@@ -853,7 +887,7 @@ describe("JavascriptParser", () => {
 				acc.push([flag, true]);
 				acc.push([flag + flag, false]);
 				return acc;
-			}, []),
+			}, /** @type {[string, boolean][]} */ ([])),
 			["", true],
 			["igm", true],
 			["igmy", true],

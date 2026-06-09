@@ -2,7 +2,7 @@
 
 require("./helpers/warmup-webpack");
 
-/** @typedef {{ name: string; tests: string[] }} Category */
+/** @typedef {{ name: string, tests: string[] }} Category */
 /**
  * @typedef {object} SuiteConfig
  * @property {string} name suite name
@@ -16,7 +16,6 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 /** @type {{ sync: (p: string) => void }} */
-// @ts-ignore no declaration file for rimraf
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const { TestRunner } = require("./harness/runner");
@@ -81,7 +80,9 @@ const describeCases = (config) => {
 							/** @type {import("../").Configuration} */
 							let options = /** @type {import("../").Configuration} */ ({});
 							if (fs.existsSync(configPath)) options = require(configPath);
-							if (typeof (/** @type {EXPECTED_ANY} */ (options)) === "function") {
+							if (
+								typeof (/** @type {EXPECTED_ANY} */ (options)) === "function"
+							) {
 								options = /** @type {EXPECTED_ANY} */ (options)({ config });
 							}
 							if (!options.mode) options.mode = "development";
@@ -142,7 +143,10 @@ const describeCases = (config) => {
 								// ignored
 							}
 
-							const onCompiled = (/** @type {Error | null} */ err, /** @type {import("../").Stats} */ stats) => {
+							const onCompiled = (
+								/** @type {Error | null} */ err,
+								/** @type {import("../").Stats} */ stats
+							) => {
 								if (err) return done(err);
 								const jsonStats = stats.toJson({
 									errorDetails: true
@@ -172,7 +176,9 @@ const describeCases = (config) => {
 									return;
 								}
 
-								function runCompiler(/** @type {(err: EXPECTED_ANY, stats?: EXPECTED_ANY) => void} */ callback) {
+								function runCompiler(
+									/** @type {(err: EXPECTED_ANY, stats?: EXPECTED_ANY) => void} */ callback
+								) {
 									fakeUpdateLoaderOptions.updateIndex++;
 									compiler.run((err, _stats) => {
 										const stats = /** @type {import("../").Stats} */ (_stats);
@@ -244,9 +250,10 @@ const describeCases = (config) => {
 										});
 									},
 									getBundlePaths: (_i, _options, runner) => {
-										const bundles = /** @type {EXPECTED_ANY[]} */ (/** @type {EXPECTED_ANY} */ (_stats.entrypoints).main.assets).map(
-											(/** @type {EXPECTED_ANY} */ i) => i.name
-										);
+										const bundles = /** @type {EXPECTED_ANY[]} */ (
+											/** @type {EXPECTED_ANY} */ (_stats.entrypoints).main
+												.assets
+										).map((/** @type {EXPECTED_ANY} */ i) => i.name);
 										if (config.target === "web") {
 											return bundles;
 										}

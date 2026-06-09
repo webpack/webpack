@@ -2,7 +2,7 @@
 
 require("./helpers/warmup-webpack");
 
-/** @typedef {{ name: string; tests: string[] }} Category */
+/** @typedef {{ name: string, tests: string[] }} Category */
 /**
  * @typedef {object} SuiteConfig
  * @property {string} name suite name
@@ -27,7 +27,6 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 /** @type {{ sync: (p: string) => void, (p: string, cb: (err: EXPECTED_ANY) => void): void }} */
-// @ts-ignore no declaration file for rimraf
 const rimraf = require("rimraf");
 const { parseResource } = require("../lib/util/identifier");
 const checkArrayExpectation = require("./checkArrayExpectation");
@@ -232,20 +231,24 @@ const describeCases = (config) => {
 							},
 							plugins: [
 								...(config.plugins || []),
-								function testCasesTest(/** @type {import("../").Compiler} */ this) {
-									this.hooks.compilation.tap("TestCasesTest", (/** @type {EXPECTED_ANY} */ compilation) => {
-										for (const hook of [
-											"optimize",
-											"optimizeModules",
-											"optimizeChunks",
-											"afterOptimizeTree",
-											"afterOptimizeAssets"
-										]) {
-											compilation.hooks[hook].tap("TestCasesTest", () =>
-												compilation.checkConstraints()
-											);
+								/** @this {import("../").Compiler} */
+								function testCasesTest() {
+									this.hooks.compilation.tap(
+										"TestCasesTest",
+										(/** @type {EXPECTED_ANY} */ compilation) => {
+											for (const hook of [
+												"optimize",
+												"optimizeModules",
+												"optimizeChunks",
+												"afterOptimizeTree",
+												"afterOptimizeAssets"
+											]) {
+												compilation.hooks[hook].tap("TestCasesTest", () =>
+													compilation.checkConstraints()
+												);
+											}
 										}
-									});
+									);
 								}
 							],
 							experiments: {
@@ -448,9 +451,7 @@ const describeCases = (config) => {
 											if (infrastructureLogging) {
 												done(
 													new Error(
-														`Errors/Warnings during build:\n${
-															infrastructureLogging
-														}`
+														`Errors/Warnings during build:\n${infrastructureLogging}`
 													)
 												);
 											}
@@ -492,10 +493,14 @@ const describeCases = (config) => {
 									if (testConfig.moduleScope) {
 										testConfig.moduleScope(runner._moduleScope, options);
 									}
-									(/** @type {EXPECTED_ANY} */ (runner.require)).webpackTestSuiteRequire = true;
+									/** @type {EXPECTED_ANY} */ (
+										runner.require
+									).webpackTestSuiteRequire = true;
 								},
 								getBundlePaths: (i, options) =>
-									/** @type {NonNullable<TestConfig["findBundle"]>} */ (testConfig.findBundle)(i, options)
+									/** @type {NonNullable<TestConfig["findBundle"]>} */ (
+										testConfig.findBundle
+									)(i, options)
 							});
 							Promise.all(results).then(() => {
 								if (getNumberOfTests() === 0) {

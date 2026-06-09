@@ -112,15 +112,14 @@ describe("WatchDetection", () => {
 						}
 					};
 
-					watcher =
-						/** @type {import("../").Watching} */ (
-							compiler.watch(
-								{
-									aggregateTimeout: 50
-								},
-								() => {}
-							)
-						);
+					watcher = /** @type {import("../").Watching} */ (
+						compiler.watch(
+							{
+								aggregateTimeout: 50
+							},
+							() => {}
+						)
+					);
 				}
 
 				/**

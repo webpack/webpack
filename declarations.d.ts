@@ -3,6 +3,7 @@ type EXPECTED_FUNCTION = Function;
 type EXPECTED_OBJECT = object;
 
 declare module "*.json";
+declare module "rimraf";
 
 // Deprecated NodeJS API usages in webpack
 declare namespace NodeJS {

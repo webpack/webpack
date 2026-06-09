@@ -26,17 +26,18 @@ describe("WatchClose", () => {
 					filename: "bundle.js"
 				}
 			});
-			watcher =
-				/** @type {import("../").Watching} */ (
-					/** @type {import("../").Compiler} */ (compiler).watch(
-						{ poll: 300 },
-						() => {}
-					)
-				);
+			watcher = /** @type {import("../").Watching} */ (
+				/** @type {import("../").Compiler} */ (compiler).watch(
+					{ poll: 300 },
+					() => {}
+				)
+			);
 		});
 
 		afterEach(() => {
-			/** @type {{ close: () => void }} */ (/** @type {unknown} */ (watcher)).close();
+			/** @type {{ close: () => void }} */ (
+				/** @type {unknown} */ (watcher)
+			).close();
 			compiler = null;
 		});
 

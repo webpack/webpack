@@ -6,7 +6,7 @@ const fs = require("fs");
 const path = require("path");
 const util = require("util");
 const vm = require("vm");
-// @ts-ignore
+// @ts-expect-error no types for rimraf
 const rimraf = require("rimraf");
 
 const readdir = util.promisify(fs.readdir);
@@ -68,12 +68,20 @@ describe("Persistent Caching", () => {
 			const webpack = require("../");
 
 			webpack(
-				/** @type {import("../").Configuration} */ (/** @type {unknown} */ ({
-					...config,
-					...configAdditions,
-					cache: { ...config.cache, .../** @type {EXPECTED_ANY} */ (configAdditions).cache }
-				})),
-				(/** @type {Error | null} */ err, /** @type {import("../").Stats | undefined} */ _stats) => {
+				/** @type {import("../").Configuration} */ (
+					/** @type {unknown} */ ({
+						...config,
+						...configAdditions,
+						cache: {
+							...config.cache,
+							.../** @type {EXPECTED_ANY} */ (configAdditions).cache
+						}
+					})
+				),
+				(
+					/** @type {Error | null} */ err,
+					/** @type {import("../").Stats | undefined} */ _stats
+				) => {
 					if (err) return reject(err);
 					const stats = /** @type {import("../").Stats} */ (_stats);
 					if (stats.hasErrors()) {
@@ -103,13 +111,16 @@ describe("Persistent Caching", () => {
 			const p = path.resolve(outputPath, name);
 			const source = fs.readFileSync(p, "utf8");
 			const context = {};
-			const fn = /** @type {Function} */ (/** @type {EXPECTED_ANY} */ (vm.runInThisContext)(
-				`(function(require, module, exports) { ${source} })`,
-				context,
-				{
-					filename: p
-				}
-			));
+			const fn =
+				/** @type {(require: (name: string) => EXPECTED_ANY, module: { exports: unknown }, exports: unknown) => void} */ (
+					/** @type {EXPECTED_ANY} */ (vm.runInThisContext)(
+						`(function(require, module, exports) { ${source} })`,
+						context,
+						{
+							filename: p
+						}
+					)
+				);
 			const m = { exports: /** @type {unknown} */ ({}) };
 			cache[name] = m;
 			fn(require, m, m.exports);

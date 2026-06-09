@@ -3,15 +3,19 @@
 const childProcess = require("child_process");
 const fs = require("fs");
 const path = require("path");
-// @ts-ignore
+// @ts-expect-error no types for rimraf
 const rimraf = require("rimraf");
 
 const cacheDirectory = path.resolve(__dirname, "js/buildDepsCache");
 const outputDirectory = path.resolve(__dirname, "js/buildDeps");
 const inputDirectory = path.resolve(__dirname, "js/buildDepsInput");
 
-/** @typedef {{ warnings?: RegExp[] | false | undefined, ignoreErrors?: boolean, invalidBuildDependencies?: boolean, definedValue?: string }} ExecOptions */
-const exec = (/** @type {string} */ n, /** @type {ExecOptions} */ options = {}) =>
+/** @typedef {{ warnings?: RegExp[] | false | undefined, ignoreErrors?: boolean, invalidBuildDependencies?: boolean, definedValue?: string, buildTwice?: boolean }} ExecOptions */
+
+const exec = (
+	/** @type {string} */ n,
+	/** @type {ExecOptions} */ options = {}
+) =>
 	new Promise((resolve, reject) => {
 		const webpack = require("../");
 
@@ -32,17 +36,25 @@ const exec = (/** @type {string} */ n, /** @type {ExecOptions} */ options = {}) 
 			n,
 			JSON.stringify(options)
 		]);
-		const p = childProcess.execFile(
-			process.execPath,
-			execArgs,
-			{
-				stdio: ["ignore", "pipe", "pipe"]
-			}
+		const p = /** @type {import("child_process").ChildProcess} */ (
+			/** @type {EXPECTED_ANY} */ (childProcess.execFile)(
+				process.execPath,
+				execArgs,
+				/** @type {import("child_process").ExecFileOptions} */ ({
+					stdio: ["ignore", "pipe", "pipe"]
+				})
+			)
 		);
 		/** @type {string[]} */
 		const chunks = [];
-		/** @type {import("stream").Readable} */ (p.stderr).on("data", (/** @type {string} */ chunk) => chunks.push(chunk));
-		/** @type {import("stream").Readable} */ (p.stdout).on("data", (/** @type {string} */ chunk) => chunks.push(chunk));
+		/** @type {import("stream").Readable} */ (p.stderr).on(
+			"data",
+			(/** @type {string} */ chunk) => chunks.push(chunk)
+		);
+		/** @type {import("stream").Readable} */ (p.stdout).on(
+			"data",
+			(/** @type {string} */ chunk) => chunks.push(chunk)
+		);
 		p.once("exit", (code) => {
 			/** @type {string[]} */
 			const errors = [];

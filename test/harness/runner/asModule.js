@@ -11,9 +11,9 @@ const LINKER = () => {};
 /**
  * @param {vm.SourceTextModule | vm.Module | EXPECTED_ANY} something module or object
  * @param {EXPECTED_ANY} context context
- * @param {{ esmReturnStatus?: boolean }=} options options
+ * @param {{ esmReturnStatus?: string }=} options options
  * @param {Record<string, string>=} importAttributes import attributes
- * @returns {Promise<vm.SourceTextModule> | Promise<vm.SyntheticModule>} module
+ * @returns {Promise<vm.SourceTextModule | vm.SyntheticModule>} module
  */
 module.exports = async (
 	something,
@@ -24,7 +24,7 @@ module.exports = async (
 	if (
 		something instanceof (vm.Module || /* node.js 10 */ vm.SourceTextModule)
 	) {
-		return something;
+		return /** @type {vm.SourceTextModule} */ (something);
 	}
 
 	if (importAttributes && importAttributes.type === "bytes") {
@@ -36,7 +36,7 @@ module.exports = async (
 			{ context }
 		);
 
-		await byteModule.link(() => {});
+		await byteModule.link(/** @type {EXPECTED_ANY} */ (() => {}));
 		await byteModule.evaluate();
 
 		return byteModule;
@@ -60,14 +60,19 @@ module.exports = async (
 	if (options.esmReturnStatus === ESModuleStatus.Unlinked) return esm;
 
 	if (major === 10) {
-		if (esm.linkingStatus === ESModuleStatus.Unlinked) {
-			await esm.link(LINKER);
+		if (
+			/** @type {EXPECTED_ANY} */ (esm).linkingStatus ===
+			ESModuleStatus.Unlinked
+		) {
+			await esm.link(/** @type {EXPECTED_ANY} */ (() => {}));
 		}
-		if (esm.linkingStatus === ESModuleStatus.Linked) {
+		if (
+			/** @type {EXPECTED_ANY} */ (esm).linkingStatus === ESModuleStatus.Linked
+		) {
 			esm.instantiate();
 		}
 	} else if (esm.status === ESModuleStatus.Unlinked) {
-		await esm.link(LINKER);
+		await esm.link(/** @type {EXPECTED_ANY} */ (() => {}));
 	}
 
 	await esm.evaluate();

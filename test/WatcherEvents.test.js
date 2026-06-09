@@ -5,8 +5,8 @@ const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
 
 /**
- * @param {import("../").Configuration | import("../").MultiConfiguration} config
- * @returns {import("../").Compiler | import("../").MultiCompiler}
+ * @param {import("../").Configuration | import("../").MultiConfiguration} config webpack config
+ * @returns {import("../").Compiler | import("../").MultiCompiler} compiler instance
  */
 const createCompiler = (config) => {
 	const compiler =
@@ -63,7 +63,9 @@ describe("WatcherEvents", () => {
 		});
 
 		compiler.hooks.done.tap("WatcherEventsTest", () => {
-			/** @type {{ close: () => void }} */ (/** @type {unknown} */ (watcher)).close();
+			/** @type {{ close: () => void }} */ (
+				/** @type {unknown} */ (watcher)
+			).close();
 		});
 	});
 
@@ -84,7 +86,9 @@ describe("WatcherEvents", () => {
 		});
 
 		compiler.hooks.done.tap("WatcherEventsTest", () => {
-			/** @type {{ close: () => void }} */ (/** @type {unknown} */ (watcher)).close();
+			/** @type {{ close: () => void }} */ (
+				/** @type {unknown} */ (watcher)
+			).close();
 		});
 	});
 });

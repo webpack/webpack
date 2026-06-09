@@ -45,18 +45,18 @@ describe("Watch", () => {
 				},
 				(err, stats) => {
 					if (err) return done(err);
-					if (/** @type {import("../").Stats} */ (stats).hasErrors())
+					if (/** @type {import("../").Stats} */ (stats).hasErrors()) {
 						return done(
 							new Error(/** @type {import("../").Stats} */ (stats).toString())
 						);
+					}
 					counterHandler++;
 				}
 			)
 		);
-		compiler.outputFileSystem =
-			/** @type {import("../").OutputFileSystem} */ (
-				/** @type {unknown} */ (createFsFromVolume(new Volume()))
-			);
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 		setTimeout(() => {
 			expect(counterBeforeCompile).toBe(1);
 			expect(counterDone).toBe(1);
@@ -67,7 +67,7 @@ describe("Watch", () => {
 
 	it("should correctly emit asset when invalidation occurs again", (done) => {
 		/**
-		 * @param {unknown} err
+		 * @param {unknown} err error
 		 */
 		function handleError(err) {
 			if (err) done(/** @type {Error} */ (err));

@@ -2,7 +2,11 @@
 
 const findGraphRoots = require("../lib/util/findGraphRoots");
 
-const args = (/** @type {Record<string, string[]>} */ g) => /** @type {[string[], (m: string) => string[]]} */ ([Object.keys(g), (/** @type {string} */ m) => g[m]]);
+const args = (/** @type {Record<string, string[]>} */ g) =>
+	/** @type {[string[], (m: string) => string[]]} */ ([
+		Object.keys(g),
+		(/** @type {string} */ m) => g[m]
+	]);
 
 describe("findGraphRoots", () => {
 	it("simple case", () => {
