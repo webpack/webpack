@@ -4,7 +4,6 @@ require("./helpers/warmup-webpack");
 
 const path = require("path");
 const fs = require("graceful-fs");
-// @ts-expect-error no types for rimraf
 const rimraf = require("rimraf");
 
 describe("Profiling Plugin", () => {

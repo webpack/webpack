@@ -120,14 +120,14 @@ class TestRunner {
 			target === false
 				? /** @type {false} */ (false)
 				: typeof target === "string"
-				? getTargetProperties(
-						target,
-						/** @type {string} */ (webpackOptions.context)
-				  )
-				: getTargetsProperties(
-						/** @type {string[]} */ (target),
-						/** @type {string} */ (webpackOptions.context)
-				  );
+					? getTargetProperties(
+							target,
+							/** @type {string} */ (webpackOptions.context)
+						)
+					: getTargetsProperties(
+							/** @type {string[]} */ (target),
+							/** @type {string} */ (webpackOptions.context)
+						);
 		const props =
 			/** @type {import("../../../lib/config/target").TargetProperties} */ (
 				targetProperties
@@ -191,8 +191,8 @@ class TestRunner {
 						const normalized = path.isAbsolute(p)
 							? p
 							: p.startsWith("./")
-							? p
-							: `./${p}`;
+								? p
+								: `./${p}`;
 						results.push(runner.require(outputDirectory, normalized));
 					}
 
@@ -594,11 +594,11 @@ class TestRunner {
 								? `./${path.relative(
 										path.dirname(identifier),
 										fileURLToPath(specifier)
-								  )}`
+									)}`
 								: specifier.replace(
 										/https:\/\/example.com\/public\/path\//,
 										"./"
-								  );
+									);
 
 							const res = await this.require(
 								path.dirname(identifier),
@@ -801,12 +801,12 @@ class TestRunner {
 					typeof TextEncoder !== "undefined"
 						? TextEncoder
 						: // eslint-disable-next-line n/prefer-global/text-encoder
-						  require("util").TextEncoder,
+							require("util").TextEncoder,
 				TextDecoder:
 					typeof TextDecoder !== "undefined"
 						? TextDecoder
 						: // eslint-disable-next-line n/prefer-global/text-decoder
-						  require("util").TextDecoder,
+							require("util").TextDecoder,
 				EventSource,
 				clearTimeout,
 				fetch

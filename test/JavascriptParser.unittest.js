@@ -7,14 +7,13 @@ const BasicEvaluatedExpression = require("../lib/javascript/BasicEvaluatedExpres
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
 
 describe("JavascriptParser", () => {
-	/* eslint-disable no-undef */
 	/* eslint-disable no-unused-vars */
-	/** @type {EXPECTED_ANY} */ var abc;
-	/** @type {EXPECTED_ANY} */ var cde;
-	/** @type {EXPECTED_ANY} */ var fgh;
-	/** @type {EXPECTED_ANY} */ var memberExpr;
-	/** @type {EXPECTED_ANY} */ var ijk;
-	/** @type {EXPECTED_ANY} */ var xyz;
+	/** @type {EXPECTED_ANY} */ let abc;
+	/** @type {EXPECTED_ANY} */ let cde;
+	/** @type {EXPECTED_ANY} */ let fgh;
+	/** @type {EXPECTED_ANY} */ let memberExpr;
+	/** @type {EXPECTED_ANY} */ let ijk;
+	/** @type {EXPECTED_ANY} */ let xyz;
 	const testCases = /** @type {EXPECTED_ANY} */ ({
 		"call ident": [
 			function () {
@@ -79,9 +78,8 @@ describe("JavascriptParser", () => {
 				// @ts-expect-error
 				test[memberExpr];
 
-				// eslint-disable-next-line no-implicit-coercion
 				// @ts-expect-error
-				test[+memberExpr];
+				test[+memberExpr]; // eslint-disable-line no-implicit-coercion
 			},
 			{
 				expressions: ["memberExpr", "memberExpr"]
@@ -263,7 +261,7 @@ describe("JavascriptParser", () => {
 					!function () {
 						// @ts-expect-error
 						this.sub;
-					// @ts-expect-error
+						// @ts-expect-error
 					}.call(this);
 				}.call(ijk);
 			},
@@ -291,16 +289,22 @@ describe("JavascriptParser", () => {
 			}
 		]
 	});
-	/* eslint-enable no-undef */
+
 	/* eslint-enable no-unused-vars */
 
 	for (const name of Object.keys(testCases)) {
 		it(`should parse ${name}`, () => {
-			let source = /** @type {Record<string, EXPECTED_ANY[]>} */ (testCases)[name][0].toString();
+			let source = /** @type {Record<string, EXPECTED_ANY[]>} */ (testCases)[
+				name
+			][0].toString();
 			source = source.slice(13, -1).trim();
-			const state = /** @type {Record<string, EXPECTED_ANY[]>} */ (testCases)[name][1];
+			const state = /** @type {Record<string, EXPECTED_ANY[]>} */ (testCases)[
+				name
+			][1];
 
-			const testParser = new JavascriptParser(/** @type {"auto"} */ (/** @type {unknown} */ ({})));
+			const testParser = new JavascriptParser(
+				/** @type {"auto"} */ (/** @type {unknown} */ ({}))
+			);
 			testParser.hooks.canRename
 				.for("abc")
 				.tap("JavascriptParserTest", (_expr) => true);
@@ -309,7 +313,11 @@ describe("JavascriptParser", () => {
 				.tap("JavascriptParserTest", (_expr) => true);
 			testParser.hooks.call.for("abc").tap("JavascriptParserTest", (expr) => {
 				if (!testParser.state.abc) testParser.state.abc = [];
-				testParser.state.abc.push(testParser.parseString(/** @type {import("estree").Expression} */ (expr.arguments[0])));
+				testParser.state.abc.push(
+					testParser.parseString(
+						/** @type {import("estree").Expression} */ (expr.arguments[0])
+					)
+				);
 				return true;
 			});
 			testParser.hooks.call
@@ -317,7 +325,9 @@ describe("JavascriptParser", () => {
 				.tap("JavascriptParserTest", (expr) => {
 					if (!testParser.state.cdeabc) testParser.state.cdeabc = [];
 					testParser.state.cdeabc.push(
-						testParser.parseString(/** @type {import("estree").Expression} */ (expr.arguments[0]))
+						testParser.parseString(
+							/** @type {import("estree").Expression} */ (expr.arguments[0])
+						)
 					);
 					return true;
 				});
@@ -326,7 +336,9 @@ describe("JavascriptParser", () => {
 				.tap("JavascriptParserTest", (expr) => {
 					if (!testParser.state.cdedddabc) testParser.state.cdedddabc = [];
 					testParser.state.cdedddabc.push(
-						testParser.parseString(/** @type {import("estree").Expression} */ (expr.arguments[0]))
+						testParser.parseString(
+							/** @type {import("estree").Expression} */ (expr.arguments[0])
+						)
 					);
 					return true;
 				});
@@ -359,15 +371,26 @@ describe("JavascriptParser", () => {
 				.for("memberExpr")
 				.tap("JavascriptParserTest", (expr) => {
 					if (!testParser.state.expressions) testParser.state.expressions = [];
-					testParser.state.expressions.push(/** @type {import("estree").Identifier} */ (expr).name);
+					testParser.state.expressions.push(
+						/** @type {import("estree").Identifier} */ (expr).name
+					);
 					return true;
 				});
 			testParser.hooks.new.for("xyz").tap("JavascriptParserTest", (expr) => {
 				if (!testParser.state.xyz) testParser.state.xyz = [];
-				testParser.state.xyz.push(testParser.parseString(/** @type {import("estree").Expression} */ (expr.arguments[0])));
+				testParser.state.xyz.push(
+					testParser.parseString(
+						/** @type {import("estree").Expression} */ (expr.arguments[0])
+					)
+				);
 				return true;
 			});
-			const actual = testParser.parse(source, /** @type {import("../lib/Parser").ParserState} */ (/** @type {unknown} */ ({})));
+			const actual = testParser.parse(
+				source,
+				/** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
 			expect(typeof actual).toBe("object");
 			expect(actual).toEqual(state);
 		});
@@ -386,14 +409,21 @@ describe("JavascriptParser", () => {
 			}
 		];
 
-		const testParser = new JavascriptParser(/** @type {"auto"} */ (/** @type {unknown} */ ({})));
+		const testParser = new JavascriptParser(
+			/** @type {"auto"} */ (/** @type {unknown} */ ({}))
+		);
 
 		testParser.hooks.program.tap("JavascriptParserTest", (ast, comments) => {
 			if (!testParser.state.comments) testParser.state.comments = comments;
 			return true;
 		});
 
-		const actual = testParser.parse(source, /** @type {import("../lib/Parser").ParserState} */ (/** @type {unknown} */ ({})));
+		const actual = testParser.parse(
+			source,
+			/** @type {import("../lib/Parser").ParserState} */ (
+				/** @type {unknown} */ ({})
+			)
+		);
 		expect(typeof actual).toBe("object");
 		expect(typeof actual.comments).toBe("object");
 		for (const [index, element] of actual.comments.entries()) {
@@ -419,14 +449,29 @@ describe("JavascriptParser", () => {
 				.tap("JavascriptParserTest", (expr) =>
 					new BasicEvaluatedExpression()
 						.setString("aString")
-						.setRange(/** @type {import("../lib/javascript/JavascriptParser").Range} */ (expr.range))
+						.setRange(
+							/** @type {import("../lib/javascript/JavascriptParser").Range} */ (
+								expr.range
+							)
+						)
 				);
 			parser.hooks.evaluateIdentifier
 				.for("b.Number")
 				.tap("JavascriptParserTest", (expr) =>
-					new BasicEvaluatedExpression().setNumber(123).setRange(/** @type {import("../lib/javascript/JavascriptParser").Range} */ (expr.range))
+					new BasicEvaluatedExpression()
+						.setNumber(123)
+						.setRange(
+							/** @type {import("../lib/javascript/JavascriptParser").Range} */ (
+								expr.range
+							)
+						)
 				);
-			return parser.parse(`test(${source});`, /** @type {import("../lib/Parser").ParserState} */ (/** @type {unknown} */ ({}))).result;
+			return parser.parse(
+				`test(${source});`,
+				/** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			).result;
 		}
 
 		const testCases = {
@@ -638,7 +683,9 @@ describe("JavascriptParser", () => {
 					);
 				}
 				if (evalExpr.isConstArray()) {
-					result.push(`array=[${/** @type {(string | number | boolean | null | RegExp | bigint)[]} */ (evalExpr.array).join("],[")}]`);
+					result.push(
+						`array=[${/** @type {(string | number | boolean | null | RegExp | bigint)[]} */ (evalExpr.array).join("],[")}]`
+					);
 				}
 				if (evalExpr.isTemplateString()) {
 					result.push(
@@ -648,7 +695,9 @@ describe("JavascriptParser", () => {
 				if (evalExpr.isWrapped()) {
 					result.push(
 						`wrapped=[${evalExprToString(/** @type {import("../lib/javascript/BasicEvaluatedExpression")} */ (evalExpr.prefix))}]+[${evalExprToString(
-							/** @type {import("../lib/javascript/BasicEvaluatedExpression")} */ (evalExpr.postfix)
+							/** @type {import("../lib/javascript/BasicEvaluatedExpression")} */ (
+								evalExpr.postfix
+							)
 						)}]`
 					);
 				}
@@ -666,7 +715,9 @@ describe("JavascriptParser", () => {
 			it(`should eval ${key}`, () => {
 				const evalExpr = evaluateInParser(key);
 				expect(evalExprToString(evalExpr)).toBe(
-					/** @type {Record<string, string>} */ (testCases)[key] ? `${key} ${/** @type {Record<string, string>} */ (testCases)[key]}` : key
+					/** @type {Record<string, string>} */ (testCases)[key]
+						? `${key} ${/** @type {Record<string, string>} */ (testCases)[key]}`
+						: key
 				);
 			});
 		}
@@ -685,7 +736,12 @@ describe("JavascriptParser", () => {
 				const expr = /** @type {Record<string, string>} */ (cases)[name];
 
 				it(name, () => {
-					const actual = parser.parse(expr, /** @type {import("../lib/Parser").ParserState} */ (/** @type {unknown} */ ({})));
+					const actual = parser.parse(
+						expr,
+						/** @type {import("../lib/Parser").ParserState} */ (
+							/** @type {unknown} */ ({})
+						)
+					);
 					expect(typeof actual).toBe("object");
 				});
 			}
@@ -719,8 +775,15 @@ describe("JavascriptParser", () => {
 
 			for (const name of Object.keys(cases)) {
 				it(name, () => {
-					const actual = parser.parse(/** @type {Record<string, EXPECTED_ANY[]>} */ (cases)[name][0], /** @type {import("../lib/Parser").ParserState} */ (/** @type {unknown} */ ({})));
-					expect(actual).toEqual(/** @type {Record<string, EXPECTED_ANY[]>} */ (cases)[name][1]);
+					const actual = parser.parse(
+						/** @type {Record<string, EXPECTED_ANY[]>} */ (cases)[name][0],
+						/** @type {import("../lib/Parser").ParserState} */ (
+							/** @type {unknown} */ ({})
+						)
+					);
+					expect(actual).toEqual(
+						/** @type {Record<string, EXPECTED_ANY[]>} */ (cases)[name][1]
+					);
 				});
 			}
 		});
@@ -736,7 +799,12 @@ describe("JavascriptParser", () => {
 				const expr = /** @type {Record<string, string>} */ (cases)[name];
 
 				it(name, () => {
-					const actual = JavascriptParser._parse(expr, /** @type {import("../lib/javascript/JavascriptParser").InternalParseOptions} */ (/** @type {unknown} */ ({})));
+					const actual = JavascriptParser._parse(
+						expr,
+						/** @type {import("../lib/javascript/JavascriptParser").InternalParseOptions} */ (
+							/** @type {unknown} */ ({})
+						)
+					);
 					expect(typeof actual).toBe("object");
 				});
 			}
@@ -753,7 +821,12 @@ describe("JavascriptParser", () => {
 				return true;
 			});
 
-			parser.parse("const { a, ...rest } = { a: 1, b: 2 };", /** @type {import("../lib/Parser").ParserState} */ (/** @type {unknown} */ ({})));
+			parser.parse(
+				"const { a, ...rest } = { a: 1, b: 2 };",
+				/** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
 
 			expect(definitions.has("a")).toBe(true);
 			expect(definitions.has("rest")).toBe(true);
@@ -870,11 +943,20 @@ describe("JavascriptParser", () => {
 
 				it(name, () => {
 					const parser = new JavascriptParser();
-					const { ast } = JavascriptParser._parse(expr.code, /** @type {import("../lib/javascript/JavascriptParser").InternalParseOptions} */ ({ ranges: true }));
-					expect(typeof ast).toBe("object");
-					expect(parser.parseCalculatedString(/** @type {import("estree").Expression} */ (/** @type {EXPECTED_ANY} */ (ast.body[0]).expression))).toEqual(
-						expr.result
+					const { ast } = JavascriptParser._parse(
+						expr.code,
+						/** @type {import("../lib/javascript/JavascriptParser").InternalParseOptions} */ ({
+							ranges: true
+						})
 					);
+					expect(typeof ast).toBe("object");
+					expect(
+						parser.parseCalculatedString(
+							/** @type {import("estree").Expression} */ (
+								/** @type {EXPECTED_ANY} */ (ast.body[0]).expression
+							)
+						)
+					).toEqual(expr.result);
 				});
 			}
 		});

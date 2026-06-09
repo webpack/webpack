@@ -3,57 +3,57 @@
 require("./helpers/warmup-webpack");
 
 describe("Validation", () => {
-	const createTestCase = (/** @type {string} */ name, /** @type {EXPECTED_ANY} */ config, /** @type {(msg: string) => void} */ fn, /** @type {unknown} */ only = undefined) => {
+	const createTestCase = (
+		/** @type {string} */ name,
+		/** @type {EXPECTED_ANY} */ config,
+		/** @type {(msg: string) => void} */ fn,
+		/** @type {unknown} */ only = undefined
+	) => {
 		it(`should fail validation for ${name}`, () => {
-			/** @type {Error | undefined} */
-			let errored;
-
 			try {
 				const webpack = require("..");
 
 				webpack(config);
 			} catch (err) {
-				if (/** @type {EXPECTED_ANY} */ (err).name !== "ValidationError") throw err;
-				errored = /** @type {Error} */ (err);
+				if (/** @type {EXPECTED_ANY} */ (err).name !== "ValidationError") {
+					throw err;
+				}
 				fn(/** @type {Error} */ (err).message);
 
 				return;
 			}
 
-			if (!errored) {
-				throw new Error("Validation didn't fail");
-			}
-
-			expect(errored.message).toMatch(/^Invalid configuration object./);
+			throw new Error("Validation didn't fail");
 		});
 	};
 
-	const createTestCaseOnlyValidate = (/** @type {string} */ name, /** @type {EXPECTED_ANY} */ config, /** @type {(msg: string) => void} */ fn) => {
+	const createTestCaseOnlyValidate = (
+		/** @type {string} */ name,
+		/** @type {EXPECTED_ANY} */ config,
+		/** @type {(msg: string) => void} */ fn
+	) => {
 		it(`should fail validation for ${name}`, () => {
-			/** @type {Error | undefined} */
-			let errored;
-
 			try {
 				const webpack = require("..");
 
 				webpack.validate(config);
 			} catch (err) {
-				if (/** @type {EXPECTED_ANY} */ (err).name !== "ValidationError") throw err;
-				errored = /** @type {Error} */ (err);
+				if (/** @type {EXPECTED_ANY} */ (err).name !== "ValidationError") {
+					throw err;
+				}
 				fn(/** @type {Error} */ (err).message);
 
 				return;
 			}
 
-			if (!errored) {
-				throw new Error("Validation didn't fail");
-			}
-
-			expect(errored.message).toMatch(/^Invalid configuration object./);
+			throw new Error("Validation didn't fail");
 		});
 	};
 
-	const createTestCaseWithoutError = (/** @type {string} */ name, /** @type {EXPECTED_ANY} */ config) => {
+	const createTestCaseWithoutError = (
+		/** @type {string} */ name,
+		/** @type {EXPECTED_ANY} */ config
+	) => {
 		it(`should success validation for ${name}`, () => {
 			let errored;
 
@@ -63,7 +63,9 @@ describe("Validation", () => {
 				webpack(config);
 			} catch (err) {
 				if (/** @type {EXPECTED_ANY} */ (err).name === "ValidationError") {
-					throw new Error("Validation didn't success", { cause: /** @type {Error} */ (err) });
+					throw new Error("Validation didn't success", {
+						cause: /** @type {Error} */ (err)
+					});
 				}
 
 				errored = err;

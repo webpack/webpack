@@ -5,7 +5,6 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = /** @type {{ sync: (path: string) => void }} */ (
-	// @ts-expect-error - no type declarations for rimraf
 	require("rimraf")
 );
 

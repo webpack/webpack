@@ -9,8 +9,10 @@ require("./helpers/warmup-webpack");
  * @property {string=} target target
  * @property {string=} mode mode
  * @property {boolean=} module module
+ * @property {boolean=} minimize minimize
  * @property {string | false=} devtool devtool
  * @property {EXPECTED_ANY=} cache cache
+ * @property {EXPECTED_ANY=} snapshot snapshot
  * @property {EXPECTED_ANY=} optimization optimization
  * @property {string[]=} deprecations expected deprecations
  * @property {EXPECTED_ANY[]=} plugins plugins
@@ -493,9 +495,10 @@ const describeCases = (config) => {
 									if (testConfig.moduleScope) {
 										testConfig.moduleScope(runner._moduleScope, options);
 									}
-									/** @type {EXPECTED_ANY} */ (
+									const runnerRequire = /** @type {EXPECTED_ANY} */ (
 										runner.require
-									).webpackTestSuiteRequire = true;
+									);
+									runnerRequire.webpackTestSuiteRequire = true;
 								},
 								getBundlePaths: (i, options) =>
 									/** @type {NonNullable<TestConfig["findBundle"]>} */ (

@@ -6,7 +6,6 @@ const fs = require("fs");
 const path = require("path");
 const util = require("util");
 const vm = require("vm");
-// @ts-expect-error no types for rimraf
 const rimraf = require("rimraf");
 
 const readdir = util.promisify(fs.readdir);

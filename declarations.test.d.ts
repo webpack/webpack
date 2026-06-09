@@ -1,5 +1,8 @@
 declare module "*.json";
 
+// optional peer of webpack-cli, not installed
+declare module "webpack-dev-server";
+
 type Env = Record<string, any>;
 type TestOptions = { testPath: string; srcPath: string };
 

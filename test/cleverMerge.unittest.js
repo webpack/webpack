@@ -8,7 +8,7 @@ const {
 	resolveByProperty
 } = require("../lib/util/cleverMerge");
 
-/** @typedef {Record<string, unknown[]>} CasesMap */
+/** @typedef {Record<string, EXPECTED_ANY[]>} CasesMap */
 
 describe("cleverMerge", () => {
 	const base = {
@@ -531,7 +531,11 @@ describe("cleverMerge", () => {
 			{
 				b: 50,
 				y: 20,
-				byArguments: (/** @type {number} */ x, /** @type {number} */ y, /** @type {number} */ z) => ({
+				byArguments: (
+					/** @type {number} */ x,
+					/** @type {number} */ y,
+					/** @type {number} */ z
+				) => ({
 					c: 60,
 					x,
 					y,
@@ -552,7 +556,11 @@ describe("cleverMerge", () => {
 				a: 4, // keep
 				b: 5, // static override
 				c: 6, // dynamic override
-				byArguments: (/** @type {number} */ x, /** @type {number} */ y, /** @type {number} */ z) => ({
+				byArguments: (
+					/** @type {number} */ x,
+					/** @type {number} */ y,
+					/** @type {number} */ z
+				) => ({
 					x, // keep
 					y, // static override
 					z // dynamic override
@@ -561,7 +569,11 @@ describe("cleverMerge", () => {
 			{
 				b: 50,
 				y: 20,
-				byArguments: (/** @type {number} */ x, /** @type {number} */ y, /** @type {number} */ z) => ({
+				byArguments: (
+					/** @type {number} */ x,
+					/** @type {number} */ y,
+					/** @type {number} */ z
+				) => ({
 					c: 60,
 					z: z * 10
 				})
@@ -583,7 +595,13 @@ describe("cleverMerge", () => {
 					c: 8, // dynamic override
 					d: 9, // static override (3rd)
 					e: 10, // dynamic override (3rd)
-					byArguments: (/** @type {number} */ x, /** @type {number} */ y, /** @type {number} */ z, /** @type {number} */ v, /** @type {number} */ w) => ({
+					byArguments: (
+						/** @type {number} */ x,
+						/** @type {number} */ y,
+						/** @type {number} */ z,
+						/** @type {number} */ v,
+						/** @type {number} */ w
+					) => ({
 						x, // keep
 						y, // static override
 						z, // dynamic override
@@ -594,7 +612,11 @@ describe("cleverMerge", () => {
 				{
 					b: 70,
 					y: 20,
-					byArguments: (/** @type {number} */ x, /** @type {number} */ y, /** @type {number} */ z) => ({
+					byArguments: (
+						/** @type {number} */ x,
+						/** @type {number} */ y,
+						/** @type {number} */ z
+					) => ({
 						c: 80,
 						z: z * 10
 					})
@@ -603,7 +625,13 @@ describe("cleverMerge", () => {
 			{
 				d: 90,
 				v: 40,
-				byArguments: (/** @type {number} */ x, /** @type {number} */ y, /** @type {number} */ z, /** @type {number} */ v, /** @type {number} */ w) => ({
+				byArguments: (
+					/** @type {number} */ x,
+					/** @type {number} */ y,
+					/** @type {number} */ z,
+					/** @type {number} */ v,
+					/** @type {number} */ w
+				) => ({
 					e: 100,
 					w: w * 10
 				})

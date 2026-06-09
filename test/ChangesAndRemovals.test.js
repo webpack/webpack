@@ -6,7 +6,6 @@ const path = require("path");
 const fs = require("graceful-fs");
 const { Volume, createFsFromVolume } = require("memfs");
 /** @type {(path: string, callback: (err?: unknown) => void) => void} */
-// @ts-expect-error no types for rimraf
 const rimraf = require("rimraf");
 
 /**

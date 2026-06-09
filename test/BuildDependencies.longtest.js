@@ -3,7 +3,6 @@
 const childProcess = require("child_process");
 const fs = require("fs");
 const path = require("path");
-// @ts-expect-error no types for rimraf
 const rimraf = require("rimraf");
 
 const cacheDirectory = path.resolve(__dirname, "js/buildDepsCache");

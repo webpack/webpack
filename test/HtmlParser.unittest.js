@@ -11,19 +11,21 @@ const HtmlInlineStyleDependency = require("../lib/dependencies/HtmlInlineStyleDe
 const CommentCompilationWarning = require("../lib/errors/CommentCompilationWarning");
 const UnsupportedFeatureWarning = require("../lib/errors/UnsupportedFeatureWarning");
 const HtmlParser = require("../lib/html/HtmlParser");
-const buildHtmlAst = /** @type {MockedBuildHtmlAst} */ (require("../lib/html/buildHtmlAst"));
+const buildHtmlAst = /** @type {MockedBuildHtmlAst} */ (
+	require("../lib/html/buildHtmlAst")
+);
 
 /**
- * @returns {{ module: EXPECTED_ANY, presentationalDependencies: object[], dependencies: object[], warnings: object[], errors: object[] }} test doubles
+ * @returns {{ module: EXPECTED_ANY, presentationalDependencies: EXPECTED_OBJECT[], dependencies: EXPECTED_OBJECT[], warnings: EXPECTED_OBJECT[], errors: EXPECTED_OBJECT[] }} test doubles
  */
 const makeModule = () => {
-	/** @type {object[]} */
+	/** @type {EXPECTED_OBJECT[]} */
 	const presentationalDependencies = [];
-	/** @type {object[]} */
+	/** @type {EXPECTED_OBJECT[]} */
 	const dependencies = [];
-	/** @type {object[]} */
+	/** @type {EXPECTED_OBJECT[]} */
 	const warnings = [];
-	/** @type {object[]} */
+	/** @type {EXPECTED_OBJECT[]} */
 	const errors = [];
 	const module = {
 		resource: path.resolve(__dirname, "index.html"),
@@ -32,17 +34,17 @@ const makeModule = () => {
 		identifier() {
 			return this.resource;
 		},
-		addPresentationalDependency(/** @type {object} */ dependency) {
+		addPresentationalDependency(/** @type {EXPECTED_OBJECT} */ dependency) {
 			presentationalDependencies.push(dependency);
 		},
-		addDependency(/** @type {object} */ dependency) {
+		addDependency(/** @type {EXPECTED_OBJECT} */ dependency) {
 			dependencies.push(dependency);
 		},
 		addCodeGenerationDependency() {},
-		addWarning(/** @type {object} */ warning) {
+		addWarning(/** @type {EXPECTED_OBJECT} */ warning) {
 			warnings.push(warning);
 		},
-		addError(/** @type {object} */ error) {
+		addError(/** @type {EXPECTED_OBJECT} */ error) {
 			errors.push(error);
 		}
 	};
@@ -54,14 +56,17 @@ const makeModule = () => {
  * @param {{ outputModule?: boolean, css?: boolean }=} options options
  * @returns {import("../lib/Parser").ParserState} parser state
  */
-const makeState = (module, { outputModule = false, css = false } = {}) => /** @type {import("../lib/Parser").ParserState} */ (/** @type {unknown} */ ({
-	module,
-	compilation: {
-		outputOptions: { hashFunction: "md4", module: outputModule },
-		compiler: { context: path.resolve(__dirname, "..") },
-		options: { experiments: { css } }
-	}
-}));
+const makeState = (module, { outputModule = false, css = false } = {}) =>
+	/** @type {import("../lib/Parser").ParserState} */ (
+		/** @type {unknown} */ ({
+			module,
+			compilation: {
+				outputOptions: { hashFunction: "md4", module: outputModule },
+				compiler: { context: path.resolve(__dirname, "..") },
+				options: { experiments: { css } }
+			}
+		})
+	);
 
 describe("HtmlParser", () => {
 	it("should aggregate inline script content across all text children", () => {
@@ -73,9 +78,9 @@ describe("HtmlParser", () => {
 			secondText,
 			firstStart + firstText.length
 		);
-		/** @type {object[]} */
+		/** @type {EXPECTED_OBJECT[]} */
 		const presentationalDependencies = [];
-		/** @type {object[]} */
+		/** @type {EXPECTED_OBJECT[]} */
 		const dependencies = [];
 		const module = /** @type {EXPECTED_ANY} */ ({
 			resource: path.resolve(__dirname, "index.html"),
@@ -84,10 +89,10 @@ describe("HtmlParser", () => {
 			identifier() {
 				return this.resource;
 			},
-			addPresentationalDependency(/** @type {object} */ dependency) {
+			addPresentationalDependency(/** @type {EXPECTED_OBJECT} */ dependency) {
 				presentationalDependencies.push(dependency);
 			},
-			addDependency(/** @type {object} */ dependency) {
+			addDependency(/** @type {EXPECTED_OBJECT} */ dependency) {
 				dependencies.push(dependency);
 			}
 		});
@@ -124,29 +129,36 @@ describe("HtmlParser", () => {
 		});
 
 		const parser = new HtmlParser({});
-		parser.parse(source, /** @type {import("../lib/Parser").ParserState} */ (/** @type {unknown} */ ({
-			module,
-			compilation: {
-				outputOptions: {
-					hashFunction: "md4",
-					module: false
-				},
-				compiler: {
-					context: path.resolve(__dirname, "..")
-				},
-				options: {
-					experiments: {
-						css: false
+		parser.parse(
+			source,
+			/** @type {import("../lib/Parser").ParserState} */ (
+				/** @type {unknown} */ ({
+					module,
+					compilation: {
+						outputOptions: {
+							hashFunction: "md4",
+							module: false
+						},
+						compiler: {
+							context: path.resolve(__dirname, "..")
+						},
+						options: {
+							experiments: {
+								css: false
+							}
+						}
 					}
-				}
-			}
-		})));
+				})
+			)
+		);
 
 		expect(buildHtmlAst).toHaveBeenCalledWith(source);
 		expect(dependencies).toHaveLength(1);
 		expect(presentationalDependencies).toHaveLength(1);
 
-		const dependency = /** @type {EXPECTED_ANY} */ (presentationalDependencies[0]);
+		const dependency = /** @type {EXPECTED_ANY} */ (
+			presentationalDependencies[0]
+		);
 		expect(dependency).toBeInstanceOf(HtmlInlineScriptDependency);
 		expect(dependency.contentRange).toEqual([
 			firstStart,
@@ -182,7 +194,7 @@ describe("HtmlParser", () => {
 			secondText,
 			firstStart + firstText.length
 		); // 20
-		/** @type {object[]} */
+		/** @type {EXPECTED_OBJECT[]} */
 		const dependencies = [];
 		const module = /** @type {EXPECTED_ANY} */ ({
 			resource: path.resolve(__dirname, "index.html"),
@@ -192,7 +204,7 @@ describe("HtmlParser", () => {
 				return this.resource;
 			},
 			addPresentationalDependency() {},
-			addDependency(/** @type {object} */ dependency) {
+			addDependency(/** @type {EXPECTED_OBJECT} */ dependency) {
 				dependencies.push(dependency);
 			},
 			addCodeGenerationDependency() {}
@@ -236,23 +248,28 @@ describe("HtmlParser", () => {
 		});
 
 		const parser = new HtmlParser({});
-		parser.parse(source, /** @type {import("../lib/Parser").ParserState} */ (/** @type {unknown} */ ({
-			module,
-			compilation: {
-				outputOptions: {
-					hashFunction: "md4",
-					module: false
-				},
-				compiler: {
-					context: path.resolve(__dirname, "..")
-				},
-				options: {
-					experiments: {
-						css: true
+		parser.parse(
+			source,
+			/** @type {import("../lib/Parser").ParserState} */ (
+				/** @type {unknown} */ ({
+					module,
+					compilation: {
+						outputOptions: {
+							hashFunction: "md4",
+							module: false
+						},
+						compiler: {
+							context: path.resolve(__dirname, "..")
+						},
+						options: {
+							experiments: {
+								css: true
+							}
+						}
 					}
-				}
-			}
-		})));
+				})
+			)
+		);
 
 		const styleDeps = dependencies.filter(
 			(d) => d instanceof HtmlInlineStyleDependency
@@ -272,9 +289,9 @@ describe("HtmlParser", () => {
 		 * @returns {EXPECTED_ANY} module double with dependency sets + diagnostics
 		 */
 		const templateModule = () => {
-			/** @type {object[]} */
+			/** @type {EXPECTED_OBJECT[]} */
 			const warnings = [];
-			/** @type {object[]} */
+			/** @type {EXPECTED_OBJECT[]} */
 			const errors = [];
 			return {
 				resource: path.resolve(__dirname, "index.html"),
@@ -283,10 +300,10 @@ describe("HtmlParser", () => {
 					contextDependencies: new Set(),
 					missingDependencies: new Set()
 				}),
-				addWarning(/** @type {object} */ warning) {
+				addWarning(/** @type {EXPECTED_OBJECT} */ warning) {
 					warnings.push(warning);
 				},
-				addError(/** @type {object} */ error) {
+				addError(/** @type {EXPECTED_OBJECT} */ error) {
 					errors.push(error);
 				},
 				warnings,
