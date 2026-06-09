@@ -12822,11 +12822,6 @@ declare interface KnownBuildInfo {
 	inlineExports?: boolean;
 
 	/**
-	 * names of top-level variables declared with const
-	 */
-	constBindings?: Set<string>;
-
-	/**
 	 * true when the module is part of a circular dependency chain
 	 */
 	isCircular?: boolean;
