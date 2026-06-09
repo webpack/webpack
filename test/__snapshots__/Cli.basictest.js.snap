@@ -2205,7 +2205,7 @@ Object {
         "type": "enum",
         "values": Array [
           "stylesheet",
-          "block",
+          "block-contents",
         ],
       },
     ],
@@ -2235,7 +2235,7 @@ Object {
         "type": "enum",
         "values": Array [
           "stylesheet",
-          "block",
+          "block-contents",
         ],
       },
     ],
@@ -2420,7 +2420,7 @@ Object {
         "type": "enum",
         "values": Array [
           "stylesheet",
-          "block",
+          "block-contents",
         ],
       },
     ],
@@ -2586,7 +2586,7 @@ Object {
         "type": "enum",
         "values": Array [
           "stylesheet",
-          "block",
+          "block-contents",
         ],
       },
     ],

@@ -562,7 +562,7 @@
     },
     "CssParserAs": {
       "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).",
-      "enum": ["stylesheet", "block"]
+      "enum": ["stylesheet", "block-contents"]
     },
     "CssParserContainer": {
       "description": "Enable/disable renaming of `@container` names.",

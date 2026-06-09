@@ -5267,7 +5267,7 @@ declare interface CssAutoOrModuleParserOptions {
 	/**
 	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
 	 */
-	as?: "stylesheet" | "block";
+	as?: "stylesheet" | "block-contents";
 
 	/**
 	 * Enable/disable renaming of `@container` names.
@@ -5503,7 +5503,7 @@ declare interface CssModuleParserOptions {
 	/**
 	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
 	 */
-	as?: "stylesheet" | "block";
+	as?: "stylesheet" | "block-contents";
 
 	/**
 	 * Enable/disable renaming of `@container` names.
@@ -5693,7 +5693,7 @@ declare interface CssParserOptions {
 	/**
 	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
 	 */
-	as?: "stylesheet" | "block";
+	as?: "stylesheet" | "block-contents";
 
 	/**
 	 * Configure how CSS content is exported as default.

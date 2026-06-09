@@ -806,7 +806,7 @@ export type CssParserAnimation = boolean;
 /**
  * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
  */
-export type CssParserAs = "stylesheet" | "block";
+export type CssParserAs = "stylesheet" | "block-contents";
 /**
  * Enable/disable renaming of `@container` names.
  */

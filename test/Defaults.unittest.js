@@ -2474,7 +2474,7 @@ describe("snapshots", () => {
 			+       Object {
 			+         "dependency": "html-style-attribute",
 			+         "parser": Object {
-			+           "as": "block",
+			+           "as": "block-contents",
 			+           "exportType": "text",
 			+         },
 			+         "resolve": Object {
@@ -3228,7 +3228,7 @@ describe("snapshots", () => {
 			+       Object {
 			+         "dependency": "html-style-attribute",
 			+         "parser": Object {
-			+           "as": "block",
+			+           "as": "block-contents",
 			+           "exportType": "text",
 			+         },
 			+         "resolve": Object {
