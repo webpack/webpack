@@ -216,7 +216,7 @@ describe("walkCssTokens — Node / Token", () => {
 		let loc;
 		new SourceProcessor()
 			.use({ [NodeType.Declaration]: (n) => (loc = n.loc) })
-			.process("a{\n  color: red\n}", { parse: parseAStylesheet });
+			.process("a{\n  color: red\n}");
 		expect(loc.start).toEqual({ line: 2, column: 2 });
 		expect(loc.end).toEqual({ line: 3, column: 0 });
 	});
@@ -240,7 +240,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 				},
 				[NodeType.Declaration]: (n) => log.push(`decl:${n.name}`)
 			})
-			.process("a{color:red;width:1px}", { parse: parseAStylesheet });
+			.process("a{color:red;width:1px}");
 		expect(log).toEqual(["enter", "decl:color", "decl:width", "exit"]);
 	});
 
@@ -254,7 +254,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 				},
 				[NodeType.Declaration]: () => log.push("decl")
 			})
-			.process("a{color:red}", { parse: parseAStylesheet });
+			.process("a{color:red}");
 		expect(log).toEqual(["qr"]);
 	});
 
@@ -263,10 +263,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 			let n = 0;
 			new SourceProcessor()
 				.use({ [NodeType.QualifiedRule]: () => n++ })
-				.process("@media x{.a{c:1}.b{d:2}}", {
-					recurseBlocks,
-					parse: parseAStylesheet
-				});
+				.process("@media x{.a{c:1}.b{d:2}}", { recurseBlocks });
 			return n;
 		};
 		expect(count(false)).toBe(0);
@@ -277,9 +274,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 		const names = [];
 		new SourceProcessor()
 			.use({ [NodeType.Declaration]: (n) => names.push(n.name) })
-			.process("@font-face{font-family:x;src:url(y)}", {
-				parse: parseAStylesheet
-			});
+			.process("@font-face{font-family:x;src:url(y)}");
 		expect(names).toEqual(["font-family", "src"]);
 	});
 
@@ -290,7 +285,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 			.use({ [NodeType.Declaration]: () => a++ })
 			.use({ [NodeType.Declaration]: () => b++ });
 		expect(sp).toBeInstanceOf(SourceProcessor);
-		sp.process("x{a:1}", { parse: parseAStylesheet });
+		sp.process("x{a:1}");
 		expect([a, b]).toEqual([1, 1]);
 	});
 
@@ -299,7 +294,6 @@ describe("walkCssTokens — SourceProcessor", () => {
 		new SourceProcessor()
 			.use({ [NodeType.Declaration]: () => {} })
 			.process("a{color:red/*!c*/}", {
-				parse: parseAStylesheet,
 				comment: (input, start, end) => {
 					seen.push(input.slice(start, end));
 					return end;
@@ -308,7 +302,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 		expect(seen).toEqual(["/*!c*/"]);
 	});
 
-	it("parse: parseABlocksContents walks a block's contents (style attribute)", () => {
+	it('as: "block-contents" walks a block\'s contents (style attribute)', () => {
 		const names = [];
 		const urls = [];
 		new SourceProcessor()
@@ -317,19 +311,17 @@ describe("walkCssTokens — SourceProcessor", () => {
 				[NodeType.Url]: (n) => urls.push(n.value)
 			})
 			.process("color: red; background: url(a.png)", {
-				parse: parseABlocksContents
+				as: "block-contents"
 			});
 		expect(names).toEqual(["color", "background"]);
 		expect(urls).toEqual(["a.png"]);
 	});
 
-	it("parse: parseAStylesheet treats a top-level declaration as a parse error", () => {
+	it('the default "stylesheet" mode treats a top-level declaration as a parse error', () => {
 		const names = [];
 		new SourceProcessor()
 			.use({ [NodeType.Declaration]: (n) => names.push(n.name) })
-			.process("color: red; background: url(a.png)", {
-				parse: parseAStylesheet
-			});
+			.process("color: red; background: url(a.png)");
 		expect(names).toEqual([]);
 	});
 });
@@ -405,9 +397,7 @@ describe("walkCssTokens — nesting and error recovery", () => {
 				[NodeType.Function]: () => fns++,
 				[NodeType.SimpleBlock]: () => blocks++
 			})
-			.process("a{width:calc(1 + 2);grid:[x] 3px}", {
-				parse: parseAStylesheet
-			});
+			.process("a{width:calc(1 + 2);grid:[x] 3px}");
 		expect([nums, fns, blocks]).toEqual([2, 1, 1]);
 	});
 });
