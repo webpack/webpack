@@ -2,6 +2,6 @@
 
 module.exports = {
 	findBundle() {
-		return ["avoid.mjs", "test.js"];
+		return ["nocollide-true.mjs", "test.js"];
 	}
 };

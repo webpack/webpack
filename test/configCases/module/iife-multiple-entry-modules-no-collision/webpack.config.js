@@ -2,7 +2,7 @@
 
 /** @type {import("../../../../").Configuration} */
 const base = {
-	entry: ["./index1.js", "./index2.js"],
+	entry: ["./first.js", "./second.js"],
 	output: {
 		module: true
 	},
@@ -19,14 +19,14 @@ const base = {
 module.exports = [
 	{
 		...base,
-		name: "avoid",
-		output: { ...base.output, filename: "avoid.mjs" },
+		name: "nocollide-true",
+		output: { ...base.output, filename: "nocollide-true.mjs" },
 		optimization: { ...base.optimization, avoidEntryIife: true }
 	},
 	{
 		...base,
-		name: "keep",
-		output: { ...base.output, filename: "keep.mjs" },
+		name: "nocollide-false",
+		output: { ...base.output, filename: "nocollide-false.mjs" },
 		optimization: { ...base.optimization, avoidEntryIife: false }
 	},
 	{
