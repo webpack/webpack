@@ -55,6 +55,12 @@ const common = {
 						}
 					},
 					{
+						resourceQuery: /\?uniquename-local$/,
+						generator: {
+							localIdentName: "[uniquename]__[local]"
+						}
+					},
+					{
 						resourceQuery: /\?hash-local-custom$/,
 						generator: {
 							localIdentHashSalt: "salt",
