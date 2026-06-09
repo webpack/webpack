@@ -632,6 +632,10 @@ export type Path = string;
  */
 export type Pathinfo = "verbose" | boolean;
 /**
+ * Project-wide defaults for `webpackPrefetch` / `webpackPreload` / `webpackFetchPriority` on URL-referenced assets (e.g. `new URL(..., import.meta.url)`, `url(...)` in CSS). Per-call magic comments still take precedence. Pass an array to scope hints to specific asset paths via `test` / `include` / `exclude`.
+ */
+export type ResourceHints = ResourceHintsRule[] | ResourceHintsRule;
+/**
  * This option enables loading async chunks via a custom script type, such as script type="module".
  */
 export type ScriptType = false | "text/javascript" | "module";
@@ -2525,6 +2529,10 @@ export interface Output {
 	 */
 	publicPath?: PublicPath;
 	/**
+	 * Project-wide defaults for `webpackPrefetch` / `webpackPreload` / `webpackFetchPriority` on URL-referenced assets (e.g. `new URL(..., import.meta.url)`, `url(...)` in CSS). Per-call magic comments still take precedence. Pass an array to scope hints to specific asset paths via `test` / `include` / `exclude`.
+	 */
+	resourceHints?: ResourceHints;
+	/**
 	 * This option enables loading async chunks via a custom script type, such as script type="module".
 	 */
 	scriptType?: ScriptType;
@@ -2671,6 +2679,35 @@ export interface Environment {
 	 * The environment supports template literals.
 	 */
 	templateLiteral?: boolean;
+}
+/**
+ * One resource-hint default rule. `test` / `include` / `exclude` match against the asset's request; omit all three to apply to every asset.
+ */
+export interface ResourceHintsRule {
+	/**
+	 * A condition matcher.
+	 */
+	exclude?: RuleSetCondition;
+	/**
+	 * Default fetchpriority for prefetch / preload links.
+	 */
+	fetchPriority?: "low" | "high" | "auto" | false;
+	/**
+	 * A condition matcher.
+	 */
+	include?: RuleSetCondition;
+	/**
+	 * When true, emit `<link rel="prefetch">` for matching assets without an explicit hint comment.
+	 */
+	prefetch?: boolean;
+	/**
+	 * When true, emit `<link rel="preload">` for matching assets without an explicit hint comment.
+	 */
+	preload?: boolean;
+	/**
+	 * A condition matcher.
+	 */
+	test?: RuleSetCondition;
 }
 /**
  * Use a Trusted Types policy to create urls for chunks.
@@ -4109,6 +4146,10 @@ export interface OutputNormalized {
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: PublicPath;
+	/**
+	 * Project-wide defaults for `webpackPrefetch` / `webpackPreload` / `webpackFetchPriority` on URL-referenced assets (e.g. `new URL(..., import.meta.url)`, `url(...)` in CSS). Per-call magic comments still take precedence. Pass an array to scope hints to specific asset paths via `test` / `include` / `exclude`.
+	 */
+	resourceHints?: ResourceHints;
 	/**
 	 * This option enables loading async chunks via a custom script type, such as script type="module".
 	 */

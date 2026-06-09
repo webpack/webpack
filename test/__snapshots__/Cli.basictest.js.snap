@@ -8639,6 +8639,445 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-resource-hints-exclude": Object {
+    "configs": Array [
+      Object {
+        "description": "One resource-hint default rule. \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset.",
+        "multiple": true,
+        "path": "output.resourceHints[].exclude",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "One resource-hint default rule. \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset.",
+        "multiple": true,
+        "path": "output.resourceHints[].exclude",
+        "type": "string",
+      },
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.exclude[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.exclude[]",
+        "type": "string",
+      },
+    ],
+    "description": "One resource-hint default rule. \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset. A rule condition.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-exclude-and": Object {
+    "configs": Array [
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.exclude.and[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.exclude.and[]",
+        "type": "string",
+      },
+    ],
+    "description": "A rule condition.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-exclude-and-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.resourceHints.exclude.and' configuration. A list of rule conditions.",
+        "multiple": false,
+        "path": "output.resourceHints.exclude.and",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.resourceHints.exclude.and' configuration. A list of rule conditions.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-resource-hints-exclude-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "output.resourceHints[].exclude.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "output.resourceHints[].exclude.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-exclude-or": Object {
+    "configs": Array [
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.exclude.or[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.exclude.or[]",
+        "type": "string",
+      },
+    ],
+    "description": "A rule condition.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-exclude-or-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.resourceHints.exclude.or' configuration. A list of rule conditions.",
+        "multiple": false,
+        "path": "output.resourceHints.exclude.or",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.resourceHints.exclude.or' configuration. A list of rule conditions.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-resource-hints-exclude-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.resourceHints.exclude' configuration. A list of rule conditions.",
+        "multiple": false,
+        "path": "output.resourceHints.exclude",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.resourceHints.exclude' configuration. A list of rule conditions.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-resource-hints-fetch-priority": Object {
+    "configs": Array [
+      Object {
+        "description": "Default fetchpriority for prefetch / preload links.",
+        "multiple": true,
+        "path": "output.resourceHints[].fetchPriority",
+        "type": "enum",
+        "values": Array [
+          "low",
+          "high",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Default fetchpriority for prefetch / preload links.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-include": Object {
+    "configs": Array [
+      Object {
+        "description": "One resource-hint default rule. \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset.",
+        "multiple": true,
+        "path": "output.resourceHints[].include",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "One resource-hint default rule. \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset.",
+        "multiple": true,
+        "path": "output.resourceHints[].include",
+        "type": "string",
+      },
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.include[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.include[]",
+        "type": "string",
+      },
+    ],
+    "description": "One resource-hint default rule. \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset. A rule condition.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-include-and": Object {
+    "configs": Array [
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.include.and[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.include.and[]",
+        "type": "string",
+      },
+    ],
+    "description": "A rule condition.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-include-and-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.resourceHints.include.and' configuration. A list of rule conditions.",
+        "multiple": false,
+        "path": "output.resourceHints.include.and",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.resourceHints.include.and' configuration. A list of rule conditions.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-resource-hints-include-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "output.resourceHints[].include.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "output.resourceHints[].include.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-include-or": Object {
+    "configs": Array [
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.include.or[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.include.or[]",
+        "type": "string",
+      },
+    ],
+    "description": "A rule condition.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-include-or-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.resourceHints.include.or' configuration. A list of rule conditions.",
+        "multiple": false,
+        "path": "output.resourceHints.include.or",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.resourceHints.include.or' configuration. A list of rule conditions.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-resource-hints-include-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.resourceHints.include' configuration. A list of rule conditions.",
+        "multiple": false,
+        "path": "output.resourceHints.include",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.resourceHints.include' configuration. A list of rule conditions.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-resource-hints-prefetch": Object {
+    "configs": Array [
+      Object {
+        "description": "When true, emit \`<link rel=\\"prefetch\\">\` for matching assets without an explicit hint comment.",
+        "multiple": true,
+        "path": "output.resourceHints[].prefetch",
+        "type": "boolean",
+      },
+    ],
+    "description": "When true, emit \`<link rel=\\"prefetch\\">\` for matching assets without an explicit hint comment.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "output-resource-hints-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "When true, emit \`<link rel=\\"preload\\">\` for matching assets without an explicit hint comment.",
+        "multiple": true,
+        "path": "output.resourceHints[].preload",
+        "type": "boolean",
+      },
+    ],
+    "description": "When true, emit \`<link rel=\\"preload\\">\` for matching assets without an explicit hint comment.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "output-resource-hints-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.resourceHints' configuration. Project-wide defaults for \`webpackPrefetch\` / \`webpackPreload\` / \`webpackFetchPriority\` on URL-referenced assets (e.g. \`new URL(..., import.meta.url)\`, \`url(...)\` in CSS). Per-call magic comments still take precedence. Pass an array to scope hints to specific asset paths via \`test\` / \`include\` / \`exclude\`.",
+        "multiple": false,
+        "path": "output.resourceHints",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.resourceHints' configuration. Project-wide defaults for \`webpackPrefetch\` / \`webpackPreload\` / \`webpackFetchPriority\` on URL-referenced assets (e.g. \`new URL(..., import.meta.url)\`, \`url(...)\` in CSS). Per-call magic comments still take precedence. Pass an array to scope hints to specific asset paths via \`test\` / \`include\` / \`exclude\`.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-resource-hints-test": Object {
+    "configs": Array [
+      Object {
+        "description": "One resource-hint default rule. \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset.",
+        "multiple": true,
+        "path": "output.resourceHints[].test",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "One resource-hint default rule. \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset.",
+        "multiple": true,
+        "path": "output.resourceHints[].test",
+        "type": "string",
+      },
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.test[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.test[]",
+        "type": "string",
+      },
+    ],
+    "description": "One resource-hint default rule. \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset. A rule condition.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-test-and": Object {
+    "configs": Array [
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.test.and[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.test.and[]",
+        "type": "string",
+      },
+    ],
+    "description": "A rule condition.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-test-and-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.resourceHints.test.and' configuration. A list of rule conditions.",
+        "multiple": false,
+        "path": "output.resourceHints.test.and",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.resourceHints.test.and' configuration. A list of rule conditions.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-resource-hints-test-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "output.resourceHints[].test.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "output.resourceHints[].test.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-test-or": Object {
+    "configs": Array [
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.test.or[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "A rule condition.",
+        "multiple": true,
+        "path": "output.resourceHints.test.or[]",
+        "type": "string",
+      },
+    ],
+    "description": "A rule condition.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-test-or-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.resourceHints.test.or' configuration. A list of rule conditions.",
+        "multiple": false,
+        "path": "output.resourceHints.test.or",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.resourceHints.test.or' configuration. A list of rule conditions.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-resource-hints-test-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.resourceHints.test' configuration. A list of rule conditions.",
+        "multiple": false,
+        "path": "output.resourceHints.test",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.resourceHints.test' configuration. A list of rule conditions.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-script-type": Object {
     "configs": Array [
       Object {

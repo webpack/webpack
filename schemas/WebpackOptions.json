@@ -3972,6 +3972,9 @@
         "publicPath": {
           "$ref": "#/definitions/PublicPath"
         },
+        "resourceHints": {
+          "$ref": "#/definitions/ResourceHints"
+        },
         "scriptType": {
           "$ref": "#/definitions/ScriptType"
         },
@@ -4169,6 +4172,9 @@
         },
         "publicPath": {
           "$ref": "#/definitions/PublicPath"
+        },
+        "resourceHints": {
+          "$ref": "#/definitions/ResourceHints"
         },
         "scriptType": {
           "$ref": "#/definitions/ScriptType"
@@ -4838,6 +4844,48 @@
           "tsType": "((this: import('enhanced-resolve').Resolver, arg1: import('enhanced-resolve').Resolver) => void)"
         }
       ]
+    },
+    "ResourceHints": {
+      "description": "Project-wide defaults for `webpackPrefetch` / `webpackPreload` / `webpackFetchPriority` on URL-referenced assets (e.g. `new URL(..., import.meta.url)`, `url(...)` in CSS). Per-call magic comments still take precedence. Pass an array to scope hints to specific asset paths via `test` / `include` / `exclude`.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceHintsRule"
+          }
+        },
+        {
+          "$ref": "#/definitions/ResourceHintsRule"
+        }
+      ]
+    },
+    "ResourceHintsRule": {
+      "description": "One resource-hint default rule. `test` / `include` / `exclude` match against the asset's request; omit all three to apply to every asset.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exclude": {
+          "$ref": "#/definitions/RuleSetCondition"
+        },
+        "fetchPriority": {
+          "description": "Default fetchpriority for prefetch / preload links.",
+          "enum": ["low", "high", "auto", false]
+        },
+        "include": {
+          "$ref": "#/definitions/RuleSetCondition"
+        },
+        "prefetch": {
+          "description": "When true, emit `<link rel=\"prefetch\">` for matching assets without an explicit hint comment.",
+          "type": "boolean"
+        },
+        "preload": {
+          "description": "When true, emit `<link rel=\"preload\">` for matching assets without an explicit hint comment.",
+          "type": "boolean"
+        },
+        "test": {
+          "$ref": "#/definitions/RuleSetCondition"
+        }
+      }
     },
     "RuleSetCondition": {
       "description": "A condition matcher.",
