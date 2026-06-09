@@ -3,10 +3,15 @@
 const Chunk = require("../lib/Chunk");
 
 describe("Chunk", () => {
+	/** @type {InstanceType<typeof Chunk>} */
 	let ChunkInstance;
 
 	beforeEach(() => {
-		ChunkInstance = new Chunk("chunk-test", "module-test", "loc-test");
+		const ChunkAny =
+			/** @type {new (...args: unknown[]) => InstanceType<typeof Chunk>} */ (
+				/** @type {unknown} */ (Chunk)
+			);
+		ChunkInstance = new ChunkAny("chunk-test", "module-test", "loc-test");
 	});
 
 	it("should have debugId more than 999", () => {

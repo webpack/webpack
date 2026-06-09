@@ -3,9 +3,9 @@
 const deterministicGrouping = require("../lib/util/deterministicGrouping");
 
 describe("deterministicGrouping", () => {
-	const group = (items, minSize, maxSize) =>
+	const group = (/** @type {object[]} */ items, /** @type {object} */ minSize, /** @type {object} */ maxSize) =>
 		deterministicGrouping({
-			items: items.map((item, i) => [i, item]),
+			items: items.map((/** @type {object} */ item, /** @type {number} */ i) => [i, item]),
 			minSize,
 			maxSize,
 			getKey: ([key]) => `${100000 + key}`,

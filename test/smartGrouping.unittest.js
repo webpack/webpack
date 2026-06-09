@@ -4,30 +4,51 @@ const smartGrouping = require("../lib/util/smartGrouping");
 
 describe("util/smartGrouping", () => {
 	it("should group correctly", () => {
-		const groupConfigs = [
-			{
-				getKeys(item) {
-					return item.match(/\d+/g);
+		const groupConfigs =
+			/** @type {import("../lib/util/smartGrouping").GroupConfig<string, { name: string, items: string[] }>[]} */ ([
+				{
+					/**
+					 * @param {string} item
+					 * @returns {string[] | undefined}
+					 */
+					getKeys(item) {
+						return /** @type {string[] | undefined} */ (
+							/** @type {unknown} */ (item.match(/\d+/g))
+						);
+					},
+					/**
+					 * @param {string} key
+					 * @param {string[]} items
+					 */
+					createGroup(key, items) {
+						return {
+							name: `has number ${key}`,
+							items
+						};
+					}
 				},
-				createGroup(key, items) {
-					return {
-						name: `has number ${key}`,
-						items
-					};
+				{
+					/**
+					 * @param {string} item
+					 * @returns {string[] | undefined}
+					 */
+					getKeys(item) {
+						return /** @type {string[] | undefined} */ (
+							/** @type {unknown} */ (item.match(/\w+/g))
+						);
+					},
+					/**
+					 * @param {string} key
+					 * @param {string[]} items
+					 */
+					createGroup(key, items) {
+						return {
+							name: `has word ${key}`,
+							items
+						};
+					}
 				}
-			},
-			{
-				getKeys(item) {
-					return item.match(/\w+/g);
-				},
-				createGroup(key, items) {
-					return {
-						name: `has word ${key}`,
-						items
-					};
-				}
-			}
-		];
+			]);
 		expect(
 			smartGrouping(
 				[

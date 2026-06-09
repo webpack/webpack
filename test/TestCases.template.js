@@ -2,8 +2,32 @@
 
 require("./helpers/warmup-webpack");
 
+/** @typedef {{ name: string; tests: string[] }} Category */
+/**
+ * @typedef {object} SuiteConfig
+ * @property {string} name suite name
+ * @property {string=} target target
+ * @property {string=} mode mode
+ * @property {boolean=} module module
+ * @property {string | false=} devtool devtool
+ * @property {EXPECTED_ANY=} cache cache
+ * @property {EXPECTED_ANY=} optimization optimization
+ * @property {string[]=} deprecations expected deprecations
+ * @property {EXPECTED_ANY[]=} plugins plugins
+ */
+/**
+ * @typedef {object} TestConfig
+ * @property {((i: EXPECTED_ANY, options: EXPECTED_ANY) => string)=} findBundle
+ * @property {number=} timeout
+ * @property {number=} cachedTimeout
+ * @property {boolean=} noTests
+ * @property {((scope: EXPECTED_ANY, options: EXPECTED_ANY) => void)=} moduleScope
+ */
+
 const path = require("path");
 const fs = require("graceful-fs");
+/** @type {{ sync: (p: string) => void, (p: string, cb: (err: EXPECTED_ANY) => void): void }} */
+// @ts-ignore no declaration file for rimraf
 const rimraf = require("rimraf");
 const { parseResource } = require("../lib/util/identifier");
 const checkArrayExpectation = require("./checkArrayExpectation");
@@ -14,19 +38,23 @@ const deprecationTracking = require("./helpers/deprecationTracking");
 const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
 
 const casesPath = path.join(__dirname, "cases");
-let categories = fs.readdirSync(casesPath);
-categories = categories.map((cat) => ({
+/** @type {Category[]} */
+const categories = fs.readdirSync(casesPath).map((cat) => ({
 	name: cat,
 	tests: fs
 		.readdirSync(path.join(casesPath, cat))
 		.filter((folder) => !folder.includes("_"))
 }));
 
+/**
+ * @param {string[]} appendTarget log collector
+ * @returns {EXPECTED_ANY} logger object
+ */
 const createLogger = (appendTarget) => ({
-	log: (l) => appendTarget.push(l),
-	debug: (l) => appendTarget.push(l),
-	trace: (l) => appendTarget.push(l),
-	info: (l) => appendTarget.push(l),
+	log: (/** @type {string} */ l) => appendTarget.push(l),
+	debug: (/** @type {string} */ l) => appendTarget.push(l),
+	trace: (/** @type {string} */ l) => appendTarget.push(l),
+	info: (/** @type {string} */ l) => appendTarget.push(l),
 	warn: console.warn.bind(console),
 	error: console.error.bind(console),
 	logTime: () => {},
@@ -39,8 +67,12 @@ const createLogger = (appendTarget) => ({
 	status: () => {}
 });
 
+/**
+ * @param {SuiteConfig} config suite config
+ */
 const describeCases = (config) => {
 	describe(config.name, () => {
+		/** @type {ReturnType<typeof captureStdio>} */
 		let stderr;
 
 		beforeEach(() => {
@@ -69,6 +101,7 @@ const describeCases = (config) => {
 					}
 					return true;
 				})) {
+					/** @type {string[]} */
 					const infraStructureLog = [];
 
 					// eslint-disable-next-line no-loop-func
@@ -88,6 +121,7 @@ const describeCases = (config) => {
 							category.name,
 							testName
 						);
+						/** @type {TestConfig} */
 						let testConfig = {
 							findBundle(_, options) {
 								const ext = path.extname(
@@ -106,7 +140,8 @@ const describeCases = (config) => {
 						const terserForTesting = new TerserPlugin({
 							parallel: false
 						});
-						let options = {
+						/** @type {import("../").Configuration} */
+						let options = /** @type {import("../").Configuration} */ ({
 							context: casesPath,
 							entry: `./${category.name}/${testName}/`,
 							target: config.target || "async-node",
@@ -197,8 +232,8 @@ const describeCases = (config) => {
 							},
 							plugins: [
 								...(config.plugins || []),
-								function testCasesTest() {
-									this.hooks.compilation.tap("TestCasesTest", (compilation) => {
+								function testCasesTest(/** @type {import("../").Compiler} */ this) {
+									this.hooks.compilation.tap("TestCasesTest", (/** @type {EXPECTED_ANY} */ compilation) => {
 										for (const hook of [
 											"optimize",
 											"optimizeModules",
@@ -223,17 +258,18 @@ const describeCases = (config) => {
 								debug: true,
 								console: createLogger(infraStructureLog)
 							}
-						};
+						});
 
 						beforeAll((done) => {
 							rimraf(cacheDirectory, done);
 						});
 
+						/** @type {(() => void)[]} */
 						const cleanups = [];
 
 						afterAll(() => {
-							options = undefined;
-							testConfig = undefined;
+							options = /** @type {EXPECTED_ANY} */ (undefined);
+							testConfig = /** @type {EXPECTED_ANY} */ (undefined);
 							for (const fn of cleanups) fn();
 						});
 
@@ -241,9 +277,10 @@ const describeCases = (config) => {
 							it(
 								`${testName} should pre-compile to fill disk cache (1st)`,
 								(done) => {
-									const oldPath = options.output.path;
-									options.output.path = path.join(
-										options.output.path,
+									const output = /** @type {EXPECTED_ANY} */ (options.output);
+									const oldPath = output.path;
+									output.path = path.join(
+										/** @type {string} */ (output.path),
 										"cache1"
 									);
 									infraStructureLog.length = 0;
@@ -253,7 +290,7 @@ const describeCases = (config) => {
 
 									webpack(options, (err) => {
 										deprecationTracker();
-										options.output.path = oldPath;
+										output.path = oldPath;
 										if (err) return done(err);
 										const infrastructureLogErrors = filterInfraStructureErrors(
 											infraStructureLog,
@@ -285,9 +322,10 @@ const describeCases = (config) => {
 							it(
 								`${testName} should pre-compile to fill disk cache (2nd)`,
 								(done) => {
-									const oldPath = options.output.path;
-									options.output.path = path.join(
-										options.output.path,
+									const output2 = /** @type {EXPECTED_ANY} */ (options.output);
+									const oldPath = output2.path;
+									output2.path = path.join(
+										/** @type {string} */ (output2.path),
 										"cache2"
 									);
 									infraStructureLog.length = 0;
@@ -297,7 +335,7 @@ const describeCases = (config) => {
 
 									webpack(options, (err) => {
 										deprecationTracker();
-										options.output.path = oldPath;
+										output2.path = oldPath;
 										if (err) return done(err);
 										const infrastructureLogErrors = filterInfraStructureErrors(
 											infraStructureLog,
@@ -337,7 +375,8 @@ const describeCases = (config) => {
 								const compiler = webpack(options);
 								const run = () => {
 									const deprecationTracker = deprecationTracking.start();
-									compiler.run((err, stats) => {
+									compiler.run((err, _stats) => {
+										const stats = /** @type {import("../").Stats} */ (_stats);
 										const deprecations = deprecationTracker();
 										if (err) return done(err);
 										const infrastructureLogErrors = filterInfraStructureErrors(
@@ -453,10 +492,10 @@ const describeCases = (config) => {
 									if (testConfig.moduleScope) {
 										testConfig.moduleScope(runner._moduleScope, options);
 									}
-									runner.require.webpackTestSuiteRequire = true;
+									(/** @type {EXPECTED_ANY} */ (runner.require)).webpackTestSuiteRequire = true;
 								},
 								getBundlePaths: (i, options) =>
-									testConfig.findBundle(i, options)
+									/** @type {NonNullable<TestConfig["findBundle"]>} */ (testConfig.findBundle)(i, options)
 							});
 							Promise.all(results).then(() => {
 								if (getNumberOfTests() === 0) {

@@ -8,7 +8,7 @@ const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
 const captureStdio = require("./helpers/captureStdio");
 
-const createMultiCompiler = (progressOptions, configOptions) => {
+const createMultiCompiler = (/** @type {Record<string, unknown> | undefined} */ progressOptions = undefined, /** @type {Record<string, unknown> | undefined} */ configOptions = undefined) => {
 	const compiler = webpack(
 		Object.assign(
 			[
@@ -24,14 +24,14 @@ const createMultiCompiler = (progressOptions, configOptions) => {
 			configOptions
 		)
 	);
-	compiler.outputFileSystem = createFsFromVolume(new Volume());
+	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (/** @type {unknown} */ (createFsFromVolume(new Volume())));
 
 	new webpack.ProgressPlugin(progressOptions).apply(compiler);
 
 	return compiler;
 };
 
-const createSimpleCompiler = (progressOptions) => {
+const createSimpleCompiler = (/** @type {Record<string, unknown> | undefined} */ progressOptions = undefined) => {
 	const compiler = webpack({
 		context: path.join(__dirname, "fixtures"),
 		entry: "./a.js",
@@ -46,18 +46,18 @@ const createSimpleCompiler = (progressOptions) => {
 		]
 	});
 
-	compiler.outputFileSystem = createFsFromVolume(new Volume());
+	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (/** @type {unknown} */ (createFsFromVolume(new Volume())));
 
 	return compiler;
 };
 
-const createSimpleCompilerWithCustomHandler = (options) => {
+const createSimpleCompilerWithCustomHandler = (/** @type {Record<string, unknown> | undefined} */ options = undefined) => {
 	const compiler = webpack({
 		context: path.join(__dirname, "fixtures"),
 		entry: "./a.js"
 	});
 
-	compiler.outputFileSystem = createFsFromVolume(new Volume());
+	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (/** @type {unknown} */ (createFsFromVolume(new Volume())));
 	const logger = compiler.getInfrastructureLogger("custom test logger");
 	new webpack.ProgressPlugin({
 		activeModules: true,
@@ -68,21 +68,25 @@ const createSimpleCompilerWithCustomHandler = (options) => {
 	return compiler;
 };
 
-const getLogs = (logsStr) => logsStr.split(/\r/).filter((v) => v !== " ");
+const getLogs = (/** @type {string} */ logsStr) => logsStr.split(/\r/).filter((/** @type {string} */ v) => v !== " ");
 
-const runCompilerAsync = (compiler) =>
+const runCompilerAsync = (/** @type {import("../").Compiler | import("../").MultiCompiler} */ compiler) =>
 	new Promise((resolve, reject) => {
-		compiler.run((err) => {
+		compiler.run((/** @type {Error | null} */ err) => {
 			if (err) {
 				reject(err);
 			} else {
-				resolve();
+				resolve(undefined);
 			}
 		});
 	});
 
+/** @typedef {{ toString(): string, toStringRaw(): string, restore(): void, data: string[], reset(): void }} CapturedStdio */
+
 describe("ProgressPlugin", () => {
+	/** @type {CapturedStdio} */
 	let stderr;
+	/** @type {CapturedStdio} */
 	let stdout;
 
 	beforeEach(() => {
@@ -97,7 +101,7 @@ describe("ProgressPlugin", () => {
 		stdout && stdout.restore();
 	});
 
-	const nanTest = (createCompiler) => () => {
+	const nanTest = (/** @type {Function} */ createCompiler) => () => {
 		const compiler = createCompiler();
 
 		return runCompilerAsync(compiler).then(() => {
@@ -162,10 +166,11 @@ describe("ProgressPlugin", () => {
 		});
 	});
 
-	const monotonicTest = (createCompiler) => () => {
+	const monotonicTest = (/** @type {Function} */ createCompiler) => () => {
+		/** @type {{ value: number, text: string }[]} */
 		const handlerCalls = [];
 		const compiler = createCompiler({
-			handler: (p, ...args) => {
+			handler: (/** @type {number} */ p, /** @type {string[]} */ ...args) => {
 				handlerCalls.push({ value: p, text: `${p}% ${args.join(" ")}` });
 			}
 		});
@@ -195,7 +200,7 @@ describe("ProgressPlugin", () => {
 
 	it(
 		"should have monotonic increasing progress (multi compiler, parallelism)",
-		monotonicTest((o) => createMultiCompiler(o, { parallelism: 1 }))
+		monotonicTest((/** @type {Record<string, unknown>} */ o) => createMultiCompiler(o, { parallelism: 1 }))
 	);
 
 	it("should not print lines longer than stderr.columns", () => {
@@ -210,7 +215,7 @@ describe("ProgressPlugin", () => {
 				expect(log.length).toBeLessThanOrEqual(35);
 			}
 			// cspell:ignore mization nsPlugin
-			expect(logs).toContain(
+			/** @type {EXPECTED_ANY} */ (expect(logs)).toContain(
 				"75% sealing ...mization ...nsPlugin",
 				"trims each detail string equally"
 			);
@@ -222,19 +227,19 @@ describe("ProgressPlugin", () => {
 	it("should handle when stderr.columns is undefined", () => {
 		const compiler = createSimpleCompiler();
 
-		process.stderr.columns = undefined;
+		/** @type {EXPECTED_ANY} */ (process.stderr).columns = undefined;
 		return runCompilerAsync(compiler).then(() => {
 			const logs = getLogs(stderr.toString());
 
 			expect(logs.length).toBeGreaterThan(20);
-			expect(_.maxBy(logs, "length").length).not.toBeGreaterThan(40);
+			expect(/** @type {string} */ (_.maxBy(logs, "length")).length).not.toBeGreaterThan(40);
 		});
 	});
 
 	it("should contain the new compiler hooks", () => {
 		const compiler = createSimpleCompiler();
 
-		process.stderr.columns = undefined;
+		/** @type {EXPECTED_ANY} */ (process.stderr).columns = undefined;
 		return runCompilerAsync(compiler).then(() => {
 			const logs = getLogs(stderr.toString());
 

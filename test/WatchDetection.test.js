@@ -81,14 +81,17 @@ describe("WatchDetection", () => {
 						filename: "bundle.js"
 					}
 				});
-				const memfs = (compiler.outputFileSystem = createFsFromVolume(
-					new Volume()
-				));
+				const memfs = (compiler.outputFileSystem =
+					/** @type {import("../").OutputFileSystem & import("memfs").IFs} */ (
+						/** @type {unknown} */ (createFsFromVolume(new Volume()))
+					));
+				/** @type {(() => void) | null | undefined} */
 				let onChange;
 				compiler.hooks.done.tap("WatchDetectionTest", () => {
 					if (onChange) onChange();
 				});
 
+				/** @type {import("../").Watching} */
 				let watcher;
 
 				step1();
@@ -109,12 +112,15 @@ describe("WatchDetection", () => {
 						}
 					};
 
-					watcher = compiler.watch(
-						{
-							aggregateTimeout: 50
-						},
-						() => {}
-					);
+					watcher =
+						/** @type {import("../").Watching} */ (
+							compiler.watch(
+								{
+									aggregateTimeout: 50
+								},
+								() => {}
+							)
+						);
 				}
 
 				/**

@@ -31,70 +31,117 @@ const cvTypes = (src) => parseAListOfComponentValues(src).map((n) => n.type);
  * @param {string} src css source
  * @returns {number} the first token's type
  */
-const firstTokenType = (src) => readToken(src, 0, {}).type;
+const firstTokenType = (src) =>
+	/** @type {import("../lib/css/walkCssTokens").MutableToken} */ (
+		readToken(
+			src,
+			0,
+			/** @type {import("../lib/css/walkCssTokens").MutableToken} */ ({})
+		)
+	).type;
 
 describe("walkCssTokens — component values (tokenToNode)", () => {
 	it("classifies each leaf token type", () => {
-		expect(parseAComponentValue("123").type).toBe(NodeType.Number);
-		expect(parseAComponentValue("50%").type).toBe(NodeType.Percentage);
-		expect(parseAComponentValue("10px").type).toBe(NodeType.Dimension);
-		expect(parseAComponentValue("#id").type).toBe(NodeType.Hash);
-		expect(parseAComponentValue('"ab"').type).toBe(NodeType.String);
-		expect(parseAComponentValue("url(a.png)").type).toBe(NodeType.Url);
-		expect(parseAComponentValue("foo(1)").type).toBe(NodeType.Function);
-		expect(parseAComponentValue("[a]").type).toBe(NodeType.SimpleBlock);
-		expect(parseAComponentValue("(a)").type).toBe(NodeType.SimpleBlock);
-		expect(parseAComponentValue("{a}").type).toBe(NodeType.SimpleBlock);
-		expect(parseAComponentValue("+").type).toBe(NodeType.Delim);
-		expect(parseAComponentValue(":").type).toBe(NodeType.Colon);
-		expect(parseAComponentValue(",").type).toBe(NodeType.Comma);
-		expect(parseAComponentValue(";").type).toBe(NodeType.Semicolon);
-		expect(parseAComponentValue("foo").type).toBe(NodeType.Ident);
-		expect(parseAComponentValue(".5").type).toBe(NodeType.Number);
-		expect(parseAComponentValue("@media").type).toBe(NodeType.AtKeyword);
+		/** @param {string} s @returns {import("../lib/css/walkCssTokens").ComponentValue} */
+		const cv = (s) =>
+			/** @type {import("../lib/css/walkCssTokens").ComponentValue} */ (
+				parseAComponentValue(s)
+			);
+		expect(cv("123").type).toBe(NodeType.Number);
+		expect(cv("50%").type).toBe(NodeType.Percentage);
+		expect(cv("10px").type).toBe(NodeType.Dimension);
+		expect(cv("#id").type).toBe(NodeType.Hash);
+		expect(cv('"ab"').type).toBe(NodeType.String);
+		expect(cv("url(a.png)").type).toBe(NodeType.Url);
+		expect(cv("foo(1)").type).toBe(NodeType.Function);
+		expect(cv("[a]").type).toBe(NodeType.SimpleBlock);
+		expect(cv("(a)").type).toBe(NodeType.SimpleBlock);
+		expect(cv("{a}").type).toBe(NodeType.SimpleBlock);
+		expect(cv("+").type).toBe(NodeType.Delim);
+		expect(cv(":").type).toBe(NodeType.Colon);
+		expect(cv(",").type).toBe(NodeType.Comma);
+		expect(cv(";").type).toBe(NodeType.Semicolon);
+		expect(cv("foo").type).toBe(NodeType.Ident);
+		expect(cv(".5").type).toBe(NodeType.Number);
+		expect(cv("@media").type).toBe(NodeType.AtKeyword);
 	});
 
 	it("decodes numeric token metadata", () => {
-		const int = parseAComponentValue("123");
+		/** @param {string} s @returns {import("../lib/css/walkCssTokens").NumberToken} */
+		const num = (s) =>
+			/** @type {import("../lib/css/walkCssTokens").NumberToken} */ (
+				parseAComponentValue(s)
+			);
+		const int = num("123");
 		expect([int.numericValue, int.typeFlag, int.sign]).toEqual([
 			123,
 			"integer",
 			""
 		]);
-		const signed = parseAComponentValue("+1.5");
+		const signed = num("+1.5");
 		expect([signed.numericValue, signed.typeFlag, signed.sign]).toEqual([
 			1.5,
 			"number",
 			"+"
 		]);
-		expect(parseAComponentValue("-2").sign).toBe("-");
-		expect(parseAComponentValue("1e3").typeFlag).toBe("number");
+		expect(num("-2").sign).toBe("-");
+		expect(num("1e3").typeFlag).toBe("number");
 	});
 
 	it("decodes percentage and dimension metadata", () => {
-		const pct = parseAComponentValue("-50%");
+		const pct =
+			/** @type {import("../lib/css/walkCssTokens").PercentageToken} */ (
+				parseAComponentValue("-50%")
+			);
 		expect([pct.numericValue, pct.sign]).toEqual([-50, "-"]);
-		const dim = parseAComponentValue("10px");
+		const dim =
+			/** @type {import("../lib/css/walkCssTokens").DimensionToken} */ (
+				parseAComponentValue("10px")
+			);
 		expect([dim.numericValue, dim.unit, dim.typeFlag]).toEqual([
 			10,
 			"px",
 			"integer"
 		]);
-		expect(parseAComponentValue("1.5EM").unit).toBe("em");
+		expect(
+			/** @type {import("../lib/css/walkCssTokens").DimensionToken} */ (
+				parseAComponentValue("1.5EM")
+			).unit
+		).toBe("em");
 	});
 
 	it("decodes hash id vs unrestricted and url content", () => {
-		expect(parseAComponentValue("#id").typeFlag).toBe("id");
-		expect(parseAComponentValue("#123").typeFlag).toBe("unrestricted");
-		const url = parseAComponentValue("url(a.png)");
+		expect(
+			/** @type {import("../lib/css/walkCssTokens").HashToken} */ (
+				parseAComponentValue("#id")
+			).typeFlag
+		).toBe("id");
+		expect(
+			/** @type {import("../lib/css/walkCssTokens").HashToken} */ (
+				parseAComponentValue("#123")
+			).typeFlag
+		).toBe("unrestricted");
+		const url =
+			/** @type {import("../lib/css/walkCssTokens").UrlToken} */ (
+				parseAComponentValue("url(a.png)")
+			);
 		expect(url.value).toBe("a.png");
 		expect("a.png").toHaveLength(url.contentEnd - url.contentStart);
 	});
 
 	it("exposes function name and nested values", () => {
-		const fn = parseAComponentValue("calc(1 + 2)");
+		const fn =
+			/** @type {import("../lib/css/walkCssTokens").FunctionNode} */ (
+				parseAComponentValue("calc(1 + 2)")
+			);
 		expect(fn.name).toBe("calc");
-		expect(fn.value.some((c) => c.type === NodeType.Number)).toBe(true);
+		expect(
+			fn.value.some(
+				/** @param {import("../lib/css/walkCssTokens").ComponentValue} c */ (
+					c
+				) => c.type === NodeType.Number
+			)
+		).toBe(true);
 	});
 
 	it("preserves stray closers, CDO and CDC as component values", () => {
@@ -118,11 +165,18 @@ describe("walkCssTokens — component values (tokenToNode)", () => {
 
 describe("walkCssTokens — parser entry points", () => {
 	it("parseADeclaration parses name, value and !important", () => {
-		const d = parseADeclaration("color: red");
+		const d =
+			/** @type {import("../lib/css/walkCssTokens").Declaration} */ (
+				parseADeclaration("color: red")
+			);
 		expect(d.name).toBe("color");
 		expect(d.important).toBe(false);
 		expect(d.value.length).toBeGreaterThan(0);
-		expect(parseADeclaration("color: red !important").important).toBe(true);
+		expect(
+			/** @type {import("../lib/css/walkCssTokens").Declaration} */ (
+				parseADeclaration("color: red !important")
+			).important
+		).toBe(true);
 		expect(parseADeclaration("123")).toBeUndefined();
 		expect(parseADeclaration("color red")).toBeUndefined();
 		expect(parseADeclaration("color")).toBeUndefined();
@@ -131,10 +185,16 @@ describe("walkCssTokens — parser entry points", () => {
 	});
 
 	it("parseARule parses qualified rules and at-rules", () => {
-		const qr = parseARule("a { color: red }");
+		const qr =
+			/** @type {import("../lib/css/walkCssTokens").QualifiedRule} */ (
+				parseARule("a { color: red }")
+			);
 		expect(qr.type).toBe(NodeType.QualifiedRule);
 		expect(qr.declarations).toHaveLength(1);
-		const at = parseARule('@import "x";');
+		const at =
+			/** @type {import("../lib/css/walkCssTokens").AtRule} */ (
+				parseARule('@import "x";')
+			);
 		expect(at.type).toBe(NodeType.AtRule);
 		expect(at.name).toBe("import");
 		expect(at.declarations).toBeNull();
@@ -151,7 +211,11 @@ describe("walkCssTokens — parser entry points", () => {
 		expect(parseAComponentValue("")).toBeUndefined();
 		expect(parseAComponentValue("   ")).toBeUndefined();
 		expect(parseAComponentValue("a b")).toBeUndefined();
-		expect(parseAComponentValue("  a  ").type).toBe(NodeType.Ident);
+		expect(
+			/** @type {import("../lib/css/walkCssTokens").ComponentValue} */ (
+				parseAComponentValue("  a  ")
+			).type
+		).toBe(NodeType.Ident);
 	});
 
 	it("parseAListOfComponentValues keeps whitespace and all values", () => {
@@ -184,10 +248,18 @@ describe("walkCssTokens — parser entry points", () => {
 			NodeType.AtRule,
 			NodeType.QualifiedRule
 		]);
-		expect(ss.rules[0].name).toBe("media");
-		expect(ss.rules[0].childRules.map((r) => r.type)).toEqual([
-			NodeType.QualifiedRule
-		]);
+		expect(
+			/** @type {import("../lib/css/walkCssTokens").AtRule} */ (
+				ss.rules[0]
+			).name
+		).toBe("media");
+		expect(
+			/** @type {import("../lib/css/walkCssTokens").Rule[]} */ (
+				/** @type {import("../lib/css/walkCssTokens").AtRule} */ (
+					ss.rules[0]
+				).childRules
+			).map((r) => r.type)
+		).toEqual([NodeType.QualifiedRule]);
 		expect([ss.start, ss.end]).toEqual([0, src.length]);
 	});
 
@@ -206,23 +278,39 @@ describe("walkCssTokens — parser entry points", () => {
 
 describe("walkCssTokens — Node / Token", () => {
 	it("exposes range, loc and toString over the source", () => {
-		const decl = parseADeclaration("color: red");
+		const decl =
+			/** @type {import("../lib/css/walkCssTokens").Declaration} */ (
+				parseADeclaration("color: red")
+			);
 		expect(decl).toBeInstanceOf(Node);
 		expect(decl.range).toEqual([decl.start, decl.end]);
 		expect(decl.toString()).toBe("color: red");
 	});
 
 	it("computes 1-based line / 0-based column via loc", () => {
+		/** @type {{ start: { line: number, column: number }, end: { line: number, column: number } } | undefined} */
 		let loc;
 		new SourceProcessor()
-			.use({ [NodeType.Declaration]: (n) => (loc = n.loc) })
+			.use({
+				[NodeType.Declaration]: (/** @type {import("../lib/css/walkCssTokens").Node} */ n) =>
+					(loc = n.loc)
+			})
 			.process("a{\n  color: red\n}");
-		expect(loc.start).toEqual({ line: 2, column: 2 });
-		expect(loc.end).toEqual({ line: 3, column: 0 });
+		expect(/** @type {NonNullable<typeof loc>} */ (loc).start).toEqual({
+			line: 2,
+			column: 2
+		});
+		expect(/** @type {NonNullable<typeof loc>} */ (loc).end).toEqual({
+			line: 3,
+			column: 0
+		});
 	});
 
 	it("lazily computes a token's value once", () => {
-		const ident = parseAComponentValue("foo");
+		const ident =
+			/** @type {import("../lib/css/walkCssTokens").Token} */ (
+				parseAComponentValue("foo")
+			);
 		expect(ident).toBeInstanceOf(Token);
 		expect(ident.value).toBe("foo");
 		expect(ident.value).toBe("foo");
@@ -231,24 +319,34 @@ describe("walkCssTokens — Node / Token", () => {
 
 describe("walkCssTokens — SourceProcessor", () => {
 	it("fires enter / exit visitors in source order", () => {
+		/** @type {string[]} */
 		const log = [];
 		new SourceProcessor()
-			.use({
-				[NodeType.QualifiedRule]: {
-					enter: () => log.push("enter"),
-					exit: () => log.push("exit")
-				},
-				[NodeType.Declaration]: (n) => log.push(`decl:${n.name}`)
-			})
+			.use(
+				/** @type {import("../lib/css/walkCssTokens").VisitorMap} */ ({
+					[NodeType.QualifiedRule]: {
+						enter: () => log.push("enter"),
+						exit: () => log.push("exit")
+					},
+					[NodeType.Declaration]: (
+						/** @type {import("../lib/css/walkCssTokens").Declaration} */ n
+					) => log.push(`decl:${n.name}`)
+				})
+			)
 			.process("a{color:red;width:1px}");
 		expect(log).toEqual(["enter", "decl:color", "decl:width", "exit"]);
 	});
 
 	it("ctx.skipChildren() stops descent into a node", () => {
+		/** @type {string[]} */
 		const log = [];
 		new SourceProcessor()
 			.use({
-				[NodeType.QualifiedRule]: (n, p, ctx) => {
+				[NodeType.QualifiedRule]: (
+					/** @type {import("../lib/css/walkCssTokens").Node} */ n,
+					/** @type {import("../lib/css/walkCssTokens").Node | null} */ p,
+					/** @type {import("../lib/css/walkCssTokens").VisitorContext} */ ctx
+				) => {
 					log.push("qr");
 					ctx.skipChildren();
 				},
@@ -259,7 +357,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 	});
 
 	it("recurseBlocks: false stops at top-level rules", () => {
-		const count = (recurseBlocks) => {
+		const count = (/** @type {boolean} */ recurseBlocks) => {
 			let n = 0;
 			new SourceProcessor()
 				.use({ [NodeType.QualifiedRule]: () => n++ })
@@ -271,9 +369,16 @@ describe("walkCssTokens — SourceProcessor", () => {
 	});
 
 	it("walks declarations inside at-rule blocks", () => {
+		/** @type {string[]} */
 		const names = [];
 		new SourceProcessor()
-			.use({ [NodeType.Declaration]: (n) => names.push(n.name) })
+			.use(
+				/** @type {import("../lib/css/walkCssTokens").VisitorMap} */ ({
+					[NodeType.Declaration]: (
+						/** @type {import("../lib/css/walkCssTokens").Declaration} */ n
+					) => names.push(n.name)
+				})
+			)
 			.process("@font-face{font-family:x;src:url(y)}");
 		expect(names).toEqual(["font-family", "src"]);
 	});
@@ -290,6 +395,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 	});
 
 	it("forwards the comment callback", () => {
+		/** @type {string[]} */
 		const seen = [];
 		new SourceProcessor()
 			.use({ [NodeType.Declaration]: () => {} })
@@ -398,8 +504,20 @@ describe("walkCssTokens — tokenizer edge cases", () => {
 
 	it("readToken returns undefined once the input is fully consumed", () => {
 		// "a" is a single 1-char ident token; reading past it (offset 1) is EOF.
-		expect(readToken("a", 0, {})).toBeDefined();
-		expect(readToken("a", 1, {})).toBeUndefined();
+		expect(
+			readToken(
+				"a",
+				0,
+				/** @type {import("../lib/css/walkCssTokens").MutableToken} */ ({})
+			)
+		).toBeDefined();
+		expect(
+			readToken(
+				"a",
+				1,
+				/** @type {import("../lib/css/walkCssTokens").MutableToken} */ ({})
+			)
+		).toBeUndefined();
 	});
 
 	it("turns a newline inside a string into a bad-string token", () => {

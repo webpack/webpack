@@ -59,7 +59,12 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		expect(interpolate("[chunkhash]", data)).toBe("1122334455");
 		expect(interpolate("[contenthash:4]", data)).toBe("9988");
 		// chunk name falls back to id when unnamed
-		expect(interpolate("[name]", { chunk: { id: "9" } })).toBe("9");
+		expect(
+			interpolate(
+				"[name]",
+				/** @type {EXPECTED_ANY} */ ({ chunk: { id: "9" } })
+			)
+		).toBe("9");
 	});
 
 	it("interpolates module placeholders incl. legacy aliases", () => {
@@ -81,7 +86,12 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		expect(interpolate("[url]", { url: "u" })).toBe("u");
 		expect(interpolate("[runtime]", { runtime: "main" })).toBe("main");
 		// non-string runtime collapses to "_"
-		expect(interpolate("[runtime]", { runtime: ["a", "b"] })).toBe("_");
+		expect(
+			interpolate(
+				"[runtime]",
+				/** @type {EXPECTED_ANY} */ ({ runtime: ["a", "b"] })
+			)
+		).toBe("_");
 	});
 
 	it("unescapes bracket-escaped placeholders", () => {

@@ -4,6 +4,7 @@ require("./helpers/warmup-webpack");
 
 const path = require("path");
 const fs = require("graceful-fs");
+// @ts-ignore
 const rimraf = require("rimraf");
 const webpack = require("..");
 const { registerPerCaseSnapshotHooks } = require("./harness/snapshot");
@@ -37,8 +38,11 @@ const tests = fs
 		return true;
 	});
 
+/** @typedef {{ toString(): string, toStringRaw(): string, restore(): void, data: string[], reset(): void }} CapturedStdio */
+
 describe("StatsTestCases", () => {
 	jest.setTimeout(30000);
+	/** @type {CapturedStdio} */
 	let stderr;
 
 	beforeEach(() => {
@@ -60,6 +64,7 @@ describe("StatsTestCases", () => {
 				const outputDirectory = path.join(outputBase, testName);
 				rimraf.sync(outputDirectory);
 				fs.mkdirSync(outputDirectory, { recursive: true });
+				/** @type {import("../").Configuration} */
 				let options = {
 					mode: "development",
 					entry: "./index",
@@ -104,27 +109,28 @@ describe("StatsTestCases", () => {
 					}
 				}
 				const c = webpack(options);
-				const compilers = c.compilers ? c.compilers : [c];
+				const cAny = /** @type {EXPECTED_ANY} */ (c);
+				const compilers = /** @type {import("../").Compiler[]} */ (cAny.compilers ? cAny.compilers : [c]);
 				for (const c of compilers) {
-					const ifs = c.inputFileSystem;
+					const ifs = /** @type {NonNullable<typeof c.inputFileSystem>} */ (c.inputFileSystem);
 					c.inputFileSystem = Object.create(ifs);
-					c.inputFileSystem.readFile = function readFile() {
+					/** @type {NonNullable<typeof c.inputFileSystem>} */ (c.inputFileSystem).readFile = function readFile() {
 						// eslint-disable-next-line prefer-rest-params
 						const args = Array.prototype.slice.call(arguments);
 						const callback = args.pop();
 						// eslint-disable-next-line no-useless-call
-						ifs.readFile.apply(ifs, [
+						/** @type {NonNullable<typeof ifs>} */ (ifs).readFile.apply(ifs, [
 							...args,
-							(err, result) => {
+							(/** @type {Error | null} */ err, /** @type {Buffer | undefined} */ result) => {
 								if (err) return callback(err);
 								if (!/\.(?:js|json|txt)$/.test(args[0])) {
 									return callback(null, result);
 								}
-								callback(null, result.toString("utf8").replace(/\r/g, ""));
+								callback(null, /** @type {Buffer} */ (result).toString("utf8").replace(/\r/g, ""));
 							}
 						]);
 					};
-					c.hooks.compilation.tap("StatsTestCasesTest", (compilation) => {
+					c.hooks.compilation.tap("StatsTestCasesTest", (/** @type {import("../").Compilation} */ compilation) => {
 						for (const hook of [
 							"optimize",
 							"optimizeModules",
@@ -133,17 +139,19 @@ describe("StatsTestCases", () => {
 							"afterOptimizeAssets",
 							"beforeHash"
 						]) {
-							compilation.hooks[hook].tap("TestCasesTest", () =>
+							/** @type {Record<string, EXPECTED_ANY>} */ (compilation.hooks)[hook].tap("TestCasesTest", () =>
 								compilation.checkConstraints()
 							);
 						}
 					});
 				}
-				c.run((err, stats) => {
+				c.run((err, _stats) => {
 					if (err) return done(err);
-					for (const compilation of [
-						...(stats.stats ? stats.stats : [stats])
-					].map((s) => s.compilation)) {
+					const stats = /** @type {import("../").Stats} */ (_stats);
+					const statsAny = /** @type {EXPECTED_ANY} */ (stats);
+					for (const compilation of /** @type {import("../").Compilation[]} */ ([
+						...(statsAny.stats ? statsAny.stats : [stats])
+					].map((/** @type {EXPECTED_ANY} */ s) => s.compilation))) {
 						compilation.logging.delete("webpack.Compilation.ModuleProfile");
 					}
 					expect(stats.hasErrors()).toBe(testName.endsWith("error"));

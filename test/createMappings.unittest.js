@@ -16,7 +16,7 @@ describe("encodeVLQ", () => {
 
 	for (const [input, expected] of cases) {
 		it(`encodes ${input} -> ${expected}`, () => {
-			expect(encodeVLQ(input)).toBe(expected);
+			expect(encodeVLQ(/** @type {number} */ (input))).toBe(expected);
 		});
 	}
 });

@@ -35,6 +35,7 @@ const {
 // Snapshot uses the spec-style kebab-case names for multi-word token types;
 // the tokenizer emits numeric `TT_*` values. Map between them so the existing
 // snapshot files stay valid.
+/** @type {Record<number, string>} */
 const TYPE_TO_PRINTED = {
 	[TT_WHITESPACE]: "whitespace",
 	[TT_COMMENT]: "comment",
@@ -79,7 +80,7 @@ describe("readToken", () => {
 			// Drive the lexer core directly: a fresh `out` per call collects the
 			// raw token list (comments included); `readToken` returns undefined at EOF.
 			for (let pos = 0; ; ) {
-				const t = readToken(code, pos, {});
+				const t = readToken(code, pos, /** @type {import("../lib/css/walkCssTokens").MutableToken} */ ({}));
 				if (t === undefined) break;
 				pos = t.end;
 				const printed = TYPE_TO_PRINTED[t.type] || t.type;
@@ -111,7 +112,7 @@ describe("readToken", () => {
 const tokenRoundtrip = (input) => {
 	let out = "";
 	for (let pos = 0; ; ) {
-		const t = readToken(input, pos, {});
+		const t = readToken(input, pos, /** @type {import("../lib/css/walkCssTokens").MutableToken} */ ({}));
 		if (t === undefined) break;
 		pos = t.end;
 		out += input.slice(t.start, t.end);

@@ -3,8 +3,9 @@
 require("./helpers/warmup-webpack");
 
 describe("Validation", () => {
-	const createTestCase = (name, config, fn, only) => {
+	const createTestCase = (/** @type {string} */ name, /** @type {EXPECTED_ANY} */ config, /** @type {(msg: string) => void} */ fn, /** @type {unknown} */ only = undefined) => {
 		it(`should fail validation for ${name}`, () => {
+			/** @type {Error | undefined} */
 			let errored;
 
 			try {
@@ -12,9 +13,9 @@ describe("Validation", () => {
 
 				webpack(config);
 			} catch (err) {
-				if (err.name !== "ValidationError") throw err;
-				errored = err;
-				fn(err.message);
+				if (/** @type {EXPECTED_ANY} */ (err).name !== "ValidationError") throw err;
+				errored = /** @type {Error} */ (err);
+				fn(/** @type {Error} */ (err).message);
 
 				return;
 			}
@@ -27,8 +28,9 @@ describe("Validation", () => {
 		});
 	};
 
-	const createTestCaseOnlyValidate = (name, config, fn) => {
+	const createTestCaseOnlyValidate = (/** @type {string} */ name, /** @type {EXPECTED_ANY} */ config, /** @type {(msg: string) => void} */ fn) => {
 		it(`should fail validation for ${name}`, () => {
+			/** @type {Error | undefined} */
 			let errored;
 
 			try {
@@ -36,9 +38,9 @@ describe("Validation", () => {
 
 				webpack.validate(config);
 			} catch (err) {
-				if (err.name !== "ValidationError") throw err;
-				errored = err;
-				fn(err.message);
+				if (/** @type {EXPECTED_ANY} */ (err).name !== "ValidationError") throw err;
+				errored = /** @type {Error} */ (err);
+				fn(/** @type {Error} */ (err).message);
 
 				return;
 			}
@@ -51,7 +53,7 @@ describe("Validation", () => {
 		});
 	};
 
-	const createTestCaseWithoutError = (name, config) => {
+	const createTestCaseWithoutError = (/** @type {string} */ name, /** @type {EXPECTED_ANY} */ config) => {
 		it(`should success validation for ${name}`, () => {
 			let errored;
 
@@ -60,8 +62,8 @@ describe("Validation", () => {
 
 				webpack(config);
 			} catch (err) {
-				if (err.name === "ValidationError") {
-					throw new Error("Validation didn't success", { cause: err });
+				if (/** @type {EXPECTED_ANY} */ (err).name === "ValidationError") {
+					throw new Error("Validation didn't success", { cause: /** @type {Error} */ (err) });
 				}
 
 				errored = err;

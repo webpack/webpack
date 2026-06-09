@@ -6,9 +6,13 @@ const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
 
+/**
+ * @param {import("../").MultiCompilerOptions=} options options
+ * @returns {import("../").MultiCompiler} compiler
+ */
 const createMultiCompiler = (options) => {
-	const compiler = webpack(
-		Object.assign(
+	const compiler = /** @type {import("../").MultiCompiler} */ (webpack(
+		/** @type {import("../").MultiConfiguration} */ (Object.assign(
 			[
 				{
 					name: "a",
@@ -22,12 +26,12 @@ const createMultiCompiler = (options) => {
 				}
 			],
 			options
-		)
-	);
-	compiler.outputFileSystem = createFsFromVolume(new Volume());
-	compiler.watchFileSystem = {
-		watch(_a, _b, _c, _d, _e, _f, _g) {}
-	};
+		))
+	));
+	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (/** @type {unknown} */ (createFsFromVolume(new Volume())));
+	compiler.watchFileSystem = /** @type {import("../lib/util/fs").WatchFileSystem} */ ({
+		watch: (_a, _b, _c, _d, _e, _f, _g) => /** @type {import("../lib/util/fs").Watcher} */ (/** @type {unknown} */ (undefined))
+	});
 	return compiler;
 };
 
@@ -51,7 +55,7 @@ describe("MultiCompiler", () => {
 		let called = 0;
 
 		compiler.hooks.watchRun.tap("MultiCompiler test", () => called++);
-		compiler.watch(1000, (err) => {
+		compiler.watch(/** @type {import("../declarations/WebpackOptions").WatchOptions} */ (/** @type {unknown} */ (1000)), (err) => {
 			if (err) {
 				throw err;
 			}
@@ -109,7 +113,7 @@ describe("MultiCompiler", () => {
 	});
 
 	it("should not be running twice at a time (instance cb)", (done) => {
-		const compiler = webpack(
+		const compiler = /** @type {import("../").Compiler} */ (webpack(
 			{
 				context: __dirname,
 				mode: "production",
@@ -120,8 +124,8 @@ describe("MultiCompiler", () => {
 				}
 			},
 			() => {}
-		);
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		));
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (/** @type {unknown} */ (createFsFromVolume(new Volume())));
 		compiler.run((err, _stats) => {
 			if (err) {
 				compiler.close(done);
@@ -145,10 +149,10 @@ describe("MultiCompiler", () => {
 		const compiler = createMultiCompiler();
 		compiler.run((err, stats) => {
 			if (err) return done(err);
-			for (const childStats of stats.stats) {
+			for (const childStats of /** @type {import("../").MultiStats} */ (stats).stats) {
 				const compilation = childStats.compilation;
 				// codeGenerationResults: only used during seal/emit, dropped.
-				expect(compilation.codeGenerationResults.map.size).toBe(0);
+				expect(/** @type {import("../").CodeGenerationResults} */ (compilation.codeGenerationResults).map.size).toBe(0);
 				// Stats must still be usable on the slimmed compilation.
 				expect(typeof childStats.toJson().hash).toBe("string");
 			}
@@ -157,8 +161,8 @@ describe("MultiCompiler", () => {
 	});
 
 	it("should release a finished child's codeGenerationResults before a dependent sibling runs (#15521)", (done) => {
-		const compiler = webpack(
-			Object.assign(
+		const compiler = /** @type {import("../").MultiCompiler} */ (webpack(
+			/** @type {import("../").MultiConfiguration} */ (Object.assign(
 				[
 					{
 						name: "a",
@@ -173,11 +177,14 @@ describe("MultiCompiler", () => {
 					}
 				],
 				{ parallelism: 1 }
-			)
-		);
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
-		compiler.watchFileSystem = { watch(_a, _b, _c, _d, _e, _f, _g) {} };
+			))
+		));
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (/** @type {unknown} */ (createFsFromVolume(new Volume())));
+		compiler.watchFileSystem = /** @type {import("../lib/util/fs").WatchFileSystem} */ ({
+			watch: (_a, _b, _c, _d, _e, _f, _g) => /** @type {import("../lib/util/fs").Watcher} */ (/** @type {unknown} */ (undefined))
+		});
 		const [a, b] = compiler.compilers;
+		/** @type {import("../").Compilation | undefined} */
 		let aCompilation;
 		a.hooks.done.tap("test", (stats) => {
 			aCompilation = stats.compilation;
@@ -185,9 +192,10 @@ describe("MultiCompiler", () => {
 		// With dependencies + parallelism 1, b only starts after a is fully
 		// done (including a's afterDone release tap). Capture a's map size at
 		// that point: it must already be cleared while b is about to build.
+		/** @type {number | undefined} */
 		let aMapSizeWhenBStarts;
 		b.hooks.run.tap("test", () => {
-			aMapSizeWhenBStarts = aCompilation.codeGenerationResults.map.size;
+			aMapSizeWhenBStarts = /** @type {import("../").CodeGenerationResults} */ (/** @type {import("../").Compilation} */ (aCompilation).codeGenerationResults).map.size;
 		});
 		compiler.run((err) => {
 			if (err) return done(err);
@@ -210,9 +218,9 @@ describe("MultiCompiler", () => {
 
 	it("should run again correctly after first closed watch", (done) => {
 		const compiler = createMultiCompiler();
-		const watching = compiler.watch({}, (err, _stats) => {
+		const watching = /** @type {import("../lib/MultiWatching")} */ (/** @type {unknown} */ (compiler.watch({}, (err, _stats) => {
 			if (err) return done(err);
-		});
+		})));
 		watching.close(() => {
 			compiler.run((err, _stats) => {
 				if (err) return done(err);
@@ -223,9 +231,9 @@ describe("MultiCompiler", () => {
 
 	it("should watch again correctly after first closed watch", (done) => {
 		const compiler = createMultiCompiler();
-		const watching = compiler.watch({}, (err, _stats) => {
+		const watching = /** @type {import("../lib/MultiWatching")} */ (/** @type {unknown} */ (compiler.watch({}, (err, _stats) => {
 			if (err) return done(err);
-		});
+		})));
 		watching.close(() => {
 			compiler.watch({}, (err, _stats) => {
 				if (err) return done(err);
@@ -235,7 +243,7 @@ describe("MultiCompiler", () => {
 	});
 
 	it("should respect parallelism and dependencies for running", (done) => {
-		const compiler = createMultiCompiler({
+		const compiler = createMultiCompiler(/** @type {import("../").MultiCompilerOptions} */ ({
 			parallelism: 1,
 			2: {
 				name: "c",
@@ -253,7 +261,8 @@ describe("MultiCompiler", () => {
 				context: path.join(__dirname, "fixtures"),
 				entry: "./a.js"
 			}
-		});
+		}));
+		/** @type {string[]} */
 		const events = [];
 		for (const c of compiler.compilers) {
 			c.hooks.run.tap("test", () => {
@@ -272,8 +281,8 @@ describe("MultiCompiler", () => {
 	});
 
 	it("should respect parallelism and dependencies for watching", (done) => {
-		const compiler = webpack(
-			Object.assign(
+		const compiler = /** @type {import("../").MultiCompiler} */ (webpack(
+			/** @type {import("../").MultiConfiguration} */ (Object.assign(
 				[
 					{
 						name: "a",
@@ -296,12 +305,14 @@ describe("MultiCompiler", () => {
 					}
 				],
 				{ parallelism: 1 }
-			)
-		);
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+			))
+		));
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (/** @type {unknown} */ (createFsFromVolume(new Volume())));
+		/** @type {Function[]} */
 		const watchCallbacks = [];
+		/** @type {Function[]} */
 		const watchCallbacksUndelayed = [];
-		compiler.watchFileSystem = {
+		compiler.watchFileSystem = /** @type {import("../lib/util/fs").WatchFileSystem} */ ({
 			watch(
 				files,
 				directories,
@@ -313,8 +324,10 @@ describe("MultiCompiler", () => {
 			) {
 				watchCallbacks.push(callback);
 				watchCallbacksUndelayed.push(callbackUndelayed);
+				return /** @type {import("../lib/util/fs").Watcher} */ (/** @type {unknown} */ (undefined));
 			}
-		};
+		});
+		/** @type {string[]} */
 		const events = [];
 		for (const c of compiler.compilers) {
 			c.hooks.invalid.tap("test", () => {
@@ -331,7 +344,7 @@ describe("MultiCompiler", () => {
 		let update = 0;
 		compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
-			const info = () => stats.toString({ preset: "summary", version: false });
+			const info = () => /** @type {import("../").MultiStats} */ (stats).toString({ preset: "summary", version: false });
 			switch (update++) {
 				case 0:
 					expect(info()).toMatchInlineSnapshot(`
@@ -444,23 +457,27 @@ describe("MultiCompiler", () => {
 	});
 
 	it("should respect parallelism when using invalidate", (done) => {
-		const configs = [
-			{
-				name: "a",
-				mode: "development",
-				entry: { a: "./a.js" },
-				context: path.join(__dirname, "fixtures")
-			},
-			{
-				name: "b",
-				mode: "development",
-				entry: { b: "./b.js" },
-				context: path.join(__dirname, "fixtures")
-			}
-		];
-		configs.parallelism = 1;
-		const compiler = webpack(configs);
+		const compiler = /** @type {import("../").MultiCompiler} */ (webpack(
+			/** @type {import("../").MultiConfiguration} */ (/** @type {unknown} */ (Object.assign(
+				[
+					{
+						name: "a",
+						mode: "development",
+						entry: { a: "./a.js" },
+						context: path.join(__dirname, "fixtures")
+					},
+					{
+						name: "b",
+						mode: "development",
+						entry: { b: "./b.js" },
+						context: path.join(__dirname, "fixtures")
+					}
+				],
+				{ parallelism: 1 }
+			)))
+		));
 
+		/** @type {string[]} */
 		const events = [];
 		for (const c of compiler.compilers) {
 			c.hooks.invalid.tap("test", () => {
@@ -474,11 +491,11 @@ describe("MultiCompiler", () => {
 			});
 		}
 
-		compiler.watchFileSystem = { watch() {} };
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.watchFileSystem = { watch: /** @type {import("../lib/util/fs").WatchMethod} */ (/** @type {unknown} */ (/** @type {() => void} */ (() => {}))) };
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (/** @type {unknown} */ (createFsFromVolume(new Volume())));
 
 		let state = 0;
-		const watching = compiler.watch({}, (error) => {
+		const watching = /** @type {import("../lib/MultiWatching")} */ (/** @type {unknown} */ (compiler.watch({}, (error) => {
 			if (error) {
 				done(error);
 				return;
@@ -520,11 +537,11 @@ describe("MultiCompiler", () => {
 					done(err);
 				}
 			});
-		});
+		})));
 	}, 2000);
 
 	it("should respect dependencies when using invalidate", (done) => {
-		const compiler = webpack([
+		const compiler = /** @type {import("../").MultiCompiler} */ (webpack([
 			{
 				name: "a",
 				mode: "development",
@@ -538,8 +555,9 @@ describe("MultiCompiler", () => {
 				entry: { b: "./b.js" },
 				context: path.join(__dirname, "fixtures")
 			}
-		]);
+		]));
 
+		/** @type {string[]} */
 		const events = [];
 		for (const c of compiler.compilers) {
 			c.hooks.invalid.tap("test", () => {
@@ -553,11 +571,11 @@ describe("MultiCompiler", () => {
 			});
 		}
 
-		compiler.watchFileSystem = { watch() {} };
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.watchFileSystem = { watch: /** @type {import("../lib/util/fs").WatchMethod} */ (/** @type {unknown} */ (/** @type {() => void} */ (() => {}))) };
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (/** @type {unknown} */ (createFsFromVolume(new Volume())));
 
 		let state = 0;
-		const watching = compiler.watch({}, (error) => {
+		const watching = /** @type {import("../lib/MultiWatching")} */ (/** @type {unknown} */ (compiler.watch({}, (error) => {
 			if (error) {
 				done(error);
 				return;
@@ -599,13 +617,13 @@ describe("MultiCompiler", () => {
 					done(err);
 				}
 			});
-		});
+		})));
 	}, 2000);
 
 	it("shouldn't hang when invalidating watchers", (done) => {
-		const entriesA = { a: "./a.js" };
-		const entriesB = { b: "./b.js" };
-		const compiler = webpack([
+		const entriesA = /** @type {Record<string, string>} */ ({ a: "./a.js" });
+		const entriesB = /** @type {Record<string, string>} */ ({ b: "./b.js" });
+		const compiler = /** @type {import("../").MultiCompiler} */ (webpack([
 			{
 				name: "a",
 				mode: "development",
@@ -618,12 +636,12 @@ describe("MultiCompiler", () => {
 				entry: () => entriesB,
 				context: path.join(__dirname, "fixtures")
 			}
-		]);
+		]));
 
-		compiler.watchFileSystem = { watch() {} };
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.watchFileSystem = { watch: /** @type {import("../lib/util/fs").WatchMethod} */ (/** @type {unknown} */ (/** @type {() => void} */ (() => {}))) };
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (/** @type {unknown} */ (createFsFromVolume(new Volume())));
 
-		const watching = compiler.watch({}, (error) => {
+		const watching = /** @type {import("../lib/MultiWatching")} */ (/** @type {unknown} */ (compiler.watch({}, (error) => {
 			if (error) {
 				done(error);
 				return;
@@ -636,12 +654,12 @@ describe("MultiCompiler", () => {
 				if (err) return done(err);
 				compiler.close(done);
 			});
-		});
+		})));
 	}, 2000);
 
 	it("shouldn't hang when invalidating during build", (done) => {
-		const compiler = webpack(
-			Object.assign([
+		const compiler = /** @type {import("../").MultiCompiler} */ (webpack(
+			/** @type {import("../").MultiConfiguration} */ (Object.assign([
 				{
 					name: "a",
 					mode: "development",
@@ -655,13 +673,15 @@ describe("MultiCompiler", () => {
 					entry: "./b.js",
 					dependencies: ["a"]
 				}
-			])
-		);
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+			]))
+		));
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (/** @type {unknown} */ (createFsFromVolume(new Volume())));
+		/** @type {Function[]} */
 		const watchCallbacks = [];
+		/** @type {Function[]} */
 		const watchCallbacksUndelayed = [];
 		let firstRun = true;
-		compiler.watchFileSystem = {
+		compiler.watchFileSystem = /** @type {import("../lib/util/fs").WatchFileSystem} */ ({
 			watch(
 				files,
 				directories,
@@ -673,14 +693,15 @@ describe("MultiCompiler", () => {
 			) {
 				watchCallbacks.push(callback);
 				watchCallbacksUndelayed.push(callbackUndelayed);
-				if (firstRun && files.has(path.join(__dirname, "fixtures", "a.js"))) {
+				if (firstRun && /** @type {Set<string>} */ (files).has(path.join(__dirname, "fixtures", "a.js"))) {
 					process.nextTick(() => {
 						callback(null, new Map(), new Map(), new Set(), new Set());
 					});
 					firstRun = false;
 				}
+				return /** @type {import("../lib/util/fs").Watcher} */ (/** @type {unknown} */ (undefined));
 			}
-		};
+		});
 		compiler.watch({}, (err, _stats) => {
 			if (err) return done(err);
 			compiler.close(done);

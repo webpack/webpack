@@ -123,7 +123,7 @@ describe("css identifier utils", () => {
 		const { escapeIdentifier, unescapeIdentifier, equalsLowerCase } =
 			walkCssTokens;
 		// mulberry32
-		const makeRng = (seed) => {
+		const makeRng = (/** @type {number} */ seed) => {
 			let s = seed >>> 0;
 			return () => {
 				s = (s + 0x6d2b79f5) >>> 0;
@@ -137,7 +137,7 @@ describe("css identifier utils", () => {
 			"\\\\\\41\\3 \\{}\\@.#:;()[]<>\"' \t\n\r\f",
 			"-_0123456789"
 		];
-		const randStr = (rng) => {
+		const randStr = (/** @type {() => number} */ rng) => {
 			const len = (rng() * 40) | 0;
 			const surrogateMode = rng() < 0.2;
 			let out = "";
@@ -166,7 +166,9 @@ describe("css identifier utils", () => {
 					unescapeIdentifier(s);
 					equalsLowerCase(s, "button");
 				} catch (err) {
-					failures.push(`throw on ${JSON.stringify(s)}: ${err.message}`);
+					failures.push(
+					`throw on ${JSON.stringify(s)}: ${/** @type {Error} */ (err).message}`
+				);
 				}
 			}
 			expect(failures).toEqual([]);
@@ -190,7 +192,9 @@ describe("css identifier utils", () => {
 					try {
 						cssExportConvention(s, c);
 					} catch (err) {
-						failures.push(`${c} on ${JSON.stringify(s)}: ${err.message}`);
+						failures.push(
+						`${c} on ${JSON.stringify(s)}: ${/** @type {Error} */ (err).message}`
+					);
 					}
 				}
 			}

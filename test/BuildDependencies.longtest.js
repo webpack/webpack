@@ -3,13 +3,15 @@
 const childProcess = require("child_process");
 const fs = require("fs");
 const path = require("path");
+// @ts-ignore
 const rimraf = require("rimraf");
 
 const cacheDirectory = path.resolve(__dirname, "js/buildDepsCache");
 const outputDirectory = path.resolve(__dirname, "js/buildDeps");
 const inputDirectory = path.resolve(__dirname, "js/buildDepsInput");
 
-const exec = (n, options = {}) =>
+/** @typedef {{ warnings?: RegExp[], ignoreErrors?: boolean }} ExecOptions */
+const exec = (/** @type {number} */ n, /** @type {ExecOptions} */ options = {}) =>
 	new Promise((resolve, reject) => {
 		const webpack = require("../");
 
@@ -17,7 +19,7 @@ const exec = (n, options = {}) =>
 
 		const p = childProcess.execFile(
 			process.execPath,
-			[
+			/** @type {string[]} */ ([
 				...(coverageEnabled
 					? [
 							require.resolve("nyc/bin/nyc.js"),
@@ -29,18 +31,21 @@ const exec = (n, options = {}) =>
 						]
 					: []),
 				path.resolve(__dirname, "fixtures/buildDependencies/run.js"),
-				n,
+				`${n}`,
 				JSON.stringify(options)
-			],
+			]),
 			{
 				stdio: ["ignore", "pipe", "pipe"]
 			}
 		);
+		/** @type {string[]} */
 		const chunks = [];
-		p.stderr.on("data", (chunk) => chunks.push(chunk));
-		p.stdout.on("data", (chunk) => chunks.push(chunk));
+		/** @type {import("stream").Readable} */ (p.stderr).on("data", (/** @type {string} */ chunk) => chunks.push(chunk));
+		/** @type {import("stream").Readable} */ (p.stdout).on("data", (/** @type {string} */ chunk) => chunks.push(chunk));
 		p.once("exit", (code) => {
+			/** @type {string[]} */
 			const errors = [];
+			/** @type {string[]} */
 			const warnings = [];
 			const rawStdout = chunks.join("");
 			const stdout = rawStdout.replace(
@@ -216,7 +221,9 @@ export default 0;`
 		await exec("7", {
 			definedValue: "other"
 		});
+		/** @type {number} */
 		let now4;
+		/** @type {number} */
 		let now5;
 		if (supportsEsm) {
 			fs.writeFileSync(

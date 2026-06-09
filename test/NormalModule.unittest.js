@@ -6,7 +6,14 @@ const RawSource = require("webpack-sources").RawSource;
 const NormalModule = require("../lib/NormalModule");
 const HarmonyImportSideEffectDependency = require("../lib/dependencies/HarmonyImportSideEffectDependency");
 
+/** @typedef {import("../lib/NormalModule").LoaderItem} LoaderItem */
+/** @typedef {import("../lib/Parser")} Parser */
+/** @typedef {import("../lib/Generator")} Generator */
+/** @typedef {import("../lib/ModuleGraph")} ModuleGraph */
+/** @typedef {import("../lib/dependencies/ImportPhase").ImportPhaseType} ImportPhaseType */
+
 describe("NormalModule", () => {
+	/** @type {InstanceType<typeof NormalModule>} */
 	let normalModule;
 	/** @type {string} */
 	let request;
@@ -14,33 +21,40 @@ describe("NormalModule", () => {
 	let userRequest;
 	/** @type {string} */
 	let rawRequest;
-	/** @type {string[]} */
+	/** @type {LoaderItem[]} */
 	let loaders;
 	/** @type {string} */
 	let resource;
+	/** @type {Parser} */
 	let parser;
 
 	beforeEach(() => {
 		request = "/some/request";
 		userRequest = "/some/userRequest";
 		rawRequest = "some/rawRequest";
-		/** @type {string[]} */
+		/** @type {LoaderItem[]} */
 		loaders = [];
 		resource = "/some/resource";
-		parser = {
-			parse() {}
-		};
-		normalModule = new NormalModule({
-			type: "javascript/auto",
-			request,
-			userRequest,
-			rawRequest,
-			loaders,
-			resource,
-			parser,
-			generator: null,
-			resolveOptions: {}
-		});
+		parser = /** @type {Parser} */ (
+			/** @type {unknown} */ ({
+				parse() {}
+			})
+		);
+		normalModule = new NormalModule(
+			/** @type {import("../lib/NormalModule").NormalModuleCreateData} */ (
+				/** @type {unknown} */ ({
+					type: "javascript/auto",
+					request,
+					userRequest,
+					rawRequest,
+					loaders,
+					resource,
+					parser,
+					generator: null,
+					resolveOptions: {}
+				})
+			)
+		);
 		normalModule.buildInfo = {
 			cacheable: true
 		};
@@ -61,9 +75,13 @@ describe("NormalModule", () => {
 	describe("#readableIdentifier", () => {
 		it("calls the given requestShortener with the user request", () => {
 			const spy = jest.fn();
-			normalModule.readableIdentifier({
-				shorten: spy
-			});
+			normalModule.readableIdentifier(
+				/** @type {import("../lib/RequestShortener")} */ (
+					/** @type {unknown} */ ({
+						shorten: spy
+					})
+				)
+			);
 			expect(spy).toHaveBeenCalledTimes(1);
 			expect(spy.mock.calls[0][0]).toBe(userRequest);
 		});
@@ -82,15 +100,19 @@ describe("NormalModule", () => {
 			beforeEach(() => {
 				userRequest =
 					"/some/userRequest!/some/other/userRequest!/some/thing/is/off/here";
-				normalModule = new NormalModule({
-					type: "javascript/auto",
-					request,
-					userRequest,
-					rawRequest,
-					loaders,
-					resource,
-					parser
-				});
+				normalModule = new NormalModule(
+					/** @type {import("../lib/NormalModule").NormalModuleCreateData} */ (
+						/** @type {unknown} */ ({
+							type: "javascript/auto",
+							request,
+							userRequest,
+							rawRequest,
+							loaders,
+							resource,
+							parser
+						})
+					)
+				);
 			});
 
 			it("contextifies every path in the userRequest", () => {
@@ -107,15 +129,19 @@ describe("NormalModule", () => {
 				// cspell:word testpath
 				userRequest =
 					"F:\\some\\context\\loader?query=foo\\bar&otherPath=testpath/other";
-				normalModule = new NormalModule({
-					type: "javascript/auto",
-					request,
-					userRequest,
-					rawRequest,
-					loaders,
-					resource,
-					parser
-				});
+				normalModule = new NormalModule(
+					/** @type {import("../lib/NormalModule").NormalModuleCreateData} */ (
+						/** @type {unknown} */ ({
+							type: "javascript/auto",
+							request,
+							userRequest,
+							rawRequest,
+							loaders,
+							resource,
+							parser
+						})
+					)
+				);
 				expect(
 					normalModule.libIdent({
 						context: "F:\\some\\context"
@@ -135,15 +161,19 @@ describe("NormalModule", () => {
 
 			beforeEach(() => {
 				resource = `${baseResource}?some=query`;
-				normalModule = new NormalModule({
-					type: "javascript/auto",
-					request,
-					userRequest,
-					rawRequest,
-					loaders,
-					resource,
-					parser
-				});
+				normalModule = new NormalModule(
+					/** @type {import("../lib/NormalModule").NormalModuleCreateData} */ (
+						/** @type {unknown} */ ({
+							type: "javascript/auto",
+							request,
+							userRequest,
+							rawRequest,
+							loaders,
+							resource,
+							parser
+						})
+					)
+				);
 			});
 
 			it("return only the part before the ?-sign", () => {
@@ -153,8 +183,11 @@ describe("NormalModule", () => {
 	});
 
 	describe("#createSourceForAsset", () => {
+		/** @type {string} */
 		let name;
+		/** @type {string} */
 		let content;
+		/** @type {string | (() => void)} */
 		let sourceMap;
 
 		beforeEach(() => {
@@ -174,7 +207,12 @@ describe("NormalModule", () => {
 		describe("given a string as the sourcemap", () => {
 			it("returns a OriginalSource", () => {
 				expect(
-					normalModule.createSourceForAsset("/", name, content, sourceMap)
+					normalModule.createSourceForAsset(
+						"/",
+						name,
+						content,
+						/** @type {string} */ (sourceMap)
+					)
 				).toBeInstanceOf(OriginalSource);
 			});
 		});
@@ -187,7 +225,12 @@ describe("NormalModule", () => {
 
 			it("returns a SourceMapSource", () => {
 				expect(
-					normalModule.createSourceForAsset("/", name, content, sourceMap)
+					normalModule.createSourceForAsset(
+						"/",
+						name,
+						content,
+						/** @type {string} */ (/** @type {unknown} */ (sourceMap))
+					)
 				).toBeInstanceOf(RawSource);
 			});
 		});
@@ -199,7 +242,12 @@ describe("NormalModule", () => {
 
 			it("returns a SourceMapSource", () => {
 				expect(
-					normalModule.createSourceForAsset("/", name, content, sourceMap)
+					normalModule.createSourceForAsset(
+						"/",
+						name,
+						content,
+						/** @type {string} */ (/** @type {unknown} */ (sourceMap))
+					)
 				).toBeInstanceOf(RawSource);
 			});
 		});
@@ -212,7 +260,12 @@ describe("NormalModule", () => {
 
 			it("returns a SourceMapSource", () => {
 				expect(
-					normalModule.createSourceForAsset("/", name, content, sourceMap)
+					normalModule.createSourceForAsset(
+						"/",
+						name,
+						content,
+						/** @type {string} */ (/** @type {unknown} */ (sourceMap))
+					)
 				).toBeInstanceOf(SourceMapSource);
 			});
 		});
@@ -222,16 +275,22 @@ describe("NormalModule", () => {
 		const expectedSource = "some source";
 
 		beforeEach(() => {
-			normalModule._source = new RawSource(expectedSource);
+			/** @type {EXPECTED_ANY} */ (normalModule)._source = new RawSource(
+				expectedSource
+			);
 		});
 
 		it("returns an original Source", () => {
-			expect(normalModule.originalSource()).toBe(normalModule._source);
+			expect(normalModule.originalSource()).toBe(
+				/** @type {EXPECTED_ANY} */ (normalModule)._source
+			);
 		});
 	});
 
 	describe("#applyNoParseRule", () => {
+		/** @type {string | RegExp} */
 		let rule;
+		/** @type {string} */
 		let content;
 
 		describe("given a string as rule", () => {
@@ -245,7 +304,12 @@ describe("NormalModule", () => {
 				});
 
 				it("returns true", () => {
-					expect(normalModule.shouldPreventParsing(rule, content)).toBe(true);
+					expect(
+						/** @type {EXPECTED_ANY} */ (normalModule).shouldPreventParsing(
+							rule,
+							content
+						)
+					).toBe(true);
 				});
 			});
 
@@ -255,7 +319,12 @@ describe("NormalModule", () => {
 				});
 
 				it("returns false", () => {
-					expect(normalModule.shouldPreventParsing(rule, content)).toBe(false);
+					expect(
+						/** @type {EXPECTED_ANY} */ (normalModule).shouldPreventParsing(
+							rule,
+							content
+						)
+					).toBe(false);
 				});
 			});
 		});
@@ -271,7 +340,12 @@ describe("NormalModule", () => {
 				});
 
 				it("returns true", () => {
-					expect(normalModule.shouldPreventParsing(rule, content)).toBe(true);
+					expect(
+						/** @type {EXPECTED_ANY} */ (normalModule).shouldPreventParsing(
+							rule,
+							content
+						)
+					).toBe(true);
 				});
 			});
 
@@ -281,13 +355,19 @@ describe("NormalModule", () => {
 				});
 
 				it("returns false", () => {
-					expect(normalModule.shouldPreventParsing(rule, content)).toBe(false);
+					expect(
+						/** @type {EXPECTED_ANY} */ (normalModule).shouldPreventParsing(
+							rule,
+							content
+						)
+					).toBe(false);
 				});
 			});
 		});
 	});
 
 	describe("#shouldPreventParsing", () => {
+		/** @type {jest.Mock} */
 		let applyNoParseRuleSpy;
 
 		beforeEach(() => {
@@ -297,12 +377,15 @@ describe("NormalModule", () => {
 
 		describe("given no noParseRule", () => {
 			it("returns false", () => {
-				expect(normalModule.shouldPreventParsing()).toBe(false);
+				expect(
+					/** @type {EXPECTED_ANY} */ (normalModule).shouldPreventParsing()
+				).toBe(false);
 				expect(applyNoParseRuleSpy).not.toHaveBeenCalled();
 			});
 		});
 
 		describe("given a noParseRule", () => {
+			/** @type {boolean} */
 			let returnValOfSpy;
 
 			beforeEach(() => {
@@ -312,24 +395,29 @@ describe("NormalModule", () => {
 
 			describe("that is a string", () => {
 				it("calls and returns whatever applyNoParseRule returns", () => {
-					expect(normalModule.shouldPreventParsing("some rule")).toBe(
-						returnValOfSpy
-					);
+					expect(
+						/** @type {EXPECTED_ANY} */ (normalModule).shouldPreventParsing(
+							"some rule"
+						)
+					).toBe(returnValOfSpy);
 					expect(applyNoParseRuleSpy).toHaveBeenCalledTimes(1);
 				});
 			});
 
 			describe("that is a regex", () => {
 				it("calls and returns whatever applyNoParseRule returns", () => {
-					expect(normalModule.shouldPreventParsing("some rule")).toBe(
-						returnValOfSpy
-					);
+					expect(
+						/** @type {EXPECTED_ANY} */ (normalModule).shouldPreventParsing(
+							"some rule"
+						)
+					).toBe(returnValOfSpy);
 					expect(applyNoParseRuleSpy).toHaveBeenCalledTimes(1);
 				});
 			});
 
 			describe("that is an array", () => {
 				describe("of strings and or regexps", () => {
+					/** @type {(string | RegExp)[]} */
 					let someRules;
 
 					beforeEach(() => {
@@ -343,9 +431,11 @@ describe("NormalModule", () => {
 						});
 
 						it("returns false", () => {
-							expect(normalModule.shouldPreventParsing(someRules)).toBe(
-								returnValOfSpy
-							);
+							expect(
+								/** @type {EXPECTED_ANY} */ (normalModule).shouldPreventParsing(
+									someRules
+								)
+							).toBe(returnValOfSpy);
 							expect(applyNoParseRuleSpy).toHaveBeenCalledTimes(3);
 						});
 					});
@@ -357,9 +447,11 @@ describe("NormalModule", () => {
 						});
 
 						it("returns true", () => {
-							expect(normalModule.shouldPreventParsing(someRules)).toBe(
-								returnValOfSpy
-							);
+							expect(
+								/** @type {EXPECTED_ANY} */ (normalModule).shouldPreventParsing(
+									someRules
+								)
+							).toBe(returnValOfSpy);
 							expect(applyNoParseRuleSpy).toHaveBeenCalledTimes(1);
 						});
 					});
@@ -373,9 +465,11 @@ describe("NormalModule", () => {
 						});
 
 						it("returns true", () => {
-							expect(normalModule.shouldPreventParsing(someRules)).toBe(
-								returnValOfSpy
-							);
+							expect(
+								/** @type {EXPECTED_ANY} */ (normalModule).shouldPreventParsing(
+									someRules
+								)
+							).toBe(returnValOfSpy);
 							expect(applyNoParseRuleSpy).toHaveBeenCalledTimes(3);
 						});
 					});
@@ -389,20 +483,28 @@ describe("NormalModule", () => {
 		// linked by HarmonyImportSideEffectDependency. Walking the chain via
 		// the recursive form used 2 stack frames per module and overflowed on
 		// long chains (issue #20986).
+		/**
+		 * @param {number} count chain length
+		 * @returns {{ modules: InstanceType<typeof NormalModule>[], moduleGraph: ModuleGraph }} chain
+		 */
 		const buildChain = (count) => {
 			const modules = [];
 			for (let i = 0; i < count; i++) {
-				const mod = new NormalModule({
-					type: "javascript/auto",
-					request: `/m${i}`,
-					userRequest: `/m${i}`,
-					rawRequest: `m${i}`,
-					loaders: [],
-					resource: `/m${i}`,
-					parser: { parse() {} },
-					generator: null,
-					resolveOptions: {}
-				});
+				const mod = new NormalModule(
+					/** @type {import("../lib/NormalModule").NormalModuleCreateData} */ (
+						/** @type {unknown} */ ({
+							type: "javascript/auto",
+							request: `/m${i}`,
+							userRequest: `/m${i}`,
+							rawRequest: `m${i}`,
+							loaders: [],
+							resource: `/m${i}`,
+							parser: { parse() {} },
+							generator: null,
+							resolveOptions: {}
+						})
+					)
+				);
 				mod.buildMeta = { sideEffectFree: true };
 				modules.push(mod);
 			}
@@ -411,16 +513,19 @@ describe("NormalModule", () => {
 				const dep = new HarmonyImportSideEffectDependency(
 					`m${i + 1}`,
 					0,
-					"evaluation"
+					/** @type {ImportPhaseType} */ (/** @type {unknown} */ ("evaluation"))
 				);
 				modules[i].dependencies = [dep];
 				depToModule.set(dep, modules[i + 1]);
 			}
 			modules[count - 1].dependencies = [];
-			const moduleGraph = {
-				getModule: (dep) => depToModule.get(dep),
-				getOptimizationBailout: () => []
-			};
+			const moduleGraph = /** @type {ModuleGraph} */ (
+				/** @type {unknown} */ ({
+					/** @param {import("../lib/Dependency")} dep dependency @returns {InstanceType<typeof import("../lib/NormalModule")> | undefined} module */
+					getModule: (dep) => depToModule.get(dep),
+					getOptimizationBailout: () => []
+				})
+			);
 			return { modules, moduleGraph };
 		};
 
@@ -446,12 +551,14 @@ describe("NormalModule", () => {
 			const lastDep = new HarmonyImportSideEffectDependency(
 				"m0",
 				0,
-				"evaluation"
+				/** @type {ImportPhaseType} */ (/** @type {unknown} */ ("evaluation"))
 			);
 			modules[49].dependencies = [lastDep];
 			const originalGetModule = moduleGraph.getModule;
-			moduleGraph.getModule = (dep) =>
-				dep === lastDep ? modules[0] : originalGetModule(dep);
+			moduleGraph.getModule = /** @type {ModuleGraph["getModule"]} */ (
+				/** @param {import("../lib/Dependency")} dep dependency @returns {InstanceType<typeof import("../lib/NormalModule")> | undefined} module */
+				(dep) => (dep === lastDep ? modules[0] : originalGetModule(dep))
+			);
 			// Cycles fold to `false` (the accumulator's identity) when all
 			// participating modules are side-effect free — same as the original
 			// recursive behavior.
@@ -464,10 +571,15 @@ describe("NormalModule", () => {
 			// Make module 5 have side effects.
 			modules[5].buildMeta = { sideEffectFree: false };
 			const bailouts = new Map();
-			moduleGraph.getOptimizationBailout = (mod) => {
-				if (!bailouts.has(mod)) bailouts.set(mod, []);
-				return bailouts.get(mod);
-			};
+			/** @type {EXPECTED_ANY} */ (moduleGraph).getOptimizationBailout =
+				/**
+				 * @param {import("../lib/NormalModule")} mod module
+				 * @returns {unknown[]} bailout list
+				 */
+				(mod) => {
+					if (!bailouts.has(mod)) bailouts.set(mod, []);
+					return bailouts.get(mod);
+				};
 			expect(modules[0].getSideEffectsConnectionState(moduleGraph)).toBe(true);
 			// Each ancestor in the chain (modules 0..4) records the bailout once
 			// for the dep that triggered descent, matching the recursive baseline.
@@ -482,18 +594,25 @@ describe("NormalModule", () => {
 
 		it("aggregates state across branching deps", () => {
 			// Diamond: root depends on two side-effect-free leaves.
+			/**
+			 * @param {string} id module id
+			 */
 			const make = (id) => {
-				const mod = new NormalModule({
-					type: "javascript/auto",
-					request: `/${id}`,
-					userRequest: `/${id}`,
-					rawRequest: id,
-					loaders: [],
-					resource: `/${id}`,
-					parser: { parse() {} },
-					generator: null,
-					resolveOptions: {}
-				});
+				const mod = new NormalModule(
+					/** @type {import("../lib/NormalModule").NormalModuleCreateData} */ (
+						/** @type {unknown} */ ({
+							type: "javascript/auto",
+							request: `/${id}`,
+							userRequest: `/${id}`,
+							rawRequest: id,
+							loaders: [],
+							resource: `/${id}`,
+							parser: { parse() {} },
+							generator: null,
+							resolveOptions: {}
+						})
+					)
+				);
 				mod.buildMeta = { sideEffectFree: true };
 				mod.dependencies = [];
 				return mod;
@@ -501,13 +620,24 @@ describe("NormalModule", () => {
 			const root = make("root");
 			const a = make("a");
 			const b = make("b");
-			const depA = new HarmonyImportSideEffectDependency("a", 0, "evaluation");
-			const depB = new HarmonyImportSideEffectDependency("b", 1, "evaluation");
+			const depA = new HarmonyImportSideEffectDependency(
+				"a",
+				0,
+				/** @type {ImportPhaseType} */ (/** @type {unknown} */ ("evaluation"))
+			);
+			const depB = new HarmonyImportSideEffectDependency(
+				"b",
+				1,
+				/** @type {ImportPhaseType} */ (/** @type {unknown} */ ("evaluation"))
+			);
 			root.dependencies = [depA, depB];
-			const moduleGraph = {
-				getModule: (dep) => (dep === depA ? a : dep === depB ? b : undefined),
-				getOptimizationBailout: () => []
-			};
+			const moduleGraph = /** @type {ModuleGraph} */ (
+				/** @type {unknown} */ ({
+					/** @param {import("../lib/Dependency")} dep dependency @returns {InstanceType<typeof import("../lib/NormalModule")> | undefined} module */
+					getModule: (dep) => (dep === depA ? a : dep === depB ? b : undefined),
+					getOptimizationBailout: () => []
+				})
+			);
 			expect(root.getSideEffectsConnectionState(moduleGraph)).toBe(false);
 			expect(root._isEvaluatingSideEffects).toBe(false);
 			expect(a._isEvaluatingSideEffects).toBe(false);
@@ -527,17 +657,21 @@ describe("NormalModule", () => {
 			const N = 5000;
 			const modules = [];
 			for (let i = 0; i < N; i++) {
-				const mod = new NormalModule({
-					type: "javascript/auto",
-					request: `/m${i}`,
-					userRequest: `/m${i}`,
-					rawRequest: `m${i}`,
-					loaders: [],
-					resource: `/m${i}`,
-					parser: { parse() {} },
-					generator: null,
-					resolveOptions: {}
-				});
+				const mod = new NormalModule(
+					/** @type {import("../lib/NormalModule").NormalModuleCreateData} */ (
+						/** @type {unknown} */ ({
+							type: "javascript/auto",
+							request: `/m${i}`,
+							userRequest: `/m${i}`,
+							rawRequest: `m${i}`,
+							loaders: [],
+							resource: `/m${i}`,
+							parser: { parse() {} },
+							generator: null,
+							resolveOptions: {}
+						})
+					)
+				);
 				mod.buildMeta = { sideEffectFree: true };
 				modules.push(mod);
 			}
@@ -546,7 +680,7 @@ describe("NormalModule", () => {
 				const sideDep = new HarmonyImportSideEffectDependency(
 					`m${(i + 1) % N}`,
 					0,
-					"evaluation"
+					/** @type {ImportPhaseType} */ (/** @type {unknown} */ ("evaluation"))
 				);
 				modules[i].dependencies = [
 					sideDep,
@@ -555,10 +689,13 @@ describe("NormalModule", () => {
 				];
 				depToModule.set(sideDep, modules[(i + 1) % N]);
 			}
-			const moduleGraph = {
-				getModule: (dep) => depToModule.get(dep),
-				getOptimizationBailout: () => []
-			};
+			const moduleGraph = /** @type {ModuleGraph} */ (
+				/** @type {unknown} */ ({
+					/** @param {import("../lib/Dependency")} dep dependency @returns {InstanceType<typeof import("../lib/NormalModule")> | undefined} module */
+					getModule: (dep) => depToModule.get(dep),
+					getOptimizationBailout: () => []
+				})
+			);
 			expect(modules[0].getSideEffectsConnectionState(moduleGraph)).toBe(false);
 		});
 
@@ -573,18 +710,25 @@ describe("NormalModule", () => {
 			// enough past that boundary that any regression in the
 			// iterative fallback path will overflow V8's stack.
 			const N = 2500;
+			/**
+			 * @param {string} id module id
+			 */
 			const make = (id) => {
-				const mod = new NormalModule({
-					type: "javascript/auto",
-					request: `/${id}`,
-					userRequest: `/${id}`,
-					rawRequest: id,
-					loaders: [],
-					resource: `/${id}`,
-					parser: { parse() {} },
-					generator: null,
-					resolveOptions: {}
-				});
+				const mod = new NormalModule(
+					/** @type {import("../lib/NormalModule").NormalModuleCreateData} */ (
+						/** @type {unknown} */ ({
+							type: "javascript/auto",
+							request: `/${id}`,
+							userRequest: `/${id}`,
+							rawRequest: id,
+							loaders: [],
+							resource: `/${id}`,
+							parser: { parse() {} },
+							generator: null,
+							resolveOptions: {}
+						})
+					)
+				);
 				mod.buildMeta = { sideEffectFree: true };
 				return mod;
 			};
@@ -597,22 +741,25 @@ describe("NormalModule", () => {
 				const next = new HarmonyImportSideEffectDependency(
 					`m${i + 1}`,
 					0,
-					"evaluation"
+					/** @type {ImportPhaseType} */ (/** @type {unknown} */ ("evaluation"))
 				);
 				const aside = new HarmonyImportSideEffectDependency(
 					"leaf",
 					1,
-					"evaluation"
+					/** @type {ImportPhaseType} */ (/** @type {unknown} */ ("evaluation"))
 				);
 				modules[i].dependencies = [next, aside];
 				depToModule.set(next, modules[i + 1]);
 				depToModule.set(aside, leaf);
 			}
 			modules[N - 1].dependencies = [];
-			const moduleGraph = {
-				getModule: (dep) => depToModule.get(dep),
-				getOptimizationBailout: () => []
-			};
+			const moduleGraph = /** @type {ModuleGraph} */ (
+				/** @type {unknown} */ ({
+					/** @param {import("../lib/Dependency")} dep dependency @returns {InstanceType<typeof import("../lib/NormalModule")> | undefined} module */
+					getModule: (dep) => depToModule.get(dep),
+					getOptimizationBailout: () => []
+				})
+			);
 			expect(modules[0].getSideEffectsConnectionState(moduleGraph)).toBe(false);
 			for (let i = 0; i < N; i++) {
 				expect(modules[i]._isEvaluatingSideEffects).toBe(false);

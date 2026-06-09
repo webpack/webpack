@@ -13,13 +13,18 @@ describe("contextModule", () => {
 
 	describe("#identifier", () => {
 		it("returns an safe identifier for this module", () => {
-			contextModule = new ContextModule(() => {}, {
-				type: "javascript/auto",
-				request,
-				resource: "a",
-				mode: "lazy",
-				regExp: /a|b/
-			});
+			contextModule = new ContextModule(
+				() => {},
+				/** @type {import("../lib/ContextModule").ContextModuleOptions} */ (
+					/** @type {unknown} */ ({
+						type: "javascript/auto",
+						request,
+						resource: "a",
+						mode: "lazy",
+						regExp: /a|b/
+					})
+				)
+			);
 			expect(contextModule.identifier()).toEqual(
 				expect.stringContaining("/a%7Cb/")
 			);

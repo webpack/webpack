@@ -3,11 +3,17 @@
 const RequestShortener = require("../lib/RequestShortener");
 const RuntimeTemplate = require("../lib/RuntimeTemplate");
 
+/** @typedef {import("../lib/config/defaults").OutputNormalizedWithDefaults} OutputOptions */
+
 describe("RuntimeTemplate.concatenation", () => {
 	it("no args", () => {
 		const runtimeTemplate = new RuntimeTemplate(
-			undefined,
-			{ environment: { templateLiteral: false } },
+			/** @type {import("../lib/Compilation")} */ (
+				/** @type {unknown} */ (undefined)
+			),
+			/** @type {OutputOptions} */ (
+				/** @type {unknown} */ ({ environment: { templateLiteral: false } })
+			),
 			new RequestShortener(__dirname)
 		);
 		expect(runtimeTemplate.concatenation()).toBe('""');
@@ -15,18 +21,30 @@ describe("RuntimeTemplate.concatenation", () => {
 
 	it("1 arg", () => {
 		const runtimeTemplate = new RuntimeTemplate(
-			undefined,
-			{ environment: { templateLiteral: false } },
+			/** @type {import("../lib/Compilation")} */ (
+				/** @type {unknown} */ (undefined)
+			),
+			/** @type {OutputOptions} */ (
+				/** @type {unknown} */ ({ environment: { templateLiteral: false } })
+			),
 			new RequestShortener(__dirname)
 		);
-		expect(runtimeTemplate.concatenation({ expr: 1 })).toBe('"" + 1');
+		expect(
+			runtimeTemplate.concatenation({
+				expr: /** @type {string} */ (/** @type {unknown} */ (1))
+			})
+		).toBe('"" + 1');
 		expect(runtimeTemplate.concatenation("str")).toBe('"str"');
 	});
 
 	it("es5", () => {
 		const runtimeTemplate = new RuntimeTemplate(
-			undefined,
-			{ environment: { templateLiteral: false } },
+			/** @type {import("../lib/Compilation")} */ (
+				/** @type {unknown} */ (undefined)
+			),
+			/** @type {OutputOptions} */ (
+				/** @type {unknown} */ ({ environment: { templateLiteral: false } })
+			),
 			new RequestShortener(__dirname)
 		);
 
@@ -40,38 +58,61 @@ describe("RuntimeTemplate.concatenation", () => {
 				"str"
 			)
 		).toBe('"" + __webpack__.p + str.a + "str"');
-		expect(runtimeTemplate.concatenation("a", "b", { expr: 1 })).toBe(
-			'"a" + "b" + 1'
-		);
-		expect(runtimeTemplate.concatenation("a", { expr: 1 }, "b")).toBe(
-			'"a" + 1 + "b"'
-		);
+		expect(
+			runtimeTemplate.concatenation("a", "b", {
+				expr: /** @type {string} */ (/** @type {unknown} */ (1))
+			})
+		).toBe('"a" + "b" + 1');
+		expect(
+			runtimeTemplate.concatenation(
+				"a",
+				{ expr: /** @type {string} */ (/** @type {unknown} */ (1)) },
+				"b"
+			)
+		).toBe('"a" + 1 + "b"');
 	});
 
 	describe("es6", () => {
 		const runtimeTemplate = new RuntimeTemplate(
-			undefined,
-			{ environment: { templateLiteral: true } },
+			/** @type {import("../lib/Compilation")} */ (
+				/** @type {unknown} */ (undefined)
+			),
+			/** @type {OutputOptions} */ (
+				/** @type {unknown} */ ({ environment: { templateLiteral: true } })
+			),
 			new RequestShortener(__dirname)
 		);
 
 		it("should prefer shorten variant #1", () => {
-			expect(runtimeTemplate.concatenation({ expr: 1 }, "a", { expr: 2 })).toBe(
-				'1 + "a" + 2'
-			);
+			expect(
+				runtimeTemplate.concatenation(
+					{ expr: /** @type {string} */ (/** @type {unknown} */ (1)) },
+					"a",
+					{ expr: /** @type {string} */ (/** @type {unknown} */ (2)) }
+				)
+			).toBe('1 + "a" + 2');
 		});
 
 		it("should prefer shorten variant #2", () => {
 			expect(
-				runtimeTemplate.concatenation({ expr: 1 }, "a", { expr: 2 }, "b")
+				runtimeTemplate.concatenation(
+					{ expr: /** @type {string} */ (/** @type {unknown} */ (1)) },
+					"a",
+					{ expr: /** @type {string} */ (/** @type {unknown} */ (2)) },
+					"b"
+				)
 			).toBe('1 + "a" + 2 + "b"');
 		});
 
 		it("should prefer shorten variant #3", () => {
 			/* eslint-disable no-template-curly-in-string */
-			expect(runtimeTemplate.concatenation("a", { expr: 1 }, "b")).toBe(
-				"`a${1}b`"
-			);
+			expect(
+				runtimeTemplate.concatenation(
+					"a",
+					{ expr: /** @type {string} */ (/** @type {unknown} */ (1)) },
+					"b"
+				)
+			).toBe("`a${1}b`");
 			/* eslint-enable */
 		});
 	});

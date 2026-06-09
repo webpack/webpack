@@ -10,12 +10,12 @@ const MultiWatching = require("../lib/MultiWatching");
  * @returns {Watching} watching
  */
 const createWatching = () =>
-	/** @type {Watching} */ ({
+	/** @type {Watching} */ (/** @type {unknown} */ ({
 		invalidate: jest.fn(),
 		suspend: jest.fn(),
 		resume: jest.fn(),
 		close: jest.fn()
-	});
+	}));
 
 /**
  * @returns {MultiCompiler} compiler
@@ -69,9 +69,10 @@ describe("MultiWatching", () => {
 	});
 
 	describe("close", () => {
+		/** @type {jest.Mock} */
 		let callback;
-		const callClosedFinishedCallback = (watching) => {
-			watching.close.mock.calls[0][0]();
+		const callClosedFinishedCallback = (/** @type {Watching} */ watching) => {
+			/** @type {jest.Mock} */ (watching.close).mock.calls[0][0]();
 		};
 
 		beforeEach(() => {

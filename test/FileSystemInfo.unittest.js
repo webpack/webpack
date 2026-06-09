@@ -1,5 +1,10 @@
 "use strict";
 
+/** @typedef {import("../lib/FileSystemInfo").Snapshot} Snapshot */
+/** @typedef {import("../lib/FileSystemInfo").SnapshotOptions} SnapshotOptions */
+/** @typedef {import("../lib/errors/WebpackError")} WebpackError */
+/** @typedef {import("memfs").IFs} IFs */
+
 const util = require("util");
 const { Volume, createFsFromVolume } = require("memfs");
 const FileSystemInfo = require("../lib/FileSystemInfo");
@@ -132,33 +137,35 @@ describe("FileSystemInfo", () => {
 		return fs;
 	};
 
-	const createFsInfo = (fs) => {
-		const logger = {
-			error: (...args) => {
+	const createFsInfo = (/** @type {IFs} */ fs) => {
+		/** @type {import("../lib/logging/Logger").Logger & Record<string, Function>} */
+		const logger = /** @type {import("../lib/logging/Logger").Logger & Record<string, Function>} */ (/** @type {unknown} */ ({
+			error: (/** @type {unknown[]} */ ...args) => {
 				throw new Error(util.format(...args));
 			}
-		};
-		const fsInfo = new FileSystemInfo(fs, {
+		}));
+		/** @type {import("../lib/FileSystemInfo") & Record<string, unknown>} */
+		const fsInfo = /** @type {import("../lib/FileSystemInfo") & Record<string, unknown>} */ (new FileSystemInfo(/** @type {import("../lib/util/fs").InputFileSystem} */ (/** @type {unknown} */ (fs)), {
 			logger,
 			unmanagedPaths,
 			managedPaths,
 			immutablePaths,
 			hashFunction: "sha256"
-		});
+		}));
 		for (const method of ["warn", "info", "log", "debug"]) {
 			fsInfo.logs = [];
 			fsInfo[method] = [];
-			logger[method] = (...args) => {
+			logger[method] = (/** @type {unknown[]} */ ...args) => {
 				const msg = util.format(...args);
-				fsInfo[method].push(msg);
-				fsInfo.logs.push(`[${method}] ${msg}`);
+				/** @type {string[]} */ (fsInfo[method]).push(msg);
+				/** @type {string[]} */ (fsInfo.logs).push(`[${method}] ${msg}`);
 			};
 		}
 		fsInfo.addFileTimestamps(new Map(ignored.map((i) => [i, "ignore"])));
 		return fsInfo;
 	};
 
-	const createSnapshot = (fs, options, callback) => {
+	const createSnapshot = (/** @type {IFs} */ fs, /** @type {SnapshotOptions} */ options, /** @type {(err?: Error | null, snapshot?: Snapshot | null, snapshot2?: Snapshot | null) => void} */ callback) => {
 		const fsInfo = createFsInfo(fs);
 		fsInfo.createSnapshot(
 			Date.now() + 10000,
@@ -168,7 +175,7 @@ describe("FileSystemInfo", () => {
 			options,
 			(err, snapshot) => {
 				if (err) return callback(err);
-				snapshot.name = "initial snapshot";
+				/** @type {Snapshot & Record<string, unknown>} */ (snapshot).name = "initial snapshot";
 				// create another one to test the caching
 				fsInfo.createSnapshot(
 					Date.now() + 10000,
@@ -178,7 +185,7 @@ describe("FileSystemInfo", () => {
 					options,
 					(err, snapshot2) => {
 						if (err) return callback(err);
-						snapshot2.name = "cached snapshot";
+						/** @type {Snapshot & Record<string, unknown>} */ (snapshot2).name = "cached snapshot";
 						callback(null, snapshot, snapshot2);
 					}
 				);
@@ -186,17 +193,17 @@ describe("FileSystemInfo", () => {
 		);
 	};
 
-	const clone = (object) => {
+	const clone = (/** @type {object} */ object) => {
 		const serialized = buffersSerializer.serialize(object, {});
 		return buffersSerializer.deserialize(serialized, {});
 	};
 
 	const expectSnapshotsState = (
-		fs,
-		snapshot,
-		snapshot2,
-		expected,
-		callback
+		/** @type {IFs} */ fs,
+		/** @type {Snapshot | null | undefined} */ snapshot,
+		/** @type {Snapshot | null | undefined} */ snapshot2,
+		/** @type {boolean} */ expected,
+		/** @type {(err?: Error | null) => void} */ callback
 	) => {
 		expectSnapshotState(fs, snapshot, expected, (err) => {
 			if (err) return callback(err);
@@ -205,11 +212,11 @@ describe("FileSystemInfo", () => {
 		});
 	};
 
-	const expectSnapshotState = (fs, snapshot, expected, callback) => {
+	const expectSnapshotState = (/** @type {IFs} */ fs, /** @type {Snapshot | null | undefined} */ snapshot, /** @type {boolean} */ expected, /** @type {(err?: Error | null) => void} */ callback) => {
 		const fsInfo = createFsInfo(fs);
-		const details = (snapshot) => `${fsInfo.logs.join("\n")}
+		const details = (/** @type {unknown} */ snapshot) => `${/** @type {string[]} */ (/** @type {Record<string, unknown>} */ (fsInfo).logs).join("\n")}
 ${util.inspect(snapshot, false, Infinity, true)}`;
-		fsInfo.checkSnapshotValid(snapshot, (err, valid) => {
+		fsInfo.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
 			if (err) return callback(err);
 			if (valid !== expected) {
 				return callback(
@@ -220,7 +227,7 @@ ${details(snapshot)}`)
 				);
 			}
 			// Another try to check if direct caching works
-			fsInfo.checkSnapshotValid(snapshot, (err, valid) => {
+			fsInfo.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
 				if (err) return callback(err);
 				if (valid !== expected) {
 					return callback(
@@ -229,7 +236,7 @@ ${details(snapshot)}`)
 					);
 				}
 				// Another try to check if indirect caching works
-				fsInfo.checkSnapshotValid(clone(snapshot), (err, valid) => {
+				fsInfo.checkSnapshotValid(/** @type {Snapshot} */ (/** @type {unknown} */ (clone(/** @type {object} */ (snapshot)))), (err, valid) => {
 					if (err) return callback(err);
 					if (valid !== expected) {
 						return callback(
@@ -243,8 +250,8 @@ ${details(snapshot)}`)
 		});
 	};
 
-	const updateFile = (fs, filename) => {
-		const oldContent = fs.readFileSync(filename, "utf8");
+	const updateFile = (/** @type {IFs} */ fs, /** @type {string} */ filename) => {
+		const oldContent = /** @type {string} */ (/** @type {unknown} */ (fs.readFileSync(filename, "utf8")));
 		if (filename.endsWith(".json")) {
 			const data = JSON.parse(oldContent);
 			fs.writeFileSync(
@@ -259,11 +266,11 @@ ${details(snapshot)}`)
 		}
 	};
 
-	for (const [name, options] of [
+	for (const [name, options] of /** @type {[string, SnapshotOptions][]} */ ([
 		["timestamp", { timestamp: true }],
 		["hash", { hash: true }],
 		["tsh", { timestamp: true, hash: true }]
-	]) {
+	])) {
 		describe(`${name} mode`, () => {
 			it("should always accept an empty snapshot", (done) => {
 				const fs = createFs();
@@ -415,7 +422,7 @@ ${details(snapshot)}`)
 		it("should return same iterable for getFileIterable()", (done) => {
 			getSnapshot((err, snapshot) => {
 				if (err) done(err);
-				expect(snapshot.getFileIterable()).toEqual(snapshot.getFileIterable());
+				expect(/** @type {Snapshot} */ (snapshot).getFileIterable()).toEqual(/** @type {Snapshot} */ (snapshot).getFileIterable());
 				done();
 			});
 		});
@@ -423,8 +430,8 @@ ${details(snapshot)}`)
 		it("should return same iterable for getContextIterable()", (done) => {
 			getSnapshot((err, snapshot) => {
 				if (err) done(err);
-				expect(snapshot.getContextIterable()).toEqual(
-					snapshot.getContextIterable()
+				expect(/** @type {Snapshot} */ (snapshot).getContextIterable()).toEqual(
+					/** @type {Snapshot} */ (snapshot).getContextIterable()
 				);
 				done();
 			});
@@ -433,7 +440,7 @@ ${details(snapshot)}`)
 		it("should return same iterable for getMissingIterable()", (done) => {
 			getSnapshot((err, snapshot) => {
 				if (err) done(err);
-				expect(snapshot.getFileIterable()).toEqual(snapshot.getFileIterable());
+				expect(/** @type {Snapshot} */ (snapshot).getFileIterable()).toEqual(/** @type {Snapshot} */ (snapshot).getFileIterable());
 				done();
 			});
 		});
@@ -456,16 +463,16 @@ ${details(snapshot)}`)
 			jest.spyOn(fs, "readlink").mockImplementation((path, callback) => {
 				if (path === "/path/context/sub/symlink-error" && i < 2) {
 					i += 1;
-					callback(new Error("test"));
+					/** @type {Function} */ (callback)(new Error("test"));
 					return;
 				}
 
-				originalReadlink(path, callback);
+				(/** @type {Function} */ (originalReadlink))(path, callback);
 			});
 
 			createSnapshot(
 				fs,
-				["timestamp", { timestamp: true }],
+				/** @type {SnapshotOptions} */ (/** @type {unknown} */ (["timestamp", { timestamp: true }])),
 				(err, snapshot, snapshot2) => {
 					if (err) return done(err);
 					expectSnapshotsState(fs, snapshot, snapshot2, true, done);
@@ -483,7 +490,7 @@ ${details(snapshot)}`)
 			);
 
 			jest.spyOn(fs, "readlink").mockImplementation((path, callback) => {
-				callback(new Error("test"));
+				/** @type {Function} */ (callback)(new Error("test"));
 			});
 
 			const fsInfo = createFsInfo(fs);
@@ -492,7 +499,7 @@ ${details(snapshot)}`)
 				files,
 				directories,
 				missing,
-				["timestamp", { timestamp: true }],
+				/** @type {SnapshotOptions} */ (/** @type {unknown} */ (["timestamp", { timestamp: true }])),
 				(err, snapshot) => {
 					expect(snapshot).toBeNull();
 					done();
@@ -530,7 +537,7 @@ ${details(snapshot)}`)
 	// `timestampHash`. Cache lookups now treat existence-only entries as a
 	// cache miss and re-read from disk so snapshots stay valid.
 	describe("existence-only watchpack entries", () => {
-		const buildFsInfoWithSnapshot = (callback) => {
+		const buildFsInfoWithSnapshot = (/** @type {(err?: Error | null, fs?: IFs, snapshot?: Snapshot | null) => void} */ callback) => {
 			const fs = createFs();
 			const fsInfo = createFsInfo(fs);
 			fsInfo.createSnapshot(
@@ -538,7 +545,7 @@ ${details(snapshot)}`)
 				files,
 				directories,
 				missing,
-				["timestamp", { timestamp: true }],
+				/** @type {SnapshotOptions} */ (/** @type {unknown} */ (["timestamp", { timestamp: true }])),
 				(err, snapshot) => {
 					if (err) return callback(err);
 					callback(null, fs, snapshot);
@@ -546,15 +553,15 @@ ${details(snapshot)}`)
 			);
 		};
 
-		const onlyNonIgnored = (paths) => paths.filter((p) => !ignored.includes(p));
+		const onlyNonIgnored = (/** @type {string[]} */ paths) => paths.filter((/** @type {string} */ p) => !ignored.includes(p));
 
 		it("keeps the snapshot valid when watchpack reports `{}` for context dirs", (done) => {
 			buildFsInfoWithSnapshot((err, fs, snapshot) => {
 				if (err) return done(err);
-				const fsInfo = createFsInfo(fs);
+				const fsInfo = createFsInfo(/** @type {IFs} */ (fs));
 				const map = new Map(directories.map((d) => [d, {}]));
 				fsInfo.addContextTimestamps(map, true);
-				fsInfo.checkSnapshotValid(snapshot, (err, valid) => {
+				fsInfo.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
 					if (err) return done(err);
 					expect(valid).toBe(true);
 					done();
@@ -565,10 +572,10 @@ ${details(snapshot)}`)
 		it("keeps the snapshot valid when watchpack reports `{}` for files", (done) => {
 			buildFsInfoWithSnapshot((err, fs, snapshot) => {
 				if (err) return done(err);
-				const fsInfo = createFsInfo(fs);
+				const fsInfo = createFsInfo(/** @type {IFs} */ (fs));
 				const map = new Map(onlyNonIgnored(files).map((f) => [f, {}]));
 				fsInfo.addFileTimestamps(map, true);
-				fsInfo.checkSnapshotValid(snapshot, (err, valid) => {
+				fsInfo.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
 					if (err) return done(err);
 					expect(valid).toBe(true);
 					done();
@@ -579,14 +586,14 @@ ${details(snapshot)}`)
 		it("keeps the snapshot valid when watchpack reports `{ safeTime }` (no timestampHash) for an existing context dir", (done) => {
 			buildFsInfoWithSnapshot((err, fs, snapshot) => {
 				if (err) return done(err);
-				const fsInfo = createFsInfo(fs);
+				const fsInfo = createFsInfo(/** @type {IFs} */ (fs));
 				// Only target existing directories — for missing ones the cache
 				// would claim the dir exists while the snapshot says it doesn't.
 				fsInfo.addContextTimestamps(
 					new Map([["/path/context+files", { safeTime: 1 }]]),
 					true
 				);
-				fsInfo.checkSnapshotValid(snapshot, (err, valid) => {
+				fsInfo.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
 					if (err) return done(err);
 					expect(valid).toBe(true);
 					done();
@@ -603,7 +610,7 @@ ${details(snapshot)}`)
 				files,
 				directories,
 				missing,
-				["timestamp", { timestamp: true }],
+				/** @type {SnapshotOptions} */ (/** @type {unknown} */ (["timestamp", { timestamp: true }])),
 				(err, snapshot) => {
 					if (err) return done(err);
 					const fsInfo2 = createFsInfo(fs);
@@ -611,7 +618,7 @@ ${details(snapshot)}`)
 						new Map([["/path/context+files", { safeTime: startTime + 5000 }]]),
 						true
 					);
-					fsInfo2.checkSnapshotValid(snapshot, (err, valid) => {
+					fsInfo2.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
 						if (err) return done(err);
 						expect(valid).toBe(false);
 						done();
@@ -656,7 +663,7 @@ ${details(snapshot)}`)
 				files,
 				directories,
 				missing,
-				["timestamp", { timestamp: true }],
+				/** @type {SnapshotOptions} */ (/** @type {unknown} */ (["timestamp", { timestamp: true }])),
 				(err, snapshot) => {
 					if (err) return done(err);
 					const fsInfo2 = createFsInfo(fs);
@@ -667,7 +674,7 @@ ${details(snapshot)}`)
 						new Map([["/path/package.json", {}]]),
 						true
 					);
-					fsInfo2.checkSnapshotValid(snapshot, (err, valid) => {
+					fsInfo2.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
 						if (err) return done(err);
 						expect(valid).toBe(true);
 						done();
@@ -684,13 +691,13 @@ ${details(snapshot)}`)
 				files,
 				directories,
 				missing,
-				["timestamp", { timestamp: true }],
+				/** @type {SnapshotOptions} */ (/** @type {unknown} */ (["timestamp", { timestamp: true }])),
 				(err, snapshot) => {
 					if (err) return done(err);
 					// Create the missing file and re-check.
 					fs.writeFileSync("/path/package.json", "{}");
 					const fsInfo2 = createFsInfo(fs);
-					fsInfo2.checkSnapshotValid(snapshot, (err, valid) => {
+					fsInfo2.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
 						if (err) return done(err);
 						expect(valid).toBe(false);
 						done();
@@ -728,11 +735,11 @@ ${details(snapshot)}`)
 				files,
 				directories,
 				missing,
-				["timestamp", { timestamp: true }],
+				/** @type {SnapshotOptions} */ (/** @type {unknown} */ (["timestamp", { timestamp: true }])),
 				(err, snapshot) => {
 					if (err) return done(err);
 					const stored = /** @type {Map<string, EXPECTED_ANY>} */ (
-						snapshot.contextTimestamps
+						/** @type {Snapshot} */ (snapshot).contextTimestamps
 					).get("/path/context+files");
 					expect(stored).toBeTruthy();
 					expect(stored).toHaveProperty("timestampHash");
@@ -753,10 +760,10 @@ ${details(snapshot)}`)
 		// isolates the context check from the per-file checks.
 		const changedFile = "/path/context+files/sub/file3.txt";
 
-		for (const [name, options] of [
+		for (const [name, options] of /** @type {[string, SnapshotOptions][]} */ ([
 			["timestamp", { timestamp: true }],
 			["tsh", { timestamp: true, hash: true }]
-		]) {
+		])) {
 			it(`keeps the snapshot valid when a tracked context dir becomes ignored (${name})`, (done) => {
 				const fs = createFs();
 				const fsInfo = createFsInfo(fs);
@@ -771,7 +778,7 @@ ${details(snapshot)}`)
 						updateFile(fs, changedFile);
 						// Sanity: without ignoring, the change invalidates the snapshot.
 						const control = createFsInfo(fs);
-						control.checkSnapshotValid(snapshot, (err, valid) => {
+						control.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
 							if (err) return done(err);
 							expect(valid).toBe(false);
 							// Mark the directory ignored: the snapshot stays valid.
@@ -780,7 +787,7 @@ ${details(snapshot)}`)
 								new Map([[ignoredDir, "ignore"]]),
 								true
 							);
-							fsInfo2.checkSnapshotValid(snapshot, (err, valid) => {
+							fsInfo2.checkSnapshotValid(/** @type {Snapshot} */ (snapshot), (err, valid) => {
 								if (err) return done(err);
 								expect(valid).toBe(true);
 								done();
@@ -804,7 +811,7 @@ ${details(snapshot)}`)
 				(err, snapshot) => {
 					if (err) return done(err);
 					const ts = /** @type {Map<string, EXPECTED_ANY> | undefined} */ (
-						snapshot.contextTimestamps
+						/** @type {Snapshot} */ (snapshot).contextTimestamps
 					);
 					expect(ts === undefined || !ts.has(ignoredDir)).toBe(true);
 					done();
@@ -814,7 +821,8 @@ ${details(snapshot)}`)
 	});
 
 	describe("cache maintenance", () => {
-		const buildWithStats = (callback) => {
+		/** @typedef {import("../lib/FileSystemInfo") & Record<string, unknown>} FsInfoExt */
+		const buildWithStats = (/** @type {(err: Error | null | undefined, fsInfo?: FsInfoExt) => void} */ callback) => {
 			const fs = createFs();
 			const fsInfo = createFsInfo(fs);
 			// Two overlapping snapshots populate the optimization statistics so
@@ -843,10 +851,11 @@ ${details(snapshot)}`)
 		};
 
 		it("logStatistics() logs cache and optimization stats", (done) => {
-			buildWithStats((err, fsInfo) => {
+			buildWithStats((err, fsInfo_) => {
 				if (err) return done(err);
+				const fsInfo = /** @type {FsInfoExt} */ (fsInfo_);
 				expect(() => fsInfo.logStatistics()).not.toThrow();
-				expect(fsInfo.log.some((m) => /new snapshots created/.test(m))).toBe(
+				expect(/** @type {string[]} */ (fsInfo.log).some((/** @type {string} */ m) => /new snapshots created/.test(m))).toBe(
 					true
 				);
 				done();
@@ -854,8 +863,9 @@ ${details(snapshot)}`)
 		});
 
 		it("clear() empties caches and resets stats", (done) => {
-			buildWithStats((err, fsInfo) => {
+			buildWithStats((err, fsInfo_) => {
 				if (err) return done(err);
+				const fsInfo = /** @type {FsInfoExt} */ (fsInfo_);
 				expect(fsInfo._fileTimestamps.size).toBeGreaterThan(0);
 				expect(fsInfo._statCreatedSnapshots).toBeGreaterThan(0);
 				fsInfo.clear();
@@ -924,9 +934,9 @@ ${details(snapshot)}`)
 						options,
 						(err, s2) => {
 							if (err) return done(err);
-							const merged = fsInfo.mergeSnapshots(s1, s2);
+							const merged = fsInfo.mergeSnapshots(/** @type {Snapshot} */ (s1), /** @type {Snapshot} */ (s2));
 							expect(merged.startTime).toBe(
-								Math.min(s1.startTime, s2.startTime)
+								Math.min(/** @type {number} */ (/** @type {Snapshot} */ (s1).startTime), /** @type {number} */ (/** @type {Snapshot} */ (s2).startTime))
 							);
 							// both inputs are cached as valid → so is the merge
 							expect(fsInfo._snapshotCache.get(merged)).toBe(true);
@@ -960,15 +970,15 @@ ${details(snapshot)}`)
 						{ timestamp: true },
 						(err, withStart) => {
 							if (err) return done(err);
-							expect(noStart.hasStartTime()).toBe(false);
-							expect(fsInfo.mergeSnapshots(noStart, withStart).startTime).toBe(
-								withStart.startTime
+							expect(/** @type {Snapshot} */ (noStart).hasStartTime()).toBe(false);
+							expect(fsInfo.mergeSnapshots(/** @type {Snapshot} */ (noStart), /** @type {Snapshot} */ (withStart)).startTime).toBe(
+								/** @type {Snapshot} */ (withStart).startTime
 							);
-							expect(fsInfo.mergeSnapshots(withStart, noStart).startTime).toBe(
-								withStart.startTime
+							expect(fsInfo.mergeSnapshots(/** @type {Snapshot} */ (withStart), /** @type {Snapshot} */ (noStart)).startTime).toBe(
+								/** @type {Snapshot} */ (withStart).startTime
 							);
 							expect(
-								fsInfo.mergeSnapshots(noStart, noStart).hasStartTime()
+								fsInfo.mergeSnapshots(/** @type {Snapshot} */ (noStart), /** @type {Snapshot} */ (noStart)).hasStartTime()
 							).toBe(false);
 							done();
 						}
@@ -984,7 +994,7 @@ ${details(snapshot)}`)
 			const fsInfo = createFsInfo(fs);
 			// Fixed start time so the shared-snapshot start-time guard always passes.
 			const startTime = Date.now() + 10000;
-			const make = (fileList, cb) =>
+			const make = (/** @type {string[]} */ fileList, /** @type {(err?: Error | null, snapshot?: Snapshot | null) => void} */ cb) =>
 				fsInfo.createSnapshot(
 					startTime,
 					fileList,
@@ -994,12 +1004,12 @@ ${details(snapshot)}`)
 					cb
 				);
 			// 1st + 2nd identical snapshots create a shared common snapshot.
-			make(files, (err) => {
+			make(files, (/** @type {Error | null | undefined} */ err) => {
 				if (err) return done(err);
-				make(files, (err) => {
+				make(files, (/** @type {Error | null | undefined} */ err) => {
 					if (err) return done(err);
 					// 3rd identical snapshot reuses the shared snapshot as a whole.
-					make(files, (err) => {
+					make(files, (/** @type {Error | null | undefined} */ err) => {
 						if (err) return done(err);
 						const opt = fsInfo._fileTimestampsOptimization;
 						expect(opt._statReusedSharedSnapshots).toBeGreaterThan(0);
@@ -1046,16 +1056,17 @@ ${details(snapshot)}`)
 			return fs;
 		};
 
-		const createProjectFsInfo = (fs) => {
-			const logger = {
-				error: (...args) => {
+		const createProjectFsInfo = (/** @type {IFs} */ fs) => {
+			/** @type {import("../lib/logging/Logger").Logger & Record<string, Function>} */
+			const logger = /** @type {import("../lib/logging/Logger").Logger & Record<string, Function>} */ (/** @type {unknown} */ ({
+				error: (/** @type {unknown[]} */ ...args) => {
 					throw new Error(util.format(...args));
 				}
-			};
+			}));
 			for (const method of ["warn", "info", "log", "debug"]) {
 				logger[method] = () => {};
 			}
-			return new FileSystemInfo(fs, { logger, hashFunction: "sha256" });
+			return new FileSystemInfo(/** @type {import("../lib/util/fs").InputFileSystem} */ (/** @type {unknown} */ (fs)), { logger, hashFunction: "sha256" });
 		};
 
 		it("collects files, directories and resolve results across cjs/esm", (done) => {
@@ -1064,8 +1075,9 @@ ${details(snapshot)}`)
 			fsInfo.resolveBuildDependencies(
 				"/proj",
 				["/proj/entry.js", "/proj/", "/proj/empty-dir/"],
-				(err, result) => {
+				(err, result_) => {
 					if (err) return done(err);
+					const result = /** @type {import("../lib/FileSystemInfo").ResolveBuildDependenciesResult} */ (result_);
 					expect(result.files).toContain("/proj/entry.js");
 					expect(result.files).toContain("/proj/lib.mjs");
 					expect(result.files).toContain("/proj/node_modules/dep/index.js");
@@ -1092,8 +1104,9 @@ ${details(snapshot)}`)
 		it("checkResolveResultsValid reports invalid when an expected-missing dep appears", (done) => {
 			const fs = createProjectFs();
 			const fsInfo = createProjectFsInfo(fs);
-			fsInfo.resolveBuildDependencies("/proj", ["/proj/"], (err, result) => {
+			fsInfo.resolveBuildDependencies("/proj", ["/proj/"], (err, result_) => {
 				if (err) return done(err);
+				const result = /** @type {import("../lib/FileSystemInfo").ResolveBuildDependenciesResult} */ (result_);
 				// Create the previously-missing optional dependency.
 				fs.mkdirSync("/proj/node_modules/missing-dep", { recursive: true });
 				fs.writeFileSync(
@@ -1126,26 +1139,28 @@ ${details(snapshot)}`)
 	});
 
 	describe("managed item info", () => {
-		const setupManaged = (extra) => {
+		const setupManaged = (/** @type {(fs: IFs) => void} */ extra) => {
 			const fs = createFsFromVolume(new Volume());
 			fs.mkdirSync("/root/node_modules/normal", { recursive: true });
 			fs.writeFileSync(
 				"/root/node_modules/normal/package.json",
 				JSON.stringify({ name: "normal", version: "1.0.0" })
 			);
-			extra(fs);
-			const logger = {
-				error: (...args) => {
+			extra(/** @type {IFs} */ (/** @type {unknown} */ (fs)));
+			/** @type {import("../lib/logging/Logger").Logger & Record<string, Function>} */
+			const logger = /** @type {import("../lib/logging/Logger").Logger & Record<string, Function>} */ (/** @type {unknown} */ ({
+				error: (/** @type {unknown[]} */ ...args) => {
 					throw new Error(util.format(...args));
 				}
-			};
+			}));
+			/** @type {string[]} */
 			const warnings = [];
 			for (const method of ["warn", "info", "log", "debug"]) {
-				logger[method] = (...args) => {
+				logger[method] = (/** @type {unknown[]} */ ...args) => {
 					if (method === "warn") warnings.push(util.format(...args));
 				};
 			}
-			const fsInfo = new FileSystemInfo(fs, {
+			const fsInfo = new FileSystemInfo(/** @type {import("../lib/util/fs").InputFileSystem} */ (/** @type {unknown} */ (fs)), {
 				logger,
 				managedPaths: ["/root/node_modules"],
 				hashFunction: "sha256"
@@ -1153,7 +1168,7 @@ ${details(snapshot)}`)
 			return { fs, fsInfo, warnings };
 		};
 
-		const snapshotFiles = (fsInfo, fileList, callback) => {
+		const snapshotFiles = (/** @type {import("../lib/FileSystemInfo")} */ fsInfo, /** @type {string[]} */ fileList, /** @type {(err?: Error | null, snapshot?: Snapshot | null) => void} */ callback) => {
 			fsInfo.createSnapshot(
 				Date.now() + 10000,
 				fileList,
@@ -1179,7 +1194,7 @@ ${details(snapshot)}`)
 				],
 				(err, snapshot) => {
 					if (err) return done(err);
-					const info = snapshot.managedItemInfo;
+					const info = /** @type {Map<string, string>} */ (/** @type {Snapshot} */ (snapshot).managedItemInfo);
 					expect(info.get("/root/node_modules/normal")).toBe("normal@1.0.0");
 					expect(info.get("/root/node_modules/group")).toBe("*nested");
 					done();
@@ -1199,7 +1214,7 @@ ${details(snapshot)}`)
 				(err, snapshot) => {
 					if (err) return done(err);
 					expect(
-						snapshot.managedItemInfo.get("/root/node_modules/sub/node_modules")
+						/** @type {Map<string, string>} */ (/** @type {Snapshot} */ (snapshot).managedItemInfo).get("/root/node_modules/sub/node_modules")
 					).toBe("*node_modules");
 					done();
 				}
@@ -1349,8 +1364,11 @@ ${details(snapshot)}`)
 								directories,
 								missing,
 								{ timestamp: true, hash: true },
-								(err, base) => {
+								(err, base_) => {
 									if (err) return done(err);
+									const base = /** @type {Snapshot} */ (base_);
+									const cA = /** @type {Snapshot} */ (childA);
+									const cB = /** @type {Snapshot} */ (childB);
 									// Populate every remaining map/set so all serialization
 									// flags and `has*` getters are exercised.
 									base.setFileTimestamps(new Map([["/f", null]]));
@@ -1362,8 +1380,8 @@ ${details(snapshot)}`)
 									base.setManagedContexts(new Set(["/mc"]));
 									base.setManagedMissing(new Set(["/mm"]));
 									// Two children → the iterator's multi-child queue path.
-									base.setChildren(new Set([childA, childB]));
-									const restored = clone(base);
+									base.setChildren(new Set([cA, cB]));
+									const restored = /** @type {Snapshot & Record<string, Function>} */ (/** @type {unknown} */ (clone(base)));
 									for (const has of [
 										"hasStartTime",
 										"hasFileTimestamps",
@@ -1391,8 +1409,8 @@ ${details(snapshot)}`)
 										[...restored.getMissingIterable()].length
 									).toBeGreaterThan(0);
 									// A single-child snapshot exercises the iterator shortcut.
-									childA.setChildren(new Set([childB]));
-									expect([...childA.getFileIterable()]).toContain(
+									cA.setChildren(new Set([cB]));
+									expect([...cA.getFileIterable()]).toContain(
 										"/path/file2.txt"
 									);
 									done();
@@ -1414,9 +1432,9 @@ ${details(snapshot)}`)
 				if (err) return done(err);
 				expect(hash).toBe("directory");
 				jest.spyOn(fs, "readFile").mockImplementation((p, cb) => {
-					const err = new Error("denied");
+					const err = /** @type {Error & { code: string }} */ (new Error("denied"));
 					err.code = "EACCES";
-					cb(err);
+					/** @type {Function} */ (cb)(err);
 				});
 				fsInfo.createSnapshot(
 					Date.now() + 10000,
@@ -1436,9 +1454,9 @@ ${details(snapshot)}`)
 			const fs = createFs();
 			const fsInfo = createFsInfo(fs);
 			jest.spyOn(fs, "stat").mockImplementation((p, cb) => {
-				const err = new Error("denied");
+				const err = /** @type {Error & { code: string }} */ (new Error("denied"));
 				err.code = "EACCES";
-				cb(err);
+				/** @type {Function} */ (cb)(err);
 			});
 			fsInfo.createSnapshot(
 				Date.now() + 10000,

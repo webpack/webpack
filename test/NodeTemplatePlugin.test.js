@@ -25,16 +25,17 @@ describe("NodeTemplatePlugin", () => {
 			},
 			(err, stats) => {
 				if (err) return err;
-				expect(stats.hasErrors()).toBe(false);
-				expect(stats.hasWarnings()).toBe(false);
+				expect(/** @type {import("../").Stats} */ (stats).hasErrors()).toBe(false);
+				expect(/** @type {import("../").Stats} */ (stats).hasWarnings()).toBe(false);
 
+				// @ts-ignore
 				const result = require("./js/NodeTemplatePlugin/result").abc;
 
 				expect(result.nextTick).toBe(process.nextTick);
 				expect(result.fs).toBe(require("fs"));
-				result.loadChunk(456, (chunk) => {
+				result.loadChunk(456, /** @param {unknown} chunk */ (chunk) => {
 					expect(chunk).toBe(123);
-					result.loadChunk(567, (chunk) => {
+					result.loadChunk(567, /** @param {unknown} chunk */ (chunk) => {
 						expect(chunk).toEqual({
 							a: 1
 						});
@@ -70,17 +71,18 @@ describe("NodeTemplatePlugin", () => {
 			},
 			(err, stats) => {
 				if (err) return err;
-				expect(stats.hasErrors()).toBe(false);
+				expect(/** @type {import("../").Stats} */ (stats).hasErrors()).toBe(false);
 
+				// @ts-ignore
 				const result = require("./js/NodeTemplatePluginSingle/result2");
 
 				expect(result.nextTick).toBe(process.nextTick);
 				expect(result.fs).toBe(require("fs"));
 				const sameTick = true;
-				result.loadChunk(456, (chunk) => {
+				result.loadChunk(456, /** @param {unknown} chunk */ (chunk) => {
 					expect(chunk).toBe(123);
 					expect(sameTick).toBe(true);
-					result.loadChunk(567, (chunk) => {
+					result.loadChunk(567, /** @param {unknown} chunk */ (chunk) => {
 						expect(chunk).toEqual({
 							a: 1
 						});
