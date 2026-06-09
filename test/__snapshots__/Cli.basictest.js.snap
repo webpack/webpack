@@ -8248,6 +8248,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-html": Object {
+    "configs": Array [
+      Object {
+        "description": "Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor \`html\` option.",
+        "multiple": false,
+        "path": "output.html",
+        "type": "boolean",
+      },
+    ],
+    "description": "Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor \`html\` option.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-html-chunk-filename": Object {
     "configs": Array [
       Object {

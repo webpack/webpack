@@ -845,6 +845,10 @@
         "filename": {
           "$ref": "#/definitions/EntryFilename"
         },
+        "html": {
+          "description": "Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.",
+          "type": "boolean"
+        },
         "import": {
           "$ref": "#/definitions/EntryItem"
         },
@@ -899,6 +903,10 @@
         },
         "filename": {
           "$ref": "#/definitions/Filename"
+        },
+        "html": {
+          "description": "Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.",
+          "type": "boolean"
         },
         "import": {
           "description": "Module(s) that are loaded upon startup. The last one is exported.",
@@ -3932,6 +3940,10 @@
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
         },
+        "html": {
+          "description": "Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.",
+          "type": "boolean"
+        },
         "htmlChunkFilename": {
           "$ref": "#/definitions/HtmlChunkFilename"
         },
@@ -4149,6 +4161,10 @@
         },
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
+        },
+        "html": {
+          "description": "Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.",
+          "type": "boolean"
         },
         "htmlChunkFilename": {
           "$ref": "#/definitions/HtmlChunkFilename"
