@@ -1,5 +1,7 @@
 "use strict";
 
+/** @typedef {(...args: unknown[]) => unknown} AnyFn */
+
 module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 	const state = global.JEST_STATE_SYMBOL;
 	/** @type {import("@jest/types").Circus.DescribeBlock} */
@@ -13,27 +15,30 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 	// this function allows to release memory in fn context
 	// manually, usually after the suite has been run.
 	/**
-	 * @param {EXPECTED_FUNCTION} fn test or hook function
+	 * @param {AnyFn | undefined} fn test or hook function
 	 * @param {boolean=} isTest whether this wraps a test (vs a hook)
-	 * @returns {EXPECTED_ANY} wrapped function
+	 * @returns {((done: AnyFn) => void) | (() => unknown) | null} wrapped function
 	 */
 	const createDisposableFn = (fn, isTest) => {
 		if (!fn) return null;
+		/** @type {AnyFn | null} */
+		let f = fn;
 		const rfn =
-			fn.length >= 1
-				? (/** @type {EXPECTED_FUNCTION} */ done) => {
-						fn((/** @type {EXPECTED_ANY[]} */ ...args) => {
+			f.length >= 1
+				? (/** @type {AnyFn} */ done) => {
+						/** @type {AnyFn} */
+						(f)((/** @type {unknown[]} */ ...args) => {
 							if (isTest) runTests++;
 							done(...args);
 						});
 					}
 				: () => {
-						const r = fn();
+						const r = /** @type {AnyFn} */ (f)();
 						if (isTest) runTests++;
 						return r;
 					};
 		disposables.push(() => {
-			fn = /** @type {EXPECTED_ANY} */ (null);
+			f = null;
 		});
 		return rfn;
 	};
@@ -74,7 +79,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		} catch (err) {
 			/* eslint-disable no-unused-expressions */
 			// avoid leaking memory
-			/** @type {EXPECTED_ANY} */
+			/** @type {Error} */
 			(err).stack;
 			/* eslint-enable no-unused-expressions */
 			throw err;
@@ -105,10 +110,13 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		getNumberOfTests() {
 			return numberOfTests;
 		},
-		it(/** @type {EXPECTED_ANY[]} */ ...args) {
+		it(/** @type {unknown[]} */ ...args) {
 			numberOfTests++;
 			if (runTests >= numberOfTests) throw new Error("it called too late");
-			args[1] = createDisposableFn(args[1], true);
+			args[1] = createDisposableFn(
+				/** @type {AnyFn | undefined} */ (args[1]),
+				true
+			);
 			args[2] = args[2] || globalTimeout;
 			inSuite(() => {
 				// @ts-expect-error expected
@@ -118,11 +126,11 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 				);
 			});
 		},
-		beforeEach(/** @type {EXPECTED_ANY[]} */ ...args) {
+		beforeEach(/** @type {unknown[]} */ ...args) {
 			if (runTests >= numberOfTests) {
 				throw new Error("beforeEach called too late");
 			}
-			args[0] = createDisposableFn(args[0]);
+			args[0] = createDisposableFn(/** @type {AnyFn | undefined} */ (args[0]));
 			inSuite(() => {
 				// @ts-expect-error expected
 				beforeEach(...args);
@@ -131,11 +139,11 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 				);
 			});
 		},
-		afterEach(/** @type {EXPECTED_ANY[]} */ ...args) {
+		afterEach(/** @type {unknown[]} */ ...args) {
 			if (runTests >= numberOfTests) {
 				throw new Error("afterEach called too late");
 			}
-			args[0] = createDisposableFn(args[0]);
+			args[0] = createDisposableFn(/** @type {AnyFn | undefined} */ (args[0]));
 			inSuite(() => {
 				// @ts-expect-error expected
 				afterEach(...args);

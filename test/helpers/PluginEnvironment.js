@@ -1,14 +1,17 @@
 "use strict";
 
+/** @typedef {(...args: unknown[]) => unknown} Handler */
+/** @typedef {{ tap: (options: unknown, handler: Handler) => void, tapAsync: (options: unknown, handler: Handler) => void, tapPromise: (options: unknown, handler: Handler) => void }} FakeHook */
+
 module.exports = function PluginEnvironment() {
 	/**
-	 * @type {{ name: string, handler: EXPECTED_FUNCTION }[]}
+	 * @type {{ name: string, handler: Handler }[]}
 	 */
 	const events = [];
 
 	/**
 	 * @param {string} name the name
-	 * @param {EXPECTED_FUNCTION} handler the handler
+	 * @param {Handler} handler the handler
 	 */
 	function addEvent(name, handler) {
 		events.push({
@@ -28,7 +31,7 @@ module.exports = function PluginEnvironment() {
 	}
 
 	this.getEnvironmentStub = function getEnvironmentStub() {
-		/** @type {Map<string | symbol, EXPECTED_ANY>} */
+		/** @type {Map<string | symbol, FakeHook>} */
 		const hooks = new Map();
 		return {
 			plugin: addEvent,
@@ -44,22 +47,13 @@ module.exports = function PluginEnvironment() {
 						if (hook === undefined) {
 							const eventName = getEventName(/** @type {string} */ (hookName));
 							hook = {
-								tap(
-									/** @type {EXPECTED_ANY} */ _,
-									/** @type {EXPECTED_FUNCTION} */ handler
-								) {
+								tap(options, handler) {
 									addEvent(eventName, handler);
 								},
-								tapAsync(
-									/** @type {EXPECTED_ANY} */ _,
-									/** @type {EXPECTED_FUNCTION} */ handler
-								) {
+								tapAsync(options, handler) {
 									addEvent(eventName, handler);
 								},
-								tapPromise(
-									/** @type {EXPECTED_ANY} */ _,
-									/** @type {EXPECTED_FUNCTION} */ handler
-								) {
+								tapPromise(options, handler) {
 									addEvent(eventName, handler);
 								}
 							};

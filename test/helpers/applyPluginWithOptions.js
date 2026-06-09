@@ -2,21 +2,22 @@
 
 const PluginEnvironment = require("./PluginEnvironment");
 
+/** @typedef {{ apply: (env: unknown) => void }} PluginInstance */
+
 /**
- * @this {EXPECTED_ANY}
- * @param {EXPECTED_ANY} Plugin plugin constructor
- * @returns {EXPECTED_ANY} recorded event bindings
+ * @this {Record<string, unknown> | typeof globalThis}
+ * @param {new (...args: unknown[]) => PluginInstance} Plugin plugin constructor
+ * @param {...unknown} args constructor arguments
+ * @returns {{ name: string, handler: (...args: unknown[]) => unknown }[]} recorded event bindings
  */
-module.exports = function applyPluginWithOptions(Plugin) {
-	const plugin = new (Function.prototype.bind.apply(
-		Plugin,
-		// eslint-disable-next-line prefer-rest-params
-		/** @type {EXPECTED_ANY} */ (arguments)
-	))();
+module.exports = function applyPluginWithOptions(Plugin, ...args) {
+	const plugin = new Plugin(...args);
 	const pluginEnvironment = new PluginEnvironment();
 	plugin.apply(pluginEnvironment.getEnvironmentStub());
 
-	const env = this === global ? {} : this;
+	const env = /** @type {Record<string, unknown>} */ (
+		this === global ? {} : this
+	);
 	env.plugin = plugin;
 	env.pluginEnvironment = pluginEnvironment;
 

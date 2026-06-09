@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = () => {
-	/** @type {EXPECTED_ANY[]} */
+	/** @type {string[]} */
 	const warnings = [];
 	/** @type {typeof console.warn} */
 	let oldWarn;

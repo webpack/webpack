@@ -3,10 +3,16 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @typedef {import("../../lib/css/walkCssTokens").MutableToken} MutableToken */
+/** @typedef {Record<string, unknown> & { getPropertyValue: (property: string) => unknown }} StyleDeclaration */
+/** @typedef {{ selectorText: string | undefined, style: StyleDeclaration, cssText: string }} CssRule */
+/** @typedef {{ type: string, target?: FakeElement }} FakeEvent */
+/** @typedef {(event: FakeEvent) => void} EventHandler */
+
 /**
- * @this {Record<string, EXPECTED_ANY>}
+ * @this {StyleDeclaration}
  * @param {string} property property
- * @returns {EXPECTED_ANY} value
+ * @returns {unknown} value
  */
 function getPropertyValue(property) {
 	return this[property];
@@ -142,9 +148,10 @@ class FakeDocument {
 
 	/**
 	 * @param {FakeElement} element element
-	 * @returns {EXPECTED_ANY} computed style
+	 * @returns {StyleDeclaration} computed style
 	 */
 	getComputedStyle(element) {
+		/** @type {StyleDeclaration} */
 		const style = { getPropertyValue };
 		const links = this.getElementsByTagName("link");
 		for (const link of links) {
@@ -170,7 +177,7 @@ class FakeElement {
 		this._type = type;
 		/** @type {FakeElement[]} */
 		this._children = [];
-		/** @type {Record<string, EXPECTED_ANY>} */
+		/** @type {Record<string, unknown>} */
 		this._attributes = Object.create(null);
 		/** @type {string | undefined} */
 		this._src = undefined;
@@ -181,9 +188,9 @@ class FakeElement {
 		this.sheet = type === "link" ? new FakeSheet(this, basePath) : undefined;
 		this._textContent = "";
 		this._innerHTML = "";
-		/** @type {Map<string, EXPECTED_FUNCTION[]> | undefined} */
+		/** @type {Map<string, EventHandler[]> | undefined} */
 		this._eventListeners = undefined;
-		/** @type {undefined | ((event: EXPECTED_ANY) => void)} */
+		/** @type {EventHandler | undefined} */
 		this.onload = undefined;
 	}
 
@@ -274,7 +281,7 @@ class FakeElement {
 
 	/**
 	 * @param {string} name attribute name
-	 * @param {EXPECTED_ANY} value attribute value
+	 * @param {string} value attribute value
 	 * @returns {void}
 	 */
 	setAttribute(name, value) {
@@ -295,7 +302,7 @@ class FakeElement {
 
 	/**
 	 * @param {string} name attribute name
-	 * @returns {EXPECTED_ANY} attribute value
+	 * @returns {unknown} attribute value
 	 */
 	getAttribute(name) {
 		if (this._type === "link" && name === "href") {
@@ -366,7 +373,7 @@ class FakeElement {
 
 	/**
 	 * @param {string} event event name
-	 * @param {EXPECTED_FUNCTION} handler handler
+	 * @param {EventHandler} handler handler
 	 * @returns {void}
 	 */
 	addEventListener(event, handler) {
@@ -383,7 +390,7 @@ class FakeElement {
 
 	/**
 	 * @param {string} event event name
-	 * @param {EXPECTED_FUNCTION} handler handler
+	 * @param {EventHandler} handler handler
 	 * @returns {void}
 	 */
 	removeEventListener(event, handler) {
@@ -397,7 +404,7 @@ class FakeElement {
 	}
 
 	/**
-	 * @param {{ type: string }} event event
+	 * @param {FakeEvent} event event
 	 * @returns {void}
 	 */
 	_dispatchEvent(event) {
@@ -474,7 +481,7 @@ class FakeSheet {
 		// we can only get the latest file content, and the previous content will be lost.
 		/** @type {string | undefined} */
 		this._css = undefined;
-		/** @type {EXPECTED_ANY[] | undefined} */
+		/** @type {CssRule[] | undefined} */
 		this._cssRules = undefined;
 	}
 
@@ -522,9 +529,9 @@ class FakeSheet {
 			readToken
 		} = require("../../lib/css/walkCssTokens");
 
-		/** @type {EXPECTED_ANY[]} */
+		/** @type {CssRule[]} */
 		const rules = [];
-		/** @type {Record<string, EXPECTED_ANY>} */
+		/** @type {StyleDeclaration} */
 		let currentRule = { getPropertyValue };
 		/** @type {string | undefined} */
 		let selector;
@@ -571,7 +578,7 @@ class FakeSheet {
 				);
 			});
 		for (let pos = 0; ; ) {
-			const t = readToken(css, pos, /** @type {EXPECTED_ANY} */ ({}));
+			const t = readToken(css, pos, /** @type {MutableToken} */ ({}));
 			if (t === undefined) break;
 			pos = t.end;
 			if (t.type === TT_LEFT_CURLY_BRACKET) {
@@ -606,7 +613,7 @@ class FakeSheet {
 class CSSStyleSheet {
 	constructor() {
 		this._cssText = "";
-		/** @type {EXPECTED_ANY[]} */
+		/** @type {CssRule[]} */
 		this._cssRules = [];
 	}
 
@@ -633,7 +640,7 @@ class CSSStyleSheet {
 
 	/**
 	 * Get the parsed CSS rules
-	 * @returns {EXPECTED_ANY[]} Array of CSS rules
+	 * @returns {CssRule[]} Array of CSS rules
 	 */
 	get cssRules() {
 		return this._cssRules;
@@ -651,9 +658,9 @@ class CSSStyleSheet {
 			readToken
 		} = require("../../lib/css/walkCssTokens");
 
-		/** @type {EXPECTED_ANY[]} */
+		/** @type {CssRule[]} */
 		const rules = [];
-		/** @type {Record<string, EXPECTED_ANY>} */
+		/** @type {StyleDeclaration} */
 		let currentRule = { getPropertyValue };
 		/** @type {string | undefined} */
 		let selector;
@@ -676,7 +683,7 @@ class CSSStyleSheet {
 		let ruleStart = 0;
 
 		for (let pos = 0; ; ) {
-			const t = readToken(cleanCss, pos, /** @type {EXPECTED_ANY} */ ({}));
+			const t = readToken(cleanCss, pos, /** @type {MutableToken} */ ({}));
 			if (t === undefined) break;
 			pos = t.end;
 			if (t.type === TT_LEFT_CURLY_BRACKET) {

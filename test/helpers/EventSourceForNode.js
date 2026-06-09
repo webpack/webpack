@@ -12,7 +12,7 @@ module.exports = class EventSource {
 	constructor(url) {
 		/** @type {import("http").IncomingMessage | undefined} */
 		this.response = undefined;
-		/** @type {undefined | ((err: EXPECTED_ANY) => void)} */
+		/** @type {undefined | ((err: Error | { message: Error }) => void)} */
 		this.onerror = undefined;
 		const request = (
 			url.startsWith("https:") ? require("https") : require("http")
@@ -41,12 +41,12 @@ module.exports = class EventSource {
 	}
 
 	// eslint-disable-next-line accessor-pairs
-	set onopen(/** @type {EXPECTED_ANY} */ value) {
+	set onopen(/** @type {unknown} */ value) {
 		throw new Error("not implemented");
 	}
 
 	// eslint-disable-next-line accessor-pairs
-	set onmessage(/** @type {EXPECTED_ANY} */ value) {
+	set onmessage(/** @type {unknown} */ value) {
 		throw new Error("not implemented");
 	}
 };

@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig",
   "compilerOptions": {
+    "strict": true,
     "types": ["node", "jest"]
   },
   "include": [

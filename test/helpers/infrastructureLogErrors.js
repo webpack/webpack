@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {{ run: number, options?: EXPECTED_ANY }} Config */
+/** @typedef {{ run: number, options?: unknown }} Config */
 
 /**
  * @param {string} log log line

@@ -2,12 +2,10 @@
 
 const stripVTControlCharacters = require("./stripVTControlCharacters");
 
-/**
- * @param {NodeJS.WriteStream} stdio writable stream to capture
- * @param {boolean=} tty whether to force a TTY value
- * @returns {EXPECTED_ANY} capture handle
- */
-module.exports = (stdio, tty) => {
+module.exports = (
+	/** @type {NodeJS.WriteStream} */ stdio,
+	/** @type {boolean=} */ tty
+) => {
 	/** @type {string[]} */
 	let logs = [];
 
