@@ -167,8 +167,8 @@ describe("css identifier utils", () => {
 					equalsLowerCase(s, "button");
 				} catch (err) {
 					failures.push(
-					`throw on ${JSON.stringify(s)}: ${/** @type {Error} */ (err).message}`
-				);
+						`throw on ${JSON.stringify(s)}: ${/** @type {Error} */ (err).message}`
+					);
 				}
 			}
 			expect(failures).toEqual([]);
@@ -193,8 +193,8 @@ describe("css identifier utils", () => {
 						cssExportConvention(s, c);
 					} catch (err) {
 						failures.push(
-						`${c} on ${JSON.stringify(s)}: ${/** @type {Error} */ (err).message}`
-					);
+							`${c} on ${JSON.stringify(s)}: ${/** @type {Error} */ (err).message}`
+						);
 					}
 				}
 			}

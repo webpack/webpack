@@ -13,12 +13,16 @@ const makeModuleGraph = (
 	/** @type {unknown} */ module,
 	/** @type {unknown} */ exportsInfo = undefined
 ) =>
-	/** @type {import("../lib/ModuleGraph")} */ (/** @type {unknown} */ ({
-		getParentModule: () => module,
-		getExportsInfo: () => exportsInfo
-	}));
+	/** @type {import("../lib/ModuleGraph")} */ (
+		/** @type {unknown} */ ({
+			getParentModule: () => module,
+			getExportsInfo: () => exportsInfo
+		})
+	);
 
-const entry = (/** @type {Partial<import("../lib/dependencies/CssIcssExportDependency").CssExportEntry>} */ over) => ({
+const entry = (
+	/** @type {Partial<import("../lib/dependencies/CssIcssExportDependency").CssExportEntry>} */ over
+) => ({
 	name: "a",
 	value: "a",
 	range: undefined,
@@ -102,11 +106,12 @@ describe("CssIcssExportDependency", () => {
 					loc: { start: { line: 1, column: 0 } }
 				})
 			]);
-			const warnings = /** @type {NonNullable<ReturnType<typeof dep.getWarnings>>} */ (
-				dep.getWarnings(
-					makeModuleGraph(makeModule(), { isExportProvided: () => false })
-				)
-			);
+			const warnings =
+				/** @type {NonNullable<ReturnType<typeof dep.getWarnings>>} */ (
+					dep.getWarnings(
+						makeModuleGraph(makeModule(), { isExportProvided: () => false })
+					)
+				);
 			expect(warnings).toHaveLength(1);
 			expect(warnings[0].message).toContain(
 				'Self-referencing name "missing" not found'
@@ -143,15 +148,19 @@ describe("CssIcssExportDependency", () => {
 				chunkGraph: { moduleGraph: makeModuleGraph(makeModule()) }
 			});
 		dep.updateHash(
-			/** @type {import("../lib/util/Hash")} */ (/** @type {unknown} */ ({
-				update: (/** @type {string} */ s) => updates.push(s)
-			})),
+			/** @type {import("../lib/util/Hash")} */ (
+				/** @type {unknown} */ ({
+					update: (/** @type {string} */ s) => updates.push(s)
+				})
+			),
 			context
 		);
 		dep.updateHash(
-			/** @type {import("../lib/util/Hash")} */ (/** @type {unknown} */ ({
-				update: (/** @type {string} */ s) => updates.push(s)
-			})),
+			/** @type {import("../lib/util/Hash")} */ (
+				/** @type {unknown} */ ({
+					update: (/** @type {string} */ s) => updates.push(s)
+				})
+			),
 			context
 		);
 		expect(updates).toHaveLength(2);

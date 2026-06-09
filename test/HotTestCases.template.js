@@ -130,6 +130,7 @@ const describeCases = (config) => {
 								new webpack.LoaderOptionsPlugin(fakeUpdateLoaderOptions)
 							);
 							if (!options.recordsPath) options.recordsPath = recordsPath;
+							/** @type {HotTestConfig} */
 							let testConfig = {};
 							try {
 								// try to load a test file
@@ -141,7 +142,7 @@ const describeCases = (config) => {
 								// ignored
 							}
 
-							const onCompiled = (err, stats) => {
+							const onCompiled = (/** @type {Error | null} */ err, /** @type {import("../").Stats} */ stats) => {
 								if (err) return done(err);
 								const jsonStats = stats.toJson({
 									errorDetails: true
@@ -171,9 +172,10 @@ const describeCases = (config) => {
 									return;
 								}
 
-								function runCompiler(callback) {
+								function runCompiler(/** @type {(err: EXPECTED_ANY, stats?: EXPECTED_ANY) => void} */ callback) {
 									fakeUpdateLoaderOptions.updateIndex++;
-									compiler.run((err, stats) => {
+									compiler.run((err, _stats) => {
+										const stats = /** @type {import("../").Stats} */ (_stats);
 										if (err) return callback(err);
 										const jsonStats = stats.toJson({
 											errorDetails: true
@@ -228,7 +230,7 @@ const describeCases = (config) => {
 											afterEach: _afterEach,
 											STATE: jsonStats,
 											NEXT: runCompiler,
-											NEXT_DEFERRED: (cb) => {
+											NEXT_DEFERRED: (/** @type {EXPECTED_ANY} */ cb) => {
 												// https://github.com/webpack/webpack/actions/runs/22039709807/job/63678606467?pr=20412
 												// When lazyCompilation is enabled, delay the first compilation re-run by 1000ms during HMR
 												// to ensure that HTTP requests from dynamic imports (e.g., const promiseA = import("./moduleA"))
@@ -242,8 +244,8 @@ const describeCases = (config) => {
 										});
 									},
 									getBundlePaths: (_i, _options, runner) => {
-										const bundles = _stats.entrypoints.main.assets.map(
-											(i) => i.name
+										const bundles = /** @type {EXPECTED_ANY[]} */ (/** @type {EXPECTED_ANY} */ (_stats.entrypoints).main.assets).map(
+											(/** @type {EXPECTED_ANY} */ i) => i.name
 										);
 										if (config.target === "web") {
 											return bundles;
@@ -266,7 +268,7 @@ const describeCases = (config) => {
 								);
 							};
 							compiler = webpack(options);
-							compiler.run(onCompiled);
+							compiler.run(/** @type {EXPECTED_ANY} */ (onCompiled));
 						}, 20000);
 
 						const {

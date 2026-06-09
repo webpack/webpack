@@ -75,6 +75,7 @@ describe("StatsTestCases", () => {
 				if (fs.existsSync(path.join(testDirectory, "webpack.config.js"))) {
 					options = require(path.join(testDirectory, "webpack.config.js"));
 				}
+				/** @type {{ validate?: (stats: import("../").Stats, stderr: string) => void }} */
 				let testConfig = {};
 				try {
 					// try to load a test file
@@ -177,13 +178,15 @@ describe("StatsTestCases", () => {
 						"utf8"
 					);
 
+					/** @type {EXPECTED_ANY} */
 					let toStringOptions = {
 						context: testDirectory,
 						colors: false
 					};
 					let hasColorSetting = false;
-					if (typeof c.options.stats !== "undefined") {
-						toStringOptions = c.options.stats;
+					const cOptions = /** @type {EXPECTED_ANY} */ (c.options);
+					if (typeof cOptions.stats !== "undefined") {
+						toStringOptions = cOptions.stats;
 						if (
 							toStringOptions === null ||
 							typeof toStringOptions !== "object"
@@ -195,17 +198,17 @@ describe("StatsTestCases", () => {
 						}
 						hasColorSetting = typeof toStringOptions.colors !== "undefined";
 					}
-					if (Array.isArray(c.options) && !toStringOptions.children) {
-						toStringOptions.children = c.options.map((o) => o.stats);
+					if (Array.isArray(cOptions) && !toStringOptions.children) {
+						toStringOptions.children = cOptions.map((/** @type {EXPECTED_ANY} */ o) => o.stats);
 					}
 					// mock timestamps
-					for (const { compilation: s } of stats.stats
-						? stats.stats
+					for (const { compilation: s } of statsAny.stats
+						? statsAny.stats
 						: [stats]) {
-						expect(s.startTime).toBeGreaterThan(0);
-						expect(s.endTime).toBeGreaterThan(0);
-						s.endTime = new Date("04/20/1970, 12:42:42 PM").getTime();
-						s.startTime = s.endTime - 1234;
+						expect(/** @type {EXPECTED_ANY} */ (s).startTime).toBeGreaterThan(0);
+						expect(/** @type {EXPECTED_ANY} */ (s).endTime).toBeGreaterThan(0);
+						/** @type {EXPECTED_ANY} */ (s).endTime = new Date("04/20/1970, 12:42:42 PM").getTime();
+						/** @type {EXPECTED_ANY} */ (s).startTime = /** @type {EXPECTED_ANY} */ (s).endTime - 1234;
 					}
 					let actual = stats.toString(toStringOptions);
 					expect(typeof actual).toBe("string");

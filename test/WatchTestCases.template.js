@@ -4,9 +4,22 @@ require("./helpers/warmup-webpack");
 
 /** @typedef {Record<string, EXPECTED_ANY>} Env */
 /** @typedef {{ testPath: string, srcPath: string }} TestOptions */
+/**
+ * @typedef {object} SuiteConfig
+ * @property {string} name suite name
+ * @property {EXPECTED_ANY=} experiments experiments overrides
+ * @property {EXPECTED_ANY=} optimization optimization overrides
+ */
+/**
+ * @typedef {object} WatchTestConfig
+ * @property {((i: EXPECTED_ANY, options: EXPECTED_ANY) => string)=} findBundle
+ * @property {boolean=} noTests
+ */
 
 const path = require("path");
 const fs = require("graceful-fs");
+/** @type {{ sync: (p: string) => void, (p: string, cb: (err: EXPECTED_ANY) => void): void }} */
+// @ts-ignore no declaration file for rimraf
 const rimraf = require("rimraf");
 const { parseResource } = require("../lib/util/identifier");
 const checkArrayExpectation = require("./checkArrayExpectation");
@@ -51,6 +64,9 @@ function copyDiff(src, dest, initial) {
 	}
 }
 
+/**
+ * @param {SuiteConfig} config suite config
+ */
 const describeCases = (config) => {
 	describe(config.name, () => {
 		beforeAll(() => {
@@ -110,7 +126,7 @@ const describeCases = (config) => {
 							testName
 						);
 						const testDirectory = path.join(casesPath, category.name, testName);
-						/** @type {TODO} */
+						/** @type {Array<{ name: string, done?: boolean, stats?: import("../").Stats, it?: EXPECTED_ANY, getNumberOfTests?: () => number }>} */
 						const runs = fs
 							.readdirSync(testDirectory)
 							.sort()
@@ -142,7 +158,7 @@ const describeCases = (config) => {
 									srcPath: tempDirectory
 								});
 							}
-							const applyConfig = (options, idx) => {
+							const applyConfig = (/** @type {import("../").Configuration} */ options, /** @type {number} */ idx) => {
 								if (!options.mode) options.mode = "development";
 								if (!options.context) options.context = tempDirectory;
 								if (!options.entry) options.entry = "./index.js";
@@ -162,24 +178,24 @@ const describeCases = (config) => {
 											: ".js"
 									}`;
 								}
-								if (options.cache && options.cache.type === "filesystem") {
+								if (options.cache && /** @type {import("../").FileCacheOptions} */ (options.cache).type === "filesystem") {
 									const cacheDirectory = path.join(tempDirectory, ".cache");
-									options.cache.cacheDirectory = cacheDirectory;
-									options.cache.name = `config-${idx}`;
+									/** @type {import("../").FileCacheOptions} */ (options.cache).cacheDirectory = cacheDirectory;
+									/** @type {import("../").FileCacheOptions} */ (options.cache).name = `config-${idx}`;
 								}
 								if (config.experiments) {
 									if (!options.experiments) options.experiments = {};
 									for (const key of Object.keys(config.experiments)) {
-										if (options.experiments[key] === undefined) {
-											options.experiments[key] = config.experiments[key];
+										if ((/** @type {EXPECTED_ANY} */ (options.experiments))[key] === undefined) {
+											(/** @type {EXPECTED_ANY} */ (options.experiments))[key] = config.experiments[key];
 										}
 									}
 								}
 								if (config.optimization) {
 									if (!options.optimization) options.optimization = {};
 									for (const key of Object.keys(config.optimization)) {
-										if (options.optimization[key] === undefined) {
-											options.optimization[key] = config.optimization[key];
+										if ((/** @type {EXPECTED_ANY} */ (options.optimization))[key] === undefined) {
+											(/** @type {EXPECTED_ANY} */ (options.optimization))[key] = config.optimization[key];
 										}
 									}
 								}
@@ -196,13 +212,14 @@ const describeCases = (config) => {
 							let runIdx = 0;
 							let waitMode = false;
 							let run = runs[runIdx];
+							/** @type {string | null | undefined} */
 							let triggeringFilename;
 							let lastHash = "";
 
 							const currentWatchStepModule = require("./helpers/currentWatchStep");
 
 							let compilationFinished = done;
-							currentWatchStepModule.step = run.name;
+							(/** @type {{ step: string | undefined }} */ (currentWatchStepModule)).step = run.name;
 							copyDiff(path.join(testDirectory, run.name), tempDirectory, true);
 
 							setTimeout(() => {
@@ -288,6 +305,7 @@ const describeCases = (config) => {
 											return;
 										}
 
+										/** @type {WatchTestConfig} */
 										let testConfig = {
 											findBundle(_, options) {
 												const ext = path.extname(
@@ -341,7 +359,7 @@ const describeCases = (config) => {
 
 										run.it(
 											"should compile the next step",
-											(done) => {
+											(/** @type {(err?: Error) => void} */ done) => {
 												runIdx++;
 												if (runIdx < runs.length) {
 													run = runs[runIdx];

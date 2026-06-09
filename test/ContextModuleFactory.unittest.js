@@ -23,8 +23,8 @@ describe("ContextModuleFactory", () => {
 			memfs.readdir = /** @type {IFs["readdir"]} */ (
 				/** @type {unknown} */ (
 					/**
-					 * @param {string} _dir
-					 * @param {(err: Error | null, result?: unknown) => void} callback
+					 * @param {string} _dir directory path
+					 * @param {(err: Error | null, result?: unknown) => void} callback node callback
 					 * @returns {void}
 					 */
 					(_dir, callback) => {
@@ -35,8 +35,8 @@ describe("ContextModuleFactory", () => {
 			memfs.stat = /** @type {IFs["stat"]} */ (
 				/** @type {unknown} */ (
 					/**
-					 * @param {string} _file
-					 * @param {(err: NodeJS.ErrnoException | null, result?: unknown) => void} callback
+					 * @param {string} _file file path
+					 * @param {(err: NodeJS.ErrnoException | null, result?: unknown) => void} callback node callback
 					 * @returns {void}
 					 */
 					(_file, callback) => {
@@ -70,8 +70,8 @@ describe("ContextModuleFactory", () => {
 			memfs.readdir = /** @type {IFs["readdir"]} */ (
 				/** @type {unknown} */ (
 					/**
-					 * @param {string} _dir
-					 * @param {(err: Error | null, result?: unknown) => void} callback
+					 * @param {string} _dir directory path
+					 * @param {(err: Error | null, result?: unknown) => void} callback node callback
 					 * @returns {void}
 					 */
 					(_dir, callback) => {
@@ -82,8 +82,8 @@ describe("ContextModuleFactory", () => {
 			memfs.stat = /** @type {IFs["stat"]} */ (
 				/** @type {unknown} */ (
 					/**
-					 * @param {string} _file
-					 * @param {(err: NodeJS.ErrnoException | null, result?: unknown) => void} callback
+					 * @param {string} _file file path
+					 * @param {(err: NodeJS.ErrnoException | null, result?: unknown) => void} callback node callback
 					 * @returns {void}
 					 */
 					(_file, callback) => {
@@ -117,8 +117,8 @@ describe("ContextModuleFactory", () => {
 			memfs.readdir = /** @type {IFs["readdir"]} */ (
 				/** @type {unknown} */ (
 					/**
-					 * @param {string} _dir
-					 * @param {(err: Error | null, result?: unknown) => void} callback
+					 * @param {string} _dir directory path
+					 * @param {(err: Error | null, result?: unknown) => void} callback node callback
 					 * @returns {void}
 					 */
 					(_dir, callback) => {
@@ -130,8 +130,8 @@ describe("ContextModuleFactory", () => {
 			memfs.stat = /** @type {IFs["stat"]} */ (
 				/** @type {unknown} */ (
 					/**
-					 * @param {string} _file
-					 * @param {(err: Error | null, result?: unknown) => void} callback
+					 * @param {string} _file file path
+					 * @param {(err: Error | null, result?: unknown) => void} callback node callback
 					 * @returns {void}
 					 */
 					(_file, callback) => {
@@ -147,8 +147,8 @@ describe("ContextModuleFactory", () => {
 				/** @type {unknown} */ (
 					Object.assign(
 						/**
-						 * @param {string} dir
-						 * @param {(err: Error | null, result?: unknown) => void} callback
+						 * @param {string} dir directory path
+						 * @param {(err: Error | null, result?: unknown) => void} callback node callback
 						 * @returns {void}
 						 */
 						(dir, callback) => {
@@ -180,8 +180,8 @@ describe("ContextModuleFactory", () => {
 			memfs.readdir = /** @type {IFs["readdir"]} */ (
 				/** @type {unknown} */ (
 					/**
-					 * @param {string} _dir
-					 * @param {(err: Error | null, result?: unknown) => void} callback
+					 * @param {string} _dir directory path
+					 * @param {(err: Error | null, result?: unknown) => void} callback node callback
 					 * @returns {void}
 					 */
 					(_dir, callback) => {
@@ -193,8 +193,8 @@ describe("ContextModuleFactory", () => {
 			memfs.stat = /** @type {IFs["stat"]} */ (
 				/** @type {unknown} */ (
 					/**
-					 * @param {string} _file
-					 * @param {(err: Error | null, result?: unknown) => void} callback
+					 * @param {string} _file file path
+					 * @param {(err: Error | null, result?: unknown) => void} callback node callback
 					 * @returns {void}
 					 */
 					(_file, callback) => {
@@ -210,8 +210,8 @@ describe("ContextModuleFactory", () => {
 				/** @type {unknown} */ (
 					Object.assign(
 						/**
-						 * @param {string} dir
-						 * @param {(err: Error | null, result?: unknown) => void} callback
+						 * @param {string} dir directory path
+						 * @param {(err: Error | null, result?: unknown) => void} callback node callback
 						 * @returns {void}
 						 */
 						(dir, callback) => {
@@ -244,8 +244,8 @@ describe("ContextModuleFactory", () => {
 			memfs.readdir = /** @type {IFs["readdir"]} */ (
 				/** @type {unknown} */ (
 					/**
-					 * @param {string} dir
-					 * @param {(err: Error | null, result?: unknown) => void} callback
+					 * @param {string} dir directory path
+					 * @param {(err: Error | null, result?: unknown) => void} callback node callback
 					 * @returns {void}
 					 */
 					(dir, callback) => {
@@ -259,8 +259,8 @@ describe("ContextModuleFactory", () => {
 			memfs.stat = /** @type {IFs["stat"]} */ (
 				/** @type {unknown} */ (
 					/**
-					 * @param {string} file
-					 * @param {(err: Error | null, result?: unknown) => void} callback
+					 * @param {string} file file path
+					 * @param {(err: Error | null, result?: unknown) => void} callback node callback
 					 * @returns {void}
 					 */
 					(file, callback) => {

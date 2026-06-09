@@ -5,12 +5,19 @@ const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
 
 /**
- * @param {import("../").Configuration | import("../").Configuration[]} config
+ * @param {import("../").Configuration | import("../").MultiConfiguration} config
  * @returns {import("../").Compiler | import("../").MultiCompiler}
  */
 const createCompiler = (config) => {
-	const compiler = webpack(config);
-	compiler.outputFileSystem =
+	const compiler =
+		/** @type {import("../").Compiler | import("../").MultiCompiler} */ (
+			webpack(
+				/** @type {import("../").Configuration} */ (
+					/** @type {unknown} */ (config)
+				)
+			)
+		);
+	/** @type {import("../").Compiler} */ (compiler).outputFileSystem =
 		/** @type {import("../").OutputFileSystem} */ (
 			/** @type {unknown} */ (createFsFromVolume(new Volume()))
 		);
@@ -56,7 +63,7 @@ describe("WatcherEvents", () => {
 		});
 
 		compiler.hooks.done.tap("WatcherEventsTest", () => {
-			/** @type {{ close: () => void }} */ (watcher).close();
+			/** @type {{ close: () => void }} */ (/** @type {unknown} */ (watcher)).close();
 		});
 	});
 
@@ -77,7 +84,7 @@ describe("WatcherEvents", () => {
 		});
 
 		compiler.hooks.done.tap("WatcherEventsTest", () => {
-			/** @type {{ close: () => void }} */ (watcher).close();
+			/** @type {{ close: () => void }} */ (/** @type {unknown} */ (watcher)).close();
 		});
 	});
 });

@@ -18,14 +18,23 @@ const child = (children, tagName) =>
 
 // The tree builder always produces a full document (html > head, body); these
 // helpers reach the interesting subtrees.
-/** @param {string} src @returns {import("../lib/html/buildHtmlAst").HtmlElement} */
+/**
+ * @param {string} src source
+ * @returns {import("../lib/html/buildHtmlAst").HtmlElement} html element
+ */
 const html = (src) => child(buildHtmlAst(src).children, "html");
-/** @param {string} src @returns {import("../lib/html/buildHtmlAst").HtmlElement[]} */
+/**
+ * @param {string} src source
+ * @returns {import("../lib/html/buildHtmlAst").HtmlElement[]} body children
+ */
 const body = (src) =>
 	/** @type {import("../lib/html/buildHtmlAst").HtmlElement[]} */ (
 		child(html(src).children, "body").children
 	);
-/** @param {string} src @returns {import("../lib/html/buildHtmlAst").HtmlElement[]} */
+/**
+ * @param {string} src source
+ * @returns {import("../lib/html/buildHtmlAst").HtmlElement[]} head children
+ */
 const head = (src) =>
 	/** @type {import("../lib/html/buildHtmlAst").HtmlElement[]} */ (
 		child(html(src).children, "head").children
@@ -39,7 +48,7 @@ const head = (src) =>
 const find = (src, tagName) => {
 	/** @type {import("../lib/html/buildHtmlAst").HtmlElement | undefined} */
 	let found;
-	/** @param {import("../lib/html/buildHtmlAst").HtmlNode} node */
+	/** @param {import("../lib/html/buildHtmlAst").HtmlNode} node node to search */
 	const walk = (node) => {
 		if (found || node.type !== "element") return;
 		if (node.tagName === tagName) {
@@ -72,10 +81,9 @@ describe("buildHtmlAst", () => {
 
 	it("should parse nested elements", () => {
 		const div = body("<div><span>hello</span></div>")[0];
-		const span =
-			/** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
-				div.children[0]
-			);
+		const span = /** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
+			div.children[0]
+		);
 		expect(span.tagName).toBe("span");
 		expect(span.children[0].type).toBe("text");
 		expect(
@@ -242,10 +250,9 @@ describe("buildHtmlAst", () => {
 				table.children[0]
 			);
 		expect(tbody.tagName).toBe("tbody");
-		const tr =
-			/** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
-				tbody.children[0]
-			);
+		const tr = /** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
+			tbody.children[0]
+		);
 		expect(
 			tr.children.map(
 				(c) =>
@@ -259,20 +266,18 @@ describe("buildHtmlAst", () => {
 		const svg = body(
 			"<svg><foreignObject><div>html</div></foreignObject></svg>"
 		)[0];
-		const fo =
-			/** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
-				svg.children[0]
-			);
+		const fo = /** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
+			svg.children[0]
+		);
 		expect(fo.namespace).toBe(NS_SVG);
 		expect(
 			/** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
 				fo.children[0]
 			).namespace
 		).toBe(NS_HTML);
-		const desc =
-			/** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
-				body("<svg><desc><div>x</div></desc></svg>")[0].children[0]
-			);
+		const desc = /** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
+			body("<svg><desc><div>x</div></desc></svg>")[0].children[0]
+		);
 		expect(
 			/** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
 				desc.children[0]
@@ -322,10 +327,9 @@ describe("buildHtmlAst", () => {
 	it("should update end offsets when an element is closed", () => {
 		const src = "<div><span>text</div>";
 		const div = body(src)[0];
-		const span =
-			/** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
-				div.children[0]
-			);
+		const span = /** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
+			div.children[0]
+		);
 		expect(div.end).toBe(src.length);
 		expect(span.end).toBe(src.length);
 	});
@@ -403,7 +407,7 @@ describe("buildHtmlAst", () => {
 			const nodes = body("<a href=x.png><div>y</a>");
 			/** @type {string[]} */
 			const spans = [];
-			/** @param {import("../lib/html/buildHtmlAst").HtmlNode} node */
+			/** @param {import("../lib/html/buildHtmlAst").HtmlNode} node node to collect from */
 			const collect = (node) => {
 				if (node.type !== "element") return;
 				for (const attr of node.attributes) {
@@ -467,10 +471,9 @@ describe("buildHtmlAst", () => {
 			child(select.children, "button").children,
 			"selectedcontent"
 		);
-		const span =
-			/** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
-				selectedcontent.children[0]
-			);
+		const span = /** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
+			selectedcontent.children[0]
+		);
 		expect(span.tagName).toBe("span");
 		expect(
 			/** @type {import("../lib/html/buildHtmlAst").HtmlText} */ (
@@ -502,15 +505,13 @@ describe("buildHtmlAst", () => {
 	it("foster-parents stray text in a table fragment context", () => {
 		// Context is a `table`, so there is no `<table>` on the open stack: stray
 		// character data is fostered to the fragment root, beside the table rows.
-		const root =
-			/** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
-				buildHtmlAst("<tr><td>a</td></tr>x", "table").children[0]
-			);
+		const root = /** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
+			buildHtmlAst("<tr><td>a</td></tr>x", "table").children[0]
+		);
 		const texts = root.children
 			.filter((c) => c.type === "text")
 			.map(
-				(/** @type {import("../lib/html/buildHtmlAst").HtmlText} */ c) =>
-					c.data
+				(/** @type {import("../lib/html/buildHtmlAst").HtmlText} */ c) => c.data
 			);
 		expect(texts).toContain("x");
 		expect(child(root.children, "tbody")).toBeDefined();

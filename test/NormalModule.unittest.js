@@ -521,7 +521,10 @@ describe("NormalModule", () => {
 			modules[count - 1].dependencies = [];
 			const moduleGraph = /** @type {ModuleGraph} */ (
 				/** @type {unknown} */ ({
-					/** @param {import("../lib/Dependency")} dep dependency @returns {InstanceType<typeof import("../lib/NormalModule")> | undefined} module */
+					/**
+					 * @param {import("../lib/Dependency")} dep dependency
+					 * @returns {import("../lib/Module") | null} module
+					 */
 					getModule: (dep) => depToModule.get(dep),
 					getOptimizationBailout: () => []
 				})
@@ -556,7 +559,10 @@ describe("NormalModule", () => {
 			modules[49].dependencies = [lastDep];
 			const originalGetModule = moduleGraph.getModule;
 			moduleGraph.getModule = /** @type {ModuleGraph["getModule"]} */ (
-				/** @param {import("../lib/Dependency")} dep dependency @returns {InstanceType<typeof import("../lib/NormalModule")> | undefined} module */
+				/**
+				 * @param {import("../lib/Dependency")} dep dependency
+				 * @returns {import("../lib/Module") | null} module
+				 */
 				(dep) => (dep === lastDep ? modules[0] : originalGetModule(dep))
 			);
 			// Cycles fold to `false` (the accumulator's identity) when all
@@ -596,6 +602,7 @@ describe("NormalModule", () => {
 			// Diamond: root depends on two side-effect-free leaves.
 			/**
 			 * @param {string} id module id
+			 * @returns {InstanceType<typeof NormalModule>} module
 			 */
 			const make = (id) => {
 				const mod = new NormalModule(
@@ -633,8 +640,11 @@ describe("NormalModule", () => {
 			root.dependencies = [depA, depB];
 			const moduleGraph = /** @type {ModuleGraph} */ (
 				/** @type {unknown} */ ({
-					/** @param {import("../lib/Dependency")} dep dependency @returns {InstanceType<typeof import("../lib/NormalModule")> | undefined} module */
-					getModule: (dep) => (dep === depA ? a : dep === depB ? b : undefined),
+					/**
+					 * @param {import("../lib/Dependency")} dep dependency
+					 * @returns {import("../lib/Module") | null} module
+					 */
+					getModule: (dep) => (dep === depA ? a : dep === depB ? b : null),
 					getOptimizationBailout: () => []
 				})
 			);
@@ -691,7 +701,10 @@ describe("NormalModule", () => {
 			}
 			const moduleGraph = /** @type {ModuleGraph} */ (
 				/** @type {unknown} */ ({
-					/** @param {import("../lib/Dependency")} dep dependency @returns {InstanceType<typeof import("../lib/NormalModule")> | undefined} module */
+					/**
+					 * @param {import("../lib/Dependency")} dep dependency
+					 * @returns {import("../lib/Module") | null} module
+					 */
 					getModule: (dep) => depToModule.get(dep),
 					getOptimizationBailout: () => []
 				})
@@ -712,6 +725,7 @@ describe("NormalModule", () => {
 			const N = 2500;
 			/**
 			 * @param {string} id module id
+			 * @returns {InstanceType<typeof NormalModule>} module
 			 */
 			const make = (id) => {
 				const mod = new NormalModule(
@@ -755,7 +769,10 @@ describe("NormalModule", () => {
 			modules[N - 1].dependencies = [];
 			const moduleGraph = /** @type {ModuleGraph} */ (
 				/** @type {unknown} */ ({
-					/** @param {import("../lib/Dependency")} dep dependency @returns {InstanceType<typeof import("../lib/NormalModule")> | undefined} module */
+					/**
+					 * @param {import("../lib/Dependency")} dep dependency
+					 * @returns {import("../lib/Module") | null} module
+					 */
 					getModule: (dep) => depToModule.get(dep),
 					getOptimizationBailout: () => []
 				})

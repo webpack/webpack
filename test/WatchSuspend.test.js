@@ -155,6 +155,7 @@ describe("WatchSuspend", () => {
 							}, 200);
 						})
 					);
+				});
 			}
 		}
 

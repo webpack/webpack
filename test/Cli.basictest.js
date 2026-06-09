@@ -117,7 +117,7 @@ describe("Cli", () => {
 	});
 
 	describe("processArguments", () => {
-		const test = (/** @type {string} */ name, /** @type {Record<string, unknown>} */ values, /** @type {Record<string, unknown>} */ config, /** @type {(e: EXPECTED_ANY) => void} */ fn) => {
+		const test = (/** @type {string} */ name, /** @type {import("../lib/cli").Values} */ values, /** @type {import("../").Configuration} */ config, /** @type {(e: EXPECTED_ANY) => void} */ fn) => {
 			it(`should correctly process arguments for ${name}`, () => {
 				const args = getArguments();
 				const problems = processArguments(args, config, values);
@@ -618,6 +618,7 @@ describe("Cli", () => {
 				/** @type {import("../lib/cli").Flags} */
 				const args = {
 					"evil-flag": {
+						description: undefined,
 						configs: [
 							{ type: /** @type {import("../lib/cli").SimpleType} */ ("string"), multiple: false, path: `${key}.polluted` }
 						],
@@ -626,9 +627,7 @@ describe("Cli", () => {
 					}
 				};
 				const config = {};
-				const problems = processArguments(args, config, {
-					"evil-flag": "PWNED"
-				});
+				const problems = processArguments(args, config, /** @type {import("../lib/cli").Values} */ (/** @type {unknown} */ ({"evil-flag": "PWNED"})));
 
 				expect(/** @type {Record<string, unknown>} */ ({}).polluted).toBeUndefined();
 				expect(problems).toEqual([
@@ -640,15 +639,14 @@ describe("Cli", () => {
 				/** @type {import("../lib/cli").Flags} */
 				const args = {
 					"evil-flag": {
+						description: undefined,
 						configs: [{ type: /** @type {import("../lib/cli").SimpleType} */ ("string"), multiple: false, path: key }],
 						simpleType: /** @type {import("../lib/cli").SimpleType} */ ("string"),
 						multiple: false
 					}
 				};
 				const config = {};
-				const problems = processArguments(args, config, {
-					"evil-flag": "PWNED"
-				});
+				const problems = processArguments(args, config, /** @type {import("../lib/cli").Values} */ (/** @type {unknown} */ ({"evil-flag": "PWNED"})));
 
 				expect(/** @type {Record<string, unknown>} */ ({}).polluted).toBeUndefined();
 				expect(problems).toEqual([

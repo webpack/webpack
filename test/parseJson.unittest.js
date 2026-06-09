@@ -46,12 +46,12 @@ const jsonThrows = (/** @type {unknown} */ data, /** @type {Array<unknown>} */ .
 
 	// If expected is an Error constructor or instance, use it directly
 	if (typeof expected === "function" || expected instanceof Error) {
-		expect(() => /** @type {Function} */ (/** @type {unknown} */ (parseJson))(data, null, context)).toThrow(expected);
+		expect(() => /** @type {Function} */ (/** @type {unknown} */ (parseJson))(data, null, context)).toThrow(/** @type {Error} */ (/** @type {unknown} */ (expected)));
 		return;
 	}
 
 	/** @type {Record<string, unknown>} */
-	let err;
+	let err = {};
 
 	try {
 		/** @type {Function} */ (/** @type {unknown} */ (parseJson))(data, null, context);

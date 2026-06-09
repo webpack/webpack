@@ -13,12 +13,12 @@ const {
 } = require("../lib/util/semver");
 
 describe("SemVer", () => {
-	const createRuntimeFunction = (/** @type {(helpers: object) => string} */ runtimeCodeFunction) => {
+	const createRuntimeFunction = (/** @type {(helpers: unknown) => string} */ runtimeCodeFunction) => {
 		const runtimeFunction = runtimeCodeFunction({
 			basicFunction: (/** @type {string} */ args, /** @type {string[]} */ body) => `(${args}) => {\n${body.join("\n")}\n}`,
 			supportsArrowFunction: () => true
 		});
-		const functionName = runtimeFunction.match(/^var (\w+)/)[1];
+		const functionName = /** @type {RegExpMatchArray} */ (runtimeFunction.match(/^var (\w+)/))[1];
 		return eval(
 			`(function (...args) { ${runtimeFunction}; return ${functionName}(...args); })`
 		);

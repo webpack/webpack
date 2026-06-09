@@ -80,7 +80,11 @@ describe("readToken", () => {
 			// Drive the lexer core directly: a fresh `out` per call collects the
 			// raw token list (comments included); `readToken` returns undefined at EOF.
 			for (let pos = 0; ; ) {
-				const t = readToken(code, pos, /** @type {import("../lib/css/walkCssTokens").MutableToken} */ ({}));
+				const t = readToken(
+					code,
+					pos,
+					/** @type {import("../lib/css/walkCssTokens").MutableToken} */ ({})
+				);
 				if (t === undefined) break;
 				pos = t.end;
 				const printed = TYPE_TO_PRINTED[t.type] || t.type;
@@ -112,7 +116,11 @@ describe("readToken", () => {
 const tokenRoundtrip = (input) => {
 	let out = "";
 	for (let pos = 0; ; ) {
-		const t = readToken(input, pos, /** @type {import("../lib/css/walkCssTokens").MutableToken} */ ({}));
+		const t = readToken(
+			input,
+			pos,
+			/** @type {import("../lib/css/walkCssTokens").MutableToken} */ ({})
+		);
 		if (t === undefined) break;
 		pos = t.end;
 		out += input.slice(t.start, t.end);

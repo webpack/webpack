@@ -823,7 +823,7 @@ describe("walkHtmlTokens", () => {
 		 * @returns {[string, ...EXPECTED_ANY[]][]} token stream
 		 */
 		const walk = (html) => {
-			/** @type {unknown[]} */
+			/** @type {[string, ...EXPECTED_ANY[]][]} */
 			const out = [];
 			walkHtmlTokens(html, 0, {
 				openTag: (input, start, end, ns, ne, selfClosing) => {
@@ -1998,11 +1998,11 @@ describe("walkHtmlTokens", () => {
 			/** @type {[string, ...EXPECTED_ANY[]][]} */
 			const out = [];
 			const skipFn =
-				(label) =>
+				(/** @type {string} */ label) =>
 				(
-					input,
-					start,
-					end,
+					/** @type {string} */ input,
+					/** @type {number} */ start,
+					/** @type {number} */ end,
 					/** @type {number} */ ns,
 					/** @type {number} */ ne
 				) => {

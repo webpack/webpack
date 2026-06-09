@@ -36,6 +36,7 @@ describe("Compiler", () => {
 		normalizedOptions.optimization = {
 			minimize: false
 		};
+		/** @type {{ mkdir: string[], writeFile: unknown[] }} */
 		const logs = {
 			mkdir: [],
 			writeFile: []
@@ -312,8 +313,8 @@ describe("Compiler", () => {
 		describe("isChild", () => {
 			it("returns booleanized this.parentCompilation", (done) => {
 				const c =
-					/** @type {import("../").Compiler & {parentCompilation: unknown}} */ (
-						compiler
+					/** @type {Omit<import("../").Compiler, "parentCompilation"> & {parentCompilation: unknown}} */ (
+						/** @type {unknown} */ (compiler)
 					);
 				c.parentCompilation = "stringyStringString";
 				const response1 = compiler.isChild();

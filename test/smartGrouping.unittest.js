@@ -8,8 +8,8 @@ describe("util/smartGrouping", () => {
 			/** @type {import("../lib/util/smartGrouping").GroupConfig<string, { name: string, items: string[] }>[]} */ ([
 				{
 					/**
-					 * @param {string} item
-					 * @returns {string[] | undefined}
+					 * @param {string} item group item
+					 * @returns {string[] | undefined} keys
 					 */
 					getKeys(item) {
 						return /** @type {string[] | undefined} */ (
@@ -17,8 +17,9 @@ describe("util/smartGrouping", () => {
 						);
 					},
 					/**
-					 * @param {string} key
-					 * @param {string[]} items
+					 * @param {string} key group key
+					 * @param {string[]} items group items
+					 * @returns {{ name: string, items: string[] }} group object
 					 */
 					createGroup(key, items) {
 						return {
@@ -29,8 +30,8 @@ describe("util/smartGrouping", () => {
 				},
 				{
 					/**
-					 * @param {string} item
-					 * @returns {string[] | undefined}
+					 * @param {string} item group item
+					 * @returns {string[] | undefined} keys
 					 */
 					getKeys(item) {
 						return /** @type {string[] | undefined} */ (
@@ -38,8 +39,9 @@ describe("util/smartGrouping", () => {
 						);
 					},
 					/**
-					 * @param {string} key
-					 * @param {string[]} items
+					 * @param {string} key group key
+					 * @param {string[]} items group items
+					 * @returns {{ name: string, items: string[] }} group object
 					 */
 					createGroup(key, items) {
 						return {

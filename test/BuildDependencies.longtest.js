@@ -10,30 +10,31 @@ const cacheDirectory = path.resolve(__dirname, "js/buildDepsCache");
 const outputDirectory = path.resolve(__dirname, "js/buildDeps");
 const inputDirectory = path.resolve(__dirname, "js/buildDepsInput");
 
-/** @typedef {{ warnings?: RegExp[], ignoreErrors?: boolean }} ExecOptions */
-const exec = (/** @type {number} */ n, /** @type {ExecOptions} */ options = {}) =>
+/** @typedef {{ warnings?: RegExp[] | false | undefined, ignoreErrors?: boolean, invalidBuildDependencies?: boolean, definedValue?: string }} ExecOptions */
+const exec = (/** @type {string} */ n, /** @type {ExecOptions} */ options = {}) =>
 	new Promise((resolve, reject) => {
 		const webpack = require("../");
 
 		const coverageEnabled = webpack.toString().includes("++");
 
+		const execArgs = /** @type {string[]} */ ([
+			...(coverageEnabled
+				? [
+						require.resolve("nyc/bin/nyc.js"),
+						"--silent",
+						"--no-clean",
+						"--cache-dir",
+						".jest-cache/nyc",
+						process.execPath
+					]
+				: []),
+			path.resolve(__dirname, "fixtures/buildDependencies/run.js"),
+			n,
+			JSON.stringify(options)
+		]);
 		const p = childProcess.execFile(
 			process.execPath,
-			/** @type {string[]} */ ([
-				...(coverageEnabled
-					? [
-							require.resolve("nyc/bin/nyc.js"),
-							"--silent",
-							"--no-clean",
-							"--cache-dir",
-							".jest-cache/nyc",
-							process.execPath
-						]
-					: []),
-				path.resolve(__dirname, "fixtures/buildDependencies/run.js"),
-				`${n}`,
-				JSON.stringify(options)
-			]),
+			execArgs,
 			{
 				stdio: ["ignore", "pipe", "pipe"]
 			}
@@ -221,10 +222,8 @@ export default 0;`
 		await exec("7", {
 			definedValue: "other"
 		});
-		/** @type {number} */
-		let now4;
-		/** @type {number} */
-		let now5;
+		let now4 = 0;
+		let now5 = 0;
 		if (supportsEsm) {
 			fs.writeFileSync(
 				path.resolve(inputDirectory, "esm-dependency.js"),
