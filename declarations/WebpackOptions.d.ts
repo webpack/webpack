@@ -1231,6 +1231,10 @@ export interface EntryDescription {
 	 */
 	filename?: EntryFilename;
 	/**
+	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
+	 */
+	html?: boolean;
+	/**
 	 * Module(s) that are loaded upon startup.
 	 */
 	import: EntryItem;
@@ -2477,6 +2481,10 @@ export interface Output {
 	 */
 	hotUpdateMainFilename?: HotUpdateMainFilename;
 	/**
+	 * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
+	 */
+	html?: boolean;
+	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	htmlChunkFilename?: HtmlChunkFilename;
@@ -3466,6 +3474,10 @@ export interface EntryDescriptionNormalized {
 	 */
 	filename?: Filename;
 	/**
+	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
+	 */
+	html?: boolean;
+	/**
 	 * Module(s) that are loaded upon startup. The last one is exported.
 	 */
 	import?: string[];
@@ -4098,6 +4110,10 @@ export interface OutputNormalized {
 	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
 	 */
 	hotUpdateMainFilename?: HotUpdateMainFilename;
+	/**
+	 * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
+	 */
+	html?: boolean;
 	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
