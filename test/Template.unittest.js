@@ -24,4 +24,22 @@ describe("Template", () => {
 			"path-to-sdfas-sadfome$$-js"
 		);
 	});
+
+	it("should strip JSDoc types from runtime function content but keep other comments", () => {
+		const content = Template.getFunctionContent({
+			toString: () =>
+				[
+					"function () {",
+					"\t/** @type {number} */",
+					"\tvar a = /** @type {EXPECTED_ANY} */ (1);",
+					"\t// keep this line comment",
+					"\treturn a /* keep */;",
+					"}"
+				].join("\n")
+		});
+		expect(content).not.toContain("@type");
+		expect(content).toContain("var a = (1);");
+		expect(content).toContain("// keep this line comment");
+		expect(content).toContain("/* keep */");
+	});
 });
