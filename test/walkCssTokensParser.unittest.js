@@ -301,6 +301,29 @@ describe("walkCssTokens — SourceProcessor", () => {
 			});
 		expect(seen).toEqual(["/*!c*/"]);
 	});
+
+	it("as: 'declaration-list' walks a bare declaration list (style attribute)", () => {
+		const names = [];
+		const urls = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Declaration]: (n) => names.push(n.name),
+				[NodeType.Url]: (n) => urls.push(n.value)
+			})
+			.process("color: red; background: url(a.png)", {
+				as: "declaration-list"
+			});
+		expect(names).toEqual(["color", "background"]);
+		expect(urls).toEqual(["a.png"]);
+	});
+
+	it("as: 'stylesheet' (default) treats a bare declaration list as a top-level parse error", () => {
+		const names = [];
+		new SourceProcessor()
+			.use({ [NodeType.Declaration]: (n) => names.push(n.name) })
+			.process("color: red; background: url(a.png)");
+		expect(names).toEqual([]);
+	});
 });
 
 describe("walkCssTokens — nesting and error recovery", () => {

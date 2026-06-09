@@ -5265,6 +5265,11 @@ declare interface CssAutoOrModuleParserOptions {
 	animation?: boolean;
 
 	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: "stylesheet" | "declaration-list";
+
+	/**
 	 * Enable/disable renaming of `@container` names.
 	 */
 	container?: boolean;
@@ -5496,6 +5501,11 @@ declare interface CssModuleParserOptions {
 	animation?: boolean;
 
 	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: "stylesheet" | "declaration-list";
+
+	/**
 	 * Enable/disable renaming of `@container` names.
 	 */
 	container?: boolean;
@@ -5611,6 +5621,10 @@ declare abstract class CssParser extends ParserClass {
 		 */
 		animation: boolean;
 		/**
+		 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML `style` attribute).
+		 */
+		as: string;
+		/**
 		 * Enable/disable renaming of `@container` names.
 		 */
 		container: boolean;
@@ -5676,6 +5690,11 @@ declare abstract class CssParser extends ParserClass {
  * Parser options for css modules.
  */
 declare interface CssParserOptions {
+	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: "stylesheet" | "declaration-list";
+
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
@@ -9335,10 +9354,10 @@ declare interface HtmlParserOptions {
 						 */
 						type:
 							| "script"
+							| "stylesheet"
 							| "src"
 							| "srcset"
 							| "script-module"
-							| "stylesheet"
 							| "stylesheet-inline";
 				  }
 		  )[];
@@ -23299,18 +23318,18 @@ declare interface SourcePosition {
 }
 type SourceType =
 	| "script"
+	| "stylesheet"
 	| "src"
 	| "srcset"
 	| "script-module"
-	| "stylesheet"
 	| "stylesheet-inline"
 	| "modulepreload";
 type SourceTypeOrResolver =
 	| "script"
+	| "stylesheet"
 	| "src"
 	| "srcset"
 	| "script-module"
-	| "stylesheet"
 	| "stylesheet-inline"
 	| "modulepreload"
 	| ((attrs: Map<string, string>, css: boolean) => SourceType);

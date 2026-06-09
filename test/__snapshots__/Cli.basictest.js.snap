@@ -2196,6 +2196,23 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "module-parser-css-as": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML \`style\` attribute).",
+        "multiple": false,
+        "path": "module.parser.css.as",
+        "type": "enum",
+        "values": Array [
+          "stylesheet",
+          "declaration-list",
+        ],
+      },
+    ],
+    "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML \`style\` attribute).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-css-auto-animation": Object {
     "configs": Array [
       Object {
@@ -2208,6 +2225,23 @@ Object {
     "description": "Enable/disable renaming of \`@keyframes\`.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-css-auto-as": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML \`style\` attribute).",
+        "multiple": false,
+        "path": "module.parser.css/auto.as",
+        "type": "enum",
+        "values": Array [
+          "stylesheet",
+          "declaration-list",
+        ],
+      },
+    ],
+    "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML \`style\` attribute).",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-css-auto-container": Object {
     "configs": Array [
@@ -2377,6 +2411,23 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-css-global-as": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML \`style\` attribute).",
+        "multiple": false,
+        "path": "module.parser.css/global.as",
+        "type": "enum",
+        "values": Array [
+          "stylesheet",
+          "declaration-list",
+        ],
+      },
+    ],
+    "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML \`style\` attribute).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-css-global-container": Object {
     "configs": Array [
       Object {
@@ -2525,6 +2576,23 @@ Object {
     "description": "Enable/disable renaming of \`@keyframes\`.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-css-module-as": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML \`style\` attribute).",
+        "multiple": false,
+        "path": "module.parser.css/module.as",
+        "type": "enum",
+        "values": Array [
+          "stylesheet",
+          "declaration-list",
+        ],
+      },
+    ],
+    "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML \`style\` attribute).",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-css-module-container": Object {
     "configs": Array [

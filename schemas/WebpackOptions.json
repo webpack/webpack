@@ -380,6 +380,9 @@
         "animation": {
           "$ref": "#/definitions/CssParserAnimation"
         },
+        "as": {
+          "$ref": "#/definitions/CssParserAs"
+        },
         "container": {
           "$ref": "#/definitions/CssParserContainer"
         },
@@ -521,6 +524,9 @@
         "animation": {
           "$ref": "#/definitions/CssParserAnimation"
         },
+        "as": {
+          "$ref": "#/definitions/CssParserAs"
+        },
         "container": {
           "$ref": "#/definitions/CssParserContainer"
         },
@@ -553,6 +559,10 @@
     "CssParserAnimation": {
       "description": "Enable/disable renaming of `@keyframes`.",
       "type": "boolean"
+    },
+    "CssParserAs": {
+      "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML `style` attribute).",
+      "enum": ["stylesheet", "declaration-list"]
     },
     "CssParserContainer": {
       "description": "Enable/disable renaming of `@container` names.",
@@ -591,6 +601,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "as": {
+          "$ref": "#/definitions/CssParserAs"
+        },
         "exportType": {
           "$ref": "#/definitions/CssParserExportType"
         },

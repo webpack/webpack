@@ -804,6 +804,10 @@ export type AssetParserDataUrlFunction =
  */
 export type CssParserAnimation = boolean;
 /**
+ * Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML `style` attribute).
+ */
+export type CssParserAs = "stylesheet" | "declaration-list";
+/**
  * Enable/disable renaming of `@container` names.
  */
 export type CssParserContainer = boolean;
@@ -3241,6 +3245,10 @@ export interface CssAutoOrModuleParserOptions {
 	 */
 	animation?: CssParserAnimation;
 	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: CssParserAs;
+	/**
 	 * Enable/disable renaming of `@container` names.
 	 */
 	container?: CssParserContainer;
@@ -3344,6 +3352,10 @@ export interface CssModuleParserOptions {
 	 */
 	animation?: CssParserAnimation;
 	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: CssParserAs;
+	/**
 	 * Enable/disable renaming of `@container` names.
 	 */
 	container?: CssParserContainer;
@@ -3384,6 +3396,10 @@ export interface CssModuleParserOptions {
  * Parser options for css modules.
  */
 export interface CssParserOptions {
+	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: CssParserAs;
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
