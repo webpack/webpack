@@ -15,7 +15,6 @@ const {
 	parseACommaSeparatedListOfComponentValues,
 	parseAComponentValue,
 	parseADeclaration,
-	parseADeclarationList,
 	parseAListOfComponentValues,
 	parseARule,
 	parseAStylesheet,
@@ -312,7 +311,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 		expect(seen).toEqual(["/*!c*/"]);
 	});
 
-	it("parse: parseADeclarationList walks a bare declaration list (style attribute)", () => {
+	it("a parseABlocksContents driver walks a bare declaration list (style attribute)", () => {
 		const names = [];
 		const urls = [];
 		new SourceProcessor()
@@ -321,7 +320,11 @@ describe("walkCssTokens — SourceProcessor", () => {
 				[NodeType.Url]: (n) => urls.push(n.value)
 			})
 			.process("color: red; background: url(a.png)", {
-				parse: parseADeclarationList
+				parse: (ts, onNode) => {
+					const { decls, rules } = parseABlocksContents(ts);
+					for (const d of decls) onNode(d);
+					for (const r of rules) onNode(r);
+				}
 			});
 		expect(names).toEqual(["color", "background"]);
 		expect(urls).toEqual(["a.png"]);
