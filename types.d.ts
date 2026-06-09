@@ -5265,9 +5265,9 @@ declare interface CssAutoOrModuleParserOptions {
 	animation?: boolean;
 
 	/**
-	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML `style` attribute).
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
 	 */
-	as?: "stylesheet" | "declaration-list";
+	as?: "stylesheet" | "block";
 
 	/**
 	 * Enable/disable renaming of `@container` names.
@@ -5501,9 +5501,9 @@ declare interface CssModuleParserOptions {
 	animation?: boolean;
 
 	/**
-	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML `style` attribute).
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
 	 */
-	as?: "stylesheet" | "declaration-list";
+	as?: "stylesheet" | "block";
 
 	/**
 	 * Enable/disable renaming of `@container` names.
@@ -5621,7 +5621,7 @@ declare abstract class CssParser extends ParserClass {
 		 */
 		animation: boolean;
 		/**
-		 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML `style` attribute).
+		 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
 		 */
 		as: string;
 		/**
@@ -5691,9 +5691,9 @@ declare abstract class CssParser extends ParserClass {
  */
 declare interface CssParserOptions {
 	/**
-	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML `style` attribute).
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
 	 */
-	as?: "stylesheet" | "declaration-list";
+	as?: "stylesheet" | "block";
 
 	/**
 	 * Configure how CSS content is exported as default.

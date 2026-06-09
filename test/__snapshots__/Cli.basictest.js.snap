@@ -2199,17 +2199,17 @@ Object {
   "module-parser-css-as": Object {
     "configs": Array [
       Object {
-        "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML \`style\` attribute).",
+        "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML \`style\` attribute).",
         "multiple": false,
         "path": "module.parser.css.as",
         "type": "enum",
         "values": Array [
           "stylesheet",
-          "declaration-list",
+          "block",
         ],
       },
     ],
-    "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML \`style\` attribute).",
+    "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML \`style\` attribute).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2229,17 +2229,17 @@ Object {
   "module-parser-css-auto-as": Object {
     "configs": Array [
       Object {
-        "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML \`style\` attribute).",
+        "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML \`style\` attribute).",
         "multiple": false,
         "path": "module.parser.css/auto.as",
         "type": "enum",
         "values": Array [
           "stylesheet",
-          "declaration-list",
+          "block",
         ],
       },
     ],
-    "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML \`style\` attribute).",
+    "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML \`style\` attribute).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2414,17 +2414,17 @@ Object {
   "module-parser-css-global-as": Object {
     "configs": Array [
       Object {
-        "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML \`style\` attribute).",
+        "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML \`style\` attribute).",
         "multiple": false,
         "path": "module.parser.css/global.as",
         "type": "enum",
         "values": Array [
           "stylesheet",
-          "declaration-list",
+          "block",
         ],
       },
     ],
-    "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML \`style\` attribute).",
+    "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML \`style\` attribute).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2580,17 +2580,17 @@ Object {
   "module-parser-css-module-as": Object {
     "configs": Array [
       Object {
-        "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML \`style\` attribute).",
+        "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML \`style\` attribute).",
         "multiple": false,
         "path": "module.parser.css/module.as",
         "type": "enum",
         "values": Array [
           "stylesheet",
-          "declaration-list",
+          "block",
         ],
       },
     ],
-    "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a list of declarations (e.g. the content of an HTML \`style\` attribute).",
+    "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML \`style\` attribute).",
     "multiple": false,
     "simpleType": "string",
   },
