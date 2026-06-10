@@ -361,41 +361,6 @@ type AnyLoaderContext = NormalModuleLoaderContext<any> &
 	HotModuleReplacementPluginLoaderContext;
 
 /**
- * Tracks values across a stack of nested sets where child scopes can add new
- * values without mutating the sets created by their parents.
- */
-declare abstract class AppendOnlyStackedSet<T> {
-	/**
-	 * Adds a value to the current scope layer, creating that layer lazily when
-	 * the first write occurs.
-	 */
-	add(el: T): void;
-
-	/**
-	 * Checks whether a value is present in any scope layer currently visible to
-	 * this stacked set.
-	 */
-	has(el: T): boolean;
-
-	/**
-	 * Removes every scope layer and any values accumulated in them.
-	 */
-	clear(): void;
-
-	/**
-	 * Creates a child stacked set that shares the existing scope history while
-	 * allowing subsequent additions to be recorded in its own new layer.
-	 */
-	createChild(): AppendOnlyStackedSet<T>;
-
-	/**
-	 * Iterates over the stacked sets from newest to oldest so consumers can
-	 * inspect recently added values first.
-	 */
-	[Symbol.iterator](): Iterator<T>;
-}
-
-/**
  * Returns object of arguments.
  */
 declare interface Argument {
@@ -8909,6 +8874,10 @@ declare interface GroupOptionsSmartGrouping {
 	force?: boolean;
 	targetGroupCount?: number;
 }
+declare interface GuardCollection {
+	consequent?: object;
+	alternate?: object;
+}
 declare interface HMRJavascriptParserHooks {
 	hotAcceptCallback: SyncBailHook<
 		[
@@ -9120,9 +9089,6 @@ declare interface HarmonySettings {
 	await: boolean;
 	attributes?: ImportAttributes;
 	phase: ImportPhaseType;
-}
-declare interface HarmonySpecifierGuards {
-	guards?: AppendOnlyStackedSet<string>;
 }
 declare abstract class HarmonyStarExportsList {
 	dependencies: HarmonyExportImportedSpecifierDependency[];
@@ -10495,10 +10461,7 @@ declare class JavascriptParser extends ParserClass {
 			boolean | void
 		>;
 		statementIf: SyncBailHook<[IfStatement], boolean | void>;
-		collectGuards: SyncBailHook<
-			[Expression],
-			void | ((walk: () => void) => void)
-		>;
+		collectGuards: SyncBailHook<[Expression], void | GuardCollection>;
 		classExtendsExpression: SyncBailHook<
 			[
 				Expression,
@@ -10795,8 +10758,7 @@ declare class JavascriptParser extends ParserClass {
 		| HarmonySettings
 		| ImportSettings
 		| CommonJsImportSettings
-		| CompatibilitySettings
-		| HarmonySpecifierGuards;
+		| CompatibilitySettings;
 	magicCommentContext: ContextImport;
 
 	/**
@@ -11115,6 +11077,12 @@ declare class JavascriptParser extends ParserClass {
 	 * Pre walk if statement.
 	 */
 	preWalkIfStatement(statement: IfStatement): void;
+
+	/**
+	 * Walks a conditional branch with its guard frame (if any) pushed onto the
+	 * parser-state guard stack for the duration of the branch body.
+	 */
+	walkGuardedBranch(frame: undefined | null | object, walk: () => void): void;
 
 	/**
 	 * Processes the provided statement.
@@ -12039,8 +12007,7 @@ declare class JavascriptParser extends ParserClass {
 		| HarmonySettings
 		| ImportSettings
 		| CommonJsImportSettings
-		| CompatibilitySettings
-		| HarmonySpecifierGuards;
+		| CompatibilitySettings;
 
 	/**
 	 * Processes the provided name.
@@ -12054,8 +12021,7 @@ declare class JavascriptParser extends ParserClass {
 			| HarmonySettings
 			| ImportSettings
 			| CommonJsImportSettings
-			| CompatibilitySettings
-			| HarmonySpecifierGuards,
+			| CompatibilitySettings,
 		flags?: 0 | 1 | 2 | 4
 	): void;
 
@@ -24464,8 +24430,7 @@ declare interface TagInfo {
 		| HarmonySettings
 		| ImportSettings
 		| CommonJsImportSettings
-		| CompatibilitySettings
-		| HarmonySpecifierGuards;
+		| CompatibilitySettings;
 	next?: TagInfo;
 }
 declare interface TargetItemWithConnection {
