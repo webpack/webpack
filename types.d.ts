@@ -19058,6 +19058,7 @@ declare interface PathData {
 	noChunkHash?: boolean;
 	url?: string;
 	local?: string;
+	uniqueName?: string;
 	prepareId?: (id: string | number) => string | number;
 }
 type PathDataChunk = PathData & { chunk: Chunk | ChunkPathData };

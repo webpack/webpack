@@ -8,8 +8,9 @@ it("should have correct local ident for css export locals", (done) => {
 		import("./style.module.css?q#f"),
 		import("./style.module.css?uniqueName-id-contenthash"),
 		import("./style.module.css?hash-local-custom"),
+		import("./style.module.css?uniquename-local"),
 		import("./style.module.less"),
-	]).then(([idLocal, hash, hashLocal, pathNameLocal, fileLocal, queryFragment, uniqueNameIdContenthash, less]) => {
+	]).then(([idLocal, hash, hashLocal, pathNameLocal, fileLocal, queryFragment, uniqueNameIdContenthash, hashLocalCustom, uniquenameLocal]) => {
 		expect(idLocal).toMatchSnapshot();
 		expect(hash).toMatchSnapshot();
 		expect(hashLocal).toMatchSnapshot();
@@ -17,7 +18,8 @@ it("should have correct local ident for css export locals", (done) => {
 		expect(fileLocal).toMatchSnapshot();
 		expect(queryFragment).toMatchSnapshot();
 		expect(uniqueNameIdContenthash).toMatchSnapshot();
-		expect(less).toMatchSnapshot();
+		expect(hashLocalCustom).toMatchSnapshot();
+		expect(uniquenameLocal).toMatchSnapshot();
 		done()
 	}).catch(done)
 });

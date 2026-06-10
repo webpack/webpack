@@ -94,6 +94,15 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		).toBe("_");
 	});
 
+	it("interpolates [uniqueName] and its [uniquename] alias", () => {
+		const data = { uniqueName: "my-app" };
+		expect(interpolate("[uniqueName].js", data)).toBe("my-app.js");
+		expect(interpolate("[uniquename].js", data)).toBe("my-app.js");
+		expect(interpolate("[uniqueName]", { uniqueName: "" })).toBe("");
+		// left untouched when no uniqueName is provided
+		expect(interpolate("[uniqueName]", {})).toBe("[uniqueName]");
+	});
+
 	it("unescapes bracket-escaped placeholders", () => {
 		expect(interpolate("[\\name\\]", {})).toBe("[name]");
 	});
