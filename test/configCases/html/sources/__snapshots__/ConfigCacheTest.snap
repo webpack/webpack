@@ -113,6 +113,9 @@ exports[`ConfigCacheTestCases html sources exported tests should handle source 1
 <meta itemprop=\\"b\\" content=\\"./should-not-resolve.png\\" />
 <meta itemprop=\\" \\" content=\\"./should-not-resolve.png\\" />
 
+<meta name=\\"unknown-name\\" itemprop=\\"image\\" content=\\"09a1a1112c577c279435.png\\" />
+<meta name=\\"theme-color\\" property=\\"og:image\\" content=\\"09a1a1112c577c279435.png\\" />
+
 <link rel=\\"unknown\\" href=\\"./no-need-to-resolve.png\\">
 
 <object data=\\"31d6cfe0d16ae931b73c.pdf\\" type=\\"application/pdf\\" width=\\"500\\" height=\\"300\\">
