@@ -127,6 +127,7 @@ describe("snapshots", () => {
 		    "deferImport": false,
 		    "futureDefaults": false,
 		    "html": undefined,
+		    "lazyBarrel": false,
 		    "lazyCompilation": undefined,
 		    "outputModule": false,
 		    "sourceImport": false,

@@ -1371,6 +1371,11 @@ export interface Experiments {
 	 */
 	html?: boolean;
 	/**
+	 * Defer building modules referenced by re-exports of side-effect-free modules until the re-exported names are used (lazy barrel optimization).
+	 * @experimental
+	 */
+	lazyBarrel?: boolean;
+	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 * @experimental
 	 */
@@ -3531,6 +3536,11 @@ export interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	html?: boolean;
+	/**
+	 * Defer building modules referenced by re-exports of side-effect-free modules until the re-exported names are used (lazy barrel optimization).
+	 * @experimental
+	 */
+	lazyBarrel?: boolean;
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 * @experimental

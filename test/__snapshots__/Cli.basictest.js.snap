@@ -898,6 +898,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-lazy-barrel": Object {
+    "configs": Array [
+      Object {
+        "description": "Defer building modules referenced by re-exports of side-effect-free modules until the re-exported names are used (lazy barrel optimization).",
+        "multiple": false,
+        "path": "experiments.lazyBarrel",
+        "type": "boolean",
+      },
+    ],
+    "description": "Defer building modules referenced by re-exports of side-effect-free modules until the re-exported names are used (lazy barrel optimization).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-lazy-compilation": Object {
     "configs": Array [
       Object {
