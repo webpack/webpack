@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html template-content exported tests should rewrite asset URLs inside <template> content 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>Template</title></head>
+<body>
+
+<template>
+	<img src=\\"09a1a1112c577c279435.png\\" alt=\\"in-template\\">
+	<img srcset=\\"09a1a1112c577c279435.png 480w, 09a1a1112c577c279435.png 800w\\" alt=\\"in-template-srcset\\">
+	<template>
+		<img src=\\"09a1a1112c577c279435.png\\" alt=\\"nested-template\\">
+	</template>
+</template>
+
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"outside-template\\">
+
+</body>
+</html>
+"
+`;

@@ -43,6 +43,7 @@
 <link rel="shortcut icon" href="./image.png">
 <link rel="shortcut    icon" href="./image.png">
 <link rel="icon shortcut" href="./image.png">
+<link rel="shortcut	icon" href="./image.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./image.png">
 <link rel="icon" type="image/png" sizes="32x32" href="./image.png">
 <link rel="icon" type="image/png" sizes="194x194" href="./image.png">
@@ -53,6 +54,7 @@
 <link rel="mask-icon" href="./webpack.svg" color="#5bbad5">
 <link rel="preload" as="image" imagesrcset="image.png 400w, image.png 800w, image.png 1600w" imagesizes="100vw">
 <meta name="twitter:image" content="./image.png">
+<meta name="twitter:image:src" content="./image.png">
 <meta name="msapplication-square70x70logo" content="./image.png">
 <meta NAME="msapplication-square70x70logo" content="./image.png">
 <meta name="msapplication-square150x150logo" content="./image.png">
@@ -161,6 +163,18 @@
 
 <svg width="200" height="200">
 	<use xlink:href="./webpack.svg"></use>
+</svg>
+
+<svg width="200" height="200">
+	<filter id="image-filter">
+		<feImage xlink:href="./webpack.svg"/>
+	</filter>
+</svg>
+
+<svg width="200" height="200">
+	<filter id="image-filter-href">
+		<feImage href="./webpack.svg"/>
+	</filter>
 </svg>
 
 <img src="image.png">

@@ -46,6 +46,7 @@ exports[`ConfigCacheTestCases html sources exported tests should handle source 1
 <link rel=\\"shortcut icon\\" href=\\"09a1a1112c577c279435.png\\">
 <link rel=\\"shortcut    icon\\" href=\\"09a1a1112c577c279435.png\\">
 <link rel=\\"icon shortcut\\" href=\\"09a1a1112c577c279435.png\\">
+<link rel=\\"shortcut	icon\\" href=\\"09a1a1112c577c279435.png\\">
 <link rel=\\"icon\\" type=\\"image/png\\" sizes=\\"16x16\\" href=\\"09a1a1112c577c279435.png\\">
 <link rel=\\"icon\\" type=\\"image/png\\" sizes=\\"32x32\\" href=\\"09a1a1112c577c279435.png\\">
 <link rel=\\"icon\\" type=\\"image/png\\" sizes=\\"194x194\\" href=\\"09a1a1112c577c279435.png\\">
@@ -56,6 +57,7 @@ exports[`ConfigCacheTestCases html sources exported tests should handle source 1
 <link rel=\\"mask-icon\\" href=\\"258a547148033fda8727.svg\\" color=\\"#5bbad5\\">
 <link rel=\\"preload\\" as=\\"image\\" imagesrcset=\\"09a1a1112c577c279435.png 400w, 09a1a1112c577c279435.png 800w, 09a1a1112c577c279435.png 1600w\\" imagesizes=\\"100vw\\">
 <meta name=\\"twitter:image\\" content=\\"09a1a1112c577c279435.png\\">
+<meta name=\\"twitter:image:src\\" content=\\"09a1a1112c577c279435.png\\">
 <meta name=\\"msapplication-square70x70logo\\" content=\\"09a1a1112c577c279435.png\\">
 <meta NAME=\\"msapplication-square70x70logo\\" content=\\"09a1a1112c577c279435.png\\">
 <meta name=\\"msapplication-square150x150logo\\" content=\\"09a1a1112c577c279435.png\\">
@@ -65,7 +67,7 @@ exports[`ConfigCacheTestCases html sources exported tests should handle source 1
 <meta name=\\"msapplication-TileImage\\" content=\\"09a1a1112c577c279435.png\\">
 <meta name=\\"msapplication-config\\" content=\\"cdf6bf7956501ca5d4d6.xml\\">
 <meta name=\\"theme-color\\" content=\\"#ffffff\\">
-<meta content=\\"name=Check Order Status;action-uri=./orderStatus.aspx?src=IE9;icon-uri=./favicon.ico\\" name=\\"msapplication-task\\">
+<meta content=\\"name=Check Order Status;action-uri=./orderStatus.aspx?src=IE9;icon-uri=09a1a1112c577c279435.ico\\" name=\\"msapplication-task\\">
 
 <meta property=\\"og:url\\" content=\\"http://www.nytimes.com/2015/02/19/arts/international/when-great-minds-dont-think-alike.html\\" />
 <meta property=\\"og:type\\" content=\\"article\\" />
@@ -140,10 +142,10 @@ exports[`ConfigCacheTestCases html sources exported tests should handle source 1
 
 <meta content=\\"name=Check Order Status;
       action-uri=./orderStatus.aspx?src=IE9;
-      icon-uri= ./image.png\\" name=\\"msapplication-task\\">
+      icon-uri= 09a1a1112c577c279435.png\\" name=\\"msapplication-task\\">
 
 <meta content=\\"name=Check Order Status;
-      icon-uri= ./image.png;
+      icon-uri= 09a1a1112c577c279435.png;
       action-uri=./orderStatus.aspx?src=IE9\\" name=\\"msapplication-task\\">
 
 <meta content=\\"name=Check Order Status;
@@ -164,6 +166,18 @@ exports[`ConfigCacheTestCases html sources exported tests should handle source 1
 
 <svg width=\\"200\\" height=\\"200\\">
 	<use xlink:href=\\"258a547148033fda8727.svg\\"></use>
+</svg>
+
+<svg width=\\"200\\" height=\\"200\\">
+	<filter id=\\"image-filter\\">
+		<feImage xlink:href=\\"258a547148033fda8727.svg\\"/>
+	</filter>
+</svg>
+
+<svg width=\\"200\\" height=\\"200\\">
+	<filter id=\\"image-filter-href\\">
+		<feImage href=\\"258a547148033fda8727.svg\\"/>
+	</filter>
 </svg>
 
 <img src=\\"09a1a1112c577c279435.png\\">
