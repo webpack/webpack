@@ -14977,6 +14977,9 @@ declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
+declare interface ModuleClassConstructor {
+	new (createData: CreateData, resolveData: ResolveData): Module;
+}
 declare class ModuleConcatenationPlugin {
 	constructor();
 
@@ -16991,6 +16994,11 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 			SyncBailHook<[CreateData, ResolveData], void | Module>
 		>;
 	}>;
+
+	/**
+	 * Module class per module type, used when no `createModuleClass` tap intercepts.
+	 */
+	moduleClasses: Map<string, ModuleClassConstructor>;
 	resolverFactory: ResolverFactory;
 	ruleSet: RuleSet;
 	context: string;
