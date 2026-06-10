@@ -3,6 +3,11 @@
 const BinaryMiddleware = require("../lib/serialization/BinaryMiddleware");
 const SerializerMiddleware = require("../lib/serialization/SerializerMiddleware");
 
+/**
+ * @param {import("../lib/serialization/BinaryMiddleware").PrimitiveSerializableType[]} base base
+ * @param {number} count count
+ * @returns {import("../lib/serialization/BinaryMiddleware").PrimitiveSerializableType[]} result
+ */
 const cont = (base, count) => {
 	const result = [];
 	for (let i = 0; i < count; i++) {
@@ -12,8 +17,13 @@ const cont = (base, count) => {
 };
 
 const mw = new BinaryMiddleware();
-const other = { other: true };
+/** @type {import("../lib/serialization/SerializerMiddleware").LazyTarget} */
+const other = /** @type {EXPECTED_ANY} */ ({ other: true });
 
+/**
+ * @param {import("../lib/serialization/types").PrimitiveSerializableType} item item
+ * @returns {unknown} resolved item
+ */
 const resolveLazy = (item) => {
 	if (SerializerMiddleware.isLazy(item)) {
 		const data = item();
@@ -44,7 +54,8 @@ describe("BinaryMiddleware", () => {
 		SerializerMiddleware.createLazy([5], other)
 	];
 
-	const itemsWithLazy = [
+	/** @type {import("../lib/serialization/types").PrimitiveSerializableType[]} */
+	const itemsWithLazy = /** @type {EXPECTED_ANY} */ ([
 		...items,
 		SerializerMiddleware.createLazy(
 			[SerializerMiddleware.createLazy([5], other)],
@@ -59,13 +70,13 @@ describe("BinaryMiddleware", () => {
 			],
 			mw
 		)
-	];
+	]);
 	itemsWithLazy.push(SerializerMiddleware.createLazy([...itemsWithLazy], mw));
 	itemsWithLazy.push(
 		SerializerMiddleware.createLazy([...itemsWithLazy], other)
 	);
 
-	items.push(undefined);
+	items.push(/** @type {EXPECTED_ANY} */ (undefined));
 
 	const cases = [
 		...itemsWithLazy.map((item) => [item]),
@@ -123,8 +134,14 @@ describe("BinaryMiddleware", () => {
 						// 	`${c} x ${key.slice(0, 20)} (${data.length})\n`
 						// );
 						const realData = cont(data, data.length * c);
-						const serialized = mw.serialize(realData, {});
-						const newData = mw.deserialize(serialized, {});
+						const serialized =
+							/** @type {import("../lib/serialization/BinaryMiddleware").SerializedType} */ (
+								mw.serialize(realData, {})
+							);
+						const newData =
+							/** @type {import("../lib/serialization/BinaryMiddleware").DeserializedType} */ (
+								mw.deserialize(serialized, {})
+							);
 						expect(newData.map(resolveLazy)).toEqual(realData.map(resolveLazy));
 					});
 				}

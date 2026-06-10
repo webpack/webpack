@@ -57,34 +57,40 @@ describe("HotModuleReplacementPlugin", () => {
 			}
 		});
 		fs.writeFileSync(entryFile, "1", "utf8");
-		compiler.run((err, stats) => {
+		compiler.run((err, _stats) => {
 			if (err) throw err;
+			const stats = /** @type {import("../").Stats} */ (_stats);
 			const oldHash1 = stats.toJson().hash;
 			fs.writeFileSync(statsFile1, stats.toString());
-			compiler.run((err, stats) => {
+			compiler.run((err, _stats) => {
 				if (err) throw err;
+				const stats = /** @type {import("../").Stats} */ (_stats);
 				const lastHash1 = stats.toJson().hash;
 				fs.writeFileSync(statsFile2, stats.toString());
 				expect(lastHash1).toBe(oldHash1); // hash shouldn't change when bundle stay equal
 				fs.writeFileSync(entryFile, "2", "utf8");
-				compiler.run((err, stats) => {
+				compiler.run((err, _stats) => {
 					if (err) throw err;
+					const stats = /** @type {import("../").Stats} */ (_stats);
 					const lastHash2 = stats.toJson().hash;
 					fs.writeFileSync(statsFile1, stats.toString());
 					expect(lastHash2).not.toBe(lastHash1); // hash should change when bundle changes
 					fs.writeFileSync(entryFile, "1", "utf8");
-					compiler.run((err, stats) => {
+					compiler.run((err, _stats) => {
 						if (err) throw err;
+						const stats = /** @type {import("../").Stats} */ (_stats);
 						const currentHash1 = stats.toJson().hash;
 						fs.writeFileSync(statsFile2, stats.toString());
 						expect(currentHash1).not.toBe(lastHash1); // hash shouldn't change to the first hash if bundle changed back to first bundle
 						fs.writeFileSync(entryFile, "2", "utf8");
-						compiler.run((err, stats) => {
+						compiler.run((err, _stats) => {
 							if (err) throw err;
+							const stats = /** @type {import("../").Stats} */ (_stats);
 							const currentHash2 = stats.toJson().hash;
 							fs.writeFileSync(statsFile1, stats.toString());
-							compiler.run((err, stats) => {
+							compiler.run((err, _stats) => {
 								if (err) throw err;
+								const stats = /** @type {import("../").Stats} */ (_stats);
 								expect(stats.toJson().hash).toBe(currentHash2);
 								expect(currentHash2).not.toBe(lastHash2);
 								expect(currentHash1).not.toBe(currentHash2);
@@ -103,6 +109,7 @@ describe("HotModuleReplacementPlugin", () => {
 		const entryFile = path.join(outputPath, "entry.js");
 		const recordsFile = path.join(outputPath, "records.json");
 		let step = 0;
+		/** @type {string} */
 		let firstUpdate;
 		try {
 			fs.mkdirSync(outputPath, { recursive: true });
@@ -111,7 +118,7 @@ describe("HotModuleReplacementPlugin", () => {
 		}
 		fs.writeFileSync(entryFile, `${++step}`, "utf8");
 		const updates = new Set();
-		const hasFile = (file) => {
+		const hasFile = (/** @type {string} */ file) => {
 			try {
 				fs.statSync(path.join(outputPath, file));
 				return true;
@@ -132,8 +139,12 @@ describe("HotModuleReplacementPlugin", () => {
 			},
 			plugins: [new webpack.HotModuleReplacementPlugin()]
 		});
-		const callback = (err, stats) => {
+		const callback = (
+			/** @type {Error | null} */ err,
+			/** @type {import("../").Stats | undefined} */ _stats
+		) => {
 			if (err) return done(err);
+			const stats = /** @type {import("../").Stats} */ (_stats);
 			const jsonStats = stats.toJson();
 			const hash = jsonStats.hash;
 			const hmrUpdateMainFileName = `0.${hash}.hot-update.json`;
@@ -211,18 +222,23 @@ describe("HotModuleReplacementPlugin", () => {
 			}
 		});
 		fs.writeFileSync(entryFile, "1", "utf8");
-		compiler.run((err, stats) => {
+		compiler.run((err, _stats) => {
 			if (err) throw err;
+			const stats = /** @type {import("../").Stats} */ (_stats);
 			const jsonStats = stats.toJson();
 			const hash = jsonStats.hash;
-			const chunkName = Object.keys(jsonStats.assetsByChunkName)[0];
+			const chunkName = Object.keys(
+				/** @type {Record<string, string[]>} */ (jsonStats.assetsByChunkName)
+			)[0];
 			fs.writeFileSync(statsFile3, stats.toString());
-			compiler.run((err, stats) => {
+			compiler.run((err, _stats) => {
 				if (err) throw err;
+				const stats = /** @type {import("../").Stats} */ (_stats);
 				fs.writeFileSync(statsFile4, stats.toString());
 				fs.writeFileSync(entryFile, "2", "utf8");
-				compiler.run((err, stats) => {
+				compiler.run((err, _stats) => {
 					if (err) throw err;
+					const stats = /** @type {import("../").Stats} */ (_stats);
 					fs.writeFileSync(statsFile3, stats.toString());
 					const result = JSON.parse(
 						fs.readFileSync(
@@ -298,15 +314,18 @@ describe("HotModuleReplacementPlugin", () => {
 			}
 		});
 		fs.writeFileSync(entryFile, "1", "utf8");
-		compiler.run((err, stats) => {
+		compiler.run((err, _stats) => {
 			if (err) return done(err);
+			const stats = /** @type {import("../").Stats} */ (_stats);
 			fs.writeFileSync(statsFile3, stats.toString());
-			compiler.run((err, stats) => {
+			compiler.run((err, _stats) => {
 				if (err) return done(err);
+				const stats = /** @type {import("../").Stats} */ (_stats);
 				fs.writeFileSync(statsFile4, stats.toString());
 				fs.writeFileSync(entryFile, "2", "utf8");
-				compiler.run((err, stats) => {
+				compiler.run((err, _stats) => {
 					if (err) return done(err);
+					const stats = /** @type {import("../").Stats} */ (_stats);
 					fs.writeFileSync(statsFile3, stats.toString());
 
 					let foundUpdates = false;
@@ -395,8 +414,9 @@ describe("HotModuleReplacementPlugin", () => {
 		});
 		const run = () =>
 			new Promise((resolve, reject) => {
-				compiler.run((err, stats) => {
+				compiler.run((err, _stats) => {
 					if (err) return reject(err);
+					const stats = /** @type {import("../").Stats} */ (_stats);
 					if (stats.hasErrors()) {
 						return reject(
 							new Error(stats.toString({ all: false, errors: true }))
@@ -422,7 +442,7 @@ describe("HotModuleReplacementPlugin", () => {
 			.find((f) => !before.has(f) && /^b\..*\.hot-update\.json$/.test(f));
 		expect(bUpdate).toBeDefined();
 		const manifest = JSON.parse(
-			fs.readFileSync(path.join(out, bUpdate), "utf8")
+			fs.readFileSync(path.join(out, /** @type {string} */ (bUpdate)), "utf8")
 		);
 
 		await new Promise((resolve) => {
@@ -493,8 +513,9 @@ describe("HotModuleReplacementPlugin", () => {
 		});
 		const run = () =>
 			new Promise((resolve, reject) => {
-				compiler.run((err, stats) => {
+				compiler.run((err, _stats) => {
 					if (err) return reject(err);
+					const stats = /** @type {import("../").Stats} */ (_stats);
 					if (stats.hasErrors()) {
 						return reject(
 							new Error(stats.toString({ all: false, errors: true }))
@@ -520,7 +541,7 @@ describe("HotModuleReplacementPlugin", () => {
 			.find((f) => !before.has(f) && /^b\..*\.hot-update\.json$/.test(f));
 		expect(bUpdate).toBeDefined();
 		const manifest = JSON.parse(
-			fs.readFileSync(path.join(out, bUpdate), "utf8")
+			fs.readFileSync(path.join(out, /** @type {string} */ (bUpdate)), "utf8")
 		);
 		await new Promise((resolve) => {
 			compiler.close(resolve);
@@ -592,8 +613,9 @@ describe("HotModuleReplacementPlugin", () => {
 		});
 		const run = () =>
 			new Promise((resolve, reject) => {
-				compiler.run((err, stats) => {
+				compiler.run((err, _stats) => {
 					if (err) return reject(err);
+					const stats = /** @type {import("../").Stats} */ (_stats);
 					if (stats.hasErrors()) {
 						return reject(
 							new Error(stats.toString({ all: false, errors: true }))
@@ -609,17 +631,18 @@ describe("HotModuleReplacementPlugin", () => {
 			path.join(src, "b.js"),
 			'const p = import(/* webpackChunkName: "lazyShared" */ "./shared");\np.then(({ g }) => console.log("b", g()));\nif (module.hot) module.hot.accept();\n'
 		);
-		const stats = await run();
+		const stats = /** @type {import("../").Stats} */ (await run());
 		const { warnings } = stats.toJson({ all: false, warnings: true });
 		await new Promise((resolve) => {
 			compiler.close(resolve);
 		});
 
 		expect(
-			warnings.some((w) =>
-				(w.message || String(w)).includes(
-					"doesn't lead to unique filenames per runtime"
-				)
+			/** @type {import("../").StatsError[]} */ (warnings).some(
+				(/** @type {import("../").StatsError} */ w) =>
+					(w.message || String(w)).includes(
+						"doesn't lead to unique filenames per runtime"
+					)
 			)
 		).toBe(true);
 	}, 120000);

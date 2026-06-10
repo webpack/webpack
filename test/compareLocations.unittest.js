@@ -2,21 +2,37 @@
 
 const { compareLocations } = require("../lib/util/comparators");
 
+/** @typedef {import("../lib/Dependency").DependencyLocation} DependencyLocation */
+/** @typedef {import("../lib/Dependency").SourcePosition} SourcePosition */
+/** @typedef {import("../lib/Dependency").RealDependencyLocation} RealDependencyLocation */
+
+/**
+ * @param {Partial<SourcePosition>=} overrides position overrides
+ * @returns {SourcePosition} source position
+ */
 const createPosition = (overrides) => ({
 	line: 10,
 	column: 5,
 	...overrides
 });
 
+/**
+ * @param {Partial<SourcePosition> | null=} start start position overrides
+ * @param {Partial<SourcePosition> | null=} end end position overrides
+ * @param {number=} index location index
+ * @returns {RealDependencyLocation} real dependency location
+ */
 const createLocation = (start, end, index) => ({
-	start: createPosition(start),
-	end: createPosition(end),
+	start: createPosition(start || undefined),
+	end: createPosition(end || undefined),
 	index: index || 3
 });
 
 describe("compareLocations", () => {
 	describe("object location comparison", () => {
+		/** @type {DependencyLocation} */
 		let a;
+		/** @type {DependencyLocation} */
 		let b;
 
 		describe("location line number", () => {
@@ -86,17 +102,42 @@ describe("compareLocations", () => {
 
 	describe("unknown location type comparison", () => {
 		it("returns 1 when the first parameter is an object and the second parameter is not", () => {
-			expect(compareLocations(createLocation(), 123)).toBe(1);
-			expect(compareLocations(createLocation(), "alpha")).toBe(1);
+			expect(
+				compareLocations(
+					createLocation(),
+					/** @type {DependencyLocation} */ (/** @type {unknown} */ (123))
+				)
+			).toBe(1);
+			expect(
+				compareLocations(
+					createLocation(),
+					/** @type {DependencyLocation} */ (/** @type {unknown} */ ("alpha"))
+				)
+			).toBe(1);
 		});
 
 		it("returns -1 when the first parameter is not an object and the second parameter is", () => {
-			expect(compareLocations(123, createLocation())).toBe(-1);
-			expect(compareLocations("alpha", createLocation())).toBe(-1);
+			expect(
+				compareLocations(
+					/** @type {DependencyLocation} */ (/** @type {unknown} */ (123)),
+					createLocation()
+				)
+			).toBe(-1);
+			expect(
+				compareLocations(
+					/** @type {DependencyLocation} */ (/** @type {unknown} */ ("alpha")),
+					createLocation()
+				)
+			).toBe(-1);
 		});
 
 		it("returns 0 when both the first parameter and the second parameter are not objects", () => {
-			expect(compareLocations(123, 456)).toBe(0);
+			expect(
+				compareLocations(
+					/** @type {DependencyLocation} */ (/** @type {unknown} */ (123)),
+					/** @type {DependencyLocation} */ (/** @type {unknown} */ (456))
+				)
+			).toBe(0);
 		});
 	});
 });

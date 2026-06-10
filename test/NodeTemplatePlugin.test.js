@@ -25,22 +25,33 @@ describe("NodeTemplatePlugin", () => {
 			},
 			(err, stats) => {
 				if (err) return err;
-				expect(stats.hasErrors()).toBe(false);
-				expect(stats.hasWarnings()).toBe(false);
+				expect(/** @type {import("../").Stats} */ (stats).hasErrors()).toBe(
+					false
+				);
+				expect(/** @type {import("../").Stats} */ (stats).hasWarnings()).toBe(
+					false
+				);
 
+				// @ts-expect-error generated file does not exist at type-check time
 				const result = require("./js/NodeTemplatePlugin/result").abc;
 
 				expect(result.nextTick).toBe(process.nextTick);
 				expect(result.fs).toBe(require("fs"));
-				result.loadChunk(456, (chunk) => {
-					expect(chunk).toBe(123);
-					result.loadChunk(567, (chunk) => {
-						expect(chunk).toEqual({
-							a: 1
-						});
-						done();
-					});
-				});
+				result.loadChunk(
+					456,
+					/** @param {unknown} chunk loaded chunk */ (chunk) => {
+						expect(chunk).toBe(123);
+						result.loadChunk(
+							567,
+							/** @param {unknown} chunk loaded chunk */ (chunk) => {
+								expect(chunk).toEqual({
+									a: 1
+								});
+								done();
+							}
+						);
+					}
+				);
 			}
 		);
 	});
@@ -70,23 +81,32 @@ describe("NodeTemplatePlugin", () => {
 			},
 			(err, stats) => {
 				if (err) return err;
-				expect(stats.hasErrors()).toBe(false);
+				expect(/** @type {import("../").Stats} */ (stats).hasErrors()).toBe(
+					false
+				);
 
+				// @ts-expect-error generated file does not exist at type-check time
 				const result = require("./js/NodeTemplatePluginSingle/result2");
 
 				expect(result.nextTick).toBe(process.nextTick);
 				expect(result.fs).toBe(require("fs"));
 				const sameTick = true;
-				result.loadChunk(456, (chunk) => {
-					expect(chunk).toBe(123);
-					expect(sameTick).toBe(true);
-					result.loadChunk(567, (chunk) => {
-						expect(chunk).toEqual({
-							a: 1
-						});
-						done();
-					});
-				});
+				result.loadChunk(
+					456,
+					/** @param {unknown} chunk loaded chunk */ (chunk) => {
+						expect(chunk).toBe(123);
+						expect(sameTick).toBe(true);
+						result.loadChunk(
+							567,
+							/** @param {unknown} chunk loaded chunk */ (chunk) => {
+								expect(chunk).toEqual({
+									a: 1
+								});
+								done();
+							}
+						);
+					}
+				);
 			}
 		);
 	});

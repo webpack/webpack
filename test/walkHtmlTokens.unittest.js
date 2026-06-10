@@ -18,6 +18,7 @@ describe("walkHtmlTokens", () => {
 
 	for (const [name, code] of tests) {
 		it(`should tokenize and roundtrip "${name}"`, () => {
+			/** @type {unknown[]} */
 			const results = [];
 
 			walkHtmlTokens(code, 0, {
@@ -78,6 +79,7 @@ describe("walkHtmlTokens", () => {
 			expect(results).toMatchSnapshot();
 
 			// Roundtrip: concatenating all token values must reconstruct the original
+			/** @type {unknown[]} */
 			const reconstructed = [];
 			walkHtmlTokens(code, 0, {
 				openTag: (input, start, end) => {
@@ -107,6 +109,7 @@ describe("walkHtmlTokens", () => {
 	}
 
 	it("should handle empty input", () => {
+		/** @type {unknown[]} */
 		const results = [];
 		walkHtmlTokens("", 0, {
 			text: (input, start, end) => {
@@ -118,6 +121,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle plain text with no tags", () => {
+		/** @type {unknown[]} */
 		const results = [];
 		walkHtmlTokens("hello world", 0, {
 			text: (input, start, end) => {
@@ -129,6 +133,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should detect self-closing tags", () => {
+		/** @type {unknown[]} */
 		const tags = [];
 		walkHtmlTokens("<br/><img src='x'/>", 0, {
 			openTag: (input, start, end, nameStart, nameEnd, selfClosing) => {
@@ -143,6 +148,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should parse boolean attributes", () => {
+		/** @type {unknown[]} */
 		const attrs = [];
 		walkHtmlTokens('<input disabled required type="text">', 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
@@ -163,6 +169,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle all quote types", () => {
+		/** @type {unknown[]} */
 		const attrs = [];
 		walkHtmlTokens("<div a=\"1\" b='2' c=3>", 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
@@ -179,6 +186,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should parse comments", () => {
+		/** @type {unknown[]} */
 		const comments = [];
 		walkHtmlTokens("before<!-- hi -->after", 0, {
 			comment: (input, start, end) => {
@@ -190,6 +198,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle lone < at EOF", () => {
+		/** @type {unknown[]} */
 		const texts = [];
 		walkHtmlTokens("hello<", 0, {
 			text: (input, start, end) => {
@@ -201,6 +210,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should parse DOCTYPE as doctype", () => {
+		/** @type {unknown[]} */
 		const results = [];
 		walkHtmlTokens("<!DOCTYPE html><div>hi</div>", 0, {
 			doctype: (input, start, end) => {
@@ -229,6 +239,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should parse DOCTYPE case-insensitively", () => {
+		/** @type {unknown[]} */
 		const results = [];
 		walkHtmlTokens("<!doctype html><!DoCtYpE html>", 0, {
 			doctype: (input, start, end) => {
@@ -240,6 +251,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle CDATA sections", () => {
+		/** @type {unknown[]} */
 		const results = [];
 		walkHtmlTokens("<div><![CDATA[<img src='x'>]]></div>", 0, {
 			comment: (input, start, end) => {
@@ -264,6 +276,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle nested brackets in CDATA", () => {
+		/** @type {unknown[]} */
 		const comments = [];
 		walkHtmlTokens("<![CDATA[a]b]]c]]>", 0, {
 			comment: (input, start, end) => {
@@ -275,6 +288,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle nested <!-- inside comments", () => {
+		/** @type {unknown[]} */
 		const comments = [];
 		walkHtmlTokens("<!-- outer <!-- inner -->", 0, {
 			comment: (input, start, end) => {
@@ -286,6 +300,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle EOF in DOCTYPE", () => {
+		/** @type {unknown[]} */
 		const results = [];
 		walkHtmlTokens("<!DOCTYPE html", 0, {
 			doctype: (input, start, end) => {
@@ -297,6 +312,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle EOF in CDATA", () => {
+		/** @type {unknown[]} */
 		const comments = [];
 		walkHtmlTokens("<![CDATA[unclosed", 0, {
 			comment: (input, start, end) => {
@@ -309,6 +325,7 @@ describe("walkHtmlTokens", () => {
 
 	it("should roundtrip DOCTYPE + tags + CDATA", () => {
 		const html = "<!DOCTYPE html><html><body><![CDATA[data]]></body></html>";
+		/** @type {unknown[]} */
 		const parts = [];
 		walkHtmlTokens(html, 0, {
 			openTag: (input, start, end) => {
@@ -336,6 +353,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle RCDATA for title element", () => {
+		/** @type {unknown[]} */
 		const results = [];
 		walkHtmlTokens("<title>Hello <b>World</b></title>", 0, {
 			openTag: (input, start, end, ns, ne) => {
@@ -359,6 +377,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle RCDATA for textarea element", () => {
+		/** @type {unknown[]} */
 		const results = [];
 		walkHtmlTokens("<textarea><p>not a tag</p></textarea>", 0, {
 			openTag: (input, start, end, ns, ne) => {
@@ -382,6 +401,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle RAWTEXT for style element", () => {
+		/** @type {unknown[]} */
 		const results = [];
 		walkHtmlTokens("<style>.a { color: red; }</style>", 0, {
 			openTag: (input, start, end, ns, ne) => {
@@ -405,6 +425,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle script data state", () => {
+		/** @type {unknown[]} */
 		const results = [];
 		walkHtmlTokens("<script>var x = 1 < 2;</script>", 0, {
 			openTag: (input, start, end, ns, ne) => {
@@ -428,6 +449,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle script data escaped state (<!-- inside script)", () => {
+		/** @type {unknown[]} */
 		const results = [];
 		walkHtmlTokens("<script><!--- comment --></script>", 0, {
 			openTag: (input, start, end, ns, ne) => {
@@ -451,6 +473,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle script data double escaped state transitions (<script and </script)", () => {
+		/** @type {unknown[]} */
 		const results = [];
 		walkHtmlTokens(
 			"<script><!-- <script> var x = 1; </script> --></script>",
@@ -483,6 +506,7 @@ describe("walkHtmlTokens", () => {
 		// `</scripts>` (or any longer prefix) would falsely match `"script"`
 		// and prematurely exit the double-escaped state.
 		const html = "<script><!--<script>x</scripts>y</script>--></script>";
+		/** @type {unknown[]} */
 		const results = [];
 		walkHtmlTokens(html, 0, {
 			openTag: (input, start, end, ns, ne) => {
@@ -511,6 +535,7 @@ describe("walkHtmlTokens", () => {
 		// `tagStart` must point to the `<` of the actual close tag — otherwise
 		// `flushText(tagStart)` emits an empty range and the script body is lost.
 		const html = "<script><!--<script></script></script>";
+		/** @type {unknown[]} */
 		const results = [];
 		walkHtmlTokens(html, 0, {
 			openTag: (input, start, end, ns, ne) => {
@@ -534,6 +559,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should not match wrong end tag in RCDATA", () => {
+		/** @type {unknown[]} */
 		const results = [];
 		walkHtmlTokens("<title>text</div></title>", 0, {
 			openTag: (input, start, end, ns, ne) => {
@@ -557,6 +583,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle case-insensitive end tags in content modes", () => {
+		/** @type {unknown[]} */
 		const results = [];
 		walkHtmlTokens("<style>.a{}</STYLE>", 0, {
 			openTag: (input, start, end, ns, ne) => {
@@ -582,6 +609,7 @@ describe("walkHtmlTokens", () => {
 	it("should roundtrip HTML with script and style", () => {
 		const html =
 			"<html><head><style>.a{}</style></head><body><script>var x=1;</script></body></html>";
+		/** @type {unknown[]} */
 		const parts = [];
 		walkHtmlTokens(html, 0, {
 			openTag: (input, start, end) => {
@@ -601,6 +629,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle PLAINTEXT state", () => {
+		/** @type {unknown[]} */
 		const results = [];
 		walkHtmlTokens("<div><plaintext><p>ignored</p></div>", 0, {
 			openTag: (input, start, end, ns, ne) => {
@@ -624,6 +653,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle named character references in text", () => {
+		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>Tom &amp; Jerry</p>";
 		walkHtmlTokens(html, 0, {
@@ -644,6 +674,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle named character references in double-quoted attributes", () => {
+		/** @type {unknown[]} */
 		const attrs = [];
 		walkHtmlTokens('<a href="?a=1&amp;b=2">', 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
@@ -656,6 +687,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle named character references in single-quoted attributes", () => {
+		/** @type {unknown[]} */
 		const attrs = [];
 		walkHtmlTokens("<a href='?x=1&lt;2'>", 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
@@ -668,6 +700,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle character references in unquoted attributes", () => {
+		/** @type {unknown[]} */
 		const attrs = [];
 		walkHtmlTokens("<a href=foo&amp;bar>", 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
@@ -680,6 +713,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle decimal numeric character references", () => {
+		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>&#65;&#66;&#67;</p>";
 		walkHtmlTokens(html, 0, {
@@ -700,6 +734,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle hexadecimal character references", () => {
+		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>&#x41;&#X42;</p>";
 		walkHtmlTokens(html, 0, {
@@ -720,6 +755,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle bare ampersand (not a character reference)", () => {
+		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>bare & alone</p>";
 		walkHtmlTokens(html, 0, {
@@ -740,6 +776,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle unknown named character references", () => {
+		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>&unknown;</p>";
 		walkHtmlTokens(html, 0, {
@@ -760,6 +797,7 @@ describe("walkHtmlTokens", () => {
 	});
 
 	it("should handle empty numeric character references (&#; and &#x;)", () => {
+		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>&#;&#x;</p>";
 		walkHtmlTokens(html, 0, {
@@ -785,6 +823,7 @@ describe("walkHtmlTokens", () => {
 		 * @returns {[string, ...EXPECTED_ANY[]][]} token stream
 		 */
 		const walk = (html) => {
+			/** @type {[string, ...EXPECTED_ANY[]][]} */
 			const out = [];
 			walkHtmlTokens(html, 0, {
 				openTag: (input, start, end, ns, ne, selfClosing) => {
@@ -827,6 +866,7 @@ describe("walkHtmlTokens", () => {
 		 * @returns {string} reconstructed html
 		 */
 		const roundtrip = (html) => {
+			/** @type {unknown[]} */
 			const parts = [];
 			walkHtmlTokens(html, 0, {
 				openTag: (input, start, end) => {
@@ -1867,6 +1907,7 @@ describe("walkHtmlTokens", () => {
 			// Each branch checks `callbacks.X !== undefined`; exercise the false
 			// side by walking a document that would produce those tokens but
 			// passing only `openTag` / `text`.
+			/** @type {unknown[]} */
 			const opens = [];
 			expect(() =>
 				walkHtmlTokens("<!DOCTYPE html><!-- c --><a>x</a><![CDATA[ y ]]>", 0, {
@@ -1957,11 +1998,11 @@ describe("walkHtmlTokens", () => {
 			/** @type {[string, ...EXPECTED_ANY[]][]} */
 			const out = [];
 			const skipFn =
-				(label) =>
+				(/** @type {string} */ label) =>
 				(
-					input,
-					start,
-					end,
+					/** @type {string} */ input,
+					/** @type {number} */ start,
+					/** @type {number} */ end,
 					/** @type {number} */ ns,
 					/** @type {number} */ ne
 				) => {

@@ -89,10 +89,12 @@ const getDefaultConfig = (config) => {
 	const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
 		require("..").config;
 
-	config = getNormalizedWebpackOptions(config);
-	applyWebpackOptionsDefaults(config);
+	const normalized = getNormalizedWebpackOptions(
+		/** @type {EXPECTED_ANY} */ (config)
+	);
+	applyWebpackOptionsDefaults(/** @type {EXPECTED_ANY} */ (normalized));
 	process.chdir(cwd);
-	return config;
+	return /** @type {WebpackOptionsNormalized} */ (normalized);
 };
 
 describe("snapshots", () => {
@@ -2091,8 +2093,10 @@ describe("snapshots", () => {
 	`)
 	);
 
-	test("ecmaVersion", { output: { ecmaVersion: 2020 } }, (e) =>
-		e.toMatchInlineSnapshot("Compared values have no visual difference.")
+	test(
+		"ecmaVersion",
+		{ output: /** @type {EXPECTED_ANY} */ ({ ecmaVersion: 2020 }) },
+		(e) => e.toMatchInlineSnapshot("Compared values have no visual difference.")
 	);
 
 	test(

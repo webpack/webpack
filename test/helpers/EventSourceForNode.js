@@ -6,8 +6,14 @@
 "use strict";
 
 module.exports = class EventSource {
+	/**
+	 * @param {string} url url
+	 */
 	constructor(url) {
+		/** @type {import("http").IncomingMessage | undefined} */
 		this.response = undefined;
+		/** @type {undefined | ((err: Error | { message: Error }) => void)} */
+		this.onerror = undefined;
 		const request = (
 			url.startsWith("https:") ? require("https") : require("http")
 		).request(
@@ -31,16 +37,16 @@ module.exports = class EventSource {
 	}
 
 	close() {
-		this.response.destroy();
+		if (this.response) this.response.destroy();
 	}
 
 	// eslint-disable-next-line accessor-pairs
-	set onopen(value) {
+	set onopen(/** @type {unknown} */ value) {
 		throw new Error("not implemented");
 	}
 
 	// eslint-disable-next-line accessor-pairs
-	set onmessage(value) {
+	set onmessage(/** @type {unknown} */ value) {
 		throw new Error("not implemented");
 	}
 };

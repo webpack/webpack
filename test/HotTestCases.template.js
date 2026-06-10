@@ -2,24 +2,40 @@
 
 require("./helpers/warmup-webpack");
 
+/** @typedef {{ name: string, tests: string[] }} Category */
+/**
+ * @typedef {object} SuiteConfig
+ * @property {string} name suite name
+ * @property {string=} target target
+ */
+/**
+ * @typedef {object} HotTestConfig
+ * @property {((scope: EXPECTED_ANY, options: import("../").Configuration) => void)=} moduleScope
+ */
+
 const path = require("path");
 const fs = require("graceful-fs");
+/** @type {{ sync: (p: string) => void }} */
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const { TestRunner } = require("./harness/runner");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 
 const casesPath = path.join(__dirname, "hotCases");
-let categories = fs
+/** @type {Category[]} */
+const categories = fs
 	.readdirSync(casesPath)
-	.filter((dir) => fs.statSync(path.join(casesPath, dir)).isDirectory());
-categories = categories.map((cat) => ({
-	name: cat,
-	tests: fs
-		.readdirSync(path.join(casesPath, cat))
-		.filter((folder) => !folder.includes("_"))
-}));
+	.filter((dir) => fs.statSync(path.join(casesPath, dir)).isDirectory())
+	.map((cat) => ({
+		name: cat,
+		tests: fs
+			.readdirSync(path.join(casesPath, cat))
+			.filter((folder) => !folder.includes("_"))
+	}));
 
+/**
+ * @param {SuiteConfig} config suite config
+ */
 const describeCases = (config) => {
 	describe(config.name, () => {
 		for (const category of categories) {
@@ -37,11 +53,12 @@ const describeCases = (config) => {
 					}
 
 					describe(testName, () => {
+						/** @type {import("../").Compiler} */
 						let compiler;
 
-						afterAll((callback) => {
+						afterAll((/** @type {EXPECTED_ANY} */ callback) => {
 							compiler.close(callback);
-							compiler = undefined;
+							compiler = /** @type {EXPECTED_ANY} */ (undefined);
 						});
 
 						it(`${testName} should compile`, (done) => {
@@ -60,10 +77,13 @@ const describeCases = (config) => {
 								updateIndex: 0
 							};
 							const configPath = path.join(testDirectory, "webpack.config.js");
-							let options = {};
+							/** @type {import("../").Configuration} */
+							let options = /** @type {import("../").Configuration} */ ({});
 							if (fs.existsSync(configPath)) options = require(configPath);
-							if (typeof options === "function") {
-								options = options({ config });
+							if (
+								typeof (/** @type {EXPECTED_ANY} */ (options)) === "function"
+							) {
+								options = /** @type {EXPECTED_ANY} */ (options)({ config });
 							}
 							if (!options.mode) options.mode = "development";
 							if (!options.devtool) options.devtool = false;
@@ -111,6 +131,7 @@ const describeCases = (config) => {
 								new webpack.LoaderOptionsPlugin(fakeUpdateLoaderOptions)
 							);
 							if (!options.recordsPath) options.recordsPath = recordsPath;
+							/** @type {HotTestConfig} */
 							let testConfig = {};
 							try {
 								// try to load a test file
@@ -122,7 +143,10 @@ const describeCases = (config) => {
 								// ignored
 							}
 
-							const onCompiled = (err, stats) => {
+							const onCompiled = (
+								/** @type {Error | null} */ err,
+								/** @type {import("../").Stats} */ stats
+							) => {
 								if (err) return done(err);
 								const jsonStats = stats.toJson({
 									errorDetails: true
@@ -152,9 +176,12 @@ const describeCases = (config) => {
 									return;
 								}
 
-								function runCompiler(callback) {
+								function runCompiler(
+									/** @type {(err: EXPECTED_ANY, stats?: EXPECTED_ANY) => void} */ callback
+								) {
 									fakeUpdateLoaderOptions.updateIndex++;
-									compiler.run((err, stats) => {
+									compiler.run((err, _stats) => {
+										const stats = /** @type {import("../").Stats} */ (_stats);
 										if (err) return callback(err);
 										const jsonStats = stats.toJson({
 											errorDetails: true
@@ -209,7 +236,7 @@ const describeCases = (config) => {
 											afterEach: _afterEach,
 											STATE: jsonStats,
 											NEXT: runCompiler,
-											NEXT_DEFERRED: (cb) => {
+											NEXT_DEFERRED: (/** @type {EXPECTED_ANY} */ cb) => {
 												// https://github.com/webpack/webpack/actions/runs/22039709807/job/63678606467?pr=20412
 												// When lazyCompilation is enabled, delay the first compilation re-run by 1000ms during HMR
 												// to ensure that HTTP requests from dynamic imports (e.g., const promiseA = import("./moduleA"))
@@ -223,9 +250,10 @@ const describeCases = (config) => {
 										});
 									},
 									getBundlePaths: (_i, _options, runner) => {
-										const bundles = _stats.entrypoints.main.assets.map(
-											(i) => i.name
-										);
+										const bundles = /** @type {EXPECTED_ANY[]} */ (
+											/** @type {EXPECTED_ANY} */ (_stats.entrypoints).main
+												.assets
+										).map((/** @type {EXPECTED_ANY} */ i) => i.name);
 										if (config.target === "web") {
 											return bundles;
 										}
@@ -247,7 +275,7 @@ const describeCases = (config) => {
 								);
 							};
 							compiler = webpack(options);
-							compiler.run(onCompiled);
+							compiler.run(/** @type {EXPECTED_ANY} */ (onCompiled));
 						}, 20000);
 
 						const {

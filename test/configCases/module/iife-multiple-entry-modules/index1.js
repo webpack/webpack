@@ -1,4 +1,5 @@
-
- it("multiple inlined modules should be wrapped in IIFE to isolate from other inlined modules and chunk modules", () => {
-	expect(typeof value).toBe("undefined"); // `value` in index2 should not leak to index1
+it("isolates index2's top-level `value` from index1 without an IIFE", () => {
+	// index2 declares `value`; renaming keeps it from leaking into index1, so the
+	// per-entry IIFE is not needed.
+	expect(typeof value).toBe("undefined");
 });

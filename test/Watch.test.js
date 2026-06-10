@@ -11,44 +11,52 @@ describe("Watch", () => {
 		let counterBeforeCompile = 0;
 		let counterDone = 0;
 		let counterHandler = 0;
-		const compiler = webpack(
-			{
-				context: path.resolve(__dirname, "fixtures/watch"),
-				watch: true,
-				mode: "development",
-				snapshot: {
-					managedPaths: [/^(.+?[\\/]node_modules[\\/])/]
-				},
-				experiments: {
-					futureDefaults: true
-				},
-				module: {
-					// unsafeCache: false,
-					rules: [
-						{
-							test: /\.js$/,
-							use: "some-loader"
+		const compiler = /** @type {import("../").Compiler} */ (
+			webpack(
+				{
+					context: path.resolve(__dirname, "fixtures/watch"),
+					watch: true,
+					mode: "development",
+					snapshot: {
+						managedPaths: [/^(.+?[\\/]node_modules[\\/])/]
+					},
+					experiments: {
+						futureDefaults: true
+					},
+					module: {
+						// unsafeCache: false,
+						rules: [
+							{
+								test: /\.js$/,
+								use: "some-loader"
+							}
+						]
+					},
+					plugins: [
+						(c) => {
+							c.hooks.beforeCompile.tap("test", () => {
+								counterBeforeCompile++;
+							});
+							c.hooks.done.tap("test", () => {
+								counterDone++;
+							});
 						}
 					]
 				},
-				plugins: [
-					(c) => {
-						c.hooks.beforeCompile.tap("test", () => {
-							counterBeforeCompile++;
-						});
-						c.hooks.done.tap("test", () => {
-							counterDone++;
-						});
+				(err, stats) => {
+					if (err) return done(err);
+					if (/** @type {import("../").Stats} */ (stats).hasErrors()) {
+						return done(
+							new Error(/** @type {import("../").Stats} */ (stats).toString())
+						);
 					}
-				]
-			},
-			(err, stats) => {
-				if (err) return done(err);
-				if (stats.hasErrors()) return done(new Error(stats.toString()));
-				counterHandler++;
-			}
+					counterHandler++;
+				}
+			)
 		);
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
 		setTimeout(() => {
 			expect(counterBeforeCompile).toBe(1);
 			expect(counterDone).toBe(1);
@@ -58,8 +66,11 @@ describe("Watch", () => {
 	});
 
 	it("should correctly emit asset when invalidation occurs again", (done) => {
+		/**
+		 * @param {unknown} err error
+		 */
 		function handleError(err) {
-			if (err) done(err);
+			if (err) done(/** @type {Error} */ (err));
 		}
 		let calls = 0;
 		const compiler = webpack({
@@ -93,10 +104,10 @@ describe("Watch", () => {
 		});
 
 		// First invalidation
-		compiler.watching.invalidate();
+		/** @type {import("../").Watching} */ (compiler.watching).invalidate();
 		// Second invalidation while compiler is still running
 		setTimeout(() => {
-			compiler.watching.invalidate();
+			/** @type {import("../").Watching} */ (compiler.watching).invalidate();
 		}, 50);
 	});
 });

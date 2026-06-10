@@ -3,9 +3,7 @@
 module.exports = function supportsSpread() {
 	try {
 		const x = { a: true };
-		// eslint-disable-next-line no-unassigned-vars
-		let y;
-		eval("y = { ...x }");
+		const y = eval("({ ...x })");
 		return y !== x && y.a;
 	} catch (_err) {
 		return false;
