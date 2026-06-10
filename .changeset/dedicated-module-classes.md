@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add dedicated module classes and a module class registry per module type.
+Add dedicated module classes for all built-in module types.
