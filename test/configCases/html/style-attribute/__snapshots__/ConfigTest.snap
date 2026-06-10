@@ -13,6 +13,7 @@ exports[`ConfigTestCases html style-attribute exported tests should resolve url(
 <section style=\\"background: url(handled-pixel.png), url(handled-pixel.png);\\">Multiple urls</section>
 <div style=\\"background: url(handled-pixel.png);\\">Entity in url</div>
 <div style=\\"--quote: &#39;&quot;&#39;; background: url(handled-pixel.png);\\">Entity round-trip</div>
+<div style=\\"background: url(handled-pixel.png);\\">Entity-obfuscated url()</div>
 </body>
 </html>
 "

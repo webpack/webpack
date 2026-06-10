@@ -28,4 +28,8 @@ it("should decode character references and re-escape on write-back", () => {
 	// written back into the attribute (quotes are escaped for any quoting
 	// context), keeping the HTML valid.
 	expect(page).toMatch(/style="--quote: &#39;&quot;&#39;;[^"]*"/);
+
+	// The url() pre-filter runs on the decoded value, so `&#117;rl(` is
+	// recognized and resolved.
+	expect(page).not.toContain("&#117;rl(./pixel.png)");
 });

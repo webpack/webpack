@@ -10,7 +10,10 @@ exports[`ConfigTestCases html entities exported tests should decode character re
 <img src=\\"09a1a1112c577c279435.png\\" alt=\\"amp in filename\\">
 <img src=\\"09a1a1112c577c279435.png?x=1&y=2\\" alt=\\"amp in query\\">
 <img srcset=\\"09a1a1112c577c279435.png 1x, 09a1a1112c577c279435.png 2x\\" alt=\\"references in srcset\\">
+<img srcset=\\"09a1a1112c577c279435.png&#32;1x,&#32;09a1a1112c577c279435.png 2x\\" alt=\\"entity-encoded whitespace splits candidates\\">
 <img src=\\"&num;foo\\" alt=\\"decodes to fragment-only, must be skipped\\">
+<link rel=\\"&#105;con\\" href=\\"09a1a1112c577c279435.png\\">
+<meta name=\\"twitter&#58;image\\" content=\\"09a1a1112c577c279435.png\\">
 
 </body>
 </html>
