@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Handle external SVG references in presentation attributes, textPath and mpath.
+Handle external SVG `textPath` and `mpath` references in HTML parser.

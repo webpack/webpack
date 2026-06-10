@@ -4,19 +4,11 @@
 <body>
 
 <svg width="200" height="200">
-	<defs>
-		<linearGradient id="local-grad"></linearGradient>
-	</defs>
-	<rect width="10" height="10" fill="url(./refs.svg#grad)" stroke="url('./refs.svg#stroke')"/>
-	<circle r="5" fill="url(#local-grad)" filter="url(./refs.svg#blur)"/>
-	<path d="M0 0" clip-path="url(./refs.svg#c)" mask="url(&quot;./refs.svg#m&quot;)" marker-start="url(./refs.svg#m1)"/>
 	<text><textPath href="./refs.svg#curve">external</textPath></text>
 	<text><textPath xlink:href="#local-path">local</textPath></text>
 	<animateMotion><mpath href="./refs.svg#curve"/></animateMotion>
 	<animateMotion><mpath xlink:href="#local-motion"/></animateMotion>
 </svg>
-
-<div fill="url(./should-not-resolve.svg#x)">not SVG content</div>
 
 </body>
 </html>

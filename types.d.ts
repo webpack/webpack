@@ -9314,7 +9314,6 @@ declare abstract class HtmlParser extends ParserClass {
 	template?: (source: string, context: HtmlTemplateContext) => string;
 	sourcesByTag: Record<string, Record<string, SourceItem>>;
 	anyTagSources?: Record<string, SourceItem>;
-	defaultUrlSources: boolean;
 
 	/**
 	 * Runs the `template` option over the source and returns the transformed

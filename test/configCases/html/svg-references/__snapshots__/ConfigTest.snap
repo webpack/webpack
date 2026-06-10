@@ -1,25 +1,17 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ConfigTestCases html svg-references exported tests should resolve external url() references in SVG presentation attributes 1`] = `
+exports[`ConfigTestCases html svg-references exported tests should resolve external textPath and mpath references 1`] = `
 "<!DOCTYPE html>
 <html>
 <head><title>SVG references</title></head>
 <body>
 
 <svg width=\\"200\\" height=\\"200\\">
-	<defs>
-		<linearGradient id=\\"local-grad\\"></linearGradient>
-	</defs>
-	<rect width=\\"10\\" height=\\"10\\" fill=\\"url(258a547148033fda8727.svg#grad)\\" stroke=\\"url('258a547148033fda8727.svg#stroke')\\"/>
-	<circle r=\\"5\\" fill=\\"url(#local-grad)\\" filter=\\"url(258a547148033fda8727.svg#blur)\\"/>
-	<path d=\\"M0 0\\" clip-path=\\"url(258a547148033fda8727.svg#c)\\" mask=\\"url(&quot;258a547148033fda8727.svg#m&quot;)\\" marker-start=\\"url(258a547148033fda8727.svg#m1)\\"/>
 	<text><textPath href=\\"258a547148033fda8727.svg#curve\\">external</textPath></text>
 	<text><textPath xlink:href=\\"#local-path\\">local</textPath></text>
 	<animateMotion><mpath href=\\"258a547148033fda8727.svg#curve\\"/></animateMotion>
 	<animateMotion><mpath xlink:href=\\"#local-motion\\"/></animateMotion>
 </svg>
-
-<div fill=\\"url(./should-not-resolve.svg#x)\\">not SVG content</div>
 
 </body>
 </html>
