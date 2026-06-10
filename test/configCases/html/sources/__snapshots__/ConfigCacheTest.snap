@@ -155,6 +155,10 @@ exports[`ConfigCacheTestCases html sources exported tests should handle source 1
       action-uri=./orderStatus.aspx?src=IE9;
       icon-uri=\\" name=\\"msapplication-task\\">
 
+<meta content=\\"name=No Icon;action-uri=./orderStatus.aspx?src=IE9\\" name=\\"msapplication-task\\">
+<meta content=\\"name=Empty Icon;icon-uri=\\" name=\\"msapplication-task\\">
+<meta content=\\"name=Trailing Space;icon-uri=09a1a1112c577c279435.png ;action-uri=./orderStatus.aspx?src=IE9\\" name=\\"msapplication-task\\">
+
 <svg width=\\"200\\" height=\\"200\\">
 	<image xlink:href=\\"258a547148033fda8727.svg\\" height=\\"200\\" width=\\"200\\"/>
 </svg>

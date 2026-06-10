@@ -5,8 +5,9 @@ it("should decode character references in attribute URLs before resolving", () =
 	expect(page).not.toContain("im&#97;ge.png");
 	expect(page).not.toContain("a&amp;b.png");
 	expect(page).not.toContain("./image.png?x=1&amp;y=2");
-	// A reference decoding to a fragment-only URL is left alone
+	// References decoding to fragment-only or whitespace-only URLs are left alone
 	expect(page).toContain('src="&num;foo"');
+	expect(page).toContain('src="&#32;&#32;"');
 	expect(page).toMatchSnapshot();
 });
 

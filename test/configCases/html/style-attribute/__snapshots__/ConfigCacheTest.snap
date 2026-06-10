@@ -14,6 +14,7 @@ exports[`ConfigCacheTestCases html style-attribute exported tests should resolve
 <div style=\\"background: url(handled-pixel.png);\\">Entity in url</div>
 <div style=\\"--quote: &#39;&quot;&#39;; background: url(handled-pixel.png);\\">Entity round-trip</div>
 <div style=\\"background: url(handled-pixel.png);\\">Entity-obfuscated url()</div>
+<div style=\\"\\">Empty style — left untouched</div>
 </body>
 </html>
 "
