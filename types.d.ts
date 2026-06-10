@@ -5265,6 +5265,11 @@ declare interface CssAutoOrModuleParserOptions {
 	animation?: boolean;
 
 	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: "stylesheet" | "block-contents";
+
+	/**
 	 * Enable/disable renaming of `@container` names.
 	 */
 	container?: boolean;
@@ -5496,6 +5501,11 @@ declare interface CssModuleParserOptions {
 	animation?: boolean;
 
 	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: "stylesheet" | "block-contents";
+
+	/**
 	 * Enable/disable renaming of `@container` names.
 	 */
 	container?: boolean;
@@ -5611,6 +5621,10 @@ declare abstract class CssParser extends ParserClass {
 		 */
 		animation: boolean;
 		/**
+		 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
+		 */
+		as: string;
+		/**
 		 * Enable/disable renaming of `@container` names.
 		 */
 		container: boolean;
@@ -5676,6 +5690,11 @@ declare abstract class CssParser extends ParserClass {
  * Parser options for css modules.
  */
 declare interface CssParserOptions {
+	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: "stylesheet" | "block-contents";
+
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
@@ -9331,15 +9350,16 @@ declare interface HtmlParserOptions {
 						 */
 						tag?: string;
 						/**
-						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-inline` treats the attribute value as inline CSS text and bundles it through the CSS pipeline (the attribute's content is replaced with the processed CSS at render time, like an inline `<style>` body).
+						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-style` treats the attribute value as a full stylesheet (like a `<style>` body) and `stylesheet-style-attribute` as a CSS block's contents (a declaration list, like a `style` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time.
 						 */
 						type:
 							| "script"
+							| "stylesheet"
 							| "src"
 							| "srcset"
 							| "script-module"
-							| "stylesheet"
-							| "stylesheet-inline";
+							| "stylesheet-style"
+							| "stylesheet-style-attribute";
 				  }
 		  )[];
 
@@ -23300,19 +23320,21 @@ declare interface SourcePosition {
 }
 type SourceType =
 	| "script"
+	| "stylesheet"
 	| "src"
 	| "srcset"
 	| "script-module"
-	| "stylesheet"
-	| "stylesheet-inline"
+	| "stylesheet-style"
+	| "stylesheet-style-attribute"
 	| "modulepreload";
 type SourceTypeOrResolver =
 	| "script"
+	| "stylesheet"
 	| "src"
 	| "srcset"
 	| "script-module"
-	| "stylesheet"
-	| "stylesheet-inline"
+	| "stylesheet-style"
+	| "stylesheet-style-attribute"
 	| "modulepreload"
 	| ((attrs: Map<string, string>, css: boolean) => SourceType);
 type SourceValue = string | Buffer;

@@ -406,6 +406,44 @@ describe("walkCssTokens — SourceProcessor", () => {
 			});
 		expect(seen).toEqual(["/*!c*/"]);
 	});
+
+	it('as: "block-contents" walks a block\'s contents (style attribute)', () => {
+		/** @type {string[]} */
+		const names = [];
+		/** @type {string[]} */
+		const urls = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/css/walkCssTokens").VisitorMap} */ ({
+					[NodeType.Declaration]: (
+						/** @type {import("../lib/css/walkCssTokens").Declaration} */ n
+					) => names.push(n.name),
+					[NodeType.Url]: (
+						/** @type {import("../lib/css/walkCssTokens").UrlToken} */ n
+					) => urls.push(n.value)
+				})
+			)
+			.process("color: red; background: url(a.png)", {
+				as: "block-contents"
+			});
+		expect(names).toEqual(["color", "background"]);
+		expect(urls).toEqual(["a.png"]);
+	});
+
+	it('the default "stylesheet" mode treats a top-level declaration as a parse error', () => {
+		/** @type {string[]} */
+		const names = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/css/walkCssTokens").VisitorMap} */ ({
+					[NodeType.Declaration]: (
+						/** @type {import("../lib/css/walkCssTokens").Declaration} */ n
+					) => names.push(n.name)
+				})
+			)
+			.process("color: red; background: url(a.png)");
+		expect(names).toEqual([]);
+	});
 });
 
 describe("walkCssTokens — nesting and error recovery", () => {
