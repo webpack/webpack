@@ -378,7 +378,8 @@
     "sccs",
     "FEFF",
     "apos",
-    "Abaz"
+    "Abaz",
+    "Guardable"
   ],
   "ignoreRegExpList": [
     "/Author.+/",

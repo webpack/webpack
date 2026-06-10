@@ -361,41 +361,6 @@ type AnyLoaderContext = NormalModuleLoaderContext<any> &
 	HotModuleReplacementPluginLoaderContext;
 
 /**
- * Tracks values across a stack of nested sets where child scopes can add new
- * values without mutating the sets created by their parents.
- */
-declare abstract class AppendOnlyStackedSet<T> {
-	/**
-	 * Adds a value to the current scope layer, creating that layer lazily when
-	 * the first write occurs.
-	 */
-	add(el: T): void;
-
-	/**
-	 * Checks whether a value is present in any scope layer currently visible to
-	 * this stacked set.
-	 */
-	has(el: T): boolean;
-
-	/**
-	 * Removes every scope layer and any values accumulated in them.
-	 */
-	clear(): void;
-
-	/**
-	 * Creates a child stacked set that shares the existing scope history while
-	 * allowing subsequent additions to be recorded in its own new layer.
-	 */
-	createChild(): AppendOnlyStackedSet<T>;
-
-	/**
-	 * Iterates over the stacked sets from newest to oldest so consumers can
-	 * inspect recently added values first.
-	 */
-	[Symbol.iterator](): Iterator<T>;
-}
-
-/**
  * Returns object of arguments.
  */
 declare interface Argument {
@@ -5265,6 +5230,11 @@ declare interface CssAutoOrModuleParserOptions {
 	animation?: boolean;
 
 	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: "stylesheet" | "block-contents";
+
+	/**
 	 * Enable/disable renaming of `@container` names.
 	 */
 	container?: boolean;
@@ -5496,6 +5466,11 @@ declare interface CssModuleParserOptions {
 	animation?: boolean;
 
 	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: "stylesheet" | "block-contents";
+
+	/**
 	 * Enable/disable renaming of `@container` names.
 	 */
 	container?: boolean;
@@ -5611,6 +5586,10 @@ declare abstract class CssParser extends ParserClass {
 		 */
 		animation: boolean;
 		/**
+		 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
+		 */
+		as: string;
+		/**
 		 * Enable/disable renaming of `@container` names.
 		 */
 		container: boolean;
@@ -5676,6 +5655,11 @@ declare abstract class CssParser extends ParserClass {
  * Parser options for css modules.
  */
 declare interface CssParserOptions {
+	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: "stylesheet" | "block-contents";
+
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
@@ -7481,7 +7465,7 @@ declare abstract class ExportInfo {
 		resolveTargetFilter: (target: TargetItemWithConnection) => boolean,
 		updateOriginalConnection?: (
 			target: TargetItemWithConnection
-		) => ModuleGraphConnection
+		) => undefined | ModuleGraphConnection
 	): undefined | TargetItemWithConnection;
 
 	/**
@@ -8890,6 +8874,10 @@ declare interface GroupOptionsSmartGrouping {
 	force?: boolean;
 	targetGroupCount?: number;
 }
+declare interface GuardCollection {
+	consequent?: object;
+	alternate?: object;
+}
 declare interface HMRJavascriptParserHooks {
 	hotAcceptCallback: SyncBailHook<
 		[
@@ -9101,9 +9089,6 @@ declare interface HarmonySettings {
 	await: boolean;
 	attributes?: ImportAttributes;
 	phase: ImportPhaseType;
-}
-declare interface HarmonySpecifierGuards {
-	guards?: AppendOnlyStackedSet<string>;
 }
 declare abstract class HarmonyStarExportsList {
 	dependencies: HarmonyExportImportedSpecifierDependency[];
@@ -9331,15 +9316,16 @@ declare interface HtmlParserOptions {
 						 */
 						tag?: string;
 						/**
-						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-inline` treats the attribute value as inline CSS text and bundles it through the CSS pipeline (the attribute's content is replaced with the processed CSS at render time, like an inline `<style>` body).
+						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-style` treats the attribute value as a full stylesheet (like a `<style>` body) and `stylesheet-style-attribute` as a CSS block's contents (a declaration list, like a `style` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time.
 						 */
 						type:
 							| "script"
+							| "stylesheet"
 							| "src"
 							| "srcset"
 							| "script-module"
-							| "stylesheet"
-							| "stylesheet-inline";
+							| "stylesheet-style"
+							| "stylesheet-style-attribute";
 				  }
 		  )[];
 
@@ -10475,10 +10461,7 @@ declare class JavascriptParser extends ParserClass {
 			boolean | void
 		>;
 		statementIf: SyncBailHook<[IfStatement], boolean | void>;
-		collectGuards: SyncBailHook<
-			[Expression],
-			void | ((walk: () => void) => void)
-		>;
+		collectGuards: SyncBailHook<[Expression], void | GuardCollection>;
 		classExtendsExpression: SyncBailHook<
 			[
 				Expression,
@@ -10775,8 +10758,7 @@ declare class JavascriptParser extends ParserClass {
 		| HarmonySettings
 		| ImportSettings
 		| CommonJsImportSettings
-		| CompatibilitySettings
-		| HarmonySpecifierGuards;
+		| CompatibilitySettings;
 	magicCommentContext: ContextImport;
 
 	/**
@@ -11095,6 +11077,12 @@ declare class JavascriptParser extends ParserClass {
 	 * Pre walk if statement.
 	 */
 	preWalkIfStatement(statement: IfStatement): void;
+
+	/**
+	 * Walks a conditional branch with its guard frame (if any) pushed onto the
+	 * parser-state guard stack for the duration of the branch body.
+	 */
+	walkGuardedBranch(frame: undefined | null | object, walk: () => void): void;
 
 	/**
 	 * Processes the provided statement.
@@ -12019,8 +12007,7 @@ declare class JavascriptParser extends ParserClass {
 		| HarmonySettings
 		| ImportSettings
 		| CommonJsImportSettings
-		| CompatibilitySettings
-		| HarmonySpecifierGuards;
+		| CompatibilitySettings;
 
 	/**
 	 * Processes the provided name.
@@ -12034,8 +12021,7 @@ declare class JavascriptParser extends ParserClass {
 			| HarmonySettings
 			| ImportSettings
 			| CommonJsImportSettings
-			| CompatibilitySettings
-			| HarmonySpecifierGuards,
+			| CompatibilitySettings,
 		flags?: 0 | 1 | 2 | 4
 	): void;
 
@@ -23300,19 +23286,21 @@ declare interface SourcePosition {
 }
 type SourceType =
 	| "script"
+	| "stylesheet"
 	| "src"
 	| "srcset"
 	| "script-module"
-	| "stylesheet"
-	| "stylesheet-inline"
+	| "stylesheet-style"
+	| "stylesheet-style-attribute"
 	| "modulepreload";
 type SourceTypeOrResolver =
 	| "script"
+	| "stylesheet"
 	| "src"
 	| "srcset"
 	| "script-module"
-	| "stylesheet"
-	| "stylesheet-inline"
+	| "stylesheet-style"
+	| "stylesheet-style-attribute"
 	| "modulepreload"
 	| ((attrs: Map<string, string>, css: boolean) => SourceType);
 type SourceValue = string | Buffer;
@@ -24442,8 +24430,7 @@ declare interface TagInfo {
 		| HarmonySettings
 		| ImportSettings
 		| CommonJsImportSettings
-		| CompatibilitySettings
-		| HarmonySpecifierGuards;
+		| CompatibilitySettings;
 	next?: TagInfo;
 }
 declare interface TargetItemWithConnection {
