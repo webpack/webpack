@@ -8,5 +8,7 @@
 <p style="color: blue;">No url here — left untouched</p>
 <span style="background-image: image-set('./pixel.png' 1x);">image-set</span>
 <section style="background: url('./pixel.png'), url(./pixel.png);">Multiple urls</section>
+<div style="background: url(./pixel&#46;png);">Entity in url</div>
+<div style="--quote: '&quot;'; background: url(./pixel.png);">Entity round-trip</div>
 </body>
 </html>

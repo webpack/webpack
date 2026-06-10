@@ -11,6 +11,8 @@ exports[`ConfigCacheTestCases html style-attribute exported tests should resolve
 <p style=\\"color: blue;\\">No url here — left untouched</p>
 <span style=\\"background-image: image-set(url(handled-pixel.png) 1x);\\">image-set</span>
 <section style=\\"background: url(handled-pixel.png), url(handled-pixel.png);\\">Multiple urls</section>
+<div style=\\"background: url(handled-pixel.png);\\">Entity in url</div>
+<div style=\\"--quote: &#39;&quot;&#39;; background: url(handled-pixel.png);\\">Entity round-trip</div>
 </body>
 </html>
 "
