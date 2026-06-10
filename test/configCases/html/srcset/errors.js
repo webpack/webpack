@@ -12,20 +12,10 @@ module.exports = [
 	/Bad value for attribute "srcset" on element "img": Must contain one or more image candidate strings/,
 	/Bad value for attribute "srcset" on element "img": Must contain one or more image candidate strings/,
 
-	// TODO(html-entities): These regexes assert that numeric character references (e.g., `&#x9;`)
-	// are NOT decoded by the HTML parser before being passed to the `srcset` parser.
-	// If `HtmlParser.js` is ever updated to decode entities globally, these tests will
-	// fail because `&#x9;` will become `\t` (whitespace) and successfully parse as a valid srcset.
-	// Any future HTML decoding must be implemented selectively to preserve this behavior.
-	/Can't resolve '&#x9;&#x9;data:,a&#x9;&#x9;1x&#x9;&#x9;'/,
-	/Can't resolve '&#xA;&#xA;data:,a&#xA;&#xA;1x&#xA;&#xA;'/,
-	/Can't resolve '&#xB;&#xB;data:,a&#xB;&#xB;1x&#xB;&#xB;'/,
-	/Can't resolve '&#xC;&#xC;data:,a&#xC;&#xC;1x&#xC;&#xC;'/,
-	/Can't resolve '&#xD;&#xD;data:,a&#xD;&#xD;1x&#xD;&#xD;'/,
-	/Can't resolve '&#xE;&#xE;data:,a&#xE;&#xE;1x&#xE;&#xE;'/,
-	/Can't resolve '&#xF;&#xF;data:,a&#xF;&#xF;1x&#xF;&#xF;'/,
-	/Can't resolve '&#x10;&#x10;data:,a&#x10;&#x10;1x&#x10;&#x10;'/,
-	/Can't resolve '&nbsp;data:,a'/,
+	// Character references are decoded selectively: tokenization (and the
+	// `srcset` splitting above) sees the raw text, but each extracted URL is
+	// decoded and cleaned before resolution. The entity-whitespace candidates
+	// from the lines below therefore resolve as data URIs instead of erroring.
 	/Bad value for attribute "srcset" on element "img": Invalid srcset descriptor found in 'data:,a \( , data:,b 1x, \), data:,c' at '\( , data:,b 1x, \)'/,
 	/Bad value for attribute "srcset" on element "img": Invalid srcset descriptor found in 'data:,a \(\(\( , data:,b 1x, \), data:,c' at '\(\(\( , data:,b 1x, \)'/,
 	/Bad value for attribute "srcset" on element "img": Invalid srcset descriptor found in 'data:,a \[ , data:,b 1x, \], data:,c' at '\['/,
