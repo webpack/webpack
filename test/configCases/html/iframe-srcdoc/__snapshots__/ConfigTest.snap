@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html iframe-srcdoc exported tests should rewrite asset URLs inside <iframe srcdoc> 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>iframe srcdoc</title></head>
+<body>
+
+<iframe srcdoc=\\"<h1>Hello</h1><img src=&quot;out-image.png&quot;><link rel=&quot;icon&quot; href=&quot;out-image.png&quot;>\\"></iframe>
+
+<iframe srcdoc='<img srcset=\\"out-image.png 1x, out-image.png 2x\\"><img src=\\"out-image.png\\"><script src=\\"out-script.js\\"></script>'></iframe>
+
+<iframe srcdoc=\\"<iframe srcdoc='<img src=&amp;quot;out-deep.png&amp;quot;>'></iframe>\\"></iframe>
+
+<iframe src=\\"./should-stay.html\\"></iframe>
+
+</body>
+</html>
+"
+`;

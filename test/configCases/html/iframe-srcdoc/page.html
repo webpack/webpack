@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>iframe srcdoc</title></head>
+<body>
+
+<iframe srcdoc="<h1>Hello</h1><img src=&quot;./image.png&quot;><link rel=&quot;icon&quot; href=&quot;./image.png&quot;>"></iframe>
+
+<iframe srcdoc='<img srcset="./image.png 1x, ./image.png 2x"><img src="./im&#97;ge.png"><script src="./script.js"></script>'></iframe>
+
+<iframe srcdoc="<iframe srcdoc='<img src=&amp;quot;./deep.png&amp;quot;>'></iframe>"></iframe>
+
+<iframe src="./should-stay.html"></iframe>
+
+</body>
+</html>
