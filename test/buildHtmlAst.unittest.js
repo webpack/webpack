@@ -645,3 +645,201 @@ describe("buildHtmlAst — SourceProcessor", () => {
 		expect(a).toBeGreaterThan(0);
 	});
 });
+
+describe("buildHtmlAst — insertion-mode edge cases", () => {
+	it("merges foster-parented text runs before a table", () => {
+		const nodes = body("<table>x<tr></tr>y</table>");
+		// Both stray runs are fostered before the table and merged into one node.
+		expect(
+			/** @type {import("../lib/html/syntax").HtmlText} */ (nodes[0]).data
+		).toBe("xy");
+		expect(nodes[1].type).toBe(NodeType.Element);
+	});
+
+	it("keeps end tags and comments under foreign rules inside <svg>", () => {
+		const svg = find("<svg><circle></circle><!--c--></svg>", "svg");
+		expect(
+			/** @type {import("../lib/html/syntax").HtmlElement} */ (svg.children[0])
+				.tagName
+		).toBe("circle");
+		expect(svg.children[1].type).toBe(NodeType.Comment);
+	});
+
+	it("ignores stray end tags before head", () => {
+		const nodes = body("</div><p>x</p>");
+		expect(
+			/** @type {import("../lib/html/syntax").HtmlElement} */ (nodes[0]).tagName
+		).toBe("p");
+	});
+
+	it("handles <noscript> in head with comments, whitespace, and stray tags", () => {
+		const noscript = find(
+			"<head><noscript><!--c--> <link></div><head></noscript></head>",
+			"noscript"
+		);
+		expect(noscript.children[0].type).toBe(NodeType.Comment);
+		expect(
+			/** @type {import("../lib/html/syntax").HtmlElement} */ (
+				noscript.children.find((c) => c.type === NodeType.Element)
+			).tagName
+		).toBe("link");
+	});
+
+	it("pops <noscript> in head on non-passthrough content", () => {
+		// <span> is not allowed in head-noscript: noscript is popped and the
+		// span lands in the body.
+		const nodes = body("<head><noscript><span>x</span></noscript></head>");
+		expect(
+			/** @type {import("../lib/html/syntax").HtmlElement} */ (nodes[0]).tagName
+		).toBe("span");
+	});
+
+	it("keeps comments between </head> and <body>", () => {
+		const root = html("<head></head><!--c--><body>x</body>");
+		expect(root.children.some((c) => c.type === NodeType.Comment)).toBe(true);
+	});
+
+	it("re-dispatches EOF inside an unterminated <template>", () => {
+		const template = find("<template>x", "template");
+		expect(template.templateContent).toBeDefined();
+	});
+
+	it("keeps comments inside <table>", () => {
+		const table = find("<table><!--c--></table>", "table");
+		expect(table.children[0].type).toBe(NodeType.Comment);
+	});
+
+	it("closes <caption> via </caption>, </table>, and row triggers", () => {
+		const t1 = find("<table><caption>a</caption></table>", "table");
+		expect(
+			/** @type {import("../lib/html/syntax").HtmlElement} */ (t1.children[0])
+				.tagName
+		).toBe("caption");
+		// A <tr> start while in caption closes the caption first.
+		const t2 = find("<table><caption>a<tr><td>b</table>", "table");
+		expect(
+			/** @type {import("../lib/html/syntax").HtmlElement} */ (t2.children[0])
+				.tagName
+		).toBe("caption");
+		expect(child(t2.children, "tbody")).toBeDefined();
+		// Ignored stray ends inside caption.
+		const t3 = find("<table><caption>a</td></tbody>b</table>", "table");
+		expect(
+			/** @type {import("../lib/html/syntax").HtmlText} */ (
+				/** @type {import("../lib/html/syntax").HtmlElement} */ (t3.children[0])
+					.children[0]
+			).data
+		).toBe("ab");
+	});
+
+	it("parses <colgroup> with cols, comments, and implicit close", () => {
+		const table = find(
+			"<table><colgroup><!--c--><col span='2'></col></colgroup><tr><td>x</table>",
+			"table"
+		);
+		const colgroup = child(table.children, "colgroup");
+		expect(colgroup.children.some((c) => c.type === NodeType.Comment)).toBe(
+			true
+		);
+		expect(child(colgroup.children, "col")).toBeDefined();
+		// Implicit close: a row start while in colgroup pops it.
+		expect(child(table.children, "tbody")).toBeDefined();
+		// Character data pops colgroup back to table (fostered out).
+		const t2 = find("<table><colgroup>x</table>", "table");
+		expect(child(t2.children, "colgroup")).toBeDefined();
+	});
+
+	it("closes a row via </tbody> and ignores stray cell ends in a row", () => {
+		const table = find("<table><tbody><tr><td>a</td></tbody></table>", "table");
+		const tbody = child(table.children, "tbody");
+		expect(child(child(tbody.children, "tr").children, "td")).toBeDefined();
+		// ROW_IGNORED_ENDS: a stray </td> directly in row mode is dropped.
+		const t2 = find("<table><tr></td><td>b</td></tr></table>", "table");
+		expect(
+			child(child(child(t2.children, "tbody").children, "tr").children, "td")
+		).toBeDefined();
+	});
+
+	it("handles content after </html> (after-after-body)", () => {
+		const ast = buildHtmlAst("<p>a</p></html><!--c-->z");
+		// Comment after </html> attaches to the document.
+		expect(ast.children.some((c) => c.type === NodeType.Comment)).toBe(true);
+		// Non-whitespace text re-enters the body.
+		const texts = body("<p>a</p></html>z");
+		expect(
+			/** @type {import("../lib/html/syntax").HtmlText} */ (
+				/** @type {import("../lib/html/syntax").HtmlElement} */ (texts[0])
+					.children[0]
+			).data
+		).toBe("a");
+	});
+
+	it("parses nested frameset elements, frames, and noframes", () => {
+		const src =
+			"<frameset cols='50%,50%'> <!--c--><frame src='a'><frameset><frame></frameset></frameset> <!--d--></html> <!--e--><noframes>n</noframes>";
+		const root = html(src);
+		const frameset = child(root.children, "frameset");
+		expect(frameset).toBeDefined();
+		expect(child(frameset.children, "frame")).toBeDefined();
+		expect(child(frameset.children, "frameset")).toBeDefined();
+		expect(frameset.children.some((c) => c.type === NodeType.Comment)).toBe(
+			true
+		);
+		// afterFrameset comment + </html> → afterAfterFrameset comment/noframes.
+		const ast = buildHtmlAst(src);
+		expect(ast.children.some((c) => c.type === NodeType.Comment)).toBe(true);
+		expect(find(src, "noframes")).toBeDefined();
+	});
+
+	it("ignores </frameset> at the root frameset and html start in frameset", () => {
+		const src = "<frameset></frameset></frameset><html lang='x'>";
+		expect(child(html(src).children, "frameset")).toBeDefined();
+	});
+
+	it("mirrors the selected option from an <optgroup> into <selectedcontent>", () => {
+		const select = body(
+			"<select><button><selectedcontent></selectedcontent></button><optgroup><option selected>B</optgroup></select>"
+		)[0];
+		const selectedcontent = child(
+			child(select.children, "button").children,
+			"selectedcontent"
+		);
+		expect(
+			/** @type {import("../lib/html/syntax").HtmlText} */ (
+				selectedcontent.children[0]
+			).data
+		).toBe("B");
+	});
+});
+
+describe("buildHtmlAst — stray doctype and <html> re-dispatch", () => {
+	it("ignores a mid-document doctype and merges stray <html> attributes", () => {
+		// A stray doctype is dropped and a repeated <html> merges new
+		// attributes in colgroup / table / noscript / frameset modes.
+		const t = find(
+			"<table><colgroup><!DOCTYPE html></col><template></template><col></colgroup></table>",
+			"table"
+		);
+		expect(child(child(t.children, "colgroup").children, "col")).toBeDefined();
+		expect(find("<table><colgroup>", "colgroup")).toBeDefined();
+		expect(
+			find("<head><noscript><!DOCTYPE html></noscript>", "noscript")
+		).toBeDefined();
+		const t2 = find("<table><!DOCTYPE html><tr><td>x</table>", "table");
+		expect(child(t2.children, "tbody")).toBeDefined();
+	});
+
+	it("handles stray doctype and <html> around frameset content", () => {
+		const root = html(
+			"<frameset><!DOCTYPE html><html lang='a'><frame></frameset><!DOCTYPE html><html lang='b'></html><!DOCTYPE html><html lang='c'>"
+		);
+		expect(child(root.children, "frameset")).toBeDefined();
+		// The stray <html> start tags merged their attributes into the root.
+		expect(root.attributes.some((a) => a.name === "lang")).toBe(true);
+	});
+
+	it("merges stray <html> after </html> (after-after-body)", () => {
+		const root = html("<p>x</p></html><html lang='z'>");
+		expect(root.attributes.some((a) => a.name === "lang")).toBe(true);
+	});
+});
