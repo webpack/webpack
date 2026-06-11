@@ -7332,17 +7332,19 @@ declare abstract class ExportInfo {
 	canMangleProvide?: boolean;
 
 	/**
-	 * defined: the export binds to a small primitive constant and may be inlined
-	 * undefined: not an inlined constant export
-	 */
-	canInlineProvide?: InlinedValue;
-
-	/**
 	 * true: it can be mangled
 	 * false: is can not be mangled
 	 * undefined: it was not determined if it can be mangled
 	 */
 	canMangleUse?: boolean;
+	exportsInfoOwned: boolean;
+	exportsInfo?: ExportsInfo;
+
+	/**
+	 * defined: the export binds to a small primitive constant and may be inlined
+	 * undefined: not an inlined constant export
+	 */
+	canInlineProvide?: InlinedValue;
 
 	/**
 	 * true: at least one consumer accepts inlining, none rejected
@@ -7363,8 +7365,6 @@ declare abstract class ExportInfo {
 	 * undefined: not determined
 	 */
 	immutableBinding?: boolean;
-	exportsInfoOwned: boolean;
-	exportsInfo?: ExportsInfo;
 	get canMangle(): boolean;
 	canInline(): undefined | InlinedValue;
 
