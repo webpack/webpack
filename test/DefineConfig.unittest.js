@@ -44,6 +44,13 @@ describe("defineConfig", () => {
 		expect(webpack.defineConfig(fn)).toBe(fn);
 	});
 
+	it("should return an async function style multi compiler configuration unchanged", () => {
+		/** @type {import("../").ConfigurationFactory} */
+		const fn = async () => [{ name: "a" }, { name: "b" }];
+
+		expect(webpack.defineConfig(fn)).toBe(fn);
+	});
+
 	it("should return an array of function style configurations unchanged", () => {
 		/** @type {import("../").ConfigurationFactory[]} */
 		const fns = [() => ({ name: "a" }), async () => ({ name: "b" })];
@@ -72,9 +79,19 @@ describe("defineConfig", () => {
 		expect(webpack.defineConfig(promise)).toBe(promise);
 	});
 
+	it("should return a promise async function style configuration unchanged", () => {
+		/** @type {Promise<import("../").ConfigurationFactory>} */
+		const promise = Promise.resolve(async () => ({ mode: "none" }));
+
+		expect(webpack.defineConfig(promise)).toBe(promise);
+	});
+
 	it("should return a promise array of function style configurations unchanged", () => {
 		/** @type {Promise<import("../").ConfigurationFactory[]>} */
-		const promise = Promise.resolve([() => ({ name: "a" })]);
+		const promise = Promise.resolve([
+			() => ({ name: "a" }),
+			async () => ({ name: "b" })
+		]);
 
 		expect(webpack.defineConfig(promise)).toBe(promise);
 	});
