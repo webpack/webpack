@@ -397,10 +397,6 @@ declare interface Asset {
 	 */
 	info: AssetInfo;
 }
-type AssetBuildInfo = KnownBuildInfo &
-	Record<string, any> &
-	KnownNormalModuleBuildInfo &
-	KnownAssetBuildInfo;
 declare abstract class AssetBytesGenerator extends Generator {
 	/**
 	 * Generates fallback output for the provided error condition.
@@ -499,6 +495,10 @@ declare interface AssetInlineGeneratorOptions {
 				context: { filename: string; module: Module }
 		  ) => string);
 }
+type AssetModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownNormalModuleBuildInfo &
+	KnownAssetModuleBuildInfo;
 declare abstract class AssetParser extends ParserClass {
 	dataUrlCondition?:
 		| boolean
@@ -5294,11 +5294,6 @@ declare interface CssAutoOrModuleParserOptions {
 	 */
 	url?: boolean;
 }
-type CssBuildInfo = KnownBuildInfo &
-	Record<string, any> &
-	KnownNormalModuleBuildInfo &
-	KnownCssBuildInfo;
-type CssBuildMeta = KnownBuildMeta & Record<string, any> & KnownCssBuildMeta;
 declare interface CssData {
 	/**
 	 * whether export __esModule
@@ -5414,6 +5409,13 @@ declare abstract class CssModule extends NormalModule {
 	inheritance?: [CssLayer, Supports, Media][];
 	exportType?: "link" | "text" | "css-style-sheet" | "style";
 }
+type CssModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownNormalModuleBuildInfo &
+	KnownCssModuleBuildInfo;
+type CssModuleBuildMeta = KnownBuildMeta &
+	Record<string, any> &
+	KnownCssModuleBuildMeta;
 
 /**
  * Generator options for css/module modules.
@@ -9244,10 +9246,6 @@ declare interface HotModuleReplacementPluginLoaderContext {
 declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
-type HtmlBuildInfo = KnownBuildInfo &
-	Record<string, any> &
-	KnownNormalModuleBuildInfo &
-	KnownHtmlBuildInfo;
 declare abstract class HtmlGenerator extends Generator {
 	options: HtmlGeneratorOptions;
 
@@ -9302,6 +9300,10 @@ declare interface HtmlGeneratorOptions {
 	 */
 	extract?: boolean;
 }
+type HtmlModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownNormalModuleBuildInfo &
+	KnownHtmlModuleBuildInfo;
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
 	template?: (source: string, context: HtmlTemplateContext) => string;
@@ -10145,13 +10147,6 @@ declare interface IteratorObject<T, TReturn = unknown, TNext = unknown>
 	[Symbol.iterator](): IteratorObject<T, TReturn, TNext>;
 	[Symbol.dispose](): void;
 }
-type JavascriptBuildInfo = KnownBuildInfo &
-	Record<string, any> &
-	KnownNormalModuleBuildInfo &
-	KnownJavascriptBuildInfo;
-type JavascriptBuildMeta = KnownBuildMeta &
-	Record<string, any> &
-	KnownJavascriptBuildMeta;
 declare abstract class JavascriptGenerator extends Generator {
 	/**
 	 * Processes the provided module.
@@ -10194,6 +10189,13 @@ declare abstract class JavascriptGenerator extends Generator {
 		generateContext: GenerateContext
 	): null | Source;
 }
+type JavascriptModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownNormalModuleBuildInfo &
+	KnownJavascriptModuleBuildInfo;
+type JavascriptModuleBuildMeta = KnownBuildMeta &
+	Record<string, any> &
+	KnownJavascriptModuleBuildMeta;
 declare class JavascriptModulesPlugin {
 	constructor(options?: object);
 	options: object;
@@ -12564,10 +12566,6 @@ declare interface JoinCacheEntry {
 	 */
 	cache: Map<string, Map<string, undefined | string>>;
 }
-type JsonBuildInfo = KnownBuildInfo &
-	Record<string, any> &
-	KnownNormalModuleBuildInfo &
-	KnownJsonBuildInfo;
 declare abstract class JsonData {
 	/**
 	 * Returns raw JSON data.
@@ -12608,6 +12606,10 @@ declare interface JsonGeneratorOptions {
 	 */
 	JSONParse?: boolean;
 }
+type JsonModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownNormalModuleBuildInfo &
+	KnownJsonModuleBuildInfo;
 declare interface JsonObjectFs {
 	[index: string]:
 		| undefined
@@ -12719,15 +12721,6 @@ declare class JsonpTemplatePlugin {
 		compilation: Compilation
 	): JsonpCompilationPluginHooks;
 }
-declare interface KnownAssetBuildInfo {
-	/**
-	 * whether the asset is inlined as a data url
-	 */
-	dataUrl?: boolean;
-	filename?: string;
-	assetInfo?: AssetInfo;
-	fullContentHash?: string;
-}
 declare interface KnownAssetInfo {
 	/**
 	 * true, if the asset can be long term cached forever (contains a hash)
@@ -12794,6 +12787,15 @@ declare interface KnownAssetInfo {
 	 */
 	related?: Record<string, null | string | string[]>;
 }
+declare interface KnownAssetModuleBuildInfo {
+	/**
+	 * whether the asset is inlined as a data url
+	 */
+	dataUrl?: boolean;
+	filename?: string;
+	assetInfo?: AssetInfo;
+	fullContentHash?: string;
+}
 declare interface KnownBuildInfo {
 	cacheable?: boolean;
 	strict?: boolean;
@@ -12859,7 +12861,7 @@ declare interface KnownContextModuleBuildInfo {
 declare interface KnownCreateStatsOptionsContext {
 	forToString?: boolean;
 }
-declare interface KnownCssBuildInfo {
+declare interface KnownCssModuleBuildInfo {
 	cssData?: CssData;
 
 	/**
@@ -12867,7 +12869,7 @@ declare interface KnownCssBuildInfo {
 	 */
 	charset?: string;
 }
-declare interface KnownCssBuildMeta {
+declare interface KnownCssModuleBuildMeta {
 	isCssModule?: boolean;
 	needIdInConcatenation?: boolean;
 }
@@ -12909,13 +12911,13 @@ declare interface KnownHooks {
 	 */
 	result: AsyncSeriesHook<[ResolveRequest, ResolveContext]>;
 }
-declare interface KnownHtmlBuildInfo {
+declare interface KnownHtmlModuleBuildInfo {
 	/**
 	 * entries collected from the document, grouped by kind
 	 */
 	htmlEntryScripts?: Record<string, EntryScriptInfo[]>;
 }
-declare interface KnownJavascriptBuildInfo {
+declare interface KnownJavascriptModuleBuildInfo {
 	/**
 	 * using in CommonJs
 	 */
@@ -12936,7 +12938,7 @@ declare interface KnownJavascriptBuildInfo {
 	 */
 	inlineExports?: boolean;
 }
-declare interface KnownJavascriptBuildMeta {
+declare interface KnownJavascriptModuleBuildMeta {
 	strictHarmonyModule?: boolean;
 	treatAsCommonJs?: boolean;
 }
@@ -12946,7 +12948,7 @@ declare interface KnownJavascriptParserState {
 	lastHarmonyImportOrder?: number;
 	localModules?: LocalModule[];
 }
-declare interface KnownJsonBuildInfo {
+declare interface KnownJsonModuleBuildInfo {
 	jsonData?: JsonData;
 }
 declare interface KnownMeta {
@@ -13337,7 +13339,7 @@ declare interface KnownStatsProfile {
 	factory: number;
 	dependencies: number;
 }
-declare interface KnownSyncWasmBuildMeta {
+declare interface KnownSyncWasmModuleBuildMeta {
 	jsIncompatibleExports?: Record<string, string>;
 }
 declare interface KnownUnsafeCacheData {
@@ -24439,9 +24441,9 @@ declare interface SyncModuleIdsPluginOptions {
 	 */
 	mode?: "read" | "create" | "merge" | "update";
 }
-type SyncWasmBuildMeta = KnownBuildMeta &
+type SyncWasmModuleBuildMeta = KnownBuildMeta &
 	Record<string, any> &
-	KnownSyncWasmBuildMeta;
+	KnownSyncWasmModuleBuildMeta;
 declare interface SyntheticDependencyLocation {
 	name: string;
 	index?: number;
@@ -26407,22 +26409,22 @@ declare namespace exports {
 		Configuration,
 		WebpackOptionsNormalized,
 		WebpackPluginInstance,
-		AssetBuildInfo,
+		AssetModuleBuildInfo,
 		ChunkGroup,
 		AssetEmittedInfo,
 		ContextModuleBuildInfo,
-		CssBuildInfo,
-		CssBuildMeta,
+		CssModuleBuildInfo,
+		CssModuleBuildMeta,
 		ExternalModuleBuildInfo,
-		HtmlBuildInfo,
-		JavascriptBuildInfo,
-		JavascriptBuildMeta,
-		JsonBuildInfo,
+		HtmlModuleBuildInfo,
+		JavascriptModuleBuildInfo,
+		JavascriptModuleBuildMeta,
+		JsonModuleBuildInfo,
 		BuildInfo,
 		BuildMeta,
 		NormalModuleBuildInfo,
 		ConcatenatedModuleBuildInfo,
-		SyncWasmBuildMeta,
+		SyncWasmModuleBuildMeta,
 		Asset,
 		AssetInfo,
 		EntryOptions,
