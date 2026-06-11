@@ -28,4 +28,18 @@ describe("defineConfig", () => {
 
 		expect(defineConfig(fn)).toBe(fn);
 	});
+
+	it("should return an async function style configuration unchanged", () => {
+		/** @type {import("../lib/config/defineConfig").ConfigurationFactory} */
+		const fn = async () => ({ mode: "none" });
+
+		expect(defineConfig(fn)).toBe(fn);
+	});
+
+	it("should return a promise configuration unchanged", () => {
+		/** @type {Promise<import("../lib/config/defineConfig").Configuration>} */
+		const promise = Promise.resolve({ mode: "none" });
+
+		expect(defineConfig(promise)).toBe(promise);
+	});
 });
