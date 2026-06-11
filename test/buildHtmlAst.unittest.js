@@ -558,7 +558,7 @@ describe("buildHtmlAst — SourceProcessor", () => {
 	});
 
 	it("visits the document root with a null parent", () => {
-		/** @type {[string, string | null][]} */
+		/** @type {[number, number | null][]} */
 		const seen = [];
 		new SourceProcessor()
 			.use({
