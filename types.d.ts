@@ -7572,6 +7572,11 @@ declare interface ExportSpec {
 type ExportedVariableInfo = string | VariableInfo | ScopeInfo;
 declare abstract class ExportsInfo {
 	/**
+	 * Records that an owned export got an inlined used name.
+	 */
+	markInlinedExports(): void;
+
+	/**
 	 * Gets owned exports.
 	 */
 	get ownedExports(): Iterable<ExportInfo>;
@@ -7708,6 +7713,12 @@ declare abstract class ExportsInfo {
 	 * Returns the used name.
 	 */
 	getUsedName(name: string | string[], runtime: RuntimeSpec): UsedName;
+
+	/**
+	 * Checks whether `getUsedName(name, runtime)` would return an `InlinedUsedName`,
+	 * without allocating intermediate used-name arrays (hot path for connection conditions).
+	 */
+	hasInlinedUsedName(name: string[], runtime: RuntimeSpec): boolean;
 
 	/**
 	 * Updates the hash with the data contributed by this instance.
