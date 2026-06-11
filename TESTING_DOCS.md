@@ -66,12 +66,12 @@ This document explains the structure of the `test/` directory in the Webpack pro
 
 ### 12b. `html5lib-tests/`
 
-- **Purpose**: WHATWG html5lib-tests tokenizer conformance cases for `lib/html/walkHtmlTokens`.
+- **Purpose**: WHATWG html5lib-tests tokenizer conformance cases for `lib/html/syntax`.
 - **Usage**: Git submodule — initialize with `git submodule update --init test/html5lib-tests`. Test runner: `test/html5lib-webpack.spectest.js` (`yarn test:html5lib`) compiles every input as a webpack HTML entry to confirm the full pipeline handles it without crashing.
 
 ### 12c. `css-parsing-tests/`
 
-- **Purpose**: CSS Syntax Level 3 conformance corpus for `lib/css/walkCssTokens`.
+- **Purpose**: CSS Syntax Level 3 conformance corpus for `lib/css/syntax`.
 - **Usage**: Git submodule — initialize with `git submodule update --init test/css-parsing-tests`. Test runner: `test/cssParsing-webpack.spectest.js` (`yarn test:css-parsing`) compiles every input as a webpack CSS entry to confirm the full pipeline handles it without crashing.
 
 ### 13. `watchCases/`

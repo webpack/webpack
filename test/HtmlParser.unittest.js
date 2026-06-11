@@ -2,9 +2,12 @@
 
 const path = require("path");
 
-jest.mock("../lib/html/buildHtmlAst", () => jest.fn());
+jest.mock("../lib/html/syntax", () => ({
+	...jest.requireActual("../lib/html/syntax"),
+	buildHtmlAst: jest.fn()
+}));
 
-/** @typedef {import("../lib/html/buildHtmlAst") & { mockReturnValue: (val: EXPECTED_ANY) => void }} MockedBuildHtmlAst */
+/** @typedef {import("../lib/html/syntax")["buildHtmlAst"] & { mockReturnValue: (val: EXPECTED_ANY) => void }} MockedBuildHtmlAst */
 
 const HtmlInlineScriptDependency = require("../lib/dependencies/HtmlInlineScriptDependency");
 const HtmlInlineStyleDependency = require("../lib/dependencies/HtmlInlineStyleDependency");
@@ -12,7 +15,7 @@ const CommentCompilationWarning = require("../lib/errors/CommentCompilationWarni
 const UnsupportedFeatureWarning = require("../lib/errors/UnsupportedFeatureWarning");
 const HtmlParser = require("../lib/html/HtmlParser");
 const buildHtmlAst = /** @type {MockedBuildHtmlAst} */ (
-	require("../lib/html/buildHtmlAst")
+	require("../lib/html/syntax").buildHtmlAst
 );
 
 /**
