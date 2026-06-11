@@ -397,6 +397,10 @@ declare interface Asset {
 	 */
 	info: AssetInfo;
 }
+type AssetBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownNormalModuleBuildInfo &
+	KnownAssetBuildInfo;
 declare abstract class AssetBytesGenerator extends Generator {
 	/**
 	 * Generates fallback output for the provided error condition.
@@ -4325,6 +4329,9 @@ declare class ConcatSource extends Source {
 	): GeneratedSourceInfo;
 }
 type ConcatSourceChild = string | Source | SourceLike;
+type ConcatenatedModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownConcatenatedModuleBuildInfo;
 declare interface ConcatenatedModuleInfo {
 	type: "concatenated";
 	module: Module;
@@ -4378,18 +4385,18 @@ declare interface ConcatenatedModuleInfo {
 	 */
 	exportsTypeStrict?:
 		| "namespace"
+		| "dynamic"
 		| "default-only"
-		| "default-with-named"
-		| "dynamic";
+		| "default-with-named";
 
 	/**
 	 * memoized getExportsType(strict=false)
 	 */
 	exportsTypeNonStrict?:
 		| "namespace"
+		| "dynamic"
 		| "default-only"
-		| "default-with-named"
-		| "dynamic";
+		| "default-with-named";
 }
 declare interface ConcatenationBailoutReasonContext {
 	/**
@@ -4995,6 +5002,9 @@ type ContextMode =
 	| "lazy-once"
 	| "sync"
 	| "async-weak";
+type ContextModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownContextModuleBuildInfo;
 declare abstract class ContextModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
 		beforeResolve: AsyncSeriesWaterfallHook<
@@ -5284,6 +5294,11 @@ declare interface CssAutoOrModuleParserOptions {
 	 */
 	url?: boolean;
 }
+type CssBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownNormalModuleBuildInfo &
+	KnownCssBuildInfo;
+type CssBuildMeta = KnownBuildMeta & Record<string, any> & KnownCssBuildMeta;
 declare interface CssData {
 	/**
 	 * whether export __esModule
@@ -6864,6 +6879,11 @@ declare class EntryPlugin {
 		options: string | EntryOptions
 	): EntryDependency;
 }
+declare interface EntryScriptInfo {
+	request: string;
+	entryName: string;
+	type: "script" | "stylesheet" | "script-module" | "modulepreload";
+}
 type EntryStatic = string | EntryObject | string[];
 
 /**
@@ -7772,9 +7792,9 @@ declare interface ExportsSpec {
 }
 type ExportsType =
 	| "namespace"
+	| "dynamic"
 	| "default-only"
-	| "default-with-named"
-	| "dynamic";
+	| "default-with-named";
 type Exposes = (string | ExposesObject)[] | ExposesObject;
 
 /**
@@ -7964,6 +7984,9 @@ declare class ExternalModule extends Module {
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
+type ExternalModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownExternalModuleBuildInfo;
 declare interface ExternalModuleHooks {
 	chunkCondition: SyncBailHook<[Chunk, Compilation], boolean>;
 }
@@ -8034,18 +8057,18 @@ declare interface ExternalModuleInfo {
 	 */
 	exportsTypeStrict?:
 		| "namespace"
+		| "dynamic"
 		| "default-only"
-		| "default-with-named"
-		| "dynamic";
+		| "default-with-named";
 
 	/**
 	 * memoized getExportsType(strict=false)
 	 */
 	exportsTypeNonStrict?:
 		| "namespace"
+		| "dynamic"
 		| "default-only"
-		| "default-with-named"
-		| "dynamic";
+		| "default-with-named";
 }
 type ExternalModuleRequest = string | string[] | RequestRecord;
 type Externals =
@@ -9221,6 +9244,10 @@ declare interface HotModuleReplacementPluginLoaderContext {
 declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
+type HtmlBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownNormalModuleBuildInfo &
+	KnownHtmlBuildInfo;
 declare abstract class HtmlGenerator extends Generator {
 	options: HtmlGeneratorOptions;
 
@@ -9321,9 +9348,9 @@ declare interface HtmlParserOptions {
 						type:
 							| "script"
 							| "stylesheet"
+							| "script-module"
 							| "src"
 							| "srcset"
-							| "script-module"
 							| "stylesheet-style"
 							| "stylesheet-style-attribute";
 				  }
@@ -10118,6 +10145,13 @@ declare interface IteratorObject<T, TReturn = unknown, TNext = unknown>
 	[Symbol.iterator](): IteratorObject<T, TReturn, TNext>;
 	[Symbol.dispose](): void;
 }
+type JavascriptBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownNormalModuleBuildInfo &
+	KnownJavascriptBuildInfo;
+type JavascriptBuildMeta = KnownBuildMeta &
+	Record<string, any> &
+	KnownJavascriptBuildMeta;
 declare abstract class JavascriptGenerator extends Generator {
 	/**
 	 * Processes the provided module.
@@ -12530,6 +12564,10 @@ declare interface JoinCacheEntry {
 	 */
 	cache: Map<string, Map<string, undefined | string>>;
 }
+type JsonBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownNormalModuleBuildInfo &
+	KnownJsonBuildInfo;
 declare abstract class JsonData {
 	/**
 	 * Returns raw JSON data.
@@ -12681,6 +12719,15 @@ declare class JsonpTemplatePlugin {
 		compilation: Compilation
 	): JsonpCompilationPluginHooks;
 }
+declare interface KnownAssetBuildInfo {
+	/**
+	 * whether the asset is inlined as a data url
+	 */
+	dataUrl?: boolean;
+	filename?: string;
+	assetInfo?: AssetInfo;
+	fullContentHash?: string;
+}
 declare interface KnownAssetInfo {
 	/**
 	 * true, if the asset can be long term cached forever (contains a hash)
@@ -12749,123 +12796,15 @@ declare interface KnownAssetInfo {
 }
 declare interface KnownBuildInfo {
 	cacheable?: boolean;
-	parsed?: boolean;
 	strict?: boolean;
-
-	/**
-	 * using in AMD
-	 */
 	moduleArgument?: string;
-
-	/**
-	 * using in AMD
-	 */
 	exportsArgument?: string;
 
 	/**
-	 * using in CommonJs
-	 */
-	moduleConcatenationBailout?: string;
-
-	/**
-	 * using in APIPlugin
-	 */
-	needCreateRequire?: boolean;
-
-	/**
-	 * using in HttpUriPlugin
-	 */
-	resourceIntegrity?: string;
-
-	/**
-	 * using in NormalModule
-	 */
-	fileDependencies?: LazySet<string>;
-
-	/**
-	 * using in NormalModule
-	 */
-	contextDependencies?: LazySet<string>;
-
-	/**
-	 * using in NormalModule
-	 */
-	missingDependencies?: LazySet<string>;
-
-	/**
-	 * using in NormalModule
-	 */
-	buildDependencies?: LazySet<string>;
-
-	/**
-	 * using in NormalModule
-	 */
-	valueDependencies?: Map<string, ValueCacheVersion>;
-
-	/**
-	 * using in NormalModule
+	 * assets added by loaders or plugins
 	 */
 	assets?: Record<string, Source>;
-
-	/**
-	 * using in NormalModule
-	 */
 	assetsInfo?: Map<string, undefined | AssetInfo>;
-
-	/**
-	 * using in NormalModule
-	 */
-	hash?: string;
-
-	/**
-	 * using in ContextModule
-	 */
-	snapshot?: null | Snapshot;
-
-	/**
-	 * for assets modules
-	 */
-	fullContentHash?: string;
-
-	/**
-	 * for assets modules
-	 */
-	filename?: string;
-
-	/**
-	 * for assets modules
-	 */
-	dataUrl?: boolean;
-
-	/**
-	 * for assets modules
-	 */
-	assetInfo?: AssetInfo;
-
-	/**
-	 * for external modules
-	 */
-	javascriptModule?: boolean;
-
-	/**
-	 * for lazy compilation modules
-	 */
-	active?: boolean;
-
-	/**
-	 * for css modules
-	 */
-	cssData?: CssData;
-
-	/**
-	 * for css modules (charset at-rule)
-	 */
-	charset?: string;
-
-	/**
-	 * for json modules
-	 */
-	jsonData?: JsonData;
 
 	/**
 	 * top level declaration names
@@ -12873,32 +12812,40 @@ declare interface KnownBuildInfo {
 	topLevelDeclarations?: Set<string>;
 
 	/**
-	 * names of locally declared functions known to be free of side effects
-	 */
-	pureFunctions?: Set<string>;
-
-	/**
-	 * whether this module was parsed with `optimization.inlineExports` enabled (gates inlining of its exports)
-	 */
-	inlineExports?: boolean;
-
-	/**
 	 * true when the module is part of a circular dependency chain
 	 */
 	isCircular?: boolean;
 }
 declare interface KnownBuildMeta {
-	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
+	exportsType?: "default" | "namespace" | "flagged" | "dynamic";
 	defaultObject?: false | "redirect" | "redirect-warn";
-	strictHarmonyModule?: boolean;
-	treatAsCommonJs?: boolean;
 	async?: boolean;
 	sideEffectFree?: boolean;
-	isCssModule?: boolean;
-	needIdInConcatenation?: boolean;
-	jsIncompatibleExports?: Record<string, string>;
+
+	/**
+	 * using in ModuleLibraryPlugin
+	 */
 	exportsFinalNameByRuntime?: Map<string, Record<string, string>>;
+
+	/**
+	 * using in ModuleLibraryPlugin
+	 */
 	exportsSourceByRuntime?: Map<string, string>;
+}
+declare interface KnownConcatenatedModuleBuildInfo {
+	fileDependencies?: LazySet<string>;
+	contextDependencies?: LazySet<string>;
+	missingDependencies?: LazySet<string>;
+
+	/**
+	 * collected from the inner modules
+	 */
+	needCreateRequire?: boolean;
+
+	/**
+	 * taken over from the root module
+	 */
+	inlineExports?: boolean;
 }
 declare interface KnownContext {
 	/**
@@ -12906,8 +12853,29 @@ declare interface KnownContext {
 	 */
 	environments?: string[];
 }
+declare interface KnownContextModuleBuildInfo {
+	snapshot?: null | Snapshot;
+}
 declare interface KnownCreateStatsOptionsContext {
 	forToString?: boolean;
+}
+declare interface KnownCssBuildInfo {
+	cssData?: CssData;
+
+	/**
+	 * charset at-rule
+	 */
+	charset?: string;
+}
+declare interface KnownCssBuildMeta {
+	isCssModule?: boolean;
+	needIdInConcatenation?: boolean;
+}
+declare interface KnownExternalModuleBuildInfo {
+	/**
+	 * true when emitting an ESM external (`output.module`)
+	 */
+	javascriptModule?: boolean;
 }
 declare interface KnownHooks {
 	/**
@@ -12941,15 +12909,64 @@ declare interface KnownHooks {
 	 */
 	result: AsyncSeriesHook<[ResolveRequest, ResolveContext]>;
 }
+declare interface KnownHtmlBuildInfo {
+	/**
+	 * entries collected from the document, grouped by kind
+	 */
+	htmlEntryScripts?: Record<string, EntryScriptInfo[]>;
+}
+declare interface KnownJavascriptBuildInfo {
+	/**
+	 * using in CommonJs
+	 */
+	moduleConcatenationBailout?: string;
+
+	/**
+	 * using in APIPlugin
+	 */
+	needCreateRequire?: boolean;
+
+	/**
+	 * names of locally declared functions known to be free of side effects
+	 */
+	pureFunctions?: Set<string>;
+
+	/**
+	 * whether this module was parsed with `optimization.inlineExports` enabled (gates inlining of its exports)
+	 */
+	inlineExports?: boolean;
+}
+declare interface KnownJavascriptBuildMeta {
+	strictHarmonyModule?: boolean;
+	treatAsCommonJs?: boolean;
+}
 declare interface KnownJavascriptParserState {
 	harmonyNamedExports?: Set<string>;
 	harmonyStarExports?: HarmonyStarExportsList;
 	lastHarmonyImportOrder?: number;
 	localModules?: LocalModule[];
 }
+declare interface KnownJsonBuildInfo {
+	jsonData?: JsonData;
+}
 declare interface KnownMeta {
 	importVarMap?: Map<Module, string>;
 	deferredImportVarMap?: Map<Module, string>;
+}
+declare interface KnownNormalModuleBuildInfo {
+	parsed?: boolean;
+	hash?: string;
+	fileDependencies?: LazySet<string>;
+	contextDependencies?: LazySet<string>;
+	missingDependencies?: LazySet<string>;
+	buildDependencies?: LazySet<string>;
+	valueDependencies?: Map<string, ValueCacheVersion>;
+	snapshot?: null | Snapshot;
+
+	/**
+	 * using in HttpUriPlugin
+	 */
+	resourceIntegrity?: string;
 }
 declare interface KnownNormalizedStatsOptions {
 	context: string;
@@ -13319,6 +13336,9 @@ declare interface KnownStatsProfile {
 	additionalIntegration: number;
 	factory: number;
 	dependencies: number;
+}
+declare interface KnownSyncWasmBuildMeta {
+	jsIncompatibleExports?: Record<string, string>;
 }
 declare interface KnownUnsafeCacheData {
 	/**
@@ -16556,6 +16576,9 @@ declare class NormalModule extends Module {
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
+type NormalModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownNormalModuleBuildInfo;
 declare interface NormalModuleCompilationHooks {
 	loader: SyncHook<[AnyLoaderContext, NormalModule]>;
 	beforeLoaders: SyncHook<[LoaderItem[], NormalModule, AnyLoaderContext]>;
@@ -23287,21 +23310,21 @@ declare interface SourcePosition {
 type SourceType =
 	| "script"
 	| "stylesheet"
+	| "script-module"
+	| "modulepreload"
 	| "src"
 	| "srcset"
-	| "script-module"
 	| "stylesheet-style"
-	| "stylesheet-style-attribute"
-	| "modulepreload";
+	| "stylesheet-style-attribute";
 type SourceTypeOrResolver =
 	| "script"
 	| "stylesheet"
+	| "script-module"
+	| "modulepreload"
 	| "src"
 	| "srcset"
-	| "script-module"
 	| "stylesheet-style"
 	| "stylesheet-style-attribute"
-	| "modulepreload"
 	| ((attrs: Map<string, string>, css: boolean) => SourceType);
 type SourceValue = string | Buffer;
 declare interface SplitChunksOptions {
@@ -24416,6 +24439,9 @@ declare interface SyncModuleIdsPluginOptions {
 	 */
 	mode?: "read" | "create" | "merge" | "update";
 }
+type SyncWasmBuildMeta = KnownBuildMeta &
+	Record<string, any> &
+	KnownSyncWasmBuildMeta;
 declare interface SyntheticDependencyLocation {
 	name: string;
 	index?: number;
@@ -26381,8 +26407,22 @@ declare namespace exports {
 		Configuration,
 		WebpackOptionsNormalized,
 		WebpackPluginInstance,
+		AssetBuildInfo,
 		ChunkGroup,
 		AssetEmittedInfo,
+		ContextModuleBuildInfo,
+		CssBuildInfo,
+		CssBuildMeta,
+		ExternalModuleBuildInfo,
+		HtmlBuildInfo,
+		JavascriptBuildInfo,
+		JavascriptBuildMeta,
+		JsonBuildInfo,
+		BuildInfo,
+		BuildMeta,
+		NormalModuleBuildInfo,
+		ConcatenatedModuleBuildInfo,
+		SyncWasmBuildMeta,
 		Asset,
 		AssetInfo,
 		EntryOptions,
