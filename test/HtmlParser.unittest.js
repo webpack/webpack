@@ -17,6 +17,7 @@ const HtmlParser = require("../lib/html/HtmlParser");
 const buildHtmlAst = /** @type {MockedBuildHtmlAst} */ (
 	require("../lib/html/syntax").buildHtmlAst
 );
+const { NodeType } = require("../lib/html/syntax");
 
 /**
  * @returns {{ module: EXPECTED_ANY, presentationalDependencies: EXPECTED_OBJECT[], dependencies: EXPECTED_OBJECT[], warnings: EXPECTED_OBJECT[], errors: EXPECTED_OBJECT[] }} test doubles
@@ -101,22 +102,22 @@ describe("HtmlParser", () => {
 		});
 
 		buildHtmlAst.mockReturnValue({
-			type: "document",
+			type: NodeType.Document,
 			children: [
 				{
-					type: "element",
+					type: NodeType.Element,
 					tagName: "script",
 					namespace: 0,
 					attributes: [],
 					children: [
 						{
-							type: "text",
+							type: NodeType.Text,
 							data: firstText,
 							start: firstStart,
 							end: firstStart + firstText.length
 						},
 						{
-							type: "text",
+							type: NodeType.Text,
 							data: secondText,
 							start: secondStart,
 							end: secondStart + secondText.length
@@ -214,28 +215,28 @@ describe("HtmlParser", () => {
 		});
 
 		buildHtmlAst.mockReturnValue({
-			type: "document",
+			type: NodeType.Document,
 			children: [
 				{
-					type: "element",
+					type: NodeType.Element,
 					tagName: "style",
 					namespace: 0,
 					attributes: [],
 					children: [
 						{
-							type: "text",
+							type: NodeType.Text,
 							data: firstText,
 							start: firstStart,
 							end: firstStart + firstText.length
 						},
 						{
-							type: "comment",
+							type: NodeType.Comment,
 							data: " X ",
 							start: firstStart + firstText.length,
 							end: secondStart
 						},
 						{
-							type: "text",
+							type: NodeType.Text,
 							data: secondText,
 							start: secondStart,
 							end: secondStart + secondText.length
@@ -365,10 +366,10 @@ describe("HtmlParser", () => {
 		const source = "<!-- webpackIgnore: ) -->";
 		const { module, warnings } = makeModule();
 		buildHtmlAst.mockReturnValue({
-			type: "document",
+			type: NodeType.Document,
 			children: [
 				{
-					type: "comment",
+					type: NodeType.Comment,
 					data: " webpackIgnore: ) ",
 					start: 0,
 					end: source.length
@@ -386,10 +387,10 @@ describe("HtmlParser", () => {
 		const source = "<!-- webpackIgnore: 5 -->";
 		const { module, warnings } = makeModule();
 		buildHtmlAst.mockReturnValue({
-			type: "document",
+			type: NodeType.Document,
 			children: [
 				{
-					type: "comment",
+					type: NodeType.Comment,
 					data: " webpackIgnore: 5 ",
 					start: 0,
 					end: source.length
@@ -407,14 +408,14 @@ describe("HtmlParser", () => {
 		const source = "<style>   </style>";
 		const { module, dependencies } = makeModule();
 		buildHtmlAst.mockReturnValue({
-			type: "document",
+			type: NodeType.Document,
 			children: [
 				{
-					type: "element",
+					type: NodeType.Element,
 					tagName: "style",
 					namespace: 0,
 					attributes: [],
-					children: [{ type: "text", data: "   ", start: 7, end: 10 }],
+					children: [{ type: NodeType.Text, data: "   ", start: 7, end: 10 }],
 					selfClosing: false,
 					start: 0,
 					end: source.length,
@@ -434,7 +435,7 @@ describe("HtmlParser", () => {
 	it("accepts a Buffer source and strips a leading BOM", () => {
 		const { module } = makeModule();
 		buildHtmlAst.mockReturnValue({
-			type: "document",
+			type: NodeType.Document,
 			children: []
 		});
 
@@ -459,10 +460,10 @@ describe("HtmlParser", () => {
 		const source = "<!-- webpackPreload: true -->";
 		const { module, warnings } = makeModule();
 		buildHtmlAst.mockReturnValue({
-			type: "document",
+			type: NodeType.Document,
 			children: [
 				{
-					type: "comment",
+					type: NodeType.Comment,
 					data: " webpackPreload: true ",
 					start: 0,
 					end: source.length
@@ -478,10 +479,10 @@ describe("HtmlParser", () => {
 		const source = "<style></style>";
 		const { module, dependencies } = makeModule();
 		buildHtmlAst.mockReturnValue({
-			type: "document",
+			type: NodeType.Document,
 			children: [
 				{
-					type: "element",
+					type: NodeType.Element,
 					tagName: "style",
 					namespace: 0,
 					attributes: [],
@@ -527,10 +528,10 @@ describe("HtmlParser", () => {
 			};
 		};
 		return {
-			type: "document",
+			type: NodeType.Document,
 			children: [
 				{
-					type: "element",
+					type: NodeType.Element,
 					tagName: "script",
 					namespace: 0,
 					attributes: [attr("type"), attr("src")],

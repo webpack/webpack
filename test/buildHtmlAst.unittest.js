@@ -6,6 +6,7 @@ const {
 	NS_HTML,
 	NS_MATHML,
 	NS_SVG,
+	NodeType,
 	buildHtmlAst
 } = require("../lib/html/syntax");
 
@@ -16,7 +17,7 @@ const {
  */
 const child = (children, tagName) =>
 	/** @type {import("../lib/html/syntax").HtmlElement} */ (
-		children.find((c) => c.type === "element" && c.tagName === tagName)
+		children.find((c) => c.type === NodeType.Element && c.tagName === tagName)
 	);
 
 // The tree builder always produces a full document (html > head, body); these
@@ -53,7 +54,7 @@ const find = (src, tagName) => {
 	let found;
 	/** @param {import("../lib/html/syntax").HtmlNode} node node to search */
 	const walk = (node) => {
-		if (found || node.type !== "element") return;
+		if (found || node.type !== NodeType.Element) return;
 		if (node.tagName === tagName) {
 			found = node;
 			return;
@@ -67,7 +68,7 @@ const find = (src, tagName) => {
 describe("buildHtmlAst", () => {
 	it("should produce an empty document with html/head/body scaffolding", () => {
 		const ast = buildHtmlAst("");
-		expect(ast.type).toBe("document");
+		expect(ast.type).toBe(NodeType.Document);
 		const root = child(ast.children, "html");
 		expect(root.tagName).toBe("html");
 		expect(child(root.children, "head").tagName).toBe("head");
@@ -77,7 +78,7 @@ describe("buildHtmlAst", () => {
 	it("should parse a simple element into the body", () => {
 		const nodes = body("<div></div>");
 		expect(nodes).toHaveLength(1);
-		expect(nodes[0].type).toBe("element");
+		expect(nodes[0].type).toBe(NodeType.Element);
 		expect(nodes[0].tagName).toBe("div");
 		expect(nodes[0].children).toEqual([]);
 	});
@@ -88,7 +89,7 @@ describe("buildHtmlAst", () => {
 			div.children[0]
 		);
 		expect(span.tagName).toBe("span");
-		expect(span.children[0].type).toBe("text");
+		expect(span.children[0].type).toBe(NodeType.Text);
 		expect(
 			/** @type {import("../lib/html/syntax").HtmlText} */ (span.children[0])
 				.data
@@ -121,7 +122,7 @@ describe("buildHtmlAst", () => {
 
 	it("should parse comments", () => {
 		const ast = buildHtmlAst("<!-- hello -->");
-		expect(ast.children[0].type).toBe("comment");
+		expect(ast.children[0].type).toBe(NodeType.Comment);
 		expect(
 			/** @type {import("../lib/html/syntax").HtmlComment} */ (ast.children[0])
 				.data
@@ -130,7 +131,7 @@ describe("buildHtmlAst", () => {
 
 	it("should parse doctype", () => {
 		const ast = buildHtmlAst("<!DOCTYPE html><html></html>");
-		expect(ast.children[0].type).toBe("doctype");
+		expect(ast.children[0].type).toBe(NodeType.Doctype);
 		expect(
 			/** @type {import("../lib/html/syntax").HtmlDoctype} */ (ast.children[0])
 				.name
@@ -176,7 +177,7 @@ describe("buildHtmlAst", () => {
 		// Foster-parenting the table's text next to the leading text exercises
 		// the adjacent-text-node merge.
 		const nodes = body("Text<table>Misplaced</table>");
-		expect(nodes[0].type).toBe("text");
+		expect(nodes[0].type).toBe(NodeType.Text);
 		expect(
 			/** @type {import("../lib/html/syntax").HtmlText} */ (
 				/** @type {unknown} */ (nodes[0])
@@ -287,7 +288,7 @@ describe("buildHtmlAst", () => {
 
 	it("should keep CDATA text in foreign content", () => {
 		const svg = body("<svg><![CDATA[foo]]></svg>")[0];
-		expect(svg.children[0].type).toBe("text");
+		expect(svg.children[0].type).toBe(NodeType.Text);
 		expect(
 			/** @type {import("../lib/html/syntax").HtmlText} */ (svg.children[0])
 				.data
@@ -297,7 +298,7 @@ describe("buildHtmlAst", () => {
 	it("should treat bogus comments as comments", () => {
 		// A leading bogus comment is inserted into the document before <html>.
 		const ast = buildHtmlAst("<?bogus comment>");
-		expect(ast.children[0].type).toBe("comment");
+		expect(ast.children[0].type).toBe(NodeType.Comment);
 		expect(
 			/** @type {import("../lib/html/syntax").HtmlComment} */ (ast.children[0])
 				.data
@@ -306,7 +307,7 @@ describe("buildHtmlAst", () => {
 
 	it("should parse raw-text elements without decoding entities", () => {
 		const script = find("<script>var a = 1 < 2 &amp; 3;</script>", "script");
-		expect(script.children[0].type).toBe("text");
+		expect(script.children[0].type).toBe(NodeType.Text);
 		expect(
 			/** @type {import("../lib/html/syntax").HtmlText} */ (script.children[0])
 				.data
@@ -403,7 +404,7 @@ describe("buildHtmlAst", () => {
 			const spans = [];
 			/** @param {import("../lib/html/syntax").HtmlNode} node node to collect from */
 			const collect = (node) => {
-				if (node.type !== "element") return;
+				if (node.type !== NodeType.Element) return;
 				for (const attr of node.attributes) {
 					if (attr.valueStart !== undefined && attr.valueStart !== -1) {
 						spans.push(`${attr.valueStart},${attr.valueEnd}`);
@@ -499,7 +500,7 @@ describe("buildHtmlAst", () => {
 			buildHtmlAst("<tr><td>a</td></tr>x", "table").children[0]
 		);
 		const texts = root.children
-			.filter((c) => c.type === "text")
+			.filter((c) => c.type === NodeType.Text)
 			.map((/** @type {import("../lib/html/syntax").HtmlText} */ c) => c.data);
 		expect(texts).toContain("x");
 		expect(child(root.children, "tbody")).toBeDefined();
@@ -565,7 +566,7 @@ describe("buildHtmlAst — SourceProcessor", () => {
 					seen.push([n.type, parent && parent.type])
 			})
 			.process("<p>x</p>");
-		expect(seen).toEqual([["document", null]]);
+		expect(seen).toEqual([[NodeType.Document, null]]);
 	});
 
 	it("fires comment / doctype visitors", () => {

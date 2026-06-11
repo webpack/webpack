@@ -22,6 +22,7 @@ const webpack = require("..");
 const {
 	NS_MATHML,
 	NS_SVG,
+	NodeType,
 	buildHtmlAst,
 	decodeHtmlEntities
 } = require("../lib/html/syntax");
@@ -200,7 +201,7 @@ const serialize = (doc) => {
 	 */
 	const walk = (node, depth) => {
 		const indent = `| ${"  ".repeat(depth)}`;
-		if (node.type === "doctype") {
+		if (node.type === NodeType.Doctype) {
 			let s = `<!DOCTYPE ${node.name || ""}`;
 			if (node.publicId !== null || node.systemId !== null) {
 				s += ` "${node.publicId || ""}" "${node.systemId || ""}"`;
@@ -208,11 +209,11 @@ const serialize = (doc) => {
 			lines.push(`${indent}${s}>`);
 			return;
 		}
-		if (node.type === "comment") {
+		if (node.type === NodeType.Comment) {
 			lines.push(`${indent}<!-- ${node.data} -->`);
 			return;
 		}
-		if (node.type === "text") {
+		if (node.type === NodeType.Text) {
 			lines.push(`${indent}"${node.data}"`);
 			return;
 		}
@@ -319,7 +320,7 @@ const runTreeCase = (c) => {
 	const root =
 		c.fragment && doc.children[0]
 			? /** @type {import("../lib/html/syntax").HtmlDocument} */ ({
-					type: "document",
+					type: NodeType.Document,
 					children: /** @type {import("../lib/html/syntax").HtmlElement} */ (
 						doc.children[0]
 					).children
