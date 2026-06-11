@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head><title>Entities</title></head>
+<body>
+
+<img src="./im&#97;ge.png" alt="numeric reference in path">
+<img src="./a&amp;b.png" alt="amp in filename">
+<img src="./image.png?x=1&amp;y=2" alt="amp in query">
+<img srcset="./im&#97;ge.png 1x, ./a&amp;b.png 2x" alt="references in srcset">
+<img srcset="./image.png&#32;1x,&#32;./a&amp;b.png 2x" alt="entity-encoded whitespace splits candidates">
+<img src="&num;foo" alt="decodes to fragment-only, must be skipped">
+<img src="&#32;&#32;" alt="decodes to whitespace-only, must be skipped">
+<link rel="&#105;con" href="./image.png">
+<meta name="twitter&#58;image" content="./image.png">
+
+</body>
+</html>

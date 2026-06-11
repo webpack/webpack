@@ -203,6 +203,15 @@ describe("buildHtmlAst", () => {
 		).toBe(NS_SVG);
 	});
 
+	it("should not resolve prototype-named SVG tags and attributes through the adjustment tables", () => {
+		const svg = body('<svg><constructor toString="x"></constructor></svg>')[0];
+		const el = /** @type {import("../lib/html/buildHtmlAst").HtmlElement} */ (
+			svg.children[0]
+		);
+		expect(el.tagName).toBe("constructor");
+		expect(el.attributes[0].name).toBe("tostring");
+	});
+
 	it("should detect MathML namespace", () => {
 		const math = body("<math><mi>x</mi></math>")[0];
 		expect(math.namespace).toBe(NS_MATHML);

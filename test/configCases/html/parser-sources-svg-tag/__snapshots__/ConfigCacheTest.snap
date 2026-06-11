@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html parser-sources-svg-tag exported tests should match user-configured sources against adjusted camelCase SVG tag names 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>SVG tag sources</title></head>
+<body>
+
+<svg width=\\"10\\" height=\\"10\\">
+	<filter id=\\"f\\">
+		<feImage href=\\"image.png\\"/>
+	</filter>
+</svg>
+
+<svg width=\\"10\\" height=\\"10\\">
+	<foreignObject data-src=\\"image.png\\"></foreignObject>
+</svg>
+
+<img src=\\"./image.png\\" alt=\\"defaults disabled\\">
+
+</body>
+</html>
+"
+`;

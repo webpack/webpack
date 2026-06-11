@@ -2822,4 +2822,44 @@ describe("walkHtmlTokens", () => {
 			expect(walkHtmlTokens.decodeHtmlEntities("&ampX")).toBe("&X");
 		});
 	});
+
+	describe("decodeHtmlEntitiesWithMap", () => {
+		it("should return the input and no map when nothing decodes", () => {
+			expect(walkHtmlTokens.decodeHtmlEntitiesWithMap("plain text")).toEqual({
+				text: "plain text",
+				map: undefined
+			});
+			// Attribute rule keeps `&amp=1` literal — no map either.
+			expect(walkHtmlTokens.decodeHtmlEntitiesWithMap("&amp=1", true)).toEqual({
+				text: "&amp=1",
+				map: undefined
+			});
+		});
+
+		it("should map decoded boundaries back to raw offsets", () => {
+			const { text, map } = walkHtmlTokens.decodeHtmlEntitiesWithMap(
+				"a&amp;b",
+				true
+			);
+			expect(text).toBe("a&b");
+			// Boundaries: `a` 0, decoded `&` starts at raw 1, `b` at raw 6, end 7.
+			expect(map).toEqual([0, 1, 6, 7]);
+			// A decoded span maps to the covering raw span.
+			expect(
+				"a&amp;b".slice(
+					/** @type {number[]} */ (map)[0],
+					/** @type {number[]} */ (map)[3]
+				)
+			).toBe("a&amp;b");
+		});
+
+		it("should map around numeric references and trailing text", () => {
+			const { text, map } = walkHtmlTokens.decodeHtmlEntitiesWithMap(
+				"x&#32;yz",
+				true
+			);
+			expect(text).toBe("x yz");
+			expect(map).toEqual([0, 1, 6, 7, 8]);
+		});
+	});
 });

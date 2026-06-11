@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head><title>SVG tag sources</title></head>
+<body>
+
+<svg width="10" height="10">
+	<filter id="f">
+		<feImage href="./image.png"/>
+	</filter>
+</svg>
+
+<svg width="10" height="10">
+	<foreignObject data-src="./image.png"></foreignObject>
+</svg>
+
+<img src="./image.png" alt="defaults disabled">
+
+</body>
+</html>
