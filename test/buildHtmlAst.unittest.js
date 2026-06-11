@@ -651,7 +651,9 @@ describe("buildHtmlAst — insertion-mode edge cases", () => {
 		const nodes = body("<table>x<tr></tr>y</table>");
 		// Both stray runs are fostered before the table and merged into one node.
 		expect(
-			/** @type {import("../lib/html/syntax").HtmlText} */ (nodes[0]).data
+			/** @type {import("../lib/html/syntax").HtmlText} */ (
+				/** @type {unknown} */ (nodes[0])
+			).data
 		).toBe("xy");
 		expect(nodes[1].type).toBe(NodeType.Element);
 	});
