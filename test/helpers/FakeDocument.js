@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 
-/** @typedef {import("../../lib/css/walkCssTokens").MutableToken} MutableToken */
+/** @typedef {import("../../lib/css/syntax").MutableToken} MutableToken */
 /** @typedef {Record<string, unknown> & { getPropertyValue: (property: string) => unknown }} StyleDeclaration */
 /** @typedef {{ selectorText: string | undefined, style: StyleDeclaration, cssText: string }} CssRule */
 /** @typedef {{ type: string, target?: FakeElement }} FakeEvent */
@@ -527,7 +527,7 @@ class FakeSheet {
 			TT_RIGHT_CURLY_BRACKET,
 			TT_SEMICOLON,
 			readToken
-		} = require("../../lib/css/walkCssTokens");
+		} = require("../../lib/css/syntax");
 
 		/** @type {CssRule[]} */
 		const rules = [];
@@ -656,7 +656,7 @@ class CSSStyleSheet {
 			TT_RIGHT_CURLY_BRACKET,
 			TT_SEMICOLON,
 			readToken
-		} = require("../../lib/css/walkCssTokens");
+		} = require("../../lib/css/syntax");
 
 		/** @type {CssRule[]} */
 		const rules = [];

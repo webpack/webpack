@@ -30,7 +30,7 @@ const {
 	TT_WHITESPACE,
 	parseAListOfComponentValues,
 	readToken
-} = require("../lib/css/walkCssTokens");
+} = require("../lib/css/syntax");
 
 // Snapshot uses the spec-style kebab-case names for multi-word token types;
 // the tokenizer emits numeric `TT_*` values. Map between them so the existing
@@ -83,7 +83,7 @@ describe("readToken", () => {
 				const t = readToken(
 					code,
 					pos,
-					/** @type {import("../lib/css/walkCssTokens").MutableToken} */ ({})
+					/** @type {import("../lib/css/syntax").MutableToken} */ ({})
 				);
 				if (t === undefined) break;
 				pos = t.end;
@@ -119,7 +119,7 @@ const tokenRoundtrip = (input) => {
 		const t = readToken(
 			input,
 			pos,
-			/** @type {import("../lib/css/walkCssTokens").MutableToken} */ ({})
+			/** @type {import("../lib/css/syntax").MutableToken} */ ({})
 		);
 		if (t === undefined) break;
 		pos = t.end;
