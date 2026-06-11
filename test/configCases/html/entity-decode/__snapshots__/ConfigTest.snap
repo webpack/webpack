@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html entity-decode exported tests decodes HTML entities in an extracted attribute URL 1`] = `
+"<!DOCTYPE html>
+<html>
+	<body>
+		<img src=\\"31d6cfe0d16ae931b73c.png\\" alt=\\"entity in url\\">
+	</body>
+</html>
+"
+`;
