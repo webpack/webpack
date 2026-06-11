@@ -147,7 +147,7 @@ describe("BinaryMiddleware", () => {
 			"hi",
 			"hi".repeat(200),
 			"😀",
-			"héllo",
+			"café",
 			1,
 			11,
 			0x100,
@@ -201,7 +201,10 @@ describe("BinaryMiddleware", () => {
 				for (let i = 0; i < whole.length; i += chunkSize) {
 					chunks.push(whole.subarray(i, i + chunkSize));
 				}
-				const result = mw.deserialize(chunks, {});
+				const result =
+					/** @type {import("../lib/serialization/BinaryMiddleware").DeserializedType} */ (
+						mw.deserialize(chunks, {})
+					);
 				expect(result.map(resolveLazy)).toEqual(data.map(resolveLazy));
 			});
 		}
