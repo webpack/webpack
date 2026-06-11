@@ -505,3 +505,142 @@ describe("buildHtmlAst", () => {
 		expect(child(root.children, "tbody")).toBeDefined();
 	});
 });
+
+describe("buildHtmlAst — SourceProcessor", () => {
+	const { NodeType, SourceProcessor } = require("../lib/html/syntax");
+
+	it("fires enter / exit visitors in source order", () => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/html/syntax").VisitorMap} */ ({
+					[NodeType.Element]: {
+						enter: (n) =>
+							log.push(
+								`enter:${
+									/** @type {import("../lib/html/syntax").HtmlElement} */ (n)
+										.tagName
+								}`
+							),
+						exit: (n) =>
+							log.push(
+								`exit:${
+									/** @type {import("../lib/html/syntax").HtmlElement} */ (n)
+										.tagName
+								}`
+							)
+					},
+					[NodeType.Text]: (n) =>
+						log.push(
+							`text:${
+								/** @type {import("../lib/html/syntax").HtmlText} */ (n).data
+							}`
+						)
+				})
+			)
+			.process("<div><span>a</span>b</div>");
+		expect(log).toEqual([
+			"enter:html",
+			"enter:head",
+			"exit:head",
+			"enter:body",
+			"enter:div",
+			"enter:span",
+			"text:a",
+			"exit:span",
+			"text:b",
+			"exit:div",
+			"exit:body",
+			"exit:html"
+		]);
+	});
+
+	it("visits the document root with a null parent", () => {
+		/** @type {[string, string | null][]} */
+		const seen = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Document]: (n, parent) =>
+					seen.push([n.type, parent && parent.type])
+			})
+			.process("<p>x</p>");
+		expect(seen).toEqual([["document", null]]);
+	});
+
+	it("fires comment / doctype visitors", () => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Doctype]: () => log.push("doctype"),
+				[NodeType.Comment]: (n) =>
+					log.push(
+						`comment:${
+							/** @type {import("../lib/html/syntax").HtmlComment} */ (n).data
+						}`
+					)
+			})
+			.process("<!DOCTYPE html><!--c--><p>x</p>");
+		expect(log).toEqual(["doctype", "comment:c"]);
+	});
+
+	it("ctx.skipChildren() stops descent into a node", () => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Element]: (n, p, ctx) => {
+					const el = /** @type {import("../lib/html/syntax").HtmlElement} */ (
+						n
+					);
+					log.push(el.tagName);
+					if (el.tagName === "div") ctx.skipChildren();
+				}
+			})
+			.process("<div><span>a</span></div><p>b</p>");
+		expect(log).toEqual(["html", "head", "body", "div", "p"]);
+	});
+
+	it("walks <template> content as a document fragment", () => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.DocumentFragment]: () => log.push("fragment"),
+				[NodeType.Element]: (n) =>
+					log.push(
+						/** @type {import("../lib/html/syntax").HtmlElement} */ (n).tagName
+					)
+			})
+			.process("<template><p>x</p></template>");
+		expect(log).toEqual(["html", "head", "template", "fragment", "p", "body"]);
+	});
+
+	it("walks a pre-built AST when options.ast is given", () => {
+		/** @type {string[]} */
+		const log = [];
+		const ast = buildHtmlAst("<p>x</p>");
+		new SourceProcessor()
+			.use({
+				[NodeType.Element]: (n) =>
+					log.push(
+						/** @type {import("../lib/html/syntax").HtmlElement} */ (n).tagName
+					)
+			})
+			.process("ignored input", { ast });
+		expect(log).toEqual(["html", "head", "body", "p"]);
+	});
+
+	it("use() chains and accumulates visitors per type", () => {
+		let a = 0;
+		let b = 0;
+		const sp = new SourceProcessor()
+			.use({ [NodeType.Element]: () => a++ })
+			.use({ [NodeType.Element]: () => b++ });
+		expect(sp).toBeInstanceOf(SourceProcessor);
+		sp.process("<p>x</p>");
+		expect(a).toBe(b);
+		expect(a).toBeGreaterThan(0);
+	});
+});
