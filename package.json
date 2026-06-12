@@ -105,7 +105,6 @@
     "es-module-lexer": "^2.1.0",
     "eslint-scope": "5.1.1",
     "events": "^3.2.0",
-    "glob-to-regexp": "^0.4.1",
     "graceful-fs": "^4.2.11",
     "loader-runner": "^4.3.2",
     "mime-db": "^1.54.0",
@@ -113,7 +112,7 @@
     "neo-async": "^2.6.2",
     "schema-utils": "^4.3.3",
     "tapable": "^2.3.0",
-    "watchpack": "^2.5.1",
+    "watchpack": "^2.5.2",
     "webpack-sources": "^3.5.0"
   },
   "devDependencies": {
@@ -123,7 +122,6 @@
     "@changesets/get-github-info": "^0.8.0",
     "@codspeed/core": "^5.5.0",
     "@types/eslint-scope": "^3.7.7",
-    "@types/glob-to-regexp": "^0.4.4",
     "@types/graceful-fs": "^4.1.9",
     "@types/jest": "^30.0.0",
     "@types/mime-db": "^1.43.6",
