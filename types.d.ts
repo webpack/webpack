@@ -326,6 +326,11 @@ declare interface AllCodeGenerationSchemas {
 	topLevelDeclarations: Set<string>;
 
 	/**
+	 * free identifier names in the rendered source for javascript modules
+	 */
+	freeNames: Set<string>;
+
+	/**
 	 * chunk init fragments for javascript modules
 	 */
 	chunkInitFragments: InitFragment<any>[];
@@ -2933,6 +2938,7 @@ type CodeGenValue<K extends string> = K extends
 	| "assetInfo"
 	| "share-init"
 	| "topLevelDeclarations"
+	| "freeNames"
 	| "chunkInitFragments"
 	| "url"
 	| "fullContentHash"
