@@ -129,10 +129,6 @@ import { Context as ContextImport } from "vm";
 declare interface Abortable {
 	signal?: AbortSignal;
 }
-
-/**
- * Represents AbstractLibraryPlugin.
- */
 declare class AbstractLibraryPlugin<T> {
 	/**
 	 * Creates an instance of AbstractLibraryPlugin.
@@ -592,10 +588,6 @@ declare class AsyncDependenciesBlock extends DependenciesBlock {
 	get circular(): boolean;
 	module: any;
 }
-
-/**
- * Represents AsyncQueue.
- */
 declare abstract class AsyncQueue<T, K, R> {
 	hooks: {
 		beforeAdd: AsyncSeriesHook<[T]>;
@@ -698,11 +690,6 @@ declare interface AsyncWebAssemblyModulesPluginOptions {
 	mangleImports?: boolean;
 }
 declare abstract class AsyncWebAssemblyParser extends ParserClass {}
-
-/**
- * Records modules from one compilation and adds them back as prefetch
- * dependencies in the next compilation.
- */
 declare class AutomaticPrefetchPlugin {
 	constructor();
 
@@ -717,11 +704,6 @@ declare interface BackendApi {
 	dispose: (callback: (err?: null | Error) => void) => void;
 	module: (module: Module) => ModuleResult;
 }
-
-/**
- * Prepends or appends banner text to emitted assets that match the configured
- * file filters.
- */
 declare class BannerPlugin {
 	/**
 	 * Normalizes banner options and compiles the configured banner source into a
@@ -844,11 +826,6 @@ declare interface BaseResolveRequest {
 	 * inner relative path for internal usage
 	 */
 	__innerRequest_relativePath?: string;
-
-	/**
-	 * internal: shared marker `RestrictionsPlugin` flips when it filters out an existing target, letting `ExportsFieldPlugin` fall back instead of erroring
-	 */
-	__restrictionsMarker?: { blocked: boolean };
 }
 declare interface BasenameCacheEntry {
 	/**
@@ -1271,11 +1248,6 @@ declare abstract class ByTypeGenerator extends Generator {
 	) => null | Source;
 }
 declare const CIRCULAR_CONNECTION: unique symbol;
-
-/**
- * Abstract cache interface backed by tapable hooks for reading, writing, idle
- * transitions, and shutdown across webpack cache implementations.
- */
 declare class CacheClass {
 	/**
 	 * Initializes the cache lifecycle hooks implemented by cache backends.
@@ -1559,11 +1531,6 @@ declare interface CallbackWebpackFunction_2<T, R = void> {
 	(err: null | Error, result?: T): R;
 }
 type Cell<T> = undefined | T;
-
-/**
- * A Chunk is a unit of encapsulation for Modules.
- * Chunks are "rendered" into bundles that get emitted when the build completes.
- */
 declare class Chunk {
 	/**
 	 * Creates an instance of Chunk.
@@ -2380,11 +2347,6 @@ declare class ChunkGraph {
 	 */
 	static clearChunkGraphForChunk(chunk: Chunk): void;
 }
-
-/**
- * Represents a connected group of chunks along with the parent/child
- * relationships, async blocks, and traversal metadata webpack tracks for it.
- */
 declare abstract class ChunkGroup {
 	groupDebugId: number;
 	options: ChunkGroupOptions;
@@ -2692,11 +2654,6 @@ declare interface ChunkPathData {
 	contentHash?: Record<string, string>;
 	contentHashWithLength?: Record<string, (length: number) => string>;
 }
-
-/**
- * Adds runtime support for chunk prefetch and preload relationships discovered
- * in the chunk graph.
- */
 declare class ChunkPrefetchPreloadPlugin {
 	constructor();
 
@@ -3027,11 +2984,6 @@ type CodeGenerationResultData = Omit<
 	"get" | "set" | "has" | "delete"
 > &
 	CodeGenMapOverloads;
-
-/**
- * Stores code generation results keyed by module and runtime so later stages
- * can retrieve emitted sources, metadata, and derived hashes.
- */
 declare abstract class CodeGenerationResults {
 	map: Map<Module, RuntimeSpecMap<CodeGenerationResult, CodeGenerationResult>>;
 
@@ -4415,11 +4367,6 @@ declare interface ConcatenationBailoutReasonContext {
 	 */
 	chunkGraph: ChunkGraph;
 }
-
-/**
- * Tracks the symbols and cross-module references needed while rendering a
- * concatenated module.
- */
 declare class ConcatenationScope {
 	/**
 	 * Creates the mutable scope object used while rendering a concatenated
@@ -5754,15 +5701,6 @@ declare class DelegatedPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * DependenciesBlock is the base class for all Module classes in webpack. It describes a
- * "block" of dependencies which are pointers to other DependenciesBlock instances. For example
- * when a Module has a CommonJs require statement, the DependencyBlock for the CommonJs module
- * would be added as a dependency to the Module. DependenciesBlock is inherited by two types of classes:
- * Module subclasses and AsyncDependenciesBlock subclasses. The only difference between the two is that
- * AsyncDependenciesBlock subclasses are used for code-splitting (async boundary) and Module subclasses are not.
- */
 declare abstract class DependenciesBlock {
 	dependencies: Dependency[];
 	blocks: AsyncDependenciesBlock[];
@@ -6608,11 +6546,6 @@ declare interface EnableLibraryPluginOptions {
 	 */
 	additionalApply?: () => void;
 }
-
-/**
- * Validates and enables named wasm loading backends by applying the plugin
- * implementations that provide their runtime support.
- */
 declare class EnableWasmLoadingPlugin {
 	/**
 	 * Stores the wasm loading backend name that should be enabled for the
@@ -6720,6 +6653,11 @@ declare interface EntryDescription {
 	filename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
+	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
+	 */
+	html?: boolean;
+
+	/**
 	 * Module(s) that are loaded upon startup.
 	 */
 	import: EntryItem;
@@ -6783,6 +6721,11 @@ declare interface EntryDescriptionNormalized {
 	 * Specifies the filename of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	filename?: string | TemplatePathFn<PathDataChunk>;
+
+	/**
+	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
+	 */
+	html?: boolean;
 
 	/**
 	 * Module(s) that are loaded upon startup. The last one is exported.
@@ -6905,13 +6848,6 @@ declare interface EntryTypesIndex {
 	timestamp: number;
 	accuracy: number;
 }
-
-/**
- * Entrypoint serves as an encapsulation primitive for chunks that are
- * a part of a single ChunkGroup. They represent all bundles that need to be loaded for a
- * single instance of a page. Multi-page application architectures will typically yield multiple Entrypoint objects
- * inside of the compilation, whereas a Single Page App may only contain one with many lazy-loaded chunks.
- */
 declare abstract class Entrypoint extends ChunkGroup {
 	/**
 	 * Sets the runtimeChunk for an entrypoint.
@@ -8295,11 +8231,6 @@ declare interface FallbackCacheGroup {
 	maxInitialSize: SplitChunksSizes;
 	automaticNameDelimiter: string;
 }
-
-/**
- * Enables asynchronous WebAssembly loading through `fetch` for environments
- * that can instantiate fetched binaries at runtime.
- */
 declare class FetchCompileAsyncWasmPlugin {
 	constructor();
 
@@ -8309,11 +8240,6 @@ declare class FetchCompileAsyncWasmPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * Enables synchronous WebAssembly chunk loading that fetches `.wasm` files and
- * compiles them in browser-like environments.
- */
 declare class FetchCompileWasmPlugin {
 	/**
 	 * Stores options that affect generated synchronous WebAssembly runtime code.
@@ -8480,10 +8406,6 @@ declare interface FileSystem {
 	 */
 	realpath?: RealPathTypes;
 }
-
-/**
- * Used to access information about the filesystem in a cached way
- */
 declare abstract class FileSystemInfo {
 	fs: InputFileSystem;
 	logger?: WebpackLogger;
@@ -9234,11 +9156,6 @@ declare interface HashedModuleIdsPluginOptions {
 	 */
 	hashFunction?: string | typeof Hash;
 }
-
-/**
- * Base class for runtime modules that only emit helper functions and do not
- * need special staging or attachment behavior beyond `RuntimeModule`.
- */
 declare abstract class HelperRuntimeModule extends RuntimeModule {}
 declare class HotModuleReplacementPlugin {
 	constructor();
@@ -9936,10 +9853,6 @@ type InfrastructureLoggingNormalizedWithDefaults = InfrastructureLogging & {
 	colors: NonNullable<undefined | boolean>;
 	appendOnly: NonNullable<undefined | boolean>;
 };
-
-/**
- * Represents InitFragment.
- */
 declare class InitFragment<GenerateContext> {
 	/**
 	 * Creates an instance of InitFragment.
@@ -13529,12 +13442,6 @@ type LazyFunction<
 declare interface LazyOptions {
 	[index: string]: any;
 }
-
-/**
- * Like Set but with an addAll method to eventually add items from another iterable.
- * Access methods make sure that all delayed operations are executed.
- * Iteration methods deopts to normal Set performance until clear is called again (because of the chance of modifications during iteration).
- */
 declare class LazySet<T> {
 	/**
 	 * Seeds the set with an optional iterable while preparing internal queues for
@@ -15035,10 +14942,6 @@ declare class ModuleDependency extends Dependency {
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
 }
-
-/**
- * Represents ModuleExternalInitFragment.
- */
 declare class ModuleExternalInitFragment extends InitFragment<GenerateContext> {
 	/**
 	 * Creates an instance of ModuleExternalInitFragment.
@@ -18376,6 +18279,11 @@ declare interface Output {
 	hotUpdateMainFilename?: string;
 
 	/**
+	 * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
+	 */
+	html?: boolean;
+
+	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	htmlChunkFilename?: string | TemplatePathFn<PathDataChunk>;
@@ -18709,6 +18617,11 @@ declare interface OutputNormalized {
 	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
 	 */
 	hotUpdateMainFilename?: string;
+
+	/**
+	 * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
+	 */
+	html?: boolean;
 
 	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
@@ -19145,11 +19058,6 @@ declare interface PitchLoaderDefinitionFunction<
 		data: object
 	): string | void | Buffer | Promise<string | Buffer>;
 }
-
-/**
- * Should be used only for "target === false" or
- * when you want to overwrite platform target properties
- */
 declare class PlatformPlugin {
 	/**
 	 * Creates an instance of PlatformPlugin.
@@ -20581,11 +20489,6 @@ declare class Replacement {
 declare interface RequestRecord {
 	[index: string]: string | string[];
 }
-
-/**
- * Shortens absolute or verbose request strings so diagnostics and stats output
- * can be rendered relative to a chosen base directory.
- */
 declare abstract class RequestShortener {
 	contextify: (value: string) => string;
 
@@ -21946,10 +21849,6 @@ declare interface RuntimeRequirementsContext {
 	codeGenerationResults: CodeGenerationResults;
 }
 type RuntimeSpec = undefined | string | SortableSet<string>;
-
-/**
- * Represents RuntimeSpecMap.
- */
 declare class RuntimeSpecMap<T, R = T> {
 	/**
 	 * Creates an instance of RuntimeSpecMap.
@@ -22632,10 +22531,6 @@ declare interface ScopeInfo {
 declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
 }
-
-/**
- * Represents Serializer.
- */
 declare abstract class Serializer<DeserializedValue, SerializedValue, Context> {
 	serializeMiddlewares: SerializerMiddleware<any, any, any>[];
 	deserializeMiddlewares: SerializerMiddleware<any, any, any>[];
@@ -22657,10 +22552,6 @@ declare abstract class Serializer<DeserializedValue, SerializedValue, Context> {
 		context: Context & ExtendedContext
 	): Promise<DeserializedValue>;
 }
-
-/**
- * Represents SerializerMiddleware.
- */
 declare abstract class SerializerMiddleware<
 	DeserializedType,
 	SerializedType,
@@ -23079,10 +22970,6 @@ declare interface SnapshotOptionsWebpackOptions {
 declare interface SortFunction<T> {
 	(a: T, b: T): number;
 }
-
-/**
- * A subset of Set that offers sorting functionality
- */
 declare abstract class SortableSet<T> extends Set<T> {
 	/**
 	 * Sort with a comparer function
@@ -23438,11 +23325,6 @@ declare abstract class StackEntry {
 	 */
 	toString(): string;
 }
-
-/**
- * Layered map that supports child scopes while memoizing lookups from parent
- * scopes into the current layer.
- */
 declare abstract class StackedMap<K, V> {
 	map: Map<K, InternalCell<V>>;
 	stack: Map<K, InternalCell<V>>[];
@@ -25035,11 +24917,6 @@ declare abstract class Watching {
 	 */
 	close(callback: (err: null | Error, result?: void) => void): void;
 }
-
-/**
- * Stores values by tuple keys while using `WeakMap` for object elements so the
- * cache can release entries when those objects are collected.
- */
 declare abstract class WeakTupleMap<K extends any[], V> {
 	/**
 	 * Stores a value at the node identified by the provided tuple key.
