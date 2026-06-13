@@ -61,6 +61,8 @@ jobs:
           private-key: ${{ secrets.BOT_PRIVATE_KEY }}
       - name: Dispatch workflow
         uses: actions/github-script@d746ffe35508b1917358783b479e04febd2b8f71 # v9.0.0
+        env:
+          PUBLISHED_PACKAGES: ${{ needs.release.outputs.publishedPackages }}
         with:
           github-token: ${{ steps.app-token.outputs.token }}
           script: |
