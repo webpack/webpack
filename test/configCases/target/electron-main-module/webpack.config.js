@@ -1,29 +1,27 @@
 "use strict";
 
-/** @type {import("../../../../types").Configuration} */
-module.exports = {
-	target: "electron-main",
-	node: {
-		__dirname: false,
-		__filename: false
+/** @type {import("../../../../types").Configuration[]} */
+module.exports = [
+	{
+		// `module-import` path: electron built-ins are imported as ESM
+		target: "electron-main",
+		output: {
+			module: true
+		},
+		optimization: {
+			concatenateModules: false,
+			minimize: false
+		},
+		experiments: {
+			outputModule: true
+		}
 	},
-	output: {
-		module: true,
-		filename: "[name].js"
-	},
-	entry: {
-		externals: "./externals",
-		main: "./index"
-	},
-	optimization: {
-		concatenateModules: false,
-		minimize: false
-	},
-	experiments: {
-		outputModule: true
-	},
-	externals: {
-		fs: "commonjs fs",
-		path: "commonjs path"
+	{
+		// `node-commonjs` path: electron built-ins are required
+		target: "electron-main",
+		optimization: {
+			concatenateModules: false,
+			minimize: false
+		}
 	}
-};
+];
