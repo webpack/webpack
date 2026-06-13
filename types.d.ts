@@ -7022,6 +7022,11 @@ declare interface Environment {
 	module?: boolean;
 
 	/**
+	 * The environment supports `process.getBuiltinModule()` to synchronously load Node.js built-in modules.
+	 */
+	nodeBuiltinModuleGetter?: boolean;
+
+	/**
 	 * The environment supports `node:` prefix for Node.js core modules.
 	 */
 	nodePrefixForCoreModules?: boolean;
@@ -7994,7 +7999,8 @@ declare class ExternalModule extends Module {
 	static getCompilationHooks(compilation: Compilation): ExternalModuleHooks;
 	static ModuleExternalInitFragment: typeof ModuleExternalInitFragment;
 	static getExternalModuleNodeCommonjsInitFragment: (
-		runtimeTemplate: RuntimeTemplate
+		runtimeTemplate: RuntimeTemplate,
+		universal?: boolean
 	) => InitFragment<ChunkRenderContextJavascriptModulesPlugin>;
 
 	/**
@@ -12895,6 +12901,11 @@ declare interface KnownExternalModuleBuildInfo {
 	 * true when emitting an ESM external (`output.module`)
 	 */
 	javascriptModule?: boolean;
+
+	/**
+	 * true when the external may load in both node and non-node runtimes (universal target)
+	 */
+	universalExternal?: boolean;
 }
 declare interface KnownHooks {
 	/**
@@ -22037,6 +22048,7 @@ declare abstract class RuntimeTemplate {
 	supportsEcmaScriptModuleSyntax(): boolean;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
+	supportsNodeBuiltinModuleGetter(): undefined | boolean;
 
 	/**
 	 * Renders node prefix for core module.
