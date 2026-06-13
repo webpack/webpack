@@ -1167,6 +1167,11 @@
           "type": "boolean",
           "experimental": true
         },
+        "lazyBarrel": {
+          "description": "Defer building modules referenced by re-exports of side-effect-free modules until the re-exported names are used (lazy barrel optimization).",
+          "type": "boolean",
+          "experimental": true
+        },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
           "anyOf": [
@@ -1247,6 +1252,11 @@
         },
         "html": {
           "description": "Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points.",
+          "type": "boolean",
+          "experimental": true
+        },
+        "lazyBarrel": {
+          "description": "Defer building modules referenced by re-exports of side-effect-free modules until the re-exported names are used (lazy barrel optimization).",
           "type": "boolean",
           "experimental": true
         },

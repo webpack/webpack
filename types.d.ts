@@ -5854,6 +5854,21 @@ declare class Dependency {
 	couldAffectReferencingModule(): boolean | symbol;
 
 	/**
+	 * Returns the export name this dependency requests from its target module (lazy barrel optimization).
+	 */
+	getForwardId(): null | string | true;
+
+	/**
+	 * Returns how this dependency may be deferred when its parent module is side-effect-free (lazy barrel optimization).
+	 */
+	getLazyUntil():
+		| null
+		| "request"
+		| { id: string }
+		| { local: string }
+		| "fallback";
+
+	/**
 	 * Returns the referenced module and export
 	 * @deprecated
 	 */
@@ -7224,6 +7239,12 @@ declare interface Experiments {
 	html?: boolean;
 
 	/**
+	 * Defer building modules referenced by re-exports of side-effect-free modules until the re-exported names are used (lazy barrel optimization).
+	 * @experimental
+	 */
+	lazyBarrel?: boolean;
+
+	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 * @experimental
 	 */
@@ -7305,6 +7326,12 @@ declare interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	html?: boolean;
+
+	/**
+	 * Defer building modules referenced by re-exports of side-effect-free modules until the re-exported names are used (lazy barrel optimization).
+	 * @experimental
+	 */
+	lazyBarrel?: boolean;
 
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
