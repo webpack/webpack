@@ -2239,7 +2239,7 @@ mfe-b:
   asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
   asset node_modules_react_index_js.js 7.45 KiB [emitted] [minimized] 1 related asset
   asset mfeBBB.js 6.49 KiB [emitted] [minimized] (name: mfeBBB)
-  asset src-b_Component_js.js 471 bytes [emitted] [minimized]
+  asset src-b_Component_js.js 461 bytes [emitted] [minimized]
   chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.4 KiB (runtime) [entry] [rendered]
     > mfeBBB
     runtime modules 16.4 KiB 10 modules
@@ -2266,8 +2266,8 @@ mfe-c:
   asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
   asset mfeCCC.js 7.1 KiB [emitted] [minimized] (name: mfeCCC)
   asset node_modules_lodash_random_js.js 3.08 KiB [emitted] [minimized]
-  asset src-c_LazyComponent_js.js 530 bytes [emitted] [minimized]
-  asset src-c_Component_js.js 485 bytes [emitted] [minimized]
+  asset src-c_LazyComponent_js.js 520 bytes [emitted] [minimized]
+  asset src-c_Component_js.js 475 bytes [emitted] [minimized]
   chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 17.1 KiB (runtime) [entry] [rendered]
     > mfeCCC
     runtime modules 17.1 KiB 12 modules

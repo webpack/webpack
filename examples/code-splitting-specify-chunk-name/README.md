@@ -417,9 +417,9 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 2.72 KiB [emitted] [minimized] (name: main)
-asset 994.output.js 127 bytes [emitted] [minimized] (name: chunk-bar-baz0)
-asset 45.output.js 126 bytes [emitted] [minimized] (name: chunk-foo)
-asset 792.output.js 126 bytes [emitted] [minimized] (name: chunk-bar-baz2)
+asset 994.output.js 117 bytes [emitted] [minimized] (name: chunk-bar-baz0)
+asset 45.output.js 116 bytes [emitted] [minimized] (name: chunk-foo)
+asset 792.output.js 116 bytes [emitted] [minimized] (name: chunk-bar-baz2)
 chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
   > ./templates/foo ./example.js 1:0-62
   > ./example.js 5:0-8:16
