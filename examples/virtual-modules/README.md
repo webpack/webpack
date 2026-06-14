@@ -749,9 +749,9 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.82 KiB [emitted] [minimized] (name: main)
-asset 263.output.js 118 bytes [emitted] [minimized]
-asset 722.output.js 118 bytes [emitted] [minimized]
+asset output.js 2.79 KiB [emitted] [minimized] (name: main)
+asset 263.output.js 108 bytes [emitted] [minimized]
+asset 722.output.js 108 bytes [emitted] [minimized]
 asset logo.svg 78 bytes [emitted] [from: virtual:logo.svg] (auxiliary name: main)
 chunk (runtime: main) 263.output.js 20 bytes [rendered]
   > ./routes/a.js virtual:routes 1:32-55
