@@ -5704,6 +5704,29 @@ declare interface CssParserOptions {
 	url?: boolean;
 }
 type Declaration = FunctionDeclaration | VariableDeclaration | ClassDeclaration;
+type DefineConfigInput =
+	| Configuration
+	| MultiConfiguration
+	| ((
+			env: Record<string, any>,
+			argv: Record<string, any>
+	  ) => MaybePromise<Configuration | MultiConfiguration>)
+	| ((
+			env: Record<string, any>,
+			argv: Record<string, any>
+	  ) => MaybePromise<Configuration | MultiConfiguration>)[]
+	| Promise<
+			| Configuration
+			| MultiConfiguration
+			| ((
+					env: Record<string, any>,
+					argv: Record<string, any>
+			  ) => MaybePromise<Configuration | MultiConfiguration>)
+			| ((
+					env: Record<string, any>,
+					argv: Record<string, any>
+			  ) => MaybePromise<Configuration | MultiConfiguration>)[]
+	  >;
 declare class DefinePlugin {
 	/**
 	 * Create a new define plugin
@@ -14452,6 +14475,7 @@ declare interface MaybeMergeableInitFragment<GenerateContext> {
 		fragments: MaybeMergeableInitFragment<GenerateContext>[]
 	) => MaybeMergeableInitFragment<GenerateContext>[];
 }
+type MaybePromise<T> = T | Promise<T>;
 type Media = undefined | string;
 
 /**
@@ -25740,6 +25764,7 @@ declare function exports(
 declare function exports(options: MultiConfiguration): MultiCompiler;
 declare namespace exports {
 	export const webpack: _functionWebpack;
+	export const defineConfig: <T extends DefineConfigInput>(config: T) => T;
 	export const validate: (
 		configuration: Configuration | MultiConfiguration
 	) => void;
@@ -26339,6 +26364,10 @@ declare namespace exports {
 	export type ExternalItemFunctionPromise = (
 		data: ExternalItemFunctionData
 	) => Promise<ExternalItemValue>;
+	export type ConfigurationFactory = (
+		env: Record<string, any>,
+		argv: Record<string, any>
+	) => MaybePromise<Configuration | MultiConfiguration>;
 	export {
 		AutomaticPrefetchPlugin,
 		AsyncDependenciesBlock,
@@ -26467,6 +26496,7 @@ declare namespace exports {
 		Problem,
 		Colors,
 		ColorsOptions,
+		DefineConfigInput,
 		StatsAsset,
 		StatsChunk,
 		StatsChunkGroup,
