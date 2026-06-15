@@ -138,15 +138,20 @@ const describeCases = (config) => {
 								if (!options.entry) options.entry = "./index.js";
 								if (!options.target) options.target = "async-node";
 								if (!options.output) options.output = {};
-								if (!options.output.environment) {
-									options.output.environment = {};
-								}
+								// generated runtime runs in this Node.js process; avoid `?.` on
+								// Node < 14 (skip `ecmaVersion` cases asserting derived environment)
 								if (
-									options.output.environment.optionalChaining === undefined &&
+									category.name !== "ecmaVersion" &&
 									!supportsOptionalChaining()
 								) {
-									// generated runtime runs in this Node.js process; avoid `?.` on Node < 14
-									options.output.environment.optionalChaining = false;
+									if (!options.output.environment) {
+										options.output.environment = {};
+									}
+									if (
+										options.output.environment.optionalChaining === undefined
+									) {
+										options.output.environment.optionalChaining = false;
+									}
 								}
 								if (!options.output.path) options.output.path = outputDirectory;
 								if (typeof options.output.pathinfo === "undefined") {
