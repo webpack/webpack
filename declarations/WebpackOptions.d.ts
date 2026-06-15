@@ -2648,6 +2648,10 @@ export interface Environment {
 	 */
 	globalThis?: boolean;
 	/**
+	 * The environment supports 'Object.hasOwn'.
+	 */
+	hasOwn?: boolean;
+	/**
 	 * The environment supports `import.meta.dirname` and `import.meta.filename`.
 	 */
 	importMetaDirnameAndFilename?: boolean;

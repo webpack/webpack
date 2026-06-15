@@ -7032,6 +7032,11 @@ declare interface Environment {
 	globalThis?: boolean;
 
 	/**
+	 * The environment supports 'Object.hasOwn'.
+	 */
+	hasOwn?: boolean;
+
+	/**
 	 * The environment supports `import.meta.dirname` and `import.meta.filename`.
 	 */
 	importMetaDirnameAndFilename?: boolean;
@@ -22067,6 +22072,7 @@ declare abstract class RuntimeTemplate {
 	supportsAsyncFunction(): boolean;
 	supportsOptionalChaining(): boolean;
 	supportsSpread(): boolean;
+	supportsObjectHasOwn(): boolean;
 	supportsForOf(): boolean;
 	supportsDestructuring(): boolean;
 	supportsBigIntLiteral(): boolean;
@@ -22127,6 +22133,12 @@ declare abstract class RuntimeTemplate {
 	 * and falling back to a `prop: function/arrow` property otherwise.
 	 */
 	method(prop: string, args: string, body: string | string[]): string;
+
+	/**
+	 * Returns an own-property check, using `Object.hasOwn` when supported and
+	 * falling back to `Object.prototype.hasOwnProperty.call` otherwise.
+	 */
+	objectHasOwn(object: string, property: string): string;
 
 	/**
 	 * Returns destructure array code.

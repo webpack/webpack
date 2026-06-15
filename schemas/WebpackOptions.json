@@ -1085,6 +1085,10 @@
           "description": "The environment supports 'globalThis'.",
           "type": "boolean"
         },
+        "hasOwn": {
+          "description": "The environment supports 'Object.hasOwn'.",
+          "type": "boolean"
+        },
         "importMetaDirnameAndFilename": {
           "description": "The environment supports `import.meta.dirname` and `import.meta.filename`.",
           "type": "boolean"

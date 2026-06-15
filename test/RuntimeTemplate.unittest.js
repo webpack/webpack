@@ -199,3 +199,32 @@ describe("RuntimeTemplate.method", () => {
 		);
 	});
 });
+
+describe("RuntimeTemplate.objectHasOwn", () => {
+	/**
+	 * @param {boolean} hasOwn whether the environment supports `Object.hasOwn`
+	 * @returns {RuntimeTemplate} runtime template
+	 */
+	const create = (hasOwn) =>
+		new RuntimeTemplate(
+			/** @type {import("../lib/Compilation")} */ (
+				/** @type {unknown} */ (undefined)
+			),
+			/** @type {OutputOptions} */ (
+				/** @type {unknown} */ ({ environment: { hasOwn } })
+			),
+			new RequestShortener(__dirname)
+		);
+
+	it("uses Object.hasOwn when supported", () => {
+		expect(create(true).objectHasOwn("obj", "prop")).toBe(
+			"Object.hasOwn(obj, prop)"
+		);
+	});
+
+	it("falls back to hasOwnProperty.call when not supported", () => {
+		expect(create(false).objectHasOwn("obj", "prop")).toBe(
+			"Object.prototype.hasOwnProperty.call(obj, prop)"
+		);
+	});
+});
