@@ -8144,6 +8144,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-symbol": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports 'Symbol' (and well-known symbols like 'Symbol.toStringTag').",
+        "multiple": false,
+        "path": "output.environment.symbol",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports 'Symbol' (and well-known symbols like 'Symbol.toStringTag').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-template-literal": Object {
     "configs": Array [
       Object {

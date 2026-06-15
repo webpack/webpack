@@ -7072,6 +7072,11 @@ declare interface Environment {
 	spread?: boolean;
 
 	/**
+	 * The environment supports 'Symbol' (and well-known symbols like 'Symbol.toStringTag').
+	 */
+	symbol?: boolean;
+
+	/**
 	 * The environment supports template literals.
 	 */
 	templateLiteral?: boolean;
@@ -22073,6 +22078,7 @@ declare abstract class RuntimeTemplate {
 	supportsOptionalChaining(): boolean;
 	supportsSpread(): boolean;
 	supportsObjectHasOwn(): boolean;
+	supportsSymbol(): boolean;
 	supportsForOf(): boolean;
 	supportsDestructuring(): boolean;
 	supportsBigIntLiteral(): boolean;

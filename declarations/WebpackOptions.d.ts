@@ -2680,6 +2680,10 @@ export interface Environment {
 	 */
 	spread?: boolean;
 	/**
+	 * The environment supports 'Symbol' (and well-known symbols like 'Symbol.toStringTag').
+	 */
+	symbol?: boolean;
+	/**
 	 * The environment supports template literals.
 	 */
 	templateLiteral?: boolean;

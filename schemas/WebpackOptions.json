@@ -1117,6 +1117,10 @@
           "description": "The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').",
           "type": "boolean"
         },
+        "symbol": {
+          "description": "The environment supports 'Symbol' (and well-known symbols like 'Symbol.toStringTag').",
+          "type": "boolean"
+        },
         "templateLiteral": {
           "description": "The environment supports template literals.",
           "type": "boolean"
