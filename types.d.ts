@@ -6536,7 +6536,37 @@ declare class ElectronTargetPlugin {
 	/**
 	 * Creates an instance of ElectronTargetPlugin.
 	 */
-	constructor(context?: "main" | "preload" | "renderer");
+	constructor(
+		context?: "main" | "preload" | "renderer",
+		type?:
+			| "import"
+			| "var"
+			| "module"
+			| "assign"
+			| "this"
+			| "window"
+			| "self"
+			| "global"
+			| "commonjs"
+			| "commonjs2"
+			| "commonjs-module"
+			| "commonjs-static"
+			| "amd"
+			| "amd-require"
+			| "umd"
+			| "umd2"
+			| "jsonp"
+			| "system"
+			| "promise"
+			| "module-import"
+			| "script"
+			| "node-commonjs"
+			| "asset"
+			| "asset-url"
+			| "css-import"
+			| "css-url"
+	);
+	type: ExternalsType;
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
