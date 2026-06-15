@@ -1976,7 +1976,9 @@ describe("snapshots", () => {
 			+       "module": true,
 			@@ ... @@
 			-     "filename": "[name].js",
+			-     "globalObject": "self",
 			+     "filename": "[name].mjs",
+			+     "globalObject": "globalThis",
 			@@ ... @@
 			-     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
 			+     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.mjs",

@@ -8024,7 +8024,8 @@ declare class ExternalModule extends Module {
 	static getCompilationHooks(compilation: Compilation): ExternalModuleHooks;
 	static ModuleExternalInitFragment: typeof ModuleExternalInitFragment;
 	static getExternalModuleNodeCommonjsInitFragment: (
-		runtimeTemplate: RuntimeTemplate
+		runtimeTemplate: RuntimeTemplate,
+		universal?: boolean
 	) => InitFragment<ChunkRenderContextJavascriptModulesPlugin>;
 
 	/**
