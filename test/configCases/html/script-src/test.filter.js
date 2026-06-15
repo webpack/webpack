@@ -5,5 +5,6 @@
 // (via `--experimental-vm-modules`) needs Node 12+.
 module.exports = function filter() {
 	const major = Number(process.versions.node.split(".")[0]);
-	return major >= 12;
+	// the es2022 snapshot uses `Object.hasOwn`, available since Node 16.9
+	return major >= 12 && typeof Object.hasOwn === "function";
 };
