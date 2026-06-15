@@ -1109,6 +1109,10 @@
           "description": "The environment supports optional chaining ('obj?.a' or 'obj?.()').",
           "type": "boolean"
         },
+        "spread": {
+          "description": "The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').",
+          "type": "boolean"
+        },
         "templateLiteral": {
           "description": "The environment supports template literals.",
           "type": "boolean"

@@ -158,3 +158,44 @@ describe("RuntimeTemplate.optionalChaining", () => {
 		);
 	});
 });
+
+describe("RuntimeTemplate.method", () => {
+	/**
+	 * @param {boolean} methodShorthand whether the environment supports method shorthand
+	 * @param {boolean} arrowFunction whether the environment supports arrow functions
+	 * @returns {RuntimeTemplate} runtime template
+	 */
+	const create = (methodShorthand, arrowFunction) =>
+		new RuntimeTemplate(
+			/** @type {import("../lib/Compilation")} */ (
+				/** @type {unknown} */ (undefined)
+			),
+			/** @type {OutputOptions} */ (
+				/** @type {unknown} */ ({
+					environment: { methodShorthand, arrowFunction }
+				})
+			),
+			new RequestShortener(__dirname)
+		);
+
+	it("uses method shorthand when supported", () => {
+		const runtimeTemplate = create(true, true);
+		expect(runtimeTemplate.method("get", "name", "return name;")).toBe(
+			"get(name) {\n\treturn name;\n}"
+		);
+	});
+
+	it("falls back to an arrow property when shorthand is unsupported", () => {
+		const runtimeTemplate = create(false, true);
+		expect(runtimeTemplate.method("get", "name", "return name;")).toBe(
+			"get: (name) => {\n\treturn name;\n}"
+		);
+	});
+
+	it("falls back to a function property without arrow support", () => {
+		const runtimeTemplate = create(false, false);
+		expect(runtimeTemplate.method("get", "name", "return name;")).toBe(
+			"get: function(name) {\n\treturn name;\n}"
+		);
+	});
+});

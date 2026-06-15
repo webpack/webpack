@@ -7062,6 +7062,11 @@ declare interface Environment {
 	optionalChaining?: boolean;
 
 	/**
+	 * The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').
+	 */
+	spread?: boolean;
+
+	/**
 	 * The environment supports template literals.
 	 */
 	templateLiteral?: boolean;
@@ -22061,6 +22066,7 @@ declare abstract class RuntimeTemplate {
 	supportsArrowFunction(): boolean;
 	supportsAsyncFunction(): boolean;
 	supportsOptionalChaining(): boolean;
+	supportsSpread(): boolean;
 	supportsForOf(): boolean;
 	supportsDestructuring(): boolean;
 	supportsBigIntLiteral(): boolean;
@@ -22115,6 +22121,12 @@ declare abstract class RuntimeTemplate {
 	 * the fallback, so it must be side-effect free.
 	 */
 	optionalChaining(object: string, access: string): string;
+
+	/**
+	 * Renders an object-literal method, using method shorthand when supported
+	 * and falling back to a `prop: function/arrow` property otherwise.
+	 */
+	method(prop: string, args: string, body: string | string[]): string;
 
 	/**
 	 * Returns destructure array code.

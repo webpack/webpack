@@ -8118,6 +8118,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-spread": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').",
+        "multiple": false,
+        "path": "output.environment.spread",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-template-literal": Object {
     "configs": Array [
       Object {

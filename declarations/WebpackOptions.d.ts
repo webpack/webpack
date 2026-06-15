@@ -2672,6 +2672,10 @@ export interface Environment {
 	 */
 	optionalChaining?: boolean;
 	/**
+	 * The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').
+	 */
+	spread?: boolean;
+	/**
 	 * The environment supports template literals.
 	 */
 	templateLiteral?: boolean;
