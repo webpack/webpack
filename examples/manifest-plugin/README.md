@@ -98,10 +98,10 @@ module.exports = config;
       "file": "dist/output.js"
     },
     "async_js.js.map": {
-      "file": "dist/async_js.0eeb6882e0cf674fd1fc.js.map"
+      "file": "dist/async_js.67305b378d0bdef68bde.js.map"
     },
     "async_js.js": {
-      "file": "dist/async_js.0eeb6882e0cf674fd1fc.js"
+      "file": "dist/async_js.67305b378d0bdef68bde.js"
     }
   }
 }
@@ -124,7 +124,7 @@ assets:
     main.js:
         file: /nested/dist/output.js
     async_js.js:
-        file: /nested/dist/async_js.0eeb6882e0cf674fd1fc.js
+        file: /nested/dist/async_js.67305b378d0bdef68bde.js
 custom: value
 ```
 
@@ -182,13 +182,13 @@ const [styles, scripts] = importEntrypoints(manifest, "main");
 
 ```
 assets by info 881 bytes [immutable]
-  asset async_js.0eeb6882e0cf674fd1fc.js 873 bytes [emitted] [immutable] 1 related asset
+  asset async_js.67305b378d0bdef68bde.js 873 bytes [emitted] [immutable] 1 related asset
   asset 3ee037f347c64cc372ad18857b0db91f.txt 4 bytes [emitted] [immutable] [from: foo.txt] (auxiliary name: main)
   asset a0145fafc7fab801e574.txt 4 bytes [emitted] [immutable] [from: bar.txt] (auxiliary name: main)
 asset output.js 15.8 KiB [emitted] (name: main) 1 related asset
 asset manifest.json 601 bytes [emitted]
 asset manifest.yml 395 bytes [emitted]
-chunk (runtime: main) async_js.0eeb6882e0cf674fd1fc.js 24 bytes [rendered]
+chunk (runtime: main) async_js.67305b378d0bdef68bde.js 24 bytes [rendered]
   > ./async.js ./example.js 6:8-28
   ./async.js 24 bytes [built] [code generated]
     [exports: default]
@@ -208,13 +208,13 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-assets by path *.js 3.43 KiB
+assets by path *.js 3.42 KiB
   asset output.js 3.24 KiB [emitted] [minimized] (name: main) 1 related asset
-  asset async_js.f5b4307c4a15ad5435bd.js 194 bytes [emitted] [immutable] [minimized] 1 related asset
+  asset async_js.59a751e1b9b97bdbc720.js 184 bytes [emitted] [immutable] [minimized] 1 related asset
 asset manifest.json 507 bytes [emitted]
 asset manifest.yml 309 bytes [emitted]
 asset 3ee037f347c64cc372ad18857b0db91f.txt 4 bytes [emitted] [immutable] [from: foo.txt] (auxiliary name: main)
-chunk (runtime: main) async_js.f5b4307c4a15ad5435bd.js 24 bytes [rendered]
+chunk (runtime: main) async_js.59a751e1b9b97bdbc720.js 24 bytes [rendered]
   > ./async.js ./example.js 6:8-28
   ./async.js 24 bytes [built] [code generated]
     [exports: default]

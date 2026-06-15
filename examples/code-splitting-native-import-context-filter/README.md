@@ -442,9 +442,9 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 2.74 KiB [emitted] [minimized] (name: main)
-asset 717.output.js 127 bytes [emitted] [minimized]
-asset 776.output.js 127 bytes [emitted] [minimized]
-asset 0.output.js 124 bytes [emitted] [minimized]
+asset 717.output.js 117 bytes [emitted] [minimized]
+asset 776.output.js 117 bytes [emitted] [minimized]
+asset 0.output.js 114 bytes [emitted] [minimized]
 chunk (runtime: main) 0.output.js 38 bytes [rendered]
   > ./baz ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./baz
   > ./baz.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./baz.js
