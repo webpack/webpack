@@ -1,5 +1,4 @@
 it("should compile", async () => {
-	debugger;
 	const logs = global.__configCases__deferImport__proposal = [];
 
 	let mod = import("./entry.js");
