@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Type the serializer context `read`/`write` as generic instead of `any`.
+Make serializer `read`/`write` generic over the serialized value types instead of `any`.
