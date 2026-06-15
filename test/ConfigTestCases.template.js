@@ -32,6 +32,7 @@ const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
 const prepareOptions = require("./helpers/prepareOptions");
+const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
 
 const casesPath = path.join(__dirname, "configCases");
 const categories = fs.readdirSync(casesPath).map((cat) => ({
@@ -137,6 +138,16 @@ const describeCases = (config) => {
 								if (!options.entry) options.entry = "./index.js";
 								if (!options.target) options.target = "async-node";
 								if (!options.output) options.output = {};
+								if (!options.output.environment) {
+									options.output.environment = {};
+								}
+								if (
+									options.output.environment.optionalChaining === undefined &&
+									!supportsOptionalChaining()
+								) {
+									// generated runtime runs in this Node.js process; avoid `?.` on Node < 14
+									options.output.environment.optionalChaining = false;
+								}
 								if (!options.output.path) options.output.path = outputDirectory;
 								if (typeof options.output.pathinfo === "undefined") {
 									options.output.pathinfo = true;

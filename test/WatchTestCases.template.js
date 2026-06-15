@@ -27,6 +27,7 @@ const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const prepareOptions = require("./helpers/prepareOptions");
 const { remove } = require("./helpers/remove");
+const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
 
 /**
  * @param {string} src src
@@ -166,6 +167,16 @@ const describeCases = (config) => {
 								if (!options.entry) options.entry = "./index.js";
 								if (!options.target) options.target = "async-node";
 								if (!options.output) options.output = {};
+								if (!options.output.environment) {
+									options.output.environment = {};
+								}
+								if (
+									options.output.environment.optionalChaining === undefined &&
+									!supportsOptionalChaining()
+								) {
+									// generated runtime runs in this Node.js process; avoid `?.` on Node < 14
+									options.output.environment.optionalChaining = false;
+								}
 								if (options.output.clean === undefined) {
 									options.output.clean = true;
 								}
