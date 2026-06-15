@@ -12931,11 +12931,6 @@ declare interface KnownExternalModuleBuildInfo {
 	 * true when emitting an ESM external (`output.module`)
 	 */
 	javascriptModule?: boolean;
-
-	/**
-	 * true when the external may load in both node and non-node runtimes (universal target)
-	 */
-	universalExternal?: boolean;
 }
 declare interface KnownHooks {
 	/**
