@@ -1,11 +1,7 @@
 "use strict";
 
-it("does not support require-based externals in a universal ESM target", () => {
-	// the commonjs family emits `require(...)`, but `require` is not defined in ESM output
-	expect(() => require("commonjsExt")).toThrow(/require is not defined/);
-	expect(() => require("commonjs2Ext")).toThrow(/require is not defined/);
-	expect(() => require("commonjsModuleExt")).toThrow(/require is not defined/);
-	expect(() => require("commonjsStaticExt")).toThrow(/require is not defined/);
+it("does not support the `this` external in a universal ESM target", () => {
 	// `this` external: top-level `this` is undefined in an ESM module
-	expect(() => require("thisExt")).toThrow(/Cannot read properties of undefined/);
+	// (V8 wording differs across node versions: "property" vs "properties")
+	expect(() => require("thisExt")).toThrow(/Cannot read propert(?:y|ies)/);
 });

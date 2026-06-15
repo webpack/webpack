@@ -3,15 +3,15 @@
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{
-		name: "known-node-version",
+		name: "optional-chaining",
 		target: ["node22.12", "web"],
 		output: { module: true },
 		experiments: { outputModule: true }
 	},
 	{
-		name: "unknown-node-version",
-		target: ["node", "web"],
-		output: { module: true },
+		name: "no-optional-chaining",
+		target: ["node22.12", "web"],
+		output: { module: true, environment: { optionalChaining: false } },
 		experiments: { outputModule: true }
 	}
 ];

@@ -7052,11 +7052,6 @@ declare interface Environment {
 	module?: boolean;
 
 	/**
-	 * The environment supports `process.getBuiltinModule()` to synchronously load Node.js built-in modules.
-	 */
-	nodeBuiltinModuleGetter?: boolean;
-
-	/**
 	 * The environment supports `node:` prefix for Node.js core modules.
 	 */
 	nodePrefixForCoreModules?: boolean;
@@ -22073,7 +22068,6 @@ declare abstract class RuntimeTemplate {
 	supportsEcmaScriptModuleSyntax(): boolean;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
-	supportsNodeBuiltinModuleGetter(): undefined | boolean;
 
 	/**
 	 * Renders node prefix for core module.

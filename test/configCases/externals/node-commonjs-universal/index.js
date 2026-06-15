@@ -18,16 +18,17 @@ it("should load node built-in modules in a universal bundle", () => {
 
 it("should not statically import the `module` built-in (would crash in browser)", () => {
 	expect(header).not.toMatch(/\bfrom\b/);
-	expect(header).toContain("process.getBuiltinModule");
+	expect(header).toContain("getBuiltinModule");
 });
 
-it("should pick the loading strategy based on the known node version", () => {
+it("should guard getBuiltinModule with optional chaining when supported", () => {
 	if (__STATS_I__ === 0) {
-		// known node version supporting process.getBuiltinModule: inline guard, no try/catch
-		expect(header).toContain('typeof process !== "undefined"');
-		expect(header).not.toContain("try {");
+		// optional chaining supported
+		expect(header).toContain("process.getBuiltinModule?.");
 	} else {
-		// unknown node version: defensive try/catch so the bundle still loads elsewhere
-		expect(header).toContain("try {");
+		// `&&` short-circuit fallback
+		expect(header).toContain(
+			"process.getBuiltinModule && process.getBuiltinModule"
+		);
 	}
 });
