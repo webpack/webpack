@@ -117,3 +117,44 @@ describe("RuntimeTemplate.concatenation", () => {
 		});
 	});
 });
+
+describe("RuntimeTemplate.optionalChaining", () => {
+	/**
+	 * @param {boolean} optionalChaining whether the environment supports optional chaining
+	 * @returns {RuntimeTemplate} runtime template
+	 */
+	const create = (optionalChaining) =>
+		new RuntimeTemplate(
+			/** @type {import("../lib/Compilation")} */ (
+				/** @type {unknown} */ (undefined)
+			),
+			/** @type {OutputOptions} */ (
+				/** @type {unknown} */ ({ environment: { optionalChaining } })
+			),
+			new RequestShortener(__dirname)
+		);
+
+	it("uses optional chaining when supported", () => {
+		const runtimeTemplate = create(true);
+		expect(runtimeTemplate.optionalChaining("obj", "prop")).toBe("obj?.prop");
+		expect(runtimeTemplate.optionalChaining("fn", "()")).toBe("fn?.()");
+		expect(runtimeTemplate.optionalChaining("obj", "method(arg)")).toBe(
+			"obj?.method(arg)"
+		);
+		expect(runtimeTemplate.optionalChaining("obj", "[key]")).toBe("obj?.[key]");
+	});
+
+	it("falls back to && when not supported", () => {
+		const runtimeTemplate = create(false);
+		expect(runtimeTemplate.optionalChaining("obj", "prop")).toBe(
+			"obj && obj.prop"
+		);
+		expect(runtimeTemplate.optionalChaining("fn", "()")).toBe("fn && fn()");
+		expect(runtimeTemplate.optionalChaining("obj", "method(arg)")).toBe(
+			"obj && obj.method(arg)"
+		);
+		expect(runtimeTemplate.optionalChaining("obj", "[key]")).toBe(
+			"obj && obj[key]"
+		);
+	});
+});
