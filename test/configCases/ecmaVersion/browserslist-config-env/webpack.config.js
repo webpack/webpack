@@ -28,6 +28,7 @@ module.exports = {
 			  "nodePrefixForCoreModules": false,
 			  "optionalChaining": false,
 			  "spread": false,
+			  "symbol": false,
 			  "templateLiteral": false,
 			}
 		`);

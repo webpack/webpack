@@ -26,6 +26,7 @@ module.exports = {
 			  "nodePrefixForCoreModules": true,
 			  "optionalChaining": true,
 			  "spread": true,
+			  "symbol": true,
 			  "templateLiteral": true,
 			}
 		`);
