@@ -100,7 +100,7 @@ globalThis.__moduleA = moduleA;
 /******/ 
 /******/ /* webpack/runtime/hasOwnProperty shorthand */
 /******/ (() => {
-/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.hasOwn(obj, prop))
 /******/ })();
 /******/ 
 /******/ /* webpack/runtime/export webpack runtime */
@@ -236,7 +236,7 @@ exports[`ConfigTestCases html script-src-mixed exported tests should chain multi
 /************************************************************************/
 /******/ /* webpack/runtime/hasOwnProperty shorthand */
 /******/ (() => {
-/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.hasOwn(obj, prop))
 /******/ })();
 /******/ 
 /******/ /* webpack/runtime/export webpack runtime */
