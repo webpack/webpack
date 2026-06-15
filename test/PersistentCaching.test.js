@@ -7,6 +7,7 @@ const path = require("path");
 const util = require("util");
 const vm = require("vm");
 const rimraf = require("rimraf");
+const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
 
 const readdir = util.promisify(fs.readdir);
 const writeFile = util.promisify(fs.writeFile);
@@ -44,7 +45,9 @@ describe("Persistent Caching", () => {
 		target: "node",
 		output: {
 			library: { type: "commonjs-module", export: "default" },
-			path: outputPath
+			path: outputPath,
+			// bundles are executed in this Node.js process; avoid `?.` on Node < 14
+			environment: { optionalChaining: supportsOptionalChaining() }
 		}
 	};
 
