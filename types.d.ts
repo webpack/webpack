@@ -22109,6 +22109,13 @@ declare abstract class RuntimeTemplate {
 	emptyFunction(): string;
 
 	/**
+	 * Guards an access/call on `object` with optional chaining when supported,
+	 * otherwise an equivalent `&&` short-circuit. `object` is evaluated twice in
+	 * the fallback, so it must be side-effect free.
+	 */
+	optionalChaining(object: string, access: string): string;
+
+	/**
 	 * Returns destructure array code.
 	 */
 	destructureArray(items: string[], value: string): string;

@@ -20,6 +20,7 @@ const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const { TestRunner } = require("./harness/runner");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
+const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
 
 const casesPath = path.join(__dirname, "hotCases");
 /** @type {Category[]} */
@@ -90,6 +91,14 @@ const describeCases = (config) => {
 							if (!options.context) options.context = testDirectory;
 							if (!options.entry) options.entry = "./index.js";
 							if (!options.output) options.output = {};
+							if (!options.output.environment) options.output.environment = {};
+							if (
+								options.output.environment.optionalChaining === undefined &&
+								!supportsOptionalChaining()
+							) {
+								// generated runtime runs in this Node.js process; avoid `?.` on Node < 14
+								options.output.environment.optionalChaining = false;
+							}
 							if (!options.output.path) options.output.path = outputDirectory;
 							if (!options.output.filename) {
 								options.output.filename = `bundle${
