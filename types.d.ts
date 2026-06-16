@@ -7057,6 +7057,11 @@ declare interface Environment {
 	module?: boolean;
 
 	/**
+	 * The environment supports `process.getBuiltinModule()` to synchronously load Node.js core modules.
+	 */
+	nodeBuiltinModuleGetter?: boolean;
+
+	/**
 	 * The environment supports `node:` prefix for Node.js core modules.
 	 */
 	nodePrefixForCoreModules?: boolean;
@@ -22135,11 +22140,13 @@ declare abstract class RuntimeTemplate {
 	optionalChaining(object: string, access: string): string;
 
 	/**
-	 * Reads a node builtin via `process.getBuiltinModule` for bundles that may also
-	 * run outside node (universal `["node", "web"]`), avoiding a static `import`
-	 * that would break loading elsewhere. Guards `process` (absent in the browser)
-	 * and old node lacking `getBuiltinModule`, so the result is falsy off node and
-	 * callers must only use it on the node path.
+	 * Reads a node builtin for bundles that may also run outside node (universal
+	 * `["node", "web"]`), avoiding a static `import` that would break loading
+	 * elsewhere. When the target node version is known to expose
+	 * `process.getBuiltinModule()` it is used directly; otherwise it is tried first
+	 * and falls back to `createRequire`, wrapped in `try/catch` so a non-node (or
+	 * old-node) load can't throw. Guarded by `typeof process`, so the result is
+	 * falsy off node and callers must only use it on the node path.
 	 */
 	getBuiltinModule(request: string, access?: string): string;
 

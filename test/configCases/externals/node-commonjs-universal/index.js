@@ -21,14 +21,15 @@ it("should not statically import the `module` built-in (would crash in browser)"
 	expect(header).toContain("getBuiltinModule");
 });
 
-it("should guard getBuiltinModule with optional chaining when supported", () => {
+it("should resolve the builtin getter based on node support", () => {
 	if (__STATS_I__ === 0) {
-		// optional chaining supported
-		expect(header).toContain("process.getBuiltinModule?.");
+		// node version known to expose `process.getBuiltinModule()` -> call it directly
+		expect(header).toContain("process.getBuiltinModule(");
+		expect(header).not.toContain("try {");
 	} else {
-		// `&&` short-circuit fallback
-		expect(header).toContain(
-			"process.getBuiltinModule && process.getBuiltinModule"
-		);
+		// unknown/old node -> try the getter, fall back to createRequire, never throw at load
+		expect(header).toContain("try {");
+		expect(header).toContain("process.getBuiltinModule(");
+		expect(header).toContain("createRequire(import.meta.url)");
 	}
 });

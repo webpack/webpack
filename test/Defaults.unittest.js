@@ -163,6 +163,7 @@ describe("snapshots", () => {
 		      "let": true,
 		      "methodShorthand": true,
 		      "module": undefined,
+		      "nodeBuiltinModuleGetter": undefined,
 		      "nodePrefixForCoreModules": true,
 		      "optionalChaining": true,
 		      "spread": true,
@@ -432,6 +433,7 @@ describe("snapshots", () => {
 		      "let": true,
 		      "methodShorthand": true,
 		      "module": undefined,
+		      "nodeBuiltinModuleGetter": undefined,
 		      "nodePrefixForCoreModules": true,
 		      "optionalChaining": true,
 		      "spread": true,
@@ -2913,11 +2915,6 @@ describe("snapshots", () => {
 			-       "let": true,
 			-       "methodShorthand": true,
 			-       "module": undefined,
-			-       "nodePrefixForCoreModules": true,
-			-       "optionalChaining": true,
-			-       "spread": true,
-			-       "symbol": true,
-			-       "templateLiteral": true,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
 			+       "forOf": false,
@@ -2927,6 +2924,12 @@ describe("snapshots", () => {
 			+       "let": false,
 			+       "methodShorthand": false,
 			+       "module": false,
+			@@ ... @@
+			-       "nodePrefixForCoreModules": true,
+			-       "optionalChaining": true,
+			-       "spread": true,
+			-       "symbol": true,
+			-       "templateLiteral": true,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
 			+       "spread": false,
@@ -2959,11 +2962,6 @@ describe("snapshots", () => {
 			-       "let": true,
 			-       "methodShorthand": true,
 			-       "module": undefined,
-			-       "nodePrefixForCoreModules": true,
-			-       "optionalChaining": true,
-			-       "spread": true,
-			-       "symbol": true,
-			-       "templateLiteral": true,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
 			+       "forOf": false,
@@ -2973,6 +2971,12 @@ describe("snapshots", () => {
 			+       "let": false,
 			+       "methodShorthand": false,
 			+       "module": false,
+			@@ ... @@
+			-       "nodePrefixForCoreModules": true,
+			-       "optionalChaining": true,
+			-       "spread": true,
+			-       "symbol": true,
+			-       "templateLiteral": true,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
 			+       "spread": false,
@@ -3768,8 +3772,10 @@ describe("snapshots", () => {
 			+       "importMetaDirnameAndFilename": false,
 			@@ ... @@
 			-       "module": undefined,
+			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
 			+       "module": true,
+			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			@@ ... @@
 			-     "target": "web",
@@ -3818,8 +3824,10 @@ describe("snapshots", () => {
 			+       "importMetaDirnameAndFilename": false,
 			@@ ... @@
 			-       "module": undefined,
+			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
 			+       "module": true,
+			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			@@ ... @@
 			-     "filename": "[name].js",
@@ -3947,6 +3955,12 @@ describe("Targets", () => {
 		- Expected
 		+ Received
 
+		@@ ... @@
+		-       "nodeBuiltinModuleGetter": false,
+		+       "nodeBuiltinModuleGetter": undefined,
+		@@ ... @@
+		-       "nodeBuiltinModuleGetter": false,
+		+       "nodeBuiltinModuleGetter": undefined,
 		@@ ... @@
 		-   "target": "node12.17",
 		+   "target": "browserslist: node 12.17",
