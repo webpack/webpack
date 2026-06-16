@@ -22,20 +22,3 @@ Apply against a `webpack/tooling` checkout:
 cd path/to/tooling
 patch -p1 < path/to/webpack/patches/tooling-infer-in-tuple-extends.patch
 ```
-
-## `serializer-positional-tuple-typing.patch`
-
-Positional serializer typing: `ObjectSerializerContext<[A, B, C]>` /
-`ObjectDeserializerContext<[A, B, C]>` make the first `write`/`read` expect `A`,
-the second `B`, etc. `write` advances by returning the next context; `read`
-advances via a `rest` accessor (same object, retyped to `Tail<T>` — no
-allocation). Includes the built-in serializers and `ConstDependency` as a
-worked dependency example.
-
-Held as a patch because the generated `types.d.ts` only validates once the
-`tooling` fix above is released. Apply against this repo, then regenerate:
-
-```sh
-git apply patches/serializer-positional-tuple-typing.patch
-yarn fix:special
-```
