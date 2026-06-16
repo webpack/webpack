@@ -5866,6 +5866,16 @@ declare class Dependency {
 	getLazyUntil(): null | "*" | "@" | { id: string } | { local: string };
 
 	/**
+	 * Whether the lazy barrel currently defers creating this dependency's target module (lazy barrel optimization).
+	 */
+	isLazy(): boolean;
+
+	/**
+	 * Sets whether the lazy barrel defers creating this dependency's target module (lazy barrel optimization).
+	 */
+	setLazy(value: boolean): void;
+
+	/**
 	 * Returns the referenced module and export
 	 * @deprecated
 	 */
