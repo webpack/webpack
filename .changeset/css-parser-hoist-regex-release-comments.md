@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Hoist per-call CSS parser regexes to module scope and keep parsed comments in local parse state so they are not retained on the reused parser instance between modules.
+Reduce CSS parser CPU (hoisted per-call regexes, byte-compared `@container` pure-mode keywords) and stop retaining parsed comments on the reused parser instance between modules.
