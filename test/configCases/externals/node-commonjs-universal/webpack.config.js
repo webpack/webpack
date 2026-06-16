@@ -12,8 +12,9 @@ module.exports = [
 	{
 		name: "fallback",
 		// node version predating `process.getBuiltinModule()` -> try/catch + createRequire
+		// `arrowFunction: false` also exercises the non-arrow getter wrapper
 		target: ["node18", "web"],
-		output: { module: true },
+		output: { module: true, environment: { arrowFunction: false } },
 		experiments: { outputModule: true }
 	}
 ];
