@@ -22140,13 +22140,14 @@ declare abstract class RuntimeTemplate {
 	optionalChaining(object: string, access: string): string;
 
 	/**
-	 * Reads a node builtin via `process.getBuiltinModule()` for bundles that may
-	 * also run outside node (universal `["node", "web"]`), avoiding a static
-	 * `import` that would break loading elsewhere. When the target node version is
-	 * known to expose the getter it is called directly; otherwise a `typeof` probe
-	 * guards it (no `require`, which doesn't exist in ESM). `typeof` never throws on
-	 * undeclared names, so the result is falsy off node (and on node without the
-	 * getter), and callers must only use it on the node path.
+	 * Reads a node builtin for bundles that may also run outside node (universal
+	 * `["node", "web"]`), avoiding a static `import` that would break loading
+	 * elsewhere. When the target node version is known to expose
+	 * `process.getBuiltinModule()` it is called directly. Otherwise the getter is
+	 * preferred at runtime (`typeof` probe), falling back to `require`
+	 * (CommonJS / older node) wrapped in `try/catch` so the `ReferenceError`
+	 * `require` throws in ESM is swallowed; both stay falsy off node and in the
+	 * browser. Callers must only use the result on the node path.
 	 */
 	getBuiltinModule(request: string, access?: string): string;
 
