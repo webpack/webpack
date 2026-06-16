@@ -70,6 +70,10 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 - `examples/` — Usage examples (build with `yarn build:examples`).
 - `.changeset/` — Pending changeset files for the next release.
 
+**Patches**
+
+- `patches/` — Standalone patches kept for upstream contribution (e.g. `webpack/tooling` fixes); applied by hand, not via `postinstall`.
+
 **Auto-generated — do not edit by hand; regenerate via `yarn fix:special`**
 
 - `types.d.ts`, `declarations/**/*.d.ts`, `schemas/**/*.check.{js,d.ts}`, generated runtime code under `lib/`.
