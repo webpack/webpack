@@ -36,9 +36,9 @@ it("should resolve the builtin getter based on node support", () => {
 		expect(header).toContain("process.getBuiltinModule(");
 		expect(header).not.toContain('typeof process.getBuiltinModule === "function"');
 	} else {
-		// unknown/old node -> probe the getter with `typeof`, fall back to createRequire
+		// unknown/old node -> probe the getter with `typeof` (no `require`, ESM-safe)
 		expect(header).toContain('typeof process.getBuiltinModule === "function"');
-		expect(header).toContain('typeof require === "function"');
 		expect(header).toContain("createRequire(import.meta.url)");
+		expect(header).not.toContain("require(");
 	}
 });
