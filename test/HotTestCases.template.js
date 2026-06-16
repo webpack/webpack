@@ -7,7 +7,6 @@ require("./helpers/warmup-webpack");
  * @typedef {object} SuiteConfig
  * @property {string} name suite name
  * @property {string | string[]=} target target
- * @property {boolean=} universal run the bundle in every environment of a universal target
  */
 /**
  * @typedef {object} HotTestConfig
@@ -39,10 +38,14 @@ const categories = fs
  * @param {SuiteConfig} config suite config
  */
 const describeCases = (config) => {
+	// run the bundle in both environments when the target lists a node-like
+	// and a web-like env (a stand-in until the `universal` target lands)
+	const runInNodeAndWebEnv = TestRunner.hasNodeAndWebEnv(config.target);
+
 	describe(config.name, () => {
 		for (const category of categories) {
-			// `universal` cases only run in the universal suite, and vice versa.
-			if ((category.name === "universal") !== Boolean(config.universal)) {
+			// `universal` cases only run in the node+web suite, and vice versa.
+			if ((category.name === "universal") !== runInNodeAndWebEnv) {
 				continue;
 			}
 
@@ -97,8 +100,8 @@ const describeCases = (config) => {
 							if (!options.context) options.context = testDirectory;
 							if (!options.entry) options.entry = "./index.js";
 							if (!options.output) options.output = {};
-							if (config.universal) {
-								// universal target requires ESM output to run in node and web
+							if (runInNodeAndWebEnv) {
+								// running in node and web requires ESM output
 								if (!options.experiments) options.experiments = {};
 								if (options.experiments.outputModule === undefined) {
 									options.experiments.outputModule = true;
@@ -291,8 +294,8 @@ const describeCases = (config) => {
 											/** @type {EXPECTED_ANY} */ (_stats.entrypoints).main
 												.assets
 										).map((/** @type {EXPECTED_ANY} */ i) => i.name);
-										// universal expands to one runner per target; pick by its target
-										const isWeb = config.universal
+										// node+web expands to one runner per target; pick by its target
+										const isWeb = runInNodeAndWebEnv
 											? runner.hasWebTarget()
 											: config.target === "web";
 										if (isWeb) {

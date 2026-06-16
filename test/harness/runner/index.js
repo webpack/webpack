@@ -107,32 +107,23 @@ class TestRunner {
 	}
 
 	/**
-	 * @param {EXPECTED_ANY} webpackOptions webpack options
-	 * @returns {boolean} whether target is universal
+	 * Whether the target lists both a node-like and a web-like environment, so
+	 * the same bundle should be executed once per environment.
+	 * TODO replace with the dedicated `universal` target once it lands.
+	 * @param {EXPECTED_ANY} target target
+	 * @param {string=} context context
+	 * @returns {boolean} true, if target has a node-like and a web-like env
 	 */
-	static isUniversalTarget(webpackOptions) {
-		const outputModule =
-			(webpackOptions.output && webpackOptions.output.module) ||
-			(webpackOptions.experiments && webpackOptions.experiments.outputModule);
-		const target = webpackOptions.target;
-
-		const targetProperties =
-			target === false
-				? /** @type {false} */ (false)
-				: typeof target === "string"
-					? getTargetProperties(
-							target,
-							/** @type {string} */ (webpackOptions.context)
-						)
-					: getTargetsProperties(
-							/** @type {string[]} */ (target),
-							/** @type {string} */ (webpackOptions.context)
-						);
-		const props =
-			/** @type {import("../../../lib/config/target").TargetProperties} */ (
-				targetProperties
-			);
-		return outputModule && props.node === null && props.web === null;
+	static hasNodeAndWebEnv(target, context) {
+		if (!Array.isArray(target)) return false;
+		let hasNode = false;
+		let hasWeb = false;
+		for (const t of target) {
+			const props = getTargetProperties(t, /** @type {string} */ (context));
+			if (props.node === true) hasNode = true;
+			if (props.web === true || props.webworker === true) hasWeb = true;
+		}
+		return hasNode && hasWeb;
 	}
 
 	/**
@@ -161,7 +152,7 @@ class TestRunner {
 			const options = optionsArr[i];
 			let targets = [options.target];
 			let found = false;
-			if (TestRunner.isUniversalTarget(options)) {
+			if (TestRunner.hasNodeAndWebEnv(options.target, options.context)) {
 				targets = targets.reduce((prev, cur) => [...prev, ...cur], []);
 			}
 
