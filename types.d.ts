@@ -18623,7 +18623,7 @@ declare interface Output {
 	/**
 	 * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
 	 */
-	html?: boolean;
+	html?: boolean | OutputHtmlOptions;
 
 	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
@@ -18808,6 +18808,16 @@ declare interface OutputFileSystem {
 }
 
 /**
+ * Options for the generated HTML files.
+ */
+declare interface OutputHtmlOptions {
+	/**
+	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
+	 */
+	scriptLoading?: "auto" | "defer" | "blocking";
+}
+
+/**
  * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
  */
 declare interface OutputNormalized {
@@ -18963,7 +18973,7 @@ declare interface OutputNormalized {
 	/**
 	 * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
 	 */
-	html?: boolean;
+	html?: boolean | OutputHtmlOptions;
 
 	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
