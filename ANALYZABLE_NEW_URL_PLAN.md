@@ -121,8 +121,7 @@ expression remains the recognized pattern.)
 
 - [ ] In the analyzable branch, replace the **outerRange** (the whole `new URL(...)`,
       not just the args) so we control both arguments:
-      `     new URL(/* asset import */ <JSON.stringify(specifier)>, import.meta.url)
-  `
+      `    new URL(/* asset import */ <JSON.stringify(specifier)>, import.meta.url)`
       Use the configured `import.meta` name if webpack renames it; otherwise literal
       `import.meta.url`.
 - [ ] Do **not** add `RuntimeGlobals.baseURI`, `RuntimeGlobals.relativeUrl`, or
@@ -134,15 +133,19 @@ expression remains the recognized pattern.)
 
 ### Step 4 — Asset module side
 
-- [ ] Confirm the asset file is still emitted even though no JS `__webpack_require__(id)`
-      reaches it (the dependency edge must still pull the asset into the graph for
-      emission + hashing). If reachability now depends solely on this dependency, ensure
-      the module isn't tree-shaken away.
-- [ ] Decide whether the asset's JS wrapper module
-      (`module.exports = __webpack_require__.p + "..."`, `AssetGenerator.js:645`) is still
-      generated when its only consumer uses the analyzable form. Ideally it is dropped to
-      avoid a dead module in the bundle; if dropping is risky, leave it (unused) and
-      handle in a follow-up.
+- [x] The asset file is still emitted: the asset stays in the graph via the dependency
+      edge (and, when the wrapper is dropped, via the `asset` source type), so it is
+      emitted and hashed regardless of whether a JS `__webpack_require__(id)` reaches it.
+- [x] **Dead-wrapper cleanup (done).** When an asset is consumed _only_ by analyzable
+      `new URL` in ESM output **and** the effective publicPath is a chunk-independent
+      absolute string (root-absolute `/…` or `scheme://…`, no `[…]` tokens),
+      `AssetGenerator.getTypes` now exposes it as `asset-url` instead of `javascript`, so
+      the `module.exports = __webpack_require__.p + "…"` wrapper (and its publicPath
+      runtime global) are never emitted — exactly how CSS/HTML url assets behave.
+      `auto`/relative publicPaths keep the wrapper because a single literal can't be
+      correct across chunks at different depths; dropping it there needs a per-chunk JS
+      placeholder pass (future work). The undo-path is computed from the **consuming**
+      module's chunk (not the asset's), which is required once the wrapper is gone.
 
 ### Step 5 — Edge cases & fallbacks
 
@@ -195,9 +198,11 @@ expression remains the recognized pattern.)
 
 - **Gating: default-on for `output.module`** (no experiment flag). Analyzable form is
   emitted whenever output is a real ESM module; CJS/IIFE output is unchanged.
+- **Dead wrapper: dropped for chunk-independent (absolute) publicPath**, kept otherwise
+  (see Step 4). `url: "relative"` keeps its runtime polyfill (semantics differ from the
+  absolute literal form).
 
 ## Open questions
 
-- Drop the now-dead asset JS wrapper module in this PR or defer (Step 4)?
-- `url: "relative"` semantics under the literal form — confirm parity before removing the
-  `RelativeUrlRuntimeModule` path (Step 5).
+- `auto`/relative publicPath wrapper-drop: needs a per-chunk JS placeholder substitution
+  (like CSS's `PUBLIC_PATH_AUTO`) so a chunk-relative literal can be emitted per chunk.
