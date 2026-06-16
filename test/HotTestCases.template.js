@@ -38,14 +38,17 @@ const categories = fs
  * @param {SuiteConfig} config suite config
  */
 const describeCases = (config) => {
-	// run the bundle in both environments when the target lists a node-like
-	// and a web-like env (a stand-in until the `universal` target lands)
-	const runInNodeAndWebEnv = TestRunner.hasNodeAndWebEnv(config.target);
+	// universal targets run the same (ESM) bundle once per environment; the
+	// suite forces module output, so probe with `output.module` set
+	const isUniversal = TestRunner.isUniversalTarget({
+		target: config.target,
+		output: { module: true }
+	});
 
 	describe(config.name, () => {
 		for (const category of categories) {
-			// `universal` cases only run in the node+web suite, and vice versa.
-			if ((category.name === "universal") !== runInNodeAndWebEnv) {
+			// `universal` cases only run in the universal suite, and vice versa.
+			if ((category.name === "universal") !== isUniversal) {
 				continue;
 			}
 
@@ -100,8 +103,8 @@ const describeCases = (config) => {
 							if (!options.context) options.context = testDirectory;
 							if (!options.entry) options.entry = "./index.js";
 							if (!options.output) options.output = {};
-							if (runInNodeAndWebEnv) {
-								// running in node and web requires ESM output
+							if (isUniversal) {
+								// universal target requires ESM output to run in node and web
 								if (!options.experiments) options.experiments = {};
 								if (options.experiments.outputModule === undefined) {
 									options.experiments.outputModule = true;
@@ -294,8 +297,8 @@ const describeCases = (config) => {
 											/** @type {EXPECTED_ANY} */ (_stats.entrypoints).main
 												.assets
 										).map((/** @type {EXPECTED_ANY} */ i) => i.name);
-										// node+web expands to one runner per target; pick by its target
-										const isWeb = runInNodeAndWebEnv
+										// universal expands to one runner per target; pick by its target
+										const isWeb = isUniversal
 											? runner.hasWebTarget()
 											: config.target === "web";
 										if (isWeb) {
