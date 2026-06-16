@@ -8040,6 +8040,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-has-own": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports 'Object.hasOwn'.",
+        "multiple": false,
+        "path": "output.environment.hasOwn",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports 'Object.hasOwn'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-import-meta-dirname-and-filename": Object {
     "configs": Array [
       Object {
@@ -8115,6 +8128,32 @@ Object {
       },
     ],
     "description": "The environment supports optional chaining ('obj?.a' or 'obj?.()').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-spread": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').",
+        "multiple": false,
+        "path": "output.environment.spread",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-symbol": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports 'Symbol' (and well-known symbols like 'Symbol.toStringTag').",
+        "multiple": false,
+        "path": "output.environment.symbol",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports 'Symbol' (and well-known symbols like 'Symbol.toStringTag').",
     "multiple": false,
     "simpleType": "boolean",
   },

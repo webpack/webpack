@@ -7032,6 +7032,11 @@ declare interface Environment {
 	globalThis?: boolean;
 
 	/**
+	 * The environment supports 'Object.hasOwn'.
+	 */
+	hasOwn?: boolean;
+
+	/**
 	 * The environment supports `import.meta.dirname` and `import.meta.filename`.
 	 */
 	importMetaDirnameAndFilename?: boolean;
@@ -7060,6 +7065,16 @@ declare interface Environment {
 	 * The environment supports optional chaining ('obj?.a' or 'obj?.()').
 	 */
 	optionalChaining?: boolean;
+
+	/**
+	 * The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').
+	 */
+	spread?: boolean;
+
+	/**
+	 * The environment supports 'Symbol' (and well-known symbols like 'Symbol.toStringTag').
+	 */
+	symbol?: boolean;
 
 	/**
 	 * The environment supports template literals.
@@ -22061,6 +22076,9 @@ declare abstract class RuntimeTemplate {
 	supportsArrowFunction(): boolean;
 	supportsAsyncFunction(): boolean;
 	supportsOptionalChaining(): boolean;
+	supportsSpread(): boolean;
+	supportsObjectHasOwn(): boolean;
+	supportsSymbol(): boolean;
 	supportsForOf(): boolean;
 	supportsDestructuring(): boolean;
 	supportsBigIntLiteral(): boolean;
@@ -22115,6 +22133,18 @@ declare abstract class RuntimeTemplate {
 	 * the fallback, so it must be side-effect free.
 	 */
 	optionalChaining(object: string, access: string): string;
+
+	/**
+	 * Renders an object-literal method, using method shorthand when supported
+	 * and falling back to a `prop: function/arrow` property otherwise.
+	 */
+	method(prop: string, args: string, body: string | string[]): string;
+
+	/**
+	 * Returns an own-property check, using `Object.hasOwn` when supported and
+	 * falling back to `Object.prototype.hasOwnProperty.call` otherwise.
+	 */
+	objectHasOwn(object: string, property: string): string;
 
 	/**
 	 * Returns destructure array code.

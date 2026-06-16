@@ -7,6 +7,7 @@ const path = require("path");
 const util = require("util");
 const vm = require("vm");
 const rimraf = require("rimraf");
+const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");
 const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
 
 const readdir = util.promisify(fs.readdir);
@@ -47,7 +48,11 @@ describe("Persistent Caching", () => {
 			library: { type: "commonjs-module", export: "default" },
 			path: outputPath,
 			// bundles are executed in this Node.js process; avoid `?.` on Node < 14
-			environment: { optionalChaining: supportsOptionalChaining() }
+			// and `Object.hasOwn` on Node < 16.9
+			environment: {
+				optionalChaining: supportsOptionalChaining(),
+				hasOwn: supportsObjectHasOwn()
+			}
 		}
 	};
 

@@ -32,6 +32,7 @@ const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
 const prepareOptions = require("./helpers/prepareOptions");
+const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");
 const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
 
 const casesPath = path.join(__dirname, "configCases");
@@ -151,6 +152,19 @@ const describeCases = (config) => {
 										options.output.environment.optionalChaining === undefined
 									) {
 										options.output.environment.optionalChaining = false;
+									}
+								}
+								// generated runtime runs in this Node.js process; avoid
+								// `Object.hasOwn` on Node < 16.9
+								if (
+									category.name !== "ecmaVersion" &&
+									!supportsObjectHasOwn()
+								) {
+									if (!options.output.environment) {
+										options.output.environment = {};
+									}
+									if (options.output.environment.hasOwn === undefined) {
+										options.output.environment.hasOwn = false;
 									}
 								}
 								if (!options.output.path) options.output.path = outputDirectory;

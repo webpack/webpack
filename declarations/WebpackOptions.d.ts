@@ -2648,6 +2648,10 @@ export interface Environment {
 	 */
 	globalThis?: boolean;
 	/**
+	 * The environment supports 'Object.hasOwn'.
+	 */
+	hasOwn?: boolean;
+	/**
 	 * The environment supports `import.meta.dirname` and `import.meta.filename`.
 	 */
 	importMetaDirnameAndFilename?: boolean;
@@ -2671,6 +2675,14 @@ export interface Environment {
 	 * The environment supports optional chaining ('obj?.a' or 'obj?.()').
 	 */
 	optionalChaining?: boolean;
+	/**
+	 * The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').
+	 */
+	spread?: boolean;
+	/**
+	 * The environment supports 'Symbol' (and well-known symbols like 'Symbol.toStringTag').
+	 */
+	symbol?: boolean;
 	/**
 	 * The environment supports template literals.
 	 */

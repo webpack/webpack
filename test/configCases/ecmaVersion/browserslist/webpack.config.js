@@ -18,12 +18,15 @@ module.exports = {
 			  "dynamicImportInWorker": true,
 			  "forOf": true,
 			  "globalThis": true,
+			  "hasOwn": true,
 			  "importMetaDirnameAndFilename": true,
 			  "let": true,
 			  "methodShorthand": true,
 			  "module": true,
 			  "nodePrefixForCoreModules": true,
 			  "optionalChaining": true,
+			  "spread": true,
+			  "symbol": true,
 			  "templateLiteral": true,
 			}
 		`);

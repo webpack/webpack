@@ -1085,6 +1085,10 @@
           "description": "The environment supports 'globalThis'.",
           "type": "boolean"
         },
+        "hasOwn": {
+          "description": "The environment supports 'Object.hasOwn'.",
+          "type": "boolean"
+        },
         "importMetaDirnameAndFilename": {
           "description": "The environment supports `import.meta.dirname` and `import.meta.filename`.",
           "type": "boolean"
@@ -1107,6 +1111,14 @@
         },
         "optionalChaining": {
           "description": "The environment supports optional chaining ('obj?.a' or 'obj?.()').",
+          "type": "boolean"
+        },
+        "spread": {
+          "description": "The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').",
+          "type": "boolean"
+        },
+        "symbol": {
+          "description": "The environment supports 'Symbol' (and well-known symbols like 'Symbol.toStringTag').",
           "type": "boolean"
         },
         "templateLiteral": {
