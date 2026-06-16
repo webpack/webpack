@@ -14,25 +14,25 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 2`] = `
 Object {
-  "btn--info_is-disabled_1": "_1a45088986a4441b80a4",
-  "btn-info_is-disabled": "_1a45088986a4441b80a4",
-  "color-red": "--_1a45088986a4441b80a4",
+  "btn--info_is-disabled_1": "IFi2Y1",
+  "btn-info_is-disabled": "KrqLlq",
+  "color-red": "--DeicrI",
   "foo": "bar",
-  "foo_bar": "_1a45088986a4441b80a4",
+  "foo_bar": "fXKKeh",
   "my-btn-info_is-disabled": "value",
-  "simple": "_1a45088986a4441b80a4",
+  "simple": "BTbMAh",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 3`] = `
 Object {
-  "btn--info_is-disabled_1": "_92db8cf73c3ac16b6115-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_92db8cf73c3ac16b6115-btn-info_is-disabled",
-  "color-red": "--_92db8cf73c3ac16b6115-color-red",
+  "btn--info_is-disabled_1": "_228W8K-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "DhvxvG-btn-info_is-disabled",
+  "color-red": "--_lvU1k-color-red",
   "foo": "bar",
-  "foo_bar": "_92db8cf73c3ac16b6115-foo_bar",
+  "foo_bar": "uKJpHY-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "_92db8cf73c3ac16b6115-simple",
+  "simple": "_0P_xqP-simple",
 }
 `;
 
@@ -86,13 +86,13 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 8`] = `
 Object {
-  "btn--info_is-disabled_1": "_4746c07f4f5c7e136661-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_4746c07f4f5c7e136661-btn-info_is-disabled",
-  "color-red": "--_4746c07f4f5c7e136661-color-red",
+  "btn--info_is-disabled_1": "tgsjdmmcabgyhove-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "bjqahratuciglpyn-btn-info_is-disabled",
+  "color-red": "--bgrnnfrltrvjzeit-color-red",
   "foo": "bar",
-  "foo_bar": "_4746c07f4f5c7e136661-foo_bar",
+  "foo_bar": "bcknxregveukxgtu-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "_4746c07f4f5c7e136661-simple",
+  "simple": "cczbhihlbtjmqesr-simple",
 }
 `;
 
@@ -110,108 +110,36 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 10`] = `
 Object {
-  "btn--info_is-disabled_1": "style_module_css-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "style_module_css-btn-info_is-disabled",
-  "color-red": "--style_module_css-color-red",
+  "btn--info_is-disabled_1": "[fullhash:base64:6]",
+  "btn-info_is-disabled": "[fullhash:base64:6]",
+  "color-red": "--[fullhash:base64:6]",
   "foo": "bar",
-  "foo_bar": "style_module_css-foo_bar",
+  "foo_bar": "[fullhash:base64:6]",
   "my-btn-info_is-disabled": "value",
-  "simple": "style_module_css-simple",
+  "simple": "[fullhash:base64:6]",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 11`] = `
 Object {
-  "btn--info_is-disabled_1": "_78f85885f7219581fae2",
-  "btn-info_is-disabled": "_78f85885f7219581fae2",
-  "color-red": "--_78f85885f7219581fae2",
+  "btn--info_is-disabled_1": "atmlbU",
+  "btn-info_is-disabled": "XEO1Vb",
+  "color-red": "--p8PUOH",
   "foo": "bar",
-  "foo_bar": "_78f85885f7219581fae2",
+  "foo_bar": "XyZGKX",
   "my-btn-info_is-disabled": "value",
-  "simple": "_78f85885f7219581fae2",
+  "simple": "mWsd1f",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 12`] = `
 Object {
-  "btn--info_is-disabled_1": "_185fd11f5c30cd30b4d7-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_185fd11f5c30cd30b4d7-btn-info_is-disabled",
-  "color-red": "--_185fd11f5c30cd30b4d7-color-red",
+  "btn--info_is-disabled_1": "_7kxSk7",
+  "btn-info_is-disabled": "qmGxXU",
+  "color-red": "--pv0ktj",
   "foo": "bar",
-  "foo_bar": "_185fd11f5c30cd30b4d7-foo_bar",
+  "foo_bar": "_7gP9EV",
   "my-btn-info_is-disabled": "value",
-  "simple": "_185fd11f5c30cd30b4d7-simple",
-}
-`;
-
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 13`] = `
-Object {
-  "btn--info_is-disabled_1": "./style.module__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module__btn-info_is-disabled",
-  "color-red": "--./style.module__color-red",
-  "foo": "bar",
-  "foo_bar": "./style.module__foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "simple": "./style.module__simple",
-}
-`;
-
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 14`] = `
-Object {
-  "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
-  "color-red": "--./style.module.css__color-red",
-  "foo": "bar",
-  "foo_bar": "./style.module.css__foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css__simple",
-}
-`;
-
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 15`] = `
-Object {
-  "btn--info_is-disabled_1": "./style.module.css?q#f__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?q#f__btn-info_is-disabled",
-  "color-red": "--./style.module.css?q#f__color-red",
-  "foo": "bar",
-  "foo_bar": "./style.module.css?q#f__foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css?q#f__simple",
-}
-`;
-
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 16`] = `
-Object {
-  "btn--info_is-disabled_1": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
-  "btn-info_is-disabled": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
-  "color-red": "---style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
-  "foo": "bar",
-  "foo_bar": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
-  "my-btn-info_is-disabled": "value",
-  "simple": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
-}
-`;
-
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 17`] = `
-Object {
-  "btn--info_is-disabled_1": "_3593cfd6c0d3a6d04be3-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_3593cfd6c0d3a6d04be3-btn-info_is-disabled",
-  "color-red": "--_3593cfd6c0d3a6d04be3-color-red",
-  "foo": "bar",
-  "foo_bar": "_3593cfd6c0d3a6d04be3-foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "simple": "_3593cfd6c0d3a6d04be3-simple",
-}
-`;
-
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 18`] = `
-Object {
-  "btn--info_is-disabled_1": "__btn--info_is-disabled_1",
-  "btn-info_is-disabled": "__btn-info_is-disabled",
-  "color-red": "--__color-red",
-  "foo": "bar",
-  "foo_bar": "__foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "simple": "__simple",
+  "simple": "kUul3_",
 }
 `;

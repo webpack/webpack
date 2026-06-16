@@ -61,6 +61,24 @@ const common = {
 						}
 					},
 					{
+						resourceQuery: /\?hash-base64-6$/,
+						generator: {
+							localIdentName: "[hash:base64:6]"
+						}
+					},
+					{
+						resourceQuery: /\?hash-6$/,
+						generator: {
+							localIdentName: "[hash:6]"
+						}
+					},
+					{
+						resourceQuery: /\?fullhash-6$/,
+						generator: {
+							localIdentName: "[fullhash:6]"
+						}
+					},
+					{
 						resourceQuery: /\?hash-local-custom$/,
 						generator: {
 							localIdentHashSalt: "salt",
