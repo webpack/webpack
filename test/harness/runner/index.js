@@ -107,6 +107,10 @@ class TestRunner {
 	}
 
 	/**
+	 * Whether the target is universal, i.e. its merged platform is neither
+	 * node- nor web-specific (e.g. `["web", "node"]`, `["web", "electron-main"]`,
+	 * `["web", "node", "webworker"]`), so the same bundle runs once per env.
+	 * TODO simplify once a dedicated `universal` target lands.
 	 * @param {EXPECTED_ANY} webpackOptions webpack options
 	 * @returns {boolean} whether target is universal
 	 */
@@ -759,24 +763,44 @@ class TestRunner {
 					);
 				};
 			}
-			const fetch = async (/** @type {string} */ url) => {
+			const fetch = async (/** @type {string | URL} */ url) => {
 				try {
+					// universal targets pass a `URL` (often `file:`) to fetch
+					const filePath =
+						url instanceof URL || String(url).startsWith("file:")
+							? fileURLToPath(url)
+							: urlToPath(String(url), this.outputDirectory);
 					const buffer = await new Promise((resolve, reject) => {
-						fs.readFile(urlToPath(url, this.outputDirectory), (err, b) =>
-							err ? reject(err) : resolve(b)
-						);
+						fs.readFile(filePath, (err, b) => (err ? reject(err) : resolve(b)));
 					});
+					// `instantiateStreaming` needs a real Response with a wasm mime type
+					if (typeof Response !== "undefined") {
+						const contentType = filePath.endsWith(".wasm")
+							? "application/wasm"
+							: filePath.endsWith(".json")
+								? "application/json"
+								: "text/plain";
+						return new Response(buffer, {
+							status: 200,
+							headers: { "Content-Type": contentType }
+						});
+					}
 					return {
 						status: 200,
 						ok: true,
+						headers: { get: () => "application/wasm" },
+						arrayBuffer: async () => buffer,
+						text: async () => buffer.toString("utf8"),
 						json: async () => JSON.parse(buffer.toString("utf8"))
 					};
 				} catch (/** @type {EXPECTED_ANY} */ err) {
 					if (err.code === "ENOENT") {
-						return {
-							status: 404,
-							ok: false
-						};
+						return typeof Response !== "undefined"
+							? new Response(null, { status: 404 })
+							: {
+									status: 404,
+									ok: false
+								};
 					}
 					throw err;
 				}

@@ -6,7 +6,7 @@ require("./helpers/warmup-webpack");
 /**
  * @typedef {object} SuiteConfig
  * @property {string} name suite name
- * @property {string=} target target
+ * @property {string | string[]=} target target
  */
 /**
  * @typedef {object} HotTestConfig
@@ -39,8 +39,20 @@ const categories = fs
  * @param {SuiteConfig} config suite config
  */
 const describeCases = (config) => {
+	// universal targets run the same (ESM) bundle once per environment; the
+	// suite forces module output, so probe with `output.module` set
+	const isUniversal = TestRunner.isUniversalTarget({
+		target: config.target,
+		output: { module: true }
+	});
+
 	describe(config.name, () => {
 		for (const category of categories) {
+			// `universal` cases only run in the universal suite, and vice versa.
+			if ((category.name === "universal") !== isUniversal) {
+				continue;
+			}
+
 			describe(category.name, () => {
 				for (const testName of category.tests) {
 					const testDirectory = path.join(casesPath, category.name, testName);
@@ -92,6 +104,19 @@ const describeCases = (config) => {
 							if (!options.context) options.context = testDirectory;
 							if (!options.entry) options.entry = "./index.js";
 							if (!options.output) options.output = {};
+							if (isUniversal) {
+								// universal target requires ESM output to run in node and web
+								if (!options.experiments) options.experiments = {};
+								if (options.experiments.outputModule === undefined) {
+									options.experiments.outputModule = true;
+								}
+								if (options.output.module === undefined) {
+									options.output.module = true;
+								}
+								if (options.output.chunkFormat === undefined) {
+									options.output.chunkFormat = "module";
+								}
+							}
 							if (!options.output.environment) options.output.environment = {};
 							if (
 								options.output.environment.optionalChaining === undefined &&
@@ -116,7 +141,11 @@ const describeCases = (config) => {
 								}`;
 							}
 							if (!options.output.chunkFilename) {
-								options.output.chunkFilename = "[name].chunk.[fullhash].js";
+								options.output.chunkFilename = `[name].chunk.[fullhash]${
+									options.experiments && options.experiments.outputModule
+										? ".mjs"
+										: ".js"
+								}`;
 							}
 							if (options.output.pathinfo === undefined) {
 								options.output.pathinfo = true;
@@ -125,7 +154,12 @@ const describeCases = (config) => {
 								options.output.publicPath = "https://test.cases/path/";
 							}
 							if (options.output.library === undefined) {
-								options.output.library = { type: "commonjs2" };
+								options.output.library = {
+									type:
+										options.experiments && options.experiments.outputModule
+											? "module"
+											: "commonjs2"
+								};
 							}
 							if (!options.optimization) options.optimization = {};
 							if (!options.optimization.moduleIds) {
@@ -271,7 +305,11 @@ const describeCases = (config) => {
 											/** @type {EXPECTED_ANY} */ (_stats.entrypoints).main
 												.assets
 										).map((/** @type {EXPECTED_ANY} */ i) => i.name);
-										if (config.target === "web") {
+										// universal expands to one runner per target; pick by its target
+										const isWeb = isUniversal
+											? runner.hasWebTarget()
+											: config.target === "web";
+										if (isWeb) {
 											return bundles;
 										}
 										return [bundles[bundles.length - 1]];
