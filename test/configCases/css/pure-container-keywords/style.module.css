@@ -1,0 +1,35 @@
+.box {
+	color: red;
+}
+
+/* `@container` names of length 2/3/4/7 each exercise one arm of the parser's
+   container-keyword byte check (a name is the first prelude ident). */
+@container xy (min-width: 100px) {
+	.box {
+		color: blue;
+	}
+}
+
+@container abc (min-width: 100px) {
+	.box {
+		color: green;
+	}
+}
+
+@container wrap (min-width: 100px) {
+	.box {
+		color: pink;
+	}
+}
+
+@container sidebar (min-width: 100px) {
+	.box {
+		color: black;
+	}
+}
+
+/* A non-fast-path magic comment (multiple keys, regex + object values) drives
+   the `vm.runInContext` parse path; `webpackIgnore: true` keeps the URL as-is. */
+.icon {
+	background: /* webpackIgnore: true, re: /x/, obj: { y: 1 } */ url("./ignored.png");
+}
