@@ -22077,10 +22077,7 @@ declare abstract class RuntimeTemplate {
 	isNeutralPlatform(): boolean;
 
 	/**
-	 * Whether the bundle targets multiple platforms at once (universal, e.g.
-	 * `["node", "web"]` with `output.module`), so no platform's globals are
-	 * guaranteed. Such targets resolve to neutral `null` platform flags; same
-	 * determination as `isUniversalTarget` in `WebpackOptionsApply`.
+	 * Whether the bundle targets node and web at once (universal `["node", "web"]` + `output.module`), like `isUniversalTarget` in `WebpackOptionsApply`.
 	 */
 	isUniversalTarget(): boolean;
 	supportsConst(): boolean;
@@ -22148,15 +22145,7 @@ declare abstract class RuntimeTemplate {
 	optionalChaining(object: string, access: string): string;
 
 	/**
-	 * Reads a node builtin via `process.getBuiltinModule()` for bundles that may
-	 * also run outside node (universal `["node", "web"]`), avoiding a static
-	 * `import` that would crash loading in the browser. When the target node
-	 * version is known to expose the getter it is called directly; otherwise a
-	 * `typeof` probe guards it. `require` is not an option here: universal output
-	 * is ESM, where `require` doesn't exist. The result is falsy off node (and on
-	 * node <22.3, which has no synchronous ESM builtin access), so callers must
-	 * only use it on the node path. Mirrors the universal node-commonjs externals
-	 * loader.
+	 * Reads a node builtin via `process.getBuiltinModule()`, guarded to stay falsy off node so universal `["node", "web"]` bundles don't crash (also falsy on node <22.3).
 	 */
 	getBuiltinModule(request: string, access?: string): string;
 

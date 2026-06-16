@@ -18,9 +18,7 @@ it("should load node built-in modules in a universal bundle", () => {
 });
 
 it("should resolve a node-commonjs external at runtime in an ESM bundle", () => {
-	// the bundle is `.mjs` (ESM); `os` is the universal node-commonjs external,
-	// resolved through the generated getter (createRequire/getBuiltinModule), so a
-	// working result proves the getter runs in a real ECMAScript module
+	// `os` is the universal node-commonjs external; a working result proves the getter runs in real ESM
 	expect(typeof os.platform()).toBe("string");
 	expect(Array.isArray(os.cpus())).toBe(true);
 });
@@ -36,8 +34,7 @@ it("should resolve the builtin getter based on node support", () => {
 		expect(header).toContain("process.getBuiltinModule(");
 		expect(header).not.toContain('typeof process.getBuiltinModule === "function"');
 	} else {
-		// unknown/old node -> guard the getter with a `typeof` probe; no `require`
-		// (it doesn't exist in ESM), so it stays falsy on node <22.3
+		// unknown/old node -> `typeof`-guarded getter (no `require`; falsy on node <22.3)
 		expect(header).toContain('typeof process.getBuiltinModule === "function"');
 		expect(header).toContain("createRequire(import.meta.url)");
 		expect(header).not.toContain("catch");
