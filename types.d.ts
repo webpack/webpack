@@ -26001,6 +26001,7 @@ declare namespace exports {
 		export let toBinary: "__webpack_require__.tb";
 		export let uncaughtErrorHandler: "__webpack_require__.oe";
 		export let wasmInstances: "__webpack_require__.w";
+		export let worker: "__webpack_require__.wc";
 	}
 	export const UsageState: Readonly<{
 		Unused: 0;
