@@ -8105,6 +8105,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-node-builtin-module-getter": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports \`process.getBuiltinModule()\` to synchronously load Node.js core modules.",
+        "multiple": false,
+        "path": "output.environment.nodeBuiltinModuleGetter",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports \`process.getBuiltinModule()\` to synchronously load Node.js core modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-node-prefix-for-core-modules": Object {
     "configs": Array [
       Object {

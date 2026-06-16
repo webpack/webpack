@@ -23,6 +23,7 @@ module.exports = {
 			  "let": true,
 			  "methodShorthand": true,
 			  "module": true,
+			  "nodeBuiltinModuleGetter": true,
 			  "nodePrefixForCoreModules": true,
 			  "optionalChaining": true,
 			  "spread": true,
