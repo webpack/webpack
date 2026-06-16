@@ -22075,6 +22075,14 @@ declare abstract class RuntimeTemplate {
 	isIIFE(): boolean;
 	isModule(): boolean;
 	isNeutralPlatform(): boolean;
+
+	/**
+	 * Whether the bundle may run on both node and web (universal `["node", "web"]`),
+	 * so neither side's globals are guaranteed. `compiler.platform` flags are `null`
+	 * for such targets, so this reads the externals presets, where webpack resolves
+	 * the universal determination (`outputModule && targetProperties[x] === null`).
+	 */
+	isUniversalNodeWeb(): boolean;
 	supportsConst(): boolean;
 	supportsLet(): boolean;
 	supportsMethodShorthand(): boolean;
