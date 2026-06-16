@@ -22143,10 +22143,11 @@ declare abstract class RuntimeTemplate {
 	 * Reads a node builtin for bundles that may also run outside node (universal
 	 * `["node", "web"]`), avoiding a static `import` that would break loading
 	 * elsewhere. When the target node version is known to expose
-	 * `process.getBuiltinModule()` it is used directly; otherwise it is tried first
-	 * and falls back to `createRequire`, wrapped in `try/catch` so a non-node (or
-	 * old-node) load can't throw. Guarded by `typeof process`, so the result is
-	 * falsy off node and callers must only use it on the node path.
+	 * `process.getBuiltinModule()` it is used directly; otherwise it prefers that
+	 * getter and falls back to `createRequire`. `typeof` guards (never throwing on
+	 * undeclared names) keep the expression safe where `process`, the getter, or
+	 * `require` are absent, so the result is falsy off node and callers must only
+	 * use it on the node path.
 	 */
 	getBuiltinModule(request: string, access?: string): string;
 
