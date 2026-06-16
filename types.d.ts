@@ -22135,6 +22135,15 @@ declare abstract class RuntimeTemplate {
 	optionalChaining(object: string, access: string): string;
 
 	/**
+	 * Reads a node builtin via `process.getBuiltinModule` for bundles that may also
+	 * run outside node (universal `["node", "web"]`), avoiding a static `import`
+	 * that would break loading elsewhere. Guards `process` (absent in the browser)
+	 * and old node lacking `getBuiltinModule`, so the result is falsy off node and
+	 * callers must only use it on the node path.
+	 */
+	getBuiltinModule(request: string, access?: string): string;
+
+	/**
 	 * Renders an object-literal method, using method shorthand when supported
 	 * and falling back to a `prop: function/arrow` property otherwise.
 	 */
