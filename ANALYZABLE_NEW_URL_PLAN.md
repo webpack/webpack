@@ -8,27 +8,22 @@ narrow: only the `new URL("./asset", import.meta.url)` asset-reference pattern.
 
 Source:
 
-```js
+```text
 const u = new URL("./asset.png", import.meta.url);
 ```
 
 What webpack emits today (`lib/dependencies/URLDependency.js:110-162`):
 
-```js
+```text
 // non-relative (default)
-const u = new URL(
-	/* asset import */ __webpack_require__(/*id*/ 123),
-	__webpack_require__.b
-);
+const u = new URL(/* asset import */ __webpack_require__(/*id*/ 123), __webpack_require__.b);
 // url: "relative"
-const u = new /* asset import */ __webpack_require__.U(
-	__webpack_require__(/*id*/ 123)
-);
+const u = new /* asset import */ __webpack_require__.U(__webpack_require__(/*id*/ 123));
 ```
 
 and the referenced asset module exports (`lib/asset/AssetGenerator.js:393-399, 645-660`):
 
-```js
+```text
 module.exports = __webpack_require__.p + "asset.<hash>.png";
 ```
 
@@ -43,7 +38,7 @@ This is **not statically analyzable** by other tools because:
 
 The canonical, universally-recognized analyzable form is the **source form itself**:
 
-```js
+```text
 const u = new URL("./asset.<hash>.png", import.meta.url);
 ```
 
@@ -127,7 +122,7 @@ expression remains the recognized pattern.)
 - [ ] In the analyzable branch, replace the **outerRange** (the whole `new URL(...)`,
       not just the args) so we control both arguments:
       `     new URL(/* asset import */ <JSON.stringify(specifier)>, import.meta.url)
-    `
+  `
       Use the configured `import.meta` name if webpack renames it; otherwise literal
       `import.meta.url`.
 - [ ] Do **not** add `RuntimeGlobals.baseURI`, `RuntimeGlobals.relativeUrl`, or
