@@ -34,11 +34,14 @@ it("should resolve the builtin getter based on node support", () => {
 	if (__STATS_I__ === 0) {
 		// node version known to expose `process.getBuiltinModule()` -> call it directly
 		expect(header).toContain("process.getBuiltinModule(");
-		expect(header).not.toContain('typeof process.getBuiltinModule === "function"');
-	} else {
-		// unknown/old node -> probe the getter with `typeof` (no `require`, ESM-safe)
-		expect(header).toContain('typeof process.getBuiltinModule === "function"');
-		expect(header).toContain("createRequire(import.meta.url)");
 		expect(header).not.toContain("require(");
+		expect(header).not.toContain("catch");
+	} else {
+		// unknown/old node -> probe the getter, else fall back to `createRequire` in a
+		// try/catch that swallows the ESM/browser ReferenceError `require` throws
+		expect(header).toContain('typeof process.getBuiltinModule === "function"');
+		expect(header).toContain("catch");
+		expect(header).toContain("require(");
+		expect(header).toContain("createRequire(import.meta.url)");
 	}
 });
