@@ -76,9 +76,6 @@ module.exports = x({  });
   \\\\****************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   HomeLayout: () => (/* binding */ HomeLayout)
-/* harmony export */ });
 /* harmony import */ var externals0__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! externals0 */ 2);
 
 
@@ -100,6 +97,10 @@ console.log({ HomeLayout });
             console.log({ external_externals3_namespaceObject });
 }
 
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"HomeLayout\\", 0, /* binding */ HomeLayout
+/* harmony export */ ]);
 
 
 /***/ })
