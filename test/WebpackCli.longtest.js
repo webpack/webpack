@@ -168,4 +168,63 @@ describe("WebpackCLI integration", () => {
 		);
 		expect(errors).toMatch(/Expected: 'production'/);
 	});
+
+	// `webpack.defineConfig` is a runtime identity; the user config requires the
+	// real webpack while the CLI builds against the mock, so the capture proves
+	// every config shape is loaded and resolved end-to-end through webpack-cli.
+	const CONFIG = path.resolve(__dirname, "fixtures/webpack-cli/define-config");
+	const defineConfigCase = (/** @type {string} */ file) =>
+		run(["--config", path.join(CONFIG, file)]);
+
+	it("loads a defineConfig object configuration", async () => {
+		const { config } = await defineConfigCase("object.js");
+		expect(config.name).toBe("object");
+	});
+
+	it("loads a defineConfig multi-compiler configuration", async () => {
+		const { config } = await defineConfigCase("multi.js");
+		expect(config.map((/** @type {EXPECTED_ANY} */ c) => c.name)).toEqual([
+			"first",
+			"second"
+		]);
+	});
+
+	it("loads a defineConfig function configuration", async () => {
+		const { config } = await defineConfigCase("function.js");
+		expect(config.name).toBe("function");
+	});
+
+	it("loads a defineConfig function returning an array", async () => {
+		const { config } = await defineConfigCase("function-multi.js");
+		expect(config.map((/** @type {EXPECTED_ANY} */ c) => c.name)).toEqual([
+			"first",
+			"second"
+		]);
+	});
+
+	it("loads a defineConfig async function configuration", async () => {
+		const { config } = await defineConfigCase("async-function.js");
+		expect(config.name).toBe("async-function");
+	});
+
+	it("loads a defineConfig array of functions configuration", async () => {
+		const { config } = await defineConfigCase("array-functions.js");
+		expect(config.map((/** @type {EXPECTED_ANY} */ c) => c.name)).toEqual([
+			"first",
+			"second"
+		]);
+	});
+
+	it("loads a defineConfig promise configuration", async () => {
+		const { config } = await defineConfigCase("promise.js");
+		expect(config.name).toBe("promise");
+	});
+
+	it("loads a defineConfig promise returning an array", async () => {
+		const { config } = await defineConfigCase("promise-multi.js");
+		expect(config.map((/** @type {EXPECTED_ANY} */ c) => c.name)).toEqual([
+			"first",
+			"second"
+		]);
+	});
 });
