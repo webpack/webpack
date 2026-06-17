@@ -6864,6 +6864,7 @@ declare class EntryOptionPlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
+	static getHooks(compiler: Compiler): EntryOptionPluginHooks;
 
 	/**
 	 * Apply entry option.
@@ -6882,6 +6883,15 @@ declare class EntryOptionPlugin {
 		name: string,
 		desc: EntryDescriptionNormalized
 	): EntryOptions;
+}
+declare interface EntryOptionPluginHooks {
+	/**
+	 * transform an entry into a different request (e.g. wrap a non-HTML entry in a synthetic HTML module); return `undefined` to keep the default behavior
+	 */
+	entry: SyncBailHook<
+		[string, string, EntryDescriptionNormalized],
+		undefined | string
+	>;
 }
 type EntryOptions = { name?: string } & Omit<
 	EntryDescriptionNormalized,
