@@ -7039,6 +7039,11 @@ declare interface Environment {
 	module?: boolean;
 
 	/**
+	 * The environment supports `process.getBuiltinModule()` to synchronously load Node.js core modules.
+	 */
+	nodeBuiltinModuleGetter?: boolean;
+
+	/**
 	 * The environment supports `node:` prefix for Node.js core modules.
 	 */
 	nodePrefixForCoreModules?: boolean;
@@ -22052,6 +22057,11 @@ declare abstract class RuntimeTemplate {
 	isIIFE(): boolean;
 	isModule(): boolean;
 	isNeutralPlatform(): boolean;
+
+	/**
+	 * Whether the bundle targets node and web at once (universal `["node", "web"]` + `output.module`), like `isUniversalTarget` in `WebpackOptionsApply`.
+	 */
+	isUniversalTarget(): boolean;
 	supportsConst(): boolean;
 	supportsLet(): boolean;
 	supportsMethodShorthand(): boolean;
@@ -22115,6 +22125,11 @@ declare abstract class RuntimeTemplate {
 	 * the fallback, so it must be side-effect free.
 	 */
 	optionalChaining(object: string, access: string): string;
+
+	/**
+	 * Reads a node builtin via `process.getBuiltinModule()`, guarded to stay falsy off node so universal `["node", "web"]` bundles don't crash (also falsy on node <22.3).
+	 */
+	getBuiltinModule(request: string, access?: string): string;
 
 	/**
 	 * Renders an object-literal method, using method shorthand when supported
@@ -25983,6 +25998,7 @@ declare namespace exports {
 		export let toBinary: "__webpack_require__.tb";
 		export let uncaughtErrorHandler: "__webpack_require__.oe";
 		export let wasmInstances: "__webpack_require__.w";
+		export let worker: "__webpack_require__.wc";
 	}
 	export const UsageState: Readonly<{
 		Unused: 0;
