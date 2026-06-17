@@ -3175,10 +3175,6 @@ declare interface ColorsOptions {
 	 */
 	useColor?: boolean;
 }
-declare interface CommentCssParser {
-	value: string;
-	range: [number, number];
-}
 type CommentJavascriptParser = CommentImport & {
 	start: number;
 	end: number;
@@ -5657,21 +5653,7 @@ declare abstract class CssParser extends ParserClass {
 		 */
 		defaultMode?: "global" | "auto" | "pure" | "local";
 	};
-	comments?: CommentCssParser[];
 	magicCommentContext: ContextImport;
-
-	/**
-	 * Returns comments in the range.
-	 */
-	getComments(range: [number, number]): CommentCssParser[];
-
-	/**
-	 * Parses comment options.
-	 */
-	parseCommentOptions(range: [number, number]): {
-		options: null | Record<string, any>;
-		errors: null | (Error & { comment: CommentCssParser })[];
-	};
 }
 
 /**
