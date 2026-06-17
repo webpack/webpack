@@ -25,13 +25,32 @@ const supportsWebpackCli =
 			? minor > reqMinor
 			: patch >= reqPatch;
 
+// Shape captured by mock-webpack: the mock schema's synthetic flags plus the
+// `name`/`mode` the defineConfig fixtures set. `pattern` is a RegExp serialized
+// to a plain marker by the JSON round-trip.
+/**
+ * @typedef {object} CapturedConfig
+ * @property {string=} name
+ * @property {string=} mode
+ * @property {boolean=} flag
+ * @property {number=} count
+ * @property {string=} output
+ * @property {{ source: string, flags: string }=} pattern
+ * @property {("info" | "warn")=} level
+ * @property {string[]=} list
+ * @property {boolean=} boolConst
+ * @property {number=} numConst
+ * @property {string=} whenProd
+ * @property {boolean=} whenDev
+ */
+
 // Runs webpack-cli in-process against a mock webpack module injected via the
 // documented WEBPACK_PACKAGE env var (webpack-cli loads webpack through a native
 // import jest.mock cannot intercept). process.exit/console.error are spied so a
 // validation failure surfaces as an exit code plus the captured messages.
 /**
  * @param {string[]} args args
- * @returns {Promise<{ config: Record<string, EXPECTED_ANY>, exitCode: number, errors: string }>} result
+ * @returns {Promise<{ config: CapturedConfig, exitCode: number, errors: string }>} result
  */
 const run = async (args) => {
 	const dir = fs.mkdtempSync(path.join(os.tmpdir(), "wp-cli-"));
@@ -173,58 +192,82 @@ describe("WebpackCLI integration", () => {
 	// real webpack while the CLI builds against the mock, so the capture proves
 	// every config shape is loaded and resolved end-to-end through webpack-cli.
 	const CONFIG = path.resolve(__dirname, "fixtures/webpack-cli/define-config");
-	const defineConfigCase = (/** @type {string} */ file) =>
-		run(["--config", path.join(CONFIG, file)]);
+
+	/**
+	 * @param {string} file fixture file name in the define-config directory
+	 * @param {string[]=} args extra cli args prepended before --config
+	 * @returns {Promise<CapturedConfig>} the single resolved config
+	 */
+	const loadConfig = async (file, args = []) =>
+		(await run([...args, "--config", path.join(CONFIG, file)])).config;
+
+	/**
+	 * @param {string} file fixture file name in the define-config directory
+	 * @param {string[]=} args extra cli args prepended before --config
+	 * @returns {Promise<CapturedConfig[]>} the resolved multi-compiler config
+	 */
+	const loadMultiConfig = async (file, args) =>
+		/** @type {CapturedConfig[]} */ (
+			/** @type {unknown} */ (await loadConfig(file, args))
+		);
 
 	it("loads a defineConfig object configuration", async () => {
-		const { config } = await defineConfigCase("object.js");
+		const config = await loadConfig("object.js");
 		expect(config.name).toBe("object");
 	});
 
 	it("loads a defineConfig multi-compiler configuration", async () => {
-		const { config } = await defineConfigCase("multi.js");
-		expect(config.map((/** @type {EXPECTED_ANY} */ c) => c.name)).toEqual([
-			"first",
-			"second"
-		]);
+		const config = await loadMultiConfig("multi.js");
+		expect(config.map((c) => c.name)).toEqual(["first", "second"]);
 	});
 
 	it("loads a defineConfig function configuration", async () => {
-		const { config } = await defineConfigCase("function.js");
+		const config = await loadConfig("function.js");
 		expect(config.name).toBe("function");
 	});
 
 	it("loads a defineConfig function returning an array", async () => {
-		const { config } = await defineConfigCase("function-multi.js");
-		expect(config.map((/** @type {EXPECTED_ANY} */ c) => c.name)).toEqual([
-			"first",
-			"second"
-		]);
+		const config = await loadMultiConfig("function-multi.js");
+		expect(config.map((c) => c.name)).toEqual(["first", "second"]);
 	});
 
 	it("loads a defineConfig async function configuration", async () => {
-		const { config } = await defineConfigCase("async-function.js");
+		const config = await loadConfig("async-function.js");
 		expect(config.name).toBe("async-function");
 	});
 
 	it("loads a defineConfig array of functions configuration", async () => {
-		const { config } = await defineConfigCase("array-functions.js");
-		expect(config.map((/** @type {EXPECTED_ANY} */ c) => c.name)).toEqual([
-			"first",
-			"second"
-		]);
+		const config = await loadMultiConfig("array-functions.js");
+		expect(config.map((c) => c.name)).toEqual(["first", "second"]);
 	});
 
 	it("loads a defineConfig promise configuration", async () => {
-		const { config } = await defineConfigCase("promise.js");
+		const config = await loadConfig("promise.js");
 		expect(config.name).toBe("promise");
 	});
 
 	it("loads a defineConfig promise returning an array", async () => {
-		const { config } = await defineConfigCase("promise-multi.js");
-		expect(config.map((/** @type {EXPECTED_ANY} */ c) => c.name)).toEqual([
-			"first",
-			"second"
+		const config = await loadMultiConfig("promise-multi.js");
+		expect(config.map((c) => c.name)).toEqual(["first", "second"]);
+	});
+
+	it("threads --env and argv into a defineConfig function", async () => {
+		const config = await loadConfig("env-args.js", [
+			"--env",
+			"name=demo",
+			"--mode",
+			"production"
 		]);
+		expect(config.name).toBe("demo:production");
+	});
+
+	it("threads --env into a defineConfig function returning an array", async () => {
+		const config = await loadMultiConfig("env-args-multi.js", [
+			"--env",
+			"first=a",
+			"--env",
+			"second=b"
+		]);
+		expect(config.map((c) => c.name)).toEqual(["a", "b"]);
 	});
 });
