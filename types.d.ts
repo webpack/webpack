@@ -5805,12 +5805,12 @@ declare abstract class DependenciesBlock {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 }
 declare interface DependenciesBlockLike {
 	dependencies: Dependency[];
@@ -5952,12 +5952,12 @@ declare class Dependency {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 	module: any;
 	get disconnect(): any;
 	static NO_EXPORTS_REFERENCED: string[][];
@@ -9226,12 +9226,12 @@ declare abstract class HarmonyStarExportsList {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: StarListSerializerContext): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: StarListDeserializerContext): void;
 }
 declare class Hash {
 	constructor();
@@ -9316,6 +9316,13 @@ declare interface HashedModuleIdsPluginOptions {
 	 */
 	hashFunction?: string | typeof Hash;
 }
+type Head<T extends ReadonlyArray<any>> = T extends readonly [infer H, ...any[]]
+	? H
+	: T extends readonly []
+		? any
+		: T extends (infer E)[]
+			? E
+			: never;
 
 /**
  * Base class for runtime modules that only emit helper functions and do not
@@ -10052,12 +10059,12 @@ declare class InitFragment<GenerateContext> {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(context: ObjectSerializerContext): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContext): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 
 	/**
 	 * Adds the provided source to the init fragment.
@@ -10085,8 +10092,8 @@ declare abstract class InlinedValue {
 	value?: null | string | number | boolean;
 	renderLiteral(): string;
 	render(comment: string): string;
-	serialize(__0: ObjectSerializerContext): void;
-	deserialize(__0: ObjectDeserializerContext): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 }
 type InlinedValueKind = "string" | "number" | "boolean" | "undefined" | "null";
 declare interface InnerGraphUtils {
@@ -13685,7 +13692,9 @@ declare class LazySet<T> {
 	 * Serializes the fully materialized set contents into webpack's object
 	 * serialization stream.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(
+		__0: ObjectSerializerContextObjectMiddlewareObject_4<(number | T)[]>
+	): void;
 
 	/**
 	 * Returns the default iterator over values after forcing pending merges.
@@ -13695,7 +13704,9 @@ declare class LazySet<T> {
 	/**
 	 * Restores a `LazySet` from serialized item data.
 	 */
-	static deserialize<T>(__0: ObjectDeserializerContext): LazySet<T>;
+	static deserialize<T>(
+		__0: ObjectDeserializerContextObjectMiddlewareObject_3<(number | T)[]>
+	): LazySet<T>;
 }
 declare interface LibIdentOptions {
 	/**
@@ -14205,12 +14216,12 @@ declare abstract class LocalModule {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(context: ObjectSerializerContext): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_2): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContext): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_1): void;
 }
 declare interface LogEntry {
 	type:
@@ -16672,7 +16683,9 @@ declare class NormalModule extends Module {
 	static getCompilationHooks(
 		compilation: Compilation
 	): NormalModuleCompilationHooks;
-	static deserialize(context: ObjectDeserializerContext): NormalModule;
+	static deserialize(
+		context: ObjectDeserializerContextObjectMiddlewareObject_4
+	): NormalModule;
 
 	/**
 	 * Gets source basic types.
@@ -17453,8 +17466,36 @@ declare interface ObjectConfiguration {
 /**
  * Updates set size using the provided set.
  */
-declare interface ObjectDeserializerContext {
+declare interface ObjectDeserializerContextObjectMiddlewareObject_1 {
+	read: () => string;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_3<[number, boolean]>;
+	setCircularReference: (value: ReferenceableItem) => void;
+}
+declare namespace ObjectDeserializerContextObjectMiddlewareObject_2 {
+	export let read: () => any;
+	export let rest: ObjectDeserializerContextObjectMiddlewareObject_3<
+		ReadonlyArray<any>
+	>;
+	export let setCircularReference: (value: ReferenceableItem) => void;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface ObjectDeserializerContextObjectMiddlewareObject_3<
+	T extends ReadonlyArray<any> = ReadonlyArray<any>
+> {
+	read: () => Head<T>;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_3<Tail<T>>;
+	setCircularReference: (value: ReferenceableItem) => void;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface ObjectDeserializerContextObjectMiddlewareObject_4 {
 	read: () => any;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_3<ReadonlyArray<any>>;
 	setCircularReference: (value: ReferenceableItem) => void;
 }
 
@@ -17501,15 +17542,92 @@ declare interface ObjectEncodingOptionsTypes {
  * Updates set size using the provided set.
  */
 declare interface ObjectSerializer {
-	serialize: (value: any, context: ObjectSerializerContext) => void;
-	deserialize: (context: ObjectDeserializerContext) => any;
+	serialize: (
+		value: any,
+		context: ObjectSerializerContextObjectMiddlewareObject_4<any>
+	) => void;
+	deserialize: (
+		context: ObjectDeserializerContextObjectMiddlewareObject_3<any>
+	) => any;
 }
 
 /**
  * Updates set size using the provided set.
  */
-declare interface ObjectSerializerContext {
-	write: (value?: any) => void;
+declare interface ObjectSerializerContextObjectMiddlewareObject_1 {
+	write: (
+		value: RestoreProvidedDataExports[]
+	) => ObjectSerializerContextObjectMiddlewareObject_4<
+		[undefined | null | boolean, undefined | boolean, boolean]
+	>;
+	setCircularReference: (value: ReferenceableItem) => void;
+	snapshot: () => ObjectSerializerSnapshot;
+	rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	writeLazy?: (item?: any) => void;
+	writeSeparate?: (
+		item: any,
+		obj?: LazyOptions
+	) => LazyFunction<any, any, any, LazyOptions>;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface ObjectSerializerContextObjectMiddlewareObject_2 {
+	write: (
+		value: string
+	) => ObjectSerializerContextObjectMiddlewareObject_4<[number, boolean]>;
+	setCircularReference: (value: ReferenceableItem) => void;
+	snapshot: () => ObjectSerializerSnapshot;
+	rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	writeLazy?: (item?: any) => void;
+	writeSeparate?: (
+		item: any,
+		obj?: LazyOptions
+	) => LazyFunction<any, any, any, LazyOptions>;
+}
+declare namespace ObjectSerializerContextObjectMiddlewareObject_3 {
+	export let write: (
+		value?: any
+	) => ObjectSerializerContextObjectMiddlewareObject_4<ReadonlyArray<any>>;
+	export let setCircularReference: (value: ReferenceableItem) => void;
+	export let snapshot: () => ObjectSerializerSnapshot;
+	export let rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	export let writeLazy: undefined | ((item?: any) => void);
+	export let writeSeparate:
+		| undefined
+		| ((
+				item: any,
+				obj?: LazyOptions
+		  ) => LazyFunction<any, any, any, LazyOptions>);
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface ObjectSerializerContextObjectMiddlewareObject_4<
+	T extends ReadonlyArray<any> = ReadonlyArray<any>
+> {
+	write: (
+		value: Head<T>
+	) => ObjectSerializerContextObjectMiddlewareObject_4<Tail<T>>;
+	setCircularReference: (value: ReferenceableItem) => void;
+	snapshot: () => ObjectSerializerSnapshot;
+	rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	writeLazy?: (item?: any) => void;
+	writeSeparate?: (
+		item: any,
+		obj?: LazyOptions
+	) => LazyFunction<any, any, any, LazyOptions>;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface ObjectSerializerContextObjectMiddlewareObject_5 {
+	write: (
+		value?: any
+	) => ObjectSerializerContextObjectMiddlewareObject_4<ReadonlyArray<any>>;
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
@@ -21492,7 +21610,7 @@ declare abstract class RestoreProvidedData {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_1): void;
 }
 declare interface RestoreProvidedDataExports {
 	name: string;
@@ -23027,12 +23145,12 @@ declare abstract class Snapshot {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 
 	/**
 	 * Gets file iterable.
@@ -23620,6 +23738,32 @@ declare abstract class StackedMap<K, V> {
 	 * scope.
 	 */
 	createChild(): StackedMap<K, V>;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface StarListDeserializerContext {
+	read: () => HarmonyExportImportedSpecifierDependency[];
+	rest: ObjectDeserializerContextObjectMiddlewareObject_3<[]>;
+	setCircularReference: (value: ReferenceableItem) => void;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface StarListSerializerContext {
+	write: (
+		value: HarmonyExportImportedSpecifierDependency[]
+	) => ObjectSerializerContextObjectMiddlewareObject_4<[]>;
+	setCircularReference: (value: ReferenceableItem) => void;
+	snapshot: () => ObjectSerializerSnapshot;
+	rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	writeLazy?: (item?: any) => void;
+	writeSeparate?: (
+		item: any,
+		obj?: LazyOptions
+	) => LazyFunction<any, any, any, LazyOptions>;
 }
 declare interface StartupRenderContext {
 	/**
@@ -24597,6 +24741,9 @@ declare interface TagInfo {
 		| CompatibilitySettings;
 	next?: TagInfo;
 }
+type Tail<T extends ReadonlyArray<any>> = T extends readonly [any, ...infer R]
+	? R
+	: T;
 declare interface TargetItemWithConnection {
 	module: Module;
 	connection: ModuleGraphConnection;
@@ -25260,12 +25407,12 @@ declare class WebpackError extends Error {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 
 	/**
 	 * Creates a `.stack` property on `targetObject`, which when accessed returns
@@ -26464,6 +26611,10 @@ declare namespace exports {
 		env: Record<string, any>,
 		argv: Record<string, any>
 	) => MaybePromise<Configuration | MultiConfiguration>;
+	export type ObjectSerializerContext =
+		typeof ObjectSerializerContextObjectMiddlewareObject_3;
+	export type ObjectDeserializerContext =
+		typeof ObjectDeserializerContextObjectMiddlewareObject_2;
 	export {
 		AutomaticPrefetchPlugin,
 		AsyncDependenciesBlock,
@@ -26607,8 +26758,6 @@ declare namespace exports {
 		StatsModuleTraceDependency,
 		StatsModuleTraceItem,
 		StatsProfile,
-		ObjectSerializerContext,
-		ObjectDeserializerContext,
 		InputFileSystem,
 		OutputFileSystem,
 		LoaderModule,
