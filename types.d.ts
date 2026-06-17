@@ -22234,6 +22234,20 @@ declare abstract class RuntimeTemplate {
 	 * Whether the bundle targets node and web at once (universal `["node", "web"]` + `output.module`), like `isUniversalTarget` in `WebpackOptionsApply`.
 	 */
 	isUniversalTarget(): boolean;
+
+	/**
+	 * Runtime expression that is truthy in browser-like environments (a DOM
+	 * `document` or a worker `self`) and falsy in Node.js. Single source of
+	 * truth for branching a universal ("node-or-web") target at runtime.
+	 */
+	isWebLikePlatformExpression(): string;
+
+	/**
+	 * Expression for the global registry that collects CSS server-side when there
+	 * is no DOM (SSR). An SSR host reads it from `globalThis`; it is keyed by the
+	 * style/chunk identifier and namespaced by `output.uniqueName`.
+	 */
+	cssServerStyleRegistry(): string;
 	supportsConst(): boolean;
 	supportsLet(): boolean;
 	supportsMethodShorthand(): boolean;
