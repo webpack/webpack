@@ -4795,6 +4795,8 @@ declare class ConstDependency extends NullDependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_FALLBACK: "*";
+	static LAZY_UNTIL_REQUEST: "@";
 }
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
 	constructor();
@@ -5836,6 +5838,26 @@ declare class Dependency {
 	couldAffectReferencingModule(): boolean | symbol;
 
 	/**
+	 * Returns the export name this dependency requests from its target module (lazy barrel optimization).
+	 */
+	getForwardId(): null | string | true;
+
+	/**
+	 * Returns how this dependency may be deferred when its parent module is side-effect-free (lazy barrel optimization).
+	 */
+	getLazyUntil(): null | "*" | "@" | { id: string } | { local: string };
+
+	/**
+	 * Whether the lazy barrel currently defers creating this dependency's target module (lazy barrel optimization).
+	 */
+	isLazy(): boolean;
+
+	/**
+	 * Sets whether the lazy barrel defers creating this dependency's target module (lazy barrel optimization).
+	 */
+	setLazy(value: boolean): void;
+
+	/**
 	 * Returns the referenced module and export
 	 * @deprecated
 	 */
@@ -5928,6 +5950,8 @@ declare class Dependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_FALLBACK: "*";
+	static LAZY_UNTIL_REQUEST: "@";
 }
 declare interface DependencyConstructor {
 	new (...args: any[]): Dependency;
@@ -9144,6 +9168,8 @@ declare class HarmonyImportDependency extends ModuleDependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_FALLBACK: "*";
+	static LAZY_UNTIL_REQUEST: "@";
 }
 declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
 	constructor();
@@ -15067,6 +15093,8 @@ declare class ModuleDependency extends Dependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_FALLBACK: "*";
+	static LAZY_UNTIL_REQUEST: "@";
 }
 
 /**
@@ -17388,6 +17416,8 @@ declare class NullDependency extends Dependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_FALLBACK: "*";
+	static LAZY_UNTIL_REQUEST: "@";
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
 	constructor();

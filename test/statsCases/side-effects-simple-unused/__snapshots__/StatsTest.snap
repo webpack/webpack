@@ -31,14 +31,6 @@ exports[`StatsTestCases side-effects-simple-unused should print correct stats fo
     [inactive] harmony export imported specifier ./c ./node_modules/pmodule/b.js 5:0-24
   harmony import specifier pmodule ./index.js 3:17-18 (skipped side-effect-free modules)
   [inactive] harmony export imported specifier ./b ./node_modules/pmodule/index.js 2:0-30 (skipped side-effect-free modules)
-./node_modules/pmodule/a.js X bytes [orphan] [built]
-  [module unused]
-  [inactive] from origin ./index.js + 2 modules
-    [inactive] harmony side effect evaluation ./a ./index.js + 2 modules ./node_modules/pmodule/index.js 1:0-20
-    [inactive] harmony export imported specifier ./a ./index.js + 2 modules ./node_modules/pmodule/index.js 1:0-20
-  [inactive] from origin ./node_modules/pmodule/index.js
-    [inactive] harmony side effect evaluation ./a ./node_modules/pmodule/index.js 1:0-20
-    [inactive] harmony export imported specifier ./a ./node_modules/pmodule/index.js 1:0-20
 ./node_modules/pmodule/b.js X bytes [orphan] [built]
   [module unused]
   [inactive] from origin ./index.js + 2 modules
