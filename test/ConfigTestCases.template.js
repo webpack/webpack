@@ -114,9 +114,9 @@ const describeCases = (config) => {
 
 						registerPerCaseSnapshotHooks(testDirectory, config.name);
 
-						beforeAll(() => {
+						beforeAll(async () => {
 							options = /** @type {import("../").Configuration} */ (
-								prepareOptions(
+								await prepareOptions(
 									require(path.join(testDirectory, "webpack.config.js")),
 									{ testPath: outputDirectory }
 								)
