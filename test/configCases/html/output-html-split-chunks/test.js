@@ -5,9 +5,15 @@ const vm = require("vm");
 const read = (file) => fs.readFileSync(path.resolve(__dirname, file), "utf-8");
 // Match the `src` attribute rather than the whole tag — the page only puts
 // `src` on `<script>` (links use `href`), and an attribute regexp avoids
-// CodeQL's bad-HTML-tag-filter rule.
-const scriptSrcs = (html) =>
-	Array.from(html.matchAll(/src="([^"]+)"/g)).map((m) => m[1]);
+// CodeQL's bad-HTML-tag-filter rule. `RegExp.exec` keeps this Node 10 safe
+// (no `String.prototype.matchAll`).
+const scriptSrcs = (html) => {
+	const re = /src="([^"]+)"/g;
+	const srcs = [];
+	let match;
+	while ((match = re.exec(html)) !== null) srcs.push(match[1]);
+	return srcs;
+};
 
 it("injects the runtime and vendor chunks before the entry chunk", () => {
 	const srcs = scriptSrcs(read("app.html"));
