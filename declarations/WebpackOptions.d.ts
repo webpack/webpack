@@ -818,7 +818,8 @@ export type CssParserDashedIdents = boolean;
 /**
  * Configure how CSS content is exported as default.
  */
-export type CssParserExportType = "link" | "text" | "css-style-sheet" | "style";
+export type CssParserExportType =
+	"link" | "text" | "css-style-sheet" | "style" | "url";
 /**
  * Enable/disable renaming of `@function` names.
  */
