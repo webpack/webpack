@@ -2102,8 +2102,18 @@ describe("snapshots", () => {
 			-     "outputModule": false,
 			+     "outputModule": true,
 			@@ ... @@
+			-     "electron": false,
+			-     "electronMain": false,
+			-     "electronPreload": false,
+			-     "electronRenderer": false,
 			-     "node": false,
+			-     "nwjs": false,
+			+     "electron": true,
+			+     "electronMain": null,
+			+     "electronPreload": null,
+			+     "electronRenderer": null,
 			+     "node": true,
+			+     "nwjs": true,
 			@@ ... @@
 			-   "externalsType": "var",
 			+   "externalsType": "module-import",
