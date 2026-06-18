@@ -65,7 +65,7 @@
     "test:html5lib": "yarn test:base --testMatch \"<rootDir>/test/html5lib.spectest.js\"",
     "test:css-parsing": "yarn test:base --testMatch \"<rootDir>/test/cssParsing-webpack.spectest.js\"",
     "test:deno": "yarn test:base:deno --testMatch \"<rootDir>/test/*.{basictest,longtest,test,unittest}.js\"",
-    "test:base:deno": "deno --allow-read --allow-env --allow-sys --allow-ffi --allow-write --allow-run --unstable-node-globals --unstable-bare-node-builtins --unstable-detect-cjs --v8-flags='--max-old-space-size=4096' ./node_modules/jest-cli/bin/jest.js --config jest.config.deno.js --logHeapUsage",
+    "test:base:deno": "deno --allow-read --allow-env --allow-sys --allow-ffi --allow-write --allow-run --allow-net --unstable-node-globals --unstable-bare-node-builtins --unstable-detect-cjs --v8-flags='--max-old-space-size=4096' ./node_modules/jest-cli/bin/jest.js --logHeapUsage",
     "test:bun": "yarn test:base:bun --testMatch \"<rootDir>/test/*.unittest.js\"",
     "test:base:bun": "bun --bun --preload ./test/bun-preload.js ./node_modules/jest-cli/bin/jest.js --runInBand --logHeapUsage",
     "test:update-snapshots": "yarn test:base -u",
