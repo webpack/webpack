@@ -108,9 +108,9 @@ class TestRunner {
 
 	/**
 	 * Whether the target is universal, i.e. its merged platform is neither
-	 * node- nor web-specific (e.g. `["web", "node"]`, `["web", "electron-main"]`,
-	 * `["web", "node", "webworker"]`), so the same bundle runs once per env.
-	 * TODO simplify once a dedicated `universal` target lands.
+	 * node- nor web-specific (the `"universal"` preset, or arrays like
+	 * `["web", "node"]`, `["web", "electron-main"]`, `["web", "node", "webworker"]`),
+	 * so the same bundle runs once per env.
 	 * @param {EXPECTED_ANY} webpackOptions webpack options
 	 * @returns {boolean} whether target is universal
 	 */
@@ -163,10 +163,14 @@ class TestRunner {
 		const results = [];
 		for (let i = 0; i < optionsArr.length; i++) {
 			const options = optionsArr[i];
-			let targets = [options.target];
 			let found = false;
+			// universal targets run the same bundle once per concrete environment;
+			// the `"universal"` preset expands to web + node.
+			let targets = [options.target];
 			if (TestRunner.isUniversalTarget(options)) {
-				targets = targets.reduce((prev, cur) => [...prev, ...cur], []);
+				targets = Array.isArray(options.target)
+					? options.target
+					: ["web", "node"];
 			}
 
 			for (const target of targets) {
