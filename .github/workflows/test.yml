@@ -294,7 +294,9 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  # Run webpack's test suite under Deno and Bun (spec validation suites excluded)
+  # Run webpack's test suite under Deno and Bun (spec validation suites excluded).
+  # Bun is non-blocking: jest cannot fully run under Bun yet (see
+  # test/bun-preload.js), so the bun job runs the unit subset for visibility only.
   runtimes:
     needs: basic
     strategy:
@@ -302,6 +304,7 @@ jobs:
       matrix:
         runtime: [deno, bun]
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.runtime == 'bun' }}
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
