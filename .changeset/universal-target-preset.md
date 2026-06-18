@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add a `universal` target preset that merges `web` and `node` features.
+Add a `universal` target preset (browser + web worker + Node.js) that always outputs ECMAScript modules.

@@ -2090,9 +2090,8 @@ describe("snapshots", () => {
 	test(
 		"target universal (preset)",
 		{
-			target: "universal",
-			output: { module: true },
-			experiments: { outputModule: true }
+			// the universal preset enables ESM output (and web worker support) on its own
+			target: "universal"
 		},
 		(e) =>
 			e.toMatchInlineSnapshot(`
