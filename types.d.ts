@@ -1618,6 +1618,7 @@ declare class Chunk {
 	name?: null | string;
 	idNameHints: SortableSet<string>;
 	preventIntegration: boolean;
+	preventSplitting: boolean;
 	filenameTemplate?:
 		string | ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
 	cssFilenameTemplate?:
@@ -5399,7 +5400,7 @@ declare interface CssAutoOrModuleParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet" | "style";
+	exportType?: "url" | "link" | "text" | "css-style-sheet" | "style";
 
 	/**
 	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
@@ -5595,7 +5596,7 @@ declare abstract class CssModule extends NormalModule {
 	supports: Supports;
 	media: Media;
 	inheritance?: [CssLayer, Supports, Media][];
-	exportType?: "link" | "text" | "css-style-sheet" | "style";
+	exportType?: "url" | "link" | "text" | "css-style-sheet" | "style";
 }
 type CssModuleBuildInfo = KnownBuildInfo &
 	Record<string, any> &
@@ -5617,7 +5618,7 @@ declare interface CssModuleGeneratorOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet" | "style";
+	exportType?: "url" | "link" | "text" | "css-style-sheet" | "style";
 
 	/**
 	 * Specifies the convention of exported names.
@@ -5703,7 +5704,7 @@ declare interface CssModuleParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet" | "style";
+	exportType?: "url" | "link" | "text" | "css-style-sheet" | "style";
 
 	/**
 	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
@@ -5891,7 +5892,7 @@ declare abstract class CssParser extends ParserClass {
 		/**
 		 * Configure how CSS content is exported as default.
 		 */
-		exportType?: "link" | "text" | "css-style-sheet" | "style";
+		exportType?: "url" | "link" | "text" | "css-style-sheet" | "style";
 		/**
 		 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
 		 */
@@ -5956,7 +5957,7 @@ declare interface CssParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet" | "style";
+	exportType?: "url" | "link" | "text" | "css-style-sheet" | "style";
 
 	/**
 	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
@@ -7373,10 +7374,11 @@ declare interface EntryOptionPluginHooks {
 		undefined | string
 	>;
 }
-type EntryOptions = { name?: string; worklet?: boolean } & Omit<
-	EntryDescriptionNormalized,
-	"import"
->;
+type EntryOptions = {
+	name?: string;
+	worklet?: boolean;
+	standalone?: boolean;
+} & Omit<EntryDescriptionNormalized, "import">;
 declare class EntryPlugin {
 	/**
 	 * An entry plugin which will handle creation of the EntryDependency
