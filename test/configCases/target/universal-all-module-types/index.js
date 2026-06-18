@@ -2,15 +2,31 @@ import cjsValue from "./cjs";
 import jsonData from "./data.json" with { type: "json" };
 import defer * as deferred from "./deferred.js";
 import { esmValue } from "./esm.js";
+import autoAsset from "./small.dat";
+import bytesRule from "./raw.bin";
 import html from "./page.html";
 import inlineSvg from "./inline.svg";
+import * as globalCss from "./global.css";
 import * as cssModule from "./styles.module.css";
 import sheet from "./style.css" with { type: "css" };
 import txtSource from "./file.txt";
+import bytesAttr from "./note.text" with { type: "bytes" };
+import textAttr from "./note.text" with { type: "text" };
 import answer from "ext-var";
 import source srcExpr from "ext-source";
 
 const isBrowser = typeof window !== "undefined";
+// CONFIG_NAME is injected per build; universal runs this file twice (web + node)
+const env = isBrowser ? "web" : "node";
+
+it(`[${CONFIG_NAME}] runs in a ${env}-like environment`, () => {
+	if (isBrowser) {
+		expect(typeof window).toBe("object");
+		expect(typeof document).toBe("object");
+	} else {
+		expect(typeof process.versions.node).toBe("string");
+	}
+});
 
 it("supports esm imports/exports", () => {
 	expect(esmValue).toBe("esm");
@@ -46,6 +62,15 @@ it("supports dynamic imports", async () => {
 	expect(m.default).toBe("dynamic");
 });
 
+it("supports dynamic context (import.meta.webpackContext)", async () => {
+	const ctx = import.meta.webpackContext("./ctx", {
+		recursive: false,
+		regExp: /\.js$/
+	});
+	expect(ctx.keys().sort()).toEqual(["./a.js", "./b.js"]);
+	expect(ctx("./a.js").default).toBe("ctx-a");
+});
+
 it("supports asset/resource via new URL(import.meta.url)", () => {
 	const url = new URL("./asset.png", import.meta.url);
 	expect(url.href).toMatch(/\.png$/);
@@ -59,6 +84,25 @@ it("supports asset/inline (data URL)", () => {
 	expect(inlineSvg).toMatch(/^data:image\/svg\+xml/);
 });
 
+it("supports asset/bytes", () => {
+	expect(bytesRule).toBeInstanceOf(Uint8Array);
+	expect(new TextDecoder().decode(bytesRule).trim()).toBe("hello bytes rule");
+});
+
+it("supports auto asset (inlined data URL)", () => {
+	expect(autoAsset).toMatch(/^data:/);
+});
+
+it("supports asset import attribute `type: text`", () => {
+	expect(typeof textAttr).toBe("string");
+	expect(textAttr.trim()).toBe("hello attribute asset");
+});
+
+it("supports asset import attribute `type: bytes`", () => {
+	expect(bytesAttr).toBeInstanceOf(Uint8Array);
+	expect(new TextDecoder().decode(bytesAttr).trim()).toBe("hello attribute asset");
+});
+
 it("supports css imported as a constructable stylesheet", () => {
 	if (isBrowser) {
 		expect(sheet).toBeInstanceOf(CSSStyleSheet);
@@ -70,6 +114,10 @@ it("supports css imported as a constructable stylesheet", () => {
 
 it("supports css modules with named exports", () => {
 	expect(typeof cssModule.box).toBe("string");
+});
+
+it("supports global css", () => {
+	expect(globalCss).toEqual({});
 });
 
 it("supports html modules", () => {

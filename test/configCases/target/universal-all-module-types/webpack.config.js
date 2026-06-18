@@ -9,8 +9,16 @@ const rules = [
 	{ test: /\.txt$/, type: "asset/source" },
 	{ test: /\.svg$/, type: "asset/inline" },
 	{ test: /\.png$/, type: "asset/resource" },
+	{ test: /\.bin$/, type: "asset/bytes" },
+	{
+		test: /\.dat$/,
+		type: "asset",
+		parser: { dataUrlCondition: { maxSize: Infinity } },
+		generator: { dataUrl: { mimetype: "text/plain" } }
+	},
 	{ test: /\.wat$/, loader: "wast-loader", type: "webassembly/async" },
-	{ test: /\.module\.css$/, type: "css/module" }
+	{ test: /\.module\.css$/, type: "css/module" },
+	{ test: /\.global\.css$/, type: "css/global" }
 ];
 
 /** @type {NonNullable<import("../../../../").Configuration["experiments"]>} */
