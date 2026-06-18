@@ -464,6 +464,16 @@ describe("snapshots", () => {
 		            "type": "asset/inline",
 		          },
 		          Object {
+		            "issuer": Object {
+		              "not": /\\\\\\.css\\$/i,
+		            },
+		            "parser": Object {
+		              "exportType": "url",
+		            },
+		            "test": /\\\\\\.css\\$/i,
+		            "type": "css/auto",
+		          },
+		          Object {
 		            "type": "asset/resource",
 		          },
 		        ],
@@ -4627,13 +4637,16 @@ describe("snapshots", () => {
 			-           "preferRelative": true,
 			-         },
 			-         "type": "css",
-			@@ ... @@
+			-       },
+			-       Object {
 			-         "dependency": /css-import-local-module/,
 			-         "exclude": /\\.module\\.\\w+$/i,
-			@@ ... @@
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
 			-         },
 			-         "type": "css/module",
-			@@ ... @@
+			-       },
 			-       Object {
 			-         "dependency": /css-import-global-module/,
 			-         "exclude": /\\.module\\.\\w+$/i,
@@ -4665,26 +4678,14 @@ describe("snapshots", () => {
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
-			-         },
-			-       },
-			-       Object {
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
-			-         },
 			@@ ... @@
-			-         },
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
-			-         },
 			-       },
-			-       Object {
+			@@ ... @@
 			-         "dependency": "html-style",
 			-         "parser": Object {
 			-           "exportType": "text",
 			-         },
-			-         "resolve": Object {
+			@@ ... @@
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
 			-         },
@@ -4694,17 +4695,41 @@ describe("snapshots", () => {
 			-         "parser": Object {
 			-           "as": "block-contents",
 			-           "exportType": "text",
+			-         },
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
+			-         },
+			-       },
+			-       Object {
+			-         "resolve": Object {
+			@@ ... @@
+			-           },
+			-           Object {
+			-             "issuer": Object {
+			-               "not": /\\.css$/i,
+			-             },
+			-             "parser": Object {
+			-               "exportType": "url",
+			-             },
+			-             "test": /\\.css$/i,
+			-             "type": "css/auto",
+			@@ ... @@
+			+       },
+			+       Object {
+			+         "oneOf": Array [
+			+           Object {
+			+             "resourceQuery": /(\\?|&)raw(&|$)/,
+			+             "type": "asset/source",
 			@@ ... @@
 			-     ],
 			-     "generator": Object {
 			-       "css": Object {
 			-         "esModule": true,
 			-         "exportsOnly": false,
-			+       Object {
-			+         "oneOf": Array [
 			+           Object {
-			+             "resourceQuery": /(\\?|&)raw(&|$)/,
-			+             "type": "asset/source",
+			+             "resourceQuery": /(\\?|&)url(&|$)/,
+			+             "type": "asset/resource",
 			@@ ... @@
 			-       "css/auto": Object {
 			-         "exportsConvention": "as-is",
@@ -4713,10 +4738,6 @@ describe("snapshots", () => {
 			-         "localIdentHashFunction": "md4",
 			-         "localIdentHashSalt": undefined,
 			-         "localIdentName": "[fullhash]",
-			+           Object {
-			+             "resourceQuery": /(\\?|&)url(&|$)/,
-			+             "type": "asset/resource",
-			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
@@ -4805,6 +4826,9 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
+			-           "...",
+			-         ],
+			-       },
 			-       "css-import": Object {
 			-         "conditionNames": Array [
 			-           "webpack",
@@ -4832,8 +4856,7 @@ describe("snapshots", () => {
 			-         ],
 			-         "mainFields": Array [
 			-           "style",
-			-           "...",
-			-         ],
+			@@ ... @@
 			-         "mainFiles": Array [],
 			-         "preferRelative": true,
 			-       },
@@ -4852,7 +4875,6 @@ describe("snapshots", () => {
 			-         ],
 			-         "mainFiles": Array [],
 			-         "preferRelative": true,
-			-       },
 			@@ ... @@
 			+           ".html",
 			@@ ... @@
