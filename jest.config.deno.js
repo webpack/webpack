@@ -14,8 +14,9 @@ const baseConfig = require("./jest.config");
 // pattern, so they are skipped under Deno until the upstream Deno panic is
 // fixed (https://github.com/denoland/deno/issues). Every other suite runs.
 /** @type {import("jest").Config} */
-const config = Object.assign({}, baseConfig, {
+const config = {
+	...baseConfig,
 	testPathIgnorePatterns: ["/node_modules/", "<rootDir>/test/[^/]*TestCases"]
-});
+};
 
 module.exports = config;
