@@ -312,7 +312,13 @@ const describeCases = (config) => {
 										if (isWeb) {
 											return bundles;
 										}
-										return [bundles[bundles.length - 1]];
+										// node runs the JS entry only; skip CSS/other assets that may sort last
+										const jsBundles = bundles.filter(
+											(/** @type {string} */ n) => /\.[cm]?js$/.test(n)
+										);
+										const nodeBundles =
+											jsBundles.length > 0 ? jsBundles : bundles;
+										return [nodeBundles[nodeBundles.length - 1]];
 									}
 								});
 								Promise.all(results).then(
