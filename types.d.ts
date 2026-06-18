@@ -5601,6 +5601,17 @@ declare class CssModulesPlugin {
 	 */
 	static chunkHasCss(chunk: Chunk, chunkGraph: ChunkGraph): boolean;
 }
+declare interface CssNamespace {
+	/**
+	 * namespace prefix (empty string for the default namespace)
+	 */
+	prefix: string;
+
+	/**
+	 * the full `@namespace …` rule text (without the trailing semicolon)
+	 */
+	rule: string;
+}
 declare abstract class CssParser extends ParserClass {
 	defaultMode: "global" | "auto" | "local" | "pure";
 	options: {
@@ -12985,6 +12996,11 @@ declare interface KnownCssModuleBuildInfo {
 	 * charset at-rule
 	 */
 	charset?: string;
+
+	/**
+	 * `@namespace` at-rules, hoisted to the top of the chunk
+	 */
+	namespaces?: CssNamespace[];
 }
 declare interface KnownCssModuleBuildMeta {
 	isCssModule?: boolean;

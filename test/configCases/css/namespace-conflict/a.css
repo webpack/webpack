@@ -1,0 +1,5 @@
+@namespace svg url('http://example.com/a');
+
+.a {
+	color: red;
+}

@@ -2,7 +2,8 @@
 
 exports[`ConfigCacheTestCases css import exported tests should compile 1`] = `
 Array [
-  "/*!******************************************************************************************!*\\\\
+  "@namespace url(http://www.w3.org/1999/xhtml);
+/*!******************************************************************************************!*\\\\
   !*** external \\"https://test.cases/path/../../../../configCases/css/import/external.css\\" ***!
   \\\\******************************************************************************************/
 body {
@@ -1975,7 +1976,7 @@ a {
 @import layer(super.foo) url(fae7e602dbe59a260308.css?warning=4) supports(display: flex) screen and (min-width: 400px);
 @import layer(super.foo) supports(display: flex) url(fae7e602dbe59a260308.css?warning=5) screen and (min-width: 400px);
 @import layer(super.foo) supports(display: flex) screen and (min-width: 400px) url(fae7e602dbe59a260308.css?warning=6);
-@namespace url(http://www.w3.org/1999/xhtml);
+
 @import supports(background: url(09a1a1112c577c279435.png));
 @import supports(background: url(09a1a1112c577c279435.png)) screen and (min-width: 400px);
 @import layer(test) supports(background: url(09a1a1112c577c279435.png)) screen and (min-width: 400px);
@@ -1997,7 +1998,8 @@ body {
 
 exports[`ConfigCacheTestCases css import exported tests should compile 2`] = `
 Array [
-  "/*!***********************!*\\\\
+  "@namespace url(http://www.w3.org/1999/xhtml);
+/*!***********************!*\\\\
   !*** css ./style.css ***!
   \\\\***********************/
 @import \\"./style-import.css\\";
@@ -2232,7 +2234,7 @@ url(style6.css?foo=14)
 @import layer(super.foo) supports(display: flex) url(\\"./style2.css?warning=5\\") screen and (min-width: 400px);
 @import layer(super.foo) supports(display: flex) screen and (min-width: 400px) url(\\"./style2.css?warning=6\\");
 @import url(\\"/style2.css?wrong-order-but-valid=6\\") supports(display: flex) layer(super.foo) screen and (min-width: 400px);
-@namespace url(http://www.w3.org/1999/xhtml);
+
 @import url(\\"./style2.css?after-namespace\\");
 @import supports(background: url(\\"./img.png\\"));
 @import supports(background: url(\\"./img.png\\")) screen and (min-width: 400px);
