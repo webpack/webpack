@@ -304,7 +304,6 @@ jobs:
       matrix:
         runtime: [deno, bun]
     runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.runtime == 'bun' }}
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
@@ -332,7 +331,9 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
+      # Bun can't fully run jest yet, so don't let its failure block the PR.
       - run: yarn test:${{ matrix.runtime }} --ci
+        continue-on-error: ${{ matrix.runtime == 'bun' }}
 
   integration:
     needs: basic
