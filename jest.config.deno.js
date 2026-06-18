@@ -7,8 +7,8 @@ const baseConfig = require("./jest.config");
 // Deno (2.8.3) panics at the Rust level (libs/core/runtime/bindings.rs
 // "Module not found") when webpack calls require() during/after a test's
 // teardown — e.g. ImportMetaPlugin doing require("../../package.json") once a
-// compilation outlives the test. Node throws a catchable ReferenceError here;
-// Deno aborts the whole process, so a single offending test kills the run.
+// compilation outlives the test. Node throws a ReferenceError the test can
+// catch; Deno aborts the whole process, so a single offending test kills the run.
 //
 // The *TestCases suites compile and execute generated bundles that hit that
 // pattern, so they are skipped under Deno until the upstream Deno panic is
