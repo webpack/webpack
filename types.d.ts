@@ -1567,6 +1567,7 @@ declare class Chunk {
 	name?: null | string;
 	idNameHints: SortableSet<string>;
 	preventIntegration: boolean;
+	preventSplitting: boolean;
 	filenameTemplate?:
 		| string
 		| ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
@@ -3449,6 +3450,19 @@ declare class Compilation {
 	logging: Map<string, LogEntry[]>;
 	dependencyFactories: Map<DependencyConstructor, ModuleFactory>;
 	dependencyTemplates: DependencyTemplates;
+	dependencyEntries: Map<
+		DependencyConstructor,
+		{
+			entryOptions: (
+				dependency: Dependency,
+				module: Module
+			) => undefined | EntryOptions;
+			getChunkFilename: (
+				dependency: Dependency,
+				chunk: Chunk
+			) => undefined | string;
+		}
+	>;
 	childrenCounters: Record<string, number>;
 	usedChunkIds: null | Set<number>;
 	usedModuleIds: null | Set<number>;
@@ -5301,7 +5315,7 @@ declare interface CssAutoOrModuleParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet" | "style";
+	exportType?: "url" | "link" | "text" | "css-style-sheet" | "style";
 
 	/**
 	 * Enable/disable renaming of `@function` names.
@@ -5446,7 +5460,7 @@ declare abstract class CssModule extends NormalModule {
 	supports: Supports;
 	media: Media;
 	inheritance?: [CssLayer, Supports, Media][];
-	exportType?: "link" | "text" | "css-style-sheet" | "style";
+	exportType?: "url" | "link" | "text" | "css-style-sheet" | "style";
 }
 type CssModuleBuildInfo = KnownBuildInfo &
 	Record<string, any> &
@@ -5468,7 +5482,7 @@ declare interface CssModuleGeneratorOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet" | "style";
+	exportType?: "url" | "link" | "text" | "css-style-sheet" | "style";
 
 	/**
 	 * Specifies the convention of exported names.
@@ -5544,7 +5558,7 @@ declare interface CssModuleParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet" | "style";
+	exportType?: "url" | "link" | "text" | "css-style-sheet" | "style";
 
 	/**
 	 * Enable/disable renaming of `@function` names.
@@ -5656,7 +5670,7 @@ declare abstract class CssParser extends ParserClass {
 		/**
 		 * Configure how CSS content is exported as default.
 		 */
-		exportType?: "link" | "text" | "css-style-sheet" | "style";
+		exportType?: "url" | "link" | "text" | "css-style-sheet" | "style";
 		/**
 		 * Enable/disable renaming of `@function` names.
 		 */
@@ -5701,7 +5715,7 @@ declare interface CssParserOptions {
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
-	exportType?: "link" | "text" | "css-style-sheet" | "style";
+	exportType?: "url" | "link" | "text" | "css-style-sheet" | "style";
 
 	/**
 	 * Enable/disable `@import` at-rules handling.
