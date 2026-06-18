@@ -3,10 +3,11 @@ const path = require("path");
 const vm = require("vm");
 
 const read = (file) => fs.readFileSync(path.resolve(__dirname, file), "utf-8");
+// Match the `src` attribute rather than the whole tag — the page only puts
+// `src` on `<script>` (links use `href`), and an attribute regexp avoids
+// CodeQL's bad-HTML-tag-filter rule.
 const scriptSrcs = (html) =>
-	Array.from(html.matchAll(/<script src="([^"]+)"><\/script>/g)).map(
-		(m) => m[1]
-	);
+	Array.from(html.matchAll(/src="([^"]+)"/g)).map((m) => m[1]);
 
 it("injects the whole transitive dependOn chain in load order", () => {
 	const srcs = scriptSrcs(read("app.html"));

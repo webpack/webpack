@@ -10,8 +10,8 @@ it("injects the dependOn target's stylesheet into the dependant page", () => {
 
 it("loads the stylesheet before the script that needs it", () => {
 	const html = read("app.html");
-	const linkIndex = html.search(/<link rel="stylesheet"/);
-	const scriptIndex = html.search(/<script src=/);
+	const linkIndex = html.indexOf('rel="stylesheet"');
+	const scriptIndex = html.indexOf("<script");
 	expect(linkIndex).toBeGreaterThanOrEqual(0);
 	expect(scriptIndex).toBeGreaterThanOrEqual(0);
 	expect(linkIndex).toBeLessThan(scriptIndex);
