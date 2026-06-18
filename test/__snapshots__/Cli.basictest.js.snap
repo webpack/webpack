@@ -8079,6 +8079,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-logical-assignment": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports logical assignment operators ('a ||= b', 'a &&= b', 'a ??= b').",
+        "multiple": false,
+        "path": "output.environment.logicalAssignment",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports logical assignment operators ('a ||= b', 'a &&= b', 'a ??= b').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-method-shorthand": Object {
     "configs": Array [
       Object {

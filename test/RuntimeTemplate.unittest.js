@@ -228,3 +228,32 @@ describe("RuntimeTemplate.objectHasOwn", () => {
 		);
 	});
 });
+
+describe("RuntimeTemplate.assignOr", () => {
+	/**
+	 * @param {boolean} logicalAssignment whether the environment supports logical assignment
+	 * @returns {RuntimeTemplate} runtime template
+	 */
+	const create = (logicalAssignment) =>
+		new RuntimeTemplate(
+			/** @type {import("../lib/Compilation")} */ (
+				/** @type {unknown} */ (undefined)
+			),
+			/** @type {OutputOptions} */ (
+				/** @type {unknown} */ ({ environment: { logicalAssignment } })
+			),
+			new RequestShortener(__dirname)
+		);
+
+	it("uses ||= when supported", () => {
+		expect(create(true).assignOr("scope[name]", "{}")).toBe(
+			"scope[name] ||= {}"
+		);
+	});
+
+	it("falls back to self-assignment when not supported", () => {
+		expect(create(false).assignOr("scope[name]", "{}")).toBe(
+			"scope[name] = scope[name] || {}"
+		);
+	});
+});
