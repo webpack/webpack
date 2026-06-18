@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css namespace-export-types exported tests should hoist @namespace across inline export types 1`] = `
+"@namespace svg url('http://www.w3.org/2000/svg');
+/*!*****************************************!*\\\\
+  !*** css ./text.css (exportType: text) ***!
+  \\\\*****************************************/
+
+
+.text-a { color: red; }
+
+"
+`;
+
+exports[`ConfigCacheTestCases css namespace-export-types exported tests should hoist @namespace across inline export types 2`] = `
+"@namespace svg url('http://www.w3.org/2000/svg');
+/*!*****************************************************!*\\\\
+  !*** css ./sheet.css (exportType: css-style-sheet) ***!
+  \\\\*****************************************************/
+
+
+.sheet-a { color: green; }
+
+"
+`;
+
+exports[`ConfigCacheTestCases css namespace-export-types exported tests should hoist @namespace across inline export types 3`] = `
+Array [
+  "@namespace svg url('http://www.w3.org/2000/svg');
+/*!********************************************!*\\\\
+  !*** css ./inject.css (exportType: style) ***!
+  \\\\********************************************/
+
+
+.inject-a { color: blue; }
+
+",
+]
+`;
