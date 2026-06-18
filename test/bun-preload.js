@@ -28,13 +28,15 @@ const align = (target) => {
 		const d = Object.getOwnPropertyDescriptor(target, key);
 		if (!d || !d.configurable) continue;
 		if (HIDDEN.has(key)) {
-			if (d.enumerable)
-				Object.defineProperty(target, key, { ...d, enumerable: false });
+			if (d.enumerable) {
+				d.enumerable = false;
+				Object.defineProperty(target, key, d);
+			}
 		} else if (d.get || d.set) {
 			let value;
 			try {
 				value = d.get ? d.get.call(target) : undefined;
-			} catch {
+			} catch (_err) {
 				value = undefined;
 			}
 			Object.defineProperty(target, key, {
@@ -44,7 +46,8 @@ const align = (target) => {
 				configurable: true
 			});
 		} else if (d.writable === false) {
-			Object.defineProperty(target, key, { ...d, writable: true });
+			d.writable = true;
+			Object.defineProperty(target, key, d);
 		}
 	}
 };
