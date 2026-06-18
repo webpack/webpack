@@ -6788,6 +6788,11 @@ declare interface EntryDescription {
 	filename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
+	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
+	 */
+	html?: boolean;
+
+	/**
 	 * Module(s) that are loaded upon startup.
 	 */
 	import: EntryItem;
@@ -6853,6 +6858,11 @@ declare interface EntryDescriptionNormalized {
 	filename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
+	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
+	 */
+	html?: boolean;
+
+	/**
 	 * Module(s) that are loaded upon startup. The last one is exported.
 	 */
 	import?: string[];
@@ -6910,6 +6920,7 @@ declare class EntryOptionPlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
+	static getHooks(compiler: Compiler): EntryOptionPluginHooks;
 
 	/**
 	 * Apply entry option.
@@ -6928,6 +6939,15 @@ declare class EntryOptionPlugin {
 		name: string,
 		desc: EntryDescriptionNormalized
 	): EntryOptions;
+}
+declare interface EntryOptionPluginHooks {
+	/**
+	 * transform an entry into a different request (e.g. wrap a non-HTML entry in a synthetic HTML module); return `undefined` to keep the default behavior
+	 */
+	entry: SyncBailHook<
+		[string, string, EntryDescriptionNormalized],
+		undefined | string
+	>;
 }
 type EntryOptions = { name?: string } & Omit<
 	EntryDescriptionNormalized,
@@ -18596,6 +18616,11 @@ declare interface Output {
 	hotUpdateMainFilename?: string;
 
 	/**
+	 * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
+	 */
+	html?: boolean;
+
+	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	htmlChunkFilename?: string | TemplatePathFn<PathDataChunk>;
@@ -18929,6 +18954,11 @@ declare interface OutputNormalized {
 	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
 	 */
 	hotUpdateMainFilename?: string;
+
+	/**
+	 * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
+	 */
+	html?: boolean;
 
 	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
