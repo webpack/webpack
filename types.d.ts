@@ -4795,6 +4795,8 @@ declare class ConstDependency extends NullDependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_LOCAL: "local";
+	static LAZY_UNTIL_ID: "id";
 	static LAZY_UNTIL_FALLBACK: "*";
 	static LAZY_UNTIL_REQUEST: "@";
 }
@@ -5600,7 +5602,7 @@ declare class CssModulesPlugin {
 	static chunkHasCss(chunk: Chunk, chunkGraph: ChunkGraph): boolean;
 }
 declare abstract class CssParser extends ParserClass {
-	defaultMode: "global" | "auto" | "pure" | "local";
+	defaultMode: "global" | "auto" | "local" | "pure";
 	options: {
 		/**
 		 * Enable/disable renaming of `@keyframes`.
@@ -5653,7 +5655,7 @@ declare abstract class CssParser extends ParserClass {
 		/**
 		 * default mode
 		 */
-		defaultMode?: "global" | "auto" | "pure" | "local";
+		defaultMode?: "global" | "auto" | "local" | "pure";
 	};
 	magicCommentContext: ContextImport;
 }
@@ -5845,7 +5847,12 @@ declare class Dependency {
 	/**
 	 * Returns how this dependency may be deferred when its parent module is side-effect-free (lazy barrel optimization).
 	 */
-	getLazyUntil(): null | "*" | "@" | { id: string } | { local: string };
+	getLazyUntil(): null | "local" | "id" | "*" | "@";
+
+	/**
+	 * Returns the export name for a `LAZY_UNTIL_LOCAL`/`LAZY_UNTIL_ID` classification (lazy barrel optimization).
+	 */
+	getLazyName(): null | string;
 
 	/**
 	 * Whether the lazy barrel currently defers creating this dependency's target module (lazy barrel optimization).
@@ -5950,6 +5957,8 @@ declare class Dependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_LOCAL: "local";
+	static LAZY_UNTIL_ID: "id";
 	static LAZY_UNTIL_FALLBACK: "*";
 	static LAZY_UNTIL_REQUEST: "@";
 }
@@ -9168,6 +9177,8 @@ declare class HarmonyImportDependency extends ModuleDependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_LOCAL: "local";
+	static LAZY_UNTIL_ID: "id";
 	static LAZY_UNTIL_FALLBACK: "*";
 	static LAZY_UNTIL_REQUEST: "@";
 }
@@ -15093,6 +15104,8 @@ declare class ModuleDependency extends Dependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_LOCAL: "local";
+	static LAZY_UNTIL_ID: "id";
 	static LAZY_UNTIL_FALLBACK: "*";
 	static LAZY_UNTIL_REQUEST: "@";
 }
@@ -17416,6 +17429,8 @@ declare class NullDependency extends Dependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_LOCAL: "local";
+	static LAZY_UNTIL_ID: "id";
 	static LAZY_UNTIL_FALLBACK: "*";
 	static LAZY_UNTIL_REQUEST: "@";
 }
