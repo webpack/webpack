@@ -21,6 +21,7 @@ module.exports = {
 			  "hasOwn": true,
 			  "importMetaDirnameAndFilename": true,
 			  "let": true,
+			  "logicalAssignment": true,
 			  "methodShorthand": true,
 			  "module": true,
 			  "nodeBuiltinModuleGetter": true,
