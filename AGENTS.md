@@ -82,7 +82,7 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 
 - `package.json` — All commands (defined in `scripts`).
 - `tsconfig*.json` — TypeScript configs (one per surface: `lib`, `hot`, types tests, validation, benchmarks).
-- `eslint.config.mjs`, `cspell.json`, `jest.config.js`, `generate-types-config.js` — Lint/spell/test/type-gen configs.
+- `eslint.config.mjs`, `cspell.json`, `jest.config.js`, `jest.config.deno.js`, `generate-types-config.js` — Lint/spell/test/type-gen configs.
 - `.github/workflows/`, `.github/scripts/` — CI.
 
 ## Coding Standards
