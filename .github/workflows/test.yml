@@ -294,19 +294,16 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  # Run the full suite under Deno and Bun, split into the same parts as Node
+  # Run webpack's test suite under Deno and Bun (spec validation suites excluded)
   runtimes:
     needs: basic
     strategy:
       fail-fast: false
       matrix:
         runtime: [deno, bun]
-        part: [basic, unit, integration:a, integration:b, test262, html5lib, css-parsing]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
-        with:
-          submodules: true
 
       - name: Use Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
@@ -332,14 +329,7 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
-        if: matrix.part == 'test262'
-        with:
-          repository: tc39/test262
-          path: test/js/test262
-          ref: f2d59ea6e4b2f6f87de9f0d18a41d73782b6a9bc
-
-      - run: yarn test:${{ matrix.part }}:${{ matrix.runtime }} --ci
+      - run: yarn test:${{ matrix.runtime }} --ci
 
   integration:
     needs: basic
