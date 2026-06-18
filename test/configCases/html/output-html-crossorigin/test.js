@@ -5,14 +5,14 @@ const read = (file) => fs.readFileSync(path.resolve(__dirname, file), "utf-8");
 
 it("mirrors output.crossOriginLoading onto the injected script", () => {
 	const html = read("main.html");
-	expect(html).toMatch(
-		/<script src="[^"]+\.js" crossorigin="anonymous"><\/script>/
-	);
+	const script = html.match(/<script\b[^>]*><\/script>/)[0];
+	expect(script).toContain('crossorigin="anonymous"');
+	expect(script).toMatch(/src="[^"]+\.js"/);
 });
 
 it("mirrors output.crossOriginLoading onto the extracted stylesheet link", () => {
 	const html = read("main.html");
-	expect(html).toMatch(
-		/<link rel="stylesheet" href="[^"]+\.css" crossorigin="anonymous">/
-	);
+	const link = html.match(/<link\b[^>]*>/)[0];
+	expect(link).toContain('crossorigin="anonymous"');
+	expect(link).toMatch(/href="[^"]+\.css"/);
 });
