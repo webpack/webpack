@@ -25,6 +25,12 @@ it("should rewrite asset URLs inside <iframe srcdoc>", () => {
 	expect(page).not.toContain("pixel&#46;png");
 	expect(page).toMatch(/srcdoc="<img src=&quot;handled-pixel\.png&quot;>"/);
 
+	// CSS `url()` inside a nested `style` attribute composes with the CSS
+	// pipeline: the url is rewritten and the inner quotes re-escaped for srcdoc.
+	expect(page).toMatch(
+		/srcdoc="<div style=&quot;background: url\(handled-pixel\.png\)&quot;>styled<\/div>"/
+	);
+
 	// Plain text (no markup) is left untouched — no nested module is spun up.
 	expect(page).toContain('srcdoc="no assets here"');
 });

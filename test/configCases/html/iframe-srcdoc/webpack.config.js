@@ -9,6 +9,7 @@ module.exports = {
 		assetModuleFilename: "handled-[name][ext]"
 	},
 	experiments: {
-		html: true
+		html: true,
+		css: true
 	}
 };

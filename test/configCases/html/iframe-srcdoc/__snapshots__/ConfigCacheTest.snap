@@ -9,6 +9,7 @@ exports[`ConfigCacheTestCases html iframe-srcdoc exported tests should rewrite a
 <iframe srcdoc=\\"<p>hello <b>world</b></p>\\"></iframe>
 <iframe srcdoc=\\"<img src=&quot;handled-pixel.png&quot;><img src=&quot;handled-other.png&quot;>\\"></iframe>
 <iframe srcdoc=\\"<img src=&quot;handled-pixel.png&quot;>\\"></iframe>
+<iframe srcdoc=\\"<div style=&quot;background: url(handled-pixel.png)&quot;>styled</div>\\"></iframe>
 <iframe srcdoc=\\"no assets here\\"></iframe>
 </body>
 </html>
