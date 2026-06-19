@@ -4,16 +4,27 @@ it("should rewrite asset URLs inside <iframe srcdoc>", () => {
 	expect(typeof page).toBe("string");
 	expect(page).toMatchSnapshot();
 
-	// The img inside srcdoc had its src rewritten to a hashed asset URL.
+	// No original (unresolved) asset URL survives.
 	expect(page).not.toContain("./pixel.png");
-	expect(page).toContain("handled-pixel.png");
+	expect(page).not.toContain("./other.png");
 
-	// The processed HTML is re-escaped so the outer `srcdoc="..."` stays valid:
-	// `"` -> `&quot;` and a decoded `'` (in the alt) -> `&#39;`.
+	// `src` is rewritten and re-escaped (`"` -> `&quot;`, decoded `'` -> `&#39;`).
 	expect(page).toMatch(
 		/srcdoc="<img src=&quot;handled-pixel\.png&quot; alt=&quot;a&#39;b&quot;>"/
 	);
 
-	// A srcdoc with no markup is left untouched (no nested module spun up).
+	// Markup without assets passes through unchanged (idempotent).
+	expect(page).toContain('srcdoc="<p>hello <b>world</b></p>"');
+
+	// Multiple assets in one document are all rewritten.
+	expect(page).toMatch(
+		/srcdoc="<img src=&quot;handled-pixel\.png&quot;><img src=&quot;handled-other\.png&quot;>"/
+	);
+
+	// An entity inside the URL (`&#46;` = `.`) is decoded before resolving.
+	expect(page).not.toContain("pixel&#46;png");
+	expect(page).toMatch(/srcdoc="<img src=&quot;handled-pixel\.png&quot;>"/);
+
+	// Plain text (no markup) is left untouched — no nested module is spun up.
 	expect(page).toContain('srcdoc="no assets here"');
 });
