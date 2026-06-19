@@ -8,9 +8,10 @@ it("should rewrite asset URLs inside <iframe srcdoc>", () => {
 	expect(page).not.toContain("./pixel.png");
 	expect(page).not.toContain("./other.png");
 
-	// `src` is rewritten and re-escaped (`"` -> `&quot;`, decoded `'` -> `&#39;`).
+	// `src` is rewritten and the processed HTML re-escaped for the attribute,
+	// exercising all three escapes: `"` -> `&quot;`, `'` -> `&#39;`, `&` -> `&amp;`.
 	expect(page).toMatch(
-		/srcdoc="<img src=&quot;handled-pixel\.png&quot; alt=&quot;a&#39;b&quot;>"/
+		/srcdoc="<img src=&quot;handled-pixel\.png&quot; alt=&quot;a&#39;b&amp;c&quot;>"/
 	);
 
 	// Markup without assets passes through unchanged (idempotent).
@@ -30,6 +31,26 @@ it("should rewrite asset URLs inside <iframe srcdoc>", () => {
 	expect(page).toMatch(
 		/srcdoc="<div style=&quot;background: url\(handled-pixel\.png\)&quot;>styled<\/div>"/
 	);
+
+	// A single-quoted `srcdoc='...'` attribute is handled too.
+	expect(page).toMatch(/srcdoc='<img src=&quot;handled-pixel\.png&quot;>'/);
+
+	// Non-`img` asset references (here `<link href>`) are rewritten as well.
+	expect(page).toMatch(
+		/srcdoc="<link rel=&quot;icon&quot; href=&quot;handled-pixel\.png&quot;>"/
+	);
+
+	// Nested `<iframe srcdoc>` recurses; the multi-level escaping turns the inner
+	// `&quot;` into `&amp;quot;` while the innermost asset is still rewritten.
+	expect(page).toMatch(
+		/srcdoc="<iframe srcdoc=&quot;<img src=&amp;quot;handled-pixel\.png&amp;quot;>&quot;>"/
+	);
+
+	// TODO (see HtmlParser) external/absolute URLs are currently turned into a
+	// dependency that resolves to an empty `data:,` instead of being left
+	// untouched. This snapshots the current (to-be-fixed) behavior so a future
+	// fix is visible in the diff.
+	expect(page).toMatch(/srcdoc="<img src=&quot;data:,&quot;>"/);
 
 	// Plain text (no markup) is left untouched — no nested module is spun up.
 	expect(page).toContain('srcdoc="no assets here"');
