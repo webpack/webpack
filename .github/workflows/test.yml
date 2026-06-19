@@ -295,8 +295,6 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   # Run webpack's test suite under Deno and Bun (spec validation suites excluded).
-  # Both are non-blocking (for-visibility): jest can't fully run under Bun yet, and
-  # Deno 2.8.3 has intermittent panics JS cannot trap (see the run step below).
   runtimes:
     needs: basic
     strategy:
@@ -331,16 +329,12 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
-      # Both runtimes are non-blocking (for-visibility), so don't let them block
-      # the PR. Bun can't fully run jest yet (see test/bun-preload.js). Deno 2.8.3
-      # intermittently hard-panics (a Rust abort that JS cannot trap, "Module not
-      # found" at bindings.rs) on some module loads; it lands on a different case
-      # each run and doesn't reproduce locally, so it can't be pinned to a per-case
-      # test.filter.js. The run is in-band (see test:base:deno) to keep failures
-      # ordinary where possible, and the HotTestCases suites are dropped (see
+      # The Deno run is in-band (see test:base:deno): under jest's parallel workers
+      # Deno 2.8.3 hard-panics (a Rust abort JS cannot trap) on some module loads,
+      # killing a worker; in-band keeps failures ordinary so test.filter.js can skip
+      # the genuinely-incompatible cases. The HotTestCases suites are dropped (see
       # test:deno) due to a jest+Deno warmup teardown race that isn't per-case.
       - run: yarn test:${{ matrix.runtime }} --ci
-        continue-on-error: true
 
   integration:
     needs: basic
