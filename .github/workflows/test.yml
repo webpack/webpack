@@ -332,9 +332,12 @@ jobs:
       - run: yarn link webpack --frozen-lockfile
 
       # Bun can't fully run jest yet, so don't let its failure block the PR.
-      # The Deno run drops the HotTestCases suites (see test:deno): their shared
-      # warmup test intermittently fails on a jest+Deno async-teardown race, not a
-      # per-case failure, so it can't be targeted with a per-case test.filter.js.
+      # The Deno run is in-band (see test:base:deno): Deno 2.8.3 hard-panics
+      # (a Rust abort that JS cannot trap) on some module loads, which kills a
+      # jest worker and fails the whole suite non-deterministically; in-band turns
+      # those into ordinary per-case failures that test.filter.js can skip. The
+      # HotTestCases suites are also dropped (see test:deno): their shared warmup
+      # test flakes on a jest+Deno teardown race that isn't per-case.
       - run: yarn test:${{ matrix.runtime }} --ci
         continue-on-error: ${{ matrix.runtime == 'bun' }}
 
