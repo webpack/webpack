@@ -22385,6 +22385,8 @@ declare abstract class RuntimeTemplate {
 	 * operator when supported and falling back to `target = target || value`
 	 * otherwise. `target` is evaluated twice in the fallback, so it must be
 	 * side-effect free. The expression evaluates to the resulting value.
+	 * Models `||` only, so `target` must never hold a legitimate falsy value
+	 * (`0`, `""`, `false`) — it would be overwritten; use it for object/array defaults.
 	 */
 	assignOr(target: string, value: string): string;
 
