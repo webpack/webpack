@@ -5,6 +5,7 @@ const { HotModuleReplacementPlugin } = require("../../");
 
 // `webpack` resolves to this repo only because the example lives inside it;
 // real projects can drop this alias and import `webpack/hot/*` directly.
+/** @type {import("../../").Configuration} */
 const base = {
 	mode: "development",
 	context: __dirname,
