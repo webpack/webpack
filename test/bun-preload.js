@@ -53,3 +53,20 @@ const align = (target) => {
 };
 
 align(nodeModule.Module);
+
+// jest's globals cleanup reads web-stream getters (.closed/.ready) off the
+// prototypes; under Bun those reject and fail every test. getDeletionMode()
+// reads the mode off the host globalThis, so force it off here. jest re-inits
+// it per test file with its own mode and warns about the mismatch; silence it.
+try {
+	// eslint-disable-next-line import/no-extraneous-dependencies
+	require("jest-util").initializeGarbageCollectionUtils(globalThis, "off");
+	const originalWarn = console.warn.bind(console);
+	console.warn = (...args) =>
+		typeof args[0] === "string" &&
+		args[0].includes("garbage collection deletion mode already initialized")
+			? undefined
+			: originalWarn(...args);
+} catch (_err) {
+	// jest-util not resolvable; nothing to disable
+}
