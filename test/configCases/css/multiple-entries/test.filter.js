@@ -1,6 +1,5 @@
 "use strict";
 
-// Deno 2.8.3 produces different runtime/output behavior for this css case
-// (undefined CSS export / non-deterministic emitted-file order), so skip it.
-// TODO Bun emits the css files in a different order too, so the snapshot differs.
-module.exports = () => !process.versions.deno && !process.versions.bun;
+// TODO Deno 2.8.3 returns an undefined CSS export for this case, so skip it.
+// (The non-deterministic emitted-file order is fixed in test.config.js.)
+module.exports = () => !process.versions.deno;
