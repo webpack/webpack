@@ -267,6 +267,15 @@ describe("StatsTestCases", () => {
 						.replace(/(\w)\\(\w)/g, "$1/$2")
 						.replace(/, additional resolving: X ms/g, "")
 						.replace(/Unexpected identifier '.+?'/g, "Unexpected identifier")
+						// Normalize JSC (Bun) engine error phrasings to the V8 form.
+						.replace(
+							/Unexpected identifier\. Expected a ':' following the property name '[^']*'\./g,
+							"Unexpected identifier"
+						)
+						.replace(
+							/JSON Parse error: Unexpected EOF/g,
+							"Unexpected end of JSON input"
+						)
 						.replace(/[.0-9]+(\s?(bytes|KiB|MiB|GiB))/g, "X$1")
 						.replace(
 							/ms\s\([0-9a-f]{6,32}\)|(?!\d+-)[0-9a-f-]{6,32}\./g,
