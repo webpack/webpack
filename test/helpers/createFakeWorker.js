@@ -36,6 +36,12 @@ const { parentPort } = require("worker_threads");
 const { URL, fileURLToPath } = require("url");
 const path = require("path");
 const fs = require("fs");
+const { createRequire } = require("module");
+// Root require at a real file: Bun's eval-worker module context is a blob: URL,
+// from which require() of the emitted chunks (incl. hot-update) fails to resolve.
+const scopedRequire = createRequire(path.join(${JSON.stringify(
+				outputDirectory
+			)}, "__importScripts.js"));
 global.self = global;
 self.URL = URL;
 self.location = new URL(${JSON.stringify(
@@ -52,7 +58,7 @@ self.importScripts = url => {
 	${
 		options.type === "module"
 			? 'throw new Error("importScripts is not supported in module workers")'
-			: "require(urlToPath(url))"
+			: "scopedRequire(urlToPath(url))"
 	};
 };
 self.fetch = async url => {
@@ -83,21 +89,22 @@ self.fetch = async url => {
 self.postMessage = data => {
 	parentPort.postMessage(data);
 };
-if (${options.type === "module"}) {
-	import(${JSON.stringify(file)}).then(() => {
-		parentPort.on("message", data => {
-			if(self.onmessage) self.onmessage({
-				data
+// Bun dispatches to \`self.onmessage\` natively (web Worker API), so forwarding
+// parentPort messages to it as well would deliver every message twice. Node and
+// Deno do not, so there we must forward.
+const forward = process.versions.bun
+	? () => {}
+	: () =>
+			parentPort.on("message", data => {
+				if(self.onmessage) self.onmessage({
+					data
+				});
 			});
-		});
-	});
+if (${options.type === "module"}) {
+	import(${JSON.stringify(file)}).then(forward);
 } else {
-	parentPort.on("message", data => {
-		if(self.onmessage) self.onmessage({
-			data
-		});
-	});
-	require(${JSON.stringify(file)});
+	forward();
+	scopedRequire(${JSON.stringify(file)});
 }
 `;
 			this.worker = new (require("worker_threads").Worker)(workerBootstrap, {
