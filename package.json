@@ -67,7 +67,7 @@
     "test:deno": "yarn test:base:deno --reporters default --reporters \"<rootDir>/test/runtimeCrashReporter.js\" --testMatch \"<rootDir>/test/*.{basictest,longtest,test,unittest}.js\" --testPathIgnorePatterns \"/node_modules/\" \"test/HotTestCases\"",
     "test:base:deno": "deno --allow-read --allow-env --allow-sys --allow-ffi --allow-write --allow-run --allow-net --unstable-node-globals --unstable-bare-node-builtins --unstable-detect-cjs --v8-flags='--max-old-space-size=4096' ./node_modules/jest-cli/bin/jest.js --runInBand --logHeapUsage",
     "test:bun": "yarn test:base:bun --reporters default --reporters \"<rootDir>/test/runtimeCrashReporter.js\" --testMatch \"<rootDir>/test/*.{basictest,longtest,test,unittest}.js\" --testPathIgnorePatterns \"/node_modules/\" \"test/HotTestCases\" \"test/parseJson.unittest.js\" \"test/AbstractMethodError.unittest.js\" \"test/MultiItemCache.unittest.js\" \"test/WebpackCli.longtest.js\"",
-    "test:base:bun": "bun --bun --preload ./test/bun-preload.js ./node_modules/jest-cli/bin/jest.js --workerThreads --workerIdleMemoryLimit=512MB --logHeapUsage",
+    "test:base:bun": "bun --bun --preload ./test/bun-preload.js ./node_modules/jest-cli/bin/jest.js --runInBand --logHeapUsage",
     "test:update-snapshots": "yarn test:base -u",
     "report:cover": "nyc report --reporter=lcov  --reporter=text -t coverage",
     "report:cover:clean": "rimraf .nyc_output coverage",
