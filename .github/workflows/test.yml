@@ -329,11 +329,15 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
+      # Bun runs with worker_threads (see test:base:bun): in-band's single heap
+      # OOMs the runner on the full suite and Bun's child_process workers hang, but
+      # threads work once jest-worker loads the Bun preload per thread. Apply that
+      # patch here (Bun only) rather than via a repo-wide postinstall.
+      - if: matrix.runtime == 'bun'
+        run: git apply patches/jest-worker+30.4.1.patch
+
       # Deno runs in-band (see test:base:deno): under jest's parallel workers Deno
-      # 2.8.3 hard-panics (a Rust abort JS cannot trap) on some module loads. Bun
-      # runs with worker_threads (see test:base:bun): in-band's single heap OOMs the
-      # runner on the full suite and Bun's child_process workers hang, but threads
-      # work once jest-worker loads the Bun preload per thread (patches/). The
+      # 2.8.3 hard-panics (a Rust abort JS cannot trap) on some module loads. The
       # HotTestCases suites are dropped (see test:deno) due to a jest+Deno warmup
       # teardown race that isn't per-case.
       - run: yarn test:${{ matrix.runtime }} --ci
