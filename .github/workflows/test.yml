@@ -336,7 +336,6 @@ jobs:
       # suites are dropped (see test:deno) due to a jest+Deno warmup teardown race
       # that isn't per-case.
       - run: yarn test:${{ matrix.runtime }} --ci
-        continue-on-error: ${{ matrix.runtime == 'bun' }}
 
   integration:
     needs: basic
