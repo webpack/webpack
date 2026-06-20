@@ -338,8 +338,10 @@ jobs:
 
       # Deno runs in-band (see test:base:deno): under jest's parallel workers Deno
       # 2.8.3 hard-panics (a Rust abort JS cannot trap) on some module loads. The
-      # HotTestCases suites are dropped (see test:deno) due to a jest+Deno warmup
-      # teardown race that isn't per-case.
+      # HotTestCases suites are dropped for Deno only (see test:deno): running them
+      # all in-band cumulatively panics Deno in storeBuildDependencies, though each
+      # case passes alone, so it can't be skipped per-case. Bun runs them with only
+      # a few per-case test.filter.js skips.
       - run: yarn test:${{ matrix.runtime }} --ci
 
   integration:
