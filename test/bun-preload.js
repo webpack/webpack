@@ -18,6 +18,49 @@
 // Realign those descriptors with Node so the copy loop succeeds.
 
 const nodeModule = require("node:module");
+const nodeVm = require("node:vm");
+
+// Bun mishandles a `vm` `importModuleDynamically` callback that resolves to a
+// `vm.Module` (jest wraps every dynamically-imported CJS dep as one): the
+// dynamic import then resolves to an empty namespace. Returning the module's
+// `.namespace` works, so coerce the callback result wherever jest installs it
+// (CJS bodies via `compileFunction`, ESM via `SourceTextModule`).
+const toNamespace = (mod) =>
+	nodeVm.Module && mod instanceof nodeVm.Module ? mod.namespace : mod;
+const wrapDynamicImport = (options) => {
+	if (!options || typeof options.importModuleDynamically !== "function") {
+		return options;
+	}
+	const original = options.importModuleDynamically;
+	return {
+		...options,
+		importModuleDynamically(...args) {
+			const result = original.apply(this, args);
+			return result && typeof result.then === "function"
+				? result.then(toNamespace)
+				: toNamespace(result);
+		}
+	};
+};
+const originalCompileFunction = nodeVm.compileFunction;
+nodeVm.compileFunction = function compileFunction(code, params, options) {
+	return originalCompileFunction.call(
+		this,
+		code,
+		params,
+		wrapDynamicImport(options)
+	);
+};
+if (nodeVm.SourceTextModule) {
+	const OriginalSourceTextModule = nodeVm.SourceTextModule;
+	nodeVm.SourceTextModule = class SourceTextModule extends (
+		OriginalSourceTextModule
+	) {
+		constructor(code, options) {
+			super(code, wrapDynamicImport(options));
+		}
+	};
+}
 
 // Bun's native `fs.watch` does not deliver change events reliably under jest's
 // worker threads, so watchpack misses edits and the WatchTestCases hang or read
