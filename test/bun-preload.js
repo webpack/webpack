@@ -19,6 +19,11 @@
 
 const nodeModule = require("node:module");
 
+// Bun's native `fs.watch` does not deliver change events reliably under jest's
+// worker threads, so watchpack misses edits and the WatchTestCases hang or read
+// stale output. Force watchpack into polling mode (honored unless already set).
+if (!process.env.WATCHPACK_POLLING) process.env.WATCHPACK_POLLING = "100";
+
 // Statics Node keeps non-enumerable; hide them so `Object.entries` skips them.
 const HIDDEN = new Set(["prototype", "length", "name", "arguments", "caller"]);
 
