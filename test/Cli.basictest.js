@@ -901,17 +901,20 @@ describe("Cli", () => {
 
 		const defaultColors = createColors();
 
-		// Deno's default color-support detection differs, so createColors() emits
-		// no ANSI codes here; skip this assertion under Deno.
+		// Deno's and Bun's default color-support detection differs, so
+		// createColors() emits no ANSI codes here; skip this assertion on both.
 
-		(process.versions.deno ? it.skip : it)("simple (colors by default)", () => {
-			for (const [name, open, close] of colorsMap) {
-				expect(
-					/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (
-						/** @type {unknown} */ (defaultColors)
-					)[name](name)
-				).toBe(open + name + close);
+		(process.versions.deno || process.versions.bun ? it.skip : it)(
+			"simple (colors by default)",
+			() => {
+				for (const [name, open, close] of colorsMap) {
+					expect(
+						/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (
+							/** @type {unknown} */ (defaultColors)
+						)[name](name)
+					).toBe(open + name + close);
+				}
 			}
-		});
+		);
 	});
 });
