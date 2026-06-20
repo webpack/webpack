@@ -329,13 +329,12 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
-      # The Deno run is in-band (see test:base:deno): under jest's parallel workers
-      # Deno 2.8.3 hard-panics (a Rust abort JS cannot trap) on some module loads,
-      # killing a worker; in-band keeps failures ordinary so test.filter.js can skip
-      # the genuinely-incompatible cases. The HotTestCases suites are dropped (see
-      # test:deno) due to a jest+Deno warmup teardown race that isn't per-case.
-      # Bun is non-blocking: jest itself can't run under Bun yet (its sandboxed
-      # timers/web-streams break jest-circus), so it runs for visibility only.
+      # Both runtimes run in-band (see test:base:deno / test:base:bun): under jest's
+      # parallel workers Deno 2.8.3 hard-panics (a Rust abort JS cannot trap) on some
+      # module loads, killing a worker; in-band keeps failures ordinary so
+      # test.filter.js can skip the genuinely-incompatible cases. The HotTestCases
+      # suites are dropped (see test:deno) due to a jest+Deno warmup teardown race
+      # that isn't per-case.
       - run: yarn test:${{ matrix.runtime }} --ci
         continue-on-error: ${{ matrix.runtime == 'bun' }}
 
