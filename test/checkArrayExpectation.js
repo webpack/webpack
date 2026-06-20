@@ -62,6 +62,10 @@ const normalizeString = (str, testDirectory) => {
 		/Module parse failed: (?:JSON Parse error:|Unexpected token "[^"]*" \(0x|Unexpected \S+ in JSON|Unexpected end of JSON input|Unexpected non-whitespace character after JSON)[\s\S]*?(?=\nYou may need an appropriate loader)/g,
 		"Module parse failed: <JSON parse error>"
 	);
+	// Normalize JSC (Bun) magic-comment parse phrasing to the V8 form: JSC
+	// quotes the token and appends "Expected …", V8 does neither.
+	str = str.replace(/(Unexpected token) '([^']*)'\. Expected[^\n]*/g, "$1 $2");
+	str = str.replace(/(Unexpected identifier)\. Expected[^\n]*/g, "$1");
 	// Normalize "Unexpected token" messages — quoting and detail
 	// format varies across Node.js versions (e.g. with/without quotes,
 	// hex codes, trailing context).
