@@ -40,17 +40,18 @@ it("should rewrite asset URLs inside <iframe srcdoc>", () => {
 		/srcdoc="<link rel=&quot;icon&quot; href=&quot;handled-pixel\.png&quot;>"/
 	);
 
+	// URLs inside srcdoc go through the same pipeline as top-level HTML: a
+	// resolvable asset is emitted/rewritten, while absolute and protocol-relative
+	// URLs become the `data:,` ignored-asset (delegated, not special-cased).
+	expect(page).toMatch(
+		/srcdoc="<img src=&quot;handled-pixel\.png&quot;><img src=&quot;data:,&quot;><img src=&quot;data:,&quot;>"/
+	);
+
 	// Nested `<iframe srcdoc>` recurses; the multi-level escaping turns the inner
 	// `&quot;` into `&amp;quot;` while the innermost asset is still rewritten.
 	expect(page).toMatch(
 		/srcdoc="<iframe srcdoc=&quot;<img src=&amp;quot;handled-pixel\.png&amp;quot;>&quot;>"/
 	);
-
-	// TODO (see HtmlParser) external/absolute URLs are currently turned into a
-	// dependency that resolves to an empty `data:,` instead of being left
-	// untouched. This snapshots the current (to-be-fixed) behavior so a future
-	// fix is visible in the diff.
-	expect(page).toMatch(/srcdoc="<img src=&quot;data:,&quot;>"/);
 
 	// Plain text (no markup) is left untouched — no nested module is spun up.
 	expect(page).toContain('srcdoc="no assets here"');
