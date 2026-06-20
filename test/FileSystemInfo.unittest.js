@@ -236,9 +236,11 @@ describe("FileSystemInfo", () => {
 		/** @type {(err?: Error | null) => void} */ callback
 	) => {
 		const fsInfo = createFsInfo(fs);
-		const details = (
-			/** @type {unknown} */ snapshot
-		) => `${/** @type {string[]} */ (/** @type {Record<string, unknown>} */ (fsInfo).logs).join("\n")}
+		const details = (/** @type {unknown} */ snapshot) => `${
+			/** @type {string[]} */ (
+				/** @type {Record<string, unknown>} */ (fsInfo).logs
+			).join("\n")
+		}
 ${util.inspect(snapshot, false, Infinity, true)}`;
 		fsInfo.checkSnapshotValid(
 			/** @type {Snapshot} */ (snapshot),
@@ -1271,6 +1273,55 @@ ${details(snapshot)}`)
 				new Map([["x\n/proj\n./entry", "/proj/entry.js"]]),
 				(err) => {
 					expect(err).toBeInstanceOf(Error);
+					done();
+				}
+			);
+		});
+
+		it("parses ESM specifiers covering every string-escape form", (done) => {
+			const fs = createFsFromVolume(new Volume());
+			fs.mkdirSync("/proj", { recursive: true });
+			const CR = "\r";
+			const LF = "\n";
+			const LS = "\u2028";
+			const PS = "\u2029";
+			// Template literals keep es-module-lexer's `n` unset, so the specifier
+			// flows through `parseString`; the bad ones throw and are caught.
+			const source = `${[
+				"import(``);",
+				"import(`./plain.mjs`);",
+				"import(`./hex\\x41.mjs`);",
+				"import(`./unicode\\u0041.mjs`);",
+				"import(`./codepoint\\u{1F600}.mjs`);",
+				"import(`./named\\n\\t\\r\\b\\f\\v.mjs`);",
+				"import(`./nul\\0.mjs`);",
+				"import(`./other\\q\\$.mjs`);",
+				`import(\`./cont\\${LF}lf.mjs\`);`,
+				`import(\`./cont\\${CR}cr.mjs\`);`,
+				`import(\`./cont\\${CR}${LF}crlf.mjs\`);`,
+				`import(\`./cont\\${LS}ls.mjs\`);`,
+				`import(\`./cont\\${PS}ps.mjs\`);`,
+				`import(\`./raw${CR}cr.mjs\`);`,
+				"import(`./bad-hex\\xZZ.mjs`);",
+				"import(`./bad-unicode\\uZZZZ.mjs`);",
+				"import(`./bad-codepoint\\u{110000}.mjs`);",
+				"import(`./empty-codepoint\\u{}.mjs`);",
+				"import(`./octal\\101.mjs`);",
+				"import(`./decimal\\8.mjs`);",
+				// Non-analyzable args keep `n` unset and feed a string literal to
+				// parseString: legacy octal, \\8, and a non-literal (returns null).
+				'import("\\101" + x);',
+				'import("\\8" + x);',
+				'import(x + "\\u0041");'
+			].join("\n")}\n`;
+			fs.writeFileSync("/proj/entry.mjs", source);
+			const fsInfo = createProjectFsInfo(fs);
+			fsInfo.resolveBuildDependencies(
+				"/proj",
+				["/proj/entry.mjs"],
+				(err, result) => {
+					if (err) return done(err);
+					expect(result).toBeDefined();
 					done();
 				}
 			);
