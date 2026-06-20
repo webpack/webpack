@@ -54,19 +54,32 @@ const align = (target) => {
 
 align(nodeModule.Module);
 
-// jest's globals cleanup reads web-stream getters (.closed/.ready) off the
-// prototypes; under Bun those reject and fail every test. getDeletionMode()
-// reads the mode off the host globalThis, so force it off here. jest re-inits
-// it per test file with its own mode and warns about the mismatch; silence it.
-try {
-	// eslint-disable-next-line import/no-extraneous-dependencies
-	require("jest-util").initializeGarbageCollectionUtils(globalThis, "off");
-	const originalWarn = console.warn.bind(console);
-	console.warn = (...args) =>
-		typeof args[0] === "string" &&
-		args[0].includes("garbage collection deletion mode already initialized")
-			? undefined
-			: originalWarn(...args);
-} catch (_err) {
-	// jest-util not resolvable; nothing to disable
+// Bun's stream reader/writer `.closed`/`.ready` getters return a *rejected*
+// promise (not a sync throw) when read off the prototype. jest's globals cleanup
+// reads every global getter during env setup, so those rejections surface as
+// unhandled and fail tests. Attach a no-op catch so they are never "unhandled";
+// real instances still return the original promise to their consumers.
+for (const [name, keys] of [
+	["ReadableStreamDefaultReader", ["closed"]],
+	["ReadableStreamBYOBReader", ["closed"]],
+	["WritableStreamDefaultWriter", ["closed", "ready"]]
+]) {
+	const ctor = globalThis[name];
+	if (!ctor || !ctor.prototype) continue;
+	for (const key of keys) {
+		const descriptor = Object.getOwnPropertyDescriptor(ctor.prototype, key);
+		if (!descriptor || !descriptor.get) continue;
+		const original = descriptor.get;
+		Object.defineProperty(ctor.prototype, key, {
+			configurable: true,
+			enumerable: descriptor.enumerable,
+			get() {
+				const value = original.call(this);
+				if (value && typeof value.then === "function") {
+					value.catch(() => {});
+				}
+				return value;
+			}
+		});
+	}
 }
