@@ -87,6 +87,10 @@ function createFiles() {
 	);
 }
 
+// Bun's fs.watch surfaces unlink events differently from Node, so watchpack
+// reports the removed file inconsistently across runs; skip on Bun.
+const itSkipBun = process.versions.bun ? it.skip : it;
+
 describe("ChangesAndRemovals", () => {
 	beforeEach((done) => {
 		cleanup((err) => {
@@ -158,7 +162,7 @@ describe("ChangesAndRemovals", () => {
 		});
 	});
 
-	it("should track removed file when removing file", (done) => {
+	itSkipBun("should track removed file when removing file", (done) => {
 		const compiler = createSingleCompiler();
 		/** @type {import("../").Watching | null} */
 		let watcher = null;
