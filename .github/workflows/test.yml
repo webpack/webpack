@@ -334,7 +334,7 @@ jobs:
       # threads work once jest-worker loads the Bun preload per thread. Apply that
       # patch here (Bun only) rather than via a repo-wide postinstall.
       - if: matrix.runtime == 'bun'
-        run: git apply patches/jest-worker+30.4.1.patch
+        run: git apply test/patches/jest-worker+30.4.1.patch
 
       # Deno runs in-band (see test:base:deno): under jest's parallel workers Deno
       # 2.8.3 hard-panics (a Rust abort JS cannot trap) on some module loads. The

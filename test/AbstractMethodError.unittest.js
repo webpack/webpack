@@ -2,6 +2,10 @@
 
 const AbstractMethodError = require("../lib/errors/AbstractMethodError");
 
+// TODO JSC (Bun) formats Error.stack differently than V8, so the caller name
+// folded into the message can't be parsed the same way.
+const itSkipBun = process.versions.bun ? it.skip : it;
+
 describe("WebpackError", () => {
 	class Foo {
 		abstractMethod() {
@@ -13,7 +17,7 @@ describe("WebpackError", () => {
 
 	const expectedMessage = "Abstract method $1. Must be overridden.";
 
-	it("should construct message with caller info", () => {
+	itSkipBun("should construct message with caller info", () => {
 		const fooClassError = new Foo().abstractMethod();
 		const childClassError = new Child().abstractMethod();
 
