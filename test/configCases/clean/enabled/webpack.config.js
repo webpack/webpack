@@ -41,8 +41,8 @@ module.exports = {
 			    "this/dir/should/not/be/removed",
 			  ],
 			  "files": Array [
-			    "this/dir/should/not/be/removed/file.ext",
 			    "bundle0.js",
+			    "this/dir/should/not/be/removed/file.ext",
 			  ],
 			}
 		`);

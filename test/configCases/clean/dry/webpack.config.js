@@ -31,16 +31,16 @@ module.exports = {
 			    "this",
 			    "this/dir",
 			    "this/dir/should",
+			    "this/dir/should/be",
+			    "this/dir/should/be/removed",
 			    "this/dir/should/not",
 			    "this/dir/should/not/be",
 			    "this/dir/should/not/be/removed",
-			    "this/dir/should/be",
-			    "this/dir/should/be/removed",
 			  ],
 			  "files": Array [
-			    "this/dir/should/not/be/removed/file.ext",
-			    "this/dir/should/be/removed/file.ext",
 			    "bundle0.js",
+			    "this/dir/should/be/removed/file.ext",
+			    "this/dir/should/not/be/removed/file.ext",
 			  ],
 			}
 		`);

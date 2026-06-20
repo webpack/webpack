@@ -99,6 +99,15 @@ describe("WebpackCLI integration", () => {
 		return;
 	}
 
+	// TODO Bun 1.3.11 hard-segfaults while running the webpack-cli child process
+	// (crash is at execution, not load); skip the whole suite on Bun.
+	if (process.versions.bun) {
+		// eslint-disable-next-line jest/no-disabled-tests
+		it.skip("segfaults under Bun", () => {});
+
+		return;
+	}
+
 	it("parses every cli argument type into the webpack config", async () => {
 		const { config } = await run([
 			"--flag",

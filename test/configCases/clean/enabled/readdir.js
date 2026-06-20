@@ -41,8 +41,10 @@ module.exports = function readDir(from) {
 		}
 	}
 
+	// Sort so the snapshot is stable across runtimes (Deno's `fs.readdirSync`
+	// returns entries in a different order than Node).
 	return {
-		files: collectedFiles,
-		directories: collectedDirectories
+		files: collectedFiles.sort(),
+		directories: collectedDirectories.sort()
 	};
 }
