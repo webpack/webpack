@@ -53,6 +53,19 @@ it("should rewrite asset URLs inside <iframe srcdoc>", () => {
 		/srcdoc="<iframe srcdoc=&quot;<img src=&amp;quot;handled-pixel\.png&amp;quot;>&quot;>"/
 	);
 
+	// A full document (DOCTYPE + html/head/body, the canonical srcdoc form per
+	// the HTML spec) is parsed in document mode; assets in head and body resolve.
+	expect(page).toMatch(
+		/srcdoc="<!DOCTYPE html><html><head><link rel=&quot;icon&quot; href=&quot;handled-pixel\.png&quot;><\/head><body><img src=&quot;handled-other\.png&quot;><\/body><\/html>"/
+	);
+
+	// The exact syntactic form the HTML spec defines for srcdoc (comments + ASCII
+	// whitespace, an optional DOCTYPE, the `html` document element, more comments)
+	// parses cleanly: comments and DOCTYPE are preserved, the inner asset resolves.
+	expect(page).toMatch(
+		/srcdoc="<!-- lead --> <!DOCTYPE html> <!-- mid --> <html><body><img src=&quot;handled-pixel\.png&quot;><\/body><\/html> <!-- trail -->"/
+	);
+
 	// Plain text (no markup) is left untouched — no nested module is spun up.
 	expect(page).toContain('srcdoc="no assets here"');
 });
