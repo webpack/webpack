@@ -178,6 +178,7 @@
     "middlewares",
     "mimetype",
     "mixins",
+    "mklink",
     "modulehash",
     "moduleid",
     "modulepreload",
