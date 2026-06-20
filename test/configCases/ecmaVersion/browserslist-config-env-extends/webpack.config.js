@@ -23,6 +23,7 @@ module.exports = {
 			  "hasOwn": false,
 			  "importMetaDirnameAndFilename": false,
 			  "let": false,
+			  "logicalAssignment": false,
 			  "methodShorthand": false,
 			  "module": false,
 			  "nodeBuiltinModuleGetter": false,

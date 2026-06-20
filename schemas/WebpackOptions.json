@@ -1105,6 +1105,10 @@
           "description": "The environment supports let for variable declarations.",
           "type": "boolean"
         },
+        "logicalAssignment": {
+          "description": "The environment supports logical assignment operators ('a ||= b', 'a &&= b', 'a ??= b').",
+          "type": "boolean"
+        },
         "methodShorthand": {
           "description": "The environment supports object method shorthand ('{ module() {} }').",
           "type": "boolean"

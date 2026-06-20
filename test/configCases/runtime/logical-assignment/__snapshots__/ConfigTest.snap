@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases runtime logical-assignment exported tests should emit logical assignment in the chunk-loading runtime (bundle0.js) 1`] = `
+Array [
+  "const installedChunks = __webpack_require__.hmrS_jsonp ||= {",
+  "const chunkLoadingGlobal = self[\\"webpackChunk\\"] ||= [];",
+]
+`;
+
+exports[`ConfigTestCases runtime logical-assignment exported tests should emit logical assignment in the chunk-loading runtime (bundle1.js) 1`] = `
+Array [
+  "const installedChunks = __webpack_require__.hmrS_require ||= {",
+]
+`;
+
+exports[`ConfigTestCases runtime logical-assignment exported tests should emit logical assignment in the chunk-loading runtime (bundle2.js) 1`] = `
+Array [
+  "var installedChunks = __webpack_require__.hmrS_readFileVm ||= {",
+]
+`;
+
+exports[`ConfigTestCases runtime logical-assignment exported tests should emit logical assignment in the chunk-loading runtime (bundle3.js) 1`] = `
+Array [
+  "var installedChunks = __webpack_require__.hmrS_importScripts ||= {",
+  "var chunkLoadingGlobal = self[\\"webpackChunk\\"] ||= [];",
+]
+`;

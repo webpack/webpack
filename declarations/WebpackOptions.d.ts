@@ -2668,6 +2668,10 @@ export interface Environment {
 	 */
 	let?: boolean;
 	/**
+	 * The environment supports logical assignment operators ('a ||= b', 'a &&= b', 'a ??= b').
+	 */
+	logicalAssignment?: boolean;
+	/**
 	 * The environment supports object method shorthand ('{ module() {} }').
 	 */
 	methodShorthand?: boolean;

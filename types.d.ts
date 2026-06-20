@@ -7105,6 +7105,11 @@ declare interface Environment {
 	let?: boolean;
 
 	/**
+	 * The environment supports logical assignment operators ('a ||= b', 'a &&= b', 'a ??= b').
+	 */
+	logicalAssignment?: boolean;
+
+	/**
 	 * The environment supports object method shorthand ('{ module() {} }').
 	 */
 	methodShorthand?: boolean;
@@ -22296,6 +22301,7 @@ declare abstract class RuntimeTemplate {
 	supportsConst(): boolean;
 	supportsLet(): boolean;
 	supportsMethodShorthand(): boolean;
+	supportsLogicalAssignment(): boolean;
 	supportsArrowFunction(): boolean;
 	supportsAsyncFunction(): boolean;
 	supportsOptionalChaining(): boolean;
@@ -22373,6 +22379,16 @@ declare abstract class RuntimeTemplate {
 	 * falling back to `Object.prototype.hasOwnProperty.call` otherwise.
 	 */
 	objectHasOwn(object: string, property: string): string;
+
+	/**
+	 * Returns a self-defaulting assignment, using the `||=` logical assignment
+	 * operator when supported and falling back to `target = target || value`
+	 * otherwise. `target` is evaluated twice in the fallback, so it must be
+	 * side-effect free. The expression evaluates to the resulting value.
+	 * Models `||` only, so `target` must never hold a legitimate falsy value
+	 * (`0`, `""`, `false`) — it would be overwritten; use it for object/array defaults.
+	 */
+	assignOr(target: string, value: string): string;
 
 	/**
 	 * Returns destructure array code.
