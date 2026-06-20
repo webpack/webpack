@@ -9,8 +9,9 @@ const _denoOrigFilter = module.exports;
 // Deno 2.8.3 hard-panics ("Module not found", bindings.rs) instead of throwing
 // when executing this case's output; the panic aborts the process and cannot be
 // caught, so skip the case under Deno.
-// TODO Bun hangs here (same root cause as worker/node-worker-esm): a message
-// queued while webpack's import() worker chunk loading is in flight stalls Bun's
-// event loop, so the worker never attaches its listener; Node buffers it.
+// TODO Bun drops a worker message posted before the listener attaches: the
+// split-chunk module worker loads its chunks during startup, so self.onmessage
+// lands after; Node/browsers buffer the message. Same root cause as
+// node-worker-esm.
 module.exports = (...args) =>
 	!process.versions.deno && !process.versions.bun && _denoOrigFilter(...args);
