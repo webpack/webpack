@@ -115,8 +115,10 @@ const exec = (
 
 const supportsEsm = Number(process.versions.modules) >= 83;
 
-// TODO under Bun webpack's FileSystemInfo doesn't emit the managed-item
-// warning this test asserts (fs introspection differs); skip on Bun.
+// TODO Bun doesn't populate `module.children` for requires made from inside a
+// node_modules package, so webpack's build-dependency walk (require.cache
+// children) never reaches the `dep-without-package.json` managed item and the
+// warning this test asserts is never emitted; skip on Bun.
 const itSkipBun = process.versions.bun ? it.skip : it;
 
 describe("BuildDependencies", () => {
