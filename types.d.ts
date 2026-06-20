@@ -4782,6 +4782,17 @@ declare class ConstDependency extends NullDependency {
 	range: number | [number, number];
 	runtimeRequirements: null | Set<string>;
 	static Template: typeof ConstDependencyTemplate;
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 
@@ -5848,6 +5859,14 @@ declare class Dependency {
 	): void;
 
 	/**
+	 * Updates loc from a source location plus an explicit index, without
+	 * materializing the `loc` object (keeps `get loc` lazy). Replaces the
+	 * `dep.loc = Object.create(loc); dep.loc.index = i` pattern, which both
+	 * allocated a copy and stored the index outside the serialized fields.
+	 */
+	setLocWithIndex(loc: DependencyLocation, index: number): void;
+
+	/**
 	 * Returns a request context.
 	 */
 	getContext(): undefined | string;
@@ -5967,6 +5986,17 @@ declare class Dependency {
 	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 	module: any;
 	get disconnect(): any;
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 
@@ -9212,6 +9242,17 @@ declare class HarmonyImportDependency extends ModuleDependency {
 		members: string[],
 		membersOptionals: boolean[]
 	) => string[];
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 
@@ -15151,6 +15192,17 @@ declare class ModuleDependency extends Dependency {
 	range?: [number, number];
 	weak: boolean;
 	static Template: typeof DependencyTemplate;
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 
@@ -17478,6 +17530,17 @@ type NormalizedStatsOptions = KnownNormalizedStatsOptions &
 declare class NullDependency extends Dependency {
 	constructor();
 	static Template: typeof NullDependencyTemplate;
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 
