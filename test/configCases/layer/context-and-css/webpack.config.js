@@ -29,7 +29,9 @@ module.exports = {
 								loader: "less-loader",
 								options: {
 									additionalData:
-										"@color: white; @property-color: color-light; @property-background: background-light;"
+										"@color: white; @property-color: color-light; @property-background: background-light;",
+									// Use the CJS less; default `import("less")` crashes Bun's vm.
+									implementation: require("less")
 								}
 							}
 						]
@@ -41,7 +43,8 @@ module.exports = {
 								loader: "less-loader",
 								options: {
 									additionalData:
-										"@color: black; @property-color: color-dark; @property-background: background-dark;"
+										"@color: black; @property-color: color-dark; @property-background: background-dark;",
+									implementation: require("less")
 								}
 							}
 						]

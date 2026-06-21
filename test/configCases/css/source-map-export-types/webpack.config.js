@@ -27,7 +27,8 @@ const makeConfig = (exportType, useLess) => {
 							use: [
 								{
 									loader: "less-loader",
-									options: { sourceMap: true }
+									// Use the CJS less; less-loader's default `import("less")` crashes Bun's vm.
+									options: { sourceMap: true, implementation: require("less") }
 								}
 							],
 							type: "css/auto",

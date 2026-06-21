@@ -29,7 +29,9 @@ module.exports = {
 							{
 								loader: "less-loader",
 								options: {
-									additionalData: "@color: white;"
+									additionalData: "@color: white;",
+									// Use the CJS less; default `import("less")` crashes Bun's vm.
+									implementation: require("less")
 								}
 							}
 						]
@@ -42,7 +44,8 @@ module.exports = {
 							{
 								loader: "less-loader",
 								options: {
-									additionalData: "@color: black;"
+									additionalData: "@color: black;",
+									implementation: require("less")
 								}
 							}
 						]

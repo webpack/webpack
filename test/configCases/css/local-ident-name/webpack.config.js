@@ -8,7 +8,13 @@ const common = {
 			{
 				test: /\.less$/,
 				type: "css/auto",
-				use: ["less-loader"],
+				// Use the CJS less; less-loader's default `import("less")` crashes Bun's vm.
+				use: [
+					{
+						loader: "less-loader",
+						options: { implementation: require("less") }
+					}
+				],
 				generator: {
 					localIdentName: "[path][name][ext]__[local]"
 				}

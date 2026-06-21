@@ -30,7 +30,14 @@ module.exports = [
 				},
 				{
 					test: /\.less$/,
-					use: ["./remove-source-map-url-loader", "less-loader"],
+					// Use the CJS less; less-loader's default `import("less")` crashes Bun's vm.
+					use: [
+						"./remove-source-map-url-loader",
+						{
+							loader: "less-loader",
+							options: { implementation: require("less") }
+						}
+					],
 					type: "css/global"
 				}
 			]
