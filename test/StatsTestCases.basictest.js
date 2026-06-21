@@ -295,12 +295,16 @@ describe("StatsTestCases", () => {
 					);
 					actual = actual
 						.split("\n")
-						.flatMap((line) => {
+						.reduce((lines, line) => {
 							const prefix = line.match(/^(\s*\|\s+)at\b/);
-							if (!prefix) return [line];
+							if (!prefix) {
+								lines.push(line);
+								return lines;
+							}
 							const file = line.match(traceFile);
-							return file ? [`${prefix[1]}at ${file[0]}`] : [];
-						})
+							if (file) lines.push(`${prefix[1]}at ${file[0]}`);
+							return lines;
+						}, /** @type {string[]} */ ([]))
 						.join("\n");
 					expect(actual).toMatchSnapshot();
 
