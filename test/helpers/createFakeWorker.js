@@ -89,21 +89,28 @@ self.fetch = async url => {
 self.postMessage = data => {
 	parentPort.postMessage(data);
 };
-// Bun dispatches to \`self.onmessage\` natively (web Worker API), so forwarding
-// parentPort messages to it as well would deliver every message twice. Node and
-// Deno do not, so there we must forward.
-const forward = process.versions.bun
-	? () => {}
-	: () =>
-			parentPort.on("message", data => {
-				if(self.onmessage) self.onmessage({
-					data
-				});
-			});
+// Deliver parentPort messages to self.onmessage, buffering until it is set
+// (browsers queue messages until onmessage is assigned; the worker module may
+// set it only after async startup). Defining onmessage as an accessor also stops
+// Bun's web-Worker API from dispatching to it natively, which would otherwise
+// deliver every message twice.
+let onmessageHandler;
+const messageBuffer = [];
+Object.defineProperty(self, "onmessage", {
+	configurable: true,
+	get() { return onmessageHandler; },
+	set(fn) {
+		onmessageHandler = fn;
+		if (fn) for (const data of messageBuffer.splice(0)) fn({ data });
+	}
+});
+parentPort.on("message", data => {
+	if (onmessageHandler) onmessageHandler({ data });
+	else messageBuffer.push(data);
+});
 if (${options.type === "module"}) {
-	import(${JSON.stringify(file)}).then(forward);
+	import(${JSON.stringify(file)});
 } else {
-	forward();
 	scopedRequire(${JSON.stringify(file)});
 }
 `;
