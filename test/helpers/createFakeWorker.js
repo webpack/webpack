@@ -43,10 +43,17 @@ const scopedRequire = createRequire(path.join(${JSON.stringify(
 				outputDirectory
 			)}, "__importScripts.js"));
 global.self = global;
+// Expose parentPort as a global for workers that use it directly (e.g. the
+// blob-URL worker); Bun does not surface it implicitly the way Node does here.
+self.parentPort = parentPort;
 self.URL = URL;
 self.location = new URL(${JSON.stringify(
+				// Engines format object URLs differently (Node "blob:nodedata:<id>",
+				// Bun "blob:<id>"); build a blob: location from the original URL so the
+				// runtime's publicPath derivation (strip "blob:" + last path segment)
+				// works regardless.
 				isBlobURL
-					? resource.toString().replace("nodedata:", "https://test.cases/path/")
+					? `blob:${/** @type {URL} */ (options.originalURL)}`
 					: resource.toString()
 			)});
 const urlToPath = url => {
