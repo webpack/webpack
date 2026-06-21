@@ -5,13 +5,16 @@
 // the CJS less to skip the dynamic import. On Node it delegates unchanged.
 const lessLoader = require("less-loader");
 
-module.exports = function loader(...args) {
+/** @type {import("../../../../").LoaderDefinition} */
+module.exports = function loader(content) {
 	if (process.versions.bun) {
-		const getOptions = this.getOptions.bind(this);
-		this.getOptions = (schema) => ({
+		// Make less-loader read the CJS less (skips its crashing `import("less")`).
+		const ctx = /** @type {EXPECTED_ANY} */ (this);
+		const getOptions = ctx.getOptions.bind(ctx);
+		ctx.getOptions = (/** @type {EXPECTED_ANY} */ schema) => ({
 			implementation: require("less"),
 			...getOptions(schema)
 		});
 	}
-	return lessLoader.apply(this, args);
+	return lessLoader.call(this, content);
 };
