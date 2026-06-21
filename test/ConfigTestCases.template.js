@@ -53,8 +53,17 @@ const createLogger = (appendTarget) => ({
 	debug: (/** @type {string} */ l) => appendTarget.push(l),
 	trace: (/** @type {string} */ l) => appendTarget.push(l),
 	info: (/** @type {string} */ l) => appendTarget.push(l),
-	warn: console.warn.bind(console),
-	error: console.error.bind(console),
+	// Also collect warn/error so cache store/restore failures (logged via
+	// `logger.warn`, e.g. "Caching failed for pack") are recorded and fail the
+	// test instead of being swallowed by jest's console buffering.
+	warn: (/** @type {string} */ l, /** @type {EXPECTED_ANY[]} */ ...args) => {
+		appendTarget.push(l);
+		console.warn(l, ...args);
+	},
+	error: (/** @type {string} */ l, /** @type {EXPECTED_ANY[]} */ ...args) => {
+		appendTarget.push(l);
+		console.error(l, ...args);
+	},
 	logTime: () => {},
 	group: () => {},
 	groupCollapsed: () => {},
@@ -291,37 +300,39 @@ const describeCases = (config) => {
 								compiler.run((err) => {
 									deprecationTracker();
 									if (err) return handleFatalError(err, done);
-									const infrastructureLogging = stderr.toString();
-									if (infrastructureLogging) {
-										return done(
-											new Error(
-												`Errors/Warnings during build:\n${infrastructureLogging}`
-											)
-										);
-									}
-									const infrastructureLogErrors = filterInfraStructureErrors(
-										infraStructureLog,
-										{
-											run: 1,
-											options
-										}
-									);
-									if (
-										infrastructureLogErrors.length &&
-										checkArrayExpectation(
-											testDirectory,
-											{ infrastructureLogs: infrastructureLogErrors },
-											"infrastructureLog",
-											"infrastructure-log",
-											"InfrastructureLog",
-											options,
-											done
-										)
-									) {
-										return;
-									}
+									// Check after close: the disk cache is stored during close,
+									// so store failures (warnings) only surface afterwards.
 									compiler.close((closeErr) => {
 										if (closeErr) return handleFatalError(closeErr, done);
+										const infrastructureLogging = stderr.toString();
+										if (infrastructureLogging) {
+											return done(
+												new Error(
+													`Errors/Warnings during build:\n${infrastructureLogging}`
+												)
+											);
+										}
+										const infrastructureLogErrors = filterInfraStructureErrors(
+											infraStructureLog,
+											{
+												run: 1,
+												options
+											}
+										);
+										if (
+											infrastructureLogErrors.length &&
+											checkArrayExpectation(
+												testDirectory,
+												{ infrastructureLogs: infrastructureLogErrors },
+												"infrastructureLog",
+												"infrastructure-log",
+												"InfrastructureLog",
+												options,
+												done
+											)
+										) {
+											return;
+										}
 										done();
 									});
 								});
@@ -347,14 +358,6 @@ const describeCases = (config) => {
 											errorsCount: true
 										});
 									if (errorsCount === 0) {
-										const infrastructureLogging = stderr.toString();
-										if (infrastructureLogging) {
-											return done(
-												new Error(
-													`Errors/Warnings during build:\n${infrastructureLogging}`
-												)
-											);
-										}
 										const allModules = children
 											? children.reduce(
 													(all, { modules }) => [
@@ -388,29 +391,41 @@ const describeCases = (config) => {
 											);
 										}
 									}
-									const infrastructureLogErrors = filterInfraStructureErrors(
-										infraStructureLog,
-										{
-											run: 2,
-											options
-										}
-									);
-									if (
-										infrastructureLogErrors.length &&
-										checkArrayExpectation(
-											testDirectory,
-											{ infrastructureLogs: infrastructureLogErrors },
-											"infrastructureLog",
-											"infrastructure-log",
-											"InfrastructureLog",
-											options,
-											done
-										)
-									) {
-										return;
-									}
+									// Check after close: the disk cache is stored during close,
+									// so store failures (warnings) only surface afterwards.
 									compiler.close((closeErr) => {
 										if (closeErr) return handleFatalError(closeErr, done);
+										if (errorsCount === 0) {
+											const infrastructureLogging = stderr.toString();
+											if (infrastructureLogging) {
+												return done(
+													new Error(
+														`Errors/Warnings during build:\n${infrastructureLogging}`
+													)
+												);
+											}
+										}
+										const infrastructureLogErrors = filterInfraStructureErrors(
+											infraStructureLog,
+											{
+												run: 2,
+												options
+											}
+										);
+										if (
+											infrastructureLogErrors.length &&
+											checkArrayExpectation(
+												testDirectory,
+												{ infrastructureLogs: infrastructureLogErrors },
+												"infrastructureLog",
+												"infrastructure-log",
+												"InfrastructureLog",
+												options,
+												done
+											)
+										) {
+											return;
+										}
 										done();
 									});
 								});

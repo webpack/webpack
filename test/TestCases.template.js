@@ -58,8 +58,17 @@ const createLogger = (appendTarget) => ({
 	debug: (/** @type {string} */ l) => appendTarget.push(l),
 	trace: (/** @type {string} */ l) => appendTarget.push(l),
 	info: (/** @type {string} */ l) => appendTarget.push(l),
-	warn: console.warn.bind(console),
-	error: console.error.bind(console),
+	// Also collect warn/error so cache store/restore failures (logged via
+	// `logger.warn`, e.g. "Caching failed for pack") are recorded and fail the
+	// test instead of being swallowed by jest's console buffering.
+	warn: (/** @type {string} */ l, /** @type {EXPECTED_ANY[]} */ ...args) => {
+		appendTarget.push(l);
+		console.warn(l, ...args);
+	},
+	error: (/** @type {string} */ l, /** @type {EXPECTED_ANY[]} */ ...args) => {
+		appendTarget.push(l);
+		console.error(l, ...args);
+	},
 	logTime: () => {},
 	group: () => {},
 	groupCollapsed: () => {},
