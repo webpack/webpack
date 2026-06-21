@@ -4,6 +4,7 @@ require("./helpers/warmup-webpack");
 
 const path = require("path");
 const fs = require("graceful-fs");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 jest.setTimeout(60000);
 
@@ -56,6 +57,9 @@ async function loadConfiguration(projectDir) {
 }
 
 describe("Examples", () => {
+	// http2-aggressive-splitting intentionally uses the deprecated plugin alias
+	expectNoDeprecations(["DEP_WEBPACK_AGGRESSIVE_SPLITTING_PLUGIN"]);
+
 	const basePath = path.join(__dirname, "..", "examples");
 
 	const examples = require("../examples/examples");

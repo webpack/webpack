@@ -8,6 +8,7 @@ const rimraf = require("rimraf");
 const webpack = require("..");
 const { registerPerCaseSnapshotHooks } = require("./harness/snapshot");
 const captureStdio = require("./helpers/captureStdio");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 /**
  * Escapes regular expression metacharacters
@@ -41,6 +42,8 @@ const tests = fs
 
 describe("StatsTestCases", () => {
 	jest.setTimeout(30000);
+	// aggressive-splitting cases intentionally use the deprecated plugin alias
+	expectNoDeprecations(["DEP_WEBPACK_AGGRESSIVE_SPLITTING_PLUGIN"]);
 	/** @type {CapturedStdio} */
 	let stderr;
 
