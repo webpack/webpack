@@ -7,7 +7,8 @@ module.exports = () => supportsWorker() && supportsBlob();
 
 const _denoOrigFilter = module.exports;
 
-// Deno 2.8.3 runs this case differently than Node (worker execution or
-// emitted output differs), so skip it under Deno.
+// Under Deno the fake worker_threads worker rejects an in-worker chunk load
+// (a blob:/data:/custom-publicPath URL it cannot map) asynchronously after the
+// case finished, surfacing as an uncaught error that fails a later case.
 module.exports = (...args) =>
 	!process.versions.deno && _denoOrigFilter(...args);

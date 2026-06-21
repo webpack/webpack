@@ -125,6 +125,16 @@ if (${options.type === "module"}) {
 				eval: true
 			});
 
+			this._terminated = false;
+			// A chunk load rejected after the test got its result and called
+			// terminate() surfaces as an uncaught worker error (notably under Deno,
+			// where pending dynamic imports reject during teardown); swallow it once
+			// terminated so it can't fail an unrelated later test. Genuine in-test
+			// errors still propagate.
+			this.worker.on("error", (err) => {
+				if (!this._terminated) throw err;
+			});
+
 			/** @type {((data: unknown) => void) | undefined} */
 			this._onmessage = undefined;
 		}
@@ -147,6 +157,7 @@ if (${options.type === "module"}) {
 		}
 
 		terminate() {
+			this._terminated = true;
 			return this.worker.terminate();
 		}
 	};

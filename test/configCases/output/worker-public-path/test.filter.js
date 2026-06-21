@@ -2,7 +2,12 @@
 
 const supportsWorker = require("../../../helpers/supportsWorker");
 
-// Deno 2.8.3 hard-panics ("Module not found", bindings.rs) instead of throwing
-// when the worker loads the public-path chunk; the panic aborts the process and
-// cannot be caught, so skip the case under Deno.
-module.exports = () => !process.versions.deno && supportsWorker();
+module.exports = () => supportsWorker();
+
+const _denoOrigFilter = module.exports;
+
+// Under Deno the fake worker_threads worker rejects an in-worker chunk load
+// (a blob:/data:/custom-publicPath URL it cannot map) asynchronously after the
+// case finished, surfacing as an uncaught error that fails a later case.
+module.exports = (...args) =>
+	!process.versions.deno && _denoOrigFilter(...args);
