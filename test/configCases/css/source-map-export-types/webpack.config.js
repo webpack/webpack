@@ -2,6 +2,12 @@
 
 const path = require("path");
 
+// Bun aborts in its node:vm SourceTextModule.link() on less-loader's
+// `import("less")`; under Bun load the CJS less so it skips the dynamic import.
+const lessImplementation = process.versions.bun
+	? { implementation: require("less") }
+	: undefined;
+
 /**
  * @param {string} exportType the CSS parser exportType under test
  * @param {boolean} useLess whether to compile through less-loader
@@ -27,8 +33,7 @@ const makeConfig = (exportType, useLess) => {
 							use: [
 								{
 									loader: "less-loader",
-									// Use the CJS less; less-loader's default `import("less")` crashes Bun's vm.
-									options: { sourceMap: true, implementation: require("less") }
+									options: { sourceMap: true, ...lessImplementation }
 								}
 							],
 							type: "css/auto",

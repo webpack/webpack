@@ -1,5 +1,11 @@
 "use strict";
 
+// Bun aborts in its node:vm SourceTextModule.link() on less-loader's
+// `import("less")`; under Bun load the CJS less so it skips the dynamic import.
+const lessImplementation = process.versions.bun
+	? { implementation: require("less") }
+	: undefined;
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "web",
@@ -30,8 +36,7 @@ module.exports = {
 								options: {
 									additionalData:
 										"@color: white; @property-color: color-light; @property-background: background-light;",
-									// Use the CJS less; default `import("less")` crashes Bun's vm.
-									implementation: require("less")
+									...lessImplementation
 								}
 							}
 						]
@@ -44,7 +49,7 @@ module.exports = {
 								options: {
 									additionalData:
 										"@color: black; @property-color: color-dark; @property-background: background-dark;",
-									implementation: require("less")
+									...lessImplementation
 								}
 							}
 						]

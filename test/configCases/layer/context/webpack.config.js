@@ -2,6 +2,12 @@
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
+// Bun aborts in its node:vm SourceTextModule.link() on less-loader's
+// `import("less")`; under Bun load the CJS less so it skips the dynamic import.
+const lessImplementation = process.versions.bun
+	? { implementation: require("less") }
+	: undefined;
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
@@ -30,8 +36,7 @@ module.exports = {
 								loader: "less-loader",
 								options: {
 									additionalData: "@color: white;",
-									// Use the CJS less; default `import("less")` crashes Bun's vm.
-									implementation: require("less")
+									...lessImplementation
 								}
 							}
 						]
@@ -45,7 +50,7 @@ module.exports = {
 								loader: "less-loader",
 								options: {
 									additionalData: "@color: black;",
-									implementation: require("less")
+									...lessImplementation
 								}
 							}
 						]

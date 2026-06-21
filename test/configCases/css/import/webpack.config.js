@@ -2,6 +2,12 @@
 
 const webpack = require("../../../../");
 
+// Bun aborts in its node:vm SourceTextModule.link() on less-loader's
+// `import("less")`; under Bun load the CJS less so it skips the dynamic import.
+const lessLoader = process.versions.bun
+	? { loader: "less-loader", options: { implementation: require("less") } }
+	: "less-loader";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = [
 	{
@@ -30,14 +36,7 @@ module.exports = [
 				},
 				{
 					test: /\.less$/,
-					// Use the CJS less; less-loader's default `import("less")` crashes Bun's vm.
-					use: [
-						"./remove-source-map-url-loader",
-						{
-							loader: "less-loader",
-							options: { implementation: require("less") }
-						}
-					],
+					use: ["./remove-source-map-url-loader", lessLoader],
 					type: "css/global"
 				}
 			]
