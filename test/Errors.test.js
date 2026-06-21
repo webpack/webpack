@@ -217,7 +217,7 @@ describe("Errors", () => {
 				`);
 	}, 20000);
 
-	itSkipBun("should emit warning for require.extensions", async () => {
+	it("should emit warning for require.extensions", async () => {
 		await expect(compile({ entry: "./require.extensions" })).resolves
 			.toMatchInlineSnapshot(`
 					Object {
@@ -257,7 +257,7 @@ describe("Errors", () => {
 				`);
 	});
 
-	itSkipBun("should emit warning for module.parent.require", async () => {
+	it("should emit warning for module.parent.require", async () => {
 		await expect(compile({ entry: "./module.parent.require" })).resolves
 			.toMatchInlineSnapshot(`
 					Object {
@@ -455,7 +455,7 @@ describe("Errors", () => {
 });
 
 describe("Loaders", () => {
-	itSkipBun("should emit error thrown at module level", async () => {
+	it("should emit error thrown at module level", async () => {
 		await expect(
 			compile({
 				entry: "./module-level-throw-error-loader!./no-errors-deprecate"
@@ -477,7 +477,7 @@ describe("Loaders", () => {
 				`);
 	});
 
-	itSkipBun("should emit errors & warnings for emit-error-loader", async () => {
+	it("should emit errors & warnings for emit-error-loader", async () => {
 		await expect(compile({ entry: "./entry-point-error-loader-required.js" }))
 			.resolves.toMatchInlineSnapshot(`
 					Object {
@@ -533,7 +533,7 @@ describe("Loaders", () => {
 				`);
 	});
 
-	itSkipBun("should emit error & warning for emit-error-loader", async () => {
+	it("should emit error & warning for emit-error-loader", async () => {
 		await expect(compile({ entry: "./emit-error-loader!./entry-point.js" }))
 			.resolves.toMatchInlineSnapshot(`
 					Object {
