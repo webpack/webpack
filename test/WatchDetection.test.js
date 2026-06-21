@@ -5,6 +5,9 @@ const fs = require("graceful-fs");
 const { Volume, createFsFromVolume } = require("memfs");
 
 const webpack = require("..");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+
+expectNoDeprecations();
 
 describe("WatchDetection", () => {
 	if (process.env.NO_WATCH_TESTS) {

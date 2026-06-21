@@ -3,6 +3,7 @@
 require("./helpers/warmup-webpack");
 
 const { Volume, createFsFromVolume } = require("memfs");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 /**
  * @param {import("../").Configuration} options options
@@ -26,6 +27,8 @@ const compile = (options) =>
 			});
 		})
 	);
+
+expectNoDeprecations();
 
 describe("Stats", () => {
 	it("should work with a boolean value", async () => {

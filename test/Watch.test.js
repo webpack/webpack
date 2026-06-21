@@ -5,6 +5,9 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+
+expectNoDeprecations();
 
 describe("Watch", () => {
 	it("should only compile a single time", (done) => {

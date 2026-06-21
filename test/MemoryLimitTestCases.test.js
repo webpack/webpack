@@ -7,6 +7,7 @@ const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 const webpack = require("..");
 const captureStdio = require("./helpers/captureStdio");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 const toMiB = (/** @type {number} */ bytes) =>
 	`${Math.round(bytes / 1024 / 1024)}MiB`;
@@ -32,6 +33,8 @@ const tests = fs
 	});
 
 /** @typedef {{ toString(): string, toStringRaw(): string, restore(): void, data: string[], reset(): void }} CapturedStdio */
+
+expectNoDeprecations();
 
 describe("MemoryLimitTestCases", () => {
 	jest.setTimeout(40000);

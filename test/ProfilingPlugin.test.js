@@ -5,6 +5,9 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+
+expectNoDeprecations(["DEP_WEBPACK_COMPILATION_NORMAL_MODULE_LOADER_HOOK"]);
 
 describe("Profiling Plugin", () => {
 	jest.setTimeout(120000);
