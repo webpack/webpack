@@ -20,6 +20,7 @@ const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const { TestRunner } = require("./harness/runner");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
+const deprecationTracking = require("./helpers/deprecationTracking");
 const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");
 const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
 
@@ -198,6 +199,7 @@ const describeCases = (config) => {
 								/** @type {Error | null} */ err,
 								/** @type {import("../").Stats} */ stats
 							) => {
+								const deprecations = deprecationTracker();
 								if (err) return done(err);
 								const jsonStats = stats.toJson({
 									errorDetails: true
@@ -226,13 +228,27 @@ const describeCases = (config) => {
 								) {
 									return;
 								}
+								if (
+									checkArrayExpectation(
+										testDirectory,
+										{ deprecations },
+										"deprecation",
+										"Deprecation",
+										options,
+										done
+									)
+								) {
+									return;
+								}
 
 								function runCompiler(
 									/** @type {(err: EXPECTED_ANY, stats?: EXPECTED_ANY) => void} */ callback
 								) {
 									fakeUpdateLoaderOptions.updateIndex++;
+									const deprecationTracker = deprecationTracking.start();
 									compiler.run((err, _stats) => {
 										const stats = /** @type {import("../").Stats} */ (_stats);
+										const deprecations = deprecationTracker();
 										if (err) return callback(err);
 										const jsonStats = stats.toJson({
 											errorDetails: true
@@ -257,6 +273,19 @@ const describeCases = (config) => {
 												"warning",
 												`warnings${fakeUpdateLoaderOptions.updateIndex}`,
 												"Warning",
+												options,
+												callback
+											)
+										) {
+											return;
+										}
+										if (
+											checkArrayExpectation(
+												testDirectory,
+												{ deprecations },
+												"deprecation",
+												`deprecations${fakeUpdateLoaderOptions.updateIndex}`,
+												"Deprecation",
 												options,
 												callback
 											)
@@ -335,6 +364,7 @@ const describeCases = (config) => {
 									}
 								);
 							};
+							const deprecationTracker = deprecationTracking.start();
 							compiler = webpack(options);
 							compiler.run(/** @type {EXPECTED_ANY} */ (onCompiled));
 						}, 20000);
