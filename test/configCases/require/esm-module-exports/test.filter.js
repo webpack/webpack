@@ -5,11 +5,11 @@
 module.exports = function filter(config) {
 	const [major, minor] = process.versions.node.split(".").map(Number);
 	if (!(major > 22 || (major === 22 && minor >= 12))) return false;
-	// TODO Bun's `require(esm)` named-export interop differs from V8/Node, so the
-	// unwrapped values are undefined here; skip under Bun.
-	if (process.versions.bun) return false;
 	// Deno's persistent-cache snapshot timing leaves this case's modules
 	// uncached on the 2nd build, so skip only the filesystem-cache variant.
 	if (process.versions.deno && config && config.cache) return false;
+	// Bun's persistent cache is likewise nondeterministic here ("Pack got
+	// invalid", modules not re-cached), so skip the filesystem-cache variant.
+	if (process.versions.bun && config && config.cache) return false;
 	return true;
 };

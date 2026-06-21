@@ -267,6 +267,15 @@ describe("StatsTestCases", () => {
 						.replace(/(\w)\\(\w)/g, "$1/$2")
 						.replace(/, additional resolving: X ms/g, "")
 						.replace(/Unexpected identifier '.+?'/g, "Unexpected identifier")
+						// Normalize JSC (Bun) engine error phrasings to the V8 form.
+						.replace(
+							/Unexpected identifier\. Expected a ':' following the property name '[^']*'\./g,
+							"Unexpected identifier"
+						)
+						.replace(
+							/JSON Parse error: Unexpected EOF/g,
+							"Unexpected end of JSON input"
+						)
 						.replace(/[.0-9]+(\s?(bytes|KiB|MiB|GiB))/g, "X$1")
 						.replace(
 							/ms\s\([0-9a-f]{6,32}\)|(?!\d+-)[0-9a-f-]{6,32}\./g,
@@ -276,6 +285,27 @@ describe("StatsTestCases", () => {
 						// Jest v27: at Object.<anonymous>.module.exports
 						// Jest v30: at Object.module.exports
 						.replace(/Object\.<anonymous>\./g, "Object.");
+					// Normalize logger trace frames across engines: V8 emits one
+					// "at fn (file:line:col)" frame, while JSC (Bun) emits extra
+					// internal frames, omits the function name, and reports different
+					// line:col. Keep only frames inside the test dir, reduced to the
+					// file path.
+					const traceFile = new RegExp(
+						`Xdir/${quoteMeta(testName)}/[^\\s():]+`
+					);
+					actual = actual
+						.split("\n")
+						.reduce((lines, line) => {
+							const prefix = line.match(/^(\s*\|\s+)at\b/);
+							if (!prefix) {
+								lines.push(line);
+								return lines;
+							}
+							const file = line.match(traceFile);
+							if (file) lines.push(`${prefix[1]}at ${file[0]}`);
+							return lines;
+						}, /** @type {string[]} */ ([]))
+						.join("\n");
 					expect(actual).toMatchSnapshot();
 
 					if (testConfig.validate) {

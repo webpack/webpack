@@ -11,7 +11,5 @@ const _denoOrigFilter = module.exports;
 // Deno hard-panics (untrappable, bindings.rs "Module not found") when the jest vm
 // harness spawns a real worker thread; the panic aborts the whole process, so skip
 // the harness execution under Deno.
-// TODO Bun's Worker does not run the emitted worker chunk to completion here,
-// so the case hangs until the jest timeout; skip under Bun.
 module.exports = (...args) =>
-	!process.versions.deno && !process.versions.bun && _denoOrigFilter(...args);
+	!process.versions.deno && _denoOrigFilter(...args);
