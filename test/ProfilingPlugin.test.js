@@ -5,10 +5,9 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
-const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
-expectNoDeprecations(["DEP_WEBPACK_COMPILATION_NORMAL_MODULE_LOADER_HOOK"]);
-
+// ProfilingPlugin intercepts the deprecated Compilation.hooks.normalModuleLoader
+// hook; that deprecation is asserted in configCases/plugins/profiling-plugin.
 describe("Profiling Plugin", () => {
 	jest.setTimeout(120000);
 
