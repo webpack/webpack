@@ -2387,6 +2387,7 @@ describe("snapshots", () => {
 		+     "profile": false,
 		+     "readonly": false,
 		+     "store": "pack",
+		+     "storeFilter": undefined,
 		+     "type": "filesystem",
 		+     "version": "",
 		+   },
@@ -2433,6 +2434,7 @@ describe("snapshots", () => {
 			+     "profile": false,
 			+     "readonly": false,
 			+     "store": "pack",
+			+     "storeFilter": undefined,
 			+     "type": "filesystem",
 			+     "version": "",
 			+   },
@@ -2513,6 +2515,7 @@ describe("snapshots", () => {
 			+     "profile": false,
 			+     "readonly": false,
 			+     "store": "pack",
+			+     "storeFilter": undefined,
 			+     "type": "filesystem",
 			+     "version": "",
 			+   },
@@ -2535,7 +2538,6 @@ describe("snapshots", () => {
 			-     "typescript": undefined,
 			+     "typescript": true,
 			@@ ... @@
-			+           ],
 			+         },
 			+         "resolve": Object {
 			+           "byDependency": Object {
@@ -2671,24 +2673,16 @@ describe("snapshots", () => {
 			+         "parser": Object {
 			+           "as": "block-contents",
 			+           "exportType": "text",
-			+         },
-			+         "resolve": Object {
+			@@ ... @@
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
 			+       },
 			+       Object {
 			+         "resolve": Object {
-			+           "byDependency": Object {
-			+             "esm": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         },
+			@@ ... @@
 			+         "test": /\\.mts$/i,
-			+         "type": "javascript/esm",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "descriptionData": Object {
 			+           "type": "module",
 			+         },
@@ -2718,6 +2712,18 @@ describe("snapshots", () => {
 			+           "or": Array [
 			+             "text/typescript",
 			+             "application/typescript",
+			+           ],
+			+         },
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "type": "javascript/esm",
+			+       },
+			+       Object {
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2763,7 +2769,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			+       },
+			@@ ... @@
 			+       "css/global": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -2771,7 +2777,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			+       },
+			@@ ... @@
 			+       "css/module": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -2779,9 +2785,10 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			@@ ... @@
+			+       },
 			+       "html": Object {
 			+         "sources": true,
+			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -3220,6 +3227,7 @@ describe("snapshots", () => {
 			+     "profile": false,
 			+     "readonly": false,
 			+     "store": "pack",
+			+     "storeFilter": undefined,
 			+     "type": "filesystem",
 			+     "version": "",
 			+   },

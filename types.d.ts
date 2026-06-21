@@ -1414,6 +1414,10 @@ declare abstract class CacheFacade {
 		computer: () => T | Promise<T>
 	): Promise<T>;
 }
+type CacheFilterEntry =
+	| { type: "Compilation/modules"; data: Module }
+	| { type: "Compilation/assets"; data: Source }
+	| { type: "Compilation/codeGeneration"; data: CodeGenerationResult };
 declare interface CacheGroupSource {
 	key: string;
 	priority?: number;
@@ -8573,6 +8577,11 @@ declare interface FileCacheOptions {
 	store?: "pack";
 
 	/**
+	 * Filter which cache entries are stored. Called only for the known Compilation caches with a `{ type, data }` entry (`type` discriminates `data`). Return false to skip storing the entry.
+	 */
+	storeFilter?: (entry: CacheFilterEntry) => boolean;
+
+	/**
 	 * Filesystem caching.
 	 */
 	type: "filesystem";
@@ -14640,12 +14649,23 @@ declare interface MemoryCacheOptions {
 	maxGenerations?: number;
 
 	/**
+	 * Filter which cache entries are stored. Called only for the known Compilation caches with a `{ type, data }` entry (`type` discriminates `data`). Return false to skip storing the entry.
+	 */
+	storeFilter?: (entry: CacheFilterEntry) => boolean;
+
+	/**
 	 * In memory caching.
 	 */
 	type: "memory";
 }
 declare class MemoryCachePlugin {
-	constructor();
+	constructor(__0?: {
+		/**
+		 * filter deciding which cache entries are stored (false skips)
+		 */
+		storeFilter?: (entry: CacheFilterEntry) => boolean;
+	});
+	storeFilter?: (entry: CacheFilterEntry) => boolean;
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.

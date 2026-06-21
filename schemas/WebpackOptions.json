@@ -1632,6 +1632,11 @@
           "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).",
           "enum": ["pack"]
         },
+        "storeFilter": {
+          "description": "Filter which cache entries are stored. Called only for the known Compilation caches with a `{ type, data }` entry (`type` discriminates `data`). Return false to skip storing the entry.",
+          "instanceof": "Function",
+          "tsType": "(import(\"../lib/CacheFacade\").CacheFilter)"
+        },
         "type": {
           "description": "Filesystem caching.",
           "enum": ["filesystem"]
@@ -2667,6 +2672,11 @@
           "description": "Number of generations unused cache entries stay in memory cache at minimum (1 = may be removed after unused for a single compilation, ..., Infinity: kept forever).",
           "type": "number",
           "minimum": 1
+        },
+        "storeFilter": {
+          "description": "Filter which cache entries are stored. Called only for the known Compilation caches with a `{ type, data }` entry (`type` discriminates `data`). Return false to skip storing the entry.",
+          "instanceof": "Function",
+          "tsType": "(import(\"../lib/CacheFacade\").CacheFilter)"
         },
         "type": {
           "description": "In memory caching.",
