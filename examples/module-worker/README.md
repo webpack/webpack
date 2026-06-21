@@ -245,14 +245,14 @@ export const add = (content, from) => {
 /******/ 
 /******/ /* webpack/runtime/hasOwnProperty shorthand */
 /******/ (() => {
-/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.hasOwn(obj, prop))
 /******/ })();
 /******/ 
 /******/ /* webpack/runtime/make namespace object */
 /******/ (() => {
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 		if(Symbol.toStringTag) {
 /******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
@@ -530,14 +530,14 @@ fibWorker.onmessage = event => {
 /******/ 
 /******/ /* webpack/runtime/hasOwnProperty shorthand */
 /******/ (() => {
-/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.hasOwn(obj, prop))
 /******/ })();
 /******/ 
 /******/ /* webpack/runtime/make namespace object */
 /******/ (() => {
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 		if(Symbol.toStringTag) {
 /******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
@@ -650,7 +650,7 @@ onconnect = function (e) {
 ```
 
 ```javascript
-var e={};const t={};function o(r){const s=t[r];if(void 0!==s)return s.exports;const n=t[r]={exports:{}};return e[r](n,n.exports,o),n.exports}o.m=e,o.d=(e,t)=>{if(Array.isArray(t))for(var r=0;r<t.length;){var s=t[r++],n=t[r++];o.o(e,s)?0===n&&r++:0===n?Object.defineProperty(e,s,{enumerable:!0,value:t[r++]}):Object.defineProperty(e,s,{enumerable:!0,get:n})}else for(var s in t)o.o(t,s)&&!o.o(e,s)&&Object.defineProperty(e,s,{enumerable:!0,get:t[s]})},o.f={},o.e=e=>Promise.all(Object.keys(o.f).reduce((t,r)=>(o.f[r](e,t),t),[])),o.u=e=>e+".js",o.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t),o.p="/dist/",(()=>{const e={377:0},t=t=>{let{__webpack_esm_ids__:r,__webpack_esm_modules__:s,__webpack_esm_runtime__:n}=t;var a,i,c=0;for(a in s)o.o(s,a)&&(o.m[a]=s[a]);for(n&&n(o);c<r.length;c++)i=r[c],o.o(e,i)&&e[i]&&e[i][0](),e[r[c]]=0};o.f.j=(r,s)=>{let n=o.o(e,r)?e[r]:void 0;if(0!==n)if(n)s.push(n[1]);else{let a=import(o.p+o.u(r)).then(t,t=>{throw 0!==e[r]&&(e[r]=void 0),t});a=Promise.race([a,new Promise(t=>n=e[r]=[t])]),s.push(n[1]=a)}}})(),onconnect=function(e){for(const t of e.ports)t.onmessage=async e=>{const r=e.data;switch(r.type){case"message":const{add:e}=await o.e(936).then(o.bind(o,936));e(r.content,r.from);case"history":const{history:s}=await o.e(936).then(o.bind(o,936));t.postMessage({type:"history",history:s})}}};
+var e={};const t={};function o(r){const s=t[r];if(void 0!==s)return s.exports;const n=t[r]={exports:{}};return e[r](n,n.exports,o),n.exports}o.m=e,o.d=(e,t)=>{if(Array.isArray(t))for(var r=0;r<t.length;){var s=t[r++],n=t[r++];o.o(e,s)?0===n&&r++:0===n?Object.defineProperty(e,s,{enumerable:!0,value:t[r++]}):Object.defineProperty(e,s,{enumerable:!0,get:n})}else for(var s in t)o.o(t,s)&&!o.o(e,s)&&Object.defineProperty(e,s,{enumerable:!0,get:t[s]})},o.f={},o.e=e=>Promise.all(Object.keys(o.f).reduce((t,r)=>(o.f[r](e,t),t),[])),o.u=e=>e+".js",o.o=(e,t)=>Object.hasOwn(e,t),o.p="/dist/",(()=>{const e={377:0},t=t=>{let{__webpack_esm_ids__:r,__webpack_esm_modules__:s,__webpack_esm_runtime__:n}=t;var i,a,c=0;for(i in s)o.o(s,i)&&(o.m[i]=s[i]);for(n&&n(o);c<r.length;c++)a=r[c],o.o(e,a)&&e[a]&&e[a][0](),e[r[c]]=0};o.f.j=(r,s)=>{let n=o.o(e,r)?e[r]:void 0;if(0!==n)if(n)s.push(n[1]);else{let i=import(o.p+o.u(r)).then(t,t=>{throw 0!==e[r]&&(e[r]=void 0),t});i=Promise.race([i,new Promise(t=>n=e[r]=[t])]),s.push(n[1]=i)}}})(),onconnect=function(e){for(const t of e.ports)t.onmessage=async e=>{const r=e.data;switch(r.type){case"message":const{add:e}=await o.e(936).then(o.bind(o,936));e(r.content,r.from);case"history":const{history:s}=await o.e(936).then(o.bind(o,936));t.postMessage({type:"history",history:s})}}};
 ```
 
 # dist/workers/fibonacci.js
@@ -742,14 +742,14 @@ var e={};const t={};function o(r){const s=t[r];if(void 0!==s)return s.exports;co
 /******/ 
 /******/ /* webpack/runtime/hasOwnProperty shorthand */
 /******/ (() => {
-/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.hasOwn(obj, prop))
 /******/ })();
 /******/ 
 /******/ /* webpack/runtime/make namespace object */
 /******/ (() => {
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 		if(Symbol.toStringTag) {
 /******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
@@ -847,7 +847,7 @@ onmessage = async event => {
 ```
 
 ```javascript
-var e={};const r={};function o(t){const s=r[t];if(void 0!==s)return s.exports;const n=r[t]={exports:{}};return e[t](n,n.exports,o),n.exports}o.m=e,o.d=(e,r)=>{if(Array.isArray(r))for(var t=0;t<r.length;){var s=r[t++],n=r[t++];o.o(e,s)?0===n&&t++:0===n?Object.defineProperty(e,s,{enumerable:!0,value:r[t++]}):Object.defineProperty(e,s,{enumerable:!0,get:n})}else for(var s in r)o.o(r,s)&&!o.o(e,s)&&Object.defineProperty(e,s,{enumerable:!0,get:r[s]})},o.f={},o.e=e=>Promise.all(Object.keys(o.f).reduce((r,t)=>(o.f[t](e,r),r),[])),o.u=e=>e+".js",o.o=(e,r)=>Object.prototype.hasOwnProperty.call(e,r),o.p="/dist/",(()=>{const e={721:0},r=r=>{let{__webpack_esm_ids__:t,__webpack_esm_modules__:s,__webpack_esm_runtime__:n}=r;var a,i,c=0;for(a in s)o.o(s,a)&&(o.m[a]=s[a]);for(n&&n(o);c<t.length;c++)i=t[c],o.o(e,i)&&e[i]&&e[i][0](),e[t[c]]=0};o.f.j=(t,s)=>{let n=o.o(e,t)?e[t]:void 0;if(0!==n)if(n)s.push(n[1]);else{let a=import(o.p+o.u(t)).then(r,r=>{throw 0!==e[t]&&(e[t]=void 0),r});a=Promise.race([a,new Promise(r=>n=e[t]=[r])]),s.push(n[1]=a)}}})(),onmessage=async e=>{const{fibonacci:r}=await o.e(129).then(o.bind(o,129)),t=JSON.parse(e.data);postMessage(`fib(${t}) = ${r(t)}`)};
+var e={};const r={};function o(t){const s=r[t];if(void 0!==s)return s.exports;const n=r[t]={exports:{}};return e[t](n,n.exports,o),n.exports}o.m=e,o.d=(e,r)=>{if(Array.isArray(r))for(var t=0;t<r.length;){var s=r[t++],n=r[t++];o.o(e,s)?0===n&&t++:0===n?Object.defineProperty(e,s,{enumerable:!0,value:r[t++]}):Object.defineProperty(e,s,{enumerable:!0,get:n})}else for(var s in r)o.o(r,s)&&!o.o(e,s)&&Object.defineProperty(e,s,{enumerable:!0,get:r[s]})},o.f={},o.e=e=>Promise.all(Object.keys(o.f).reduce((r,t)=>(o.f[t](e,r),r),[])),o.u=e=>e+".js",o.o=(e,r)=>Object.hasOwn(e,r),o.p="/dist/",(()=>{const e={721:0},r=r=>{let{__webpack_esm_ids__:t,__webpack_esm_modules__:s,__webpack_esm_runtime__:n}=r;var a,i,c=0;for(a in s)o.o(s,a)&&(o.m[a]=s[a]);for(n&&n(o);c<t.length;c++)i=t[c],o.o(e,i)&&e[i]&&e[i][0](),e[t[c]]=0};o.f.j=(t,s)=>{let n=o.o(e,t)?e[t]:void 0;if(0!==n)if(n)s.push(n[1]);else{let a=import(o.p+o.u(t)).then(r,r=>{throw 0!==e[t]&&(e[t]=void 0),r});a=Promise.race([a,new Promise(r=>n=e[t]=[r])]),s.push(n[1]=a)}}})(),onmessage=async e=>{const{fibonacci:r}=await o.e(129).then(o.bind(o,129)),t=JSON.parse(e.data);postMessage(`fib(${t}) = ${r(t)}`)};
 ```
 
 # dist/129.js
@@ -886,9 +886,9 @@ function fibonacci(n) {
 ## Unoptimized
 
 ```
-asset main.js 9.44 KiB [emitted] [javascript module] (name: main)
-asset chat.js 7.35 KiB [emitted] [javascript module] (name: chat)
-asset workers/fibonacci.js 6.99 KiB [emitted] [javascript module] (name: fibonacci)
+asset main.js 9.38 KiB [emitted] [javascript module] (name: main)
+asset chat.js 7.29 KiB [emitted] [javascript module] (name: chat)
+asset workers/fibonacci.js 6.94 KiB [emitted] [javascript module] (name: fibonacci)
 asset 936.js 1.04 KiB [emitted] [javascript module]
 asset 129.js 881 bytes [emitted] [javascript module]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
@@ -899,21 +899,21 @@ chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
     [used exports unknown]
     import() ./fibonacci ./example.js 70:30-51
     import() ./fibonacci ./fib-worker.js 2:29-50
-chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 3.56 KiB (runtime) [entry] [rendered]
+chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 3.5 KiB (runtime) [entry] [rendered]
   > ./example.js 25:19-31:1
-  runtime modules 3.56 KiB 7 modules
+  runtime modules 3.5 KiB 7 modules
   ./chat-worker.js 442 bytes [built] [code generated]
     [used exports unknown]
     new Worker() ./chat-worker.js ./example.js 25:19-31:1
-chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 3.56 KiB (runtime) [entry] [rendered]
+chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 3.5 KiB (runtime) [entry] [rendered]
   > ./example.js 80:18-84:2
-  runtime modules 3.56 KiB 7 modules
+  runtime modules 3.5 KiB 7 modules
   ./fib-worker.js 176 bytes [built] [code generated]
     [used exports unknown]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 3.73 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 3.68 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.73 KiB 7 modules
+  runtime modules 3.68 KiB 7 modules
   ./example.js 2.25 KiB [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -931,9 +931,9 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset main.js 2.58 KiB [emitted] [javascript module] [minimized] (name: main)
-asset chat.js 1.31 KiB [emitted] [javascript module] [minimized] (name: chat)
-asset workers/fibonacci.js 1.15 KiB [emitted] [javascript module] [minimized] (name: fibonacci)
+asset main.js 2.55 KiB [emitted] [javascript module] [minimized] (name: main)
+asset chat.js 1.28 KiB [emitted] [javascript module] [minimized] (name: chat)
+asset workers/fibonacci.js 1.13 KiB [emitted] [javascript module] [minimized] (name: fibonacci)
 asset 936.js 221 bytes [emitted] [javascript module] [minimized]
 asset 129.js 199 bytes [emitted] [javascript module] [minimized]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
@@ -944,21 +944,21 @@ chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
     [all exports used]
     import() ./fibonacci ./example.js 70:30-51
     import() ./fibonacci ./fib-worker.js 2:29-50
-chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 3.29 KiB (runtime) [entry] [rendered]
+chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 3.27 KiB (runtime) [entry] [rendered]
   > ./example.js 25:19-31:1
-  runtime modules 3.29 KiB 6 modules
+  runtime modules 3.27 KiB 6 modules
   ./chat-worker.js 442 bytes [built] [code generated]
     [no exports used]
     new Worker() ./chat-worker.js ./example.js 25:19-31:1
-chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 3.29 KiB (runtime) [entry] [rendered]
+chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 3.27 KiB (runtime) [entry] [rendered]
   > ./example.js 80:18-84:2
-  runtime modules 3.29 KiB 6 modules
+  runtime modules 3.27 KiB 6 modules
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 3.46 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 3.44 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.46 KiB 6 modules
+  runtime modules 3.44 KiB 6 modules
   ./example.js 2.25 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main

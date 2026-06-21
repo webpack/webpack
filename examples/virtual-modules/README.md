@@ -515,7 +515,7 @@ module.exports = __webpack_require__.p + "logo.svg";
 /******/ 		const webpackError = hasSymbol ? Symbol("webpack error") : "__webpack_error__";
 /******/ 		
 /******/ 		const resolveQueue = (queue) => {
-/******/ 			if(queue && queue.d < 1) {
+/******/ 			if(queue?.d < 1) {
 /******/ 				queue.d = 1;
 /******/ 				queue.forEach((fn) => (fn.r--));
 /******/ 				queue.forEach((fn) => (fn.r-- ? fn.r++ : fn()));
@@ -579,7 +579,7 @@ module.exports = __webpack_require__.p + "logo.svg";
 /******/ 			}
 /******/ 			const done = (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue))
 /******/ 			body(handle, done);
-/******/ 			queue && queue.d < 0 && (queue.d = 0);
+/******/ 			queue?.d < 0 && (queue.d = 0);
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -641,7 +641,7 @@ module.exports = __webpack_require__.p + "logo.svg";
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -719,14 +719,14 @@ module.exports = __webpack_require__.p + "logo.svg";
 ## Unoptimized
 
 ```
-asset output.js 20.9 KiB [emitted] (name: main)
+asset output.js 20.8 KiB [emitted] (name: main)
 asset 1.output.js 803 bytes [emitted]
 asset 2.output.js 803 bytes [emitted]
 asset logo.svg 78 bytes [emitted] [from: virtual:logo.svg] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.98 KiB (javascript) 78 bytes (asset) 4.74 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.98 KiB (javascript) 78 bytes (asset) 4.69 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 617 bytes (javascript) 78 bytes (asset) [dependent] 12 modules
-  runtime modules 4.74 KiB 8 modules
+  runtime modules 4.69 KiB 8 modules
   ./example.js 1.38 KiB [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -749,7 +749,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.79 KiB [emitted] [minimized] (name: main)
+asset output.js 2.76 KiB [emitted] [minimized] (name: main)
 asset 263.output.js 108 bytes [emitted] [minimized]
 asset 722.output.js 108 bytes [emitted] [minimized]
 asset logo.svg 78 bytes [emitted] [from: virtual:logo.svg] (auxiliary name: main)
@@ -763,10 +763,10 @@ chunk (runtime: main) 722.output.js 20 bytes [rendered]
   ./routes/b.js 20 bytes [built] [code generated]
     [exports: default]
     import() ./routes/b.js virtual:routes 2:9-32
-chunk (runtime: main) output.js (main) 1.85 KiB (javascript) 78 bytes (asset) 4.74 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.85 KiB (javascript) 78 bytes (asset) 4.69 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 482 bytes (javascript) 78 bytes (asset) [dependent] 8 modules
-  runtime modules 4.74 KiB 8 modules
+  runtime modules 4.69 KiB 8 modules
   ./example.js 1.38 KiB [built] [code generated]
     [no exports]
     [no exports used]

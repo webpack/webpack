@@ -496,7 +496,7 @@ module.exports = "# Example headings\n\n## Sample Section\n\n## This'll be a _He
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -680,9 +680,9 @@ toRawContainerUsingString.appendChild(markdownToRawText);
 ```
 asset output.js 19.2 KiB [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 11.3 KiB (javascript) 14.6 KiB (asset) 2.61 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 11.3 KiB (javascript) 14.6 KiB (asset) 2.58 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.61 KiB 6 modules
+  runtime modules 2.58 KiB 6 modules
   dependent modules 8.89 KiB (javascript) 14.6 KiB (asset) [dependent] 4 modules
   ./example.js 2.39 KiB [built] [code generated]
     [no exports]

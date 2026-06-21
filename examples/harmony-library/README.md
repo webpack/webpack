@@ -80,7 +80,7 @@ return /******/ (() => { // webpackBootstrap
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -126,10 +126,10 @@ function increment() {
 ## Unoptimized
 
 ```
-asset MyLibrary.umd.js 3.5 KiB [emitted] (name: main)
-chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 1.11 KiB (runtime) [entry] [rendered]
+asset MyLibrary.umd.js 3.46 KiB [emitted] (name: main)
+chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 1.07 KiB (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 1.11 KiB 3 modules
+  runtime modules 1.07 KiB 3 modules
   ./example.js 92 bytes [built] [code generated]
     [exports: default, increment, value]
     [used exports unknown]
@@ -141,10 +141,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset MyLibrary.umd.js 880 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 1.11 KiB (runtime) [entry] [rendered]
+asset MyLibrary.umd.js 852 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 1.07 KiB (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 1.11 KiB 3 modules
+  runtime modules 1.07 KiB 3 modules
   ./example.js 92 bytes [built] [code generated]
     [exports: default, increment, value]
     entry ./example main

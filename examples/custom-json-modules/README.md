@@ -203,7 +203,7 @@ module.exports = /*#__PURE__*/JSON.parse('{"title":"JSON5 Example","owner":{"nam
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -252,11 +252,11 @@ document.querySelector('#app').innerHTML = [_data_toml__WEBPACK_IMPORTED_MODULE_
 ## webpack output
 
 ```
-asset output.js 5.91 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 919 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
+asset output.js 5.88 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 919 bytes (javascript) 241 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 565 bytes [dependent] 3 modules
-  runtime modules 274 bytes 1 module
+  runtime modules 241 bytes 1 module
   ./example.js 354 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
