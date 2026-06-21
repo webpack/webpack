@@ -7530,12 +7530,6 @@ declare abstract class ExportInfo {
 	 * undefined: it was not determined whether the export is pure
 	 */
 	pureProvide?: boolean;
-
-	/**
-	 * true: the export binding never changes (eligible for value-based export)
-	 * undefined: not determined
-	 */
-	immutableBinding?: boolean;
 	get canMangle(): boolean;
 	canInline(): undefined | InlinedValue;
 
@@ -7704,11 +7698,6 @@ declare interface ExportSpec {
 	 * calling this export has no observable side effects
 	 */
 	isPure?: boolean;
-
-	/**
-	 * the export binding never changes (eligible for value-based export instead of getter)
-	 */
-	immutableBinding?: boolean;
 
 	/**
 	 * nested exports
@@ -21732,7 +21721,6 @@ declare interface RestoreProvidedDataExports {
 	canInlineProvide?: InlinedValue;
 	terminalBinding: boolean;
 	pureProvide?: boolean;
-	immutableBinding?: boolean;
 	exportsInfo?: RestoreProvidedData;
 }
 type Rule = string | RegExp | ((str: string) => boolean);
