@@ -20,6 +20,10 @@ const PERSISTENCE_CACHE_INVALIDATE_ERROR = (log, config) => {
 
 // Filesystem cache store/restore failures are logged as warnings; surface them
 // as errors so a broken disk cache fails the test instead of passing silently.
+/**
+ * @param {string} log log line
+ * @returns {string | undefined} error message
+ */
 const PERSISTENCE_CACHE_FAILED_ERROR = (log) => {
 	const match =
 		/^\[webpack\.cache\.PackFileCacheStrategy\] (Caching failed for pack: .+|Restoring pack failed from .+|Restoring failed for .+ from pack: .+|Restoring pack from .+ failed: .+|Skipped not serializable cache item .+)$/.exec(
