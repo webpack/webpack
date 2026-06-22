@@ -2,6 +2,13 @@
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	// Version-gated target: import.meta.dirname/filename exist since Deno 1.40.
-	target: "deno1.40"
+	target: "deno1.40",
+	// The harness picks the bundle extension from the raw config (before the
+	// deno target's ESM default applies), so set ESM output explicitly.
+	experiments: {
+		outputModule: true
+	},
+	output: {
+		module: true
+	}
 };

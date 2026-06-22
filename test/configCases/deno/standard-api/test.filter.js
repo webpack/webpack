@@ -1,4 +1,4 @@
 "use strict";
 
-// Uses Deno's standard runtime API (the `Deno` global), available only under Deno.
+// Uses the Deno runtime (the `Deno` global / web globals like fetch); Deno only.
 module.exports = () => typeof Deno !== "undefined";
