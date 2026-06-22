@@ -226,14 +226,6 @@ type RecursiveArrayOrRecord<T> =
 	| Array<RecursiveArrayOrRecord<T>>
 	| T;
 
-declare module "loader-runner" {
-	export function getContext(resource: string): string;
-	export function runLoaders(
-		options: any,
-		callback: (err: Error | null, result: any) => void
-	): void;
-}
-
 declare module "eslint-scope/lib/referencer" {
 	type Property = import("estree").Property;
 	type PropertyDefinition = import("estree").PropertyDefinition;
