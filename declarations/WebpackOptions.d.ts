@@ -3627,19 +3627,23 @@ export interface HtmlParserOptions {
 						 */
 						attribute: string;
 						/**
-						 * Called with the element's attribute map; return false to skip this source entry for that element.
+						 * Called with the element's decoded attribute map and the decoded attribute value; return false to skip this source entry for that element.
 						 */
-						filter?: (attributes: Map<string, string>) => boolean;
+						filter?: (
+							attributes: Map<string, string>,
+							value: string
+						) => boolean;
 						/**
 						 * Tag name to match. Omit to match any tag.
 						 */
 						tag?: string;
 						/**
-						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-style` treats the attribute value as a full stylesheet (like a `<style>` body) and `stylesheet-style-attribute` as a CSS block's contents (a declaration list, like a `style` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time.
+						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `css-url` extracts `url(...)` references from a CSS value (like an SVG presentation attribute such as `fill`) as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-style` treats the attribute value as a full stylesheet (like a `<style>` body) and `stylesheet-style-attribute` as a CSS block's contents (a declaration list, like a `style` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time.
 						 */
 						type:
 							| "src"
 							| "srcset"
+							| "css-url"
 							| "script"
 							| "script-module"
 							| "stylesheet"
