@@ -332,7 +332,8 @@ class TestRunner {
 			TextEncoder: typeof TextEncoder !== "undefined" ? TextEncoder : undefined,
 			TextDecoder: typeof TextDecoder !== "undefined" ? TextDecoder : undefined,
 			// expose the Deno runtime global to bundles when running under Deno
-			Deno: /** @type {EXPECTED_ANY} */ (globalThis).Deno
+			// `global` (not `globalThis`) keeps this working on Node.js 10
+			Deno: /** @type {EXPECTED_ANY} */ (global).Deno
 		};
 		return base;
 	}
