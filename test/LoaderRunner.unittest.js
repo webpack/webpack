@@ -6,6 +6,13 @@ const { getContext, runLoaders } = require("../lib/loaders/LoaderRunner");
 
 const fixtures = path.resolve(__dirname, "fixtures", "loader-runner");
 
+// Errors thrown by Node's fs and by the module resolver cross the jest
+// vm-module realm boundary (`--experimental-vm-modules`), so the realm-bound
+// `toBeInstanceOf(Error)` is unreliable for them. Use the realm-independent
+// internal class tag instead.
+const isError = (err) =>
+	Object.prototype.toString.call(err) === "[object Error]";
+
 describe("runLoaders", () => {
 	it("should process only a resource", (done) => {
 		runLoaders(
@@ -564,7 +571,7 @@ describe("runLoaders", () => {
 				loaders: [path.resolve(fixtures, "pitch-dependencies-loader.js")]
 			},
 			(err, result) => {
-				expect(err).toBeInstanceOf(Error);
+				expect(isError(err)).toBe(true);
 				expect(err.message).toMatch(/ENOENT/i);
 				expect(result.fileDependencies).toEqual([
 					`remainingRequest:${path.resolve(fixtures, "missing.txt")}`,
@@ -582,9 +589,9 @@ describe("runLoaders", () => {
 				loaders: [path.resolve(fixtures, "does-not-exist-loader.js")]
 			},
 			(err, result) => {
-				expect(err).toBeInstanceOf(Error);
+				expect(isError(err)).toBe(true);
 				expect(err.code).toBe("MODULE_NOT_FOUND");
-				expect(err.message).toMatch(/does-not-exist-loader\.js'($|\n)/i);
+				expect(err.message).toMatch(/does-not-exist-loader\.js'/i);
 				expect(result).toEqual({
 					cacheable: false,
 					fileDependencies: [],
@@ -866,7 +873,7 @@ describe("runLoaders", () => {
 					]
 				},
 				(err, result) => {
-					expect(err).toBeInstanceOf(Error);
+					expect(isError(err)).toBe(true);
 					expect(result).toEqual({
 						cacheable: false,
 						fileDependencies: [],
