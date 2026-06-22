@@ -35,6 +35,7 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
   - `lib/javascript/` — JavaScript parsing (acorn), generation, exports analysis.
   - `lib/json/` — JSON modules.
   - `lib/library/` — UMD/AMD/ESM/CommonJS library output formats.
+  - `lib/loaders/` — Loader execution runtime (vendored loader-runner): pitching/normal loader iteration and loader module loading.
   - `lib/logging/` — Logger API and console formatting.
   - `lib/optimize/` — Optimization plugins (`SplitChunksPlugin`, `ConcatenatedModule`, …).
   - `lib/performance/` — Asset/entrypoint size hints.
