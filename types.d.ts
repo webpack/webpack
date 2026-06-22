@@ -679,13 +679,9 @@ declare class AsyncWebAssemblyModulesPlugin {
 		renderContext: WebAssemblyRenderContext,
 		hooks: CompilationHooksAsyncWebAssemblyModulesPlugin
 	): Source;
-
-	/**
-	 * Returns the attached hooks.
-	 */
-	static getCompilationHooks(
+	static getCompilationHooks: (
 		compilation: Compilation
-	): CompilationHooksAsyncWebAssemblyModulesPlugin;
+	) => CompilationHooksAsyncWebAssemblyModulesPlugin;
 }
 declare interface AsyncWebAssemblyModulesPluginOptions {
 	/**
@@ -2757,6 +2753,13 @@ declare interface ChunkRenderContextCssModulesPlugin {
 	 */
 	moduleSourceContent: Source;
 }
+
+/**
+ * Renames an inlined module's top-level declaration (and all its references) when
+ * its name is already taken in the shared startup scope, recording the chosen name
+ * in `allUsedNames`. Lets inlined modules be emitted without a per-entry/per-chunk
+ * IIFE by resolving name collisions instead of isolating each module.
+ */
 declare interface ChunkRenderContextJavascriptModulesPlugin {
 	/**
 	 * the chunk
@@ -2904,13 +2907,9 @@ declare class CleanPlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
-
-	/**
-	 * Returns the attached hooks.
-	 */
-	static getCompilationHooks(
+	static getCompilationHooks: (
 		compilation: Compilation
-	): CleanPluginCompilationHooks;
+	) => CleanPluginCompilationHooks;
 }
 declare interface CleanPluginCompilationHooks {
 	/**
@@ -3974,6 +3973,13 @@ declare interface CompilationHooksCssModulesPlugin {
 		undefined | void | Module[]
 	>;
 }
+
+/**
+ * Renames an inlined module's top-level declaration (and all its references) when
+ * its name is already taken in the shared startup scope, recording the chosen name
+ * in `allUsedNames`. Lets inlined modules be emitted without a per-entry/per-chunk
+ * IIFE by resolving name collisions instead of isolating each module.
+ */
 declare interface CompilationHooksJavascriptModulesPlugin {
 	renderModuleContent: SyncWaterfallHook<
 		[Source, Module, ModuleRenderContext],
@@ -4172,18 +4178,18 @@ declare class Compiler {
 	fileTimestamps?: Map<
 		string,
 		| null
+		| "ignore"
 		| EntryTypesIndex
 		| OnlySafeTimeEntry
 		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
 	>;
 	contextTimestamps?: Map<
 		string,
 		| null
+		| "ignore"
 		| EntryTypesIndex
 		| OnlySafeTimeEntry
 		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
 	>;
 	fsStartTime?: number;
 	resolverFactory: ResolverFactory;
@@ -5154,8 +5160,8 @@ declare interface ContextResolveData {
 }
 type ContextTimestamp =
 	| null
-	| ContextFileSystemInfoEntry
 	| "ignore"
+	| ContextFileSystemInfoEntry
 	| ExistenceOnlyTimeEntryFileSystemInfo;
 declare interface ContextTimestampAndHash {
 	safeTime: number;
@@ -5399,9 +5405,9 @@ declare interface CssImportDependencyMeta {
 type CssLayer = undefined | string;
 declare class CssLoadingRuntimeModule extends RuntimeModule {
 	constructor(runtimeRequirements: ReadonlySet<string>);
-	static getCompilationHooks(
+	static getCompilationHooks: (
 		compilation: Compilation
-	): CssLoadingRuntimeModulePluginHooks;
+	) => CssLoadingRuntimeModulePluginHooks;
 
 	/**
 	 * Runtime modules without any dependencies to other runtime modules
@@ -5600,13 +5606,6 @@ declare class CssModulesPlugin {
 	): Source;
 
 	/**
-	 * Returns the attached hooks.
-	 */
-	static getCompilationHooks(
-		compilation: Compilation
-	): CompilationHooksCssModulesPlugin;
-
-	/**
 	 * Renders css module source.
 	 */
 	static renderModule(
@@ -5627,6 +5626,9 @@ declare class CssModulesPlugin {
 	 * Returns true, when the chunk has css.
 	 */
 	static chunkHasCss(chunk: Chunk, chunkGraph: ChunkGraph): boolean;
+	static getCompilationHooks: (
+		compilation: Compilation
+	) => CompilationHooksCssModulesPlugin;
 }
 declare abstract class CssParser extends ParserClass {
 	defaultMode: "global" | "auto" | "local" | "pure";
@@ -5753,11 +5755,6 @@ declare class DefinePlugin {
 	apply(compiler: Compiler): void;
 
 	/**
-	 * Returns the attached hooks.
-	 */
-	static getCompilationHooks(compilation: Compilation): DefinePluginHooks;
-
-	/**
 	 * Returns runtime value.
 	 */
 	static runtimeValue(
@@ -5768,6 +5765,7 @@ declare class DefinePlugin {
 		}) => CodeValuePrimitive,
 		options?: true | string[] | RuntimeValueOptions
 	): RuntimeValue;
+	static getCompilationHooks: (compilation: Compilation) => DefinePluginHooks;
 }
 declare interface DefinePluginHooks {
 	definitions: SyncWaterfallHook<
@@ -8136,11 +8134,7 @@ declare class ExternalModule extends Module {
 		unsafeCacheData: UnsafeCacheData,
 		normalModuleFactory: NormalModuleFactory
 	): void;
-
-	/**
-	 * Returns the attached hooks.
-	 */
-	static getCompilationHooks(compilation: Compilation): ExternalModuleHooks;
+	static getCompilationHooks: (compilation: Compilation) => ExternalModuleHooks;
 	static ModuleExternalInitFragment: typeof ModuleExternalInitFragment;
 	static getExternalModuleNodeCommonjsInitFragment: (
 		runtimeTemplate: RuntimeTemplate,
@@ -8693,7 +8687,7 @@ declare abstract class FileSystemInfo {
 		path: string,
 		callback: (
 			err?: null | WebpackError,
-			fileTimestamp?: null | FileSystemInfoEntry | "ignore"
+			fileTimestamp?: null | "ignore" | FileSystemInfoEntry
 		) => void
 	): void;
 
@@ -8791,8 +8785,8 @@ declare interface FileSystemInfoEntry {
 }
 type FileTimestamp =
 	| null
-	| FileSystemInfoEntry
 	| "ignore"
+	| FileSystemInfoEntry
 	| ExistenceOnlyTimeEntryFileSystemInfo;
 type FilterItemTypes = string | RegExp | ((value: string) => boolean);
 declare interface Flags {
@@ -10467,19 +10461,15 @@ declare class JavascriptModulesPlugin {
 	): string;
 
 	/**
-	 * Returns the attached hooks.
-	 */
-	static getCompilationHooks(
-		compilation: Compilation
-	): CompilationHooksJavascriptModulesPlugin;
-
-	/**
 	 * Gets chunk filename template.
 	 */
 	static getChunkFilenameTemplate(
 		chunk: Chunk,
 		outputOptions: OutputNormalizedWithDefaults
 	): ChunkFilenameTemplate;
+	static getCompilationHooks: (
+		compilation: Compilation
+	) => CompilationHooksJavascriptModulesPlugin;
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
 declare class JavascriptParser extends ParserClass {
@@ -12881,9 +12871,9 @@ type JsonValueTypes =
 	| JsonValueTypes[];
 declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	constructor(runtimeRequirements: ReadonlySet<string>);
-	static getCompilationHooks(
+	static getCompilationHooks: (
 		compilation: Compilation
-	): JsonpCompilationPluginHooks;
+	) => JsonpCompilationPluginHooks;
 
 	/**
 	 * Runtime modules without any dependencies to other runtime modules
@@ -14015,9 +14005,9 @@ declare interface LoadScriptCompilationHooks {
 }
 declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 	constructor(withCreateScriptUrl?: boolean, withFetchPriority?: boolean);
-	static getCompilationHooks(
+	static getCompilationHooks: (
 		compilation: Compilation
-	): LoadScriptCompilationHooks;
+	) => LoadScriptCompilationHooks;
 
 	/**
 	 * Runtime modules without any dependencies to other runtime modules
@@ -14369,6 +14359,13 @@ type LogTypeEnum =
 	| "status";
 declare const MEASURE_END_OPERATION: unique symbol;
 declare const MEASURE_START_OPERATION: unique symbol;
+
+/**
+ * Renames an inlined module's top-level declaration (and all its references) when
+ * its name is already taken in the shared startup scope, recording the chosen name
+ * in `allUsedNames`. Lets inlined modules be emitted without a per-entry/per-chunk
+ * IIFE by resolving name collisions instead of isolating each module.
+ */
 declare interface MainRenderContext {
 	/**
 	 * the chunk
@@ -15171,13 +15168,9 @@ declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 	 * Creates an instance of ModuleChunkLoadingRuntimeModule.
 	 */
 	constructor(runtimeRequirements: ReadonlySet<string>);
-
-	/**
-	 * Returns hooks.
-	 */
-	static getCompilationHooks(
+	static getCompilationHooks: (
 		compilation: Compilation
-	): JsonpCompilationPluginHooks;
+	) => JsonpCompilationPluginHooks;
 
 	/**
 	 * Runtime modules without any dependencies to other runtime modules
@@ -15375,13 +15368,9 @@ declare class ModuleFederationPlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
-
-	/**
-	 * Get the compilation hooks associated with this plugin.
-	 */
-	static getCompilationHooks(
+	static getCompilationHooks: (
 		compilation: Compilation
-	): CompilationHooksModuleFederationPlugin;
+	) => CompilationHooksModuleFederationPlugin;
 }
 declare interface ModuleFederationPluginOptions {
 	/**
@@ -16200,6 +16189,13 @@ declare interface ModuleReferenceOptions {
 	 */
 	asiSafe?: boolean;
 }
+
+/**
+ * Renames an inlined module's top-level declaration (and all its references) when
+ * its name is already taken in the shared startup scope, recording the chosen name
+ * in `allUsedNames`. Lets inlined modules be emitted without a per-entry/per-chunk
+ * IIFE by resolving name collisions instead of isolating each module.
+ */
 declare interface ModuleRenderContext {
 	/**
 	 * the chunk
@@ -20597,13 +20593,9 @@ declare class RealContentHashPlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
-
-	/**
-	 * Returns the attached hooks.
-	 */
-	static getCompilationHooks(
+	static getCompilationHooks: (
 		compilation: Compilation
-	): CompilationHooksRealContentHashPlugin;
+	) => CompilationHooksRealContentHashPlugin;
 }
 declare interface RealContentHashPluginOptions {
 	/**
@@ -20818,6 +20810,13 @@ declare interface RemotesConfig {
 declare interface RemotesObject {
 	[index: string]: string | RemotesConfig | string[];
 }
+
+/**
+ * Renames an inlined module's top-level declaration (and all its references) when
+ * its name is already taken in the shared startup scope, recording the chosen name
+ * in `allUsedNames`. Lets inlined modules be emitted without a per-entry/per-chunk
+ * IIFE by resolving name collisions instead of isolating each module.
+ */
 declare interface RenderBootstrapContext {
 	/**
 	 * the chunk
@@ -20890,6 +20889,13 @@ declare interface RenderContextCssModulesPlugin {
 	 */
 	modules: CssModule[];
 }
+
+/**
+ * Renames an inlined module's top-level declaration (and all its references) when
+ * its name is already taken in the shared startup scope, recording the chosen name
+ * in `allUsedNames`. Lets inlined modules be emitted without a per-entry/per-chunk
+ * IIFE by resolving name collisions instead of isolating each module.
+ */
 declare interface RenderContextJavascriptModulesPlugin {
 	/**
 	 * the chunk
@@ -24037,6 +24043,13 @@ declare interface StarListSerializerContext {
 		obj?: LazyOptions
 	) => LazyFunction<any, any, any, LazyOptions>;
 }
+
+/**
+ * Renames an inlined module's top-level declaration (and all its references) when
+ * its name is already taken in the shared startup scope, recording the chosen name
+ * in `allUsedNames`. Lets inlined modules be emitted without a per-entry/per-chunk
+ * IIFE by resolving name collisions instead of isolating each module.
+ */
 declare interface StartupRenderContext {
 	/**
 	 * the chunk
@@ -25406,18 +25419,18 @@ declare interface WatchFileSystem {
 			timeInfoEntries1?: Map<
 				string,
 				| null
+				| "ignore"
 				| EntryTypesIndex
 				| OnlySafeTimeEntry
 				| ExistenceOnlyTimeEntryTypesIndex
-				| "ignore"
 			>,
 			timeInfoEntries2?: Map<
 				string,
 				| null
+				| "ignore"
 				| EntryTypesIndex
 				| OnlySafeTimeEntry
 				| ExistenceOnlyTimeEntryTypesIndex
-				| "ignore"
 			>,
 			changes?: Set<string>,
 			removals?: Set<string>
@@ -25504,10 +25517,10 @@ declare interface Watcher {
 	getFileTimeInfoEntries: () => Map<
 		string,
 		| null
+		| "ignore"
 		| EntryTypesIndex
 		| OnlySafeTimeEntry
 		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
 	>;
 
 	/**
@@ -25516,10 +25529,10 @@ declare interface Watcher {
 	getContextTimeInfoEntries: () => Map<
 		string,
 		| null
+		| "ignore"
 		| EntryTypesIndex
 		| OnlySafeTimeEntry
 		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
 	>;
 
 	/**
@@ -25548,10 +25561,10 @@ declare interface WatcherInfo {
 	fileTimeInfoEntries: Map<
 		string,
 		| null
+		| "ignore"
 		| EntryTypesIndex
 		| OnlySafeTimeEntry
 		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
 	>;
 
 	/**
@@ -25560,10 +25573,10 @@ declare interface WatcherInfo {
 	contextTimeInfoEntries: Map<
 		string,
 		| null
+		| "ignore"
 		| EntryTypesIndex
 		| OnlySafeTimeEntry
 		| ExistenceOnlyTimeEntryTypesIndex
-		| "ignore"
 	>;
 }
 declare abstract class Watching {
