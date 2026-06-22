@@ -47,15 +47,22 @@ global.self = global;
 // blob-URL worker); Bun does not surface it implicitly the way Node does here.
 self.parentPort = parentPort;
 self.URL = URL;
-self.location = new URL(${JSON.stringify(
-				// Engines format object URLs differently (Node "blob:nodedata:<id>",
-				// Bun "blob:<id>"); build a blob: location from the original URL so the
-				// runtime's publicPath derivation (strip "blob:" + last path segment)
-				// works regardless.
-				isBlobURL
-					? `blob:${/** @type {URL} */ (options.originalURL)}`
-					: resource.toString()
-			)});
+// Deno's worker globalThis.location is a read-only "data:text/javascript," (the
+// eval-worker URL), so a plain assignment is silently ignored and webpack then
+// derives a bogus "data:text/" publicPath; defineProperty overrides it (Node/Bun
+// allow either). Engines also format object URLs differently (Node
+// "blob:nodedata:<id>", Bun "blob:<id>"), so build a blob: location from the
+// original URL — the runtime's publicPath derivation (strip "blob:" + last path
+// segment) works regardless.
+Object.defineProperty(self, "location", {
+	configurable: true,
+	writable: true,
+	value: new URL(${JSON.stringify(
+		isBlobURL
+			? `blob:${/** @type {URL} */ (options.originalURL)}`
+			: resource.toString()
+	)})
+});
 const urlToPath = url => {
   if (/^file:/i.test(url)) return fileURLToPath(url);
 	if (url.startsWith("https://test.cases/path/")) url = url.slice(24);
