@@ -26,7 +26,7 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
   - `lib/debug/` — Debug helpers.
   - `lib/dependencies/` — `Dependency` classes and their templates (HarmonyImport, CommonJsRequire, RequireContext, …).
   - `lib/dll/` — DllPlugin / DllReferencePlugin.
-  - `lib/electron/`, `lib/node/`, `lib/web/`, `lib/webworker/` — Target-specific runtime templates.
+  - `lib/deno/`, `lib/electron/`, `lib/node/`, `lib/web/`, `lib/webworker/` — Target-specific runtime templates and externals presets.
   - `lib/errors/` — Error class hierarchy.
   - `lib/esm/` — ESM-specific output (e.g. `import.meta`).
   - `lib/hmr/` — Hot Module Replacement plugins.

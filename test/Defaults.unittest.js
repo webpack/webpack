@@ -133,6 +133,7 @@ describe("snapshots", () => {
 		  },
 		  "externals": undefined,
 		  "externalsPresets": Object {
+		    "deno": false,
 		    "electron": false,
 		    "electronMain": false,
 		    "electronPreload": false,
@@ -1599,6 +1600,171 @@ describe("snapshots", () => {
 		@@ ... @@
 		-   "target": "web",
 		+   "target": "node",
+	`)
+	);
+
+	test("target deno", { target: "deno" }, (e) =>
+		e.toMatchInlineSnapshot(`
+		- Expected
+		+ Received
+
+		@@ ... @@
+		-     "outputModule": false,
+		+     "outputModule": true,
+		@@ ... @@
+		-     "deno": false,
+		+     "deno": true,
+		@@ ... @@
+		-   "externalsType": "var",
+		+   "externalsType": "module-import",
+		@@ ... @@
+		-       "document": true,
+		-       "dynamicImport": undefined,
+		-       "dynamicImportInWorker": undefined,
+		+       "document": false,
+		+       "dynamicImport": true,
+		+       "dynamicImportInWorker": true,
+		@@ ... @@
+		-       "globalThis": undefined,
+		-       "importMetaDirnameAndFilename": undefined,
+		+       "globalThis": true,
+		+       "importMetaDirnameAndFilename": true,
+		@@ ... @@
+		-       "module": undefined,
+		+       "module": true,
+		@@ ... @@
+		-     "target": "web",
+		+     "target": "deno",
+		@@ ... @@
+		-         "createRequire": false,
+		+         "createRequire": true,
+		@@ ... @@
+		-         "importMeta": true,
+		+         "importMeta": "preserve-unknown",
+		@@ ... @@
+		-     "__dirname": "mock",
+		-     "__filename": "mock",
+		+     "__dirname": "eval-only",
+		+     "__filename": "eval-only",
+		@@ ... @@
+		-     "chunkFilename": "[name].js",
+		-     "chunkFormat": "array-push",
+		+     "chunkFilename": "[name].mjs",
+		+     "chunkFormat": "module",
+		@@ ... @@
+		-     "chunkLoading": "jsonp",
+		+     "chunkLoading": "import",
+		@@ ... @@
+		-       "jsonp",
+		-       "import-scripts",
+		+       "import",
+		@@ ... @@
+		-       "document": true,
+		-       "dynamicImport": undefined,
+		-       "dynamicImportInWorker": undefined,
+		+       "document": false,
+		+       "dynamicImport": true,
+		+       "dynamicImportInWorker": true,
+		@@ ... @@
+		-       "globalThis": undefined,
+		-       "importMetaDirnameAndFilename": undefined,
+		+       "globalThis": true,
+		+       "importMetaDirnameAndFilename": true,
+		@@ ... @@
+		-       "module": undefined,
+		+       "module": true,
+		@@ ... @@
+		-     "filename": "[name].js",
+		-     "globalObject": "self",
+		+     "filename": "[name].mjs",
+		+     "globalObject": "globalThis",
+		@@ ... @@
+		-     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
+		+     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.mjs",
+		@@ ... @@
+		-     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
+		+     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json.mjs",
+		@@ ... @@
+		-     "iife": true,
+		+     "iife": false,
+		@@ ... @@
+		-     "module": false,
+		+     "module": true,
+		@@ ... @@
+		-     "scriptType": false,
+		+     "scriptType": "module",
+		@@ ... @@
+		-     "workerChunkLoading": "import-scripts",
+		+     "workerChunkLoading": "import",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		+       "deno",
+		+       "node",
+		@@ ... @@
+		-   "target": "web",
+		+   "target": "deno",
 	`)
 	);
 
