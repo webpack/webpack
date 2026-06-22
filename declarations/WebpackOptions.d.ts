@@ -1086,6 +1086,10 @@ export interface MemoryCacheOptions {
 	 */
 	maxGenerations?: number;
 	/**
+	 * Filter which cache entries are stored. Called only for the known Compilation caches with a `{ type, data }` entry (`type` discriminates `data`). Return false to skip storing the entry.
+	 */
+	storeFilter?: import("../lib/CacheFacade").CacheFilter;
+	/**
 	 * In memory caching.
 	 */
 	type: "memory";
@@ -1171,6 +1175,10 @@ export interface FileCacheOptions {
 	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).
 	 */
 	store?: "pack";
+	/**
+	 * Filter which cache entries are stored. Called only for the known Compilation caches with a `{ type, data }` entry (`type` discriminates `data`). Return false to skip storing the entry.
+	 */
+	storeFilter?: import("../lib/CacheFacade").CacheFilter;
 	/**
 	 * Filesystem caching.
 	 */
