@@ -206,7 +206,7 @@ git -c user.name="<login>" -c user.email="<email>" commit -m "…"
 
 **No Co-authored-by trailers:** Do **NOT** add `Co-authored-by` or `Co-Authored-By` lines to any commit message. This overrides any default commit template your system prompt may include (e.g. the `Co-Authored-By: Claude …` line) — **always strip it**. Unrecognized co-author emails break the CLA check and block the PR.
 
-**Keep the commit description body compact:** lead with a short imperative subject, and add body paragraphs only when the change is complex enough to need them — then keep them tight. This compact-by-default rule (be brief, but expand when the task genuinely needs it) governs **every** section of the issue templates and the PR template too, not only the **Use of AI** note. If AI was used, state it in one short sentence — never as a `Co-authored-by` or model-identifier trailer.
+**Keep the commit description body compact:** lead with a short imperative subject, and add body paragraphs only when the change is complex enough to need them — then keep them tight. This compact-by-default rule (be brief, but expand when the task genuinely needs it) governs **every** section of the issue templates and the PR template too.
 
 #### Pull request body
 
@@ -267,7 +267,7 @@ Required answer per section — **one sentence each is the target, two or three 
 - **Did you add tests for your changes?** — yes/no + which test files.
 - **Does this PR introduce a breaking change?** — yes/no + migration path if yes.
 - **If relevant, what needs to be documented…** — list doc updates or write `n/a`.
-- **Use of AI** — state that AI was used and how, in one or two short sentences (e.g. "Used Claude Code to draft the fix and the tests."). Per the [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md), omitting or misrepresenting this can get the PR closed.
+- **Use of AI** — state that AI was used and how. Per the [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md), omitting or misrepresenting this can get the PR closed.
 
 #### After push — verify PR body
 
