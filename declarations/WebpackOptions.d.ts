@@ -3607,9 +3607,9 @@ export interface ExperimentsNormalized {
  */
 export interface HtmlGeneratorOptions {
 	/**
-	 * Emit the parsed and URL-rewritten HTML as a standalone `.html` output file alongside the module's JavaScript export. When unset, extraction defaults to `true` for HTML modules used as compilation entries (HTML entry points) and `false` for HTML modules imported from JavaScript. Filenames follow `output.htmlFilename` / `output.htmlChunkFilename`.
+	 * Emit the parsed and URL-rewritten HTML as a standalone `.html` output file alongside the module's JavaScript export. `true` always emits the file; `false` never does; `"inline"` exposes the processed HTML for inline write-back (e.g. `<iframe srcdoc>`) without emitting a standalone file. When unset, extraction defaults to `true` for HTML modules used as compilation entries (HTML entry points) and `false` for HTML modules imported from JavaScript. Filenames follow `output.htmlFilename` / `output.htmlChunkFilename`.
 	 */
-	extract?: boolean;
+	extract?: "inline" | boolean;
 }
 /**
  * Parser options for html modules.

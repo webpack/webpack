@@ -2659,7 +2659,7 @@ describe("snapshots", () => {
 			+       Object {
 			+         "dependency": "html-srcdoc",
 			+         "generator": Object {
-			+           "extract": true,
+			+           "extract": "inline",
 			+         },
 			+         "resolve": Object {
 			+           "fullySpecified": true,
@@ -3436,7 +3436,7 @@ describe("snapshots", () => {
 			+       Object {
 			+         "dependency": "html-srcdoc",
 			+         "generator": Object {
-			+           "extract": true,
+			+           "extract": "inline",
 			+         },
 			+         "resolve": Object {
 			+           "fullySpecified": true,
@@ -3816,7 +3816,7 @@ describe("snapshots", () => {
 			+       Object {
 			+         "dependency": "html-srcdoc",
 			+         "generator": Object {
-			+           "extract": true,
+			+           "extract": "inline",
 			+         },
 			+         "resolve": Object {
 			+           "fullySpecified": true,
