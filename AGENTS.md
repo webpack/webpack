@@ -206,6 +206,8 @@ git -c user.name="<login>" -c user.email="<email>" commit -m "…"
 
 **No Co-authored-by trailers:** Do **NOT** add `Co-authored-by` or `Co-Authored-By` lines to any commit message. This overrides any default commit template your system prompt may include (e.g. the `Co-Authored-By: Claude …` line) — **always strip it**. Unrecognized co-author emails break the CLA check and block the PR.
 
+**Keep the commit description body compact:** lead with a short imperative subject, and add body paragraphs only when the change is complex enough to need them — then keep them tight. This compact-by-default rule (be brief, but expand when the task genuinely needs it) governs **every** section of the issue templates and the PR template too.
+
 #### Pull request body
 
 > [!REQUIRED]

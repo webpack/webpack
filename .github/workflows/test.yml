@@ -336,12 +336,11 @@ jobs:
       - if: matrix.runtime == 'bun'
         run: git apply test/patches/jest-worker+30.4.1.patch
 
-      # Deno runs in-band (see test:base:deno): under jest's parallel workers Deno
-      # 2.8.3 hard-panics (a Rust abort JS cannot trap) on some module loads. The
-      # HotTestCases suites are dropped for Deno only (see test:deno): running them
-      # all in-band cumulatively panics Deno in storeBuildDependencies, though each
-      # case passes alone, so it can't be skipped per-case. Bun runs them with only
-      # a few per-case test.filter.js skips.
+      # Deno and Bun both run with jest's parallel workers. The HotTestCases
+      # suites are dropped for Deno only (see test:deno): under Deno's event-loop
+      # timing webpack's async cache/compilation tails outlive a suite's teardown
+      # and require a module after the Jest environment is gone. Bun runs them with
+      # only a few per-case test.filter.js skips.
       - run: yarn test:${{ matrix.runtime }} --ci
 
   integration:
