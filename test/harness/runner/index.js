@@ -330,7 +330,9 @@ class TestRunner {
 			URL,
 			Buffer,
 			TextEncoder: typeof TextEncoder !== "undefined" ? TextEncoder : undefined,
-			TextDecoder: typeof TextDecoder !== "undefined" ? TextDecoder : undefined
+			TextDecoder: typeof TextDecoder !== "undefined" ? TextDecoder : undefined,
+			// expose the Deno runtime global to bundles when running under Deno
+			Deno: globalThis.Deno
 		};
 		return base;
 	}
