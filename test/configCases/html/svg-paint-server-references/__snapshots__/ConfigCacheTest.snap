@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html svg-paint-server-references exported tests should resolve external SVG paint-server and color-profile references 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>SVG paint servers</title></head>
+<body>
+
+<svg width=\\"200\\" height=\\"200\\">
+	<defs>
+		<linearGradient id=\\"g1\\" href=\\"5141f55e7ff89741c215.svg#base\\"/>
+		<radialGradient id=\\"g2\\" xlink:href=\\"5141f55e7ff89741c215.svg#base\\"/>
+		<pattern id=\\"p1\\" href=\\"5141f55e7ff89741c215.svg#tile\\"/>
+		<filter id=\\"f1\\" xlink:href=\\"5141f55e7ff89741c215.svg#blur\\"/>
+		<linearGradient id=\\"g3\\" href=\\"#g1\\"/>
+	</defs>
+	<rect width=\\"100\\" height=\\"100\\" fill=\\"url(#g1)\\"/>
+</svg>
+
+<svg><color-profile name=\\"sRGB\\" xlink:href=\\"42b59ea9ac36054f76a5.icc\\"/></svg>
+
+</body>
+</html>
+"
+`;

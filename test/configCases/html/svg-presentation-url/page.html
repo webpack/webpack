@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head><title>SVG presentation url()</title></head>
+<body>
+
+<svg width="200" height="200">
+	<defs>
+		<clipPath id="clip"><circle cx="50" cy="50" r="40"/></clipPath>
+	</defs>
+	<rect width="100" height="100" fill="url(./paint.svg#grad)" clip-path="url(#clip)"/>
+	<rect width="100" height="100" stroke="url('./paint.svg#grad')" filter="url(./paint.svg#blur)"/>
+	<text mask="url(./paint.svg#m)">masked</text>
+</svg>
+
+</body>
+</html>

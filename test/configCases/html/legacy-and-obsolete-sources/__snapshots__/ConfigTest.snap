@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html legacy-and-obsolete-sources exported tests should resolve legacy and obsolete source attributes 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Legacy and obsolete sources</title>
+<link rel=\\"image_src\\" href=\\"a024183765ea16a3fa14.png\\">
+<meta name=\\"thumbnail\\" content=\\"a024183765ea16a3fa14.png\\">
+</head>
+<body>
+
+<object classid=\\"a024183765ea16a3fa14.png\\" data=\\"a024183765ea16a3fa14.png\\">
+	<param name=\\"movie\\" valuetype=\\"ref\\" value=\\"a024183765ea16a3fa14.png\\">
+	<param name=\\"bgcolor\\" value=\\"./skip.png\\">
+</object>
+
+<applet code=\\"a024183765ea16a3fa14.png\\" object=\\"a024183765ea16a3fa14.png\\"></applet>
+
+<math><mglyph src=\\"a024183765ea16a3fa14.png\\"></math>
+
+</body>
+</html>
+"
+`;
