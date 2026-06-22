@@ -5,6 +5,7 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 /**
  * @param {import("../").MultiCompilerOptions=} options options
@@ -46,6 +47,8 @@ const createMultiCompiler = (options) => {
 };
 
 describe("MultiCompiler", () => {
+	expectNoDeprecations();
+
 	it("should trigger 'run' for each child compiler", (done) => {
 		const compiler = createMultiCompiler();
 		let called = 0;

@@ -3,8 +3,11 @@
 require("./helpers/warmup-webpack");
 
 const path = require("path");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 // cspell:word nodetest
+expectNoDeprecations();
+
 describe("NodeTemplatePlugin", () => {
 	it("should compile and run a simple module", (done) => {
 		const webpack = require("..");

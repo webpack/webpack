@@ -7,10 +7,13 @@ const fs = require("graceful-fs");
 const rimraf = /** @type {{ sync: (path: string) => void }} */ (
 	require("rimraf")
 );
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 let fixtureCount = 0;
 
 describe("Compiler (filesystem caching)", () => {
+	expectNoDeprecations();
+
 	const tempFixturePath = path.join(
 		__dirname,
 		"fixtures",

@@ -6,23 +6,24 @@ const webpack = require("../../");
 /** @type {import("webpack").Configuration} */
 const config = {
 	// mode: "development" || "production",
-	cache: true, // better performance for the AggressiveSplittingPlugin
 	entry: "./example",
 	output: {
 		path: path.join(__dirname, "dist"),
 		filename: "[chunkhash].js",
 		chunkFilename: "[chunkhash].js"
 	},
-	plugins: [
-		new webpack.optimize.AggressiveSplittingPlugin({
+	optimization: {
+		splitChunks: {
+			chunks: "all",
 			minSize: 30000,
 			maxSize: 50000
-		}),
+		}
+	},
+	plugins: [
 		new webpack.DefinePlugin({
 			"process.env.NODE_ENV": JSON.stringify("production")
 		})
-	],
-	recordsOutputPath: path.join(__dirname, "dist", "records.json")
+	]
 };
 
 module.exports = config;

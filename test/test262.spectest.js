@@ -7,6 +7,7 @@ const path = require("path");
 const url = require("url");
 const vm = require("vm");
 const webpack = require("..");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 const needDebug = typeof process.env.DEBUG !== "undefined";
 
@@ -1152,6 +1153,8 @@ function splitToNChunks(array, n) {
 }
 
 const shardedTestFiles = splitToNChunks([...testFiles], shard[1])[shard[0] - 1];
+
+expectNoDeprecations();
 
 describe("test262", () => {
 	for (const mode of ["development", "production"]) {

@@ -4,6 +4,9 @@ require("./helpers/warmup-webpack");
 
 const path = require("path");
 const fs = require("graceful-fs");
+const {
+	expectOnlyListedDeprecations
+} = require("./helpers/expectNoDeprecations");
 
 jest.setTimeout(60000);
 
@@ -74,66 +77,70 @@ describe("Examples", () => {
 			continue;
 		}
 
-		it(`should compile ${relativePath}`, async () => {
-			let options = await loadConfiguration(examplePath);
+		describe(relativePath, () => {
+			expectOnlyListedDeprecations(() => examplePath);
 
-			if (!options) {
-				// Skip ECMA modules examples
-				return;
-			}
+			it(`should compile ${relativePath}`, async () => {
+				let options = await loadConfiguration(examplePath);
 
-			if (typeof options === "function") options = options();
-
-			if (Array.isArray(options)) {
-				for (const [_, item] of options.entries()) {
-					processOptions(item);
+				if (!options) {
+					// Skip ECMA modules examples
+					return;
 				}
-			} else {
-				processOptions(options);
-			}
 
-			/**
-			 * @param {import("../").Configuration} options options
-			 */
-			function processOptions(options) {
-				options.context = examplePath;
-				options.output = options.output || {};
-				options.output.pathinfo = true;
-				options.output.path = path.join(examplePath, "dist");
-				options.output.publicPath = "dist/";
-				if (!options.entry) options.entry = "./example.js";
-				if (!options.plugins) options.plugins = [];
-			}
+				if (typeof options === "function") options = options();
 
-			const webpack = require("..");
+				if (Array.isArray(options)) {
+					for (const [_, item] of options.entries()) {
+						processOptions(item);
+					}
+				} else {
+					processOptions(options);
+				}
 
-			await /** @type {Promise<void>} */ (
-				new Promise((resolve, reject) => {
-					webpack(options, (err, stats) => {
-						if (err) {
-							reject(err);
-							return;
-						}
-						if (/** @type {import("../").Stats} */ (stats).hasErrors()) {
-							reject(
-								new Error(
-									/** @type {import("../").Stats} */ (stats).toString(
-										/** @type {import("../").StatsOptions} */ ({
-											all: false,
-											errors: true,
-											errorDetails: true,
-											errorStacks: true
-										})
+				/**
+				 * @param {import("../").Configuration} options options
+				 */
+				function processOptions(options) {
+					options.context = examplePath;
+					options.output = options.output || {};
+					options.output.pathinfo = true;
+					options.output.path = path.join(examplePath, "dist");
+					options.output.publicPath = "dist/";
+					if (!options.entry) options.entry = "./example.js";
+					if (!options.plugins) options.plugins = [];
+				}
+
+				const webpack = require("..");
+
+				await /** @type {Promise<void>} */ (
+					new Promise((resolve, reject) => {
+						webpack(options, (err, stats) => {
+							if (err) {
+								reject(err);
+								return;
+							}
+							if (/** @type {import("../").Stats} */ (stats).hasErrors()) {
+								reject(
+									new Error(
+										/** @type {import("../").Stats} */ (stats).toString(
+											/** @type {import("../").StatsOptions} */ ({
+												all: false,
+												errors: true,
+												errorDetails: true,
+												errorStacks: true
+											})
+										)
 									)
-								)
-							);
-							return;
-						}
+								);
+								return;
+							}
 
-						resolve();
-					});
-				})
-			);
-		}, 90000);
+							resolve();
+						});
+					})
+				);
+			}, 90000);
+		});
 	}
 });

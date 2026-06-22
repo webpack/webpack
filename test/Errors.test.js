@@ -6,6 +6,7 @@ const path = require("path");
 const fs = require("graceful-fs");
 const prettyFormat = require("pretty-format").default;
 const webpack = require("..");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 const CWD_PATTERN = new RegExp(process.cwd().replace(/\\/g, "/"), "gm");
 const ERROR_STACK_PATTERN = /(?:\n\s+at\s.*)+/g;
@@ -183,6 +184,8 @@ async function compile(options) {
 
 	return { errors, warnings };
 }
+
+expectNoDeprecations();
 
 describe("Errors", () => {
 	it("should emit warning for missingFile", async () => {

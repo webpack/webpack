@@ -8,6 +8,9 @@ const rimraf = require("rimraf");
 const webpack = require("..");
 const { registerPerCaseSnapshotHooks } = require("./harness/snapshot");
 const captureStdio = require("./helpers/captureStdio");
+const {
+	expectOnlyListedDeprecations
+} = require("./helpers/expectNoDeprecations");
 
 /**
  * Escapes regular expression metacharacters
@@ -58,6 +61,7 @@ describe("StatsTestCases", () => {
 		// eslint-disable-next-line no-loop-func
 		describe(testName, () => {
 			registerPerCaseSnapshotHooks(testDirectory, "StatsTestCases");
+			expectOnlyListedDeprecations(() => testDirectory);
 
 			it(`should print correct stats for ${testName}`, (done) => {
 				const outputDirectory = path.join(outputBase, testName);

@@ -6,6 +6,7 @@ const path = require("path");
 const fs = require("graceful-fs");
 /** @type {{ sync: (pattern: string) => void }} */
 const rimraf = require("rimraf");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 let fixtureCount = 0;
 
@@ -15,6 +16,8 @@ let fixtureCount = 0;
  */
 
 describe("Compiler (caching)", () => {
+	expectNoDeprecations();
+
 	/**
 	 * @param {string} entry entry file
 	 * @param {import("../").Configuration} options webpack options

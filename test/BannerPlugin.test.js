@@ -4,9 +4,12 @@ const path = require("path");
 const fs = require("graceful-fs");
 
 const webpack = require("..");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 const pluginDir = path.join(__dirname, "js", "BannerPlugin");
 const outputDir = path.join(pluginDir, "output");
+
+expectNoDeprecations();
 
 describe("BannerPlugin", () => {
 	it("should cache assets", (done) => {

@@ -7,6 +7,7 @@ const path = require("path");
 const util = require("util");
 const vm = require("vm");
 const rimraf = require("rimraf");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");
 const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
 
@@ -16,6 +17,8 @@ const utimes = util.promisify(fs.utimes);
 const mkdir = util.promisify(fs.mkdir);
 
 describe("Persistent Caching", () => {
+	expectNoDeprecations();
+
 	const tempPath = path.resolve(__dirname, "js", "persistent-caching");
 	const outputPath = path.resolve(tempPath, "output");
 	const cachePath = path.resolve(tempPath, "cache");

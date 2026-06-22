@@ -7,6 +7,7 @@ const fs = require("graceful-fs");
 const { Volume, createFsFromVolume } = require("memfs");
 /** @type {(path: string, callback: (err?: unknown) => void) => void} */
 const rimraf = require("rimraf");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 /**
  * @param {import("../").Configuration} config config
@@ -90,6 +91,8 @@ function createFiles() {
 // Bun's fs.watch surfaces unlink events differently from Node, so watchpack
 // reports the removed file inconsistently across runs; skip on Bun.
 const itSkipBun = process.versions.bun ? it.skip : it;
+
+expectNoDeprecations();
 
 describe("ChangesAndRemovals", () => {
 	beforeEach((done) => {

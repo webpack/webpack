@@ -1,12 +1,8 @@
-This example demonstrates the AggressiveSplittingPlugin for splitting the bundle into multiple smaller chunks to improve caching. This works best with an HTTP2 web server, otherwise, there is an overhead for the increased number of requests.
+This example demonstrates how to split the bundle into multiple smaller chunks to improve caching using `optimization.splitChunks` with a `maxSize`. This works best with an HTTP2 web server, otherwise, there is an overhead for the increased number of requests.
 
-AggressiveSplittingPlugin splits every chunk until it reaches the specified `maxSize`. In this example, it tries to create chunks with <50kB raw code, which typically minimizes to ~10kB. It groups modules by folder structure, because modules in the same folder are likely to have similar repetitive text, making them gzip efficiently together. They are also likely to change together.
+Setting `maxSize` tells webpack to split chunks that are bigger than this size into smaller ones. In this example, it tries to create chunks with <50kB raw code, which typically minimizes to ~10kB. Modules are grouped by folder structure, because modules in the same folder are likely to have similar repetitive text, making them gzip efficiently together. They are also likely to change together.
 
-AggressiveSplittingPlugin records its splitting in the webpack records. When it is next run, it tries to use the last recorded splitting. Since changes to application code between one run and the next are usually in only a few modules (or just one), re-using the old splittings (and chunks, which are probably still in the client's cache), is highly advantageous.
-
-Only chunks that are bigger than the specified `minSize` are stored into the records. This ensures that these chunks fill up as your application grows, instead of creating many records of small chunks for every change.
-
-If a module changes, its chunks are declared to be invalid and are put back into the module pool. New chunks are created from all modules in the pool.
+`chunks: "all"` applies the splitting to all chunks, including the initial ones. Chunk content is deterministic, so the same `[chunkhash]` is emitted as long as a chunk's modules don't change. Since changes to application code between one build and the next are usually in only a few modules, the unchanged chunks keep their hash and stay in the client's cache.
 
 There is a tradeoff here:
 
@@ -32,10 +28,4 @@ _{{stdout}}_
 
 ```
 _{{production:stdout}}_
-```
-
-## Records
-
-```
-_{{dist/records.json}}_
 ```

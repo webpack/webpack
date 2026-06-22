@@ -3,6 +3,7 @@
 require("./helpers/warmup-webpack");
 
 const { Volume, createFsFromVolume } = require("memfs");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 /**
  * @param {import("../").Configuration | import("../").MultiConfiguration} options options
@@ -30,6 +31,8 @@ const compile = (options) =>
 	);
 
 describe("MultiStats", () => {
+	expectNoDeprecations();
+
 	it("should create JSON of children stats", async () => {
 		const stats = await compile([
 			{

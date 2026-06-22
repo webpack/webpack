@@ -3,6 +3,7 @@
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 /**
  * @param {import("../").Configuration | import("../").MultiConfiguration} config webpack config
@@ -37,6 +38,8 @@ const createMultiCompiler = () =>
 			entry: "./a.js"
 		}
 	]);
+
+expectNoDeprecations();
 
 describe("WatcherEvents", () => {
 	if (process.env.NO_WATCH_TESTS) {
