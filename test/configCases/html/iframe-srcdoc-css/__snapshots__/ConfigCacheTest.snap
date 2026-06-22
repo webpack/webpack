@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html iframe-srcdoc-css exported tests should process CSS inside <iframe srcdoc> (@import, url(), and <link>) 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>srcdoc css</title></head>
+<body>
+<iframe srcdoc=\\"<style>body {
+	color: red;
+}
+
+
+</style>\\"></iframe>
+<iframe srcdoc=\\"<style>body{background:url(handled-pixel.png)}
+</style>\\"></iframe>
+<iframe srcdoc=\\"<link rel=&quot;stylesheet&quot; href=&quot;576.bundle0.css&quot;>\\"></iframe>
+</body>
+</html>
+"
+`;
