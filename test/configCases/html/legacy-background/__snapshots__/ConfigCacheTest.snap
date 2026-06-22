@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html legacy-background exported tests should resolve the deprecated \`background\` attribute on body/table/td/th 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>Legacy background</title></head>
+<body background=\\"a024183765ea16a3fa14.png\\">
+
+<table background=\\"a024183765ea16a3fa14.png\\">
+	<tr>
+		<th background=\\"a024183765ea16a3fa14.png\\">head</th>
+		<td background=\\"a024183765ea16a3fa14.png\\">cell</td>
+	</tr>
+</table>
+
+</body>
+</html>
+"
+`;
