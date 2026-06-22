@@ -6,12 +6,16 @@ const { getContext, runLoaders } = require("../lib/loaders/LoaderRunner");
 
 const fixtures = path.resolve(__dirname, "fixtures", "loader-runner");
 
-// Errors thrown by Node's fs and by the module resolver cross the jest
-// vm-module realm boundary (`--experimental-vm-modules`), so the realm-bound
-// `toBeInstanceOf(Error)` is unreliable for them. Use the realm-independent
-// internal class tag instead.
-const isError = (err) =>
-	Object.prototype.toString.call(err) === "[object Error]";
+/**
+ * Asserts `err` is an Error. `instanceof Error` is unreliable across the jest
+ * vm-module realm boundary (`--experimental-vm-modules`), so check the
+ * realm-independent internal class tag instead.
+ * @param {unknown} err thrown value
+ * @returns {asserts err is NodeJS.ErrnoException} err is an Error
+ */
+function expectError(err) {
+	expect(Object.prototype.toString.call(err)).toBe("[object Error]");
+}
 
 describe("runLoaders", () => {
 	it("should process only a resource", (done) => {
@@ -571,7 +575,7 @@ describe("runLoaders", () => {
 				loaders: [path.resolve(fixtures, "pitch-dependencies-loader.js")]
 			},
 			(err, result) => {
-				expect(isError(err)).toBe(true);
+				expectError(err);
 				expect(err.message).toMatch(/ENOENT/i);
 				expect(result.fileDependencies).toEqual([
 					`remainingRequest:${path.resolve(fixtures, "missing.txt")}`,
@@ -589,7 +593,7 @@ describe("runLoaders", () => {
 				loaders: [path.resolve(fixtures, "does-not-exist-loader.js")]
 			},
 			(err, result) => {
-				expect(isError(err)).toBe(true);
+				expectError(err);
 				expect(err.code).toBe("MODULE_NOT_FOUND");
 				expect(err.message).toMatch(/does-not-exist-loader\.js'/i);
 				expect(result).toEqual({
@@ -610,7 +614,7 @@ describe("runLoaders", () => {
 				loaders: [path.resolve(fixtures, "module-exports-object-loader.js")]
 			},
 			(err, result) => {
-				expect(err).toBeInstanceOf(Error);
+				expectError(err);
 				expect(err.message).toMatch(
 					/module-exports-object-loader.js' is not a loader \(must have normal or pitch function\)$/
 				);
@@ -632,7 +636,7 @@ describe("runLoaders", () => {
 				loaders: [path.resolve(fixtures, "module-exports-string-loader.js")]
 			},
 			(err, result) => {
-				expect(err).toBeInstanceOf(Error);
+				expectError(err);
 				expect(err.message).toMatch(
 					/module-exports-string-loader.js' is not a loader \(export function or es6 module\)$/
 				);
@@ -654,7 +658,7 @@ describe("runLoaders", () => {
 				loaders: [path.resolve(fixtures, "throws-error-loader.js")]
 			},
 			(err, result) => {
-				expect(err).toBeInstanceOf(Error);
+				expectError(err);
 				expect(err.message).toMatch(/^resource$/i);
 				expect(result.fileDependencies).toEqual([
 					path.resolve(fixtures, "resource.bin")
@@ -674,7 +678,7 @@ describe("runLoaders", () => {
 			(err, result) => {
 				if (!once) return done(new Error("should not be called twice"));
 				once = false;
-				expect(err).toBeInstanceOf(Error);
+				expectError(err);
 				expect(err.message).toMatch(/^resource$/i);
 				expect(result.fileDependencies).toEqual([
 					path.resolve(fixtures, "resource.bin")
@@ -715,8 +719,9 @@ describe("runLoaders", () => {
 	});
 
 	it("should load a loader using System.import and process", (done) => {
-		global.System = {
-			import(moduleId) {
+		/** @type {EXPECTED_ANY} */
+		(global).System = {
+			import(/** @type {string} */ moduleId) {
 				return Promise.resolve(require(moduleId));
 			}
 		};
@@ -736,7 +741,7 @@ describe("runLoaders", () => {
 				done();
 			}
 		);
-		delete global.System;
+		delete (/** @type {EXPECTED_ANY} */ (global).System);
 	});
 
 	if (Number(process.versions.modules) >= 83) {
@@ -873,7 +878,7 @@ describe("runLoaders", () => {
 					]
 				},
 				(err, result) => {
-					expect(isError(err)).toBe(true);
+					expectError(err);
 					expect(result).toEqual({
 						cacheable: false,
 						fileDependencies: [],
@@ -897,7 +902,7 @@ describe("runLoaders", () => {
 					]
 				},
 				(err, result) => {
-					expect(err).toBeInstanceOf(Error);
+					expectError(err);
 					expect(err.message).toMatch(
 						/esm-invalid-loader\.mjs' is not a loader \(must have normal or pitch function\)$/
 					);
