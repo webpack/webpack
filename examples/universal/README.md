@@ -1,11 +1,11 @@
-This example shows the **`universal` target** — `target: "universal"` — which makes a single webpack compiler emit **one ESM bundle that runs in the browser, web workers, Node.js, Electron and NW.js**.
+This example shows the **`universal` target** — `target: "universal"` — which makes a single webpack compiler emit **one ESM bundle that runs in the browser, web workers, Node.js, Electron and NW.js**. Because the output is plain ECMAScript modules with no platform assumptions baked in, the same bundle also runs on other ESM runtimes such as **Deno** and **Bun**.
 
 The `universal` preset is the intersection of every platform webpack knows about: it only uses runtime features (chunk loading, global object, etc.) that all of them support, and output is **always ECMAScript modules**. The bundle bakes in no platform-specific assumptions, so anything platform-dependent is resolved at **runtime** instead. Because output is always ESM, `experiments.outputModule` and `output.module` default to `true` for this target — no extra config needed.
 
 This example demonstrates the full potential of that setup:
 
 - **One source, every runtime** — `example.js` is built once and runs unchanged on each platform.
-- **Runtime environment detection** — `env.js` reports the current platform without any build-time `target` branch.
+- **Runtime environment detection** — `env.js` reports the current platform (browser, Node.js, Deno, Bun, …) without any build-time `target` branch.
 - **Universal code splitting** — the dynamic `import("./render")` is emitted as a separate `.mjs` chunk, and webpack generates a chunk loader that works everywhere (native `import()` in the browser, dynamic `import()` of the emitted module in Node).
 - **Universal output sink** — the lazily-loaded `render.js` writes to the DOM in a browser and to stdout in Node.
 
@@ -35,8 +35,13 @@ main();
 
 ```javascript
 // Universal feature detection. The bundle assumes no platform-specific global at
-// build time, so the environment is resolved at runtime instead.
+// build time, so the environment is resolved at runtime instead. Deno and Bun
+// are checked before Node because both also expose a Node-compatible `process`.
 export function platform() {
+	if (typeof Deno !== "undefined") return "Deno";
+
+	if (typeof Bun !== "undefined") return "Bun";
+
 	if (typeof window !== "undefined") return "browser";
 
 	if (
@@ -113,8 +118,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   platform: () => (/* binding */ platform)
 /* harmony export */ });
 // Universal feature detection. The bundle assumes no platform-specific global at
-// build time, so the environment is resolved at runtime instead.
+// build time, so the environment is resolved at runtime instead. Deno and Bun
+// are checked before Node because both also expose a Node-compatible `process`.
 function platform() {
+	if (typeof Deno !== "undefined") return "Deno";
+
+	if (typeof Bun !== "undefined") return "Bun";
+
 	if (typeof window !== "undefined") return "browser";
 
 	if (
@@ -376,12 +386,12 @@ function render(message) {
 ## Unoptimized
 
 ```
-asset output.mjs 8.61 KiB [emitted] [javascript module] (name: main)
+asset output.mjs 8.8 KiB [emitted] [javascript module] (name: main)
 asset render_js.mjs 1.02 KiB [emitted] [javascript module]
-chunk (runtime: main) output.mjs (main) 999 bytes (javascript) 3.48 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 3.48 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 3.48 KiB 6 modules
-  dependent modules 370 bytes [dependent] 1 module
+  dependent modules 562 bytes [dependent] 1 module
   ./example.js 629 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -398,12 +408,12 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.mjs 1.27 KiB [emitted] [javascript module] [minimized] (name: main)
+asset output.mjs 1.33 KiB [emitted] [javascript module] [minimized] (name: main)
 asset render_js.mjs 250 bytes [emitted] [javascript module] [minimized]
-chunk (runtime: main) output.mjs (main) 999 bytes (javascript) 3.25 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 3.25 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 3.25 KiB 5 modules
-  ./example.js + 1 modules 999 bytes [built] [code generated]
+  ./example.js + 1 modules 1.16 KiB [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
