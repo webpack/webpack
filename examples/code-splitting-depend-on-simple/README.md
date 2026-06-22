@@ -231,7 +231,7 @@ module.exports = 'prop-types';
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -315,7 +315,7 @@ module.exports = 'prop-types';
 ## Unoptimized
 
 ```
-asset react-vendors.js 8.25 KiB [emitted] (name: react-vendors)
+asset react-vendors.js 8.21 KiB [emitted] (name: react-vendors)
 asset app.js 1.62 KiB [emitted] (name: app)
 chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
   > ./app.js app
@@ -323,11 +323,11 @@ chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial
     [no exports]
     [used exports unknown]
     entry ./app.js app
-chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javascript) 3.76 KiB (runtime) >{app}< [entry] [rendered]
+chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javascript) 3.73 KiB (runtime) >{app}< [entry] [rendered]
   > prop-types react-vendors
   > react react-vendors
   > react-dom react-vendors
-  runtime modules 3.76 KiB 6 modules
+  runtime modules 3.73 KiB 6 modules
   cacheable modules 87 bytes
     ./node_modules/prop-types.js 31 bytes [built] [code generated]
       [used exports unknown]

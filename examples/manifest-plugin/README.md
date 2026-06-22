@@ -194,9 +194,9 @@ chunk (runtime: main) async_js.67305b378d0bdef68bde.js 24 bytes [rendered]
     [exports: default]
     [used exports unknown]
     import() ./async.js ./example.js 6:8-28
-chunk (runtime: main) output.js (main) 325 bytes (javascript) 4 bytes (asset) 8.19 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 325 bytes (javascript) 4 bytes (asset) 8.11 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 8.19 KiB 9 modules
+  runtime modules 8.11 KiB 9 modules
   dependent modules 4 bytes (asset) 122 bytes (javascript) [dependent] 2 modules
   ./example.js 203 bytes [built] [code generated]
     [exports: default]
@@ -208,8 +208,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-assets by path *.js 3.42 KiB
-  asset output.js 3.24 KiB [emitted] [minimized] (name: main) 1 related asset
+assets by path *.js 3.37 KiB
+  asset output.js 3.19 KiB [emitted] [minimized] (name: main) 1 related asset
   asset async_js.59a751e1b9b97bdbc720.js 184 bytes [emitted] [immutable] [minimized] 1 related asset
 asset manifest.json 507 bytes [emitted]
 asset manifest.yml 309 bytes [emitted]
@@ -219,9 +219,9 @@ chunk (runtime: main) async_js.59a751e1b9b97bdbc720.js 24 bytes [rendered]
   ./async.js 24 bytes [built] [code generated]
     [exports: default]
     import() ./async.js ./example.js 6:8-28
-chunk (runtime: main) output.js (main) 283 bytes (javascript) 8.1 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 283 bytes (javascript) 8.03 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 8.1 KiB 9 modules
+  runtime modules 8.03 KiB 9 modules
   dependent modules 80 bytes [dependent] 1 module
   ./example.js 203 bytes [built] [code generated]
     [exports: default]

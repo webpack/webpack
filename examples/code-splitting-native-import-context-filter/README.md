@@ -240,8 +240,8 @@ module.exports = webpackAsyncContext;
 /******/ 				clearTimeout(timeout);
 /******/ 				const doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
-/******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
+/******/ 				script.parentNode?.removeChild(script);
+/******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
@@ -255,7 +255,7 @@ module.exports = webpackAsyncContext;
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -428,9 +428,9 @@ chunk (runtime: main) 776.output.js 38 bytes [rendered]
     [used exports unknown]
     import() context element ./bar ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./bar
     import() context element ./bar.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./bar.js
-chunk (runtime: main) output.js (main) 597 bytes (javascript) 5.96 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 597 bytes (javascript) 5.9 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.96 KiB 8 modules
+  runtime modules 5.9 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 437 bytes [built] [code generated]
     [used exports unknown]
@@ -441,7 +441,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.74 KiB [emitted] [minimized] (name: main)
+asset output.js 2.7 KiB [emitted] [minimized] (name: main)
 asset 717.output.js 117 bytes [emitted] [minimized]
 asset 776.output.js 117 bytes [emitted] [minimized]
 asset 0.output.js 114 bytes [emitted] [minimized]
@@ -466,9 +466,9 @@ chunk (runtime: main) 776.output.js 38 bytes [rendered]
     [exports: default]
     import() context element ./bar ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./bar
     import() context element ./bar.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ referencedExports:  namespace object ./bar.js
-chunk (runtime: main) output.js (main) 597 bytes (javascript) 5.96 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 597 bytes (javascript) 5.9 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.96 KiB 8 modules
+  runtime modules 5.9 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 437 bytes [built] [code generated]
     [no exports used]

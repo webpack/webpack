@@ -590,8 +590,8 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 				clearTimeout(timeout);
 /******/ 				const doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
-/******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
+/******/ 				script.parentNode?.removeChild(script);
+/******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
@@ -605,7 +605,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -661,7 +661,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 					const handleFunction = (fn, arg1, arg2, d, next, first) => {
 /******/ 						try {
 /******/ 							const promise = fn(arg1, arg2);
-/******/ 							if(promise && promise.then) {
+/******/ 							if(promise?.then) {
 /******/ 								const p = promise.then((result) => (next(result, d)), onError);
 /******/ 								if(first) promises.push(data.p = p); else return p;
 /******/ 							} else {
@@ -720,7 +720,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 					const initFn = (module) => (module && module.init && module.init(__webpack_require__.S[name], initScope))
 /******/ 					if(module.then) return promises.push(module.then(initFn, handleError));
 /******/ 					const initResult = initFn(module);
-/******/ 					if(initResult && initResult.then) return promises.push(initResult['catch'](handleError));
+/******/ 					if(initResult?.then) return promises.push(initResult['catch'](handleError));
 /******/ 				} catch(err) { handleError(err); }
 /******/ 			}
 /******/ 			const promises = [];
@@ -817,7 +817,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		};
 /******/ 		const init = (fn) => (function(scopeName, key, eager, c, d) {
 /******/ 			const promise = __webpack_require__.I(scopeName);
-/******/ 			if (promise && promise.then && !eager) {
+/******/ 			if (promise?.then && !eager) {
 /******/ 				return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], key, false, c, d));
 /******/ 			}
 /******/ 			return fn(scopeName, __webpack_require__.S[scopeName], key, eager, c, d);
@@ -1191,8 +1191,8 @@ __webpack_require__.d(exports, {
 /******/ 				clearTimeout(timeout);
 /******/ 				const doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
-/******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
+/******/ 				script.parentNode?.removeChild(script);
+/******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
@@ -1206,7 +1206,7 @@ __webpack_require__.d(exports, {
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -1248,7 +1248,7 @@ __webpack_require__.d(exports, {
 /******/ 					const initFn = (module) => (module && module.init && module.init(__webpack_require__.S[name], initScope))
 /******/ 					if(module.then) return promises.push(module.then(initFn, handleError));
 /******/ 					const initResult = initFn(module);
-/******/ 					if(initResult && initResult.then) return promises.push(initResult['catch'](handleError));
+/******/ 					if(initResult?.then) return promises.push(initResult['catch'](handleError));
 /******/ 				} catch(err) { handleError(err); }
 /******/ 			}
 /******/ 			const promises = [];
@@ -1344,7 +1344,7 @@ __webpack_require__.d(exports, {
 /******/ 		};
 /******/ 		const init = (fn) => (function(scopeName, key, eager, c, d) {
 /******/ 			const promise = __webpack_require__.I(scopeName);
-/******/ 			if (promise && promise.then && !eager) {
+/******/ 			if (promise?.then && !eager) {
 /******/ 				return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], key, false, c, d));
 /******/ 			}
 /******/ 			return fn(scopeName, __webpack_require__.S[scopeName], key, eager, c, d);
@@ -1748,8 +1748,8 @@ __webpack_require__.d(exports, {
 /******/ 				clearTimeout(timeout);
 /******/ 				const doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
-/******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
+/******/ 				script.parentNode?.removeChild(script);
+/******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
@@ -1763,7 +1763,7 @@ __webpack_require__.d(exports, {
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -1805,7 +1805,7 @@ __webpack_require__.d(exports, {
 /******/ 					const initFn = (module) => (module && module.init && module.init(__webpack_require__.S[name], initScope))
 /******/ 					if(module.then) return promises.push(module.then(initFn, handleError));
 /******/ 					const initResult = initFn(module);
-/******/ 					if(initResult && initResult.then) return promises.push(initResult['catch'](handleError));
+/******/ 					if(initResult?.then) return promises.push(initResult['catch'](handleError));
 /******/ 				} catch(err) { handleError(err); }
 /******/ 			}
 /******/ 			const promises = [];
@@ -1901,7 +1901,7 @@ __webpack_require__.d(exports, {
 /******/ 		};
 /******/ 		const init = (fn) => (function(scopeName, key, eager, c, d) {
 /******/ 			const promise = __webpack_require__.I(scopeName);
-/******/ 			if (promise && promise.then && !eager) {
+/******/ 			if (promise?.then && !eager) {
 /******/ 				return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], key, false, c, d));
 /******/ 			}
 /******/ 			return fn(scopeName, __webpack_require__.S[scopeName], key, eager, c, d);
@@ -2114,11 +2114,11 @@ __webpack_require__.d(exports, {
 ```
 app:
   asset src_bootstrap_js.js 43.3 KiB [emitted]
-  asset app.js 30.6 KiB [emitted] (name: app)
+  asset app.js 30.5 KiB [emitted] (name: app)
   asset vendors-node_modules_react_index_js.js 28.4 KiB [emitted] (id hint: vendors)
-  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.4 KiB (runtime) [entry] [rendered]
+  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.3 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
-    runtime modules 19.4 KiB 13 modules
+    runtime modules 19.3 KiB 13 modules
     built modules 672 bytes (javascript) 42 bytes (share-init) [built]
       ./src/index.js 588 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
@@ -2142,11 +2142,11 @@ mfe-b:
   assets by chunk 1 MiB (id hint: vendors)
     asset vendors-node_modules_date-fns_index_js.js 997 KiB [emitted] (id hint: vendors)
     asset vendors-node_modules_react_index_js.js 28.4 KiB [emitted] (id hint: vendors)
-  asset mfeBBB.js 24.9 KiB [emitted] (name: mfeBBB)
+  asset mfeBBB.js 24.8 KiB [emitted] (name: mfeBBB)
   asset src-b_Component_js.js 1.9 KiB [emitted]
-  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.5 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.4 KiB (runtime) [entry] [rendered]
     > mfeBBB
-    runtime modules 16.5 KiB 10 modules
+    runtime modules 16.4 KiB 10 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
@@ -2174,9 +2174,9 @@ mfe-c:
   asset mfeCCC.js 26.3 KiB [emitted] (name: mfeCCC)
   asset src-c_LazyComponent_js.js 2.04 KiB [emitted]
   asset src-c_Component_js.js 1.81 KiB [emitted]
-  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 17.2 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 17.1 KiB (runtime) [entry] [rendered]
     > mfeCCC
-    runtime modules 17.2 KiB 12 modules
+    runtime modules 17.1 KiB 12 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
@@ -2211,11 +2211,11 @@ mfe-c:
 ```
 app:
   asset src_bootstrap_js.js 12.5 KiB [emitted] [minimized] 1 related asset
-  asset app.js 7.86 KiB [emitted] [minimized] (name: app)
+  asset app.js 7.81 KiB [emitted] [minimized] (name: app)
   asset node_modules_react_index_js.js 7.45 KiB [emitted] [minimized] 1 related asset
-  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.4 KiB (runtime) [entry] [rendered]
+  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.3 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
-    runtime modules 19.4 KiB 13 modules
+    runtime modules 19.3 KiB 13 modules
     built modules 672 bytes (javascript) 42 bytes (share-init) [built]
       ./src/index.js 588 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
@@ -2238,11 +2238,11 @@ app:
 mfe-b:
   asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
   asset node_modules_react_index_js.js 7.45 KiB [emitted] [minimized] 1 related asset
-  asset mfeBBB.js 6.49 KiB [emitted] [minimized] (name: mfeBBB)
+  asset mfeBBB.js 6.44 KiB [emitted] [minimized] (name: mfeBBB)
   asset src-b_Component_js.js 461 bytes [emitted] [minimized]
-  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.4 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.3 KiB (runtime) [entry] [rendered]
     > mfeBBB
-    runtime modules 16.4 KiB 10 modules
+    runtime modules 16.3 KiB 10 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
@@ -2264,13 +2264,13 @@ mfe-b:
 
 mfe-c:
   asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
-  asset mfeCCC.js 7.1 KiB [emitted] [minimized] (name: mfeCCC)
+  asset mfeCCC.js 7.05 KiB [emitted] [minimized] (name: mfeCCC)
   asset node_modules_lodash_random_js.js 3.08 KiB [emitted] [minimized]
   asset src-c_LazyComponent_js.js 520 bytes [emitted] [minimized]
   asset src-c_Component_js.js 475 bytes [emitted] [minimized]
-  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 17.1 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 17 KiB (runtime) [entry] [rendered]
     > mfeCCC
-    runtime modules 17.1 KiB 12 modules
+    runtime modules 17 KiB 12 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]

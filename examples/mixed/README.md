@@ -260,8 +260,8 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 				clearTimeout(timeout);
 /******/ 				const doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
-/******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
+/******/ 				script.parentNode?.removeChild(script);
+/******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
@@ -275,7 +275,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -504,11 +504,11 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 14.5 KiB [emitted] (name: main)
+asset output.js 14.4 KiB [emitted] (name: main)
 asset require_context_templates_sync_recursive_js_.output.js 2.29 KiB [emitted]
-chunk (runtime: main) output.js (main) 1010 bytes (javascript) 6.23 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 6.17 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 6.23 KiB 9 modules
+  runtime modules 6.17 KiB 9 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [used exports unknown]
@@ -526,11 +526,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.75 KiB [emitted] [minimized] (name: main)
+asset output.js 2.71 KiB [emitted] [minimized] (name: main)
 asset require_context_templates_sync_recursive_js_.output.js 625 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 1010 bytes (javascript) 6.23 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 6.17 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 6.23 KiB 9 modules
+  runtime modules 6.17 KiB 9 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [no exports used]

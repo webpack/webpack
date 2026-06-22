@@ -52,11 +52,11 @@ module.exports = config;
 ## Unoptimized
 
 ```
-asset 5bb2a88d464bd37f9bdf.js 37.2 KiB [emitted] [immutable] (name: main)
+asset c7731e1b451590230a75.js 37.2 KiB [emitted] [immutable] (name: main)
 asset 6136ed90a731a1f7d2a3.js 12 KiB [emitted] [immutable]
-chunk (runtime: main) 5bb2a88d464bd37f9bdf.js (main) 17 KiB (javascript) 4.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) c7731e1b451590230a75.js (main) 17 KiB (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 4.95 KiB 6 modules
+  runtime modules 4.92 KiB 6 modules
   dependent modules 17 KiB [dependent] 2 modules
   ./example.js 42 bytes [built] [code generated]
 chunk (runtime: main) 6136ed90a731a1f7d2a3.js 7.83 KiB [rendered]
@@ -69,15 +69,15 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset 24effdb242889c6b9c11.js 9.07 KiB [emitted] [immutable] [minimized] (name: main) 1 related asset
+asset 7ca3ef3fdbb2a836fdc1.js 9.05 KiB [emitted] [immutable] [minimized] (name: main) 1 related asset
 asset 0bd063af5520128b2714.js 3.55 KiB [emitted] [immutable] [minimized] 1 related asset
 chunk (runtime: main) 0bd063af5520128b2714.js 7.83 KiB [rendered]
   > react-dom ./example.js 2:0-22
   dependent modules 6.5 KiB [dependent] 1 module
   ../../node_modules/react-dom/index.js 1.33 KiB [built] [code generated]
-chunk (runtime: main) 24effdb242889c6b9c11.js (main) 17 KiB (javascript) 4.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) 7ca3ef3fdbb2a836fdc1.js (main) 17 KiB (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 4.95 KiB 6 modules
+  runtime modules 4.92 KiB 6 modules
   dependent modules 17 KiB [dependent] 2 modules
   ./example.js 42 bytes [built] [code generated]
 webpack X.X.X compiled successfully
