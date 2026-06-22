@@ -770,9 +770,17 @@ describe("runLoaders", () => {
 		});
 	}
 
-	const [nodeMajor, nodeMinor] = process.versions.node.split(".").map(Number);
-	// `require(esm)` is enabled by default starting from Node.js 22.12.0
-	if (nodeMajor > 22 || (nodeMajor === 22 && nodeMinor >= 12)) {
+	// `require()` of an ESM file only works where the runtime supports it:
+	// native Node >=22.12, and under jest only on Node >=24.9 (sync vm module
+	// APIs), and not under Deno. Feature-detect rather than sniff the version.
+	let canRequireEsm = false;
+	try {
+		require(path.resolve(fixtures, "esm-loader.mjs"));
+		canRequireEsm = true;
+	} catch (_err) {
+		// require(esm) is not supported in this runtime
+	}
+	if (canRequireEsm) {
 		it("should load an esm loader using require()", (done) => {
 			runLoaders(
 				{
