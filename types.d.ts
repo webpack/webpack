@@ -18878,6 +18878,14 @@ declare interface OutputFileSystem {
  */
 declare interface OutputHtmlOptions {
 	/**
+	 * Add Subresource Integrity (SRI) `integrity` attributes to injected `<script>`/`<link>` tags. `true` uses `['sha384']`; an array sets the hash algorithms; a function receives each referenced asset and returns the algorithms to use or `false` to skip it.
+	 */
+	integrity?:
+		| boolean
+		| string[]
+		| ((asset: { chunk: Chunk; filename: string }) => false | string[]);
+
+	/**
 	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
 	 */
 	scriptLoading?: "auto" | "defer" | "blocking";

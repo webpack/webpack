@@ -4109,6 +4109,26 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "integrity": {
+          "description": "Add Subresource Integrity (SRI) `integrity` attributes to injected `<script>`/`<link>` tags. `true` uses `['sha384']`; an array sets the hash algorithms; a function receives each referenced asset and returns the algorithms to use or `false` to skip it.",
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "description": "A hash algorithm name passed to Node.js `crypto.createHash` (e.g. 'sha256', 'sha384', 'sha512').",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "((asset: { chunk: import('../lib/Chunk'), filename: string }) => string[] | false)"
+            }
+          ]
+        },
         "scriptLoading": {
           "description": "How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.",
           "enum": ["auto", "blocking", "defer"]
