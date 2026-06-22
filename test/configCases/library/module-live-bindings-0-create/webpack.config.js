@@ -1,6 +1,8 @@
 "use strict";
 
 /**
+ * Asserts the emitted entry keeps live ESM bindings (direct top-level
+ * declarations) instead of snapshotting them through `__webpack_exports__`.
  * @param {string} assetName emitted entry asset to assert on
  * @returns {(this: import("../../../../").Compiler) => void} plugin
  */
@@ -9,38 +11,38 @@ const assertLiveBindings = (assetName) =>
 		this.hooks.compilation.tap("testcase", (compilation) => {
 			compilation.hooks.afterProcessAssets.tap("testcase", (assets) => {
 				const source = assets[assetName].source();
-				// The entry's own exports must be live bindings to its top-level
-				// declarations, not snapshots of `__webpack_exports__`.
 				expect(source).not.toMatch(/const __webpack_exports__\w+ =/);
-				expect(source).toMatch(/export \{[^}]*\bcount\b/);
+				expect(source).toMatch(/export \{[^}]*\bmutLet\b/);
 			});
 		});
 	};
 
+/**
+ * @param {string} name output sub-directory
+ * @param {string} entryAsset emitted entry asset to assert on
+ * @param {"development" | "production"} mode mode
+ * @param {false | "single"} runtimeChunk runtime chunk option
+ * @returns {import("../../../../").Configuration} config
+ */
+const variant = (name, entryAsset, mode, runtimeChunk) => ({
+	mode,
+	devtool: false,
+	entry: { [entryAsset.replace(/\..*$/, "")]: "./lib.js" },
+	target: "node14",
+	output: {
+		filename: `${name}/[name].mjs`,
+		module: true,
+		library: { type: "module" }
+	},
+	optimization: { concatenateModules: true, runtimeChunk, minimize: false },
+	experiments: { outputModule: true },
+	plugins: [assertLiveBindings(`${name}/${entryAsset}`)]
+});
+
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
-	{
-		entry: "./lib.js",
-		target: "node14",
-		output: {
-			filename: "lib.js",
-			module: true,
-			library: { type: "module" }
-		},
-		optimization: { concatenateModules: true },
-		experiments: { outputModule: true },
-		plugins: [assertLiveBindings("lib.js")]
-	},
-	{
-		entry: "./lib.js",
-		target: "node14",
-		output: {
-			filename: "runtime-chunk/[name].mjs",
-			module: true,
-			library: { type: "module" }
-		},
-		optimization: { concatenateModules: true, runtimeChunk: "single" },
-		experiments: { outputModule: true },
-		plugins: [assertLiveBindings("runtime-chunk/main.mjs")]
-	}
+	variant("single", "lib.mjs", "development", false),
+	variant("single-prod", "lib.mjs", "production", false),
+	variant("runtime", "main.mjs", "development", "single"),
+	variant("runtime-prod", "main.mjs", "production", "single")
 ];

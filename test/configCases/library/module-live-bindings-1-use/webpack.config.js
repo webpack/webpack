@@ -1,22 +1,17 @@
 "use strict";
 
-const path = require("path");
-
 /** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
-module.exports = (env, { testPath }) => ({
+module.exports = () => ({
 	target: "node14",
 	output: { filename: "bundle.mjs", module: true },
 	experiments: { outputModule: true },
-	resolve: {
-		alias: {
-			library: path.resolve(testPath, "../module-live-bindings-0-create/lib.js")
-		}
-	},
 	externalsType: "module",
-	// The runtime-chunk library is two linked ESM files, so consume it as a real
-	// external module instead of re-bundling it.
+	// Consume each built library as a real external ESM module so the emitted
+	// `export { ... }` statements are exercised natively (live bindings).
 	externals: {
-		"library-runtime-chunk":
-			"../module-live-bindings-0-create/runtime-chunk/main.mjs"
+		"lib-single": "../module-live-bindings-0-create/single/lib.mjs",
+		"lib-single-prod": "../module-live-bindings-0-create/single-prod/lib.mjs",
+		"lib-runtime": "../module-live-bindings-0-create/runtime/main.mjs",
+		"lib-runtime-prod": "../module-live-bindings-0-create/runtime-prod/main.mjs"
 	}
 });
