@@ -8352,6 +8352,24 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-html-script-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "How injected \`<script>\` tags load. \`auto\` (default) emits a module script for ES module output and \`defer\` otherwise; \`defer\` forces a deferred script; \`blocking\` emits a plain blocking script.",
+        "multiple": false,
+        "path": "output.html.scriptLoading",
+        "type": "enum",
+        "values": Array [
+          "auto",
+          "blocking",
+          "defer",
+        ],
+      },
+    ],
+    "description": "How injected \`<script>\` tags load. \`auto\` (default) emits a module script for ES module output and \`defer\` otherwise; \`defer\` forces a deferred script; \`blocking\` emits a plain blocking script.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-ignore-browser-warnings": Object {
     "configs": Array [
       Object {

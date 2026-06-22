@@ -3961,8 +3961,7 @@
           "$ref": "#/definitions/HotUpdateMainFilename"
         },
         "html": {
-          "description": "Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.",
-          "type": "boolean"
+          "$ref": "#/definitions/OutputHtml"
         },
         "htmlChunkFilename": {
           "$ref": "#/definitions/HtmlChunkFilename"
@@ -4085,6 +4084,28 @@
         }
       }
     },
+    "OutputHtml": {
+      "description": "Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.",
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/definitions/OutputHtmlOptions"
+        }
+      ]
+    },
+    "OutputHtmlOptions": {
+      "description": "Options for the generated HTML files.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scriptLoading": {
+          "description": "How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.",
+          "enum": ["auto", "blocking", "defer"]
+        }
+      }
+    },
     "OutputModule": {
       "description": "Output javascript files as module source type.",
       "type": "boolean"
@@ -4183,8 +4204,7 @@
           "$ref": "#/definitions/HotUpdateMainFilename"
         },
         "html": {
-          "description": "Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.",
-          "type": "boolean"
+          "$ref": "#/definitions/OutputHtml"
         },
         "htmlChunkFilename": {
           "$ref": "#/definitions/HtmlChunkFilename"

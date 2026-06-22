@@ -596,6 +596,10 @@ export type HotUpdateGlobal = string;
  */
 export type HotUpdateMainFilename = string;
 /**
+ * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
+ */
+export type OutputHtml = boolean | OutputHtmlOptions;
+/**
  * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
  */
 export type HtmlChunkFilename = FilenameTemplate;
@@ -2483,7 +2487,7 @@ export interface Output {
 	/**
 	 * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
 	 */
-	html?: boolean;
+	html?: OutputHtml;
 	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
@@ -2703,6 +2707,15 @@ export interface Environment {
 	 * The environment supports template literals.
 	 */
 	templateLiteral?: boolean;
+}
+/**
+ * Options for the generated HTML files.
+ */
+export interface OutputHtmlOptions {
+	/**
+	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
+	 */
+	scriptLoading?: "auto" | "blocking" | "defer";
 }
 /**
  * Use a Trusted Types policy to create urls for chunks.
@@ -4117,7 +4130,7 @@ export interface OutputNormalized {
 	/**
 	 * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
 	 */
-	html?: boolean;
+	html?: OutputHtml;
 	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
