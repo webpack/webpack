@@ -2,15 +2,7 @@
 
 exports[`warnings 1`] = `
 Array [
-  Object {
-    "loc": "30:8-38",
-    "message": "Should not import the named export 'no-esm-text' (imported as 'moduleTextNoEsm') from default-exporting module (only default export is available soon)",
-    "moduleName": "./index.js",
-  },
-  Object {
-    "loc": "30:8-38",
-    "message": "Should not import the named export 'no-esm-text' (imported as 'moduleTextNoEsm') from default-exporting module (only default export is available soon)",
-    "moduleName": "./index.js",
-  },
+  "Should not import the named export 'no-esm-text' (imported as 'moduleTextNoEsm') from default-exporting module (only default export is available soon)",
+  "Should not import the named export 'no-esm-text' (imported as 'moduleTextNoEsm') from default-exporting module (only default export is available soon)",
 ]
 `;

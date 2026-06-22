@@ -1,8 +1,82 @@
 "use strict";
 
+const path = require("path");
 const identifierUtil = require("../lib/util/identifier");
 
 describe("util/identifier", () => {
+	describe("ABSOLUTE_PATH_REGEXP", () => {
+		const { ABSOLUTE_PATH_REGEXP } = identifierUtil;
+
+		it("matches POSIX and every Windows absolute path type", () => {
+			for (const absolute of [
+				"/dir/file",
+				"/",
+				"C:\\dir\\file",
+				"c:/dir/file",
+				"C:\\",
+				"\\\\server\\share\\file",
+				"//server/share",
+				"\\dir\\file",
+				"\\\\?\\C:\\dir",
+				"\\\\.\\C:\\dir"
+			]) {
+				expect(ABSOLUTE_PATH_REGEXP.test(absolute)).toBe(true);
+			}
+		});
+
+		it("does not match relative or drive-relative paths", () => {
+			for (const relative of [
+				"dir\\file",
+				"./dir",
+				"../dir",
+				"C:dir",
+				"C:",
+				""
+			]) {
+				expect(ABSOLUTE_PATH_REGEXP.test(relative)).toBe(false);
+			}
+		});
+
+		it("agrees with path.win32.isAbsolute and path.posix.isAbsolute", () => {
+			for (const p of [
+				"C:\\dir",
+				"c:/dir",
+				"C:dir",
+				"\\\\server\\share",
+				"\\dir",
+				"/dir",
+				"dir/file",
+				"./dir",
+				"..",
+				""
+			]) {
+				expect(ABSOLUTE_PATH_REGEXP.test(p)).toBe(
+					path.win32.isAbsolute(p) || path.posix.isAbsolute(p)
+				);
+			}
+		});
+	});
+
+	describe("WINDOWS_ABS_PATH_REGEXP", () => {
+		const { WINDOWS_ABS_PATH_REGEXP } = identifierUtil;
+
+		it("matches only Windows drive-letter absolute paths", () => {
+			for (const drive of ["C:\\dir\\file", "c:/dir/file", "C:\\"]) {
+				expect(WINDOWS_ABS_PATH_REGEXP.test(drive)).toBe(true);
+			}
+			// a leading "/" is NOT a drive path: it stays relative to a base (#12759)
+			for (const other of [
+				"/dir/file",
+				"/",
+				"\\dir",
+				"\\\\server\\share",
+				"x"
+			]) {
+				expect(WINDOWS_ABS_PATH_REGEXP.test(other)).toBe(false);
+			}
+		});
+	});
+
 	describe("makePathsRelative", () => {
 		describe("given a context and a pathConstruct", () => {
 			it("computes the correct relative results for the path construct", () => {
@@ -53,6 +127,7 @@ describe("util/identifier", () => {
 	});
 
 	describe("getUndoPath", () => {
+		/** @type {[string, string, boolean?][]} */
 		const cases = [
 			["file.js", ""],
 			["file.js", "./", true],
@@ -83,7 +158,11 @@ describe("util/identifier", () => {
 					"C:\\a\\b\\c\\d\\"
 				]) {
 					expect(
-						identifierUtil.getUndoPath(filename, outputPath, enforceRelative)
+						identifierUtil.getUndoPath(
+							filename,
+							outputPath,
+							/** @type {boolean} */ (enforceRelative)
+						)
 					).toBe(expected);
 				}
 			});

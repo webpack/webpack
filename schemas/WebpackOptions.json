@@ -380,6 +380,9 @@
         "animation": {
           "$ref": "#/definitions/CssParserAnimation"
         },
+        "as": {
+          "$ref": "#/definitions/CssParserAs"
+        },
         "container": {
           "$ref": "#/definitions/CssParserContainer"
         },
@@ -521,6 +524,9 @@
         "animation": {
           "$ref": "#/definitions/CssParserAnimation"
         },
+        "as": {
+          "$ref": "#/definitions/CssParserAs"
+        },
         "container": {
           "$ref": "#/definitions/CssParserContainer"
         },
@@ -553,6 +559,10 @@
     "CssParserAnimation": {
       "description": "Enable/disable renaming of `@keyframes`.",
       "type": "boolean"
+    },
+    "CssParserAs": {
+      "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).",
+      "enum": ["stylesheet", "block-contents"]
     },
     "CssParserContainer": {
       "description": "Enable/disable renaming of `@container` names.",
@@ -591,6 +601,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "as": {
+          "$ref": "#/definitions/CssParserAs"
+        },
         "exportType": {
           "$ref": "#/definitions/CssParserExportType"
         },
@@ -832,6 +845,10 @@
         "filename": {
           "$ref": "#/definitions/EntryFilename"
         },
+        "html": {
+          "description": "Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.",
+          "type": "boolean"
+        },
         "import": {
           "$ref": "#/definitions/EntryItem"
         },
@@ -849,6 +866,10 @@
         },
         "wasmLoading": {
           "$ref": "#/definitions/WasmLoading"
+        },
+        "worker": {
+          "description": "Mark this entry as a worker so its output file uses 'output.workerChunkFilename'.",
+          "type": "boolean"
         }
       },
       "required": ["import"]
@@ -883,6 +904,10 @@
         "filename": {
           "$ref": "#/definitions/Filename"
         },
+        "html": {
+          "description": "Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.",
+          "type": "boolean"
+        },
         "import": {
           "description": "Module(s) that are loaded upon startup. The last one is exported.",
           "type": "array",
@@ -908,6 +933,10 @@
         },
         "wasmLoading": {
           "$ref": "#/definitions/WasmLoading"
+        },
+        "worker": {
+          "description": "Mark this entry as a worker so its output file uses 'output.workerChunkFilename'.",
+          "type": "boolean"
         }
       }
     },
@@ -1064,12 +1093,20 @@
           "description": "The environment supports 'globalThis'.",
           "type": "boolean"
         },
+        "hasOwn": {
+          "description": "The environment supports 'Object.hasOwn'.",
+          "type": "boolean"
+        },
         "importMetaDirnameAndFilename": {
           "description": "The environment supports `import.meta.dirname` and `import.meta.filename`.",
           "type": "boolean"
         },
         "let": {
           "description": "The environment supports let for variable declarations.",
+          "type": "boolean"
+        },
+        "logicalAssignment": {
+          "description": "The environment supports logical assignment operators ('a ||= b', 'a &&= b', 'a ??= b').",
           "type": "boolean"
         },
         "methodShorthand": {
@@ -1080,12 +1117,24 @@
           "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
           "type": "boolean"
         },
+        "nodeBuiltinModuleGetter": {
+          "description": "The environment supports `process.getBuiltinModule()` to synchronously load Node.js core modules.",
+          "type": "boolean"
+        },
         "nodePrefixForCoreModules": {
           "description": "The environment supports `node:` prefix for Node.js core modules.",
           "type": "boolean"
         },
         "optionalChaining": {
           "description": "The environment supports optional chaining ('obj?.a' or 'obj?.()').",
+          "type": "boolean"
+        },
+        "spread": {
+          "description": "The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').",
+          "type": "boolean"
+        },
+        "symbol": {
+          "description": "The environment supports 'Symbol' (and well-known symbols like 'Symbol.toStringTag').",
           "type": "boolean"
         },
         "templateLiteral": {
@@ -1831,14 +1880,15 @@
                         "minLength": 1
                       },
                       "type": {
-                        "description": "How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type=\"module\" src>`; `stylesheet` emits a CSS chunk entry like `<link rel=\"stylesheet\">`; `stylesheet-inline` treats the attribute value as inline CSS text and bundles it through the CSS pipeline (the attribute's content is replaced with the processed CSS at render time, like an inline `<style>` body).",
+                        "description": "How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type=\"module\" src>`; `stylesheet` emits a CSS chunk entry like `<link rel=\"stylesheet\">`; `stylesheet-style` treats the attribute value as a full stylesheet (like a `<style>` body) and `stylesheet-style-attribute` as a CSS block's contents (a declaration list, like a `style` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time.",
                         "enum": [
                           "src",
                           "srcset",
                           "script",
                           "script-module",
                           "stylesheet",
-                          "stylesheet-inline"
+                          "stylesheet-style",
+                          "stylesheet-style-attribute"
                         ]
                       }
                     },
@@ -3914,6 +3964,9 @@
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
         },
+        "html": {
+          "$ref": "#/definitions/OutputHtml"
+        },
         "htmlChunkFilename": {
           "$ref": "#/definitions/HtmlChunkFilename"
         },
@@ -4021,6 +4074,9 @@
         "webassemblyModuleFilename": {
           "$ref": "#/definitions/WebassemblyModuleFilename"
         },
+        "workerChunkFilename": {
+          "$ref": "#/definitions/WorkerChunkFilename"
+        },
         "workerChunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
         },
@@ -4029,6 +4085,28 @@
         },
         "workerWasmLoading": {
           "$ref": "#/definitions/WasmLoading"
+        }
+      }
+    },
+    "OutputHtml": {
+      "description": "Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.",
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/definitions/OutputHtmlOptions"
+        }
+      ]
+    },
+    "OutputHtmlOptions": {
+      "description": "Options for the generated HTML files.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scriptLoading": {
+          "description": "How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.",
+          "enum": ["auto", "blocking", "defer"]
         }
       }
     },
@@ -4129,6 +4207,9 @@
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
         },
+        "html": {
+          "$ref": "#/definitions/OutputHtml"
+        },
         "htmlChunkFilename": {
           "$ref": "#/definitions/HtmlChunkFilename"
         },
@@ -4192,6 +4273,9 @@
         },
         "webassemblyModuleFilename": {
           "$ref": "#/definitions/WebassemblyModuleFilename"
+        },
+        "workerChunkFilename": {
+          "$ref": "#/definitions/WorkerChunkFilename"
         },
         "workerChunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
@@ -6320,6 +6404,14 @@
         }
       },
       "required": ["apply"]
+    },
+    "WorkerChunkFilename": {
+      "description": "Specifies the filename template of non-initial output worker's files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/FilenameTemplate"
+        }
+      ]
     },
     "WorkerPublicPath": {
       "description": "Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.",

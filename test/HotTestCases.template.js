@@ -2,27 +2,57 @@
 
 require("./helpers/warmup-webpack");
 
+/** @typedef {{ name: string, tests: string[] }} Category */
+/**
+ * @typedef {object} SuiteConfig
+ * @property {string} name suite name
+ * @property {string | string[]=} target target
+ */
+/**
+ * @typedef {object} HotTestConfig
+ * @property {((scope: EXPECTED_ANY, options: import("../").Configuration) => void)=} moduleScope
+ */
+
 const path = require("path");
 const fs = require("graceful-fs");
+/** @type {{ sync: (p: string) => void }} */
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const { TestRunner } = require("./harness/runner");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
+const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");
+const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
 
 const casesPath = path.join(__dirname, "hotCases");
-let categories = fs
+/** @type {Category[]} */
+const categories = fs
 	.readdirSync(casesPath)
-	.filter((dir) => fs.statSync(path.join(casesPath, dir)).isDirectory());
-categories = categories.map((cat) => ({
-	name: cat,
-	tests: fs
-		.readdirSync(path.join(casesPath, cat))
-		.filter((folder) => !folder.includes("_"))
-}));
+	.filter((dir) => fs.statSync(path.join(casesPath, dir)).isDirectory())
+	.map((cat) => ({
+		name: cat,
+		tests: fs
+			.readdirSync(path.join(casesPath, cat))
+			.filter((folder) => !folder.includes("_"))
+	}));
 
+/**
+ * @param {SuiteConfig} config suite config
+ */
 const describeCases = (config) => {
+	// universal targets run the same (ESM) bundle once per environment; the
+	// suite forces module output, so probe with `output.module` set
+	const isUniversal = TestRunner.isUniversalTarget({
+		target: config.target,
+		output: { module: true }
+	});
+
 	describe(config.name, () => {
 		for (const category of categories) {
+			// `universal` cases only run in the universal suite, and vice versa.
+			if ((category.name === "universal") !== isUniversal) {
+				continue;
+			}
+
 			describe(category.name, () => {
 				for (const testName of category.tests) {
 					const testDirectory = path.join(casesPath, category.name, testName);
@@ -37,11 +67,12 @@ const describeCases = (config) => {
 					}
 
 					describe(testName, () => {
+						/** @type {import("../").Compiler} */
 						let compiler;
 
-						afterAll((callback) => {
+						afterAll((/** @type {EXPECTED_ANY} */ callback) => {
 							compiler.close(callback);
-							compiler = undefined;
+							compiler = /** @type {EXPECTED_ANY} */ (undefined);
 						});
 
 						it(`${testName} should compile`, (done) => {
@@ -60,16 +91,47 @@ const describeCases = (config) => {
 								updateIndex: 0
 							};
 							const configPath = path.join(testDirectory, "webpack.config.js");
-							let options = {};
+							/** @type {import("../").Configuration} */
+							let options = /** @type {import("../").Configuration} */ ({});
 							if (fs.existsSync(configPath)) options = require(configPath);
-							if (typeof options === "function") {
-								options = options({ config });
+							if (
+								typeof (/** @type {EXPECTED_ANY} */ (options)) === "function"
+							) {
+								options = /** @type {EXPECTED_ANY} */ (options)({ config });
 							}
 							if (!options.mode) options.mode = "development";
 							if (!options.devtool) options.devtool = false;
 							if (!options.context) options.context = testDirectory;
 							if (!options.entry) options.entry = "./index.js";
 							if (!options.output) options.output = {};
+							if (isUniversal) {
+								// universal target requires ESM output to run in node and web
+								if (!options.experiments) options.experiments = {};
+								if (options.experiments.outputModule === undefined) {
+									options.experiments.outputModule = true;
+								}
+								if (options.output.module === undefined) {
+									options.output.module = true;
+								}
+								if (options.output.chunkFormat === undefined) {
+									options.output.chunkFormat = "module";
+								}
+							}
+							if (!options.output.environment) options.output.environment = {};
+							if (
+								options.output.environment.optionalChaining === undefined &&
+								!supportsOptionalChaining()
+							) {
+								// generated runtime runs in this Node.js process; avoid `?.` on Node < 14
+								options.output.environment.optionalChaining = false;
+							}
+							if (
+								options.output.environment.hasOwn === undefined &&
+								!supportsObjectHasOwn()
+							) {
+								// generated runtime runs in this Node.js process; avoid `Object.hasOwn` on Node < 16.9
+								options.output.environment.hasOwn = false;
+							}
 							if (!options.output.path) options.output.path = outputDirectory;
 							if (!options.output.filename) {
 								options.output.filename = `bundle${
@@ -79,7 +141,11 @@ const describeCases = (config) => {
 								}`;
 							}
 							if (!options.output.chunkFilename) {
-								options.output.chunkFilename = "[name].chunk.[fullhash].js";
+								options.output.chunkFilename = `[name].chunk.[fullhash]${
+									options.experiments && options.experiments.outputModule
+										? ".mjs"
+										: ".js"
+								}`;
 							}
 							if (options.output.pathinfo === undefined) {
 								options.output.pathinfo = true;
@@ -88,7 +154,12 @@ const describeCases = (config) => {
 								options.output.publicPath = "https://test.cases/path/";
 							}
 							if (options.output.library === undefined) {
-								options.output.library = { type: "commonjs2" };
+								options.output.library = {
+									type:
+										options.experiments && options.experiments.outputModule
+											? "module"
+											: "commonjs2"
+								};
 							}
 							if (!options.optimization) options.optimization = {};
 							if (!options.optimization.moduleIds) {
@@ -111,6 +182,7 @@ const describeCases = (config) => {
 								new webpack.LoaderOptionsPlugin(fakeUpdateLoaderOptions)
 							);
 							if (!options.recordsPath) options.recordsPath = recordsPath;
+							/** @type {HotTestConfig} */
 							let testConfig = {};
 							try {
 								// try to load a test file
@@ -122,7 +194,10 @@ const describeCases = (config) => {
 								// ignored
 							}
 
-							const onCompiled = (err, stats) => {
+							const onCompiled = (
+								/** @type {Error | null} */ err,
+								/** @type {import("../").Stats} */ stats
+							) => {
 								if (err) return done(err);
 								const jsonStats = stats.toJson({
 									errorDetails: true
@@ -152,9 +227,12 @@ const describeCases = (config) => {
 									return;
 								}
 
-								function runCompiler(callback) {
+								function runCompiler(
+									/** @type {(err: EXPECTED_ANY, stats?: EXPECTED_ANY) => void} */ callback
+								) {
 									fakeUpdateLoaderOptions.updateIndex++;
-									compiler.run((err, stats) => {
+									compiler.run((err, _stats) => {
+										const stats = /** @type {import("../").Stats} */ (_stats);
 										if (err) return callback(err);
 										const jsonStats = stats.toJson({
 											errorDetails: true
@@ -209,7 +287,7 @@ const describeCases = (config) => {
 											afterEach: _afterEach,
 											STATE: jsonStats,
 											NEXT: runCompiler,
-											NEXT_DEFERRED: (cb) => {
+											NEXT_DEFERRED: (/** @type {EXPECTED_ANY} */ cb) => {
 												// https://github.com/webpack/webpack/actions/runs/22039709807/job/63678606467?pr=20412
 												// When lazyCompilation is enabled, delay the first compilation re-run by 1000ms during HMR
 												// to ensure that HTTP requests from dynamic imports (e.g., const promiseA = import("./moduleA"))
@@ -223,13 +301,24 @@ const describeCases = (config) => {
 										});
 									},
 									getBundlePaths: (_i, _options, runner) => {
-										const bundles = _stats.entrypoints.main.assets.map(
-											(i) => i.name
-										);
-										if (config.target === "web") {
+										const bundles = /** @type {EXPECTED_ANY[]} */ (
+											/** @type {EXPECTED_ANY} */ (_stats.entrypoints).main
+												.assets
+										).map((/** @type {EXPECTED_ANY} */ i) => i.name);
+										// universal expands to one runner per target; pick by its target
+										const isWeb = isUniversal
+											? runner.hasWebTarget()
+											: config.target === "web";
+										if (isWeb) {
 											return bundles;
 										}
-										return [bundles[bundles.length - 1]];
+										// node runs the JS entry only; skip CSS/other assets that may sort last
+										const jsBundles = bundles.filter(
+											(/** @type {string} */ n) => /\.[cm]?js$/.test(n)
+										);
+										const nodeBundles =
+											jsBundles.length > 0 ? jsBundles : bundles;
+										return [nodeBundles[nodeBundles.length - 1]];
 									}
 								});
 								Promise.all(results).then(
@@ -247,7 +336,7 @@ const describeCases = (config) => {
 								);
 							};
 							compiler = webpack(options);
-							compiler.run(onCompiled);
+							compiler.run(/** @type {EXPECTED_ANY} */ (onCompiled));
 						}, 20000);
 
 						const {

@@ -24,8 +24,15 @@ describe("WatchSuspend", () => {
 		const file3Path = path.join(fixturePath, "file3.js");
 		const outputPath = path.join(__dirname, "js/WatchSuspend");
 		const outputFile = path.join(outputPath, "bundle.js");
-		let compiler = null;
-		let watching = null;
+		/** @type {import("../").Compiler} */
+		let compiler = /** @type {import("../").Compiler} */ (
+			/** @type {unknown} */ (null)
+		);
+		/** @type {import("../").Watching} */
+		let watching = /** @type {import("../").Watching} */ (
+			/** @type {unknown} */ (null)
+		);
+		/** @type {(() => void) | null} */
 		let onChange = null;
 
 		beforeAll(() => {
@@ -52,7 +59,9 @@ describe("WatchSuspend", () => {
 					filename: "bundle.js"
 				}
 			});
-			watching = compiler.watch({ aggregateTimeout: 50 }, () => {});
+			watching = /** @type {import("../").Watching} */ (
+				compiler.watch({ aggregateTimeout: 50 }, () => {})
+			);
 
 			compiler.hooks.done.tap("WatchSuspendTest", () => {
 				if (onChange) onChange();
@@ -60,8 +69,12 @@ describe("WatchSuspend", () => {
 		});
 
 		afterAll(() => {
-			watching.close();
-			compiler = null;
+			/** @type {{ close: () => void }} */ (
+				/** @type {unknown} */ (watching)
+			).close();
+			compiler = /** @type {import("../").Compiler} */ (
+				/** @type {unknown} */ (null)
+			);
 			try {
 				fs.unlinkSync(filePath);
 			} catch (_err) {
@@ -110,36 +123,43 @@ describe("WatchSuspend", () => {
 					//  So set-up new watcher and wait when initial compilation is done
 					await new Promise((resolve) => {
 						watching.close(() => {
-							watching = compiler.watch({ aggregateTimeout: 1000 }, () => {
-								resolve();
-							});
+							watching = /** @type {import("../").Watching} */ (
+								compiler.watch({ aggregateTimeout: 1000 }, () => {
+									resolve(undefined);
+								})
+							);
 						});
 					});
-					return new Promise((resolve) => {
-						if (changeBefore) fs.writeFileSync(filePath, "'bar'", "utf8");
-						setTimeout(() => {
-							watching.suspend();
-							fs.writeFileSync(filePath, "'baz'", "utf8");
-
-							onChange = "throw";
+					return /** @type {Promise<void>} */ (
+						new Promise((resolve) => {
+							if (changeBefore) fs.writeFileSync(filePath, "'bar'", "utf8");
 							setTimeout(() => {
-								onChange = () => {
-									expect(fs.readFileSync(outputFile, "utf8")).toContain(
-										"'baz'"
-									);
-									expect(
-										compiler.modifiedFiles && [...compiler.modifiedFiles].sort()
-									).toEqual([filePath]);
-									expect(
-										compiler.removedFiles && [...compiler.removedFiles]
-									).toEqual([]);
-									onChange = null;
-									resolve();
-								};
-								watching.resume();
-							}, delay);
-						}, 200);
-					});
+								watching.suspend();
+								fs.writeFileSync(filePath, "'baz'", "utf8");
+
+								onChange = /** @type {null} */ (
+									/** @type {unknown} */ ("throw")
+								);
+								setTimeout(() => {
+									onChange = () => {
+										expect(fs.readFileSync(outputFile, "utf8")).toContain(
+											"'baz'"
+										);
+										expect(
+											compiler.modifiedFiles &&
+												[...compiler.modifiedFiles].sort()
+										).toEqual([filePath]);
+										expect(
+											compiler.removedFiles && [...compiler.removedFiles]
+										).toEqual([]);
+										onChange = null;
+										resolve();
+									};
+									watching.resume();
+								}, delay);
+							}, 200);
+						})
+					);
 				});
 			}
 		}

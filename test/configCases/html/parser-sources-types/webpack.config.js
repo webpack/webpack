@@ -29,13 +29,21 @@ module.exports = {
 					// Custom element whose `href` should bundle a CSS
 					// chunk entry, like `<link rel="stylesheet">`.
 					{ tag: "my-link", attribute: "href", type: "stylesheet" },
-					// Custom attribute whose value IS inline CSS text —
-					// gets routed through the CSS pipeline and the
-					// attribute value is replaced with the processed CSS.
+					// Custom attribute whose value IS a full inline stylesheet
+					// (like a `<style>` body) — routed through the CSS pipeline
+					// and the attribute value replaced with the processed CSS.
 					{
 						tag: "my-style",
 						attribute: "data-css",
-						type: "stylesheet-inline"
+						type: "stylesheet-style"
+					},
+					// Custom attribute whose value is a CSS block's contents (a
+					// declaration list, like a `style` attribute) — also routed
+					// through the CSS pipeline so `url()` & co. resolve.
+					{
+						tag: "my-box",
+						attribute: "data-style",
+						type: "stylesheet-style-attribute"
 					}
 				]
 			}

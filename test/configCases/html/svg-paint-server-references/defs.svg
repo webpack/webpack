@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<linearGradient id="base">
+		<stop offset="0%" stop-color="#fff"/>
+		<stop offset="100%" stop-color="#000"/>
+	</linearGradient>
+	<pattern id="tile" width="10" height="10" patternUnits="userSpaceOnUse">
+		<rect width="10" height="10" fill="#8ED6FB"/>
+	</pattern>
+	<filter id="blur">
+		<feGaussianBlur stdDeviation="2"/>
+	</filter>
+</svg>

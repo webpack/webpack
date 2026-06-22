@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html skip-behavior exported tests should silently skip whitespace-only source attribute values 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>skip behavior</title></head>
+<body>
+
+<!-- whitespace-only: skip, no error -->
+<img src=\\"   \\" alt=\\"ws-only\\">
+<img srcset=\\"   \\" alt=\\"ws-only-srcset\\">
+
+<!-- sanity: normal src still resolves -->
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"ok\\">
+
+</body>
+</html>
+"
+`;

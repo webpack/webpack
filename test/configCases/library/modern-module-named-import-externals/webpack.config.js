@@ -5,7 +5,7 @@ module.exports = {
 	cache: {
 		type: "memory" // Enable memory cache to test serialization
 	},
-	mode: "none",
+	mode: "production",
 	entry: { main: "./index.js", test: "./test.js" },
 	output: {
 		module: true,
@@ -31,7 +31,9 @@ module.exports = {
 	],
 	optimization: {
 		concatenateModules: false,
-		usedExports: true
+		usedExports: true,
+		minimize: false,
+		moduleIds: "named"
 	},
 	plugins: [
 		(compiler) => {

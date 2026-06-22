@@ -2,11 +2,8 @@
 
 exports[`errors 1`] = `
 Array [
-  Object {
-    "message": "Module build failed: UnhandledSchemeError: Reading from \\"unknown:test\\" is not handled by plugins (Unhandled scheme).
+  "Module build failed: UnhandledSchemeError: Reading from \\"unknown:test\\" is not handled by plugins (Unhandled scheme).
 Webpack supports \\"data:\\" and \\"file:\\" URIs by default.
 You may need an additional plugin to handle \\"unknown:\\" URIs.",
-    "moduleName": "unknown:test",
-  },
 ]
 `;

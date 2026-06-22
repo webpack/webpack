@@ -2196,6 +2196,23 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "module-parser-css-as": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML \`style\` attribute).",
+        "multiple": false,
+        "path": "module.parser.css.as",
+        "type": "enum",
+        "values": Array [
+          "stylesheet",
+          "block-contents",
+        ],
+      },
+    ],
+    "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML \`style\` attribute).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-css-auto-animation": Object {
     "configs": Array [
       Object {
@@ -2208,6 +2225,23 @@ Object {
     "description": "Enable/disable renaming of \`@keyframes\`.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-css-auto-as": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML \`style\` attribute).",
+        "multiple": false,
+        "path": "module.parser.css/auto.as",
+        "type": "enum",
+        "values": Array [
+          "stylesheet",
+          "block-contents",
+        ],
+      },
+    ],
+    "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML \`style\` attribute).",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-css-auto-container": Object {
     "configs": Array [
@@ -2377,6 +2411,23 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-css-global-as": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML \`style\` attribute).",
+        "multiple": false,
+        "path": "module.parser.css/global.as",
+        "type": "enum",
+        "values": Array [
+          "stylesheet",
+          "block-contents",
+        ],
+      },
+    ],
+    "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML \`style\` attribute).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-css-global-container": Object {
     "configs": Array [
       Object {
@@ -2525,6 +2576,23 @@ Object {
     "description": "Enable/disable renaming of \`@keyframes\`.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-css-module-as": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML \`style\` attribute).",
+        "multiple": false,
+        "path": "module.parser.css/module.as",
+        "type": "enum",
+        "values": Array [
+          "stylesheet",
+          "block-contents",
+        ],
+      },
+    ],
+    "description": "Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML \`style\` attribute).",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-css-module-container": Object {
     "configs": Array [
@@ -2752,7 +2820,7 @@ Object {
   "module-parser-html-sources-type": Object {
     "configs": Array [
       Object {
-        "description": "How the attribute value should be parsed and bundled. \`src\` extracts a single URL as a plain asset; \`srcset\` parses a \`srcset\`-style list of candidate URLs as plain assets; \`script\` and \`script-module\` emit a classic / ES-module chunk entry like \`<script src>\` and \`<script type=\\"module\\" src>\`; \`stylesheet\` emits a CSS chunk entry like \`<link rel=\\"stylesheet\\">\`; \`stylesheet-inline\` treats the attribute value as inline CSS text and bundles it through the CSS pipeline (the attribute's content is replaced with the processed CSS at render time, like an inline \`<style>\` body).",
+        "description": "How the attribute value should be parsed and bundled. \`src\` extracts a single URL as a plain asset; \`srcset\` parses a \`srcset\`-style list of candidate URLs as plain assets; \`script\` and \`script-module\` emit a classic / ES-module chunk entry like \`<script src>\` and \`<script type=\\"module\\" src>\`; \`stylesheet\` emits a CSS chunk entry like \`<link rel=\\"stylesheet\\">\`; \`stylesheet-style\` treats the attribute value as a full stylesheet (like a \`<style>\` body) and \`stylesheet-style-attribute\` as a CSS block's contents (a declaration list, like a \`style\` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time.",
         "multiple": true,
         "path": "module.parser.html.sources[].type",
         "type": "enum",
@@ -2762,11 +2830,12 @@ Object {
           "script",
           "script-module",
           "stylesheet",
-          "stylesheet-inline",
+          "stylesheet-style",
+          "stylesheet-style-attribute",
         ],
       },
     ],
-    "description": "How the attribute value should be parsed and bundled. \`src\` extracts a single URL as a plain asset; \`srcset\` parses a \`srcset\`-style list of candidate URLs as plain assets; \`script\` and \`script-module\` emit a classic / ES-module chunk entry like \`<script src>\` and \`<script type=\\"module\\" src>\`; \`stylesheet\` emits a CSS chunk entry like \`<link rel=\\"stylesheet\\">\`; \`stylesheet-inline\` treats the attribute value as inline CSS text and bundles it through the CSS pipeline (the attribute's content is replaced with the processed CSS at render time, like an inline \`<style>\` body).",
+    "description": "How the attribute value should be parsed and bundled. \`src\` extracts a single URL as a plain asset; \`srcset\` parses a \`srcset\`-style list of candidate URLs as plain assets; \`script\` and \`script-module\` emit a classic / ES-module chunk entry like \`<script src>\` and \`<script type=\\"module\\" src>\`; \`stylesheet\` emits a CSS chunk entry like \`<link rel=\\"stylesheet\\">\`; \`stylesheet-style\` treats the attribute value as a full stylesheet (like a \`<style>\` body) and \`stylesheet-style-attribute\` as a CSS block's contents (a declaration list, like a \`style\` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -7971,6 +8040,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-has-own": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports 'Object.hasOwn'.",
+        "multiple": false,
+        "path": "output.environment.hasOwn",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports 'Object.hasOwn'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-import-meta-dirname-and-filename": Object {
     "configs": Array [
       Object {
@@ -7994,6 +8076,19 @@ Object {
       },
     ],
     "description": "The environment supports let for variable declarations.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-logical-assignment": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports logical assignment operators ('a ||= b', 'a &&= b', 'a ??= b').",
+        "multiple": false,
+        "path": "output.environment.logicalAssignment",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports logical assignment operators ('a ||= b', 'a &&= b', 'a ??= b').",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -8023,6 +8118,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-node-builtin-module-getter": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports \`process.getBuiltinModule()\` to synchronously load Node.js core modules.",
+        "multiple": false,
+        "path": "output.environment.nodeBuiltinModuleGetter",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports \`process.getBuiltinModule()\` to synchronously load Node.js core modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-node-prefix-for-core-modules": Object {
     "configs": Array [
       Object {
@@ -8046,6 +8154,32 @@ Object {
       },
     ],
     "description": "The environment supports optional chaining ('obj?.a' or 'obj?.()').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-spread": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').",
+        "multiple": false,
+        "path": "output.environment.spread",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-symbol": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports 'Symbol' (and well-known symbols like 'Symbol.toStringTag').",
+        "multiple": false,
+        "path": "output.environment.symbol",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports 'Symbol' (and well-known symbols like 'Symbol.toStringTag').",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -8179,6 +8313,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-html": Object {
+    "configs": Array [
+      Object {
+        "description": "Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor \`html\` option.",
+        "multiple": false,
+        "path": "output.html",
+        "type": "boolean",
+      },
+    ],
+    "description": "Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor \`html\` option.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-html-chunk-filename": Object {
     "configs": Array [
       Object {
@@ -8202,6 +8349,24 @@ Object {
       },
     ],
     "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-html-script-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "How injected \`<script>\` tags load. \`auto\` (default) emits a module script for ES module output and \`defer\` otherwise; \`defer\` forces a deferred script; \`blocking\` emits a plain blocking script.",
+        "multiple": false,
+        "path": "output.html.scriptLoading",
+        "type": "enum",
+        "values": Array [
+          "auto",
+          "blocking",
+          "defer",
+        ],
+      },
+    ],
+    "description": "How injected \`<script>\` tags load. \`auto\` (default) emits a module script for ES module output and \`defer\` otherwise; \`defer\` forces a deferred script; \`blocking\` emits a plain blocking script.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -8829,6 +8994,19 @@ Object {
       },
     ],
     "description": "The filename of WebAssembly modules as relative path inside the 'output.path' directory.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-worker-chunk-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+        "multiple": false,
+        "path": "output.workerChunkFilename",
+        "type": "string",
+      },
+    ],
+    "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
     "multiple": false,
     "simpleType": "string",
   },

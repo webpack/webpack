@@ -206,12 +206,6 @@ const b = "b";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -255,7 +249,7 @@ const b = "b";
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -303,11 +297,11 @@ console.log(
 ## Unoptimized
 
 ```
-asset output.js 9.4 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 354 bytes (javascript) 1.11 KiB (runtime) [entry] [rendered]
+asset output.js 9.12 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 354 bytes (javascript) 1.07 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 214 bytes [dependent] 6 modules
-  runtime modules 1.11 KiB 3 modules
+  runtime modules 1.07 KiB 3 modules
   ./example.js 140 bytes [built] [code generated]
     [no exports]
     [used exports unknown]

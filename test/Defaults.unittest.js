@@ -89,10 +89,12 @@ const getDefaultConfig = (config) => {
 	const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
 		require("..").config;
 
-	config = getNormalizedWebpackOptions(config);
-	applyWebpackOptionsDefaults(config);
+	const normalized = getNormalizedWebpackOptions(
+		/** @type {EXPECTED_ANY} */ (config)
+	);
+	applyWebpackOptionsDefaults(/** @type {EXPECTED_ANY} */ (normalized));
 	process.chdir(cwd);
-	return config;
+	return /** @type {WebpackOptionsNormalized} */ (normalized);
 };
 
 describe("snapshots", () => {
@@ -157,12 +159,17 @@ describe("snapshots", () => {
 		      "dynamicImportInWorker": undefined,
 		      "forOf": true,
 		      "globalThis": undefined,
+		      "hasOwn": undefined,
 		      "importMetaDirnameAndFilename": undefined,
 		      "let": true,
+		      "logicalAssignment": undefined,
 		      "methodShorthand": true,
 		      "module": undefined,
+		      "nodeBuiltinModuleGetter": undefined,
 		      "nodePrefixForCoreModules": true,
 		      "optionalChaining": true,
+		      "spread": true,
+		      "symbol": true,
 		      "templateLiteral": true,
 		    },
 		    "target": "web",
@@ -423,12 +430,17 @@ describe("snapshots", () => {
 		      "dynamicImportInWorker": undefined,
 		      "forOf": true,
 		      "globalThis": undefined,
+		      "hasOwn": undefined,
 		      "importMetaDirnameAndFilename": undefined,
 		      "let": true,
+		      "logicalAssignment": undefined,
 		      "methodShorthand": true,
 		      "module": undefined,
+		      "nodeBuiltinModuleGetter": undefined,
 		      "nodePrefixForCoreModules": true,
 		      "optionalChaining": true,
+		      "spread": true,
+		      "symbol": true,
 		      "templateLiteral": true,
 		    },
 		    "filename": "[name].js",
@@ -440,6 +452,7 @@ describe("snapshots", () => {
 		    "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
 		    "hotUpdateGlobal": "webpackHotUpdatewebpack",
 		    "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
+		    "html": false,
 		    "htmlChunkFilename": "[name].html",
 		    "htmlFilename": "[name].html",
 		    "ignoreBrowserWarnings": undefined,
@@ -461,6 +474,7 @@ describe("snapshots", () => {
 		    "uniqueName": "webpack",
 		    "wasmLoading": "fetch",
 		    "webassemblyModuleFilename": "[hash].module.wasm",
+		    "workerChunkFilename": "[name].js",
 		    "workerChunkLoading": "import-scripts",
 		    "workerPublicPath": "",
 		    "workerWasmLoading": "fetch",
@@ -1086,7 +1100,9 @@ describe("snapshots", () => {
 		-     "scriptType": false,
 		+     "scriptType": "module",
 		@@ ... @@
+		-     "workerChunkFilename": "[name].js",
 		-     "workerChunkLoading": "import-scripts",
+		+     "workerChunkFilename": "[name].mjs",
 		+     "workerChunkLoading": "import",
 	`)
 	);
@@ -1196,6 +1212,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "htmlChunkFilename": "[name].html",
 		+     "htmlChunkFilename": "[id].bundle.html",
+		@@ ... @@
+		-     "workerChunkFilename": "[name].js",
+		+     "workerChunkFilename": "[id].bundle.js",
 	`)
 	);
 
@@ -1218,6 +1237,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "htmlChunkFilename": "[name].html",
 		+     "htmlChunkFilename": "[id].html",
+		@@ ... @@
+		-     "workerChunkFilename": "[name].js",
+		+     "workerChunkFilename": "[id].js",
 	`)
 	);
 
@@ -1626,7 +1648,12 @@ describe("snapshots", () => {
 		+       "dynamicImportInWorker": true,
 		@@ ... @@
 		-       "globalThis": undefined,
+		-       "hasOwn": undefined,
 		+       "globalThis": true,
+		+       "hasOwn": true,
+		@@ ... @@
+		-       "logicalAssignment": undefined,
+		+       "logicalAssignment": true,
 		@@ ... @@
 		-       "module": undefined,
 		+       "module": true,
@@ -1665,7 +1692,12 @@ describe("snapshots", () => {
 		+       "dynamicImportInWorker": true,
 		@@ ... @@
 		-       "globalThis": undefined,
+		-       "hasOwn": undefined,
 		+       "globalThis": true,
+		+       "hasOwn": true,
+		@@ ... @@
+		-       "logicalAssignment": undefined,
+		+       "logicalAssignment": true,
 		@@ ... @@
 		-       "module": undefined,
 		+       "module": true,
@@ -1690,7 +1722,9 @@ describe("snapshots", () => {
 		-     "scriptType": false,
 		+     "scriptType": "module",
 		@@ ... @@
+		-     "workerChunkFilename": "[name].js",
 		-     "workerChunkLoading": "import-scripts",
+		+     "workerChunkFilename": "[name].mjs",
 		+     "workerChunkLoading": "import",
 		@@ ... @@
 		-         "aliasFields": Array [
@@ -1787,12 +1821,19 @@ describe("snapshots", () => {
 		+       "dynamicImportInWorker": true,
 		@@ ... @@
 		-       "globalThis": undefined,
+		-       "hasOwn": undefined,
 		-       "importMetaDirnameAndFilename": undefined,
 		+       "globalThis": true,
+		+       "hasOwn": true,
 		+       "importMetaDirnameAndFilename": true,
 		@@ ... @@
+		-       "logicalAssignment": undefined,
+		+       "logicalAssignment": true,
+		@@ ... @@
 		-       "module": undefined,
+		-       "nodeBuiltinModuleGetter": undefined,
 		+       "module": true,
+		+       "nodeBuiltinModuleGetter": false,
 		@@ ... @@
 		-     "target": "web",
 		+     "target": "deno",
@@ -1828,12 +1869,19 @@ describe("snapshots", () => {
 		+       "dynamicImportInWorker": true,
 		@@ ... @@
 		-       "globalThis": undefined,
+		-       "hasOwn": undefined,
 		-       "importMetaDirnameAndFilename": undefined,
 		+       "globalThis": true,
+		+       "hasOwn": true,
 		+       "importMetaDirnameAndFilename": true,
 		@@ ... @@
+		-       "logicalAssignment": undefined,
+		+       "logicalAssignment": true,
+		@@ ... @@
 		-       "module": undefined,
+		-       "nodeBuiltinModuleGetter": undefined,
 		+       "module": true,
+		+       "nodeBuiltinModuleGetter": false,
 		@@ ... @@
 		-     "filename": "[name].js",
 		-     "globalObject": "self",
@@ -1855,7 +1903,9 @@ describe("snapshots", () => {
 		-     "scriptType": false,
 		+     "scriptType": "module",
 		@@ ... @@
+		-     "workerChunkFilename": "[name].js",
 		-     "workerChunkLoading": "import-scripts",
+		+     "workerChunkFilename": "[name].mjs",
 		+     "workerChunkLoading": "import",
 		@@ ... @@
 		-         "aliasFields": Array [
@@ -2292,7 +2342,9 @@ describe("snapshots", () => {
 			+       "module": true,
 			@@ ... @@
 			-     "filename": "[name].js",
+			-     "globalObject": "self",
 			+     "filename": "[name].mjs",
+			+     "globalObject": "globalThis",
 			@@ ... @@
 			-     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
 			+     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.mjs",
@@ -2312,7 +2364,9 @@ describe("snapshots", () => {
 			-     "wasmLoading": "fetch",
 			+     "wasmLoading": "universal",
 			@@ ... @@
+			-     "workerChunkFilename": "[name].js",
 			-     "workerChunkLoading": "import-scripts",
+			+     "workerChunkFilename": "[name].mjs",
 			+     "workerChunkLoading": "import",
 			@@ ... @@
 			-     "workerWasmLoading": "fetch",
@@ -2391,6 +2445,184 @@ describe("snapshots", () => {
 		`)
 	);
 
+	test(
+		"target universal (preset)",
+		{
+			// the universal preset enables ESM output (and web worker support) on its own
+			target: "universal"
+		},
+		(e) =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-     "outputModule": false,
+			+     "outputModule": true,
+			@@ ... @@
+			-     "electron": false,
+			-     "electronMain": false,
+			-     "electronPreload": false,
+			-     "electronRenderer": false,
+			-     "node": false,
+			-     "nwjs": false,
+			+     "electron": true,
+			+     "electronMain": null,
+			+     "electronPreload": null,
+			+     "electronRenderer": null,
+			+     "node": true,
+			+     "nwjs": true,
+			@@ ... @@
+			-   "externalsType": "var",
+			+   "externalsType": "module-import",
+			@@ ... @@
+			-       "document": true,
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "document": false,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "module": undefined,
+			+       "module": true,
+			@@ ... @@
+			-     "target": "web",
+			+     "target": undefined,
+			@@ ... @@
+			-         "importMeta": true,
+			+         "importMeta": "preserve-unknown",
+			@@ ... @@
+			-     "__dirname": "mock",
+			-     "__filename": "mock",
+			+     "__dirname": "eval-only",
+			+     "__filename": "eval-only",
+			@@ ... @@
+			-     "chunkFilename": "[name].js",
+			-     "chunkFormat": "array-push",
+			+     "chunkFilename": "[name].mjs",
+			+     "chunkFormat": "module",
+			@@ ... @@
+			-     "chunkLoading": "jsonp",
+			+     "chunkLoading": "import",
+			@@ ... @@
+			-       "jsonp",
+			-       "import-scripts",
+			+       "import",
+			@@ ... @@
+			-       "fetch",
+			+       "universal",
+			@@ ... @@
+			-       "document": true,
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "document": false,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "module": undefined,
+			+       "module": true,
+			@@ ... @@
+			-     "filename": "[name].js",
+			-     "globalObject": "self",
+			+     "filename": "[name].mjs",
+			+     "globalObject": "globalThis",
+			@@ ... @@
+			-     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
+			+     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.mjs",
+			@@ ... @@
+			-     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
+			+     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json.mjs",
+			@@ ... @@
+			-     "iife": true,
+			+     "iife": false,
+			@@ ... @@
+			-     "module": false,
+			+     "module": true,
+			@@ ... @@
+			-     "scriptType": false,
+			+     "scriptType": "module",
+			@@ ... @@
+			-     "wasmLoading": "fetch",
+			+     "wasmLoading": "universal",
+			@@ ... @@
+			-     "workerChunkFilename": "[name].js",
+			-     "workerChunkLoading": "import-scripts",
+			+     "workerChunkFilename": "[name].mjs",
+			+     "workerChunkLoading": "import",
+			@@ ... @@
+			-     "workerWasmLoading": "fetch",
+			+     "workerWasmLoading": "universal",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-       "browser",
+			@@ ... @@
+			-   "target": "web",
+			+   "target": "universal",
+		`)
+	);
+
 	test("records", { recordsPath: "some-path" }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -2407,8 +2639,10 @@ describe("snapshots", () => {
 	`)
 	);
 
-	test("ecmaVersion", { output: { ecmaVersion: 2020 } }, (e) =>
-		e.toMatchInlineSnapshot("Compared values have no visual difference.")
+	test(
+		"ecmaVersion",
+		{ output: /** @type {EXPECTED_ANY} */ ({ ecmaVersion: 2020 }) },
+		(e) => e.toMatchInlineSnapshot("Compared values have no visual difference.")
 	);
 
 	test(
@@ -2677,7 +2911,7 @@ describe("snapshots", () => {
 			+               "fullySpecified": true,
 			+             },
 			+           },
-			@@ ... @@
+			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
 			+       },
@@ -2716,13 +2950,13 @@ describe("snapshots", () => {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
-			@@ ... @@
+			+         },
 			+         "type": "css",
 			+       },
 			+       Object {
 			+         "dependency": /css-import-local-module/,
 			+         "exclude": /\\.module\\.\\w+$/i,
-			@@ ... @@
+			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
@@ -2788,10 +3022,28 @@ describe("snapshots", () => {
 			+         },
 			+       },
 			+       Object {
+			+         "dependency": "html-style-attribute",
+			+         "parser": Object {
+			+           "as": "block-contents",
+			+           "exportType": "text",
+			+         },
 			+         "resolve": Object {
-			@@ ... @@
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+       },
+			+       Object {
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
 			+         "test": /\\.mts$/i,
-			@@ ... @@
+			+         "type": "javascript/esm",
+			+       },
+			+       Object {
 			+         "descriptionData": Object {
 			+           "type": "module",
 			+         },
@@ -2821,18 +3073,6 @@ describe("snapshots", () => {
 			+           "or": Array [
 			+             "text/typescript",
 			+             "application/typescript",
-			+           ],
-			+         },
-			+         "resolve": Object {
-			+           "byDependency": Object {
-			+             "esm": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         },
-			+         "type": "javascript/esm",
-			+       },
-			+       Object {
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -2870,7 +3110,7 @@ describe("snapshots", () => {
 			+         "import": true,
 			+         "namedExports": true,
 			+         "url": true,
-			@@ ... @@
+			+       },
 			+       "css/auto": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -2878,7 +3118,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			@@ ... @@
+			+       },
 			+       "css/global": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -2894,10 +3134,9 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			+       },
+			@@ ... @@
 			+       "html": Object {
 			+         "sources": true,
-			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -2932,6 +3171,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           ".ts",
 			@@ ... @@
+			+           "...",
+			+         ],
+			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2975,11 +3217,9 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			+           "...",
-			+         ],
+			@@ ... @@
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			+       },
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -3206,23 +3446,33 @@ describe("snapshots", () => {
 			-       "dynamicImportInWorker": undefined,
 			-       "forOf": true,
 			-       "globalThis": undefined,
+			-       "hasOwn": undefined,
 			-       "importMetaDirnameAndFilename": undefined,
 			-       "let": true,
+			-       "logicalAssignment": undefined,
 			-       "methodShorthand": true,
 			-       "module": undefined,
+			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
 			-       "optionalChaining": true,
+			-       "spread": true,
+			-       "symbol": true,
 			-       "templateLiteral": true,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
 			+       "forOf": false,
 			+       "globalThis": false,
+			+       "hasOwn": false,
 			+       "importMetaDirnameAndFilename": false,
 			+       "let": false,
+			+       "logicalAssignment": false,
 			+       "methodShorthand": false,
 			+       "module": false,
+			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
+			+       "spread": false,
+			+       "symbol": false,
 			+       "templateLiteral": false,
 			@@ ... @@
 			-     "chunkLoadingGlobal": "webpackChunkwebpack",
@@ -3246,23 +3496,33 @@ describe("snapshots", () => {
 			-       "dynamicImportInWorker": undefined,
 			-       "forOf": true,
 			-       "globalThis": undefined,
+			-       "hasOwn": undefined,
 			-       "importMetaDirnameAndFilename": undefined,
 			-       "let": true,
+			-       "logicalAssignment": undefined,
 			-       "methodShorthand": true,
 			-       "module": undefined,
+			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
 			-       "optionalChaining": true,
+			-       "spread": true,
+			-       "symbol": true,
 			-       "templateLiteral": true,
 			+       "dynamicImport": false,
 			+       "dynamicImportInWorker": false,
 			+       "forOf": false,
 			+       "globalThis": false,
+			+       "hasOwn": false,
 			+       "importMetaDirnameAndFilename": false,
 			+       "let": false,
+			+       "logicalAssignment": false,
 			+       "methodShorthand": false,
 			+       "module": false,
+			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
+			+       "spread": false,
+			+       "symbol": false,
 			+       "templateLiteral": false,
 			@@ ... @@
 			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
@@ -3406,7 +3666,6 @@ describe("snapshots", () => {
 			-     "typescript": undefined,
 			+     "typescript": true,
 			@@ ... @@
-			+           ],
 			+         },
 			+         "resolve": Object {
 			+           "byDependency": Object {
@@ -3531,6 +3790,16 @@ describe("snapshots", () => {
 			+         "dependency": "html-style",
 			+         "parser": Object {
 			+           "exportType": "text",
+			@@ ... @@
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+       },
+			+       Object {
+			+         "dependency": "html-style-attribute",
+			+         "parser": Object {
+			+           "as": "block-contents",
+			+           "exportType": "text",
 			+         },
 			+         "resolve": Object {
 			+           "fullySpecified": true,
@@ -3553,16 +3822,9 @@ describe("snapshots", () => {
 			+           "type": "module",
 			+         },
 			+         "resolve": Object {
-			+           "byDependency": Object {
-			+             "esm": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         },
+			@@ ... @@
 			+         "test": /\\.ts$/i,
-			+         "type": "javascript/esm",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "test": /\\.cts$/i,
 			+         "type": "javascript/dynamic",
 			+       },
@@ -3578,6 +3840,18 @@ describe("snapshots", () => {
 			+           "or": Array [
 			+             "text/typescript",
 			+             "application/typescript",
+			+           ],
+			+         },
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "type": "javascript/esm",
+			+       },
+			+       Object {
 			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
@@ -3609,8 +3883,6 @@ describe("snapshots", () => {
 			+       },
 			+       "html": Object {},
 			@@ ... @@
-			+         },
-			+       },
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
@@ -3623,7 +3895,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			@@ ... @@
+			+       },
 			+       "css/global": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -3639,7 +3911,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			@@ ... @@
+			+       },
 			+       "html": Object {
 			+         "sources": true,
 			+       },
@@ -3674,6 +3946,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           ".ts",
 			@@ ... @@
+			+           "...",
+			+         ],
+			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -3717,11 +3992,9 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			+           "...",
-			+         ],
+			@@ ... @@
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			+       },
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -4034,13 +4307,20 @@ describe("snapshots", () => {
 			+       "dynamicImportInWorker": true,
 			@@ ... @@
 			-       "globalThis": undefined,
+			-       "hasOwn": undefined,
 			-       "importMetaDirnameAndFilename": undefined,
 			+       "globalThis": true,
+			+       "hasOwn": false,
 			+       "importMetaDirnameAndFilename": false,
 			@@ ... @@
+			-       "logicalAssignment": undefined,
+			+       "logicalAssignment": false,
+			@@ ... @@
 			-       "module": undefined,
+			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
 			+       "module": true,
+			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			@@ ... @@
 			-     "target": "web",
@@ -4082,13 +4362,20 @@ describe("snapshots", () => {
 			+       "dynamicImportInWorker": true,
 			@@ ... @@
 			-       "globalThis": undefined,
+			-       "hasOwn": undefined,
 			-       "importMetaDirnameAndFilename": undefined,
 			+       "globalThis": true,
+			+       "hasOwn": false,
 			+       "importMetaDirnameAndFilename": false,
 			@@ ... @@
+			-       "logicalAssignment": undefined,
+			+       "logicalAssignment": false,
+			@@ ... @@
 			-       "module": undefined,
+			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
 			+       "module": true,
+			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			@@ ... @@
 			-     "filename": "[name].js",
@@ -4114,7 +4401,9 @@ describe("snapshots", () => {
 			-     "wasmLoading": "fetch",
 			+     "wasmLoading": "async-node",
 			@@ ... @@
+			-     "workerChunkFilename": "[name].js",
 			-     "workerChunkLoading": "import-scripts",
+			+     "workerChunkFilename": "[name].mjs",
 			+     "workerChunkLoading": "import",
 			@@ ... @@
 			-     "workerWasmLoading": "fetch",

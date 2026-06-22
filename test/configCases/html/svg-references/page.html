@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title>SVG references</title></head>
+<body>
+
+<svg width="200" height="200">
+	<text><textPath href="./refs.svg#curve">external</textPath></text>
+	<text><textPath xlink:href="#local-path">local</textPath></text>
+	<animateMotion><mpath href="./refs.svg#curve"/></animateMotion>
+	<animateMotion><mpath xlink:href="#local-motion"/></animateMotion>
+</svg>
+
+</body>
+</html>

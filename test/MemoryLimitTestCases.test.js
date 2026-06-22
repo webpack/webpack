@@ -8,7 +8,8 @@ const rimraf = require("rimraf");
 const webpack = require("..");
 const captureStdio = require("./helpers/captureStdio");
 
-const toMiB = (bytes) => `${Math.round(bytes / 1024 / 1024)}MiB`;
+const toMiB = (/** @type {number} */ bytes) =>
+	`${Math.round(bytes / 1024 / 1024)}MiB`;
 const base = path.join(__dirname, "memoryLimitCases");
 const outputBase = path.join(__dirname, "js", "memoryLimit");
 const tests = fs
@@ -30,8 +31,11 @@ const tests = fs
 		return true;
 	});
 
+/** @typedef {{ toString(): string, toStringRaw(): string, restore(): void, data: string[], reset(): void }} CapturedStdio */
+
 describe("MemoryLimitTestCases", () => {
 	jest.setTimeout(40000);
+	/** @type {CapturedStdio} */
 	let stderr;
 
 	beforeEach(() => {
@@ -47,6 +51,7 @@ describe("MemoryLimitTestCases", () => {
 	});
 
 	for (const testName of tests) {
+		/** @type {{ heapSizeLimitBytes: number, validate?: (stats: import("../").Stats, stderr: string) => void }} */
 		let testConfig = {
 			heapSizeLimitBytes: 250 * 1024 * 1024
 		};
@@ -66,6 +71,7 @@ describe("MemoryLimitTestCases", () => {
 			const outputDirectory = path.join(outputBase, testName);
 			rimraf.sync(outputDirectory);
 			fs.mkdirSync(outputDirectory, { recursive: true });
+			/** @type {import("../").Configuration} */
 			let options = {
 				mode: "development",
 				entry: "./index",
@@ -77,7 +83,9 @@ describe("MemoryLimitTestCases", () => {
 				options = require(path.join(base, testName, "webpack.config.js"));
 			}
 
-			const resolvedOptions = Array.isArray(options) ? options : [options];
+			const resolvedOptions = /** @type {import("../").Configuration[]} */ (
+				Array.isArray(options) ? options : [options]
+			);
 			for (const options of resolvedOptions) {
 				if (!options.context) options.context = path.join(base, testName);
 				if (!options.output) options.output = options.output || {};
@@ -90,29 +98,47 @@ describe("MemoryLimitTestCases", () => {
 			}
 			const heapSizeStart = process.memoryUsage().heapUsed;
 			const c = webpack(options);
-			const compilers = c.compilers ? c.compilers : [c];
+			const cAny = /** @type {EXPECTED_ANY} */ (c);
+			const compilers = /** @type {import("../").Compiler[]} */ (
+				cAny.compilers ? cAny.compilers : [c]
+			);
 			for (const c of compilers) {
-				const ifs = c.inputFileSystem;
+				const ifs = /** @type {NonNullable<typeof c.inputFileSystem>} */ (
+					c.inputFileSystem
+				);
 				c.inputFileSystem = Object.create(ifs);
-				c.inputFileSystem.readFile = function readFile() {
+				/** @type {NonNullable<typeof c.inputFileSystem>} */ (
+					c.inputFileSystem
+				).readFile = function readFile() {
 					// eslint-disable-next-line prefer-rest-params
 					const args = Array.prototype.slice.call(arguments);
 					const callback = args.pop();
 					// eslint-disable-next-line no-useless-call
-					ifs.readFile.apply(ifs, [
+					/** @type {EXPECTED_ANY} */ (
+						/** @type {NonNullable<typeof ifs>} */ (ifs).readFile
+					).apply(ifs, [
 						...args,
-						(err, result) => {
+						(
+							/** @type {Error | null} */ err,
+							/** @type {Buffer | undefined} */ result
+						) => {
 							if (err) return callback(err);
 							if (!/\.(?:js|json|txt)$/.test(args[0])) {
 								return callback(null, result);
 							}
-							callback(null, result.toString("utf8").replace(/\r/g, ""));
+							callback(
+								null,
+								/** @type {Buffer} */ (result)
+									.toString("utf8")
+									.replace(/\r/g, "")
+							);
 						}
 					]);
 				};
 			}
-			c.run((err, stats) => {
+			c.run((err, _stats) => {
 				if (err) return done(err);
+				const stats = /** @type {import("../").Stats} */ (_stats);
 				expect(stats.hasErrors()).toBe(testName.endsWith("error"));
 				if (!testName.endsWith("error") && stats.hasErrors()) {
 					return done(

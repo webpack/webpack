@@ -183,12 +183,6 @@ export const add = (content, from) => {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -289,8 +283,8 @@ export const add = (content, from) => {
 /******/ 				clearTimeout(timeout);
 /******/ 				const doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
-/******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
+/******/ 				script.parentNode?.removeChild(script);
+/******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
@@ -588,12 +582,6 @@ onconnect = function (e) {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -764,8 +752,8 @@ function fibonacci(n) {
 ## Unoptimized
 
 ```
-asset main.js 12.8 KiB [emitted] (name: main)
-asset workers/fibonacci.js 5.86 KiB [emitted] (name: fibonacci)
+asset main.js 12.5 KiB [emitted] (name: main)
+asset workers/fibonacci.js 5.61 KiB [emitted] (name: fibonacci)
 asset chat.js 839 bytes [emitted] (name: chat)
 asset 129.js 729 bytes [emitted]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
@@ -788,9 +776,9 @@ chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.9 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.88 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.9 KiB 7 modules
+  runtime modules 5.88 KiB 7 modules
   ./example.js 2.25 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main
@@ -800,7 +788,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset main.js 3.55 KiB [emitted] [minimized] (name: main)
+asset main.js 3.53 KiB [emitted] [minimized] (name: main)
 asset workers/fibonacci.js 989 bytes [emitted] [minimized] (name: fibonacci)
 asset chat.js 270 bytes [emitted] [minimized] (name: chat)
 asset 129.js 156 bytes [emitted] [minimized]
@@ -824,9 +812,9 @@ chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.9 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.88 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.9 KiB 7 modules
+  runtime modules 5.88 KiB 7 modules
   ./example.js 2.25 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main

@@ -3,32 +3,52 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @typedef {import("../../lib/css/syntax").MutableToken} MutableToken */
+/** @typedef {Record<string, unknown> & { getPropertyValue: (property: string) => unknown }} StyleDeclaration */
+/** @typedef {{ selectorText: string | undefined, style: StyleDeclaration, cssText: string }} CssRule */
+/** @typedef {{ type: string, target?: FakeElement }} FakeEvent */
+/** @typedef {(event: FakeEvent) => void} EventHandler */
+
 /**
- * @this {FakeDocument}
+ * @this {StyleDeclaration}
  * @param {string} property property
- * @returns {EXPECTED_ANY} value
+ * @returns {unknown} value
  */
 function getPropertyValue(property) {
 	return this[property];
 }
 
 class FakeDocument {
+	/**
+	 * @param {string} basePath base path
+	 */
 	constructor(basePath) {
 		this.head = this.createElement("head");
 		this.body = this.createElement("body");
 		this.baseURI = "https://test.cases/path/index.html";
 		this.title = "";
+		/** @type {Map<string, FakeElement[]>} */
 		this._elementsByTagName = new Map([
 			["head", [this.head]],
 			["body", [this.body]]
 		]);
 		this._basePath = basePath;
+		/** @type {undefined | ((src: string | undefined) => void)} */
+		this.onScript = undefined;
 	}
 
+	/**
+	 * @param {string} type element type
+	 * @returns {FakeElement} element
+	 */
 	createElement(type) {
 		return new FakeElement(this, type, this._basePath);
 	}
 
+	/**
+	 * @param {FakeElement} element element
+	 * @returns {void}
+	 */
 	_onElementAttached(element) {
 		const type = element._type;
 		let list = this._elementsByTagName.get(type);
@@ -39,17 +59,30 @@ class FakeDocument {
 		list.push(element);
 	}
 
+	/**
+	 * @param {FakeElement} element element
+	 * @returns {void}
+	 */
 	_onElementRemoved(element) {
 		const type = element._type;
 		const list = this._elementsByTagName.get(type);
+		if (list === undefined) return;
 		const idx = list.indexOf(element);
 		list.splice(idx, 1);
 	}
 
+	/**
+	 * @param {string} name tag name
+	 * @returns {FakeElement[]} elements
+	 */
 	getElementsByTagName(name) {
 		return this._elementsByTagName.get(name) || [];
 	}
 
+	/**
+	 * @param {string} selector selector
+	 * @returns {FakeElement[]} matching elements
+	 */
 	querySelectorAll(selector) {
 		// Simple selector support for common cases
 		// Tag selector: "link", "script", etc.
@@ -59,6 +92,7 @@ class FakeDocument {
 		// Class selector: ".class"
 		if (selector.startsWith(".")) {
 			const className = selector.slice(1);
+			/** @type {FakeElement[]} */
 			const allElements = [];
 			for (const elements of this._elementsByTagName.values()) {
 				for (const element of elements) {
@@ -84,6 +118,7 @@ class FakeDocument {
 		// Attribute selector: "[attr]", "[attr=value]"
 		if (selector.startsWith("[") && selector.endsWith("]")) {
 			const attrSelector = selector.slice(1, -1);
+			/** @type {FakeElement[]} */
 			const allElements = [];
 			if (attrSelector.includes("=")) {
 				const [attr, value] = attrSelector
@@ -111,10 +146,16 @@ class FakeDocument {
 		return [];
 	}
 
+	/**
+	 * @param {FakeElement} element element
+	 * @returns {StyleDeclaration} computed style
+	 */
 	getComputedStyle(element) {
+		/** @type {StyleDeclaration} */
 		const style = { getPropertyValue };
 		const links = this.getElementsByTagName("link");
 		for (const link of links) {
+			if (!link.sheet) continue;
 			for (const rule of link.sheet.cssRules) {
 				if (rule.selectorText === element._type) {
 					Object.assign(style, rule.style);
@@ -126,17 +167,31 @@ class FakeDocument {
 }
 
 class FakeElement {
+	/**
+	 * @param {FakeDocument} document owning document
+	 * @param {string} type element type
+	 * @param {string} basePath base path
+	 */
 	constructor(document, type, basePath) {
 		this._document = document;
 		this._type = type;
+		/** @type {FakeElement[]} */
 		this._children = [];
+		/** @type {Record<string, unknown>} */
 		this._attributes = Object.create(null);
+		/** @type {string | undefined} */
 		this._src = undefined;
+		/** @type {string | undefined} */
 		this._href = undefined;
+		/** @type {FakeElement | undefined} */
 		this.parentNode = undefined;
 		this.sheet = type === "link" ? new FakeSheet(this, basePath) : undefined;
 		this._textContent = "";
 		this._innerHTML = "";
+		/** @type {Map<string, EventHandler[]> | undefined} */
+		this._eventListeners = undefined;
+		/** @type {EventHandler | undefined} */
+		this.onload = undefined;
 	}
 
 	get nodeName() {
@@ -163,12 +218,20 @@ class FakeElement {
 			value === undefined || value === null ? "" : String(value);
 	}
 
+	/**
+	 * @param {FakeElement} node node to attach
+	 * @returns {void}
+	 */
 	_attach(node) {
 		this._document._onElementAttached(node);
 		this._children.push(node);
 		node.parentNode = this;
 	}
 
+	/**
+	 * @param {FakeElement} node node to load
+	 * @returns {void}
+	 */
 	_load(node) {
 		if (node._type === "link") {
 			const timer = setTimeout(() => {
@@ -179,21 +242,34 @@ class FakeElement {
 			}, 100);
 		} else if (node._type === "script" && this._document.onScript) {
 			Promise.resolve().then(() => {
-				this._document.onScript(node.src);
+				/** @type {(src: string | undefined) => void} */
+				(this._document.onScript)(node.src);
 			});
 		}
 	}
 
+	/**
+	 * @param {FakeElement} node node to insert
+	 * @returns {void}
+	 */
 	insertBefore(node) {
 		this._attach(node);
 		this._load(node);
 	}
 
+	/**
+	 * @param {FakeElement} node node to append
+	 * @returns {void}
+	 */
 	appendChild(node) {
 		this._attach(node);
 		this._load(node);
 	}
 
+	/**
+	 * @param {FakeElement} node node to remove
+	 * @returns {void}
+	 */
 	removeChild(node) {
 		const idx = this._children.indexOf(node);
 		if (idx >= 0) {
@@ -203,18 +279,31 @@ class FakeElement {
 		}
 	}
 
+	/**
+	 * @param {string} name attribute name
+	 * @param {string} value attribute value
+	 * @returns {void}
+	 */
 	setAttribute(name, value) {
 		if (this._type === "link" && name === "href") {
-			this.href(value);
+			this.href = value;
 		} else {
 			this._attributes[name] = value;
 		}
 	}
 
+	/**
+	 * @param {string} name attribute name
+	 * @returns {void}
+	 */
 	removeAttribute(name) {
 		delete this._attributes[name];
 	}
 
+	/**
+	 * @param {string} name attribute name
+	 * @returns {unknown} attribute value
+	 */
 	getAttribute(name) {
 		if (this._type === "link" && name === "href") {
 			return this.href;
@@ -223,6 +312,10 @@ class FakeElement {
 		return this._attributes[name];
 	}
 
+	/**
+	 * @param {string} value raw url value
+	 * @returns {string} resolved url
+	 */
 	_toRealUrl(value) {
 		if (/^\//.test(value)) {
 			return `https://test.cases${value}`;
@@ -241,7 +334,7 @@ class FakeElement {
 
 	set src(value) {
 		if (this._type === "script") {
-			this._src = this._toRealUrl(value);
+			this._src = this._toRealUrl(/** @type {string} */ (value));
 		}
 	}
 
@@ -251,10 +344,12 @@ class FakeElement {
 
 	set href(value) {
 		if (this._type === "link") {
-			this._href = this._toRealUrl(value);
+			this._href = this._toRealUrl(/** @type {string} */ (value));
 			try {
-				this.sheet._css = this.sheet.css;
-				this.sheet._cssRules = this.sheet.cssRules;
+				if (this.sheet) {
+					this.sheet._css = this.sheet.css;
+					this.sheet._cssRules = this.sheet.cssRules;
+				}
 			} catch (_error) {
 				// Ignore error
 			}
@@ -276,16 +371,28 @@ class FakeElement {
 		this._attributes.rel = value;
 	}
 
+	/**
+	 * @param {string} event event name
+	 * @param {EventHandler} handler handler
+	 * @returns {void}
+	 */
 	addEventListener(event, handler) {
 		if (!this._eventListeners) {
 			this._eventListeners = new Map();
 		}
-		if (!this._eventListeners.has(event)) {
-			this._eventListeners.set(event, []);
+		let handlers = this._eventListeners.get(event);
+		if (handlers === undefined) {
+			handlers = [];
+			this._eventListeners.set(event, handlers);
 		}
-		this._eventListeners.get(event).push(handler);
+		handlers.push(handler);
 	}
 
+	/**
+	 * @param {string} event event name
+	 * @param {EventHandler} handler handler
+	 * @returns {void}
+	 */
 	removeEventListener(event, handler) {
 		if (!this._eventListeners) return;
 		const handlers = this._eventListeners.get(event);
@@ -296,6 +403,10 @@ class FakeElement {
 		}
 	}
 
+	/**
+	 * @param {FakeEvent} event event
+	 * @returns {void}
+	 */
 	_dispatchEvent(event) {
 		if (!this._eventListeners) return;
 		const handlers = this._eventListeners.get(event.type);
@@ -306,6 +417,10 @@ class FakeElement {
 		}
 	}
 
+	/**
+	 * @param {boolean=} deep whether to deep-clone children
+	 * @returns {FakeElement} cloned element
+	 */
 	cloneNode(deep = false) {
 		const cloned = new FakeElement(
 			this._document,
@@ -353,6 +468,10 @@ class FakeElement {
 }
 
 class FakeSheet {
+	/**
+	 * @param {FakeElement} element owning element
+	 * @param {string} basePath base path
+	 */
 	constructor(element, basePath) {
 		this._element = element;
 		this._basePath = basePath;
@@ -360,7 +479,9 @@ class FakeSheet {
 		// We cannot lazily load file content in getter because in HMR scenarios,
 		// the file path will have ?hmr=timestamp appended. If we load lazily,
 		// we can only get the latest file content, and the previous content will be lost.
+		/** @type {string | undefined} */
 		this._css = undefined;
+		/** @type {CssRule[] | undefined} */
 		this._cssRules = undefined;
 	}
 
@@ -369,7 +490,7 @@ class FakeSheet {
 		let css = fs.readFileSync(
 			path.resolve(
 				this._basePath,
-				this._element.href
+				/** @type {string} */ (this._element.href)
 					.replace(/^https:\/\/test\.cases\/path\//, "")
 					.replace(/^https:\/\/example\.com\//, "")
 					.split("?")[0] // Remove query parameters (e.g., ?hmr=timestamp)
@@ -405,15 +526,18 @@ class FakeSheet {
 			TT_LEFT_CURLY_BRACKET,
 			TT_RIGHT_CURLY_BRACKET,
 			TT_SEMICOLON,
-			TokenStream
-		} = require("../../lib/css/walkCssTokens");
+			readToken
+		} = require("../../lib/css/syntax");
 
+		/** @type {CssRule[]} */
 		const rules = [];
+		/** @type {StyleDeclaration} */
 		let currentRule = { getPropertyValue };
+		/** @type {string | undefined} */
 		let selector;
 		let last = 0;
 		let ruleStart = 0; // Track the start of the current rule
-		const processDeclaration = (str) => {
+		const processDeclaration = (/** @type {string} */ str) => {
 			const colon = str.indexOf(":");
 			if (colon > 0) {
 				const property = str.slice(0, colon).trim();
@@ -421,7 +545,7 @@ class FakeSheet {
 				currentRule[property] = value;
 			}
 		};
-		const href = this._element.href.split("?")[0]; // Remove query parameters (e.g., ?hmr=timestamp)
+		const href = /** @type {string} */ (this._element.href).split("?")[0]; // Remove query parameters (e.g., ?hmr=timestamp)
 		const filepath = /file:\/\//.test(href)
 			? new URL(href)
 			: path.resolve(
@@ -453,7 +577,10 @@ class FakeSheet {
 					"utf8"
 				);
 			});
-		for (const t of new TokenStream(css).tokenize()) {
+		for (let pos = 0; ; ) {
+			const t = readToken(css, pos, /** @type {MutableToken} */ ({}));
+			if (t === undefined) break;
+			pos = t.end;
 			if (t.type === TT_LEFT_CURLY_BRACKET) {
 				if (selector === undefined) {
 					ruleStart = last; // Record the start of the rule (before the selector)
@@ -486,6 +613,7 @@ class FakeSheet {
 class CSSStyleSheet {
 	constructor() {
 		this._cssText = "";
+		/** @type {CssRule[]} */
 		this._cssRules = [];
 	}
 
@@ -512,7 +640,7 @@ class CSSStyleSheet {
 
 	/**
 	 * Get the parsed CSS rules
-	 * @returns {Array} Array of CSS rules
+	 * @returns {CssRule[]} Array of CSS rules
 	 */
 	get cssRules() {
 		return this._cssRules;
@@ -527,15 +655,18 @@ class CSSStyleSheet {
 			TT_LEFT_CURLY_BRACKET,
 			TT_RIGHT_CURLY_BRACKET,
 			TT_SEMICOLON,
-			TokenStream
-		} = require("../../lib/css/walkCssTokens");
+			readToken
+		} = require("../../lib/css/syntax");
 
+		/** @type {CssRule[]} */
 		const rules = [];
+		/** @type {StyleDeclaration} */
 		let currentRule = { getPropertyValue };
+		/** @type {string | undefined} */
 		let selector;
 		let last = 0;
 
-		const processDeclaration = (str) => {
+		const processDeclaration = (/** @type {string} */ str) => {
 			const colon = str.indexOf(":");
 			if (colon > 0) {
 				const property = str.slice(0, colon).trim();
@@ -551,7 +682,10 @@ class CSSStyleSheet {
 
 		let ruleStart = 0;
 
-		for (const t of new TokenStream(cleanCss).tokenize()) {
+		for (let pos = 0; ; ) {
+			const t = readToken(cleanCss, pos, /** @type {MutableToken} */ ({}));
+			if (t === undefined) break;
+			pos = t.end;
 			if (t.type === TT_LEFT_CURLY_BRACKET) {
 				if (selector === undefined) {
 					selector = cleanCss.slice(last, t.start).trim();

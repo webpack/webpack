@@ -13,7 +13,6 @@ const {
 	TT_COMMENT,
 	TT_DELIM,
 	TT_DIMENSION,
-	TT_EOF,
 	TT_FUNCTION,
 	TT_HASH,
 	TT_IDENTIFIER,
@@ -29,12 +28,14 @@ const {
 	TT_STRING,
 	TT_URL,
 	TT_WHITESPACE,
-	TokenStream
-} = require("../lib/css/walkCssTokens");
+	parseAListOfComponentValues,
+	readToken
+} = require("../lib/css/syntax");
 
 // Snapshot uses the spec-style kebab-case names for multi-word token types;
 // the tokenizer emits numeric `TT_*` values. Map between them so the existing
 // snapshot files stay valid.
+/** @type {Record<number, string>} */
 const TYPE_TO_PRINTED = {
 	[TT_WHITESPACE]: "whitespace",
 	[TT_COMMENT]: "comment",
@@ -63,7 +64,7 @@ const TYPE_TO_PRINTED = {
 	[TT_BAD_URL_TOKEN]: "bad-url-token"
 };
 
-describe("TokenStream.tokenize", () => {
+describe("readToken", () => {
 	const casesPath = path.resolve(__dirname, "./configCases/css/parsing/cases");
 	const tests = fs
 		.readdirSync(casesPath)
@@ -76,8 +77,16 @@ describe("TokenStream.tokenize", () => {
 	for (const [name, code] of tests) {
 		it(`should parse and print "${name}"`, () => {
 			const results = [];
-			for (const t of new TokenStream(code).tokenize()) {
-				if (t.type === TT_EOF) break;
+			// Drive the lexer core directly: a fresh `out` per call collects the
+			// raw token list (comments included); `readToken` returns undefined at EOF.
+			for (let pos = 0; ; ) {
+				const t = readToken(
+					code,
+					pos,
+					/** @type {import("../lib/css/syntax").MutableToken} */ ({})
+				);
+				if (t === undefined) break;
+				pos = t.end;
 				const printed = TYPE_TO_PRINTED[t.type] || t.type;
 				if (t.type === TT_URL) {
 					results.push([
@@ -98,4 +107,54 @@ describe("TokenStream.tokenize", () => {
 			expect(results.map((item) => item[1]).join("")).toBe(code);
 		});
 	}
+});
+
+/**
+ * @param {string} input CSS source
+ * @returns {string} input reconstructed from token source slices
+ */
+const tokenRoundtrip = (input) => {
+	let out = "";
+	for (let pos = 0; ; ) {
+		const t = readToken(
+			input,
+			pos,
+			/** @type {import("../lib/css/syntax").MutableToken} */ ({})
+		);
+		if (t === undefined) break;
+		pos = t.end;
+		out += input.slice(t.start, t.end);
+	}
+	return out;
+};
+
+// Regressions from the css-parsing-tests corpus: each input previously hung
+// the parser or dropped bytes from the token stream.
+describe("walkCssTokens regressions", () => {
+	const NUL = String.fromCharCode(0);
+	const C1 = String.fromCharCode(0x80); // U+0080: an ident-start code point
+
+	it("does not hang on a literal U+0080 ident-start code point", () => {
+		expect(parseAListOfComponentValues(C1, 0, {})).toHaveLength(1);
+		expect(parseAListOfComponentValues(`a${C1}b`, 0, {})).toHaveLength(1);
+	});
+
+	it("does not hang on a backslash at EOF inside a url token", () => {
+		expect(parseAListOfComponentValues("url(a\\", 0, {})).toHaveLength(1);
+		expect(parseAListOfComponentValues("url(\\", 0, {})).toHaveLength(1);
+	});
+
+	it("emits an unterminated comment at EOF so token ranges cover all input", () => {
+		expect(tokenRoundtrip("a /* unterminated")).toBe("a /* unterminated");
+		expect(tokenRoundtrip("/* x")).toBe("/* x");
+	});
+
+	it("emits a string with a trailing backslash at EOF", () => {
+		expect(tokenRoundtrip('"ab\\')).toBe('"ab\\');
+		expect(tokenRoundtrip("url('a\\")).toBe("url('a\\");
+	});
+
+	it("never drops input bytes around a NUL code point", () => {
+		expect(tokenRoundtrip(`a${NUL}b`)).toBe(`a${NUL}b`);
+	});
 });

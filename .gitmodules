@@ -1,3 +1,9 @@
 [submodule "test/test262-cases"]
 	path = test/test262-cases
 	url = https://github.com/tc39/test262
+[submodule "test/html5lib-tests"]
+	path = test/html5lib-tests
+	url = https://github.com/html5lib/html5lib-tests.git
+[submodule "test/css-parsing-tests"]
+	path = test/css-parsing-tests
+	url = https://github.com/CourtBouillon/css-parsing-tests.git

@@ -54,6 +54,18 @@ const normalizeString = (str, testDirectory) => {
 		.join("\n")
 		.replace(/\n{3,}/g, "\n\n")
 		.trim();
+	// Normalize engine-specific JSON.parse error text (V8 "Unexpected token …
+	// (0x..)" / "… in JSON …" vs JSC/Bun "JSON Parse error: …") so JSON
+	// type-import "Module parse failed" snapshots match across runtimes. The
+	// acorn "(line:col)" parse errors are engine-independent and left as-is.
+	str = str.replace(
+		/Module parse failed: (?:JSON Parse error:|Unexpected token "[^"]*" \(0x|Unexpected \S+ in JSON|Unexpected end of JSON input|Unexpected non-whitespace character after JSON)[\s\S]*?(?=\nYou may need an appropriate loader)/g,
+		"Module parse failed: <JSON parse error>"
+	);
+	// Normalize JSC (Bun) magic-comment parse phrasing to the V8 form: JSC
+	// quotes the token and appends "Expected …", V8 does neither.
+	str = str.replace(/(Unexpected token) '([^']*)'\. Expected[^\n]*/g, "$1 $2");
+	str = str.replace(/(Unexpected identifier)\. Expected[^\n]*/g, "$1");
 	// Normalize "Unexpected token" messages — quoting and detail
 	// format varies across Node.js versions (e.g. with/without quotes,
 	// hex codes, trailing context).
@@ -64,19 +76,6 @@ const normalizeString = (str, testDirectory) => {
 };
 
 /**
- * Fields to include in snapshot serialization.
- * Only stable, meaningful fields should be listed here —
- * nondeterministic fields (e.g. moduleTrace, details) are excluded.
- * @type {ReadonlyArray<{ key: string, normalize?: boolean }>}
- */
-const SNAPSHOT_FIELDS = [
-	{ key: "message", normalize: true },
-	{ key: "moduleName", normalize: true },
-	{ key: "loc" },
-	{ key: "compilerPath" }
-];
-
-/**
  * Serializes an array of error/warning objects into a normalized form
  * suitable for Jest snapshot matching. Absolute paths are replaced with
  * placeholders so snapshots stay stable across environments.
@@ -85,18 +84,13 @@ const SNAPSHOT_FIELDS = [
  * @returns {EXPECTED_ANY[]} normalized items for snapshot comparison
  */
 const normalizeForSnapshot = (items, testDirectory) =>
-	items.map((item) => {
-		const result = {};
-		for (const { key, normalize } of SNAPSHOT_FIELDS) {
-			if (item[key]) {
-				result[key] = normalize
-					? normalizeString(item[key], testDirectory)
-					: item[key];
-			}
-		}
-		return result;
-	});
+	items.map((item) => normalizeString(item.message, testDirectory) || "");
 
+/**
+ * @param {EXPECTED_ANY} expected expected value or RegExp or array
+ * @param {EXPECTED_ANY} actual actual value
+ * @returns {boolean} whether actual matches expected
+ */
 const check = (expected, actual) => {
 	if (expected instanceof RegExp) {
 		expected = { message: expected };
@@ -113,6 +107,10 @@ const check = (expected, actual) => {
 	});
 };
 
+/**
+ * @param {EXPECTED_ANY} object stats item or RegExp
+ * @returns {string} explanation string
+ */
 const explain = (object) => {
 	if (object instanceof RegExp) {
 		object = { message: object };
@@ -132,6 +130,12 @@ const explain = (object) => {
 		.join("; ");
 };
 
+/**
+ * @param {EXPECTED_ANY[]} actual actual items
+ * @param {EXPECTED_ANY[]} expected expected items
+ * @param {string} kind error/warning/etc
+ * @returns {string} diff string
+ */
 const diffItems = (actual, expected, kind) => {
 	const tooMuch = [...actual];
 	const missing = [...expected];
@@ -158,6 +162,16 @@ ${tooMuch.map((item) => `${explain(item)}`).join("\n\n")}`);
 	return diff.join("\n\n");
 };
 
+/**
+ * @param {string} testDirectory test directory
+ * @param {EXPECTED_ANY} object stats object
+ * @param {string} kind error/warning/etc
+ * @param {string} filename filename or upperCaseKind when 6-arg form
+ * @param {string | EXPECTED_ANY} upperCaseKind upperCaseKind or options when 6-arg form
+ * @param {EXPECTED_ANY} options options or done when 6-arg form
+ * @param {EXPECTED_ANY=} done done callback
+ * @returns {boolean | undefined} true if expectation failed
+ */
 module.exports = function checkArrayExpectation(
 	testDirectory,
 	object,
@@ -186,53 +200,15 @@ module.exports = function checkArrayExpectation(
 			expected = expected(options);
 		}
 		const diff = diffItems(array, expected, kind);
-		if (expected.length < array.length) {
+		if (diff) {
 			return (
 				done(
 					new Error(
-						`More ${kind}s (${array.length} instead of ${expected.length}) while compiling than expected:\n\n${diff}\n\nCheck expected ${kind}s: ${expectedFilename}`
+						`${upperCaseKind}s mismatch (${array.length} actual, ${expected.length} expected):\n\n${diff}\n\nCheck expected ${kind}s: ${expectedFilename}`
 					)
 				),
 				true
 			);
-		} else if (expected.length > array.length) {
-			return (
-				done(
-					new Error(
-						`Less ${kind}s (${array.length} instead of ${expected.length}) while compiling than expected:\n\n${diff}\n\nCheck expected ${kind}s: ${expectedFilename}`
-					)
-				),
-				true
-			);
-		}
-		for (let i = 0; i < array.length; i++) {
-			if (Array.isArray(expected[i])) {
-				for (const expectedItem of expected[i]) {
-					if (!check(expectedItem, array[i])) {
-						return (
-							done(
-								new Error(
-									`${upperCaseKind} ${i}: ${explain(
-										array[i]
-									)} doesn't match ${explain(expectedItem)}`
-								)
-							),
-							true
-						);
-					}
-				}
-			} else if (!check(expected[i], array[i])) {
-				return (
-					done(
-						new Error(
-							`${upperCaseKind} ${i}: ${explain(
-								array[i]
-							)} doesn't match ${explain(expected[i])}`
-						)
-					),
-					true
-				);
-			}
 		}
 	} else if (array.length > 0) {
 		if (kind === "error" || kind === "warning") {

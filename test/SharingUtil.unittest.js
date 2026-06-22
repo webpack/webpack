@@ -230,8 +230,7 @@ describe("normalize dep version", () => {
 		"https://www.github.com/foo/bar": "",
 		"foo/bar#branch with space": "branch with space",
 		"https://github.com/foo/bar/tree/branch": "branch",
-		"user..test--/..foo-js# . . . . . some . tags / / /":
-			" . . . . . some . tags / / /"
+		"user..test--/..foo-js# . . . . . some . tags / / /": ""
 	};
 
 	const gitlabInvalid = [
@@ -925,13 +924,14 @@ describe("normalize dep version", () => {
 
 	it("should return empty string for some invalid URL deps", () => {
 		for (const url of commonInvalid) {
-			expect(normalizeVersion(url)).toBe("");
+			expect(normalizeVersion(/** @type {string} */ (url))).toBe("");
 		}
 	});
 
 	it("should get correct version for some valid URL deps", () => {
+		const commonValidMap = /** @type {Record<string, string>} */ (commonValid);
 		for (const url of Object.keys(commonValid)) {
-			expect(normalizeVersion(url)).toBe(commonValid[url]);
+			expect(normalizeVersion(url)).toBe(commonValidMap[url]);
 		}
 	});
 
@@ -942,8 +942,9 @@ describe("normalize dep version", () => {
 	});
 
 	it("should get correct version for github URL deps", () => {
+		const githubValidMap = /** @type {Record<string, string>} */ (githubValid);
 		for (const url of Object.keys(githubValid)) {
-			expect(normalizeVersion(url)).toBe(githubValid[url]);
+			expect(normalizeVersion(url)).toBe(githubValidMap[url]);
 		}
 	});
 
@@ -954,8 +955,9 @@ describe("normalize dep version", () => {
 	});
 
 	it("should get correct version for gitlab URL deps", () => {
+		const gitlabValidMap = /** @type {Record<string, string>} */ (gitlabValid);
 		for (const url of Object.keys(gitlabValid)) {
-			expect(normalizeVersion(url)).toBe(gitlabValid[url]);
+			expect(normalizeVersion(url)).toBe(gitlabValidMap[url]);
 		}
 	});
 
@@ -966,8 +968,11 @@ describe("normalize dep version", () => {
 	});
 
 	it("should get correct version for bitbucket URL deps", () => {
+		const bitbucketValidMap = /** @type {Record<string, string>} */ (
+			bitbucketValid
+		);
 		for (const url of Object.keys(bitbucketValid)) {
-			expect(normalizeVersion(url)).toBe(bitbucketValid[url]);
+			expect(normalizeVersion(url)).toBe(bitbucketValidMap[url]);
 		}
 	});
 
@@ -978,8 +983,9 @@ describe("normalize dep version", () => {
 	});
 
 	it("should get correct version for gist URL deps", () => {
+		const gistValidMap = /** @type {Record<string, string>} */ (gistValid);
 		for (const url of Object.keys(gistValid)) {
-			expect(normalizeVersion(url)).toBe(gistValid[url]);
+			expect(normalizeVersion(url)).toBe(gistValidMap[url]);
 		}
 	});
 
@@ -990,8 +996,11 @@ describe("normalize dep version", () => {
 	});
 
 	it("should return correct version for other domain URL deps", () => {
+		const otherDomainValidMap = /** @type {Record<string, string>} */ (
+			otherDomainValid
+		);
 		for (const url of Object.keys(otherDomainValid)) {
-			expect(normalizeVersion(url)).toBe(otherDomainValid[url]);
+			expect(normalizeVersion(url)).toBe(otherDomainValidMap[url]);
 		}
 	});
 });

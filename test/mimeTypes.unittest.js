@@ -19,10 +19,22 @@ describe("mimeTypes", () => {
 		});
 
 		it("should return undefined for non-strings", () => {
-			expect(mimeTypes.extension(null)).toBeUndefined();
-			expect(mimeTypes.extension(undefined)).toBeUndefined();
-			expect(mimeTypes.extension(42)).toBeUndefined();
-			expect(mimeTypes.extension({})).toBeUndefined();
+			expect(
+				mimeTypes.extension(
+					/** @type {string} */ (/** @type {unknown} */ (null))
+				)
+			).toBeUndefined();
+			expect(
+				mimeTypes.extension(
+					/** @type {string} */ (/** @type {unknown} */ (undefined))
+				)
+			).toBeUndefined();
+			expect(
+				mimeTypes.extension(/** @type {string} */ (/** @type {unknown} */ (42)))
+			).toBeUndefined();
+			expect(
+				mimeTypes.extension(/** @type {string} */ (/** @type {unknown} */ ({})))
+			).toBeUndefined();
 			expect(mimeTypes.extension("")).toBeUndefined();
 		});
 
@@ -80,10 +92,20 @@ describe("mimeTypes", () => {
 		});
 
 		it("should return undefined for non-strings", () => {
-			expect(mimeTypes.lookup(null)).toBeUndefined();
-			expect(mimeTypes.lookup(undefined)).toBeUndefined();
-			expect(mimeTypes.lookup(42)).toBeUndefined();
-			expect(mimeTypes.lookup({})).toBeUndefined();
+			expect(
+				mimeTypes.lookup(/** @type {string} */ (/** @type {unknown} */ (null)))
+			).toBeUndefined();
+			expect(
+				mimeTypes.lookup(
+					/** @type {string} */ (/** @type {unknown} */ (undefined))
+				)
+			).toBeUndefined();
+			expect(
+				mimeTypes.lookup(/** @type {string} */ (/** @type {unknown} */ (42)))
+			).toBeUndefined();
+			expect(
+				mimeTypes.lookup(/** @type {string} */ (/** @type {unknown} */ ({})))
+			).toBeUndefined();
 			expect(mimeTypes.lookup("")).toBeUndefined();
 		});
 

@@ -181,12 +181,6 @@ var named = "named";
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -242,7 +236,7 @@ var named = "named";
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -298,11 +292,11 @@ _fs__WEBPACK_IMPORTED_MODULE_0__.readFile("file");
 ## Unoptimized
 
 ```
-asset output.js 8 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 1.37 KiB (runtime) [entry] [rendered]
+asset output.js 7.72 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 1.34 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 785 bytes [dependent] 4 modules
-  runtime modules 1.37 KiB 4 modules
+  runtime modules 1.34 KiB 4 modules
   ./example.js 374 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -313,11 +307,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 977 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 1.11 KiB (runtime) [entry] [rendered]
+asset output.js 948 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 1.07 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 484 bytes [dependent] 3 modules
-  runtime modules 1.11 KiB 3 modules
+  runtime modules 1.07 KiB 3 modules
   ./example.js + 1 modules 675 bytes [built] [code generated]
     [no exports]
     [no exports used]

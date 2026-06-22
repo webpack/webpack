@@ -19,11 +19,20 @@ it("should bundle a `stylesheet`-typed attribute as a CSS chunk entry", () => {
 	expect(page).toMatch(/<my-link href="__html_[a-f0-9]+_\d+\.chunk\.css">/);
 });
 
-it("should bundle a `stylesheet-inline`-typed attribute value as inline CSS", () => {
-	// The attribute's value was routed through the CSS pipeline, so the
-	// rewritten value now carries the pipeline's banner header alongside
-	// the original CSS text.
+it("should bundle a `stylesheet-style`-typed attribute value as inline CSS", () => {
+	// The attribute's value (a full stylesheet) was routed through the CSS
+	// pipeline, so the rewritten value now carries the pipeline's banner
+	// header alongside the original CSS text.
 	expect(page).toMatch(
 		/<my-style data-css="\/\*![\s\S]*?css data:text\/css[\s\S]*?body \{ color: red; \}\s*"><\/my-style>/
+	);
+});
+
+it("should bundle a `stylesheet-style-attribute`-typed value as a block's contents", () => {
+	// A bare declaration list is valid as a block's contents but a parse
+	// error as a stylesheet; routed through the CSS pipeline it survives,
+	// proving the value was parsed as `as: "block-contents"`.
+	expect(page).toMatch(
+		/<my-box data-style="[\s\S]*?color: ?green[\s\S]*?padding: ?10px[\s\S]*?"><\/my-box>/
 	);
 });

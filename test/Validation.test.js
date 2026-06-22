@@ -3,55 +3,57 @@
 require("./helpers/warmup-webpack");
 
 describe("Validation", () => {
-	const createTestCase = (name, config, fn, only) => {
+	const createTestCase = (
+		/** @type {string} */ name,
+		/** @type {EXPECTED_ANY} */ config,
+		/** @type {(msg: string) => void} */ fn,
+		/** @type {unknown} */ only = undefined
+	) => {
 		it(`should fail validation for ${name}`, () => {
-			let errored;
-
 			try {
 				const webpack = require("..");
 
 				webpack(config);
 			} catch (err) {
-				if (err.name !== "ValidationError") throw err;
-				errored = err;
-				fn(err.message);
+				if (/** @type {EXPECTED_ANY} */ (err).name !== "ValidationError") {
+					throw err;
+				}
+				fn(/** @type {Error} */ (err).message);
 
 				return;
 			}
 
-			if (!errored) {
-				throw new Error("Validation didn't fail");
-			}
-
-			expect(errored.message).toMatch(/^Invalid configuration object./);
+			throw new Error("Validation didn't fail");
 		});
 	};
 
-	const createTestCaseOnlyValidate = (name, config, fn) => {
+	const createTestCaseOnlyValidate = (
+		/** @type {string} */ name,
+		/** @type {EXPECTED_ANY} */ config,
+		/** @type {(msg: string) => void} */ fn
+	) => {
 		it(`should fail validation for ${name}`, () => {
-			let errored;
-
 			try {
 				const webpack = require("..");
 
 				webpack.validate(config);
 			} catch (err) {
-				if (err.name !== "ValidationError") throw err;
-				errored = err;
-				fn(err.message);
+				if (/** @type {EXPECTED_ANY} */ (err).name !== "ValidationError") {
+					throw err;
+				}
+				fn(/** @type {Error} */ (err).message);
 
 				return;
 			}
 
-			if (!errored) {
-				throw new Error("Validation didn't fail");
-			}
-
-			expect(errored.message).toMatch(/^Invalid configuration object./);
+			throw new Error("Validation didn't fail");
 		});
 	};
 
-	const createTestCaseWithoutError = (name, config) => {
+	const createTestCaseWithoutError = (
+		/** @type {string} */ name,
+		/** @type {EXPECTED_ANY} */ config
+	) => {
 		it(`should success validation for ${name}`, () => {
 			let errored;
 
@@ -60,8 +62,10 @@ describe("Validation", () => {
 
 				webpack(config);
 			} catch (err) {
-				if (err.name === "ValidationError") {
-					throw new Error("Validation didn't success", { cause: err });
+				if (/** @type {EXPECTED_ANY} */ (err).name === "ValidationError") {
+					throw new Error("Validation didn't success", {
+						cause: /** @type {Error} */ (err)
+					});
 				}
 
 				errored = err;
@@ -562,7 +566,7 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.output has an unknown property 'ecmaVersion'. These properties are valid:
-			   object { amdContainer?, assetModuleFilename?, asyncChunks?, auxiliaryComment?, charset?, chunkFilename?, chunkFormat?, chunkLoadTimeout?, chunkLoading?, chunkLoadingGlobal?, clean?, compareBeforeEmit?, crossOriginLoading?, cssChunkFilename?, cssFilename?, devtoolFallbackModuleFilenameTemplate?, devtoolModuleFilenameTemplate?, devtoolNamespace?, enabledChunkLoadingTypes?, enabledLibraryTypes?, enabledWasmLoadingTypes?, environment?, filename?, globalObject?, hashDigest?, hashDigestLength?, hashFunction?, hashSalt?, hotUpdateChunkFilename?, hotUpdateGlobal?, hotUpdateMainFilename?, htmlChunkFilename?, htmlFilename?, ignoreBrowserWarnings?, iife?, importFunctionName?, importMetaName?, library?, libraryExport?, libraryTarget?, module?, path?, pathinfo?, publicPath?, scriptType?, sourceMapFilename?, sourcePrefix?, strictModuleErrorHandling?, strictModuleExceptionHandling?, strictModuleResolution?, trustedTypes?, umdNamedDefine?, uniqueName?, wasmLoading?, webassemblyModuleFilename?, workerChunkLoading?, workerPublicPath?, workerWasmLoading? }
+			   object { amdContainer?, assetModuleFilename?, asyncChunks?, auxiliaryComment?, charset?, chunkFilename?, chunkFormat?, chunkLoadTimeout?, chunkLoading?, chunkLoadingGlobal?, clean?, compareBeforeEmit?, crossOriginLoading?, cssChunkFilename?, cssFilename?, devtoolFallbackModuleFilenameTemplate?, devtoolModuleFilenameTemplate?, devtoolNamespace?, enabledChunkLoadingTypes?, enabledLibraryTypes?, enabledWasmLoadingTypes?, environment?, filename?, globalObject?, hashDigest?, hashDigestLength?, hashFunction?, hashSalt?, hotUpdateChunkFilename?, hotUpdateGlobal?, hotUpdateMainFilename?, html?, htmlChunkFilename?, htmlFilename?, ignoreBrowserWarnings?, iife?, importFunctionName?, importMetaName?, library?, libraryExport?, libraryTarget?, module?, path?, pathinfo?, publicPath?, scriptType?, sourceMapFilename?, sourcePrefix?, strictModuleErrorHandling?, strictModuleExceptionHandling?, strictModuleResolution?, trustedTypes?, umdNamedDefine?, uniqueName?, wasmLoading?, webassemblyModuleFilename?, workerChunkFilename?, workerChunkLoading?, workerPublicPath?, workerWasmLoading? }
 			   -> Options affecting the output of the compilation. \`output\` options tell webpack how to write the compiled files to disk.
 			   Did you mean output.environment (output.ecmaVersion was a temporary configuration option during webpack 5 beta)?"
 		`)

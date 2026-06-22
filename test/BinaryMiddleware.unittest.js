@@ -3,6 +3,11 @@
 const BinaryMiddleware = require("../lib/serialization/BinaryMiddleware");
 const SerializerMiddleware = require("../lib/serialization/SerializerMiddleware");
 
+/**
+ * @param {import("../lib/serialization/BinaryMiddleware").PrimitiveSerializableType[]} base base
+ * @param {number} count count
+ * @returns {import("../lib/serialization/BinaryMiddleware").PrimitiveSerializableType[]} result
+ */
 const cont = (base, count) => {
 	const result = [];
 	for (let i = 0; i < count; i++) {
@@ -12,8 +17,13 @@ const cont = (base, count) => {
 };
 
 const mw = new BinaryMiddleware();
-const other = { other: true };
+/** @type {import("../lib/serialization/SerializerMiddleware").LazyTarget} */
+const other = /** @type {EXPECTED_ANY} */ ({ other: true });
 
+/**
+ * @param {import("../lib/serialization/types").PrimitiveSerializableType} item item
+ * @returns {unknown} resolved item
+ */
 const resolveLazy = (item) => {
 	if (SerializerMiddleware.isLazy(item)) {
 		const data = item();
@@ -44,7 +54,8 @@ describe("BinaryMiddleware", () => {
 		SerializerMiddleware.createLazy([5], other)
 	];
 
-	const itemsWithLazy = [
+	/** @type {import("../lib/serialization/types").PrimitiveSerializableType[]} */
+	const itemsWithLazy = /** @type {EXPECTED_ANY} */ ([
 		...items,
 		SerializerMiddleware.createLazy(
 			[SerializerMiddleware.createLazy([5], other)],
@@ -59,13 +70,13 @@ describe("BinaryMiddleware", () => {
 			],
 			mw
 		)
-	];
+	]);
 	itemsWithLazy.push(SerializerMiddleware.createLazy([...itemsWithLazy], mw));
 	itemsWithLazy.push(
 		SerializerMiddleware.createLazy([...itemsWithLazy], other)
 	);
 
-	items.push(undefined);
+	items.push(/** @type {EXPECTED_ANY} */ (undefined));
 
 	const cases = [
 		...itemsWithLazy.map((item) => [item]),
@@ -103,6 +114,140 @@ describe("BinaryMiddleware", () => {
 		cont([5.5], 20)
 	];
 
+	describe("bigints", () => {
+		const bigints = [
+			BigInt(0),
+			BigInt(5),
+			BigInt(10),
+			BigInt(11),
+			BigInt(-1),
+			BigInt(-128),
+			BigInt(127),
+			BigInt(128),
+			BigInt(-2147483648),
+			BigInt(2147483647),
+			BigInt("123456789012345678901234567890"),
+			BigInt("-987654321098765432109876543210")
+		];
+		for (const b of bigints) {
+			it(`should serialize bigint ${b} correctly`, () => {
+				const data = [b, b, "x", b, true, b];
+				const serialized =
+					/** @type {Buffer[]} */
+					(mw.serialize(data, {}));
+				expect(mw.deserialize(serialized, {})).toEqual(data);
+			});
+		}
+	});
+
+	describe("chunked streams", () => {
+		// mixed payload without lazies so the serialized buffers can be re-split
+		const data = [
+			"",
+			"hi",
+			"hi".repeat(200),
+			"😀",
+			"café",
+			1,
+			11,
+			0x100,
+			-1,
+			-1.25,
+			...cont([3], 40),
+			...cont([1000], 40),
+			...cont([0.5], 40),
+			...cont([true, false], 17),
+			null,
+			true,
+			null,
+			false,
+			null,
+			42,
+			null,
+			5000,
+			null,
+			null,
+			null,
+			...cont([null], 5),
+			...cont([null], 300),
+			BigInt(7),
+			BigInt(100000),
+			BigInt("123456789012345678901234567890"),
+			Buffer.from("hello"),
+			Buffer.alloc(10000, 1)
+		];
+		for (const chunkSize of [1, 2, 3, 5, 8, 13, 64]) {
+			it(`should deserialize a stream split into ${chunkSize}-byte chunks`, () => {
+				const serialized =
+					/** @type {Buffer[]} */
+					(mw.serialize(data, {}));
+				const whole = Buffer.concat(serialized);
+				const chunks = [];
+				for (let i = 0; i < whole.length; i += chunkSize) {
+					chunks.push(whole.subarray(i, i + chunkSize));
+				}
+				expect(mw.deserialize(chunks, {})).toEqual(data);
+			});
+		}
+
+		for (const chunkSize of [1, 3, 7]) {
+			it(`should deserialize inlined lazy sections split into ${chunkSize}-byte chunks`, () => {
+				const data = [1, SerializerMiddleware.createLazy([2, "x"], mw), true];
+				const serialized =
+					/** @type {Buffer[]} */
+					(mw.serialize(data, {}));
+				const whole = Buffer.concat(serialized);
+				const chunks = [];
+				for (let i = 0; i < whole.length; i += chunkSize) {
+					chunks.push(whole.subarray(i, i + chunkSize));
+				}
+				const result =
+					/** @type {import("../lib/serialization/BinaryMiddleware").DeserializedType} */ (
+						mw.deserialize(chunks, {})
+					);
+				expect(result.map(resolveLazy)).toEqual(data.map(resolveLazy));
+			});
+		}
+	});
+
+	describe("invalid streams", () => {
+		it("should throw on an unexpected header byte", () => {
+			expect(() => mw.deserialize([Buffer.from([0x1d])], {})).toThrow(
+				/Unexpected header byte/
+			);
+		});
+
+		it("should throw on unexpected end of stream", () => {
+			// string section claiming 10 content bytes with only 2 present
+			expect(() =>
+				mw.deserialize([Buffer.from([0x1e, 10, 0, 0, 0, 0x61, 0x62])], {})
+			).toThrow(/Unexpected end of stream/);
+		});
+
+		it("should throw on a lazy element where bytes are expected", () => {
+			const lazy = SerializerMiddleware.createLazy([5], other);
+			expect(() =>
+				mw.deserialize(
+					[
+						Buffer.from([0x1e, 10, 0, 0, 0, 0x61, 0x62]),
+						/** @type {EXPECTED_ANY} */ (lazy)
+					],
+					{}
+				)
+			).toThrow(/Unexpected lazy element in stream/);
+		});
+
+		it("should throw on a non-lazy element in a lazy section", () => {
+			// lazy section with one zero-length entry must be followed by a lazy fn
+			expect(() =>
+				mw.deserialize(
+					[Buffer.from([0x0b, 1, 0, 0, 0, 0, 0, 0, 0]), Buffer.from([0x0c])],
+					{}
+				)
+			).toThrow(/Unexpected non-lazy element in stream/);
+		});
+	});
+
 	for (const c of [1, 100]) {
 		for (const caseData of cases) {
 			for (const prepend of items) {
@@ -123,8 +268,14 @@ describe("BinaryMiddleware", () => {
 						// 	`${c} x ${key.slice(0, 20)} (${data.length})\n`
 						// );
 						const realData = cont(data, data.length * c);
-						const serialized = mw.serialize(realData, {});
-						const newData = mw.deserialize(serialized, {});
+						const serialized =
+							/** @type {import("../lib/serialization/BinaryMiddleware").SerializedType} */ (
+								mw.serialize(realData, {})
+							);
+						const newData =
+							/** @type {import("../lib/serialization/BinaryMiddleware").DeserializedType} */ (
+								mw.deserialize(serialized, {})
+							);
 						expect(newData.map(resolveLazy)).toEqual(realData.map(resolveLazy));
 					});
 				}

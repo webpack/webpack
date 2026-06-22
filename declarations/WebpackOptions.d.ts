@@ -596,6 +596,10 @@ export type HotUpdateGlobal = string;
  */
 export type HotUpdateMainFilename = string;
 /**
+ * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
+ */
+export type OutputHtml = boolean | OutputHtmlOptions;
+/**
  * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
  */
 export type HtmlChunkFilename = FilenameTemplate;
@@ -663,6 +667,10 @@ export type UniqueName = string;
  * The filename of WebAssembly modules as relative path inside the 'output.path' directory.
  */
 export type WebassemblyModuleFilename = string;
+/**
+ * Specifies the filename template of non-initial output worker's files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+ */
+export type WorkerChunkFilename = FilenameTemplate;
 /**
  * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
  */
@@ -799,6 +807,10 @@ export type AssetParserDataUrlFunction =
  * Enable/disable renaming of `@keyframes`.
  */
 export type CssParserAnimation = boolean;
+/**
+ * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
+ */
+export type CssParserAs = "stylesheet" | "block-contents";
 /**
  * Enable/disable renaming of `@container` names.
  */
@@ -1223,6 +1235,10 @@ export interface EntryDescription {
 	 */
 	filename?: EntryFilename;
 	/**
+	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
+	 */
+	html?: boolean;
+	/**
 	 * Module(s) that are loaded upon startup.
 	 */
 	import: EntryItem;
@@ -1246,6 +1262,10 @@ export interface EntryDescription {
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	wasmLoading?: WasmLoading;
+	/**
+	 * Mark this entry as a worker so its output file uses 'output.workerChunkFilename'.
+	 */
+	worker?: boolean;
 }
 /**
  * Options for library.
@@ -2469,6 +2489,10 @@ export interface Output {
 	 */
 	hotUpdateMainFilename?: HotUpdateMainFilename;
 	/**
+	 * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
+	 */
+	html?: OutputHtml;
+	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	htmlChunkFilename?: HtmlChunkFilename;
@@ -2566,6 +2590,10 @@ export interface Output {
 	 */
 	webassemblyModuleFilename?: WebassemblyModuleFilename;
 	/**
+	 * Specifies the filename template of non-initial output worker's files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	workerChunkFilename?: WorkerChunkFilename;
+	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: ChunkLoading;
@@ -2636,6 +2664,10 @@ export interface Environment {
 	 */
 	globalThis?: boolean;
 	/**
+	 * The environment supports 'Object.hasOwn'.
+	 */
+	hasOwn?: boolean;
+	/**
 	 * The environment supports `import.meta.dirname` and `import.meta.filename`.
 	 */
 	importMetaDirnameAndFilename?: boolean;
@@ -2643,6 +2675,10 @@ export interface Environment {
 	 * The environment supports let for variable declarations.
 	 */
 	let?: boolean;
+	/**
+	 * The environment supports logical assignment operators ('a ||= b', 'a &&= b', 'a ??= b').
+	 */
+	logicalAssignment?: boolean;
 	/**
 	 * The environment supports object method shorthand ('{ module() {} }').
 	 */
@@ -2652,6 +2688,10 @@ export interface Environment {
 	 */
 	module?: boolean;
 	/**
+	 * The environment supports `process.getBuiltinModule()` to synchronously load Node.js core modules.
+	 */
+	nodeBuiltinModuleGetter?: boolean;
+	/**
 	 * The environment supports `node:` prefix for Node.js core modules.
 	 */
 	nodePrefixForCoreModules?: boolean;
@@ -2660,9 +2700,26 @@ export interface Environment {
 	 */
 	optionalChaining?: boolean;
 	/**
+	 * The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').
+	 */
+	spread?: boolean;
+	/**
+	 * The environment supports 'Symbol' (and well-known symbols like 'Symbol.toStringTag').
+	 */
+	symbol?: boolean;
+	/**
 	 * The environment supports template literals.
 	 */
 	templateLiteral?: boolean;
+}
+/**
+ * Options for the generated HTML files.
+ */
+export interface OutputHtmlOptions {
+	/**
+	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
+	 */
+	scriptLoading?: "auto" | "blocking" | "defer";
 }
 /**
  * Use a Trusted Types policy to create urls for chunks.
@@ -3233,6 +3290,10 @@ export interface CssAutoOrModuleParserOptions {
 	 */
 	animation?: CssParserAnimation;
 	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: CssParserAs;
+	/**
 	 * Enable/disable renaming of `@container` names.
 	 */
 	container?: CssParserContainer;
@@ -3336,6 +3397,10 @@ export interface CssModuleParserOptions {
 	 */
 	animation?: CssParserAnimation;
 	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: CssParserAs;
+	/**
 	 * Enable/disable renaming of `@container` names.
 	 */
 	container?: CssParserContainer;
@@ -3376,6 +3441,10 @@ export interface CssModuleParserOptions {
  * Parser options for css modules.
  */
 export interface CssParserOptions {
+	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: CssParserAs;
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
@@ -3426,6 +3495,10 @@ export interface EntryDescriptionNormalized {
 	 */
 	filename?: Filename;
 	/**
+	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
+	 */
+	html?: boolean;
+	/**
 	 * Module(s) that are loaded upon startup. The last one is exported.
 	 */
 	import?: string[];
@@ -3449,6 +3522,10 @@ export interface EntryDescriptionNormalized {
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	wasmLoading?: WasmLoading;
+	/**
+	 * Mark this entry as a worker so its output file uses 'output.workerChunkFilename'.
+	 */
+	worker?: boolean;
 }
 /**
  * Multiple entry bundles are created. The key is the entry name. The value is an entry description object.
@@ -3562,7 +3639,7 @@ export interface HtmlParserOptions {
 						 */
 						tag?: string;
 						/**
-						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-inline` treats the attribute value as inline CSS text and bundles it through the CSS pipeline (the attribute's content is replaced with the processed CSS at render time, like an inline `<style>` body).
+						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-style` treats the attribute value as a full stylesheet (like a `<style>` body) and `stylesheet-style-attribute` as a CSS block's contents (a declaration list, like a `style` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time.
 						 */
 						type:
 							| "src"
@@ -3570,7 +3647,8 @@ export interface HtmlParserOptions {
 							| "script"
 							| "script-module"
 							| "stylesheet"
-							| "stylesheet-inline";
+							| "stylesheet-style"
+							| "stylesheet-style-attribute";
 				  }
 		  )[]
 		| boolean;
@@ -4054,6 +4132,10 @@ export interface OutputNormalized {
 	 */
 	hotUpdateMainFilename?: HotUpdateMainFilename;
 	/**
+	 * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
+	 */
+	html?: OutputHtml;
+	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	htmlChunkFilename?: HtmlChunkFilename;
@@ -4138,6 +4220,10 @@ export interface OutputNormalized {
 	 * The filename of WebAssembly modules as relative path inside the 'output.path' directory.
 	 */
 	webassemblyModuleFilename?: WebassemblyModuleFilename;
+	/**
+	 * Specifies the filename template of non-initial output worker's files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	workerChunkFilename?: WorkerChunkFilename;
 	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */

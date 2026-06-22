@@ -5,13 +5,20 @@ require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 const { Volume, createFsFromVolume } = require("memfs");
+/** @type {(path: string, callback: (err?: unknown) => void) => void} */
 const rimraf = require("rimraf");
 
+/**
+ * @param {import("../").Configuration} config config
+ * @returns {import("../").Compiler} compiler
+ */
 const createCompiler = (config) => {
 	const webpack = require("..");
 
-	const compiler = webpack(config);
-	compiler.outputFileSystem = createFsFromVolume(new Volume());
+	const compiler = /** @type {import("../").Compiler} */ (webpack(config));
+	compiler.outputFileSystem = /** @type {EXPECTED_ANY} */ (
+		createFsFromVolume(new Volume())
+	);
 	return compiler;
 };
 
@@ -28,6 +35,10 @@ const createSingleCompiler = () =>
 		}
 	});
 
+/**
+ * @param {import("../").Compiler} compiler compiler
+ * @param {() => void} action action
+ */
 const onceDone = (compiler, action) => {
 	let initial = true;
 	compiler.hooks.done.tap("ChangesAndRemovalsTest", () => {
@@ -37,6 +48,10 @@ const onceDone = (compiler, action) => {
 	});
 };
 
+/**
+ * @param {import("../").Compiler} compiler compiler
+ * @returns {{ removed: string[] | undefined, modified: string[] | undefined }} changes
+ */
 const getChanges = (compiler) => {
 	const modifiedFiles = compiler.modifiedFiles;
 	const removedFiles = compiler.removedFiles;
@@ -72,6 +87,10 @@ function createFiles() {
 	);
 }
 
+// Bun's fs.watch surfaces unlink events differently from Node, so watchpack
+// reports the removed file inconsistently across runs; skip on Bun.
+const itSkipBun = process.versions.bun ? it.skip : it;
+
 describe("ChangesAndRemovals", () => {
 	beforeEach((done) => {
 		cleanup((err) => {
@@ -94,18 +113,22 @@ describe("ChangesAndRemovals", () => {
 
 	it("should not track modified/removed files during initial watchRun", (done) => {
 		const compiler = createSingleCompiler();
-		const watchRunFinished = new Promise((resolve) => {
-			compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", (compiler) => {
-				expect(getChanges(compiler)).toEqual({
-					removed: undefined,
-					modified: undefined
+		const watchRunFinished = /** @type {Promise<void>} */ (
+			new Promise((resolve) => {
+				compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", (compiler) => {
+					expect(getChanges(compiler)).toEqual({
+						removed: undefined,
+						modified: undefined
+					});
+					resolve();
 				});
-				resolve();
-			});
-		});
-		const watcher = compiler.watch({ aggregateTimeout: 200 }, (err) => {
-			if (err) done(err);
-		});
+			})
+		);
+		const watcher = /** @type {import("../").Watching} */ (
+			compiler.watch({ aggregateTimeout: 200 }, (err) => {
+				if (err) done(err);
+			})
+		);
 
 		watchRunFinished.then(() => {
 			watcher.close(done);
@@ -114,7 +137,8 @@ describe("ChangesAndRemovals", () => {
 
 	it("should track modified files when they've been modified", (done) => {
 		const compiler = createSingleCompiler();
-		let watcher;
+		/** @type {import("../").Watching | null} */
+		let watcher = null;
 
 		compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", (compiler) => {
 			if (!watcher) return;
@@ -127,18 +151,21 @@ describe("ChangesAndRemovals", () => {
 			watcher = null;
 		});
 
-		watcher = compiler.watch({ aggregateTimeout: 200 }, (err) => {
-			if (err) done(err);
-		});
+		watcher = /** @type {import("../").Watching} */ (
+			compiler.watch({ aggregateTimeout: 200 }, (err) => {
+				if (err) done(err);
+			})
+		);
 
 		onceDone(compiler, () => {
 			fs.appendFileSync(tempFilePath, "\nlet x = 'file modified';");
 		});
 	});
 
-	it("should track removed file when removing file", (done) => {
+	itSkipBun("should track removed file when removing file", (done) => {
 		const compiler = createSingleCompiler();
-		let watcher;
+		/** @type {import("../").Watching | null} */
+		let watcher = null;
 
 		compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", (compiler) => {
 			if (!watcher) return;
@@ -151,9 +178,11 @@ describe("ChangesAndRemovals", () => {
 			watcher = null;
 		});
 
-		watcher = compiler.watch({ aggregateTimeout: 200 }, (err) => {
-			if (err) done(err);
-		});
+		watcher = /** @type {import("../").Watching} */ (
+			compiler.watch({ aggregateTimeout: 200 }, (err) => {
+				if (err) done(err);
+			})
+		);
 
 		onceDone(compiler, () => {
 			fs.unlinkSync(tempFilePath);

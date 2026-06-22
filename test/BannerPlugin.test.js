@@ -39,11 +39,18 @@ describe("BannerPlugin", () => {
 			expect(footerFileResults[0]).toBe("/*! banner is a string */");
 			fs.writeFileSync(entry2File, "2", "utf8");
 			compiler.run((err, stats) => {
-				const { assets } = stats.toJson();
-				expect(assets.find((as) => as.name === "entry1.js").emitted).toBe(
-					false
-				);
-				expect(assets.find((as) => as.name === "entry2.js").emitted).toBe(true);
+				const { assets } = /** @type {import("../").Stats} */ (stats).toJson();
+				const assetsList = /** @type {import("../").StatsAsset[]} */ (assets);
+				expect(
+					/** @type {import("../").StatsAsset} */ (
+						assetsList.find((as) => as.name === "entry1.js")
+					).emitted
+				).toBe(false);
+				expect(
+					/** @type {import("../").StatsAsset} */ (
+						assetsList.find((as) => as.name === "entry2.js")
+					).emitted
+				).toBe(true);
 				done(err);
 			});
 		});

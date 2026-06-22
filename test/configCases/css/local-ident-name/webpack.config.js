@@ -1,5 +1,13 @@
 "use strict";
 
+// Bun aborts in its node:vm SourceTextModule.link() and Deno hard-panics
+// ("Module not found") on less-loader's `import("less")`; on both load the CJS
+// less so it skips the dynamic import.
+const lessLoader =
+	process.versions.bun || process.versions.deno
+		? { loader: "less-loader", options: { implementation: require("less") } }
+		: "less-loader";
+
 const common = {
 	mode: "development",
 	devtool: false,
@@ -8,7 +16,7 @@ const common = {
 			{
 				test: /\.less$/,
 				type: "css/auto",
-				use: ["less-loader"],
+				use: [lessLoader],
 				generator: {
 					localIdentName: "[path][name][ext]__[local]"
 				}
@@ -52,6 +60,12 @@ const common = {
 						resourceQuery: /\?uniqueName-id-contenthash$/,
 						generator: {
 							localIdentName: "[uniqueName]-[id]-[contenthash]"
+						}
+					},
+					{
+						resourceQuery: /\?uniquename-local$/,
+						generator: {
+							localIdentName: "[uniquename]__[local]"
 						}
 					},
 					{

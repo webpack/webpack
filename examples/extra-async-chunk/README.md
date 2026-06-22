@@ -73,12 +73,6 @@ require.ensure(["./a"], function(require) {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -150,8 +144,8 @@ require.ensure(["./a"], function(require) {
 /******/ 				clearTimeout(timeout);
 /******/ 				const doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
-/******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
+/******/ 				script.parentNode?.removeChild(script);
+/******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
@@ -359,7 +353,7 @@ module.exports = "d";
 ## Unoptimized
 
 ```
-asset output.js 9.39 KiB [emitted] (name: main)
+asset output.js 9.11 KiB [emitted] (name: main)
 asset a_js-b_js.output.js 618 bytes [emitted]
 asset c_js.output.js 329 bytes [emitted]
 asset d_js.output.js 329 bytes [emitted]
@@ -388,9 +382,9 @@ chunk (runtime: main) d_js.output.js 21 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./d.js 1:0-14
     cjs require ./d ./example.js 7:1-15
-chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.95 KiB 6 modules
+  runtime modules 4.92 KiB 6 modules
   ./example.js 164 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -400,7 +394,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.86 KiB [emitted] [minimized] (name: main)
+asset output.js 1.85 KiB [emitted] [minimized] (name: main)
 asset a_js-b_js.output.js 110 bytes [emitted] [minimized]
 asset c_js.output.js 83 bytes [emitted] [minimized]
 asset d_js.output.js 83 bytes [emitted] [minimized]
@@ -429,9 +423,9 @@ chunk (runtime: main) d_js.output.js 21 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./d.js 1:0-14
     cjs require ./d ./example.js 7:1-15
-chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.95 KiB 6 modules
+  runtime modules 4.92 KiB 6 modules
   ./example.js 164 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main

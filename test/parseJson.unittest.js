@@ -2,6 +2,10 @@
 
 const parseJson = require("../lib/util/parseJson");
 
+// TODO JSC (Bun) produces different SyntaxError text for malformed JSON than
+// V8, so the message/position assertions keyed on Node's wording don't hold.
+const itSkipBun = process.versions.bun ? it.skip : it;
+
 const currentNodeMajor = Number.parseInt(
 	process.version.slice(1).split(".")[0],
 	10
@@ -11,9 +15,20 @@ const currentNodeMajor = Number.parseInt(
 // value where the current major version is >= the latest key. eg: in node 24,
 // for the input {20:1, 22:2}, this will return 2 if not match is found it will
 // return the value of the `default` key.
-const getLatestMatchingNode = ({ default: defaultNode, ...majors }) => {
-	for (const major of Object.keys(majors).sort((a, b) => b - a)) {
-		if (currentNodeMajor >= major) {
+const getLatestMatchingNode = (
+	/** @type {Record<string, unknown> & { default?: unknown }} */ {
+		default: defaultNode,
+		...majors
+	}
+) => {
+	for (const major of Object.keys(majors).sort(
+		(a, b) =>
+			/** @type {number} */ (/** @type {unknown} */ (b)) -
+			/** @type {number} */ (/** @type {unknown} */ (a))
+	)) {
+		if (
+			currentNodeMajor >= /** @type {number} */ (/** @type {unknown} */ (major))
+		) {
 			return majors[major];
 		}
 	}
@@ -21,64 +36,83 @@ const getLatestMatchingNode = ({ default: defaultNode, ...majors }) => {
 	return defaultNode;
 };
 
-const expectMessage = (...args) =>
+const expectMessage = (
+	/** @type {(string | RegExp | Record<string, unknown>)[]} */ ...args
+) =>
 	new RegExp(
 		args
 			.map((rawValue) => {
 				const value =
 					rawValue.constructor === Object
-						? getLatestMatchingNode(rawValue)
+						? getLatestMatchingNode(
+								/** @type {Record<string, unknown> & { default?: unknown }} */ (
+									rawValue
+								)
+							)
 						: rawValue;
 				return value instanceof RegExp ? value.source : value;
 			})
 			.join("")
 	);
 
-const jsonThrows = (data, ...args) => {
+const jsonThrows = (
+	/** @type {unknown} */ data,
+	/** @type {unknown[]} */ ...args
+) => {
+	/** @type {number | undefined} */
 	let context;
 
 	if (typeof args[0] === "number") {
-		context = args.shift();
+		context = /** @type {number} */ (args.shift());
 	}
 
 	const expected = args[0];
 
 	// If expected is an Error constructor or instance, use it directly
 	if (typeof expected === "function" || expected instanceof Error) {
-		expect(() => parseJson(data, null, context)).toThrow(expected);
+		expect(() =>
+			/** @type {(data: unknown, reviver: null, context: number | undefined) => unknown} */ (
+				/** @type {unknown} */ (parseJson)
+			)(data, null, context)
+		).toThrow(/** @type {Error} */ (/** @type {unknown} */ (expected)));
 		return;
 	}
 
-	let err;
+	/** @type {Record<string, unknown>} */
+	let err = {};
 
 	try {
-		parseJson(data, null, context);
+		/** @type {(data: unknown, reviver: null, context: number | undefined) => unknown} */ (
+			/** @type {unknown} */ (parseJson)
+		)(data, null, context);
 	} catch (err_) {
-		err = err_;
+		err = /** @type {Record<string, unknown>} */ (err_);
 	}
 
-	if (expected.message) {
-		if (expected.message instanceof RegExp) {
-			expect(err.message).toMatch(expected.message);
+	const expectedObj = /** @type {Record<string, unknown>} */ (expected);
+
+	if (expectedObj.message) {
+		if (expectedObj.message instanceof RegExp) {
+			expect(/** @type {string} */ (err.message)).toMatch(expectedObj.message);
 		} else {
-			expect(err.message).toBe(expected.message);
+			expect(err.message).toBe(expectedObj.message);
 		}
 	}
 
-	if (expected.code) {
-		expect(err.code).toBe(expected.code);
+	if (expectedObj.code) {
+		expect(err.code).toBe(expectedObj.code);
 	}
 
-	if (expected.name) {
-		expect(err.name).toBe(expected.name);
+	if (expectedObj.name) {
+		expect(err.name).toBe(expectedObj.name);
 	}
 
-	if (expected.position !== undefined) {
-		expect(err.position).toBe(expected.position);
+	if (expectedObj.position !== undefined) {
+		expect(err.position).toBe(expectedObj.position);
 	}
 
-	if (expected.systemError) {
-		expect(err.systemError).toBeInstanceOf(expected.systemError);
+	if (expectedObj.systemError) {
+		expect(err.systemError).toBeInstanceOf(expectedObj.systemError);
 	}
 };
 
@@ -116,39 +150,50 @@ describe("parseJson", () => {
 		const data = Buffer.from(str);
 		const bom = Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), data]);
 
-		expect(JSON.stringify(parseJson(data))).toBe(str);
-		expect(JSON.stringify(parseJson(bom))).toBe(str);
-	});
-
-	it("better errors when faced with repeated BOM bytes and trailing \\b characters", () => {
-		const str = JSON.stringify({
-			foo: 1,
-			bar: {
-				baz: [1, 2, 3, "four"]
-			}
-		});
-		const doubleBomBuffer = Buffer.concat([
-			Buffer.from([0xef, 0xbb, 0xbf, 0xef, 0xbb, 0xbf]),
-			Buffer.from(str)
-		]);
-
-		jsonThrows(doubleBomBuffer.toString(), {
-			message: /Unexpected token "." \(0xFEFF\)/
-		});
-
-		jsonThrows(`${str}\b\b\b\b\b\b\b\b\b\b\b\b`, {
-			message: expectMessage(
-				"Unexpected ",
-				{
-					20: "non-whitespace character after JSON",
-					default: /token "\\b" \(0x08\) in JSON/
-				},
-				/ at position.*\\b"/
+		expect(
+			JSON.stringify(
+				parseJson(/** @type {string} */ (/** @type {unknown} */ (data)))
 			)
-		});
+		).toBe(str);
+		expect(
+			JSON.stringify(
+				parseJson(/** @type {string} */ (/** @type {unknown} */ (bom)))
+			)
+		).toBe(str);
 	});
 
-	it("throws SyntaxError for unexpected token", () => {
+	itSkipBun(
+		"better errors when faced with repeated BOM bytes and trailing \\b characters",
+		() => {
+			const str = JSON.stringify({
+				foo: 1,
+				bar: {
+					baz: [1, 2, 3, "four"]
+				}
+			});
+			const doubleBomBuffer = Buffer.concat([
+				Buffer.from([0xef, 0xbb, 0xbf, 0xef, 0xbb, 0xbf]),
+				Buffer.from(str)
+			]);
+
+			jsonThrows(doubleBomBuffer.toString(), {
+				message: /Unexpected token "." \(0xFEFF\)/
+			});
+
+			jsonThrows(`${str}\b\b\b\b\b\b\b\b\b\b\b\b`, {
+				message: expectMessage(
+					"Unexpected ",
+					{
+						20: "non-whitespace character after JSON",
+						default: /token "\\b" \(0x08\) in JSON/
+					},
+					/ at position.*\\b"/
+				)
+			});
+		}
+	);
+
+	itSkipBun("throws SyntaxError for unexpected token", () => {
 		const data = "foo";
 
 		jsonThrows(data, {
@@ -166,7 +211,7 @@ describe("parseJson", () => {
 		});
 	});
 
-	it("throws SyntaxError for unexpected end of JSON", () => {
+	itSkipBun("throws SyntaxError for unexpected end of JSON", () => {
 		const data = '{"foo: bar}';
 
 		jsonThrows(data, {
@@ -183,7 +228,7 @@ describe("parseJson", () => {
 		});
 	});
 
-	it("throws SyntaxError for unexpected number", () => {
+	itSkipBun("throws SyntaxError for unexpected number", () => {
 		const data = "[[1,2],{3,3,3,3,3}]";
 
 		jsonThrows(data, {
@@ -200,7 +245,7 @@ describe("parseJson", () => {
 		});
 	});
 
-	it("throws SyntaxError for broken object", () => {
+	itSkipBun("throws SyntaxError for broken object", () => {
 		const data = '{"6543210';
 
 		jsonThrows(data, {
@@ -217,7 +262,7 @@ describe("parseJson", () => {
 		});
 	});
 
-	it("throws SyntaxError with characters like a string", () => {
+	itSkipBun("throws SyntaxError with characters like a string", () => {
 		const data = "abcde";
 
 		jsonThrows(data, {
@@ -239,7 +284,7 @@ describe("parseJson", () => {
 		});
 	});
 
-	it("throws for end of input", () => {
+	itSkipBun("throws for end of input", () => {
 		const data = '{"a":1,""';
 
 		jsonThrows(data, {
@@ -280,7 +325,7 @@ describe("parseJson", () => {
 		});
 	});
 
-	it("handles empty string helpfully", () => {
+	itSkipBun("handles empty string helpfully", () => {
 		jsonThrows("", {
 			message: "Unexpected end of JSON input while parsing empty string",
 			name: "JSONParseError",

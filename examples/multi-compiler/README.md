@@ -109,12 +109,6 @@ console.log("Running " + "desktop" + " build");
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -150,7 +144,7 @@ console.log("Running " + "mobile" + " build");
 
 ```
 mobile:
-  asset mobile.js 1.97 KiB [emitted] (name: main)
+  asset mobile.js 1.72 KiB [emitted] (name: main)
   chunk (runtime: main) mobile.js (main) 114 bytes [entry] [rendered]
     > ./example main
     dependent modules 20 bytes [dependent] 1 module

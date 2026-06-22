@@ -3,6 +3,8 @@
 	Author Tobias Koppers @sokra
 */
 /* globals __webpack_hash__ */
+// Universal regular-HMR client (web + Node): runs `module.hot.check` whenever a
+// `webpackHotUpdate` signal arrives on ./emitter (pushed by the dev-server).
 if (module.hot) {
 	/** @type {undefined|string} */
 	var lastHash;

@@ -161,12 +161,6 @@ for (const user of users) {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -199,7 +193,7 @@ console.log(__webpack_require__(/*! ./index */ 1));
 ## Unoptimized
 
 ```
-asset output.js 2.76 KiB [emitted] (name: main)
+asset output.js 2.51 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 939 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 906 bytes [dependent] 1 module

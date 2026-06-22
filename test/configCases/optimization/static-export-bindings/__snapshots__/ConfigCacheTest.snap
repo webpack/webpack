@@ -1,0 +1,2793 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases optimization static-export-bindings static-export-bindings should compile 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 462
+/*!**************************!*\\\\
+  !*** ./const-default.js ***!
+  \\\\**************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+// \`export { const as default }\` is immutable -> eligible for value binding
+const constDefault = \\"const-default\\";
+
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"default\\", 0, /* binding */ constDefault
+/* harmony export */ ]);
+
+
+/***/ },
+
+/***/ 660
+/*!**************************!*\\\\
+  !*** ./const-exports.js ***!
+  \\\\**************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+const literal = \\"literal\\";
+
+const local = \\"local\\";
+
+
+const source = { destructured: \\"destructured\\" };
+const { destructured } = source;
+
+const [arrayValue] = [\\"array\\"];
+
+const aliased = \\"aliased\\";
+
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"arrayValue\\", 0, /* binding */ arrayValue,
+/* harmony export */   \\"destructured\\", 0, /* binding */ destructured,
+/* harmony export */   \\"literal\\", 0, /* binding */ literal,
+/* harmony export */   \\"renamed\\", 0, /* binding */ local,
+/* harmony export */   \\"string-alias\\", 0, /* binding */ aliased
+/* harmony export */ ]);
+
+
+/***/ },
+
+/***/ 797
+/*!********************!*\\\\
+  !*** ./cycle-a.js ***!
+  \\\\********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   cyclicConst: () => (/* binding */ cyclicConst),
+/* harmony export */   readViaB: () => (/* binding */ readViaB)
+/* harmony export */ });
+/* harmony import */ var _cycle_b__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-b */ 100);
+
+
+const cyclicConst = \\"cyclic\\";
+
+function readViaB() {
+	return (0,_cycle_b__WEBPACK_IMPORTED_MODULE_0__.readFromB)();
+}
+
+
+/***/ },
+
+/***/ 100
+/*!********************!*\\\\
+  !*** ./cycle-b.js ***!
+  \\\\********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   readFromB: () => (/* binding */ readFromB)
+/* harmony export */ });
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-a */ 797);
+
+
+function readFromB() {
+	return _cycle_a__WEBPACK_IMPORTED_MODULE_0__.cyclicConst;
+}
+
+
+/***/ },
+
+/***/ 260
+/*!****************************!*\\\\
+  !*** ./default-binding.js ***!
+  \\\\****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   bumpDefault: () => (/* binding */ bumpDefault),
+/* harmony export */   \\"default\\": () => (/* binding */ mutableDefault)
+/* harmony export */ });
+// \`export { x as default }\` is a live binding (unlike \`export default <expr>\`)
+let mutableDefault = 0;
+function bumpDefault() {
+	mutableDefault++;
+}
+
+
+
+/***/ },
+
+/***/ 262
+/*!*************************!*\\\\
+  !*** ./default-expr.js ***!
+  \\\\*************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (42);
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"default\\", 0, /* export default binding */ __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ ]);
+
+
+/***/ },
+
+/***/ 72
+/*!****************************!*\\\\
+  !*** ./default-fn-anon.js ***!
+  \\\\****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   \\"default\\": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+__webpack_require__.dn(__WEBPACK_DEFAULT_EXPORT__);
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__() { return \\"default-anon\\"; }
+
+
+/***/ },
+
+/***/ 914
+/*!****************************!*\\\\
+  !*** ./default-fn-decl.js ***!
+  \\\\****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   \\"default\\": () => (/* binding */ fn)
+/* harmony export */ });
+function fn() { return \\"default-fn\\"; }
+
+
+/***/ },
+
+/***/ 103
+/*!*****************************!*\\\\
+  !*** ./function-exports.js ***!
+  \\\\*****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   fn: () => (/* binding */ fn),
+/* harmony export */   fn2: () => (/* binding */ fn2)
+/* harmony export */ });
+function fn() {
+	return \\"fn\\";
+}
+
+function fn2() {
+	return \\"fn2\\";
+}
+
+
+/***/ },
+
+/***/ 245
+/*!****************************!*\\\\
+  !*** ./mutable-exports.js ***!
+  \\\\****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   counter: () => (/* binding */ counter),
+/* harmony export */   increment: () => (/* binding */ increment)
+/* harmony export */ });
+let counter = 0;
+
+function increment() {
+	counter++;
+}
+
+
+/***/ },
+
+/***/ 381
+/*!**************************!*\\\\
+  !*** ./mutable-forms.js ***!
+  \\\\**************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   mutateAll: () => (/* binding */ mutateAll),
+/* harmony export */   viaAssign: () => (/* binding */ viaAssign),
+/* harmony export */   viaCompound: () => (/* binding */ viaCompound),
+/* harmony export */   viaUpdate: () => (/* binding */ viaUpdate)
+/* harmony export */ });
+// Various mutation forms on exported \`let\` must all stay observable as live bindings
+let viaAssign = 1;
+let viaCompound = 1;
+let viaUpdate = 1;
+
+function mutateAll() {
+	viaAssign = 10;
+	viaCompound += 5;
+	viaUpdate++;
+}
+
+
+/***/ },
+
+/***/ 670
+/*!***************************!*\\\\
+  !*** ./reexport-chain.js ***!
+  \\\\***************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   chainedCounter: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_1__.counter),
+/* harmony export */   chainedIncrement: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_1__.increment),
+/* harmony export */   chainedLiteral: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_0__.literal)
+/* harmony export */ });
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reexport */ 660);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport */ 245);
+// Re-export chain: this file re-exports from reexport.js which re-exports from const-exports.js
+
+// A mutable binding re-exported through two hops must stay live
+
+
+
+/***/ },
+
+/***/ 770
+/*!******************************!*\\\\
+  !*** ./reexport-circular.js ***!
+  \\\\******************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   reCircular: () => (/* reexport safe */ _cycle_a__WEBPACK_IMPORTED_MODULE_0__.cyclicConst)
+/* harmony export */ });
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-a */ 797);
+// Re-export from a circular module — should use getter
+
+
+
+/***/ },
+
+/***/ 992
+/*!***************************!*\\\\
+  !*** ./reexport-mixed.js ***!
+  \\\\***************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   reConst: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal),
+/* harmony export */   reCounter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter),
+/* harmony export */   reFn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
+/* harmony export */   reIncrement: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment)
+/* harmony export */ });
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mutable-exports */ 245);
+// Mixed: direct const export + re-exports in the same module
+const ownConst = \\"own\\";
+
+
+
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"ownConst\\", 0, /* binding */ ownConst
+/* harmony export */ ]);
+
+
+/***/ },
+
+/***/ 787
+/*!**************************!*\\\\
+  !*** ./reexport-star.js ***!
+  \\\\**************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   fn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
+/* harmony export */   fn2: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn2),
+/* harmony export */   namedConst: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal)
+/* harmony export */ });
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+// Star export mixed with named re-export — star export should prevent value binding
+
+
+
+
+/***/ },
+
+/***/ 618
+/*!*********************!*\\\\
+  !*** ./reexport.js ***!
+  \\\\*********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   arrayValue: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.arrayValue),
+/* harmony export */   counter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter),
+/* harmony export */   destructured: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.destructured),
+/* harmony export */   fn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
+/* harmony export */   increment: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment),
+/* harmony export */   literal: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal),
+/* harmony export */   renamed: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.renamed)
+/* harmony export */ });
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mutable-exports */ 245);
+
+
+
+
+
+/***/ },
+
+/***/ 973
+/*!***********************!*\\\\
+  !*** ./self-const.js ***!
+  \\\\***********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   readSelf: () => (/* binding */ readSelf),
+/* harmony export */   selfConst: () => (/* binding */ selfConst)
+/* harmony export */ });
+/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./self-const */ 973);
+// Self-cycle: const must fall back to a getter so reading via the namespace works
+
+
+const selfConst = \\"self\\";
+
+function readSelf() {
+	return _self_const__WEBPACK_IMPORTED_MODULE_0__.selfConst;
+}
+
+
+/***/ },
+
+/***/ 990
+/*!*************************!*\\\\
+  !*** ./star-mutable.js ***!
+  \\\\*************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   counter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_0__.counter),
+/* harmony export */   increment: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_0__.increment)
+/* harmony export */ });
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mutable-exports */ 245);
+// \`export *\` of a mutable binding must stay live
+
+
+
+/***/ }
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	const __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter/value functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			if(Array.isArray(definition)) {
+/******/ 				var i = 0;
+/******/ 				while(i < definition.length) {
+/******/ 					var key = definition[i++];
+/******/ 					var binding = definition[i++];
+/******/ 					if(!__webpack_require__.o(exports, key)) {
+/******/ 						if(binding === 0) {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
+/******/ 						} else {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, get: binding });
+/******/ 						}
+/******/ 					} else if(binding === 0) { i++; }
+/******/ 				}
+/******/ 			} else {
+/******/ 				for(var key in definition) {
+/******/ 					if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 					}
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/set anonymous default export name */
+/******/ 	(() => {
+/******/ 		// set .name for anonymous default exports per ES spec
+/******/ 		__webpack_require__.dn = (x) => {
+/******/ 			(Object.getOwnPropertyDescriptor(x, \\"name\\") || {}).writable || Object.defineProperty(x, \\"name\\", { value: \\"default\\", configurable: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+let __webpack_exports__ = {};
+/*!******************!*\\\\
+  !*** ./index.js ***!
+  \\\\******************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reexport-star */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport-star */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./star-mutable */ 245);
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./reexport-circular */ 797);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./reexport */ 618);
+/* harmony import */ var _reexport_chain__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./reexport-chain */ 670);
+/* harmony import */ var _reexport_mixed__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./reexport-mixed */ 992);
+/* harmony import */ var _reexport_star__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./reexport-star */ 787);
+/* harmony import */ var _reexport_circular__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./reexport-circular */ 770);
+/* harmony import */ var _default_binding__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./default-binding */ 260);
+/* harmony import */ var _const_default__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./const-default */ 462);
+/* harmony import */ var _default_expr__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./default-expr */ 262);
+/* harmony import */ var _default_fn_decl__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./default-fn-decl */ 914);
+/* harmony import */ var _default_fn_anon__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./default-fn-anon */ 72);
+/* harmony import */ var _star_mutable__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./star-mutable */ 990);
+/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./self-const */ 973);
+/* harmony import */ var _mutable_forms__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./mutable-forms */ 381);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function expectValueDescriptor(ns, key) {
+	const descriptor = Object.getOwnPropertyDescriptor(ns, key);
+	expect(descriptor.get).toBe(undefined);
+	expect(descriptor.enumerable).toBe(true);
+	expect(descriptor.writable).toBe(false);
+}
+
+function expectGetterDescriptor(ns, key) {
+	const descriptor = Object.getOwnPropertyDescriptor(ns, key);
+	expect(typeof descriptor.get).toBe(\\"function\\");
+	expect(descriptor.enumerable).toBe(true);
+	expect(Object.prototype.hasOwnProperty.call(descriptor, \\"value\\")).toBe(false);
+}
+
+// === Direct exports ===
+
+it(\\"should bind const exports as readonly values (non-circular)\\", () => {
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"literal\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"renamed\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.renamed).toBe(\\"local\\");
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"destructured\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.destructured).toBe(\\"destructured\\");
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"arrayValue\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.arrayValue).toBe(\\"array\\");
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"string-alias\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__[\\"string-alias\\"]).toBe(\\"aliased\\");
+});
+
+it(\\"should keep function exports as getters\\", () => {
+	expectGetterDescriptor(_function_exports__WEBPACK_IMPORTED_MODULE_1__, \\"fn\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn()).toBe(\\"fn\\");
+	expectGetterDescriptor(_function_exports__WEBPACK_IMPORTED_MODULE_1__, \\"fn2\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn2()).toBe(\\"fn2\\");
+});
+
+it(\\"should keep mutable exports as getters\\", () => {
+	expectGetterDescriptor(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__, \\"counter\\");
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(0);
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(1);
+});
+
+it(\\"should work correctly with circular modules\\", () => {
+	expect(_cycle_a__WEBPACK_IMPORTED_MODULE_3__.cyclicConst).toBe(\\"cyclic\\");
+	expect(_cycle_a__WEBPACK_IMPORTED_MODULE_3__.readViaB()).toBe(\\"cyclic\\");
+});
+
+// === Re-exports (all use getters — re-export optimization not yet supported) ===
+
+it(\\"should keep re-exported const as getter\\", () => {
+	expectGetterDescriptor(_reexport__WEBPACK_IMPORTED_MODULE_4__, \\"literal\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+});
+
+it(\\"should keep re-exported function as getter\\", () => {
+	expectGetterDescriptor(_reexport__WEBPACK_IMPORTED_MODULE_4__, \\"fn\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn()).toBe(\\"fn\\");
+});
+
+it(\\"should keep re-exported mutable as getter with live binding\\", () => {
+	expectGetterDescriptor(_reexport__WEBPACK_IMPORTED_MODULE_4__, \\"counter\\");
+	const before = _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter;
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(before + 1);
+});
+
+it(\\"should use getter for multi-level re-export chain\\", () => {
+	expectGetterDescriptor(_reexport_chain__WEBPACK_IMPORTED_MODULE_5__, \\"chainedLiteral\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+});
+
+it(\\"should bind own const as value in mixed module\\", () => {
+	expectValueDescriptor(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__, \\"ownConst\\");
+	expect(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__.ownConst).toBe(\\"own\\");
+});
+
+it(\\"should keep re-exported values in mixed module\\", () => {
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn()).toBe(\\"fn\\");
+});
+
+it(\\"should keep re-exported mutable as live binding in mixed module\\", () => {
+	const before = _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter;
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(before + 1);
+});
+
+it(\\"should use getter for named re-export with export *\\", () => {
+	expectGetterDescriptor(_reexport_star__WEBPACK_IMPORTED_MODULE_7__, \\"namedConst\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+});
+
+it(\\"should keep star-exported function as getter\\", () => {
+	expectGetterDescriptor(_reexport_star__WEBPACK_IMPORTED_MODULE_7__, \\"fn\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn()).toBe(\\"fn\\");
+});
+
+it(\\"should use getter for re-export from circular module\\", () => {
+	expectGetterDescriptor(_reexport_circular__WEBPACK_IMPORTED_MODULE_8__, \\"reCircular\\");
+	expect(_cycle_a__WEBPACK_IMPORTED_MODULE_3__.cyclicConst).toBe(\\"cyclic\\");
+});
+
+// === Live-binding edge cases ===
+
+it(\\"should keep \`export { let as default }\` as a live binding\\", () => {
+	expectGetterDescriptor(_default_binding__WEBPACK_IMPORTED_MODULE_9__, \\"default\\");
+	expect(_default_binding__WEBPACK_IMPORTED_MODULE_9__[\\"default\\"]).toBe(0);
+	_default_binding__WEBPACK_IMPORTED_MODULE_9__.bumpDefault();
+	expect(_default_binding__WEBPACK_IMPORTED_MODULE_9__[\\"default\\"]).toBe(1);
+});
+
+it(\\"should bind \`export { const as default }\` as a value\\", () => {
+	expectValueDescriptor(_const_default__WEBPACK_IMPORTED_MODULE_10__, \\"default\\");
+	expect(_const_default__WEBPACK_IMPORTED_MODULE_10__[\\"default\\"]).toBe(\\"const-default\\");
+});
+
+it(\\"should bind \`export default expression\` as a value\\", () => {
+	expectValueDescriptor(_default_expr__WEBPACK_IMPORTED_MODULE_11__, \\"default\\");
+	expect(_default_expr__WEBPACK_IMPORTED_MODULE_11__[\\"default\\"]).toBe(42);
+});
+
+it(\\"should keep \`export default function fn(){}\` as getter\\", () => {
+	expectGetterDescriptor(_default_fn_decl__WEBPACK_IMPORTED_MODULE_12__, \\"default\\");
+	expect(_default_fn_decl__WEBPACK_IMPORTED_MODULE_12__[\\"default\\"]()).toBe(\\"default-fn\\");
+});
+
+it(\\"should keep \`export default function(){}\` as getter\\", () => {
+	expectGetterDescriptor(_default_fn_anon__WEBPACK_IMPORTED_MODULE_13__, \\"default\\");
+	expect(_default_fn_anon__WEBPACK_IMPORTED_MODULE_13__[\\"default\\"]()).toBe(\\"default-anon\\");
+});
+
+it(\\"should keep mutable binding live through \`export *\`\\", () => {
+	expectGetterDescriptor(_star_mutable__WEBPACK_IMPORTED_MODULE_14__, \\"counter\\");
+	const before = _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter;
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(before + 1);
+});
+
+it(\\"should keep mutable binding live through a two-hop re-export chain\\", () => {
+	expectGetterDescriptor(_reexport_chain__WEBPACK_IMPORTED_MODULE_5__, \\"chainedCounter\\");
+	const before = _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter;
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(before + 1);
+});
+
+it(\\"should fall back to getter for const in a self-cycle and read correctly\\", () => {
+	expectGetterDescriptor(_self_const__WEBPACK_IMPORTED_MODULE_15__, \\"selfConst\\");
+	expect(_self_const__WEBPACK_IMPORTED_MODULE_15__.selfConst).toBe(\\"self\\");
+	expect(_self_const__WEBPACK_IMPORTED_MODULE_15__.readSelf()).toBe(\\"self\\");
+});
+
+it(\\"should observe every mutation form (assign, compound, update) as live\\", () => {
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaAssign).toBe(1);
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaCompound).toBe(1);
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaUpdate).toBe(1);
+	_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.mutateAll();
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaAssign).toBe(10);
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaCompound).toBe(6);
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaUpdate).toBe(2);
+});
+
+it(\\"should enumerate value-bound and getter exports together\\", () => {
+	expect(Object.keys(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__).sort()).toEqual([
+		\\"mutateAll\\",
+		\\"viaAssign\\",
+		\\"viaCompound\\",
+		\\"viaUpdate\\"
+	]);
+	expect(Object.keys(_const_exports__WEBPACK_IMPORTED_MODULE_0__).sort()).toEqual([
+		\\"arrayValue\\",
+		\\"destructured\\",
+		\\"literal\\",
+		\\"renamed\\",
+		\\"string-alias\\"
+	]);
+});
+
+/******/ })()
+;"
+`;
+
+exports[`ConfigCacheTestCases optimization static-export-bindings static-export-bindings should compile 2`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 462
+/*!**************************!*\\\\
+  !*** ./const-default.js ***!
+  \\\\**************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+// \`export { const as default }\` is immutable -> eligible for value binding
+const constDefault = \\"const-default\\";
+
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"default\\", 0, /* binding */ constDefault
+/* harmony export */ ]);
+
+
+/***/ },
+
+/***/ 660
+/*!**************************!*\\\\
+  !*** ./const-exports.js ***!
+  \\\\**************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+const literal = \\"literal\\";
+
+const local = \\"local\\";
+
+
+const source = { destructured: \\"destructured\\" };
+const { destructured } = source;
+
+const [arrayValue] = [\\"array\\"];
+
+const aliased = \\"aliased\\";
+
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"arrayValue\\", 0, /* binding */ arrayValue,
+/* harmony export */   \\"destructured\\", 0, /* binding */ destructured,
+/* harmony export */   \\"literal\\", 0, /* binding */ literal,
+/* harmony export */   \\"renamed\\", 0, /* binding */ local,
+/* harmony export */   \\"string-alias\\", 0, /* binding */ aliased
+/* harmony export */ ]);
+
+
+/***/ },
+
+/***/ 797
+/*!********************!*\\\\
+  !*** ./cycle-a.js ***!
+  \\\\********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   cyclicConst: () => (/* binding */ cyclicConst),
+/* harmony export */   readViaB: () => (/* binding */ readViaB)
+/* harmony export */ });
+/* harmony import */ var _cycle_b__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-b */ 100);
+
+
+const cyclicConst = \\"cyclic\\";
+
+function readViaB() {
+	return (0,_cycle_b__WEBPACK_IMPORTED_MODULE_0__.readFromB)();
+}
+
+
+/***/ },
+
+/***/ 100
+/*!********************!*\\\\
+  !*** ./cycle-b.js ***!
+  \\\\********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   readFromB: () => (/* binding */ readFromB)
+/* harmony export */ });
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-a */ 797);
+
+
+function readFromB() {
+	return _cycle_a__WEBPACK_IMPORTED_MODULE_0__.cyclicConst;
+}
+
+
+/***/ },
+
+/***/ 260
+/*!****************************!*\\\\
+  !*** ./default-binding.js ***!
+  \\\\****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   bumpDefault: () => (/* binding */ bumpDefault),
+/* harmony export */   \\"default\\": () => (/* binding */ mutableDefault)
+/* harmony export */ });
+// \`export { x as default }\` is a live binding (unlike \`export default <expr>\`)
+let mutableDefault = 0;
+function bumpDefault() {
+	mutableDefault++;
+}
+
+
+
+/***/ },
+
+/***/ 262
+/*!*************************!*\\\\
+  !*** ./default-expr.js ***!
+  \\\\*************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (42);
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"default\\", 0, /* export default binding */ __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ ]);
+
+
+/***/ },
+
+/***/ 72
+/*!****************************!*\\\\
+  !*** ./default-fn-anon.js ***!
+  \\\\****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   \\"default\\": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+__webpack_require__.dn(__WEBPACK_DEFAULT_EXPORT__);
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__() { return \\"default-anon\\"; }
+
+
+/***/ },
+
+/***/ 914
+/*!****************************!*\\\\
+  !*** ./default-fn-decl.js ***!
+  \\\\****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   \\"default\\": () => (/* binding */ fn)
+/* harmony export */ });
+function fn() { return \\"default-fn\\"; }
+
+
+/***/ },
+
+/***/ 103
+/*!*****************************!*\\\\
+  !*** ./function-exports.js ***!
+  \\\\*****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   fn: () => (/* binding */ fn),
+/* harmony export */   fn2: () => (/* binding */ fn2)
+/* harmony export */ });
+function fn() {
+	return \\"fn\\";
+}
+
+function fn2() {
+	return \\"fn2\\";
+}
+
+
+/***/ },
+
+/***/ 245
+/*!****************************!*\\\\
+  !*** ./mutable-exports.js ***!
+  \\\\****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   counter: () => (/* binding */ counter),
+/* harmony export */   increment: () => (/* binding */ increment)
+/* harmony export */ });
+let counter = 0;
+
+function increment() {
+	counter++;
+}
+
+
+/***/ },
+
+/***/ 381
+/*!**************************!*\\\\
+  !*** ./mutable-forms.js ***!
+  \\\\**************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   mutateAll: () => (/* binding */ mutateAll),
+/* harmony export */   viaAssign: () => (/* binding */ viaAssign),
+/* harmony export */   viaCompound: () => (/* binding */ viaCompound),
+/* harmony export */   viaUpdate: () => (/* binding */ viaUpdate)
+/* harmony export */ });
+// Various mutation forms on exported \`let\` must all stay observable as live bindings
+let viaAssign = 1;
+let viaCompound = 1;
+let viaUpdate = 1;
+
+function mutateAll() {
+	viaAssign = 10;
+	viaCompound += 5;
+	viaUpdate++;
+}
+
+
+/***/ },
+
+/***/ 670
+/*!***************************!*\\\\
+  !*** ./reexport-chain.js ***!
+  \\\\***************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   chainedCounter: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_1__.counter),
+/* harmony export */   chainedIncrement: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_1__.increment),
+/* harmony export */   chainedLiteral: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_0__.literal)
+/* harmony export */ });
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reexport */ 660);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport */ 245);
+// Re-export chain: this file re-exports from reexport.js which re-exports from const-exports.js
+
+// A mutable binding re-exported through two hops must stay live
+
+
+
+/***/ },
+
+/***/ 770
+/*!******************************!*\\\\
+  !*** ./reexport-circular.js ***!
+  \\\\******************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   reCircular: () => (/* reexport safe */ _cycle_a__WEBPACK_IMPORTED_MODULE_0__.cyclicConst)
+/* harmony export */ });
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-a */ 797);
+// Re-export from a circular module — should use getter
+
+
+
+/***/ },
+
+/***/ 992
+/*!***************************!*\\\\
+  !*** ./reexport-mixed.js ***!
+  \\\\***************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   reConst: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal),
+/* harmony export */   reCounter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter),
+/* harmony export */   reFn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
+/* harmony export */   reIncrement: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment)
+/* harmony export */ });
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mutable-exports */ 245);
+// Mixed: direct const export + re-exports in the same module
+const ownConst = \\"own\\";
+
+
+
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"ownConst\\", 0, /* binding */ ownConst
+/* harmony export */ ]);
+
+
+/***/ },
+
+/***/ 787
+/*!**************************!*\\\\
+  !*** ./reexport-star.js ***!
+  \\\\**************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   fn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
+/* harmony export */   fn2: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn2),
+/* harmony export */   namedConst: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal)
+/* harmony export */ });
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+// Star export mixed with named re-export — star export should prevent value binding
+
+
+
+
+/***/ },
+
+/***/ 618
+/*!*********************!*\\\\
+  !*** ./reexport.js ***!
+  \\\\*********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   arrayValue: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.arrayValue),
+/* harmony export */   counter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter),
+/* harmony export */   destructured: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.destructured),
+/* harmony export */   fn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
+/* harmony export */   increment: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment),
+/* harmony export */   literal: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal),
+/* harmony export */   renamed: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.renamed)
+/* harmony export */ });
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mutable-exports */ 245);
+
+
+
+
+
+/***/ },
+
+/***/ 973
+/*!***********************!*\\\\
+  !*** ./self-const.js ***!
+  \\\\***********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   readSelf: () => (/* binding */ readSelf),
+/* harmony export */   selfConst: () => (/* binding */ selfConst)
+/* harmony export */ });
+/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./self-const */ 973);
+// Self-cycle: const must fall back to a getter so reading via the namespace works
+
+
+const selfConst = \\"self\\";
+
+function readSelf() {
+	return _self_const__WEBPACK_IMPORTED_MODULE_0__.selfConst;
+}
+
+
+/***/ },
+
+/***/ 990
+/*!*************************!*\\\\
+  !*** ./star-mutable.js ***!
+  \\\\*************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   counter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_0__.counter),
+/* harmony export */   increment: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_0__.increment)
+/* harmony export */ });
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mutable-exports */ 245);
+// \`export *\` of a mutable binding must stay live
+
+
+
+/***/ }
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	const __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter/value functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			if(Array.isArray(definition)) {
+/******/ 				var i = 0;
+/******/ 				while(i < definition.length) {
+/******/ 					var key = definition[i++];
+/******/ 					var binding = definition[i++];
+/******/ 					if(!__webpack_require__.o(exports, key)) {
+/******/ 						if(binding === 0) {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
+/******/ 						} else {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, get: binding });
+/******/ 						}
+/******/ 					} else if(binding === 0) { i++; }
+/******/ 				}
+/******/ 			} else {
+/******/ 				for(var key in definition) {
+/******/ 					if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 					}
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/set anonymous default export name */
+/******/ 	(() => {
+/******/ 		// set .name for anonymous default exports per ES spec
+/******/ 		__webpack_require__.dn = (x) => {
+/******/ 			(Object.getOwnPropertyDescriptor(x, \\"name\\") || {}).writable || Object.defineProperty(x, \\"name\\", { value: \\"default\\", configurable: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+let __webpack_exports__ = {};
+/*!******************!*\\\\
+  !*** ./index.js ***!
+  \\\\******************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reexport-star */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport-star */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./star-mutable */ 245);
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./reexport-circular */ 797);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./reexport */ 618);
+/* harmony import */ var _reexport_chain__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./reexport-chain */ 670);
+/* harmony import */ var _reexport_mixed__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./reexport-mixed */ 992);
+/* harmony import */ var _reexport_star__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./reexport-star */ 787);
+/* harmony import */ var _reexport_circular__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./reexport-circular */ 770);
+/* harmony import */ var _default_binding__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./default-binding */ 260);
+/* harmony import */ var _const_default__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./const-default */ 462);
+/* harmony import */ var _default_expr__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./default-expr */ 262);
+/* harmony import */ var _default_fn_decl__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./default-fn-decl */ 914);
+/* harmony import */ var _default_fn_anon__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./default-fn-anon */ 72);
+/* harmony import */ var _star_mutable__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./star-mutable */ 990);
+/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./self-const */ 973);
+/* harmony import */ var _mutable_forms__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./mutable-forms */ 381);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function expectValueDescriptor(ns, key) {
+	const descriptor = Object.getOwnPropertyDescriptor(ns, key);
+	expect(descriptor.get).toBe(undefined);
+	expect(descriptor.enumerable).toBe(true);
+	expect(descriptor.writable).toBe(false);
+}
+
+function expectGetterDescriptor(ns, key) {
+	const descriptor = Object.getOwnPropertyDescriptor(ns, key);
+	expect(typeof descriptor.get).toBe(\\"function\\");
+	expect(descriptor.enumerable).toBe(true);
+	expect(Object.prototype.hasOwnProperty.call(descriptor, \\"value\\")).toBe(false);
+}
+
+// === Direct exports ===
+
+it(\\"should bind const exports as readonly values (non-circular)\\", () => {
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"literal\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"renamed\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.renamed).toBe(\\"local\\");
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"destructured\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.destructured).toBe(\\"destructured\\");
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"arrayValue\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.arrayValue).toBe(\\"array\\");
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"string-alias\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__[\\"string-alias\\"]).toBe(\\"aliased\\");
+});
+
+it(\\"should keep function exports as getters\\", () => {
+	expectGetterDescriptor(_function_exports__WEBPACK_IMPORTED_MODULE_1__, \\"fn\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn()).toBe(\\"fn\\");
+	expectGetterDescriptor(_function_exports__WEBPACK_IMPORTED_MODULE_1__, \\"fn2\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn2()).toBe(\\"fn2\\");
+});
+
+it(\\"should keep mutable exports as getters\\", () => {
+	expectGetterDescriptor(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__, \\"counter\\");
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(0);
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(1);
+});
+
+it(\\"should work correctly with circular modules\\", () => {
+	expect(_cycle_a__WEBPACK_IMPORTED_MODULE_3__.cyclicConst).toBe(\\"cyclic\\");
+	expect(_cycle_a__WEBPACK_IMPORTED_MODULE_3__.readViaB()).toBe(\\"cyclic\\");
+});
+
+// === Re-exports (all use getters — re-export optimization not yet supported) ===
+
+it(\\"should keep re-exported const as getter\\", () => {
+	expectGetterDescriptor(_reexport__WEBPACK_IMPORTED_MODULE_4__, \\"literal\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+});
+
+it(\\"should keep re-exported function as getter\\", () => {
+	expectGetterDescriptor(_reexport__WEBPACK_IMPORTED_MODULE_4__, \\"fn\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn()).toBe(\\"fn\\");
+});
+
+it(\\"should keep re-exported mutable as getter with live binding\\", () => {
+	expectGetterDescriptor(_reexport__WEBPACK_IMPORTED_MODULE_4__, \\"counter\\");
+	const before = _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter;
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(before + 1);
+});
+
+it(\\"should use getter for multi-level re-export chain\\", () => {
+	expectGetterDescriptor(_reexport_chain__WEBPACK_IMPORTED_MODULE_5__, \\"chainedLiteral\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+});
+
+it(\\"should bind own const as value in mixed module\\", () => {
+	expectValueDescriptor(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__, \\"ownConst\\");
+	expect(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__.ownConst).toBe(\\"own\\");
+});
+
+it(\\"should keep re-exported values in mixed module\\", () => {
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn()).toBe(\\"fn\\");
+});
+
+it(\\"should keep re-exported mutable as live binding in mixed module\\", () => {
+	const before = _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter;
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(before + 1);
+});
+
+it(\\"should use getter for named re-export with export *\\", () => {
+	expectGetterDescriptor(_reexport_star__WEBPACK_IMPORTED_MODULE_7__, \\"namedConst\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+});
+
+it(\\"should keep star-exported function as getter\\", () => {
+	expectGetterDescriptor(_reexport_star__WEBPACK_IMPORTED_MODULE_7__, \\"fn\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn()).toBe(\\"fn\\");
+});
+
+it(\\"should use getter for re-export from circular module\\", () => {
+	expectGetterDescriptor(_reexport_circular__WEBPACK_IMPORTED_MODULE_8__, \\"reCircular\\");
+	expect(_cycle_a__WEBPACK_IMPORTED_MODULE_3__.cyclicConst).toBe(\\"cyclic\\");
+});
+
+// === Live-binding edge cases ===
+
+it(\\"should keep \`export { let as default }\` as a live binding\\", () => {
+	expectGetterDescriptor(_default_binding__WEBPACK_IMPORTED_MODULE_9__, \\"default\\");
+	expect(_default_binding__WEBPACK_IMPORTED_MODULE_9__[\\"default\\"]).toBe(0);
+	_default_binding__WEBPACK_IMPORTED_MODULE_9__.bumpDefault();
+	expect(_default_binding__WEBPACK_IMPORTED_MODULE_9__[\\"default\\"]).toBe(1);
+});
+
+it(\\"should bind \`export { const as default }\` as a value\\", () => {
+	expectValueDescriptor(_const_default__WEBPACK_IMPORTED_MODULE_10__, \\"default\\");
+	expect(_const_default__WEBPACK_IMPORTED_MODULE_10__[\\"default\\"]).toBe(\\"const-default\\");
+});
+
+it(\\"should bind \`export default expression\` as a value\\", () => {
+	expectValueDescriptor(_default_expr__WEBPACK_IMPORTED_MODULE_11__, \\"default\\");
+	expect(_default_expr__WEBPACK_IMPORTED_MODULE_11__[\\"default\\"]).toBe(42);
+});
+
+it(\\"should keep \`export default function fn(){}\` as getter\\", () => {
+	expectGetterDescriptor(_default_fn_decl__WEBPACK_IMPORTED_MODULE_12__, \\"default\\");
+	expect(_default_fn_decl__WEBPACK_IMPORTED_MODULE_12__[\\"default\\"]()).toBe(\\"default-fn\\");
+});
+
+it(\\"should keep \`export default function(){}\` as getter\\", () => {
+	expectGetterDescriptor(_default_fn_anon__WEBPACK_IMPORTED_MODULE_13__, \\"default\\");
+	expect(_default_fn_anon__WEBPACK_IMPORTED_MODULE_13__[\\"default\\"]()).toBe(\\"default-anon\\");
+});
+
+it(\\"should keep mutable binding live through \`export *\`\\", () => {
+	expectGetterDescriptor(_star_mutable__WEBPACK_IMPORTED_MODULE_14__, \\"counter\\");
+	const before = _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter;
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(before + 1);
+});
+
+it(\\"should keep mutable binding live through a two-hop re-export chain\\", () => {
+	expectGetterDescriptor(_reexport_chain__WEBPACK_IMPORTED_MODULE_5__, \\"chainedCounter\\");
+	const before = _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter;
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(before + 1);
+});
+
+it(\\"should fall back to getter for const in a self-cycle and read correctly\\", () => {
+	expectGetterDescriptor(_self_const__WEBPACK_IMPORTED_MODULE_15__, \\"selfConst\\");
+	expect(_self_const__WEBPACK_IMPORTED_MODULE_15__.selfConst).toBe(\\"self\\");
+	expect(_self_const__WEBPACK_IMPORTED_MODULE_15__.readSelf()).toBe(\\"self\\");
+});
+
+it(\\"should observe every mutation form (assign, compound, update) as live\\", () => {
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaAssign).toBe(1);
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaCompound).toBe(1);
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaUpdate).toBe(1);
+	_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.mutateAll();
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaAssign).toBe(10);
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaCompound).toBe(6);
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaUpdate).toBe(2);
+});
+
+it(\\"should enumerate value-bound and getter exports together\\", () => {
+	expect(Object.keys(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__).sort()).toEqual([
+		\\"mutateAll\\",
+		\\"viaAssign\\",
+		\\"viaCompound\\",
+		\\"viaUpdate\\"
+	]);
+	expect(Object.keys(_const_exports__WEBPACK_IMPORTED_MODULE_0__).sort()).toEqual([
+		\\"arrayValue\\",
+		\\"destructured\\",
+		\\"literal\\",
+		\\"renamed\\",
+		\\"string-alias\\"
+	]);
+});
+
+/******/ })()
+;"
+`;
+
+exports[`ConfigCacheTestCases optimization static-export-bindings static-export-bindings should pre-compile to fill disk cache (1st) 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 462
+/*!**************************!*\\\\
+  !*** ./const-default.js ***!
+  \\\\**************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+// \`export { const as default }\` is immutable -> eligible for value binding
+const constDefault = \\"const-default\\";
+
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"default\\", 0, /* binding */ constDefault
+/* harmony export */ ]);
+
+
+/***/ },
+
+/***/ 660
+/*!**************************!*\\\\
+  !*** ./const-exports.js ***!
+  \\\\**************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+const literal = \\"literal\\";
+
+const local = \\"local\\";
+
+
+const source = { destructured: \\"destructured\\" };
+const { destructured } = source;
+
+const [arrayValue] = [\\"array\\"];
+
+const aliased = \\"aliased\\";
+
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"arrayValue\\", 0, /* binding */ arrayValue,
+/* harmony export */   \\"destructured\\", 0, /* binding */ destructured,
+/* harmony export */   \\"literal\\", 0, /* binding */ literal,
+/* harmony export */   \\"renamed\\", 0, /* binding */ local,
+/* harmony export */   \\"string-alias\\", 0, /* binding */ aliased
+/* harmony export */ ]);
+
+
+/***/ },
+
+/***/ 797
+/*!********************!*\\\\
+  !*** ./cycle-a.js ***!
+  \\\\********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   cyclicConst: () => (/* binding */ cyclicConst),
+/* harmony export */   readViaB: () => (/* binding */ readViaB)
+/* harmony export */ });
+/* harmony import */ var _cycle_b__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-b */ 100);
+
+
+const cyclicConst = \\"cyclic\\";
+
+function readViaB() {
+	return (0,_cycle_b__WEBPACK_IMPORTED_MODULE_0__.readFromB)();
+}
+
+
+/***/ },
+
+/***/ 100
+/*!********************!*\\\\
+  !*** ./cycle-b.js ***!
+  \\\\********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   readFromB: () => (/* binding */ readFromB)
+/* harmony export */ });
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-a */ 797);
+
+
+function readFromB() {
+	return _cycle_a__WEBPACK_IMPORTED_MODULE_0__.cyclicConst;
+}
+
+
+/***/ },
+
+/***/ 260
+/*!****************************!*\\\\
+  !*** ./default-binding.js ***!
+  \\\\****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   bumpDefault: () => (/* binding */ bumpDefault),
+/* harmony export */   \\"default\\": () => (/* binding */ mutableDefault)
+/* harmony export */ });
+// \`export { x as default }\` is a live binding (unlike \`export default <expr>\`)
+let mutableDefault = 0;
+function bumpDefault() {
+	mutableDefault++;
+}
+
+
+
+/***/ },
+
+/***/ 262
+/*!*************************!*\\\\
+  !*** ./default-expr.js ***!
+  \\\\*************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (42);
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"default\\", 0, /* export default binding */ __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ ]);
+
+
+/***/ },
+
+/***/ 72
+/*!****************************!*\\\\
+  !*** ./default-fn-anon.js ***!
+  \\\\****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   \\"default\\": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+__webpack_require__.dn(__WEBPACK_DEFAULT_EXPORT__);
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__() { return \\"default-anon\\"; }
+
+
+/***/ },
+
+/***/ 914
+/*!****************************!*\\\\
+  !*** ./default-fn-decl.js ***!
+  \\\\****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   \\"default\\": () => (/* binding */ fn)
+/* harmony export */ });
+function fn() { return \\"default-fn\\"; }
+
+
+/***/ },
+
+/***/ 103
+/*!*****************************!*\\\\
+  !*** ./function-exports.js ***!
+  \\\\*****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   fn: () => (/* binding */ fn),
+/* harmony export */   fn2: () => (/* binding */ fn2)
+/* harmony export */ });
+function fn() {
+	return \\"fn\\";
+}
+
+function fn2() {
+	return \\"fn2\\";
+}
+
+
+/***/ },
+
+/***/ 245
+/*!****************************!*\\\\
+  !*** ./mutable-exports.js ***!
+  \\\\****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   counter: () => (/* binding */ counter),
+/* harmony export */   increment: () => (/* binding */ increment)
+/* harmony export */ });
+let counter = 0;
+
+function increment() {
+	counter++;
+}
+
+
+/***/ },
+
+/***/ 381
+/*!**************************!*\\\\
+  !*** ./mutable-forms.js ***!
+  \\\\**************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   mutateAll: () => (/* binding */ mutateAll),
+/* harmony export */   viaAssign: () => (/* binding */ viaAssign),
+/* harmony export */   viaCompound: () => (/* binding */ viaCompound),
+/* harmony export */   viaUpdate: () => (/* binding */ viaUpdate)
+/* harmony export */ });
+// Various mutation forms on exported \`let\` must all stay observable as live bindings
+let viaAssign = 1;
+let viaCompound = 1;
+let viaUpdate = 1;
+
+function mutateAll() {
+	viaAssign = 10;
+	viaCompound += 5;
+	viaUpdate++;
+}
+
+
+/***/ },
+
+/***/ 670
+/*!***************************!*\\\\
+  !*** ./reexport-chain.js ***!
+  \\\\***************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   chainedCounter: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_1__.counter),
+/* harmony export */   chainedIncrement: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_1__.increment),
+/* harmony export */   chainedLiteral: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_0__.literal)
+/* harmony export */ });
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reexport */ 660);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport */ 245);
+// Re-export chain: this file re-exports from reexport.js which re-exports from const-exports.js
+
+// A mutable binding re-exported through two hops must stay live
+
+
+
+/***/ },
+
+/***/ 770
+/*!******************************!*\\\\
+  !*** ./reexport-circular.js ***!
+  \\\\******************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   reCircular: () => (/* reexport safe */ _cycle_a__WEBPACK_IMPORTED_MODULE_0__.cyclicConst)
+/* harmony export */ });
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-a */ 797);
+// Re-export from a circular module — should use getter
+
+
+
+/***/ },
+
+/***/ 992
+/*!***************************!*\\\\
+  !*** ./reexport-mixed.js ***!
+  \\\\***************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   reConst: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal),
+/* harmony export */   reCounter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter),
+/* harmony export */   reFn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
+/* harmony export */   reIncrement: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment)
+/* harmony export */ });
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mutable-exports */ 245);
+// Mixed: direct const export + re-exports in the same module
+const ownConst = \\"own\\";
+
+
+
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"ownConst\\", 0, /* binding */ ownConst
+/* harmony export */ ]);
+
+
+/***/ },
+
+/***/ 787
+/*!**************************!*\\\\
+  !*** ./reexport-star.js ***!
+  \\\\**************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   fn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
+/* harmony export */   fn2: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn2),
+/* harmony export */   namedConst: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal)
+/* harmony export */ });
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+// Star export mixed with named re-export — star export should prevent value binding
+
+
+
+
+/***/ },
+
+/***/ 618
+/*!*********************!*\\\\
+  !*** ./reexport.js ***!
+  \\\\*********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   arrayValue: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.arrayValue),
+/* harmony export */   counter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter),
+/* harmony export */   destructured: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.destructured),
+/* harmony export */   fn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
+/* harmony export */   increment: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment),
+/* harmony export */   literal: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal),
+/* harmony export */   renamed: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.renamed)
+/* harmony export */ });
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mutable-exports */ 245);
+
+
+
+
+
+/***/ },
+
+/***/ 973
+/*!***********************!*\\\\
+  !*** ./self-const.js ***!
+  \\\\***********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   readSelf: () => (/* binding */ readSelf),
+/* harmony export */   selfConst: () => (/* binding */ selfConst)
+/* harmony export */ });
+/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./self-const */ 973);
+// Self-cycle: const must fall back to a getter so reading via the namespace works
+
+
+const selfConst = \\"self\\";
+
+function readSelf() {
+	return _self_const__WEBPACK_IMPORTED_MODULE_0__.selfConst;
+}
+
+
+/***/ },
+
+/***/ 990
+/*!*************************!*\\\\
+  !*** ./star-mutable.js ***!
+  \\\\*************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   counter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_0__.counter),
+/* harmony export */   increment: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_0__.increment)
+/* harmony export */ });
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mutable-exports */ 245);
+// \`export *\` of a mutable binding must stay live
+
+
+
+/***/ }
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	const __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter/value functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			if(Array.isArray(definition)) {
+/******/ 				var i = 0;
+/******/ 				while(i < definition.length) {
+/******/ 					var key = definition[i++];
+/******/ 					var binding = definition[i++];
+/******/ 					if(!__webpack_require__.o(exports, key)) {
+/******/ 						if(binding === 0) {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
+/******/ 						} else {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, get: binding });
+/******/ 						}
+/******/ 					} else if(binding === 0) { i++; }
+/******/ 				}
+/******/ 			} else {
+/******/ 				for(var key in definition) {
+/******/ 					if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 					}
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/set anonymous default export name */
+/******/ 	(() => {
+/******/ 		// set .name for anonymous default exports per ES spec
+/******/ 		__webpack_require__.dn = (x) => {
+/******/ 			(Object.getOwnPropertyDescriptor(x, \\"name\\") || {}).writable || Object.defineProperty(x, \\"name\\", { value: \\"default\\", configurable: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+let __webpack_exports__ = {};
+/*!******************!*\\\\
+  !*** ./index.js ***!
+  \\\\******************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reexport-star */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport-star */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./star-mutable */ 245);
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./reexport-circular */ 797);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./reexport */ 618);
+/* harmony import */ var _reexport_chain__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./reexport-chain */ 670);
+/* harmony import */ var _reexport_mixed__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./reexport-mixed */ 992);
+/* harmony import */ var _reexport_star__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./reexport-star */ 787);
+/* harmony import */ var _reexport_circular__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./reexport-circular */ 770);
+/* harmony import */ var _default_binding__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./default-binding */ 260);
+/* harmony import */ var _const_default__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./const-default */ 462);
+/* harmony import */ var _default_expr__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./default-expr */ 262);
+/* harmony import */ var _default_fn_decl__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./default-fn-decl */ 914);
+/* harmony import */ var _default_fn_anon__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./default-fn-anon */ 72);
+/* harmony import */ var _star_mutable__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./star-mutable */ 990);
+/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./self-const */ 973);
+/* harmony import */ var _mutable_forms__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./mutable-forms */ 381);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function expectValueDescriptor(ns, key) {
+	const descriptor = Object.getOwnPropertyDescriptor(ns, key);
+	expect(descriptor.get).toBe(undefined);
+	expect(descriptor.enumerable).toBe(true);
+	expect(descriptor.writable).toBe(false);
+}
+
+function expectGetterDescriptor(ns, key) {
+	const descriptor = Object.getOwnPropertyDescriptor(ns, key);
+	expect(typeof descriptor.get).toBe(\\"function\\");
+	expect(descriptor.enumerable).toBe(true);
+	expect(Object.prototype.hasOwnProperty.call(descriptor, \\"value\\")).toBe(false);
+}
+
+// === Direct exports ===
+
+it(\\"should bind const exports as readonly values (non-circular)\\", () => {
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"literal\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"renamed\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.renamed).toBe(\\"local\\");
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"destructured\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.destructured).toBe(\\"destructured\\");
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"arrayValue\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.arrayValue).toBe(\\"array\\");
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"string-alias\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__[\\"string-alias\\"]).toBe(\\"aliased\\");
+});
+
+it(\\"should keep function exports as getters\\", () => {
+	expectGetterDescriptor(_function_exports__WEBPACK_IMPORTED_MODULE_1__, \\"fn\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn()).toBe(\\"fn\\");
+	expectGetterDescriptor(_function_exports__WEBPACK_IMPORTED_MODULE_1__, \\"fn2\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn2()).toBe(\\"fn2\\");
+});
+
+it(\\"should keep mutable exports as getters\\", () => {
+	expectGetterDescriptor(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__, \\"counter\\");
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(0);
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(1);
+});
+
+it(\\"should work correctly with circular modules\\", () => {
+	expect(_cycle_a__WEBPACK_IMPORTED_MODULE_3__.cyclicConst).toBe(\\"cyclic\\");
+	expect(_cycle_a__WEBPACK_IMPORTED_MODULE_3__.readViaB()).toBe(\\"cyclic\\");
+});
+
+// === Re-exports (all use getters — re-export optimization not yet supported) ===
+
+it(\\"should keep re-exported const as getter\\", () => {
+	expectGetterDescriptor(_reexport__WEBPACK_IMPORTED_MODULE_4__, \\"literal\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+});
+
+it(\\"should keep re-exported function as getter\\", () => {
+	expectGetterDescriptor(_reexport__WEBPACK_IMPORTED_MODULE_4__, \\"fn\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn()).toBe(\\"fn\\");
+});
+
+it(\\"should keep re-exported mutable as getter with live binding\\", () => {
+	expectGetterDescriptor(_reexport__WEBPACK_IMPORTED_MODULE_4__, \\"counter\\");
+	const before = _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter;
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(before + 1);
+});
+
+it(\\"should use getter for multi-level re-export chain\\", () => {
+	expectGetterDescriptor(_reexport_chain__WEBPACK_IMPORTED_MODULE_5__, \\"chainedLiteral\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+});
+
+it(\\"should bind own const as value in mixed module\\", () => {
+	expectValueDescriptor(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__, \\"ownConst\\");
+	expect(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__.ownConst).toBe(\\"own\\");
+});
+
+it(\\"should keep re-exported values in mixed module\\", () => {
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn()).toBe(\\"fn\\");
+});
+
+it(\\"should keep re-exported mutable as live binding in mixed module\\", () => {
+	const before = _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter;
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(before + 1);
+});
+
+it(\\"should use getter for named re-export with export *\\", () => {
+	expectGetterDescriptor(_reexport_star__WEBPACK_IMPORTED_MODULE_7__, \\"namedConst\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+});
+
+it(\\"should keep star-exported function as getter\\", () => {
+	expectGetterDescriptor(_reexport_star__WEBPACK_IMPORTED_MODULE_7__, \\"fn\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn()).toBe(\\"fn\\");
+});
+
+it(\\"should use getter for re-export from circular module\\", () => {
+	expectGetterDescriptor(_reexport_circular__WEBPACK_IMPORTED_MODULE_8__, \\"reCircular\\");
+	expect(_cycle_a__WEBPACK_IMPORTED_MODULE_3__.cyclicConst).toBe(\\"cyclic\\");
+});
+
+// === Live-binding edge cases ===
+
+it(\\"should keep \`export { let as default }\` as a live binding\\", () => {
+	expectGetterDescriptor(_default_binding__WEBPACK_IMPORTED_MODULE_9__, \\"default\\");
+	expect(_default_binding__WEBPACK_IMPORTED_MODULE_9__[\\"default\\"]).toBe(0);
+	_default_binding__WEBPACK_IMPORTED_MODULE_9__.bumpDefault();
+	expect(_default_binding__WEBPACK_IMPORTED_MODULE_9__[\\"default\\"]).toBe(1);
+});
+
+it(\\"should bind \`export { const as default }\` as a value\\", () => {
+	expectValueDescriptor(_const_default__WEBPACK_IMPORTED_MODULE_10__, \\"default\\");
+	expect(_const_default__WEBPACK_IMPORTED_MODULE_10__[\\"default\\"]).toBe(\\"const-default\\");
+});
+
+it(\\"should bind \`export default expression\` as a value\\", () => {
+	expectValueDescriptor(_default_expr__WEBPACK_IMPORTED_MODULE_11__, \\"default\\");
+	expect(_default_expr__WEBPACK_IMPORTED_MODULE_11__[\\"default\\"]).toBe(42);
+});
+
+it(\\"should keep \`export default function fn(){}\` as getter\\", () => {
+	expectGetterDescriptor(_default_fn_decl__WEBPACK_IMPORTED_MODULE_12__, \\"default\\");
+	expect(_default_fn_decl__WEBPACK_IMPORTED_MODULE_12__[\\"default\\"]()).toBe(\\"default-fn\\");
+});
+
+it(\\"should keep \`export default function(){}\` as getter\\", () => {
+	expectGetterDescriptor(_default_fn_anon__WEBPACK_IMPORTED_MODULE_13__, \\"default\\");
+	expect(_default_fn_anon__WEBPACK_IMPORTED_MODULE_13__[\\"default\\"]()).toBe(\\"default-anon\\");
+});
+
+it(\\"should keep mutable binding live through \`export *\`\\", () => {
+	expectGetterDescriptor(_star_mutable__WEBPACK_IMPORTED_MODULE_14__, \\"counter\\");
+	const before = _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter;
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(before + 1);
+});
+
+it(\\"should keep mutable binding live through a two-hop re-export chain\\", () => {
+	expectGetterDescriptor(_reexport_chain__WEBPACK_IMPORTED_MODULE_5__, \\"chainedCounter\\");
+	const before = _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter;
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(before + 1);
+});
+
+it(\\"should fall back to getter for const in a self-cycle and read correctly\\", () => {
+	expectGetterDescriptor(_self_const__WEBPACK_IMPORTED_MODULE_15__, \\"selfConst\\");
+	expect(_self_const__WEBPACK_IMPORTED_MODULE_15__.selfConst).toBe(\\"self\\");
+	expect(_self_const__WEBPACK_IMPORTED_MODULE_15__.readSelf()).toBe(\\"self\\");
+});
+
+it(\\"should observe every mutation form (assign, compound, update) as live\\", () => {
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaAssign).toBe(1);
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaCompound).toBe(1);
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaUpdate).toBe(1);
+	_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.mutateAll();
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaAssign).toBe(10);
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaCompound).toBe(6);
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaUpdate).toBe(2);
+});
+
+it(\\"should enumerate value-bound and getter exports together\\", () => {
+	expect(Object.keys(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__).sort()).toEqual([
+		\\"mutateAll\\",
+		\\"viaAssign\\",
+		\\"viaCompound\\",
+		\\"viaUpdate\\"
+	]);
+	expect(Object.keys(_const_exports__WEBPACK_IMPORTED_MODULE_0__).sort()).toEqual([
+		\\"arrayValue\\",
+		\\"destructured\\",
+		\\"literal\\",
+		\\"renamed\\",
+		\\"string-alias\\"
+	]);
+});
+
+/******/ })()
+;"
+`;
+
+exports[`ConfigCacheTestCases optimization static-export-bindings static-export-bindings should pre-compile to fill disk cache (2nd) 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 462
+/*!**************************!*\\\\
+  !*** ./const-default.js ***!
+  \\\\**************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+// \`export { const as default }\` is immutable -> eligible for value binding
+const constDefault = \\"const-default\\";
+
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"default\\", 0, /* binding */ constDefault
+/* harmony export */ ]);
+
+
+/***/ },
+
+/***/ 660
+/*!**************************!*\\\\
+  !*** ./const-exports.js ***!
+  \\\\**************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+const literal = \\"literal\\";
+
+const local = \\"local\\";
+
+
+const source = { destructured: \\"destructured\\" };
+const { destructured } = source;
+
+const [arrayValue] = [\\"array\\"];
+
+const aliased = \\"aliased\\";
+
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"arrayValue\\", 0, /* binding */ arrayValue,
+/* harmony export */   \\"destructured\\", 0, /* binding */ destructured,
+/* harmony export */   \\"literal\\", 0, /* binding */ literal,
+/* harmony export */   \\"renamed\\", 0, /* binding */ local,
+/* harmony export */   \\"string-alias\\", 0, /* binding */ aliased
+/* harmony export */ ]);
+
+
+/***/ },
+
+/***/ 797
+/*!********************!*\\\\
+  !*** ./cycle-a.js ***!
+  \\\\********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   cyclicConst: () => (/* binding */ cyclicConst),
+/* harmony export */   readViaB: () => (/* binding */ readViaB)
+/* harmony export */ });
+/* harmony import */ var _cycle_b__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-b */ 100);
+
+
+const cyclicConst = \\"cyclic\\";
+
+function readViaB() {
+	return (0,_cycle_b__WEBPACK_IMPORTED_MODULE_0__.readFromB)();
+}
+
+
+/***/ },
+
+/***/ 100
+/*!********************!*\\\\
+  !*** ./cycle-b.js ***!
+  \\\\********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   readFromB: () => (/* binding */ readFromB)
+/* harmony export */ });
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-a */ 797);
+
+
+function readFromB() {
+	return _cycle_a__WEBPACK_IMPORTED_MODULE_0__.cyclicConst;
+}
+
+
+/***/ },
+
+/***/ 260
+/*!****************************!*\\\\
+  !*** ./default-binding.js ***!
+  \\\\****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   bumpDefault: () => (/* binding */ bumpDefault),
+/* harmony export */   \\"default\\": () => (/* binding */ mutableDefault)
+/* harmony export */ });
+// \`export { x as default }\` is a live binding (unlike \`export default <expr>\`)
+let mutableDefault = 0;
+function bumpDefault() {
+	mutableDefault++;
+}
+
+
+
+/***/ },
+
+/***/ 262
+/*!*************************!*\\\\
+  !*** ./default-expr.js ***!
+  \\\\*************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (42);
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"default\\", 0, /* export default binding */ __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ ]);
+
+
+/***/ },
+
+/***/ 72
+/*!****************************!*\\\\
+  !*** ./default-fn-anon.js ***!
+  \\\\****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   \\"default\\": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+__webpack_require__.dn(__WEBPACK_DEFAULT_EXPORT__);
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__() { return \\"default-anon\\"; }
+
+
+/***/ },
+
+/***/ 914
+/*!****************************!*\\\\
+  !*** ./default-fn-decl.js ***!
+  \\\\****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   \\"default\\": () => (/* binding */ fn)
+/* harmony export */ });
+function fn() { return \\"default-fn\\"; }
+
+
+/***/ },
+
+/***/ 103
+/*!*****************************!*\\\\
+  !*** ./function-exports.js ***!
+  \\\\*****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   fn: () => (/* binding */ fn),
+/* harmony export */   fn2: () => (/* binding */ fn2)
+/* harmony export */ });
+function fn() {
+	return \\"fn\\";
+}
+
+function fn2() {
+	return \\"fn2\\";
+}
+
+
+/***/ },
+
+/***/ 245
+/*!****************************!*\\\\
+  !*** ./mutable-exports.js ***!
+  \\\\****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   counter: () => (/* binding */ counter),
+/* harmony export */   increment: () => (/* binding */ increment)
+/* harmony export */ });
+let counter = 0;
+
+function increment() {
+	counter++;
+}
+
+
+/***/ },
+
+/***/ 381
+/*!**************************!*\\\\
+  !*** ./mutable-forms.js ***!
+  \\\\**************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   mutateAll: () => (/* binding */ mutateAll),
+/* harmony export */   viaAssign: () => (/* binding */ viaAssign),
+/* harmony export */   viaCompound: () => (/* binding */ viaCompound),
+/* harmony export */   viaUpdate: () => (/* binding */ viaUpdate)
+/* harmony export */ });
+// Various mutation forms on exported \`let\` must all stay observable as live bindings
+let viaAssign = 1;
+let viaCompound = 1;
+let viaUpdate = 1;
+
+function mutateAll() {
+	viaAssign = 10;
+	viaCompound += 5;
+	viaUpdate++;
+}
+
+
+/***/ },
+
+/***/ 670
+/*!***************************!*\\\\
+  !*** ./reexport-chain.js ***!
+  \\\\***************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   chainedCounter: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_1__.counter),
+/* harmony export */   chainedIncrement: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_1__.increment),
+/* harmony export */   chainedLiteral: () => (/* reexport safe */ _reexport__WEBPACK_IMPORTED_MODULE_0__.literal)
+/* harmony export */ });
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reexport */ 660);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport */ 245);
+// Re-export chain: this file re-exports from reexport.js which re-exports from const-exports.js
+
+// A mutable binding re-exported through two hops must stay live
+
+
+
+/***/ },
+
+/***/ 770
+/*!******************************!*\\\\
+  !*** ./reexport-circular.js ***!
+  \\\\******************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   reCircular: () => (/* reexport safe */ _cycle_a__WEBPACK_IMPORTED_MODULE_0__.cyclicConst)
+/* harmony export */ });
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cycle-a */ 797);
+// Re-export from a circular module — should use getter
+
+
+
+/***/ },
+
+/***/ 992
+/*!***************************!*\\\\
+  !*** ./reexport-mixed.js ***!
+  \\\\***************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   reConst: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal),
+/* harmony export */   reCounter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter),
+/* harmony export */   reFn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
+/* harmony export */   reIncrement: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment)
+/* harmony export */ });
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mutable-exports */ 245);
+// Mixed: direct const export + re-exports in the same module
+const ownConst = \\"own\\";
+
+
+
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, [
+/* harmony export */   \\"ownConst\\", 0, /* binding */ ownConst
+/* harmony export */ ]);
+
+
+/***/ },
+
+/***/ 787
+/*!**************************!*\\\\
+  !*** ./reexport-star.js ***!
+  \\\\**************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   fn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
+/* harmony export */   fn2: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn2),
+/* harmony export */   namedConst: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal)
+/* harmony export */ });
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+// Star export mixed with named re-export — star export should prevent value binding
+
+
+
+
+/***/ },
+
+/***/ 618
+/*!*********************!*\\\\
+  !*** ./reexport.js ***!
+  \\\\*********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   arrayValue: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.arrayValue),
+/* harmony export */   counter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter),
+/* harmony export */   destructured: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.destructured),
+/* harmony export */   fn: () => (/* reexport safe */ _function_exports__WEBPACK_IMPORTED_MODULE_1__.fn),
+/* harmony export */   increment: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment),
+/* harmony export */   literal: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.literal),
+/* harmony export */   renamed: () => (/* reexport safe */ _const_exports__WEBPACK_IMPORTED_MODULE_0__.renamed)
+/* harmony export */ });
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./const-exports */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./function-exports */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mutable-exports */ 245);
+
+
+
+
+
+/***/ },
+
+/***/ 973
+/*!***********************!*\\\\
+  !*** ./self-const.js ***!
+  \\\\***********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   readSelf: () => (/* binding */ readSelf),
+/* harmony export */   selfConst: () => (/* binding */ selfConst)
+/* harmony export */ });
+/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./self-const */ 973);
+// Self-cycle: const must fall back to a getter so reading via the namespace works
+
+
+const selfConst = \\"self\\";
+
+function readSelf() {
+	return _self_const__WEBPACK_IMPORTED_MODULE_0__.selfConst;
+}
+
+
+/***/ },
+
+/***/ 990
+/*!*************************!*\\\\
+  !*** ./star-mutable.js ***!
+  \\\\*************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   counter: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_0__.counter),
+/* harmony export */   increment: () => (/* reexport safe */ _mutable_exports__WEBPACK_IMPORTED_MODULE_0__.increment)
+/* harmony export */ });
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mutable-exports */ 245);
+// \`export *\` of a mutable binding must stay live
+
+
+
+/***/ }
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	const __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			const e = new Error(\\"Cannot find module '\\" + moduleId + \\"'\\");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter/value functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			if(Array.isArray(definition)) {
+/******/ 				var i = 0;
+/******/ 				while(i < definition.length) {
+/******/ 					var key = definition[i++];
+/******/ 					var binding = definition[i++];
+/******/ 					if(!__webpack_require__.o(exports, key)) {
+/******/ 						if(binding === 0) {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
+/******/ 						} else {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, get: binding });
+/******/ 						}
+/******/ 					} else if(binding === 0) { i++; }
+/******/ 				}
+/******/ 			} else {
+/******/ 				for(var key in definition) {
+/******/ 					if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 					}
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/set anonymous default export name */
+/******/ 	(() => {
+/******/ 		// set .name for anonymous default exports per ES spec
+/******/ 		__webpack_require__.dn = (x) => {
+/******/ 			(Object.getOwnPropertyDescriptor(x, \\"name\\") || {}).writable || Object.defineProperty(x, \\"name\\", { value: \\"default\\", configurable: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+let __webpack_exports__ = {};
+/*!******************!*\\\\
+  !*** ./index.js ***!
+  \\\\******************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _const_exports__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reexport-star */ 660);
+/* harmony import */ var _function_exports__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport-star */ 103);
+/* harmony import */ var _mutable_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./star-mutable */ 245);
+/* harmony import */ var _cycle_a__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./reexport-circular */ 797);
+/* harmony import */ var _reexport__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./reexport */ 618);
+/* harmony import */ var _reexport_chain__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./reexport-chain */ 670);
+/* harmony import */ var _reexport_mixed__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./reexport-mixed */ 992);
+/* harmony import */ var _reexport_star__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./reexport-star */ 787);
+/* harmony import */ var _reexport_circular__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./reexport-circular */ 770);
+/* harmony import */ var _default_binding__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./default-binding */ 260);
+/* harmony import */ var _const_default__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./const-default */ 462);
+/* harmony import */ var _default_expr__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./default-expr */ 262);
+/* harmony import */ var _default_fn_decl__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./default-fn-decl */ 914);
+/* harmony import */ var _default_fn_anon__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./default-fn-anon */ 72);
+/* harmony import */ var _star_mutable__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./star-mutable */ 990);
+/* harmony import */ var _self_const__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./self-const */ 973);
+/* harmony import */ var _mutable_forms__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./mutable-forms */ 381);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function expectValueDescriptor(ns, key) {
+	const descriptor = Object.getOwnPropertyDescriptor(ns, key);
+	expect(descriptor.get).toBe(undefined);
+	expect(descriptor.enumerable).toBe(true);
+	expect(descriptor.writable).toBe(false);
+}
+
+function expectGetterDescriptor(ns, key) {
+	const descriptor = Object.getOwnPropertyDescriptor(ns, key);
+	expect(typeof descriptor.get).toBe(\\"function\\");
+	expect(descriptor.enumerable).toBe(true);
+	expect(Object.prototype.hasOwnProperty.call(descriptor, \\"value\\")).toBe(false);
+}
+
+// === Direct exports ===
+
+it(\\"should bind const exports as readonly values (non-circular)\\", () => {
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"literal\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"renamed\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.renamed).toBe(\\"local\\");
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"destructured\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.destructured).toBe(\\"destructured\\");
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"arrayValue\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.arrayValue).toBe(\\"array\\");
+	expectValueDescriptor(_const_exports__WEBPACK_IMPORTED_MODULE_0__, \\"string-alias\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__[\\"string-alias\\"]).toBe(\\"aliased\\");
+});
+
+it(\\"should keep function exports as getters\\", () => {
+	expectGetterDescriptor(_function_exports__WEBPACK_IMPORTED_MODULE_1__, \\"fn\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn()).toBe(\\"fn\\");
+	expectGetterDescriptor(_function_exports__WEBPACK_IMPORTED_MODULE_1__, \\"fn2\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn2()).toBe(\\"fn2\\");
+});
+
+it(\\"should keep mutable exports as getters\\", () => {
+	expectGetterDescriptor(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__, \\"counter\\");
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(0);
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(1);
+});
+
+it(\\"should work correctly with circular modules\\", () => {
+	expect(_cycle_a__WEBPACK_IMPORTED_MODULE_3__.cyclicConst).toBe(\\"cyclic\\");
+	expect(_cycle_a__WEBPACK_IMPORTED_MODULE_3__.readViaB()).toBe(\\"cyclic\\");
+});
+
+// === Re-exports (all use getters — re-export optimization not yet supported) ===
+
+it(\\"should keep re-exported const as getter\\", () => {
+	expectGetterDescriptor(_reexport__WEBPACK_IMPORTED_MODULE_4__, \\"literal\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+});
+
+it(\\"should keep re-exported function as getter\\", () => {
+	expectGetterDescriptor(_reexport__WEBPACK_IMPORTED_MODULE_4__, \\"fn\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn()).toBe(\\"fn\\");
+});
+
+it(\\"should keep re-exported mutable as getter with live binding\\", () => {
+	expectGetterDescriptor(_reexport__WEBPACK_IMPORTED_MODULE_4__, \\"counter\\");
+	const before = _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter;
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(before + 1);
+});
+
+it(\\"should use getter for multi-level re-export chain\\", () => {
+	expectGetterDescriptor(_reexport_chain__WEBPACK_IMPORTED_MODULE_5__, \\"chainedLiteral\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+});
+
+it(\\"should bind own const as value in mixed module\\", () => {
+	expectValueDescriptor(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__, \\"ownConst\\");
+	expect(_reexport_mixed__WEBPACK_IMPORTED_MODULE_6__.ownConst).toBe(\\"own\\");
+});
+
+it(\\"should keep re-exported values in mixed module\\", () => {
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn()).toBe(\\"fn\\");
+});
+
+it(\\"should keep re-exported mutable as live binding in mixed module\\", () => {
+	const before = _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter;
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(before + 1);
+});
+
+it(\\"should use getter for named re-export with export *\\", () => {
+	expectGetterDescriptor(_reexport_star__WEBPACK_IMPORTED_MODULE_7__, \\"namedConst\\");
+	expect(_const_exports__WEBPACK_IMPORTED_MODULE_0__.literal).toBe(\\"literal\\");
+});
+
+it(\\"should keep star-exported function as getter\\", () => {
+	expectGetterDescriptor(_reexport_star__WEBPACK_IMPORTED_MODULE_7__, \\"fn\\");
+	expect(_function_exports__WEBPACK_IMPORTED_MODULE_1__.fn()).toBe(\\"fn\\");
+});
+
+it(\\"should use getter for re-export from circular module\\", () => {
+	expectGetterDescriptor(_reexport_circular__WEBPACK_IMPORTED_MODULE_8__, \\"reCircular\\");
+	expect(_cycle_a__WEBPACK_IMPORTED_MODULE_3__.cyclicConst).toBe(\\"cyclic\\");
+});
+
+// === Live-binding edge cases ===
+
+it(\\"should keep \`export { let as default }\` as a live binding\\", () => {
+	expectGetterDescriptor(_default_binding__WEBPACK_IMPORTED_MODULE_9__, \\"default\\");
+	expect(_default_binding__WEBPACK_IMPORTED_MODULE_9__[\\"default\\"]).toBe(0);
+	_default_binding__WEBPACK_IMPORTED_MODULE_9__.bumpDefault();
+	expect(_default_binding__WEBPACK_IMPORTED_MODULE_9__[\\"default\\"]).toBe(1);
+});
+
+it(\\"should bind \`export { const as default }\` as a value\\", () => {
+	expectValueDescriptor(_const_default__WEBPACK_IMPORTED_MODULE_10__, \\"default\\");
+	expect(_const_default__WEBPACK_IMPORTED_MODULE_10__[\\"default\\"]).toBe(\\"const-default\\");
+});
+
+it(\\"should bind \`export default expression\` as a value\\", () => {
+	expectValueDescriptor(_default_expr__WEBPACK_IMPORTED_MODULE_11__, \\"default\\");
+	expect(_default_expr__WEBPACK_IMPORTED_MODULE_11__[\\"default\\"]).toBe(42);
+});
+
+it(\\"should keep \`export default function fn(){}\` as getter\\", () => {
+	expectGetterDescriptor(_default_fn_decl__WEBPACK_IMPORTED_MODULE_12__, \\"default\\");
+	expect(_default_fn_decl__WEBPACK_IMPORTED_MODULE_12__[\\"default\\"]()).toBe(\\"default-fn\\");
+});
+
+it(\\"should keep \`export default function(){}\` as getter\\", () => {
+	expectGetterDescriptor(_default_fn_anon__WEBPACK_IMPORTED_MODULE_13__, \\"default\\");
+	expect(_default_fn_anon__WEBPACK_IMPORTED_MODULE_13__[\\"default\\"]()).toBe(\\"default-anon\\");
+});
+
+it(\\"should keep mutable binding live through \`export *\`\\", () => {
+	expectGetterDescriptor(_star_mutable__WEBPACK_IMPORTED_MODULE_14__, \\"counter\\");
+	const before = _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter;
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(before + 1);
+});
+
+it(\\"should keep mutable binding live through a two-hop re-export chain\\", () => {
+	expectGetterDescriptor(_reexport_chain__WEBPACK_IMPORTED_MODULE_5__, \\"chainedCounter\\");
+	const before = _mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter;
+	_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.increment();
+	expect(_mutable_exports__WEBPACK_IMPORTED_MODULE_2__.counter).toBe(before + 1);
+});
+
+it(\\"should fall back to getter for const in a self-cycle and read correctly\\", () => {
+	expectGetterDescriptor(_self_const__WEBPACK_IMPORTED_MODULE_15__, \\"selfConst\\");
+	expect(_self_const__WEBPACK_IMPORTED_MODULE_15__.selfConst).toBe(\\"self\\");
+	expect(_self_const__WEBPACK_IMPORTED_MODULE_15__.readSelf()).toBe(\\"self\\");
+});
+
+it(\\"should observe every mutation form (assign, compound, update) as live\\", () => {
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaAssign).toBe(1);
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaCompound).toBe(1);
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaUpdate).toBe(1);
+	_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.mutateAll();
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaAssign).toBe(10);
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaCompound).toBe(6);
+	expect(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__.viaUpdate).toBe(2);
+});
+
+it(\\"should enumerate value-bound and getter exports together\\", () => {
+	expect(Object.keys(_mutable_forms__WEBPACK_IMPORTED_MODULE_16__).sort()).toEqual([
+		\\"mutateAll\\",
+		\\"viaAssign\\",
+		\\"viaCompound\\",
+		\\"viaUpdate\\"
+	]);
+	expect(Object.keys(_const_exports__WEBPACK_IMPORTED_MODULE_0__).sort()).toEqual([
+		\\"arrayValue\\",
+		\\"destructured\\",
+		\\"literal\\",
+		\\"renamed\\",
+		\\"string-alias\\"
+	]);
+});
+
+/******/ })()
+;"
+`;

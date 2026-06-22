@@ -227,7 +227,9 @@ export default defineConfig([
 			"n/no-unsupported-features/node-builtins": "off",
 
 			"import/extensions": "off",
-			"import/no-unresolved": "off"
+			"import/no-unresolved": "off",
+			// examples reference `webpack` as the demonstrated package
+			"import/no-extraneous-dependencies": "off"
 		}
 	},
 	{

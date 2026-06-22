@@ -1,11 +1,12 @@
 "use strict";
 
-const walkCssTokens = require("../lib/css/walkCssTokens");
+const cssSyntax = require("../lib/css/syntax");
+const { cssExportConvention } = require("../lib/util/conventions");
 const { makeCacheable } = require("../lib/util/identifier");
 
 describe("css identifier utils", () => {
 	describe("escapeIdentifier", () => {
-		const { escapeIdentifier } = walkCssTokens;
+		const { escapeIdentifier } = cssSyntax;
 
 		// [input, expected]
 		/** @type {[string, string][]} */
@@ -54,7 +55,7 @@ describe("css identifier utils", () => {
 	});
 
 	describe("unescapeIdentifier", () => {
-		const { unescapeIdentifier } = walkCssTokens;
+		const { unescapeIdentifier } = cssSyntax;
 
 		// [input, expected]
 		/** @type {[string, string][]} */
@@ -100,7 +101,7 @@ describe("css identifier utils", () => {
 		});
 
 		it("round-trips through escapeIdentifier for common values", () => {
-			const { escapeIdentifier } = walkCssTokens;
+			const { escapeIdentifier } = cssSyntax;
 			for (const value of [
 				"foo bar",
 				"foo.bar",
@@ -111,6 +112,92 @@ describe("css identifier utils", () => {
 			]) {
 				expect(unescapeIdentifier(escapeIdentifier(value))).toBe(value);
 			}
+		});
+	});
+
+	// Deterministic fuzzing: a seeded PRNG drives random/edge-case inputs
+	// (control chars, lone surrogates, backslash escapes, leading digit/hyphen)
+	// so any failure is reproducible. Guards the string utils against crashes
+	// and escape/unescape round-trip violations.
+	describe("fuzzing (seeded)", () => {
+		const { escapeIdentifier, unescapeIdentifier, equalsLowerCase } = cssSyntax;
+		// mulberry32
+		const makeRng = (/** @type {number} */ seed) => {
+			let s = seed >>> 0;
+			return () => {
+				s = (s + 0x6d2b79f5) >>> 0;
+				let t = Math.imul(s ^ (s >>> 15), 1 | s);
+				t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+				return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+			};
+		};
+		const POOLS = [
+			"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_",
+			"\\\\\\41\\3 \\{}\\@.#:;()[]<>\"' \t\n\r\f",
+			"-_0123456789"
+		];
+		const randStr = (/** @type {() => number} */ rng) => {
+			const len = (rng() * 40) | 0;
+			const surrogateMode = rng() < 0.2;
+			let out = "";
+			for (let i = 0; i < len; i++) {
+				if (surrogateMode) {
+					// any BMP code unit, including lone surrogates 0xD800-0xDFFF
+					out += String.fromCharCode((rng() * 0x10000) | 0);
+				} else {
+					const pool = POOLS[(rng() * POOLS.length) | 0];
+					out += pool[(rng() * pool.length) | 0];
+				}
+			}
+			return out;
+		};
+
+		it("escape/unescape never throw and round-trip on random input", () => {
+			const rng = makeRng(0x12345678);
+			/** @type {string[]} */
+			const failures = [];
+			for (let i = 0; i < 50000; i++) {
+				const s = randStr(rng);
+				try {
+					if (unescapeIdentifier(escapeIdentifier(s)) !== s) {
+						failures.push(`round-trip: ${JSON.stringify(s)}`);
+					}
+					unescapeIdentifier(s);
+					equalsLowerCase(s, "button");
+				} catch (err) {
+					failures.push(
+						`throw on ${JSON.stringify(s)}: ${/** @type {Error} */ (err).message}`
+					);
+				}
+			}
+			expect(failures).toEqual([]);
+		});
+
+		it("cssExportConvention never throws on random input", () => {
+			const rng = makeRng(0x9abcdef0);
+			/** @type {import("../declarations/WebpackOptions").CssGeneratorExportsConvention[]} */
+			const conventions = [
+				"as-is",
+				"camel-case",
+				"camel-case-only",
+				"dashes",
+				"dashes-only"
+			];
+			/** @type {string[]} */
+			const failures = [];
+			for (let i = 0; i < 20000; i++) {
+				const s = randStr(rng);
+				for (const c of conventions) {
+					try {
+						cssExportConvention(s, c);
+					} catch (err) {
+						failures.push(
+							`${c} on ${JSON.stringify(s)}: ${/** @type {Error} */ (err).message}`
+						);
+					}
+				}
+			}
+			expect(failures).toEqual([]);
 		});
 	});
 

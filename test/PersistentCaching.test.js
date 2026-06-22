@@ -7,6 +7,8 @@ const path = require("path");
 const util = require("util");
 const vm = require("vm");
 const rimraf = require("rimraf");
+const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");
+const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
 
 const readdir = util.promisify(fs.readdir);
 const writeFile = util.promisify(fs.writeFile);
@@ -44,7 +46,13 @@ describe("Persistent Caching", () => {
 		target: "node",
 		output: {
 			library: { type: "commonjs-module", export: "default" },
-			path: outputPath
+			path: outputPath,
+			// bundles are executed in this Node.js process; avoid `?.` on Node < 14
+			// and `Object.hasOwn` on Node < 16.9
+			environment: {
+				optionalChaining: supportsOptionalChaining(),
+				hasOwn: supportsObjectHasOwn()
+			}
 		}
 	};
 
@@ -52,7 +60,7 @@ describe("Persistent Caching", () => {
 		rimraf(tempPath, done);
 	});
 
-	const updateSrc = async (data) => {
+	const updateSrc = async (/** @type {Record<string, string>} */ data) => {
 		const ts = new Date(Date.now() - 10000);
 		await mkdir(srcPath, { recursive: true });
 		for (const key of Object.keys(data)) {
@@ -62,18 +70,27 @@ describe("Persistent Caching", () => {
 		}
 	};
 
-	const compile = async (configAdditions = {}) =>
+	const compile = async (/** @type {EXPECTED_ANY} */ configAdditions = {}) =>
 		new Promise((resolve, reject) => {
 			const webpack = require("../");
 
 			webpack(
-				{
-					...config,
-					...configAdditions,
-					cache: { ...config.cache, ...configAdditions.cache }
-				},
-				(err, stats) => {
+				/** @type {import("../").Configuration} */ (
+					/** @type {unknown} */ ({
+						...config,
+						...configAdditions,
+						cache: {
+							...config.cache,
+							.../** @type {EXPECTED_ANY} */ (configAdditions).cache
+						}
+					})
+				),
+				(
+					/** @type {Error | null} */ err,
+					/** @type {import("../").Stats | undefined} */ _stats
+				) => {
 					if (err) return reject(err);
+					const stats = /** @type {import("../").Stats} */ (_stats);
 					if (stats.hasErrors()) {
 						return reject(stats.toString({ preset: "errors-only" }));
 					}
@@ -93,21 +110,25 @@ describe("Persistent Caching", () => {
 	};
 
 	const execute = () => {
+		/** @type {Record<string, { exports: unknown }>} */
 		const cache = {};
-		const require = (name) => {
+		const require = (/** @type {string} */ name) => {
 			if (cache[name]) return cache[name].exports;
 			if (!name.endsWith(".js")) name += ".js";
 			const p = path.resolve(outputPath, name);
 			const source = fs.readFileSync(p, "utf8");
 			const context = {};
-			const fn = vm.runInThisContext(
-				`(function(require, module, exports) { ${source} })`,
-				context,
-				{
-					filename: p
-				}
-			);
-			const m = { exports: {} };
+			const fn =
+				/** @type {(require: (name: string) => EXPECTED_ANY, module: { exports: unknown }, exports: unknown) => void} */ (
+					/** @type {EXPECTED_ANY} */ (vm.runInThisContext)(
+						`(function(require, module, exports) { ${source} })`,
+						context,
+						{
+							filename: p
+						}
+					)
+				);
+			const m = { exports: /** @type {unknown} */ ({}) };
 			cache[name] = m;
 			fn(require, m, m.exports);
 			return m.exports;
@@ -144,7 +165,7 @@ export { style };
 }`
 		};
 		for (const file of files) {
-			data[file] = "export default 1;";
+			/** @type {Record<string, string>} */ (data)[file] = "export default 1;";
 		}
 		await updateSrc(data);
 		await compile({ cache: { compression: false } });
@@ -171,7 +192,8 @@ export { style };
 			"e.js": 'import "lodash";'
 		};
 		await updateSrc(data);
-		const c = (items) => {
+		const c = (/** @type {string} */ items) => {
+			/** @type {Record<string, string>} */
 			const entry = {};
 			for (const item of items) entry[item] = `./src/${item}.js`;
 			return compile({ entry, cache: { compression: false } });

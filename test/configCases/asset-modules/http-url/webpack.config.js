@@ -36,10 +36,7 @@ const base = {
 };
 
 const frozen = true;
-const allowedUris = [
-	"http://localhost:9990/",
-	"https://raw.githubusercontent.com/"
-];
+const allowedUris = ["http://localhost:9990/"];
 
 module.exports = [
 	{

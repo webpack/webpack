@@ -64,6 +64,16 @@ This document explains the structure of the `test/` directory in the Webpack pro
 - **Purpose**: ECMAScript test262 conformance test cases.
 - **Usage**: Git submodule — initialize with `git submodule update --init test/test262-cases`. Test runner: `test/test262.spectest.js`.
 
+### 12b. `html5lib-tests/`
+
+- **Purpose**: WHATWG html5lib-tests tokenizer conformance cases for `lib/html/syntax`.
+- **Usage**: Git submodule — initialize with `git submodule update --init test/html5lib-tests`. Test runner: `test/html5lib-webpack.spectest.js` (`yarn test:html5lib`) compiles every input as a webpack HTML entry to confirm the full pipeline handles it without crashing.
+
+### 12c. `css-parsing-tests/`
+
+- **Purpose**: CSS Syntax Level 3 conformance corpus for `lib/css/syntax`.
+- **Usage**: Git submodule — initialize with `git submodule update --init test/css-parsing-tests`. Test runner: `test/cssParsing-webpack.spectest.js` (`yarn test:css-parsing`) compiles every input as a webpack CSS entry to confirm the full pipeline handles it without crashing.
+
 ### 13. `watchCases/`
 
 - **Purpose**: Tests for Webpack’s watch mode functionality.
@@ -115,16 +125,18 @@ yarn test
 
 **Choose test command based on modified directory:**
 
-| Modified directory/file | Command                                                                               |
-| ----------------------- | ------------------------------------------------------------------------------------- |
-| `test/*.unittest.js`    | `yarn test:base -- --testPathPatterns="<filename>"`                                   |
-| `test/cases/`           | `yarn test:basic`                                                                     |
-| `test/configCases/`     | `yarn test:basic -- --testPathPatterns="ConfigTestCases"`                             |
-| `test/statsCases/`      | `yarn test:basic -- --testPathPatterns="StatsTestCases"`                              |
-| `test/watchCases/`      | `yarn test:base -- --testPathPatterns="WatchTestCases"`                               |
-| `test/hotCases/`        | `yarn test:base -- --testPathPatterns="HotTestCases"`                                 |
-| `test/benchmarkCases/`  | `FILTER="<case-name>" yarn benchmark`                                                 |
-| `test/test262-cases/`   | `yarn test:test262` (requires `git submodule update --init test/test262-cases` first) |
+| Modified directory/file   | Command                                                                                       |
+| ------------------------- | --------------------------------------------------------------------------------------------- |
+| `test/*.unittest.js`      | `yarn test:base -- --testPathPatterns="<filename>"`                                           |
+| `test/cases/`             | `yarn test:basic`                                                                             |
+| `test/configCases/`       | `yarn test:basic -- --testPathPatterns="ConfigTestCases"`                                     |
+| `test/statsCases/`        | `yarn test:basic -- --testPathPatterns="StatsTestCases"`                                      |
+| `test/watchCases/`        | `yarn test:base -- --testPathPatterns="WatchTestCases"`                                       |
+| `test/hotCases/`          | `yarn test:base -- --testPathPatterns="HotTestCases"`                                         |
+| `test/benchmarkCases/`    | `FILTER="<case-name>" yarn benchmark`                                                         |
+| `test/test262-cases/`     | `yarn test:test262` (requires `git submodule update --init test/test262-cases` first)         |
+| `test/html5lib-tests/`    | `yarn test:html5lib` (requires `git submodule update --init test/html5lib-tests` first)       |
+| `test/css-parsing-tests/` | `yarn test:css-parsing` (requires `git submodule update --init test/css-parsing-tests` first) |
 
 **Running a single test case** with `--testNamePattern`. The test name format is `<category> <case-name>` (e.g., `css basic`, `asset url`):
 

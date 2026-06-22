@@ -87,12 +87,6 @@ require.ensure(["c"], function(require) {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		if (!(moduleId in __webpack_modules__)) {
-/******/ 			delete __webpack_module_cache__[moduleId];
-/******/ 			const e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 			e.code = 'MODULE_NOT_FOUND';
-/******/ 			throw e;
-/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -164,8 +158,8 @@ require.ensure(["c"], function(require) {
 /******/ 				clearTimeout(timeout);
 /******/ 				const doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
-/******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
+/******/ 				script.parentNode?.removeChild(script);
+/******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
@@ -338,11 +332,11 @@ Minimized
 ## Unoptimized
 
 ```
-asset output.js 9.71 KiB [emitted] (name: main)
+asset output.js 9.43 KiB [emitted] (name: main)
 asset node_modules_c_js-node_modules_d_js.output.js 562 bytes [emitted]
-chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.95 KiB 6 modules
+  runtime modules 4.92 KiB 6 modules
   dependent modules 22 bytes [dependent] 2 modules
   ./example.js 139 bytes [built] [code generated]
     [used exports unknown]
@@ -361,11 +355,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.8 KiB [emitted] [minimized] (name: main)
+asset output.js 1.79 KiB [emitted] [minimized] (name: main)
 asset node_modules_c_js-node_modules_d_js.output.js 108 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.95 KiB 6 modules
+  runtime modules 4.92 KiB 6 modules
   dependent modules 22 bytes [dependent] 2 modules
   ./example.js 139 bytes [built] [code generated]
     [no exports used]

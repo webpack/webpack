@@ -2,15 +2,7 @@
 
 exports[`warnings 1`] = `
 Array [
-  Object {
-    "loc": "68:11-19",
-    "message": "Critical dependency: require function is used in a way in which dependencies cannot be statically extracted",
-    "moduleName": "./index.js",
-  },
-  Object {
-    "loc": "74:8-21",
-    "message": "createRequire().main is not supported by webpack.",
-    "moduleName": "./index.js",
-  },
+  "Critical dependency: require function is used in a way in which dependencies cannot be statically extracted",
+  "createRequire().main is not supported by webpack.",
 ]
 `;

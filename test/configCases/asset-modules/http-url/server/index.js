@@ -1,6 +1,7 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const zlib = require("zlib");
 
 /** @typedef {import("../../../../../").Compiler} Compiler */
 
@@ -10,8 +11,24 @@ const path = require("path");
 function createServer() {
 	const server = http.createServer((req, res) => {
 		let file;
-		const pathname = "." + /** @type {string} */ (req.url).replace(/\?.*$/, "");
-		if (/** @type {string} */ (req.url).endsWith("?no-cache")) {
+		const url = /** @type {string} */ (req.url);
+		const query = url.includes("?") ? url.slice(url.indexOf("?") + 1) : "";
+		// simulate a dropped connection to exercise the fetch error path
+		if (query === "error") {
+			/** @type {import("net").Socket} */ (res.socket).destroy();
+			return;
+		}
+		// must-revalidate redirect with a stable etag, to exercise the unchanged-redirect path
+		if (query === "redirect") {
+			res.statusCode = 301;
+			res.setHeader("Location", "/resolve.js");
+			res.setHeader("ETag", '"stable-redirect"');
+			res.setHeader("Cache-Control", "public, must-revalidate");
+			res.end();
+			return;
+		}
+		const pathname = "." + url.replace(/\?.*$/, "");
+		if (url.endsWith("?no-cache")) {
 			res.setHeader("Cache-Control", "no-cache, max-age=60");
 		} else {
 			res.setHeader("Cache-Control", "public, immutable, max-age=600");
@@ -35,8 +52,29 @@ function createServer() {
 		}
 		res.setHeader(
 			"Content-Type",
-			pathname.endsWith(".js") ? "text/javascript" : "text/css"
+			pathname.endsWith(".js")
+				? "text/javascript"
+				: pathname.endsWith("LICENSE")
+					? "text/plain"
+					: "text/css"
 		);
+		// serve compressed responses to exercise the decompression branches
+		const encoding =
+			query === "gzip" || query === "br" || query === "deflate"
+				? query
+				: undefined;
+		if (encoding) {
+			res.setHeader("Content-Encoding", encoding);
+			const buffer = Buffer.from(file);
+			res.end(
+				encoding === "gzip"
+					? zlib.gzipSync(buffer)
+					: encoding === "br"
+						? zlib.brotliCompressSync(buffer)
+						: zlib.deflateSync(buffer)
+			);
+			return;
+		}
 		res.end(file);
 	});
 	server.unref();

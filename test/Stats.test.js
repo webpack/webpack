@@ -4,20 +4,28 @@ require("./helpers/warmup-webpack");
 
 const { Volume, createFsFromVolume } = require("memfs");
 
+/**
+ * @param {import("../").Configuration} options options
+ * @returns {Promise<import("../").Stats>} stats
+ */
 const compile = (options) =>
-	new Promise((resolve, reject) => {
-		const webpack = require("..");
+	/** @type {Promise<import("../").Stats>} */ (
+		new Promise((resolve, reject) => {
+			const webpack = require("..");
 
-		const compiler = webpack(options);
-		compiler.outputFileSystem = createFsFromVolume(new Volume());
-		compiler.run((err, stats) => {
-			if (err) {
-				reject(err);
-			} else {
-				resolve(stats);
-			}
-		});
-	});
+			const compiler = /** @type {import("../").Compiler} */ (webpack(options));
+			compiler.outputFileSystem = /** @type {EXPECTED_ANY} */ (
+				createFsFromVolume(new Volume())
+			);
+			compiler.run((err, stats) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(/** @type {import("../").Stats} */ (stats));
+				}
+			});
+		})
+	);
 
 describe("Stats", () => {
 	it("should work with a boolean value", async () => {
@@ -72,21 +80,29 @@ describe("Stats", () => {
 			entry: "./fixtures/a"
 		});
 		expect(
-			stats.toString({
-				all: false,
-				env: true,
-				_env: "production"
-			})
+			stats.toString(
+				/** @type {import("../").StatsOptions} */ (
+					/** @type {unknown} */ ({
+						all: false,
+						env: true,
+						_env: "production"
+					})
+				)
+			)
 		).toBe('Environment (--env): "production"');
 		expect(
-			stats.toString({
-				all: false,
-				env: true,
-				_env: {
-					prod: ["foo", "bar"],
-					baz: true
-				}
-			})
+			stats.toString(
+				/** @type {import("../").StatsOptions} */ (
+					/** @type {unknown} */ ({
+						all: false,
+						env: true,
+						_env: {
+							prod: ["foo", "bar"],
+							baz: true
+						}
+					})
+				)
+			)
 		).toBe(
 			"Environment (--env): {\n" +
 				'  "prod": [\n' +
@@ -241,10 +257,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryB.js",
-			          "size": 3369,
+			          "size": 3310,
 			        },
 			      ],
-			      "assetsSize": 3369,
+			      "assetsSize": 3310,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -290,10 +306,10 @@ describe("Stats", () => {
 			      "info": Object {
 			        "javascriptModule": false,
 			        "minimized": true,
-			        "size": 3369,
+			        "size": 3310,
 			      },
 			      "name": "entryB.js",
-			      "size": 3369,
+			      "size": 3310,
 			      "type": "asset",
 			    },
 			    Object {

@@ -20,12 +20,17 @@ module.exports = {
 			  "dynamicImportInWorker": false,
 			  "forOf": false,
 			  "globalThis": false,
+			  "hasOwn": false,
 			  "importMetaDirnameAndFilename": false,
 			  "let": false,
+			  "logicalAssignment": false,
 			  "methodShorthand": false,
 			  "module": false,
+			  "nodeBuiltinModuleGetter": false,
 			  "nodePrefixForCoreModules": false,
 			  "optionalChaining": false,
+			  "spread": false,
+			  "symbol": false,
 			  "templateLiteral": false,
 			}
 		`);

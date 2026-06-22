@@ -1,7 +1,18 @@
 declare module "*.json";
 
+// optional peer of webpack-cli, not installed
+declare module "webpack-dev-server";
+
+// only required by a few CSS test cases; ships no types
+declare module "less";
+declare module "less-loader";
+
 type Env = Record<string, any>;
 type TestOptions = { testPath: string; srcPath: string };
+
+// jest-circus internal state, exposed on `global` by test/patch-node-env.js
+// eslint-disable-next-line no-var
+declare var JEST_STATE_SYMBOL: import("@jest/types").Circus.State;
 
 declare namespace jest {
 	interface Matchers<R> {

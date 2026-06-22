@@ -17,6 +17,9 @@ it("error when lockfile is outdated/invalid", () => {
 	expect(() => {
 		require("http://localhost:9990/redirect");
 	}).toThrow();
+	expect(() => {
+		require("http://localhost:9990/resolve.js?error");
+	}).toThrow();
 });
 
 import text from "http://localhost:9990/asset.txt?ignore";

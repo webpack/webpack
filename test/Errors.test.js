@@ -10,22 +10,37 @@ const webpack = require("..");
 const CWD_PATTERN = new RegExp(process.cwd().replace(/\\/g, "/"), "gm");
 const ERROR_STACK_PATTERN = /(?:\n\s+at\s.*)+/g;
 
+// JSC (Bun) exposes these as own props on every Error; V8 does not.
+const JSC_ERROR_KEYS = new Set([
+	"line",
+	"column",
+	"sourceURL",
+	"originalLine",
+	"originalColumn"
+]);
+
 /**
  * @param {unknown} err an err
  * @returns {Record<string, EXPECTED_ANY>} a cleaned error
  */
 function cleanError(err) {
+	/** @type {Record<string, EXPECTED_ANY>} */
 	const result = {};
-	for (const key of Object.getOwnPropertyNames(err)) {
-		result[key] = err[key];
+	const errObj = /** @type {Record<string, EXPECTED_ANY>} */ (err);
+	for (const key of Object.getOwnPropertyNames(errObj)) {
+		if (JSC_ERROR_KEYS.has(key)) continue;
+		result[key] = errObj[key];
 	}
 
 	if (result.message) {
-		result.message = err.message.replace(ERROR_STACK_PATTERN, "");
+		result.message = errObj.message.replace(ERROR_STACK_PATTERN, "");
 	}
 
 	if (result.stack) {
-		result.stack = result.stack.replace(ERROR_STACK_PATTERN, "");
+		result.stack = /** @type {string} */ (result.stack).replace(
+			ERROR_STACK_PATTERN,
+			""
+		);
 	}
 
 	return result;
@@ -36,7 +51,12 @@ function cleanError(err) {
  * @returns {string} serialized value
  */
 function serialize(received) {
-	return prettyFormat(received, prettyFormatOptions)
+	return prettyFormat(
+		received,
+		/** @type {import("pretty-format").Options} */ (
+			/** @type {unknown} */ (prettyFormatOptions)
+		)
+	)
 		.replace(CWD_PATTERN, "<cwd>")
 		.trim();
 }
@@ -46,10 +66,10 @@ const prettyFormatOptions = {
 	printFunctionName: false,
 	plugins: [
 		{
-			test(val) {
+			test(/** @type {unknown} */ val) {
 				return typeof val === "string";
 			},
-			print(val) {
+			print(/** @type {string} */ val) {
 				return `"${val
 					.replace(/\\/g, "/")
 					.replace(/"/g, '\\"')
@@ -60,10 +80,10 @@ const prettyFormatOptions = {
 };
 
 expect.addSnapshotSerializer({
-	test(received) {
+	test(/** @type {EXPECTED_ANY} */ received) {
 		return received.errors || received.warnings;
 	},
-	print(received) {
+	print(/** @type {EXPECTED_ANY} */ received) {
 		return serialize({
 			errors: received.errors.map(cleanError),
 			warnings: received.warnings.map(cleanError)
@@ -72,13 +92,19 @@ expect.addSnapshotSerializer({
 });
 
 expect.addSnapshotSerializer({
-	test(received) {
+	test(/** @type {EXPECTED_ANY} */ received) {
 		return received.message;
 	},
-	print(received) {
+	print(/** @type {EXPECTED_ANY} */ received) {
 		return serialize(cleanError(received));
 	}
 });
+
+// JSC (Bun) renders `Error.prototype.stack` without the "<name>: <message>"
+// header V8 emits, and uses different `JSON.parse` error text; both are captured
+// by these snapshots and cannot be normalized from the stats output, so skip
+// the affected cases on Bun only.
+const itSkipBun = process.versions.bun ? it.skip : it;
 
 const defaults = {
 	options: {
@@ -89,26 +115,41 @@ const defaults = {
 			minimize: false
 		}
 	},
-	outputFileSystem: {
-		mkdir(dir, callback) {
+	outputFileSystem: /** @type {import("../").OutputFileSystem} */ ({
+		mkdir(
+			/** @type {string} */ dir,
+			/** @type {(err?: Error | null) => void} */ callback
+		) {
 			callback();
 		},
-		writeFile(file, content, callback) {
+		writeFile(
+			/** @type {string} */ file,
+			/** @type {string | Buffer} */ content,
+			/** @type {(err?: Error | null) => void} */ callback
+		) {
 			callback();
 		},
-		stat(file, callback) {
+		stat(
+			/** @type {string} */ file,
+			/** @type {(err: Error | null, stats?: import("fs").Stats) => void} */ callback
+		) {
 			callback(new Error("ENOENT"));
 		}
-	}
+	})
 };
 
 /**
  * @param {import("../").Configuration} options options
- * @returns {Promise<{ errors: TODO[], warnings: TODO[] }>} errors and warnings
+ * @returns {Promise<{ errors: import("../").StatsError[], warnings: import("../").StatsError[] }>} errors and warnings
  */
 async function compile(options) {
 	const stats = await new Promise((resolve, reject) => {
-		const compiler = webpack({ ...defaults.options, ...options });
+		const compiler = webpack(
+			/** @type {import("../").Configuration} */ ({
+				...defaults.options,
+				...options
+			})
+		);
 		if (options.mode === "production") {
 			if (options.optimization) options.optimization.minimize = true;
 			else options.optimization = { minimize: true };
@@ -300,7 +341,7 @@ describe("Errors", () => {
 		});
 	}
 
-	it("should emit warning for undef mode", async () => {
+	itSkipBun("should emit warning for undef mode", async () => {
 		await expect(compile({ mode: undefined, entry: "./entry-point" })).resolves
 			.toMatchInlineSnapshot(`
 					Object {
@@ -389,14 +430,16 @@ describe("Errors", () => {
 				`);
 	});
 
-	it("should emit warning when 'output.iife'=false is used with 'output.library.type'='umd'", async () => {
-		await expect(
-			compile({
-				mode: "production",
-				entry: "./false-iife-umd.js",
-				output: { library: { type: "umd" }, iife: false }
-			})
-		).resolves.toMatchInlineSnapshot(`
+	itSkipBun(
+		"should emit warning when 'output.iife'=false is used with 'output.library.type'='umd'",
+		async () => {
+			await expect(
+				compile({
+					mode: "production",
+					entry: "./false-iife-umd.js",
+					output: { library: { type: "umd" }, iife: false }
+				})
+			).resolves.toMatchInlineSnapshot(`
 		Object {
 		  "errors": Array [],
 		  "warnings": Array [
@@ -407,7 +450,8 @@ describe("Errors", () => {
 		  ],
 		}
 	`);
-	});
+		}
+	);
 });
 
 describe("Loaders", () => {
@@ -517,7 +561,7 @@ describe("Loaders", () => {
 				`);
 	});
 
-	it("should emit error for json-loader when not json", async () => {
+	itSkipBun("should emit error for json-loader when not json", async () => {
 		await expect(compile({ entry: "json-loader!./not-a-json.js" })).resolves
 			.toMatchInlineSnapshot(`
 					Object {
@@ -721,7 +765,7 @@ describe("Loaders", () => {
 				`);
 	});
 
-	it("should emit error for module-exports-object-loader", async () => {
+	itSkipBun("should emit error for module-exports-object-loader", async () => {
 		await expect(
 			compile({ entry: "./module-exports-object-loader!./entry-point.js" })
 		).resolves.toMatchInlineSnapshot(`
@@ -741,7 +785,7 @@ describe("Loaders", () => {
 				`);
 	});
 
-	it("should emit error for module-exports-string-loader", async () => {
+	itSkipBun("should emit error for module-exports-string-loader", async () => {
 		await expect(
 			compile({ entry: "./module-exports-string-loader!./entry-point.js" })
 		).resolves.toMatchInlineSnapshot(`

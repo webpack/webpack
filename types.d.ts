@@ -326,6 +326,11 @@ declare interface AllCodeGenerationSchemas {
 	topLevelDeclarations: Set<string>;
 
 	/**
+	 * free identifier names in the rendered source for javascript modules
+	 */
+	freeNames: Set<string>;
+
+	/**
 	 * chunk init fragments for javascript modules
 	 */
 	chunkInitFragments: InitFragment<any>[];
@@ -359,41 +364,6 @@ type AnyLoaderContext = NormalModuleLoaderContext<any> &
 	LoaderRunnerLoaderContext<any> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
-
-/**
- * Tracks values across a stack of nested sets where child scopes can add new
- * values without mutating the sets created by their parents.
- */
-declare abstract class AppendOnlyStackedSet<T> {
-	/**
-	 * Adds a value to the current scope layer, creating that layer lazily when
-	 * the first write occurs.
-	 */
-	add(el: T): void;
-
-	/**
-	 * Checks whether a value is present in any scope layer currently visible to
-	 * this stacked set.
-	 */
-	has(el: T): boolean;
-
-	/**
-	 * Removes every scope layer and any values accumulated in them.
-	 */
-	clear(): void;
-
-	/**
-	 * Creates a child stacked set that shares the existing scope history while
-	 * allowing subsequent additions to be recorded in its own new layer.
-	 */
-	createChild(): AppendOnlyStackedSet<T>;
-
-	/**
-	 * Iterates over the stacked sets from newest to oldest so consumers can
-	 * inspect recently added values first.
-	 */
-	[Symbol.iterator](): Iterator<T>;
-}
 
 /**
  * Returns object of arguments.
@@ -530,6 +500,10 @@ declare interface AssetInlineGeneratorOptions {
 				context: { filename: string; module: Module }
 		  ) => string);
 }
+type AssetModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownNormalModuleBuildInfo &
+	KnownAssetModuleBuildInfo;
 declare abstract class AssetParser extends ParserClass {
 	dataUrlCondition?:
 		| boolean
@@ -2964,6 +2938,7 @@ type CodeGenValue<K extends string> = K extends
 	| "assetInfo"
 	| "share-init"
 	| "topLevelDeclarations"
+	| "freeNames"
 	| "chunkInitFragments"
 	| "url"
 	| "fullContentHash"
@@ -3199,11 +3174,6 @@ declare interface ColorsOptions {
 	 * force use colors
 	 */
 	useColor?: boolean;
-}
-declare interface CommentCssParser {
-	value: string;
-	range: [number, number];
-	loc: { start: Position; end: Position };
 }
 type CommentJavascriptParser = CommentImport & {
 	start: number;
@@ -4361,6 +4331,9 @@ declare class ConcatSource extends Source {
 	): GeneratedSourceInfo;
 }
 type ConcatSourceChild = string | Source | SourceLike;
+type ConcatenatedModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownConcatenatedModuleBuildInfo;
 declare interface ConcatenatedModuleInfo {
 	type: "concatenated";
 	module: Module;
@@ -4408,6 +4381,24 @@ declare interface ConcatenatedModuleInfo {
 	 * runtime namespace object that detects "__esModule"
 	 */
 	interopDefaultAccessName?: string;
+
+	/**
+	 * memoized getExportsType(strict=true)
+	 */
+	exportsTypeStrict?:
+		| "namespace"
+		| "dynamic"
+		| "default-only"
+		| "default-with-named";
+
+	/**
+	 * memoized getExportsType(strict=false)
+	 */
+	exportsTypeNonStrict?:
+		| "namespace"
+		| "dynamic"
+		| "default-only"
+		| "default-with-named";
 }
 declare interface ConcatenationBailoutReasonContext {
 	/**
@@ -4791,6 +4782,17 @@ declare class ConstDependency extends NullDependency {
 	range: number | [number, number];
 	runtimeRequirements: null | Set<string>;
 	static Template: typeof ConstDependencyTemplate;
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 
@@ -4804,6 +4806,10 @@ declare class ConstDependency extends NullDependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_LOCAL: "local";
+	static LAZY_UNTIL_ID: "id";
+	static LAZY_UNTIL_FALLBACK: "*";
+	static LAZY_UNTIL_REQUEST: "@";
 }
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
 	constructor();
@@ -5007,12 +5013,15 @@ declare interface ContextHash {
 	symlinks?: Set<string>;
 }
 type ContextMode =
-	| "weak"
 	| "eager"
+	| "weak"
 	| "lazy"
 	| "lazy-once"
 	| "sync"
 	| "async-weak";
+type ContextModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownContextModuleBuildInfo;
 declare abstract class ContextModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
 		beforeResolve: AsyncSeriesWaterfallHook<
@@ -5248,6 +5257,11 @@ declare interface CssAutoOrModuleParserOptions {
 	animation?: boolean;
 
 	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: "stylesheet" | "block-contents";
+
+	/**
 	 * Enable/disable renaming of `@container` names.
 	 */
 	container?: boolean;
@@ -5412,6 +5426,13 @@ declare abstract class CssModule extends NormalModule {
 	inheritance?: [CssLayer, Supports, Media][];
 	exportType?: "link" | "text" | "css-style-sheet" | "style";
 }
+type CssModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownNormalModuleBuildInfo &
+	KnownCssModuleBuildInfo;
+type CssModuleBuildMeta = KnownBuildMeta &
+	Record<string, any> &
+	KnownCssModuleBuildMeta;
 
 /**
  * Generator options for css/module modules.
@@ -5477,6 +5498,11 @@ declare interface CssModuleParserOptions {
 	 * Enable/disable renaming of `@keyframes`.
 	 */
 	animation?: boolean;
+
+	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: "stylesheet" | "block-contents";
 
 	/**
 	 * Enable/disable renaming of `@container` names.
@@ -5587,12 +5613,16 @@ declare class CssModulesPlugin {
 	static chunkHasCss(chunk: Chunk, chunkGraph: ChunkGraph): boolean;
 }
 declare abstract class CssParser extends ParserClass {
-	defaultMode: "global" | "auto" | "pure" | "local";
+	defaultMode: "global" | "auto" | "local" | "pure";
 	options: {
 		/**
 		 * Enable/disable renaming of `@keyframes`.
 		 */
 		animation: boolean;
+		/**
+		 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
+		 */
+		as: string;
 		/**
 		 * Enable/disable renaming of `@container` names.
 		 */
@@ -5636,29 +5666,20 @@ declare abstract class CssParser extends ParserClass {
 		/**
 		 * default mode
 		 */
-		defaultMode?: "global" | "auto" | "pure" | "local";
+		defaultMode?: "global" | "auto" | "local" | "pure";
 	};
-	comments?: CommentCssParser[];
 	magicCommentContext: ContextImport;
-
-	/**
-	 * Returns comments in the range.
-	 */
-	getComments(range: [number, number]): CommentCssParser[];
-
-	/**
-	 * Parses comment options.
-	 */
-	parseCommentOptions(range: [number, number]): {
-		options: null | Record<string, any>;
-		errors: null | (Error & { comment: CommentCssParser })[];
-	};
 }
 
 /**
  * Parser options for css modules.
  */
 declare interface CssParserOptions {
+	/**
+	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
+	 */
+	as?: "stylesheet" | "block-contents";
+
 	/**
 	 * Configure how CSS content is exported as default.
 	 */
@@ -5680,6 +5701,29 @@ declare interface CssParserOptions {
 	url?: boolean;
 }
 type Declaration = FunctionDeclaration | VariableDeclaration | ClassDeclaration;
+type DefineConfigInput =
+	| Configuration
+	| MultiConfiguration
+	| ((
+			env: Record<string, any>,
+			argv: Record<string, any>
+	  ) => MaybePromise<Configuration | MultiConfiguration>)
+	| ((
+			env: Record<string, any>,
+			argv: Record<string, any>
+	  ) => MaybePromise<Configuration | MultiConfiguration>)[]
+	| Promise<
+			| Configuration
+			| MultiConfiguration
+			| ((
+					env: Record<string, any>,
+					argv: Record<string, any>
+			  ) => MaybePromise<Configuration | MultiConfiguration>)
+			| ((
+					env: Record<string, any>,
+					argv: Record<string, any>
+			  ) => MaybePromise<Configuration | MultiConfiguration>)[]
+	  >;
 declare class DefinePlugin {
 	/**
 	 * Create a new define plugin
@@ -5774,12 +5818,12 @@ declare abstract class DependenciesBlock {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 }
 declare interface DependenciesBlockLike {
 	dependencies: Dependency[];
@@ -5787,7 +5831,6 @@ declare interface DependenciesBlockLike {
 }
 declare class Dependency {
 	constructor();
-	weak: boolean;
 	optional?: boolean;
 
 	/**
@@ -5816,6 +5859,14 @@ declare class Dependency {
 	): void;
 
 	/**
+	 * Updates loc from a source location plus an explicit index, without
+	 * materializing the `loc` object (keeps `get loc` lazy). Replaces the
+	 * `dep.loc = Object.create(loc); dep.loc.index = i` pattern, which both
+	 * allocated a copy and stored the index outside the serialized fields.
+	 */
+	setLocWithIndex(loc: DependencyLocation, index: number): void;
+
+	/**
 	 * Returns a request context.
 	 */
 	getContext(): undefined | string;
@@ -5829,6 +5880,31 @@ declare class Dependency {
 	 * Could affect referencing module.
 	 */
 	couldAffectReferencingModule(): boolean | symbol;
+
+	/**
+	 * Returns the export name this dependency requests from its target module (lazy barrel optimization).
+	 */
+	getForwardId(): null | string | true;
+
+	/**
+	 * Returns how this dependency may be deferred when its parent module is side-effect-free (lazy barrel optimization).
+	 */
+	getLazyUntil(): null | "local" | "id" | "*" | "@";
+
+	/**
+	 * Returns the export name for a `LAZY_UNTIL_LOCAL`/`LAZY_UNTIL_ID` classification (lazy barrel optimization).
+	 */
+	getLazyName(): null | string;
+
+	/**
+	 * Whether the lazy barrel currently defers creating this dependency's target module (lazy barrel optimization).
+	 */
+	isLazy(): boolean;
+
+	/**
+	 * Sets whether the lazy barrel defers creating this dependency's target module (lazy barrel optimization).
+	 */
+	setLazy(value: boolean): void;
 
 	/**
 	 * Returns the referenced module and export
@@ -5902,14 +5978,25 @@ declare class Dependency {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 	module: any;
 	get disconnect(): any;
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 
@@ -5923,6 +6010,10 @@ declare class Dependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_LOCAL: "local";
+	static LAZY_UNTIL_ID: "id";
+	static LAZY_UNTIL_FALLBACK: "*";
+	static LAZY_UNTIL_REQUEST: "@";
 }
 declare interface DependencyConstructor {
 	new (...args: any[]): Dependency;
@@ -6513,7 +6604,37 @@ declare class ElectronTargetPlugin {
 	/**
 	 * Creates an instance of ElectronTargetPlugin.
 	 */
-	constructor(context?: "main" | "preload" | "renderer");
+	constructor(
+		context?: "main" | "preload" | "renderer",
+		type?:
+			| "import"
+			| "var"
+			| "module"
+			| "assign"
+			| "this"
+			| "window"
+			| "self"
+			| "global"
+			| "commonjs"
+			| "commonjs2"
+			| "commonjs-module"
+			| "commonjs-static"
+			| "amd"
+			| "amd-require"
+			| "umd"
+			| "umd2"
+			| "jsonp"
+			| "system"
+			| "promise"
+			| "module-import"
+			| "script"
+			| "node-commonjs"
+			| "asset"
+			| "asset-url"
+			| "css-import"
+			| "css-url"
+	);
+	type: ExternalsType;
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
@@ -6697,6 +6818,11 @@ declare interface EntryDescription {
 	filename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
+	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
+	 */
+	html?: boolean;
+
+	/**
 	 * Module(s) that are loaded upon startup.
 	 */
 	import: EntryItem;
@@ -6725,6 +6851,11 @@ declare interface EntryDescription {
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	wasmLoading?: string | false;
+
+	/**
+	 * Mark this entry as a worker so its output file uses 'output.workerChunkFilename'.
+	 */
+	worker?: boolean;
 }
 
 /**
@@ -6757,6 +6888,11 @@ declare interface EntryDescriptionNormalized {
 	filename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
+	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
+	 */
+	html?: boolean;
+
+	/**
 	 * Module(s) that are loaded upon startup. The last one is exported.
 	 */
 	import?: string[];
@@ -6785,6 +6921,11 @@ declare interface EntryDescriptionNormalized {
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	wasmLoading?: string | false;
+
+	/**
+	 * Mark this entry as a worker so its output file uses 'output.workerChunkFilename'.
+	 */
+	worker?: boolean;
 }
 type EntryItem = string | string[];
 type EntryLibIndex =
@@ -6809,6 +6950,7 @@ declare class EntryOptionPlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
+	static getHooks(compiler: Compiler): EntryOptionPluginHooks;
 
 	/**
 	 * Apply entry option.
@@ -6827,6 +6969,15 @@ declare class EntryOptionPlugin {
 		name: string,
 		desc: EntryDescriptionNormalized
 	): EntryOptions;
+}
+declare interface EntryOptionPluginHooks {
+	/**
+	 * transform an entry into a different request (e.g. wrap a non-HTML entry in a synthetic HTML module); return `undefined` to keep the default behavior
+	 */
+	entry: SyncBailHook<
+		[string, string, EntryDescriptionNormalized],
+		undefined | string
+	>;
 }
 type EntryOptions = { name?: string } & Omit<
 	EntryDescriptionNormalized,
@@ -6853,6 +7004,11 @@ declare class EntryPlugin {
 		entry: string,
 		options: string | EntryOptions
 	): EntryDependency;
+}
+declare interface EntryScriptInfo {
+	request: string;
+	entryName: string;
+	type: "script" | "stylesheet" | "script-module" | "modulepreload";
 }
 type EntryStatic = string | EntryObject | string[];
 
@@ -6964,6 +7120,11 @@ declare interface Environment {
 	globalThis?: boolean;
 
 	/**
+	 * The environment supports 'Object.hasOwn'.
+	 */
+	hasOwn?: boolean;
+
+	/**
 	 * The environment supports `import.meta.dirname` and `import.meta.filename`.
 	 */
 	importMetaDirnameAndFilename?: boolean;
@@ -6972,6 +7133,11 @@ declare interface Environment {
 	 * The environment supports let for variable declarations.
 	 */
 	let?: boolean;
+
+	/**
+	 * The environment supports logical assignment operators ('a ||= b', 'a &&= b', 'a ??= b').
+	 */
+	logicalAssignment?: boolean;
 
 	/**
 	 * The environment supports object method shorthand ('{ module() {} }').
@@ -6984,6 +7150,11 @@ declare interface Environment {
 	module?: boolean;
 
 	/**
+	 * The environment supports `process.getBuiltinModule()` to synchronously load Node.js core modules.
+	 */
+	nodeBuiltinModuleGetter?: boolean;
+
+	/**
 	 * The environment supports `node:` prefix for Node.js core modules.
 	 */
 	nodePrefixForCoreModules?: boolean;
@@ -6992,6 +7163,16 @@ declare interface Environment {
 	 * The environment supports optional chaining ('obj?.a' or 'obj?.()').
 	 */
 	optionalChaining?: boolean;
+
+	/**
+	 * The environment supports spread and rest in array/object literals and calls ('{ ...obj }', 'fn(...args)').
+	 */
+	spread?: boolean;
+
+	/**
+	 * The environment supports 'Symbol' (and well-known symbols like 'Symbol.toStringTag').
+	 */
+	symbol?: boolean;
 
 	/**
 	 * The environment supports template literals.
@@ -7322,17 +7503,19 @@ declare abstract class ExportInfo {
 	canMangleProvide?: boolean;
 
 	/**
-	 * defined: the export binds to a small primitive constant and may be inlined
-	 * undefined: not an inlined constant export
-	 */
-	canInlineProvide?: InlinedValue;
-
-	/**
 	 * true: it can be mangled
 	 * false: is can not be mangled
 	 * undefined: it was not determined if it can be mangled
 	 */
 	canMangleUse?: boolean;
+	exportsInfoOwned: boolean;
+	exportsInfo?: ExportsInfo;
+
+	/**
+	 * defined: the export binds to a small primitive constant and may be inlined
+	 * undefined: not an inlined constant export
+	 */
+	canInlineProvide?: InlinedValue;
 
 	/**
 	 * true: at least one consumer accepts inlining, none rejected
@@ -7347,14 +7530,6 @@ declare abstract class ExportInfo {
 	 * undefined: it was not determined whether the export is pure
 	 */
 	pureProvide?: boolean;
-
-	/**
-	 * true: the export binding never changes (eligible for value-based export)
-	 * undefined: not determined
-	 */
-	immutableBinding?: boolean;
-	exportsInfoOwned: boolean;
-	exportsInfo?: ExportsInfo;
 	get canMangle(): boolean;
 	canInline(): undefined | InlinedValue;
 
@@ -7455,7 +7630,7 @@ declare abstract class ExportInfo {
 		resolveTargetFilter: (target: TargetItemWithConnection) => boolean,
 		updateOriginalConnection?: (
 			target: TargetItemWithConnection
-		) => ModuleGraphConnection
+		) => undefined | ModuleGraphConnection
 	): undefined | TargetItemWithConnection;
 
 	/**
@@ -7525,11 +7700,6 @@ declare interface ExportSpec {
 	isPure?: boolean;
 
 	/**
-	 * the export binding never changes (eligible for value-based export instead of getter)
-	 */
-	immutableBinding?: boolean;
-
-	/**
 	 * nested exports
 	 */
 	exports?: (string | ExportSpec)[];
@@ -7561,6 +7731,11 @@ declare interface ExportSpec {
 }
 type ExportedVariableInfo = string | VariableInfo | ScopeInfo;
 declare abstract class ExportsInfo {
+	/**
+	 * Records that an owned export got an inlined used name.
+	 */
+	markInlinedExports(): void;
+
 	/**
 	 * Gets owned exports.
 	 */
@@ -7700,6 +7875,12 @@ declare abstract class ExportsInfo {
 	getUsedName(name: string | string[], runtime: RuntimeSpec): UsedName;
 
 	/**
+	 * Checks whether `getUsedName(name, runtime)` would return an `InlinedUsedName`,
+	 * without allocating intermediate used-name arrays (hot path for connection conditions).
+	 */
+	hasInlinedUsedName(name: string[], runtime: RuntimeSpec): boolean;
+
+	/**
 	 * Updates the hash with the data contributed by this instance.
 	 */
 	updateHash(hash: Hash, runtime: RuntimeSpec): void;
@@ -7762,9 +7943,9 @@ declare interface ExportsSpec {
 }
 type ExportsType =
 	| "namespace"
+	| "dynamic"
 	| "default-only"
-	| "default-with-named"
-	| "dynamic";
+	| "default-with-named";
 type Exposes = (string | ExposesObject)[] | ExposesObject;
 
 /**
@@ -7945,7 +8126,8 @@ declare class ExternalModule extends Module {
 	static getCompilationHooks(compilation: Compilation): ExternalModuleHooks;
 	static ModuleExternalInitFragment: typeof ModuleExternalInitFragment;
 	static getExternalModuleNodeCommonjsInitFragment: (
-		runtimeTemplate: RuntimeTemplate
+		runtimeTemplate: RuntimeTemplate,
+		universal?: boolean
 	) => InitFragment<ChunkRenderContextJavascriptModulesPlugin>;
 
 	/**
@@ -7954,6 +8136,9 @@ declare class ExternalModule extends Module {
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
+type ExternalModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownExternalModuleBuildInfo;
 declare interface ExternalModuleHooks {
 	chunkCondition: SyncBailHook<[Chunk, Compilation], boolean>;
 }
@@ -8018,6 +8203,24 @@ declare interface ExternalModuleInfo {
 	 * runtime namespace object that detects "__esModule"
 	 */
 	interopDefaultAccessName?: string;
+
+	/**
+	 * memoized getExportsType(strict=true)
+	 */
+	exportsTypeStrict?:
+		| "namespace"
+		| "dynamic"
+		| "default-only"
+		| "default-with-named";
+
+	/**
+	 * memoized getExportsType(strict=false)
+	 */
+	exportsTypeNonStrict?:
+		| "namespace"
+		| "dynamic"
+		| "default-only"
+		| "default-with-named";
 }
 type ExternalModuleRequest = string | string[] | RequestRecord;
 type Externals =
@@ -8645,6 +8848,7 @@ declare class Generator {
 	 * Returns the source types available for this module.
 	 */
 	getTypes(module: NormalModule): ReadonlySet<string>;
+	getTypesDependOnIncomingConnections(): boolean;
 
 	/**
 	 * Returns the estimated size for the requested source type.
@@ -8850,6 +9054,10 @@ declare interface GroupOptionsSmartGrouping {
 	force?: boolean;
 	targetGroupCount?: number;
 }
+declare interface GuardCollection {
+	consequent?: object;
+	alternate?: object;
+}
 declare interface HMRJavascriptParserHooks {
 	hotAcceptCallback: SyncBailHook<
 		[
@@ -9028,6 +9236,17 @@ declare class HarmonyImportDependency extends ModuleDependency {
 		members: string[],
 		membersOptionals: boolean[]
 	) => string[];
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 
@@ -9041,6 +9260,10 @@ declare class HarmonyImportDependency extends ModuleDependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_LOCAL: "local";
+	static LAZY_UNTIL_ID: "id";
+	static LAZY_UNTIL_FALLBACK: "*";
+	static LAZY_UNTIL_REQUEST: "@";
 }
 declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
 	constructor();
@@ -9062,9 +9285,6 @@ declare interface HarmonySettings {
 	attributes?: ImportAttributes;
 	phase: ImportPhaseType;
 }
-declare interface HarmonySpecifierGuards {
-	guards?: AppendOnlyStackedSet<string>;
-}
 declare abstract class HarmonyStarExportsList {
 	dependencies: HarmonyExportImportedSpecifierDependency[];
 
@@ -9077,12 +9297,12 @@ declare abstract class HarmonyStarExportsList {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: StarListSerializerContext): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: StarListDeserializerContext): void;
 }
 declare class Hash {
 	constructor();
@@ -9167,6 +9387,13 @@ declare interface HashedModuleIdsPluginOptions {
 	 */
 	hashFunction?: string | typeof Hash;
 }
+type Head<T extends ReadonlyArray<any>> = T extends readonly [infer H, ...any[]]
+	? H
+	: T extends readonly []
+		? any
+		: T extends (infer E)[]
+			? E
+			: never;
 
 /**
  * Base class for runtime modules that only emit helper functions and do not
@@ -9250,6 +9477,10 @@ declare interface HtmlGeneratorOptions {
 	 */
 	extract?: boolean;
 }
+type HtmlModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownNormalModuleBuildInfo &
+	KnownHtmlModuleBuildInfo;
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
 	template?: (source: string, context: HtmlTemplateContext) => string;
@@ -9291,15 +9522,16 @@ declare interface HtmlParserOptions {
 						 */
 						tag?: string;
 						/**
-						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-inline` treats the attribute value as inline CSS text and bundles it through the CSS pipeline (the attribute's content is replaced with the processed CSS at render time, like an inline `<style>` body).
+						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-style` treats the attribute value as a full stylesheet (like a `<style>` body) and `stylesheet-style-attribute` as a CSS block's contents (a declaration list, like a `style` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time.
 						 */
 						type:
 							| "script"
+							| "stylesheet"
+							| "script-module"
 							| "src"
 							| "srcset"
-							| "script-module"
-							| "stylesheet"
-							| "stylesheet-inline";
+							| "stylesheet-style"
+							| "stylesheet-style-attribute";
 				  }
 		  )[];
 
@@ -9898,12 +10130,12 @@ declare class InitFragment<GenerateContext> {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(context: ObjectSerializerContext): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContext): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 
 	/**
 	 * Adds the provided source to the init fragment.
@@ -9931,8 +10163,8 @@ declare abstract class InlinedValue {
 	value?: null | string | number | boolean;
 	renderLiteral(): string;
 	render(comment: string): string;
-	serialize(__0: ObjectSerializerContext): void;
-	deserialize(__0: ObjectDeserializerContext): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 }
 type InlinedValueKind = "string" | "number" | "boolean" | "undefined" | "null";
 declare interface InnerGraphUtils {
@@ -10134,6 +10366,13 @@ declare abstract class JavascriptGenerator extends Generator {
 		generateContext: GenerateContext
 	): null | Source;
 }
+type JavascriptModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownNormalModuleBuildInfo &
+	KnownJavascriptModuleBuildInfo;
+type JavascriptModuleBuildMeta = KnownBuildMeta &
+	Record<string, any> &
+	KnownJavascriptModuleBuildMeta;
 declare class JavascriptModulesPlugin {
 	constructor(options?: object);
 	options: object;
@@ -10435,10 +10674,7 @@ declare class JavascriptParser extends ParserClass {
 			boolean | void
 		>;
 		statementIf: SyncBailHook<[IfStatement], boolean | void>;
-		collectGuards: SyncBailHook<
-			[Expression],
-			void | ((walk: () => void) => void)
-		>;
+		collectGuards: SyncBailHook<[Expression], void | GuardCollection>;
 		classExtendsExpression: SyncBailHook<
 			[
 				Expression,
@@ -10735,8 +10971,7 @@ declare class JavascriptParser extends ParserClass {
 		| HarmonySettings
 		| ImportSettings
 		| CommonJsImportSettings
-		| CompatibilitySettings
-		| HarmonySpecifierGuards;
+		| CompatibilitySettings;
 	magicCommentContext: ContextImport;
 
 	/**
@@ -11055,6 +11290,12 @@ declare class JavascriptParser extends ParserClass {
 	 * Pre walk if statement.
 	 */
 	preWalkIfStatement(statement: IfStatement): void;
+
+	/**
+	 * Walks a conditional branch with its guard frame (if any) pushed onto the
+	 * parser-state guard stack for the duration of the branch body.
+	 */
+	walkGuardedBranch(frame: undefined | null | object, walk: () => void): void;
 
 	/**
 	 * Processes the provided statement.
@@ -11979,8 +12220,7 @@ declare class JavascriptParser extends ParserClass {
 		| HarmonySettings
 		| ImportSettings
 		| CommonJsImportSettings
-		| CompatibilitySettings
-		| HarmonySpecifierGuards;
+		| CompatibilitySettings;
 
 	/**
 	 * Processes the provided name.
@@ -11994,8 +12234,7 @@ declare class JavascriptParser extends ParserClass {
 			| HarmonySettings
 			| ImportSettings
 			| CommonJsImportSettings
-			| CompatibilitySettings
-			| HarmonySpecifierGuards,
+			| CompatibilitySettings,
 		flags?: 0 | 1 | 2 | 4
 	): void;
 
@@ -12036,6 +12275,72 @@ declare class JavascriptParser extends ParserClass {
 		options: null | Record<string, any>;
 		errors: null | (Error & { comment: CommentJavascriptParser })[];
 	};
+
+	/**
+	 * Finds the root object of a member expression chain without allocating the
+	 * member arrays. The traversal/break logic must stay in sync with
+	 * `extractMemberExpressionChain`; it lets `getMemberExpressionInfo` reject
+	 * unrecognized roots (~77% of calls) before paying for the arrays.
+	 */
+	getMemberExpressionRoot(
+		expression:
+			| ImportExpressionImport
+			| UnaryExpression
+			| ArrayExpression
+			| ArrowFunctionExpression
+			| AssignmentExpression
+			| AwaitExpression
+			| BinaryExpression
+			| SimpleCallExpression
+			| NewExpression
+			| ChainExpression
+			| ClassExpression
+			| ConditionalExpression
+			| FunctionExpression
+			| Identifier
+			| SimpleLiteral
+			| RegExpLiteral
+			| BigIntLiteral
+			| LogicalExpression
+			| MemberExpression
+			| MetaProperty
+			| ObjectExpression
+			| SequenceExpression
+			| TaggedTemplateExpression
+			| TemplateLiteral
+			| ThisExpression
+			| UpdateExpression
+			| YieldExpression
+			| Super
+	):
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| Super;
 
 	/**
 	 * Extract member expression chain.
@@ -12240,7 +12545,7 @@ declare interface JavascriptParserOptions {
 	/**
 	 * Specifies global mode for dynamic import.
 	 */
-	dynamicImportMode?: "weak" | "eager" | "lazy" | "lazy-once";
+	dynamicImportMode?: "eager" | "weak" | "lazy" | "lazy-once";
 
 	/**
 	 * Specifies global prefetch for dynamic import.
@@ -12478,6 +12783,10 @@ declare interface JsonGeneratorOptions {
 	 */
 	JSONParse?: boolean;
 }
+type JsonModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownNormalModuleBuildInfo &
+	KnownJsonModuleBuildInfo;
 declare interface JsonObjectFs {
 	[index: string]:
 		| undefined
@@ -12655,125 +12964,26 @@ declare interface KnownAssetInfo {
 	 */
 	related?: Record<string, null | string | string[]>;
 }
+declare interface KnownAssetModuleBuildInfo {
+	/**
+	 * whether the asset is inlined as a data url
+	 */
+	dataUrl?: boolean;
+	filename?: string;
+	assetInfo?: AssetInfo;
+	fullContentHash?: string;
+}
 declare interface KnownBuildInfo {
 	cacheable?: boolean;
-	parsed?: boolean;
 	strict?: boolean;
-
-	/**
-	 * using in AMD
-	 */
 	moduleArgument?: string;
-
-	/**
-	 * using in AMD
-	 */
 	exportsArgument?: string;
 
 	/**
-	 * using in CommonJs
-	 */
-	moduleConcatenationBailout?: string;
-
-	/**
-	 * using in APIPlugin
-	 */
-	needCreateRequire?: boolean;
-
-	/**
-	 * using in HttpUriPlugin
-	 */
-	resourceIntegrity?: string;
-
-	/**
-	 * using in NormalModule
-	 */
-	fileDependencies?: LazySet<string>;
-
-	/**
-	 * using in NormalModule
-	 */
-	contextDependencies?: LazySet<string>;
-
-	/**
-	 * using in NormalModule
-	 */
-	missingDependencies?: LazySet<string>;
-
-	/**
-	 * using in NormalModule
-	 */
-	buildDependencies?: LazySet<string>;
-
-	/**
-	 * using in NormalModule
-	 */
-	valueDependencies?: Map<string, ValueCacheVersion>;
-
-	/**
-	 * using in NormalModule
+	 * assets added by loaders or plugins
 	 */
 	assets?: Record<string, Source>;
-
-	/**
-	 * using in NormalModule
-	 */
 	assetsInfo?: Map<string, undefined | AssetInfo>;
-
-	/**
-	 * using in NormalModule
-	 */
-	hash?: string;
-
-	/**
-	 * using in ContextModule
-	 */
-	snapshot?: null | Snapshot;
-
-	/**
-	 * for assets modules
-	 */
-	fullContentHash?: string;
-
-	/**
-	 * for assets modules
-	 */
-	filename?: string;
-
-	/**
-	 * for assets modules
-	 */
-	dataUrl?: boolean;
-
-	/**
-	 * for assets modules
-	 */
-	assetInfo?: AssetInfo;
-
-	/**
-	 * for external modules
-	 */
-	javascriptModule?: boolean;
-
-	/**
-	 * for lazy compilation modules
-	 */
-	active?: boolean;
-
-	/**
-	 * for css modules
-	 */
-	cssData?: CssData;
-
-	/**
-	 * for css modules (charset at-rule)
-	 */
-	charset?: string;
-
-	/**
-	 * for json modules
-	 */
-	jsonData?: JsonData;
 
 	/**
 	 * top level declaration names
@@ -12781,37 +12991,40 @@ declare interface KnownBuildInfo {
 	topLevelDeclarations?: Set<string>;
 
 	/**
-	 * names of locally declared functions known to be free of side effects
-	 */
-	pureFunctions?: Set<string>;
-
-	/**
-	 * whether this module was parsed with `optimization.inlineExports` enabled (gates inlining of its exports)
-	 */
-	inlineExports?: boolean;
-
-	/**
-	 * names of top-level variables declared with const
-	 */
-	constBindings?: Set<string>;
-
-	/**
 	 * true when the module is part of a circular dependency chain
 	 */
 	isCircular?: boolean;
 }
 declare interface KnownBuildMeta {
-	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
+	exportsType?: "default" | "namespace" | "flagged" | "dynamic";
 	defaultObject?: false | "redirect" | "redirect-warn";
-	strictHarmonyModule?: boolean;
-	treatAsCommonJs?: boolean;
 	async?: boolean;
 	sideEffectFree?: boolean;
-	isCssModule?: boolean;
-	needIdInConcatenation?: boolean;
-	jsIncompatibleExports?: Record<string, string>;
+
+	/**
+	 * using in ModuleLibraryPlugin
+	 */
 	exportsFinalNameByRuntime?: Map<string, Record<string, string>>;
+
+	/**
+	 * using in ModuleLibraryPlugin
+	 */
 	exportsSourceByRuntime?: Map<string, string>;
+}
+declare interface KnownConcatenatedModuleBuildInfo {
+	fileDependencies?: LazySet<string>;
+	contextDependencies?: LazySet<string>;
+	missingDependencies?: LazySet<string>;
+
+	/**
+	 * collected from the inner modules
+	 */
+	needCreateRequire?: boolean;
+
+	/**
+	 * taken over from the root module
+	 */
+	inlineExports?: boolean;
 }
 declare interface KnownContext {
 	/**
@@ -12819,8 +13032,29 @@ declare interface KnownContext {
 	 */
 	environments?: string[];
 }
+declare interface KnownContextModuleBuildInfo {
+	snapshot?: null | Snapshot;
+}
 declare interface KnownCreateStatsOptionsContext {
 	forToString?: boolean;
+}
+declare interface KnownCssModuleBuildInfo {
+	cssData?: CssData;
+
+	/**
+	 * charset at-rule
+	 */
+	charset?: string;
+}
+declare interface KnownCssModuleBuildMeta {
+	isCssModule?: boolean;
+	needIdInConcatenation?: boolean;
+}
+declare interface KnownExternalModuleBuildInfo {
+	/**
+	 * true when emitting an ESM external (`output.module`)
+	 */
+	javascriptModule?: boolean;
 }
 declare interface KnownHooks {
 	/**
@@ -12854,15 +13088,64 @@ declare interface KnownHooks {
 	 */
 	result: AsyncSeriesHook<[ResolveRequest, ResolveContext]>;
 }
+declare interface KnownHtmlModuleBuildInfo {
+	/**
+	 * entries collected from the document, grouped by kind
+	 */
+	htmlEntryScripts?: Record<string, EntryScriptInfo[]>;
+}
+declare interface KnownJavascriptModuleBuildInfo {
+	/**
+	 * using in CommonJs
+	 */
+	moduleConcatenationBailout?: string;
+
+	/**
+	 * using in APIPlugin
+	 */
+	needCreateRequire?: boolean;
+
+	/**
+	 * names of locally declared functions known to be free of side effects
+	 */
+	pureFunctions?: Set<string>;
+
+	/**
+	 * whether this module was parsed with `optimization.inlineExports` enabled (gates inlining of its exports)
+	 */
+	inlineExports?: boolean;
+}
+declare interface KnownJavascriptModuleBuildMeta {
+	strictHarmonyModule?: boolean;
+	treatAsCommonJs?: boolean;
+}
 declare interface KnownJavascriptParserState {
 	harmonyNamedExports?: Set<string>;
 	harmonyStarExports?: HarmonyStarExportsList;
 	lastHarmonyImportOrder?: number;
 	localModules?: LocalModule[];
 }
+declare interface KnownJsonModuleBuildInfo {
+	jsonData?: JsonData;
+}
 declare interface KnownMeta {
 	importVarMap?: Map<Module, string>;
 	deferredImportVarMap?: Map<Module, string>;
+}
+declare interface KnownNormalModuleBuildInfo {
+	parsed?: boolean;
+	hash?: string;
+	fileDependencies?: LazySet<string>;
+	contextDependencies?: LazySet<string>;
+	missingDependencies?: LazySet<string>;
+	buildDependencies?: LazySet<string>;
+	valueDependencies?: Map<string, ValueCacheVersion>;
+	snapshot?: null | Snapshot;
+
+	/**
+	 * using in HttpUriPlugin
+	 */
+	resourceIntegrity?: string;
 }
 declare interface KnownNormalizedStatsOptions {
 	context: string;
@@ -13233,6 +13516,9 @@ declare interface KnownStatsProfile {
 	factory: number;
 	dependencies: number;
 }
+declare interface KnownSyncWasmModuleBuildMeta {
+	jsIncompatibleExports?: Record<string, string>;
+}
 declare interface KnownUnsafeCacheData {
 	/**
 	 * factory meta
@@ -13477,7 +13763,9 @@ declare class LazySet<T> {
 	 * Serializes the fully materialized set contents into webpack's object
 	 * serialization stream.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(
+		__0: ObjectSerializerContextObjectMiddlewareObject_4<(number | T)[]>
+	): void;
 
 	/**
 	 * Returns the default iterator over values after forcing pending merges.
@@ -13487,7 +13775,9 @@ declare class LazySet<T> {
 	/**
 	 * Restores a `LazySet` from serialized item data.
 	 */
-	static deserialize<T>(__0: ObjectDeserializerContext): LazySet<T>;
+	static deserialize<T>(
+		__0: ObjectDeserializerContextObjectMiddlewareObject_3<(number | T)[]>
+	): LazySet<T>;
 }
 declare interface LibIdentOptions {
 	/**
@@ -13997,12 +14287,12 @@ declare abstract class LocalModule {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(context: ObjectSerializerContext): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_2): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContext): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_1): void;
 }
 declare interface LogEntry {
 	type:
@@ -14326,6 +14616,7 @@ declare interface MaybeMergeableInitFragment<GenerateContext> {
 		fragments: MaybeMergeableInitFragment<GenerateContext>[]
 	) => MaybeMergeableInitFragment<GenerateContext>[];
 }
+type MaybePromise<T> = T | Promise<T>;
 type Media = undefined | string;
 
 /**
@@ -14732,6 +15023,11 @@ declare class Module extends DependenciesBlock {
 	getSourceTypes(): ReadonlySet<string>;
 
 	/**
+	 * Freshly recomputed source types when they depend on incoming connections, for chunk-graph cache invalidation; undefined otherwise. #20800
+	 */
+	getReferencedSourceTypes(): undefined | ReadonlySet<string>;
+
+	/**
 	 * Basic source types are high-level categories like javascript, css, webassembly, etc.
 	 * We only have built-in knowledge about the javascript basic type here; other basic types may be
 	 * added or changed over time by generators and do not need to be handled or detected here.
@@ -14888,7 +15184,19 @@ declare class ModuleDependency extends Dependency {
 	userRequest: string;
 	sourceOrder?: number;
 	range?: [number, number];
+	weak: boolean;
 	static Template: typeof DependencyTemplate;
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 
@@ -14902,6 +15210,10 @@ declare class ModuleDependency extends Dependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_LOCAL: "local";
+	static LAZY_UNTIL_ID: "id";
+	static LAZY_UNTIL_FALLBACK: "*";
+	static LAZY_UNTIL_REQUEST: "@";
 }
 
 /**
@@ -16456,7 +16768,9 @@ declare class NormalModule extends Module {
 	static getCompilationHooks(
 		compilation: Compilation
 	): NormalModuleCompilationHooks;
-	static deserialize(context: ObjectDeserializerContext): NormalModule;
+	static deserialize(
+		context: ObjectDeserializerContextObjectMiddlewareObject_4
+	): NormalModule;
 
 	/**
 	 * Gets source basic types.
@@ -16464,6 +16778,9 @@ declare class NormalModule extends Module {
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
 }
+type NormalModuleBuildInfo = KnownBuildInfo &
+	Record<string, any> &
+	KnownNormalModuleBuildInfo;
 declare interface NormalModuleCompilationHooks {
 	loader: SyncHook<[AnyLoaderContext, NormalModule]>;
 	beforeLoaders: SyncHook<[LoaderItem[], NormalModule, AnyLoaderContext]>;
@@ -17208,6 +17525,17 @@ type NormalizedStatsOptions = KnownNormalizedStatsOptions &
 declare class NullDependency extends Dependency {
 	constructor();
 	static Template: typeof NullDependencyTemplate;
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 
@@ -17221,6 +17549,10 @@ declare class NullDependency extends Dependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_LOCAL: "local";
+	static LAZY_UNTIL_ID: "id";
+	static LAZY_UNTIL_FALLBACK: "*";
+	static LAZY_UNTIL_REQUEST: "@";
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
 	constructor();
@@ -17232,8 +17564,36 @@ declare interface ObjectConfiguration {
 /**
  * Updates set size using the provided set.
  */
-declare interface ObjectDeserializerContext {
+declare interface ObjectDeserializerContextObjectMiddlewareObject_1 {
+	read: () => string;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_3<[number, boolean]>;
+	setCircularReference: (value: ReferenceableItem) => void;
+}
+declare namespace ObjectDeserializerContextObjectMiddlewareObject_2 {
+	export let read: () => any;
+	export let rest: ObjectDeserializerContextObjectMiddlewareObject_3<
+		ReadonlyArray<any>
+	>;
+	export let setCircularReference: (value: ReferenceableItem) => void;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface ObjectDeserializerContextObjectMiddlewareObject_3<
+	T extends ReadonlyArray<any> = ReadonlyArray<any>
+> {
+	read: () => Head<T>;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_3<Tail<T>>;
+	setCircularReference: (value: ReferenceableItem) => void;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface ObjectDeserializerContextObjectMiddlewareObject_4 {
 	read: () => any;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_3<ReadonlyArray<any>>;
 	setCircularReference: (value: ReferenceableItem) => void;
 }
 
@@ -17280,15 +17640,92 @@ declare interface ObjectEncodingOptionsTypes {
  * Updates set size using the provided set.
  */
 declare interface ObjectSerializer {
-	serialize: (value: any, context: ObjectSerializerContext) => void;
-	deserialize: (context: ObjectDeserializerContext) => any;
+	serialize: (
+		value: any,
+		context: ObjectSerializerContextObjectMiddlewareObject_4<any>
+	) => void;
+	deserialize: (
+		context: ObjectDeserializerContextObjectMiddlewareObject_3<any>
+	) => any;
 }
 
 /**
  * Updates set size using the provided set.
  */
-declare interface ObjectSerializerContext {
-	write: (value?: any) => void;
+declare interface ObjectSerializerContextObjectMiddlewareObject_1 {
+	write: (
+		value: RestoreProvidedDataExports[]
+	) => ObjectSerializerContextObjectMiddlewareObject_4<
+		[undefined | null | boolean, undefined | boolean, boolean]
+	>;
+	setCircularReference: (value: ReferenceableItem) => void;
+	snapshot: () => ObjectSerializerSnapshot;
+	rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	writeLazy?: (item?: any) => void;
+	writeSeparate?: (
+		item: any,
+		obj?: LazyOptions
+	) => LazyFunction<any, any, any, LazyOptions>;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface ObjectSerializerContextObjectMiddlewareObject_2 {
+	write: (
+		value: string
+	) => ObjectSerializerContextObjectMiddlewareObject_4<[number, boolean]>;
+	setCircularReference: (value: ReferenceableItem) => void;
+	snapshot: () => ObjectSerializerSnapshot;
+	rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	writeLazy?: (item?: any) => void;
+	writeSeparate?: (
+		item: any,
+		obj?: LazyOptions
+	) => LazyFunction<any, any, any, LazyOptions>;
+}
+declare namespace ObjectSerializerContextObjectMiddlewareObject_3 {
+	export let write: (
+		value?: any
+	) => ObjectSerializerContextObjectMiddlewareObject_4<ReadonlyArray<any>>;
+	export let setCircularReference: (value: ReferenceableItem) => void;
+	export let snapshot: () => ObjectSerializerSnapshot;
+	export let rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	export let writeLazy: undefined | ((item?: any) => void);
+	export let writeSeparate:
+		| undefined
+		| ((
+				item: any,
+				obj?: LazyOptions
+		  ) => LazyFunction<any, any, any, LazyOptions>);
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface ObjectSerializerContextObjectMiddlewareObject_4<
+	T extends ReadonlyArray<any> = ReadonlyArray<any>
+> {
+	write: (
+		value: Head<T>
+	) => ObjectSerializerContextObjectMiddlewareObject_4<Tail<T>>;
+	setCircularReference: (value: ReferenceableItem) => void;
+	snapshot: () => ObjectSerializerSnapshot;
+	rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	writeLazy?: (item?: any) => void;
+	writeSeparate?: (
+		item: any,
+		obj?: LazyOptions
+	) => LazyFunction<any, any, any, LazyOptions>;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface ObjectSerializerContextObjectMiddlewareObject_5 {
+	write: (
+		value?: any
+	) => ObjectSerializerContextObjectMiddlewareObject_4<ReadonlyArray<any>>;
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
@@ -18242,6 +18679,11 @@ declare interface Output {
 	hotUpdateMainFilename?: string;
 
 	/**
+	 * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
+	 */
+	html?: boolean | OutputHtmlOptions;
+
+	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	htmlChunkFilename?: string | TemplatePathFn<PathDataChunk>;
@@ -18363,6 +18805,11 @@ declare interface Output {
 	webassemblyModuleFilename?: string;
 
 	/**
+	 * Specifies the filename template of non-initial output worker's files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	workerChunkFilename?: string | TemplatePathFn<PathDataChunk>;
+
+	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: string | false;
@@ -18416,6 +18863,16 @@ declare interface OutputFileSystem {
 	join?: (path1: string, path2: string) => string;
 	relative?: (from: string, to: string) => string;
 	dirname?: (dirname: string) => string;
+}
+
+/**
+ * Options for the generated HTML files.
+ */
+declare interface OutputHtmlOptions {
+	/**
+	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
+	 */
+	scriptLoading?: "auto" | "defer" | "blocking";
 }
 
 /**
@@ -18572,6 +19029,11 @@ declare interface OutputNormalized {
 	hotUpdateMainFilename?: string;
 
 	/**
+	 * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
+	 */
+	html?: boolean | OutputHtmlOptions;
+
+	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	htmlChunkFilename?: string | TemplatePathFn<PathDataChunk>;
@@ -18678,6 +19140,11 @@ declare interface OutputNormalized {
 	webassemblyModuleFilename?: string;
 
 	/**
+	 * Specifies the filename template of non-initial output worker's files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	workerChunkFilename?: string | TemplatePathFn<PathDataChunk>;
+
+	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: string | false;
@@ -18713,6 +19180,9 @@ type OutputNormalizedWithDefaults = OutputNormalized & {
 	devtoolNamespace: string;
 	publicPath: NonNullable<undefined | string | TemplatePathFn<PathData>>;
 	workerPublicPath: string;
+	workerChunkFilename: NonNullable<
+		undefined | string | TemplatePathFn<PathDataChunk>
+	>;
 	workerWasmLoading: NonNullable<undefined | string | false>;
 	workerChunkLoading: NonNullable<undefined | string | false>;
 	chunkFormat: NonNullable<undefined | string | false>;
@@ -18939,6 +19409,7 @@ declare interface PathData {
 	noChunkHash?: boolean;
 	url?: string;
 	local?: string;
+	uniqueName?: string;
 	prepareId?: (id: string | number) => string | number;
 }
 type PathDataChunk = PathData & { chunk: Chunk | ChunkPathData };
@@ -19071,10 +19542,6 @@ declare interface PnpApi {
 		issuer: string,
 		options: { considerBuiltins: boolean }
 	) => null | string;
-}
-declare interface Position {
-	line: number;
-	column: number;
 }
 declare class PrefetchPlugin {
 	/**
@@ -21266,7 +21733,7 @@ declare abstract class RestoreProvidedData {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_1): void;
 }
 declare interface RestoreProvidedDataExports {
 	name: string;
@@ -21275,7 +21742,6 @@ declare interface RestoreProvidedDataExports {
 	canInlineProvide?: InlinedValue;
 	terminalBinding: boolean;
 	pureProvide?: boolean;
-	immutableBinding?: boolean;
 	exportsInfo?: RestoreProvidedData;
 }
 type Rule = string | RegExp | ((str: string) => boolean);
@@ -21885,12 +22351,35 @@ declare abstract class RuntimeTemplate {
 	isIIFE(): boolean;
 	isModule(): boolean;
 	isNeutralPlatform(): boolean;
+
+	/**
+	 * Whether the bundle targets node and web at once (universal `["node", "web"]` + `output.module`), like `isUniversalTarget` in `WebpackOptionsApply`.
+	 */
+	isUniversalTarget(): boolean;
+
+	/**
+	 * Runtime expression that is truthy in browser-like environments (a DOM
+	 * `document` or a worker `self`) and falsy in Node.js. Single source of
+	 * truth for branching a universal ("node-or-web") target at runtime.
+	 */
+	isWebLikePlatformExpression(): string;
+
+	/**
+	 * Expression for the global registry that collects CSS server-side when there
+	 * is no DOM (SSR). An SSR host reads it from `globalThis`; it is keyed by the
+	 * style/chunk identifier and namespaced by `output.uniqueName`.
+	 */
+	cssServerStyleRegistry(): string;
 	supportsConst(): boolean;
 	supportsLet(): boolean;
 	supportsMethodShorthand(): boolean;
+	supportsLogicalAssignment(): boolean;
 	supportsArrowFunction(): boolean;
 	supportsAsyncFunction(): boolean;
 	supportsOptionalChaining(): boolean;
+	supportsSpread(): boolean;
+	supportsObjectHasOwn(): boolean;
+	supportsSymbol(): boolean;
 	supportsForOf(): boolean;
 	supportsDestructuring(): boolean;
 	supportsBigIntLiteral(): boolean;
@@ -21938,6 +22427,40 @@ declare abstract class RuntimeTemplate {
 	 * Returns empty function code.
 	 */
 	emptyFunction(): string;
+
+	/**
+	 * Guards an access/call on `object` with optional chaining when supported,
+	 * otherwise an equivalent `&&` short-circuit. `object` is evaluated twice in
+	 * the fallback, so it must be side-effect free.
+	 */
+	optionalChaining(object: string, access: string): string;
+
+	/**
+	 * Reads a node builtin via `process.getBuiltinModule()`, guarded to stay falsy off node so universal `["node", "web"]` bundles don't crash (also falsy on node <22.3).
+	 */
+	getBuiltinModule(request: string, access?: string): string;
+
+	/**
+	 * Renders an object-literal method, using method shorthand when supported
+	 * and falling back to a `prop: function/arrow` property otherwise.
+	 */
+	method(prop: string, args: string, body: string | string[]): string;
+
+	/**
+	 * Returns an own-property check, using `Object.hasOwn` when supported and
+	 * falling back to `Object.prototype.hasOwnProperty.call` otherwise.
+	 */
+	objectHasOwn(object: string, property: string): string;
+
+	/**
+	 * Returns a self-defaulting assignment, using the `||=` logical assignment
+	 * operator when supported and falling back to `target = target || value`
+	 * otherwise. `target` is evaluated twice in the fallback, so it must be
+	 * side-effect free. The expression evaluates to the resulting value.
+	 * Models `||` only, so `target` must never hold a legitimate falsy value
+	 * (`0`, `""`, `false`) — it would be overwritten; use it for object/array defaults.
+	 */
+	assignOr(target: string, value: string): string;
 
 	/**
 	 * Returns destructure array code.
@@ -22769,12 +23292,12 @@ declare abstract class Snapshot {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 
 	/**
 	 * Gets file iterable.
@@ -23189,20 +23712,22 @@ declare interface SourcePosition {
 }
 type SourceType =
 	| "script"
+	| "stylesheet"
+	| "script-module"
+	| "modulepreload"
 	| "src"
 	| "srcset"
-	| "script-module"
-	| "stylesheet"
-	| "stylesheet-inline"
-	| "modulepreload";
+	| "stylesheet-style"
+	| "stylesheet-style-attribute";
 type SourceTypeOrResolver =
 	| "script"
+	| "stylesheet"
+	| "script-module"
+	| "modulepreload"
 	| "src"
 	| "srcset"
-	| "script-module"
-	| "stylesheet"
-	| "stylesheet-inline"
-	| "modulepreload"
+	| "stylesheet-style"
+	| "stylesheet-style-attribute"
 	| ((attrs: Map<string, string>, css: boolean) => SourceType);
 type SourceValue = string | Buffer;
 declare interface SplitChunksOptions {
@@ -23360,6 +23885,32 @@ declare abstract class StackedMap<K, V> {
 	 * scope.
 	 */
 	createChild(): StackedMap<K, V>;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface StarListDeserializerContext {
+	read: () => HarmonyExportImportedSpecifierDependency[];
+	rest: ObjectDeserializerContextObjectMiddlewareObject_3<[]>;
+	setCircularReference: (value: ReferenceableItem) => void;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface StarListSerializerContext {
+	write: (
+		value: HarmonyExportImportedSpecifierDependency[]
+	) => ObjectSerializerContextObjectMiddlewareObject_4<[]>;
+	setCircularReference: (value: ReferenceableItem) => void;
+	snapshot: () => ObjectSerializerSnapshot;
+	rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	writeLazy?: (item?: any) => void;
+	writeSeparate?: (
+		item: any,
+		obj?: LazyOptions
+	) => LazyFunction<any, any, any, LazyOptions>;
 }
 declare interface StartupRenderContext {
 	/**
@@ -24317,6 +24868,9 @@ declare interface SyncModuleIdsPluginOptions {
 	 */
 	mode?: "read" | "create" | "merge" | "update";
 }
+type SyncWasmModuleBuildMeta = KnownBuildMeta &
+	Record<string, any> &
+	KnownSyncWasmModuleBuildMeta;
 declare interface SyntheticDependencyLocation {
 	name: string;
 	index?: number;
@@ -24331,10 +24885,12 @@ declare interface TagInfo {
 		| HarmonySettings
 		| ImportSettings
 		| CommonJsImportSettings
-		| CompatibilitySettings
-		| HarmonySpecifierGuards;
+		| CompatibilitySettings;
 	next?: TagInfo;
 }
+type Tail<T extends ReadonlyArray<any>> = T extends readonly [any, ...infer R]
+	? R
+	: T;
 declare interface TargetItemWithConnection {
 	module: Module;
 	connection: ModuleGraphConnection;
@@ -24920,6 +25476,19 @@ declare abstract class WeakTupleMap<K extends any[], V> {
 	provide(...args: [K, ...((...args: K) => V)[]]): V;
 
 	/**
+	 * Memoizes `compute(thisArg, ...args)` under the tuple key `[compute,
+	 * ...args]`, computing it on a miss. Equivalent to `provide(compute, ...args,
+	 * () => compute(thisArg, ...args))` but without allocating that closure (or an
+	 * extra rest array) on every call — `ModuleGraph#cached` runs this on hot
+	 * paths where most calls hit the cache and the closure would be pure waste.
+	 */
+	cachedProvide(
+		compute: (thisArg: any, ...args: K) => V,
+		thisArg: any,
+		args: K
+	): V;
+
+	/**
 	 * Removes the value stored for the tuple key without pruning the trie.
 	 */
 	delete(...args: K): void;
@@ -24985,12 +25554,12 @@ declare class WebpackError extends Error {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 
 	/**
 	 * Creates a `.stack` property on `targetObject`, which when accessed returns
@@ -25584,6 +26153,7 @@ declare function exports(
 declare function exports(options: MultiConfiguration): MultiCompiler;
 declare namespace exports {
 	export const webpack: _functionWebpack;
+	export const defineConfig: <T extends DefineConfigInput>(config: T) => T;
 	export const validate: (
 		configuration: Configuration | MultiConfiguration
 	) => void;
@@ -25777,6 +26347,7 @@ declare namespace exports {
 		export let toBinary: "__webpack_require__.tb";
 		export let uncaughtErrorHandler: "__webpack_require__.oe";
 		export let wasmInstances: "__webpack_require__.w";
+		export let worker: "__webpack_require__.wc";
 	}
 	export const UsageState: Readonly<{
 		Unused: 0;
@@ -26183,6 +26754,14 @@ declare namespace exports {
 	export type ExternalItemFunctionPromise = (
 		data: ExternalItemFunctionData
 	) => Promise<ExternalItemValue>;
+	export type ConfigurationFactory = (
+		env: Record<string, any>,
+		argv: Record<string, any>
+	) => MaybePromise<Configuration | MultiConfiguration>;
+	export type ObjectSerializerContext =
+		typeof ObjectSerializerContextObjectMiddlewareObject_3;
+	export type ObjectDeserializerContext =
+		typeof ObjectDeserializerContextObjectMiddlewareObject_2;
 	export {
 		AutomaticPrefetchPlugin,
 		AsyncDependenciesBlock,
@@ -26270,8 +26849,22 @@ declare namespace exports {
 		Configuration,
 		WebpackOptionsNormalized,
 		WebpackPluginInstance,
+		AssetModuleBuildInfo,
 		ChunkGroup,
 		AssetEmittedInfo,
+		ContextModuleBuildInfo,
+		CssModuleBuildInfo,
+		CssModuleBuildMeta,
+		ExternalModuleBuildInfo,
+		HtmlModuleBuildInfo,
+		JavascriptModuleBuildInfo,
+		JavascriptModuleBuildMeta,
+		JsonModuleBuildInfo,
+		BuildInfo,
+		BuildMeta,
+		NormalModuleBuildInfo,
+		ConcatenatedModuleBuildInfo,
+		SyncWasmModuleBuildMeta,
 		Asset,
 		AssetInfo,
 		EntryOptions,
@@ -26297,6 +26890,7 @@ declare namespace exports {
 		Problem,
 		Colors,
 		ColorsOptions,
+		DefineConfigInput,
 		StatsAsset,
 		StatsChunk,
 		StatsChunkGroup,
@@ -26311,8 +26905,6 @@ declare namespace exports {
 		StatsModuleTraceDependency,
 		StatsModuleTraceItem,
 		StatsProfile,
-		ObjectSerializerContext,
-		ObjectDeserializerContext,
 		InputFileSystem,
 		OutputFileSystem,
 		LoaderModule,

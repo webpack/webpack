@@ -18,6 +18,7 @@ const {
 	urlToPath,
 	urlToRelativePath
 } = require("./RunnerHelpers");
+const rewriteImportMeta = require("./rewriteImportMeta");
 
 const [major] = getNodeVersion();
 
@@ -107,6 +108,10 @@ class TestRunner {
 	}
 
 	/**
+	 * Whether the target is universal, i.e. its merged platform is neither
+	 * node- nor web-specific (the `"universal"` preset, or arrays like
+	 * `["web", "node"]`, `["web", "electron-main"]`, `["web", "node", "webworker"]`),
+	 * so the same bundle runs once per env.
 	 * @param {EXPECTED_ANY} webpackOptions webpack options
 	 * @returns {boolean} whether target is universal
 	 */
@@ -122,17 +127,17 @@ class TestRunner {
 				: typeof target === "string"
 					? getTargetProperties(
 							target,
-							/** @type {Context} */ (webpackOptions.context)
+							/** @type {string} */ (webpackOptions.context)
 						)
 					: getTargetsProperties(
 							/** @type {string[]} */ (target),
-							/** @type {Context} */ (webpackOptions.context)
+							/** @type {string} */ (webpackOptions.context)
 						);
-		return (
-			outputModule &&
-			targetProperties.node === null &&
-			targetProperties.web === null
-		);
+		const props =
+			/** @type {import("../../../lib/config/target").TargetProperties} */ (
+				targetProperties
+			);
+		return outputModule && props.node === null && props.web === null;
 	}
 
 	/**
@@ -159,10 +164,14 @@ class TestRunner {
 		const results = [];
 		for (let i = 0; i < optionsArr.length; i++) {
 			const options = optionsArr[i];
-			let targets = [options.target];
 			let found = false;
+			// universal targets run the same bundle once per concrete environment;
+			// the `"universal"` preset expands to web + node.
+			let targets = [options.target];
 			if (TestRunner.isUniversalTarget(options)) {
-				targets = targets.reduce((prev, cur) => [...prev, ...cur], []);
+				targets = Array.isArray(options.target)
+					? options.target
+					: ["web", "node"];
 			}
 
 			for (const target of targets) {
@@ -251,7 +260,7 @@ class TestRunner {
 		const target = this.target;
 		const context = /** @type {string} */ (this.webpackOptions.context);
 
-		if (target === false) return false;
+		if (/** @type {EXPECTED_ANY} */ (target) === false) return false;
 
 		return typeof target === "string"
 			? getTargetProperties(target, context)
@@ -293,7 +302,7 @@ class TestRunner {
 			console,
 			expect,
 			jest,
-			nsObj: (m) => {
+			nsObj: (/** @type {EXPECTED_ANY} */ m) => {
 				Object.defineProperty(m, Symbol.toStringTag, {
 					value: "Module"
 				});
@@ -302,8 +311,8 @@ class TestRunner {
 		};
 		Object.assign(base, this._globalContext);
 		if (this.jsDom()) {
-			base.window = this._globalContext;
-			base.self = this._globalContext;
+			/** @type {EXPECTED_ANY} */ (base).window = this._globalContext;
+			/** @type {EXPECTED_ANY} */ (base).self = this._globalContext;
 		}
 		return base;
 	}
@@ -345,12 +354,12 @@ class TestRunner {
 	/**
 	 * @param {string} currentDirectory current directory
 	 * @param {string | string[]} module module
-	 * @returns {ModuleInfo} module info
+	 * @returns {ModuleInfo | undefined} module info
 	 */
 	_resolveModule(currentDirectory, module) {
 		if (Array.isArray(module)) {
 			return {
-				origin: module,
+				origin: /** @type {string} */ (/** @type {EXPECTED_ANY} */ (module)),
 				subPath: "",
 				modulePath: path.join(currentDirectory, ".array-require.js"),
 				content: `module.exports = (${module
@@ -392,9 +401,20 @@ class TestRunner {
 	 * @param {Record<string, string>=} importAttributes import attributes
 	 * @returns {EXPECTED_ANY} require result
 	 */
-	require(currentDirectory, module, context = {}, importAttributes = {}) {
-		if (this.testConfig.modules && module in this.testConfig.modules) {
-			return this.testConfig.modules[module];
+	require(
+		currentDirectory,
+		module,
+		context = /** @type {RequireContext} */ ({}),
+		importAttributes = {}
+	) {
+		if (
+			/** @type {EXPECTED_ANY} */ (this.testConfig).modules &&
+			/** @type {string} */ (module) in
+				/** @type {EXPECTED_ANY} */ (this.testConfig).modules
+		) {
+			return /** @type {EXPECTED_ANY} */ (this.testConfig).modules[
+				/** @type {string} */ (module)
+			];
 		}
 		if (this.testConfig.resolveModule) {
 			module = this.testConfig.resolveModule(
@@ -409,7 +429,8 @@ class TestRunner {
 			const rawRequire = Module.createRequire
 				? Module.createRequire(currentDirectory)
 				: require;
-			return rawRequire(module.startsWith("node:") ? module.slice(5) : module);
+			const mod = /** @type {string} */ (module);
+			return rawRequire(mod.startsWith("node:") ? mod.slice(5) : mod);
 		}
 		const { modulePath } = moduleInfo;
 		if (importAttributes && importAttributes.type === "bytes") {
@@ -453,7 +474,7 @@ class TestRunner {
 					this.require.bind(this, path.dirname(modulePath)),
 					this.require
 				),
-				importScripts: (url) => {
+				importScripts: (/** @type {string} */ url) => {
 					expect(url).toMatch(/^https:\/\/test\.cases\/path\//);
 					this.require(this.outputDirectory, urlToRelativePath(url));
 				},
@@ -537,6 +558,7 @@ class TestRunner {
 				}
 			);
 
+		/** @type {vm.Context | null} */
 		let esmContext = null;
 
 		/** @type {Map<string, vm.SourceTextModule>} */
@@ -544,7 +566,8 @@ class TestRunner {
 		const { category, name, round } = this.testMeta;
 
 		const testMetaStr = `${category}-${name}-${round || 0}`;
-		const appendTestMeta = (identifier) => `${identifier}?${testMetaStr}`;
+		const appendTestMeta = (/** @type {string} */ identifier) =>
+			`${identifier}?${testMetaStr}`;
 
 		/**
 		 * @param {string} identifier identifier
@@ -554,50 +577,78 @@ class TestRunner {
 		const getModuleInstance = (identifier, content) => {
 			let instance = esmCache.get(identifier);
 			if (!instance) {
-				instance = new vm.SourceTextModule(content, {
-					identifier: appendTestMeta(identifier),
-					url: appendTestMeta(pathToFileURL(identifier).href),
-					context: esmContext,
-					initializeImportMeta: (meta, _module) => {
-						meta.url = pathToFileURL(identifier).href;
-
+				let moduleSource = content;
+				// Deno 2.8.3 hard-panics ("Module not found", bindings.rs) the moment
+				// `import.meta` is accessed inside a vm SourceTextModule (no
+				// initializeImportMeta shape avoids it). Rewrite the `import.meta`
+				// meta-property to a prepended object so the module evaluates; parse to
+				// only touch real syntax, never string/comment text. Node/Bun keep the
+				// initializeImportMeta callback below.
+				if (process.versions.deno && /\bimport\.meta\b/.test(content)) {
+					moduleSource = rewriteImportMeta(content, () => {
+						/** @type {Record<string, string>} */
+						const meta = { url: pathToFileURL(identifier).href };
 						if (this.hasNodeTarget()) {
 							meta.filename = identifier;
 							meta.dirname = path.dirname(identifier);
 						}
-					},
-					importModuleDynamically: async (
-						specifier,
-						module,
-						importAttributes
-					) => {
-						const normalizedSpecifier = specifier.startsWith("file:")
-							? `./${path.relative(
-									path.dirname(identifier),
-									fileURLToPath(specifier)
-								)}`
-							: specifier.replace(
-									/https:\/\/example.com\/public\/path\//,
-									"./"
-								);
+						return meta;
+					});
+				}
+				instance = new vm.SourceTextModule(
+					moduleSource,
+					/** @type {EXPECTED_ANY} */ ({
+						identifier: appendTestMeta(identifier),
+						url: appendTestMeta(pathToFileURL(identifier).href),
+						context: esmContext,
+						initializeImportMeta: (
+							/** @type {EXPECTED_ANY} */ meta,
+							/** @type {EXPECTED_ANY} */ _module
+						) => {
+							meta.url = pathToFileURL(identifier).href;
 
-						const res = await this.require(
-							path.dirname(identifier),
-							normalizedSpecifier,
-							{
-								esmReturnStatus: ESModuleStatus.Evaluated
-							},
-							importAttributes
-						);
+							if (this.hasNodeTarget()) {
+								meta.filename = identifier;
+								meta.dirname = path.dirname(identifier);
+							}
+						},
+						importModuleDynamically: async (
+							/** @type {string} */ specifier,
+							/** @type {vm.Module} */ module,
+							/** @type {EXPECTED_ANY} */ importAttributes
+						) => {
+							const normalizedSpecifier = specifier.startsWith("file:")
+								? `./${path.relative(
+										path.dirname(identifier),
+										fileURLToPath(specifier)
+									)}`
+								: specifier.replace(
+										/https:\/\/example.com\/public\/path\//,
+										"./"
+									);
 
-						return await asModule(
-							res,
-							module.context,
-							undefined,
-							importAttributes
-						);
-					}
-				});
+							const res = await this.require(
+								path.dirname(identifier),
+								normalizedSpecifier,
+								{
+									esmReturnStatus: ESModuleStatus.Evaluated
+								},
+								/** @type {Record<string, string>} */ (
+									/** @type {EXPECTED_ANY} */ (importAttributes)
+								)
+							);
+
+							return await asModule(
+								res,
+								module.context,
+								undefined,
+								/** @type {Record<string, string>} */ (
+									/** @type {EXPECTED_ANY} */ (importAttributes)
+								)
+							);
+						}
+					})
+				);
 				esmCache.set(identifier, instance);
 			}
 
@@ -620,7 +671,8 @@ class TestRunner {
 
 			const esm = getModuleInstance(modulePath, content);
 
-			if (esmReturnStatus === ESModuleStatus.Unlinked) return esm;
+			if (esmReturnStatus === ESModuleStatus.Unlinked)
+				return Promise.resolve(esm);
 
 			const link = async () => {
 				await esm.link(
@@ -630,7 +682,11 @@ class TestRunner {
 							await this.require(
 								path.dirname(
 									referencingModule.identifier ||
-										fileURLToPath(referencingModule.url)
+										fileURLToPath(
+											/** @type {string} */ (
+												/** @type {EXPECTED_ANY} */ (referencingModule).url
+											)
+										)
 								),
 								specifier,
 								{ esmReturnStatus: ESModuleStatus.Unlinked }
@@ -646,11 +702,17 @@ class TestRunner {
 			const run = async () => {
 				// Link module dependencies
 				if (major === 10) {
-					if (esm.linkingStatus === ESModuleStatus.Unlinked) {
+					if (
+						/** @type {EXPECTED_ANY} */ (esm).linkingStatus ===
+						ESModuleStatus.Unlinked
+					) {
 						await link();
 					}
-					if (esm.linkingStatus === ESModuleStatus.Linked) {
-						esm.instantiate();
+					if (
+						/** @type {EXPECTED_ANY} */ (esm).linkingStatus ===
+						ESModuleStatus.Linked
+					) {
+						/** @type {EXPECTED_ANY} */ (esm).instantiate();
 					}
 				} else if (esm.status === ESModuleStatus.Unlinked) {
 					await link();
@@ -660,7 +722,7 @@ class TestRunner {
 				await esm.evaluate();
 				if (esmReturnStatus === ESModuleStatus.Evaluated) return esm;
 
-				const ns = esm.namespace;
+				const ns = /** @type {EXPECTED_ANY} */ (esm.namespace);
 				return ns.default && ns.default instanceof Promise ? ns.default : ns;
 			};
 
@@ -717,28 +779,51 @@ class TestRunner {
 
 			const document = new FakeDocument(outputDirectory);
 			if (this.testConfig.evaluateScriptOnAttached) {
-				document.onScript = (src) => {
-					this.require(outputDirectory, urlToRelativePath(src));
+				document.onScript = (/** @type {string | undefined} */ src) => {
+					this.require(
+						outputDirectory,
+						urlToRelativePath(/** @type {string} */ (src))
+					);
 				};
 			}
-			const fetch = async (url) => {
+			const fetch = async (/** @type {string | URL} */ url) => {
 				try {
+					// universal targets pass a `URL` (often `file:`) to fetch
+					const filePath =
+						url instanceof URL || String(url).startsWith("file:")
+							? fileURLToPath(url)
+							: urlToPath(String(url), this.outputDirectory);
 					const buffer = await new Promise((resolve, reject) => {
-						fs.readFile(urlToPath(url, this.outputDirectory), (err, b) =>
-							err ? reject(err) : resolve(b)
-						);
+						fs.readFile(filePath, (err, b) => (err ? reject(err) : resolve(b)));
 					});
+					// `instantiateStreaming` needs a real Response with a wasm mime type
+					if (typeof Response !== "undefined") {
+						const contentType = filePath.endsWith(".wasm")
+							? "application/wasm"
+							: filePath.endsWith(".json")
+								? "application/json"
+								: "text/plain";
+						return new Response(buffer, {
+							status: 200,
+							headers: { "Content-Type": contentType }
+						});
+					}
 					return {
 						status: 200,
 						ok: true,
+						headers: { get: () => "application/wasm" },
+						arrayBuffer: async () => buffer,
+						text: async () => buffer.toString("utf8"),
 						json: async () => JSON.parse(buffer.toString("utf8"))
 					};
-				} catch (err) {
+				} catch (/** @type {EXPECTED_ANY} */ err) {
 					if (err.code === "ENOENT") {
-						return {
-							status: 404,
-							ok: false
-						};
+						return typeof Response !== "undefined"
+							? new Response(null, { status: 404 })
+							: {
+									status: 404,
+									ok: false
+								};
 					}
 					throw err;
 				}
@@ -775,7 +860,7 @@ class TestRunner {
 			};
 			if (typeof Blob !== "undefined") {
 				// node.js >= 18
-				env.Blob = Blob;
+				/** @type {EXPECTED_ANY} */ (env).Blob = Blob;
 			}
 			return env;
 		}

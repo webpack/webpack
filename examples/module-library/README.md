@@ -76,7 +76,7 @@ export function reset() {
 /******/ (() => {
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 		if(Symbol.toStringTag) {
 /******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
@@ -140,10 +140,10 @@ let n=0;function o(){n++}function t(){n--}function e(){n=0}const s=n=>console.lo
 ## Unoptimized
 
 ```
-asset output.js 3.29 KiB [emitted] [javascript module] (name: main)
-chunk (runtime: main) output.js (main) 302 bytes (javascript) 1.11 KiB (runtime) [entry] [rendered]
+asset output.js 3.26 KiB [emitted] [javascript module] (name: main)
+chunk (runtime: main) output.js (main) 302 bytes (javascript) 1.07 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 1.11 KiB 3 modules
+  runtime modules 1.07 KiB 3 modules
   ./example.js + 2 modules 302 bytes [built] [code generated]
     [exports: decrement, increment, print, reset, resetCounter, value]
     [used exports unknown]

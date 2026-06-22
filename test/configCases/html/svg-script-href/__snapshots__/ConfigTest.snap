@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html svg-script-href exported tests should bundle SVG <script xlink:href> and <script href> as entry chunks 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>SVG script</title></head>
+<body>
+
+<svg width=\\"10\\" height=\\"10\\">
+	<script xlink:href=\\"__html_cbe5b59d_0.chunk.js\\"></script>
+</svg>
+
+<svg width=\\"10\\" height=\\"10\\">
+	<script href=\\"__html_cbe5b59d_1.chunk.js\\">console.log(\\"fallback ignored when href is present\\")</script>
+</svg>
+
+</body>
+</html>
+"
+`;

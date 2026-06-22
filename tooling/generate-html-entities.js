@@ -7,7 +7,7 @@
 // cspell:disable
 
 // Generates the `// #region html entities` block inside
-// `lib/html/walkHtmlTokens.js` from the vendored WHATWG named character
+// `lib/html/syntax.js` from the vendored WHATWG named character
 // references table at `tooling/html-entities.json`.
 //
 // Run as part of `yarn lint:special` to verify the inlined block is in
@@ -25,13 +25,7 @@ const SPEC_URL = "https://html.spec.whatwg.org/entities.json";
 const FALLBACK_URL =
 	"https://raw.githubusercontent.com/w3c/html/master/entities.json";
 const DATA_PATH = path.resolve(__dirname, "html-entities.json");
-const TARGET_PATH = path.resolve(
-	__dirname,
-	"..",
-	"lib",
-	"html",
-	"walkHtmlTokens.js"
-);
+const TARGET_PATH = path.resolve(__dirname, "..", "lib", "html", "syntax.js");
 
 // Tolerate both LF and CRLF so the generator's `check` mode doesn't
 // false-fail on Windows checkouts where git normalized line endings to CRLF.

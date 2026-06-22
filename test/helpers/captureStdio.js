@@ -2,15 +2,22 @@
 
 const stripVTControlCharacters = require("./stripVTControlCharacters");
 
-module.exports = (stdio, tty) => {
+module.exports = (
+	/** @type {NodeJS.WriteStream} */ stdio,
+	/** @type {boolean=} */ tty
+) => {
+	/** @type {string[]} */
 	let logs = [];
 
 	const write = stdio.write;
 	const isTTY = stdio.isTTY;
 
-	stdio.write = function write(str) {
-		logs.push(str);
-	};
+	stdio.write = /** @type {NodeJS.WriteStream["write"]} */ (
+		function write(/** @type {string} */ str) {
+			logs.push(str);
+			return true;
+		}
+	);
 	if (tty !== undefined) stdio.isTTY = tty;
 
 	return {

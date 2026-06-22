@@ -8,6 +8,8 @@ const {
 	resolveByProperty
 } = require("../lib/util/cleverMerge");
 
+/** @typedef {Record<string, EXPECTED_ANY[]>} CasesMap */
+
 describe("cleverMerge", () => {
 	const base = {
 		a1: [1],
@@ -529,7 +531,11 @@ describe("cleverMerge", () => {
 			{
 				b: 50,
 				y: 20,
-				byArguments: (x, y, z) => ({
+				byArguments: (
+					/** @type {number} */ x,
+					/** @type {number} */ y,
+					/** @type {number} */ z
+				) => ({
 					c: 60,
 					x,
 					y,
@@ -550,7 +556,11 @@ describe("cleverMerge", () => {
 				a: 4, // keep
 				b: 5, // static override
 				c: 6, // dynamic override
-				byArguments: (x, y, z) => ({
+				byArguments: (
+					/** @type {number} */ x,
+					/** @type {number} */ y,
+					/** @type {number} */ z
+				) => ({
 					x, // keep
 					y, // static override
 					z // dynamic override
@@ -559,7 +569,11 @@ describe("cleverMerge", () => {
 			{
 				b: 50,
 				y: 20,
-				byArguments: (x, y, z) => ({
+				byArguments: (
+					/** @type {number} */ x,
+					/** @type {number} */ y,
+					/** @type {number} */ z
+				) => ({
 					c: 60,
 					z: z * 10
 				})
@@ -581,7 +595,13 @@ describe("cleverMerge", () => {
 					c: 8, // dynamic override
 					d: 9, // static override (3rd)
 					e: 10, // dynamic override (3rd)
-					byArguments: (x, y, z, v, w) => ({
+					byArguments: (
+						/** @type {number} */ x,
+						/** @type {number} */ y,
+						/** @type {number} */ z,
+						/** @type {number} */ v,
+						/** @type {number} */ w
+					) => ({
 						x, // keep
 						y, // static override
 						z, // dynamic override
@@ -592,7 +612,11 @@ describe("cleverMerge", () => {
 				{
 					b: 70,
 					y: 20,
-					byArguments: (x, y, z) => ({
+					byArguments: (
+						/** @type {number} */ x,
+						/** @type {number} */ y,
+						/** @type {number} */ z
+					) => ({
 						c: 80,
 						z: z * 10
 					})
@@ -601,7 +625,13 @@ describe("cleverMerge", () => {
 			{
 				d: 90,
 				v: 40,
-				byArguments: (x, y, z, v, w) => ({
+				byArguments: (
+					/** @type {number} */ x,
+					/** @type {number} */ y,
+					/** @type {number} */ z,
+					/** @type {number} */ v,
+					/** @type {number} */ w
+				) => ({
 					e: 100,
 					w: w * 10
 				})
@@ -657,7 +687,7 @@ describe("cleverMerge", () => {
 		nonObject5: [undefined, { a: 1 }, { a: 1 }]
 	};
 	for (const key of Object.keys(cases)) {
-		const testCase = cases[key];
+		const testCase = /** @type {CasesMap} */ (cases)[key];
 
 		it(`should merge ${key} correctly`, () => {
 			let merged = cleverMerge(testCase[0], testCase[1]);

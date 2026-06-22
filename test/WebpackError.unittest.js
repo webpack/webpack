@@ -16,7 +16,7 @@ describe("WebpackError", () => {
 	}
 
 	it("should provide inspect method for use by for util.inspect", () => {
-		const error = new CustomError("Message");
+		const error = new CustomError();
 		expect(error.toString()).toContain("CustomError: CustomMessage");
 		expect(error.stack).toContain(__filename);
 	});
