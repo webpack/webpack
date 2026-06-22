@@ -17,6 +17,13 @@ it("should rewrite asset URLs inside <iframe srcdoc>", () => {
 	// Markup without assets passes through unchanged (idempotent).
 	expect(page).toContain('srcdoc="<p>hello <b>world</b></p>"');
 
+	// Formatting-only markup (tags but no asset token: no `=`, `url(`, `@import`)
+	// is left verbatim and spins up no nested module — see the `__STATS__` check
+	// below and `SRCDOC_ASSET_REGEXP` in HtmlParser.
+	expect(page).toContain(
+		'srcdoc="<article><h1>Heading</h1><p>Formatting only, no assets &amp; nothing to rewrite.</p></article>"'
+	);
+
 	// Multiple assets in one document are all rewritten.
 	expect(page).toMatch(
 		/srcdoc="<img src=&quot;handled-pixel\.png&quot;><img src=&quot;handled-other\.png&quot;>"/
@@ -68,4 +75,24 @@ it("should rewrite asset URLs inside <iframe srcdoc>", () => {
 
 	// Plain text (no markup) is left untouched — no nested module is spun up.
 	expect(page).toContain('srcdoc="no assets here"');
+});
+
+it("should not spin up a nested module for asset-free srcdoc markup", () => {
+	const ids = __STATS__.modules.map((m) => m.identifier || m.name || "");
+
+	// Positive control: `<img src="./pixel.png">` (an asset-bearing document)
+	// IS turned into a nested `data:text/html` module.
+	expect(ids).toContainEqual(
+		expect.stringContaining(
+			"data:text/html;base64,PGltZyBzcmM9Ii4vcGl4ZWwucG5nIj4="
+		)
+	);
+
+	// `<p>hello <b>world</b></p>` rewrites to itself, so it must NOT become a
+	// module (the pre-filter skips markup with no asset-bearing token).
+	expect(ids).not.toContainEqual(
+		expect.stringContaining(
+			"data:text/html;base64,PHA+aGVsbG8gPGI+d29ybGQ8L2I+PC9wPg=="
+		)
+	);
 });
