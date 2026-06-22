@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Extract SVG paint-server, color-profile and legacy `background` URLs in HTML.
+Extract SVG presentation `url()`, paint-server and legacy `background` URLs in HTML.
