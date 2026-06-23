@@ -1583,6 +1583,7 @@ declare class Chunk {
 	rendered: boolean;
 	hash?: string;
 	contentHash: Record<string, string>;
+	contentHashFull: Record<string, string>;
 	renderedHash?: string;
 	chunkReason?: string;
 	extraAsync: boolean;
@@ -2685,8 +2686,21 @@ declare interface ChunkPathData {
 	name?: string;
 	hash: string;
 	hashWithLength?: (length: number) => string;
+
+	/**
+	 * builds `[chunkhash:<digest>]` per chunk in the runtime chunk-filename map
+	 */
+	hashWithDigest?: (digest: string, length?: number) => string;
 	contentHash?: Record<string, string>;
 	contentHashWithLength?: Record<string, (length: number) => string>;
+
+	/**
+	 * builds `[contenthash:<digest>]` per chunk in the runtime chunk-filename map
+	 */
+	contentHashWithDigest?: Record<
+		string,
+		(digest: string, length?: number) => string
+	>;
 }
 
 /**
@@ -19437,6 +19451,11 @@ declare interface PathData {
 	 */
 	fullHashDigest?: string;
 	hashWithLength?: (length: number) => string;
+
+	/**
+	 * builds `[fullhash:<digest>]`/`[hash:<digest>]` in the runtime chunk-filename context, where it throws because a runtime `getFullHash()` expression cannot be re-encoded
+	 */
+	hashWithDigest?: (digest: string, length?: number) => string;
 	chunk?: Chunk | ChunkPathData;
 	module?: Module | ModulePathData;
 	runtime?: RuntimeSpec;

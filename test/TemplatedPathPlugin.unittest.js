@@ -160,6 +160,62 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		).toBe("9");
 	});
 
+	/* cSpell:disable */
+	it("re-encodes [contenthash:<digest>] from the full content digest", () => {
+		// stored hash is truncated; contentHashFull carries the full digest
+		const data = {
+			chunk: {
+				id: "7",
+				contentHash: { javascript: "0123" },
+				contentHashFull: { javascript: "0123456789abcdef" }
+			},
+			contentHashType: "javascript"
+		};
+		// digest re-encodes the FULL value, not the truncated "0123"
+		expect(interpolate("[contenthash:base64]", data)).toBe(
+			Buffer.from("0123456789abcdef", "hex").toString("base64")
+		);
+		// no-digest still uses the truncated stored value
+		expect(interpolate("[contenthash]", data)).toBe("0123");
+	});
+	/* cSpell:enable */
+
+	it("uses the per-chunk digest handler for [contenthash:<digest>] (runtime map)", () => {
+		const data = {
+			chunk: {
+				id: "7",
+				contentHash: { javascript: "0123" },
+				contentHashFull: { javascript: "0123456789abcdef" },
+				// runtime context provides a per-chunk re-encode handler
+				contentHashWithDigest: {
+					javascript: (digest, length) => `MAP(${digest},${length})`
+				}
+			},
+			contentHashType: "javascript"
+		};
+		expect(interpolate("[contenthash:base64url:8]", data)).toBe(
+			"MAP(base64url,8)"
+		);
+		// length-only keeps using the plain stored value (no digest handler)
+		expect(interpolate("[contenthash:2]", data)).toBe("01");
+	});
+
+	it("throws for [fullhash:<digest>] in the runtime chunk-filename context", () => {
+		const data = {
+			hash: "0123456789abcdef",
+			hashWithDigest: () => {
+				throw new Error("cannot re-encode getFullHash()");
+			}
+		};
+		expect(() => interpolate("[fullhash:base64]", data)).toThrow(
+			/cannot re-encode getFullHash/
+		);
+		// without the handler it still re-encodes normally
+		expect(interpolate("[fullhash:base64]", { hash: "0123456789abcdef" })).toBe(
+			Buffer.from("0123456789abcdef", "hex").toString("base64")
+		);
+	});
+
 	it("interpolates module placeholders incl. legacy aliases", () => {
 		const data = { module: { id: "42", hash: "9876543210" } };
 		expect(interpolate("[id]", data)).toBe("42");
