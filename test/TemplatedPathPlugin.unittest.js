@@ -79,6 +79,15 @@ describe("TemplatedPathPlugin.interpolate", () => {
 	});
 	/* cSpell:enable */
 
+	it("throws on an unknown inline digest", () => {
+		expect(() =>
+			interpolate("[fullhash:base40]", { hash: "0123456789abcdef" })
+		).toThrow(/Unsupported hash digest "base40"/);
+		expect(() =>
+			interpolate("[fullhash:nope:8]", { hash: "0123456789abcdef" })
+		).toThrow(/Unsupported hash digest "nope"/);
+	});
+
 	it("interpolates chunk placeholders", () => {
 		const data = {
 			chunk: {
