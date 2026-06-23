@@ -120,11 +120,12 @@
     "webpack-sources": "^3.5.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.27.1",
-    "@babel/preset-react": "^7.27.1",
+    "@babel/core": "^8.0.1",
+    "@babel/preset-react": "^8.0.1",
     "@changesets/cli": "^2.29.8",
     "@changesets/get-github-info": "^0.8.0",
     "@codspeed/core": "^5.5.0",
+    "@types/convert-source-map": "^2.0.3",
     "@types/eslint-scope": "^3.7.7",
     "@types/graceful-fs": "^4.1.9",
     "@types/jest": "^30.0.0",
