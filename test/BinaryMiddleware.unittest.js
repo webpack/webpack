@@ -212,7 +212,7 @@ describe("BinaryMiddleware", () => {
 
 	describe("invalid streams", () => {
 		it("should throw on an unexpected header byte", () => {
-			expect(() => mw.deserialize([Buffer.from([0x19])], {})).toThrow(
+			expect(() => mw.deserialize([Buffer.from([0x1d])], {})).toThrow(
 				/Unexpected header byte/
 			);
 		});

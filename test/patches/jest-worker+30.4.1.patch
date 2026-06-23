@@ -1,0 +1,18 @@
+diff --git a/node_modules/jest-worker/build/threadChild.js b/node_modules/jest-worker/build/threadChild.js
+index e757511..4be460e 100644
+--- a/node_modules/jest-worker/build/threadChild.js
++++ b/node_modules/jest-worker/build/threadChild.js
+@@ -6,6 +6,13 @@
+  *  * LICENSE file in the root directory of this source tree.
+  *  * /
+  */
++// webpack: load the Bun jest preloader in each worker thread (the bun --preload
++// flag only runs in the main thread). No-op off Bun. See test/bun-preload.js.
++if (process.versions.bun) {
++	try {
++		require(require("path").resolve(process.cwd(), "test/bun-preload.js"));
++	} catch (e) {}
++}
+ /******/ (() => { // webpackBootstrap
+ /******/ 	"use strict";
+ /******/ 	var __webpack_modules__ = ({

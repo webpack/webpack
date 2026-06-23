@@ -1,5 +1,13 @@
 "use strict";
 
+// Bun aborts in its node:vm SourceTextModule.link() and Deno hard-panics
+// ("Module not found") on less-loader's `import("less")`; on both load the CJS
+// less so it skips the dynamic import.
+const lessImplementation =
+	process.versions.bun || process.versions.deno
+		? { implementation: require("less") }
+		: undefined;
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "web",
@@ -29,7 +37,8 @@ module.exports = {
 								loader: "less-loader",
 								options: {
 									additionalData:
-										"@color: white; @property-color: color-light; @property-background: background-light;"
+										"@color: white; @property-color: color-light; @property-background: background-light;",
+									...lessImplementation
 								}
 							}
 						]
@@ -41,7 +50,8 @@ module.exports = {
 								loader: "less-loader",
 								options: {
 									additionalData:
-										"@color: black; @property-color: color-dark; @property-background: background-dark;"
+										"@color: black; @property-color: color-dark; @property-background: background-dark;",
+									...lessImplementation
 								}
 							}
 						]

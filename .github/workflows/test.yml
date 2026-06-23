@@ -294,6 +294,55 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  # Run webpack's test suite under Deno and Bun (spec validation suites excluded).
+  runtimes:
+    needs: basic
+    strategy:
+      fail-fast: false
+      matrix:
+        runtime: [deno, bun]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Use Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: lts/*
+          cache: yarn
+
+      - name: Use Deno
+        if: matrix.runtime == 'deno'
+        uses: denoland/setup-deno@667a34cdef165d8d2b2e98dde39547c9daac7282 # v2.0.4
+        with:
+          deno-version: v2.x
+
+      - name: Use Bun
+        if: matrix.runtime == 'bun'
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: latest
+
+      - run: yarn --frozen-lockfile
+
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
+      # Bun runs with worker_threads (see test:base:bun): in-band's single heap
+      # OOMs the runner on the full suite and Bun's child_process workers hang, but
+      # threads work once jest-worker loads the Bun preload per thread. Apply that
+      # patch here (Bun only) rather than via a repo-wide postinstall.
+      - if: matrix.runtime == 'bun'
+        run: git apply test/patches/jest-worker+30.4.1.patch
+
+      # Deno and Bun both run with jest's parallel workers. The HotTestCases
+      # suites are dropped for Deno only (see test:deno): under Deno's event-loop
+      # timing webpack's async cache/compilation tails outlive a suite's teardown
+      # and require a module after the Jest environment is gone. Bun runs them with
+      # only a few per-case test.filter.js skips.
+      - run: yarn test:${{ matrix.runtime }} --ci
+
   integration:
     needs: basic
     strategy:

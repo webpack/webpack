@@ -4,6 +4,9 @@ require("./helpers/warmup-webpack");
 
 const fs = require("fs");
 const path = require("path");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+
+expectNoDeprecations();
 
 describe("WatchSuspend", () => {
 	if (process.env.NO_WATCH_TESTS) {

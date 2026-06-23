@@ -845,6 +845,10 @@
         "filename": {
           "$ref": "#/definitions/EntryFilename"
         },
+        "html": {
+          "description": "Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.",
+          "type": "boolean"
+        },
         "import": {
           "$ref": "#/definitions/EntryItem"
         },
@@ -899,6 +903,10 @@
         },
         "filename": {
           "$ref": "#/definitions/Filename"
+        },
+        "html": {
+          "description": "Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.",
+          "type": "boolean"
         },
         "import": {
           "description": "Module(s) that are loaded upon startup. The last one is exported.",
@@ -1097,12 +1105,20 @@
           "description": "The environment supports let for variable declarations.",
           "type": "boolean"
         },
+        "logicalAssignment": {
+          "description": "The environment supports logical assignment operators ('a ||= b', 'a &&= b', 'a ??= b').",
+          "type": "boolean"
+        },
         "methodShorthand": {
           "description": "The environment supports object method shorthand ('{ module() {} }').",
           "type": "boolean"
         },
         "module": {
           "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
+          "type": "boolean"
+        },
+        "nodeBuiltinModuleGetter": {
+          "description": "The environment supports `process.getBuiltinModule()` to synchronously load Node.js core modules.",
           "type": "boolean"
         },
         "nodePrefixForCoreModules": {
@@ -3944,6 +3960,9 @@
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
         },
+        "html": {
+          "$ref": "#/definitions/OutputHtml"
+        },
         "htmlChunkFilename": {
           "$ref": "#/definitions/HtmlChunkFilename"
         },
@@ -4065,6 +4084,28 @@
         }
       }
     },
+    "OutputHtml": {
+      "description": "Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.",
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/definitions/OutputHtmlOptions"
+        }
+      ]
+    },
+    "OutputHtmlOptions": {
+      "description": "Options for the generated HTML files.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scriptLoading": {
+          "description": "How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.",
+          "enum": ["auto", "blocking", "defer"]
+        }
+      }
+    },
     "OutputModule": {
       "description": "Output javascript files as module source type.",
       "type": "boolean"
@@ -4161,6 +4202,9 @@
         },
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
+        },
+        "html": {
+          "$ref": "#/definitions/OutputHtml"
         },
         "htmlChunkFilename": {
           "$ref": "#/definitions/HtmlChunkFilename"

@@ -8079,6 +8079,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-logical-assignment": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports logical assignment operators ('a ||= b', 'a &&= b', 'a ??= b').",
+        "multiple": false,
+        "path": "output.environment.logicalAssignment",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports logical assignment operators ('a ||= b', 'a &&= b', 'a ??= b').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-method-shorthand": Object {
     "configs": Array [
       Object {
@@ -8102,6 +8115,19 @@ Object {
       },
     ],
     "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-node-builtin-module-getter": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports \`process.getBuiltinModule()\` to synchronously load Node.js core modules.",
+        "multiple": false,
+        "path": "output.environment.nodeBuiltinModuleGetter",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports \`process.getBuiltinModule()\` to synchronously load Node.js core modules.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -8287,6 +8313,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-html": Object {
+    "configs": Array [
+      Object {
+        "description": "Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor \`html\` option.",
+        "multiple": false,
+        "path": "output.html",
+        "type": "boolean",
+      },
+    ],
+    "description": "Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor \`html\` option.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-html-chunk-filename": Object {
     "configs": Array [
       Object {
@@ -8310,6 +8349,24 @@ Object {
       },
     ],
     "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-html-script-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "How injected \`<script>\` tags load. \`auto\` (default) emits a module script for ES module output and \`defer\` otherwise; \`defer\` forces a deferred script; \`blocking\` emits a plain blocking script.",
+        "multiple": false,
+        "path": "output.html.scriptLoading",
+        "type": "enum",
+        "values": Array [
+          "auto",
+          "blocking",
+          "defer",
+        ],
+      },
+    ],
+    "description": "How injected \`<script>\` tags load. \`auto\` (default) emits a module script for ES module output and \`defer\` otherwise; \`defer\` forces a deferred script; \`blocking\` emits a plain blocking script.",
     "multiple": false,
     "simpleType": "string",
   },

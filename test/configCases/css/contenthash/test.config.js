@@ -10,7 +10,8 @@ module.exports = {
 		return [async1, async2, bundle];
 	},
 	moduleScope(scope, options) {
-		const bundle = findOutputFiles(options, /bundle.+.css/)[0];
+		// Anchor `.css$` so the unordered readdir doesn't pick `.css.map`.
+		const bundle = findOutputFiles(options, /^bundle\..+\.css$/)[0];
 		const link = scope.window.document.createElement("link");
 		link.rel = "stylesheet";
 		link.href = bundle;

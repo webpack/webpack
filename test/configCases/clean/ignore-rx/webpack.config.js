@@ -42,6 +42,11 @@ module.exports = {
 			Object {
 			  "directories": Array [
 			    "this",
+			    "this/dir",
+			    "this/dir/should",
+			    "this/dir/should/not",
+			    "this/dir/should/not/be",
+			    "this/dir/should/not/be/removed",
 			    "this/is",
 			    "this/is/ignored",
 			    "this/is/ignored/dir",
@@ -50,16 +55,11 @@ module.exports = {
 			    "this/is/ignored/dir/that/should/not",
 			    "this/is/ignored/dir/that/should/not/be",
 			    "this/is/ignored/dir/that/should/not/be/removed",
-			    "this/dir",
-			    "this/dir/should",
-			    "this/dir/should/not",
-			    "this/dir/should/not/be",
-			    "this/dir/should/not/be/removed",
 			  ],
 			  "files": Array [
-			    "this/is/ignored/dir/that/should/not/be/removed/file.ext",
-			    "this/dir/should/not/be/removed/file.ext",
 			    "bundle0.js",
+			    "this/dir/should/not/be/removed/file.ext",
+			    "this/is/ignored/dir/that/should/not/be/removed/file.ext",
 			  ],
 			}
 		`);

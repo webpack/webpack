@@ -26,6 +26,7 @@ const {
 	buildHtmlAst,
 	decodeHtmlEntities
 } = require("../lib/html/syntax");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 const testsDir = path.resolve(__dirname, "./html5lib-tests");
 
@@ -129,6 +130,8 @@ const tokenizerCases =
 	fs.existsSync(tokenizerDir) && fs.readdirSync(tokenizerDir).length > 0
 		? loadTokenizerCases()
 		: [];
+
+expectNoDeprecations();
 
 describe("html5lib-tests webpack build", () => {
 	/** @type {Map<string, Map<string, string[]>>} */

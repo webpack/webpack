@@ -989,4 +989,63 @@ describe("JavascriptParser", () => {
 			});
 		}
 	});
+
+	describe("new import call (acorn-import-phases)", () => {
+		beforeAll(() => {
+			const parser =
+				/** @type {typeof JavascriptParser & { __importPhasesExtended?: true }} */
+				(JavascriptParser);
+			if (!parser.__importPhasesExtended) {
+				JavascriptParser.extend(
+					require("acorn-import-phases")({ source: true, defer: true })
+				);
+				parser.__importPhasesExtended = true;
+			}
+		});
+
+		/**
+		 * @param {string} source source
+		 * @returns {Error | null} thrown error, if any
+		 */
+		function parse(source) {
+			try {
+				new JavascriptParser().parse(
+					source,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({ source })
+					)
+				);
+				return null;
+			} catch (err) {
+				return /** @type {Error} */ (err);
+			}
+		}
+
+		// `import.defer(...)`/`import.source(...)` are CallExpressions, so they
+		// cannot be the operand of `new`, including with member access (#21212).
+		for (const source of [
+			'new import.defer("x");',
+			'new import.defer("x").prop;',
+			'new import.defer("x").a.b;',
+			'new import.source("x").prop;'
+		]) {
+			it(`rejects ${JSON.stringify(source)}`, () => {
+				const err = parse(source);
+				expect(err).toBeInstanceOf(SyntaxError);
+				expect(/** @type {Error} */ (err).message).toBe(
+					"import call cannot be the target of `new`"
+				);
+			});
+		}
+
+		// Parenthesized forms and non-`new` member access stay valid.
+		for (const source of [
+			'new (import.defer("x")).prop;',
+			'import.defer("x").then(() => {});'
+		]) {
+			it(`accepts ${JSON.stringify(source)}`, () => {
+				expect(parse(source)).toBeNull();
+			});
+		}
+	});
 });

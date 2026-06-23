@@ -11,6 +11,7 @@ jest.mock("../lib/html/syntax", () => ({
 
 const HtmlInlineScriptDependency = require("../lib/dependencies/HtmlInlineScriptDependency");
 const HtmlInlineStyleDependency = require("../lib/dependencies/HtmlInlineStyleDependency");
+const HtmlSourceDependency = require("../lib/dependencies/HtmlSourceDependency");
 const CommentCompilationWarning = require("../lib/errors/CommentCompilationWarning");
 const UnsupportedFeatureWarning = require("../lib/errors/UnsupportedFeatureWarning");
 const HtmlParser = require("../lib/html/HtmlParser");
@@ -561,4 +562,75 @@ describe("HtmlParser", () => {
 			expect(presentationalDependencies.length).toBeGreaterThan(0);
 		}
 	);
+
+	describe("source extraction", () => {
+		// Feed the real tree builder so these exercise genuine offsets/namespaces.
+		const realBuildHtmlAst =
+			/** @type {typeof import("../lib/html/syntax")} */ (
+				jest.requireActual("../lib/html/syntax")
+			).buildHtmlAst;
+
+		/**
+		 * @param {string} source html
+		 * @returns {string[]} the requests of the emitted HtmlSourceDependency-s
+		 */
+		const sourceRequests = (source) => {
+			const { module, dependencies } = makeModule();
+			buildHtmlAst.mockReturnValue(realBuildHtmlAst(source));
+			new HtmlParser({}).parse(source, makeState(module));
+			return dependencies
+				.filter((d) => d instanceof HtmlSourceDependency)
+				.map((d) => /** @type {EXPECTED_ANY} */ (d).request);
+		};
+
+		it("extracts external url() in SVG presentation attributes, skipping local/empty", () => {
+			expect(
+				sourceRequests(
+					'<svg><rect fill="url(./g.svg#x)" clip-path="url(#local)" stroke="url(\'./g.svg#y\')" mask="url()"/></svg>'
+				)
+			).toEqual(["./g.svg#x", "./g.svg#y"]);
+		});
+
+		it("ignores SVG presentation attributes that are valueless or carry no url()", () => {
+			// `fill="red"` has no url(); `stroke` is valueless — both are skipped.
+			expect(sourceRequests('<svg><rect fill="red" stroke/></svg>')).toEqual(
+				[]
+			);
+		});
+
+		it("maps offsets through entities in an SVG presentation url()", () => {
+			expect(
+				sourceRequests('<svg><rect fill="url(./a&amp;b.svg#z)"/></svg>')
+			).toEqual(["./a&b.svg#z"]);
+		});
+
+		it("extracts SVG paint-server / reference element href values", () => {
+			expect(
+				sourceRequests(
+					'<svg><linearGradient href="./d.svg#g"/><filter xlink:href="./d.svg#f"/></svg>'
+				)
+			).toEqual(["./d.svg#g", "./d.svg#f"]);
+		});
+
+		it("extracts legacy and obsolete source attributes, skipping a non-ref <param>", () => {
+			const requests = sourceRequests(
+				'<link rel="image_src" href="./i.png"><meta name="thumbnail" content="./t.png">' +
+					'<object classid="./c.bin"><param valuetype="ref" value="./p.bin"><param value="./skip"></object>' +
+					'<applet code="./a.class" object="./o.ser"></applet><math><mglyph src="./m.png"/></math>'
+			);
+			expect(requests).toEqual(
+				expect.arrayContaining([
+					"./i.png",
+					"./t.png",
+					"./c.bin",
+					"./p.bin",
+					"./a.class",
+					"./o.ser",
+					"./m.png"
+				])
+			);
+			expect(requests).toHaveLength(7);
+			expect(requests).not.toContain("./skip");
+		});
+	});
 });

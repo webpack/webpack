@@ -11,6 +11,14 @@ const EXPORT_TYPES =
 	/** @type {ExportType[]} */
 	(["link", "text", "css-style-sheet", "style"]);
 
+// Bun aborts in its node:vm SourceTextModule.link() and Deno hard-panics
+// ("Module not found") on less-loader's `import("less")`; on both load the CJS
+// less so it skips the dynamic import.
+const lessLoader =
+	process.versions.bun || process.versions.deno
+		? { loader: "less-loader", options: { implementation: require("less") } }
+		: "less-loader";
+
 /**
  * @param {ExportType} exportType css parser exportType
  * @returns {Configuration} webpack configuration
@@ -24,7 +32,7 @@ const createConfig = (exportType) => ({
 		rules: [
 			{
 				test: /\.less$/,
-				use: ["./remove-source-map-url-loader", "less-loader"]
+				use: ["./remove-source-map-url-loader", lessLoader]
 			},
 			{
 				test: /.css$/,

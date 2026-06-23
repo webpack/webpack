@@ -138,8 +138,8 @@ module.exports = config;
 /******/ 				clearTimeout(timeout);
 /******/ 				const doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
-/******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
+/******/ 				script.parentNode?.removeChild(script);
+/******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
@@ -281,7 +281,7 @@ Promise.all(/*! require.ensure */[__webpack_require__.e(670), __webpack_require_
 ## Unoptimized
 
 ```
-asset output.js 9.89 KiB [emitted] (name: main)
+asset output.js 9.86 KiB [emitted] (name: main)
 asset 670.output.js 344 bytes [emitted]
 asset 210.output.js 326 bytes [emitted]
 asset 425.output.js 326 bytes [emitted]
@@ -312,9 +312,9 @@ chunk (runtime: main) 670.output.js 21 bytes [rendered] split chunk (cache group
     require.ensure item ./a ./example.js 3:0-6:2
     require.ensure item ./a ./example.js 8:0-16:2
     cjs require ./a ./example.js 9:1-15
-chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.91 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.94 KiB 6 modules
+  runtime modules 4.91 KiB 6 modules
   ./example.js 346 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -354,7 +354,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.15 KiB [emitted] [minimized] (name: main)
+asset output.js 2.13 KiB [emitted] [minimized] (name: main)
 asset 210.output.js 80 bytes [emitted] [minimized]
 asset 425.output.js 80 bytes [emitted] [minimized]
 asset 670.output.js 80 bytes [emitted] [minimized]
@@ -385,9 +385,9 @@ chunk (runtime: main) 670.output.js 21 bytes [rendered] split chunk (cache group
     require.ensure item ./a ./example.js 3:0-6:2
     require.ensure item ./a ./example.js 8:0-16:2
     cjs require ./a ./example.js 9:1-15
-chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 346 bytes (javascript) 4.91 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.94 KiB 6 modules
+  runtime modules 4.91 KiB 6 modules
   ./example.js 346 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main

@@ -4,6 +4,9 @@ const path = require("path");
 const fs = require("graceful-fs");
 
 const webpack = require("..");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+
+expectNoDeprecations();
 
 describe("HotModuleReplacementPlugin", () => {
 	it("should not have circular hashes but equal if unmodified", (done) => {

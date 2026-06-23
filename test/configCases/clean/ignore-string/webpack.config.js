@@ -49,8 +49,8 @@ module.exports = {
 			    "ignored/dir/that/should/not/be/removed",
 			  ],
 			  "files": Array [
-			    "ignored/dir/that/should/not/be/removed/file.ext",
 			    "bundle0.js",
+			    "ignored/dir/that/should/not/be/removed/file.ext",
 			  ],
 			}
 		`);

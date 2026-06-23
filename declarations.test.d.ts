@@ -3,6 +3,10 @@ declare module "*.json";
 // optional peer of webpack-cli, not installed
 declare module "webpack-dev-server";
 
+// only required by a few CSS test cases; ships no types
+declare module "less";
+declare module "less-loader";
+
 type Env = Record<string, any>;
 type TestOptions = { testPath: string; srcPath: string };
 

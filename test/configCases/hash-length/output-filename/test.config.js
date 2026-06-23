@@ -19,12 +19,14 @@ module.exports = {
 	findBundle(i, options) {
 		const files = fs.readdirSync(options.output.path);
 		const bundleDetects = [
+			// Anchor with a trailing dot so e.g. `bundle1` does not also match
+			// `bundle10`; the first readdir match is otherwise order-dependent.
 			options.amd.expectedChunkFilenameLength && {
-				regex: new RegExp(`^\\d+.bundle${i}`, "i"),
+				regex: new RegExp(`^\\d+\\.bundle${i}\\.`, "i"),
 				expectedNameLength: options.amd.expectedChunkFilenameLength
 			},
 			{
-				regex: new RegExp(`^bundle${i}`, "i"),
+				regex: new RegExp(`^bundle${i}\\.`, "i"),
 				expectedNameLength: options.amd.expectedFilenameLength
 			}
 		].filter(Boolean);

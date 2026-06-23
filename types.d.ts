@@ -3175,10 +3175,6 @@ declare interface ColorsOptions {
 	 */
 	useColor?: boolean;
 }
-declare interface CommentCssParser {
-	value: string;
-	range: [number, number];
-}
 type CommentJavascriptParser = CommentImport & {
 	start: number;
 	end: number;
@@ -4786,6 +4782,17 @@ declare class ConstDependency extends NullDependency {
 	range: number | [number, number];
 	runtimeRequirements: null | Set<string>;
 	static Template: typeof ConstDependencyTemplate;
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 
@@ -4799,6 +4806,10 @@ declare class ConstDependency extends NullDependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_LOCAL: "local";
+	static LAZY_UNTIL_ID: "id";
+	static LAZY_UNTIL_FALLBACK: "*";
+	static LAZY_UNTIL_REQUEST: "@";
 }
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
 	constructor();
@@ -5602,7 +5613,7 @@ declare class CssModulesPlugin {
 	static chunkHasCss(chunk: Chunk, chunkGraph: ChunkGraph): boolean;
 }
 declare abstract class CssParser extends ParserClass {
-	defaultMode: "global" | "auto" | "pure" | "local";
+	defaultMode: "global" | "auto" | "local" | "pure";
 	options: {
 		/**
 		 * Enable/disable renaming of `@keyframes`.
@@ -5655,23 +5666,9 @@ declare abstract class CssParser extends ParserClass {
 		/**
 		 * default mode
 		 */
-		defaultMode?: "global" | "auto" | "pure" | "local";
+		defaultMode?: "global" | "auto" | "local" | "pure";
 	};
-	comments?: CommentCssParser[];
 	magicCommentContext: ContextImport;
-
-	/**
-	 * Returns comments in the range.
-	 */
-	getComments(range: [number, number]): CommentCssParser[];
-
-	/**
-	 * Parses comment options.
-	 */
-	parseCommentOptions(range: [number, number]): {
-		options: null | Record<string, any>;
-		errors: null | (Error & { comment: CommentCssParser })[];
-	};
 }
 
 /**
@@ -5704,6 +5701,29 @@ declare interface CssParserOptions {
 	url?: boolean;
 }
 type Declaration = FunctionDeclaration | VariableDeclaration | ClassDeclaration;
+type DefineConfigInput =
+	| Configuration
+	| MultiConfiguration
+	| ((
+			env: Record<string, any>,
+			argv: Record<string, any>
+	  ) => MaybePromise<Configuration | MultiConfiguration>)
+	| ((
+			env: Record<string, any>,
+			argv: Record<string, any>
+	  ) => MaybePromise<Configuration | MultiConfiguration>)[]
+	| Promise<
+			| Configuration
+			| MultiConfiguration
+			| ((
+					env: Record<string, any>,
+					argv: Record<string, any>
+			  ) => MaybePromise<Configuration | MultiConfiguration>)
+			| ((
+					env: Record<string, any>,
+					argv: Record<string, any>
+			  ) => MaybePromise<Configuration | MultiConfiguration>)[]
+	  >;
 declare class DefinePlugin {
 	/**
 	 * Create a new define plugin
@@ -5798,12 +5818,12 @@ declare abstract class DependenciesBlock {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 }
 declare interface DependenciesBlockLike {
 	dependencies: Dependency[];
@@ -5839,6 +5859,14 @@ declare class Dependency {
 	): void;
 
 	/**
+	 * Updates loc from a source location plus an explicit index, without
+	 * materializing the `loc` object (keeps `get loc` lazy). Replaces the
+	 * `dep.loc = Object.create(loc); dep.loc.index = i` pattern, which both
+	 * allocated a copy and stored the index outside the serialized fields.
+	 */
+	setLocWithIndex(loc: DependencyLocation, index: number): void;
+
+	/**
 	 * Returns a request context.
 	 */
 	getContext(): undefined | string;
@@ -5852,6 +5880,31 @@ declare class Dependency {
 	 * Could affect referencing module.
 	 */
 	couldAffectReferencingModule(): boolean | symbol;
+
+	/**
+	 * Returns the export name this dependency requests from its target module (lazy barrel optimization).
+	 */
+	getForwardId(): null | string | true;
+
+	/**
+	 * Returns how this dependency may be deferred when its parent module is side-effect-free (lazy barrel optimization).
+	 */
+	getLazyUntil(): null | "local" | "id" | "*" | "@";
+
+	/**
+	 * Returns the export name for a `LAZY_UNTIL_LOCAL`/`LAZY_UNTIL_ID` classification (lazy barrel optimization).
+	 */
+	getLazyName(): null | string;
+
+	/**
+	 * Whether the lazy barrel currently defers creating this dependency's target module (lazy barrel optimization).
+	 */
+	isLazy(): boolean;
+
+	/**
+	 * Sets whether the lazy barrel defers creating this dependency's target module (lazy barrel optimization).
+	 */
+	setLazy(value: boolean): void;
 
 	/**
 	 * Returns the referenced module and export
@@ -5925,14 +5978,25 @@ declare class Dependency {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 	module: any;
 	get disconnect(): any;
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 
@@ -5946,6 +6010,10 @@ declare class Dependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_LOCAL: "local";
+	static LAZY_UNTIL_ID: "id";
+	static LAZY_UNTIL_FALLBACK: "*";
+	static LAZY_UNTIL_REQUEST: "@";
 }
 declare interface DependencyConstructor {
 	new (...args: any[]): Dependency;
@@ -6750,6 +6818,11 @@ declare interface EntryDescription {
 	filename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
+	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
+	 */
+	html?: boolean;
+
+	/**
 	 * Module(s) that are loaded upon startup.
 	 */
 	import: EntryItem;
@@ -6815,6 +6888,11 @@ declare interface EntryDescriptionNormalized {
 	filename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
+	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
+	 */
+	html?: boolean;
+
+	/**
 	 * Module(s) that are loaded upon startup. The last one is exported.
 	 */
 	import?: string[];
@@ -6872,6 +6950,7 @@ declare class EntryOptionPlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
+	static getHooks(compiler: Compiler): EntryOptionPluginHooks;
 
 	/**
 	 * Apply entry option.
@@ -6890,6 +6969,15 @@ declare class EntryOptionPlugin {
 		name: string,
 		desc: EntryDescriptionNormalized
 	): EntryOptions;
+}
+declare interface EntryOptionPluginHooks {
+	/**
+	 * transform an entry into a different request (e.g. wrap a non-HTML entry in a synthetic HTML module); return `undefined` to keep the default behavior
+	 */
+	entry: SyncBailHook<
+		[string, string, EntryDescriptionNormalized],
+		undefined | string
+	>;
 }
 type EntryOptions = { name?: string } & Omit<
 	EntryDescriptionNormalized,
@@ -7047,6 +7135,11 @@ declare interface Environment {
 	let?: boolean;
 
 	/**
+	 * The environment supports logical assignment operators ('a ||= b', 'a &&= b', 'a ??= b').
+	 */
+	logicalAssignment?: boolean;
+
+	/**
 	 * The environment supports object method shorthand ('{ module() {} }').
 	 */
 	methodShorthand?: boolean;
@@ -7055,6 +7148,11 @@ declare interface Environment {
 	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
 	 */
 	module?: boolean;
+
+	/**
+	 * The environment supports `process.getBuiltinModule()` to synchronously load Node.js core modules.
+	 */
+	nodeBuiltinModuleGetter?: boolean;
 
 	/**
 	 * The environment supports `node:` prefix for Node.js core modules.
@@ -7432,12 +7530,6 @@ declare abstract class ExportInfo {
 	 * undefined: it was not determined whether the export is pure
 	 */
 	pureProvide?: boolean;
-
-	/**
-	 * true: the export binding never changes (eligible for value-based export)
-	 * undefined: not determined
-	 */
-	immutableBinding?: boolean;
 	get canMangle(): boolean;
 	canInline(): undefined | InlinedValue;
 
@@ -7606,11 +7698,6 @@ declare interface ExportSpec {
 	 * calling this export has no observable side effects
 	 */
 	isPure?: boolean;
-
-	/**
-	 * the export binding never changes (eligible for value-based export instead of getter)
-	 */
-	immutableBinding?: boolean;
 
 	/**
 	 * nested exports
@@ -9144,6 +9231,17 @@ declare class HarmonyImportDependency extends ModuleDependency {
 		members: string[],
 		membersOptionals: boolean[]
 	) => string[];
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 
@@ -9157,6 +9255,10 @@ declare class HarmonyImportDependency extends ModuleDependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_LOCAL: "local";
+	static LAZY_UNTIL_ID: "id";
+	static LAZY_UNTIL_FALLBACK: "*";
+	static LAZY_UNTIL_REQUEST: "@";
 }
 declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
 	constructor();
@@ -9190,12 +9292,12 @@ declare abstract class HarmonyStarExportsList {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: StarListSerializerContext): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: StarListDeserializerContext): void;
 }
 declare class Hash {
 	constructor();
@@ -9280,6 +9382,13 @@ declare interface HashedModuleIdsPluginOptions {
 	 */
 	hashFunction?: string | typeof Hash;
 }
+type Head<T extends ReadonlyArray<any>> = T extends readonly [infer H, ...any[]]
+	? H
+	: T extends readonly []
+		? any
+		: T extends (infer E)[]
+			? E
+			: never;
 
 /**
  * Base class for runtime modules that only emit helper functions and do not
@@ -10016,12 +10125,12 @@ declare class InitFragment<GenerateContext> {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(context: ObjectSerializerContext): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContext): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 
 	/**
 	 * Adds the provided source to the init fragment.
@@ -10049,8 +10158,8 @@ declare abstract class InlinedValue {
 	value?: null | string | number | boolean;
 	renderLiteral(): string;
 	render(comment: string): string;
-	serialize(__0: ObjectSerializerContext): void;
-	deserialize(__0: ObjectDeserializerContext): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 }
 type InlinedValueKind = "string" | "number" | "boolean" | "undefined" | "null";
 declare interface InnerGraphUtils {
@@ -13649,7 +13758,9 @@ declare class LazySet<T> {
 	 * Serializes the fully materialized set contents into webpack's object
 	 * serialization stream.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(
+		__0: ObjectSerializerContextObjectMiddlewareObject_4<(number | T)[]>
+	): void;
 
 	/**
 	 * Returns the default iterator over values after forcing pending merges.
@@ -13659,7 +13770,9 @@ declare class LazySet<T> {
 	/**
 	 * Restores a `LazySet` from serialized item data.
 	 */
-	static deserialize<T>(__0: ObjectDeserializerContext): LazySet<T>;
+	static deserialize<T>(
+		__0: ObjectDeserializerContextObjectMiddlewareObject_3<(number | T)[]>
+	): LazySet<T>;
 }
 declare interface LibIdentOptions {
 	/**
@@ -14169,12 +14282,12 @@ declare abstract class LocalModule {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(context: ObjectSerializerContext): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_2): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(context: ObjectDeserializerContext): void;
+	deserialize(context: ObjectDeserializerContextObjectMiddlewareObject_1): void;
 }
 declare interface LogEntry {
 	type:
@@ -14498,6 +14611,7 @@ declare interface MaybeMergeableInitFragment<GenerateContext> {
 		fragments: MaybeMergeableInitFragment<GenerateContext>[]
 	) => MaybeMergeableInitFragment<GenerateContext>[];
 }
+type MaybePromise<T> = T | Promise<T>;
 type Media = undefined | string;
 
 /**
@@ -15067,6 +15181,17 @@ declare class ModuleDependency extends Dependency {
 	range?: [number, number];
 	weak: boolean;
 	static Template: typeof DependencyTemplate;
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 
@@ -15080,6 +15205,10 @@ declare class ModuleDependency extends Dependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_LOCAL: "local";
+	static LAZY_UNTIL_ID: "id";
+	static LAZY_UNTIL_FALLBACK: "*";
+	static LAZY_UNTIL_REQUEST: "@";
 }
 
 /**
@@ -16633,7 +16762,9 @@ declare class NormalModule extends Module {
 	static getCompilationHooks(
 		compilation: Compilation
 	): NormalModuleCompilationHooks;
-	static deserialize(context: ObjectDeserializerContext): NormalModule;
+	static deserialize(
+		context: ObjectDeserializerContextObjectMiddlewareObject_4
+	): NormalModule;
 
 	/**
 	 * Gets source basic types.
@@ -17388,6 +17519,17 @@ type NormalizedStatsOptions = KnownNormalizedStatsOptions &
 declare class NullDependency extends Dependency {
 	constructor();
 	static Template: typeof NullDependencyTemplate;
+
+	/**
+	 * Compares two dependencies by source location for sorting a module's
+	 * `dependencies`, without materializing the `loc` objects (`get loc` caches
+	 * its result, so comparing through it would retain a location object on every
+	 * sorted dependency). These dependencies always carry a real source position,
+	 * so only start (line, column) and the within-statement index are compared; a
+	 * dependency without an index sorts after one that has an index at the same
+	 * position.
+	 */
+	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 
@@ -17401,6 +17543,10 @@ declare class NullDependency extends Dependency {
 	 */
 	static canConcatenate(dependency: Dependency): boolean;
 	static TRANSITIVE: symbol;
+	static LAZY_UNTIL_LOCAL: "local";
+	static LAZY_UNTIL_ID: "id";
+	static LAZY_UNTIL_FALLBACK: "*";
+	static LAZY_UNTIL_REQUEST: "@";
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
 	constructor();
@@ -17412,8 +17558,36 @@ declare interface ObjectConfiguration {
 /**
  * Updates set size using the provided set.
  */
-declare interface ObjectDeserializerContext {
+declare interface ObjectDeserializerContextObjectMiddlewareObject_1 {
+	read: () => string;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_3<[number, boolean]>;
+	setCircularReference: (value: ReferenceableItem) => void;
+}
+declare namespace ObjectDeserializerContextObjectMiddlewareObject_2 {
+	export let read: () => any;
+	export let rest: ObjectDeserializerContextObjectMiddlewareObject_3<
+		ReadonlyArray<any>
+	>;
+	export let setCircularReference: (value: ReferenceableItem) => void;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface ObjectDeserializerContextObjectMiddlewareObject_3<
+	T extends ReadonlyArray<any> = ReadonlyArray<any>
+> {
+	read: () => Head<T>;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_3<Tail<T>>;
+	setCircularReference: (value: ReferenceableItem) => void;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface ObjectDeserializerContextObjectMiddlewareObject_4 {
 	read: () => any;
+	rest: ObjectDeserializerContextObjectMiddlewareObject_3<ReadonlyArray<any>>;
 	setCircularReference: (value: ReferenceableItem) => void;
 }
 
@@ -17460,15 +17634,92 @@ declare interface ObjectEncodingOptionsTypes {
  * Updates set size using the provided set.
  */
 declare interface ObjectSerializer {
-	serialize: (value: any, context: ObjectSerializerContext) => void;
-	deserialize: (context: ObjectDeserializerContext) => any;
+	serialize: (
+		value: any,
+		context: ObjectSerializerContextObjectMiddlewareObject_4<any>
+	) => void;
+	deserialize: (
+		context: ObjectDeserializerContextObjectMiddlewareObject_3<any>
+	) => any;
 }
 
 /**
  * Updates set size using the provided set.
  */
-declare interface ObjectSerializerContext {
-	write: (value?: any) => void;
+declare interface ObjectSerializerContextObjectMiddlewareObject_1 {
+	write: (
+		value: RestoreProvidedDataExports[]
+	) => ObjectSerializerContextObjectMiddlewareObject_4<
+		[undefined | null | boolean, undefined | boolean, boolean]
+	>;
+	setCircularReference: (value: ReferenceableItem) => void;
+	snapshot: () => ObjectSerializerSnapshot;
+	rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	writeLazy?: (item?: any) => void;
+	writeSeparate?: (
+		item: any,
+		obj?: LazyOptions
+	) => LazyFunction<any, any, any, LazyOptions>;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface ObjectSerializerContextObjectMiddlewareObject_2 {
+	write: (
+		value: string
+	) => ObjectSerializerContextObjectMiddlewareObject_4<[number, boolean]>;
+	setCircularReference: (value: ReferenceableItem) => void;
+	snapshot: () => ObjectSerializerSnapshot;
+	rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	writeLazy?: (item?: any) => void;
+	writeSeparate?: (
+		item: any,
+		obj?: LazyOptions
+	) => LazyFunction<any, any, any, LazyOptions>;
+}
+declare namespace ObjectSerializerContextObjectMiddlewareObject_3 {
+	export let write: (
+		value?: any
+	) => ObjectSerializerContextObjectMiddlewareObject_4<ReadonlyArray<any>>;
+	export let setCircularReference: (value: ReferenceableItem) => void;
+	export let snapshot: () => ObjectSerializerSnapshot;
+	export let rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	export let writeLazy: undefined | ((item?: any) => void);
+	export let writeSeparate:
+		| undefined
+		| ((
+				item: any,
+				obj?: LazyOptions
+		  ) => LazyFunction<any, any, any, LazyOptions>);
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface ObjectSerializerContextObjectMiddlewareObject_4<
+	T extends ReadonlyArray<any> = ReadonlyArray<any>
+> {
+	write: (
+		value: Head<T>
+	) => ObjectSerializerContextObjectMiddlewareObject_4<Tail<T>>;
+	setCircularReference: (value: ReferenceableItem) => void;
+	snapshot: () => ObjectSerializerSnapshot;
+	rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	writeLazy?: (item?: any) => void;
+	writeSeparate?: (
+		item: any,
+		obj?: LazyOptions
+	) => LazyFunction<any, any, any, LazyOptions>;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface ObjectSerializerContextObjectMiddlewareObject_5 {
+	write: (
+		value?: any
+	) => ObjectSerializerContextObjectMiddlewareObject_4<ReadonlyArray<any>>;
 	setCircularReference: (value: ReferenceableItem) => void;
 	snapshot: () => ObjectSerializerSnapshot;
 	rollback: (snapshot: ObjectSerializerSnapshot) => void;
@@ -18422,6 +18673,11 @@ declare interface Output {
 	hotUpdateMainFilename?: string;
 
 	/**
+	 * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
+	 */
+	html?: boolean | OutputHtmlOptions;
+
+	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	htmlChunkFilename?: string | TemplatePathFn<PathDataChunk>;
@@ -18604,6 +18860,16 @@ declare interface OutputFileSystem {
 }
 
 /**
+ * Options for the generated HTML files.
+ */
+declare interface OutputHtmlOptions {
+	/**
+	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
+	 */
+	scriptLoading?: "auto" | "defer" | "blocking";
+}
+
+/**
  * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
  */
 declare interface OutputNormalized {
@@ -18755,6 +19021,11 @@ declare interface OutputNormalized {
 	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
 	 */
 	hotUpdateMainFilename?: string;
+
+	/**
+	 * Generate an HTML file for each non-HTML entrypoint with its JS and CSS output chunks injected. Can be overridden per entry via the entry descriptor `html` option.
+	 */
+	html?: boolean | OutputHtmlOptions;
 
 	/**
 	 * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
@@ -21451,7 +21722,7 @@ declare abstract class RestoreProvidedData {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_1): void;
 }
 declare interface RestoreProvidedDataExports {
 	name: string;
@@ -21460,7 +21731,6 @@ declare interface RestoreProvidedDataExports {
 	canInlineProvide?: InlinedValue;
 	terminalBinding: boolean;
 	pureProvide?: boolean;
-	immutableBinding?: boolean;
 	exportsInfo?: RestoreProvidedData;
 }
 type Rule = string | RegExp | ((str: string) => boolean);
@@ -22070,9 +22340,29 @@ declare abstract class RuntimeTemplate {
 	isIIFE(): boolean;
 	isModule(): boolean;
 	isNeutralPlatform(): boolean;
+
+	/**
+	 * Whether the bundle targets node and web at once (universal `["node", "web"]` + `output.module`), like `isUniversalTarget` in `WebpackOptionsApply`.
+	 */
+	isUniversalTarget(): boolean;
+
+	/**
+	 * Runtime expression that is truthy in browser-like environments (a DOM
+	 * `document` or a worker `self`) and falsy in Node.js. Single source of
+	 * truth for branching a universal ("node-or-web") target at runtime.
+	 */
+	isWebLikePlatformExpression(): string;
+
+	/**
+	 * Expression for the global registry that collects CSS server-side when there
+	 * is no DOM (SSR). An SSR host reads it from `globalThis`; it is keyed by the
+	 * style/chunk identifier and namespaced by `output.uniqueName`.
+	 */
+	cssServerStyleRegistry(): string;
 	supportsConst(): boolean;
 	supportsLet(): boolean;
 	supportsMethodShorthand(): boolean;
+	supportsLogicalAssignment(): boolean;
 	supportsArrowFunction(): boolean;
 	supportsAsyncFunction(): boolean;
 	supportsOptionalChaining(): boolean;
@@ -22135,6 +22425,11 @@ declare abstract class RuntimeTemplate {
 	optionalChaining(object: string, access: string): string;
 
 	/**
+	 * Reads a node builtin via `process.getBuiltinModule()`, guarded to stay falsy off node so universal `["node", "web"]` bundles don't crash (also falsy on node <22.3).
+	 */
+	getBuiltinModule(request: string, access?: string): string;
+
+	/**
 	 * Renders an object-literal method, using method shorthand when supported
 	 * and falling back to a `prop: function/arrow` property otherwise.
 	 */
@@ -22145,6 +22440,16 @@ declare abstract class RuntimeTemplate {
 	 * falling back to `Object.prototype.hasOwnProperty.call` otherwise.
 	 */
 	objectHasOwn(object: string, property: string): string;
+
+	/**
+	 * Returns a self-defaulting assignment, using the `||=` logical assignment
+	 * operator when supported and falling back to `target = target || value`
+	 * otherwise. `target` is evaluated twice in the fallback, so it must be
+	 * side-effect free. The expression evaluates to the resulting value.
+	 * Models `||` only, so `target` must never hold a legitimate falsy value
+	 * (`0`, `""`, `false`) — it would be overwritten; use it for object/array defaults.
+	 */
+	assignOr(target: string, value: string): string;
 
 	/**
 	 * Returns destructure array code.
@@ -22976,12 +23281,12 @@ declare abstract class Snapshot {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 
 	/**
 	 * Gets file iterable.
@@ -23569,6 +23874,32 @@ declare abstract class StackedMap<K, V> {
 	 * scope.
 	 */
 	createChild(): StackedMap<K, V>;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface StarListDeserializerContext {
+	read: () => HarmonyExportImportedSpecifierDependency[];
+	rest: ObjectDeserializerContextObjectMiddlewareObject_3<[]>;
+	setCircularReference: (value: ReferenceableItem) => void;
+}
+
+/**
+ * Updates set size using the provided set.
+ */
+declare interface StarListSerializerContext {
+	write: (
+		value: HarmonyExportImportedSpecifierDependency[]
+	) => ObjectSerializerContextObjectMiddlewareObject_4<[]>;
+	setCircularReference: (value: ReferenceableItem) => void;
+	snapshot: () => ObjectSerializerSnapshot;
+	rollback: (snapshot: ObjectSerializerSnapshot) => void;
+	writeLazy?: (item?: any) => void;
+	writeSeparate?: (
+		item: any,
+		obj?: LazyOptions
+	) => LazyFunction<any, any, any, LazyOptions>;
 }
 declare interface StartupRenderContext {
 	/**
@@ -24546,6 +24877,9 @@ declare interface TagInfo {
 		| CompatibilitySettings;
 	next?: TagInfo;
 }
+type Tail<T extends ReadonlyArray<any>> = T extends readonly [any, ...infer R]
+	? R
+	: T;
 declare interface TargetItemWithConnection {
 	module: Module;
 	connection: ModuleGraphConnection;
@@ -25209,12 +25543,12 @@ declare class WebpackError extends Error {
 	/**
 	 * Serializes this instance into the provided serializer context.
 	 */
-	serialize(__0: ObjectSerializerContext): void;
+	serialize(__0: ObjectSerializerContextObjectMiddlewareObject_5): void;
 
 	/**
 	 * Restores this instance from the provided deserializer context.
 	 */
-	deserialize(__0: ObjectDeserializerContext): void;
+	deserialize(__0: ObjectDeserializerContextObjectMiddlewareObject_4): void;
 
 	/**
 	 * Creates a `.stack` property on `targetObject`, which when accessed returns
@@ -25808,6 +26142,7 @@ declare function exports(
 declare function exports(options: MultiConfiguration): MultiCompiler;
 declare namespace exports {
 	export const webpack: _functionWebpack;
+	export const defineConfig: <T extends DefineConfigInput>(config: T) => T;
 	export const validate: (
 		configuration: Configuration | MultiConfiguration
 	) => void;
@@ -26001,6 +26336,7 @@ declare namespace exports {
 		export let toBinary: "__webpack_require__.tb";
 		export let uncaughtErrorHandler: "__webpack_require__.oe";
 		export let wasmInstances: "__webpack_require__.w";
+		export let worker: "__webpack_require__.wc";
 	}
 	export const UsageState: Readonly<{
 		Unused: 0;
@@ -26407,6 +26743,14 @@ declare namespace exports {
 	export type ExternalItemFunctionPromise = (
 		data: ExternalItemFunctionData
 	) => Promise<ExternalItemValue>;
+	export type ConfigurationFactory = (
+		env: Record<string, any>,
+		argv: Record<string, any>
+	) => MaybePromise<Configuration | MultiConfiguration>;
+	export type ObjectSerializerContext =
+		typeof ObjectSerializerContextObjectMiddlewareObject_3;
+	export type ObjectDeserializerContext =
+		typeof ObjectDeserializerContextObjectMiddlewareObject_2;
 	export {
 		AutomaticPrefetchPlugin,
 		AsyncDependenciesBlock,
@@ -26535,6 +26879,7 @@ declare namespace exports {
 		Problem,
 		Colors,
 		ColorsOptions,
+		DefineConfigInput,
 		StatsAsset,
 		StatsChunk,
 		StatsChunkGroup,
@@ -26549,8 +26894,6 @@ declare namespace exports {
 		StatsModuleTraceDependency,
 		StatsModuleTraceItem,
 		StatsProfile,
-		ObjectSerializerContext,
-		ObjectDeserializerContext,
 		InputFileSystem,
 		OutputFileSystem,
 		LoaderModule,

@@ -231,7 +231,7 @@ module.exports = __webpack_require__.v(exports, module.id, "7b2c601f4b203df3bce9
 /******/ 		const webpackError = hasSymbol ? Symbol("webpack error") : "__webpack_error__";
 /******/ 		
 /******/ 		const resolveQueue = (queue) => {
-/******/ 			if(queue && queue.d < 1) {
+/******/ 			if(queue?.d < 1) {
 /******/ 				queue.d = 1;
 /******/ 				queue.forEach((fn) => (fn.r--));
 /******/ 				queue.forEach((fn) => (fn.r-- ? fn.r++ : fn()));
@@ -295,7 +295,7 @@ module.exports = __webpack_require__.v(exports, module.id, "7b2c601f4b203df3bce9
 /******/ 			}
 /******/ 			const done = (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue))
 /******/ 			body(handle, done);
-/******/ 			queue && queue.d < 0 && (queue.d = 0);
+/******/ 			queue?.d < 0 && (queue.d = 0);
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -335,7 +335,7 @@ module.exports = __webpack_require__.v(exports, module.id, "7b2c601f4b203df3bce9
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -397,13 +397,13 @@ module.exports = __webpack_require__.v(exports, module.id, "7b2c601f4b203df3bce9
 ## Unoptimized
 
 ```
-asset output.js 14 KiB [emitted] (name: main)
+asset output.js 13.9 KiB [emitted] (name: main)
 asset 7b2c601f4b203df3bce9.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset 097acf8fdf462561c3a7.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 7210b1cf069a95877339.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 4.2 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 4.15 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.2 KiB 6 modules
+  runtime modules 4.15 KiB 6 modules
   dependent modules 552 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
   ./example.js 753 bytes [built] [code generated]
     [no exports]
@@ -419,9 +419,9 @@ asset output.js 3.02 KiB [emitted] [minimized] (name: main)
 asset 7572f965ce6a56064de5.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset 131bb4eca051ca1f58ad.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 5743c48f2e6f7881a967.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.93 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.92 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.93 KiB 5 modules
+  runtime modules 3.92 KiB 5 modules
   dependent modules 552 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
   ./example.js 753 bytes [built] [code generated]
     [no exports]

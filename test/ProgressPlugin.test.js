@@ -7,6 +7,7 @@ const _ = require("lodash");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
 const captureStdio = require("./helpers/captureStdio");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 const createMultiCompiler = (
 	/** @type {Record<string, unknown> | undefined} */ progressOptions = undefined,
@@ -98,6 +99,8 @@ const runCompilerAsync = (
 	});
 
 /** @typedef {{ toString(): string, toStringRaw(): string, restore(): void, data: string[], reset(): void }} CapturedStdio */
+
+expectNoDeprecations();
 
 describe("ProgressPlugin", () => {
 	/** @type {CapturedStdio} */

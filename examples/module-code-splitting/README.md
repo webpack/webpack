@@ -129,14 +129,14 @@ export function reset() {
 /******/ 
 /******/ /* webpack/runtime/hasOwnProperty shorthand */
 /******/ (() => {
-/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.hasOwn(obj, prop))
 /******/ })();
 /******/ 
 /******/ /* webpack/runtime/make namespace object */
 /******/ (() => {
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 		if(Symbol.toStringTag) {
 /******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
@@ -251,7 +251,7 @@ setTimeout(async () => {
 # dist/output.js (production)
 
 ```javascript
-var e={};const t={};function o(r){const n=t[r];if(void 0!==n)return n.exports;const i=t[r]={exports:{}};return e[r](i,i.exports,o),i.exports}o.m=e,o.d=(e,t)=>{if(Array.isArray(t))for(var r=0;r<t.length;){var n=t[r++],i=t[r++];o.o(e,n)?0===i&&r++:0===i?Object.defineProperty(e,n,{enumerable:!0,value:t[r++]}):Object.defineProperty(e,n,{enumerable:!0,get:i})}else for(var n in t)o.o(t,n)&&!o.o(e,n)&&Object.defineProperty(e,n,{enumerable:!0,get:t[n]})},o.f={},o.e=e=>Promise.all(Object.keys(o.f).reduce((t,r)=>(o.f[r](e,t),t),[])),o.u=e=>e+".output.js",o.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t),o.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},o.p="dist/",(()=>{const e={792:0},t=t=>{let{__webpack_esm_ids__:r,__webpack_esm_modules__:n,__webpack_esm_runtime__:i}=t;var a,s,l=0;for(a in n)o.o(n,a)&&(o.m[a]=n[a]);for(i&&i(o);l<r.length;l++)s=r[l],o.o(e,s)&&e[s]&&e[s][0](),e[r[l]]=0};o.f.j=(r,n)=>{let i=o.o(e,r)?e[r]:void 0;if(0!==i)if(i)n.push(i[1]);else{let a=import(o.p+o.u(r)).then(t,t=>{throw 0!==e[r]&&(e[r]=void 0),t});a=Promise.race([a,new Promise(t=>i=e[r]=[t])]),n.push(i[1]=a)}}})();const r=e=>console.log(e);setTimeout(async()=>{const e=await o.e(481).then(o.bind(o,481));r(e.value),e.increment(),e.increment(),e.increment(),r(e.value),await(async()=>{(await o.e(481).then(o.bind(o,481))).reset()})(),r(e.value)},100);
+var e={};const t={};function r(o){const n=t[o];if(void 0!==n)return n.exports;const i=t[o]={exports:{}};return e[o](i,i.exports,r),i.exports}r.m=e,r.d=(e,t)=>{if(Array.isArray(t))for(var o=0;o<t.length;){var n=t[o++],i=t[o++];r.o(e,n)?0===i&&o++:0===i?Object.defineProperty(e,n,{enumerable:!0,value:t[o++]}):Object.defineProperty(e,n,{enumerable:!0,get:i})}else for(var n in t)r.o(t,n)&&!r.o(e,n)&&Object.defineProperty(e,n,{enumerable:!0,get:t[n]})},r.f={},r.e=e=>Promise.all(Object.keys(r.f).reduce((t,o)=>(r.f[o](e,t),t),[])),r.u=e=>e+".output.js",r.o=(e,t)=>Object.hasOwn(e,t),r.r=e=>{Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.p="dist/",(()=>{const e={792:0},t=t=>{let{__webpack_esm_ids__:o,__webpack_esm_modules__:n,__webpack_esm_runtime__:i}=t;var s,a,c=0;for(s in n)r.o(n,s)&&(r.m[s]=n[s]);for(i&&i(r);c<o.length;c++)a=o[c],r.o(e,a)&&e[a]&&e[a][0](),e[o[c]]=0};r.f.j=(o,n)=>{let i=r.o(e,o)?e[o]:void 0;if(0!==i)if(i)n.push(i[1]);else{let s=import(r.p+r.u(o)).then(t,t=>{throw 0!==e[o]&&(e[o]=void 0),t});s=Promise.race([s,new Promise(t=>i=e[o]=[t])]),n.push(i[1]=s)}}})();const o=e=>console.log(e);setTimeout(async()=>{const e=await r.e(481).then(r.bind(r,481));o(e.value),e.increment(),e.increment(),e.increment(),o(e.value),await(async()=>{(await r.e(481).then(r.bind(r,481))).reset()})(),o(e.value)},100);
 ```
 
 # Info
@@ -259,11 +259,11 @@ var e={};const t={};function o(r){const n=t[r];if(void 0!==n)return n.exports;co
 ## Unoptimized
 
 ```
-asset output.js 7.28 KiB [emitted] [javascript module] (name: main)
+asset output.js 7.23 KiB [emitted] [javascript module] (name: main)
 asset 1.output.js 1.34 KiB [emitted] [javascript module]
-chunk (runtime: main) output.js (main) 420 bytes (javascript) 3.56 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 420 bytes (javascript) 3.51 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.56 KiB 7 modules
+  runtime modules 3.51 KiB 7 modules
   ./example.js + 1 modules 420 bytes [built] [code generated]
     [no exports]
     [no exports used]
@@ -282,7 +282,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.42 KiB [emitted] [javascript module] [minimized] (name: main)
+asset output.js 1.37 KiB [emitted] [javascript module] [minimized] (name: main)
 asset 481.output.js 258 bytes [emitted] [javascript module] [minimized]
 chunk (runtime: main) 481.output.js 146 bytes [rendered]
   > ./counter ./methods.js 2:8-27
@@ -291,9 +291,9 @@ chunk (runtime: main) 481.output.js 146 bytes [rendered]
     [exports: decrement, increment, reset, value]
     import() ./counter ./example.js + 1 modules ./example.js 4:23-42
     import() ./counter ./example.js + 1 modules ./methods.js 2:8-27
-chunk (runtime: main) output.js (main) 420 bytes (javascript) 3.57 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 420 bytes (javascript) 3.51 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.57 KiB 7 modules
+  runtime modules 3.51 KiB 7 modules
   ./example.js + 1 modules 420 bytes [built] [code generated]
     [no exports]
     [no exports used]

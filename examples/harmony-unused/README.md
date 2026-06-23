@@ -214,7 +214,7 @@ function c() { console.log("c"); }
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -262,11 +262,11 @@ _library__WEBPACK_IMPORTED_MODULE_1__.reexportedMultiply(1, 2);
 ## Unoptimized
 
 ```
-asset output.js 7.63 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 698 bytes (javascript) 1.11 KiB (runtime) [entry] [rendered]
+asset output.js 7.6 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 698 bytes (javascript) 1.07 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 584 bytes [dependent] 3 modules
-  runtime modules 1.11 KiB 3 modules
+  runtime modules 1.07 KiB 3 modules
   ./example.js 114 bytes [built] [code generated]
     [no exports]
     [used exports unknown]

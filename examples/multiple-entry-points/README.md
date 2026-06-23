@@ -256,8 +256,8 @@ __webpack_require__.e(/*! AMD require */ "shared_js").then(function() { var __WE
 /******/ 				clearTimeout(timeout);
 /******/ 				const doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
-/******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
+/******/ 				script.parentNode?.removeChild(script);
+/******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
@@ -529,8 +529,8 @@ __webpack_require__.e(/*! require.ensure */ "shared_js").then((function(require)
 /******/ 				clearTimeout(timeout);
 /******/ 				const doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
-/******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
+/******/ 				script.parentNode?.removeChild(script);
+/******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
@@ -685,7 +685,7 @@ asset pageA.js 10.7 KiB [emitted] (name: pageA)
 asset pageB.js 10.6 KiB [emitted] (name: pageB)
 asset shared_js.js 503 bytes [emitted]
 asset commons.js 370 bytes [emitted] (name: commons) (id hint: commons)
-Entrypoint pageA 11.1 KiB = commons.js 370 bytes pageA.js 10.7 KiB
+Entrypoint pageA 11 KiB = commons.js 370 bytes pageA.js 10.7 KiB
 Entrypoint pageB 11 KiB = commons.js 370 bytes pageB.js 10.6 KiB
 chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
   > ./pageA pageA
@@ -696,15 +696,15 @@ chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [
     cjs require ./common ./pageA.js 1:13-32
     cjs require ./common ./pageB.js 1:13-32
     cjs require ./common ./shared.js 1:13-32
-chunk (runtime: pageA) pageA.js (pageA) 105 bytes (javascript) 5.89 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.js (pageA) 105 bytes (javascript) 5.87 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
-  runtime modules 5.89 KiB 7 modules
+  runtime modules 5.87 KiB 7 modules
   ./pageA.js 105 bytes [built] [code generated]
     [used exports unknown]
     entry ./pageA pageA
-chunk (runtime: pageB) pageB.js (pageB) 148 bytes (javascript) 5.89 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.js (pageB) 148 bytes (javascript) 5.87 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
-  runtime modules 5.89 KiB 7 modules
+  runtime modules 5.87 KiB 7 modules
   ./pageB.js 148 bytes [built] [code generated]
     [used exports unknown]
     entry ./pageB pageB
@@ -724,12 +724,12 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset pageA.js 2.23 KiB [emitted] [minimized] (name: pageA)
-asset pageB.js 2.21 KiB [emitted] [minimized] (name: pageB)
+asset pageA.js 2.21 KiB [emitted] [minimized] (name: pageA)
+asset pageB.js 2.19 KiB [emitted] [minimized] (name: pageB)
 asset shared_js.js 122 bytes [emitted] [minimized]
 asset commons.js 91 bytes [emitted] [minimized] (name: commons) (id hint: commons)
-Entrypoint pageA 2.32 KiB = commons.js 91 bytes pageA.js 2.23 KiB
-Entrypoint pageB 2.3 KiB = commons.js 91 bytes pageB.js 2.21 KiB
+Entrypoint pageA 2.3 KiB = commons.js 91 bytes pageA.js 2.21 KiB
+Entrypoint pageB 2.28 KiB = commons.js 91 bytes pageB.js 2.19 KiB
 chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
   > ./pageA pageA
   > ./pageB pageB
@@ -739,15 +739,15 @@ chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [
     cjs require ./common ./pageA.js 1:13-32
     cjs require ./common ./pageB.js 1:13-32
     cjs require ./common ./shared.js 1:13-32
-chunk (runtime: pageA) pageA.js (pageA) 105 bytes (javascript) 5.89 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.js (pageA) 105 bytes (javascript) 5.87 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
-  runtime modules 5.89 KiB 7 modules
+  runtime modules 5.87 KiB 7 modules
   ./pageA.js 105 bytes [built] [code generated]
     [no exports used]
     entry ./pageA pageA
-chunk (runtime: pageB) pageB.js (pageB) 148 bytes (javascript) 5.89 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.js (pageB) 148 bytes (javascript) 5.87 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
-  runtime modules 5.89 KiB 7 modules
+  runtime modules 5.87 KiB 7 modules
   ./pageB.js 148 bytes [built] [code generated]
     [no exports used]
     entry ./pageB pageB

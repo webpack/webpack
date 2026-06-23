@@ -205,7 +205,7 @@ function greet(user      )         {
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -239,10 +239,10 @@ console.log(__webpack_require__(/*! ./index */ 1));
 ## Unoptimized
 
 ```
-asset output.js 4.83 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 375 bytes (javascript) 1.11 KiB (runtime) [entry] [rendered]
+asset output.js 4.8 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 375 bytes (javascript) 1.07 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 1.11 KiB 3 modules
+  runtime modules 1.07 KiB 3 modules
   dependent modules 342 bytes [dependent] 2 modules
   ./example.js 33 bytes [built] [code generated]
     [used exports unknown]

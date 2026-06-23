@@ -1,5 +1,6 @@
-// the message is inconsistency between some nodejs versions
-const UNKNOWN_FUNCTION_TABLE = /table index is out of bounds|invalid index into function table|invalid function/;
+// the message is inconsistency between engines (V8 wording vs JSC/Bun)
+const UNKNOWN_FUNCTION_TABLE =
+	/table index is out of bounds|invalid index into function table|invalid function|Out of bounds call_indirect/;
 
 it("should support tables", function () {
 	return import("./wasm-table.wat").then(function (wasm) {

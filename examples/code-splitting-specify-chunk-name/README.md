@@ -217,8 +217,8 @@ module.exports = webpackAsyncContext;
 /******/ 				clearTimeout(timeout);
 /******/ 				const doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
-/******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
+/******/ 				script.parentNode?.removeChild(script);
+/******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			const timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
@@ -232,7 +232,7 @@ module.exports = webpackAsyncContext;
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -375,7 +375,7 @@ __webpack_require__(1)("./ba" + createContextVar).then(function(bar) {
 ## Unoptimized
 
 ```
-asset output.js 12.1 KiB [emitted] (name: main)
+asset output.js 12 KiB [emitted] (name: main)
 asset 792.output.js 846 bytes [emitted] (name: chunk-bar-baz2)
 asset 994.output.js 846 bytes [emitted] (name: chunk-bar-baz0)
 asset 45.output.js 845 bytes [emitted] (name: chunk-foo)
@@ -387,9 +387,9 @@ chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
     [used exports unknown]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.96 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.9 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.96 KiB 8 modules
+  runtime modules 5.9 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 405 bytes [built] [code generated]
     [used exports unknown]
@@ -416,7 +416,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.72 KiB [emitted] [minimized] (name: main)
+asset output.js 2.68 KiB [emitted] [minimized] (name: main)
 asset 994.output.js 117 bytes [emitted] [minimized] (name: chunk-bar-baz0)
 asset 45.output.js 116 bytes [emitted] [minimized] (name: chunk-foo)
 asset 792.output.js 116 bytes [emitted] [minimized] (name: chunk-bar-baz2)
@@ -427,9 +427,9 @@ chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
     [exports: default]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.96 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.9 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.96 KiB 8 modules
+  runtime modules 5.9 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 405 bytes [built] [code generated]
     [no exports used]

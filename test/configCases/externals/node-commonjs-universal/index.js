@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 
 const outputPath = __STATS__.children[__STATS_I__].outputPath;
 const source = fs.readFileSync(
@@ -16,19 +17,26 @@ it("should load node built-in modules in a universal bundle", () => {
 	expect(typeof path.join).toBe("function");
 });
 
+it("should resolve a node-commonjs external at runtime in an ESM bundle", () => {
+	// `os` is the universal node-commonjs external; a working result proves the getter runs in real ESM
+	expect(typeof os.platform()).toBe("string");
+	expect(Array.isArray(os.cpus())).toBe(true);
+});
+
 it("should not statically import the `module` built-in (would crash in browser)", () => {
 	expect(header).not.toMatch(/\bfrom\b/);
 	expect(header).toContain("getBuiltinModule");
 });
 
-it("should guard getBuiltinModule with optional chaining when supported", () => {
+it("should resolve the builtin getter based on node support", () => {
 	if (__STATS_I__ === 0) {
-		// optional chaining supported
-		expect(header).toContain("process.getBuiltinModule?.");
+		// node version known to expose `process.getBuiltinModule()` -> call it directly
+		expect(header).toContain("process.getBuiltinModule(");
+		expect(header).not.toContain('typeof process.getBuiltinModule === "function"');
 	} else {
-		// `&&` short-circuit fallback
-		expect(header).toContain(
-			"process.getBuiltinModule && process.getBuiltinModule"
-		);
+		// unknown/old node -> `typeof`-guarded getter (no `require`; falsy on node <22.3)
+		expect(header).toContain('typeof process.getBuiltinModule === "function"');
+		expect(header).toContain("createRequire(import.meta.url)");
+		expect(header).not.toContain("catch");
 	}
 });

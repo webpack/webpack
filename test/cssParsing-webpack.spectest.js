@@ -13,6 +13,7 @@ const fs = require("fs");
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 const casesDir = path.resolve(__dirname, "./css-parsing-tests");
 const MODES = ["development", "production"];
@@ -114,6 +115,8 @@ const cases =
 	fs.existsSync(casesDir) && fs.readdirSync(casesDir).length > 0
 		? loadCases()
 		: [];
+
+expectNoDeprecations();
 
 describe("css-parsing-tests webpack build", () => {
 	/** @type {Map<string, Map<string, string[]>>} */

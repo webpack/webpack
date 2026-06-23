@@ -5,6 +5,10 @@ const config = {
 	testTimeout: 30000,
 	prettierPath: require.resolve("prettier-2"),
 	forceExit: true,
+	setupFiles: [
+		"<rootDir>/test/bun-sandbox-setup.js",
+		"<rootDir>/test/deno-worker-setup.js"
+	],
 	setupFilesAfterEnv: ["<rootDir>/test/setupTestFramework.js"],
 	testMatch: [
 		"<rootDir>/test/*.test.js",

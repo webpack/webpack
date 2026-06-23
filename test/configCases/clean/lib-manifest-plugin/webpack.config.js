@@ -24,8 +24,8 @@ module.exports = {
 			Object {
 			  "directories": Array [],
 			  "files": Array [
-			    "manifest.json",
 			    "bundle0.js",
+			    "manifest.json",
 			  ],
 			}
 		`);

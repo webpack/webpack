@@ -3,6 +3,9 @@
 require("./helpers/warmup-webpack");
 
 const path = require("path");
+const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+
+expectNoDeprecations();
 
 describe("WatchClose", () => {
 	describe("multiple calls watcher", () => {

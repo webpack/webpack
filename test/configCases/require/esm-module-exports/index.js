@@ -3,14 +3,19 @@
 //
 // Each `.mjs` fixture is required two ways:
 //   * `require("./*.mjs")` — webpack rewrites the call, and (with this PR)
-//     unwraps the `"module.exports"` named export at code-gen time.
+//     unwraps the `"module.exports"` named export at code-gen time. This is the
+//     behavior under test and is asserted against literal expected values on
+//     every runtime.
 //   * `require(/* webpackIgnore: true */ pathVar)` — webpack leaves the call
 //     literal. At runtime the test harness short-circuits these absolute
 //     paths via `testConfig.modules` (see `test.config.js`) to the values
 //     produced by Node's real `Module._load` — the native `require(esm)`
-//     result.
-//
-// Both sides must agree.
+//     result. This native cross-check is gated on `crossCheckNative`: Bun's
+//     `require(esm)` does not implement the "module.exports" unwrapping
+//     convention, so the oracle returns `undefined` there and the comparison
+//     is skipped (webpack's own output is still fully asserted above).
+
+const crossCheckNative = !process.versions.bun;
 
 const valueMjsPath = VALUE_MJS_PATH;
 const plainMjsPath = PLAIN_MJS_PATH;
@@ -25,81 +30,105 @@ const underscoreLikePath = UNDERSCORE_LIKE_PATH;
 
 it("should unwrap a named export 'module.exports' for plain require()", () => {
 	const webpacked = require("./value.mjs");
-	const native = require(/* webpackIgnore: true */ valueMjsPath);
 	expect(typeof webpacked).toBe("function");
-	expect(typeof native).toBe("function");
 	expect(webpacked()).toBe(42);
-	expect(webpacked()).toBe(native());
 	expect(webpacked.named).toBe("named-prop");
-	expect(webpacked.named).toBe(native.named);
+	if (crossCheckNative) {
+		const native = require(/* webpackIgnore: true */ valueMjsPath);
+		expect(typeof native).toBe("function");
+		expect(webpacked()).toBe(native());
+		expect(webpacked.named).toBe(native.named);
+	}
 });
 
 it("should unwrap 'module.exports' for require() with property access", () => {
-	const native = require(/* webpackIgnore: true */ valueMjsPath);
-	expect(require("./value.mjs").named).toBe(native.named);
-	expect(require("./value.mjs").deep.nested).toBe(native.deep.nested);
+	expect(require("./value.mjs").named).toBe("named-prop");
+	expect(require("./value.mjs").deep.nested).toBe("deep-value");
+	if (crossCheckNative) {
+		const native = require(/* webpackIgnore: true */ valueMjsPath);
+		expect(require("./value.mjs").named).toBe(native.named);
+		expect(require("./value.mjs").deep.nested).toBe(native.deep.nested);
+	}
 });
 
 it("should unwrap 'module.exports' for require() with call", () => {
-	const native = require(/* webpackIgnore: true */ valueMjsPath);
-	expect(require("./value.mjs")()).toBe(native());
+	expect(require("./value.mjs")()).toBe(42);
+	if (crossCheckNative) {
+		const native = require(/* webpackIgnore: true */ valueMjsPath);
+		expect(require("./value.mjs")()).toBe(native());
+	}
 });
 
 it("should unwrap 'module.exports' for destructuring assignment", () => {
-	const native = require(/* webpackIgnore: true */ valueMjsPath);
 	const { named } = require("./value.mjs");
-	expect(named).toBe(native.named);
+	expect(named).toBe("named-prop");
+	if (crossCheckNative) {
+		const native = require(/* webpackIgnore: true */ valueMjsPath);
+		expect(named).toBe(native.named);
+	}
 });
 
 it("should unwrap 'module.exports' when it is a primitive", () => {
 	const webpacked = require("./plain.mjs");
-	const native = require(/* webpackIgnore: true */ plainMjsPath);
 	expect(webpacked).toBe("i-am-the-module-exports");
-	expect(webpacked).toBe(native);
+	if (crossCheckNative) {
+		const native = require(/* webpackIgnore: true */ plainMjsPath);
+		expect(webpacked).toBe(native);
+	}
 });
 
 it("should let 'module.exports' win over a sibling default/named export", () => {
 	const webpacked = require("./with-default.mjs");
-	const native = require(/* webpackIgnore: true */ withDefaultMjsPath);
 	expect(webpacked).toBe("module-exports-wins");
-	expect(webpacked).toBe(native);
 	// The default and named exports are not visible on the unwrapped value
 	// (it's a string primitive here).
 	expect(webpacked.default).toBeUndefined();
 	expect(webpacked.named).toBeUndefined();
+	if (crossCheckNative) {
+		const native = require(/* webpackIgnore: true */ withDefaultMjsPath);
+		expect(webpacked).toBe(native);
+	}
 });
 
 it("should unwrap 'module.exports' that was re-exported from another module", () => {
 	const webpacked = require("./reexport.mjs");
-	const native = require(/* webpackIgnore: true */ reexportMjsPath);
 	expect(webpacked).toBe("from-base-module");
-	expect(webpacked).toBe(native);
+	if (crossCheckNative) {
+		const native = require(/* webpackIgnore: true */ reexportMjsPath);
+		expect(webpacked).toBe(native);
+	}
 });
 
 it("CJS wrapper `module.exports = require(esm)` re-exports the unwrapped value", () => {
 	const webpacked = require("./wrapper-full.cjs");
-	const native = require(/* webpackIgnore: true */ wrapperFullPath);
 	expect(typeof webpacked).toBe("function");
 	expect(webpacked()).toBe(42);
-	expect(webpacked()).toBe(native());
-	expect(webpacked.named).toBe(native.named);
+	if (crossCheckNative) {
+		const native = require(/* webpackIgnore: true */ wrapperFullPath);
+		expect(webpacked()).toBe(native());
+		expect(webpacked.named).toBe(native.named);
+	}
 });
 
 it("CJS wrapper `module.exports.x = require(esm)` exposes the unwrapped value as a property", () => {
 	const webpacked = require("./wrapper-named.cjs");
-	const native = require(/* webpackIgnore: true */ wrapperNamedPath);
 	expect(typeof webpacked.fn).toBe("function");
 	expect(webpacked.fn()).toBe(42);
-	expect(webpacked.fn()).toBe(native.fn());
 	expect(webpacked.literal).toBe("i-am-the-module-exports");
-	expect(webpacked.literal).toBe(native.literal);
+	if (crossCheckNative) {
+		const native = require(/* webpackIgnore: true */ wrapperNamedPath);
+		expect(webpacked.fn()).toBe(native.fn());
+		expect(webpacked.literal).toBe(native.literal);
+	}
 });
 
 it("CJS wrapper `module.exports = require(esm).x` re-exports a property of the unwrapped value", () => {
 	const webpacked = require("./wrapper-prop.cjs");
-	const native = require(/* webpackIgnore: true */ wrapperPropPath);
 	expect(webpacked).toBe("named-prop");
-	expect(webpacked).toBe(native);
+	if (crossCheckNative) {
+		const native = require(/* webpackIgnore: true */ wrapperPropPath);
+		expect(webpacked).toBe(native);
+	}
 });
 
 it("should not leak sibling named exports when 'module.exports' unwraps (usedExports regression)", () => {
@@ -110,14 +139,17 @@ it("should not leak sibling named exports when 'module.exports' unwraps (usedExp
 	// returning "named-value" — which would NOT match Node's behavior of
 	// accessing `.named` on the unwrapped string (`undefined`).
 	const webpackedNamed = require("./distinct.mjs").named;
-	const nativeNamed = require(/* webpackIgnore: true */ distinctMjsPath).named;
 	expect(webpackedNamed).toBeUndefined();
-	expect(webpackedNamed).toBe(nativeNamed);
 
 	const webpackedPlain = require("./distinct.mjs");
-	const nativePlain = require(/* webpackIgnore: true */ distinctMjsPath);
 	expect(webpackedPlain).toBe("module-exports-value");
-	expect(webpackedPlain).toBe(nativePlain);
+
+	if (crossCheckNative) {
+		const nativeNamed = require(/* webpackIgnore: true */ distinctMjsPath).named;
+		expect(webpackedNamed).toBe(nativeNamed);
+		const nativePlain = require(/* webpackIgnore: true */ distinctMjsPath);
+		expect(webpackedPlain).toBe(nativePlain);
+	}
 });
 
 // Underscore-shaped library regression (issue #20896 + the linked underscore
@@ -127,12 +159,14 @@ it("should not leak sibling named exports when 'module.exports' unwraps (usedExp
 
 it("Underscore-like: `const _ = require(lib)` yields the callable library", () => {
 	const _ = require("./underscore-like.mjs");
-	const native = require(/* webpackIgnore: true */ underscoreLikePath);
 	expect(typeof _).toBe("function");
-	expect(typeof native).toBe("function");
 	expect(_.VERSION).toBe("1.0.0-esm");
-	expect(_.VERSION).toBe(native.VERSION);
 	expect(_.map([1, 2, 3], (x) => x * 2)).toEqual([2, 4, 6]);
+	if (crossCheckNative) {
+		const native = require(/* webpackIgnore: true */ underscoreLikePath);
+		expect(typeof native).toBe("function");
+		expect(_.VERSION).toBe(native.VERSION);
+	}
 });
 
 it("Underscore-like: `_.partial.placeholder === _` (underscore/issues/3016)", () => {
@@ -152,16 +186,21 @@ it("Underscore-like: `_.partial(fn, _, x, _)` fills positionally with the placeh
 
 it("Underscore-like: destructured pull behaves as `import _ from 'underscore'` would (esbuild/issues/4459)", () => {
 	const { map, VERSION } = require("./underscore-like.mjs");
-	const native = require(/* webpackIgnore: true */ underscoreLikePath);
 	expect(map([1, 2], (x) => x + 1)).toEqual([2, 3]);
-	expect(VERSION).toBe(native.VERSION);
+	expect(VERSION).toBe("1.0.0-esm");
+	if (crossCheckNative) {
+		const native = require(/* webpackIgnore: true */ underscoreLikePath);
+		expect(VERSION).toBe(native.VERSION);
+	}
 });
 
 it("should preserve namespace behavior when ESM has no 'module.exports' export", () => {
 	const ns = require("./no-special-export.mjs");
-	const nativeNs = require(/* webpackIgnore: true */ noSpecialMjsPath);
 	expect(ns.foo).toBe("foo-value");
-	expect(ns.foo).toBe(nativeNs.foo);
 	expect(ns.default).toBe("default-value");
-	expect(ns.default).toBe(nativeNs.default);
+	if (crossCheckNative) {
+		const nativeNs = require(/* webpackIgnore: true */ noSpecialMjsPath);
+		expect(ns.foo).toBe(nativeNs.foo);
+		expect(ns.default).toBe(nativeNs.default);
+	}
 });

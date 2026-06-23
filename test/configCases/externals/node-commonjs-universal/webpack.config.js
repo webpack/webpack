@@ -3,15 +3,17 @@
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{
-		name: "optional-chaining",
+		name: "known-getter",
+		// node version known to support `process.getBuiltinModule()` (>= 22.3)
 		target: ["node22.12", "web"],
 		output: { module: true },
 		experiments: { outputModule: true }
 	},
 	{
-		name: "no-optional-chaining",
-		target: ["node22.12", "web"],
-		output: { module: true, environment: { optionalChaining: false } },
+		name: "fallback",
+		// node version predating `process.getBuiltinModule()` -> getter probe + createRequire
+		target: ["node18", "web"],
+		output: { module: true },
 		experiments: { outputModule: true }
 	}
 ];

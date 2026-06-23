@@ -18,6 +18,7 @@ const {
 	urlToPath,
 	urlToRelativePath
 } = require("./RunnerHelpers");
+const rewriteImportMeta = require("./rewriteImportMeta");
 
 const [major] = getNodeVersion();
 
@@ -108,9 +109,9 @@ class TestRunner {
 
 	/**
 	 * Whether the target is universal, i.e. its merged platform is neither
-	 * node- nor web-specific (e.g. `["web", "node"]`, `["web", "electron-main"]`,
-	 * `["web", "node", "webworker"]`), so the same bundle runs once per env.
-	 * TODO simplify once a dedicated `universal` target lands.
+	 * node- nor web-specific (the `"universal"` preset, or arrays like
+	 * `["web", "node"]`, `["web", "electron-main"]`, `["web", "node", "webworker"]`),
+	 * so the same bundle runs once per env.
 	 * @param {EXPECTED_ANY} webpackOptions webpack options
 	 * @returns {boolean} whether target is universal
 	 */
@@ -163,10 +164,14 @@ class TestRunner {
 		const results = [];
 		for (let i = 0; i < optionsArr.length; i++) {
 			const options = optionsArr[i];
-			let targets = [options.target];
 			let found = false;
+			// universal targets run the same bundle once per concrete environment;
+			// the `"universal"` preset expands to web + node.
+			let targets = [options.target];
 			if (TestRunner.isUniversalTarget(options)) {
-				targets = targets.reduce((prev, cur) => [...prev, ...cur], []);
+				targets = Array.isArray(options.target)
+					? options.target
+					: ["web", "node"];
 			}
 
 			for (const target of targets) {
@@ -572,8 +577,26 @@ class TestRunner {
 		const getModuleInstance = (identifier, content) => {
 			let instance = esmCache.get(identifier);
 			if (!instance) {
+				let moduleSource = content;
+				// Deno 2.8.3 hard-panics ("Module not found", bindings.rs) the moment
+				// `import.meta` is accessed inside a vm SourceTextModule (no
+				// initializeImportMeta shape avoids it). Rewrite the `import.meta`
+				// meta-property to a prepended object so the module evaluates; parse to
+				// only touch real syntax, never string/comment text. Node/Bun keep the
+				// initializeImportMeta callback below.
+				if (process.versions.deno && /\bimport\.meta\b/.test(content)) {
+					moduleSource = rewriteImportMeta(content, () => {
+						/** @type {Record<string, string>} */
+						const meta = { url: pathToFileURL(identifier).href };
+						if (this.hasNodeTarget()) {
+							meta.filename = identifier;
+							meta.dirname = path.dirname(identifier);
+						}
+						return meta;
+					});
+				}
 				instance = new vm.SourceTextModule(
-					content,
+					moduleSource,
 					/** @type {EXPECTED_ANY} */ ({
 						identifier: appendTestMeta(identifier),
 						url: appendTestMeta(pathToFileURL(identifier).href),

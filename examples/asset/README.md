@@ -269,7 +269,7 @@ module.exports = __webpack_require__.tb("PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmc
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			if(Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
@@ -488,10 +488,10 @@ files.forEach(item => {
 asset output.js 19.8 KiB [emitted] (name: main)
 asset images/89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset images/afc10c70ed4ce2b33593.svg 656 bytes [emitted] [immutable] [from: images/url.svg] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 12.4 KiB (javascript) 15.2 KiB (asset) 1.86 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 12.4 KiB (javascript) 15.2 KiB (asset) 1.82 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 9.59 KiB (javascript) 15.2 KiB (asset) [dependent] 6 modules
-  runtime modules 1.86 KiB 5 modules
+  runtime modules 1.82 KiB 5 modules
   ./example.js 2.85 KiB [built] [code generated]
     [no exports]
     [used exports unknown]

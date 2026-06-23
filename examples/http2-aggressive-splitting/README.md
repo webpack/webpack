@@ -1,12 +1,8 @@
-This example demonstrates the AggressiveSplittingPlugin for splitting the bundle into multiple smaller chunks to improve caching. This works best with an HTTP2 web server, otherwise, there is an overhead for the increased number of requests.
+This example demonstrates how to split the bundle into multiple smaller chunks to improve caching using `optimization.splitChunks` with a `maxSize`. This works best with an HTTP2 web server, otherwise, there is an overhead for the increased number of requests.
 
-AggressiveSplittingPlugin splits every chunk until it reaches the specified `maxSize`. In this example, it tries to create chunks with <50kB raw code, which typically minimizes to ~10kB. It groups modules by folder structure, because modules in the same folder are likely to have similar repetitive text, making them gzip efficiently together. They are also likely to change together.
+Setting `maxSize` tells webpack to split chunks that are bigger than this size into smaller ones. In this example, it tries to create chunks with <50kB raw code, which typically minimizes to ~10kB. Modules are grouped by folder structure, because modules in the same folder are likely to have similar repetitive text, making them gzip efficiently together. They are also likely to change together.
 
-AggressiveSplittingPlugin records its splitting in the webpack records. When it is next run, it tries to use the last recorded splitting. Since changes to application code between one run and the next are usually in only a few modules (or just one), re-using the old splittings (and chunks, which are probably still in the client's cache), is highly advantageous.
-
-Only chunks that are bigger than the specified `minSize` are stored into the records. This ensures that these chunks fill up as your application grows, instead of creating many records of small chunks for every change.
-
-If a module changes, its chunks are declared to be invalid and are put back into the module pool. New chunks are created from all modules in the pool.
+`chunks: "all"` applies the splitting to all chunks, including the initial ones. Chunk content is deterministic, so the same `[chunkhash]` is emitted as long as a chunk's modules don't change. Since changes to application code between one build and the next are usually in only a few modules, the unchanged chunks keep their hash and stay in the client's cache.
 
 There is a tradeoff here:
 
@@ -25,23 +21,24 @@ const webpack = require("../../");
 /** @type {import("webpack").Configuration} */
 const config = {
 	// mode: "development" || "production",
-	cache: true, // better performance for the AggressiveSplittingPlugin
 	entry: "./example",
 	output: {
 		path: path.join(__dirname, "dist"),
 		filename: "[chunkhash].js",
 		chunkFilename: "[chunkhash].js"
 	},
-	plugins: [
-		new webpack.optimize.AggressiveSplittingPlugin({
+	optimization: {
+		splitChunks: {
+			chunks: "all",
 			minSize: 30000,
 			maxSize: 50000
-		}),
+		}
+	},
+	plugins: [
 		new webpack.DefinePlugin({
 			"process.env.NODE_ENV": JSON.stringify("production")
 		})
-	],
-	recordsOutputPath: path.join(__dirname, "dist", "records.json")
+	]
 };
 
 module.exports = config;
@@ -52,11 +49,11 @@ module.exports = config;
 ## Unoptimized
 
 ```
-asset 5bb2a88d464bd37f9bdf.js 37.2 KiB [emitted] [immutable] (name: main)
+asset c7731e1b451590230a75.js 37.2 KiB [emitted] [immutable] (name: main)
 asset 6136ed90a731a1f7d2a3.js 12 KiB [emitted] [immutable]
-chunk (runtime: main) 5bb2a88d464bd37f9bdf.js (main) 17 KiB (javascript) 4.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) c7731e1b451590230a75.js (main) 17 KiB (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 4.95 KiB 6 modules
+  runtime modules 4.92 KiB 6 modules
   dependent modules 17 KiB [dependent] 2 modules
   ./example.js 42 bytes [built] [code generated]
 chunk (runtime: main) 6136ed90a731a1f7d2a3.js 7.83 KiB [rendered]
@@ -69,53 +66,16 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset 24effdb242889c6b9c11.js 9.07 KiB [emitted] [immutable] [minimized] (name: main) 1 related asset
+asset 7ca3ef3fdbb2a836fdc1.js 9.05 KiB [emitted] [immutable] [minimized] (name: main) 1 related asset
 asset 0bd063af5520128b2714.js 3.55 KiB [emitted] [immutable] [minimized] 1 related asset
 chunk (runtime: main) 0bd063af5520128b2714.js 7.83 KiB [rendered]
   > react-dom ./example.js 2:0-22
   dependent modules 6.5 KiB [dependent] 1 module
   ../../node_modules/react-dom/index.js 1.33 KiB [built] [code generated]
-chunk (runtime: main) 24effdb242889c6b9c11.js (main) 17 KiB (javascript) 4.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) 7ca3ef3fdbb2a836fdc1.js (main) 17 KiB (javascript) 4.92 KiB (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 4.95 KiB 6 modules
+  runtime modules 4.92 KiB 6 modules
   dependent modules 17 KiB [dependent] 2 modules
   ./example.js 42 bytes [built] [code generated]
 webpack X.X.X compiled successfully
-```
-
-## Records
-
-```
-{
-  "aggressiveSplits": [],
-  "chunks": {
-    "byName": {
-      "main": 0
-    },
-    "bySource": {
-      "0 ./example.js react-dom": 1,
-      "0 main": 0
-    },
-    "usedIds": [
-      0,
-      1
-    ]
-  },
-  "modules": {
-    "byIdentifier": {
-      "../../node_modules/react-dom/cjs/react-dom.production.js": 4,
-      "../../node_modules/react-dom/index.js": 3,
-      "../../node_modules/react/cjs/react.production.js": 2,
-      "../../node_modules/react/index.js": 1,
-      "./example.js": 0
-    },
-    "usedIds": [
-      0,
-      1,
-      2,
-      3,
-      4
-    ]
-  }
-}
 ```

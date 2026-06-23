@@ -8,9 +8,11 @@ module.exports = {
 		return ["basic.js"];
 	},
 	afterExecute(options) {
+		// Sort: readdirSync order is filesystem-dependent (differs on Bun).
 		const files = fs
 			.readdirSync(options.output.path)
-			.filter((item) => !/stats/.test(item));
+			.filter((item) => !/stats/.test(item))
+			.sort();
 
 		expect(files).toMatchSnapshot();
 

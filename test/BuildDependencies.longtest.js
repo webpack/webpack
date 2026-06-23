@@ -115,6 +115,12 @@ const exec = (
 
 const supportsEsm = Number(process.versions.modules) >= 83;
 
+// TODO Bun doesn't populate `module.children` for requires made from inside a
+// node_modules package, so webpack's build-dependency walk (require.cache
+// children) never reaches the `dep-without-package.json` managed item and the
+// warning this test asserts is never emitted; skip on Bun.
+const itSkipBun = process.versions.bun ? it.skip : it;
+
 describe("BuildDependencies", () => {
 	beforeEach((done) => {
 		rimraf(cacheDirectory, () => {
@@ -126,29 +132,31 @@ describe("BuildDependencies", () => {
 		});
 	});
 
-	it("should capture loader and config dependencies", async () => {
-		fs.writeFileSync(
-			path.resolve(inputDirectory, "package.json"),
-			JSON.stringify({
-				name: "yep",
-				version: "1.0.0"
-			})
-		);
-		fs.writeFileSync(
-			path.resolve(inputDirectory, "loader-dependency.js"),
-			"module.exports = 0;"
-		);
-		fs.writeFileSync(
-			path.resolve(inputDirectory, "config-dependency.js"),
-			"module.exports = 0;"
-		);
-		fs.writeFileSync(
-			path.resolve(inputDirectory, "esm-dependency.js"),
-			"module.exports = 0;"
-		);
-		fs.writeFileSync(
-			path.resolve(inputDirectory, "esm-async-dependency.mjs"),
-			`import path from "node:path";
+	itSkipBun(
+		"should capture loader and config dependencies",
+		async () => {
+			fs.writeFileSync(
+				path.resolve(inputDirectory, "package.json"),
+				JSON.stringify({
+					name: "yep",
+					version: "1.0.0"
+				})
+			);
+			fs.writeFileSync(
+				path.resolve(inputDirectory, "loader-dependency.js"),
+				"module.exports = 0;"
+			);
+			fs.writeFileSync(
+				path.resolve(inputDirectory, "config-dependency.js"),
+				"module.exports = 0;"
+			);
+			fs.writeFileSync(
+				path.resolve(inputDirectory, "esm-dependency.js"),
+				"module.exports = 0;"
+			);
+			fs.writeFileSync(
+				path.resolve(inputDirectory, "esm-async-dependency.mjs"),
+				`import path from "node:path";
 import vm from "vm";
 
 async function preload() {
@@ -160,178 +168,180 @@ async function preload() {
 }
 
 export default 0;`
-		);
-		await exec("0", {
-			invalidBuildDependencies: true,
-			buildTwice: true,
-			warnings: [/Can't resolve 'should-fail-resolving'/]
-		});
-		fs.writeFileSync(
-			path.resolve(inputDirectory, "loader-dependency.js"),
-			"module.exports = 1;"
-		);
-		fs.writeFileSync(
-			path.resolve(inputDirectory, "config-dependency.js"),
-			"module.exports = 1;"
-		);
-		fs.writeFileSync(
-			path.resolve(inputDirectory, "esm-dependency.js"),
-			"module.exports = 1;"
-		);
-		await exec("1", {
-			warnings: supportsEsm && [
-				/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
-			]
-		});
-		fs.writeFileSync(
-			path.resolve(inputDirectory, "loader-dependency.js"),
-			"module.exports = Date.now();"
-		);
-		const now1 = Date.now();
-		const output2 = await exec("2", {
-			warnings: supportsEsm && [
-				/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
-			]
-		});
-		expect(output2).toMatch(/but build dependencies have changed/);
-		expect(output2).toMatch(/Captured build dependencies/);
-		expect(output2).not.toMatch(/Assuming/);
-		expect(output2).not.toMatch(/<w>/);
-		const output3 = await exec("3");
-		expect(output3).not.toMatch(/resolving of build dependencies is invalid/);
-		expect(output3).not.toMatch(/but build dependencies have changed/);
-		expect(output3).not.toMatch(/Captured build dependencies/);
-		expect(output3).not.toMatch(/Assuming/);
-		expect(output3).not.toMatch(/<w>/);
-		fs.writeFileSync(
-			path.resolve(inputDirectory, "package.json"),
-			JSON.stringify({
-				name: "other",
-				version: "2.0.0"
-			})
-		);
-		const output4 = await exec("4", {
-			warnings: supportsEsm && [
-				/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
-			]
-		});
-		expect(output4).toMatch(/resolving of build dependencies is invalid/);
-		expect(output4).not.toMatch(/but build dependencies have changed/);
-		expect(output4).toMatch(/Captured build dependencies/);
-		fs.writeFileSync(
-			path.resolve(inputDirectory, "config-dependency"),
-			"module.exports = Date.now();"
-		);
-		const now2 = Date.now();
-		await exec("5", {
-			warnings: supportsEsm && [
-				/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
-			]
-		});
-		const now3 = Date.now();
-		await exec("6");
-		await exec("7", {
-			definedValue: "other"
-		});
-		let now4 = 0;
-		let now5 = 0;
-		if (supportsEsm) {
+			);
+			await exec("0", {
+				invalidBuildDependencies: true,
+				buildTwice: true,
+				warnings: [/Can't resolve 'should-fail-resolving'/]
+			});
+			fs.writeFileSync(
+				path.resolve(inputDirectory, "loader-dependency.js"),
+				"module.exports = 1;"
+			);
+			fs.writeFileSync(
+				path.resolve(inputDirectory, "config-dependency.js"),
+				"module.exports = 1;"
+			);
 			fs.writeFileSync(
 				path.resolve(inputDirectory, "esm-dependency.js"),
-				"module.exports = Date.now();"
+				"module.exports = 1;"
 			);
-			now4 = Date.now();
-			await exec("8", {
-				definedValue: "other",
-				warnings: [
+			await exec("1", {
+				warnings: supportsEsm && [
 					/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
 				]
 			});
 			fs.writeFileSync(
-				path.resolve(inputDirectory, "esm-async-dependency.mjs"),
-				"export default Date.now();"
+				path.resolve(inputDirectory, "loader-dependency.js"),
+				"module.exports = Date.now();"
 			);
-			now5 = Date.now();
-
-			await exec("9", {
-				definedValue: "other",
-				warnings: [
+			const now1 = Date.now();
+			const output2 = await exec("2", {
+				warnings: supportsEsm && [
 					/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
 				]
 			});
-		}
-		const results = Array.from({ length: supportsEsm ? 10 : 8 }).map((_, i) =>
-			require(`./js/buildDeps/${i}/main.js`)
-		);
-		for (const r of results) {
-			expect(typeof r.loader).toBe("number");
-			expect(typeof r.config).toBe("number");
-			expect(typeof r.uncached).toBe("number");
-			expect(typeof r.definedValue).toBe("string");
-		}
-		let result = results.shift();
-		expect(result.loader).toBe(0);
-		expect(result.config).toBe(0);
-		if (supportsEsm) expect(result.esmConfig).toBe(0);
-		expect(result.uncached).toBe(0);
-		// 0 -> 1 should not cache at all because of invalid buildDeps
-		result = results.shift();
-		expect(result.loader).toBe(1);
-		expect(result.config).toBe(1);
-		expect(result.esmConfig).toBe(1);
-		expect(result.uncached).toBe(1);
-		// 1 -> 2 should be invalidated
-		result = results.shift();
-		expect(result.loader).toBeGreaterThan(now1);
-		expect(result.config).toBe(1);
-		expect(result.esmConfig).toBe(1);
-		expect(result.uncached).toBe(1);
-		// 2 -> 3 should stay cached
-		let prevResult = result;
-		result = results.shift();
-		expect(result.loader).toBe(prevResult.loader);
-		expect(result.config).toBe(1);
-		expect(result.esmConfig).toBe(1);
-		expect(result.uncached).toBe(1);
-		// 3 -> 4 should stay cached
-		prevResult = result;
-		result = results.shift();
-		expect(result.loader).toBe(prevResult.loader);
-		expect(result.config).toBe(1);
-		expect(result.esmConfig).toBe(1);
-		expect(result.uncached).toBe(1);
-		// 4 -> 5 should be invalidated
-		result = results.shift();
-		expect(result.loader).toBeGreaterThan(now2);
-		expect(result.config).toBeGreaterThan(now2);
-		expect(result.esmConfig).toBe(1);
-		expect(result.uncached).toBe(result.config);
-		// 5 -> 6 should stay cached, but uncacheable module still rebuilds
-		prevResult = result;
-		result = results.shift();
-		expect(result.loader).toBe(prevResult.loader);
-		expect(result.config).toBe(prevResult.config);
-		expect(result.uncached).toBeGreaterThan(now3);
-		// 6 -> 7 should stay cached, except the updated defined value
-		prevResult = result;
-		result = results.shift();
-		expect(result.loader).toBe(prevResult.loader);
-		expect(result.config).toBe(prevResult.config);
-		expect(result.definedValue).toBe("other");
-		if (supportsEsm) {
-			// 7 -> 8 should be invalidated
+			expect(output2).toMatch(/but build dependencies have changed/);
+			expect(output2).toMatch(/Captured build dependencies/);
+			expect(output2).not.toMatch(/Assuming/);
+			expect(output2).not.toMatch(/<w>/);
+			const output3 = await exec("3");
+			expect(output3).not.toMatch(/resolving of build dependencies is invalid/);
+			expect(output3).not.toMatch(/but build dependencies have changed/);
+			expect(output3).not.toMatch(/Captured build dependencies/);
+			expect(output3).not.toMatch(/Assuming/);
+			expect(output3).not.toMatch(/<w>/);
+			fs.writeFileSync(
+				path.resolve(inputDirectory, "package.json"),
+				JSON.stringify({
+					name: "other",
+					version: "2.0.0"
+				})
+			);
+			const output4 = await exec("4", {
+				warnings: supportsEsm && [
+					/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
+				]
+			});
+			expect(output4).toMatch(/resolving of build dependencies is invalid/);
+			expect(output4).not.toMatch(/but build dependencies have changed/);
+			expect(output4).toMatch(/Captured build dependencies/);
+			fs.writeFileSync(
+				path.resolve(inputDirectory, "config-dependency"),
+				"module.exports = Date.now();"
+			);
+			const now2 = Date.now();
+			await exec("5", {
+				warnings: supportsEsm && [
+					/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
+				]
+			});
+			const now3 = Date.now();
+			await exec("6");
+			await exec("7", {
+				definedValue: "other"
+			});
+			let now4 = 0;
+			let now5 = 0;
+			if (supportsEsm) {
+				fs.writeFileSync(
+					path.resolve(inputDirectory, "esm-dependency.js"),
+					"module.exports = Date.now();"
+				);
+				now4 = Date.now();
+				await exec("8", {
+					definedValue: "other",
+					warnings: [
+						/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
+					]
+				});
+				fs.writeFileSync(
+					path.resolve(inputDirectory, "esm-async-dependency.mjs"),
+					"export default Date.now();"
+				);
+				now5 = Date.now();
+
+				await exec("9", {
+					definedValue: "other",
+					warnings: [
+						/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
+					]
+				});
+			}
+			const results = Array.from({ length: supportsEsm ? 10 : 8 }).map((_, i) =>
+				require(`./js/buildDeps/${i}/main.js`)
+			);
+			for (const r of results) {
+				expect(typeof r.loader).toBe("number");
+				expect(typeof r.config).toBe("number");
+				expect(typeof r.uncached).toBe("number");
+				expect(typeof r.definedValue).toBe("string");
+			}
+			let result = results.shift();
+			expect(result.loader).toBe(0);
+			expect(result.config).toBe(0);
+			if (supportsEsm) expect(result.esmConfig).toBe(0);
+			expect(result.uncached).toBe(0);
+			// 0 -> 1 should not cache at all because of invalid buildDeps
 			result = results.shift();
-			expect(result.loader).toBeGreaterThan(now4);
-			expect(result.config).toBeGreaterThan(now4);
-			expect(result.esmConfig).toBeGreaterThan(now4);
-			expect(result.uncached).toBeGreaterThan(now4);
-			// 8 -> 9 should be invalidated
+			expect(result.loader).toBe(1);
+			expect(result.config).toBe(1);
+			expect(result.esmConfig).toBe(1);
+			expect(result.uncached).toBe(1);
+			// 1 -> 2 should be invalidated
 			result = results.shift();
-			expect(result.loader).toBeGreaterThan(now5);
-			expect(result.config).toBeGreaterThan(now5);
-			expect(result.esmConfig).toBeGreaterThan(now5);
-			expect(result.esmAsyncConfig).toBeGreaterThan(now5);
-			expect(result.uncached).toBeGreaterThan(now5);
-		}
-	}, 500000);
+			expect(result.loader).toBeGreaterThan(now1);
+			expect(result.config).toBe(1);
+			expect(result.esmConfig).toBe(1);
+			expect(result.uncached).toBe(1);
+			// 2 -> 3 should stay cached
+			let prevResult = result;
+			result = results.shift();
+			expect(result.loader).toBe(prevResult.loader);
+			expect(result.config).toBe(1);
+			expect(result.esmConfig).toBe(1);
+			expect(result.uncached).toBe(1);
+			// 3 -> 4 should stay cached
+			prevResult = result;
+			result = results.shift();
+			expect(result.loader).toBe(prevResult.loader);
+			expect(result.config).toBe(1);
+			expect(result.esmConfig).toBe(1);
+			expect(result.uncached).toBe(1);
+			// 4 -> 5 should be invalidated
+			result = results.shift();
+			expect(result.loader).toBeGreaterThan(now2);
+			expect(result.config).toBeGreaterThan(now2);
+			expect(result.esmConfig).toBe(1);
+			expect(result.uncached).toBe(result.config);
+			// 5 -> 6 should stay cached, but uncacheable module still rebuilds
+			prevResult = result;
+			result = results.shift();
+			expect(result.loader).toBe(prevResult.loader);
+			expect(result.config).toBe(prevResult.config);
+			expect(result.uncached).toBeGreaterThan(now3);
+			// 6 -> 7 should stay cached, except the updated defined value
+			prevResult = result;
+			result = results.shift();
+			expect(result.loader).toBe(prevResult.loader);
+			expect(result.config).toBe(prevResult.config);
+			expect(result.definedValue).toBe("other");
+			if (supportsEsm) {
+				// 7 -> 8 should be invalidated
+				result = results.shift();
+				expect(result.loader).toBeGreaterThan(now4);
+				expect(result.config).toBeGreaterThan(now4);
+				expect(result.esmConfig).toBeGreaterThan(now4);
+				expect(result.uncached).toBeGreaterThan(now4);
+				// 8 -> 9 should be invalidated
+				result = results.shift();
+				expect(result.loader).toBeGreaterThan(now5);
+				expect(result.config).toBeGreaterThan(now5);
+				expect(result.esmConfig).toBeGreaterThan(now5);
+				expect(result.esmAsyncConfig).toBeGreaterThan(now5);
+				expect(result.uncached).toBeGreaterThan(now5);
+			}
+		},
+		500000
+	);
 });

@@ -161,8 +161,10 @@ describe("snapshots", () => {
 		      "hasOwn": undefined,
 		      "importMetaDirnameAndFilename": undefined,
 		      "let": true,
+		      "logicalAssignment": undefined,
 		      "methodShorthand": true,
 		      "module": undefined,
+		      "nodeBuiltinModuleGetter": undefined,
 		      "nodePrefixForCoreModules": true,
 		      "optionalChaining": true,
 		      "spread": true,
@@ -430,8 +432,10 @@ describe("snapshots", () => {
 		      "hasOwn": undefined,
 		      "importMetaDirnameAndFilename": undefined,
 		      "let": true,
+		      "logicalAssignment": undefined,
 		      "methodShorthand": true,
 		      "module": undefined,
+		      "nodeBuiltinModuleGetter": undefined,
 		      "nodePrefixForCoreModules": true,
 		      "optionalChaining": true,
 		      "spread": true,
@@ -447,6 +451,7 @@ describe("snapshots", () => {
 		    "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
 		    "hotUpdateGlobal": "webpackHotUpdatewebpack",
 		    "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
+		    "html": false,
 		    "htmlChunkFilename": "[name].html",
 		    "htmlFilename": "[name].html",
 		    "ignoreBrowserWarnings": undefined,
@@ -2085,6 +2090,184 @@ describe("snapshots", () => {
 		`)
 	);
 
+	test(
+		"target universal (preset)",
+		{
+			// the universal preset enables ESM output (and web worker support) on its own
+			target: "universal"
+		},
+		(e) =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-     "outputModule": false,
+			+     "outputModule": true,
+			@@ ... @@
+			-     "electron": false,
+			-     "electronMain": false,
+			-     "electronPreload": false,
+			-     "electronRenderer": false,
+			-     "node": false,
+			-     "nwjs": false,
+			+     "electron": true,
+			+     "electronMain": null,
+			+     "electronPreload": null,
+			+     "electronRenderer": null,
+			+     "node": true,
+			+     "nwjs": true,
+			@@ ... @@
+			-   "externalsType": "var",
+			+   "externalsType": "module-import",
+			@@ ... @@
+			-       "document": true,
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "document": false,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "module": undefined,
+			+       "module": true,
+			@@ ... @@
+			-     "target": "web",
+			+     "target": undefined,
+			@@ ... @@
+			-         "importMeta": true,
+			+         "importMeta": "preserve-unknown",
+			@@ ... @@
+			-     "__dirname": "mock",
+			-     "__filename": "mock",
+			+     "__dirname": "eval-only",
+			+     "__filename": "eval-only",
+			@@ ... @@
+			-     "chunkFilename": "[name].js",
+			-     "chunkFormat": "array-push",
+			+     "chunkFilename": "[name].mjs",
+			+     "chunkFormat": "module",
+			@@ ... @@
+			-     "chunkLoading": "jsonp",
+			+     "chunkLoading": "import",
+			@@ ... @@
+			-       "jsonp",
+			-       "import-scripts",
+			+       "import",
+			@@ ... @@
+			-       "fetch",
+			+       "universal",
+			@@ ... @@
+			-       "document": true,
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "document": false,
+			+       "dynamicImport": true,
+			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "module": undefined,
+			+       "module": true,
+			@@ ... @@
+			-     "filename": "[name].js",
+			-     "globalObject": "self",
+			+     "filename": "[name].mjs",
+			+     "globalObject": "globalThis",
+			@@ ... @@
+			-     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
+			+     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.mjs",
+			@@ ... @@
+			-     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
+			+     "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json.mjs",
+			@@ ... @@
+			-     "iife": true,
+			+     "iife": false,
+			@@ ... @@
+			-     "module": false,
+			+     "module": true,
+			@@ ... @@
+			-     "scriptType": false,
+			+     "scriptType": "module",
+			@@ ... @@
+			-     "wasmLoading": "fetch",
+			+     "wasmLoading": "universal",
+			@@ ... @@
+			-     "workerChunkFilename": "[name].js",
+			-     "workerChunkLoading": "import-scripts",
+			+     "workerChunkFilename": "[name].mjs",
+			+     "workerChunkLoading": "import",
+			@@ ... @@
+			-     "workerWasmLoading": "fetch",
+			+     "workerWasmLoading": "universal",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-       "browser",
+			@@ ... @@
+			-   "target": "web",
+			+   "target": "universal",
+		`)
+	);
+
 	test("records", { recordsPath: "some-path" }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
@@ -2911,8 +3094,10 @@ describe("snapshots", () => {
 			-       "hasOwn": undefined,
 			-       "importMetaDirnameAndFilename": undefined,
 			-       "let": true,
+			-       "logicalAssignment": undefined,
 			-       "methodShorthand": true,
 			-       "module": undefined,
+			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
 			-       "optionalChaining": true,
 			-       "spread": true,
@@ -2925,8 +3110,10 @@ describe("snapshots", () => {
 			+       "hasOwn": false,
 			+       "importMetaDirnameAndFilename": false,
 			+       "let": false,
+			+       "logicalAssignment": false,
 			+       "methodShorthand": false,
 			+       "module": false,
+			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
 			+       "spread": false,
@@ -2957,8 +3144,10 @@ describe("snapshots", () => {
 			-       "hasOwn": undefined,
 			-       "importMetaDirnameAndFilename": undefined,
 			-       "let": true,
+			-       "logicalAssignment": undefined,
 			-       "methodShorthand": true,
 			-       "module": undefined,
+			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
 			-       "optionalChaining": true,
 			-       "spread": true,
@@ -2971,8 +3160,10 @@ describe("snapshots", () => {
 			+       "hasOwn": false,
 			+       "importMetaDirnameAndFilename": false,
 			+       "let": false,
+			+       "logicalAssignment": false,
 			+       "methodShorthand": false,
 			+       "module": false,
+			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
 			+       "spread": false,
@@ -3767,9 +3958,14 @@ describe("snapshots", () => {
 			+       "hasOwn": false,
 			+       "importMetaDirnameAndFilename": false,
 			@@ ... @@
+			-       "logicalAssignment": undefined,
+			+       "logicalAssignment": false,
+			@@ ... @@
 			-       "module": undefined,
+			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
 			+       "module": true,
+			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			@@ ... @@
 			-     "target": "web",
@@ -3817,9 +4013,14 @@ describe("snapshots", () => {
 			+       "hasOwn": false,
 			+       "importMetaDirnameAndFilename": false,
 			@@ ... @@
+			-       "logicalAssignment": undefined,
+			+       "logicalAssignment": false,
+			@@ ... @@
 			-       "module": undefined,
+			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
 			+       "module": true,
+			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			@@ ... @@
 			-     "filename": "[name].js",
