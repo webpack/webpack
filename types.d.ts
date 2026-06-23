@@ -315,10 +315,6 @@ declare interface AliasOption {
 	name: string;
 	onlyModule?: boolean;
 }
-type AliasOptionNewRequest = string | false | string[];
-declare interface AliasOptions {
-	[index: string]: AliasOptionNewRequest;
-}
 declare interface AllCodeGenerationSchemas {
 	/**
 	 * top level declarations for javascript modules
@@ -19429,7 +19425,7 @@ type PathDataModule = PathData & {
 type PathLikeFs = string | Buffer | URL;
 type PathLikeTypes = string | URL_url | Buffer;
 type PathOrFileDescriptorFs = string | number | Buffer | URL;
-type PathOrFileDescriptorTypes = string | number | Buffer | URL_url;
+type PathOrFileDescriptorTypes = string | number | URL_url | Buffer;
 type Pattern =
 	| Identifier
 	| MemberExpression
@@ -21392,12 +21388,12 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 	/**
 	 * A list of module alias configurations or an object which maps key to value
 	 */
-	alias?: AliasOption[] | AliasOptions;
+	alias?: UserAliasOptions | UserAliasOptionEntry[];
 
 	/**
 	 * A list of module alias configurations or an object which maps key to value, applied only after modules option
 	 */
-	fallback?: AliasOption[] | AliasOptions;
+	fallback?: UserAliasOptions | UserAliasOptionEntry[];
 
 	/**
 	 * An object which maps extension to extension aliases
@@ -21475,9 +21471,9 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 	resolver?: Resolver;
 
 	/**
-	 * A list of directories to resolve modules from, can be absolute path or folder name
+	 * A list of directories to resolve modules from, can be absolute path, folder name, or a `file:` `URL` instance
 	 */
-	modules?: string | string[];
+	modules?: string | URL_url | (string | URL_url)[];
 
 	/**
 	 * A list of main fields in description files
@@ -21504,9 +21500,9 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 	pnpApi?: null | PnpApi;
 
 	/**
-	 * A list of root paths
+	 * A list of root paths, each an absolute path or a `file:` `URL` instance
 	 */
-	roots?: string[];
+	roots?: (string | URL_url)[];
 
 	/**
 	 * The request is already fully specified and no extensions or directories are resolved for it
@@ -21519,9 +21515,9 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 	resolveToContext?: boolean;
 
 	/**
-	 * A list of resolve restrictions
+	 * A list of resolve restrictions, each an absolute path, a `file:` `URL` instance, or a RegExp
 	 */
-	restrictions?: (string | RegExp)[];
+	restrictions?: (string | RegExp | URL_url)[];
 
 	/**
 	 * Use only the sync constraints of the file system calls
@@ -21539,9 +21535,9 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 	preferAbsolute?: boolean;
 
 	/**
-	 * TypeScript config file path or config object with configFile and references
+	 * TypeScript config file path (or `file:` `URL` instance) or config object with configFile and references
 	 */
-	tsconfig?: string | boolean | TsconfigOptions;
+	tsconfig?: string | boolean | URL_url | UserTsconfigOptions;
 }
 type ResolveOptionsWithDependencyType = ResolveOptions & {
 	dependencyType?: string;
@@ -21600,30 +21596,30 @@ declare abstract class Resolver {
 		null | ResolveRequest
 	>;
 	resolveSync(
-		path: string,
-		request: string,
+		parent: string | URL_url,
+		specifier: string | URL_url,
 		resolveContext?: ResolveContext
 	): string | false;
 	resolveSync(
 		context: ContextTypes,
-		path: string,
-		request: string,
+		parent: string | URL_url,
+		specifier: string | URL_url,
 		resolveContext?: ResolveContext
 	): string | false;
 	resolvePromise(
-		path: string,
-		request: string,
+		parent: string | URL_url,
+		specifier: string | URL_url,
 		resolveContext?: ResolveContext
 	): Promise<string | false>;
 	resolvePromise(
 		context: ContextTypes,
-		path: string,
-		request: string,
+		parent: string | URL_url,
+		specifier: string | URL_url,
 		resolveContext?: ResolveContext
 	): Promise<string | false>;
 	resolve(
-		path: string,
-		request: string,
+		parent: string | URL_url,
+		specifier: string | URL_url,
 		callback: (
 			err: null | ErrorWithDetail,
 			res?: string | false,
@@ -21631,8 +21627,8 @@ declare abstract class Resolver {
 		) => void
 	): void;
 	resolve(
-		path: string,
-		request: string,
+		parent: string | URL_url,
+		specifier: string | URL_url,
 		resolveContext: ResolveContext,
 		callback: (
 			err: null | ErrorWithDetail,
@@ -21642,8 +21638,8 @@ declare abstract class Resolver {
 	): void;
 	resolve(
 		context: ContextTypes,
-		path: string,
-		request: string,
+		parent: string | URL_url,
+		specifier: string | URL_url,
 		callback: (
 			err: null | ErrorWithDetail,
 			res?: string | false,
@@ -21652,8 +21648,8 @@ declare abstract class Resolver {
 	): void;
 	resolve(
 		context: ContextTypes,
-		path: string,
-		request: string,
+		parent: string | URL_url,
+		specifier: string | URL_url,
 		resolveContext: ResolveContext,
 		callback: (
 			err: null | ErrorWithDetail,
@@ -23802,6 +23798,15 @@ declare interface SplitData {
 	modules: string[];
 	size: number;
 }
+
+/**
+ * Singly-linked stack entry that also exposes a Set-like API
+ * (`has`, `size`, iteration). Each `doResolve` call prepends a new
+ * `StackEntry` that points at the previous tip via `.parent`, so pushing
+ * is O(1) in time and memory. Recursion detection walks the linked list
+ * (O(n)) but the stack is typically shallow, so this is cheaper overall
+ * than cloning a `Set` per call.
+ */
 declare abstract class StackEntry {
 	name?: string;
 	path: string | false;
@@ -23847,6 +23852,21 @@ declare abstract class StackEntry {
 	 * at the formatted form.
 	 */
 	toString(): string;
+
+	/**
+	 * Iterate entries from oldest (root) to newest (tip), matching how a
+	 * `Set` that was populated in insertion order would iterate. Pre-seeded
+	 * legacy `Set<string>` entries come first so error-message output stays
+	 * ordered oldest-to-newest.
+	 * Yields each entry as its formatted `toString()` form. Plugins written
+	 * against the pre-5.21 `Set<string>` shape — e.g.
+	 * `[...resolveContext.stack].find(a => a.includes("module:"))` — keep
+	 * working unchanged because each yielded value is a plain string with
+	 * all of `String.prototype` available natively. Resolves that never
+	 * iterate the stack pay nothing; iteration costs one `toString()`
+	 * allocation per stack frame.
+	 */
+	[Symbol.iterator](): IterableIterator<string>;
 }
 
 /**
@@ -25135,6 +25155,35 @@ declare interface UpdateHashContextGenerator {
 type Usage = string | true | TopLevelSymbol;
 type UsageStateType = 0 | 1 | 2 | 3 | 4;
 type UsedName = string | false | string[] | InlinedUsedName;
+declare interface UserAliasOptionEntry {
+	alias: UserAliasOptionNewRequest;
+	name: string;
+	onlyModule?: boolean;
+}
+type UserAliasOptionNewRequest =
+	| string
+	| false
+	| URL_url
+	| (string | URL_url)[];
+declare interface UserAliasOptions {
+	[index: string]: UserAliasOptionNewRequest;
+}
+declare interface UserTsconfigOptions {
+	/**
+	 * A path, or `file:` `URL` instance, pointing at the tsconfig file
+	 */
+	configFile?: string | URL_url;
+
+	/**
+	 * References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths or `file:` `URL` instances
+	 */
+	references?: "auto" | (string | URL_url)[];
+
+	/**
+	 * Override baseUrl from tsconfig.json with a path or `file:` `URL` instance
+	 */
+	baseUrl?: string | URL_url;
+}
 type Value = string | number | boolean | RegExp;
 type ValueCacheVersion = string | Set<string>;
 declare interface Values {
