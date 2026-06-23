@@ -1,6 +1,19 @@
 "use strict";
 
-const { interpolate } = require("../lib/TemplatedPathPlugin");
+const { getPresentKinds, interpolate } = require("../lib/TemplatedPathPlugin");
+
+describe("TemplatedPathPlugin.getPresentKinds", () => {
+	it("reports the placeholder kinds a template references, ignoring args", () => {
+		const kinds = getPresentKinds("[name].[contenthash:base64:8].js");
+		expect(kinds.has("name")).toBe(true);
+		expect(kinds.has("contenthash")).toBe(true);
+		expect(kinds.has("fullhash")).toBe(false);
+	});
+
+	it("returns an empty set for literal templates", () => {
+		expect(getPresentKinds("static/main.js").size).toBe(0);
+	});
+});
 
 describe("TemplatedPathPlugin.interpolate", () => {
 	it("returns literal paths unchanged", () => {
