@@ -1122,6 +1122,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "externals-presets-bun": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat bun built-in modules like 'bun', 'bun:sqlite' or 'bun:ffi' and node.js built-in modules as external and load them via import when used (for the Bun runtime).",
+        "multiple": false,
+        "path": "externalsPresets.bun",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat bun built-in modules like 'bun', 'bun:sqlite' or 'bun:ffi' and node.js built-in modules as external and load them via import when used (for the Bun runtime).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "externals-presets-deno": Object {
     "configs": Array [
       Object {
