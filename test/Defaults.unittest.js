@@ -3475,8 +3475,6 @@ describe("snapshots", () => {
 			+       },
 			+       "html": Object {},
 			@@ ... @@
-			+         },
-			+       },
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
@@ -3505,9 +3503,10 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			@@ ... @@
+			+       },
 			+       "html": Object {
 			+         "sources": true,
+			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -3556,11 +3555,10 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			+           "...",
-			+         ],
+			@@ ... @@
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			+       },
+			@@ ... @@
 			+       "css-import-global-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -3588,9 +3586,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
+			+       },
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -3635,6 +3635,7 @@ describe("snapshots", () => {
 			-     "cache": false,
 			+     "cache": true,
 			@@ ... @@
+			+     ],
 			+     "extensionAlias": Object {
 			+       ".cjs": Array [
 			+         ".cjs",
@@ -3647,7 +3648,7 @@ describe("snapshots", () => {
 			+       ".mjs": Array [
 			+         ".mjs",
 			+         ".mts",
-			+       ],
+			@@ ... @@
 			+     },
 			@@ ... @@
 			+     "tsconfig": true,
@@ -3657,6 +3658,11 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
+			@@ ... @@
+			-   "watchOptions": Object {},
+			+   "watchOptions": Object {
+			+     "ignored": /^(.+?[\\\\/]node_modules[\\\\/])|[\\\\/]\\.git([\\\\/]|$)/,
+			+   },
 		`)
 	);
 
@@ -4037,6 +4043,7 @@ describe("snapshots", () => {
 			-     "typescript": undefined,
 			+     "typescript": true,
 			@@ ... @@
+			+           ],
 			+         },
 			+         "resolve": Object {
 			+           "byDependency": Object {
@@ -4072,7 +4079,7 @@ describe("snapshots", () => {
 			+               "fullySpecified": true,
 			+             },
 			+           },
-			+         ],
+			@@ ... @@
 			+         "type": "webassembly/async",
 			+       },
 			+       Object {
@@ -4116,7 +4123,7 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css/global",
-			+       },
+			@@ ... @@
 			+       Object {
 			+         "parser": Object {
 			+           "exportType": "css-style-sheet",
@@ -4161,6 +4168,7 @@ describe("snapshots", () => {
 			+         "dependency": "html-style",
 			+         "parser": Object {
 			+           "exportType": "text",
+			+         },
 			@@ ... @@
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
@@ -4179,23 +4187,23 @@ describe("snapshots", () => {
 			+       },
 			+       Object {
 			+         "resolve": Object {
+			@@ ... @@
+			+         "test": /\\.mts$/i,
+			@@ ... @@
+			+         "descriptionData": Object {
+			+           "type": "module",
+			+         },
+			+         "resolve": Object {
 			+           "byDependency": Object {
 			+             "esm": Object {
 			+               "fullySpecified": true,
 			+             },
 			+           },
 			+         },
-			+         "test": /\\.mts$/i,
+			+         "test": /\\.ts$/i,
 			+         "type": "javascript/esm",
 			+       },
 			+       Object {
-			+         "descriptionData": Object {
-			+           "type": "module",
-			+         },
-			+         "resolve": Object {
-			@@ ... @@
-			+         "test": /\\.ts$/i,
-			@@ ... @@
 			+         "test": /\\.cts$/i,
 			+         "type": "javascript/dynamic",
 			+       },
@@ -4254,11 +4262,13 @@ describe("snapshots", () => {
 			+       },
 			+       "html": Object {},
 			@@ ... @@
+			+         },
+			+       },
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
 			+         "url": true,
-			+       },
+			@@ ... @@
 			+       "css/auto": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -4274,7 +4284,7 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			+       },
+			@@ ... @@
 			+       "css/module": Object {
 			+         "animation": true,
 			+         "container": true,
@@ -4317,9 +4327,6 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           ".ts",
 			@@ ... @@
-			+           "...",
-			+         ],
-			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -4363,9 +4370,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
+			+       },
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -4412,7 +4421,7 @@ describe("snapshots", () => {
 			+       ".cjs": Array [
 			+         ".cjs",
 			+         ".cts",
-			@@ ... @@
+			+       ],
 			+       ".js": Array [
 			+         ".js",
 			+         ".ts",
@@ -4420,13 +4429,18 @@ describe("snapshots", () => {
 			+       ".mjs": Array [
 			+         ".mjs",
 			+         ".mts",
-			+       ],
+			@@ ... @@
 			+     },
 			@@ ... @@
 			+     "tsconfig": true,
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
+			@@ ... @@
+			-   "watchOptions": Object {},
+			+   "watchOptions": Object {
+			+     "ignored": /^(.+?[\\\\/]node_modules[\\\\/])|[\\\\/]\\.git([\\\\/]|$)/,
+			+   },
 		`)
 	);
 
@@ -4561,8 +4575,7 @@ describe("snapshots", () => {
 			@@ ... @@
 			+       "html": Object {},
 			@@ ... @@
-			+         },
-			@@ ... @@
+			+       },
 			+       "html": Object {
 			+         "sources": true,
 			@@ ... @@
@@ -4635,17 +4648,22 @@ describe("snapshots", () => {
 			+       ".js": Array [
 			+         ".js",
 			+         ".ts",
-			@@ ... @@
+			+       ],
 			+       ".mjs": Array [
 			+         ".mjs",
 			+         ".mts",
-			+       ],
+			@@ ... @@
 			+     },
 			@@ ... @@
 			+     "tsconfig": true,
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
+			@@ ... @@
+			-   "watchOptions": Object {},
+			+   "watchOptions": Object {
+			+     "ignored": /^(.+?[\\\\/]node_modules[\\\\/])|[\\\\/]\\.git([\\\\/]|$)/,
+			+   },
 		`)
 	);
 
@@ -4850,6 +4868,44 @@ describe("snapshots", () => {
 			+   "target": "node14",
 		`)
 	);
+});
+
+describe("watchOptions.ignored", () => {
+	it("is unset by default (node_modules stays watched)", () => {
+		expect(getDefaultConfig({}).watchOptions.ignored).toBeUndefined();
+	});
+
+	it("ignores node_modules and .git under futureDefaults", () => {
+		const { ignored } = getDefaultConfig({
+			experiments: { futureDefaults: true }
+		}).watchOptions;
+		expect(ignored).toBeInstanceOf(RegExp);
+		const re = /** @type {RegExp} */ (ignored);
+		expect(re.test("/app/node_modules/foo/index.js")).toBe(true);
+		expect(re.test("/app/.git/HEAD")).toBe(true);
+		expect(re.test("/app/.gitignore")).toBe(false);
+		expect(re.test("/app/src/index.js")).toBe(false);
+	});
+
+	it("does not override a user-provided ignored", () => {
+		const ignored = ["**/dist/**"];
+		expect(
+			getDefaultConfig({
+				experiments: { futureDefaults: true },
+				watchOptions: { ignored }
+			}).watchOptions.ignored
+		).toBe(ignored);
+	});
+
+	it("is derived from custom managedPaths", () => {
+		const ignored = getDefaultConfig({
+			snapshot: { managedPaths: [/^(.+?[\\/]vendor[\\/])/] }
+		}).watchOptions.ignored;
+		expect(ignored).toBeInstanceOf(RegExp);
+		expect(/** @type {RegExp} */ (ignored).test("/app/vendor/foo.js")).toBe(
+			true
+		);
+	});
 });
 
 describe("Targets", () => {
