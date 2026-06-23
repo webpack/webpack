@@ -8,27 +8,27 @@ const checkArrayExpectation = require("./checkArrayExpectation");
 const {
 	expectOnlyListedDeprecations
 } = require("./helpers/expectNoDeprecations");
-const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
 
 jest.setTimeout(60000);
 
 /**
- * @param {string[]} appendTarget log collector
+ * @param {string[]} appendErrors warn/error collector
  * @returns {EXPECTED_ANY} logger object
  */
-const createLogger = (appendTarget) => ({
-	log: (/** @type {string} */ l) => appendTarget.push(l),
-	debug: (/** @type {string} */ l) => appendTarget.push(l),
-	trace: (/** @type {string} */ l) => appendTarget.push(l),
-	info: (/** @type {string} */ l) => appendTarget.push(l),
-	// Collect warn/error so a filesystem-cache store/restore failure (logged via
-	// `logger.warn`, e.g. "Caching failed for pack") fails the example build.
+const createLogger = (appendErrors) => ({
+	log: () => {},
+	debug: () => {},
+	trace: () => {},
+	info: () => {},
+	// Every infrastructure warning/error must be declared in the example's
+	// infrastructure-log.js or the build fails, so a filesystem-cache
+	// store/restore failure can't slip through unnoticed.
 	warn: (/** @type {string} */ l, /** @type {EXPECTED_ANY[]} */ ...args) => {
-		appendTarget.push(l);
+		appendErrors.push(l);
 		console.warn(l, ...args);
 	},
 	error: (/** @type {string} */ l, /** @type {EXPECTED_ANY[]} */ ...args) => {
-		appendTarget.push(l);
+		appendErrors.push(l);
 		console.error(l, ...args);
 	},
 	logTime: () => {},
@@ -113,7 +113,7 @@ describe("Examples", () => {
 
 			it(`should compile ${relativePath}`, async () => {
 				/** @type {string[]} */
-				const infraStructureLog = [];
+				const infraStructureErrors = [];
 				let options = await loadConfiguration(examplePath);
 
 				if (!options) {
@@ -156,7 +156,7 @@ describe("Examples", () => {
 						options.infrastructureLogging = {
 							...options.infrastructureLogging,
 							debug: true,
-							console: createLogger(infraStructureLog)
+							console: createLogger(infraStructureErrors)
 						};
 					}
 				}
@@ -200,16 +200,16 @@ describe("Examples", () => {
 							// warnings, not as a close error (some examples, e.g.
 							// lazy-compilation, error on close from their own backend).
 							compiler.close(() => {
-								const infrastructureLogErrors = filterInfraStructureErrors(
-									infraStructureLog,
-									{ run: 1, options }
-								);
-								if (infrastructureLogErrors.length) {
+								if (infraStructureErrors.length) {
 									/** @type {Error | undefined} */
 									let expectationError;
 									checkArrayExpectation(
 										examplePath,
-										{ infrastructureLogs: infrastructureLogErrors },
+										{
+											infrastructureLogs: infraStructureErrors.map(
+												(message) => ({ message })
+											)
+										},
 										"infrastructureLog",
 										"infrastructure-log",
 										"InfrastructureLog",
