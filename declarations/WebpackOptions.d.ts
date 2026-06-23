@@ -2721,6 +2721,10 @@ export interface Environment {
  */
 export interface OutputHtmlOptions {
 	/**
+	 * Favicon for the generated HTML. `true` (default) injects the webpack logo as an SVG favicon; `false` disables it; a string is treated as a path to a favicon file that is emitted and linked.
+	 */
+	favicon?: boolean | string;
+	/**
 	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
 	 */
 	scriptLoading?: "auto" | "blocking" | "defer";
