@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html iframe-srcdoc exported tests should rewrite asset URLs inside <iframe srcdoc> 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>iframe srcdoc</title></head>
+<body>
+<iframe srcdoc=\\"<img src=&quot;handled-pixel.png&quot; alt=&quot;a&#39;b&amp;c&quot;>\\"></iframe>
+<iframe srcdoc=\\"<p>hello <b>world</b></p>\\"></iframe>
+<iframe srcdoc=\\"<article><h1>Heading</h1><p>Formatting only, no assets &amp; nothing to rewrite.</p></article>\\"></iframe>
+<iframe srcdoc=\\"<img src=&quot;handled-pixel.png&quot;><img src=&quot;handled-other.png&quot;>\\"></iframe>
+<iframe srcdoc=\\"<img src=&quot;handled-pixel.png&quot;>\\"></iframe>
+<iframe srcdoc=\\"<div style=&quot;background: url(handled-pixel.png)&quot;>styled</div>\\"></iframe>
+<iframe srcdoc='<img src=&quot;handled-pixel.png&quot;>'></iframe>
+<iframe srcdoc=\\"<link rel=&quot;icon&quot; href=&quot;handled-pixel.png&quot;>\\"></iframe>
+<iframe srcdoc=\\"<img src=&quot;handled-pixel.png&quot;><img src=&quot;data:,&quot;><img src=&quot;data:,&quot;>\\"></iframe>
+<iframe srcdoc=\\"<iframe srcdoc=&quot;<img src=&amp;quot;handled-pixel.png&amp;quot;>&quot;>\\"></iframe>
+<iframe srcdoc=\\"<!DOCTYPE html><html><head><link rel=&quot;icon&quot; href=&quot;handled-pixel.png&quot;></head><body><img src=&quot;handled-other.png&quot;></body></html>\\"></iframe>
+<iframe srcdoc=\\"<!-- lead --> <!DOCTYPE html> <!-- mid --> <html><body><img src=&quot;handled-pixel.png&quot;></body></html> <!-- trail -->\\"></iframe>
+<iframe srcdoc=\\"no assets here\\"></iframe>
+</body>
+</html>
+"
+`;

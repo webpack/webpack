@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head><title>iframe srcdoc</title></head>
+<body>
+<iframe srcdoc="<img src=&quot;./pixel.png&quot; alt=&quot;a'b&amp;c&quot;>"></iframe>
+<iframe srcdoc="<p>hello <b>world</b></p>"></iframe>
+<iframe srcdoc="<article><h1>Heading</h1><p>Formatting only, no assets &amp; nothing to rewrite.</p></article>"></iframe>
+<iframe srcdoc="<img src=&quot;./pixel.png&quot;><img src=&quot;./other.png&quot;>"></iframe>
+<iframe srcdoc="<img src=&quot;./pixel&#46;png&quot;>"></iframe>
+<iframe srcdoc="<div style=&quot;background: url(./pixel.png)&quot;>styled</div>"></iframe>
+<iframe srcdoc='<img src="./pixel.png">'></iframe>
+<iframe srcdoc="<link rel=&quot;icon&quot; href=&quot;./pixel.png&quot;>"></iframe>
+<iframe srcdoc="<img src=&quot;./pixel.png&quot;><img src=&quot;https://cdn.test/x.png&quot;><img src=&quot;//cdn.test/y.png&quot;>"></iframe>
+<iframe srcdoc="<iframe srcdoc=&quot;&lt;img src=&amp;quot;./pixel.png&amp;quot;&gt;&quot;>"></iframe>
+<iframe srcdoc="<!DOCTYPE html><html><head><link rel=&quot;icon&quot; href=&quot;./pixel.png&quot;></head><body><img src=&quot;./other.png&quot;></body></html>"></iframe>
+<iframe srcdoc="<!-- lead --> <!DOCTYPE html> <!-- mid --> <html><body><img src=&quot;./pixel.png&quot;></body></html> <!-- trail -->"></iframe>
+<iframe srcdoc="no assets here"></iframe>
+</body>
+</html>

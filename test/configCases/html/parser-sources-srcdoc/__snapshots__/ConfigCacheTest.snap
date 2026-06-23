@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html parser-sources-srcdoc exported tests applies the \`srcdoc\` source type to iframe[srcdoc] and a custom tag/attribute 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>srcdoc via sources</title></head>
+<body>
+<iframe srcdoc=\\"<img src=&quot;handled-pixel.png&quot;>\\"></iframe>
+<div data-html=\\"<img src=&quot;handled-pixel.png&quot;>\\"></div>
+</body>
+</html>
+"
+`;

@@ -9474,9 +9474,9 @@ declare abstract class HtmlGenerator extends Generator {
  */
 declare interface HtmlGeneratorOptions {
 	/**
-	 * Emit the parsed and URL-rewritten HTML as a standalone `.html` output file alongside the module's JavaScript export. When unset, extraction defaults to `true` for HTML modules used as compilation entries (HTML entry points) and `false` for HTML modules imported from JavaScript. Filenames follow `output.htmlFilename` / `output.htmlChunkFilename`.
+	 * Emit the parsed and URL-rewritten HTML as a standalone `.html` output file alongside the module's JavaScript export. `true` always emits the file; `false` never does; `"inline"` exposes the processed HTML for inline write-back (e.g. `<iframe srcdoc>`) without emitting a standalone file. When unset, extraction defaults to `true` for HTML modules used as compilation entries (HTML entry points) and `false` for HTML modules imported from JavaScript. Filenames follow `output.htmlFilename` / `output.htmlChunkFilename`.
 	 */
-	extract?: boolean;
+	extract?: boolean | "inline";
 }
 type HtmlModuleBuildInfo = KnownBuildInfo &
 	Record<string, any> &
@@ -9525,7 +9525,7 @@ declare interface HtmlParserOptions {
 						 */
 						tag?: string;
 						/**
-						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `css-url` extracts `url(...)` references from a CSS value (like an SVG presentation attribute such as `fill`) as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-style` treats the attribute value as a full stylesheet (like a `<style>` body) and `stylesheet-style-attribute` as a CSS block's contents (a declaration list, like a `style` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time.
+						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `css-url` extracts `url(...)` references from a CSS value (like an SVG presentation attribute such as `fill`) as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-style` treats the attribute value as a full stylesheet (like a `<style>` body) and `stylesheet-style-attribute` as a CSS block's contents (a declaration list, like a `style` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time; `srcdoc` treats the attribute value as an entity-encoded HTML document (like `<iframe srcdoc>`), bundling it through the HTML pipeline and replacing the attribute's content with the processed HTML at render time.
 						 */
 						type:
 							| "script"
@@ -9535,7 +9535,8 @@ declare interface HtmlParserOptions {
 							| "src"
 							| "srcset"
 							| "stylesheet-style"
-							| "stylesheet-style-attribute";
+							| "stylesheet-style-attribute"
+							| "srcdoc";
 				  }
 		  )[];
 
@@ -23760,6 +23761,7 @@ type SourceType =
 	| "srcset"
 	| "stylesheet-style"
 	| "stylesheet-style-attribute"
+	| "srcdoc"
 	| "msapplication-task";
 type SourceTypeOrResolver =
 	| "script"
@@ -23771,6 +23773,7 @@ type SourceTypeOrResolver =
 	| "srcset"
 	| "stylesheet-style"
 	| "stylesheet-style-attribute"
+	| "srcdoc"
 	| "msapplication-task"
 	| ((attrs: Map<string, string>, css: boolean) => SourceType);
 type SourceValue = string | Buffer;
