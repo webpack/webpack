@@ -784,6 +784,28 @@ describe("Cli", () => {
 
 			expect(isColorSupported()).toBe(true);
 		});
+
+		it("argv --color", () => {
+			const originalArgv = process.argv;
+			process.argv = [...process.argv, "--color"];
+
+			try {
+				expect(isColorSupported()).toBe(true);
+			} finally {
+				process.argv = originalArgv;
+			}
+		});
+
+		it("argv --no-color", () => {
+			const originalArgv = process.argv;
+			process.argv = [...process.argv, "--no-color"];
+
+			try {
+				expect(isColorSupported()).toBe(false);
+			} finally {
+				process.argv = originalArgv;
+			}
+		});
 	});
 
 	describe("createColors", () => {
