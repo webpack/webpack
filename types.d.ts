@@ -19406,6 +19406,11 @@ declare interface PathData {
 	contentHashType?: string;
 	contentHash?: string;
 	contentHashWithLength?: (length: number) => string;
+
+	/**
+	 * digest the stored hashes are encoded in (for `[hash:<digest>]`)
+	 */
+	hashDigest?: string;
 	noChunkHash?: boolean;
 	url?: string;
 	local?: string;

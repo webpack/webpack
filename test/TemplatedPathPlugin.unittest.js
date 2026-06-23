@@ -44,6 +44,28 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		expect(interpolate("[hash]", data)).toBe("0123456789abcdef");
 	});
 
+	/* cSpell:disable */
+	it("re-encodes a hash placeholder to an inline digest", () => {
+		const data = { hash: "0123456789abcdef" };
+		// [<kind>:<digest>] and [<kind>:<digest>:<length>]
+		expect(interpolate("[fullhash:base64]", data)).toBe("ASNFZ4mrze8=");
+		expect(interpolate("[fullhash:base64url]", data)).toBe("ASNFZ4mrze8");
+		expect(interpolate("[fullhash:base32]", data)).toBe("CI2FM6E2XTPP");
+		expect(interpolate("[fullhash:base62]", data)).toBe("63uFdvrkbZ");
+		expect(interpolate("[fullhash:base64:4]", data)).toBe("ASNF");
+		// [<kind>:<length>] and [<kind>] keep their existing meaning
+		expect(interpolate("[fullhash:4]", data)).toBe("0123");
+		expect(interpolate("[fullhash]", data)).toBe("0123456789abcdef");
+		// honours a non-default source digest
+		expect(
+			interpolate("[fullhash:hex]", {
+				hash: "ASNFZ4mrze8",
+				hashDigest: "base64url"
+			})
+		).toBe("0123456789abcdef");
+	});
+	/* cSpell:enable */
+
 	it("interpolates chunk placeholders", () => {
 		const data = {
 			chunk: {
