@@ -89,6 +89,20 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		expect(interpolate("[fullhash]", data)).toBe("0123");
 	});
 
+	it("rejects an inline digest on [contenthash] when realContentHash is on", () => {
+		const data = {
+			module: { id: "1", hash: "h" },
+			contentHash: "0123456789abcdef"
+		};
+		expect(() =>
+			interpolate("[contenthash:base64:8]", { ...data, realContentHash: true })
+		).toThrow(/not supported together with optimization\.realContentHash/);
+		// allowed when realContentHash is off
+		expect(interpolate("[contenthash:base64]", data)).toBe(
+			Buffer.from("0123456789abcdef", "hex").toString("base64")
+		);
+	});
+
 	it("throws on an unknown inline digest", () => {
 		expect(() =>
 			interpolate("[fullhash:base40]", { hash: "0123456789abcdef" })

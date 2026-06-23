@@ -19416,6 +19416,11 @@ declare interface PathData {
 	 * digest the stored hashes are encoded in (for `[hash:<digest>]`)
 	 */
 	hashDigest?: string;
+
+	/**
+	 * whether `optimization.realContentHash` recomputes content hashes (rejects an inline digest on `[contenthash]`)
+	 */
+	realContentHash?: boolean;
 	noChunkHash?: boolean;
 	url?: string;
 	local?: string;
