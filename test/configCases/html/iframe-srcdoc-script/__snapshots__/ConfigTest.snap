@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html iframe-srcdoc-script exported tests should bundle <script> inside <iframe srcdoc> as an entry chunk 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>srcdoc script</title></head>
+<body>
+<iframe srcdoc=\\"<script src=&quot;__html_60417bb2_0.bundle0.js&quot;></script>\\"></iframe>
+<iframe srcdoc=\\"<script src=&quot;__html_cabc5adb_0.bundle0.js&quot;></script>\\"></iframe>
+</body>
+</html>
+"
+`;
