@@ -1,3 +1,7 @@
 "use strict";
 
-module.exports = () => /^v2[2-9]/.test(process.version);
+// Stable, unflagged `with` import-attributes syntax landed in Node.js v22.
+module.exports = () => {
+	const [major] = process.versions.node.split(".").map(Number);
+	return major >= 22;
+};
