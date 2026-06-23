@@ -19396,6 +19396,11 @@ declare interface PathCacheFunctions {
 declare interface PathData {
 	chunkGraph?: ChunkGraph;
 	hash?: string;
+
+	/**
+	 * untruncated compilation hash, for re-encoding `[fullhash:<digest>]`
+	 */
+	fullHash?: string;
 	hashWithLength?: (length: number) => string;
 	chunk?: Chunk | ChunkPathData;
 	module?: Module | ModulePathData;

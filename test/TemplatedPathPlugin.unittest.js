@@ -79,6 +79,16 @@ describe("TemplatedPathPlugin.interpolate", () => {
 	});
 	/* cSpell:enable */
 
+	it("re-encodes [fullhash:<digest>] from the untruncated hash when provided", () => {
+		const data = { hash: "0123", fullHash: "0123456789abcdef" };
+		// the digest re-encodes the full hash, not the truncated data.hash
+		expect(interpolate("[fullhash:base64]", data)).toBe(
+			Buffer.from("0123456789abcdef", "hex").toString("base64")
+		);
+		// no-digest keeps using the truncated value
+		expect(interpolate("[fullhash]", data)).toBe("0123");
+	});
+
 	it("throws on an unknown inline digest", () => {
 		expect(() =>
 			interpolate("[fullhash:base40]", { hash: "0123456789abcdef" })
