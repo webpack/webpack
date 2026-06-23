@@ -28,7 +28,7 @@ it("marks matching modules in ignoreList", () => {
 it("keeps other modules outside ignoreList", () => {
 	const sources = map.sources;
 	const usedIndex = sources.findIndex((source) => /used\.js/.test(source));
-	expect(used).toBe("used");
+	expect(used).toEqual({ name: "used" });
 	expect(usedIndex).not.toBe(-1);
 	expect(map.ignoreList).not.toContain(usedIndex);
 });
