@@ -19426,6 +19426,11 @@ declare interface PathData {
 	 * whether `optimization.realContentHash` recomputes content hashes (rejects an inline digest on `[contenthash]`)
 	 */
 	realContentHash?: boolean;
+
+	/**
+	 * treat `[hash]` as `[fullhash]` rather than the module hash (CSS local idents)
+	 */
+	hashAsFullHash?: boolean;
 	noChunkHash?: boolean;
 	url?: string;
 	local?: string;

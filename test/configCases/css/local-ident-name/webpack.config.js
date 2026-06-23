@@ -100,6 +100,12 @@ const common = {
 						generator: {
 							localIdentName: "[local]__[fullhash:base64url:5]"
 						}
+					},
+					{
+						resourceQuery: /\?modulehash$/,
+						generator: {
+							localIdentName: "[modulehash]-[local]"
+						}
 					}
 				]
 			}

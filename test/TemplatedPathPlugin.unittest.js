@@ -163,6 +163,23 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		).toBe("c");
 	});
 
+	it("keeps [hash] as the local hash with hashAsFullHash", () => {
+		const data = {
+			module: { id: "1", hash: "modulehash" },
+			hash: "localValue"
+		};
+		// default: the module context repurposes [hash] to the module hash
+		expect(interpolate("[hash]", data)).toBe("modulehash");
+		// with the flag: [hash] stays the [fullhash]/local hash
+		expect(interpolate("[hash]", { ...data, hashAsFullHash: true })).toBe(
+			"localValue"
+		);
+		// ...and [modulehash] still gives the module hash
+		expect(interpolate("[modulehash]", { ...data, hashAsFullHash: true })).toBe(
+			"modulehash"
+		);
+	});
+
 	it("interpolates [url] and [runtime]", () => {
 		expect(interpolate("[url]", { url: "u" })).toBe("u");
 		expect(interpolate("[runtime]", { runtime: "main" })).toBe("main");

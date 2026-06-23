@@ -13,8 +13,9 @@ it("should have correct local ident for css export locals", (done) => {
 		import("./style.module.css?hash-digest"),
 		import("./style.module.css?contenthash-digest"),
 		import("./style.module.css?fullhash-digest"),
+		import("./style.module.css?modulehash"),
 		import("./style.module.less"),
-	]).then(([idLocal, hash, hashLocal, pathNameLocal, fileLocal, queryFragment, uniqueNameIdContenthash, hashLocalCustom, uniquenameLocal, fullhashLength, hashDigest, contenthashDigest, fullhashDigest]) => {
+	]).then(([idLocal, hash, hashLocal, pathNameLocal, fileLocal, queryFragment, uniqueNameIdContenthash, hashLocalCustom, uniquenameLocal, fullhashLength, hashDigest, contenthashDigest, fullhashDigest, moduleHash]) => {
 		expect(idLocal).toMatchSnapshot();
 		expect(hash).toMatchSnapshot();
 		expect(hashLocal).toMatchSnapshot();
@@ -28,6 +29,7 @@ it("should have correct local ident for css export locals", (done) => {
 		expect(hashDigest).toMatchSnapshot();
 		expect(contenthashDigest).toMatchSnapshot();
 		expect(fullhashDigest).toMatchSnapshot();
+		expect(moduleHash).toMatchSnapshot();
 		done()
 	}).catch(done)
 });

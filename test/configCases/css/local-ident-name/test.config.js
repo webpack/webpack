@@ -16,6 +16,7 @@ module.exports = {
 			`style_module_css_hash-digest.bundle${i}.js`,
 			`style_module_css_contenthash-digest.bundle${i}.js`,
 			`style_module_css_fullhash-digest.bundle${i}.js`,
+			`style_module_css_modulehash.bundle${i}.js`,
 			`style_module_less.bundle${i}.js`,
 			`bundle${i}.js`
 		];

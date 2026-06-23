@@ -14,25 +14,25 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 2`] = `
 Object {
-  "btn--info_is-disabled_1": "_1a45088986a4441b80a4",
-  "btn-info_is-disabled": "_1a45088986a4441b80a4",
-  "color-red": "--_1a45088986a4441b80a4",
+  "btn--info_is-disabled_1": "IFi2Y1",
+  "btn-info_is-disabled": "KrqLlq",
+  "color-red": "--DeicrI",
   "foo": "bar",
-  "foo_bar": "_1a45088986a4441b80a4",
+  "foo_bar": "fXKKeh",
   "my-btn-info_is-disabled": "value",
-  "simple": "_1a45088986a4441b80a4",
+  "simple": "BTbMAh",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 3`] = `
 Object {
-  "btn--info_is-disabled_1": "_92db8cf73c3ac16b6115-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_92db8cf73c3ac16b6115-btn-info_is-disabled",
-  "color-red": "--_92db8cf73c3ac16b6115-color-red",
+  "btn--info_is-disabled_1": "_228W8K-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "DhvxvG-btn-info_is-disabled",
+  "color-red": "--_lvU1k-color-red",
   "foo": "bar",
-  "foo_bar": "_92db8cf73c3ac16b6115-foo_bar",
+  "foo_bar": "uKJpHY-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "_92db8cf73c3ac16b6115-simple",
+  "simple": "_0P_xqP-simple",
 }
 `;
 
@@ -86,13 +86,13 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 8`] = `
 Object {
-  "btn--info_is-disabled_1": "_4746c07f4f5c7e136661-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_4746c07f4f5c7e136661-btn-info_is-disabled",
-  "color-red": "--_4746c07f4f5c7e136661-color-red",
+  "btn--info_is-disabled_1": "tgsjdmmcabgyhove-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "bjqahratuciglpyn-btn-info_is-disabled",
+  "color-red": "--bgrnnfrltrvjzeit-color-red",
   "foo": "bar",
-  "foo_bar": "_4746c07f4f5c7e136661-foo_bar",
+  "foo_bar": "bcknxregveukxgtu-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "_4746c07f4f5c7e136661-simple",
+  "simple": "cczbhihlbtjmqesr-simple",
 }
 `;
 
@@ -122,13 +122,13 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 11`] = `
 Object {
-  "btn--info_is-disabled_1": "btn--info_is-disabled_1__Z9a2I",
-  "btn-info_is-disabled": "btn-info_is-disabled__Z9a2I",
-  "color-red": "--color-red__Z9a2I",
+  "btn--info_is-disabled_1": "btn--info_is-disabled_1__CATMK",
+  "btn-info_is-disabled": "btn-info_is-disabled__oDuLA",
+  "color-red": "--color-red__ufedo",
   "foo": "bar",
-  "foo_bar": "foo_bar__Z9a2I",
+  "foo_bar": "foo_bar__blo73",
   "my-btn-info_is-disabled": "value",
-  "simple": "simple__Z9a2I",
+  "simple": "simple__bJYIb",
 }
 `;
 
@@ -158,6 +158,18 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 14`] = `
 Object {
+  "btn--info_is-disabled_1": "_9510b54fb5f645662e28-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_9510b54fb5f645662e28-btn-info_is-disabled",
+  "color-red": "--_9510b54fb5f645662e28-color-red",
+  "foo": "bar",
+  "foo_bar": "_9510b54fb5f645662e28-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "_9510b54fb5f645662e28-simple",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 15`] = `
+Object {
   "btn--info_is-disabled_1": "style_module_css-btn--info_is-disabled_1",
   "btn-info_is-disabled": "style_module_css-btn-info_is-disabled",
   "color-red": "--style_module_css-color-red",
@@ -168,31 +180,31 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 15`] = `
-Object {
-  "btn--info_is-disabled_1": "_78f85885f7219581fae2",
-  "btn-info_is-disabled": "_78f85885f7219581fae2",
-  "color-red": "--_78f85885f7219581fae2",
-  "foo": "bar",
-  "foo_bar": "_78f85885f7219581fae2",
-  "my-btn-info_is-disabled": "value",
-  "simple": "_78f85885f7219581fae2",
-}
-`;
-
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 16`] = `
 Object {
-  "btn--info_is-disabled_1": "_185fd11f5c30cd30b4d7-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_185fd11f5c30cd30b4d7-btn-info_is-disabled",
-  "color-red": "--_185fd11f5c30cd30b4d7-color-red",
+  "btn--info_is-disabled_1": "IFi2Y1",
+  "btn-info_is-disabled": "KrqLlq",
+  "color-red": "--DeicrI",
   "foo": "bar",
-  "foo_bar": "_185fd11f5c30cd30b4d7-foo_bar",
+  "foo_bar": "fXKKeh",
   "my-btn-info_is-disabled": "value",
-  "simple": "_185fd11f5c30cd30b4d7-simple",
+  "simple": "BTbMAh",
 }
 `;
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 17`] = `
+Object {
+  "btn--info_is-disabled_1": "_228W8K-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "DhvxvG-btn-info_is-disabled",
+  "color-red": "--_lvU1k-color-red",
+  "foo": "bar",
+  "foo_bar": "uKJpHY-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "_0P_xqP-simple",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 18`] = `
 Object {
   "btn--info_is-disabled_1": "./style.module__btn--info_is-disabled_1",
   "btn-info_is-disabled": "./style.module__btn-info_is-disabled",
@@ -204,7 +216,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 18`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 19`] = `
 Object {
   "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
   "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
@@ -216,7 +228,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 19`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 20`] = `
 Object {
   "btn--info_is-disabled_1": "./style.module.css?q#f__btn--info_is-disabled_1",
   "btn-info_is-disabled": "./style.module.css?q#f__btn-info_is-disabled",
@@ -228,7 +240,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 20`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 21`] = `
 Object {
   "btn--info_is-disabled_1": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
   "btn-info_is-disabled": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
@@ -240,19 +252,19 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 21`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 22`] = `
 Object {
-  "btn--info_is-disabled_1": "_3593cfd6c0d3a6d04be3-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "_3593cfd6c0d3a6d04be3-btn-info_is-disabled",
-  "color-red": "--_3593cfd6c0d3a6d04be3-color-red",
+  "btn--info_is-disabled_1": "tgsjdmmcabgyhove-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "bjqahratuciglpyn-btn-info_is-disabled",
+  "color-red": "--bgrnnfrltrvjzeit-color-red",
   "foo": "bar",
-  "foo_bar": "_3593cfd6c0d3a6d04be3-foo_bar",
+  "foo_bar": "bcknxregveukxgtu-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "_3593cfd6c0d3a6d04be3-simple",
+  "simple": "cczbhihlbtjmqesr-simple",
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 22`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 23`] = `
 Object {
   "btn--info_is-disabled_1": "__btn--info_is-disabled_1",
   "btn-info_is-disabled": "__btn-info_is-disabled",
@@ -264,7 +276,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 23`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 24`] = `
 Object {
   "btn--info_is-disabled_1": "RNWz-btn--info_is-disabled_1",
   "btn-info_is-disabled": "_1QJb-btn-info_is-disabled",
@@ -276,19 +288,19 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 24`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 25`] = `
 Object {
-  "btn--info_is-disabled_1": "btn--info_is-disabled_1__R0fN9",
-  "btn-info_is-disabled": "btn-info_is-disabled__R0fN9",
-  "color-red": "--color-red__R0fN9",
+  "btn--info_is-disabled_1": "btn--info_is-disabled_1__CATMK",
+  "btn-info_is-disabled": "btn-info_is-disabled__oDuLA",
+  "color-red": "--color-red__ufedo",
   "foo": "bar",
-  "foo_bar": "foo_bar__R0fN9",
+  "foo_bar": "foo_bar__blo73",
   "my-btn-info_is-disabled": "value",
-  "simple": "simple__R0fN9",
+  "simple": "simple__bJYIb",
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 25`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 26`] = `
 Object {
   "btn--info_is-disabled_1": "Zsy75M42-btn--info_is-disabled_1",
   "btn-info_is-disabled": "Zsy75M42-btn-info_is-disabled",
@@ -300,7 +312,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 26`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 27`] = `
 Object {
   "btn--info_is-disabled_1": "btn--info_is-disabled_1__ZTi_c",
   "btn-info_is-disabled": "btn-info_is-disabled__fowf8",
@@ -309,5 +321,17 @@ Object {
   "foo_bar": "foo_bar__OSiNn",
   "my-btn-info_is-disabled": "value",
   "simple": "simple__XKVrb",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 28`] = `
+Object {
+  "btn--info_is-disabled_1": "_5614b0226bd2d583b8d6-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "_5614b0226bd2d583b8d6-btn-info_is-disabled",
+  "color-red": "--_5614b0226bd2d583b8d6-color-red",
+  "foo": "bar",
+  "foo_bar": "_5614b0226bd2d583b8d6-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "_5614b0226bd2d583b8d6-simple",
 }
 `;
