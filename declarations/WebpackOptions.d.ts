@@ -2721,6 +2721,20 @@ export interface Environment {
  */
 export interface OutputHtmlOptions {
 	/**
+	 * Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; an array of `RegExp` patterns matches against the emitted chunk filename.
+	 */
+	inline?: RegExp[] | boolean;
+	/**
+	 * Add Subresource Integrity (SRI) `integrity` attributes to injected `<script>`/`<link>` tags. `true` uses `['sha384']`; an array sets the hash algorithms; a function receives each referenced asset and returns the algorithms to use or `false` to skip it.
+	 */
+	integrity?:
+		| string[]
+		| boolean
+		| ((asset: {
+				chunk: import("../lib/Chunk");
+				filename: string;
+		  }) => string[] | false);
+	/**
 	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
 	 */
 	scriptLoading?: "auto" | "blocking" | "defer";
