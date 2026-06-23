@@ -12,6 +12,8 @@ module.exports = {
 			`style_module_css_uniqueName-id-contenthash.bundle${i}.js`,
 			`style_module_css_hash-local-custom.bundle${i}.js`,
 			`style_module_css_uniquename-local.bundle${i}.js`,
+			`style_module_css_fullhash-length.bundle${i}.js`,
+			`style_module_css_hash-base64.bundle${i}.js`,
 			`style_module_less.bundle${i}.js`,
 			`bundle${i}.js`
 		];
