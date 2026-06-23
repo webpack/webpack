@@ -31,3 +31,18 @@ describe("nonNumericOnlyHash", () => {
 		expect(nonNumericOnlyHash("511a", 3)).toBe("f11");
 	});
 });
+
+describe("nonNumericOnlyHash.digestNonNumericOnly", () => {
+	const { digestNonNumericOnly } = nonNumericOnlyHash;
+	const fakeHash = (value) => ({
+		digest: (encoding) => `${value}:${encoding}`
+	});
+
+	it("digests then truncates with a non-numeric first char", () => {
+		expect(digestNonNumericOnly(fakeHash("abcdef"), "hex", 3)).toBe("abc");
+		// digit-only slice gets its first char shifted (same as nonNumericOnlyHash)
+		expect(digestNonNumericOnly(fakeHash("0111"), "hex", 3)).toBe(
+			nonNumericOnlyHash("0111:hex", 3)
+		);
+	});
+});
