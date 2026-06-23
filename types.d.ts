@@ -19513,6 +19513,11 @@ declare interface PlatformTargetProperties {
 	 * electron platform, require of some electron built-in modules is available
 	 */
 	electron?: null | boolean;
+
+	/**
+	 * universal ESM target spanning both web and node (target `"universal"` or `["web", "node"]`)
+	 */
+	universal?: null | boolean;
 }
 type Plugin =
 	| undefined
