@@ -1,6 +1,19 @@
 "use strict";
 
-const { interpolate } = require("../lib/TemplatedPathPlugin");
+const { getPresentKinds, interpolate } = require("../lib/TemplatedPathPlugin");
+
+describe("TemplatedPathPlugin.getPresentKinds", () => {
+	it("reports the placeholder kinds a template references, ignoring args", () => {
+		const kinds = getPresentKinds("[name].[contenthash:base64:8].js");
+		expect(kinds.has("name")).toBe(true);
+		expect(kinds.has("contenthash")).toBe(true);
+		expect(kinds.has("fullhash")).toBe(false);
+	});
+
+	it("returns an empty set for literal templates", () => {
+		expect(getPresentKinds("static/main.js").size).toBe(0);
+	});
+});
 
 describe("TemplatedPathPlugin.interpolate", () => {
 	it("returns literal paths unchanged", () => {
@@ -44,6 +57,74 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		expect(interpolate("[hash]", data)).toBe("0123456789abcdef");
 	});
 
+	/* cSpell:disable */
+	it("re-encodes a hash placeholder to an inline digest", () => {
+		const data = { hash: "0123456789abcdef" };
+		// [<kind>:<digest>] and [<kind>:<digest>:<length>]
+		expect(interpolate("[fullhash:base64]", data)).toBe("ASNFZ4mrze8=");
+		expect(interpolate("[fullhash:base64url]", data)).toBe("ASNFZ4mrze8");
+		expect(interpolate("[fullhash:base32]", data)).toBe("CI2FM6E2XTPP");
+		expect(interpolate("[fullhash:base62]", data)).toBe("63uFdvrkbZ");
+		expect(interpolate("[fullhash:base64:4]", data)).toBe("ASNF");
+		// [<kind>:<length>] and [<kind>] keep their existing meaning
+		expect(interpolate("[fullhash:4]", data)).toBe("0123");
+		expect(interpolate("[fullhash]", data)).toBe("0123456789abcdef");
+		// honours a non-default source digest
+		expect(
+			interpolate("[fullhash:hex]", {
+				hash: "ASNFZ4mrze8",
+				hashDigest: "base64url"
+			})
+		).toBe("0123456789abcdef");
+	});
+	/* cSpell:enable */
+
+	it("re-encodes [fullhash:<digest>] from the untruncated hash when provided", () => {
+		const data = { hash: "0123", fullHash: "0123456789abcdef" };
+		// the digest re-encodes the full hash, not the truncated data.hash
+		expect(interpolate("[fullhash:base64]", data)).toBe(
+			Buffer.from("0123456789abcdef", "hex").toString("base64")
+		);
+		// no-digest keeps using the truncated value
+		expect(interpolate("[fullhash]", data)).toBe("0123");
+	});
+
+	/* cSpell:disable */
+	it("re-encodes [fullhash] from its own fullHashDigest", () => {
+		// fullHash carries its own source digest (CSS localIdentHashDigest case)
+		expect(
+			interpolate("[fullhash:hex]", {
+				hash: "x",
+				fullHash: "ASNFZ4mrze8",
+				fullHashDigest: "base64url"
+			})
+		).toBe("0123456789abcdef");
+	});
+	/* cSpell:enable */
+
+	it("rejects an inline digest on [contenthash] when realContentHash is on", () => {
+		const data = {
+			module: { id: "1", hash: "h" },
+			contentHash: "0123456789abcdef"
+		};
+		expect(() =>
+			interpolate("[contenthash:base64:8]", { ...data, realContentHash: true })
+		).toThrow(/not supported together with optimization\.realContentHash/);
+		// allowed when realContentHash is off
+		expect(interpolate("[contenthash:base64]", data)).toBe(
+			Buffer.from("0123456789abcdef", "hex").toString("base64")
+		);
+	});
+
+	it("throws on an unknown inline digest", () => {
+		expect(() =>
+			interpolate("[fullhash:base40]", { hash: "0123456789abcdef" })
+		).toThrow(/Unsupported hash digest "base40"/);
+		expect(() =>
+			interpolate("[fullhash:nope:8]", { hash: "0123456789abcdef" })
+		).toThrow(/Unsupported hash digest "nope"/);
+	});
+
 	it("interpolates chunk placeholders", () => {
 		const data = {
 			chunk: {
@@ -80,6 +161,23 @@ describe("TemplatedPathPlugin.interpolate", () => {
 				contentHash: "c"
 			})
 		).toBe("c");
+	});
+
+	it("keeps [hash] as the local hash with hashAsFullHash", () => {
+		const data = {
+			module: { id: "1", hash: "modulehash" },
+			hash: "localValue"
+		};
+		// default: the module context repurposes [hash] to the module hash
+		expect(interpolate("[hash]", data)).toBe("modulehash");
+		// with the flag: [hash] stays the [fullhash]/local hash
+		expect(interpolate("[hash]", { ...data, hashAsFullHash: true })).toBe(
+			"localValue"
+		);
+		// ...and [modulehash] still gives the module hash
+		expect(interpolate("[modulehash]", { ...data, hashAsFullHash: true })).toBe(
+			"modulehash"
+		);
 	});
 
 	it("interpolates [url] and [runtime]", () => {

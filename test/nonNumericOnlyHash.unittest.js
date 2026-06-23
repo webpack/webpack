@@ -1,6 +1,7 @@
 "use strict";
 
 const nonNumericOnlyHash = require("../lib/util/nonNumericOnlyHash");
+const { digestNonNumericOnly } = require("../lib/util/nonNumericOnlyHash");
 
 describe("nonNumericOnlyHash", () => {
 	it("hashLength=0", () => {
@@ -29,5 +30,20 @@ describe("nonNumericOnlyHash", () => {
 
 	it("511a", () => {
 		expect(nonNumericOnlyHash("511a", 3)).toBe("f11");
+	});
+});
+
+describe("nonNumericOnlyHash.digestNonNumericOnly", () => {
+	const fakeHash = (/** @type {string} */ value) =>
+		/** @type {EXPECTED_ANY} */ ({
+			digest: (/** @type {string} */ encoding) => `${value}:${encoding}`
+		});
+
+	it("digests then truncates with a non-numeric first char", () => {
+		expect(digestNonNumericOnly(fakeHash("abcdef"), "hex", 3)).toBe("abc");
+		// digit-only slice gets its first char shifted (same as nonNumericOnlyHash)
+		expect(digestNonNumericOnly(fakeHash("0111"), "hex", 3)).toBe(
+			nonNumericOnlyHash("0111:hex", 3)
+		);
 	});
 });
