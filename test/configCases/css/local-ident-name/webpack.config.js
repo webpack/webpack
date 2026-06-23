@@ -94,6 +94,12 @@ const common = {
 						generator: {
 							localIdentName: "[contenthash:base64:8]-[local]"
 						}
+					},
+					{
+						resourceQuery: /\?fullhash-digest$/,
+						generator: {
+							localIdentName: "[local]__[fullhash:base64url:5]"
+						}
 					}
 				]
 			}

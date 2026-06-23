@@ -19401,6 +19401,11 @@ declare interface PathData {
 	 * untruncated compilation hash, for re-encoding `[fullhash:<digest>]`
 	 */
 	fullHash?: string;
+
+	/**
+	 * digest `fullHash` is encoded in (defaults to `hashDigest`)
+	 */
+	fullHashDigest?: string;
 	hashWithLength?: (length: number) => string;
 	chunk?: Chunk | ChunkPathData;
 	module?: Module | ModulePathData;

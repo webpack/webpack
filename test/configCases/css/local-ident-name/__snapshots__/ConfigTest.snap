@@ -146,6 +146,18 @@ Object {
 
 exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 13`] = `
 Object {
+  "btn--info_is-disabled_1": "btn--info_is-disabled_1__ZTi_c",
+  "btn-info_is-disabled": "btn-info_is-disabled__fowf8",
+  "color-red": "--color-red__rgLJQ",
+  "foo": "bar",
+  "foo_bar": "foo_bar__OSiNn",
+  "my-btn-info_is-disabled": "value",
+  "simple": "simple__XKVrb",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 14`] = `
+Object {
   "btn--info_is-disabled_1": "style_module_css-btn--info_is-disabled_1",
   "btn-info_is-disabled": "style_module_css-btn-info_is-disabled",
   "color-red": "--style_module_css-color-red",
@@ -156,7 +168,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 14`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 15`] = `
 Object {
   "btn--info_is-disabled_1": "_78f85885f7219581fae2",
   "btn-info_is-disabled": "_78f85885f7219581fae2",
@@ -168,7 +180,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 15`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 16`] = `
 Object {
   "btn--info_is-disabled_1": "_185fd11f5c30cd30b4d7-btn--info_is-disabled_1",
   "btn-info_is-disabled": "_185fd11f5c30cd30b4d7-btn-info_is-disabled",
@@ -180,7 +192,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 16`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 17`] = `
 Object {
   "btn--info_is-disabled_1": "./style.module__btn--info_is-disabled_1",
   "btn-info_is-disabled": "./style.module__btn-info_is-disabled",
@@ -192,7 +204,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 17`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 18`] = `
 Object {
   "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
   "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
@@ -204,7 +216,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 18`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 19`] = `
 Object {
   "btn--info_is-disabled_1": "./style.module.css?q#f__btn--info_is-disabled_1",
   "btn-info_is-disabled": "./style.module.css?q#f__btn-info_is-disabled",
@@ -216,7 +228,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 19`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 20`] = `
 Object {
   "btn--info_is-disabled_1": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
   "btn-info_is-disabled": "-style_module_css_uniqueName-id-contenthash-66ccbbe4ce365e96ef13",
@@ -228,7 +240,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 20`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 21`] = `
 Object {
   "btn--info_is-disabled_1": "_3593cfd6c0d3a6d04be3-btn--info_is-disabled_1",
   "btn-info_is-disabled": "_3593cfd6c0d3a6d04be3-btn-info_is-disabled",
@@ -240,7 +252,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 21`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 22`] = `
 Object {
   "btn--info_is-disabled_1": "__btn--info_is-disabled_1",
   "btn-info_is-disabled": "__btn-info_is-disabled",
@@ -252,7 +264,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 22`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 23`] = `
 Object {
   "btn--info_is-disabled_1": "RNWz-btn--info_is-disabled_1",
   "btn-info_is-disabled": "_1QJb-btn-info_is-disabled",
@@ -264,7 +276,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 23`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 24`] = `
 Object {
   "btn--info_is-disabled_1": "btn--info_is-disabled_1__R0fN9",
   "btn-info_is-disabled": "btn-info_is-disabled__R0fN9",
@@ -276,7 +288,7 @@ Object {
 }
 `;
 
-exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 24`] = `
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 25`] = `
 Object {
   "btn--info_is-disabled_1": "Zsy75M42-btn--info_is-disabled_1",
   "btn-info_is-disabled": "Zsy75M42-btn-info_is-disabled",
@@ -285,5 +297,17 @@ Object {
   "foo_bar": "Zsy75M42-foo_bar",
   "my-btn-info_is-disabled": "value",
   "simple": "Zsy75M42-simple",
+}
+`;
+
+exports[`ConfigTestCases css local-ident-name exported tests should have correct local ident for css export locals 26`] = `
+Object {
+  "btn--info_is-disabled_1": "btn--info_is-disabled_1__ZTi_c",
+  "btn-info_is-disabled": "btn-info_is-disabled__fowf8",
+  "color-red": "--color-red__rgLJQ",
+  "foo": "bar",
+  "foo_bar": "foo_bar__OSiNn",
+  "my-btn-info_is-disabled": "value",
+  "simple": "simple__XKVrb",
 }
 `;

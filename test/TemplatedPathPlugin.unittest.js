@@ -89,6 +89,19 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		expect(interpolate("[fullhash]", data)).toBe("0123");
 	});
 
+	/* cSpell:disable */
+	it("re-encodes [fullhash] from its own fullHashDigest", () => {
+		// fullHash carries its own source digest (CSS localIdentHashDigest case)
+		expect(
+			interpolate("[fullhash:hex]", {
+				hash: "x",
+				fullHash: "ASNFZ4mrze8",
+				fullHashDigest: "base64url"
+			})
+		).toBe("0123456789abcdef");
+	});
+	/* cSpell:enable */
+
 	it("rejects an inline digest on [contenthash] when realContentHash is on", () => {
 		const data = {
 			module: { id: "1", hash: "h" },
