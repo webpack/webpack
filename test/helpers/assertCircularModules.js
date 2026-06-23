@@ -9,7 +9,7 @@ const path = require("path");
 // matches the expected set of basename. Reads after optimizeModules, before
 // concatenation, so original NormalModules are still present.
 /**
- * @param {Iterable<string>} expectedCircular expected circular module basenames
+ * @param {Iterable<string>} expectedCircular expected circular module basename
  * @returns {(compiler: Compiler) => void} plugin
  */
 module.exports = (expectedCircular) =>
