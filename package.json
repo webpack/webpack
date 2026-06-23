@@ -66,7 +66,7 @@
     "test:css-parsing": "yarn test:base --testMatch \"<rootDir>/test/cssParsing-webpack.spectest.js\"",
     "test:deno": "yarn test:base:deno --reporters default --reporters \"<rootDir>/test/runtimeCrashReporter.js\" --testMatch \"<rootDir>/test/*.{basictest,longtest,test,unittest}.js\" --testPathIgnorePatterns \"/node_modules/\"",
     "test:base:deno": "deno --allow-read --allow-env --allow-sys --allow-ffi --allow-write --allow-run --allow-net --import-map=test/deno-import-map.json --v8-flags='--max-old-space-size=4096' ./node_modules/jest-cli/bin/jest.js --workerIdleMemoryLimit=512MB --logHeapUsage",
-    "test:bun": "yarn test:base:bun --reporters default --reporters \"<rootDir>/test/runtimeCrashReporter.js\" --testMatch \"<rootDir>/test/*.{basictest,longtest,test,unittest}.js\" --testPathIgnorePatterns \"/node_modules/\" \"test/Errors.test.js\"",
+    "test:bun": "yarn test:base:bun --reporters default --reporters \"<rootDir>/test/runtimeCrashReporter.js\" --testMatch \"<rootDir>/test/*.{basictest,longtest,test,unittest}.js\" --testPathIgnorePatterns \"/node_modules/\"",
     "test:base:bun": "bun --bun --preload ./test/bun-preload.js ./node_modules/jest-cli/bin/jest.js --workerThreads --workerIdleMemoryLimit=512MB --logHeapUsage",
     "test:update-snapshots": "yarn test:base -u",
     "report:cover": "nyc report --reporter=lcov  --reporter=text -t coverage",
