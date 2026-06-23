@@ -556,16 +556,23 @@
     human-id "^4.1.1"
     prettier "^2.7.1"
 
-"@codspeed/core@^5.5.0":
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/@codspeed/core/-/core-5.5.0.tgz#5ce1156381f7f173d56bf635d08db0e45fd0e028"
-  integrity sha512-5FbjNlxSVOfemB85orEecikZiTz0C8aZYUfCkt5HY6QLLd1mqkrHAfekEJw0gkHcgCjNgD6DVp2TXm0V/xtt4w==
+"@codspeed/core@^5.6.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@codspeed/core/-/core-5.6.0.tgz#f0155f0b3a867178eb19e4a0c63ccf389339805a"
+  integrity sha512-m9e5hGD2z7oWme78AvyNVq9kKkh7NjBgUImiIEE55hlEk363AmOinxIQPc7vKeNgwOBflUcXOMTqQRLjwHcfUA==
   dependencies:
     axios "^1.4.0"
     find-up "^6.3.0"
     form-data "^4.0.4"
     node-gyp-build "^4.6.0"
     stack-trace "1.0.0-pre2"
+
+"@codspeed/tinybench-plugin@^5.5.0":
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/@codspeed/tinybench-plugin/-/tinybench-plugin-5.6.0.tgz#78508e13c99412697c975e29a828f11fcf8e9920"
+  integrity sha512-RO+eM8s6/SwlxQbFQjizUWpQURIogScwWZpZNdqwYB0xfXbP429ZvGyd3Y/2EnzgObl1Q/mVhqsOiUuuyx2Ubw==
+  dependencies:
+    "@codspeed/core" "^5.6.0"
 
 "@cspell/cspell-bundled-dicts@10.0.1":
   version "10.0.1"
@@ -8999,10 +9006,10 @@ three@^0.184.0:
   resolved "https://registry.yarnpkg.com/three/-/three-0.184.0.tgz#5bca0a3851eea5345e4c205567b40dfa49b791b5"
   integrity sha512-wtTRjG92pM5eUg/KuUnHsqSAlPM296brTOcLgMRqEeylYTh/CdtvKUvCyyCQTzFuStieWxvZb8mVTMvdPyUpxg==
 
-tinybench@^6.0.1:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/tinybench/-/tinybench-6.0.2.tgz#77bcb1f11df0c220ec1ce0b6ced0ce7aa2757661"
-  integrity sha512-FlHoQpcFvCzeXK5kVPvV7IVgW/hs/B36QWTz876iSdeJguBDfdTSRQmYmaHX+fQNt4hp+gEFB2XXw+8hT4/y8A==
+tinybench@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/tinybench/-/tinybench-5.1.0.tgz#796a599a58114ef61279d8550bc2f34e1ad3cbf0"
+  integrity sha512-LXKNtFualiKOm6gADe1UXPtf8+Nfn1CtPMEHAT33Fd2YjQatrujkDcK0+4wRC1X6t7fxUDXUs6BsvuIgfkDgDg==
 
 tinyexec@^1.2.4:
   version "1.2.4"
