@@ -76,6 +76,36 @@ const common = {
 							localIdentHashDigestLength: 16,
 							localIdentName: "[hash]-[local]"
 						}
+					},
+					{
+						resourceQuery: /\?fullhash-length$/,
+						generator: {
+							localIdentName: "[fullhash:4]-[local]"
+						}
+					},
+					{
+						resourceQuery: /\?hash-digest$/,
+						generator: {
+							localIdentName: "[local]__[hash:base64:5]"
+						}
+					},
+					{
+						resourceQuery: /\?contenthash-digest$/,
+						generator: {
+							localIdentName: "[contenthash:base64:8]-[local]"
+						}
+					},
+					{
+						resourceQuery: /\?fullhash-digest$/,
+						generator: {
+							localIdentName: "[local]__[fullhash:base64url:5]"
+						}
+					},
+					{
+						resourceQuery: /\?modulehash$/,
+						generator: {
+							localIdentName: "[modulehash]-[local]"
+						}
 					}
 				]
 			}

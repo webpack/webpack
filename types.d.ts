@@ -19400,6 +19400,16 @@ declare interface PathCacheFunctions {
 declare interface PathData {
 	chunkGraph?: ChunkGraph;
 	hash?: string;
+
+	/**
+	 * untruncated compilation hash, for re-encoding `[fullhash:<digest>]`
+	 */
+	fullHash?: string;
+
+	/**
+	 * digest `fullHash` is encoded in (defaults to `hashDigest`)
+	 */
+	fullHashDigest?: string;
 	hashWithLength?: (length: number) => string;
 	chunk?: Chunk | ChunkPathData;
 	module?: Module | ModulePathData;
@@ -19410,6 +19420,21 @@ declare interface PathData {
 	contentHashType?: string;
 	contentHash?: string;
 	contentHashWithLength?: (length: number) => string;
+
+	/**
+	 * digest the stored hashes are encoded in (for `[hash:<digest>]`)
+	 */
+	hashDigest?: string;
+
+	/**
+	 * whether `optimization.realContentHash` recomputes content hashes (rejects an inline digest on `[contenthash]`)
+	 */
+	realContentHash?: boolean;
+
+	/**
+	 * treat `[hash]` as `[fullhash]` rather than the module hash (CSS local idents)
+	 */
+	hashAsFullHash?: boolean;
 	noChunkHash?: boolean;
 	url?: string;
 	local?: string;
