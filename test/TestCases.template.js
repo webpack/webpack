@@ -51,15 +51,25 @@ const categories = fs.readdirSync(casesPath).map((cat) => ({
 
 /**
  * @param {string[]} appendTarget log collector
+ * @param {string[]} appendErrors warn/error collector
  * @returns {EXPECTED_ANY} logger object
  */
-const createLogger = (appendTarget) => ({
+const createLogger = (appendTarget, appendErrors) => ({
 	log: (/** @type {string} */ l) => appendTarget.push(l),
 	debug: (/** @type {string} */ l) => appendTarget.push(l),
 	trace: (/** @type {string} */ l) => appendTarget.push(l),
 	info: (/** @type {string} */ l) => appendTarget.push(l),
-	warn: console.warn.bind(console),
-	error: console.error.bind(console),
+	// Collect warn/error separately: every infrastructure warning/error must be
+	// declared in the case's infrastructure-log.js or the test fails, so a cache
+	// store/restore failure can't slip through unnoticed.
+	warn: (/** @type {string} */ l, /** @type {EXPECTED_ANY[]} */ ...args) => {
+		appendErrors.push(l);
+		console.warn(l, ...args);
+	},
+	error: (/** @type {string} */ l, /** @type {EXPECTED_ANY[]} */ ...args) => {
+		appendErrors.push(l);
+		console.error(l, ...args);
+	},
 	logTime: () => {},
 	group: () => {},
 	groupCollapsed: () => {},
@@ -106,6 +116,8 @@ const describeCases = (config) => {
 				})) {
 					/** @type {string[]} */
 					const infraStructureLog = [];
+					/** @type {string[]} */
+					const infraStructureErrors = [];
 
 					// eslint-disable-next-line no-loop-func
 					describe(testName, () => {
@@ -275,7 +287,7 @@ const describeCases = (config) => {
 							},
 							infrastructureLogging: config.cache && {
 								debug: true,
-								console: createLogger(infraStructureLog)
+								console: createLogger(infraStructureLog, infraStructureErrors)
 							}
 						});
 
@@ -303,6 +315,7 @@ const describeCases = (config) => {
 										"cache1"
 									);
 									infraStructureLog.length = 0;
+									infraStructureErrors.length = 0;
 									const deprecationTracker = deprecationTracking.start();
 
 									const webpack = require("..");
@@ -311,13 +324,13 @@ const describeCases = (config) => {
 										deprecationTracker();
 										output.path = oldPath;
 										if (err) return done(err);
-										const infrastructureLogErrors = filterInfraStructureErrors(
-											infraStructureLog,
-											{
+										const infrastructureLogErrors = [
+											...filterInfraStructureErrors(infraStructureLog, {
 												run: 1,
 												options
-											}
-										);
+											}),
+											...infraStructureErrors.map((message) => ({ message }))
+										];
 										if (
 											infrastructureLogErrors.length &&
 											checkArrayExpectation(
@@ -348,6 +361,7 @@ const describeCases = (config) => {
 										"cache2"
 									);
 									infraStructureLog.length = 0;
+									infraStructureErrors.length = 0;
 									const deprecationTracker = deprecationTracking.start();
 
 									const webpack = require("..");
@@ -356,13 +370,13 @@ const describeCases = (config) => {
 										deprecationTracker();
 										output2.path = oldPath;
 										if (err) return done(err);
-										const infrastructureLogErrors = filterInfraStructureErrors(
-											infraStructureLog,
-											{
+										const infrastructureLogErrors = [
+											...filterInfraStructureErrors(infraStructureLog, {
 												run: 2,
 												options
-											}
-										);
+											}),
+											...infraStructureErrors.map((message) => ({ message }))
+										];
 										if (
 											infrastructureLogErrors.length &&
 											checkArrayExpectation(
@@ -398,13 +412,13 @@ const describeCases = (config) => {
 										const stats = /** @type {import("../").Stats} */ (_stats);
 										const deprecations = deprecationTracker();
 										if (err) return done(err);
-										const infrastructureLogErrors = filterInfraStructureErrors(
-											infraStructureLog,
-											{
+										const infrastructureLogErrors = [
+											...filterInfraStructureErrors(infraStructureLog, {
 												run: 3,
 												options
-											}
-										);
+											}),
+											...infraStructureErrors.map((message) => ({ message }))
+										];
 										if (
 											infrastructureLogErrors.length &&
 											checkArrayExpectation(

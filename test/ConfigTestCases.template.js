@@ -46,15 +46,25 @@ const categories = fs.readdirSync(casesPath).map((cat) => ({
 
 /**
  * @param {string[]} appendTarget log collector
+ * @param {string[]} appendErrors warn/error collector
  * @returns {EXPECTED_ANY} logger object
  */
-const createLogger = (appendTarget) => ({
+const createLogger = (appendTarget, appendErrors) => ({
 	log: (/** @type {string} */ l) => appendTarget.push(l),
 	debug: (/** @type {string} */ l) => appendTarget.push(l),
 	trace: (/** @type {string} */ l) => appendTarget.push(l),
 	info: (/** @type {string} */ l) => appendTarget.push(l),
-	warn: console.warn.bind(console),
-	error: console.error.bind(console),
+	// Collect warn/error separately: every infrastructure warning/error must be
+	// declared in the case's infrastructure-log.js or the test fails, so a cache
+	// store/restore failure can't slip through unnoticed.
+	warn: (/** @type {string} */ l, /** @type {EXPECTED_ANY[]} */ ...args) => {
+		appendErrors.push(l);
+		console.warn(l, ...args);
+	},
+	error: (/** @type {string} */ l, /** @type {EXPECTED_ANY[]} */ ...args) => {
+		appendErrors.push(l);
+		console.error(l, ...args);
+	},
 	logTime: () => {},
 	group: () => {},
 	groupCollapsed: () => {},
@@ -101,6 +111,8 @@ const describeCases = (config) => {
 						}
 						/** @type {string[]} */
 						const infraStructureLog = [];
+						/** @type {string[]} */
+						const infraStructureErrors = [];
 						const outBaseDir = path.join(__dirname, "js");
 						const testSubPath = path.join(config.name, category.name, testName);
 						const outputDirectory = path.join(outBaseDir, testSubPath);
@@ -198,7 +210,10 @@ const describeCases = (config) => {
 								if (config.cache) {
 									options.infrastructureLogging = {
 										debug: true,
-										console: createLogger(infraStructureLog)
+										console: createLogger(
+											infraStructureLog,
+											infraStructureErrors
+										)
 									};
 								}
 								if (!options.snapshot) options.snapshot = {};
@@ -284,6 +299,7 @@ const describeCases = (config) => {
 								rimraf.sync(outputDirectory);
 								fs.mkdirSync(outputDirectory, { recursive: true });
 								infraStructureLog.length = 0;
+								infraStructureErrors.length = 0;
 								const deprecationTracker = deprecationTracking.start();
 
 								const compiler = require("..")(options);
@@ -291,37 +307,39 @@ const describeCases = (config) => {
 								compiler.run((err) => {
 									deprecationTracker();
 									if (err) return handleFatalError(err, done);
-									const infrastructureLogging = stderr.toString();
-									if (infrastructureLogging) {
-										return done(
-											new Error(
-												`Errors/Warnings during build:\n${infrastructureLogging}`
-											)
-										);
-									}
-									const infrastructureLogErrors = filterInfraStructureErrors(
-										infraStructureLog,
-										{
-											run: 1,
-											options
-										}
-									);
-									if (
-										infrastructureLogErrors.length &&
-										checkArrayExpectation(
-											testDirectory,
-											{ infrastructureLogs: infrastructureLogErrors },
-											"infrastructureLog",
-											"infrastructure-log",
-											"InfrastructureLog",
-											options,
-											done
-										)
-									) {
-										return;
-									}
+									// Check after close: the disk cache is stored during close,
+									// so store failures (warnings) only surface afterwards.
 									compiler.close((closeErr) => {
 										if (closeErr) return handleFatalError(closeErr, done);
+										const infrastructureLogging = stderr.toString();
+										if (infrastructureLogging) {
+											return done(
+												new Error(
+													`Errors/Warnings during build:\n${infrastructureLogging}`
+												)
+											);
+										}
+										const infrastructureLogErrors = [
+											...filterInfraStructureErrors(infraStructureLog, {
+												run: 1,
+												options
+											}),
+											...infraStructureErrors.map((message) => ({ message }))
+										];
+										if (
+											infrastructureLogErrors.length &&
+											checkArrayExpectation(
+												testDirectory,
+												{ infrastructureLogs: infrastructureLogErrors },
+												"infrastructureLog",
+												"infrastructure-log",
+												"InfrastructureLog",
+												options,
+												done
+											)
+										) {
+											return;
+										}
 										done();
 									});
 								});
@@ -331,6 +349,7 @@ const describeCases = (config) => {
 								rimraf.sync(outputDirectory);
 								fs.mkdirSync(outputDirectory, { recursive: true });
 								infraStructureLog.length = 0;
+								infraStructureErrors.length = 0;
 								const deprecationTracker = deprecationTracking.start();
 
 								const compiler = require("..")(options);
@@ -347,14 +366,6 @@ const describeCases = (config) => {
 											errorsCount: true
 										});
 									if (errorsCount === 0) {
-										const infrastructureLogging = stderr.toString();
-										if (infrastructureLogging) {
-											return done(
-												new Error(
-													`Errors/Warnings during build:\n${infrastructureLogging}`
-												)
-											);
-										}
 										const allModules = children
 											? children.reduce(
 													(all, { modules }) => [
@@ -388,29 +399,41 @@ const describeCases = (config) => {
 											);
 										}
 									}
-									const infrastructureLogErrors = filterInfraStructureErrors(
-										infraStructureLog,
-										{
-											run: 2,
-											options
-										}
-									);
-									if (
-										infrastructureLogErrors.length &&
-										checkArrayExpectation(
-											testDirectory,
-											{ infrastructureLogs: infrastructureLogErrors },
-											"infrastructureLog",
-											"infrastructure-log",
-											"InfrastructureLog",
-											options,
-											done
-										)
-									) {
-										return;
-									}
+									// Check after close: the disk cache is stored during close,
+									// so store failures (warnings) only surface afterwards.
 									compiler.close((closeErr) => {
 										if (closeErr) return handleFatalError(closeErr, done);
+										if (errorsCount === 0) {
+											const infrastructureLogging = stderr.toString();
+											if (infrastructureLogging) {
+												return done(
+													new Error(
+														`Errors/Warnings during build:\n${infrastructureLogging}`
+													)
+												);
+											}
+										}
+										const infrastructureLogErrors = [
+											...filterInfraStructureErrors(infraStructureLog, {
+												run: 2,
+												options
+											}),
+											...infraStructureErrors.map((message) => ({ message }))
+										];
+										if (
+											infrastructureLogErrors.length &&
+											checkArrayExpectation(
+												testDirectory,
+												{ infrastructureLogs: infrastructureLogErrors },
+												"infrastructureLog",
+												"infrastructure-log",
+												"InfrastructureLog",
+												options,
+												done
+											)
+										) {
+											return;
+										}
 										done();
 									});
 								});
@@ -490,13 +513,13 @@ const describeCases = (config) => {
 								) {
 									return;
 								}
-								const infrastructureLogErrors = filterInfraStructureErrors(
-									infraStructureLog,
-									{
+								const infrastructureLogErrors = [
+									...filterInfraStructureErrors(infraStructureLog, {
 										run: 3,
 										options
-									}
-								);
+									}),
+									...infraStructureErrors.map((message) => ({ message }))
+								];
 								if (
 									infrastructureLogErrors.length &&
 									checkArrayExpectation(

@@ -1489,6 +1489,14 @@ export interface LazyCompilationDefaultBackendOptions {
  */
 export interface ExternalsPresets {
 	/**
+	 * Treat bun built-in modules like 'bun', 'bun:sqlite' or 'bun:ffi' and node.js built-in modules as external and load them via import when used (for the Bun runtime).
+	 */
+	bun?: boolean;
+	/**
+	 * Treat node.js built-in modules like fs, path or vm as external and load them via the required 'node:' specifier when used (for the Deno runtime).
+	 */
+	deno?: boolean;
+	/**
 	 * Treat common electron built-in modules in main and preload context like 'electron', 'ipc' or 'shell' as external and load them via require() when used.
 	 */
 	electron?: boolean;
@@ -3627,19 +3635,23 @@ export interface HtmlParserOptions {
 						 */
 						attribute: string;
 						/**
-						 * Called with the element's attribute map; return false to skip this source entry for that element.
+						 * Called with the element's decoded attribute map and the decoded attribute value; return false to skip this source entry for that element.
 						 */
-						filter?: (attributes: Map<string, string>) => boolean;
+						filter?: (
+							attributes: Map<string, string>,
+							value: string
+						) => boolean;
 						/**
 						 * Tag name to match. Omit to match any tag.
 						 */
 						tag?: string;
 						/**
-						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-style` treats the attribute value as a full stylesheet (like a `<style>` body) and `stylesheet-style-attribute` as a CSS block's contents (a declaration list, like a `style` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time; `srcdoc` treats the attribute value as an entity-encoded HTML document (like `<iframe srcdoc>`), bundling it through the HTML pipeline and replacing the attribute's content with the processed HTML at render time.
+						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `css-url` extracts `url(...)` references from a CSS value (like an SVG presentation attribute such as `fill`) as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-style` treats the attribute value as a full stylesheet (like a `<style>` body) and `stylesheet-style-attribute` as a CSS block's contents (a declaration list, like a `style` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time; `srcdoc` treats the attribute value as an entity-encoded HTML document (like `<iframe srcdoc>`), bundling it through the HTML pipeline and replacing the attribute's content with the processed HTML at render time.
 						 */
 						type:
 							| "src"
 							| "srcset"
+							| "css-url"
 							| "script"
 							| "script-module"
 							| "stylesheet"

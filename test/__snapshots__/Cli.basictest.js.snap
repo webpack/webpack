@@ -1122,6 +1122,32 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "externals-presets-bun": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat bun built-in modules like 'bun', 'bun:sqlite' or 'bun:ffi' and node.js built-in modules as external and load them via import when used (for the Bun runtime).",
+        "multiple": false,
+        "path": "externalsPresets.bun",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat bun built-in modules like 'bun', 'bun:sqlite' or 'bun:ffi' and node.js built-in modules as external and load them via import when used (for the Bun runtime).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-deno": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat node.js built-in modules like fs, path or vm as external and load them via the required 'node:' specifier when used (for the Deno runtime).",
+        "multiple": false,
+        "path": "externalsPresets.deno",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat node.js built-in modules like fs, path or vm as external and load them via the required 'node:' specifier when used (for the Deno runtime).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "externals-presets-electron": Object {
     "configs": Array [
       Object {
@@ -2829,13 +2855,14 @@ Object {
   "module-parser-html-sources-type": Object {
     "configs": Array [
       Object {
-        "description": "How the attribute value should be parsed and bundled. \`src\` extracts a single URL as a plain asset; \`srcset\` parses a \`srcset\`-style list of candidate URLs as plain assets; \`script\` and \`script-module\` emit a classic / ES-module chunk entry like \`<script src>\` and \`<script type=\\"module\\" src>\`; \`stylesheet\` emits a CSS chunk entry like \`<link rel=\\"stylesheet\\">\`; \`stylesheet-style\` treats the attribute value as a full stylesheet (like a \`<style>\` body) and \`stylesheet-style-attribute\` as a CSS block's contents (a declaration list, like a \`style\` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time; \`srcdoc\` treats the attribute value as an entity-encoded HTML document (like \`<iframe srcdoc>\`), bundling it through the HTML pipeline and replacing the attribute's content with the processed HTML at render time.",
+        "description": "How the attribute value should be parsed and bundled. \`src\` extracts a single URL as a plain asset; \`srcset\` parses a \`srcset\`-style list of candidate URLs as plain assets; \`css-url\` extracts \`url(...)\` references from a CSS value (like an SVG presentation attribute such as \`fill\`) as plain assets; \`script\` and \`script-module\` emit a classic / ES-module chunk entry like \`<script src>\` and \`<script type=\\"module\\" src>\`; \`stylesheet\` emits a CSS chunk entry like \`<link rel=\\"stylesheet\\">\`; \`stylesheet-style\` treats the attribute value as a full stylesheet (like a \`<style>\` body) and \`stylesheet-style-attribute\` as a CSS block's contents (a declaration list, like a \`style\` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time; \`srcdoc\` treats the attribute value as an entity-encoded HTML document (like \`<iframe srcdoc>\`), bundling it through the HTML pipeline and replacing the attribute's content with the processed HTML at render time.",
         "multiple": true,
         "path": "module.parser.html.sources[].type",
         "type": "enum",
         "values": Array [
           "src",
           "srcset",
+          "css-url",
           "script",
           "script-module",
           "stylesheet",
@@ -2845,7 +2872,7 @@ Object {
         ],
       },
     ],
-    "description": "How the attribute value should be parsed and bundled. \`src\` extracts a single URL as a plain asset; \`srcset\` parses a \`srcset\`-style list of candidate URLs as plain assets; \`script\` and \`script-module\` emit a classic / ES-module chunk entry like \`<script src>\` and \`<script type=\\"module\\" src>\`; \`stylesheet\` emits a CSS chunk entry like \`<link rel=\\"stylesheet\\">\`; \`stylesheet-style\` treats the attribute value as a full stylesheet (like a \`<style>\` body) and \`stylesheet-style-attribute\` as a CSS block's contents (a declaration list, like a \`style\` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time; \`srcdoc\` treats the attribute value as an entity-encoded HTML document (like \`<iframe srcdoc>\`), bundling it through the HTML pipeline and replacing the attribute's content with the processed HTML at render time.",
+    "description": "How the attribute value should be parsed and bundled. \`src\` extracts a single URL as a plain asset; \`srcset\` parses a \`srcset\`-style list of candidate URLs as plain assets; \`css-url\` extracts \`url(...)\` references from a CSS value (like an SVG presentation attribute such as \`fill\`) as plain assets; \`script\` and \`script-module\` emit a classic / ES-module chunk entry like \`<script src>\` and \`<script type=\\"module\\" src>\`; \`stylesheet\` emits a CSS chunk entry like \`<link rel=\\"stylesheet\\">\`; \`stylesheet-style\` treats the attribute value as a full stylesheet (like a \`<style>\` body) and \`stylesheet-style-attribute\` as a CSS block's contents (a declaration list, like a \`style\` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time; \`srcdoc\` treats the attribute value as an entity-encoded HTML document (like \`<iframe srcdoc>\`), bundling it through the HTML pipeline and replacing the attribute's content with the processed HTML at render time.",
     "multiple": true,
     "simpleType": "string",
   },

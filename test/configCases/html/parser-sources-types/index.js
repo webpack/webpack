@@ -36,3 +36,19 @@ it("should bundle a `stylesheet-style-attribute`-typed value as a block's conten
 		/<my-box data-style="[\s\S]*?color: ?green[\s\S]*?padding: ?10px[\s\S]*?"><\/my-box>/
 	);
 });
+
+it("should extract url() from a `css-url`-typed attribute as a plain asset", () => {
+	// The `url(./pixel.png)` reference was bundled as an asset and rewritten
+	// to the emitted file name, just like an SVG presentation attribute.
+	expect(page).not.toContain("./pixel.png");
+	expect(page).toMatch(/<my-paint data-fill="url\([0-9a-f]+\.png\)">/);
+});
+
+it("should apply an any-tag source (no `tag`) to any element", () => {
+	// `{ attribute: "data-style" }` has no `tag`, so it matches the plain
+	// `<div>`; its CSS block contents flow through the pipeline and the
+	// `url()` resolves, proving developer-provided any-tag sources work.
+	expect(page).toMatch(
+		/<div data-style="[\s\S]*?url\([0-9a-f]+\.png\)[\s\S]*?">any-tag source<\/div>/
+	);
+});
