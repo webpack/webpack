@@ -754,10 +754,10 @@ describe("Cli", () => {
 
 		it("env TERM", () => {
 			const isCI =
-				"CI" in process.env &&
-				("GITHUB_ACTIONS" in process.env ||
-					"GITLAB_CI" in process.env ||
-					"CIRCLECI" in process.env);
+				process.env.CI !== undefined &&
+				(process.env.GITHUB_ACTIONS !== undefined ||
+					process.env.GITLAB_CI !== undefined ||
+					process.env.CIRCLECI !== undefined);
 
 			process.env.TERM = "dumb";
 
@@ -901,20 +901,14 @@ describe("Cli", () => {
 
 		const defaultColors = createColors();
 
-		// Deno's and Bun's default color-support detection differs, so
-		// createColors() emits no ANSI codes here; skip this assertion on both.
-
-		(process.versions.deno || process.versions.bun ? it.skip : it)(
-			"simple (colors by default)",
-			() => {
-				for (const [name, open, close] of colorsMap) {
-					expect(
-						/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (
-							/** @type {unknown} */ (defaultColors)
-						)[name](name)
-					).toBe(open + name + close);
-				}
+		it("simple (colors by default)", () => {
+			for (const [name, open, close] of colorsMap) {
+				expect(
+					/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (
+						/** @type {unknown} */ (defaultColors)
+					)[name](name)
+				).toBe(open + name + close);
 			}
-		);
+		});
 	});
 });
