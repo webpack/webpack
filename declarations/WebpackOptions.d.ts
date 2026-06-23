@@ -1489,6 +1489,10 @@ export interface LazyCompilationDefaultBackendOptions {
  */
 export interface ExternalsPresets {
 	/**
+	 * Treat bun built-in modules like 'bun', 'bun:sqlite' or 'bun:ffi' and node.js built-in modules as external and load them via import when used (for the Bun runtime).
+	 */
+	bun?: boolean;
+	/**
 	 * Treat node.js built-in modules like fs, path or vm as external and load them via the required 'node:' specifier when used (for the Deno runtime).
 	 */
 	deno?: boolean;

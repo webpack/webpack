@@ -8312,6 +8312,11 @@ declare class ExternalsPlugin {
  */
 declare interface ExternalsPresets {
 	/**
+	 * Treat bun built-in modules like 'bun', 'bun:sqlite' or 'bun:ffi' and node.js built-in modules as external and load them via import when used (for the Bun runtime).
+	 */
+	bun?: boolean;
+
+	/**
 	 * Treat node.js built-in modules like fs, path or vm as external and load them via the required 'node:' specifier when used (for the Deno runtime).
 	 */
 	deno?: boolean;
@@ -19517,6 +19522,11 @@ declare interface PlatformTargetProperties {
 	 * deno platform, node built-in modules (via the `node:` specifier) and web APIs are available
 	 */
 	deno?: null | boolean;
+
+	/**
+	 * bun platform, bun and node built-in modules are available
+	 */
+	bun?: null | boolean;
 
 	/**
 	 * nwjs platform, require of legacy nw.gui is available
