@@ -726,13 +726,17 @@ describe("Cli", () => {
 			// Most important - it clears the cache
 			jest.resetModules();
 			process.env = { ...OLD_ENV };
-			// Prevent `process.env.FORCE_COLOR` from being auto set by `jest-worker`
-			if (OLD_ENV.FORCE_COLOR) {
-				delete process.env.FORCE_COLOR;
-			}
-			// Prevent `process.env.TERM` default value
-			if (OLD_ENV.TERM) {
-				delete process.env.TERM;
+			// Drop the values the CI runner/jest-worker inject (FORCE_COLOR, and the
+			// CI provider vars) so each test exercises exactly the signal it sets.
+			for (const key of [
+				"FORCE_COLOR",
+				"TERM",
+				"CI",
+				"GITHUB_ACTIONS",
+				"GITLAB_CI",
+				"CIRCLECI"
+			]) {
+				delete process.env[key];
 			}
 		});
 
@@ -754,10 +758,10 @@ describe("Cli", () => {
 
 		it("env TERM", () => {
 			const isCI =
-				"CI" in process.env &&
-				("GITHUB_ACTIONS" in process.env ||
-					"GITLAB_CI" in process.env ||
-					"CIRCLECI" in process.env);
+				process.env.CI !== undefined &&
+				(process.env.GITHUB_ACTIONS !== undefined ||
+					process.env.GITLAB_CI !== undefined ||
+					process.env.CIRCLECI !== undefined);
 
 			process.env.TERM = "dumb";
 
@@ -783,6 +787,28 @@ describe("Cli", () => {
 			process.env.CIRCLECI = "1";
 
 			expect(isColorSupported()).toBe(true);
+		});
+
+		it("argv --color", () => {
+			const originalArgv = process.argv;
+			process.argv = [...process.argv, "--color"];
+
+			try {
+				expect(isColorSupported()).toBe(true);
+			} finally {
+				process.argv = originalArgv;
+			}
+		});
+
+		it("argv --no-color", () => {
+			const originalArgv = process.argv;
+			process.argv = [...process.argv, "--no-color"];
+
+			try {
+				expect(isColorSupported()).toBe(false);
+			} finally {
+				process.argv = originalArgv;
+			}
 		});
 	});
 
@@ -901,20 +927,14 @@ describe("Cli", () => {
 
 		const defaultColors = createColors();
 
-		// Deno's and Bun's default color-support detection differs, so
-		// createColors() emits no ANSI codes here; skip this assertion on both.
-
-		(process.versions.deno || process.versions.bun ? it.skip : it)(
-			"simple (colors by default)",
-			() => {
-				for (const [name, open, close] of colorsMap) {
-					expect(
-						/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (
-							/** @type {unknown} */ (defaultColors)
-						)[name](name)
-					).toBe(open + name + close);
-				}
+		it("simple (colors by default)", () => {
+			for (const [name, open, close] of colorsMap) {
+				expect(
+					/** @type {Record<string, import("../lib/cli").PrintFunction>} */ (
+						/** @type {unknown} */ (defaultColors)
+					)[name](name)
+				).toBe(open + name + close);
 			}
-		);
+		});
 	});
 });

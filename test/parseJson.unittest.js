@@ -2,9 +2,10 @@
 
 const parseJson = require("../lib/util/parseJson");
 
-// TODO JSC (Bun) produces different SyntaxError text for malformed JSON than
-// V8, so the message/position assertions keyed on Node's wording don't hold.
-const itSkipBun = process.versions.bun ? it.skip : it;
+// Bun runs on JSC, whose SyntaxError text and positions differ from V8's
+// (Node, Deno). Assert the exact wording only on V8 and the engine-agnostic
+// wrapper contract on every runtime.
+const isV8 = !process.versions.bun;
 
 const currentNodeMajor = Number.parseInt(
 	process.version.slice(1).split(".")[0],
@@ -92,10 +93,18 @@ const jsonThrows = (
 	const expectedObj = /** @type {Record<string, unknown>} */ (expected);
 
 	if (expectedObj.message) {
-		if (expectedObj.message instanceof RegExp) {
-			expect(/** @type {string} */ (err.message)).toMatch(expectedObj.message);
+		if (isV8) {
+			if (expectedObj.message instanceof RegExp) {
+				expect(/** @type {string} */ (err.message)).toMatch(
+					expectedObj.message
+				);
+			} else {
+				expect(err.message).toBe(expectedObj.message);
+			}
 		} else {
-			expect(err.message).toBe(expectedObj.message);
+			// JSC wording differs, but the wrapped message is always a non-empty string.
+			expect(typeof err.message).toBe("string");
+			expect(/** @type {string} */ (err.message).length).toBeGreaterThan(0);
 		}
 	}
 
@@ -108,7 +117,11 @@ const jsonThrows = (
 	}
 
 	if (expectedObj.position !== undefined) {
-		expect(err.position).toBe(expectedObj.position);
+		if (isV8) {
+			expect(err.position).toBe(expectedObj.position);
+		} else {
+			expect(typeof err.position).toBe("number");
+		}
 	}
 
 	if (expectedObj.systemError) {
@@ -162,38 +175,39 @@ describe("parseJson", () => {
 		).toBe(str);
 	});
 
-	itSkipBun(
-		"better errors when faced with repeated BOM bytes and trailing \\b characters",
-		() => {
-			const str = JSON.stringify({
-				foo: 1,
-				bar: {
-					baz: [1, 2, 3, "four"]
-				}
-			});
-			const doubleBomBuffer = Buffer.concat([
-				Buffer.from([0xef, 0xbb, 0xbf, 0xef, 0xbb, 0xbf]),
-				Buffer.from(str)
-			]);
+	it("better errors when faced with repeated BOM bytes and trailing \\b characters", () => {
+		const str = JSON.stringify({
+			foo: 1,
+			bar: {
+				baz: [1, 2, 3, "four"]
+			}
+		});
+		const doubleBomBuffer = Buffer.concat([
+			Buffer.from([0xef, 0xbb, 0xbf, 0xef, 0xbb, 0xbf]),
+			Buffer.from(str)
+		]);
 
-			jsonThrows(doubleBomBuffer.toString(), {
-				message: /Unexpected token "." \(0xFEFF\)/
-			});
+		jsonThrows(doubleBomBuffer.toString(), {
+			message: /Unexpected token "." \(0xFEFF\)/,
+			name: "JSONParseError",
+			systemError: SyntaxError
+		});
 
-			jsonThrows(`${str}\b\b\b\b\b\b\b\b\b\b\b\b`, {
-				message: expectMessage(
-					"Unexpected ",
-					{
-						20: "non-whitespace character after JSON",
-						default: /token "\\b" \(0x08\) in JSON/
-					},
-					/ at position.*\\b"/
-				)
-			});
-		}
-	);
+		jsonThrows(`${str}\b\b\b\b\b\b\b\b\b\b\b\b`, {
+			message: expectMessage(
+				"Unexpected ",
+				{
+					20: "non-whitespace character after JSON",
+					default: /token "\\b" \(0x08\) in JSON/
+				},
+				/ at position.*\\b"/
+			),
+			name: "JSONParseError",
+			systemError: SyntaxError
+		});
+	});
 
-	itSkipBun("throws SyntaxError for unexpected token", () => {
+	it("throws SyntaxError for unexpected token", () => {
 		const data = "foo";
 
 		jsonThrows(data, {
@@ -211,7 +225,7 @@ describe("parseJson", () => {
 		});
 	});
 
-	itSkipBun("throws SyntaxError for unexpected end of JSON", () => {
+	it("throws SyntaxError for unexpected end of JSON", () => {
 		const data = '{"foo: bar}';
 
 		jsonThrows(data, {
@@ -228,7 +242,7 @@ describe("parseJson", () => {
 		});
 	});
 
-	itSkipBun("throws SyntaxError for unexpected number", () => {
+	it("throws SyntaxError for unexpected number", () => {
 		const data = "[[1,2],{3,3,3,3,3}]";
 
 		jsonThrows(data, {
@@ -245,7 +259,7 @@ describe("parseJson", () => {
 		});
 	});
 
-	itSkipBun("throws SyntaxError for broken object", () => {
+	it("throws SyntaxError for broken object", () => {
 		const data = '{"6543210';
 
 		jsonThrows(data, {
@@ -262,7 +276,7 @@ describe("parseJson", () => {
 		});
 	});
 
-	itSkipBun("throws SyntaxError with characters like a string", () => {
+	it("throws SyntaxError with characters like a string", () => {
 		const data = "abcde";
 
 		jsonThrows(data, {
@@ -284,7 +298,7 @@ describe("parseJson", () => {
 		});
 	});
 
-	itSkipBun("throws for end of input", () => {
+	it("throws for end of input", () => {
 		const data = '{"a":1,""';
 
 		jsonThrows(data, {
@@ -325,7 +339,7 @@ describe("parseJson", () => {
 		});
 	});
 
-	itSkipBun("handles empty string helpfully", () => {
+	it("handles empty string helpfully", () => {
 		jsonThrows("", {
 			message: "Unexpected end of JSON input while parsing empty string",
 			name: "JSONParseError",

@@ -326,6 +326,13 @@ const describeCases = (config) => {
 												setTimeout(() => {
 													runCompiler(cb);
 												}, 1000);
+											},
+											// Re-run the same compilation version (without advancing the
+											// fake-update index): lets a test wait out the lazy-compilation
+											// activation race instead of relying on a single fixed delay.
+											NEXT_RETRY: (/** @type {EXPECTED_ANY} */ cb) => {
+												fakeUpdateLoaderOptions.updateIndex--;
+												runCompiler(cb);
 											}
 										});
 									},

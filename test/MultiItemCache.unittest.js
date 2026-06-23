@@ -3,19 +3,18 @@
 const Cache = require("../lib/Cache");
 const { ItemCacheFacade, MultiItemCache } = require("../lib/CacheFacade");
 
-// TODO JSC (Bun) words the "not a function" TypeError differently than V8.
-const itSkipBun = process.versions.bun ? it.skip : it;
-
 describe("MultiItemCache", () => {
-	itSkipBun("throws when getting items from an empty Cache", () => {
+	it("throws when getting items from an empty Cache", () => {
 		const multiItemCache = new MultiItemCache(generateItemCaches(0));
+		// Asserts the error type rather than its text: JSC (Bun) words the
+		// "not a function" TypeError differently than V8.
 		expect(() =>
 			multiItemCache.get(
 				/** @type {EXPECTED_ANY} */ (
 					(/** @type {unknown} */ _) => /** @type {() => unknown} */ (_)()
 				)
 			)
-		).toThrow(/_ is not a function/);
+		).toThrow(TypeError);
 	});
 
 	it("returns the single ItemCacheFacade when passed an array of length 1", () => {
