@@ -12948,6 +12948,11 @@ declare interface KnownAssetInfo {
 	contenthash?: string | string[];
 
 	/**
+	 * maps a `[contenthash:<digest>]` value to its digest, so `RealContentHashPlugin` re-encodes the recomputed hash in it
+	 */
+	contenthashDigest?: Record<string, string>;
+
+	/**
 	 * when asset was created from a source file (potentially transformed), the original filename relative to compilation context
 	 */
 	sourceFilename?: string;
@@ -19448,7 +19453,7 @@ declare interface PathData {
 	hashDigest?: string;
 
 	/**
-	 * whether `optimization.realContentHash` recomputes content hashes (rejects an inline digest on `[contenthash]`)
+	 * whether `optimization.realContentHash` recomputes content hashes (records an inline `[contenthash:<digest>]` so it re-encodes in that digest)
 	 */
 	realContentHash?: boolean;
 

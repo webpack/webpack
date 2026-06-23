@@ -5,7 +5,8 @@ const fs = require("fs");
 // base64url is filename-safe (A-Z a-z 0-9 - _); base62 is alphanumeric.
 const charsets = [
 	/^bundle0\.[A-Za-z0-9_-]{8}\.js$/,
-	/^bundle1\.[A-Za-z0-9]{10}\.js$/
+	/^bundle1\.[A-Za-z0-9]{10}\.js$/,
+	/^bundle2\.[A-Za-z0-9_-]{8}\.js$/
 ];
 
 module.exports = {

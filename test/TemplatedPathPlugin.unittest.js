@@ -102,18 +102,30 @@ describe("TemplatedPathPlugin.interpolate", () => {
 	});
 	/* cSpell:enable */
 
-	it("rejects an inline digest on [contenthash] when realContentHash is on", () => {
+	it("records the inline digest on [contenthash] for realContentHash to re-encode", () => {
 		const data = {
 			module: { id: "1", hash: "h" },
 			contentHash: "0123456789abcdef"
 		};
-		expect(() =>
-			interpolate("[contenthash:base64:8]", { ...data, realContentHash: true })
-		).toThrow(/not supported together with optimization\.realContentHash/);
-		// allowed when realContentHash is off
-		expect(interpolate("[contenthash:base64]", data)).toBe(
+		const expected = Buffer.from("0123456789abcdef", "hex")
+			.toString("base64")
+			.slice(0, 8);
+		const assetInfo = {};
+		expect(
+			interpolate(
+				"[contenthash:base64:8]",
+				{ ...data, realContentHash: true },
+				assetInfo
+			)
+		).toBe(expected);
+		// digest recorded so RealContentHashPlugin re-encodes the recomputed hash
+		expect(assetInfo.contenthashDigest).toEqual({ [expected]: "base64" });
+		// nothing recorded when realContentHash is off
+		const assetInfo2 = {};
+		expect(interpolate("[contenthash:base64]", data, assetInfo2)).toBe(
 			Buffer.from("0123456789abcdef", "hex").toString("base64")
 		);
+		expect(assetInfo2.contenthashDigest).toBeUndefined();
 	});
 
 	it("throws on an unknown inline digest", () => {
