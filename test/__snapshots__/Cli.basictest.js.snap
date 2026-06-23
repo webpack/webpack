@@ -1122,6 +1122,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "externals-presets-deno": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat node.js built-in modules like fs, path or vm as external and load them via the required 'node:' specifier when used (for the Deno runtime).",
+        "multiple": false,
+        "path": "externalsPresets.deno",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat node.js built-in modules like fs, path or vm as external and load them via the required 'node:' specifier when used (for the Deno runtime).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "externals-presets-electron": Object {
     "configs": Array [
       Object {

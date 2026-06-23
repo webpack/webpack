@@ -34,6 +34,7 @@ module.exports = {
 		`);
 				expect(compilation.options.externalsPresets).toMatchInlineSnapshot(`
 			Object {
+			  "deno": false,
 			  "electron": false,
 			  "electronMain": false,
 			  "electronPreload": false,

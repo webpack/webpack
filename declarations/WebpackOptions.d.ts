@@ -1489,6 +1489,10 @@ export interface LazyCompilationDefaultBackendOptions {
  */
 export interface ExternalsPresets {
 	/**
+	 * Treat node.js built-in modules like fs, path or vm as external and load them via the required 'node:' specifier when used (for the Deno runtime).
+	 */
+	deno?: boolean;
+	/**
 	 * Treat common electron built-in modules in main and preload context like 'electron', 'ipc' or 'shell' as external and load them via require() when used.
 	 */
 	electron?: boolean;

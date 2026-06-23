@@ -26,7 +26,7 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
   - `lib/debug/` — Debug helpers.
   - `lib/dependencies/` — `Dependency` classes and their templates (HarmonyImport, CommonJsRequire, RequireContext, …).
   - `lib/dll/` — DllPlugin / DllReferencePlugin.
-  - `lib/electron/`, `lib/node/`, `lib/web/`, `lib/webworker/` — Target-specific runtime templates.
+  - `lib/deno/`, `lib/electron/`, `lib/node/`, `lib/web/`, `lib/webworker/` — Target-specific runtime templates and externals presets.
   - `lib/errors/` — Error class hierarchy.
   - `lib/esm/` — ESM-specific output (e.g. `import.meta`).
   - `lib/hmr/` — Hot Module Replacement plugins.
@@ -91,6 +91,10 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 ### Source language: CommonJS + JSDoc
 
 `lib/` is CommonJS only. Use `module.exports` / `require()`, never `import`/`export` syntax. Types are declared via JSDoc — `@typedef {import("./Other")} Other` and friends — never TypeScript syntax inside `.js` files. The JSDoc annotations are compiled into `types.d.ts` by `yarn fix:special`.
+
+### Source file headers
+
+Every source file under `lib/` (and `hot/`, `tooling/`) opens with the MIT license header. When adding a **new** file, set the `Author` line to its actual author (`Author <Name> @<github-handle>`) — don't copy another file's author line.
 
 ### Code comments
 

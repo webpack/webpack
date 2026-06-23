@@ -8312,6 +8312,11 @@ declare class ExternalsPlugin {
  */
 declare interface ExternalsPresets {
 	/**
+	 * Treat node.js built-in modules like fs, path or vm as external and load them via the required 'node:' specifier when used (for the Deno runtime).
+	 */
+	deno?: boolean;
+
+	/**
 	 * Treat common electron built-in modules in main and preload context like 'electron', 'ipc' or 'shell' as external and load them via require() when used.
 	 */
 	electron?: boolean;
@@ -16682,6 +16687,7 @@ declare class NodeTargetPlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
+	static builtins: (string | RegExp)[];
 }
 declare class NodeTemplatePlugin {
 	/**
@@ -19503,6 +19509,11 @@ declare interface PlatformTargetProperties {
 	 * node platform, require of node built-in modules is available
 	 */
 	node?: null | boolean;
+
+	/**
+	 * deno platform, node built-in modules (via the `node:` specifier) and web APIs are available
+	 */
+	deno?: null | boolean;
 
 	/**
 	 * nwjs platform, require of legacy nw.gui is available
