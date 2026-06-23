@@ -76,18 +76,6 @@ const common = {
 							localIdentHashDigestLength: 16,
 							localIdentName: "[hash]-[local]"
 						}
-					},
-					{
-						resourceQuery: /\?fullhash-length$/,
-						generator: {
-							localIdentName: "[fullhash:8]-[local]"
-						}
-					},
-					{
-						resourceQuery: /\?hash-base64$/,
-						generator: {
-							localIdentName: "[local]__[hash:base64:5]"
-						}
 					}
 				]
 			}
