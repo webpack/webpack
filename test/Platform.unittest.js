@@ -29,6 +29,10 @@ describe("platform", () => {
 			expect(getPlatform(["web", "node", "webworker"]).universal).toBe(true);
 		});
 
+		it('is true for the ["webworker", "node"] target (worker is web)', () => {
+			expect(getPlatform(["webworker", "node"]).universal).toBe(true);
+		});
+
 		it("is false for a web-only target", () => {
 			expect(getPlatform("web").universal).toBe(false);
 		});
