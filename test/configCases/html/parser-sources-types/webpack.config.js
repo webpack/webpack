@@ -44,7 +44,14 @@ module.exports = {
 						tag: "my-box",
 						attribute: "data-style",
 						type: "stylesheet-style-attribute"
-					}
+					},
+					// Custom attribute whose value is a CSS value carrying a
+					// `url(...)` FuncIRI (like an SVG `fill`) — the referenced
+					// file is bundled as a plain asset and the url rewritten.
+					{ tag: "my-paint", attribute: "data-fill", type: "css-url" },
+					// Any-tag source (no `tag`): the `data-style` attribute is a
+					// CSS block's contents on *any* element.
+					{ attribute: "data-style", type: "stylesheet-style-attribute" }
 				]
 			}
 		}
