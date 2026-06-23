@@ -1,6 +1,7 @@
 "use strict";
 
 const nonNumericOnlyHash = require("../lib/util/nonNumericOnlyHash");
+const { digestNonNumericOnly } = require("../lib/util/nonNumericOnlyHash");
 
 describe("nonNumericOnlyHash", () => {
 	it("hashLength=0", () => {
@@ -33,10 +34,10 @@ describe("nonNumericOnlyHash", () => {
 });
 
 describe("nonNumericOnlyHash.digestNonNumericOnly", () => {
-	const { digestNonNumericOnly } = nonNumericOnlyHash;
-	const fakeHash = (value) => ({
-		digest: (encoding) => `${value}:${encoding}`
-	});
+	const fakeHash = (/** @type {string} */ value) =>
+		/** @type {EXPECTED_ANY} */ ({
+			digest: (/** @type {string} */ encoding) => `${value}:${encoding}`
+		});
 
 	it("digests then truncates with a non-numeric first char", () => {
 		expect(digestNonNumericOnly(fakeHash("abcdef"), "hex", 3)).toBe("abc");
