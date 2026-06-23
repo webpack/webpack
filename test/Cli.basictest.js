@@ -726,13 +726,17 @@ describe("Cli", () => {
 			// Most important - it clears the cache
 			jest.resetModules();
 			process.env = { ...OLD_ENV };
-			// Prevent `process.env.FORCE_COLOR` from being auto set by `jest-worker`
-			if (OLD_ENV.FORCE_COLOR) {
-				delete process.env.FORCE_COLOR;
-			}
-			// Prevent `process.env.TERM` default value
-			if (OLD_ENV.TERM) {
-				delete process.env.TERM;
+			// Drop the values the CI runner/jest-worker inject (FORCE_COLOR, and the
+			// CI provider vars) so each test exercises exactly the signal it sets.
+			for (const key of [
+				"FORCE_COLOR",
+				"TERM",
+				"CI",
+				"GITHUB_ACTIONS",
+				"GITLAB_CI",
+				"CIRCLECI"
+			]) {
+				delete process.env[key];
 			}
 		});
 
