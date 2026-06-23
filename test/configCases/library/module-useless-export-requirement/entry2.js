@@ -29,7 +29,7 @@ it("should compile and run", () => {
 	// the first emitted module (`;// path/to/module.js`). This avoids
 	// matching this test's own source, which is concatenated into the bundle.
 	const content = stripModuleMarkers(getFile());
-	expect(concat).toBe("concat");
+	expect(concat).toEqual({});
 
 	if (isNoConcat) {
 		expect(content).toMatch(exportsReg);

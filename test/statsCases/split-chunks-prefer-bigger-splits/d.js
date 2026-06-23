@@ -1,2 +1,2 @@
 // content content content content content
-export default "d";
+export default { name: "d" };

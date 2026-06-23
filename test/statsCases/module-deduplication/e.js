@@ -1,1 +1,1 @@
-export default "e";
+export default { name: "e" };

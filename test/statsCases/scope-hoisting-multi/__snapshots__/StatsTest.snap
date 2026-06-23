@@ -21,7 +21,7 @@ webpack x.x.x compiled successfully in X ms
 Entrypoint first X KiB = b-vendor.js X bytes b-first.js X KiB
 Entrypoint second X KiB = b-vendor.js X bytes b-second.js X KiB
 runtime modules X KiB 20 modules
-cacheable modules X bytes
+cacheable modules X KiB
   code generated modules X bytes [code generated]
     ./first.js + 2 modules X bytes [built] [code generated]
       ModuleConcatenation bailout: Cannot concat with ./vendor.js: Module ./vendor.js is not in the same chunk(s) (expected in chunk(s) first, module is in chunk(s) vendor)

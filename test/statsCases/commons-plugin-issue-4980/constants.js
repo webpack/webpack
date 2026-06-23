@@ -2,4 +2,4 @@ export const a = "a";
 export const b = "b";
 export const c = "c";
 
-export default "d";
+export default { name: "d" };

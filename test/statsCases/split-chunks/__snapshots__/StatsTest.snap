@@ -170,7 +170,7 @@ manual:
     > x b
     > y b
     > z b
-    runtime modules X KiB 4 modules
+    runtime modules X KiB 5 modules
     dependent modules X bytes [dependent] 2 modules
     ./b.js X bytes [built] [code generated]
   chunk (runtime: main) manual/async-a.js (async-a) X bytes <{792}> ={96}= >{49}< [rendered]
@@ -182,12 +182,12 @@ manual:
     > x c
     > y c
     > z c
-    runtime modules X KiB 4 modules
+    runtime modules X KiB 5 modules
     dependent modules X bytes [dependent] 2 modules
     ./c.js X bytes [built] [code generated]
   chunk (runtime: main) manual/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{96}< >{263}< >{869}< [entry] [rendered]
     > ./ main
-    runtime modules X KiB 9 modules
+    runtime modules X KiB 10 modules
     ./index.js X bytes [built] [code generated]
   chunk (runtime: main) manual/async-c.js (async-c) X bytes <{792}> ={96}= [rendered]
     > ./c ./index.js 3:0-47
@@ -198,7 +198,7 @@ manual:
     > x a
     > y a
     > z a
-    runtime modules X KiB 10 modules
+    runtime modules X KiB 11 modules
     dependent modules X bytes [dependent] 1 module
     ./a.js + 1 modules X bytes [built] [code generated]
   manual (webpack x.x.x) compiled successfully
@@ -374,7 +374,7 @@ custom-chunks-filter-in-cache-groups:
     > x b
     > y b
     > z b
-    runtime modules X KiB 4 modules
+    runtime modules X KiB 5 modules
     dependent modules X bytes [dependent] 2 modules
     ./b.js X bytes [built] [code generated]
   chunk (runtime: main) custom-chunks-filter-in-cache-groups/async-a.js (async-a) X bytes <{792}> ={96}= >{49}< [rendered]
@@ -386,7 +386,7 @@ custom-chunks-filter-in-cache-groups:
     > x c
     > y c
     > z c
-    runtime modules X KiB 4 modules
+    runtime modules X KiB 5 modules
     dependent modules X bytes [dependent] 2 modules
     ./c.js X bytes [built] [code generated]
   chunk (runtime: a) custom-chunks-filter-in-cache-groups/765.js (id hint: vendors) X bytes ={996}= >{49}< [initial] [rendered] split chunk (cache group: defaultVendors)
@@ -399,7 +399,7 @@ custom-chunks-filter-in-cache-groups:
     ./node_modules/z.js X bytes [built] [code generated]
   chunk (runtime: main) custom-chunks-filter-in-cache-groups/main.js (main) X bytes (javascript) X KiB (runtime) >{60}< >{96}< >{263}< >{869}< [entry] [rendered]
     > ./ main
-    runtime modules X KiB 9 modules
+    runtime modules X KiB 10 modules
     ./index.js X bytes [built] [code generated]
   chunk (runtime: main) custom-chunks-filter-in-cache-groups/async-c.js (async-c) X bytes <{792}> ={96}= [rendered]
     > ./c ./index.js 3:0-47

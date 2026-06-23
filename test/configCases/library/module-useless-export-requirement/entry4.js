@@ -27,7 +27,7 @@ const isNoConcat = /-no-concat\.mjs$/.test(__filename);
 
 it("should not emit __webpack_require__ helpers with CSS modules", () => {
 	const content = stripModuleMarkers(getFile());
-	expect(concat).toBe("concat");
+	expect(concat).toEqual({});
 
 	if (isNoConcat) {
 		expect(content).toMatch(exportsReg);

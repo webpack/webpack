@@ -1,1 +1,1 @@
-export default "module first";
+export default { name: "module first" };
