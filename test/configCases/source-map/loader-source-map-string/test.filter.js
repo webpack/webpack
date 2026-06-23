@@ -1,8 +1,9 @@
 "use strict";
 
-// The loader loads ESM-only @babel/core@8, which requires Node ^22.18 || >=24.9
-// (Jest vm + subpath imports); gate to the versions where it can run.
+// These cases load ESM-only @babel/core@8, which needs Node ^22.18 || >=24.11
+// (subpath imports) and can't load under Jest's vm below Node 24.9 or on Deno/Bun.
 module.exports = () => {
+	if (typeof Deno !== "undefined" || typeof Bun !== "undefined") return false;
 	const [major, minor] = process.versions.node.split(".").map(Number);
 	return major > 24 || (major === 24 && minor >= 9);
 };
