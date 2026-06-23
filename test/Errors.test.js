@@ -305,7 +305,6 @@ describe("Errors", () => {
 					          "originName": "./case-sensitive.js",
 					        },
 					      ],
-					      "stack": "CaseSensitiveModulesWarning: There are multiple modules with names that only differ in casing.\\nThis can lead to unexpected behavior when compiling on a filesystem with other case-semantic.\\nUse equal casing. Compare these module identifiers:\\n* <cwd>/test/fixtures/errors/FILE.js\\n    Used by 1 module(s), i. e.\\n    <cwd>/test/fixtures/errors/case-sensitive.js\\n* <cwd>/test/fixtures/errors/file.js\\n    Used by 1 module(s), i. e.\\n    <cwd>/test/fixtures/errors/case-sensitive.js",
 					    },
 					  ],
 					}
