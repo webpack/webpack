@@ -267,7 +267,7 @@ Make sure to read our AI policy (https://github.com/webpack/governance/blob/main
 
 Required answer per section — **one sentence each is the target, two or three the absolute maximum**:
 
-- **Summary** — motivation and what problem is solved; link the related issue (`Closes #…` / `Fixes #…`).
+- **Summary** — motivation and what problem is solved; link the related issue. When the PR actually fixes the bug or implements the feature the issue asks for, use the auto-closing form `Closes #…` / `Fixes #…` (not `Refs #…`); reserve `Refs #…` for issues the PR only relates to but does not resolve.
 - **What kind of change does this PR introduce?** — one of: fix, feat, refactor, perf, test, chore, ci, build, style, revert, docs.
 - **Did you add tests for your changes?** — yes/no + which test files.
 - **Does this PR introduce a breaking change?** — yes/no + migration path if yes.
