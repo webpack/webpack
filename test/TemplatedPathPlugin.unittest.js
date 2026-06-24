@@ -102,6 +102,24 @@ describe("TemplatedPathPlugin.interpolate", () => {
 	});
 	/* cSpell:enable */
 
+	it("re-encodes a module [contenthash]/[modulehash] from the full digest", () => {
+		const data = {
+			module: { id: "1", hash: "0123456789abcdef0123456789abcdef" },
+			contentHash: "0123456789abcdef",
+			contentHashFull: "0123456789abcdef0123456789abcdef"
+		};
+		// digit-only length is bounded by the stored (truncated) content hash
+		expect(interpolate("[contenthash:24]", data)).toBe("0123456789abcdef");
+		// a digest re-encodes from the full digest, so length can exceed the stored one
+		expect(interpolate("[contenthash:hex:24]", data)).toBe(
+			"0123456789abcdef01234567"
+		);
+		// [modulehash] re-encodes from the full module hash too
+		expect(interpolate("[modulehash:hex:24]", data)).toBe(
+			"0123456789abcdef01234567"
+		);
+	});
+
 	it("records the inline digest on [contenthash] for realContentHash to re-encode", () => {
 		const data = {
 			module: { id: "1", hash: "h" },

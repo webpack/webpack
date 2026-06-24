@@ -19464,6 +19464,11 @@ declare interface PathData {
 	query?: string;
 	contentHashType?: string;
 	contentHash?: string;
+
+	/**
+	 * untruncated module/asset content hash, for re-encoding `[contenthash:<digest>]` from full entropy
+	 */
+	contentHashFull?: string;
 	contentHashWithLength?: (length: number) => string;
 
 	/**
