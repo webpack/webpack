@@ -102,18 +102,48 @@ describe("TemplatedPathPlugin.interpolate", () => {
 	});
 	/* cSpell:enable */
 
-	it("rejects an inline digest on [contenthash] when realContentHash is on", () => {
+	it("re-encodes a module [contenthash]/[modulehash] from the full digest", () => {
+		const data = {
+			module: { id: "1", hash: "0123456789abcdef0123456789abcdef" },
+			contentHash: "0123456789abcdef",
+			contentHashFull: "0123456789abcdef0123456789abcdef"
+		};
+		// digit-only length is bounded by the stored (truncated) content hash
+		expect(interpolate("[contenthash:24]", data)).toBe("0123456789abcdef");
+		// a digest re-encodes from the full digest, so length can exceed the stored one
+		expect(interpolate("[contenthash:hex:24]", data)).toBe(
+			"0123456789abcdef01234567"
+		);
+		// [modulehash] re-encodes from the full module hash too
+		expect(interpolate("[modulehash:hex:24]", data)).toBe(
+			"0123456789abcdef01234567"
+		);
+	});
+
+	it("records the inline digest on [contenthash] for realContentHash to re-encode", () => {
 		const data = {
 			module: { id: "1", hash: "h" },
 			contentHash: "0123456789abcdef"
 		};
-		expect(() =>
-			interpolate("[contenthash:base64:8]", { ...data, realContentHash: true })
-		).toThrow(/not supported together with optimization\.realContentHash/);
-		// allowed when realContentHash is off
-		expect(interpolate("[contenthash:base64]", data)).toBe(
+		const expected = Buffer.from("0123456789abcdef", "hex")
+			.toString("base64")
+			.slice(0, 8);
+		const assetInfo = /** @type {EXPECTED_ANY} */ ({});
+		expect(
+			interpolate(
+				"[contenthash:base64:8]",
+				{ ...data, realContentHash: true },
+				assetInfo
+			)
+		).toBe(expected);
+		// digest recorded so RealContentHashPlugin re-encodes the recomputed hash
+		expect(assetInfo.contenthashDigest).toEqual({ [expected]: "base64" });
+		// nothing recorded when realContentHash is off
+		const assetInfo2 = /** @type {EXPECTED_ANY} */ ({});
+		expect(interpolate("[contenthash:base64]", data, assetInfo2)).toBe(
 			Buffer.from("0123456789abcdef", "hex").toString("base64")
 		);
+		expect(assetInfo2.contenthashDigest).toBeUndefined();
 	});
 
 	it("throws on an unknown inline digest", () => {
@@ -146,6 +176,65 @@ describe("TemplatedPathPlugin.interpolate", () => {
 				/** @type {EXPECTED_ANY} */ ({ chunk: { id: "9" } })
 			)
 		).toBe("9");
+	});
+
+	/* cSpell:disable */
+	it("re-encodes [contenthash:<digest>] from the full content digest", () => {
+		// stored hash is truncated; contentHashFull carries the full digest
+		const data = /** @type {EXPECTED_ANY} */ ({
+			chunk: {
+				id: "7",
+				contentHash: { javascript: "0123" },
+				contentHashFull: { javascript: "0123456789abcdef" }
+			},
+			contentHashType: "javascript"
+		});
+		// digest re-encodes the FULL value, not the truncated "0123"
+		expect(interpolate("[contenthash:base64]", data)).toBe(
+			Buffer.from("0123456789abcdef", "hex").toString("base64")
+		);
+		// no-digest still uses the truncated stored value
+		expect(interpolate("[contenthash]", data)).toBe("0123");
+	});
+	/* cSpell:enable */
+
+	it("uses the per-chunk digest handler for [contenthash:<digest>] (runtime map)", () => {
+		const data = /** @type {EXPECTED_ANY} */ ({
+			chunk: {
+				id: "7",
+				contentHash: { javascript: "0123" },
+				contentHashFull: { javascript: "0123456789abcdef" },
+				// runtime context provides a per-chunk re-encode handler
+				contentHashWithDigest: {
+					javascript: (
+						/** @type {string} */ digest,
+						/** @type {number} */ length
+					) => `MAP(${digest},${length})`
+				}
+			},
+			contentHashType: "javascript"
+		});
+		expect(interpolate("[contenthash:base64url:8]", data)).toBe(
+			"MAP(base64url,8)"
+		);
+		// length-only keeps using the plain stored value (no digest handler)
+		expect(interpolate("[contenthash:2]", data)).toBe("01");
+	});
+
+	it("throws for [fullhash:<digest>] in the runtime chunk-filename context", () => {
+		const data = {
+			hash: "0123456789abcdef",
+			hashWithDigest: () => {
+				throw new Error("cannot re-encode getFullHash()");
+			}
+		};
+		expect(() => interpolate("[fullhash:base64]", data)).toThrow(
+			/cannot re-encode getFullHash/
+		);
+		// without the handler it still re-encodes normally
+		expect(interpolate("[fullhash:base64]", { hash: "0123456789abcdef" })).toBe(
+			Buffer.from("0123456789abcdef", "hex").toString("base64")
+		);
 	});
 
 	it("interpolates module placeholders incl. legacy aliases", () => {

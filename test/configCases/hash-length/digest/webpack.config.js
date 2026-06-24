@@ -17,5 +17,14 @@ module.exports = [
 		output: {
 			filename: "bundle1.[fullhash:base62:10].js"
 		}
+	},
+	{
+		name: "contenthash with base64url digest under realContentHash",
+		target: "node",
+		// RealContentHashPlugin re-encodes the recomputed hash in the inline digest
+		optimization: { realContentHash: true },
+		output: {
+			filename: "bundle2.[contenthash:base64url:8].js"
+		}
 	}
 ];

@@ -1583,6 +1583,7 @@ declare class Chunk {
 	rendered: boolean;
 	hash?: string;
 	contentHash: Record<string, string>;
+	contentHashFull: Record<string, string>;
 	renderedHash?: string;
 	chunkReason?: string;
 	extraAsync: boolean;
@@ -2685,8 +2686,21 @@ declare interface ChunkPathData {
 	name?: string;
 	hash: string;
 	hashWithLength?: (length: number) => string;
+
+	/**
+	 * builds `[chunkhash:<digest>]` per chunk in the runtime chunk-filename map
+	 */
+	hashWithDigest?: (digest: string, length?: number) => string;
 	contentHash?: Record<string, string>;
 	contentHashWithLength?: Record<string, (length: number) => string>;
+
+	/**
+	 * builds `[contenthash:<digest>]` per chunk in the runtime chunk-filename map
+	 */
+	contentHashWithDigest?: Record<
+		string,
+		(digest: string, length?: number) => string
+	>;
 }
 
 /**
@@ -8996,7 +9010,8 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 			| string
 			| false
 			| ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string),
-		allChunks: boolean
+		allChunks: boolean,
+		usesFullHashDigest?: boolean
 	);
 	contentType: string;
 	global: string;
@@ -12946,6 +12961,11 @@ declare interface KnownAssetInfo {
 	 * the value(s) of the content hash used for this asset
 	 */
 	contenthash?: string | string[];
+
+	/**
+	 * maps a `[contenthash:<digest>]` value to its digest, so `RealContentHashPlugin` re-encodes the recomputed hash in it
+	 */
+	contenthashDigest?: Record<string, string>;
 
 	/**
 	 * when asset was created from a source file (potentially transformed), the original filename relative to compilation context
@@ -19432,6 +19452,11 @@ declare interface PathData {
 	 */
 	fullHashDigest?: string;
 	hashWithLength?: (length: number) => string;
+
+	/**
+	 * builds `[fullhash:<digest>]`/`[hash:<digest>]` in the runtime chunk-filename context, where it throws because a runtime `getFullHash()` expression cannot be re-encoded
+	 */
+	hashWithDigest?: (digest: string, length?: number) => string;
 	chunk?: Chunk | ChunkPathData;
 	module?: Module | ModulePathData;
 	runtime?: RuntimeSpec;
@@ -19440,6 +19465,11 @@ declare interface PathData {
 	query?: string;
 	contentHashType?: string;
 	contentHash?: string;
+
+	/**
+	 * untruncated module/asset content hash, for re-encoding `[contenthash:<digest>]` from full entropy
+	 */
+	contentHashFull?: string;
 	contentHashWithLength?: (length: number) => string;
 
 	/**
@@ -19448,7 +19478,7 @@ declare interface PathData {
 	hashDigest?: string;
 
 	/**
-	 * whether `optimization.realContentHash` recomputes content hashes (rejects an inline digest on `[contenthash]`)
+	 * whether `optimization.realContentHash` recomputes content hashes (records an inline `[contenthash:<digest>]` so it re-encodes in that digest)
 	 */
 	realContentHash?: boolean;
 
