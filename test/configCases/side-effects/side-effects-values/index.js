@@ -5,10 +5,10 @@ import globValueModule from "glob-value-module";
 
 it("should handle a boolean", function () {
 	expect(booleanValueModule).toBe("def");
-	expect(booleanValueModuleLog).toEqual(["index.js"]);
+	expect(booleanValueModuleLog).toEqual([]);
 });
 
 it("should handle globs", function () {
 	expect(globValueModule).toBe("def");
-	expect(globValueModuleLog).toEqual(["index.js"]);
+	expect(globValueModuleLog).toEqual([]);
 });

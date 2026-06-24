@@ -1,1 +1,1 @@
-export default 40 + 2;
+export default { value: 42 };

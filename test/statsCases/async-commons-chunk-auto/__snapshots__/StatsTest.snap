@@ -117,7 +117,7 @@ vendors:
     ./node_modules/z.js X bytes [built] [code generated]
   chunk (runtime: b) vendors/b.js (b) X bytes (javascript) X KiB (runtime) [entry] [rendered]
     > ./b b
-    runtime modules X KiB 4 modules
+    runtime modules X KiB 5 modules
     dependent modules X bytes [dependent] 2 modules
     ./b.js X bytes [built] [code generated]
   chunk (runtime: main) vendors/async-a.js (async-a) X bytes [rendered]
@@ -126,7 +126,7 @@ vendors:
     ./a.js + 1 modules X bytes [built] [code generated]
   chunk (runtime: c) vendors/c.js (c) X bytes (javascript) X KiB (runtime) [entry] [rendered]
     > ./c c
-    runtime modules X KiB 4 modules
+    runtime modules X KiB 5 modules
     dependent modules X bytes [dependent] 2 modules
     ./c.js X bytes [built] [code generated]
   chunk (runtime: main) vendors/main.js (main) X bytes (javascript) X KiB (runtime) [entry] [rendered]
@@ -139,7 +139,7 @@ vendors:
     ./c.js X bytes [built] [code generated]
   chunk (runtime: a) vendors/a.js (a) X bytes (javascript) X KiB (runtime) [entry] [rendered]
     > ./a a
-    runtime modules X KiB 10 modules
+    runtime modules X KiB 11 modules
     dependent modules X bytes [dependent] 1 module
     ./a.js + 1 modules X bytes [built] [code generated]
   vendors (webpack x.x.x) compiled successfully

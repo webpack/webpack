@@ -1,6 +1,6 @@
 import "./shared";
 
-export default "b";
+export default { name: "b" };
 
 // content content content content content content content content
 // content content content content content content content content

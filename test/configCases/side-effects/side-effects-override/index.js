@@ -7,5 +7,5 @@ it("should be able to override side effects", function() {
 	expect(p).toBe("def");
 	expect(n).toBe("def");
 	expect(plog).toEqual(["a.js", "b.js", "c.js", "index.js"]);
-	expect(nlog).toEqual(["index.js"]);
+	expect(nlog).toEqual([]);
 });

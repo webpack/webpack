@@ -1,1 +1,1 @@
-export default "used";
+export default { name: "used" };

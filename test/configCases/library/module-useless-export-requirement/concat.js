@@ -1,1 +1,1 @@
-export default "concat"
+export default {}

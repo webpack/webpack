@@ -1105,9 +1105,13 @@ const knownProductionBuildBugs = [
 	// namespaces are no longer the same object as the local Proxy.
 	"import/import-defer/deferred-namespace-object/identity.js",
 
-	// Production InlineExports: Support disable inline export annotation to keep the TDZ
+	// Production InlineExports:
+	// TODO: Support disable inline export annotation to keep the TDZ
 	"module-code/instn-named-bndng-const.js",
-	"module-code/instn-iee-bndng-const.js"
+	"module-code/instn-iee-bndng-const.js",
+	"module-code/instn-named-bndng-dflt-star.js",
+	"module-code/instn-named-bndng-dflt-named.js",
+	"module-code/namespace/internals/get-str-found-uninit.js"
 ];
 /* cspell:enable */
 

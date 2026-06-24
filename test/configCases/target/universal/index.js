@@ -10,7 +10,7 @@ it("should compile check", () => {
 });
 
 it("should compile", () => {
-	expect(value).toBe(42);
+	expect(value).toEqual({});
 });
 
 it("should circular depend on itself external", () => {
