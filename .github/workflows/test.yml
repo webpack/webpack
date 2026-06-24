@@ -349,7 +349,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [10.x, 20.x, 22.x, 24.x, 26.x]
+        node-version: [10.x, 22.x, 24.x, 26.x]
         part: [a, b]
         include:
           # Test with main branches of webpack dependencies
@@ -362,6 +362,9 @@ jobs:
             part: b
             use_main_branches: 1
           # Test on old Node.js versions
+          - os: ubuntu-latest
+            node-version: 20.x
+            part: a
           - os: ubuntu-latest
             node-version: 18.x
             part: a
