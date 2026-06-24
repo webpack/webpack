@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html module-sibling-type exported tests rewrites type=module in place when cloning a native module <script> sibling 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>module sibling type</title>
+<script type=\\"module\\" src=\\"html-runtime.mjs\\"></script><script type=\\"module\\" src=\\"__html_cbe5b59d_0.chunk.mjs\\"></script>
+</head>
+<body><h1>Hello</h1></body>
+</html>
+"
+`;
