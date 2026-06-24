@@ -53,7 +53,7 @@ describe("parseJson", () => {
 
 	const str = JSON.stringify({ foo: 1, bar: { baz: [1, 2, 3, "four"] } });
 	const parseErrorCases = [
-		["repeated BOM bytes", `﻿﻿${str}`, null],
+		["repeated BOM bytes", `\uFEFF\uFEFF${str}`, null],
 		["trailing control characters", `${str}\b\b\b`, null],
 		["an unexpected token", "foo", "foo"],
 		["an unterminated string", '{"foo: bar}', "foo: bar"],
@@ -92,7 +92,9 @@ describe("parseJson", () => {
 
 	for (const [input, message] of nonStringCases) {
 		it(`reports a helpful message for ${String(message)}`, () => {
-			const err = catchError(() => parseJson(/** @type {EXPECTED_ANY} */ (input)));
+			const err = catchError(() =>
+				parseJson(/** @type {EXPECTED_ANY} */ (input))
+			);
 
 			expect(err.name).toBe("JSONParseError");
 			expect(err.position).toBe(0);
@@ -109,7 +111,7 @@ describe("JSONParseError", () => {
 		new JSONParseError(new SyntaxError(message), txt, txt);
 
 	it("rewrites an unexpected token to include its char code", () => {
-		const err = wrap('Unexpected token \'o\', "foo" is not valid JSON', "foo");
+		const err = wrap("Unexpected token 'o', \"foo\" is not valid JSON", "foo");
 
 		expect(err.message).toBe(
 			'Unexpected token "o" (0x6F), "foo" is not valid JSON while parsing \'foo\''
