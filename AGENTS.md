@@ -93,6 +93,12 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 
 `lib/` is CommonJS only. Use `module.exports` / `require()`, never `import`/`export` syntax. Types are declared via JSDoc — `@typedef {import("./Other")} Other` and friends — never TypeScript syntax inside `.js` files. The JSDoc annotations are compiled into `types.d.ts` by `yarn fix:special`.
 
+### Type annotations
+
+Prefer the most specific real type. `EXPECTED_ANY`, `EXPECTED_OBJECT`, and `EXPECTED_FUNCTION` (aliases for `any`, `object`, `Function`) are an escape hatch, not a default — use them **only** when the value genuinely can be any value, any object, or any function. When you simply don't know the type yet, reach for `unknown` and narrow it, rather than widening to `EXPECTED_ANY`. This applies in `test/` too: if a real type (e.g. an imported `import("…").Foo`) fits, use it instead of `EXPECTED_ANY`.
+
+Prefer a generic (`@template`) over a widened type whenever a function's output type depends on its input — it keeps callers precisely typed instead of collapsing to `EXPECTED_ANY`.
+
 ### Source file headers
 
 Every source file under `lib/` (and `hot/`, `tooling/`) opens with the MIT license header. When adding a **new** file, set the `Author` line to its actual author (`Author <Name> @<github-handle>`) — don't copy another file's author line.

@@ -58,6 +58,7 @@ describe("Profiling Plugin", () => {
 // Optional dependency: the browser end-to-end check only runs where puppeteer-core
 // (and a Chrome it can launch) are present. It self-skips otherwise, so it does
 // nothing on the legacy-Node matrix and in the Bun/Deno runtimes. See #17234.
+/** @type {typeof import("puppeteer-core") | undefined} */
 let puppeteer;
 try {
 	const name = "puppeteer-core";
@@ -66,20 +67,30 @@ try {
 	puppeteer = undefined;
 }
 
-const globalAny = /** @type {EXPECTED_ANY} */ (globalThis);
-const onBunOrDeno = Boolean(globalAny.Bun) || Boolean(globalAny.Deno);
+const globalScope = /** @type {{ Bun?: unknown, Deno?: unknown }} */ (
+	globalThis
+);
+const onBunOrDeno = Boolean(globalScope.Bun) || Boolean(globalScope.Deno);
+// puppeteer-core requires Node >= 18; skip on the legacy-Node matrix.
+const nodeMajor = Number.parseInt(process.versions.node, 10);
+
+/**
+ * @typedef {{ frame: string, parent?: string }} TraceFrame
+ * @typedef {{ name: string, args: { data: { frames: TraceFrame[] } } }} TraceEvent
+ */
 
 describe("ProfilingPlugin in real Chrome", () => {
-	/** @type {EXPECTED_ANY} */
+	/** @type {import("puppeteer-core").Browser | undefined} */
 	let browser;
 
 	beforeAll(async () => {
-		if (!puppeteer || onBunOrDeno) return;
+		if (!puppeteer || onBunOrDeno || nodeMajor < 18) return;
 		try {
-			const launchOptions = /** @type {EXPECTED_ANY} */ ({
+			/** @type {import("puppeteer-core").LaunchOptions} */
+			const launchOptions = {
 				headless: true,
 				args: ["--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"]
-			});
+			};
 			// Use an explicit binary when provided, otherwise the installed Chrome.
 			if (process.env.PUPPETEER_EXECUTABLE_PATH) {
 				launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
@@ -103,6 +114,9 @@ describe("ProfilingPlugin in real Chrome", () => {
 			return done();
 		}
 
+		// Narrowed handle so the type survives into the callbacks below.
+		const activeBrowser = browser;
+
 		const webpack = require("..");
 
 		const outputPath = path.join(__dirname, "js/profiling-chrome");
@@ -118,19 +132,22 @@ describe("ProfilingPlugin in real Chrome", () => {
 			compiler.run(async (err) => {
 				if (err) return done(err);
 				try {
+					/** @type {TraceEvent[]} */
 					const events = JSON.parse(fs.readFileSync(eventsPath, "utf8"));
-					const page = await browser.newPage();
+					const page = await activeBrowser.newPage();
 					// Run Chrome DevTools' trace bootstrap (MetaHandler) in the real
 					// browser: iterate the TracingStartedInBrowser frames and pick the
 					// parent-less main frame. A missing `frames` array threw
 					// "frames is not iterable" and the whole trace failed to load.
 					const result = await page.evaluate(
-						(/** @type {EXPECTED_ANY[]} */ evs) => {
+						(/** @type {TraceEvent[]} */ evs) => {
 							const event = evs.find(
 								(e) => e && e.name === "TracingStartedInBrowser"
 							);
-							if (!event) return { ok: false, reason: "no bootstrap event" };
+							if (!event) return { ok: false, threw: null, mainFrame: null };
+							/** @type {string | null} */
 							let threw = null;
+							/** @type {string | null} */
 							let mainFrame = null;
 							try {
 								for (const frame of event.args.data.frames) {
