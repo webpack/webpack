@@ -31,12 +31,14 @@ it("should mangle export when destructuring module's property is a module", () =
 	expect(obj3CanMangle).toBe(true)
 });
 
-it("should not mangle export when destructuring module's nested property is a module (used in unknown way)", () => {
+it("should mangle export when destructuring module's nested property is a module (escaping namespace)", () => {
 	const { nested: { obj5, obj5CanMangle } } = obj4;
 	expect(obj5.aaa).toBe("a");
 	expect(obj5.bbb).toBe("b");
 	expect(obj4CanMangle).toBe(true);
-	expect(obj5CanMangle).toBe(false); // obj5 is used in unknown way
+	// The namespace escapes as a whole value but is rendered as a decoupled
+	// namespace object that keeps the original names, so it stays mangleable.
+	expect(obj5CanMangle).toBe(true);
 });
 
 it("should mangle default in namespace import", async () => {

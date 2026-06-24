@@ -4346,6 +4346,11 @@ declare interface ConcatenatedModuleInfo {
 	rawExportMap?: Map<string, string>;
 	namespaceExportSymbol?: string;
 	namespaceObjectName?: string;
+
+	/**
+	 * decoupled namespace object that keeps original export names when the exports are mangled
+	 */
+	escapeNamespaceObjectName?: string;
 	concatenationScope?: ConcatenationScope;
 
 	/**
@@ -4791,6 +4796,7 @@ declare class ConstDependency extends NullDependency {
 	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED_MANGLEABLE: string[][];
 
 	/**
 	 * Returns true if the dependency is a low priority dependency.
@@ -5995,6 +6001,7 @@ declare class Dependency {
 	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED_MANGLEABLE: string[][];
 
 	/**
 	 * Returns true if the dependency is a low priority dependency.
@@ -8151,6 +8158,11 @@ declare interface ExternalModuleInfo {
 	name?: string;
 
 	/**
+	 * decoupled namespace object that keeps original export names when the exports are mangled
+	 */
+	escapeNamespaceObjectName?: string;
+
+	/**
 	 * deferred module.exports / harmony namespace object
 	 */
 	deferredName?: string;
@@ -9250,6 +9262,7 @@ declare class HarmonyImportDependency extends ModuleDependency {
 	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED_MANGLEABLE: string[][];
 
 	/**
 	 * Returns true if the dependency is a low priority dependency.
@@ -15204,6 +15217,7 @@ declare class ModuleDependency extends Dependency {
 	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED_MANGLEABLE: string[][];
 
 	/**
 	 * Returns true if the dependency is a low priority dependency.
@@ -16155,6 +16169,11 @@ declare interface ModuleReferenceOptions {
 	 * true, when this referenced export is deferred
 	 */
 	deferredImport: boolean;
+
+	/**
+	 * true, when a whole-namespace reference may use a decoupled namespace object that keeps the original export names
+	 */
+	mangleableNamespace: boolean;
 
 	/**
 	 * if the position is ASI safe or unknown
@@ -17543,6 +17562,7 @@ declare class NullDependency extends Dependency {
 	static compareLocations(a: Dependency, b: Dependency): 0 | 1 | -1;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED_MANGLEABLE: string[][];
 
 	/**
 	 * Returns true if the dependency is a low priority dependency.
@@ -22902,6 +22922,10 @@ declare abstract class RuntimeTemplate {
 		 * module dependency
 		 */
 		dependency: ModuleDependency;
+		/**
+		 * true, when a whole-namespace value may use a decoupled namespace object that keeps the original export names
+		 */
+		mangleableNamespace?: boolean;
 	}): string;
 
 	/**
