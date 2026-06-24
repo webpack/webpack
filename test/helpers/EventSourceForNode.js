@@ -14,6 +14,8 @@ module.exports = class EventSource {
 		this.response = undefined;
 		/** @type {undefined | ((err: Error | { message: Error }) => void)} */
 		this.onerror = undefined;
+		/** @type {boolean} */
+		this.closed = false;
 		const request = (
 			url.startsWith("https:") ? require("https") : require("http")
 		).request(
@@ -26,12 +28,12 @@ module.exports = class EventSource {
 			(res) => {
 				this.response = res;
 				res.on("error", (err) => {
-					if (this.onerror) this.onerror(err);
+					if (!this.closed && this.onerror) this.onerror(err);
 				});
 			}
 		);
 		request.on("error", (err) => {
-			if (this.onerror) this.onerror({ message: err });
+			if (!this.closed && this.onerror) this.onerror({ message: err });
 		});
 		request.end();
 		/** @type {import("http").ClientRequest} */
@@ -39,8 +41,10 @@ module.exports = class EventSource {
 	}
 
 	close() {
-		// Abort the request too: close() may run before the response arrives, and a
-		// pending socket would otherwise keep the worker's event loop alive.
+		// Mark intentional so destroying the in-flight request/response below
+		// doesn't surface its abort as an onerror. Destroying the request also
+		// frees a pending socket when close() runs before the response arrives.
+		this.closed = true;
 		this.request.destroy();
 		if (this.response) this.response.destroy();
 	}
