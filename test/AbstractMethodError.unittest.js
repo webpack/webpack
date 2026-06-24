@@ -2,9 +2,10 @@
 
 const AbstractMethodError = require("../lib/errors/AbstractMethodError");
 
-// JSC (Bun) formats Error.stack differently than V8, so the caller name folded
-// into the message can't be parsed; assert it only on V8 (Node, Deno).
-const isV8 = !process.versions.bun;
+// Only Node folds the caller name into the message reliably: JSC (Bun) formats
+// Error.stack differently and Deno's V8 stack frames differ too, so the exact
+// caller name is asserted on Node only.
+const isNode = !process.versions.bun && !process.versions.deno;
 
 describe("AbstractMethodError", () => {
 	class Foo {
@@ -22,7 +23,7 @@ describe("AbstractMethodError", () => {
 		expect(fooClassError.message).toMatch(/Must be overridden\.$/);
 		expect(childClassError.message).toMatch(/Must be overridden\.$/);
 
-		if (isV8) {
+		if (isNode) {
 			expect(fooClassError.message).toBe(
 				"Abstract method Foo.abstractMethod. Must be overridden."
 			);
