@@ -56,23 +56,25 @@ describe("Profiling Plugin", () => {
 });
 
 // Optional dependency: the browser end-to-end check only runs where puppeteer-core
-// (and a Chrome it can launch) are present. It self-skips otherwise, so it does
-// nothing on the legacy-Node matrix and in the Bun/Deno runtimes. See #17234.
-/** @type {typeof import("puppeteer-core") | undefined} */
-let puppeteer;
-try {
-	const name = "puppeteer-core";
-	puppeteer = require(name);
-} catch (_err) {
-	puppeteer = undefined;
-}
-
+// (and a Chrome it can launch) are present. puppeteer-core needs Node >= 18, and
+// loading it under the memory-limited Bun/Deno workers is wasteful, so only require
+// it where the check can actually run; it self-skips everywhere else. See #17234.
 const globalScope = /** @type {{ Bun?: unknown, Deno?: unknown }} */ (
 	globalThis
 );
 const onBunOrDeno = Boolean(globalScope.Bun) || Boolean(globalScope.Deno);
-// puppeteer-core requires Node >= 18; skip on the legacy-Node matrix.
 const nodeMajor = Number.parseInt(process.versions.node, 10);
+
+/** @type {typeof import("puppeteer-core") | undefined} */
+let puppeteer;
+if (!onBunOrDeno && nodeMajor >= 18) {
+	try {
+		const name = "puppeteer-core";
+		puppeteer = require(name);
+	} catch (_err) {
+		puppeteer = undefined;
+	}
+}
 
 /**
  * @typedef {{ frame: string, parent?: string }} TraceFrame
