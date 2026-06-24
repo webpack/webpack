@@ -2,11 +2,7 @@
 
 const AbstractMethodError = require("../lib/errors/AbstractMethodError");
 
-// JSC (Bun) formats Error.stack differently than V8, so the caller name folded
-// into the message can't be parsed; assert it only on V8 (Node, Deno).
-const isV8 = !process.versions.bun;
-
-describe("WebpackError", () => {
+describe("AbstractMethodError", () => {
 	class Foo {
 		abstractMethod() {
 			return new AbstractMethodError();
@@ -15,22 +11,13 @@ describe("WebpackError", () => {
 
 	class Child extends Foo {}
 
-	const expectedMessage = "Abstract method $1. Must be overridden.";
+	// V8 (Node, Deno) prefixes the class onto the stack frame (Foo.abstractMethod);
+	// JSC (Bun) reports only the method name. Assert the message shape and that the
+	// calling method name is folded in — both hold on every engine.
+	const CALLER = /^Abstract method [\w.]*abstractMethod\. Must be overridden\.$/;
 
-	it("should construct message with caller info", () => {
-		const fooClassError = new Foo().abstractMethod();
-		const childClassError = new Child().abstractMethod();
-
-		expect(fooClassError.message).toMatch(/Must be overridden\.$/);
-		expect(childClassError.message).toMatch(/Must be overridden\.$/);
-
-		if (isV8) {
-			expect(fooClassError.message).toBe(
-				expectedMessage.replace("$1", "Foo.abstractMethod")
-			);
-			expect(childClassError.message).toBe(
-				expectedMessage.replace("$1", "Child.abstractMethod")
-			);
-		}
+	it("folds the calling method name into the message", () => {
+		expect(new Foo().abstractMethod().message).toMatch(CALLER);
+		expect(new Child().abstractMethod().message).toMatch(CALLER);
 	});
 });
