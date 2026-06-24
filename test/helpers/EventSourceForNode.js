@@ -34,9 +34,14 @@ module.exports = class EventSource {
 			if (this.onerror) this.onerror({ message: err });
 		});
 		request.end();
+		/** @type {import("http").ClientRequest} */
+		this.request = request;
 	}
 
 	close() {
+		// Abort the request too: close() may run before the response arrives, and a
+		// pending socket would otherwise keep the worker's event loop alive.
+		this.request.destroy();
 		if (this.response) this.response.destroy();
 	}
 
