@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html parser-sources-html-entry exported tests should process the linked page through the HTML pipeline as its own page 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>About</title></head>
+<body>
+<h1>About</h1>
+<img src=\\"image.png\\" alt=\\"logo\\">
+</body>
+</html>
+"
+`;
