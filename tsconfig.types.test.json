@@ -19,5 +19,5 @@
     "test/*.longtest.js",
     "declarations.test.d.ts"
   ],
-  "exclude": ["test/js/**/*"]
+  "exclude": ["test/js/**/*", "test/ProfilingPlugin.longtest.js"]
 }

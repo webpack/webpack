@@ -6,11 +6,13 @@ const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 
-// Optional dependency: only run the browser end-to-end check when puppeteer
-// (and a working Chrome) are present. See #17234.
+// Optional dependency: the browser end-to-end check only runs where puppeteer
+// (and a working Chrome) are present. puppeteer is not a committed dependency —
+// CI installs it and runs this on the latest LTS only (see test.yml, #17234).
 let puppeteer;
 try {
-	puppeteer = require("puppeteer");
+	const name = "puppeteer";
+	puppeteer = require(name);
 } catch (_err) {
 	puppeteer = undefined;
 }
@@ -18,7 +20,7 @@ try {
 describe("ProfilingPlugin in real Chrome", () => {
 	jest.setTimeout(120000);
 
-	/** @type {import("puppeteer").Browser | undefined} */
+	/** @type {EXPECTED_ANY} */
 	let browser;
 
 	beforeAll(async () => {
@@ -60,29 +62,30 @@ describe("ProfilingPlugin in real Chrome", () => {
 				if (err) return done(err);
 				try {
 					const events = JSON.parse(fs.readFileSync(eventsPath, "utf8"));
-					const page = await /** @type {import("puppeteer").Browser} */ (
-						browser
-					).newPage();
+					const page = await browser.newPage();
 					// Run Chrome DevTools' trace bootstrap (MetaHandler) in the real
 					// browser: iterate the TracingStartedInBrowser frames and pick the
 					// parent-less main frame. A missing `frames` array threw
 					// "frames is not iterable" and the whole trace failed to load.
-					const result = await page.evaluate((evs) => {
-						const event = evs.find(
-							(e) => e && e.name === "TracingStartedInBrowser"
-						);
-						if (!event) return { ok: false, reason: "no bootstrap event" };
-						let threw = null;
-						let mainFrame = null;
-						try {
-							for (const frame of event.args.data.frames) {
-								if (!frame.parent) mainFrame = frame.frame;
+					const result = await page.evaluate(
+						(/** @type {EXPECTED_ANY[]} */ evs) => {
+							const event = evs.find(
+								(e) => e && e.name === "TracingStartedInBrowser"
+							);
+							if (!event) return { ok: false, reason: "no bootstrap event" };
+							let threw = null;
+							let mainFrame = null;
+							try {
+								for (const frame of event.args.data.frames) {
+									if (!frame.parent) mainFrame = frame.frame;
+								}
+							} catch (err_) {
+								threw = err_ instanceof Error ? err_.message : String(err_);
 							}
-						} catch (err_) {
-							threw = String((err_ && err_.message) || err_);
-						}
-						return { ok: threw === null, threw, mainFrame };
-					}, events);
+							return { ok: threw === null, threw, mainFrame };
+						},
+						events
+					);
 					await page.close();
 
 					expect(result.threw).toBeNull();
