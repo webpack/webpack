@@ -138,9 +138,10 @@ if (${options.type === "module"}) {
 			// where pending dynamic imports reject during teardown); swallow it once
 			// terminated so it can't fail an unrelated later test. Genuine in-test
 			// errors still propagate.
-			this.worker.on("error", (err) => {
+			this._onerror = (/** @type {Error} */ err) => {
 				if (!this._terminated) throw err;
-			});
+			};
+			this.worker.on("error", this._onerror);
 
 			/** @type {((data: unknown) => void) | undefined} */
 			this._onmessage = undefined;
@@ -165,6 +166,8 @@ if (${options.type === "module"}) {
 
 		terminate() {
 			this._terminated = true;
+			this.worker.off("error", this._onerror);
+			if (this._onmessage) this.worker.off("message", this._onmessage);
 			return this.worker.terminate();
 		}
 	};

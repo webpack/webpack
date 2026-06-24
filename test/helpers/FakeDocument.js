@@ -235,11 +235,13 @@ class FakeElement {
 	_load(node) {
 		if (node._type === "link") {
 			const timer = setTimeout(() => {
-				clearTimeout(timer);
 				const loadEvent = { type: "load", target: node };
 				if (node.onload) node.onload(loadEvent);
 				node._dispatchEvent(loadEvent);
 			}, 100);
+			// Don't let this cosmetic load timer keep the worker's event loop alive
+			// past teardown (Deno's setTimeout returns a number, hence the guard).
+			if (typeof timer.unref === "function") timer.unref();
 		} else if (node._type === "script" && this._document.onScript) {
 			Promise.resolve().then(() => {
 				/** @type {(src: string | undefined) => void} */
