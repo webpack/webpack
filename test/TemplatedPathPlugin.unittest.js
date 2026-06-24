@@ -128,7 +128,7 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		const expected = Buffer.from("0123456789abcdef", "hex")
 			.toString("base64")
 			.slice(0, 8);
-		const assetInfo = {};
+		const assetInfo = /** @type {EXPECTED_ANY} */ ({});
 		expect(
 			interpolate(
 				"[contenthash:base64:8]",
@@ -139,7 +139,7 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		// digest recorded so RealContentHashPlugin re-encodes the recomputed hash
 		expect(assetInfo.contenthashDigest).toEqual({ [expected]: "base64" });
 		// nothing recorded when realContentHash is off
-		const assetInfo2 = {};
+		const assetInfo2 = /** @type {EXPECTED_ANY} */ ({});
 		expect(interpolate("[contenthash:base64]", data, assetInfo2)).toBe(
 			Buffer.from("0123456789abcdef", "hex").toString("base64")
 		);
@@ -181,14 +181,14 @@ describe("TemplatedPathPlugin.interpolate", () => {
 	/* cSpell:disable */
 	it("re-encodes [contenthash:<digest>] from the full content digest", () => {
 		// stored hash is truncated; contentHashFull carries the full digest
-		const data = {
+		const data = /** @type {EXPECTED_ANY} */ ({
 			chunk: {
 				id: "7",
 				contentHash: { javascript: "0123" },
 				contentHashFull: { javascript: "0123456789abcdef" }
 			},
 			contentHashType: "javascript"
-		};
+		});
 		// digest re-encodes the FULL value, not the truncated "0123"
 		expect(interpolate("[contenthash:base64]", data)).toBe(
 			Buffer.from("0123456789abcdef", "hex").toString("base64")
@@ -199,18 +199,21 @@ describe("TemplatedPathPlugin.interpolate", () => {
 	/* cSpell:enable */
 
 	it("uses the per-chunk digest handler for [contenthash:<digest>] (runtime map)", () => {
-		const data = {
+		const data = /** @type {EXPECTED_ANY} */ ({
 			chunk: {
 				id: "7",
 				contentHash: { javascript: "0123" },
 				contentHashFull: { javascript: "0123456789abcdef" },
 				// runtime context provides a per-chunk re-encode handler
 				contentHashWithDigest: {
-					javascript: (digest, length) => `MAP(${digest},${length})`
+					javascript: (
+						/** @type {string} */ digest,
+						/** @type {number} */ length
+					) => `MAP(${digest},${length})`
 				}
 			},
 			contentHashType: "javascript"
-		};
+		});
 		expect(interpolate("[contenthash:base64url:8]", data)).toBe(
 			"MAP(base64url,8)"
 		);
