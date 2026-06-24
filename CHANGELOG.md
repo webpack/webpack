@@ -1,5 +1,235 @@
 # webpack
 
+## 5.108.0
+
+### Minor Changes
+
+- Treat top-level await and `import.meta` as ES module markers, matching Node.js syntax detection so no explicit module type is needed. (by [@alexander-akait](https://github.com/alexander-akait) in [#21218](https://github.com/webpack/webpack/pull/21218))
+
+- Add a `bun` target that emits ESM and externalizes `bun:*` and node.js built-in modules. (by [@alexander-akait](https://github.com/alexander-akait) in [#21248](https://github.com/webpack/webpack/pull/21248))
+
+- Support CommonJS reexports via `Object.defineProperty` value and getter descriptors. (by [@alexander-akait](https://github.com/alexander-akait) in [#21129](https://github.com/webpack/webpack/pull/21129))
+
+- Support JSON Schema `const` when generating CLI flags from a schema. (by [@alexander-akait](https://github.com/alexander-akait) in [#21087](https://github.com/webpack/webpack/pull/21087))
+
+- Support JSON Schema `if`/`then`/`else` when generating CLI flags from a schema. (by [@alexander-akait](https://github.com/alexander-akait) in [#21087](https://github.com/webpack/webpack/pull/21087))
+
+- Skip import specifiers, `require()` and `import()` calls in dead conditional branches gated by inlined imported constants (`isDEV ? A : B`), evaluated via `getCondition`. (by [@hai-x](https://github.com/hai-x) in [#21136](https://github.com/webpack/webpack/pull/21136))
+
+- CSS `localIdentName` `[hash]` now resolves to the local ident hash (matching css-loader); use `[modulehash]` for the module hash. (by [@alexander-akait](https://github.com/alexander-akait) in [#21259](https://github.com/webpack/webpack/pull/21259))
+
+- Add CSS parser `as` option and resolve `url()` inside HTML `style` attributes. (by [@alexander-akait](https://github.com/alexander-akait) in [#21157](https://github.com/webpack/webpack/pull/21157))
+
+- Add dedicated module classes for all built-in module types. (by [@alexander-akait](https://github.com/alexander-akait) in [#21164](https://github.com/webpack/webpack/pull/21164))
+
+- Support `.html`/`.css` for the default `./src` entry under the html/css experiments. (by [@alexander-akait](https://github.com/alexander-akait) in [#21039](https://github.com/webpack/webpack/pull/21039))
+
+- Add `defineConfig` helper for typed configuration files. (by [@alexander-akait](https://github.com/alexander-akait) in [#21169](https://github.com/webpack/webpack/pull/21169))
+
+- Add a `deno` target (with versions, e.g. `deno`, `deno2`, `deno1.40`) that emits ESM, resolves node.js built-ins via the required `node:` specifier, and keeps Deno's own import protocols (`npm:`, `jsr:`, `node:`, `http(s)://`) external. (by [@alexander-akait](https://github.com/alexander-akait) in [#21247](https://github.com/webpack/webpack/pull/21247))
+
+- Use `module-import` for electron externals when the target supports ESM. (by [@alexander-akait](https://github.com/alexander-akait) in [#21184](https://github.com/webpack/webpack/pull/21184))
+
+- Add `output.environment.logicalAssignment` to emit `||=` in runtime code when the target supports logical assignment operators. (by [@bjohansebas](https://github.com/bjohansebas) in [#21219](https://github.com/webpack/webpack/pull/21219))
+
+- Resolve and rewrite asset URLs inside `<iframe srcdoc>` in HTML modules. (by [@bjohansebas](https://github.com/bjohansebas) in [#21226](https://github.com/webpack/webpack/pull/21226))
+
+- Add HMR support for HTML modules with body/title DOM patching on update. (by [@alexander-akait](https://github.com/alexander-akait) in [#21011](https://github.com/webpack/webpack/pull/21011))
+
+- Add `css-url` html source type extracting `url()` references from CSS-valued attributes. (by [@alexander-akait](https://github.com/alexander-akait) in [#21250](https://github.com/webpack/webpack/pull/21250))
+
+- Add `module.parser.html.sources` option to disable or customize URL-attribute extraction for HTML modules, with `script` / `script-module` / `stylesheet` / `stylesheet-inline` types for custom attributes (by [@alexander-akait](https://github.com/alexander-akait) in [#21022](https://github.com/webpack/webpack/pull/21022))
+
+- Add `module.parser.html.template` option to transform HTML module source before parsing. (by [@alexander-akait](https://github.com/alexander-akait) in [#21055](https://github.com/webpack/webpack/pull/21055))
+
+- Extract more source URLs in HTML modules (SVG, legacy and obsolete attributes). (by [@alexander-akait](https://github.com/alexander-akait) in [#21241](https://github.com/webpack/webpack/pull/21241))
+
+- Inline `export default <const>` when the default-exported value is a primitive constant. (by [@hai-x](https://github.com/hai-x) in [#21189](https://github.com/webpack/webpack/pull/21189))
+
+- Support `optimization.inlineExports` for better tree-shaking. (by [@hai-x](https://github.com/hai-x) in [#20973](https://github.com/webpack/webpack/pull/20973))
+
+- Re-encode inline hash digests (`[contenthash]`/`[chunkhash]`/`[fullhash]`/`[modulehash]`) from the full content hash, so they carry full entropy and work under `optimization.realContentHash` and in dynamically-loaded chunk filenames; also preserve leading zero bytes in base-N digests. (by [@alexander-akait](https://github.com/alexander-akait) in [#21267](https://github.com/webpack/webpack/pull/21267))
+
+- Allow tree-shaking unused calls to `/*#__NO_SIDE_EFFECTS__*/`-annotated (pure) exports across module boundaries. (by [@hai-x](https://github.com/hai-x) in [#20907](https://github.com/webpack/webpack/pull/20907))
+
+- Defer building unused re-export targets of side-effect-free barrel modules. (by [@hai-x](https://github.com/hai-x) in [#21165](https://github.com/webpack/webpack/pull/21165))
+
+- Keep export mangling enabled for modules whose namespace object is used as a whole value, by materializing a decoupled namespace object that keeps the original export names. (by [@alexander-akait](https://github.com/alexander-akait) in [#21234](https://github.com/webpack/webpack/pull/21234))
+
+- Add `output.environment.let` option (paired with target's `let` capability) and emit `let`/`const` instead of `var` in generated runtime code wherever it is safe. Bindings that may be wrapped in runtime-condition `if` blocks (harmony imports, ConcatenatedModule external imports) continue to use `var` to preserve function scoping. (by [@alexander-akait](https://github.com/alexander-akait) in [#21010](https://github.com/webpack/webpack/pull/21010))
+
+- Add `output.html` to emit an HTML file per entrypoint, injecting its JS/CSS chunks (including `dependOn` shared chunks). (by [@alexander-akait](https://github.com/alexander-akait) in [#21215](https://github.com/webpack/webpack/pull/21215))
+
+- Add `module.parser.javascript.pureFunctions` to mark top-level names as side-effect-free for tree shaking. (by [@hai-x](https://github.com/hai-x) in [#21063](https://github.com/webpack/webpack/pull/21063))
+
+- Add `universal` to `compiler.platform`, true for universal targets (`"universal"` or `["web", "node"]`). (by [@bjohansebas](https://github.com/bjohansebas) in [#21252](https://github.com/webpack/webpack/pull/21252))
+
+- Add `output.strictModuleResolution` to gate the runtime `MODULE_NOT_FOUND` guard. (by [@hai-x](https://github.com/hai-x) in [#21067](https://github.com/webpack/webpack/pull/21067))
+
+- Support an inline digest in hash path placeholders, e.g. `[contenthash:base64:8]`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21259](https://github.com/webpack/webpack/pull/21259))
+
+- Support `[uniqueName]` and its `[uniquename]` alias in template paths. (by [@alexander-akait](https://github.com/alexander-akait) in [#21155](https://github.com/webpack/webpack/pull/21155))
+
+- Support CSS in Node for universal targets, collecting styles for SSR. (by [@alexander-akait](https://github.com/alexander-akait) in [#21208](https://github.com/webpack/webpack/pull/21208))
+
+- Improve commonjs, node-commonjs and global externals for universal targets. (by [@alexander-akait](https://github.com/alexander-akait) in [#21187](https://github.com/webpack/webpack/pull/21187))
+
+- Add a `universal` target preset (browser + web worker + Node.js + Electron + NW.js) that always outputs ECMAScript modules. (by [@alexander-akait](https://github.com/alexander-akait) in [#21214](https://github.com/webpack/webpack/pull/21214))
+
+- Support `new Worker(new URL(...))` in universal (node + web) targets by resolving the Worker constructor from `worker_threads` when no global `Worker` exists. (by [@alexander-akait](https://github.com/alexander-akait) in [#21195](https://github.com/webpack/webpack/pull/21195))
+
+- Add `output.workerChunkFilename` and `entry.worker` for worker chunk filenames. (by [@alexander-akait](https://github.com/alexander-akait) in [#21128](https://github.com/webpack/webpack/pull/21128))
+
+### Patch Changes
+
+- Skip re-parsing the inlined entry module when no renaming is needed. (by [@alexander-akait](https://github.com/alexander-akait) in [#21167](https://github.com/webpack/webpack/pull/21167))
+
+- Extend the avoidEntryIife no-parse fast path to multi-entry chunks. (by [@alexander-akait](https://github.com/alexander-akait) in [#21173](https://github.com/webpack/webpack/pull/21173))
+
+- Reuse the binary deserialize dispatch table to speed up cache restore. (by [@alexander-akait](https://github.com/alexander-akait) in [#21175](https://github.com/webpack/webpack/pull/21175))
+
+- Type `buildInfo` and `buildMeta` per module type with shared common properties. (by [@alexander-akait](https://github.com/alexander-akait) in [#21172](https://github.com/webpack/webpack/pull/21172))
+
+- Avoid copying module runtime requirements when ownership is not transferred. (by [@alexander-akait](https://github.com/alexander-akait) in [#21140](https://github.com/webpack/webpack/pull/21140))
+
+- Keep all CommonJS exports when an exported function accesses them via `this`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21179](https://github.com/webpack/webpack/pull/21179))
+
+- Align CLI color-support detection across Node, Deno and Bun. (by [@alexander-akait](https://github.com/alexander-akait) in [#21257](https://github.com/webpack/webpack/pull/21257))
+
+- Include the schema origin path in conflicting-schema CLI argument errors. (by [@alexander-akait](https://github.com/alexander-akait) in [#21087](https://github.com/webpack/webpack/pull/21087))
+
+- Reject `__proto__`, `constructor` and `prototype` path segments in `cli.processArguments` to prevent prototype pollution. (by [@alexander-akait](https://github.com/alexander-akait) in [#21057](https://github.com/webpack/webpack/pull/21057))
+
+- Speed up `Compilation.deleteAsset` and `Compilation.renameAsset` via a lazy reverse index from asset file name to containing chunks. (by [@alexander-akait](https://github.com/alexander-akait) in [#21035](https://github.com/webpack/webpack/pull/21035))
+
+- Fix merging of inner modules' top-level declarations in concatenated modules. (by [@alexander-akait](https://github.com/alexander-akait) in [#21170](https://github.com/webpack/webpack/pull/21170))
+
+- Reduce allocations in export hashing and concatenation name lookups. (by [@alexander-akait](https://github.com/alexander-akait) in [#21167](https://github.com/webpack/webpack/pull/21167))
+
+- Avoid toLowerCase allocations in CSS keyword comparisons. (by [@alexander-akait](https://github.com/alexander-akait) in [#21109](https://github.com/webpack/webpack/pull/21109))
+
+- Speed up CSS identifier escaping with a char-class lookup table. (by [@alexander-akait](https://github.com/alexander-akait) in [#21109](https://github.com/webpack/webpack/pull/21109))
+
+- Resolve `[fullhash]` in `url()` public paths for inlined CSS export types (`style`/`text`/`css-style-sheet`) at runtime. (by [@alexander-akait](https://github.com/alexander-akait) in [#21054](https://github.com/webpack/webpack/pull/21054))
+
+- Avoid quadratic line scan when building CSS module exports source maps. (by [@alexander-akait](https://github.com/alexander-akait) in [#21109](https://github.com/webpack/webpack/pull/21109))
+
+- Compute CSS comment source locations lazily. (by [@alexander-akait](https://github.com/alexander-akait) in [#21109](https://github.com/webpack/webpack/pull/21109))
+
+- Support inline hash digest and length in CSS module `localIdentName` placeholders. (by [@alexander-akait](https://github.com/alexander-akait) in [#21259](https://github.com/webpack/webpack/pull/21259))
+
+- Resolve full CSS escapes (including hex) in CSS-Modules names, so e.g. `\75 rl()` matches `url()`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21196](https://github.com/webpack/webpack/pull/21196))
+
+- Reduce CSS parser CPU (hoisted per-call regexes, byte-compared `@container` pure-mode keywords) and stop retaining parsed comments on the reused parser instance between modules. (by [@alexander-akait](https://github.com/alexander-akait) in [#21202](https://github.com/webpack/webpack/pull/21202))
+
+- Reduce CSS build time and memory usage. Per-export CSS dependencies are consolidated into one dependency per module, and hot-path allocations and lookups in CSS code generation and the module-graph cache are trimmed. (by [@alexander-akait](https://github.com/alexander-akait) in [#21114](https://github.com/webpack/webpack/pull/21114))
+
+- Cache CSS public-path placeholder offsets per module source to avoid re-materializing and re-scanning the source on every render. (by [@alexander-akait](https://github.com/alexander-akait) in [#21054](https://github.com/webpack/webpack/pull/21054))
+
+- Fix CSS tokenizer infinite loops and dropped tokens on malformed input. (by [@alexander-akait](https://github.com/alexander-akait) in [#21102](https://github.com/webpack/webpack/pull/21102))
+
+- Speed up CSS identifier unescaping with bulk run flushing. (by [@alexander-akait](https://github.com/alexander-akait) in [#21109](https://github.com/webpack/webpack/pull/21109))
+
+- Skip already-visited symlink targets when resolving context hashes so cyclic symlink graphs no longer overflow the queue. (by [@alexander-akait](https://github.com/alexander-akait) in [#21088](https://github.com/webpack/webpack/pull/21088))
+
+- Resolve `DefinePlugin` access to an undefined object member as `undefined`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21040](https://github.com/webpack/webpack/pull/21040))
+
+- Avoid materializing dependency source locations when sorting, keeping them lazy to reduce build time and memory. (by [@alexander-akait](https://github.com/alexander-akait) in [#21228](https://github.com/webpack/webpack/pull/21228))
+
+- Speed up serialization deserialize by replacing a Buffer.isBuffer call with a typeof check. (by [@hai-x](https://github.com/hai-x) in [#21203](https://github.com/webpack/webpack/pull/21203))
+
+- Emit assets with absolute target paths as-is to avoid invalid Windows paths. (by [@alexander-akait](https://github.com/alexander-akait) in [#21223](https://github.com/webpack/webpack/pull/21223))
+
+- Add `output.environment.spread`, `output.environment.hasOwn`, and `output.environment.symbol`, and use method shorthand, spread, `Object.hasOwn`, and an unguarded `Symbol` in generated runtime code where the environment supports it. (by [@alexander-akait](https://github.com/alexander-akait) in [#21188](https://github.com/webpack/webpack/pull/21188))
+
+- Drop the unused loadScript runtime from ESM hot-update bundles. (by [@alexander-akait](https://github.com/alexander-akait) in [#21208](https://github.com/webpack/webpack/pull/21208))
+
+- Extend value binding optimization to export default expressions. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#21117](https://github.com/webpack/webpack/pull/21117))
+
+- Reduce ExportInfo memory and cache size for inline-exports metadata. (by [@alexander-akait](https://github.com/alexander-akait) in [#21171](https://github.com/webpack/webpack/pull/21171))
+
+- Resolve nested exports info paths iteratively to cut per-level array allocations. (by [@alexander-akait](https://github.com/alexander-akait) in [#21137](https://github.com/webpack/webpack/pull/21137))
+
+- Fix stale incremental cache for css, html and asset/source/inline modules. (by [@alexander-akait](https://github.com/alexander-akait) in [#21108](https://github.com/webpack/webpack/pull/21108))
+
+- CommonJS tree-shaking no longer drops exports accessed before a deferred require binding. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#21123](https://github.com/webpack/webpack/pull/21123))
+
+- Make CSS-referenced asset available in lazy JS chunk during incremental rebuilds. (by [@alexander-akait](https://github.com/alexander-akait) in [#21100](https://github.com/webpack/webpack/pull/21100))
+
+- Correct string/template import specifier parsing for filesystem cache build dependencies and fix module-sharing hostname validation. (by [@alexander-akait](https://github.com/alexander-akait) in [#21232](https://github.com/webpack/webpack/pull/21232))
+
+- perf: guard isDeferred() behind experiments.deferImport in ConcatenatedModule (by [@shashank-u03](https://github.com/shashank-u03) in [#21096](https://github.com/webpack/webpack/pull/21096))
+
+- Speed up deterministicGrouping and cached comparators on large builds. (by [@alexander-akait](https://github.com/alexander-akait) in [#21197](https://github.com/webpack/webpack/pull/21197))
+
+- Reduce allocations on harmony/commonjs dependency hot paths. (by [@alexander-akait](https://github.com/alexander-akait) in [#21180](https://github.com/webpack/webpack/pull/21180))
+
+- Force-load a module's new owning chunk during HMR when its only loaded chunk is removed from a runtime, so it keeps receiving updates. (by [@alexander-akait](https://github.com/alexander-akait) in [#21131](https://github.com/webpack/webpack/pull/21131))
+
+- Fix HTML parser adoption agency to handle a `nobr` shielded by a marker. (by [@alexander-akait](https://github.com/alexander-akait) in [#21274](https://github.com/webpack/webpack/pull/21274))
+
+- Expand HTML parser tag/attribute coverage and decode character references. (by [@alexander-akait](https://github.com/alexander-akait) in [#21159](https://github.com/webpack/webpack/pull/21159))
+
+- Speed up and reduce allocations in the experimental HTML parser's tokenizer, tree builder, and entity decoder. (by [@alexander-akait](https://github.com/alexander-akait) in [#21152](https://github.com/webpack/webpack/pull/21152))
+
+- Speed up the experimental HTML parser and reduce its memory usage. (by [@alexander-akait](https://github.com/alexander-akait) in [#21130](https://github.com/webpack/webpack/pull/21130))
+
+- Avoid redundant HTML module work: reuse the dependency-template render across the JS and HTML code-generation passes, and memoize sentinel resolution/content hashing per source. (by [@alexander-akait](https://github.com/alexander-akait) in [#21054](https://github.com/webpack/webpack/pull/21054))
+
+- Release inner-graph state after use and speed up inlined-export checks. (by [@alexander-akait](https://github.com/alexander-akait) in [#21167](https://github.com/webpack/webpack/pull/21167))
+
+- Reduce JavascriptParser allocations on the walk hot path to speed up parsing and lower memory usage. (by [@alexander-akait](https://github.com/alexander-akait) in [#21139](https://github.com/webpack/webpack/pull/21139))
+
+- Reduce CPU and memory overhead of the lazy barrel optimization. (by [@alexander-akait](https://github.com/alexander-akait) in [#21213](https://github.com/webpack/webpack/pull/21213))
+
+- Keep the error message in module build errors on engines whose `Error.stack` omits it. (by [@alexander-akait](https://github.com/alexander-akait) in [#21239](https://github.com/webpack/webpack/pull/21239))
+
+- Speed up module concatenation by caching repeated per-module computations. (by [@alexander-akait](https://github.com/alexander-akait) in [#21115](https://github.com/webpack/webpack/pull/21115))
+
+- Move the `hot` flag from `Module` to `NormalModule`, where it's actually read and written. (by [@alexander-akait](https://github.com/alexander-akait) in [#21028](https://github.com/webpack/webpack/pull/21028))
+
+- Move the `weak` flag from `Dependency` to `ModuleDependency`, where it's actually set. (by [@alexander-akait](https://github.com/alexander-akait) in [#21111](https://github.com/webpack/webpack/pull/21111))
+
+- Avoid the entry IIFE for multiple inlined entry modules by renaming collisions. (by [@alexander-akait](https://github.com/alexander-akait) in [#21151](https://github.com/webpack/webpack/pull/21151))
+
+- Reject `new import.defer(...)`/`new import.source(...)` with member access as a SyntaxError. (by [@alexander-akait](https://github.com/alexander-akait) in [#21211](https://github.com/webpack/webpack/pull/21211))
+
+- Avoid `ProvidePlugin` injection for local CommonJS require bindings that use the same variable name. (by [@fireairforce](https://github.com/fireairforce) in [#21041](https://github.com/webpack/webpack/pull/21041))
+
+- Resolve the global `new Worker(new URL(...))` to `worker_threads` on the `node` target. (by [@alexander-akait](https://github.com/alexander-akait) in [#21217](https://github.com/webpack/webpack/pull/21217))
+
+- Use optional chaining in generated runtime code where the environment supports it. (by [@alexander-akait](https://github.com/alexander-akait) in [#21186](https://github.com/webpack/webpack/pull/21186))
+
+- Allow output.path to be the filesystem root by treating EISDIR like EEXIST in mkdirp. (by [@alexander-akait](https://github.com/alexander-akait) in [#21223](https://github.com/webpack/webpack/pull/21223))
+
+- Reduce memory by not retaining the source location object on every dependency. (by [@alexander-akait](https://github.com/alexander-akait) in [#21183](https://github.com/webpack/webpack/pull/21183))
+
+- Keep the full exports object when a `require()` binding is re-exported. (by [@alexander-akait](https://github.com/alexander-akait) in [#21144](https://github.com/webpack/webpack/pull/21144))
+
+- Replace glob-to-regexp dependency with watchpack's globToRegExp utility. (by [@hai-x](https://github.com/hai-x) in [#21176](https://github.com/webpack/webpack/pull/21176))
+
+- Shrink the persistent cache: add a NULL_AND_I16 binary tier and inline tiny strings instead of larger far back-references. (by [@hai-x](https://github.com/hai-x) in [#21210](https://github.com/webpack/webpack/pull/21210))
+
+- Type serializer read/write contexts with positional tuples and fix a ProvideSharedDependency version/request swap. (by [@alexander-akait](https://github.com/alexander-akait) in [#21201](https://github.com/webpack/webpack/pull/21201))
+
+- Speed up buildChunkGraph by deriving block modules from the first runtime. (by [@alexander-akait](https://github.com/alexander-akait) in [#21166](https://github.com/webpack/webpack/pull/21166))
+
+- Cache re-export target resolution in SideEffectsFlagPlugin for faster builds. (by [@alexander-akait](https://github.com/alexander-akait) in [#21085](https://github.com/webpack/webpack/pull/21085))
+
+- Skip pure single-star passthrough modules for `export *` re-exports. (by [@alexander-akait](https://github.com/alexander-akait) in [#21085](https://github.com/webpack/webpack/pull/21085))
+
+- Skip dependency error/warning reporting for unchanged modules on rebuilds. (by [@alexander-akait](https://github.com/alexander-akait) in [#21154](https://github.com/webpack/webpack/pull/21154))
+
+- Use value descriptors instead of getters for const export bindings. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#21021](https://github.com/webpack/webpack/pull/21021))
+
+- Apply CSS hot updates on the Node side of a universal target. (by [@alexander-akait](https://github.com/alexander-akait) in [#21217](https://github.com/webpack/webpack/pull/21217))
+
+- Guard CSS `style` export-type injection so it no-ops when there is no `document`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21193](https://github.com/webpack/webpack/pull/21193))
+
+- Avoid building warning stats objects when counting warnings without a filter. (by [@alexander-akait](https://github.com/alexander-akait) in [#21198](https://github.com/webpack/webpack/pull/21198))
+
+- Recognize forward-slash Windows absolute paths (e.g. C:/dir) consistently. (by [@alexander-akait](https://github.com/alexander-akait) in [#21223](https://github.com/webpack/webpack/pull/21223))
+
 ## 5.107.2
 
 ### Patch Changes
