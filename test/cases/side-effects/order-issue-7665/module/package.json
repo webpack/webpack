@@ -1,6 +1,7 @@
 {
   "sideEffects": [
     "./index.js",
-    "./a.js"
+    "./a.js",
+    "./b.js"
   ]
 }

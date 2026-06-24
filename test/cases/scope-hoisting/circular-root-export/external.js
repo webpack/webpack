@@ -6,6 +6,7 @@ if (process.env.NODE_ENV === "production") {
 	expect(b()).toBe("b");
 	expect(Object(c).b()).toBe("b");
 }
+// TODO: Support disable inline export annotation to keep the TDZ
 expect(() => d).toThrow();
 
 export function test() {
