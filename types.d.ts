@@ -26196,6 +26196,23 @@ declare interface WithOptions {
 		options: Partial<ResolveOptionsWithDependencyType>
 	) => ResolverWithOptions;
 }
+
+/**
+ * Adds an entry that runs inside every Web Worker entrypoint — the worker
+ * counterpart of EntryPlugin's global entry (which only reaches the document's
+ * entrypoints). Used e.g. to inject an HMR client into workers.
+ */
+declare class WorkerEntryPlugin {
+	constructor(context: string, entry: string, options?: string | EntryOptions);
+	context: string;
+	entry: string;
+	options: string | EntryOptions;
+
+	/**
+	 * Applies the plugin by registering its hooks on the compiler.
+	 */
+	apply(compiler: Compiler): void;
+}
 declare interface WriteFile {
 	(
 		file: PathOrFileDescriptorFs,
@@ -26973,6 +26990,7 @@ declare namespace exports {
 		WebpackOptionsApply,
 		WebpackOptionsDefaulter,
 		ValidationError as WebpackOptionsValidationError,
+		WorkerEntryPlugin,
 		ValidationError,
 		DelegatedPlugin,
 		DllPlugin,
