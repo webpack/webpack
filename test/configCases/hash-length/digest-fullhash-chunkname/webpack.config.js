@@ -1,11 +1,22 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
-module.exports = {
-	target: "web",
-	// [fullhash:<digest>] cannot be re-encoded in the runtime chunk-filename
-	// expression for dynamically-loaded chunks, so the build must error clearly.
-	output: {
-		chunkFilename: "[name].[fullhash:base64url:8].js"
+/** @type {import("../../../../").Configuration[]} */
+module.exports = [
+	{
+		name: "fullhash digest, base64url",
+		target: "node",
+		// hashDigestLength smaller than the inline length, to exercise full entropy;
+		// the runtime inlines the re-encoded full hash (post-hash) so the URL matches
+		output: {
+			hashDigestLength: 8,
+			chunkFilename: "[name].[fullhash:base64url:12].js"
+		}
+	},
+	{
+		name: "fullhash digest, hex",
+		target: "node",
+		output: {
+			chunkFilename: "[name].[fullhash:hex:12].js"
+		}
 	}
-};
+];

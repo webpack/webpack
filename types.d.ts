@@ -9010,7 +9010,8 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 			| string
 			| false
 			| ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string),
-		allChunks: boolean
+		allChunks: boolean,
+		usesFullHashDigest?: boolean
 	);
 	contentType: string;
 	global: string;
