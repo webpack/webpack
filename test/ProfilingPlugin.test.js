@@ -6,12 +6,15 @@ const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 
+// Bun's Node `inspector` CPU profiler never resolves, hanging this test until timeout.
+const itSkipBun = process.versions.bun ? it.skip : it;
+
 // ProfilingPlugin intercepts the deprecated Compilation.hooks.normalModuleLoader
 // hook; that deprecation is asserted in configCases/plugins/profiling-plugin.
 describe("Profiling Plugin", () => {
 	jest.setTimeout(120000);
 
-	it("should handle output path with folder creation", (done) => {
+	itSkipBun("should handle output path with folder creation", (done) => {
 		const webpack = require("../");
 
 		const outputPath = path.join(__dirname, "js/profilingPath");

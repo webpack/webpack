@@ -182,6 +182,7 @@
     "prettier-2": "npm:prettier@^2",
     "pretty-format": "^30.0.5",
     "pug": "^3.0.3",
+    "puppeteer-core": "^23.11.1",
     "raw-loader": "^4.0.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
