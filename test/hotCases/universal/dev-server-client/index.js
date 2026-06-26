@@ -1,7 +1,9 @@
 import value from "./module";
-// universal regular-HMR client: works on web (dev-server EventSource signal)
-// and Node (same emitter signal) without a platform-specific client
-import emitter from "../../../../hot/emitter";
+// universal regular-HMR client: the dev-server signal is delivered through an
+// `EventTarget` emitter on web and node, with no platform-specific client.
+// hot/dev-server's `./emitter` is swapped to hot/emitter-event-target for
+// universal targets, so push on that same singleton here.
+import emitter from "../../../../hot/emitter-event-target";
 import "../../../../hot/dev-server";
 
 import.meta.webpackHot.accept("./module");
@@ -21,6 +23,10 @@ it("should trigger HMR via the dev-server signal on web and node", (done) => {
 	NEXT((err, stats) => {
 		if (err) return done(err);
 		// emulate the dev-server pushing an update signal through the emitter
-		emitter.emit("webpackHotUpdate", stats.hash);
+		emitter.dispatchEvent(
+			new CustomEvent("webpackHotUpdate", {
+				detail: { currentHash: stats.hash }
+			})
+		);
 	});
 });
