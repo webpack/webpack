@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Strip `node:` prefix from externalized core modules on unsupported targets.
+Respect the `node:` prefix for node.js core modules used as externals.
