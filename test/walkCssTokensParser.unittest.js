@@ -1,8 +1,8 @@
 "use strict";
 
 const {
-	Node,
 	A,
+	Node,
 	NodeType,
 	SourceProcessor,
 	TT_BAD_STRING_TOKEN,
