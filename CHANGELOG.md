@@ -1,5 +1,13 @@
 # webpack
 
+## 5.108.1
+
+### Patch Changes
+
+- Fix invalid property access for escaped namespace imports with multi-character mangled export names. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#21280](https://github.com/webpack/webpack/pull/21280))
+
+- Add frames to ProfilingPlugin TracingStartedInBrowser event so the trace loads in Chrome DevTools. (by [@alexander-akait](https://github.com/alexander-akait) in [#21269](https://github.com/webpack/webpack/pull/21269))
+
 ## 5.108.0
 
 ### Minor Changes
