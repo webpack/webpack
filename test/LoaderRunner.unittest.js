@@ -280,6 +280,29 @@ describe("runLoaders", () => {
 		);
 	});
 
+	it("should augment a caller-provided context in place", (done) => {
+		const context = { custom: "kept" };
+		runLoaders(
+			{
+				resource: path.resolve(fixtures, "resource.bin"),
+				loaders: [path.resolve(fixtures, "keys-loader.js")],
+				context
+			},
+			(err, result) => {
+				if (err) return done(err);
+				try {
+					// the caller's object is augmented in place...
+					expect(typeof context.addDependency).toBe("function");
+					// ...and its own properties survive into the loader context
+					expect(JSON.parse(result.result[0]).custom).toBe("kept");
+				} catch (err_) {
+					return done(err_);
+				}
+				done();
+			}
+		);
+	});
+
 	it("should have to correct keys in context (with options)", (done) => {
 		runLoaders(
 			{
