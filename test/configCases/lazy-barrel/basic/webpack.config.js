@@ -44,14 +44,11 @@ const config = (variant) => ({
 	plugins: [
 		(compiler) => {
 			const created = new Set();
-			compiler.hooks.thisCompilation.tap(
-				"Test",
-				(compilation, { normalModuleFactory }) => {
-					normalModuleFactory.hooks.createModule.tap("Test", (createData) => {
-						created.add(createData.resource);
-					});
-				}
-			);
+			compiler.hooks.thisCompilation.tap("Test", (compilation) => {
+				compilation.hooks.buildModule.tap("Test", (module) => {
+					created.add(module.resource);
+				});
+			});
 			compiler.hooks.done.tap("Test", () => {
 				for (const module of lazyModules) {
 					expect(created.has(module)).toBe(false);
