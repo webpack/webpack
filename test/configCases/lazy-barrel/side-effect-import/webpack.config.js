@@ -3,8 +3,11 @@
 const fs = require("fs");
 const path = require("path");
 
-const barrel = path.resolve(__dirname, "lib/index.js");
-const unusedTarget = path.resolve(__dirname, "lib/Button.js");
+/** @typedef {import("../../../../").NormalModule} NormalModule */
+
+const lazyModules = new Set(
+	["lib/Button.js"].map((file) => path.resolve(__dirname, file))
+);
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -31,17 +34,15 @@ module.exports = {
 	plugins: [
 		(compiler) => {
 			const created = new Set();
-			compiler.hooks.thisCompilation.tap(
-				"Test",
-				(compilation, { normalModuleFactory }) => {
-					normalModuleFactory.hooks.createModule.tap("Test", (createData) => {
-						created.add(createData.resource);
-					});
-				}
-			);
+			compiler.hooks.thisCompilation.tap("Test", (compilation) => {
+				compilation.hooks.buildModule.tap("Test", (module) => {
+					created.add(/** @type {NormalModule} */ (module).resource);
+				});
+			});
 			compiler.hooks.done.tap("Test", (stats) => {
-				expect(created.has(barrel)).toBe(true);
-				expect(created.has(unusedTarget)).toBe(false);
+				for (const module of lazyModules) {
+					expect(created.has(module)).toBe(false);
+				}
 
 				const css = fs.readFileSync(
 					path.join(

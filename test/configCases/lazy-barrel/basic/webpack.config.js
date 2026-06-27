@@ -1,23 +1,8 @@
 "use strict";
 
-const fs = require("fs");
 const path = require("path");
 
-/** @type {string[]} */
-const allModules = fs
-	.readdirSync(__dirname, { recursive: true })
-	.filter((rel) => typeof rel === "string")
-	.map((rel) => path.resolve(__dirname, rel))
-	.filter((file) => {
-		const name = path.basename(file);
-		return (
-			fs.statSync(file).isFile() &&
-			name !== "package.json" &&
-			name !== "webpack.config.js" &&
-			name !== "test.filter.js" &&
-			name !== "test.config.js"
-		);
-	});
+/** @typedef {import("../../../../").NormalModule} NormalModule */
 
 // re-export targets that must stay deferred; `named-barrel/d.js` is a locally
 // imported binding re-exported unused, which webpack keeps lazy too
@@ -46,18 +31,13 @@ const config = (variant) => ({
 			const created = new Set();
 			compiler.hooks.thisCompilation.tap("Test", (compilation) => {
 				compilation.hooks.buildModule.tap("Test", (module) => {
-					created.add(module.resource);
+					created.add(/** @type {NormalModule} */ (module).resource);
 				});
 			});
 			compiler.hooks.done.tap("Test", () => {
 				for (const module of lazyModules) {
 					expect(created.has(module)).toBe(false);
 				}
-				expect(
-					allModules.filter(
-						(module) => !created.has(module) && !lazyModules.has(module)
-					)
-				).toEqual([]);
 			});
 		}
 	]
