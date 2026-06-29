@@ -1,6 +1,8 @@
-import { getNumber } from "./wasm.wat?1";
-import { getNumber as getNumber2 } from "./wasm.wat?2";
+import { getNumber } from "./wasm.wat";
+import { addNumber } from "./wasm-import.wat";
 
 export function run() {
-	return getNumber() + getNumber2();
+	// getNumber() === 42 (no imports -> instantiateStreaming branch)
+	// addNumber(20) === 20 + 22 (wasm imports wasm -> compileStreaming branch)
+	return getNumber() + addNumber(20);
 }

@@ -5,13 +5,19 @@ const path = require("path");
 const url = require("url");
 
 module.exports = {
-	findBundle(i) {
-		switch (i) {
-			case 0:
-				return ["chunks/93.async.js", "bundle0.js"];
-			case 1:
-				return ["chunks/93.sync.js", "bundle1.js"];
-		}
+	findBundle(i, options) {
+		const isModule = Boolean(options.experiments.outputModule);
+		const bundle = `./bundle${i}.${isModule ? "mjs" : "js"}`;
+		// Module output loads chunks through the ESM linker, so only the entry
+		// bundle is needed. JSONP (non-module) output needs the chunk preloaded
+		// so its chunk-loading promise resolves in the test runner.
+		if (isModule) return [bundle];
+		const suffix = i === 1 ? ".async.js" : ".sync.js";
+		const chunks = fs
+			.readdirSync(path.join(options.output.path, "chunks"))
+			.filter((f) => f.endsWith(suffix))
+			.map((f) => `./chunks/${f}`);
+		return [...chunks, bundle];
 	},
 	moduleScope(scope, options) {
 		// Serve wasm with a wrong MIME type so streaming instantiation fails
