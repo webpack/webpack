@@ -341,44 +341,7 @@ jobs:
       # timing webpack's async cache/compilation tails outlive a suite's teardown
       # and require a module after the Jest environment is gone. Bun runs them with
       # only a few per-case test.filter.js skips.
-      - if: matrix.runtime == 'deno'
-        run: yarn test:deno --ci
-
-      # Bun (latest) can SIGSEGV on process teardown AFTER the suite has finished
-      # (exit 132 with every test already passed) — a Bun runtime bug, not a test
-      # failure. Trust jest's own result file: succeed only if jest reported zero
-      # failures, otherwise fail. A real test failure, or a crash before jest
-      # writes the result, leaves no successful JSON and still fails the job.
-      - if: matrix.runtime == 'bun'
-        run: |
-          set +e
-          yarn test:bun --ci --json --outputFile="$RUNNER_TEMP/bun-jest.json"
-          status=$?
-          set -e
-          if [ "$status" -eq 0 ]; then exit 0; fi
-          echo "Bun exited with $status; checking jest result file..."
-          node -e '
-            const fs = require("fs");
-            let r;
-            try {
-              r = JSON.parse(
-                fs.readFileSync(process.env.RUNNER_TEMP + "/bun-jest.json", "utf8")
-              );
-            } catch (e) {
-              console.error("No jest result file — treating as failure.");
-              process.exit(1);
-            }
-            if (r.success && !r.numFailedTests && !r.numFailedTestSuites) {
-              console.error(
-                "Bun crashed on teardown after all " +
-                  r.numPassedTests +
-                  " tests passed; ignoring runtime exit code."
-              );
-              process.exit(0);
-            }
-            console.error("jest reported failures.");
-            process.exit(1);
-          '
+      - run: yarn test:${{ matrix.runtime }} --ci
 
   integration:
     needs: basic
