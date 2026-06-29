@@ -664,6 +664,10 @@ export type StrictModuleResolution = boolean;
  */
 export type UniqueName = string;
 /**
+ * Fall back to non-streaming WebAssembly instantiation when streaming compilation fails because the server does not serve `.wasm` files with the `application/wasm` MIME type.
+ */
+export type WasmStreamingFallback = boolean;
+/**
  * The filename of WebAssembly modules as relative path inside the 'output.path' directory.
  */
 export type WebassemblyModuleFilename = string;
@@ -2590,6 +2594,10 @@ export interface Output {
 	 */
 	wasmLoading?: WasmLoading;
 	/**
+	 * Fall back to non-streaming WebAssembly instantiation when streaming compilation fails because the server does not serve `.wasm` files with the `application/wasm` MIME type.
+	 */
+	wasmStreamingFallback?: WasmStreamingFallback;
+	/**
 	 * The filename of WebAssembly modules as relative path inside the 'output.path' directory.
 	 */
 	webassemblyModuleFilename?: WebassemblyModuleFilename;
@@ -4225,6 +4233,10 @@ export interface OutputNormalized {
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	wasmLoading?: WasmLoading;
+	/**
+	 * Fall back to non-streaming WebAssembly instantiation when streaming compilation fails because the server does not serve `.wasm` files with the `application/wasm` MIME type.
+	 */
+	wasmStreamingFallback?: WasmStreamingFallback;
 	/**
 	 * The filename of WebAssembly modules as relative path inside the 'output.path' directory.
 	 */

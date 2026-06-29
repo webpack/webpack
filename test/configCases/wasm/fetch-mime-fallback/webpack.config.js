@@ -16,7 +16,8 @@ module.exports = [
 		output: {
 			module: true,
 			chunkFilename: "chunks/[name].async.mjs",
-			webassemblyModuleFilename: "[id].[hash].module.async.wasm"
+			webassemblyModuleFilename: "[id].[hash].module.async.wasm",
+			wasmStreamingFallback: true
 		},
 		experiments: {
 			outputModule: true,
@@ -36,7 +37,8 @@ module.exports = [
 		},
 		output: {
 			chunkFilename: "chunks/[name].async.js",
-			webassemblyModuleFilename: "[id].[hash].async.wasm"
+			webassemblyModuleFilename: "[id].[hash].async.wasm",
+			wasmStreamingFallback: true
 		},
 		experiments: {
 			asyncWebAssembly: true
@@ -56,7 +58,8 @@ module.exports = [
 		output: {
 			module: true,
 			chunkFilename: "chunks/[name].sync.mjs",
-			webassemblyModuleFilename: "[id].[hash].module.sync.wasm"
+			webassemblyModuleFilename: "[id].[hash].module.sync.wasm",
+			wasmStreamingFallback: true
 		},
 		experiments: {
 			outputModule: true,
@@ -76,7 +79,8 @@ module.exports = [
 		},
 		output: {
 			chunkFilename: "chunks/[name].sync.js",
-			webassemblyModuleFilename: "[id].[hash].sync.wasm"
+			webassemblyModuleFilename: "[id].[hash].sync.wasm",
+			wasmStreamingFallback: true
 		},
 		experiments: {
 			syncWebAssembly: true

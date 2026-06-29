@@ -1,5 +1,5 @@
 ---
-"webpack": patch
+"webpack": minor
 ---
 
-Fall back to `WebAssembly.instantiate` for sync wasm on wrong MIME type.
+Add `output.wasmStreamingFallback` for wasm fallback on wrong MIME type.

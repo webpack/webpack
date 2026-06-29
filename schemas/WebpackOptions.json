@@ -4084,6 +4084,9 @@
         "wasmLoading": {
           "$ref": "#/definitions/WasmLoading"
         },
+        "wasmStreamingFallback": {
+          "$ref": "#/definitions/WasmStreamingFallback"
+        },
         "webassemblyModuleFilename": {
           "$ref": "#/definitions/WebassemblyModuleFilename"
         },
@@ -4283,6 +4286,9 @@
         },
         "wasmLoading": {
           "$ref": "#/definitions/WasmLoading"
+        },
+        "wasmStreamingFallback": {
+          "$ref": "#/definitions/WasmStreamingFallback"
         },
         "webassemblyModuleFilename": {
           "$ref": "#/definitions/WebassemblyModuleFilename"
@@ -6203,6 +6209,10 @@
           "type": "string"
         }
       ]
+    },
+    "WasmStreamingFallback": {
+      "description": "Fall back to non-streaming WebAssembly instantiation when streaming compilation fails because the server does not serve `.wasm` files with the `application/wasm` MIME type.",
+      "type": "boolean"
     },
     "Watch": {
       "description": "Enter watch mode, which rebuilds on file change.",
