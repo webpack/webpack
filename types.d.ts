@@ -10030,6 +10030,51 @@ declare interface ImportDependencyMeta {
 type ImportExpressionJavascriptParser = ImportExpressionImport & {
 	phase?: "defer" | "source";
 };
+
+/**
+ * Enable/disable evaluating import.meta fields. Omitted fields are enabled and unknown fields are preserved.
+ */
+declare interface ImportMetaParserOptions {
+	/**
+	 * Enable/disable evaluating import.meta.dirname.
+	 */
+	dirname?: boolean;
+
+	/**
+	 * Enable/disable evaluating import.meta.env.
+	 */
+	env?: boolean;
+
+	/**
+	 * Enable/disable evaluating import.meta.filename.
+	 */
+	filename?: boolean;
+
+	/**
+	 * Enable/disable evaluating import.meta.main.
+	 */
+	main?: boolean;
+
+	/**
+	 * Enable/disable evaluating import.meta.url.
+	 */
+	url?: boolean;
+
+	/**
+	 * Enable/disable evaluating import.meta.webpack.
+	 */
+	webpack?: boolean;
+
+	/**
+	 * Enable/disable evaluating import.meta.webpackContext.
+	 */
+	webpackContext?: boolean;
+
+	/**
+	 * Enable/disable evaluating import.meta.webpackHot.
+	 */
+	webpackHot?: boolean;
+}
 declare interface ImportModuleOptions {
 	/**
 	 * the target layer
@@ -12626,9 +12671,9 @@ declare interface JavascriptParserOptions {
 	importExportsPresence?: false | "auto" | "error" | "warn";
 
 	/**
-	 * Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.
+	 * Enable/disable evaluating import.meta. Set to 'preserve-unknown' or an object to preserve unknown properties for runtime evaluation.
 	 */
-	importMeta?: boolean | "preserve-unknown";
+	importMeta?: boolean | "preserve-unknown" | ImportMetaParserOptions;
 
 	/**
 	 * Enable/disable evaluating import.meta.webpackContext.

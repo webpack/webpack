@@ -3667,6 +3667,43 @@ export interface HtmlParserOptions {
 	template?: import("../lib/html/HtmlParser").HtmlTemplateFunction;
 }
 /**
+ * Enable/disable evaluating import.meta fields. Omitted fields are enabled and unknown fields are preserved.
+ */
+export interface ImportMetaParserOptions {
+	/**
+	 * Enable/disable evaluating import.meta.dirname.
+	 */
+	dirname?: boolean;
+	/**
+	 * Enable/disable evaluating import.meta.env.
+	 */
+	env?: boolean;
+	/**
+	 * Enable/disable evaluating import.meta.filename.
+	 */
+	filename?: boolean;
+	/**
+	 * Enable/disable evaluating import.meta.main.
+	 */
+	main?: boolean;
+	/**
+	 * Enable/disable evaluating import.meta.url.
+	 */
+	url?: boolean;
+	/**
+	 * Enable/disable evaluating import.meta.webpack.
+	 */
+	webpack?: boolean;
+	/**
+	 * Enable/disable evaluating import.meta.webpackContext.
+	 */
+	webpackContext?: boolean;
+	/**
+	 * Enable/disable evaluating import.meta.webpackHot.
+	 */
+	webpackHot?: boolean;
+}
+/**
  * Parser options for javascript modules.
  */
 export interface JavascriptParserOptions {
@@ -3751,9 +3788,9 @@ export interface JavascriptParserOptions {
 	 */
 	importExportsPresence?: "error" | "warn" | "auto" | false;
 	/**
-	 * Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.
+	 * Enable/disable evaluating import.meta. Set to 'preserve-unknown' or an object to preserve unknown properties for runtime evaluation.
 	 */
-	importMeta?: boolean | "preserve-unknown";
+	importMeta?: boolean | "preserve-unknown" | ImportMetaParserOptions;
 	/**
 	 * Enable/disable evaluating import.meta.webpackContext.
 	 */
