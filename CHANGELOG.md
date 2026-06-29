@@ -1,5 +1,15 @@
 # webpack
 
+## 5.108.3
+
+### Patch Changes
+
+- Speed up CSS parsing and reduce CSS AST node memory. (by [@alexander-akait](https://github.com/alexander-akait) in [#21285](https://github.com/webpack/webpack/pull/21285))
+
+- Fix HMR codegen crash for harmony accept with unresolved imports. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#21302](https://github.com/webpack/webpack/pull/21302))
+
+- Match harmony accept dependencies by module reference so HMR codegen handles imports without a module or chunk id. (by [@alexander-akait](https://github.com/alexander-akait) in [#21303](https://github.com/webpack/webpack/pull/21303))
+
 ## 5.108.2
 
 ### Patch Changes
