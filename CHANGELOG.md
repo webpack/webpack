@@ -1,5 +1,13 @@
 # webpack
 
+## 5.108.2
+
+### Patch Changes
+
+- Fix lazy barrel deferral of ungrouped side-effect imports. (by [@hai-x](https://github.com/hai-x) in [#21291](https://github.com/webpack/webpack/pull/21291))
+
+- Respect the `node:` prefix for node.js core modules used as externals. (by [@alexander-akait](https://github.com/alexander-akait) in [#21286](https://github.com/webpack/webpack/pull/21286))
+
 ## 5.108.1
 
 ### Patch Changes
