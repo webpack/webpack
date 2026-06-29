@@ -5,6 +5,11 @@ const path = require("path");
 
 // When --write is set, files will be written in place
 // Otherwise it only prints outdated files
+const allowedArgs = ["--write"];
+const unknownArgs = process.argv.slice(2).filter(arg => !allowedArgs.includes(arg));
+if (unknownArgs.length > 0) {
+	throw new Error(`Unknown arguments: ${unknownArgs.join(", ")}`);
+}
 const doWrite = process.argv.includes("--write");
 
 const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
@@ -83,9 +88,9 @@ const ${identifier} = new WebAssembly.Module(
 		if (newContent !== content) {
 			if (doWrite) {
 				fs.writeFileSync(filePath, newContent, "utf8");
-				console.error(`${file} updated`);
+				console.error(file + " updated");
 			} else {
-				console.error(`${file} need to be updated`);
+				console.error(file + " need to be updated");
 				process.exitCode = 1;
 			}
 		}
