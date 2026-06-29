@@ -38,9 +38,15 @@ cacheable modules X bytes
         harmony import specifier ./components ./foo.js 3:20-25 (skipped side-effect-free modules)
         harmony import specifier ./components ./main.js + 1 modules ./main.js 3:15-20 (skipped side-effect-free modules)
       ./components/src/CompAB/utils.js X bytes [built] [code generated]
-        harmony import specifier ./utils ./components/src/CompAB/CompA.js 5:5-12
-        harmony import specifier ./utils ./components/src/CompAB/CompB.js 5:2-5
-        harmony import specifier ./utils ./main.js + 1 modules ./components/src/CompAB/CompB.js 5:2-5
+        from origin ./components/src/CompAB/CompA.js
+          [inactive] harmony side effect evaluation ./utils ./components/src/CompAB/CompA.js 1:0-35
+          harmony import specifier ./utils ./components/src/CompAB/CompA.js 5:5-12
+        from origin ./components/src/CompAB/CompB.js
+          [inactive] harmony side effect evaluation ./utils ./components/src/CompAB/CompB.js 1:0-30
+          harmony import specifier ./utils ./components/src/CompAB/CompB.js 5:2-5
+        from origin ./main.js + 1 modules
+          [inactive] harmony side effect evaluation ./utils ./main.js + 1 modules ./components/src/CompAB/CompB.js 1:0-30
+          harmony import specifier ./utils ./main.js + 1 modules ./components/src/CompAB/CompB.js 5:2-5
   modules by path ./*.js X bytes
     ./main.js + 1 modules X bytes [built] [code generated]
       [no exports used]

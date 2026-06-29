@@ -2,6 +2,8 @@
 
 const path = require("path");
 
+/** @typedef {import("../../../../").NormalModule} NormalModule */
+
 // Modules of `heavy-lib` that must stay deferred when only `used` is imported.
 const deferred = new Set(
 	["unused.js", "deep.js"].map((f) =>
@@ -32,14 +34,11 @@ const config = (concatenateModules) => ({
 	plugins: [
 		(compiler) => {
 			const created = new Set();
-			compiler.hooks.thisCompilation.tap(
-				"Test",
-				(compilation, { normalModuleFactory }) => {
-					normalModuleFactory.hooks.createModule.tap("Test", (createData) => {
-						created.add(createData.resource);
-					});
-				}
-			);
+			compiler.hooks.thisCompilation.tap("Test", (compilation) => {
+				compilation.hooks.buildModule.tap("Test", (module) => {
+					created.add(/** @type {NormalModule} */ (module).resource);
+				});
+			});
 			compiler.hooks.done.tap("Test", () => {
 				for (const module of deferred) {
 					expect(created.has(module)).toBe(false);
