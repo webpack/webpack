@@ -1,6 +1,7 @@
 "use strict";
 
 const {
+	A,
 	Node,
 	NodeType,
 	SourceProcessor,
@@ -290,7 +291,7 @@ describe("walkCssTokens — Node / Token", () => {
 			.use({
 				[NodeType.Declaration]: (
 					/** @type {import("../lib/css/syntax").Node} */ n
-				) => (loc = n.loc)
+				) => (loc = A.loc(n))
 			})
 			.process("a{\n  color: red\n}");
 		expect(/** @type {NonNullable<typeof loc>} */ (loc).start).toEqual({
@@ -326,7 +327,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 					},
 					[NodeType.Declaration]: (
 						/** @type {import("../lib/css/syntax").Declaration} */ n
-					) => log.push(`decl:${n.name}`)
+					) => log.push(`decl:${A.name(n)}`)
 				})
 			)
 			.process("a{color:red;width:1px}");
@@ -372,7 +373,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Declaration]: (
 						/** @type {import("../lib/css/syntax").Declaration} */ n
-					) => names.push(n.name)
+					) => names.push(A.name(n))
 				})
 			)
 			.process("@font-face{font-family:x;src:url(y)}");
@@ -414,10 +415,10 @@ describe("walkCssTokens — SourceProcessor", () => {
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Declaration]: (
 						/** @type {import("../lib/css/syntax").Declaration} */ n
-					) => names.push(n.name),
+					) => names.push(A.name(n)),
 					[NodeType.Url]: (
 						/** @type {import("../lib/css/syntax").UrlToken} */ n
-					) => urls.push(n.value)
+					) => urls.push(A.value(n))
 				})
 			)
 			.process("color: red; background: url(a.png)", {
@@ -435,7 +436,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Declaration]: (
 						/** @type {import("../lib/css/syntax").Declaration} */ n
-					) => names.push(n.name)
+					) => names.push(A.name(n))
 				})
 			)
 			.process("color: red; background: url(a.png)");
