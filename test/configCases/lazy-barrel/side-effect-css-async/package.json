@@ -1,0 +1,5 @@
+{
+	"name": "side-effect-css-async",
+	"version": "1.0.0",
+	"sideEffects": ["**/*.css"]
+}
