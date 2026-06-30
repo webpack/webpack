@@ -2059,6 +2059,47 @@
       "description": "The name of the native import.meta object (can be exchanged for a polyfill).",
       "type": "string"
     },
+    "ImportMetaParserOptions": {
+      "description": "Enable/disable evaluating import.meta fields. Omitted fields are enabled and unknown fields are preserved. Custom fields are allowed.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      },
+      "properties": {
+        "dirname": {
+          "description": "Enable/disable evaluating import.meta.dirname.",
+          "type": "boolean"
+        },
+        "env": {
+          "description": "Enable/disable evaluating import.meta.env.",
+          "type": "boolean"
+        },
+        "filename": {
+          "description": "Enable/disable evaluating import.meta.filename.",
+          "type": "boolean"
+        },
+        "main": {
+          "description": "Enable/disable evaluating import.meta.main.",
+          "type": "boolean"
+        },
+        "url": {
+          "description": "Enable/disable evaluating import.meta.url.",
+          "type": "boolean"
+        },
+        "webpack": {
+          "description": "Enable/disable evaluating import.meta.webpack.",
+          "type": "boolean"
+        },
+        "webpackContext": {
+          "description": "Enable/disable evaluating import.meta.webpackContext.",
+          "type": "boolean"
+        },
+        "webpackHot": {
+          "description": "Enable/disable evaluating import.meta.webpackHot.",
+          "type": "boolean"
+        }
+      }
+    },
     "InfrastructureLogging": {
       "description": "Options for infrastructure level logging.",
       "type": "object",
@@ -2212,7 +2253,7 @@
           "enum": ["error", "warn", "auto", false]
         },
         "importMeta": {
-          "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+          "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' or an object to preserve unknown properties for runtime evaluation.",
           "anyOf": [
             {
               "type": "boolean"
@@ -2220,6 +2261,9 @@
             {
               "type": "string",
               "enum": ["preserve-unknown"]
+            },
+            {
+              "$ref": "#/definitions/ImportMetaParserOptions"
             }
           ]
         },

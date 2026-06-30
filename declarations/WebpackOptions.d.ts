@@ -902,6 +902,11 @@ export type ExternalItemValue =
 export type IgnoreWarningsNormalized =
 	import("../lib/IgnoreWarningsPlugin").IgnoreFn[];
 /**
+ * Enable/disable evaluating import.meta fields. Omitted fields are enabled and unknown fields are preserved. Custom fields are allowed.
+ */
+export type ImportMetaParserOptions = ImportMetaParserOptionsKnown &
+	ImportMetaParserOptionsUnknown;
+/**
  * Create an additional chunk which contains only the webpack runtime and chunk hash maps.
  */
 export type OptimizationRuntimeChunkNormalized =
@@ -3751,9 +3756,9 @@ export interface JavascriptParserOptions {
 	 */
 	importExportsPresence?: "error" | "warn" | "auto" | false;
 	/**
-	 * Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.
+	 * Enable/disable evaluating import.meta. Set to 'preserve-unknown' or an object to preserve unknown properties for runtime evaluation.
 	 */
-	importMeta?: boolean | "preserve-unknown";
+	importMeta?: boolean | "preserve-unknown" | ImportMetaParserOptions;
 	/**
 	 * Enable/disable evaluating import.meta.webpackContext.
 	 */
@@ -4489,6 +4494,49 @@ export interface GeneratorOptionsByModuleTypeUnknown {
 	[k: string]: {
 		[k: string]: any;
 	};
+}
+/**
+ * Enable/disable evaluating import.meta fields. Omitted fields are enabled and unknown fields are preserved. Custom fields are allowed.
+ */
+export interface ImportMetaParserOptionsKnown {
+	/**
+	 * Enable/disable evaluating import.meta.dirname.
+	 */
+	dirname?: boolean;
+	/**
+	 * Enable/disable evaluating import.meta.env.
+	 */
+	env?: boolean;
+	/**
+	 * Enable/disable evaluating import.meta.filename.
+	 */
+	filename?: boolean;
+	/**
+	 * Enable/disable evaluating import.meta.main.
+	 */
+	main?: boolean;
+	/**
+	 * Enable/disable evaluating import.meta.url.
+	 */
+	url?: boolean;
+	/**
+	 * Enable/disable evaluating import.meta.webpack.
+	 */
+	webpack?: boolean;
+	/**
+	 * Enable/disable evaluating import.meta.webpackContext.
+	 */
+	webpackContext?: boolean;
+	/**
+	 * Enable/disable evaluating import.meta.webpackHot.
+	 */
+	webpackHot?: boolean;
+}
+/**
+ * Enable/disable evaluating import.meta fields. Omitted fields are enabled and unknown fields are preserved. Custom fields are allowed.
+ */
+export interface ImportMetaParserOptionsUnknown {
+	[k: string]: boolean;
 }
 /**
  * Specify options for each parser.
