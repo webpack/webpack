@@ -11,6 +11,30 @@ function readEnv() {
 	return { GITHUB_SERVER_URL };
 }
 
+// Retry GitHub API calls so a transient drop (e.g. GraphQL "Premature close") doesn't fail the release.
+/**
+ * @template T
+ * @param {() => Promise<T>} fn operation to retry
+ * @returns {Promise<T>} result
+ */
+async function withRetry(fn) {
+	const maxAttempts = 5;
+	let lastError;
+	for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+		try {
+			return await fn();
+		} catch (err) {
+			lastError = err;
+			if (attempt === maxAttempts) break;
+			const delay = Math.min(1000 * 2 ** (attempt - 1), 8000);
+			await new Promise((resolve) => {
+				setTimeout(resolve, delay);
+			});
+		}
+	}
+	throw lastError;
+}
+
 /** @type {ChangelogFunctions} */
 const changelogFunctions = {
 	getDependencyReleaseLine: async (
@@ -29,10 +53,12 @@ const changelogFunctions = {
 			await Promise.all(
 				changesets.map(async (cs) => {
 					if (cs.commit) {
-						const { links } = await getInfo({
-							repo: options.repo,
-							commit: cs.commit
-						});
+						const { links } = await withRetry(() =>
+							getInfo({
+								repo: options.repo,
+								commit: cs.commit
+							})
+						);
 						return links.commit;
 					}
 				})
@@ -84,10 +110,12 @@ const changelogFunctions = {
 
 		const links = await (async () => {
 			if (prFromSummary !== undefined) {
-				let { links } = await getInfoFromPullRequest({
-					repo: options.repo,
-					pull: prFromSummary
-				});
+				let { links } = await withRetry(() =>
+					getInfoFromPullRequest({
+						repo: options.repo,
+						pull: prFromSummary
+					})
+				);
 				if (commitFromSummary) {
 					const shortCommitId = commitFromSummary.slice(0, 7);
 					links = {
@@ -99,10 +127,12 @@ const changelogFunctions = {
 			}
 			const commitToFetchFrom = commitFromSummary || changeset.commit;
 			if (commitToFetchFrom) {
-				const { links } = await getInfo({
-					repo: options.repo,
-					commit: commitToFetchFrom
-				});
+				const { links } = await withRetry(() =>
+					getInfo({
+						repo: options.repo,
+						commit: commitToFetchFrom
+					})
+				);
 				return links;
 			}
 			return {
