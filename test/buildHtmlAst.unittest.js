@@ -849,7 +849,7 @@ describe("buildHtmlAst — stray doctype and <html> re-dispatch", () => {
 // The `skip` options are pure output reductions: tree construction (and quirks
 // detection) must run identically, so the ELEMENT tree — tags, nesting, offsets
 // and attributes — is the same with any skip combination as with none. This
-// guards the risky `skip.proseText` path, which drops text-node insertion.
+// guards the risky `skip.text` path, which drops text-node insertion.
 describe("buildHtmlAst — skip options preserve element structure", () => {
 	// A spread of construction edge cases: foster parenting, adoption agency,
 	// select/table/ruby scoping, foreign content, raw-text elements, quirks.
@@ -918,10 +918,10 @@ describe("buildHtmlAst — skip options preserve element structure", () => {
 	};
 
 	const skipCombos = [
-		{ proseText: true },
+		{ text: true },
 		{ comments: true },
 		{ doctype: true },
-		{ proseText: true, comments: true, doctype: true }
+		{ text: true, comments: true, doctype: true }
 	];
 
 	it.each(cases)("keeps the element tree stable under skip (%s)", (src) => {
@@ -933,21 +933,32 @@ describe("buildHtmlAst — skip options preserve element structure", () => {
 		}
 	});
 
-	it("skip.proseText keeps <script>/<style> bodies (offset-only) and drops prose", () => {
+	it("skip.text drops every text node; raw-text bodies stay readable via contentEnd", () => {
 		const src = "<p>prose</p><script>var x=1;</script>";
-		const doc = buildHtmlAst(src, undefined, { proseText: true });
+		const doc = buildHtmlAst(src, undefined, { text: true });
 		/** @type {import("../lib/html/syntax").HtmlText[]} */
 		const texts = [];
+		/** @type {import("../lib/html/syntax").HtmlElement | undefined} */
+		let script;
 		/** @param {import("../lib/html/syntax").HtmlNode} n node */
 		const walk = (n) => {
 			if (n.type === NodeType.Text) texts.push(n);
-			if (n.type === NodeType.Element) for (const c of n.children) walk(c);
+			if (n.type === NodeType.Element) {
+				if (n.tagName === "script") script = n;
+				for (const c of n.children) walk(c);
+			}
 		};
 		for (const c of doc.children) walk(c);
-		// Only the <script> body survives, and it carries offsets but no `data`.
-		expect(texts).toHaveLength(1);
-		expect(texts[0].data).toBeUndefined();
-		expect(src.slice(texts[0].start, texts[0].end)).toBe("var x=1;");
+		// No text nodes at all — not even the <script> body.
+		expect(texts).toHaveLength(0);
+		// The body is read by offset from the element's [tagEnd, contentEnd].
+		expect(
+			src.slice(
+				/** @type {import("../lib/html/syntax").HtmlElement} */ (script).tagEnd,
+				/** @type {import("../lib/html/syntax").HtmlElement} */ (script)
+					.contentEnd
+			)
+		).toBe("var x=1;");
 	});
 
 	it("skip.comments drops comment nodes; skip.doctype drops the doctype node", () => {
@@ -972,27 +983,26 @@ describe("buildHtmlAst — skip options preserve element structure", () => {
 		expect(count(buildHtmlAst(src), NodeType.Doctype)).toBe(1);
 	});
 
-	it("skip.proseText keeps every raw-text element body (script/style/textarea/title)", () => {
-		// Each body is the element's raw value, so all four survive (offset-only).
+	it("skip.text records every raw-text element body span on contentEnd", () => {
+		// script/style (raw text) + textarea/title (escapable raw text): each body
+		// is the element's raw value, recorded as [tagEnd, contentEnd] — no Text node.
 		const src =
 			"<title>ti</title><style>.s{}</style></head><body>prose<script>sc</script><textarea>ta</textarea>";
-		const doc = buildHtmlAst(src, undefined, { proseText: true });
+		const doc = buildHtmlAst(src, undefined, { text: true });
 		/** @type {Record<string, string>} */
 		const bodies = {};
-		/**
-		 * @param {import("../lib/html/syntax").HtmlNode} n node
-		 * @param {import("../lib/html/syntax").HtmlElement | null} parent parent
-		 */
-		const walk = (n, parent) => {
-			if (n.type === NodeType.Text && parent) {
-				expect(n.data).toBeUndefined();
-				bodies[parent.tagName] = src.slice(n.start, n.end);
-			}
+		/** @param {import("../lib/html/syntax").HtmlNode} n node */
+		const walk = (n) => {
+			// No Text nodes are emitted under skip.text.
+			expect(n.type).not.toBe(NodeType.Text);
 			if (n.type === NodeType.Element) {
-				for (const c of n.children) walk(c, n);
+				if (n.contentEnd > n.tagEnd) {
+					bodies[n.tagName] = src.slice(n.tagEnd, n.contentEnd);
+				}
+				for (const c of n.children) walk(c);
 			}
 		};
-		for (const c of doc.children) walk(c, null);
+		for (const c of doc.children) walk(c);
 		expect(bodies).toEqual({
 			title: "ti",
 			style: ".s{}",
