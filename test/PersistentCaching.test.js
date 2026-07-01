@@ -304,4 +304,39 @@ import 'lodash';
 		await compile(configAdditions);
 		await expect(getCacheFileTimes()).resolves.toEqual(firstCacheFileTimes);
 	}, 20000);
+
+	it("should provide re-exports deferred by the lazy barrel after restore", async () => {
+		// A side-effect-free barrel with a local export and a star re-export whose
+		// target is unused: the star stays deferred, so the barrel is cacheable and
+		// gets persisted as a closed export set omitting the star's exports. A later
+		// build that imports one of those names must recompute, not restore the stale
+		// exports and report the name as missing.
+		const configAdditions = {
+			mode: "development",
+			entry: "./src/main.js",
+			optimization: {
+				sideEffects: true,
+				providedExports: true,
+				usedExports: true,
+				innerGraph: true
+			}
+		};
+		await mkdir(path.resolve(srcPath, "pkg"), { recursive: true });
+		await updateSrc({
+			"pkg/package.json": '{ "name": "pkg", "sideEffects": false }',
+			"pkg/extra.js": "export const b = 'b';",
+			"pkg/index.js": "export const a = 'a';\nexport * from './extra';",
+			"main.js": "import { a } from './pkg';\nexport default a;"
+		});
+		await compile(configAdditions);
+		expect(execute()).toBe("a");
+
+		await updateSrc({
+			"main.js": "import { a, b } from './pkg';\nexport default a + b;"
+		});
+		const stats = await compile(configAdditions);
+		expect(stats.hasErrors()).toBe(false);
+		expect(stats.hasWarnings()).toBe(false);
+		expect(execute()).toBe("ab");
+	}, 60000);
 });
