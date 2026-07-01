@@ -391,17 +391,13 @@ describe("walkCssTokens — SourceProcessor", () => {
 		expect([a, b]).toEqual([1, 1]);
 	});
 
-	it("forwards the comment callback", () => {
+	it("surfaces comments through the NodeType.Comment visitor", () => {
 		/** @type {string[]} */
 		const seen = [];
 		new SourceProcessor()
 			.use({ [NodeType.Declaration]: () => {} })
-			.process("a{color:red/*!c*/}", {
-				comment: (input, start, end) => {
-					seen.push(input.slice(start, end));
-					return end;
-				}
-			});
+			.use({ [NodeType.Comment]: (node) => seen.push(A.source(node)) })
+			.process("a{color:red/*!c*/}");
 		expect(seen).toEqual(["/*!c*/"]);
 	});
 
