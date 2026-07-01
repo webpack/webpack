@@ -3455,6 +3455,17 @@ describe("snapshots", () => {
 			+             "text/typescript",
 			+             "application/typescript",
 			@@ ... @@
+			+             "issuer": Object {
+			+               "not": /\\.css$/i,
+			+             },
+			+             "parser": Object {
+			+               "exportType": "url",
+			+             },
+			+             "test": /\\.css$/i,
+			+             "type": "css/auto",
+			+           },
+			+           Object {
+			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
 			+         "exportsOnly": false,
@@ -3485,8 +3496,6 @@ describe("snapshots", () => {
 			+       },
 			+       "html": Object {},
 			@@ ... @@
-			+         },
-			+       },
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
@@ -3515,9 +3524,10 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			@@ ... @@
+			+       },
 			+       "html": Object {
 			+         "sources": true,
+			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -3552,9 +3562,6 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           ".ts",
 			@@ ... @@
-			+           "...",
-			+         ],
-			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -3598,9 +3605,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
+			+       },
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -3650,7 +3659,7 @@ describe("snapshots", () => {
 			+       ".cjs": Array [
 			+         ".cjs",
 			+         ".cts",
-			+       ],
+			@@ ... @@
 			+       ".js": Array [
 			+         ".js",
 			+         ".ts",
@@ -3658,7 +3667,7 @@ describe("snapshots", () => {
 			+       ".mjs": Array [
 			+         ".mjs",
 			+         ".mts",
-			@@ ... @@
+			+       ],
 			+     },
 			@@ ... @@
 			+     "tsconfig": true,
@@ -4048,6 +4057,16 @@ describe("snapshots", () => {
 			-     "typescript": undefined,
 			+     "typescript": true,
 			@@ ... @@
+			+           ],
+			+         },
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "type": "javascript/esm",
 			+       },
 			+       Object {
 			+         "rules": Array [
@@ -4058,7 +4077,7 @@ describe("snapshots", () => {
 			+             "resolve": Object {
 			+               "fullySpecified": true,
 			+             },
-			@@ ... @@
+			+           },
 			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
@@ -4074,10 +4093,10 @@ describe("snapshots", () => {
 			+               "fullySpecified": true,
 			+             },
 			+           },
-			+         ],
+			@@ ... @@
 			+         "type": "webassembly/async",
 			+       },
-			@@ ... @@
+			+       Object {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
@@ -4122,8 +4141,7 @@ describe("snapshots", () => {
 			+       Object {
 			+         "parser": Object {
 			+           "exportType": "css-style-sheet",
-			+         },
-			+         "resolve": Object {
+			@@ ... @@
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
@@ -4192,16 +4210,9 @@ describe("snapshots", () => {
 			+       },
 			+       Object {
 			+         "resolve": Object {
-			+           "byDependency": Object {
-			+             "esm": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         },
+			@@ ... @@
 			+         "test": /\\.mts$/i,
-			+         "type": "javascript/esm",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "descriptionData": Object {
 			+           "type": "module",
 			+         },
@@ -4244,6 +4255,17 @@ describe("snapshots", () => {
 			+       },
 			+       Object {
 			@@ ... @@
+			+           },
+			+           Object {
+			+             "issuer": Object {
+			+               "not": /\\.css$/i,
+			+             },
+			+             "parser": Object {
+			+               "exportType": "url",
+			+             },
+			+             "test": /\\.css$/i,
+			+             "type": "css/auto",
+			@@ ... @@
 			+       "css": Object {
 			+         "esModule": true,
 			+         "exportsOnly": false,
@@ -4274,8 +4296,6 @@ describe("snapshots", () => {
 			+       },
 			+       "html": Object {},
 			@@ ... @@
-			+         },
-			+       },
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
@@ -4304,9 +4324,10 @@ describe("snapshots", () => {
 			+         "dashedIdents": true,
 			+         "function": true,
 			+         "grid": true,
-			@@ ... @@
+			+       },
 			+       "html": Object {
 			+         "sources": true,
+			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -4338,9 +4359,6 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           ".ts",
 			@@ ... @@
-			+           "...",
-			+         ],
-			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -4368,10 +4386,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			@@ ... @@
+			+       },
 			+       "css-import-local-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -4434,7 +4453,7 @@ describe("snapshots", () => {
 			+       ".cjs": Array [
 			+         ".cjs",
 			+         ".cts",
-			+       ],
+			@@ ... @@
 			+       ".js": Array [
 			+         ".js",
 			+         ".ts",
@@ -4442,7 +4461,7 @@ describe("snapshots", () => {
 			+       ".mjs": Array [
 			+         ".mjs",
 			+         ".mts",
-			@@ ... @@
+			+       ],
 			+     },
 			@@ ... @@
 			+     "tsconfig": true,
