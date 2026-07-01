@@ -3012,6 +3012,184 @@ describe("snapshots", () => {
 		`)
 	);
 
+	test(
+		"universal target with a version lacking globalThis",
+		{
+			// node<12 has no `globalThis`; the merged target reports it as absent, so
+			// output.globalObject stays `self` and environment.globalThis stays false
+			target: ["web", "node10"],
+			experiments: { outputModule: false },
+			output: { chunkFormat: "array-push" }
+		},
+		(e) =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-     "web": true,
+			+     "web": false,
+			@@ ... @@
+			-       "bigIntLiteral": true,
+			+       "bigIntLiteral": false,
+			@@ ... @@
+			-       "document": true,
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "document": false,
+			+       "dynamicImport": false,
+			+       "dynamicImportInWorker": false,
+			@@ ... @@
+			-       "globalThis": undefined,
+			-       "hasOwn": undefined,
+			-       "importMetaDirnameAndFilename": undefined,
+			+       "globalThis": false,
+			+       "hasOwn": false,
+			+       "importMetaDirnameAndFilename": false,
+			@@ ... @@
+			-       "logicalAssignment": undefined,
+			+       "logicalAssignment": false,
+			@@ ... @@
+			-       "module": undefined,
+			-       "nodeBuiltinModuleGetter": undefined,
+			-       "nodePrefixForCoreModules": true,
+			-       "optionalChaining": true,
+			+       "module": false,
+			+       "nodeBuiltinModuleGetter": false,
+			+       "nodePrefixForCoreModules": false,
+			+       "optionalChaining": false,
+			@@ ... @@
+			-     "target": "web",
+			+     "target": undefined,
+			@@ ... @@
+			-     "chunkLoading": "jsonp",
+			+     "chunkLoading": false,
+			@@ ... @@
+			-     "enabledChunkLoadingTypes": Array [
+			-       "jsonp",
+			-       "import-scripts",
+			-     ],
+			+     "enabledChunkLoadingTypes": Array [],
+			@@ ... @@
+			-     "enabledWasmLoadingTypes": Array [
+			-       "fetch",
+			-     ],
+			+     "enabledWasmLoadingTypes": Array [],
+			@@ ... @@
+			-       "bigIntLiteral": true,
+			+       "bigIntLiteral": false,
+			@@ ... @@
+			-       "document": true,
+			-       "dynamicImport": undefined,
+			-       "dynamicImportInWorker": undefined,
+			+       "document": false,
+			+       "dynamicImport": false,
+			+       "dynamicImportInWorker": false,
+			@@ ... @@
+			-       "globalThis": undefined,
+			-       "hasOwn": undefined,
+			-       "importMetaDirnameAndFilename": undefined,
+			+       "globalThis": false,
+			+       "hasOwn": false,
+			+       "importMetaDirnameAndFilename": false,
+			@@ ... @@
+			-       "logicalAssignment": undefined,
+			+       "logicalAssignment": false,
+			@@ ... @@
+			-       "module": undefined,
+			-       "nodeBuiltinModuleGetter": undefined,
+			-       "nodePrefixForCoreModules": true,
+			-       "optionalChaining": true,
+			+       "module": false,
+			+       "nodeBuiltinModuleGetter": false,
+			+       "nodePrefixForCoreModules": false,
+			+       "optionalChaining": false,
+			@@ ... @@
+			-     "publicPath": "auto",
+			+     "publicPath": "",
+			@@ ... @@
+			-     "wasmLoading": "fetch",
+			+     "wasmLoading": false,
+			@@ ... @@
+			-     "workerChunkLoading": "import-scripts",
+			+     "workerChunkLoading": false,
+			@@ ... @@
+			-     "workerWasmLoading": "fetch",
+			+     "workerWasmLoading": false,
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-         "aliasFields": Array [
+			-           "browser",
+			-         ],
+			+         "aliasFields": Array [],
+			@@ ... @@
+			-           "browser",
+			@@ ... @@
+			-       "browser",
+			@@ ... @@
+			-   "target": "web",
+			+   "target": Array [
+			+     "web",
+			+     "node10",
+			+   ],
+		`)
+	);
+
 	test("records", { recordsPath: "some-path" }, (e) =>
 		e.toMatchInlineSnapshot(`
 		- Expected
