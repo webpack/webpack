@@ -13022,6 +13022,11 @@ declare interface KnownBuildInfo {
 	 * true when the module is part of a circular dependency chain
 	 */
 	isCircular?: boolean;
+
+	/**
+	 * request keys of re-export targets still deferred by the lazy barrel optimization; part of the provided-exports cache key
+	 */
+	lazyDependencies?: Set<string>;
 }
 declare interface KnownBuildMeta {
 	exportsType?: "default" | "namespace" | "flagged" | "dynamic";

@@ -8,6 +8,11 @@ module.exports = {
 	},
 	module: {
 		unsafeCache: true,
+		parser: {
+			javascript: {
+				exportsPresence: "error"
+			}
+		},
 		rules: [
 			{
 				test: /pkg/,

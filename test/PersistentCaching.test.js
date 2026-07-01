@@ -68,6 +68,7 @@ describe("Persistent Caching", () => {
 		await mkdir(srcPath, { recursive: true });
 		for (const key of Object.keys(data)) {
 			const p = path.resolve(srcPath, key);
+			await mkdir(path.dirname(p), { recursive: true });
 			await writeFile(p, data[key]);
 			await utimes(p, ts, ts);
 		}
@@ -149,6 +150,40 @@ export default 40 + file;
 		await updateSrc(data);
 		await compile();
 		expect(execute()).toBe(42);
+	}, 100000);
+
+	it("should not serve stale barrel exports when a deferred star target is later imported", async () => {
+		const providedExportsOf = (/** @type {EXPECTED_ANY} */ stats, name) => {
+			const mod = stats
+				.toJson({ modules: true, providedExports: true })
+				.modules.find(
+					(/** @type {EXPECTED_ANY} */ m) => m.name && m.name.endsWith(name)
+				);
+			return mod && mod.providedExports;
+		};
+		// `sideEffects: false` marks pkg as a lazy barrel; build 1 only uses the
+		// local export, so `export * from "./sub"` stays deferred and pkg is cached
+		// without sub's `b`
+		await updateSrc({
+			"index.js": 'import { local } from "./pkg";\nexport default local;\n',
+			"pkg/package.json": '{ "name": "pkg", "sideEffects": false }\n',
+			"pkg/index.js": 'export const local = "local";\nexport * from "./sub";\n',
+			"pkg/sub/index.js": 'export const b = "B";\n'
+		});
+		const stats1 = await compile();
+		expect(execute()).toBe("local");
+		expect(providedExportsOf(stats1, "pkg/index.js")).toEqual(["local"]);
+		// build 2 imports `b`, which un-defers `./sub`; pkg is restored from the
+		// stale cache by its unchanged hash and must be re-flagged to regain `b`
+		await updateSrc({
+			"index.js":
+				'import { local, b } from "./pkg";\nexport default local + b;\n'
+		});
+		const stats2 = await compile();
+		expect(execute()).toBe("localB");
+		expect(providedExportsOf(stats2, "pkg/index.js")).toEqual(
+			expect.arrayContaining(["local", "b"])
+		);
 	}, 100000);
 
 	it("should merge multiple small files", async () => {
