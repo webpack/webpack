@@ -1,5 +1,11 @@
 # webpack
 
+## 5.108.4
+
+### Patch Changes
+
+- Default `output.globalObject` to `globalThis` for universal targets. (by [@alexander-akait](https://github.com/alexander-akait) in [#21314](https://github.com/webpack/webpack/pull/21314))
+
 ## 5.108.3
 
 ### Patch Changes
