@@ -849,7 +849,7 @@ describe("buildHtmlAst — stray doctype and <html> re-dispatch", () => {
 // The `skip` options are pure output reductions: tree construction (and quirks
 // detection) must run identically, so the ELEMENT tree — tags, nesting, offsets
 // and attributes — is the same with any skip combination as with none. This
-// guards the risky `skip.text` path, which drops text-node insertion.
+// guards the risky `skip.proseText` path, which drops text-node insertion.
 describe("buildHtmlAst — skip options preserve element structure", () => {
 	// A spread of construction edge cases: foster parenting, adoption agency,
 	// select/table/ruby scoping, foreign content, raw-text elements, quirks.
@@ -868,7 +868,19 @@ describe("buildHtmlAst — skip options preserve element structure", () => {
 		"<script>var a = 1 < 2 && '</x>';</script><style>.a{color:red}</style>",
 		"<pre>\nkeep</pre><textarea>\nx</textarea>",
 		"<!-- c1 --><p>x<!-- c2 --></p><!-- c3 -->",
-		"<frameset>x<frame></frameset>"
+		"<frameset>x<frame></frameset>",
+		// Foreign-content CDATA becomes character data (dropped as prose).
+		"<svg><![CDATA[cdata text]]><rect/></svg>",
+		// No doctype → quirks mode; skip.doctype must not change that.
+		"<table><tr><td>quirks</td></tr></table>",
+		// Entities/whitespace in prose text (whitespace routing in head/table).
+		"  <html>  <head>  </head>  <body> a &amp; b &#60; c </body> </html>",
+		// Escapable raw-text bodies + a title in head.
+		"<title>page &amp; more</title><textarea>form\ntext</textarea>",
+		// Button scope + implied end tags.
+		"<button><p>x</button>y",
+		// Comment-only document.
+		"<!-- only a comment -->"
 	];
 
 	/**
@@ -906,10 +918,10 @@ describe("buildHtmlAst — skip options preserve element structure", () => {
 	};
 
 	const skipCombos = [
-		{ text: true },
+		{ proseText: true },
 		{ comments: true },
 		{ doctype: true },
-		{ text: true, comments: true, doctype: true }
+		{ proseText: true, comments: true, doctype: true }
 	];
 
 	it.each(cases)("keeps the element tree stable under skip (%s)", (src) => {
@@ -921,9 +933,9 @@ describe("buildHtmlAst — skip options preserve element structure", () => {
 		}
 	});
 
-	it("skip.text keeps <script>/<style> bodies (offset-only) and drops prose", () => {
+	it("skip.proseText keeps <script>/<style> bodies (offset-only) and drops prose", () => {
 		const src = "<p>prose</p><script>var x=1;</script>";
-		const doc = buildHtmlAst(src, undefined, { text: true });
+		const doc = buildHtmlAst(src, undefined, { proseText: true });
 		/** @type {import("../lib/html/syntax").HtmlText[]} */
 		const texts = [];
 		/** @param {import("../lib/html/syntax").HtmlNode} n node */
@@ -958,5 +970,52 @@ describe("buildHtmlAst — skip options preserve element structure", () => {
 		// Baseline still has both.
 		expect(count(buildHtmlAst(src), NodeType.Comment)).toBe(1);
 		expect(count(buildHtmlAst(src), NodeType.Doctype)).toBe(1);
+	});
+
+	it("skip.proseText keeps every raw-text element body (script/style/textarea/title)", () => {
+		// Each body is the element's raw value, so all four survive (offset-only).
+		const src =
+			"<title>ti</title><style>.s{}</style></head><body>prose<script>sc</script><textarea>ta</textarea>";
+		const doc = buildHtmlAst(src, undefined, { proseText: true });
+		/** @type {Record<string, string>} */
+		const bodies = {};
+		/**
+		 * @param {import("../lib/html/syntax").HtmlNode} n node
+		 * @param {import("../lib/html/syntax").HtmlElement | null} parent parent
+		 */
+		const walk = (n, parent) => {
+			if (n.type === NodeType.Text && parent) {
+				expect(n.data).toBeUndefined();
+				bodies[parent.tagName] = src.slice(n.start, n.end);
+			}
+			if (n.type === NodeType.Element) {
+				for (const c of n.children) walk(c, n);
+			}
+		};
+		for (const c of doc.children) walk(c, null);
+		expect(bodies).toEqual({
+			title: "ti",
+			style: ".s{}",
+			script: "sc",
+			textarea: "ta"
+		});
+	});
+
+	it("skip options preserve element structure under fragment parsing", () => {
+		// Fragment contexts drive a different initial insertion mode; skips must
+		// still leave the element tree (and offsets) identical.
+		/** @type {[string, string][]} */
+		const fragments = [
+			["<td>a</td><tr><td>b", "table"],
+			["<li>x<li>y", "ul"],
+			["text<b>bold</b>", "div"],
+			["<rect/>text", "svg"]
+		];
+		for (const [src, ctx] of fragments) {
+			const base = elementSignature(buildHtmlAst(src, ctx));
+			for (const skip of skipCombos) {
+				expect(elementSignature(buildHtmlAst(src, ctx, skip))).toBe(base);
+			}
+		}
 	});
 });
