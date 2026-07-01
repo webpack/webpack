@@ -765,4 +765,24 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 		expect(valueTypes).toContain(NodeType.Number);
 		expect(valueTypes).toContain(NodeType.Dimension);
 	});
+
+	it("accepts skip as SourceProcessor instance options (no per-call skip)", () => {
+		/** @type {string[]} */
+		const seen = [];
+		new SourceProcessor({
+			as: "block-contents",
+			skip: { types: buildSkipSet([NodeType.Number]) }
+		})
+			.use(
+				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
+					[NodeType.Number]: () => seen.push("num"),
+					[NodeType.Ident]: (
+						/** @type {import("../lib/css/syntax").Node} */ n
+					) => seen.push(A.value(n))
+				})
+			)
+			.process("p: 1 foo");
+		// The instance-level skip drops numbers; `process` needed no options.
+		expect(seen).toEqual(["foo"]);
+	});
 });
