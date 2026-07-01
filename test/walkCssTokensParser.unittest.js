@@ -644,6 +644,17 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 		expect(counts[NodeType.Declaration]).toBe(base[NodeType.Declaration]);
 	});
 
+	it("skipping SimpleBlock drops the block and its whole subtree", () => {
+		// `(7 qux)` is a paren simple block holding a Number and an Ident.
+		const counts = countByType(
+			"p: foo (7 qux)",
+			buildSkipSet([NodeType.SimpleBlock])
+		);
+		expect(counts[NodeType.SimpleBlock] || 0).toBe(0);
+		expect(counts[NodeType.Number] || 0).toBe(0); // nested 7 not walked
+		expect(counts[NodeType.Ident]).toBe(1); // only top-level foo, not qux
+	});
+
 	it("a combined skip set drops every listed type at once", () => {
 		const counts = countByType(
 			VALUE_CSS,
@@ -693,6 +704,48 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 				skip: buildSkipSet([NodeType.QualifiedRule])
 			});
 		expect(urls).toEqual(["p.png"]);
+	});
+
+	it("skipping AtRule drops the at-rule prelude but keeps the block", () => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
+					[NodeType.AtRule]: (
+						/** @type {import("../lib/css/syntax").AtRule} */ n
+					) => log.push(`at:${A.name(n)}`),
+					[NodeType.Ident]: (
+						/** @type {import("../lib/css/syntax").Node} */ n
+					) => log.push(`ident:${A.value(n)}`),
+					[NodeType.Declaration]: (
+						/** @type {import("../lib/css/syntax").Declaration} */ n
+					) => log.push(`decl:${A.name(n)}`)
+				})
+			)
+			.process("@media (min-width:9px){a{color:red}}", {
+				skip: buildSkipSet([NodeType.AtRule])
+			});
+		// The at-rule fires, its prelude ident (min-width) is dropped, and the
+		// block (the nested rule + its declaration + value ident) is still walked.
+		expect(log).toEqual(["at:media", "ident:a", "decl:color", "ident:red"]);
+	});
+
+	it("skipping AtRule still surfaces url() in an at-rule prelude (@import)", () => {
+		/** @type {string[]} */
+		const urls = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
+					[NodeType.Url]: (
+						/** @type {import("../lib/css/syntax").UrlToken} */ n
+					) => urls.push(A.value(n))
+				})
+			)
+			.process("@import url(x.css);", {
+				skip: buildSkipSet([NodeType.AtRule])
+			});
+		expect(urls).toEqual(["x.css"]);
 	});
 
 	it("the object backend (parseAStylesheet) ignores a prior skip and builds the full tree", () => {
