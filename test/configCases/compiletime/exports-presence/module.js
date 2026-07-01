@@ -24,6 +24,14 @@ describe("should not add additional warnings/errors", () => {
 				fn(ns.a, ns.d);
 			}
 		}
+		// mirror of `0 || "a" in ns`: statically-falsy operand on the right
+		if ("a" in ns || 0) {
+			fn(ns.a);
+		}
+		// `in` is never nullish, so `?? 0` is a no-op guard
+		if ("a" in ns ?? 0) {
+			fn(ns.a);
+		}
 
 		// warning: 31:6-10(a)
 		if (!("a" in ns)) {
@@ -32,6 +40,13 @@ describe("should not add additional warnings/errors", () => {
 		}
 
 		if (!!("a" in ns)) {
+			fn(ns.a);
+		}
+
+		// a negated `in` guard flips for the `else` branch
+		if (!("a" in ns)) {
+			// no access
+		} else {
 			fn(ns.a);
 		}
 	});
