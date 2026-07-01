@@ -1,5 +1,5 @@
-it("should load in node without referencing `self`", () => {
-	// `self` (undefined in node) would throw at load; reaching here proves it isn't referenced.
+it("should not throw on load from an unguarded `self` in node", () => {
+	// an unguarded `self` (undefined in node) throws at load; reaching here proves there is none.
 	expect(hello()).toBe("hello");
 });
 
