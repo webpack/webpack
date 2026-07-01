@@ -579,7 +579,7 @@ class FakeSheet {
 					"utf8"
 				);
 			});
-		for (let pos = 0; ; ) {
+		for (let pos = 0; ;) {
 			const t = readToken(css, pos, /** @type {MutableToken} */ ({}));
 			if (t === undefined) break;
 			pos = t.end;
@@ -684,7 +684,7 @@ class CSSStyleSheet {
 
 		let ruleStart = 0;
 
-		for (let pos = 0; ; ) {
+		for (let pos = 0; ;) {
 			const t = readToken(cleanCss, pos, /** @type {MutableToken} */ ({}));
 			if (t === undefined) break;
 			pos = t.end;
