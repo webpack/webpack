@@ -13027,6 +13027,11 @@ declare interface KnownHtmlModuleBuildInfo {
 	 * entries collected from the document, grouped by kind
 	 */
 	htmlEntryScripts?: Record<string, EntryScriptInfo[]>;
+
+	/**
+	 * `../` per `<base href>` path segment, prepended to the auto-public-path undo path so a relative base doesn't misdirect bundled URLs
+	 */
+	baseUrlPrefix?: string;
 }
 declare interface KnownJavascriptModuleBuildInfo {
 	/**

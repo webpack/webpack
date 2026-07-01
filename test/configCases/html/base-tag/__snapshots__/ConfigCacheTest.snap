@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html base-tag exported tests should handle a base that escapes above the document dir without warning 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<base href=\\"../up/\\">
+<title>Escaping base</title>
+</head>
+<body>
+<img src=\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==\\" alt=\\"scheme URL, unaffected by base\\">
+</body>
+</html>
+"
+`;
+
+exports[`ConfigCacheTestCases html base-tag exported tests should leave URLs untouched under a root-relative <base href> 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<base href=\\"/\\">
+<title>Root base</title>
+</head>
+<body>
+<img src=\\"server-root.png\\" alt=\\"left untouched: resolved against the server root\\">
+</body>
+</html>
+"
+`;
+
+exports[`ConfigCacheTestCases html base-tag exported tests should leave URLs untouched under an absolute <base href> 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<base href=\\"https://cdn.example.com/assets/\\">
+<title>External base</title>
+</head>
+<body>
+<img src=\\"remote-only.png\\" alt=\\"left untouched: served from the external base\\">
+</body>
+</html>
+"
+`;
+
+exports[`ConfigCacheTestCases html base-tag exported tests should prefix one \`../\` per segment of a deep relative base 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<base href=\\"assets/img/\\">
+<title>Deep relative base</title>
+</head>
+<body>
+<img src=\\"../../31d6cfe0d16ae931b73c.png\\" alt=\\"resolved two levels deep\\">
+</body>
+</html>
+"
+`;
+
+exports[`ConfigCacheTestCases html base-tag exported tests should resolve relative URLs against a relative <base href> 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<base href=\\"nested/\\">
+<title>Relative base</title>
+</head>
+<body>
+<img src=\\"../31d6cfe0d16ae931b73c.png\\" alt=\\"resolved via base\\">
+<img src=\\"../31d6cfe0d16ae931b73c.png\\" alt=\\"root-relative ignores base\\">
+<img src=\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==\\" alt=\\"scheme ignores base\\">
+</body>
+</html>
+"
+`;
