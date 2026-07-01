@@ -845,3 +845,118 @@ describe("buildHtmlAst — stray doctype and <html> re-dispatch", () => {
 		expect(root.attributes.some((a) => a.name === "lang")).toBe(true);
 	});
 });
+
+// The `skip` options are pure output reductions: tree construction (and quirks
+// detection) must run identically, so the ELEMENT tree — tags, nesting, offsets
+// and attributes — is the same with any skip combination as with none. This
+// guards the risky `skip.text` path, which drops text-node insertion.
+describe("buildHtmlAst — skip options preserve element structure", () => {
+	// A spread of construction edge cases: foster parenting, adoption agency,
+	// select/table/ruby scoping, foreign content, raw-text elements, quirks.
+	const cases = [
+		"<!DOCTYPE html><html><head><title>t</title></head><body>hi</body></html>",
+		"<table>foo<td>bar</td></table>",
+		"a<table>b</table>c",
+		"text<table><tbody><tr>cell<td>real</table>after",
+		"<p>a<b>b<i>c</p>d</i>e",
+		"<b>1<p>2</b>3",
+		"<a>1<a>2<a>3",
+		"<select>x<option>y</option>z</select>",
+		"<ruby>base<rt>anno</rt></ruby>",
+		"<div><table>txt<svg><foreignObject><div>x</div></foreignObject></svg></table></div>",
+		"<math><mtext>t<mglyph>g</math>after",
+		"<script>var a = 1 < 2 && '</x>';</script><style>.a{color:red}</style>",
+		"<pre>\nkeep</pre><textarea>\nx</textarea>",
+		"<!-- c1 --><p>x<!-- c2 --></p><!-- c3 -->",
+		"<frameset>x<frame></frameset>"
+	];
+
+	/**
+	 * @param {import("../lib/html/syntax").HtmlDocument} doc document
+	 * @returns {string} a signature of the element tree (tags, nesting, offsets, attrs)
+	 */
+	const elementSignature = (doc) => {
+		/** @type {string[]} */
+		const out = [];
+		/**
+		 * @param {import("../lib/html/syntax").HtmlNode | import("../lib/html/syntax").HtmlDocument | import("../lib/html/syntax").HtmlDocumentFragment} node node
+		 * @param {number} depth depth
+		 */
+		const walk = (node, depth) => {
+			if (node.type === NodeType.Element) {
+				const attrs = node.attributes
+					.map(
+						(a) =>
+							`${a.name}(${a.nameStart},${a.nameEnd},${a.valueStart},${a.valueEnd})`
+					)
+					.join(",");
+				out.push(
+					`${depth}:${node.tagName}@${node.namespace}[${node.start},${node.end},${node.tagEnd},${node.nameEnd}]{${attrs}}`
+				);
+				if (node.templateContent) {
+					for (const c of node.templateContent.children) walk(c, depth + 1);
+				}
+			}
+			if ("children" in node) {
+				for (const c of node.children) walk(c, depth + 1);
+			}
+		};
+		walk(doc, 0);
+		return out.join("\n");
+	};
+
+	const skipCombos = [
+		{ text: true },
+		{ comments: true },
+		{ doctype: true },
+		{ text: true, comments: true, doctype: true }
+	];
+
+	it.each(cases)("keeps the element tree stable under skip (%s)", (src) => {
+		const baseline = elementSignature(buildHtmlAst(src));
+		for (const skip of skipCombos) {
+			expect(elementSignature(buildHtmlAst(src, undefined, skip))).toBe(
+				baseline
+			);
+		}
+	});
+
+	it("skip.text keeps <script>/<style> bodies (offset-only) and drops prose", () => {
+		const src = "<p>prose</p><script>var x=1;</script>";
+		const doc = buildHtmlAst(src, undefined, { text: true });
+		/** @type {import("../lib/html/syntax").HtmlText[]} */
+		const texts = [];
+		/** @param {import("../lib/html/syntax").HtmlNode} n node */
+		const walk = (n) => {
+			if (n.type === NodeType.Text) texts.push(n);
+			if (n.type === NodeType.Element) for (const c of n.children) walk(c);
+		};
+		for (const c of doc.children) walk(c);
+		// Only the <script> body survives, and it carries offsets but no `data`.
+		expect(texts).toHaveLength(1);
+		expect(texts[0].data).toBeUndefined();
+		expect(src.slice(texts[0].start, texts[0].end)).toBe("var x=1;");
+	});
+
+	it("skip.comments drops comment nodes; skip.doctype drops the doctype node", () => {
+		const src = "<!DOCTYPE html><!-- c --><p></p>";
+		const count = (
+			/** @type {import("../lib/html/syntax").HtmlDocument} */ doc,
+			/** @type {number} */ type
+		) => {
+			let n = 0;
+			/** @param {import("../lib/html/syntax").HtmlNode} node node */
+			const walk = (node) => {
+				if (node.type === type) n++;
+				if ("children" in node) for (const c of node.children) walk(c);
+			};
+			for (const c of doc.children) walk(c);
+			return n;
+		};
+		expect(count(buildHtmlAst(src, undefined, { comments: true }), NodeType.Comment)).toBe(0);
+		expect(count(buildHtmlAst(src, undefined, { doctype: true }), NodeType.Doctype)).toBe(0);
+		// Baseline still has both.
+		expect(count(buildHtmlAst(src), NodeType.Comment)).toBe(1);
+		expect(count(buildHtmlAst(src), NodeType.Doctype)).toBe(1);
+	});
+});
