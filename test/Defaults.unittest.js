@@ -1057,9 +1057,6 @@ describe("snapshots", () => {
 		+       "dynamicImport": true,
 		+       "dynamicImportInWorker": true,
 		@@ ... @@
-		-       "globalThis": undefined,
-		+       "globalThis": true,
-		@@ ... @@
 		-       "module": undefined,
 		+       "module": true,
 		@@ ... @@
@@ -1082,9 +1079,6 @@ describe("snapshots", () => {
 		-       "dynamicImportInWorker": undefined,
 		+       "dynamicImport": true,
 		+       "dynamicImportInWorker": true,
-		@@ ... @@
-		-       "globalThis": undefined,
-		+       "globalThis": true,
 		@@ ... @@
 		-       "module": undefined,
 		+       "module": true,
@@ -2679,9 +2673,6 @@ describe("snapshots", () => {
 			+       "dynamicImport": true,
 			+       "dynamicImportInWorker": true,
 			@@ ... @@
-			-       "globalThis": undefined,
-			+       "globalThis": true,
-			@@ ... @@
 			-       "module": undefined,
 			+       "module": true,
 			@@ ... @@
@@ -2717,9 +2708,6 @@ describe("snapshots", () => {
 			+       "document": false,
 			+       "dynamicImport": true,
 			+       "dynamicImportInWorker": true,
-			@@ ... @@
-			-       "globalThis": undefined,
-			+       "globalThis": true,
 			@@ ... @@
 			-       "module": undefined,
 			+       "module": true,
@@ -2866,9 +2854,6 @@ describe("snapshots", () => {
 			+       "dynamicImport": true,
 			+       "dynamicImportInWorker": true,
 			@@ ... @@
-			-       "globalThis": undefined,
-			+       "globalThis": true,
-			@@ ... @@
 			-       "module": undefined,
 			+       "module": true,
 			@@ ... @@
@@ -2904,9 +2889,6 @@ describe("snapshots", () => {
 			+       "document": false,
 			+       "dynamicImport": true,
 			+       "dynamicImportInWorker": true,
-			@@ ... @@
-			-       "globalThis": undefined,
-			+       "globalThis": true,
 			@@ ... @@
 			-       "module": undefined,
 			+       "module": true,
