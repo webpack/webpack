@@ -572,6 +572,7 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 	const VALUE_CSS =
 		'p: foo 10 10px 50% #fff / "s" : , bar(9 baz #aaa 2px "t" %)';
 	// Leaf types present in VALUE_CSS's value (Whitespace too, from the spaces).
+	/** @type {[string, number][]} */
 	const LEAF_TYPES = [
 		["Ident", NodeType.Ident],
 		["Number", NodeType.Number],
