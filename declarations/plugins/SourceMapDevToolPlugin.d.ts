@@ -12,9 +12,7 @@ export type Rules = Rule[] | Rule;
  * Condition used to match resource (string, RegExp or Function).
  */
 export type Rule =
-	| RegExp
-	| string
-	| import("../../lib/ModuleFilenameHelpers").MatcherFn;
+	RegExp | string | import("../../lib/ModuleFilenameHelpers").MatcherFn;
 
 export interface SourceMapDevToolPluginOptions {
 	/**

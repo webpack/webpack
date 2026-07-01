@@ -79,7 +79,7 @@ describe("readToken", () => {
 			const results = [];
 			// Drive the lexer core directly: a fresh `out` per call collects the
 			// raw token list (comments included); `readToken` returns undefined at EOF.
-			for (let pos = 0; ; ) {
+			for (let pos = 0; ;) {
 				const t = readToken(
 					code,
 					pos,
@@ -115,7 +115,7 @@ describe("readToken", () => {
  */
 const tokenRoundtrip = (input) => {
 	let out = "";
-	for (let pos = 0; ; ) {
+	for (let pos = 0; ;) {
 		const t = readToken(
 			input,
 			pos,
