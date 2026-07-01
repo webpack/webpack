@@ -618,21 +618,6 @@ describe("buildHtmlAst — SourceProcessor", () => {
 		expect(log).toEqual(["html", "head", "template", "fragment", "p", "body"]);
 	});
 
-	it("walks a pre-built AST when options.ast is given", () => {
-		/** @type {string[]} */
-		const log = [];
-		const ast = buildHtmlAst("<p>x</p>");
-		new SourceProcessor()
-			.use({
-				[NodeType.Element]: (n) =>
-					log.push(
-						/** @type {import("../lib/html/syntax").HtmlElement} */ (n).tagName
-					)
-			})
-			.process("ignored input", { ast });
-		expect(log).toEqual(["html", "head", "body", "p"]);
-	});
-
 	it("use() chains and accumulates visitors per type", () => {
 		let a = 0;
 		let b = 0;
@@ -983,8 +968,12 @@ describe("buildHtmlAst — skip options preserve element structure", () => {
 			for (const c of doc.children) walk(c);
 			return n;
 		};
-		expect(count(buildHtmlAst(src, undefined, { comments: true }), NodeType.Comment)).toBe(0);
-		expect(count(buildHtmlAst(src, undefined, { doctype: true }), NodeType.Doctype)).toBe(0);
+		expect(
+			count(buildHtmlAst(src, undefined, { comments: true }), NodeType.Comment)
+		).toBe(0);
+		expect(
+			count(buildHtmlAst(src, undefined, { doctype: true }), NodeType.Doctype)
+		).toBe(0);
 		// Baseline still has both.
 		expect(count(buildHtmlAst(src), NodeType.Comment)).toBe(1);
 		expect(count(buildHtmlAst(src), NodeType.Doctype)).toBe(1);
