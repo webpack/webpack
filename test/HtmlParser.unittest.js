@@ -2,23 +2,16 @@
 
 const path = require("path");
 
-jest.mock("../lib/html/syntax", () => ({
-	...jest.requireActual("../lib/html/syntax"),
-	buildHtmlAst: jest.fn()
-}));
-
-/** @typedef {import("../lib/html/syntax")["buildHtmlAst"] & { mockReturnValue: (val: EXPECTED_ANY) => void }} MockedBuildHtmlAst */
-
+// These tests drive the real tree builder end-to-end (like the CSS parser
+// tests): `HtmlParser` builds the AST inside `SourceProcessor.process`, so
+// there is nothing to mock — each case parses real HTML and asserts the
+// extracted dependencies.
 const HtmlInlineScriptDependency = require("../lib/dependencies/HtmlInlineScriptDependency");
 const HtmlInlineStyleDependency = require("../lib/dependencies/HtmlInlineStyleDependency");
 const HtmlSourceDependency = require("../lib/dependencies/HtmlSourceDependency");
 const CommentCompilationWarning = require("../lib/errors/CommentCompilationWarning");
 const UnsupportedFeatureWarning = require("../lib/errors/UnsupportedFeatureWarning");
 const HtmlParser = require("../lib/html/HtmlParser");
-const buildHtmlAst = /** @type {MockedBuildHtmlAst} */ (
-	require("../lib/html/syntax").buildHtmlAst
-);
-const { NodeType } = require("../lib/html/syntax");
 
 /**
  * @returns {{ module: EXPECTED_ANY, presentationalDependencies: EXPECTED_OBJECT[], dependencies: EXPECTED_OBJECT[], warnings: EXPECTED_OBJECT[], errors: EXPECTED_OBJECT[] }} test doubles
@@ -102,37 +95,6 @@ describe("HtmlParser", () => {
 			}
 		});
 
-		buildHtmlAst.mockReturnValue({
-			type: NodeType.Document,
-			children: [
-				{
-					type: NodeType.Element,
-					tagName: "script",
-					namespace: 0,
-					attributes: [],
-					children: [
-						{
-							type: NodeType.Text,
-							data: firstText,
-							start: firstStart,
-							end: firstStart + firstText.length
-						},
-						{
-							type: NodeType.Text,
-							data: secondText,
-							start: secondStart,
-							end: secondStart + secondText.length
-						}
-					],
-					selfClosing: false,
-					start: 0,
-					end: source.length,
-					tagEnd: source.indexOf(">") + 1,
-					nameEnd: "<script".length
-				}
-			]
-		});
-
 		const parser = new HtmlParser({});
 		parser.parse(
 			source,
@@ -157,7 +119,6 @@ describe("HtmlParser", () => {
 			)
 		);
 
-		expect(buildHtmlAst).toHaveBeenCalledWith(source, undefined, true);
 		expect(dependencies).toHaveLength(1);
 		expect(presentationalDependencies).toHaveLength(1);
 
@@ -213,43 +174,6 @@ describe("HtmlParser", () => {
 				dependencies.push(dependency);
 			},
 			addCodeGenerationDependency() {}
-		});
-
-		buildHtmlAst.mockReturnValue({
-			type: NodeType.Document,
-			children: [
-				{
-					type: NodeType.Element,
-					tagName: "style",
-					namespace: 0,
-					attributes: [],
-					children: [
-						{
-							type: NodeType.Text,
-							data: firstText,
-							start: firstStart,
-							end: firstStart + firstText.length
-						},
-						{
-							type: NodeType.Comment,
-							data: " X ",
-							start: firstStart + firstText.length,
-							end: secondStart
-						},
-						{
-							type: NodeType.Text,
-							data: secondText,
-							start: secondStart,
-							end: secondStart + secondText.length
-						}
-					],
-					selfClosing: false,
-					start: 0,
-					end: source.length,
-					tagEnd: source.indexOf(">") + 1,
-					nameEnd: "<style".length
-				}
-			]
 		});
 
 		const parser = new HtmlParser({});
@@ -366,17 +290,6 @@ describe("HtmlParser", () => {
 	it("warns on a malformed webpackIgnore magic comment", () => {
 		const source = "<!-- webpackIgnore: ) -->";
 		const { module, warnings } = makeModule();
-		buildHtmlAst.mockReturnValue({
-			type: NodeType.Document,
-			children: [
-				{
-					type: NodeType.Comment,
-					data: " webpackIgnore: ) ",
-					start: 0,
-					end: source.length
-				}
-			]
-		});
 
 		new HtmlParser({}).parse(source, makeState(module));
 
@@ -387,17 +300,6 @@ describe("HtmlParser", () => {
 	it("warns when webpackIgnore is not a boolean", () => {
 		const source = "<!-- webpackIgnore: 5 -->";
 		const { module, warnings } = makeModule();
-		buildHtmlAst.mockReturnValue({
-			type: NodeType.Document,
-			children: [
-				{
-					type: NodeType.Comment,
-					data: " webpackIgnore: 5 ",
-					start: 0,
-					end: source.length
-				}
-			]
-		});
 
 		new HtmlParser({}).parse(source, makeState(module));
 
@@ -408,23 +310,6 @@ describe("HtmlParser", () => {
 	it("does not emit a dependency for a whitespace-only inline <style>", () => {
 		const source = "<style>   </style>";
 		const { module, dependencies } = makeModule();
-		buildHtmlAst.mockReturnValue({
-			type: NodeType.Document,
-			children: [
-				{
-					type: NodeType.Element,
-					tagName: "style",
-					namespace: 0,
-					attributes: [],
-					children: [{ type: NodeType.Text, data: "   ", start: 7, end: 10 }],
-					selfClosing: false,
-					start: 0,
-					end: source.length,
-					tagEnd: 7,
-					nameEnd: "<style".length
-				}
-			]
-		});
 
 		new HtmlParser({}).parse(source, makeState(module, { css: true }));
 
@@ -434,17 +319,19 @@ describe("HtmlParser", () => {
 	});
 
 	it("accepts a Buffer source and strips a leading BOM", () => {
-		const { module } = makeModule();
-		buildHtmlAst.mockReturnValue({
-			type: NodeType.Document,
-			children: []
-		});
+		const range = (/** @type {string | Buffer} */ src) => {
+			const { module, dependencies } = makeModule();
+			new HtmlParser({}).parse(src, makeState(module));
+			const dep = dependencies.find((d) => d instanceof HtmlSourceDependency);
+			return /** @type {EXPECTED_ANY} */ (dep).range;
+		};
 
-		new HtmlParser({}).parse(Buffer.from("<div></div>"), makeState(module));
-		expect(buildHtmlAst).toHaveBeenCalledWith("<div></div>", undefined, true);
-
-		new HtmlParser({}).parse("﻿<div></div>", makeState(module));
-		expect(buildHtmlAst).toHaveBeenLastCalledWith("<div></div>", undefined, true);
+		// A Buffer source parses like the equivalent string.
+		expect(range(Buffer.from("<img src=a.png>"))).toEqual(
+			range("<img src=a.png>")
+		);
+		// A leading BOM is stripped, so offsets align with the un-prefixed source.
+		expect(range("﻿<img src=a.png>")).toEqual(range("<img src=a.png>"));
 	});
 
 	it("throws when given a preparsed (object) source", () => {
@@ -460,17 +347,6 @@ describe("HtmlParser", () => {
 	it("ignores a magic comment that has no webpackIgnore key", () => {
 		const source = "<!-- webpackPreload: true -->";
 		const { module, warnings } = makeModule();
-		buildHtmlAst.mockReturnValue({
-			type: NodeType.Document,
-			children: [
-				{
-					type: NodeType.Comment,
-					data: " webpackPreload: true ",
-					start: 0,
-					end: source.length
-				}
-			]
-		});
 
 		new HtmlParser({}).parse(source, makeState(module));
 		expect(warnings).toHaveLength(0);
@@ -479,23 +355,6 @@ describe("HtmlParser", () => {
 	it("does not emit a dependency for an empty inline <style>", () => {
 		const source = "<style></style>";
 		const { module, dependencies } = makeModule();
-		buildHtmlAst.mockReturnValue({
-			type: NodeType.Document,
-			children: [
-				{
-					type: NodeType.Element,
-					tagName: "style",
-					namespace: 0,
-					attributes: [],
-					children: [],
-					selfClosing: false,
-					start: 0,
-					end: source.length,
-					tagEnd: 7,
-					nameEnd: "<style".length
-				}
-			]
-		});
 
 		new HtmlParser({}).parse(source, makeState(module, { css: true }));
 
@@ -504,49 +363,6 @@ describe("HtmlParser", () => {
 		).toHaveLength(0);
 	});
 
-	// Build a `<script type=… src=…>` AST element with offsets derived from the
-	// source so reconcileScriptTypeAttr sees the real attribute spans.
-	const scriptWithType = (/** @type {string} */ source) => {
-		/**
-		 * @param {string} name attribute name
-		 * @returns {EXPECTED_ANY} attribute
-		 */
-		const attr = (name) => {
-			const nameStart = source.indexOf(`${name}=`);
-			const nameEnd = nameStart + name.length;
-			const afterEq = nameEnd + 1;
-			const quote = source[afterEq] === '"' || source[afterEq] === "'";
-			const valueStart = quote ? afterEq + 1 : afterEq;
-			const end = source.indexOf(quote ? source[afterEq] : " ", valueStart);
-			const valueEnd = end === -1 ? source.indexOf(">") : end;
-			return {
-				name,
-				value: source.slice(valueStart, valueEnd),
-				nameStart,
-				nameEnd,
-				valueStart,
-				valueEnd
-			};
-		};
-		return {
-			type: NodeType.Document,
-			children: [
-				{
-					type: NodeType.Element,
-					tagName: "script",
-					namespace: 0,
-					attributes: [attr("type"), attr("src")],
-					children: [],
-					selfClosing: false,
-					start: 0,
-					end: source.length,
-					tagEnd: source.indexOf(">") + 1,
-					nameEnd: "<script".length
-				}
-			]
-		};
-	};
-
 	it.each([
 		["<script type='module' src='a.js'></script>"],
 		["<script type=module src=b.js></script>"]
@@ -554,7 +370,6 @@ describe("HtmlParser", () => {
 		"drops a single-quoted/unquoted type=module for classic output (%s)",
 		(source) => {
 			const { module, presentationalDependencies } = makeModule();
-			buildHtmlAst.mockReturnValue(scriptWithType(source));
 
 			new HtmlParser({}).parse(source, makeState(module));
 
@@ -564,19 +379,12 @@ describe("HtmlParser", () => {
 	);
 
 	describe("source extraction", () => {
-		// Feed the real tree builder so these exercise genuine offsets/namespaces.
-		const realBuildHtmlAst =
-			/** @type {typeof import("../lib/html/syntax")} */ (
-				jest.requireActual("../lib/html/syntax")
-			).buildHtmlAst;
-
 		/**
 		 * @param {string} source html
 		 * @returns {string[]} the requests of the emitted HtmlSourceDependency-s
 		 */
 		const sourceRequests = (source) => {
 			const { module, dependencies } = makeModule();
-			buildHtmlAst.mockReturnValue(realBuildHtmlAst(source));
 			new HtmlParser({}).parse(source, makeState(module));
 			return dependencies
 				.filter((d) => d instanceof HtmlSourceDependency)
