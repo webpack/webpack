@@ -157,7 +157,7 @@ describe("HtmlParser", () => {
 			)
 		);
 
-		expect(buildHtmlAst).toHaveBeenCalledWith(source);
+		expect(buildHtmlAst).toHaveBeenCalledWith(source, undefined, true);
 		expect(dependencies).toHaveLength(1);
 		expect(presentationalDependencies).toHaveLength(1);
 
@@ -441,10 +441,10 @@ describe("HtmlParser", () => {
 		});
 
 		new HtmlParser({}).parse(Buffer.from("<div></div>"), makeState(module));
-		expect(buildHtmlAst).toHaveBeenCalledWith("<div></div>");
+		expect(buildHtmlAst).toHaveBeenCalledWith("<div></div>", undefined, true);
 
 		new HtmlParser({}).parse("﻿<div></div>", makeState(module));
-		expect(buildHtmlAst).toHaveBeenLastCalledWith("<div></div>");
+		expect(buildHtmlAst).toHaveBeenLastCalledWith("<div></div>", undefined, true);
 	});
 
 	it("throws when given a preparsed (object) source", () => {
