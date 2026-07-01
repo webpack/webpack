@@ -880,7 +880,14 @@ describe("buildHtmlAst — skip options preserve element structure", () => {
 		// Button scope + implied end tags.
 		"<button><p>x</button>y",
 		// Comment-only document.
-		"<!-- only a comment -->"
+		"<!-- only a comment -->",
+		// `skip.text` whitespace fast-path fallbacks: whitespace-producing
+		// character references, CR normalization, and NUL must still route text
+		// exactly (these decide foster-parenting / framesetOk).
+		"<table>&#32;&#9;<td>a</td></table>",
+		"<div>&#32;&#32;</div>plain  text",
+		"a<table>\r\n  <tr><td>b\0c</td></tr></table>d",
+		"<pre>\r\nkeep</pre>"
 	];
 
 	/**
