@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore selectedcontent
+// cspell:ignore selectedcontent mtext mglyph
 
 const {
 	NS_HTML,
@@ -934,10 +934,15 @@ describe("buildHtmlAst — skip options preserve element structure", () => {
 		return out.join("\n");
 	};
 
+	// Every non-empty subset of the skip flags (incl. { text, doctype }, the
+	// combination HtmlParser uses).
 	const skipCombos = [
 		{ text: true },
 		{ comments: true },
 		{ doctype: true },
+		{ text: true, comments: true },
+		{ text: true, doctype: true },
+		{ comments: true, doctype: true },
 		{ text: true, comments: true, doctype: true }
 	];
 
@@ -1030,6 +1035,27 @@ describe("buildHtmlAst — skip options preserve element structure", () => {
 			script: "sc",
 			textarea: "ta"
 		});
+	});
+
+	it("skip.text records contentEnd for foreign-content <style>/<script>", () => {
+		// SVG <style>/<script> stay in the SVG namespace and their bodies are plain
+		// text; HtmlParser extracts them regardless of namespace, so contentEnd must
+		// be recorded here too.
+		const src = "<svg><style>.a{}</style><script>x()</script></svg>";
+		const doc = buildHtmlAst(src, undefined, { text: true });
+		/** @type {Record<string, string>} */
+		const bodies = {};
+		/** @param {import("../lib/html/syntax").HtmlNode} n node */
+		const walk = (n) => {
+			if (n.type === NodeType.Element) {
+				if (n.contentEnd > n.tagEnd) {
+					bodies[n.tagName] = src.slice(n.tagEnd, n.contentEnd);
+				}
+				for (const c of n.children) walk(c);
+			}
+		};
+		for (const c of doc.children) walk(c);
+		expect(bodies).toEqual({ style: ".a{}", script: "x()" });
 	});
 
 	it("skip options preserve element structure under fragment parsing", () => {

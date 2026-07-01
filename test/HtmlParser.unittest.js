@@ -2,10 +2,8 @@
 
 const path = require("path");
 
-// These tests drive the real tree builder end-to-end (like the CSS parser
-// tests): `HtmlParser` builds the AST inside `SourceProcessor.process`, so
-// there is nothing to mock — each case parses real HTML and asserts the
-// extracted dependencies.
+// `HtmlParser` builds the AST inside `SourceProcessor.process`, so nothing is
+// mocked: each case parses real HTML and asserts the extracted dependencies.
 const HtmlInlineScriptDependency = require("../lib/dependencies/HtmlInlineScriptDependency");
 const HtmlInlineStyleDependency = require("../lib/dependencies/HtmlInlineStyleDependency");
 const HtmlSourceDependency = require("../lib/dependencies/HtmlSourceDependency");
