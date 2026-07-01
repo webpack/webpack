@@ -588,10 +588,10 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 	/**
 	 * Count visited nodes per type while walking `css`.
 	 * @param {string} css source
-	 * @param {Uint8Array=} skip skip set
+	 * @param {number[]=} skipTypes component-value node types to drop
 	 * @returns {Record<number, number>} count keyed by node type
 	 */
-	const countByType = (css, skip) => {
+	const countByType = (css, skipTypes) => {
 		/** @type {Record<number, number>} */
 		const counts = {};
 		/** @type {import("../lib/css/syntax").VisitorMap} */
@@ -601,7 +601,10 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 				counts[A.type(n)] = (counts[A.type(n)] || 0) + 1;
 			};
 		}
-		new SourceProcessor().use(map).process(css, { as: "block-contents", skip });
+		new SourceProcessor().use(map).process(css, {
+			as: "block-contents",
+			skip: skipTypes ? { types: buildSkipSet(skipTypes) } : undefined
+		});
 		return counts;
 	};
 
@@ -619,7 +622,7 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 	it.each(LEAF_TYPES)(
 		"skips every %s leaf (value + function arg) and leaves other types untouched",
 		(name, type) => {
-			const counts = countByType(VALUE_CSS, buildSkipSet([type]));
+			const counts = countByType(VALUE_CSS, [type]);
 			// The skipped type is fully dropped, in both the top-level value list
 			// and the nested function's arg list.
 			expect(counts[type] || 0).toBe(0);
@@ -635,7 +638,7 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 	);
 
 	it("skipping Function drops the function and its whole arg subtree", () => {
-		const counts = countByType(VALUE_CSS, buildSkipSet([NodeType.Function]));
+		const counts = countByType(VALUE_CSS, [NodeType.Function]);
 		expect(counts[NodeType.Function] || 0).toBe(0);
 		// bar()'s args (9 baz #aaa 2px "t" %) are no longer walked, so the nested
 		// leaves drop out while the top-level value leaves remain.
@@ -646,20 +649,18 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 
 	it("skipping SimpleBlock drops the block and its whole subtree", () => {
 		// `(7 qux)` is a paren simple block holding a Number and an Ident.
-		const counts = countByType(
-			"p: foo (7 qux)",
-			buildSkipSet([NodeType.SimpleBlock])
-		);
+		const counts = countByType("p: foo (7 qux)", [NodeType.SimpleBlock]);
 		expect(counts[NodeType.SimpleBlock] || 0).toBe(0);
 		expect(counts[NodeType.Number] || 0).toBe(0); // nested 7 not walked
 		expect(counts[NodeType.Ident]).toBe(1); // only top-level foo, not qux
 	});
 
 	it("a combined skip set drops every listed type at once", () => {
-		const counts = countByType(
-			VALUE_CSS,
-			buildSkipSet([NodeType.Number, NodeType.Dimension, NodeType.Ident])
-		);
+		const counts = countByType(VALUE_CSS, [
+			NodeType.Number,
+			NodeType.Dimension,
+			NodeType.Ident
+		]);
 		expect(counts[NodeType.Number] || 0).toBe(0);
 		expect(counts[NodeType.Dimension] || 0).toBe(0);
 		expect(counts[NodeType.Ident] || 0).toBe(0);
@@ -667,7 +668,7 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 		expect(counts[NodeType.Hash]).toBe(base[NodeType.Hash]);
 	});
 
-	it("skipping QualifiedRule drops the selector prelude but keeps the block", () => {
+	it("skip.selectorPrelude drops the selector prelude but keeps the block", () => {
 		/** @type {string[]} */
 		const log = [];
 		new SourceProcessor()
@@ -682,14 +683,14 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 				})
 			)
 			.process(".foo .bar{color:red}", {
-				skip: buildSkipSet([NodeType.QualifiedRule])
+				skip: { selectorPrelude: true }
 			});
 		// Selector idents (foo, bar) are never materialized; the value ident (red)
 		// and the declaration still are.
 		expect(log).toEqual(["decl:color", "ident:red"]);
 	});
 
-	it("skipping QualifiedRule still surfaces url() inside a selector prelude", () => {
+	it("skip.selectorPrelude still surfaces url() inside a selector prelude", () => {
 		/** @type {string[]} */
 		const urls = [];
 		new SourceProcessor()
@@ -701,12 +702,12 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 				})
 			)
 			.process(":x(url(p.png)){color:red}", {
-				skip: buildSkipSet([NodeType.QualifiedRule])
+				skip: { selectorPrelude: true }
 			});
 		expect(urls).toEqual(["p.png"]);
 	});
 
-	it("skipping AtRule drops the at-rule prelude but keeps the block", () => {
+	it("skip.atRulePrelude drops the at-rule prelude but keeps the block", () => {
 		/** @type {string[]} */
 		const log = [];
 		new SourceProcessor()
@@ -724,14 +725,14 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 				})
 			)
 			.process("@media (min-width:9px){a{color:red}}", {
-				skip: buildSkipSet([NodeType.AtRule])
+				skip: { atRulePrelude: true }
 			});
 		// The at-rule fires, its prelude ident (min-width) is dropped, and the
 		// block (the nested rule + its declaration + value ident) is still walked.
 		expect(log).toEqual(["at:media", "ident:a", "decl:color", "ident:red"]);
 	});
 
-	it("skipping AtRule still surfaces url() in an at-rule prelude (@import)", () => {
+	it("skip.atRulePrelude still surfaces url() in an at-rule prelude (@import)", () => {
 		/** @type {string[]} */
 		const urls = [];
 		new SourceProcessor()
@@ -743,7 +744,7 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 				})
 			)
 			.process("@import url(x.css);", {
-				skip: buildSkipSet([NodeType.AtRule])
+				skip: { atRulePrelude: true }
 			});
 		expect(urls).toEqual(["x.css"]);
 	});
@@ -753,7 +754,9 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 		// must reset the skip state so `parseA*` are never affected.
 		new SourceProcessor()
 			.use({ [NodeType.Declaration]: () => {} })
-			.process("a{p:1 2px}", { skip: buildSkipSet([NodeType.Number]) });
+			.process("a{p:1 2px}", {
+				skip: { types: buildSkipSet([NodeType.Number]) }
+			});
 		const decl = /** @type {import("../lib/css/syntax").Declaration} */ (
 			parseADeclaration("p:1 2px")
 		);
