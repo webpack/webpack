@@ -3015,8 +3015,7 @@ describe("snapshots", () => {
 	test(
 		"universal target with a version lacking globalThis",
 		{
-			// node<12 has no `globalThis`; the merged target reports it as absent, so
-			// output.globalObject stays `self` and environment.globalThis stays false
+			// node<12 lacks `globalThis`: globalObject stays `self`, environment.globalThis false
 			target: ["web", "node10"],
 			experiments: { outputModule: false },
 			output: { chunkFormat: "array-push" }

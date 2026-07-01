@@ -1,8 +1,6 @@
 "use strict";
 
-// #6522: a UMD/global library built for both web and node must resolve
-// output.globalObject to `globalThis`, not `self` (undefined in node), so the
-// bundle can be require()d there. Both types below embed the global object.
+// #6522: universal (web + node) UMD/global libraries must use `globalThis`, not `self`.
 /**
  * @param {"umd" | "global"} type library type that embeds the global object
  * @returns {import("../../../../").Configuration} configuration
