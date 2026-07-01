@@ -708,6 +708,28 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 		expect(urls).toEqual(["p.png"]);
 	});
 
+	it("skip.selectorPrelude recovers from a stray } in the selector prelude", () => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
+					[NodeType.Declaration]: (
+						/** @type {import("../lib/css/syntax").Declaration} */ n
+					) => log.push(`decl:${A.name(n)}`),
+					[NodeType.Ident]: (
+						/** @type {import("../lib/css/syntax").Node} */ n
+					) => log.push(`ident:${A.value(n)}`)
+				})
+			)
+			.process("}} a{color:red}", {
+				skip: { selectorPrelude: true }
+			});
+		// Stray `}`s in the prelude are a parse error; skip mode still tracks them as
+		// the disambiguation tokens, recovers, and walks the block (decl + value ident).
+		expect(log).toEqual(["decl:color", "ident:red"]);
+	});
+
 	it("skip.atRulePrelude drops the at-rule prelude but keeps the block", () => {
 		/** @type {string[]} */
 		const log = [];
