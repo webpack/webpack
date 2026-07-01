@@ -1057,6 +1057,9 @@ describe("snapshots", () => {
 		+       "dynamicImport": true,
 		+       "dynamicImportInWorker": true,
 		@@ ... @@
+		-       "globalThis": undefined,
+		+       "globalThis": true,
+		@@ ... @@
 		-       "module": undefined,
 		+       "module": true,
 		@@ ... @@
@@ -1080,13 +1083,14 @@ describe("snapshots", () => {
 		+       "dynamicImport": true,
 		+       "dynamicImportInWorker": true,
 		@@ ... @@
+		-       "globalThis": undefined,
+		+       "globalThis": true,
+		@@ ... @@
 		-       "module": undefined,
 		+       "module": true,
 		@@ ... @@
 		-     "filename": "[name].js",
-		-     "globalObject": "self",
 		+     "filename": "[name].mjs",
-		+     "globalObject": "globalThis",
 		@@ ... @@
 		-     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
 		+     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.mjs",
@@ -2675,6 +2679,9 @@ describe("snapshots", () => {
 			+       "dynamicImport": true,
 			+       "dynamicImportInWorker": true,
 			@@ ... @@
+			-       "globalThis": undefined,
+			+       "globalThis": true,
+			@@ ... @@
 			-       "module": undefined,
 			+       "module": true,
 			@@ ... @@
@@ -2710,6 +2717,9 @@ describe("snapshots", () => {
 			+       "document": false,
 			+       "dynamicImport": true,
 			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "globalThis": undefined,
+			+       "globalThis": true,
 			@@ ... @@
 			-       "module": undefined,
 			+       "module": true,
@@ -2856,6 +2866,9 @@ describe("snapshots", () => {
 			+       "dynamicImport": true,
 			+       "dynamicImportInWorker": true,
 			@@ ... @@
+			-       "globalThis": undefined,
+			+       "globalThis": true,
+			@@ ... @@
 			-       "module": undefined,
 			+       "module": true,
 			@@ ... @@
@@ -2891,6 +2904,9 @@ describe("snapshots", () => {
 			+       "document": false,
 			+       "dynamicImport": true,
 			+       "dynamicImportInWorker": true,
+			@@ ... @@
+			-       "globalThis": undefined,
+			+       "globalThis": true,
 			@@ ... @@
 			-       "module": undefined,
 			+       "module": true,
