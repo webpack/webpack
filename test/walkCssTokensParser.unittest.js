@@ -12,6 +12,7 @@ const {
 	TT_URL,
 	Token,
 	TokenStream,
+	buildSkipSet,
 	parseABlocksContents,
 	parseACommaSeparatedListOfComponentValues,
 	parseAComponentValue,
@@ -560,5 +561,152 @@ describe("walkCssTokens — tokenizer edge cases", () => {
 		// escaped CR/LF line-continuation inside a string exercises the
 		// CRLF-collapsing escaped-newline path.
 		expect(firstTokenType('"a\\\r\nb"')).toBe(TT_STRING);
+	});
+});
+
+describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
+	// A bare declaration (parsed as block-contents, so there is no selector
+	// prelude to pollute the counts). Every leaf type appears both at the top
+	// level of the value and inside `bar(…)`, so one skip proves both the
+	// value-list and the function-arg builders honour it.
+	const VALUE_CSS =
+		'p: foo 10 10px 50% #fff / "s" : , bar(9 baz #aaa 2px "t" %)';
+	// Leaf types present in VALUE_CSS's value (Whitespace too, from the spaces).
+	const LEAF_TYPES = [
+		["Ident", NodeType.Ident],
+		["Number", NodeType.Number],
+		["Dimension", NodeType.Dimension],
+		["Percentage", NodeType.Percentage],
+		["Hash", NodeType.Hash],
+		["Delim", NodeType.Delim],
+		["String", NodeType.String],
+		["Colon", NodeType.Colon],
+		["Comma", NodeType.Comma],
+		["Whitespace", NodeType.Whitespace]
+	];
+
+	/**
+	 * Count visited nodes per type while walking `css`.
+	 * @param {string} css source
+	 * @param {Uint8Array=} skip skip set
+	 * @returns {Record<number, number>} count keyed by node type
+	 */
+	const countByType = (css, skip) => {
+		/** @type {Record<number, number>} */
+		const counts = {};
+		/** @type {import("../lib/css/syntax").VisitorMap} */
+		const map = {};
+		for (const t of Object.values(NodeType)) {
+			map[t] = (/** @type {import("../lib/css/syntax").Node} */ n) => {
+				counts[A.type(n)] = (counts[A.type(n)] || 0) + 1;
+			};
+		}
+		new SourceProcessor().use(map).process(css, { as: "block-contents", skip });
+		return counts;
+	};
+
+	const base = countByType(VALUE_CSS);
+
+	it("baseline (no skip) visits every leaf type in the value", () => {
+		for (const [name, type] of LEAF_TYPES) {
+			expect({ [name]: base[type] || 0 }).toEqual({
+				[name]: expect.any(Number)
+			});
+			expect(base[type]).toBeGreaterThan(0);
+		}
+	});
+
+	it.each(LEAF_TYPES)(
+		"skips every %s leaf (value + function arg) and leaves other types untouched",
+		(name, type) => {
+			const counts = countByType(VALUE_CSS, buildSkipSet([type]));
+			// The skipped type is fully dropped, in both the top-level value list
+			// and the nested function's arg list.
+			expect(counts[type] || 0).toBe(0);
+			// Every other leaf type is unaffected.
+			for (const [, other] of LEAF_TYPES) {
+				if (other === type) continue;
+				expect(counts[other] || 0).toBe(base[other] || 0);
+			}
+			// Structure still parses: the declaration and its function survive.
+			expect(counts[NodeType.Declaration]).toBe(base[NodeType.Declaration]);
+			expect(counts[NodeType.Function]).toBe(base[NodeType.Function]);
+		}
+	);
+
+	it("skipping Function drops the function and its whole arg subtree", () => {
+		const counts = countByType(VALUE_CSS, buildSkipSet([NodeType.Function]));
+		expect(counts[NodeType.Function] || 0).toBe(0);
+		// bar()'s args (9 baz #aaa 2px "t" %) are no longer walked, so the nested
+		// leaves drop out while the top-level value leaves remain.
+		expect(counts[NodeType.Ident]).toBe(1); // only top-level `foo`
+		expect(counts[NodeType.Number]).toBe(1); // only top-level `10`
+		expect(counts[NodeType.Declaration]).toBe(base[NodeType.Declaration]);
+	});
+
+	it("a combined skip set drops every listed type at once", () => {
+		const counts = countByType(
+			VALUE_CSS,
+			buildSkipSet([NodeType.Number, NodeType.Dimension, NodeType.Ident])
+		);
+		expect(counts[NodeType.Number] || 0).toBe(0);
+		expect(counts[NodeType.Dimension] || 0).toBe(0);
+		expect(counts[NodeType.Ident] || 0).toBe(0);
+		// A type left out of the set is still visited.
+		expect(counts[NodeType.Hash]).toBe(base[NodeType.Hash]);
+	});
+
+	it("skipping QualifiedRule drops the selector prelude but keeps the block", () => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
+					[NodeType.Ident]: (
+						/** @type {import("../lib/css/syntax").Node} */ n
+					) => log.push(`ident:${A.value(n)}`),
+					[NodeType.Declaration]: (
+						/** @type {import("../lib/css/syntax").Declaration} */ n
+					) => log.push(`decl:${A.name(n)}`)
+				})
+			)
+			.process(".foo .bar{color:red}", {
+				skip: buildSkipSet([NodeType.QualifiedRule])
+			});
+		// Selector idents (foo, bar) are never materialized; the value ident (red)
+		// and the declaration still are.
+		expect(log).toEqual(["decl:color", "ident:red"]);
+	});
+
+	it("skipping QualifiedRule still surfaces url() inside a selector prelude", () => {
+		/** @type {string[]} */
+		const urls = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
+					[NodeType.Url]: (
+						/** @type {import("../lib/css/syntax").UrlToken} */ n
+					) => urls.push(A.value(n))
+				})
+			)
+			.process(":x(url(p.png)){color:red}", {
+				skip: buildSkipSet([NodeType.QualifiedRule])
+			});
+		expect(urls).toEqual(["p.png"]);
+	});
+
+	it("the object backend (parseAStylesheet) ignores a prior skip and builds the full tree", () => {
+		// Run a skipping stream parse first, then a full parse — the object backend
+		// must reset the skip state so `parseA*` are never affected.
+		new SourceProcessor()
+			.use({ [NodeType.Declaration]: () => {} })
+			.process("a{p:1 2px}", { skip: buildSkipSet([NodeType.Number]) });
+		const decl = /** @type {import("../lib/css/syntax").Declaration} */ (
+			parseADeclaration("p:1 2px")
+		);
+		// Object-backend nodes expose fields directly (not via the SoA `A` seam).
+		const valueTypes = decl.value.map((n) => n.type);
+		expect(valueTypes).toContain(NodeType.Number);
+		expect(valueTypes).toContain(NodeType.Dimension);
 	});
 });
