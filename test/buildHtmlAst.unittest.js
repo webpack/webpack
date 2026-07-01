@@ -478,6 +478,31 @@ describe("buildHtmlAst", () => {
 		expect(span.attributes[0].valueStart).toBe(-1);
 	});
 
+	it("clones <template> content when mirroring into <selectedcontent>", () => {
+		const select = body(
+			"<select><button><selectedcontent></button><option><template><p>x</p></template>"
+		)[0];
+		const selectedcontent = child(
+			child(select.children, "button").children,
+			"selectedcontent"
+		);
+		const template = /** @type {import("../lib/html/syntax").HtmlElement} */ (
+			selectedcontent.children[0]
+		);
+		expect(template.tagName).toBe("template");
+		// The cloned template keeps its own document-fragment content.
+		const fragment =
+			/** @type {import("../lib/html/syntax").HtmlDocumentFragment} */ (
+				template.templateContent
+			);
+		expect(fragment.type).toBe(NodeType.DocumentFragment);
+		expect(
+			/** @type {import("../lib/html/syntax").HtmlElement} */ (
+				fragment.children[0]
+			).tagName
+		).toBe("p");
+	});
+
 	it("should mirror the last selected <option> into <selectedcontent>", () => {
 		const select = body(
 			"<select><button><selectedcontent></button><option>A<option selected>B"
