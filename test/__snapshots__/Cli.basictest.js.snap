@@ -9021,6 +9021,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-wasm-streaming-fallback": Object {
+    "configs": Array [
+      Object {
+        "description": "Fall back to non-streaming WebAssembly instantiation when streaming compilation fails because the server does not serve \`.wasm\` files with the \`application/wasm\` MIME type.",
+        "multiple": false,
+        "path": "output.wasmStreamingFallback",
+        "type": "boolean",
+      },
+    ],
+    "description": "Fall back to non-streaming WebAssembly instantiation when streaming compilation fails because the server does not serve \`.wasm\` files with the \`application/wasm\` MIME type.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-webassembly-module-filename": Object {
     "configs": Array [
       Object {
