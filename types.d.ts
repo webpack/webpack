@@ -5093,6 +5093,26 @@ declare interface ContextOptions {
 	layer?: null | string;
 	attributes?: ImportAttributes;
 	phase?: 0 | 1 | 2;
+
+	/**
+	 * glob patterns for import.meta.glob
+	 */
+	globPatterns?: string[];
+
+	/**
+	 * importer context for import.meta.glob
+	 */
+	globContext?: string;
+
+	/**
+	 * glob import selection
+	 */
+	globImport?: string;
+
+	/**
+	 * glob exhaustive mode
+	 */
+	globExhaustive?: boolean;
 }
 declare class ContextReplacementPlugin {
 	/**

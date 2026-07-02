@@ -159,6 +159,16 @@ declare namespace webpack {
 		id: string | number;
 		(dependency: string): unknown;
 	}
+
+	type ImportMetaGlobPattern = string | readonly string[];
+	type ImportMetaGlobQuery = string | Record<string, string | number | boolean>;
+	type ImportMetaGlobOptions<Eager extends boolean = boolean> = {
+		eager?: Eager;
+		import?: string;
+		query?: ImportMetaGlobQuery;
+		exhaustive?: boolean;
+		base?: string;
+	};
 }
 
 interface ImportMetaEnv {
@@ -185,6 +195,16 @@ interface ImportMeta {
 			mode?: "sync" | "eager" | "weak" | "lazy" | "lazy-once";
 		}
 	) => webpack.Context;
+	glob: {
+		<T = unknown>(
+			pattern: webpack.ImportMetaGlobPattern,
+			options?: webpack.ImportMetaGlobOptions<false>
+		): Record<string, () => Promise<T>>;
+		<T = unknown>(
+			pattern: webpack.ImportMetaGlobPattern,
+			options: webpack.ImportMetaGlobOptions<true>
+		): Record<string, T>;
+	};
 }
 
 declare const __resourceQuery: string;
