@@ -1,13 +1,11 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ConfigCacheTestCases html ignored-source exported tests should replace aliased-false src with data:, 1`] = `
+exports[`ConfigCacheTestCases html ignored-source exported tests should replace an alias-false src with the ignored data URL 1`] = `
 "<!DOCTYPE html>
 <html>
 <head><title>ignored-source</title></head>
 <body>
-<!-- resolved normally -->
 <img src=\\"09a1a1112c577c279435.png\\" alt=\\"resolved\\">
-<!-- alias false triggers createIgnoredModule -->
 <img src=\\"data:,\\" alt=\\"ignored\\">
 </body>
 </html>
