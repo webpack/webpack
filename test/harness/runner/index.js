@@ -331,6 +331,9 @@ class TestRunner {
 			Buffer,
 			TextEncoder: typeof TextEncoder !== "undefined" ? TextEncoder : undefined,
 			TextDecoder: typeof TextDecoder !== "undefined" ? TextDecoder : undefined,
+			// universal HMR clients drive the emitter through `EventTarget`
+			EventTarget: typeof EventTarget !== "undefined" ? EventTarget : undefined,
+			CustomEvent: typeof CustomEvent !== "undefined" ? CustomEvent : undefined,
 			// expose the Deno/Bun runtime globals to bundles when running under
 			// them; `global` (not `globalThis`) keeps this working on Node.js 10
 			Deno: /** @type {EXPECTED_ANY} */ (global).Deno,
