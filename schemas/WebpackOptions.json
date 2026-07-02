@@ -2227,6 +2227,10 @@
           "description": "Enable/disable evaluating import.meta.webpackContext.",
           "type": "boolean"
         },
+        "importMetaUrl": {
+          "description": "Specifies the behavior of 'new URL(..., import.meta.url)' when the target can't be bundled as an asset: 'error' fails the build, 'eval-only' evaluates only 'import.meta.url', keeps the 'new URL(...)' for runtime evaluation and emits a warning.",
+          "enum": ["error", "eval-only"]
+        },
         "node": {
           "$ref": "#/definitions/Node"
         },

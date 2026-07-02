@@ -12564,6 +12564,11 @@ declare interface JavascriptParserOptions {
 	importMetaContext?: boolean;
 
 	/**
+	 * Specifies the behavior of 'new URL(..., import.meta.url)' when the target can't be bundled as an asset: 'error' fails the build, 'eval-only' evaluates only 'import.meta.url', keeps the 'new URL(...)' for runtime evaluation and emits a warning.
+	 */
+	importMetaUrl?: "error" | "eval-only";
+
+	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
 	node?: false | NodeOptions;

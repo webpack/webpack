@@ -311,6 +311,7 @@ describe("snapshots", () => {
 		        "exprContextRegExp": false,
 		        "exprContextRequest": ".",
 		        "importMeta": true,
+		        "importMetaUrl": "error",
 		        "sourceImport": false,
 		        "strictExportPresence": undefined,
 		        "strictThisContextOnImports": false,
@@ -3877,6 +3878,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
+			-         "importMetaUrl": "error",
+			+         "importMetaUrl": "eval-only",
+			@@ ... @@
 			-         "typescript": undefined,
 			+         "typescript": true,
 			@@ ... @@
@@ -3938,11 +3942,10 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			+           "...",
-			+         ],
+			@@ ... @@
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
-			+       },
+			@@ ... @@
 			+       "css-import-local-module": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -3954,9 +3957,11 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
 			+         "preferRelative": true,
+			+       },
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -4404,6 +4409,16 @@ describe("snapshots", () => {
 			-     "typescript": undefined,
 			+     "typescript": true,
 			@@ ... @@
+			+           ],
+			+         },
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "type": "javascript/esm",
 			+       },
 			+       Object {
 			+         "rules": Array [
@@ -4414,7 +4429,7 @@ describe("snapshots", () => {
 			+             "resolve": Object {
 			+               "fullySpecified": true,
 			+             },
-			@@ ... @@
+			+           },
 			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
@@ -4430,10 +4445,10 @@ describe("snapshots", () => {
 			+               "fullySpecified": true,
 			+             },
 			+           },
-			+         ],
+			@@ ... @@
 			+         "type": "webassembly/async",
 			+       },
-			@@ ... @@
+			+       Object {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
@@ -4512,7 +4527,7 @@ describe("snapshots", () => {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
-			+         },
+			@@ ... @@
 			+         "type": "html",
 			+       },
 			+       Object {
@@ -4520,7 +4535,7 @@ describe("snapshots", () => {
 			+         "generator": Object {
 			+           "extract": "inline",
 			+         },
-			+         "resolve": Object {
+			@@ ... @@
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
@@ -4562,20 +4577,14 @@ describe("snapshots", () => {
 			+           "type": "module",
 			+         },
 			+         "resolve": Object {
-			+           "byDependency": Object {
-			+             "esm": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         },
+			@@ ... @@
 			+         "test": /\\.ts$/i,
-			+         "type": "javascript/esm",
+			@@ ... @@
 			+       },
 			+       Object {
 			+         "test": /\\.cts$/i,
 			+         "type": "javascript/dynamic",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "descriptionData": Object {
 			+           "type": "commonjs",
 			+         },
@@ -4631,7 +4640,7 @@ describe("snapshots", () => {
 			+       "html": Object {},
 			@@ ... @@
 			+         },
-			+       },
+			@@ ... @@
 			+       "css": Object {
 			+         "import": true,
 			+         "namedExports": true,
@@ -4663,8 +4672,12 @@ describe("snapshots", () => {
 			@@ ... @@
 			+       "html": Object {
 			+         "sources": true,
+			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
+			@@ ... @@
+			-         "importMetaUrl": "error",
+			+         "importMetaUrl": "eval-only",
 			@@ ... @@
 			-         "typescript": undefined,
 			+         "typescript": true,
@@ -4949,11 +4962,15 @@ describe("snapshots", () => {
 			@@ ... @@
 			+       "html": Object {},
 			@@ ... @@
+			+         },
+			@@ ... @@
 			+       "html": Object {
 			+         "sources": true,
-			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
+			@@ ... @@
+			-         "importMetaUrl": "error",
+			+         "importMetaUrl": "eval-only",
 			@@ ... @@
 			-         "typescript": undefined,
 			+         "typescript": true,
