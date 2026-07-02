@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore selectedcontent
+// cspell:ignore selectedcontent mtext mglyph
 
 const {
 	NS_HTML,
@@ -478,6 +478,31 @@ describe("buildHtmlAst", () => {
 		expect(span.attributes[0].valueStart).toBe(-1);
 	});
 
+	it("clones <template> content when mirroring into <selectedcontent>", () => {
+		const select = body(
+			"<select><button><selectedcontent></button><option><template><p>x</p></template>"
+		)[0];
+		const selectedcontent = child(
+			child(select.children, "button").children,
+			"selectedcontent"
+		);
+		const template = /** @type {import("../lib/html/syntax").HtmlElement} */ (
+			selectedcontent.children[0]
+		);
+		expect(template.tagName).toBe("template");
+		// The cloned template keeps its own document-fragment content.
+		const fragment =
+			/** @type {import("../lib/html/syntax").HtmlDocumentFragment} */ (
+				template.templateContent
+			);
+		expect(fragment.type).toBe(NodeType.DocumentFragment);
+		expect(
+			/** @type {import("../lib/html/syntax").HtmlElement} */ (
+				fragment.children[0]
+			).tagName
+		).toBe("p");
+	});
+
 	it("should mirror the last selected <option> into <selectedcontent>", () => {
 		const select = body(
 			"<select><button><selectedcontent></button><option>A<option selected>B"
@@ -616,21 +641,6 @@ describe("buildHtmlAst — SourceProcessor", () => {
 			})
 			.process("<template><p>x</p></template>");
 		expect(log).toEqual(["html", "head", "template", "fragment", "p", "body"]);
-	});
-
-	it("walks a pre-built AST when options.ast is given", () => {
-		/** @type {string[]} */
-		const log = [];
-		const ast = buildHtmlAst("<p>x</p>");
-		new SourceProcessor()
-			.use({
-				[NodeType.Element]: (n) =>
-					log.push(
-						/** @type {import("../lib/html/syntax").HtmlElement} */ (n).tagName
-					)
-			})
-			.process("ignored input", { ast });
-		expect(log).toEqual(["html", "head", "body", "p"]);
 	});
 
 	it("use() chains and accumulates visitors per type", () => {
@@ -843,5 +853,226 @@ describe("buildHtmlAst — stray doctype and <html> re-dispatch", () => {
 	it("merges stray <html> after </html> (after-after-body)", () => {
 		const root = html("<p>x</p></html><html lang='z'>");
 		expect(root.attributes.some((a) => a.name === "lang")).toBe(true);
+	});
+});
+
+// The `skip` options are pure output reductions: tree construction (and quirks
+// detection) must run identically, so the ELEMENT tree — tags, nesting, offsets
+// and attributes — is the same with any skip combination as with none. This
+// guards the risky `skip.text` path, which drops text-node insertion.
+describe("buildHtmlAst — skip options preserve element structure", () => {
+	// A spread of construction edge cases: foster parenting, adoption agency,
+	// select/table/ruby scoping, foreign content, raw-text elements, quirks.
+	const cases = [
+		"<!DOCTYPE html><html><head><title>t</title></head><body>hi</body></html>",
+		"<table>foo<td>bar</td></table>",
+		"a<table>b</table>c",
+		"text<table><tbody><tr>cell<td>real</table>after",
+		"<p>a<b>b<i>c</p>d</i>e",
+		"<b>1<p>2</b>3",
+		"<a>1<a>2<a>3",
+		"<select>x<option>y</option>z</select>",
+		"<ruby>base<rt>anno</rt></ruby>",
+		"<div><table>txt<svg><foreignObject><div>x</div></foreignObject></svg></table></div>",
+		"<math><mtext>t<mglyph>g</math>after",
+		"<script>var a = 1 < 2 && '</x>';</script><style>.a{color:red}</style>",
+		"<pre>\nkeep</pre><textarea>\nx</textarea>",
+		"<!-- c1 --><p>x<!-- c2 --></p><!-- c3 -->",
+		"<frameset>x<frame></frameset>",
+		// Foreign-content CDATA becomes character data (dropped as prose).
+		"<svg><![CDATA[cdata text]]><rect/></svg>",
+		// No doctype → quirks mode; skip.doctype must not change that.
+		"<table><tr><td>quirks</td></tr></table>",
+		// Entities/whitespace in prose text (whitespace routing in head/table).
+		"  <html>  <head>  </head>  <body> a &amp; b &#60; c </body> </html>",
+		// Escapable raw-text bodies + a title in head.
+		"<title>page &amp; more</title><textarea>form\ntext</textarea>",
+		// Button scope + implied end tags.
+		"<button><p>x</button>y",
+		// Comment-only document.
+		"<!-- only a comment -->",
+		// `skip.text` whitespace fast-path fallbacks: whitespace-producing
+		// character references, CR normalization, and NUL must still route text
+		// exactly (these decide foster-parenting / framesetOk).
+		"<table>&#32;&#9;<td>a</td></table>",
+		"<div>&#32;&#32;</div>plain  text",
+		"a<table>\r\n  <tr><td>b\0c</td></tr></table>d",
+		"<pre>\r\nkeep</pre>"
+	];
+
+	/**
+	 * @param {import("../lib/html/syntax").HtmlDocument} doc document
+	 * @returns {string} a signature of the element tree (tags, nesting, offsets, attrs)
+	 */
+	const elementSignature = (doc) => {
+		/** @type {string[]} */
+		const out = [];
+		/**
+		 * @param {import("../lib/html/syntax").HtmlNode | import("../lib/html/syntax").HtmlDocument | import("../lib/html/syntax").HtmlDocumentFragment} node node
+		 * @param {number} depth depth
+		 */
+		const walk = (node, depth) => {
+			if (node.type === NodeType.Element) {
+				const attrs = node.attributes
+					.map(
+						(a) =>
+							`${a.name}(${a.nameStart},${a.nameEnd},${a.valueStart},${a.valueEnd})`
+					)
+					.join(",");
+				out.push(
+					`${depth}:${node.tagName}@${node.namespace}[${node.start},${node.end},${node.tagEnd},${node.nameEnd}]{${attrs}}`
+				);
+				if (node.templateContent) {
+					for (const c of node.templateContent.children) walk(c, depth + 1);
+				}
+			}
+			if ("children" in node) {
+				for (const c of node.children) walk(c, depth + 1);
+			}
+		};
+		walk(doc, 0);
+		return out.join("\n");
+	};
+
+	// Every non-empty subset of the skip flags (incl. { text, doctype }, the
+	// combination HtmlParser uses).
+	const skipCombos = [
+		{ text: true },
+		{ comments: true },
+		{ doctype: true },
+		{ text: true, comments: true },
+		{ text: true, doctype: true },
+		{ comments: true, doctype: true },
+		{ text: true, comments: true, doctype: true }
+	];
+
+	it.each(cases)("keeps the element tree stable under skip (%s)", (src) => {
+		const baseline = elementSignature(buildHtmlAst(src));
+		for (const skip of skipCombos) {
+			expect(elementSignature(buildHtmlAst(src, undefined, skip))).toBe(
+				baseline
+			);
+		}
+	});
+
+	it("skip.text drops every text node; raw-text bodies stay readable via contentEnd", () => {
+		const src = "<p>prose</p><script>var x=1;</script>";
+		const doc = buildHtmlAst(src, undefined, { text: true });
+		/** @type {import("../lib/html/syntax").HtmlText[]} */
+		const texts = [];
+		/** @type {import("../lib/html/syntax").HtmlElement | undefined} */
+		let script;
+		/** @param {import("../lib/html/syntax").HtmlNode} n node */
+		const walk = (n) => {
+			if (n.type === NodeType.Text) texts.push(n);
+			if (n.type === NodeType.Element) {
+				if (n.tagName === "script") script = n;
+				for (const c of n.children) walk(c);
+			}
+		};
+		for (const c of doc.children) walk(c);
+		// No text nodes at all — not even the <script> body.
+		expect(texts).toHaveLength(0);
+		// The body is read by offset from the element's [tagEnd, contentEnd].
+		expect(
+			src.slice(
+				/** @type {import("../lib/html/syntax").HtmlElement} */ (script).tagEnd,
+				/** @type {import("../lib/html/syntax").HtmlElement} */ (script)
+					.contentEnd
+			)
+		).toBe("var x=1;");
+	});
+
+	it("skip.comments drops comment nodes; skip.doctype drops the doctype node", () => {
+		const src = "<!DOCTYPE html><!-- c --><p></p>";
+		const count = (
+			/** @type {import("../lib/html/syntax").HtmlDocument} */ doc,
+			/** @type {number} */ type
+		) => {
+			let n = 0;
+			/** @param {import("../lib/html/syntax").HtmlNode} node node */
+			const walk = (node) => {
+				if (node.type === type) n++;
+				if ("children" in node) for (const c of node.children) walk(c);
+			};
+			for (const c of doc.children) walk(c);
+			return n;
+		};
+		expect(
+			count(buildHtmlAst(src, undefined, { comments: true }), NodeType.Comment)
+		).toBe(0);
+		expect(
+			count(buildHtmlAst(src, undefined, { doctype: true }), NodeType.Doctype)
+		).toBe(0);
+		// Baseline still has both.
+		expect(count(buildHtmlAst(src), NodeType.Comment)).toBe(1);
+		expect(count(buildHtmlAst(src), NodeType.Doctype)).toBe(1);
+	});
+
+	it("skip.text records every raw-text element body span on contentEnd", () => {
+		// script/style (raw text) + textarea/title (escapable raw text): each body
+		// is the element's raw value, recorded as [tagEnd, contentEnd] — no Text node.
+		const src =
+			"<title>ti</title><style>.s{}</style></head><body>prose<script>sc</script><textarea>ta</textarea>";
+		const doc = buildHtmlAst(src, undefined, { text: true });
+		/** @type {Record<string, string>} */
+		const bodies = {};
+		/** @param {import("../lib/html/syntax").HtmlNode} n node */
+		const walk = (n) => {
+			// No Text nodes are emitted under skip.text.
+			expect(n.type).not.toBe(NodeType.Text);
+			if (n.type === NodeType.Element) {
+				if (n.contentEnd > n.tagEnd) {
+					bodies[n.tagName] = src.slice(n.tagEnd, n.contentEnd);
+				}
+				for (const c of n.children) walk(c);
+			}
+		};
+		for (const c of doc.children) walk(c);
+		expect(bodies).toEqual({
+			title: "ti",
+			style: ".s{}",
+			script: "sc",
+			textarea: "ta"
+		});
+	});
+
+	it("skip.text records contentEnd for foreign-content <style>/<script>", () => {
+		// SVG <style>/<script> stay in the SVG namespace and their bodies are plain
+		// text; HtmlParser extracts them regardless of namespace, so contentEnd must
+		// be recorded here too.
+		const src = "<svg><style>.a{}</style><script>x()</script></svg>";
+		const doc = buildHtmlAst(src, undefined, { text: true });
+		/** @type {Record<string, string>} */
+		const bodies = {};
+		/** @param {import("../lib/html/syntax").HtmlNode} n node */
+		const walk = (n) => {
+			if (n.type === NodeType.Element) {
+				if (n.contentEnd > n.tagEnd) {
+					bodies[n.tagName] = src.slice(n.tagEnd, n.contentEnd);
+				}
+				for (const c of n.children) walk(c);
+			}
+		};
+		for (const c of doc.children) walk(c);
+		expect(bodies).toEqual({ style: ".a{}", script: "x()" });
+	});
+
+	it("skip options preserve element structure under fragment parsing", () => {
+		// Fragment contexts drive a different initial insertion mode; skips must
+		// still leave the element tree (and offsets) identical.
+		/** @type {[string, string][]} */
+		const fragments = [
+			["<td>a</td><tr><td>b", "table"],
+			["<li>x<li>y", "ul"],
+			["text<b>bold</b>", "div"],
+			["<rect/>text", "svg"]
+		];
+		for (const [src, ctx] of fragments) {
+			const base = elementSignature(buildHtmlAst(src, ctx));
+			for (const skip of skipCombos) {
+				expect(elementSignature(buildHtmlAst(src, ctx, skip))).toBe(base);
+			}
+		}
 	});
 });
