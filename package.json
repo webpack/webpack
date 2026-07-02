@@ -110,7 +110,6 @@
     "eslint-scope": "5.1.1",
     "events": "^3.2.0",
     "graceful-fs": "^4.2.11",
-    "loader-runner": "^4.3.2",
     "mime-db": "^1.54.0",
     "minimizer-webpack-plugin": "^5.6.1",
     "neo-async": "^2.6.2",
