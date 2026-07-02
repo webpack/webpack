@@ -1,0 +1,12 @@
+.used {
+	color: red;
+}
+
+.unused {
+	color: blue;
+}
+
+:export {
+	usedVar: hello;
+	unusedVar: goodbye;
+}
