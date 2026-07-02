@@ -42,6 +42,20 @@ exports[`ConfigCacheTestCases html base-tag exported tests should leave URLs unt
 "
 `;
 
+exports[`ConfigCacheTestCases html base-tag exported tests should normalize dot-segments in the base href 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<base href=\\"assets/img/..\\">
+<title>Dot-segment base</title>
+</head>
+<body>
+<img src=\\"../31d6cfe0d16ae931b73c.png\\" alt=\\"dot-segment normalized base\\">
+</body>
+</html>
+"
+`;
+
 exports[`ConfigCacheTestCases html base-tag exported tests should prefix one \`../\` per segment of a deep relative base 1`] = `
 "<!DOCTYPE html>
 <html>

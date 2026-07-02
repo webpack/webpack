@@ -1,5 +1,6 @@
 import relative from "./relative.html";
 import deep from "./deep.html";
+import dotseg from "./dotseg.html";
 import external from "./external.html";
 import root from "./root.html";
 import escape from "./escape.html";
@@ -25,6 +26,16 @@ it("should prefix one `../` per segment of a deep relative base", () => {
 	// `<base href="assets/img/">` is two segments deep.
 	expect(deep).toMatch(/<img src="\.\.\/\.\.\/[^"]+\.png" alt="resolved two levels deep">/);
 	expect(deep).toMatchSnapshot();
+});
+
+it("should normalize dot-segments in the base href", () => {
+	// `<base href="assets/img/.."`> normalizes to `assets/`; `dot.png` only
+	// exists at `assets/dot.png`, so a successful build proves the `..` was
+	// resolved (not left as `assets/img/`). The prefix is one segment deep.
+	expect(dotseg).toMatch(
+		/<img src="\.\.\/[^"]+\.png" alt="dot-segment normalized base">/
+	);
+	expect(dotseg).toMatchSnapshot();
 });
 
 it("should leave URLs untouched under an absolute <base href>", () => {
