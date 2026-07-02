@@ -22347,6 +22347,7 @@ declare abstract class RuntimeTemplate {
 	supportsBigIntLiteral(): boolean;
 	supportsDynamicImport(): boolean;
 	supportsEcmaScriptModuleSyntax(): boolean;
+	supportsAnalyzableEsm(): boolean;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
 
