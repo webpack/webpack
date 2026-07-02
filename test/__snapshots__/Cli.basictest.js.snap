@@ -3219,13 +3219,13 @@ Object {
   "module-parser-javascript-auto-import-meta": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' or an object to preserve unknown properties for runtime evaluation.",
         "multiple": false,
         "path": "module.parser.javascript/auto.importMeta",
         "type": "boolean",
       },
       Object {
-        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' or an object to preserve unknown properties for runtime evaluation.",
         "multiple": false,
         "path": "module.parser.javascript/auto.importMeta",
         "type": "enum",
@@ -3234,7 +3234,7 @@ Object {
         ],
       },
     ],
-    "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+    "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' or an object to preserve unknown properties for runtime evaluation.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -3248,6 +3248,110 @@ Object {
       },
     ],
     "description": "Enable/disable evaluating import.meta.webpackContext.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-import-meta-dirname": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.dirname.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.importMeta.dirname",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.dirname.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-import-meta-env": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.env.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.importMeta.env",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.env.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-import-meta-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.filename.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.importMeta.filename",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.filename.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-import-meta-main": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.main.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.importMeta.main",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.main.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-import-meta-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.url.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.importMeta.url",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.url.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-import-meta-webpack": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.webpack.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.importMeta.webpack",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.webpack.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-import-meta-webpack-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.webpackContext.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.importMeta.webpackContext",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.webpackContext.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-import-meta-webpack-hot": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.webpackHot.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.importMeta.webpackHot",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.webpackHot.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4061,13 +4165,13 @@ Object {
   "module-parser-javascript-dynamic-import-meta": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' or an object to preserve unknown properties for runtime evaluation.",
         "multiple": false,
         "path": "module.parser.javascript/dynamic.importMeta",
         "type": "boolean",
       },
       Object {
-        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' or an object to preserve unknown properties for runtime evaluation.",
         "multiple": false,
         "path": "module.parser.javascript/dynamic.importMeta",
         "type": "enum",
@@ -4076,7 +4180,7 @@ Object {
         ],
       },
     ],
-    "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+    "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' or an object to preserve unknown properties for runtime evaluation.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -4090,6 +4194,110 @@ Object {
       },
     ],
     "description": "Enable/disable evaluating import.meta.webpackContext.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-import-meta-dirname": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.dirname.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.importMeta.dirname",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.dirname.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-import-meta-env": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.env.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.importMeta.env",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.env.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-import-meta-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.filename.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.importMeta.filename",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.filename.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-import-meta-main": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.main.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.importMeta.main",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.main.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-import-meta-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.url.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.importMeta.url",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.url.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-import-meta-webpack": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.webpack.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.importMeta.webpack",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.webpack.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-import-meta-webpack-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.webpackContext.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.importMeta.webpackContext",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.webpackContext.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-import-meta-webpack-hot": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.webpackHot.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.importMeta.webpackHot",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.webpackHot.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4876,13 +5084,13 @@ Object {
   "module-parser-javascript-esm-import-meta": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' or an object to preserve unknown properties for runtime evaluation.",
         "multiple": false,
         "path": "module.parser.javascript/esm.importMeta",
         "type": "boolean",
       },
       Object {
-        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' or an object to preserve unknown properties for runtime evaluation.",
         "multiple": false,
         "path": "module.parser.javascript/esm.importMeta",
         "type": "enum",
@@ -4891,7 +5099,7 @@ Object {
         ],
       },
     ],
-    "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+    "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' or an object to preserve unknown properties for runtime evaluation.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -4905,6 +5113,110 @@ Object {
       },
     ],
     "description": "Enable/disable evaluating import.meta.webpackContext.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-import-meta-dirname": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.dirname.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.importMeta.dirname",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.dirname.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-import-meta-env": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.env.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.importMeta.env",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.env.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-import-meta-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.filename.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.importMeta.filename",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.filename.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-import-meta-main": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.main.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.importMeta.main",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.main.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-import-meta-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.url.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.importMeta.url",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.url.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-import-meta-webpack": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.webpack.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.importMeta.webpack",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.webpack.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-import-meta-webpack-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.webpackContext.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.importMeta.webpackContext",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.webpackContext.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-import-meta-webpack-hot": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.webpackHot.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.importMeta.webpackHot",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.webpackHot.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -5439,13 +5751,13 @@ Object {
   "module-parser-javascript-import-meta": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' or an object to preserve unknown properties for runtime evaluation.",
         "multiple": false,
         "path": "module.parser.javascript.importMeta",
         "type": "boolean",
       },
       Object {
-        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+        "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' or an object to preserve unknown properties for runtime evaluation.",
         "multiple": false,
         "path": "module.parser.javascript.importMeta",
         "type": "enum",
@@ -5454,7 +5766,7 @@ Object {
         ],
       },
     ],
-    "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' to preserve unknown properties for runtime evaluation.",
+    "description": "Enable/disable evaluating import.meta. Set to 'preserve-unknown' or an object to preserve unknown properties for runtime evaluation.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -5468,6 +5780,110 @@ Object {
       },
     ],
     "description": "Enable/disable evaluating import.meta.webpackContext.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-import-meta-dirname": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.dirname.",
+        "multiple": false,
+        "path": "module.parser.javascript.importMeta.dirname",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.dirname.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-import-meta-env": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.env.",
+        "multiple": false,
+        "path": "module.parser.javascript.importMeta.env",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.env.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-import-meta-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.filename.",
+        "multiple": false,
+        "path": "module.parser.javascript.importMeta.filename",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.filename.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-import-meta-main": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.main.",
+        "multiple": false,
+        "path": "module.parser.javascript.importMeta.main",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.main.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-import-meta-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.url.",
+        "multiple": false,
+        "path": "module.parser.javascript.importMeta.url",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.url.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-import-meta-webpack": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.webpack.",
+        "multiple": false,
+        "path": "module.parser.javascript.importMeta.webpack",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.webpack.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-import-meta-webpack-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.webpackContext.",
+        "multiple": false,
+        "path": "module.parser.javascript.importMeta.webpackContext",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.webpackContext.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-import-meta-webpack-hot": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.webpackHot.",
+        "multiple": false,
+        "path": "module.parser.javascript.importMeta.webpackHot",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.webpackHot.",
     "multiple": false,
     "simpleType": "boolean",
   },
