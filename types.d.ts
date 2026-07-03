@@ -4,7 +4,7 @@
  * Run `yarn fix:special` to update
  */
 
-import { Parser as ParserImport } from "acorn";
+import { Parser as ParserImport, Position } from "acorn";
 import { Buffer } from "buffer";
 import {
 	ArrayExpression,
@@ -19139,6 +19139,11 @@ declare interface ParseOptions {
 	semicolons?: boolean;
 	allowHashBang?: boolean;
 	allowReturnOutsideFunction?: boolean;
+
+	/**
+	 * internal: serve loc/range lazily instead of allocating them during parsing
+	 */
+	lazySourcePositions?: SourcePositions;
 }
 declare interface ParseResult {
 	ast: Program;
@@ -23674,6 +23679,16 @@ declare class SourceMapSource extends Source {
 declare interface SourcePosition {
 	line: number;
 	column?: number;
+}
+
+/**
+ * Offset → line/column mapping for one parsed file. The line-start table is
+ * built only when some node's `loc` is first read.
+ */
+declare abstract class SourcePositions {
+	source: string;
+	lineStarts?: number[];
+	position(offset: number): Position;
 }
 type SourceType =
 	| "script"
