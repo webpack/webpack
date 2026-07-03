@@ -291,6 +291,7 @@ describe("walkCssTokens — Node / Token", () => {
 		new SourceProcessor()
 			.use({
 				[NodeType.Declaration]: (
+					/** @type {import("../lib/css/syntax").CssAst} */ _api,
 					/** @type {import("../lib/css/syntax").Node} */ n
 				) => (loc = A.loc(n))
 			})
@@ -327,6 +328,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 						exit: () => log.push("exit")
 					},
 					[NodeType.Declaration]: (
+						/** @type {import("../lib/css/syntax").CssAst} */ _api,
 						/** @type {import("../lib/css/syntax").Declaration} */ n
 					) => log.push(`decl:${A.name(n)}`)
 				})
@@ -341,6 +343,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 		new SourceProcessor()
 			.use({
 				[NodeType.QualifiedRule]: (
+					/** @type {import("../lib/css/syntax").CssAst} */ _api,
 					/** @type {import("../lib/css/syntax").Node} */ n,
 					/** @type {import("../lib/css/syntax").Node | null} */ p,
 					/** @type {import("../lib/css/syntax").VisitorContext} */ ctx
@@ -373,6 +376,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Declaration]: (
+						/** @type {import("../lib/css/syntax").CssAst} */ _api,
 						/** @type {import("../lib/css/syntax").Declaration} */ n
 					) => names.push(A.name(n))
 				})
@@ -397,7 +401,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 		const seen = [];
 		new SourceProcessor()
 			.use({ [NodeType.Declaration]: () => {} })
-			.use({ [NodeType.Comment]: (node) => seen.push(A.source(node)) })
+			.use({ [NodeType.Comment]: (api, node) => seen.push(api.source(node)) })
 			.process("a{color:red/*!c*/}");
 		expect(seen).toEqual(["/*!c*/"]);
 	});
@@ -411,9 +415,11 @@ describe("walkCssTokens — SourceProcessor", () => {
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Declaration]: (
+						/** @type {import("../lib/css/syntax").CssAst} */ _api,
 						/** @type {import("../lib/css/syntax").Declaration} */ n
 					) => names.push(A.name(n)),
 					[NodeType.Url]: (
+						/** @type {import("../lib/css/syntax").CssAst} */ _api,
 						/** @type {import("../lib/css/syntax").UrlToken} */ n
 					) => urls.push(A.value(n))
 				})
@@ -432,6 +438,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Declaration]: (
+						/** @type {import("../lib/css/syntax").CssAst} */ _api,
 						/** @type {import("../lib/css/syntax").Declaration} */ n
 					) => names.push(A.name(n))
 				})
@@ -598,8 +605,11 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 		/** @type {import("../lib/css/syntax").VisitorMap} */
 		const map = {};
 		for (const t of Object.values(NodeType)) {
-			map[t] = (/** @type {import("../lib/css/syntax").Node} */ n) => {
-				counts[A.type(n)] = (counts[A.type(n)] || 0) + 1;
+			map[t] = (
+				/** @type {import("../lib/css/syntax").CssAst} */ api,
+				/** @type {import("../lib/css/syntax").Node} */ n
+			) => {
+				counts[api.type(n)] = (counts[api.type(n)] || 0) + 1;
 			};
 		}
 		new SourceProcessor().use(map).process(css, {
@@ -676,9 +686,11 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Ident]: (
+						/** @type {import("../lib/css/syntax").CssAst} */ _api,
 						/** @type {import("../lib/css/syntax").Node} */ n
 					) => log.push(`ident:${A.value(n)}`),
 					[NodeType.Declaration]: (
+						/** @type {import("../lib/css/syntax").CssAst} */ _api,
 						/** @type {import("../lib/css/syntax").Declaration} */ n
 					) => log.push(`decl:${A.name(n)}`)
 				})
@@ -698,6 +710,7 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Url]: (
+						/** @type {import("../lib/css/syntax").CssAst} */ _api,
 						/** @type {import("../lib/css/syntax").UrlToken} */ n
 					) => urls.push(A.value(n))
 				})
@@ -715,9 +728,11 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Declaration]: (
+						/** @type {import("../lib/css/syntax").CssAst} */ _api,
 						/** @type {import("../lib/css/syntax").Declaration} */ n
 					) => log.push(`decl:${A.name(n)}`),
 					[NodeType.Ident]: (
+						/** @type {import("../lib/css/syntax").CssAst} */ _api,
 						/** @type {import("../lib/css/syntax").Node} */ n
 					) => log.push(`ident:${A.value(n)}`)
 				})
@@ -737,12 +752,15 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.AtRule]: (
+						/** @type {import("../lib/css/syntax").CssAst} */ _api,
 						/** @type {import("../lib/css/syntax").AtRule} */ n
 					) => log.push(`at:${A.name(n)}`),
 					[NodeType.Ident]: (
+						/** @type {import("../lib/css/syntax").CssAst} */ _api,
 						/** @type {import("../lib/css/syntax").Node} */ n
 					) => log.push(`ident:${A.value(n)}`),
 					[NodeType.Declaration]: (
+						/** @type {import("../lib/css/syntax").CssAst} */ _api,
 						/** @type {import("../lib/css/syntax").Declaration} */ n
 					) => log.push(`decl:${A.name(n)}`)
 				})
@@ -762,6 +780,7 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Url]: (
+						/** @type {import("../lib/css/syntax").CssAst} */ _api,
 						/** @type {import("../lib/css/syntax").UrlToken} */ n
 					) => urls.push(A.value(n))
 				})
@@ -800,6 +819,7 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Number]: () => seen.push("num"),
 					[NodeType.Ident]: (
+						/** @type {import("../lib/css/syntax").CssAst} */ _api,
 						/** @type {import("../lib/css/syntax").Node} */ n
 					) => seen.push(A.value(n))
 				})
