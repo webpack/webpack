@@ -1,7 +1,6 @@
 "use strict";
 
 const {
-	A,
 	Node,
 	NodeType,
 	SourceProcessor,
@@ -291,9 +290,8 @@ describe("walkCssTokens — Node / Token", () => {
 		new SourceProcessor()
 			.use({
 				[NodeType.Declaration]: (
-					/** @type {import("../lib/css/syntax").CssAst} */ _api,
-					/** @type {import("../lib/css/syntax").Node} */ n
-				) => (loc = A.loc(n))
+					/** @type {import("../lib/css/syntax").CssPath} */ path
+				) => (loc = path.loc())
 			})
 			.process("a{\n  color: red\n}");
 		expect(/** @type {NonNullable<typeof loc>} */ (loc).start).toEqual({
@@ -328,9 +326,8 @@ describe("walkCssTokens — SourceProcessor", () => {
 						exit: () => log.push("exit")
 					},
 					[NodeType.Declaration]: (
-						/** @type {import("../lib/css/syntax").CssAst} */ _api,
-						/** @type {import("../lib/css/syntax").Declaration} */ n
-					) => log.push(`decl:${A.name(n)}`)
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => log.push(`decl:${path.name()}`)
 				})
 			)
 			.process("a{color:red;width:1px}");
@@ -343,13 +340,10 @@ describe("walkCssTokens — SourceProcessor", () => {
 		new SourceProcessor()
 			.use({
 				[NodeType.QualifiedRule]: (
-					/** @type {import("../lib/css/syntax").CssAst} */ _api,
-					/** @type {import("../lib/css/syntax").Node} */ n,
-					/** @type {import("../lib/css/syntax").Node | null} */ p,
-					/** @type {import("../lib/css/syntax").VisitorContext} */ ctx
+					/** @type {import("../lib/css/syntax").CssPath} */ path
 				) => {
 					log.push("qr");
-					ctx.skipChildren();
+					path.skipChildren();
 				},
 				[NodeType.Declaration]: () => log.push("decl")
 			})
@@ -376,9 +370,8 @@ describe("walkCssTokens — SourceProcessor", () => {
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Declaration]: (
-						/** @type {import("../lib/css/syntax").CssAst} */ _api,
-						/** @type {import("../lib/css/syntax").Declaration} */ n
-					) => names.push(A.name(n))
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => names.push(path.name())
 				})
 			)
 			.process("@font-face{font-family:x;src:url(y)}");
@@ -401,7 +394,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 		const seen = [];
 		new SourceProcessor()
 			.use({ [NodeType.Declaration]: () => {} })
-			.use({ [NodeType.Comment]: (api, node) => seen.push(api.source(node)) })
+			.use({ [NodeType.Comment]: (path) => seen.push(path.source()) })
 			.process("a{color:red/*!c*/}");
 		expect(seen).toEqual(["/*!c*/"]);
 	});
@@ -415,13 +408,11 @@ describe("walkCssTokens — SourceProcessor", () => {
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Declaration]: (
-						/** @type {import("../lib/css/syntax").CssAst} */ _api,
-						/** @type {import("../lib/css/syntax").Declaration} */ n
-					) => names.push(A.name(n)),
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => names.push(path.name()),
 					[NodeType.Url]: (
-						/** @type {import("../lib/css/syntax").CssAst} */ _api,
-						/** @type {import("../lib/css/syntax").UrlToken} */ n
-					) => urls.push(A.value(n))
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => urls.push(path.value())
 				})
 			)
 			.process("color: red; background: url(a.png)", {
@@ -438,9 +429,8 @@ describe("walkCssTokens — SourceProcessor", () => {
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Declaration]: (
-						/** @type {import("../lib/css/syntax").CssAst} */ _api,
-						/** @type {import("../lib/css/syntax").Declaration} */ n
-					) => names.push(A.name(n))
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => names.push(path.name())
 				})
 			)
 			.process("color: red; background: url(a.png)");
@@ -605,11 +595,8 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 		/** @type {import("../lib/css/syntax").VisitorMap} */
 		const map = {};
 		for (const t of Object.values(NodeType)) {
-			map[t] = (
-				/** @type {import("../lib/css/syntax").CssAst} */ api,
-				/** @type {import("../lib/css/syntax").Node} */ n
-			) => {
-				counts[api.type(n)] = (counts[api.type(n)] || 0) + 1;
+			map[t] = (/** @type {import("../lib/css/syntax").CssPath} */ path) => {
+				counts[path.type()] = (counts[path.type()] || 0) + 1;
 			};
 		}
 		new SourceProcessor().use(map).process(css, {
@@ -686,13 +673,11 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Ident]: (
-						/** @type {import("../lib/css/syntax").CssAst} */ _api,
-						/** @type {import("../lib/css/syntax").Node} */ n
-					) => log.push(`ident:${A.value(n)}`),
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => log.push(`ident:${path.value()}`),
 					[NodeType.Declaration]: (
-						/** @type {import("../lib/css/syntax").CssAst} */ _api,
-						/** @type {import("../lib/css/syntax").Declaration} */ n
-					) => log.push(`decl:${A.name(n)}`)
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => log.push(`decl:${path.name()}`)
 				})
 			)
 			.process(".foo .bar{color:red}", {
@@ -710,9 +695,8 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Url]: (
-						/** @type {import("../lib/css/syntax").CssAst} */ _api,
-						/** @type {import("../lib/css/syntax").UrlToken} */ n
-					) => urls.push(A.value(n))
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => urls.push(path.value())
 				})
 			)
 			.process(":x(url(p.png)){color:red}", {
@@ -728,13 +712,11 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Declaration]: (
-						/** @type {import("../lib/css/syntax").CssAst} */ _api,
-						/** @type {import("../lib/css/syntax").Declaration} */ n
-					) => log.push(`decl:${A.name(n)}`),
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => log.push(`decl:${path.name()}`),
 					[NodeType.Ident]: (
-						/** @type {import("../lib/css/syntax").CssAst} */ _api,
-						/** @type {import("../lib/css/syntax").Node} */ n
-					) => log.push(`ident:${A.value(n)}`)
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => log.push(`ident:${path.value()}`)
 				})
 			)
 			.process("}} a{color:red}", {
@@ -752,17 +734,14 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.AtRule]: (
-						/** @type {import("../lib/css/syntax").CssAst} */ _api,
-						/** @type {import("../lib/css/syntax").AtRule} */ n
-					) => log.push(`at:${A.name(n)}`),
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => log.push(`at:${path.name()}`),
 					[NodeType.Ident]: (
-						/** @type {import("../lib/css/syntax").CssAst} */ _api,
-						/** @type {import("../lib/css/syntax").Node} */ n
-					) => log.push(`ident:${A.value(n)}`),
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => log.push(`ident:${path.value()}`),
 					[NodeType.Declaration]: (
-						/** @type {import("../lib/css/syntax").CssAst} */ _api,
-						/** @type {import("../lib/css/syntax").Declaration} */ n
-					) => log.push(`decl:${A.name(n)}`)
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => log.push(`decl:${path.name()}`)
 				})
 			)
 			.process("@media (min-width:9px){a{color:red}}", {
@@ -780,9 +759,8 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Url]: (
-						/** @type {import("../lib/css/syntax").CssAst} */ _api,
-						/** @type {import("../lib/css/syntax").UrlToken} */ n
-					) => urls.push(A.value(n))
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => urls.push(path.value())
 				})
 			)
 			.process("@import url(x.css);", {
@@ -819,9 +797,8 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Number]: () => seen.push("num"),
 					[NodeType.Ident]: (
-						/** @type {import("../lib/css/syntax").CssAst} */ _api,
-						/** @type {import("../lib/css/syntax").Node} */ n
-					) => seen.push(A.value(n))
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => seen.push(path.value())
 				})
 			)
 			.process("p: 1 foo");

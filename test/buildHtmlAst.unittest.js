@@ -546,10 +546,10 @@ describe("buildHtmlAst — SourceProcessor", () => {
 			.use(
 				/** @type {import("../lib/html/syntax").VisitorMap} */ ({
 					[NodeType.Element]: {
-						enter: (api, n) => log.push(`enter:${api.tagName(n)}`),
-						exit: (api, n) => log.push(`exit:${api.tagName(n)}`)
+						enter: (path) => log.push(`enter:${path.tagName()}`),
+						exit: (path) => log.push(`exit:${path.tagName()}`)
 					},
-					[NodeType.Text]: (api, n) => log.push(`text:${api.data(n)}`)
+					[NodeType.Text]: (path) => log.push(`text:${path.data()}`)
 				})
 			)
 			.process("<div><span>a</span>b</div>");
@@ -574,8 +574,7 @@ describe("buildHtmlAst — SourceProcessor", () => {
 		const seen = [];
 		new SourceProcessor()
 			.use({
-				[NodeType.Document]: (api, n, parent) =>
-					seen.push([api.type(n), parent === null ? null : api.type(parent)])
+				[NodeType.Document]: (path) => seen.push([path.type(), path.parent])
 			})
 			.process("<p>x</p>");
 		expect(seen).toEqual([[NodeType.Document, null]]);
@@ -587,20 +586,20 @@ describe("buildHtmlAst — SourceProcessor", () => {
 		new SourceProcessor()
 			.use({
 				[NodeType.Doctype]: () => log.push("doctype"),
-				[NodeType.Comment]: (api, n) => log.push(`comment:${api.data(n)}`)
+				[NodeType.Comment]: (path) => log.push(`comment:${path.data()}`)
 			})
 			.process("<!DOCTYPE html><!--c--><p>x</p>");
 		expect(log).toEqual(["doctype", "comment:c"]);
 	});
 
-	it("ctx.skipChildren() stops descent into a node", () => {
+	it("path.skipChildren() stops descent into a node", () => {
 		/** @type {string[]} */
 		const log = [];
 		new SourceProcessor()
 			.use({
-				[NodeType.Element]: (api, n, p, ctx) => {
-					log.push(api.tagName(n));
-					if (api.tagName(n) === "div") ctx.skipChildren();
+				[NodeType.Element]: (path) => {
+					log.push(path.tagName());
+					if (path.tagName() === "div") path.skipChildren();
 				}
 			})
 			.process("<div><span>a</span></div><p>b</p>");
@@ -613,7 +612,7 @@ describe("buildHtmlAst — SourceProcessor", () => {
 		new SourceProcessor()
 			.use({
 				[NodeType.DocumentFragment]: () => log.push("fragment"),
-				[NodeType.Element]: (api, n) => log.push(api.tagName(n))
+				[NodeType.Element]: (path) => log.push(path.tagName())
 			})
 			.process("<template><p>x</p></template>");
 		expect(log).toEqual(["html", "head", "template", "fragment", "p", "body"]);
