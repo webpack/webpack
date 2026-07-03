@@ -806,3 +806,117 @@ describe("walkCssTokens — skip set (CssProcessOptions.skip)", () => {
 		expect(seen).toEqual(["foo"]);
 	});
 });
+
+describe("walkCssTokens — path accessors", () => {
+	/** @typedef {import("../lib/css/syntax").CssPath} CssPath */
+	const SRC =
+		"@media screen { .a { co\\6cor: red !important; background: url(x.png) var(--v, calc(1 + 2)); } } /* note */ .b { grid: [x] 1; }";
+
+	it("exposes every field read on the current node", () => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
+					[NodeType.AtRule]: (/** @type {CssPath} */ path) => {
+						log.push(`at:${path.name()}`);
+						log.push(
+							`atName:${SRC.slice(path.nameStart() + 1, path.nameEnd())}`
+						);
+						log.push(`prelude:${path.prelude().length > 0}`);
+						log.push(
+							`childRules:${
+								/** @type {import("../lib/css/syntax").Rule[]} */ (
+									path.childRules()
+								).length
+							}`
+						);
+						log.push(
+							`decls:${
+								/** @type {import("../lib/css/syntax").Declaration[]} */ (
+									path.declarations()
+								).length
+							}`
+						);
+						log.push(`blockOpen:${SRC[path.blockStart()]}`);
+						log.push(`blockClose:${SRC[path.blockEnd() - 1]}`);
+						log.push(`span:${SRC.slice(path.start(), path.start() + 6)}`);
+						log.push(`node:${path.node !== null}`);
+						log.push(`parent:${path.parent}`);
+					},
+					[NodeType.Declaration]: (/** @type {CssPath} */ path) => {
+						if (path.important()) {
+							log.push(`decl:${path.name()}=${path.unescapedName()}`);
+						}
+					},
+					[NodeType.Url]: (/** @type {CssPath} */ path) => {
+						log.push(
+							`url:${SRC.slice(path.contentStart(), path.contentEnd())}`
+						);
+					},
+					[NodeType.SimpleBlock]: (/** @type {CssPath} */ path) => {
+						log.push(`blockToken:${path.blockToken()}`);
+					},
+					[NodeType.Function]: {
+						enter: (/** @type {CssPath} */ path) => {
+							if (path.name() === "var") {
+								log.push(`fnChildren:${path.children().length > 0}`);
+							}
+						},
+						exit: (/** @type {CssPath} */ path) => {
+							log.push(`fnExit:${path.name()}`);
+						}
+					},
+					[NodeType.Comment]: {
+						enter: (/** @type {CssPath} */ path) => {
+							log.push(`comment:${SRC.slice(path.start(), path.end())}`);
+							log.push(`commentParent:${path.parent}`);
+						},
+						exit: () => log.push("commentExit")
+					}
+				})
+			)
+			.process(SRC);
+		expect(log).toContain("at:media");
+		expect(log).toContain("atName:media");
+		expect(log).toContain("prelude:true");
+		expect(log).toContain("childRules:1");
+		expect(log).toContain("decls:0");
+		expect(log).toContain("blockOpen:{");
+		expect(log).toContain("blockClose:}");
+		expect(log).toContain("blockToken:[");
+		expect(log).toContain("span:@media");
+		expect(log).toContain("node:true");
+		expect(log).toContain("parent:null");
+		expect(log).toContain("decl:co\\6cor=color");
+		expect(log).toContain("url:x.png");
+		expect(log).toContain("fnChildren:true");
+		expect(log).toContain("fnExit:var");
+		expect(log).toContain("comment:/* note */");
+		expect(log).toContain("commentParent:null");
+		expect(log).toContain("commentExit");
+	});
+
+	it("reads prelude and declarations of a qualified rule", () => {
+		/** @type {unknown[]} */
+		const out = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
+					[NodeType.QualifiedRule]: (/** @type {CssPath} */ path) => {
+						out.push([
+							path.prelude().length > 0,
+							/** @type {import("../lib/css/syntax").Declaration[]} */ (
+								path.declarations()
+							).length,
+							/** @type {import("../lib/css/syntax").Rule[]} */ (
+								path.childRules()
+							).length
+						]);
+					}
+				})
+			)
+			.process(".b { margin: 0; }");
+		expect(out).toEqual([[true, 1, 0]]);
+	});
+});

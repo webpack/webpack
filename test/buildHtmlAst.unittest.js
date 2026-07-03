@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore selectedcontent mtext mglyph
+// cspell:ignore selectedcontent mtext mglyph colgroups viewbox definitionurl
 
 const {
 	A,
@@ -532,7 +532,7 @@ describe("buildHtmlAst", () => {
 		);
 		const texts = root.children
 			.filter((c) => c.type === NodeType.Text)
-			.map((/** @type {MatText} */ c) => c.data);
+			.map((c) => /** @type {MatText} */ (c).data);
 		expect(texts).toContain("x");
 		expect(child(root.children, "tbody")).toBeDefined();
 	});
@@ -1028,5 +1028,314 @@ describe("buildHtmlAst — skip options preserve element structure", () => {
 				expect(elementSignature(buildHtmlAst(src, ctx, skip))).toBe(base);
 			}
 		}
+	});
+});
+
+describe("buildHtmlAst — tree-construction edge cases (SoA columns)", () => {
+	/**
+	 * @param {string} src source
+	 * @param {import("../lib/html/syntax").HtmlAstSkip=} skip skip options
+	 * @returns {MatNode[]} body children
+	 */
+	const bodyOf = (src, skip) =>
+		child(
+			child(buildHtmlAst(src, undefined, skip).children, "html").children,
+			"body"
+		).children;
+
+	it("grows the node and attribute columns past their initial capacity", () => {
+		let src = "";
+		for (let i = 0; i < 5000; i++) src += `<i data-n="${i}"></i>`;
+		const nodes = body(src);
+		expect(nodes).toHaveLength(5000);
+		expect(nodes[4999].attributes[0].value).toBe("4999");
+	});
+
+	it("merges texts left adjacent by a skipped comment", () => {
+		const nodes = bodyOf("a<!--c-->b", { comments: true });
+		expect(nodes).toEqual([
+			expect.objectContaining({ type: NodeType.Text, data: "ab" })
+		]);
+	});
+
+	it("foster-parents text inside <template> containing a table", () => {
+		const template = head("<template><table>x</table></template>")[0];
+		const content = /** @type {MatFragment} */ (template.templateContent);
+		expect(content.children.map((c) => c.type)).toEqual([
+			NodeType.Text,
+			NodeType.Element
+		]);
+		expect(/** @type {MatText} */ (content.children[0]).data).toBe("x");
+	});
+
+	it("splits leading whitespace out of a <colgroup>", () => {
+		const table = child(bodyOf("<table><colgroup> x<col>"), "table");
+		// "x" pops the colgroup (fostered before the table); <col> reopens one.
+		const colgroups = table.children.filter(
+			(c) => c.type === NodeType.Element && c.tagName === "colgroup"
+		);
+		expect(colgroups).toHaveLength(2);
+		expect(
+			child(/** @type {MatElement} */ (colgroups[1]).children, "col")
+		).toBeDefined();
+	});
+
+	it("closes a <colgroup> on its end tag and on anything-else", () => {
+		const t1 = child(
+			bodyOf("<table><colgroup><col></colgroup><tr><td>x"),
+			"table"
+		);
+		expect(child(t1.children, "colgroup")).toBeDefined();
+		expect(child(t1.children, "tbody")).toBeDefined();
+		const t2 = child(bodyOf("<table><colgroup><tbody><tr><td>x"), "table");
+		expect(child(t2.children, "tbody")).toBeDefined();
+	});
+
+	it("moves an <hr> out of option/optgroup context in <select>", () => {
+		const select = child(
+			bodyOf("<select><option>a<optgroup><option>b<hr><option>c"),
+			"select"
+		);
+		const tags = select.children
+			.filter((c) => c.type === NodeType.Element)
+			.map((c) => /** @type {MatElement} */ (c).tagName);
+		expect(tags).toContain("hr");
+	});
+
+	it("keeps <selectedcontent> content when the select has no options", () => {
+		const select = child(
+			bodyOf(
+				"<select><button><selectedcontent>x</selectedcontent></button></select>"
+			),
+			"select"
+		);
+		const sc = child(
+			child(select.children, "button").children,
+			"selectedcontent"
+		);
+		expect(sc.children).toEqual([
+			expect.objectContaining({ type: NodeType.Text, data: "x" })
+		]);
+	});
+
+	it("mirrors the last selected option found inside an <optgroup>", () => {
+		const select = child(
+			bodyOf(
+				"<select><button><selectedcontent></selectedcontent></button><optgroup> <option>A<option selected>B</optgroup></select>"
+			),
+			"select"
+		);
+		const sc = child(
+			child(select.children, "button").children,
+			"selectedcontent"
+		);
+		expect(/** @type {MatText} */ (sc.children[0]).data).toBe("B");
+	});
+
+	it("applies the Noah's Ark clause to identical formatting elements", () => {
+		// Four identical <b class="x"> in the active formatting list: only three
+		// survive, so the reconstruction in the second <p> nests three <b>.
+		const src =
+			'<p>1<b class="x"><b class="x"><b class="x"><b class="x">2</p><p>3';
+		const paragraphs = bodyOf(src).filter(
+			(c) => c.type === NodeType.Element && c.tagName === "p"
+		);
+		/**
+		 * @param {MatElement} el element
+		 * @returns {number} depth of nested <b>
+		 */
+		const bDepth = (el) => {
+			let depth = 0;
+			for (let b = child(el.children, "b"); b; b = child(b.children, "b")) {
+				depth++;
+			}
+			return depth;
+		};
+		expect(bDepth(/** @type {MatElement} */ (paragraphs[0]))).toBe(4);
+		expect(bDepth(/** @type {MatElement} */ (paragraphs[1]))).toBe(3);
+	});
+
+	it("clones attributes when the adoption agency splits a formatting element", () => {
+		const p = find('<b class="x">1<p>2</b>3', "p");
+		const clone = child(p.children, "b");
+		expect(clone.attributes).toEqual([
+			expect.objectContaining({ name: "class", value: "x" })
+		]);
+	});
+
+	it("treats <annotation-xml encoding=text/html> as an integration point", () => {
+		const ax = find(
+			'<math><annotation-xml encoding="text/html"><div>x</div></annotation-xml></math>',
+			"annotation-xml"
+		);
+		const div = child(ax.children, "div");
+		expect(div.namespace).toBe(NS_HTML);
+	});
+
+	it("adjusts SVG and MathML attribute names", () => {
+		const svg = find('<svg viewbox="0 0 1 1" xlink:href="#a"/>', "svg");
+		const byName = new Map(svg.attributes.map((a) => [a.name, a]));
+		expect(byName.has("viewBox")).toBe(true);
+		const xlink = /** @type {HtmlAttribute} */ (byName.get("xlink:href"));
+		expect(xlink.serializedName).toBe("xlink href");
+		const math = find('<math definitionurl="u">', "math");
+		expect(math.attributes[0].name).toBe("definitionURL");
+	});
+
+	it("breaks a <font> with a color attribute out of foreign content", () => {
+		const nodes = bodyOf('<svg><font color="red">x');
+		const font = child(nodes, "font");
+		expect(font.namespace).toBe(NS_HTML);
+		// Without a breakout attribute the font stays inside the svg.
+		const svg = child(bodyOf("<svg><font other=1>x"), "svg");
+		expect(child(svg.children, "font").namespace).toBe(NS_SVG);
+	});
+
+	it("merges attributes of a repeated <body> tag", () => {
+		const doc = buildHtmlAst('<body class="a"><body id="b" class="c">x');
+		const bodyEl = child(child(doc.children, "html").children, "body");
+		const byName = new Map(bodyEl.attributes.map((a) => [a.name, a.value]));
+		expect(byName.get("class")).toBe("a");
+		expect(byName.get("id")).toBe("b");
+	});
+
+	it("replaces an empty <body> with a <frameset>", () => {
+		// An implied body (opened by <div>) leaves frameset-ok set, so the
+		// <frameset> detaches it; an explicit <body> tag would clear the flag.
+		const doc = buildHtmlAst(
+			'<div><frameset rows="1"> <frameset cols="2"><frame></frameset></frameset>'
+		);
+		const htmlEl = child(doc.children, "html");
+		expect(child(htmlEl.children, "body")).toBeUndefined();
+		const outer = child(htmlEl.children, "frameset");
+		const inner = child(outer.children, "frameset");
+		expect(child(inner.children, "frame")).toBeDefined();
+	});
+
+	it("closes an open <dd> when a <dt> starts", () => {
+		const dl = child(bodyOf("<dl><dd>a<dt>b</dl>"), "dl");
+		const items = dl.children
+			.filter((c) => c.type === NodeType.Element)
+			.map((c) => /** @type {MatElement} */ (c).tagName);
+		expect(items).toEqual(["dd", "dt"]);
+	});
+
+	it("closes an open <a> when a new <a> starts", () => {
+		const nodes = bodyOf('<a href="1">x<a href="2">y');
+		const anchors = nodes.filter(
+			(c) => c.type === NodeType.Element && c.tagName === "a"
+		);
+		expect(anchors).toHaveLength(2);
+	});
+
+	it("closes an open <button> when a new <button> starts", () => {
+		const nodes = bodyOf("<button>a<button>b");
+		const buttons = nodes.filter(
+			(c) => c.type === NodeType.Element && c.tagName === "button"
+		);
+		expect(buttons).toHaveLength(2);
+	});
+
+	it("closes an open heading when a new heading starts", () => {
+		const tags = bodyOf("<h1>a<h2>b")
+			.filter((c) => c.type === NodeType.Element)
+			.map((c) => /** @type {MatElement} */ (c).tagName);
+		expect(tags).toEqual(["h1", "h2"]);
+	});
+
+	it("</form> closes the form even with open descendants", () => {
+		const form = child(bodyOf("<form><div>x</form>y<input>"), "form");
+		// The stray input after </form> lands in the div (still open), not the form.
+		expect(child(child(form.children, "div").children, "input")).toBeDefined();
+	});
+
+	it("keeps <input type=hidden> inside a table", () => {
+		const table = child(
+			bodyOf('<table><input type="hidden"><input type="text"></table>'),
+			"table"
+		);
+		const hidden = child(table.children, "input");
+		expect(hidden.attributes[0].value).toBe("hidden");
+	});
+
+	it("attaches comments after </body> to the <html> element", () => {
+		const htmlEl = child(buildHtmlAst("x</body><!--c-->").children, "html");
+		expect(htmlEl.children.map((c) => c.type)).toContain(NodeType.Comment);
+	});
+
+	it("parses text in a foreign fragment context", () => {
+		const doc = buildHtmlAstRefs("x<div>y", "svg");
+		const root = A.firstChild(doc);
+		expect(A.type(A.firstChild(root))).toBe(NodeType.Text);
+	});
+
+	it("runs the adoption agency in a table-row fragment context", () => {
+		const doc = buildHtmlAst("<b>x<tr>y</b>z", "tr");
+		const root = child(doc.children, "html");
+		expect(
+			/** @type {MatText} */ (child(root.children, "b").children[0]).data
+		).toBe("xy");
+	});
+});
+
+describe("buildHtmlAst — path accessor completeness", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	it("exposes node, parent links and attribute spans on the path", () => {
+		const SRC = '<!DOCTYPE html PUBLIC "p" "s"><div id="d" checked>x</div>';
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/html/syntax").VisitorMap} */ ({
+					[NodeType.Doctype]: (path) => {
+						const n = path.node;
+						log.push(
+							`doctype:${path.doctypePublicId(n)}/${path.doctypeSystemId(n)}`
+						);
+					},
+					[NodeType.Element]: (path) => {
+						if (path.tagName() !== "div") return;
+						log.push(`node:${path.node !== null}`);
+						log.push(
+							`parentTag:${path.tagName(/** @type {number} */ (path.parent))}`
+						);
+						log.push(`parentOf:${path.parentOf() === path.parent}`);
+						log.push(`attrs:${path.attributeCount()}`);
+						const id = path.findAttribute("id");
+						log.push(`id:${path.attributeName(id)}=${path.attributeValue(id)}`);
+						log.push(
+							`idName:${SRC.slice(
+								path.attributeNameStart(id),
+								path.attributeNameEnd(id)
+							)}`
+						);
+						log.push(
+							`idValue:${SRC.slice(
+								path.attributeValueStart(id),
+								path.attributeValueEnd(id)
+							)}`
+						);
+						const checked = path.attributeAt(1);
+						log.push(`checkedValueStart:${path.attributeValueStart(checked)}`);
+						log.push(`firstChildType:${path.type(path.firstChild())}`);
+						log.push(`nextSibling:${path.nextSibling()}`);
+					}
+				})
+			)
+			.process(SRC);
+		expect(log).toEqual([
+			"doctype:p/s",
+			"node:true",
+			"parentTag:body",
+			"parentOf:true",
+			"attrs:2",
+			"id:id=d",
+			"idName:id",
+			"idValue:d",
+			"checkedValueStart:-1",
+			`firstChildType:${NodeType.Text}`,
+			"nextSibling:0"
+		]);
 	});
 });
