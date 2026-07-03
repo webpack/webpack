@@ -176,6 +176,8 @@ Use `patch` for bug fixes, `minor` for new features, `major` for breaking change
 
 **Keep the description as short as possible** — a single imperative sentence, ≤ 80 characters, **first character capitalized**, **trailing period** ("Fix split-chunks cache key collision."). Changesets are concatenated into `CHANGELOG.md` verbatim. Multi-paragraph rationale belongs in the PR body, not the changeset.
 
+**One changeset per pull request** — when a PR contains several related changes, fold them into a single changeset entry (one sentence naming them, using the highest applicable bump level) instead of adding one file per change. Only add separate changeset files when the changes are genuinely unrelated to each other; the length limit may be relaxed slightly for a combined entry.
+
 ### 4. Updating Examples (if needed)
 
 If WebpackOptions were added or modified, consider updating examples in `examples/`. Run `yarn build:examples` to verify.
