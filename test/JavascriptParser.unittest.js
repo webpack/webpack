@@ -990,14 +990,14 @@ describe("JavascriptParser", () => {
 		}
 	});
 
-	describe("new import call (acorn-import-phases)", () => {
+	describe("new import call (import phases)", () => {
 		beforeAll(() => {
 			const parser =
 				/** @type {typeof JavascriptParser & { __importPhasesExtended?: true }} */
 				(JavascriptParser);
 			if (!parser.__importPhasesExtended) {
 				JavascriptParser.extend(
-					require("acorn-import-phases")({ source: true, defer: true })
+					require("../lib/javascript/syntax").importPhases
 				);
 				parser.__importPhasesExtended = true;
 			}
@@ -1032,8 +1032,8 @@ describe("JavascriptParser", () => {
 			it(`rejects ${JSON.stringify(source)}`, () => {
 				const err = parse(source);
 				expect(err).toBeInstanceOf(SyntaxError);
-				expect(/** @type {Error} */ (err).message).toBe(
-					"import call cannot be the target of `new`"
+				expect(/** @type {Error} */ (err).message).toMatch(
+					/^import call cannot be the target of `new`/
 				);
 			});
 		}
