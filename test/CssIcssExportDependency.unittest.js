@@ -29,6 +29,10 @@ const entry = (
 	interpolate: false,
 	exportMode: EXPORT_MODE.REPLACE,
 	exportType: EXPORT_TYPE.NORMAL,
+	locStartLine: 0,
+	locStartColumn: 0,
+	locEndLine: 0,
+	locEndColumn: 0,
 	...over
 });
 
@@ -103,7 +107,10 @@ describe("CssIcssExportDependency", () => {
 					value: "missing",
 					exportMode: EXPORT_MODE.SELF_REFERENCE,
 					exportType: EXPORT_TYPE.COMPOSES,
-					loc: { start: { line: 1, column: 0 } }
+					locStartLine: 1,
+					locStartColumn: 0,
+					locEndLine: 1,
+					locEndColumn: 7
 				})
 			]);
 			const warnings =
@@ -177,7 +184,10 @@ describe("CssIcssExportDependency", () => {
 				interpolate: true,
 				exportMode: EXPORT_MODE.ONCE,
 				exportType: EXPORT_TYPE.CUSTOM_VARIABLE,
-				loc: { start: { line: 1, column: 2 } }
+				locStartLine: 1,
+				locStartColumn: 2,
+				locEndLine: 1,
+				locEndColumn: 5
 			}),
 			entry({
 				name: "b",
