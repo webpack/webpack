@@ -334,7 +334,7 @@ describe("walkCssTokens — SourceProcessor", () => {
 		expect(log).toEqual(["enter", "decl:color", "decl:width", "exit"]);
 	});
 
-	it("ctx.skipChildren() stops descent into a node", () => {
+	it("path.skipChildren() stops descent into a node", () => {
 		/** @type {string[]} */
 		const log = [];
 		new SourceProcessor()
