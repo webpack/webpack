@@ -5318,7 +5318,10 @@ declare abstract class CssGenerator extends Generator {
 	sourceDependency(
 		dependency: Dependency,
 		source: ReplaceSource,
-		templateContext: DependencyTemplateContext & { cssData: CssData }
+		templateContext: DependencyTemplateContext & {
+			cssData: CssData;
+			type: string;
+		}
 	): void;
 
 	/**
