@@ -991,25 +991,13 @@ describe("JavascriptParser", () => {
 	});
 
 	describe("new import call (import phases)", () => {
-		beforeAll(() => {
-			const parser =
-				/** @type {typeof JavascriptParser & { __importPhasesExtended?: true }} */
-				(JavascriptParser);
-			if (!parser.__importPhasesExtended) {
-				JavascriptParser.extend(
-					require("../lib/javascript/syntax").importPhases
-				);
-				parser.__importPhasesExtended = true;
-			}
-		});
-
 		/**
 		 * @param {string} source source
 		 * @returns {Error | null} thrown error, if any
 		 */
 		function parse(source) {
 			try {
-				new JavascriptParser().parse(
+				new JavascriptParser("auto", { importPhases: true }).parse(
 					source,
 					/** @type {import("../lib/Parser").ParserState} */ (
 						/** @type {unknown} */ ({ source })

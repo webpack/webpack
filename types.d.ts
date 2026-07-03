@@ -10409,6 +10409,7 @@ declare class JavascriptParser extends ParserClass {
 		options?: {
 			parse?: (code: string, options: ParseOptions) => ParseResult;
 			typescript?: boolean;
+			importPhases?: boolean;
 		}
 	);
 	hooks: Readonly<{
@@ -10850,6 +10851,7 @@ declare class JavascriptParser extends ParserClass {
 	options: {
 		parse?: (code: string, options: ParseOptions) => ParseResult;
 		typescript?: boolean;
+		importPhases?: boolean;
 	};
 	scope: ScopeInfo;
 	state: JavascriptParserState;
@@ -19144,6 +19146,11 @@ declare interface ParseOptions {
 	 * internal: serve loc/range lazily instead of allocating them during parsing
 	 */
 	lazySourcePositions?: SourcePositions;
+
+	/**
+	 * enable parsing of the import phase proposals (import defer / import source)
+	 */
+	importPhases?: boolean;
 }
 declare interface ParseResult {
 	ast: Program;
