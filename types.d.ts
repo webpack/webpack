@@ -5316,11 +5316,12 @@ declare abstract class CssGenerator extends Generator {
 	 * Processes the provided module.
 	 */
 	sourceDependency(
-		module: NormalModule,
 		dependency: Dependency,
-		initFragments: InitFragment<GenerateContext>[],
 		source: ReplaceSource,
-		generateContext: GenerateContext & { cssData: CssData }
+		templateContext: DependencyTemplateContext & {
+			cssData: CssData;
+			type: string;
+		}
 	): void;
 
 	/**
@@ -9386,22 +9387,18 @@ declare abstract class HtmlGenerator extends Generator {
 	 * Processes the provided module.
 	 */
 	sourceDependency(
-		module: NormalModule,
 		dependency: Dependency,
-		initFragments: InitFragment<GenerateContext>[],
 		source: ReplaceSource,
-		generateContext: GenerateContext
+		templateContext: DependencyTemplateContext
 	): void;
 
 	/**
 	 * Processes the provided dependencies block.
 	 */
 	sourceBlock(
-		module: NormalModule,
 		block: DependenciesBlock,
-		initFragments: InitFragment<GenerateContext>[],
 		source: ReplaceSource,
-		generateContext: GenerateContext
+		templateContext: DependencyTemplateContext
 	): void;
 
 	/**
