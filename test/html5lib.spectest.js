@@ -20,6 +20,7 @@ const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
 const {
+	A,
 	NS_MATHML,
 	NS_SVG,
 	NodeType,
@@ -192,37 +193,41 @@ const NS_PREFIX = {
 const KNOWN_DIVERGENCES = new Set();
 
 /**
- * Serialize an AST in the html5lib tree-construction format.
- * @param {import("../lib/html/syntax").HtmlDocument} doc document
+ * Serialize an AST in the html5lib tree-construction format, reading the SoA
+ * tree through the accessor `A`.
+ * @param {import("../lib/html/syntax").HtmlNodeRef} root node whose children are serialized
  * @returns {string} serialized tree
  */
-const serialize = (doc) => {
+const serialize = (root) => {
 	const lines = [];
 	/**
-	 * @param {import("../lib/html/syntax").HtmlNode} node node
+	 * @param {import("../lib/html/syntax").HtmlNodeRef} node node
 	 * @param {number} depth depth
 	 */
 	const walk = (node, depth) => {
 		const indent = `| ${"  ".repeat(depth)}`;
-		if (node.type === NodeType.Doctype) {
-			let s = `<!DOCTYPE ${node.name || ""}`;
-			if (node.publicId !== null || node.systemId !== null) {
-				s += ` "${node.publicId || ""}" "${node.systemId || ""}"`;
+		const type = A.type(node);
+		if (type === NodeType.Doctype) {
+			let s = `<!DOCTYPE ${A.doctypeName(node) || ""}`;
+			const publicId = A.doctypePublicId(node);
+			const systemId = A.doctypeSystemId(node);
+			if (publicId !== null || systemId !== null) {
+				s += ` "${publicId || ""}" "${systemId || ""}"`;
 			}
 			lines.push(`${indent}${s}>`);
 			return;
 		}
-		if (node.type === NodeType.Comment) {
-			lines.push(`${indent}<!-- ${node.data} -->`);
+		if (type === NodeType.Comment) {
+			lines.push(`${indent}<!-- ${A.data(node)} -->`);
 			return;
 		}
-		if (node.type === NodeType.Text) {
-			lines.push(`${indent}"${node.data}"`);
+		if (type === NodeType.Text) {
+			lines.push(`${indent}"${A.data(node)}"`);
 			return;
 		}
-		const prefix = NS_PREFIX[node.namespace] || "";
-		lines.push(`${indent}<${prefix}${node.tagName}>`);
-		const attrs = [...node.attributes].sort((a, b) => {
+		const prefix = NS_PREFIX[A.namespace(node)] || "";
+		lines.push(`${indent}<${prefix}${A.tagName(node)}>`);
+		const attrs = [...A.attributes(node)].sort((a, b) => {
 			const an = a.serializedName || a.name;
 			const bn = b.serializedName || b.name;
 			return an < bn ? -1 : an > bn ? 1 : 0;
@@ -234,14 +239,19 @@ const serialize = (doc) => {
 				}="${decodeHtmlEntities(a.value, true)}"`
 			);
 		}
-		if (node.templateContent) {
+		const tc = A.templateContent(node);
+		if (tc !== 0) {
 			lines.push(`| ${"  ".repeat(depth + 1)}content`);
-			for (const c of node.templateContent.children) walk(c, depth + 2);
+			for (let c = A.firstChild(tc); c !== 0; c = A.nextSibling(c)) {
+				walk(c, depth + 2);
+			}
 			return;
 		}
-		for (const c of node.children) walk(c, depth + 1);
+		for (let c = A.firstChild(node); c !== 0; c = A.nextSibling(c)) {
+			walk(c, depth + 1);
+		}
 	};
-	for (const c of doc.children) walk(c, 0);
+	for (let c = A.firstChild(root); c !== 0; c = A.nextSibling(c)) walk(c, 0);
 	return lines.join("\n");
 };
 
@@ -320,16 +330,8 @@ const parseDat = (text) => {
 const runTreeCase = (c) => {
 	const doc = buildHtmlAst(c.data, c.fragment || undefined);
 	// In fragment mode the result is the children of the synthesized root.
-	const root =
-		c.fragment && doc.children[0]
-			? /** @type {import("../lib/html/syntax").HtmlDocument} */ ({
-					type: NodeType.Document,
-					children: /** @type {import("../lib/html/syntax").HtmlElement} */ (
-						doc.children[0]
-					).children
-				})
-			: doc;
-	return serialize(root);
+	const first = A.firstChild(doc);
+	return serialize(c.fragment && first !== 0 ? first : doc);
 };
 
 const hasTreeCorpus =
