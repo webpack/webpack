@@ -40,7 +40,7 @@ it("should return correct import.meta.webpack", () => {
 
 it("should return undefined for unknown property", () => {
 	expect(import.meta.other).toBe(undefined);
-	if (typeof import.meta.other !== "undefined") require("fail");
+	if (typeof import.meta.other !== "undefined") throw new Error("fail");
 	expect(() => import.meta.other.other.other).toThrow();
 });
 

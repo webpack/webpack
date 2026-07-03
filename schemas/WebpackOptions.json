@@ -2065,6 +2065,7 @@
       "description": "Enable/disable evaluating import.meta fields. Omitted fields are enabled and unknown fields are preserved. Custom fields are allowed.",
       "type": "object",
       "additionalProperties": {
+        "description": "Enable/disable evaluating a custom import.meta field.",
         "type": "boolean"
       },
       "properties": {

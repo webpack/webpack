@@ -4519,6 +4519,9 @@ export interface ImportMetaParserOptionsKnown {
  * Enable/disable evaluating import.meta fields. Omitted fields are enabled and unknown fields are preserved. Custom fields are allowed.
  */
 export interface ImportMetaParserOptionsUnknown {
+	/**
+	 * Enable/disable evaluating a custom import.meta field.
+	 */
 	[k: string]: boolean;
 }
 /**
