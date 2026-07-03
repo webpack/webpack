@@ -20,13 +20,60 @@
 const nodeModule = require("node:module");
 const nodeVm = require("node:vm");
 
+// Bun segfaults while jest drives a native `vm.SyntheticModule` (its CJS/core
+// wrapper for dynamic `import()`) through link/evaluate inside the jest
+// environment context. Substitute a pure-JS stand-in with the same lifecycle
+// API — jest's resolution/mocks/process globals still apply, but no native vm
+// module code runs.
+class BunSyntheticModule {
+	constructor(exportNames, evaluationCallback, options = {}) {
+		this.identifier = options.identifier || "";
+		this.context = options.context;
+		this.status = "unlinked";
+		this.error = undefined;
+		this._evaluationCallback = evaluationCallback;
+		this._namespace = Object.create(null);
+		Object.defineProperty(this._namespace, Symbol.toStringTag, {
+			value: "Module"
+		});
+	}
+
+	setExport(name, value) {
+		this._namespace[name] = value;
+	}
+
+	get namespace() {
+		return this._namespace;
+	}
+
+	async link() {
+		if (this.status === "unlinked") this.status = "linked";
+	}
+
+	async evaluate() {
+		if (this.status !== "linked") return;
+		try {
+			this._evaluationCallback();
+			this.status = "evaluated";
+		} catch (err) {
+			this.status = "errored";
+			this.error = err;
+			throw err;
+		}
+	}
+}
+nodeVm.SyntheticModule = BunSyntheticModule;
+
 // Bun mishandles a `vm` `importModuleDynamically` callback that resolves to a
-// `vm.Module` (jest wraps every dynamically-imported CJS dep as one): the
-// dynamic import then resolves to an empty namespace. Returning the module's
-// `.namespace` works, so coerce the callback result wherever jest installs it
-// (CJS bodies via `compileFunction`, ESM via `SourceTextModule`).
+// module object (jest returns one for every dynamic import): the import then
+// resolves to an empty namespace. Returning the namespace works, so coerce the
+// callback result wherever jest installs it (CJS bodies via `compileFunction`,
+// ESM via `SourceTextModule`).
 const toNamespace = (mod) =>
-	nodeVm.Module && mod instanceof nodeVm.Module ? mod.namespace : mod;
+	(nodeVm.Module && mod instanceof nodeVm.Module) ||
+	mod instanceof BunSyntheticModule
+		? mod.namespace
+		: mod;
 const wrapDynamicImport = (options) => {
 	if (!options || typeof options.importModuleDynamically !== "function") {
 		return options;

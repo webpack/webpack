@@ -336,6 +336,11 @@ jobs:
       - if: matrix.runtime == 'bun'
         run: git apply test/patches/jest-worker+30.4.1.patch
 
+      # webpack-cli 7.1.0's CLIPlugin import interop breaks under Bun; see the
+      # patch header. Needed by WebpackCli.longtest.js until an upstream release.
+      - if: matrix.runtime == 'bun'
+        run: git apply test/patches/webpack-cli+7.1.0.patch
+
       # Deno and Bun both run with jest's parallel workers. The HotTestCases
       # suites are dropped for Deno only (see test:deno): under Deno's event-loop
       # timing webpack's async cache/compilation tails outlive a suite's teardown
