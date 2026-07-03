@@ -11,7 +11,7 @@ const {
 	buildHtmlAst: buildHtmlAstRefs
 } = require("../lib/html/syntax");
 
-/** @typedef {MatNodeRef} HtmlNodeRef */
+/** @typedef {import("../lib/html/syntax").HtmlNodeRef} HtmlNodeRef */
 /** @typedef {import("../lib/html/syntax").HtmlAttribute} HtmlAttribute */
 /**
  * Materialized plain-object views of the struct-of-arrays AST — the shape
@@ -83,7 +83,9 @@ const materialize = (ref) => {
 		default:
 			// Text / Comment
 			return {
-				type: /** @type {typeof NodeType.Text} */ (type),
+				type: /** @type {typeof NodeType.Text | typeof NodeType.Comment} */ (
+					type
+				),
 				data: A.data(ref),
 				start: A.start(ref),
 				end: A.end(ref)
