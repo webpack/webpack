@@ -336,8 +336,9 @@ jobs:
       - if: matrix.runtime == 'bun'
         run: git apply test/patches/jest-worker+30.4.1.patch
 
-      # webpack-cli 7.1.0's CLIPlugin import interop breaks under Bun; see the
-      # patch header. Needed by WebpackCli.longtest.js until an upstream release.
+      # webpack-cli 7.1.0's CLIPlugin dynamic import unwraps `.default` twice —
+      # correct Node CJS interop, but undefined under Bun (it honors __esModule).
+      # Needed by WebpackCli.longtest.js until an upstream release ships the fix.
       - if: matrix.runtime == 'bun'
         run: git apply test/patches/webpack-cli+7.1.0.patch
 

@@ -1,18 +1,15 @@
-Bun-only test patch (applied in the CI Bun job, like jest-worker):
-webpack-cli 7.1.0 unwraps its CLIPlugin dynamic import twice (`.default.default`),
-correct under Node's CJS interop but `undefined` under Bun, which honors
-`__esModule` and unwraps once already. Drop when webpack's webpack-cli
-dependency includes the upstream interop fix.
-
 diff --git a/node_modules/webpack-cli/lib/webpack-cli.js b/node_modules/webpack-cli/lib/webpack-cli.js
-index 70b2510..527a06b 100644
+index 70b2510..70263a6 100644
 --- a/node_modules/webpack-cli/lib/webpack-cli.js
 +++ b/node_modules/webpack-cli/lib/webpack-cli.js
-@@ -2293,7 +2293,8 @@ class WebpackCLI {
+@@ -2293,7 +2293,11 @@ class WebpackCLI {
              this.logger.error(`'${options.progress}' is an invalid value for the --progress option. Only 'profile' is allowed.`);
              process.exit(2);
          }
 -        const { default: CLIPlugin } = (await import("./plugins/cli-plugin.js")).default;
++        // webpack: Bun honors __esModule and unwraps once already; the upstream
++        // double `.default` is Node-only interop. Drop with this patch file when
++        // a webpack-cli release ships the fix.
 +        const cliPluginModule = (await import("./plugins/cli-plugin.js")).default;
 +        const CLIPlugin = cliPluginModule.default ?? cliPluginModule;
          // `getArguments()` already returns a name-keyed map of exactly the argument
