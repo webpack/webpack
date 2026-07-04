@@ -4,7 +4,6 @@ const path = require("path");
 const {
 	commonGlobBaseDir,
 	extractGlobBaseDir,
-	globMatchCore,
 	globMatchWithExplicitDot,
 	globMatchWithOptions,
 	globPatternsAreRecursive,
@@ -13,7 +12,6 @@ const {
 	normalizePathSeparatorsForPath,
 	patternHasExplicitDotFor,
 	resolveContextModuleGlobPattern,
-	splitBraceAlternatives,
 	unescapeGlobPath
 } = require("../lib/util/globUtils");
 
@@ -79,6 +77,81 @@ describe("globUtils", () => {
 	});
 
 	describe("globMatchWithOptions", () => {
+		it("does not match path separators with a single star", () => {
+			expect(
+				globMatchWithOptions("./other/*.js", "./other/x.js", defaultOptions)
+			).toBe(true);
+			expect(
+				globMatchWithOptions("./other/*.js", "./other/sub/x.js", defaultOptions)
+			).toBe(false);
+			expect(
+				globMatchWithOptions(
+					"./pages/*/index.js",
+					"./pages/a/b/index.js",
+					defaultOptions
+				)
+			).toBe(false);
+		});
+
+		it("matches nested path segments with globstar", () => {
+			expect(
+				globMatchWithOptions("./dir/**/*.js", "./dir/a/b/c.js", defaultOptions)
+			).toBe(true);
+			expect(
+				globMatchWithOptions("./dir/**/*.js", "./dir/c.js", defaultOptions)
+			).toBe(true);
+		});
+
+		it("matches a single non-separator character with question mark", () => {
+			expect(globMatchWithOptions("./d/?.js", "./d/a.js", defaultOptions)).toBe(
+				true
+			);
+			expect(
+				globMatchWithOptions("./d/?.js", "./d/日.js", defaultOptions)
+			).toBe(true);
+			expect(globMatchWithOptions("./a?c", "./a/c", defaultOptions)).toBe(
+				false
+			);
+		});
+
+		it("expands nested brace alternatives", () => {
+			expect(
+				globMatchWithOptions("a.{js,{ts,tsx}}", "a.ts", defaultOptions)
+			).toBe(true);
+			expect(
+				globMatchWithOptions("a.{js,{ts,tsx}}", "a.tsx", defaultOptions)
+			).toBe(true);
+			expect(
+				globMatchWithOptions("a.{js,{ts,tsx}}", "a.jsx", defaultOptions)
+			).toBe(false);
+			expect(globMatchWithOptions("{a,{b,c},d}/x", "d/x", defaultOptions)).toBe(
+				true
+			);
+			expect(globMatchWithOptions("{a,{b,c},d}/x", "c/x", defaultOptions)).toBe(
+				true
+			);
+			expect(globMatchWithOptions("{a,{b,c},d}/x", "e/x", defaultOptions)).toBe(
+				false
+			);
+		});
+
+		it("treats unmatched braces as literals", () => {
+			expect(globMatchWithOptions("./a{b.js", "./a{b.js", defaultOptions)).toBe(
+				true
+			);
+			expect(globMatchWithOptions("./a}b.js", "./a}b.js", defaultOptions)).toBe(
+				true
+			);
+		});
+
+		it("supports character classes without crossing separators", () => {
+			expect(globMatchWithOptions("a[bc]d", "abd", defaultOptions)).toBe(true);
+			expect(globMatchWithOptions("a[a-z]c", "amc", defaultOptions)).toBe(true);
+			expect(globMatchWithOptions("a[!b]c", "aXc", defaultOptions)).toBe(true);
+			expect(globMatchWithOptions("a[!b]c", "abc", defaultOptions)).toBe(false);
+			expect(globMatchWithOptions("a[!b]c", "a/c", defaultOptions)).toBe(false);
+		});
+
 		it("matches escaped star and question as literals", () => {
 			expect(
 				globMatchWithOptions(
@@ -121,58 +194,6 @@ describe("globUtils", () => {
 					defaultOptions
 				)
 			).toBe(false);
-		});
-
-		it("matches non-ascii filenames by character", () => {
-			expect(globMatchCore("./dir/日.js", "./dir/日.js")).toBe(true);
-			expect(globMatchCore("./dir/?.js", "./dir/日.js")).toBe(true);
-			expect(globMatchCore("./dir/[日].js", "./dir/日.js")).toBe(true);
-		});
-	});
-
-	describe("splitBraceAlternatives", () => {
-		it("splits nested brace groups on top-level commas", () => {
-			expect(splitBraceAlternatives("js,{ts,tsx}")).toEqual(["js", "{ts,tsx}"]);
-			expect(splitBraceAlternatives("a,{b,c},d")).toEqual(["a", "{b,c}", "d"]);
-		});
-	});
-
-	describe("globMatchCore", () => {
-		it("expands nested brace alternatives", () => {
-			expect(globMatchCore("a.{js,{ts,tsx}}", "a.ts")).toBe(true);
-			expect(globMatchCore("a.{js,{ts,tsx}}", "a.tsx")).toBe(true);
-			expect(globMatchCore("a.{js,{ts,tsx}}", "a.js")).toBe(true);
-			expect(globMatchCore("a.{js,{ts,tsx}}", "a.mjs")).toBe(false);
-		});
-
-		it("matches path patterns with nested brace directories", () => {
-			expect(
-				globMatchCore(
-					"./nested-brace/{a,{b,c}}/item.js",
-					"./nested-brace/b/item.js"
-				)
-			).toBe(true);
-			expect(
-				globMatchCore(
-					"./nested-brace/{a,{b,c}}/item.js",
-					"./nested-brace/d/item.js"
-				)
-			).toBe(false);
-		});
-
-		it("still lets globstar cross path separators", () => {
-			expect(
-				globMatchWithOptions(
-					"./fixtures/**/*.js",
-					"./fixtures/a/b.js",
-					defaultOptions
-				)
-			).toBe(true);
-		});
-
-		it("does not let question marks match path separators", () => {
-			expect(globMatchCore("./dir/?.js", "./dir/a.js")).toBe(true);
-			expect(globMatchCore("./dir/?.js", "./dir/.js")).toBe(false);
 		});
 	});
 
