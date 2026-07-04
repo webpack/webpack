@@ -20,13 +20,69 @@
 const nodeModule = require("node:module");
 const nodeVm = require("node:vm");
 
-// Bun mishandles a `vm` `importModuleDynamically` callback that resolves to a
-// `vm.Module` (jest wraps every dynamically-imported CJS dep as one): the
-// dynamic import then resolves to an empty namespace. Returning the module's
-// `.namespace` works, so coerce the callback result wherever jest installs it
-// (CJS bodies via `compileFunction`, ESM via `SourceTextModule`).
+// Pure-JS `vm.SyntheticModule` stand-in: Bun segfaults when jest drives the
+// native one through link/evaluate inside the jest environment context.
+class BunSyntheticModule {
+	constructor(exportNames, evaluationCallback, options = {}) {
+		this.identifier = options.identifier || "";
+		this.context = options.context;
+		this.status = "unlinked";
+		this.error = undefined;
+		this._exportNames = new Set(exportNames);
+		this._evaluationCallback = evaluationCallback;
+		this._namespace = Object.create(null);
+		Object.defineProperty(this._namespace, Symbol.toStringTag, {
+			value: "Module"
+		});
+	}
+
+	setExport(name, value) {
+		if (!this._exportNames.has(name)) {
+			throw new ReferenceError(`Export '${name}' is not defined in module`);
+		}
+		this._namespace[name] = value;
+	}
+
+	get namespace() {
+		return this._namespace;
+	}
+
+	async link() {
+		if (this.status === "unlinked") this.status = "linked";
+	}
+
+	async evaluate() {
+		if (this.status !== "linked") return;
+		try {
+			this._evaluationCallback();
+			this.status = "evaluated";
+		} catch (err) {
+			this.status = "errored";
+			this.error = err;
+			throw err;
+		}
+	}
+}
+const OriginalSyntheticModule = nodeVm.SyntheticModule;
+// Only jest-runtime wrappers get the stand-in; other creators (the ESM test
+// harness) link into native SourceTextModule graphs and need a real instance.
+nodeVm.SyntheticModule = function SyntheticModule(
+	exportNames,
+	evaluationCallback,
+	options
+) {
+	return new Error("caller probe").stack.includes("jest-runtime")
+		? new BunSyntheticModule(exportNames, evaluationCallback, options)
+		: new OriginalSyntheticModule(exportNames, evaluationCallback, options);
+};
+
+// Bun resolves an `importModuleDynamically` result that is a module object to
+// an empty namespace; coerce to `.namespace` wherever jest installs a callback.
 const toNamespace = (mod) =>
-	nodeVm.Module && mod instanceof nodeVm.Module ? mod.namespace : mod;
+	(nodeVm.Module && mod instanceof nodeVm.Module) ||
+	mod instanceof BunSyntheticModule
+		? mod.namespace
+		: mod;
 const wrapDynamicImport = (options) => {
 	if (!options || typeof options.importModuleDynamically !== "function") {
 		return options;
