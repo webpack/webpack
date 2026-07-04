@@ -20,17 +20,15 @@
 const nodeModule = require("node:module");
 const nodeVm = require("node:vm");
 
-// Bun segfaults while jest drives a native `vm.SyntheticModule` (its CJS/core
-// wrapper for dynamic `import()`) through link/evaluate inside the jest
-// environment context. Substitute a pure-JS stand-in with the same lifecycle
-// API — jest's resolution/mocks/process globals still apply, but no native vm
-// module code runs.
+// Pure-JS `vm.SyntheticModule` stand-in: Bun segfaults when jest drives the
+// native one through link/evaluate inside the jest environment context.
 class BunSyntheticModule {
 	constructor(exportNames, evaluationCallback, options = {}) {
 		this.identifier = options.identifier || "";
 		this.context = options.context;
 		this.status = "unlinked";
 		this.error = undefined;
+		this._exportNames = new Set(exportNames);
 		this._evaluationCallback = evaluationCallback;
 		this._namespace = Object.create(null);
 		Object.defineProperty(this._namespace, Symbol.toStringTag, {
@@ -39,6 +37,9 @@ class BunSyntheticModule {
 	}
 
 	setExport(name, value) {
+		if (!this._exportNames.has(name)) {
+			throw new ReferenceError(`Export '${name}' is not defined in module`);
+		}
 		this._namespace[name] = value;
 	}
 
@@ -63,10 +64,8 @@ class BunSyntheticModule {
 	}
 }
 const OriginalSyntheticModule = nodeVm.SyntheticModule;
-// Only jest-runtime's wrappers get the stand-in: they stay in JS and the
-// dynamic-import boundary below unwraps them to a namespace. Any other
-// creator (e.g. the ESM test harness) links the module into a native
-// SourceTextModule graph, which requires a real native instance.
+// Only jest-runtime wrappers get the stand-in; other creators (the ESM test
+// harness) link into native SourceTextModule graphs and need a real instance.
 nodeVm.SyntheticModule = function SyntheticModule(
 	exportNames,
 	evaluationCallback,
@@ -77,11 +76,8 @@ nodeVm.SyntheticModule = function SyntheticModule(
 		: new OriginalSyntheticModule(exportNames, evaluationCallback, options);
 };
 
-// Bun mishandles a `vm` `importModuleDynamically` callback that resolves to a
-// module object (jest returns one for every dynamic import): the import then
-// resolves to an empty namespace. Returning the namespace works, so coerce the
-// callback result wherever jest installs it (CJS bodies via `compileFunction`,
-// ESM via `SourceTextModule`).
+// Bun resolves an `importModuleDynamically` result that is a module object to
+// an empty namespace; coerce to `.namespace` wherever jest installs a callback.
 const toNamespace = (mod) =>
 	(nodeVm.Module && mod instanceof nodeVm.Module) ||
 	mod instanceof BunSyntheticModule
