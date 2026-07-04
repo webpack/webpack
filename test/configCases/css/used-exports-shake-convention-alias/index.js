@@ -33,7 +33,7 @@ it("should resolve the directly imported bindings", () => {
 	expect(usedVar).toBe("hello");
 });
 
-it("should emit convention aliases but omit unused exports in the JS wrapper", () => {
+it("should emit used exports but omit unused exports and unused aliases in the JS wrapper", () => {
 	const fs = __non_webpack_require__("fs");
 	const path = __non_webpack_require__("path");
 	const js = fs.readFileSync(
@@ -47,14 +47,14 @@ it("should emit convention aliases but omit unused exports in the JS wrapper", (
 	if (__STATS_I__ === 0) {
 		const exportsBlock = extractModuleExports(js);
 		expect(exportsBlock).toMatch(/"fooBar":/);
-		expect(exportsBlock).toMatch(/"foo_bar":/);
+		expect(exportsBlock).not.toMatch(/"foo_bar":/);
 		expect(exportsBlock).toMatch(/"usedVar":\s*"hello"/);
 		expect(exportsBlock).not.toMatch(new RegExp(`"${unusedClass}":`));
 		expect(exportsBlock).not.toMatch(new RegExp(`"${unusedExport}":`));
 	} else {
 		const cssSection = extractConcatCssSection(js);
 		expect(cssSection).toMatch(/const fooBar =/);
-		expect(cssSection).toMatch(/const foo_bar =/);
+		expect(cssSection).not.toMatch(/const foo_bar =/);
 		expect(cssSection).toMatch(/const usedVar = "hello"/);
 		expect(cssSection).not.toMatch(new RegExp(`const ${unusedClass} =`));
 		expect(cssSection).not.toMatch(new RegExp(`const ${unusedExport} =`));
