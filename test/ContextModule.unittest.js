@@ -130,6 +130,10 @@ describe("contextModule", () => {
 				"esm"
 			);
 			const moduleGraph = {
+				/**
+				 * @param {import("../lib/Dependency")} dep dependency
+				 * @returns {import("../lib/Module") | null} module
+				 */
 				getModule: (dep) => (dep === depResolved ? resolvedModule : null)
 			};
 			const chunkGraph = {
