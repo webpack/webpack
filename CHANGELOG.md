@@ -1,5 +1,29 @@
 # webpack
 
+## 5.108.4
+
+### Patch Changes
+
+- Speed up non-CSS-Modules parsing by not building unused selector AST nodes. (by [@alexander-akait](https://github.com/alexander-akait) in [#21324](https://github.com/webpack/webpack/pull/21324))
+
+- Speed up non-CSS-Modules CSS parsing by dropping value tokens nothing reads. (by [@alexander-akait](https://github.com/alexander-akait) in [#21324](https://github.com/webpack/webpack/pull/21324))
+
+- Resolve HTML asset URLs against the document `<base href>`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21329](https://github.com/webpack/webpack/pull/21329))
+
+- Add HTML integration tests: generateError output, ignored src, null-char parse. (by [@aryanraj45](https://github.com/aryanraj45) in [#21328](https://github.com/webpack/webpack/pull/21328))
+
+- Reduce CPU and memory overhead of HTML and CSS parsing and code generation. (by [@alexander-akait](https://github.com/alexander-akait) in [#21332](https://github.com/webpack/webpack/pull/21332))
+
+- Reduce HTML parser memory and CPU by skipping unused AST nodes. (by [@alexander-akait](https://github.com/alexander-akait) in [#21323](https://github.com/webpack/webpack/pull/21323))
+
+- Reduce HTML parser memory by storing the AST in struct-of-arrays form. (by [@alexander-akait](https://github.com/alexander-akait) in [#21331](https://github.com/webpack/webpack/pull/21331))
+
+- Key the provided-exports cache on a lazy barrel's still-lazy re-export targets. (by [@hai-x](https://github.com/hai-x) in [#21326](https://github.com/webpack/webpack/pull/21326))
+
+- Default `output.globalObject` to `globalThis` for universal targets. (by [@alexander-akait](https://github.com/alexander-akait) in [#21314](https://github.com/webpack/webpack/pull/21314))
+
+- Pass through `new URL(...)` directory references instead of resolving them. (by [@alexander-akait](https://github.com/alexander-akait) in [#21312](https://github.com/webpack/webpack/pull/21312))
+
 ## 5.108.3
 
 ### Patch Changes
