@@ -62,7 +62,20 @@ class BunSyntheticModule {
 		}
 	}
 }
-nodeVm.SyntheticModule = BunSyntheticModule;
+const OriginalSyntheticModule = nodeVm.SyntheticModule;
+// Only jest-runtime's wrappers get the stand-in: they stay in JS and the
+// dynamic-import boundary below unwraps them to a namespace. Any other
+// creator (e.g. the ESM test harness) links the module into a native
+// SourceTextModule graph, which requires a real native instance.
+nodeVm.SyntheticModule = function SyntheticModule(
+	exportNames,
+	evaluationCallback,
+	options
+) {
+	return new Error("caller probe").stack.includes("jest-runtime")
+		? new BunSyntheticModule(exportNames, evaluationCallback, options)
+		: new OriginalSyntheticModule(exportNames, evaluationCallback, options);
+};
 
 // Bun mishandles a `vm` `importModuleDynamically` callback that resolves to a
 // module object (jest returns one for every dynamic import): the import then
