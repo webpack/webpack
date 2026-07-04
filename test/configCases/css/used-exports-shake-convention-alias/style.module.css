@@ -1,0 +1,12 @@
+.foo_bar {
+	color: red;
+}
+
+.unused-class {
+	color: blue;
+}
+
+:export {
+	usedVar: hello;
+	unusedVar: goodbye;
+}
