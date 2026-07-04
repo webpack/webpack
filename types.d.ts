@@ -5097,22 +5097,22 @@ declare interface ContextOptions {
 	/**
 	 * glob patterns for import.meta.glob
 	 */
-	globPatterns?: string[];
+	patterns?: string[];
 
 	/**
 	 * importer context for import.meta.glob
 	 */
-	globContext?: string;
+	requestContext?: string;
 
 	/**
-	 * glob import selection
+	 * import selection for import.meta.glob
 	 */
-	globImport?: string;
+	importName?: string;
 
 	/**
-	 * glob exhaustive mode
+	 * exhaustive mode for import.meta.glob
 	 */
-	globExhaustive?: boolean;
+	exhaustive?: boolean;
 }
 declare class ContextReplacementPlugin {
 	/**

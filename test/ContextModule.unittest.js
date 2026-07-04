@@ -35,7 +35,7 @@ describe("contextModule", () => {
 		});
 	});
 
-	describe("getGlobImportPropertyAccess", () => {
+	describe("getImportPropertyAccess", () => {
 		/** @type {import("../lib/ContextModule").ContextModuleOptions} */
 		const baseOptions = {
 			resource: "a",
@@ -44,44 +44,44 @@ describe("contextModule", () => {
 			regExp: false
 		};
 
-		it("returns undefined when globImport is missing, empty, or '*'", () => {
+		it("returns undefined when importName is missing, empty, or '*'", () => {
 			contextModule = new ContextModule(() => {}, baseOptions);
-			expect(contextModule.getGlobImportPropertyAccess()).toBeUndefined();
+			expect(contextModule.getImportPropertyAccess()).toBeUndefined();
 
 			contextModule = new ContextModule(() => {}, {
 				...baseOptions,
-				globImport: "*"
+				importName: "*"
 			});
-			expect(contextModule.getGlobImportPropertyAccess()).toBeUndefined();
+			expect(contextModule.getImportPropertyAccess()).toBeUndefined();
 		});
 
 		it("uses dot access for safe identifier export names", () => {
 			contextModule = new ContextModule(() => {}, {
 				...baseOptions,
-				globImport: "namedExport"
+				importName: "namedExport"
 			});
-			expect(contextModule.getGlobImportPropertyAccess()).toBe(".namedExport");
+			expect(contextModule.getImportPropertyAccess()).toBe(".namedExport");
 		});
 
 		it("uses bracket access for non-identifier export names", () => {
 			contextModule = new ContextModule(() => {}, {
 				...baseOptions,
-				globImport: "foo-bar"
+				importName: "foo-bar"
 			});
-			expect(contextModule.getGlobImportPropertyAccess()).toBe('["foo-bar"]');
+			expect(contextModule.getImportPropertyAccess()).toBe('["foo-bar"]');
 		});
 
 		it("uses bracket access for reserved export names", () => {
 			contextModule = new ContextModule(() => {}, {
 				...baseOptions,
-				globImport: "default"
+				importName: "default"
 			});
-			expect(contextModule.getGlobImportPropertyAccess()).toBe('["default"]');
+			expect(contextModule.getImportPropertyAccess()).toBe('["default"]');
 		});
 	});
 
-	describe("glob identifier", () => {
-		it("includes globContext in module identifier", () => {
+	describe("patterns identifier", () => {
+		it("includes requestContext in module identifier", () => {
 			const contextA = path.join("/root", "p");
 			const contextB = path.join("/root", "q");
 			const moduleA = new ContextModule(
@@ -91,8 +91,8 @@ describe("contextModule", () => {
 					mode: "sync",
 					recursive: true,
 					regExp: false,
-					globPatterns: ["../shared/*.js", "./*.js"],
-					globContext: contextA
+					patterns: ["../shared/*.js", "./*.js"],
+					requestContext: contextA
 				})
 			);
 			const moduleB = new ContextModule(
@@ -102,8 +102,8 @@ describe("contextModule", () => {
 					mode: "sync",
 					recursive: true,
 					regExp: false,
-					globPatterns: ["../shared/*.js", "./*.js"],
-					globContext: contextB
+					patterns: ["../shared/*.js", "./*.js"],
+					requestContext: contextB
 				})
 			);
 			expect(moduleA.identifier()).not.toEqual(moduleB.identifier());
@@ -156,7 +156,7 @@ describe("contextModule", () => {
 					mode: "sync",
 					recursive: true,
 					regExp: false,
-					globPatterns: ["./dir/*.js"]
+					patterns: ["./dir/*.js"]
 				})
 			);
 			const source = contextModule.getGlobSyncSource(
