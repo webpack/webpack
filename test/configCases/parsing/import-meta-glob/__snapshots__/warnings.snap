@@ -12,5 +12,6 @@ Array [
   "import.meta.glob() 'exhaustive' option must be a constant boolean (true or false), defaulting to false",
   "import.meta.glob() 'as' option is not supported. Use 'query' instead (e.g. { query: '?raw' })",
   "import.meta.glob() unsupported option 'caseSensitive'. Supported options are: eager, import, query, base, exhaustive",
+  "import.meta.glob() option keys must be constant strings",
 ]
 `;

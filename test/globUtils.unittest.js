@@ -4,13 +4,16 @@ const path = require("path");
 const {
 	commonGlobBaseDir,
 	extractGlobBaseDir,
+	globMatchCore,
 	globMatchWithExplicitDot,
 	globMatchWithOptions,
+	globPatternsAreRecursive,
 	globUserRequest,
 	normalizePathSeparators,
 	normalizePathSeparatorsForPath,
 	patternHasExplicitDotFor,
 	resolveContextModuleGlobPattern,
+	splitBraceAlternatives,
 	unescapeGlobPath
 } = require("../lib/util/globUtils");
 
@@ -105,6 +108,93 @@ describe("globUtils", () => {
 					defaultOptions
 				)
 			).toBe(false);
+		});
+
+		it("does not let single * match across path separators", () => {
+			expect(
+				globMatchWithOptions("./other/*.js", "./other/foo.js", defaultOptions)
+			).toBe(true);
+			expect(
+				globMatchWithOptions(
+					"./other/*.js",
+					"./other/sub/foo.js",
+					defaultOptions
+				)
+			).toBe(false);
+		});
+
+		it("matches non-ascii filenames by character", () => {
+			expect(globMatchCore("./dir/日.js", "./dir/日.js")).toBe(true);
+			expect(globMatchCore("./dir/?.js", "./dir/日.js")).toBe(true);
+			expect(globMatchCore("./dir/[日].js", "./dir/日.js")).toBe(true);
+		});
+	});
+
+	describe("splitBraceAlternatives", () => {
+		it("splits nested brace groups on top-level commas", () => {
+			expect(splitBraceAlternatives("js,{ts,tsx}")).toEqual(["js", "{ts,tsx}"]);
+			expect(splitBraceAlternatives("a,{b,c},d")).toEqual(["a", "{b,c}", "d"]);
+		});
+	});
+
+	describe("globMatchCore", () => {
+		it("expands nested brace alternatives", () => {
+			expect(globMatchCore("a.{js,{ts,tsx}}", "a.ts")).toBe(true);
+			expect(globMatchCore("a.{js,{ts,tsx}}", "a.tsx")).toBe(true);
+			expect(globMatchCore("a.{js,{ts,tsx}}", "a.js")).toBe(true);
+			expect(globMatchCore("a.{js,{ts,tsx}}", "a.mjs")).toBe(false);
+		});
+
+		it("matches path patterns with nested brace directories", () => {
+			expect(
+				globMatchCore(
+					"./nested-brace/{a,{b,c}}/item.js",
+					"./nested-brace/b/item.js"
+				)
+			).toBe(true);
+			expect(
+				globMatchCore(
+					"./nested-brace/{a,{b,c}}/item.js",
+					"./nested-brace/d/item.js"
+				)
+			).toBe(false);
+		});
+
+		it("still lets globstar cross path separators", () => {
+			expect(
+				globMatchWithOptions(
+					"./fixtures/**/*.js",
+					"./fixtures/a/b.js",
+					defaultOptions
+				)
+			).toBe(true);
+		});
+
+		it("does not let question marks match path separators", () => {
+			expect(globMatchCore("./dir/?.js", "./dir/a.js")).toBe(true);
+			expect(globMatchCore("./dir/?.js", "./dir/.js")).toBe(false);
+		});
+	});
+
+	describe("globPatternsAreRecursive", () => {
+		it("does not treat bracket path segments as recursive patterns", () => {
+			const root = path.resolve("test/proj/[app]");
+			const patterns = [resolveContextModuleGlobPattern("./*.js", root, root)];
+			expect(globPatternsAreRecursive(patterns, `${root}/`)).toBe(false);
+		});
+
+		it("does not treat parenthesis path segments as recursive patterns", () => {
+			const root = path.resolve("test/proj/(group)");
+			const patterns = [resolveContextModuleGlobPattern("./*.js", root, root)];
+			expect(globPatternsAreRecursive(patterns, `${root}/`)).toBe(false);
+		});
+
+		it("detects recursive patterns from unescaped suffix slashes", () => {
+			const root = path.resolve("test/cases/context/import-meta-glob");
+			const patterns = [
+				resolveContextModuleGlobPattern("./pages/*/index.js", root, root)
+			];
+			expect(globPatternsAreRecursive(patterns, `${root}/`)).toBe(true);
 		});
 	});
 
@@ -236,6 +326,13 @@ describe("globUtils", () => {
 			];
 			const mod = path.join(brackets, "mod/index.js");
 			expect(globUserRequest(patterns, mod, false)).toBe("./mod/index.js");
+		});
+
+		it("matches unicode filenames", () => {
+			const root = path.resolve("test/cases/context/import-meta-glob/unicode");
+			const patterns = [resolveContextModuleGlobPattern("./*.js", root, root)];
+			const file = path.join(root, "日.js");
+			expect(globUserRequest(patterns, file, false)).toBe("./日.js");
 		});
 	});
 

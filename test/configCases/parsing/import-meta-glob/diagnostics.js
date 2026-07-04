@@ -13,3 +13,5 @@ import.meta.glob("./missing/*.js", { exhaustive: "true" });
 import.meta.glob("./missing/*.js", { as: "raw" });
 import.meta.glob("./missing/*.js", { caseSensitive: true });
 import.meta.glob("./missing/*.js", { eager: true, import: "default" });
+const eagerOptionKey = "eager";
+import.meta.glob("./missing/*.js", { [eagerOptionKey]: true });

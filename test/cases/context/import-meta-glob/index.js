@@ -26,7 +26,13 @@ const lazyMultiModules = import.meta.glob(['./dir/*.js', './other/*.js'])
 const lazyDefaultModules = import.meta.glob('./dir/*.js', { import: 'default' })
 const lazyNamedModules = import.meta.glob('./dir/*.js', { import: 'named' })
 const templateLiteralModules = import.meta.glob(`./dir/*.js`)
+import { modules as globContextFromP } from './glob-context/p/importer'
+import { modules as globContextFromQ } from './glob-context/q/importer'
 const braceModules = import.meta.glob('./brace/*.{js,mjs}', { eager: true })
+const nestedBraceModules = import.meta.glob('./nested-brace/{a,{b,c}}/*.js', {
+  eager: true,
+})
+const unicodeModules = import.meta.glob('./unicode/*.js', { eager: true })
 const starStarDotModules = import.meta.glob('./star-star-dot/**.js', { eager: true })
 const baseModules = import.meta.glob('./dir/*.js', {
   base: './base',
@@ -238,6 +244,36 @@ it('should support brace expansion in glob patterns', () => {
   expect(keys).toEqual(['./brace/a.js', './brace/b.mjs'])
   expect(braceModules['./brace/a.js'].default).toBe('brace js')
   expect(braceModules['./brace/b.mjs'].default).toBe('brace mjs')
+})
+
+it('should expand nested brace groups in glob patterns', () => {
+  expect(Object.keys(nestedBraceModules).sort()).toEqual([
+    './nested-brace/a/item.js',
+    './nested-brace/b/item.js',
+    './nested-brace/c/item.js',
+  ])
+  expect(nestedBraceModules['./nested-brace/a/item.js'].default).toBe('nested-a')
+  expect(nestedBraceModules['./nested-brace/b/item.js'].default).toBe('nested-b')
+  expect(nestedBraceModules['./nested-brace/c/item.js'].default).toBe('nested-c')
+})
+
+it('should match non-ascii filenames', () => {
+  expect(Object.keys(unicodeModules)).toEqual(['./unicode/日.js'])
+  expect(unicodeModules['./unicode/日.js'].default).toBe('cjk')
+})
+
+it('should not let single-segment globs match nested directories', () => {
+  expect(multiModules['./other/baz.js'].default).toBe('baz')
+  expect(multiModules['./other/sub/nested.js']).toBeUndefined()
+})
+
+it('should resolve dot-slash patterns from each importer directory', () => {
+  expect(globContextFromP['./local-p.js'].default).toBe('local-p')
+  expect(globContextFromP['./local-q.js']).toBeUndefined()
+  expect(globContextFromQ['./local-q.js'].default).toBe('local-q')
+  expect(globContextFromQ['./local-p.js']).toBeUndefined()
+  expect(globContextFromP['../shared/common.js'].default).toBe('common')
+  expect(globContextFromQ['../shared/common.js'].default).toBe('common')
 })
 
 it('should support globstar before an extension', () => {
