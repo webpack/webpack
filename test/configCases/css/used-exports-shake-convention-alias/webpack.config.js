@@ -1,7 +1,12 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
-module.exports = {
+/** @typedef {import("../../../../").Configuration} Configuration */
+
+/**
+ * @param {boolean} concatenateModules whether module concatenation is enabled
+ * @returns {Configuration} webpack config
+ */
+const makeConfig = (concatenateModules) => ({
 	entry: "./index.js",
 	target: "web",
 	mode: "production",
@@ -24,7 +29,7 @@ module.exports = {
 	optimization: {
 		usedExports: true,
 		mangleExports: false,
-		concatenateModules: false,
+		concatenateModules,
 		minimize: false,
 		moduleIds: "named",
 		chunkIds: "named"
@@ -33,4 +38,6 @@ module.exports = {
 		__dirname: false,
 		__filename: false
 	}
-};
+});
+
+module.exports = [makeConfig(false), makeConfig(true)];

@@ -1,8 +1,8 @@
 "use strict";
 
 module.exports = {
-	findBundle() {
-		return ["bundle0.js"];
+	findBundle(i) {
+		return [`bundle${i}.js`];
 	},
 	moduleScope(scope) {
 		if (scope.window.__cssLinkInjected) return;

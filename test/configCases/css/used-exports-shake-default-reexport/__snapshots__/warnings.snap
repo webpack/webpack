@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
-
-exports[`warnings 1`] = `
-Array [
-  "export 'default' (reexported as 'styles') was not found in './styles.module.css' (possible exports: unused, unusedVar, used, usedVar)",
-]
-`;

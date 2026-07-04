@@ -14,6 +14,19 @@ const extractModuleExports = (js) => {
 	return match[0];
 };
 
+/**
+ * @param {string} js bundle source
+ * @returns {string} concatenated CSS module bindings section
+ */
+const extractConcatCssSection = (js) => {
+	const marker = "css ./style.module.css";
+	const start = js.indexOf(marker);
+	expect(start).not.toBe(-1);
+	const end = js.indexOf(";// ./index.js", start);
+	expect(end).not.toBe(-1);
+	return js.slice(start, end);
+};
+
 it("should resolve the directly imported bindings", () => {
 	expect(typeof fooBar).toBe("string");
 	expect(fooBar.length).toBeGreaterThan(0);
@@ -23,16 +36,27 @@ it("should resolve the directly imported bindings", () => {
 it("should emit convention aliases but omit unused exports in the JS wrapper", () => {
 	const fs = __non_webpack_require__("fs");
 	const path = __non_webpack_require__("path");
-	const js = fs.readFileSync(path.join(__dirname, "bundle0.js"), "utf-8");
+	const js = fs.readFileSync(
+		path.join(__dirname, `bundle${__STATS_I__}.js`),
+		"utf-8"
+	);
 
 	const unusedClass = "un" + "usedClass";
 	const unusedExport = "un" + "usedVar";
-	const exportsBlock = extractModuleExports(js);
 
-	// `fooBar` is imported; `foo_bar` is the as-is alias for the same class.
-	expect(exportsBlock).toMatch(/"fooBar":/);
-	expect(exportsBlock).toMatch(/"foo_bar":/);
-	expect(exportsBlock).toMatch(/"usedVar":\s*"hello"/);
-	expect(exportsBlock).not.toMatch(new RegExp(`"${unusedClass}":`));
-	expect(exportsBlock).not.toMatch(new RegExp(`"${unusedExport}":`));
+	if (__STATS_I__ === 0) {
+		const exportsBlock = extractModuleExports(js);
+		expect(exportsBlock).toMatch(/"fooBar":/);
+		expect(exportsBlock).toMatch(/"foo_bar":/);
+		expect(exportsBlock).toMatch(/"usedVar":\s*"hello"/);
+		expect(exportsBlock).not.toMatch(new RegExp(`"${unusedClass}":`));
+		expect(exportsBlock).not.toMatch(new RegExp(`"${unusedExport}":`));
+	} else {
+		const cssSection = extractConcatCssSection(js);
+		expect(cssSection).toMatch(/const fooBar =/);
+		expect(cssSection).toMatch(/const foo_bar =/);
+		expect(cssSection).toMatch(/const usedVar = "hello"/);
+		expect(cssSection).not.toMatch(new RegExp(`const ${unusedClass} =`));
+		expect(cssSection).not.toMatch(new RegExp(`const ${unusedExport} =`));
+	}
 });
