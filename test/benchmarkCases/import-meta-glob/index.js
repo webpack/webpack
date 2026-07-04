@@ -15,9 +15,7 @@ const singleStarModules = import.meta.glob("./generated/*/file1.js", {
 // lazy mode on a subset (one chunk per matched file)
 const lazyModules = import.meta.glob("./generated/dir1/*.js");
 
-console.log(
-	Object.keys(eagerModules).length,
-	Object.keys(braceModules).length,
-	Object.keys(singleStarModules).length,
-	Object.keys(lazyModules).length
-);
+Object.keys(eagerModules).length;
+Object.keys(braceModules).length;
+Object.keys(singleStarModules).length;
+Object.keys(lazyModules).length;
