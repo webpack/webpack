@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  "Module build failed: Error: The \`template\` html parser option must return a string.",
+]
+`;

@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  "\`webpackIgnore\` expected a boolean, but received: yes.",
+  "Compilation error while processing magic comment(-s): /* webpackIgnore: { */: Unexpected token ;",
+]
+`;

@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html webpack-ignore-comment exported tests should handle webpackIgnore comments on img src attributes 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>webpack-ignore-comment</title></head>
+<body>
+<!-- webpackIgnore: true -->
+<img src=\\"./image.png\\" alt=\\"a\\">
+<!-- webpackIgnore: \\"yes\\" -->
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"b\\">
+<!-- webpackIgnore: { -->
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"c\\">
+<img src=\\"09a1a1112c577c279435.png\\" alt=\\"d\\">
+</body>
+</html>
+"
+`;
