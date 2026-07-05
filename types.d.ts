@@ -1326,6 +1326,11 @@ declare class CacheClass {
 }
 declare abstract class CacheFacade {
 	/**
+	 * Returns whether a cache backend is active.
+	 */
+	isEnabled(): boolean;
+
+	/**
 	 * Returns child cache.
 	 */
 	getChildCache(name: string): CacheFacade;
@@ -10281,10 +10286,9 @@ declare abstract class JavascriptGenerator extends Generator {
 	 * Processes the provided module.
 	 */
 	sourceDependency(
-		module: Module,
 		dependency: Dependency,
-		initFragments: InitFragment<GenerateContext>[],
 		source: ReplaceSource,
+		templateContext: DependencyTemplateContext,
 		generateContext: GenerateContext
 	): void;
 
@@ -10294,7 +10298,7 @@ declare abstract class JavascriptGenerator extends Generator {
 	sourceBlock(
 		module: Module,
 		block: DependenciesBlock,
-		initFragments: InitFragment<GenerateContext>[],
+		templateContext: DependencyTemplateContext,
 		source: ReplaceSource,
 		generateContext: GenerateContext
 	): void;
