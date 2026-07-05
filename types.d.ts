@@ -19223,6 +19223,11 @@ declare interface ParseOptions {
 	lazySourcePositions?: LazySourcePositions;
 
 	/**
+	 * internal: collect comments here without slicing their text eagerly
+	 */
+	lazyComments?: CommentJavascriptParser[];
+
+	/**
 	 * enable parsing of the import phase proposals (import defer / import source)
 	 */
 	importPhases?: boolean;
