@@ -4,7 +4,7 @@
  * Run `yarn fix:special` to update
  */
 
-import { Parser as ParserImport } from "acorn";
+import { Parser as ParserImport, Position } from "acorn";
 import { Buffer } from "buffer";
 import {
 	ArrayExpression,
@@ -10406,6 +10406,7 @@ declare class JavascriptParser extends ParserClass {
 		options?: {
 			parse?: (code: string, options: ParseOptions) => ParseResult;
 			typescript?: boolean;
+			importPhases?: boolean;
 		}
 	);
 	hooks: Readonly<{
@@ -10555,6 +10556,41 @@ declare class JavascriptParser extends ParserClass {
 			],
 			boolean | void
 		>;
+		preStatementByType: HookMap<
+			SyncBailHook<
+				[
+					| ImportDeclaration
+					| ExportNamedDeclaration
+					| ExportAllDeclaration
+					| FunctionDeclaration
+					| MaybeNamedFunctionDeclaration
+					| VariableDeclaration
+					| ClassDeclaration
+					| MaybeNamedClassDeclaration
+					| ExpressionStatement
+					| BlockStatement
+					| StaticBlock
+					| EmptyStatement
+					| DebuggerStatement
+					| WithStatement
+					| ReturnStatement
+					| LabeledStatement
+					| BreakStatement
+					| ContinueStatement
+					| IfStatement
+					| SwitchStatement
+					| ThrowStatement
+					| TryStatement
+					| WhileStatement
+					| DoWhileStatement
+					| ForStatement
+					| ForInStatement
+					| ForOfStatement
+					| ExportDefaultDeclaration
+				],
+				boolean | void
+			>
+		>;
 		blockPreStatement: SyncBailHook<
 			[
 				| ImportDeclaration
@@ -10587,6 +10623,41 @@ declare class JavascriptParser extends ParserClass {
 				| ExportDefaultDeclaration
 			],
 			boolean | void
+		>;
+		blockPreStatementByType: HookMap<
+			SyncBailHook<
+				[
+					| ImportDeclaration
+					| ExportNamedDeclaration
+					| ExportAllDeclaration
+					| FunctionDeclaration
+					| MaybeNamedFunctionDeclaration
+					| VariableDeclaration
+					| ClassDeclaration
+					| MaybeNamedClassDeclaration
+					| ExpressionStatement
+					| BlockStatement
+					| StaticBlock
+					| EmptyStatement
+					| DebuggerStatement
+					| WithStatement
+					| ReturnStatement
+					| LabeledStatement
+					| BreakStatement
+					| ContinueStatement
+					| IfStatement
+					| SwitchStatement
+					| ThrowStatement
+					| TryStatement
+					| WhileStatement
+					| DoWhileStatement
+					| ForStatement
+					| ForInStatement
+					| ForOfStatement
+					| ExportDefaultDeclaration
+				],
+				boolean | void
+			>
 		>;
 		statement: SyncBailHook<
 			[
@@ -10847,6 +10918,7 @@ declare class JavascriptParser extends ParserClass {
 	options: {
 		parse?: (code: string, options: ParseOptions) => ParseResult;
 		typescript?: boolean;
+		importPhases?: boolean;
 	};
 	scope: ScopeInfo;
 	state: JavascriptParserState;
@@ -13712,6 +13784,9 @@ declare class LazySet<T> {
 	static deserialize<T>(
 		__0: ObjectDeserializerContextObjectMiddlewareObject_3<(number | T)[]>
 	): LazySet<T>;
+}
+declare interface LazySourcePositions {
+	position: (offset: number) => Position;
 }
 declare interface LibIdentOptions {
 	/**
@@ -19141,6 +19216,16 @@ declare interface ParseOptions {
 	semicolons?: boolean;
 	allowHashBang?: boolean;
 	allowReturnOutsideFunction?: boolean;
+
+	/**
+	 * internal: serve loc/range lazily instead of allocating them during parsing
+	 */
+	lazySourcePositions?: LazySourcePositions;
+
+	/**
+	 * enable parsing of the import phase proposals (import defer / import source)
+	 */
+	importPhases?: boolean;
 }
 declare interface ParseResult {
 	ast: Program;
