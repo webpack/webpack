@@ -13783,6 +13783,9 @@ declare class LazySet<T> {
 		__0: ObjectDeserializerContextObjectMiddlewareObject_3<(number | T)[]>
 	): LazySet<T>;
 }
+declare interface LazySourcePositions {
+	position: (offset: number) => Position;
+}
 declare interface LibIdentOptions {
 	/**
 	 * absolute context path to which lib ident is relative to
@@ -19215,7 +19218,7 @@ declare interface ParseOptions {
 	/**
 	 * internal: serve loc/range lazily instead of allocating them during parsing
 	 */
-	lazySourcePositions?: SourcePositions;
+	lazySourcePositions?: LazySourcePositions;
 
 	/**
 	 * enable parsing of the import phase proposals (import defer / import source)
@@ -23756,16 +23759,6 @@ declare class SourceMapSource extends Source {
 declare interface SourcePosition {
 	line: number;
 	column?: number;
-}
-
-/**
- * Offset → line/column mapping for one parsed file. The line-start table is
- * built only when some node's `loc` is first read.
- */
-declare abstract class SourcePositions {
-	source: string;
-	lineStarts?: number[];
-	position(offset: number): Position;
 }
 type SourceType =
 	| "script"
