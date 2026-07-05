@@ -1326,6 +1326,11 @@ declare class CacheClass {
 }
 declare abstract class CacheFacade {
 	/**
+	 * Returns whether a cache backend is active.
+	 */
+	isEnabled(): boolean;
+
+	/**
 	 * Returns child cache.
 	 */
 	getChildCache(name: string): CacheFacade;
