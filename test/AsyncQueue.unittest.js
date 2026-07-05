@@ -2,8 +2,10 @@
 
 const AsyncQueue = require("../lib/util/AsyncQueue");
 
+/** @typedef {import("../lib/util/AsyncQueue").Processor<number, number>} NumberProcessor */
+
 /**
- * @param {{ processor?: (item: number, callback: (err?: Error | null, result?: number) => void) => void }} options options
+ * @param {{ processor?: NumberProcessor }} options options
  * @returns {AsyncQueue<number, number, number>} queue
  */
 const createQueue = ({ processor } = {}) =>
@@ -12,7 +14,9 @@ const createQueue = ({ processor } = {}) =>
 		parallelism: 1,
 		processor:
 			processor ||
-			((item, callback) => setImmediate(() => callback(null, item * 2)))
+			((item, callback) => {
+				setImmediate(() => callback(null, item * 2));
+			})
 	});
 
 describe("AsyncQueue", () => {
