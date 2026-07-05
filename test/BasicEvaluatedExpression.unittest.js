@@ -203,7 +203,10 @@ describe("BasicEvaluatedExpression", () => {
 		const e = new BasicEvaluatedExpression();
 		e.setRange([1, 2]);
 		expect(e.range).toEqual([1, 2]);
-		const node = { type: "Identifier", name: "x" };
+		const node = /** @type {import("estree").Node} */ ({
+			type: "Identifier",
+			name: "x"
+		});
 		e.setExpression(node);
 		expect(e.expression).toBe(node);
 		e.setSideEffects(false);

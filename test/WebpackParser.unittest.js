@@ -8,15 +8,18 @@ const JavascriptParser = require("../lib/javascript/JavascriptParser");
  * @returns {import("../lib/javascript/JavascriptParser").ParseResult} result
  */
 const parse = (code, options) =>
-	JavascriptParser._parse(code, {
-		sourceType: "script",
-		ecmaVersion: "latest",
-		comments: true,
-		ranges: true,
-		semicolons: true,
-		allowHashBang: true,
-		...options
-	});
+	JavascriptParser._parse(
+		code,
+		/** @type {import("../lib/javascript/JavascriptParser").InternalParseOptions} */ ({
+			sourceType: "script",
+			ecmaVersion: "latest",
+			comments: true,
+			ranges: true,
+			semicolons: true,
+			allowHashBang: true,
+			...options
+		})
+	);
 
 describe("WebpackParser", () => {
 	describe("lazy comments", () => {
@@ -68,7 +71,13 @@ describe("WebpackParser", () => {
 	describe("template fast path", () => {
 		it("should cook CR and CRLF chunks through the cold path", () => {
 			const { ast } = parse("`a\r\nb\rc`;");
-			const quasi = ast.body[0].expression.quasis[0];
+			const statement =
+				/** @type {import("estree").ExpressionStatement} */
+				(ast.body[0]);
+			const template =
+				/** @type {import("estree").TemplateLiteral} */
+				(statement.expression);
+			const quasi = template.quasis[0];
 			expect(quasi.value.cooked).toBe("a\nb\nc");
 		});
 
@@ -117,10 +126,18 @@ describe("WebpackParser", () => {
 
 		it("should build the literal value once", () => {
 			const { ast } = parse("x = /a[/]b/gi;");
-			const literal = ast.body[0].expression.right;
+			const statement =
+				/** @type {import("estree").ExpressionStatement} */
+				(ast.body[0]);
+			const assignment =
+				/** @type {import("estree").AssignmentExpression} */
+				(statement.expression);
+			const literal =
+				/** @type {import("estree").RegExpLiteral} */
+				(assignment.right);
 			expect(literal.regex).toEqual({ pattern: "a[/]b", flags: "gi" });
 			expect(literal.value).toBeInstanceOf(RegExp);
-			expect(literal.value.source).toBe("a[/]b");
+			expect(/** @type {RegExp} */ (literal.value).source).toBe("a[/]b");
 		});
 	});
 });
