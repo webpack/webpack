@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Reduce allocations in JavaScript code generation and concatenation renaming.
+Reduce allocations in JS code generation, concatenation renaming and queues.
