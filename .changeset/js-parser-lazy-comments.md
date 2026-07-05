@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Speed up JavaScript tokenizing with lazy comment text and template/regexp fast paths.
+Speed up JavaScript parsing with lazy comment text, template/regexp fast paths and linked scope maps.

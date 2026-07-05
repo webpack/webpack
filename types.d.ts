@@ -23911,11 +23911,12 @@ declare abstract class StackEntry {
 
 /**
  * Layered map that supports child scopes while memoizing lookups from parent
- * scopes into the current layer.
+ * scopes into the current layer. Layers form a linked parent chain, so
+ * `createChild` is O(1) instead of copying a layer array per scope.
  */
 declare abstract class StackedMap<K, V> {
 	map: Map<K, InternalCell<V>>;
-	stack: Map<K, InternalCell<V>>[];
+	parent?: StackedMap<K, V>;
 
 	/**
 	 * Stores a value in the current layer, preserving explicit `undefined`
