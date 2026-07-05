@@ -854,9 +854,9 @@ declare interface BasenameCacheEntry {
 
 /**
  * An instance is allocated for a large share of walked expressions, so the
- * 26 public fields live virtually: one packed flags slot plus five value
- * slots shared by type (accessors keep every public field readable). This
- * shrinks instances from 224 to 88 bytes on V8.
+ * boolean facts live in one packed flags slot and the scalar/identifier
+ * fields in five slots shared by type, with accessors keeping every public
+ * field readable. This shrinks instances from 224 to 144 bytes on V8.
  */
 declare abstract class BasicEvaluatedExpression {
 	range?: [number, number];
@@ -935,6 +935,13 @@ declare abstract class BasicEvaluatedExpression {
 		| AssignmentPattern
 		| SwitchCase
 		| TemplateElement;
+	quasis?: BasicEvaluatedExpression[];
+	parts?: BasicEvaluatedExpression[];
+	items?: BasicEvaluatedExpression[];
+	options?: BasicEvaluatedExpression[];
+	prefix?: null | BasicEvaluatedExpression;
+	postfix?: null | BasicEvaluatedExpression;
+	wrappedInnerExpressions?: BasicEvaluatedExpression[];
 	type: number;
 	truthy: boolean;
 	falsy: boolean;
@@ -945,15 +952,8 @@ declare abstract class BasicEvaluatedExpression {
 	bigint?: bigint;
 	regExp?: RegExp;
 	string?: string;
-	quasis?: BasicEvaluatedExpression[];
-	parts?: BasicEvaluatedExpression[];
 	templateStringKind?: "cooked" | "raw";
 	array?: any[];
-	items?: BasicEvaluatedExpression[];
-	options?: BasicEvaluatedExpression[];
-	prefix?: null | BasicEvaluatedExpression;
-	postfix?: null | BasicEvaluatedExpression;
-	wrappedInnerExpressions?: BasicEvaluatedExpression[];
 	identifier?: string | VariableInfo;
 	rootInfo?: string | VariableInfo;
 	getMembers?: () => string[];
