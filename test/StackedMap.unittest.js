@@ -111,6 +111,22 @@ describe("StackedMap", () => {
 		expect(child.size).toBe(2);
 	});
 
+	it("should answer has() through the parent chain and memoize misses", () => {
+		const root = new StackedMap();
+		root.set("a", 1);
+		root.set("u", undefined);
+		const mid = root.createChild();
+		const leaf = mid.createChild();
+		// walk hit two layers up
+		expect(leaf.has("a")).toBe(true);
+		// explicit undefined counts as present
+		expect(leaf.has("u")).toBe(true);
+		// walk miss writes a tombstone, the second lookup answers from it
+		expect(leaf.has("missing")).toBe(false);
+		expect(leaf.has("missing")).toBe(false);
+		expect(leaf.get("missing")).toBeUndefined();
+	});
+
 	it("should let children observe later parent writes of new keys", () => {
 		// both the historical array design (shared Map objects) and a linked
 		// design expose parent writes made after child creation
