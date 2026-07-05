@@ -121,4 +121,45 @@ describe("AsyncQueue", () => {
 			done();
 		});
 	});
+
+	it("should wrap errors thrown by the result hook", (done) => {
+		const queue = createQueue();
+		queue.hooks.result.tap("Test", () => {
+			throw new Error("result hook failed");
+		});
+		queue.add(1, (err) => {
+			expect(err).toBeInstanceOf(Error);
+			expect(/** @type {Error} */ (err).message).toMatch("result hook failed");
+			done();
+		});
+	});
+
+	it("should serve finished items and collect multiple waiters", (done) => {
+		const queue = createQueue();
+		queue.add(7, (err, result) => {
+			expect(result).toBe(14);
+			// entry is in DONE state now — served without re-processing
+			queue.add(7, (err2, result2) => {
+				expect(result2).toBe(14);
+				done();
+			});
+		});
+		// both are queued behind the processing entry -> callbacks list
+		queue.add(7, (err, result) => expect(result).toBe(14));
+		queue.add(7, (err, result) => expect(result).toBe(14));
+	});
+
+	it("should fail items added while a beforeAdd hook is in flight after stop", (done) => {
+		const queue = createQueue();
+		queue.hooks.beforeAdd.tapAsync("Test", (item, callback) => {
+			setImmediate(() => callback());
+		});
+		queue.add(1, (err) => {
+			expect(err).toBeInstanceOf(Error);
+			expect(/** @type {Error} */ (err).message).toMatch("Queue was stopped");
+			done();
+		});
+		// stop before the async beforeAdd hook completes
+		queue.stop();
+	});
 });
