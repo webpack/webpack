@@ -62,8 +62,8 @@ export interface ProgressPluginOptions {
 	 * Generate progress bar. `"auto"` enables it only for interactive terminals. Default: false.
 	 */
 	progressBar?:
-		| boolean
 		| "auto"
+		| boolean
 		| {
 				/**
 				 * Color used for the filled portion of the bar.

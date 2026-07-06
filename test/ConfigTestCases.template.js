@@ -216,6 +216,12 @@ const describeCases = (config) => {
 										)
 									};
 								}
+								// Harness forces stderr.isTTY, which turns the futureDefaults
+								// `"auto"` progress bar on; keep it out of captured output.
+								if (!options.infrastructureLogging) {
+									options.infrastructureLogging = {};
+								}
+								options.infrastructureLogging.progress = false;
 								if (!options.snapshot) options.snapshot = {};
 								if (!options.snapshot.managedPaths) {
 									options.snapshot.managedPaths = [

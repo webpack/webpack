@@ -62,10 +62,10 @@
           "description": "Generate progress bar. `\"auto\"` enables it only for interactive terminals. Default: false.",
           "anyOf": [
             {
-              "type": "boolean"
+              "enum": ["auto"]
             },
             {
-              "enum": ["auto"]
+              "type": "boolean"
             },
             {
               "type": "object",

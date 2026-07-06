@@ -10112,7 +10112,7 @@ declare interface InfrastructureLogging {
 	/**
 	 * Show build progress. `"auto"` shows it only for interactive terminals. This option is only used when no custom console is provided.
 	 */
-	progress?: boolean | "auto";
+	progress?: "auto" | boolean;
 
 	/**
 	 * Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.
@@ -19941,8 +19941,8 @@ declare interface ProgressPluginOptions {
 	 * Generate progress bar. `"auto"` enables it only for interactive terminals. Default: false.
 	 */
 	progressBar?:
-		| boolean
 		| "auto"
+		| boolean
 		| {
 				/**
 				 * Color used for the filled portion of the bar.

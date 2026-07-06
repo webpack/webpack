@@ -1552,7 +1552,7 @@ export interface InfrastructureLogging {
 	/**
 	 * Show build progress. `"auto"` shows it only for interactive terminals. This option is only used when no custom console is provided.
 	 */
-	progress?: boolean | "auto";
+	progress?: "auto" | boolean;
 	/**
 	 * Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.
 	 */

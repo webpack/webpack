@@ -2140,10 +2140,10 @@
           "description": "Show build progress. `\"auto\"` shows it only for interactive terminals. This option is only used when no custom console is provided.",
           "anyOf": [
             {
-              "type": "boolean"
+              "enum": ["auto"]
             },
             {
-              "enum": ["auto"]
+              "type": "boolean"
             }
           ]
         },
