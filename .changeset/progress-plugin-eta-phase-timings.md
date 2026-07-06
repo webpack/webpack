@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `estimatedTime`, `phaseTimings`, and progress bar `width` options to `ProgressPlugin`.
+Add `estimatedTime`, `phaseTimings`, progress bar `width`, and `progressBar: "auto"` (TTY-only) options to `ProgressPlugin`.

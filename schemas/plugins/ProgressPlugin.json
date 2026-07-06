@@ -59,10 +59,13 @@
           "enum": [true, false, null]
         },
         "progressBar": {
-          "description": "Generate progress bar. Default: false.",
+          "description": "Generate progress bar. `\"auto\"` enables it only for interactive terminals. Default: false.",
           "anyOf": [
             {
               "type": "boolean"
+            },
+            {
+              "enum": ["auto"]
             },
             {
               "type": "object",
