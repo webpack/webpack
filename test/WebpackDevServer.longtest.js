@@ -19,14 +19,15 @@ const path = require("path");
 // Drives a real webpack-dev-server (added as a compiler plugin) in real Chrome via
 // puppeteer-core. Bun and Deno report a Node-compatible version; require puppeteer
 // and the dev server lazily so the suite self-skips where they (or Chrome) are
-// missing. puppeteer-core needs Node >= 18.
-const nodeMajor = Number.parseInt(process.versions.node, 10);
+// missing. webpack-dev-server needs Node >= 22.15 (its floor, above puppeteer's >= 18).
+const [nodeMajor, nodeMinor] = process.versions.node.split(".").map(Number);
+const nodeSupported = nodeMajor > 22 || (nodeMajor === 22 && nodeMinor >= 15);
 
 /** @type {typeof import("puppeteer-core") | undefined} */
 let puppeteer;
 /** @type {typeof import("webpack-dev-server") | undefined} */
 let WebpackDevServer;
-if (nodeMajor >= 18) {
+if (nodeSupported) {
 	try {
 		puppeteer = require("puppeteer-core");
 		WebpackDevServer = require("webpack-dev-server");
