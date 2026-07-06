@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html preload-prefetch-shared exported tests should build a preload/prefetch target that is also used in code and as a real entry 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+<!-- \`shared.js\` is a real executing entry AND preloaded/prefetched. -->
+<link rel=\\"preload\\" as=\\"script\\" href=\\"__html_cbe5b59d_0.chunk.js\\">
+<link rel=\\"prefetch\\" as=\\"script\\" href=\\"__html_cbe5b59d_1.chunk.js\\">
+<!-- \`used.js\` is preloaded but only ever imported from code. -->
+<link rel=\\"preload\\" as=\\"script\\" href=\\"__html_cbe5b59d_2.chunk.js\\">
+</head>
+<body>
+<h1>Hello</h1>
+<script src=\\"__html_cbe5b59d_3.chunk.js\\"></script>
+</body>
+</html>
+"
+`;

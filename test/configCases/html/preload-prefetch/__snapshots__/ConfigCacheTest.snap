@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html preload-prefetch exported tests should rewrite <link rel=preload/prefetch> of a bundled script/style to chunk URLs 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+<link rel=\\"preload\\" as=\\"script\\" href=\\"__html_cbe5b59d_0.chunk.js\\">
+<link rel=\\"prefetch\\" as=\\"script\\" href=\\"__html_cbe5b59d_1.chunk.js\\">
+<link rel=\\"preload\\" as=\\"style\\" href=\\"__html_cbe5b59d_2.chunk.css\\">
+<!-- webpackIgnore: true -->
+<link rel=\\"preload\\" as=\\"script\\" href=\\"./ignored.js\\">
+</head>
+<body>
+<h1>Hello</h1>
+</body>
+</html>
+"
+`;

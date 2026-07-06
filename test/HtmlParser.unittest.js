@@ -134,7 +134,7 @@ describe("HtmlParser", () => {
 				"utf8"
 			).toString("base64")}`
 		);
-		expect(module.buildInfo.htmlEntryScripts).toEqual({
+		expect(module.buildInfo.htmlEntries).toEqual({
 			script: [
 				{
 					request: dependency.request,
@@ -144,7 +144,10 @@ describe("HtmlParser", () => {
 			],
 			"script-module": [],
 			modulepreload: [],
-			stylesheet: []
+			stylesheet: [],
+			html: [],
+			preload: [],
+			prefetch: []
 		});
 	});
 

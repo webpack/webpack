@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+<!-- Non-script/style `as` targets are asset modules: emitted and the
+     href rewritten to the output asset URL, not bundled as a chunk. -->
+<link rel="preload" as="image" href="./img.png">
+<link rel="prefetch" as="image" href="./img2.png">
+<link rel="preload" as="font" href="./font.woff2" type="font/woff2" crossorigin>
+<link rel="preload" as="fetch" href="./data.bin" crossorigin>
+</head>
+<body>
+<h1>Hello</h1>
+</body>
+</html>

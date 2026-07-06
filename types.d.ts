@@ -7002,11 +7002,6 @@ declare class EntryPlugin {
 		options: string | EntryOptions
 	): EntryDependency;
 }
-declare interface EntryScriptInfo {
-	request: string;
-	entryName: string;
-	type: "script" | "stylesheet" | "script-module" | "modulepreload";
-}
 type EntryStatic = string | EntryObject | string[];
 
 /**
@@ -9407,6 +9402,19 @@ declare interface HotModuleReplacementPluginLoaderContext {
 declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
+declare interface HtmlEntryInfo {
+	request: string;
+	entryName: string;
+	type:
+		| "html"
+		| "script"
+		| "stylesheet"
+		| "preload"
+		| "script-module"
+		| "modulepreload"
+		| "prefetch";
+	css?: boolean;
+}
 declare abstract class HtmlGenerator extends Generator {
 	options: HtmlGeneratorOptions;
 
@@ -9504,9 +9512,10 @@ declare interface HtmlParserOptions {
 						 */
 						tag?: string;
 						/**
-						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `css-url` extracts `url(...)` references from a CSS value (like an SVG presentation attribute such as `fill`) as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `stylesheet-style` treats the attribute value as a full stylesheet (like a `<style>` body) and `stylesheet-style-attribute` as a CSS block's contents (a declaration list, like a `style` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time; `srcdoc` treats the attribute value as an entity-encoded HTML document (like `<iframe srcdoc>`), bundling it through the HTML pipeline and replacing the attribute's content with the processed HTML at render time.
+						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `css-url` extracts `url(...)` references from a CSS value (like an SVG presentation attribute such as `fill`) as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `html` treats the URL as a link to another HTML file that is bundled as its own emitted page (its assets extracted) and rewrites the attribute to the page's output filename (like Parcel's `<a href="page.html">`); `stylesheet-style` treats the attribute value as a full stylesheet (like a `<style>` body) and `stylesheet-style-attribute` as a CSS block's contents (a declaration list, like a `style` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time; `srcdoc` treats the attribute value as an entity-encoded HTML document (like `<iframe srcdoc>`), bundling it through the HTML pipeline and replacing the attribute's content with the processed HTML at render time.
 						 */
 						type:
+							| "html"
 							| "script"
 							| "css-url"
 							| "stylesheet"
@@ -13121,7 +13130,7 @@ declare interface KnownHtmlModuleBuildInfo {
 	/**
 	 * entries collected from the document, grouped by kind
 	 */
-	htmlEntryScripts?: Record<string, EntryScriptInfo[]>;
+	htmlEntries?: Record<string, HtmlEntryInfo[]>;
 
 	/**
 	 * `../` per `<base href>` path segment, prepended to the auto-public-path undo path so a relative base doesn't misdirect bundled URLs
@@ -23805,11 +23814,14 @@ declare interface SourcePosition {
 	column?: number;
 }
 type SourceType =
+	| "html"
 	| "script"
 	| "css-url"
 	| "stylesheet"
+	| "preload"
 	| "script-module"
 	| "modulepreload"
+	| "prefetch"
 	| "src"
 	| "srcset"
 	| "stylesheet-style"
@@ -23817,11 +23829,14 @@ type SourceType =
 	| "srcdoc"
 	| "msapplication-task";
 type SourceTypeOrResolver =
+	| "html"
 	| "script"
 	| "css-url"
 	| "stylesheet"
+	| "preload"
 	| "script-module"
 	| "modulepreload"
+	| "prefetch"
 	| "src"
 	| "srcset"
 	| "stylesheet-style"
