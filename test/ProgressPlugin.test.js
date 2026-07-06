@@ -106,7 +106,7 @@ const createAutoCompiler = (
 };
 
 const createCoreCompiler = (
-	/** @type {{ infrastructureLogging?: Record<string, unknown>, experiments?: Record<string, unknown>, plugins?: unknown[] }} */ extra = {}
+	/** @type {{ infrastructureLogging?: Record<string, unknown>, experiments?: Record<string, unknown>, plugins?: import("../").Configuration["plugins"] }} */ extra = {}
 ) => {
 	const compiler = webpack({
 		context: path.join(__dirname, "fixtures"),
