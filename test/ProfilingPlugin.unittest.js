@@ -56,25 +56,14 @@ describe("Profiling Plugin", () => {
 });
 
 // Optional dependency: the browser end-to-end check only runs where puppeteer-core
-// (and a Chrome it can launch) are present. puppeteer-core needs Node >= 18, and
-// loading it under the memory-limited Bun/Deno workers is wasteful, so only require
-// it where the check can actually run; it self-skips everywhere else. See #17234.
+// (and a Chrome it can launch) are present. puppeteer-core needs Node >= 18 and is
+// ESM-only since v25, so it is loaded lazily via dynamic import inside beforeAll;
+// it self-skips on Bun/Deno, old Node, or when no Chrome launches. See #17234.
 const globalScope = /** @type {{ Bun?: unknown, Deno?: unknown }} */ (
 	globalThis
 );
 const onBunOrDeno = Boolean(globalScope.Bun) || Boolean(globalScope.Deno);
 const nodeMajor = Number.parseInt(process.versions.node, 10);
-
-/** @type {typeof import("puppeteer-core") | undefined} */
-let puppeteer;
-if (!onBunOrDeno && nodeMajor >= 18) {
-	try {
-		const name = "puppeteer-core";
-		puppeteer = require(name);
-	} catch (_err) {
-		puppeteer = undefined;
-	}
-}
 
 /**
  * @typedef {{ frame: string, parent?: string }} TraceFrame
@@ -86,7 +75,15 @@ describe("ProfilingPlugin in real Chrome", () => {
 	let browser;
 
 	beforeAll(async () => {
-		if (!puppeteer || onBunOrDeno || nodeMajor < 18) return;
+		if (onBunOrDeno || nodeMajor < 18) return;
+		/** @type {typeof import("puppeteer-core").default} */
+		let puppeteer;
+		try {
+			// require() of puppeteer-core throws under Jest since it is ESM-only (v25+).
+			puppeteer = (await import("puppeteer-core")).default;
+		} catch (_err) {
+			return;
+		}
 		try {
 			/** @type {import("puppeteer-core").LaunchOptions} */
 			const launchOptions = {

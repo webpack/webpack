@@ -391,7 +391,9 @@
     "FEFF",
     "apos",
     "Abaz",
-    "Guardable"
+    "Guardable",
+    "strtok",
+    "typebox"
   ],
   "ignoreRegExpList": [
     "/Author.+/",

@@ -167,6 +167,13 @@ export default defineConfig([
 		}
 	},
 	{
+		// puppeteer-core is ESM-only (v25+) and is loaded via dynamic import here
+		files: ["test/ProfilingPlugin.unittest.js"],
+		languageOptions: {
+			ecmaVersion: 2020
+		}
+	},
+	{
 		files: ["test/helpers/**/*.{js,cjs,mjs}"],
 		languageOptions: {
 			globals: {
