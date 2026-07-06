@@ -190,7 +190,8 @@ export default defineConfig([
 			"test/*.benchmark.mjs",
 			"test/benchmarkCases/_helpers/**/*.mjs",
 			"test/benchmarkCases/**/webpack.config.mjs",
-			"test/benchmarkCases/**/options.mjs"
+			"test/benchmarkCases/**/options.mjs",
+			"test/benchmarkCases/**/index.bench.mjs"
 		],
 		languageOptions: {
 			ecmaVersion: 2022

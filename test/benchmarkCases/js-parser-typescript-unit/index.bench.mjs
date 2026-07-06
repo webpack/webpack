@@ -17,7 +17,6 @@ const source = fs.readFileSync(
  */
 export default (bench) => {
 	bench.add('unit benchmark "js-parser-typescript-unit"', () => {
-		// fresh parser per run: no cross-run caches
 		const parser = new JavascriptParser("auto");
 		parser.parse(source, {});
 	});
