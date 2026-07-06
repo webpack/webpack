@@ -2799,6 +2799,16 @@ declare interface ChunkRenderContextJavascriptModulesPlugin {
 	 * rendering in strict context
 	 */
 	strictMode?: boolean;
+
+	/**
+	 * entry module inlined at the chunk top level instead of the registry
+	 */
+	inlinedEntryModule?: Module;
+
+	/**
+	 * rendered body of the inlined entry module
+	 */
+	inlinedEntrySource?: Source;
 }
 declare interface ChunkRuntime {
 	[index: number]: string;
