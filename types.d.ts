@@ -10112,7 +10112,7 @@ declare interface InfrastructureLogging {
 	/**
 	 * Show build progress. `"auto"` shows it only for interactive terminals. This option is only used when no custom console is provided.
 	 */
-	progress?: "auto" | boolean;
+	progress?: boolean | "auto";
 
 	/**
 	 * Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.
@@ -19871,7 +19871,7 @@ declare class ProgressPlugin {
 					 */
 					width?: number;
 			  }>,
-		timing?: { estimatedTime?: boolean; phaseTimings?: boolean }
+		timing?: TimingOptions
 	) => (percentage: number, msg: string, ...args: string[]) => void;
 }
 type ProgressPluginArgument =
@@ -19941,8 +19941,8 @@ declare interface ProgressPluginOptions {
 	 * Generate progress bar. `"auto"` enables it only for interactive terminals. Default: false.
 	 */
 	progressBar?:
-		| "auto"
 		| boolean
+		| "auto"
 		| {
 				/**
 				 * Color used for the filled portion of the bar.
@@ -25229,6 +25229,10 @@ declare interface TimestampAndHash {
 	safeTime: number;
 	timestamp?: number;
 	hash: string;
+}
+declare interface TimingOptions {
+	estimatedTime?: boolean;
+	phaseTimings?: boolean;
 }
 declare class TopLevelSymbol {
 	/**
