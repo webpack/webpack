@@ -302,6 +302,11 @@ function buildConfiguration(
 	config.name = `${test}-${baseline.name}-${scenario.name}`;
 	config.context = testDirectory;
 	config.performance = false;
+	// Serialize module builds so completion order (and thus Map/Set growth and
+	// allocation counts) is deterministic across runs — the main source of
+	// memory-benchmark instability. Trades concurrency-driven peak for stable,
+	// comparable numbers.
+	config.parallelism = 1;
 	config.output = config.output || {};
 	config.output.path = path.join(
 		baseOutputPath,
