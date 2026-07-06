@@ -9395,7 +9395,15 @@ declare class HotUpdateChunk extends Chunk {
 declare interface HtmlEntryInfo {
 	request: string;
 	entryName: string;
-	type: "html" | "script" | "stylesheet" | "script-module" | "modulepreload";
+	type:
+		| "html"
+		| "script"
+		| "stylesheet"
+		| "preload"
+		| "script-module"
+		| "modulepreload"
+		| "prefetch";
+	css?: boolean;
 }
 declare abstract class HtmlGenerator extends Generator {
 	options: HtmlGeneratorOptions;
@@ -23800,8 +23808,10 @@ type SourceType =
 	| "script"
 	| "css-url"
 	| "stylesheet"
+	| "preload"
 	| "script-module"
 	| "modulepreload"
+	| "prefetch"
 	| "src"
 	| "srcset"
 	| "stylesheet-style"
@@ -23813,8 +23823,10 @@ type SourceTypeOrResolver =
 	| "script"
 	| "css-url"
 	| "stylesheet"
+	| "preload"
 	| "script-module"
 	| "modulepreload"
+	| "prefetch"
 	| "src"
 	| "srcset"
 	| "stylesheet-style"

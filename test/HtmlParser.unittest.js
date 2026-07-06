@@ -145,7 +145,9 @@ describe("HtmlParser", () => {
 			"script-module": [],
 			modulepreload: [],
 			stylesheet: [],
-			html: []
+			html: [],
+			preload: [],
+			prefetch: []
 		});
 	});
 
