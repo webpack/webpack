@@ -25,6 +25,12 @@ import { Bench, hrtimeNow } from "tinybench";
 
 /** @typedef {TinybenchTask & { collectBy?: string }} Task */
 
+// One libuv thread → fs completions fire in submission order, making module
+// build order (and thus allocation counts) deterministic run-to-run. Set before
+// any async fs so libuv reads it when the pool first initializes; `??=` lets the
+// CI env override stand. This is the main lever against memory-benchmark noise.
+process.env.UV_THREADPOOL_SIZE ??= "1";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootPath = path.join(__dirname, "..");
 const git = simpleGit(rootPath);
@@ -302,11 +308,6 @@ function buildConfiguration(
 	config.name = `${test}-${baseline.name}-${scenario.name}`;
 	config.context = testDirectory;
 	config.performance = false;
-	// Serialize module builds so completion order (and thus Map/Set growth and
-	// allocation counts) is deterministic across runs — the main source of
-	// memory-benchmark instability. Trades concurrency-driven peak for stable,
-	// comparable numbers.
-	config.parallelism = 1;
 	config.output = config.output || {};
 	config.output.path = path.join(
 		baseOutputPath,
