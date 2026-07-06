@@ -283,8 +283,11 @@ const startServer = (dir, port, devServerOptions) => {
 			started = true;
 			waitForPort(port).then(() => resolve({ server, watching }), reject);
 		});
+		// Poll instead of native file watching: libuv's Windows fs.watch aborts the
+		// process on temp-dir paths ("Assertion failed ... fs-event.c"), and it keeps
+		// edit detection reliable under Bun/Deno too.
 		watching = /** @type {import("..").Watching} */ (
-			compiler.watch({}, (err) => {
+			compiler.watch({ poll: 200 }, (err) => {
 				if (err) reject(err);
 			})
 		);
