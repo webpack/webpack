@@ -105,6 +105,28 @@ const createAutoCompiler = (
 	return compiler;
 };
 
+const createCoreCompiler = (
+	/** @type {{ infrastructureLogging?: Record<string, unknown>, experiments?: Record<string, unknown>, plugins?: unknown[] }} */ extra = {}
+) => {
+	const compiler = webpack({
+		context: path.join(__dirname, "fixtures"),
+		entry: "./a.js",
+		experiments: extra.experiments,
+		infrastructureLogging: {
+			debug: /Progress/,
+			colors: false,
+			...extra.infrastructureLogging
+		},
+		plugins: extra.plugins
+	});
+
+	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		/** @type {unknown} */ (createFsFromVolume(new Volume()))
+	);
+
+	return compiler;
+};
+
 const getLogs = (/** @type {string} */ logsStr) =>
 	logsStr.split(/\r/).filter((/** @type {string} */ v) => v !== " ");
 
@@ -477,6 +499,85 @@ describe("ProgressPlugin", () => {
 		process.stderr.columns = 120;
 		return runCompilerAsync(compiler).then(() => {
 			expect(stderr.toString()).not.toContain("━");
+		});
+	});
+
+	describe("core default progress (futureDefaults)", () => {
+		it("should auto-apply the bar in interactive output", () => {
+			const compiler = createCoreCompiler({
+				experiments: { futureDefaults: true },
+				infrastructureLogging: { appendOnly: false }
+			});
+
+			process.stderr.columns = 120;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).toContain("━");
+			});
+		});
+
+		it("should stay silent in non-interactive output", () => {
+			const compiler = createCoreCompiler({
+				experiments: { futureDefaults: true },
+				infrastructureLogging: { appendOnly: true }
+			});
+
+			process.stderr.columns = 120;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).not.toContain("━");
+			});
+		});
+
+		it("should be off without futureDefaults", () => {
+			const compiler = createCoreCompiler({
+				infrastructureLogging: { appendOnly: false }
+			});
+
+			process.stderr.columns = 120;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).not.toContain("━");
+			});
+		});
+
+		it("should not override an explicit user ProgressPlugin", () => {
+			const compiler = createCoreCompiler({
+				experiments: { futureDefaults: true },
+				infrastructureLogging: { appendOnly: false },
+				plugins: [new webpack.ProgressPlugin({ progressBar: false })]
+			});
+
+			process.stderr.columns = 120;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).not.toContain("━");
+			});
+		});
+
+		it("should auto-apply one aggregated bar for a MultiCompiler", () => {
+			const compiler = webpack([
+				{
+					context: path.join(__dirname, "fixtures"),
+					entry: "./a.js",
+					experiments: { futureDefaults: true },
+					infrastructureLogging: { appendOnly: false, colors: false }
+				},
+				{
+					context: path.join(__dirname, "fixtures"),
+					entry: "./b.js",
+					experiments: { futureDefaults: true },
+					infrastructureLogging: { appendOnly: false, colors: false }
+				}
+			]);
+			for (const c of compiler.compilers) {
+				c.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+					/** @type {unknown} */ (createFsFromVolume(new Volume()))
+				);
+			}
+
+			process.stderr.columns = 200;
+			return runCompilerAsync(compiler).then(() => {
+				const logs = stderr.toString();
+				expect(logs).toContain("━");
+				expect(logs).toContain("[0]");
+			});
 		});
 	});
 
