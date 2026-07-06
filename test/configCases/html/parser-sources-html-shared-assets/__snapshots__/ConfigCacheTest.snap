@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html parser-sources-html-shared-assets exported tests handles a script and stylesheet shared between the two pages 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><link rel=\\"stylesheet\\" href=\\"315.bundle0.css\\"></head>
+<body>
+<h1>About</h1>
+<script src=\\"666.bundle0.js\\"></script>
+</body>
+</html>
+"
+`;
