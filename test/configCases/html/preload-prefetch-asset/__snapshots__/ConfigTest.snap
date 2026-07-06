@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html preload-prefetch-asset exported tests should rewrite <link rel=preload/prefetch> of asset-module targets to asset URLs 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+<!-- Non-script/style \`as\` targets are asset modules: emitted and the
+     href rewritten to the output asset URL, not bundled as a chunk. -->
+<link rel=\\"preload\\" as=\\"image\\" href=\\"assets/img.png\\">
+<link rel=\\"prefetch\\" as=\\"image\\" href=\\"assets/img2.png\\">
+<link rel=\\"preload\\" as=\\"font\\" href=\\"assets/font.woff2\\" type=\\"font/woff2\\" crossorigin>
+<link rel=\\"preload\\" as=\\"fetch\\" href=\\"assets/data.bin\\" crossorigin>
+</head>
+<body>
+<h1>Hello</h1>
+</body>
+</html>
+"
+`;

@@ -1,3 +1,4 @@
+import { state } from "./counter.js";
 import "./used.js";
 import page from "./page.html";
 
@@ -27,5 +28,5 @@ it("should execute code-imported and entry modules exactly once", () => {
 	// `used.js` is reachable from index.js, shared.js and the preload/prefetch
 	// entries, yet the module is shared in the graph — the code-imported copy
 	// runs exactly once for this runtime.
-	expect(globalThis.USED).toBe(1);
+	expect(state.count).toBe(1);
 });

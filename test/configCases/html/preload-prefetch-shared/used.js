@@ -1,1 +1,3 @@
-globalThis.USED = (globalThis.USED || 0) + 1;
+import { state } from "./counter.js";
+
+state.count++;
