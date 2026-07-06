@@ -317,19 +317,19 @@ describe("ProgressPlugin", () => {
 		);
 		expect(
 			new webpack.ProgressPlugin({ progressBar: true }).progressBar
-		).toEqual({ name: "Build", color: "green" });
+		).toEqual({ name: "Build", color: "green", width: 25 });
 		expect(
 			new webpack.ProgressPlugin({ progressBar: { name: "Custom" } })
 				.progressBar
-		).toEqual({ name: "Custom", color: "green" });
+		).toEqual({ name: "Custom", color: "green", width: 25 });
 		expect(
 			new webpack.ProgressPlugin({ progressBar: { color: "red" } }).progressBar
-		).toEqual({ name: "Build", color: "red" });
+		).toEqual({ name: "Build", color: "red", width: 25 });
 		expect(
 			new webpack.ProgressPlugin({
-				progressBar: { name: "Custom", color: "cyan" }
+				progressBar: { name: "Custom", color: "cyan", width: 10 }
 			}).progressBar
-		).toEqual({ name: "Custom", color: "cyan" });
+		).toEqual({ name: "Custom", color: "cyan", width: 10 });
 	});
 
 	it("should render progress bar with block characters when enabled", () => {
@@ -381,6 +381,61 @@ describe("ProgressPlugin", () => {
 			expect(logs).toContain("BarB");
 			expect(logs).toContain("━");
 			expect(logs).toContain("●");
+		});
+	});
+
+	it("should respect the progressBar width", () => {
+		const compiler = createSimpleCompiler({
+			progressBar: { name: "WideBar", color: "green", width: 10 }
+		});
+
+		process.stderr.columns = 200;
+		return runCompilerAsync(compiler).then(() => {
+			const logs = stderr.toString();
+			// At 100% the bar is fully filled, so it never exceeds the configured width.
+			expect(logs).toContain("━".repeat(10));
+			expect(logs).not.toContain("━".repeat(11));
+		});
+	});
+
+	it("should display estimated time when estimatedTime is enabled", () => {
+		const compiler = createSimpleCompiler({ estimatedTime: true });
+
+		process.stderr.columns = 120;
+		return runCompilerAsync(compiler).then(() => {
+			const logs = stderr.toString();
+			expect(logs).toEqual(expect.stringMatching(/ETA: \d+(?:ms|s|m)/));
+			expect(logs).not.toContain("NaN");
+		});
+	});
+
+	it("should display phase timings when phaseTimings is enabled", () => {
+		const compiler = createSimpleCompiler({ phaseTimings: true });
+
+		process.stderr.columns = 120;
+		return runCompilerAsync(compiler).then(() => {
+			const logs = stderr.toString();
+			expect(logs).toEqual(
+				expect.stringMatching(/Build completed in \d+(?:ms|s|m)/)
+			);
+			expect(logs).toContain("Phase breakdown:");
+			// The summary is printed exactly once per build.
+			expect(logs.match(/Build completed in/g)).toHaveLength(1);
+		});
+	});
+
+	it("should accept estimatedTime and phaseTimings together without errors", () => {
+		const compiler = createSimpleCompiler({
+			progressBar: true,
+			estimatedTime: true,
+			phaseTimings: true
+		});
+
+		process.stderr.columns = 150;
+		return runCompilerAsync(compiler).then(() => {
+			const logs = stderr.toString();
+			expect(logs).toContain("%");
+			expect(logs).not.toContain("NaN");
 		});
 	});
 

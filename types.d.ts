@@ -19826,7 +19826,13 @@ declare class ProgressPlugin {
 				 * Name shown before the progress bar.
 				 */
 				name?: string;
+				/**
+				 * Width of the progress bar in characters. Default: 25.
+				 */
+				width?: number;
 		  }>;
+	estimatedTime: boolean;
+	phaseTimings: boolean;
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
@@ -19854,7 +19860,12 @@ declare class ProgressPlugin {
 					 * Name shown before the progress bar.
 					 */
 					name?: string;
-			  }>
+					/**
+					 * Width of the progress bar in characters. Default: 25.
+					 */
+					width?: number;
+			  }>,
+		timing?: { estimatedTime?: boolean; phaseTimings?: boolean }
 	) => (percentage: number, msg: string, ...args: string[]) => void;
 }
 type ProgressPluginArgument =
@@ -19886,6 +19897,11 @@ declare interface ProgressPluginOptions {
 	entries?: boolean;
 
 	/**
+	 * Show estimated time remaining based on build progress. Default: false.
+	 */
+	estimatedTime?: boolean;
+
+	/**
 	 * Function that executes for every progress step.
 	 */
 	handler?: (percentage: number, msg: string, ...args: string[]) => void;
@@ -19906,6 +19922,11 @@ declare interface ProgressPluginOptions {
 	percentBy?: null | "entries" | "modules" | "dependencies";
 
 	/**
+	 * Show a timing breakdown for each build phase when the build completes. Default: false.
+	 */
+	phaseTimings?: boolean;
+
+	/**
 	 * Collect profile data for progress steps. Default: false.
 	 */
 	profile?: null | boolean;
@@ -19924,6 +19945,10 @@ declare interface ProgressPluginOptions {
 				 * Name shown before the progress bar.
 				 */
 				name?: string;
+				/**
+				 * Width of the progress bar in characters. Default: 25.
+				 */
+				width?: number;
 		  };
 }
 declare class ProvidePlugin {
