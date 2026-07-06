@@ -104,7 +104,7 @@
     "acorn": "^8.16.0",
     "browserslist": "^4.28.1",
     "chrome-trace-event": "^1.0.2",
-    "enhanced-resolve": "^5.22.2",
+    "enhanced-resolve": "^5.24.2",
     "es-module-lexer": "^2.1.0",
     "eslint-scope": "5.1.1",
     "events": "^3.2.0",
@@ -116,7 +116,7 @@
     "schema-utils": "^4.3.3",
     "tapable": "^2.3.0",
     "watchpack": "^2.5.2",
-    "webpack-sources": "^3.5.0"
+    "webpack-sources": "^3.5.1"
   },
   "devDependencies": {
     "@babel/core": "^8.0.1",
