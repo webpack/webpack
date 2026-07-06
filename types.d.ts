@@ -4,7 +4,7 @@
  * Run `yarn fix:special` to update
  */
 
-import { Parser as ParserImport } from "acorn";
+import { Parser as ParserImport, Position } from "acorn";
 import { Buffer } from "buffer";
 import {
 	ArrayExpression,
@@ -315,10 +315,6 @@ declare interface AliasOption {
 	name: string;
 	onlyModule?: boolean;
 }
-type AliasOptionNewRequest = string | false | string[];
-declare interface AliasOptions {
-	[index: string]: AliasOptionNewRequest;
-}
 declare interface AllCodeGenerationSchemas {
 	/**
 	 * top level declarations for javascript modules
@@ -428,9 +424,7 @@ declare interface AssetEmittedInfo {
 	targetPath: string;
 }
 type AssetFilterItemTypes =
-	| string
-	| RegExp
-	| ((name: string, asset: StatsAsset) => boolean);
+	string | RegExp | ((name: string, asset: StatsAsset) => boolean);
 declare abstract class AssetGenerator extends Generator {
 	dataUrlOptions?:
 		| AssetGeneratorDataUrlOptions
@@ -857,31 +851,15 @@ declare interface BasenameCacheEntry {
 	 */
 	cache: Map<string, Map<undefined | string, undefined | string>>;
 }
+
+/**
+ * An instance is allocated for a large share of walked expressions, so the
+ * boolean facts live in one packed flags slot and the scalar/identifier
+ * fields in five slots shared by type, with accessors keeping every public
+ * field readable. This shrinks instances from 224 to 144 bytes on V8.
+ */
 declare abstract class BasicEvaluatedExpression {
-	type: number;
 	range?: [number, number];
-	falsy: boolean;
-	truthy: boolean;
-	nullish?: boolean;
-	sideEffects: boolean;
-	bool?: boolean;
-	number?: number;
-	bigint?: bigint;
-	regExp?: RegExp;
-	string?: string;
-	quasis?: BasicEvaluatedExpression[];
-	parts?: BasicEvaluatedExpression[];
-	array?: any[];
-	items?: BasicEvaluatedExpression[];
-	options?: BasicEvaluatedExpression[];
-	prefix?: null | BasicEvaluatedExpression;
-	postfix?: null | BasicEvaluatedExpression;
-	wrappedInnerExpressions?: BasicEvaluatedExpression[];
-	identifier?: string | VariableInfo;
-	rootInfo?: string | VariableInfo;
-	getMembers?: () => string[];
-	getMembersOptionals?: () => boolean[];
-	getMemberRanges?: () => [number, number][];
 	expression?:
 		| Program
 		| ImportDeclaration
@@ -957,6 +935,30 @@ declare abstract class BasicEvaluatedExpression {
 		| AssignmentPattern
 		| SwitchCase
 		| TemplateElement;
+	quasis?: BasicEvaluatedExpression[];
+	parts?: BasicEvaluatedExpression[];
+	items?: BasicEvaluatedExpression[];
+	options?: BasicEvaluatedExpression[];
+	prefix?: null | BasicEvaluatedExpression;
+	postfix?: null | BasicEvaluatedExpression;
+	wrappedInnerExpressions?: BasicEvaluatedExpression[];
+	type: number;
+	truthy: boolean;
+	falsy: boolean;
+	nullish?: boolean;
+	sideEffects: boolean;
+	bool?: boolean;
+	number?: number;
+	bigint?: bigint;
+	regExp?: RegExp;
+	string?: string;
+	templateStringKind?: "cooked" | "raw";
+	array?: any[];
+	identifier?: string | VariableInfo;
+	rootInfo?: string | VariableInfo;
+	getMembers?: () => string[];
+	getMembersOptionals?: () => boolean[];
+	getMemberRanges?: () => [number, number][];
 	isUnknown(): boolean;
 	isNull(): boolean;
 	isUndefined(): boolean;
@@ -986,14 +988,7 @@ declare abstract class BasicEvaluatedExpression {
 	 * As compile time value.
 	 */
 	asCompileTimeValue():
-		| undefined
-		| null
-		| string
-		| number
-		| bigint
-		| boolean
-		| RegExp
-		| any[];
+		undefined | null | string | number | bigint | boolean | RegExp | any[];
 	isTruthy(): boolean;
 	isFalsy(): boolean;
 	isNullish(): undefined | boolean;
@@ -1094,7 +1089,6 @@ declare abstract class BasicEvaluatedExpression {
 		parts: BasicEvaluatedExpression[],
 		kind: "cooked" | "raw"
 	): BasicEvaluatedExpression;
-	templateStringKind?: "cooked" | "raw";
 	setTruthy(): BasicEvaluatedExpression;
 	setFalsy(): BasicEvaluatedExpression;
 
@@ -1339,6 +1333,11 @@ declare class CacheClass {
 }
 declare abstract class CacheFacade {
 	/**
+	 * Returns whether a cache backend is active.
+	 */
+	isEnabled(): boolean;
+
+	/**
 	 * Returns child cache.
 	 */
 	getChildCache(name: string): CacheFacade;
@@ -1430,8 +1429,7 @@ declare interface CacheGroupSource {
 	maxAsyncRequests?: number;
 	maxInitialRequests?: number;
 	filename?:
-		| string
-		| ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
+		string | ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
 	idHint?: string;
 	automaticNameDelimiter?: string;
 	reuseExistingChunk?: boolean;
@@ -1572,11 +1570,9 @@ declare class Chunk {
 	idNameHints: SortableSet<string>;
 	preventIntegration: boolean;
 	filenameTemplate?:
-		| string
-		| ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
+		string | ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
 	cssFilenameTemplate?:
-		| string
-		| ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
+		string | ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
 	runtime: RuntimeSpec;
 	files: Set<string>;
 	auxiliaryFiles: Set<string>;
@@ -1845,8 +1841,7 @@ declare interface ChunkConditionMap {
 	[index: string]: boolean;
 }
 type ChunkFilenameTemplate =
-	| string
-	| ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
+	string | ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
 declare class ChunkGraph {
 	/**
 	 * Creates an instance of ChunkGraph.
@@ -2825,8 +2820,7 @@ declare abstract class ChunkTemplate {
 		renderManifest: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
 					renderManifestEntries: RenderManifestEntry[],
 					renderManifestOptions: RenderManifestOptions
@@ -2836,8 +2830,7 @@ declare abstract class ChunkTemplate {
 		modules: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
 					source: Source,
 					moduleTemplate: ModuleTemplate,
@@ -2848,8 +2841,7 @@ declare abstract class ChunkTemplate {
 		render: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
 					source: Source,
 					moduleTemplate: ModuleTemplate,
@@ -2860,24 +2852,21 @@ declare abstract class ChunkTemplate {
 		renderWithEntry: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (source: Source, chunk: Chunk) => Source
 			) => void;
 		};
 		hash: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (hash: Hash) => void
 			) => void;
 		};
 		hashForChunk: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
 					hash: Hash,
 					chunk: Chunk,
@@ -3127,14 +3116,7 @@ type CodeValue =
 			| RuntimeValue
 	  >[];
 type CodeValuePrimitive =
-	| undefined
-	| null
-	| string
-	| number
-	| bigint
-	| boolean
-	| Function
-	| RegExp;
+	undefined | null | string | number | bigint | boolean | Function | RegExp;
 declare interface Colors {
 	reset: (value?: any) => string;
 	bold: (value?: any) => string;
@@ -3774,8 +3756,7 @@ declare class Compilation {
 		file: string,
 		newSourceOrFunction: Source | ((source: Source) => Source),
 		assetInfoUpdateOrFunction?:
-			| AssetInfo
-			| ((assetInfo?: AssetInfo) => undefined | AssetInfo)
+			AssetInfo | ((assetInfo?: AssetInfo) => undefined | AssetInfo)
 	): void;
 
 	/**
@@ -4411,19 +4392,13 @@ declare interface ConcatenatedModuleInfo {
 	 * memoized getExportsType(strict=true)
 	 */
 	exportsTypeStrict?:
-		| "namespace"
-		| "dynamic"
-		| "default-only"
-		| "default-with-named";
+		"namespace" | "dynamic" | "default-only" | "default-with-named";
 
 	/**
 	 * memoized getExportsType(strict=false)
 	 */
 	exportsTypeNonStrict?:
-		| "namespace"
-		| "dynamic"
-		| "default-only"
-		| "default-with-named";
+		"namespace" | "dynamic" | "default-only" | "default-with-named";
 }
 declare interface ConcatenationBailoutReasonContext {
 	/**
@@ -4626,6 +4601,7 @@ declare interface Configuration {
 		| "umd2"
 		| "jsonp"
 		| "system"
+		| "amd-async"
 		| "promise"
 		| "module-import"
 		| "script"
@@ -4791,9 +4767,7 @@ declare interface Configuration {
 	watchOptions?: WatchOptions;
 }
 type ConnectionState =
-	| boolean
-	| typeof CIRCULAR_CONNECTION
-	| typeof TRANSITIVE_ONLY;
+	boolean | typeof CIRCULAR_CONNECTION | typeof TRANSITIVE_ONLY;
 declare class ConstDependency extends NullDependency {
 	/**
 	 * Creates an instance of ConstDependency.
@@ -5039,12 +5013,7 @@ declare interface ContextHash {
 	symlinks?: Set<string>;
 }
 type ContextMode =
-	| "eager"
-	| "weak"
-	| "lazy"
-	| "lazy-once"
-	| "sync"
-	| "async-weak";
+	"eager" | "weak" | "lazy" | "lazy-once" | "sync" | "async-weak";
 type ContextModuleBuildInfo = KnownBuildInfo &
 	Record<string, any> &
 	KnownContextModuleBuildInfo;
@@ -5360,11 +5329,12 @@ declare abstract class CssGenerator extends Generator {
 	 * Processes the provided module.
 	 */
 	sourceDependency(
-		module: NormalModule,
 		dependency: Dependency,
-		initFragments: InitFragment<GenerateContext>[],
 		source: ReplaceSource,
-		generateContext: GenerateContext & { cssData: CssData }
+		templateContext: DependencyTemplateContext & {
+			cssData: CssData;
+			type: string;
+		}
 	): void;
 
 	/**
@@ -6222,11 +6192,9 @@ declare interface DeterministicModuleIdsPluginOptions {
 	failOnConflict?: boolean;
 }
 type DevtoolFallbackModuleFilenameTemplate =
-	| string
-	| ((context: ModuleFilenameTemplateContext) => string);
+	string | ((context: ModuleFilenameTemplateContext) => string);
 type DevtoolModuleFilenameTemplate =
-	| string
-	| ((context: ModuleFilenameTemplateContext) => string);
+	string | ((context: ModuleFilenameTemplateContext) => string);
 
 /**
  * Returns location of targetPath relative to rootPath.
@@ -6644,6 +6612,7 @@ declare class ElectronTargetPlugin {
 			| "umd2"
 			| "jsonp"
 			| "system"
+			| "amd-async"
 			| "promise"
 			| "module-import"
 			| "script"
@@ -6953,8 +6922,7 @@ type EntryLibIndex =
 	| EntryObject
 	| string[];
 type EntryNormalized =
-	| (() => Promise<EntryStaticNormalized>)
-	| EntryStaticNormalized;
+	(() => Promise<EntryStaticNormalized>) | EntryStaticNormalized;
 
 /**
  * Multiple entry bundles are created. The key is the entry name. The value can be a string, an array or an entry description object.
@@ -7074,12 +7042,7 @@ declare abstract class Entrypoint extends ChunkGroup {
 	dependOn(entrypoint: Entrypoint): boolean;
 }
 type EnumValue =
-	| null
-	| string
-	| number
-	| boolean
-	| EnumValueObject
-	| EnumValue[];
+	null | string | number | boolean | EnumValueObject | EnumValue[];
 declare interface EnumValueObject {
 	[index: string]: EnumValue;
 }
@@ -7249,8 +7212,7 @@ declare interface EvalDevToolModulePluginOptions {
 	 * module filename template
 	 */
 	moduleFilenameTemplate?:
-		| string
-		| ((context: ModuleFilenameTemplateContext) => string);
+		string | ((context: ModuleFilenameTemplateContext) => string);
 }
 declare class EvalSourceMapDevToolPlugin {
 	/**
@@ -7961,10 +7923,7 @@ declare interface ExportsSpec {
 	dependencies?: Module[];
 }
 type ExportsType =
-	| "namespace"
-	| "dynamic"
-	| "default-only"
-	| "default-with-named";
+	"namespace" | "dynamic" | "default-only" | "default-with-named";
 type Exposes = (string | ExposesObject)[] | ExposesObject;
 
 /**
@@ -8119,17 +8078,13 @@ declare class ExternalModule extends Module {
 		type: ExternalsType,
 		userRequest: string,
 		dependencyMeta?:
-			| ImportDependencyMeta
-			| CssImportDependencyMeta
-			| AssetDependencyMeta
+			ImportDependencyMeta | CssImportDependencyMeta | AssetDependencyMeta
 	);
 	request: ExternalModuleRequest;
 	externalType: ExternalsType;
 	userRequest: string;
 	dependencyMeta?:
-		| ImportDependencyMeta
-		| CssImportDependencyMeta
-		| AssetDependencyMeta;
+		ImportDependencyMeta | CssImportDependencyMeta | AssetDependencyMeta;
 
 	/**
 	 * restore unsafe cache data
@@ -8228,19 +8183,13 @@ declare interface ExternalModuleInfo {
 	 * memoized getExportsType(strict=true)
 	 */
 	exportsTypeStrict?:
-		| "namespace"
-		| "dynamic"
-		| "default-only"
-		| "default-with-named";
+		"namespace" | "dynamic" | "default-only" | "default-with-named";
 
 	/**
 	 * memoized getExportsType(strict=false)
 	 */
 	exportsTypeNonStrict?:
-		| "namespace"
-		| "dynamic"
-		| "default-only"
-		| "default-with-named";
+		"namespace" | "dynamic" | "default-only" | "default-with-named";
 }
 type ExternalModuleRequest = string | string[] | RequestRecord;
 type Externals =
@@ -8280,6 +8229,7 @@ declare class ExternalsPlugin {
 			| "umd2"
 			| "jsonp"
 			| "system"
+			| "amd-async"
 			| "promise"
 			| "module-import"
 			| "script"
@@ -8310,6 +8260,7 @@ declare class ExternalsPlugin {
 		| "umd2"
 		| "jsonp"
 		| "system"
+		| "amd-async"
 		| "promise"
 		| "module-import"
 		| "script"
@@ -8409,6 +8360,7 @@ type ExternalsType =
 	| "umd2"
 	| "jsonp"
 	| "system"
+	| "amd-async"
 	| "promise"
 	| "module-import"
 	| "script"
@@ -8703,9 +8655,7 @@ declare abstract class FileSystemInfo {
 		callback: (
 			err?: null | WebpackError,
 			resolvedContextTimestamp?:
-				| null
-				| "ignore"
-				| ResolvedContextFileSystemInfoEntry
+				null | "ignore" | ResolvedContextFileSystemInfoEntry
 		) => void
 	): void;
 
@@ -8788,10 +8738,7 @@ declare interface FileSystemInfoEntry {
 	timestamp?: number;
 }
 type FileTimestamp =
-	| null
-	| "ignore"
-	| FileSystemInfoEntry
-	| ExistenceOnlyTimeEntryFileSystemInfo;
+	null | "ignore" | FileSystemInfoEntry | ExistenceOnlyTimeEntryFileSystemInfo;
 type FilterItemTypes = string | RegExp | ((value: string) => boolean);
 declare interface Flags {
 	[index: string]: Argument;
@@ -9457,22 +9404,18 @@ declare abstract class HtmlGenerator extends Generator {
 	 * Processes the provided module.
 	 */
 	sourceDependency(
-		module: NormalModule,
 		dependency: Dependency,
-		initFragments: InitFragment<GenerateContext>[],
 		source: ReplaceSource,
-		generateContext: GenerateContext
+		templateContext: DependencyTemplateContext
 	): void;
 
 	/**
 	 * Processes the provided dependencies block.
 	 */
 	sourceBlock(
-		module: NormalModule,
 		block: DependenciesBlock,
-		initFragments: InitFragment<GenerateContext>[],
 		source: ReplaceSource,
-		generateContext: GenerateContext
+		templateContext: DependencyTemplateContext
 	): void;
 
 	/**
@@ -10110,12 +10053,7 @@ declare interface ImportSettings {
 	expression: ImportExpressionJavascriptParser;
 }
 type ImportSource =
-	| undefined
-	| null
-	| string
-	| SimpleLiteral
-	| RegExpLiteral
-	| BigIntLiteral;
+	undefined | null | string | SimpleLiteral | RegExpLiteral | BigIntLiteral;
 type Imported = true | [string, string][];
 
 /**
@@ -10419,10 +10357,9 @@ declare abstract class JavascriptGenerator extends Generator {
 	 * Processes the provided module.
 	 */
 	sourceDependency(
-		module: Module,
 		dependency: Dependency,
-		initFragments: InitFragment<GenerateContext>[],
 		source: ReplaceSource,
+		templateContext: DependencyTemplateContext,
 		generateContext: GenerateContext
 	): void;
 
@@ -10432,7 +10369,7 @@ declare abstract class JavascriptGenerator extends Generator {
 	sourceBlock(
 		module: Module,
 		block: DependenciesBlock,
-		initFragments: InitFragment<GenerateContext>[],
+		templateContext: DependencyTemplateContext,
 		source: ReplaceSource,
 		generateContext: GenerateContext
 	): void;
@@ -10544,6 +10481,7 @@ declare class JavascriptParser extends ParserClass {
 		options?: {
 			parse?: (code: string, options: ParseOptions) => ParseResult;
 			typescript?: boolean;
+			importPhases?: boolean;
 		}
 	);
 	hooks: Readonly<{
@@ -10693,6 +10631,41 @@ declare class JavascriptParser extends ParserClass {
 			],
 			boolean | void
 		>;
+		preStatementByType: HookMap<
+			SyncBailHook<
+				[
+					| ImportDeclaration
+					| ExportNamedDeclaration
+					| ExportAllDeclaration
+					| FunctionDeclaration
+					| MaybeNamedFunctionDeclaration
+					| VariableDeclaration
+					| ClassDeclaration
+					| MaybeNamedClassDeclaration
+					| ExpressionStatement
+					| BlockStatement
+					| StaticBlock
+					| EmptyStatement
+					| DebuggerStatement
+					| WithStatement
+					| ReturnStatement
+					| LabeledStatement
+					| BreakStatement
+					| ContinueStatement
+					| IfStatement
+					| SwitchStatement
+					| ThrowStatement
+					| TryStatement
+					| WhileStatement
+					| DoWhileStatement
+					| ForStatement
+					| ForInStatement
+					| ForOfStatement
+					| ExportDefaultDeclaration
+				],
+				boolean | void
+			>
+		>;
 		blockPreStatement: SyncBailHook<
 			[
 				| ImportDeclaration
@@ -10725,6 +10698,41 @@ declare class JavascriptParser extends ParserClass {
 				| ExportDefaultDeclaration
 			],
 			boolean | void
+		>;
+		blockPreStatementByType: HookMap<
+			SyncBailHook<
+				[
+					| ImportDeclaration
+					| ExportNamedDeclaration
+					| ExportAllDeclaration
+					| FunctionDeclaration
+					| MaybeNamedFunctionDeclaration
+					| VariableDeclaration
+					| ClassDeclaration
+					| MaybeNamedClassDeclaration
+					| ExpressionStatement
+					| BlockStatement
+					| StaticBlock
+					| EmptyStatement
+					| DebuggerStatement
+					| WithStatement
+					| ReturnStatement
+					| LabeledStatement
+					| BreakStatement
+					| ContinueStatement
+					| IfStatement
+					| SwitchStatement
+					| ThrowStatement
+					| TryStatement
+					| WhileStatement
+					| DoWhileStatement
+					| ForStatement
+					| ForInStatement
+					| ForOfStatement
+					| ExportDefaultDeclaration
+				],
+				boolean | void
+			>
 		>;
 		statement: SyncBailHook<
 			[
@@ -10985,6 +10993,7 @@ declare class JavascriptParser extends ParserClass {
 	options: {
 		parse?: (code: string, options: ParseOptions) => ParseResult;
 		typescript?: boolean;
+		importPhases?: boolean;
 	};
 	scope: ScopeInfo;
 	state: JavascriptParserState;
@@ -12834,13 +12843,7 @@ declare abstract class JsonData {
 	 * Returns raw JSON data.
 	 */
 	get():
-		| undefined
-		| null
-		| string
-		| number
-		| boolean
-		| JsonObjectFs
-		| JsonValueFs[];
+		undefined | null | string | number | boolean | JsonObjectFs | JsonValueFs[];
 
 	/**
 	 * Updates the hash with the data contributed by this instance.
@@ -12875,13 +12878,7 @@ type JsonModuleBuildInfo = KnownBuildInfo &
 	KnownJsonModuleBuildInfo;
 declare interface JsonObjectFs {
 	[index: string]:
-		| undefined
-		| null
-		| string
-		| number
-		| boolean
-		| JsonObjectFs
-		| JsonValueFs[];
+		undefined | null | string | number | boolean | JsonObjectFs | JsonValueFs[];
 }
 declare interface JsonObjectTypes {
 	[index: string]:
@@ -12919,19 +12916,9 @@ declare interface JsonParserOptions {
 	) => null | string | number | boolean | Buffer | JsonObjectFs | JsonValueFs[];
 }
 type JsonValueFs =
-	| null
-	| string
-	| number
-	| boolean
-	| JsonObjectFs
-	| JsonValueFs[];
+	null | string | number | boolean | JsonObjectFs | JsonValueFs[];
 type JsonValueTypes =
-	| null
-	| string
-	| number
-	| boolean
-	| JsonObjectTypes
-	| JsonValueTypes[];
+	null | string | number | boolean | JsonObjectTypes | JsonValueTypes[];
 declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	constructor(runtimeRequirements: ReadonlySet<string>);
 	static getCompilationHooks: (
@@ -13184,6 +13171,11 @@ declare interface KnownHtmlModuleBuildInfo {
 	 * entries collected from the document, grouped by kind
 	 */
 	htmlEntryScripts?: Record<string, EntryScriptInfo[]>;
+
+	/**
+	 * `../` per `<base href>` path segment, prepended to the auto-public-path undo path so a relative base doesn't misdirect bundled URLs
+	 */
+	baseUrlPrefix?: string;
 }
 declare interface KnownJavascriptModuleBuildInfo {
 	/**
@@ -13718,9 +13710,7 @@ declare interface LazyCompilationDefaultBackendOptions {
 	 * Specifies where to listen to from the server.
 	 */
 	listen?:
-		| number
-		| ListenOptions
-		| ((server: ServerLazyCompilationBackend) => void);
+		number | ListenOptions | ((server: ServerLazyCompilationBackend) => void);
 
 	/**
 	 * Specifies the protocol the client should use to connect to the server.
@@ -13869,6 +13859,9 @@ declare class LazySet<T> {
 	static deserialize<T>(
 		__0: ObjectDeserializerContextObjectMiddlewareObject_3<(number | T)[]>
 	): LazySet<T>;
+}
+declare interface LazySourcePositions {
+	position: (offset: number) => Position;
 }
 declare interface LibIdentOptions {
 	/**
@@ -14475,8 +14468,7 @@ declare abstract class MainTemplate {
 		renderManifest: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
 					renderManifestEntries: RenderManifestEntry[],
 					renderManifestOptions: RenderManifestOptions
@@ -14488,8 +14480,7 @@ declare abstract class MainTemplate {
 		require: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
 					value: string,
 					renderBootstrapContext: RenderBootstrapContext
@@ -14502,8 +14493,7 @@ declare abstract class MainTemplate {
 		render: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
 					source: Source,
 					chunk: Chunk,
@@ -14516,16 +14506,14 @@ declare abstract class MainTemplate {
 		renderWithEntry: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (source: Source, chunk: Chunk, hash?: string) => Source
 			) => void;
 		};
 		assetPath: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (value: string, path: PathData, assetInfo?: AssetInfo) => string
 			) => void;
 			call: (filename: TemplatePath, options: PathData) => string;
@@ -14533,16 +14521,14 @@ declare abstract class MainTemplate {
 		hash: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (hash: Hash) => void
 			) => void;
 		};
 		hashForChunk: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (hash: Hash, chunk: Chunk) => void
 			) => void;
 		};
@@ -14825,10 +14811,7 @@ declare interface MkdirSync {
 	(
 		path: PathLikeFs,
 		options?:
-			| null
-			| string
-			| number
-			| (MakeDirectoryOptions & { recursive?: false })
+			null | string | number | (MakeDirectoryOptions & { recursive?: false })
 	): void;
 	(
 		path: PathLikeFs,
@@ -14922,8 +14905,7 @@ declare class Module extends DependenciesBlock {
 	 * @deprecated
 	 */
 	get optimizationBailout(): (
-		| string
-		| ((requestShortener: RequestShortener) => string)
+		string | ((requestShortener: RequestShortener) => string)
 	)[];
 
 	/**
@@ -15478,6 +15460,7 @@ declare interface ModuleFederationPluginOptions {
 		| "umd2"
 		| "jsonp"
 		| "system"
+		| "amd-async"
 		| "promise"
 		| "module-import"
 		| "script"
@@ -16362,8 +16345,7 @@ declare abstract class ModuleTemplate {
 		content: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
 					source: Source,
 					module: Module,
@@ -16375,8 +16357,7 @@ declare abstract class ModuleTemplate {
 		module: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
 					source: Source,
 					module: Module,
@@ -16388,8 +16369,7 @@ declare abstract class ModuleTemplate {
 		render: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
 					source: Source,
 					module: Module,
@@ -16401,8 +16381,7 @@ declare abstract class ModuleTemplate {
 		package: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (
 					source: Source,
 					module: Module,
@@ -16414,8 +16393,7 @@ declare abstract class ModuleTemplate {
 		hash: {
 			tap: <AdditionalOptions>(
 				options:
-					| string
-					| (TapOptions & { name: string } & IfSet<AdditionalOptions>),
+					string | (TapOptions & { name: string } & IfSet<AdditionalOptions>),
 				fn: (hash: Hash) => void
 			) => void;
 		};
@@ -17926,12 +17904,7 @@ declare interface Optimization {
 	 * Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
 	chunkIds?:
-		| false
-		| "natural"
-		| "named"
-		| "deterministic"
-		| "size"
-		| "total-size";
+		false | "natural" | "named" | "deterministic" | "size" | "total-size";
 
 	/**
 	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.
@@ -18081,12 +18054,7 @@ declare interface OptimizationNormalized {
 	 * Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
 	chunkIds?:
-		| false
-		| "natural"
-		| "named"
-		| "deterministic"
-		| "size"
-		| "total-size";
+		false | "natural" | "named" | "deterministic" | "size" | "total-size";
 
 	/**
 	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.
@@ -18702,15 +18670,13 @@ declare interface Output {
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
 	devtoolFallbackModuleFilenameTemplate?:
-		| string
-		| ((context: ModuleFilenameTemplateContext) => string);
+		string | ((context: ModuleFilenameTemplateContext) => string);
 
 	/**
 	 * Filename template string of function for the sources array in a generated SourceMap.
 	 */
 	devtoolModuleFilenameTemplate?:
-		| string
-		| ((context: ModuleFilenameTemplateContext) => string);
+		string | ((context: ModuleFilenameTemplateContext) => string);
 
 	/**
 	 * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
@@ -18904,6 +18870,11 @@ declare interface Output {
 	wasmLoading?: string | false;
 
 	/**
+	 * Fall back to non-streaming WebAssembly instantiation when streaming compilation fails because the server does not serve `.wasm` files with the `application/wasm` MIME type.
+	 */
+	wasmStreamingFallback?: boolean;
+
+	/**
 	 * The filename of WebAssembly modules as relative path inside the 'output.path' directory.
 	 */
 	webassemblyModuleFilename?: string;
@@ -19060,15 +19031,13 @@ declare interface OutputNormalized {
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
 	devtoolFallbackModuleFilenameTemplate?:
-		| string
-		| ((context: ModuleFilenameTemplateContext) => string);
+		string | ((context: ModuleFilenameTemplateContext) => string);
 
 	/**
 	 * Filename template string of function for the sources array in a generated SourceMap.
 	 */
 	devtoolModuleFilenameTemplate?:
-		| string
-		| ((context: ModuleFilenameTemplateContext) => string);
+		string | ((context: ModuleFilenameTemplateContext) => string);
 
 	/**
 	 * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
@@ -19247,6 +19216,11 @@ declare interface OutputNormalized {
 	wasmLoading?: string | false;
 
 	/**
+	 * Fall back to non-streaming WebAssembly instantiation when streaming compilation fails because the server does not serve `.wasm` files with the `application/wasm` MIME type.
+	 */
+	wasmStreamingFallback?: boolean;
+
+	/**
 	 * The filename of WebAssembly modules as relative path inside the 'output.path' directory.
 	 */
 	webassemblyModuleFilename?: string;
@@ -19336,6 +19310,21 @@ declare interface ParseOptions {
 	semicolons?: boolean;
 	allowHashBang?: boolean;
 	allowReturnOutsideFunction?: boolean;
+
+	/**
+	 * internal: serve loc/range lazily instead of allocating them during parsing
+	 */
+	lazySourcePositions?: LazySourcePositions;
+
+	/**
+	 * internal: collect comments here without slicing their text eagerly
+	 */
+	lazyComments?: CommentJavascriptParser[];
+
+	/**
+	 * enable parsing of the import phase proposals (import defer / import source)
+	 */
+	importPhases?: boolean;
 }
 declare interface ParseResult {
 	ast: Program;
@@ -19567,7 +19556,7 @@ type PathDataModule = PathData & {
 type PathLikeFs = string | Buffer | URL;
 type PathLikeTypes = string | URL_url | Buffer;
 type PathOrFileDescriptorFs = string | number | Buffer | URL;
-type PathOrFileDescriptorTypes = string | number | Buffer | URL_url;
+type PathOrFileDescriptorTypes = string | number | URL_url | Buffer;
 type Pattern =
 	| Identifier
 	| MemberExpression
@@ -20027,8 +20016,7 @@ declare interface ProvidesObject {
 	[index: string]: string | ProvidesConfig;
 }
 type PureCondition =
-	| boolean
-	| ((compilation: Compilation, module: Module) => boolean);
+	boolean | ((compilation: Compilation, module: Module) => boolean);
 declare interface RawChunkGroupOptions {
 	preloadOrder?: number;
 	prefetchOrder?: number;
@@ -20212,9 +20200,7 @@ declare interface ReadFileFs {
 	(
 		path: PathOrFileDescriptorFs,
 		options:
-			| undefined
-			| null
-			| ({ encoding?: null; flag?: string } & Abortable),
+			undefined | null | ({ encoding?: null; flag?: string } & Abortable),
 		callback: (err: null | NodeJS.ErrnoException, result?: Buffer) => void
 	): void;
 	(
@@ -20308,9 +20294,7 @@ declare interface ReadFileTypes {
 	(
 		path: PathOrFileDescriptorTypes,
 		options:
-			| undefined
-			| null
-			| ({ encoding?: null; flag?: string } & Abortable),
+			undefined | null | ({ encoding?: null; flag?: string } & Abortable),
 		callback: (err: null | NodeJS.ErrnoException, result?: Buffer) => void
 	): void;
 	(
@@ -21031,8 +21015,7 @@ declare interface RenderContextJavascriptModulesPlugin {
 	strictMode?: boolean;
 }
 type RenderManifestEntry =
-	| RenderManifestEntryTemplated
-	| RenderManifestEntryStatic;
+	RenderManifestEntryTemplated | RenderManifestEntryStatic;
 declare interface RenderManifestEntryStatic {
 	render: () => Source;
 	filename: string;
@@ -21567,12 +21550,12 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 	/**
 	 * A list of module alias configurations or an object which maps key to value
 	 */
-	alias?: AliasOption[] | AliasOptions;
+	alias?: UserAliasOptions | UserAliasOptionEntry[];
 
 	/**
 	 * A list of module alias configurations or an object which maps key to value, applied only after modules option
 	 */
-	fallback?: AliasOption[] | AliasOptions;
+	fallback?: UserAliasOptions | UserAliasOptionEntry[];
 
 	/**
 	 * An object which maps extension to extension aliases
@@ -21650,17 +21633,15 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 	resolver?: Resolver;
 
 	/**
-	 * A list of directories to resolve modules from, can be absolute path or folder name
+	 * A list of directories to resolve modules from, can be absolute path, folder name, or a `file:` `URL` instance
 	 */
-	modules?: string | string[];
+	modules?: string | URL_url | (string | URL_url)[];
 
 	/**
 	 * A list of main fields in description files
 	 */
 	mainFields?: (
-		| string
-		| string[]
-		| { name: string | string[]; forceRelative: boolean }
+		string | string[] | { name: string | string[]; forceRelative: boolean }
 	)[];
 
 	/**
@@ -21679,9 +21660,9 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 	pnpApi?: null | PnpApi;
 
 	/**
-	 * A list of root paths
+	 * A list of root paths, each an absolute path or a `file:` `URL` instance
 	 */
-	roots?: string[];
+	roots?: (string | URL_url)[];
 
 	/**
 	 * The request is already fully specified and no extensions or directories are resolved for it
@@ -21694,9 +21675,9 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 	resolveToContext?: boolean;
 
 	/**
-	 * A list of resolve restrictions
+	 * A list of resolve restrictions, each an absolute path, a `file:` `URL` instance, or a RegExp
 	 */
-	restrictions?: (string | RegExp)[];
+	restrictions?: (string | RegExp | URL_url)[];
 
 	/**
 	 * Use only the sync constraints of the file system calls
@@ -21714,9 +21695,9 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 	preferAbsolute?: boolean;
 
 	/**
-	 * TypeScript config file path or config object with configFile and references
+	 * TypeScript config file path (or `file:` `URL` instance) or config object with configFile and references
 	 */
-	tsconfig?: string | boolean | TsconfigOptions;
+	tsconfig?: string | boolean | URL_url | UserTsconfigOptions;
 }
 type ResolveOptionsWithDependencyType = ResolveOptions & {
 	dependencyType?: string;
@@ -21775,30 +21756,30 @@ declare abstract class Resolver {
 		null | ResolveRequest
 	>;
 	resolveSync(
-		path: string,
-		request: string,
+		parent: string | URL_url,
+		specifier: string | URL_url,
 		resolveContext?: ResolveContext
 	): string | false;
 	resolveSync(
 		context: ContextTypes,
-		path: string,
-		request: string,
+		parent: string | URL_url,
+		specifier: string | URL_url,
 		resolveContext?: ResolveContext
 	): string | false;
 	resolvePromise(
-		path: string,
-		request: string,
+		parent: string | URL_url,
+		specifier: string | URL_url,
 		resolveContext?: ResolveContext
 	): Promise<string | false>;
 	resolvePromise(
 		context: ContextTypes,
-		path: string,
-		request: string,
+		parent: string | URL_url,
+		specifier: string | URL_url,
 		resolveContext?: ResolveContext
 	): Promise<string | false>;
 	resolve(
-		path: string,
-		request: string,
+		parent: string | URL_url,
+		specifier: string | URL_url,
 		callback: (
 			err: null | ErrorWithDetail,
 			res?: string | false,
@@ -21806,8 +21787,8 @@ declare abstract class Resolver {
 		) => void
 	): void;
 	resolve(
-		path: string,
-		request: string,
+		parent: string | URL_url,
+		specifier: string | URL_url,
 		resolveContext: ResolveContext,
 		callback: (
 			err: null | ErrorWithDetail,
@@ -21817,8 +21798,8 @@ declare abstract class Resolver {
 	): void;
 	resolve(
 		context: ContextTypes,
-		path: string,
-		request: string,
+		parent: string | URL_url,
+		specifier: string | URL_url,
 		callback: (
 			err: null | ErrorWithDetail,
 			res?: string | false,
@@ -21827,8 +21808,8 @@ declare abstract class Resolver {
 	): void;
 	resolve(
 		context: ContextTypes,
-		path: string,
-		request: string,
+		parent: string | URL_url,
+		specifier: string | URL_url,
 		resolveContext: ResolveContext,
 		callback: (
 			err: null | ErrorWithDetail,
@@ -23809,8 +23790,7 @@ declare interface SourceMapDevToolPluginOptions {
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.
 	 */
 	fallbackModuleFilenameTemplate?:
-		| string
-		| ((context: ModuleFilenameTemplateContext) => string);
+		string | ((context: ModuleFilenameTemplateContext) => string);
 
 	/**
 	 * Path prefix to which the [file] placeholder is relative to.
@@ -23841,8 +23821,7 @@ declare interface SourceMapDevToolPluginOptions {
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap.
 	 */
 	moduleFilenameTemplate?:
-		| string
-		| ((context: ModuleFilenameTemplateContext) => string);
+		string | ((context: ModuleFilenameTemplateContext) => string);
 
 	/**
 	 * Namespace prefix to allow multiple webpack roots in the devtools.
@@ -23949,8 +23928,7 @@ declare interface SplitChunksOptions {
 	maxInitialRequests: number;
 	hidePathInfo: boolean;
 	filename?:
-		| string
-		| ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
+		string | ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
 	automaticNameDelimiter: string;
 	getCacheGroups: (
 		module: Module,
@@ -23981,6 +23959,15 @@ declare interface SplitData {
 	modules: string[];
 	size: number;
 }
+
+/**
+ * Singly-linked stack entry that also exposes a Set-like API
+ * (`has`, `size`, iteration). Each `doResolve` call prepends a new
+ * `StackEntry` that points at the previous tip via `.parent`, so pushing
+ * is O(1) in time and memory. Recursion detection walks the linked list
+ * (O(n)) but the stack is typically shallow, so this is cheaper overall
+ * than cloning a `Set` per call.
+ */
 declare abstract class StackEntry {
 	name?: string;
 	path: string | false;
@@ -24026,15 +24013,31 @@ declare abstract class StackEntry {
 	 * at the formatted form.
 	 */
 	toString(): string;
+
+	/**
+	 * Iterate entries from oldest (root) to newest (tip), matching how a
+	 * `Set` that was populated in insertion order would iterate. Pre-seeded
+	 * legacy `Set<string>` entries come first so error-message output stays
+	 * ordered oldest-to-newest.
+	 * Yields each entry as its formatted `toString()` form. Plugins written
+	 * against the pre-5.21 `Set<string>` shape — e.g.
+	 * `[...resolveContext.stack].find(a => a.includes("module:"))` — keep
+	 * working unchanged because each yielded value is a plain string with
+	 * all of `String.prototype` available natively. Resolves that never
+	 * iterate the stack pay nothing; iteration costs one `toString()`
+	 * allocation per stack frame.
+	 */
+	[Symbol.iterator](): IterableIterator<string>;
 }
 
 /**
  * Layered map that supports child scopes while memoizing lookups from parent
- * scopes into the current layer.
+ * scopes into the current layer. Layers form a linked parent chain, so
+ * `createChild` is O(1) instead of copying a layer array per scope.
  */
 declare abstract class StackedMap<K, V> {
 	map: Map<K, InternalCell<V>>;
-	stack: Map<K, InternalCell<V>>[];
+	parent?: StackedMap<K, V>;
 
 	/**
 	 * Stores a value in the current layer, preserving explicit `undefined`
@@ -25325,6 +25328,32 @@ declare interface UpdateHashContextGenerator {
 type Usage = string | true | TopLevelSymbol;
 type UsageStateType = 0 | 1 | 2 | 3 | 4;
 type UsedName = string | false | string[] | InlinedUsedName;
+declare interface UserAliasOptionEntry {
+	alias: UserAliasOptionNewRequest;
+	name: string;
+	onlyModule?: boolean;
+}
+type UserAliasOptionNewRequest =
+	string | false | URL_url | (string | URL_url)[];
+declare interface UserAliasOptions {
+	[index: string]: UserAliasOptionNewRequest;
+}
+declare interface UserTsconfigOptions {
+	/**
+	 * A path, or `file:` `URL` instance, pointing at the tsconfig file
+	 */
+	configFile?: string | URL_url;
+
+	/**
+	 * References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths or `file:` `URL` instances
+	 */
+	references?: "auto" | (string | URL_url)[];
+
+	/**
+	 * Override baseUrl from tsconfig.json with a path or `file:` `URL` instance
+	 */
+	baseUrl?: string | URL_url;
+}
 type Value = string | number | boolean | RegExp;
 type ValueCacheVersion = string | Set<string>;
 declare interface Values {
@@ -25449,9 +25478,7 @@ declare class VirtualUrlPlugin {
 	static DEFAULT_SCHEME: string;
 }
 type WarningFilterItemTypes =
-	| string
-	| RegExp
-	| ((warning: StatsError, warningString: string) => boolean);
+	string | RegExp | ((warning: StatsError, warningString: string) => boolean);
 
 /**
  * Returns location of targetPath relative to rootPath.
@@ -26041,6 +26068,7 @@ declare interface WebpackOptionsNormalized {
 		| "umd2"
 		| "jsonp"
 		| "system"
+		| "amd-async"
 		| "promise"
 		| "module-import"
 		| "script"
@@ -26109,8 +26137,7 @@ declare interface WebpackOptionsNormalized {
 	 * Add additional plugins to the compiler.
 	 */
 	plugins: (
-		| ((this: Compiler, compiler: Compiler) => void)
-		| WebpackPluginInstance
+		((this: Compiler, compiler: Compiler) => void) | WebpackPluginInstance
 	)[];
 
 	/**
@@ -26215,6 +26242,7 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
 		| "umd2"
 		| "jsonp"
 		| "system"
+		| "amd-async"
 		| "promise"
 		| "module-import"
 		| "script"
@@ -26452,8 +26480,7 @@ declare namespace exports {
 			options: {
 				namespace?: string;
 				moduleFilenameTemplate?:
-					| string
-					| ((context: ModuleFilenameTemplateContext) => string);
+					string | ((context: ModuleFilenameTemplateContext) => string);
 			},
 			__2: {
 				requestShortener: RequestShortener;
