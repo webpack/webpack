@@ -538,6 +538,40 @@ describe("ProgressPlugin", () => {
 			});
 		});
 
+		it("should apply the bar for explicit infrastructureLogging.progress: true", () => {
+			const compiler = createCoreCompiler({
+				infrastructureLogging: { progress: true, appendOnly: false }
+			});
+
+			process.stderr.columns = 120;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).toContain("━");
+			});
+		});
+
+		it("should stay silent for infrastructureLogging.progress: 'auto' in non-interactive output", () => {
+			const compiler = createCoreCompiler({
+				infrastructureLogging: { progress: "auto", appendOnly: true }
+			});
+
+			process.stderr.columns = 120;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).not.toContain("━");
+			});
+		});
+
+		it("should respect an explicit infrastructureLogging.progress: false under futureDefaults", () => {
+			const compiler = createCoreCompiler({
+				experiments: { futureDefaults: true },
+				infrastructureLogging: { progress: false, appendOnly: false }
+			});
+
+			process.stderr.columns = 120;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).not.toContain("━");
+			});
+		});
+
 		it("should not override an explicit user ProgressPlugin", () => {
 			const compiler = createCoreCompiler({
 				experiments: { futureDefaults: true },
