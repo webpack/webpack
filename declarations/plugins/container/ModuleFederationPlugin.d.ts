@@ -78,6 +78,7 @@ export type ExternalsType =
 	| "commonjs-static"
 	| "amd"
 	| "amd-require"
+	| "amd-async"
 	| "umd"
 	| "umd2"
 	| "jsonp"
