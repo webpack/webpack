@@ -502,8 +502,43 @@ describe("ProgressPlugin", () => {
 		});
 	});
 
-	describe("core progress (infrastructureLogging.progress)", () => {
-		it("should auto-apply the bar for progress: true in interactive output", () => {
+	describe("core default progress (futureDefaults)", () => {
+		it("should auto-apply the bar in interactive output", () => {
+			const compiler = createCoreCompiler({
+				experiments: { futureDefaults: true },
+				infrastructureLogging: { appendOnly: false }
+			});
+
+			process.stderr.columns = 120;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).toContain("━");
+			});
+		});
+
+		it("should stay silent in non-interactive output", () => {
+			const compiler = createCoreCompiler({
+				experiments: { futureDefaults: true },
+				infrastructureLogging: { appendOnly: true }
+			});
+
+			process.stderr.columns = 120;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).not.toContain("━");
+			});
+		});
+
+		it("should be off without futureDefaults", () => {
+			const compiler = createCoreCompiler({
+				infrastructureLogging: { appendOnly: false }
+			});
+
+			process.stderr.columns = 120;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).not.toContain("━");
+			});
+		});
+
+		it("should apply the bar for explicit infrastructureLogging.progress: true", () => {
 			const compiler = createCoreCompiler({
 				infrastructureLogging: { progress: true, appendOnly: false }
 			});
@@ -514,18 +549,7 @@ describe("ProgressPlugin", () => {
 			});
 		});
 
-		it("should auto-apply the bar for progress: 'auto' in interactive output", () => {
-			const compiler = createCoreCompiler({
-				infrastructureLogging: { progress: "auto", appendOnly: false }
-			});
-
-			process.stderr.columns = 120;
-			return runCompilerAsync(compiler).then(() => {
-				expect(stderr.toString()).toContain("━");
-			});
-		});
-
-		it("should stay silent for progress: 'auto' in non-interactive output", () => {
+		it("should stay silent for infrastructureLogging.progress: 'auto' in non-interactive output", () => {
 			const compiler = createCoreCompiler({
 				infrastructureLogging: { progress: "auto", appendOnly: true }
 			});
@@ -536,10 +560,10 @@ describe("ProgressPlugin", () => {
 			});
 		});
 
-		it("should be opt-in — off by default even under futureDefaults", () => {
+		it("should respect an explicit infrastructureLogging.progress: false under futureDefaults", () => {
 			const compiler = createCoreCompiler({
 				experiments: { futureDefaults: true },
-				infrastructureLogging: { appendOnly: false }
+				infrastructureLogging: { progress: false, appendOnly: false }
 			});
 
 			process.stderr.columns = 120;
@@ -550,7 +574,8 @@ describe("ProgressPlugin", () => {
 
 		it("should not override an explicit user ProgressPlugin", () => {
 			const compiler = createCoreCompiler({
-				infrastructureLogging: { progress: true, appendOnly: false },
+				experiments: { futureDefaults: true },
+				infrastructureLogging: { appendOnly: false },
 				plugins: [new webpack.ProgressPlugin({ progressBar: false })]
 			});
 
@@ -560,25 +585,19 @@ describe("ProgressPlugin", () => {
 			});
 		});
 
-		it("should apply one aggregated bar for a MultiCompiler", () => {
+		it("should auto-apply one aggregated bar for a MultiCompiler", () => {
 			const compiler = webpack([
 				{
 					context: path.join(__dirname, "fixtures"),
 					entry: "./a.js",
-					infrastructureLogging: {
-						progress: "auto",
-						appendOnly: false,
-						colors: false
-					}
+					experiments: { futureDefaults: true },
+					infrastructureLogging: { appendOnly: false, colors: false }
 				},
 				{
 					context: path.join(__dirname, "fixtures"),
 					entry: "./b.js",
-					infrastructureLogging: {
-						progress: "auto",
-						appendOnly: false,
-						colors: false
-					}
+					experiments: { futureDefaults: true },
+					infrastructureLogging: { appendOnly: false, colors: false }
 				}
 			]);
 			for (const c of compiler.compilers) {
