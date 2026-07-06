@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+<!-- `shared.js` is a real executing entry AND preloaded/prefetched. -->
+<link rel="preload" as="script" href="./shared.js">
+<link rel="prefetch" as="script" href="./shared.js">
+<!-- `used.js` is preloaded but only ever imported from code. -->
+<link rel="preload" as="script" href="./used.js">
+</head>
+<body>
+<h1>Hello</h1>
+<script src="./shared.js"></script>
+</body>
+</html>
