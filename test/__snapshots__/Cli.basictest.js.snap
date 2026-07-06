@@ -1463,16 +1463,16 @@ Object {
         "description": "Show build progress. \`\\"auto\\"\` shows it only for interactive terminals. This option is only used when no custom console is provided.",
         "multiple": false,
         "path": "infrastructureLogging.progress",
-        "type": "boolean",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
       },
       Object {
         "description": "Show build progress. \`\\"auto\\"\` shows it only for interactive terminals. This option is only used when no custom console is provided.",
         "multiple": false,
         "path": "infrastructureLogging.progress",
-        "type": "enum",
-        "values": Array [
-          "auto",
-        ],
+        "type": "boolean",
       },
     ],
     "description": "Show build progress. \`\\"auto\\"\` shows it only for interactive terminals. This option is only used when no custom console is provided.",
