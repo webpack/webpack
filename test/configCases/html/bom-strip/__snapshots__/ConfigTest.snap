@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html bom-strip exported tests should strip a UTF-8 BOM from the HTML source 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>bom-strip</title></head>
+<body><p>Hello</p></body>
+</html>
+"
+`;

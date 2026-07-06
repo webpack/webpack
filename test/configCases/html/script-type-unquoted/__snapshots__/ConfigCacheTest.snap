@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html script-type-unquoted exported tests should strip unquoted type=module attr when output.module is false 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>script-type-unquoted</title></head>
+<body>
+<script src=\\"117.bundle0.mjs\\"></script>
+</body>
+</html>
+"
+`;
