@@ -1218,6 +1218,10 @@ describe("snapshots", () => {
 		-   "devtool": false,
 		+   "devtool": Array [
 		+     Object {
+		+       "type": "css",
+		+       "use": "source-map",
+		+     },
+		+     Object {
 		+       "type": "javascript",
 		+       "use": "eval",
 		+     },
@@ -3736,6 +3740,10 @@ describe("snapshots", () => {
 			-   "devtool": false,
 			+   "devtool": Array [
 			+     Object {
+			+       "type": "css",
+			+       "use": "source-map",
+			+     },
+			+     Object {
 			+       "type": "javascript",
 			+       "use": "eval",
 			+     },
@@ -5188,12 +5196,33 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 		).toEqual({ css: false, html: true, asyncWebAssembly: true });
 	});
 
+	it("keeps css on when only an enforce:pre loader targets .css", () => {
+		// A pre/post loader (e.g. stylelint) doesn't establish the module type, so it
+		// must not suppress the built-in css type.
+		expect(
+			resolve({
+				module: {
+					rules: [
+						{ test: /\.css$/i, enforce: "pre", use: ["stylelint-loader"] }
+					]
+				}
+			})
+		).toEqual({ css: true, html: true, asyncWebAssembly: true });
+	});
+
 	it("ignores loaders registered for unrelated extensions", () => {
 		expect(
 			resolve({
 				module: { rules: [{ test: /\.js$/i, use: ["babel-loader"] }] }
 			})
 		).toEqual({ css: true, html: true, asyncWebAssembly: true });
+	});
+
+	it("applies the default dev css source map to auto-enabled css", () => {
+		// `devtool` is resolved after experiments, so auto-enabled css still gets the
+		// default `{ type: "css", use: "source-map" }` dev source map.
+		const { devtool } = getDefaultConfig({ mode: "development" });
+		expect(devtool).toContainEqual({ type: "css", use: "source-map" });
 	});
 
 	it("respects explicit boolean values", () => {
