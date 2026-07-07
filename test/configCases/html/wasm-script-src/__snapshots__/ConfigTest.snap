@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html wasm-script-src exported tests should emit a <script type=application/wasm src> as a bundled wasm asset and rewrite its src 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+</head>
+<body>
+<script type=\\"application/wasm\\" src=\\"1fc15b7aa7560530faab.wasm\\"></script>
+</body>
+</html>
+"
+`;
