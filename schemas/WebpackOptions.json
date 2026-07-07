@@ -1149,8 +1149,17 @@
       "additionalProperties": true,
       "properties": {
         "asyncWebAssembly": {
-          "description": "Support WebAssembly as asynchronous EcmaScript Module.",
-          "type": "boolean",
+          "description": "Support WebAssembly as asynchronous EcmaScript Module. `\"auto\"` (the default) enables it unless a loader is registered for WebAssembly files.",
+          "anyOf": [
+            {
+              "description": "Enable the built-in async WebAssembly support only when no loader is registered for WebAssembly files.",
+              "enum": ["auto"]
+            },
+            {
+              "description": "Enable/disable the built-in async WebAssembly support.",
+              "type": "boolean"
+            }
+          ],
           "experimental": true
         },
         "backCompat": {
@@ -1253,8 +1262,17 @@
       "additionalProperties": false,
       "properties": {
         "asyncWebAssembly": {
-          "description": "Support WebAssembly as asynchronous EcmaScript Module.",
-          "type": "boolean",
+          "description": "Support WebAssembly as asynchronous EcmaScript Module. `\"auto\"` (the default) enables it unless a loader is registered for WebAssembly files.",
+          "anyOf": [
+            {
+              "description": "Enable the built-in async WebAssembly support only when no loader is registered for WebAssembly files.",
+              "enum": ["auto"]
+            },
+            {
+              "description": "Enable/disable the built-in async WebAssembly support.",
+              "type": "boolean"
+            }
+          ],
           "experimental": true
         },
         "backCompat": {

@@ -7305,10 +7305,10 @@ declare interface Experiments {
 	[index: string]: any;
 
 	/**
-	 * Support WebAssembly as asynchronous EcmaScript Module.
+	 * Support WebAssembly as asynchronous EcmaScript Module. `"auto"` (the default) enables it unless a loader is registered for WebAssembly files.
 	 * @experimental
 	 */
-	asyncWebAssembly?: boolean;
+	asyncWebAssembly?: "auto" | boolean;
 
 	/**
 	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
@@ -7388,10 +7388,10 @@ declare interface Experiments {
  */
 declare interface ExperimentsNormalized {
 	/**
-	 * Support WebAssembly as asynchronous EcmaScript Module.
+	 * Support WebAssembly as asynchronous EcmaScript Module. `"auto"` (the default) enables it unless a loader is registered for WebAssembly files.
 	 * @experimental
 	 */
-	asyncWebAssembly?: boolean;
+	asyncWebAssembly?: "auto" | boolean;
 
 	/**
 	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.

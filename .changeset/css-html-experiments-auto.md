@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Default `experiments.css` and `experiments.html` to `"auto"`, enabling the built-in CSS/HTML support unless a loader is registered for those files.
+Default `experiments.css`, `experiments.html` and `experiments.asyncWebAssembly` to `"auto"`, enabling the built-in support unless a loader is registered for those files.

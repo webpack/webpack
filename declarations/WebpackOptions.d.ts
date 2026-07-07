@@ -1330,10 +1330,10 @@ export interface LibraryCustomUmdObject {
  */
 export interface Experiments {
 	/**
-	 * Support WebAssembly as asynchronous EcmaScript Module.
+	 * Support WebAssembly as asynchronous EcmaScript Module. `"auto"` (the default) enables it unless a loader is registered for WebAssembly files.
 	 * @experimental
 	 */
-	asyncWebAssembly?: boolean;
+	asyncWebAssembly?: "auto" | boolean;
 	/**
 	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
 	 * @experimental
@@ -3528,10 +3528,10 @@ export interface EntryStaticNormalized {
  */
 export interface ExperimentsNormalized {
 	/**
-	 * Support WebAssembly as asynchronous EcmaScript Module.
+	 * Support WebAssembly as asynchronous EcmaScript Module. `"auto"` (the default) enables it unless a loader is registered for WebAssembly files.
 	 * @experimental
 	 */
-	asyncWebAssembly?: boolean;
+	asyncWebAssembly?: "auto" | boolean;
 	/**
 	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
 	 * @experimental
