@@ -10110,6 +10110,11 @@ declare interface InfrastructureLogging {
 	level?: "none" | "verbose" | "error" | "warn" | "info" | "log";
 
 	/**
+	 * Show build progress. `"auto"` shows it only for interactive terminals. This option is only used when no custom console is provided.
+	 */
+	progress?: boolean | "auto";
+
+	/**
 	 * Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.
 	 */
 	stream?: NodeJS.WritableStream & {
@@ -19817,6 +19822,7 @@ declare class ProgressPlugin {
 	percentBy: null | "entries" | "modules" | "dependencies";
 	progressBar:
 		| false
+		| "auto"
 		| Required<{
 				/**
 				 * Color used for the filled portion of the bar.
@@ -19826,7 +19832,13 @@ declare class ProgressPlugin {
 				 * Name shown before the progress bar.
 				 */
 				name?: string;
+				/**
+				 * Width of the progress bar in characters. Default: 25.
+				 */
+				width?: number;
 		  }>;
+	estimatedTime: boolean;
+	phaseTimings: boolean;
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
@@ -19854,7 +19866,12 @@ declare class ProgressPlugin {
 					 * Name shown before the progress bar.
 					 */
 					name?: string;
-			  }>
+					/**
+					 * Width of the progress bar in characters. Default: 25.
+					 */
+					width?: number;
+			  }>,
+		timing?: TimingOptions
 	) => (percentage: number, msg: string, ...args: string[]) => void;
 }
 type ProgressPluginArgument =
@@ -19886,6 +19903,11 @@ declare interface ProgressPluginOptions {
 	entries?: boolean;
 
 	/**
+	 * Show estimated time remaining based on build progress. Default: false.
+	 */
+	estimatedTime?: boolean;
+
+	/**
 	 * Function that executes for every progress step.
 	 */
 	handler?: (percentage: number, msg: string, ...args: string[]) => void;
@@ -19906,15 +19928,21 @@ declare interface ProgressPluginOptions {
 	percentBy?: null | "entries" | "modules" | "dependencies";
 
 	/**
+	 * Show a timing breakdown for each build phase when the build completes. Default: false.
+	 */
+	phaseTimings?: boolean;
+
+	/**
 	 * Collect profile data for progress steps. Default: false.
 	 */
 	profile?: null | boolean;
 
 	/**
-	 * Generate progress bar. Default: false.
+	 * Generate progress bar. `"auto"` enables it only for interactive terminals. Default: false.
 	 */
 	progressBar?:
 		| boolean
+		| "auto"
 		| {
 				/**
 				 * Color used for the filled portion of the bar.
@@ -19924,6 +19952,10 @@ declare interface ProgressPluginOptions {
 				 * Name shown before the progress bar.
 				 */
 				name?: string;
+				/**
+				 * Width of the progress bar in characters. Default: 25.
+				 */
+				width?: number;
 		  };
 }
 declare class ProvidePlugin {
@@ -25197,6 +25229,10 @@ declare interface TimestampAndHash {
 	safeTime: number;
 	timestamp?: number;
 	hash: string;
+}
+declare interface TimingOptions {
+	estimatedTime?: boolean;
+	phaseTimings?: boolean;
 }
 declare class TopLevelSymbol {
 	/**

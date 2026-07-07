@@ -82,6 +82,51 @@ const createSimpleCompilerWithCustomHandler = (
 	return compiler;
 };
 
+const createAutoCompiler = (
+	/** @type {Record<string, unknown> | undefined} */ progressOptions,
+	/** @type {{ infrastructureLogging?: Record<string, unknown>, experiments?: Record<string, unknown> }} */ extra = {}
+) => {
+	const compiler = webpack({
+		context: path.join(__dirname, "fixtures"),
+		entry: "./a.js",
+		experiments: extra.experiments,
+		infrastructureLogging: {
+			debug: /Progress/,
+			colors: false,
+			...extra.infrastructureLogging
+		},
+		plugins: [new webpack.ProgressPlugin(progressOptions)]
+	});
+
+	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		/** @type {unknown} */ (createFsFromVolume(new Volume()))
+	);
+
+	return compiler;
+};
+
+const createCoreCompiler = (
+	/** @type {{ infrastructureLogging?: Record<string, unknown>, experiments?: Record<string, unknown>, plugins?: import("../").Configuration["plugins"] }} */ extra = {}
+) => {
+	const compiler = webpack({
+		context: path.join(__dirname, "fixtures"),
+		entry: "./a.js",
+		experiments: extra.experiments,
+		infrastructureLogging: {
+			debug: /Progress/,
+			colors: false,
+			...extra.infrastructureLogging
+		},
+		plugins: extra.plugins
+	});
+
+	compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+		/** @type {unknown} */ (createFsFromVolume(new Volume()))
+	);
+
+	return compiler;
+};
+
 const getLogs = (/** @type {string} */ logsStr) =>
 	logsStr.split(/\r/).filter((/** @type {string} */ v) => v !== " ");
 
@@ -317,19 +362,22 @@ describe("ProgressPlugin", () => {
 		);
 		expect(
 			new webpack.ProgressPlugin({ progressBar: true }).progressBar
-		).toEqual({ name: "Build", color: "green" });
+		).toEqual({ name: "Build", color: "green", width: 25 });
 		expect(
 			new webpack.ProgressPlugin({ progressBar: { name: "Custom" } })
 				.progressBar
-		).toEqual({ name: "Custom", color: "green" });
+		).toEqual({ name: "Custom", color: "green", width: 25 });
 		expect(
 			new webpack.ProgressPlugin({ progressBar: { color: "red" } }).progressBar
-		).toEqual({ name: "Build", color: "red" });
+		).toEqual({ name: "Build", color: "red", width: 25 });
 		expect(
 			new webpack.ProgressPlugin({
-				progressBar: { name: "Custom", color: "cyan" }
+				progressBar: { name: "Custom", color: "cyan", width: 10 }
 			}).progressBar
-		).toEqual({ name: "Custom", color: "cyan" });
+		).toEqual({ name: "Custom", color: "cyan", width: 10 });
+		expect(
+			new webpack.ProgressPlugin({ progressBar: "auto" }).progressBar
+		).toBe("auto");
 	});
 
 	it("should render progress bar with block characters when enabled", () => {
@@ -381,6 +429,230 @@ describe("ProgressPlugin", () => {
 			expect(logs).toContain("BarB");
 			expect(logs).toContain("━");
 			expect(logs).toContain("●");
+		});
+	});
+
+	it("should respect the progressBar width", () => {
+		const compiler = createSimpleCompiler({
+			progressBar: { name: "WideBar", color: "green", width: 10 }
+		});
+
+		process.stderr.columns = 200;
+		return runCompilerAsync(compiler).then(() => {
+			const logs = stderr.toString();
+			// At 100% the bar is fully filled, so it never exceeds the configured width.
+			expect(logs).toContain("━".repeat(10));
+			expect(logs).not.toContain("━".repeat(11));
+		});
+	});
+
+	it("should not render the bar for progressBar: 'auto' in non-interactive output", () => {
+		const compiler = createAutoCompiler(
+			{ progressBar: "auto" },
+			{ infrastructureLogging: { appendOnly: true } }
+		);
+
+		process.stderr.columns = 120;
+		return runCompilerAsync(compiler).then(() => {
+			const logs = stderr.toString();
+			expect(logs).not.toContain("━");
+			expect(logs).toEqual(expect.stringMatching(/\d+%/));
+		});
+	});
+
+	it("should render the bar for progressBar: 'auto' in interactive output", () => {
+		const compiler = createAutoCompiler(
+			{ progressBar: "auto" },
+			{ infrastructureLogging: { appendOnly: false } }
+		);
+
+		process.stderr.columns = 120;
+		return runCompilerAsync(compiler).then(() => {
+			expect(stderr.toString()).toContain("━");
+		});
+	});
+
+	it("should enable the auto bar by default with experiments.futureDefaults (interactive)", () => {
+		const compiler = createAutoCompiler(
+			{},
+			{
+				infrastructureLogging: { appendOnly: false },
+				experiments: { futureDefaults: true }
+			}
+		);
+
+		process.stderr.columns = 120;
+		return runCompilerAsync(compiler).then(() => {
+			expect(stderr.toString()).toContain("━");
+		});
+	});
+
+	it("should respect an explicit progressBar: false even with futureDefaults", () => {
+		const compiler = createAutoCompiler(
+			{ progressBar: false },
+			{
+				infrastructureLogging: { appendOnly: false },
+				experiments: { futureDefaults: true }
+			}
+		);
+
+		process.stderr.columns = 120;
+		return runCompilerAsync(compiler).then(() => {
+			expect(stderr.toString()).not.toContain("━");
+		});
+	});
+
+	describe("core default progress (futureDefaults)", () => {
+		it("should auto-apply the bar in interactive output", () => {
+			const compiler = createCoreCompiler({
+				experiments: { futureDefaults: true },
+				infrastructureLogging: { appendOnly: false }
+			});
+
+			process.stderr.columns = 120;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).toContain("━");
+			});
+		});
+
+		it("should stay silent in non-interactive output", () => {
+			const compiler = createCoreCompiler({
+				experiments: { futureDefaults: true },
+				infrastructureLogging: { appendOnly: true }
+			});
+
+			process.stderr.columns = 120;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).not.toContain("━");
+			});
+		});
+
+		it("should be off without futureDefaults", () => {
+			const compiler = createCoreCompiler({
+				infrastructureLogging: { appendOnly: false }
+			});
+
+			process.stderr.columns = 120;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).not.toContain("━");
+			});
+		});
+
+		it("should apply the bar for explicit infrastructureLogging.progress: true", () => {
+			const compiler = createCoreCompiler({
+				infrastructureLogging: { progress: true, appendOnly: false }
+			});
+
+			process.stderr.columns = 120;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).toContain("━");
+			});
+		});
+
+		it("should stay silent for infrastructureLogging.progress: 'auto' in non-interactive output", () => {
+			const compiler = createCoreCompiler({
+				infrastructureLogging: { progress: "auto", appendOnly: true }
+			});
+
+			process.stderr.columns = 120;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).not.toContain("━");
+			});
+		});
+
+		it("should respect an explicit infrastructureLogging.progress: false under futureDefaults", () => {
+			const compiler = createCoreCompiler({
+				experiments: { futureDefaults: true },
+				infrastructureLogging: { progress: false, appendOnly: false }
+			});
+
+			process.stderr.columns = 120;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).not.toContain("━");
+			});
+		});
+
+		it("should not override an explicit user ProgressPlugin", () => {
+			const compiler = createCoreCompiler({
+				experiments: { futureDefaults: true },
+				infrastructureLogging: { appendOnly: false },
+				plugins: [new webpack.ProgressPlugin({ progressBar: false })]
+			});
+
+			process.stderr.columns = 120;
+			return runCompilerAsync(compiler).then(() => {
+				expect(stderr.toString()).not.toContain("━");
+			});
+		});
+
+		it("should auto-apply one aggregated bar for a MultiCompiler", () => {
+			const compiler = webpack([
+				{
+					context: path.join(__dirname, "fixtures"),
+					entry: "./a.js",
+					experiments: { futureDefaults: true },
+					infrastructureLogging: { appendOnly: false, colors: false }
+				},
+				{
+					context: path.join(__dirname, "fixtures"),
+					entry: "./b.js",
+					experiments: { futureDefaults: true },
+					infrastructureLogging: { appendOnly: false, colors: false }
+				}
+			]);
+			for (const c of compiler.compilers) {
+				c.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+					/** @type {unknown} */ (createFsFromVolume(new Volume()))
+				);
+			}
+
+			process.stderr.columns = 200;
+			return runCompilerAsync(compiler).then(() => {
+				const logs = stderr.toString();
+				expect(logs).toContain("━");
+				expect(logs).toContain("[0]");
+			});
+		});
+	});
+
+	it("should display estimated time when estimatedTime is enabled", () => {
+		const compiler = createSimpleCompiler({ estimatedTime: true });
+
+		process.stderr.columns = 120;
+		return runCompilerAsync(compiler).then(() => {
+			const logs = stderr.toString();
+			expect(logs).toEqual(expect.stringMatching(/ETA: \d+(?:ms|s|m)/));
+			expect(logs).not.toContain("NaN");
+		});
+	});
+
+	it("should display phase timings when phaseTimings is enabled", () => {
+		const compiler = createSimpleCompiler({ phaseTimings: true });
+
+		process.stderr.columns = 120;
+		return runCompilerAsync(compiler).then(() => {
+			const logs = stderr.toString();
+			expect(logs).toEqual(
+				expect.stringMatching(/Build completed in \d+(?:ms|s|m)/)
+			);
+			expect(logs).toContain("Phase breakdown:");
+			// The summary is printed exactly once per build.
+			expect(logs.match(/Build completed in/g)).toHaveLength(1);
+		});
+	});
+
+	it("should accept estimatedTime and phaseTimings together without errors", () => {
+		const compiler = createSimpleCompiler({
+			progressBar: true,
+			estimatedTime: true,
+			phaseTimings: true
+		});
+
+		process.stderr.columns = 150;
+		return runCompilerAsync(compiler).then(() => {
+			const logs = stderr.toString();
+			expect(logs).toContain("%");
+			expect(logs).not.toContain("NaN");
 		});
 	});
 

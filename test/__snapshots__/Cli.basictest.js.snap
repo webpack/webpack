@@ -1457,6 +1457,28 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "infrastructure-logging-progress": Object {
+    "configs": Array [
+      Object {
+        "description": "Show build progress. \`\\"auto\\"\` shows it only for interactive terminals. This option is only used when no custom console is provided.",
+        "multiple": false,
+        "path": "infrastructureLogging.progress",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "Show build progress. \`\\"auto\\"\` shows it only for interactive terminals. This option is only used when no custom console is provided.",
+        "multiple": false,
+        "path": "infrastructureLogging.progress",
+        "type": "boolean",
+      },
+    ],
+    "description": "Show build progress. \`\\"auto\\"\` shows it only for interactive terminals. This option is only used when no custom console is provided.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "mode": Object {
     "configs": Array [
       Object {

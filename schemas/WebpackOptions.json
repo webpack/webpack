@@ -2136,6 +2136,17 @@
           "description": "Log level.",
           "enum": ["none", "error", "warn", "info", "log", "verbose"]
         },
+        "progress": {
+          "description": "Show build progress. `\"auto\"` shows it only for interactive terminals. This option is only used when no custom console is provided.",
+          "anyOf": [
+            {
+              "enum": ["auto"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
         "stream": {
           "description": "Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.",
           "tsType": "NodeJS.WritableStream & { isTTY?: boolean, columns?: number, rows?: number }"
