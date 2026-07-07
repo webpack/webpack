@@ -23,8 +23,11 @@ module.exports = {
 	optimization: {
 		chunkIds: "named"
 	},
+	// This case predates css-by-default and asserts on `<script src>` chunking;
+	// keep css off so the built-in CSS pipeline doesn't shift the snapshots.
 	experiments: {
 		html: true,
-		outputModule: true
+		outputModule: true,
+		css: false
 	}
 };
