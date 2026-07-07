@@ -199,6 +199,22 @@ Format: `<type>/<short-description>` (e.g. `fix/split-chunks-cache-key`, `feat/c
 
 Valid `<type>` values: `fix`, `feat`, `refactor`, `perf`, `test`, `chore`, `ci`, `build`, `style`, `revert`, `docs`. Must match the answer to "What kind of change does this PR introduce?" in the PR body.
 
+**Choose `<type>` automatically from the diff** — do not guess or reuse a previous task's prefix. Inspect the staged changes and pick the single type describing their _primary intent_, using the first match in this priority order:
+
+1. `revert` — the change reverts a previous commit.
+2. `fix` — corrects incorrect runtime behavior (a bug); normally paired with a regression test.
+3. `feat` — adds a new user-facing capability or config option (touches `schemas/`, `lib/config/`, or adds a new public API).
+4. `perf` — improves build time or memory without changing behavior.
+5. `refactor` — restructures `lib/` code without changing behavior or adding features.
+6. `test` — touches only `test/`.
+7. `docs` — touches only documentation (`*.md`, example READMEs, JSDoc-only prose).
+8. `build` — changes the build system or dependencies (`package.json`, `tooling/`, generator scripts).
+9. `ci` — touches only `.github/`.
+10. `style` — formatting-only changes with no behavior impact.
+11. `chore` — anything else.
+
+When a change spans several categories, classify by its primary purpose (a bug fix that also adds a test is `fix`, not `test`; a feature with docs is `feat`). The chosen `<type>` is the same value used for the "What kind of change does this PR introduce?" answer, so derive both from this list.
+
 Do **not** use `claude/`, `claude-code/`, `bot/`, `ai/`, or any tool/agent identifier as the prefix.
 
 If the task harness pre-created a branch with a different prefix, rename it before the first push: `git branch -m <new-name>`.
