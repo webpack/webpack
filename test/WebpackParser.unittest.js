@@ -140,4 +140,123 @@ describe("WebpackParser", () => {
 			expect(/** @type {RegExp} */ (literal.value).source).toBe("a[/]b");
 		});
 	});
+
+	describe("number fast path", () => {
+		/**
+		 * @param {string} code source
+		 * @param {object=} options extra parse options
+		 * @returns {import("estree").Literal} the sole declarator's literal init
+		 */
+		const literal = (code, options) => {
+			const declaration =
+				/** @type {import("estree").VariableDeclaration} */
+				(parse(code, options).ast.body[0]);
+			return /** @type {import("estree").Literal} */ (
+				declaration.declarations[0].init
+			);
+		};
+
+		it("should read integers, decimals and bare zero on the fast path", () => {
+			expect(literal("var x = 0").value).toBe(0);
+			expect(literal("var x = 42").value).toBe(42);
+			expect(literal("var x = 1.5").value).toBe(1.5);
+			expect(literal("var x = 0.5").value).toBe(0.5);
+			expect(literal("var x = 100.").value).toBe(100);
+			expect(literal("var x = 1.").value).toBe(1);
+			expect(literal("var x = .5").value).toBe(0.5);
+		});
+
+		it("should delegate radix, exponent, separator and bigint literals to acorn", () => {
+			expect(literal("var x = 0x1f").value).toBe(31);
+			expect(literal("var x = 0o17").value).toBe(15);
+			expect(literal("var x = 0b101").value).toBe(5);
+			expect(literal("var x = 1e3").value).toBe(1000);
+			expect(literal("var x = 1_000").value).toBe(1000);
+			expect(literal("var x = 1234567890123456").value).toBe(1234567890123456);
+			expect(typeof literal("var x = 123n").value).toBe("bigint");
+		});
+
+		it("should reject an identifier directly after a number", () => {
+			expect(() => parse("var x = 0abc")).toThrow(
+				/Identifier directly after number/
+			);
+			expect(() => parse("var x = 1.5abc")).toThrow(
+				/Identifier directly after number/
+			);
+		});
+	});
+
+	describe("automatic semicolon insertion", () => {
+		it("should insert semicolons across line breaks and at eof", () => {
+			expect([...parse("x").semicolons]).toHaveLength(1);
+			expect([...parse("a\nb").semicolons]).toHaveLength(2);
+			expect([...parse("x;\ny;").semicolons]).toHaveLength(0);
+			expect(
+				[...parse("function f() { return\n5 }").semicolons].length
+			).toBeGreaterThan(0);
+		});
+
+		it("should parse numbers and insert semicolons without ranges", () => {
+			const { ast, semicolons } = parse("var x = 1.5\nvar y = 0", {
+				ranges: false
+			});
+			expect(ast.body).toHaveLength(2);
+			expect([...semicolons]).toHaveLength(2);
+		});
+
+		it("should tokenize non-ASCII identifiers and unicode whitespace", () => {
+			const { ast } = parse("var π = 1; var café = 2;");
+			const first =
+				/** @type {import("estree").VariableDeclaration} */
+				(ast.body[0]);
+			expect(
+				/** @type {import("estree").Identifier} */ (first.declarations[0].id)
+					.name
+			).toBe("π");
+			expect(ast.body).toHaveLength(2);
+		});
+	});
+
+	describe("reserved words and bindings", () => {
+		it("should reject contextual and reserved identifiers like acorn", () => {
+			expect(() => parse("function* g() { var yield; }")).toThrow(
+				/Cannot use 'yield' as identifier inside a generator/
+			);
+			expect(() => parse("async function f() { var await; }")).toThrow(
+				/Cannot use 'await' as identifier inside an async function/
+			);
+			expect(() =>
+				parse("class C { x = arguments; }", { sourceType: "module" })
+			).toThrow(/Cannot use 'arguments' in class field initializer/);
+			expect(() =>
+				parse("class C { static { arguments; } }", { sourceType: "module" })
+			).toThrow(/class static initialization block/);
+			expect(() => parse("var enum;", { sourceType: "module" })).toThrow(
+				/The keyword 'enum' is reserved/
+			);
+			expect(() => parse("'use strict'; var eval;")).toThrow(
+				/Binding eval in strict mode/
+			);
+		});
+
+		it("should allow keywords as property names", () => {
+			expect(
+				parse("obj.class; obj.enum; ({ if: 1, default: 2 });").ast
+			).toBeDefined();
+		});
+
+		it("should detect redeclarations and undefined exports", () => {
+			expect(() => parse("let x; let x;")).toThrow(
+				/Identifier 'x' has already been declared/
+			);
+			expect(() => parse("{ let a; let a; }")).toThrow(/already been declared/);
+			expect(parse("var x; var x;").ast).toBeDefined();
+			expect(() => parse("export { x };", { sourceType: "module" })).toThrow(
+				/Export 'x' is not defined/
+			);
+			expect(
+				parse("export { x }; var x;", { sourceType: "module" }).ast
+			).toBeDefined();
+		});
+	});
 });
