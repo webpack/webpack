@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html build-http-absolute-url exported tests should bundle an absolute http(s) URL referenced from HTML when experiments.buildHttp is enabled 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>Test</title></head>
+<body>
+<img src=\\"afc10c70ed4ce2b33593.svg\\" alt=\\"remote\\">
+</body>
+</html>
+"
+`;
