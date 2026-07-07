@@ -794,10 +794,10 @@ describe("snapshots", () => {
 		          "...",
 		        ],
 		        "extensions": Array [
-		          ".html",
 		          ".js",
 		          ".json",
 		          ".wasm",
+		          ".html",
 		          ".css",
 		        ],
 		        "mainFields": Array [
@@ -838,10 +838,10 @@ describe("snapshots", () => {
 		          "...",
 		        ],
 		        "extensions": Array [
-		          ".html",
 		          ".js",
 		          ".json",
 		          ".wasm",
+		          ".html",
 		          ".css",
 		        ],
 		        "mainFields": Array [
@@ -906,10 +906,10 @@ describe("snapshots", () => {
 		          "...",
 		        ],
 		        "extensions": Array [
-		          ".html",
 		          ".js",
 		          ".json",
 		          ".wasm",
+		          ".html",
 		          ".css",
 		        ],
 		        "mainFields": Array [
@@ -930,10 +930,10 @@ describe("snapshots", () => {
 		          "...",
 		        ],
 		        "extensions": Array [
-		          ".html",
 		          ".js",
 		          ".json",
 		          ".wasm",
+		          ".html",
 		          ".css",
 		        ],
 		        "mainFields": Array [
@@ -3946,7 +3946,21 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
+			+           ".html",
 			+           ".ts",
+			@@ ... @@
+			-           ".html",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".html",
+			+           ".ts",
+			@@ ... @@
+			-           ".html",
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -3958,19 +3972,17 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
+			+           ".html",
 			+           ".ts",
+			@@ ... @@
+			-           ".html",
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
+			+           ".html",
 			+           ".ts",
 			@@ ... @@
-			+           "typescript",
-			@@ ... @@
-			+           ".ts",
-			@@ ... @@
-			+           "typescript",
-			@@ ... @@
-			+           ".ts",
+			-           ".html",
 			@@ ... @@
 			-     "cache": false,
 			+     "cache": true,
@@ -3984,11 +3996,11 @@ describe("snapshots", () => {
 			+       ".js": Array [
 			+         ".js",
 			+         ".ts",
-			@@ ... @@
+			+       ],
 			+       ".mjs": Array [
 			+         ".mjs",
 			+         ".mts",
-			+       ],
+			@@ ... @@
 			+     },
 			@@ ... @@
 			+     "tsconfig": true,
@@ -4466,7 +4478,21 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
+			+           ".html",
 			+           ".ts",
+			@@ ... @@
+			-           ".html",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".html",
+			+           ".ts",
+			@@ ... @@
+			-           ".html",
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -4478,19 +4504,17 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
+			+           ".html",
 			+           ".ts",
+			@@ ... @@
+			-           ".html",
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
+			+           ".html",
 			+           ".ts",
 			@@ ... @@
-			+           "typescript",
-			@@ ... @@
-			+           ".ts",
-			@@ ... @@
-			+           "typescript",
-			@@ ... @@
-			+           ".ts",
+			-           ".html",
 			@@ ... @@
 			+     ],
 			+     "extensionAlias": Object {
@@ -4501,11 +4525,11 @@ describe("snapshots", () => {
 			+       ".js": Array [
 			+         ".js",
 			+         ".ts",
-			@@ ... @@
+			+       ],
 			+       ".mjs": Array [
 			+         ".mjs",
 			+         ".mts",
-			+       ],
+			@@ ... @@
 			+     },
 			@@ ... @@
 			+     "tsconfig": true,
@@ -4654,7 +4678,6 @@ describe("snapshots", () => {
 			@@ ... @@
 			-           "preferRelative": true,
 			@@ ... @@
-			-       },
 			-       Object {
 			-         "dependency": "html-style-attribute",
 			-         "parser": Object {
@@ -4664,7 +4687,7 @@ describe("snapshots", () => {
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
-			@@ ... @@
+			-         },
 			+         "type": "javascript/esm",
 			@@ ... @@
 			-       "css": Object {
@@ -4696,13 +4719,11 @@ describe("snapshots", () => {
 			-         "localIdentName": "[fullhash]",
 			-       },
 			@@ ... @@
-			-         },
-			-       },
 			-       "css": Object {
 			-         "import": true,
 			-         "namedExports": true,
 			-         "url": true,
-			@@ ... @@
+			-       },
 			-       "css/auto": Object {
 			-         "animation": true,
 			-         "container": true,
@@ -4710,7 +4731,7 @@ describe("snapshots", () => {
 			-         "dashedIdents": true,
 			-         "function": true,
 			-         "grid": true,
-			@@ ... @@
+			-       },
 			-       "css/global": Object {
 			-         "animation": true,
 			-         "container": true,
@@ -4758,9 +4779,6 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           ".ts",
 			@@ ... @@
-			-           "...",
-			-         ],
-			-       },
 			-       "css-import": Object {
 			-         "conditionNames": Array [
 			-           "webpack",
@@ -4772,10 +4790,11 @@ describe("snapshots", () => {
 			-         ],
 			-         "mainFields": Array [
 			-           "style",
-			@@ ... @@
+			-           "...",
+			-         ],
 			-         "mainFiles": Array [],
 			-         "preferRelative": true,
-			@@ ... @@
+			-       },
 			-       "css-import-global-module": Object {
 			-         "conditionNames": Array [
 			-           "webpack",
@@ -4811,8 +4830,22 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
+			+           ".html",
 			+           ".ts",
 			@@ ... @@
+			-           ".html",
+			-           ".css",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".html",
+			+           ".ts",
+			@@ ... @@
+			-           ".html",
 			-           ".css",
 			@@ ... @@
 			+           "typescript",
@@ -4823,29 +4856,22 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           ".ts",
 			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".html",
+			+           ".ts",
+			@@ ... @@
+			-           ".html",
 			-           ".css",
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
+			+           ".html",
 			+           ".ts",
 			@@ ... @@
-			+           "typescript",
-			@@ ... @@
-			+           ".ts",
-			@@ ... @@
-			+           "typescript",
-			@@ ... @@
-			+           ".ts",
-			@@ ... @@
+			-           ".html",
 			-           ".css",
 			@@ ... @@
-			+           "typescript",
-			@@ ... @@
-			+           ".ts",
-			@@ ... @@
-			-           ".css",
-			@@ ... @@
-			+     ],
 			+     "extensionAlias": Object {
 			+       ".cjs": Array [
 			+         ".cjs",
@@ -4854,7 +4880,7 @@ describe("snapshots", () => {
 			+       ".js": Array [
 			+         ".js",
 			+         ".ts",
-			@@ ... @@
+			+       ],
 			+       ".mjs": Array [
 			+         ".mjs",
 			+         ".mts",
@@ -5152,6 +5178,21 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 		).toEqual({ css: false, html: true, asyncWebAssembly: true });
 	});
 
+	it("keeps css off for a loader scoped to specific .css filenames", () => {
+		// A `test` regexp that references the extension counts even when the generic
+		// sample path doesn't match it, so the built-in type doesn't double-process.
+		expect(
+			resolve({
+				module: {
+					rules: [
+						{ test: /source\.css$/, loader: "css-loader" },
+						{ test: /dep\.css$/, loader: "css-loader" }
+					]
+				}
+			})
+		).toEqual({ css: false, html: true, asyncWebAssembly: true });
+	});
+
 	it("keeps css off for a combined sass/less rule that also covers .css", () => {
 		// The common `sass-loader` setup tests `.sass`, `.scss` and `.css` together;
 		// the built-in type must stay off so the loader chain keeps handling .css.
@@ -5223,6 +5264,24 @@ describe("experiments.css/html/asyncWebAssembly auto", () => {
 		// default `{ type: "css", use: "source-map" }` dev source map.
 		const { devtool } = getDefaultConfig({ mode: "development" });
 		expect(devtool).toContainEqual({ type: "css", use: "source-map" });
+	});
+
+	it("keeps auto-enabled html below .js in resolve extensions", () => {
+		// Auto-enabled html must not let `x.html` shadow `x.js` for `import "./x"`.
+		const { resolve: r } = getDefaultConfig({});
+		const exts =
+			/** @type {NonNullable<import("../").ResolveOptions>["byDependency"]} */
+			(r.byDependency).esm.extensions;
+		expect(exts.indexOf(".html")).toBeGreaterThan(exts.indexOf(".js"));
+	});
+
+	it("keeps .html above .js when html is explicitly enabled", () => {
+		// Explicit opt-in preserves the html-as-entry priority (`.html` before `.js`).
+		const { resolve: r } = getDefaultConfig({ experiments: { html: true } });
+		const exts =
+			/** @type {NonNullable<import("../").ResolveOptions>["byDependency"]} */
+			(r.byDependency).esm.extensions;
+		expect(exts.indexOf(".html")).toBeLessThan(exts.indexOf(".js"));
 	});
 
 	it("respects explicit boolean values", () => {
