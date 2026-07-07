@@ -58,6 +58,9 @@ jobs:
           LAST_COMMIT: 1
           NEGATIVE_FILTER: on-schedule
           SHARD: ${{ matrix.shard }}
+          # Single libuv thread → deterministic fs-completion order, removing the
+          # last I/O race that perturbs allocation counts between runs.
+          UV_THREADPOOL_SIZE: 1
   benchmark-memory:
     strategy:
       fail-fast: false
@@ -101,3 +104,6 @@ jobs:
           LAST_COMMIT: 1
           NEGATIVE_FILTER: on-schedule
           SHARD: ${{ matrix.shard }}
+          # Single libuv thread → deterministic fs-completion order, removing the
+          # last I/O race that perturbs allocation counts between runs.
+          UV_THREADPOOL_SIZE: 1

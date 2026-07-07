@@ -25,6 +25,12 @@ import { Bench, hrtimeNow } from "tinybench";
 
 /** @typedef {TinybenchTask & { collectBy?: string }} Task */
 
+// One libuv thread → fs completions fire in submission order, making module
+// build order (and thus allocation counts) deterministic run-to-run. Set before
+// any async fs so libuv reads it when the pool first initializes; `??=` lets the
+// CI env override stand. This is the main lever against memory-benchmark noise.
+process.env.UV_THREADPOOL_SIZE ??= "1";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootPath = path.join(__dirname, "..");
 const git = simpleGit(rootPath);
@@ -839,7 +845,13 @@ const withCodSpeed = async (bench) => {
 			if (!meta) return;
 			await meta.options?.beforeAll?.call(task, "warmup");
 			try {
-				await iterationAsync(task, task.name);
+				const { peak, marginal } = await sampleHeapPeak(() =>
+					iterationAsync(task, task.name)
+				);
+				const uri = getTaskUri(bench, task.name, rootCallingFile);
+				console.log(
+					`[Memory] ${uri} peakHeapUsed=${formatBytes(peak)} marginal=${formatBytes(marginal)}`
+				);
 			} finally {
 				await meta.options?.afterAll?.call(task, "warmup");
 			}
@@ -1350,6 +1362,42 @@ function formatTime(value) {
 			return `${formatNumber(value * NS_PER_MS, 5, 2)} ns`;
 		}
 	}
+}
+
+/**
+ * @param {number} bytes bytes
+ * @returns {string} formatted size
+ */
+function formatBytes(bytes) {
+	return `${(bytes / 1024 ** 2).toFixed(2)} MiB`;
+}
+
+/**
+ * Peak `heapUsed` during `fn`, sampled on the event loop. CodSpeed memory mode
+ * counts allocations in an already-warmed heap, so peak-RSS wins stay invisible;
+ * this tracks the live-set high-water mark. Called only from the un-instrumented
+ * prime pass so it can't pollute the measured region. `heapUsed` not `rss`: the
+ * shared process never returns arena pages, so `rss` isn't per-task comparable.
+ * @param {() => Promise<unknown>} fn compile to measure
+ * @returns {Promise<{ peak: number, marginal: number }>} peak and marginal live bytes
+ */
+async function sampleHeapPeak(fn) {
+	global.gc?.();
+	const baseline = process.memoryUsage().heapUsed;
+	let peak = baseline;
+	const timer = setInterval(() => {
+		const { heapUsed } = process.memoryUsage();
+		if (heapUsed > peak) peak = heapUsed;
+	}, 4);
+	timer.unref?.();
+	try {
+		await fn();
+	} finally {
+		clearInterval(timer);
+	}
+	const end = process.memoryUsage().heapUsed;
+	if (end > peak) peak = end;
+	return { peak, marginal: peak - baseline };
 }
 
 const statsByTests = new Map();
