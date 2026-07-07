@@ -38,6 +38,19 @@ module.exports = {
 					},
 					importMetaContext: true
 				}
+			},
+			{
+				test: /context-import-meta-false\.js$/,
+				parser: {
+					importMeta: false
+				}
+			},
+			{
+				test: /context-legacy-overridden\.js$/,
+				parser: {
+					importMeta: false,
+					importMetaContext: true
+				}
 			}
 		]
 	}
