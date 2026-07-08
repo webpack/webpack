@@ -259,4 +259,64 @@ describe("WebpackParser", () => {
 			).toBeDefined();
 		});
 	});
+
+	describe("token context (finishToken exprAllowed)", () => {
+		/**
+		 * @param {string} code source
+		 * @returns {string} the sole expression's node type
+		 */
+		const exprType = (code) => {
+			const statement =
+				/** @type {import("estree").ExpressionStatement} */
+				(parse(code).ast.body[0]);
+			return statement.expression.type;
+		};
+
+		it("should read `/` after a value as division, not a regexp", () => {
+			// the `else` branch: exprAllowed follows the token type's beforeExpr
+			expect(exprType("a / b / c")).toBe("BinaryExpression");
+			expect(exprType("1 / 2")).toBe("BinaryExpression");
+			expect(exprType("(1 / n) ** (1 / 2)")).toBe("BinaryExpression");
+			expect(exprType("a.b / c")).toBe("BinaryExpression");
+			expect(exprType("a[b] / c")).toBe("BinaryExpression");
+			expect(exprType("f() / 2")).toBe("BinaryExpression");
+		});
+
+		it("should read `/` where an expression is allowed as a regexp", () => {
+			// the updateContext branch (parenR pop) and value-position defaults
+			expect(exprType("x = /re/g")).toBe("AssignmentExpression");
+			expect(parse("if (a) /re/.test(b);").ast).toBeDefined();
+			expect(parse("function f() { return /re/; }").ast).toBeDefined();
+			expect(parse("var t = `${1 / 2}${/re/.source}`;").ast).toBeDefined();
+		});
+
+		it("should keep `/` after a keyword-valued property name as division", () => {
+			// keyword-after-dot forbids an expression, so the next `/` divides
+			expect(parse("a.in / b; a.of / c;").ast).toBeDefined();
+		});
+	});
+
+	describe("punctuator fast path", () => {
+		it("should tokenize the single-char punctuators into the right AST", () => {
+			const program = parse("f(a, [b], { c: 1 });").ast;
+			const call =
+				/** @type {import("estree").CallExpression} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (program.body[0])
+						.expression
+				);
+			expect(call.type).toBe("CallExpression");
+			expect(call.arguments).toHaveLength(3);
+			expect(call.arguments[1].type).toBe("ArrayExpression");
+			expect(call.arguments[2].type).toBe("ObjectExpression");
+		});
+
+		it("should keep ranges aligned across punctuator-dense code", () => {
+			const { ast } = parse("[({})];");
+			const { range } = /** @type {{ range: [number, number] }} */ (
+				/** @type {unknown} */ (ast.body[0])
+			);
+			expect(range).toEqual([0, 7]);
+		});
+	});
 });
