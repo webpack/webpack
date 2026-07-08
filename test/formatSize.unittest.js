@@ -40,6 +40,18 @@ describe("SizeFormatHelpers", () => {
 			expect(formatSize(1.2 * 1024 * 1024 * 1024)).toBe("1.2 GiB");
 		});
 
+		it("should handle tebibytes", () => {
+			expect(formatSize(2 * 1024 ** 4)).toBe("2 TiB");
+		});
+
+		it("should handle pebibytes", () => {
+			expect(formatSize(3 * 1024 ** 5)).toBe("3 PiB");
+		});
+
+		it("should clamp sizes beyond the largest unit", () => {
+			expect(formatSize(5 * 1024 ** 6)).toBe("5120 PiB");
+		});
+
 		it("should handle undefined/NaN", () => {
 			expect(formatSize()).toBe("unknown size");
 			expect(formatSize(Number.NaN)).toBe("unknown size");
