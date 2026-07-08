@@ -283,6 +283,10 @@ const describeCases = (config) => {
 								asyncWebAssembly: true,
 								topLevelAwait: true,
 								backCompat: false,
+								// These cases use inline `!css-loader!`/loaders, not the built-in
+								// css/html types; pin them off so the "auto" defaults don't apply.
+								css: false,
+								html: false,
 								...(config.module ? { outputModule: true } : {})
 							},
 							infrastructureLogging: config.cache && {

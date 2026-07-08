@@ -7305,10 +7305,10 @@ declare interface Experiments {
 	[index: string]: any;
 
 	/**
-	 * Support WebAssembly as asynchronous EcmaScript Module.
+	 * Support WebAssembly as asynchronous EcmaScript Module. `"auto"` (the default) enables it unless a loader is registered for WebAssembly files.
 	 * @experimental
 	 */
-	asyncWebAssembly?: boolean;
+	asyncWebAssembly?: boolean | "auto";
 
 	/**
 	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
@@ -7329,10 +7329,10 @@ declare interface Experiments {
 	cacheUnaffected?: boolean;
 
 	/**
-	 * Enable css support.
+	 * Enable css support. `"auto"` (the default) enables the built-in CSS support unless a loader is registered for CSS files.
 	 * @experimental
 	 */
-	css?: boolean;
+	css?: boolean | "auto";
 
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
@@ -7347,10 +7347,10 @@ declare interface Experiments {
 	futureDefaults?: boolean;
 
 	/**
-	 * Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points.
+	 * Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points. `"auto"` (the default) enables it unless a loader is registered for HTML files.
 	 * @experimental
 	 */
-	html?: boolean;
+	html?: boolean | "auto";
 
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
@@ -7388,10 +7388,10 @@ declare interface Experiments {
  */
 declare interface ExperimentsNormalized {
 	/**
-	 * Support WebAssembly as asynchronous EcmaScript Module.
+	 * Support WebAssembly as asynchronous EcmaScript Module. `"auto"` (the default) enables it unless a loader is registered for WebAssembly files.
 	 * @experimental
 	 */
-	asyncWebAssembly?: boolean;
+	asyncWebAssembly?: boolean | "auto";
 
 	/**
 	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
@@ -7412,10 +7412,10 @@ declare interface ExperimentsNormalized {
 	cacheUnaffected?: boolean;
 
 	/**
-	 * Enable css support.
+	 * Enable css support. `"auto"` (the default) enables the built-in CSS support unless a loader is registered for CSS files.
 	 * @experimental
 	 */
-	css?: boolean;
+	css?: boolean | "auto";
 
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
@@ -7430,10 +7430,10 @@ declare interface ExperimentsNormalized {
 	futureDefaults?: boolean;
 
 	/**
-	 * Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points.
+	 * Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points. `"auto"` (the default) enables it unless a loader is registered for HTML files.
 	 * @experimental
 	 */
-	html?: boolean;
+	html?: boolean | "auto";
 
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.

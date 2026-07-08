@@ -874,6 +874,8 @@ describe("Loaders", () => {
 			compile({
 				mode: "development",
 				entry: "./abc.html",
+				// Opt out so `.html` stays unhandled and still hits the no-loader path.
+				experiments: { css: false, html: false },
 				module: {}
 			})
 		).resolves.toMatchInlineSnapshot(`

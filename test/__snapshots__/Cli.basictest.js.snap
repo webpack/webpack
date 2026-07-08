@@ -704,15 +704,24 @@ Object {
   "experiments-async-web-assembly": Object {
     "configs": Array [
       Object {
-        "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+        "description": "Enable the built-in async WebAssembly support only when no loader is registered for WebAssembly files.",
+        "multiple": false,
+        "path": "experiments.asyncWebAssembly",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "Enable/disable the built-in async WebAssembly support.",
         "multiple": false,
         "path": "experiments.asyncWebAssembly",
         "type": "boolean",
       },
     ],
-    "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+    "description": "Enable the built-in async WebAssembly support only when no loader is registered for WebAssembly files. Enable/disable the built-in async WebAssembly support.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "experiments-back-compat": Object {
     "configs": Array [
@@ -849,15 +858,24 @@ Object {
   "experiments-css": Object {
     "configs": Array [
       Object {
-        "description": "Enable css support.",
+        "description": "Enable the built-in CSS support only when no loader is registered for CSS files.",
+        "multiple": false,
+        "path": "experiments.css",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "Enable/disable the built-in CSS support.",
         "multiple": false,
         "path": "experiments.css",
         "type": "boolean",
       },
     ],
-    "description": "Enable css support.",
+    "description": "Enable the built-in CSS support only when no loader is registered for CSS files. Enable/disable the built-in CSS support.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "experiments-defer-import": Object {
     "configs": Array [
@@ -888,15 +906,24 @@ Object {
   "experiments-html": Object {
     "configs": Array [
       Object {
-        "description": "Enable HTML entry support. Treats \`.html\` files as a first-class module type so they can be used directly as entry points.",
+        "description": "Enable the built-in HTML support only when no loader is registered for HTML files.",
+        "multiple": false,
+        "path": "experiments.html",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "Enable/disable the built-in HTML support.",
         "multiple": false,
         "path": "experiments.html",
         "type": "boolean",
       },
     ],
-    "description": "Enable HTML entry support. Treats \`.html\` files as a first-class module type so they can be used directly as entry points.",
+    "description": "Enable the built-in HTML support only when no loader is registered for HTML files. Enable/disable the built-in HTML support.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "experiments-lazy-compilation": Object {
     "configs": Array [
