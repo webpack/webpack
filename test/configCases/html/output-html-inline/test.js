@@ -62,12 +62,11 @@ it("<!-- webpackInline: true --> inlines the tag without output.html.inline", ()
 	expect(scripts[0]).toMatch(/console\.log/);
 });
 
-it("<!-- webpackInline: true --> with runtimeChunk does not inline sibling runtime", () => {
+it("<!-- webpackInline: true --> with runtimeChunk inlines sibling runtime too", () => {
 	const html = readHtml("magic-split.html");
-	// entry tag inlined
-	expect(inlineScripts(html).length).toBeGreaterThan(0);
-	// runtime sibling served normally (forceInline is entry-only)
-	expect(scriptTags(html).some((t) => t.includes("src="))).toBe(true);
+	// both entry and runtime sibling are inlined
+	expect(inlineScripts(html).length).toBeGreaterThanOrEqual(2);
+	expect(scriptTags(html).some((t) => t.includes("src="))).toBe(false);
 });
 
 it("inline: false serves chunks normally", () => {
