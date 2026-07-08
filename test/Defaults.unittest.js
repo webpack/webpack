@@ -119,14 +119,14 @@ describe("snapshots", () => {
 		    },
 		  },
 		  "experiments": Object {
-		    "asyncWebAssembly": false,
+		    "asyncWebAssembly": true,
 		    "backCompat": true,
 		    "buildHttp": undefined,
 		    "cacheUnaffected": false,
-		    "css": undefined,
+		    "css": true,
 		    "deferImport": false,
 		    "futureDefaults": false,
-		    "html": undefined,
+		    "html": true,
 		    "lazyCompilation": undefined,
 		    "outputModule": false,
 		    "sourceImport": false,
@@ -245,6 +245,147 @@ describe("snapshots", () => {
 		        "type": "javascript/esm",
 		      },
 		      Object {
+		        "rules": Array [
+		          Object {
+		            "descriptionData": Object {
+		              "type": "module",
+		            },
+		            "resolve": Object {
+		              "fullySpecified": true,
+		            },
+		          },
+		        ],
+		        "test": /\\\\\\.wasm\\$/i,
+		        "type": "webassembly/async",
+		      },
+		      Object {
+		        "mimetype": "application/wasm",
+		        "rules": Array [
+		          Object {
+		            "descriptionData": Object {
+		              "type": "module",
+		            },
+		            "resolve": Object {
+		              "fullySpecified": true,
+		            },
+		          },
+		        ],
+		        "type": "webassembly/async",
+		      },
+		      Object {
+		        "resolve": Object {
+		          "fullySpecified": true,
+		          "preferRelative": true,
+		        },
+		        "test": /\\\\\\.css\\$/i,
+		        "type": "css/auto",
+		      },
+		      Object {
+		        "mimetype": "text/css+module",
+		        "resolve": Object {
+		          "fullySpecified": true,
+		          "preferRelative": true,
+		        },
+		        "type": "css/module",
+		      },
+		      Object {
+		        "mimetype": "text/css",
+		        "resolve": Object {
+		          "fullySpecified": true,
+		          "preferRelative": true,
+		        },
+		        "type": "css",
+		      },
+		      Object {
+		        "dependency": /css-import-local-module/,
+		        "exclude": /\\\\\\.module\\\\\\.\\\\w\\+\\$/i,
+		        "resolve": Object {
+		          "fullySpecified": true,
+		          "preferRelative": true,
+		        },
+		        "type": "css/module",
+		      },
+		      Object {
+		        "dependency": /css-import-global-module/,
+		        "exclude": /\\\\\\.module\\\\\\.\\\\w\\+\\$/i,
+		        "resolve": Object {
+		          "fullySpecified": true,
+		          "preferRelative": true,
+		        },
+		        "type": "css/global",
+		      },
+		      Object {
+		        "parser": Object {
+		          "exportType": "css-style-sheet",
+		        },
+		        "resolve": Object {
+		          "fullySpecified": true,
+		          "preferRelative": true,
+		        },
+		        "with": Object {
+		          "type": "css",
+		        },
+		      },
+		      Object {
+		        "assert": Object {
+		          "type": "css",
+		        },
+		        "parser": Object {
+		          "exportType": "css-style-sheet",
+		        },
+		        "resolve": Object {
+		          "fullySpecified": true,
+		          "preferRelative": true,
+		        },
+		      },
+		      Object {
+		        "resolve": Object {
+		          "fullySpecified": true,
+		          "preferRelative": true,
+		        },
+		        "test": /\\\\\\.html\\$/i,
+		        "type": "html",
+		      },
+		      Object {
+		        "mimetype": "text/html",
+		        "resolve": Object {
+		          "fullySpecified": true,
+		          "preferRelative": true,
+		        },
+		        "type": "html",
+		      },
+		      Object {
+		        "dependency": "html-srcdoc",
+		        "generator": Object {
+		          "extract": "inline",
+		        },
+		        "resolve": Object {
+		          "fullySpecified": true,
+		          "preferRelative": true,
+		        },
+		      },
+		      Object {
+		        "dependency": "html-style",
+		        "parser": Object {
+		          "exportType": "text",
+		        },
+		        "resolve": Object {
+		          "fullySpecified": true,
+		          "preferRelative": true,
+		        },
+		      },
+		      Object {
+		        "dependency": "html-style-attribute",
+		        "parser": Object {
+		          "as": "block-contents",
+		          "exportType": "text",
+		        },
+		        "resolve": Object {
+		          "fullySpecified": true,
+		          "preferRelative": true,
+		        },
+		      },
+		      Object {
 		        "dependency": "url",
 		        "oneOf": Array [
 		          Object {
@@ -288,6 +429,35 @@ describe("snapshots", () => {
 		      },
 		    ],
 		    "generator": Object {
+		      "css": Object {
+		        "esModule": true,
+		        "exportsOnly": false,
+		      },
+		      "css/auto": Object {
+		        "exportsConvention": "as-is",
+		        "localIdentHashDigest": "base64url",
+		        "localIdentHashDigestLength": 6,
+		        "localIdentHashFunction": "md4",
+		        "localIdentHashSalt": undefined,
+		        "localIdentName": "[fullhash]",
+		      },
+		      "css/global": Object {
+		        "exportsConvention": "as-is",
+		        "localIdentHashDigest": "base64url",
+		        "localIdentHashDigestLength": 6,
+		        "localIdentHashFunction": "md4",
+		        "localIdentHashSalt": undefined,
+		        "localIdentName": "[fullhash]",
+		      },
+		      "css/module": Object {
+		        "exportsConvention": "as-is",
+		        "localIdentHashDigest": "base64url",
+		        "localIdentHashDigestLength": 6,
+		        "localIdentHashFunction": "md4",
+		        "localIdentHashSalt": undefined,
+		        "localIdentName": "[fullhash]",
+		      },
+		      "html": Object {},
 		      "json": Object {
 		        "JSONParse": true,
 		      },
@@ -298,6 +468,38 @@ describe("snapshots", () => {
 		        "dataUrlCondition": Object {
 		          "maxSize": 8096,
 		        },
+		      },
+		      "css": Object {
+		        "import": true,
+		        "namedExports": true,
+		        "url": true,
+		      },
+		      "css/auto": Object {
+		        "animation": true,
+		        "container": true,
+		        "customIdents": true,
+		        "dashedIdents": true,
+		        "function": true,
+		        "grid": true,
+		      },
+		      "css/global": Object {
+		        "animation": true,
+		        "container": true,
+		        "customIdents": true,
+		        "dashedIdents": true,
+		        "function": true,
+		        "grid": true,
+		      },
+		      "css/module": Object {
+		        "animation": true,
+		        "container": true,
+		        "customIdents": true,
+		        "dashedIdents": true,
+		        "function": true,
+		        "grid": true,
+		      },
+		      "html": Object {
+		        "sources": true,
 		      },
 		      "javascript": Object {
 		        "anonymousDefaultExportName": true,
@@ -384,6 +586,7 @@ describe("snapshots", () => {
 		      "chunks": "async",
 		      "defaultSizeTypes": Array [
 		        "javascript",
+		        "css",
 		        "unknown",
 		      ],
 		      "enforceSizeThreshold": 30000,
@@ -534,6 +737,54 @@ describe("snapshots", () => {
 		          "...",
 		        ],
 		      },
+		      "css-import": Object {
+		        "conditionNames": Array [
+		          "webpack",
+		          "production",
+		          "style",
+		        ],
+		        "extensions": Array [
+		          ".css",
+		        ],
+		        "mainFields": Array [
+		          "style",
+		          "...",
+		        ],
+		        "mainFiles": Array [],
+		        "preferRelative": true,
+		      },
+		      "css-import-global-module": Object {
+		        "conditionNames": Array [
+		          "webpack",
+		          "production",
+		          "style",
+		        ],
+		        "extensions": Array [
+		          ".css",
+		        ],
+		        "mainFields": Array [
+		          "style",
+		          "...",
+		        ],
+		        "mainFiles": Array [],
+		        "preferRelative": true,
+		      },
+		      "css-import-local-module": Object {
+		        "conditionNames": Array [
+		          "webpack",
+		          "production",
+		          "style",
+		        ],
+		        "extensions": Array [
+		          ".css",
+		        ],
+		        "mainFields": Array [
+		          "style",
+		          "...",
+		        ],
+		        "mainFiles": Array [],
+		        "preferRelative": true,
+		      },
 		      "esm": Object {
 		        "aliasFields": Array [
 		          "browser",
@@ -548,6 +799,8 @@ describe("snapshots", () => {
 		          ".js",
 		          ".json",
 		          ".wasm",
+		          ".html",
+		          ".css",
 		        ],
 		        "mainFields": Array [
 		          "browser",
@@ -590,6 +843,8 @@ describe("snapshots", () => {
 		          ".js",
 		          ".json",
 		          ".wasm",
+		          ".html",
+		          ".css",
 		        ],
 		        "mainFields": Array [
 		          "browser",
@@ -656,6 +911,8 @@ describe("snapshots", () => {
 		          ".js",
 		          ".json",
 		          ".wasm",
+		          ".html",
+		          ".css",
 		        ],
 		        "mainFields": Array [
 		          "browser",
@@ -678,6 +935,8 @@ describe("snapshots", () => {
 		          ".js",
 		          ".json",
 		          ".wasm",
+		          ".html",
+		          ".css",
 		        ],
 		        "mainFields": Array [
 		          "browser",
@@ -961,6 +1220,10 @@ describe("snapshots", () => {
 		-   "devtool": false,
 		+   "devtool": Array [
 		+     Object {
+		+       "type": "css",
+		+       "use": "source-map",
+		+     },
+		+     Object {
 		+       "type": "javascript",
 		+       "use": "eval",
 		+     },
@@ -968,6 +1231,15 @@ describe("snapshots", () => {
 		@@ ... @@
 		-   "mode": "none",
 		+   "mode": "development",
+		@@ ... @@
+		-         "localIdentName": "[fullhash]",
+		+         "localIdentName": "[uniqueName]-[id]-[local]",
+		@@ ... @@
+		-         "localIdentName": "[fullhash]",
+		+         "localIdentName": "[uniqueName]-[id]-[local]",
+		@@ ... @@
+		-         "localIdentName": "[fullhash]",
+		+         "localIdentName": "[uniqueName]-[id]-[local]",
 		@@ ... @@
 		-         "exportsDepth": Infinity,
 		+         "exportsDepth": 1,
@@ -992,6 +1264,15 @@ describe("snapshots", () => {
 		-     "strictModuleResolution": false,
 		+     "strictModuleResolution": true,
 		@@ ... @@
+		-           "production",
+		+           "development",
+		@@ ... @@
+		-           "production",
+		+           "development",
+		@@ ... @@
+		-           "production",
+		+           "development",
+		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
 		@@ ... @@
@@ -1009,36 +1290,16 @@ describe("snapshots", () => {
 		+ Received
 
 		@@ ... @@
+		-     "asyncWebAssembly": true,
+		+     "asyncWebAssembly": false,
+		@@ ... @@
 		-     "syncWebAssembly": false,
 		+     "syncWebAssembly": true,
 		@@ ... @@
-		+       },
-		+       Object {
-		+         "rules": Array [
-		+           Object {
-		+             "descriptionData": Object {
-		+               "type": "module",
-		+             },
-		+             "resolve": Object {
-		+               "fullySpecified": true,
-		+             },
-		+           },
-		+         ],
-		+         "test": /\\.wasm$/i,
+		-         "type": "webassembly/async",
 		+         "type": "webassembly/sync",
-		+       },
-		+       Object {
-		+         "mimetype": "application/wasm",
-		+         "rules": Array [
-		+           Object {
-		+             "descriptionData": Object {
-		+               "type": "module",
-		+             },
-		+             "resolve": Object {
-		+               "fullySpecified": true,
-		+             },
-		+           },
-		+         ],
+		@@ ... @@
+		-         "type": "webassembly/async",
 		+         "type": "webassembly/sync",
 	`)
 	);
@@ -1112,43 +1373,7 @@ describe("snapshots", () => {
 	);
 
 	test("async wasm", { experiments: { asyncWebAssembly: true } }, (e) =>
-		e.toMatchInlineSnapshot(`
-		- Expected
-		+ Received
-
-		@@ ... @@
-		-     "asyncWebAssembly": false,
-		+     "asyncWebAssembly": true,
-		@@ ... @@
-		+       },
-		+       Object {
-		+         "rules": Array [
-		+           Object {
-		+             "descriptionData": Object {
-		+               "type": "module",
-		+             },
-		+             "resolve": Object {
-		+               "fullySpecified": true,
-		+             },
-		+           },
-		+         ],
-		+         "test": /\\.wasm$/i,
-		+         "type": "webassembly/async",
-		+       },
-		+       Object {
-		+         "mimetype": "application/wasm",
-		+         "rules": Array [
-		+           Object {
-		+             "descriptionData": Object {
-		+               "type": "module",
-		+             },
-		+             "resolve": Object {
-		+               "fullySpecified": true,
-		+             },
-		+           },
-		+         ],
-		+         "type": "webassembly/async",
-	`)
+		e.toMatchInlineSnapshot("Compared values have no visual difference.")
 	);
 
 	test(
@@ -1160,40 +1385,8 @@ describe("snapshots", () => {
 			+ Received
 
 			@@ ... @@
-			-     "asyncWebAssembly": false,
-			+     "asyncWebAssembly": true,
-			@@ ... @@
 			-     "syncWebAssembly": false,
 			+     "syncWebAssembly": true,
-			@@ ... @@
-			+       },
-			+       Object {
-			+         "rules": Array [
-			+           Object {
-			+             "descriptionData": Object {
-			+               "type": "module",
-			+             },
-			+             "resolve": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         ],
-			+         "test": /\\.wasm$/i,
-			+         "type": "webassembly/async",
-			+       },
-			+       Object {
-			+         "mimetype": "application/wasm",
-			+         "rules": Array [
-			+           Object {
-			+             "descriptionData": Object {
-			+               "type": "module",
-			+             },
-			+             "resolve": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         ],
-			+         "type": "webassembly/async",
 		`)
 	);
 
@@ -1517,6 +1710,9 @@ describe("snapshots", () => {
 		-     "target": "web",
 		+     "target": "node",
 		@@ ... @@
+		-         "exportsOnly": false,
+		+         "exportsOnly": true,
+		@@ ... @@
 		-         "createRequire": false,
 		+         "createRequire": true,
 		@@ ... @@
@@ -1664,6 +1860,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "target": "web",
 		+     "target": "deno",
+		@@ ... @@
+		-         "exportsOnly": false,
+		+         "exportsOnly": true,
 		@@ ... @@
 		-         "createRequire": false,
 		+         "createRequire": true,
@@ -1841,6 +2040,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "target": "web",
 		+     "target": "deno",
+		@@ ... @@
+		-         "exportsOnly": false,
+		+         "exportsOnly": true,
 		@@ ... @@
 		-         "createRequire": false,
 		+         "createRequire": true,
@@ -2025,6 +2227,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "target": "web",
 		+     "target": "bun",
+		@@ ... @@
+		-         "exportsOnly": false,
+		+         "exportsOnly": true,
 		@@ ... @@
 		-         "createRequire": false,
 		+         "createRequire": true,
@@ -2211,6 +2416,9 @@ describe("snapshots", () => {
 		-     "target": "web",
 		+     "target": "bun",
 		@@ ... @@
+		-         "exportsOnly": false,
+		+         "exportsOnly": true,
+		@@ ... @@
 		-         "createRequire": false,
 		+         "createRequire": true,
 		@@ ... @@
@@ -2362,6 +2570,9 @@ describe("snapshots", () => {
 		-       "document": true,
 		+       "document": false,
 		@@ ... @@
+		-         "exportsOnly": false,
+		+         "exportsOnly": true,
+		@@ ... @@
 		-     "chunkLoading": "jsonp",
 		+     "chunkLoading": "import-scripts",
 		@@ ... @@
@@ -2399,6 +2610,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "target": "web",
 		+     "target": "electron-main",
+		@@ ... @@
+		-         "exportsOnly": false,
+		+         "exportsOnly": true,
 		@@ ... @@
 		-         "createRequire": false,
 		+         "createRequire": true,
@@ -2533,6 +2747,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "target": "web",
 		+     "target": "electron-preload",
+		@@ ... @@
+		-         "exportsOnly": false,
+		+         "exportsOnly": true,
 		@@ ... @@
 		-         "createRequire": false,
 		+         "createRequire": true,
@@ -3525,6 +3742,10 @@ describe("snapshots", () => {
 			-   "devtool": false,
 			+   "devtool": Array [
 			+     Object {
+			+       "type": "css",
+			+       "use": "source-map",
+			+     },
+			+     Object {
 			+       "type": "javascript",
 			+       "use": "eval",
 			+     },
@@ -3532,6 +3753,15 @@ describe("snapshots", () => {
 			@@ ... @@
 			-   "mode": "none",
 			+   "mode": "development",
+			@@ ... @@
+			-         "localIdentName": "[fullhash]",
+			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			@@ ... @@
+			-         "localIdentName": "[fullhash]",
+			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			@@ ... @@
+			-         "localIdentName": "[fullhash]",
+			+         "localIdentName": "[uniqueName]-[id]-[local]",
 			@@ ... @@
 			-         "exportsDepth": Infinity,
 			+         "exportsDepth": 1,
@@ -3555,6 +3785,15 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "strictModuleResolution": false,
 			+     "strictModuleResolution": true,
+			@@ ... @@
+			-           "production",
+			+           "development",
+			@@ ... @@
+			-           "production",
+			+           "development",
+			@@ ... @@
+			-           "production",
+			+           "development",
 			@@ ... @@
 			-     "cache": false,
 			+     "cache": true,
@@ -3602,20 +3841,14 @@ describe("snapshots", () => {
 			+     "version": "",
 			+   },
 			@@ ... @@
-			-     "asyncWebAssembly": false,
 			-     "backCompat": true,
-			+     "asyncWebAssembly": true,
 			+     "backCompat": false,
 			@@ ... @@
 			-     "cacheUnaffected": false,
-			-     "css": undefined,
 			+     "cacheUnaffected": true,
-			+     "css": true,
 			@@ ... @@
 			-     "futureDefaults": false,
-			-     "html": undefined,
 			+     "futureDefaults": true,
-			+     "html": true,
 			@@ ... @@
 			-     "typescript": undefined,
 			+     "typescript": true,
@@ -3623,156 +3856,6 @@ describe("snapshots", () => {
 			-     "progress": false,
 			+     "progress": "auto",
 			@@ ... @@
-			+           ],
-			+         },
-			+         "resolve": Object {
-			+           "byDependency": Object {
-			+             "esm": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         },
-			+         "type": "javascript/esm",
-			+       },
-			+       Object {
-			+         "rules": Array [
-			+           Object {
-			+             "descriptionData": Object {
-			+               "type": "module",
-			+             },
-			+             "resolve": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         ],
-			+         "test": /\\.wasm$/i,
-			+         "type": "webassembly/async",
-			+       },
-			+       Object {
-			+         "mimetype": "application/wasm",
-			+         "rules": Array [
-			+           Object {
-			+             "descriptionData": Object {
-			+               "type": "module",
-			+             },
-			+             "resolve": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         ],
-			+         "type": "webassembly/async",
-			+       },
-			+       Object {
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+         "test": /\\.css$/i,
-			+         "type": "css/auto",
-			+       },
-			+       Object {
-			+         "mimetype": "text/css+module",
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+         "type": "css/module",
-			+       },
-			+       Object {
-			+         "mimetype": "text/css",
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+         "type": "css",
-			+       },
-			+       Object {
-			+         "dependency": /css-import-local-module/,
-			+         "exclude": /\\.module\\.\\w+$/i,
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+         "type": "css/module",
-			+       },
-			+       Object {
-			+         "dependency": /css-import-global-module/,
-			+         "exclude": /\\.module\\.\\w+$/i,
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+         "type": "css/global",
-			+       },
-			+       Object {
-			+         "parser": Object {
-			+           "exportType": "css-style-sheet",
-			+         },
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+         "with": Object {
-			+           "type": "css",
-			+         },
-			+       },
-			+       Object {
-			+         "assert": Object {
-			+           "type": "css",
-			+         },
-			+         "parser": Object {
-			+           "exportType": "css-style-sheet",
-			+         },
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+       },
-			+       Object {
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+         "test": /\\.html$/i,
-			+         "type": "html",
-			+       },
-			+       Object {
-			+         "mimetype": "text/html",
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+         "type": "html",
-			+       },
-			+       Object {
-			+         "dependency": "html-srcdoc",
-			+         "generator": Object {
-			+           "extract": "inline",
-			+         },
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+       },
-			+       Object {
-			+         "dependency": "html-style",
-			+         "parser": Object {
-			+           "exportType": "text",
-			+         },
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+       },
-			+       Object {
-			+         "dependency": "html-style-attribute",
-			+         "parser": Object {
-			+           "as": "block-contents",
-			+           "exportType": "text",
-			+         },
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
 			+         },
 			+       },
 			+       Object {
@@ -3807,79 +3890,35 @@ describe("snapshots", () => {
 			+       Object {
 			+         "descriptionData": Object {
 			+           "type": "commonjs",
-			+         },
+			@@ ... @@
 			+         "test": /\\.ts$/i,
 			+         "type": "javascript/dynamic",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "mimetype": Object {
 			+           "or": Array [
 			+             "text/typescript",
 			+             "application/typescript",
-			@@ ... @@
-			+       "css": Object {
-			+         "esModule": true,
-			+         "exportsOnly": false,
-			+       },
-			+       "css/auto": Object {
-			+         "exportsConvention": "as-is",
-			+         "localIdentHashDigest": "base64url",
-			+         "localIdentHashDigestLength": 6,
-			+         "localIdentHashFunction": "xxhash64",
-			+         "localIdentHashSalt": undefined,
-			+         "localIdentName": "[fullhash]",
-			+       },
-			+       "css/global": Object {
-			+         "exportsConvention": "as-is",
-			+         "localIdentHashDigest": "base64url",
-			+         "localIdentHashDigestLength": 6,
-			+         "localIdentHashFunction": "xxhash64",
-			+         "localIdentHashSalt": undefined,
-			+         "localIdentName": "[fullhash]",
-			+       },
-			+       "css/module": Object {
-			+         "exportsConvention": "as-is",
-			+         "localIdentHashDigest": "base64url",
-			+         "localIdentHashDigestLength": 6,
-			+         "localIdentHashFunction": "xxhash64",
-			+         "localIdentHashSalt": undefined,
-			+         "localIdentName": "[fullhash]",
-			+       },
-			+       "html": Object {},
-			@@ ... @@
+			+           ],
 			+         },
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "type": "javascript/esm",
 			+       },
-			+       "css": Object {
-			+         "import": true,
-			+         "namedExports": true,
-			+         "url": true,
-			+       },
-			+       "css/auto": Object {
-			+         "animation": true,
-			+         "container": true,
-			+         "customIdents": true,
-			+         "dashedIdents": true,
-			+         "function": true,
-			+         "grid": true,
-			+       },
-			+       "css/global": Object {
-			+         "animation": true,
-			+         "container": true,
-			+         "customIdents": true,
-			+         "dashedIdents": true,
-			+         "function": true,
-			+         "grid": true,
-			+       },
-			+       "css/module": Object {
-			+         "animation": true,
-			+         "container": true,
-			+         "customIdents": true,
-			+         "dashedIdents": true,
-			+         "function": true,
-			+         "grid": true,
+			+       Object {
 			@@ ... @@
-			+       "html": Object {
-			+         "sources": true,
+			-         "localIdentHashFunction": "md4",
+			+         "localIdentHashFunction": "xxhash64",
+			@@ ... @@
+			-         "localIdentHashFunction": "md4",
+			+         "localIdentHashFunction": "xxhash64",
+			@@ ... @@
+			-         "localIdentHashFunction": "md4",
+			+         "localIdentHashFunction": "xxhash64",
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -3895,8 +3934,6 @@ describe("snapshots", () => {
 			+     "__dirname": "warn-mock",
 			+     "__filename": "warn-mock",
 			+     "global": "warn",
-			@@ ... @@
-			+         "css",
 			@@ ... @@
 			-     "charset": true,
 			+     "charset": false,
@@ -3914,63 +3951,12 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           ".ts",
 			@@ ... @@
-			+           "...",
-			+         ],
-			+       },
-			+       "css-import": Object {
-			+         "conditionNames": Array [
-			+           "webpack",
-			+           "production",
-			+           "style",
-			+         ],
-			+         "extensions": Array [
-			+           ".css",
-			+         ],
-			+         "mainFields": Array [
-			+           "style",
-			+           "...",
-			+         ],
-			+         "mainFiles": Array [],
-			+         "preferRelative": true,
-			+       },
-			+       "css-import-global-module": Object {
-			+         "conditionNames": Array [
-			+           "webpack",
-			+           "production",
-			+           "style",
-			+         ],
-			+         "extensions": Array [
-			+           ".css",
-			+         ],
-			+         "mainFields": Array [
-			+           "style",
-			@@ ... @@
-			+         "mainFiles": Array [],
-			+         "preferRelative": true,
-			@@ ... @@
-			+       "css-import-local-module": Object {
-			+         "conditionNames": Array [
-			+           "webpack",
-			+           "production",
-			+           "style",
-			+         ],
-			+         "extensions": Array [
-			+           ".css",
-			+         ],
-			+         "mainFields": Array [
-			+           "style",
-			+           "...",
-			+         ],
-			+         "mainFiles": Array [],
-			+         "preferRelative": true,
-			+       },
-			@@ ... @@
 			+           "typescript",
 			@@ ... @@
 			+           ".html",
 			+           ".ts",
 			@@ ... @@
-			+           ".css",
+			-           ".html",
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -3981,7 +3967,7 @@ describe("snapshots", () => {
 			+           ".html",
 			+           ".ts",
 			@@ ... @@
-			+           ".css",
+			-           ".html",
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -3996,14 +3982,14 @@ describe("snapshots", () => {
 			+           ".html",
 			+           ".ts",
 			@@ ... @@
-			+           ".css",
+			-           ".html",
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
 			+           ".html",
 			+           ".ts",
 			@@ ... @@
-			+           ".css",
+			-           ".html",
 			@@ ... @@
 			-     "cache": false,
 			+     "cache": true,
@@ -4077,6 +4063,7 @@ describe("snapshots", () => {
 			-       "chunks": "async",
 			-       "defaultSizeTypes": Array [
 			-         "javascript",
+			-         "css",
 			-         "unknown",
 			-       ],
 			-       "enforceSizeThreshold": 30000,
@@ -4393,20 +4380,14 @@ describe("snapshots", () => {
 			+ Received
 
 			@@ ... @@
-			-     "asyncWebAssembly": false,
 			-     "backCompat": true,
-			+     "asyncWebAssembly": true,
 			+     "backCompat": false,
 			@@ ... @@
 			-     "cacheUnaffected": false,
-			-     "css": undefined,
 			+     "cacheUnaffected": true,
-			+     "css": true,
 			@@ ... @@
 			-     "futureDefaults": false,
-			-     "html": undefined,
 			+     "futureDefaults": true,
-			+     "html": true,
 			@@ ... @@
 			-     "typescript": undefined,
 			+     "typescript": true,
@@ -4414,159 +4395,6 @@ describe("snapshots", () => {
 			-     "progress": false,
 			+     "progress": "auto",
 			@@ ... @@
-			+           ],
-			+         },
-			+         "resolve": Object {
-			+           "byDependency": Object {
-			+             "esm": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         },
-			+         "type": "javascript/esm",
-			+       },
-			+       Object {
-			+         "rules": Array [
-			+           Object {
-			+             "descriptionData": Object {
-			+               "type": "module",
-			+             },
-			+             "resolve": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         ],
-			+         "test": /\\.wasm$/i,
-			+         "type": "webassembly/async",
-			+       },
-			+       Object {
-			+         "mimetype": "application/wasm",
-			+         "rules": Array [
-			+           Object {
-			+             "descriptionData": Object {
-			+               "type": "module",
-			+             },
-			+             "resolve": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			@@ ... @@
-			+         "type": "webassembly/async",
-			+       },
-			+       Object {
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+         "test": /\\.css$/i,
-			+         "type": "css/auto",
-			+       },
-			+       Object {
-			+         "mimetype": "text/css+module",
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+         "type": "css/module",
-			+       },
-			+       Object {
-			+         "mimetype": "text/css",
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+         "type": "css",
-			+       },
-			+       Object {
-			+         "dependency": /css-import-local-module/,
-			+         "exclude": /\\.module\\.\\w+$/i,
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+         "type": "css/module",
-			+       },
-			+       Object {
-			+         "dependency": /css-import-global-module/,
-			+         "exclude": /\\.module\\.\\w+$/i,
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+         "type": "css/global",
-			@@ ... @@
-			+       Object {
-			+         "parser": Object {
-			+           "exportType": "css-style-sheet",
-			+         },
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+         "with": Object {
-			+           "type": "css",
-			+         },
-			+       },
-			+       Object {
-			+         "assert": Object {
-			+           "type": "css",
-			+         },
-			+         "parser": Object {
-			+           "exportType": "css-style-sheet",
-			+         },
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+       },
-			+       Object {
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+         "test": /\\.html$/i,
-			+         "type": "html",
-			+       },
-			+       Object {
-			+         "mimetype": "text/html",
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+         "type": "html",
-			+       },
-			+       Object {
-			+         "dependency": "html-srcdoc",
-			+         "generator": Object {
-			+           "extract": "inline",
-			+         },
-			@@ ... @@
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+       },
-			+       Object {
-			+         "dependency": "html-style",
-			+         "parser": Object {
-			+           "exportType": "text",
-			+         },
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+       },
-			+       Object {
-			+         "dependency": "html-style-attribute",
-			+         "parser": Object {
-			+           "as": "block-contents",
-			+           "exportType": "text",
-			+         },
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+       },
-			+       Object {
 			+         "resolve": Object {
 			+           "byDependency": Object {
 			+             "esm": Object {
@@ -4582,14 +4410,20 @@ describe("snapshots", () => {
 			+           "type": "module",
 			+         },
 			+         "resolve": Object {
-			@@ ... @@
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
 			+         "test": /\\.ts$/i,
-			@@ ... @@
+			+         "type": "javascript/esm",
 			+       },
 			+       Object {
 			+         "test": /\\.cts$/i,
 			+         "type": "javascript/dynamic",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "descriptionData": Object {
 			+           "type": "commonjs",
 			+         },
@@ -4614,69 +4448,14 @@ describe("snapshots", () => {
 			+       },
 			+       Object {
 			@@ ... @@
-			+       "css": Object {
-			+         "esModule": true,
-			+         "exportsOnly": false,
-			+       },
-			+       "css/auto": Object {
-			+         "exportsConvention": "as-is",
-			+         "localIdentHashDigest": "base64url",
-			+         "localIdentHashDigestLength": 6,
+			-         "localIdentHashFunction": "md4",
 			+         "localIdentHashFunction": "xxhash64",
-			+         "localIdentHashSalt": undefined,
-			+         "localIdentName": "[fullhash]",
-			+       },
-			+       "css/global": Object {
-			+         "exportsConvention": "as-is",
-			+         "localIdentHashDigest": "base64url",
-			+         "localIdentHashDigestLength": 6,
-			+         "localIdentHashFunction": "xxhash64",
-			+         "localIdentHashSalt": undefined,
-			+         "localIdentName": "[fullhash]",
-			+       },
-			+       "css/module": Object {
-			+         "exportsConvention": "as-is",
-			+         "localIdentHashDigest": "base64url",
-			+         "localIdentHashDigestLength": 6,
-			+         "localIdentHashFunction": "xxhash64",
-			+         "localIdentHashSalt": undefined,
-			+         "localIdentName": "[fullhash]",
-			+       },
-			+       "html": Object {},
 			@@ ... @@
-			+         },
-			+       },
-			+       "css": Object {
-			+         "import": true,
-			+         "namedExports": true,
-			+         "url": true,
-			+       },
-			+       "css/auto": Object {
-			+         "animation": true,
-			+         "container": true,
-			+         "customIdents": true,
-			+         "dashedIdents": true,
-			+         "function": true,
-			+         "grid": true,
-			+       },
-			+       "css/global": Object {
-			+         "animation": true,
-			+         "container": true,
-			+         "customIdents": true,
-			+         "dashedIdents": true,
-			+         "function": true,
-			+         "grid": true,
-			+       },
-			+       "css/module": Object {
-			+         "animation": true,
-			+         "container": true,
-			+         "customIdents": true,
-			+         "dashedIdents": true,
-			+         "function": true,
-			+         "grid": true,
+			-         "localIdentHashFunction": "md4",
+			+         "localIdentHashFunction": "xxhash64",
 			@@ ... @@
-			+       "html": Object {
-			+         "sources": true,
+			-         "localIdentHashFunction": "md4",
+			+         "localIdentHashFunction": "xxhash64",
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -4689,8 +4468,6 @@ describe("snapshots", () => {
 			+     "__dirname": "warn-mock",
 			+     "__filename": "warn-mock",
 			+     "global": "warn",
-			@@ ... @@
-			+         "css",
 			@@ ... @@
 			-     "charset": true,
 			+     "charset": false,
@@ -4708,63 +4485,12 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           ".ts",
 			@@ ... @@
-			+           "...",
-			+         ],
-			+       },
-			+       "css-import": Object {
-			+         "conditionNames": Array [
-			+           "webpack",
-			+           "production",
-			+           "style",
-			+         ],
-			+         "extensions": Array [
-			+           ".css",
-			+         ],
-			+         "mainFields": Array [
-			+           "style",
-			+           "...",
-			+         ],
-			+         "mainFiles": Array [],
-			+         "preferRelative": true,
-			+       },
-			+       "css-import-global-module": Object {
-			+         "conditionNames": Array [
-			+           "webpack",
-			+           "production",
-			+           "style",
-			+         ],
-			+         "extensions": Array [
-			+           ".css",
-			+         ],
-			+         "mainFields": Array [
-			+           "style",
-			@@ ... @@
-			+         "mainFiles": Array [],
-			+         "preferRelative": true,
-			@@ ... @@
-			+       "css-import-local-module": Object {
-			+         "conditionNames": Array [
-			+           "webpack",
-			+           "production",
-			+           "style",
-			+         ],
-			+         "extensions": Array [
-			+           ".css",
-			+         ],
-			+         "mainFields": Array [
-			+           "style",
-			+           "...",
-			+         ],
-			+         "mainFiles": Array [],
-			+         "preferRelative": true,
-			+       },
-			@@ ... @@
 			+           "typescript",
 			@@ ... @@
 			+           ".html",
 			+           ".ts",
 			@@ ... @@
-			+           ".css",
+			-           ".html",
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -4775,7 +4501,7 @@ describe("snapshots", () => {
 			+           ".html",
 			+           ".ts",
 			@@ ... @@
-			+           ".css",
+			-           ".html",
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -4790,14 +4516,14 @@ describe("snapshots", () => {
 			+           ".html",
 			+           ".ts",
 			@@ ... @@
-			+           ".css",
+			-           ".html",
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
 			+           ".html",
 			+           ".ts",
 			@@ ... @@
-			+           ".css",
+			-           ".html",
 			@@ ... @@
 			+     ],
 			+     "extensionAlias": Object {
@@ -4836,20 +4562,16 @@ describe("snapshots", () => {
 			+ Received
 
 			@@ ... @@
-			-     "asyncWebAssembly": false,
 			-     "backCompat": true,
-			+     "asyncWebAssembly": true,
 			+     "backCompat": false,
 			@@ ... @@
 			-     "cacheUnaffected": false,
-			-     "css": undefined,
+			-     "css": true,
 			+     "cacheUnaffected": true,
 			+     "css": false,
 			@@ ... @@
 			-     "futureDefaults": false,
-			-     "html": undefined,
 			+     "futureDefaults": true,
-			+     "html": true,
 			@@ ... @@
 			-     "typescript": undefined,
 			+     "typescript": true,
@@ -4857,118 +4579,189 @@ describe("snapshots", () => {
 			-     "progress": false,
 			+     "progress": "auto",
 			@@ ... @@
-			+           ],
-			+         },
-			+         "resolve": Object {
-			+           "byDependency": Object {
-			+             "esm": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         },
-			+         "type": "javascript/esm",
-			+       },
-			+       Object {
-			+         "rules": Array [
-			+           Object {
-			+             "descriptionData": Object {
-			+               "type": "module",
-			+             },
-			+             "resolve": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         ],
-			+         "test": /\\.wasm$/i,
-			+         "type": "webassembly/async",
-			+       },
-			+       Object {
-			+         "mimetype": "application/wasm",
-			+         "rules": Array [
-			+           Object {
-			+             "descriptionData": Object {
-			+               "type": "module",
-			+             },
-			+             "resolve": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         ],
-			+         "type": "webassembly/async",
-			+       },
-			+       Object {
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
+			-         "test": /\\.css$/i,
+			-         "type": "css/auto",
 			+         "test": /\\.html$/i,
 			+         "type": "html",
-			+       },
-			+       Object {
+			@@ ... @@
+			-         "mimetype": "text/css+module",
 			+         "mimetype": "text/html",
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
+			@@ ... @@
+			-         "type": "css/module",
 			+         "type": "html",
-			+       },
-			+       Object {
+			@@ ... @@
+			-         "mimetype": "text/css",
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
 			+         "dependency": "html-srcdoc",
 			+         "generator": Object {
 			+           "extract": "inline",
-			+         },
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
-			+       },
-			+       Object {
-			+         "resolve": Object {
+			@@ ... @@
+			-         "type": "css",
+			-       },
+			-       Object {
+			-         "dependency": /css-import-local-module/,
+			-         "exclude": /\\.module\\.\\w+$/i,
+			@@ ... @@
+			-         "type": "css/module",
+			@@ ... @@
+			-         "dependency": /css-import-global-module/,
+			-         "exclude": /\\.module\\.\\w+$/i,
+			@@ ... @@
 			+           "byDependency": Object {
 			+             "esm": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         },
+			@@ ... @@
+			-           "preferRelative": true,
+			@@ ... @@
+			-         "type": "css/global",
+			@@ ... @@
+			-       Object {
+			-         "parser": Object {
+			-           "exportType": "css-style-sheet",
+			@@ ... @@
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
+			-         },
+			-         "with": Object {
+			-           "type": "css",
 			+         "test": /\\.mts$/i,
 			+         "type": "javascript/esm",
-			+       },
-			+       Object {
+			@@ ... @@
+			-       },
+			@@ ... @@
+			-         "assert": Object {
+			-           "type": "css",
+			-         },
+			-         "parser": Object {
+			-           "exportType": "css-style-sheet",
 			+         "descriptionData": Object {
 			+           "type": "module",
-			+         },
-			+         "resolve": Object {
+			@@ ... @@
 			+           "byDependency": Object {
 			+             "esm": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         },
+			@@ ... @@
+			-           "preferRelative": true,
+			@@ ... @@
+			-       Object {
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
+			@@ ... @@
+			-         "test": /\\.html$/i,
+			-         "type": "html",
 			+         "test": /\\.ts$/i,
 			+         "type": "javascript/esm",
-			+       },
-			+       Object {
+			@@ ... @@
+			-         "mimetype": "text/html",
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
 			+         "test": /\\.cts$/i,
 			+         "type": "javascript/dynamic",
-			+       },
-			+       Object {
+			@@ ... @@
+			-         "type": "html",
+			-       },
+			@@ ... @@
+			-         "dependency": "html-srcdoc",
+			-         "generator": Object {
+			-           "extract": "inline",
 			+         "descriptionData": Object {
 			+           "type": "commonjs",
-			+         },
+			@@ ... @@
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
+			-         },
 			+         "test": /\\.ts$/i,
 			+         "type": "javascript/dynamic",
-			+       },
-			+       Object {
+			@@ ... @@
+			-         "dependency": "html-style",
+			-         "parser": Object {
+			-           "exportType": "text",
 			+         "mimetype": Object {
 			+           "or": Array [
 			+             "text/typescript",
 			+             "application/typescript",
+			+           ],
 			@@ ... @@
-			+       "html": Object {},
+			+           "byDependency": Object {
+			+             "esm": Object {
 			@@ ... @@
-			+       "html": Object {
-			+         "sources": true,
-			+       },
+			-           "preferRelative": true,
+			-         },
+			@@ ... @@
+			-       Object {
+			-         "dependency": "html-style-attribute",
+			-         "parser": Object {
+			-           "as": "block-contents",
+			-           "exportType": "text",
+			@@ ... @@
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
+			@@ ... @@
+			+         "type": "javascript/esm",
+			@@ ... @@
+			-       "css": Object {
+			-         "esModule": true,
+			-         "exportsOnly": false,
+			-       },
+			-       "css/auto": Object {
+			-         "exportsConvention": "as-is",
+			-         "localIdentHashDigest": "base64url",
+			-         "localIdentHashDigestLength": 6,
+			-         "localIdentHashFunction": "md4",
+			-         "localIdentHashSalt": undefined,
+			-         "localIdentName": "[fullhash]",
+			-       },
+			-       "css/global": Object {
+			-         "exportsConvention": "as-is",
+			-         "localIdentHashDigest": "base64url",
+			-         "localIdentHashDigestLength": 6,
+			-         "localIdentHashFunction": "md4",
+			-         "localIdentHashSalt": undefined,
+			-         "localIdentName": "[fullhash]",
+			-       },
+			-       "css/module": Object {
+			-         "exportsConvention": "as-is",
+			-         "localIdentHashDigest": "base64url",
+			-         "localIdentHashDigestLength": 6,
+			-         "localIdentHashFunction": "md4",
+			-         "localIdentHashSalt": undefined,
+			-         "localIdentName": "[fullhash]",
+			-       },
+			@@ ... @@
+			-       "css": Object {
+			-         "import": true,
+			-         "namedExports": true,
+			-         "url": true,
+			-       },
+			-       "css/auto": Object {
+			-         "animation": true,
+			-         "container": true,
+			-         "customIdents": true,
+			-         "dashedIdents": true,
+			-         "function": true,
+			-         "grid": true,
+			-       },
+			-       "css/global": Object {
+			-         "animation": true,
+			-         "container": true,
+			-         "customIdents": true,
+			-         "dashedIdents": true,
+			-         "function": true,
+			-         "grid": true,
+			-       },
+			-       "css/module": Object {
+			-         "animation": true,
+			-         "container": true,
+			-         "customIdents": true,
+			-         "dashedIdents": true,
+			-         "function": true,
+			-         "grid": true,
+			-       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -4981,6 +4774,8 @@ describe("snapshots", () => {
 			+     "__dirname": "warn-mock",
 			+     "__filename": "warn-mock",
 			+     "global": "warn",
+			@@ ... @@
+			-         "css",
 			@@ ... @@
 			-     "charset": true,
 			+     "charset": false,
@@ -4998,23 +4793,63 @@ describe("snapshots", () => {
 			@@ ... @@
 			+           ".ts",
 			@@ ... @@
+			-           "...",
+			-         ],
+			-       },
+			-       "css-import": Object {
+			-         "conditionNames": Array [
+			-           "webpack",
+			-           "production",
+			-           "style",
+			-         ],
+			-         "extensions": Array [
+			-           ".css",
+			-         ],
+			-         "mainFields": Array [
+			-           "style",
+			-           "...",
+			-         ],
+			-         "mainFiles": Array [],
+			-         "preferRelative": true,
+			-       },
+			-       "css-import-global-module": Object {
+			-         "conditionNames": Array [
+			-           "webpack",
+			-           "production",
+			-           "style",
+			-         ],
+			-         "extensions": Array [
+			-           ".css",
+			-         ],
+			-         "mainFields": Array [
+			-           "style",
+			-           "...",
+			-         ],
+			-         "mainFiles": Array [],
+			-         "preferRelative": true,
+			-       },
+			-       "css-import-local-module": Object {
+			-         "conditionNames": Array [
+			-           "webpack",
+			-           "production",
+			-           "style",
+			-         ],
+			-         "extensions": Array [
+			-           ".css",
+			-         ],
+			-         "mainFields": Array [
+			-           "style",
+			@@ ... @@
+			-         "mainFiles": Array [],
+			-         "preferRelative": true,
+			@@ ... @@
 			+           "typescript",
 			@@ ... @@
 			+           ".html",
 			+           ".ts",
 			@@ ... @@
-			+           "typescript",
-			@@ ... @@
-			+           ".ts",
-			@@ ... @@
-			+           "typescript",
-			@@ ... @@
-			+           ".html",
-			+           ".ts",
-			@@ ... @@
-			+           "typescript",
-			@@ ... @@
-			+           ".ts",
+			-           ".html",
+			-           ".css",
 			@@ ... @@
 			+           "typescript",
 			@@ ... @@
@@ -5025,17 +4860,38 @@ describe("snapshots", () => {
 			+           ".html",
 			+           ".ts",
 			@@ ... @@
+			-           ".html",
+			-           ".css",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".ts",
+			@@ ... @@
 			+           "typescript",
 			@@ ... @@
 			+           ".html",
 			+           ".ts",
 			@@ ... @@
-			+     ],
+			-           ".html",
+			-           ".css",
+			@@ ... @@
+			+           "typescript",
+			@@ ... @@
+			+           ".html",
+			+           ".ts",
+			@@ ... @@
+			-           ".html",
+			-           ".css",
+			@@ ... @@
 			+     "extensionAlias": Object {
 			+       ".cjs": Array [
 			+         ".cjs",
 			+         ".cts",
-			@@ ... @@
+			+       ],
 			+       ".js": Array [
 			+         ".js",
 			+         ".ts",
@@ -5100,6 +4956,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "target": "web",
 			+     "target": "node",
+			@@ ... @@
+			-         "exportsOnly": false,
+			+         "exportsOnly": true,
 			@@ ... @@
 			-         "createRequire": false,
 			+         "createRequire": true,
@@ -5254,6 +5113,233 @@ describe("snapshots", () => {
 			+   "target": "node14",
 		`)
 	);
+});
+
+describe("experiments.css/html/asyncWebAssembly auto", () => {
+	/**
+	 * @param {Configuration} config configuration
+	 * @returns {{ css: unknown, html: unknown, asyncWebAssembly: unknown }} resolved experiments
+	 */
+	const resolve = (config) => {
+		const { experiments } = getDefaultConfig(config);
+		return {
+			css: experiments.css,
+			html: experiments.html,
+			asyncWebAssembly: experiments.asyncWebAssembly
+		};
+	};
+
+	it("enables the built-in css/html/wasm support by default (no loaders)", () => {
+		expect(resolve({})).toEqual({
+			css: true,
+			html: true,
+			asyncWebAssembly: true
+		});
+	});
+
+	it("keeps css off when a loader is registered for .css files", () => {
+		expect(
+			resolve({ module: { rules: [{ test: /\.css$/i, use: ["css-loader"] }] } })
+		).toEqual({ css: false, html: true, asyncWebAssembly: true });
+	});
+
+	it("keeps css off when a loader also covers .module.css", () => {
+		expect(
+			resolve({
+				module: { rules: [{ test: /\.module\.css$/i, use: ["css-loader"] }] }
+			})
+		).toEqual({ css: false, html: true, asyncWebAssembly: true });
+	});
+
+	it("keeps html off when a loader is registered for .html files", () => {
+		expect(
+			resolve({
+				module: { rules: [{ test: /\.html$/i, loader: "html-loader" }] }
+			})
+		).toEqual({ css: true, html: false, asyncWebAssembly: true });
+	});
+
+	it("keeps async wasm off when a loader is registered for .wasm files", () => {
+		expect(
+			resolve({
+				module: { rules: [{ test: /\.wasm$/i, use: ["wasm-loader"] }] }
+			})
+		).toEqual({ css: true, html: true, asyncWebAssembly: false });
+	});
+
+	it("keeps async wasm off when syncWebAssembly is enabled", () => {
+		expect(resolve({ experiments: { syncWebAssembly: true } })).toEqual({
+			css: true,
+			html: true,
+			asyncWebAssembly: false
+		});
+	});
+
+	it("detects a loader nested in oneOf", () => {
+		expect(
+			resolve({
+				module: {
+					rules: [
+						{
+							test: /\.css$/i,
+							oneOf: [
+								{ resourceQuery: /raw/, type: "asset/source" },
+								{ use: ["css-loader"] }
+							]
+						}
+					]
+				}
+			})
+		).toEqual({ css: false, html: true, asyncWebAssembly: true });
+	});
+
+	it("keeps css off for a loader scoped to specific .css filenames", () => {
+		// A `test` regexp that references the extension counts even when the generic
+		// sample path doesn't match it, so the built-in type doesn't double-process.
+		expect(
+			resolve({
+				module: {
+					rules: [
+						{ test: /source\.css$/, loader: "css-loader" },
+						{ test: /dep\.css$/, loader: "css-loader" }
+					]
+				}
+			})
+		).toEqual({ css: false, html: true, asyncWebAssembly: true });
+	});
+
+	it("keeps css off for a combined sass/less rule that also covers .css", () => {
+		// The common `sass-loader` setup tests `.sass`, `.scss` and `.css` together;
+		// the built-in type must stay off so the loader chain keeps handling .css.
+		expect(
+			resolve({
+				module: {
+					rules: [
+						{
+							test: /\.(sa|sc|c)ss$/i,
+							use: ["style-loader", "css-loader", "sass-loader"]
+						}
+					]
+				}
+			})
+		).toEqual({ css: false, html: true, asyncWebAssembly: true });
+	});
+
+	it("leaves css on when sass/less loaders only handle .scss/.less", () => {
+		// `.scss`/`.less` don't overlap the built-in `/\.css$/i` rule, so enabling
+		// css by default is additive here and does not double-process anything.
+		expect(
+			resolve({
+				module: {
+					rules: [
+						{ test: /\.s[ac]ss$/i, use: ["css-loader", "sass-loader"] },
+						{ test: /\.less$/i, use: ["css-loader", "less-loader"] }
+					]
+				}
+			})
+		).toEqual({ css: true, html: true, asyncWebAssembly: true });
+	});
+
+	it("stays lenient about include/exclude narrowing", () => {
+		// A loader scoped to `include: /src/` already handles those files today, so
+		// the built-in type must stay off even for a resource outside that scope.
+		expect(
+			resolve({
+				module: {
+					rules: [{ test: /\.css$/i, include: /src/, use: ["css-loader"] }]
+				}
+			})
+		).toEqual({ css: false, html: true, asyncWebAssembly: true });
+	});
+
+	it("keeps css on when only an enforce:pre loader targets .css", () => {
+		// A pre/post loader (e.g. stylelint) doesn't establish the module type, so it
+		// must not suppress the built-in css type.
+		expect(
+			resolve({
+				module: {
+					rules: [
+						{ test: /\.css$/i, enforce: "pre", use: ["stylelint-loader"] }
+					]
+				}
+			})
+		).toEqual({ css: true, html: true, asyncWebAssembly: true });
+	});
+
+	it("ignores loaders registered for unrelated extensions", () => {
+		expect(
+			resolve({
+				module: { rules: [{ test: /\.js$/i, use: ["babel-loader"] }] }
+			})
+		).toEqual({ css: true, html: true, asyncWebAssembly: true });
+	});
+
+	it("applies the default dev css source map to auto-enabled css", () => {
+		// `devtool` is resolved after experiments, so auto-enabled css still gets the
+		// default `{ type: "css", use: "source-map" }` dev source map.
+		const { devtool } = getDefaultConfig({ mode: "development" });
+		expect(devtool).toContainEqual({ type: "css", use: "source-map" });
+	});
+
+	it("keeps auto-enabled html below .js in resolve extensions", () => {
+		// Auto-enabled html must not let `x.html` shadow `x.js` for `import "./x"`.
+		const { resolve: r } = getDefaultConfig({});
+		const exts = /** @type {string[]} */ (
+			/** @type {EXPECTED_ANY} */ (r.byDependency).esm.extensions
+		);
+		expect(exts.indexOf(".html")).toBeGreaterThan(exts.indexOf(".js"));
+	});
+
+	it("keeps .html above .js when html is explicitly enabled", () => {
+		// Explicit opt-in preserves the html-as-entry priority (`.html` before `.js`).
+		const { resolve: r } = getDefaultConfig({ experiments: { html: true } });
+		const exts = /** @type {string[]} */ (
+			/** @type {EXPECTED_ANY} */ (r.byDependency).esm.extensions
+		);
+		expect(exts.indexOf(".html")).toBeLessThan(exts.indexOf(".js"));
+	});
+
+	it("respects explicit boolean values", () => {
+		expect(
+			resolve({
+				experiments: { css: false, html: false, asyncWebAssembly: false }
+			})
+		).toEqual({ css: false, html: false, asyncWebAssembly: false });
+		expect(
+			resolve({
+				experiments: { css: true, html: true, asyncWebAssembly: true },
+				module: { rules: [{ test: /\.css$/i, use: ["css-loader"] }] }
+			})
+		).toEqual({ css: true, html: true, asyncWebAssembly: true });
+	});
+
+	it('resolves an explicit "auto" the same as the default', () => {
+		expect(
+			resolve({
+				experiments: { css: "auto", html: "auto", asyncWebAssembly: "auto" }
+			})
+		).toEqual({ css: true, html: true, asyncWebAssembly: true });
+		expect(
+			resolve({
+				experiments: { css: "auto" },
+				module: { rules: [{ test: /\.css$/i, use: ["css-loader"] }] }
+			})
+		).toEqual({ css: false, html: true, asyncWebAssembly: true });
+	});
+
+	it("keeps futureDefaults forcing the experiments on even with a loader", () => {
+		expect(
+			resolve({
+				experiments: { futureDefaults: true },
+				module: {
+					rules: [
+						{ test: /\.css$/i, use: ["css-loader"] },
+						{ test: /\.wasm$/i, use: ["wasm-loader"] }
+					]
+				}
+			})
+		).toEqual({ css: true, html: true, asyncWebAssembly: true });
+	});
 });
 
 describe("Targets", () => {

@@ -1149,8 +1149,17 @@
       "additionalProperties": true,
       "properties": {
         "asyncWebAssembly": {
-          "description": "Support WebAssembly as asynchronous EcmaScript Module.",
-          "type": "boolean",
+          "description": "Support WebAssembly as asynchronous EcmaScript Module. `\"auto\"` (the default) enables it unless a loader is registered for WebAssembly files.",
+          "anyOf": [
+            {
+              "description": "Enable the built-in async WebAssembly support only when no loader is registered for WebAssembly files.",
+              "enum": ["auto"]
+            },
+            {
+              "description": "Enable/disable the built-in async WebAssembly support.",
+              "type": "boolean"
+            }
+          ],
           "experimental": true
         },
         "backCompat": {
@@ -1176,8 +1185,17 @@
           "experimental": true
         },
         "css": {
-          "description": "Enable css support.",
-          "type": "boolean",
+          "description": "Enable css support. `\"auto\"` (the default) enables the built-in CSS support unless a loader is registered for CSS files.",
+          "anyOf": [
+            {
+              "description": "Enable the built-in CSS support only when no loader is registered for CSS files.",
+              "enum": ["auto"]
+            },
+            {
+              "description": "Enable/disable the built-in CSS support.",
+              "type": "boolean"
+            }
+          ],
           "experimental": true
         },
         "deferImport": {
@@ -1191,8 +1209,17 @@
           "experimental": true
         },
         "html": {
-          "description": "Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points.",
-          "type": "boolean",
+          "description": "Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points. `\"auto\"` (the default) enables it unless a loader is registered for HTML files.",
+          "anyOf": [
+            {
+              "description": "Enable the built-in HTML support only when no loader is registered for HTML files.",
+              "enum": ["auto"]
+            },
+            {
+              "description": "Enable/disable the built-in HTML support.",
+              "type": "boolean"
+            }
+          ],
           "experimental": true
         },
         "lazyCompilation": {
@@ -1235,8 +1262,17 @@
       "additionalProperties": false,
       "properties": {
         "asyncWebAssembly": {
-          "description": "Support WebAssembly as asynchronous EcmaScript Module.",
-          "type": "boolean",
+          "description": "Support WebAssembly as asynchronous EcmaScript Module. `\"auto\"` (the default) enables it unless a loader is registered for WebAssembly files.",
+          "anyOf": [
+            {
+              "description": "Enable the built-in async WebAssembly support only when no loader is registered for WebAssembly files.",
+              "enum": ["auto"]
+            },
+            {
+              "description": "Enable/disable the built-in async WebAssembly support.",
+              "type": "boolean"
+            }
+          ],
           "experimental": true
         },
         "backCompat": {
@@ -1259,8 +1295,17 @@
           "experimental": true
         },
         "css": {
-          "description": "Enable css support.",
-          "type": "boolean",
+          "description": "Enable css support. `\"auto\"` (the default) enables the built-in CSS support unless a loader is registered for CSS files.",
+          "anyOf": [
+            {
+              "description": "Enable the built-in CSS support only when no loader is registered for CSS files.",
+              "enum": ["auto"]
+            },
+            {
+              "description": "Enable/disable the built-in CSS support.",
+              "type": "boolean"
+            }
+          ],
           "experimental": true
         },
         "deferImport": {
@@ -1274,8 +1319,17 @@
           "experimental": true
         },
         "html": {
-          "description": "Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points.",
-          "type": "boolean",
+          "description": "Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points. `\"auto\"` (the default) enables it unless a loader is registered for HTML files.",
+          "anyOf": [
+            {
+              "description": "Enable the built-in HTML support only when no loader is registered for HTML files.",
+              "enum": ["auto"]
+            },
+            {
+              "description": "Enable/disable the built-in HTML support.",
+              "type": "boolean"
+            }
+          ],
           "experimental": true
         },
         "lazyCompilation": {
