@@ -159,6 +159,8 @@ Skipping any layer silently breaks the option. After editing schemas, run `yarn 
 
 Run targeted tests — `yarn jest test/<area>` or `yarn jest -t "<name>"`. Don't run `yarn test` unless asked. When updating snapshots (`yarn jest -u`), eyeball the diff first. See [TESTING_DOCS.md](TESTING_DOCS.md) for details.
 
+**Cover every line you add or change.** A commit must not lower coverage: each new branch, fast path, and fallback needs a test that exercises it (Codecov enforces this on the patch, target 90%+). When a change adds branches that integration cases don't reach — e.g. tokenizer fast paths and their cold-path fallbacks — add a focused `*.unittest.js` that drives each branch (both the fast and delegated paths). Check `yarn cover:unit` locally, or the PR's Codecov "patch" report, and add cases until no changed line is missing.
+
 ### 3. Adding a Changeset
 
 Every user-facing change needs a changeset file:
