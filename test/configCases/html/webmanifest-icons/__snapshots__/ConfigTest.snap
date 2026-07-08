@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html webmanifest-icons exported tests should parse a <link rel=manifest> webmanifest and bundle its icon URLs 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+<link rel=\\"manifest\\" href=\\"e9d68669affe7dd0d5bc.webmanifest\\">
+</head>
+<body></body>
+</html>
+"
+`;

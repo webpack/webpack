@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html meta-twitter-player-stream exported tests should resolve the twitter:player:stream meta content as an asset 1`] = `
+"<!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+<meta name=\\"twitter:card\\" content=\\"player\\">
+<meta name=\\"twitter:player:stream\\" content=\\"2bbf24ed4ead06945961.mp4\\">
+</head>
+<body></body>
+</html>
+"
+`;

@@ -1,0 +1,14 @@
+{
+  "name": "Test App",
+  "start_url": "/",
+  "scope": "/app/",
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "./icon-512.png", "sizes": "512x512" },
+    { "src": "https://cdn.example.com/remote.png", "sizes": "48x48" }
+  ],
+  "screenshots": [ { "src": "./screenshot.png", "sizes": "1280x720" } ],
+  "shortcuts": [
+    { "name": "Home", "url": "/home", "icons": [ { "src": "./shortcut.png", "sizes": "96x96" } ] }
+  ]
+}

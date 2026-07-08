@@ -1,0 +1,11 @@
+{
+  "name": "Test App",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/webpack/webpack/refs/heads/main/test/configCases/asset-modules/_images/file.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}

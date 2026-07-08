@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html svg-legacy-references exported tests should resolve references in legacy SVG elements (font-face-uri, cursor, altGlyph, tref, glyphRef) 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>Legacy SVG references</title></head>
+<body>
+<svg xmlns=\\"http://www.w3.org/2000/svg\\">
+	<font><font-face><font-face-src><font-face-uri xlink:href=\\"2c197f0854373cc57b06.ttf\\"/></font-face-src></font-face></font>
+	<cursor xlink:href=\\"c8ae14f4541ddd88406f.png\\"/>
+	<text><altGlyph xlink:href=\\"e1ab5e4441f8f5d35b0f.svg#g\\">x</altGlyph></text>
+	<text><tref xlink:href=\\"e1ab5e4441f8f5d35b0f.svg#t\\"/></text>
+	<glyphRef xlink:href=\\"e1ab5e4441f8f5d35b0f.svg#gr\\"/>
+	<use xlink:href=\\"#local\\"/>
+</svg>
+</body>
+</html>
+"
+`;

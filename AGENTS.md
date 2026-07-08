@@ -17,7 +17,7 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 **Source**
 
 - `lib/` — Main source code (CommonJS only; types declared via JSDoc `@typedef`).
-  - `lib/asset/` — Asset modules (images, fonts, raw files).
+  - `lib/asset/` — Asset modules (images, fonts, raw files); includes the `asset/webmanifest` type that parses `<link rel="manifest">` icon URLs.
   - `lib/async-modules/` — Top-level await.
   - `lib/bun/` — Bun target externals preset (`bun:*` and node.js built-in modules).
   - `lib/cache/` — Filesystem and memory caches.

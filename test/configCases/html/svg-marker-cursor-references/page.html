@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head><title>SVG marker and cursor url()</title></head>
+<body>
+
+<svg width="200" height="200">
+	<defs>
+		<marker id="arrow"><path d="M0,0 L10,5 L0,10 z"/></marker>
+	</defs>
+	<line x1="0" y1="0" x2="100" y2="100"
+		marker="url(./marker.svg#a)"
+		marker-start="url('./marker.svg#s')"
+		marker-mid="url(./marker.svg#m)"
+		marker-end="url(./marker.svg#e)"/>
+	<rect width="50" height="50" cursor="url(./marker.svg)" fill="none"/>
+	<rect width="50" height="50" marker-start="url(#arrow)"/>
+</svg>
+
+</body>
+</html>
