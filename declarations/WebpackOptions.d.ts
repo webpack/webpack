@@ -879,15 +879,17 @@ export type EntryDynamicNormalized =
  */
 export type EntryNormalized = EntryDynamicNormalized | EntryStaticNormalized;
 /**
+ * How an external's exports interoperate with ES module imports, independent of the importing module's strictness (similar to Rollup's `output.interop`). 'default': treat as CommonJS, the default import is the whole exports (Node.js semantics). 'esModule': treat as an ES module namespace, the default import is unboxed to `.default`.
+ */
+export type ExternalItemInterop = "default" | "esModule";
+/**
  * The dependency used for the external.
  */
 export type ExternalItemValue =
 	| string[]
 	| boolean
 	| string
-	| {
-			[k: string]: any;
-	  };
+	| (ExternalItemValueObjectKnown & ExternalItemValueObjectUnknown);
 /**
  * Ignore specific warnings.
  */
@@ -4420,6 +4422,24 @@ export interface ExternalItemObjectKnown {
  */
 export interface ExternalItemObjectUnknown {
 	[k: string]: ExternalItemValue;
+}
+/**
+ * The target of the external with a type, optionally with an 'interop' hint describing how its exports interoperate with ES module imports.
+ */
+export interface ExternalItemValueObjectKnown {
+	/**
+	 * How an external's exports interoperate with ES module imports, independent of the importing module's strictness (similar to Rollup's `output.interop`). 'default': treat as CommonJS, the default import is the whole exports (Node.js semantics). 'esModule': treat as an ES module namespace, the default import is unboxed to `.default`.
+	 */
+	interop?: ExternalItemInterop;
+}
+/**
+ * The target of the external with a type, optionally with an 'interop' hint describing how its exports interoperate with ES module imports.
+ */
+export interface ExternalItemValueObjectUnknown {
+	/**
+	 * The target of the external for a specific external type.
+	 */
+	[k: string]: string[] | string;
 }
 /**
  * Specify options for each generator.

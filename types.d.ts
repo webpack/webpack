@@ -4578,7 +4578,11 @@ declare interface Configuration {
 				data: ExternalItemFunctionData,
 				callback: (
 					err?: null | Error,
-					result?: string | boolean | string[] | { [index: string]: any }
+					result?:
+						| string
+						| boolean
+						| string[]
+						| (ExternalItemValueObjectKnown & ExternalItemValueObjectUnknown)
 				) => void
 		  ) => void)
 		| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)
@@ -8023,7 +8027,11 @@ type ExternalItem =
 			data: ExternalItemFunctionData,
 			callback: (
 				err?: null | Error,
-				result?: string | boolean | string[] | { [index: string]: any }
+				result?:
+					| string
+					| boolean
+					| string[]
+					| (ExternalItemValueObjectKnown & ExternalItemValueObjectUnknown)
 			) => void
 	  ) => void)
 	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>);
@@ -8032,7 +8040,11 @@ type ExternalItemFunction =
 			data: ExternalItemFunctionData,
 			callback: (
 				err?: null | Error,
-				result?: string | boolean | string[] | { [index: string]: any }
+				result?:
+					| string
+					| boolean
+					| string[]
+					| (ExternalItemValueObjectKnown & ExternalItemValueObjectUnknown)
 			) => void
 	  ) => void)
 	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>);
@@ -8093,7 +8105,28 @@ declare interface ExternalItemObjectKnown {
 declare interface ExternalItemObjectUnknown {
 	[index: string]: ExternalItemValue;
 }
-type ExternalItemValue = string | boolean | string[] | { [index: string]: any };
+type ExternalItemValue =
+	| string
+	| boolean
+	| string[]
+	| (ExternalItemValueObjectKnown & ExternalItemValueObjectUnknown);
+
+/**
+ * The target of the external with a type, optionally with an 'interop' hint describing how its exports interoperate with ES module imports.
+ */
+declare interface ExternalItemValueObjectKnown {
+	/**
+	 * How an external's exports interoperate with ES module imports, independent of the importing module's strictness (similar to Rollup's `output.interop`). 'default': treat as CommonJS, the default import is the whole exports (Node.js semantics). 'esModule': treat as an ES module namespace, the default import is unboxed to `.default`.
+	 */
+	interop?: "default" | "esModule";
+}
+
+/**
+ * The target of the external with a type, optionally with an 'interop' hint describing how its exports interoperate with ES module imports.
+ */
+declare interface ExternalItemValueObjectUnknown {
+	[index: string]: string | string[];
+}
 declare class ExternalModule extends Module {
 	/**
 	 * Creates an instance of ExternalModule.
@@ -8103,13 +8136,15 @@ declare class ExternalModule extends Module {
 		type: ExternalsType,
 		userRequest: string,
 		dependencyMeta?:
-			ImportDependencyMeta | CssImportDependencyMeta | AssetDependencyMeta
+			ImportDependencyMeta | CssImportDependencyMeta | AssetDependencyMeta,
+		interop?: "default" | "esModule"
 	);
 	request: ExternalModuleRequest;
 	externalType: ExternalsType;
 	userRequest: string;
 	dependencyMeta?:
 		ImportDependencyMeta | CssImportDependencyMeta | AssetDependencyMeta;
+	interop?: "default" | "esModule";
 
 	/**
 	 * restore unsafe cache data
@@ -8225,7 +8260,11 @@ type Externals =
 			data: ExternalItemFunctionData,
 			callback: (
 				err?: null | Error,
-				result?: string | boolean | string[] | { [index: string]: any }
+				result?:
+					| string
+					| boolean
+					| string[]
+					| (ExternalItemValueObjectKnown & ExternalItemValueObjectUnknown)
 			) => void
 	  ) => void)
 	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)
@@ -27016,7 +27055,11 @@ declare namespace exports {
 		data: ExternalItemFunctionData,
 		callback: (
 			err?: null | Error,
-			result?: string | boolean | string[] | { [index: string]: any }
+			result?:
+				| string
+				| boolean
+				| string[]
+				| (ExternalItemValueObjectKnown & ExternalItemValueObjectUnknown)
 		) => void
 	) => void;
 	export type ExternalItemFunctionDataGetResolve = (
