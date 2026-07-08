@@ -55,6 +55,22 @@ module.exports = [
 	// A separate runtime chunk means the entry script gets a cloned sibling
 	// `<script>` — exercises integrity on cloned tags, not just the entry tag.
 	{ ...config("split", true), optimization: { runtimeChunk: "single" } },
+	// An authored `.html` entry whose native `<script>` already carries an
+	// `integrity` attribute — the content-specific author value must be
+	// replaced by the per-chunk one, not left beside it as a duplicate.
+	{
+		name: "authored",
+		target: "web",
+		entry: { authored: "./src/authored.html" },
+		output: {
+			filename: "[name].[contenthash].js",
+			htmlFilename: "authored.html",
+			crossOriginLoading: "anonymous",
+			html: { integrity: true }
+		},
+		experiments: { html: true },
+		plugins: [copyTest]
+	},
 	// A custom element mapped to a `script` source type synthesizes a fresh
 	// `<script>` for its runtime sibling — exercises integrity on built (not
 	// cloned) tags. The entry is an authored `.html`, so no wrapping happens.

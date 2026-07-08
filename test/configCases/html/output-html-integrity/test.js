@@ -74,3 +74,28 @@ it("integrity: function decides per asset (false skips, array sets algorithms)",
 	expect(html).toMatch(/<link rel="stylesheet"[^>]*>/);
 	expect(html).not.toMatch(/<link[^>]*integrity/);
 });
+
+it("integrity replaces an authored `integrity` attribute instead of duplicating it", () => {
+	const html = readHtml("authored.html");
+	const tags = tagsWithIntegrity(html);
+	// Exactly one `integrity` on the entry `<script>`: the authored value is
+	// dropped (content-specific) and the correct per-chunk one put in its place.
+	expect(tags).toHaveLength(1);
+	expect((html.match(/integrity=/g) || []).length).toBe(1);
+	expect(html).not.toContain("authorPlaceholder");
+	expect(tags[0].kind).toBe("script");
+	expect(sriMatches(tags[0].url, tags[0].integrity)).toBe(true);
+});
+
+it("no emitted JS ships an unresolved integrity sentinel", () => {
+	// A JS chunk can embed the HTML string; its sentinel must be stripped, not
+	// resolved late (that would corrupt the chunk's content hash and its SRI).
+	for (const file of fs.readdirSync(__dirname)) {
+		// Skip this test file itself — copied in as `test.js`, it mentions the
+		// sentinel in assertions below.
+		if (!file.endsWith(".js") || file === "test.js") continue;
+		expect(read(file).toString("utf-8")).not.toContain(
+			"__WEBPACK_HTML_INTEGRITY__"
+		);
+	}
+});
