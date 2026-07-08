@@ -3758,7 +3758,8 @@ export interface JavascriptParserOptions {
 	 */
 	importMeta?: boolean | "preserve-unknown" | ImportMetaParserOptions;
 	/**
-	 * Enable/disable evaluating import.meta.webpackContext.
+	 * @deprecated
+	 * Deprecated in favor of "importMeta" object option with a "webpackContext" field. Enable/disable evaluating import.meta.webpackContext.
 	 */
 	importMetaContext?: boolean;
 	/**

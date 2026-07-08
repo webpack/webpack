@@ -2282,8 +2282,9 @@
           ]
         },
         "importMetaContext": {
-          "description": "Enable/disable evaluating import.meta.webpackContext.",
-          "type": "boolean"
+          "description": "Deprecated in favor of \"importMeta\" object option with a \"webpackContext\" field. Enable/disable evaluating import.meta.webpackContext.",
+          "type": "boolean",
+          "deprecated": true
         },
         "node": {
           "$ref": "#/definitions/Node"
