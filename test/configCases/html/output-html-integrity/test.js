@@ -78,13 +78,17 @@ it("integrity: function decides per asset (false skips, array sets algorithms)",
 it("integrity replaces an authored `integrity` attribute instead of duplicating it", () => {
 	const html = readHtml("authored.html");
 	const tags = tagsWithIntegrity(html);
-	// Exactly one `integrity` on the entry `<script>`: the authored value is
-	// dropped (content-specific) and the correct per-chunk one put in its place.
-	expect(tags).toHaveLength(1);
-	expect((html.match(/integrity=/g) || []).length).toBe(1);
+	// The rewritten entry `<script>` plus the runtime sibling cloned from it.
+	expect(tags.length).toBeGreaterThan(1);
+	// The authored value is dropped (content-specific) on both the rewritten
+	// entry tag and the clone — never left beside the per-chunk one, so the
+	// number of `integrity=` occurrences equals the number of tags (one each).
+	expect((html.match(/integrity=/g) || []).length).toBe(tags.length);
 	expect(html).not.toContain("authorPlaceholder");
-	expect(tags[0].kind).toBe("script");
-	expect(sriMatches(tags[0].url, tags[0].integrity)).toBe(true);
+	for (const tag of tags) {
+		expect(tag.kind).toBe("script");
+		expect(sriMatches(tag.url, tag.integrity)).toBe(true);
+	}
 });
 
 it("no emitted JS ships an unresolved integrity sentinel", () => {

@@ -57,7 +57,10 @@ module.exports = [
 	{ ...config("split", true), optimization: { runtimeChunk: "single" } },
 	// An authored `.html` entry whose native `<script>` already carries an
 	// `integrity` attribute — the content-specific author value must be
-	// replaced by the per-chunk one, not left beside it as a duplicate.
+	// replaced by the per-chunk one, not left beside it as a duplicate. A
+	// single runtime chunk means that authored `<script>` is also cloned for
+	// the runtime sibling, so both the rewritten entry tag and the cloned tag
+	// are exercised.
 	{
 		name: "authored",
 		target: "web",
@@ -68,6 +71,7 @@ module.exports = [
 			crossOriginLoading: "anonymous",
 			html: { integrity: true }
 		},
+		optimization: { runtimeChunk: "single" },
 		experiments: { html: true },
 		plugins: [copyTest]
 	},
