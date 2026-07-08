@@ -113,6 +113,19 @@ module.exports = [
 		experiments: { html: true, css: true },
 		plugins: [copyTest]
 	},
+	// JS importing an HTML module — sentinel must not appear in the JS chunk
+	{
+		name: "js-imports-html",
+		target: "web",
+		entry: { "js-imports-html": "./src/main-with-html.js" },
+		output: {
+			filename: "[name].[contenthash].js",
+			htmlFilename: "js-imports-html-wrapper.html",
+			html: { inline: true }
+		},
+		experiments: { html: true, css: true },
+		plugins: [copyTest]
+	},
 	// inline: true with authored CSS entry — <link> replaced with <style>
 	{
 		name: "css-link",

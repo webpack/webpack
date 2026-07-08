@@ -88,6 +88,13 @@ it("inline: true + integrity does not emit integrity attr on inlined tags", () =
 	expect(html).not.toContain("__WEBPACK_HTML_INTEGRITY__");
 });
 
+it("JS importing HTML module does not leave inline sentinel in the JS chunk", () => {
+	const files = fs.readdirSync(__dirname).filter((f) => f.startsWith("js-imports-html.") && f.endsWith(".js"));
+	expect(files.length).toBeGreaterThan(0);
+	const jsContent = fs.readFileSync(path.resolve(__dirname, files[0]), "utf-8");
+	expect(jsContent).not.toContain("__WEBPACK_HTML_INLINE__");
+});
+
 it("inline: true with authored <link rel=stylesheet> entry inlines CSS as <style>", () => {
 	const html = readHtml("css-link.html");
 	expect(inlineStyles(html).length).toBeGreaterThan(0);
