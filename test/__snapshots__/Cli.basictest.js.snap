@@ -8829,6 +8829,38 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-html-integrity": Object {
+    "configs": Array [
+      Object {
+        "description": "A hash algorithm name passed to Node.js \`crypto.createHash\` (e.g. 'sha256', 'sha384', 'sha512').",
+        "multiple": true,
+        "path": "output.html.integrity[]",
+        "type": "string",
+      },
+      Object {
+        "description": "Add Subresource Integrity (SRI) \`integrity\` attributes to injected \`<script>\`/\`<link>\` tags. \`true\` uses \`['sha384']\`; an array sets the hash algorithms; a function receives each referenced asset and returns the algorithms to use or \`false\` to skip it.",
+        "multiple": false,
+        "path": "output.html.integrity",
+        "type": "boolean",
+      },
+    ],
+    "description": "A hash algorithm name passed to Node.js \`crypto.createHash\` (e.g. 'sha256', 'sha384', 'sha512'). Add Subresource Integrity (SRI) \`integrity\` attributes to injected \`<script>\`/\`<link>\` tags. \`true\` uses \`['sha384']\`; an array sets the hash algorithms; a function receives each referenced asset and returns the algorithms to use or \`false\` to skip it.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-html-integrity-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.html.integrity' configuration. Add Subresource Integrity (SRI) \`integrity\` attributes to injected \`<script>\`/\`<link>\` tags. \`true\` uses \`['sha384']\`; an array sets the hash algorithms; a function receives each referenced asset and returns the algorithms to use or \`false\` to skip it.",
+        "multiple": false,
+        "path": "output.html.integrity",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.html.integrity' configuration. Add Subresource Integrity (SRI) \`integrity\` attributes to injected \`<script>\`/\`<link>\` tags. \`true\` uses \`['sha384']\`; an array sets the hash algorithms; a function receives each referenced asset and returns the algorithms to use or \`false\` to skip it.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-html-script-loading": Object {
     "configs": Array [
       Object {
