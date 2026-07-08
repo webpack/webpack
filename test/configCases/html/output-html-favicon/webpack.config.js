@@ -47,5 +47,31 @@ module.exports = [
 	// disabled
 	config("off", false),
 	// user-provided icon
-	config("custom", "./src/icon.svg")
+	config("custom", "./src/icon.svg"),
+	// authored HTML entry — favicon injected into <head>
+	{
+		name: "authored",
+		target: "web",
+		entry: { authored: "./src/page.html" },
+		output: {
+			filename: "[name].js",
+			htmlFilename: "authored.html",
+			html: true
+		},
+		experiments: { html: true },
+		plugins: [copyTest]
+	},
+	// authored HTML entry — favicon disabled
+	{
+		name: "authored-off",
+		target: "web",
+		entry: { "authored-off": "./src/page-off.html" },
+		output: {
+			filename: "[name].js",
+			htmlFilename: "authored-off.html",
+			html: { favicon: false }
+		},
+		experiments: { html: true },
+		plugins: [copyTest]
+	}
 ];

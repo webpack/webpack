@@ -27,3 +27,20 @@ it("uses a user-provided favicon", () => {
 	expect(link).not.toBeNull();
 	expect(link[0]).toMatch(/href="[^"]+\.svg"/);
 });
+
+it("injects favicon into authored HTML entry", () => {
+	const html = readHtml("authored.html");
+	const link = iconLink(html);
+	expect(link).not.toBeNull();
+	expect(link[0]).toContain('type="image/svg+xml"');
+	expect(link[0]).toMatch(/href="[^"]+\.svg"/);
+});
+
+it("does not inject favicon into authored HTML when favicon: false", () => {
+	expect(iconLink(readHtml("authored-off.html"))).toBeNull();
+});
+
+it("emits the favicon asset for authored HTML entry", () => {
+	const files = fs.readdirSync(__dirname);
+	expect(files.some((f) => f === "favicon.svg")).toBe(true);
+});
