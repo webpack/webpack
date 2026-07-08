@@ -81,5 +81,49 @@ module.exports = [
 		},
 		experiments: { html: true, css: true },
 		plugins: [copyTest]
+	},
+	// magic comment with runtimeChunk: siblings must NOT be inlined (forceInline is entry-only)
+	{
+		name: "magic-split",
+		target: "web",
+		entry: { "magic-split": "./src/magic.html" },
+		output: {
+			filename: "[name].[contenthash].js",
+			htmlFilename: "magic-split.html"
+		},
+		optimization: { runtimeChunk: "single" },
+		experiments: { html: true, css: true },
+		plugins: [copyTest]
+	},
+	// inline: false — explicit opt-out, chunks served normally
+	config("no-inline", false),
+	// inline: [] — empty array, no chunks match, served normally
+	config("empty-pattern", []),
+	// inline: true + integrity — inlined chunks must not emit an integrity attr
+	{
+		name: "inline-integrity",
+		target: "web",
+		entry: { "inline-integrity": "./src/main.js" },
+		output: {
+			filename: "[name].[contenthash].js",
+			htmlFilename: "inline-integrity.html",
+			html: { inline: true, integrity: true },
+			crossOriginLoading: "anonymous"
+		},
+		experiments: { html: true, css: true },
+		plugins: [copyTest]
+	},
+	// inline: true with authored CSS entry — <link> replaced with <style>
+	{
+		name: "css-link",
+		target: "web",
+		entry: { "css-link": "./src/style-entry.html" },
+		output: {
+			filename: "[name].[contenthash].js",
+			htmlFilename: "css-link.html",
+			html: { inline: true }
+		},
+		experiments: { html: true, css: true },
+		plugins: [copyTest]
 	}
 ];

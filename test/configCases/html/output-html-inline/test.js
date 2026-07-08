@@ -61,3 +61,37 @@ it("<!-- webpackInline: true --> inlines the tag without output.html.inline", ()
 	expect(scripts.length).toBeGreaterThan(0);
 	expect(scripts[0]).toMatch(/console\.log/);
 });
+
+it("<!-- webpackInline: true --> with runtimeChunk does not inline sibling runtime", () => {
+	const html = readHtml("magic-split.html");
+	// entry tag inlined
+	expect(inlineScripts(html).length).toBeGreaterThan(0);
+	// runtime sibling served normally (forceInline is entry-only)
+	expect(scriptTags(html).some((t) => t.includes("src="))).toBe(true);
+});
+
+it("inline: false serves chunks normally", () => {
+	const html = readHtml("no-inline.html");
+	expect(scriptTags(html).some((t) => t.includes("src="))).toBe(true);
+	expect(inlineScripts(html).length).toBe(0);
+});
+
+it("inline: [] serves chunks normally", () => {
+	const html = readHtml("empty-pattern.html");
+	expect(scriptTags(html).some((t) => t.includes("src="))).toBe(true);
+	expect(inlineScripts(html).length).toBe(0);
+});
+
+it("inline: true + integrity does not emit integrity attr on inlined tags", () => {
+	const html = readHtml("inline-integrity.html");
+	expect(inlineScripts(html).length).toBeGreaterThan(0);
+	expect(html).not.toContain("integrity=");
+	expect(html).not.toContain("__WEBPACK_HTML_INTEGRITY__");
+});
+
+it("inline: true with authored <link rel=stylesheet> entry inlines CSS as <style>", () => {
+	const html = readHtml("css-link.html");
+	expect(inlineStyles(html).length).toBeGreaterThan(0);
+	expect(inlineStyles(html)[0]).toMatch(/color/);
+	expect(linkTags(html).some((t) => t.includes("href="))).toBe(false);
+});
