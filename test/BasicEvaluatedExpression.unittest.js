@@ -232,13 +232,22 @@ describe("BasicEvaluatedExpression", () => {
 	});
 
 	it("should validate regexp flags statically", () => {
-		// cspell:ignore gimy gimys
+		// cspell:ignore gimy gimys dgimsuy gimsvy
 		const isValid = BasicEvaluatedExpression.isValidRegExpFlags;
 		expect(isValid("")).toBe(true);
 		expect(isValid("g")).toBe(true);
 		expect(isValid("gimy")).toBe(true);
+		// modern flags d, s, u, v are valid too
+		expect(isValid("s")).toBe(true);
+		expect(isValid("u")).toBe(true);
+		expect(isValid("d")).toBe(true);
+		expect(isValid("v")).toBe(true);
+		expect(isValid("gimys")).toBe(true);
+		expect(isValid("dgimsuy")).toBe(true);
+		expect(isValid("gimsvy")).toBe(true);
 		expect(isValid("gg")).toBe(false);
 		expect(isValid("q")).toBe(false);
-		expect(isValid("gimys")).toBe(false);
+		// u and v are mutually exclusive
+		expect(isValid("uv")).toBe(false);
 	});
 });

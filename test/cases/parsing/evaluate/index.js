@@ -93,6 +93,10 @@ it("should try to evaluate new RegExp()", function () {
 	expectAOnly(
 		require.context("./regexp", false, new RegExp("(?<!filtered)\\.js$"))
 	);
+	// modern flags (d, s, u, v) must be recognized as valid
+	expectAOnly(
+		require.context("./regexp", false, new RegExp("(?<!filtered)\\.js$", "u"))
+	);
 });
 
 it("should not evaluate new RegExp for redefined RegExp", () => {

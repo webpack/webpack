@@ -120,7 +120,7 @@ Object {
   "t t": "postcss-modules-local-by-default_local_modules_css-t t",
   "test": "postcss-modules-local-by-default_local_modules_css-test",
   "title-align": "--postcss-modules-local-by-default_local_modules_css-title-align",
-  "u-m+ ": "postcss-modules-local-by-default_local_modules_css-u-m+ ",
+  "u-m+": "postcss-modules-local-by-default_local_modules_css-u-m+",
   "😃bounce😃": "postcss-modules-local-by-default_local_modules_css-😃bounce😃",
 }
 `;
@@ -765,7 +765,7 @@ Array [
 #postcss-modules-local-by-default_local_modules_css-\\\\#test {}
 
 /* scope escaped ids (2) */
-#postcss-modules-local-by-default_local_modules_css-u-m\\\\+\\\\ {}
+#postcss-modules-local-by-default_local_modules_css-u-m\\\\+{}
 
 /* scope multiple selectors */
 .postcss-modules-local-by-default_local_modules_css-foo, .postcss-modules-local-by-default_local_modules_css-baz { a_value: some-value; }

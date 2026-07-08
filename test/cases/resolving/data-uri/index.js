@@ -10,6 +10,20 @@ it("should require js module from ascii data-uri", function () {
 	expect(mod.fn()).toBe("Hello world");
 });
 
+it("should require js module from utf-8 percent-encoded data-uri", function () {
+	const mod = require(
+		'data:application/node;charset=utf-8,module.exports={text:"caf%C3%A9 %E2%98%95",emoji:"%F0%9F%98%80"}'
+	);
+	expect(mod.text).toBe("café ☕");
+	expect(mod.emoji).toBe("😀");
+});
+
+it("should keep the raw body of a non-percent-encoded data-uri", function () {
+	// A bare `%` is invalid percent-encoding, so decoding falls back to the raw body.
+	const mod = require('data:application/node,module.exports={pct:"100%"}');
+	expect(mod.pct).toBe("100%");
+});
+
 it("should import js module from base64 data-uri", function () {
 	const mod = require("./module-with-imports");
 	expect(mod.number).toBe(42);

@@ -75,6 +75,18 @@ describe("css identifier utils", () => {
 			["\\0 ", "�"],
 			// surrogate -> replacement character
 			["\\D800 ", "�"],
+			// a full 6-digit hex escape still consumes its trailing space
+			["\\000041 b", "Ab"],
+			["\\10FFFF Z", "\u{10FFFF}Z"],
+			// any CSS whitespace terminates the escape, not just a space
+			["\\41\tb", "Ab"],
+			["\\41\nb", "Ab"],
+			["\\41\fb", "Ab"],
+			["\\41\rb", "Ab"],
+			// a CRLF terminator is consumed as a single newline
+			["\\41\r\nb", "Ab"],
+			// a 7th hex digit is not a terminator and stays literal
+			["\\000041b", "Ab"],
 			// no escapes -> fast path returns input
 			["plain-identifier", "plain-identifier"]
 		];
