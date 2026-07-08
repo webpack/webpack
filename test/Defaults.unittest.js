@@ -427,6 +427,11 @@ describe("snapshots", () => {
 		          "type": "bytes",
 		        },
 		      },
+		      Object {
+		        "dependency": "url",
+		        "test": /\\\\\\.webmanifest\\$/i,
+		        "type": "asset/webmanifest",
+		      },
 		    ],
 		    "generator": Object {
 		      "css": Object {
