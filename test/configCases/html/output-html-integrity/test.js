@@ -91,6 +91,32 @@ it("integrity replaces an authored `integrity` attribute instead of duplicating 
 	}
 });
 
+it("integrity covers preload links (with crossorigin) but not prefetch", () => {
+	const html = readHtml("preload.html");
+	const tags = tagsWithIntegrity(html);
+	// Two `<link rel="preload" as="script">`, one `as="style"`, and the entry
+	// `<script>` — each carrying a correct SRI hash of its referenced file.
+	const links = tags.filter((tag) => tag.kind === "link");
+	expect(links.length).toBe(3);
+	for (const tag of tags) {
+		expect(sriMatches(tag.url, tag.integrity)).toBe(true);
+	}
+	// No duplicated `integrity`, and the authored value was replaced.
+	expect((html.match(/integrity=/g) || []).length).toBe(tags.length);
+	expect(html).not.toContain("authorPreload");
+	// SRI needs CORS: every preload `<link>` carries `crossorigin`.
+	for (const tag of html.match(/<link[^>]*>/g) || []) {
+		if (/rel="preload"/.test(tag)) {
+			expect(tag).toMatch(/crossorigin="anonymous"/);
+		}
+	}
+	// `prefetch` is not integrity-eligible per the SRI spec — left untouched.
+	const prefetch = html.match(/<link[^>]*rel="prefetch"[^>]*>/);
+	expect(prefetch).toBeTruthy();
+	expect(prefetch[0]).not.toMatch(/integrity=/);
+	expect(prefetch[0]).not.toMatch(/crossorigin=/);
+});
+
 it("no emitted JS ships an unresolved integrity sentinel", () => {
 	// A JS chunk can embed the HTML string; its sentinel must be stripped, not
 	// resolved late (that would corrupt the chunk's content hash and its SRI).

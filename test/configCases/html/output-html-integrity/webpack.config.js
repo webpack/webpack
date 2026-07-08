@@ -75,6 +75,22 @@ module.exports = [
 		experiments: { html: true },
 		plugins: [copyTest]
 	},
+	// An authored `.html` with `preload`/`prefetch` resource hints: `preload`
+	// links are integrity-eligible (SRI) and must get `crossorigin`/`integrity`
+	// (including replacing an authored value), while `prefetch` gets neither.
+	{
+		name: "preload",
+		target: "web",
+		entry: { preload: "./src/preload.html" },
+		output: {
+			filename: "[name].[contenthash].js",
+			htmlFilename: "preload.html",
+			crossOriginLoading: "anonymous",
+			html: { integrity: true }
+		},
+		experiments: { html: true, css: true },
+		plugins: [copyTest]
+	},
 	// A custom element mapped to a `script` source type synthesizes a fresh
 	// `<script>` for its runtime sibling — exercises integrity on built (not
 	// cloned) tags. The entry is an authored `.html`, so no wrapping happens.
