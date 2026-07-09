@@ -344,6 +344,32 @@ describe("WebpackParser", () => {
 		});
 	});
 
+	describe("unary and update expressions", () => {
+		it("should parse prefix and postfix operators on the fast path", () => {
+			const { ast } = parse("!x; y++; --z; typeof w; a ** -b;");
+			expect(
+				ast.body
+					.slice(0, 3)
+					.map(
+						(s) =>
+							/** @type {import("estree").ExpressionStatement} */ (s)
+								.expression.type
+					)
+			).toEqual(["UnaryExpression", "UpdateExpression", "UpdateExpression"]);
+		});
+
+		it("should keep acorn's delete and exponentiation checks", () => {
+			expect(() => parse('"use strict"; delete x;')).toThrow(
+				/Deleting local variable in strict mode/
+			);
+			expect(() => parse("class C { #p; m(){ delete this.#p; } }")).toThrow(
+				/Private fields can not be deleted/
+			);
+			expect(() => parse("-a ** 2;")).toThrow(/Unexpected token/);
+			expect(() => parse("1++;")).toThrow(/Assigning to rvalue/);
+		});
+	});
+
 	describe("assignment expressions", () => {
 		it("should parse destructuring, chained and compound assignments", () => {
 			expect(
