@@ -308,6 +308,48 @@ describe("WebpackParser", () => {
 		});
 	});
 
+	describe("subscript parsing", () => {
+		it("should parse optional chains, private members and tagged templates", () => {
+			expect(
+				parse("a?.b; a?.[b]; a?.(); x = f(a, b,); tag`x${1}`;").ast
+			).toBeDefined();
+			expect(
+				parse("class P { #x = 1; m() { return this.#x; } }").ast
+			).toBeDefined();
+		});
+
+		it("should reject optional chaining in new callees and template tags", () => {
+			expect(() => parse("new a?.b();")).toThrow(
+				/Optional chaining cannot appear in the callee/
+			);
+			expect(() => parse("a?.b`t`;")).toThrow(
+				/Optional chaining cannot appear in the tag/
+			);
+		});
+
+		it("should parse async arrows through the call subscript path", () => {
+			expect(
+				parse("const f = async (a, b = 1) => a + b; async(1, 2);").ast
+			).toBeDefined();
+			expect(() => parse("async (await) => 1;")).toThrow(
+				/Cannot use 'await' as identifier inside an async function/
+			);
+		});
+
+		it("should delegate to acorn without ranges and pre-2020 ecmaVersions", () => {
+			expect(parse("a.b(c)[d];", { ranges: false }).ast).toBeDefined();
+			const { ast } = parse("a.b(c);", { ecmaVersion: 10 });
+			const call =
+				/** @type {import("estree").CallExpression} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (ast.body[0])
+						.expression
+				);
+			// acorn only adds `optional` from ecmaVersion 11 on
+			expect("optional" in call.callee).toBe(false);
+		});
+	});
+
 	describe("punctuator fast path", () => {
 		it("should tokenize the single-char punctuators into the right AST", () => {
 			const program = parse("f(a, [b], { c: 1 });").ast;
