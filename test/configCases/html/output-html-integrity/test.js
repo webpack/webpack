@@ -74,3 +74,58 @@ it("integrity: function decides per asset (false skips, array sets algorithms)",
 	expect(html).toMatch(/<link rel="stylesheet"[^>]*>/);
 	expect(html).not.toMatch(/<link[^>]*integrity/);
 });
+
+it("integrity replaces an authored `integrity` attribute instead of duplicating it", () => {
+	const html = readHtml("authored.html");
+	const tags = tagsWithIntegrity(html);
+	// The rewritten entry `<script>` plus the runtime sibling cloned from it.
+	expect(tags.length).toBeGreaterThan(1);
+	// The authored value is dropped (content-specific) on both the rewritten
+	// entry tag and the clone — never left beside the per-chunk one, so the
+	// number of `integrity=` occurrences equals the number of tags (one each).
+	expect((html.match(/integrity=/g) || []).length).toBe(tags.length);
+	expect(html).not.toContain("authorPlaceholder");
+	for (const tag of tags) {
+		expect(tag.kind).toBe("script");
+		expect(sriMatches(tag.url, tag.integrity)).toBe(true);
+	}
+});
+
+it("integrity covers preload links (with crossorigin) but not prefetch", () => {
+	const html = readHtml("preload.html");
+	const tags = tagsWithIntegrity(html);
+	// Two `<link rel="preload" as="script">`, one `as="style"`, and the entry
+	// `<script>` — each carrying a correct SRI hash of its referenced file.
+	const links = tags.filter((tag) => tag.kind === "link");
+	expect(links.length).toBe(3);
+	for (const tag of tags) {
+		expect(sriMatches(tag.url, tag.integrity)).toBe(true);
+	}
+	// No duplicated `integrity`, and the authored value was replaced.
+	expect((html.match(/integrity=/g) || []).length).toBe(tags.length);
+	expect(html).not.toContain("authorPreload");
+	// SRI needs CORS: every preload `<link>` carries `crossorigin`.
+	for (const tag of html.match(/<link[^>]*>/g) || []) {
+		if (/rel="preload"/.test(tag)) {
+			expect(tag).toMatch(/crossorigin="anonymous"/);
+		}
+	}
+	// `prefetch` is not integrity-eligible per the SRI spec — left untouched.
+	const prefetch = html.match(/<link[^>]*rel="prefetch"[^>]*>/);
+	expect(prefetch).toBeTruthy();
+	expect(prefetch[0]).not.toMatch(/integrity=/);
+	expect(prefetch[0]).not.toMatch(/crossorigin=/);
+});
+
+it("no emitted JS ships an unresolved integrity sentinel", () => {
+	// A JS chunk can embed the HTML string; its sentinel must be stripped, not
+	// resolved late (that would corrupt the chunk's content hash and its SRI).
+	for (const file of fs.readdirSync(__dirname)) {
+		// Skip this test file itself — copied in as `test.js`, it mentions the
+		// sentinel in assertions below.
+		if (!file.endsWith(".js") || file === "test.js") continue;
+		expect(read(file).toString("utf-8")).not.toContain(
+			"__WEBPACK_HTML_INTEGRITY__"
+		);
+	}
+});
