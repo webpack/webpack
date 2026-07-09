@@ -344,6 +344,23 @@ describe("WebpackParser", () => {
 		});
 	});
 
+	describe("binary expressions", () => {
+		it("should keep private-in checks and delegate without ranges", () => {
+			expect(
+				parse("class C { #x; m(o){ return #x in o; } }").ast
+			).toBeDefined();
+			// a private name only reaches buildBinary's right side via a chain
+			expect(() =>
+				parse("class C { #x; m(o){ return o in #x in o; } }")
+			).toThrow(/Private identifier can only be left side/);
+			const { ast } = parse("a + b && c;", { ranges: false });
+			expect(
+				/** @type {import("estree").ExpressionStatement} */ (ast.body[0])
+					.expression.type
+			).toBe("LogicalExpression");
+		});
+	});
+
 	describe("subscript parsing", () => {
 		it("should parse optional chains, private members and tagged templates", () => {
 			expect(
