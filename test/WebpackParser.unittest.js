@@ -245,6 +245,18 @@ describe("WebpackParser", () => {
 			).toBeDefined();
 		});
 
+		it("should allow await as a sloppy-mode identifier", () => {
+			const { ast } = parse("var await = 1; await;");
+			const declaration =
+				/** @type {import("estree").VariableDeclaration} */
+				(ast.body[0]);
+			expect(
+				/** @type {import("estree").Identifier} */ (
+					declaration.declarations[0].id
+				).name
+			).toBe("await");
+		});
+
 		it("should detect redeclarations and undefined exports", () => {
 			expect(() => parse("let x; let x;")).toThrow(
 				/Identifier 'x' has already been declared/
