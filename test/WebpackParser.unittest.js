@@ -308,6 +308,42 @@ describe("WebpackParser", () => {
 		});
 	});
 
+	describe("expression atoms", () => {
+		it("should parse keyword literals and this on the fast path", () => {
+			const { ast } = parse("this; true; false; null; 1.5;");
+			expect(
+				ast.body.map(
+					(s) =>
+						/** @type {import("estree").ExpressionStatement} */ (s).expression
+							.type
+				)
+			).toEqual([
+				"ThisExpression",
+				"Literal",
+				"Literal",
+				"Literal",
+				"Literal"
+			]);
+			const literal =
+				/** @type {import("estree").Literal} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (ast.body[1])
+						.expression
+				);
+			expect(literal.raw).toBe("true");
+			expect(literal.value).toBe(true);
+		});
+
+		it("should parse async function expressions and async arrows", () => {
+			expect(
+				parse("const f = async function() { return 1; };").ast
+			).toBeDefined();
+			expect(parse("const g = async x => x; const h = x => x;").ast).toBeDefined();
+			// ASI keeps `async` a plain identifier, so the arrow is unexpected
+			expect(() => parse("async\n() => {};")).toThrow(/Unexpected token/);
+		});
+	});
+
 	describe("subscript parsing", () => {
 		it("should parse optional chains, private members and tagged templates", () => {
 			expect(
