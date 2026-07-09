@@ -470,8 +470,11 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	/* webpack/runtime/set anonymous default export name */
 /******/ 	(() => {
 /******/ 		// set .name for anonymous default exports per ES spec
+/******/ 		// skipped when the property is non-configurable (pre-ES2015 engines),
+/******/ 		// where Object.defineProperty would throw
 /******/ 		__webpack_require__.dn = (x) => {
-/******/ 			(Object.getOwnPropertyDescriptor(x, \\"name\\") || {}).writable || Object.defineProperty(x, \\"name\\", { value: \\"default\\", configurable: true });
+/******/ 			var descriptor = Object.getOwnPropertyDescriptor(x, \\"name\\");
+/******/ 			if (!descriptor || (!descriptor.writable && descriptor.configurable)) Object.defineProperty(x, \\"name\\", { value: \\"default\\", configurable: true });
 /******/ 		};
 /******/ 	})();
 /******/ 	
