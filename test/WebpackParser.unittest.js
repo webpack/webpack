@@ -344,6 +344,34 @@ describe("WebpackParser", () => {
 		});
 	});
 
+	describe("statements", () => {
+		it("should parse declarations, blocks and expression statements", () => {
+			const { ast } = parse(
+				"var a = 1, b; { let c = 2; } d = 3; for (var i = 0; i < 3; i++) {}"
+			);
+			expect(ast.body.map((s) => s.type)).toEqual([
+				"VariableDeclaration",
+				"BlockStatement",
+				"ExpressionStatement",
+				"ForStatement"
+			]);
+			const declaration =
+				/** @type {import("estree").VariableDeclaration} */ (ast.body[0]);
+			expect(declaration.kind).toBe("var");
+			expect(declaration.declarations.map((d) => d.init && d.init.type)).toEqual(
+				["Literal", null]
+			);
+		});
+
+		it("should keep acorn's declaration checks", () => {
+			expect(() => parse("const f;")).toThrow(/Unexpected token/);
+			expect(() => parse("let {a};")).toThrow(
+				/Complex binding patterns require an initialization value/
+			);
+			expect(parse("function f(){ 'use strict'; return 1; }").ast).toBeDefined();
+		});
+	});
+
 	describe("unary and update expressions", () => {
 		it("should parse prefix and postfix operators on the fast path", () => {
 			const { ast } = parse("!x; y++; --z; typeof w; a ** -b;");
