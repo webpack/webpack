@@ -344,6 +344,30 @@ describe("WebpackParser", () => {
 		});
 	});
 
+	describe("assignment expressions", () => {
+		it("should parse destructuring, chained and compound assignments", () => {
+			expect(
+				parse("({a, b = 1} = obj); [x = 2, ...r] = arr;").ast
+			).toBeDefined();
+			const { ast } = parse("a = b = c; d **= 2; e ??= f;");
+			const chained =
+				/** @type {import("estree").AssignmentExpression} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (ast.body[0])
+						.expression
+				);
+			expect(chained.right.type).toBe("AssignmentExpression");
+			expect(
+				parse("function* g(){ const x = yield 1; }").ast
+			).toBeDefined();
+		});
+
+		it("should reject invalid assignment targets", () => {
+			expect(() => parse("1 = 2;")).toThrow(/Assigning to rvalue/);
+			expect(() => parse("({a}) = b;")).toThrow(/Assigning to rvalue/);
+		});
+	});
+
 	describe("binary expressions", () => {
 		it("should keep private-in checks and delegate without ranges", () => {
 			expect(
