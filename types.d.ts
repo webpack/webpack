@@ -859,7 +859,6 @@ declare interface BasenameCacheEntry {
  * field readable. This shrinks instances from 224 to 144 bytes on V8.
  */
 declare abstract class BasicEvaluatedExpression {
-	range?: [number, number];
 	expression?:
 		| Program
 		| ImportDeclaration
@@ -942,6 +941,14 @@ declare abstract class BasicEvaluatedExpression {
 	prefix?: null | BasicEvaluatedExpression;
 	postfix?: null | BasicEvaluatedExpression;
 	wrappedInnerExpressions?: BasicEvaluatedExpression[];
+
+	/**
+	 * Served lazily from the attached expression when not set explicitly:
+	 * `evaluateExpression`'s plain results share the expression's range, and
+	 * most evaluations never read it, so the node's range array is only
+	 * materialized on demand.
+	 */
+	range?: [number, number];
 	type: number;
 	truthy: boolean;
 	falsy: boolean;
