@@ -231,6 +231,22 @@ describe("BasicEvaluatedExpression", () => {
 		expect(e.sideEffects).toBe(false);
 	});
 
+	it("should serve range lazily from the attached expression", () => {
+		const e = new BasicEvaluatedExpression();
+		expect(e.range).toBeUndefined();
+		e.setExpression(
+			/** @type {import("estree").Node & { range: [number, number] }} */ (
+				/** @type {unknown} */ ({ type: "Identifier", range: [3, 7] })
+			)
+		);
+		expect(e.range).toEqual([3, 7]);
+		// an explicit range always wins over the expression's
+		e.setRange([1, 2]);
+		expect(e.range).toEqual([1, 2]);
+		e.range = [4, 5];
+		expect(e.range).toEqual([4, 5]);
+	});
+
 	it("should validate regexp flags statically", () => {
 		// cspell:ignore gimy gimys dgimsuy gimsvy
 		const isValid = BasicEvaluatedExpression.isValidRegExpFlags;
