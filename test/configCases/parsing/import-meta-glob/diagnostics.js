@@ -15,3 +15,4 @@ import.meta.glob("./missing/*.js", { caseSensitive: true });
 import.meta.glob("./missing/*.js", { eager: true, import: "default" });
 const eagerOptionKey = "eager";
 import.meta.glob("./missing/*.js", { [eagerOptionKey]: true });
+import.meta.glob("@/alias/*.js");

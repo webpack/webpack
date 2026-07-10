@@ -12,12 +12,23 @@ const eagerNamespaceModules = import.meta.glob('./dir/*.js', {
 const explicitNodeModulesModules = import.meta.glob('./dir/node_modules/*.js', {
   eager: true,
 })
-const skippedExhaustiveModules = import.meta.glob(
+const explicitHiddenModules = import.meta.glob(
   ['./dot/.*.js', './.foo/*.js', './dir/node_modules/**'],
   { eager: true },
 )
-const exhaustiveModules = import.meta.glob(
+const explicitHiddenModulesExhaustive = import.meta.glob(
   ['./dot/.*.js', './.foo/*.js', './dir/node_modules/**'],
+  { eager: true, exhaustive: true },
+)
+const soloFooModules = import.meta.glob('./.foo/*.js', { eager: true })
+const combinedFooModules = import.meta.glob(['./dot/.*.js', './.foo/*.js'], {
+  eager: true,
+})
+const wildcardScanModules = import.meta.glob('./exhaustive-scan/**/*.js', {
+  eager: true,
+})
+const wildcardScanExhaustiveModules = import.meta.glob(
+  './exhaustive-scan/**/*.js',
   { eager: true, exhaustive: true },
 )
 const filteredModules = import.meta.glob(['./dir/*.js', '!**/bar.js'], { eager: true })
@@ -118,6 +129,11 @@ const filteredDefaultModules = import.meta.glob(['./dir/*.js', '!**/bar.js'], {
 const lazyFilteredNamedModules = import.meta.glob(['./dir/*.js', '!**/bar.js'], {
   import: 'named',
 })
+const caseSensitiveModules = import.meta.glob('./case-test/*.JS', { eager: true })
+const caseInsensitiveModules = import.meta.glob('./case-test/*.JS', {
+  eager: true,
+  caseSensitive: false,
+})
 const quotedModules = import.meta.glob("./quoted/*.js", { eager: true })
 const escapeModules = import.meta.glob('./escape/**/glob.js', { eager: true })
 
@@ -192,17 +208,37 @@ it('should allow explicit glob roots inside node_modules', () => {
   )
 })
 
-it('should only search hidden directories and node_modules in exhaustive mode', () => {
-  expect(Object.keys(skippedExhaustiveModules)).toEqual(['./dot/.hidden.js'])
-  expect(skippedExhaustiveModules['./dot/.hidden.js'].default).toBe('hidden')
-  expect(Object.keys(exhaustiveModules).sort()).toEqual([
+it('should search explicitly targeted hidden and node_modules dirs regardless of exhaustive', () => {
+  const expected = [
     './.foo/test.js',
     './dir/node_modules/hoge.js',
     './dot/.hidden.js',
+  ]
+  expect(Object.keys(explicitHiddenModules).sort()).toEqual(expected)
+  expect(Object.keys(explicitHiddenModulesExhaustive).sort()).toEqual(expected)
+  expect(explicitHiddenModules['./dot/.hidden.js'].default).toBe('hidden')
+  expect(explicitHiddenModules['./.foo/test.js'].default).toBe('dot folder')
+  expect(explicitHiddenModules['./dir/node_modules/hoge.js'].default).toBe('hoge')
+})
+
+it('should match an explicit dot-directory pattern the same alone or combined', () => {
+  expect(Object.keys(soloFooModules)).toEqual(['./.foo/test.js'])
+  expect(Object.keys(combinedFooModules).sort()).toEqual([
+    './.foo/test.js',
+    './dot/.hidden.js',
   ])
-  expect(exhaustiveModules['./dot/.hidden.js'].default).toBe('hidden')
-  expect(exhaustiveModules['./.foo/test.js'].default).toBe('dot folder')
-  expect(exhaustiveModules['./dir/node_modules/hoge.js'].default).toBe('hoge')
+  expect(combinedFooModules['./.foo/test.js'].default).toBe('dot folder')
+})
+
+it('should descend wildcard-reached hidden and node_modules dirs only when exhaustive', () => {
+  expect(Object.keys(wildcardScanModules)).toEqual([
+    './exhaustive-scan/visible.js',
+  ])
+  expect(Object.keys(wildcardScanExhaustiveModules).sort()).toEqual([
+    './exhaustive-scan/.hidden-dir/deep.js',
+    './exhaustive-scan/node_modules/dep.js',
+    './exhaustive-scan/visible.js',
+  ])
 })
 
 it('should support negative patterns and import selection in glob arrays', async () => {
@@ -365,6 +401,12 @@ it('should parse glob calls with comments in the argument list', async () => {
 it('should work when glob results are wrapped with Object.keys and Object.values', () => {
   expect(objectKeyModules.sort()).toEqual(dirKeys)
   expect(objectValueModules.map(mod => mod.default).sort()).toEqual(['bar', 'foo'])
+})
+
+it('should match case-insensitively only when caseSensitive is false', () => {
+  expect(Object.keys(caseSensitiveModules)).toEqual([])
+  expect(Object.keys(caseInsensitiveModules)).toEqual(['./case-test/alpha.js'])
+  expect(caseInsensitiveModules['./case-test/alpha.js'].default).toBe('alpha')
 })
 
 it('should handle matched paths containing single quotes', () => {

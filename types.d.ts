@@ -5113,6 +5113,11 @@ declare interface ContextOptions {
 	 * exhaustive mode for import.meta.glob
 	 */
 	exhaustive?: boolean;
+
+	/**
+	 * case-sensitive matching for import.meta.glob
+	 */
+	caseSensitive?: boolean;
 }
 declare class ContextReplacementPlugin {
 	/**

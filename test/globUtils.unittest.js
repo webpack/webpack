@@ -6,6 +6,7 @@ const {
 	extractGlobBaseDir,
 	globMatchWithExplicitDot,
 	globMatchWithOptions,
+	globPatternBaseReachesDir,
 	globPatternsAreRecursive,
 	globUserRequest,
 	normalizePathSeparators,
@@ -354,6 +355,49 @@ describe("globUtils", () => {
 			const patterns = [resolveContextModuleGlobPattern("./*.js", root, root)];
 			const file = path.join(root, "日.js");
 			expect(globUserRequest(patterns, file, false)).toBe("./日.js");
+		});
+
+		it("honors the caseSensitive flag", () => {
+			const root = path.resolve("test/cases/context/import-meta-glob/dir");
+			const patterns = [resolveContextModuleGlobPattern("./*.JS", root, root)];
+			const file = path.join(root, "foo.js");
+			expect(globUserRequest(patterns, file, false, true)).toBeUndefined();
+			expect(globUserRequest(patterns, file, false, false)).toBe("./foo.js");
+		});
+	});
+
+	describe("globPatternBaseReachesDir", () => {
+		const root = path.resolve("test/cases/context/import-meta-glob");
+
+		it("is true when a dir is within a positive pattern's literal base", () => {
+			const patterns = [
+				resolveContextModuleGlobPattern("./.foo/*.js", root, root),
+				resolveContextModuleGlobPattern("./dir/node_modules/**", root, root)
+			];
+			expect(globPatternBaseReachesDir(patterns, path.join(root, ".foo"))).toBe(
+				true
+			);
+			expect(
+				globPatternBaseReachesDir(patterns, path.join(root, "dir/node_modules"))
+			).toBe(true);
+		});
+
+		it("is false for dirs only reachable through a wildcard segment", () => {
+			const patterns = [
+				resolveContextModuleGlobPattern("./**/*.js", root, root)
+			];
+			expect(globPatternBaseReachesDir(patterns, path.join(root, ".foo"))).toBe(
+				false
+			);
+		});
+
+		it("ignores negative patterns", () => {
+			const patterns = [
+				resolveContextModuleGlobPattern("!./.foo/*.js", root, root)
+			];
+			expect(globPatternBaseReachesDir(patterns, path.join(root, ".foo"))).toBe(
+				false
+			);
 		});
 	});
 
