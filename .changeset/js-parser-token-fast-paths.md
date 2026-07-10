@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Speed up JavaScript parsing with tokenizer fast paths and single-shape nodes.
+Speed up JavaScript parsing and AST walking and reduce their memory usage.
