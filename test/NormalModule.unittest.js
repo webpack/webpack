@@ -3,6 +3,7 @@
 const SourceMapSource = require("webpack-sources").SourceMapSource;
 const OriginalSource = require("webpack-sources").OriginalSource;
 const RawSource = require("webpack-sources").RawSource;
+const CachedSource = require("webpack-sources").CachedSource;
 const NormalModule = require("../lib/NormalModule");
 const HarmonyImportSideEffectDependency = require("../lib/dependencies/HarmonyImportSideEffectDependency");
 
@@ -781,6 +782,109 @@ describe("NormalModule", () => {
 			for (let i = 0; i < N; i++) {
 				expect(modules[i]._isEvaluatingSideEffects).toBe(false);
 			}
+		});
+	});
+
+	describe("#codeGeneration", () => {
+		/** @returns {import("../lib/Generator")} mock generator */
+		const makeGenerator = () =>
+			/** @type {import("../lib/Generator")} */ (
+				/** @type {unknown} */ ({
+					generate() {
+						return new RawSource("module.exports = 1;");
+					}
+				})
+			);
+
+		/**
+		 * @param {boolean} cacheEnabled whether the codegen cache is active
+		 * @returns {import("../lib/Compilation")} mock compilation
+		 */
+		const makeCompilation = (cacheEnabled) =>
+			/** @type {import("../lib/Compilation")} */ (
+				/** @type {unknown} */ ({
+					getCache() {
+						return { isEnabled: () => cacheEnabled };
+					}
+				})
+			);
+
+		/** @type {import("../lib/ChunkGraph")} */
+		const chunkGraph = /** @type {import("../lib/ChunkGraph")} */ (
+			/** @type {unknown} */ ({
+				getModuleSourceTypes: () => ["javascript"]
+			})
+		);
+
+		/** @type {import("../lib/DependencyTemplates")} */
+		const dependencyTemplates =
+			/** @type {import("../lib/DependencyTemplates")} */ (
+				/** @type {unknown} */ ({
+					get: () => undefined
+				})
+			);
+
+		/** @type {import("../lib/RuntimeTemplate")} */
+		const runtimeTemplate = /** @type {import("../lib/RuntimeTemplate")} */ (
+			/** @type {unknown} */ ({})
+		);
+
+		/** @type {import("../lib/ModuleGraph")} */
+		const moduleGraph = /** @type {import("../lib/ModuleGraph")} */ (
+			/** @type {unknown} */ ({})
+		);
+
+		/**
+		 * @param {boolean | undefined} cacheEnabled codegen cache state
+		 * @returns {import("../lib/Module").CodeGenerationResult} codegen result
+		 */
+		const runCodeGeneration = (cacheEnabled) => {
+			const mod = new NormalModule(
+				/** @type {import("../lib/NormalModule").NormalModuleCreateData} */ (
+					/** @type {unknown} */ ({
+						type: "javascript/auto",
+						request: "/codegen.js",
+						userRequest: "/codegen.js",
+						rawRequest: "./codegen.js",
+						loaders: [],
+						resource: "/codegen.js",
+						parser: { parse() {} },
+						generator: makeGenerator(),
+						resolveOptions: {}
+					})
+				)
+			);
+			mod.buildInfo = { parsed: true };
+			return mod.codeGeneration({
+				dependencyTemplates,
+				runtimeTemplate,
+				moduleGraph,
+				chunkGraph,
+				runtime: undefined,
+				runtimes: [],
+				compilation:
+					cacheEnabled === undefined ? undefined : makeCompilation(cacheEnabled)
+			});
+		};
+
+		it("skips CachedSource when the code-generation cache is disabled", () => {
+			const result = runCodeGeneration(false);
+			const source = result.sources.get("javascript");
+			expect(source).toBeInstanceOf(RawSource);
+			expect(source).not.toBeInstanceOf(CachedSource);
+		});
+
+		it("wraps in CachedSource when the code-generation cache is enabled", () => {
+			const result = runCodeGeneration(true);
+			const source = result.sources.get("javascript");
+			expect(source).toBeInstanceOf(CachedSource);
+		});
+
+		it("skips CachedSource when no compilation is provided", () => {
+			const result = runCodeGeneration(undefined);
+			const source = result.sources.get("javascript");
+			expect(source).toBeInstanceOf(RawSource);
+			expect(source).not.toBeInstanceOf(CachedSource);
 		});
 	});
 });
