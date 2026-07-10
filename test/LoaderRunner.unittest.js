@@ -309,13 +309,12 @@ describe("runLoaders", () => {
 	});
 
 	it("should reuse a context prepared by createLoaderContext", (done) => {
-		const loaderContext = createLoaderContext({
-			resource: path.resolve(fixtures, "resource.bin")
-		});
+		const loaderContext = createLoaderContext();
 		// a dependency added before running must survive (same state object)
 		loaderContext.addDependency("/pre/existing/dep");
 		runLoaders(
 			{
+				resource: path.resolve(fixtures, "resource.bin"),
 				loaders: [path.resolve(fixtures, "simple-loader.js")],
 				context: loaderContext
 			},
@@ -334,6 +333,29 @@ describe("runLoaders", () => {
 				done();
 			}
 		);
+	});
+
+	it("should allow re-running on the same context", (done) => {
+		const loaderContext = createLoaderContext();
+		const run = (/** @type {(err: Error | null) => void} */ cb) =>
+			runLoaders(
+				{
+					resource: path.resolve(fixtures, "resource.bin"),
+					loaders: [path.resolve(fixtures, "simple-loader.js")],
+					context: loaderContext
+				},
+				(err, result) => {
+					if (err) return cb(err);
+					try {
+						// second run must not throw/crash (loaderIndex is reset per run)
+						expect(result.result).toEqual(["resource-simple"]);
+					} catch (err_) {
+						return cb(err_);
+					}
+					cb(null);
+				}
+			);
+		run((err) => (err ? done(err) : run(done)));
 	});
 
 	it("should have to correct keys in context (with options)", (done) => {
