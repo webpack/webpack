@@ -410,6 +410,17 @@ describe("globUtils", () => {
 			];
 			expect(commonGlobBaseDir(patterns, root)).toBe(`${root}/`);
 		});
+
+		// Vite #22170 / getCommonBase: a shared name prefix (foo vs foobar) must
+		// not collapse the common base into the shorter directory.
+		it("does not treat a name prefix as a shared directory", () => {
+			const root = path.resolve("test/cases/context/import-meta-glob-parity");
+			const patterns = [
+				resolveContextModuleGlobPattern("./pfx/foo/*.js", root, root),
+				resolveContextModuleGlobPattern("./pfx/foobar/*.js", root, root)
+			];
+			expect(commonGlobBaseDir(patterns, root)).toBe(`${root}/pfx/`);
+		});
 	});
 
 	describe("parse and factory resolve consistency", () => {
