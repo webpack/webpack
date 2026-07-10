@@ -350,7 +350,7 @@ describe("runLoaders", () => {
 						// second run must not throw/crash (loaderIndex is reset per run)
 						expect(result.result).toEqual(["resource-simple"]);
 					} catch (err_) {
-						return cb(err_);
+						return cb(/** @type {Error} */ (err_));
 					}
 					cb(null);
 				}
