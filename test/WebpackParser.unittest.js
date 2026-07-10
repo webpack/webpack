@@ -363,6 +363,20 @@ describe("WebpackParser", () => {
 			);
 		});
 
+		it("should parse if/else chains and returns on the fast path", () => {
+			const { ast } = parse(
+				"if (a) b(); else if (c) { d(); } function f(){ if (x) return y; return; }"
+			);
+			const ifStatement =
+				/** @type {import("estree").IfStatement} */ (ast.body[0]);
+			expect(ifStatement.type).toBe("IfStatement");
+			expect(
+				/** @type {import("estree").IfStatement} */ (ifStatement.alternate)
+					.type
+			).toBe("IfStatement");
+			expect(() => parse("return 1;")).toThrow(/'return' outside of function/);
+		});
+
 		it("should keep acorn's declaration checks", () => {
 			expect(() => parse("const f;")).toThrow(/Unexpected token/);
 			expect(() => parse("let {a};")).toThrow(
