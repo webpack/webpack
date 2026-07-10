@@ -374,7 +374,10 @@ describe("WebpackParser", () => {
 				/** @type {import("estree").IfStatement} */ (ifStatement.alternate)
 					.type
 			).toBe("IfStatement");
-			expect(() => parse("return 1;")).toThrow(/'return' outside of function/);
+			// the script-mode helper allows top-level return; module mode doesn't
+			expect(() => parse("return 1;", { sourceType: "module" })).toThrow(
+				/'return' outside of function/
+			);
 		});
 
 		it("should keep acorn's declaration checks", () => {
