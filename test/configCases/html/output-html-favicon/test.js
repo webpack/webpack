@@ -5,8 +5,6 @@ const readHtml = (name) =>
 	fs.readFileSync(path.resolve(__dirname, name), "utf-8");
 
 const iconLink = (html) => html.match(/<link rel="icon"[^>]*>/i);
-const anyIconLink = (html) =>
-	/rel\s*=\s*["']?(?:shortcut\s+)?icon/i.test(html);
 
 it("injects the default webpack svg favicon", () => {
 	const link = iconLink(readHtml("default.html"));
@@ -72,7 +70,7 @@ it("injects custom favicon into authored HTML entry", () => {
 	const link = iconLink(readHtml("authored-custom.html"));
 	expect(link).not.toBeNull();
 	expect(link[0]).toMatch(/href="[^"]+\.svg"/);
-	expect(link[0]).not.toContain('type="image/svg+xml"');
+	expect(link[0]).toContain('type="image/svg+xml"');
 });
 
 it("injects favicon into all pages of a multi-page authored HTML build", () => {
