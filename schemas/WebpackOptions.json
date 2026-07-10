@@ -626,6 +626,10 @@
       "description": "Enable/disable `url()`/`image-set()`/`src()`/`image()` functions handling.",
       "type": "boolean"
     },
+    "DedupePrefetch": {
+      "description": "Skip injecting a `<link rel=\"prefetch\">` for a chunk that is already preloaded or prefetched in the document (avoids a duplicate request in some browsers).",
+      "type": "boolean"
+    },
     "DeferImportExperimentOptions": {
       "description": "Options for defer import.",
       "type": "boolean",
@@ -4042,6 +4046,9 @@
         "cssFilename": {
           "$ref": "#/definitions/CssFilename"
         },
+        "dedupePrefetch": {
+          "$ref": "#/definitions/DedupePrefetch"
+        },
         "devtoolFallbackModuleFilenameTemplate": {
           "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"
         },
@@ -4323,6 +4330,9 @@
         },
         "cssFilename": {
           "$ref": "#/definitions/CssFilename"
+        },
+        "dedupePrefetch": {
+          "$ref": "#/definitions/DedupePrefetch"
         },
         "devtoolFallbackModuleFilenameTemplate": {
           "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"
