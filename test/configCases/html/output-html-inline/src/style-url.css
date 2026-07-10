@@ -1,0 +1,9 @@
+.bg {
+	background: url(./img.png);
+}
+.bg-quoted {
+	background: url("./img.png");
+}
+.bg-data {
+	background: url(data:image/png;base64,AAAA);
+}

@@ -18965,7 +18965,7 @@ declare interface OutputFileSystem {
  */
 declare interface OutputHtmlOptions {
 	/**
-	 * Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; an array of `RegExp` patterns matches against the emitted chunk filename.
+	 * Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; an array of `RegExp` patterns matches against the chunk name.
 	 */
 	inline?: boolean | RegExp[];
 

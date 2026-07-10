@@ -4234,7 +4234,7 @@
       "additionalProperties": false,
       "properties": {
         "inline": {
-          "description": "Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; an array of `RegExp` patterns matches against the emitted chunk filename.",
+          "description": "Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; an array of `RegExp` patterns matches against the chunk name.",
           "anyOf": [
             {
               "type": "array",

@@ -1,0 +1,6 @@
+.a::before {
+	content: "</style>";
+}
+.b {
+	color: green;
+}
