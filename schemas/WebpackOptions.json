@@ -1446,6 +1446,10 @@
       "instanceof": "Function",
       "tsType": "import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionPromise"
     },
+    "ExternalItemInterop": {
+      "description": "How an external's exports interoperate with ES module imports, independent of the importing module's strictness (similar to Rollup's `output.interop`). 'default': treat as CommonJS, the default import is the whole exports (Node.js semantics). 'esModule': treat as an ES module namespace, the default import is unboxed to `.default`.",
+      "enum": ["default", "esModule"]
+    },
     "ExternalItemValue": {
       "description": "The dependency used for the external.",
       "anyOf": [
@@ -1466,7 +1470,30 @@
           "type": "string"
         },
         {
-          "type": "object"
+          "description": "The target of the external with a type, optionally with an 'interop' hint describing how its exports interoperate with ES module imports.",
+          "type": "object",
+          "additionalProperties": {
+            "description": "The target of the external for a specific external type.",
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "description": "A part of the target of the external.",
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              {
+                "description": "The target of the external.",
+                "type": "string"
+              }
+            ]
+          },
+          "properties": {
+            "interop": {
+              "$ref": "#/definitions/ExternalItemInterop"
+            }
+          }
         }
       ]
     },
