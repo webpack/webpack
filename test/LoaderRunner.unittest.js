@@ -2,7 +2,11 @@
 
 const fs = require("fs");
 const path = require("path");
-const { getContext, runLoaders } = require("../lib/loaders/LoaderRunner");
+const {
+	createLoaderContext,
+	getContext,
+	runLoaders
+} = require("../lib/loaders/LoaderRunner");
 
 const fixtures = path.resolve(__dirname, "fixtures", "loader-runner");
 
@@ -291,10 +295,39 @@ describe("runLoaders", () => {
 			(err, result) => {
 				if (err) return done(err);
 				try {
-					// the caller's object is augmented in place...
-					expect(typeof context.addDependency).toBe("function");
-					// ...and its own properties survive into the loader context
-					expect(JSON.parse(result.result[0]).custom).toBe("kept");
+					const parsed = JSON.parse(result.result[0]);
+					// the caller's own property survives...
+					expect(parsed.custom).toBe("kept");
+					// ...on the same object the loader-runner augmented in place
+					expect(parsed.loaderIndex).toBe(0);
+				} catch (err_) {
+					return done(err_);
+				}
+				done();
+			}
+		);
+	});
+
+	it("should reuse a context prepared by createLoaderContext", (done) => {
+		const loaderContext = createLoaderContext({
+			resource: path.resolve(fixtures, "resource.bin")
+		});
+		// a dependency added before running must survive (same state object)
+		loaderContext.addDependency("/pre/existing/dep");
+		runLoaders(
+			{
+				loaders: [path.resolve(fixtures, "simple-loader.js")],
+				context: loaderContext
+			},
+			(err, result) => {
+				if (err) return done(err);
+				try {
+					// the prepared context was reused, not rebuilt
+					expect(result.fileDependencies).toContain("/pre/existing/dep");
+					expect(loaderContext.resourcePath).toBe(
+						path.resolve(fixtures, "resource.bin")
+					);
+					expect(result.result).toEqual(["resource-simple"]);
 				} catch (err_) {
 					return done(err_);
 				}
