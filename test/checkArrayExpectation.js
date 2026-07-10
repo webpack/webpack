@@ -29,17 +29,23 @@ const getWebpackRoot = (testDirectory) => {
  */
 const normalizeString = (str, testDirectory) => {
 	if (!str) return str;
+	str = str.replace(/\\/g, "/");
+	const testDirNorm = testDirectory.replace(/\\/g, "/");
 	const root = getWebpackRoot(testDirectory);
+	const rootNorm = root ? root.replace(/\\/g, "/") : "";
 	// Replace more-specific test dir first, then the broader root
-	str = str.replace(new RegExp(quoteMeta(testDirectory), "g"), "<TEST_DIR>");
-	if (root) {
-		str = str.replace(new RegExp(quoteMeta(root), "g"), "<WEBPACK_ROOT>");
+	str = str.replace(new RegExp(quoteMeta(testDirNorm), "g"), "<TEST_DIR>");
+	if (rootNorm) {
+		str = str.replace(new RegExp(quoteMeta(rootNorm), "g"), "<WEBPACK_ROOT>");
 		// Replace ancestor directories above webpack root.
 		// The resolver walks up to the filesystem root looking for
 		// node_modules, producing paths like /Users/x/node_modules.
 		let ancestor = path.dirname(root);
 		while (ancestor !== path.dirname(ancestor)) {
-			str = str.replace(new RegExp(quoteMeta(ancestor), "g"), "<ANCESTOR>");
+			str = str.replace(
+				new RegExp(quoteMeta(ancestor.replace(/\\/g, "/")), "g"),
+				"<ANCESTOR>"
+			);
 			ancestor = path.dirname(ancestor);
 		}
 	}
@@ -71,7 +77,6 @@ const normalizeString = (str, testDirectory) => {
 	// hex codes, trailing context).
 	str = str.replace(/(Unexpected token) '([^']*)'$/gm, "$1 $2");
 	str = str.replace(/(Unexpected token[^)]*\))[^\n]*(?:\n['"])?/g, "$1");
-	str = str.replace(/\\/g, "/");
 	return str;
 };
 

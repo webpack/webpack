@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  "import.meta.glob() requires 1 or 2 arguments",
+  "import.meta.glob() second argument must be an object literal",
+  "Module not found: Error: Can't resolve '<TEST_DIR>/missing/' in '<TEST_DIR>'",
+  "Module not found: Error: Can't resolve '<TEST_DIR>/missing/' in '<TEST_DIR>'",
+]
+`;

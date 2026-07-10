@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  "import.meta.glob() first argument must be a string literal or array of string literals",
+  "import.meta.glob() requires at least one pattern",
+  "import.meta.glob() pattern array elements must be constant strings",
+  "import.meta.glob() 'eager' option must be a constant boolean (true or false), defaulting to false",
+  "import.meta.glob() 'import' option must be a constant string, ignoring",
+  "import.meta.glob() 'query' object value for key 'foo' must be a constant string or boolean",
+  "import.meta.glob() 'base' option must be a constant string, ignoring",
+  "import.meta.glob() 'exhaustive' option must be a constant boolean (true or false), defaulting to false",
+  "import.meta.glob() 'as' option is not supported. Use 'query' instead (e.g. { query: '?raw' })",
+  "import.meta.glob() unsupported option 'caseSensitive'. Supported options are: eager, import, query, base, exhaustive",
+  "import.meta.glob() option keys must be constant strings",
+]
+`;
