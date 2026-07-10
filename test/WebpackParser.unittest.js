@@ -299,7 +299,10 @@ describe("WebpackParser", () => {
 			expect(exprType("x = /re/g")).toBe("AssignmentExpression");
 			expect(parse("if (a) /re/.test(b);").ast).toBeDefined();
 			expect(parse("function f() { return /re/; }").ast).toBeDefined();
-			expect(parse("var t = `${1 / 2}${/re/.source}`;").ast).toBeDefined();
+			expect(
+				// eslint-disable-next-line no-template-curly-in-string
+				parse("var t = `${1 / 2}${/re/.source}`;").ast
+			).toBeDefined();
 		});
 
 		it("should keep `/` after a keyword-valued property name as division", () => {
@@ -317,13 +320,7 @@ describe("WebpackParser", () => {
 						/** @type {import("estree").ExpressionStatement} */ (s).expression
 							.type
 				)
-			).toEqual([
-				"ThisExpression",
-				"Literal",
-				"Literal",
-				"Literal",
-				"Literal"
-			]);
+			).toEqual(["ThisExpression", "Literal", "Literal", "Literal", "Literal"]);
 			const literal =
 				/** @type {import("estree").Literal} */
 				(
@@ -338,7 +335,9 @@ describe("WebpackParser", () => {
 			expect(
 				parse("const f = async function() { return 1; };").ast
 			).toBeDefined();
-			expect(parse("const g = async x => x; const h = x => x;").ast).toBeDefined();
+			expect(
+				parse("const g = async x => x; const h = x => x;").ast
+			).toBeDefined();
 			// ASI keeps `async` a plain identifier, so the arrow is unexpected
 			expect(() => parse("async\n() => {};")).toThrow(/Unexpected token/);
 		});
@@ -355,24 +354,25 @@ describe("WebpackParser", () => {
 				"ExpressionStatement",
 				"ForStatement"
 			]);
-			const declaration =
-				/** @type {import("estree").VariableDeclaration} */ (ast.body[0]);
-			expect(declaration.kind).toBe("var");
-			expect(declaration.declarations.map((d) => d.init && d.init.type)).toEqual(
-				["Literal", null]
+			const declaration = /** @type {import("estree").VariableDeclaration} */ (
+				ast.body[0]
 			);
+			expect(declaration.kind).toBe("var");
+			expect(
+				declaration.declarations.map((d) => d.init && d.init.type)
+			).toEqual(["Literal", null]);
 		});
 
 		it("should parse if/else chains and returns on the fast path", () => {
 			const { ast } = parse(
 				"if (a) b(); else if (c) { d(); } function f(){ if (x) return y; return; }"
 			);
-			const ifStatement =
-				/** @type {import("estree").IfStatement} */ (ast.body[0]);
+			const ifStatement = /** @type {import("estree").IfStatement} */ (
+				ast.body[0]
+			);
 			expect(ifStatement.type).toBe("IfStatement");
 			expect(
-				/** @type {import("estree").IfStatement} */ (ifStatement.alternate)
-					.type
+				/** @type {import("estree").IfStatement} */ (ifStatement.alternate).type
 			).toBe("IfStatement");
 			// the script-mode helper allows top-level return; module mode doesn't
 			expect(() => parse("return 1;", { sourceType: "module" })).toThrow(
@@ -385,7 +385,9 @@ describe("WebpackParser", () => {
 			expect(() => parse("let {a};")).toThrow(
 				/Complex binding patterns require an initialization value/
 			);
-			expect(parse("function f(){ 'use strict'; return 1; }").ast).toBeDefined();
+			expect(
+				parse("function f(){ 'use strict'; return 1; }").ast
+			).toBeDefined();
 		});
 	});
 
@@ -408,6 +410,7 @@ describe("WebpackParser", () => {
 				/** @type {import("estree").TemplateLiteral} */
 				(
 					/** @type {import("estree").ExpressionStatement} */ (
+						// eslint-disable-next-line no-template-curly-in-string
 						parse("`a${x}b`;").ast.body[0]
 					).expression
 				);
@@ -416,9 +419,7 @@ describe("WebpackParser", () => {
 		});
 
 		it("should keep acorn's new.target and template escape checks", () => {
-			expect(
-				parse("function f(){ return new.target; }").ast
-			).toBeDefined();
+			expect(parse("function f(){ return new.target; }").ast).toBeDefined();
 			expect(() => parse("new.target;")).toThrow(
 				/'new\.target' can only be used in functions/
 			);
@@ -432,7 +433,7 @@ describe("WebpackParser", () => {
 						parse("tag`ok \\unicode`;").ast.body[0]
 					).expression
 				);
-			expect(tagged.quasi.quasis[0].value.cooked).toBe(null);
+			expect(tagged.quasi.quasis[0].value.cooked).toBeNull();
 		});
 	});
 
@@ -444,8 +445,8 @@ describe("WebpackParser", () => {
 					.slice(0, 3)
 					.map(
 						(s) =>
-							/** @type {import("estree").ExpressionStatement} */ (s)
-								.expression.type
+							/** @type {import("estree").ExpressionStatement} */ (s).expression
+								.type
 					)
 			).toEqual(["UnaryExpression", "UpdateExpression", "UpdateExpression"]);
 		});
@@ -475,9 +476,7 @@ describe("WebpackParser", () => {
 						.expression
 				);
 			expect(chained.right.type).toBe("AssignmentExpression");
-			expect(
-				parse("function* g(){ const x = yield 1; }").ast
-			).toBeDefined();
+			expect(parse("function* g(){ const x = yield 1; }").ast).toBeDefined();
 		});
 
 		it("should reject invalid assignment targets", () => {
@@ -506,6 +505,7 @@ describe("WebpackParser", () => {
 	describe("subscript parsing", () => {
 		it("should parse optional chains, private members and tagged templates", () => {
 			expect(
+				// eslint-disable-next-line no-template-curly-in-string
 				parse("a?.b; a?.[b]; a?.(); x = f(a, b,); tag`x${1}`;").ast
 			).toBeDefined();
 			expect(
