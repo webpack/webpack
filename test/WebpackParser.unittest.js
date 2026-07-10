@@ -245,6 +245,18 @@ describe("WebpackParser", () => {
 			).toBeDefined();
 		});
 
+		it("should allow await as a sloppy-mode identifier", () => {
+			const { ast } = parse("var await = 1; await;");
+			const declaration =
+				/** @type {import("estree").VariableDeclaration} */
+				(ast.body[0]);
+			expect(
+				/** @type {import("estree").Identifier} */ (
+					declaration.declarations[0].id
+				).name
+			).toBe("await");
+		});
+
 		it("should detect redeclarations and undefined exports", () => {
 			expect(() => parse("let x; let x;")).toThrow(
 				/Identifier 'x' has already been declared/
@@ -257,6 +269,303 @@ describe("WebpackParser", () => {
 			expect(
 				parse("export { x }; var x;", { sourceType: "module" }).ast
 			).toBeDefined();
+		});
+	});
+
+	describe("token context (finishToken exprAllowed)", () => {
+		/**
+		 * @param {string} code source
+		 * @returns {string} the sole expression's node type
+		 */
+		const exprType = (code) => {
+			const statement =
+				/** @type {import("estree").ExpressionStatement} */
+				(parse(code).ast.body[0]);
+			return statement.expression.type;
+		};
+
+		it("should read `/` after a value as division, not a regexp", () => {
+			// the `else` branch: exprAllowed follows the token type's beforeExpr
+			expect(exprType("a / b / c")).toBe("BinaryExpression");
+			expect(exprType("1 / 2")).toBe("BinaryExpression");
+			expect(exprType("(1 / n) ** (1 / 2)")).toBe("BinaryExpression");
+			expect(exprType("a.b / c")).toBe("BinaryExpression");
+			expect(exprType("a[b] / c")).toBe("BinaryExpression");
+			expect(exprType("f() / 2")).toBe("BinaryExpression");
+		});
+
+		it("should read `/` where an expression is allowed as a regexp", () => {
+			// the updateContext branch (parenR pop) and value-position defaults
+			expect(exprType("x = /re/g")).toBe("AssignmentExpression");
+			expect(parse("if (a) /re/.test(b);").ast).toBeDefined();
+			expect(parse("function f() { return /re/; }").ast).toBeDefined();
+			expect(
+				// eslint-disable-next-line no-template-curly-in-string
+				parse("var t = `${1 / 2}${/re/.source}`;").ast
+			).toBeDefined();
+		});
+
+		it("should keep `/` after a keyword-valued property name as division", () => {
+			// keyword-after-dot forbids an expression, so the next `/` divides
+			expect(parse("a.in / b; a.of / c;").ast).toBeDefined();
+		});
+	});
+
+	describe("expression atoms", () => {
+		it("should parse keyword literals and this on the fast path", () => {
+			const { ast } = parse("this; true; false; null; 1.5;");
+			expect(
+				ast.body.map(
+					(s) =>
+						/** @type {import("estree").ExpressionStatement} */ (s).expression
+							.type
+				)
+			).toEqual(["ThisExpression", "Literal", "Literal", "Literal", "Literal"]);
+			const literal =
+				/** @type {import("estree").Literal} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (ast.body[1])
+						.expression
+				);
+			expect(literal.raw).toBe("true");
+			expect(literal.value).toBe(true);
+		});
+
+		it("should parse async function expressions and async arrows", () => {
+			expect(
+				parse("const f = async function() { return 1; };").ast
+			).toBeDefined();
+			expect(
+				parse("const g = async x => x; const h = x => x;").ast
+			).toBeDefined();
+			// ASI keeps `async` a plain identifier, so the arrow is unexpected
+			expect(() => parse("async\n() => {};")).toThrow(/Unexpected token/);
+		});
+	});
+
+	describe("statements", () => {
+		it("should parse declarations, blocks and expression statements", () => {
+			const { ast } = parse(
+				"var a = 1, b; { let c = 2; } d = 3; for (var i = 0; i < 3; i++) {}"
+			);
+			expect(ast.body.map((s) => s.type)).toEqual([
+				"VariableDeclaration",
+				"BlockStatement",
+				"ExpressionStatement",
+				"ForStatement"
+			]);
+			const declaration = /** @type {import("estree").VariableDeclaration} */ (
+				ast.body[0]
+			);
+			expect(declaration.kind).toBe("var");
+			expect(
+				declaration.declarations.map((d) => d.init && d.init.type)
+			).toEqual(["Literal", null]);
+		});
+
+		it("should parse if/else chains and returns on the fast path", () => {
+			const { ast } = parse(
+				"if (a) b(); else if (c) { d(); } function f(){ if (x) return y; return; }"
+			);
+			const ifStatement = /** @type {import("estree").IfStatement} */ (
+				ast.body[0]
+			);
+			expect(ifStatement.type).toBe("IfStatement");
+			expect(
+				/** @type {import("estree").IfStatement} */ (ifStatement.alternate).type
+			).toBe("IfStatement");
+			// the script-mode helper allows top-level return; module mode doesn't
+			expect(() => parse("return 1;", { sourceType: "module" })).toThrow(
+				/'return' outside of function/
+			);
+		});
+
+		it("should keep acorn's declaration checks", () => {
+			expect(() => parse("const f;")).toThrow(/Unexpected token/);
+			expect(() => parse("let {a};")).toThrow(
+				/Complex binding patterns require an initialization value/
+			);
+			expect(
+				parse("function f(){ 'use strict'; return 1; }").ast
+			).toBeDefined();
+		});
+	});
+
+	describe("conditional, new, array and template atoms", () => {
+		it("should parse them on the single-shape fast paths", () => {
+			const { ast } = parse("a ? b : c; new A; new B(1); [1, , 2];");
+			expect(
+				ast.body.map(
+					(s) =>
+						/** @type {import("estree").ExpressionStatement} */ (s).expression
+							.type
+				)
+			).toEqual([
+				"ConditionalExpression",
+				"NewExpression",
+				"NewExpression",
+				"ArrayExpression"
+			]);
+			const template =
+				/** @type {import("estree").TemplateLiteral} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (
+						// eslint-disable-next-line no-template-curly-in-string
+						parse("`a${x}b`;").ast.body[0]
+					).expression
+				);
+			expect(template.quasis.map((q) => q.value.raw)).toEqual(["a", "b"]);
+			expect(template.quasis[1].tail).toBe(true);
+		});
+
+		it("should keep acorn's new.target and template escape checks", () => {
+			expect(parse("function f(){ return new.target; }").ast).toBeDefined();
+			expect(() => parse("new.target;")).toThrow(
+				/'new\.target' can only be used in functions/
+			);
+			expect(() => parse("`bad \\unicode`;")).toThrow(
+				/Bad escape sequence in untagged template literal/
+			);
+			const tagged =
+				/** @type {import("estree").TaggedTemplateExpression} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (
+						parse("tag`ok \\unicode`;").ast.body[0]
+					).expression
+				);
+			expect(tagged.quasi.quasis[0].value.cooked).toBeNull();
+		});
+	});
+
+	describe("unary and update expressions", () => {
+		it("should parse prefix and postfix operators on the fast path", () => {
+			const { ast } = parse("!x; y++; --z; typeof w; a ** -b;");
+			expect(
+				ast.body
+					.slice(0, 3)
+					.map(
+						(s) =>
+							/** @type {import("estree").ExpressionStatement} */ (s).expression
+								.type
+					)
+			).toEqual(["UnaryExpression", "UpdateExpression", "UpdateExpression"]);
+		});
+
+		it("should keep acorn's delete and exponentiation checks", () => {
+			expect(() => parse('"use strict"; delete x;')).toThrow(
+				/Deleting local variable in strict mode/
+			);
+			expect(() => parse("class C { #p; m(){ delete this.#p; } }")).toThrow(
+				/Private fields can not be deleted/
+			);
+			expect(() => parse("-a ** 2;")).toThrow(/Unexpected token/);
+			expect(() => parse("1++;")).toThrow(/Assigning to rvalue/);
+		});
+	});
+
+	describe("assignment expressions", () => {
+		it("should parse destructuring, chained and compound assignments", () => {
+			expect(
+				parse("({a, b = 1} = obj); [x = 2, ...r] = arr;").ast
+			).toBeDefined();
+			const { ast } = parse("a = b = c; d **= 2; e ??= f;");
+			const chained =
+				/** @type {import("estree").AssignmentExpression} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (ast.body[0])
+						.expression
+				);
+			expect(chained.right.type).toBe("AssignmentExpression");
+			expect(parse("function* g(){ const x = yield 1; }").ast).toBeDefined();
+		});
+
+		it("should reject invalid assignment targets", () => {
+			expect(() => parse("1 = 2;")).toThrow(/Assigning to rvalue/);
+			expect(() => parse("({a}) = b;")).toThrow(/Assigning to rvalue/);
+		});
+	});
+
+	describe("binary expressions", () => {
+		it("should keep private-in checks and delegate without ranges", () => {
+			expect(
+				parse("class C { #x; m(o){ return #x in o; } }").ast
+			).toBeDefined();
+			// a private name only reaches buildBinary's right side via a chain
+			expect(() =>
+				parse("class C { #x; m(o){ return o in #x in o; } }")
+			).toThrow(/Private identifier can only be left side/);
+			const { ast } = parse("a + b && c;", { ranges: false });
+			expect(
+				/** @type {import("estree").ExpressionStatement} */ (ast.body[0])
+					.expression.type
+			).toBe("LogicalExpression");
+		});
+	});
+
+	describe("subscript parsing", () => {
+		it("should parse optional chains, private members and tagged templates", () => {
+			expect(
+				// eslint-disable-next-line no-template-curly-in-string
+				parse("a?.b; a?.[b]; a?.(); x = f(a, b,); tag`x${1}`;").ast
+			).toBeDefined();
+			expect(
+				parse("class P { #x = 1; m() { return this.#x; } }").ast
+			).toBeDefined();
+		});
+
+		it("should reject optional chaining in new callees and template tags", () => {
+			expect(() => parse("new a?.b();")).toThrow(
+				/Optional chaining cannot appear in the callee/
+			);
+			expect(() => parse("a?.b`t`;")).toThrow(
+				/Optional chaining cannot appear in the tag/
+			);
+		});
+
+		it("should parse async arrows through the call subscript path", () => {
+			expect(
+				parse("const f = async (a, b = 1) => a + b; async(1, 2);").ast
+			).toBeDefined();
+			expect(() => parse("async (await) => 1;")).toThrow(
+				/Cannot use 'await' as identifier inside an async function/
+			);
+		});
+
+		it("should delegate to acorn without ranges and pre-2020 ecmaVersions", () => {
+			expect(parse("a.b(c)[d];", { ranges: false }).ast).toBeDefined();
+			const { ast } = parse("a.b(c);", { ecmaVersion: 10 });
+			const call =
+				/** @type {import("estree").CallExpression} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (ast.body[0])
+						.expression
+				);
+			// acorn only adds `optional` from ecmaVersion 11 on
+			expect("optional" in call.callee).toBe(false);
+		});
+	});
+
+	describe("punctuator fast path", () => {
+		it("should tokenize the single-char punctuators into the right AST", () => {
+			const program = parse("f(a, [b], { c: 1 });").ast;
+			const call =
+				/** @type {import("estree").CallExpression} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (program.body[0])
+						.expression
+				);
+			expect(call.type).toBe("CallExpression");
+			expect(call.arguments).toHaveLength(3);
+			expect(call.arguments[1].type).toBe("ArrayExpression");
+			expect(call.arguments[2].type).toBe("ObjectExpression");
+		});
+
+		it("should keep ranges aligned across punctuator-dense code", () => {
+			const { ast } = parse("[({})];");
+			const { range } = /** @type {{ range: [number, number] }} */ (
+				/** @type {unknown} */ (ast.body[0])
+			);
+			expect(range).toEqual([0, 7]);
 		});
 	});
 });
