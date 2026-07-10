@@ -26,7 +26,7 @@ const copyTest = {
 	}
 };
 
-/** @type {(name, favicon) => import("../../../../").Configuration} */
+/** @type {(name: string, favicon?: string | boolean) => import("../../../../").Configuration} */
 const config = (name, favicon) => ({
 	name,
 	target: "web",
