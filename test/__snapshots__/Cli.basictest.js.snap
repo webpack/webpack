@@ -8856,6 +8856,38 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-html-inline": Object {
+    "configs": Array [
+      Object {
+        "description": "A regular expression matched against the chunk name; matching chunks are inlined.",
+        "multiple": true,
+        "path": "output.html.inline[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Inline the content of matching chunks directly into the HTML instead of emitting a separate \`<script>\`/\`<link>\` tag. \`true\` inlines every chunk; an array of \`RegExp\` patterns matches against the emitted chunk filename.",
+        "multiple": false,
+        "path": "output.html.inline",
+        "type": "boolean",
+      },
+    ],
+    "description": "A regular expression matched against the chunk name; matching chunks are inlined. Inline the content of matching chunks directly into the HTML instead of emitting a separate \`<script>\`/\`<link>\` tag. \`true\` inlines every chunk; an array of \`RegExp\` patterns matches against the emitted chunk filename.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-html-inline-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.html.inline' configuration. Inline the content of matching chunks directly into the HTML instead of emitting a separate \`<script>\`/\`<link>\` tag. \`true\` inlines every chunk; an array of \`RegExp\` patterns matches against the emitted chunk filename.",
+        "multiple": false,
+        "path": "output.html.inline",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.html.inline' configuration. Inline the content of matching chunks directly into the HTML instead of emitting a separate \`<script>\`/\`<link>\` tag. \`true\` inlines every chunk; an array of \`RegExp\` patterns matches against the emitted chunk filename.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-html-integrity": Object {
     "configs": Array [
       Object {
