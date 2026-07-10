@@ -44,3 +44,17 @@ it("emits the favicon asset for authored HTML entry", () => {
 	const files = fs.readdirSync(__dirname);
 	expect(files.some((f) => f === "favicon.svg")).toBe(true);
 });
+
+it("injects custom favicon into authored HTML entry", () => {
+	const link = iconLink(readHtml("authored-custom.html"));
+	expect(link).not.toBeNull();
+	expect(link[0]).toMatch(/href="[^"]+\.svg"/);
+	expect(link[0]).not.toContain('type="image/svg+xml"');
+});
+
+it("injects favicon into all pages of a multi-page authored HTML build", () => {
+	const link1 = iconLink(readHtml("page.html"));
+	const link2 = iconLink(readHtml("page-off.html"));
+	expect(link1).not.toBeNull();
+	expect(link2).not.toBeNull();
+});

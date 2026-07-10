@@ -73,5 +73,34 @@ module.exports = [
 		},
 		experiments: { html: true },
 		plugins: [copyTest]
+	},
+	// authored HTML entry — custom favicon path
+	{
+		name: "authored-custom",
+		target: "web",
+		entry: { "authored-custom": "./src/page.html" },
+		output: {
+			filename: "[name].js",
+			htmlFilename: "authored-custom.html",
+			html: { favicon: "./src/icon.svg" }
+		},
+		experiments: { html: true },
+		plugins: [copyTest]
+	},
+	// multi-page authored HTML — both pages get the favicon even if first one
+	// already has <link rel="icon"> (exercises the pre-loop asset-name fix)
+	{
+		name: "authored-multi",
+		target: "web",
+		entry: {
+			page1: "./src/page.html",
+			page2: "./src/page-off.html"
+		},
+		output: {
+			filename: "[name].js",
+			html: true
+		},
+		experiments: { html: true },
+		plugins: [copyTest]
 	}
 ];
