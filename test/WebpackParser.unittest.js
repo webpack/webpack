@@ -389,6 +389,53 @@ describe("WebpackParser", () => {
 		});
 	});
 
+	describe("conditional, new, array and template atoms", () => {
+		it("should parse them on the single-shape fast paths", () => {
+			const { ast } = parse("a ? b : c; new A; new B(1); [1, , 2];");
+			expect(
+				ast.body.map(
+					(s) =>
+						/** @type {import("estree").ExpressionStatement} */ (s).expression
+							.type
+				)
+			).toEqual([
+				"ConditionalExpression",
+				"NewExpression",
+				"NewExpression",
+				"ArrayExpression"
+			]);
+			const template =
+				/** @type {import("estree").TemplateLiteral} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (
+						parse("`a${x}b`;").ast.body[0]
+					).expression
+				);
+			expect(template.quasis.map((q) => q.value.raw)).toEqual(["a", "b"]);
+			expect(template.quasis[1].tail).toBe(true);
+		});
+
+		it("should keep acorn's new.target and template escape checks", () => {
+			expect(
+				parse("function f(){ return new.target; }").ast
+			).toBeDefined();
+			expect(() => parse("new.target;")).toThrow(
+				/'new\.target' can only be used in functions/
+			);
+			expect(() => parse("`bad \\unicode`;")).toThrow(
+				/Bad escape sequence in untagged template literal/
+			);
+			const tagged =
+				/** @type {import("estree").TaggedTemplateExpression} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (
+						parse("tag`ok \\unicode`;").ast.body[0]
+					).expression
+				);
+			expect(tagged.quasi.quasis[0].value.cooked).toBe(null);
+		});
+	});
+
 	describe("unary and update expressions", () => {
 		it("should parse prefix and postfix operators on the fast path", () => {
 			const { ast } = parse("!x; y++; --z; typeof w; a ** -b;");
