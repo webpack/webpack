@@ -18753,6 +18753,11 @@ declare interface Output {
 	cssFilename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
+	 * Skip injecting a `<link rel="prefetch">` for a chunk that is already preloaded or prefetched in the document (avoids a duplicate request in some browsers).
+	 */
+	dedupePrefetch?: boolean;
+
+	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
 	devtoolFallbackModuleFilenameTemplate?:
@@ -19119,6 +19124,11 @@ declare interface OutputNormalized {
 	cssFilename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
+	 * Skip injecting a `<link rel="prefetch">` for a chunk that is already preloaded or prefetched in the document (avoids a duplicate request in some browsers).
+	 */
+	dedupePrefetch?: boolean;
+
+	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
 	devtoolFallbackModuleFilenameTemplate?:
@@ -19366,6 +19376,7 @@ type OutputNormalizedWithDefaults = OutputNormalized & {
 	module: NonNullable<undefined | boolean>;
 	asyncChunks: NonNullable<undefined | boolean>;
 	charset: NonNullable<undefined | boolean>;
+	dedupePrefetch: NonNullable<undefined | boolean>;
 	iife: NonNullable<undefined | boolean>;
 	globalObject: string;
 	scriptType: NonNullable<undefined | false | "module" | "text/javascript">;

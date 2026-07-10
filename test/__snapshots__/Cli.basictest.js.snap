@@ -8248,6 +8248,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-dedupe-prefetch": Object {
+    "configs": Array [
+      Object {
+        "description": "Skip injecting a \`<link rel=\\"prefetch\\">\` for a chunk that is already preloaded or prefetched in the document (avoids a duplicate request in some browsers).",
+        "multiple": false,
+        "path": "output.dedupePrefetch",
+        "type": "boolean",
+      },
+    ],
+    "description": "Skip injecting a \`<link rel=\\"prefetch\\">\` for a chunk that is already preloaded or prefetched in the document (avoids a duplicate request in some browsers).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-devtool-fallback-module-filename-template": Object {
     "configs": Array [
       Object {
