@@ -13,11 +13,7 @@ module.exports = {
 				this.audioWorklet = createWorklet();
 			}
 		};
-		scope.CSS = {
-			paintWorklet: createWorklet(),
-			layoutWorklet: createWorklet(),
-			animationWorklet: createWorklet()
-		};
+		scope.CSS = { paintWorklet: createWorklet() };
 	},
 	findBundle(i, options) {
 		outputDirectory = options.output.path;

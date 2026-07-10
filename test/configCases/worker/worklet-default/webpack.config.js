@@ -3,7 +3,6 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	output: {
-		assetModuleFilename: "asset-[name][ext]",
 		filename: "[name].js"
 	},
 	target: "web",
@@ -11,13 +10,9 @@ module.exports = {
 		rules: [
 			{
 				test: /\.[cm]?js$/,
+				// the dedicated worklet parser with its default syntax
 				parser: {
-					worklet: [
-						"CSS.paintWorklet.addModule()",
-						"*context.audioWorklet.addModule()",
-						"*audioWorklet.addModule()",
-						"..."
-					]
+					worklet: true
 				}
 			}
 		]
