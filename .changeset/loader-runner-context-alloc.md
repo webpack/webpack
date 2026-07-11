@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Reduce per-module loader-context allocation and harden request parsing.
+Reduce loader-context allocation and reuse/harden the shared resource parser.
