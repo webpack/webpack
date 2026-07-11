@@ -323,6 +323,20 @@ describe("WebpackParser", () => {
 			// keyword-after-dot forbids an expression, so the next `/` divides
 			expect(parse("a.in / b; a.of / c;").ast).toBeDefined();
 		});
+
+		it("should re-allow an expression after `of` and generator `yield`", () => {
+			// the inlined name.updateContext true branches: the `/` lexes a regexp
+			expect(parse("for (x of /re/g);").ast).toBeDefined();
+			expect(parse("function* g() { yield /re/g; }").ast).toBeDefined();
+		});
+
+		it("should delegate multi-char `.` and `=` tokens to acorn", () => {
+			// `...`, `==`, `===` and `=>` miss the single-char dispatch fast paths
+			expect(exprType("f(...a)")).toBe("CallExpression");
+			expect(exprType("a == b")).toBe("BinaryExpression");
+			expect(exprType("a === b")).toBe("BinaryExpression");
+			expect(exprType("(x) => x")).toBe("ArrowFunctionExpression");
+		});
 	});
 
 	describe("expression atoms", () => {
