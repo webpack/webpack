@@ -358,6 +358,21 @@ describe("runLoaders", () => {
 		run((err) => (err ? done(err) : run(done)));
 	});
 
+	it("should collect dependencies when methods are passed as detached callbacks", () => {
+		// loaders call these without a receiver, e.g. `deps.forEach(this.addDependency)`
+		const loaderContext = createLoaderContext();
+		/* eslint-disable unicorn/no-array-for-each -- intentionally exercising the detached forEach-callback pattern */
+		["/a", "/b"].forEach(loaderContext.addDependency);
+		["/c"].forEach(loaderContext.addContextDependency);
+		["/d"].forEach(loaderContext.addMissingDependency);
+		/* eslint-enable unicorn/no-array-for-each */
+		const detachedCacheable = loaderContext.cacheable;
+		detachedCacheable(false);
+		expect(loaderContext.getDependencies()).toEqual(["/a", "/b"]);
+		expect(loaderContext.getContextDependencies()).toEqual(["/c"]);
+		expect(loaderContext.getMissingDependencies()).toEqual(["/d"]);
+	});
+
 	it("should have to correct keys in context (with options)", (done) => {
 		runLoaders(
 			{

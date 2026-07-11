@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Reduce loader-context allocation and reuse/harden the shared resource parser.
+Reuse and harden webpack's shared resource parser in the loader runner.
