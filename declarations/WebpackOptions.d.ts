@@ -2686,10 +2686,6 @@ export interface Environment {
 	 */
 	module?: boolean;
 	/**
-	 * The environment supports `<link rel="modulepreload">` to preload EcmaScript modules.
-	 */
-	modulePreload?: boolean;
-	/**
 	 * The environment supports `process.getBuiltinModule()` to synchronously load Node.js core modules.
 	 */
 	nodeBuiltinModuleGetter?: boolean;
@@ -2719,22 +2715,11 @@ export interface Environment {
  */
 export interface OutputHtmlOptions {
 	/**
-	 * Inject a `<base>` element into the page `<head>`. A string sets `href`; an object sets both `href` and optionally `target`. Skipped if the HTML already contains a `<base>` element.
+	 * Where to place injected chunk `<script>`/`<link>` tags. `"body"` (default) appends them before `</body>`; `"head"` places them in `<head>`; `false` suppresses all sibling-chunk injection.
 	 */
-	base?:
-		| string
-		| {
-				/**
-				 * Value for the `href` attribute of the `<base>` element.
-				 */
-				href: string;
-				/**
-				 * Value for the `target` attribute of the `<base>` element (e.g. `"_blank"`).
-				 */
-				target?: string;
-		  };
+	inject?: ("body" | "head") | false;
 	/**
-	 * Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; an array of `RegExp` patterns matches against the chunk name.
+	 * Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; an array of `RegExp` patterns matches against the emitted chunk filename.
 	 */
 	inline?: RegExp[] | boolean;
 	/**
@@ -2748,76 +2733,9 @@ export interface OutputHtmlOptions {
 				filename: string;
 		  }) => string[] | false);
 	/**
-	 * Inject `<meta>` tags into the page `<head>`. Each key is the `name` attribute (or `"charset"` for a charset declaration); the value is the `content` string. Keys beginning with `og:` or `twitter:` use the `property` attribute instead of `name`. Tags are always appended; the caller is responsible for avoiding duplicates in authored HTML.
-	 */
-	meta?: {
-		/**
-		 * Content string for the meta tag.
-		 */
-		[k: string]: string;
-	};
-	/**
-	 * Resource-hint `<link>` tags injected into the HTML `<head>`. Off by default (webpack already loads the initial chunks via parallel `<script>` tags). `true` preloads the entry's initial dependency chunks (runtime, vendor, split) with `<link rel="modulepreload">` (ES module output) or `<link rel="preload" as="script">` (classic output). An array of descriptors, or a function called per HTML page (with its entrypoint context and the auto `defaultHints` to spread in), provides custom hints. Each hint targets a literal `href`, a `chunk` name, or an `entry` name — chunk/entry URLs, content hashes, public path, `crossorigin` and SRI are resolved automatically. Dynamic `import()`s always stay on the on-demand runtime.
-	 */
-	resourceHints?:
-		| HtmlResourceHint[]
-		| boolean
-		| ((context: {
-				entryName: string;
-				entrypoint: import("../lib/Entrypoint");
-				chunks: import("../lib/Chunk")[];
-				compilation: import("../lib/Compilation");
-				defaultHints: {rel: "modulepreload" | "preload"; chunk: string}[];
-		  }) => import("../lib/dependencies/HtmlEntryDependency").HtmlResourceHint[]);
-	/**
 	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
 	 */
 	scriptLoading?: "auto" | "blocking" | "defer";
-	/**
-	 * Sets the `<title>` of the generated HTML page. Skipped if the HTML already contains a `<title>` element.
-	 */
-	title?: string;
-}
-/**
- * A custom resource-hint `<link>` for `output.html.resourceHints`. Exactly one of `href` / `chunk` / `entry` names the target.
- */
-export interface HtmlResourceHint {
-	/**
-	 * The `as` attribute (`script`, `style`, `font`, …); defaults to `script` for chunk/entry references.
-	 */
-	as?: string;
-	/**
-	 * Name of a chunk to hint; its emitted URL is resolved automatically.
-	 */
-	chunk?: string;
-	/**
-	 * The CORS mode; `true` maps to `anonymous`.
-	 */
-	crossorigin?: ("anonymous" | "use-credentials") | boolean;
-	/**
-	 * Name of an entrypoint to hint; expands to one hint per initial chunk.
-	 */
-	entry?: string;
-	/**
-	 * A literal URL used verbatim (external resource, `preconnect` origin, or an already-hashed asset).
-	 */
-	href?: string;
-	/**
-	 * Subresource Integrity for a chunk/entry reference. Follows `output.html.integrity` by default; set `false` to opt this hint out.
-	 */
-	integrity?: boolean;
-	/**
-	 * The `media` attribute.
-	 */
-	media?: string;
-	/**
-	 * The `rel` of the resource hint.
-	 */
-	rel: "preload" | "prefetch" | "modulepreload" | "preconnect" | "dns-prefetch";
-	/**
-	 * The `type` attribute (MIME type).
-	 */
-	type?: string;
 }
 /**
  * Use a Trusted Types policy to create urls for chunks.

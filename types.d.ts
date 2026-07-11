@@ -7173,11 +7173,6 @@ declare interface Environment {
 	module?: boolean;
 
 	/**
-	 * The environment supports `<link rel="modulepreload">` to preload EcmaScript modules.
-	 */
-	modulePreload?: boolean;
-
-	/**
 	 * The environment supports `process.getBuiltinModule()` to synchronously load Node.js core modules.
 	 */
 	nodeBuiltinModuleGetter?: boolean;
@@ -7314,11 +7309,6 @@ declare interface ExecuteModuleOptions {
 declare interface ExecuteModuleResult {
 	exports: any;
 	cacheable: boolean;
-
-	/**
-	 * reasons why the executed modules are not cacheable
-	 */
-	notCacheableReasons: string[];
 	assets: Map<string, { source: Source; info?: AssetInfo }>;
 	fileDependencies: LazySet<string>;
 	contextDependencies: LazySet<string>;
@@ -9613,104 +9603,6 @@ declare interface HtmlParserOptions {
 	 * Transform the raw source before the html parser extracts dependencies. Receives the source string and a context (`{ module, resource }`) and must return the html string to parse. Useful for compiling a templating language (Handlebars, EJS, Eta, …) to html so that URLs the template emits are still picked up as webpack dependencies. Runs synchronously.
 	 */
 	template?: (source: string, context: HtmlTemplateContext) => string;
-}
-declare interface HtmlResourceHintHtmlEntryDependency {
-	/**
-	 * hint relationship
-	 */
-	rel: HtmlResourceHintRel;
-
-	/**
-	 * literal URL (external, `preconnect`, or an already-hashed asset)
-	 */
-	href?: string;
-
-	/**
-	 * chunk name to hint
-	 */
-	chunk?: string;
-
-	/**
-	 * entrypoint name to hint (expands to one hint per initial chunk)
-	 */
-	entry?: string;
-
-	/**
-	 * the `as` attribute; defaults to `script` for chunk/entry refs
-	 */
-	as?: string;
-
-	/**
-	 * the `type` attribute (MIME)
-	 */
-	type?: string;
-
-	/**
-	 * CORS mode (`true` → `anonymous`)
-	 */
-	crossorigin?: boolean | "anonymous" | "use-credentials";
-
-	/**
-	 * the `media` attribute
-	 */
-	media?: string;
-
-	/**
-	 * SRI for a chunk/entry ref; follows `output.html.integrity` by default, `false` opts out
-	 */
-	integrity?: boolean;
-}
-type HtmlResourceHintRel =
-	"preload" | "modulepreload" | "prefetch" | "preconnect" | "dns-prefetch";
-
-/**
- * A custom resource-hint `<link>` for `output.html.resourceHints`. Exactly one of `href` / `chunk` / `entry` names the target.
- */
-declare interface HtmlResourceHintWebpackOptions {
-	/**
-	 * The `as` attribute (`script`, `style`, `font`, …); defaults to `script` for chunk/entry references.
-	 */
-	as?: string;
-
-	/**
-	 * Name of a chunk to hint; its emitted URL is resolved automatically.
-	 */
-	chunk?: string;
-
-	/**
-	 * The CORS mode; `true` maps to `anonymous`.
-	 */
-	crossorigin?: boolean | "anonymous" | "use-credentials";
-
-	/**
-	 * Name of an entrypoint to hint; expands to one hint per initial chunk.
-	 */
-	entry?: string;
-
-	/**
-	 * A literal URL used verbatim (external resource, `preconnect` origin, or an already-hashed asset).
-	 */
-	href?: string;
-
-	/**
-	 * Subresource Integrity for a chunk/entry reference. Follows `output.html.integrity` by default; set `false` to opt this hint out.
-	 */
-	integrity?: boolean;
-
-	/**
-	 * The `media` attribute.
-	 */
-	media?: string;
-
-	/**
-	 * The `rel` of the resource hint.
-	 */
-	rel: "preload" | "modulepreload" | "prefetch" | "preconnect" | "dns-prefetch";
-
-	/**
-	 * The `type` attribute (MIME type).
-	 */
-	type?: string;
 }
 declare interface HtmlTemplateContext {
 	/**
@@ -13257,11 +13149,6 @@ declare interface KnownAssetModuleBuildInfo {
 }
 declare interface KnownBuildInfo {
 	cacheable?: boolean;
-
-	/**
-	 * reasons why the module is not cacheable (e.g. paths of loaders that marked it)
-	 */
-	notCacheableReasons?: string[];
 	strict?: boolean;
 	moduleArgument?: string;
 	exportsArgument?: string;
@@ -13679,7 +13566,6 @@ declare interface KnownStatsModule {
 	size?: number;
 	sizes?: Record<string, number>;
 	cacheable?: boolean;
-	notCacheableReasons?: string[];
 	built?: boolean;
 	codeGenerated?: boolean;
 	buildTimeExecuted?: boolean;
@@ -19155,23 +19041,12 @@ declare interface OutputFileSystem {
  */
 declare interface OutputHtmlOptions {
 	/**
-	 * Inject a `<base>` element into the page `<head>`. A string sets `href`; an object sets both `href` and optionally `target`. Skipped if the HTML already contains a `<base>` element.
+	 * Where to place injected chunk `<script>`/`<link>` tags. `"body"` (default) appends them before `</body>`; `"head"` places them in `<head>`; `false` suppresses all sibling-chunk injection.
 	 */
-	base?:
-		| string
-		| {
-				/**
-				 * Value for the `href` attribute of the `<base>` element.
-				 */
-				href: string;
-				/**
-				 * Value for the `target` attribute of the `<base>` element (e.g. `"_blank"`).
-				 */
-				target?: string;
-		  };
+	inject?: false | "body" | "head";
 
 	/**
-	 * Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; an array of `RegExp` patterns matches against the chunk name.
+	 * Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; an array of `RegExp` patterns matches against the emitted chunk filename.
 	 */
 	inline?: boolean | RegExp[];
 
@@ -19184,33 +19059,9 @@ declare interface OutputHtmlOptions {
 		| ((asset: { chunk: Chunk; filename: string }) => false | string[]);
 
 	/**
-	 * Inject `<meta>` tags into the page `<head>`. Each key is the `name` attribute (or `"charset"` for a charset declaration); the value is the `content` string. Keys beginning with `og:` or `twitter:` use the `property` attribute instead of `name`. Tags are always appended; the caller is responsible for avoiding duplicates in authored HTML.
-	 */
-	meta?: { [index: string]: string };
-
-	/**
-	 * Resource-hint `<link>` tags injected into the HTML `<head>`. Off by default (webpack already loads the initial chunks via parallel `<script>` tags). `true` preloads the entry's initial dependency chunks (runtime, vendor, split) with `<link rel="modulepreload">` (ES module output) or `<link rel="preload" as="script">` (classic output). An array of descriptors, or a function called per HTML page (with its entrypoint context and the auto `defaultHints` to spread in), provides custom hints. Each hint targets a literal `href`, a `chunk` name, or an `entry` name — chunk/entry URLs, content hashes, public path, `crossorigin` and SRI are resolved automatically. Dynamic `import()`s always stay on the on-demand runtime.
-	 */
-	resourceHints?:
-		| boolean
-		| HtmlResourceHintWebpackOptions[]
-		| ((context: {
-				entryName: string;
-				entrypoint: Entrypoint;
-				chunks: Chunk[];
-				compilation: Compilation;
-				defaultHints: { rel: "preload" | "modulepreload"; chunk: string }[];
-		  }) => HtmlResourceHintHtmlEntryDependency[]);
-
-	/**
 	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
 	 */
 	scriptLoading?: "auto" | "defer" | "blocking";
-
-	/**
-	 * Sets the `<title>` of the generated HTML page. Skipped if the HTML already contains a `<title>` element.
-	 */
-	title?: string;
 }
 
 /**
@@ -22815,7 +22666,6 @@ declare abstract class RuntimeTemplate {
 	supportsBigIntLiteral(): boolean;
 	supportsDynamicImport(): boolean;
 	supportsEcmaScriptModuleSyntax(): boolean;
-	supportsModulePreload(): boolean;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
 
@@ -24294,14 +24144,11 @@ declare abstract class StackEntry {
 
 /**
  * Layered map that supports child scopes while memoizing lookups from parent
- * scopes. Layers form a linked parent chain, so `createChild` is O(1) instead
- * of copying a layer array per scope. A layer's `Map` is only allocated on its
- * first own write, and lookup results are memoized into the nearest
- * `Map`-bearing layer of the walk — read-only layers (most block scopes) stay
- * allocation-free and share their parent's memoized entries.
+ * scopes into the current layer. Layers form a linked parent chain, so
+ * `createChild` is O(1) instead of copying a layer array per scope.
  */
 declare abstract class StackedMap<K, V> {
-	map?: Map<K, InternalCell<V>>;
+	map: Map<K, InternalCell<V>>;
 	parent?: StackedMap<K, V>;
 
 	/**
@@ -24318,14 +24165,13 @@ declare abstract class StackedMap<K, V> {
 
 	/**
 	 * Checks whether a key exists in the current scope chain, caching any parent
-	 * lookup result in the nearest `Map`-bearing layer.
+	 * lookup result in the current layer.
 	 */
 	has(item: K): boolean;
 
 	/**
 	 * Returns the visible value for a key, caching parent hits and misses in the
-	 * nearest `Map`-bearing layer so repeated lookups (from this layer or any
-	 * sibling below that layer) answer with a single probe.
+	 * current layer.
 	 */
 	get(item: K): Cell<V>;
 
