@@ -2,7 +2,7 @@
 
 require("./helpers/warmup-webpack");
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 const { Volume, createFsFromVolume } = require("memfs");
 /** @type {(path: string, callback: (err?: unknown) => void) => void} */

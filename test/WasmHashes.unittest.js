@@ -1,6 +1,6 @@
 "use strict";
 
-const { createHash, randomBytes } = require("crypto");
+const { createHash, randomBytes } = require("node:crypto");
 
 const wasmHashes = {
 	xxhash64: () => {

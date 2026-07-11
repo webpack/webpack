@@ -13,7 +13,7 @@ require("./helpers/warmup-webpack");
  * @property {((scope: EXPECTED_ANY, options: import("../").Configuration) => void)=} moduleScope
  */
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 /** @type {{ sync: (p: string) => void }} */
 const rimraf = require("rimraf");
@@ -191,7 +191,7 @@ const describeCases = (config) => {
 									testConfig,
 									require(path.join(testDirectory, "test.config.js"))
 								);
-							} catch (_err) {
+							} catch {
 								// ignored
 							}
 

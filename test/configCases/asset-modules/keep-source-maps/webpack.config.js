@@ -27,7 +27,7 @@ module.exports = {
 					binary: false,
 					filename: (pathInfo) =>
 						/** @type {string} */
-						(pathInfo.filename).replace(/\.scss/gi, ".css")
+						(pathInfo.filename).replaceAll(/\.scss/gi, ".css")
 				},
 				use: ["./loader.js"]
 			}

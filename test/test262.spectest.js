@@ -2,17 +2,17 @@
 
 require("./helpers/warmup-webpack");
 
-const fs = require("fs");
-const path = require("path");
-const url = require("url");
-const vm = require("vm");
+const fs = require("node:fs");
+const path = require("node:path");
+const url = require("node:url");
+const vm = require("node:vm");
 const webpack = require("..");
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 const needDebug = typeof process.env.DEBUG !== "undefined";
 
 const outputFileSystem = needDebug
-	? require("fs")
+	? require("node:fs")
 	: (() => {
 			const { Volume, createFsFromVolume } = require("memfs");
 
@@ -459,7 +459,7 @@ const edgeCases = [
 /* cspell:enable */
 const edgeCasesRegExp = new RegExp(
 	edgeCases
-		.map((s) => `(?:${s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$)`)
+		.map((s) => `(?:${s.replaceAll(/[.*+?^${}()|[\]\\]/g, "\\$&")}$)`)
 		.join("|")
 );
 
@@ -562,7 +562,7 @@ const extractYamlArray = (meta, key) => {
 
 	return match[1]
 		.split(",")
-		.map((s) => s.trim().replace(/['"]/g, ""))
+		.map((s) => s.trim().replaceAll(/['"]/g, ""))
 		.filter(Boolean);
 };
 

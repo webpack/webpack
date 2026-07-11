@@ -1,11 +1,11 @@
 "use strict";
 
-const fs = require("fs");
+const fs = require("node:fs");
 
 const file = process.argv[2];
 
 let content = fs.readFileSync(file, "utf8");
-content = content.replace(/debug-digest-([a-f0-9]+)/g, (match, bin) =>
+content = content.replaceAll(/debug-digest-([a-f0-9]+)/g, (match, bin) =>
 	Buffer.from(bin, "hex").toString("utf8")
 );
 

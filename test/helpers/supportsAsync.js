@@ -9,7 +9,7 @@ module.exports = function supportsAsync() {
 	try {
 		eval("async () => {}");
 		return true;
-	} catch (_err) {
+	} catch {
 		// Ignore
 	}
 

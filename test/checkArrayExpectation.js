@@ -1,6 +1,6 @@
 "use strict";
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 const { matchKindSnapshot } = require("./harness/snapshot");
 
@@ -8,7 +8,7 @@ const { matchKindSnapshot } = require("./harness/snapshot");
  * @param {string} str string to escape for use in a RegExp
  * @returns {string} escaped string
  */
-const quoteMeta = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const quoteMeta = (str) => str.replaceAll(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 /**
  * Derives the webpack root directory from a test directory path.
@@ -29,21 +29,24 @@ const getWebpackRoot = (testDirectory) => {
  */
 const normalizeString = (str, testDirectory) => {
 	if (!str) return str;
-	str = str.replace(/\\/g, "/");
-	const testDirNorm = testDirectory.replace(/\\/g, "/");
+	str = str.replaceAll("\\", "/");
+	const testDirNorm = testDirectory.replaceAll("\\", "/");
 	const root = getWebpackRoot(testDirectory);
-	const rootNorm = root ? root.replace(/\\/g, "/") : "";
+	const rootNorm = root ? root.replaceAll("\\", "/") : "";
 	// Replace more-specific test dir first, then the broader root
-	str = str.replace(new RegExp(quoteMeta(testDirNorm), "g"), "<TEST_DIR>");
+	str = str.replaceAll(new RegExp(quoteMeta(testDirNorm), "g"), "<TEST_DIR>");
 	if (rootNorm) {
-		str = str.replace(new RegExp(quoteMeta(rootNorm), "g"), "<WEBPACK_ROOT>");
+		str = str.replaceAll(
+			new RegExp(quoteMeta(rootNorm), "g"),
+			"<WEBPACK_ROOT>"
+		);
 		// Replace ancestor directories above webpack root.
 		// The resolver walks up to the filesystem root looking for
 		// node_modules, producing paths like /Users/x/node_modules.
 		let ancestor = path.dirname(root);
 		while (ancestor !== path.dirname(ancestor)) {
-			str = str.replace(
-				new RegExp(quoteMeta(ancestor.replace(/\\/g, "/")), "g"),
+			str = str.replaceAll(
+				new RegExp(quoteMeta(ancestor.replaceAll("\\", "/")), "g"),
 				"<ANCESTOR>"
 			);
 			ancestor = path.dirname(ancestor);
@@ -51,32 +54,35 @@ const normalizeString = (str, testDirectory) => {
 	}
 	// Normalize the output directory suite name (e.g. test/js/ConfigTestCases/
 	// vs test/js/ConfigCacheTestCases/) so all suites produce identical snapshots.
-	str = str.replace(/(<WEBPACK_ROOT>\/test\/js\/)[^/]+\//g, "$1<OUTPUT>/");
+	str = str.replaceAll(/(<WEBPACK_ROOT>\/test\/js\/)[^/]+\//g, "$1<OUTPUT>/");
 	// Strip stack trace lines — line numbers vary across Node.js versions
 	// and between runs (e.g. processTicksAndRejections).
 	str = str
 		.split("\n")
 		.filter((line) => !/^\s+at\s/.test(line))
 		.join("\n")
-		.replace(/\n{3,}/g, "\n\n")
+		.replaceAll(/\n{3,}/g, "\n\n")
 		.trim();
 	// Normalize engine-specific JSON.parse error text (V8 "Unexpected token …
 	// (0x..)" / "… in JSON …" vs JSC/Bun "JSON Parse error: …") so JSON
 	// type-import "Module parse failed" snapshots match across runtimes. The
 	// acorn "(line:col)" parse errors are engine-independent and left as-is.
-	str = str.replace(
+	str = str.replaceAll(
 		/Module parse failed: (?:JSON Parse error:|Unexpected token "[^"]*" \(0x|Unexpected \S+ in JSON|Unexpected end of JSON input|Unexpected non-whitespace character after JSON)[\s\S]*?(?=\nYou may need an appropriate loader)/g,
 		"Module parse failed: <JSON parse error>"
 	);
 	// Normalize JSC (Bun) magic-comment parse phrasing to the V8 form: JSC
 	// quotes the token and appends "Expected …", V8 does neither.
-	str = str.replace(/(Unexpected token) '([^']*)'\. Expected[^\n]*/g, "$1 $2");
-	str = str.replace(/(Unexpected identifier)\. Expected[^\n]*/g, "$1");
+	str = str.replaceAll(
+		/(Unexpected token) '([^']*)'\. Expected[^\n]*/g,
+		"$1 $2"
+	);
+	str = str.replaceAll(/(Unexpected identifier)\. Expected[^\n]*/g, "$1");
 	// Normalize "Unexpected token" messages — quoting and detail
 	// format varies across Node.js versions (e.g. with/without quotes,
 	// hex codes, trailing context).
-	str = str.replace(/(Unexpected token) '([^']*)'$/gm, "$1 $2");
-	str = str.replace(/(Unexpected token[^)]*\))[^\n]*(?:\n['"])?/g, "$1");
+	str = str.replaceAll(/(Unexpected token) '([^']*)'$/gm, "$1 $2");
+	str = str.replaceAll(/(Unexpected token[^)]*\))[^\n]*(?:\n['"])?/g, "$1");
 	return str;
 };
 

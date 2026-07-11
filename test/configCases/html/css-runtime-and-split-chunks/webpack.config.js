@@ -13,8 +13,8 @@
 //      scripts so the cascade is stable.
 //   4. entry chunk's `<script>` — last, rewritten in place.
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */

@@ -3,7 +3,7 @@
 /** @typedef {(...args: unknown[]) => unknown} AnyFn */
 
 module.exports = (globalTimeout = 2000, nameSuffix = "") => {
-	const state = global.JEST_STATE_SYMBOL;
+	const state = globalThis.JEST_STATE_SYMBOL;
 	/** @type {import("@jest/types").Circus.DescribeBlock} */
 	let currentDescribeBlock;
 	/** @type {import("@jest/types").Circus.TestEntry | null | undefined} */
@@ -117,7 +117,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 				/** @type {AnyFn | undefined} */ (args[1]),
 				true
 			);
-			args[2] = args[2] || globalTimeout;
+			args[2] ||= globalTimeout;
 			inSuite(() => {
 				// @ts-expect-error expected
 				it(...args);

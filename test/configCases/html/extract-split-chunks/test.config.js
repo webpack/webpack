@@ -1,6 +1,6 @@
 "use strict";
 
-const fs = require("fs");
+const fs = require("node:fs");
 
 // `output.filename` is `[name].js` so the test entry bundle lives at
 // `main.js`, not `bundle0.js`. Tell the harness where to find it; we also

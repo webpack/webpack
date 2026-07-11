@@ -3,7 +3,7 @@
 module.exports = function supportsBlob() {
 	try {
 		return typeof Blob !== "undefined";
-	} catch (_err) {
+	} catch {
 		return false;
 	}
 };

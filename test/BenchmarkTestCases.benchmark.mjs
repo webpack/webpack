@@ -1,8 +1,8 @@
-import { constants, writeFile } from "fs";
-import fs from "fs/promises";
-import { Session } from "inspector";
-import path from "path";
-import { fileURLToPath, pathToFileURL } from "url";
+import { constants, writeFile } from "node:fs";
+import fs from "node:fs/promises";
+import { Session } from "node:inspector";
+import path from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import {
 	InstrumentHooks,
 	getCodspeedRunnerMode,
@@ -207,7 +207,7 @@ const baselineRevisions = await getBaselineRevs();
 
 try {
 	await fs.mkdir(baselinesPath, { recursive: true });
-} catch (_err) {} // eslint-disable-line no-empty
+} catch {} // eslint-disable-line no-empty
 
 /** @typedef {{ name: string, rev?: string, webpack: (() => Promise<Webpack>) }} Baseline */
 
@@ -252,7 +252,7 @@ for (const baselineInfo of baselineRevisions) {
 
 		try {
 			await fs.mkdir(baselinePath);
-		} catch (_err) {} // eslint-disable-line no-empty
+		} catch {} // eslint-disable-line no-empty
 
 		const gitIndex = path.resolve(rootPath, ".git/index");
 		const index = await fs.readFile(gitIndex);
@@ -304,18 +304,18 @@ function buildConfiguration(
 						: "./index.js"
 				)
 			: config.entry;
-	config.devtool = config.devtool || false;
+	config.devtool ||= false;
 	config.name = `${test}-${baseline.name}-${scenario.name}`;
 	config.context = testDirectory;
 	config.performance = false;
-	config.output = config.output || {};
+	config.output ||= {};
 	config.output.path = path.join(
 		baseOutputPath,
 		test,
 		`scenario-${scenario.name}`,
 		`baseline-${baseline.name}`
 	);
-	config.plugins = config.plugins || [];
+	config.plugins ||= [];
 	if (
 		config.cache &&
 		typeof config.cache !== "boolean" &&
@@ -339,11 +339,11 @@ function buildConfiguration(
 function sanitizeFilename(filename) {
 	// Replace invalid filesystem characters with underscores
 	return filename
-		.replace(/[<>:"/\\|?*]/g, "_")
-		.replace(/[\u0000-\u001F\u0080-\u009F]/g, "_")
+		.replaceAll(/[<>:"/\\|?*]/g, "_")
+		.replaceAll(/[\u0000-\u001F\u0080-\u009F]/g, "_")
 		.replace(/^\.+/, "_")
 		.replace(/\.+$/, "_")
-		.replace(/\s+/g, "_")
+		.replaceAll(/\s+/g, "_")
 		.slice(0, 200); // Limit filename length
 }
 
@@ -686,7 +686,7 @@ const withCodSpeed = async (bench) => {
 			// then drain pending IO with `setImmediate`, then one final GC to
 			// catch anything the IO callbacks left behind.
 			for (let i = 0; i < 3; i++) {
-				global.gc?.();
+				globalThis.gc?.();
 				await new Promise((resolve) => {
 					queueMicrotask(() => resolve(undefined));
 				});
@@ -694,7 +694,7 @@ const withCodSpeed = async (bench) => {
 			await new Promise((resolve) => {
 				setImmediate(resolve);
 			});
-			global.gc?.();
+			globalThis.gc?.();
 			await wrapWithInstrumentHooksAsync(wrapFunctionWithFrame(fn, true), uri);
 			await mongoMeasurement.stop(uri);
 			await options?.afterEach?.call(task, "run");
@@ -711,7 +711,7 @@ const withCodSpeed = async (bench) => {
 			options = undefined;
 			uriMap.delete(name);
 			for (let i = 0; i < 3; i++) {
-				global.gc?.();
+				globalThis.gc?.();
 				await new Promise((resolve) => {
 					queueMicrotask(() => resolve(undefined));
 				});
@@ -719,7 +719,7 @@ const withCodSpeed = async (bench) => {
 			await new Promise((resolve) => {
 				setImmediate(resolve);
 			});
-			global.gc?.();
+			globalThis.gc?.();
 		};
 
 		/**
@@ -792,7 +792,7 @@ const withCodSpeed = async (bench) => {
 			// trigger) doesn't leak into the measured sample. The sync path has no
 			// microtask queue to drain, so we just chain GCs.
 			for (let i = 0; i < 4; i++) {
-				global.gc?.();
+				globalThis.gc?.();
 			}
 			wrapWithInstrumentHooks(wrapFunctionWithFrame(fn, false), uri);
 
@@ -810,7 +810,7 @@ const withCodSpeed = async (bench) => {
 			options = undefined;
 			uriMap.delete(name);
 			for (let i = 0; i < 4; i++) {
-				global.gc?.();
+				globalThis.gc?.();
 			}
 		};
 
@@ -886,7 +886,7 @@ const withCodSpeed = async (bench) => {
 				// Drain heap accumulated by the prime pass so it can't leak
 				// into the first measurement.
 				for (let i = 0; i < 4; i++) {
-					global.gc?.();
+					globalThis.gc?.();
 					await new Promise((resolve) => {
 						queueMicrotask(() => resolve(undefined));
 					});
@@ -894,7 +894,7 @@ const withCodSpeed = async (bench) => {
 				await new Promise((resolve) => {
 					setImmediate(resolve);
 				});
-				global.gc?.();
+				globalThis.gc?.();
 			}
 
 			for (const task of bench.tasks) {
@@ -916,7 +916,7 @@ const withCodSpeed = async (bench) => {
 					primeTaskSync(task);
 				}
 				for (let i = 0; i < 4; i++) {
-					global.gc?.();
+					globalThis.gc?.();
 				}
 			}
 
@@ -973,7 +973,7 @@ async function registerSuite(bench, test, baselines) {
 
 	try {
 		options = await import(`${pathToFileURL(optionsPath)}`);
-	} catch (_err) {
+	} catch {
 		// Ignore
 	}
 
@@ -1382,7 +1382,7 @@ function formatBytes(bytes) {
  * @returns {Promise<{ peak: number, marginal: number }>} peak and marginal live bytes
  */
 async function sampleHeapPeak(fn) {
-	global.gc?.();
+	globalThis.gc?.();
 	const baseline = process.memoryUsage().heapUsed;
 	let peak = baseline;
 	const timer = setInterval(() => {

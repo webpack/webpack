@@ -34,11 +34,11 @@ module.exports = {
 					}
 					// Exercise the dependency helpers (harmless paths).
 					addDependency(resource);
-					addContextDependency(require("path").dirname(resource));
+					addContextDependency(require("node:path").dirname(resource));
 					addBuildDependency(resource);
 					return source
-						.replace(/\{\{title\}\}/g, "Hello world")
-						.replace(/\{\{image\}\}/g, "./image.png");
+						.replaceAll("{{title}}", "Hello world")
+						.replaceAll("{{image}}", "./image.png");
 				}
 			}
 		}

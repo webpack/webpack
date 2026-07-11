@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable camelcase */
 
-import fs from "fs";
+import fs from "node:fs";
 
 /**
  * @param {{ github: EXPECTED_ANY, context: EXPECTED_ANY }} params params

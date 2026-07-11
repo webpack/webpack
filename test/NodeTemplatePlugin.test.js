@@ -2,7 +2,7 @@
 
 require("./helpers/warmup-webpack");
 
-const path = require("path");
+const path = require("node:path");
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 // cspell:word nodetest
@@ -39,7 +39,7 @@ describe("NodeTemplatePlugin", () => {
 				const result = require("./js/NodeTemplatePlugin/result").abc;
 
 				expect(result.nextTick).toBe(process.nextTick);
-				expect(result.fs).toBe(require("fs"));
+				expect(result.fs).toBe(require("node:fs"));
 				result.loadChunk(
 					456,
 					/** @param {unknown} chunk loaded chunk */ (chunk) => {
@@ -92,7 +92,7 @@ describe("NodeTemplatePlugin", () => {
 				const result = require("./js/NodeTemplatePluginSingle/result2");
 
 				expect(result.nextTick).toBe(process.nextTick);
-				expect(result.fs).toBe(require("fs"));
+				expect(result.fs).toBe(require("node:fs"));
 				const sameTick = true;
 				result.loadChunk(
 					456,

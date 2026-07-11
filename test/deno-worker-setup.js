@@ -7,11 +7,11 @@
 // of the real entry — which Deno runs as CommonJS. This avoids the
 // --unstable-detect-cjs flag. No-op on Node/Bun (gated on process.versions.deno).
 if (process.versions.deno) {
-	const fs = require("fs");
-	const os = require("os");
-	const path = require("path");
-	const { fileURLToPath } = require("url");
-	const workerThreads = require("worker_threads");
+	const fs = require("node:fs");
+	const os = require("node:os");
+	const path = require("node:path");
+	const { fileURLToPath } = require("node:url");
+	const workerThreads = require("node:worker_threads");
 
 	const RealWorker = workerThreads.Worker;
 
@@ -55,7 +55,7 @@ if (process.versions.deno) {
 				this.once("exit", () => {
 					try {
 						fs.unlinkSync(file);
-					} catch (_err) {
+					} catch {
 						// best-effort cleanup
 					}
 				});

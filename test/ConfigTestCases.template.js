@@ -19,7 +19,7 @@ require("./helpers/warmup-webpack");
  * @property {((scope: EXPECTED_ANY, options: import("../").Configuration, target: EXPECTED_ANY) => void)=} moduleScope
  */
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 /** @type {{ sync: (p: string) => void }} */
 const rimraf = require("rimraf");
@@ -254,7 +254,7 @@ const describeCases = (config) => {
 									testConfig,
 									require(path.join(testDirectory, "test.config.js"))
 								);
-							} catch (_err) {
+							} catch {
 								// ignored
 							}
 							if (testConfig.timeout) setDefaultTimeout(testConfig.timeout);
@@ -586,7 +586,7 @@ const describeCases = (config) => {
 										if (testConfig.afterExecute) {
 											testConfig.afterExecute(options);
 										}
-										for (const key of Object.keys(global)) {
+										for (const key of Object.keys(globalThis)) {
 											if (key.includes("webpack")) {
 												delete (
 													/** @type {Record<string, unknown>} */ (global)[key]

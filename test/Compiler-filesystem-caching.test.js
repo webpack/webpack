@@ -2,7 +2,7 @@
 
 require("./helpers/warmup-webpack");
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 const rimraf = /** @type {{ sync: (path: string) => void }} */ (
 	require("rimraf")
@@ -112,21 +112,17 @@ describe("Compiler (filesystem caching)", () => {
 									}
 
 									if (isBigIntSupported) {
-										expect(result.bigint).toBe(BigInt(5));
-										expect(result.bigint1).toBe(BigInt(124));
-										expect(result.bigint2).toBe(BigInt(125));
-										expect(result.bigint3).toBe(BigInt("12345678901234567890"));
-										expect(result.bigint4).toBe(BigInt(5));
-										expect(result.bigint5).toBe(BigInt(1000000));
-										expect(result.bigint6).toBe(BigInt(128));
-										expect(result.bigint7).toBe(BigInt(2147483647));
-										expect(result.obj.foo).toBe(BigInt(-10));
-										expect([...result.set]).toEqual([BigInt(1), BigInt(2)]);
-										expect(result.arr).toEqual([
-											BigInt(256),
-											BigInt(257),
-											BigInt(258)
-										]);
+										expect(result.bigint).toBe(5n);
+										expect(result.bigint1).toBe(124n);
+										expect(result.bigint2).toBe(125n);
+										expect(result.bigint3).toBe(12345678901234567890n);
+										expect(result.bigint4).toBe(5n);
+										expect(result.bigint5).toBe(1000000n);
+										expect(result.bigint6).toBe(128n);
+										expect(result.bigint7).toBe(2147483647n);
+										expect(result.obj.foo).toBe(-10n);
+										expect([...result.set]).toEqual([1n, 2n]);
+										expect(result.arr).toEqual([256n, 257n, 258n]);
 									}
 
 									return;
@@ -157,17 +153,17 @@ describe("Compiler (filesystem caching)", () => {
 								}
 
 								if (isBigIntSupported) {
-									storeValue.bigint = BigInt(5);
-									storeValue.bigint1 = BigInt(124);
-									storeValue.bigint2 = BigInt(125);
-									storeValue.bigint3 = BigInt("12345678901234567890");
-									storeValue.bigint4 = BigInt(5);
-									storeValue.bigint5 = BigInt(1000000);
-									storeValue.bigint6 = BigInt(128);
-									storeValue.bigint7 = BigInt(2147483647);
-									storeValue.obj = { foo: BigInt(-10) };
-									storeValue.set = new Set([BigInt(1), BigInt(2)]);
-									storeValue.arr = [BigInt(256), BigInt(257), BigInt(258)];
+									storeValue.bigint = 5n;
+									storeValue.bigint1 = 124n;
+									storeValue.bigint2 = 125n;
+									storeValue.bigint3 = 12345678901234567890n;
+									storeValue.bigint4 = 5n;
+									storeValue.bigint5 = 1000000n;
+									storeValue.bigint6 = 128n;
+									storeValue.bigint7 = 2147483647n;
+									storeValue.obj = { foo: -10n };
+									storeValue.set = new Set([1n, 2n]);
+									storeValue.arr = [256n, 257n, 258n];
 								}
 
 								await cacheItem.storePromise(storeValue);

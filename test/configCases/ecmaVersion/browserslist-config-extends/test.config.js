@@ -1,7 +1,7 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 
 const rootPath = path.resolve(__dirname, "../../../../");
 const rootNodeModules = path.resolve(rootPath, "./node_modules");
@@ -24,7 +24,7 @@ const browserslistFile = path.resolve(browserslistPackage, "./index.js");
 
 try {
 	fs.mkdirSync(browserslistPackage);
-} catch (_err) {
+} catch {
 	// Nothing
 }
 

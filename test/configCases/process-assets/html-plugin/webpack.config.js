@@ -228,7 +228,7 @@ class HtmlMinimizePlugin {
 								(source) =>
 									new RawSource(
 										/** @type {string} */
-										(source.source()).replace(/\s+/g, " ")
+										(source.source()).replaceAll(/\s+/g, " ")
 									),
 								(assetInfo) => ({
 									...assetInfo,

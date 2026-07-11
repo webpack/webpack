@@ -54,7 +54,7 @@ jobs:
 
       - name: Validate types using old typescript version
         run: |
-          yarn upgrade typescript@5.0 @types/node@20
+          yarn upgrade typescript@5.8 @types/node@22
           yarn --frozen-lockfile
           yarn validate:types
 
@@ -96,24 +96,6 @@ jobs:
           lcov-file: ./coverage/lcov.info
           title: Types Coverage
           delete-old-comments: true
-
-  validate-legacy-node:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-
-      - name: Use Node.js 10.x
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
-        with:
-          node-version: 10.x
-          cache: yarn
-
-      # Remove `devDependencies` from `package.json` to avoid `yarn install` compatibility error
-      - run: node -e "const content = require('./package.json');delete content.devDependencies;require('fs').writeFileSync('package.json', JSON.stringify(content, null, 2));"
-
-      # `--ignore-engines`: some transitive deps (e.g. node-releases) declare
-      # `engines.node >= 18` but run fine on old Node; matches the other legacy jobs
-      - run: yarn install --production --frozen-lockfile --ignore-engines
 
   basic:
     runs-on: ubuntu-latest
@@ -351,7 +333,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [10.x, 22.x, 24.x, 26.x]
+        node-version: [22.x, 24.x, 26.x]
         part: [a, b]
         include:
           # Test with main branches of webpack dependencies
@@ -363,65 +345,17 @@ jobs:
             node-version: lts/*
             part: b
             use_main_branches: 1
-          # Test on old Node.js versions
-          - os: ubuntu-latest
-            node-version: 20.x
-            part: a
-          - os: ubuntu-latest
-            node-version: 18.x
-            part: a
-          - os: ubuntu-latest
-            node-version: 16.x
-            part: a
-          - os: ubuntu-latest
-            node-version: 14.x
-            part: a
-          - os: ubuntu-latest
-            node-version: 12.x
-            part: a
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-
-      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        id: calculate_architecture
-        with:
-          result-encoding: string
-          script: |
-            if ('${{ matrix.os }}' === 'macos-latest' && '${{ matrix['node-version'] }}' === '10.x') {
-              return "x64"
-            } else {
-              return ''
-            }
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: ${{ matrix.node-version }}
-          architecture: ${{ steps.calculate_architecture.outputs.result }}
           cache: yarn
 
-      # Install old `jest` version and deps for legacy node versions
-      - run: |
-          yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-snapshot@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 cspell@^6.31.1 open-cli@^7.2.0 coffee-loader@^1.0.0 babel-loader@^8.1.0 style-loader@^2.0.0 css-loader@^5.0.1 less-loader@^8.1.1 less@4.5.1 mini-css-extract-plugin@^1.6.1 nyc@^15.1.0 memfs@4.14.0 --ignore-engines
-          yarn --frozen-lockfile --ignore-engines
-        if: matrix.node-version == '10.x' || matrix.node-version == '12.x' || matrix.node-version == '14.x'
-
-      - run: |
-          yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-snapshot@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 husky@^8.0.3 lint-staged@^13.2.1 nyc@^15.1.0 coffee-loader@1.0.0 babel-loader@^8.1.0 style-loader@^2.0.0 css-loader@^5.0.1 less-loader@^8.1.1 mini-css-extract-plugin@^1.6.1 --ignore-engines
-          yarn --frozen-lockfile
-        if: matrix.node-version == '16.x'
-
-      - run: |
-          yarn upgrade cspell@^8.8.4 lint-staged@^15.2.5 --ignore-engines
-          yarn --frozen-lockfile
-        if: matrix.node-version == '18.x'
-
-      - run: |
-          yarn upgrade cspell@^9 --ignore-engines
-          yarn --frozen-lockfile
-        if: matrix.node-version == '20.x'
-
+      # pkg-pr-new versions newer than 0.0.66 require Node.js >= 24
       - run: |
           yarn upgrade pkg-pr-new@0.0.66
           yarn --frozen-lockfile
@@ -431,9 +365,8 @@ jobs:
       - run: yarn upgrade enhanced-resolve@webpack/enhanced-resolve#main loader-runner@webpack/loader-runner#main webpack-sources@webpack/webpack-sources#main watchpack@webpack/watchpack#main tapable@webpack/tapable#main
         if: matrix.use_main_branches == '1'
 
-      # Install dependencies for LTS node versions
       - run: yarn --frozen-lockfile
-        if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x' && matrix.node-version != '16.x' && matrix.node-version != '18.x' && matrix.node-version != '20.x' && matrix.node-version != '22.x'
+        if: matrix.node-version != '22.x'
 
       - run: yarn link --frozen-lockfile || true
 
@@ -451,14 +384,8 @@ jobs:
       - run: yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
         env:
           MAIN_BRANCHES: ${{ matrix.use_main_branches }}
-        if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x' && matrix.node-version != '16.x' && matrix.node-version != '18.x' && matrix.node-version != '20.x'
-
-      # Don't run code coverage analysis on older versions of NodeJS, this will speed up our CI
-      - run: yarn test:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn test:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
-        if: matrix.node-version == '10.x' || matrix.node-version == '12.x' || matrix.node-version == '14.x' || matrix.node-version == '16.x' || matrix.node-version == '18.x' || matrix.node-version == '20.x'
 
       - run: yarn report:cover:merge
-        if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x' && matrix.node-version != '16.x' && matrix.node-version != '18.x' && matrix.node-version != '20.x'
 
       - name: Codecov
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
@@ -469,4 +396,3 @@ jobs:
           flags: integration
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x' && matrix.node-version != '16.x' && matrix.node-version != '18.x' && matrix.node-version != '20.x'

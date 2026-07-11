@@ -1,6 +1,6 @@
 "use strict";
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 
 const webpack = require("..");
@@ -20,7 +20,7 @@ describe("BannerPlugin", () => {
 			fs.mkdirSync(path.join(pluginDir), {
 				recursive: true
 			});
-		} catch (_err) {
+		} catch {
 			// empty
 		}
 		const compiler = webpack({
@@ -66,7 +66,7 @@ describe("BannerPlugin", () => {
 			fs.mkdirSync(path.join(pluginDir), {
 				recursive: true
 			});
-		} catch (_err) {
+		} catch {
 			// empty
 		}
 		const compiler = webpack({
@@ -100,7 +100,7 @@ describe("BannerPlugin", () => {
 			fs.mkdirSync(path.join(pluginDir), {
 				recursive: true
 			});
-		} catch (_err) {
+		} catch {
 			// empty
 		}
 		const compiler = webpack({

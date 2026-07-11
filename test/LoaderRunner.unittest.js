@@ -1,7 +1,7 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const {
 	createLoaderContext,
 	getContext,
@@ -798,7 +798,7 @@ describe("runLoaders", () => {
 
 	it("should load a loader using System.import and process", (done) => {
 		/** @type {EXPECTED_ANY} */
-		(global).System = {
+		(globalThis).System = {
 			import(/** @type {string} */ moduleId) {
 				return Promise.resolve(require(moduleId));
 			}
@@ -819,7 +819,7 @@ describe("runLoaders", () => {
 				done();
 			}
 		);
-		delete (/** @type {EXPECTED_ANY} */ (global).System);
+		delete (/** @type {EXPECTED_ANY} */ (globalThis).System);
 	});
 
 	if (Number(process.versions.modules) >= 83) {
@@ -855,7 +855,7 @@ describe("runLoaders", () => {
 	try {
 		require(path.resolve(fixtures, "esm-loader.mjs"));
 		canRequireEsm = true;
-	} catch (_err) {
+	} catch {
 		// require(esm) is not supported in this runtime
 	}
 	if (canRequireEsm) {

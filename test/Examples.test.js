@@ -2,7 +2,7 @@
 
 require("./helpers/warmup-webpack");
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const {
@@ -67,7 +67,7 @@ async function loadConfiguration(projectDir) {
 			try {
 				options = require(path);
 				return options;
-			} catch (_err) {
+			} catch {
 				// Nothing
 			}
 
@@ -77,10 +77,10 @@ async function loadConfiguration(projectDir) {
 		try {
 			options = await dynamicImport(path);
 			return options.default;
-		} catch (_err) {
+		} catch {
 			try {
 				options = require(path);
-			} catch (_err) {
+			} catch {
 				// Nothing
 			}
 		}
@@ -138,7 +138,7 @@ describe("Examples", () => {
 				 */
 				function processOptions(options) {
 					options.context = examplePath;
-					options.output = options.output || {};
+					options.output ||= {};
 					options.output.pathinfo = true;
 					options.output.path = path.join(examplePath, "dist");
 					options.output.publicPath = "dist/";

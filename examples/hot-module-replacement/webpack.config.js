@@ -1,6 +1,6 @@
 "use strict";
 
-const path = require("path");
+const path = require("node:path");
 const { HotModuleReplacementPlugin } = require("../../");
 
 // `webpack` resolves to this repo only because the example lives inside it;

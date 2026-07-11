@@ -1,6 +1,6 @@
 "use strict";
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 const ProfilingPlugin = require("../lib/debug/ProfilingPlugin");
@@ -81,7 +81,7 @@ describe("ProfilingPlugin in real Chrome", () => {
 		try {
 			// require() of puppeteer-core throws under Jest since it is ESM-only (v25+).
 			puppeteer = (await import("puppeteer-core")).default;
-		} catch (_err) {
+		} catch {
 			return;
 		}
 		try {
@@ -97,7 +97,7 @@ describe("ProfilingPlugin in real Chrome", () => {
 				launchOptions.channel = "chrome";
 			}
 			browser = await puppeteer.launch(launchOptions);
-		} catch (_err) {
+		} catch {
 			// No usable Chrome in this environment — the test self-skips below.
 			browser = undefined;
 		}

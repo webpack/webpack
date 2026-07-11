@@ -1,6 +1,6 @@
 "use strict";
 
-const path = require("path");
+const path = require("node:path");
 
 /** @typedef {import("../../").Compiler} Compiler */
 /** @typedef {import("../../").Module} Module */

@@ -1,6 +1,6 @@
 "use strict";
 
-const path = require("path");
+const path = require("node:path");
 
 // `HtmlParser` builds the AST inside `SourceProcessor.process`, so nothing is
 // mocked: each case parses real HTML and asserts the extracted dependencies.

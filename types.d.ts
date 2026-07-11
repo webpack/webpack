@@ -23250,6 +23250,7 @@ declare interface Scope {
 		| "function"
 		| "module"
 		| "global"
+		| "with"
 		| "block"
 		| "catch"
 		| "class"
@@ -23258,7 +23259,6 @@ declare interface Scope {
 		| "for"
 		| "function-expression-name"
 		| "switch"
-		| "with"
 		| "TDZ";
 	isStrict: boolean;
 	upper: null | Scope;

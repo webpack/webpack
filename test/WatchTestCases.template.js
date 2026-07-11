@@ -16,7 +16,7 @@ require("./helpers/warmup-webpack");
  * @property {boolean=} noTests
  */
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 /** @type {{ sync: (p: string) => void, (p: string, cb: (err: EXPECTED_ANY) => void): void }} */
 const rimraf = require("rimraf");
@@ -359,7 +359,7 @@ const describeCases = (config) => {
 												testConfig,
 												require(path.join(testDirectory, "test.config.js"))
 											);
-										} catch (_err) {
+										} catch {
 											// empty
 										}
 

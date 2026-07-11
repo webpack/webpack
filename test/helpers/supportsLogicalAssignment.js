@@ -6,7 +6,7 @@ module.exports = function supportsLogicalAssignment() {
 			"(function f() { var x = null; x ??= true; x &&= true; return x ||= false; })"
 		);
 		return f();
-	} catch (_err) {
+	} catch {
 		return false;
 	}
 };

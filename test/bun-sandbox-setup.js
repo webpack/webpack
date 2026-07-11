@@ -11,7 +11,7 @@ if (typeof URL === "undefined" || typeof setTimeout === "undefined") {
 		let mod;
 		try {
 			mod = require(request);
-		} catch (_err) {
+		} catch {
 			return;
 		}
 		for (const name of names) {
@@ -49,7 +49,7 @@ if (typeof URL === "undefined" || typeof setTimeout === "undefined") {
 		try {
 			// eslint-disable-next-line n/prefer-global/crypto
 			globalThis.crypto = require("node:crypto").webcrypto;
-		} catch (_err) {
+		} catch {
 			// no crypto available
 		}
 	}

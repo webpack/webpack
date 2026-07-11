@@ -1,8 +1,8 @@
 "use strict";
 
-const childProcess = require("child_process");
-const fs = require("fs");
-const path = require("path");
+const childProcess = require("node:child_process");
+const fs = require("node:fs");
+const path = require("node:path");
 const rimraf = require("rimraf");
 
 const cacheDirectory = path.resolve(__dirname, "js/buildDepsCache");
@@ -60,7 +60,7 @@ const exec = (
 			/** @type {string[]} */
 			const warnings = [];
 			const rawStdout = chunks.join("");
-			const stdout = rawStdout.replace(
+			const stdout = rawStdout.replaceAll(
 				// This warning is expected
 				/<([ew])> \[.+\n(?:<[ew]> [^[].+\n)*/g,
 				(message, type) => {

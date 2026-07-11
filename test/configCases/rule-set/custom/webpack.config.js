@@ -16,9 +16,9 @@ module.exports = {
 						options: {
 							resource:
 								/** @type {string} */
-								(data.resource).replace(/^.*[\\/]/g, ""),
+								(data.resource).replaceAll(/^.*[\\/]/g, ""),
 							resourceQuery: data.resourceQuery,
-							issuer: data.issuer.replace(/^.*[\\/]/g, "")
+							issuer: data.issuer.replaceAll(/^.*[\\/]/g, "")
 						}
 					});
 				}

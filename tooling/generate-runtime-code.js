@@ -1,12 +1,7 @@
 "use strict";
 
-const major = Number(process.versions.node.split(".")[0]);
-if (major < 16) {
-	throw new Error("Node.js 16+ required to build embedded WASM");
-}
-
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const prettier = require("prettier");
 const terser = require("terser");
 
@@ -82,9 +77,9 @@ const files = ["lib/util/semver.js"];
 			}
 			let templateLiteral = false;
 			const code = result.code
-				.replace(/\\/g, "\\\\")
-				.replace(/'/g, "\\'")
-				.replace(/function\(([^)]+)\)/g, (m, args) => {
+				.replaceAll("\\", "\\\\")
+				.replaceAll("'", "\\'")
+				.replaceAll(/function\(([^)]+)\)/g, (m, args) => {
 					templateLiteral = true;
 					return `\${runtimeTemplate.supportsArrowFunction() ? '${
 						args.includes(",") ? `(${args})` : args
@@ -110,7 +105,7 @@ exports.${name}RuntimeCode = runtimeTemplate => \`var ${name} = \${runtimeTempla
 
 		const prettierConfig = await prettier.resolveConfig(filePath);
 		const newContent = await prettier.format(
-			content.replace(regexp, (match) => replaces.get(match)),
+			content.replaceAll(regexp, (match) => replaces.get(match)),
 			{ filepath: filePath, ...prettierConfig }
 		);
 

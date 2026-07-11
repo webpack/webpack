@@ -1,6 +1,6 @@
 "use strict";
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 const { Volume, createFsFromVolume } = require("memfs");
 
@@ -47,7 +47,7 @@ describe("WatchDetection", () => {
 			beforeAll(() => {
 				try {
 					fs.mkdirSync(fixturePath);
-				} catch (_err) {
+				} catch {
 					// empty
 				}
 				fs.writeFileSync(filePath, "require('./file2')", "utf8");
@@ -58,17 +58,17 @@ describe("WatchDetection", () => {
 				setTimeout(() => {
 					try {
 						fs.unlinkSync(filePath);
-					} catch (_err) {
+					} catch {
 						// empty
 					}
 					try {
 						fs.unlinkSync(file2Path);
-					} catch (_err) {
+					} catch {
 						// empty
 					}
 					try {
 						fs.rmdirSync(fixturePath);
-					} catch (_err) {
+					} catch {
 						// empty
 					}
 					done();

@@ -26,7 +26,7 @@ require("./helpers/warmup-webpack");
  * @property {((scope: EXPECTED_ANY, options: EXPECTED_ANY) => void)=} moduleScope
  */
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 /** @type {{ sync: (p: string) => void, (p: string, cb: (err: EXPECTED_ANY) => void): void }} */
 const rimraf = require("rimraf");

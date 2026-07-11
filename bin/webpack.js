@@ -8,7 +8,7 @@
  * @returns {Promise<void>} promise
  */
 const runCommand = (command, args) => {
-	const cp = require("child_process");
+	const cp = require("node:child_process");
 
 	return new Promise((resolve, reject) => {
 		const executedCommand = cp.spawn(command, args, {
@@ -39,7 +39,7 @@ const isInstalled = (packageName) => {
 		return true;
 	}
 
-	const path = require("path");
+	const path = require("node:path");
 	const fs = require("graceful-fs");
 
 	let dir = __dirname;
@@ -51,7 +51,7 @@ const isInstalled = (packageName) => {
 			) {
 				return true;
 			}
-		} catch (_error) {
+		} catch {
 			// Nothing
 		}
 	} while (dir !== (dir = path.dirname(dir)));
@@ -59,14 +59,14 @@ const isInstalled = (packageName) => {
 	// https://github.com/nodejs/node/blob/v18.9.1/lib/internal/modules/cjs/loader.js#L1274
 	const { globalPaths } =
 		/** @type {typeof import("module") & { globalPaths: string[] }} */
-		(require("module"));
+		(require("node:module"));
 
 	for (const internalPath of globalPaths) {
 		try {
 			if (fs.statSync(path.join(internalPath, packageName)).isDirectory()) {
 				return true;
 			}
-		} catch (_error) {
+		} catch {
 			// Nothing
 		}
 	}
@@ -79,7 +79,7 @@ const isInstalled = (packageName) => {
  * @returns {void}
  */
 const runCli = (cli) => {
-	const path = require("path");
+	const path = require("node:path");
 
 	const pkgPath = require.resolve(`${cli.package}/package.json`);
 
@@ -117,9 +117,9 @@ const cli = {
 };
 
 if (!cli.installed) {
-	const path = require("path");
+	const path = require("node:path");
 	const fs = require("graceful-fs");
-	const readLine = require("readline");
+	const readLine = require("node:readline");
 
 	const notify = `CLI for webpack must be installed.\n  ${cli.name} (${cli.url})\n`;
 

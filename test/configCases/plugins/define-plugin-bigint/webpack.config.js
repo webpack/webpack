@@ -11,8 +11,8 @@ module.exports = {
 	},
 	plugins: [
 		new DefinePlugin({
-			BIGINT: BigInt("9007199254740993"),
-			ZERO_BIGINT: BigInt(0)
+			BIGINT: 9007199254740993n,
+			ZERO_BIGINT: 0n
 		})
 	]
 };

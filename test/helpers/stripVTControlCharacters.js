@@ -1,6 +1,6 @@
 "use strict";
 
-const { stripVTControlCharacters } = require("util");
+const { stripVTControlCharacters } = require("node:util");
 
 const regex =
 	// eslint-disable-next-line no-control-regex
@@ -21,5 +21,5 @@ module.exports = (str) => {
 	}
 
 	// TODO remove me after update Node.js
-	return str.replace(regex, "");
+	return str.replaceAll(regex, "");
 };

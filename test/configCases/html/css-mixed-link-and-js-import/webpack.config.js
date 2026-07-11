@@ -18,8 +18,8 @@
 //      CSS pipeline; the imported file ends up in the same chunk as
 //      the importer, so no extra `<link>` shows up for it.
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */

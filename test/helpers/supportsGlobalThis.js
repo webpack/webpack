@@ -4,7 +4,7 @@ module.exports = function supportsGlobalThis() {
 	try {
 		eval("globalThis");
 		return true;
-	} catch (_err) {
+	} catch {
 		// Ignore
 	}
 

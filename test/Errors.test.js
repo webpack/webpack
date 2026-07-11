@@ -2,13 +2,13 @@
 
 require("./helpers/warmup-webpack");
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 const prettyFormat = require("pretty-format").default;
 const webpack = require("..");
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
-const CWD_PATTERN = new RegExp(process.cwd().replace(/\\/g, "/"), "gm");
+const CWD_PATTERN = new RegExp(process.cwd().replaceAll("\\", "/"), "gm");
 const ERROR_STACK_PATTERN = /(?:\n\s+at\s.*)+/g;
 
 // Engine-dependent error keys dropped from snapshots: `stack` because JSC (Bun)
@@ -39,7 +39,7 @@ function cleanError(err) {
 
 	if (result.message) {
 		result.message = errObj.message
-			.replace(ERROR_STACK_PATTERN, "")
+			.replaceAll(ERROR_STACK_PATTERN, "")
 			// `JSON.parse` SyntaxError wording differs across engines (V8 vs JSC).
 			.replace(
 				/SyntaxError: (?:Unexpected end of JSON input|JSON Parse error: Unexpected EOF)/,
@@ -75,9 +75,9 @@ const prettyFormatOptions = {
 			},
 			print(/** @type {string} */ val) {
 				return `"${val
-					.replace(/\\/g, "/")
-					.replace(/"/g, '\\"')
-					.replace(/\r?\n/g, "\\n")}"`;
+					.replaceAll("\\", "/")
+					.replaceAll('"', '\\"')
+					.replaceAll(/\r?\n/g, "\\n")}"`;
 			}
 		}
 	]

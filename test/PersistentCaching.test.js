@@ -2,10 +2,10 @@
 
 require("./helpers/warmup-webpack");
 
-const fs = require("fs");
-const path = require("path");
-const util = require("util");
-const vm = require("vm");
+const fs = require("node:fs");
+const path = require("node:path");
+const util = require("node:util");
+const vm = require("node:vm");
 const rimraf = require("rimraf");
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");

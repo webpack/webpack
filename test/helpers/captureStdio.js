@@ -27,12 +27,12 @@ module.exports = (
 
 		toString: () =>
 			stripVTControlCharacters(logs.join(""))
-				.replace(
+				.replaceAll(
 					/\([^)]+\) (\[[^\]]+\]\s*)?(Deprecation|Experimental)Warning.+(\n\(Use .node.+\))?(\n(\s|BREAKING CHANGE).*)*(\n\s+at .*)*\n?/g,
 					""
 				)
 				// Ignore deprecated `import * as pkg from "file.json" assert { type: "json" };`
-				.replace(
+				.replaceAll(
 					/\([^)]+\) (\[[^\]]+\]\s*)?(V8:).* 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead\n/g,
 					""
 				),

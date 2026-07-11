@@ -1,8 +1,8 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
-const url = require("url");
+const fs = require("node:fs");
+const path = require("node:path");
+const url = require("node:url");
 
 module.exports = {
 	findBundle(i) {

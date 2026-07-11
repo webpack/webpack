@@ -1,6 +1,6 @@
-import fs from "fs/promises";
-import { dirname, resolve } from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs/promises";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const DIRS = 15;
 const FILES_PER_DIR = 20;

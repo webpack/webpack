@@ -3,7 +3,7 @@
 module.exports = function supportsTextDecoder() {
 	try {
 		return typeof TextDecoder !== "undefined";
-	} catch (_err) {
+	} catch {
 		return false;
 	}
 };

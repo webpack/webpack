@@ -6,8 +6,8 @@
 // the extracted HTML should point at the emitted JS and CSS chunks instead of
 // the original `./app.js` / `./styles.css` sources.
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */
