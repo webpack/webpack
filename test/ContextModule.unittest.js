@@ -110,6 +110,25 @@ describe("contextModule", () => {
 			expect(moduleA.identifier()).toContain(contextA);
 			expect(moduleB.identifier()).toContain(contextB);
 		});
+
+		it("marks case-insensitive glob modules across identifier forms", () => {
+			const mod = new ContextModule(
+				() => {},
+				/** @type {import("../lib/ContextModule").ContextModuleOptions} */ ({
+					resource: "/root",
+					mode: "lazy",
+					recursive: true,
+					regExp: false,
+					patterns: ["./*.js"],
+					requestContext: "/root",
+					caseSensitive: false
+				})
+			);
+			const shortener = new RequestShortener("/root");
+			expect(mod.identifier()).toContain("case-insensitive");
+			expect(mod.readableIdentifier(shortener)).toContain("case-insensitive");
+			expect(mod.libIdent({ context: "/root" })).toContain("case-insensitive");
+		});
 	});
 
 	describe("getGlobSyncSource", () => {
