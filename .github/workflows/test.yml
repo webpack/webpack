@@ -52,12 +52,6 @@ jobs:
 
       - run: yarn lint
 
-      - name: Validate types using old typescript version
-        run: |
-          yarn upgrade typescript@5.8 @types/node@22
-          yarn --frozen-lockfile
-          yarn validate:types
-
       - name: Validate changeset format
         if: github.event_name == 'pull_request'
         run: |
@@ -333,7 +327,9 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [22.x, 24.x, 26.x]
+        # engines floor, active LTS, current — the aliases track new Node.js
+        # releases without per-release matrix edits
+        node-version: [22.x, lts/*, latest]
         part: [a, b]
         include:
           # Test with main branches of webpack dependencies
@@ -355,18 +351,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: yarn
 
-      # pkg-pr-new versions newer than 0.0.66 require Node.js >= 24
-      - run: |
-          yarn upgrade pkg-pr-new@0.0.66
-          yarn --frozen-lockfile
-        if: matrix.node-version == '22.x'
-
       # Install main version of our deps
       - run: yarn upgrade enhanced-resolve@webpack/enhanced-resolve#main loader-runner@webpack/loader-runner#main webpack-sources@webpack/webpack-sources#main watchpack@webpack/watchpack#main tapable@webpack/tapable#main
         if: matrix.use_main_branches == '1'
 
       - run: yarn --frozen-lockfile
-        if: matrix.node-version != '22.x'
 
       - run: yarn link --frozen-lockfile || true
 

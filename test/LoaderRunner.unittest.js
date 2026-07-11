@@ -822,31 +822,29 @@ describe("runLoaders", () => {
 		delete (/** @type {EXPECTED_ANY} */ (globalThis).System);
 	});
 
-	if (Number(process.versions.modules) >= 83) {
-		it("should load a loader using import()", (done) => {
-			runLoaders(
-				{
-					resource: path.resolve(fixtures, "resource.bin"),
-					loaders: [
-						{
-							loader: path.resolve(fixtures, "esm-loader.mjs"),
-							type: "module"
-						}
-					]
-				},
-				(err, result) => {
-					if (err) return done(err);
-					expect(result.result).toEqual(["resource-esm"]);
-					expect(result.cacheable).toBe(true);
-					expect(result.fileDependencies).toEqual([
-						path.resolve(fixtures, "resource.bin")
-					]);
-					expect(result.contextDependencies).toEqual([]);
-					done();
-				}
-			);
-		});
-	}
+	it("should load a loader using import()", (done) => {
+		runLoaders(
+			{
+				resource: path.resolve(fixtures, "resource.bin"),
+				loaders: [
+					{
+						loader: path.resolve(fixtures, "esm-loader.mjs"),
+						type: "module"
+					}
+				]
+			},
+			(err, result) => {
+				if (err) return done(err);
+				expect(result.result).toEqual(["resource-esm"]);
+				expect(result.cacheable).toBe(true);
+				expect(result.fileDependencies).toEqual([
+					path.resolve(fixtures, "resource.bin")
+				]);
+				expect(result.contextDependencies).toEqual([]);
+				done();
+			}
+		);
+	});
 
 	// `require()` of an ESM file only works where the runtime supports it:
 	// native Node >=22.12, and under jest only on Node >=24.9 (sync vm module
@@ -879,130 +877,128 @@ describe("runLoaders", () => {
 		});
 	}
 
-	if (Number(process.versions.modules) >= 83) {
-		it("should load a commonjs loader using import()", (done) => {
-			runLoaders(
-				{
-					resource: path.resolve(fixtures, "resource.bin"),
-					loaders: [
-						{
-							loader: path.resolve(fixtures, "simple-loader.js"),
-							type: "module"
-						}
-					]
-				},
-				(err, result) => {
-					if (err) return done(err);
-					expect(result.result).toEqual(["resource-simple"]);
-					expect(result.cacheable).toBe(true);
-					expect(result.fileDependencies).toEqual([
-						path.resolve(fixtures, "resource.bin")
-					]);
-					expect(result.contextDependencies).toEqual([]);
-					done();
-				}
-			);
-		});
+	it("should load a commonjs loader using import()", (done) => {
+		runLoaders(
+			{
+				resource: path.resolve(fixtures, "resource.bin"),
+				loaders: [
+					{
+						loader: path.resolve(fixtures, "simple-loader.js"),
+						type: "module"
+					}
+				]
+			},
+			(err, result) => {
+				if (err) return done(err);
+				expect(result.result).toEqual(["resource-simple"]);
+				expect(result.cacheable).toBe(true);
+				expect(result.fileDependencies).toEqual([
+					path.resolve(fixtures, "resource.bin")
+				]);
+				expect(result.contextDependencies).toEqual([]);
+				done();
+			}
+		);
+	});
 
-		it("should process an esm pitching loader using import()", (done) => {
-			runLoaders(
-				{
-					resource: path.resolve(fixtures, "resource.bin"),
-					loaders: [
-						path.resolve(fixtures, "simple-loader.js"),
-						{
-							loader: path.resolve(fixtures, "esm-pitching-loader.mjs"),
-							type: "module"
-						},
-						path.resolve(fixtures, "simple-async-loader.js")
-					]
-				},
-				(err, result) => {
-					if (err) return done(err);
-					expect(result.result).toEqual([
-						`${path.resolve(fixtures, "simple-async-loader.js")}!${path.resolve(
-							fixtures,
-							"resource.bin"
-						)}:${path.resolve(fixtures, "simple-loader.js")}-simple`
-					]);
-					expect(result.cacheable).toBe(true);
-					expect(result.fileDependencies).toEqual([]);
-					expect(result.contextDependencies).toEqual([]);
-					done();
-				}
-			);
-		});
+	it("should process an esm pitching loader using import()", (done) => {
+		runLoaders(
+			{
+				resource: path.resolve(fixtures, "resource.bin"),
+				loaders: [
+					path.resolve(fixtures, "simple-loader.js"),
+					{
+						loader: path.resolve(fixtures, "esm-pitching-loader.mjs"),
+						type: "module"
+					},
+					path.resolve(fixtures, "simple-async-loader.js")
+				]
+			},
+			(err, result) => {
+				if (err) return done(err);
+				expect(result.result).toEqual([
+					`${path.resolve(fixtures, "simple-async-loader.js")}!${path.resolve(
+						fixtures,
+						"resource.bin"
+					)}:${path.resolve(fixtures, "simple-loader.js")}-simple`
+				]);
+				expect(result.cacheable).toBe(true);
+				expect(result.fileDependencies).toEqual([]);
+				expect(result.contextDependencies).toEqual([]);
+				done();
+			}
+		);
+	});
 
-		it("should process an esm raw loader using import()", (done) => {
-			runLoaders(
-				{
-					resource: path.resolve(fixtures, "bom.bin"),
-					loaders: [
-						{
-							loader: path.resolve(fixtures, "esm-raw-loader.mjs"),
-							type: "module"
-						}
-					]
-				},
-				(err, result) => {
-					if (err) return done(err);
-					expect(result.result[0].toString("utf8")).toBe("efbbbf62c3b66d﻿böm");
-					done();
-				}
-			);
-		});
+	it("should process an esm raw loader using import()", (done) => {
+		runLoaders(
+			{
+				resource: path.resolve(fixtures, "bom.bin"),
+				loaders: [
+					{
+						loader: path.resolve(fixtures, "esm-raw-loader.mjs"),
+						type: "module"
+					}
+				]
+			},
+			(err, result) => {
+				if (err) return done(err);
+				expect(result.result[0].toString("utf8")).toBe("efbbbf62c3b66d﻿böm");
+				done();
+			}
+		);
+	});
 
-		it("should not return dependencies when an esm loader is not found", (done) => {
-			runLoaders(
-				{
-					resource: path.resolve(fixtures, "resource.bin"),
-					loaders: [
-						{
-							loader: path.resolve(fixtures, "does-not-exist-loader.mjs"),
-							type: "module"
-						}
-					]
-				},
-				(err, result) => {
-					expectError(err);
-					expect(result).toEqual({
-						cacheable: false,
-						fileDependencies: [],
-						contextDependencies: [],
-						missingDependencies: []
-					});
-					done();
-				}
-			);
-		});
+	it("should not return dependencies when an esm loader is not found", (done) => {
+		runLoaders(
+			{
+				resource: path.resolve(fixtures, "resource.bin"),
+				loaders: [
+					{
+						loader: path.resolve(fixtures, "does-not-exist-loader.mjs"),
+						type: "module"
+					}
+				]
+			},
+			(err, result) => {
+				expectError(err);
+				expect(result).toEqual({
+					cacheable: false,
+					fileDependencies: [],
+					contextDependencies: [],
+					missingDependencies: []
+				});
+				done();
+			}
+		);
+	});
 
-		it("should not return dependencies when an esm loader has an invalid default export", (done) => {
-			runLoaders(
-				{
-					resource: path.resolve(fixtures, "resource.bin"),
-					loaders: [
-						{
-							loader: path.resolve(fixtures, "esm-invalid-loader.mjs"),
-							type: "module"
-						}
-					]
-				},
-				(err, result) => {
-					expectError(err);
-					expect(err.message).toMatch(
-						/esm-invalid-loader\.mjs' is not a loader \(must have normal or pitch function\)$/
-					);
-					expect(result).toEqual({
-						cacheable: false,
-						fileDependencies: [],
-						contextDependencies: [],
-						missingDependencies: []
-					});
-					done();
-				}
-			);
-		});
-	}
+	it("should not return dependencies when an esm loader has an invalid default export", (done) => {
+		runLoaders(
+			{
+				resource: path.resolve(fixtures, "resource.bin"),
+				loaders: [
+					{
+						loader: path.resolve(fixtures, "esm-invalid-loader.mjs"),
+						type: "module"
+					}
+				]
+			},
+			(err, result) => {
+				expectError(err);
+				expect(err.message).toMatch(
+					/esm-invalid-loader\.mjs' is not a loader \(must have normal or pitch function\)$/
+				);
+				expect(result).toEqual({
+					cacheable: false,
+					fileDependencies: [],
+					contextDependencies: [],
+					missingDependencies: []
+				});
+				done();
+			}
+		);
+	});
 
 	it("should support escaping in resource", (done) => {
 		runLoaders(

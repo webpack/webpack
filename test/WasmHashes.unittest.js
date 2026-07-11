@@ -1,6 +1,6 @@
 "use strict";
 
-const { createHash, randomBytes } = require("node:crypto");
+const { randomBytes } = require("node:crypto");
 
 const wasmHashes = {
 	xxhash64: () => {
@@ -30,10 +30,7 @@ const wasmHashes = {
 
 		return {
 			createHash: createMd4Hash,
-			createReferenceHash:
-				Number.parseInt(process.version.slice(1), 10) < 17
-					? async () => createHash("md4")
-					: createMd4Hash,
+			createReferenceHash: createMd4Hash,
 			regExp: /^[0-9a-f]{32}$/
 		};
 	},

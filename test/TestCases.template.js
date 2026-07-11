@@ -37,8 +37,6 @@ const captureStdio = require("./helpers/captureStdio");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
-const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");
-const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
 
 const casesPath = path.join(__dirname, "cases");
 /** @type {Category[]} */
@@ -198,19 +196,7 @@ const describeCases = (config) => {
 							output: {
 								pathinfo: "verbose",
 								path: outputDirectory,
-								filename: config.module ? "bundle.mjs" : "bundle.js",
-								// generated runtime runs in this Node.js process; avoid `?.` on
-								// Node < 14 and `Object.hasOwn` on Node < 16.9
-								...(supportsOptionalChaining() && supportsObjectHasOwn()
-									? {}
-									: {
-											environment: {
-												...(supportsOptionalChaining()
-													? {}
-													: { optionalChaining: false }),
-												...(supportsObjectHasOwn() ? {} : { hasOwn: false })
-											}
-										})
+								filename: config.module ? "bundle.mjs" : "bundle.js"
 							},
 							resolve: {
 								modules: ["web_modules", "node_modules"],

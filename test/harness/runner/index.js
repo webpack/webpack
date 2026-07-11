@@ -12,15 +12,12 @@ const {
 
 const {
 	ESModuleStatus,
-	getNodeVersion,
 	getSubPath,
 	isRelativePath,
 	urlToPath,
 	urlToRelativePath
 } = require("./RunnerHelpers");
 const rewriteImportMeta = require("./rewriteImportMeta");
-
-const [major] = getNodeVersion();
 
 /** @typedef {import("./RunnerHelpers").ESModuleStatus} ESModuleStatus */
 
@@ -705,20 +702,7 @@ class TestRunner {
 
 			const run = async () => {
 				// Link module dependencies
-				if (major === 10) {
-					if (
-						/** @type {EXPECTED_ANY} */ (esm).linkingStatus ===
-						ESModuleStatus.Unlinked
-					) {
-						await link();
-					}
-					if (
-						/** @type {EXPECTED_ANY} */ (esm).linkingStatus ===
-						ESModuleStatus.Linked
-					) {
-						/** @type {EXPECTED_ANY} */ (esm).instantiate();
-					}
-				} else if (esm.status === ESModuleStatus.Unlinked) {
+				if (esm.status === ESModuleStatus.Unlinked) {
 					await link();
 				}
 

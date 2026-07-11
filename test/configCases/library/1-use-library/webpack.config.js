@@ -5,7 +5,6 @@
 
 const path = require("node:path");
 const webpack = require("../../../../");
-const supportsAsync = require("../../../helpers/supportsAsync");
 
 /** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration[]} */
 module.exports = (env, { testPath }) => [
@@ -121,40 +120,33 @@ module.exports = (env, { testPath }) => [
 			})
 		]
 	},
-	...(supportsAsync()
-		? [
-				{
-					resolve: {
-						alias: {
-							library: path.resolve(
-								testPath,
-								"../0-create-library/esm-async.js"
-							)
-						}
-					},
-					plugins: [
-						new webpack.DefinePlugin({
-							NAME: JSON.stringify("esm-async")
-						})
-					]
-				},
-				{
-					resolve: {
-						alias: {
-							library: path.resolve(
-								testPath,
-								"../0-create-library/esm-async-no-concatenate-modules.js"
-							)
-						}
-					},
-					plugins: [
-						new webpack.DefinePlugin({
-							NAME: JSON.stringify("esm-async-no-concatenate-modules")
-						})
-					]
-				}
-			]
-		: []),
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(testPath, "../0-create-library/esm-async.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-async")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/esm-async-no-concatenate-modules.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm-async-no-concatenate-modules")
+			})
+		]
+	},
 	{
 		resolve: {
 			alias: {

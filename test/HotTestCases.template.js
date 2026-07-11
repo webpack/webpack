@@ -21,8 +21,6 @@ const checkArrayExpectation = require("./checkArrayExpectation");
 const { TestRunner } = require("./harness/runner");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
-const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");
-const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
 
 const casesPath = path.join(__dirname, "hotCases");
 /** @type {Category[]} */
@@ -117,21 +115,6 @@ const describeCases = (config) => {
 								if (options.output.chunkFormat === undefined) {
 									options.output.chunkFormat = "module";
 								}
-							}
-							if (!options.output.environment) options.output.environment = {};
-							if (
-								options.output.environment.optionalChaining === undefined &&
-								!supportsOptionalChaining()
-							) {
-								// generated runtime runs in this Node.js process; avoid `?.` on Node < 14
-								options.output.environment.optionalChaining = false;
-							}
-							if (
-								options.output.environment.hasOwn === undefined &&
-								!supportsObjectHasOwn()
-							) {
-								// generated runtime runs in this Node.js process; avoid `Object.hasOwn` on Node < 16.9
-								options.output.environment.hasOwn = false;
 							}
 							if (!options.output.path) options.output.path = outputDirectory;
 							if (!options.output.filename) {

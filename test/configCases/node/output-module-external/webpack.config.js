@@ -1,7 +1,5 @@
 "use strict";
 
-const { DefinePlugin } = require("../../../../");
-
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "node",
@@ -16,11 +14,5 @@ module.exports = {
 		module: true,
 		filename: "[name].mjs"
 	},
-	plugins: [
-		new DefinePlugin({
-			NODE_VERSION: JSON.stringify(
-				process.versions.node.split(".").map(Number)[0]
-			)
-		})
-	]
+	plugins: []
 };

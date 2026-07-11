@@ -2,7 +2,6 @@
 
 const path = require("node:path");
 const webpack = require("../../../../");
-const supportsAsync = require("../../../helpers/supportsAsync");
 
 /** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration[]} */
 module.exports = (env, { testPath }) => [
@@ -107,55 +106,51 @@ module.exports = (env, { testPath }) => [
 			outputModule: true
 		}
 	},
-	...(supportsAsync()
-		? [
-				{
-					entry: "./index-async.js",
-					output: {
-						uniqueName: "esm-async",
-						filename: "esm-async.js",
-						library: {
-							type: "module"
-						}
-					},
-					optimization: {
-						concatenateModules: true
-					},
-					target: "node14",
-					resolve: {
-						alias: {
-							external: "./non-external",
-							"external-named": "./non-external-named"
-						}
-					},
-					experiments: {
-						outputModule: true
-					}
-				},
-				{
-					entry: "./index-async.js",
-					output: {
-						uniqueName: "esm-async-no-concatenate-modules",
-						filename: "esm-async-no-concatenate-modules.js",
-						library: {
-							type: "module"
-						}
-					},
-					optimization: {
-						concatenateModules: false
-					},
-					resolve: {
-						alias: {
-							external: "./non-external",
-							"external-named": "./non-external-named"
-						}
-					},
-					experiments: {
-						outputModule: true
-					}
-				}
-			]
-		: []),
+	{
+		entry: "./index-async.js",
+		output: {
+			uniqueName: "esm-async",
+			filename: "esm-async.js",
+			library: {
+				type: "module"
+			}
+		},
+		optimization: {
+			concatenateModules: true
+		},
+		target: "node14",
+		resolve: {
+			alias: {
+				external: "./non-external",
+				"external-named": "./non-external-named"
+			}
+		},
+		experiments: {
+			outputModule: true
+		}
+	},
+	{
+		entry: "./index-async.js",
+		output: {
+			uniqueName: "esm-async-no-concatenate-modules",
+			filename: "esm-async-no-concatenate-modules.js",
+			library: {
+				type: "module"
+			}
+		},
+		optimization: {
+			concatenateModules: false
+		},
+		resolve: {
+			alias: {
+				external: "./non-external",
+				"external-named": "./non-external-named"
+			}
+		},
+		experiments: {
+			outputModule: true
+		}
+	},
 	{
 		output: {
 			uniqueName: "esm-export-no-concatenate-modules",

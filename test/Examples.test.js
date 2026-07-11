@@ -41,7 +41,6 @@ const createLogger = (appendErrors) => ({
 	status: () => {}
 });
 
-const nodeVersion = Number.parseInt(process.version.slice(1).split(".")[0], 10);
 // eslint-disable-next-line no-new-func
 const dynamicImport = new Function("specifier", "return import(specifier)");
 
@@ -61,17 +60,6 @@ async function loadConfiguration(projectDir) {
 	for (const path of paths) {
 		if (!fs.existsSync(path)) {
 			continue;
-		}
-
-		if (nodeVersion < 18) {
-			try {
-				options = require(path);
-				return options;
-			} catch {
-				// Nothing
-			}
-
-			return;
 		}
 
 		try {

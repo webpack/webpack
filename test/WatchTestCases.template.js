@@ -27,8 +27,6 @@ const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const prepareOptions = require("./helpers/prepareOptions");
 const { remove } = require("./helpers/remove");
-const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");
-const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
 
 /**
  * @param {string} src src
@@ -168,23 +166,6 @@ const describeCases = (config) => {
 								if (!options.entry) options.entry = "./index.js";
 								if (!options.target) options.target = "async-node";
 								if (!options.output) options.output = {};
-								if (!options.output.environment) {
-									options.output.environment = {};
-								}
-								if (
-									options.output.environment.optionalChaining === undefined &&
-									!supportsOptionalChaining()
-								) {
-									// generated runtime runs in this Node.js process; avoid `?.` on Node < 14
-									options.output.environment.optionalChaining = false;
-								}
-								if (
-									options.output.environment.hasOwn === undefined &&
-									!supportsObjectHasOwn()
-								) {
-									// generated runtime runs in this Node.js process; avoid `Object.hasOwn` on Node < 16.9
-									options.output.environment.hasOwn = false;
-								}
 								if (options.output.clean === undefined) {
 									options.output.clean = true;
 								}
