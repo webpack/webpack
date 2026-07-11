@@ -104,4 +104,41 @@ describe("ChunkImportMapPlugin", () => {
 			done
 		);
 	});
+
+	describe("injectIntoHtml", () => {
+		const imports = { "webpack/c/1": "/a.mjs" };
+
+		it("inserts a new import map after <head>, before the body", () => {
+			const out = ChunkImportMapPlugin.injectIntoHtml(
+				"<!doctype html><html><head><title>x</title></head><body></body></html>",
+				imports
+			);
+			expect(out).toContain('<script type="importmap">');
+			expect(out).toContain('"webpack/c/1":"/a.mjs"');
+			expect(out.indexOf('type="importmap"')).toBeLessThan(out.indexOf("<body"));
+		});
+
+		it("prepends when there is no <head>", () => {
+			const out = ChunkImportMapPlugin.injectIntoHtml(
+				"<html><body></body></html>",
+				imports
+			);
+			expect(out.startsWith('<script type="importmap">')).toBe(true);
+		});
+
+		it("merges into an existing user import map, keeping user entries", () => {
+			const out = ChunkImportMapPlugin.injectIntoHtml(
+				'<head><script type="importmap">{"imports":{"lit":"https://cdn/lit.js"}}</script></head>',
+				imports
+			);
+			const match = /** @type {RegExpExecArray} */ (
+				/<script type="importmap">([\s\S]*?)<\/script>/.exec(out)
+			);
+			const map = JSON.parse(match[1]);
+			expect(map.imports.lit).toBe("https://cdn/lit.js");
+			expect(map.imports["webpack/c/1"]).toBe("/a.mjs");
+			// Exactly one import map remains in the document.
+			expect((out.match(/type="importmap"/g) || []).length).toBe(1);
+		});
+	});
 });
