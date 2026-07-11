@@ -157,4 +157,23 @@ describe("walkCssTokens regressions", () => {
 	it("never drops input bytes around a NUL code point", () => {
 		expect(tokenRoundtrip(`a${NUL}b`)).toBe(`a${NUL}b`);
 	});
+
+	it("keeps the last content byte of an unterminated url() at EOF", () => {
+		/**
+		 * @param {string} input CSS source starting with `url(`
+		 * @returns {string} the url token's unquoted content
+		 */
+		const urlContent = (input) => {
+			const t = /** @type {import("../lib/css/syntax").MutableToken} */ (
+				readToken(input, 0, {})
+			);
+			return input.slice(t.contentStart, t.contentEnd);
+		};
+		// EOF branch previously did `pos - 1`, dropping the final code point.
+		expect(urlContent("url(abc")).toBe("abc");
+		expect(urlContent("url(x")).toBe("x");
+		// Terminated / whitespace-terminated forms are unaffected.
+		expect(urlContent("url(abc)")).toBe("abc");
+		expect(urlContent("url(abc )")).toBe("abc");
+	});
 });
