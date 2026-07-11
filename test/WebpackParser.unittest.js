@@ -245,6 +245,20 @@ describe("WebpackParser", () => {
 			).toBeDefined();
 		});
 
+		it("should reject escape sequences in keywords like acorn", () => {
+			// the owned `next` keyword-escape guard fires when a keyword token
+			// carries a `\uXXXX` escape
+			expect(() => parse("\\u0069f (x) {}")).toThrow(
+				/Escape sequence in keyword if/
+			);
+			expect(() => parse("\\u0074ypeof x;")).toThrow(
+				/Escape sequence in keyword typeof/
+			);
+			// `liberal` idents (keyword as property name) pass `ignore`, so an
+			// escaped keyword is allowed there
+			expect(parse("obj.\\u0069f;").ast).toBeDefined();
+		});
+
 		it("should allow await as a sloppy-mode identifier", () => {
 			const { ast } = parse("var await = 1; await;");
 			const declaration =
