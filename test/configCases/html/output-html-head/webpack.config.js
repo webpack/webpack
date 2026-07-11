@@ -97,5 +97,13 @@ module.exports = [
 		},
 		experiments: { html: true },
 		plugins: [copyTest]
+	},
+	// authored HTML — base injected with no charset (exercises else branch: base inserts after <head>)
+	{
+		name: "authored-base-only",
+		entry: { "authored-base-only": "./src/page-nocharset.html" },
+		output: { html: { base: "/assets/" } },
+		experiments: { html: true },
+		plugins: [copyTest]
 	}
 ];

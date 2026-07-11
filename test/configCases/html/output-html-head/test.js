@@ -108,3 +108,11 @@ it("authored existing: existing base is NOT replaced", () => {
 	expect(html).toContain('href="/existing/"');
 	expect(html).not.toContain("/should-not-override/");
 });
+
+// --- authored-base-only (source: page-nocharset.html) ---
+it("authored base-only: base inserted at head start when no charset present", () => {
+	const html = read("page-nocharset.html");
+	expect(html).toMatch(/<base href="\/assets\/">/);
+	// base should be right after <head> when there's no charset
+	expect(html).toMatch(/<head><base href="\/assets\/">/);
+});
