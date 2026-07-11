@@ -837,6 +837,65 @@ ${details(snapshot)}`)
 				}
 			);
 		});
+
+		// #21378: `_resolveContextTimestamp` walks symlink targets via
+		// `_getUnresolvedContextTimestamp`. Watchpack rebuild entries carry
+		// `{ safeTime, timestamp }` but never `timestampHash`; returning
+		// them for a symlink target makes the hash walk crash. Relative
+		// symlink targets (pnpm-style) resolve to the real directory path.
+		it("checkSnapshotValid resolves context dirs with symlinks when watchpack reports `{ safeTime, timestamp }` for the symlink target (#21378)", (done) => {
+			const fs = createFsFromVolume(new Volume());
+			const ctxDir = "/root/ctx";
+			const realDir = "/root/real";
+			const realSubDir = "/root/real/sub";
+			fs.mkdirSync(`${ctxDir}/sub`, { recursive: true });
+			fs.mkdirSync(realSubDir, { recursive: true });
+			fs.writeFileSync(`${realSubDir}/a.txt`, "hello");
+			fs.writeFileSync(`${ctxDir}/index.txt`, "x");
+			fs.symlinkSync("../real", `${ctxDir}/link`, "dir");
+			const contextDirs = [ctxDir, realDir, realSubDir];
+			const fsInfo = createFsInfo(fs);
+			fsInfo.createSnapshot(
+				Date.now() + 10000,
+				[],
+				contextDirs,
+				[],
+				/** @type {SnapshotOptions} */ (
+					/** @type {unknown} */ (["timestamp", { timestamp: true }])
+				),
+				(err, snapshot) => {
+					if (err) return done(err);
+					const ctxSnap = /** @type {Map<string, EXPECTED_ANY>} */ (
+						/** @type {Snapshot} */ (snapshot).contextTimestamps
+					).get(ctxDir);
+					const fsInfo2 = createFsInfo(fs);
+					// Rebuild: watchpack supplies `{ safeTime, timestamp }` for
+					// context dirs but never `timestampHash`.
+					fsInfo2.addContextTimestamps(
+						new Map([
+							[ctxDir, { safeTime: ctxSnap.safeTime }],
+							[
+								realDir,
+								{ safeTime: ctxSnap.safeTime, timestamp: ctxSnap.safeTime }
+							],
+							[
+								realSubDir,
+								{ safeTime: ctxSnap.safeTime, timestamp: ctxSnap.safeTime }
+							]
+						]),
+						true
+					);
+					fsInfo2.checkSnapshotValid(
+						/** @type {Snapshot} */ (snapshot),
+						(err, valid) => {
+							if (err) return done(err);
+							expect(valid).toBe(true);
+							done();
+						}
+					);
+				}
+			);
+		});
 	});
 
 	// A context directory tracked when the snapshot was created can become
