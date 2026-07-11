@@ -2262,6 +2262,10 @@
           "description": "Enable/disable evaluating import.meta.main.",
           "type": "boolean"
         },
+        "resolve": {
+          "description": "Enable/disable evaluating import.meta.resolve.",
+          "type": "boolean"
+        },
         "url": {
           "description": "Enable/disable evaluating import.meta.url.",
           "type": "boolean"
