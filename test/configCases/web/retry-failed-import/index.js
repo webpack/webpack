@@ -8,13 +8,15 @@ it("should be able to retry a failed import()", () => {
 	const script = document.head._children[0];
 	expect(script.onerror).toBeTypeOf("function");
 
-	script.onerror({ type: "load", target: script });
+	const loadEvent = { type: "load", target: script };
+	script.onerror(loadEvent);
 
 	return promise.catch(err => {
 		expect(err).toBeInstanceOf(Error);
 		expect(err.name).toBe("ChunkLoadError");
 		expect(err.type).toBe("missing");
 		expect(err.request).toBe("https://test.cases/path/the-chunk.js");
+		expect(err.event).toBe(loadEvent);
 		expect(err.message).toMatch(
 			/^Loading chunk .+ failed\.\n\(missing: https:\/\/test\.cases\/path\/the-chunk\.js\)$/
 		);
@@ -33,6 +35,7 @@ it("should be able to retry a failed import()", () => {
 			expect(err.name).toBe("ChunkLoadError");
 			expect(err.type).toBe(undefined);
 			expect(err.request).toBe(undefined);
+			expect(err.event).toBe(undefined);
 			expect(err.message).toMatch(
 				/^Loading chunk .+ failed\.\n\(undefined: undefined\)$/
 			);
