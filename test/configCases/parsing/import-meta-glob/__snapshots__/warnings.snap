@@ -11,7 +11,8 @@ Array [
   "import.meta.glob() 'base' option must be a constant string, ignoring",
   "import.meta.glob() 'exhaustive' option must be a constant boolean (true or false), defaulting to false",
   "import.meta.glob() 'as' option is not supported. Use 'query' instead (e.g. { query: '?raw' })",
-  "import.meta.glob() unsupported option 'caseSensitive'. Supported options are: eager, import, query, base, exhaustive",
+  "import.meta.glob() 'caseSensitive' option must be a constant boolean (true or false), defaulting to true",
   "import.meta.glob() option keys must be constant strings",
+  "import.meta.glob() pattern '@/alias/*.js' must be relative (start with './' or '../'), absolute (start with '/'), or a globstar ('**'); aliases are not resolved",
 ]
 `;

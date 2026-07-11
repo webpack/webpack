@@ -6,5 +6,6 @@ Array [
   "import.meta.glob() second argument must be an object literal",
   "Module not found: Error: Can't resolve '<TEST_DIR>/missing/' in '<TEST_DIR>'",
   "Module not found: Error: Can't resolve '<TEST_DIR>/missing/' in '<TEST_DIR>'",
+  "Module not found: Error: Can't resolve '<TEST_DIR>/@/alias/' in '<TEST_DIR>'",
 ]
 `;

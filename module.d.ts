@@ -168,6 +168,7 @@ declare namespace webpack {
 		query?: ImportMetaGlobQuery;
 		exhaustive?: boolean;
 		base?: string;
+		caseSensitive?: boolean;
 	};
 }
 
