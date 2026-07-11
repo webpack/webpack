@@ -23,9 +23,11 @@ it("synthetic: non-charset metas injected with correct attribute", () => {
 	expect(html).toMatch(/<meta name="description" content="A test page">/);
 });
 
-it("synthetic: og: meta uses property attribute", () => {
+it("synthetic: og: uses property attribute, twitter: uses name attribute", () => {
 	const html = read("synthetic-all.html");
 	expect(html).toMatch(/<meta property="og:title" content="My App OG">/);
+	// Twitter Cards use name=, not property= — using property= breaks Twitter's crawler
+	expect(html).toMatch(/<meta name="twitter:card" content="summary">/);
 });
 
 it("synthetic: title injected", () => {
@@ -78,6 +80,13 @@ it("authored: viewport meta injected before </head>", () => {
 it("authored: title injected when none existed", () => {
 	const html = read("page.html");
 	expect(html).toMatch(/<title>Authored Title<\/title>/);
+});
+
+it("authored: charset before base in insertion order", () => {
+	const html = read("page.html");
+	const charsetPos = html.indexOf("<meta charset=");
+	const basePos = html.indexOf("<base ");
+	expect(charsetPos).toBeLessThan(basePos);
 });
 
 // --- authored-existing (source: page-existing.html) ---

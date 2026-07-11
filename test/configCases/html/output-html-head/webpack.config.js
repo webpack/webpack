@@ -40,7 +40,8 @@ module.exports = [
 					charset: "UTF-8",
 					viewport: "width=device-width, initial-scale=1",
 					description: "A test page",
-					"og:title": "My App OG"
+					"og:title": "My App OG",
+					"twitter:card": "summary"
 				},
 				base: { href: "/app/", target: "_self" }
 			}
