@@ -3877,12 +3877,12 @@ describe("snapshots", () => {
 			+       Object {
 			+         "descriptionData": Object {
 			+           "type": "module",
-			+         },
+			@@ ... @@
 			+         "resolve": Object {
 			+           "byDependency": Object {
 			+             "esm": Object {
 			+               "fullySpecified": true,
-			+             },
+			@@ ... @@
 			+           },
 			+         },
 			+         "test": /\\.ts$/i,
@@ -3892,13 +3892,14 @@ describe("snapshots", () => {
 			+         "test": /\\.cts$/i,
 			+         "type": "javascript/dynamic",
 			+       },
-			+       Object {
+			@@ ... @@
 			+         "descriptionData": Object {
 			+           "type": "commonjs",
-			@@ ... @@
+			+         },
 			+         "test": /\\.ts$/i,
 			+         "type": "javascript/dynamic",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "mimetype": Object {
 			+           "or": Array [
 			+             "text/typescript",
@@ -3915,6 +3916,27 @@ describe("snapshots", () => {
 			+         "type": "javascript/esm",
 			+       },
 			+       Object {
+			@@ ... @@
+			+       Object {
+			+         "oneOf": Array [
+			+           Object {
+			+             "resourceQuery": /(\\?|&)raw(&|$)/,
+			+             "type": "asset/source",
+			+           },
+			+           Object {
+			+             "resourceQuery": /(\\?|&)url(&|$)/,
+			+             "type": "asset/resource",
+			+           },
+			+           Object {
+			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
+			+             "type": "asset/resource",
+			+           },
+			+           Object {
+			+             "resourceQuery": /(\\?|&)inline(&|$)/,
+			+             "type": "asset/inline",
+			+           },
+			+         ],
+			+       },
 			@@ ... @@
 			-         "localIdentHashFunction": "md4",
 			+         "localIdentHashFunction": "xxhash64",
@@ -4004,7 +4026,7 @@ describe("snapshots", () => {
 			+       ".cjs": Array [
 			+         ".cjs",
 			+         ".cts",
-			+       ],
+			@@ ... @@
 			+       ".js": Array [
 			+         ".js",
 			+         ".ts",
@@ -4012,7 +4034,7 @@ describe("snapshots", () => {
 			+       ".mjs": Array [
 			+         ".mjs",
 			+         ".mts",
-			@@ ... @@
+			+       ],
 			+     },
 			@@ ... @@
 			+     "tsconfig": true,
@@ -4400,17 +4422,19 @@ describe("snapshots", () => {
 			-     "progress": false,
 			+     "progress": "auto",
 			@@ ... @@
+			+         },
+			+       },
+			+       Object {
 			+         "resolve": Object {
 			+           "byDependency": Object {
 			+             "esm": Object {
 			+               "fullySpecified": true,
 			+             },
 			+           },
-			+         },
+			@@ ... @@
 			+         "test": /\\.mts$/i,
 			+         "type": "javascript/esm",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "descriptionData": Object {
 			+           "type": "module",
 			+         },
@@ -4452,6 +4476,28 @@ describe("snapshots", () => {
 			+         "type": "javascript/esm",
 			+       },
 			+       Object {
+			@@ ... @@
+			+       },
+			+       Object {
+			+         "oneOf": Array [
+			+           Object {
+			+             "resourceQuery": /(\\?|&)raw(&|$)/,
+			+             "type": "asset/source",
+			+           },
+			+           Object {
+			+             "resourceQuery": /(\\?|&)url(&|$)/,
+			+             "type": "asset/resource",
+			+           },
+			+           Object {
+			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
+			+             "type": "asset/resource",
+			@@ ... @@
+			+           Object {
+			+             "resourceQuery": /(\\?|&)inline(&|$)/,
+			+             "type": "asset/inline",
+			+           },
+			+         ],
+			+       },
 			@@ ... @@
 			-         "localIdentHashFunction": "md4",
 			+         "localIdentHashFunction": "xxhash64",
@@ -4530,7 +4576,6 @@ describe("snapshots", () => {
 			@@ ... @@
 			-           ".html",
 			@@ ... @@
-			+     ],
 			+     "extensionAlias": Object {
 			+       ".cjs": Array [
 			+         ".cjs",
@@ -4543,7 +4588,7 @@ describe("snapshots", () => {
 			+       ".mjs": Array [
 			+         ".mjs",
 			+         ".mts",
-			@@ ... @@
+			+       ],
 			+     },
 			@@ ... @@
 			+     "tsconfig": true,
@@ -4599,12 +4644,12 @@ describe("snapshots", () => {
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
+			-         },
+			-         "type": "css",
 			+         "dependency": "html-srcdoc",
 			+         "generator": Object {
 			+           "extract": "inline",
 			@@ ... @@
-			-         "type": "css",
-			-       },
 			-       Object {
 			-         "dependency": /css-import-local-module/,
 			-         "exclude": /\\.module\\.\\w+$/i,
@@ -4628,12 +4673,12 @@ describe("snapshots", () => {
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
-			-         },
-			-         "with": Object {
-			-           "type": "css",
 			+         "test": /\\.mts$/i,
 			+         "type": "javascript/esm",
 			@@ ... @@
+			-         "with": Object {
+			-           "type": "css",
+			-         },
 			-       },
 			@@ ... @@
 			-         "assert": Object {
@@ -4663,11 +4708,10 @@ describe("snapshots", () => {
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
+			-         },
+			-         "type": "html",
 			+         "test": /\\.cts$/i,
 			+         "type": "javascript/dynamic",
-			@@ ... @@
-			-         "type": "html",
-			-       },
 			@@ ... @@
 			-         "dependency": "html-srcdoc",
 			-         "generator": Object {
@@ -4695,7 +4739,6 @@ describe("snapshots", () => {
 			+             "esm": Object {
 			@@ ... @@
 			-           "preferRelative": true,
-			-         },
 			@@ ... @@
 			-       Object {
 			-         "dependency": "html-style-attribute",
@@ -4706,13 +4749,21 @@ describe("snapshots", () => {
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
-			@@ ... @@
 			+         "type": "javascript/esm",
 			@@ ... @@
+			-       },
+			@@ ... @@
+			-     ],
+			-     "generator": Object {
 			-       "css": Object {
 			-         "esModule": true,
 			-         "exportsOnly": false,
-			-       },
+			+       Object {
+			+         "oneOf": Array [
+			+           Object {
+			+             "resourceQuery": /(\\?|&)raw(&|$)/,
+			+             "type": "asset/source",
+			@@ ... @@
 			-       "css/auto": Object {
 			-         "exportsConvention": "as-is",
 			-         "localIdentHashDigest": "base64url",
@@ -4720,7 +4771,10 @@ describe("snapshots", () => {
 			-         "localIdentHashFunction": "md4",
 			-         "localIdentHashSalt": undefined,
 			-         "localIdentName": "[fullhash]",
-			-       },
+			+           Object {
+			+             "resourceQuery": /(\\?|&)url(&|$)/,
+			+             "type": "asset/resource",
+			@@ ... @@
 			-       "css/global": Object {
 			-         "exportsConvention": "as-is",
 			-         "localIdentHashDigest": "base64url",
@@ -4728,7 +4782,10 @@ describe("snapshots", () => {
 			-         "localIdentHashFunction": "md4",
 			-         "localIdentHashSalt": undefined,
 			-         "localIdentName": "[fullhash]",
-			-       },
+			+           Object {
+			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
+			+             "type": "asset/resource",
+			@@ ... @@
 			-       "css/module": Object {
 			-         "exportsConvention": "as-is",
 			-         "localIdentHashDigest": "base64url",
@@ -4736,8 +4793,17 @@ describe("snapshots", () => {
 			-         "localIdentHashFunction": "md4",
 			-         "localIdentHashSalt": undefined,
 			-         "localIdentName": "[fullhash]",
-			-       },
+			+           Object {
+			+             "resourceQuery": /(\\?|&)inline(&|$)/,
+			+             "type": "asset/inline",
+			+           },
+			+         ],
 			@@ ... @@
+			+     ],
+			+     "generator": Object {
+			@@ ... @@
+			-         },
+			-       },
 			-       "css": Object {
 			-         "import": true,
 			-         "namedExports": true,
@@ -4750,7 +4816,7 @@ describe("snapshots", () => {
 			-         "dashedIdents": true,
 			-         "function": true,
 			-         "grid": true,
-			-       },
+			@@ ... @@
 			-       "css/global": Object {
 			-         "animation": true,
 			-         "container": true,
@@ -4758,7 +4824,7 @@ describe("snapshots", () => {
 			-         "dashedIdents": true,
 			-         "function": true,
 			-         "grid": true,
-			-       },
+			@@ ... @@
 			-       "css/module": Object {
 			-         "animation": true,
 			-         "container": true,
