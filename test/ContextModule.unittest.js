@@ -30,7 +30,7 @@ describe("contextModule", () => {
 				)
 			);
 			expect(contextModule.identifier()).toEqual(
-				expect.stringContaining("/a%7Cb/")
+				expect.stringContaining("%2Fa%7Cb%2F")
 			);
 		});
 	});
