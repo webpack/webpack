@@ -2,6 +2,8 @@
 
 const {
 	createMagicCommentContext,
+	getCommentsInRange,
+	parseCommentOptionsInRange,
 	parseMagicComment
 } = require("../lib/util/magicComment");
 
@@ -52,5 +54,38 @@ describe("parseMagicComment", () => {
 		expect(() => parseMagicComment("webpackIgnore: )", context)).toThrow(
 			/Unexpected token/
 		);
+	});
+});
+
+describe("getCommentsInRange", () => {
+	/** @type {{ value: string, range: [number, number] }[]} */
+	const comments = [
+		{ value: " a ", range: [0, 5] },
+		{ value: " b ", range: [10, 15] },
+		{ value: " c ", range: [20, 25] }
+	];
+
+	it("returns an empty array when there are no comments", () => {
+		expect(getCommentsInRange([], [0, 100])).toEqual([]);
+	});
+
+	it("returns comments fully inside the range", () => {
+		expect(getCommentsInRange(comments, [8, 22])).toEqual([comments[1]]);
+	});
+});
+
+describe("parseCommentOptionsInRange", () => {
+	const context = createMagicCommentContext();
+
+	it("merges webpack magic comments inside the range", () => {
+		/** @type {{ value: string, range: [number, number] }[]} */
+		const comments = [
+			{ value: " note ", range: [0, 8] },
+			{ value: " webpackIgnore: true ", range: [10, 33] }
+		];
+		expect(parseCommentOptionsInRange(comments, [0, 40], context)).toEqual({
+			options: { webpackIgnore: true },
+			errors: []
+		});
 	});
 });
