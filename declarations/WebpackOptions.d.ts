@@ -1397,10 +1397,10 @@ export interface Experiments {
 	 */
 	syncWebAssembly?: boolean;
 	/**
-	 * Enable typescript support.
+	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support unless a loader is registered for TypeScript files.
 	 * @experimental
 	 */
-	typescript?: boolean;
+	typescript?: "auto" | boolean;
 	[k: string]: any;
 }
 /**
@@ -3613,10 +3613,10 @@ export interface ExperimentsNormalized {
 	 */
 	syncWebAssembly?: boolean;
 	/**
-	 * Enable typescript support.
+	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support unless a loader is registered for TypeScript files.
 	 * @experimental
 	 */
-	typescript?: boolean;
+	typescript?: "auto" | boolean;
 }
 /**
  * Generator options for html modules.
