@@ -13,7 +13,8 @@ const anyNodeModuleApi = /** @type {EXPECTED_ANY} */ (nodeModuleApi);
 const hadStripTypeScriptTypes =
 	typeof anyNodeModuleApi.stripTypeScriptTypes === "function";
 if (!hadStripTypeScriptTypes) {
-	anyNodeModuleApi.stripTypeScriptTypes = (source) => source;
+	anyNodeModuleApi.stripTypeScriptTypes = (/** @type {string} */ source) =>
+		source;
 }
 // eslint-disable-next-line jest/require-top-level-describe, jest/padding-around-after-all-blocks
 afterAll(() => {
