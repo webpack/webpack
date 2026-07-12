@@ -1,6 +1,6 @@
 "use strict";
 
-const path = require("path");
+const path = require("node:path");
 
 // Bun aborts in its node:vm SourceTextModule.link() and Deno hard-panics
 // ("Module not found") on less-loader's `import("less")`; on both load the CJS

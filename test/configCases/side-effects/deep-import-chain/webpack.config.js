@@ -1,7 +1,7 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 
 // Mirrors the reproduction from
 // https://github.com/abecirovic-mo/webpack-5.107.0-repro: a long chain of

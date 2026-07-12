@@ -116,18 +116,18 @@ describe("BinaryMiddleware", () => {
 
 	describe("bigints", () => {
 		const bigints = [
-			BigInt(0),
-			BigInt(5),
-			BigInt(10),
-			BigInt(11),
-			BigInt(-1),
-			BigInt(-128),
-			BigInt(127),
-			BigInt(128),
-			BigInt(-2147483648),
-			BigInt(2147483647),
-			BigInt("123456789012345678901234567890"),
-			BigInt("-987654321098765432109876543210")
+			0n,
+			5n,
+			10n,
+			11n,
+			-1n,
+			-128n,
+			127n,
+			128n,
+			-2147483648n,
+			2147483647n,
+			123456789012345678901234567890n,
+			-987654321098765432109876543210n
 		];
 		for (const b of bigints) {
 			it(`should serialize bigint ${b} correctly`, () => {
@@ -170,9 +170,9 @@ describe("BinaryMiddleware", () => {
 			null,
 			...cont([null], 5),
 			...cont([null], 300),
-			BigInt(7),
-			BigInt(100000),
-			BigInt("123456789012345678901234567890"),
+			7n,
+			100000n,
+			123456789012345678901234567890n,
 			Buffer.from("hello"),
 			Buffer.alloc(10000, 1)
 		];

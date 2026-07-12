@@ -5,8 +5,8 @@
 // auto-enable extraction for entry HTML modules so the page is emitted as a
 // `.html` output file — the HTML-entry-point use case.
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */

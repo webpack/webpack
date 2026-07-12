@@ -1,20 +1,20 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 
 module.exports = {
 	beforeExecute() {
 		try {
 			fs.unlinkSync(path.join(__dirname, "dev-defaults.webpack.lock"));
-		} catch (_err) {
+		} catch {
 			// Empty
 		}
 	},
 	afterExecute() {
 		try {
 			fs.unlinkSync(path.join(__dirname, "dev-defaults.webpack.lock"));
-		} catch (_err) {
+		} catch {
 			// Empty
 		}
 	}

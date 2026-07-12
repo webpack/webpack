@@ -9,8 +9,8 @@
 // or throwing an internal exception. (Mirrors html5lib.spectest.js;
 // only fixture loading and the entry type differ.)
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");

@@ -140,7 +140,7 @@ const align = (target) => {
 			let value;
 			try {
 				value = d.get ? d.get.call(target) : undefined;
-			} catch (_err) {
+			} catch {
 				value = undefined;
 			}
 			Object.defineProperty(target, key, {

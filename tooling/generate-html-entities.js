@@ -17,9 +17,9 @@
 // with `--fetch` (one-off, requires network access). Source URL:
 // https://html.spec.whatwg.org/entities.json (WHATWG HTML Standard).
 
-const fs = require("fs");
-const https = require("https");
-const path = require("path");
+const fs = require("node:fs");
+const https = require("node:https");
+const path = require("node:path");
 
 const SPEC_URL = "https://html.spec.whatwg.org/entities.json";
 const FALLBACK_URL =
@@ -136,7 +136,7 @@ const HTML_ENTITIES = /** @type {Readonly<Record<string, string>>} */ (Object.fr
 		let body;
 		try {
 			body = await fetchUrl(SPEC_URL);
-		} catch (_err) {
+		} catch {
 			body = await fetchUrl(FALLBACK_URL);
 		}
 		const parsed = JSON.parse(body);
@@ -156,7 +156,7 @@ const HTML_ENTITIES = /** @type {Readonly<Record<string, string>>} */ (Object.fr
 	// Preserve the file's existing EOL style (CRLF on Windows, LF elsewhere)
 	// so writing the regenerated region doesn't introduce mixed line endings.
 	const eol = currentContent.includes("\r\n") ? "\r\n" : "\n";
-	const region = renderRegion(map).replace(/\n/g, eol);
+	const region = renderRegion(map).replaceAll("\n", eol);
 	const newContent = currentContent.replace(REGION_REGEXP, region);
 
 	if (newContent !== currentContent) {

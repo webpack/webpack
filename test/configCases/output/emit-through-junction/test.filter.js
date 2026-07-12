@@ -1,7 +1,7 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 
 // Skip where directory junctions / symlinks cannot be created (e.g. Windows
 // without the required privilege).
@@ -14,10 +14,10 @@ module.exports = () => {
 		fs.unlinkSync(link);
 		fs.rmdirSync(real);
 		return true;
-	} catch (_err) {
+	} catch {
 		try {
 			fs.rmdirSync(real);
-		} catch (_err2) {
+		} catch {
 			// ignore cleanup failure
 		}
 		return false;

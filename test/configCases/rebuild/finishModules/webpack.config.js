@@ -1,6 +1,6 @@
 "use strict";
 
-const { join, resolve } = require("path");
+const { join, resolve } = require("node:path");
 const { NormalModule } = require("../../../../");
 
 /**

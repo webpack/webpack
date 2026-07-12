@@ -1,7 +1,7 @@
 "use strict";
 
-const fs = require("fs");
-const join = require("path").join;
+const fs = require("node:fs");
+const join = require("node:path").join;
 const webpack = require("../../../");
 
 /**
@@ -10,7 +10,7 @@ const webpack = require("../../../");
  */
 function read(path) {
 	return JSON.stringify(
-		fs.readFileSync(join(__dirname, path), "utf8").replace(/\r\n?/g, "\n")
+		fs.readFileSync(join(__dirname, path), "utf8").replaceAll(/\r\n?/g, "\n")
 	);
 }
 

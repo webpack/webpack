@@ -1,6 +1,6 @@
-import fs from "fs/promises";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { simpleGit } from "simple-git";
 import pkgJson from "../package.json" with { type: "json" };
 
@@ -19,7 +19,7 @@ const toLines = (output) =>
 		.filter(Boolean);
 
 const isChangeset = (filePath) => {
-	const normalized = filePath.replace(/\\/g, "/");
+	const normalized = filePath.replaceAll("\\", "/");
 	return (
 		normalized.startsWith(".changeset/") &&
 		normalized.endsWith(".md") &&
@@ -138,4 +138,4 @@ const main = async () => {
 	}
 };
 
-main();
+await main();

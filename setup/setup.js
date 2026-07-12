@@ -1,7 +1,7 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 
 const root = process.cwd();
 const nodeModulesFolder = path.resolve(root, "node_modules");
@@ -70,7 +70,7 @@ async function ensureYarnInstalledAsync() {
 	try {
 		const stdout = await execGetOutput("yarn", ["-v"], "Check yarn version");
 		hasYarn = semverPattern.test(stdout);
-	} catch (_err) {
+	} catch {
 		hasYarn = false;
 	}
 	if (!hasYarn) await installYarnAsync();
@@ -92,7 +92,7 @@ function installYarnAsync() {
 function exec(command, args, description) {
 	console.log(`Setup: ${description}`);
 	return new Promise((resolve, reject) => {
-		const cp = require("child_process").spawn(command, args, {
+		const cp = require("node:child_process").spawn(command, args, {
 			cwd: root,
 			stdio: "inherit",
 			shell: true
@@ -120,7 +120,7 @@ function exec(command, args, description) {
 function execGetOutput(command, args, description) {
 	console.log(`Setup: ${description}`);
 	return new Promise((resolve, reject) => {
-		const cp = require("child_process").spawn(command, args, {
+		const cp = require("node:child_process").spawn(command, args, {
 			cwd: root,
 			stdio: [process.stdin, "pipe", process.stderr],
 			shell: true

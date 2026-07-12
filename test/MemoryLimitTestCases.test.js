@@ -2,7 +2,7 @@
 
 require("./helpers/warmup-webpack");
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 const webpack = require("..");
@@ -43,9 +43,9 @@ describe("MemoryLimitTestCases", () => {
 
 	beforeEach(() => {
 		stderr = captureStdio(process.stderr, true);
-		if (global.gc) {
-			global.gc();
-			global.gc();
+		if (globalThis.gc) {
+			globalThis.gc();
+			globalThis.gc();
 		}
 	});
 
@@ -64,7 +64,7 @@ describe("MemoryLimitTestCases", () => {
 				testConfig,
 				require(path.join(base, testName, "test.config.js"))
 			);
-		} catch (_err) {
+		} catch {
 			// ignored
 		}
 		const size = toMiB(testConfig.heapSizeLimitBytes);
@@ -91,7 +91,7 @@ describe("MemoryLimitTestCases", () => {
 			);
 			for (const options of resolvedOptions) {
 				if (!options.context) options.context = path.join(base, testName);
-				if (!options.output) options.output = options.output || {};
+				options.output ||= {};
 				if (!options.output.path) options.output.path = outputDirectory;
 				if (!options.plugins) options.plugins = [];
 				if (!options.optimization) options.optimization = {};
@@ -103,7 +103,7 @@ describe("MemoryLimitTestCases", () => {
 			const c = webpack(options);
 			const cAny = /** @type {EXPECTED_ANY} */ (c);
 			const compilers = /** @type {import("../").Compiler[]} */ (
-				cAny.compilers ? cAny.compilers : [c]
+				cAny.compilers || [c]
 			);
 			for (const c of compilers) {
 				const ifs = /** @type {NonNullable<typeof c.inputFileSystem>} */ (
@@ -133,7 +133,7 @@ describe("MemoryLimitTestCases", () => {
 								null,
 								/** @type {Buffer} */ (result)
 									.toString("utf8")
-									.replace(/\r/g, "")
+									.replaceAll("\r", "")
 							);
 						}
 					]);

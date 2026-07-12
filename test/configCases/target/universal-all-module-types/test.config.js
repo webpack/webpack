@@ -1,6 +1,6 @@
 "use strict";
 
-const { Worker } = require("worker_threads");
+const { Worker } = require("node:worker_threads");
 
 module.exports = {
 	findBundle(i, options) {

@@ -1,6 +1,6 @@
 "use strict";
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 const deprecationTracking = require("./deprecationTracking");
 

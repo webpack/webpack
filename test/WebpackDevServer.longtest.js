@@ -11,10 +11,10 @@ jest.mock("depd", () => () => {
 	return deprecate;
 });
 
-const fs = require("fs");
-const net = require("net");
-const os = require("os");
-const path = require("path");
+const fs = require("node:fs");
+const net = require("node:net");
+const os = require("node:os");
+const path = require("node:path");
 
 // Drives a real webpack-dev-server (added as a compiler plugin) in real Chrome via
 // puppeteer-core. Bun and Deno report a Node-compatible version; require puppeteer
@@ -31,7 +31,7 @@ if (nodeSupported) {
 	try {
 		puppeteer = require("puppeteer-core");
 		WebpackDevServer = require("webpack-dev-server");
-	} catch (_err) {
+	} catch {
 		puppeteer = undefined;
 		WebpackDevServer = undefined;
 	}
@@ -48,12 +48,12 @@ const ensureWebpackSelfLink = () => {
 	const link = path.join(root, "node_modules", "webpack");
 	try {
 		if (fs.realpathSync(link) === fs.realpathSync(root)) return;
-	} catch (_err) {
+	} catch {
 		// not linked yet — fall through and create it
 	}
 	try {
 		fs.symlinkSync(root, link, "junction");
-	} catch (_err) {
+	} catch {
 		// a real node_modules/webpack already exists — nothing to do
 	}
 };
@@ -314,7 +314,7 @@ describe("WebpackDevServer integration in real Chrome", () => {
 				launchOptions.channel = "chrome";
 			}
 			browser = await puppeteer.launch(launchOptions);
-		} catch (_err) {
+		} catch {
 			// No usable Chrome in this environment — the tests self-skip below.
 			browser = undefined;
 		}
@@ -345,14 +345,14 @@ describe("WebpackDevServer integration in real Chrome", () => {
 
 			// Marker on window survives an HMR patch but not a full page reload.
 			await page.evaluate(() => {
-				/** @type {EXPECTED_ANY} */ (window).__notReloaded = true;
+				/** @type {EXPECTED_ANY} */ (globalThis).__notReloaded = true;
 			});
 
 			fs.writeFileSync(messagePath, messageSource("V2"));
 			await waitForAppText(page, "MESSAGE_V2", 20000);
 
 			const notReloaded = await page.evaluate(
-				() => /** @type {EXPECTED_ANY} */ (window).__notReloaded === true
+				() => /** @type {EXPECTED_ANY} */ (globalThis).__notReloaded === true
 			);
 			expect(notReloaded).toBe(true);
 		} finally {
@@ -385,14 +385,14 @@ describe("WebpackDevServer integration in real Chrome", () => {
 			await waitForAppText(page, "MESSAGE_V1", 20000);
 
 			await page.evaluate(() => {
-				/** @type {EXPECTED_ANY} */ (window).__notReloaded = true;
+				/** @type {EXPECTED_ANY} */ (globalThis).__notReloaded = true;
 			});
 
 			fs.writeFileSync(messagePath, messageSource("V2"));
 			await waitForAppText(page, "MESSAGE_V2", 20000);
 
 			const notReloaded = await page.evaluate(
-				() => /** @type {EXPECTED_ANY} */ (window).__notReloaded === true
+				() => /** @type {EXPECTED_ANY} */ (globalThis).__notReloaded === true
 			);
 			expect(notReloaded).toBe(false);
 		} finally {

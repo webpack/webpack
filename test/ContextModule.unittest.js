@@ -1,6 +1,6 @@
 "use strict";
 
-const path = require("path");
+const path = require("node:path");
 const ContextModule = require("../lib/ContextModule");
 const RequestShortener = require("../lib/RequestShortener");
 const RuntimeTemplate = require("../lib/RuntimeTemplate");

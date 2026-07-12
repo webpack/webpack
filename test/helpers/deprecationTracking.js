@@ -5,7 +5,7 @@
 
 "use strict";
 
-const util = require("util");
+const util = require("node:util");
 
 /** @type {undefined | Map<string, { code: string, message: string, stack: string }>} */
 let interception;

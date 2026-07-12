@@ -2,8 +2,8 @@
 
 // `./src` with no extension must resolve `./src/index.css` when the css
 // experiment is on — the same way `./src` resolves `./src/index.js` by default.
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */

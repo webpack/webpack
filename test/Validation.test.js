@@ -358,8 +358,8 @@ describe("Validation", () => {
 		(msg) => {
 			expect(
 				msg
-					.replace(/object \{ .* \}/g, "object {...}")
-					.replace(/"none" \| .+/g, '"none" | ...')
+					.replaceAll(/object \{ .* \}/g, "object {...}")
+					.replaceAll(/"none" \| .+/g, '"none" | ...')
 			).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.stats has an unknown property 'foobar'. These properties are valid:

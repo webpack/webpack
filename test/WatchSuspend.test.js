@@ -2,8 +2,8 @@
 
 require("./helpers/warmup-webpack");
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 expectNoDeprecations();
@@ -41,14 +41,14 @@ describe("WatchSuspend", () => {
 		beforeAll(() => {
 			try {
 				fs.mkdirSync(fixturePath);
-			} catch (_err) {
+			} catch {
 				// skip
 			}
 			try {
 				fs.writeFileSync(filePath, "'foo'", "utf8");
 				fs.writeFileSync(file2Path, "'file2'", "utf8");
 				fs.writeFileSync(file3Path, "'file3'", "utf8");
-			} catch (_err) {
+			} catch {
 				// skip
 			}
 
@@ -80,12 +80,12 @@ describe("WatchSuspend", () => {
 			);
 			try {
 				fs.unlinkSync(filePath);
-			} catch (_err) {
+			} catch {
 				// skip
 			}
 			try {
 				fs.rmdirSync(fixturePath);
-			} catch (_err) {
+			} catch {
 				// skip
 			}
 		});

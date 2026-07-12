@@ -17,7 +17,7 @@ module.exports = class EventSource {
 		/** @type {boolean} */
 		this.closed = false;
 		const request = (
-			url.startsWith("https:") ? require("https") : require("http")
+			url.startsWith("https:") ? require("node:https") : require("node:http")
 		).request(
 			url,
 			{

@@ -2,7 +2,7 @@
 
 require("./helpers/warmup-webpack");
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const {
@@ -41,7 +41,6 @@ const createLogger = (appendErrors) => ({
 	status: () => {}
 });
 
-const nodeVersion = Number.parseInt(process.version.slice(1).split(".")[0], 10);
 // eslint-disable-next-line no-new-func
 const dynamicImport = new Function("specifier", "return import(specifier)");
 
@@ -63,24 +62,13 @@ async function loadConfiguration(projectDir) {
 			continue;
 		}
 
-		if (nodeVersion < 18) {
-			try {
-				options = require(path);
-				return options;
-			} catch (_err) {
-				// Nothing
-			}
-
-			return;
-		}
-
 		try {
 			options = await dynamicImport(path);
 			return options.default;
-		} catch (_err) {
+		} catch {
 			try {
 				options = require(path);
-			} catch (_err) {
+			} catch {
 				// Nothing
 			}
 		}
@@ -138,7 +126,7 @@ describe("Examples", () => {
 				 */
 				function processOptions(options) {
 					options.context = examplePath;
-					options.output = options.output || {};
+					options.output ||= {};
 					options.output.pathinfo = true;
 					options.output.path = path.join(examplePath, "dist");
 					options.output.publicPath = "dist/";

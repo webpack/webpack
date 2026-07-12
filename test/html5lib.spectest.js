@@ -15,8 +15,8 @@
 //    listed case is asserted to *still* diverge, so accidentally fixing one
 //    flags the list as stale.
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
 const {
@@ -45,7 +45,7 @@ const INTERNAL =
 const BATCH = 400;
 
 const unescape = (s) =>
-	s.replace(/\\u([0-9A-Fa-f]{4})/g, (_, h) =>
+	s.replaceAll(/\\u([0-9A-Fa-f]{4})/g, (_, h) =>
 		String.fromCharCode(Number.parseInt(h, 16))
 	);
 

@@ -1,6 +1,6 @@
 "use strict";
 
-const path = require("path");
+const path = require("node:path");
 
 // A loader is registered for `.css`, but `experiments.css` is left at its "auto"
 // default → the built-in CSS type stays off so the loader keeps handling the file.

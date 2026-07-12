@@ -1,6 +1,6 @@
 "use strict";
 
-const path = require("path");
+const path = require("node:path");
 
 module.exports = (
 	/** @type {{ outputDirectory: string }} */ { outputDirectory }
@@ -128,9 +128,12 @@ if (${options.type === "module"}) {
 	scopedRequire(${JSON.stringify(file)});
 }
 `;
-			this.worker = new (require("worker_threads").Worker)(workerBootstrap, {
-				eval: true
-			});
+			this.worker = new (require("node:worker_threads").Worker)(
+				workerBootstrap,
+				{
+					eval: true
+				}
+			);
 
 			this._terminated = false;
 			// A chunk load rejected after the test got its result and called

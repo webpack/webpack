@@ -7,8 +7,8 @@
 // the emitted `.css` chunk rather than the original `./style.css`. The
 // `url()` asset URL in the emitted CSS should also be a hashed filename.
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */

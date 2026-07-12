@@ -1,3 +1,3 @@
 "use strict";
 
-module.exports = () => "stripTypeScriptTypes" in require("module");
+module.exports = () => "stripTypeScriptTypes" in require("node:module");

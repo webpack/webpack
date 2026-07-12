@@ -1,7 +1,7 @@
 "use strict";
 
-const path = require("path");
-const { pathToFileURL } = require("url");
+const path = require("node:path");
+const { pathToFileURL } = require("node:url");
 
 module.exports = {
 	moduleScope(scope, options) {

@@ -5,5 +5,5 @@
  * @returns {string} escaped string
  */
 module.exports = function regexEscape(string) {
-	return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+	return string.replaceAll(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 };

@@ -1,7 +1,7 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 
 module.exports = () => {
 	try {
@@ -12,7 +12,7 @@ module.exports = () => {
 		);
 		fs.unlinkSync(path.join(__dirname, ".testlink"));
 		return true;
-	} catch (_err) {
+	} catch {
 		return false;
 	}
 };

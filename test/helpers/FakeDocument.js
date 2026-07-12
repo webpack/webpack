@@ -1,7 +1,7 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 
 /** @typedef {import("../../lib/css/syntax").MutableToken} MutableToken */
 /** @typedef {Record<string, unknown> & { getPropertyValue: (property: string) => unknown }} StyleDeclaration */
@@ -123,7 +123,7 @@ class FakeDocument {
 			if (attrSelector.includes("=")) {
 				const [attr, value] = attrSelector
 					.split("=")
-					.map((s) => s.trim().replace(/^["']|["']$/g, ""));
+					.map((s) => s.trim().replaceAll(/^["']|["']$/g, ""));
 				for (const elements of this._elementsByTagName.values()) {
 					for (const element of elements) {
 						if (element.getAttribute(attr) === value) {
@@ -352,7 +352,7 @@ class FakeElement {
 					this.sheet._css = this.sheet.css;
 					this.sheet._cssRules = this.sheet.cssRules;
 				}
-			} catch (_error) {
+			} catch {
 				// Ignore error
 			}
 		}
@@ -500,7 +500,7 @@ class FakeSheet {
 			"utf8"
 		);
 
-		css = css.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
+		css = css.replaceAll(/@import url\("([^"]+)"\);/g, (match, url) => {
 			if (!/^https:\/\/test\.cases\/path\//.test(url)) {
 				return `@import url("${url}");`;
 			}
@@ -560,9 +560,8 @@ class FakeSheet {
 		let css = fs.readFileSync(filepath, "utf8");
 		css = css
 			// Remove comments
-			// @ts-expect-error we use es2018 for such tests
-			.replace(/\/\*.*?\*\//gs, "")
-			.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
+			.replaceAll(/\/\*.*?\*\//gs, "")
+			.replaceAll(/@import url\("([^"]+)"\);/g, (match, url) => {
 				if (!/^https:\/\/test\.cases\/path\//.test(url)) {
 					return url;
 				}
@@ -678,9 +677,7 @@ class CSSStyleSheet {
 		};
 
 		// Remove comments
-		const cleanCss = cssText
-			// @ts-expect-error we use es2018 for such tests
-			.replace(/\/\*.*?\*\//gs, "");
+		const cleanCss = cssText.replaceAll(/\/\*.*?\*\//gs, "");
 
 		let ruleStart = 0;
 

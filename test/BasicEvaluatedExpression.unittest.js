@@ -35,12 +35,12 @@ describe("BasicEvaluatedExpression", () => {
 		expect(e.asString()).toBe("0");
 		expect(e.asCompileTimeValue()).toBe(0);
 
-		e.setBigInt(BigInt(0));
+		e.setBigInt(0n);
 		expect(e.isBigInt()).toBe(true);
-		expect(e.bigint).toBe(BigInt(0));
+		expect(e.bigint).toBe(0n);
 		expect(e.asBool()).toBe(false);
 		expect(e.asString()).toBe("0");
-		expect(e.asCompileTimeValue()).toBe(BigInt(0));
+		expect(e.asCompileTimeValue()).toBe(0n);
 
 		e.setBoolean(true);
 		expect(e.isBoolean()).toBe(true);

@@ -19,7 +19,7 @@ module.exports = function supportsUsing() {
 			return disposed;
 		})`);
 		return f() === true;
-	} catch (_err) {
+	} catch {
 		return false;
 	}
 };

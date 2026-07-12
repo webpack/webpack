@@ -1,6 +1,6 @@
 "use strict";
 
-const fs = require("fs");
+const fs = require("node:fs");
 
 const findFile = (files, regex) =>
 	files.find((file) => {
@@ -52,6 +52,6 @@ module.exports = {
 		return `./${filename}`;
 	},
 	afterExecute: () => {
-		delete global.webpackChunk;
+		delete globalThis.webpackChunk;
 	}
 };

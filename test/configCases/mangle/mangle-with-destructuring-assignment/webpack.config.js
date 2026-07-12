@@ -38,7 +38,7 @@ module.exports = {
 									const file = compilation.getAssetPath("[name].js", {
 										filename: `${module
 											.readableIdentifier(compilation.requestShortener)
-											.replace(/[?#]/g, "_")}.js`
+											.replaceAll(/[?#]/g, "_")}.js`
 									});
 									compilation.emitAsset(file, source);
 								}

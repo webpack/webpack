@@ -6,8 +6,8 @@
 // The synthesized sibling `<link>` must carry each one back byte-exact,
 // exercising every branch of the parser's `attrSourceSpan`.
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */

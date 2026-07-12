@@ -1,6 +1,6 @@
 "use strict";
 
-const path = require("path");
+const path = require("node:path");
 
 // Reproduces https://github.com/webpack/webpack/issues/16819: webpack-dev-server
 // adds entries as absolute paths with query strings, and when the project lives

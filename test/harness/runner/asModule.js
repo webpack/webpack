@@ -1,9 +1,7 @@
 "use strict";
 
 const vm = require("vm");
-const { ESModuleStatus, getNodeVersion } = require("./RunnerHelpers");
-
-const [major] = getNodeVersion();
+const { ESModuleStatus } = require("./RunnerHelpers");
 
 const SYNTHETIC_MODULES_STORE = "__SYNTHETIC_MODULES_STORE";
 const LINKER = () => {};
@@ -21,9 +19,7 @@ module.exports = async (
 	options = {},
 	importAttributes = {}
 ) => {
-	if (
-		something instanceof (vm.Module || /* node.js 10 */ vm.SourceTextModule)
-	) {
+	if (something instanceof vm.Module) {
 		return /** @type {vm.SourceTextModule} */ (something);
 	}
 
@@ -59,19 +55,7 @@ module.exports = async (
 	});
 	if (options.esmReturnStatus === ESModuleStatus.Unlinked) return esm;
 
-	if (major === 10) {
-		if (
-			/** @type {EXPECTED_ANY} */ (esm).linkingStatus ===
-			ESModuleStatus.Unlinked
-		) {
-			await esm.link(/** @type {EXPECTED_ANY} */ (() => {}));
-		}
-		if (
-			/** @type {EXPECTED_ANY} */ (esm).linkingStatus === ESModuleStatus.Linked
-		) {
-			esm.instantiate();
-		}
-	} else if (esm.status === ESModuleStatus.Unlinked) {
+	if (esm.status === ESModuleStatus.Unlinked) {
 		await esm.link(/** @type {EXPECTED_ANY} */ (() => {}));
 	}
 

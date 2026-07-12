@@ -71,6 +71,12 @@ export default defineConfig([
 			// Revisit it in future
 			"no-use-before-define": "off",
 
+			// In-place `Array#sort` is intentional — `toSorted()` copies the array on hot paths
+			"unicorn/no-array-sort": "off",
+
+			// The autofix strands the JSDoc `@type` annotations that live on the constructor assignments
+			"unicorn/prefer-class-fields": "off",
+
 			// TODO We need allow to have `_arg` in tooling and use `after-used` value for `args`
 			"no-unused-vars": [
 				"error",
@@ -97,20 +103,8 @@ export default defineConfig([
 	},
 	{
 		files: ["bin/**/*.js"],
-		// Allow to use `dynamic` import
-		languageOptions: {
-			ecmaVersion: 2020
-		},
 		rules: {
-			"no-console": "off",
-
-			// Allow to use `dynamic` import and hashbang
-			"n/no-unsupported-features/es-syntax": [
-				"error",
-				{
-					ignores: ["hashbang", "dynamic-import"]
-				}
-			]
+			"no-console": "off"
 		}
 	},
 	{
@@ -153,9 +147,6 @@ export default defineConfig([
 	{
 		files: ["test/**/*.js"],
 		rules: {
-			// Some our tests contain `package.json` without `engines`, but tests should work on Node.js@10, so let's disable it
-			"n/prefer-node-protocol": "off",
-
 			// No need here, we have custom test logic, so except can be placed in different places
 			"jest/no-standalone-expect": "off",
 
@@ -164,13 +155,6 @@ export default defineConfig([
 
 			// We have a lot of custom tests
 			"jest/no-confusing-set-timeout": "off"
-		}
-	},
-	{
-		// puppeteer-core is ESM-only (v25+) and is loaded via dynamic import here
-		files: ["test/ProfilingPlugin.unittest.js"],
-		languageOptions: {
-			ecmaVersion: 2020
 		}
 	},
 	{
@@ -199,17 +183,11 @@ export default defineConfig([
 			"test/benchmarkCases/**/webpack.config.mjs",
 			"test/benchmarkCases/**/options.mjs"
 		],
-		languageOptions: {
-			ecmaVersion: 2022
-		},
 		rules: {
-			"no-console": "off"
-		}
-	},
-	{
-		files: ["test/Compiler-filesystem-caching.test.js"],
-		languageOptions: {
-			ecmaVersion: 2022
+			"no-console": "off",
+
+			// CommonJS scripts cannot use top-level await
+			"unicorn/prefer-top-level-await": "off"
 		}
 	},
 	{
@@ -241,9 +219,6 @@ export default defineConfig([
 	},
 	{
 		files: [".changeset/**/*.mjs"],
-		languageOptions: {
-			ecmaVersion: 2025
-		},
 		rules: {
 			"no-console": "off",
 			"n/no-unsupported-features/node-builtins": "off"

@@ -53,26 +53,13 @@ const urlToRelativePath = (url) => {
 	return `./${url}`;
 };
 
-/**
- * @returns {number[]} version arr
- */
-const getNodeVersion = () => process.versions.node.split(".").map(Number);
-
 const ESModuleStatus = Object.freeze({
 	Unlinked: "unlinked",
-	Linked: "linked",
-	Evaluated: "evaluated",
-	/**
-	 * Present in `module.linkingStatus`
-	 * Compatible with Node.js v10
-	 * https://nodejs.org/docs/latest-v10.x/api/vm.html#vm_module_status
-	 */
-	Uninstantiated: "uninstantiated"
+	Evaluated: "evaluated"
 });
 
 module.exports = {
 	ESModuleStatus,
-	getNodeVersion,
 	getSubPath,
 	isRelativePath,
 	urlToPath,

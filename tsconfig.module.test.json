@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "lib": ["es2017", "dom"],
+    "lib": ["es2025", "dom"],
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,

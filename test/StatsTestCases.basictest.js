@@ -2,7 +2,7 @@
 
 require("./helpers/warmup-webpack");
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 const webpack = require("..");
@@ -17,7 +17,7 @@ const {
  * @param {string} str String to quote
  * @returns {string} Escaped string
  */
-const quoteMeta = (str) => str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
+const quoteMeta = (str) => str.replaceAll(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
 
 const base = path.join(__dirname, "statsCases");
 const outputBase = path.join(__dirname, "js", "stats");
@@ -86,14 +86,14 @@ describe("StatsTestCases", () => {
 						testConfig,
 						require(path.join(testDirectory, "test.config.js"))
 					);
-				} catch (_err) {
+				} catch {
 					// ignored
 				}
 
 				const resolvedOptions = Array.isArray(options) ? options : [options];
 				for (const options of resolvedOptions) {
 					if (!options.context) options.context = testDirectory;
-					if (!options.output) options.output = options.output || {};
+					if (!options.output) options.output ||= {};
 					if (!options.output.path) options.output.path = outputDirectory;
 					if (!options.plugins) options.plugins = [];
 					if (!options.optimization) options.optimization = {};
@@ -115,7 +115,7 @@ describe("StatsTestCases", () => {
 				const c = webpack(options);
 				const cAny = /** @type {EXPECTED_ANY} */ (c);
 				const compilers = /** @type {import("../").Compiler[]} */ (
-					cAny.compilers ? cAny.compilers : [c]
+					cAny.compilers || [c]
 				);
 				for (const c of compilers) {
 					const ifs = /** @type {NonNullable<typeof c.inputFileSystem>} */ (
@@ -145,7 +145,7 @@ describe("StatsTestCases", () => {
 									null,
 									/** @type {Buffer} */ (result)
 										.toString("utf8")
-										.replace(/\r/g, "")
+										.replaceAll("\r", "")
 								);
 							}
 						]);
@@ -173,7 +173,7 @@ describe("StatsTestCases", () => {
 					const stats = /** @type {import("../").Stats} */ (_stats);
 					const statsAny = /** @type {EXPECTED_ANY} */ (stats);
 					for (const compilation of /** @type {import("../").Compilation[]} */ (
-						[...(statsAny.stats ? statsAny.stats : [stats])].map(
+						[...(statsAny.stats || [stats])].map(
 							(/** @type {EXPECTED_ANY} */ s) => s.compilation
 						)
 					)) {
@@ -228,9 +228,7 @@ describe("StatsTestCases", () => {
 						);
 					}
 					// mock timestamps
-					for (const { compilation: s } of statsAny.stats
-						? statsAny.stats
-						: [stats]) {
+					for (const { compilation: s } of statsAny.stats || [stats]) {
 						expect(/** @type {EXPECTED_ANY} */ (s).startTime).toBeGreaterThan(
 							0
 						);
@@ -246,49 +244,49 @@ describe("StatsTestCases", () => {
 					if (!hasColorSetting) {
 						actual = stderr.toString() + actual;
 						actual = actual
-							.replace(/\u001B\[[0-9;]*m/g, "")
-							.replace(/[.0-9]+(\s?ms)/g, "X$1");
+							.replaceAll(/\u001B\[[0-9;]*m/g, "")
+							.replaceAll(/[.0-9]+(\s?ms)/g, "X$1");
 					} else {
 						actual = stderr.toStringRaw() + actual;
 						actual = actual
-							.replace(/\u001B\[1m\u001B\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
-							.replace(/\u001B\[1m/g, "<CLR=BOLD>")
-							.replace(/\u001B\[39m\u001B\[22m/g, "</CLR>")
-							.replace(/\u001B\[([0-9;]*)m/g, "<CLR=$1>")
-							.replace(/[.0-9]+(<\/CLR>)?(\s?ms)/g, "X$1$2");
+							.replaceAll(/\u001B\[1m\u001B\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
+							.replaceAll("\u001B[1m", "<CLR=BOLD>")
+							.replaceAll("\u001B[39m\u001B[22m", "</CLR>")
+							.replaceAll(/\u001B\[([0-9;]*)m/g, "<CLR=$1>")
+							.replaceAll(/[.0-9]+(<\/CLR>)?(\s?ms)/g, "X$1$2");
 					}
 					// cspell:ignore Xdir
 					actual = actual
-						.replace(/\r\n?/g, "\n")
-						.replace(
+						.replaceAll(/\r\n?/g, "\n")
+						.replaceAll(
 							/webpack [^ )]+(\)?) compiled/g,
 							"webpack x.x.x$1 compiled"
 						)
-						.replace(
+						.replaceAll(
 							new RegExp(quoteMeta(testDirectory), "g"),
 							`Xdir/${testName}`
 						)
-						.replace(/(\w)\\(\w)/g, "$1/$2")
-						.replace(/, additional resolving: X ms/g, "")
-						.replace(/Unexpected identifier '.+?'/g, "Unexpected identifier")
+						.replaceAll(/(\w)\\(\w)/g, "$1/$2")
+						.replaceAll(", additional resolving: X ms", "")
+						.replaceAll(/Unexpected identifier '.+?'/g, "Unexpected identifier")
 						// Normalize JSC (Bun) engine error phrasings to the V8 form.
-						.replace(
+						.replaceAll(
 							/Unexpected identifier\. Expected a ':' following the property name '[^']*'\./g,
 							"Unexpected identifier"
 						)
-						.replace(
-							/JSON Parse error: Unexpected EOF/g,
+						.replaceAll(
+							"JSON Parse error: Unexpected EOF",
 							"Unexpected end of JSON input"
 						)
-						.replace(/[.0-9]+(\s?(bytes|KiB|MiB|GiB))/g, "X$1")
-						.replace(
+						.replaceAll(/[.0-9]+(\s?(bytes|KiB|MiB|GiB))/g, "X$1")
+						.replaceAll(
 							/ms\s\([0-9a-f]{6,32}\)|(?!\d+-)[0-9a-f-]{6,32}\./g,
-							(match) => `${match.replace(/[0-9a-f]/g, "X")}`
+							(match) => `${match.replaceAll(/[0-9a-f]/g, "X")}`
 						)
 						// Normalize stack traces between Jest v27 and v30
 						// Jest v27: at Object.<anonymous>.module.exports
 						// Jest v30: at Object.module.exports
-						.replace(/Object\.<anonymous>\./g, "Object.");
+						.replaceAll("Object.<anonymous>.", "Object.");
 					// Normalize logger trace frames across engines: V8 emits one
 					// "at fn (file:line:col)" frame, while JSC (Bun) emits extra
 					// internal frames, omits the function name, and reports different
