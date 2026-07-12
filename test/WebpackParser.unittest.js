@@ -286,6 +286,44 @@ describe("WebpackParser", () => {
 		});
 	});
 
+	describe("identifier word cache", () => {
+		/**
+		 * @param {string} code source
+		 * @returns {string[]} every Identifier name in program order
+		 */
+		const names = (code) => {
+			/** @type {string[]} */
+			const found = [];
+			JSON.stringify(parse(code).ast, (_key, value) => {
+				if (value && value.type === "Identifier") found.push(value.name);
+				return value;
+			});
+			return found;
+		};
+
+		it("should return identical names for repeated, uncached and long identifiers", () => {
+			// repeated words hit the cache; 1-char and >12-char words bypass it
+			expect(names("foo + foo + f + averyveryLongIdentifier;")).toEqual([
+				"foo",
+				"foo",
+				"f",
+				"averyveryLongIdentifier"
+			]);
+		});
+
+		it("should survive hash collisions by content check", () => {
+			// `aaaa`/`ahri` and `aaaa`/`aafom` share a cache slot (same djb2&mask),
+			// exercising the same-length and length-mismatch collision branches
+			expect(names("aaaa + ahri + aaaa + aafom + aaaa;")).toEqual([
+				"aaaa",
+				"ahri",
+				"aaaa",
+				"aafom",
+				"aaaa"
+			]);
+		});
+	});
+
 	describe("token context (finishToken exprAllowed)", () => {
 		/**
 		 * @param {string} code source
