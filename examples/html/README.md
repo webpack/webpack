@@ -213,7 +213,7 @@ chunk (runtime: __html_6d047296_1) __html_6d047296_2.js (__html_6d047296_2) 56 b
     [no exports]
     [used exports unknown]
     entry data:text/javascript;base64,CgkJCWNvbnNvbGUu.. __html_6d047296_2
-chunk (runtime: page) page.js (page) 1.24 KiB (javascript) 1.23 KiB (html) 65 bytes (css-text) 34.2 KiB (asset) 84 bytes (asset-url) [entry] [rendered]
+chunk (runtime: page) page.js (page) 34.2 KiB (asset) 84 bytes (asset-url) 65 bytes (css-text) 1.24 KiB (javascript) 1.23 KiB (html) [entry] [rendered]
   > ./src/index.html page
   dependent modules 34.2 KiB (asset) 84 bytes (asset-url) 65 bytes (css-text) [dependent] 3 modules
   ./src/index.html 1.24 KiB (javascript) 1.23 KiB (html) [built] [code generated]
@@ -242,7 +242,7 @@ chunk (runtime: __html_6d047296_0) __html_6d047296_0.css (__html_6d047296_0) 64 
     [no exports]
     [no exports used]
     entry ./styles.css __html_6d047296_0
-chunk (runtime: page) page.js (page) 1.28 KiB (javascript) 1.23 KiB (html) 65 bytes (css-text) 34.2 KiB (asset) 84 bytes (asset-url) 1.21 KiB (runtime) [entry] [rendered]
+chunk (runtime: page) page.js (page) 34.2 KiB (asset) 1.28 KiB (javascript) 84 bytes (asset-url) 65 bytes (css-text) 1.23 KiB (html) 1.21 KiB (runtime) [entry] [rendered]
   > ./src/index.html page
   dependent modules 34.2 KiB (asset) 42 bytes (javascript) 84 bytes (asset-url) 65 bytes (css-text) [dependent] 3 modules
   runtime modules 1.21 KiB 2 modules
@@ -256,7 +256,7 @@ chunk (runtime: __html_6d047296_1) __html_6d047296_2.js (__html_6d047296_2) 56 b
     [no exports]
     [no exports used]
     entry data:text/javascript;base64,CgkJCWNvbnNvbGUu.. __html_6d047296_2
-chunk (runtime: __html_6d047296_1) __html_6d047296_1.js (__html_6d047296_1) 14.6 KiB (asset) 583 bytes (javascript) 42 bytes (asset-url) 3.67 KiB (runtime) [entry] [rendered]
+chunk (runtime: __html_6d047296_1) __html_6d047296_1.js (__html_6d047296_1) 583 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 3.67 KiB (runtime) [entry] [rendered]
   > ./app.js __html_6d047296_1
   runtime modules 3.67 KiB 5 modules
   dependent modules 14.6 KiB (asset) 42 bytes (javascript) 42 bytes (asset-url) [dependent] 1 module

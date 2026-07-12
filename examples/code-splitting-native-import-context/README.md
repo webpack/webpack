@@ -296,6 +296,7 @@ module.exports = webpackAsyncContext;
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
 /******/ 										error.request = realSrc;
+/******/ 										error.event = event;
 /******/ 										installedChunkData[1](error);
 /******/ 									}
 /******/ 								}
@@ -415,9 +416,9 @@ chunk (runtime: main) 776.output.js 38 bytes [rendered]
     [used exports unknown]
     import() context element ./bar ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar
     import() context element ./bar.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar.js
-chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.9 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.93 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.9 KiB 8 modules
+  runtime modules 5.93 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 281 bytes [built] [code generated]
     [used exports unknown]
@@ -428,7 +429,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.66 KiB [emitted] [minimized] (name: main)
+asset output.js 2.67 KiB [emitted] [minimized] (name: main)
 asset 717.output.js 117 bytes [emitted] [minimized]
 asset 776.output.js 117 bytes [emitted] [minimized]
 asset 0.output.js 114 bytes [emitted] [minimized]
@@ -453,9 +454,9 @@ chunk (runtime: main) 776.output.js 38 bytes [rendered]
     [exports: default]
     import() context element ./bar ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar
     import() context element ./bar.js ./templates/ lazy ^\.\/.*$ referencedExports:  namespace object ./bar.js
-chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.9 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.93 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.9 KiB 8 modules
+  runtime modules 5.93 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 281 bytes [built] [code generated]
     [no exports used]

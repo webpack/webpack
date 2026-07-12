@@ -284,6 +284,7 @@ module.exports = webpackAsyncContext;
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
 /******/ 										error.request = realSrc;
+/******/ 										error.event = event;
 /******/ 										installedChunkData[1](error);
 /******/ 									}
 /******/ 								}
@@ -387,9 +388,9 @@ chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
     [used exports unknown]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.9 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.93 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.9 KiB 8 modules
+  runtime modules 5.93 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 405 bytes [built] [code generated]
     [used exports unknown]
@@ -416,7 +417,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.68 KiB [emitted] [minimized] (name: main)
+asset output.js 2.69 KiB [emitted] [minimized] (name: main)
 asset 994.output.js 117 bytes [emitted] [minimized] (name: chunk-bar-baz0)
 asset 45.output.js 116 bytes [emitted] [minimized] (name: chunk-foo)
 asset 792.output.js 116 bytes [emitted] [minimized] (name: chunk-bar-baz2)
@@ -427,9 +428,9 @@ chunk (runtime: main) 45.output.js (chunk-foo) 38 bytes [rendered]
     [exports: default]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.9 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.93 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.9 KiB 8 modules
+  runtime modules 5.93 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 405 bytes [built] [code generated]
     [no exports used]

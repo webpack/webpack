@@ -263,6 +263,7 @@ module.exports = config;
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
 /******/ 										error.request = realSrc;
+/******/ 										error.event = event;
 /******/ 										installedChunkData[1](error);
 /******/ 									}
 /******/ 								}
@@ -452,14 +453,14 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 9.05 KiB [emitted] (name: main)
+asset output.js 9.09 KiB [emitted] (name: main)
 asset pageB_js.output.js 760 bytes [emitted]
 asset pageA_js.output.js 565 bytes [emitted]
 asset pageC_js.output.js 547 bytes [emitted]
 asset reusableComponent_js.output.js 441 bytes [emitted]
-chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.92 KiB 6 modules
+  runtime modules 4.94 KiB 6 modules
   ./example.js 220 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -495,14 +496,14 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.85 KiB [emitted] [minimized] (name: main)
+asset output.js 1.86 KiB [emitted] [minimized] (name: main)
 asset pageB_js.output.js 228 bytes [emitted] [minimized]
 asset reusableComponent_js.output.js 141 bytes [emitted] [minimized]
 asset pageC_js.output.js 138 bytes [emitted] [minimized]
 asset pageA_js.output.js 137 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.92 KiB 6 modules
+  runtime modules 4.94 KiB 6 modules
   ./example.js 220 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main

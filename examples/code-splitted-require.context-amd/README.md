@@ -170,6 +170,7 @@ getTemplate("b", function(b) {
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
 /******/ 										error.request = realSrc;
+/******/ 										error.event = event;
 /******/ 										installedChunkData[1](error);
 /******/ 									}
 /******/ 								}
@@ -340,11 +341,11 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 9 KiB [emitted] (name: main)
+asset output.js 9.04 KiB [emitted] (name: main)
 asset require_context_templates_sync_recursive_.output.js 2.28 KiB [emitted]
-chunk (runtime: main) output.js (main) 251 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 251 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.92 KiB 6 modules
+  runtime modules 4.94 KiB 6 modules
   ./example.js 251 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -361,11 +362,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 1.88 KiB [emitted] [minimized] (name: main)
+asset output.js 1.89 KiB [emitted] [minimized] (name: main)
 asset require_context_templates_sync_recursive_.output.js 652 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 251 bytes (javascript) 4.92 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 251 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.92 KiB 6 modules
+  runtime modules 4.94 KiB 6 modules
   ./example.js 251 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main

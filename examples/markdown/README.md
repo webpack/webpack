@@ -696,7 +696,7 @@ webpack X.X.X compiled successfully
 ```
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: main)
 asset output.js 11 KiB [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 14.6 KiB (asset) 11.4 KiB (javascript) 1.59 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 11.4 KiB (javascript) 14.6 KiB (asset) 1.59 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 1.59 KiB 4 modules
   dependent modules 14.6 KiB (asset) 42 bytes (javascript) [dependent] 1 module
