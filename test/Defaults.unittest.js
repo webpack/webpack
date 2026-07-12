@@ -5231,7 +5231,7 @@ describe("experiments.typescript auto", () => {
 	it("keeps typescript off when the Node.js TypeScript API is unavailable", () => {
 		// `"auto"` must not enable the built-in support on Node.js < 22.6, where
 		// `module.stripTypeScriptTypes` is missing and it would throw at build time.
-		const mod = require("module");
+		const mod = /** @type {EXPECTED_ANY} */ (require("module"));
 
 		const saved = mod.stripTypeScriptTypes;
 		mod.stripTypeScriptTypes = undefined;

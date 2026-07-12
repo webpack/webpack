@@ -1094,7 +1094,7 @@ Object {
   "experiments-typescript": Object {
     "configs": Array [
       Object {
-        "description": "Enable the built-in TypeScript support only when no loader is registered for TypeScript files.",
+        "description": "Enable the built-in TypeScript support only when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.",
         "multiple": false,
         "path": "experiments.typescript",
         "type": "enum",
@@ -1109,7 +1109,7 @@ Object {
         "type": "boolean",
       },
     ],
-    "description": "Enable the built-in TypeScript support only when no loader is registered for TypeScript files. Enable/disable the built-in TypeScript support.",
+    "description": "Enable the built-in TypeScript support only when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files. Enable/disable the built-in TypeScript support.",
     "multiple": false,
     "simpleType": "string",
   },
