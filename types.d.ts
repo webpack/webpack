@@ -6358,9 +6358,6 @@ declare interface DirnameCacheEntry {
 	 */
 	cache: Map<string, string>;
 }
-declare interface Disposable {
-	[Symbol.dispose](): void;
-}
 declare class DllPlugin {
 	/**
 	 * Creates an instance of DllPlugin.
@@ -10437,11 +10434,6 @@ declare abstract class ItemCacheFacade {
 	 */
 	providePromise<T>(computer: () => T | Promise<T>): Promise<T>;
 }
-declare interface IteratorObject<T, TReturn = unknown, TNext = unknown>
-	extends Iterator<T, TReturn, TNext>, Disposable {
-	[Symbol.iterator](): IteratorObject<T, TReturn, TNext>;
-	[Symbol.dispose](): void;
-}
 declare abstract class JavascriptGenerator extends Generator {
 	/**
 	 * Processes the provided module.
@@ -13902,6 +13894,11 @@ declare class LazySet<T> {
 	delete(value: T): boolean;
 
 	/**
+	 * Returns a new set with the items of this set that are not in the other.
+	 */
+	difference(other: ReadonlySetLike<unknown>): Set<T>;
+
+	/**
 	 * Returns the set's entry iterator and permanently switches future
 	 * operations to eager merge mode to preserve iterator correctness.
 	 */
@@ -13922,9 +13919,40 @@ declare class LazySet<T> {
 	has(item: T): boolean;
 
 	/**
+	 * Returns a new set with the items present in both this set and the other.
+	 */
+	intersection<U>(other: ReadonlySetLike<U>): Set<T & U>;
+
+	/**
+	 * Returns true when this set shares no items with the other.
+	 */
+	isDisjointFrom(other: ReadonlySetLike<unknown>): boolean;
+
+	/**
+	 * Returns true when every item of this set is in the other.
+	 */
+	isSubsetOf(other: ReadonlySetLike<unknown>): boolean;
+
+	/**
+	 * Returns true when every item of the other set is in this one.
+	 */
+	isSupersetOf(other: ReadonlySetLike<unknown>): boolean;
+
+	/**
 	 * Returns the key iterator, eagerly materializing pending merges first.
 	 */
 	keys(): SetIterator<T>;
+
+	/**
+	 * Returns a new set with the items that are in either this set or the other,
+	 * but not both.
+	 */
+	symmetricDifference<U>(other: ReadonlySetLike<U>): Set<T | U>;
+
+	/**
+	 * Returns a new set containing the items of both this set and the other.
+	 */
+	union<U>(other: ReadonlySetLike<U>): Set<T | U>;
 
 	/**
 	 * Returns the value iterator, eagerly materializing pending merges first.
@@ -23344,10 +23372,6 @@ declare abstract class SerializerMiddleware<
 type ServerLazyCompilationBackend =
 	| ServerImportHttp<typeof IncomingMessage>
 	| ServerImportHttps<typeof IncomingMessage>;
-declare interface SetIterator<T> extends IteratorObject<T, undefined> {
-	[Symbol.iterator](): SetIterator<T>;
-	[Symbol.dispose](): void;
-}
 declare class SharePlugin {
 	/**
 	 * Creates an instance of SharePlugin.
@@ -26899,7 +26923,7 @@ declare namespace exports {
 			export let compareStringsNumeric: (a: string, b: string) => 0 | 1 | -1;
 			export let concatComparators: <T>(
 				c1: Comparator<T>,
-				c2: Comparator<T>,
+				c2: undefined | Comparator<T>,
 				...cRest: Comparator<T>[]
 			) => Comparator<T>;
 			export let keepOriginalOrder: <T>(iterable: Iterable<T>) => Comparator<T>;

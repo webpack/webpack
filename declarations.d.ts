@@ -15,26 +15,6 @@ declare namespace NodeJS {
 	}
 }
 
-declare module "typescript-iterable" {
-	// New iterator interfaces from `lib.es2015.iterable.d.ts` for compatibility with old typescript versions and `dispose`
-	interface Disposable {
-		[Symbol.dispose](): void;
-	}
-
-	export interface IteratorObject<T, TReturn = unknown, TNext = unknown>
-		extends Iterator<T, TReturn, TNext>, Disposable {
-		[Symbol.iterator](): IteratorObject<T, TReturn, TNext>;
-	}
-
-	export interface SetIterator<T> extends IteratorObject<
-		T,
-		BuiltinIteratorReturn,
-		unknown
-	> {
-		[Symbol.iterator](): SetIterator<T>;
-	}
-}
-
 // There are no typings for @webassemblyjs/ast
 declare module "@webassemblyjs/ast" {
 	export class AST extends Node {
