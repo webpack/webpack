@@ -3,7 +3,7 @@
 const rootPath = "../../../../";
 
 const webpack = require(rootPath);
-const path = require("path");
+const path = require("node:path");
 
 /** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
 module.exports = (env, { testPath }) => ({

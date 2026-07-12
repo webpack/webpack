@@ -5,8 +5,8 @@
 // otherwise the second entry's `<link>` ends up after the first entry's
 // `<script>` (CSS loading after a script that already ran).
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */

@@ -1,7 +1,7 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 
 // When --write is set, files will be written in place
 // Otherwise it only prints outdated files
@@ -14,7 +14,7 @@ const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 	// `assemblyscript/asc` and pull in its global type declarations (which
 	// redeclare `require`).
 	const ascSpecifier = "assemblyscript/asc";
-	// eslint-disable-next-line n/no-unsupported-features/es-syntax
+
 	const asc = (await import(ascSpecifier)).default;
 
 	for (const file of files) {
@@ -78,7 +78,9 @@ const ${identifier} = new WebAssembly.Module(
 			match = regexp.exec(content);
 		}
 
-		const newContent = content.replace(regexp, (match) => replaces.get(match));
+		const newContent = content.replaceAll(regexp, (match) =>
+			replaces.get(match)
+		);
 
 		if (newContent !== content) {
 			if (doWrite) {

@@ -1,6 +1,6 @@
 "use strict";
 
-const path = require("path");
+const path = require("node:path");
 const ModuleDependencyError = require("../lib/errors/ModuleDependencyError");
 
 describe("ModuleDependencyError", () => {

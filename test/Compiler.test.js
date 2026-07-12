@@ -2,7 +2,7 @@
 
 require("./helpers/warmup-webpack");
 
-const path = require("path");
+const path = require("node:path");
 const { Volume, createFsFromVolume } = require("memfs");
 const Stats = require("../lib/Stats");
 const captureStdio = require("./helpers/captureStdio");
@@ -1151,10 +1151,10 @@ describe("Compiler", () => {
 
 		const escapeAnsi = (/** @type {string} */ stringRaw) =>
 			stringRaw
-				.replace(/\u001B\[1m\u001B\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
-				.replace(/\u001B\[1m/g, "<CLR=BOLD>")
-				.replace(/\u001B\[39m\u001B\[22m/g, "</CLR>")
-				.replace(/\u001B\[([0-9;]*)m/g, "<CLR=$1>");
+				.replaceAll(/\u001B\[1m\u001B\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
+				.replaceAll("\u001B[1m", "<CLR=BOLD>")
+				.replaceAll("\u001B[39m\u001B[22m", "</CLR>")
+				.replaceAll(/\u001B\[([0-9;]*)m/g, "<CLR=$1>");
 		class MyPlugin {
 			/** @param {import("../").Compiler} compiler webpack compiler */
 			apply(compiler) {

@@ -181,6 +181,8 @@ describe("JavascriptParser", () => {
 						fgh.sub;
 						fgh;
 					}
+					// the parse fixture asserts scope tracking of the catch binding
+					// eslint-disable-next-line unicorn/prefer-optional-catch-binding
 				} catch (err) {
 					fgh.sub;
 					fgh;

@@ -1,6 +1,6 @@
 "use strict";
 
-const { createHash } = require("crypto");
+const { createHash } = require("node:crypto");
 
 /** @typedef {import("crypto").Encoding} Encoding */
 /** @typedef {import("crypto").BinaryToTextEncoding} BinaryToTextEncoding */

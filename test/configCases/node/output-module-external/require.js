@@ -1,4 +1,5 @@
 const assertBuiltin = require("assert");
+const assertStrict = require("assert/strict");
 const asyncHooks = require("async_hooks");
 const buffer = require("buffer");
 const childProcess = require("child_process");
@@ -7,92 +8,61 @@ const consoleBuiltin = require("console");
 const constants = require("constants");
 const crypto = require("crypto");
 const dgram = require("dgram");
+const diagnosticsChannel = require("diagnostics_channel");
 const dns = require("dns");
+const dnsPromises = require("dns/promises");
 const domain = require("domain");
 const events = require("events");
 const fs = require("fs");
+const fsPromises = require("fs/promises");
 const http = require("http");
 const http2 = require("http2");
 const https = require("https");
 const inspector = require("inspector");
+const inspectorPromises = require("inspector/promises");
 const moduleBuiltin = require("module");
 const net = require("net");
 const os = require("os");
 const path = require("path");
+const pathPosix = require("path/posix");
+const pathWin32 = require("path/win32");
 const perfHooks = require("perf_hooks");
 const processBuiltin = require("process");
 const punycode = require("punycode");
 const querystring = require("querystring");
 const readline = require("readline");
+const readlinePromises = require("readline/promises");
 const repl = require("repl");
 const stream = require("stream");
+const streamConsumers = require("stream/consumers");
+const streamPromises = require("stream/promises");
+const streamWeb = require("stream/web");
 const stringDecoder = require("string_decoder");
 const sys = require("sys");
 const timers = require("timers");
+const timersPromises = require("timers/promises");
 const tls = require("tls");
 const traceEvents = require("trace_events");
 const tty = require("tty");
 const url = require("url");
 const util = require("util");
+const utilTypes = require("util/types");
 const v8 = require("v8");
 const vm = require("vm");
+const wasi = require("wasi");
+const workerThreads = require("worker_threads");
 const zlib = require("zlib");
 const stream2 = require("./stream");
-
-// diagnostics_channel was backported to Node.js v14.17.0 and ships in v15.1.0+
-const diagnosticsChannel =
-	NODE_VERSION >= 14 ? require("diagnostics_channel") : undefined;
-
-// It's hidden on Node <=16 unless `--experimental-wasi-unstable-preview1` is provided
-const wasi = NODE_VERSION >= 18 ? require("wasi") : undefined;
-const workerThreads =
-	NODE_VERSION >= 12 ? require("worker_threads") : undefined;
-
-// https://github.com/nodejs/node/pull/34962
-const pathPosix = NODE_VERSION >= 15 ? require("path/posix") : undefined;
-// https://github.com/nodejs/node/pull/34962
-const pathWin32 = NODE_VERSION >= 15 ? require("path/win32") : undefined;
-const dnsPromises = NODE_VERSION >= 15 ? require("dns/promises") : undefined;
-const inspectorPromises =
-	NODE_VERSION >= 19 ? require("inspector/promises") : undefined;
-const streamConsumers =
-	NODE_VERSION >= 16 ? require("stream/consumers") : undefined;
-const streamPromises =
-	NODE_VERSION >= 15 ? require("stream/promises") : undefined;
-
-// https://github.com/nodejs/node/pull/34055
-const utilTypes = NODE_VERSION >= 15 ? require("util/types") : undefined;
-const streamWeb = NODE_VERSION >= 16 ? require("stream/web") : undefined;
-const readlinePromises =
-	NODE_VERSION >= 17 ? require("readline/promises") : undefined;
-const timersPromises =
-	NODE_VERSION >= 15 ? require("timers/promises") : undefined;
-
-const assertStrict = NODE_VERSION >= 15 ? require("assert/strict") : undefined;
-const fsPromises = NODE_VERSION >= 14 ? require("fs/promises") : undefined;
-
-const itIfAvailable = (imported) =>
-	imported
-		? (desc, fn) =>
-				it(desc, () => {
-					fn(imported);
-				})
-		: () => {
-				// skip
-			};
 
 it("should assert equality", () => {
 	expect(() => assertBuiltin.strictEqual(1, 1)).not.toThrow();
 });
 
-itIfAvailable(assertStrict)(
-	"should assert deep equality (assert/strict)",
-	(assertStrict) => {
-		expect(() =>
-			assertStrict.deepStrictEqual({ a: 1 }, { a: 1 })
-		).not.toThrow();
-	}
-);
+it("should assert deep equality (assert/strict)", () => {
+	expect(() =>
+		assertStrict.deepStrictEqual({ a: 1 }, { a: 1 })
+	).not.toThrow();
+});
 
 it("should create async hook (async_hooks)", () => {
 	const hook = asyncHooks.createHook({});
@@ -132,24 +102,18 @@ it("should create UDP socket (dgram)", () => {
 	socket.close();
 });
 
-itIfAvailable(diagnosticsChannel)(
-	"should create channel (diagnostics_channel)",
-	(channel) => {
-		const diagnostics = channel.channel("test");
-		expect(diagnostics).toBeDefined();
-	}
-);
+it("should create channel (diagnostics_channel)", () => {
+	const diagnostics = diagnosticsChannel.channel("test");
+	expect(diagnostics).toBeDefined();
+});
 
 it("should have lookup method (dns)", () => {
 	expect(typeof dns.lookup).toBe("function");
 });
 
-itIfAvailable(dnsPromises)(
-	"should have lookup method (dns/promises)",
-	(dnsPromises) => {
-		expect(typeof dnsPromises.lookup).toBe("function");
-	}
-);
+it("should have lookup method (dns/promises)", () => {
+	expect(typeof dnsPromises.lookup).toBe("function");
+});
 
 it("should create domain (domain)", () => {
 	const d = domain.create();
@@ -168,12 +132,9 @@ it("should check if file exists (fs)", () => {
 	expect(typeof fs.existsSync).toBe("function");
 });
 
-itIfAvailable(fsPromises)(
-	"should have readFile method (fs/promises)",
-	(fsPromises) => {
-		expect(typeof fsPromises.readFile).toBe("function");
-	}
-);
+it("should have readFile method (fs/promises)", () => {
+	expect(typeof fsPromises.readFile).toBe("function");
+});
 
 it("should create server (http)", () => {
 	const server = http.createServer();
@@ -193,12 +154,9 @@ it("should have url method (inspector)", () => {
 	expect(typeof inspector.url).toBe("function");
 });
 
-itIfAvailable(inspectorPromises)(
-	"should have Session constructor (inspector/promises)",
-	(inspectorPromises) => {
-		expect(typeof inspectorPromises.Session).toBe("function");
-	}
-);
+it("should have Session constructor (inspector/promises)", () => {
+	expect(typeof inspectorPromises.Session).toBe("function");
+});
 
 it("should have builtinModules (module)", () => {
 	expect(Array.isArray(moduleBuiltin.builtinModules)).toBe(true);
@@ -218,19 +176,13 @@ it("should correctly join paths (path)", () => {
 	expect(path.extname("foo.js")).toBe(".js");
 });
 
-itIfAvailable(pathPosix)(
-	"should join paths with posix style (path/posix)",
-	(pathPosix) => {
-		expect(pathPosix.join("/foo", "bar")).toBe("/foo/bar");
-	}
-);
+it("should join paths with posix style (path/posix)", () => {
+	expect(pathPosix.join("/foo", "bar")).toBe("/foo/bar");
+});
 
-itIfAvailable(pathWin32)(
-	"should join paths with win32 style (path/win32)",
-	(pathWin32) => {
-		expect(pathWin32.join("C:\\foo", "bar")).toBe("C:\\foo\\bar");
-	}
-);
+it("should join paths with win32 style (path/win32)", () => {
+	expect(pathWin32.join("C:\\foo", "bar")).toBe("C:\\foo\\bar");
+});
 
 it("should get performance (perf_hooks)", () => {
 	expect(perfHooks.performance).toBeDefined();
@@ -255,12 +207,9 @@ it("should create interface (readline)", () => {
 	expect(typeof readline.createInterface).toBe("function");
 });
 
-itIfAvailable(readlinePromises)(
-	"should create interface (readline/promises)",
-	(readlinePromises) => {
-		expect(typeof readlinePromises.createInterface).toBe("function");
-	}
-);
+it("should create interface (readline/promises)", () => {
+	expect(typeof readlinePromises.createInterface).toBe("function");
+});
 
 it("should start repl (repl)", () => {
 	// repl is an interactive builtin some runtimes only stub (Bun has no
@@ -274,26 +223,17 @@ it("should create readable stream (stream)", () => {
 	expect(readable).toBeDefined();
 });
 
-itIfAvailable(streamConsumers)(
-	"should have text method (stream/consumers)",
-	(streamConsumers) => {
-		expect(typeof streamConsumers.text).toBe("function");
-	}
-);
+it("should have text method (stream/consumers)", () => {
+	expect(typeof streamConsumers.text).toBe("function");
+});
 
-itIfAvailable(streamPromises)(
-	"should have pipeline method (stream/promises)",
-	(streamPromises) => {
-		expect(typeof streamPromises.pipeline).toBe("function");
-	}
-);
+it("should have pipeline method (stream/promises)", () => {
+	expect(typeof streamPromises.pipeline).toBe("function");
+});
 
-itIfAvailable(streamWeb)(
-	"should have ReadableStream (stream/web)",
-	(streamWeb) => {
-		expect(typeof streamWeb.ReadableStream).toBe("function");
-	}
-);
+it("should have ReadableStream (stream/web)", () => {
+	expect(typeof streamWeb.ReadableStream).toBe("function");
+});
 
 it("should decode buffer (string_decoder)", () => {
 	const decoder = new stringDecoder.StringDecoder("utf8");
@@ -308,12 +248,9 @@ it("should have setTimeout (timers)", () => {
 	expect(typeof timers.setTimeout).toBe("function");
 });
 
-itIfAvailable(timersPromises)(
-	"should have setTimeout (timers/promises)",
-	(timersPromises) => {
-		expect(typeof timersPromises.setTimeout).toBe("function");
-	}
-);
+it("should have setTimeout (timers/promises)", () => {
+	expect(typeof timersPromises.setTimeout).toBe("function");
+});
 
 it("should create server (tls)", () => {
 	expect(typeof tls.createServer).toBe("function");
@@ -336,12 +273,9 @@ it("should format string (util)", () => {
 	expect(util.format("Hello %s", "World")).toBe("Hello World");
 });
 
-itIfAvailable(utilTypes)(
-	"should check if promise (util/types)",
-	(utilTypes) => {
-		expect(utilTypes.isPromise(Promise.resolve())).toBe(true);
-	}
-);
+it("should check if promise (util/types)", () => {
+	expect(utilTypes.isPromise(Promise.resolve())).toBe(true);
+});
 
 it("should get heap statistics (v8)", () => {
 	const stats = v8.getHeapStatistics();
@@ -353,16 +287,13 @@ it("should run in context (vm)", () => {
 	expect(result).toBe(2);
 });
 
-itIfAvailable(wasi)("should have WASI constructor (wasi)", (wasi) => {
+it("should have WASI constructor (wasi)", () => {
 	expect(typeof wasi.WASI).toBe("function");
 });
 
-itIfAvailable(workerThreads)(
-	"should check if main thread (worker_threads)",
-	(workerThreads) => {
-		expect(typeof workerThreads.isMainThread).toBe("boolean");
-	}
-);
+it("should check if main thread (worker_threads)", () => {
+	expect(typeof workerThreads.isMainThread).toBe("boolean");
+});
 
 it("should compress data (zlib)", () => {
 	const compressed = zlib.gzipSync("test data");

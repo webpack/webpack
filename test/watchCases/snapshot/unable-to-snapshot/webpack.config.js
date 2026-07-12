@@ -1,6 +1,6 @@
 "use strict";
 
-const path = require("path");
+const path = require("node:path");
 
 /** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
 module.exports = (env, { srcPath }) => ({

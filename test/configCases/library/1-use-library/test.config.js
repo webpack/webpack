@@ -7,6 +7,6 @@ module.exports = {
 		};
 	},
 	afterExecute() {
-		delete global.webpackChunk;
+		delete globalThis.webpackChunk;
 	}
 };

@@ -1,5 +1,3 @@
 "use strict";
 
-const supportsWorker = require("../../../helpers/supportsWorker");
-
-module.exports = (config) => supportsWorker() && config.target !== "async-node";
+module.exports = (config) => config.target !== "async-node";

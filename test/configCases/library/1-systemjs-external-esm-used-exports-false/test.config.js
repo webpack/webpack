@@ -11,7 +11,7 @@ module.exports = {
 		scope.System.setRequire(scope.require);
 	},
 	afterExecute() {
-		delete global.webpackChunk;
+		delete globalThis.webpackChunk;
 		System.execute("(anonym)");
 	}
 };

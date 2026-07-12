@@ -2,7 +2,7 @@
 
 require("./helpers/warmup-webpack");
 
-const path = require("path");
+const path = require("node:path");
 const jestDiff = require("jest-diff").diff;
 const stripVTControlCharacters = require("./helpers/stripVTControlCharacters");
 
@@ -15,7 +15,7 @@ const stripVTControlCharacters = require("./helpers/stripVTControlCharacters");
  * @param {string} str String to quote
  * @returns {string} Escaped string
  */
-const quoteMeta = (str) => str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
+const quoteMeta = (str) => str.replaceAll(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
 
 const cwd = process.cwd();
 const cwdRegExp = new RegExp(
@@ -34,15 +34,15 @@ const escapedCwdRegExp = new RegExp(
  */
 const normalize = (str) => {
 	if (cwd.startsWith("/")) {
-		str = str.replace(new RegExp(quoteMeta(cwd), "g"), "<cwd>");
+		str = str.replaceAll(new RegExp(quoteMeta(cwd), "g"), "<cwd>");
 	} else {
-		str = str.replace(cwdRegExp, (m, g) => `<cwd>${g.replace(/\\/g, "/")}`);
+		str = str.replace(cwdRegExp, (m, g) => `<cwd>${g.replaceAll("\\", "/")}`);
 		str = str.replace(
 			escapedCwdRegExp,
-			(m, g) => `<cwd>${g.replace(/\\\\/g, "/")}`
+			(m, g) => `<cwd>${g.replaceAll("\\\\", "/")}`
 		);
 	}
-	str = str.replace(/@@ -\d+,\d+ \+\d+,\d+ @@/g, "@@ ... @@");
+	str = str.replaceAll(/@@ -\d+,\d+ \+\d+,\d+ @@/g, "@@ ... @@");
 	return str;
 };
 

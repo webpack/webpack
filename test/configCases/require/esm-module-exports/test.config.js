@@ -1,7 +1,7 @@
 "use strict";
 
-const Module = require("module");
-const path = require("path");
+const Module = require("node:module");
+const path = require("node:path");
 
 // Pre-load each .mjs fixture through Node's real `require(esm)`. `Module._load`
 // is the low-level loader that backs `require()` and is **not** intercepted by

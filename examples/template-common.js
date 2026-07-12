@@ -4,8 +4,8 @@
 */
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 
 /**
  * @param {string} regExpStr reg exp string
@@ -13,8 +13,8 @@ const path = require("path");
  */
 function lessStrict(regExpStr) {
 	regExpStr = regExpStr
-		.replace(/node_modules/g, "(node_modules|~)")
-		.replace(/\\\/|\\\\/g, "[\\/\\\\]");
+		.replaceAll("node_modules", "(node_modules|~)")
+		.replaceAll(/\\\/|\\\\/g, "[\\/\\\\]");
 	return regExpStr;
 }
 
@@ -42,34 +42,34 @@ const replaceBase = (template) => {
 	let webpack = path.join(__dirname, "..");
 	let webpackParent = path.join(__dirname, "..", "..");
 	const cwdRegExpStr = lessStrict(
-		cwd.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
+		cwd.replaceAll(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
 	);
 	const cwdRegExp = new RegExp(cwdRegExpStr, "g");
 	const cwdSlashRegExp = new RegExp(`${cwdRegExpStr}[\\/\\\\]`, "g");
 
-	webpack = lessStrict(webpack.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
+	webpack = lessStrict(webpack.replaceAll(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
 	webpackParent = lessStrict(
-		webpackParent.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
+		webpackParent.replaceAll(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
 	);
 
 	const webpackRegExp = new RegExp(webpack, "g");
 	const webpackParentRegExp = new RegExp(webpackParent, "g");
 
 	return template
-		.replace(/\r\n/g, "\n")
-		.replace(/\r/g, "\n")
-		.replace(/\[webpack-cli\].+\n/g, "")
+		.replaceAll("\r\n", "\n")
+		.replaceAll("\r", "\n")
+		.replaceAll(/\[webpack-cli\].+\n/g, "")
 		.replace(cwdSlashRegExp, "./")
 		.replace(cwdRegExp, ".")
 		.replace(webpackRegExp, "(webpack)")
 		.replace(webpackParentRegExp, "(webpack)/~")
-		.replace(timeRegexp, "")
-		.replace(dataUrlRegexp, (match) => {
+		.replaceAll(timeRegexp, "")
+		.replaceAll(dataUrlRegexp, (match) => {
 			if (match.length < 100) return match;
 			return `${match.slice(0, 50)}...${match.slice(-10)}`;
 		})
-		.replace(/\.chunkhash\./g, ".[chunkhash].")
-		.replace(
+		.replaceAll(".chunkhash.", ".[chunkhash].")
+		.replaceAll(
 			runtimeModulesRegexp,
 			/**
 			 * @param {string} match match

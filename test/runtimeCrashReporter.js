@@ -1,6 +1,6 @@
 "use strict";
 
-const fs = require("fs");
+const fs = require("node:fs");
 
 // Bun's stderr is a non-blocking pipe: a sync write can throw EAGAIN when full.
 // Retry (1ms backoff) until flushed; Node/Deno's blocking fd 2 never hit this.

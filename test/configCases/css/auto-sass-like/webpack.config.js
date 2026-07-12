@@ -1,6 +1,6 @@
 "use strict";
 
-const path = require("path");
+const path = require("node:path");
 
 // The common sass setup registers one loader chain for `.sass`, `.scss` AND `.css`.
 // Because that rule matches `.css`, the "auto" default must keep the built-in CSS

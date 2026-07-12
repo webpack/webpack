@@ -1,7 +1,7 @@
 "use strict";
 
-const fs = require("fs");
-const url = require("url");
+const fs = require("node:fs");
+const url = require("node:url");
 
 module.exports = {
 	moduleScope(scope, options, target) {

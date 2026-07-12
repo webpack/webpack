@@ -1,7 +1,7 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 
 const findOutputFiles = require("../../../helpers/findOutputFiles");
 
@@ -125,7 +125,7 @@ module.exports = {
 			const cssContent = fs.readFileSync(path.join(dir, css), "utf8");
 			const cssUrlMatch = cssContent.match(/url\(([^)]+)\)/);
 			expect(cssUrlMatch).not.toBeNull();
-			const cssUrl = cssUrlMatch[1].replace(/^["']|["']$/g, "");
+			const cssUrl = cssUrlMatch[1].replaceAll(/^["']|["']$/g, "");
 			expect(path.basename(cssUrl)).toBe(bg);
 			expect(fs.existsSync(path.resolve(dir, cssUrl))).toBe(true);
 

@@ -1,6 +1,6 @@
 "use strict";
 
-const fs = require("fs");
+const fs = require("node:fs");
 
 // base64url is filename-safe (A-Z a-z 0-9 - _); base62 is alphanumeric.
 const charsets = [

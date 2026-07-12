@@ -2,8 +2,8 @@
 
 // cspell:ignore apos notpre Elig reconsumes xyzabc zzzunknown codepoint DFFF ampx noncharacter FFFE
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const {
 	QUOTE_DOUBLE,
 	QUOTE_NONE,

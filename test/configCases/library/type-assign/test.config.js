@@ -2,6 +2,6 @@
 
 module.exports = {
 	afterExecute() {
-		delete global.MyLibrary;
+		delete globalThis.MyLibrary;
 	}
 };

@@ -5,9 +5,6 @@ it("should load node builtins via dynamic import", async () => {
 		const imported = await modulePromise;
 		return imported.default || imported;
 	};
-	const expectIfAvailable = (imported, fn) => {
-		if (imported) fn(imported);
-	};
 
 	const assertBuiltin = await load(import("assert"));
 	const asyncHooks = await load(import("async_hooks"));
@@ -91,42 +88,23 @@ it("should load node builtins via dynamic import", async () => {
 		zlib
 	};
 
-	const baseBuiltinCount = Object.keys(builtinImports).length;
+	const diagnosticsChannel = await load(import("diagnostics_channel"));
+	const wasi = await load(import("wasi"));
+	const workerThreads = await load(import("worker_threads"));
+	const pathPosix = await load(import("path/posix"));
+	const pathWin32 = await load(import("path/win32"));
+	const dnsPromises = await load(import("dns/promises"));
+	const inspectorPromises = await load(import("inspector/promises"));
+	const streamConsumers = await load(import("stream/consumers"));
+	const streamPromises = await load(import("stream/promises"));
+	const utilTypes = await load(import("util/types"));
+	const streamWeb = await load(import("stream/web"));
+	const readlinePromises = await load(import("readline/promises"));
+	const timersPromises = await load(import("timers/promises"));
+	const assertStrict = await load(import("assert/strict"));
+	const fsPromises = await load(import("fs/promises"));
 
-	const diagnosticsChannel =
-		NODE_VERSION >= 14 ? await load(import("diagnostics_channel")) : undefined;
-	const wasi = NODE_VERSION >= 18 ? await load(import("wasi")) : undefined;
-	const workerThreads =
-		NODE_VERSION >= 12 ? await load(import("worker_threads")) : undefined;
-
-	const pathPosix =
-		NODE_VERSION >= 15 ? await load(import("path/posix")) : undefined;
-	const pathWin32 =
-		NODE_VERSION >= 15 ? await load(import("path/win32")) : undefined;
-	const dnsPromises =
-		NODE_VERSION >= 15 ? await load(import("dns/promises")) : undefined;
-	const inspectorPromises =
-		NODE_VERSION >= 19 ? await load(import("inspector/promises")) : undefined;
-	const streamConsumers =
-		NODE_VERSION >= 16 ? await load(import("stream/consumers")) : undefined;
-	const streamPromises =
-		NODE_VERSION >= 15 ? await load(import("stream/promises")) : undefined;
-
-	const utilTypes =
-		NODE_VERSION >= 15 ? await load(import("util/types")) : undefined;
-	const streamWeb =
-		NODE_VERSION >= 16 ? await load(import("stream/web")) : undefined;
-	const readlinePromises =
-		NODE_VERSION >= 17 ? await load(import("readline/promises")) : undefined;
-	const timersPromises =
-		NODE_VERSION >= 15 ? await load(import("timers/promises")) : undefined;
-
-	const assertStrict =
-		NODE_VERSION >= 15 ? await load(import("assert/strict")) : undefined;
-	const fsPromises =
-		NODE_VERSION >= 14 ? await load(import("fs/promises")) : undefined;
-
-	const optionalBuiltins = [
+	const subpathBuiltins = [
 		["diagnostics_channel", diagnosticsChannel],
 		["readline/promises", readlinePromises],
 		["stream/consumers", streamConsumers],
@@ -144,16 +122,11 @@ it("should load node builtins via dynamic import", async () => {
 		["fs/promises", fsPromises]
 	];
 
-	for (const [request, imported] of optionalBuiltins) {
-		if (imported) builtinImports[request] = imported;
+	for (const [request, imported] of subpathBuiltins) {
+		builtinImports[request] = imported;
 	}
 
 	const content = fs.readFileSync(__filename, "utf-8");
-
-	expect(Object.keys(builtinImports)).toHaveLength(
-		baseBuiltinCount +
-			optionalBuiltins.filter(([, imported]) => Boolean(imported)).length
-	);
 
 	for (const [request, imported] of Object.entries(builtinImports)) {
 		expect(imported).toBeDefined();
@@ -164,11 +137,9 @@ it("should load node builtins via dynamic import", async () => {
 
 	expect(() => assertBuiltin.strictEqual(1, 1)).not.toThrow();
 
-	expectIfAvailable(assertStrict, (assertStrict) => {
-		expect(() =>
-			assertStrict.deepStrictEqual({ a: 1 }, { a: 1 })
-		).not.toThrow();
-	});
+	expect(() =>
+		assertStrict.deepStrictEqual({ a: 1 }, { a: 1 })
+	).not.toThrow();
 
 	const hook = asyncHooks.createHook({});
 	expect(hook).toBeDefined();
@@ -191,16 +162,12 @@ it("should load node builtins via dynamic import", async () => {
 	expect(socket).toBeDefined();
 	socket.close();
 
-	expectIfAvailable(diagnosticsChannel, (channel) => {
-		const diagnostics = channel.channel("test");
-		expect(diagnostics).toBeDefined();
-	});
+	const diagnostics = diagnosticsChannel.channel("test");
+	expect(diagnostics).toBeDefined();
 
 	expect(typeof dns.lookup).toBe("function");
 
-	expectIfAvailable(dnsPromises, (dnsPromises) => {
-		expect(typeof dnsPromises.lookup).toBe("function");
-	});
+	expect(typeof dnsPromises.lookup).toBe("function");
 
 	const d = domain.create();
 	expect(d).toBeDefined();
@@ -213,9 +180,7 @@ it("should load node builtins via dynamic import", async () => {
 
 	expect(typeof fs.existsSync).toBe("function");
 
-	expectIfAvailable(fsPromises, (fsPromises) => {
-		expect(typeof fsPromises.readFile).toBe("function");
-	});
+	expect(typeof fsPromises.readFile).toBe("function");
 
 	const httpServer = http.createServer();
 	expect(httpServer).toBeDefined();
@@ -225,9 +190,7 @@ it("should load node builtins via dynamic import", async () => {
 	expect(typeof https.createServer).toBe("function");
 	expect(typeof inspector.url).toBe("function");
 
-	expectIfAvailable(inspectorPromises, (inspectorPromises) => {
-		expect(typeof inspectorPromises.Session).toBe("function");
-	});
+	expect(typeof inspectorPromises.Session).toBe("function");
 
 	expect(Array.isArray(moduleBuiltin.builtinModules)).toBe(true);
 
@@ -238,13 +201,9 @@ it("should load node builtins via dynamic import", async () => {
 	expect(typeof os.platform()).toBe("string");
 	expect(path.extname("foo.js")).toBe(".js");
 
-	expectIfAvailable(pathPosix, (pathPosix) => {
-		expect(pathPosix.join("/foo", "bar")).toBe("/foo/bar");
-	});
+	expect(pathPosix.join("/foo", "bar")).toBe("/foo/bar");
 
-	expectIfAvailable(pathWin32, (pathWin32) => {
-		expect(pathWin32.join("C:\\foo", "bar")).toBe("C:\\foo\\bar");
-	});
+	expect(pathWin32.join("C:\\foo", "bar")).toBe("C:\\foo\\bar");
 
 	expect(perfHooks.performance).toBeDefined();
 	expect(typeof processBuiltin.platform).toBe("string");
@@ -257,9 +216,7 @@ it("should load node builtins via dynamic import", async () => {
 
 	expect(typeof readline.createInterface).toBe("function");
 
-	expectIfAvailable(readlinePromises, (readlinePromises) => {
-		expect(typeof readlinePromises.createInterface).toBe("function");
-	});
+	expect(typeof readlinePromises.createInterface).toBe("function");
 
 	// repl is an interactive builtin some runtimes only stub (Bun has no
 	// repl.start); verify the API where the runtime implements it.
@@ -268,17 +225,11 @@ it("should load node builtins via dynamic import", async () => {
 	const readable = new stream.Readable();
 	expect(readable).toBeDefined();
 
-	expectIfAvailable(streamConsumers, (streamConsumers) => {
-		expect(typeof streamConsumers.text).toBe("function");
-	});
+	expect(typeof streamConsumers.text).toBe("function");
 
-	expectIfAvailable(streamPromises, (streamPromises) => {
-		expect(typeof streamPromises.pipeline).toBe("function");
-	});
+	expect(typeof streamPromises.pipeline).toBe("function");
 
-	expectIfAvailable(streamWeb, (streamWeb) => {
-		expect(typeof streamWeb.ReadableStream).toBe("function");
-	});
+	expect(typeof streamWeb.ReadableStream).toBe("function");
 
 	const decoder = new stringDecoder.StringDecoder("utf8");
 	expect(decoder.write(Buffer.from("hello"))).toBe("hello");
@@ -286,9 +237,7 @@ it("should load node builtins via dynamic import", async () => {
 	expect(sys).toEqual(util);
 	expect(typeof timers.setTimeout).toBe("function");
 
-	expectIfAvailable(timersPromises, (timersPromises) => {
-		expect(typeof timersPromises.setTimeout).toBe("function");
-	});
+	expect(typeof timersPromises.setTimeout).toBe("function");
 
 	expect(typeof tls.createServer).toBe("function");
 	expect(typeof traceEvents.getEnabledCategories).toBe("function");
@@ -299,9 +248,7 @@ it("should load node builtins via dynamic import", async () => {
 
 	expect(util.format("Hello %s", "World")).toBe("Hello World");
 
-	expectIfAvailable(utilTypes, (utilTypes) => {
-		expect(utilTypes.isPromise(Promise.resolve())).toBe(true);
-	});
+	expect(utilTypes.isPromise(Promise.resolve())).toBe(true);
 
 	const stats = v8.getHeapStatistics();
 	expect(stats).toBeDefined();
@@ -309,13 +256,9 @@ it("should load node builtins via dynamic import", async () => {
 	const result = vm.runInNewContext("1 + 1");
 	expect(result).toBe(2);
 
-	expectIfAvailable(wasi, (wasi) => {
-		expect(typeof wasi.WASI).toBe("function");
-	});
+	expect(typeof wasi.WASI).toBe("function");
 
-	expectIfAvailable(workerThreads, (workerThreads) => {
-		expect(typeof workerThreads.isMainThread).toBe("boolean");
-	});
+	expect(typeof workerThreads.isMainThread).toBe("boolean");
 
 	const compressed = zlib.gzipSync("test data");
 	expect(Buffer.isBuffer(compressed)).toBe(true);

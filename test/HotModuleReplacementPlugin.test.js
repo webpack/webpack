@@ -1,6 +1,6 @@
 "use strict";
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 
 const webpack = require("..");
@@ -38,12 +38,12 @@ describe("HotModuleReplacementPlugin", () => {
 			fs.mkdirSync(path.join(__dirname, "js", "HotModuleReplacementPlugin"), {
 				recursive: true
 			});
-		} catch (_err) {
+		} catch {
 			// empty
 		}
 		try {
 			fs.unlinkSync(recordsFile);
-		} catch (_err) {
+		} catch {
 			// empty
 		}
 		const compiler = webpack({
@@ -116,7 +116,7 @@ describe("HotModuleReplacementPlugin", () => {
 		let firstUpdate;
 		try {
 			fs.mkdirSync(outputPath, { recursive: true });
-		} catch (_err) {
+		} catch {
 			// empty
 		}
 		fs.writeFileSync(entryFile, `${++step}`, "utf8");
@@ -125,7 +125,7 @@ describe("HotModuleReplacementPlugin", () => {
 			try {
 				fs.statSync(path.join(outputPath, file));
 				return true;
-			} catch (_err) {
+			} catch {
 				return false;
 			}
 		};
@@ -201,12 +201,12 @@ describe("HotModuleReplacementPlugin", () => {
 		const recordsFile = path.join(outputPath, "records.json");
 		try {
 			fs.mkdirSync(outputPath, { recursive: true });
-		} catch (_err) {
+		} catch {
 			// empty
 		}
 		try {
 			fs.unlinkSync(recordsFile);
-		} catch (_err) {
+		} catch {
 			// empty
 		}
 		const compiler = webpack({
@@ -289,12 +289,12 @@ describe("HotModuleReplacementPlugin", () => {
 					recursive: true
 				}
 			);
-		} catch (_err) {
+		} catch {
 			// empty
 		}
 		try {
 			fs.unlinkSync(recordsFile);
-		} catch (_err) {
+		} catch {
 			// empty
 		}
 		const compiler = webpack({
@@ -334,13 +334,11 @@ describe("HotModuleReplacementPlugin", () => {
 					let foundUpdates = false;
 
 					for (const key of Object.keys(stats.compilation.assets)) {
-						foundUpdates =
-							foundUpdates ||
-							Boolean(
-								/static\/webpack\/\[name\]\/entry\.js\..*?\.hot-update\.js/.test(
-									key
-								)
-							);
+						foundUpdates ||= Boolean(
+							/static\/webpack\/\[name\]\/entry\.js\..*?\.hot-update\.js/.test(
+								key
+							)
+						);
 					}
 
 					expect(foundUpdates).toBe(true);
@@ -371,7 +369,7 @@ describe("HotModuleReplacementPlugin", () => {
 		fs.mkdirSync(src, { recursive: true });
 		try {
 			fs.unlinkSync(recordsFile);
-		} catch (_err) {
+		} catch {
 			// empty
 		}
 
@@ -475,7 +473,7 @@ describe("HotModuleReplacementPlugin", () => {
 		fs.mkdirSync(src, { recursive: true });
 		try {
 			fs.unlinkSync(recordsFile);
-		} catch (_err) {
+		} catch {
 			// empty
 		}
 
@@ -570,7 +568,7 @@ describe("HotModuleReplacementPlugin", () => {
 		fs.mkdirSync(src, { recursive: true });
 		try {
 			fs.unlinkSync(recordsFile);
-		} catch (_err) {
+		} catch {
 			// empty
 		}
 

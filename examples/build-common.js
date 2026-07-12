@@ -4,9 +4,9 @@
 */
 "use strict";
 
-const cp = require("child_process");
-const fs = require("fs");
-const path = require("path");
+const cp = require("node:child_process");
+const fs = require("node:fs");
+const path = require("node:path");
 const async = require("neo-async");
 const tc = require("./template-common");
 
@@ -21,7 +21,7 @@ const extraArgs = "";
  * @property {boolean=} STATS_COLORS no stats color flag
  */
 
-const globalObj = /** @type {typeof globalThis & GlobalObj} */ (global);
+const globalObj = /** @type {typeof globalThis & GlobalObj} */ (globalThis);
 
 const targetArgs = globalObj.NO_TARGET_ARGS
 	? ""
@@ -41,7 +41,7 @@ const commonArgs = `${statsColorsArg} ${statsArgs} ${publicPathArgs} ${extraArgs
 
 
 let readme = fs.readFileSync(
-	require("path").join(process.cwd(), "template.md"),
+	require("node:path").join(process.cwd(), "template.md"),
 	"utf8"
 );
 
@@ -132,12 +132,12 @@ const doCompileAndReplace = (args, prefix, callback) => {
 					process.cwd(),
 					stdout
 						.replace(/[\r?\n]*$/, "")
-						.replace(
+						.replaceAll(
 							/\d\d\d\d-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])/g,
 							"XXXX-XX-XX"
 						)
-						.replace(/([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]/g, "XXXX:XX:XX")
-						.replace(/webpack [0-9.]+/g, "webpack X.X.X"),
+						.replaceAll(/([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]/g, "XXXX:XX:XX")
+						.replaceAll(/webpack [0-9.]+/g, "webpack X.X.X"),
 					prefix
 				);
 			} catch (err) {

@@ -6,8 +6,8 @@
 // `<iframe srcdoc>` it contains is `extract: "inline"` — its asset is rewritten
 // but it must NOT emit its own `.html`.
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */

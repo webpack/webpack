@@ -5,7 +5,7 @@
 /** @typedef {import("../lib/errors/WebpackError")} WebpackError */
 /** @typedef {import("memfs").IFs} IFs */
 
-const util = require("util");
+const util = require("node:util");
 const { Volume, createFsFromVolume } = require("memfs");
 const FileSystemInfo = require("../lib/FileSystemInfo");
 const { buffersSerializer } = require("../lib/util/serialization");

@@ -4,4 +4,4 @@
 // gained `mode: "transform"` (needed for enums/namespaces) in v22.7. Guard
 // against versions that lack the API entirely.
 
-module.exports = () => "stripTypeScriptTypes" in require("module");
+module.exports = () => "stripTypeScriptTypes" in require("node:module");

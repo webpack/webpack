@@ -9,16 +9,10 @@ process.exitCode = 1;
 
 const options = JSON.parse(process.argv[3]);
 
-const esm = +process.versions.modules >= 83;
-
-if (esm) {
-	require("require-dependency-with-exports");
-	import("./esm.mjs").then(module => {
-		run(module);
-	});
-} else {
-	run({ default: 1, asyncDep: 1 });
-}
+require("require-dependency-with-exports");
+import("./esm.mjs").then(module => {
+	run(module);
+});
 
 function run({ default: value2, asyncDep: value3 }) {
 	const compiler = webpack(
@@ -66,8 +60,9 @@ function run({ default: value2, asyncDep: value3 }) {
 					defaultWebpack: [],
 					config: [
 						__filename,
-						path.resolve(__dirname, "../../../node_modules/.yarn-integrity")
-					].concat(esm ? ["../../fixtures/buildDependencies/esm.mjs"] : []),
+						path.resolve(__dirname, "../../../node_modules/.yarn-integrity"),
+						"../../fixtures/buildDependencies/esm.mjs"
+					],
 					invalid: options.invalidBuildDependencies
 						? ["should-fail-resolving"]
 						: [],

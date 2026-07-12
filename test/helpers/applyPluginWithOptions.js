@@ -16,7 +16,7 @@ module.exports = function applyPluginWithOptions(Plugin, ...args) {
 	plugin.apply(pluginEnvironment.getEnvironmentStub());
 
 	const env = /** @type {Record<string, unknown>} */ (
-		this === global ? {} : this
+		this === globalThis ? {} : this
 	);
 	env.plugin = plugin;
 	env.pluginEnvironment = pluginEnvironment;

@@ -1,8 +1,8 @@
 "use strict";
 
-const childProcess = require("child_process");
-const fs = require("fs");
-const path = require("path");
+const childProcess = require("node:child_process");
+const fs = require("node:fs");
+const path = require("node:path");
 const rimraf = require("rimraf");
 
 const cacheDirectory = path.resolve(__dirname, "js/buildDepsCache");
@@ -60,7 +60,7 @@ const exec = (
 			/** @type {string[]} */
 			const warnings = [];
 			const rawStdout = chunks.join("");
-			const stdout = rawStdout.replace(
+			const stdout = rawStdout.replaceAll(
 				// This warning is expected
 				/<([ew])> \[.+\n(?:<[ew]> [^[].+\n)*/g,
 				(message, type) => {
@@ -112,8 +112,6 @@ const exec = (
 			reject(err);
 		});
 	});
-
-const supportsEsm = Number(process.versions.modules) >= 83;
 
 // TODO Bun doesn't populate `module.children` for requires made from inside a
 // node_modules package, so webpack's build-dependency walk (require.cache
@@ -187,7 +185,7 @@ export default 0;`
 				"module.exports = 1;"
 			);
 			await exec("1", {
-				warnings: supportsEsm && [
+				warnings: [
 					/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
 				]
 			});
@@ -197,7 +195,7 @@ export default 0;`
 			);
 			const now1 = Date.now();
 			const output2 = await exec("2", {
-				warnings: supportsEsm && [
+				warnings: [
 					/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
 				]
 			});
@@ -219,7 +217,7 @@ export default 0;`
 				})
 			);
 			const output4 = await exec("4", {
-				warnings: supportsEsm && [
+				warnings: [
 					/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
 				]
 			});
@@ -232,7 +230,7 @@ export default 0;`
 			);
 			const now2 = Date.now();
 			await exec("5", {
-				warnings: supportsEsm && [
+				warnings: [
 					/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
 				]
 			});
@@ -241,34 +239,30 @@ export default 0;`
 			await exec("7", {
 				definedValue: "other"
 			});
-			let now4 = 0;
-			let now5 = 0;
-			if (supportsEsm) {
-				fs.writeFileSync(
-					path.resolve(inputDirectory, "esm-dependency.js"),
-					"module.exports = Date.now();"
-				);
-				now4 = Date.now();
-				await exec("8", {
-					definedValue: "other",
-					warnings: [
-						/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
-					]
-				});
-				fs.writeFileSync(
-					path.resolve(inputDirectory, "esm-async-dependency.mjs"),
-					"export default Date.now();"
-				);
-				now5 = Date.now();
+			fs.writeFileSync(
+				path.resolve(inputDirectory, "esm-dependency.js"),
+				"module.exports = Date.now();"
+			);
+			const now4 = Date.now();
+			await exec("8", {
+				definedValue: "other",
+				warnings: [
+					/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
+				]
+			});
+			fs.writeFileSync(
+				path.resolve(inputDirectory, "esm-async-dependency.mjs"),
+				"export default Date.now();"
+			);
+			const now5 = Date.now();
 
-				await exec("9", {
-					definedValue: "other",
-					warnings: [
-						/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
-					]
-				});
-			}
-			const results = Array.from({ length: supportsEsm ? 10 : 8 }).map((_, i) =>
+			await exec("9", {
+				definedValue: "other",
+				warnings: [
+					/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
+				]
+			});
+			const results = Array.from({ length: 10 }).map((_, i) =>
 				require(`./js/buildDeps/${i}/main.js`)
 			);
 			for (const r of results) {
@@ -280,7 +274,7 @@ export default 0;`
 			let result = results.shift();
 			expect(result.loader).toBe(0);
 			expect(result.config).toBe(0);
-			if (supportsEsm) expect(result.esmConfig).toBe(0);
+			expect(result.esmConfig).toBe(0);
 			expect(result.uncached).toBe(0);
 			// 0 -> 1 should not cache at all because of invalid buildDeps
 			result = results.shift();
@@ -326,21 +320,19 @@ export default 0;`
 			expect(result.loader).toBe(prevResult.loader);
 			expect(result.config).toBe(prevResult.config);
 			expect(result.definedValue).toBe("other");
-			if (supportsEsm) {
-				// 7 -> 8 should be invalidated
-				result = results.shift();
-				expect(result.loader).toBeGreaterThan(now4);
-				expect(result.config).toBeGreaterThan(now4);
-				expect(result.esmConfig).toBeGreaterThan(now4);
-				expect(result.uncached).toBeGreaterThan(now4);
-				// 8 -> 9 should be invalidated
-				result = results.shift();
-				expect(result.loader).toBeGreaterThan(now5);
-				expect(result.config).toBeGreaterThan(now5);
-				expect(result.esmConfig).toBeGreaterThan(now5);
-				expect(result.esmAsyncConfig).toBeGreaterThan(now5);
-				expect(result.uncached).toBeGreaterThan(now5);
-			}
+			// 7 -> 8 should be invalidated
+			result = results.shift();
+			expect(result.loader).toBeGreaterThan(now4);
+			expect(result.config).toBeGreaterThan(now4);
+			expect(result.esmConfig).toBeGreaterThan(now4);
+			expect(result.uncached).toBeGreaterThan(now4);
+			// 8 -> 9 should be invalidated
+			result = results.shift();
+			expect(result.loader).toBeGreaterThan(now5);
+			expect(result.config).toBeGreaterThan(now5);
+			expect(result.esmConfig).toBeGreaterThan(now5);
+			expect(result.esmAsyncConfig).toBeGreaterThan(now5);
+			expect(result.uncached).toBeGreaterThan(now5);
 		},
 		500000
 	);

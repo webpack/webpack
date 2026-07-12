@@ -2,7 +2,7 @@
 
 require("./helpers/warmup-webpack");
 
-const path = require("path");
+const path = require("node:path");
 const fs = require("graceful-fs");
 /** @type {{ sync: (pattern: string) => void }} */
 const rimraf = require("rimraf");

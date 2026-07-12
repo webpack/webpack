@@ -1,8 +1,8 @@
 "use strict";
 
-const fs = require("fs");
-const url = require("url");
-const worker = require("worker_threads");
+const fs = require("node:fs");
+const url = require("node:url");
+const worker = require("node:worker_threads");
 
 module.exports = {
 	moduleScope(scope, options) {

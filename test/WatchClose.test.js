@@ -2,7 +2,7 @@
 
 require("./helpers/warmup-webpack");
 
-const path = require("path");
+const path = require("node:path");
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 expectNoDeprecations();

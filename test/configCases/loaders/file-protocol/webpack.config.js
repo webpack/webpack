@@ -1,7 +1,7 @@
 "use strict";
 
-const path = require("path");
-const url = require("url");
+const path = require("node:path");
+const url = require("node:url");
 
 const pathToLoader = url
 	.pathToFileURL(path.resolve(__dirname, "./loader.js"))

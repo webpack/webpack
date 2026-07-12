@@ -1,7 +1,7 @@
 "use strict";
 
-const os = require("os");
-const path = require("path");
+const os = require("node:os");
+const path = require("node:path");
 const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */

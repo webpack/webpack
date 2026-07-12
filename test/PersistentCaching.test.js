@@ -2,14 +2,12 @@
 
 require("./helpers/warmup-webpack");
 
-const fs = require("fs");
-const path = require("path");
-const util = require("util");
-const vm = require("vm");
+const fs = require("node:fs");
+const path = require("node:path");
+const util = require("node:util");
+const vm = require("node:vm");
 const rimraf = require("rimraf");
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
-const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");
-const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
 
 const readdir = util.promisify(fs.readdir);
 const writeFile = util.promisify(fs.writeFile);
@@ -49,13 +47,7 @@ describe("Persistent Caching", () => {
 		target: "node",
 		output: {
 			library: { type: "commonjs-module", export: "default" },
-			path: outputPath,
-			// bundles are executed in this Node.js process; avoid `?.` on Node < 14
-			// and `Object.hasOwn` on Node < 16.9
-			environment: {
-				optionalChaining: supportsOptionalChaining(),
-				hasOwn: supportsObjectHasOwn()
-			}
+			path: outputPath
 		}
 	};
 

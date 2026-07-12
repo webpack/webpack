@@ -1,4 +1,4 @@
-import fs from "fs/promises";
+import fs from "node:fs/promises";
 
 const avgCode = `
 const str = "we" + "do" + "some" + "ops";
