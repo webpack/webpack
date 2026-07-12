@@ -9045,6 +9045,32 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-html-inject": Object {
+    "configs": Array [
+      Object {
+        "description": "Where to place injected chunk \`<script>\`/\`<link>\` tags. \`\\"body\\"\` (default) appends them before \`</body>\`; \`\\"head\\"\` places them in \`<head>\`; \`false\` suppresses all sibling-chunk injection.",
+        "multiple": false,
+        "path": "output.html.inject",
+        "type": "enum",
+        "values": Array [
+          "body",
+          "head",
+        ],
+      },
+      Object {
+        "description": "Where to place injected chunk \`<script>\`/\`<link>\` tags. \`\\"body\\"\` (default) appends them before \`</body>\`; \`\\"head\\"\` places them in \`<head>\`; \`false\` suppresses all sibling-chunk injection.",
+        "multiple": false,
+        "path": "output.html.inject",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Where to place injected chunk \`<script>\`/\`<link>\` tags. \`\\"body\\"\` (default) appends them before \`</body>\`; \`\\"head\\"\` places them in \`<head>\`; \`false\` suppresses all sibling-chunk injection.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-html-inline": Object {
     "configs": Array [
       Object {
