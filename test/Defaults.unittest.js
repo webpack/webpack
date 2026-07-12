@@ -2,9 +2,25 @@
 
 require("./helpers/warmup-webpack");
 
+const nodeModuleApi = require("module");
 const path = require("path");
 const jestDiff = require("jest-diff").diff;
 const stripVTControlCharacters = require("./helpers/stripVTControlCharacters");
+
+// Stub `stripTypeScriptTypes` (Node.js >= 22.6) on runtimes lacking it (Bun/Deno)
+// so the `typescript: "auto"` default resolves on, keeping snapshots identical.
+const anyNodeModuleApi = /** @type {EXPECTED_ANY} */ (nodeModuleApi);
+const hadStripTypeScriptTypes =
+	typeof anyNodeModuleApi.stripTypeScriptTypes === "function";
+if (!hadStripTypeScriptTypes) {
+	anyNodeModuleApi.stripTypeScriptTypes = (source) => source;
+}
+// eslint-disable-next-line jest/require-top-level-describe, jest/padding-around-after-all-blocks
+afterAll(() => {
+	if (!hadStripTypeScriptTypes) {
+		delete anyNodeModuleApi.stripTypeScriptTypes;
+	}
+});
 
 /** @typedef {import("../lib/index").Configuration} Configuration */
 /** @typedef {import("../lib/index").WebpackOptionsNormalized} WebpackOptionsNormalized */
