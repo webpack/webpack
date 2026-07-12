@@ -1250,10 +1250,10 @@
           "experimental": true
         },
         "typescript": {
-          "description": "Enable typescript support. `\"auto\"` (the default) enables the built-in TypeScript support unless a loader is registered for TypeScript files.",
+          "description": "Enable typescript support. `\"auto\"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.",
           "anyOf": [
             {
-              "description": "Enable the built-in TypeScript support only when no loader is registered for TypeScript files.",
+              "description": "Enable the built-in TypeScript support only when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.",
               "enum": ["auto"]
             },
             {
@@ -1369,10 +1369,10 @@
           "experimental": true
         },
         "typescript": {
-          "description": "Enable typescript support. `\"auto\"` (the default) enables the built-in TypeScript support unless a loader is registered for TypeScript files.",
+          "description": "Enable typescript support. `\"auto\"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.",
           "anyOf": [
             {
-              "description": "Enable the built-in TypeScript support only when no loader is registered for TypeScript files.",
+              "description": "Enable the built-in TypeScript support only when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.",
               "enum": ["auto"]
             },
             {

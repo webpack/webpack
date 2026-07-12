@@ -5228,6 +5228,20 @@ describe("experiments.typescript auto", () => {
 		).toBe(true);
 	});
 
+	it("keeps typescript off when the Node.js TypeScript API is unavailable", () => {
+		// `"auto"` must not enable the built-in support on Node.js < 22.6, where
+		// `module.stripTypeScriptTypes` is missing and it would throw at build time.
+		const mod = require("module");
+
+		const saved = mod.stripTypeScriptTypes;
+		mod.stripTypeScriptTypes = undefined;
+		try {
+			expect(resolve({})).toBe(false);
+		} finally {
+			mod.stripTypeScriptTypes = saved;
+		}
+	});
+
 	it("respects explicit boolean values", () => {
 		expect(resolve({ experiments: { typescript: false } })).toBe(false);
 		expect(

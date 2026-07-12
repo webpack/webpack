@@ -1397,7 +1397,7 @@ export interface Experiments {
 	 */
 	syncWebAssembly?: boolean;
 	/**
-	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support unless a loader is registered for TypeScript files.
+	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
 	 * @experimental
 	 */
 	typescript?: "auto" | boolean;
@@ -3613,7 +3613,7 @@ export interface ExperimentsNormalized {
 	 */
 	syncWebAssembly?: boolean;
 	/**
-	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support unless a loader is registered for TypeScript files.
+	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
 	 * @experimental
 	 */
 	typescript?: "auto" | boolean;
