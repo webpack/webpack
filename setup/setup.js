@@ -1,7 +1,9 @@
-"use strict";
+import fs from "node:fs";
+import { createRequire } from "node:module";
 
-const fs = require("node:fs");
-const path = require("node:path");
+import path from "node:path";
+
+const require = createRequire(import.meta.url);
 
 const root = process.cwd();
 const nodeModulesFolder = path.resolve(root, "node_modules");
@@ -98,10 +100,10 @@ function exec(command, args, description) {
 			shell: true
 		});
 
-		cp.on("error", (error) => {
+		cp.on("error", (/** @type {Error} */ error) => {
 			reject(new Error(`${description} failed with ${error}`));
 		});
-		cp.on("exit", (exitCode) => {
+		cp.on("exit", (/** @type {number | null} */ exitCode) => {
 			if (exitCode) {
 				reject(new Error(`${description} failed with exit code ${exitCode}`));
 			} else {
@@ -126,10 +128,10 @@ function execGetOutput(command, args, description) {
 			shell: true
 		});
 
-		cp.on("error", (error) => {
+		cp.on("error", (/** @type {Error} */ error) => {
 			reject(new Error(`${description} failed with ${error}`));
 		});
-		cp.on("exit", (exitCode) => {
+		cp.on("exit", (/** @type {number | null} */ exitCode) => {
 			if (exitCode) {
 				reject(new Error(`${description} failed with exit code ${exitCode}`));
 			} else {
@@ -138,7 +140,7 @@ function execGetOutput(command, args, description) {
 		});
 		/** @type {Buffer[]} */
 		const buffers = [];
-		cp.stdout.on("data", (data) => buffers.push(data));
+		cp.stdout.on("data", (/** @type {Buffer} */ data) => buffers.push(data));
 	});
 }
 

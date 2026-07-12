@@ -1,12 +1,9 @@
-"use strict";
-
-const fs = require("node:fs");
-const path = require("node:path");
-const BinaryMiddleware = require("../lib/serialization/BinaryMiddleware");
-const FileMiddleware = require("../lib/serialization/FileMiddleware");
-const Serializer = require("../lib/serialization/Serializer");
-const SerializerMiddleware = require("../lib/serialization/SerializerMiddleware");
-
+import fs from "node:fs";
+import path from "node:path";
+import BinaryMiddleware from "../lib/serialization/BinaryMiddleware.js";
+import FileMiddleware from "../lib/serialization/FileMiddleware.js";
+import Serializer from "../lib/serialization/Serializer.js";
+import SerializerMiddleware from "../lib/serialization/SerializerMiddleware.js";
 /** @typedef {{ size: number, lazySize: number }} SizeInfo */
 
 const binaryMiddleware = new BinaryMiddleware();

@@ -7,7 +7,8 @@
 /**
  * Algorithm used for generation the hash (see node.js crypto package).
  */
-export type HashFunction = string | typeof import("../../../lib/util/Hash");
+export type HashFunction =
+	string | typeof import("../../../lib/util/Hash.js").default;
 
 export interface HashedModuleIdsPluginOptions {
 	/**

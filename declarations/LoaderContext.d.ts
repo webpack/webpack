@@ -1,19 +1,19 @@
-import type { RawSourceMap } from "../lib/NormalModule";
-import type Module from "../lib/Module";
+import type { RawSourceMap } from "../lib/NormalModule.js";
+import type Module from "../lib/Module.js";
 import type { validate } from "schema-utils";
-import type { AssetInfo } from "../lib/Compilation";
-import type { ResolveOptionsWithDependencyType } from "../lib/ResolverFactory";
-import type Compilation from "../lib/Compilation";
-import type Compiler from "../lib/Compiler";
-import type NormalModule from "../lib/NormalModule";
-import type Hash from "../lib/util/Hash";
-import type { InputFileSystem } from "../lib/util/fs";
-import type { Logger } from "../lib/logging/Logger";
+import type { AssetInfo } from "../lib/Compilation.js";
+import type { ResolveOptionsWithDependencyType } from "../lib/ResolverFactory.js";
+import type Compilation from "../lib/Compilation.js";
+import type Compiler from "../lib/Compiler.js";
+import type NormalModule from "../lib/NormalModule.js";
+import type Hash from "../lib/util/Hash.js";
+import type { InputFileSystem } from "../lib/util/fs.js";
+import type { Logger } from "../lib/logging/Logger.js";
 import type {
 	ImportModuleOptions,
 	ImportModuleCallback,
 	ExecuteModuleExports
-} from "../lib/dependencies/LoaderPlugin";
+} from "../lib/dependencies/LoaderPlugin.js";
 import type { Resolver } from "enhanced-resolve";
 import type {
 	Environment,
@@ -21,7 +21,7 @@ import type {
 	HashSalt,
 	HashDigest,
 	HashFunction
-} from "./WebpackOptions";
+} from "./WebpackOptions.js";
 
 type ResolveCallback = Parameters<Resolver["resolve"]>[4];
 type Schema = Parameters<typeof validate>[0];

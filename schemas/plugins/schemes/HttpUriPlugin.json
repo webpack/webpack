@@ -59,7 +59,7 @@
           {
             "description": "Allowed URI filter function.",
             "instanceof": "Function",
-            "tsType": "import('../../../lib/schemes/HttpUriPlugin').AllowedUriFn"
+            "tsType": "import('../../../lib/schemes/HttpUriPlugin.js').AllowedUriFn"
           }
         ]
       }

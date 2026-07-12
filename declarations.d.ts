@@ -206,7 +206,7 @@ type RecursiveArrayOrRecord<T> =
 	| Array<RecursiveArrayOrRecord<T>>
 	| T;
 
-declare module "eslint-scope/lib/referencer" {
+declare module "eslint-scope/lib/referencer.js" {
 	type Property = import("estree").Property;
 	type PropertyDefinition = import("estree").PropertyDefinition;
 
@@ -214,5 +214,5 @@ declare module "eslint-scope/lib/referencer" {
 		Property(node: PropertyDefinition | Property): void;
 		PropertyDefinition(node: PropertyDefinition): void;
 	}
-	export = Referencer;
+	export default Referencer;
 }

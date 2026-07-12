@@ -10,7 +10,7 @@ export type VirtualUrlPluginOptions = VirtualUrlOptions;
  */
 export type VirtualModuleContent =
 	| string
-	| import("../../../lib/schemes/VirtualUrlPlugin").SourceFn
+	| import("../../../lib/schemes/VirtualUrlPlugin.js").SourceFn
 	| VirtualModule;
 
 /**
@@ -43,7 +43,7 @@ export interface VirtualModule {
 	/**
 	 * The source function that provides the virtual content.
 	 */
-	source: import("../../../lib/schemes/VirtualUrlPlugin").SourceFn;
+	source: import("../../../lib/schemes/VirtualUrlPlugin.js").SourceFn;
 	/**
 	 * The module type.
 	 */
@@ -52,5 +52,7 @@ export interface VirtualModule {
 	 * Optional version function or value for cache invalidation.
 	 */
 	version?:
-		true | string | import("../../../lib/schemes/VirtualUrlPlugin").VersionFn;
+		| true
+		| string
+		| import("../../../lib/schemes/VirtualUrlPlugin.js").VersionFn;
 }

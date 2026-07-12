@@ -2,8 +2,6 @@
 	MIT License http://www.opensource.org/licenses/mit-license.php
 */
 
-"use strict";
-
 // cspell:disable
 
 // Generates the `// #region html entities` block inside
@@ -17,15 +15,21 @@
 // with `--fetch` (one-off, requires network access). Source URL:
 // https://html.spec.whatwg.org/entities.json (WHATWG HTML Standard).
 
-const fs = require("node:fs");
-const https = require("node:https");
-const path = require("node:path");
+import fs from "node:fs";
+import https from "node:https";
+import path from "node:path";
 
 const SPEC_URL = "https://html.spec.whatwg.org/entities.json";
 const FALLBACK_URL =
 	"https://raw.githubusercontent.com/w3c/html/master/entities.json";
-const DATA_PATH = path.resolve(__dirname, "html-entities.json");
-const TARGET_PATH = path.resolve(__dirname, "..", "lib", "html", "syntax.js");
+const DATA_PATH = path.resolve(import.meta.dirname, "html-entities.json");
+const TARGET_PATH = path.resolve(
+	import.meta.dirname,
+	"..",
+	"lib",
+	"html",
+	"syntax.js"
+);
 
 // Tolerate both LF and CRLF so the generator's `check` mode doesn't
 // false-fail on Windows checkouts where git normalized line endings to CRLF.

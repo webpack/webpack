@@ -13,7 +13,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../../lib/ModuleFilenameHelpers').MatcherFn"
+          "tsType": "import('../../lib/ModuleFilenameHelpers.js').MatcherFn"
         }
       ]
     },
@@ -54,7 +54,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../../lib/TemplatedPathPlugin').TemplatePathFn"
+          "tsType": "import('../../lib/TemplatedPathPlugin.js').TemplatePathFn"
         }
       ]
     },
@@ -84,7 +84,7 @@
         {
           "description": "Custom function generating the identifier.",
           "instanceof": "Function",
-          "tsType": "import('../../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
+          "tsType": "import('../../lib/ModuleFilenameHelpers.js').ModuleFilenameTemplateFunction"
         }
       ]
     },
@@ -136,7 +136,7 @@
         {
           "description": "Custom function generating the identifier.",
           "instanceof": "Function",
-          "tsType": "import('../../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
+          "tsType": "import('../../lib/ModuleFilenameHelpers.js').ModuleFilenameTemplateFunction"
         }
       ]
     },

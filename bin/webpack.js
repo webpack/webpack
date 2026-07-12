@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
-"use strict";
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
 
 /**
  * @param {string} command process to run
@@ -42,7 +44,7 @@ const isInstalled = (packageName) => {
 	const path = require("node:path");
 	const fs = require("graceful-fs");
 
-	let dir = __dirname;
+	let dir = import.meta.dirname;
 
 	do {
 		try {

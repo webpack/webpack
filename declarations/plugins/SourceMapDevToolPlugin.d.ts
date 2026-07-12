@@ -12,7 +12,7 @@ export type Rules = Rule[] | Rule;
  * Condition used to match resource (string, RegExp or Function).
  */
 export type Rule =
-	RegExp | string | import("../../lib/ModuleFilenameHelpers").MatcherFn;
+	RegExp | string | import("../../lib/ModuleFilenameHelpers.js").MatcherFn;
 
 export interface SourceMapDevToolPluginOptions {
 	/**
@@ -21,7 +21,7 @@ export interface SourceMapDevToolPluginOptions {
 	append?:
 		| (false | null)
 		| string
-		| import("../../lib/TemplatedPathPlugin").TemplatePathFn;
+		| import("../../lib/TemplatedPathPlugin.js").TemplatePathFn;
 	/**
 	 * Indicates whether column mappings should be used (defaults to true).
 	 */
@@ -39,7 +39,7 @@ export interface SourceMapDevToolPluginOptions {
 	 */
 	fallbackModuleFilenameTemplate?:
 		| string
-		| import("../../lib/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
+		| import("../../lib/ModuleFilenameHelpers.js").ModuleFilenameTemplateFunction;
 	/**
 	 * Path prefix to which the [file] placeholder is relative to.
 	 */
@@ -65,7 +65,7 @@ export interface SourceMapDevToolPluginOptions {
 	 */
 	moduleFilenameTemplate?:
 		| string
-		| import("../../lib/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
+		| import("../../lib/ModuleFilenameHelpers.js").ModuleFilenameTemplateFunction;
 	/**
 	 * Namespace prefix to allow multiple webpack roots in the devtools.
 	 */

@@ -1,14 +1,17 @@
 {
   "compilerOptions": {
     "target": "ES2024",
-    "module": "commonjs",
+    "module": "nodenext",
     "lib": ["es2025", "dom"],
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,
     "strict": true,
     "types": ["node"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "webpack-sources/types": ["./node_modules/webpack-sources/types.d.ts"]
+    }
   },
   "include": [
     "declarations.d.ts",

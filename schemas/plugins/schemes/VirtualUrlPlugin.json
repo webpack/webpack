@@ -12,7 +12,7 @@
         "source": {
           "description": "The source function that provides the virtual content.",
           "instanceof": "Function",
-          "tsType": "import('../../../lib/schemes/VirtualUrlPlugin').SourceFn"
+          "tsType": "import('../../../lib/schemes/VirtualUrlPlugin.js').SourceFn"
         },
         "type": {
           "description": "The module type.",
@@ -30,7 +30,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import('../../../lib/schemes/VirtualUrlPlugin').VersionFn"
+              "tsType": "import('../../../lib/schemes/VirtualUrlPlugin.js').VersionFn"
             }
           ]
         }
@@ -45,7 +45,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../../../lib/schemes/VirtualUrlPlugin').SourceFn"
+          "tsType": "import('../../../lib/schemes/VirtualUrlPlugin.js').SourceFn"
         },
         {
           "$ref": "#/definitions/VirtualModule"

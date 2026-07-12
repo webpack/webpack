@@ -1,9 +1,8 @@
-"use strict";
-
-const fs = require("node:fs");
-const path = require("node:path");
-const prettier = require("prettier");
-const terser = require("terser");
+import fs from "node:fs";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+import { format, resolveConfig } from "prettier";
+import { minify } from "terser";
 
 // When --write is set, files will be written in place
 // Otherwise it only prints outdated files
@@ -13,10 +12,10 @@ const files = ["lib/util/semver.js"];
 
 (async () => {
 	for (const file of files) {
-		const filePath = path.resolve(__dirname, "..", file);
+		const filePath = path.resolve(import.meta.dirname, "..", file);
 		const content = fs.readFileSync(filePath, "utf8");
 
-		const exports = require(`../${file}`);
+		const exports = await import(pathToFileURL(filePath).href);
 
 		const regexp =
 			/\n\/\/#region runtime code: (.+)\n[\s\S]+?\/\/#endregion\n/g;
@@ -51,7 +50,7 @@ const files = ["lib/util/semver.js"];
 			}
 
 			const body = originalCode.slice(header[0].length, -1);
-			const result = await terser.minify(
+			const result = await minify(
 				{
 					"input.js": body
 				},
@@ -93,7 +92,7 @@ const files = ["lib/util/semver.js"];
  * @param {RuntimeTemplate} runtimeTemplate
  * @returns {string}
  */
-exports.${name}RuntimeCode = runtimeTemplate => \`var ${name} = \${runtimeTemplate.basicFunction("${args}", [
+export const ${name}RuntimeCode = (runtimeTemplate) => \`var ${name} = \${runtimeTemplate.basicFunction("${args}", [
 	"// see webpack/${file} for original code",
 	${templateLiteral ? `\`${code}\`` : `'${code}'`}
 ])}\`;
@@ -103,8 +102,8 @@ exports.${name}RuntimeCode = runtimeTemplate => \`var ${name} = \${runtimeTempla
 			match = regexp.exec(content);
 		}
 
-		const prettierConfig = await prettier.resolveConfig(filePath);
-		const newContent = await prettier.format(
+		const prettierConfig = await resolveConfig(filePath);
+		const newContent = await format(
 			content.replaceAll(regexp, (match) => replaces.get(match)),
 			{ filepath: filePath, ...prettierConfig }
 		);
