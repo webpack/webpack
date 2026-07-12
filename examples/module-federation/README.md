@@ -389,6 +389,7 @@ module.exports = new Promise((resolve, reject) => {
 		__webpack_error__.name = 'ScriptExternalLoadError';
 		__webpack_error__.type = errorType;
 		__webpack_error__.request = realSrc;
+		__webpack_error__.event = event;
 		reject(__webpack_error__);
 	}, "mfeBBB");
 }).then(() => (mfeBBB));
@@ -416,6 +417,7 @@ module.exports = new Promise((resolve, reject) => {
 		__webpack_error__.name = 'ScriptExternalLoadError';
 		__webpack_error__.type = errorType;
 		__webpack_error__.request = realSrc;
+		__webpack_error__.event = event;
 		reject(__webpack_error__);
 	}, "mfeCCC");
 }).then(() => (mfeCCC));
@@ -948,6 +950,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
 /******/ 										error.request = realSrc;
+/******/ 										error.event = event;
 /******/ 										installedChunkData[1](error);
 /******/ 									}
 /******/ 								}
@@ -1477,6 +1480,7 @@ __webpack_require__.d(exports, {
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
 /******/ 										error.request = realSrc;
+/******/ 										error.event = event;
 /******/ 										installedChunkData[1](error);
 /******/ 									}
 /******/ 								}
@@ -2040,6 +2044,7 @@ __webpack_require__.d(exports, {
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
 /******/ 										error.request = realSrc;
+/******/ 										error.event = event;
 /******/ 										installedChunkData[1](error);
 /******/ 									}
 /******/ 								}
@@ -2114,7 +2119,7 @@ __webpack_require__.d(exports, {
 ```
 app:
   asset src_bootstrap_js.js 45.9 KiB [emitted]
-  asset app.js 30.5 KiB [emitted] (name: app)
+  asset app.js 30.6 KiB [emitted] (name: app)
   asset vendors-node_modules_react_index_js.js 28.4 KiB [emitted] (id hint: vendors)
   chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.3 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
@@ -2211,7 +2216,7 @@ mfe-c:
 ```
 app:
   asset src_bootstrap_js.js 12.7 KiB [emitted] [minimized] 1 related asset
-  asset app.js 7.81 KiB [emitted] [minimized] (name: app)
+  asset app.js 7.84 KiB [emitted] [minimized] (name: app)
   asset node_modules_react_index_js.js 7.45 KiB [emitted] [minimized] 1 related asset
   chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.3 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
@@ -2238,7 +2243,7 @@ app:
 mfe-b:
   asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
   asset node_modules_react_index_js.js 7.45 KiB [emitted] [minimized] 1 related asset
-  asset mfeBBB.js 6.44 KiB [emitted] [minimized] (name: mfeBBB)
+  asset mfeBBB.js 6.45 KiB [emitted] [minimized] (name: mfeBBB)
   asset src-b_Component_js.js 596 bytes [emitted] [minimized]
   chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.3 KiB (runtime) [entry] [rendered]
     > mfeBBB
@@ -2264,7 +2269,7 @@ mfe-b:
 
 mfe-c:
   asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
-  asset mfeCCC.js 7.05 KiB [emitted] [minimized] (name: mfeCCC)
+  asset mfeCCC.js 7.06 KiB [emitted] [minimized] (name: mfeCCC)
   asset node_modules_lodash_random_js.js 3.08 KiB [emitted] [minimized]
   asset src-c_LazyComponent_js.js 651 bytes [emitted] [minimized]
   asset src-c_Component_js.js 595 bytes [emitted] [minimized]

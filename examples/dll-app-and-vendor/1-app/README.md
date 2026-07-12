@@ -60,7 +60,7 @@ console.log(new square(7));
 /* 0 */,
 /* 1 */
 /*!******************************************************************************************************!*\
-  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_0b536460c09d26f43a6b ***!
+  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_a768dd4c4f8cf865355d ***!
   \******************************************************************************************************/
 /*! namespace exports */
 /*! export square [provided] [no usage info] [provision prevents renaming (no use info)] */
@@ -68,12 +68,12 @@ console.log(new square(7));
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_lib_0b536460c09d26f43a6b */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_lib_a768dd4c4f8cf865355d */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**************************************************!*\
-  !*** external "vendor_lib_0b536460c09d26f43a6b" ***!
+  !*** external "vendor_lib_a768dd4c4f8cf865355d" ***!
   \**************************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -81,7 +81,7 @@ module.exports = (__webpack_require__(/*! dll-reference vendor_lib_0b536460c09d2
 /***/ ((module) => {
 
 "use strict";
-module.exports = vendor_lib_0b536460c09d26f43a6b;
+module.exports = vendor_lib_a768dd4c4f8cf865355d;
 
 /***/ })
 /******/ 	]);

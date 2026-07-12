@@ -339,6 +339,7 @@ export const add = (content, from) => {
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
 /******/ 										error.request = realSrc;
+/******/ 										error.event = event;
 /******/ 										installedChunkData[1](error);
 /******/ 									}
 /******/ 								}
@@ -776,9 +777,9 @@ chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.88 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.9 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.88 KiB 7 modules
+  runtime modules 5.9 KiB 7 modules
   ./example.js 2.25 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main
@@ -788,7 +789,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset main.js 3.53 KiB [emitted] [minimized] (name: main)
+asset main.js 3.54 KiB [emitted] [minimized] (name: main)
 asset workers/fibonacci.js 989 bytes [emitted] [minimized] (name: fibonacci)
 asset chat.js 270 bytes [emitted] [minimized] (name: chat)
 asset 129.js 156 bytes [emitted] [minimized]
@@ -812,9 +813,9 @@ chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.88 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 5.9 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.88 KiB 7 modules
+  runtime modules 5.9 KiB 7 modules
   ./example.js 2.25 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main
