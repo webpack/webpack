@@ -145,6 +145,42 @@ export default defineConfig([
 		}
 	},
 	{
+		// runtime templates are ESM wrappers (`export default function`) around
+		// ES5 browser code that is stringified into bundles
+		files: ["lib/**/*.runtime.js"],
+		languageOptions: {
+			sourceType: "module",
+			ecmaVersion: 2015
+		}
+	},
+	{
+		// test/, examples/ and hot/ stay CommonJS (scoped package.json)
+		files: ["test/**/*.js", "examples/**/*.js", "hot/**/*.js"],
+		ignores: ["test/**/*.mjs", "examples/**/*.mjs"],
+		languageOptions: {
+			sourceType: "commonjs",
+			globals: {
+				...globals.node,
+				...globals.commonjs
+			}
+		},
+		rules: {
+			// CommonJS require() needs no extensions and resolves devDeps fine
+			"import/extensions": "off",
+			"import/no-extraneous-dependencies": "off",
+			// test/package.json is only a module-type boundary, not a package
+			"n/no-unpublished-require": "off"
+		}
+	},
+	{
+		// module-type boundary confuses package-relative rules here too
+		files: ["test/**/*.mjs"],
+		rules: {
+			"import/no-extraneous-dependencies": "off",
+			"n/no-unpublished-import": "off"
+		}
+	},
+	{
 		files: ["test/**/*.js"],
 		rules: {
 			// No need here, we have custom test logic, so except can be placed in different places
@@ -202,7 +238,7 @@ export default defineConfig([
 		}
 	},
 	{
-		files: ["examples/**/*.js"],
+		files: ["examples/**/*.{js,mjs,cjs}"],
 		rules: {
 			"no-console": "off",
 

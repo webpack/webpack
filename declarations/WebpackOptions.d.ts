@@ -71,7 +71,8 @@ export type Entry = EntryDynamic | EntryStatic;
 /**
  * A Function returning an entry object, an entry string, an entry array or a promise to these things.
  */
-export type EntryDynamic = import("../lib/DynamicEntryPlugin").RawEntryDynamic;
+export type EntryDynamic =
+	import("../lib/DynamicEntryPlugin.js").RawEntryDynamic;
 /**
  * A static entry description.
  */
@@ -98,8 +99,8 @@ export type EntryFilename = FilenameTemplate;
  */
 export type FilenameTemplate =
 	| string
-	| import("../lib/TemplatedPathPlugin").TemplatePathFn<
-			import("../lib/Compilation").PathDataChunk
+	| import("../lib/TemplatedPathPlugin.js").TemplatePathFn<
+			import("../lib/Compilation.js").PathDataChunk
 	  >;
 /**
  * Specifies the layer in which modules of this entrypoint are placed.
@@ -158,7 +159,7 @@ export type PublicPath = "auto" | RawPublicPath;
  * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
  */
 export type RawPublicPath =
-	string | import("../lib/TemplatedPathPlugin").TemplatePathFn;
+	string | import("../lib/TemplatedPathPlugin.js").TemplatePathFn;
 /**
  * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
  */
@@ -183,7 +184,7 @@ export type HttpUriAllowedUris = HttpUriOptionsAllowedUris;
  * List of allowed URIs (resp. the beginning of them).
  */
 export type HttpUriOptionsAllowedUris = (
-	RegExp | string | import("../lib/schemes/HttpUriPlugin").AllowedUriFn
+	RegExp | string | import("../lib/schemes/HttpUriPlugin.js").AllowedUriFn
 )[];
 /**
  * Extend configuration from another configuration (only works when using webpack-cli).
@@ -214,12 +215,12 @@ export type ExternalItemFunction =
  * The function is called on each dependency (`function(context, request, callback(err, result))`).
  */
 export type ExternalItemFunctionCallback =
-	import("../lib/ExternalModuleFactoryPlugin").ExternalItemFunctionCallback;
+	import("../lib/ExternalModuleFactoryPlugin.js").ExternalItemFunctionCallback;
 /**
  * The function is called on each dependency (`function(context, request)`).
  */
 export type ExternalItemFunctionPromise =
-	import("../lib/ExternalModuleFactoryPlugin").ExternalItemFunctionPromise;
+	import("../lib/ExternalModuleFactoryPlugin.js").ExternalItemFunctionPromise;
 /**
  * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
  */
@@ -270,7 +271,7 @@ export type IgnoreWarnings = (
 			 */
 			module?: RegExp;
 	  }
-	| import("../lib/IgnoreWarningsPlugin").IgnoreFn
+	| import("../lib/IgnoreWarningsPlugin.js").IgnoreFn
 )[];
 /**
  * Filtering values.
@@ -282,7 +283,7 @@ export type FilterTypes = FilterItemTypes[] | FilterItemTypes;
 export type FilterItemTypes =
 	| RegExp
 	| string
-	| import("../lib/stats/DefaultStatsFactoryPlugin").FilterItemTypeFn;
+	| import("../lib/stats/DefaultStatsFactoryPlugin.js").FilterItemTypeFn;
 /**
  * Enable production optimizations or development hints.
  */
@@ -301,7 +302,7 @@ export type RuleSetConditionOrConditions = RuleSetCondition | RuleSetConditions;
 export type RuleSetCondition =
 	| RegExp
 	| string
-	| import("../lib/rules/RuleSetCompiler").RuleSetConditionFn
+	| import("../lib/rules/RuleSetCompiler.js").RuleSetConditionFn
 	| RuleSetLogicalConditions
 	| RuleSetConditions;
 /**
@@ -319,7 +320,7 @@ export type RuleSetConditionOrConditionsAbsolute =
 export type RuleSetConditionAbsolute =
 	| RegExp
 	| string
-	| import("../lib/rules/RuleSetCompiler").RuleSetConditionFn
+	| import("../lib/rules/RuleSetCompiler.js").RuleSetConditionFn
 	| RuleSetLogicalConditionsAbsolute
 	| RuleSetConditionsAbsolute;
 /**
@@ -406,7 +407,7 @@ export type RuleSetUseItem =
  * The function is called on each data and return rule set item.
  */
 export type RuleSetUseFunction =
-	import("../lib/rules/RuleSetCompiler").RuleSetUseFn;
+	import("../lib/rules/RuleSetCompiler.js").RuleSetUseFn;
 /**
  * A list of rules.
  */
@@ -420,10 +421,10 @@ export type GeneratorOptionsByModuleType = GeneratorOptionsByModuleTypeKnown &
  * Don't parse files matching. It's matched against the full resolved request.
  */
 export type NoParse =
-	| (RegExp | string | import("../lib/NormalModule").NoParseFn)[]
+	| (RegExp | string | import("../lib/NormalModule.js").NoParseFn)[]
 	| RegExp
 	| string
-	| import("../lib/NormalModule").NoParseFn;
+	| import("../lib/NormalModule.js").NoParseFn;
 /**
  * Specify options for each parser.
  */
@@ -441,7 +442,7 @@ export type Node = false | NodeOptions;
  * Function acting as plugin.
  */
 export type WebpackPluginFunction =
-	import("../lib/webpack").WebpackPluginFunction;
+	import("../lib/webpack.js").WebpackPluginFunction;
 /**
  * Create an additional chunk which contains only the webpack runtime and chunk hash maps.
  */
@@ -454,13 +455,13 @@ export type OptimizationRuntimeChunk =
 			 */
 			name?:
 				| string
-				| import("../lib/optimize/RuntimeChunkPlugin").RuntimeChunkFunction;
+				| import("../lib/optimize/RuntimeChunkPlugin.js").RuntimeChunkFunction;
 	  };
 /**
  * A function returning cache groups.
  */
 export type OptimizationSplitChunksGetCacheGroups =
-	import("../lib/optimize/SplitChunksPlugin").RawGetCacheGroups;
+	import("../lib/optimize/SplitChunksPlugin.js").RawGetCacheGroups;
 /**
  * Size description for limits.
  */
@@ -477,8 +478,8 @@ export type OptimizationSplitChunksSizes =
  */
 export type AssetModuleFilename =
 	| string
-	| import("../lib/TemplatedPathPlugin").TemplatePathFn<
-			import("../lib/Compilation").PathDataModule
+	| import("../lib/TemplatedPathPlugin.js").TemplatePathFn<
+			import("../lib/Compilation.js").PathDataModule
 	  >;
 /**
  * Add charset attribute for script tag.
@@ -526,13 +527,13 @@ export type CssFilename = FilenameTemplate;
  */
 export type DevtoolFallbackModuleFilenameTemplate =
 	| string
-	| import("../lib/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
+	| import("../lib/ModuleFilenameHelpers.js").ModuleFilenameTemplateFunction;
 /**
  * Filename template string of function for the sources array in a generated SourceMap.
  */
 export type DevtoolModuleFilenameTemplate =
 	| string
-	| import("../lib/ModuleFilenameHelpers").ModuleFilenameTemplateFunction;
+	| import("../lib/ModuleFilenameHelpers.js").ModuleFilenameTemplateFunction;
 /**
  * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
  */
@@ -568,7 +569,8 @@ export type HashDigestLength = number;
 /**
  * Algorithm used for generation the hash (see node.js crypto package).
  */
-export type HashFunction = string | typeof import("../lib/util/Hash");
+export type HashFunction =
+	string | typeof import("../lib/util/Hash.js").default;
 /**
  * Any string which is added to the hash to salt it.
  */
@@ -731,7 +733,7 @@ export type ModuleFilterTypes = ModuleFilterItemTypes[] | ModuleFilterItemTypes;
 export type ModuleFilterItemTypes =
 	| RegExp
 	| string
-	| import("../lib/stats/DefaultStatsFactoryPlugin").ModuleFilterItemTypeFn;
+	| import("../lib/stats/DefaultStatsFactoryPlugin.js").ModuleFilterItemTypeFn;
 /**
  * Filtering modules.
  */
@@ -742,7 +744,7 @@ export type AssetFilterTypes = AssetFilterItemTypes[] | AssetFilterItemTypes;
 export type AssetFilterItemTypes =
 	| RegExp
 	| string
-	| import("../lib/stats/DefaultStatsFactoryPlugin").AssetFilterItemFn;
+	| import("../lib/stats/DefaultStatsFactoryPlugin.js").AssetFilterItemFn;
 /**
  * Filtering warnings.
  */
@@ -754,7 +756,7 @@ export type WarningFilterTypes =
 export type WarningFilterItemTypes =
 	| RegExp
 	| string
-	| import("../lib/stats/DefaultStatsPresetPlugin").WarningFilterFn;
+	| import("../lib/stats/DefaultStatsPresetPlugin.js").WarningFilterFn;
 /**
  * Environment to build for. An array of environments to build for all of them when possible.
  */
@@ -776,7 +778,7 @@ export type AssetGeneratorDataUrl =
  * Function that executes for module and should return an DataUrl string. It can have a string as 'ident' property which contributes to the module hash.
  */
 export type AssetGeneratorDataUrlFunction =
-	import("../lib/asset/AssetGenerator").DataUrlFunction;
+	import("../lib/asset/AssetGenerator.js").DataUrlFunction;
 /**
  * Generator options for asset modules.
  */
@@ -787,14 +789,14 @@ export type AssetGeneratorOptions = AssetInlineGeneratorOptions &
  */
 export type AssetModuleOutputPath =
 	| string
-	| import("../lib/TemplatedPathPlugin").TemplatePathFn<
-			import("../lib/Compilation").PathDataModule
+	| import("../lib/TemplatedPathPlugin.js").TemplatePathFn<
+			import("../lib/Compilation.js").PathDataModule
 	  >;
 /**
  * Function that executes for module and should return whenever asset should be inlined as DataUrl.
  */
 export type AssetParserDataUrlFunction =
-	import("../lib/asset/AssetParser").AssetParserDataUrlFunction;
+	import("../lib/asset/AssetParser.js").AssetParserDataUrlFunction;
 /**
  * Enable/disable renaming of `@keyframes`.
  */
@@ -852,7 +854,7 @@ export type CssGeneratorEsModule = boolean;
  */
 export type CssGeneratorExportsConvention =
 	| ("as-is" | "camel-case" | "camel-case-only" | "dashes" | "dashes-only")
-	| import("../lib/dependencies/CssIcssExportDependency").ExportsConventionFn;
+	| import("../lib/dependencies/CssIcssExportDependency.js").ExportsConventionFn;
 /**
  * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
  */
@@ -862,8 +864,8 @@ export type CssGeneratorExportsOnly = boolean;
  */
 export type CssGeneratorLocalIdentName =
 	| string
-	| import("../lib/TemplatedPathPlugin").TemplatePathFn<
-			import("../lib/Compilation").PathDataModule
+	| import("../lib/TemplatedPathPlugin.js").TemplatePathFn<
+			import("../lib/Compilation.js").PathDataModule
 	  >;
 /**
  * Options for defer import.
@@ -873,7 +875,7 @@ export type DeferImportExperimentOptions = boolean;
  * A Function returning a Promise resolving to a normalized entry.
  */
 export type EntryDynamicNormalized =
-	import("../lib/DynamicEntryPlugin").EntryDynamic;
+	import("../lib/DynamicEntryPlugin.js").EntryDynamic;
 /**
  * The entry point(s) of the compilation.
  */
@@ -894,7 +896,7 @@ export type ExternalItemValue =
  * Ignore specific warnings.
  */
 export type IgnoreWarningsNormalized =
-	import("../lib/IgnoreWarningsPlugin").IgnoreFn[];
+	import("../lib/IgnoreWarningsPlugin.js").IgnoreFn[];
 /**
  * Enable/disable evaluating import.meta fields. Omitted fields are enabled and unknown fields are preserved. Custom fields are allowed.
  */
@@ -909,7 +911,7 @@ export type OptimizationRuntimeChunkNormalized =
 			/**
 			 * The name factory for the runtime chunks.
 			 */
-			name?: import("../lib/optimize/RuntimeChunkPlugin").RuntimeChunkFunction;
+			name?: import("../lib/optimize/RuntimeChunkPlugin.js").RuntimeChunkFunction;
 	  };
 /**
  * Add additional plugins to the compiler.
@@ -1440,7 +1442,7 @@ export interface LazyCompilationOptions {
 	 * Specifies the backend that should be used for handling client keep alive.
 	 */
 	backend?:
-		| import("../lib/hmr/LazyCompilationPlugin").BackEnd
+		| import("../lib/hmr/LazyCompilationPlugin.js").BackEnd
 		| LazyCompilationDefaultBackendOptions;
 	/**
 	 * Enable/disable lazy compilation for entries.
@@ -1453,7 +1455,7 @@ export interface LazyCompilationOptions {
 	/**
 	 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
 	 */
-	test?: RegExp | string | import("../lib/hmr/LazyCompilationPlugin").TestFn;
+	test?: RegExp | string | import("../lib/hmr/LazyCompilationPlugin.js").TestFn;
 }
 /**
  * Options for the default backend.
@@ -1469,7 +1471,7 @@ export interface LazyCompilationDefaultBackendOptions {
 	listen?:
 		| number
 		| import("net").ListenOptions
-		| import("../lib/hmr/lazyCompilationBackend").Listen;
+		| import("../lib/hmr/lazyCompilationBackend.js").Listen;
 	/**
 	 * Specifies the protocol the client should use to connect to the server.
 	 */
@@ -1478,9 +1480,9 @@ export interface LazyCompilationDefaultBackendOptions {
 	 * Specifies how to create the server handling the EventSource requests.
 	 */
 	server?:
-		| import("../lib/hmr/lazyCompilationBackend").HttpsServerOptions
-		| import("../lib/hmr/lazyCompilationBackend").HttpServerOptions
-		| import("../lib/hmr/lazyCompilationBackend").CreateServerFunction;
+		| import("../lib/hmr/lazyCompilationBackend.js").HttpsServerOptions
+		| import("../lib/hmr/lazyCompilationBackend.js").HttpServerOptions
+		| import("../lib/hmr/lazyCompilationBackend.js").CreateServerFunction;
 }
 /**
  * Enable presets of externals for specific targets.
@@ -1647,7 +1649,7 @@ export interface ModuleOptions {
 	/**
 	 * Cache the resolving of module requests.
 	 */
-	unsafeCache?: boolean | import("../lib/Compilation").UnsafeCachePredicate;
+	unsafeCache?: boolean | import("../lib/Compilation.js").UnsafeCachePredicate;
 	/**
 	 * @deprecated
 	 * Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.
@@ -1904,7 +1906,7 @@ export interface ResolveOptions {
 	/**
 	 * Filesystem for the resolver.
 	 */
-	fileSystem?: import("../lib/util/fs").InputFileSystem;
+	fileSystem?: import("../lib/util/fs.js").InputFileSystem;
 	/**
 	 * Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).
 	 */
@@ -2114,7 +2116,7 @@ export interface WebpackPluginInstance {
 	/**
 	 * The run point of the plugin, required method.
 	 */
-	apply: import("../lib/webpack").WebpackPluginInstanceApplyFunction;
+	apply: import("../lib/webpack.js").WebpackPluginInstanceApplyFunction;
 	[k: string]: any;
 }
 /**
@@ -2145,11 +2147,11 @@ export interface OptimizationSplitChunksOptions {
 	chunks?:
 		| ("initial" | "async" | "all")
 		| RegExp
-		| import("../lib/optimize/SplitChunksPlugin").ChunkFilterFn;
+		| import("../lib/optimize/SplitChunksPlugin.js").ChunkFilterFn;
 	/**
 	 * Sets the size types which are used when a number is used for sizes.
 	 */
-	defaultSizeTypes?: import("../lib/Module").SourceType[];
+	defaultSizeTypes?: import("../lib/Module.js").SourceType[];
 	/**
 	 * Size threshold at which splitting is enforced and other restrictions (minRemainingSize, maxAsyncRequests, maxInitialRequests) are ignored.
 	 */
@@ -2168,7 +2170,7 @@ export interface OptimizationSplitChunksOptions {
 		chunks?:
 			| ("initial" | "async" | "all")
 			| RegExp
-			| import("../lib/optimize/SplitChunksPlugin").ChunkFilterFn;
+			| import("../lib/optimize/SplitChunksPlugin.js").ChunkFilterFn;
 		/**
 		 * Maximal size hint for the on-demand chunks.
 		 */
@@ -2195,8 +2197,8 @@ export interface OptimizationSplitChunksOptions {
 	 */
 	filename?:
 		| string
-		| import("../lib/TemplatedPathPlugin").TemplatePathFn<
-				import("../lib/Compilation").PathDataChunk
+		| import("../lib/TemplatedPathPlugin.js").TemplatePathFn<
+				import("../lib/Compilation.js").PathDataChunk
 		  >;
 	/**
 	 * Prevents exposing path info when creating names for parts splitted by maxSize.
@@ -2241,7 +2243,8 @@ export interface OptimizationSplitChunksOptions {
 	/**
 	 * Give chunks created a name (chunks with equal name are merged).
 	 */
-	name?: false | string | import("../lib/optimize/SplitChunksPlugin").GetNameFn;
+	name?:
+		false | string | import("../lib/optimize/SplitChunksPlugin.js").GetNameFn;
 	/**
 	 * Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.
 	 */
@@ -2261,7 +2264,7 @@ export interface OptimizationSplitChunksCacheGroup {
 	chunks?:
 		| ("initial" | "async" | "all")
 		| RegExp
-		| import("../lib/optimize/SplitChunksPlugin").ChunkFilterFn;
+		| import("../lib/optimize/SplitChunksPlugin.js").ChunkFilterFn;
 	/**
 	 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group.
 	 */
@@ -2275,8 +2278,8 @@ export interface OptimizationSplitChunksCacheGroup {
 	 */
 	filename?:
 		| string
-		| import("../lib/TemplatedPathPlugin").TemplatePathFn<
-				import("../lib/Compilation").PathDataChunk
+		| import("../lib/TemplatedPathPlugin.js").TemplatePathFn<
+				import("../lib/Compilation.js").PathDataChunk
 		  >;
 	/**
 	 * Sets the hint for chunk id.
@@ -2288,7 +2291,7 @@ export interface OptimizationSplitChunksCacheGroup {
 	layer?:
 		| RegExp
 		| string
-		| import("../lib/optimize/SplitChunksPlugin").CheckModuleLayerFn;
+		| import("../lib/optimize/SplitChunksPlugin.js").CheckModuleLayerFn;
 	/**
 	 * Maximum number of requests which are accepted for on-demand loading.
 	 */
@@ -2328,7 +2331,8 @@ export interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Give chunks for this cache group a name (chunks with equal name are merged).
 	 */
-	name?: false | string | import("../lib/optimize/SplitChunksPlugin").GetNameFn;
+	name?:
+		false | string | import("../lib/optimize/SplitChunksPlugin.js").GetNameFn;
 	/**
 	 * Priority of this cache group.
 	 */
@@ -2341,14 +2345,16 @@ export interface OptimizationSplitChunksCacheGroup {
 	 * Assign modules to a cache group by module name.
 	 */
 	test?:
-		RegExp | string | import("../lib/optimize/SplitChunksPlugin").CheckTestFn;
+		| RegExp
+		| string
+		| import("../lib/optimize/SplitChunksPlugin.js").CheckTestFn;
 	/**
 	 * Assign modules to a cache group by module type.
 	 */
 	type?:
 		| RegExp
 		| string
-		| import("../lib/optimize/SplitChunksPlugin").CheckModuleTypeFn;
+		| import("../lib/optimize/SplitChunksPlugin.js").CheckModuleTypeFn;
 	/**
 	 * Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.
 	 */
@@ -2615,7 +2621,7 @@ export interface CleanOptions {
 	/**
 	 * Keep these assets.
 	 */
-	keep?: RegExp | string | import("../lib/CleanPlugin").KeepFn;
+	keep?: RegExp | string | import("../lib/CleanPlugin.js").KeepFn;
 }
 /**
  * The abilities of the environment where the webpack generated code should run.
@@ -2725,7 +2731,7 @@ export interface OutputHtmlOptions {
 		| string[]
 		| boolean
 		| ((asset: {
-				chunk: import("../lib/Chunk");
+				chunk: import("../lib/Chunk.js").default;
 				filename: string;
 		  }) => string[] | false);
 	/**
@@ -2753,7 +2759,7 @@ export interface PerformanceOptions {
 	/**
 	 * Filter function to select assets that are checked.
 	 */
-	assetFilter?: import("../lib/performance/SizeLimitsPlugin").AssetFilter;
+	assetFilter?: import("../lib/performance/SizeLimitsPlugin.js").AssetFilter;
 	/**
 	 * Sets the format of the hints: warnings, errors or nothing at all.
 	 */
@@ -3673,7 +3679,7 @@ export interface HtmlParserOptions {
 	/**
 	 * Transform the raw source before the html parser extracts dependencies. Receives the source string and a context (`{ module, resource }`) and must return the html string to parse. Useful for compiling a templating language (Handlebars, EJS, Eta, …) to html so that URLs the template emits are still picked up as webpack dependencies. Runs synchronously.
 	 */
-	template?: import("../lib/html/HtmlParser").HtmlTemplateFunction;
+	template?: import("../lib/html/HtmlParser.js").HtmlTemplateFunction;
 }
 /**
  * Parser options for javascript modules.
@@ -3779,7 +3785,7 @@ export interface JavascriptParserOptions {
 	/**
 	 * Function to parser source code.
 	 */
-	parse?: import("../lib/javascript/JavascriptParser").ParseFunction;
+	parse?: import("../lib/javascript/JavascriptParser.js").ParseFunction;
 	/**
 	 * Mark the listed top-level function names for pure-function-based tree shaking.
 	 */
@@ -3887,7 +3893,7 @@ export interface JsonParserOptions {
 	/**
 	 * Function to parser content and return JSON.
 	 */
-	parse?: import("../lib/json/JsonParser").ParseFn;
+	parse?: import("../lib/json/JsonParser.js").ParseFn;
 }
 /**
  * Options affecting the normal modules (`NormalModuleFactory`).
@@ -3916,7 +3922,7 @@ export interface ModuleOptionsNormalized {
 	/**
 	 * Cache the resolving of module requests.
 	 */
-	unsafeCache?: boolean | import("../lib/Compilation").UnsafeCachePredicate;
+	unsafeCache?: boolean | import("../lib/Compilation.js").UnsafeCachePredicate;
 }
 /**
  * Enables/Disables integrated optimizations.
@@ -4415,7 +4421,7 @@ export interface ExternalItemObjectKnown {
 		| {
 				[k: string]: ExternalItem;
 		  }
-		| import("../lib/ExternalModuleFactoryPlugin").ExternalItemByLayerFn;
+		| import("../lib/ExternalModuleFactoryPlugin.js").ExternalItemByLayerFn;
 }
 /**
  * If an dependency matches exactly a property of the object, the property value is used as dependency.

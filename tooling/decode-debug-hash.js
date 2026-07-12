@@ -1,6 +1,4 @@
-"use strict";
-
-const fs = require("node:fs");
+import fs from "node:fs";
 
 const file = process.argv[2];
 

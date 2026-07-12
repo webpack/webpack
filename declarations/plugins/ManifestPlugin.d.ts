@@ -16,11 +16,11 @@ export interface ManifestPluginOptions {
 	/**
 	 * Allows filtering the files which make up the manifest.
 	 */
-	filter?: import("../../lib/ManifestPlugin").Filter;
+	filter?: import("../../lib/ManifestPlugin.js").Filter;
 	/**
 	 * A function that receives the manifest object, modifies it, and returns the modified manifest.
 	 */
-	generate?: import("../../lib/ManifestPlugin").Generate;
+	generate?: import("../../lib/ManifestPlugin.js").Generate;
 	/**
 	 * Specifies a path prefix for all keys in the manifest.
 	 */
@@ -28,7 +28,7 @@ export interface ManifestPluginOptions {
 	/**
 	 * A function that receives the manifest object and returns the manifest string.
 	 */
-	serialize?: import("../../lib/ManifestPlugin").Serialize;
+	serialize?: import("../../lib/ManifestPlugin.js").Serialize;
 }
 /**
  * Describes a manifest entrypoint.

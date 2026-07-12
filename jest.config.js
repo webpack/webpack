@@ -1,4 +1,6 @@
-"use strict";
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
 
 /** @type {import("jest").Config} */
 const config = {
@@ -61,4 +63,4 @@ const config = {
 	}
 };
 
-module.exports = config;
+export default config;

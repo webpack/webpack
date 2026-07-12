@@ -6,4 +6,4 @@ export type {
 	PitchLoaderDefinitionFunction,
 	RawLoaderDefinitionFunction,
 	LoaderContext
-} from "./LoaderContext";
+} from "./LoaderContext.js";

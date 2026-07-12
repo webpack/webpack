@@ -19,5 +19,5 @@ export type IgnorePluginOptions =
 			/**
 			 * A filter function for resource and context.
 			 */
-			checkResource: import("../../lib/IgnorePlugin").CheckResourceFn;
+			checkResource: import("../../lib/IgnorePlugin.js").CheckResourceFn;
 	  };

@@ -34,7 +34,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../lib/stats/DefaultStatsFactoryPlugin').AssetFilterItemFn"
+          "tsType": "import('../lib/stats/DefaultStatsFactoryPlugin.js').AssetFilterItemFn"
         }
       ]
     },
@@ -77,7 +77,7 @@
     "AssetGeneratorDataUrlFunction": {
       "description": "Function that executes for module and should return an DataUrl string. It can have a string as 'ident' property which contributes to the module hash.",
       "instanceof": "Function",
-      "tsType": "import('../lib/asset/AssetGenerator').DataUrlFunction"
+      "tsType": "import('../lib/asset/AssetGenerator.js').DataUrlFunction"
     },
     "AssetGeneratorDataUrlOptions": {
       "description": "Options object for data url generation.",
@@ -149,7 +149,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
+          "tsType": "import(\"../lib/TemplatedPathPlugin.js\").TemplatePathFn<import(\"../lib/Compilation.js\").PathDataModule>"
         }
       ]
     },
@@ -162,14 +162,14 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
+          "tsType": "import(\"../lib/TemplatedPathPlugin.js\").TemplatePathFn<import(\"../lib/Compilation.js\").PathDataModule>"
         }
       ]
     },
     "AssetParserDataUrlFunction": {
       "description": "Function that executes for module and should return whenever asset should be inlined as DataUrl.",
       "instanceof": "Function",
-      "tsType": "import(\"../lib/asset/AssetParser\").AssetParserDataUrlFunction"
+      "tsType": "import(\"../lib/asset/AssetParser.js\").AssetParserDataUrlFunction"
     },
     "AssetParserDataUrlOptions": {
       "description": "Options object for DataUrl condition.",
@@ -353,7 +353,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/CleanPlugin\").KeepFn"
+              "tsType": "import(\"../lib/CleanPlugin.js\").KeepFn"
             }
           ]
         }
@@ -449,7 +449,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../lib/dependencies/CssIcssExportDependency').ExportsConventionFn"
+          "tsType": "import('../lib/dependencies/CssIcssExportDependency.js').ExportsConventionFn"
         }
       ]
     },
@@ -465,7 +465,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataModule>"
+          "tsType": "import(\"../lib/TemplatedPathPlugin.js\").TemplatePathFn<import(\"../lib/Compilation.js\").PathDataModule>"
         }
       ]
     },
@@ -686,7 +686,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
+          "tsType": "import('../lib/ModuleFilenameHelpers.js').ModuleFilenameTemplateFunction"
         }
       ]
     },
@@ -698,7 +698,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../lib/ModuleFilenameHelpers').ModuleFilenameTemplateFunction"
+          "tsType": "import('../lib/ModuleFilenameHelpers.js').ModuleFilenameTemplateFunction"
         }
       ]
     },
@@ -943,12 +943,12 @@
     "EntryDynamic": {
       "description": "A Function returning an entry object, an entry string, an entry array or a promise to these things.",
       "instanceof": "Function",
-      "tsType": "import('../lib/DynamicEntryPlugin').RawEntryDynamic"
+      "tsType": "import('../lib/DynamicEntryPlugin.js').RawEntryDynamic"
     },
     "EntryDynamicNormalized": {
       "description": "A Function returning a Promise resolving to a normalized entry.",
       "instanceof": "Function",
-      "tsType": "import('../lib/DynamicEntryPlugin').EntryDynamic"
+      "tsType": "import('../lib/DynamicEntryPlugin.js').EntryDynamic"
     },
     "EntryFilename": {
       "description": "Specifies the filename of the output file on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
@@ -1414,7 +1414,7 @@
                 },
                 {
                   "instanceof": "Function",
-                  "tsType": "import('../lib/ExternalModuleFactoryPlugin').ExternalItemByLayerFn"
+                  "tsType": "import('../lib/ExternalModuleFactoryPlugin.js').ExternalItemByLayerFn"
                 }
               ]
             }
@@ -1439,12 +1439,12 @@
     "ExternalItemFunctionCallback": {
       "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
       "instanceof": "Function",
-      "tsType": "import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionCallback"
+      "tsType": "import(\"../lib/ExternalModuleFactoryPlugin.js\").ExternalItemFunctionCallback"
     },
     "ExternalItemFunctionPromise": {
       "description": "The function is called on each dependency (`function(context, request)`).",
       "instanceof": "Function",
-      "tsType": "import(\"../lib/ExternalModuleFactoryPlugin\").ExternalItemFunctionPromise"
+      "tsType": "import(\"../lib/ExternalModuleFactoryPlugin.js\").ExternalItemFunctionPromise"
     },
     "ExternalItemInterop": {
       "description": "How an external's exports interoperate with ES module imports, independent of the importing module's strictness (similar to Rollup's `output.interop`). 'default': treat as CommonJS, the default import is the whole exports (Node.js semantics). 'esModule': treat as an ES module namespace, the default import is unboxed to `.default`.",
@@ -1751,7 +1751,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
+          "tsType": "import(\"../lib/TemplatedPathPlugin.js\").TemplatePathFn<import(\"../lib/Compilation.js\").PathDataChunk>"
         }
       ]
     },
@@ -1771,7 +1771,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../lib/stats/DefaultStatsFactoryPlugin').FilterItemTypeFn"
+          "tsType": "import('../lib/stats/DefaultStatsFactoryPlugin.js').FilterItemTypeFn"
         }
       ]
     },
@@ -1879,7 +1879,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "typeof import('../lib/util/Hash')"
+          "tsType": "typeof import('../lib/util/Hash.js').default"
         }
       ]
     },
@@ -2002,7 +2002,7 @@
         "template": {
           "description": "Transform the raw source before the html parser extracts dependencies. Receives the source string and a context (`{ module, resource }`) and must return the html string to parse. Useful for compiling a templating language (Handlebars, EJS, Eta, …) to html so that URLs the template emits are still picked up as webpack dependencies. Runs synchronously.",
           "instanceof": "Function",
-          "tsType": "import('../lib/html/HtmlParser').HtmlTemplateFunction"
+          "tsType": "import('../lib/html/HtmlParser.js').HtmlTemplateFunction"
         }
       }
     },
@@ -2076,7 +2076,7 @@
           {
             "description": "Allowed URI filter function.",
             "instanceof": "Function",
-            "tsType": "import('../lib/schemes/HttpUriPlugin').AllowedUriFn"
+            "tsType": "import('../lib/schemes/HttpUriPlugin.js').AllowedUriFn"
           }
         ]
       }
@@ -2116,7 +2116,7 @@
           {
             "description": "A custom function to select warnings based on the raw warning instance.",
             "instanceof": "Function",
-            "tsType": "import(\"../lib/IgnoreWarningsPlugin\").IgnoreFn"
+            "tsType": "import(\"../lib/IgnoreWarningsPlugin.js\").IgnoreFn"
           }
         ]
       }
@@ -2127,7 +2127,7 @@
       "items": {
         "description": "A function to select warnings based on the raw warning instance.",
         "instanceof": "Function",
-        "tsType": "import(\"../lib/IgnoreWarningsPlugin\").IgnoreFn"
+        "tsType": "import(\"../lib/IgnoreWarningsPlugin.js\").IgnoreFn"
       }
     },
     "Iife": {
@@ -2377,7 +2377,7 @@
         "parse": {
           "description": "Function to parser source code.",
           "instanceof": "Function",
-          "tsType": "import('../lib/javascript/JavascriptParser').ParseFunction"
+          "tsType": "import('../lib/javascript/JavascriptParser.js').ParseFunction"
         },
         "pureFunctions": {
           "description": "Mark the listed top-level function names for pure-function-based tree shaking.",
@@ -2523,7 +2523,7 @@
         "parse": {
           "description": "Function to parser content and return JSON.",
           "instanceof": "Function",
-          "tsType": "import('../lib/json/JsonParser').ParseFn"
+          "tsType": "import('../lib/json/JsonParser.js').ParseFn"
         }
       }
     },
@@ -2574,7 +2574,7 @@
             {
               "description": "A custom listen function.",
               "instanceof": "Function",
-              "tsType": "import(\"../lib/hmr/lazyCompilationBackend\").Listen"
+              "tsType": "import(\"../lib/hmr/lazyCompilationBackend.js\").Listen"
             }
           ]
         },
@@ -2590,12 +2590,12 @@
               "type": "object",
               "additionalProperties": true,
               "properties": {},
-              "tsType": "import(\"../lib/hmr/lazyCompilationBackend\").HttpsServerOptions | import(\"../lib/hmr/lazyCompilationBackend\").HttpServerOptions"
+              "tsType": "import(\"../lib/hmr/lazyCompilationBackend.js\").HttpsServerOptions | import(\"../lib/hmr/lazyCompilationBackend.js\").HttpServerOptions"
             },
             {
               "description": "A custom create server function.",
               "instanceof": "Function",
-              "tsType": "import(\"../lib/hmr/lazyCompilationBackend\").CreateServerFunction"
+              "tsType": "import(\"../lib/hmr/lazyCompilationBackend.js\").CreateServerFunction"
             }
           ]
         }
@@ -2612,7 +2612,7 @@
             {
               "description": "A custom backend.",
               "instanceof": "Function",
-              "tsType": "import(\"../lib/hmr/LazyCompilationPlugin\").BackEnd"
+              "tsType": "import(\"../lib/hmr/LazyCompilationPlugin.js\").BackEnd"
             },
             {
               "$ref": "#/definitions/LazyCompilationDefaultBackendOptions"
@@ -2639,7 +2639,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import('../lib/hmr/LazyCompilationPlugin').TestFn"
+              "tsType": "import('../lib/hmr/LazyCompilationPlugin.js').TestFn"
             }
           ]
         }
@@ -2852,7 +2852,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../lib/stats/DefaultStatsFactoryPlugin').ModuleFilterItemTypeFn"
+          "tsType": "import('../lib/stats/DefaultStatsFactoryPlugin.js').ModuleFilterItemTypeFn"
         }
       ]
     },
@@ -2988,7 +2988,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/Compilation\").UnsafeCachePredicate"
+              "tsType": "import(\"../lib/Compilation.js\").UnsafeCachePredicate"
             }
           ]
         },
@@ -3051,7 +3051,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import('../lib/Compilation').UnsafeCachePredicate"
+              "tsType": "import('../lib/Compilation.js').UnsafeCachePredicate"
             }
           ]
         }
@@ -3082,7 +3082,7 @@
               },
               {
                 "instanceof": "Function",
-                "tsType": "import(\"../lib/NormalModule\").NoParseFn"
+                "tsType": "import(\"../lib/NormalModule.js\").NoParseFn"
               }
             ]
           },
@@ -3100,7 +3100,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/NormalModule\").NoParseFn"
+          "tsType": "import(\"../lib/NormalModule.js\").NoParseFn"
         }
       ]
     },
@@ -3496,7 +3496,7 @@
                 },
                 {
                   "instanceof": "Function",
-                  "tsType": "import('../lib/optimize/RuntimeChunkPlugin').RuntimeChunkFunction"
+                  "tsType": "import('../lib/optimize/RuntimeChunkPlugin.js').RuntimeChunkFunction"
                 }
               ]
             }
@@ -3517,7 +3517,7 @@
             "name": {
               "description": "The name factory for the runtime chunks.",
               "instanceof": "Function",
-              "tsType": "import('../lib/optimize/RuntimeChunkPlugin').RuntimeChunkFunction"
+              "tsType": "import('../lib/optimize/RuntimeChunkPlugin.js').RuntimeChunkFunction"
             }
           }
         }
@@ -3545,7 +3545,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import('../lib/optimize/SplitChunksPlugin').ChunkFilterFn"
+              "tsType": "import('../lib/optimize/SplitChunksPlugin.js').ChunkFilterFn"
             }
           ]
         },
@@ -3571,7 +3571,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
+              "tsType": "import(\"../lib/TemplatedPathPlugin.js\").TemplatePathFn<import(\"../lib/Compilation.js\").PathDataChunk>"
             }
           ]
         },
@@ -3591,7 +3591,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import('../lib/optimize/SplitChunksPlugin').CheckModuleLayerFn"
+              "tsType": "import('../lib/optimize/SplitChunksPlugin.js').CheckModuleLayerFn"
             }
           ]
         },
@@ -3669,7 +3669,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import('../lib/optimize/SplitChunksPlugin').GetNameFn"
+              "tsType": "import('../lib/optimize/SplitChunksPlugin.js').GetNameFn"
             }
           ]
         },
@@ -3693,7 +3693,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import('../lib/optimize/SplitChunksPlugin').CheckTestFn"
+              "tsType": "import('../lib/optimize/SplitChunksPlugin.js').CheckTestFn"
             }
           ]
         },
@@ -3709,7 +3709,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import('../lib/optimize/SplitChunksPlugin').CheckModuleTypeFn"
+              "tsType": "import('../lib/optimize/SplitChunksPlugin.js').CheckModuleTypeFn"
             }
           ]
         },
@@ -3722,7 +3722,7 @@
     "OptimizationSplitChunksGetCacheGroups": {
       "description": "A function returning cache groups.",
       "instanceof": "Function",
-      "tsType": "import('../lib/optimize/SplitChunksPlugin').RawGetCacheGroups"
+      "tsType": "import('../lib/optimize/SplitChunksPlugin.js').RawGetCacheGroups"
     },
     "OptimizationSplitChunksOptions": {
       "description": "Options object for splitting chunks into smaller chunks.",
@@ -3794,7 +3794,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import('../lib/optimize/SplitChunksPlugin').ChunkFilterFn"
+              "tsType": "import('../lib/optimize/SplitChunksPlugin.js').ChunkFilterFn"
             }
           ]
         },
@@ -3804,7 +3804,7 @@
           "items": {
             "description": "Size type, like 'javascript', 'webassembly'.",
             "type": "string",
-            "tsType": "import(\"../lib/Module\").SourceType"
+            "tsType": "import(\"../lib/Module.js\").SourceType"
           },
           "minItems": 1
         },
@@ -3838,7 +3838,7 @@
                 },
                 {
                   "instanceof": "Function",
-                  "tsType": "import('../lib/optimize/SplitChunksPlugin').ChunkFilterFn"
+                  "tsType": "import('../lib/optimize/SplitChunksPlugin.js').ChunkFilterFn"
                 }
               ]
             },
@@ -3894,7 +3894,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn<import(\"../lib/Compilation\").PathDataChunk>"
+              "tsType": "import(\"../lib/TemplatedPathPlugin.js\").TemplatePathFn<import(\"../lib/Compilation.js\").PathDataChunk>"
             }
           ]
         },
@@ -3976,7 +3976,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "import('../lib/optimize/SplitChunksPlugin').GetNameFn"
+              "tsType": "import('../lib/optimize/SplitChunksPlugin.js').GetNameFn"
             }
           ]
         },
@@ -4292,7 +4292,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((asset: { chunk: import('../lib/Chunk'), filename: string }) => string[] | false)"
+              "tsType": "((asset: { chunk: import('../lib/Chunk.js').default, filename: string }) => string[] | false)"
             }
           ]
         },
@@ -4585,7 +4585,7 @@
         "assetFilter": {
           "description": "Filter function to select assets that are checked.",
           "instanceof": "Function",
-          "tsType": "import('../lib/performance/SizeLimitsPlugin').AssetFilter"
+          "tsType": "import('../lib/performance/SizeLimitsPlugin.js').AssetFilter"
         },
         "hints": {
           "description": "Sets the format of the hints: warnings, errors or nothing at all.",
@@ -4669,7 +4669,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/TemplatedPathPlugin\").TemplatePathFn"
+          "tsType": "import(\"../lib/TemplatedPathPlugin.js\").TemplatePathFn"
         }
       ]
     },
@@ -4922,7 +4922,7 @@
         },
         "fileSystem": {
           "description": "Filesystem for the resolver.",
-          "tsType": "import('../lib/util/fs').InputFileSystem"
+          "tsType": "import('../lib/util/fs.js').InputFileSystem"
         },
         "fullySpecified": {
           "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
@@ -5123,7 +5123,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../lib/rules/RuleSetCompiler').RuleSetConditionFn"
+          "tsType": "import('../lib/rules/RuleSetCompiler.js').RuleSetConditionFn"
         },
         {
           "$ref": "#/definitions/RuleSetLogicalConditions"
@@ -5149,7 +5149,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import('../lib/rules/RuleSetCompiler').RuleSetConditionFn"
+          "tsType": "import('../lib/rules/RuleSetCompiler.js').RuleSetConditionFn"
         },
         {
           "$ref": "#/definitions/RuleSetLogicalConditionsAbsolute"
@@ -5573,7 +5573,7 @@
     "RuleSetUseFunction": {
       "description": "The function is called on each data and return rule set item.",
       "instanceof": "Function",
-      "tsType": "import('../lib/rules/RuleSetCompiler').RuleSetUseFn"
+      "tsType": "import('../lib/rules/RuleSetCompiler.js').RuleSetUseFn"
     },
     "RuleSetUseItem": {
       "description": "A description of an applied loader.",
@@ -6335,7 +6335,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "import(\"../lib/stats/DefaultStatsPresetPlugin\").WarningFilterFn"
+          "tsType": "import(\"../lib/stats/DefaultStatsPresetPlugin.js\").WarningFilterFn"
         }
       ]
     },
@@ -6589,7 +6589,7 @@
     "WebpackPluginFunction": {
       "description": "Function acting as plugin.",
       "instanceof": "Function",
-      "tsType": "import('../lib/webpack').WebpackPluginFunction"
+      "tsType": "import('../lib/webpack.js').WebpackPluginFunction"
     },
     "WebpackPluginInstance": {
       "description": "Plugin instance.",
@@ -6599,7 +6599,7 @@
         "apply": {
           "description": "The run point of the plugin, required method.",
           "instanceof": "Function",
-          "tsType": "import('../lib/webpack').WebpackPluginInstanceApplyFunction"
+          "tsType": "import('../lib/webpack.js').WebpackPluginInstanceApplyFunction"
         }
       },
       "required": ["apply"]

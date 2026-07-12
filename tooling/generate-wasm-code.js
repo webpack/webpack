@@ -1,7 +1,5 @@
-"use strict";
-
-const fs = require("node:fs");
-const path = require("node:path");
+import fs from "node:fs";
+import path from "node:path";
 
 // When --write is set, files will be written in place
 // Otherwise it only prints outdated files
@@ -18,7 +16,7 @@ const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 	const asc = (await import(ascSpecifier)).default;
 
 	for (const file of files) {
-		const filePath = path.resolve(__dirname, "..", file);
+		const filePath = path.resolve(import.meta.dirname, "..", file);
 		const content = fs.readFileSync(filePath, "utf8");
 
 		const regexp =

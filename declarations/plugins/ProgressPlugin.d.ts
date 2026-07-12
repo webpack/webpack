@@ -8,7 +8,7 @@ export type ProgressPluginArgument = ProgressPluginOptions | HandlerFunction;
 /**
  * Function that executes for every progress step.
  */
-export type HandlerFunction = import("../../lib/ProgressPlugin").HandlerFn;
+export type HandlerFunction = import("../../lib/ProgressPlugin.js").HandlerFn;
 
 /**
  * Options object for the ProgressPlugin.

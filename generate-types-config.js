@@ -1,6 +1,4 @@
-"use strict";
-
-module.exports = {
+const config = {
 	nameMapping: {
 		FsStats: /^Stats Import fs/,
 		validateFunction: /^validate Import/,
@@ -10,3 +8,5 @@ module.exports = {
 	exclude: [/^devServer in WebpackOptions /],
 	include: [/^(_module|_compilation|_compiler) in NormalModuleLoaderContext /]
 };
+
+export const { nameMapping, exclude, include } = config;
