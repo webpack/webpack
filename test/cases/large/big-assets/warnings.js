@@ -1,7 +1,8 @@
 "use strict";
 
 module.exports = [
-	// ObjectMiddleware, loader-runner, jest-worker, minimizer-webpack-plugin/utils.js
+	// ObjectMiddleware, loadLoader (require + import), jest-worker, minimizer-webpack-plugin/utils.js
+	/Critical dependency: the request of a dependency is an expression/,
 	/Critical dependency: the request of a dependency is an expression/,
 	/Critical dependency: the request of a dependency is an expression/,
 	/Critical dependency: the request of a dependency is an expression/,
