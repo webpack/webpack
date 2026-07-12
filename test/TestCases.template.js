@@ -287,6 +287,9 @@ const describeCases = (config) => {
 								// css/html types; pin them off so the "auto" defaults don't apply.
 								css: false,
 								html: false,
+								// Keep the default resolver behavior these cases assert (no `.ts`
+								// extensionAlias) by pinning the "auto" typescript default off too.
+								typescript: false,
 								...(config.module ? { outputModule: true } : {})
 							},
 							infrastructureLogging: config.cache && {
