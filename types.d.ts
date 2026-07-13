@@ -7413,10 +7413,10 @@ declare interface Experiments {
 	syncWebAssembly?: boolean;
 
 	/**
-	 * Enable typescript support.
+	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
 	 * @experimental
 	 */
-	typescript?: boolean;
+	typescript?: boolean | "auto";
 }
 
 /**
@@ -7496,10 +7496,10 @@ declare interface ExperimentsNormalized {
 	syncWebAssembly?: boolean;
 
 	/**
-	 * Enable typescript support.
+	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
 	 * @experimental
 	 */
-	typescript?: boolean;
+	typescript?: boolean | "auto";
 }
 declare abstract class ExportInfo {
 	name: string;
