@@ -5,8 +5,7 @@ let outputDirectory;
 module.exports = {
 	moduleScope(scope) {
 		const { createWorklet } = require("../../../helpers/createFakeWorklet")({
-			outputDirectory,
-			module: true
+			outputDirectory
 		});
 
 		scope.AudioContext = class AudioContext {

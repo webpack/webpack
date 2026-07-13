@@ -6,18 +6,15 @@ const path = require("path");
 const { fileURLToPath } = require("url");
 const vm = require("vm");
 
-// Simulates a worklet: `addModule(url)` evaluates the referenced script inside a
+// Simulates a worklet: `addModule(url)` evaluates the referenced chunk inside a
 // single persistent global scope (as a real worklet global scope would), so the
 // webpack bootstrap blob, the split chunks and the entry chunk all share state.
 // `registerProcessor`/`registerPaint` registrations are captured for assertions.
-// With `module: true` the chunk is an ES module (module output): it is evaluated
-// via `vm.SourceTextModule` and its native `import`s are linked to sibling chunk
-// files, as a real module worklet resolves its static import graph.
+// A worklet always loads its chunks as ES modules, so each is evaluated via
+// `vm.SourceTextModule` (with `import.meta.url` populated) and its native
+// `import`s are linked to sibling chunk files.
 module.exports = (
-	/** @type {{ outputDirectory: string, module?: boolean }} */ {
-		outputDirectory,
-		module: isModule
-	}
+	/** @type {{ outputDirectory: string }} */ { outputDirectory }
 ) => {
 	const urlToPath = (/** @type {string} */ url) => {
 		if (/^https:\/\/test\.cases\/path\//.test(url)) {
@@ -58,30 +55,32 @@ module.exports = (
 					).text()
 				: fs.readFileSync(urlToPath(url), "utf8");
 
+		/** @type {Map<string, vm.SourceTextModule>} */
+		const compiled = new Map();
+		const compile = (/** @type {string} */ u, /** @type {string} */ src) => {
+			const record = new vm.SourceTextModule(src, {
+				context,
+				identifier: u,
+				initializeImportMeta: (meta) => {
+					meta.url = u;
+				}
+			});
+			compiled.set(u, record);
+			return record;
+		};
+		const link = async (
+			/** @type {string} */ specifier,
+			/** @type {vm.Module} */ referencing
+		) => {
+			const childUrl = new URL(specifier, referencing.identifier).href;
+			return (
+				compiled.get(childUrl) || compile(childUrl, await readCode(childUrl))
+			);
+		};
+
 		const addModule = async (/** @type {string | URL} */ resource) => {
 			const url = String(resource);
-			const code = await readCode(url);
-			if (!isModule) {
-				vm.runInContext(code, context, { filename: url });
-				return;
-			}
-			/** @type {Map<string, vm.SourceTextModule>} */
-			const compiled = new Map();
-			const compile = (/** @type {string} */ u, /** @type {string} */ src) => {
-				const record = new vm.SourceTextModule(src, { context, identifier: u });
-				compiled.set(u, record);
-				return record;
-			};
-			const link = async (
-				/** @type {string} */ specifier,
-				/** @type {vm.Module} */ referencing
-			) => {
-				const childUrl = new URL(specifier, referencing.identifier).href;
-				return (
-					compiled.get(childUrl) || compile(childUrl, await readCode(childUrl))
-				);
-			};
-			const entry = compile(url, code);
+			const entry = compile(url, await readCode(url));
 			await entry.link(link);
 			await entry.evaluate();
 		};
