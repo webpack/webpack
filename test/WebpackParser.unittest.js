@@ -1,5 +1,7 @@
 "use strict";
 
+// cspell:ignore ypeof averyvery ahri aafom
+
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
 
 /**
@@ -245,6 +247,20 @@ describe("WebpackParser", () => {
 			).toBeDefined();
 		});
 
+		it("should reject escape sequences in keywords like acorn", () => {
+			// the owned `next` keyword-escape guard fires when a keyword token
+			// carries a `\uXXXX` escape
+			expect(() => parse("\\u0069f (x) {}")).toThrow(
+				/Escape sequence in keyword if/
+			);
+			expect(() => parse("\\u0074ypeof x;")).toThrow(
+				/Escape sequence in keyword typeof/
+			);
+			// `liberal` idents (keyword as property name) pass `ignore`, so an
+			// escaped keyword is allowed there
+			expect(parse("obj.\\u0069f;").ast).toBeDefined();
+		});
+
 		it("should allow await as a sloppy-mode identifier", () => {
 			const { ast } = parse("var await = 1; await;");
 			const declaration =
@@ -269,6 +285,58 @@ describe("WebpackParser", () => {
 			expect(
 				parse("export { x }; var x;", { sourceType: "module" }).ast
 			).toBeDefined();
+		});
+	});
+
+	describe("identifier word cache", () => {
+		/**
+		 * @param {string} code source
+		 * @returns {string[]} every Identifier name in program order
+		 */
+		const names = (code) => {
+			/** @type {string[]} */
+			const found = [];
+			JSON.stringify(parse(code).ast, (_key, value) => {
+				if (value && value.type === "Identifier") found.push(value.name);
+				return value;
+			});
+			return found;
+		};
+
+		it("should return identical names for repeated, uncached and long identifiers", () => {
+			// repeated words hit the cache; 1-char and >12-char words bypass it
+			expect(names("foo + foo + f + averyveryLongIdentifier;")).toEqual([
+				"foo",
+				"foo",
+				"f",
+				"averyveryLongIdentifier"
+			]);
+		});
+
+		it("should survive hash collisions by content check", () => {
+			// `aaaa`/`ahri` and `aaaa`/`aafom` share a cache slot (same djb2&mask),
+			// exercising the same-length and length-mismatch collision branches
+			expect(names("aaaa + ahri + aaaa + aafom + aaaa;")).toEqual([
+				"aaaa",
+				"ahri",
+				"aaaa",
+				"aafom",
+				"aaaa"
+			]);
+		});
+
+		it("should serve multi-char operators from the operator cache", () => {
+			// one occurrence fills the cache, the second hits it; sizes 1-4
+			const { ast } = parse(
+				"a < b; a << b; a <<= b; a === b; a === c; a >>>= b; x &&= y;"
+			);
+			const ops = ast.body.map(
+				(s) =>
+					/** @type {{ expression: { operator: string } }} */ (
+						/** @type {unknown} */ (s)
+					).expression.operator
+			);
+			expect(ops).toEqual(["<", "<<", "<<=", "===", "===", ">>>=", "&&="]);
 		});
 	});
 
@@ -308,6 +376,20 @@ describe("WebpackParser", () => {
 		it("should keep `/` after a keyword-valued property name as division", () => {
 			// keyword-after-dot forbids an expression, so the next `/` divides
 			expect(parse("a.in / b; a.of / c;").ast).toBeDefined();
+		});
+
+		it("should re-allow an expression after `of` and generator `yield`", () => {
+			// the inlined name.updateContext true branches: the `/` lexes a regexp
+			expect(parse("for (x of /re/g);").ast).toBeDefined();
+			expect(parse("function* g() { yield /re/g; }").ast).toBeDefined();
+		});
+
+		it("should delegate multi-char `.` and `=` tokens to acorn", () => {
+			// `...`, `==`, `===` and `=>` miss the single-char dispatch fast paths
+			expect(exprType("f(...a)")).toBe("CallExpression");
+			expect(exprType("a == b")).toBe("BinaryExpression");
+			expect(exprType("a === b")).toBe("BinaryExpression");
+			expect(exprType("(x) => x")).toBe("ArrowFunctionExpression");
 		});
 	});
 
