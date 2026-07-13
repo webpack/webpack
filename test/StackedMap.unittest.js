@@ -127,6 +127,28 @@ describe("StackedMap", () => {
 		expect(leaf.get("missing")).toBeUndefined();
 	});
 
+	it("should enumerate an untouched root layer as empty", () => {
+		const root = new StackedMap();
+		expect(root.asArray()).toEqual([]);
+		expect(root.size).toBe(0);
+		root.set("a", 1);
+		expect(root.asArray()).toEqual(["a"]);
+	});
+
+	it("should memoize parent hits into a writing child layer", () => {
+		const root = new StackedMap();
+		root.set("a", 1);
+		root.set("c", 3);
+		const child = root.createChild();
+		child.set("b", 2);
+		// child owns a map, so the parent hit is cached there for has and get;
+		// each key first probes via a different method to cover both memo writes
+		expect(child.has("a")).toBe(true);
+		expect(child.has("a")).toBe(true);
+		expect(child.get("c")).toBe(3);
+		expect(child.get("c")).toBe(3);
+	});
+
 	it("should let children observe later parent writes of new keys", () => {
 		// both the historical array design (shared Map objects) and a linked
 		// design expose parent writes made after child creation
