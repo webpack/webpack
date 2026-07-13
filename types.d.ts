@@ -7309,6 +7309,11 @@ declare interface ExecuteModuleOptions {
 declare interface ExecuteModuleResult {
 	exports: any;
 	cacheable: boolean;
+
+	/**
+	 * reasons why the executed modules are not cacheable
+	 */
+	notCacheableReasons: string[];
 	assets: Map<string, { source: Source; info?: AssetInfo }>;
 	fileDependencies: LazySet<string>;
 	contextDependencies: LazySet<string>;
@@ -13146,7 +13151,7 @@ declare interface KnownBuildInfo {
 	cacheable?: boolean;
 
 	/**
-	 * paths of the loaders that marked the module as not cacheable
+	 * reasons why the module is not cacheable (e.g. paths of loaders that marked it)
 	 */
 	notCacheableReasons?: string[];
 	strict?: boolean;

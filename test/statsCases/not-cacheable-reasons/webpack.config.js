@@ -22,12 +22,25 @@ const base = {
 	module: {
 		rules: [
 			{
-				test: /[\\/](index|flagged)\.js$/,
+				test: /[\\/](index|flagged|child(-dep)?)\.js$/,
 				use: require.resolve("./loader")
+			},
+			{
+				test: /[\\/]cleared\.js$/,
+				use: require.resolve("./clear-loader")
+			},
+			{
+				test: /[\\/]imported\.js$/,
+				use: require.resolve("./import-module-loader")
 			}
 		]
 	},
-	plugins: [markHostFlaggedPlugin]
+	plugins: [
+		markHostFlaggedPlugin,
+		new webpack.DefinePlugin({
+			RUNTIME_VALUE: webpack.DefinePlugin.runtimeValue(() => 42, true)
+		})
+	]
 };
 
 /** @type {import("../../../").Configuration[]} */
