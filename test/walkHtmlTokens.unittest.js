@@ -175,6 +175,34 @@ describe("walkHtmlTokens", () => {
 		]);
 	});
 
+	it("should route quote/lt-led attribute names through the attribute-name state", () => {
+		/** @type {unknown[]} */
+		const attrs = [];
+		/** @type {unknown[]} */
+		const errors = [];
+		walkHtmlTokens("<div \"x=1 'y>", 0, {
+			attribute: (input, ns, ne, vs, ve, qt) => {
+				attrs.push([
+					input.slice(ns, ne),
+					vs === -1 ? null : input.slice(vs, ve)
+				]);
+				if (vs === -1) return ne;
+				return qt !== QUOTE_NONE ? ve + 1 : ve;
+			},
+			parseError: (input, code) => {
+				errors.push(code);
+			}
+		});
+		expect(attrs).toEqual([
+			['"x', "1"],
+			["'y", null]
+		]);
+		expect(errors).toEqual([
+			"unexpected-character-in-attribute-name",
+			"unexpected-character-in-attribute-name"
+		]);
+	});
+
 	it("should handle all quote types", () => {
 		/** @type {unknown[]} */
 		const attrs = [];
@@ -611,6 +639,45 @@ describe("walkHtmlTokens", () => {
 			["text", ".a{}"],
 			["close", "STYLE"]
 		]);
+	});
+
+	it("should flush unterminated raw-text bodies at EOF (no further `<`)", () => {
+		// Drives the content-mode fast-forwards when `indexOf` finds no next
+		// `<` (RCDATA / RAWTEXT / script data run to end of input).
+		for (const [source, tag, body] of [
+			["<title>left open", "title", "left open"],
+			["<style>.a{color:red}", "style", ".a{color:red}"],
+			["<script>var x = 1;", "script", "var x = 1;"]
+		]) {
+			/** @type {unknown[]} */
+			const results = [];
+			walkHtmlTokens(source, 0, {
+				openTag: (input, start, end, ns, ne) => {
+					results.push(["open", input.slice(ns, ne)]);
+					return end;
+				},
+				text: (input, start, end) => {
+					results.push(["text", input.slice(start, end)]);
+					return end;
+				}
+			});
+			expect(results).toEqual([
+				["open", tag],
+				["text", body]
+			]);
+		}
+	});
+
+	it("should handle character references in RCDATA text", () => {
+		/** @type {unknown[]} */
+		const results = [];
+		walkHtmlTokens("<title>a &amp; b</title>", 0, {
+			text: (input, start, end) => {
+				results.push(input.slice(start, end));
+				return end;
+			}
+		});
+		expect(results).toEqual(["a &amp; b"]);
 	});
 
 	it("should roundtrip HTML with script and style", () => {
