@@ -26,6 +26,7 @@ module.exports = {
 			  "logicalAssignment": false,
 			  "methodShorthand": false,
 			  "module": false,
+			  "modulePreload": false,
 			  "nodeBuiltinModuleGetter": false,
 			  "nodePrefixForCoreModules": false,
 			  "optionalChaining": false,
