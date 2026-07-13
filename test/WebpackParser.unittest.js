@@ -1,5 +1,7 @@
 "use strict";
 
+// cspell:ignore ypeof averyvery ahri aafom
+
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
 
 /**
