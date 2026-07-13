@@ -322,6 +322,20 @@ describe("WebpackParser", () => {
 				"aaaa"
 			]);
 		});
+
+		it("should serve multi-char operators from the operator cache", () => {
+			// one occurrence fills the cache, the second hits it; sizes 1-4
+			const { ast } = parse(
+				"a < b; a << b; a <<= b; a === b; a === c; a >>>= b; x &&= y;"
+			);
+			const ops = ast.body.map(
+				(s) =>
+					/** @type {{ expression: { operator: string } }} */ (
+						/** @type {unknown} */ (s)
+					).expression.operator
+			);
+			expect(ops).toEqual(["<", "<<", "<<=", "===", "===", ">>>=", "&&="]);
+		});
 	});
 
 	describe("token context (finishToken exprAllowed)", () => {
