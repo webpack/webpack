@@ -1050,7 +1050,7 @@ describe("JavascriptParser", () => {
 			});
 			parser.parse("function f(){} f();", state);
 			// the tagged callee took the full evaluation path
-			expect(evaluated.length).toBe(1);
+			expect(evaluated).toHaveLength(1);
 		});
 	});
 
