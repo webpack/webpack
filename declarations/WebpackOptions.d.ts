@@ -2686,6 +2686,10 @@ export interface Environment {
 	 */
 	module?: boolean;
 	/**
+	 * The environment supports `<link rel="modulepreload">` to preload EcmaScript modules.
+	 */
+	modulePreload?: boolean;
+	/**
 	 * The environment supports `process.getBuiltinModule()` to synchronously load Node.js core modules.
 	 */
 	nodeBuiltinModuleGetter?: boolean;
@@ -2757,6 +2761,19 @@ export interface OutputHtmlOptions {
 		[k: string]: string;
 	};
 	/**
+	 * Resource-hint `<link>` tags injected into the HTML `<head>`. Off by default (webpack already loads the initial chunks via parallel `<script>` tags). `true` preloads the entry's initial dependency chunks (runtime, vendor, split) with `<link rel="modulepreload">` (ES module output) or `<link rel="preload" as="script">` (classic output). An array of descriptors, or a function called per HTML page (with its entrypoint context and the auto `defaultHints` to spread in), provides custom hints. Each hint targets a literal `href`, a `chunk` name, or an `entry` name — chunk/entry URLs, content hashes, public path, `crossorigin` and SRI are resolved automatically. Dynamic `import()`s always stay on the on-demand runtime.
+	 */
+	resourceHints?:
+		| HtmlResourceHint[]
+		| boolean
+		| ((context: {
+				entryName: string;
+				entrypoint: import("../lib/Entrypoint");
+				chunks: import("../lib/Chunk")[];
+				compilation: import("../lib/Compilation");
+				defaultHints: {rel: "modulepreload" | "preload"; chunk: string}[];
+		  }) => import("../lib/dependencies/HtmlEntryDependency").HtmlResourceHint[]);
+	/**
 	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
 	 */
 	scriptLoading?: "auto" | "blocking" | "defer";
@@ -2764,6 +2781,47 @@ export interface OutputHtmlOptions {
 	 * Sets the `<title>` of the generated HTML page. Skipped if the HTML already contains a `<title>` element.
 	 */
 	title?: string;
+}
+/**
+ * A custom resource-hint `<link>` for `output.html.resourceHints`. Exactly one of `href` / `chunk` / `entry` names the target.
+ */
+export interface HtmlResourceHint {
+	/**
+	 * The `as` attribute (`script`, `style`, `font`, …); defaults to `script` for chunk/entry references.
+	 */
+	as?: string;
+	/**
+	 * Name of a chunk to hint; its emitted URL is resolved automatically.
+	 */
+	chunk?: string;
+	/**
+	 * The CORS mode; `true` maps to `anonymous`.
+	 */
+	crossorigin?: ("anonymous" | "use-credentials") | boolean;
+	/**
+	 * Name of an entrypoint to hint; expands to one hint per initial chunk.
+	 */
+	entry?: string;
+	/**
+	 * A literal URL used verbatim (external resource, `preconnect` origin, or an already-hashed asset).
+	 */
+	href?: string;
+	/**
+	 * Subresource Integrity for a chunk/entry reference. Follows `output.html.integrity` by default; set `false` to opt this hint out.
+	 */
+	integrity?: boolean;
+	/**
+	 * The `media` attribute.
+	 */
+	media?: string;
+	/**
+	 * The `rel` of the resource hint.
+	 */
+	rel: "preload" | "prefetch" | "modulepreload" | "preconnect" | "dns-prefetch";
+	/**
+	 * The `type` attribute (MIME type).
+	 */
+	type?: string;
 }
 /**
  * Use a Trusted Types policy to create urls for chunks.
