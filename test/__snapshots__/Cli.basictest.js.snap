@@ -8759,6 +8759,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-module-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports \`<link rel=\\"modulepreload\\">\` to preload EcmaScript modules.",
+        "multiple": false,
+        "path": "output.environment.modulePreload",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports \`<link rel=\\"modulepreload\\">\` to preload EcmaScript modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-node-builtin-module-getter": Object {
     "configs": Array [
       Object {
@@ -9095,6 +9108,166 @@ Object {
     "description": "Clear all items provided in 'output.html.integrity' configuration. Add Subresource Integrity (SRI) \`integrity\` attributes to injected \`<script>\`/\`<link>\` tags. \`true\` uses \`['sha384']\`; an array sets the hash algorithms; a function receives each referenced asset and returns the algorithms to use or \`false\` to skip it.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "output-html-resource-hints": Object {
+    "configs": Array [
+      Object {
+        "description": "Resource-hint \`<link>\` tags injected into the HTML \`<head>\`. Off by default (webpack already loads the initial chunks via parallel \`<script>\` tags). \`true\` preloads the entry's initial dependency chunks (runtime, vendor, split) with \`<link rel=\\"modulepreload\\">\` (ES module output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic output). An array of descriptors, or a function called per HTML page (with its entrypoint context and the auto \`defaultHints\` to spread in), provides custom hints. Each hint targets a literal \`href\`, a \`chunk\` name, or an \`entry\` name — chunk/entry URLs, content hashes, public path, \`crossorigin\` and SRI are resolved automatically. Dynamic \`import()\`s always stay on the on-demand runtime.",
+        "multiple": false,
+        "path": "output.html.resourceHints",
+        "type": "boolean",
+      },
+    ],
+    "description": "Resource-hint \`<link>\` tags injected into the HTML \`<head>\`. Off by default (webpack already loads the initial chunks via parallel \`<script>\` tags). \`true\` preloads the entry's initial dependency chunks (runtime, vendor, split) with \`<link rel=\\"modulepreload\\">\` (ES module output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic output). An array of descriptors, or a function called per HTML page (with its entrypoint context and the auto \`defaultHints\` to spread in), provides custom hints. Each hint targets a literal \`href\`, a \`chunk\` name, or an \`entry\` name — chunk/entry URLs, content hashes, public path, \`crossorigin\` and SRI are resolved automatically. Dynamic \`import()\`s always stay on the on-demand runtime.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-html-resource-hints-as": Object {
+    "configs": Array [
+      Object {
+        "description": "The \`as\` attribute (\`script\`, \`style\`, \`font\`, …); defaults to \`script\` for chunk/entry references.",
+        "multiple": true,
+        "path": "output.html.resourceHints[].as",
+        "type": "string",
+      },
+    ],
+    "description": "The \`as\` attribute (\`script\`, \`style\`, \`font\`, …); defaults to \`script\` for chunk/entry references.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-html-resource-hints-chunk": Object {
+    "configs": Array [
+      Object {
+        "description": "Name of a chunk to hint; its emitted URL is resolved automatically.",
+        "multiple": true,
+        "path": "output.html.resourceHints[].chunk",
+        "type": "string",
+      },
+    ],
+    "description": "Name of a chunk to hint; its emitted URL is resolved automatically.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-html-resource-hints-crossorigin": Object {
+    "configs": Array [
+      Object {
+        "description": "The CORS mode; \`true\` maps to \`anonymous\`.",
+        "multiple": true,
+        "path": "output.html.resourceHints[].crossorigin",
+        "type": "enum",
+        "values": Array [
+          "anonymous",
+          "use-credentials",
+        ],
+      },
+      Object {
+        "description": "The CORS mode; \`true\` maps to \`anonymous\`.",
+        "multiple": true,
+        "path": "output.html.resourceHints[].crossorigin",
+        "type": "boolean",
+      },
+    ],
+    "description": "The CORS mode; \`true\` maps to \`anonymous\`.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-html-resource-hints-entry": Object {
+    "configs": Array [
+      Object {
+        "description": "Name of an entrypoint to hint; expands to one hint per initial chunk.",
+        "multiple": true,
+        "path": "output.html.resourceHints[].entry",
+        "type": "string",
+      },
+    ],
+    "description": "Name of an entrypoint to hint; expands to one hint per initial chunk.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-html-resource-hints-href": Object {
+    "configs": Array [
+      Object {
+        "description": "A literal URL used verbatim (external resource, \`preconnect\` origin, or an already-hashed asset).",
+        "multiple": true,
+        "path": "output.html.resourceHints[].href",
+        "type": "string",
+      },
+    ],
+    "description": "A literal URL used verbatim (external resource, \`preconnect\` origin, or an already-hashed asset).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-html-resource-hints-integrity": Object {
+    "configs": Array [
+      Object {
+        "description": "Subresource Integrity for a chunk/entry reference. Follows \`output.html.integrity\` by default; set \`false\` to opt this hint out.",
+        "multiple": true,
+        "path": "output.html.resourceHints[].integrity",
+        "type": "boolean",
+      },
+    ],
+    "description": "Subresource Integrity for a chunk/entry reference. Follows \`output.html.integrity\` by default; set \`false\` to opt this hint out.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "output-html-resource-hints-media": Object {
+    "configs": Array [
+      Object {
+        "description": "The \`media\` attribute.",
+        "multiple": true,
+        "path": "output.html.resourceHints[].media",
+        "type": "string",
+      },
+    ],
+    "description": "The \`media\` attribute.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-html-resource-hints-rel": Object {
+    "configs": Array [
+      Object {
+        "description": "The \`rel\` of the resource hint.",
+        "multiple": true,
+        "path": "output.html.resourceHints[].rel",
+        "type": "enum",
+        "values": Array [
+          "preload",
+          "prefetch",
+          "modulepreload",
+          "preconnect",
+          "dns-prefetch",
+        ],
+      },
+    ],
+    "description": "The \`rel\` of the resource hint.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-html-resource-hints-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.html.resourceHints' configuration. Resource-hint \`<link>\` tags injected into the HTML \`<head>\`. Off by default (webpack already loads the initial chunks via parallel \`<script>\` tags). \`true\` preloads the entry's initial dependency chunks (runtime, vendor, split) with \`<link rel=\\"modulepreload\\">\` (ES module output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic output). An array of descriptors, or a function called per HTML page (with its entrypoint context and the auto \`defaultHints\` to spread in), provides custom hints. Each hint targets a literal \`href\`, a \`chunk\` name, or an \`entry\` name — chunk/entry URLs, content hashes, public path, \`crossorigin\` and SRI are resolved automatically. Dynamic \`import()\`s always stay on the on-demand runtime.",
+        "multiple": false,
+        "path": "output.html.resourceHints",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.html.resourceHints' configuration. Resource-hint \`<link>\` tags injected into the HTML \`<head>\`. Off by default (webpack already loads the initial chunks via parallel \`<script>\` tags). \`true\` preloads the entry's initial dependency chunks (runtime, vendor, split) with \`<link rel=\\"modulepreload\\">\` (ES module output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic output). An array of descriptors, or a function called per HTML page (with its entrypoint context and the auto \`defaultHints\` to spread in), provides custom hints. Each hint targets a literal \`href\`, a \`chunk\` name, or an \`entry\` name — chunk/entry URLs, content hashes, public path, \`crossorigin\` and SRI are resolved automatically. Dynamic \`import()\`s always stay on the on-demand runtime.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-html-resource-hints-type": Object {
+    "configs": Array [
+      Object {
+        "description": "The \`type\` attribute (MIME type).",
+        "multiple": true,
+        "path": "output.html.resourceHints[].type",
+        "type": "string",
+      },
+    ],
+    "description": "The \`type\` attribute (MIME type).",
+    "multiple": true,
+    "simpleType": "string",
   },
   "output-html-script-loading": Object {
     "configs": Array [

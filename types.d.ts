@@ -7173,6 +7173,11 @@ declare interface Environment {
 	module?: boolean;
 
 	/**
+	 * The environment supports `<link rel="modulepreload">` to preload EcmaScript modules.
+	 */
+	modulePreload?: boolean;
+
+	/**
 	 * The environment supports `process.getBuiltinModule()` to synchronously load Node.js core modules.
 	 */
 	nodeBuiltinModuleGetter?: boolean;
@@ -9608,6 +9613,104 @@ declare interface HtmlParserOptions {
 	 * Transform the raw source before the html parser extracts dependencies. Receives the source string and a context (`{ module, resource }`) and must return the html string to parse. Useful for compiling a templating language (Handlebars, EJS, Eta, …) to html so that URLs the template emits are still picked up as webpack dependencies. Runs synchronously.
 	 */
 	template?: (source: string, context: HtmlTemplateContext) => string;
+}
+declare interface HtmlResourceHintHtmlEntryDependency {
+	/**
+	 * hint relationship
+	 */
+	rel: HtmlResourceHintRel;
+
+	/**
+	 * literal URL (external, `preconnect`, or an already-hashed asset)
+	 */
+	href?: string;
+
+	/**
+	 * chunk name to hint
+	 */
+	chunk?: string;
+
+	/**
+	 * entrypoint name to hint (expands to one hint per initial chunk)
+	 */
+	entry?: string;
+
+	/**
+	 * the `as` attribute; defaults to `script` for chunk/entry refs
+	 */
+	as?: string;
+
+	/**
+	 * the `type` attribute (MIME)
+	 */
+	type?: string;
+
+	/**
+	 * CORS mode (`true` → `anonymous`)
+	 */
+	crossorigin?: boolean | "anonymous" | "use-credentials";
+
+	/**
+	 * the `media` attribute
+	 */
+	media?: string;
+
+	/**
+	 * SRI for a chunk/entry ref; follows `output.html.integrity` by default, `false` opts out
+	 */
+	integrity?: boolean;
+}
+type HtmlResourceHintRel =
+	"preload" | "modulepreload" | "prefetch" | "preconnect" | "dns-prefetch";
+
+/**
+ * A custom resource-hint `<link>` for `output.html.resourceHints`. Exactly one of `href` / `chunk` / `entry` names the target.
+ */
+declare interface HtmlResourceHintWebpackOptions {
+	/**
+	 * The `as` attribute (`script`, `style`, `font`, …); defaults to `script` for chunk/entry references.
+	 */
+	as?: string;
+
+	/**
+	 * Name of a chunk to hint; its emitted URL is resolved automatically.
+	 */
+	chunk?: string;
+
+	/**
+	 * The CORS mode; `true` maps to `anonymous`.
+	 */
+	crossorigin?: boolean | "anonymous" | "use-credentials";
+
+	/**
+	 * Name of an entrypoint to hint; expands to one hint per initial chunk.
+	 */
+	entry?: string;
+
+	/**
+	 * A literal URL used verbatim (external resource, `preconnect` origin, or an already-hashed asset).
+	 */
+	href?: string;
+
+	/**
+	 * Subresource Integrity for a chunk/entry reference. Follows `output.html.integrity` by default; set `false` to opt this hint out.
+	 */
+	integrity?: boolean;
+
+	/**
+	 * The `media` attribute.
+	 */
+	media?: string;
+
+	/**
+	 * The `rel` of the resource hint.
+	 */
+	rel: "preload" | "modulepreload" | "prefetch" | "preconnect" | "dns-prefetch";
+
+	/**
+	 * The `type` attribute (MIME type).
+	 */
+	type?: string;
 }
 declare interface HtmlTemplateContext {
 	/**
@@ -19086,6 +19189,20 @@ declare interface OutputHtmlOptions {
 	meta?: { [index: string]: string };
 
 	/**
+	 * Resource-hint `<link>` tags injected into the HTML `<head>`. Off by default (webpack already loads the initial chunks via parallel `<script>` tags). `true` preloads the entry's initial dependency chunks (runtime, vendor, split) with `<link rel="modulepreload">` (ES module output) or `<link rel="preload" as="script">` (classic output). An array of descriptors, or a function called per HTML page (with its entrypoint context and the auto `defaultHints` to spread in), provides custom hints. Each hint targets a literal `href`, a `chunk` name, or an `entry` name — chunk/entry URLs, content hashes, public path, `crossorigin` and SRI are resolved automatically. Dynamic `import()`s always stay on the on-demand runtime.
+	 */
+	resourceHints?:
+		| boolean
+		| HtmlResourceHintWebpackOptions[]
+		| ((context: {
+				entryName: string;
+				entrypoint: Entrypoint;
+				chunks: Chunk[];
+				compilation: Compilation;
+				defaultHints: { rel: "preload" | "modulepreload"; chunk: string }[];
+		  }) => HtmlResourceHintHtmlEntryDependency[]);
+
+	/**
 	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
 	 */
 	scriptLoading?: "auto" | "defer" | "blocking";
@@ -22698,6 +22815,7 @@ declare abstract class RuntimeTemplate {
 	supportsBigIntLiteral(): boolean;
 	supportsDynamicImport(): boolean;
 	supportsEcmaScriptModuleSyntax(): boolean;
+	supportsModulePreload(): boolean;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
 

@@ -185,6 +185,7 @@ describe("snapshots", () => {
 		      "logicalAssignment": undefined,
 		      "methodShorthand": true,
 		      "module": undefined,
+		      "modulePreload": true,
 		      "nodeBuiltinModuleGetter": undefined,
 		      "nodePrefixForCoreModules": true,
 		      "optionalChaining": true,
@@ -716,6 +717,7 @@ describe("snapshots", () => {
 		      "logicalAssignment": undefined,
 		      "methodShorthand": true,
 		      "module": undefined,
+		      "modulePreload": true,
 		      "nodeBuiltinModuleGetter": undefined,
 		      "nodePrefixForCoreModules": true,
 		      "optionalChaining": true,
@@ -2141,8 +2143,9 @@ describe("snapshots", () => {
 		+       "logicalAssignment": true,
 		@@ ... @@
 		-       "module": undefined,
-		-       "nodeBuiltinModuleGetter": undefined,
 		+       "module": true,
+		@@ ... @@
+		-       "nodeBuiltinModuleGetter": undefined,
 		+       "nodeBuiltinModuleGetter": false,
 		@@ ... @@
 		-     "target": "web",
@@ -2192,8 +2195,9 @@ describe("snapshots", () => {
 		+       "logicalAssignment": true,
 		@@ ... @@
 		-       "module": undefined,
-		-       "nodeBuiltinModuleGetter": undefined,
 		+       "module": true,
+		@@ ... @@
+		-       "nodeBuiltinModuleGetter": undefined,
 		+       "nodeBuiltinModuleGetter": false,
 		@@ ... @@
 		-     "filename": "[name].js",
@@ -2328,8 +2332,9 @@ describe("snapshots", () => {
 		+       "logicalAssignment": true,
 		@@ ... @@
 		-       "module": undefined,
-		-       "nodeBuiltinModuleGetter": undefined,
 		+       "module": true,
+		@@ ... @@
+		-       "nodeBuiltinModuleGetter": undefined,
 		+       "nodeBuiltinModuleGetter": true,
 		@@ ... @@
 		-     "target": "web",
@@ -2379,8 +2384,9 @@ describe("snapshots", () => {
 		+       "logicalAssignment": true,
 		@@ ... @@
 		-       "module": undefined,
-		-       "nodeBuiltinModuleGetter": undefined,
 		+       "module": true,
+		@@ ... @@
+		-       "nodeBuiltinModuleGetter": undefined,
 		+       "nodeBuiltinModuleGetter": true,
 		@@ ... @@
 		-     "filename": "[name].js",
@@ -2516,8 +2522,9 @@ describe("snapshots", () => {
 		+       "logicalAssignment": true,
 		@@ ... @@
 		-       "module": undefined,
-		-       "nodeBuiltinModuleGetter": undefined,
 		+       "module": true,
+		@@ ... @@
+		-       "nodeBuiltinModuleGetter": undefined,
 		+       "nodeBuiltinModuleGetter": true,
 		@@ ... @@
 		-     "target": "web",
@@ -2567,8 +2574,9 @@ describe("snapshots", () => {
 		+       "logicalAssignment": true,
 		@@ ... @@
 		-       "module": undefined,
-		-       "nodeBuiltinModuleGetter": undefined,
 		+       "module": true,
+		@@ ... @@
+		-       "nodeBuiltinModuleGetter": undefined,
 		+       "nodeBuiltinModuleGetter": true,
 		@@ ... @@
 		-     "filename": "[name].js",
@@ -3359,10 +3367,11 @@ describe("snapshots", () => {
 			+       "logicalAssignment": false,
 			@@ ... @@
 			-       "module": undefined,
+			+       "module": false,
+			@@ ... @@
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
 			-       "optionalChaining": true,
-			+       "module": false,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
@@ -3405,10 +3414,11 @@ describe("snapshots", () => {
 			+       "logicalAssignment": false,
 			@@ ... @@
 			-       "module": undefined,
+			+       "module": false,
+			@@ ... @@
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
 			-       "optionalChaining": true,
-			+       "module": false,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
@@ -3537,10 +3547,11 @@ describe("snapshots", () => {
 			+       "logicalAssignment": false,
 			@@ ... @@
 			-       "module": undefined,
+			+       "module": false,
+			@@ ... @@
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
 			-       "optionalChaining": true,
-			+       "module": false,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
@@ -3583,10 +3594,11 @@ describe("snapshots", () => {
 			+       "logicalAssignment": false,
 			@@ ... @@
 			-       "module": undefined,
+			+       "module": false,
+			@@ ... @@
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
 			-       "optionalChaining": true,
-			+       "module": false,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
@@ -4202,6 +4214,7 @@ describe("snapshots", () => {
 			-       "logicalAssignment": undefined,
 			-       "methodShorthand": true,
 			-       "module": undefined,
+			-       "modulePreload": true,
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
 			-       "optionalChaining": true,
@@ -4218,6 +4231,7 @@ describe("snapshots", () => {
 			+       "logicalAssignment": false,
 			+       "methodShorthand": false,
 			+       "module": false,
+			+       "modulePreload": false,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
@@ -4252,6 +4266,7 @@ describe("snapshots", () => {
 			-       "logicalAssignment": undefined,
 			-       "methodShorthand": true,
 			-       "module": undefined,
+			-       "modulePreload": true,
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
 			-       "optionalChaining": true,
@@ -4268,6 +4283,7 @@ describe("snapshots", () => {
 			+       "logicalAssignment": false,
 			+       "methodShorthand": false,
 			+       "module": false,
+			+       "modulePreload": false,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			+       "optionalChaining": false,
@@ -4815,9 +4831,10 @@ describe("snapshots", () => {
 			+       "logicalAssignment": false,
 			@@ ... @@
 			-       "module": undefined,
+			+       "module": true,
+			@@ ... @@
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
-			+       "module": true,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			@@ ... @@
@@ -4873,9 +4890,10 @@ describe("snapshots", () => {
 			+       "logicalAssignment": false,
 			@@ ... @@
 			-       "module": undefined,
+			+       "module": true,
+			@@ ... @@
 			-       "nodeBuiltinModuleGetter": undefined,
 			-       "nodePrefixForCoreModules": true,
-			+       "module": true,
 			+       "nodeBuiltinModuleGetter": false,
 			+       "nodePrefixForCoreModules": false,
 			@@ ... @@
@@ -5311,6 +5329,12 @@ describe("Targets", () => {
 		- Expected
 		+ Received
 
+		@@ ... @@
+		-       "modulePreload": true,
+		+       "modulePreload": false,
+		@@ ... @@
+		-       "modulePreload": true,
+		+       "modulePreload": false,
 		@@ ... @@
 		-   "target": "node12.17",
 		+   "target": "browserslist: node 12.17",
