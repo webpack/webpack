@@ -1038,7 +1038,7 @@ describe("JavascriptParser", () => {
 			const TAG = Symbol("test tag");
 			parser.hooks.statement.tap("Test", (statement) => {
 				if (statement.type === "FunctionDeclaration") {
-					parser.tagVariable("f", TAG, "data");
+					parser.tagVariable("f", TAG);
 				}
 				return undefined;
 			});
