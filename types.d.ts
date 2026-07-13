@@ -4427,6 +4427,11 @@ declare interface ConcatenationBailoutReasonContext {
 	 * the chunk graph
 	 */
 	chunkGraph: ChunkGraph;
+
+	/**
+	 * whether eligible CommonJS modules may be concatenated
+	 */
+	concatenateCommonJsModules?: boolean;
 }
 
 /**
@@ -18127,6 +18132,11 @@ declare interface Optimization {
 		false | "natural" | "named" | "deterministic" | "size" | "total-size";
 
 	/**
+	 * Also concatenate CommonJS modules with statically analyzable exports when module concatenation is enabled.
+	 */
+	concatenateCommonJsModules?: boolean;
+
+	/**
 	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.
 	 */
 	concatenateModules?: boolean;
@@ -18275,6 +18285,11 @@ declare interface OptimizationNormalized {
 	 */
 	chunkIds?:
 		false | "natural" | "named" | "deterministic" | "size" | "total-size";
+
+	/**
+	 * Also concatenate CommonJS modules with statically analyzable exports when module concatenation is enabled.
+	 */
+	concatenateCommonJsModules?: boolean;
 
 	/**
 	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.
@@ -18439,6 +18454,7 @@ type OptimizationNormalizedWithDefaults = OptimizationNormalized & {
 	innerGraph: NonNullable<undefined | boolean>;
 	inlineExports: NonNullable<undefined | boolean>;
 	concatenateModules: NonNullable<undefined | boolean>;
+	concatenateCommonJsModules: NonNullable<undefined | boolean>;
 	avoidEntryIife: NonNullable<undefined | boolean>;
 	emitOnErrors: NonNullable<undefined | boolean>;
 	checkWasmTypes: NonNullable<undefined | boolean>;

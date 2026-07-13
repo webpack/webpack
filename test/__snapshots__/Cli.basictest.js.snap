@@ -7458,6 +7458,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-concatenate-common-js-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Also concatenate CommonJS modules with statically analyzable exports when module concatenation is enabled.",
+        "multiple": false,
+        "path": "optimization.concatenateCommonJsModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Also concatenate CommonJS modules with statically analyzable exports when module concatenation is enabled.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-concatenate-modules": Object {
     "configs": Array [
       Object {

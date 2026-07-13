@@ -2018,6 +2018,10 @@ export interface Optimization {
 	chunkIds?:
 		"natural" | "named" | "deterministic" | "size" | "total-size" | false;
 	/**
+	 * Also concatenate CommonJS modules with statically analyzable exports when module concatenation is enabled.
+	 */
+	concatenateCommonJsModules?: boolean;
+	/**
 	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.
 	 */
 	concatenateModules?: boolean;
@@ -4033,6 +4037,10 @@ export interface OptimizationNormalized {
 	 */
 	chunkIds?:
 		"natural" | "named" | "deterministic" | "size" | "total-size" | false;
+	/**
+	 * Also concatenate CommonJS modules with statically analyzable exports when module concatenation is enabled.
+	 */
+	concatenateCommonJsModules?: boolean;
 	/**
 	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.
 	 */

@@ -3259,6 +3259,10 @@
             false
           ]
         },
+        "concatenateCommonJsModules": {
+          "description": "Also concatenate CommonJS modules with statically analyzable exports when module concatenation is enabled.",
+          "type": "boolean"
+        },
         "concatenateModules": {
           "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.",
           "type": "boolean"
@@ -3430,6 +3434,10 @@
             "total-size",
             false
           ]
+        },
+        "concatenateCommonJsModules": {
+          "description": "Also concatenate CommonJS modules with statically analyzable exports when module concatenation is enabled.",
+          "type": "boolean"
         },
         "concatenateModules": {
           "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.",
