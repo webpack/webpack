@@ -8839,6 +8839,45 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-html-base": Object {
+    "configs": Array [
+      Object {
+        "description": "Inject a \`<base>\` element into the page \`<head>\`. A string sets \`href\`; an object sets both \`href\` and optionally \`target\`. Skipped if the HTML already contains a \`<base>\` element.",
+        "multiple": false,
+        "path": "output.html.base",
+        "type": "string",
+      },
+    ],
+    "description": "Inject a \`<base>\` element into the page \`<head>\`. A string sets \`href\`; an object sets both \`href\` and optionally \`target\`. Skipped if the HTML already contains a \`<base>\` element.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-html-base-href": Object {
+    "configs": Array [
+      Object {
+        "description": "Value for the \`href\` attribute of the \`<base>\` element.",
+        "multiple": false,
+        "path": "output.html.base.href",
+        "type": "string",
+      },
+    ],
+    "description": "Value for the \`href\` attribute of the \`<base>\` element.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-html-base-target": Object {
+    "configs": Array [
+      Object {
+        "description": "Value for the \`target\` attribute of the \`<base>\` element (e.g. \`\\"_blank\\"\`).",
+        "multiple": false,
+        "path": "output.html.base.target",
+        "type": "string",
+      },
+    ],
+    "description": "Value for the \`target\` attribute of the \`<base>\` element (e.g. \`\\"_blank\\"\`).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-html-chunk-filename": Object {
     "configs": Array [
       Object {
@@ -8944,6 +8983,19 @@ Object {
       },
     ],
     "description": "How injected \`<script>\` tags load. \`auto\` (default) emits a module script for ES module output and \`defer\` otherwise; \`defer\` forces a deferred script; \`blocking\` emits a plain blocking script.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-html-title": Object {
+    "configs": Array [
+      Object {
+        "description": "Sets the \`<title>\` of the generated HTML page. Skipped if the HTML already contains a \`<title>\` element.",
+        "multiple": false,
+        "path": "output.html.title",
+        "type": "string",
+      },
+    ],
+    "description": "Sets the \`<title>\` of the generated HTML page. Skipped if the HTML already contains a \`<title>\` element.",
     "multiple": false,
     "simpleType": "string",
   },

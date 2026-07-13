@@ -2715,6 +2715,21 @@ export interface Environment {
  */
 export interface OutputHtmlOptions {
 	/**
+	 * Inject a `<base>` element into the page `<head>`. A string sets `href`; an object sets both `href` and optionally `target`. Skipped if the HTML already contains a `<base>` element.
+	 */
+	base?:
+		| string
+		| {
+				/**
+				 * Value for the `href` attribute of the `<base>` element.
+				 */
+				href: string;
+				/**
+				 * Value for the `target` attribute of the `<base>` element (e.g. `"_blank"`).
+				 */
+				target?: string;
+		  };
+	/**
 	 * Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; an array of `RegExp` patterns matches against the chunk name.
 	 */
 	inline?: RegExp[] | boolean;
@@ -2729,9 +2744,22 @@ export interface OutputHtmlOptions {
 				filename: string;
 		  }) => string[] | false);
 	/**
+	 * Inject `<meta>` tags into the page `<head>`. Each key is the `name` attribute (or `"charset"` for a charset declaration); the value is the `content` string. Keys beginning with `og:` or `twitter:` use the `property` attribute instead of `name`. Tags are always appended; the caller is responsible for avoiding duplicates in authored HTML.
+	 */
+	meta?: {
+		/**
+		 * Content string for the meta tag.
+		 */
+		[k: string]: string;
+	};
+	/**
 	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
 	 */
 	scriptLoading?: "auto" | "blocking" | "defer";
+	/**
+	 * Sets the `<title>` of the generated HTML page. Skipped if the HTML already contains a `<title>` element.
+	 */
+	title?: string;
 }
 /**
  * Use a Trusted Types policy to create urls for chunks.
