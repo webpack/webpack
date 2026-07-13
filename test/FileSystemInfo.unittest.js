@@ -590,6 +590,47 @@ ${details(snapshot)}`)
 		});
 	});
 
+	describe("per-path cache reuse", () => {
+		for (const [name, options] of /** @type {[string, SnapshotOptions][]} */ ([
+			["timestamp", { timestamp: true }],
+			["hash", { hash: true }],
+			["tsh", { timestamp: true, hash: true }]
+		])) {
+			it(`should reuse cached file info in ${name} mode below the sharing threshold`, (done) => {
+				const fs = createFs();
+				const fsInfo = createFsInfo(fs);
+				// 2 files < MIN_COMMON_SNAPSHOT_SIZE, so the second snapshot
+				// reads them from the per-path caches instead of a shared child
+				const twoFiles = ["/path/file.txt", "/path/nested/deep/file.txt"];
+				fsInfo.createSnapshot(
+					Date.now() + 10000,
+					twoFiles,
+					[],
+					[],
+					options,
+					(err) => {
+						if (err) return done(err);
+						fsInfo.createSnapshot(
+							Date.now() + 10000,
+							twoFiles,
+							[],
+							[],
+							options,
+							(err, snapshot2) => {
+								if (err) return done(err);
+								const s2 = /** @type {Snapshot} */ (snapshot2);
+								expect(new Set(s2.getFileIterable())).toEqual(
+									new Set(twoFiles)
+								);
+								expectSnapshotState(fs, s2, true, done);
+							}
+						);
+					}
+				);
+			});
+		}
+	});
+
 	describe("symlinks", () => {
 		it("should work with symlinks with errors", (done) => {
 			const fs = createFs();
