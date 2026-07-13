@@ -1,0 +1,1 @@
+registerProcessor("test", (input) => `${input}!`);

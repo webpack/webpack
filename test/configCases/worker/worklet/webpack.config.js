@@ -12,14 +12,10 @@ module.exports = {
 			{
 				test: /\.[cm]?js$/,
 				parser: {
-					worker: [
+					worklet: [
 						"CSS.paintWorklet.addModule()",
-						"CSS.layoutWorklet.addModule()",
-						"CSS.animationWorklet.addModule()",
 						"*context.audioWorklet.addModule()",
-						"*context.foo.bar.audioWorklet.addModule()",
 						"*audioWorklet.addModule()",
-						// *addModule() is not valid syntax
 						"..."
 					]
 				}

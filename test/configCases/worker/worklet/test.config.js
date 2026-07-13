@@ -4,28 +4,19 @@ let outputDirectory;
 
 module.exports = {
 	moduleScope(scope) {
-		const FakeWorker = require("../../../helpers/createFakeWorker")({
+		const { createWorklet } = require("../../../helpers/createFakeWorklet")({
 			outputDirectory
 		});
 
-		// Pseudo code
 		scope.AudioContext = class AudioContext {
 			constructor() {
-				this.audioWorklet = {
-					addModule: (url) => Promise.resolve(FakeWorker.bind(null, url))
-				};
+				this.audioWorklet = createWorklet();
 			}
 		};
 		scope.CSS = {
-			paintWorklet: {
-				addModule: (url) => Promise.resolve(FakeWorker.bind(null, url))
-			},
-			layoutWorklet: {
-				addModule: (url) => Promise.resolve(FakeWorker.bind(null, url))
-			},
-			animationWorklet: {
-				addModule: (url) => Promise.resolve(FakeWorker.bind(null, url))
-			}
+			paintWorklet: createWorklet(),
+			layoutWorklet: createWorklet(),
+			animationWorklet: createWorklet()
 		};
 	},
 	findBundle(i, options) {

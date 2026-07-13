@@ -7012,7 +7012,7 @@ declare interface EntryOptionPluginHooks {
 		undefined | string
 	>;
 }
-type EntryOptions = { name?: string } & Omit<
+type EntryOptions = { name?: string; worklet?: boolean } & Omit<
 	EntryDescriptionNormalized,
 	"import"
 >;
@@ -12904,6 +12904,11 @@ declare interface JavascriptParserOptions {
 	 * Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().
 	 */
 	worker?: boolean | string[];
+
+	/**
+	 * Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().
+	 */
+	worklet?: boolean | string[];
 
 	/**
 	 * Enable warnings for partial dynamic dependencies.
@@ -26684,6 +26689,7 @@ declare namespace exports {
 		export let getFullHash: "__webpack_require__.h";
 		export let getTrustedTypesPolicy: "__webpack_require__.tt";
 		export let getUpdateManifestFilename: "__webpack_require__.hmrF";
+		export let getWorkletBootstrap: "__webpack_require__.wb";
 		export let global: "__webpack_require__.g";
 		export let harmonyModuleDecorator: "__webpack_require__.hmd";
 		export let hasCssModules: "has css modules";
