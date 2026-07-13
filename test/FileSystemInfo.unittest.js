@@ -498,6 +498,139 @@ ${details(snapshot)}`)
 		});
 	});
 
+	describe("path classification cache", () => {
+		const options = { timestamp: true };
+
+		const noopLogger = /** @type {import("../lib/logging/Logger").Logger} */ (
+			/** @type {unknown} */ ({
+				error: () => {},
+				warn: () => {},
+				info: () => {},
+				log: () => {},
+				debug: () => {}
+			})
+		);
+
+		const createRegExpFsInfo = (/** @type {IFs} */ fs) =>
+			/** @type {import("../lib/FileSystemInfo") & Record<string, unknown>} */ (
+				/** @type {unknown} */ (
+					new FileSystemInfo(
+						/** @type {import("../lib/util/fs").InputFileSystem} */ (
+							/** @type {unknown} */ (fs)
+						),
+						{
+							logger: noopLogger,
+							unmanagedPaths: [
+								/^\/path\/node_modules\/@foo\/package1\//,
+								/^\/path\/node_modules\/@foo\/package2\//,
+								/^\/path\/node_modules\/bar-package3\//
+							],
+							managedPaths: [/^(\/path\/node_modules\/)/],
+							immutablePaths: [/^\/path\/cache\//],
+							hashFunction: "sha256"
+						}
+					)
+				)
+			);
+
+		it("should memoize RegExp path classification across snapshots", (done) => {
+			const fs = createFs();
+			const fsInfo = createRegExpFsInfo(fs);
+			fsInfo.createSnapshot(
+				Date.now() + 10000,
+				files,
+				directories,
+				missing,
+				options,
+				(err, snapshot) => {
+					if (err) return done(err);
+					const s1 = /** @type {Snapshot} */ (snapshot);
+					const cache = /** @type {Map<string, 0 | 1 | string>} */ (
+						fsInfo._pathClassificationCache
+					);
+					expect(cache.get("/path/file.txt")).toBe(0);
+					expect(cache.get("/path/node_modules/@foo/package1/index.js")).toBe(
+						0
+					);
+					expect(cache.get("/path/cache/package-1234/file.txt")).toBe(1);
+					expect(cache.get("/path/node_modules/package/file.txt")).toBe(
+						"/path/node_modules/package"
+					);
+					expect(s1.managedFiles).toContain(
+						"/path/node_modules/package/file.txt"
+					);
+					expect(s1.managedFiles).toContain(
+						"/path/cache/package-1234/file.txt"
+					);
+					fsInfo.createSnapshot(
+						Date.now() + 10000,
+						files,
+						directories,
+						missing,
+						options,
+						(err, snapshot2) => {
+							if (err) return done(err);
+							const s2 = /** @type {Snapshot} */ (snapshot2);
+							// cached classification must capture the same input paths
+							const fileSet = new Set(s2.getFileIterable());
+							for (const path of files) expect(fileSet).toContain(path);
+							const contextSet = new Set(s2.getContextIterable());
+							for (const path of directories) {
+								expect(contextSet).toContain(path);
+							}
+							const missingSet = new Set(s2.getMissingIterable());
+							for (const path of missing) expect(missingSet).toContain(path);
+							fsInfo.clear();
+							expect(cache.size).toBe(0);
+							done();
+						}
+					);
+				}
+			);
+		});
+	});
+
+	describe("per-path cache reuse", () => {
+		for (const [name, options] of /** @type {[string, SnapshotOptions][]} */ ([
+			["timestamp", { timestamp: true }],
+			["hash", { hash: true }],
+			["tsh", { timestamp: true, hash: true }]
+		])) {
+			it(`should reuse cached file info in ${name} mode below the sharing threshold`, (done) => {
+				const fs = createFs();
+				const fsInfo = createFsInfo(fs);
+				// 2 files < MIN_COMMON_SNAPSHOT_SIZE, so the second snapshot
+				// reads them from the per-path caches instead of a shared child
+				const twoFiles = ["/path/file.txt", "/path/nested/deep/file.txt"];
+				fsInfo.createSnapshot(
+					Date.now() + 10000,
+					twoFiles,
+					[],
+					[],
+					options,
+					(err) => {
+						if (err) return done(err);
+						fsInfo.createSnapshot(
+							Date.now() + 10000,
+							twoFiles,
+							[],
+							[],
+							options,
+							(err, snapshot2) => {
+								if (err) return done(err);
+								const s2 = /** @type {Snapshot} */ (snapshot2);
+								expect(new Set(s2.getFileIterable())).toEqual(
+									new Set(twoFiles)
+								);
+								expectSnapshotState(fs, s2, true, done);
+							}
+						);
+					}
+				);
+			});
+		}
+	});
+
 	describe("symlinks", () => {
 		it("should work with symlinks with errors", (done) => {
 			const fs = createFs();
