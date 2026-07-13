@@ -224,6 +224,27 @@ describe("util/identifier", () => {
 		}
 	});
 
+	describe("parseResource", () => {
+		// [input, expectedPath, expectedQuery, expectedFragment]
+		/** @type {[string, string, string, string][]} */
+		const cases = [
+			["path?query#frag", "path", "?query", "#frag"],
+			["a\0#b?c", "a#b", "?c", ""],
+			// malformed escaping (trailing lone \0) falls back to path
+			["a\0", "a\0", "", ""]
+		];
+		for (const case_ of cases) {
+			it(JSON.stringify(case_[0]), () => {
+				const { resource, path, query, fragment } =
+					identifierUtil.parseResource(case_[0]);
+				expect(case_[0]).toBe(resource);
+				expect(case_[1]).toBe(path);
+				expect(case_[2]).toBe(query);
+				expect(case_[3]).toBe(fragment);
+			});
+		}
+	});
+
 	describe("parseResourceWithoutFragment", () => {
 		// [input, expectedPath, expectedQuery]
 		/** @type {[string, string, string][]} */
@@ -241,7 +262,9 @@ describe("util/identifier", () => {
 				"C:\\Users\\#\\repo\\loader.js",
 				"?"
 			],
-			["/Users/\0#/repo/loader-\0#.js", "/Users/#/repo/loader-#.js", ""]
+			["/Users/\0#/repo/loader-\0#.js", "/Users/#/repo/loader-#.js", ""],
+			// malformed escaping (trailing lone \0) falls back to path
+			["a\0", "a\0", ""]
 		];
 		for (const case_ of cases) {
 			it(case_[0], () => {
