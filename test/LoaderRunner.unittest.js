@@ -691,6 +691,9 @@ describe("runLoaders", () => {
 				expect(err.message).toMatch(/does-not-exist-loader\.js'/i);
 				expect(result).toEqual({
 					cacheable: false,
+					notCacheableReasons: [
+						path.resolve(fixtures, "does-not-exist-loader.js")
+					],
 					fileDependencies: [],
 					contextDependencies: [],
 					missingDependencies: []
@@ -713,6 +716,9 @@ describe("runLoaders", () => {
 				);
 				expect(result).toEqual({
 					cacheable: false,
+					notCacheableReasons: [
+						path.resolve(fixtures, "module-exports-object-loader.js")
+					],
 					fileDependencies: [],
 					contextDependencies: [],
 					missingDependencies: []
@@ -735,6 +741,9 @@ describe("runLoaders", () => {
 				);
 				expect(result).toEqual({
 					cacheable: false,
+					notCacheableReasons: [
+						path.resolve(fixtures, "module-exports-string-loader.js")
+					],
 					fileDependencies: [],
 					contextDependencies: [],
 					missingDependencies: []
@@ -982,6 +991,9 @@ describe("runLoaders", () => {
 					expectError(err);
 					expect(result).toEqual({
 						cacheable: false,
+						notCacheableReasons: [
+							path.resolve(fixtures, "does-not-exist-loader.mjs")
+						],
 						fileDependencies: [],
 						contextDependencies: [],
 						missingDependencies: []
@@ -1009,6 +1021,9 @@ describe("runLoaders", () => {
 					);
 					expect(result).toEqual({
 						cacheable: false,
+						notCacheableReasons: [
+							path.resolve(fixtures, "esm-invalid-loader.mjs")
+						],
 						fileDependencies: [],
 						contextDependencies: [],
 						missingDependencies: []

@@ -7309,6 +7309,11 @@ declare interface ExecuteModuleOptions {
 declare interface ExecuteModuleResult {
 	exports: any;
 	cacheable: boolean;
+
+	/**
+	 * reasons why the executed modules are not cacheable
+	 */
+	notCacheableReasons: string[];
 	assets: Map<string, { source: Source; info?: AssetInfo }>;
 	fileDependencies: LazySet<string>;
 	contextDependencies: LazySet<string>;
@@ -13144,6 +13149,11 @@ declare interface KnownAssetModuleBuildInfo {
 }
 declare interface KnownBuildInfo {
 	cacheable?: boolean;
+
+	/**
+	 * reasons why the module is not cacheable (e.g. paths of loaders that marked it)
+	 */
+	notCacheableReasons?: string[];
 	strict?: boolean;
 	moduleArgument?: string;
 	exportsArgument?: string;
@@ -13561,6 +13571,7 @@ declare interface KnownStatsModule {
 	size?: number;
 	sizes?: Record<string, number>;
 	cacheable?: boolean;
+	notCacheableReasons?: string[];
 	built?: boolean;
 	codeGenerated?: boolean;
 	buildTimeExecuted?: boolean;

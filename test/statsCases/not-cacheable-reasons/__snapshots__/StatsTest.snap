@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases not-cacheable-reasons should print correct stats for not-cacheable-reasons 1`] = `
+"not-concatenated:
+  asset main.js X KiB [emitted] (name: main)
+  runtime modules X KiB 9 modules
+  orphan modules X bytes [orphan] 2 modules
+  built modules X bytes [built]
+    ./index.js X bytes [not cacheable: ./loader.js] [built] [code generated]
+    ./cleared.js X bytes [built] [code generated]
+    ./defined.js X bytes [not cacheable: DefinePlugin runtime value RUNTIME_VALUE] [built] [code generated]
+    ./flagged.js X bytes [not cacheable: ./loader.js] [built] [code generated]
+    ./host-flagged.js X bytes [not cacheable] [built] [code generated]
+    ./imported.js X bytes [not cacheable: ./loader.js] [built] [code generated]
+  not-concatenated (webpack x.x.x) compiled successfully in X ms
+
+concatenated:
+  asset main.js X bytes [emitted] (name: main)
+  orphan modules X bytes (javascript) X KiB (runtime) [orphan] 13 modules
+  ./index.js + 5 modules X bytes [not cacheable: ./loader.js, DefinePlugin runtime value RUNTIME_VALUE] [built] [code generated]
+  concatenated (webpack x.x.x) compiled successfully in X ms"
+`;
