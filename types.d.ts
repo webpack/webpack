@@ -24134,11 +24134,14 @@ declare abstract class StackEntry {
 
 /**
  * Layered map that supports child scopes while memoizing lookups from parent
- * scopes into the current layer. Layers form a linked parent chain, so
- * `createChild` is O(1) instead of copying a layer array per scope.
+ * scopes. Layers form a linked parent chain, so `createChild` is O(1) instead
+ * of copying a layer array per scope. A layer's `Map` is only allocated on its
+ * first own write, and lookup results are memoized into the nearest
+ * `Map`-bearing layer of the walk — read-only layers (most block scopes) stay
+ * allocation-free and share their parent's memoized entries.
  */
 declare abstract class StackedMap<K, V> {
-	map: Map<K, InternalCell<V>>;
+	map?: Map<K, InternalCell<V>>;
 	parent?: StackedMap<K, V>;
 
 	/**
@@ -24155,13 +24158,14 @@ declare abstract class StackedMap<K, V> {
 
 	/**
 	 * Checks whether a key exists in the current scope chain, caching any parent
-	 * lookup result in the current layer.
+	 * lookup result in the nearest `Map`-bearing layer.
 	 */
 	has(item: K): boolean;
 
 	/**
 	 * Returns the visible value for a key, caching parent hits and misses in the
-	 * current layer.
+	 * nearest `Map`-bearing layer so repeated lookups (from this layer or any
+	 * sibling below that layer) answer with a single probe.
 	 */
 	get(item: K): Cell<V>;
 
