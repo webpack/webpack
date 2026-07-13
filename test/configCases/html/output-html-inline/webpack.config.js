@@ -82,6 +82,19 @@ module.exports = [
 		experiments: { html: true, css: true },
 		plugins: [copyTest]
 	},
+	// a malformed magic comment between `<!-- webpackInline: true -->` and the
+	// script must clear the pending inline, so the script is served normally
+	{
+		name: "magic-inline-reset",
+		target: "web",
+		entry: { "magic-inline-reset": "./src/magic-inline-reset.html" },
+		output: {
+			filename: "[name].[contenthash].js",
+			htmlFilename: "magic-inline-reset.html"
+		},
+		experiments: { html: true, css: true },
+		plugins: [copyTest]
+	},
 	// magic comment with runtimeChunk: forceInline applies to the whole entry, so
 	// the runtime sibling is inlined alongside the entry chunk
 	{

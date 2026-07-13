@@ -62,6 +62,14 @@ it("<!-- webpackInline: true --> inlines the tag without output.html.inline", ()
 	expect(scripts[0]).toMatch(/console\.log/);
 });
 
+it("a malformed magic comment resets a pending webpackInline directive", () => {
+	// `<!-- webpackInline: true -->` then a malformed comment then the script:
+	// the malformed comment must clear the pending inline, so the script stays external.
+	const html = readHtml("magic-inline-reset.html");
+	expect(scriptTags(html).some((t) => t.includes("src="))).toBe(true);
+	expect(inlineScripts(html).length).toBe(0);
+});
+
 it("<!-- webpackInline: true --> with runtimeChunk inlines sibling runtime too", () => {
 	const html = readHtml("magic-split.html");
 	// both entry and runtime sibling are inlined

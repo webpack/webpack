@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  "Compilation error while processing magic comment(-s): /* webpackChunkName: {{{ */: Unexpected token {",
+]
+`;
