@@ -1,8 +1,8 @@
 "use strict";
 
 /**
- * Mimics ids restored from records: pins `./other.js` to the id `./mod.js0`
- * and reserves the base name `./mod.js` (so `./mod.js` needs a numbered id).
+ * Mimics ids restored from records: pins `./third.js` to the id `./mod.js`
+ * (so `./mod.js` needs a numbered id) and `./other.js` to `./mod.js0`.
  * @type {import("../../../../").WebpackPluginInstance}
  */
 const reserveIds = {
@@ -16,17 +16,14 @@ const reserveIds = {
 						const resource =
 							/** @type {import("../../../../").NormalModule} */ (module)
 								.resource;
-						if (
-							resource &&
-							resource.replace(/\?.*$/, "").endsWith("other.js")
-						) {
+						if (!resource) continue;
+						const base = resource.replace(/\?.*$/, "");
+						if (base.endsWith("other.js")) {
 							chunkGraph.setModuleId(module, "./mod.js0");
+						} else if (base.endsWith("third.js")) {
+							chunkGraph.setModuleId(module, "./mod.js");
 						}
 					}
-					if (!compilation.usedModuleIds) {
-						compilation.usedModuleIds = new Set();
-					}
-					compilation.usedModuleIds.add("./mod.js");
 				}
 			);
 		});

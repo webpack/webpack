@@ -31,9 +31,15 @@ describe("FileMiddleware deserialize", () => {
 		// begins on a content-buffer boundary — the case that regressed.
 		const readFile = () => Promise.resolve([header, content]);
 
-		const result = await deserialize(null, "test", readFile);
+		const result = await deserialize(
+			/** @type {InstanceType<typeof FileMiddleware>} */ (
+				/** @type {unknown} */ (null)
+			),
+			"test",
+			readFile
+		);
 
 		expect(result).toHaveLength(1);
-		expect(Buffer.from(result[0])).toEqual(content);
+		expect(Buffer.from(/** @type {Buffer} */ (result[0]))).toEqual(content);
 	});
 });
