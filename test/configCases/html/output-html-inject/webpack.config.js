@@ -97,5 +97,12 @@ module.exports = [
 		optimization: { runtimeChunk: "single" },
 		experiments: { html: true },
 		plugins: [copyTest]
+	},
+	{
+		name: "module-default-head",
+		entry: { "module-default-head": { import: ["./src/main.js"], html: true } },
+		output: { filename: "[name].js", module: true },
+		experiments: { html: true, outputModule: true },
+		plugins: [copyTest]
 	}
 ];

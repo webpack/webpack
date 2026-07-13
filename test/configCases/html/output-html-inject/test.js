@@ -63,6 +63,12 @@ it("inject:false with runtimeChunk suppresses sibling entirely, entry URL still 
 	expect(html).toMatch(/<script src="[^"]+\.js"/);
 });
 
+it("output.module: true defaults inject to head (module scripts are implicitly deferred)", () => {
+	const html = read("module-default-head.html");
+	expect(headContent(html)).toMatch(/<script type="module"/);
+	expect(bodyContent(html)).not.toMatch(/<script/);
+});
+
 it("inject:head with no </head> tag falls back to inserting siblings before the entry tag", () => {
 	const html = read("page-nohead.html");
 	// both runtime and entry scripts land in <body> (no </head> to target)
