@@ -5,7 +5,7 @@
  */
 
 /**
- * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+ * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.library.type set to the same value).
  */
 export type ExternalsType =
 	| "var"

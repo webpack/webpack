@@ -1244,11 +1244,6 @@
           "type": "boolean",
           "experimental": true
         },
-        "syncWebAssembly": {
-          "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
-          "type": "boolean",
-          "experimental": true
-        },
         "typescript": {
           "description": "Enable typescript support.",
           "type": "boolean",
@@ -1354,11 +1349,6 @@
           "type": "boolean",
           "experimental": true
         },
-        "syncWebAssembly": {
-          "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
-          "type": "boolean",
-          "experimental": true
-        },
         "typescript": {
           "description": "Enable typescript support.",
           "type": "boolean",
@@ -1385,7 +1375,7 @@
       "type": "string"
     },
     "ExternalItem": {
-      "description": "Specify dependency that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.",
+      "description": "Specify dependency that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.library.type`.",
       "anyOf": [
         {
           "description": "Every matched dependency becomes external.",
@@ -1498,7 +1488,7 @@
       ]
     },
     "Externals": {
-      "description": "Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.",
+      "description": "Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.library.type`.",
       "anyOf": [
         {
           "type": "array",
@@ -1559,7 +1549,7 @@
       }
     },
     "ExternalsType": {
-      "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+      "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.library.type set to the same value).",
       "enum": [
         "var",
         "module",
@@ -2307,6 +2297,10 @@
           "description": "Enable/disable parsing of dynamic URL.",
           "type": "boolean"
         },
+        "esm": {
+          "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+          "type": "boolean"
+        },
         "exportsPresence": {
           "description": "Specifies the behavior of invalid export names in \"import ... from ...\" and \"export ... from ...\".",
           "enum": ["error", "warn", "auto", false]
@@ -2334,10 +2328,6 @@
         "exprContextRequest": {
           "description": "Set the default request for full dynamic dependencies.",
           "type": "string"
-        },
-        "harmony": {
-          "description": "Enable/disable parsing of EcmaScript Modules syntax.",
-          "type": "boolean"
         },
         "import": {
           "description": "Enable/disable parsing of import() syntax.",
@@ -2897,34 +2887,6 @@
             }
           ]
         },
-        "exprContextCritical": {
-          "description": "Enable warnings for full dynamic dependencies.",
-          "type": "boolean",
-          "deprecated": true
-        },
-        "exprContextRecursive": {
-          "description": "Enable recursive directory lookup for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRecursive'.",
-          "type": "boolean",
-          "deprecated": true
-        },
-        "exprContextRegExp": {
-          "description": "Sets the default regular expression for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRegExp'.",
-          "anyOf": [
-            {
-              "instanceof": "RegExp",
-              "tsType": "RegExp"
-            },
-            {
-              "type": "boolean"
-            }
-          ],
-          "deprecated": true
-        },
-        "exprContextRequest": {
-          "description": "Set the default request for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRequest'.",
-          "type": "string",
-          "deprecated": true
-        },
         "generator": {
           "$ref": "#/definitions/GeneratorOptionsByModuleType"
         },
@@ -2942,44 +2904,6 @@
             }
           ]
         },
-        "strictExportPresence": {
-          "description": "Emit errors instead of warnings when imported names don't exist in imported module. Deprecated: This option has moved to 'module.parser.javascript.strictExportPresence'.",
-          "type": "boolean",
-          "deprecated": true
-        },
-        "strictThisContextOnImports": {
-          "description": "Handle the this context correctly according to the spec for namespace objects. Deprecated: This option has moved to 'module.parser.javascript.strictThisContextOnImports'.",
-          "type": "boolean",
-          "deprecated": true
-        },
-        "unknownContextCritical": {
-          "description": "Enable warnings when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextCritical'.",
-          "type": "boolean",
-          "deprecated": true
-        },
-        "unknownContextRecursive": {
-          "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRecursive'.",
-          "type": "boolean",
-          "deprecated": true
-        },
-        "unknownContextRegExp": {
-          "description": "Sets the regular expression when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRegExp'.",
-          "anyOf": [
-            {
-              "instanceof": "RegExp",
-              "tsType": "RegExp"
-            },
-            {
-              "type": "boolean"
-            }
-          ],
-          "deprecated": true
-        },
-        "unknownContextRequest": {
-          "description": "Sets the request when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRequest'.",
-          "type": "string",
-          "deprecated": true
-        },
         "unsafeCache": {
           "description": "Cache the resolving of module requests.",
           "anyOf": [
@@ -2991,22 +2915,6 @@
               "tsType": "import(\"../lib/Compilation.js\").UnsafeCachePredicate"
             }
           ]
-        },
-        "wrappedContextCritical": {
-          "description": "Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.",
-          "type": "boolean",
-          "deprecated": true
-        },
-        "wrappedContextRecursive": {
-          "description": "Enable recursive directory lookup for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRecursive'.",
-          "type": "boolean",
-          "deprecated": true
-        },
-        "wrappedContextRegExp": {
-          "description": "Set the inner regular expression for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRegExp'.",
-          "instanceof": "RegExp",
-          "tsType": "RegExp",
-          "deprecated": true
         }
       }
     },
@@ -3143,10 +3051,6 @@
           "description": "Avoid wrapping the entry module in an IIFE.",
           "type": "boolean"
         },
-        "checkWasmTypes": {
-          "description": "Check for incompatible wasm types when importing/exporting from/to ESM.",
-          "type": "boolean"
-        },
         "chunkIds": {
           "description": "Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin).",
           "enum": [
@@ -3229,14 +3133,6 @@
           "description": "Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).",
           "enum": ["natural", "named", "hashed", "deterministic", "size", false]
         },
-        "noEmitOnErrors": {
-          "description": "Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).",
-          "type": "boolean",
-          "cli": {
-            "exclude": true
-          },
-          "deprecated": true
-        },
         "nodeEnv": {
           "description": "Set process.env.NODE_ENV to a specific value.",
           "anyOf": [
@@ -3313,10 +3209,6 @@
       "properties": {
         "avoidEntryIife": {
           "description": "Avoid wrapping the entry module in an IIFE.",
-          "type": "boolean"
-        },
-        "checkWasmTypes": {
-          "description": "Check for incompatible wasm types when importing/exporting from/to ESM.",
           "type": "boolean"
         },
         "chunkIds": {
@@ -3397,14 +3289,6 @@
         "moduleIds": {
           "description": "Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).",
           "enum": ["natural", "named", "hashed", "deterministic", "size", false]
-        },
-        "noEmitOnErrors": {
-          "description": "Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).",
-          "type": "boolean",
-          "cli": {
-            "exclude": true
-          },
-          "deprecated": true
         },
         "nodeEnv": {
           "description": "Set process.env.NODE_ENV to a specific value.",
@@ -4009,32 +3893,12 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "amdContainer": {
-          "cli": {
-            "exclude": true
-          },
-          "oneOf": [
-            {
-              "$ref": "#/definitions/AmdContainer"
-            }
-          ]
-        },
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
         },
         "asyncChunks": {
           "description": "Enable/disable creating async chunks that are loaded on demand.",
           "type": "boolean"
-        },
-        "auxiliaryComment": {
-          "cli": {
-            "exclude": true
-          },
-          "oneOf": [
-            {
-              "$ref": "#/definitions/AuxiliaryComment"
-            }
-          ]
         },
         "charset": {
           "$ref": "#/definitions/Charset"
@@ -4142,26 +4006,6 @@
         "library": {
           "$ref": "#/definitions/Library"
         },
-        "libraryExport": {
-          "cli": {
-            "exclude": true
-          },
-          "oneOf": [
-            {
-              "$ref": "#/definitions/LibraryExport"
-            }
-          ]
-        },
-        "libraryTarget": {
-          "cli": {
-            "exclude": true
-          },
-          "oneOf": [
-            {
-              "$ref": "#/definitions/LibraryType"
-            }
-          ]
-        },
         "module": {
           "$ref": "#/definitions/OutputModule"
         },
@@ -4205,16 +4049,6 @@
             },
             {
               "$ref": "#/definitions/TrustedTypes"
-            }
-          ]
-        },
-        "umdNamedDefine": {
-          "cli": {
-            "exclude": true
-          },
-          "oneOf": [
-            {
-              "$ref": "#/definitions/UmdNamedDefine"
             }
           ]
         },
@@ -6307,7 +6141,7 @@
       }
     },
     "UmdNamedDefine": {
-      "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
+      "description": "If `output.library.type` is set to umd and `output.library.name` is set, setting this to true will name the AMD module.",
       "type": "boolean"
     },
     "UniqueName": {

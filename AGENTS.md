@@ -50,7 +50,7 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
   - `lib/typescript/` — Experimental TypeScript module support (strip types via the Node.js TypeScript API).
   - `lib/url/` — `new URL(asset, import.meta.url)` references.
   - `lib/util/` — Utility helpers.
-  - `lib/wasm/`, `lib/wasm-async/`, `lib/wasm-sync/` — WebAssembly module support.
+  - `lib/wasm/`, `lib/wasm-async/` — WebAssembly module support.
 - `hot/` — Runtime code shipped to browsers for HMR (browser-side, not Node tooling).
 - `bin/` — `webpack` CLI entry point.
 - `tooling/` — Repo-internal build scripts (runtime/wasm code generators, hash-debug tool); invoked by `yarn fix:special`.

@@ -9,7 +9,9 @@ export type HttpUriPluginOptions = HttpUriOptions;
  * List of allowed URIs (resp. the beginning of them).
  */
 export type HttpUriOptionsAllowedUris = (
-	RegExp | string | import("../../../lib/schemes/HttpUriPlugin.js").AllowedUriFn
+	| RegExp
+	| string
+	| import("../../../lib/schemes/HttpUriPlugin.js").AllowedUriFn
 )[];
 
 /**

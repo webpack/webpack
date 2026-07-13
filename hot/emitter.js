@@ -1,2 +1,5 @@
-var EventEmitter = require("events");
-module.exports = new EventEmitter();
+if (typeof EventTarget !== "function") {
+	throw new Error("Environment doesn't support EventTarget");
+}
+
+module.exports = new EventTarget();

@@ -105,7 +105,7 @@
       }
     },
     "ExternalsType": {
-      "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+      "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.library.type set to the same value).",
       "enum": [
         "var",
         "module",
@@ -478,7 +478,7 @@
       }
     },
     "UmdNamedDefine": {
-      "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
+      "description": "If `output.library.type` is set to umd and `output.library.name` is set, setting this to true will name the AMD module.",
       "type": "boolean"
     }
   },

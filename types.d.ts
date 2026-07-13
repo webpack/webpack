@@ -4,8 +4,8 @@
  * Run `yarn fix:special` to update
  */
 
-import { Parser as ParserImport, Position } from "acorn"
-import { ErrorObject } from "ajv"
+import { Parser as ParserImport, Position } from "acorn/dist/acorn.d.mts"
+import { ErrorObject } from "ajv/dist/types/index"
 import { Buffer } from "buffer"
 import { ArrayExpression, ArrayPattern, ArrowFunctionExpression, AssignmentExpression, AssignmentPattern, AssignmentProperty, AwaitExpression, BigIntLiteral, BinaryExpression, BlockStatement, BreakStatement, CatchClause, ChainExpression, ClassBody, ClassDeclaration, ClassExpression, Comment as CommentImport, ConditionalExpression, ContinueStatement, DebuggerStatement, Directive, DoWhileStatement, EmptyStatement, ExportAllDeclaration, ExportDefaultDeclaration, ExportNamedDeclaration, ExportSpecifier, ExpressionStatement, ForInStatement, ForOfStatement, ForStatement, FunctionDeclaration, FunctionExpression, Identifier, IfStatement, ImportDeclaration, ImportDefaultSpecifier, ImportExpression as ImportExpressionImport, ImportNamespaceSpecifier, ImportSpecifier, LabeledStatement, LogicalExpression, MaybeNamedClassDeclaration, MaybeNamedFunctionDeclaration, MemberExpression, MetaProperty, MethodDefinition, NewExpression, ObjectExpression, ObjectPattern, PrivateIdentifier, Program, Property, PropertyDefinition, RegExpLiteral, RestElement, ReturnStatement, SequenceExpression, SimpleCallExpression, SimpleLiteral, SourceLocation, SpreadElement, StaticBlock, Super, SwitchCase, SwitchStatement, TaggedTemplateExpression, TemplateElement, TemplateLiteral, ThisExpression, ThrowStatement, TryStatement, UnaryExpression, UpdateExpression, VariableDeclaration, VariableDeclarator, WhileStatement, WithStatement, YieldExpression } from "estree"
 import { IncomingMessage, Server as ServerImportHttp, ServerOptions as ServerOptionsImportHttp } from "http"
@@ -16,7 +16,7 @@ import { ListenOptions } from "net"
 import { ExtendedSchema, ValidationErrorConfiguration, validate as validateFunction } from "schema-utils"
 import { default as ValidationErrorDefault } from "schema-utils/declarations/ValidationError"
 import { PostFormatter } from "schema-utils/declarations/validate"
-import { AsArray, AsyncParallelHook, AsyncSeriesBailHook, AsyncSeriesHook, AsyncSeriesWaterfallHook, HookMap, IfSet, MultiHook, SyncBailHook, SyncHook, SyncWaterfallHook, TapOptions, TypedHookMap } from "tapable"
+import { AsArray, AsyncParallelHook, AsyncSeriesBailHook, AsyncSeriesHook, AsyncSeriesWaterfallHook, HookMap, MultiHook, SyncBailHook, SyncHook, SyncWaterfallHook, TapOptions, TypedHookMap } from "tapable"
 import { URL } from "url"
 import { Context as ContextImport } from "vm"
 
@@ -168,6 +168,10 @@ declare interface AliasOption {
 	name: string;
 	onlyModule?: (boolean);
 }
+type AliasOptionNewRequest = (string | false | (string)[]);
+declare interface AliasOptions {
+	[index: string]: AliasOptionNewRequest;
+}
 declare interface AllCodeGenerationSchemas {
 	
 /**
@@ -261,7 +265,7 @@ declare abstract class AssetBytesParser extends ParserClass {
 
 }
 declare interface AssetDependencyMeta {
-	sourceType: ("asset-url" | "css-url");
+	sourceType: "asset-url";
 }
 
 /**
@@ -510,7 +514,6 @@ declare class AutomaticPrefetchPlugin {
  */
 apply( compiler: Compiler): void;
 }
-type AuxiliaryComment = (string | LibraryCustomUmdCommentObject);
 declare interface BackendApi {
 	dispose: (( callback: (( err?: (null | Error)) => void)) => void);
 	module: (( module: Module) => ModuleResult);
@@ -1161,125 +1164,6 @@ constructor( name?: (null | string), backCompat?: (boolean));
 	extraAsync: (boolean);
 	
 /**
- * Returns entry module.
- * @deprecated
- */
-get entryModule(): (Module);
-	
-/**
- * Checks whether this chunk has an entry module.
- * @deprecated
- */
-hasEntryModule( ): (boolean);
-	
-/**
- * Adds the provided module to the chunk.
- * @deprecated
- */
-addModule( module: Module): (boolean);
-	
-/**
- * Removes the provided module from the chunk.
- * @deprecated
- */
-removeModule( module: Module): void;
-	
-/**
- * Gets the number of modules in this chunk.
- * @deprecated
- */
-getNumberOfModules( ): number;
-	
-/**
- * @deprecated
- */
-get modulesIterable(): Iterable<Module>;
-	
-/**
- * Compares this chunk with another chunk.
- * @deprecated
- */
-compareTo( otherChunk: Chunk): (0 | 1 | -1);
-	
-/**
- * Checks whether this chunk contains the module.
- * @deprecated
- */
-containsModule( module: Module): (boolean);
-	
-/**
- * Returns the modules for this chunk.
- * @deprecated
- */
-getModules( ): (Module)[];
-	
-/**
- * Removes this chunk from the chunk graph and chunk groups.
- * @deprecated
- */
-remove( ): void;
-	
-/**
- * Moves a module from this chunk to another chunk.
- * @deprecated
- */
-moveModule( module: Module, otherChunk: Chunk): void;
-	
-/**
- * Integrates another chunk into this chunk when possible.
- * @deprecated
- */
-integrate( otherChunk: Chunk): (boolean);
-	
-/**
- * Checks whether this chunk can be integrated with another chunk.
- * @deprecated
- */
-canBeIntegrated( otherChunk: Chunk): (boolean);
-	
-/**
- * Checks whether this chunk is empty.
- * @deprecated
- */
-isEmpty( ): (boolean);
-	
-/**
- * Returns the total size of all modules in this chunk.
- * @deprecated
- */
-modulesSize( ): number;
-	
-/**
- * Returns the estimated size for the requested source type.
- * @deprecated
- */
-size( options?: ChunkSizeOptions): number;
-	
-/**
- * Returns the integrated size with another chunk.
- * @deprecated
- */
-integratedSize( otherChunk: Chunk, options: ChunkSizeOptions): number;
-	
-/**
- * Gets chunk module maps.
- * @deprecated
- */
-getChunkModuleMaps( filterFn: (( m: Module) => (boolean))): ChunkModuleMaps;
-	
-/**
- * Checks whether this chunk contains a matching module in the graph.
- * @deprecated
- */
-hasModuleInGraph( filterFn: (( m: Module) => (boolean)), filterChunkFn?: ((( c: Chunk, chunkGraph: ChunkGraph) => (boolean)))): (boolean);
-	
-/**
- * Returns the chunk map information.
- * @deprecated
- */
-getChunkMaps( realHash: (boolean)): ChunkMaps;
-	
-/**
  * Checks whether this chunk has runtime.
  */
 hasRuntime( ): (boolean);
@@ -1545,7 +1429,7 @@ getOrderedChunkModules( chunk: Chunk, comparator: (( a: Module, b: Module) => (0
 /**
  * Gets chunk module id map.
  */
-getChunkModuleIdMap( chunk: Chunk, filterFn: (( m: Module) => (boolean)), includeAllChunks?: (boolean)): ChunkModuleIdMapEs5Alias_2;
+getChunkModuleIdMap( chunk: Chunk, filterFn: (( m: Module) => (boolean)), includeAllChunks?: (boolean)): ChunkModuleIdMap;
 	
 /**
  * Gets chunk module rendered hash map.
@@ -1806,42 +1690,6 @@ getModuleGraphHashBigInt( module: Module, runtime: RuntimeSpec, withConnections?
  * Gets tree runtime requirements.
  */
 getTreeRuntimeRequirements( chunk: Chunk): ReadonlySet<string>;
-	
-/**
- * Gets chunk graph for module.
- * @deprecated
- */
-static getChunkGraphForModule( module: Module, deprecateMessage: string, deprecationCode: string): ChunkGraph;
-	
-/**
- * Sets chunk graph for module.
- * @deprecated
- */
-static setChunkGraphForModule( module: Module, chunkGraph: ChunkGraph): void;
-	
-/**
- * Clear chunk graph for module.
- * @deprecated
- */
-static clearChunkGraphForModule( module: Module): void;
-	
-/**
- * Gets chunk graph for chunk.
- * @deprecated
- */
-static getChunkGraphForChunk( chunk: Chunk, deprecateMessage: string, deprecationCode: string): ChunkGraph;
-	
-/**
- * Sets chunk graph for chunk.
- * @deprecated
- */
-static setChunkGraphForChunk( chunk: Chunk, chunkGraph: ChunkGraph): void;
-	
-/**
- * Clear chunk graph for chunk.
- * @deprecated
- */
-static clearChunkGraphForChunk( chunk: Chunk): void;
 }
 
 /**
@@ -2076,11 +1924,6 @@ declare interface ChunkHashes {
 	[index: string]: string;
 }
 type ChunkId = (string | number);
-declare interface ChunkMaps {
-	hash: Record<ChunkId, string>;
-	contentHash: Record<ChunkId, Record<string, string>>;
-	name: Record<ChunkId, string>;
-}
 declare interface ChunkModuleHashMap {
 	[index: number]: IdToHashMap;
 	[index: string]: IdToHashMap;
@@ -2088,11 +1931,7 @@ declare interface ChunkModuleHashMap {
 declare interface ChunkModuleHashes {
 	[index: string]: string;
 }
-declare interface ChunkModuleIdMapEs5Alias_1 {
-	[index: number]: (ChunkId)[];
-	[index: string]: (ChunkId)[];
-}
-declare interface ChunkModuleIdMapEs5Alias_2 {
+declare interface ChunkModuleIdMap {
 	[index: number]: (ModuleId)[];
 	[index: string]: (ModuleId)[];
 }
@@ -2134,10 +1973,6 @@ end?: (number);
 declare interface ChunkModuleIds {
 	[index: number]: (ModuleId)[];
 	[index: string]: (ModuleId)[];
-}
-declare interface ChunkModuleMaps {
-	id: ChunkModuleIdMapEs5Alias_1;
-	hash: chunkModuleHashMap;
 }
 type ChunkName = (null | string);
 declare interface ChunkPathData {
@@ -2289,10 +2124,6 @@ chunkOverhead?: (number);
  */
 entryChunkMultiplicator?: (number);
 }
-declare abstract class ChunkTemplate {
-	hooks: Readonly<{ renderManifest: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( renderManifestEntries: (RenderManifestEntry)[], renderManifestOptions: RenderManifestOptions) => (RenderManifestEntry)[])) => void) }; modules: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( source: Source, moduleTemplate: ModuleTemplate, renderContext: RenderContextJavascriptModulesPlugin) => Source)) => void) }; render: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( source: Source, moduleTemplate: ModuleTemplate, renderContext: RenderContextJavascriptModulesPlugin) => Source)) => void) }; renderWithEntry: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( source: Source, chunk: Chunk) => Source)) => void) }; hash: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( hash: Hash) => void)) => void) }; hashForChunk: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( hash: Hash, chunk: Chunk, chunkHashContext: ChunkHashContext) => void)) => void) } }>;
-	get outputOptions(): OutputNormalizedWithDefaults;
-}
 
 /**
  * Advanced options for cleaning assets.
@@ -2395,7 +2226,7 @@ codeGenerationResults?: (CodeGenerationResults);
 /**
  * the compilation
  */
-compilation?: (Compilation);
+compilation: Compilation;
 	
 /**
  * source types
@@ -2573,32 +2404,15 @@ afterChunks: SyncHook<[Iterable<Chunk>]>; optimizeDependencies: SyncBailHook<[It
 /**
  * @deprecated
  */
-additionalChunkAssets: FakeHook<Pick<AsyncSeriesHook<[Set<Chunk>]>, ("name" | "tapAsync" | "tapPromise" | "tap")>>; 
-/**
- * @deprecated
- */
 additionalAssets: FakeHook<Pick<AsyncSeriesHook<[]>, ("name" | "tapAsync" | "tapPromise" | "tap")>>; 
 /**
  * @deprecated
  */
-optimizeChunkAssets: FakeHook<Pick<AsyncSeriesHook<[Set<Chunk>]>, ("name" | "tapAsync" | "tapPromise" | "tap")>>; 
+optimizeAssets: FakeHook<Pick<AsyncSeriesHook<[CompilationAssets]>, ("name" | "tapAsync" | "tapPromise" | "tap")>>; 
 /**
  * @deprecated
  */
-afterOptimizeChunkAssets: FakeHook<Pick<AsyncSeriesHook<[Set<Chunk>]>, ("name" | "tapAsync" | "tapPromise" | "tap")>>; 
-/**
- * @deprecated
- */
-optimizeAssets: AsyncSeriesHook<[CompilationAssets], ProcessAssetsAdditionalOptions>; 
-/**
- * @deprecated
- */
-afterOptimizeAssets: SyncHook<[CompilationAssets]>; processAssets: AsyncSeriesHook<[CompilationAssets], ProcessAssetsAdditionalOptions>; afterProcessAssets: SyncHook<[CompilationAssets]>; processAdditionalAssets: AsyncSeriesHook<[CompilationAssets]>; needAdditionalSeal: SyncBailHook<[], (boolean | void)>; afterSeal: AsyncSeriesHook<[]>; renderManifest: SyncWaterfallHook<[(RenderManifestEntry)[], RenderManifestOptions], (RenderManifestEntry)[]>; fullHash: SyncHook<[Hash]>; chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>; moduleAsset: SyncHook<[Module, string]>; chunkAsset: SyncHook<[Chunk, string]>; assetPath: SyncWaterfallHook<[string, PathData, (undefined | AssetInfo)], string>; needAdditionalPass: SyncBailHook<[], (boolean | void)>; childCompiler: SyncHook<[Compiler, string, number]>; log: SyncBailHook<[string, LogEntry], (boolean | void)>; processWarnings: SyncWaterfallHook<[(Error)[]], (Error)[]>; processErrors: SyncWaterfallHook<[(Error)[]], (Error)[]>; statsPreset: HookMap<SyncHook<[Partial<NormalizedStatsOptions>, CreateStatsOptionsContext]>>; statsNormalize: SyncHook<[Partial<NormalizedStatsOptions>, CreateStatsOptionsContext]>; statsFactory: SyncHook<[StatsFactory, NormalizedStatsOptions]>; statsPrinter: SyncHook<[StatsPrinter, NormalizedStatsOptions]>; 
-/**
- * Gets normal module loader.
- * @deprecated
- */
-get normalModuleLoader(): SyncHook<[AnyLoaderContext, NormalModule]> }>;
+afterOptimizeAssets?: (FakeHook<{ name: string; tap: (( options: (string | (TapOptions & { name: string })), fn: (( ...args: [CompilationAssets]) => void)) => void) }>); processAssets: AsyncSeriesHook<[CompilationAssets], ProcessAssetsAdditionalOptions>; afterProcessAssets: SyncHook<[CompilationAssets]>; processAdditionalAssets: AsyncSeriesHook<[CompilationAssets]>; needAdditionalSeal: SyncBailHook<[], (boolean | void)>; afterSeal: AsyncSeriesHook<[]>; renderManifest: SyncWaterfallHook<[(RenderManifestEntry)[], RenderManifestOptions], (RenderManifestEntry)[]>; fullHash: SyncHook<[Hash]>; chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>; moduleAsset: SyncHook<[Module, string]>; chunkAsset: SyncHook<[Chunk, string]>; assetPath: SyncWaterfallHook<[string, PathData, (undefined | AssetInfo)], string>; needAdditionalPass: SyncBailHook<[], (boolean | void)>; childCompiler: SyncHook<[Compiler, string, number]>; log: SyncBailHook<[string, LogEntry], (boolean | void)>; processWarnings: SyncWaterfallHook<[(Error)[]], (Error)[]>; processErrors: SyncWaterfallHook<[(Error)[]], (Error)[]>; statsPreset: HookMap<SyncHook<[Partial<NormalizedStatsOptions>, CreateStatsOptionsContext]>>; statsNormalize: SyncHook<[Partial<NormalizedStatsOptions>, CreateStatsOptionsContext]>; statsFactory: SyncHook<[StatsFactory, NormalizedStatsOptions]>; statsPrinter: SyncHook<[StatsPrinter, NormalizedStatsOptions]> }>;
 	name?: (string);
 	startTime?: (number);
 	endTime?: (number);
@@ -2615,10 +2429,7 @@ get normalModuleLoader(): SyncHook<[AnyLoaderContext, NormalModule]> }>;
 	bail: (boolean);
 	profile: (boolean);
 	params: CompilationParams;
-	mainTemplate: MainTemplate;
-	chunkTemplate: ChunkTemplate;
 	runtimeTemplate: RuntimeTemplate;
-	moduleTemplates: ModuleTemplates;
 	moduleMemCaches?: (Map<Module, WeakTupleMap<(any)[], any>>);
 	moduleMemCaches2?: (Map<Module, WeakTupleMap<(any)[], any>>);
 	moduleGraph: ModuleGraph;
@@ -2668,11 +2479,6 @@ creatingModuleDuringBuild: WeakMap<Module, Set<Module>>;
 	contextDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;
 	buildDependencies: LazySet<string>;
-	
-/**
- * @deprecated
- */
-compilationDependencies: { add: (( item: string) => LazySet<string>) };
 	getStats( ): Stats;
 	
 /**
@@ -2778,7 +2584,7 @@ contextInfo?: (Partial<ModuleFactoryCreateDataContextInfo>) }, callback: (( err?
 /**
  * Adds the provided string to the compilation.
  */
-addEntry( context: string, entry: Dependency, optionsOrName: (string | EntryOptions), callback: (( err?: (null | WebpackError), result?: (null | Module)) => void)): void;
+addEntry( context: string, entry: Dependency, options: EntryOptions, callback: (( err?: (null | WebpackError), result?: (null | Module)) => void)): void;
 	
 /**
  * Adds the provided string to the compilation.
@@ -2839,7 +2645,7 @@ chunkGraphEntries?: (Iterable<Chunk>) }): void;
 /**
  * Adds runtime module.
  */
-addRuntimeModule( chunk: Chunk, module: RuntimeModule, chunkGraph?: ChunkGraph): void;
+addRuntimeModule( chunk: Chunk, module: RuntimeModule, chunkGraph: ChunkGraph): void;
 	
 /**
  * If `module` is passed, `loc` and `request` must also be passed.
@@ -3178,45 +2984,7 @@ declare class Compiler {
  */
 constructor( context: string, options?: WebpackOptionsNormalized);
 	hooks: Readonly<{ initialize: SyncHook<[]>; shouldEmit: SyncBailHook<[Compilation], (boolean | void)>; done: AsyncSeriesHook<[Stats]>; afterDone: SyncHook<[Stats]>; additionalPass: AsyncSeriesHook<[]>; beforeRun: AsyncSeriesHook<[Compiler]>; run: AsyncSeriesHook<[Compiler]>; emit: AsyncSeriesHook<[Compilation]>; assetEmitted: AsyncSeriesHook<[string, AssetEmittedInfo]>; afterEmit: AsyncSeriesHook<[Compilation]>; thisCompilation: SyncHook<[Compilation, CompilationParams]>; compilation: SyncHook<[Compilation, CompilationParams]>; normalModuleFactory: SyncHook<[NormalModuleFactory]>; contextModuleFactory: SyncHook<[ContextModuleFactory]>; beforeCompile: AsyncSeriesHook<[CompilationParams]>; compile: SyncHook<[CompilationParams]>; make: AsyncParallelHook<[Compilation]>; finishMake: AsyncParallelHook<[Compilation]>; afterCompile: AsyncSeriesHook<[Compilation]>; readRecords: AsyncSeriesHook<[]>; emitRecords: AsyncSeriesHook<[]>; watchRun: AsyncSeriesHook<[Compiler]>; failed: SyncHook<[Error]>; invalid: SyncHook<[(null | string), number]>; watchClose: SyncHook<[]>; shutdown: AsyncSeriesHook<[]>; infrastructureLog: SyncBailHook<[string, string, (undefined | (any)[])], (true | void)>; validate: SyncHook<[]>; environment: SyncHook<[]>; afterEnvironment: SyncHook<[]>; afterPlugins: SyncHook<[Compiler]>; afterResolvers: SyncHook<[Compiler]>; entryOption: SyncBailHook<[string, EntryNormalized], (boolean | void)> }>;
-	webpack: { 
-/**
- * Returns the compiler object.
- */
-( options: Configuration, callback: CallbackWebpackFunction_2<Stats, void>): (null | Compiler); 
-/**
- * Returns the compiler object.
- */
-( options: Configuration): Compiler; 
-/**
- * Returns the multi compiler object.
- */
-( options: MultiConfiguration, callback: CallbackWebpackFunction_2<MultiStats, void>): (null | defaultMultiCompiler); 
-/**
- * Returns the multi compiler object.
- */
-( options: MultiConfiguration): defaultMultiCompiler; webpack: _functionWebpack; defineConfig: (<T extends DefineConfigInput>( config: T) => T); validate: (( options: (Configuration | MultiConfiguration)) => void); validateSchema: (( schema: (Parameters<typeof validateFunction>)[0], options: (Parameters<typeof validateFunction>)[1], validationConfiguration?: (ValidationErrorConfiguration)) => void); version: string; cli: typeof cli; AutomaticPrefetchPlugin: typeof AutomaticPrefetchPlugin; AsyncDependenciesBlock: typeof AsyncDependenciesBlock; BannerPlugin: typeof BannerPlugin; Cache: typeof CacheClass; Chunk: typeof Chunk; ChunkGraph: typeof ChunkGraph; CleanPlugin: typeof CleanPlugin; Compilation: typeof Compilation; Compiler: typeof Compiler; ConcatenationScope: typeof ConcatenationScope; ContextExclusionPlugin: typeof ContextExclusionPlugin; ContextReplacementPlugin: typeof ContextReplacementPlugin; DefinePlugin: typeof DefinePlugin; Dependency: typeof Dependency; DynamicEntryPlugin: typeof DynamicEntryPlugin; DotenvPlugin: typeof DotenvPlugin; EntryOptionPlugin: typeof EntryOptionPlugin; EntryPlugin: typeof EntryPlugin; EnvironmentPlugin: typeof EnvironmentPlugin; EvalDevToolModulePlugin: typeof EvalDevToolModulePlugin; EvalSourceMapDevToolPlugin: typeof EvalSourceMapDevToolPlugin; ExternalModule: typeof ExternalModule; ExternalsPlugin: typeof ExternalsPlugin; Generator: typeof Generator; HotUpdateChunk: typeof HotUpdateChunk; HotModuleReplacementPlugin: typeof HotModuleReplacementPlugin; InitFragment: typeof InitFragment; IgnorePlugin: typeof IgnorePlugin; JavascriptModulesPlugin: typeof JavascriptModulesPlugin; LibraryTemplatePlugin: typeof LibraryTemplatePlugin; LoaderOptionsPlugin: typeof LoaderOptionsPlugin; LoaderTargetPlugin: typeof LoaderTargetPlugin; Module: typeof Module; ModuleFactory: typeof ModuleFactory; ModuleFilenameHelpers: { ALL_LOADERS_RESOURCE: string; REGEXP_ALL_LOADERS_RESOURCE: RegExp; LOADERS_RESOURCE: string; REGEXP_LOADERS_RESOURCE: RegExp; RESOURCE: string; REGEXP_RESOURCE: RegExp; ABSOLUTE_RESOURCE_PATH: string; REGEXP_ABSOLUTE_RESOURCE_PATH: RegExp; RESOURCE_PATH: string; REGEXP_RESOURCE_PATH: RegExp; ALL_LOADERS: string; REGEXP_ALL_LOADERS: RegExp; LOADERS: string; REGEXP_LOADERS: RegExp; QUERY: string; REGEXP_QUERY: RegExp; ID: string; REGEXP_ID: RegExp; HASH: string; REGEXP_HASH: RegExp; NAMESPACE: string; REGEXP_NAMESPACE: RegExp; 
-/**
- * Returns the filename.
- */
-createFilename( module: (string | Module), options: { namespace?: (string); moduleFilenameTemplate?: (string | (( context: ModuleFilenameTemplateContext) => string)) }, __2: { requestShortener: RequestShortener; chunkGraph: ChunkGraph; hashFunction?: (string | typeof Hash) }): string; 
-/**
- * Replaces duplicate items in an array with new values generated by a callback function.
- * The callback function is called with the duplicate item, the index of the duplicate item, and the number of times the item has been replaced.
- * The callback function should return the new value for the duplicate item.
- */
-replaceDuplicates<T>( array: (T)[], fn: (( duplicateItem: T, duplicateItemIndex: number, numberOfTimesReplaced: number) => T), comparator?: ((( firstElement: T, nextElement: T) => (0 | 1 | -1)))): (T)[]; matchPart: (( str: string, test: Matcher) => (boolean)); 
-/**
- * Tests if a string matches a match object. The match object can have the following properties:
- * - `test`: a RegExp or an array of RegExp
- * - `include`: a RegExp or an array of RegExp
- * - `exclude`: a RegExp or an array of RegExp
- * The `test` property is tested first, then `include` and then `exclude`.
- */
-matchObject( obj: MatchObject, str: string): (boolean) }; ModuleGraph: typeof ModuleGraph; ModuleGraphConnection: typeof ModuleGraphConnection; NoEmitOnErrorsPlugin: typeof NoEmitOnErrorsPlugin; NormalModule: typeof NormalModule; NormalModuleReplacementPlugin: typeof NormalModuleReplacementPlugin; MultiCompiler: typeof defaultMultiCompiler; OptimizationStages: typeof OptimizationStages; Parser: typeof ParserClass; PlatformPlugin: typeof PlatformPlugin; PrefetchPlugin: typeof PrefetchPlugin; ProgressPlugin: typeof ProgressPlugin; ProvidePlugin: typeof ProvidePlugin; RuntimeGlobals: typeof RuntimeGlobals; RuntimeModule: typeof RuntimeModule; SingleEntryPlugin: typeof EntryPlugin; SourceMapDevToolPlugin: typeof SourceMapDevToolPlugin; Stats: typeof Stats; ManifestPlugin: typeof ManifestPlugin; Template: typeof Template; UsageState: Readonly<{ Unused: 0; OnlyPropertiesUsed: 1; NoInfo: 2; Unknown: 3; Used: 4 }>; WatchIgnorePlugin: typeof WatchIgnorePlugin; WebpackError: typeof WebpackError; WebpackOptionsApply: typeof WebpackOptionsApply; WebpackOptionsDefaulter: typeof WebpackOptionsDefaulter; WebpackOptionsValidationError: typeof ValidationErrorDefault; ValidationError: typeof ValidationErrorDefault; cache: Readonly<{ MemoryCachePlugin: typeof MemoryCachePlugin }>; config: Readonly<{ getNormalizedWebpackOptions: (( config: Configuration) => WebpackOptionsNormalized); applyWebpackOptionsDefaults: (( options: WebpackOptionsNormalized, compilerIndex?: (number)) => ResolvedOptions) }>; dependencies: Readonly<{ ModuleDependency: typeof ModuleDependency; HarmonyImportDependency: typeof HarmonyImportDependency; ConstDependency: typeof ConstDependency; NullDependency: typeof NullDependency }>; ids: Readonly<{ ChunkModuleIdRangePlugin: typeof ChunkModuleIdRangePlugin; NaturalModuleIdsPlugin: typeof NaturalModuleIdsPlugin; OccurrenceModuleIdsPlugin: typeof OccurrenceModuleIdsPlugin; NamedModuleIdsPlugin: typeof NamedModuleIdsPlugin; DeterministicChunkIdsPlugin: typeof DeterministicChunkIdsPlugin; DeterministicModuleIdsPlugin: typeof DeterministicModuleIdsPlugin; NamedChunkIdsPlugin: typeof NamedChunkIdsPlugin; OccurrenceChunkIdsPlugin: typeof OccurrenceChunkIdsPlugin; HashedModuleIdsPlugin: typeof HashedModuleIdsPlugin }>; javascript: Readonly<{ EnableChunkLoadingPlugin: typeof EnableChunkLoadingPlugin; JavascriptModulesPlugin: typeof JavascriptModulesPlugin; JavascriptParser: typeof JavascriptParser }>; optimize: Readonly<{ AggressiveMergingPlugin: typeof AggressiveMergingPlugin; AggressiveSplittingPlugin: typeof AggressiveSplittingPlugin; InnerGraph: typeof InnerGraph; LimitChunkCountPlugin: typeof LimitChunkCountPlugin; MergeDuplicateChunksPlugin: typeof MergeDuplicateChunksPlugin; MinChunkSizePlugin: typeof MinChunkSizePlugin; ModuleConcatenationPlugin: typeof ModuleConcatenationPlugin; RealContentHashPlugin: typeof RealContentHashPlugin; RuntimeChunkPlugin: typeof RuntimeChunkPlugin; SideEffectsFlagPlugin: typeof SideEffectsFlagPlugin; SplitChunksPlugin: typeof defaultSplitChunksPlugin }>; runtime: Readonly<{ GetChunkFilenameRuntimeModule: typeof GetChunkFilenameRuntimeModule; LoadScriptRuntimeModule: typeof LoadScriptRuntimeModule }>; prefetch: Readonly<{ ChunkPrefetchPreloadPlugin: typeof ChunkPrefetchPreloadPlugin }>; web: Readonly<{ FetchCompileWasmPlugin: typeof FetchCompileWasmPlugin; FetchCompileAsyncWasmPlugin: typeof FetchCompileAsyncWasmPlugin; JsonpChunkLoadingRuntimeModule: typeof JsonpChunkLoadingRuntimeModule; JsonpTemplatePlugin: typeof JsonpTemplatePlugin; CssLoadingRuntimeModule: typeof CssLoadingRuntimeModule }>; esm: Readonly<{ ModuleChunkLoadingRuntimeModule: typeof ModuleChunkLoadingRuntimeModule }>; webworker: Readonly<{ WebWorkerTemplatePlugin: typeof WebWorkerTemplatePlugin }>; node: Readonly<{ NodeEnvironmentPlugin: typeof NodeEnvironmentPlugin; NodeSourcePlugin: typeof NodeSourcePlugin; NodeTargetPlugin: typeof NodeTargetPlugin; NodeTemplatePlugin: typeof NodeTemplatePlugin; ReadFileCompileWasmPlugin: typeof ReadFileCompileWasmPlugin; ReadFileCompileAsyncWasmPlugin: typeof ReadFileCompileAsyncWasmPlugin }>; electron: Readonly<{ ElectronTargetPlugin: typeof ElectronTargetPlugin }>; wasm: Readonly<{ AsyncWebAssemblyModulesPlugin: typeof AsyncWebAssemblyModulesPlugin; EnableWasmLoadingPlugin: typeof EnableWasmLoadingPlugin }>; css: Readonly<{ CssModulesPlugin: typeof CssModulesPlugin }>; library: Readonly<{ AbstractLibraryPlugin: typeof AbstractLibraryPlugin; EnableLibraryPlugin: typeof EnableLibraryPlugin }>; DelegatedPlugin: typeof DelegatedPlugin; DllPlugin: typeof DllPlugin; DllReferencePlugin: typeof DllReferencePlugin; LibManifestPlugin: typeof LibManifestPlugin; dll: Readonly<{ DelegatedPlugin: typeof DelegatedPlugin; DllPlugin: typeof DllPlugin; DllReferencePlugin: typeof DllReferencePlugin; LibManifestPlugin: typeof LibManifestPlugin }>; container: Readonly<{ ContainerPlugin: typeof ContainerPlugin; ContainerReferencePlugin: typeof ContainerReferencePlugin; ModuleFederationPlugin: typeof ModuleFederationPlugin; scope: (<T>( scope: string, options: ContainerOptionsFormat<T>) => Record<string, (string | (string)[] | T)>) }>; sharing: Readonly<{ ConsumeSharedPlugin: typeof ConsumeSharedPlugin; ProvideSharedPlugin: typeof ProvideSharedPlugin; SharePlugin: typeof SharePlugin; scope: (<T>( scope: string, options: ContainerOptionsFormat<T>) => Record<string, (string | (string)[] | T)>) }>; debug: Readonly<{ ProfilingPlugin: typeof ProfilingPlugin }>; util: Readonly<{ createHash: (( algorithm: HashFunction) => Hash); comparators: typeof comparators; runtime: typeof runtime; serialization: { get register(): (( Constructor: Constructor, request: string, name: (null | string), serializer: ObjectSerializer) => void); get registerLoader(): (( regExp: RegExp, loader: (( request: string) => (boolean))) => void); get registerNotSerializable(): (( Constructor: Constructor) => void); get NOT_SERIALIZABLE(): object; get MEASURE_START_OPERATION(): typeof MEASURE_START_OPERATION; get MEASURE_END_OPERATION(): typeof MEASURE_END_OPERATION; get buffersSerializer(): Serializer<any, any, any>; 
-/**
- * Creates a file serializer.
- */
-createFileSerializer: (<D, S, C>( fs: IntermediateFileSystem, hashFunction: HashFunction) => Serializer<D, S, C>) }; cleverMerge: (<T, O>( first?: (null | T), second?: (null | O)) => (T | O | (T & O))); LazySet: typeof LazySet; compileBooleanMatcher: _functionCompileBooleanMatcher }>; sources: declarations; experiments: Readonly<{ schemes: Readonly<{ HttpUriPlugin: typeof HttpUriPlugin; VirtualUrlPlugin: typeof VirtualUrlPlugin }>; ids: Readonly<{ SyncModuleIdsPlugin: typeof SyncModuleIdsPlugin }> }> };
+	webpack: _functionWebpack;
 	name?: (string);
 	parentCompilation?: (Compilation);
 	root: Compiler;
@@ -3541,7 +3309,7 @@ experiments?: (Experiments);
 extends?: (string | (string)[]);
 	
 /**
- * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
+ * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.library.type`.
  */
 externals?: (string | RegExp | (ExternalItemObjectKnown & ExternalItemObjectUnknown) | (( data: ExternalItemFunctionData, callback: (( err?: (null | Error), result?: (string | boolean | (string)[] | (ExternalItemValueObjectKnown & ExternalItemValueObjectUnknown))) => void)) => void) | (( data: ExternalItemFunctionData) => Promise<ExternalItemValue>) | (ExternalItem)[]);
 	
@@ -3551,7 +3319,7 @@ externals?: (string | RegExp | (ExternalItemObjectKnown & ExternalItemObjectUnkn
 externalsPresets?: (ExternalsPresets);
 	
 /**
- * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+ * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.library.type set to the same value).
  */
 externalsType?: ("import" | "module" | "promise" | "commonjs" | "jsonp" | "var" | "assign" | "this" | "window" | "self" | "global" | "commonjs2" | "commonjs-module" | "commonjs-static" | "amd" | "amd-require" | "amd-async" | "umd" | "umd2" | "system" | "module-import" | "script" | "node-commonjs" | "asset" | "asset-url" | "css-import" | "css-url");
 	
@@ -3717,11 +3485,6 @@ static compareLocations( a: Dependency, b: Dependency): (0 | 1 | -1);
  * Returns true if the dependency is a low priority dependency.
  */
 static isLowPriorityDependency( dependency: Dependency): (boolean);
-	
-/**
- * Returns true if the dependency can be concatenated (scope hoisting).
- */
-static canConcatenate( dependency: Dependency): (boolean);
 	static TRANSITIVE: symbol;
 	static LAZY_UNTIL_LOCAL: "local";
 	static LAZY_UNTIL_ID: "id";
@@ -4275,12 +4038,6 @@ static STAGE_ATTACH: number;
  * Runtime modules which trigger actions on bootstrap
  */
 static STAGE_TRIGGER: number;
-	
-/**
- * Gets source basic types.
- * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
- */
-static getSourceBasicTypes( module: Module): ReadonlySet<string>;
 }
 declare interface CssLoadingRuntimeModulePluginHooks {
 	createStylesheet: SyncWaterfallHook<[string, Chunk], string>;
@@ -4768,8 +4525,6 @@ serialize( __0: ObjectSerializerContextObjectMiddlewareObject_4): void;
  * Restores this instance from the provided deserializer context.
  */
 deserialize( __0: ObjectDeserializerContextObjectMiddlewareObject_3): void;
-	module: any;
-	get disconnect(): any;
 	
 /**
  * Compares two dependencies by source location for sorting a module's
@@ -4789,11 +4544,6 @@ static compareLocations( a: Dependency, b: Dependency): (0 | 1 | -1);
  * Returns true if the dependency is a low priority dependency.
  */
 static isLowPriorityDependency( dependency: Dependency): (boolean);
-	
-/**
- * Returns true if the dependency can be concatenated (scope hoisting).
- */
-static canConcatenate( dependency: Dependency): (boolean);
 	static TRANSITIVE: symbol;
 	static LAZY_UNTIL_LOCAL: "local";
 	static LAZY_UNTIL_ID: "id";
@@ -5661,10 +5411,10 @@ declare class EntryPlugin {
 /**
  * An entry plugin which will handle creation of the EntryDependency
  */
-constructor( context: string, entry: string, options?: (string | EntryOptions));
+constructor( context: string, entry: string, options?: (EntryOptions));
 	context: string;
 	entry: string;
-	options: (string | EntryOptions);
+	options: EntryOptions;
 	
 /**
  * Applies the plugin by registering its hooks on the compiler.
@@ -5674,7 +5424,7 @@ apply( compiler: Compiler): void;
 /**
  * Creates a dependency.
  */
-static createDependency( entry: string, options: (string | EntryOptions)): EntryDependency;
+static createDependency( entry: string, options: EntryOptions): EntryDependency;
 }
 type EntryStatic = (string | EntryObject | (string)[]);
 
@@ -6055,12 +5805,6 @@ outputModule?: (boolean);
 sourceImport?: (boolean);
 	
 /**
- * Support WebAssembly as synchronous EcmaScript Module (outdated).
- * @experimental
- */
-syncWebAssembly?: (boolean);
-	
-/**
  * Enable typescript support.
  * @experimental
  */
@@ -6137,12 +5881,6 @@ outputModule?: (boolean);
  * @experimental
  */
 sourceImport?: (boolean);
-	
-/**
- * Support WebAssembly as synchronous EcmaScript Module (outdated).
- * @experimental
- */
-syncWebAssembly?: (boolean);
 	
 /**
  * Enable typescript support.
@@ -6694,12 +6432,6 @@ restoreFromUnsafeCache( unsafeCacheData: UnsafeCacheData, normalModuleFactory: N
 	static getCompilationHooks: (( compilation: Compilation) => ExternalModuleHooks);
 	static ModuleExternalInitFragment: typeof ModuleExternalInitFragment;
 	static getExternalModuleNodeCommonjsInitFragment: (( runtimeTemplate: RuntimeTemplate, universal?: (boolean)) => InitFragment<ChunkRenderContextJavascriptModulesPlugin>);
-	
-/**
- * Gets source basic types.
- * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
- */
-static getSourceBasicTypes( module: Module): ReadonlySet<string>;
 }
 type ExternalModuleBuildInfo = (KnownBuildInfo & Record<string, any> & KnownExternalModuleBuildInfo);
 declare interface ExternalModuleHooks {
@@ -6864,10 +6596,6 @@ declare interface FSImplementation {
 	open?: ((( ...args: (any)[]) => any));
 	close?: ((( ...args: (any)[]) => any));
 }
-
-/**
- * Processes the provided factorize module option.
- */
 declare interface FactorizeModuleOptions {
 	currentProfile?: (ModuleProfile);
 	factory: ModuleFactory;
@@ -6912,32 +6640,6 @@ declare class FetchCompileAsyncWasmPlugin {
  * to chunks containing async WebAssembly modules.
  */
 apply( compiler: Compiler): void;
-}
-
-/**
- * Enables synchronous WebAssembly chunk loading that fetches `.wasm` files and
- * compiles them in browser-like environments.
- */
-declare class FetchCompileWasmPlugin {
-	
-/**
- * Stores options that affect generated synchronous WebAssembly runtime code.
- */
-constructor( options?: (FetchCompileWasmPluginOptions));
-	options: FetchCompileWasmPluginOptions;
-	
-/**
- * Registers compilation hooks that attach the fetch-based synchronous wasm
- * runtime module to chunks containing sync WebAssembly modules.
- */
-apply( compiler: Compiler): void;
-}
-declare interface FetchCompileWasmPluginOptions {
-	
-/**
- * mangle imports
- */
-mangleImports?: (boolean);
 }
 
 /**
@@ -7402,12 +7104,6 @@ static STAGE_ATTACH: number;
  * Runtime modules which trigger actions on bootstrap
  */
 static STAGE_TRIGGER: number;
-	
-/**
- * Gets source basic types.
- * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
- */
-static getSourceBasicTypes( module: Module): ReadonlySet<string>;
 }
 
 /**
@@ -7478,24 +7174,6 @@ declare abstract class HarmonyExportImportedSpecifierDependency extends HarmonyI
 	otherStarExports: (null | ReadonlyArray<HarmonyExportImportedSpecifierDependency>);
 	exportPresenceMode: ExportPresenceMode;
 	allStarExports: (null | HarmonyStarExportsList);
-	
-/**
- * Returns id.
- * @deprecated
- */
-get id(): void;
-	
-/**
- * Returns id.
- * @deprecated
- */
-getId( ): void;
-	
-/**
- * Updates id.
- * @deprecated
- */
-setId( ): void;
 	
 /**
  * Returns the imported id.
@@ -7575,11 +7253,6 @@ static compareLocations( a: Dependency, b: Dependency): (0 | 1 | -1);
  * Returns true if the dependency is a low priority dependency.
  */
 static isLowPriorityDependency( dependency: Dependency): (boolean);
-	
-/**
- * Returns true if the dependency can be concatenated (scope hoisting).
- */
-static canConcatenate( dependency: Dependency): (boolean);
 	static TRANSITIVE: symbol;
 	static LAZY_UNTIL_LOCAL: "local";
 	static LAZY_UNTIL_ID: "id";
@@ -9417,6 +9090,11 @@ dynamicImportPreload?: (number | boolean);
 dynamicUrl?: (boolean);
 	
 /**
+ * Enable/disable parsing of EcmaScript Modules syntax.
+ */
+esm?: (boolean);
+	
+/**
  * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
  */
 exportsPresence?: (false | "error" | "auto" | "warn");
@@ -9440,11 +9118,6 @@ exprContextRegExp?: (boolean | RegExp);
  * Set the default request for full dynamic dependencies.
  */
 exprContextRequest?: (string);
-	
-/**
- * Enable/disable parsing of EcmaScript Modules syntax.
- */
-harmony?: (boolean);
 	
 /**
  * Enable/disable parsing of import() syntax.
@@ -9684,30 +9357,10 @@ static STAGE_ATTACH: number;
  * Runtime modules which trigger actions on bootstrap
  */
 static STAGE_TRIGGER: number;
-	
-/**
- * Gets source basic types.
- * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
- */
-static getSourceBasicTypes( module: Module): ReadonlySet<string>;
 }
 declare interface JsonpCompilationPluginHooks {
 	linkPreload: SyncWaterfallHook<[string, Chunk], string>;
 	linkPrefetch: SyncWaterfallHook<[string, Chunk], string>;
-}
-declare class JsonpTemplatePlugin {
-	constructor( );
-	
-/**
- * Applies the plugin by registering its hooks on the compiler.
- */
-apply( compiler: Compiler): void;
-	
-/**
- * Returns hooks.
- * @deprecated use JsonpChunkLoadingRuntimeModule.getCompilationHooks instead
- */
-static getCompilationHooks( compilation: Compilation): JsonpCompilationPluginHooks;
 }
 declare interface KnownAssetInfo {
 	
@@ -9787,8 +9440,6 @@ declare interface KnownAssetModuleBuildInfo {
  * whether the asset is inlined as a data url
  */
 dataUrl?: (boolean);
-	filename?: (string);
-	assetInfo?: (AssetInfo);
 	fullContentHash?: (string);
 }
 declare interface KnownBuildInfo {
@@ -10323,11 +9974,6 @@ declare interface KnownStatsProfile {
 	storing: number;
 	additionalResolving: number;
 	additionalIntegration: number;
-	factory: number;
-	dependencies: number;
-}
-declare interface KnownSyncWasmModuleBuildMeta {
-	jsIncompatibleExports?: (Record<string, string>);
 }
 declare interface KnownUnsafeCacheData {
 	
@@ -10652,8 +10298,6 @@ commonjs?: (string);
  */
 root?: (string | (string)[]);
 }
-type LibraryExport = (string | (string)[]);
-type LibraryName = (string | (string)[] | LibraryCustomUmdObject);
 
 /**
  * Options for library.
@@ -10686,22 +10330,9 @@ name?: (string | (string)[] | LibraryCustomUmdObject);
 type: string;
 	
 /**
- * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
+ * If `output.library.type` is set to umd and `output.library.name` is set, setting this to true will name the AMD module.
  */
 umdNamedDefine?: (boolean);
-}
-declare class LibraryTemplatePlugin {
-	
-/**
- * Creates an instance of LibraryTemplatePlugin.
- */
-constructor( name: LibraryName, target: string, umdNamedDefine: (boolean), auxiliaryComment: AuxiliaryComment, exportProperty: LibraryExport);
-	library: { type: string; name: LibraryName; umdNamedDefine: (boolean); auxiliaryComment: AuxiliaryComment; export: LibraryExport };
-	
-/**
- * Applies the plugin by registering its hooks on the compiler.
- */
-apply( compiler: Compiler): void;
 }
 declare class LimitChunkCountPlugin {
 	
@@ -10759,12 +10390,6 @@ static STAGE_ATTACH: number;
  * Runtime modules which trigger actions on bootstrap
  */
 static STAGE_TRIGGER: number;
-	
-/**
- * Gets source basic types.
- * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
- */
-static getSourceBasicTypes( module: Module): ReadonlySet<string>;
 }
 
 /**
@@ -11054,15 +10679,6 @@ hash: string;
  */
 strictMode?: (boolean);
 }
-declare abstract class MainTemplate {
-	hooks: Readonly<{ renderManifest: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( renderManifestEntries: (RenderManifestEntry)[], renderManifestOptions: RenderManifestOptions) => (RenderManifestEntry)[])) => void) }; modules: { tap: (( ) => never) }; moduleObj: { tap: (( ) => never) }; require: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( value: string, renderBootstrapContext: RenderBootstrapContext) => string)) => void) }; beforeStartup: { tap: (( ) => never) }; startup: { tap: (( ) => never) }; afterStartup: { tap: (( ) => never) }; render: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( source: Source, chunk: Chunk, hash: (undefined | string), moduleTemplate: ModuleTemplate, dependencyTemplates: DependencyTemplates) => Source)) => void) }; renderWithEntry: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( source: Source, chunk: Chunk, hash?: (string)) => Source)) => void) }; assetPath: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( value: string, path: PathData, assetInfo?: (AssetInfo)) => string)) => void); call: (( filename: TemplatePath, options: PathData) => string) }; hash: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( hash: Hash) => void)) => void) }; hashForChunk: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( hash: Hash, chunk: Chunk) => void)) => void) }; globalHashPaths: { tap: (( ) => void) }; globalHash: { tap: (( ) => void) }; hotBootstrap: { tap: (( ) => never) }; bootstrap: SyncWaterfallHook<[string, Chunk, string, ModuleTemplate, DependencyTemplates], string>; localVars: SyncWaterfallHook<[string, Chunk, string], string>; requireExtensions: SyncWaterfallHook<[string, Chunk, string], string>; requireEnsure: SyncWaterfallHook<[string, Chunk, string, string], string>; get jsonpScript(): SyncWaterfallHook<[string, Chunk], string>; get linkPrefetch(): SyncWaterfallHook<[string, Chunk], string>; get linkPreload(): SyncWaterfallHook<[string, Chunk], string> }>;
-	renderCurrentHashCode: (( hash: string, length?: (number)) => string);
-	getPublicPath: (( options: PathData) => string);
-	getAssetPath: (( path: TemplatePath, options: PathData) => string);
-	getAssetPathWithInfo: (( path: TemplatePath, options: PathData) => InterpolatedPathAndAssetInfo);
-	get requireFn(): string;
-	get outputOptions(): Output;
-}
 declare interface MakeDirectoryOptions {
 	recursive?: (boolean);
 	mode?: (string | number);
@@ -11298,130 +10914,11 @@ constructor( type: string, context?: (null | string), layer?: (null | string));
 	debugId: number;
 	resolveOptions?: (ResolveOptions);
 	factoryMeta?: (FactoryMeta);
-	useSourceMap: (boolean);
-	useSimpleSourceMap: (boolean);
+	sourceMapKind: SourceMapKind;
 	buildMeta?: (BuildMeta);
 	buildInfo?: (BuildInfo);
 	presentationalDependencies?: ((Dependency)[]);
 	codeGenerationDependencies?: ((Dependency)[]);
-	
-/**
- * Returns the module id assigned by the chunk graph.
- * Updates the module id using the provided value.
- * @deprecated
- * @deprecated
- */
-id: (null | string | number);
-	
-/**
- * Returns the hash of the module.
- * @deprecated
- */
-get hash(): string;
-	
-/**
- * Returns the rendered hash of the module.
- * @deprecated
- */
-get renderedHash(): string;
-	
-/**
- * @deprecated
- * @deprecated
- */
-profile?: (ModuleProfile);
-	
-/**
- * Returns the pre-order index.
- * Updates the pre-order index using the provided value.
- * @deprecated
- * @deprecated
- */
-index: (null | number);
-	
-/**
- * Returns the post-order index.
- * Updates the post-order index using the provided value.
- * @deprecated
- * @deprecated
- */
-index2: (null | number);
-	
-/**
- * Returns the depth.
- * Updates the depth using the provided value.
- * @deprecated
- * @deprecated
- */
-depth: (null | number);
-	
-/**
- * Returns the issuer.
- * Updates the issuer using the provided value.
- * @deprecated
- * @deprecated
- */
-issuer?: (null | Module);
-	
-/**
- * @deprecated
- */
-get usedExports(): (null | boolean | SortableSet<string>);
-	
-/**
- * Gets optimization bailout.
- * @deprecated
- */
-get optimizationBailout(): ((string | (( requestShortener: RequestShortener) => string)))[];
-	
-/**
- * @deprecated
- */
-get optional(): (boolean);
-	
-/**
- * Adds the provided chunk to the module.
- * @deprecated
- */
-addChunk( chunk: Chunk): (boolean);
-	
-/**
- * Removes the provided chunk from the module.
- * @deprecated
- */
-removeChunk( chunk: Chunk): void;
-	
-/**
- * Checks whether this module is in the provided chunk.
- * @deprecated
- */
-isInChunk( chunk: Chunk): (boolean);
-	
-/**
- * @deprecated
- */
-isEntryModule( ): (boolean);
-	
-/**
- * @deprecated
- */
-getChunks( ): (Chunk)[];
-	
-/**
- * @deprecated
- */
-getNumberOfChunks( ): number;
-	
-/**
- * @deprecated
- */
-get chunksIterable(): Iterable<Chunk>;
-	
-/**
- * Checks whether this module provides the specified export.
- * @deprecated
- */
-isProvided( exportName: string): (null | boolean);
 	
 /**
  * Gets exports argument.
@@ -11512,12 +11009,6 @@ hasReasons( moduleGraph: ModuleGraph, runtime: RuntimeSpec): (boolean);
  * Checks whether the module needs to be rebuilt for the current build state.
  */
 needBuild( context: NeedBuildContext, callback: (( err?: (null | WebpackError), needBuild?: (boolean)) => void)): void;
-	
-/**
- * Checks whether it needs rebuild.
- * @deprecated Use needBuild instead
- */
-needRebuild( fileTimestamps: Map<string, (null | number)>, contextTimestamps: Map<string, (null | number)>): (boolean);
 	
 /**
  * Invalidates the cached state associated with this value.
@@ -11627,17 +11118,6 @@ originalSource( ): (null | Source);
  * Adds the provided file dependencies to the module.
  */
 addCacheDependencies( fileDependencies: LazySet<string>, contextDependencies: LazySet<string>, missingDependencies: LazySet<string>, buildDependencies: LazySet<string>): void;
-	get hasEqualsChunks(): any;
-	get isUsed(): any;
-	get errors(): any;
-	get warnings(): any;
-	used: any;
-	
-/**
- * Gets source basic types.
- * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
- */
-static getSourceBasicTypes( module: Module): ReadonlySet<string>;
 }
 declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 	
@@ -11666,12 +11146,6 @@ static STAGE_ATTACH: number;
  * Runtime modules which trigger actions on bootstrap
  */
 static STAGE_TRIGGER: number;
-	
-/**
- * Gets source basic types.
- * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
- */
-static getSourceBasicTypes( module: Module): ReadonlySet<string>;
 }
 declare class ModuleConcatenationPlugin {
 	constructor( );
@@ -11712,11 +11186,6 @@ static compareLocations( a: Dependency, b: Dependency): (0 | 1 | -1);
  * Returns true if the dependency is a low priority dependency.
  */
 static isLowPriorityDependency( dependency: Dependency): (boolean);
-	
-/**
- * Returns true if the dependency can be concatenated (scope hoisting).
- */
-static canConcatenate( dependency: Dependency): (boolean);
 	static TRANSITIVE: symbol;
 	static LAZY_UNTIL_LOCAL: "local";
 	static LAZY_UNTIL_ID: "id";
@@ -12225,24 +11694,6 @@ setModuleMemCaches( moduleMemCaches: Map<Module, WeakTupleMap<(any)[], any>>): v
  * Dependency cache provide.
  */
 dependencyCacheProvide<D extends Dependency, ARGS extends (any)[], R>( dependency: D, ...args: [ARGS, ...((( moduleGraph: ModuleGraph, dependency: D, ...args: ARGS) => R))[]]): R;
-	
-/**
- * Gets module graph for module.
- * @deprecated
- */
-static getModuleGraphForModule( module: Module, deprecateMessage: string, deprecationCode: string): ModuleGraph;
-	
-/**
- * Sets module graph for module.
- * @deprecated
- */
-static setModuleGraphForModule( module: Module, moduleGraph: ModuleGraph): void;
-	
-/**
- * Clear module graph for module.
- * @deprecated
- */
-static clearModuleGraphForModule( module: Module): void;
 	static ModuleGraphConnection: typeof ModuleGraphConnection;
 }
 declare class ModuleGraphConnection {
@@ -12315,30 +11766,6 @@ declare interface ModuleOptions {
 defaultRules?: (((undefined | null | false | "" | 0 | RuleSetRule | "..."))[]);
 	
 /**
- * Enable warnings for full dynamic dependencies.
- * @deprecated
- */
-exprContextCritical?: (boolean);
-	
-/**
- * Enable recursive directory lookup for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRecursive'.
- * @deprecated
- */
-exprContextRecursive?: (boolean);
-	
-/**
- * Sets the default regular expression for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRegExp'.
- * @deprecated
- */
-exprContextRegExp?: (boolean | RegExp);
-	
-/**
- * Set the default request for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRequest'.
- * @deprecated
- */
-exprContextRequest?: (string);
-	
-/**
  * Specify options for each generator.
  */
 generator?: (GeneratorOptionsByModuleType);
@@ -12359,63 +11786,9 @@ parser?: (ParserOptionsByModuleType);
 rules?: (((undefined | null | false | "" | 0 | RuleSetRule | "..."))[]);
 	
 /**
- * Emit errors instead of warnings when imported names don't exist in imported module. Deprecated: This option has moved to 'module.parser.javascript.strictExportPresence'.
- * @deprecated
- */
-strictExportPresence?: (boolean);
-	
-/**
- * Handle the this context correctly according to the spec for namespace objects. Deprecated: This option has moved to 'module.parser.javascript.strictThisContextOnImports'.
- * @deprecated
- */
-strictThisContextOnImports?: (boolean);
-	
-/**
- * Enable warnings when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextCritical'.
- * @deprecated
- */
-unknownContextCritical?: (boolean);
-	
-/**
- * Enable recursive directory lookup when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRecursive'.
- * @deprecated
- */
-unknownContextRecursive?: (boolean);
-	
-/**
- * Sets the regular expression when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRegExp'.
- * @deprecated
- */
-unknownContextRegExp?: (boolean | RegExp);
-	
-/**
- * Sets the request when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRequest'.
- * @deprecated
- */
-unknownContextRequest?: (string);
-	
-/**
  * Cache the resolving of module requests.
  */
 unsafeCache?: (boolean | (( module: Module) => (boolean)));
-	
-/**
- * Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.
- * @deprecated
- */
-wrappedContextCritical?: (boolean);
-	
-/**
- * Enable recursive directory lookup for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRecursive'.
- * @deprecated
- */
-wrappedContextRecursive?: (boolean);
-	
-/**
- * Set the inner regular expression for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRegExp'.
- * @deprecated
- */
-wrappedContextRegExp?: (RegExp);
 }
 
 /**
@@ -12641,14 +12014,6 @@ resolve?: (ResolveOptions);
  * Flags a module as with or without side effects.
  */
 sideEffects?: (boolean);
-}
-declare abstract class ModuleTemplate {
-	type: string;
-	hooks: Readonly<{ content: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( source: Source, module: Module, moduleRenderContext: ModuleRenderContext, dependencyTemplates: DependencyTemplates) => Source)) => void) }; module: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( source: Source, module: Module, moduleRenderContext: ModuleRenderContext, dependencyTemplates: DependencyTemplates) => Source)) => void) }; render: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( source: Source, module: Module, chunkRenderContext: ChunkRenderContextJavascriptModulesPlugin, dependencyTemplates: DependencyTemplates) => Source)) => void) }; package: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( source: Source, module: Module, chunkRenderContext: ChunkRenderContextJavascriptModulesPlugin, dependencyTemplates: DependencyTemplates) => Source)) => void) }; hash: { tap: (<AdditionalOptions>( options: (string | (TapOptions & { name: string } & IfSet<AdditionalOptions>)), fn: (( hash: Hash) => void)) => void) } }>;
-	get runtimeTemplate(): RuntimeTemplate;
-}
-declare interface ModuleTemplates {
-	javascript: ModuleTemplate;
 }
 declare interface ModuleTrace {
 	origin: Module;
@@ -12888,12 +12253,6 @@ restoreFromUnsafeCache( unsafeCacheData: UnsafeCacheData, normalModuleFactory: N
 	shouldPreventParsing( noParseRule: (undefined | string | RegExp | (( content: string) => (boolean)) | (Exclude<NoParse, (any)[]>)[]), request: string): (boolean);
 	static getCompilationHooks( compilation: Compilation): NormalModuleCompilationHooks;
 	static deserialize( context: ObjectDeserializerContextObjectMiddlewareObject_3): NormalModule;
-	
-/**
- * Gets source basic types.
- * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
- */
-static getSourceBasicTypes( module: Module): ReadonlySet<string>;
 }
 type NormalModuleBuildInfo = (KnownBuildInfo & Record<string, any> & KnownNormalModuleBuildInfo);
 declare interface NormalModuleCompilationHooks {
@@ -12961,22 +12320,22 @@ matchResource?: (string);
 /**
  * the parser used
  */
-parser: ((Record<"javascript/auto", JavascriptParser> & Record<"javascript/dynamic", JavascriptParser> & Record<"javascript/esm", JavascriptParser> & Record<"json", JsonParser> & Record<"asset", AssetParser> & Record<"asset/inline", AssetParser> & Record<"asset/resource", AssetParser> & Record<"asset/source", AssetSourceParser> & Record<"asset/bytes", AssetBytesParser> & Record<"webassembly/async", WebAssemblyParserAsyncWebAssemblyParser> & Record<"webassembly/sync", WebAssemblyParserClass> & Record<"css", CssParser> & Record<"css/auto", CssParser> & Record<"css/module", CssParser> & Record<"css/global", CssParser> & Record<"html", HtmlParser> & Record<string, ParserClass>))[T];
+parser: ((Record<"javascript/auto", JavascriptParser> & Record<"javascript/dynamic", JavascriptParser> & Record<"javascript/esm", JavascriptParser> & Record<"json", JsonParser> & Record<"asset", AssetParser> & Record<"asset/inline", AssetParser> & Record<"asset/resource", AssetParser> & Record<"asset/source", AssetSourceParser> & Record<"asset/bytes", AssetBytesParser> & Record<"webassembly/async", WebAssemblyParser> & Record<"css", CssParser> & Record<"css/auto", CssParser> & Record<"css/module", CssParser> & Record<"css/global", CssParser> & Record<"html", HtmlParser> & Record<string, ParserClass>))[T];
 	
 /**
  * the options of the parser used
  */
-parserOptions?: (((Record<"javascript/auto", JavascriptParserOptions> & Record<"javascript/dynamic", JavascriptParserOptions> & Record<"javascript/esm", JavascriptParserOptions> & Record<"json", JsonParserOptions> & Record<"asset", AssetParserOptions> & Record<"asset/inline", EmptyParserOptions> & Record<"asset/resource", EmptyParserOptions> & Record<"asset/source", EmptyParserOptions> & Record<"asset/bytes", EmptyParserOptions> & Record<"webassembly/async", EmptyParserOptions> & Record<"webassembly/sync", EmptyParserOptions> & Record<"css", CssParserOptions> & Record<"css/auto", CssModuleParserOptions> & Record<"css/module", CssModuleParserOptions> & Record<"css/global", CssModuleParserOptions> & Record<"html", EmptyParserOptions> & Record<string, ParserOptions>))[T]);
+parserOptions?: (((Record<"javascript/auto", JavascriptParserOptions> & Record<"javascript/dynamic", JavascriptParserOptions> & Record<"javascript/esm", JavascriptParserOptions> & Record<"json", JsonParserOptions> & Record<"asset", AssetParserOptions> & Record<"asset/inline", EmptyParserOptions> & Record<"asset/resource", EmptyParserOptions> & Record<"asset/source", EmptyParserOptions> & Record<"asset/bytes", EmptyParserOptions> & Record<"webassembly/async", EmptyParserOptions> & Record<"css", CssParserOptions> & Record<"css/auto", CssModuleParserOptions> & Record<"css/module", CssModuleParserOptions> & Record<"css/global", CssModuleParserOptions> & Record<"html", EmptyParserOptions> & Record<string, ParserOptions>))[T]);
 	
 /**
  * the generator used
  */
-generator: ((Record<"javascript/auto", JavascriptGenerator> & Record<"javascript/dynamic", JavascriptGenerator> & Record<"javascript/esm", JavascriptGenerator> & Record<"json", JsonGenerator> & Record<"asset", AssetGenerator> & Record<"asset/inline", AssetGenerator> & Record<"asset/resource", AssetGenerator> & Record<"asset/source", AssetSourceGenerator> & Record<"asset/bytes", AssetBytesGenerator> & Record<"webassembly/async", Generator> & Record<"webassembly/sync", Generator> & Record<"css", CssGenerator> & Record<"css/auto", CssGenerator> & Record<"css/module", CssGenerator> & Record<"css/global", CssGenerator> & Record<"html", HtmlGenerator> & Record<string, Generator>))[T];
+generator: ((Record<"javascript/auto", JavascriptGenerator> & Record<"javascript/dynamic", JavascriptGenerator> & Record<"javascript/esm", JavascriptGenerator> & Record<"json", JsonGenerator> & Record<"asset", AssetGenerator> & Record<"asset/inline", AssetGenerator> & Record<"asset/resource", AssetGenerator> & Record<"asset/source", AssetSourceGenerator> & Record<"asset/bytes", AssetBytesGenerator> & Record<"webassembly/async", Generator> & Record<"css", CssGenerator> & Record<"css/auto", CssGenerator> & Record<"css/module", CssGenerator> & Record<"css/global", CssGenerator> & Record<"html", HtmlGenerator> & Record<string, Generator>))[T];
 	
 /**
  * the options of the generator used
  */
-generatorOptions?: (((Record<"javascript/auto", EmptyGeneratorOptions> & Record<"javascript/dynamic", EmptyGeneratorOptions> & Record<"javascript/esm", EmptyGeneratorOptions> & Record<"json", JsonGeneratorOptions> & Record<"asset", AssetGeneratorOptions> & Record<"asset/inline", AssetGeneratorOptions> & Record<"asset/resource", AssetGeneratorOptions> & Record<"asset/source", EmptyGeneratorOptions> & Record<"asset/bytes", EmptyGeneratorOptions> & Record<"webassembly/async", EmptyGeneratorOptions> & Record<"webassembly/sync", EmptyGeneratorOptions> & Record<"css", CssGeneratorOptions> & Record<"css/auto", CssModuleGeneratorOptions> & Record<"css/module", CssModuleGeneratorOptions> & Record<"css/global", CssModuleGeneratorOptions> & Record<"html", HtmlGeneratorOptions> & Record<string, GeneratorOptions>))[T]);
+generatorOptions?: (((Record<"javascript/auto", EmptyGeneratorOptions> & Record<"javascript/dynamic", EmptyGeneratorOptions> & Record<"javascript/esm", EmptyGeneratorOptions> & Record<"json", JsonGeneratorOptions> & Record<"asset", AssetGeneratorOptions> & Record<"asset/inline", AssetGeneratorOptions> & Record<"asset/resource", AssetGeneratorOptions> & Record<"asset/source", EmptyGeneratorOptions> & Record<"asset/bytes", EmptyGeneratorOptions> & Record<"webassembly/async", EmptyGeneratorOptions> & Record<"css", CssGeneratorOptions> & Record<"css/auto", CssModuleGeneratorOptions> & Record<"css/module", CssModuleGeneratorOptions> & Record<"css/global", CssModuleGeneratorOptions> & Record<"html", HtmlGeneratorOptions> & Record<string, GeneratorOptions>))[T]);
 	
 /**
  * options used for resolving requests from this module
@@ -12989,7 +12348,7 @@ resolveOptions?: (ResolveOptions);
 extractSourceMap: (boolean);
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
-	hooks: Readonly<{ resolve: AsyncSeriesBailHook<[ResolveData], (false | void | Module)>; resolveForScheme: HookMap<AsyncSeriesBailHook<[ResourceDataWithData, ResolveData], (true | void)>>; resolveInScheme: HookMap<AsyncSeriesBailHook<[ResourceDataWithData, ResolveData], (true | void)>>; factorize: AsyncSeriesBailHook<[ResolveData], (undefined | Module)>; beforeResolve: AsyncSeriesBailHook<[ResolveData], (false | void)>; afterResolve: AsyncSeriesBailHook<[ResolveData], (false | void)>; createModule: AsyncSeriesBailHook<[CreateData, ResolveData], (void | Module)>; module: SyncWaterfallHook<[Module, CreateData, ResolveData], Module>; createParser: TypedHookMap<(Record<"javascript/auto", SyncBailHook<[JavascriptParserOptions], JavascriptParser>> & Record<"javascript/dynamic", SyncBailHook<[JavascriptParserOptions], JavascriptParser>> & Record<"javascript/esm", SyncBailHook<[JavascriptParserOptions], JavascriptParser>> & Record<"json", SyncBailHook<[JsonParserOptions], JsonParser>> & Record<"asset", SyncBailHook<[AssetParserOptions], AssetParser>> & Record<"asset/inline", SyncBailHook<[EmptyParserOptions], AssetParser>> & Record<"asset/resource", SyncBailHook<[EmptyParserOptions], AssetParser>> & Record<"asset/source", SyncBailHook<[EmptyParserOptions], AssetSourceParser>> & Record<"asset/bytes", SyncBailHook<[EmptyParserOptions], AssetBytesParser>> & Record<"webassembly/async", SyncBailHook<[EmptyParserOptions], WebAssemblyParserAsyncWebAssemblyParser>> & Record<"webassembly/sync", SyncBailHook<[EmptyParserOptions], WebAssemblyParserClass>> & Record<"css", SyncBailHook<[CssParserOptions], CssParser>> & Record<"css/auto", SyncBailHook<[CssModuleParserOptions], CssParser>> & Record<"css/module", SyncBailHook<[CssModuleParserOptions], CssParser>> & Record<"css/global", SyncBailHook<[CssModuleParserOptions], CssParser>> & Record<"html", SyncBailHook<[EmptyParserOptions], HtmlParser>> & Record<string, SyncBailHook<[ParserOptions], ParserClass>>)>; parser: TypedHookMap<(Record<"javascript/auto", SyncBailHook<[JavascriptParser, JavascriptParserOptions], void>> & Record<"javascript/dynamic", SyncBailHook<[JavascriptParser, JavascriptParserOptions], void>> & Record<"javascript/esm", SyncBailHook<[JavascriptParser, JavascriptParserOptions], void>> & Record<"json", SyncBailHook<[JsonParser, JsonParserOptions], void>> & Record<"asset", SyncBailHook<[AssetParser, AssetParserOptions], void>> & Record<"asset/inline", SyncBailHook<[AssetParser, EmptyParserOptions], void>> & Record<"asset/resource", SyncBailHook<[AssetParser, EmptyParserOptions], void>> & Record<"asset/source", SyncBailHook<[AssetSourceParser, EmptyParserOptions], void>> & Record<"asset/bytes", SyncBailHook<[AssetBytesParser, EmptyParserOptions], void>> & Record<"webassembly/async", SyncBailHook<[WebAssemblyParserAsyncWebAssemblyParser, EmptyParserOptions], void>> & Record<"webassembly/sync", SyncBailHook<[WebAssemblyParserClass, EmptyParserOptions], void>> & Record<"css", SyncBailHook<[CssParser, CssParserOptions], void>> & Record<"css/auto", SyncBailHook<[CssParser, CssModuleParserOptions], void>> & Record<"css/module", SyncBailHook<[CssParser, CssModuleParserOptions], void>> & Record<"css/global", SyncBailHook<[CssParser, CssModuleParserOptions], void>> & Record<"html", SyncBailHook<[HtmlParser, EmptyParserOptions], void>> & Record<string, SyncBailHook<[ParserClass, ParserOptions], void>>)>; createGenerator: TypedHookMap<(Record<"javascript/auto", SyncBailHook<[EmptyGeneratorOptions], JavascriptGenerator>> & Record<"javascript/dynamic", SyncBailHook<[EmptyGeneratorOptions], JavascriptGenerator>> & Record<"javascript/esm", SyncBailHook<[EmptyGeneratorOptions], JavascriptGenerator>> & Record<"json", SyncBailHook<[JsonGeneratorOptions], JsonGenerator>> & Record<"asset", SyncBailHook<[AssetGeneratorOptions], AssetGenerator>> & Record<"asset/inline", SyncBailHook<[AssetGeneratorOptions], AssetGenerator>> & Record<"asset/resource", SyncBailHook<[AssetGeneratorOptions], AssetGenerator>> & Record<"asset/source", SyncBailHook<[EmptyGeneratorOptions], AssetSourceGenerator>> & Record<"asset/bytes", SyncBailHook<[EmptyGeneratorOptions], AssetBytesGenerator>> & Record<"webassembly/async", SyncBailHook<[EmptyGeneratorOptions], Generator>> & Record<"webassembly/sync", SyncBailHook<[EmptyGeneratorOptions], Generator>> & Record<"css", SyncBailHook<[CssGeneratorOptions], CssGenerator>> & Record<"css/auto", SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>> & Record<"css/module", SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>> & Record<"css/global", SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>> & Record<"html", SyncBailHook<[HtmlGeneratorOptions], HtmlGenerator>> & Record<string, SyncBailHook<[GeneratorOptions], Generator>>)>; generator: TypedHookMap<(Record<"javascript/auto", SyncBailHook<[JavascriptGenerator, EmptyGeneratorOptions], void>> & Record<"javascript/dynamic", SyncBailHook<[JavascriptGenerator, EmptyGeneratorOptions], void>> & Record<"javascript/esm", SyncBailHook<[JavascriptGenerator, EmptyGeneratorOptions], void>> & Record<"json", SyncBailHook<[JsonGenerator, JsonGeneratorOptions], void>> & Record<"asset", SyncBailHook<[AssetGenerator, AssetGeneratorOptions], void>> & Record<"asset/inline", SyncBailHook<[AssetGenerator, AssetGeneratorOptions], void>> & Record<"asset/resource", SyncBailHook<[AssetGenerator, AssetGeneratorOptions], void>> & Record<"asset/source", SyncBailHook<[AssetSourceGenerator, EmptyGeneratorOptions], void>> & Record<"asset/bytes", SyncBailHook<[AssetBytesGenerator, EmptyGeneratorOptions], void>> & Record<"webassembly/async", SyncBailHook<[Generator, EmptyGeneratorOptions], void>> & Record<"webassembly/sync", SyncBailHook<[Generator, EmptyGeneratorOptions], void>> & Record<"css", SyncBailHook<[CssGenerator, CssGeneratorOptions], void>> & Record<"css/auto", SyncBailHook<[CssGenerator, CssModuleGeneratorOptions], void>> & Record<"css/module", SyncBailHook<[CssGenerator, CssModuleGeneratorOptions], void>> & Record<"css/global", SyncBailHook<[CssGenerator, CssModuleGeneratorOptions], void>> & Record<"html", SyncBailHook<[HtmlGenerator, HtmlGeneratorOptions], void>> & Record<string, SyncBailHook<[Generator, GeneratorOptions], void>>)>; createModuleClass: HookMap<SyncBailHook<[CreateData, ResolveData], (void | Module)>> }>;
+	hooks: Readonly<{ resolve: AsyncSeriesBailHook<[ResolveData], (false | void | Module)>; resolveForScheme: HookMap<AsyncSeriesBailHook<[ResourceDataWithData, ResolveData], (true | void)>>; resolveInScheme: HookMap<AsyncSeriesBailHook<[ResourceDataWithData, ResolveData], (true | void)>>; factorize: AsyncSeriesBailHook<[ResolveData], (undefined | Module)>; beforeResolve: AsyncSeriesBailHook<[ResolveData], (false | void)>; afterResolve: AsyncSeriesBailHook<[ResolveData], (false | void)>; createModule: AsyncSeriesBailHook<[CreateData, ResolveData], (void | Module)>; module: SyncWaterfallHook<[Module, CreateData, ResolveData], Module>; createParser: TypedHookMap<(Record<"javascript/auto", SyncBailHook<[JavascriptParserOptions], JavascriptParser>> & Record<"javascript/dynamic", SyncBailHook<[JavascriptParserOptions], JavascriptParser>> & Record<"javascript/esm", SyncBailHook<[JavascriptParserOptions], JavascriptParser>> & Record<"json", SyncBailHook<[JsonParserOptions], JsonParser>> & Record<"asset", SyncBailHook<[AssetParserOptions], AssetParser>> & Record<"asset/inline", SyncBailHook<[EmptyParserOptions], AssetParser>> & Record<"asset/resource", SyncBailHook<[EmptyParserOptions], AssetParser>> & Record<"asset/source", SyncBailHook<[EmptyParserOptions], AssetSourceParser>> & Record<"asset/bytes", SyncBailHook<[EmptyParserOptions], AssetBytesParser>> & Record<"webassembly/async", SyncBailHook<[EmptyParserOptions], WebAssemblyParser>> & Record<"css", SyncBailHook<[CssParserOptions], CssParser>> & Record<"css/auto", SyncBailHook<[CssModuleParserOptions], CssParser>> & Record<"css/module", SyncBailHook<[CssModuleParserOptions], CssParser>> & Record<"css/global", SyncBailHook<[CssModuleParserOptions], CssParser>> & Record<"html", SyncBailHook<[EmptyParserOptions], HtmlParser>> & Record<string, SyncBailHook<[ParserOptions], ParserClass>>)>; parser: TypedHookMap<(Record<"javascript/auto", SyncBailHook<[JavascriptParser, JavascriptParserOptions], void>> & Record<"javascript/dynamic", SyncBailHook<[JavascriptParser, JavascriptParserOptions], void>> & Record<"javascript/esm", SyncBailHook<[JavascriptParser, JavascriptParserOptions], void>> & Record<"json", SyncBailHook<[JsonParser, JsonParserOptions], void>> & Record<"asset", SyncBailHook<[AssetParser, AssetParserOptions], void>> & Record<"asset/inline", SyncBailHook<[AssetParser, EmptyParserOptions], void>> & Record<"asset/resource", SyncBailHook<[AssetParser, EmptyParserOptions], void>> & Record<"asset/source", SyncBailHook<[AssetSourceParser, EmptyParserOptions], void>> & Record<"asset/bytes", SyncBailHook<[AssetBytesParser, EmptyParserOptions], void>> & Record<"webassembly/async", SyncBailHook<[WebAssemblyParser, EmptyParserOptions], void>> & Record<"css", SyncBailHook<[CssParser, CssParserOptions], void>> & Record<"css/auto", SyncBailHook<[CssParser, CssModuleParserOptions], void>> & Record<"css/module", SyncBailHook<[CssParser, CssModuleParserOptions], void>> & Record<"css/global", SyncBailHook<[CssParser, CssModuleParserOptions], void>> & Record<"html", SyncBailHook<[HtmlParser, EmptyParserOptions], void>> & Record<string, SyncBailHook<[ParserClass, ParserOptions], void>>)>; createGenerator: TypedHookMap<(Record<"javascript/auto", SyncBailHook<[EmptyGeneratorOptions], JavascriptGenerator>> & Record<"javascript/dynamic", SyncBailHook<[EmptyGeneratorOptions], JavascriptGenerator>> & Record<"javascript/esm", SyncBailHook<[EmptyGeneratorOptions], JavascriptGenerator>> & Record<"json", SyncBailHook<[JsonGeneratorOptions], JsonGenerator>> & Record<"asset", SyncBailHook<[AssetGeneratorOptions], AssetGenerator>> & Record<"asset/inline", SyncBailHook<[AssetGeneratorOptions], AssetGenerator>> & Record<"asset/resource", SyncBailHook<[AssetGeneratorOptions], AssetGenerator>> & Record<"asset/source", SyncBailHook<[EmptyGeneratorOptions], AssetSourceGenerator>> & Record<"asset/bytes", SyncBailHook<[EmptyGeneratorOptions], AssetBytesGenerator>> & Record<"webassembly/async", SyncBailHook<[EmptyGeneratorOptions], Generator>> & Record<"css", SyncBailHook<[CssGeneratorOptions], CssGenerator>> & Record<"css/auto", SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>> & Record<"css/module", SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>> & Record<"css/global", SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>> & Record<"html", SyncBailHook<[HtmlGeneratorOptions], HtmlGenerator>> & Record<string, SyncBailHook<[GeneratorOptions], Generator>>)>; generator: TypedHookMap<(Record<"javascript/auto", SyncBailHook<[JavascriptGenerator, EmptyGeneratorOptions], void>> & Record<"javascript/dynamic", SyncBailHook<[JavascriptGenerator, EmptyGeneratorOptions], void>> & Record<"javascript/esm", SyncBailHook<[JavascriptGenerator, EmptyGeneratorOptions], void>> & Record<"json", SyncBailHook<[JsonGenerator, JsonGeneratorOptions], void>> & Record<"asset", SyncBailHook<[AssetGenerator, AssetGeneratorOptions], void>> & Record<"asset/inline", SyncBailHook<[AssetGenerator, AssetGeneratorOptions], void>> & Record<"asset/resource", SyncBailHook<[AssetGenerator, AssetGeneratorOptions], void>> & Record<"asset/source", SyncBailHook<[AssetSourceGenerator, EmptyGeneratorOptions], void>> & Record<"asset/bytes", SyncBailHook<[AssetBytesGenerator, EmptyGeneratorOptions], void>> & Record<"webassembly/async", SyncBailHook<[Generator, EmptyGeneratorOptions], void>> & Record<"css", SyncBailHook<[CssGenerator, CssGeneratorOptions], void>> & Record<"css/auto", SyncBailHook<[CssGenerator, CssModuleGeneratorOptions], void>> & Record<"css/module", SyncBailHook<[CssGenerator, CssModuleGeneratorOptions], void>> & Record<"css/global", SyncBailHook<[CssGenerator, CssModuleGeneratorOptions], void>> & Record<"html", SyncBailHook<[HtmlGenerator, HtmlGeneratorOptions], void>> & Record<string, SyncBailHook<[Generator, GeneratorOptions], void>>)>; createModuleClass: HookMap<SyncBailHook<[CreateData, ResolveData], (void | Module)>> }>;
 	resolverFactory: defaultResolverFactory;
 	ruleSet: RuleSet;
 	context: string;
@@ -13011,22 +12370,22 @@ resolveRequestArray( contextInfo: ModuleFactoryCreateDataContextInfo, context: s
 /**
  * Returns parser.
  */
-getParser<T extends string>( type: T, parserOptions?: ParserOptions): ((Record<"javascript/auto", JavascriptParser> & Record<"javascript/dynamic", JavascriptParser> & Record<"javascript/esm", JavascriptParser> & Record<"json", JsonParser> & Record<"asset", AssetParser> & Record<"asset/inline", AssetParser> & Record<"asset/resource", AssetParser> & Record<"asset/source", AssetSourceParser> & Record<"asset/bytes", AssetBytesParser> & Record<"webassembly/async", WebAssemblyParserAsyncWebAssemblyParser> & Record<"webassembly/sync", WebAssemblyParserClass> & Record<"css", CssParser> & Record<"css/auto", CssParser> & Record<"css/module", CssParser> & Record<"css/global", CssParser> & Record<"html", HtmlParser> & Record<string, ParserClass>))[T];
+getParser<T extends string>( type: T, parserOptions?: ParserOptions): ((Record<"javascript/auto", JavascriptParser> & Record<"javascript/dynamic", JavascriptParser> & Record<"javascript/esm", JavascriptParser> & Record<"json", JsonParser> & Record<"asset", AssetParser> & Record<"asset/inline", AssetParser> & Record<"asset/resource", AssetParser> & Record<"asset/source", AssetSourceParser> & Record<"asset/bytes", AssetBytesParser> & Record<"webassembly/async", WebAssemblyParser> & Record<"css", CssParser> & Record<"css/auto", CssParser> & Record<"css/module", CssParser> & Record<"css/global", CssParser> & Record<"html", HtmlParser> & Record<string, ParserClass>))[T];
 	
 /**
  * Creates a parser from the provided type.
  */
-createParser<T extends string>( type: T, parserOptions?: ParserOptions): ((Record<"javascript/auto", JavascriptParser> & Record<"javascript/dynamic", JavascriptParser> & Record<"javascript/esm", JavascriptParser> & Record<"json", JsonParser> & Record<"asset", AssetParser> & Record<"asset/inline", AssetParser> & Record<"asset/resource", AssetParser> & Record<"asset/source", AssetSourceParser> & Record<"asset/bytes", AssetBytesParser> & Record<"webassembly/async", WebAssemblyParserAsyncWebAssemblyParser> & Record<"webassembly/sync", WebAssemblyParserClass> & Record<"css", CssParser> & Record<"css/auto", CssParser> & Record<"css/module", CssParser> & Record<"css/global", CssParser> & Record<"html", HtmlParser> & Record<string, ParserClass>))[T];
+createParser<T extends string>( type: T, parserOptions?: ParserOptions): ((Record<"javascript/auto", JavascriptParser> & Record<"javascript/dynamic", JavascriptParser> & Record<"javascript/esm", JavascriptParser> & Record<"json", JsonParser> & Record<"asset", AssetParser> & Record<"asset/inline", AssetParser> & Record<"asset/resource", AssetParser> & Record<"asset/source", AssetSourceParser> & Record<"asset/bytes", AssetBytesParser> & Record<"webassembly/async", WebAssemblyParser> & Record<"css", CssParser> & Record<"css/auto", CssParser> & Record<"css/module", CssParser> & Record<"css/global", CssParser> & Record<"html", HtmlParser> & Record<string, ParserClass>))[T];
 	
 /**
  * Returns generator.
  */
-getGenerator<T extends string>( type: T, generatorOptions?: GeneratorOptions): ((Record<"javascript/auto", JavascriptGenerator> & Record<"javascript/dynamic", JavascriptGenerator> & Record<"javascript/esm", JavascriptGenerator> & Record<"json", JsonGenerator> & Record<"asset", AssetGenerator> & Record<"asset/inline", AssetGenerator> & Record<"asset/resource", AssetGenerator> & Record<"asset/source", AssetSourceGenerator> & Record<"asset/bytes", AssetBytesGenerator> & Record<"webassembly/async", Generator> & Record<"webassembly/sync", Generator> & Record<"css", CssGenerator> & Record<"css/auto", CssGenerator> & Record<"css/module", CssGenerator> & Record<"css/global", CssGenerator> & Record<"html", HtmlGenerator> & Record<string, Generator>))[T];
+getGenerator<T extends string>( type: T, generatorOptions?: GeneratorOptions): ((Record<"javascript/auto", JavascriptGenerator> & Record<"javascript/dynamic", JavascriptGenerator> & Record<"javascript/esm", JavascriptGenerator> & Record<"json", JsonGenerator> & Record<"asset", AssetGenerator> & Record<"asset/inline", AssetGenerator> & Record<"asset/resource", AssetGenerator> & Record<"asset/source", AssetSourceGenerator> & Record<"asset/bytes", AssetBytesGenerator> & Record<"webassembly/async", Generator> & Record<"css", CssGenerator> & Record<"css/auto", CssGenerator> & Record<"css/module", CssGenerator> & Record<"css/global", CssGenerator> & Record<"html", HtmlGenerator> & Record<string, Generator>))[T];
 	
 /**
  * Creates a generator.
  */
-createGenerator<T extends string>( type: T, generatorOptions?: GeneratorOptions): ((Record<"javascript/auto", JavascriptGenerator> & Record<"javascript/dynamic", JavascriptGenerator> & Record<"javascript/esm", JavascriptGenerator> & Record<"json", JsonGenerator> & Record<"asset", AssetGenerator> & Record<"asset/inline", AssetGenerator> & Record<"asset/resource", AssetGenerator> & Record<"asset/source", AssetSourceGenerator> & Record<"asset/bytes", AssetBytesGenerator> & Record<"webassembly/async", Generator> & Record<"webassembly/sync", Generator> & Record<"css", CssGenerator> & Record<"css/auto", CssGenerator> & Record<"css/module", CssGenerator> & Record<"css/global", CssGenerator> & Record<"html", HtmlGenerator> & Record<string, Generator>))[T];
+createGenerator<T extends string>( type: T, generatorOptions?: GeneratorOptions): ((Record<"javascript/auto", JavascriptGenerator> & Record<"javascript/dynamic", JavascriptGenerator> & Record<"javascript/esm", JavascriptGenerator> & Record<"json", JsonGenerator> & Record<"asset", AssetGenerator> & Record<"asset/inline", AssetGenerator> & Record<"asset/resource", AssetGenerator> & Record<"asset/source", AssetSourceGenerator> & Record<"asset/bytes", AssetBytesGenerator> & Record<"webassembly/async", Generator> & Record<"css", CssGenerator> & Record<"css/auto", CssGenerator> & Record<"css/module", CssGenerator> & Record<"css/global", CssGenerator> & Record<"html", HtmlGenerator> & Record<string, Generator>))[T];
 	
 /**
  * Returns the resolver.
@@ -13163,11 +12522,6 @@ static compareLocations( a: Dependency, b: Dependency): (0 | 1 | -1);
  * Returns true if the dependency is a low priority dependency.
  */
 static isLowPriorityDependency( dependency: Dependency): (boolean);
-	
-/**
- * Returns true if the dependency can be concatenated (scope hoisting).
- */
-static canConcatenate( dependency: Dependency): (boolean);
 	static TRANSITIVE: symbol;
 	static LAZY_UNTIL_LOCAL: "local";
 	static LAZY_UNTIL_ID: "id";
@@ -13364,11 +12718,6 @@ declare interface Optimization {
 avoidEntryIife?: (boolean);
 	
 /**
- * Check for incompatible wasm types when importing/exporting from/to ESM.
- */
-checkWasmTypes?: (boolean);
-	
-/**
  * Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin).
  */
 chunkIds?: (false | "size" | "natural" | "named" | "deterministic" | "total-size");
@@ -13427,12 +12776,6 @@ minimizer?: (((undefined | null | false | "" | 0 | ((this: Compiler,  compiler: 
  * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
  */
 moduleIds?: (false | "size" | "natural" | "named" | "deterministic" | "hashed");
-	
-/**
- * Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).
- * @deprecated
- */
-noEmitOnErrors?: (boolean);
 	
 /**
  * Set process.env.NODE_ENV to a specific value.
@@ -13500,11 +12843,6 @@ declare interface OptimizationNormalized {
 avoidEntryIife?: (boolean);
 	
 /**
- * Check for incompatible wasm types when importing/exporting from/to ESM.
- */
-checkWasmTypes?: (boolean);
-	
-/**
  * Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin).
  */
 chunkIds?: (false | "size" | "natural" | "named" | "deterministic" | "total-size");
@@ -13565,12 +12903,6 @@ minimizer?: (((((this: Compiler,  compiler: Compiler) => void) | WebpackPluginIn
 moduleIds?: (false | "size" | "natural" | "named" | "deterministic" | "hashed");
 	
 /**
- * Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).
- * @deprecated
- */
-noEmitOnErrors?: (boolean);
-	
-/**
  * Set process.env.NODE_ENV to a specific value.
  */
 nodeEnv?: (string | false);
@@ -13628,7 +12960,7 @@ type OptimizationNormalizedWithDefaults = (OptimizationNormalized & { runtimeChu
 /**
  * The name factory for the runtime chunks.
  */
-name?: ((( entrypoint: { name: string }) => string)) })>; splitChunks: NonNullable<(undefined | false | OptimizationSplitChunksOptions)>; mergeDuplicateChunks: NonNullable<(undefined | boolean)>; removeAvailableModules: NonNullable<(undefined | boolean)>; removeEmptyChunks: NonNullable<(undefined | boolean)>; flagIncludedChunks: NonNullable<(undefined | boolean)>; moduleIds: NonNullable<(undefined | false | "size" | "natural" | "named" | "deterministic" | "hashed")>; chunkIds: NonNullable<(undefined | false | "size" | "natural" | "named" | "deterministic" | "total-size")>; sideEffects: NonNullable<(undefined | boolean | "flag")>; providedExports: NonNullable<(undefined | boolean)>; usedExports: NonNullable<(undefined | boolean | "global")>; mangleExports: NonNullable<(undefined | boolean | "size" | "deterministic")>; innerGraph: NonNullable<(undefined | boolean)>; inlineExports: NonNullable<(undefined | boolean)>; concatenateModules: NonNullable<(undefined | boolean)>; avoidEntryIife: NonNullable<(undefined | boolean)>; emitOnErrors: NonNullable<(undefined | boolean)>; checkWasmTypes: NonNullable<(undefined | boolean)>; mangleWasmImports: NonNullable<(undefined | boolean)>; portableRecords: NonNullable<(undefined | boolean)>; realContentHash: NonNullable<(undefined | boolean)>; minimize: NonNullable<(undefined | boolean)>; minimizer: ((((this: Compiler,  compiler: Compiler) => void) | WebpackPluginInstance | "..."))[]; nodeEnv: NonNullable<(undefined | string | false)> });
+name?: ((( entrypoint: { name: string }) => string)) })>; splitChunks: NonNullable<(undefined | false | OptimizationSplitChunksOptions)>; mergeDuplicateChunks: NonNullable<(undefined | boolean)>; removeAvailableModules: NonNullable<(undefined | boolean)>; removeEmptyChunks: NonNullable<(undefined | boolean)>; flagIncludedChunks: NonNullable<(undefined | boolean)>; moduleIds: NonNullable<(undefined | false | "size" | "natural" | "named" | "deterministic" | "hashed")>; chunkIds: NonNullable<(undefined | false | "size" | "natural" | "named" | "deterministic" | "total-size")>; sideEffects: NonNullable<(undefined | boolean | "flag")>; providedExports: NonNullable<(undefined | boolean)>; usedExports: NonNullable<(undefined | boolean | "global")>; mangleExports: NonNullable<(undefined | boolean | "size" | "deterministic")>; innerGraph: NonNullable<(undefined | boolean)>; inlineExports: NonNullable<(undefined | boolean)>; concatenateModules: NonNullable<(undefined | boolean)>; avoidEntryIife: NonNullable<(undefined | boolean)>; emitOnErrors: NonNullable<(undefined | boolean)>; mangleWasmImports: NonNullable<(undefined | boolean)>; portableRecords: NonNullable<(undefined | boolean)>; realContentHash: NonNullable<(undefined | boolean)>; minimize: NonNullable<(undefined | boolean)>; minimizer: ((((this: Compiler,  compiler: Compiler) => void) | WebpackPluginInstance | "..."))[]; nodeEnv: NonNullable<(undefined | string | false)> });
 
 /**
  * Options object for describing behavior of a cache group selecting modules that should be cached together.
@@ -13874,12 +13206,6 @@ name?: (string | false | (( module: Module, chunks: (Chunk)[], key: string) => (
  */
 usedExports?: (boolean);
 }
-declare namespace OptimizationStages {
-export let STAGE_ADVANCED: 10;
-export let STAGE_BASIC: -10;
-export let STAGE_DEFAULT: 0;
-
-}
 declare interface Options {
 	
 /**
@@ -13922,7 +13248,7 @@ declare abstract class OptionsApply {
 /**
  * Returns options object.
  */
-process( options: WebpackOptionsNormalizedWithDefaults, compiler: Compiler, interception?: (WebpackOptionsInterception)): WebpackOptionsNormalizedWithDefaults;
+process( options: WebpackOptionsNormalizedWithDefaults, compiler: Compiler): WebpackOptionsNormalizedWithDefaults;
 }
 declare interface OriginRecord {
 	module: (null | Module);
@@ -13941,11 +13267,6 @@ declare class OriginalSource extends Source {
 declare interface Output {
 	
 /**
- * Add a container for define/require functions in the AMD module.
- */
-amdContainer?: (string);
-	
-/**
  * The filename of asset modules as relative path inside the 'output.path' directory.
  */
 assetModuleFilename?: (string | TemplatePathFn<PathDataModule>);
@@ -13954,11 +13275,6 @@ assetModuleFilename?: (string | TemplatePathFn<PathDataModule>);
  * Enable/disable creating async chunks that are loaded on demand.
  */
 asyncChunks?: (boolean);
-	
-/**
- * Add a comment in the UMD wrapper.
- */
-auxiliaryComment?: (string | LibraryCustomUmdCommentObject);
 	
 /**
  * Add charset attribute for script tag.
@@ -14136,16 +13452,6 @@ importMetaName?: (string);
 library?: (string | (string)[] | LibraryOptions | LibraryCustomUmdObject);
 	
 /**
- * Specify which export should be exposed as library.
- */
-libraryExport?: (string | (string)[]);
-	
-/**
- * Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'commonjs-static', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
- */
-libraryTarget?: (string);
-	
-/**
  * Output javascript files as module source type.
  */
 module?: (boolean);
@@ -14200,11 +13506,6 @@ strictModuleResolution?: (boolean);
  * Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name.
  */
 trustedTypes?: (string | true | TrustedTypes);
-	
-/**
- * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
- */
-umdNamedDefine?: (boolean);
 	
 /**
  * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
@@ -14827,7 +14128,7 @@ type PathDataModule = (PathData & { module: (Module | ModulePathData); chunkGrap
 type PathLikeFs = (string | Buffer | URL);
 type PathLikeTypes = (string | URL_url | Buffer);
 type PathOrFileDescriptorFs = (string | number | Buffer | URL);
-type PathOrFileDescriptorTypes = (string | number | URL_url | Buffer);
+type PathOrFileDescriptorTypes = (string | number | Buffer | URL_url);
 type Pattern = (Identifier | MemberExpression | ObjectPattern | ArrayPattern | RestElement | AssignmentPattern);
 
 /**
@@ -15325,31 +14626,6 @@ declare interface ReadFileCompileAsyncWasmPluginOptions {
  */
 import?: (boolean);
 }
-declare class ReadFileCompileWasmPlugin {
-	
-/**
- * Creates an instance of ReadFileCompileWasmPlugin.
- */
-constructor( options?: (ReadFileCompileWasmPluginOptions));
-	options: ReadFileCompileWasmPluginOptions;
-	
-/**
- * Applies the plugin by registering its hooks on the compiler.
- */
-apply( compiler: Compiler): void;
-}
-declare interface ReadFileCompileWasmPluginOptions {
-	
-/**
- * mangle imports
- */
-mangleImports?: (boolean);
-	
-/**
- * use import?
- */
-import?: (boolean);
-}
 declare interface ReadFileFs {
 	( path: PathOrFileDescriptorFs, options: (undefined | null | ({ encoding?: (null); flag?: (string) } & Abortable)), callback: (( err: (null | NodeJS.ErrnoException), result?: (Buffer)) => void)): void;
 	( path: PathOrFileDescriptorFs, options: ("base64" | ({ encoding: BufferEncoding; flag?: (string) } & Abortable) | "ascii" | "utf8" | "utf-8" | "utf16le" | "utf-16le" | "ucs2" | "ucs-2" | "base64url" | "latin1" | "binary" | "hex"), callback: (( err: (null | NodeJS.ErrnoException), result?: (string)) => void)): void;
@@ -15676,7 +14952,6 @@ chunk: Chunk;
 	fullHash: string;
 	outputOptions: OutputNormalizedWithDefaults;
 	codeGenerationResults: CodeGenerationResults;
-	moduleTemplates: { javascript: ModuleTemplate };
 	dependencyTemplates: DependencyTemplates;
 	runtimeTemplate: RuntimeTemplate;
 	moduleGraph: ModuleGraph;
@@ -16152,12 +15427,12 @@ declare interface ResolveOptionsResolverFactoryObject2 {
 /**
  * A list of module alias configurations or an object which maps key to value
  */
-alias?: (UserAliasOptions | (UserAliasOptionEntry)[]);
+alias?: ((AliasOption)[] | AliasOptions);
 	
 /**
  * A list of module alias configurations or an object which maps key to value, applied only after modules option
  */
-fallback?: (UserAliasOptions | (UserAliasOptionEntry)[]);
+fallback?: ((AliasOption)[] | AliasOptions);
 	
 /**
  * An object which maps extension to extension aliases
@@ -16235,9 +15510,9 @@ symlinks?: (boolean);
 resolver?: (Resolver);
 	
 /**
- * A list of directories to resolve modules from, can be absolute path, folder name, or a `file:` `URL` instance
+ * A list of directories to resolve modules from, can be absolute path or folder name
  */
-modules?: (string | URL_url | ((string | URL_url))[]);
+modules?: (string | (string)[]);
 	
 /**
  * A list of main fields in description files
@@ -16260,9 +15535,9 @@ plugins?: ((Plugin)[]);
 pnpApi?: (null | PnpApi);
 	
 /**
- * A list of root paths, each an absolute path or a `file:` `URL` instance
+ * A list of root paths
  */
-roots?: (((string | URL_url))[]);
+roots?: ((string)[]);
 	
 /**
  * The request is already fully specified and no extensions or directories are resolved for it
@@ -16275,9 +15550,9 @@ fullySpecified?: (boolean);
 resolveToContext?: (boolean);
 	
 /**
- * A list of resolve restrictions, each an absolute path, a `file:` `URL` instance, or a RegExp
+ * A list of resolve restrictions
  */
-restrictions?: (((string | RegExp | URL_url))[]);
+restrictions?: (((string | RegExp))[]);
 	
 /**
  * Use only the sync constraints of the file system calls
@@ -16295,9 +15570,9 @@ preferRelative?: (boolean);
 preferAbsolute?: (boolean);
 	
 /**
- * TypeScript config file path (or `file:` `URL` instance) or config object with configFile and references
+ * TypeScript config file path or config object with configFile and references
  */
-tsconfig?: (string | boolean | URL_url | UserTsconfigOptions);
+tsconfig?: (string | boolean | TsconfigOptions);
 }
 type ResolveOptionsWithDependencyType = (ResolveOptions & { dependencyType?: (string); resolveToContext?: (boolean) });
 type ResolvePluginInstance = ({ [index: string]: any; 
@@ -16329,14 +15604,14 @@ declare abstract class Resolver {
 	hooks: KnownHooks;
 	ensureHook( name: (string | AsyncSeriesBailHook<[ResolveRequest, ResolveContext], (null | ResolveRequest)>)): AsyncSeriesBailHook<[ResolveRequest, ResolveContext], (null | ResolveRequest)>;
 	getHook( name: (string | AsyncSeriesBailHook<[ResolveRequest, ResolveContext], (null | ResolveRequest)>)): AsyncSeriesBailHook<[ResolveRequest, ResolveContext], (null | ResolveRequest)>;
-	resolveSync( parent: (string | URL_url), specifier: (string | URL_url), resolveContext?: (ResolveContext)): (string | false);
-	resolveSync( context: ContextTypes, parent: (string | URL_url), specifier: (string | URL_url), resolveContext?: (ResolveContext)): (string | false);
-	resolvePromise( parent: (string | URL_url), specifier: (string | URL_url), resolveContext?: (ResolveContext)): Promise<(string | false)>;
-	resolvePromise( context: ContextTypes, parent: (string | URL_url), specifier: (string | URL_url), resolveContext?: (ResolveContext)): Promise<(string | false)>;
-	resolve( parent: (string | URL_url), specifier: (string | URL_url), callback: (( err: (null | ErrorWithDetail), res?: (string | false), req?: (ResolveRequest)) => void)): void;
-	resolve( parent: (string | URL_url), specifier: (string | URL_url), resolveContext: ResolveContext, callback: (( err: (null | ErrorWithDetail), res?: (string | false), req?: (ResolveRequest)) => void)): void;
-	resolve( context: ContextTypes, parent: (string | URL_url), specifier: (string | URL_url), callback: (( err: (null | ErrorWithDetail), res?: (string | false), req?: (ResolveRequest)) => void)): void;
-	resolve( context: ContextTypes, parent: (string | URL_url), specifier: (string | URL_url), resolveContext: ResolveContext, callback: (( err: (null | ErrorWithDetail), res?: (string | false), req?: (ResolveRequest)) => void)): void;
+	resolveSync( path: string, request: string, resolveContext?: (ResolveContext)): (string | false);
+	resolveSync( context: ContextTypes, path: string, request: string, resolveContext?: (ResolveContext)): (string | false);
+	resolvePromise( path: string, request: string, resolveContext?: (ResolveContext)): Promise<(string | false)>;
+	resolvePromise( context: ContextTypes, path: string, request: string, resolveContext?: (ResolveContext)): Promise<(string | false)>;
+	resolve( path: string, request: string, callback: (( err: (null | ErrorWithDetail), res?: (string | false), req?: (ResolveRequest)) => void)): void;
+	resolve( path: string, request: string, resolveContext: ResolveContext, callback: (( err: (null | ErrorWithDetail), res?: (string | false), req?: (ResolveRequest)) => void)): void;
+	resolve( context: ContextTypes, path: string, request: string, callback: (( err: (null | ErrorWithDetail), res?: (string | false), req?: (ResolveRequest)) => void)): void;
+	resolve( context: ContextTypes, path: string, request: string, resolveContext: ResolveContext, callback: (( err: (null | ErrorWithDetail), res?: (string | false), req?: (ResolveRequest)) => void)): void;
 	doResolve( hook: AsyncSeriesBailHook<[ResolveRequest, ResolveContext], (null | ResolveRequest)>, request: ResolveRequest, message: (null | string), resolveContext: ResolveContext, callback: (( err?: (null | Error), result?: (ResolveRequest)) => void)): void;
 	parse( identifier: string): ParsedIdentifier;
 	isModule( path: string): (boolean);
@@ -16723,94 +15998,6 @@ name?: ((( entrypoint: { name: string }) => string)) }));
 apply( compiler: Compiler): void;
 }
 type RuntimeCondition = (undefined | string | boolean | SortableSet<string>);
-declare namespace RuntimeGlobals {
-export let amdDefine: "__webpack_require__.amdD";
-export let amdOptions: "__webpack_require__.amdO";
-export let asyncModule: "__webpack_require__.a";
-export let asyncModuleDoneSymbol: "__webpack_require__.aD";
-export let asyncModuleExportSymbol: "__webpack_require__.aE";
-export let baseURI: "__webpack_require__.b";
-export let chunkCallback: "webpackChunk";
-export let chunkName: "__webpack_require__.cn";
-export let compatGetDefaultExport: "__webpack_require__.n";
-export let compileWasm: "__webpack_require__.vs";
-export let createFakeNamespaceObject: "__webpack_require__.t";
-export let createScript: "__webpack_require__.ts";
-export let createScriptUrl: "__webpack_require__.tu";
-export let cssInjectStyle: "__webpack_require__.is";
-export let currentRemoteGetScope: "__webpack_require__.R";
-export let deferredModuleAsyncTransitiveDependencies: "__webpack_require__.zT";
-export let deferredModuleAsyncTransitiveDependenciesSymbol: "__webpack_require__.zS";
-export let definePropertyGetters: "__webpack_require__.d";
-export let ensureChunk: "__webpack_require__.e";
-export let ensureChunkHandlers: "__webpack_require__.f";
-export let ensureChunkIncludeEntries: "__webpack_require__.f (include entries)";
-export let entryModuleId: "__webpack_require__.s";
-export let esmId: "__webpack_esm_id__";
-export let esmIds: "__webpack_esm_ids__";
-export let esmModules: "__webpack_esm_modules__";
-export let esmRuntime: "__webpack_esm_runtime__";
-export let exports: "__webpack_exports__";
-export let externalInstallChunk: "__webpack_require__.C";
-export let getChunkCssFilename: "__webpack_require__.k";
-export let getChunkScriptFilename: "__webpack_require__.u";
-export let getChunkUpdateCssFilename: "__webpack_require__.hk";
-export let getChunkUpdateScriptFilename: "__webpack_require__.hu";
-export let getFullHash: "__webpack_require__.h";
-export let getTrustedTypesPolicy: "__webpack_require__.tt";
-export let getUpdateManifestFilename: "__webpack_require__.hmrF";
-export let global: "__webpack_require__.g";
-export let harmonyModuleDecorator: "__webpack_require__.hmd";
-export let hasCssModules: "has css modules";
-export let hasFetchPriority: "has fetch priority";
-export let hasOwnProperty: "__webpack_require__.o";
-export let hmrDownloadManifest: "__webpack_require__.hmrM";
-export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
-export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
-export let hmrModuleData: "__webpack_require__.hmrD";
-export let hmrRuntimeStatePrefix: "__webpack_require__.hmrS";
-export let initializeSharing: "__webpack_require__.I";
-export let instantiateWasm: "__webpack_require__.v";
-export let interceptModuleExecution: "__webpack_require__.i";
-export let loadScript: "__webpack_require__.l";
-export let makeDeferredNamespaceObject: "__webpack_require__.z";
-export let makeNamespaceObject: "__webpack_require__.r";
-export let makeOptimizedDeferredNamespaceObject: "__webpack_require__.zO";
-export let module: "module";
-export let moduleCache: "__webpack_require__.c";
-export let moduleFactories: "__webpack_require__.m";
-export let moduleFactoriesAddOnly: "__webpack_require__.m (add only)";
-export let moduleId: "module.id";
-export let moduleLoaded: "module.loaded";
-export let nodeModuleDecorator: "__webpack_require__.nmd";
-export let onChunksLoaded: "__webpack_require__.O";
-export let prefetchChunk: "__webpack_require__.E";
-export let prefetchChunkHandlers: "__webpack_require__.F";
-export let preloadChunk: "__webpack_require__.G";
-export let preloadChunkHandlers: "__webpack_require__.H";
-export let publicPath: "__webpack_require__.p";
-export let relativeUrl: "__webpack_require__.U";
-export let require: "__webpack_require__";
-export let requireScope: "__webpack_require__.*";
-export let returnExportsFromRuntime: "return-exports-from-runtime";
-export let runtimeId: "__webpack_require__.j";
-export let scriptNonce: "__webpack_require__.nc";
-export let setAnonymousDefaultName: "__webpack_require__.dn";
-export let shareScopeMap: "__webpack_require__.S";
-export let startup: "__webpack_require__.x";
-export let startupEntrypoint: "__webpack_require__.X";
-export let startupNoDefault: "__webpack_require__.x (no default handler)";
-export let startupOnlyAfter: "__webpack_require__.x (only after)";
-export let startupOnlyBefore: "__webpack_require__.x (only before)";
-export let system: "__webpack_require__.System";
-export let systemContext: "__webpack_require__.y";
-export let thisAsExports: "top-level-this-exports";
-export let toBinary: "__webpack_require__.tb";
-export let uncaughtErrorHandler: "__webpack_require__.oe";
-export let wasmInstances: "__webpack_require__.w";
-export let worker: "__webpack_require__.wc";
-
-}
 type RuntimeId = (string | number);
 declare class RuntimeModule extends Module {
 	
@@ -16865,12 +16052,6 @@ static STAGE_ATTACH: number;
  * Runtime modules which trigger actions on bootstrap
  */
 static STAGE_TRIGGER: number;
-	
-/**
- * Gets source basic types.
- * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
- */
-static getSourceBasicTypes( module: Module): ReadonlySet<string>;
 }
 declare interface RuntimeRequirementsContext {
 	
@@ -18211,6 +17392,7 @@ sourceRoot?: (string);
  */
 test?: (string | RegExp | (( str: string) => (boolean)) | (Rule)[]);
 }
+type SourceMapKind = ("none" | "simple" | "full");
 declare class SourceMapSource extends Source {
 	constructor( value: (string | Buffer), name: string, sourceMap?: (string | Buffer | RawSourceMap), originalSource?: (string | Buffer), innerSourceMap?: (null | string | Buffer | RawSourceMap), removeOriginalSource?: (boolean));
 	getArgsAsBuffers( ): [Buffer, string, Buffer, (undefined | Buffer), (undefined | Buffer), (undefined | boolean)];
@@ -18252,15 +17434,6 @@ declare interface SplitData {
 	modules: (string)[];
 	size: number;
 }
-
-/**
- * Singly-linked stack entry that also exposes a Set-like API
- * (`has`, `size`, iteration). Each `doResolve` call prepends a new
- * `StackEntry` that points at the previous tip via `.parent`, so pushing
- * is O(1) in time and memory. Recursion detection walks the linked list
- * (O(n)) but the stack is typically shallow, so this is cheaper overall
- * than cloning a `Set` per call.
- */
 declare abstract class StackEntry {
 	name?: (string);
 	path: (string | false);
@@ -18306,21 +17479,6 @@ get size(): number;
  * at the formatted form.
  */
 toString( ): string;
-	
-/**
- * Iterate entries from oldest (root) to newest (tip), matching how a
- * `Set` that was populated in insertion order would iterate. Pre-seeded
- * legacy `Set<string>` entries come first so error-message output stays
- * ordered oldest-to-newest.
- * Yields each entry as its formatted `toString()` form. Plugins written
- * against the pre-5.21 `Set<string>` shape — e.g.
- * `[...resolveContext.stack].find(a => a.includes("module:"))` — keep
- * working unchanged because each yielded value is a plain string with
- * all of `String.prototype` available natively. Resolves that never
- * iterate the stack pay nothing; iteration costs one `toString()`
- * allocation per stack frame.
- */
-[Symbol.iterator]( ): IterableIterator<string>;
 }
 
 /**
@@ -19084,7 +18242,6 @@ test?: ((( module: Module) => (boolean)));
  */
 mode?: ("read" | "create" | "merge" | "update");
 }
-type SyncWasmModuleBuildMeta = (KnownBuildMeta & Record<string, any> & KnownSyncWasmModuleBuildMeta);
 declare interface SyntheticDependencyLocation {
 	name: string;
 	index?: (number);
@@ -19311,33 +18468,7 @@ module: NormalModule;
 type Usage = (string | true | TopLevelSymbol);
 type UsageStateType = (0 | 1 | 2 | 3 | 4);
 type UsedName = (string | false | (string)[] | InlinedUsedName);
-declare interface UserAliasOptionEntry {
-	alias: UserAliasOptionNewRequest;
-	name: string;
-	onlyModule?: (boolean);
-}
-type UserAliasOptionNewRequest = (string | false | URL_url | ((string | URL_url))[]);
-declare interface UserAliasOptions {
-	[index: string]: UserAliasOptionNewRequest;
-}
-declare interface UserTsconfigOptions {
-	
-/**
- * A path, or `file:` `URL` instance, pointing at the tsconfig file
- */
-configFile?: (string | URL_url);
-	
-/**
- * References to other tsconfig files. 'auto' inherits from TypeScript config, or an array of relative/absolute paths or `file:` `URL` instances
- */
-references?: ("auto" | ((string | URL_url))[]);
-	
-/**
- * Override baseUrl from tsconfig.json with a path or `file:` `URL` instance
- */
-baseUrl?: (string | URL_url);
-}
-declare abstract class ValidationErrorWebpackOptionsValidationError extends Error {
+declare abstract class ValidationErrorClass extends Error {
 	errors: (SchemaUtilErrorObject)[];
 	schema: (Parameters<typeof validateFunction>)[0];
 	headerName: string;
@@ -19560,7 +18691,7 @@ getContextTimeInfoEntries: (( ) => Map<string, (null | "ignore" | EntryTypesInde
 /**
  * get info about timestamps and changes
  */
-getInfo?: ((( ) => WatcherInfo));
+getInfo: (( ) => WatcherInfo);
 }
 
 /**
@@ -19667,10 +18798,7 @@ delete( ...args: K): void;
  */
 clear( ): void;
 }
-declare abstract class WebAssemblyParserAsyncWebAssemblyParser extends ParserClass {
-
-}
-declare abstract class WebAssemblyParserClass extends ParserClass {
+declare abstract class WebAssemblyParser extends ParserClass {
 
 }
 declare interface WebAssemblyRenderContext {
@@ -19876,25 +19004,6 @@ timeAggregateEnd( label?: (string)): void;
 declare class WebpackOptionsApply extends OptionsApply {
 	constructor( );
 }
-declare class WebpackOptionsDefaulter {
-	constructor( );
-	
-/**
- * Returns normalized webpack options.
- */
-process( options: Configuration): WebpackOptionsNormalized;
-}
-declare interface WebpackOptionsInterception {
-	devtool?: (string | false | ({ 
-/**
- * Which asset type should receive this devtool value.
- */
-type: ("all" | "css" | "javascript"); 
-/**
- * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
- */
-use: RawDevTool })[]);
-}
 
 /**
  * Normalized webpack options object.
@@ -19960,7 +19069,7 @@ entry: EntryNormalized;
 experiments: ExperimentsNormalized;
 	
 /**
- * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
+ * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.library.type`.
  */
 externals: Externals;
 	
@@ -19970,7 +19079,7 @@ externals: Externals;
 externalsPresets: ExternalsPresets;
 	
 /**
- * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+ * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.library.type set to the same value).
  */
 externalsType?: ("import" | "module" | "promise" | "commonjs" | "jsonp" | "var" | "assign" | "this" | "window" | "self" | "global" | "commonjs2" | "commonjs-module" | "commonjs-static" | "amd" | "amd-require" | "amd-async" | "umd" | "umd2" | "system" | "module-import" | "script" | "node-commonjs" | "asset" | "asset-url" | "css-import" | "css-url");
 	
@@ -20174,17 +19283,6 @@ declare interface _functionWebpack {
  */
 ( options: MultiConfiguration): defaultMultiCompiler;
 }
-declare interface chunkModuleHashMap {
-	[index: number]: string;
-	[index: string]: string;
-}
-declare namespace cli {
-export let createColors: (( __0?: (ColorsOptions)) => Colors);
-export let getArguments: (( schema?: ((JSONSchema4 & { absolutePath: (boolean); instanceof: string; cli: { helper?: (boolean); exclude?: (boolean); description?: (string); negatedDescription?: (string); resetDescription?: (string) } }) | (JSONSchema6 & { absolutePath: (boolean); instanceof: string; cli: { helper?: (boolean); exclude?: (boolean); description?: (string); negatedDescription?: (string); resetDescription?: (string) } }) | (JSONSchema7 & { absolutePath: (boolean); instanceof: string; cli: { helper?: (boolean); exclude?: (boolean); description?: (string); negatedDescription?: (string); resetDescription?: (string) } }))) => Flags);
-export let isColorSupported: (( ) => (boolean));
-export let processArguments: (( args: Flags, config: ObjectConfiguration, values: Values) => (null | (Problem)[]));
-
-}
 declare namespace comparators {
 export let compareChunkGroupsByIndex: (( a: ChunkGroup, b: ChunkGroup) => (0 | 1 | -1));
 export let compareChunks: ParameterizedComparator<ChunkGraph, Chunk>;
@@ -20269,12 +19367,6 @@ setDependencies( compiler: Compiler, dependencies: (string)[]): void;
 validateDependencies( callback: CallbackWebpackFunction_2<MultiStats, void>): (boolean);
 	
 /**
- * Run with dependencies.
- * @deprecated This method should have been private
- */
-runWithDependencies( compilers: (Compiler)[], fn: (( compiler: Compiler, callback: CallbackWebpackFunction_2<MultiStats, void>) => void), callback: CallbackWebpackFunction_2<(Stats)[], void>): void;
-	
-/**
  * Returns a compiler watcher.
  */
 watch( watchOptions: (WatchOptions | (WatchOptions)[]), handler: CallbackWebpackFunction_2<MultiStats, void>): (undefined | MultiWatching);
@@ -20316,7 +19408,7 @@ type ecmaVersion = (3 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 1
 declare namespace exports {
 export let sources: declarations;
 export let UsageState: Readonly<{ Unused: 0; OnlyPropertiesUsed: 1; NoInfo: 2; Unknown: 3; Used: 4 }>;
-export let ModuleFilenameHelpers: { ALL_LOADERS_RESOURCE: string; REGEXP_ALL_LOADERS_RESOURCE: RegExp; LOADERS_RESOURCE: string; REGEXP_LOADERS_RESOURCE: RegExp; RESOURCE: string; REGEXP_RESOURCE: RegExp; ABSOLUTE_RESOURCE_PATH: string; REGEXP_ABSOLUTE_RESOURCE_PATH: RegExp; RESOURCE_PATH: string; REGEXP_RESOURCE_PATH: RegExp; ALL_LOADERS: string; REGEXP_ALL_LOADERS: RegExp; LOADERS: string; REGEXP_LOADERS: RegExp; QUERY: string; REGEXP_QUERY: RegExp; ID: string; REGEXP_ID: RegExp; HASH: string; REGEXP_HASH: RegExp; NAMESPACE: string; REGEXP_NAMESPACE: RegExp; 
+export let ModuleFilenameHelpers: { 
 /**
  * Returns the filename.
  */
@@ -20411,7 +19503,7 @@ export let require: "__webpack_require__";
 export let requireScope: "__webpack_require__.*";
 export let returnExportsFromRuntime: "return-exports-from-runtime";
 export let runtimeId: "__webpack_require__.j";
-export let scriptNonce: "__webpack_require__.nc";
+export let nonce: "__webpack_require__.nc";
 export let setAnonymousDefaultName: "__webpack_require__.dn";
 export let shareScopeMap: "__webpack_require__.S";
 export let startup: "__webpack_require__.x";
@@ -20449,7 +19541,7 @@ export let experiments: Readonly<{ schemes: Readonly<{ HttpUriPlugin: typeof Htt
 export let ids: Readonly<{ ChunkModuleIdRangePlugin: typeof ChunkModuleIdRangePlugin; NaturalModuleIdsPlugin: typeof NaturalModuleIdsPlugin; OccurrenceModuleIdsPlugin: typeof OccurrenceModuleIdsPlugin; NamedModuleIdsPlugin: typeof NamedModuleIdsPlugin; DeterministicChunkIdsPlugin: typeof DeterministicChunkIdsPlugin; DeterministicModuleIdsPlugin: typeof DeterministicModuleIdsPlugin; NamedChunkIdsPlugin: typeof NamedChunkIdsPlugin; OccurrenceChunkIdsPlugin: typeof OccurrenceChunkIdsPlugin; HashedModuleIdsPlugin: typeof HashedModuleIdsPlugin }>;
 export let javascript: Readonly<{ EnableChunkLoadingPlugin: typeof EnableChunkLoadingPlugin; JavascriptModulesPlugin: typeof JavascriptModulesPlugin; JavascriptParser: typeof JavascriptParser }>;
 export let library: Readonly<{ AbstractLibraryPlugin: typeof AbstractLibraryPlugin; EnableLibraryPlugin: typeof EnableLibraryPlugin }>;
-export let node: Readonly<{ NodeEnvironmentPlugin: typeof NodeEnvironmentPlugin; NodeSourcePlugin: typeof NodeSourcePlugin; NodeTargetPlugin: typeof NodeTargetPlugin; NodeTemplatePlugin: typeof NodeTemplatePlugin; ReadFileCompileWasmPlugin: typeof ReadFileCompileWasmPlugin; ReadFileCompileAsyncWasmPlugin: typeof ReadFileCompileAsyncWasmPlugin }>;
+export let node: Readonly<{ NodeEnvironmentPlugin: typeof NodeEnvironmentPlugin; NodeSourcePlugin: typeof NodeSourcePlugin; NodeTargetPlugin: typeof NodeTargetPlugin; NodeTemplatePlugin: typeof NodeTemplatePlugin; ReadFileCompileAsyncWasmPlugin: typeof ReadFileCompileAsyncWasmPlugin }>;
 export let optimize: Readonly<{ AggressiveMergingPlugin: typeof AggressiveMergingPlugin; AggressiveSplittingPlugin: typeof AggressiveSplittingPlugin; InnerGraph: typeof InnerGraph; LimitChunkCountPlugin: typeof LimitChunkCountPlugin; MergeDuplicateChunksPlugin: typeof MergeDuplicateChunksPlugin; MinChunkSizePlugin: typeof MinChunkSizePlugin; ModuleConcatenationPlugin: typeof ModuleConcatenationPlugin; RealContentHashPlugin: typeof RealContentHashPlugin; RuntimeChunkPlugin: typeof RuntimeChunkPlugin; SideEffectsFlagPlugin: typeof SideEffectsFlagPlugin; SplitChunksPlugin: typeof defaultSplitChunksPlugin }>;
 export let prefetch: Readonly<{ ChunkPrefetchPreloadPlugin: typeof ChunkPrefetchPreloadPlugin }>;
 export let runtime: Readonly<{ GetChunkFilenameRuntimeModule: typeof GetChunkFilenameRuntimeModule; LoadScriptRuntimeModule: typeof LoadScriptRuntimeModule }>;
@@ -20462,64 +19554,25 @@ createFileSerializer: (<D, S, C>( fs: IntermediateFileSystem, hashFunction: Hash
 export let validate: (( options: (Configuration | MultiConfiguration)) => void);
 export let version: string;
 export let wasm: Readonly<{ AsyncWebAssemblyModulesPlugin: typeof AsyncWebAssemblyModulesPlugin; EnableWasmLoadingPlugin: typeof EnableWasmLoadingPlugin }>;
-export let web: Readonly<{ FetchCompileWasmPlugin: typeof FetchCompileWasmPlugin; FetchCompileAsyncWasmPlugin: typeof FetchCompileAsyncWasmPlugin; JsonpChunkLoadingRuntimeModule: typeof JsonpChunkLoadingRuntimeModule; JsonpTemplatePlugin: typeof JsonpTemplatePlugin; CssLoadingRuntimeModule: typeof CssLoadingRuntimeModule }>;
+export let web: Readonly<{ FetchCompileAsyncWasmPlugin: typeof FetchCompileAsyncWasmPlugin; JsonpChunkLoadingRuntimeModule: typeof JsonpChunkLoadingRuntimeModule; CssLoadingRuntimeModule: typeof CssLoadingRuntimeModule }>;
 export let webworker: Readonly<{ WebWorkerTemplatePlugin: typeof WebWorkerTemplatePlugin }>;
-let _default: { 
-/**
- * Returns the compiler object.
- */
-( options: Configuration, callback: CallbackWebpackFunction_2<Stats, void>): (null | Compiler); 
-/**
- * Returns the compiler object.
- */
-( options: Configuration): Compiler; 
-/**
- * Returns the multi compiler object.
- */
-( options: MultiConfiguration, callback: CallbackWebpackFunction_2<MultiStats, void>): (null | defaultMultiCompiler); 
-/**
- * Returns the multi compiler object.
- */
-( options: MultiConfiguration): defaultMultiCompiler; webpack: _functionWebpack; defineConfig: (<T extends DefineConfigInput>( config: T) => T); validate: (( options: (Configuration | MultiConfiguration)) => void); validateSchema: (( schema: (Parameters<typeof validateFunction>)[0], options: (Parameters<typeof validateFunction>)[1], validationConfiguration?: (ValidationErrorConfiguration)) => void); version: string; cli: typeof cli; AutomaticPrefetchPlugin: typeof AutomaticPrefetchPlugin; AsyncDependenciesBlock: typeof AsyncDependenciesBlock; BannerPlugin: typeof BannerPlugin; Cache: typeof CacheClass; Chunk: typeof Chunk; ChunkGraph: typeof ChunkGraph; CleanPlugin: typeof CleanPlugin; Compilation: typeof Compilation; Compiler: typeof Compiler; ConcatenationScope: typeof ConcatenationScope; ContextExclusionPlugin: typeof ContextExclusionPlugin; ContextReplacementPlugin: typeof ContextReplacementPlugin; DefinePlugin: typeof DefinePlugin; Dependency: typeof Dependency; DynamicEntryPlugin: typeof DynamicEntryPlugin; DotenvPlugin: typeof DotenvPlugin; EntryOptionPlugin: typeof EntryOptionPlugin; EntryPlugin: typeof EntryPlugin; EnvironmentPlugin: typeof EnvironmentPlugin; EvalDevToolModulePlugin: typeof EvalDevToolModulePlugin; EvalSourceMapDevToolPlugin: typeof EvalSourceMapDevToolPlugin; ExternalModule: typeof ExternalModule; ExternalsPlugin: typeof ExternalsPlugin; Generator: typeof Generator; HotUpdateChunk: typeof HotUpdateChunk; HotModuleReplacementPlugin: typeof HotModuleReplacementPlugin; InitFragment: typeof InitFragment; IgnorePlugin: typeof IgnorePlugin; JavascriptModulesPlugin: typeof JavascriptModulesPlugin; LibraryTemplatePlugin: typeof LibraryTemplatePlugin; LoaderOptionsPlugin: typeof LoaderOptionsPlugin; LoaderTargetPlugin: typeof LoaderTargetPlugin; Module: typeof Module; ModuleFactory: typeof ModuleFactory; ModuleFilenameHelpers: { ALL_LOADERS_RESOURCE: string; REGEXP_ALL_LOADERS_RESOURCE: RegExp; LOADERS_RESOURCE: string; REGEXP_LOADERS_RESOURCE: RegExp; RESOURCE: string; REGEXP_RESOURCE: RegExp; ABSOLUTE_RESOURCE_PATH: string; REGEXP_ABSOLUTE_RESOURCE_PATH: RegExp; RESOURCE_PATH: string; REGEXP_RESOURCE_PATH: RegExp; ALL_LOADERS: string; REGEXP_ALL_LOADERS: RegExp; LOADERS: string; REGEXP_LOADERS: RegExp; QUERY: string; REGEXP_QUERY: RegExp; ID: string; REGEXP_ID: RegExp; HASH: string; REGEXP_HASH: RegExp; NAMESPACE: string; REGEXP_NAMESPACE: RegExp; 
-/**
- * Returns the filename.
- */
-createFilename( module: (string | Module), options: { namespace?: (string); moduleFilenameTemplate?: (string | (( context: ModuleFilenameTemplateContext) => string)) }, __2: { requestShortener: RequestShortener; chunkGraph: ChunkGraph; hashFunction?: (string | typeof Hash) }): string; 
-/**
- * Replaces duplicate items in an array with new values generated by a callback function.
- * The callback function is called with the duplicate item, the index of the duplicate item, and the number of times the item has been replaced.
- * The callback function should return the new value for the duplicate item.
- */
-replaceDuplicates<T>( array: (T)[], fn: (( duplicateItem: T, duplicateItemIndex: number, numberOfTimesReplaced: number) => T), comparator?: ((( firstElement: T, nextElement: T) => (0 | 1 | -1)))): (T)[]; matchPart: (( str: string, test: Matcher) => (boolean)); 
-/**
- * Tests if a string matches a match object. The match object can have the following properties:
- * - `test`: a RegExp or an array of RegExp
- * - `include`: a RegExp or an array of RegExp
- * - `exclude`: a RegExp or an array of RegExp
- * The `test` property is tested first, then `include` and then `exclude`.
- */
-matchObject( obj: MatchObject, str: string): (boolean) }; ModuleGraph: typeof ModuleGraph; ModuleGraphConnection: typeof ModuleGraphConnection; NoEmitOnErrorsPlugin: typeof NoEmitOnErrorsPlugin; NormalModule: typeof NormalModule; NormalModuleReplacementPlugin: typeof NormalModuleReplacementPlugin; MultiCompiler: typeof defaultMultiCompiler; OptimizationStages: typeof OptimizationStages; Parser: typeof ParserClass; PlatformPlugin: typeof PlatformPlugin; PrefetchPlugin: typeof PrefetchPlugin; ProgressPlugin: typeof ProgressPlugin; ProvidePlugin: typeof ProvidePlugin; RuntimeGlobals: typeof RuntimeGlobals; RuntimeModule: typeof RuntimeModule; SingleEntryPlugin: typeof EntryPlugin; SourceMapDevToolPlugin: typeof SourceMapDevToolPlugin; Stats: typeof Stats; ManifestPlugin: typeof ManifestPlugin; Template: typeof Template; UsageState: Readonly<{ Unused: 0; OnlyPropertiesUsed: 1; NoInfo: 2; Unknown: 3; Used: 4 }>; WatchIgnorePlugin: typeof WatchIgnorePlugin; WebpackError: typeof WebpackError; WebpackOptionsApply: typeof WebpackOptionsApply; WebpackOptionsDefaulter: typeof WebpackOptionsDefaulter; WebpackOptionsValidationError: typeof ValidationErrorDefault; ValidationError: typeof ValidationErrorDefault; cache: Readonly<{ MemoryCachePlugin: typeof MemoryCachePlugin }>; config: Readonly<{ getNormalizedWebpackOptions: (( config: Configuration) => WebpackOptionsNormalized); applyWebpackOptionsDefaults: (( options: WebpackOptionsNormalized, compilerIndex?: (number)) => ResolvedOptions) }>; dependencies: Readonly<{ ModuleDependency: typeof ModuleDependency; HarmonyImportDependency: typeof HarmonyImportDependency; ConstDependency: typeof ConstDependency; NullDependency: typeof NullDependency }>; ids: Readonly<{ ChunkModuleIdRangePlugin: typeof ChunkModuleIdRangePlugin; NaturalModuleIdsPlugin: typeof NaturalModuleIdsPlugin; OccurrenceModuleIdsPlugin: typeof OccurrenceModuleIdsPlugin; NamedModuleIdsPlugin: typeof NamedModuleIdsPlugin; DeterministicChunkIdsPlugin: typeof DeterministicChunkIdsPlugin; DeterministicModuleIdsPlugin: typeof DeterministicModuleIdsPlugin; NamedChunkIdsPlugin: typeof NamedChunkIdsPlugin; OccurrenceChunkIdsPlugin: typeof OccurrenceChunkIdsPlugin; HashedModuleIdsPlugin: typeof HashedModuleIdsPlugin }>; javascript: Readonly<{ EnableChunkLoadingPlugin: typeof EnableChunkLoadingPlugin; JavascriptModulesPlugin: typeof JavascriptModulesPlugin; JavascriptParser: typeof JavascriptParser }>; optimize: Readonly<{ AggressiveMergingPlugin: typeof AggressiveMergingPlugin; AggressiveSplittingPlugin: typeof AggressiveSplittingPlugin; InnerGraph: typeof InnerGraph; LimitChunkCountPlugin: typeof LimitChunkCountPlugin; MergeDuplicateChunksPlugin: typeof MergeDuplicateChunksPlugin; MinChunkSizePlugin: typeof MinChunkSizePlugin; ModuleConcatenationPlugin: typeof ModuleConcatenationPlugin; RealContentHashPlugin: typeof RealContentHashPlugin; RuntimeChunkPlugin: typeof RuntimeChunkPlugin; SideEffectsFlagPlugin: typeof SideEffectsFlagPlugin; SplitChunksPlugin: typeof defaultSplitChunksPlugin }>; runtime: Readonly<{ GetChunkFilenameRuntimeModule: typeof GetChunkFilenameRuntimeModule; LoadScriptRuntimeModule: typeof LoadScriptRuntimeModule }>; prefetch: Readonly<{ ChunkPrefetchPreloadPlugin: typeof ChunkPrefetchPreloadPlugin }>; web: Readonly<{ FetchCompileWasmPlugin: typeof FetchCompileWasmPlugin; FetchCompileAsyncWasmPlugin: typeof FetchCompileAsyncWasmPlugin; JsonpChunkLoadingRuntimeModule: typeof JsonpChunkLoadingRuntimeModule; JsonpTemplatePlugin: typeof JsonpTemplatePlugin; CssLoadingRuntimeModule: typeof CssLoadingRuntimeModule }>; esm: Readonly<{ ModuleChunkLoadingRuntimeModule: typeof ModuleChunkLoadingRuntimeModule }>; webworker: Readonly<{ WebWorkerTemplatePlugin: typeof WebWorkerTemplatePlugin }>; node: Readonly<{ NodeEnvironmentPlugin: typeof NodeEnvironmentPlugin; NodeSourcePlugin: typeof NodeSourcePlugin; NodeTargetPlugin: typeof NodeTargetPlugin; NodeTemplatePlugin: typeof NodeTemplatePlugin; ReadFileCompileWasmPlugin: typeof ReadFileCompileWasmPlugin; ReadFileCompileAsyncWasmPlugin: typeof ReadFileCompileAsyncWasmPlugin }>; electron: Readonly<{ ElectronTargetPlugin: typeof ElectronTargetPlugin }>; wasm: Readonly<{ AsyncWebAssemblyModulesPlugin: typeof AsyncWebAssemblyModulesPlugin; EnableWasmLoadingPlugin: typeof EnableWasmLoadingPlugin }>; css: Readonly<{ CssModulesPlugin: typeof CssModulesPlugin }>; library: Readonly<{ AbstractLibraryPlugin: typeof AbstractLibraryPlugin; EnableLibraryPlugin: typeof EnableLibraryPlugin }>; DelegatedPlugin: typeof DelegatedPlugin; DllPlugin: typeof DllPlugin; DllReferencePlugin: typeof DllReferencePlugin; LibManifestPlugin: typeof LibManifestPlugin; dll: Readonly<{ DelegatedPlugin: typeof DelegatedPlugin; DllPlugin: typeof DllPlugin; DllReferencePlugin: typeof DllReferencePlugin; LibManifestPlugin: typeof LibManifestPlugin }>; container: Readonly<{ ContainerPlugin: typeof ContainerPlugin; ContainerReferencePlugin: typeof ContainerReferencePlugin; ModuleFederationPlugin: typeof ModuleFederationPlugin; scope: (<T>( scope: string, options: ContainerOptionsFormat<T>) => Record<string, (string | (string)[] | T)>) }>; sharing: Readonly<{ ConsumeSharedPlugin: typeof ConsumeSharedPlugin; ProvideSharedPlugin: typeof ProvideSharedPlugin; SharePlugin: typeof SharePlugin; scope: (<T>( scope: string, options: ContainerOptionsFormat<T>) => Record<string, (string | (string)[] | T)>) }>; debug: Readonly<{ ProfilingPlugin: typeof ProfilingPlugin }>; util: Readonly<{ createHash: (( algorithm: HashFunction) => Hash); comparators: typeof comparators; runtime: typeof runtime; serialization: { get register(): (( Constructor: Constructor, request: string, name: (null | string), serializer: ObjectSerializer) => void); get registerLoader(): (( regExp: RegExp, loader: (( request: string) => (boolean))) => void); get registerNotSerializable(): (( Constructor: Constructor) => void); get NOT_SERIALIZABLE(): object; get MEASURE_START_OPERATION(): typeof MEASURE_START_OPERATION; get MEASURE_END_OPERATION(): typeof MEASURE_END_OPERATION; get buffersSerializer(): Serializer<any, any, any>; 
-/**
- * Creates a file serializer.
- */
-createFileSerializer: (<D, S, C>( fs: IntermediateFileSystem, hashFunction: HashFunction) => Serializer<D, S, C>) }; cleverMerge: (<T, O>( first?: (null | T), second?: (null | O)) => (T | O | (T & O))); LazySet: typeof LazySet; compileBooleanMatcher: _functionCompileBooleanMatcher }>; sources: declarations; experiments: Readonly<{ schemes: Readonly<{ HttpUriPlugin: typeof HttpUriPlugin; VirtualUrlPlugin: typeof VirtualUrlPlugin }>; ids: Readonly<{ SyncModuleIdsPlugin: typeof SyncModuleIdsPlugin }> }> };
-declare const _webpackModuleExports: { 
-/**
- * Returns the compiler object.
- */
-( options: Configuration, callback: CallbackWebpackFunction_2<Stats, void>): (null | Compiler); 
-/**
- * Returns the compiler object.
- */
-( options: Configuration): Compiler; 
-/**
- * Returns the multi compiler object.
- */
-( options: MultiConfiguration, callback: CallbackWebpackFunction_2<MultiStats, void>): (null | defaultMultiCompiler); 
-/**
- * Returns the multi compiler object.
- */
-( options: MultiConfiguration): defaultMultiCompiler; webpack: _functionWebpack; defineConfig: (<T extends DefineConfigInput>( config: T) => T); validate: (( options: (Configuration | MultiConfiguration)) => void); validateSchema: (( schema: (Parameters<typeof validateFunction>)[0], options: (Parameters<typeof validateFunction>)[1], validationConfiguration?: (ValidationErrorConfiguration)) => void); version: string; cli: typeof cli; AutomaticPrefetchPlugin: typeof AutomaticPrefetchPlugin; AsyncDependenciesBlock: typeof AsyncDependenciesBlock; BannerPlugin: typeof BannerPlugin; Cache: typeof CacheClass; Chunk: typeof Chunk; ChunkGraph: typeof ChunkGraph; CleanPlugin: typeof CleanPlugin; Compilation: typeof Compilation; Compiler: typeof Compiler; ConcatenationScope: typeof ConcatenationScope; ContextExclusionPlugin: typeof ContextExclusionPlugin; ContextReplacementPlugin: typeof ContextReplacementPlugin; DefinePlugin: typeof DefinePlugin; Dependency: typeof Dependency; DynamicEntryPlugin: typeof DynamicEntryPlugin; DotenvPlugin: typeof DotenvPlugin; EntryOptionPlugin: typeof EntryOptionPlugin; EntryPlugin: typeof EntryPlugin; EnvironmentPlugin: typeof EnvironmentPlugin; EvalDevToolModulePlugin: typeof EvalDevToolModulePlugin; EvalSourceMapDevToolPlugin: typeof EvalSourceMapDevToolPlugin; ExternalModule: typeof ExternalModule; ExternalsPlugin: typeof ExternalsPlugin; Generator: typeof Generator; HotUpdateChunk: typeof HotUpdateChunk; HotModuleReplacementPlugin: typeof HotModuleReplacementPlugin; InitFragment: typeof InitFragment; IgnorePlugin: typeof IgnorePlugin; JavascriptModulesPlugin: typeof JavascriptModulesPlugin; LibraryTemplatePlugin: typeof LibraryTemplatePlugin; LoaderOptionsPlugin: typeof LoaderOptionsPlugin; LoaderTargetPlugin: typeof LoaderTargetPlugin; Module: typeof Module; ModuleFactory: typeof ModuleFactory; ModuleFilenameHelpers: { ALL_LOADERS_RESOURCE: string; REGEXP_ALL_LOADERS_RESOURCE: RegExp; LOADERS_RESOURCE: string; REGEXP_LOADERS_RESOURCE: RegExp; RESOURCE: string; REGEXP_RESOURCE: RegExp; ABSOLUTE_RESOURCE_PATH: string; REGEXP_ABSOLUTE_RESOURCE_PATH: RegExp; RESOURCE_PATH: string; REGEXP_RESOURCE_PATH: RegExp; ALL_LOADERS: string; REGEXP_ALL_LOADERS: RegExp; LOADERS: string; REGEXP_LOADERS: RegExp; QUERY: string; REGEXP_QUERY: RegExp; ID: string; REGEXP_ID: RegExp; HASH: string; REGEXP_HASH: RegExp; NAMESPACE: string; REGEXP_NAMESPACE: RegExp; 
+export function default( options: Configuration, callback: CallbackWebpackFunction_2<Stats, void>): (null | Compiler);
+export function default( options: Configuration): Compiler;
+export function default( options: MultiConfiguration, callback: CallbackWebpackFunction_2<MultiStats, void>): (null | defaultMultiCompiler);
+export function default( options: MultiConfiguration): defaultMultiCompiler;
+export namespace default {
+export let webpack: _functionWebpack;
+export let defineConfig: (<T extends DefineConfigInput>( config: T) => T);
+export let validate: (( options: (Configuration | MultiConfiguration)) => void);
+export let validateSchema: (( schema: (Parameters<typeof validateFunction>)[0], options: (Parameters<typeof validateFunction>)[1], validationConfiguration?: (ValidationErrorConfiguration)) => void);
+export let version: string;
+export namespace cli {
+export let createColors: (( __0?: (ColorsOptions)) => Colors);
+export let getArguments: (( schema?: ((JSONSchema4 & { absolutePath: (boolean); instanceof: string; cli: { helper?: (boolean); exclude?: (boolean); description?: (string); negatedDescription?: (string); resetDescription?: (string) } }) | (JSONSchema6 & { absolutePath: (boolean); instanceof: string; cli: { helper?: (boolean); exclude?: (boolean); description?: (string); negatedDescription?: (string); resetDescription?: (string) } }) | (JSONSchema7 & { absolutePath: (boolean); instanceof: string; cli: { helper?: (boolean); exclude?: (boolean); description?: (string); negatedDescription?: (string); resetDescription?: (string) } }))) => Flags);
+export let isColorSupported: (( ) => (boolean));
+export let processArguments: (( args: Flags, config: ObjectConfiguration, values: Values) => (null | (Problem)[]));
+
+}export let ModuleFilenameHelpers: { 
 /**
  * Returns the filename.
  */
@@ -20537,12 +19590,285 @@ replaceDuplicates<T>( array: (T)[], fn: (( duplicateItem: T, duplicateItemIndex:
  * - `exclude`: a RegExp or an array of RegExp
  * The `test` property is tested first, then `include` and then `exclude`.
  */
-matchObject( obj: MatchObject, str: string): (boolean) }; ModuleGraph: typeof ModuleGraph; ModuleGraphConnection: typeof ModuleGraphConnection; NoEmitOnErrorsPlugin: typeof NoEmitOnErrorsPlugin; NormalModule: typeof NormalModule; NormalModuleReplacementPlugin: typeof NormalModuleReplacementPlugin; MultiCompiler: typeof defaultMultiCompiler; OptimizationStages: typeof OptimizationStages; Parser: typeof ParserClass; PlatformPlugin: typeof PlatformPlugin; PrefetchPlugin: typeof PrefetchPlugin; ProgressPlugin: typeof ProgressPlugin; ProvidePlugin: typeof ProvidePlugin; RuntimeGlobals: typeof RuntimeGlobals; RuntimeModule: typeof RuntimeModule; SingleEntryPlugin: typeof EntryPlugin; SourceMapDevToolPlugin: typeof SourceMapDevToolPlugin; Stats: typeof Stats; ManifestPlugin: typeof ManifestPlugin; Template: typeof Template; UsageState: Readonly<{ Unused: 0; OnlyPropertiesUsed: 1; NoInfo: 2; Unknown: 3; Used: 4 }>; WatchIgnorePlugin: typeof WatchIgnorePlugin; WebpackError: typeof WebpackError; WebpackOptionsApply: typeof WebpackOptionsApply; WebpackOptionsDefaulter: typeof WebpackOptionsDefaulter; WebpackOptionsValidationError: typeof ValidationErrorDefault; ValidationError: typeof ValidationErrorDefault; cache: Readonly<{ MemoryCachePlugin: typeof MemoryCachePlugin }>; config: Readonly<{ getNormalizedWebpackOptions: (( config: Configuration) => WebpackOptionsNormalized); applyWebpackOptionsDefaults: (( options: WebpackOptionsNormalized, compilerIndex?: (number)) => ResolvedOptions) }>; dependencies: Readonly<{ ModuleDependency: typeof ModuleDependency; HarmonyImportDependency: typeof HarmonyImportDependency; ConstDependency: typeof ConstDependency; NullDependency: typeof NullDependency }>; ids: Readonly<{ ChunkModuleIdRangePlugin: typeof ChunkModuleIdRangePlugin; NaturalModuleIdsPlugin: typeof NaturalModuleIdsPlugin; OccurrenceModuleIdsPlugin: typeof OccurrenceModuleIdsPlugin; NamedModuleIdsPlugin: typeof NamedModuleIdsPlugin; DeterministicChunkIdsPlugin: typeof DeterministicChunkIdsPlugin; DeterministicModuleIdsPlugin: typeof DeterministicModuleIdsPlugin; NamedChunkIdsPlugin: typeof NamedChunkIdsPlugin; OccurrenceChunkIdsPlugin: typeof OccurrenceChunkIdsPlugin; HashedModuleIdsPlugin: typeof HashedModuleIdsPlugin }>; javascript: Readonly<{ EnableChunkLoadingPlugin: typeof EnableChunkLoadingPlugin; JavascriptModulesPlugin: typeof JavascriptModulesPlugin; JavascriptParser: typeof JavascriptParser }>; optimize: Readonly<{ AggressiveMergingPlugin: typeof AggressiveMergingPlugin; AggressiveSplittingPlugin: typeof AggressiveSplittingPlugin; InnerGraph: typeof InnerGraph; LimitChunkCountPlugin: typeof LimitChunkCountPlugin; MergeDuplicateChunksPlugin: typeof MergeDuplicateChunksPlugin; MinChunkSizePlugin: typeof MinChunkSizePlugin; ModuleConcatenationPlugin: typeof ModuleConcatenationPlugin; RealContentHashPlugin: typeof RealContentHashPlugin; RuntimeChunkPlugin: typeof RuntimeChunkPlugin; SideEffectsFlagPlugin: typeof SideEffectsFlagPlugin; SplitChunksPlugin: typeof defaultSplitChunksPlugin }>; runtime: Readonly<{ GetChunkFilenameRuntimeModule: typeof GetChunkFilenameRuntimeModule; LoadScriptRuntimeModule: typeof LoadScriptRuntimeModule }>; prefetch: Readonly<{ ChunkPrefetchPreloadPlugin: typeof ChunkPrefetchPreloadPlugin }>; web: Readonly<{ FetchCompileWasmPlugin: typeof FetchCompileWasmPlugin; FetchCompileAsyncWasmPlugin: typeof FetchCompileAsyncWasmPlugin; JsonpChunkLoadingRuntimeModule: typeof JsonpChunkLoadingRuntimeModule; JsonpTemplatePlugin: typeof JsonpTemplatePlugin; CssLoadingRuntimeModule: typeof CssLoadingRuntimeModule }>; esm: Readonly<{ ModuleChunkLoadingRuntimeModule: typeof ModuleChunkLoadingRuntimeModule }>; webworker: Readonly<{ WebWorkerTemplatePlugin: typeof WebWorkerTemplatePlugin }>; node: Readonly<{ NodeEnvironmentPlugin: typeof NodeEnvironmentPlugin; NodeSourcePlugin: typeof NodeSourcePlugin; NodeTargetPlugin: typeof NodeTargetPlugin; NodeTemplatePlugin: typeof NodeTemplatePlugin; ReadFileCompileWasmPlugin: typeof ReadFileCompileWasmPlugin; ReadFileCompileAsyncWasmPlugin: typeof ReadFileCompileAsyncWasmPlugin }>; electron: Readonly<{ ElectronTargetPlugin: typeof ElectronTargetPlugin }>; wasm: Readonly<{ AsyncWebAssemblyModulesPlugin: typeof AsyncWebAssemblyModulesPlugin; EnableWasmLoadingPlugin: typeof EnableWasmLoadingPlugin }>; css: Readonly<{ CssModulesPlugin: typeof CssModulesPlugin }>; library: Readonly<{ AbstractLibraryPlugin: typeof AbstractLibraryPlugin; EnableLibraryPlugin: typeof EnableLibraryPlugin }>; DelegatedPlugin: typeof DelegatedPlugin; DllPlugin: typeof DllPlugin; DllReferencePlugin: typeof DllReferencePlugin; LibManifestPlugin: typeof LibManifestPlugin; dll: Readonly<{ DelegatedPlugin: typeof DelegatedPlugin; DllPlugin: typeof DllPlugin; DllReferencePlugin: typeof DllReferencePlugin; LibManifestPlugin: typeof LibManifestPlugin }>; container: Readonly<{ ContainerPlugin: typeof ContainerPlugin; ContainerReferencePlugin: typeof ContainerReferencePlugin; ModuleFederationPlugin: typeof ModuleFederationPlugin; scope: (<T>( scope: string, options: ContainerOptionsFormat<T>) => Record<string, (string | (string)[] | T)>) }>; sharing: Readonly<{ ConsumeSharedPlugin: typeof ConsumeSharedPlugin; ProvideSharedPlugin: typeof ProvideSharedPlugin; SharePlugin: typeof SharePlugin; scope: (<T>( scope: string, options: ContainerOptionsFormat<T>) => Record<string, (string | (string)[] | T)>) }>; debug: Readonly<{ ProfilingPlugin: typeof ProfilingPlugin }>; util: Readonly<{ createHash: (( algorithm: HashFunction) => Hash); comparators: typeof comparators; runtime: typeof runtime; serialization: { get register(): (( Constructor: Constructor, request: string, name: (null | string), serializer: ObjectSerializer) => void); get registerLoader(): (( regExp: RegExp, loader: (( request: string) => (boolean))) => void); get registerNotSerializable(): (( Constructor: Constructor) => void); get NOT_SERIALIZABLE(): object; get MEASURE_START_OPERATION(): typeof MEASURE_START_OPERATION; get MEASURE_END_OPERATION(): typeof MEASURE_END_OPERATION; get buffersSerializer(): Serializer<any, any, any>; 
+matchObject( obj: MatchObject, str: string): (boolean) };
+export namespace OptimizationStages {
+export let STAGE_ADVANCED: 10;
+export let STAGE_BASIC: -10;
+export let STAGE_DEFAULT: 0;
+
+}export namespace RuntimeGlobals {
+export let amdDefine: "__webpack_require__.amdD";
+export let amdOptions: "__webpack_require__.amdO";
+export let asyncModule: "__webpack_require__.a";
+export let asyncModuleDoneSymbol: "__webpack_require__.aD";
+export let asyncModuleExportSymbol: "__webpack_require__.aE";
+export let baseURI: "__webpack_require__.b";
+export let chunkCallback: "webpackChunk";
+export let chunkName: "__webpack_require__.cn";
+export let compatGetDefaultExport: "__webpack_require__.n";
+export let compileWasm: "__webpack_require__.vs";
+export let createFakeNamespaceObject: "__webpack_require__.t";
+export let createScript: "__webpack_require__.ts";
+export let createScriptUrl: "__webpack_require__.tu";
+export let cssInjectStyle: "__webpack_require__.is";
+export let currentRemoteGetScope: "__webpack_require__.R";
+export let deferredModuleAsyncTransitiveDependencies: "__webpack_require__.zT";
+export let deferredModuleAsyncTransitiveDependenciesSymbol: "__webpack_require__.zS";
+export let definePropertyGetters: "__webpack_require__.d";
+export let ensureChunk: "__webpack_require__.e";
+export let ensureChunkHandlers: "__webpack_require__.f";
+export let ensureChunkIncludeEntries: "__webpack_require__.f (include entries)";
+export let entryModuleId: "__webpack_require__.s";
+export let esmId: "__webpack_esm_id__";
+export let esmIds: "__webpack_esm_ids__";
+export let esmModules: "__webpack_esm_modules__";
+export let esmRuntime: "__webpack_esm_runtime__";
+export let exports: "__webpack_exports__";
+export let externalInstallChunk: "__webpack_require__.C";
+export let getChunkCssFilename: "__webpack_require__.k";
+export let getChunkScriptFilename: "__webpack_require__.u";
+export let getChunkUpdateCssFilename: "__webpack_require__.hk";
+export let getChunkUpdateScriptFilename: "__webpack_require__.hu";
+export let getFullHash: "__webpack_require__.h";
+export let getTrustedTypesPolicy: "__webpack_require__.tt";
+export let getUpdateManifestFilename: "__webpack_require__.hmrF";
+export let global: "__webpack_require__.g";
+export let harmonyModuleDecorator: "__webpack_require__.hmd";
+export let hasCssModules: "has css modules";
+export let hasFetchPriority: "has fetch priority";
+export let hasOwnProperty: "__webpack_require__.o";
+export let hmrDownloadManifest: "__webpack_require__.hmrM";
+export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
+export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
+export let hmrModuleData: "__webpack_require__.hmrD";
+export let hmrRuntimeStatePrefix: "__webpack_require__.hmrS";
+export let initializeSharing: "__webpack_require__.I";
+export let instantiateWasm: "__webpack_require__.v";
+export let interceptModuleExecution: "__webpack_require__.i";
+export let loadScript: "__webpack_require__.l";
+export let makeDeferredNamespaceObject: "__webpack_require__.z";
+export let makeNamespaceObject: "__webpack_require__.r";
+export let makeOptimizedDeferredNamespaceObject: "__webpack_require__.zO";
+export let module: "module";
+export let moduleCache: "__webpack_require__.c";
+export let moduleFactories: "__webpack_require__.m";
+export let moduleFactoriesAddOnly: "__webpack_require__.m (add only)";
+export let moduleId: "module.id";
+export let moduleLoaded: "module.loaded";
+export let nodeModuleDecorator: "__webpack_require__.nmd";
+export let onChunksLoaded: "__webpack_require__.O";
+export let prefetchChunk: "__webpack_require__.E";
+export let prefetchChunkHandlers: "__webpack_require__.F";
+export let preloadChunk: "__webpack_require__.G";
+export let preloadChunkHandlers: "__webpack_require__.H";
+export let publicPath: "__webpack_require__.p";
+export let relativeUrl: "__webpack_require__.U";
+export let require: "__webpack_require__";
+export let requireScope: "__webpack_require__.*";
+export let returnExportsFromRuntime: "return-exports-from-runtime";
+export let runtimeId: "__webpack_require__.j";
+export let nonce: "__webpack_require__.nc";
+export let setAnonymousDefaultName: "__webpack_require__.dn";
+export let shareScopeMap: "__webpack_require__.S";
+export let startup: "__webpack_require__.x";
+export let startupEntrypoint: "__webpack_require__.X";
+export let startupNoDefault: "__webpack_require__.x (no default handler)";
+export let startupOnlyAfter: "__webpack_require__.x (only after)";
+export let startupOnlyBefore: "__webpack_require__.x (only before)";
+export let system: "__webpack_require__.System";
+export let systemContext: "__webpack_require__.y";
+export let thisAsExports: "top-level-this-exports";
+export let toBinary: "__webpack_require__.tb";
+export let uncaughtErrorHandler: "__webpack_require__.oe";
+export let wasmInstances: "__webpack_require__.w";
+export let worker: "__webpack_require__.wc";
+
+}export let UsageState: Readonly<{ Unused: 0; OnlyPropertiesUsed: 1; NoInfo: 2; Unknown: 3; Used: 4 }>;
+export let cache: Readonly<{ MemoryCachePlugin: typeof MemoryCachePlugin }>;
+export let config: Readonly<{ getNormalizedWebpackOptions: (( config: Configuration) => WebpackOptionsNormalized); applyWebpackOptionsDefaults: (( options: WebpackOptionsNormalized, compilerIndex?: (number)) => ResolvedOptions) }>;
+export let dependencies: Readonly<{ ModuleDependency: typeof ModuleDependency; HarmonyImportDependency: typeof HarmonyImportDependency; ConstDependency: typeof ConstDependency; NullDependency: typeof NullDependency }>;
+export let ids: Readonly<{ ChunkModuleIdRangePlugin: typeof ChunkModuleIdRangePlugin; NaturalModuleIdsPlugin: typeof NaturalModuleIdsPlugin; OccurrenceModuleIdsPlugin: typeof OccurrenceModuleIdsPlugin; NamedModuleIdsPlugin: typeof NamedModuleIdsPlugin; DeterministicChunkIdsPlugin: typeof DeterministicChunkIdsPlugin; DeterministicModuleIdsPlugin: typeof DeterministicModuleIdsPlugin; NamedChunkIdsPlugin: typeof NamedChunkIdsPlugin; OccurrenceChunkIdsPlugin: typeof OccurrenceChunkIdsPlugin; HashedModuleIdsPlugin: typeof HashedModuleIdsPlugin }>;
+export let javascript: Readonly<{ EnableChunkLoadingPlugin: typeof EnableChunkLoadingPlugin; JavascriptModulesPlugin: typeof JavascriptModulesPlugin; JavascriptParser: typeof JavascriptParser }>;
+export let optimize: Readonly<{ AggressiveMergingPlugin: typeof AggressiveMergingPlugin; AggressiveSplittingPlugin: typeof AggressiveSplittingPlugin; InnerGraph: typeof InnerGraph; LimitChunkCountPlugin: typeof LimitChunkCountPlugin; MergeDuplicateChunksPlugin: typeof MergeDuplicateChunksPlugin; MinChunkSizePlugin: typeof MinChunkSizePlugin; ModuleConcatenationPlugin: typeof ModuleConcatenationPlugin; RealContentHashPlugin: typeof RealContentHashPlugin; RuntimeChunkPlugin: typeof RuntimeChunkPlugin; SideEffectsFlagPlugin: typeof SideEffectsFlagPlugin; SplitChunksPlugin: typeof defaultSplitChunksPlugin }>;
+export let runtime: Readonly<{ GetChunkFilenameRuntimeModule: typeof GetChunkFilenameRuntimeModule; LoadScriptRuntimeModule: typeof LoadScriptRuntimeModule }>;
+export let prefetch: Readonly<{ ChunkPrefetchPreloadPlugin: typeof ChunkPrefetchPreloadPlugin }>;
+export let web: Readonly<{ FetchCompileAsyncWasmPlugin: typeof FetchCompileAsyncWasmPlugin; JsonpChunkLoadingRuntimeModule: typeof JsonpChunkLoadingRuntimeModule; CssLoadingRuntimeModule: typeof CssLoadingRuntimeModule }>;
+export let esm: Readonly<{ ModuleChunkLoadingRuntimeModule: typeof ModuleChunkLoadingRuntimeModule }>;
+export let webworker: Readonly<{ WebWorkerTemplatePlugin: typeof WebWorkerTemplatePlugin }>;
+export let node: Readonly<{ NodeEnvironmentPlugin: typeof NodeEnvironmentPlugin; NodeSourcePlugin: typeof NodeSourcePlugin; NodeTargetPlugin: typeof NodeTargetPlugin; NodeTemplatePlugin: typeof NodeTemplatePlugin; ReadFileCompileAsyncWasmPlugin: typeof ReadFileCompileAsyncWasmPlugin }>;
+export let electron: Readonly<{ ElectronTargetPlugin: typeof ElectronTargetPlugin }>;
+export let wasm: Readonly<{ AsyncWebAssemblyModulesPlugin: typeof AsyncWebAssemblyModulesPlugin; EnableWasmLoadingPlugin: typeof EnableWasmLoadingPlugin }>;
+export let css: Readonly<{ CssModulesPlugin: typeof CssModulesPlugin }>;
+export let library: Readonly<{ AbstractLibraryPlugin: typeof AbstractLibraryPlugin; EnableLibraryPlugin: typeof EnableLibraryPlugin }>;
+export let dll: Readonly<{ DelegatedPlugin: typeof DelegatedPlugin; DllPlugin: typeof DllPlugin; DllReferencePlugin: typeof DllReferencePlugin; LibManifestPlugin: typeof LibManifestPlugin }>;
+export let container: Readonly<{ ContainerPlugin: typeof ContainerPlugin; ContainerReferencePlugin: typeof ContainerReferencePlugin; ModuleFederationPlugin: typeof ModuleFederationPlugin; scope: (<T>( scope: string, options: ContainerOptionsFormat<T>) => Record<string, (string | (string)[] | T)>) }>;
+export let sharing: Readonly<{ ConsumeSharedPlugin: typeof ConsumeSharedPlugin; ProvideSharedPlugin: typeof ProvideSharedPlugin; SharePlugin: typeof SharePlugin; scope: (<T>( scope: string, options: ContainerOptionsFormat<T>) => Record<string, (string | (string)[] | T)>) }>;
+export let debug: Readonly<{ ProfilingPlugin: typeof ProfilingPlugin }>;
+export let util: Readonly<{ createHash: (( algorithm: HashFunction) => Hash); comparators: typeof comparators; runtime: typeof runtime; serialization: { get register(): (( Constructor: Constructor, request: string, name: (null | string), serializer: ObjectSerializer) => void); get registerLoader(): (( regExp: RegExp, loader: (( request: string) => (boolean))) => void); get registerNotSerializable(): (( Constructor: Constructor) => void); get NOT_SERIALIZABLE(): object; get MEASURE_START_OPERATION(): typeof MEASURE_START_OPERATION; get MEASURE_END_OPERATION(): typeof MEASURE_END_OPERATION; get buffersSerializer(): Serializer<any, any, any>; 
 /**
  * Creates a file serializer.
  */
-createFileSerializer: (<D, S, C>( fs: IntermediateFileSystem, hashFunction: HashFunction) => Serializer<D, S, C>) }; cleverMerge: (<T, O>( first?: (null | T), second?: (null | O)) => (T | O | (T & O))); LazySet: typeof LazySet; compileBooleanMatcher: _functionCompileBooleanMatcher }>; sources: declarations; experiments: Readonly<{ schemes: Readonly<{ HttpUriPlugin: typeof HttpUriPlugin; VirtualUrlPlugin: typeof VirtualUrlPlugin }>; ids: Readonly<{ SyncModuleIdsPlugin: typeof SyncModuleIdsPlugin }> }> };
-export type RuleSetUseFunction = (( data: EffectData) => (string | RuleSetUseFunction | { 
+createFileSerializer: (<D, S, C>( fs: IntermediateFileSystem, hashFunction: HashFunction) => Serializer<D, S, C>) }; cleverMerge: (<T, O>( first?: (null | T), second?: (null | O)) => (T | O | (T & O))); LazySet: typeof LazySet; compileBooleanMatcher: _functionCompileBooleanMatcher }>;
+export let sources: declarations;
+export let experiments: Readonly<{ schemes: Readonly<{ HttpUriPlugin: typeof HttpUriPlugin; VirtualUrlPlugin: typeof VirtualUrlPlugin }>; ids: Readonly<{ SyncModuleIdsPlugin: typeof SyncModuleIdsPlugin }> }>;
+export { AutomaticPrefetchPlugin, AsyncDependenciesBlock, BannerPlugin, CacheClass as Cache, Chunk, ChunkGraph, CleanPlugin, Compilation, Compiler, ConcatenationScope, ContextExclusionPlugin, ContextReplacementPlugin, DefinePlugin, Dependency, DynamicEntryPlugin, DotenvPlugin, EntryOptionPlugin, EntryPlugin, EnvironmentPlugin, EvalDevToolModulePlugin, EvalSourceMapDevToolPlugin, ExternalModule, ExternalsPlugin, Generator, HotUpdateChunk, HotModuleReplacementPlugin, InitFragment, IgnorePlugin, LoaderOptionsPlugin, LoaderTargetPlugin, Module, ModuleFactory, ModuleGraph, ModuleGraphConnection, NoEmitOnErrorsPlugin, NormalModule, NormalModuleReplacementPlugin, defaultMultiCompiler as MultiCompiler, ParserClass as Parser, PlatformPlugin, PrefetchPlugin, ProgressPlugin, ProvidePlugin, RuntimeModule, SourceMapDevToolPlugin, Stats, ManifestPlugin, Template, WatchIgnorePlugin, WebpackError, WebpackOptionsApply, ValidationErrorDefault as ValidationError }
+}export function "module.exports"( options: Configuration, callback: CallbackWebpackFunction_2<Stats, void>): (null | Compiler);
+export function "module.exports"( options: Configuration): Compiler;
+export function "module.exports"( options: MultiConfiguration, callback: CallbackWebpackFunction_2<MultiStats, void>): (null | defaultMultiCompiler);
+export function "module.exports"( options: MultiConfiguration): defaultMultiCompiler;
+export namespace "module.exports" {
+export let webpack: _functionWebpack;
+export let defineConfig: (<T extends DefineConfigInput>( config: T) => T);
+export let validate: (( options: (Configuration | MultiConfiguration)) => void);
+export let validateSchema: (( schema: (Parameters<typeof validateFunction>)[0], options: (Parameters<typeof validateFunction>)[1], validationConfiguration?: (ValidationErrorConfiguration)) => void);
+export let version: string;
+export namespace cli {
+export let createColors: (( __0?: (ColorsOptions)) => Colors);
+export let getArguments: (( schema?: ((JSONSchema4 & { absolutePath: (boolean); instanceof: string; cli: { helper?: (boolean); exclude?: (boolean); description?: (string); negatedDescription?: (string); resetDescription?: (string) } }) | (JSONSchema6 & { absolutePath: (boolean); instanceof: string; cli: { helper?: (boolean); exclude?: (boolean); description?: (string); negatedDescription?: (string); resetDescription?: (string) } }) | (JSONSchema7 & { absolutePath: (boolean); instanceof: string; cli: { helper?: (boolean); exclude?: (boolean); description?: (string); negatedDescription?: (string); resetDescription?: (string) } }))) => Flags);
+export let isColorSupported: (( ) => (boolean));
+export let processArguments: (( args: Flags, config: ObjectConfiguration, values: Values) => (null | (Problem)[]));
+
+}export let ModuleFilenameHelpers: { 
+/**
+ * Returns the filename.
+ */
+createFilename( module: (string | Module), options: { namespace?: (string); moduleFilenameTemplate?: (string | (( context: ModuleFilenameTemplateContext) => string)) }, __2: { requestShortener: RequestShortener; chunkGraph: ChunkGraph; hashFunction?: (string | typeof Hash) }): string; 
+/**
+ * Replaces duplicate items in an array with new values generated by a callback function.
+ * The callback function is called with the duplicate item, the index of the duplicate item, and the number of times the item has been replaced.
+ * The callback function should return the new value for the duplicate item.
+ */
+replaceDuplicates<T>( array: (T)[], fn: (( duplicateItem: T, duplicateItemIndex: number, numberOfTimesReplaced: number) => T), comparator?: ((( firstElement: T, nextElement: T) => (0 | 1 | -1)))): (T)[]; matchPart: (( str: string, test: Matcher) => (boolean)); 
+/**
+ * Tests if a string matches a match object. The match object can have the following properties:
+ * - `test`: a RegExp or an array of RegExp
+ * - `include`: a RegExp or an array of RegExp
+ * - `exclude`: a RegExp or an array of RegExp
+ * The `test` property is tested first, then `include` and then `exclude`.
+ */
+matchObject( obj: MatchObject, str: string): (boolean) };
+export namespace OptimizationStages {
+export let STAGE_ADVANCED: 10;
+export let STAGE_BASIC: -10;
+export let STAGE_DEFAULT: 0;
+
+}export namespace RuntimeGlobals {
+export let amdDefine: "__webpack_require__.amdD";
+export let amdOptions: "__webpack_require__.amdO";
+export let asyncModule: "__webpack_require__.a";
+export let asyncModuleDoneSymbol: "__webpack_require__.aD";
+export let asyncModuleExportSymbol: "__webpack_require__.aE";
+export let baseURI: "__webpack_require__.b";
+export let chunkCallback: "webpackChunk";
+export let chunkName: "__webpack_require__.cn";
+export let compatGetDefaultExport: "__webpack_require__.n";
+export let compileWasm: "__webpack_require__.vs";
+export let createFakeNamespaceObject: "__webpack_require__.t";
+export let createScript: "__webpack_require__.ts";
+export let createScriptUrl: "__webpack_require__.tu";
+export let cssInjectStyle: "__webpack_require__.is";
+export let currentRemoteGetScope: "__webpack_require__.R";
+export let deferredModuleAsyncTransitiveDependencies: "__webpack_require__.zT";
+export let deferredModuleAsyncTransitiveDependenciesSymbol: "__webpack_require__.zS";
+export let definePropertyGetters: "__webpack_require__.d";
+export let ensureChunk: "__webpack_require__.e";
+export let ensureChunkHandlers: "__webpack_require__.f";
+export let ensureChunkIncludeEntries: "__webpack_require__.f (include entries)";
+export let entryModuleId: "__webpack_require__.s";
+export let esmId: "__webpack_esm_id__";
+export let esmIds: "__webpack_esm_ids__";
+export let esmModules: "__webpack_esm_modules__";
+export let esmRuntime: "__webpack_esm_runtime__";
+export let exports: "__webpack_exports__";
+export let externalInstallChunk: "__webpack_require__.C";
+export let getChunkCssFilename: "__webpack_require__.k";
+export let getChunkScriptFilename: "__webpack_require__.u";
+export let getChunkUpdateCssFilename: "__webpack_require__.hk";
+export let getChunkUpdateScriptFilename: "__webpack_require__.hu";
+export let getFullHash: "__webpack_require__.h";
+export let getTrustedTypesPolicy: "__webpack_require__.tt";
+export let getUpdateManifestFilename: "__webpack_require__.hmrF";
+export let global: "__webpack_require__.g";
+export let harmonyModuleDecorator: "__webpack_require__.hmd";
+export let hasCssModules: "has css modules";
+export let hasFetchPriority: "has fetch priority";
+export let hasOwnProperty: "__webpack_require__.o";
+export let hmrDownloadManifest: "__webpack_require__.hmrM";
+export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
+export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
+export let hmrModuleData: "__webpack_require__.hmrD";
+export let hmrRuntimeStatePrefix: "__webpack_require__.hmrS";
+export let initializeSharing: "__webpack_require__.I";
+export let instantiateWasm: "__webpack_require__.v";
+export let interceptModuleExecution: "__webpack_require__.i";
+export let loadScript: "__webpack_require__.l";
+export let makeDeferredNamespaceObject: "__webpack_require__.z";
+export let makeNamespaceObject: "__webpack_require__.r";
+export let makeOptimizedDeferredNamespaceObject: "__webpack_require__.zO";
+export let module: "module";
+export let moduleCache: "__webpack_require__.c";
+export let moduleFactories: "__webpack_require__.m";
+export let moduleFactoriesAddOnly: "__webpack_require__.m (add only)";
+export let moduleId: "module.id";
+export let moduleLoaded: "module.loaded";
+export let nodeModuleDecorator: "__webpack_require__.nmd";
+export let onChunksLoaded: "__webpack_require__.O";
+export let prefetchChunk: "__webpack_require__.E";
+export let prefetchChunkHandlers: "__webpack_require__.F";
+export let preloadChunk: "__webpack_require__.G";
+export let preloadChunkHandlers: "__webpack_require__.H";
+export let publicPath: "__webpack_require__.p";
+export let relativeUrl: "__webpack_require__.U";
+export let require: "__webpack_require__";
+export let requireScope: "__webpack_require__.*";
+export let returnExportsFromRuntime: "return-exports-from-runtime";
+export let runtimeId: "__webpack_require__.j";
+export let nonce: "__webpack_require__.nc";
+export let setAnonymousDefaultName: "__webpack_require__.dn";
+export let shareScopeMap: "__webpack_require__.S";
+export let startup: "__webpack_require__.x";
+export let startupEntrypoint: "__webpack_require__.X";
+export let startupNoDefault: "__webpack_require__.x (no default handler)";
+export let startupOnlyAfter: "__webpack_require__.x (only after)";
+export let startupOnlyBefore: "__webpack_require__.x (only before)";
+export let system: "__webpack_require__.System";
+export let systemContext: "__webpack_require__.y";
+export let thisAsExports: "top-level-this-exports";
+export let toBinary: "__webpack_require__.tb";
+export let uncaughtErrorHandler: "__webpack_require__.oe";
+export let wasmInstances: "__webpack_require__.w";
+export let worker: "__webpack_require__.wc";
+
+}export let UsageState: Readonly<{ Unused: 0; OnlyPropertiesUsed: 1; NoInfo: 2; Unknown: 3; Used: 4 }>;
+export let cache: Readonly<{ MemoryCachePlugin: typeof MemoryCachePlugin }>;
+export let config: Readonly<{ getNormalizedWebpackOptions: (( config: Configuration) => WebpackOptionsNormalized); applyWebpackOptionsDefaults: (( options: WebpackOptionsNormalized, compilerIndex?: (number)) => ResolvedOptions) }>;
+export let dependencies: Readonly<{ ModuleDependency: typeof ModuleDependency; HarmonyImportDependency: typeof HarmonyImportDependency; ConstDependency: typeof ConstDependency; NullDependency: typeof NullDependency }>;
+export let ids: Readonly<{ ChunkModuleIdRangePlugin: typeof ChunkModuleIdRangePlugin; NaturalModuleIdsPlugin: typeof NaturalModuleIdsPlugin; OccurrenceModuleIdsPlugin: typeof OccurrenceModuleIdsPlugin; NamedModuleIdsPlugin: typeof NamedModuleIdsPlugin; DeterministicChunkIdsPlugin: typeof DeterministicChunkIdsPlugin; DeterministicModuleIdsPlugin: typeof DeterministicModuleIdsPlugin; NamedChunkIdsPlugin: typeof NamedChunkIdsPlugin; OccurrenceChunkIdsPlugin: typeof OccurrenceChunkIdsPlugin; HashedModuleIdsPlugin: typeof HashedModuleIdsPlugin }>;
+export let javascript: Readonly<{ EnableChunkLoadingPlugin: typeof EnableChunkLoadingPlugin; JavascriptModulesPlugin: typeof JavascriptModulesPlugin; JavascriptParser: typeof JavascriptParser }>;
+export let optimize: Readonly<{ AggressiveMergingPlugin: typeof AggressiveMergingPlugin; AggressiveSplittingPlugin: typeof AggressiveSplittingPlugin; InnerGraph: typeof InnerGraph; LimitChunkCountPlugin: typeof LimitChunkCountPlugin; MergeDuplicateChunksPlugin: typeof MergeDuplicateChunksPlugin; MinChunkSizePlugin: typeof MinChunkSizePlugin; ModuleConcatenationPlugin: typeof ModuleConcatenationPlugin; RealContentHashPlugin: typeof RealContentHashPlugin; RuntimeChunkPlugin: typeof RuntimeChunkPlugin; SideEffectsFlagPlugin: typeof SideEffectsFlagPlugin; SplitChunksPlugin: typeof defaultSplitChunksPlugin }>;
+export let runtime: Readonly<{ GetChunkFilenameRuntimeModule: typeof GetChunkFilenameRuntimeModule; LoadScriptRuntimeModule: typeof LoadScriptRuntimeModule }>;
+export let prefetch: Readonly<{ ChunkPrefetchPreloadPlugin: typeof ChunkPrefetchPreloadPlugin }>;
+export let web: Readonly<{ FetchCompileAsyncWasmPlugin: typeof FetchCompileAsyncWasmPlugin; JsonpChunkLoadingRuntimeModule: typeof JsonpChunkLoadingRuntimeModule; CssLoadingRuntimeModule: typeof CssLoadingRuntimeModule }>;
+export let esm: Readonly<{ ModuleChunkLoadingRuntimeModule: typeof ModuleChunkLoadingRuntimeModule }>;
+export let webworker: Readonly<{ WebWorkerTemplatePlugin: typeof WebWorkerTemplatePlugin }>;
+export let node: Readonly<{ NodeEnvironmentPlugin: typeof NodeEnvironmentPlugin; NodeSourcePlugin: typeof NodeSourcePlugin; NodeTargetPlugin: typeof NodeTargetPlugin; NodeTemplatePlugin: typeof NodeTemplatePlugin; ReadFileCompileAsyncWasmPlugin: typeof ReadFileCompileAsyncWasmPlugin }>;
+export let electron: Readonly<{ ElectronTargetPlugin: typeof ElectronTargetPlugin }>;
+export let wasm: Readonly<{ AsyncWebAssemblyModulesPlugin: typeof AsyncWebAssemblyModulesPlugin; EnableWasmLoadingPlugin: typeof EnableWasmLoadingPlugin }>;
+export let css: Readonly<{ CssModulesPlugin: typeof CssModulesPlugin }>;
+export let library: Readonly<{ AbstractLibraryPlugin: typeof AbstractLibraryPlugin; EnableLibraryPlugin: typeof EnableLibraryPlugin }>;
+export let dll: Readonly<{ DelegatedPlugin: typeof DelegatedPlugin; DllPlugin: typeof DllPlugin; DllReferencePlugin: typeof DllReferencePlugin; LibManifestPlugin: typeof LibManifestPlugin }>;
+export let container: Readonly<{ ContainerPlugin: typeof ContainerPlugin; ContainerReferencePlugin: typeof ContainerReferencePlugin; ModuleFederationPlugin: typeof ModuleFederationPlugin; scope: (<T>( scope: string, options: ContainerOptionsFormat<T>) => Record<string, (string | (string)[] | T)>) }>;
+export let sharing: Readonly<{ ConsumeSharedPlugin: typeof ConsumeSharedPlugin; ProvideSharedPlugin: typeof ProvideSharedPlugin; SharePlugin: typeof SharePlugin; scope: (<T>( scope: string, options: ContainerOptionsFormat<T>) => Record<string, (string | (string)[] | T)>) }>;
+export let debug: Readonly<{ ProfilingPlugin: typeof ProfilingPlugin }>;
+export let util: Readonly<{ createHash: (( algorithm: HashFunction) => Hash); comparators: typeof comparators; runtime: typeof runtime; serialization: { get register(): (( Constructor: Constructor, request: string, name: (null | string), serializer: ObjectSerializer) => void); get registerLoader(): (( regExp: RegExp, loader: (( request: string) => (boolean))) => void); get registerNotSerializable(): (( Constructor: Constructor) => void); get NOT_SERIALIZABLE(): object; get MEASURE_START_OPERATION(): typeof MEASURE_START_OPERATION; get MEASURE_END_OPERATION(): typeof MEASURE_END_OPERATION; get buffersSerializer(): Serializer<any, any, any>; 
+/**
+ * Creates a file serializer.
+ */
+createFileSerializer: (<D, S, C>( fs: IntermediateFileSystem, hashFunction: HashFunction) => Serializer<D, S, C>) }; cleverMerge: (<T, O>( first?: (null | T), second?: (null | O)) => (T | O | (T & O))); LazySet: typeof LazySet; compileBooleanMatcher: _functionCompileBooleanMatcher }>;
+export let sources: declarations;
+export let experiments: Readonly<{ schemes: Readonly<{ HttpUriPlugin: typeof HttpUriPlugin; VirtualUrlPlugin: typeof VirtualUrlPlugin }>; ids: Readonly<{ SyncModuleIdsPlugin: typeof SyncModuleIdsPlugin }> }>;
+export { AutomaticPrefetchPlugin, AsyncDependenciesBlock, BannerPlugin, CacheClass as Cache, Chunk, ChunkGraph, CleanPlugin, Compilation, Compiler, ConcatenationScope, ContextExclusionPlugin, ContextReplacementPlugin, DefinePlugin, Dependency, DynamicEntryPlugin, DotenvPlugin, EntryOptionPlugin, EntryPlugin, EnvironmentPlugin, EvalDevToolModulePlugin, EvalSourceMapDevToolPlugin, ExternalModule, ExternalsPlugin, Generator, HotUpdateChunk, HotModuleReplacementPlugin, InitFragment, IgnorePlugin, LoaderOptionsPlugin, LoaderTargetPlugin, Module, ModuleFactory, ModuleGraph, ModuleGraphConnection, NoEmitOnErrorsPlugin, NormalModule, NormalModuleReplacementPlugin, defaultMultiCompiler as MultiCompiler, ParserClass as Parser, PlatformPlugin, PrefetchPlugin, ProgressPlugin, ProvidePlugin, RuntimeModule, SourceMapDevToolPlugin, Stats, ManifestPlugin, Template, WatchIgnorePlugin, WebpackError, WebpackOptionsApply, ValidationErrorDefault as ValidationError }
+}export type RuleSetUseFunction = (( data: EffectData) => (string | RuleSetUseFunction | { 
 /**
  * Unique loader options identifier.
  */
@@ -20576,7 +19902,7 @@ export type ExternalItemFunctionPromise = (( data: ExternalItemFunctionData) => 
 export type ConfigurationFactory = (( env: Record<string, any>, argv: Record<string, any>) => MaybePromise<(Configuration | MultiConfiguration)>);
 export type ObjectSerializerContext = typeof ObjectSerializerContextObjectMiddlewareObject_3;
 export type ObjectDeserializerContext = typeof ObjectDeserializerContextObjectMiddlewareObject_2;
-export { ValidationErrorDefault as ValidationError, ValidationErrorDefault as WebpackOptionsValidationError, AsyncDependenciesBlock, AutomaticPrefetchPlugin, BannerPlugin, CacheClass as Cache, Chunk, ChunkGraph, CleanPlugin, Compilation, Compiler, ConcatenationScope, ContextExclusionPlugin, ContextReplacementPlugin, DefinePlugin, Dependency, DotenvPlugin, DynamicEntryPlugin, EntryOptionPlugin, EntryPlugin, EnvironmentPlugin, EvalDevToolModulePlugin, EvalSourceMapDevToolPlugin, ExternalModule, ExternalsPlugin, Generator, HotModuleReplacementPlugin, HotUpdateChunk, IgnorePlugin, InitFragment, LoaderOptionsPlugin, LoaderTargetPlugin, ManifestPlugin, Module, ModuleFactory, ModuleGraph, ModuleGraphConnection, defaultMultiCompiler as MultiCompiler, NoEmitOnErrorsPlugin, NormalModule, NormalModuleReplacementPlugin, ParserClass as Parser, PlatformPlugin, PrefetchPlugin, ProgressPlugin, ProvidePlugin, RuntimeModule, SourceMapDevToolPlugin, Stats, Template, WatchIgnorePlugin, WebpackOptionsApply, DelegatedPlugin, DllPlugin, DllReferencePlugin, LibManifestPlugin, WebpackError, JavascriptModulesPlugin, LibraryTemplatePlugin, EntryPlugin as SingleEntryPlugin, WebpackOptionsDefaulter, _default as default, ValidationErrorWebpackOptionsValidationError as ValidationError, ValidationErrorWebpackOptionsValidationError as WebpackOptionsValidationError, AsyncDependenciesBlock, AutomaticPrefetchPlugin, BannerPlugin, CacheClass as Cache, Chunk, ChunkGraph, CleanPlugin, Compilation, Compiler, ConcatenationScope, ContextExclusionPlugin, ContextReplacementPlugin, DefinePlugin, Dependency, DotenvPlugin, DynamicEntryPlugin, EntryOptionPlugin, EntryPlugin, EnvironmentPlugin, EvalDevToolModulePlugin, EvalSourceMapDevToolPlugin, ExternalModule, ExternalsPlugin, Generator, HotModuleReplacementPlugin, HotUpdateChunk, IgnorePlugin, InitFragment, LoaderOptionsPlugin, LoaderTargetPlugin, ManifestPlugin, Module, ModuleFactory, ModuleGraph, ModuleGraphConnection, defaultMultiCompiler as MultiCompiler, NoEmitOnErrorsPlugin, NormalModule, NormalModuleReplacementPlugin, ParserClass as Parser, PlatformPlugin, PrefetchPlugin, ProgressPlugin, ProvidePlugin, RuntimeModule, SourceMapDevToolPlugin, Stats, Template, WatchIgnorePlugin, WebpackOptionsApply, DelegatedPlugin, DllPlugin, DllReferencePlugin, LibManifestPlugin, WebpackError, EntryLibIndex as Entry, EntryNormalized, EntryObject, ExternalItem, ExternalItemFunction, ExternalItemObjectKnown, ExternalItemObjectUnknown, ExternalItemValue, Externals, FileCacheOptions, GeneratorOptionsByModuleTypeKnown, LibraryOptions, MemoryCacheOptions, ModuleOptions, ParserOptionsByModuleTypeKnown, ResolveOptions, RuleSetCondition, RuleSetConditionAbsolute, RuleSetRule, RuleSetUse, RuleSetUseItem, StatsOptions, Configuration, WebpackOptionsNormalized, WebpackPluginInstance, AssetModuleBuildInfo, ChunkGroup, AssetEmittedInfo, ContextModuleBuildInfo, CssModuleBuildInfo, CssModuleBuildMeta, ExternalModuleBuildInfo, HtmlModuleBuildInfo, JavascriptModuleBuildInfo, JavascriptModuleBuildMeta, JsonModuleBuildInfo, BuildInfo, BuildMeta, NormalModuleBuildInfo, ConcatenatedModuleBuildInfo, SyncWasmModuleBuildMeta, Asset, AssetInfo, EntryOptions, PathData, PathDataChunk, PathDataModule, CodeGenerationResults, Entrypoint, ExternalItemFunctionData, MultiCompilerOptions, MultiConfiguration, MultiStats, StatsOptions as MultiStatsOptions, ResolveData, ParserState, ResolvePluginInstance, Resolver, RenderManifestEntry, RenderManifestOptions, TemplatePath, Watching, Argument, Problem, Colors, ColorsOptions, DefineConfigInput, StatsAsset, StatsChunk, StatsChunkGroup, StatsChunkOrigin, StatsCompilation, StatsError, StatsLogging, StatsLoggingEntry, StatsModule, StatsModuleIssuer, StatsModuleReason, StatsModuleTraceDependency, StatsModuleTraceItem, StatsProfile, InputFileSystem, OutputFileSystem, LoaderModule, RawLoaderDefinition, LoaderDefinition, LoaderDefinitionFunction, PitchLoaderDefinitionFunction, RawLoaderDefinitionFunction, LoaderContext }
+export { ValidationErrorDefault as ValidationError, AsyncDependenciesBlock, AutomaticPrefetchPlugin, BannerPlugin, CacheClass as Cache, Chunk, ChunkGraph, CleanPlugin, Compilation, Compiler, ConcatenationScope, ContextExclusionPlugin, ContextReplacementPlugin, DefinePlugin, Dependency, DotenvPlugin, DynamicEntryPlugin, EntryOptionPlugin, EntryPlugin, EnvironmentPlugin, EvalDevToolModulePlugin, EvalSourceMapDevToolPlugin, ExternalModule, ExternalsPlugin, Generator, HotModuleReplacementPlugin, HotUpdateChunk, IgnorePlugin, InitFragment, LoaderOptionsPlugin, LoaderTargetPlugin, ManifestPlugin, Module, ModuleFactory, ModuleGraph, ModuleGraphConnection, defaultMultiCompiler as MultiCompiler, NoEmitOnErrorsPlugin, NormalModule, NormalModuleReplacementPlugin, ParserClass as Parser, PlatformPlugin, PrefetchPlugin, ProgressPlugin, ProvidePlugin, RuntimeModule, SourceMapDevToolPlugin, Stats, Template, WatchIgnorePlugin, WebpackOptionsApply, WebpackError, ValidationErrorClass as ValidationError, AsyncDependenciesBlock, AutomaticPrefetchPlugin, BannerPlugin, CacheClass as Cache, Chunk, ChunkGraph, CleanPlugin, Compilation, Compiler, ConcatenationScope, ContextExclusionPlugin, ContextReplacementPlugin, DefinePlugin, Dependency, DotenvPlugin, DynamicEntryPlugin, EntryOptionPlugin, EntryPlugin, EnvironmentPlugin, EvalDevToolModulePlugin, EvalSourceMapDevToolPlugin, ExternalModule, ExternalsPlugin, Generator, HotModuleReplacementPlugin, HotUpdateChunk, IgnorePlugin, InitFragment, LoaderOptionsPlugin, LoaderTargetPlugin, ManifestPlugin, Module, ModuleFactory, ModuleGraph, ModuleGraphConnection, defaultMultiCompiler as MultiCompiler, NoEmitOnErrorsPlugin, NormalModule, NormalModuleReplacementPlugin, ParserClass as Parser, PlatformPlugin, PrefetchPlugin, ProgressPlugin, ProvidePlugin, RuntimeModule, SourceMapDevToolPlugin, Stats, Template, WatchIgnorePlugin, WebpackOptionsApply, WebpackError, EntryLibIndex as Entry, EntryNormalized, EntryObject, ExternalItem, ExternalItemFunction, ExternalItemObjectKnown, ExternalItemObjectUnknown, ExternalItemValue, Externals, FileCacheOptions, GeneratorOptionsByModuleTypeKnown, LibraryOptions, MemoryCacheOptions, ModuleOptions, ParserOptionsByModuleTypeKnown, ResolveOptions, RuleSetCondition, RuleSetConditionAbsolute, RuleSetRule, RuleSetUse, RuleSetUseItem, StatsOptions, Configuration, WebpackOptionsNormalized, WebpackPluginInstance, AssetModuleBuildInfo, ChunkGroup, AssetEmittedInfo, ContextModuleBuildInfo, CssModuleBuildInfo, CssModuleBuildMeta, ExternalModuleBuildInfo, HtmlModuleBuildInfo, JavascriptModuleBuildInfo, JavascriptModuleBuildMeta, JsonModuleBuildInfo, BuildInfo, BuildMeta, NormalModuleBuildInfo, ConcatenatedModuleBuildInfo, Asset, AssetInfo, EntryOptions, PathData, PathDataChunk, PathDataModule, CodeGenerationResults, Entrypoint, ExternalItemFunctionData, MultiCompilerOptions, MultiConfiguration, MultiStats, StatsOptions as MultiStatsOptions, ResolveData, ParserState, ResolvePluginInstance, Resolver, RenderManifestEntry, RenderManifestOptions, TemplatePath, Watching, Argument, Problem, Colors, ColorsOptions, DefineConfigInput, StatsAsset, StatsChunk, StatsChunkGroup, StatsChunkOrigin, StatsCompilation, StatsError, StatsLogging, StatsLoggingEntry, StatsModule, StatsModuleIssuer, StatsModuleReason, StatsModuleTraceDependency, StatsModuleTraceItem, StatsProfile, InputFileSystem, OutputFileSystem, LoaderModule, RawLoaderDefinition, LoaderDefinition, LoaderDefinitionFunction, PitchLoaderDefinitionFunction, RawLoaderDefinitionFunction, LoaderContext }
 }
 declare namespace runtime {
 export let compareRuntime: (( a: RuntimeSpec, b: RuntimeSpec) => (0 | 1 | -1));
@@ -20600,4 +19926,3 @@ export { RuntimeSpecMap, RuntimeSpecSet }
 declare const topLevelSymbolTag: unique symbol;
 
 export = exports;
-export { _webpackModuleExports as "module.exports" };

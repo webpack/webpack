@@ -24,7 +24,9 @@ export type CacheOptions = true | CacheOptionsNormalized;
  * Cache generated modules and chunks to improve performance for multiple incremental builds.
  */
 export type CacheOptionsNormalized =
-	false | MemoryCacheOptions | FileCacheOptions;
+	| false
+	| MemoryCacheOptions
+	| FileCacheOptions;
 /**
  * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
  */
@@ -89,7 +91,8 @@ export type ChunkLoading = false | ChunkLoadingType;
  * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
  */
 export type ChunkLoadingType =
-	("jsonp" | "import-scripts" | "require" | "async-node" | "import") | string;
+	| ("jsonp" | "import-scripts" | "require" | "async-node" | "import")
+	| string;
 /**
  * Specifies the filename of the output file on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
  */
@@ -148,7 +151,7 @@ export type LibraryType =
 	  )
 	| string;
 /**
- * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
+ * If `output.library.type` is set to umd and `output.library.name` is set, setting this to true will name the AMD module.
  */
 export type UmdNamedDefine = boolean;
 /**
@@ -159,7 +162,8 @@ export type PublicPath = "auto" | RawPublicPath;
  * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
  */
 export type RawPublicPath =
-	string | import("../lib/TemplatedPathPlugin.js").TemplatePathFn;
+	| string
+	| import("../lib/TemplatedPathPlugin.js").TemplatePathFn;
 /**
  * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
  */
@@ -184,7 +188,9 @@ export type HttpUriAllowedUris = HttpUriOptionsAllowedUris;
  * List of allowed URIs (resp. the beginning of them).
  */
 export type HttpUriOptionsAllowedUris = (
-	RegExp | string | import("../lib/schemes/HttpUriPlugin.js").AllowedUriFn
+	| RegExp
+	| string
+	| import("../lib/schemes/HttpUriPlugin.js").AllowedUriFn
 )[];
 /**
  * Extend configuration from another configuration (only works when using webpack-cli).
@@ -195,11 +201,11 @@ export type Extends = ExtendsItem[] | ExtendsItem;
  */
 export type ExtendsItem = string;
 /**
- * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
+ * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.library.type`.
  */
 export type Externals = ExternalItem[] | ExternalItem;
 /**
- * Specify dependency that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
+ * Specify dependency that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.library.type`.
  */
 export type ExternalItem =
 	| RegExp
@@ -210,7 +216,8 @@ export type ExternalItem =
  * The function is called on each dependency.
  */
 export type ExternalItemFunction =
-	ExternalItemFunctionCallback | ExternalItemFunctionPromise;
+	| ExternalItemFunctionCallback
+	| ExternalItemFunctionPromise;
 /**
  * The function is called on each dependency (`function(context, request, callback(err, result))`).
  */
@@ -222,7 +229,7 @@ export type ExternalItemFunctionCallback =
 export type ExternalItemFunctionPromise =
 	import("../lib/ExternalModuleFactoryPlugin.js").ExternalItemFunctionPromise;
 /**
- * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+ * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.library.type set to the same value).
  */
 export type ExternalsType =
 	| "var"
@@ -313,7 +320,8 @@ export type RuleSetConditions = RuleSetCondition[];
  * One or multiple rule conditions matching an absolute path.
  */
 export type RuleSetConditionOrConditionsAbsolute =
-	RuleSetConditionAbsolute | RuleSetConditionsAbsolute;
+	| RuleSetConditionAbsolute
+	| RuleSetConditionsAbsolute;
 /**
  * A condition matcher matching an absolute path.
  */
@@ -382,7 +390,9 @@ export type ResolvePluginInstance =
  * A list of descriptions of loaders applied.
  */
 export type RuleSetUse =
-	(Falsy | RuleSetUseItem)[] | RuleSetUseFunction | RuleSetUseItem;
+	| (Falsy | RuleSetUseItem)[]
+	| RuleSetUseFunction
+	| RuleSetUseItem;
 /**
  * A description of an applied loader.
  */
@@ -493,7 +503,8 @@ export type ChunkFilename = FilenameTemplate;
  * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).
  */
 export type ChunkFormat =
-	("array-push" | "commonjs" | "module" | false) | string;
+	| ("array-push" | "commonjs" | "module" | false)
+	| string;
 /**
  * Number of milliseconds before chunk request expires.
  */
@@ -570,7 +581,8 @@ export type HashDigestLength = number;
  * Algorithm used for generation the hash (see node.js crypto package).
  */
 export type HashFunction =
-	string | typeof import("../lib/util/Hash.js").default;
+	| string
+	| typeof import("../lib/util/Hash.js").default;
 /**
  * Any string which is added to the hash to salt it.
  */
@@ -749,7 +761,8 @@ export type AssetFilterItemTypes =
  * Filtering warnings.
  */
 export type WarningFilterTypes =
-	WarningFilterItemTypes[] | WarningFilterItemTypes;
+	| WarningFilterItemTypes[]
+	| WarningFilterItemTypes;
 /**
  * Filtering value, regexp or function.
  */
@@ -773,7 +786,8 @@ export type Watch = boolean;
  * The options for data url generator.
  */
 export type AssetGeneratorDataUrl =
-	AssetGeneratorDataUrlOptions | AssetGeneratorDataUrlFunction;
+	| AssetGeneratorDataUrlOptions
+	| AssetGeneratorDataUrlFunction;
 /**
  * Function that executes for module and should return an DataUrl string. It can have a string as 'ident' property which contributes to the module hash.
  */
@@ -917,7 +931,8 @@ export type OptimizationRuntimeChunkNormalized =
  * Add additional plugins to the compiler.
  */
 export type PluginsNormalized = (
-	WebpackPluginInstance | WebpackPluginFunction
+	| WebpackPluginInstance
+	| WebpackPluginFunction
 )[];
 
 /**
@@ -969,7 +984,7 @@ export interface WebpackOptions {
 	 */
 	extends?: Extends;
 	/**
-	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
+	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.library.type`.
 	 */
 	externals?: Externals;
 	/**
@@ -977,7 +992,7 @@ export interface WebpackOptions {
 	 */
 	externalsPresets?: ExternalsPresets;
 	/**
-	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.library.type set to the same value).
 	 */
 	externalsType?: ExternalsType;
 	/**
@@ -1292,7 +1307,7 @@ export interface LibraryOptions {
 	 */
 	type: LibraryType;
 	/**
-	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
+	 * If `output.library.type` is set to umd and `output.library.name` is set, setting this to true will name the AMD module.
 	 */
 	umdNamedDefine?: UmdNamedDefine;
 }
@@ -1393,11 +1408,6 @@ export interface Experiments {
 	 * @experimental
 	 */
 	sourceImport?: boolean;
-	/**
-	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
-	 * @experimental
-	 */
-	syncWebAssembly?: boolean;
 	/**
 	 * Enable typescript support.
 	 * @experimental
@@ -1581,26 +1591,6 @@ export interface ModuleOptions {
 	 */
 	defaultRules?: RuleSetRules;
 	/**
-	 * @deprecated
-	 * Enable warnings for full dynamic dependencies.
-	 */
-	exprContextCritical?: boolean;
-	/**
-	 * @deprecated
-	 * Enable recursive directory lookup for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRecursive'.
-	 */
-	exprContextRecursive?: boolean;
-	/**
-	 * @deprecated
-	 * Sets the default regular expression for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRegExp'.
-	 */
-	exprContextRegExp?: RegExp | boolean;
-	/**
-	 * @deprecated
-	 * Set the default request for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRequest'.
-	 */
-	exprContextRequest?: string;
-	/**
 	 * Specify options for each generator.
 	 */
 	generator?: GeneratorOptionsByModuleType;
@@ -1617,54 +1607,9 @@ export interface ModuleOptions {
 	 */
 	rules?: RuleSetRules;
 	/**
-	 * @deprecated
-	 * Emit errors instead of warnings when imported names don't exist in imported module. Deprecated: This option has moved to 'module.parser.javascript.strictExportPresence'.
-	 */
-	strictExportPresence?: boolean;
-	/**
-	 * @deprecated
-	 * Handle the this context correctly according to the spec for namespace objects. Deprecated: This option has moved to 'module.parser.javascript.strictThisContextOnImports'.
-	 */
-	strictThisContextOnImports?: boolean;
-	/**
-	 * @deprecated
-	 * Enable warnings when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextCritical'.
-	 */
-	unknownContextCritical?: boolean;
-	/**
-	 * @deprecated
-	 * Enable recursive directory lookup when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRecursive'.
-	 */
-	unknownContextRecursive?: boolean;
-	/**
-	 * @deprecated
-	 * Sets the regular expression when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRegExp'.
-	 */
-	unknownContextRegExp?: RegExp | boolean;
-	/**
-	 * @deprecated
-	 * Sets the request when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRequest'.
-	 */
-	unknownContextRequest?: string;
-	/**
 	 * Cache the resolving of module requests.
 	 */
 	unsafeCache?: boolean | import("../lib/Compilation.js").UnsafeCachePredicate;
-	/**
-	 * @deprecated
-	 * Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.
-	 */
-	wrappedContextCritical?: boolean;
-	/**
-	 * @deprecated
-	 * Enable recursive directory lookup for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRecursive'.
-	 */
-	wrappedContextRecursive?: boolean;
-	/**
-	 * @deprecated
-	 * Set the inner regular expression for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRegExp'.
-	 */
-	wrappedContextRegExp?: RegExp;
 }
 /**
  * A rule description with conditions and effects for modules.
@@ -1996,7 +1941,12 @@ export interface NodeOptions {
 	 * Include a polyfill for the '__filename' variable.
 	 */
 	__filename?:
-		false | true | "warn-mock" | "mock" | "node-module" | "eval-only";
+		| false
+		| true
+		| "warn-mock"
+		| "mock"
+		| "node-module"
+		| "eval-only";
 	/**
 	 * Include a polyfill for the 'global' variable.
 	 */
@@ -2011,14 +1961,15 @@ export interface Optimization {
 	 */
 	avoidEntryIife?: boolean;
 	/**
-	 * Check for incompatible wasm types when importing/exporting from/to ESM.
-	 */
-	checkWasmTypes?: boolean;
-	/**
 	 * Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
 	chunkIds?:
-		"natural" | "named" | "deterministic" | "size" | "total-size" | false;
+		| "natural"
+		| "named"
+		| "deterministic"
+		| "size"
+		| "total-size"
+		| false;
 	/**
 	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.
 	 */
@@ -2063,11 +2014,6 @@ export interface Optimization {
 	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
 	moduleIds?: "natural" | "named" | "hashed" | "deterministic" | "size" | false;
-	/**
-	 * @deprecated
-	 * Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).
-	 */
-	noEmitOnErrors?: boolean;
 	/**
 	 * Set process.env.NODE_ENV to a specific value.
 	 */
@@ -2244,7 +2190,9 @@ export interface OptimizationSplitChunksOptions {
 	 * Give chunks created a name (chunks with equal name are merged).
 	 */
 	name?:
-		false | string | import("../lib/optimize/SplitChunksPlugin.js").GetNameFn;
+		| false
+		| string
+		| import("../lib/optimize/SplitChunksPlugin.js").GetNameFn;
 	/**
 	 * Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.
 	 */
@@ -2332,7 +2280,9 @@ export interface OptimizationSplitChunksCacheGroup {
 	 * Give chunks for this cache group a name (chunks with equal name are merged).
 	 */
 	name?:
-		false | string | import("../lib/optimize/SplitChunksPlugin.js").GetNameFn;
+		| false
+		| string
+		| import("../lib/optimize/SplitChunksPlugin.js").GetNameFn;
 	/**
 	 * Priority of this cache group.
 	 */
@@ -2365,10 +2315,6 @@ export interface OptimizationSplitChunksCacheGroup {
  */
 export interface Output {
 	/**
-	 * Add a container for define/require functions in the AMD module.
-	 */
-	amdContainer?: AmdContainer;
-	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
 	assetModuleFilename?: AssetModuleFilename;
@@ -2376,10 +2322,6 @@ export interface Output {
 	 * Enable/disable creating async chunks that are loaded on demand.
 	 */
 	asyncChunks?: boolean;
-	/**
-	 * Add a comment in the UMD wrapper.
-	 */
-	auxiliaryComment?: AuxiliaryComment;
 	/**
 	 * Add charset attribute for script tag.
 	 */
@@ -2521,14 +2463,6 @@ export interface Output {
 	 */
 	library?: Library;
 	/**
-	 * Specify which export should be exposed as library.
-	 */
-	libraryExport?: LibraryExport;
-	/**
-	 * Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'commonjs-static', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
-	 */
-	libraryTarget?: LibraryType;
-	/**
 	 * Output javascript files as module source type.
 	 */
 	module?: OutputModule;
@@ -2573,10 +2507,6 @@ export interface Output {
 	 * Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name.
 	 */
 	trustedTypes?: true | string | TrustedTypes;
-	/**
-	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
-	 */
-	umdNamedDefine?: UmdNamedDefine;
 	/**
 	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
 	 */
@@ -3614,11 +3544,6 @@ export interface ExperimentsNormalized {
 	 */
 	sourceImport?: boolean;
 	/**
-	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
-	 * @experimental
-	 */
-	syncWebAssembly?: boolean;
-	/**
 	 * Enable typescript support.
 	 * @experimental
 	 */
@@ -3734,6 +3659,10 @@ export interface JavascriptParserOptions {
 	 */
 	dynamicUrl?: boolean;
 	/**
+	 * Enable/disable parsing of EcmaScript Modules syntax.
+	 */
+	esm?: boolean;
+	/**
 	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
 	 */
 	exportsPresence?: "error" | "warn" | "auto" | false;
@@ -3753,10 +3682,6 @@ export interface JavascriptParserOptions {
 	 * Set the default request for full dynamic dependencies.
 	 */
 	exprContextRequest?: string;
-	/**
-	 * Enable/disable parsing of EcmaScript Modules syntax.
-	 */
-	harmony?: boolean;
 	/**
 	 * Enable/disable parsing of import() syntax.
 	 */
@@ -3933,14 +3858,15 @@ export interface OptimizationNormalized {
 	 */
 	avoidEntryIife?: boolean;
 	/**
-	 * Check for incompatible wasm types when importing/exporting from/to ESM.
-	 */
-	checkWasmTypes?: boolean;
-	/**
 	 * Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
 	chunkIds?:
-		"natural" | "named" | "deterministic" | "size" | "total-size" | false;
+		| "natural"
+		| "named"
+		| "deterministic"
+		| "size"
+		| "total-size"
+		| false;
 	/**
 	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.
 	 */
@@ -3985,11 +3911,6 @@ export interface OptimizationNormalized {
 	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
 	moduleIds?: "natural" | "named" | "hashed" | "deterministic" | "size" | false;
-	/**
-	 * @deprecated
-	 * Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).
-	 */
-	noEmitOnErrors?: boolean;
 	/**
 	 * Set process.env.NODE_ENV to a specific value.
 	 */
@@ -4306,7 +4227,7 @@ export interface WebpackOptionsNormalized {
 	 */
 	experiments: ExperimentsNormalized;
 	/**
-	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
+	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.library.type`.
 	 */
 	externals: Externals;
 	/**
@@ -4314,7 +4235,7 @@ export interface WebpackOptionsNormalized {
 	 */
 	externalsPresets: ExternalsPresets;
 	/**
-	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.library.type set to the same value).
 	 */
 	externalsType?: ExternalsType;
 	/**

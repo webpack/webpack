@@ -5,7 +5,9 @@
  */
 
 export type BannerPluginArgument =
-	string | BannerPluginOptions | BannerFunction;
+	| string
+	| BannerPluginOptions
+	| BannerFunction;
 /**
  * The banner as function, it will be wrapped in a comment.
  */
@@ -18,7 +20,9 @@ export type Rules = Rule[] | Rule;
  * Filtering rule as regex or string.
  */
 export type Rule =
-	RegExp | string | import("../../lib/ModuleFilenameHelpers.js").MatcherFn;
+	| RegExp
+	| string
+	| import("../../lib/ModuleFilenameHelpers.js").MatcherFn;
 
 export interface BannerPluginOptions {
 	/**

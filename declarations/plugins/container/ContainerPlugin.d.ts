@@ -58,7 +58,7 @@ export type LibraryType =
 	  )
 	| string;
 /**
- * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
+ * If `output.library.type` is set to umd and `output.library.name` is set, setting this to true will name the AMD module.
  */
 export type UmdNamedDefine = boolean;
 /**
@@ -139,7 +139,7 @@ export interface LibraryOptions {
 	 */
 	type: LibraryType;
 	/**
-	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
+	 * If `output.library.type` is set to umd and `output.library.name` is set, setting this to true will name the AMD module.
 	 */
 	umdNamedDefine?: UmdNamedDefine;
 }
