@@ -13144,6 +13144,11 @@ declare interface KnownAssetModuleBuildInfo {
 }
 declare interface KnownBuildInfo {
 	cacheable?: boolean;
+
+	/**
+	 * paths of the loaders that marked the module as not cacheable
+	 */
+	notCacheableReasons?: string[];
 	strict?: boolean;
 	moduleArgument?: string;
 	exportsArgument?: string;
@@ -13561,6 +13566,7 @@ declare interface KnownStatsModule {
 	size?: number;
 	sizes?: Record<string, number>;
 	cacheable?: boolean;
+	notCacheableReasons?: string[];
 	built?: boolean;
 	codeGenerated?: boolean;
 	buildTimeExecuted?: boolean;

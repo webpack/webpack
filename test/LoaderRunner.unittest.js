@@ -358,6 +358,61 @@ describe("runLoaders", () => {
 		run((err) => (err ? done(err) : run(done)));
 	});
 
+	it("should report the loader that marked the request as not cacheable", (done) => {
+		runLoaders(
+			{
+				resource: path.resolve(fixtures, "resource.bin"),
+				loaders: [
+					path.resolve(fixtures, "simple-loader.js"),
+					path.resolve(fixtures, "not-cacheable-loader.js")
+				]
+			},
+			(err, result) => {
+				if (err) return done(err);
+				expect(result.result).toEqual(["resource-not-cacheable-simple"]);
+				expect(result.cacheable).toBe(false);
+				expect(result.notCacheableReasons).toEqual([
+					path.resolve(fixtures, "not-cacheable-loader.js")
+				]);
+				done();
+			}
+		);
+	});
+
+	it("should not attribute a not cacheable reason when marked by the host", (done) => {
+		const loaderContext = createLoaderContext();
+		loaderContext.cacheable(false);
+		runLoaders(
+			{
+				resource: path.resolve(fixtures, "resource.bin"),
+				loaders: [path.resolve(fixtures, "simple-loader.js")],
+				context: loaderContext
+			},
+			(err, result) => {
+				if (err) return done(err);
+				expect(result.result).toEqual(["resource-simple"]);
+				expect(result.cacheable).toBe(false);
+				expect(result.notCacheableReasons).toEqual([]);
+				done();
+			}
+		);
+	});
+
+	it("should reset not cacheable reasons when dependencies are cleared", (done) => {
+		runLoaders(
+			{
+				resource: path.resolve(fixtures, "resource.bin"),
+				loaders: [path.resolve(fixtures, "clear-cacheable-loader.js")]
+			},
+			(err, result) => {
+				if (err) return done(err);
+				expect(result.cacheable).toBe(true);
+				expect(result.notCacheableReasons).toEqual([]);
+				done();
+			}
+		);
+	});
+
 	it("should collect dependencies when methods are passed as detached callbacks", () => {
 		// loaders call these without a receiver, e.g. `deps.forEach(this.addDependency)`
 		const loaderContext = createLoaderContext();
@@ -691,6 +746,9 @@ describe("runLoaders", () => {
 				expect(err.message).toMatch(/does-not-exist-loader\.js'/i);
 				expect(result).toEqual({
 					cacheable: false,
+					notCacheableReasons: [
+						path.resolve(fixtures, "does-not-exist-loader.js")
+					],
 					fileDependencies: [],
 					contextDependencies: [],
 					missingDependencies: []
@@ -713,6 +771,9 @@ describe("runLoaders", () => {
 				);
 				expect(result).toEqual({
 					cacheable: false,
+					notCacheableReasons: [
+						path.resolve(fixtures, "module-exports-object-loader.js")
+					],
 					fileDependencies: [],
 					contextDependencies: [],
 					missingDependencies: []
@@ -735,6 +796,9 @@ describe("runLoaders", () => {
 				);
 				expect(result).toEqual({
 					cacheable: false,
+					notCacheableReasons: [
+						path.resolve(fixtures, "module-exports-string-loader.js")
+					],
 					fileDependencies: [],
 					contextDependencies: [],
 					missingDependencies: []
@@ -982,6 +1046,9 @@ describe("runLoaders", () => {
 					expectError(err);
 					expect(result).toEqual({
 						cacheable: false,
+						notCacheableReasons: [
+							path.resolve(fixtures, "does-not-exist-loader.mjs")
+						],
 						fileDependencies: [],
 						contextDependencies: [],
 						missingDependencies: []
@@ -1009,6 +1076,9 @@ describe("runLoaders", () => {
 					);
 					expect(result).toEqual({
 						cacheable: false,
+						notCacheableReasons: [
+							path.resolve(fixtures, "esm-invalid-loader.mjs")
+						],
 						fileDependencies: [],
 						contextDependencies: [],
 						missingDependencies: []
