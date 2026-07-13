@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Speed up JavaScript parsing and deduplicate identifier strings.
+Speed up JavaScript parsing and AST walking, deduplicate parser strings.

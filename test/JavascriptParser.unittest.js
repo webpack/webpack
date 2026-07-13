@@ -990,6 +990,70 @@ describe("JavascriptParser", () => {
 		}
 	});
 
+	describe("defined-identifier evaluation fast path", () => {
+		/** @type {import("../lib/Parser").ParserState} */
+		const state = /** @type {EXPECTED_ANY} */ ({});
+
+		it("still walks callee and arguments of defined-callee calls", () => {
+			const parser = new JavascriptParser();
+			/** @type {string[]} */
+			const seen = [];
+			parser.hooks.expression.for("marker").tap("Test", () => {
+				seen.push("marker");
+				return true;
+			});
+			parser.parse("function f(a){} f(marker);", state);
+			expect(seen).toEqual(["marker"]);
+		});
+
+		it("honors plugin evaluate taps on defined callees", () => {
+			// a plugin tap on evaluate.for("Identifier") disables the fast path,
+			// so its identifier result must reach the call hooks
+			const parser = new JavascriptParser();
+			parser.hooks.evaluate.for("Identifier").tap("TestPlugin", (expr) => {
+				if (/** @type {{ name: string }} */ (expr).name === "f") {
+					return new BasicEvaluatedExpression()
+						.setIdentifier(
+							"fake",
+							"fake",
+							() => [],
+							() => [],
+							() => []
+						)
+						.setRange(/** @type {[number, number]} */ (expr.range));
+				}
+			});
+			/** @type {number[]} */
+			const calls = [];
+			parser.hooks.call.for("fake").tap("Test", () => {
+				calls.push(1);
+				return true;
+			});
+			parser.parse("function f(){} f();", state);
+			expect(calls).toEqual([1]);
+		});
+
+		it("does not treat tagged variables as plain defined", () => {
+			const parser = new JavascriptParser();
+			const TAG = Symbol("test tag");
+			parser.hooks.statement.tap("Test", (statement) => {
+				if (statement.type === "FunctionDeclaration") {
+					parser.tagVariable("f", TAG, "data");
+				}
+				return undefined;
+			});
+			/** @type {number[]} */
+			const evaluated = [];
+			parser.hooks.evaluateIdentifier.for(TAG).tap("Test", (expr) => {
+				evaluated.push(/** @type {[number, number]} */ (expr.range)[0]);
+				return undefined;
+			});
+			parser.parse("function f(){} f();", state);
+			// the tagged callee took the full evaluation path
+			expect(evaluated.length).toBe(1);
+		});
+	});
+
 	describe("new import call (import phases)", () => {
 		/**
 		 * @param {string} source source
