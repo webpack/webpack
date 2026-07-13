@@ -7309,6 +7309,11 @@ declare interface ExecuteModuleOptions {
 declare interface ExecuteModuleResult {
 	exports: any;
 	cacheable: boolean;
+
+	/**
+	 * reasons why the executed modules are not cacheable
+	 */
+	notCacheableReasons: string[];
 	assets: Map<string, { source: Source; info?: AssetInfo }>;
 	fileDependencies: LazySet<string>;
 	contextDependencies: LazySet<string>;
@@ -13149,6 +13154,11 @@ declare interface KnownAssetModuleBuildInfo {
 }
 declare interface KnownBuildInfo {
 	cacheable?: boolean;
+
+	/**
+	 * reasons why the module is not cacheable (e.g. paths of loaders that marked it)
+	 */
+	notCacheableReasons?: string[];
 	strict?: boolean;
 	moduleArgument?: string;
 	exportsArgument?: string;
@@ -13566,6 +13576,7 @@ declare interface KnownStatsModule {
 	size?: number;
 	sizes?: Record<string, number>;
 	cacheable?: boolean;
+	notCacheableReasons?: string[];
 	built?: boolean;
 	codeGenerated?: boolean;
 	buildTimeExecuted?: boolean;
@@ -19041,6 +19052,22 @@ declare interface OutputFileSystem {
  */
 declare interface OutputHtmlOptions {
 	/**
+	 * Inject a `<base>` element into the page `<head>`. A string sets `href`; an object sets both `href` and optionally `target`. Skipped if the HTML already contains a `<base>` element.
+	 */
+	base?:
+		| string
+		| {
+				/**
+				 * Value for the `href` attribute of the `<base>` element.
+				 */
+				href: string;
+				/**
+				 * Value for the `target` attribute of the `<base>` element (e.g. `"_blank"`).
+				 */
+				target?: string;
+		  };
+
+	/**
 	 * Where to place injected chunk `<script>`/`<link>` tags. `"body"` (default) appends them before `</body>`; `"head"` places them in `<head>`; `false` suppresses all sibling-chunk injection.
 	 */
 	inject?: false | "body" | "head";
@@ -19059,9 +19086,19 @@ declare interface OutputHtmlOptions {
 		| ((asset: { chunk: Chunk; filename: string }) => false | string[]);
 
 	/**
+	 * Inject `<meta>` tags into the page `<head>`. Each key is the `name` attribute (or `"charset"` for a charset declaration); the value is the `content` string. Keys beginning with `og:` or `twitter:` use the `property` attribute instead of `name`. Tags are always appended; the caller is responsible for avoiding duplicates in authored HTML.
+	 */
+	meta?: { [index: string]: string };
+
+	/**
 	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
 	 */
 	scriptLoading?: "auto" | "defer" | "blocking";
+
+	/**
+	 * Sets the `<title>` of the generated HTML page. Skipped if the HTML already contains a `<title>` element.
+	 */
+	title?: string;
 }
 
 /**
@@ -24144,11 +24181,14 @@ declare abstract class StackEntry {
 
 /**
  * Layered map that supports child scopes while memoizing lookups from parent
- * scopes into the current layer. Layers form a linked parent chain, so
- * `createChild` is O(1) instead of copying a layer array per scope.
+ * scopes. Layers form a linked parent chain, so `createChild` is O(1) instead
+ * of copying a layer array per scope. A layer's `Map` is only allocated on its
+ * first own write, and lookup results are memoized into the nearest
+ * `Map`-bearing layer of the walk — read-only layers (most block scopes) stay
+ * allocation-free and share their parent's memoized entries.
  */
 declare abstract class StackedMap<K, V> {
-	map: Map<K, InternalCell<V>>;
+	map?: Map<K, InternalCell<V>>;
 	parent?: StackedMap<K, V>;
 
 	/**
@@ -24165,13 +24205,14 @@ declare abstract class StackedMap<K, V> {
 
 	/**
 	 * Checks whether a key exists in the current scope chain, caching any parent
-	 * lookup result in the current layer.
+	 * lookup result in the nearest `Map`-bearing layer.
 	 */
 	has(item: K): boolean;
 
 	/**
 	 * Returns the visible value for a key, caching parent hits and misses in the
-	 * current layer.
+	 * nearest `Map`-bearing layer so repeated lookups (from this layer or any
+	 * sibling below that layer) answer with a single probe.
 	 */
 	get(item: K): Cell<V>;
 
