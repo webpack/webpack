@@ -74,7 +74,7 @@ module.exports = (
 			};
 			const link = async (
 				/** @type {string} */ specifier,
-				/** @type {vm.SourceTextModule} */ referencing
+				/** @type {vm.Module} */ referencing
 			) => {
 				const childUrl = new URL(specifier, referencing.identifier).href;
 				return (

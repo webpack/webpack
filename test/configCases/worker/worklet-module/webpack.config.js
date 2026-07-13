@@ -1,5 +1,7 @@
 "use strict";
 
+const { Compilation } = require("../../../../");
+
 /** A module worklet must add its entry chunk directly: no bootstrap, no shim. */
 class AssertNoBootstrapPlugin {
 	/** @param {import("../../../../").Compiler} compiler compiler */
@@ -8,7 +10,7 @@ class AssertNoBootstrapPlugin {
 			compilation.hooks.processAssets.tap(
 				{
 					name: "AssertNoBootstrap",
-					stage: compilation.PROCESS_ASSETS_STAGE_REPORT
+					stage: Compilation.PROCESS_ASSETS_STAGE_REPORT
 				},
 				(assets) => {
 					const main = assets["main.mjs"].source().toString();
