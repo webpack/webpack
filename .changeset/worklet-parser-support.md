@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `module.parser.javascript.worklet` option to bundle Worklet `addModule()` entries; the worklet's chunks (splits, runtime and dynamic imports) are pre-added via `addModule` since worklets can't load chunks at runtime.
+Add `module.parser.javascript.worklet` option to bundle Worklet `addModule()` entries; module output links the worklet's split chunks via native `import`, script output pre-adds them via `addModule` since script worklets can't load chunks at runtime.
