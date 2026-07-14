@@ -16,7 +16,7 @@ it(\\"should work import.meta.env with DotenvPlugin\\", () => {
 
 it(\\"import.meta.env behaves like process.env\\", async (done) => {
     try {
-        const importMetaEnv = {\\"AAA\\":\\"aaa\\",\\"WEBPACK_API_URL\\":\\"https://api.example.com\\",\\"NODE_ENV\\":\\"production\\"};
+        const importMetaEnv = ({\\"AAA\\":\\"aaa\\",\\"WEBPACK_API_URL\\":\\"https://api.example.com\\",\\"NODE_ENV\\":\\"production\\"});
         importMetaEnv;
         const processEnv = process.env;
         processEnv;

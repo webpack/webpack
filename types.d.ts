@@ -5801,6 +5801,21 @@ declare class DefinePlugin {
 		options?: true | string[] | RuntimeValueOptions
 	): RuntimeValue;
 	static getCompilationHooks: (compilation: Compilation) => DefinePluginHooks;
+	static VALUE_DEP_MAIN: "webpack/DefinePlugin_hash";
+	static VALUE_DEP_PREFIX: "webpack/DefinePlugin ";
+	static getMergedDefinitionNode: (
+		compilation: Compilation,
+		key: string
+	) => MergedDefinitionNode;
+	static getRuntimeRequirements: (code: string) => undefined | string[];
+	static stringifyMergedDefinition: (
+		compilation: Compilation,
+		parser: JavascriptParser,
+		node: MergedDefinitionNode,
+		key: string,
+		objKeys?: null | Set<string>
+	) => string;
+	static toPropertyKey: (key: string) => string;
 }
 declare interface DefinePluginHooks {
 	definitions: SyncWaterfallHook<
@@ -14983,6 +14998,41 @@ declare interface MergeDuplicateChunksPluginOptions {
 	 */
 	stage?: number;
 }
+type MergedDefinitionNode =
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| Function
+	| RegExp
+	| RuntimeValue
+	| {
+			[index: string]: RecursiveArrayOrRecord<
+				| undefined
+				| null
+				| string
+				| number
+				| bigint
+				| boolean
+				| Function
+				| RegExp
+				| RuntimeValue
+			>;
+	  }
+	| RecursiveArrayOrRecord<
+			| undefined
+			| null
+			| string
+			| number
+			| bigint
+			| boolean
+			| Function
+			| RegExp
+			| RuntimeValue
+	  >[]
+	| Map<string, MergedDefinitionNode>;
 type Meta = KnownMeta & Record<symbol, string[]> & Record<string, any>;
 declare class MinChunkSizePlugin {
 	/**
