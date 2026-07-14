@@ -8,7 +8,5 @@ module.exports = {
 		__filename: false
 	},
 	devtool: "source-map",
-	plugins: [
-		new webpack.ContextReplacementPlugin(/foo$/, true, /[\\/](?:a|b)\.js$/)
-	]
+	plugins: [new webpack.ContextReplacementPlugin(/foo$/, true, /(?:a|b)\.js$/)]
 };
