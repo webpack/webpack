@@ -24,8 +24,8 @@ const {
 	NS_MATHML,
 	NS_SVG,
 	NodeType,
-	buildHtmlAst,
-	decodeHtmlEntities
+	buildAst,
+	decodeEntities
 } = require("../lib/html/syntax");
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
@@ -236,7 +236,7 @@ const serialize = (root) => {
 			lines.push(
 				`| ${"  ".repeat(depth + 1)}${
 					a.serializedName || a.name
-				}="${decodeHtmlEntities(a.value, true)}"`
+				}="${decodeEntities(a.value, true)}"`
 			);
 		}
 		const tc = A.templateContent(node);
@@ -328,7 +328,7 @@ const parseDat = (text) => {
  * @returns {string} serialized tree
  */
 const runTreeCase = (c) => {
-	const doc = buildHtmlAst(c.data, c.fragment || undefined);
+	const doc = buildAst(c.data, c.fragment || undefined);
 	// In fragment mode the result is the children of the synthesized root.
 	const first = A.firstChild(doc);
 	return serialize(c.fragment && first !== 0 ? first : doc);
