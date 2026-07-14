@@ -11,6 +11,12 @@ it("should merge dotted definitions into whole-object reads", () => {
 	expect(obj.LIST).toEqual(["l1"]);
 });
 
+it("should support runtime values in whole-object reads", () => {
+	const obj = OBJECT;
+	expect(obj.RUNTIME).toBe("rv");
+	expect(OBJECT.RUNTIME).toBe("rv");
+});
+
 it("should merge dotted definitions into destructured reads", () => {
 	const { A, B, NESTED } = OBJECT;
 	expect(A).toBe("a");

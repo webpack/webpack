@@ -5807,6 +5807,15 @@ declare class DefinePlugin {
 		compilation: Compilation,
 		key: string
 	) => MergedDefinitionNode;
+	static getRuntimeRequirements: (code: string) => undefined | string[];
+	static stringifyMergedDefinition: (
+		compilation: Compilation,
+		parser: JavascriptParser,
+		node: MergedDefinitionNode,
+		key: string,
+		objKeys?: null | Set<string>
+	) => string;
+	static toPropertyKey: (key: string) => string;
 }
 declare interface DefinePluginHooks {
 	definitions: SyncWaterfallHook<

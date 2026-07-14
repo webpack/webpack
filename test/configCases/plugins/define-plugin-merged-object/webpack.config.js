@@ -8,6 +8,9 @@ module.exports = {
 		new DefinePlugin({
 			OBJECT: {
 				A: JSON.stringify("a"),
+				RUNTIME: DefinePlugin.runtimeValue(() => JSON.stringify("rv"), {
+					version: "1"
+				}),
 				NESTED: {
 					D1: JSON.stringify("d1")
 				},

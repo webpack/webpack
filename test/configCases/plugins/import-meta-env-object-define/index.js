@@ -6,6 +6,14 @@ it("should expose all definitions via direct property access", () => {
 	expect(import.meta.env.LIST).toEqual(["l1", "l2"]);
 });
 
+it("should support runtime values in every access pattern", () => {
+	expect(import.meta.env.RUNTIME).toBe("env-rv");
+	const env = import.meta.env;
+	expect(env.RUNTIME).toBe("env-rv");
+	const { RUNTIME } = import.meta.env;
+	expect(RUNTIME).toBe("env-rv");
+});
+
 it("should expose all definitions when reading the whole object", () => {
 	const env = import.meta.env;
 	expect(env.A).toBe("a");

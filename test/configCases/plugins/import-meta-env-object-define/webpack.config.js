@@ -11,6 +11,9 @@ module.exports = {
 		new DefinePlugin({
 			"import.meta.env": {
 				A: JSON.stringify("a"),
+				RUNTIME: DefinePlugin.runtimeValue(() => JSON.stringify("env-rv"), {
+					version: "1"
+				}),
 				NESTED: {
 					X: JSON.stringify("x")
 				},
