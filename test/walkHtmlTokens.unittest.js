@@ -433,6 +433,32 @@ describe("walkTokens", () => {
 		]);
 	});
 
+	it("should handle RAWTEXT for iframe and noembed elements", () => {
+		for (const tag of ["iframe", "noembed"]) {
+			/** @type {unknown[]} */
+			const results = [];
+			walkTokens(`<${tag}><b>not a tag</b></${tag}>`, 0, {
+				openTag: (input, start, end, ns, ne) => {
+					results.push(["open", input.slice(ns, ne)]);
+					return end;
+				},
+				closeTag: (input, start, end, ns, ne) => {
+					results.push(["close", input.slice(ns, ne)]);
+					return end;
+				},
+				text: (input, start, end) => {
+					results.push(["text", input.slice(start, end)]);
+					return end;
+				}
+			});
+			expect(results).toEqual([
+				["open", tag],
+				["text", "<b>not a tag</b>"],
+				["close", tag]
+			]);
+		}
+	});
+
 	it("should handle script data state", () => {
 		/** @type {unknown[]} */
 		const results = [];
