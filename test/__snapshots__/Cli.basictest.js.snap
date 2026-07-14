@@ -7461,13 +7461,26 @@ Object {
   "optimization-concatenate-modules": Object {
     "configs": Array [
       Object {
-        "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.",
+        "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer. An options object implies 'true'.",
         "multiple": false,
         "path": "optimization.concatenateModules",
         "type": "boolean",
       },
     ],
-    "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.",
+    "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer. An options object implies 'true'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-concatenate-modules-commonjs": Object {
+    "configs": Array [
+      Object {
+        "description": "Also concatenate CommonJS modules with statically analyzable exports. Defaults to 'true'.",
+        "multiple": false,
+        "path": "optimization.concatenateModules.commonjs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Also concatenate CommonJS modules with statically analyzable exports. Defaults to 'true'.",
     "multiple": false,
     "simpleType": "boolean",
   },

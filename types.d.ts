@@ -4349,6 +4349,16 @@ declare class ConcatSource extends Source {
 	): GeneratedSourceInfo;
 }
 type ConcatSourceChild = string | Source | SourceLike;
+
+/**
+ * Advanced options for module concatenation.
+ */
+declare interface ConcatenateModulesOptions {
+	/**
+	 * Also concatenate CommonJS modules with statically analyzable exports. Defaults to 'true'.
+	 */
+	commonjs?: boolean;
+}
 type ConcatenatedModuleBuildInfo = KnownBuildInfo &
 	Record<string, any> &
 	KnownConcatenatedModuleBuildInfo;
@@ -4427,6 +4437,11 @@ declare interface ConcatenationBailoutReasonContext {
 	 * the chunk graph
 	 */
 	chunkGraph: ChunkGraph;
+
+	/**
+	 * whether eligible CommonJS modules may be concatenated
+	 */
+	concatenateCommonJsModules?: boolean;
 }
 
 /**
@@ -18127,9 +18142,9 @@ declare interface Optimization {
 		false | "natural" | "named" | "deterministic" | "size" | "total-size";
 
 	/**
-	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.
+	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer. An options object implies 'true'.
 	 */
-	concatenateModules?: boolean;
+	concatenateModules?: boolean | ConcatenateModulesOptions;
 
 	/**
 	 * Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.
@@ -18277,9 +18292,9 @@ declare interface OptimizationNormalized {
 		false | "natural" | "named" | "deterministic" | "size" | "total-size";
 
 	/**
-	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.
+	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer. An options object implies 'true'.
 	 */
-	concatenateModules?: boolean;
+	concatenateModules?: boolean | ConcatenateModulesOptions;
 
 	/**
 	 * Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.
@@ -18438,7 +18453,9 @@ type OptimizationNormalizedWithDefaults = OptimizationNormalized & {
 	mangleExports: NonNullable<undefined | boolean | "deterministic" | "size">;
 	innerGraph: NonNullable<undefined | boolean>;
 	inlineExports: NonNullable<undefined | boolean>;
-	concatenateModules: NonNullable<undefined | boolean>;
+	concatenateModules: NonNullable<
+		undefined | boolean | ConcatenateModulesOptions
+	>;
 	avoidEntryIife: NonNullable<undefined | boolean>;
 	emitOnErrors: NonNullable<undefined | boolean>;
 	checkWasmTypes: NonNullable<undefined | boolean>;

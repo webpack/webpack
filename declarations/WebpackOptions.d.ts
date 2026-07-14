@@ -2018,9 +2018,9 @@ export interface Optimization {
 	chunkIds?:
 		"natural" | "named" | "deterministic" | "size" | "total-size" | false;
 	/**
-	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.
+	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer. An options object implies 'true'.
 	 */
-	concatenateModules?: boolean;
+	concatenateModules?: boolean | ConcatenateModulesOptions;
 	/**
 	 * Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.
 	 */
@@ -2106,6 +2106,15 @@ export interface Optimization {
 	 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, "global": analyse exports globally for all runtimes combined).
 	 */
 	usedExports?: "global" | boolean;
+}
+/**
+ * Advanced options for module concatenation.
+ */
+export interface ConcatenateModulesOptions {
+	/**
+	 * Also concatenate CommonJS modules with statically analyzable exports. Defaults to 'true'.
+	 */
+	commonjs?: boolean;
 }
 /**
  * Plugin instance.
@@ -4034,9 +4043,9 @@ export interface OptimizationNormalized {
 	chunkIds?:
 		"natural" | "named" | "deterministic" | "size" | "total-size" | false;
 	/**
-	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.
+	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer. An options object implies 'true'.
 	 */
-	concatenateModules?: boolean;
+	concatenateModules?: boolean | ConcatenateModulesOptions;
 	/**
 	 * Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.
 	 */
