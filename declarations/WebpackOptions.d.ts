@@ -2738,7 +2738,7 @@ export interface OutputHtmlOptions {
 				target?: string;
 		  };
 	/**
-	 * Where to place injected chunk `<script>`/`<link>` tags. `"body"` (default) appends them before `</body>`; `"head"` places them in `<head>`; `false` suppresses all sibling-chunk injection.
+	 * Where to place injected chunk `<script>`/`<link>` tags. `"body"` (default; `"head"` with `output.module`) keeps them next to the entry tag — end of `<body>` on generated pages; `"head"` moves them into `<head>`; `false` suppresses sibling-chunk injection (entry tags and resource hints remain).
 	 */
 	inject?: ("body" | "head") | false;
 	/**
