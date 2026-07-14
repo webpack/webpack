@@ -207,7 +207,7 @@ describe("WebpackParser", () => {
 		});
 
 		it("should tokenize non-ASCII identifiers and unicode whitespace", () => {
-			const { ast } = parse("var π = 1; var café = 2;");
+			const { ast } = parse("var π = 1;\u00A0var café = 2;");
 			const first =
 				/** @type {import("estree").VariableDeclaration} */
 				(ast.body[0]);
@@ -325,8 +325,8 @@ describe("WebpackParser", () => {
 			]);
 		});
 
-		it("should serve multi-char operators from the operator cache", () => {
-			// one occurrence fills the cache, the second hits it; sizes 1-4
+		it("should serve multi-char operators as static strings", () => {
+			// repeated occurrences reuse one string per operator; sizes 1-4
 			const { ast } = parse(
 				"a < b; a << b; a <<= b; a === b; a === c; a >>>= b; x &&= y;"
 			);
@@ -384,7 +384,7 @@ describe("WebpackParser", () => {
 			expect(parse("function* g() { yield /re/g; }").ast).toBeDefined();
 		});
 
-		it("should delegate multi-char `.` and `=` tokens to acorn", () => {
+		it("should read multi-char `.` and `=` tokens in the owned scanner", () => {
 			// `...`, `==`, `===` and `=>` miss the single-char dispatch fast paths
 			expect(exprType("f(...a)")).toBe("CallExpression");
 			expect(exprType("a == b")).toBe("BinaryExpression");
@@ -648,6 +648,289 @@ describe("WebpackParser", () => {
 				/** @type {unknown} */ (ast.body[0])
 			);
 			expect(range).toEqual([0, 7]);
+		});
+	});
+
+	describe("owned operator scanner", () => {
+		/**
+		 * @param {string} code source with one expression statement
+		 * @returns {string} the expression's operator
+		 */
+		const op = (code) =>
+			/** @type {{ expression: { operator: string } }} */ (
+				/** @type {unknown} */ (parse(code).ast.body[0])
+			).expression.operator;
+
+		it("should scan every multi-char operator to its exact string", () => {
+			expect(op("a /= b;")).toBe("/=");
+			expect(op("a %= b;")).toBe("%=");
+			expect(op("a % b;")).toBe("%");
+			expect(op("a **= b;")).toBe("**=");
+			expect(op("a ** b;")).toBe("**");
+			expect(op("a *= b;")).toBe("*=");
+			expect(op("a ||= b;")).toBe("||=");
+			expect(op("a || b;")).toBe("||");
+			expect(op("a |= b;")).toBe("|=");
+			expect(op("a | b;")).toBe("|");
+			expect(op("a &&= b;")).toBe("&&=");
+			expect(op("a && b;")).toBe("&&");
+			expect(op("a &= b;")).toBe("&=");
+			expect(op("a & b;")).toBe("&");
+			expect(op("a ^= b;")).toBe("^=");
+			expect(op("a ^ b;")).toBe("^");
+			expect(op("++a;")).toBe("++");
+			expect(op("a += b;")).toBe("+=");
+			expect(op("a + b;")).toBe("+");
+			expect(op("--a;")).toBe("--");
+			expect(op("a -= b;")).toBe("-=");
+			expect(op("a - b;")).toBe("-");
+			expect(op("a <<= b;")).toBe("<<=");
+			expect(op("a << b;")).toBe("<<");
+			expect(op("a <= b;")).toBe("<=");
+			expect(op("a < b;")).toBe("<");
+			expect(op("a >>>= b;")).toBe(">>>=");
+			expect(op("a >>> b;")).toBe(">>>");
+			expect(op("a >>= b;")).toBe(">>=");
+			expect(op("a >> b;")).toBe(">>");
+			expect(op("a >= b;")).toBe(">=");
+			expect(op("a > b;")).toBe(">");
+			expect(op("a === b;")).toBe("===");
+			expect(op("a == b;")).toBe("==");
+			expect(op("a !== b;")).toBe("!==");
+			expect(op("a != b;")).toBe("!=");
+			expect(op("!a;")).toBe("!");
+			expect(op("~a;")).toBe("~");
+			expect(op("a ??= b;")).toBe("??=");
+			expect(op("a ?? b;")).toBe("??");
+		});
+
+		it("should scan ?., conditional ? and ?. before a digit", () => {
+			const chain =
+				/** @type {{ expression: import("estree").ChainExpression }} */ (
+					/** @type {unknown} */ (parse("a?.b;").ast.body[0])
+				).expression;
+			expect(chain.type).toBe("ChainExpression");
+			// `?.` directly before a digit is a conditional, not optional chaining
+			const conditional =
+				/** @type {{ expression: import("estree").Expression }} */ (
+					/** @type {unknown} */ (parse("a ?.5:b;").ast.body[0])
+				).expression;
+			expect(conditional.type).toBe("ConditionalExpression");
+			expect(
+				/** @type {{ expression: import("estree").Expression }} */ (
+					/** @type {unknown} */ (parse("a ? b : c;").ast.body[0])
+				).expression.type
+			).toBe("ConditionalExpression");
+		});
+
+		it("should dispatch radix numbers, strings, templates and privates", () => {
+			const values = parse("const a = [0xff, 0o17, 0b11, 0, \"d\", 's'];");
+			const array = /** @type {{ init: import("estree").ArrayExpression }} */ (
+				/** @type {{ declarations: unknown[] }} */ (
+					/** @type {unknown} */ (values.ast.body[0])
+				).declarations[0]
+			).init;
+			expect(
+				array.elements.map(
+					(e) => /** @type {import("estree").Literal} */ (e).value
+				)
+			).toEqual([255, 15, 3, 0, "d", "s"]);
+			expect(parse("`t`;").ast).toBeDefined();
+			expect(
+				parse("class A { #p; m() { return this.#p; } }").ast
+			).toBeDefined();
+			expect(() => parse("a = §;")).toThrow(/Unexpected character/);
+		});
+
+		it("should read a lone dot after a dot as a plain dot token", () => {
+			// `..` misses the ellipsis check and lands on the plain-dot tail
+			expect(() => parse("a..b;")).toThrow(/Unexpected token/);
+		});
+
+		it("should keep single-char tails for direct getTokenFromCode calls", () => {
+			// unreachable from the dispatch fast path (nextToken finishes plain
+			// `=`/`.` itself) but part of the getTokenFromCode contract
+			const { tokTypes } = require("acorn");
+			const {
+				SourcePositions,
+				WebpackParser
+			} = require("../lib/javascript/syntax");
+
+			const source = "= .";
+			const parser = new WebpackParser(
+				/** @type {EXPECTED_ANY} */ ({
+					ecmaVersion: "latest",
+					lazySourcePositions: new SourcePositions(source)
+				}),
+				source
+			);
+			/** @type {EXPECTED_ANY} */ (parser).getTokenFromCode(61);
+			expect(/** @type {EXPECTED_ANY} */ (parser).type).toBe(tokTypes.eq);
+			expect(/** @type {EXPECTED_ANY} */ (parser).value).toBe("=");
+			/** @type {EXPECTED_ANY} */ (parser).pos = 2;
+			/** @type {EXPECTED_ANY} */ (parser).getTokenFromCode(46);
+			expect(/** @type {EXPECTED_ANY} */ (parser).type).toBe(tokTypes.dot);
+		});
+
+		it("should keep HTML comment forms on acorn's delegated path", () => {
+			// `<!--` opens a line comment in script mode only
+			const script = parse("x <!--y\nz;");
+			expect(script.comments.map((c) => c.value)).toEqual(["y"]);
+			const module_ = parse("x <!--y;", { sourceType: "module" });
+			expect(module_.comments).toHaveLength(0);
+			// `-->` after a line break is a comment; `a-->b` stays `(a--) > b`
+			const close = parse("a\n--> rest\nb;");
+			expect(close.comments.map((c) => c.value)).toEqual([" rest"]);
+			expect(op("a-->b;")).toBe(">");
+		});
+	});
+
+	describe("newline-before-token tracking", () => {
+		it("should apply ASI from the flag without a gap scan", () => {
+			expect(parse("a\nb;").ast.body).toHaveLength(2);
+			expect(() => parse("a b;")).toThrow(/Unexpected token/);
+			// postfix `++` on the next line binds to the next statement
+			expect(parse("a\n++b;").ast.body).toHaveLength(2);
+		});
+
+		it("should fall back to the gap scan around comments", () => {
+			// line terminator hidden inside a block comment still triggers ASI
+			expect(parse("a /* \n */ b;").ast.body).toHaveLength(2);
+			expect(() => parse("a /* x */ b;")).toThrow(/Unexpected token/);
+			// unicode whitespace defers to acorn's skipSpace, then the scan
+			expect(parse("a \u2028 b;").ast.body).toHaveLength(2);
+			expect(() => parse("a \u00A0 b;")).toThrow(/Unexpected token/);
+		});
+
+		it("should keep ASI working inside template expression gaps", () => {
+			// tokens after a template chunk come from acorn's tokenizer (flag
+			// unknown), so the scan fallback decides
+			// eslint-disable-next-line no-template-curly-in-string
+			expect(parse("f`${a\n}`;").ast.body).toHaveLength(1);
+		});
+
+		it("should keep a seen line terminator across unicode whitespace", () => {
+			// LF before a NBSP: the flag stays "yes" through acorn's skipSpace
+			expect(parse("a \n   b;").ast.body).toHaveLength(2);
+			// unicode whitespace running to eof
+			expect(parse("a; ").ast.body).toHaveLength(1);
+		});
+	});
+
+	describe("keyword and reserved-word gates", () => {
+		/**
+		 * @param {string} code source with one expression statement
+		 * @returns {string} the expression's operator
+		 */
+		const op = (code) =>
+			/** @type {{ expression: { operator: string } }} */ (
+				/** @type {unknown} */ (parse(code).ast.body[0])
+			).expression.operator;
+
+		it("should classify keywords and near-keywords correctly", () => {
+			expect(op("a instanceof b;")).toBe("instanceof");
+			expect(op("'x' in a;")).toBe("in");
+			// same length/lowercase shape as keywords, but not keywords
+			expect(parse("const instanceofX = 1; let doX = 2;").ast).toBeDefined();
+			// capitalized, single-char, and >10-char words skip the keyword probe
+			expect(
+				parse("Function; x; internationalization; whileTrue;").ast.body
+			).toHaveLength(4);
+		});
+
+		it("should still reject reserved words through the gate", () => {
+			expect(() => parse("var enum = 1;")).toThrow(
+				/The keyword 'enum' is reserved/
+			);
+			expect(() => parse('"use strict"; var implements = 1;')).toThrow(
+				/The keyword 'implements' is reserved/
+			);
+			expect(parse("var synchronized = 1;").ast).toBeDefined();
+			expect(() => parse("var if = 1;")).toThrow(/Unexpected keyword 'if'/);
+		});
+	});
+
+	describe("object literals and patterns (single-shape nodes)", () => {
+		it("should parse every property kind onto the fixed Property shape", () => {
+			const { ast } = parse(
+				"({ m() {}, get g() { return 1; }, set g(v) {}, async af() {}, " +
+					'*gen() {}, [k]: 1, "s": 2, 3: 3, sh, ...sp });'
+			);
+			const properties =
+				/** @type {{ expression: import("estree").ObjectExpression }} */ (
+					/** @type {unknown} */ (ast.body[0])
+				).expression.properties;
+			expect(
+				properties.map((p) =>
+					p.type === "Property"
+						? [p.kind, p.method, p.shorthand, p.computed]
+						: p.type
+				)
+			).toEqual([
+				["init", true, false, false],
+				["get", false, false, false],
+				["set", false, false, false],
+				["init", true, false, false],
+				["init", true, false, false],
+				["init", false, false, true],
+				["init", false, false, false],
+				["init", false, false, false],
+				["init", false, true, false],
+				"SpreadElement"
+			]);
+		});
+
+		it("should parse object patterns with defaults and rest", () => {
+			const { ast } = parse("const { a, b = 1, [c]: d, ...rest } = o;");
+			const pattern = /** @type {{ id: import("estree").ObjectPattern }} */ (
+				/** @type {{ declarations: unknown[] }} */ (
+					/** @type {unknown} */ (ast.body[0])
+				).declarations[0]
+			).id;
+			expect(pattern.type).toBe("ObjectPattern");
+			expect(pattern.properties.map((p) => p.type)).toEqual([
+				"Property",
+				"Property",
+				"Property",
+				"RestElement"
+			]);
+			// assignment-destructuring converts the same nodes via toAssignable
+			expect(parse("({ a, b = 1, ...r } = o);").ast).toBeDefined();
+		});
+
+		it("should parse trailing commas and record-less objects", () => {
+			expect(parse("({ a: 1, });").ast).toBeDefined();
+			// no destructuring-errors record flows in through `typeof`
+			expect(parse("typeof { a: 1 };").ast).toBeDefined();
+		});
+
+		it("should keep acorn's property error checks", () => {
+			expect(() => parse("const { ...rest, a } = o;")).toThrow(
+				/Comma is not permitted after the rest element/
+			);
+			expect(() => parse("({ ...a, b } = c);")).toThrow(
+				/Comma is not permitted after the rest element/
+			);
+			expect(() => parse('x = { __proto__: 1, "__proto__": 2 };')).toThrow(
+				/Redefinition of __proto__ property/
+			);
+			expect(() => parse("x = { a = 1 };")).toThrow(
+				/Shorthand property assignments are valid only in destructuring/
+			);
+			expect(() => parse("x = { get g(a, b) {} };")).toThrow(/getter/);
+		});
+
+		it("should delegate object parsing without ranges", () => {
+			const { ast } = parse("({ a: 1, ...s, m() {} });", { ranges: false });
+			const properties =
+				/** @type {{ expression: import("estree").ObjectExpression }} */ (
+					/** @type {unknown} */ (ast.body[0])
+				).expression.properties;
+			expect(properties.map((p) => p.type)).toEqual([
+				"Property",
+				"SpreadElement",
+				"Property"
+			]);
 		});
 	});
 });
