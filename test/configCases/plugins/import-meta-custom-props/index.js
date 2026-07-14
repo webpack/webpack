@@ -15,6 +15,14 @@ it("should expose custom properties when destructuring import.meta", () => {
 	expect(build.time).toBe("now");
 });
 
+it("should treat custom properties as truthy runtime values in conditions", () => {
+	if (import.meta.build) {
+		expect(import.meta.build.time).toBe("now");
+	} else {
+		throw new Error("import.meta.build should be truthy");
+	}
+});
+
 it("should keep unknown properties undefined", () => {
 	expect(import.meta.unknownProp).toBeUndefined();
 	const { unknownProp } = import.meta;
