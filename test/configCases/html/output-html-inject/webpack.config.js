@@ -172,12 +172,13 @@ module.exports = [
 		experiments: { html: true },
 		plugins: [copyTest]
 	},
-	// body entry importing CSS: inject:"head" hoists the stylesheet into <head>
+	// body entry importing CSS, default inject: the stylesheet still goes to
+	// <head> (html-webpack-plugin/Vite behavior), only scripts stay at the tag
 	{
 		name: "authored-body-css",
 		target: "web",
 		entry: { "authored-body-css": "./src/page-body-css.html" },
-		output: { filename: "[name].js", html: { inject: "head" } },
+		output: { filename: "[name].js" },
 		experiments: { html: true, css: true },
 		plugins: [copyTest]
 	},

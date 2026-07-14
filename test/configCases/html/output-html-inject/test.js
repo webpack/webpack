@@ -129,10 +129,12 @@ it("bare-script page: siblings stay before the entry, hints use the pre-script f
 	expect(html).toMatch(/<link rel="preload" as="script"/);
 });
 
-it("inject:head hoists a body entry's stylesheet into <head>", () => {
+it("a body entry's stylesheet goes to <head> even with default inject", () => {
 	const html = read("page-body-css.html");
 	expect(headContent(html)).toMatch(/<link rel="stylesheet"/);
 	expect(bodyContent(html)).not.toMatch(/<link rel="stylesheet"/);
+	// the script itself stays where the author put it
+	expect(bodyContent(html)).toMatch(/<script/);
 });
 
 it("stylesheet entry: split CSS sibling clones the original <link> in <head>", () => {
