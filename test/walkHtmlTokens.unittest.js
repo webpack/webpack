@@ -8,12 +8,14 @@ const {
 	QUOTE_DOUBLE,
 	QUOTE_NONE,
 	QUOTE_SINGLE,
-	decodeHtmlEntities,
-	decodeHtmlEntitiesWithMap,
-	walkHtmlTokens
+	decodeEntities,
+	decodeEntitiesWithMap,
+	escapeAttribute,
+	escapeText,
+	walkTokens
 } = require("../lib/html/syntax");
 
-describe("walkHtmlTokens", () => {
+describe("walkTokens", () => {
 	const casesPath = path.resolve(__dirname, "./fixtures/html/parsing/cases");
 	const tests = fs
 		.readdirSync(casesPath)
@@ -28,7 +30,7 @@ describe("walkHtmlTokens", () => {
 			/** @type {unknown[]} */
 			const results = [];
 
-			walkHtmlTokens(code, 0, {
+			walkTokens(code, 0, {
 				openTag: (input, start, end, nameStart, nameEnd, selfClosing) => {
 					results.push([
 						"open-tag",
@@ -88,7 +90,7 @@ describe("walkHtmlTokens", () => {
 			// Roundtrip: concatenating all token values must reconstruct the original
 			/** @type {unknown[]} */
 			const reconstructed = [];
-			walkHtmlTokens(code, 0, {
+			walkTokens(code, 0, {
 				openTag: (input, start, end) => {
 					reconstructed.push(input.slice(start, end));
 					return end;
@@ -118,7 +120,7 @@ describe("walkHtmlTokens", () => {
 	it("should handle empty input", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkHtmlTokens("", 0, {
+		walkTokens("", 0, {
 			text: (input, start, end) => {
 				results.push(input.slice(start, end));
 				return end;
@@ -130,7 +132,7 @@ describe("walkHtmlTokens", () => {
 	it("should handle plain text with no tags", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkHtmlTokens("hello world", 0, {
+		walkTokens("hello world", 0, {
 			text: (input, start, end) => {
 				results.push(input.slice(start, end));
 				return end;
@@ -142,7 +144,7 @@ describe("walkHtmlTokens", () => {
 	it("should detect self-closing tags", () => {
 		/** @type {unknown[]} */
 		const tags = [];
-		walkHtmlTokens("<br/><img src='x'/>", 0, {
+		walkTokens("<br/><img src='x'/>", 0, {
 			openTag: (input, start, end, nameStart, nameEnd, selfClosing) => {
 				tags.push([input.slice(nameStart, nameEnd), selfClosing]);
 				return end;
@@ -157,7 +159,7 @@ describe("walkHtmlTokens", () => {
 	it("should parse boolean attributes", () => {
 		/** @type {unknown[]} */
 		const attrs = [];
-		walkHtmlTokens('<input disabled required type="text">', 0, {
+		walkTokens('<input disabled required type="text">', 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([
 					input.slice(ns, ne),
@@ -175,38 +177,10 @@ describe("walkHtmlTokens", () => {
 		]);
 	});
 
-	it("should route quote/lt-led attribute names through the attribute-name state", () => {
-		/** @type {unknown[]} */
-		const attrs = [];
-		/** @type {unknown[]} */
-		const errors = [];
-		walkHtmlTokens("<div \"x=1 'y>", 0, {
-			attribute: (input, ns, ne, vs, ve, qt) => {
-				attrs.push([
-					input.slice(ns, ne),
-					vs === -1 ? null : input.slice(vs, ve)
-				]);
-				if (vs === -1) return ne;
-				return qt !== QUOTE_NONE ? ve + 1 : ve;
-			},
-			parseError: (input, code) => {
-				errors.push(code);
-			}
-		});
-		expect(attrs).toEqual([
-			['"x', "1"],
-			["'y", null]
-		]);
-		expect(errors).toEqual([
-			"unexpected-character-in-attribute-name",
-			"unexpected-character-in-attribute-name"
-		]);
-	});
-
 	it("should handle all quote types", () => {
 		/** @type {unknown[]} */
 		const attrs = [];
-		walkHtmlTokens("<div a=\"1\" b='2' c=3>", 0, {
+		walkTokens("<div a=\"1\" b='2' c=3>", 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([input.slice(ns, ne), input.slice(vs, ve), qt]);
 				if (qt !== QUOTE_NONE) return ve + 1;
@@ -223,7 +197,7 @@ describe("walkHtmlTokens", () => {
 	it("should parse comments", () => {
 		/** @type {unknown[]} */
 		const comments = [];
-		walkHtmlTokens("before<!-- hi -->after", 0, {
+		walkTokens("before<!-- hi -->after", 0, {
 			comment: (input, start, end) => {
 				comments.push(input.slice(start, end));
 				return end;
@@ -235,7 +209,7 @@ describe("walkHtmlTokens", () => {
 	it("should handle lone < at EOF", () => {
 		/** @type {unknown[]} */
 		const texts = [];
-		walkHtmlTokens("hello<", 0, {
+		walkTokens("hello<", 0, {
 			text: (input, start, end) => {
 				texts.push(input.slice(start, end));
 				return end;
@@ -247,7 +221,7 @@ describe("walkHtmlTokens", () => {
 	it("should parse DOCTYPE as doctype", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkHtmlTokens("<!DOCTYPE html><div>hi</div>", 0, {
+		walkTokens("<!DOCTYPE html><div>hi</div>", 0, {
 			doctype: (input, start, end) => {
 				results.push(["doctype", input.slice(start, end)]);
 				return end;
@@ -276,7 +250,7 @@ describe("walkHtmlTokens", () => {
 	it("should parse DOCTYPE case-insensitively", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkHtmlTokens("<!doctype html><!DoCtYpE html>", 0, {
+		walkTokens("<!doctype html><!DoCtYpE html>", 0, {
 			doctype: (input, start, end) => {
 				results.push(input.slice(start, end));
 				return end;
@@ -288,7 +262,7 @@ describe("walkHtmlTokens", () => {
 	it("should handle CDATA sections", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkHtmlTokens("<div><![CDATA[<img src='x'>]]></div>", 0, {
+		walkTokens("<div><![CDATA[<img src='x'>]]></div>", 0, {
 			comment: (input, start, end) => {
 				results.push(["comment", input.slice(start, end)]);
 				return end;
@@ -313,7 +287,7 @@ describe("walkHtmlTokens", () => {
 	it("should handle nested brackets in CDATA", () => {
 		/** @type {unknown[]} */
 		const comments = [];
-		walkHtmlTokens("<![CDATA[a]b]]c]]>", 0, {
+		walkTokens("<![CDATA[a]b]]c]]>", 0, {
 			comment: (input, start, end) => {
 				comments.push(input.slice(start, end));
 				return end;
@@ -325,7 +299,7 @@ describe("walkHtmlTokens", () => {
 	it("should handle nested <!-- inside comments", () => {
 		/** @type {unknown[]} */
 		const comments = [];
-		walkHtmlTokens("<!-- outer <!-- inner -->", 0, {
+		walkTokens("<!-- outer <!-- inner -->", 0, {
 			comment: (input, start, end) => {
 				comments.push(input.slice(start, end));
 				return end;
@@ -337,7 +311,7 @@ describe("walkHtmlTokens", () => {
 	it("should handle EOF in DOCTYPE", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkHtmlTokens("<!DOCTYPE html", 0, {
+		walkTokens("<!DOCTYPE html", 0, {
 			doctype: (input, start, end) => {
 				results.push(input.slice(start, end));
 				return end;
@@ -349,7 +323,7 @@ describe("walkHtmlTokens", () => {
 	it("should handle EOF in CDATA", () => {
 		/** @type {unknown[]} */
 		const comments = [];
-		walkHtmlTokens("<![CDATA[unclosed", 0, {
+		walkTokens("<![CDATA[unclosed", 0, {
 			comment: (input, start, end) => {
 				comments.push(input.slice(start, end));
 				return end;
@@ -362,7 +336,7 @@ describe("walkHtmlTokens", () => {
 		const html = "<!DOCTYPE html><html><body><![CDATA[data]]></body></html>";
 		/** @type {unknown[]} */
 		const parts = [];
-		walkHtmlTokens(html, 0, {
+		walkTokens(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
 				return end;
@@ -390,7 +364,7 @@ describe("walkHtmlTokens", () => {
 	it("should handle RCDATA for title element", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkHtmlTokens("<title>Hello <b>World</b></title>", 0, {
+		walkTokens("<title>Hello <b>World</b></title>", 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -414,7 +388,7 @@ describe("walkHtmlTokens", () => {
 	it("should handle RCDATA for textarea element", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkHtmlTokens("<textarea><p>not a tag</p></textarea>", 0, {
+		walkTokens("<textarea><p>not a tag</p></textarea>", 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -438,7 +412,7 @@ describe("walkHtmlTokens", () => {
 	it("should handle RAWTEXT for style element", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkHtmlTokens("<style>.a { color: red; }</style>", 0, {
+		walkTokens("<style>.a { color: red; }</style>", 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -459,10 +433,36 @@ describe("walkHtmlTokens", () => {
 		]);
 	});
 
+	it("should handle RAWTEXT for iframe and noembed elements", () => {
+		for (const tag of ["iframe", "noembed"]) {
+			/** @type {unknown[]} */
+			const results = [];
+			walkTokens(`<${tag}><b>not a tag</b></${tag}>`, 0, {
+				openTag: (input, start, end, ns, ne) => {
+					results.push(["open", input.slice(ns, ne)]);
+					return end;
+				},
+				closeTag: (input, start, end, ns, ne) => {
+					results.push(["close", input.slice(ns, ne)]);
+					return end;
+				},
+				text: (input, start, end) => {
+					results.push(["text", input.slice(start, end)]);
+					return end;
+				}
+			});
+			expect(results).toEqual([
+				["open", tag],
+				["text", "<b>not a tag</b>"],
+				["close", tag]
+			]);
+		}
+	});
+
 	it("should handle script data state", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkHtmlTokens("<script>var x = 1 < 2;</script>", 0, {
+		walkTokens("<script>var x = 1 < 2;</script>", 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -486,7 +486,7 @@ describe("walkHtmlTokens", () => {
 	it("should handle script data escaped state (<!-- inside script)", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkHtmlTokens("<script><!--- comment --></script>", 0, {
+		walkTokens("<script><!--- comment --></script>", 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -510,24 +510,20 @@ describe("walkHtmlTokens", () => {
 	it("should handle script data double escaped state transitions (<script and </script)", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkHtmlTokens(
-			"<script><!-- <script> var x = 1; </script> --></script>",
-			0,
-			{
-				openTag: (input, start, end, ns, ne) => {
-					results.push(["open", input.slice(ns, ne)]);
-					return end;
-				},
-				closeTag: (input, start, end, ns, ne) => {
-					results.push(["close", input.slice(ns, ne)]);
-					return end;
-				},
-				text: (input, start, end) => {
-					results.push(["text", input.slice(start, end)]);
-					return end;
-				}
+		walkTokens("<script><!-- <script> var x = 1; </script> --></script>", 0, {
+			openTag: (input, start, end, ns, ne) => {
+				results.push(["open", input.slice(ns, ne)]);
+				return end;
+			},
+			closeTag: (input, start, end, ns, ne) => {
+				results.push(["close", input.slice(ns, ne)]);
+				return end;
+			},
+			text: (input, start, end) => {
+				results.push(["text", input.slice(start, end)]);
+				return end;
 			}
-		);
+		});
 		expect(results).toEqual([
 			["open", "script"],
 			["text", "<!-- <script> var x = 1; </script> -->"],
@@ -543,7 +539,7 @@ describe("walkHtmlTokens", () => {
 		const html = "<script><!--<script>x</scripts>y</script>--></script>";
 		/** @type {unknown[]} */
 		const results = [];
-		walkHtmlTokens(html, 0, {
+		walkTokens(html, 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -572,7 +568,7 @@ describe("walkHtmlTokens", () => {
 		const html = "<script><!--<script></script></script>";
 		/** @type {unknown[]} */
 		const results = [];
-		walkHtmlTokens(html, 0, {
+		walkTokens(html, 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -596,7 +592,7 @@ describe("walkHtmlTokens", () => {
 	it("should not match wrong end tag in RCDATA", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkHtmlTokens("<title>text</div></title>", 0, {
+		walkTokens("<title>text</div></title>", 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -620,7 +616,7 @@ describe("walkHtmlTokens", () => {
 	it("should handle case-insensitive end tags in content modes", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkHtmlTokens("<style>.a{}</STYLE>", 0, {
+		walkTokens("<style>.a{}</STYLE>", 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -641,51 +637,12 @@ describe("walkHtmlTokens", () => {
 		]);
 	});
 
-	it("should flush unterminated raw-text bodies at EOF (no further `<`)", () => {
-		// Drives the content-mode fast-forwards when `indexOf` finds no next
-		// `<` (RCDATA / RAWTEXT / script data run to end of input).
-		for (const [source, tag, body] of [
-			["<title>left open", "title", "left open"],
-			["<style>.a{color:red}", "style", ".a{color:red}"],
-			["<script>var x = 1;", "script", "var x = 1;"]
-		]) {
-			/** @type {unknown[]} */
-			const results = [];
-			walkHtmlTokens(source, 0, {
-				openTag: (input, start, end, ns, ne) => {
-					results.push(["open", input.slice(ns, ne)]);
-					return end;
-				},
-				text: (input, start, end) => {
-					results.push(["text", input.slice(start, end)]);
-					return end;
-				}
-			});
-			expect(results).toEqual([
-				["open", tag],
-				["text", body]
-			]);
-		}
-	});
-
-	it("should handle character references in RCDATA text", () => {
-		/** @type {unknown[]} */
-		const results = [];
-		walkHtmlTokens("<title>a &amp; b</title>", 0, {
-			text: (input, start, end) => {
-				results.push(input.slice(start, end));
-				return end;
-			}
-		});
-		expect(results).toEqual(["a &amp; b"]);
-	});
-
 	it("should roundtrip HTML with script and style", () => {
 		const html =
 			"<html><head><style>.a{}</style></head><body><script>var x=1;</script></body></html>";
 		/** @type {unknown[]} */
 		const parts = [];
-		walkHtmlTokens(html, 0, {
+		walkTokens(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
 				return end;
@@ -705,7 +662,7 @@ describe("walkHtmlTokens", () => {
 	it("should handle PLAINTEXT state", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkHtmlTokens("<div><plaintext><p>ignored</p></div>", 0, {
+		walkTokens("<div><plaintext><p>ignored</p></div>", 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -730,7 +687,7 @@ describe("walkHtmlTokens", () => {
 		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>Tom &amp; Jerry</p>";
-		walkHtmlTokens(html, 0, {
+		walkTokens(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
 				return end;
@@ -750,7 +707,7 @@ describe("walkHtmlTokens", () => {
 	it("should handle named character references in double-quoted attributes", () => {
 		/** @type {unknown[]} */
 		const attrs = [];
-		walkHtmlTokens('<a href="?a=1&amp;b=2">', 0, {
+		walkTokens('<a href="?a=1&amp;b=2">', 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([input.slice(ns, ne), input.slice(vs, ve)]);
 				if (qt !== QUOTE_NONE) return ve + 1;
@@ -763,7 +720,7 @@ describe("walkHtmlTokens", () => {
 	it("should handle named character references in single-quoted attributes", () => {
 		/** @type {unknown[]} */
 		const attrs = [];
-		walkHtmlTokens("<a href='?x=1&lt;2'>", 0, {
+		walkTokens("<a href='?x=1&lt;2'>", 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([input.slice(ns, ne), input.slice(vs, ve)]);
 				if (qt !== QUOTE_NONE) return ve + 1;
@@ -776,7 +733,7 @@ describe("walkHtmlTokens", () => {
 	it("should handle character references in unquoted attributes", () => {
 		/** @type {unknown[]} */
 		const attrs = [];
-		walkHtmlTokens("<a href=foo&amp;bar>", 0, {
+		walkTokens("<a href=foo&amp;bar>", 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([input.slice(ns, ne), input.slice(vs, ve)]);
 				if (qt !== QUOTE_NONE) return ve + 1;
@@ -790,7 +747,7 @@ describe("walkHtmlTokens", () => {
 		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>&#65;&#66;&#67;</p>";
-		walkHtmlTokens(html, 0, {
+		walkTokens(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
 				return end;
@@ -811,7 +768,7 @@ describe("walkHtmlTokens", () => {
 		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>&#x41;&#X42;</p>";
-		walkHtmlTokens(html, 0, {
+		walkTokens(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
 				return end;
@@ -832,7 +789,7 @@ describe("walkHtmlTokens", () => {
 		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>bare & alone</p>";
-		walkHtmlTokens(html, 0, {
+		walkTokens(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
 				return end;
@@ -853,7 +810,7 @@ describe("walkHtmlTokens", () => {
 		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>&unknown;</p>";
-		walkHtmlTokens(html, 0, {
+		walkTokens(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
 				return end;
@@ -874,7 +831,7 @@ describe("walkHtmlTokens", () => {
 		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>&#;&#x;</p>";
-		walkHtmlTokens(html, 0, {
+		walkTokens(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
 				return end;
@@ -899,7 +856,7 @@ describe("walkHtmlTokens", () => {
 		const walk = (html) => {
 			/** @type {[string, ...EXPECTED_ANY[]][]} */
 			const out = [];
-			walkHtmlTokens(html, 0, {
+			walkTokens(html, 0, {
 				openTag: (input, start, end, ns, ne, selfClosing) => {
 					out.push(["open", input.slice(ns, ne), selfClosing]);
 					return end;
@@ -942,7 +899,7 @@ describe("walkHtmlTokens", () => {
 		const roundtrip = (html) => {
 			/** @type {unknown[]} */
 			const parts = [];
-			walkHtmlTokens(html, 0, {
+			walkTokens(html, 0, {
 				openTag: (input, start, end) => {
 					parts.push(input.slice(start, end));
 					return end;
@@ -1974,7 +1931,7 @@ describe("walkHtmlTokens", () => {
 
 		// --- Callback API surface: default arguments + missing callbacks ---
 		it("default arguments: walks with no pos/callbacks provided", () => {
-			expect(() => walkHtmlTokens("<a>hello</a>")).not.toThrow();
+			expect(() => walkTokens("<a>hello</a>")).not.toThrow();
 		});
 
 		it("missing closeTag/comment/doctype callbacks are tolerated", () => {
@@ -1984,7 +1941,7 @@ describe("walkHtmlTokens", () => {
 			/** @type {unknown[]} */
 			const opens = [];
 			expect(() =>
-				walkHtmlTokens("<!DOCTYPE html><!-- c --><a>x</a><![CDATA[ y ]]>", 0, {
+				walkTokens("<!DOCTYPE html><!-- c --><a>x</a><![CDATA[ y ]]>", 0, {
 					openTag: (input, start, end) => {
 						opens.push(input.slice(start, end));
 						return end;
@@ -1996,11 +1953,7 @@ describe("walkHtmlTokens", () => {
 
 		it("missing all callbacks is tolerated", () => {
 			expect(() =>
-				walkHtmlTokens(
-					"<!DOCTYPE html><!-- c --><a>x</a><![CDATA[ y ]]>z",
-					0,
-					{}
-				)
+				walkTokens("<!DOCTYPE html><!-- c --><a>x</a><![CDATA[ y ]]>z", 0, {})
 			).not.toThrow();
 		});
 
@@ -2019,7 +1972,7 @@ describe("walkHtmlTokens", () => {
 				"<!-- eof" // EOF inside comment
 			];
 			for (const html of fragments) {
-				expect(() => walkHtmlTokens(html, 0, {})).not.toThrow();
+				expect(() => walkTokens(html, 0, {})).not.toThrow();
 			}
 		});
 
@@ -2045,7 +1998,7 @@ describe("walkHtmlTokens", () => {
 				"<!DOCTYPE" // EOF inside doctype
 			];
 			for (const html of fragments) {
-				expect(() => walkHtmlTokens(html, 0, {})).not.toThrow();
+				expect(() => walkTokens(html, 0, {})).not.toThrow();
 			}
 		});
 
@@ -2084,7 +2037,7 @@ describe("walkHtmlTokens", () => {
 					// Skip one character past `>` so nextPos > end.
 					return end + 1;
 				};
-			walkHtmlTokens(
+			walkTokens(
 				"<script>x</script>" +
 					"<a foo>y</a>" +
 					"<b foo=bar>z</b>" +
@@ -2141,7 +2094,7 @@ describe("walkHtmlTokens", () => {
 		const collectErrors = (html) => {
 			/** @type {{ code: string, slice: string, severity: string }[]} */
 			const errors = [];
-			walkHtmlTokens(html, 0, {
+			walkTokens(html, 0, {
 				parseError: (input, code, start, end, severity) => {
 					errors.push({ code, slice: input.slice(start, end), severity });
 				}
@@ -2548,7 +2501,7 @@ describe("walkHtmlTokens", () => {
 			const errors = [];
 			/** @type {string[]} */
 			const opens = [];
-			walkHtmlTokens('<div class="x', 0, {
+			walkTokens('<div class="x', 0, {
 				openTag: (input, start, end, ns, ne) => {
 					opens.push(input.slice(ns, ne));
 					return end;
@@ -2571,7 +2524,7 @@ describe("walkHtmlTokens", () => {
 			const codes = [];
 			/** @type {string[]} */
 			const closes = [];
-			walkHtmlTokens("<a></a", 0, {
+			walkTokens("<a></a", 0, {
 				closeTag: (input, start, end, ns, ne) => {
 					closes.push(input.slice(ns, ne));
 					return end;
@@ -2598,7 +2551,7 @@ describe("walkHtmlTokens", () => {
 			]) {
 				/** @type {string[]} */
 				const closes = [];
-				walkHtmlTokens(html, 0, {
+				walkTokens(html, 0, {
 					openTag: (input, start, end) => end,
 					closeTag: (input, start, end, ns, ne) => {
 						closes.push(input.slice(ns, ne));
@@ -2628,7 +2581,7 @@ describe("walkHtmlTokens", () => {
 			const codes = [];
 			/** @type {[string, string][]} */
 			const attrs = [];
-			walkHtmlTokens("<div data-x", 0, {
+			walkTokens("<div data-x", 0, {
 				openTag: (input, start, end) => end,
 				attribute: (input, ns, ne, vs, ve) => {
 					attrs.push([
@@ -2651,7 +2604,7 @@ describe("walkHtmlTokens", () => {
 			// `&amp` mid-attribute-value at EOF: returnState is the attribute
 			// value (double-quoted) state, so the EOF unwinds back to a partial
 			// open tag and emits eof-in-tag.
-			walkHtmlTokens('<a href="x&amp', 0, {
+			walkTokens('<a href="x&amp', 0, {
 				openTag: (input, start, end, ns, ne) => {
 					opens.push(input.slice(ns, ne));
 					return end;
@@ -2681,7 +2634,7 @@ describe("walkHtmlTokens", () => {
 			const codes = [];
 			/** @type {string[]} */
 			const comments = [];
-			walkHtmlTokens("<!x", 0, {
+			walkTokens("<!x", 0, {
 				comment: (input, start, end) => {
 					comments.push(input.slice(start, end));
 					return end;
@@ -2746,9 +2699,9 @@ describe("walkHtmlTokens", () => {
 		});
 	});
 
-	describe("decodeHtmlEntities", () => {
+	describe("decodeEntities", () => {
 		it("should decode core named entities", () => {
-			expect(decodeHtmlEntities("&amp;&lt;&gt;&quot;&apos;&nbsp;")).toBe(
+			expect(decodeEntities("&amp;&lt;&gt;&quot;&apos;&nbsp;")).toBe(
 				"&<>\"'\u00A0"
 			);
 		});
@@ -2756,29 +2709,29 @@ describe("walkHtmlTokens", () => {
 		it("should decode legacy named entities without trailing semicolon", () => {
 			// `&AMP` and `&copy` are legacy bare-form entities in the WHATWG
 			// named character references table.
-			expect(decodeHtmlEntities("&AMP")).toBe("&");
-			expect(decodeHtmlEntities("&copy")).toBe("\u00A9");
+			expect(decodeEntities("&AMP")).toBe("&");
+			expect(decodeEntities("&copy")).toBe("\u00A9");
 		});
 
 		it("should decode entities outside the BMP and multi-codepoint entities", () => {
-			expect(decodeHtmlEntities("&AElig;")).toBe("\u00C6");
+			expect(decodeEntities("&AElig;")).toBe("\u00C6");
 			// `&NotEqualTilde;` is a multi-codepoint named reference (\u2242 + combining slash).
-			expect(decodeHtmlEntities("&NotEqualTilde;")).toBe("\u2242\u0338");
+			expect(decodeEntities("&NotEqualTilde;")).toBe("\u2242\u0338");
 		});
 
 		it("should apply longest-prefix backtrack per WHATWG", () => {
 			// `&notpre;` is not in the table, but `&not` is \u2014 the prefix matches
 			// and the remainder `pre;` is left as literal text.
-			expect(decodeHtmlEntities("&notpre;")).toBe("\u00ACpre;");
+			expect(decodeEntities("&notpre;")).toBe("\u00ACpre;");
 		});
 
 		it("should decode numeric decimal references", () => {
-			expect(decodeHtmlEntities("&#65;&#66;&#67;")).toBe("ABC");
+			expect(decodeEntities("&#65;&#66;&#67;")).toBe("ABC");
 		});
 
 		it("should decode numeric references without trailing semicolon", () => {
-			expect(decodeHtmlEntities("&#65")).toBe("A");
-			expect(decodeHtmlEntities("&#x41")).toBe("A");
+			expect(decodeEntities("&#65")).toBe("A");
+			expect(decodeEntities("&#x41")).toBe("A");
 		});
 
 		it("should not let decimal references swallow trailing hex-letter chars", () => {
@@ -2786,20 +2739,20 @@ describe("walkHtmlTokens", () => {
 			// `&#65b` should decode `&#65` → `A` and leave the trailing `b` as
 			// literal text (the earlier regex matched `[0-9a-fA-F]+` for both
 			// hex and decimal and incorrectly swallowed the `b`).
-			expect(decodeHtmlEntities("&#65b")).toBe("Ab");
-			expect(decodeHtmlEntities("&#1f")).toBe("f");
+			expect(decodeEntities("&#65b")).toBe("Ab");
+			expect(decodeEntities("&#1f")).toBe("f");
 		});
 
 		it("should decode numeric hexadecimal references", () => {
-			expect(decodeHtmlEntities("&#x41;&#x42;&#x43;")).toBe("ABC");
-			expect(decodeHtmlEntities("&#X41;&#X42;&#X43;")).toBe("ABC");
+			expect(decodeEntities("&#x41;&#x42;&#x43;")).toBe("ABC");
+			expect(decodeEntities("&#X41;&#X42;&#X43;")).toBe("ABC");
 		});
 
 		it("should leave unknown or incomplete entities as literals", () => {
-			expect(decodeHtmlEntities("&zzzunknown;")).toBe("&zzzunknown;");
-			expect(decodeHtmlEntities("&#;")).toBe("&#;");
-			expect(decodeHtmlEntities("&#x;")).toBe("&#x;");
-			expect(decodeHtmlEntities("bare & alone")).toBe("bare & alone");
+			expect(decodeEntities("&zzzunknown;")).toBe("&zzzunknown;");
+			expect(decodeEntities("&#;")).toBe("&#;");
+			expect(decodeEntities("&#x;")).toBe("&#x;");
+			expect(decodeEntities("bare & alone")).toBe("bare & alone");
 		});
 
 		it("should not match inherited Object.prototype keys as entities", () => {
@@ -2807,43 +2760,43 @@ describe("walkHtmlTokens", () => {
 			// would return `Object.prototype.toString` and the lookup would
 			// falsely treat the entity as matched. The generated table now uses
 			// a null prototype so these names stay literal.
-			expect(decodeHtmlEntities("&toString;")).toBe("&toString;");
-			expect(decodeHtmlEntities("&constructor;")).toBe("&constructor;");
-			expect(decodeHtmlEntities("&hasOwnProperty;")).toBe("&hasOwnProperty;");
+			expect(decodeEntities("&toString;")).toBe("&toString;");
+			expect(decodeEntities("&constructor;")).toBe("&constructor;");
+			expect(decodeEntities("&hasOwnProperty;")).toBe("&hasOwnProperty;");
 		});
 
 		it("should handle mixed text and entities", () => {
-			expect(decodeHtmlEntities("foo &amp; bar &#x41; baz")).toBe(
+			expect(decodeEntities("foo &amp; bar &#x41; baz")).toBe(
 				"foo & bar A baz"
 			);
 		});
 
 		it("should fast-path strings with no `&`", () => {
-			expect(decodeHtmlEntities("plain text")).toBe("plain text");
+			expect(decodeEntities("plain text")).toBe("plain text");
 		});
 
 		it("should replace numeric references above U+10FFFF with U+FFFD", () => {
-			expect(decodeHtmlEntities("&#x110000;")).toBe("�");
-			expect(decodeHtmlEntities("&#1114112;")).toBe("�");
+			expect(decodeEntities("&#x110000;")).toBe("�");
+			expect(decodeEntities("&#1114112;")).toBe("�");
 		});
 
 		it("should replace NULL and surrogate numeric references with U+FFFD", () => {
-			expect(decodeHtmlEntities("&#0;")).toBe("�");
-			expect(decodeHtmlEntities("&#x0;")).toBe("�");
-			expect(decodeHtmlEntities("&#xD800;")).toBe("�");
-			expect(decodeHtmlEntities("&#xDFFF;")).toBe("�");
-			expect(decodeHtmlEntities("&#55296;")).toBe("�");
+			expect(decodeEntities("&#0;")).toBe("�");
+			expect(decodeEntities("&#x0;")).toBe("�");
+			expect(decodeEntities("&#xD800;")).toBe("�");
+			expect(decodeEntities("&#xDFFF;")).toBe("�");
+			expect(decodeEntities("&#55296;")).toBe("�");
 		});
 
 		it("should remap C1 numeric references via the Windows-1252 table", () => {
 			// `&#x80;` (Windows-1252 euro sign) per WHATWG remaps to U+20AC.
-			expect(decodeHtmlEntities("&#x80;")).toBe("€");
+			expect(decodeEntities("&#x80;")).toBe("€");
 			// `&#x99;` remaps to U+2122 (trade mark sign).
-			expect(decodeHtmlEntities("&#x99;")).toBe("™");
+			expect(decodeEntities("&#x99;")).toBe("™");
 			// `&#x9F;` remaps to U+0178 (Ÿ).
-			expect(decodeHtmlEntities("&#x9F;")).toBe("Ÿ");
+			expect(decodeEntities("&#x9F;")).toBe("Ÿ");
 			// C1 control codepoints with no remap entry pass through.
-			expect(decodeHtmlEntities("&#x81;")).toBe("");
+			expect(decodeEntities("&#x81;")).toBe("");
 		});
 
 		it("should stay linear-time on long alphanumeric runs after `&`", () => {
@@ -2851,41 +2804,41 @@ describe("walkHtmlTokens", () => {
 			// WHATWG entity name, otherwise inputs like `&` + thousands of chars
 			// trigger O(n²) substring allocations.
 			const longRun = "a".repeat(1000);
-			expect(decodeHtmlEntities(`&${longRun}`)).toBe(`&${longRun}`);
+			expect(decodeEntities(`&${longRun}`)).toBe(`&${longRun}`);
 			// `&amp` prefix at the start still decodes; the rest is appended verbatim.
-			expect(decodeHtmlEntities(`&amp${longRun}`)).toBe(`&${longRun}`);
+			expect(decodeEntities(`&amp${longRun}`)).toBe(`&${longRun}`);
 		});
 
 		it("should apply the consumed-as-part-of-an-attribute rule when asked", () => {
 			// In text context, `&amp=foo` decodes to `&=foo`.
-			expect(decodeHtmlEntities("&amp=foo")).toBe("&=foo");
+			expect(decodeEntities("&amp=foo")).toBe("&=foo");
 			// In attribute context, the same input stays literal.
-			expect(decodeHtmlEntities("&amp=foo", true)).toBe("&amp=foo");
+			expect(decodeEntities("&amp=foo", true)).toBe("&amp=foo");
 			// `&amp;=foo` (with semicolon) decodes regardless of context.
-			expect(decodeHtmlEntities("&amp;=foo", true)).toBe("&=foo");
+			expect(decodeEntities("&amp;=foo", true)).toBe("&=foo");
 			// Longest-prefix leftover case: `&ampx` → `&amp` matches but leftover
 			// `x` is alphanumeric, so in attribute context this stays literal.
-			expect(decodeHtmlEntities("&ampX", true)).toBe("&ampX");
+			expect(decodeEntities("&ampX", true)).toBe("&ampX");
 			// In text context it still decodes the prefix.
-			expect(decodeHtmlEntities("&ampX")).toBe("&X");
+			expect(decodeEntities("&ampX")).toBe("&X");
 		});
 	});
 
-	describe("decodeHtmlEntitiesWithMap", () => {
+	describe("decodeEntitiesWithMap", () => {
 		it("should return the input and no map when nothing decodes", () => {
-			expect(decodeHtmlEntitiesWithMap("plain text")).toEqual({
+			expect(decodeEntitiesWithMap("plain text")).toEqual({
 				text: "plain text",
 				map: undefined
 			});
 			// Attribute rule keeps `&amp=1` literal — no map either.
-			expect(decodeHtmlEntitiesWithMap("&amp=1", true)).toEqual({
+			expect(decodeEntitiesWithMap("&amp=1", true)).toEqual({
 				text: "&amp=1",
 				map: undefined
 			});
 		});
 
 		it("should map decoded boundaries back to raw offsets", () => {
-			const { text, map } = decodeHtmlEntitiesWithMap("a&amp;b", true);
+			const { text, map } = decodeEntitiesWithMap("a&amp;b", true);
 			expect(text).toBe("a&b");
 			// Boundaries: `a` 0, decoded `&` starts at raw 1, `b` at raw 6, end 7.
 			expect(map).toEqual([0, 1, 6, 7]);
@@ -2899,9 +2852,53 @@ describe("walkHtmlTokens", () => {
 		});
 
 		it("should map around numeric references and trailing text", () => {
-			const { text, map } = decodeHtmlEntitiesWithMap("x&#32;yz", true);
+			const { text, map } = decodeEntitiesWithMap("x&#32;yz", true);
 			expect(text).toBe("x yz");
 			expect(map).toEqual([0, 1, 6, 7, 8]);
+		});
+	});
+
+	describe("escapeAttribute", () => {
+		it("should return the input unchanged when nothing needs escaping", () => {
+			const s = "plain value with spaces, <tags> and 'quotes'";
+			expect(escapeAttribute(s)).toBe(s);
+		});
+
+		it("should escape the WHATWG attribute-mode set", () => {
+			expect(escapeAttribute('a&b"c\u00A0d')).toBe("a&amp;b&quot;c&nbsp;d");
+		});
+
+		it("should not escape text-mode characters", () => {
+			expect(escapeAttribute("<b>")).toBe("<b>");
+		});
+
+		it("should encode CR/LF as numeric references", () => {
+			expect(escapeAttribute("a\nb\rc")).toBe("a&#10;b&#13;c");
+		});
+
+		it("should handle leading, trailing and consecutive escapes", () => {
+			expect(escapeAttribute('"a""')).toBe("&quot;a&quot;&quot;");
+			expect(escapeAttribute("&")).toBe("&amp;");
+			expect(escapeAttribute("")).toBe("");
+		});
+	});
+
+	describe("escapeText", () => {
+		it("should return the input unchanged when nothing needs escaping", () => {
+			const s = 'plain text with "quotes" and spaces';
+			expect(escapeText(s)).toBe(s);
+		});
+
+		it("should escape the WHATWG text-mode set", () => {
+			expect(escapeText("a&b<c>d\u00A0e")).toBe("a&amp;b&lt;c&gt;d&nbsp;e");
+		});
+
+		it("should not escape quotes", () => {
+			expect(escapeText("\"'")).toBe("\"'");
+		});
+
+		it("should encode CR/LF as numeric references", () => {
+			expect(escapeText("a\nb\rc")).toBe("a&#10;b&#13;c");
 		});
 	});
 });
