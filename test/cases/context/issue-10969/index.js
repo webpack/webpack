@@ -1,4 +1,4 @@
-it("should replace ! with %21 in the module id string of the context module", function () {
+it("should replace ! with %21 and ? with %3F in the module id string of the context module", function () {
 	const moduleId = require.context(
 		"./folder",
 		true,
@@ -7,6 +7,6 @@ it("should replace ! with %21 in the module id string of the context module", fu
 	).id;
 	if (typeof moduleId !== "number")
 		expect(moduleId).toBe(
-			"./context/issue-10969/folder lazy recursive ^(?%21file1\\.js$).*$i"
+			"./context/issue-10969/folder lazy recursive ^(%3F%21file1\\.js$).*$i"
 		);
 });
