@@ -363,6 +363,17 @@
       "description": "Check if to be emitted file already exists and have the same content before writing to output filesystem.",
       "type": "boolean"
     },
+    "ConcatenateModulesOptions": {
+      "description": "Advanced options for module concatenation.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "commonjs": {
+          "description": "Also concatenate CommonJS modules with statically analyzable exports.",
+          "type": "boolean"
+        }
+      }
+    },
     "Context": {
       "description": "The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.",
       "type": "string",
@@ -3259,13 +3270,16 @@
             false
           ]
         },
-        "concatenateCommonJsModules": {
-          "description": "Also concatenate CommonJS modules with statically analyzable exports when module concatenation is enabled.",
-          "type": "boolean"
-        },
         "concatenateModules": {
-          "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.",
-          "type": "boolean"
+          "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer. An options object implies 'true'.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/ConcatenateModulesOptions"
+            }
+          ]
         },
         "emitOnErrors": {
           "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.",
@@ -3435,13 +3449,16 @@
             false
           ]
         },
-        "concatenateCommonJsModules": {
-          "description": "Also concatenate CommonJS modules with statically analyzable exports when module concatenation is enabled.",
-          "type": "boolean"
-        },
         "concatenateModules": {
-          "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.",
-          "type": "boolean"
+          "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer. An options object implies 'true'.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/ConcatenateModulesOptions"
+            }
+          ]
         },
         "emitOnErrors": {
           "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.",

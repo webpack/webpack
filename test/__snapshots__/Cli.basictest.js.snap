@@ -7458,29 +7458,29 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "optimization-concatenate-common-js-modules": Object {
-    "configs": Array [
-      Object {
-        "description": "Also concatenate CommonJS modules with statically analyzable exports when module concatenation is enabled.",
-        "multiple": false,
-        "path": "optimization.concatenateCommonJsModules",
-        "type": "boolean",
-      },
-    ],
-    "description": "Also concatenate CommonJS modules with statically analyzable exports when module concatenation is enabled.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "optimization-concatenate-modules": Object {
     "configs": Array [
       Object {
-        "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.",
+        "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer. An options object implies 'true'.",
         "multiple": false,
         "path": "optimization.concatenateModules",
         "type": "boolean",
       },
     ],
-    "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.",
+    "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer. An options object implies 'true'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-concatenate-modules-commonjs": Object {
+    "configs": Array [
+      Object {
+        "description": "Also concatenate CommonJS modules with statically analyzable exports.",
+        "multiple": false,
+        "path": "optimization.concatenateModules.commonjs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Also concatenate CommonJS modules with statically analyzable exports.",
     "multiple": false,
     "simpleType": "boolean",
   },

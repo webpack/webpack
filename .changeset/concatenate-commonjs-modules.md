@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `optimization.concatenateCommonJsModules` to scope-hoist CommonJS modules with static exports.
+Support `optimization.concatenateModules: { commonjs: true }` to scope-hoist CommonJS modules with static exports.
