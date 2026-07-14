@@ -67,5 +67,35 @@ module.exports = [
 		},
 		experiments: { html: true },
 		plugins: [copyTest]
+	},
+	{
+		name: "no-head",
+		entry: { "no-head": { import: ["./src/main.js"], html: true } },
+		output: {
+			filename: "[name].js",
+			html: { template: "./src/template-no-head.html" }
+		},
+		experiments: { html: true },
+		plugins: [copyTest]
+	},
+	{
+		name: "comment-tags",
+		entry: { "comment-tags": { import: ["./src/main.js"], html: true } },
+		output: {
+			filename: "[name].js",
+			html: { template: "./src/template-comment.html" }
+		},
+		experiments: { html: true },
+		plugins: [copyTest]
+	},
+	{
+		name: "title-from-option",
+		entry: { "title-from-option": { import: ["./src/main.js"], html: true } },
+		output: {
+			filename: "[name].js",
+			html: { template: "./src/template-no-title.html", title: "Option Title" }
+		},
+		experiments: { html: true },
+		plugins: [copyTest]
 	}
 ];
