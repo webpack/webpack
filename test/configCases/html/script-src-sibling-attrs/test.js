@@ -21,9 +21,8 @@ it("should copy quoted, bare and unquoted CSP/fetch attributes byte-exact onto t
 	// `defer` is not a copyable attribute, so it must not leak onto the link.
 	expect(linkTag).not.toContain("defer");
 
-	// The link precedes the script so the stylesheet download starts first.
+	// The script is `defer`, so the link follows it (Vite order).
 	const scriptIdx = extracted.indexOf("<script");
 	const linkIdx = extracted.indexOf('<link rel="stylesheet"');
-	expect(linkIdx).toBeGreaterThan(-1);
-	expect(linkIdx).toBeLessThan(scriptIdx);
+	expect(linkIdx).toBeGreaterThan(scriptIdx);
 });

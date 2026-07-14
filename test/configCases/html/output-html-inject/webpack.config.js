@@ -257,5 +257,28 @@ module.exports = [
 		},
 		experiments: { html: true, css: true },
 		plugins: [copyTest]
+	},
+	// defer script importing CSS followed by a classic blocking script:
+	// the stylesheet may follow the defer tag but must stay ahead of the
+	// blocking script
+	{
+		name: "authored-mixed-css",
+		target: "web",
+		entry: { "authored-mixed-css": "./src/page-mixed-css.html" },
+		output: { filename: "[name].js" },
+		experiments: { html: true, css: true },
+		plugins: [copyTest]
+	},
+	// defer entry in <body> + inject:head + runtimeChunk: the runtime
+	// sibling and the stylesheet share the head anchor — script first
+	// (Vite order for deferred scripts)
+	{
+		name: "authored-defer-split",
+		target: "web",
+		entry: { "authored-defer-split": "./src/page-defer-split.html" },
+		output: { filename: "[name].js", html: { inject: "head" } },
+		optimization: { runtimeChunk: "single" },
+		experiments: { html: true, css: true },
+		plugins: [copyTest]
 	}
 ];

@@ -76,7 +76,7 @@ it("inject:false keeps opt-in resource hints for the suppressed siblings", () =>
 	expect(html).toMatch(/<link rel="preload" as="script"/);
 });
 
-it("inject:head keeps injected stylesheets ahead of the first script", () => {
+it("inject:head keeps injected stylesheets ahead of the first blocking script", () => {
 	const html = read("page-head-css.html");
 	const linkIdx = html.search(/<link rel="stylesheet"/);
 	const scriptIdx = html.search(/<script/);
@@ -157,6 +157,30 @@ it("split CSS chunks keep the source import order in <head>", () => {
 	expect(c).toBeGreaterThanOrEqual(0);
 	expect(c).toBeLessThan(b);
 	expect(b).toBeLessThan(a);
+});
+
+it("mixed page: CSS may follow the defer script but stays ahead of the blocking script", () => {
+	const html = read("page-mixed-css.html");
+	const deferIdx = html.search(/<script src="[^"]+" defer>/);
+	const linkIdx = html.indexOf('<link rel="stylesheet"');
+	const blockingIdx = html.search(/<script src="[^"]+"><\/script>/);
+	expect(deferIdx).toBeGreaterThanOrEqual(0);
+	expect(blockingIdx).toBeGreaterThanOrEqual(0);
+	expect(linkIdx).toBeGreaterThan(deferIdx);
+	expect(linkIdx).toBeLessThan(blockingIdx);
+});
+
+it("defer entry + inject:head: runtime sibling precedes the stylesheet at the head anchor", () => {
+	const html = read("page-defer-split.html");
+	const head = headContent(html);
+	const scriptIdx = head.indexOf("<script");
+	const linkIdx = head.indexOf('<link rel="stylesheet"');
+	expect(scriptIdx).toBeGreaterThanOrEqual(0);
+	// Vite order: the deferred runtime script tag comes first, CSS after
+	expect(linkIdx).toBeGreaterThan(scriptIdx);
+	expect(head).toMatch(/runtime\.js/);
+	// the deferred entry script itself stays where the author put it
+	expect(bodyContent(html)).toMatch(/<script src="[^"]+\.js" defer>/);
 });
 
 it("explicit inject:body beats the output.module head default", () => {
