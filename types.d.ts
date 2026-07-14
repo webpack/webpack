@@ -5801,6 +5801,8 @@ declare class DefinePlugin {
 		options?: true | string[] | RuntimeValueOptions
 	): RuntimeValue;
 	static getCompilationHooks: (compilation: Compilation) => DefinePluginHooks;
+	static VALUE_DEP_MAIN: "webpack/DefinePlugin_hash";
+	static VALUE_DEP_PREFIX: "webpack/DefinePlugin ";
 }
 declare interface DefinePluginHooks {
 	definitions: SyncWaterfallHook<
