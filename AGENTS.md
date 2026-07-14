@@ -158,7 +158,7 @@ Skipping any layer silently breaks the option. After editing schemas, run `yarn 
 
 **Prefer integration tests over unit tests.** Cover behavior with an integration case (`configCases/`, `watchCases/`, `hotCases/`, `statsCases/`, …) that drives a real `webpack()` build whenever the behavior can be exercised that way — they catch real-world regressions a mocked unit test misses. Reach for a `*.unittest.js` only for pure helpers/utilities that a build can't naturally reach.
 
-Run targeted tests — `yarn jest test/<area>` or `yarn jest -t "<name>"`. Don't run `yarn test` unless asked. When updating snapshots (`yarn jest -u`), eyeball the diff first. See [TESTING_DOCS.md](TESTING_DOCS.md) for details.
+Run targeted tests — `yarn test:base --testPathPatterns="<pattern>"` or `yarn test:base -t "<name>"`. Never invoke `yarn jest`/`npx jest` directly: the required `--experimental-vm-modules` node flag lives only in the `test:base` wrapper, and bare jest crashes ESM/test262 suites. Don't run `yarn test` unless asked. When updating snapshots (`yarn test:base -u`), eyeball the diff first. See [TESTING_DOCS.md](TESTING_DOCS.md) for details.
 
 **Cover every line you add or change.** A commit must not lower coverage: each new branch, fast path, and fallback needs a test that exercises it (Codecov enforces this on the patch, target 90%+). When a change adds branches that integration cases don't reach — e.g. tokenizer fast paths and their cold-path fallbacks — add a focused `*.unittest.js` that drives each branch (both the fast and delegated paths). Check `yarn cover:unit` locally, or the PR's Codecov "patch" report, and add cases until no changed line is missing.
 

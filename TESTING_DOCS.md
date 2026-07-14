@@ -127,12 +127,12 @@ yarn test
 
 | Modified directory/file   | Command                                                                                       |
 | ------------------------- | --------------------------------------------------------------------------------------------- |
-| `test/*.unittest.js`      | `yarn test:base -- --testPathPatterns="<filename>"`                                           |
+| `test/*.unittest.js`      | `yarn test:base --testPathPatterns="<filename>"`                                              |
 | `test/cases/`             | `yarn test:basic`                                                                             |
-| `test/configCases/`       | `yarn test:basic -- --testPathPatterns="ConfigTestCases"`                                     |
-| `test/statsCases/`        | `yarn test:basic -- --testPathPatterns="StatsTestCases"`                                      |
-| `test/watchCases/`        | `yarn test:base -- --testPathPatterns="WatchTestCases"`                                       |
-| `test/hotCases/`          | `yarn test:base -- --testPathPatterns="HotTestCases"`                                         |
+| `test/configCases/`       | `yarn test:basic --testPathPatterns="ConfigTestCases"`                                        |
+| `test/statsCases/`        | `yarn test:basic --testPathPatterns="StatsTestCases"`                                         |
+| `test/watchCases/`        | `yarn test:base --testPathPatterns="WatchTestCases"`                                          |
+| `test/hotCases/`          | `yarn test:base --testPathPatterns="HotTestCases"`                                            |
 | `test/benchmarkCases/`    | `FILTER="<case-name>" yarn benchmark`                                                         |
 | `test/test262-cases/`     | `yarn test:test262` (requires `git submodule update --init test/test262-cases` first)         |
 | `test/html5lib-tests/`    | `yarn test:html5lib` (requires `git submodule update --init test/html5lib-tests` first)       |
@@ -141,13 +141,13 @@ yarn test
 **Running a single test case** with `--testNamePattern`. The test name format is `<category> <case-name>` (e.g., `css basic`, `asset url`):
 
 ```sh
-yarn test:basic -- --testPathPatterns="ConfigTestCases" --testNamePattern="css basic"
+yarn test:basic --testPathPatterns="ConfigTestCases" --testNamePattern="css basic"
 ```
 
 Multiple patterns can be combined with `|`:
 
 ```sh
-yarn test:basic -- --testPathPatterns="ConfigTestCases" --testNamePattern="css basic|css url"
+yarn test:basic --testPathPatterns="ConfigTestCases" --testNamePattern="css basic|css url"
 ```
 
 ## Contribution Guide
