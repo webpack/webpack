@@ -163,7 +163,8 @@ it("mixed page: CSS may follow the defer script but stays ahead of the blocking 
 	const html = read("page-mixed-css.html");
 	const deferIdx = html.search(/<script src="[^"]+" defer>/);
 	const linkIdx = html.indexOf('<link rel="stylesheet"');
-	const blockingIdx = html.search(/<script src="[^"]+"><\/script>/);
+	// `>` right after the src value = no `defer` attribute (the blocking tag)
+	const blockingIdx = html.search(/<script src="[^"]+">/);
 	expect(deferIdx).toBeGreaterThanOrEqual(0);
 	expect(blockingIdx).toBeGreaterThanOrEqual(0);
 	expect(linkIdx).toBeGreaterThan(deferIdx);
