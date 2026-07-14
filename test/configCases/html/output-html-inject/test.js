@@ -18,9 +18,10 @@ it("inject:head puts scripts in <head>, body is empty", () => {
 	expect(bodyContent(html)).not.toMatch(/<script/);
 });
 
-it("inject:false produces no chunk <script> tags in synthetic HTML", () => {
+it("inject:false on synthetic HTML keeps only the entry <script> tag", () => {
 	const html = read("false.html");
-	expect(html).not.toMatch(/<script src=/);
+	expect(scripts(html).length).toBe(1);
+	expect(bodyContent(html)).toMatch(/<script[^>]* src="[^"]+\.js"/);
 });
 
 it("inject:false on authored HTML skips sibling chunks but keeps entry tag", () => {
@@ -69,13 +70,73 @@ it("output.module: true defaults inject to head (module scripts are implicitly d
 	expect(bodyContent(html)).not.toMatch(/<script/);
 });
 
-it("inject:head with no </head> tag falls back to inserting siblings before the entry tag", () => {
+it("inject:false keeps opt-in resource hints for the suppressed siblings", () => {
+	const html = read("page-false-hints.html");
+	expect(scripts(html).length).toBe(1);
+	expect(html).toMatch(/<link rel="preload" as="script"/);
+});
+
+it("inject:head keeps injected stylesheets ahead of the first script", () => {
+	const html = read("page-head-css.html");
+	const linkIdx = html.search(/<link rel="stylesheet"/);
+	const scriptIdx = html.search(/<script/);
+	expect(linkIdx).toBeGreaterThanOrEqual(0);
+	expect(linkIdx).toBeLessThan(scriptIdx);
+});
+
+it("inject:false on synthetic HTML keeps the entry tag, suppresses the runtime sibling", () => {
+	const html = read("false-split.html");
+	expect(scripts(html).length).toBe(1);
+	expect(html).toMatch(/<script[^>]* src="[^"]+\.js"/);
+	expect(html).not.toMatch(/runtime\.js/);
+});
+
+it("inject:head ignores `</head>` inside a comment", () => {
+	const html = read("page-head-comment.html");
+	const comment = html.slice(html.indexOf("<!--"), html.indexOf("-->"));
+	expect(comment).not.toMatch(/<script/);
+	const runtimeIdx = html.indexOf("runtime.js");
+	expect(runtimeIdx).toBeGreaterThan(html.indexOf("-->"));
+	expect(runtimeIdx).toBeLessThan(html.lastIndexOf("</head>"));
+});
+
+it("inject:head with no head tags anchors just inside the implicit head", () => {
 	const html = read("page-nohead.html");
-	// both runtime and entry scripts land in <body> (no </head> to target)
+	// no head markup is added
 	expect(html).not.toMatch(/<head>/i);
 	expect(scripts(html).length).toBe(2);
 	// runtime sibling appears before the entry script in document order
 	const runtimeIdx = html.indexOf("runtime.js");
 	const entryIdx = html.search(/__html_[a-f0-9]+_0\.js/);
 	expect(runtimeIdx).toBeLessThan(entryIdx);
+	// hints anchor there too
+	expect(html).toMatch(/<link rel="preload" as="script"/);
+});
+
+it("inject:head anchors inside an implied head, after its last child", () => {
+	const html = read("page-implied-head.html");
+	const runtimeIdx = html.indexOf("runtime.js");
+	expect(runtimeIdx).toBeGreaterThan(html.indexOf("</title>"));
+	expect(runtimeIdx).toBeLessThan(html.indexOf("<body>"));
+});
+
+it("bare-script page: siblings stay before the entry, hints use the pre-script fallback", () => {
+	const html = read("page-bare-script.html");
+	expect(scripts(html).length).toBe(2);
+	const runtimeIdx = html.indexOf("runtime.js");
+	const entryIdx = html.search(/__html_[a-f0-9]+_0\.js/);
+	expect(runtimeIdx).toBeLessThan(entryIdx);
+	expect(html).toMatch(/<link rel="preload" as="script"/);
+});
+
+it("inject:head hoists a body entry's stylesheet into <head>", () => {
+	const html = read("page-body-css.html");
+	expect(headContent(html)).toMatch(/<link rel="stylesheet"/);
+	expect(bodyContent(html)).not.toMatch(/<link rel="stylesheet"/);
+});
+
+it("explicit inject:body beats the output.module head default", () => {
+	const html = read("module-inject-body.html");
+	expect(bodyContent(html)).toMatch(/<script type="module"/);
+	expect(headContent(html)).not.toMatch(/<script/);
 });
