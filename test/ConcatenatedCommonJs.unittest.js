@@ -22,7 +22,7 @@ const createScope = () => {
 		rawExportMap: undefined
 	};
 	return new ConcatenationScope(
-		new Map([[info.module, info]]),
+		/** @type {EXPECTED_ANY} */ (new Map([[info.module, info]])),
 		/** @type {EXPECTED_ANY} */ (info),
 		new Set()
 	);
@@ -57,9 +57,11 @@ describe("getConcatenatedExportAccess", () => {
 	it("should register the export symbol in the concatenation scope", () => {
 		const scope = createScope();
 		getConcatenatedExportAccess(scope, [], ["foo"]);
-		expect(scope._currentModule.exportMap.get("foo")).toBe(
-			"__WEBPACK_CJS_EXPORT_foo__"
-		);
+		expect(
+			/** @type {Map<string, string>} */ (scope._currentModule.exportMap).get(
+				"foo"
+			)
+		).toBe("__WEBPACK_CJS_EXPORT_foo__");
 	});
 });
 
