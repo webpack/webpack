@@ -5,7 +5,7 @@ module.exports = {
 	mode: "production",
 	devtool: false,
 	optimization: {
-		concatenateModules: true,
+		concatenateModules: { commonjs: false },
 		minimize: false,
 		moduleIds: "named",
 		chunkIds: "named"

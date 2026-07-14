@@ -4355,7 +4355,7 @@ type ConcatSourceChild = string | Source | SourceLike;
  */
 declare interface ConcatenateModulesOptions {
 	/**
-	 * Also concatenate CommonJS modules with statically analyzable exports.
+	 * Also concatenate CommonJS modules with statically analyzable exports. Defaults to 'true'.
 	 */
 	commonjs?: boolean;
 }

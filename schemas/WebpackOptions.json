@@ -369,7 +369,7 @@
       "additionalProperties": false,
       "properties": {
         "commonjs": {
-          "description": "Also concatenate CommonJS modules with statically analyzable exports.",
+          "description": "Also concatenate CommonJS modules with statically analyzable exports. Defaults to 'true'.",
           "type": "boolean"
         }
       }

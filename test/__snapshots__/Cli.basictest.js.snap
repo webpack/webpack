@@ -7474,13 +7474,13 @@ Object {
   "optimization-concatenate-modules-commonjs": Object {
     "configs": Array [
       Object {
-        "description": "Also concatenate CommonJS modules with statically analyzable exports.",
+        "description": "Also concatenate CommonJS modules with statically analyzable exports. Defaults to 'true'.",
         "multiple": false,
         "path": "optimization.concatenateModules.commonjs",
         "type": "boolean",
       },
     ],
-    "description": "Also concatenate CommonJS modules with statically analyzable exports.",
+    "description": "Also concatenate CommonJS modules with statically analyzable exports. Defaults to 'true'.",
     "multiple": false,
     "simpleType": "boolean",
   },

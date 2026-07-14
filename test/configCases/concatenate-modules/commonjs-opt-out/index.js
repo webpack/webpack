@@ -1,6 +1,6 @@
 import { answer } from "./nice";
 
-it("should not concatenate CommonJS modules unless opted in", () => {
+it("should not concatenate CommonJS modules when opted out", () => {
 	expect(answer).toBe(42);
 	const concatModules = __STATS__.modules.filter((m) => m.modules);
 	expect(concatModules.length).toBe(0);
