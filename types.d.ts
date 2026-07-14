@@ -19223,6 +19223,11 @@ declare interface OutputHtmlOptions {
 	scriptLoading?: "auto" | "defer" | "blocking";
 
 	/**
+	 * Path to an HTML file used as the base template when wrapping a non-HTML entry. The file is processed by the HTML pipeline so `output.html.title`, `output.html.meta`, `output.html.inject`, and other options still apply. Relative paths are resolved from the webpack `context`.
+	 */
+	template?: string;
+
+	/**
 	 * Sets the `<title>` of the generated HTML page. Skipped if the HTML already contains a `<title>` element.
 	 */
 	title?: string;

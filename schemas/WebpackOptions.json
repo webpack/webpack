@@ -4465,6 +4465,10 @@
           "description": "How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.",
           "enum": ["auto", "blocking", "defer"]
         },
+        "template": {
+          "description": "Path to an HTML file used as the base template when wrapping a non-HTML entry. The file is processed by the HTML pipeline so `output.html.title`, `output.html.meta`, `output.html.inject`, and other options still apply. Relative paths are resolved from the webpack `context`.",
+          "type": "string"
+        },
         "title": {
           "description": "Sets the `<title>` of the generated HTML page. Skipped if the HTML already contains a `<title>` element.",
           "type": "string"
