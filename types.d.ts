@@ -7138,6 +7138,11 @@ declare interface Environment {
 	forOf?: boolean;
 
 	/**
+	 * The environment supports generator functions and yield ('function* () { yield ... }').
+	 */
+	generator?: boolean;
+
+	/**
 	 * The environment supports 'globalThis'.
 	 */
 	globalThis?: boolean;
@@ -13281,6 +13286,11 @@ declare interface KnownBuildInfo {
 	 * true when the module is part of a circular dependency chain
 	 */
 	isCircular?: boolean;
+
+	/**
+	 * module uses top-level `for await…of`, which can't be lowered to a generator
+	 */
+	usesTopLevelAwaitForOf?: boolean;
 }
 declare interface KnownBuildMeta {
 	exportsType?: "default" | "namespace" | "flagged" | "dynamic";
@@ -22811,6 +22821,7 @@ declare abstract class RuntimeTemplate {
 	supportsLogicalAssignment(): boolean;
 	supportsArrowFunction(): boolean;
 	supportsAsyncFunction(): boolean;
+	supportsGenerator(): boolean;
 	supportsOptionalChaining(): boolean;
 	supportsSpread(): boolean;
 	supportsObjectHasOwn(): boolean;
@@ -26782,6 +26793,7 @@ declare namespace exports {
 		export let asyncModule: "__webpack_require__.a";
 		export let asyncModuleDoneSymbol: "__webpack_require__.aD";
 		export let asyncModuleExportSymbol: "__webpack_require__.aE";
+		export let asyncModuleGenerator: "__webpack_require__.aG";
 		export let baseURI: "__webpack_require__.b";
 		export let chunkCallback: "webpackChunk";
 		export let chunkName: "__webpack_require__.cn";

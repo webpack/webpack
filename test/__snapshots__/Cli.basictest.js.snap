@@ -8668,6 +8668,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-generator": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports generator functions and yield ('function* () { yield ... }').",
+        "multiple": false,
+        "path": "output.environment.generator",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports generator functions and yield ('function* () { yield ... }').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-global-this": Object {
     "configs": Array [
       Object {
