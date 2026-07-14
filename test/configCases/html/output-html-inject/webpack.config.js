@@ -190,5 +190,71 @@ module.exports = [
 		output: { filename: "[name].js", module: true, html: { inject: "body" } },
 		experiments: { html: true, outputModule: true },
 		plugins: [copyTest]
+	},
+	// stylesheet entry with a split CSS sibling: the sibling clones the
+	// original <link> (so `media` carries over) at the head anchor
+	{
+		name: "authored-css-link-split",
+		target: "web",
+		entry: { "authored-css-link-split": "./src/page-css-link-split.html" },
+		output: {
+			filename: "[name].js",
+			chunkFilename: "[name].chunk.js",
+			html: { inject: "head" }
+		},
+		optimization: {
+			chunkIds: "named",
+			splitChunks: {
+				cacheGroups: {
+					shared: {
+						test: /shared\.css$/,
+						name: "shared-css",
+						chunks: "all",
+						enforce: true
+					}
+				}
+			}
+		},
+		experiments: { html: true, css: true },
+		plugins: [copyTest]
+	},
+	// three split CSS chunks imported in anti-alphabetical order: the
+	// injected links must follow the import order, not the chunk order
+	{
+		name: "authored-css-order",
+		target: "web",
+		entry: { "authored-css-order": "./src/page-css-order.html" },
+		output: {
+			filename: "[name].js",
+			chunkFilename: "[name].chunk.js",
+			html: { inject: "head" }
+		},
+		optimization: {
+			chunkIds: "named",
+			splitChunks: {
+				cacheGroups: {
+					cssA: {
+						test: /css-a\.css$/,
+						name: "css-a",
+						chunks: "all",
+						enforce: true
+					},
+					cssB: {
+						test: /css-b\.css$/,
+						name: "css-b",
+						chunks: "all",
+						enforce: true
+					},
+					cssC: {
+						test: /css-c\.css$/,
+						name: "css-c",
+						chunks: "all",
+						enforce: true
+					}
+				}
+			}
+		},
+		experiments: { html: true, css: true },
+		plugins: [copyTest]
 	}
 ];

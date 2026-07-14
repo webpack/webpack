@@ -135,6 +135,28 @@ it("inject:head hoists a body entry's stylesheet into <head>", () => {
 	expect(bodyContent(html)).not.toMatch(/<link rel="stylesheet"/);
 });
 
+it("stylesheet entry: split CSS sibling clones the original <link> in <head>", () => {
+	const html = read("page-css-link-split.html");
+	const links = html.match(/<link rel="stylesheet"[^>]*>/g) || [];
+	expect(links.length).toBe(2);
+	// the sibling clone keeps the author's `media` attribute
+	for (const link of links) {
+		expect(link).toMatch(/media="screen"/);
+	}
+	expect(headContent(html)).toMatch(/shared-css/);
+});
+
+it("split CSS chunks keep the source import order in <head>", () => {
+	const html = read("page-css-order.html");
+	const head = headContent(html);
+	const c = head.indexOf("css-c");
+	const b = head.indexOf("css-b");
+	const a = head.indexOf("css-a");
+	expect(c).toBeGreaterThanOrEqual(0);
+	expect(c).toBeLessThan(b);
+	expect(b).toBeLessThan(a);
+});
+
 it("explicit inject:body beats the output.module head default", () => {
 	const html = read("module-inject-body.html");
 	expect(bodyContent(html)).toMatch(/<script type="module"/);
