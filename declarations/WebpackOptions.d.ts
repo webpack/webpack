@@ -2658,6 +2658,10 @@ export interface Environment {
 	 */
 	forOf?: boolean;
 	/**
+	 * The environment supports generator functions and yield ('function* () { yield ... }').
+	 */
+	generator?: boolean;
+	/**
 	 * The environment supports 'globalThis'.
 	 */
 	globalThis?: boolean;

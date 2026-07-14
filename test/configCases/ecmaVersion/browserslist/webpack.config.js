@@ -17,6 +17,7 @@ module.exports = {
 			  "dynamicImport": true,
 			  "dynamicImportInWorker": true,
 			  "forOf": true,
+			  "generator": true,
 			  "globalThis": true,
 			  "hasOwn": true,
 			  "importMetaDirnameAndFilename": true,

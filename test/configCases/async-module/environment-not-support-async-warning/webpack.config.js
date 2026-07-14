@@ -11,6 +11,9 @@ module.exports = {
 			}
 		]
 	},
+	// `es5` has neither `async`/`await` nor generators, so async modules can be
+	// lowered to neither and the warning must still fire.
+	target: ["node", "es5"],
 	output: {
 		environment: {
 			dynamicImport: true,

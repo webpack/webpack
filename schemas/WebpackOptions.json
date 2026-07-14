@@ -1089,6 +1089,10 @@
           "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
           "type": "boolean"
         },
+        "generator": {
+          "description": "The environment supports generator functions and yield ('function* () { yield ... }').",
+          "type": "boolean"
+        },
         "globalThis": {
           "description": "The environment supports 'globalThis'.",
           "type": "boolean"
