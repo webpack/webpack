@@ -1,4 +1,4 @@
-globalThis.CUSTOM_META_ENV = { A: "a" };
+global.CUSTOM_META_ENV = { A: "a" };
 
 it("should defer whole-object reads to a custom definition", () => {
 	const env = import.meta.env;
