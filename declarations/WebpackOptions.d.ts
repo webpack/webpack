@@ -2734,6 +2734,10 @@ export interface OutputHtmlOptions {
 				target?: string;
 		  };
 	/**
+	 * Where to place injected chunk `<script>`/`<link>` tags. `"body"` (default) appends them before `</body>`; `"head"` places them in `<head>`; `false` suppresses all sibling-chunk injection.
+	 */
+	inject?: ("body" | "head") | false;
+	/**
 	 * Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; an array of `RegExp` patterns matches against the chunk name.
 	 */
 	inline?: RegExp[] | boolean;
