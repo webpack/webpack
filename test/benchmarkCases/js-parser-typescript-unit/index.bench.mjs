@@ -24,11 +24,32 @@ const threeEsmMinSource = fs.readFileSync(
  * @returns {void}
  */
 export default (bench) => {
-	// script-flavored CJS, parse + walk
-	bench.add('unit benchmark "js-parser-typescript-unit"', () => {
-		const parser = new JavascriptParser("auto");
-		parser.parse(typescriptSource, {});
-	});
+	// auto mode
+	bench.add(
+		"unit benchmark \"js-parser-typescript-unit\", sourceType 'auto'",
+		() => {
+			const parser = new JavascriptParser("auto");
+			parser.parse(typescriptSource, {});
+		}
+	);
+
+	// forced ecma module mode, strict parse, no fallback
+	bench.add(
+		"unit benchmark \"js-parser-typescript-unit\", sourceType 'module'",
+		() => {
+			const parser = new JavascriptParser("module");
+			parser.parse(typescriptSource, {});
+		}
+	);
+
+	// forced classic script mode
+	bench.add(
+		"unit benchmark \"js-parser-typescript-unit\", sourceType 'script'",
+		() => {
+			const parser = new JavascriptParser("script");
+			parser.parse(typescriptSource, {});
+		}
+	);
 
 	// acorn only, no walk; same options as parse() to isolate walker changes
 	bench.add(
