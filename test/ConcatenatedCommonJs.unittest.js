@@ -10,6 +10,7 @@ const CommonJsExportsDependency = require("../lib/dependencies/CommonJsExportsDe
 const CommonJsRequireDependency = require("../lib/dependencies/CommonJsRequireDependency");
 const CommonJsSelfReferenceDependency = require("../lib/dependencies/CommonJsSelfReferenceDependency");
 const JavascriptGenerator = require("../lib/javascript/JavascriptGenerator");
+const { isCommonJsWrapped } = require("../lib/javascript/JavascriptGenerator");
 
 /**
  * @returns {import("../lib/ConcatenationScope")} a concatenation scope over a single module info
@@ -166,6 +167,21 @@ describe("JavascriptGenerator CommonJS concatenation eligibility", () => {
 			/** @type {EXPECTED_ANY} */ ({ concatenateCommonJsModules: true })
 		);
 
+	/**
+	 * @param {Partial<import("../lib/NormalModule")>} overrides module shape
+	 * @returns {boolean} whether the module must be wrapped rather than hoisted
+	 */
+	const wrappedFor = (overrides) =>
+		isCommonJsWrapped(
+			/** @type {EXPECTED_ANY} */ ({
+				buildMeta: { exportsType: "default" },
+				buildInfo: { strict: true },
+				dependencies: [],
+				presentationalDependencies: [],
+				...overrides
+			})
+		);
+
 	it("should accept a module with static exports and no dependencies", () => {
 		expect(bailoutFor({})).toBeUndefined();
 	});
@@ -182,54 +198,77 @@ describe("JavascriptGenerator CommonJS concatenation eligibility", () => {
 		);
 	});
 
-	it("should reject exports assigned via an unsupported base", () => {
-		expect(
-			bailoutFor({
-				dependencies: [
-					new CommonJsExportsDependency([0, 1], null, "this", ["foo"])
-				]
-			})
-		).toBe("Module uses this to define exports");
+	// The following export shapes cannot be hoisted, but instead of bailing out
+	// they are now eligible for wrapping (rendered inside an IIFE with real
+	// module/exports objects), so the eligibility check returns undefined and
+	// isCommonJsWrapped classifies them as wrapped.
+	it("should wrap exports assigned via an unsupported base", () => {
+		const overrides = {
+			dependencies: [
+				new CommonJsExportsDependency([0, 1], null, "this", ["foo"])
+			]
+		};
+		expect(bailoutFor(overrides)).toBeUndefined();
+		expect(wrappedFor(overrides)).toBe(true);
 	});
 
-	it("should reject exports dependencies without names", () => {
-		expect(
-			bailoutFor({
-				dependencies: [
-					new CommonJsExportsDependency([0, 1], null, "exports", [])
-				]
-			})
-		).toBe("Module exports are used in an unsupported way");
+	it("should wrap exports dependencies without names", () => {
+		const overrides = {
+			dependencies: [new CommonJsExportsDependency([0, 1], null, "exports", [])]
+		};
+		expect(bailoutFor(overrides)).toBeUndefined();
+		expect(wrappedFor(overrides)).toBe(true);
 	});
 
-	it("should reject self-references via an unsupported base", () => {
-		expect(
-			bailoutFor({
-				dependencies: [
-					new CommonJsSelfReferenceDependency([0, 1], "this", ["foo"], false)
-				]
-			})
-		).toBe("Module references its exports via this");
+	it("should wrap self-references via an unsupported base", () => {
+		const overrides = {
+			dependencies: [
+				new CommonJsSelfReferenceDependency([0, 1], "this", ["foo"], false)
+			]
+		};
+		expect(bailoutFor(overrides)).toBeUndefined();
+		expect(wrappedFor(overrides)).toBe(true);
 	});
 
-	it("should reject self-references without names", () => {
-		expect(
-			bailoutFor({
-				dependencies: [
-					new CommonJsSelfReferenceDependency([0, 1], "exports", [], false)
-				]
-			})
-		).toBe("Module uses exports as a value");
+	it("should wrap self-references without names", () => {
+		const overrides = {
+			dependencies: [
+				new CommonJsSelfReferenceDependency([0, 1], "exports", [], false)
+			]
+		};
+		expect(bailoutFor(overrides)).toBeUndefined();
+		expect(wrappedFor(overrides)).toBe(true);
 	});
 
-	it("should reject a self-reference used as call context", () => {
+	it("should wrap a self-reference used as call context", () => {
+		const overrides = {
+			dependencies: [
+				new CommonJsSelfReferenceDependency([0, 1], "exports", ["f"], true)
+			]
+		};
+		expect(bailoutFor(overrides)).toBeUndefined();
+		expect(wrappedFor(overrides)).toBe(true);
+	});
+
+	it("should hoist (not wrap) a module with only nice exports", () => {
+		const overrides = {
+			dependencies: [
+				new CommonJsExportsDependency([0, 1], null, "exports", ["foo"])
+			]
+		};
+		expect(bailoutFor(overrides)).toBeUndefined();
+		expect(wrappedFor(overrides)).toBe(false);
+	});
+
+	it("should not wrap a weird module that also requires another module", () => {
 		expect(
 			bailoutFor({
 				dependencies: [
-					new CommonJsSelfReferenceDependency([0, 1], "exports", ["f"], true)
+					new CommonJsSelfReferenceDependency([0, 1], "exports", [], false),
+					new CommonJsRequireDependency("./dep", [2, 3], undefined)
 				]
 			})
-		).toBe("Module calls exports.f with its exports as call context");
+		).toBe("Module uses cjs require which is not supported when wrapping");
 	});
 
 	it("should accept supported require dependencies", () => {

@@ -84,6 +84,7 @@ it("should honor the __esModule interop flag when wrapping", () => {
 
 it("should wrap the `module.exports = exports = {}` alias form", () => {
 	expect(moduleExportsExports.z).toBe(9);
+	expect(moduleExportsExports.y).toBe(10);
 });
 
 it("should wrap parenthesized `(module.exports = {}).x =`", () => {
