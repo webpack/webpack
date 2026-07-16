@@ -1718,7 +1718,7 @@
         },
         "compression": {
           "description": "Compression type used for the cache files.",
-          "enum": [false, "gzip", "brotli"]
+          "enum": [false, "gzip", "brotli", "zstd"]
         },
         "hashAlgorithm": {
           "description": "Algorithm used for generation the hash (see node.js crypto package).",
