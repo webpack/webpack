@@ -899,6 +899,10 @@ export type ExternalItemValue =
 	| string
 	| (ExternalItemValueObjectKnown & ExternalItemValueObjectUnknown);
 /**
+ * Configure how the HTML source is parsed: `"document"` (the default) parses a full page; any other value is the tag name of the context element to parse the source as that element's inner HTML (a fragment) — e.g. `"template"` for a neutral fragment, or `"tbody"` so context-sensitive tags like a bare `<tr>`/`<td>` are kept instead of dropped.
+ */
+export type HtmlParserAs = "document" | string;
+/**
  * Ignore specific warnings.
  */
 export type IgnoreWarningsNormalized =
@@ -3779,6 +3783,10 @@ export interface HtmlGeneratorOptions {
  * Parser options for html modules.
  */
 export interface HtmlParserOptions {
+	/**
+	 * Configure how the HTML source is parsed: `"document"` (the default) parses a full page; any other value is the tag name of the context element to parse the source as that element's inner HTML (a fragment) — e.g. `"template"` for a neutral fragment, or `"tbody"` so context-sensitive tags like a bare `<tr>`/`<td>` are kept instead of dropped.
+	 */
+	as?: HtmlParserAs;
 	/**
 	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `"..."` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
 	 */
