@@ -2517,6 +2517,10 @@
           "type": "boolean",
           "deprecated": true
         },
+        "strictModeViolations": {
+          "description": "Specifies the behavior of constructs that break at runtime in strict mode (e.g. 'with', 'arguments.callee', assigning to read-only globals) when modules are emitted as ES module output.",
+          "enum": ["error", "warn", false]
+        },
         "strictThisContextOnImports": {
           "description": "Handle the this context correctly according to the spec for namespace objects.",
           "type": "boolean"
