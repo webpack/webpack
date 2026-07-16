@@ -17,6 +17,10 @@ function readsCalleeName() {
 	return arguments.callee.name;
 }
 
+function computedCallee() {
+	return arguments["callee"];
+}
+
 function assignsReadOnlyGlobal() {
 	undefined = 1;
 }
@@ -30,8 +34,8 @@ function assignsReadOnlyInfinity() {
 }
 
 // The rest keeps its behavior in strict mode — no diagnostics.
-function computedAccess() {
-	return arguments["callee"];
+function dynamicAccess(key) {
+	return arguments[key];
 }
 
 function shadowsUndefined() {
@@ -45,10 +49,11 @@ module.exports = {
 	usesCaller,
 	recursesViaCallee,
 	readsCalleeName,
+	computedCallee,
 	assignsReadOnlyGlobal,
 	updatesReadOnlyGlobal,
 	assignsReadOnlyInfinity,
-	computedAccess,
+	dynamicAccess,
 	shadowsUndefined,
 	value: 42
 };
