@@ -1,0 +1,5 @@
+@import "./imported.css";
+
+body {
+	padding: 10px;
+}
