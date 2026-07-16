@@ -16,16 +16,16 @@ function readsCalleeName() {
 	return arguments.callee.name;
 }
 
-function assignsUndeclared() {
-	undeclaredGlobal = 1;
-}
-
-function updatesUndeclared() {
-	undeclaredCounter++;
-}
-
 function assignsReadOnlyGlobal() {
 	undefined = 1;
+}
+
+function updatesReadOnlyGlobal() {
+	NaN++;
+}
+
+function assignsReadOnlyInfinity() {
+	Infinity = 0;
 }
 
 function assignsEval() {
@@ -49,11 +49,10 @@ function computedAccess() {
 	return arguments["callee"];
 }
 
-function assignsDeclared() {
-	var declared = 1;
-	declared = 2;
-	declared++;
-	return declared;
+function shadowsUndefined() {
+	var undefined = 1;
+	undefined = 2;
+	return undefined;
 }
 
 module.exports = {
@@ -61,12 +60,12 @@ module.exports = {
 	usesCaller,
 	recursesViaCallee,
 	readsCalleeName,
-	assignsUndeclared,
-	updatesUndeclared,
 	assignsReadOnlyGlobal,
+	updatesReadOnlyGlobal,
+	assignsReadOnlyInfinity,
 	assignsEval,
 	shadowsArguments,
 	computedAccess,
-	assignsDeclared,
+	shadowsUndefined,
 	value: 42
 };

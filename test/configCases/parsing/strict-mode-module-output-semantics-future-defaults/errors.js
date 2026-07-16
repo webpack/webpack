@@ -12,16 +12,10 @@ module.exports = [
 	[{ message: /Accessing "arguments\.callee" is not allowed/ }],
 	[
 		{
-			message:
-				/Assigning to the undeclared variable "undeclaredGlobal" is not allowed/
+			message: /Assigning to the read-only global "undefined" is not allowed/
 		}
 	],
-	[
-		{
-			message:
-				/Assigning to the undeclared variable "undeclaredCounter" is not allowed/
-		}
-	],
-	[{ message: /Assigning to the read-only global "undefined" is not allowed/ }],
+	[{ message: /Assigning to the read-only global "NaN" is not allowed/ }],
+	[{ message: /Assigning to the read-only global "Infinity" is not allowed/ }],
 	[{ message: /Assigning to "eval" is not allowed/ }]
 ];

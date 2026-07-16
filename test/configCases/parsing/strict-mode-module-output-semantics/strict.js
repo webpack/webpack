@@ -5,8 +5,8 @@ function strictCallee() {
 	return arguments.callee;
 }
 
-function strictAssign() {
-	undeclaredInStrict = 1;
+function strictReadOnlyAssign() {
+	undefined = 1;
 }
 
-module.exports = { strictCallee, strictAssign };
+module.exports = { strictCallee, strictReadOnlyAssign };
