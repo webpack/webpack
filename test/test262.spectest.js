@@ -1063,6 +1063,9 @@ const knownBugs = [
 	"module-code/top-level-await/await-dynamic-import-resolution.js",
 	"module-code/top-level-await/fulfillment-order.js",
 	"module-code/top-level-await/module-graphs-does-not-hang.js",
+	// Dynamic import of a fulfilled member of an errored TLA cycle must reject
+	// with the cycle root's evaluation error; webpack fulfills it instead.
+	"expressions/dynamic-import/import-fulfilled-member-of-errored-cycle.js",
 
 	// Same root cause as the postfix variants above: getter on a global `this`
 	// property must run before the increment writes back, but webpack scopes
