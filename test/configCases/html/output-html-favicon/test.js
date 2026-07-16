@@ -52,8 +52,10 @@ it("injects favicon into authored HTML entry", () => {
 
 it("favicon is the first tag inside <head> in authored HTML", () => {
 	const html = readHtml("authored.html");
-	const headContent = html.match(/<head>([\s\S]*?)<\/head>/i)?.[1] ?? "";
-	const firstTag = headContent.trim().match(/^<[^>]+>/)?.[0] ?? "";
+	const headContentMatch = html.match(/<head>([\s\S]*?)<\/head>/i);
+	const headContent = headContentMatch ? headContentMatch[1] : "";
+	const firstTagMatch = headContent.trim().match(/^<[^>]+>/);
+	const firstTag = firstTagMatch ? firstTagMatch[0] : "";
 	expect(firstTag).toMatch(/rel="icon"/i);
 });
 
@@ -82,18 +84,18 @@ it("injects favicon into all pages of a multi-page authored HTML build", () => {
 
 it("does not double-inject when authored HTML has <link rel='icon'> with single quotes", () => {
 	const html = readHtml("has-icon-squote.html");
-	const matches = html.match(/rel\s*=\s*["']?(?:shortcut\s+)?icon/gi) ?? [];
+	const matches = html.match(/rel\s*=\s*["']?(?:shortcut\s+)?icon/gi) || [];
 	expect(matches.length).toBe(1);
 });
 
 it("does not double-inject when authored HTML has <LINK REL=\"ICON\"> uppercase", () => {
 	const html = readHtml("has-icon-upper.html");
-	const matches = html.match(/rel\s*=\s*["']?(?:shortcut\s+)?icon/gi) ?? [];
+	const matches = html.match(/rel\s*=\s*["']?(?:shortcut\s+)?icon/gi) || [];
 	expect(matches.length).toBe(1);
 });
 
 it("does not double-inject when authored HTML has <link rel=\"shortcut icon\">", () => {
 	const html = readHtml("has-shortcut-icon.html");
-	const matches = html.match(/rel\s*=\s*["']?(?:shortcut\s+)?icon/gi) ?? [];
+	const matches = html.match(/rel\s*=\s*["']?(?:shortcut\s+)?icon/gi) || [];
 	expect(matches.length).toBe(1);
 });
