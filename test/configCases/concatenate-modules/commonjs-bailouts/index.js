@@ -1,5 +1,7 @@
+import * as circularA from "./circular-a";
 import * as exportRequire from "./export-require";
 import * as moduleId from "./module-id";
+import reexportRequire from "./reexport-require";
 import "./side-effect-only";
 import * as sloppy from "./sloppy";
 import * as wrapWithRequire from "./wrap-with-require";
@@ -10,6 +12,15 @@ it("should keep unsupported CommonJS modules working", () => {
 	expect(exportRequire.inner.s).toBe("sloppy");
 	expect(wrapWithRequire.default.s).toBe("sloppy");
 	expect(globalThis.__webpackWrappedSideEffect).toBe("ran");
+});
+
+it("should keep a whole `module.exports = require(...)` re-export working", () => {
+	expect(reexportRequire.s).toBe("sloppy");
+});
+
+it("should keep circular CommonJS requires working", () => {
+	expect(circularA.name).toBe("a");
+	expect(circularA.bName).toBe("b");
 });
 
 it("should not concatenate any of the unsupported modules", () => {
