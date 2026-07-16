@@ -3363,6 +3363,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-import-meta-resolve": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.resolve.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.importMeta.resolve",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.resolve.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-auto-import-meta-url": Object {
     "configs": Array [
       Object {
@@ -4341,6 +4354,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-import-meta-resolve": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.resolve.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.importMeta.resolve",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.resolve.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-dynamic-import-meta-url": Object {
     "configs": Array [
       Object {
@@ -5292,6 +5318,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-esm-import-meta-resolve": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.resolve.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.importMeta.resolve",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.resolve.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-esm-import-meta-url": Object {
     "configs": Array [
       Object {
@@ -5988,6 +6027,19 @@ Object {
       },
     ],
     "description": "Enable/disable evaluating import.meta.main.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-import-meta-resolve": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.resolve.",
+        "multiple": false,
+        "path": "module.parser.javascript.importMeta.resolve",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.resolve.",
     "multiple": false,
     "simpleType": "boolean",
   },

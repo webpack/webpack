@@ -4645,6 +4645,10 @@ export interface ImportMetaParserOptionsKnown {
 	 */
 	main?: boolean;
 	/**
+	 * Enable/disable evaluating import.meta.resolve.
+	 */
+	resolve?: boolean;
+	/**
 	 * Enable/disable evaluating import.meta.url.
 	 */
 	url?: boolean;
