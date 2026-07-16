@@ -11,7 +11,7 @@ it("should keep unsupported CommonJS modules working", () => {
 	expect(typeof moduleId.id).not.toBe("undefined");
 	expect(exportRequire.inner.s).toBe("sloppy");
 	expect(wrapWithRequire.default.s).toBe("sloppy");
-	expect(globalThis.__webpackWrappedSideEffect).toBe("ran");
+	expect(global.__webpackWrappedSideEffect).toBe("ran");
 });
 
 it("should keep a whole `module.exports = require(...)` re-export working", () => {
