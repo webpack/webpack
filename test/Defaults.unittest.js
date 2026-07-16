@@ -593,6 +593,7 @@ describe("snapshots", () => {
 		        "importMeta": true,
 		        "sourceImport": false,
 		        "strictExportPresence": undefined,
+		        "strictModeViolations": "warn",
 		        "strictThisContextOnImports": false,
 		        "typescript": true,
 		        "unknownContextCritical": true,
@@ -4007,6 +4008,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
+			-         "strictModeViolations": "warn",
+			+         "strictModeViolations": "error",
+			@@ ... @@
 			-     "unsafeCache": false,
 			+     "unsafeCache": [Function anonymous],
 			@@ ... @@
@@ -4438,7 +4442,7 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)raw(&|$)/,
 			+             "type": "asset/source",
-			+           },
+			@@ ... @@
 			+           Object {
 			+             "resourceQuery": /(\\?|&)url(&|$)/,
 			+             "type": "asset/resource",
@@ -4452,6 +4456,7 @@ describe("snapshots", () => {
 			+             "type": "asset/inline",
 			+           },
 			+         ],
+			+       },
 			@@ ... @@
 			-         "localIdentHashFunction": "md4",
 			+         "localIdentHashFunction": "xxhash64",
@@ -4463,6 +4468,9 @@ describe("snapshots", () => {
 			+         "localIdentHashFunction": "xxhash64",
 			@@ ... @@
 			+         "exportsPresence": "error",
+			@@ ... @@
+			-         "strictModeViolations": "warn",
+			+         "strictModeViolations": "error",
 			@@ ... @@
 			-     "__dirname": "mock",
 			-     "__filename": "mock",
@@ -4542,15 +4550,17 @@ describe("snapshots", () => {
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
-			@@ ... @@
+			-         },
 			-         "type": "css/module",
 			-       },
-			@@ ... @@
+			-       Object {
 			-         "mimetype": "text/css",
-			@@ ... @@
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
 			-         },
 			-         "type": "css",
-			@@ ... @@
+			-       },
 			-       Object {
 			-         "dependency": /css-import-local-module/,
 			-         "exclude": /\\.module\\.\\w+$/i,
@@ -4579,19 +4589,16 @@ describe("snapshots", () => {
 			-         },
 			-         "with": Object {
 			-           "type": "css",
-			-         },
+			@@ ... @@
 			-       },
-			-       Object {
+			@@ ... @@
 			-         "assert": Object {
 			-           "type": "css",
 			-         },
 			-         "parser": Object {
 			-           "exportType": "css-style-sheet",
 			-         },
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
-			-         },
+			@@ ... @@
 			-       },
 			-       Object {
 			-         "resolve": Object {
@@ -4672,13 +4679,11 @@ describe("snapshots", () => {
 			+     ],
 			+     "generator": Object {
 			@@ ... @@
-			-         },
-			-       },
 			-       "css": Object {
 			-         "import": true,
 			-         "namedExports": true,
 			-         "url": true,
-			@@ ... @@
+			-       },
 			-       "css/auto": Object {
 			-         "animation": true,
 			-         "container": true,
@@ -4686,7 +4691,7 @@ describe("snapshots", () => {
 			-         "dashedIdents": true,
 			-         "function": true,
 			-         "grid": true,
-			@@ ... @@
+			-       },
 			-       "css/global": Object {
 			-         "animation": true,
 			-         "container": true,
@@ -4706,6 +4711,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
+			-         "strictModeViolations": "warn",
+			+         "strictModeViolations": "error",
+			@@ ... @@
 			-     "__dirname": "mock",
 			-     "__filename": "mock",
 			-     "global": true,
@@ -4723,9 +4731,6 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
-			-           "...",
-			-         ],
-			-       },
 			-       "css-import": Object {
 			-         "conditionNames": Array [
 			-           "webpack",
@@ -4769,9 +4774,11 @@ describe("snapshots", () => {
 			-         ],
 			-         "mainFields": Array [
 			-           "style",
-			@@ ... @@
+			-           "...",
+			-         ],
 			-         "mainFiles": Array [],
 			-         "preferRelative": true,
+			-       },
 			@@ ... @@
 			+           ".html",
 			@@ ... @@

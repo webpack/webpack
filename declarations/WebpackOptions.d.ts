@@ -3917,6 +3917,10 @@ export interface JavascriptParserOptions {
 	 */
 	strictExportPresence?: boolean;
 	/**
+	 * Specifies the behavior of constructs that break at runtime in strict mode (e.g. 'with', 'arguments.callee', assigning to read-only globals) when modules are emitted as ES module output.
+	 */
+	strictModeViolations?: "error" | "warn" | false;
+	/**
 	 * Handle the this context correctly according to the spec for namespace objects.
 	 */
 	strictThisContextOnImports?: boolean;

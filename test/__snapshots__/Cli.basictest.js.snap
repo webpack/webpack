@@ -3644,6 +3644,24 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-strict-mode-violations": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of constructs that break at runtime in strict mode (e.g. 'with', 'arguments.callee', assigning to read-only globals) when modules are emitted as ES module output.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.strictModeViolations",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of constructs that break at runtime in strict mode (e.g. 'with', 'arguments.callee', assigning to read-only globals) when modules are emitted as ES module output.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-auto-strict-this-context-on-imports": Object {
     "configs": Array [
       Object {
@@ -4692,6 +4710,24 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-strict-mode-violations": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of constructs that break at runtime in strict mode (e.g. 'with', 'arguments.callee', assigning to read-only globals) when modules are emitted as ES module output.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.strictModeViolations",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of constructs that break at runtime in strict mode (e.g. 'with', 'arguments.callee', assigning to read-only globals) when modules are emitted as ES module output.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-strict-this-context-on-imports": Object {
     "configs": Array [
       Object {
@@ -5599,6 +5635,24 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-esm-strict-mode-violations": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of constructs that break at runtime in strict mode (e.g. 'with', 'arguments.callee', assigning to read-only globals) when modules are emitted as ES module output.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.strictModeViolations",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of constructs that break at runtime in strict mode (e.g. 'with', 'arguments.callee', assigning to read-only globals) when modules are emitted as ES module output.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-esm-strict-this-context-on-imports": Object {
     "configs": Array [
       Object {
@@ -6310,6 +6364,24 @@ Object {
     "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-strict-mode-violations": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of constructs that break at runtime in strict mode (e.g. 'with', 'arguments.callee', assigning to read-only globals) when modules are emitted as ES module output.",
+        "multiple": false,
+        "path": "module.parser.javascript.strictModeViolations",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of constructs that break at runtime in strict mode (e.g. 'with', 'arguments.callee', assigning to read-only globals) when modules are emitted as ES module output.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-strict-this-context-on-imports": Object {
     "configs": Array [

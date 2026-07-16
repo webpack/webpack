@@ -10720,6 +10720,7 @@ declare class JavascriptParser extends ParserClass {
 			parse?: (code: string, options: ParseOptions) => ParseResult;
 			typescript?: boolean;
 			importPhases?: boolean;
+			strictModeViolations?: false | "error" | "warn";
 		}
 	);
 	hooks: Readonly<{
@@ -11232,6 +11233,7 @@ declare class JavascriptParser extends ParserClass {
 		parse?: (code: string, options: ParseOptions) => ParseResult;
 		typescript?: boolean;
 		importPhases?: boolean;
+		strictModeViolations?: false | "error" | "warn";
 	};
 	scope: ScopeInfo;
 	state: JavascriptParserState;
@@ -13001,6 +13003,11 @@ declare interface JavascriptParserOptions {
 	 * @deprecated
 	 */
 	strictExportPresence?: boolean;
+
+	/**
+	 * Specifies the behavior of constructs that break at runtime in strict mode (e.g. 'with', 'arguments.callee', assigning to read-only globals) when modules are emitted as ES module output.
+	 */
+	strictModeViolations?: false | "error" | "warn";
 
 	/**
 	 * Handle the this context correctly according to the spec for namespace objects.
