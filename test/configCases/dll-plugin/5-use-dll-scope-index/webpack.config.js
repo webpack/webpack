@@ -1,0 +1,19 @@
+"use strict";
+
+const webpack = require("../../../../");
+
+/** @type {import("../../../../").Configuration} */
+module.exports = {
+	optimization: {
+		moduleIds: "named"
+	},
+	plugins: [
+		new webpack.DllReferencePlugin({
+			manifest: require("../../../js/config/dll-plugin/manifest-scope-index.json"),
+			name: "../0-create-dll-scope-index/dll.js",
+			scope: "scope",
+			sourceType: "commonjs2",
+			extensions: [".js", ".jsx"]
+		})
+	]
+};
