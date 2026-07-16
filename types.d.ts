@@ -4366,6 +4366,8 @@ declare interface ConcatenatedModuleInfo {
 	type: "concatenated";
 	module: Module;
 	index: number;
+	cjsWrapped?: boolean;
+	moduleObjectName?: string;
 	ast?: Program;
 	internalSource?: Source;
 	source?: ReplaceSource;

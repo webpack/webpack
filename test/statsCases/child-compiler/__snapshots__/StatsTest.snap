@@ -12,7 +12,7 @@ asset parent.js X bytes [emitted] (name: parent)
     > ./child1 child1
   ./child1.js [84] X bytes {12} [depth 0] [built] [code generated]
     [no exports used]
-    ModuleConcatenation bailout: Module is not an ECMAScript module
+    ModuleConcatenation bailout: Module is not in strict mode
     entry ./child1 child1
     
   Child first compiled successfully
