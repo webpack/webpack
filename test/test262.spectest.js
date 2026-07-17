@@ -737,16 +737,7 @@ const knownBugs = [
 	"eval-code/direct/var-env-var-init-global-exstng.js",
 
 	// acorn bugs
-	"identifiers/part-unicode-17.0.0-class-escaped.js",
-	"identifiers/part-unicode-17.0.0-class.js",
-	"identifiers/part-unicode-17.0.0-escaped.js",
-	"identifiers/part-unicode-17.0.0.js",
-	"identifiers/start-unicode-17.0.0-class-escaped.js",
-	"identifiers/start-unicode-17.0.0-class.js",
-	"identifiers/start-unicode-17.0.0-escaped.js",
-	"identifiers/start-unicode-17.0.0.js",
 	"statements/using/syntax/using-for-statement.js",
-	"statements/await-using/syntax/await-using-invalid-arraybindingpattern-does-not-break-element-access.js",
 	"statements/await-using/syntax/await-using-valid-for-await-using-of-of.js",
 
 	// Expected error because we use `Promise` to load modules, but this test overrides global `Promise`
@@ -817,8 +808,6 @@ const knownBugs = [
 	// the exported `valueOf`. Setting the prototype to `null` would impact
 	// other webpack-generated code paths.
 	"expressions/dynamic-import/custom-primitive.js",
-	// `import.meta` in script context should throw SyntaxError
-	"expressions/import.meta/syntax/goal-script.js",
 	// `with { type: 'text' }`: asset/source modules use module.exports, preventing pure ESM output for vm.SourceTextModule
 	"import/import-attributes/text-via-namespace.js",
 	// Bundler limitation: all modules share a single bundle-level import.meta, so distinct-per-module cannot be satisfied
@@ -832,9 +821,6 @@ const knownBugs = [
 
 	// Replacing `export default` will remove `default` name by spec, need to `static name = "default";` if doesn't exist
 	"expressions/class/elements/class-name-static-initializer-default-export.js",
-
-	// improve test runner to keep dynamic import for such case
-	"expressions/dynamic-import/assign-expr-get-value-abrupt-throws.js",
 
 	"eval-code/indirect/var-env-func-init-global-update-configurable.js",
 	"eval-code/indirect/var-env-var-init-global-exstng.js",
@@ -853,8 +839,6 @@ const knownBugs = [
 	"global-code/script-decl-func-err-non-configurable.js",
 	"global-code/script-decl-func-err-non-extensible.js",
 	"global-code/script-decl-func.js",
-	"global-code/script-decl-lex-deletion.js",
-	"global-code/script-decl-lex.js",
 	"global-code/script-decl-var-collision.js",
 	"global-code/script-decl-var-err.js",
 	"global-code/script-decl-var.js",
@@ -927,7 +911,6 @@ const knownBugs = [
 	"expressions/dynamic-import/syntax/valid/nested-if-nested-imports.js",
 	"expressions/dynamic-import/syntax/valid/nested-while-nested-imports.js",
 	"expressions/dynamic-import/syntax/valid/nested-with-expression-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-with-expression-script-code-valid.js",
 	"expressions/dynamic-import/syntax/valid/top-level-nested-imports.js",
 
 	// Module Namespace Exotic Object semantics for the dynamically imported
@@ -1075,9 +1058,6 @@ const knownBugs = [
 
 	// Weird test
 	"expressions/dynamic-import/syntax/valid/nested-with-nested-imports.js",
-
-	// We need to handle `import.meta` in `import`
-	"expressions/dynamic-import/assignment-expression/import-meta.js",
 
 	// Looks like a bug in webpack
 	"module-code/top-level-await/dynamic-import-rejection.js",
