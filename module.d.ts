@@ -215,6 +215,7 @@ declare const __webpack_chunkname__: string;
 declare var __webpack_base_uri__: string;
 declare var __webpack_runtime_id__: string;
 declare const __webpack_hash__: string;
+declare const __webpack_css_server_styles__: string;
 declare const __webpack_modules__: Record<string | number, NodeJS.Module>;
 declare const __webpack_require__: (id: string | number) => unknown;
 declare var __webpack_chunk_load__: (chunkId: string | number) => Promise<void>;
