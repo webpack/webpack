@@ -12,11 +12,12 @@ it("composes the SSR manifest and collected css into a rendered document", async
 		return;
 	}
 
-	// SSR pass: the manifest tells us which client assets to preload for the page
-	const fs = require("fs");
-	const path = require("path");
+	// SSR pass: the manifest tells us which client assets to preload for the page.
+	// Use dynamic import (not require) so this works in the universal module bundle.
+	const { readFileSync } = await import("fs");
+	const { join } = await import("path");
 	const manifest = JSON.parse(
-		fs.readFileSync(path.join(__STATS__.outputPath, "ssr-manifest.json"), "utf8")
+		readFileSync(join(__STATS__.outputPath, "ssr-manifest.json"), "utf8")
 	);
 
 	const preloads = manifest["./page.js"]
