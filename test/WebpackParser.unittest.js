@@ -648,17 +648,26 @@ describe("WebpackParser", () => {
 
 			let calls = 0;
 			class Plugin extends WebpackParser {
+				/**
+				 * @param {import("acorn").Node} node started statement node
+				 * @returns {import("acorn").Node} if statement
+				 */
 				parseIfStatement(node) {
 					calls++;
 					return super.parseIfStatement(node);
 				}
 			}
 			const code = "if (a) { b(); } var x = 1;";
-			const ast = Plugin.parse(code, {
-				ecmaVersion: "latest",
-				sourceType: "script",
-				lazySourcePositions: new SourcePositions(code)
-			});
+			const ast = Plugin.parse(
+				code,
+				/** @type {import("acorn").Options} */ (
+					/** @type {unknown} */ ({
+						ecmaVersion: "latest",
+						sourceType: "script",
+						lazySourcePositions: new SourcePositions(code)
+					})
+				)
+			);
 			expect(calls).toBe(1);
 			expect(ast.body.map((s) => s.type)).toEqual([
 				"IfStatement",
@@ -778,6 +787,10 @@ describe("WebpackParser", () => {
 		});
 
 		it("should climb operator precedence like acorn", () => {
+			/**
+			 * @param {string} code source
+			 * @returns {import("estree").Expression} the sole expression
+			 */
 			const expression = (code) =>
 				/** @type {import("estree").ExpressionStatement} */ (
 					parse(code).ast.body[0]
