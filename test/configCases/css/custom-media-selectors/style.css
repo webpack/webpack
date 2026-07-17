@@ -1,0 +1,48 @@
+@custom-media --narrow (max-width: 30em);
+@custom-media --modern (color), (hover);
+@custom-media --no-hover not (hover: hover);
+@custom-selector :--heading h1, h2, h3;
+
+@media (--narrow) {
+	.narrow {
+		color: red;
+	}
+}
+
+@media (--modern) and (min-width: 100px) {
+	.modern {
+		color: green;
+	}
+}
+
+@media (--no-hover) {
+	.no-hover {
+		color: orange;
+	}
+}
+
+@media (--wide) {
+	.wide {
+		color: blue;
+	}
+}
+
+:--heading {
+	color: black;
+}
+
+a:--heading {
+	color: purple;
+}
+
+.card:not(:--heading) {
+	color: teal;
+}
+
+/* Undefined custom selector — left untouched. */
+.unknown:--not-defined {
+	color: gray;
+}
+
+/* Defined after its use — custom-media names are stylesheet-global. */
+@custom-media --wide (min-width: 60em);

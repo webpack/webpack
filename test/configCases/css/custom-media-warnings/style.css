@@ -1,0 +1,32 @@
+@custom-media --screen-only screen;
+@custom-media --defined (max-width: 10em);
+
+/* Unsupported value (media type) — left unresolved. */
+@media (--screen-only) {
+	.a {
+		color: red;
+	}
+}
+
+/* Unknown name — no definition anywhere in this file. */
+@media (--undefined-mq) {
+	.b {
+		color: red;
+	}
+}
+
+/* Non-boolean context — a syntax error per the spec. */
+@media (--defined: 1px) {
+	.c {
+		color: red;
+	}
+}
+
+/* A value that is itself a custom-media reference is not resolved (unsupported). */
+@custom-media --nested (--defined);
+
+@media (--nested) {
+	.d {
+		color: red;
+	}
+}

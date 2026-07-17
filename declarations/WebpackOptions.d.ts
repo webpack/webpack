@@ -812,6 +812,14 @@ export type CssParserContainer = boolean;
  */
 export type CssParserCustomIdents = boolean;
 /**
+ * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+ */
+export type CssParserCustomMedia = boolean;
+/**
+ * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+ */
+export type CssParserCustomSelectors = boolean;
+/**
  * Enable/disable renaming of dashed identifiers, e. g. custom properties.
  */
 export type CssParserDashedIdents = boolean;
@@ -819,6 +827,10 @@ export type CssParserDashedIdents = boolean;
  * Configure how CSS content is exported as default.
  */
 export type CssParserExportType = "link" | "text" | "css-style-sheet" | "style";
+/**
+ * Enable/disable renaming of `font-family` names defined by a local `@font-face`.
+ */
+export type CssParserFontFace = boolean;
 /**
  * Enable/disable renaming of `@function` names.
  */
@@ -3421,6 +3433,14 @@ export interface CssAutoOrModuleParserOptions {
 	 */
 	customIdents?: CssParserCustomIdents;
 	/**
+	 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+	 */
+	customMedia?: CssParserCustomMedia;
+	/**
+	 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+	 */
+	customSelectors?: CssParserCustomSelectors;
+	/**
 	 * Enable/disable renaming of dashed identifiers, e. g. custom properties.
 	 */
 	dashedIdents?: CssParserDashedIdents;
@@ -3428,6 +3448,10 @@ export interface CssAutoOrModuleParserOptions {
 	 * Configure how CSS content is exported as default.
 	 */
 	exportType?: CssParserExportType;
+	/**
+	 * Enable/disable renaming of `font-family` names defined by a local `@font-face`.
+	 */
+	fontFace?: CssParserFontFace;
 	/**
 	 * Enable/disable renaming of `@function` names.
 	 */
@@ -3528,6 +3552,14 @@ export interface CssModuleParserOptions {
 	 */
 	customIdents?: CssParserCustomIdents;
 	/**
+	 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+	 */
+	customMedia?: CssParserCustomMedia;
+	/**
+	 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+	 */
+	customSelectors?: CssParserCustomSelectors;
+	/**
 	 * Enable/disable renaming of dashed identifiers, e. g. custom properties.
 	 */
 	dashedIdents?: CssParserDashedIdents;
@@ -3535,6 +3567,10 @@ export interface CssModuleParserOptions {
 	 * Configure how CSS content is exported as default.
 	 */
 	exportType?: CssParserExportType;
+	/**
+	 * Enable/disable renaming of `font-family` names defined by a local `@font-face`.
+	 */
+	fontFace?: CssParserFontFace;
 	/**
 	 * Enable/disable renaming of `@function` names.
 	 */
@@ -3564,6 +3600,14 @@ export interface CssParserOptions {
 	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
 	 */
 	as?: CssParserAs;
+	/**
+	 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+	 */
+	customMedia?: CssParserCustomMedia;
+	/**
+	 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+	 */
+	customSelectors?: CssParserCustomSelectors;
 	/**
 	 * Configure how CSS content is exported as default.
 	 */

@@ -1,0 +1,16 @@
+@custom-media --small (max-width: 20em);
+@custom-selector :--btn .button;
+
+.box {
+	color: red;
+}
+
+@media (--small) {
+	.box {
+		color: green;
+	}
+}
+
+:--btn {
+	color: blue;
+}
