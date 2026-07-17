@@ -658,6 +658,10 @@ const createImportModuleDynamically =
 		await module.link(
 			createImportModuleDynamically(context, testFile, moduleCache)
 		);
+		// Evaluate here so `import()` resolves to a fully evaluated module (the
+		// Node.js contract for `importModuleDynamically`); otherwise a top-level
+		// `await import(...)` never settles.
+		await module.evaluate();
 
 		return module;
 	};
@@ -1057,13 +1061,7 @@ const knownBugs = [
 	"expressions/prefix-decrement/operator-prefix-decrement-x-calls-putvalue-lhs-newvalue--1.js",
 
 	// Weird test
-	"expressions/dynamic-import/syntax/valid/nested-with-nested-imports.js",
-
-	// Dynamic `import()` of a rejecting module inside a top-level-await module:
-	// the runtime import promise never settles in the test runner, so the test
-	// times out.
-	"module-code/top-level-await/dynamic-import-rejection.js",
-	"module-code/top-level-await/await-dynamic-import-rejection.js"
+	"expressions/dynamic-import/syntax/valid/nested-with-nested-imports.js"
 ];
 
 const knownProductionBuildBugs = [
@@ -1261,9 +1259,14 @@ describe("test262", () => {
 							};
 						}
 
-						const context = vm.createContext(sandbox, {
-							microtaskMode: "afterEvaluate"
-						});
+						const context = vm.createContext(
+							sandbox,
+							// `afterEvaluate` drains microtasks only at evaluate/runInContext
+							// boundaries; in the module scenario that deadlocks a top-level
+							// `await import(...)`, whose resolution needs a microtask
+							// checkpoint while `evaluate()` is still running.
+							scenario === "module" ? {} : { microtaskMode: "afterEvaluate" }
+						);
 
 						sandbox.globalThis = sandbox;
 						sandbox.Buffer = Buffer;
