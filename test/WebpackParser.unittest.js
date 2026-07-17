@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore ypeof averyvery ahri aafom
+// cspell:ignore ypeof averyvery ahri aafom Unsyntactic
 
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
 
@@ -67,6 +67,17 @@ describe("WebpackParser", () => {
 			expect(() => parse("const x = 1; /* nope")).toThrow(
 				/Unterminated comment/
 			);
+		});
+
+		it("should map positions across CRLF, CR, LS and PS line breaks", () => {
+			const { comments } = parse("// a\r\n// b\r// c\u2028// d\u2029// e\n");
+			expect(comments.map((c) => c.loc.start)).toEqual([
+				{ line: 1, column: 0 },
+				{ line: 2, column: 0 },
+				{ line: 3, column: 0 },
+				{ line: 4, column: 0 },
+				{ line: 5, column: 0 }
+			]);
 		});
 	});
 
@@ -185,6 +196,72 @@ describe("WebpackParser", () => {
 			expect(() => parse("var x = 1.5abc")).toThrow(
 				/Identifier directly after number/
 			);
+		});
+	});
+
+	describe("string fast path", () => {
+		/**
+		 * @param {string} code source
+		 * @param {object=} options extra parse options
+		 * @returns {import("estree").Literal} the sole declarator's literal init
+		 */
+		const literal = (code, options) => {
+			const declaration =
+				/** @type {import("estree").VariableDeclaration} */
+				(parse(code, options).ast.body[0]);
+			return /** @type {import("estree").Literal} */ (
+				declaration.declarations[0].init
+			);
+		};
+
+		it("should read plain strings on the fast path", () => {
+			expect(literal('var x = "abc"').value).toBe("abc");
+			expect(literal("var x = 'abc'").value).toBe("abc");
+			expect(literal('var x = ""').value).toBe("");
+			expect(literal("var x = 'it\"s'").value).toBe('it"s');
+			const lit = literal('var x = "abc"');
+			expect(lit.raw).toBe('"abc"');
+			expect(lit.range).toEqual([8, 13]);
+		});
+
+		it("should read a string ending at the end of input", () => {
+			expect(literal("var x = 'tail'").value).toBe("tail");
+		});
+
+		it("should allow unescaped LS/PS in strings (ES2019+) but delegate them below ES2019", () => {
+			expect(literal("var x = '\u2028'").value).toBe("\u2028");
+			expect(literal("var x = '\u2029'").value).toBe("\u2029");
+			expect(() => parse("var x = '\u2028'", { ecmaVersion: 2018 })).toThrow(
+				/Unterminated string constant/
+			);
+		});
+
+		it("should delegate escapes to acorn", () => {
+			expect(literal('var x = "a\\nb"').value).toBe("a\nb");
+			expect(literal("var x = 'it\\'s'").value).toBe("it's");
+			expect(literal('var x = "a\\\n b"').value).toBe("a b");
+		});
+
+		it("should report strings broken by a line terminator", () => {
+			expect(() => parse('var x = "a\nb"')).toThrow(
+				/Unterminated string constant/
+			);
+			expect(() => parse('var x = "a\rb"')).toThrow(
+				/Unterminated string constant/
+			);
+		});
+
+		it("should report unterminated strings", () => {
+			expect(() => parse('var x = "nope')).toThrow(
+				/Unterminated string constant/
+			);
+			expect(() => parse("var x = '")).toThrow(/Unterminated string constant/);
+		});
+
+		it("should read strings identically when acorn tracks locations", () => {
+			expect(
+				literal('var x = "abc"', { ranges: false, locations: true }).value
+			).toBe("abc");
 		});
 	});
 
@@ -352,6 +429,38 @@ describe("WebpackParser", () => {
 			return statement.expression.type;
 		};
 
+		it("should classify braces as blocks or objects like acorn", () => {
+			// colon in block vs object context, nested blocks, function bodies
+			const { ast } = parse(
+				"foo: { bar(); } x = { a: { b: 1 } }; { { } } y = function () { return 1; };"
+			);
+			expect(ast.body.map((s) => s.type)).toEqual([
+				"LabeledStatement",
+				"ExpressionStatement",
+				"BlockStatement",
+				"ExpressionStatement"
+			]);
+			// a line terminator after `return` turns the brace into a block
+			const returned =
+				/** @type {import("estree").FunctionDeclaration} */
+				(parse("function f() { return {}; }").ast.body[0]);
+			const ret = /** @type {import("estree").ReturnStatement} */ (
+				returned.body.body[0]
+			);
+			expect(/** @type {import("estree").Node} */ (ret.argument).type).toBe(
+				"ObjectExpression"
+			);
+			const broken =
+				/** @type {import("estree").FunctionDeclaration} */
+				(parse("function f() { return\n{}; }").ast.body[0]);
+			expect(
+				/** @type {import("estree").ReturnStatement} */ (broken.body.body[0])
+					.argument
+			).toBeNull();
+			// a stray closer still pops safely before the parser rejects it
+			expect(() => parse("}")).toThrow(/Unexpected token/);
+		});
+
 		it("should read `/` after a value as division, not a regexp", () => {
 			// the `else` branch: exprAllowed follows the token type's beforeExpr
 			expect(exprType("a / b / c")).toBe("BinaryExpression");
@@ -471,6 +580,121 @@ describe("WebpackParser", () => {
 				parse("function f(){ 'use strict'; return 1; }").ast
 			).toBeDefined();
 		});
+
+		it("should dispatch let declarations and let-as-identifier like acorn", () => {
+			const { ast } = parse("let a = 1; let = 2; let.x; let(1);");
+			expect(ast.body.map((s) => s.type)).toEqual([
+				"VariableDeclaration",
+				"ExpressionStatement",
+				"ExpressionStatement",
+				"ExpressionStatement"
+			]);
+			expect(
+				/** @type {import("estree").VariableDeclaration} */ (ast.body[0]).kind
+			).toBe("let");
+			expect(() => parse("if (a) let b = 1;")).toThrow(/Unexpected token/);
+			// `let [` is the one head where isLet stays true in statement position
+			expect(() => parse("if (a) let [b] = 1;")).toThrow(/Unexpected token/);
+			expect(() => parse("if (a) const b = 1;")).toThrow(/Unexpected token/);
+		});
+
+		it("should parse labeled statements through acorn's tail", () => {
+			const { ast } = parse("outer: for (;;) { break outer; } let: x();");
+			expect(ast.body.map((s) => s.type)).toEqual([
+				"LabeledStatement",
+				"LabeledStatement"
+			]);
+			const labeled = /** @type {import("estree").LabeledStatement} */ (
+				ast.body[0]
+			);
+			expect(labeled.label.name).toBe("outer");
+			expect(labeled.range).toEqual([0, 32]);
+			expect(() => parse("break outer;")).toThrow(/Unsyntactic break/);
+		});
+
+		it("should delegate async, using and await statement heads to acorn", () => {
+			const { ast } = parse(
+				"async function f() { await g(); } async () => 1; using?.x;"
+			);
+			expect(ast.body.map((s) => s.type)).toEqual([
+				"FunctionDeclaration",
+				"ExpressionStatement",
+				"ExpressionStatement"
+			]);
+			const { ast: moduleAst } = parse("await x;", { sourceType: "module" });
+			expect(moduleAst.body[0].type).toBe("ExpressionStatement");
+		});
+
+		it("should parse if and return through acorn without ranges", () => {
+			const { ast } = parse(
+				"function f() { if (a) return 1; return 2; } if (b) c();",
+				{ ranges: false }
+			);
+			expect(ast.body.map((s) => s.type)).toEqual([
+				"FunctionDeclaration",
+				"IfStatement"
+			]);
+		});
+
+		it("should delegate rare statement heads to acorn", () => {
+			const { ast } = parse(
+				"do ; while (a); switch (b) { default: } try { throw 1; } catch { } with (c) d(); debugger; ;",
+				{ ecmaVersion: 2019 }
+			);
+			expect(ast.body.map((s) => s.type)).toEqual([
+				"DoWhileStatement",
+				"SwitchStatement",
+				"TryStatement",
+				"WithStatement",
+				"DebuggerStatement",
+				"EmptyStatement"
+			]);
+		});
+
+		it("should keep the statement fast path off for parser plugins overriding statement parsers", () => {
+			const {
+				SourcePositions,
+				WebpackParser
+			} = require("../lib/javascript/syntax");
+
+			let calls = 0;
+			class Plugin extends WebpackParser {
+				/**
+				 * @param {import("acorn").Node} node started statement node
+				 * @returns {import("acorn").Node} if statement
+				 */
+				parseIfStatement(node) {
+					calls++;
+					return super.parseIfStatement(node);
+				}
+
+				/**
+				 * @param {import("acorn").Node} node started statement node
+				 * @returns {import("acorn").Node} return statement
+				 */
+				parseReturnStatement(node) {
+					calls++;
+					return super.parseReturnStatement(node);
+				}
+			}
+			const code = "if (a) { b(); } var x = 1; function f() { return x; }";
+			const ast = Plugin.parse(
+				code,
+				/** @type {import("acorn").Options} */ (
+					/** @type {unknown} */ ({
+						ecmaVersion: "latest",
+						sourceType: "script",
+						lazySourcePositions: new SourcePositions(code)
+					})
+				)
+			);
+			expect(calls).toBe(2);
+			expect(ast.body.map((s) => s.type)).toEqual([
+				"IfStatement",
+				"VariableDeclaration",
+				"FunctionDeclaration"
+			]);
+		});
 	});
 
 	describe("conditional, new, array and template atoms", () => {
@@ -581,6 +805,126 @@ describe("WebpackParser", () => {
 				/** @type {import("estree").ExpressionStatement} */ (ast.body[0])
 					.expression.type
 			).toBe("LogicalExpression");
+		});
+
+		it("should climb operator precedence like acorn", () => {
+			/**
+			 * @param {string} code source
+			 * @returns {import("estree").Expression} the sole expression
+			 */
+			const expression = (code) =>
+				/** @type {import("estree").ExpressionStatement} */ (
+					parse(code).ast.body[0]
+				).expression;
+			const sum = /** @type {import("estree").BinaryExpression} */ (
+				expression("1 + 2 * 3 - 4;")
+			);
+			// ((1 + (2 * 3)) - 4): the same-precedence loop keeps left-association
+			expect(sum.operator).toBe("-");
+			const add = /** @type {import("estree").BinaryExpression} */ (sum.left);
+			expect(add.operator).toBe("+");
+			expect(add.right.type).toBe("BinaryExpression");
+			expect(sum.range).toEqual([0, 13]);
+			const coalesce = /** @type {import("estree").LogicalExpression} */ (
+				expression("a ?? b ?? c;")
+			);
+			expect(coalesce.operator).toBe("??");
+			expect(coalesce.left.type).toBe("LogicalExpression");
+			const exponent = /** @type {import("estree").BinaryExpression} */ (
+				expression("2 ** 3 ** 4;")
+			);
+			// `**` is right-associative via the recursive right-side climb
+			expect(exponent.right.type).toBe("BinaryExpression");
+		});
+
+		it("should reject mixing ?? with && and || like acorn", () => {
+			expect(() => parse("a ?? b || c;")).toThrow(/cannot be mixed/);
+			expect(() => parse("a && b ?? c;")).toThrow(/cannot be mixed/);
+		});
+
+		it("should not read `in` as an operator in for-init position", () => {
+			const { ast } = parse('for (var x = "a" in b) break;');
+			expect(ast.body[0].type).toBe("ForInStatement");
+			expect(
+				/** @type {import("estree").ExpressionStatement} */ (
+					parse('x = "a" in b;').ast.body[0]
+				).expression.type
+			).toBe("AssignmentExpression");
+		});
+	});
+
+	describe("destructuring-errors record pool", () => {
+		it("should keep raising expression errors from pooled records", () => {
+			expect(() => parse("({x = 1});")).toThrow(
+				/Shorthand property assignments are valid only in destructuring patterns/
+			);
+			expect(() => parse("f({x = 1});")).toThrow(
+				/Shorthand property assignments are valid only in destructuring patterns/
+			);
+		});
+
+		it("should parse nested own-record expressions and async arrows", () => {
+			expect(parse("f(g(h(x = 1)), [y = 2] = z);").ast).toBeDefined();
+			expect(parse("f(async (a = 1) => a, (b = 2) => b);").ast).toBeDefined();
+			const { ast } = parse("r = async (q = 1) => q;");
+			const assignment =
+				/** @type {import("estree").AssignmentExpression} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (ast.body[0])
+						.expression
+				);
+			expect(assignment.right.type).toBe("ArrowFunctionExpression");
+		});
+	});
+
+	describe("expressions, spreads and parameter checks", () => {
+		it("should parse comma sequences and spreads with ranges", () => {
+			const { ast } = parse("a, b, c; f(...args); [...xs];");
+			const sequence =
+				/** @type {import("estree").SequenceExpression} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (ast.body[0])
+						.expression
+				);
+			expect(sequence.type).toBe("SequenceExpression");
+			expect(sequence.expressions).toHaveLength(3);
+			expect(sequence.range).toEqual([0, 7]);
+			const call =
+				/** @type {import("estree").CallExpression} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (ast.body[1])
+						.expression
+				);
+			expect(call.arguments[0].type).toBe("SpreadElement");
+			expect(call.arguments[0].range).toEqual([11, 18]);
+			// non-lazy mode delegates to acorn
+			expect(parse("f(...args);", { ranges: false }).ast).toBeDefined();
+		});
+
+		it("should report stack overflow on pathological nesting like acorn", () => {
+			expect(() => parse(`${"(".repeat(100000)}x`)).toThrow(
+				/Not enough stack space to parse input/
+			);
+		});
+
+		it("should check identifier parameter lists like acorn", () => {
+			// sloppy simple functions allow duplicates; arrows and strict don't
+			expect(parse("function f(a, a) { return a; }").ast).toBeDefined();
+			expect(() => parse("(a, a) => a;")).toThrow(/Argument name clash/);
+			expect(() => parse("'use strict'; function f(a, a) {}")).toThrow(
+				/Argument name clash/
+			);
+			expect(() => parse("'use strict'; function f(eval) {}")).toThrow(
+				/Binding eval in strict mode/
+			);
+		});
+
+		it("should delegate pattern parameters to acorn's full walk", () => {
+			expect(
+				parse("function f({ a }, [b], c = 1, ...rest) { return a + b + c; }")
+					.ast
+			).toBeDefined();
+			expect(() => parse("(a, { a }) => a;")).toThrow(/Argument name clash/);
 		});
 	});
 
