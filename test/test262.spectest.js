@@ -1059,14 +1059,11 @@ const knownBugs = [
 	// Weird test
 	"expressions/dynamic-import/syntax/valid/nested-with-nested-imports.js",
 
-	// Looks like a bug in webpack
+	// Dynamic `import()` of a rejecting module inside a top-level-await module:
+	// the runtime import promise never settles in the test runner, so the test
+	// times out.
 	"module-code/top-level-await/dynamic-import-rejection.js",
-
-	// Need improve our test runner, nested Promise is not catching
-	"module-code/top-level-await/module-import-rejection.js",
-	"module-code/top-level-await/module-import-rejection-body.js",
-	"module-code/top-level-await/await-dynamic-import-rejection.js",
-	"module-code/top-level-await/module-import-rejection-tick.js"
+	"module-code/top-level-await/await-dynamic-import-rejection.js"
 ];
 
 const knownProductionBuildBugs = [
