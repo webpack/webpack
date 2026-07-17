@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore ypeof averyvery ahri aafom
+// cspell:ignore ypeof averyvery ahri aafom Unsyntactic
 
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
 
@@ -536,6 +536,91 @@ describe("WebpackParser", () => {
 			expect(
 				parse("function f(){ 'use strict'; return 1; }").ast
 			).toBeDefined();
+		});
+
+		it("should dispatch let declarations and let-as-identifier like acorn", () => {
+			const { ast } = parse("let a = 1; let = 2; let.x; let(1);");
+			expect(ast.body.map((s) => s.type)).toEqual([
+				"VariableDeclaration",
+				"ExpressionStatement",
+				"ExpressionStatement",
+				"ExpressionStatement"
+			]);
+			expect(
+				/** @type {import("estree").VariableDeclaration} */ (ast.body[0]).kind
+			).toBe("let");
+			expect(() => parse("if (a) let b = 1;")).toThrow(/Unexpected token/);
+			// `let [` is the one head where isLet stays true in statement position
+			expect(() => parse("if (a) let [b] = 1;")).toThrow(/Unexpected token/);
+			expect(() => parse("if (a) const b = 1;")).toThrow(/Unexpected token/);
+		});
+
+		it("should parse labeled statements through acorn's tail", () => {
+			const { ast } = parse("outer: for (;;) { break outer; } let: x();");
+			expect(ast.body.map((s) => s.type)).toEqual([
+				"LabeledStatement",
+				"LabeledStatement"
+			]);
+			const labeled = /** @type {import("estree").LabeledStatement} */ (
+				ast.body[0]
+			);
+			expect(labeled.label.name).toBe("outer");
+			expect(labeled.range).toEqual([0, 32]);
+			expect(() => parse("break outer;")).toThrow(/Unsyntactic break/);
+		});
+
+		it("should delegate async, using and await statement heads to acorn", () => {
+			const { ast } = parse(
+				"async function f() { await g(); } async () => 1; using?.x;"
+			);
+			expect(ast.body.map((s) => s.type)).toEqual([
+				"FunctionDeclaration",
+				"ExpressionStatement",
+				"ExpressionStatement"
+			]);
+			const { ast: moduleAst } = parse("await x;", { sourceType: "module" });
+			expect(moduleAst.body[0].type).toBe("ExpressionStatement");
+		});
+
+		it("should delegate rare statement heads to acorn", () => {
+			const { ast } = parse(
+				"do ; while (a); switch (b) { default: } try { throw 1; } catch { } with (c) d(); debugger; ;",
+				{ ecmaVersion: 2019 }
+			);
+			expect(ast.body.map((s) => s.type)).toEqual([
+				"DoWhileStatement",
+				"SwitchStatement",
+				"TryStatement",
+				"WithStatement",
+				"DebuggerStatement",
+				"EmptyStatement"
+			]);
+		});
+
+		it("should keep the statement fast path off for parser plugins overriding statement parsers", () => {
+			const {
+				SourcePositions,
+				WebpackParser
+			} = require("../lib/javascript/syntax");
+
+			let calls = 0;
+			class Plugin extends WebpackParser {
+				parseIfStatement(node) {
+					calls++;
+					return super.parseIfStatement(node);
+				}
+			}
+			const code = "if (a) { b(); } var x = 1;";
+			const ast = Plugin.parse(code, {
+				ecmaVersion: "latest",
+				sourceType: "script",
+				lazySourcePositions: new SourcePositions(code)
+			});
+			expect(calls).toBe(1);
+			expect(ast.body.map((s) => s.type)).toEqual([
+				"IfStatement",
+				"VariableDeclaration"
+			]);
 		});
 	});
 
