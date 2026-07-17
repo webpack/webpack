@@ -1895,6 +1895,13 @@ declare class ChunkGraph {
 	): void;
 
 	/**
+	 * Clears a chunk's recorded full-hash and dependent-hash runtime modules, so a
+	 * stale set doesn't keep previous-build runtime modules (and their compilation)
+	 * alive on an incremental rebuild. Fresh runtime modules re-attach themselves.
+	 */
+	clearRuntimeModuleHashes(chunk: Chunk): void;
+
+	/**
 	 * Processes the provided old module.
 	 */
 	replaceModule(oldModule: Module, newModule: Module): void;
@@ -15609,6 +15616,18 @@ declare class Module extends DependenciesBlock {
 	cleanupForCache(): void;
 
 	/**
+	 * Re-acquire factory-derived helpers (parser/generator) for an incremental
+	 * rebuild so this compilation's plugin hooks apply. No-op unless overridden.
+	 */
+	restoreParserAndGenerator(normalModuleFactory?: any): void;
+
+	/**
+	 * Releases the cached parser between incremental rebuilds so it doesn't keep
+	 * the previous compilation alive. No-op unless overridden.
+	 */
+	cleanupParserForCache(): void;
+
+	/**
 	 * Gets the original source.
 	 */
 	originalSource(): null | Source;
@@ -16062,6 +16081,13 @@ declare class ModuleGraph {
 	removeModuleAttributes(module: Module): void;
 
 	/**
+	 * Removes a module from the graph entirely, detaching its connections. Used to
+	 * drop stale runtime modules on an incremental rebuild so the persisted graph
+	 * doesn't accumulate them.
+	 */
+	removeModule(module: Module): void;
+
+	/**
 	 * Removes all module attributes.
 	 */
 	removeAllModuleAttributes(): void;
@@ -16074,6 +16100,17 @@ declare class ModuleGraph {
 		newModule: Module,
 		filterConnection: (moduleGraphConnection: ModuleGraphConnection) => boolean
 	): void;
+
+	/**
+	 * Start recording connection moves so they can later be reversed (experiments.incremental).
+	 */
+	startMutationJournal(): void;
+
+	/**
+	 * Reverse all recorded connection moves, restoring the graph to its pre-seal
+	 * (end-of-make) state, then stop recording (experiments.incremental).
+	 */
+	restoreFromMutationJournal(): void;
 
 	/**
 	 * Copies outgoing module connections.
