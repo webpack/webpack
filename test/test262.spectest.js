@@ -1130,10 +1130,14 @@ describe("test262", () => {
 				}
 
 				if (
+					// Decorators are not supported
 					meta.features.includes("decorators") ||
+					// V8 optimization bugs
 					meta.features.includes("Symbol.unscopables") ||
+					// TODO Not implemented
 					meta.features.includes("source-phase-imports") ||
 					meta.features.includes("source-phase-imports-module-source") ||
+					// TODO improve in our test runner
 					(meta.negative && meta.negative.phase === "resolution") ||
 					knownBugs.includes(name) ||
 					(mode === "production" && knownProductionBuildBugs.includes(name))
