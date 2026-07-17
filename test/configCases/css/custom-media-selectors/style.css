@@ -1,6 +1,8 @@
 @custom-media --narrow (max-width: 30em);
 @custom-media --modern (color), (hover);
 @custom-media --no-hover not (hover: hover);
+@custom-media --tv screen;
+@custom-media --legacy not all;
 @custom-selector :--heading h1, h2, h3;
 
 @media (--narrow) {
@@ -24,6 +26,25 @@
 @media (--wide) {
 	.wide {
 		color: blue;
+	}
+}
+
+/* A media-type value inlines at the start of a query. */
+@media (--tv) {
+	.tv {
+		color: teal;
+	}
+}
+
+@media (--tv) and (min-width: 100px) {
+	.tv-wide {
+		color: navy;
+	}
+}
+
+@media (--legacy) {
+	.legacy {
+		color: gray;
 	}
 }
 

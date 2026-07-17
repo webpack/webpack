@@ -1,8 +1,9 @@
-@custom-media --screen-only screen;
 @custom-media --defined (max-width: 10em);
+@custom-media --always true;
+@custom-media --tvish screen;
 
-/* Unsupported value (media type) — left unresolved. */
-@media (--screen-only) {
+/* 'true'/'false' values are unsupported (the ecosystem disagrees on them). */
+@media (--always) {
 	.a {
 		color: red;
 	}
@@ -22,11 +23,18 @@
 	}
 }
 
-/* A value that is itself a custom-media reference is not resolved (unsupported). */
+/* A value that is itself a custom-media reference is not resolved. */
 @custom-media --nested (--defined);
 
 @media (--nested) {
 	.d {
+		color: red;
+	}
+}
+
+/* A media-type value can't be inlined in a non-leading position. */
+@media (min-width: 1px) and (--tvish) {
+	.e {
 		color: red;
 	}
 }

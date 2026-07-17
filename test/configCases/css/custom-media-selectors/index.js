@@ -25,6 +25,13 @@ it("should resolve a @custom-media defined after its use", () => {
 	expect(readBundle()).toContain("@media (min-width: 60em)");
 });
 
+it("should inline a media-type @custom-media value", () => {
+	const css = readBundle();
+	expect(css).toMatch(/@media screen\s*\{/);
+	expect(css).toContain("@media screen and (min-width: 100px)");
+	expect(css).toMatch(/@media not all\s*\{/);
+});
+
 it("should expand a @custom-selector to :is()", () => {
 	const css = readBundle();
 	expect(css).toContain(":is(h1, h2, h3)");
