@@ -767,7 +767,6 @@ const knownBugs = [
 	"import/import-defer/errors/get-self-while-evaluating-async/main.js",
 	"import/import-defer/evaluation-top-level-await/flattening-order/main.js",
 	// Complex examples, need to think how to resolve it
-	"import/import-defer/errors/get-self-while-defer-evaluating/main.js",
 	"import/import-defer/errors/get-other-while-evaluating-async/main.js",
 	"import/import-defer/errors/get-other-while-evaluating/main.js",
 	"import/import-defer/errors/get-other-while-dep-evaluating-async/main.js",
@@ -780,8 +779,6 @@ const knownBugs = [
 	// known. Pre-knowing exports would require a larger architectural
 	// change, so this remains skipped.
 	"import/import-defer/deferred-namespace-object/exotic-object-behavior.js",
-	// Bug when import itself
-	"import/import-defer/errors/get-self-while-evaluating.js",
 	// Bug with place of `__webpack_require__`, it hoists, but should not
 	"module-code/instn-star-binding.js",
 	// Improvement- bug with `delete` and `ns[0] = something` when using `import * as ns from "...";`
@@ -1130,14 +1127,10 @@ describe("test262", () => {
 				}
 
 				if (
-					// Decorators are not supported
 					meta.features.includes("decorators") ||
-					// V8 optimization bugs
 					meta.features.includes("Symbol.unscopables") ||
-					// TODO Not implemented
 					meta.features.includes("source-phase-imports") ||
 					meta.features.includes("source-phase-imports-module-source") ||
-					// TODO improve in our test runner
 					(meta.negative && meta.negative.phase === "resolution") ||
 					knownBugs.includes(name) ||
 					(mode === "production" && knownProductionBuildBugs.includes(name))

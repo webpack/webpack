@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Cache and re-throw a deferred module's evaluation error so repeated deferred-namespace access reports the same error.
+Fix deferred-namespace evaluation errors: re-throw a deferred module's cached evaluation error, and throw when forcing evaluation of an already-evaluating module.
