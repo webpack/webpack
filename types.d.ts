@@ -22910,8 +22910,10 @@ declare abstract class RuntimeTemplate {
 
 	/**
 	 * Expression for the global registry that collects CSS server-side when there
-	 * is no DOM (SSR). An SSR host reads it from `globalThis`; it is keyed by the
-	 * style/chunk identifier and namespaced by `output.uniqueName`.
+	 * is no DOM (SSR). An SSR host reads it from the global object; it is keyed by
+	 * the style/chunk identifier and namespaced by `output.uniqueName`. Targets
+	 * without `globalThis` (e.g. Node < 12) go through the `__webpack_require__.g`
+	 * polyfill, so consumers must also require `RuntimeGlobals.global`.
 	 */
 	cssServerStyleRegistry(): string;
 	supportsConst(): boolean;
