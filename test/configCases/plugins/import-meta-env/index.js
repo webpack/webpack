@@ -3,6 +3,15 @@ it("should expose NODE_ENV from mode (WebpackOptionsApply)", () => {
 	expect(env.NODE_ENV).toBe("production");
 });
 
+it("should expose Vite-compatible defaults for a production node build", () => {
+	expect(import.meta.env.MODE).toBe("production");
+	expect(import.meta.env.DEV).toBe(false);
+	expect(import.meta.env.PROD).toBe(true);
+	// default target is async-node, so this is a server build
+	expect(import.meta.env.SSR).toBe(true);
+	expect(import.meta.env.BASE_URL).toBe("/");
+});
+
 it("should expose variables from EnvironmentPlugin", () => {
 	const env = import.meta.env;
 	expect(env.ENV_VAR_FROM_ENV).toBe("from_environment_plugin");

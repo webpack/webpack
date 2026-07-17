@@ -16,7 +16,7 @@ it(\\"should work import.meta.env with DotenvPlugin\\", () => {
 
 it(\\"import.meta.env behaves like process.env\\", async (done) => {
     try {
-        const importMetaEnv = ({\\"AAA\\":\\"aaa\\",\\"WEBPACK_API_URL\\":\\"https://api.example.com\\",\\"NODE_ENV\\":\\"production\\"});
+        const importMetaEnv = ({\\"AAA\\":\\"aaa\\",\\"WEBPACK_API_URL\\":\\"https://api.example.com\\",\\"NODE_ENV\\":\\"production\\",\\"MODE\\":\\"production\\",\\"DEV\\":false,\\"PROD\\":true,\\"SSR\\":true,\\"BASE_URL\\":\\"/\\"});
         importMetaEnv;
         const processEnv = process.env;
         processEnv;
@@ -27,7 +27,7 @@ it(\\"import.meta.env behaves like process.env\\", async (done) => {
         \\"object\\";
         typeof process.env;
 
-        const { env } = ({env: {\\"AAA\\":\\"aaa\\",\\"WEBPACK_API_URL\\":\\"https://api.example.com\\",\\"NODE_ENV\\":\\"production\\"},});
+        const { env } = ({env: {\\"AAA\\":\\"aaa\\",\\"WEBPACK_API_URL\\":\\"https://api.example.com\\",\\"NODE_ENV\\":\\"production\\",\\"MODE\\":\\"production\\",\\"DEV\\":false,\\"PROD\\":true,\\"SSR\\":true,\\"BASE_URL\\":\\"/\\"},});
         env;
     } catch (_e) {
         // ignore
