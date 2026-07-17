@@ -1025,31 +1025,15 @@ const knownBugs = [
 	//   require dynamic specifiers webpack cannot resolve at build time.
 	// - `import(<UnaryExpression>)` (e.g. `import(typeof {})`): non-string
 	//   specifiers are emitted by the parser but webpack rejects them.
-	// - The `import-defer/*/main.js` cases interleave defer and eager loads of
-	//   the same module graph; webpack currently produces a single shared
-	//   module record so ordering and async-vs-sync semantics differ.
 	"expressions/dynamic-import/eval-self-once-script.js",
 	"expressions/dynamic-import/for-await-resolution-and-error-agen-yield.js",
 	"expressions/dynamic-import/import-errored-module.js",
 	"expressions/dynamic-import/reuse-namespace-object-from-script.js",
 	"expressions/dynamic-import/usage-from-eval.js",
 	"expressions/dynamic-import/assignment-expression/unary-expr.js",
-	"expressions/dynamic-import/import-defer/sync/main.js",
-	"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/main.js",
+	// `.then` is expected not to be called on the deferred namespace's promise.
 	"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/promise-prototype-then-not-called.js",
-	"expressions/dynamic-import/import-defer/import-defer-async-module/main.js",
-	"expressions/dynamic-import/import-defer/sync-dependency-of-deferred-async-module/main.js",
 
-	// Top-level-await ordering/observability: webpack inlines TLA into a
-	// promise chain inside the runtime, so V8/Node's Module Record evaluation
-	// order (rejection-order, fulfillment-order, async-evaluation-count reset)
-	// and "module graph does not hang on cycle" semantics are not preserved.
-	"module-code/top-level-await/unobservable-global-async-evaluation-count-reset.js",
-	"module-code/top-level-await/dynamic-import-resolution.js",
-	"module-code/top-level-await/rejection-order.js",
-	"module-code/top-level-await/await-dynamic-import-resolution.js",
-	"module-code/top-level-await/fulfillment-order.js",
-	"module-code/top-level-await/module-graphs-does-not-hang.js",
 	// Dynamic import of a fulfilled member of an errored TLA cycle must reject
 	// with the cycle root's evaluation error; webpack fulfills it instead.
 	"expressions/dynamic-import/import-fulfilled-member-of-errored-cycle.js",
