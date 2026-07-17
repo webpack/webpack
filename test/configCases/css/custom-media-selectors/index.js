@@ -25,6 +25,14 @@ it("should resolve a @custom-media defined after its use", () => {
 	expect(readBundle()).toContain("@media (min-width: 60em)");
 });
 
+it("should resolve each ref in a comma-separated media-query list", () => {
+	expect(readBundle()).toContain("@media (max-width: 30em), (min-width: 60em)");
+});
+
+it("should keep a calc() media feature while scanning for refs", () => {
+	expect(readBundle()).toContain("calc(1px + 1px)");
+});
+
 it("should inline a media-type @custom-media value", () => {
 	const css = readBundle();
 	expect(css).toMatch(/@media screen\s*\{/);

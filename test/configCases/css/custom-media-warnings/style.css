@@ -43,3 +43,11 @@
 @custom-media (max-width: 1px);
 @custom-selector heading h1, h2;
 @custom-selector :--empty;
+
+/* Value-classification edge cases: all dropped and silent (never referenced). */
+@custom-media --empty;
+@custom-media --num 5;
+@custom-media --empty-seg (min-width: 1px),,(max-width: 2px);
+@custom-media --or-not (min-width: 1px), not (max-width: 2px);
+@custom-media --typey (min-width: 1px), screen;
+@custom-selector : --x span;

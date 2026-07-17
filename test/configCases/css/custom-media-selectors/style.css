@@ -65,5 +65,19 @@ a:--heading {
 	color: gray;
 }
 
+/* Comma-separated media-query list — each ref leads its own segment. */
+@media (--narrow), (--wide) {
+	.list {
+		color: pink;
+	}
+}
+
+/* A function (calc) inside a media feature is walked while scanning for refs. */
+@media (min-width: calc(1px + 1px)) {
+	.fn {
+		color: red;
+	}
+}
+
 /* Defined after its use — custom-media names are stylesheet-global. */
 @custom-media --wide (min-width: 60em);
