@@ -8449,6 +8449,11 @@ declare interface ExternalsPresets {
 	node?: boolean;
 
 	/**
+	 * Treat installed packages (requests resolving into a 'node_modules' directory) as external and load them via require()/import at runtime instead of bundling them (useful for server-side rendering builds).
+	 */
+	nodeModules?: boolean;
+
+	/**
 	 * Treat NW.js legacy nw.gui module as external and load it via require() when used.
 	 */
 	nwjs?: boolean;
@@ -22905,8 +22910,10 @@ declare abstract class RuntimeTemplate {
 
 	/**
 	 * Expression for the global registry that collects CSS server-side when there
-	 * is no DOM (SSR). An SSR host reads it from `globalThis`; it is keyed by the
-	 * style/chunk identifier and namespaced by `output.uniqueName`.
+	 * is no DOM (SSR). An SSR host reads it from the global object; it is keyed by
+	 * the style/chunk identifier and namespaced by `output.uniqueName`. Targets
+	 * without `globalThis` (e.g. Node < 12) go through the `__webpack_require__.g`
+	 * polyfill, so consumers must also require `RuntimeGlobals.global`.
 	 */
 	cssServerStyleRegistry(): string;
 	supportsConst(): boolean;
@@ -23514,6 +23521,29 @@ declare interface RuntimeValueOptions {
 	missingDependencies?: string[];
 	buildDependencies?: string[];
 	version?: string | (() => string);
+}
+declare class SSRManifestPlugin {
+	/**
+	 * Creates an instance of SSRManifestPlugin.
+	 */
+	constructor(options?: SSRManifestPluginOptions);
+	options: SSRManifestPluginOptions;
+
+	/**
+	 * Applies the plugin by registering its hooks on the compiler.
+	 */
+	apply(compiler: Compiler): void;
+}
+declare interface SSRManifestPluginOptions {
+	/**
+	 * The base directory used to compute the source-module keys (defaults to the compiler context).
+	 */
+	context?: string;
+
+	/**
+	 * Specifies the filename of the emitted manifest on disk. By default the plugin will emit `ssr-manifest.json` inside the 'output.path' directory.
+	 */
+	filename?: string;
 }
 declare interface Scope {
 	type:
@@ -26915,6 +26945,7 @@ declare namespace exports {
 		export let getChunkScriptFilename: "__webpack_require__.u";
 		export let getChunkUpdateCssFilename: "__webpack_require__.hk";
 		export let getChunkUpdateScriptFilename: "__webpack_require__.hu";
+		export let getCssServerStyles: "__webpack_require__.cs";
 		export let getFullHash: "__webpack_require__.h";
 		export let getTrustedTypesPolicy: "__webpack_require__.tt";
 		export let getUpdateManifestFilename: "__webpack_require__.hmrF";
@@ -27435,6 +27466,7 @@ declare namespace exports {
 		ProvidePlugin,
 		RuntimeModule,
 		EntryPlugin as SingleEntryPlugin,
+		SSRManifestPlugin,
 		SourceMapDevToolPlugin,
 		Stats,
 		ManifestPlugin,

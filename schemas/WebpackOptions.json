@@ -1581,6 +1581,10 @@
           "description": "Treat node.js built-in modules like fs, path or vm as external and load them via require() when used.",
           "type": "boolean"
         },
+        "nodeModules": {
+          "description": "Treat installed packages (requests resolving into a 'node_modules' directory) as external and load them via require()/import at runtime instead of bundling them (useful for server-side rendering builds).",
+          "type": "boolean"
+        },
         "nwjs": {
           "description": "Treat NW.js legacy nw.gui module as external and load it via require() when used.",
           "type": "boolean"

@@ -1249,6 +1249,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "externals-presets-node-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat installed packages (requests resolving into a 'node_modules' directory) as external and load them via require()/import at runtime instead of bundling them (useful for server-side rendering builds).",
+        "multiple": false,
+        "path": "externalsPresets.nodeModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat installed packages (requests resolving into a 'node_modules' directory) as external and load them via require()/import at runtime instead of bundling them (useful for server-side rendering builds).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "externals-presets-nwjs": Object {
     "configs": Array [
       Object {

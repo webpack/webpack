@@ -159,6 +159,7 @@ describe("snapshots", () => {
 		    "electronPreload": false,
 		    "electronRenderer": false,
 		    "node": false,
+		    "nodeModules": false,
 		    "nwjs": false,
 		    "web": true,
 		  },
@@ -3174,12 +3175,13 @@ describe("snapshots", () => {
 			-     "electronPreload": false,
 			-     "electronRenderer": false,
 			-     "node": false,
-			-     "nwjs": false,
 			+     "electron": true,
 			+     "electronMain": null,
 			+     "electronPreload": null,
 			+     "electronRenderer": null,
 			+     "node": true,
+			@@ ... @@
+			-     "nwjs": false,
 			+     "nwjs": true,
 			@@ ... @@
 			-   "externalsType": "var",
