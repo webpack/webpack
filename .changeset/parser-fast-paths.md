@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Speed up the JavaScript parser's string scanning, statement dispatch and expressions.
+Speed up JavaScript parsing and reduce its memory usage.
