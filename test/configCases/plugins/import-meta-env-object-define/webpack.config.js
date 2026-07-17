@@ -21,7 +21,7 @@ module.exports = {
 			},
 			"import.meta.env.B": JSON.stringify("b"),
 			"import.meta.env.__proto__": JSON.stringify("proto-value"),
-			"import.meta.env.BASE_URL": "__webpack_require__.p"
+			"import.meta.env.PUBLIC_PATH": "__webpack_require__.p"
 		}),
 		new EnvironmentPlugin({
 			ENV_C: "c"

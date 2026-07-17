@@ -71,8 +71,13 @@ it("should support runtime globals in definition values", () => {
 	// reading __webpack_public_path__ ensures the publicPath runtime is included
 	expect(__webpack_public_path__).toBe("/assets/");
 	const env = import.meta.env;
-	expect(env.BASE_URL).toBe("/assets/");
+	expect(env.PUBLIC_PATH).toBe("/assets/");
+	expect(import.meta.env.PUBLIC_PATH).toBe("/assets/");
+});
+
+it("should expose the built-in BASE_URL default from output.publicPath", () => {
 	expect(import.meta.env.BASE_URL).toBe("/assets/");
+	expect(import.meta.env.MODE).toBe("production");
 });
 
 function donotcallme() {
