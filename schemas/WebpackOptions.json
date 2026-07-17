@@ -589,7 +589,7 @@
     },
     "CssParserExportType": {
       "description": "Configure how CSS content is exported as default.",
-      "enum": ["link", "text", "css-style-sheet", "style"]
+      "enum": ["link", "text", "css-style-sheet", "style", "url"]
     },
     "CssParserFunction": {
       "description": "Enable/disable renaming of `@function` names.",
