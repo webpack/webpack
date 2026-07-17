@@ -768,10 +768,9 @@ const knownBugs = [
 	"import/import-defer/evaluation-top-level-await/flattening-order/main.js",
 	// Complex examples, need to think how to resolve it
 	"import/import-defer/errors/get-other-while-evaluating-async/main.js",
-	// These require a transitive ReadyForSyncExecution check (the deferred
-	// module itself is only linked, but one of its static deps is evaluating).
+	// Async variant: needs `evaluating-async` tracking through the async-module
+	// runtime, which the sync closure check below does not cover.
 	"import/import-defer/errors/get-other-while-dep-evaluating-async/main.js",
-	"import/import-defer/errors/get-other-while-dep-evaluating/main.js",
 	// Just bugs, need to fix
 	// `Reflect.preventExtensions(ns)` should return true and the deferred
 	// namespace should report `isExtensible() === false` per the TC39 spec —
