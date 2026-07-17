@@ -1,3 +1,6 @@
+import { marker } from "./resolved.js";
+
 it("should resolve absolute entry paths containing '#' in a directory name", () => {
-	expect(1 + 1).toBe(2);
+	// assert identity: the '#'-dir module resolved, not just a non-erroring build (webpack#16819)
+	expect(marker).toBe("issue-16819-absolute");
 });
