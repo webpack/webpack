@@ -188,6 +188,72 @@ describe("WebpackParser", () => {
 		});
 	});
 
+	describe("string fast path", () => {
+		/**
+		 * @param {string} code source
+		 * @param {object=} options extra parse options
+		 * @returns {import("estree").Literal} the sole declarator's literal init
+		 */
+		const literal = (code, options) => {
+			const declaration =
+				/** @type {import("estree").VariableDeclaration} */
+				(parse(code, options).ast.body[0]);
+			return /** @type {import("estree").Literal} */ (
+				declaration.declarations[0].init
+			);
+		};
+
+		it("should read plain strings on the fast path", () => {
+			expect(literal('var x = "abc"').value).toBe("abc");
+			expect(literal("var x = 'abc'").value).toBe("abc");
+			expect(literal('var x = ""').value).toBe("");
+			expect(literal("var x = 'it\"s'").value).toBe('it"s');
+			const lit = literal('var x = "abc"');
+			expect(lit.raw).toBe('"abc"');
+			expect(lit.range).toEqual([8, 13]);
+		});
+
+		it("should read a string ending at the end of input", () => {
+			expect(literal("var x = 'tail'").value).toBe("tail");
+		});
+
+		it("should allow unescaped LS/PS in strings (ES2019+) but delegate them below ES2019", () => {
+			expect(literal("var x = '\u2028'").value).toBe("\u2028");
+			expect(literal("var x = '\u2029'").value).toBe("\u2029");
+			expect(() => parse("var x = '\u2028'", { ecmaVersion: 2018 })).toThrow(
+				/Unterminated string constant/
+			);
+		});
+
+		it("should delegate escapes to acorn", () => {
+			expect(literal('var x = "a\\nb"').value).toBe("a\nb");
+			expect(literal("var x = 'it\\'s'").value).toBe("it's");
+			expect(literal('var x = "a\\\n b"').value).toBe("a b");
+		});
+
+		it("should report strings broken by a line terminator", () => {
+			expect(() => parse('var x = "a\nb"')).toThrow(
+				/Unterminated string constant/
+			);
+			expect(() => parse('var x = "a\rb"')).toThrow(
+				/Unterminated string constant/
+			);
+		});
+
+		it("should report unterminated strings", () => {
+			expect(() => parse('var x = "nope')).toThrow(
+				/Unterminated string constant/
+			);
+			expect(() => parse("var x = '")).toThrow(/Unterminated string constant/);
+		});
+
+		it("should read strings identically when acorn tracks locations", () => {
+			expect(
+				literal('var x = "abc"', { ranges: false, locations: true }).value
+			).toBe("abc");
+		});
+	});
+
 	describe("automatic semicolon insertion", () => {
 		it("should insert semicolons across line breaks and at eof", () => {
 			expect([...parse("x").semicolons]).toHaveLength(1);
