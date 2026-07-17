@@ -23520,6 +23520,29 @@ declare interface RuntimeValueOptions {
 	buildDependencies?: string[];
 	version?: string | (() => string);
 }
+declare class SSRManifestPlugin {
+	/**
+	 * Creates an instance of SSRManifestPlugin.
+	 */
+	constructor(options?: SSRManifestPluginOptions);
+	options: SSRManifestPluginOptions;
+
+	/**
+	 * Applies the plugin by registering its hooks on the compiler.
+	 */
+	apply(compiler: Compiler): void;
+}
+declare interface SSRManifestPluginOptions {
+	/**
+	 * The base directory used to compute the source-module keys (defaults to the compiler context).
+	 */
+	context?: string;
+
+	/**
+	 * Specifies the filename of the emitted manifest on disk. By default the plugin will emit `ssr-manifest.json` inside the 'output.path' directory.
+	 */
+	filename?: string;
+}
 declare interface Scope {
 	type:
 		| "function"
@@ -27440,6 +27463,7 @@ declare namespace exports {
 		ProvidePlugin,
 		RuntimeModule,
 		EntryPlugin as SingleEntryPlugin,
+		SSRManifestPlugin,
 		SourceMapDevToolPlugin,
 		Stats,
 		ManifestPlugin,
