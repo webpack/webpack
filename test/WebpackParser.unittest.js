@@ -733,6 +733,71 @@ describe("WebpackParser", () => {
 					.expression.type
 			).toBe("LogicalExpression");
 		});
+
+		it("should climb operator precedence like acorn", () => {
+			const expression = (code) =>
+				/** @type {import("estree").ExpressionStatement} */ (
+					parse(code).ast.body[0]
+				).expression;
+			const sum = /** @type {import("estree").BinaryExpression} */ (
+				expression("1 + 2 * 3 - 4;")
+			);
+			// ((1 + (2 * 3)) - 4): the same-precedence loop keeps left-association
+			expect(sum.operator).toBe("-");
+			const add = /** @type {import("estree").BinaryExpression} */ (sum.left);
+			expect(add.operator).toBe("+");
+			expect(add.right.type).toBe("BinaryExpression");
+			expect(sum.range).toEqual([0, 13]);
+			const coalesce = /** @type {import("estree").LogicalExpression} */ (
+				expression("a ?? b ?? c;")
+			);
+			expect(coalesce.operator).toBe("??");
+			expect(coalesce.left.type).toBe("LogicalExpression");
+			const exponent = /** @type {import("estree").BinaryExpression} */ (
+				expression("2 ** 3 ** 4;")
+			);
+			// `**` is right-associative via the recursive right-side climb
+			expect(exponent.right.type).toBe("BinaryExpression");
+		});
+
+		it("should reject mixing ?? with && and || like acorn", () => {
+			expect(() => parse("a ?? b || c;")).toThrow(/cannot be mixed/);
+			expect(() => parse("a && b ?? c;")).toThrow(/cannot be mixed/);
+		});
+
+		it("should not read `in` as an operator in for-init position", () => {
+			const { ast } = parse('for (var x = "a" in b) break;');
+			expect(ast.body[0].type).toBe("ForInStatement");
+			expect(
+				/** @type {import("estree").ExpressionStatement} */ (
+					parse('x = "a" in b;').ast.body[0]
+				).expression.type
+			).toBe("AssignmentExpression");
+		});
+	});
+
+	describe("destructuring-errors record pool", () => {
+		it("should keep raising expression errors from pooled records", () => {
+			expect(() => parse("({x = 1});")).toThrow(
+				/Shorthand property assignments are valid only in destructuring patterns/
+			);
+			expect(() => parse("f({x = 1});")).toThrow(
+				/Shorthand property assignments are valid only in destructuring patterns/
+			);
+		});
+
+		it("should parse nested own-record expressions and async arrows", () => {
+			expect(parse("f(g(h(x = 1)), [y = 2] = z);").ast).toBeDefined();
+			expect(parse("f(async (a = 1) => a, (b = 2) => b);").ast).toBeDefined();
+			const { ast } = parse("r = async (q = 1) => q;");
+			const assignment =
+				/** @type {import("estree").AssignmentExpression} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (ast.body[0])
+						.expression
+				);
+			expect(assignment.right.type).toBe("ArrowFunctionExpression");
+		});
 	});
 
 	describe("subscript parsing", () => {
