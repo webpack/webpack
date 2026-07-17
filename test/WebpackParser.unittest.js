@@ -68,6 +68,17 @@ describe("WebpackParser", () => {
 				/Unterminated comment/
 			);
 		});
+
+		it("should map positions across CRLF, CR, LS and PS line breaks", () => {
+			const { comments } = parse("// a\r\n// b\r// c\u2028// d\u2029// e\n");
+			expect(comments.map((c) => c.loc.start)).toEqual([
+				{ line: 1, column: 0 },
+				{ line: 2, column: 0 },
+				{ line: 3, column: 0 },
+				{ line: 4, column: 0 },
+				{ line: 5, column: 0 }
+			]);
+		});
 	});
 
 	describe("template fast path", () => {
