@@ -9565,6 +9565,23 @@ declare interface HotModuleReplacementPluginLoaderContext {
 declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
+declare interface HtmlAfterEmitContext {
+	outputName: string;
+}
+declare interface HtmlBeforeEmitContext {
+	outputName: string;
+}
+declare interface HtmlCompilationHooks {
+	/**
+	 * called with each emitted page's final HTML (all sentinels resolved) just before it is written; return the (possibly transformed) HTML — e.g. to minify, inject a CSP meta, or rewrite tags
+	 */
+	beforeEmit: AsyncSeriesWaterfallHook<[string, HtmlBeforeEmitContext], string>;
+
+	/**
+	 * called once each page's HTML asset has been finalized — a post-emit notification (nothing to return)
+	 */
+	afterEmit: AsyncSeriesHook<[HtmlAfterEmitContext]>;
+}
 declare interface HtmlEntryInfo {
 	request: string;
 	entryName: string;
@@ -9632,11 +9649,46 @@ type HtmlModuleBuildInfo = KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo &
 	KnownHtmlModuleBuildInfo;
+declare class HtmlModulesPlugin {
+	constructor();
+
+	/**
+	 * Applies the plugin by registering its hooks on the compiler.
+	 */
+	apply(compiler: Compiler): void;
+
+	/**
+	 * `output.hashFunction`/`hashSalt`/`hashDigest`/`hashDigestLength`
+	 * digest of `content`, with `nonNumericOnlyHash` applied — webpack's
+	 * standard `[contenthash]` recipe.
+	 */
+	static computeContentHash(
+		content: string | Buffer,
+		outputOptions: Output
+	): string;
+
+	/**
+	 * Filename template for an extracted HTML page: `output.htmlFilename` for
+	 * initial chunks, `output.htmlChunkFilename` otherwise — the HTML counterpart
+	 * of `CssModulesPlugin.getChunkFilenameTemplate`.
+	 */
+	static getChunkFilenameTemplate(
+		chunk: Chunk,
+		outputOptions: Output
+	): ChunkFilenameTemplate;
+
+	/**
+	 * Per-compilation hooks for the experimental HTML support.
+	 */
+	static getCompilationHooks: (
+		compilation: Compilation
+	) => HtmlCompilationHooks;
+}
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
 	template?: (source: string, context: HtmlTemplateContext) => string;
 	fragmentContext?: string;
-	sourcesByTag: Record<string, Record<string, SourceItem>>;
+	sourcesByTag: SourceTable;
 
 	/**
 	 * Runs the `template` option over the source and returns the transformed
@@ -24127,6 +24179,9 @@ declare interface SourceAndMap {
 	 */
 	map: null | RawSourceMap;
 }
+declare interface SourceBucket {
+	[index: string]: undefined | SourceItem;
+}
 declare interface SourceItem {
 	type: SourceTypeOrResolver;
 	filter?: (attributes: Map<string, string>, value: string) => boolean;
@@ -24312,6 +24367,9 @@ declare class SourceMapSource extends Source {
 declare interface SourcePosition {
 	line: number;
 	column?: number;
+}
+declare interface SourceTable {
+	[index: string]: SourceBucket;
 }
 type SourceType =
 	| "html"
@@ -27145,6 +27203,9 @@ declare namespace exports {
 	}
 	export namespace css {
 		export { CssModulesPlugin };
+	}
+	export namespace html {
+		export { HtmlModulesPlugin };
 	}
 	export namespace library {
 		export { AbstractLibraryPlugin, EnableLibraryPlugin };
