@@ -750,26 +750,13 @@ const knownBugs = [
 	// webpack bugs and improvements
 	// With namespace import we export and value and `default`, by spec we should export only `default`
 	"import/import-attributes/json-via-namespace.js",
-	// `import(spec, options)` cases where the second argument cannot be lifted
-	// to a static `with`/`assert` attributes object. webpack's
-	// `ImportDependency` template overwrites the entire `import(...)` source
-	// range with the runtime require chain and so drops the second
-	// argument's evaluation entirely (`yield`, sequence expressions, getters
-	// that throw, ToString conversion, etc). The spec also requires runtime
-	// validation of the options object (must be Object, `with`/`assert`
-	// keys, value type checks).
-	"expressions/dynamic-import/import-attributes/2nd-param-yield-ident-invalid.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-yield-expr.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-abrupt-return.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-abrupt-throw.js",
+	// `import(spec, options)` with a dynamic specifier: the options argument
+	// goes through the context-dependency path, which still drops its
+	// evaluation, so the sequenced side effects are not observed.
 	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-sequence.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-get-with-error.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-non-object.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-with-enumeration-abrupt.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-with-enumeration-enumerable.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-with-non-object.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-with-value-abrupt.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-with-value-non-string.js",
+	// `yield` as a strict-mode reserved word: webpack parses the source in
+	// sloppy mode, so the expected parse-time SyntaxError is not raised.
+	"expressions/dynamic-import/import-attributes/2nd-param-yield-ident-invalid.js",
 	// `#mark in obj` requires the deferred namespace target to report
 	// `isExtensible() === false` to throw a TypeError. webpack's proxy
 	// target is mutable until init runs and cannot be frozen up-front
