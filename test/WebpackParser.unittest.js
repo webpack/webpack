@@ -800,6 +800,57 @@ describe("WebpackParser", () => {
 		});
 	});
 
+	describe("expressions, spreads and parameter checks", () => {
+		it("should parse comma sequences and spreads with ranges", () => {
+			const { ast } = parse("a, b, c; f(...args); [...xs];");
+			const sequence =
+				/** @type {import("estree").SequenceExpression} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (ast.body[0])
+						.expression
+				);
+			expect(sequence.type).toBe("SequenceExpression");
+			expect(sequence.expressions).toHaveLength(3);
+			expect(sequence.range).toEqual([0, 7]);
+			const call =
+				/** @type {import("estree").CallExpression} */
+				(
+					/** @type {import("estree").ExpressionStatement} */ (ast.body[1])
+						.expression
+				);
+			expect(call.arguments[0].type).toBe("SpreadElement");
+			expect(call.arguments[0].range).toEqual([11, 18]);
+			// non-lazy mode delegates to acorn
+			expect(parse("f(...args);", { ranges: false }).ast).toBeDefined();
+		});
+
+		it("should report stack overflow on pathological nesting like acorn", () => {
+			expect(() => parse(`${"(".repeat(100000)}x`)).toThrow(
+				/Not enough stack space to parse input/
+			);
+		});
+
+		it("should check identifier parameter lists like acorn", () => {
+			// sloppy simple functions allow duplicates; arrows and strict don't
+			expect(parse("function f(a, a) { return a; }").ast).toBeDefined();
+			expect(() => parse("(a, a) => a;")).toThrow(/Argument name clash/);
+			expect(() => parse("'use strict'; function f(a, a) {}")).toThrow(
+				/Argument name clash/
+			);
+			expect(() => parse("'use strict'; function f(eval) {}")).toThrow(
+				/Binding eval in strict mode/
+			);
+		});
+
+		it("should delegate pattern parameters to acorn's full walk", () => {
+			expect(
+				parse("function f({ a }, [b], c = 1, ...rest) { return a + b + c; }")
+					.ast
+			).toBeDefined();
+			expect(() => parse("(a, { a }) => a;")).toThrow(/Argument name clash/);
+		});
+	});
+
 	describe("subscript parsing", () => {
 		it("should parse optional chains, private members and tagged templates", () => {
 			expect(
