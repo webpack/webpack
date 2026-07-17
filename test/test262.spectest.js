@@ -1043,12 +1043,10 @@ const knownProductionBuildBugs = [
 	// Production provided exports misses namespace re-exports
 	"module-code/instn-star-props-nrml.js",
 	"module-code/namespace/internals/get-nested-namespace-props-nrml.js",
-	// Production concatenation orders eager import after defer
+	// A module imported both `import defer` and eagerly must evaluate at the
+	// eager position; production concatenation evaluates it at the earlier
+	// deferred position instead, changing the observable evaluation order.
 	"import/import-defer/evaluation-sync/module-imported-defer-and-eager.js",
-	// Production concatenation inlines a re-exported deferred namespace as
-	// the eager namespace of the underlying module, so cross-file deferred
-	// namespaces are no longer the same object as the local Proxy.
-	"import/import-defer/deferred-namespace-object/identity.js",
 
 	// Production InlineExports:
 	// TODO: Support disable inline export annotation to keep the TDZ
