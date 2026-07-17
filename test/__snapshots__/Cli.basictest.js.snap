@@ -2421,19 +2421,6 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "module-parser-css-auto-font-face": Object {
-    "configs": Array [
-      Object {
-        "description": "Enable/disable renaming of \`font-family\` names defined by a local \`@font-face\`.",
-        "multiple": false,
-        "path": "module.parser.css/auto.fontFace",
-        "type": "boolean",
-      },
-    ],
-    "description": "Enable/disable renaming of \`font-family\` names defined by a local \`@font-face\`.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "module-parser-css-auto-function": Object {
     "configs": Array [
       Object {
@@ -2671,19 +2658,6 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "module-parser-css-global-font-face": Object {
-    "configs": Array [
-      Object {
-        "description": "Enable/disable renaming of \`font-family\` names defined by a local \`@font-face\`.",
-        "multiple": false,
-        "path": "module.parser.css/global.fontFace",
-        "type": "boolean",
-      },
-    ],
-    "description": "Enable/disable renaming of \`font-family\` names defined by a local \`@font-face\`.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "module-parser-css-global-function": Object {
     "configs": Array [
       Object {
@@ -2875,19 +2849,6 @@ Object {
     "description": "Configure how CSS content is exported as default.",
     "multiple": false,
     "simpleType": "string",
-  },
-  "module-parser-css-module-font-face": Object {
-    "configs": Array [
-      Object {
-        "description": "Enable/disable renaming of \`font-family\` names defined by a local \`@font-face\`.",
-        "multiple": false,
-        "path": "module.parser.css/module.fontFace",
-        "type": "boolean",
-      },
-    ],
-    "description": "Enable/disable renaming of \`font-family\` names defined by a local \`@font-face\`.",
-    "multiple": false,
-    "simpleType": "boolean",
   },
   "module-parser-css-module-function": Object {
     "configs": Array [

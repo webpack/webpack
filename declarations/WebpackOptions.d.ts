@@ -828,10 +828,6 @@ export type CssParserDashedIdents = boolean;
  */
 export type CssParserExportType = "link" | "text" | "css-style-sheet" | "style";
 /**
- * Enable/disable renaming of `font-family` names defined by a local `@font-face`.
- */
-export type CssParserFontFace = boolean;
-/**
  * Enable/disable renaming of `@function` names.
  */
 export type CssParserFunction = boolean;
@@ -3449,10 +3445,6 @@ export interface CssAutoOrModuleParserOptions {
 	 */
 	exportType?: CssParserExportType;
 	/**
-	 * Enable/disable renaming of `font-family` names defined by a local `@font-face`.
-	 */
-	fontFace?: CssParserFontFace;
-	/**
 	 * Enable/disable renaming of `@function` names.
 	 */
 	function?: CssParserFunction;
@@ -3567,10 +3559,6 @@ export interface CssModuleParserOptions {
 	 * Configure how CSS content is exported as default.
 	 */
 	exportType?: CssParserExportType;
-	/**
-	 * Enable/disable renaming of `font-family` names defined by a local `@font-face`.
-	 */
-	fontFace?: CssParserFontFace;
 	/**
 	 * Enable/disable renaming of `@function` names.
 	 */

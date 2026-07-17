@@ -5358,11 +5358,6 @@ declare interface CssAutoOrModuleParserOptions {
 	exportType?: "link" | "text" | "css-style-sheet" | "style";
 
 	/**
-	 * Enable/disable renaming of `font-family` names defined by a local `@font-face`.
-	 */
-	fontFace?: boolean;
-
-	/**
 	 * Enable/disable renaming of `@function` names.
 	 */
 	function?: boolean;
@@ -5617,11 +5612,6 @@ declare interface CssModuleParserOptions {
 	exportType?: "link" | "text" | "css-style-sheet" | "style";
 
 	/**
-	 * Enable/disable renaming of `font-family` names defined by a local `@font-face`.
-	 */
-	fontFace?: boolean;
-
-	/**
 	 * Enable/disable renaming of `@function` names.
 	 */
 	function?: boolean;
@@ -5740,10 +5730,6 @@ declare abstract class CssParser extends ParserClass {
 		 * Configure how CSS content is exported as default.
 		 */
 		exportType?: "link" | "text" | "css-style-sheet" | "style";
-		/**
-		 * Enable/disable renaming of `font-family` names defined by a local `@font-face`.
-		 */
-		fontFace: boolean;
 		/**
 		 * Enable/disable renaming of `@function` names.
 		 */

@@ -412,9 +412,6 @@
         "exportType": {
           "$ref": "#/definitions/CssParserExportType"
         },
-        "fontFace": {
-          "$ref": "#/definitions/CssParserFontFace"
-        },
         "function": {
           "$ref": "#/definitions/CssParserFunction"
         },
@@ -565,9 +562,6 @@
         "exportType": {
           "$ref": "#/definitions/CssParserExportType"
         },
-        "fontFace": {
-          "$ref": "#/definitions/CssParserFontFace"
-        },
         "function": {
           "$ref": "#/definitions/CssParserFunction"
         },
@@ -616,10 +610,6 @@
     "CssParserExportType": {
       "description": "Configure how CSS content is exported as default.",
       "enum": ["link", "text", "css-style-sheet", "style"]
-    },
-    "CssParserFontFace": {
-      "description": "Enable/disable renaming of `font-family` names defined by a local `@font-face`.",
-      "type": "boolean"
     },
     "CssParserFunction": {
       "description": "Enable/disable renaming of `@function` names.",

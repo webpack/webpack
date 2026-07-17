@@ -559,7 +559,6 @@ describe("snapshots", () => {
 		        "customMedia": true,
 		        "customSelectors": true,
 		        "dashedIdents": true,
-		        "fontFace": false,
 		        "function": true,
 		        "grid": true,
 		      },
@@ -570,7 +569,6 @@ describe("snapshots", () => {
 		        "customMedia": true,
 		        "customSelectors": true,
 		        "dashedIdents": true,
-		        "fontFace": false,
 		        "function": true,
 		        "grid": true,
 		      },
@@ -581,7 +579,6 @@ describe("snapshots", () => {
 		        "customMedia": true,
 		        "customSelectors": true,
 		        "dashedIdents": true,
-		        "fontFace": false,
 		        "function": true,
 		        "grid": true,
 		      },
@@ -4571,10 +4568,14 @@ describe("snapshots", () => {
 			-           "preferRelative": true,
 			-         },
 			-         "type": "css",
-			@@ ... @@
+			-       },
+			-       Object {
 			-         "dependency": /css-import-local-module/,
 			-         "exclude": /\\.module\\.\\w+$/i,
-			@@ ... @@
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
+			-         },
 			-         "type": "css/module",
 			-       },
 			-       Object {
@@ -4601,7 +4602,7 @@ describe("snapshots", () => {
 			-       Object {
 			-         "assert": Object {
 			-           "type": "css",
-			-         },
+			@@ ... @@
 			-         "parser": Object {
 			-           "exportType": "css-style-sheet",
 			-         },
@@ -4610,24 +4611,12 @@ describe("snapshots", () => {
 			-           "preferRelative": true,
 			-         },
 			-       },
-			-       Object {
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
-			-         },
 			@@ ... @@
-			-         },
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
-			-         },
-			-       },
-			-       Object {
 			-         "dependency": "html-style",
 			-         "parser": Object {
 			-           "exportType": "text",
 			-         },
-			-         "resolve": Object {
+			@@ ... @@
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
 			-         },
@@ -4637,6 +4626,14 @@ describe("snapshots", () => {
 			-         "parser": Object {
 			-           "as": "block-contents",
 			-           "exportType": "text",
+			-         },
+			-         "resolve": Object {
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
+			-         },
+			-       },
+			-       Object {
+			-         "resolve": Object {
 			@@ ... @@
 			-     ],
 			-     "generator": Object {
@@ -4670,6 +4667,10 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
 			+             "type": "asset/resource",
+			+           },
+			+           Object {
+			+             "resourceQuery": /(\\?|&)inline(&|$)/,
+			+             "type": "asset/inline",
 			@@ ... @@
 			-       "css/module": Object {
 			-         "exportsConvention": "as-is",
@@ -4678,17 +4679,11 @@ describe("snapshots", () => {
 			-         "localIdentHashFunction": "md4",
 			-         "localIdentHashSalt": undefined,
 			-         "localIdentName": "[fullhash]",
-			+           Object {
-			+             "resourceQuery": /(\\?|&)inline(&|$)/,
-			+             "type": "asset/inline",
-			+           },
 			+         ],
 			@@ ... @@
 			+     ],
 			+     "generator": Object {
 			@@ ... @@
-			-         },
-			-       },
 			-       "css": Object {
 			-         "customMedia": true,
 			-         "customSelectors": true,
@@ -4703,7 +4698,6 @@ describe("snapshots", () => {
 			-         "customMedia": true,
 			-         "customSelectors": true,
 			-         "dashedIdents": true,
-			-         "fontFace": false,
 			-         "function": true,
 			-         "grid": true,
 			-       },
@@ -4714,10 +4708,9 @@ describe("snapshots", () => {
 			-         "customMedia": true,
 			-         "customSelectors": true,
 			-         "dashedIdents": true,
-			-         "fontFace": false,
 			-         "function": true,
 			-         "grid": true,
-			@@ ... @@
+			-       },
 			-       "css/module": Object {
 			-         "animation": true,
 			-         "container": true,
@@ -4725,9 +4718,9 @@ describe("snapshots", () => {
 			-         "customMedia": true,
 			-         "customSelectors": true,
 			-         "dashedIdents": true,
-			-         "fontFace": false,
 			-         "function": true,
 			-         "grid": true,
+			-       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -4751,9 +4744,6 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
-			-           "...",
-			-         ],
-			-       },
 			-       "css-import": Object {
 			-         "conditionNames": Array [
 			-           "webpack",
@@ -4797,9 +4787,11 @@ describe("snapshots", () => {
 			-         ],
 			-         "mainFields": Array [
 			-           "style",
-			@@ ... @@
+			-           "...",
+			-         ],
 			-         "mainFiles": Array [],
 			-         "preferRelative": true,
+			-       },
 			@@ ... @@
 			+           ".html",
 			@@ ... @@
