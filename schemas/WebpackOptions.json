@@ -4447,7 +4447,7 @@
           ]
         },
         "favicon": {
-          "description": "Favicon for the generated HTML. `true` (default) injects the webpack logo as an SVG favicon; `false` disables it; a string is treated as a path to a favicon file that is emitted and linked.",
+          "description": "Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon path (e.g. `{ \"icon\": \"./favicon.svg\", \"apple-touch-icon\": \"./apple.png\" }`); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.",
           "anyOf": [
             {
               "type": "boolean"
@@ -4455,6 +4455,18 @@
             {
               "type": "string",
               "minLength": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": {
+                "description": "Path to the icon file linked for this `rel`.",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "((name: string) => boolean | string | { [rel: string]: string })"
             }
           ]
         },

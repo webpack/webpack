@@ -96,7 +96,7 @@ module.exports = [
 	{
 		name: "authored-base-only",
 		entry: { "authored-base-only": "./src/page-nocharset.html" },
-		output: { html: { base: "/assets/", favicon: false } },
+		output: { html: { base: "/assets/" } },
 		experiments: { html: true },
 		plugins: [copyTest]
 	},
@@ -120,8 +120,7 @@ module.exports = [
 				title: "No Head Doc",
 				// eslint-disable-next-line unicorn/text-encoding-identifier-case
 				meta: { charset: "utf-8" },
-				base: "/x/",
-				favicon: false
+				base: "/x/"
 			}
 		},
 		experiments: { html: true },

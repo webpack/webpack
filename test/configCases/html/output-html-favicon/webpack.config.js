@@ -26,7 +26,9 @@ const copyTest = {
 	}
 };
 
-/** @type {(name: string, favicon?: string | boolean) => import("../../../../").Configuration} */
+/** @typedef {boolean | string | Record<string, string> | ((name: string) => boolean | string | Record<string, string>)} Favicon */
+
+/** @type {(name: string, favicon?: Favicon) => import("../../../../").Configuration} */
 const config = (name, favicon) => ({
 	name,
 	target: "web",
@@ -40,106 +42,43 @@ const config = (name, favicon) => ({
 	plugins: [copyTest]
 });
 
+/** @type {(name: string, entry: string) => import("../../../../").Configuration} */
+const authored = (name, entry) => ({
+	name,
+	target: "web",
+	entry: { [name]: entry },
+	output: {
+		filename: "[name].js",
+		htmlFilename: `${name}.html`,
+		// `favicon: true` must not touch an authored page that already has an
+		// icon, and (like Vite) must not inject into an authored page at all.
+		html: { favicon: true }
+	},
+	experiments: { html: true },
+	plugins: [copyTest]
+});
+
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
-	// default — webpack logo svg favicon
+	// default (html: true, favicon unspecified) — nothing injected
 	config("default", undefined),
-	// disabled
+	// opt-in webpack logo
+	config("logo", true),
+	// disabled explicitly
 	config("off", false),
-	// user-provided icon
+	// user-provided icon path
 	config("custom", "./src/icon.svg"),
-	// authored HTML entry — favicon injected into <head>
-	{
-		name: "authored",
-		target: "web",
-		entry: { authored: "./src/page.html" },
-		output: {
-			filename: "[name].js",
-			htmlFilename: "authored.html",
-			html: true
-		},
-		experiments: { html: true },
-		plugins: [copyTest]
-	},
-	// authored HTML entry — favicon disabled
-	{
-		name: "authored-off",
-		target: "web",
-		entry: { "authored-off": "./src/page-off.html" },
-		output: {
-			filename: "[name].js",
-			htmlFilename: "authored-off.html",
-			html: { favicon: false }
-		},
-		experiments: { html: true },
-		plugins: [copyTest]
-	},
-	// authored HTML entry — custom favicon path
-	{
-		name: "authored-custom",
-		target: "web",
-		entry: { "authored-custom": "./src/page.html" },
-		output: {
-			filename: "[name].js",
-			htmlFilename: "authored-custom.html",
-			html: { favicon: "./src/icon.svg" }
-		},
-		experiments: { html: true },
-		plugins: [copyTest]
-	},
-	// multi-page authored HTML — both pages get the favicon even if first one
-	// already has <link rel="icon"> (exercises the pre-loop asset-name fix)
-	{
-		name: "authored-multi",
-		target: "web",
-		entry: {
-			page1: "./src/page.html",
-			page2: "./src/page-off.html"
-		},
-		output: {
-			filename: "[name].js",
-			html: true
-		},
-		experiments: { html: true },
-		plugins: [copyTest]
-	},
-	// authored HTML already has <link rel='icon'> (single quotes) — must not double-inject
-	{
-		name: "has-icon-squote",
-		target: "web",
-		entry: { "has-icon-squote": "./src/page-has-icon-squote.html" },
-		output: {
-			filename: "[name].js",
-			htmlFilename: "has-icon-squote.html",
-			html: true
-		},
-		experiments: { html: true },
-		plugins: [copyTest]
-	},
-	// authored HTML already has <LINK REL="ICON"> (uppercase) — must not double-inject
-	{
-		name: "has-icon-upper",
-		target: "web",
-		entry: { "has-icon-upper": "./src/page-has-icon-upper.html" },
-		output: {
-			filename: "[name].js",
-			htmlFilename: "has-icon-upper.html",
-			html: true
-		},
-		experiments: { html: true },
-		plugins: [copyTest]
-	},
-	// authored HTML already has <link rel="shortcut icon"> — must not double-inject
-	{
-		name: "has-shortcut-icon",
-		target: "web",
-		entry: { "has-shortcut-icon": "./src/page-has-shortcut-icon.html" },
-		output: {
-			filename: "[name].js",
-			htmlFilename: "has-shortcut-icon.html",
-			html: true
-		},
-		experiments: { html: true },
-		plugins: [copyTest]
-	}
+	// user-provided non-svg icon — the link's type follows the file format
+	config("custom-png", "./src/icon.png"),
+	// object notation — one <link> per rel, each hashed with its own type
+	config("object", {
+		icon: "./src/icon.svg",
+		"apple-touch-icon": "./src/icon.png"
+	}),
+	// function notation — receives the page name, returns any favicon form
+	config("fn", (name) => (name === "fn" ? "./src/icon.svg" : false)),
+	// authored page already declares a favicon — must stay the only one
+	authored("authored-has-icon", "./src/page-has-icon.html"),
+	// authored page without a favicon — webpack does not inject one
+	authored("authored-no-icon", "./src/page-no-icon.html")
 ];

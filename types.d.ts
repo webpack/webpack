@@ -19308,9 +19308,13 @@ declare interface OutputHtmlOptions {
 		  };
 
 	/**
-	 * Favicon for the generated HTML. `true` (default) injects the webpack logo as an SVG favicon; `false` disables it; a string is treated as a path to a favicon file that is emitted and linked.
+	 * Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon path (e.g. `{ "icon": "./favicon.svg", "apple-touch-icon": "./apple.png" }`); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.
 	 */
-	favicon?: string | boolean;
+	favicon?:
+		| string
+		| boolean
+		| { [index: string]: string }
+		| ((name: string) => string | boolean | { [index: string]: string });
 
 	/**
 	 * Where to place injected chunk `<script>`/`<link>` tags. `"body"` (default; `"head"` with `output.module`) keeps them next to the entry tag — end of `<body>` on generated pages; `"head"` moves them into `<head>`; `false` suppresses sibling-chunk injection (entry tags and resource hints remain).
