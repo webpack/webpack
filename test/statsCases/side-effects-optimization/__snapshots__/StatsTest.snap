@@ -7,7 +7,7 @@ cacheable modules X KiB
   ./index.js + 1 modules X KiB [built] [code generated]
     [no exports]
     [no exports used]
-    ModuleConcatenation bailout: Cannot concat with ./node_modules/module-with-export/emptyModule.js: Module is not an ECMAScript module
+    ModuleConcatenation bailout: Cannot concat with ./node_modules/module-with-export/emptyModule.js: Module is not in strict mode
     | ./index.js X bytes [built]
     |   [no exports]
     |   [no exports used]
@@ -16,7 +16,7 @@ cacheable modules X KiB
     |   [only some exports used: smallVar]
   ./node_modules/module-with-export/emptyModule.js X bytes [built] [code generated]
     [used exports unknown]
-    ModuleConcatenation bailout: Module is not an ECMAScript module
+    ModuleConcatenation bailout: Module is not in strict mode
 webpack x.x.x compiled successfully in X ms
 
 asset main.no-side.js X KiB [emitted] [minimized] (name: main)
@@ -29,7 +29,7 @@ cacheable modules X KiB
       ModuleConcatenation bailout: List of module exports is dynamic (huh: maybe provided (runtime-defined) and used in main)
     ./node_modules/module-with-export/emptyModule.js X bytes [built] [code generated]
       [used exports unknown]
-      ModuleConcatenation bailout: Module is not an ECMAScript module
+      ModuleConcatenation bailout: Module is not in strict mode
   ./index.js + 2 modules X bytes [built] [code generated]
     [no exports]
     [no exports used]

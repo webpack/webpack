@@ -1,25 +1,26 @@
-import * as callContext from "./call-context";
-import * as callOnly from "./call-only";
-import * as defineProperty from "./define-property";
-import * as escaped from "./escaped";
+import * as circularA from "./circular-a";
 import * as exportRequire from "./export-require";
 import * as moduleId from "./module-id";
-import * as reassign from "./reassign";
+import reexportRequire from "./reexport-require";
+import "./side-effect-only";
 import * as sloppy from "./sloppy";
-import * as thisExports from "./this-exports";
-import * as thisRead from "./this-read";
+import * as wrapWithRequire from "./wrap-with-require";
 
 it("should keep unsupported CommonJS modules working", () => {
 	expect(sloppy.s).toBe("sloppy");
-	expect(reassign.default.r).toBe("reassigned");
-	expect(thisExports.t).toBe("this-export");
-	expect(callContext.run()).toBe("ctx-ok");
-	expect(callOnly.g()).toBe("f-g");
 	expect(typeof moduleId.id).not.toBe("undefined");
-	expect(defineProperty.d).toBe("defined");
-	expect(escaped.e).toBe("escaped");
 	expect(exportRequire.inner.s).toBe("sloppy");
-	expect(thisRead.viaThis).toBe("v");
+	expect(wrapWithRequire.default.s).toBe("sloppy");
+	expect(global.__webpackWrappedSideEffect).toBe("ran");
+});
+
+it("should keep a whole `module.exports = require(...)` re-export working", () => {
+	expect(reexportRequire.s).toBe("sloppy");
+});
+
+it("should keep circular CommonJS requires working", () => {
+	expect(circularA.name).toBe("a");
+	expect(circularA.bName).toBe("b");
 });
 
 it("should not concatenate any of the unsupported modules", () => {
@@ -40,22 +41,16 @@ it("should report a bailout reason for each unsupported module", () => {
 	expect(bailoutsOf("sloppy.js")).toContainEqual(
 		expect.stringContaining("not in strict mode")
 	);
-	expect(bailoutsOf("this-exports.js")).toContainEqual(
-		expect.stringContaining("uses this to define exports")
-	);
-	expect(bailoutsOf("this-read.js")).toContainEqual(
-		expect.stringContaining("references its exports via this")
-	);
-	expect(bailoutsOf("call-only.js")).toContainEqual(
-		expect.stringContaining("call context")
-	);
 	expect(bailoutsOf("module-id.js")).toContainEqual(
 		expect.stringContaining("module.id")
 	);
-	expect(bailoutsOf("define-property.js")).toContainEqual(
-		expect.stringContaining("Object.defineProperty(exports)")
-	);
 	expect(bailoutsOf("export-require.js")).toContainEqual(
 		expect.stringContaining("unsupported dependency")
+	);
+	expect(bailoutsOf("wrap-with-require.js")).toContainEqual(
+		expect.stringContaining("not supported when wrapping")
+	);
+	expect(bailoutsOf("side-effect-only.js")).toContainEqual(
+		expect.stringContaining("not an ECMAScript module")
 	);
 });

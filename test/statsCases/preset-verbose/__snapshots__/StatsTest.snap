@@ -24,7 +24,7 @@ chunk {226} (runtime: main) 226.js X bytes <{964}> [rendered]
     [used exports unknown]
     CommonJS bailout: module.exports is used directly at 1:0-14
     Statement (ExpressionStatement) with side effects in source code at 1:0-21
-    ModuleConcatenation bailout: Module is not an ECMAScript module
+    ModuleConcatenation bailout: Module is not in strict mode
     require.ensure item ./d [964] ./c.js 1:0-52
     cjs self exports reference [425] ./d.js 1:0-14
     X ms [237] -> X ms [964] ->
@@ -33,7 +33,7 @@ chunk {226} (runtime: main) 226.js X bytes <{964}> [rendered]
     [used exports unknown]
     CommonJS bailout: module.exports is used directly at 1:0-14
     Statement (ExpressionStatement) with side effects in source code at 1:0-21
-    ModuleConcatenation bailout: Module is not an ECMAScript module
+    ModuleConcatenation bailout: Module is not in strict mode
     require.ensure item ./e [964] ./c.js 1:0-52
     cjs self exports reference [210] ./e.js 1:0-14
     X ms [237] -> X ms [964] ->
@@ -67,7 +67,7 @@ chunk {792} (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) 
       [used exports unknown]
       CommonJS bailout: module.exports is used directly at 1:0-14
       Statement (ExpressionStatement) with side effects in source code at 1:0-21
-      ModuleConcatenation bailout: Module is not an ECMAScript module
+      ModuleConcatenation bailout: Module is not in strict mode
       cjs self exports reference [670] ./a.js 1:0-14
       cjs require ./a [237] ./index.js 1:0-14
       X ms [237] ->
@@ -75,7 +75,7 @@ chunk {792} (runtime: main) main.js (main) X bytes (javascript) X KiB (runtime) 
     ./index.js [237] X bytes {792} [depth 0] [built] [code generated]
       [no exports used]
       Statement (ExpressionStatement) with side effects in source code at 1:0-15
-      ModuleConcatenation bailout: Module is not an ECMAScript module
+      ModuleConcatenation bailout: Module is not in strict mode
       entry ./index main
       X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
 chunk {899} (runtime: main) 899.js X bytes <{792}> [rendered]
@@ -84,7 +84,7 @@ chunk {899} (runtime: main) 899.js X bytes <{792}> [rendered]
     [used exports unknown]
     CommonJS bailout: module.exports is used directly at 1:0-14
     Statement (ExpressionStatement) with side effects in source code at 1:0-21
-    ModuleConcatenation bailout: Module is not an ECMAScript module
+    ModuleConcatenation bailout: Module is not in strict mode
     cjs self exports reference [899] ./b.js 1:0-14
     amd require ./b [237] ./index.js 2:0-16
     X ms [237] ->
@@ -94,7 +94,7 @@ chunk {964} (runtime: main) 964.js X bytes <{792}> >{226}< [rendered]
   ./c.js [964] X bytes {964} [depth 1] [built] [code generated]
     [used exports unknown]
     Statement (ExpressionStatement) with side effects in source code at 1:0-53
-    ModuleConcatenation bailout: Module is not an ECMAScript module
+    ModuleConcatenation bailout: Module is not in strict mode
     amd require ./c [237] ./index.js 3:0-16
     X ms [237] ->
     X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)

@@ -4366,6 +4366,16 @@ declare interface ConcatenatedModuleInfo {
 	type: "concatenated";
 	module: Module;
 	index: number;
+
+	/**
+	 * a "weird" CommonJS module rendered inside an IIFE with real module/exports objects
+	 */
+	cjsWrapped?: boolean;
+
+	/**
+	 * the wrapped module's `{ exports }` object variable
+	 */
+	moduleObjectName?: string;
 	ast?: Program;
 	internalSource?: Source;
 	source?: ReplaceSource;

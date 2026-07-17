@@ -49,31 +49,31 @@ cacheable modules X bytes
   ./index.js [237] X bytes {792} [depth 0] [built] [code generated]
     [no exports used]
     Statement (ExpressionStatement) with side effects in source code at 1:0-15
-    ModuleConcatenation bailout: Module is not an ECMAScript module
+    ModuleConcatenation bailout: Module is not in strict mode
   ./a.js [670] X bytes {792} [depth 1] [built] [code generated]
     [used exports unknown]
     CommonJS bailout: module.exports is used directly at 1:0-14
     Statement (ExpressionStatement) with side effects in source code at 1:0-21
-    ModuleConcatenation bailout: Module is not an ECMAScript module
+    ModuleConcatenation bailout: Module is not in strict mode
   ./b.js [899] X bytes {899} [depth 1] [built] [code generated]
     [used exports unknown]
     CommonJS bailout: module.exports is used directly at 1:0-14
     Statement (ExpressionStatement) with side effects in source code at 1:0-21
-    ModuleConcatenation bailout: Module is not an ECMAScript module
+    ModuleConcatenation bailout: Module is not in strict mode
   ./c.js [964] X bytes {964} [depth 1] [built] [code generated]
     [used exports unknown]
     Statement (ExpressionStatement) with side effects in source code at 1:0-53
-    ModuleConcatenation bailout: Module is not an ECMAScript module
+    ModuleConcatenation bailout: Module is not in strict mode
   ./d.js [425] X bytes {226} [depth 2] [built] [code generated]
     [used exports unknown]
     CommonJS bailout: module.exports is used directly at 1:0-14
     Statement (ExpressionStatement) with side effects in source code at 1:0-21
-    ModuleConcatenation bailout: Module is not an ECMAScript module
+    ModuleConcatenation bailout: Module is not in strict mode
   ./e.js [210] X bytes {226} [depth 2] [built] [code generated]
     [used exports unknown]
     CommonJS bailout: module.exports is used directly at 1:0-14
     Statement (ExpressionStatement) with side effects in source code at 1:0-21
-    ModuleConcatenation bailout: Module is not an ECMAScript module
+    ModuleConcatenation bailout: Module is not in strict mode
 
 LOG from LogTestPlugin
 <-> Group
