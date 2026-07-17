@@ -762,12 +762,18 @@ const knownBugs = [
 	// target is mutable until init runs and cannot be frozen up-front
 	// because the underlying module's exports aren't yet known.
 	"import/import-defer/evaluation-triggers/ignore-private-name-access.js",
-	// Bugs with defer and evaluation
+	// Host resolution errors must be reported eagerly even for deferred imports;
+	// webpack turns a missing module into a build error resolved lazily instead.
 	"import/import-defer/errors/resolution-error/import-defer-of-missing-module-fails.js",
+	// The deferred module itself has top-level await, so webpack evaluates it
+	// eagerly through the async-dependency system and never builds a deferred
+	// namespace for it — throwing on self/other access during its own
+	// evaluating-async state would require routing async defer imports through a
+	// deferred namespace while preserving eager awaiting (a larger change).
 	"import/import-defer/errors/get-self-while-evaluating-async/main.js",
-	"import/import-defer/evaluation-top-level-await/flattening-order/main.js",
-	// Complex examples, need to think how to resolve it
 	"import/import-defer/errors/get-other-while-evaluating-async/main.js",
+	// Exact interleaving of top-level-await and deferred evaluation order.
+	"import/import-defer/evaluation-top-level-await/flattening-order/main.js",
 	// Just bugs, need to fix
 	// `Reflect.preventExtensions(ns)` should return true and the deferred
 	// namespace should report `isExtensible() === false` per the TC39 spec —
