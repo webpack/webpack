@@ -418,6 +418,38 @@ describe("WebpackParser", () => {
 			return statement.expression.type;
 		};
 
+		it("should classify braces as blocks or objects like acorn", () => {
+			// colon in block vs object context, nested blocks, function bodies
+			const { ast } = parse(
+				"foo: { bar(); } x = { a: { b: 1 } }; { { } } y = function () { return 1; };"
+			);
+			expect(ast.body.map((s) => s.type)).toEqual([
+				"LabeledStatement",
+				"ExpressionStatement",
+				"BlockStatement",
+				"ExpressionStatement"
+			]);
+			// a line terminator after `return` turns the brace into a block
+			const returned =
+				/** @type {import("estree").FunctionDeclaration} */
+				(parse("function f() { return {}; }").ast.body[0]);
+			const ret = /** @type {import("estree").ReturnStatement} */ (
+				returned.body.body[0]
+			);
+			expect(/** @type {import("estree").Node} */ (ret.argument).type).toBe(
+				"ObjectExpression"
+			);
+			const broken =
+				/** @type {import("estree").FunctionDeclaration} */
+				(parse("function f() { return\n{}; }").ast.body[0]);
+			expect(
+				/** @type {import("estree").ReturnStatement} */ (broken.body.body[0])
+					.argument
+			).toBeNull();
+			// a stray closer still pops safely before the parser rejects it
+			expect(() => parse("}")).toThrow(/Unexpected token/);
+		});
+
 		it("should read `/` after a value as division, not a regexp", () => {
 			// the `else` branch: exprAllowed follows the token type's beforeExpr
 			expect(exprType("a / b / c")).toBe("BinaryExpression");
