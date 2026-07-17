@@ -9182,6 +9182,25 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-html-favicon": Object {
+    "configs": Array [
+      Object {
+        "description": "Favicon for the generated HTML. \`true\` (default) injects the webpack logo as an SVG favicon; \`false\` disables it; a string is treated as a path to a favicon file that is emitted and linked.",
+        "multiple": false,
+        "path": "output.html.favicon",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Favicon for the generated HTML. \`true\` (default) injects the webpack logo as an SVG favicon; \`false\` disables it; a string is treated as a path to a favicon file that is emitted and linked.",
+        "multiple": false,
+        "path": "output.html.favicon",
+        "type": "string",
+      },
+    ],
+    "description": "Favicon for the generated HTML. \`true\` (default) injects the webpack logo as an SVG favicon; \`false\` disables it; a string is treated as a path to a favicon file that is emitted and linked.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-html-filename": Object {
     "configs": Array [
       Object {

@@ -2747,6 +2747,10 @@ export interface OutputHtmlOptions {
 				target?: string;
 		  };
 	/**
+	 * Favicon for the generated HTML. `true` (default) injects the webpack logo as an SVG favicon; `false` disables it; a string is treated as a path to a favicon file that is emitted and linked.
+	 */
+	favicon?: boolean | string;
+	/**
 	 * Where to place injected chunk `<script>`/`<link>` tags. `"body"` (default; `"head"` with `output.module`) keeps them next to the entry tag — end of `<body>` on generated pages; `"head"` moves them into `<head>`; `false` suppresses sibling-chunk injection (entry tags and resource hints remain).
 	 */
 	inject?: ("body" | "head") | false;

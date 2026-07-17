@@ -11,9 +11,9 @@ const inlineStyles = (html) => html.match(/<style>[\s\S]*?<\/style>/g) || [];
 
 it("inline: true inlines all JS chunks as <script> blocks", () => {
 	const html = readHtml("bool.html");
-	// No external <script src> or <link href> for chunks
+	// No external <script src> or chunk <link href> (favicon <link rel="icon"> is expected)
 	expect(scriptTags(html).some((t) => t.includes("src="))).toBe(false);
-	expect(linkTags(html).some((t) => t.includes("href="))).toBe(false);
+	expect(linkTags(html).filter(t => !/rel=["']?icon/i.test(t)).some((t) => t.includes("href="))).toBe(false);
 	// At least one inline <script> with real content
 	const scripts = inlineScripts(html);
 	expect(scripts.length).toBeGreaterThan(0);
@@ -107,7 +107,7 @@ it("inline: true with authored <link rel=stylesheet> entry inlines CSS as <style
 	const html = readHtml("css-link.html");
 	expect(inlineStyles(html).length).toBeGreaterThan(0);
 	expect(inlineStyles(html)[0]).toMatch(/color/);
-	expect(linkTags(html).some((t) => t.includes("href="))).toBe(false);
+	expect(linkTags(html).filter(t => !/rel=["']?icon/i.test(t)).some((t) => t.includes("href="))).toBe(false);
 });
 
 it("inline: true escapes </script> so chunk content can't close the block early", () => {
