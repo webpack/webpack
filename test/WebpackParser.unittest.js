@@ -625,6 +625,17 @@ describe("WebpackParser", () => {
 			expect(moduleAst.body[0].type).toBe("ExpressionStatement");
 		});
 
+		it("should parse if and return through acorn without ranges", () => {
+			const { ast } = parse(
+				"function f() { if (a) return 1; return 2; } if (b) c();",
+				{ ranges: false }
+			);
+			expect(ast.body.map((s) => s.type)).toEqual([
+				"FunctionDeclaration",
+				"IfStatement"
+			]);
+		});
+
 		it("should delegate rare statement heads to acorn", () => {
 			const { ast } = parse(
 				"do ; while (a); switch (b) { default: } try { throw 1; } catch { } with (c) d(); debugger; ;",
@@ -656,8 +667,17 @@ describe("WebpackParser", () => {
 					calls++;
 					return super.parseIfStatement(node);
 				}
+
+				/**
+				 * @param {import("acorn").Node} node started statement node
+				 * @returns {import("acorn").Node} return statement
+				 */
+				parseReturnStatement(node) {
+					calls++;
+					return super.parseReturnStatement(node);
+				}
 			}
-			const code = "if (a) { b(); } var x = 1;";
+			const code = "if (a) { b(); } var x = 1; function f() { return x; }";
 			const ast = Plugin.parse(
 				code,
 				/** @type {import("acorn").Options} */ (
@@ -668,10 +688,11 @@ describe("WebpackParser", () => {
 					})
 				)
 			);
-			expect(calls).toBe(1);
+			expect(calls).toBe(2);
 			expect(ast.body.map((s) => s.type)).toEqual([
 				"IfStatement",
-				"VariableDeclaration"
+				"VariableDeclaration",
+				"FunctionDeclaration"
 			]);
 		});
 	});
