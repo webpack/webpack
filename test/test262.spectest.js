@@ -766,10 +766,6 @@ const knownBugs = [
 	"import/import-defer/errors/resolution-error/import-defer-of-missing-module-fails.js",
 	"import/import-defer/errors/get-self-while-evaluating-async/main.js",
 	"import/import-defer/evaluation-top-level-await/flattening-order/main.js",
-	// Bugs with using the same module require with defer and without - should we generate two modules here?
-	"import/import-defer/errors/module-throws/defer-import-after-evaluation.js",
-	"import/import-defer/errors/module-throws/third-party-evaluation-after-defer-import.js",
-	"import/import-defer/errors/module-throws/trigger-evaluation.js",
 	// Complex examples, need to think how to resolve it
 	"import/import-defer/errors/get-self-while-defer-evaluating/main.js",
 	"import/import-defer/errors/get-other-while-evaluating-async/main.js",
