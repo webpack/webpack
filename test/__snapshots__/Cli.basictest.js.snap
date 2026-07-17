@@ -2363,6 +2363,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-css-auto-custom-media": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable resolution of \`@custom-media\` at-rules (file-local build-time substitution).",
+        "multiple": false,
+        "path": "module.parser.css/auto.customMedia",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable resolution of \`@custom-media\` at-rules (file-local build-time substitution).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-auto-custom-selectors": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable resolution of \`@custom-selector\` at-rules (file-local build-time expansion to \`:is(...)\`).",
+        "multiple": false,
+        "path": "module.parser.css/auto.customSelectors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable resolution of \`@custom-selector\` at-rules (file-local build-time expansion to \`:is(...)\`).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-auto-dashed-idents": Object {
     "configs": Array [
       Object {
@@ -2394,6 +2420,19 @@ Object {
     "description": "Configure how CSS content is exported as default.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-css-auto-font-face": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`font-family\` names defined by a local \`@font-face\`.",
+        "multiple": false,
+        "path": "module.parser.css/auto.fontFace",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`font-family\` names defined by a local \`@font-face\`.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-css-auto-function": Object {
     "configs": Array [
@@ -2473,6 +2512,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-css-custom-media": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable resolution of \`@custom-media\` at-rules (file-local build-time substitution).",
+        "multiple": false,
+        "path": "module.parser.css.customMedia",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable resolution of \`@custom-media\` at-rules (file-local build-time substitution).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-custom-selectors": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable resolution of \`@custom-selector\` at-rules (file-local build-time expansion to \`:is(...)\`).",
+        "multiple": false,
+        "path": "module.parser.css.customSelectors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable resolution of \`@custom-selector\` at-rules (file-local build-time expansion to \`:is(...)\`).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-export-type": Object {
     "configs": Array [
       Object {
@@ -2548,6 +2613,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-css-global-custom-media": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable resolution of \`@custom-media\` at-rules (file-local build-time substitution).",
+        "multiple": false,
+        "path": "module.parser.css/global.customMedia",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable resolution of \`@custom-media\` at-rules (file-local build-time substitution).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-global-custom-selectors": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable resolution of \`@custom-selector\` at-rules (file-local build-time expansion to \`:is(...)\`).",
+        "multiple": false,
+        "path": "module.parser.css/global.customSelectors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable resolution of \`@custom-selector\` at-rules (file-local build-time expansion to \`:is(...)\`).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-global-dashed-idents": Object {
     "configs": Array [
       Object {
@@ -2579,6 +2670,19 @@ Object {
     "description": "Configure how CSS content is exported as default.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-css-global-font-face": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`font-family\` names defined by a local \`@font-face\`.",
+        "multiple": false,
+        "path": "module.parser.css/global.fontFace",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`font-family\` names defined by a local \`@font-face\`.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-css-global-function": Object {
     "configs": Array [
@@ -2714,6 +2818,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-css-module-custom-media": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable resolution of \`@custom-media\` at-rules (file-local build-time substitution).",
+        "multiple": false,
+        "path": "module.parser.css/module.customMedia",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable resolution of \`@custom-media\` at-rules (file-local build-time substitution).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-module-custom-selectors": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable resolution of \`@custom-selector\` at-rules (file-local build-time expansion to \`:is(...)\`).",
+        "multiple": false,
+        "path": "module.parser.css/module.customSelectors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable resolution of \`@custom-selector\` at-rules (file-local build-time expansion to \`:is(...)\`).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-module-dashed-idents": Object {
     "configs": Array [
       Object {
@@ -2745,6 +2875,19 @@ Object {
     "description": "Configure how CSS content is exported as default.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-css-module-font-face": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable renaming of \`font-family\` names defined by a local \`@font-face\`.",
+        "multiple": false,
+        "path": "module.parser.css/module.fontFace",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable renaming of \`font-family\` names defined by a local \`@font-face\`.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-css-module-function": Object {
     "configs": Array [

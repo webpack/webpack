@@ -30,3 +30,8 @@
 		color: red;
 	}
 }
+
+/* Malformed at-rules are simply dropped (no name / no colon / empty list). */
+@custom-media (max-width: 1px);
+@custom-selector heading h1, h2;
+@custom-selector :--empty;

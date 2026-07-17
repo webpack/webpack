@@ -10,6 +10,7 @@ it("should leave unresolvable @custom-media references untouched and warn", () =
 	expect(css).toContain("(--undefined-mq)");
 	expect(css).toContain("(--defined: 1px)");
 	expect(css).toContain("(--nested)");
-	// The definitions themselves are still removed.
+	// The definitions themselves are still removed, malformed ones included.
 	expect(css).not.toContain("@custom-media");
+	expect(css).not.toContain("@custom-selector");
 });

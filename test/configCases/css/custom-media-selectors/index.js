@@ -44,9 +44,7 @@ it("should scope regular class names in a css module while resolving custom-medi
 	const css = readBundle();
 	expect(mod.box).toBeDefined();
 	expect(css).toContain("@media (max-width: 20em)");
-	expect(css).toMatch(
-		new RegExp(`\\.${mod.box.replace(/[-\\/\\\\^$*+?.()|[\\]{}]/g, "\\$&")}`)
-	);
+	expect(css).toContain(`.${mod.box}`);
 });
 
 it("should drop the @custom-media and @custom-selector at-rules", () => {
