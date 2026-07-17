@@ -4504,7 +4504,7 @@
           ]
         },
         "inline": {
-          "description": "Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; an array of `RegExp` patterns matches against the chunk name.",
+          "description": "Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; `\"script\"` inlines only JavaScript, `\"style\"` only CSS; an array of `RegExp` patterns matches against the chunk name.",
           "anyOf": [
             {
               "type": "array",
@@ -4513,6 +4513,9 @@
                 "instanceof": "RegExp",
                 "tsType": "RegExp"
               }
+            },
+            {
+              "enum": ["script", "style"]
             },
             {
               "type": "boolean"
