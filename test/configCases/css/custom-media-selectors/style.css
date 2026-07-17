@@ -1,0 +1,83 @@
+@custom-media --narrow (max-width: 30em);
+@custom-media --modern (color), (hover);
+@custom-media --no-hover not (hover: hover);
+@custom-media --tv screen;
+@custom-media --legacy not all;
+@custom-selector :--heading h1, h2, h3;
+
+@media (--narrow) {
+	.narrow {
+		color: red;
+	}
+}
+
+@media (--modern) and (min-width: 100px) {
+	.modern {
+		color: green;
+	}
+}
+
+@media (--no-hover) {
+	.no-hover {
+		color: orange;
+	}
+}
+
+@media (--wide) {
+	.wide {
+		color: blue;
+	}
+}
+
+/* A media-type value inlines at the start of a query. */
+@media (--tv) {
+	.tv {
+		color: teal;
+	}
+}
+
+@media (--tv) and (min-width: 100px) {
+	.tv-wide {
+		color: navy;
+	}
+}
+
+@media (--legacy) {
+	.legacy {
+		color: gray;
+	}
+}
+
+:--heading {
+	color: black;
+}
+
+a:--heading {
+	color: purple;
+}
+
+.card:not(:--heading) {
+	color: teal;
+}
+
+/* Undefined custom selector — left untouched. */
+.unknown:--not-defined {
+	color: gray;
+}
+
+/* Comma-separated media-query list — each ref leads its own segment. */
+@media (--narrow), (--wide) {
+	.list {
+		color: pink;
+	}
+}
+
+/* A function (calc) inside a media feature is walked while scanning for refs. */
+@media (min-width: calc(1px + 1px)) {
+	.fn {
+		color: red;
+	}
+}
+
+/* Defined after its use — custom-media names are stylesheet-global. */
+@custom-media --wide (min-width: 60em);

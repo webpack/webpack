@@ -812,6 +812,14 @@ export type CssParserContainer = boolean;
  */
 export type CssParserCustomIdents = boolean;
 /**
+ * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+ */
+export type CssParserCustomMedia = boolean;
+/**
+ * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+ */
+export type CssParserCustomSelectors = boolean;
+/**
  * Enable/disable renaming of dashed identifiers, e. g. custom properties.
  */
 export type CssParserDashedIdents = boolean;
@@ -3421,6 +3429,14 @@ export interface CssAutoOrModuleParserOptions {
 	 */
 	customIdents?: CssParserCustomIdents;
 	/**
+	 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+	 */
+	customMedia?: CssParserCustomMedia;
+	/**
+	 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+	 */
+	customSelectors?: CssParserCustomSelectors;
+	/**
 	 * Enable/disable renaming of dashed identifiers, e. g. custom properties.
 	 */
 	dashedIdents?: CssParserDashedIdents;
@@ -3528,6 +3544,14 @@ export interface CssModuleParserOptions {
 	 */
 	customIdents?: CssParserCustomIdents;
 	/**
+	 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+	 */
+	customMedia?: CssParserCustomMedia;
+	/**
+	 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+	 */
+	customSelectors?: CssParserCustomSelectors;
+	/**
 	 * Enable/disable renaming of dashed identifiers, e. g. custom properties.
 	 */
 	dashedIdents?: CssParserDashedIdents;
@@ -3564,6 +3588,14 @@ export interface CssParserOptions {
 	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
 	 */
 	as?: CssParserAs;
+	/**
+	 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+	 */
+	customMedia?: CssParserCustomMedia;
+	/**
+	 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+	 */
+	customSelectors?: CssParserCustomSelectors;
 	/**
 	 * Configure how CSS content is exported as default.
 	 */

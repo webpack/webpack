@@ -5338,6 +5338,16 @@ declare interface CssAutoOrModuleParserOptions {
 	customIdents?: boolean;
 
 	/**
+	 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+	 */
+	customMedia?: boolean;
+
+	/**
+	 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+	 */
+	customSelectors?: boolean;
+
+	/**
 	 * Enable/disable renaming of dashed identifiers, e. g. custom properties.
 	 */
 	dashedIdents?: boolean;
@@ -5582,6 +5592,16 @@ declare interface CssModuleParserOptions {
 	customIdents?: boolean;
 
 	/**
+	 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+	 */
+	customMedia?: boolean;
+
+	/**
+	 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+	 */
+	customSelectors?: boolean;
+
+	/**
 	 * Enable/disable renaming of dashed identifiers, e. g. custom properties.
 	 */
 	dashedIdents?: boolean;
@@ -5695,6 +5715,14 @@ declare abstract class CssParser extends ParserClass {
 		 */
 		customIdents: boolean;
 		/**
+		 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+		 */
+		customMedia: boolean;
+		/**
+		 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+		 */
+		customSelectors: boolean;
+		/**
 		 * Enable/disable renaming of dashed identifiers, e. g. custom properties.
 		 */
 		dashedIdents: boolean;
@@ -5742,6 +5770,16 @@ declare interface CssParserOptions {
 	 * Configure how the CSS source is parsed: as a full stylesheet (default) or as a block's contents (e.g. the content of an HTML `style` attribute).
 	 */
 	as?: "stylesheet" | "block-contents";
+
+	/**
+	 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+	 */
+	customMedia?: boolean;
+
+	/**
+	 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+	 */
+	customSelectors?: boolean;
 
 	/**
 	 * Configure how CSS content is exported as default.

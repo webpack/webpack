@@ -400,6 +400,12 @@
         "customIdents": {
           "$ref": "#/definitions/CssParserCustomIdents"
         },
+        "customMedia": {
+          "$ref": "#/definitions/CssParserCustomMedia"
+        },
+        "customSelectors": {
+          "$ref": "#/definitions/CssParserCustomSelectors"
+        },
         "dashedIdents": {
           "$ref": "#/definitions/CssParserDashedIdents"
         },
@@ -544,6 +550,12 @@
         "customIdents": {
           "$ref": "#/definitions/CssParserCustomIdents"
         },
+        "customMedia": {
+          "$ref": "#/definitions/CssParserCustomMedia"
+        },
+        "customSelectors": {
+          "$ref": "#/definitions/CssParserCustomSelectors"
+        },
         "dashedIdents": {
           "$ref": "#/definitions/CssParserDashedIdents"
         },
@@ -583,6 +595,14 @@
       "description": "Enable/disable renaming of custom identifiers.",
       "type": "boolean"
     },
+    "CssParserCustomMedia": {
+      "description": "Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).",
+      "type": "boolean"
+    },
+    "CssParserCustomSelectors": {
+      "description": "Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).",
+      "type": "boolean"
+    },
     "CssParserDashedIdents": {
       "description": "Enable/disable renaming of dashed identifiers, e. g. custom properties.",
       "type": "boolean"
@@ -614,6 +634,12 @@
       "properties": {
         "as": {
           "$ref": "#/definitions/CssParserAs"
+        },
+        "customMedia": {
+          "$ref": "#/definitions/CssParserCustomMedia"
+        },
+        "customSelectors": {
+          "$ref": "#/definitions/CssParserCustomSelectors"
         },
         "exportType": {
           "$ref": "#/definitions/CssParserExportType"

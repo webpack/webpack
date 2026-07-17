@@ -546,6 +546,8 @@ describe("snapshots", () => {
 		        },
 		      },
 		      "css": Object {
+		        "customMedia": true,
+		        "customSelectors": true,
 		        "import": true,
 		        "namedExports": true,
 		        "url": true,
@@ -554,6 +556,8 @@ describe("snapshots", () => {
 		        "animation": true,
 		        "container": true,
 		        "customIdents": true,
+		        "customMedia": true,
+		        "customSelectors": true,
 		        "dashedIdents": true,
 		        "function": true,
 		        "grid": true,
@@ -562,6 +566,8 @@ describe("snapshots", () => {
 		        "animation": true,
 		        "container": true,
 		        "customIdents": true,
+		        "customMedia": true,
+		        "customSelectors": true,
 		        "dashedIdents": true,
 		        "function": true,
 		        "grid": true,
@@ -570,6 +576,8 @@ describe("snapshots", () => {
 		        "animation": true,
 		        "container": true,
 		        "customIdents": true,
+		        "customMedia": true,
+		        "customSelectors": true,
 		        "dashedIdents": true,
 		        "function": true,
 		        "grid": true,
@@ -4589,40 +4597,37 @@ describe("snapshots", () => {
 			-         },
 			-         "with": Object {
 			-           "type": "css",
-			@@ ... @@
+			-         },
 			-       },
-			@@ ... @@
+			-       Object {
 			-         "assert": Object {
 			-           "type": "css",
-			-         },
+			@@ ... @@
 			-         "parser": Object {
 			-           "exportType": "css-style-sheet",
 			-         },
-			@@ ... @@
-			-       },
-			-       Object {
-			-         "resolve": Object {
-			-           "fullySpecified": true,
-			-           "preferRelative": true,
-			-         },
-			@@ ... @@
-			-         },
 			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
 			-         },
 			-       },
-			-       Object {
+			@@ ... @@
 			-         "dependency": "html-style",
 			-         "parser": Object {
 			-           "exportType": "text",
+			-         },
 			@@ ... @@
+			-           "fullySpecified": true,
+			-           "preferRelative": true,
+			-         },
+			-       },
+			-       Object {
 			-         "dependency": "html-style-attribute",
 			-         "parser": Object {
 			-           "as": "block-contents",
 			-           "exportType": "text",
 			-         },
-			@@ ... @@
+			-         "resolve": Object {
 			-           "fullySpecified": true,
 			-           "preferRelative": true,
 			-         },
@@ -4640,10 +4645,6 @@ describe("snapshots", () => {
 			+           Object {
 			+             "resourceQuery": /(\\?|&)raw(&|$)/,
 			+             "type": "asset/source",
-			+           },
-			+           Object {
-			+             "resourceQuery": /(\\?|&)url(&|$)/,
-			+             "type": "asset/resource",
 			@@ ... @@
 			-       "css/auto": Object {
 			-         "exportsConvention": "as-is",
@@ -4653,7 +4654,7 @@ describe("snapshots", () => {
 			-         "localIdentHashSalt": undefined,
 			-         "localIdentName": "[fullhash]",
 			+           Object {
-			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
+			+             "resourceQuery": /(\\?|&)url(&|$)/,
 			+             "type": "asset/resource",
 			@@ ... @@
 			-       "css/global": Object {
@@ -4663,6 +4664,10 @@ describe("snapshots", () => {
 			-         "localIdentHashFunction": "md4",
 			-         "localIdentHashSalt": undefined,
 			-         "localIdentName": "[fullhash]",
+			+           Object {
+			+             "resourceQuery": /(\\?|&)no-inline(&|$)/,
+			+             "type": "asset/resource",
+			+           },
 			+           Object {
 			+             "resourceQuery": /(\\?|&)inline(&|$)/,
 			+             "type": "asset/inline",
@@ -4680,6 +4685,8 @@ describe("snapshots", () => {
 			+     "generator": Object {
 			@@ ... @@
 			-       "css": Object {
+			-         "customMedia": true,
+			-         "customSelectors": true,
 			-         "import": true,
 			-         "namedExports": true,
 			-         "url": true,
@@ -4688,6 +4695,8 @@ describe("snapshots", () => {
 			-         "animation": true,
 			-         "container": true,
 			-         "customIdents": true,
+			-         "customMedia": true,
+			-         "customSelectors": true,
 			-         "dashedIdents": true,
 			-         "function": true,
 			-         "grid": true,
@@ -4696,6 +4705,8 @@ describe("snapshots", () => {
 			-         "animation": true,
 			-         "container": true,
 			-         "customIdents": true,
+			-         "customMedia": true,
+			-         "customSelectors": true,
 			-         "dashedIdents": true,
 			-         "function": true,
 			-         "grid": true,
@@ -4704,6 +4715,8 @@ describe("snapshots", () => {
 			-         "animation": true,
 			-         "container": true,
 			-         "customIdents": true,
+			-         "customMedia": true,
+			-         "customSelectors": true,
 			-         "dashedIdents": true,
 			-         "function": true,
 			-         "grid": true,

@@ -1,0 +1,53 @@
+@custom-media --defined (max-width: 10em);
+@custom-media --always true;
+@custom-media --tvish screen;
+
+/* 'true'/'false' values are unsupported (the ecosystem disagrees on them). */
+@media (--always) {
+	.a {
+		color: red;
+	}
+}
+
+/* Unknown name — no definition anywhere in this file. */
+@media (--undefined-mq) {
+	.b {
+		color: red;
+	}
+}
+
+/* Non-boolean context — a syntax error per the spec. */
+@media (--defined: 1px) {
+	.c {
+		color: red;
+	}
+}
+
+/* A value that is itself a custom-media reference is not resolved. */
+@custom-media --nested (--defined);
+
+@media (--nested) {
+	.d {
+		color: red;
+	}
+}
+
+/* A media-type value can't be inlined in a non-leading position. */
+@media (min-width: 1px) and (--tvish) {
+	.e {
+		color: red;
+	}
+}
+
+/* Malformed at-rules are simply dropped (no name / no colon / empty list). */
+@custom-media (max-width: 1px);
+@custom-selector heading h1, h2;
+@custom-selector :--empty;
+
+/* Value-classification edge cases: all dropped and silent (never referenced). */
+@custom-media --empty;
+@custom-media --num 5;
+@custom-media --empty-seg (min-width: 1px),,(max-width: 2px);
+@custom-media --or-not (min-width: 1px), not (max-width: 2px);
+@custom-media --typey (min-width: 1px), screen;
+@custom-selector : --x span;

@@ -2363,6 +2363,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-css-auto-custom-media": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable resolution of \`@custom-media\` at-rules (file-local build-time substitution).",
+        "multiple": false,
+        "path": "module.parser.css/auto.customMedia",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable resolution of \`@custom-media\` at-rules (file-local build-time substitution).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-auto-custom-selectors": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable resolution of \`@custom-selector\` at-rules (file-local build-time expansion to \`:is(...)\`).",
+        "multiple": false,
+        "path": "module.parser.css/auto.customSelectors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable resolution of \`@custom-selector\` at-rules (file-local build-time expansion to \`:is(...)\`).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-auto-dashed-idents": Object {
     "configs": Array [
       Object {
@@ -2473,6 +2499,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-css-custom-media": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable resolution of \`@custom-media\` at-rules (file-local build-time substitution).",
+        "multiple": false,
+        "path": "module.parser.css.customMedia",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable resolution of \`@custom-media\` at-rules (file-local build-time substitution).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-custom-selectors": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable resolution of \`@custom-selector\` at-rules (file-local build-time expansion to \`:is(...)\`).",
+        "multiple": false,
+        "path": "module.parser.css.customSelectors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable resolution of \`@custom-selector\` at-rules (file-local build-time expansion to \`:is(...)\`).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-export-type": Object {
     "configs": Array [
       Object {
@@ -2545,6 +2597,32 @@ Object {
       },
     ],
     "description": "Enable/disable renaming of custom identifiers.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-global-custom-media": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable resolution of \`@custom-media\` at-rules (file-local build-time substitution).",
+        "multiple": false,
+        "path": "module.parser.css/global.customMedia",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable resolution of \`@custom-media\` at-rules (file-local build-time substitution).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-global-custom-selectors": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable resolution of \`@custom-selector\` at-rules (file-local build-time expansion to \`:is(...)\`).",
+        "multiple": false,
+        "path": "module.parser.css/global.customSelectors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable resolution of \`@custom-selector\` at-rules (file-local build-time expansion to \`:is(...)\`).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2711,6 +2789,32 @@ Object {
       },
     ],
     "description": "Enable/disable renaming of custom identifiers.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-module-custom-media": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable resolution of \`@custom-media\` at-rules (file-local build-time substitution).",
+        "multiple": false,
+        "path": "module.parser.css/module.customMedia",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable resolution of \`@custom-media\` at-rules (file-local build-time substitution).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-module-custom-selectors": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable resolution of \`@custom-selector\` at-rules (file-local build-time expansion to \`:is(...)\`).",
+        "multiple": false,
+        "path": "module.parser.css/module.customSelectors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable resolution of \`@custom-selector\` at-rules (file-local build-time expansion to \`:is(...)\`).",
     "multiple": false,
     "simpleType": "boolean",
   },
