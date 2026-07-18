@@ -7,7 +7,7 @@ const htmlSyntax = require("../../../lib/html/syntax.js");
 const { SourceProcessor, NodeType, parseHtml, tokenize } = htmlSyntax;
 
 // No large real-world HTML ships in the repo, so generate a deterministic
-// ~800 KiB document that exercises tree construction, attributes with entity
+// ~1.6 MiB document that exercises tree construction, attributes with entity
 // references, comments, lists/tables and RAWTEXT (<script>/<style>) elements.
 /**
  * @param {number} blocks number of repeated sections
@@ -30,14 +30,20 @@ function makeHtml(blocks) {
 	}
 	return `${out}</body></html>`;
 }
-const html = makeHtml(3500);
-const FRAGMENT = "<td>cell one</td><td>cell <b>two</b></td>";
+const html = makeHtml(7000);
+
+// Big table-body fragment (tr context seeds the tokenizer content mode).
+const FRAGMENT = `${'<td class="c">cell <b>one</b> &amp; two</td>'.repeat(6000)}`;
 
 const NOOP = () => {};
 // tokenize callbacks steer the cursor via their return value; the emit callbacks
 // resume at the token end (the tokenizer's own default). `attribute` is left
 // unset so the tokenizer uses its built-in advance.
-const RET_END = (/** @type {string} */ _input, /** @type {number} */ _start, /** @type {number} */ end) => end;
+const RET_END = (
+	/** @type {string} */ _input,
+	/** @type {number} */ _start,
+	/** @type {number} */ end
+) => end;
 
 /**
  * @param {import("tinybench").Bench} bench bench
@@ -49,7 +55,7 @@ export default (bench) => {
 		parseHtml(html);
 	});
 
-	// Fragment parse — the context element seeds the tokenizer content mode.
+	// Big fragment parse — the context element seeds the tokenizer content mode.
 	bench.add(
 		'unit benchmark "html-parser-document-unit", parseHtml (fragment, tr context)',
 		() => {

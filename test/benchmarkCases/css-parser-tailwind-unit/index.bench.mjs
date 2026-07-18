@@ -9,6 +9,7 @@ const cssSyntax = require("../../../lib/css/syntax.js");
 const {
 	SourceProcessor,
 	NodeType,
+	readToken,
 	tokenize,
 	parseAStylesheet,
 	parseAStylesheetsContents,
@@ -17,27 +18,66 @@ const {
 	parseADeclaration,
 	parseAComponentValue,
 	parseAListOfComponentValues,
-	parseACommaSeparatedListOfComponentValues
+	parseACommaSeparatedListOfComponentValues,
+	TT_LEFT_CURLY_BRACKET,
+	TT_RIGHT_CURLY_BRACKET,
+	TT_SEMICOLON
 } = cssSyntax;
 
-// Real-world ~1.9 MiB stylesheet (Tailwind, minified) — the whole-stylesheet
-// fixture, shared with the `css/large` configCase.
-const css = fs.readFileSync(
+// Real-world ~1.9 MiB minified stylesheet (Tailwind), shared with the
+// `css/large` configCase.
+const cssMin = fs.readFileSync(
 	fileURLToPath(
 		new URL("../../configCases/css/large/tailwind.min.css", import.meta.url)
 	),
 	"utf8"
 );
 
-// Representative fragments for the granular grammar entry points.
-const RULE =
-	'.card > .title:hover, #main .item[data-x="1"] { color: rgb(10, 20, 30); margin: 1px 2em 3% 0; background: url(a/b.png) no-repeat }';
-const DECLARATION =
-	"background: linear-gradient(to right, rgba(0, 0, 0, .5) 0%, #fff 100%) no-repeat";
-const COMPONENT_VALUE = "calc((100% - 2rem) / 3 + 1px)";
-const VALUE_LIST = "1px solid rgba(0, 0, 0, 0.15)";
-const COMMA_LIST = '"Helvetica Neue", Arial, system-ui, sans-serif';
-const BLOCK_CONTENTS = "color: red; font: 12px/1.4 sans-serif; & .nested { x: 1 } --v: 2";
+// Whitespace-expanded form of the same stylesheet: re-emit every token with a
+// separating space (newline after `{` `}` `;`). Tokenizer-driven so strings and
+// url()s stay intact. Same rules, far more whitespace — isolates the cost of
+// tokenizing whitespace vs. the minified input.
+/**
+ * @param {string} css minified css
+ * @returns {string} expanded css
+ */
+function expand(css) {
+	const t = {
+		type: 0,
+		start: 0,
+		end: 0,
+		isId: false,
+		contentStart: 0,
+		contentEnd: 0,
+		unitStart: 0
+	};
+	let out = "";
+	let pos = 0;
+	for (;;) {
+		if (readToken(css, pos, t) === undefined) break;
+		pos = t.end;
+		out += css.slice(t.start, t.end);
+		out +=
+			t.type === TT_LEFT_CURLY_BRACKET ||
+			t.type === TT_RIGHT_CURLY_BRACKET ||
+			t.type === TT_SEMICOLON
+				? "\n"
+				: " ";
+	}
+	return out;
+}
+const cssExpanded = expand(cssMin);
+
+// Big single-construct fixtures for the granular grammar entry points — large
+// enough (tens of KiB) that a real regression is visible above timer noise.
+const BIG_RULE = `.sel > .y:hover {${"a-b: rgba(0, 0, 0, .5) 1px 2em;".repeat(3000)}}`;
+const BIG_DECLARATION = `grid-template-columns: ${"minmax(10px, 1fr) ".repeat(3000)}`;
+const BIG_COMPONENT_VALUE = `calc(${"1px + ".repeat(8000)}1px)`;
+const BIG_VALUE_LIST = "1px solid rgba(0, 0, 0, 0.15) ".repeat(3000);
+const BIG_COMMA_LIST = Array.from({ length: 8000 }, (_, i) => `item-${i}`).join(
+	", "
+);
+const BIG_BLOCK_CONTENTS = `${"prop-x: rgba(0, 0, 0, .5) 1px;".repeat(3000)}${".nested { y: 1 }".repeat(200)}`;
 
 const NOOP = () => {};
 
@@ -47,69 +87,93 @@ const NOOP = () => {};
  */
 export default (bench) => {
 	// Whole-stylesheet parse — the main entry (CSS analog of JavascriptParser.parse).
-	bench.add('unit benchmark "css-parser-tailwind-unit", parseAStylesheet', () => {
-		parseAStylesheet(css);
-	});
 	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", parseAStylesheetsContents',
+		'unit benchmark "css-parser-tailwind-unit", parseAStylesheet (min)',
 		() => {
-			parseAStylesheetsContents(css);
+			parseAStylesheet(cssMin);
+		}
+	);
+	bench.add(
+		'unit benchmark "css-parser-tailwind-unit", parseAStylesheet (expanded)',
+		() => {
+			parseAStylesheet(cssExpanded);
+		}
+	);
+	bench.add(
+		'unit benchmark "css-parser-tailwind-unit", parseAStylesheetsContents (min)',
+		() => {
+			parseAStylesheetsContents(cssMin);
 		}
 	);
 
 	// Grammar: streaming parse + visitor walk (SourceProcessor).
 	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", process (no visitors)',
+		'unit benchmark "css-parser-tailwind-unit", process (min, no visitors)',
 		() => {
-			new SourceProcessor().use({}).process(css);
+			new SourceProcessor().use({}).process(cssMin);
 		}
 	);
 	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", process (Decl+Url visitors)',
+		'unit benchmark "css-parser-tailwind-unit", process (expanded, no visitors)',
+		() => {
+			new SourceProcessor().use({}).process(cssExpanded);
+		}
+	);
+	bench.add(
+		'unit benchmark "css-parser-tailwind-unit", process (min, Decl+Url visitors)',
 		() => {
 			new SourceProcessor()
 				.use({ [NodeType.Declaration]: NOOP, [NodeType.Url]: NOOP })
-				.process(css);
+				.process(cssMin);
 		}
 	);
 
-	// Tokenizer throughput (push interface over the readToken pull primitive).
-	bench.add('unit benchmark "css-parser-tailwind-unit", tokenize', () => {
-		tokenize(css, 0, { token: NOOP });
+	// Tokenizer throughput — min vs expanded shows the whitespace-tokenizing cost.
+	bench.add('unit benchmark "css-parser-tailwind-unit", tokenize (min)', () => {
+		tokenize(cssMin, 0, { token: NOOP });
 	});
+	bench.add(
+		'unit benchmark "css-parser-tailwind-unit", tokenize (expanded)',
+		() => {
+			tokenize(cssExpanded, 0, { token: NOOP });
+		}
+	);
 
-	// Granular grammar entry points on representative fragments.
+	// Granular grammar entry points on big single-construct inputs.
 	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", parseABlocksContents',
+		'unit benchmark "css-parser-tailwind-unit", parseARule (big)',
 		() => {
-			parseABlocksContents(BLOCK_CONTENTS, 0);
-		}
-	);
-	bench.add('unit benchmark "css-parser-tailwind-unit", parseARule', () => {
-		parseARule(RULE);
-	});
-	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", parseADeclaration',
-		() => {
-			parseADeclaration(DECLARATION);
+			parseARule(BIG_RULE);
 		}
 	);
 	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", parseAComponentValue',
+		'unit benchmark "css-parser-tailwind-unit", parseADeclaration (big)',
 		() => {
-			parseAComponentValue(COMPONENT_VALUE);
+			parseADeclaration(BIG_DECLARATION);
 		}
 	);
 	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", parseAListOfComponentValues',
+		'unit benchmark "css-parser-tailwind-unit", parseAComponentValue (big)',
 		() => {
-			parseAListOfComponentValues(VALUE_LIST);
+			parseAComponentValue(BIG_COMPONENT_VALUE);
 		}
 	);
 	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", parseACommaSeparatedListOfComponentValues',
+		'unit benchmark "css-parser-tailwind-unit", parseAListOfComponentValues (big)',
 		() => {
-			parseACommaSeparatedListOfComponentValues(COMMA_LIST);
+			parseAListOfComponentValues(BIG_VALUE_LIST);
+		}
+	);
+	bench.add(
+		'unit benchmark "css-parser-tailwind-unit", parseACommaSeparatedListOfComponentValues (big)',
+		() => {
+			parseACommaSeparatedListOfComponentValues(BIG_COMMA_LIST);
+		}
+	);
+	bench.add(
+		'unit benchmark "css-parser-tailwind-unit", parseABlocksContents (big)',
+		() => {
+			parseABlocksContents(BIG_BLOCK_CONTENTS, 0);
 		}
 	);
 };
