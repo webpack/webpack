@@ -1206,6 +1206,14 @@ describe("JavascriptParser", () => {
 			expect(asiAtStatementEnds('export * from "x";')).toEqual([false]);
 		});
 
+		it("should mutate a provided semicolons set directly", () => {
+			const parser = new JavascriptParser("module");
+			parser.semicolons = new Set([5]);
+			parser.setAsiPosition(7);
+			parser.unsetAsiPosition(5);
+			expect([...parser.semicolons]).toEqual([7]);
+		});
+
 		it("should honor setAsiPosition and unsetAsiPosition overrides", () => {
 			expect(
 				asiAtStatementEnds("a\nb", (parser, statement) =>

@@ -1,5 +1,5 @@
 exports.answer = "cjs";
 
-if (typeof globalThis.__nonexistent__ !== "undefined") {
+if (typeof __nonexistent__ !== "undefined") {
 	require.main.require("./module.js");
 }
