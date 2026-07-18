@@ -1100,4 +1100,52 @@ describe("JavascriptParser", () => {
 			});
 		}
 	});
+
+	describe("getLocation", () => {
+		const { SourcePositions } = require("../lib/javascript/syntax");
+
+		/**
+		 * @param {string} source source code
+		 * @returns {JavascriptParser} parser with an active positions mapping
+		 */
+		function parserFor(source) {
+			const parser = new JavascriptParser("module");
+			parser._sourcePositions = new SourcePositions(source);
+			return parser;
+		}
+
+		it("should derive the location from start/end offsets", () => {
+			const parser = parserFor("a;\nbb;\n");
+			expect(parser.getLocation({ start: 3, end: 5 })).toEqual({
+				start: { line: 2, column: 0 },
+				end: { line: 2, column: 2 }
+			});
+		});
+
+		it("should derive the location from a range", () => {
+			const parser = parserFor("a;\nbb;\n");
+			expect(parser.getLocation({ range: [0, 1] })).toEqual({
+				start: { line: 1, column: 0 },
+				end: { line: 1, column: 1 }
+			});
+		});
+
+		it("should fall back to `loc` without source text", () => {
+			const parser = new JavascriptParser("module");
+			const loc = {
+				start: { line: 1, column: 0 },
+				end: { line: 1, column: 1 }
+			};
+			expect(parser.getLocation({ start: 0, end: 1, loc })).toBe(loc);
+		});
+
+		it("should fall back to `loc` for nodes without offsets", () => {
+			const parser = parserFor("a;");
+			const loc = {
+				start: { line: 1, column: 0 },
+				end: { line: 1, column: 1 }
+			};
+			expect(parser.getLocation({ loc })).toBe(loc);
+		});
+	});
 });

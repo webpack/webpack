@@ -6245,7 +6245,6 @@ declare abstract class DependencyTemplates {
 declare interface DestructuringAssignmentProperty {
 	id: string;
 	range: [number, number];
-	loc: SourceLocation;
 	pattern?: Set<DestructuringAssignmentProperty>;
 	shorthand: string | boolean;
 }
@@ -12564,6 +12563,18 @@ declare class JavascriptParser extends ParserClass {
 			| MaybeNamedClassDeclaration,
 		commentsStartPos: number
 	): boolean;
+
+	/**
+	 * Returns the location of a node or comment, computed from its offsets so
+	 * ASTs from parsers without location support work too. Falls back to the
+	 * node's own `loc` only when no source text is available (preparsed ASTs).
+	 */
+	getLocation(node: {
+		start?: number;
+		end?: number;
+		range?: [number, number];
+		loc?: null | SourceLocation;
+	}): DependencyLocation;
 
 	/**
 	 * Returns comments in the range.
@@ -19736,6 +19747,11 @@ declare interface ParseResult {
 	ast: Program;
 	comments: CommentJavascriptParser[];
 	semicolons: Set<number>;
+
+	/**
+	 * offset to line/column mapping of the parsed code
+	 */
+	sourcePositions?: SourcePositions;
 }
 declare interface ParsedIdentifier {
 	/**
@@ -24295,6 +24311,16 @@ declare class SourceMapSource extends Source {
 declare interface SourcePosition {
 	line: number;
 	column?: number;
+}
+
+/**
+ * Offset → line/column mapping for one parsed file. The line-start table is
+ * built only when some node's `loc` is first read.
+ */
+declare abstract class SourcePositions {
+	source: string;
+	lineStarts?: number[];
+	position(offset: number): Position;
 }
 type SourceType =
 	| "html"
