@@ -1158,10 +1158,18 @@ describe("JavascriptParser", () => {
 			/** @type {boolean[]} */
 			const result = [];
 			parser.hooks.statement.tap("test", (statement) => {
+				const statementPath =
+					/** @type {import("../lib/javascript/JavascriptParser").StatementPath} */
+					(parser.statementPath);
 				// only top-level statements — the hook also fires for nested ones
-				if (parser.statementPath.length === 1) {
+				if (statementPath.length === 1) {
 					if (onStatement) onStatement(parser, statement);
-					result.push(parser.isAsiPosition(statement.range[1]));
+					result.push(
+						parser.isAsiPosition(
+							/** @type {import("../lib/javascript/JavascriptParser").Range} */
+							(statement.range)[1]
+						)
+					);
 				}
 			});
 			parser.parse(

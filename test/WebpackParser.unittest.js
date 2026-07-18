@@ -15,22 +15,25 @@ const locationMapperFor = (code) => {
 };
 
 /**
+ * The helper always passes `semicolons: true`, so the set is always present.
  * @param {string} code source
  * @param {object=} options extra parse options
- * @returns {import("../lib/javascript/JavascriptParser").ParseResult} result
+ * @returns {import("../lib/javascript/JavascriptParser").ParseResult & { semicolons: Set<number> }} result
  */
 const parse = (code, options) =>
-	JavascriptParser._parse(
-		code,
-		/** @type {import("../lib/javascript/JavascriptParser").InternalParseOptions} */ ({
-			sourceType: "script",
-			ecmaVersion: "latest",
-			comments: true,
-			ranges: true,
-			semicolons: true,
-			allowHashBang: true,
-			...options
-		})
+	/** @type {import("../lib/javascript/JavascriptParser").ParseResult & { semicolons: Set<number> }} */ (
+		JavascriptParser._parse(
+			code,
+			/** @type {import("../lib/javascript/JavascriptParser").InternalParseOptions} */ ({
+				sourceType: "script",
+				ecmaVersion: "latest",
+				comments: true,
+				ranges: true,
+				semicolons: true,
+				allowHashBang: true,
+				...options
+			})
+		)
 	);
 
 describe("WebpackParser", () => {
@@ -79,7 +82,13 @@ describe("WebpackParser", () => {
 			const code = "// a\r\n// b\r// c\u2028// d\u2029// e\n";
 			const { comments } = parse(code);
 			const mapper = locationMapperFor(code);
-			expect(comments.map((c) => mapper.getLocation(c).start)).toEqual([
+			expect(
+				comments.map(
+					(c) =>
+						/** @type {import("../lib/Dependency").RealDependencyLocation} */
+						(mapper.getLocation(c)).start
+				)
+			).toEqual([
 				{ line: 1, column: 0 },
 				{ line: 2, column: 0 },
 				{ line: 3, column: 0 },
