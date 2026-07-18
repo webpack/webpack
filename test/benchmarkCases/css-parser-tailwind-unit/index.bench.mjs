@@ -71,14 +71,20 @@ const cssExpanded = expand(cssMin);
 
 // Big single-construct fixtures for the granular grammar entry points — large
 // enough (tens of KiB) that a real regression is visible above timer noise.
-const BIG_RULE = `.sel > .y:hover {${"a-b: rgba(0, 0, 0, .5) 1px 2em;".repeat(3000)}}`;
-const BIG_DECLARATION = `grid-template-columns: ${"minmax(10px, 1fr) ".repeat(3000)}`;
+const BIG_RULE = `.sel > .y:hover {${"a-b: rgba(0, 0, 0, .5) 1px 2em;".repeat(
+	3000
+)}}`;
+const BIG_DECLARATION = `grid-template-columns: ${"minmax(10px, 1fr) ".repeat(
+	3000
+)}`;
 const BIG_COMPONENT_VALUE = `calc(${"1px + ".repeat(8000)}1px)`;
 const BIG_VALUE_LIST = "1px solid rgba(0, 0, 0, 0.15) ".repeat(3000);
 const BIG_COMMA_LIST = Array.from({ length: 8000 }, (_, i) => `item-${i}`).join(
 	", "
 );
-const BIG_BLOCK_CONTENTS = `${"prop-x: rgba(0, 0, 0, .5) 1px;".repeat(3000)}${".nested { y: 1 }".repeat(200)}`;
+const BIG_BLOCK_CONTENTS = `${"prop-x: rgba(0, 0, 0, .5) 1px;".repeat(
+	3000
+)}${".nested { y: 1 }".repeat(200)}`;
 
 const NOOP = () => {};
 

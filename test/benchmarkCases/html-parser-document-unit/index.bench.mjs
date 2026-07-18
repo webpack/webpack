@@ -35,7 +35,9 @@ function makeHtml(blocks) {
 const html = makeHtml(7000);
 
 // Big table-body fragment (tr context seeds the tokenizer content mode).
-const FRAGMENT = `${'<td class="c">cell <b>one</b> &amp; two</td>'.repeat(6000)}`;
+const FRAGMENT = `${'<td class="c">cell <b>one</b> &amp; two</td>'.repeat(
+	6000
+)}`;
 
 const NOOP = () => {};
 // tokenize callbacks steer the cursor via their return value; the emit callbacks
