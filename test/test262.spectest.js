@@ -658,6 +658,10 @@ const createImportModuleDynamically =
 		await module.link(
 			createImportModuleDynamically(context, testFile, moduleCache)
 		);
+		// Evaluate here so `import()` resolves to a fully evaluated module (the
+		// Node.js contract for `importModuleDynamically`); otherwise a top-level
+		// `await import(...)` never settles.
+		await module.evaluate();
 
 		return module;
 	};
@@ -737,16 +741,7 @@ const knownBugs = [
 	"eval-code/direct/var-env-var-init-global-exstng.js",
 
 	// acorn bugs
-	"identifiers/part-unicode-17.0.0-class-escaped.js",
-	"identifiers/part-unicode-17.0.0-class.js",
-	"identifiers/part-unicode-17.0.0-escaped.js",
-	"identifiers/part-unicode-17.0.0.js",
-	"identifiers/start-unicode-17.0.0-class-escaped.js",
-	"identifiers/start-unicode-17.0.0-class.js",
-	"identifiers/start-unicode-17.0.0-escaped.js",
-	"identifiers/start-unicode-17.0.0.js",
 	"statements/using/syntax/using-for-statement.js",
-	"statements/await-using/syntax/await-using-invalid-arraybindingpattern-does-not-break-element-access.js",
 	"statements/await-using/syntax/await-using-valid-for-await-using-of-of.js",
 
 	// Expected error because we use `Promise` to load modules, but this test overrides global `Promise`
@@ -755,45 +750,30 @@ const knownBugs = [
 	// webpack bugs and improvements
 	// With namespace import we export and value and `default`, by spec we should export only `default`
 	"import/import-attributes/json-via-namespace.js",
-	// `import(spec, options)` cases where the second argument cannot be lifted
-	// to a static `with`/`assert` attributes object. webpack's
-	// `ImportDependency` template overwrites the entire `import(...)` source
-	// range with the runtime require chain and so drops the second
-	// argument's evaluation entirely (`yield`, sequence expressions, getters
-	// that throw, ToString conversion, etc). The spec also requires runtime
-	// validation of the options object (must be Object, `with`/`assert`
-	// keys, value type checks).
-	"expressions/dynamic-import/import-attributes/2nd-param-yield-ident-invalid.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-yield-expr.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-abrupt-return.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-abrupt-throw.js",
+	// `import(spec, options)` with a dynamic specifier: the options argument
+	// goes through the context-dependency path, which still drops its
+	// evaluation, so the sequenced side effects are not observed.
 	"expressions/dynamic-import/import-attributes/2nd-param-evaluation-sequence.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-get-with-error.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-non-object.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-with-enumeration-abrupt.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-with-enumeration-enumerable.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-with-non-object.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-with-value-abrupt.js",
-	"expressions/dynamic-import/import-attributes/2nd-param-with-value-non-string.js",
+	// `yield` as a strict-mode reserved word: webpack parses the source in
+	// sloppy mode, so the expected parse-time SyntaxError is not raised.
+	"expressions/dynamic-import/import-attributes/2nd-param-yield-ident-invalid.js",
 	// `#mark in obj` requires the deferred namespace target to report
 	// `isExtensible() === false` to throw a TypeError. webpack's proxy
 	// target is mutable until init runs and cannot be frozen up-front
 	// because the underlying module's exports aren't yet known.
 	"import/import-defer/evaluation-triggers/ignore-private-name-access.js",
-	// Bugs with defer and evaluation
+	// Host resolution errors must be reported eagerly even for deferred imports;
+	// webpack turns a missing module into a build error resolved lazily instead.
 	"import/import-defer/errors/resolution-error/import-defer-of-missing-module-fails.js",
+	// The deferred module itself has top-level await, so webpack evaluates it
+	// eagerly through the async-dependency system and never builds a deferred
+	// namespace for it — throwing on self/other access during its own
+	// evaluating-async state would require routing async defer imports through a
+	// deferred namespace while preserving eager awaiting (a larger change).
 	"import/import-defer/errors/get-self-while-evaluating-async/main.js",
-	"import/import-defer/evaluation-top-level-await/flattening-order/main.js",
-	// Bugs with using the same module require with defer and without - should we generate two modules here?
-	"import/import-defer/errors/module-throws/defer-import-after-evaluation.js",
-	"import/import-defer/errors/module-throws/third-party-evaluation-after-defer-import.js",
-	"import/import-defer/errors/module-throws/trigger-evaluation.js",
-	// Complex examples, need to think how to resolve it
-	"import/import-defer/errors/get-self-while-defer-evaluating/main.js",
 	"import/import-defer/errors/get-other-while-evaluating-async/main.js",
-	"import/import-defer/errors/get-other-while-evaluating/main.js",
-	"import/import-defer/errors/get-other-while-dep-evaluating-async/main.js",
-	"import/import-defer/errors/get-other-while-dep-evaluating/main.js",
+	// Exact interleaving of top-level-await and deferred evaluation order.
+	"import/import-defer/evaluation-top-level-await/flattening-order/main.js",
 	// Just bugs, need to fix
 	// `Reflect.preventExtensions(ns)` should return true and the deferred
 	// namespace should report `isExtensible() === false` per the TC39 spec —
@@ -802,8 +782,6 @@ const knownBugs = [
 	// known. Pre-knowing exports would require a larger architectural
 	// change, so this remains skipped.
 	"import/import-defer/deferred-namespace-object/exotic-object-behavior.js",
-	// Bug when import itself
-	"import/import-defer/errors/get-self-while-evaluating.js",
 	// Bug with place of `__webpack_require__`, it hoists, but should not
 	"module-code/instn-star-binding.js",
 	// Improvement- bug with `delete` and `ns[0] = something` when using `import * as ns from "...";`
@@ -817,8 +795,6 @@ const knownBugs = [
 	// the exported `valueOf`. Setting the prototype to `null` would impact
 	// other webpack-generated code paths.
 	"expressions/dynamic-import/custom-primitive.js",
-	// `import.meta` in script context should throw SyntaxError
-	"expressions/import.meta/syntax/goal-script.js",
 	// `with { type: 'text' }`: asset/source modules use module.exports, preventing pure ESM output for vm.SourceTextModule
 	"import/import-attributes/text-via-namespace.js",
 	// Bundler limitation: all modules share a single bundle-level import.meta, so distinct-per-module cannot be satisfied
@@ -832,9 +808,6 @@ const knownBugs = [
 
 	// Replacing `export default` will remove `default` name by spec, need to `static name = "default";` if doesn't exist
 	"expressions/class/elements/class-name-static-initializer-default-export.js",
-
-	// improve test runner to keep dynamic import for such case
-	"expressions/dynamic-import/assign-expr-get-value-abrupt-throws.js",
 
 	"eval-code/indirect/var-env-func-init-global-update-configurable.js",
 	"eval-code/indirect/var-env-var-init-global-exstng.js",
@@ -853,8 +826,6 @@ const knownBugs = [
 	"global-code/script-decl-func-err-non-configurable.js",
 	"global-code/script-decl-func-err-non-extensible.js",
 	"global-code/script-decl-func.js",
-	"global-code/script-decl-lex-deletion.js",
-	"global-code/script-decl-lex.js",
 	"global-code/script-decl-var-collision.js",
 	"global-code/script-decl-var-err.js",
 	"global-code/script-decl-var.js",
@@ -927,7 +898,6 @@ const knownBugs = [
 	"expressions/dynamic-import/syntax/valid/nested-if-nested-imports.js",
 	"expressions/dynamic-import/syntax/valid/nested-while-nested-imports.js",
 	"expressions/dynamic-import/syntax/valid/nested-with-expression-nested-imports.js",
-	"expressions/dynamic-import/syntax/valid/nested-with-expression-script-code-valid.js",
 	"expressions/dynamic-import/syntax/valid/top-level-nested-imports.js",
 
 	// Module Namespace Exotic Object semantics for the dynamically imported
@@ -1038,31 +1008,15 @@ const knownBugs = [
 	//   require dynamic specifiers webpack cannot resolve at build time.
 	// - `import(<UnaryExpression>)` (e.g. `import(typeof {})`): non-string
 	//   specifiers are emitted by the parser but webpack rejects them.
-	// - The `import-defer/*/main.js` cases interleave defer and eager loads of
-	//   the same module graph; webpack currently produces a single shared
-	//   module record so ordering and async-vs-sync semantics differ.
 	"expressions/dynamic-import/eval-self-once-script.js",
 	"expressions/dynamic-import/for-await-resolution-and-error-agen-yield.js",
 	"expressions/dynamic-import/import-errored-module.js",
 	"expressions/dynamic-import/reuse-namespace-object-from-script.js",
 	"expressions/dynamic-import/usage-from-eval.js",
 	"expressions/dynamic-import/assignment-expression/unary-expr.js",
-	"expressions/dynamic-import/import-defer/sync/main.js",
-	"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/main.js",
+	// `.then` is expected not to be called on the deferred namespace's promise.
 	"expressions/dynamic-import/import-defer/import-defer-transitive-async-module/promise-prototype-then-not-called.js",
-	"expressions/dynamic-import/import-defer/import-defer-async-module/main.js",
-	"expressions/dynamic-import/import-defer/sync-dependency-of-deferred-async-module/main.js",
 
-	// Top-level-await ordering/observability: webpack inlines TLA into a
-	// promise chain inside the runtime, so V8/Node's Module Record evaluation
-	// order (rejection-order, fulfillment-order, async-evaluation-count reset)
-	// and "module graph does not hang on cycle" semantics are not preserved.
-	"module-code/top-level-await/unobservable-global-async-evaluation-count-reset.js",
-	"module-code/top-level-await/dynamic-import-resolution.js",
-	"module-code/top-level-await/rejection-order.js",
-	"module-code/top-level-await/await-dynamic-import-resolution.js",
-	"module-code/top-level-await/fulfillment-order.js",
-	"module-code/top-level-await/module-graphs-does-not-hang.js",
 	// Dynamic import of a fulfilled member of an errored TLA cycle must reject
 	// with the cycle root's evaluation error; webpack fulfills it instead.
 	"expressions/dynamic-import/import-fulfilled-member-of-errored-cycle.js",
@@ -1076,17 +1030,15 @@ const knownBugs = [
 	// Weird test
 	"expressions/dynamic-import/syntax/valid/nested-with-nested-imports.js",
 
-	// We need to handle `import.meta` in `import`
-	"expressions/dynamic-import/assignment-expression/import-meta.js",
-
-	// Looks like a bug in webpack
-	"module-code/top-level-await/dynamic-import-rejection.js",
-
-	// Need improve our test runner, nested Promise is not catching
+	// A rejecting top-level-await entry can only reject the ESM bundle module
+	// via top-level `await`, which webpack intentionally does not emit (async
+	// output stays runnable on engines without top-level await), so the
+	// rejection is orphaned instead of failing the module.
 	"module-code/top-level-await/module-import-rejection.js",
 	"module-code/top-level-await/module-import-rejection-body.js",
-	"module-code/top-level-await/await-dynamic-import-rejection.js",
-	"module-code/top-level-await/module-import-rejection-tick.js"
+	"module-code/top-level-await/module-import-rejection-tick.js",
+	"module-code/top-level-await/dynamic-import-rejection.js",
+	"module-code/top-level-await/await-dynamic-import-rejection.js"
 ];
 
 const knownProductionBuildBugs = [
@@ -1101,12 +1053,10 @@ const knownProductionBuildBugs = [
 	// Production provided exports misses namespace re-exports
 	"module-code/instn-star-props-nrml.js",
 	"module-code/namespace/internals/get-nested-namespace-props-nrml.js",
-	// Production concatenation orders eager import after defer
+	// A module imported both `import defer` and eagerly must evaluate at the
+	// eager position; production concatenation evaluates it at the earlier
+	// deferred position instead, changing the observable evaluation order.
 	"import/import-defer/evaluation-sync/module-imported-defer-and-eager.js",
-	// Production concatenation inlines a re-exported deferred namespace as
-	// the eager namespace of the underlying module, so cross-file deferred
-	// namespaces are no longer the same object as the local Proxy.
-	"import/import-defer/deferred-namespace-object/identity.js",
 
 	// Production InlineExports:
 	// TODO: Support disable inline export annotation to keep the TDZ
@@ -1284,9 +1234,14 @@ describe("test262", () => {
 							};
 						}
 
-						const context = vm.createContext(sandbox, {
-							microtaskMode: "afterEvaluate"
-						});
+						const context = vm.createContext(
+							sandbox,
+							// `afterEvaluate` drains microtasks only at evaluate/runInContext
+							// boundaries; in the module scenario that deadlocks a top-level
+							// `await import(...)`, whose resolution needs a microtask
+							// checkpoint while `evaluate()` is still running.
+							scenario === "module" ? {} : { microtaskMode: "afterEvaluate" }
+						);
 
 						sandbox.globalThis = sandbox;
 						sandbox.Buffer = Buffer;
