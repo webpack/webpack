@@ -19,10 +19,10 @@ const {
 	escapeAttribute,
 	escapeText,
 	parseHtml: parseHtmlRefs,
-	walkTokens
+	tokenize
 } = require("../lib/html/syntax");
 
-describe("walkTokens", () => {
+describe("tokenize", () => {
 	const casesPath = path.resolve(__dirname, "./fixtures/html/parsing/cases");
 	const tests = fs
 		.readdirSync(casesPath)
@@ -37,7 +37,7 @@ describe("walkTokens", () => {
 			/** @type {unknown[]} */
 			const results = [];
 
-			walkTokens(code, 0, {
+			tokenize(code, 0, {
 				openTag: (input, start, end, nameStart, nameEnd, selfClosing) => {
 					results.push([
 						"open-tag",
@@ -97,7 +97,7 @@ describe("walkTokens", () => {
 			// Roundtrip: concatenating all token values must reconstruct the original
 			/** @type {unknown[]} */
 			const reconstructed = [];
-			walkTokens(code, 0, {
+			tokenize(code, 0, {
 				openTag: (input, start, end) => {
 					reconstructed.push(input.slice(start, end));
 					return end;
@@ -127,7 +127,7 @@ describe("walkTokens", () => {
 	it("should handle empty input", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkTokens("", 0, {
+		tokenize("", 0, {
 			text: (input, start, end) => {
 				results.push(input.slice(start, end));
 				return end;
@@ -139,7 +139,7 @@ describe("walkTokens", () => {
 	it("should handle plain text with no tags", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkTokens("hello world", 0, {
+		tokenize("hello world", 0, {
 			text: (input, start, end) => {
 				results.push(input.slice(start, end));
 				return end;
@@ -151,7 +151,7 @@ describe("walkTokens", () => {
 	it("should detect self-closing tags", () => {
 		/** @type {unknown[]} */
 		const tags = [];
-		walkTokens("<br/><img src='x'/>", 0, {
+		tokenize("<br/><img src='x'/>", 0, {
 			openTag: (input, start, end, nameStart, nameEnd, selfClosing) => {
 				tags.push([input.slice(nameStart, nameEnd), selfClosing]);
 				return end;
@@ -166,7 +166,7 @@ describe("walkTokens", () => {
 	it("should parse boolean attributes", () => {
 		/** @type {unknown[]} */
 		const attrs = [];
-		walkTokens('<input disabled required type="text">', 0, {
+		tokenize('<input disabled required type="text">', 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([
 					input.slice(ns, ne),
@@ -187,7 +187,7 @@ describe("walkTokens", () => {
 	it("should handle all quote types", () => {
 		/** @type {unknown[]} */
 		const attrs = [];
-		walkTokens("<div a=\"1\" b='2' c=3>", 0, {
+		tokenize("<div a=\"1\" b='2' c=3>", 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([input.slice(ns, ne), input.slice(vs, ve), qt]);
 				if (qt !== QUOTE_NONE) return ve + 1;
@@ -204,7 +204,7 @@ describe("walkTokens", () => {
 	it("should parse comments", () => {
 		/** @type {unknown[]} */
 		const comments = [];
-		walkTokens("before<!-- hi -->after", 0, {
+		tokenize("before<!-- hi -->after", 0, {
 			comment: (input, start, end) => {
 				comments.push(input.slice(start, end));
 				return end;
@@ -216,7 +216,7 @@ describe("walkTokens", () => {
 	it("should handle lone < at EOF", () => {
 		/** @type {unknown[]} */
 		const texts = [];
-		walkTokens("hello<", 0, {
+		tokenize("hello<", 0, {
 			text: (input, start, end) => {
 				texts.push(input.slice(start, end));
 				return end;
@@ -228,7 +228,7 @@ describe("walkTokens", () => {
 	it("should parse DOCTYPE as doctype", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkTokens("<!DOCTYPE html><div>hi</div>", 0, {
+		tokenize("<!DOCTYPE html><div>hi</div>", 0, {
 			doctype: (input, start, end) => {
 				results.push(["doctype", input.slice(start, end)]);
 				return end;
@@ -257,7 +257,7 @@ describe("walkTokens", () => {
 	it("should parse DOCTYPE case-insensitively", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkTokens("<!doctype html><!DoCtYpE html>", 0, {
+		tokenize("<!doctype html><!DoCtYpE html>", 0, {
 			doctype: (input, start, end) => {
 				results.push(input.slice(start, end));
 				return end;
@@ -269,7 +269,7 @@ describe("walkTokens", () => {
 	it("should handle CDATA sections", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkTokens("<div><![CDATA[<img src='x'>]]></div>", 0, {
+		tokenize("<div><![CDATA[<img src='x'>]]></div>", 0, {
 			comment: (input, start, end) => {
 				results.push(["comment", input.slice(start, end)]);
 				return end;
@@ -294,7 +294,7 @@ describe("walkTokens", () => {
 	it("should handle nested brackets in CDATA", () => {
 		/** @type {unknown[]} */
 		const comments = [];
-		walkTokens("<![CDATA[a]b]]c]]>", 0, {
+		tokenize("<![CDATA[a]b]]c]]>", 0, {
 			comment: (input, start, end) => {
 				comments.push(input.slice(start, end));
 				return end;
@@ -306,7 +306,7 @@ describe("walkTokens", () => {
 	it("should handle nested <!-- inside comments", () => {
 		/** @type {unknown[]} */
 		const comments = [];
-		walkTokens("<!-- outer <!-- inner -->", 0, {
+		tokenize("<!-- outer <!-- inner -->", 0, {
 			comment: (input, start, end) => {
 				comments.push(input.slice(start, end));
 				return end;
@@ -318,7 +318,7 @@ describe("walkTokens", () => {
 	it("should handle EOF in DOCTYPE", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkTokens("<!DOCTYPE html", 0, {
+		tokenize("<!DOCTYPE html", 0, {
 			doctype: (input, start, end) => {
 				results.push(input.slice(start, end));
 				return end;
@@ -330,7 +330,7 @@ describe("walkTokens", () => {
 	it("should handle EOF in CDATA", () => {
 		/** @type {unknown[]} */
 		const comments = [];
-		walkTokens("<![CDATA[unclosed", 0, {
+		tokenize("<![CDATA[unclosed", 0, {
 			comment: (input, start, end) => {
 				comments.push(input.slice(start, end));
 				return end;
@@ -343,7 +343,7 @@ describe("walkTokens", () => {
 		const html = "<!DOCTYPE html><html><body><![CDATA[data]]></body></html>";
 		/** @type {unknown[]} */
 		const parts = [];
-		walkTokens(html, 0, {
+		tokenize(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
 				return end;
@@ -371,7 +371,7 @@ describe("walkTokens", () => {
 	it("should handle RCDATA for title element", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkTokens("<title>Hello <b>World</b></title>", 0, {
+		tokenize("<title>Hello <b>World</b></title>", 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -395,7 +395,7 @@ describe("walkTokens", () => {
 	it("should handle RCDATA for textarea element", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkTokens("<textarea><p>not a tag</p></textarea>", 0, {
+		tokenize("<textarea><p>not a tag</p></textarea>", 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -419,7 +419,7 @@ describe("walkTokens", () => {
 	it("should handle RAWTEXT for style element", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkTokens("<style>.a { color: red; }</style>", 0, {
+		tokenize("<style>.a { color: red; }</style>", 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -444,7 +444,7 @@ describe("walkTokens", () => {
 		for (const tag of ["iframe", "noembed"]) {
 			/** @type {unknown[]} */
 			const results = [];
-			walkTokens(`<${tag}><b>not a tag</b></${tag}>`, 0, {
+			tokenize(`<${tag}><b>not a tag</b></${tag}>`, 0, {
 				openTag: (input, start, end, ns, ne) => {
 					results.push(["open", input.slice(ns, ne)]);
 					return end;
@@ -469,7 +469,7 @@ describe("walkTokens", () => {
 	it("should handle script data state", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkTokens("<script>var x = 1 < 2;</script>", 0, {
+		tokenize("<script>var x = 1 < 2;</script>", 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -493,7 +493,7 @@ describe("walkTokens", () => {
 	it("should handle script data escaped state (<!-- inside script)", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkTokens("<script><!--- comment --></script>", 0, {
+		tokenize("<script><!--- comment --></script>", 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -517,7 +517,7 @@ describe("walkTokens", () => {
 	it("should handle script data double escaped state transitions (<script and </script)", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkTokens("<script><!-- <script> var x = 1; </script> --></script>", 0, {
+		tokenize("<script><!-- <script> var x = 1; </script> --></script>", 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -546,7 +546,7 @@ describe("walkTokens", () => {
 		const html = "<script><!--<script>x</scripts>y</script>--></script>";
 		/** @type {unknown[]} */
 		const results = [];
-		walkTokens(html, 0, {
+		tokenize(html, 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -575,7 +575,7 @@ describe("walkTokens", () => {
 		const html = "<script><!--<script></script></script>";
 		/** @type {unknown[]} */
 		const results = [];
-		walkTokens(html, 0, {
+		tokenize(html, 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -599,7 +599,7 @@ describe("walkTokens", () => {
 	it("should not match wrong end tag in RCDATA", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkTokens("<title>text</div></title>", 0, {
+		tokenize("<title>text</div></title>", 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -623,7 +623,7 @@ describe("walkTokens", () => {
 	it("should handle case-insensitive end tags in content modes", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkTokens("<style>.a{}</STYLE>", 0, {
+		tokenize("<style>.a{}</STYLE>", 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -649,7 +649,7 @@ describe("walkTokens", () => {
 			"<html><head><style>.a{}</style></head><body><script>var x=1;</script></body></html>";
 		/** @type {unknown[]} */
 		const parts = [];
-		walkTokens(html, 0, {
+		tokenize(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
 				return end;
@@ -669,7 +669,7 @@ describe("walkTokens", () => {
 	it("should handle PLAINTEXT state", () => {
 		/** @type {unknown[]} */
 		const results = [];
-		walkTokens("<div><plaintext><p>ignored</p></div>", 0, {
+		tokenize("<div><plaintext><p>ignored</p></div>", 0, {
 			openTag: (input, start, end, ns, ne) => {
 				results.push(["open", input.slice(ns, ne)]);
 				return end;
@@ -694,7 +694,7 @@ describe("walkTokens", () => {
 		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>Tom &amp; Jerry</p>";
-		walkTokens(html, 0, {
+		tokenize(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
 				return end;
@@ -714,7 +714,7 @@ describe("walkTokens", () => {
 	it("should handle named character references in double-quoted attributes", () => {
 		/** @type {unknown[]} */
 		const attrs = [];
-		walkTokens('<a href="?a=1&amp;b=2">', 0, {
+		tokenize('<a href="?a=1&amp;b=2">', 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([input.slice(ns, ne), input.slice(vs, ve)]);
 				if (qt !== QUOTE_NONE) return ve + 1;
@@ -727,7 +727,7 @@ describe("walkTokens", () => {
 	it("should handle named character references in single-quoted attributes", () => {
 		/** @type {unknown[]} */
 		const attrs = [];
-		walkTokens("<a href='?x=1&lt;2'>", 0, {
+		tokenize("<a href='?x=1&lt;2'>", 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([input.slice(ns, ne), input.slice(vs, ve)]);
 				if (qt !== QUOTE_NONE) return ve + 1;
@@ -740,7 +740,7 @@ describe("walkTokens", () => {
 	it("should handle character references in unquoted attributes", () => {
 		/** @type {unknown[]} */
 		const attrs = [];
-		walkTokens("<a href=foo&amp;bar>", 0, {
+		tokenize("<a href=foo&amp;bar>", 0, {
 			attribute: (input, ns, ne, vs, ve, qt) => {
 				attrs.push([input.slice(ns, ne), input.slice(vs, ve)]);
 				if (qt !== QUOTE_NONE) return ve + 1;
@@ -754,7 +754,7 @@ describe("walkTokens", () => {
 		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>&#65;&#66;&#67;</p>";
-		walkTokens(html, 0, {
+		tokenize(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
 				return end;
@@ -775,7 +775,7 @@ describe("walkTokens", () => {
 		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>&#x41;&#X42;</p>";
-		walkTokens(html, 0, {
+		tokenize(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
 				return end;
@@ -796,7 +796,7 @@ describe("walkTokens", () => {
 		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>bare & alone</p>";
-		walkTokens(html, 0, {
+		tokenize(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
 				return end;
@@ -817,7 +817,7 @@ describe("walkTokens", () => {
 		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>&unknown;</p>";
-		walkTokens(html, 0, {
+		tokenize(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
 				return end;
@@ -838,7 +838,7 @@ describe("walkTokens", () => {
 		/** @type {unknown[]} */
 		const parts = [];
 		const html = "<p>&#;&#x;</p>";
-		walkTokens(html, 0, {
+		tokenize(html, 0, {
 			openTag: (input, start, end) => {
 				parts.push(input.slice(start, end));
 				return end;
@@ -863,7 +863,7 @@ describe("walkTokens", () => {
 		const walk = (html) => {
 			/** @type {[string, ...EXPECTED_ANY[]][]} */
 			const out = [];
-			walkTokens(html, 0, {
+			tokenize(html, 0, {
 				openTag: (input, start, end, ns, ne, selfClosing) => {
 					out.push(["open", input.slice(ns, ne), selfClosing]);
 					return end;
@@ -906,7 +906,7 @@ describe("walkTokens", () => {
 		const roundtrip = (html) => {
 			/** @type {unknown[]} */
 			const parts = [];
-			walkTokens(html, 0, {
+			tokenize(html, 0, {
 				openTag: (input, start, end) => {
 					parts.push(input.slice(start, end));
 					return end;
@@ -1938,7 +1938,7 @@ describe("walkTokens", () => {
 
 		// --- Callback API surface: default arguments + missing callbacks ---
 		it("default arguments: walks with no pos/callbacks provided", () => {
-			expect(() => walkTokens("<a>hello</a>")).not.toThrow();
+			expect(() => tokenize("<a>hello</a>")).not.toThrow();
 		});
 
 		it("missing closeTag/comment/doctype callbacks are tolerated", () => {
@@ -1948,7 +1948,7 @@ describe("walkTokens", () => {
 			/** @type {unknown[]} */
 			const opens = [];
 			expect(() =>
-				walkTokens("<!DOCTYPE html><!-- c --><a>x</a><![CDATA[ y ]]>", 0, {
+				tokenize("<!DOCTYPE html><!-- c --><a>x</a><![CDATA[ y ]]>", 0, {
 					openTag: (input, start, end) => {
 						opens.push(input.slice(start, end));
 						return end;
@@ -1960,7 +1960,7 @@ describe("walkTokens", () => {
 
 		it("missing all callbacks is tolerated", () => {
 			expect(() =>
-				walkTokens("<!DOCTYPE html><!-- c --><a>x</a><![CDATA[ y ]]>z", 0, {})
+				tokenize("<!DOCTYPE html><!-- c --><a>x</a><![CDATA[ y ]]>z", 0, {})
 			).not.toThrow();
 		});
 
@@ -1979,7 +1979,7 @@ describe("walkTokens", () => {
 				"<!-- eof" // EOF inside comment
 			];
 			for (const html of fragments) {
-				expect(() => walkTokens(html, 0, {})).not.toThrow();
+				expect(() => tokenize(html, 0, {})).not.toThrow();
 			}
 		});
 
@@ -2005,7 +2005,7 @@ describe("walkTokens", () => {
 				"<!DOCTYPE" // EOF inside doctype
 			];
 			for (const html of fragments) {
-				expect(() => walkTokens(html, 0, {})).not.toThrow();
+				expect(() => tokenize(html, 0, {})).not.toThrow();
 			}
 		});
 
@@ -2044,7 +2044,7 @@ describe("walkTokens", () => {
 					// Skip one character past `>` so nextPos > end.
 					return end + 1;
 				};
-			walkTokens(
+			tokenize(
 				"<script>x</script>" +
 					"<a foo>y</a>" +
 					"<b foo=bar>z</b>" +
@@ -2101,7 +2101,7 @@ describe("walkTokens", () => {
 		const collectErrors = (html) => {
 			/** @type {{ code: string, slice: string, severity: string }[]} */
 			const errors = [];
-			walkTokens(html, 0, {
+			tokenize(html, 0, {
 				parseError: (input, code, start, end, severity) => {
 					errors.push({ code, slice: input.slice(start, end), severity });
 				}
@@ -2508,7 +2508,7 @@ describe("walkTokens", () => {
 			const errors = [];
 			/** @type {string[]} */
 			const opens = [];
-			walkTokens('<div class="x', 0, {
+			tokenize('<div class="x', 0, {
 				openTag: (input, start, end, ns, ne) => {
 					opens.push(input.slice(ns, ne));
 					return end;
@@ -2531,7 +2531,7 @@ describe("walkTokens", () => {
 			const codes = [];
 			/** @type {string[]} */
 			const closes = [];
-			walkTokens("<a></a", 0, {
+			tokenize("<a></a", 0, {
 				closeTag: (input, start, end, ns, ne) => {
 					closes.push(input.slice(ns, ne));
 					return end;
@@ -2558,7 +2558,7 @@ describe("walkTokens", () => {
 			]) {
 				/** @type {string[]} */
 				const closes = [];
-				walkTokens(html, 0, {
+				tokenize(html, 0, {
 					openTag: (input, start, end) => end,
 					closeTag: (input, start, end, ns, ne) => {
 						closes.push(input.slice(ns, ne));
@@ -2588,7 +2588,7 @@ describe("walkTokens", () => {
 			const codes = [];
 			/** @type {[string, string][]} */
 			const attrs = [];
-			walkTokens("<div data-x", 0, {
+			tokenize("<div data-x", 0, {
 				openTag: (input, start, end) => end,
 				attribute: (input, ns, ne, vs, ve) => {
 					attrs.push([
@@ -2611,7 +2611,7 @@ describe("walkTokens", () => {
 			// `&amp` mid-attribute-value at EOF: returnState is the attribute
 			// value (double-quoted) state, so the EOF unwinds back to a partial
 			// open tag and emits eof-in-tag.
-			walkTokens('<a href="x&amp', 0, {
+			tokenize('<a href="x&amp', 0, {
 				openTag: (input, start, end, ns, ne) => {
 					opens.push(input.slice(ns, ne));
 					return end;
@@ -2641,7 +2641,7 @@ describe("walkTokens", () => {
 			const codes = [];
 			/** @type {string[]} */
 			const comments = [];
-			walkTokens("<!x", 0, {
+			tokenize("<!x", 0, {
 				comment: (input, start, end) => {
 					comments.push(input.slice(start, end));
 					return end;

@@ -43,7 +43,7 @@ const {
 	parseARule,
 	parseAStylesheet,
 	parseAStylesheetsContents,
-	walkTokens
+	readToken
 } = require("../lib/css/syntax");
 
 // Snapshot uses the spec-style kebab-case names for multi-word token types;
@@ -78,7 +78,7 @@ const TYPE_TO_PRINTED = {
 	[TT_BAD_URL_TOKEN]: "bad-url-token"
 };
 
-describe("walkTokens", () => {
+describe("readToken", () => {
 	const casesPath = path.resolve(__dirname, "./configCases/css/parsing/cases");
 	const tests = fs
 		.readdirSync(casesPath)
@@ -92,9 +92,9 @@ describe("walkTokens", () => {
 		it(`should parse and print "${name}"`, () => {
 			const results = [];
 			// Drive the lexer core directly: a fresh `out` per call collects the
-			// raw token list (comments included); `walkTokens` returns undefined at EOF.
+			// raw token list (comments included); `readToken` returns undefined at EOF.
 			for (let pos = 0; ;) {
-				const t = walkTokens(
+				const t = readToken(
 					code,
 					pos,
 					/** @type {import("../lib/css/syntax").MutableToken} */ ({})
@@ -130,7 +130,7 @@ describe("walkTokens", () => {
 const tokenRoundtrip = (input) => {
 	let out = "";
 	for (let pos = 0; ;) {
-		const t = walkTokens(
+		const t = readToken(
 			input,
 			pos,
 			/** @type {import("../lib/css/syntax").MutableToken} */ ({})
@@ -184,7 +184,7 @@ const cvTypes = (src) => parseAListOfComponentValues(src).map((n) => n.type);
  */
 const firstTokenType = (src) =>
 	/** @type {import("../lib/css/syntax").MutableToken} */ (
-		walkTokens(
+		readToken(
 			src,
 			0,
 			/** @type {import("../lib/css/syntax").MutableToken} */ ({})
@@ -681,17 +681,17 @@ describe("CssSyntax — tokenizer edge cases", () => {
 		expect(firstTokenType("url(a b\\)c)")).toBe(TT_BAD_URL_TOKEN);
 	});
 
-	it("walkTokens returns undefined once the input is fully consumed", () => {
+	it("readToken returns undefined once the input is fully consumed", () => {
 		// "a" is a single 1-char ident token; reading past it (offset 1) is EOF.
 		expect(
-			walkTokens(
+			readToken(
 				"a",
 				0,
 				/** @type {import("../lib/css/syntax").MutableToken} */ ({})
 			)
 		).toBeDefined();
 		expect(
-			walkTokens(
+			readToken(
 				"a",
 				1,
 				/** @type {import("../lib/css/syntax").MutableToken} */ ({})
