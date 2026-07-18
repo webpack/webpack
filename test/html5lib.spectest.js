@@ -328,7 +328,7 @@ const parseDat = (text) => {
  * @returns {string} serialized tree
  */
 const runTreeCase = (c) => {
-	const doc = parseHtml(c.data, c.fragment || undefined);
+	const doc = parseHtml(c.data, 0, { fragmentContext: c.fragment || undefined });
 	// In fragment mode the result is the children of the synthesized root.
 	const first = A.firstChild(doc);
 	return serialize(c.fragment && first !== 0 ? first : doc);

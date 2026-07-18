@@ -2999,7 +2999,7 @@ const materialize = (ref) => {
  * @returns {MatDocument} materialized document
  */
 const parseHtml = (src, fragmentContext, skip) => {
-	const doc = parseHtmlRefs(src, fragmentContext, skip);
+	const doc = parseHtmlRefs(src, 0, { fragmentContext, skip });
 	return {
 		type: NodeType.Document,
 		children: A.children(doc).map(materialize)
@@ -4161,7 +4161,7 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	});
 
 	it("parses text in a foreign fragment context", () => {
-		const doc = parseHtmlRefs("x<div>y", "svg");
+		const doc = parseHtmlRefs("x<div>y", 0, { fragmentContext: "svg" });
 		const root = A.firstChild(doc);
 		expect(A.type(A.firstChild(root))).toBe(NodeType.Text);
 	});
