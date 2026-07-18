@@ -1,3 +1,4 @@
+// cspell:ignore tailwind minmax rgba calc
 import fs from "fs";
 import { createRequire } from "module";
 import { fileURLToPath } from "url";
@@ -6,6 +7,7 @@ const require = createRequire(import.meta.url);
 
 /** @type {typeof import("../../../lib/css/syntax")} */
 const cssSyntax = require("../../../lib/css/syntax.js");
+
 const {
 	SourceProcessor,
 	NodeType,

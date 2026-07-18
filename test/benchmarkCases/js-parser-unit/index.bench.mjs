@@ -47,12 +47,12 @@ const lodashEsSource = readPkgFile("lodash-es", "lodash.js");
  */
 const tokenizeJs = (code, sourceType) => {
 	let n = 0;
-	for (const _tok of WebpackParser.tokenizer(code, {
+	for (const tok of WebpackParser.tokenizer(code, {
 		ecmaVersion: "latest",
 		sourceType,
 		allowHashBang: true
 	})) {
-		n++;
+		if (tok) n++;
 	}
 	return n;
 };
@@ -119,17 +119,14 @@ export default (bench) => {
 
 	// ---- tokenizer only (WebpackParser tokenizer); min vs non-min shows the
 	// cost of tokenizing whitespace, mirroring the css/html tokenizer benches ----
-	bench.add("unit benchmark \"js-parser-unit\", tokenize typescript", () => {
+	bench.add('unit benchmark "js-parser-unit", tokenize typescript', () => {
 		tokenizeJs(typescriptSource, "module");
 	});
+	bench.add('unit benchmark "js-parser-unit", tokenize three.module.js', () => {
+		tokenizeJs(threeEsmSource, "module");
+	});
 	bench.add(
-		"unit benchmark \"js-parser-unit\", tokenize three.module.js",
-		() => {
-			tokenizeJs(threeEsmSource, "module");
-		}
-	);
-	bench.add(
-		"unit benchmark \"js-parser-unit\", tokenize three.module.min.js",
+		'unit benchmark "js-parser-unit", tokenize three.module.min.js',
 		() => {
 			tokenizeJs(threeEsmMinSource, "module");
 		}

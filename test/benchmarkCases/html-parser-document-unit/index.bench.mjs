@@ -1,9 +1,11 @@
+// cspell:ignore mdash
 import { createRequire } from "module";
 
 const require = createRequire(import.meta.url);
 
 /** @type {typeof import("../../../lib/html/syntax")} */
 const htmlSyntax = require("../../../lib/html/syntax.js");
+
 const { SourceProcessor, NodeType, parseHtml, tokenize } = htmlSyntax;
 
 // No large real-world HTML ships in the repo, so generate a deterministic
