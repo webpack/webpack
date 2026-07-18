@@ -6,96 +6,81 @@ const readHtml = (name) =>
 
 const iconLink = (html) => html.match(/<link rel="icon"[^>]*>/i);
 
-it("injects the default webpack svg favicon", () => {
-	const link = iconLink(readHtml("default.html"));
-	expect(link).not.toBeNull();
-	expect(link[0]).toContain('type="image/svg+xml"');
-	expect(link[0]).toMatch(/href="[^"]+\.svg"/);
+const hrefOf = (link) => link[0].match(/href="([^"]+)"/)[1];
+
+// the linked favicon file is actually emitted next to the HTML
+const emitted = (href) => fs.existsSync(path.resolve(__dirname, href));
+
+it("injects no favicon by default", () => {
+	expect(iconLink(readHtml("default.html"))).toBeNull();
 });
 
-it("synthetic wrapper favicon href is content-hashed", () => {
-	const link = iconLink(readHtml("default.html"));
+it("injects the webpack svg logo when favicon: true", () => {
+	const link = iconLink(readHtml("logo.html"));
 	expect(link).not.toBeNull();
-	// hashed asset names are hex strings — not the bare "favicon.svg"
+	expect(link[0]).toContain('type="image/svg+xml"');
+	// content-hashed asset name, not the bare source name
 	expect(link[0]).not.toContain('href="favicon.svg"');
-	expect(link[0]).toMatch(/href="[0-9a-f]{16,}\.svg"/);
+	expect(hrefOf(link)).toMatch(/^[0-9a-f]{16,}\.svg$/);
 });
 
 it("emits the favicon asset with non-empty SVG content", () => {
-	const files = fs.readdirSync(__dirname);
-	const svgs = files.filter((f) => f.endsWith(".svg"));
-	expect(svgs.length).toBeGreaterThan(0);
-	for (const svg of svgs) {
-		const content = fs.readFileSync(path.resolve(__dirname, svg), "utf-8");
-		expect(content.length).toBeGreaterThan(0);
-		expect(content).toMatch(/<svg/i);
-	}
+	const href = hrefOf(iconLink(readHtml("logo.html")));
+	expect(emitted(href)).toBe(true);
+	const content = fs.readFileSync(path.resolve(__dirname, href), "utf-8");
+	expect(content).toMatch(/<svg/i);
+	expect(content.length).toBeGreaterThan(0);
 });
 
-it("omits the favicon when set to false", () => {
+it("injects no favicon when favicon: false", () => {
 	expect(iconLink(readHtml("off.html"))).toBeNull();
 });
 
-it("uses a user-provided favicon", () => {
+it("uses a user-provided favicon, content-hashed", () => {
 	const link = iconLink(readHtml("custom.html"));
 	expect(link).not.toBeNull();
-	expect(link[0]).toMatch(/href="[^"]+\.svg"/);
-});
-
-it("injects favicon into authored HTML entry", () => {
-	const html = readHtml("authored.html");
-	const link = iconLink(html);
-	expect(link).not.toBeNull();
 	expect(link[0]).toContain('type="image/svg+xml"');
-	expect(link[0]).toMatch(/href="[^"]+\.svg"/);
+	expect(hrefOf(link)).toMatch(/^[0-9a-f]{16,}\.svg$/);
 });
 
-it("favicon is the first tag inside <head> in authored HTML", () => {
-	const html = readHtml("authored.html");
-	const headContentMatch = html.match(/<head>([\s\S]*?)<\/head>/i);
-	const headContent = headContentMatch ? headContentMatch[1] : "";
-	const firstTagMatch = headContent.trim().match(/^<[^>]+>/);
-	const firstTag = firstTagMatch ? firstTagMatch[0] : "";
-	expect(firstTag).toMatch(/rel="icon"/i);
-});
-
-it("does not inject favicon into authored HTML when favicon: false", () => {
-	expect(iconLink(readHtml("authored-off.html"))).toBeNull();
-});
-
-it("emits the favicon asset for authored HTML entry", () => {
-	const files = fs.readdirSync(__dirname);
-	expect(files.some((f) => f === "favicon.svg")).toBe(true);
-});
-
-it("injects custom favicon into authored HTML entry", () => {
-	const link = iconLink(readHtml("authored-custom.html"));
+it("sets the link type from the favicon file format (png)", () => {
+	const link = iconLink(readHtml("custom-png.html"));
 	expect(link).not.toBeNull();
-	expect(link[0]).toMatch(/href="[^"]+\.svg"/);
-	expect(link[0]).toContain('type="image/svg+xml"');
+	expect(link[0]).toContain('type="image/png"');
+	expect(emitted(hrefOf(link))).toBe(true);
+	expect(hrefOf(link)).toMatch(/^[0-9a-f]{16,}\.png$/);
 });
 
-it("injects favicon into all pages of a multi-page authored HTML build", () => {
-	const link1 = iconLink(readHtml("page.html"));
-	const link2 = iconLink(readHtml("page-off.html"));
-	expect(link1).not.toBeNull();
-	expect(link2).not.toBeNull();
+it("supports an object mapping each rel to an icon path", () => {
+	const html = readHtml("object.html");
+	const icon = html.match(/<link rel="icon"[^>]*>/i);
+	const apple = html.match(/<link rel="apple-touch-icon"[^>]*>/i);
+	expect(icon).not.toBeNull();
+	expect(icon[0]).toContain('type="image/svg+xml"');
+	expect(hrefOf(icon)).toMatch(/^[0-9a-f]{16,}\.svg$/);
+	expect(apple).not.toBeNull();
+	expect(apple[0]).toContain('type="image/png"');
+	expect(hrefOf(apple)).toMatch(/^[0-9a-f]{16,}\.png$/);
+	expect(emitted(hrefOf(icon))).toBe(true);
+	expect(emitted(hrefOf(apple))).toBe(true);
 });
 
-it("does not double-inject when authored HTML has <link rel='icon'> with single quotes", () => {
-	const html = readHtml("has-icon-squote.html");
-	const matches = html.match(/rel\s*=\s*["']?(?:shortcut\s+)?icon/gi) || [];
-	expect(matches.length).toBe(1);
+it("supports a function that receives the page name", () => {
+	const link = iconLink(readHtml("fn.html"));
+	expect(link).not.toBeNull();
+	expect(hrefOf(link)).toMatch(/^[0-9a-f]{16,}\.svg$/);
 });
 
-it("does not double-inject when authored HTML has <LINK REL=\"ICON\"> uppercase", () => {
-	const html = readHtml("has-icon-upper.html");
-	const matches = html.match(/rel\s*=\s*["']?(?:shortcut\s+)?icon/gi) || [];
-	expect(matches.length).toBe(1);
+it("does not add a favicon when the authored HTML already declares one", () => {
+	const html = readHtml("authored-has-icon.html");
+	const links = html.match(/<link rel="icon"[^>]*>/gi) || [];
+	// the authored link stays the only one — the webpack logo is not added
+	expect(links).toHaveLength(1);
+	// the author wrote no type attr; the injected logo would add type="image/svg+xml"
+	expect(links[0]).not.toContain("type=");
+	expect(hrefOf([links[0]])).toMatch(/^[0-9a-f]{16,}\.svg$/);
 });
 
-it("does not double-inject when authored HTML has <link rel=\"shortcut icon\">", () => {
-	const html = readHtml("has-shortcut-icon.html");
-	const matches = html.match(/rel\s*=\s*["']?(?:shortcut\s+)?icon/gi) || [];
-	expect(matches.length).toBe(1);
+it("does not inject a favicon into authored HTML (only webpack-generated pages)", () => {
+	expect(iconLink(readHtml("authored-no-icon.html"))).toBeNull();
 });
