@@ -3,6 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @typedef {import("../../lib/css/syntax").MutableToken} MutableToken */
 /** @typedef {Record<string, unknown> & { getPropertyValue: (property: string) => unknown }} StyleDeclaration */
 /** @typedef {{ selectorText: string | undefined, style: StyleDeclaration, cssText: string }} CssRule */
 /** @typedef {{ type: string, target?: FakeElement }} FakeEvent */
@@ -527,7 +528,7 @@ class FakeSheet {
 			TT_LEFT_CURLY_BRACKET,
 			TT_RIGHT_CURLY_BRACKET,
 			TT_SEMICOLON,
-			tokenize
+			readToken
 		} = require("../../lib/css/syntax");
 
 		/** @type {CssRule[]} */
@@ -578,30 +579,31 @@ class FakeSheet {
 					"utf8"
 				);
 			});
-		tokenize(css, 0, {
-			token: (t) => {
-				if (t.type === TT_LEFT_CURLY_BRACKET) {
-					if (selector === undefined) {
-						ruleStart = last; // Record the start of the rule (before the selector)
-						selector = css.slice(last, t.start).trim();
-						last = t.end;
-					}
-				} else if (t.type === TT_RIGHT_CURLY_BRACKET) {
-					processDeclaration(css.slice(last, t.start));
-					rules.push({
-						selectorText: selector,
-						style: currentRule,
-						cssText: css.slice(ruleStart, t.end).trim()
-					});
-					selector = undefined;
-					currentRule = { getPropertyValue };
-					last = t.end;
-				} else if (t.type === TT_SEMICOLON) {
-					processDeclaration(css.slice(last, t.start));
+		for (let pos = 0; ; ) {
+			const t = readToken(css, pos, /** @type {MutableToken} */ ({}));
+			if (t === undefined) break;
+			pos = t.end;
+			if (t.type === TT_LEFT_CURLY_BRACKET) {
+				if (selector === undefined) {
+					ruleStart = last; // Record the start of the rule (before the selector)
+					selector = css.slice(last, t.start).trim();
 					last = t.end;
 				}
+			} else if (t.type === TT_RIGHT_CURLY_BRACKET) {
+				processDeclaration(css.slice(last, t.start));
+				rules.push({
+					selectorText: selector,
+					style: currentRule,
+					cssText: css.slice(ruleStart, t.end).trim()
+				});
+				selector = undefined;
+				currentRule = { getPropertyValue };
+				last = t.end;
+			} else if (t.type === TT_SEMICOLON) {
+				processDeclaration(css.slice(last, t.start));
+				last = t.end;
 			}
-		});
+		}
 		return rules;
 	}
 }
@@ -655,7 +657,7 @@ class CSSStyleSheet {
 			TT_LEFT_CURLY_BRACKET,
 			TT_RIGHT_CURLY_BRACKET,
 			TT_SEMICOLON,
-			tokenize
+			readToken
 		} = require("../../lib/css/syntax");
 
 		/** @type {CssRule[]} */
@@ -682,35 +684,36 @@ class CSSStyleSheet {
 
 		let ruleStart = 0;
 
-		tokenize(cleanCss, 0, {
-			token: (t) => {
-				if (t.type === TT_LEFT_CURLY_BRACKET) {
-					if (selector === undefined) {
-						selector = cleanCss.slice(last, t.start).trim();
-						ruleStart = last;
-						last = t.end;
-					}
-				} else if (t.type === TT_RIGHT_CURLY_BRACKET) {
-					processDeclaration(cleanCss.slice(last, t.start));
-					last = t.end;
-
-					// Generate cssText for the entire rule
-					const ruleText = cleanCss.slice(ruleStart, t.end).trim();
-					const cssText = `${selector} ${ruleText.slice(ruleText.indexOf("{"))}`;
-
-					rules.push({
-						selectorText: selector,
-						style: currentRule,
-						cssText
-					});
-					selector = undefined;
-					currentRule = { getPropertyValue };
-				} else if (t.type === TT_SEMICOLON) {
-					processDeclaration(cleanCss.slice(last, t.start));
+		for (let pos = 0; ; ) {
+			const t = readToken(cleanCss, pos, /** @type {MutableToken} */ ({}));
+			if (t === undefined) break;
+			pos = t.end;
+			if (t.type === TT_LEFT_CURLY_BRACKET) {
+				if (selector === undefined) {
+					selector = cleanCss.slice(last, t.start).trim();
+					ruleStart = last;
 					last = t.end;
 				}
+			} else if (t.type === TT_RIGHT_CURLY_BRACKET) {
+				processDeclaration(cleanCss.slice(last, t.start));
+				last = t.end;
+
+				// Generate cssText for the entire rule
+				const ruleText = cleanCss.slice(ruleStart, t.end).trim();
+				const cssText = `${selector} ${ruleText.slice(ruleText.indexOf("{"))}`;
+
+				rules.push({
+					selectorText: selector,
+					style: currentRule,
+					cssText
+				});
+				selector = undefined;
+				currentRule = { getPropertyValue };
+			} else if (t.type === TT_SEMICOLON) {
+				processDeclaration(cleanCss.slice(last, t.start));
+				last = t.end;
 			}
-		});
+		}
 
 		this._cssRules = rules;
 	}
