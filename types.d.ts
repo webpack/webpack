@@ -4,7 +4,7 @@
  * Run `yarn fix:special` to update
  */
 
-import { Parser as ParserImport, Position } from "acorn";
+import { Parser as ParserImport } from "acorn";
 import { Buffer } from "buffer";
 import {
 	ArrayExpression,
@@ -14183,9 +14183,6 @@ declare class LazySet<T> {
 		__0: ObjectDeserializerContextObjectMiddlewareObject_3<(number | T)[]>
 	): LazySet<T>;
 }
-declare interface LazySourcePositions {
-	position: (offset: number) => Position;
-}
 declare interface LibIdentOptions {
 	/**
 	 * absolute context path to which lib ident is relative to
@@ -19731,9 +19728,9 @@ declare interface ParseOptions {
 	allowReturnOutsideFunction?: boolean;
 
 	/**
-	 * internal: serve loc/range lazily instead of allocating them during parsing
+	 * internal: serve `range` lazily and skip acorn's location/range tracking
 	 */
-	lazySourcePositions?: LazySourcePositions;
+	lazyNodes?: boolean;
 
 	/**
 	 * internal: collect comments here without slicing their text eagerly
@@ -19749,11 +19746,6 @@ declare interface ParseResult {
 	ast: Program;
 	comments: CommentJavascriptParser[];
 	semicolons: Set<number>;
-
-	/**
-	 * offset to line/column mapping of the parsed code
-	 */
-	sourcePositions?: SourcePositions;
 }
 declare interface ParsedIdentifier {
 	/**
@@ -24313,16 +24305,6 @@ declare class SourceMapSource extends Source {
 declare interface SourcePosition {
 	line: number;
 	column?: number;
-}
-
-/**
- * Offset → line/column mapping for one parsed file. The line-start table is
- * built only when some node's `loc` is first read.
- */
-declare abstract class SourcePositions {
-	source: string;
-	lineStarts?: number[];
-	position(offset: number): Position;
 }
 type SourceType =
 	| "html"

@@ -1102,15 +1102,13 @@ describe("JavascriptParser", () => {
 	});
 
 	describe("getLocation", () => {
-		const { SourcePositions } = require("../lib/javascript/syntax");
-
 		/**
 		 * @param {string} source source code
-		 * @returns {JavascriptParser} parser with an active positions mapping
+		 * @returns {JavascriptParser} parser with an active source mapping
 		 */
 		function parserFor(source) {
 			const parser = new JavascriptParser("module");
-			parser._sourcePositions = new SourcePositions(source);
+			parser._source = source;
 			return parser;
 		}
 
