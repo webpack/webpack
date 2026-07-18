@@ -3190,7 +3190,7 @@ declare interface ColorsOptions {
 type CommentJavascriptParser = CommentImport & {
 	start: number;
 	end: number;
-	loc: SourceLocation;
+	loc?: SourceLocation;
 };
 declare interface CommonJsImportSettings {
 	name?: string;
@@ -12568,6 +12568,8 @@ declare class JavascriptParser extends ParserClass {
 	 * Returns the location of a node or comment, computed from its offsets so
 	 * ASTs from parsers without location support work too. Falls back to the
 	 * node's own `loc` only when no source text is available (preparsed ASTs).
+	 * Offsets can only be mapped while parsing — callbacks deferred past the
+	 * `parse()` call must take the location upfront.
 	 */
 	getLocation(node: {
 		start?: number;
