@@ -10,7 +10,6 @@ const {
 	SourceProcessor,
 	NodeType,
 	readToken,
-	tokenize,
 	parseAStylesheet,
 	parseAStylesheetsContents,
 	parseABlocksContents,
@@ -81,6 +80,31 @@ const BIG_BLOCK_CONTENTS = `${"prop-x: rgba(0, 0, 0, .5) 1px;".repeat(3000)}${".
 
 const NOOP = () => {};
 
+// Tokenize via the readToken pull primitive — CSS's real tokenizer (one reused
+// token, zero per-token allocation).
+const TOK = {
+	type: 0,
+	start: 0,
+	end: 0,
+	isId: false,
+	contentStart: 0,
+	contentEnd: 0,
+	unitStart: 0
+};
+/**
+ * @param {string} css css source
+ * @returns {number} token count (kept so the loop isn't elided)
+ */
+const tokenizeCss = (css) => {
+	let n = 0;
+	let pos = 0;
+	for (;;) {
+		if (readToken(css, pos, TOK) === undefined) return n;
+		pos = TOK.end;
+		n++;
+	}
+};
+
 /**
  * @param {import("tinybench").Bench} bench bench
  * @returns {void}
@@ -128,14 +152,18 @@ export default (bench) => {
 		}
 	);
 
-	// Tokenizer throughput — min vs expanded shows the whitespace-tokenizing cost.
-	bench.add('unit benchmark "css-parser-tailwind-unit", tokenize (min)', () => {
-		tokenize(cssMin, 0, { token: NOOP });
-	});
+	// Tokenizer throughput (readToken) — min vs expanded shows the
+	// whitespace-tokenizing cost.
 	bench.add(
-		'unit benchmark "css-parser-tailwind-unit", tokenize (expanded)',
+		'unit benchmark "css-parser-tailwind-unit", readToken (min)',
 		() => {
-			tokenize(cssExpanded, 0, { token: NOOP });
+			tokenizeCss(cssMin);
+		}
+	);
+	bench.add(
+		'unit benchmark "css-parser-tailwind-unit", readToken (expanded)',
+		() => {
+			tokenizeCss(cssExpanded);
 		}
 	);
 
