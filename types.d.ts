@@ -3190,7 +3190,7 @@ declare interface ColorsOptions {
 type CommentJavascriptParser = CommentImport & {
 	start: number;
 	end: number;
-	loc?: SourceLocation;
+	loc?: null | SourceLocation;
 };
 declare interface CommonJsImportSettings {
 	name?: string;
@@ -19745,7 +19745,11 @@ declare interface ParseOptions {
 declare interface ParseResult {
 	ast: Program;
 	comments: CommentJavascriptParser[];
-	semicolons: Set<number>;
+
+	/**
+	 * positions of inserted semicolons; when absent they are derived from statement offsets and the source text
+	 */
+	semicolons?: Set<number>;
 }
 declare interface ParsedIdentifier {
 	/**

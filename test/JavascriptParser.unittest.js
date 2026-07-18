@@ -1146,4 +1146,69 @@ describe("JavascriptParser", () => {
 			expect(parser.getLocation({ loc })).toBe(loc);
 		});
 	});
+
+	describe("isAsiPosition derived from source", () => {
+		/**
+		 * @param {string} source source code
+		 * @param {(parser: JavascriptParser, statement: EXPECTED_ANY) => void=} onStatement statement callback
+		 * @returns {boolean[]} ASI answer at each top-level statement end
+		 */
+		function asiAtStatementEnds(source, onStatement) {
+			const parser = new JavascriptParser("module");
+			/** @type {boolean[]} */
+			const result = [];
+			parser.hooks.statement.tap("test", (statement) => {
+				// only top-level statements — the hook also fires for nested ones
+				if (parser.statementPath.length === 1) {
+					if (onStatement) onStatement(parser, statement);
+					result.push(parser.isAsiPosition(statement.range[1]));
+				}
+			});
+			parser.parse(
+				source,
+				/** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({ source })
+				)
+			);
+			return result;
+		}
+
+		it("should detect inserted semicolons without a semicolons set", () => {
+			expect(asiAtStatementEnds("a\nb")).toEqual([true, true]);
+			expect(asiAtStatementEnds("a;\nb;")).toEqual([false, false]);
+			expect(asiAtStatementEnds("var x = {}\ny")).toEqual([true, true]);
+			expect(asiAtStatementEnds("function f() {}\nx")).toEqual([false, true]);
+			expect(asiAtStatementEnds("do x; while (y)")).toEqual([false]);
+			expect(asiAtStatementEnds("l: while (a) b")).toEqual([true]);
+			expect(asiAtStatementEnds("if (a) b\nelse c")).toEqual([true]);
+		});
+
+		it("should detect inserted semicolons for module statements", () => {
+			expect(asiAtStatementEnds('import "x"')).toEqual([true]);
+			expect(asiAtStatementEnds("export var x = 1")).toEqual([true]);
+			expect(asiAtStatementEnds("export function f() {}")).toEqual([false]);
+			expect(asiAtStatementEnds("const o = {};\nexport { o }")).toEqual([
+				false,
+				true
+			]);
+			expect(asiAtStatementEnds("export default 1")).toEqual([true]);
+			expect(asiAtStatementEnds("export default function () {}")).toEqual([
+				false
+			]);
+			expect(asiAtStatementEnds('export * from "x";')).toEqual([false]);
+		});
+
+		it("should honor setAsiPosition and unsetAsiPosition overrides", () => {
+			expect(
+				asiAtStatementEnds("a\nb", (parser, statement) =>
+					parser.unsetAsiPosition(statement.range[1])
+				)
+			).toEqual([false, false]);
+			expect(
+				asiAtStatementEnds("a;\nb;", (parser, statement) =>
+					parser.setAsiPosition(statement.range[1])
+				)
+			).toEqual([true, true]);
+		});
+	});
 });
