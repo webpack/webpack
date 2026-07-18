@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`walkTokens should tokenize and roundtrip "attributes.html" 1`] = `
+exports[`tokenize should tokenize and roundtrip "attributes.html" 1`] = `
 Array [
   Array [
     "attribute",
@@ -104,7 +104,7 @@ Array [
 ]
 `;
 
-exports[`walkTokens should tokenize and roundtrip "basic.html" 1`] = `
+exports[`tokenize should tokenize and roundtrip "basic.html" 1`] = `
 Array [
   Array [
     "doctype",
@@ -419,7 +419,7 @@ Array [
 ]
 `;
 
-exports[`walkTokens should tokenize and roundtrip "character-references.html" 1`] = `
+exports[`tokenize should tokenize and roundtrip "character-references.html" 1`] = `
 Array [
   Array [
     "open-tag",
@@ -702,7 +702,7 @@ Array [
 ]
 `;
 
-exports[`walkTokens should tokenize and roundtrip "comments.html" 1`] = `
+exports[`tokenize should tokenize and roundtrip "comments.html" 1`] = `
 Array [
   Array [
     "comment",
@@ -796,7 +796,7 @@ comment -->",
 ]
 `;
 
-exports[`walkTokens should tokenize and roundtrip "nested.html" 1`] = `
+exports[`tokenize should tokenize and roundtrip "nested.html" 1`] = `
 Array [
   Array [
     "open-tag",
@@ -937,7 +937,7 @@ Array [
 ]
 `;
 
-exports[`walkTokens should tokenize and roundtrip "self-closing.html" 1`] = `
+exports[`tokenize should tokenize and roundtrip "self-closing.html" 1`] = `
 Array [
   Array [
     "attribute",

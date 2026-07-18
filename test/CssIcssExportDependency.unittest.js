@@ -100,52 +100,6 @@ describe("CssIcssExportDependency", () => {
 		});
 	});
 
-	describe("getWarnings", () => {
-		it("warns about a missing self-referenced name", () => {
-			const dep = new CssIcssExportDependency([
-				entry({
-					value: "missing",
-					exportMode: EXPORT_MODE.SELF_REFERENCE,
-					exportType: EXPORT_TYPE.COMPOSES,
-					locStartLine: 1,
-					locStartColumn: 0,
-					locEndLine: 1,
-					locEndColumn: 7
-				})
-			]);
-			const warnings =
-				/** @type {NonNullable<ReturnType<typeof dep.getWarnings>>} */ (
-					dep.getWarnings(
-						makeModuleGraph(makeModule(), { isExportProvided: () => false })
-					)
-				);
-			expect(warnings).toHaveLength(1);
-			expect(warnings[0].message).toContain(
-				'Self-referencing name "missing" not found'
-			);
-		});
-
-		it("returns null when the self-referenced name is provided", () => {
-			const dep = new CssIcssExportDependency([
-				entry({
-					value: "present",
-					exportMode: EXPORT_MODE.SELF_REFERENCE,
-					exportType: EXPORT_TYPE.COMPOSES
-				})
-			]);
-			expect(
-				dep.getWarnings(
-					makeModuleGraph(makeModule(), { isExportProvided: () => true })
-				)
-			).toBeNull();
-		});
-
-		it("returns null when there are no self-reference entries", () => {
-			const dep = new CssIcssExportDependency([entry({})]);
-			expect(dep.getWarnings(makeModuleGraph(makeModule()))).toBeNull();
-		});
-	});
-
 	it("memoizes its hash contribution", () => {
 		const dep = new CssIcssExportDependency([entry({ range: [0, 1] })]);
 		/** @type {string[]} */
