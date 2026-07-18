@@ -528,7 +528,7 @@ class FakeSheet {
 			TT_LEFT_CURLY_BRACKET,
 			TT_RIGHT_CURLY_BRACKET,
 			TT_SEMICOLON,
-			readToken
+			walkTokens
 		} = require("../../lib/css/syntax");
 
 		/** @type {CssRule[]} */
@@ -580,7 +580,7 @@ class FakeSheet {
 				);
 			});
 		for (let pos = 0; ;) {
-			const t = readToken(css, pos, /** @type {MutableToken} */ ({}));
+			const t = walkTokens(css, pos, /** @type {MutableToken} */ ({}));
 			if (t === undefined) break;
 			pos = t.end;
 			if (t.type === TT_LEFT_CURLY_BRACKET) {
@@ -657,7 +657,7 @@ class CSSStyleSheet {
 			TT_LEFT_CURLY_BRACKET,
 			TT_RIGHT_CURLY_BRACKET,
 			TT_SEMICOLON,
-			readToken
+			walkTokens
 		} = require("../../lib/css/syntax");
 
 		/** @type {CssRule[]} */
@@ -685,7 +685,7 @@ class CSSStyleSheet {
 		let ruleStart = 0;
 
 		for (let pos = 0; ;) {
-			const t = readToken(cleanCss, pos, /** @type {MutableToken} */ ({}));
+			const t = walkTokens(cleanCss, pos, /** @type {MutableToken} */ ({}));
 			if (t === undefined) break;
 			pos = t.end;
 			if (t.type === TT_LEFT_CURLY_BRACKET) {

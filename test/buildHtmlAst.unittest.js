@@ -8,14 +8,14 @@ const {
 	NS_MATHML,
 	NS_SVG,
 	NodeType,
-	buildAst: buildAstRefs
+	parseHtml: parseHtmlRefs
 } = require("../lib/html/syntax");
 
 /** @typedef {import("../lib/html/syntax").HtmlNodeRef} HtmlNodeRef */
 /** @typedef {import("../lib/html/syntax").HtmlAttribute} HtmlAttribute */
 /**
  * Materialized plain-object views of the struct-of-arrays AST — the shape
- * `buildAst` used to return, rebuilt through the accessor `A`.
+ * `parseHtml` used to return, rebuilt through the accessor `A`.
  * @typedef {object} MatElement
  * @property {typeof NodeType.Element} type
  * @property {string} tagName
@@ -37,7 +37,7 @@ const {
 /** @typedef {{ type: typeof NodeType.DocumentFragment, children: MatNode[] }} MatFragment */
 /** @typedef {MatElement | MatText | MatComment | MatDoctype} MatNode */
 
-// `buildAst` returns integer refs into reused module-level columns, valid
+// `parseHtml` returns integer refs into reused module-level columns, valid
 // only until the next parse; materialize each tree eagerly (reading every
 // field through `A`, so this suite exercises the whole accessor surface) to
 // keep assertions valid across the multiple parses many tests perform.
@@ -99,8 +99,8 @@ const materialize = (ref) => {
  * @param {import("../lib/html/syntax").HtmlAstSkip=} skip skip options
  * @returns {MatDocument} materialized document
  */
-const buildAst = (src, fragmentContext, skip) => {
-	const doc = buildAstRefs(src, fragmentContext, skip);
+const parseHtml = (src, fragmentContext, skip) => {
+	const doc = parseHtmlRefs(src, fragmentContext, skip);
 	return {
 		type: NodeType.Document,
 		children: A.children(doc).map(materialize)
@@ -123,7 +123,7 @@ const child = (children, tagName) =>
  * @param {string} src source
  * @returns {MatElement} html element
  */
-const html = (src) => child(buildAst(src).children, "html");
+const html = (src) => child(parseHtml(src).children, "html");
 /**
  * @param {string} src source
  * @returns {MatElement[]} body children
@@ -154,13 +154,13 @@ const find = (src, tagName) => {
 		}
 		for (const c of node.children) walk(c);
 	};
-	for (const c of buildAst(src).children) walk(c);
+	for (const c of parseHtml(src).children) walk(c);
 	return /** @type {MatElement} */ (found);
 };
 
-describe("buildAst", () => {
+describe("parseHtml", () => {
 	it("should produce an empty document with html/head/body scaffolding", () => {
-		const ast = buildAst("");
+		const ast = parseHtml("");
 		expect(ast.type).toBe(NodeType.Document);
 		const root = child(ast.children, "html");
 		expect(root.tagName).toBe("html");
@@ -209,13 +209,13 @@ describe("buildAst", () => {
 	});
 
 	it("should parse comments", () => {
-		const ast = buildAst("<!-- hello -->");
+		const ast = parseHtml("<!-- hello -->");
 		expect(ast.children[0].type).toBe(NodeType.Comment);
 		expect(/** @type {MatComment} */ (ast.children[0]).data).toBe(" hello ");
 	});
 
 	it("should parse doctype", () => {
-		const ast = buildAst("<!DOCTYPE html><html></html>");
+		const ast = parseHtml("<!DOCTYPE html><html></html>");
 		expect(ast.children[0].type).toBe(NodeType.Doctype);
 		expect(/** @type {MatDoctype} */ (ast.children[0]).name).toBe("html");
 	});
@@ -348,7 +348,7 @@ describe("buildAst", () => {
 
 	it("should treat bogus comments as comments", () => {
 		// A leading bogus comment is inserted into the document before <html>.
-		const ast = buildAst("<?bogus comment>");
+		const ast = parseHtml("<?bogus comment>");
 		expect(ast.children[0].type).toBe(NodeType.Comment);
 		expect(/** @type {MatComment} */ (ast.children[0]).data).toBe(
 			"?bogus comment"
@@ -528,7 +528,7 @@ describe("buildAst", () => {
 		// Context is a `table`, so there is no `<table>` on the open stack: stray
 		// character data is fostered to the fragment root, beside the table rows.
 		const root = /** @type {MatElement} */ (
-			buildAst("<tr><td>a</td></tr>x", "table").children[0]
+			parseHtml("<tr><td>a</td></tr>x", "table").children[0]
 		);
 		const texts = root.children
 			.filter((c) => c.type === NodeType.Text)
@@ -538,7 +538,7 @@ describe("buildAst", () => {
 	});
 });
 
-describe("buildAst — SourceProcessor", () => {
+describe("parseHtml — SourceProcessor", () => {
 	const { NodeType, SourceProcessor } = require("../lib/html/syntax");
 
 	it("fires enter / exit visitors in source order", () => {
@@ -633,7 +633,7 @@ describe("buildAst — SourceProcessor", () => {
 	});
 });
 
-describe("buildAst — insertion-mode edge cases", () => {
+describe("parseHtml — insertion-mode edge cases", () => {
 	it("merges foster-parented text runs before a table", () => {
 		const nodes = body("<table>x<tr></tr>y</table>");
 		// Both stray runs are fostered before the table and merged into one node.
@@ -734,7 +734,7 @@ describe("buildAst — insertion-mode edge cases", () => {
 	});
 
 	it("handles content after </html> (after-after-body)", () => {
-		const ast = buildAst("<p>a</p></html><!--c-->z");
+		const ast = parseHtml("<p>a</p></html><!--c-->z");
 		// Comment after </html> attaches to the document.
 		expect(ast.children.some((c) => c.type === NodeType.Comment)).toBe(true);
 		// Non-whitespace text re-enters the body.
@@ -757,7 +757,7 @@ describe("buildAst — insertion-mode edge cases", () => {
 			true
 		);
 		// afterFrameset comment + </html> → afterAfterFrameset comment/noframes.
-		const ast = buildAst(src);
+		const ast = parseHtml(src);
 		expect(ast.children.some((c) => c.type === NodeType.Comment)).toBe(true);
 		expect(find(src, "noframes")).toBeDefined();
 	});
@@ -779,7 +779,7 @@ describe("buildAst — insertion-mode edge cases", () => {
 	});
 });
 
-describe("buildAst — stray doctype and <html> re-dispatch", () => {
+describe("parseHtml — stray doctype and <html> re-dispatch", () => {
 	it("ignores a mid-document doctype and merges stray <html> attributes", () => {
 		// A stray doctype is dropped and a repeated <html> merges new
 		// attributes in colgroup / table / noscript / frameset modes.
@@ -815,7 +815,7 @@ describe("buildAst — stray doctype and <html> re-dispatch", () => {
 // detection) must run identically, so the ELEMENT tree — tags, nesting, offsets
 // and attributes — is the same with any skip combination as with none. This
 // guards the risky `skip.text` path, which drops text-node insertion.
-describe("buildAst — skip options preserve element structure", () => {
+describe("parseHtml — skip options preserve element structure", () => {
 	// A spread of construction edge cases: foster parenting, adoption agency,
 	// select/table/ruby scoping, foreign content, raw-text elements, quirks.
 	const cases = [
@@ -902,15 +902,15 @@ describe("buildAst — skip options preserve element structure", () => {
 	];
 
 	it.each(cases)("keeps the element tree stable under skip (%s)", (src) => {
-		const baseline = elementSignature(buildAst(src));
+		const baseline = elementSignature(parseHtml(src));
 		for (const skip of skipCombos) {
-			expect(elementSignature(buildAst(src, undefined, skip))).toBe(baseline);
+			expect(elementSignature(parseHtml(src, undefined, skip))).toBe(baseline);
 		}
 	});
 
 	it("skip.text drops every text node; raw-text bodies stay readable via contentEnd", () => {
 		const src = "<p>prose</p><script>var x=1;</script>";
-		const doc = buildAst(src, undefined, { text: true });
+		const doc = parseHtml(src, undefined, { text: true });
 		/** @type {MatText[]} */
 		const texts = [];
 		/** @type {MatElement | undefined} */
@@ -951,14 +951,14 @@ describe("buildAst — skip options preserve element structure", () => {
 			return n;
 		};
 		expect(
-			count(buildAst(src, undefined, { comments: true }), NodeType.Comment)
+			count(parseHtml(src, undefined, { comments: true }), NodeType.Comment)
 		).toBe(0);
 		expect(
-			count(buildAst(src, undefined, { doctype: true }), NodeType.Doctype)
+			count(parseHtml(src, undefined, { doctype: true }), NodeType.Doctype)
 		).toBe(0);
 		// Baseline still has both.
-		expect(count(buildAst(src), NodeType.Comment)).toBe(1);
-		expect(count(buildAst(src), NodeType.Doctype)).toBe(1);
+		expect(count(parseHtml(src), NodeType.Comment)).toBe(1);
+		expect(count(parseHtml(src), NodeType.Doctype)).toBe(1);
 	});
 
 	it("skip.text records every raw-text element body span on contentEnd", () => {
@@ -966,7 +966,7 @@ describe("buildAst — skip options preserve element structure", () => {
 		// is the element's raw value, recorded as [tagEnd, contentEnd] — no Text node.
 		const src =
 			"<title>ti</title><style>.s{}</style></head><body>prose<script>sc</script><textarea>ta</textarea>";
-		const doc = buildAst(src, undefined, { text: true });
+		const doc = parseHtml(src, undefined, { text: true });
 		/** @type {Record<string, string>} */
 		const bodies = {};
 		/** @param {MatNode} n node */
@@ -994,7 +994,7 @@ describe("buildAst — skip options preserve element structure", () => {
 		// text; HtmlParser extracts them regardless of namespace, so contentEnd must
 		// be recorded here too.
 		const src = "<svg><style>.a{}</style><script>x()</script></svg>";
-		const doc = buildAst(src, undefined, { text: true });
+		const doc = parseHtml(src, undefined, { text: true });
 		/** @type {Record<string, string>} */
 		const bodies = {};
 		/** @param {MatNode} n node */
@@ -1021,15 +1021,15 @@ describe("buildAst — skip options preserve element structure", () => {
 			["<rect/>text", "svg"]
 		];
 		for (const [src, ctx] of fragments) {
-			const base = elementSignature(buildAst(src, ctx));
+			const base = elementSignature(parseHtml(src, ctx));
 			for (const skip of skipCombos) {
-				expect(elementSignature(buildAst(src, ctx, skip))).toBe(base);
+				expect(elementSignature(parseHtml(src, ctx, skip))).toBe(base);
 			}
 		}
 	});
 });
 
-describe("buildAst — tree-construction edge cases (SoA columns)", () => {
+describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	/**
 	 * @param {string} src source
 	 * @param {import("../lib/html/syntax").HtmlAstSkip=} skip skip options
@@ -1037,7 +1037,7 @@ describe("buildAst — tree-construction edge cases (SoA columns)", () => {
 	 */
 	const bodyOf = (src, skip) =>
 		child(
-			child(buildAst(src, undefined, skip).children, "html").children,
+			child(parseHtml(src, undefined, skip).children, "html").children,
 			"body"
 		).children;
 
@@ -1190,7 +1190,7 @@ describe("buildAst — tree-construction edge cases (SoA columns)", () => {
 	});
 
 	it("merges attributes of a repeated <body> tag", () => {
-		const doc = buildAst('<body class="a"><body id="b" class="c">x');
+		const doc = parseHtml('<body class="a"><body id="b" class="c">x');
 		const bodyEl = child(child(doc.children, "html").children, "body");
 		const byName = new Map(bodyEl.attributes.map((a) => [a.name, a.value]));
 		expect(byName.get("class")).toBe("a");
@@ -1200,7 +1200,7 @@ describe("buildAst — tree-construction edge cases (SoA columns)", () => {
 	it("replaces an empty <body> with a <frameset>", () => {
 		// An implied body (opened by <div>) leaves frameset-ok set, so the
 		// <frameset> detaches it; an explicit <body> tag would clear the flag.
-		const doc = buildAst(
+		const doc = parseHtml(
 			'<div><frameset rows="1"> <frameset cols="2"><frame></frameset></frameset>'
 		);
 		const htmlEl = child(doc.children, "html");
@@ -1257,18 +1257,18 @@ describe("buildAst — tree-construction edge cases (SoA columns)", () => {
 	});
 
 	it("attaches comments after </body> to the <html> element", () => {
-		const htmlEl = child(buildAst("x</body><!--c-->").children, "html");
+		const htmlEl = child(parseHtml("x</body><!--c-->").children, "html");
 		expect(htmlEl.children.map((c) => c.type)).toContain(NodeType.Comment);
 	});
 
 	it("parses text in a foreign fragment context", () => {
-		const doc = buildAstRefs("x<div>y", "svg");
+		const doc = parseHtmlRefs("x<div>y", "svg");
 		const root = A.firstChild(doc);
 		expect(A.type(A.firstChild(root))).toBe(NodeType.Text);
 	});
 
 	it("runs the adoption agency in a table-row fragment context", () => {
-		const doc = buildAst("<b>x<tr>y</b>z", "tr");
+		const doc = parseHtml("<b>x<tr>y</b>z", "tr");
 		const root = child(doc.children, "html");
 		expect(
 			/** @type {MatText} */ (child(root.children, "b").children[0]).data
@@ -1276,7 +1276,7 @@ describe("buildAst — tree-construction edge cases (SoA columns)", () => {
 	});
 });
 
-describe("buildAst — path accessor completeness", () => {
+describe("parseHtml — path accessor completeness", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
 	it("exposes node, parent links and attribute spans on the path", () => {

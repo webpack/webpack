@@ -8,7 +8,7 @@
 //    pipeline handles the corpus without throwing an internal exception.
 //    (Mirrors cssParsing-webpack.spectest.js; URL extraction is off so
 //    nothing needs to resolve — the point is no crash on malformed input.)
-// 2. "html5lib tree-construction" — compares buildAst's serialized tree
+// 2. "html5lib tree-construction" — compares parseHtml's serialized tree
 //    to the expected html5lib tree for every tree-construction case (only the
 //    scripting-enabled cases, which webpack does not run, are skipped).
 //    KNOWN_DIVERGENCES (currently empty) pins any intentional exception: a
@@ -24,7 +24,7 @@ const {
 	NS_MATHML,
 	NS_SVG,
 	NodeType,
-	buildAst,
+	parseHtml,
 	decodeEntities
 } = require("../lib/html/syntax");
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
@@ -179,7 +179,7 @@ describe("html5lib-tests webpack build", () => {
 });
 
 // ---------------------------------------------------------------------------
-// 2. tree-construction (buildAst conformance)
+// 2. tree-construction (parseHtml conformance)
 // ---------------------------------------------------------------------------
 
 const treeDir = path.join(testsDir, "tree-construction");
@@ -328,7 +328,7 @@ const parseDat = (text) => {
  * @returns {string} serialized tree
  */
 const runTreeCase = (c) => {
-	const doc = buildAst(c.data, c.fragment || undefined);
+	const doc = parseHtml(c.data, c.fragment || undefined);
 	// In fragment mode the result is the children of the synthesized root.
 	const first = A.firstChild(doc);
 	return serialize(c.fragment && first !== 0 ? first : doc);

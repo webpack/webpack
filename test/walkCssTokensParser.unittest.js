@@ -20,7 +20,7 @@ const {
 	parseARule,
 	parseAStylesheet,
 	parseAStylesheetsContents,
-	readToken
+	walkTokens
 } = require("../lib/css/syntax");
 
 /**
@@ -34,7 +34,7 @@ const cvTypes = (src) => parseAListOfComponentValues(src).map((n) => n.type);
  */
 const firstTokenType = (src) =>
 	/** @type {import("../lib/css/syntax").MutableToken} */ (
-		readToken(
+		walkTokens(
 			src,
 			0,
 			/** @type {import("../lib/css/syntax").MutableToken} */ ({})
@@ -531,17 +531,17 @@ describe("walkCssTokens — tokenizer edge cases", () => {
 		expect(firstTokenType("url(a b\\)c)")).toBe(TT_BAD_URL_TOKEN);
 	});
 
-	it("readToken returns undefined once the input is fully consumed", () => {
+	it("walkTokens returns undefined once the input is fully consumed", () => {
 		// "a" is a single 1-char ident token; reading past it (offset 1) is EOF.
 		expect(
-			readToken(
+			walkTokens(
 				"a",
 				0,
 				/** @type {import("../lib/css/syntax").MutableToken} */ ({})
 			)
 		).toBeDefined();
 		expect(
-			readToken(
+			walkTokens(
 				"a",
 				1,
 				/** @type {import("../lib/css/syntax").MutableToken} */ ({})

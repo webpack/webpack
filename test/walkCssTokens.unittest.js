@@ -29,7 +29,7 @@ const {
 	TT_URL,
 	TT_WHITESPACE,
 	parseAListOfComponentValues,
-	readToken
+	walkTokens
 } = require("../lib/css/syntax");
 
 // Snapshot uses the spec-style kebab-case names for multi-word token types;
@@ -64,7 +64,7 @@ const TYPE_TO_PRINTED = {
 	[TT_BAD_URL_TOKEN]: "bad-url-token"
 };
 
-describe("readToken", () => {
+describe("walkTokens", () => {
 	const casesPath = path.resolve(__dirname, "./configCases/css/parsing/cases");
 	const tests = fs
 		.readdirSync(casesPath)
@@ -78,9 +78,9 @@ describe("readToken", () => {
 		it(`should parse and print "${name}"`, () => {
 			const results = [];
 			// Drive the lexer core directly: a fresh `out` per call collects the
-			// raw token list (comments included); `readToken` returns undefined at EOF.
+			// raw token list (comments included); `walkTokens` returns undefined at EOF.
 			for (let pos = 0; ;) {
-				const t = readToken(
+				const t = walkTokens(
 					code,
 					pos,
 					/** @type {import("../lib/css/syntax").MutableToken} */ ({})
@@ -116,7 +116,7 @@ describe("readToken", () => {
 const tokenRoundtrip = (input) => {
 	let out = "";
 	for (let pos = 0; ;) {
-		const t = readToken(
+		const t = walkTokens(
 			input,
 			pos,
 			/** @type {import("../lib/css/syntax").MutableToken} */ ({})
