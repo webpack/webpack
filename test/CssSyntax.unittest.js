@@ -43,7 +43,8 @@ const {
 	parseARule,
 	parseAStylesheet,
 	parseAStylesheetsContents,
-	readToken
+	readToken,
+	tokenize
 } = require("../lib/css/syntax");
 
 // Snapshot uses the spec-style kebab-case names for multi-word token types;
@@ -121,6 +122,48 @@ describe("readToken", () => {
 			expect(results.map((item) => item[1]).join("")).toBe(code);
 		});
 	}
+});
+
+describe("tokenize", () => {
+	it("visits every token (matching a readToken loop) and returns the end", () => {
+		const src = "a { color: red } /* c */ url(x.png)";
+		/** @type {number[]} */
+		const viaTokenize = [];
+		const end = tokenize(src, 0, { token: (t) => viaTokenize.push(t.type) });
+		/** @type {number[]} */
+		const viaReadToken = [];
+		for (let pos = 0; ; ) {
+			const t = readToken(
+				src,
+				pos,
+				/** @type {import("../lib/css/syntax").MutableToken} */ ({})
+			);
+			if (t === undefined) break;
+			pos = t.end;
+			viaReadToken.push(t.type);
+		}
+		expect(viaTokenize).toEqual(viaReadToken);
+		expect(end).toBe(src.length);
+	});
+
+	it("reports url token content offsets (as HtmlGenerator relies on)", () => {
+		const src = "url(a/b.png)";
+		/** @type {string | undefined} */
+		let content;
+		tokenize(src, 0, {
+			token: (t) => {
+				if (t.type === TT_URL) {
+					content = src.slice(t.contentStart, t.contentEnd);
+				}
+			}
+		});
+		expect(content).toBe("a/b.png");
+	});
+
+	it("tolerates missing/empty callbacks and still walks to the end", () => {
+		expect(tokenize("a b c", 0, {})).toBe(5);
+		expect(tokenize("a b c")).toBe(5);
+	});
 });
 
 /**
