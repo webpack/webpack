@@ -1028,7 +1028,17 @@ const knownBugs = [
 	"expressions/prefix-decrement/operator-prefix-decrement-x-calls-putvalue-lhs-newvalue--1.js",
 
 	// Weird test
-	"expressions/dynamic-import/syntax/valid/nested-with-nested-imports.js"
+	"expressions/dynamic-import/syntax/valid/nested-with-nested-imports.js",
+
+	// A rejecting top-level-await entry can only reject the ESM bundle module
+	// via top-level `await`, which webpack intentionally does not emit (async
+	// output stays runnable on engines without top-level await), so the
+	// rejection is orphaned instead of failing the module.
+	"module-code/top-level-await/module-import-rejection.js",
+	"module-code/top-level-await/module-import-rejection-body.js",
+	"module-code/top-level-await/module-import-rejection-tick.js",
+	"module-code/top-level-await/dynamic-import-rejection.js",
+	"module-code/top-level-await/await-dynamic-import-rejection.js"
 ];
 
 const knownProductionBuildBugs = [
