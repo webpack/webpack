@@ -1267,6 +1267,11 @@
           ],
           "experimental": true
         },
+        "incremental": {
+          "description": "Reuse the module graph across rebuilds and only rebuild modules affected by changes (incremental make).",
+          "type": "boolean",
+          "experimental": true
+        },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
           "anyOf": [
@@ -1384,6 +1389,11 @@
               "type": "boolean"
             }
           ],
+          "experimental": true
+        },
+        "incremental": {
+          "description": "Reuse the module graph across rebuilds and only rebuild modules affected by changes (incremental make).",
+          "type": "boolean",
           "experimental": true
         },
         "lazyCompilation": {

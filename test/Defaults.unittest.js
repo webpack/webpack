@@ -144,6 +144,7 @@ describe("snapshots", () => {
 		    "deferImport": false,
 		    "futureDefaults": false,
 		    "html": true,
+		    "incremental": false,
 		    "lazyCompilation": undefined,
 		    "outputModule": false,
 		    "sourceImport": false,

@@ -925,6 +925,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "experiments-incremental": Object {
+    "configs": Array [
+      Object {
+        "description": "Reuse the module graph across rebuilds and only rebuild modules affected by changes (incremental make).",
+        "multiple": false,
+        "path": "experiments.incremental",
+        "type": "boolean",
+      },
+    ],
+    "description": "Reuse the module graph across rebuilds and only rebuild modules affected by changes (incremental make).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-lazy-compilation": Object {
     "configs": Array [
       Object {
