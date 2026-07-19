@@ -1349,4 +1349,108 @@ describe("WebpackParser", () => {
 			]);
 		});
 	});
+
+	describe("auto source type module->script fallback", () => {
+		const { WebpackParser } = require("../lib/javascript/syntax");
+
+		/**
+		 * @param {string} code source
+		 * @param {object=} options extra parse options
+		 * @returns {{ ast: import("../lib/javascript/JavascriptParser").ParseResult["ast"], parses: number }} result and acorn parse count
+		 */
+		const parseAuto = (code, options) => {
+			const proto =
+				/** @type {{ parse: () => unknown }} */
+				(/** @type {unknown} */ (WebpackParser.prototype));
+			const spy = jest.spyOn(proto, "parse");
+			try {
+				const { ast } = parse(code, { sourceType: "auto", ...options });
+				return { ast, parses: spy.mock.calls.length };
+			} finally {
+				spy.mockRestore();
+			}
+		};
+
+		it("should downgrade a top-level return in a single parse (fast path)", () => {
+			const { ast, parses } = parseAuto(
+				'if (typeof window === "undefined") { return; }\nmodule.exports = 1;'
+			);
+			expect(parses).toBe(1);
+			expect(ast.sourceType).toBe("script");
+			expect(ast.body[0].type).toBe("IfStatement");
+		});
+
+		it("should downgrade a bare top-level return without ranges", () => {
+			const { ast, parses } = parseAuto("return 1;", { ranges: false });
+			expect(parses).toBe(1);
+			expect(ast.body[0].type).toBe("ReturnStatement");
+		});
+
+		it("should produce the same AST as an explicit script parse", () => {
+			const code = "var x = 1;\nif (x) return;\nmodule.exports = x;";
+			const strip = (/** @type {unknown} */ node) =>
+				JSON.stringify(node, (k, v) =>
+					k === "loc" || k === "start" || k === "end" || k === "range"
+						? undefined
+						: v
+				);
+			expect(strip(parseAuto(code).ast)).toBe(
+				strip(parse(code, { sourceType: "script" }).ast)
+			);
+		});
+
+		it("should single-parse a top-level return past an async function's await", () => {
+			// the await is function-scoped, not module syntax, so the downgrade still applies
+			const { parses, ast } = parseAuto(
+				"async function g() { await x; }\nif (!y) return;"
+			);
+			expect(parses).toBe(1);
+			expect(ast.sourceType).toBe("script");
+		});
+
+		it("should keep esm a single module parse", () => {
+			const { ast, parses } = parseAuto("export const x = 1;");
+			expect(parses).toBe(1);
+			expect(ast.sourceType).toBe("module");
+			expect(ast.body[0].type).toBe("ExportNamedDeclaration");
+		});
+
+		it.each([
+			['import x from "./x";\nreturn;', "import"],
+			["export const a = 1;\nreturn;", "export"],
+			["await Promise.resolve();\nreturn;", "top-level await"],
+			["import.meta.url;\nreturn;", "import.meta"]
+		])(
+			"should not downgrade when %s precedes the return (module syntax seen)",
+			(code) => {
+				const proto =
+					/** @type {{ parse: () => unknown }} */
+					(/** @type {unknown} */ (WebpackParser.prototype));
+				const spy = jest.spyOn(proto, "parse");
+				expect(() => parse(code, { sourceType: "auto" })).toThrow(
+					/'return' outside of function/
+				);
+				const parses = spy.mock.calls.length;
+				spy.mockRestore();
+				// module syntax before the return blocks the in-place downgrade, so
+				// the outer double-parse still runs and re-throws the module error
+				expect(parses).toBe(2);
+			}
+		);
+
+		it("should not downgrade a return inside a class static block", () => {
+			expect(() =>
+				parse("class C { static { return; } }", { sourceType: "auto" })
+			).toThrow(/'return' outside of function/);
+		});
+
+		it("should still fall back to script for strict-only syntax", () => {
+			// `with` is not handled by the in-place switch; the outer retry covers it
+			const { ast, parses } = parseAuto(
+				"with (obj) { x = 1; }\nmodule.exports = x;"
+			);
+			expect(parses).toBe(2);
+			expect(ast.body[0].type).toBe("WithStatement");
+		});
+	});
 });
