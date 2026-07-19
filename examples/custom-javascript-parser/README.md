@@ -78,14 +78,35 @@ const oxc = require("oxc-parser");
 /** @typedef {import("../../../lib/javascript/JavascriptParser").ParseResult} ParseResult */
 
 /**
- * Oxc has no location or `onInsertedSemicolon` APIs — none are needed:
- * webpack derives line/column locations and inserted semicolons from node
- * offsets and the source text itself.
+ * @param {string} sourceCode source code
+ * @returns {Set<number>} semicolons
+ */
+const collectSemicolons = (sourceCode) => {
+	const semiSet = new Set();
+	let pos = sourceCode.indexOf(";");
+
+	while (pos !== -1) {
+		semiSet.add(pos);
+		pos = sourceCode.indexOf(";", pos + 1);
+	}
+
+	return semiSet;
+};
+
+/**
+ * Oxc has no location API — none is needed: webpack derives line/column
+ * locations from node offsets and the source text itself.
  * @param {string} sourceCode the source code
  * @param {ParseOptions} options options
  * @returns {ParseResult} the parsed result
  */
 const oxcParse = (sourceCode, options) => {
+	// We need only automatic semicolon insertion position, but there is no API, so let's collect all semicolons
+	// But there are rooms to improve it
+	const semicolons = options.semicolons
+		? collectSemicolons(sourceCode)
+		: new Set();
+
 	const result = oxc.parseSync("file.js", sourceCode, {
 		astType: "js",
 		range: true,
@@ -105,7 +126,8 @@ const oxcParse = (sourceCode, options) => {
 
 	return {
 		ast: /** @type {Program} */ (/** @type {unknown} */ (result.program)),
-		comments
+		comments,
+		semicolons
 	};
 };
 
@@ -282,44 +304,44 @@ Implementation example:
 ## Unoptimized
 
 ```
-asset output.js 12.4 KiB [emitted] (name: main)
-asset 655.output.js 761 bytes [emitted]
-chunk (runtime: main) 655.output.js 24 bytes [rendered]
-  > ./async-loaded ./example.js 6:0-24
-  ./async-loaded.js 24 bytes [built] [code generated]
-    [exports: answer]
-    [used exports unknown]
-    import() ./async-loaded ./example.js 6:0-24
-chunk (runtime: main) output.js (main) 457 bytes (javascript) 5.93 KiB (runtime) [entry] [rendered]
-  > ./example.js main
-  runtime modules 5.93 KiB 8 modules
-  dependent modules 281 bytes [dependent] 2 modules
-  ./example.js 176 bytes [built] [code generated]
-    [no exports]
-    [used exports unknown]
-    entry ./example.js main
-webpack X.X.X compiled successfully
-
-asset output.js 12.4 KiB [emitted] (name: main)
-asset 655.output.js 761 bytes [emitted]
-chunk (runtime: main) 655.output.js 24 bytes [rendered]
-  > ./async-loaded ./example.js 6:0-24
-  ./async-loaded.js 24 bytes [built] [code generated]
-    [exports: answer]
-    [used exports unknown]
-    import() ./async-loaded ./example.js 6:0-24
-chunk (runtime: main) output.js (main) 457 bytes (javascript) 5.93 KiB (runtime) [entry] [rendered]
-  > ./example.js main
-  runtime modules 5.93 KiB 8 modules
-  dependent modules 281 bytes [dependent] 2 modules
-  ./example.js 176 bytes [built] [code generated]
-    [no exports]
-    [used exports unknown]
-    entry ./example.js main
-webpack X.X.X compiled successfully
-
 asset output.js 12.4 KiB [compared for emit] (name: main)
 asset 655.output.js 761 bytes [compared for emit]
+chunk (runtime: main) 655.output.js 24 bytes [rendered]
+  > ./async-loaded ./example.js 6:0-24
+  ./async-loaded.js 24 bytes [built] [code generated]
+    [exports: answer]
+    [used exports unknown]
+    import() ./async-loaded ./example.js 6:0-24
+chunk (runtime: main) output.js (main) 457 bytes (javascript) 5.93 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.93 KiB 8 modules
+  dependent modules 281 bytes [dependent] 2 modules
+  ./example.js 176 bytes [built] [code generated]
+    [no exports]
+    [used exports unknown]
+    entry ./example.js main
+webpack X.X.X compiled successfully
+
+asset output.js 12.4 KiB [emitted] (name: main)
+asset 655.output.js 761 bytes [emitted]
+chunk (runtime: main) 655.output.js 24 bytes [rendered]
+  > ./async-loaded ./example.js 6:0-24
+  ./async-loaded.js 24 bytes [built] [code generated]
+    [exports: answer]
+    [used exports unknown]
+    import() ./async-loaded ./example.js 6:0-24
+chunk (runtime: main) output.js (main) 457 bytes (javascript) 5.93 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.93 KiB 8 modules
+  dependent modules 281 bytes [dependent] 2 modules
+  ./example.js 176 bytes [built] [code generated]
+    [no exports]
+    [used exports unknown]
+    entry ./example.js main
+webpack X.X.X compiled successfully
+
+asset output.js 12.4 KiB [emitted] (name: main)
+asset 655.output.js 761 bytes [emitted]
 chunk (runtime: main) 655.output.js 24 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]
@@ -372,8 +394,8 @@ chunk (runtime: main) output.js (main) 457 bytes (javascript) 5.93 KiB (runtime)
     entry ./example.js main
 webpack X.X.X compiled successfully
 
-asset output.js 2.24 KiB [emitted] [minimized] (name: main)
-asset 655.output.js 121 bytes [emitted] [minimized]
+asset output.js 2.24 KiB [compared for emit] [minimized] (name: main)
+asset 655.output.js 121 bytes [compared for emit] [minimized]
 chunk (runtime: main) 655.output.js 24 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]

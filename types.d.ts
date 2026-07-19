@@ -19745,11 +19745,7 @@ declare interface ParseOptions {
 declare interface ParseResult {
 	ast: Program;
 	comments: CommentJavascriptParser[];
-
-	/**
-	 * positions of inserted semicolons; when absent they are derived from statement offsets and the source text
-	 */
-	semicolons?: Set<number>;
+	semicolons: Set<number>;
 }
 declare interface ParsedIdentifier {
 	/**

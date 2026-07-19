@@ -15,25 +15,22 @@ const locationMapperFor = (code) => {
 };
 
 /**
- * The helper always passes `semicolons: true`, so the set is always present.
  * @param {string} code source
  * @param {object=} options extra parse options
- * @returns {import("../lib/javascript/JavascriptParser").ParseResult & { semicolons: Set<number> }} result
+ * @returns {import("../lib/javascript/JavascriptParser").ParseResult} result
  */
 const parse = (code, options) =>
-	/** @type {import("../lib/javascript/JavascriptParser").ParseResult & { semicolons: Set<number> }} */ (
-		JavascriptParser._parse(
-			code,
-			/** @type {import("../lib/javascript/JavascriptParser").InternalParseOptions} */ ({
-				sourceType: "script",
-				ecmaVersion: "latest",
-				comments: true,
-				ranges: true,
-				semicolons: true,
-				allowHashBang: true,
-				...options
-			})
-		)
+	JavascriptParser._parse(
+		code,
+		/** @type {import("../lib/javascript/JavascriptParser").InternalParseOptions} */ ({
+			sourceType: "script",
+			ecmaVersion: "latest",
+			comments: true,
+			ranges: true,
+			semicolons: true,
+			allowHashBang: true,
+			...options
+		})
 	);
 
 describe("WebpackParser", () => {
