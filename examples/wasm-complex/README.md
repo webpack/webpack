@@ -264,10 +264,9 @@ function getRandomNumber() {
 /************************************************************************/
 /******/ 	/* webpack/runtime/async module */
 /******/ 	(() => {
-/******/ 		const hasSymbol = typeof Symbol === "function";
-/******/ 		const webpackQueues = hasSymbol ? Symbol("webpack queues") : "__webpack_queues__";
-/******/ 		const webpackExports = hasSymbol ? Symbol("webpack exports") : "__webpack_exports__";
-/******/ 		const webpackError = hasSymbol ? Symbol("webpack error") : "__webpack_error__";
+/******/ 		const webpackQueues = Symbol("webpack queues");
+/******/ 		const webpackExports = Symbol("webpack exports");
+/******/ 		const webpackError = Symbol("webpack error");
 /******/ 		
 /******/ 		const resolveQueue = (queue) => {
 /******/ 			if(queue?.d < 1) {
@@ -328,11 +327,12 @@ function getRandomNumber() {
 /******/ 					fn = () => (resolve(getResult));
 /******/ 					fn.r = 0;
 /******/ 					const fnQueue = (q) => (q !== queue && !depQueues.has(q) && (depQueues.add(q), q && !q.d && (fn.r++, q.push(fn))));
-/******/ 					currentDeps.map((dep) => (dep[webpackQueues](fnQueue)));
+/******/ 					currentDeps.forEach((dep) => (dep[webpackQueues](fnQueue)));
 /******/ 				});
 /******/ 				return fn.r ? promise : getResult();
 /******/ 			}
 /******/ 			const done = (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue))
+/******/ 		
 /******/ 			body(handle, done);
 /******/ 			queue?.d < 0 && (queue.d = 0);
 /******/ 		};
@@ -436,11 +436,11 @@ function getRandomNumber() {
 ## Unoptimized
 
 ```
-asset output.js 14.7 KiB [emitted] (name: main)
+asset output.js 14.6 KiB [emitted] (name: main)
 asset cf07fd0bebb4a2f09ee0.module.wasm 139 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 4.16 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 4.01 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.16 KiB 6 modules
+  runtime modules 4.01 KiB 6 modules
   dependent modules 449 bytes (javascript) 139 bytes (webassembly) [dependent] 4 modules
   ./example.js 247 bytes [built] [code generated]
     [no exports]
@@ -452,11 +452,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.94 KiB [emitted] [minimized] (name: main)
+asset output.js 2.85 KiB [emitted] [minimized] (name: main)
 asset 47966e1f5b3cc3c4f5d0.module.wasm 139 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 3.92 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 3.78 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.92 KiB 5 modules
+  runtime modules 3.78 KiB 5 modules
   dependent modules 449 bytes (javascript) 139 bytes (webassembly) [dependent] 4 modules
   ./example.js 247 bytes [built] [code generated]
     [no exports]

@@ -251,10 +251,9 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /************************************************************************/
 /******/ 	/* webpack/runtime/async module */
 /******/ 	(() => {
-/******/ 		const hasSymbol = typeof Symbol === "function";
-/******/ 		const webpackQueues = hasSymbol ? Symbol("webpack queues") : "__webpack_queues__";
-/******/ 		const webpackExports = hasSymbol ? Symbol("webpack exports") : "__webpack_exports__";
-/******/ 		const webpackError = hasSymbol ? Symbol("webpack error") : "__webpack_error__";
+/******/ 		const webpackQueues = Symbol("webpack queues");
+/******/ 		const webpackExports = Symbol("webpack exports");
+/******/ 		const webpackError = Symbol("webpack error");
 /******/ 		
 /******/ 		const resolveQueue = (queue) => {
 /******/ 			if(queue?.d < 1) {
@@ -315,11 +314,12 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /******/ 					fn = () => (resolve(getResult));
 /******/ 					fn.r = 0;
 /******/ 					const fnQueue = (q) => (q !== queue && !depQueues.has(q) && (depQueues.add(q), q && !q.d && (fn.r++, q.push(fn))));
-/******/ 					currentDeps.map((dep) => (dep[webpackQueues](fnQueue)));
+/******/ 					currentDeps.forEach((dep) => (dep[webpackQueues](fnQueue)));
 /******/ 				});
 /******/ 				return fn.r ? promise : getResult();
 /******/ 			}
 /******/ 			const done = (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue))
+/******/ 		
 /******/ 			body(handle, done);
 /******/ 			queue?.d < 0 && (queue.d = 0);
 /******/ 		};
@@ -421,13 +421,13 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 ## Unoptimized
 
 ```
-asset output.js 14.8 KiB [emitted] (name: main)
+asset output.js 14.7 KiB [emitted] (name: main)
 asset 690d0ef01c3f29042287.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset f215af0bd9b5ea85aee7.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 0bb22d2508a3f5746503.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.97 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.82 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.97 KiB 6 modules
+  runtime modules 3.82 KiB 6 modules
   dependent modules 775 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
   ./example.js 826 bytes [built] [code generated]
     [no exports]
@@ -439,13 +439,13 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 3.32 KiB [emitted] [minimized] (name: main)
+asset output.js 3.23 KiB [emitted] [minimized] (name: main)
 asset cf7e85ed8e63f4d888d1.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset a2f8efa4d5c0dcec35af.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 8c504d8ec13ead0a0a07.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.73 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.59 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.73 KiB 5 modules
+  runtime modules 3.59 KiB 5 modules
   dependent modules 775 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
   ./example.js 826 bytes [built] [code generated]
     [no exports]

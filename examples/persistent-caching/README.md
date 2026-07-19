@@ -74,7 +74,7 @@ webpack X.X.X compiled successfully
 asset output.js 553 KiB [emitted] [minimized] [big] (name: main) 1 related asset
 chunk (runtime: main) output.js (main) 2.21 MiB (javascript) 1.71 KiB (runtime) [entry]
   > ./example.js main
-  cached modules 2.21 MiB (javascript) 1.71 KiB (runtime) [cached] 905 modules
+  cached modules 2.21 MiB (javascript) 1.71 KiB (runtime) [cached] 899 modules
 
 WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.

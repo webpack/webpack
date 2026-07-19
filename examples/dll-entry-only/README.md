@@ -93,7 +93,7 @@ module.exports = __webpack_require__;
 /*! export c [provided] [no usage info] [missing usage info prevents renaming] -> ./cjs.js .c */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_exports__, __webpack_require__.d, __webpack_require__.r, __webpack_require__, __webpack_require__.* */
-/*! ModuleConcatenation bailout: Cannot concat with ./cjs.js: Module is not an ECMAScript module */
+/*! ModuleConcatenation bailout: Cannot concat with ./cjs.js: Module is not in strict mode */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -134,7 +134,7 @@ var cjs = __webpack_require__(2);
 /*! export c [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
+/*! ModuleConcatenation bailout: Module is not in strict mode */
 /***/ ((__unused_webpack_module, exports) => {
 
 // module cjs (commonjs)
@@ -245,7 +245,7 @@ exports.c = "c";
 ## Unoptimized
 
 ```
-asset dll.js 5.23 KiB [emitted] (name: dll)
+asset dll.js 5.21 KiB [emitted] (name: dll)
 chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 1.07 KiB (runtime) [entry] [rendered]
   > dll
   runtime modules 1.07 KiB 3 modules

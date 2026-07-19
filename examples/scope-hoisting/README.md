@@ -450,7 +450,7 @@ __webpack_require__.e(/*! import() */ "lazy_js").then(__webpack_require__.bind(_
 /*! export x [provided] [used in main] [usage prevents renaming] -> ./node_modules/shared.js + 1 modules .x */
 /*! export y [provided] [used in main] [usage prevents renaming] -> ./node_modules/shared2.js .y */
 /*! runtime requirements: __webpack_exports__, __webpack_require__.d, __webpack_require__.r, __webpack_require__, __webpack_require__.* */
-/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/cjs.js: Module is not an ECMAScript module */
+/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/cjs.js: Module is not in strict mode */
 /*! ModuleConcatenation bailout: Cannot concat with ./node_modules/shared.js: Module ./node_modules/shared.js is not in the same chunk(s) (expected in chunk(s) unnamed chunk(s), module is in chunk(s) ) */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -501,7 +501,7 @@ var a = "d";
 /*! default exports */
 /*! export c [provided] [used in main] [could be renamed] */
 /*! runtime requirements: __webpack_exports__ */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
+/*! ModuleConcatenation bailout: Module is not in strict mode */
 /***/ ((__unused_webpack_module, exports) => {
 
 // module cjs (commonjs)
@@ -524,7 +524,7 @@ Minimized
 
 ```
 asset output.js 11.7 KiB [emitted] (name: main)
-asset lazy_js.output.js 2.36 KiB [emitted]
+asset lazy_js.output.js 2.35 KiB [emitted]
 chunk (runtime: main) lazy_js.output.js 263 bytes [rendered]
   > ./lazy ./example.js 4:0-16
   dependent modules 42 bytes [dependent] 1 module
