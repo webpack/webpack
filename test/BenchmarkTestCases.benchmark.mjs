@@ -520,12 +520,26 @@ class BenchmarkRunner {
 	 * @returns {Promise<void>}
 	 */
 	async runInWorkers(benchmarkTasks) {
-		const numWorkers = Math.max(
-			1,
-			(typeof os.availableParallelism === "function"
+		const cpuCount =
+			typeof os.availableParallelism === "function"
 				? os.availableParallelism()
-				: os.cpus().length) - 1
+				: os.cpus().length;
+		const cpuWorkers = Math.max(1, cpuCount - 1);
+
+		// Bound the pool by RAM, not just cores: CodSpeed simulation runs every
+		// build under Valgrind, whose per-process footprint is several GiB, so a
+		// core-count-sized pool OOMs the runner (exit 143). Reserve headroom for
+		// the OS + orchestrator, then divide the rest by a per-worker estimate
+		// (large under Valgrind, small otherwise). memory mode never reaches here.
+		const totalGiB = os.totalmem() / 1024 ** 3;
+		const reserveGiB = 3;
+		const perWorkerGiB = getCodspeedRunnerMode() === "simulation" ? 6 : 1.5;
+		const memWorkers = Math.max(
+			1,
+			Math.floor((totalGiB - reserveGiB) / perWorkerGiB)
 		);
+
+		const numWorkers = Math.min(cpuWorkers, memWorkers);
 
 		const workerPool = /** @type {BenchmarkWorker} */ (
 			new Worker(
@@ -542,7 +556,7 @@ class BenchmarkRunner {
 		this.workerPool = workerPool;
 
 		console.log(
-			`\nRunning ${benchmarkTasks.length} benchmark task(s) across ${numWorkers} worker(s)\n`
+			`\nRunning ${benchmarkTasks.length} benchmark task(s) across ${numWorkers} worker(s) (cpu cap ${cpuWorkers}, memory cap ${memWorkers} @ ${totalGiB.toFixed(1)} GiB)\n`
 		);
 
 		try {
