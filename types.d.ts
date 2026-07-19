@@ -9565,6 +9565,23 @@ declare interface HotModuleReplacementPluginLoaderContext {
 declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
+declare interface HtmlAfterEmitContext {
+	outputName: string;
+}
+declare interface HtmlBeforeEmitContext {
+	outputName: string;
+}
+declare interface HtmlCompilationHooks {
+	/**
+	 * called with each emitted page's final HTML (all sentinels resolved) just before it is written; return the (possibly transformed) HTML — e.g. to minify, inject a CSP meta, or rewrite tags
+	 */
+	beforeEmit: AsyncSeriesWaterfallHook<[string, HtmlBeforeEmitContext], string>;
+
+	/**
+	 * called once each page's HTML asset has been finalized — a post-emit notification (nothing to return)
+	 */
+	afterEmit: AsyncSeriesHook<[HtmlAfterEmitContext]>;
+}
 declare interface HtmlEntryInfo {
 	request: string;
 	entryName: string;
@@ -9632,10 +9649,46 @@ type HtmlModuleBuildInfo = KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo &
 	KnownHtmlModuleBuildInfo;
+declare class HtmlModulesPlugin {
+	constructor();
+
+	/**
+	 * Applies the plugin by registering its hooks on the compiler.
+	 */
+	apply(compiler: Compiler): void;
+
+	/**
+	 * `output.hashFunction`/`hashSalt`/`hashDigest`/`hashDigestLength`
+	 * digest of `content`, with `nonNumericOnlyHash` applied — webpack's
+	 * standard `[contenthash]` recipe.
+	 */
+	static computeContentHash(
+		content: string | Buffer,
+		outputOptions: Output
+	): string;
+
+	/**
+	 * Filename template for an extracted HTML page: `output.htmlFilename` for
+	 * initial chunks, `output.htmlChunkFilename` otherwise — the HTML counterpart
+	 * of `CssModulesPlugin.getChunkFilenameTemplate`.
+	 */
+	static getChunkFilenameTemplate(
+		chunk: Chunk,
+		outputOptions: Output
+	): ChunkFilenameTemplate;
+
+	/**
+	 * Per-compilation hooks for the experimental HTML support.
+	 */
+	static getCompilationHooks: (
+		compilation: Compilation
+	) => HtmlCompilationHooks;
+}
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
 	template?: (source: string, context: HtmlTemplateContext) => string;
-	sourcesByTag: Record<string, Record<string, SourceItem>>;
+	fragmentContext?: string;
+	sourcesByTag: SourceTable;
 
 	/**
 	 * Runs the `template` option over the source and returns the transformed
@@ -9651,6 +9704,11 @@ declare abstract class HtmlParser extends ParserClass {
  * Parser options for html modules.
  */
 declare interface HtmlParserOptions {
+	/**
+	 * Configure how the HTML source is parsed: `"document"` (the default) parses a full page; any other value is the tag name of the context element to parse the source as that element's inner HTML (a fragment) — e.g. `"template"` for a neutral fragment, or `"tbody"` so context-sensitive tags like a bare `<tr>`/`<td>` are kept instead of dropped.
+	 */
+	as?: string;
+
 	/**
 	 * Configure extraction of URL-like attribute values (e.g. `<img src>`, `<link href>`, `<script src>`) as webpack dependencies. `true` (default) uses the built-in source list; `false` disables extraction entirely so attributes are left untouched and `<script src>` / `<link rel="modulepreload">` / `<link rel="stylesheet">` no longer become compilation entries; an array lets you customize which `tag`/`attribute` pairs are treated as URLs and how they are bundled. Use the string `"..."` inside the array to inline the defaults. Inline `<script>` and `<style>` bodies are always processed. Use `webpackIgnore` comments or `IgnorePlugin` to skip individual URLs.
 	 */
@@ -9675,9 +9733,10 @@ declare interface HtmlParserOptions {
 						 */
 						tag?: string;
 						/**
-						 * How the attribute value should be parsed and bundled. `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `css-url` extracts `url(...)` references from a CSS value (like an SVG presentation attribute such as `fill`) as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `html` treats the URL as a link to another HTML file that is bundled as its own emitted page (its assets extracted) and rewrites the attribute to the page's output filename (like Parcel's `<a href="page.html">`); `stylesheet-style` treats the attribute value as a full stylesheet (like a `<style>` body) and `stylesheet-style-attribute` as a CSS block's contents (a declaration list, like a `style` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time; `srcdoc` treats the attribute value as an entity-encoded HTML document (like `<iframe srcdoc>`), bundling it through the HTML pipeline and replacing the attribute's content with the processed HTML at render time.
+						 * How the attribute value should be parsed and bundled, or `false` to disable a built-in source for this `tag`/`attribute` (use together with `"..."` to drop a default, e.g. stop treating `<img src>` as a URL). `src` extracts a single URL as a plain asset; `srcset` parses a `srcset`-style list of candidate URLs as plain assets; `css-url` extracts `url(...)` references from a CSS value (like an SVG presentation attribute such as `fill`) as plain assets; `script` and `script-module` emit a classic / ES-module chunk entry like `<script src>` and `<script type="module" src>`; `stylesheet` emits a CSS chunk entry like `<link rel="stylesheet">`; `html` treats the URL as a link to another HTML file that is bundled as its own emitted page (its assets extracted) and rewrites the attribute to the page's output filename (like Parcel's `<a href="page.html">`); `stylesheet-style` treats the attribute value as a full stylesheet (like a `<style>` body) and `stylesheet-style-attribute` as a CSS block's contents (a declaration list, like a `style` attribute) — both bundle it through the CSS pipeline and replace the attribute's content with the processed CSS at render time; `srcdoc` treats the attribute value as an entity-encoded HTML document (like `<iframe srcdoc>`), bundling it through the HTML pipeline and replacing the attribute's content with the processed HTML at render time.
 						 */
 						type:
+							| false
 							| "html"
 							| "script"
 							| "css-url"
@@ -19332,9 +19391,9 @@ declare interface OutputHtmlOptions {
 	inject?: false | "body" | "head";
 
 	/**
-	 * Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; an array of `RegExp` patterns matches against the chunk name.
+	 * Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; `"script"` inlines only JavaScript, `"style"` only CSS; an array of `RegExp` patterns matches against the chunk name.
 	 */
-	inline?: boolean | RegExp[];
+	inline?: boolean | "script" | "style" | RegExp[];
 
 	/**
 	 * Add Subresource Integrity (SRI) `integrity` attributes to injected `<script>`/`<link>` tags. `true` uses `['sha384']`; an array sets the hash algorithms; a function receives each referenced asset and returns the algorithms to use or `false` to skip it.
@@ -24120,6 +24179,9 @@ declare interface SourceAndMap {
 	 */
 	map: null | RawSourceMap;
 }
+declare interface SourceBucket {
+	[index: string]: undefined | SourceItem;
+}
 declare interface SourceItem {
 	type: SourceTypeOrResolver;
 	filter?: (attributes: Map<string, string>, value: string) => boolean;
@@ -24305,6 +24367,9 @@ declare class SourceMapSource extends Source {
 declare interface SourcePosition {
 	line: number;
 	column?: number;
+}
+declare interface SourceTable {
+	[index: string]: SourceBucket;
 }
 type SourceType =
 	| "html"
@@ -27138,6 +27203,9 @@ declare namespace exports {
 	}
 	export namespace css {
 		export { CssModulesPlugin };
+	}
+	export namespace html {
+		export { HtmlModulesPlugin };
 	}
 	export namespace library {
 		export { AbstractLibraryPlugin, EnableLibraryPlugin };

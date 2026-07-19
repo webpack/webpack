@@ -26,7 +26,7 @@ const copyTest = {
 	}
 };
 
-/** @type {(name: string, inline: boolean | RegExp[]) => import("../../../../").Configuration} */
+/** @type {(name: string, inline: boolean | RegExp[] | "script" | "style") => import("../../../../").Configuration} */
 const config = (name, inline) => ({
 	name,
 	target: "web",
@@ -44,6 +44,10 @@ const config = (name, inline) => ({
 module.exports = [
 	// inline: true — all chunks inlined, no <script src> or <link href>
 	config("bool", true),
+	// inline: "script" — only JS inlined, CSS served as an external <link>
+	config("only-script", "script"),
+	// inline: "style" — only CSS inlined, JS served as an external <script src>
+	config("only-style", "style"),
 	// inline: RegExp[] — non-matching chunk name → served normally
 	config("pattern", [/^nomatch$/]),
 	// inline: RegExp[] matching the runtime chunk name — only runtime is inlined

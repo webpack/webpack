@@ -27,6 +27,25 @@ it("inline: true inlines CSS chunks as <style> blocks", () => {
 	expect(styles[0]).toMatch(/color/);
 });
 
+it('inline: "script" inlines JS but serves CSS externally', () => {
+	const html = readHtml("only-script.html");
+	expect(inlineScripts(html).length).toBeGreaterThan(0);
+	expect(scriptTags(html).some((t) => t.includes("src="))).toBe(false);
+	// CSS is left as an external <link>, not an inline <style>.
+	expect(linkTags(html).some((t) => t.includes("href="))).toBe(true);
+	expect(inlineStyles(html).length).toBe(0);
+});
+
+it('inline: "style" inlines CSS but serves JS externally', () => {
+	const html = readHtml("only-style.html");
+	expect(inlineStyles(html).length).toBeGreaterThan(0);
+	// No stylesheet <link href> remains — all CSS is inlined.
+	expect(linkTags(html).some((t) => t.includes("href="))).toBe(false);
+	// JS is left as an external <script src>, not an inline <script>.
+	expect(scriptTags(html).some((t) => t.includes("src="))).toBe(true);
+	expect(inlineScripts(html).length).toBe(0);
+});
+
 it("inline: RegExp[] skips chunks whose name does not match", () => {
 	const html = readHtml("pattern.html");
 	expect(scriptTags(html).some((t) => t.includes("src="))).toBe(true);
