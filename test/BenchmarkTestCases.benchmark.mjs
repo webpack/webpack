@@ -512,12 +512,15 @@ class BenchmarkRunner {
 				: os.cpus().length;
 		const cpuWorkers = Math.max(1, cpuCount - 1);
 
-		// Bound the pool by RAM, not just cores: each simulation build runs under
-		// Valgrind (~11 GiB peak), so 16 GiB fits one worker and oversubscribing
-		// OOMs the runner (exit 143); bigger runners auto-scale. memory mode never gets here.
+		// Simulation is the only Valgrind mode here (memory mode runs in-process);
+		// its shadow memory is only freed on process exit.
+		const underValgrind = getCodspeedRunnerMode() === "simulation";
+
+		// Bound the pool by RAM, not just cores: a Valgrind build peaks near 11 GiB,
+		// so 16 GiB fits one worker; bigger runners auto-scale. memory mode never gets here.
 		const totalGiB = os.totalmem() / 1024 ** 3;
 		const reserveGiB = 3;
-		const perWorkerGiB = getCodspeedRunnerMode() === "simulation" ? 11 : 1.5;
+		const perWorkerGiB = underValgrind ? 11 : 1.5;
 		const memWorkers = Math.max(
 			1,
 			Math.floor((totalGiB - reserveGiB) / perWorkerGiB)
@@ -531,6 +534,10 @@ class BenchmarkRunner {
 				{
 					exposedMethods: ["run"],
 					numWorkers,
+					// Valgrind memory accumulates across builds and frees only on exit, so
+					// recycle the worker after each task (`0` = always restart) to cap peak
+					// at one build's footprint; otherwise a shard OOMs mid-run (exit 143).
+					idleMemoryLimit: underValgrind ? 0 : undefined,
 					// Forward the V8 flags CodSpeed needs (seeds, --no-opt, …) so the
 					// child processes measure under the same deterministic conditions.
 					forkOptions: { silent: false, execArgv: getV8Flags() }
