@@ -20,6 +20,7 @@ export default defineConfig([
 		"!test/**/infrastructure-log.js",
 		"!test/helpers/*.*",
 		"!test/benchmarkCases/**/*.mjs",
+		"!test/harness/benchmark/**/*.mjs",
 		"!test/_helpers/**/*.mjs",
 		"!test/runner/*.js",
 		"test/js/**/*.*",
@@ -195,7 +196,7 @@ export default defineConfig([
 			"setup/**/*.js",
 			"tooling/**/*.js",
 			"test/*.benchmark.mjs",
-			"test/benchmarkCases/_helpers/**/*.mjs",
+			"test/harness/benchmark/**/*.mjs",
 			"test/benchmarkCases/**/webpack.config.mjs",
 			"test/benchmarkCases/**/options.mjs",
 			"test/benchmarkCases/**/index.bench.mjs"
