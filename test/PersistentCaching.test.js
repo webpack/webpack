@@ -160,7 +160,7 @@ export default 40 + file;
 		};
 		await updateSrc(data);
 		// zstd streams require Node.js >= 22.15
-		if (require("zlib").createZstdCompress) {
+		if ("createZstdCompress" in require("zlib")) {
 			// cold build writes a zstd-compressed cache
 			await compile({ cache: { compression: "zstd" } });
 			expect(execute()).toBe(42);
