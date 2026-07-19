@@ -512,14 +512,12 @@ class BenchmarkRunner {
 				: os.cpus().length;
 		const cpuWorkers = Math.max(1, cpuCount - 1);
 
-		// Bound the pool by RAM, not just cores: CodSpeed simulation runs every
-		// build under Valgrind, whose per-process footprint is several GiB, so a
-		// core-count-sized pool OOMs the runner (exit 143). Reserve headroom for
-		// the OS + orchestrator, then divide the rest by a per-worker estimate
-		// (large under Valgrind, small otherwise). memory mode never reaches here.
+		// Bound the pool by RAM, not just cores: each simulation build runs under
+		// Valgrind (~11 GiB peak), so 16 GiB fits one worker and oversubscribing
+		// OOMs the runner (exit 143); bigger runners auto-scale. memory mode never gets here.
 		const totalGiB = os.totalmem() / 1024 ** 3;
 		const reserveGiB = 3;
-		const perWorkerGiB = getCodspeedRunnerMode() === "simulation" ? 6 : 1.5;
+		const perWorkerGiB = getCodspeedRunnerMode() === "simulation" ? 11 : 1.5;
 		const memWorkers = Math.max(
 			1,
 			Math.floor((totalGiB - reserveGiB) / perWorkerGiB)
