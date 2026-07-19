@@ -13,8 +13,7 @@ const options = {
 	locations: true,
 	comments: true,
 	allowHashBang: true,
-	allowReturnOutsideFunction: false,
-	semicolons: true
+	allowReturnOutsideFunction: false
 };
 
 const bench = new Bench({ name: "simple benchmark", time: 100 });

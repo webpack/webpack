@@ -19,8 +19,6 @@ module.exports = {
 				parse: (code, options) => {
 					/** @type {ParseResult["comments"]} */
 					const comments = [];
-					/** @type {Set<number>} */
-					const semicolons = new Set();
 					const ast = acorn.parse(code, {
 						sourceType: options.sourceType,
 						ecmaVersion: "latest",
@@ -28,13 +26,11 @@ module.exports = {
 						ranges: true,
 						allowHashBang: true,
 						allowReturnOutsideFunction: options.allowReturnOutsideFunction,
-						onComment: /** @type {EXPECTED_ANY} */ (comments),
-						onInsertedSemicolon: (pos) => semicolons.add(pos)
+						onComment: /** @type {EXPECTED_ANY} */ (comments)
 					});
 					return {
 						ast: /** @type {ParseResult["ast"]} */ (ast),
-						comments,
-						semicolons
+						comments
 					};
 				}
 			}

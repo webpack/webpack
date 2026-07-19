@@ -80,7 +80,6 @@ export default (bench) => {
 			locations: true,
 			ranges: true,
 			comments: true,
-			semicolons: true,
 			importPhases: false
 		});
 	});

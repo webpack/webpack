@@ -8,7 +8,6 @@ const meriyah = require("meriyah");
 /** @typedef {import("estree").SourceLocation} SourceLocation */
 /** @typedef {import("../../../lib/javascript/JavascriptParser").ParseOptions} ParseOptions */
 /** @typedef {import("../../../lib/javascript/JavascriptParser").ParseResult} ParseResult */
-/** @typedef {Set<number>} Semicolons */
 
 /**
  * @param {string} sourceCode the source code
@@ -18,8 +17,6 @@ const meriyah = require("meriyah");
 const meriyahParse = (sourceCode, options) => {
 	/** @type {(Comment & { start: number, end: number, loc: SourceLocation })[]} */
 	const comments = [];
-	/** @type {Semicolons} */
-	const semicolons = new Set();
 
 	const ast =
 		/** @type {import("estree").Program} */
@@ -41,19 +38,11 @@ const meriyahParse = (sourceCode, options) => {
 								});
 							}
 						}
-					: undefined,
-				onInsertedSemicolon: options.semicolons
-					? // Set semicolons
-						/**
-						 * @param {number} pos a position of semicolon
-						 * @returns {Semicolons} set with semicolon positions
-						 */
-						(pos) => semicolons.add(pos)
 					: undefined
 			})
 		);
 
-	return { ast, comments, semicolons };
+	return { ast, comments };
 };
 
 module.exports = meriyahParse;
