@@ -474,44 +474,30 @@ class BenchmarkRunner {
 	}
 
 	/**
-	 * Run every benchmark task sequentially in the main thread. Used for CodSpeed
-	 * memory mode where the deterministic single-libuv-thread heap accounting
-	 * would be broken by extra worker processes.
+	 * Run the whole shard in one shared bench in the main process. Used for
+	 * CodSpeed memory mode: a single `Bench` with one global prime pass and one
+	 * setup/teardown, exactly like the pre-parallel harness, so allocation counts
+	 * stay stable and comparable (per-benchmark benches shifted them by 2-4x).
 	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
 	 * @returns {Promise<void>}
 	 */
 	async runInMainThread(benchmarkTasks) {
 		console.log(
-			`\nRunning ${benchmarkTasks.length} benchmark task(s) in the main thread (memory mode)\n`
+			`\nRunning ${benchmarkTasks.length} benchmark task(s) in a single process (memory mode)\n`
 		);
 
-		const { run: runBenchmark } =
-			await import("./harness/benchmark/benchmark.worker.mjs");
+		const { runAll } = await import("./harness/benchmark/benchmark.worker.mjs");
 
-		/** @type {PromiseSettledResult<BenchmarkResult>[]} */
-		const settledResults = [];
+		// Any task error aborts the run (bench `throws: true`), matching the
+		// pre-parallel harness where one failure failed the whole shard.
+		const result = await runAll({
+			tasks: benchmarkTasks,
+			casesPath: this.casesPath,
+			baseOutputPath: this.baseOutputPath,
+			callingFile
+		});
 
-		for (const task of benchmarkTasks) {
-			try {
-				const value = await runBenchmark({
-					task,
-					casesPath: this.casesPath,
-					baseOutputPath: this.baseOutputPath,
-					callingFile
-				});
-				settledResults.push({ status: "fulfilled", value });
-			} catch (err) {
-				if (err instanceof Error) {
-					console.error(`Task "${task.id}" failed: ${err.message}`);
-				}
-				settledResults.push({
-					status: "rejected",
-					reason: err
-				});
-			}
-		}
-
-		this.finalizeResults(benchmarkTasks, settledResults);
+		this.processResults([result]);
 	}
 
 	/**

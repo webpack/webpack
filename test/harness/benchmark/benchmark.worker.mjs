@@ -1037,32 +1037,11 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 }
 
 /**
- * Run one benchmark task (a benchmark × scenario, measured for every baseline).
- * Called in a jest-worker child for time/simulation runs, or directly in the
- * main thread for memory runs where cross-process state would break determinism.
- * @param {object} options options
- * @param {BenchmarkTask} options.task benchmark task
- * @param {string} options.casesPath benchmark cases directory
- * @param {string} options.baseOutputPath base output directory
- * @param {string=} options.callingFile harness path relative to the git root
- * @returns {Promise<BenchmarkResult>} benchmark result
+ * Create the CodSpeed-wrapped bench shared by one or many benchmarks.
+ * @returns {Promise<Bench>} bench
  */
-export async function run({
-	task,
-	casesPath,
-	baseOutputPath: baseOutputPathArg,
-	callingFile
-}) {
-	console.log(`Worker ${process.pid}: running ${task.id}`);
-
-	baseOutputPath = baseOutputPathArg;
-	rootCallingFile = callingFile;
-
-	const { benchmark, scenario, baselines } = task;
-	const LAST_COMMIT = typeof process.env.LAST_COMMIT !== "undefined";
-	const testDirectory = path.join(casesPath, benchmark);
-
-	const bench = await withCodSpeed(
+function createBenchInstance() {
+	return withCodSpeed(
 		new Bench({
 			now: hrtimeNow,
 			throws: true,
@@ -1085,59 +1064,17 @@ export async function run({
 			}
 		})
 	);
+}
 
-	if (benchmark.includes("-unit")) {
-		// Unit benchmarks register their own tasks against the current lib; they
-		// have no scenarios or baselines, so no HEAD/BASE comparison is emitted.
-		const benchmarkPath = path.resolve(testDirectory, "index.bench.mjs");
-		const registerBenchmarks = await import(`${pathToFileURL(benchmarkPath)}`);
-
-		registerBenchmarks.default(bench);
-	} else {
-		if (!scenario) {
-			throw new Error(`Missing scenario for benchmark "${benchmark}"`);
-		}
-
-		const realConfig = (
-			await import(
-				`${pathToFileURL(path.join(testDirectory, "webpack.config.mjs"))}`
-			)
-		).default;
-
-		// Register HEAD then BASE sequentially so task order in `bench.tasks` is
-		// deterministic; parallel registration would leak Promise-resolution order
-		// into the shared-process state each measurement observes.
-		for (const baseline of baselines) {
-			const webpack = (
-				await import(
-					`${pathToFileURL(path.resolve(baseline.path, "./lib/index.js"))}`
-				)
-			).default;
-
-			const config = buildConfiguration(
-				benchmark,
-				baseline,
-				realConfig,
-				/** @type {Scenario} */ (scenario),
-				testDirectory
-			);
-
-			const stringifiedScenario = JSON.stringify(scenario);
-			const collectBy = `${benchmark}, scenario '${stringifiedScenario}'`;
-			const taskName = `benchmark "${benchmark}", scenario '${stringifiedScenario}'${LAST_COMMIT ? "" : ` ${baseline.name} (${baseline.rev})`}`;
-			const fullTaskName = `benchmark "${benchmark}", scenario '${stringifiedScenario}' ${baseline.name} ${baseline.rev ? `(${baseline.rev})` : ""}`;
-
-			console.log(`Register: ${fullTaskName}`);
-
-			const params = { bench, taskName, collectBy, webpack, config };
-
-			await (scenario.watch ? addWatchBench(params) : addBuildBench(params));
-		}
-	}
-
-	/** @type {Result[]} */
-	const results = [];
-
+/**
+ * Push each task's latency stats into `results` on every tinybench cycle.
+ * CodSpeed analysis modes don't emit cycles, so this only fills in for
+ * disabled/walltime runs — matching the pre-parallel harness.
+ * @param {Bench} bench bench
+ * @param {Result[]} results result sink
+ * @returns {void}
+ */
+function attachResultCollector(bench, results) {
 	bench.addEventListener("cycle", (event) => {
 		const task = event.task;
 
@@ -1177,12 +1114,151 @@ export async function run({
 			maxConfidence
 		});
 	});
+}
+
+/**
+ * Register one benchmark task's benches onto `bench`. `-unit` benchmarks
+ * register their own tasks against the current lib; others add one build/watch
+ * bench per baseline.
+ * @param {Bench} bench bench
+ * @param {BenchmarkTask} task benchmark task
+ * @param {string} casesPath benchmark cases directory
+ * @returns {Promise<void>}
+ */
+async function registerBenchmark(bench, task, casesPath) {
+	const { benchmark, scenario, baselines } = task;
+	const LAST_COMMIT = typeof process.env.LAST_COMMIT !== "undefined";
+	const testDirectory = path.join(casesPath, benchmark);
+
+	if (benchmark.includes("-unit")) {
+		// Unit benchmarks register their own tasks against the current lib; they
+		// have no scenarios or baselines, so no HEAD/BASE comparison is emitted.
+		const benchmarkPath = path.resolve(testDirectory, "index.bench.mjs");
+		const registerBenchmarks = await import(`${pathToFileURL(benchmarkPath)}`);
+
+		registerBenchmarks.default(bench);
+		return;
+	}
+
+	if (!scenario) {
+		throw new Error(`Missing scenario for benchmark "${benchmark}"`);
+	}
+
+	const realConfig = (
+		await import(
+			`${pathToFileURL(path.join(testDirectory, "webpack.config.mjs"))}`
+		)
+	).default;
+
+	// Register HEAD then BASE sequentially so task order in `bench.tasks` is
+	// deterministic; parallel registration would leak Promise-resolution order
+	// into the shared-process state each measurement observes.
+	for (const baseline of baselines) {
+		const webpack = (
+			await import(
+				`${pathToFileURL(path.resolve(baseline.path, "./lib/index.js"))}`
+			)
+		).default;
+
+		const config = buildConfiguration(
+			benchmark,
+			baseline,
+			realConfig,
+			scenario,
+			testDirectory
+		);
+
+		const stringifiedScenario = JSON.stringify(scenario);
+		const collectBy = `${benchmark}, scenario '${stringifiedScenario}'`;
+		const taskName = `benchmark "${benchmark}", scenario '${stringifiedScenario}'${LAST_COMMIT ? "" : ` ${baseline.name} (${baseline.rev})`}`;
+		const fullTaskName = `benchmark "${benchmark}", scenario '${stringifiedScenario}' ${baseline.name} ${baseline.rev ? `(${baseline.rev})` : ""}`;
+
+		console.log(`Register: ${fullTaskName}`);
+
+		const params = { bench, taskName, collectBy, webpack, config };
+
+		await (scenario.watch ? addWatchBench(params) : addBuildBench(params));
+	}
+}
+
+/**
+ * Run one benchmark task in its own bench. Used by the jest-worker pool for
+ * time/simulation runs, where per-process isolation is fine (and better) for
+ * deterministic instruction counts.
+ * @param {object} options options
+ * @param {BenchmarkTask} options.task benchmark task
+ * @param {string} options.casesPath benchmark cases directory
+ * @param {string} options.baseOutputPath base output directory
+ * @param {string=} options.callingFile harness path relative to the git root
+ * @returns {Promise<BenchmarkResult>} benchmark result
+ */
+export async function run({
+	task,
+	casesPath,
+	baseOutputPath: baseOutputPathArg,
+	callingFile
+}) {
+	console.log(`Worker ${process.pid}: running ${task.id}`);
+
+	baseOutputPath = baseOutputPathArg;
+	rootCallingFile = callingFile;
+
+	const bench = await createBenchInstance();
+
+	/** @type {Result[]} */
+	const results = [];
+	attachResultCollector(bench, results);
+
+	await registerBenchmark(bench, task, casesPath);
+	await bench.run();
+
+	return {
+		benchmark: task.benchmark,
+		scenario: task.scenario ? task.scenario.name : "unit",
+		results
+	};
+}
+
+/**
+ * Run every task in one shared bench and process. Used for CodSpeed memory
+ * mode: a single `Bench`, one global prime pass, one setup/teardown — identical
+ * to the pre-parallel harness, so allocation counts stay stable and comparable
+ * across PRs (per-benchmark benches shift them). Never used with the worker pool.
+ * @param {object} options options
+ * @param {BenchmarkTask[]} options.tasks benchmark tasks
+ * @param {string} options.casesPath benchmark cases directory
+ * @param {string} options.baseOutputPath base output directory
+ * @param {string=} options.callingFile harness path relative to the git root
+ * @returns {Promise<BenchmarkResult>} combined benchmark result
+ */
+export async function runAll({
+	tasks,
+	casesPath,
+	baseOutputPath: baseOutputPathArg,
+	callingFile
+}) {
+	console.log(`Process ${process.pid}: running ${tasks.length} task(s) in one bench`);
+
+	baseOutputPath = baseOutputPathArg;
+	rootCallingFile = callingFile;
+
+	const bench = await createBenchInstance();
+
+	/** @type {Result[]} */
+	const results = [];
+	attachResultCollector(bench, results);
+
+	// Register every task up front so the memory-mode global prime pass warms
+	// all of them before any measurement (removes cross-task order dependence).
+	for (const task of tasks) {
+		await registerBenchmark(bench, task, casesPath);
+	}
 
 	await bench.run();
 
 	return {
-		benchmark,
-		scenario: scenario ? scenario.name : "unit",
+		benchmark: "all",
+		scenario: "all",
 		results
 	};
 }
