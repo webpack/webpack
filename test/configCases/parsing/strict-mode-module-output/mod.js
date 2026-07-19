@@ -20,7 +20,11 @@ function dup(a, a) {
 	return a;
 }
 
+function evalParam(eval) {
+	return eval;
+}
+
 eval = 1;
 arguments = 2;
 
-module.exports = { foo, obj, octalNumber, octalStringA, octalStringB, dup };
+module.exports = { foo, obj, octalNumber, octalStringA, octalStringB, dup, evalParam };

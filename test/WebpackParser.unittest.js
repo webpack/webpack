@@ -5,6 +5,16 @@
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
 
 /**
+ * @param {string} code source code the parser mapped
+ * @returns {JavascriptParser} parser whose getLocation maps offsets in `code`
+ */
+const locationMapperFor = (code) => {
+	const parser = new JavascriptParser("auto");
+	parser._source = code;
+	return parser;
+};
+
+/**
  * @param {string} code source
  * @param {object=} options extra parse options
  * @returns {import("../lib/javascript/JavascriptParser").ParseResult} result
@@ -36,21 +46,17 @@ describe("WebpackParser", () => {
 				["Line", " html"]
 			]);
 			expect(comments[1].range).toEqual([20, 27]);
-			expect(comments[1].loc.start).toEqual({ line: 2, column: 0 });
-			expect(comments[1].loc.end).toEqual({ line: 2, column: 7 });
+			// comments carry no `loc` — locations derive from offsets
+			expect(comments[1].loc).toBeUndefined();
 		});
 
-		it("should memoize and accept explicit value/loc writes", () => {
+		it("should memoize and accept explicit value writes", () => {
 			const { comments } = parse("// abc\n");
 			expect(comments[0].value).toBe(" abc");
 			// memoized second read
 			expect(comments[0].value).toBe(" abc");
 			comments[0].value = "override";
 			expect(comments[0].value).toBe("override");
-			const loc = comments[0].loc;
-			expect(comments[0].loc).toBe(loc);
-			comments[0].loc = { start: { line: 9, column: 9 }, end: loc.end };
-			expect(comments[0].loc.start.line).toBe(9);
 		});
 
 		it("should collect comments eagerly when ranges are off", () => {
@@ -70,8 +76,16 @@ describe("WebpackParser", () => {
 		});
 
 		it("should map positions across CRLF, CR, LS and PS line breaks", () => {
-			const { comments } = parse("// a\r\n// b\r// c\u2028// d\u2029// e\n");
-			expect(comments.map((c) => c.loc.start)).toEqual([
+			const code = "// a\r\n// b\r// c\u2028// d\u2029// e\n";
+			const { comments } = parse(code);
+			const mapper = locationMapperFor(code);
+			expect(
+				comments.map(
+					(c) =>
+						/** @type {import("../lib/Dependency").RealDependencyLocation} */
+						(mapper.getLocation(c)).start
+				)
+			).toEqual([
 				{ line: 1, column: 0 },
 				{ line: 2, column: 0 },
 				{ line: 3, column: 0 },
@@ -652,10 +666,7 @@ describe("WebpackParser", () => {
 		});
 
 		it("should keep the statement fast path off for parser plugins overriding statement parsers", () => {
-			const {
-				SourcePositions,
-				WebpackParser
-			} = require("../lib/javascript/syntax");
+			const { WebpackParser } = require("../lib/javascript/syntax");
 
 			let calls = 0;
 			class Plugin extends WebpackParser {
@@ -684,7 +695,7 @@ describe("WebpackParser", () => {
 					/** @type {unknown} */ ({
 						ecmaVersion: "latest",
 						sourceType: "script",
-						lazySourcePositions: new SourcePositions(code)
+						lazyNodes: true
 					})
 				)
 			);
@@ -1095,16 +1106,13 @@ describe("WebpackParser", () => {
 			// unreachable from the dispatch fast path (nextToken finishes plain
 			// `=`/`.` itself) but part of the getTokenFromCode contract
 			const { tokTypes } = require("acorn");
-			const {
-				SourcePositions,
-				WebpackParser
-			} = require("../lib/javascript/syntax");
+			const { WebpackParser } = require("../lib/javascript/syntax");
 
 			const source = "= .";
 			const parser = new WebpackParser(
 				/** @type {EXPECTED_ANY} */ ({
 					ecmaVersion: "latest",
-					lazySourcePositions: new SourcePositions(source)
+					lazyNodes: true
 				}),
 				source
 			);

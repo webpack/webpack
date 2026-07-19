@@ -4,7 +4,7 @@
  * Run `yarn fix:special` to update
  */
 
-import { Parser as ParserImport, Position } from "acorn";
+import { Parser as ParserImport } from "acorn";
 import { Buffer } from "buffer";
 import {
 	ArrayExpression,
@@ -3190,7 +3190,7 @@ declare interface ColorsOptions {
 type CommentJavascriptParser = CommentImport & {
 	start: number;
 	end: number;
-	loc: SourceLocation;
+	loc?: null | SourceLocation;
 };
 declare interface CommonJsImportSettings {
 	name?: string;
@@ -6245,7 +6245,6 @@ declare abstract class DependencyTemplates {
 declare interface DestructuringAssignmentProperty {
 	id: string;
 	range: [number, number];
-	loc: SourceLocation;
 	pattern?: Set<DestructuringAssignmentProperty>;
 	shorthand: string | boolean;
 }
@@ -12566,6 +12565,20 @@ declare class JavascriptParser extends ParserClass {
 	): boolean;
 
 	/**
+	 * Returns the location of a node or comment, computed from its offsets so
+	 * ASTs from parsers without location support work too. Falls back to the
+	 * node's own `loc` only when no source text is available (preparsed ASTs).
+	 * Offsets can only be mapped while parsing — callbacks deferred past the
+	 * `parse()` call must take the location upfront.
+	 */
+	getLocation(node: {
+		start?: number;
+		end?: number;
+		range?: [number, number];
+		loc?: null | SourceLocation;
+	}): DependencyLocation;
+
+	/**
 	 * Returns comments in the range.
 	 */
 	getComments(range: [number, number]): CommentJavascriptParser[];
@@ -14169,9 +14182,6 @@ declare class LazySet<T> {
 	static deserialize<T>(
 		__0: ObjectDeserializerContextObjectMiddlewareObject_3<(number | T)[]>
 	): LazySet<T>;
-}
-declare interface LazySourcePositions {
-	position: (offset: number) => Position;
 }
 declare interface LibIdentOptions {
 	/**
@@ -19718,9 +19728,9 @@ declare interface ParseOptions {
 	allowReturnOutsideFunction?: boolean;
 
 	/**
-	 * internal: serve loc/range lazily instead of allocating them during parsing
+	 * internal: serve `range` lazily and skip acorn's location/range tracking
 	 */
-	lazySourcePositions?: LazySourcePositions;
+	lazyNodes?: boolean;
 
 	/**
 	 * internal: collect comments here without slicing their text eagerly

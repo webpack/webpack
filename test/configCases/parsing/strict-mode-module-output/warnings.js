@@ -12,6 +12,7 @@ module.exports = [
 	[{ message: /Octal escape sequences are not allowed/ }],
 	[{ message: /Octal escape sequences are not allowed/ }],
 	[{ message: /Duplicate parameter name "a" is not allowed/ }],
+	[{ message: /"eval" is not allowed as a parameter name/ }],
 	[{ message: /Assigning to "eval" is not allowed/ }],
 	[{ message: /Assigning to "arguments" is not allowed/ }]
 ];
