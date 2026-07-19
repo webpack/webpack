@@ -55,7 +55,7 @@ chunk {792} (runtime: main) output.js (main) 29 bytes [entry] [rendered]
 ./example.js [695] 29 bytes {792} [depth 0] [built] [code generated]
   [no exports used]
   Statement (ExpressionStatement) with side effects in source code at 1:0-28
-  ModuleConcatenation bailout: Module is not an ECMAScript module
+  ModuleConcatenation bailout: Module is not in strict mode
 
 LOG from webpack.Compilation
     1 modules hashed, 0 from cache (1 variants per module in average)
@@ -83,5 +83,5 @@ LOG from webpack.FileSystemInfo
     Directory info in cache: 0 timestamps 0 hashes 0 timestamp hash combinations
     Managed items info in cache: 0 items
 
-XXXX-XX-XX XXXX:XX:XX: webpack X.X.X compiled successfully (8bda436ac687f5f8bd96)
+XXXX-XX-XX XXXX:XX:XX: webpack X.X.X compiled successfully (31e0a4f17dd4e2083f2e)
 ```
