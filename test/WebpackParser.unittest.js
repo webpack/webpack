@@ -27,7 +27,6 @@ const parse = (code, options) =>
 			ecmaVersion: "latest",
 			comments: true,
 			ranges: true,
-			semicolons: true,
 			allowHashBang: true,
 			...options
 		})
@@ -280,21 +279,86 @@ describe("WebpackParser", () => {
 	});
 
 	describe("automatic semicolon insertion", () => {
-		it("should insert semicolons across line breaks and at eof", () => {
-			expect([...parse("x").semicolons]).toHaveLength(1);
-			expect([...parse("a\nb").semicolons]).toHaveLength(2);
-			expect([...parse("x;\ny;").semicolons]).toHaveLength(0);
-			expect(
-				[...parse("function f() { return\n5 }").semicolons].length
-			).toBeGreaterThan(0);
+		/**
+		 * @param {string} code source the parser maps
+		 * @param {[number, number]} current current statement range
+		 * @param {[number, number]=} prev previous statement range
+		 * @returns {JavascriptParser} parser positioned in `current`
+		 */
+		const asiParserFor = (code, current, prev) => {
+			const parser = new JavascriptParser("auto");
+			parser._source = code;
+			parser.statementPath = [/** @type {EXPECTED_ANY} */ ({ range: current })];
+			if (prev) {
+				parser.prevStatement = /** @type {EXPECTED_ANY} */ ({ range: prev });
+			}
+			return parser;
+		};
+
+		it("should derive ASI positions from the source text", () => {
+			// no real semicolon → end and (via prev) start are ASI positions
+			const asi = asiParserFor("a\nb", [2, 3], [0, 1]);
+			expect(asi.isAsiPosition(3)).toBe(true);
+			expect(asi.isAsiPosition(2)).toBe(true);
+			// a real semicolon terminates the statement → not an ASI position
+			const term = asiParserFor("x;\ny;", [3, 5], [0, 2]);
+			expect(term.isAsiPosition(5)).toBe(false);
+			expect(term.isAsiPosition(3)).toBe(false);
+			// a position that is neither statement boundary is never ASI
+			expect(term.isAsiPosition(4)).toBe(false);
 		});
 
-		it("should parse numbers and insert semicolons without ranges", () => {
-			const { ast, semicolons } = parse("var x = 1.5\nvar y = 0", {
-				ranges: false
-			});
+		it("should honor set/unsetAsiPosition overrides over the source", () => {
+			const term = asiParserFor("x;\ny;", [3, 5]);
+			// force ASI even though a real semicolon is present
+			term.setAsiPosition(5);
+			expect(term.isAsiPosition(5)).toBe(true);
+			const asi = asiParserFor("a\nb", [2, 3]);
+			// force a real semicolon even though the source relies on ASI
+			asi.unsetAsiPosition(3);
+			expect(asi.isAsiPosition(3)).toBe(false);
+		});
+
+		it("should treat a comma-continued sequence element as non-ASI", () => {
+			// the separator can trail whitespace, line and block comments
+			for (const code of ["a,b", "a ,b", "a\t,b", "a//c\n,b", "a/* c */,b"]) {
+				const parser = new JavascriptParser("auto");
+				parser._source = code;
+				expect(parser._isAsiPosition(1)).toBe(false);
+			}
+			// a genuine line break with no separator is an ASI position; a lone
+			// slash (division) is a token, not a comment, so it stays ASI too
+			for (const code of [
+				"a\nb",
+				"a//c\nb",
+				"a/* c */\nb",
+				"a",
+				"a/* c */",
+				"a/b"
+			]) {
+				const parser = new JavascriptParser("auto");
+				parser._source = code;
+				expect(parser._isAsiPosition(1)).toBe(true);
+			}
+		});
+
+		it("should assume ASI when no source text is available", () => {
+			const parser = new JavascriptParser("auto");
+			parser.statementPath = [/** @type {EXPECTED_ANY} */ ({ range: [0, 1] })];
+			expect(parser.isAsiPosition(1)).toBe(true);
+		});
+
+		it("should throw when queried outside of a statement", () => {
+			const parser = new JavascriptParser("auto");
+			parser.statementPath = [];
+			expect(() => parser.isAsiPosition(0)).toThrow("Not in statement");
+		});
+
+		it("should keep splitting statements at ASI boundaries", () => {
+			expect(parse("x").ast.body).toHaveLength(1);
+			expect(parse("a\nb").ast.body).toHaveLength(2);
+			const { ast } = parse("var x = 1.5\nvar y = 0", { ranges: false });
 			expect(ast.body).toHaveLength(2);
-			expect([...semicolons]).toHaveLength(2);
 		});
 
 		it("should tokenize non-ASCII identifiers and unicode whitespace", () => {

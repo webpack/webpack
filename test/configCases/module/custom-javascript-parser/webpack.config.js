@@ -10,25 +10,17 @@ let counter = 0;
 
 /**
  * @param {string} sourceCode source code
- * @param {{ sourceType: "module", comments: boolean, locations: boolean, semicolons: boolean }} options options
- * @returns {{ ast: Program, comments: Comment[], semicolons: Set<number> }} parsed source code
+ * @param {{ sourceType: "module", comments: boolean, locations: boolean }} options options
+ * @returns {{ ast: Program, comments: Comment[] }} parsed source code
  */
 const parse = (sourceCode, options) => {
 	/** @type {Comment[]} */
 	const comments = [];
-	const semicolons = new Set();
-	/**
-	 * @param {number} pos pos
-	 */
-	const addSemicolons = (pos) => {
-		semicolons.add(pos);
-	};
 	const parseOptions = {
 		...options,
 		module: options.sourceType === "module",
 		loc: options.locations,
-		onComment: options.comments ? comments : undefined,
-		onInsertedSemicolon: options.semicolons ? addSemicolons : undefined
+		onComment: options.comments ? comments : undefined
 	};
 	// @ts-expect-error meriyah types for comments are not align with estree
 	const ast = meriyah.parse(sourceCode, parseOptions);
@@ -36,7 +28,7 @@ const parse = (sourceCode, options) => {
 	counter++;
 
 	// @ts-expect-error meriyah types for ClassExpression is not align with estree
-	return { ast, comments, semicolons };
+	return { ast, comments };
 };
 
 /** @type {import("../../../../types").Configuration} */

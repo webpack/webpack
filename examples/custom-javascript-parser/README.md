@@ -27,7 +27,6 @@ const acorn = require("acorn");
 /** @typedef {import("estree").SourceLocation} SourceLocation */
 /** @typedef {import("../../../lib/javascript/JavascriptParser").ParseOptions} ParseOptions */
 /** @typedef {import("../../../lib/javascript/JavascriptParser").ParseResult} ParseResult */
-/** @typedef {Set<number>} Semicolons */
 
 /**
  * @param {string} sourceCode the source code
@@ -37,27 +36,17 @@ const acorn = require("acorn");
 const acornParse = (sourceCode, options) => {
 	/** @type {(Comment & { start: number, end: number, loc: SourceLocation })[]} */
 	const comments = [];
-	/** @type {Semicolons} */
-	const semicolons = new Set();
 
 	const ast =
 		/** @type {import("estree").Program} */
 		(
 			acorn.parse(sourceCode, {
 				...options,
-				onComment: options.comments ? comments : undefined,
-				onInsertedSemicolon: options.semicolons
-					? // Set semicolons
-						/**
-						 * @param {number} pos a position of semicolon
-						 * @returns {Semicolons} set with semicolon positions
-						 */
-						(pos) => semicolons.add(pos)
-					: undefined
+				onComment: options.comments ? comments : undefined
 			})
 		);
 
-	return { ast, comments, semicolons };
+	return { ast, comments };
 };
 
 module.exports = acornParse;
@@ -78,35 +67,14 @@ const oxc = require("oxc-parser");
 /** @typedef {import("../../../lib/javascript/JavascriptParser").ParseResult} ParseResult */
 
 /**
- * @param {string} sourceCode source code
- * @returns {Set<number>} semicolons
- */
-const collectSemicolons = (sourceCode) => {
-	const semiSet = new Set();
-	let pos = sourceCode.indexOf(";");
-
-	while (pos !== -1) {
-		semiSet.add(pos);
-		pos = sourceCode.indexOf(";", pos + 1);
-	}
-
-	return semiSet;
-};
-
-/**
  * Oxc has no location API — none is needed: webpack derives line/column
- * locations from node offsets and the source text itself.
+ * locations from node offsets and the source text itself. ASI positions are
+ * likewise read from the source, so no semicolon collection is required.
  * @param {string} sourceCode the source code
  * @param {ParseOptions} options options
  * @returns {ParseResult} the parsed result
  */
 const oxcParse = (sourceCode, options) => {
-	// We need only automatic semicolon insertion position, but there is no API, so let's collect all semicolons
-	// But there are rooms to improve it
-	const semicolons = options.semicolons
-		? collectSemicolons(sourceCode)
-		: new Set();
-
 	const result = oxc.parseSync("file.js", sourceCode, {
 		astType: "js",
 		range: true,
@@ -126,8 +94,7 @@ const oxcParse = (sourceCode, options) => {
 
 	return {
 		ast: /** @type {Program} */ (/** @type {unknown} */ (result.program)),
-		comments,
-		semicolons
+		comments
 	};
 };
 
@@ -149,7 +116,6 @@ const meriyah = require("meriyah");
 /** @typedef {import("estree").SourceLocation} SourceLocation */
 /** @typedef {import("../../../lib/javascript/JavascriptParser").ParseOptions} ParseOptions */
 /** @typedef {import("../../../lib/javascript/JavascriptParser").ParseResult} ParseResult */
-/** @typedef {Set<number>} Semicolons */
 
 /**
  * @param {string} sourceCode the source code
@@ -159,8 +125,6 @@ const meriyah = require("meriyah");
 const meriyahParse = (sourceCode, options) => {
 	/** @type {(Comment & { start: number, end: number, loc: SourceLocation })[]} */
 	const comments = [];
-	/** @type {Semicolons} */
-	const semicolons = new Set();
 
 	const ast =
 		/** @type {import("estree").Program} */
@@ -182,19 +146,11 @@ const meriyahParse = (sourceCode, options) => {
 								});
 							}
 						}
-					: undefined,
-				onInsertedSemicolon: options.semicolons
-					? // Set semicolons
-						/**
-						 * @param {number} pos a position of semicolon
-						 * @returns {Semicolons} set with semicolon positions
-						 */
-						(pos) => semicolons.add(pos)
 					: undefined
 			})
 		);
 
-	return { ast, comments, semicolons };
+	return { ast, comments };
 };
 
 module.exports = meriyahParse;

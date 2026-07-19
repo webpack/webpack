@@ -11285,7 +11285,7 @@ declare class JavascriptParser extends ParserClass {
 	scope: ScopeInfo;
 	state: JavascriptParserState;
 	comments?: CommentJavascriptParser[];
-	semicolons?: Set<number>;
+	semicolons?: Map<number, boolean>;
 	statementPath?: StatementPathItem[];
 	prevStatement?:
 		| ImportDeclaration
@@ -19723,7 +19723,6 @@ declare interface ParseOptions {
 	locations?: boolean;
 	comments?: boolean;
 	ranges?: boolean;
-	semicolons?: boolean;
 	allowHashBang?: boolean;
 	allowReturnOutsideFunction?: boolean;
 
@@ -19745,7 +19744,6 @@ declare interface ParseOptions {
 declare interface ParseResult {
 	ast: Program;
 	comments: CommentJavascriptParser[];
-	semicolons: Set<number>;
 }
 declare interface ParsedIdentifier {
 	/**
