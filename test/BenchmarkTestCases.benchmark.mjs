@@ -1,29 +1,38 @@
-import { constants, writeFile } from "fs";
+import { constants } from "fs";
 import fs from "fs/promises";
-import { Session } from "inspector";
+import os from "os";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
-import {
-	InstrumentHooks,
-	getCodspeedRunnerMode,
-	getGitDir,
-	getV8Flags,
-	mongoMeasurement,
-	setupCore,
-	teardownCore
-} from "@codspeed/core";
+import { getCodspeedRunnerMode, getV8Flags } from "@codspeed/core";
+import { Worker } from "jest-worker";
 import { simpleGit } from "simple-git";
-import { Bench, hrtimeNow } from "tinybench";
 
-/** @typedef {import("tinybench").Task} TinybenchTask */
-/** @typedef {import("tinybench").Fn} Fn */
-/** @typedef {import("tinybench").FnOptions} FnOptions */
-/** @typedef {import("..")} Webpack */
-/** @typedef {import("..").Configuration} Configuration */
-/** @typedef {import("..").Stats} Stats */
-/** @typedef {import("..").Watching} Watching */
+/** @typedef {import("./harness/benchmark/benchmark.worker.mjs").BenchmarkResult} BenchmarkResult */
+/** @typedef {import("./harness/benchmark/benchmark.worker.mjs").Result} Result */
+/** @typedef {import("./harness/benchmark/benchmark.worker.mjs").BenchmarkWorkerMethods} BenchmarkWorkerMethods */
+/** @typedef {import("jest-worker").JestWorkerFarm<BenchmarkWorkerMethods>} BenchmarkWorker */
 
-/** @typedef {TinybenchTask & { collectBy?: string }} Task */
+/**
+ * @typedef {object} Baseline
+ * @property {string} name baseline name ("HEAD" or "BASE")
+ * @property {string=} rev baseline revision
+ * @property {string} path checked-out baseline directory
+ */
+
+/**
+ * @typedef {object} Scenario
+ * @property {string} name scenario name
+ * @property {"development" | "production"} mode mode
+ * @property {boolean=} watch watch (rebuild) scenario
+ */
+
+/**
+ * @typedef {object} BenchmarkTask
+ * @property {string} id task id (benchmark + scenario)
+ * @property {string} benchmark benchmark name
+ * @property {Scenario=} scenario scenario (omitted for `-unit` benchmarks)
+ * @property {Baseline[]} baselines baselines measured in one task
+ */
 
 // One libuv thread → fs completions fire in submission order, making module
 // build order (and thus allocation counts) deterministic run-to-run. Set before
@@ -34,8 +43,13 @@ process.env.UV_THREADPOOL_SIZE ??= "1";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootPath = path.join(__dirname, "..");
 const git = simpleGit(rootPath);
+// Forwarded to workers so measured URIs stay `test/BenchmarkTestCases.benchmark.mjs::…`
+// (identical to the pre-parallel harness), keeping CodSpeed history comparable.
+const callingFile = path.relative(rootPath, fileURLToPath(import.meta.url));
 
 const REV_LIST_REGEXP = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/;
+
+const LAST_COMMIT = typeof process.env.LAST_COMMIT !== "undefined";
 
 const checkV8Flags = () => {
 	const requiredFlags = getV8Flags().filter(
@@ -59,9 +73,6 @@ const checkV8Flags = () => {
 };
 
 checkV8Flags();
-
-const LAST_COMMIT = typeof process.env.LAST_COMMIT !== "undefined";
-const GENERATE_PROFILE = typeof process.env.PROFILE !== "undefined";
 
 /**
  * @param {[string, string, string, string | undefined]} revList rev list
@@ -167,1130 +178,10 @@ async function getBaselineRevs() {
 }
 
 /**
- * @param {number} n number of runs
- * @returns {number} distribution
- */
-function tDistribution(n) {
-	if (n === 0) {
-		return 1;
-	}
-
-	// two-sided, 90%
-	// https://en.wikipedia.org/wiki/Student%27s_t-distribution
-	if (n <= 30) {
-		//            1      2      ...
-		const data = [
-			6.314, 2.92, 2.353, 2.132, 2.015, 1.943, 1.895, 1.86, 1.833, 1.812, 1.796,
-			1.782, 1.771, 1.761, 1.753, 1.746, 1.74, 1.734, 1.729, 1.725, 1.721,
-			1.717, 1.714, 1.711, 1.708, 1.706, 1.703, 1.701, 1.699, 1.697
-		];
-		return data[n - 1];
-	} else if (n <= 120) {
-		//            30     40     50     60     70     80     90     100    110    120
-		const data = [
-			1.697, 1.684, 1.676, 1.671, 1.667, 1.664, 1.662, 1.66, 1.659, 1.658
-		];
-		const a = data[Math.floor(n / 10) - 3];
-		const b = data[Math.ceil(n / 10) - 3];
-		const f = n / 10 - Math.floor(n / 10);
-
-		return a * (1 - f) + b * f;
-	}
-
-	return 1.645;
-}
-
-const output = path.join(__dirname, "js");
-const baselinesPath = path.join(output, "benchmark-baselines");
-
-const baselineRevisions = await getBaselineRevs();
-
-try {
-	await fs.mkdir(baselinesPath, { recursive: true });
-} catch (_err) {} // eslint-disable-line no-empty
-
-/** @typedef {{ name: string, rev?: string, webpack: (() => Promise<Webpack>) }} Baseline */
-
-/** @type {Baseline[]} */
-const baselines = [];
-
-for (const baselineInfo of baselineRevisions) {
-	/**
-	 * @returns {void}
-	 */
-	function addBaseline() {
-		baselines.push({
-			name: baselineInfo.name,
-			rev: baselineRevision,
-			webpack: async () => {
-				const webpack = (
-					await import(
-						pathToFileURL(
-							path.resolve(baselinePath, "./lib/index.js")
-						).toString()
-					)
-				).default;
-
-				return webpack;
-			}
-		});
-	}
-
-	const baselineRevision = baselineInfo.rev;
-
-	const baselinePath =
-		baselineRevision === undefined
-			? path.resolve(__dirname, "../")
-			: path.resolve(baselinesPath, baselineRevision);
-
-	try {
-		await fs.access(path.resolve(baselinePath, ".git"), constants.R_OK);
-	} catch (err) {
-		if (!baselineRevision) {
-			throw new Error("No baseline revision", { cause: err });
-		}
-
-		try {
-			await fs.mkdir(baselinePath);
-		} catch (_err) {} // eslint-disable-line no-empty
-
-		const gitIndex = path.resolve(rootPath, ".git/index");
-		const index = await fs.readFile(gitIndex);
-		const prevHead = await git.raw(["rev-list", "-n", "1", "HEAD"]);
-
-		await simpleGit(baselinePath).raw([
-			"--git-dir",
-			path.join(rootPath, ".git"),
-			"reset",
-			"--hard",
-			baselineRevision
-		]);
-
-		await git.raw(["reset", "--soft", prevHead.split("\n")[0]]);
-		await fs.writeFile(gitIndex, index);
-	} finally {
-		addBaseline();
-	}
-}
-
-const baseOutputPath = path.join(__dirname, "js", "benchmark");
-
-/**
- * @param {string} test test
- * @param {Baseline} baseline baseline
- * @param {Configuration} realConfig real configuration
- * @param {Scenario} scenario scenario
- * @param {string} testDirectory test directory
- * @returns {Configuration} built configuration
- */
-function buildConfiguration(
-	test,
-	baseline,
-	realConfig,
-	scenario,
-	testDirectory
-) {
-	const { watch, ...rest } = scenario;
-	const config = structuredClone({ ...realConfig, ...rest });
-
-	config.entry =
-		typeof config.entry === "string"
-			? path.resolve(
-					testDirectory,
-					config.entry
-						? /\.(?:c|m)?js$/.test(config.entry)
-							? config.entry
-							: `${config.entry}.js`
-						: "./index.js"
-				)
-			: config.entry;
-	config.devtool = config.devtool || false;
-	config.name = `${test}-${baseline.name}-${scenario.name}`;
-	config.context = testDirectory;
-	config.performance = false;
-	config.output = config.output || {};
-	config.output.path = path.join(
-		baseOutputPath,
-		test,
-		`scenario-${scenario.name}`,
-		`baseline-${baseline.name}`
-	);
-	config.plugins = config.plugins || [];
-	if (
-		config.cache &&
-		typeof config.cache !== "boolean" &&
-		config.cache.type === "filesystem"
-	) {
-		config.cache.cacheDirectory = path.resolve(config.output.path, ".cache");
-	}
-	if (watch) {
-		config.cache = {
-			type: "memory",
-			maxGenerations: 1
-		};
-	}
-	return config;
-}
-
-/**
- * @param {string} filename filename
- * @returns {string} sanitized filename
- */
-function sanitizeFilename(filename) {
-	// Replace invalid filesystem characters with underscores
-	return filename
-		.replace(/[<>:"/\\|?*]/g, "_")
-		.replace(/[\u0000-\u001F\u0080-\u009F]/g, "_")
-		.replace(/^\.+/, "_")
-		.replace(/\.+$/, "_")
-		.replace(/\s+/g, "_")
-		.slice(0, 200); // Limit filename length
-}
-
-/**
- * @param {string} name name
- * @param {() => void} fn function
- * @returns {Promise<void>} function wrapper in profiling code
- */
-async function withProfiling(name, fn) {
-	// Ensure the profiles directory exists
-	await fs.mkdir(path.join(baseOutputPath, "profiles"), { recursive: true });
-
-	const session = new Session();
-	session.connect();
-
-	// Enable and start profiling
-	await new Promise(
-		/**
-		 * @param {(val: void) => void} resolve resolve
-		 * @param {(err?: Error) => void} reject reject
-		 */
-		(resolve, reject) => {
-			session.post("Profiler.enable", (err) => {
-				if (err) return reject(err);
-				session.post("Profiler.start", (err) => {
-					if (err) return reject(err);
-					resolve();
-				});
-			});
-		}
-	);
-
-	// Run the benchmarked function
-	// No need to `console.time`, it'll be included in the
-	// CPU Profile.
-	await fn();
-
-	// Stop profiling and get the CPU profile
-	const profile = await new Promise((resolve, reject) => {
-		session.post("Profiler.stop", (err, { profile }) => {
-			if (err) return reject(err);
-			resolve(profile);
-		});
-	});
-
-	session.disconnect();
-
-	const outputFile = `${sanitizeFilename(name)}-${Date.now()}.cpuprofile`;
-
-	await fs.writeFile(
-		path.join(baseOutputPath, "profiles", outputFile),
-		JSON.stringify(profile),
-		"utf8"
-	);
-
-	console.log(`CPU profile saved to ${outputFile}`);
-}
-
-/**
- * @param {Webpack} webpack webpack
- * @param {Configuration} config configuration
- * @returns {Promise<void>} watching
- */
-function runWebpack(webpack, config) {
-	return new Promise(
-		/**
-		 * @param {(value: void) => void} resolve resolve
-		 * @param {(err?: Error) => void} reject reject
-		 */
-		(resolve, reject) => {
-			const compiler = webpack(config);
-			compiler.run((err, stats) => {
-				if (err) return reject(err);
-				if (stats && (stats.hasWarnings() || stats.hasErrors())) {
-					return reject(new Error(stats.toString()));
-				}
-
-				compiler.close((closeErr) => {
-					if (closeErr) return reject(closeErr);
-					if (stats) stats.toString(); // Force stats computation
-					resolve();
-				});
-			});
-		}
-	);
-}
-
-/**
- * @param {Webpack} webpack webpack
- * @param {Configuration} config configuration
- * @param {(err: Error | null, stats?: Stats) => void} callback callback
- * @returns {Promise<Watching>} watching
- */
-async function runWatch(webpack, config, callback) {
-	const compiler = webpack(config);
-	return /** @type {Watching} */ (compiler.watch({}, callback));
-}
-
-/** @typedef {{ name: string, mode: "development" | "production", watch?: boolean }} Scenario */
-
-/** @type {Scenario[]} */
-const scenarios = [
-	{
-		name: "mode-development",
-		mode: "development"
-	},
-	{
-		name: "mode-development-rebuild",
-		mode: "development",
-		watch: true
-	},
-	{
-		name: "mode-production",
-		mode: "production"
-	}
-];
-
-/** @typedef {string & { prepareStackTrace: string, stackTraceLimit: string }} V8StackTrace */
-
-/**
- * @param {Fn=} belowFn below function
- * @returns {NodeJS.CallSite[]} V8 stack trace
- */
-function getStackTrace(belowFn) {
-	const oldLimit = Error.stackTraceLimit;
-	Error.stackTraceLimit = Infinity;
-	/** @type {{ stack?: NodeJS.CallSite[] }} */
-	const dummyObject = {};
-	const v8Handler = Error.prepareStackTrace;
-	Error.prepareStackTrace = (dummyObject, v8StackTrace) => v8StackTrace;
-	Error.captureStackTrace(dummyObject, belowFn || getStackTrace);
-	const v8StackTrace = /** @type {NodeJS.CallSite[]} */ (dummyObject.stack);
-	Error.prepareStackTrace = v8Handler;
-	Error.stackTraceLimit = oldLimit;
-	return v8StackTrace;
-}
-
-function getCallingFile() {
-	const stack = getStackTrace();
-	let callingFile = /** @type {string} */ (stack[2].getFileName()); // [here, withCodSpeed, actual caller]
-	const gitDir = getGitDir(callingFile);
-	if (gitDir === undefined) {
-		throw new Error("Could not find a git repository");
-	}
-	if (callingFile.startsWith("file://")) {
-		callingFile = fileURLToPath(callingFile);
-	}
-	return path.relative(gitDir, callingFile);
-}
-
-/** @typedef {{ uri: string, fn: Fn, options: FnOptions | undefined }} TaskMeta */
-/** @typedef {Map<string, TaskMeta>} URIMap */
-
-/** @type {WeakMap<Bench, URIMap>} */
-const taskUriMap = new WeakMap();
-
-/**
- * @param {Bench} bench bench
- * @returns {URIMap} URI map
- */
-function getOrCreateUriMap(bench) {
-	let uriMap = taskUriMap.get(bench);
-	if (!uriMap) {
-		/** @type {URIMap} */
-		uriMap = new Map();
-		taskUriMap.set(bench, uriMap);
-	}
-	return uriMap;
-}
-
-/**
- * @param {Bench} bench bench
- * @param {string} taskName task name
- * @param {string} rootCallingFile root calling file
- * @returns {string} task URI
- */
-function getTaskUri(bench, taskName, rootCallingFile) {
-	const uriMap = taskUriMap.get(bench);
-	return uriMap?.get(taskName)?.uri || `${rootCallingFile}::${taskName}`;
-}
-
-/**
- * @param {Bench} bench bench
- * @returns {Promise<Bench>} modifier bench
- */
-const withCodSpeed = async (bench) => {
-	const codspeedRunnerMode = getCodspeedRunnerMode();
-
-	if (codspeedRunnerMode === "disabled") {
-		return bench;
-	}
-
-	const rawAdd = bench.add;
-	const uriMap = getOrCreateUriMap(bench);
-
-	const releaseClosuresAfterMeasure = codspeedRunnerMode === "memory";
-	const NO_OP_FN = () => {};
-
-	bench.add = (name, fn, options) => {
-		const callingFile = getCallingFile();
-		let uri = callingFile;
-		if (bench.name !== undefined) {
-			uri += `::${bench.name}`;
-		}
-		uri += `::${name}`;
-		uriMap.set(name, { uri, fn, options });
-		if (releaseClosuresAfterMeasure) {
-			return rawAdd.bind(bench)(name, NO_OP_FN, {});
-		}
-		return rawAdd.bind(bench)(name, fn, options);
-	};
-	const rootCallingFile = getCallingFile();
-
-	if (codspeedRunnerMode === "simulation" || codspeedRunnerMode === "memory") {
-		// Memory mode counts allocations in the instrumented region. With `--no-opt`
-		// (required by CodSpeed analysis mode), JIT stabilization isn't a factor,
-		// so 2 warmup runs are enough to populate require.cache, webpack lazy
-		// singletons, and V8 hidden classes. More warmup just bloats the heap with
-		// garbage that the pre-measurement drain has to clean up, raising the
-		// chance of an in-measurement GC and introducing variance across PRs that
-		// would otherwise touch identical code paths.
-		const warmupIterations =
-			codspeedRunnerMode === "memory" ? 2 : bench.iterations - 1;
-
-		const setupBenchRun = () => {
-			setupCore();
-			console.log(
-				`[CodSpeed] running with @codspeed/tinybench (${codspeedRunnerMode} mode, ${warmupIterations} warmup iterations)`
-			);
-		};
-		const finalizeBenchRun = () => {
-			teardownCore();
-			console.log(`[CodSpeed] Done running ${bench.tasks.length} benches.`);
-			return bench.tasks;
-		};
-
-		/**
-		 * @param {Fn} fn function
-		 * @param {boolean} isAsync true if async function, otherwise false
-		 * @returns {() => void} function wrapped in codspeed root frame
-		 */
-		const wrapFunctionWithFrame = (fn, isAsync) => {
-			if (isAsync) {
-				return async function __codspeed_root_frame__() {
-					await fn();
-				};
-			}
-
-			return function __codspeed_root_frame__() {
-				fn();
-			};
-		};
-
-		/**
-		 * @param {string} uri URI
-		 * @param {string} status status
-		 */
-		const logTaskCompletion = (uri, status) => {
-			console.log(`[CodSpeed] ${status} ${uri}`);
-		};
-
-		const taskCompletionMessage = () =>
-			InstrumentHooks.isInstrumented() ? "Measured" : "Checked";
-
-		/**
-		 * @param {Task} task task
-		 * @param {string} name task name
-		 * @returns {Promise<[number, number] | void>} start and end time
-		 */
-		const iterationAsync = async (task, name) => {
-			const { fn, options } =
-				/** @type {TaskMeta} */
-				(uriMap.get(name));
-
-			try {
-				await options?.beforeEach?.call(task, "run");
-				const start = bench.now();
-				await fn();
-				const end = bench.now() - start || 0;
-				await options?.afterEach?.call(task, "run");
-				return [start, end];
-			} catch (err) {
-				if (bench.throws) {
-					throw err;
-				}
-			}
-		};
-
-		/**
-		 * @param {Fn} fn function
-		 * @param {string} uri URI
-		 * @returns {Promise<ReturnType<Fn>>} result with instrument hooks
-		 */
-		const wrapWithInstrumentHooksAsync = async (fn, uri) => {
-			InstrumentHooks.startBenchmark();
-			const result = await fn();
-			InstrumentHooks.stopBenchmark();
-			InstrumentHooks.setExecutedBenchmark(process.pid, uri);
-			return result;
-		};
-
-		/**
-		 * @param {Task} task task
-		 * @param {string} name task name
-		 * @param {string} uri URI
-		 */
-		const runTaskAsync = async (task, name, uri) => {
-			let { fn, options } =
-				/** @type {TaskMeta} */
-				(uriMap.get(name));
-
-			// Custom setup
-			await bench.setup?.(task, "run");
-
-			await options?.beforeAll?.call(task, "run");
-
-			if (
-				codspeedRunnerMode === "simulation" ||
-				codspeedRunnerMode === "memory"
-			) {
-				// Custom warmup
-				// We don't run `optimizeFunction` because our function is never optimized, instead we just warmup webpack.
-				// Memory mode also needs warmup so the first measured sample isn't
-				// polluted by module loading, lazy webpack init, and JIT shape transitions.
-				const samples = [];
-
-				while (samples.length < warmupIterations) {
-					samples.push(await iterationAsync(task, name));
-				}
-			}
-
-			await options?.beforeEach?.call(task, "run");
-			await mongoMeasurement.start(uri);
-			// Drain heap before the instrumented region so allocations from the
-			// warmup runs aren't attributed to the measured sample (especially
-			// under massif). One GC can leave promoted-but-unreachable objects
-			// pending finalization; finalizers themselves can allocate. Loop
-			// `gc -> microtask` three times so each GC's finalizers get a chance
-			// to run and any garbage they produce is collected on the next pass,
-			// then drain pending IO with `setImmediate`, then one final GC to
-			// catch anything the IO callbacks left behind.
-			for (let i = 0; i < 3; i++) {
-				global.gc?.();
-				await new Promise((resolve) => {
-					queueMicrotask(() => resolve(undefined));
-				});
-			}
-			await new Promise((resolve) => {
-				setImmediate(resolve);
-			});
-			global.gc?.();
-			await wrapWithInstrumentHooksAsync(wrapFunctionWithFrame(fn, true), uri);
-			await mongoMeasurement.stop(uri);
-			await options?.afterEach?.call(task, "run");
-			console.log(`[Codspeed] ✔ Measured ${uri}`);
-			await options?.afterAll?.call(task, "run");
-
-			// Custom teardown
-			await bench.teardown?.(task, "run");
-
-			logTaskCompletion(uri, taskCompletionMessage());
-
-			// Release this task's closures
-			fn = NO_OP_FN;
-			options = undefined;
-			uriMap.delete(name);
-			for (let i = 0; i < 3; i++) {
-				global.gc?.();
-				await new Promise((resolve) => {
-					queueMicrotask(() => resolve(undefined));
-				});
-			}
-			await new Promise((resolve) => {
-				setImmediate(resolve);
-			});
-			global.gc?.();
-		};
-
-		/**
-		 * @param {Task} task task
-		 * @param {string} name task
-		 * @returns {[number, number] | undefined} start and end time
-		 */
-		const iteration = (task, name) => {
-			const { fn, options } =
-				/** @type {TaskMeta} */
-				(uriMap.get(name));
-
-			try {
-				options?.beforeEach?.call(task, "run");
-				const start = bench.now();
-				fn();
-				const end = bench.now() - start || 0;
-				options?.afterEach?.call(task, "run");
-				return [start, end];
-			} catch (err) {
-				if (bench.throws) {
-					throw err;
-				}
-			}
-		};
-
-		/**
-		 * @param {Fn} fn function
-		 * @param {string} uri URI
-		 * @returns {ReturnType<Fn>} result with instrument hooks
-		 */
-		const wrapWithInstrumentHooks = (fn, uri) => {
-			InstrumentHooks.startBenchmark();
-			const result = fn();
-			InstrumentHooks.stopBenchmark();
-			InstrumentHooks.setExecutedBenchmark(process.pid, uri);
-			return result;
-		};
-
-		/**
-		 * @param {Task} task task
-		 * @param {string} name task name
-		 * @param {string} uri URI
-		 */
-		const runTaskSync = (task, name, uri) => {
-			let { fn, options } =
-				/** @type {TaskMeta} */
-				(uriMap.get(name));
-
-			// Custom setup
-			bench.setup?.(task, "run");
-
-			options?.beforeAll?.call(task, "run");
-
-			if (
-				codspeedRunnerMode === "simulation" ||
-				codspeedRunnerMode === "memory"
-			) {
-				// Custom warmup — see the async path for rationale.
-				const samples = [];
-
-				while (samples.length < warmupIterations) {
-					samples.push(iteration(task, name));
-				}
-			}
-
-			options?.beforeEach?.call(task, "run");
-
-			// Multiple GC passes so finalization (and any allocations finalizers
-			// trigger) doesn't leak into the measured sample. The sync path has no
-			// microtask queue to drain, so we just chain GCs.
-			for (let i = 0; i < 4; i++) {
-				global.gc?.();
-			}
-			wrapWithInstrumentHooks(wrapFunctionWithFrame(fn, false), uri);
-
-			options?.afterEach?.call(task, "run");
-			console.log(`[Codspeed] ✔ Measured ${uri}`);
-			options?.afterAll?.call(task, "run");
-
-			// Custom teardown
-			bench.teardown?.(task, "run");
-
-			logTaskCompletion(uri, taskCompletionMessage());
-
-			// Release this task's closures
-			fn = NO_OP_FN;
-			options = undefined;
-			uriMap.delete(name);
-			for (let i = 0; i < 4; i++) {
-				global.gc?.();
-			}
-		};
-
-		/**
-		 * @returns {Task[]} tasks
-		 */
-		const finalizeAsyncRun = () => finalizeBenchRun();
-		/**
-		 * @returns {Task[]} tasks
-		 */
-		const finalizeSyncRun = () => finalizeBenchRun();
-
-		/**
-		 * Run a task's per-task hooks plus one un-instrumented iteration. Used
-		 * as a global prime pass for memory mode so module loads, V8
-		 * hidden-class transitions, and inline-cache fills happen before any
-		 * measurement — removing the cross-task order-dependence that causes
-		 * the same benchmark to report different allocation counts across PRs.
-		 *
-		 * Intentionally skipped here: bench-level `setup` / `teardown`,
-		 * `beforeEach` / `afterEach`, `mongoMeasurement.start/stop`, and
-		 * `InstrumentHooks.startBenchmark/stopBenchmark`. Those belong to the
-		 * measurement loop and would either double-instrument or skew the
-		 * measured run if invoked here. `beforeAll` / `afterAll` are included
-		 * because they own setup/teardown that the iteration itself depends on
-		 * (e.g. the watch task opens its watcher in `beforeAll`).
-		 * @param {Task} task task
-		 * @returns {Promise<void>}
-		 */
-		const primeTaskAsync = async (task) => {
-			const meta = uriMap.get(task.name);
-			if (!meta) return;
-			await meta.options?.beforeAll?.call(task, "warmup");
-			try {
-				const { peak, marginal } = await sampleHeapPeak(() =>
-					iterationAsync(task, task.name)
-				);
-				const uri = getTaskUri(bench, task.name, rootCallingFile);
-				console.log(
-					`[Memory] ${uri} peakHeapUsed=${formatBytes(peak)} marginal=${formatBytes(marginal)}`
-				);
-			} finally {
-				await meta.options?.afterAll?.call(task, "warmup");
-			}
-		};
-
-		/**
-		 * Sync version of primeTaskAsync — see that docstring for what is and
-		 * isn't included.
-		 * @param {Task} task task
-		 */
-		const primeTaskSync = (task) => {
-			const meta = uriMap.get(task.name);
-			if (!meta) return;
-			meta.options?.beforeAll?.call(task, "warmup");
-			try {
-				iteration(task, task.name);
-			} finally {
-				meta.options?.afterAll?.call(task, "warmup");
-			}
-		};
-
-		bench.run = async () => {
-			setupBenchRun();
-
-			if (codspeedRunnerMode === "memory") {
-				console.log(
-					`[CodSpeed] memory mode: priming ${bench.tasks.length} tasks before measurement.`
-				);
-				for (const task of bench.tasks) {
-					await primeTaskAsync(task);
-				}
-				// Drain heap accumulated by the prime pass so it can't leak
-				// into the first measurement.
-				for (let i = 0; i < 4; i++) {
-					global.gc?.();
-					await new Promise((resolve) => {
-						queueMicrotask(() => resolve(undefined));
-					});
-				}
-				await new Promise((resolve) => {
-					setImmediate(resolve);
-				});
-				global.gc?.();
-			}
-
-			for (const task of bench.tasks) {
-				const uri = getTaskUri(bench, task.name, rootCallingFile);
-				await runTaskAsync(task, task.name, uri);
-			}
-
-			return finalizeAsyncRun();
-		};
-
-		bench.runSync = () => {
-			setupBenchRun();
-
-			if (codspeedRunnerMode === "memory") {
-				console.log(
-					`[CodSpeed] memory mode: priming ${bench.tasks.length} tasks before measurement.`
-				);
-				for (const task of bench.tasks) {
-					primeTaskSync(task);
-				}
-				for (let i = 0; i < 4; i++) {
-					global.gc?.();
-				}
-			}
-
-			for (const task of bench.tasks) {
-				const uri = getTaskUri(bench, task.name, rootCallingFile);
-				runTaskSync(task, task.name, uri);
-			}
-
-			return finalizeSyncRun();
-		};
-	} else if (codspeedRunnerMode === "walltime") {
-		// We don't need it
-	}
-
-	return bench;
-};
-
-const bench = await withCodSpeed(
-	new Bench({
-		now: hrtimeNow,
-		throws: true,
-		warmup: true,
-		warmupIterations: 2,
-		iterations: 8,
-		setup(task, mode) {
-			if (!task) {
-				return;
-			}
-
-			console.log(`Setup (${mode} mode): ${task.name}`);
-		},
-		teardown(task, mode) {
-			if (!task) {
-				return;
-			}
-
-			console.log(`Teardown (${mode} mode): ${task.name}`);
-		}
-	})
-);
-
-/**
- * @param {Bench} bench bench
- * @param {string} test test
- * @param {Baseline[]} baselines baselines
- * @returns {Promise<void>}
- */
-async function registerSuite(bench, test, baselines) {
-	const testDirectory = path.join(casesPath, test);
-	const optionsPath = path.resolve(testDirectory, "options.mjs");
-
-	/** @type {{ setup?: () => Promise<void> }} */
-	let options = {};
-
-	try {
-		options = await import(`${pathToFileURL(optionsPath)}`);
-	} catch (_err) {
-		// Ignore
-	}
-
-	if (typeof options.setup !== "undefined") {
-		await options.setup();
-	}
-
-	if (test.includes("-unit")) {
-		const fullBenchName = `unit benchmark "${test}"`;
-
-		console.log(`Register: ${fullBenchName}`);
-
-		const benchmarkPath = path.resolve(testDirectory, "index.bench.mjs");
-		const registerBenchmarks = await import(`${pathToFileURL(benchmarkPath)}`);
-
-		registerBenchmarks.default(bench);
-
-		return;
-	}
-
-	const realConfig = (
-		await import(
-			`${pathToFileURL(path.join(testDirectory, "webpack.config.mjs"))}`
-		)
-	).default;
-
-	// Register sequentially so task order in `bench.tasks` is deterministic.
-	// Parallel registration makes the order depend on Promise resolution,
-	// which then leaks into the shared-process state (require.cache, webpack
-	// singletons) seen by each measurement.
-	for (const baseline of baselines) {
-		const webpack = await baseline.webpack();
-
-		for (const scenario of scenarios) {
-			const config = buildConfiguration(
-				test,
-				baseline,
-				realConfig,
-				scenario,
-				testDirectory
-			);
-
-			const stringifiedScenario = JSON.stringify(scenario);
-			const benchName = `benchmark "${test}", scenario '${stringifiedScenario}'${LAST_COMMIT ? "" : ` ${baseline.name} (${baseline.rev})`}`;
-			const fullBenchName = `benchmark "${test}", scenario '${stringifiedScenario}' ${baseline.name} ${baseline.rev ? `(${baseline.rev})` : ""}`;
-
-			console.log(`Register: ${fullBenchName}`);
-
-			if (scenario.watch) {
-				if (!config.entry) {
-					throw new Error(`No entry for "${fullBenchName}" bench.`);
-				}
-
-				const entry = path.resolve(/** @type {string} */ (config.entry));
-				const originalEntryContent = await fs.readFile(entry, "utf8");
-
-				/** @type {Watching | undefined} */
-				let watching;
-				/** @type {(err: Error | null, stats?: Stats) => void} */
-				let next;
-
-				/**
-				 * @param {Error | null} err err
-				 * @param {Stats=} stats stats
-				 */
-				const watchCallback = (err, stats) => {
-					if (next) {
-						next(err, stats);
-					}
-				};
-
-				bench.add(
-					benchName,
-					async () => {
-						/** @type {((value?: void) => void)} */
-						let resolve;
-						/** @type {((err: Error | null) => void)} */
-						let reject;
-
-						const promise = new Promise((res, rej) => {
-							resolve = res;
-							reject = rej;
-						});
-
-						next = (err, stats) => {
-							if (err || !stats) {
-								reject(err);
-								return;
-							}
-
-							if (stats.hasWarnings() || stats.hasErrors()) {
-								reject(new Error(stats.toString()));
-								return;
-							}
-
-							// Construct and print stats to be more accurate with real life projects
-							stats.toString();
-							resolve();
-						};
-
-						await new Promise(
-							/**
-							 * @param {(value?: void) => void} resolve resolve
-							 * @param {(err: Error) => void} reject reject
-							 */
-							(resolve, reject) => {
-								writeFile(
-									entry,
-									`${originalEntryContent};console.log('watch test')`,
-									(err) => {
-										if (err) {
-											reject(err);
-											return;
-										}
-
-										resolve();
-									}
-								);
-							}
-						);
-
-						await promise;
-					},
-					{
-						beforeEach(mode) {
-							console.time(`Time (${mode} mode): ${benchName}`);
-						},
-						afterEach(mode) {
-							console.timeEnd(`Time (${mode} mode): ${benchName}`);
-						},
-						async beforeAll() {
-							/** @type {Task} */
-							(this).collectBy = `${test}, scenario '${stringifiedScenario}'`;
-
-							/** @type {((value?: void) => void)} */
-							let resolve;
-							/** @type {((err: Error | null) => void)} */
-							let reject;
-
-							const promise = new Promise((res, rej) => {
-								resolve = res;
-								reject = rej;
-							});
-
-							next = (err, stats) => {
-								if (err || !stats) {
-									reject(err);
-									return;
-								}
-
-								if (stats.hasWarnings() || stats.hasErrors()) {
-									reject(new Error(stats.toString()));
-									return;
-								}
-
-								// Construct and print stats to be more accurate with real life projects
-								stats.toString();
-								resolve();
-							};
-
-							if (GENERATE_PROFILE) {
-								await withProfiling(
-									benchName,
-									async () =>
-										(watching = await runWatch(webpack, config, watchCallback))
-								);
-							} else {
-								watching = await runWatch(webpack, config, watchCallback);
-							}
-
-							// Make an extra fs call to warm up filesystem caches
-							// Also wait a first run callback
-							await new Promise(
-								/**
-								 * @param {(value?: void) => void} resolve resolve
-								 * @param {(err: Error) => void} reject reject
-								 */
-								(resolve, reject) => {
-									writeFile(
-										entry,
-										`${originalEntryContent};console.log('watch test')`,
-										(err) => {
-											if (err) {
-												reject(err);
-												return;
-											}
-
-											resolve();
-										}
-									);
-								}
-							);
-
-							await promise;
-						},
-						async afterAll() {
-							// Close watching
-							await new Promise(
-								/**
-								 * @param {(value?: void) => void} resolve resolve
-								 * @param {(err: Error) => void} reject reject
-								 */
-								(resolve, reject) => {
-									if (watching) {
-										watching.close((closeErr) => {
-											if (closeErr) {
-												reject(closeErr);
-												return;
-											}
-
-											resolve();
-										});
-									}
-								}
-							);
-
-							// Write original content
-							await new Promise(
-								/**
-								 * @param {(value?: void) => void} resolve resolve
-								 * @param {(err: Error) => void} reject reject
-								 */
-								(resolve, reject) => {
-									writeFile(entry, originalEntryContent, (err) => {
-										if (err) {
-											reject(err);
-											return;
-										}
-
-										resolve();
-									});
-								}
-							);
-						}
-					}
-				);
-			} else {
-				bench.add(
-					benchName,
-					async () => {
-						await (GENERATE_PROFILE
-							? withProfiling(benchName, () => runWebpack(webpack, config))
-							: runWebpack(webpack, config));
-					},
-					{
-						beforeEach(mode) {
-							console.time(`Time (${mode} mode): ${benchName}`);
-						},
-						afterEach(mode) {
-							console.timeEnd(`Time (${mode} mode): ${benchName}`);
-						},
-						beforeAll() {
-							/** @type {Task} */
-							(this).collectBy = `${test}, scenario '${stringifiedScenario}'`;
-						}
-					}
-				);
-			}
-		}
-	}
-}
-
-await fs.rm(baseOutputPath, { recursive: true, force: true });
-
-const FILTER =
-	typeof process.env.FILTER !== "undefined"
-		? new RegExp(process.env.FILTER)
-		: undefined;
-
-const NEGATIVE_FILTER =
-	typeof process.env.NEGATIVE_FILTER !== "undefined"
-		? new RegExp(process.env.NEGATIVE_FILTER)
-		: undefined;
-
-const casesPath = path.join(__dirname, "benchmarkCases");
-/** @type {string[]} */
-const allBenchmarks = (await fs.readdir(casesPath))
-	.filter(
-		(item) =>
-			!item.includes("_") &&
-			(FILTER ? FILTER.test(item) : true) &&
-			(NEGATIVE_FILTER ? !NEGATIVE_FILTER.test(item) : true)
-	)
-	.sort((a, b) => a.localeCompare(b));
-
-/** @type {string[]} */
-const benchmarks = allBenchmarks.filter((item) => !item.includes("-long"));
-/** @type {string[]} */
-const longBenchmarks = allBenchmarks.filter((item) => item.includes("-long"));
-const i = Math.floor(benchmarks.length / longBenchmarks.length);
-
-for (const [index, value] of longBenchmarks.entries()) {
-	benchmarks.splice(index * i, 0, value);
-}
-
-const shard =
-	typeof process.env.SHARD !== "undefined"
-		? process.env.SHARD.split("/").map((item) => Number.parseInt(item, 10))
-		: [1, 1];
-
-if (
-	typeof shard[0] === "undefined" ||
-	typeof shard[1] === "undefined" ||
-	shard[0] > shard[1] ||
-	shard[0] <= 0 ||
-	shard[1] <= 0
-) {
-	throw new Error(
-		`Invalid \`SHARD\` value - it should be less then a part and more than zero, shard part is ${shard[0]}, count of shards is ${shard[1]}`
-	);
-}
-
-/**
  * @template T
  * @param {T[]} array an array
  * @param {number} n number of chunks
- * @returns {T[][]} splitted to b chunks
+ * @returns {T[][]} splitted to n chunks
  */
 function splitToNChunks(array, n) {
 	/** @type {T[][]} */
@@ -1306,153 +197,465 @@ function splitToNChunks(array, n) {
 	return result;
 }
 
-const countOfBenchmarks = benchmarks.length;
+class BenchmarkRunner {
+	constructor() {
+		/** @type {Scenario[]} */
+		this.scenarios = [
+			{
+				name: "mode-development",
+				mode: "development"
+			},
+			{
+				name: "mode-development-rebuild",
+				mode: "development",
+				watch: true
+			},
+			{
+				name: "mode-production",
+				mode: "production"
+			}
+		];
+		/** @type {string} */
+		this.casesPath = path.join(__dirname, "benchmarkCases");
+		/** @type {string} */
+		this.baseOutputPath = path.join(__dirname, "js", "benchmark");
+		/** @type {BenchmarkWorker | undefined} */
+		this.workerPool = undefined;
+	}
 
-if (countOfBenchmarks < shard[1]) {
-	throw new Error(
-		`Shard upper limit is more than count of benchmarks, count of benchmarks is ${countOfBenchmarks}, shard is ${shard[1]}`
-	);
-}
+	/**
+	 * Check out the required git revisions and clear stale build output.
+	 * @returns {Promise<Baseline[]>} baselines
+	 */
+	async initialize() {
+		const baselinesPath = path.join(__dirname, "js", "benchmark-baselines");
+		const baselineRevisions = await getBaselineRevs();
 
-// Register suites sequentially. Parallel registration makes task order in
-// `bench.tasks` depend on Promise resolution order, which in turn changes the
-// shared-process state (module graph, require.cache, webpack internals)
-// each benchmark observes.
-for (const benchmark of splitToNChunks(benchmarks, shard[1])[shard[0] - 1]) {
-	await registerSuite(bench, benchmark, baselines);
-}
+		try {
+			await fs.mkdir(baselinesPath, { recursive: true });
+		} catch (_err) {} // eslint-disable-line no-empty
 
-/**
- * @param {number} value value
- * @param {number} precision precision
- * @param {number} fractionDigits fraction digits
- * @returns {string} formatted number
- */
-function formatNumber(value, precision, fractionDigits) {
-	return Math.abs(value) >= 10 ** precision
-		? value.toFixed()
-		: Math.abs(value) < 10 ** (precision - fractionDigits)
-			? value.toFixed(fractionDigits)
-			: value.toPrecision(precision);
-}
+		/** @type {Baseline[]} */
+		const baselines = [];
 
-const US_PER_MS = 10 ** 3;
-const NS_PER_MS = 10 ** 6;
+		for (const baselineInfo of baselineRevisions) {
+			const baselineRevision = baselineInfo.rev;
+			const baselinePath =
+				baselineRevision === undefined
+					? path.resolve(__dirname, "../")
+					: path.resolve(baselinesPath, baselineRevision);
 
-/**
- * @param {number} value time
- * @returns {string} formatted time
- */
-function formatTime(value) {
-	const toType =
-		Math.round(value) > 0
-			? "ms"
-			: Math.round(value * US_PER_MS) / US_PER_MS > 0
-				? "µs"
-				: "ns";
+			try {
+				await fs.access(path.resolve(baselinePath, ".git"), constants.R_OK);
+			} catch (err) {
+				if (!baselineRevision) {
+					throw new Error("No baseline revision", { cause: err });
+				}
 
-	switch (toType) {
-		case "ms": {
-			return `${formatNumber(value, 5, 2)} ms`;
+				try {
+					await fs.mkdir(baselinePath);
+				} catch (_err) {} // eslint-disable-line no-empty
+
+				const gitIndex = path.resolve(rootPath, ".git/index");
+				const index = await fs.readFile(gitIndex);
+				const prevHead = await git.raw(["rev-list", "-n", "1", "HEAD"]);
+
+				await simpleGit(baselinePath).raw([
+					"--git-dir",
+					path.join(rootPath, ".git"),
+					"reset",
+					"--hard",
+					baselineRevision
+				]);
+
+				await git.raw(["reset", "--soft", prevHead.split("\n")[0]]);
+				await fs.writeFile(gitIndex, index);
+			} finally {
+				baselines.push({
+					name: baselineInfo.name,
+					rev: baselineRevision,
+					path: baselinePath
+				});
+			}
 		}
-		case "µs": {
-			return `${formatNumber(value * US_PER_MS, 5, 2)} µs`;
+
+		await fs.rm(this.baseOutputPath, { recursive: true, force: true });
+
+		return baselines;
+	}
+
+	/**
+	 * Discover benchmark case directories, honoring FILTER / NEGATIVE_FILTER and
+	 * interleaving the long-running cases so shards stay balanced.
+	 * @returns {Promise<string[]>} benchmark names
+	 */
+	async discoverBenchmarks() {
+		const FILTER =
+			typeof process.env.FILTER !== "undefined"
+				? new RegExp(process.env.FILTER)
+				: undefined;
+
+		const NEGATIVE_FILTER =
+			typeof process.env.NEGATIVE_FILTER !== "undefined"
+				? new RegExp(process.env.NEGATIVE_FILTER)
+				: undefined;
+
+		/** @type {string[]} */
+		const allBenchmarks = (await fs.readdir(this.casesPath))
+			.filter(
+				(item) =>
+					!item.includes("_") &&
+					(FILTER ? FILTER.test(item) : true) &&
+					(NEGATIVE_FILTER ? !NEGATIVE_FILTER.test(item) : true)
+			)
+			.sort((a, b) => a.localeCompare(b));
+
+		/** @type {string[]} */
+		const benchmarks = allBenchmarks.filter((item) => !item.includes("-long"));
+		/** @type {string[]} */
+		const longBenchmarks = allBenchmarks.filter((item) =>
+			item.includes("-long")
+		);
+
+		if (longBenchmarks.length > 0) {
+			const spacing = Math.max(
+				1,
+				Math.floor(benchmarks.length / longBenchmarks.length)
+			);
+
+			for (const [index, value] of longBenchmarks.entries()) {
+				benchmarks.splice(index * spacing, 0, value);
+			}
 		}
-		case "ns": {
-			return `${formatNumber(value * NS_PER_MS, 5, 2)} ns`;
+
+		return benchmarks;
+	}
+
+	/**
+	 * Build the benchmark tasks for this shard. Each non-unit benchmark expands
+	 * to one task per scenario (all baselines measured within the task); `-unit`
+	 * benchmarks have no scenarios and become a single task.
+	 * @param {string[]} benchmarks discovered benchmarks
+	 * @param {[number, number]} shard shard [part, count]
+	 * @param {Baseline[]} baselines baselines
+	 * @returns {BenchmarkTask[]} benchmark tasks
+	 */
+	createBenchmarkTasks(benchmarks, shard, baselines) {
+		const countOfBenchmarks = benchmarks.length;
+
+		if (countOfBenchmarks < shard[1]) {
+			throw new Error(
+				`Shard upper limit is more than count of benchmarks, count of benchmarks is ${countOfBenchmarks}, shard is ${shard[1]}`
+			);
 		}
+
+		const shardBenchmarks = splitToNChunks([...benchmarks], shard[1])[
+			shard[0] - 1
+		];
+
+		/** @type {BenchmarkTask[]} */
+		const benchmarkTasks = [];
+
+		for (const benchmark of shardBenchmarks) {
+			if (benchmark.includes("-unit")) {
+				benchmarkTasks.push({ id: benchmark, benchmark, baselines });
+				continue;
+			}
+
+			for (const scenario of this.scenarios) {
+				benchmarkTasks.push({
+					id: `${benchmark}-${scenario.name}`,
+					benchmark,
+					scenario,
+					baselines
+				});
+			}
+		}
+
+		return benchmarkTasks;
+	}
+
+	/**
+	 * Run each benchmark's `options.setup()` once (e.g. generate module trees).
+	 * Done in the orchestrator so parallel workers observe a ready filesystem.
+	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
+	 * @returns {Promise<void>}
+	 */
+	async prepareBenchmarkTasks(benchmarkTasks) {
+		/** @type {Set<string>} */
+		const prepared = new Set();
+
+		for (const { benchmark } of benchmarkTasks) {
+			if (prepared.has(benchmark)) continue;
+			prepared.add(benchmark);
+
+			const optionsPath = path.resolve(
+				this.casesPath,
+				benchmark,
+				"options.mjs"
+			);
+
+			try {
+				const options = await import(`${pathToFileURL(optionsPath)}`);
+				if (typeof options.setup !== "undefined") {
+					await options.setup();
+				}
+			} catch (_err) {
+				// Ignore — benchmark has no options.mjs
+			}
+		}
+	}
+
+	/**
+	 * Compare HEAD vs BASE for each grouped result (walltime / local runs only;
+	 * CodSpeed analysis modes report through their own instrumentation).
+	 * @param {BenchmarkResult[]} benchmarkResults benchmark results
+	 * @returns {void}
+	 */
+	processResults(benchmarkResults) {
+		/** @type {Map<string, Result[]>} */
+		const statsByTests = new Map();
+
+		for (const { results } of benchmarkResults) {
+			for (const result of results) {
+				const { collectBy } = result;
+				if (!collectBy) continue;
+
+				const allStats = statsByTests.get(collectBy);
+
+				if (!allStats) {
+					statsByTests.set(collectBy, [result]);
+					continue;
+				}
+
+				allStats.push(result);
+
+				const firstStats = allStats[0];
+				const secondStats = allStats[1];
+
+				console.log(
+					`Result: ${firstStats.text} is ${Math.round(
+						(secondStats.mean / firstStats.mean) * 100 - 100
+					)}% ${secondStats.maxConfidence < firstStats.minConfidence ? "slower than" : secondStats.minConfidence > firstStats.maxConfidence ? "faster than" : "the same as"} ${secondStats.text}`
+				);
+			}
+		}
+	}
+
+	/**
+	 * Aggregate settled task results and throw if any task failed.
+	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
+	 * @param {PromiseSettledResult<BenchmarkResult>[]} settledResults settled results
+	 * @returns {void}
+	 */
+	finalizeResults(benchmarkTasks, settledResults) {
+		/** @type {BenchmarkResult[]} */
+		const benchmarkResults = [];
+		/** @type {string[]} */
+		const failedTasks = [];
+
+		for (const [index, settled] of settledResults.entries()) {
+			if (settled.status === "fulfilled") {
+				benchmarkResults.push(settled.value);
+			} else {
+				failedTasks.push(benchmarkTasks[index].id);
+			}
+		}
+
+		if (benchmarkResults.length > 0) {
+			this.processResults(benchmarkResults);
+		}
+
+		if (failedTasks.length > 0) {
+			throw new Error(
+				`${failedTasks.length} benchmark task(s) failed: ${failedTasks.join(", ")}`
+			);
+		}
+	}
+
+	/**
+	 * Run every benchmark task sequentially in the main thread. Used for CodSpeed
+	 * memory mode where the deterministic single-libuv-thread heap accounting
+	 * would be broken by extra worker processes.
+	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
+	 * @returns {Promise<void>}
+	 */
+	async runInMainThread(benchmarkTasks) {
+		console.log(
+			`\nRunning ${benchmarkTasks.length} benchmark task(s) in the main thread (memory mode)\n`
+		);
+
+		const { run: runBenchmark } =
+			await import("./harness/benchmark/benchmark.worker.mjs");
+
+		/** @type {PromiseSettledResult<BenchmarkResult>[]} */
+		const settledResults = [];
+
+		for (const task of benchmarkTasks) {
+			try {
+				const value = await runBenchmark({
+					task,
+					casesPath: this.casesPath,
+					baseOutputPath: this.baseOutputPath,
+					callingFile
+				});
+				settledResults.push({ status: "fulfilled", value });
+			} catch (err) {
+				if (err instanceof Error) {
+					console.error(`Task "${task.id}" failed: ${err.message}`);
+				}
+				settledResults.push({
+					status: "rejected",
+					reason: err
+				});
+			}
+		}
+
+		this.finalizeResults(benchmarkTasks, settledResults);
+	}
+
+	/**
+	 * Run benchmark tasks across a pool of worker processes.
+	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
+	 * @returns {Promise<void>}
+	 */
+	async runInWorkers(benchmarkTasks) {
+		const numWorkers = Math.max(
+			1,
+			(typeof os.availableParallelism === "function"
+				? os.availableParallelism()
+				: os.cpus().length) - 1
+		);
+
+		const workerPool = /** @type {BenchmarkWorker} */ (
+			new Worker(
+				path.resolve(__dirname, "harness/benchmark/benchmark.worker.mjs"),
+				{
+					exposedMethods: ["run"],
+					numWorkers,
+					// Forward the V8 flags CodSpeed needs (seeds, --no-opt, …) so the
+					// child processes measure under the same deterministic conditions.
+					forkOptions: { silent: false, execArgv: getV8Flags() }
+				}
+			)
+		);
+		this.workerPool = workerPool;
+
+		console.log(
+			`\nRunning ${benchmarkTasks.length} benchmark task(s) across ${numWorkers} worker(s)\n`
+		);
+
+		try {
+			const settledResults = await Promise.allSettled(
+				benchmarkTasks.map((task) =>
+					workerPool.run({
+						task,
+						casesPath: this.casesPath,
+						baseOutputPath: this.baseOutputPath,
+						callingFile
+					})
+				)
+			);
+
+			this.finalizeResults(benchmarkTasks, settledResults);
+		} finally {
+			await workerPool.end();
+		}
+	}
+
+	/**
+	 * Entry point: prepare baselines, discover and shard benchmarks, then run.
+	 * @returns {Promise<void>}
+	 */
+	async run() {
+		const baselines = await this.initialize();
+		const benchmarks = await this.discoverBenchmarks();
+
+		const shard =
+			typeof process.env.SHARD !== "undefined"
+				? /** @type {[number, number]} */ (
+						process.env.SHARD.split("/").map((item) =>
+							Number.parseInt(item, 10)
+						)
+					)
+				: /** @type {[number, number]} */ ([1, 1]);
+
+		if (
+			typeof shard[0] === "undefined" ||
+			typeof shard[1] === "undefined" ||
+			Number.isNaN(shard[0]) ||
+			Number.isNaN(shard[1]) ||
+			shard[0] > shard[1] ||
+			shard[0] <= 0 ||
+			shard[1] <= 0
+		) {
+			throw new Error(
+				`Invalid \`SHARD\` value - it should be less then a part and more than zero, shard part is ${shard[0]}, count of shards is ${shard[1]}`
+			);
+		}
+
+		const benchmarkTasks = this.createBenchmarkTasks(
+			benchmarks,
+			shard,
+			baselines
+		);
+
+		await this.prepareBenchmarkTasks(benchmarkTasks);
+
+		await (getCodspeedRunnerMode() === "memory"
+			? this.runInMainThread(benchmarkTasks)
+			: this.runInWorkers(benchmarkTasks));
 	}
 }
 
 /**
- * @param {number} bytes bytes
- * @returns {string} formatted size
+ * @returns {void}
  */
-function formatBytes(bytes) {
-	return `${(bytes / 1024 ** 2).toFixed(2)} MiB`;
-}
-
-/**
- * Peak `heapUsed` during `fn`, sampled on the event loop. CodSpeed memory mode
- * counts allocations in an already-warmed heap, so peak-RSS wins stay invisible;
- * this tracks the live-set high-water mark. Called only from the un-instrumented
- * prime pass so it can't pollute the measured region. `heapUsed` not `rss`: the
- * shared process never returns arena pages, so `rss` isn't per-task comparable.
- * @param {() => Promise<unknown>} fn compile to measure
- * @returns {Promise<{ peak: number, marginal: number }>} peak and marginal live bytes
- */
-async function sampleHeapPeak(fn) {
-	global.gc?.();
-	const baseline = process.memoryUsage().heapUsed;
-	let peak = baseline;
-	const timer = setInterval(() => {
-		const { heapUsed } = process.memoryUsage();
-		if (heapUsed > peak) peak = heapUsed;
-	}, 4);
-	timer.unref?.();
-	try {
-		await fn();
-	} finally {
-		clearInterval(timer);
-	}
-	const end = process.memoryUsage().heapUsed;
-	if (end > peak) peak = end;
-	return { peak, marginal: peak - baseline };
-}
-
-const statsByTests = new Map();
-
-bench.addEventListener("cycle", (event) => {
-	const task = event.task;
-
-	if (!task) {
-		throw new Error("Can't find a task");
-	}
-
-	if (!task.result) {
-		throw new Error("Can't find a task result");
-	}
-
-	if (task.result.state !== "completed") {
-		throw new Error(`Task is not completed, state is ${task.result.state}`);
-	}
-
-	const runs = task.runs;
-	const nSqrt = Math.sqrt(runs);
-	const z = tDistribution(runs - 1);
-
-	const { latency } = task.result;
-	const minConfidence = latency.mean - (z * latency.sd) / nSqrt;
-	const maxConfidence = latency.mean + (z * latency.sd) / nSqrt;
-	const mean = formatTime(latency.mean);
-	const deviation = formatTime(latency.sd);
-	const minConfidenceFormatted = formatTime(minConfidence);
-	const maxConfidenceFormatted = formatTime(maxConfidence);
-	const confidence = `${mean} ± ${deviation} [${minConfidenceFormatted}; ${maxConfidenceFormatted}]`;
-	const text = `${task.name} ${confidence}`;
-
-	const collectBy = /** @type {Task} */ (task).collectBy;
-	const allStats = statsByTests.get(collectBy);
-
-	console.log(`Cycle: ${task.name} ${confidence} (${runs} runs sampled)`);
-
-	const info = { ...latency, text, minConfidence, maxConfidence };
-
-	if (!allStats) {
-		statsByTests.set(collectBy, [info]);
-		return;
-	}
-
-	allStats.push(info);
-
-	const firstStats = allStats[0];
-	const secondStats = allStats[1];
-
+function logSystemInfo() {
+	const cpu = process.cpuUsage();
+	console.log("=== CPU ===");
+	console.log("Process CPU (ms):", {
+		user: (cpu.user / 1000).toFixed(1),
+		system: (cpu.system / 1000).toFixed(1)
+	});
 	console.log(
-		`Result: ${firstStats.text} is ${Math.round(
-			(secondStats.mean / firstStats.mean) * 100 - 100
-		)}% ${secondStats.maxConfidence < firstStats.minConfidence ? "slower than" : secondStats.minConfidence > firstStats.maxConfidence ? "faster than" : "the same as"} ${secondStats.text}`
+		"Load average (1/5/15 min):",
+		os.loadavg().map((v) => v.toFixed(2))
 	);
+
+	const mem = process.memoryUsage();
+	console.log("=== Process Memory (MB) ===");
+	console.log({
+		rss: (mem.rss / 1024 / 1024).toFixed(1),
+		heapTotal: (mem.heapTotal / 1024 / 1024).toFixed(1),
+		heapUsed: (mem.heapUsed / 1024 / 1024).toFixed(1),
+		external: (mem.external / 1024 / 1024).toFixed(1),
+		arrayBuffers: (mem.arrayBuffers / 1024 / 1024).toFixed(1)
+	});
+
+	const totalMem = os.totalmem();
+	const freeMem = os.freemem();
+	console.log("=== System Memory (MB) ===");
+	console.log({
+		total: (totalMem / 1024 / 1024).toFixed(1),
+		free: (freeMem / 1024 / 1024).toFixed(1),
+		used: ((totalMem - freeMem) / 1024 / 1024).toFixed(1),
+		usagePercent: `${(((totalMem - freeMem) / totalMem) * 100).toFixed(1)}%`
+	});
+
+	console.log("Process uptime:", `${process.uptime().toFixed(1)}s`);
+}
+
+process.on("SIGTERM", () => {
+	console.log(">>> Received SIGTERM");
+	logSystemInfo();
+	// eslint-disable-next-line n/no-process-exit
+	process.exit(0);
 });
 
-bench.run();
+process.on("exit", (code) => {
+	console.log(">>> Exiting with code:", code);
+	logSystemInfo();
+});
+
+await new BenchmarkRunner().run();
