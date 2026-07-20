@@ -412,6 +412,9 @@
         "exportType": {
           "$ref": "#/definitions/CssParserExportType"
         },
+        "fontPreload": {
+          "$ref": "#/definitions/CssParserFontPreload"
+        },
         "function": {
           "$ref": "#/definitions/CssParserFunction"
         },
@@ -565,6 +568,9 @@
         "exportType": {
           "$ref": "#/definitions/CssParserExportType"
         },
+        "fontPreload": {
+          "$ref": "#/definitions/CssParserFontPreload"
+        },
         "function": {
           "$ref": "#/definitions/CssParserFunction"
         },
@@ -617,6 +623,10 @@
       "description": "Configure how CSS content is exported as default.",
       "enum": ["link", "text", "css-style-sheet", "style"]
     },
+    "CssParserFontPreload": {
+      "description": "Auto-emit `<link rel=\"preload\" as=\"font\">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.",
+      "type": "boolean"
+    },
     "CssParserFunction": {
       "description": "Enable/disable renaming of `@function` names.",
       "type": "boolean"
@@ -649,6 +659,9 @@
         },
         "exportType": {
           "$ref": "#/definitions/CssParserExportType"
+        },
+        "fontPreload": {
+          "$ref": "#/definitions/CssParserFontPreload"
         },
         "import": {
           "$ref": "#/definitions/CssParserImport"

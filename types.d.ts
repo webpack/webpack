@@ -5358,6 +5358,11 @@ declare interface CssAutoOrModuleParserOptions {
 	exportType?: "link" | "text" | "css-style-sheet" | "style";
 
 	/**
+	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+	 */
+	fontPreload?: boolean;
+
+	/**
 	 * Enable/disable renaming of `@function` names.
 	 */
 	function?: boolean;
@@ -5617,6 +5622,11 @@ declare interface CssModuleParserOptions {
 	exportType?: "link" | "text" | "css-style-sheet" | "style";
 
 	/**
+	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+	 */
+	fontPreload?: boolean;
+
+	/**
 	 * Enable/disable renaming of `@function` names.
 	 */
 	function?: boolean;
@@ -5741,6 +5751,10 @@ declare abstract class CssParser extends ParserClass {
 		 */
 		exportType?: "link" | "text" | "css-style-sheet" | "style";
 		/**
+		 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+		 */
+		fontPreload?: boolean;
+		/**
 		 * Enable/disable renaming of `@function` names.
 		 */
 		function: boolean;
@@ -5799,6 +5813,11 @@ declare interface CssParserOptions {
 	 * Configure how CSS content is exported as default.
 	 */
 	exportType?: "link" | "text" | "css-style-sheet" | "style";
+
+	/**
+	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+	 */
+	fontPreload?: boolean;
 
 	/**
 	 * Enable/disable `@import` at-rules handling.
