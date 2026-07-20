@@ -7,6 +7,10 @@
 
 const path = require("path");
 
+/**
+ * @param {string} name compilation name
+ * @returns {string} per-scenario output directory
+ */
 const distFor = (name) => path.join(__dirname, "dist", name);
 
 /** @type {import("webpack").Configuration[]} */
