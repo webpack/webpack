@@ -754,6 +754,7 @@ describe("snapshots", () => {
 		    "importMetaName": "import.meta",
 		    "library": undefined,
 		    "module": false,
+		    "modulePreloadPolyfill": undefined,
 		    "path": "<cwd>/dist",
 		    "pathinfo": false,
 		    "publicPath": "auto",

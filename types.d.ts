@@ -6734,7 +6734,7 @@ declare class ElectronTargetPlugin {
 	 * Creates an instance of ElectronTargetPlugin.
 	 */
 	constructor(
-		context?: "main" | "preload" | "renderer",
+		context?: "preload" | "main" | "renderer",
 		type?:
 			| "import"
 			| "var"
@@ -9608,8 +9608,8 @@ declare interface HtmlEntryInfo {
 		| "html"
 		| "script"
 		| "prefetch"
-		| "stylesheet"
 		| "preload"
+		| "stylesheet"
 		| "modulepreload"
 		| "script-module";
 	css?: boolean;
@@ -19249,6 +19249,11 @@ declare interface Output {
 	module?: boolean;
 
 	/**
+	 * Inject a tiny inline `<script>` polyfill for `<link rel="modulepreload">` into extracted HTML pages when the target environment (per `output.environment.modulePreload`) lacks native support. `true` (default) injects only when needed; `false` never injects — the `<link>` tags are still emitted but do nothing on browsers without support (useful under a strict CSP that forbids inline scripts).
+	 */
+	modulePreloadPolyfill?: boolean;
+
+	/**
 	 * The output directory as **absolute path** (required).
 	 */
 	path?: string;
@@ -19264,12 +19269,13 @@ declare interface Output {
 	publicPath?: string | TemplatePathFn<PathData>;
 
 	/**
-	 * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">`) emission for extracted HTML entries and for URL-referenced assets carrying `webpackPrefetch` / `webpackPreload` (either from magic comments or from `module.parser.<type>.urlHints` rules). `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (this same callback replaces the removed `resolveDependencies` hook). `false` disables chunk hints; URL-referenced asset hints from magic comments / `urlHints` rules still fire — via the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime.
+	 * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">`) emission for extracted HTML entries and for URL-referenced assets carrying `webpackPrefetch` / `webpackPreload` (either from magic comments or from `module.parser.<type>.urlHints` rules). `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; `"preload"` is an alias of `true`; an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (this same callback replaces the removed `resolveDependencies` hook). `false` disables chunk hints; URL-referenced asset hints from magic comments / `urlHints` rules still fire — via the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime.
 	 */
 	resourceHints?:
 		| boolean
 		| HtmlResourceHintWebpackOptions[]
 		| "prefetch"
+		| "preload"
 		| ((context: {
 				entryName: string;
 				entrypoint: Entrypoint;
@@ -19660,6 +19666,11 @@ declare interface OutputNormalized {
 	module?: boolean;
 
 	/**
+	 * Inject a tiny inline `<script>` polyfill for `<link rel="modulepreload">` into extracted HTML pages when the target environment (per `output.environment.modulePreload`) lacks native support. `true` (default) injects only when needed; `false` never injects — the `<link>` tags are still emitted but do nothing on browsers without support (useful under a strict CSP that forbids inline scripts).
+	 */
+	modulePreloadPolyfill?: boolean;
+
+	/**
 	 * The output directory as **absolute path** (required).
 	 */
 	path?: string;
@@ -19675,12 +19686,13 @@ declare interface OutputNormalized {
 	publicPath?: string | TemplatePathFn<PathData>;
 
 	/**
-	 * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">`) emission for extracted HTML entries and for URL-referenced assets carrying `webpackPrefetch` / `webpackPreload` (either from magic comments or from `module.parser.<type>.urlHints` rules). `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (this same callback replaces the removed `resolveDependencies` hook). `false` disables chunk hints; URL-referenced asset hints from magic comments / `urlHints` rules still fire — via the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime.
+	 * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">`) emission for extracted HTML entries and for URL-referenced assets carrying `webpackPrefetch` / `webpackPreload` (either from magic comments or from `module.parser.<type>.urlHints` rules). `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; `"preload"` is an alias of `true`; an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (this same callback replaces the removed `resolveDependencies` hook). `false` disables chunk hints; URL-referenced asset hints from magic comments / `urlHints` rules still fire — via the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime.
 	 */
 	resourceHints?:
 		| boolean
 		| HtmlResourceHintWebpackOptions[]
 		| "prefetch"
+		| "preload"
 		| ((context: {
 				entryName: string;
 				entrypoint: Entrypoint;
@@ -24424,8 +24436,8 @@ type SourceType =
 	| "script"
 	| "css-url"
 	| "prefetch"
-	| "stylesheet"
 	| "preload"
+	| "stylesheet"
 	| "modulepreload"
 	| "script-module"
 	| "src"
@@ -24439,8 +24451,8 @@ type SourceTypeOrResolver =
 	| "script"
 	| "css-url"
 	| "prefetch"
-	| "stylesheet"
 	| "preload"
+	| "stylesheet"
 	| "modulepreload"
 	| "script-module"
 	| "src"
