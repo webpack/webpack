@@ -35,6 +35,7 @@ const {
 	Token,
 	TokenStream,
 	buildSkipSet,
+	normalizeUrl,
 	parseABlocksContents,
 	parseACommaSeparatedListOfComponentValues,
 	parseAComponentValue,
@@ -1131,5 +1132,31 @@ describe("CssSyntax — path accessors", () => {
 			)
 			.process(".b { margin: 0; }");
 		expect(out).toEqual([[true, 1, 0]]);
+	});
+});
+
+describe("CssSyntax — normalizeUrl", () => {
+	it("should return a plain url unchanged", () => {
+		const s = "./images/photo.png";
+		expect(normalizeUrl(s, false)).toBe(s);
+	});
+
+	it("should keep data: URIs verbatim (case-insensitive) without decoding", () => {
+		expect(normalizeUrl("data:image/png;base64,AA%2F", false)).toBe(
+			"data:image/png;base64,AA%2F"
+		);
+		expect(normalizeUrl("DATA:text/plain,x%41", false)).toBe(
+			"DATA:text/plain,x%41"
+		);
+	});
+
+	it("should trim whitespace, strip escaped newlines and decode escapes", () => {
+		expect(normalizeUrl("  img.png\t ", true)).toBe("img.png");
+		expect(normalizeUrl("im\\\ng.png", true)).toBe("img.png");
+		expect(normalizeUrl("./im\\61 ges/a.png", false)).toBe("./images/a.png");
+	});
+
+	it("should decode percent-encoding outside data: URIs", () => {
+		expect(normalizeUrl("./%2E/img.png", false)).toBe("././img.png");
 	});
 });
