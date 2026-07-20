@@ -19799,6 +19799,11 @@ declare interface ParseOptions {
 	 * enable parsing of the import phase proposals (import defer / import source)
 	 */
 	importPhases?: boolean;
+
+	/**
+	 * internal: for `auto`, let the parser downgrade module->script in place instead of re-parsing
+	 */
+	moduleFallback?: boolean;
 }
 declare interface ParseResult {
 	ast: Program;
