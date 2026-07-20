@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Speed up CSS parsing with branchless tokenizer dispatch and reduce per-rule allocation.
+Speed up CSS and HTML parsing via branchless tokenizer dispatch, pre-sized HTML AST columns, and less per-node allocation.
