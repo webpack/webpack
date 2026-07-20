@@ -54,6 +54,9 @@ Two surfaces are involved:
 11. **async-css-preload** — `module.parser.javascript.dynamicImportCssPreload`.
     Auto `<link rel="preload" as="style">` for a dynamically imported chunk's
     CSS (parallel with the chunk; the JS itself is not preloaded).
+12. **auto-preconnect** — `output.autoPreconnect`. Emit
+    `<link rel="preconnect">` for a cross-origin `output.publicPath` origin
+    (the CDN serving your bundles / assets).
 
 # webpack.config.js
 
@@ -430,6 +433,30 @@ module.exports = [
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
 		experiments: { html: true, outputModule: true, css: true }
+	},
+
+	/*
+	 * 12. AUTO PRECONNECT — `output.autoPreconnect`. When bundles/assets are
+	 * served from a cross-origin CDN (`output.publicPath`), emit a
+	 * `<link rel="preconnect">` for that origin so the browser opens the
+	 * connection early. Mirrors `output.crossOriginLoading`.
+	 */
+	{
+		name: "auto-preconnect",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home.js", html: true } },
+		output: {
+			path: distFor("auto-preconnect"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			publicPath: "https://cdn.example.com/static/",
+			crossOriginLoading: "anonymous",
+			module: true,
+			autoPreconnect: true,
+			resourceHints: true
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
 	}
 ];
 ```
@@ -966,4 +993,27 @@ async-css-preload:
       [used exports unknown]
       harmony side effect evaluation ../styles/app.css ./src/routes/async-styled.js 1:0-27
   async-css-preload (webpack X.X.X) compiled successfully
+
+auto-preconnect:
+  asset runtime.a4154a99.js 6.64 KiB [emitted] [immutable] [javascript module] (name: runtime)
+  asset home.6d8d52f7.js 1.39 KiB [emitted] [immutable] [javascript module] (name: home)
+  asset __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
+  asset src_routes_settings_js.2107bc69.chunk.js 943 bytes [emitted] [immutable] [javascript module]
+  asset home.b77f75b7.html 309 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 8.03 KiB (309 bytes) = runtime.a4154a99.js 6.64 KiB home.6d8d52f7.js 1.39 KiB 1 auxiliary asset
+  Entrypoint __html_9b425bba_0 7.9 KiB = runtime.a4154a99.js 6.64 KiB __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB
+  runtime modules 3.62 KiB 8 modules
+  cacheable modules 470 bytes (javascript) 98 bytes (html)
+    data:text/html,<!doctype html><html><head><script src="./src/routes/home.js"></script></head><bod...(truncated) 108 bytes (javascript) 98 bytes (html) [built] [code generated]
+      [exports: default]
+      [used exports unknown]
+      entry data:text/html,<!doctype html><.. home
+    ./src/routes/home.js 328 bytes [built] [code generated]
+      [used exports unknown]
+      entry ./src/routes/home.js __html_9b425bba_0
+    ./src/routes/settings.js 34 bytes [built] [code generated]
+      [exports: default]
+      [used exports unknown]
+      import() ./settings.js ./src/routes/home.js 5:19-42
+  auto-preconnect (webpack X.X.X) compiled successfully
 ```

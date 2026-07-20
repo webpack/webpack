@@ -2428,6 +2428,10 @@ export interface Output {
 	 */
 	asyncChunks?: boolean;
 	/**
+	 * Auto-emit `<link rel="preconnect">` for the origin of a cross-origin `output.publicPath` (the origin bundles and assets are served from) into extracted HTML entries and the resource-hint stats / manifest. Mirrors `output.crossOriginLoading`. No-op when `publicPath` is relative or `"auto"`.
+	 */
+	autoPreconnect?: boolean;
+	/**
 	 * Add a comment in the UMD wrapper.
 	 */
 	auxiliaryComment?: AuxiliaryComment;
@@ -4328,6 +4332,10 @@ export interface OutputNormalized {
 	 * Enable/disable creating async chunks that are loaded on demand.
 	 */
 	asyncChunks?: boolean;
+	/**
+	 * Auto-emit `<link rel="preconnect">` for the origin of a cross-origin `output.publicPath` (the origin bundles and assets are served from) into extracted HTML entries and the resource-hint stats / manifest. Mirrors `output.crossOriginLoading`. No-op when `publicPath` is relative or `"auto"`.
+	 */
+	autoPreconnect?: boolean;
 	/**
 	 * Add charset attribute for script tag.
 	 */

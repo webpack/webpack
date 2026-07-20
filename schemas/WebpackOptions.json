@@ -4254,6 +4254,10 @@
           "description": "Enable/disable creating async chunks that are loaded on demand.",
           "type": "boolean"
         },
+        "autoPreconnect": {
+          "description": "Auto-emit `<link rel=\"preconnect\">` for the origin of a cross-origin `output.publicPath` (the origin bundles and assets are served from) into extracted HTML entries and the resource-hint stats / manifest. Mirrors `output.crossOriginLoading`. No-op when `publicPath` is relative or `\"auto\"`.",
+          "type": "boolean"
+        },
         "auxiliaryComment": {
           "cli": {
             "exclude": true
@@ -4633,6 +4637,10 @@
         },
         "asyncChunks": {
           "description": "Enable/disable creating async chunks that are loaded on demand.",
+          "type": "boolean"
+        },
+        "autoPreconnect": {
+          "description": "Auto-emit `<link rel=\"preconnect\">` for the origin of a cross-origin `output.publicPath` (the origin bundles and assets are served from) into extracted HTML entries and the resource-hint stats / manifest. Mirrors `output.crossOriginLoading`. No-op when `publicPath` is relative or `\"auto\"`.",
           "type": "boolean"
         },
         "charset": {

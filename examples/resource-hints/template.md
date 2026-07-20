@@ -54,6 +54,9 @@ Two surfaces are involved:
 11. **async-css-preload** — `module.parser.javascript.dynamicImportCssPreload`.
     Auto `<link rel="preload" as="style">` for a dynamically imported chunk's
     CSS (parallel with the chunk; the JS itself is not preloaded).
+12. **auto-preconnect** — `output.autoPreconnect`. Emit
+    `<link rel="preconnect">` for a cross-origin `output.publicPath` origin
+    (the CDN serving your bundles / assets).
 
 # webpack.config.js
 

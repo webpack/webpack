@@ -370,5 +370,29 @@ module.exports = [
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
 		experiments: { html: true, outputModule: true, css: true }
+	},
+
+	/*
+	 * 12. AUTO PRECONNECT — `output.autoPreconnect`. When bundles/assets are
+	 * served from a cross-origin CDN (`output.publicPath`), emit a
+	 * `<link rel="preconnect">` for that origin so the browser opens the
+	 * connection early. Mirrors `output.crossOriginLoading`.
+	 */
+	{
+		name: "auto-preconnect",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home.js", html: true } },
+		output: {
+			path: distFor("auto-preconnect"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			publicPath: "https://cdn.example.com/static/",
+			crossOriginLoading: "anonymous",
+			module: true,
+			autoPreconnect: true,
+			resourceHints: true
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
 	}
 ];

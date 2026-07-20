@@ -688,6 +688,7 @@ describe("snapshots", () => {
 		  "output": Object {
 		    "assetModuleFilename": "[hash][ext][query][fragment]",
 		    "asyncChunks": true,
+		    "autoPreconnect": undefined,
 		    "charset": true,
 		    "chunkFilename": "[name].js",
 		    "chunkFormat": "array-push",
