@@ -27,9 +27,10 @@ Two surfaces are involved:
    `<link>` list (preconnect, custom font, chunk/entry references).
 4. **callback** — `output.resourceHints: fn`. One hook that receives the auto
    `defaultHints` plus `{ entryName, entrypoint, hostType, compilation }` and
-   returns the final list. Replaces both the old `chunks: fn` and
-   `resolveDependencies` hooks; runs for HTML pages (`hostType === "html"`)
-   and JS-only entries (`hostType === "js"`).
+   returns the final list. Each hint carries `hostChunks` (the referencing chunk
+   names — Vite's `hostId`) so you can rewrite per origin chunk. Replaces both
+   the old `chunks: fn` and `resolveDependencies` hooks; runs for HTML pages
+   (`hostType === "html"`) and JS-only entries (`hostType === "js"`).
 5. **url-hints** — `module.parser.javascript.urlHints`. Rule-based
    `preload`/`prefetch` defaults for JS `new URL(...)` references. Same
    shape works under `parser.css.urlHints` (CSS `url(...)`) and

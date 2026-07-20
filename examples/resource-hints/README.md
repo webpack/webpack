@@ -27,9 +27,10 @@ Two surfaces are involved:
    `<link>` list (preconnect, custom font, chunk/entry references).
 4. **callback** — `output.resourceHints: fn`. One hook that receives the auto
    `defaultHints` plus `{ entryName, entrypoint, hostType, compilation }` and
-   returns the final list. Replaces both the old `chunks: fn` and
-   `resolveDependencies` hooks; runs for HTML pages (`hostType === "html"`)
-   and JS-only entries (`hostType === "js"`).
+   returns the final list. Each hint carries `hostChunks` (the referencing chunk
+   names — Vite's `hostId`) so you can rewrite per origin chunk. Replaces both
+   the old `chunks: fn` and `resolveDependencies` hooks; runs for HTML pages
+   (`hostType === "html"`) and JS-only entries (`hostType === "js"`).
 5. **url-hints** — `module.parser.javascript.urlHints`. Rule-based
    `preload`/`prefetch` defaults for JS `new URL(...)` references. Same
    shape works under `parser.css.urlHints` (CSS `url(...)`) and
@@ -168,10 +169,13 @@ module.exports = [
 			chunkFilename: "[name].[contenthash:8].chunk.js",
 			module: true,
 			resourceHints: ({ entryName, hostType, defaultHints }) => {
-				// Rewrite every auto hint to the CDN and stamp a per-entry marker.
+				// Full control: drop / keep / add. `d.hostChunks` names the
+				// referencing chunk(s) (Vite's `hostId`) so you can act per origin.
+				// (In the HTML build path kept auto hints render with their prebuilt
+				// tag; the SSR / manifest path — scenario 7 — also honors rewrites.)
 				const cdn = "https://cdn.example.com";
 				return [
-					...defaultHints.map((d) => ({ ...d, href: `${cdn}${d.href}` })),
+					...defaultHints,
 					{
 						rel: "preload",
 						href: `${cdn}/hero-${entryName}-${hostType}.jpg`,
@@ -276,12 +280,12 @@ module.exports = [
 	},
 
 	/*
-	 * 7. SSR MANIFEST — a JS-only build (no HTML entry). `output.resourceHints:
-	 * true` enables the auto defaults; `output.resourceHintsManifest` writes them
-	 * to a JSON file (`{ [entry]: descriptors }`) at build time so the server can
-	 * inject the `<link>` tags without walking the chunk graph. The same data is
-	 * also on `stats.entrypoints[name].resourceHints` (opt in with
-	 * `stats: { chunkGroupResourceHints: true }`).
+	 * 7. SSR MANIFEST — a JS-only build (no HTML entry). The callback tags the
+	 * runtime chunk high-priority using `hostChunks` (Vite's `hostId`);
+	 * `output.resourceHintsManifest` writes the result to a JSON file
+	 * (`{ [entry]: descriptors }`) so the server can inject the `<link>`s without
+	 * walking the chunk graph. The same data is on
+	 * `stats.entrypoints[name].resourceHints` (`stats: { chunkGroupResourceHints: true }`).
 	 */
 	{
 		name: "ssr",
@@ -298,7 +302,10 @@ module.exports = [
 			assetModuleFilename: "assets/[name].[hash:8][ext]",
 			publicPath: "/static/",
 			module: true,
-			resourceHints: true,
+			resourceHints: ({ defaultHints }) =>
+				defaultHints.map((d) =>
+					d.hostChunks.includes("runtime") ? { ...d, fetchPriority: "high" } : d
+				),
 			resourceHintsManifest: "ssr-hints.json"
 		},
 		module: {
@@ -743,7 +750,7 @@ ssr:
     asset home.27a0472f.js 4.25 KiB [emitted] [immutable] [javascript module] (name: home)
     asset runtime.d0e8e650.js 4.13 KiB [emitted] [immutable] [javascript module] (name: runtime)
     asset product.0b6623b2.js 1.34 KiB [emitted] [immutable] [javascript module] (name: product)
-  asset ssr-hints.json 447 bytes [emitted]
+  asset ssr-hints.json 699 bytes [emitted]
   Entrypoint home 8.38 KiB = runtime.d0e8e650.js 4.13 KiB home.27a0472f.js 4.25 KiB 4 auxiliary assets
   Entrypoint product 5.46 KiB = runtime.d0e8e650.js 4.13 KiB product.0b6623b2.js 1.34 KiB 1 auxiliary asset
   runtime modules 2.37 KiB 6 modules
