@@ -130,6 +130,10 @@
 
 [require.context](require.context) example demonstrating automatic creation of contexts when using variables in `require`.
 
+## Resource Hints
+
+[resource-hints](resource-hints) demonstrates every variant of `output.resourceHints` (auto initial-chunk preload / prefetch / custom array / callback) and per-parser `module.parser.<type>.urlHints` rules for `new URL(...)` / CSS `url(...)` / HTML `<img src>`, plus reading `stats.entrypoints[name].resourceHints` in SSR.
+
 ## Require Resolve
 
 [require.resolve](require.resolve) example demonstrating how to cache clearing of modules with `require.resolve` and `require.cache`.

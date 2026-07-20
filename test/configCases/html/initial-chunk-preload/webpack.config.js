@@ -22,9 +22,9 @@ module.exports = {
 		chunkFilename: "[name].chunk.js",
 		crossOriginLoading: "anonymous",
 		html: {
-			integrity: true,
-			resourceHints: true
-		}
+			integrity: true
+		},
+		resourceHints: true
 	},
 	optimization: {
 		chunkIds: "named",

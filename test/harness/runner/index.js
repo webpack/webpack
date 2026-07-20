@@ -38,6 +38,7 @@ const [major] = getNodeVersion();
  * @property {EXPECTED_FUNCTION=} nonEsmThis
  * @property {boolean=} evaluateScriptOnAttached
  * @property {"jsdom"=} env
+ * @property {string=} currentScriptNonce nonce reflected on the fake `document.currentScript` (for CSP prefetch/preload tests)
  */
 
 /**
@@ -537,7 +538,11 @@ class TestRunner {
 			const CurrentScript = require("../../helpers/CurrentScript");
 
 			const oldCurrentScript = document.currentScript;
-			document.currentScript = new CurrentScript(current);
+			document.currentScript = new CurrentScript(
+				current,
+				undefined,
+				this.testConfig.currentScriptNonce
+			);
 			try {
 				fn();
 			} finally {
@@ -720,6 +725,21 @@ class TestRunner {
 					}
 				} else if (esm.status === ESModuleStatus.Unlinked) {
 					await link();
+				}
+
+				// `document.currentScript` is `null` inside an ES module, so
+				// to test the nonce-from-script-tag path for `output.module: true`
+				// bundles we register a fake `<script>` element whose `src`
+				// matches `import.meta.url` and whose `nonce` matches the
+				// `testConfig.currentScriptNonce`.
+				if (this.testConfig.currentScriptNonce && this._moduleScope.document) {
+					const document = this._moduleScope.document;
+					const script = document.createElement("script");
+					// Match `import.meta.url` (which doesn't carry the
+					// harness-injected `?testMeta` suffix).
+					script.src = pathToFileURL(modulePath).href;
+					script.nonce = this.testConfig.currentScriptNonce;
+					document.head.appendChild(script);
 				}
 
 				// Evaluate the module

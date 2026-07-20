@@ -96,7 +96,8 @@ module.exports = [
 		entry: { "authored-nohead": "./src/page-nohead.html" },
 		output: {
 			filename: "[name].js",
-			html: { inject: "head", resourceHints: true }
+			html: { inject: "head" },
+			resourceHints: true
 		},
 		optimization: { runtimeChunk: "single" },
 		experiments: { html: true },
@@ -119,7 +120,8 @@ module.exports = [
 		entry: { "authored-bare": "./src/page-bare-script.html" },
 		output: {
 			filename: "[name].js",
-			html: { inject: "head", resourceHints: true }
+			html: { inject: "head" },
+			resourceHints: true
 		},
 		optimization: { runtimeChunk: "single" },
 		experiments: { html: true },
@@ -138,7 +140,8 @@ module.exports = [
 		entry: { "authored-false-hints": "./src/page-false-hints.html" },
 		output: {
 			filename: "[name].js",
-			html: { inject: false, resourceHints: true }
+			html: { inject: false },
+			resourceHints: true
 		},
 		optimization: { runtimeChunk: "single" },
 		experiments: { html: true },

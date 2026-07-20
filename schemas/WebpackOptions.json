@@ -429,6 +429,9 @@
         },
         "url": {
           "$ref": "#/definitions/CssParserUrl"
+        },
+        "urlHints": {
+          "$ref": "#/definitions/UrlHints"
         }
       }
     },
@@ -576,6 +579,9 @@
         },
         "url": {
           "$ref": "#/definitions/CssParserUrl"
+        },
+        "urlHints": {
+          "$ref": "#/definitions/UrlHints"
         }
       }
     },
@@ -652,6 +658,9 @@
         },
         "url": {
           "$ref": "#/definitions/CssParserUrl"
+        },
+        "urlHints": {
+          "$ref": "#/definitions/UrlHints"
         }
       }
     },
@@ -2087,6 +2096,9 @@
           "description": "Transform the raw source before the html parser extracts dependencies. Receives the source string and a context (`{ module, resource }`) and must return the html string to parse. Useful for compiling a templating language (Handlebars, EJS, Eta, …) to html so that URLs the template emits are still picked up as webpack dependencies. Runs synchronously.",
           "instanceof": "Function",
           "tsType": "import('../lib/html/HtmlParser').HtmlTemplateFunction"
+        },
+        "urlHints": {
+          "$ref": "#/definitions/UrlHints"
         }
       }
     },
@@ -2615,6 +2627,9 @@
               "type": "boolean"
             }
           ]
+        },
+        "urlHints": {
+          "$ref": "#/definitions/UrlHints"
         },
         "worker": {
           "description": "Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
@@ -4355,6 +4370,9 @@
         "publicPath": {
           "$ref": "#/definitions/PublicPath"
         },
+        "resourceHints": {
+          "$ref": "#/definitions/ResourceHints"
+        },
         "scriptType": {
           "$ref": "#/definitions/ScriptType"
         },
@@ -4550,24 +4568,6 @@
             "type": "string"
           }
         },
-        "resourceHints": {
-          "description": "Resource-hint `<link>` tags injected into the HTML `<head>`. Off by default (webpack already loads the initial chunks via parallel `<script>` tags). `true` preloads the entry's initial dependency chunks (runtime, vendor, split) with `<link rel=\"modulepreload\">` (ES module output) or `<link rel=\"preload\" as=\"script\">` (classic output). An array of descriptors, or a function called per HTML page (with its entrypoint context and the auto `defaultHints` to spread in), provides custom hints. Each hint targets a literal `href`, a `chunk` name, or an `entry` name — chunk/entry URLs, content hashes, public path, `crossorigin` and SRI are resolved automatically. Dynamic `import()`s always stay on the on-demand runtime.",
-          "anyOf": [
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/HtmlResourceHint"
-              }
-            },
-            {
-              "type": "boolean"
-            },
-            {
-              "instanceof": "Function",
-              "tsType": "((context: { entryName: string, entrypoint: import('../lib/Entrypoint'), chunks: import('../lib/Chunk')[], compilation: import('../lib/Compilation'), defaultHints: { rel: 'modulepreload' | 'preload', chunk: string }[] }) => import('../lib/dependencies/HtmlEntryDependency').HtmlResourceHint[])"
-            }
-          ]
-        },
         "scriptLoading": {
           "description": "How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.",
           "enum": ["auto", "blocking", "defer"]
@@ -4711,6 +4711,9 @@
         },
         "publicPath": {
           "$ref": "#/definitions/PublicPath"
+        },
+        "resourceHints": {
+          "$ref": "#/definitions/ResourceHints"
         },
         "scriptType": {
           "$ref": "#/definitions/ScriptType"
@@ -5381,6 +5384,27 @@
         {
           "instanceof": "Function",
           "tsType": "((this: import('enhanced-resolve').Resolver, arg1: import('enhanced-resolve').Resolver) => void)"
+        }
+      ]
+    },
+    "ResourceHints": {
+      "description": "Resource-hint (`<link rel=\"prefetch\">` / `<link rel=\"preload\">` / `<link rel=\"modulepreload\">`) emission for extracted HTML entries and for URL-referenced assets carrying `webpackPrefetch` / `webpackPreload` (either from magic comments or from `module.parser.<type>.urlHints` rules). `true` auto-emits `<link rel=\"modulepreload\">` (ESM output) or `<link rel=\"preload\" as=\"script\">` (classic) for each of the entry's initial dependency chunks; `\"prefetch\"` uses `<link rel=\"prefetch\">`; an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: \"html\" | \"js\"`, `compilation`) and returns the final list (this same callback replaces the removed `resolveDependencies` hook). `false` disables chunk hints; URL-referenced asset hints from magic comments / `urlHints` rules still fire — via the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HtmlResourceHint"
+          }
+        },
+        {
+          "enum": ["prefetch"]
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((context: { entryName: string, entrypoint: import('../lib/Entrypoint'), hostType: 'html' | 'js', compilation: import('../lib/Compilation'), defaultHints: import('../lib/dependencies/HtmlEntryDependency').HtmlResourceHint[] }) => import('../lib/dependencies/HtmlEntryDependency').HtmlResourceHint[])"
         }
       ]
     },
@@ -6111,6 +6135,10 @@
           "description": "Limit of assets displayed in chunk groups.",
           "type": "number"
         },
+        "chunkGroupResourceHints": {
+          "description": "Include the resolved `<link>` resource-hint descriptors for each entrypoint (`entrypoints[name].resourceHints`). Combines `output.resourceHints.chunks` (initial-graph modulepreload/preload/prefetch) with `output.resourceHints.assets` (URL-referenced fonts / images / …). Lets SSR frameworks inject the hints server-side without walking the chunk graph themselves; the analogue of Vite's `build.ssrManifest`.",
+          "type": "boolean"
+        },
         "chunkGroups": {
           "description": "Display all chunk groups with the corresponding bundles.",
           "type": "boolean"
@@ -6590,6 +6618,53 @@
       "description": "A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.",
       "type": "string",
       "minLength": 1
+    },
+    "UrlHintRule": {
+      "description": "One default-hint rule for URL-referenced assets emitted by this parser (JS `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`). `test` / `include` / `exclude` match against the asset's request; omit all three to apply to every asset. Matching rules set the same fields a `webpackPrefetch` / `webpackPreload` / `webpackAs` / `webpackType` / `webpackMedia` / `webpackFetchPriority` magic comment would; explicit magic comments on the same URL still win.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "as": {
+          "description": "Default `as` attribute (script / style / font / image / …).",
+          "type": "string"
+        },
+        "exclude": {
+          "$ref": "#/definitions/RuleSetCondition"
+        },
+        "fetchPriority": {
+          "description": "Default fetchpriority for prefetch / preload links.",
+          "enum": ["low", "high", "auto", false]
+        },
+        "include": {
+          "$ref": "#/definitions/RuleSetCondition"
+        },
+        "media": {
+          "description": "Default `media` attribute (e.g. `\"(min-width: 800px)\"`).",
+          "type": "string"
+        },
+        "prefetch": {
+          "description": "When true, emit `<link rel=\"prefetch\">` for matching assets without an explicit hint comment.",
+          "type": "boolean"
+        },
+        "preload": {
+          "description": "When true, emit `<link rel=\"preload\">` for matching assets without an explicit hint comment.",
+          "type": "boolean"
+        },
+        "test": {
+          "$ref": "#/definitions/RuleSetCondition"
+        },
+        "type": {
+          "description": "Default `type` attribute (MIME).",
+          "type": "string"
+        }
+      }
+    },
+    "UrlHints": {
+      "description": "URL-referenced-asset default hint rules for this parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`).",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/UrlHintRule"
+      }
     },
     "Validate": {
       "description": "Enable validation of webpack configuration. Defaults to true in development mode. In production mode, defaults to true unless futureDefaults is enabled, then defaults to false.",

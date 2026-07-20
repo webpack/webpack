@@ -19,9 +19,7 @@ module.exports = {
 		filename: "[name].mjs",
 		chunkFilename: "[name].chunk.mjs",
 		module: true,
-		html: {
-			resourceHints: true
-		}
+		resourceHints: true
 	},
 	optimization: {
 		chunkIds: "named",

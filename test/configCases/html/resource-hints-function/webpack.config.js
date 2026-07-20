@@ -1,7 +1,7 @@
 "use strict";
 
-// Custom `output.html.resourceHints` (function form): called per HTML page with
-// its entrypoint context and the auto `defaultHints`, returning hints computed
+// Custom `output.resourceHints` (function form): called per HTML page with its
+// entrypoint context and the auto `defaultHints`, returning hints computed
 // from the page name and referencing another entry by name.
 
 const fs = require("fs");
@@ -19,17 +19,16 @@ module.exports = {
 	output: {
 		filename: "[name].js",
 		chunkFilename: "[name].chunk.js",
-		html: {
-			resourceHints: ({ entryName, defaultHints }) => {
-				// Spread the auto initial-graph preloads (`defaultHints`) and add
-				// custom hints computed from the page context.
-				if (!Array.isArray(defaultHints)) throw new Error("no defaultHints");
-				return [
-					...defaultHints,
-					{ rel: "preload", href: `/hero-${entryName}.jpg`, as: "image" },
-					{ rel: "prefetch", entry: "settings", as: "script" }
-				];
-			}
+		resourceHints: ({ entryName, hostType, defaultHints }) => {
+			if (hostType !== "html") return defaultHints;
+			// Spread the auto initial-graph preloads (`defaultHints`) and add
+			// custom hints computed from the page context.
+			if (!Array.isArray(defaultHints)) throw new Error("no defaultHints");
+			return [
+				...defaultHints,
+				{ rel: "preload", href: `/hero-${entryName}.jpg`, as: "image" },
+				{ rel: "prefetch", entry: "settings", as: "script" }
+			];
 		}
 	},
 	optimization: {

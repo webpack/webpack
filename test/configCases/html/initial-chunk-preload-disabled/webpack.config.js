@@ -1,8 +1,8 @@
 "use strict";
 
-// Resource hints are off by default (no `output.html.resourceHints`): the
-// entry's initial chunks are loaded via their `<script>` tags without any
-// `<link>` hints, since webpack already fetches them in parallel.
+// Resource hints are off by default (no `output.resourceHints`): the entry's
+// initial chunks are loaded via their `<script>` tags without any `<link>`
+// hints, since webpack already fetches them in parallel.
 
 const fs = require("fs");
 const path = require("path");
