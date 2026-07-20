@@ -2,6 +2,8 @@
 
 const ResourceHintPlugin = require("../lib/prefetch/ResourceHintPlugin");
 
+/** @typedef {import("../declarations/WebpackOptions").UrlHintRule} UrlHintRule */
+
 describe("ResourceHintPlugin", () => {
 	describe("matchUrlHints", () => {
 		it("returns {} for undefined/empty rules", () => {
@@ -24,6 +26,7 @@ describe("ResourceHintPlugin", () => {
 		});
 
 		it("catch-all rule (no test/include/exclude) matches every request", () => {
+			/** @type {UrlHintRule[]} */
 			const rules = [{ preload: true, fetchPriority: "high", as: "image" }];
 			expect(ResourceHintPlugin.matchUrlHints(rules, "any/file.jpg")).toEqual({
 				preload: true,
@@ -63,6 +66,7 @@ describe("ResourceHintPlugin", () => {
 		});
 
 		it("later matching rule overrides earlier one field-by-field", () => {
+			/** @type {UrlHintRule[]} */
 			const rules = [
 				{ prefetch: true, fetchPriority: "low", as: "image" },
 				{ test: /\.woff2$/, preload: true, as: "font", type: "font/woff2" }
@@ -149,19 +153,17 @@ describe("ResourceHintPlugin", () => {
 			});
 		});
 
-		it("magic-comment `false` overrides a rule-set flag", () => {
-			// This mirrors the precedence guarantee: an explicit `webpackPrefetch:
-			// false` must be able to opt out of a project-wide rule default.
+		it("only sets fields explicitly present on the parsed comment options", () => {
+			// Missing fields must NOT clobber existing dep state — the precedence
+			// contract is "later applyParsedHints wins per set field", nothing else.
 			const dep = /** @type {EXPECTED_ANY} */ ({
 				prefetch: true,
-				preload: true
+				fetchPriority: "low"
 			});
-			ResourceHintPlugin.applyParsedHints(dep, {
-				prefetch: false,
-				preload: false
-			});
-			expect(dep.prefetch).toBe(false);
-			expect(dep.preload).toBe(false);
+			ResourceHintPlugin.applyParsedHints(dep, { preload: true });
+			expect(dep.preload).toBe(true);
+			expect(dep.prefetch).toBe(true);
+			expect(dep.fetchPriority).toBe("low");
 		});
 	});
 
