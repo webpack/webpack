@@ -1146,4 +1146,67 @@ describe("JavascriptParser", () => {
 			expect(parser.getLocation({ loc })).toBe(loc);
 		});
 	});
+
+	describe("WebpackParser fast paths", () => {
+		const { WebpackParser } = require("../lib/javascript/syntax");
+
+		/**
+		 * @param {string} source source code
+		 * @returns {EXPECTED_ANY} program AST
+		 */
+		const parse = (source) =>
+			WebpackParser.parse(source, { ecmaVersion: 2022, lazyNodes: true });
+
+		it("shares one string between an escape-free quasi's raw and cooked", () => {
+			// eslint-disable-next-line no-template-curly-in-string
+			const tl = parse("`plain ${1} tail`").body[0].expression;
+			expect(tl.quasis[0].value.raw).toBe("plain ");
+			expect(tl.quasis[0].value.raw).toBe(tl.quasis[0].value.cooked);
+			expect(tl.quasis[1].value.raw).toBe(tl.quasis[1].value.cooked);
+		});
+
+		it("keeps raw and cooked distinct for quasis with escapes or CRLF", () => {
+			const esc = parse("`a\\nb`").body[0].expression.quasis[0].value;
+			expect(esc.raw).toBe("a\\nb");
+			expect(esc.cooked).toBe("a\nb");
+			const crlf = parse("`a\r\nb`").body[0].expression.quasis[0].value;
+			expect(crlf.raw).toBe("a\nb");
+			expect(crlf.cooked).toBe("a\nb");
+			const cr = parse("`a\rb`").body[0].expression.quasis[0].value;
+			expect(cr.raw).toBe("a\nb");
+			expect(cr.cooked).toBe("a\nb");
+		});
+
+		it("detects __proto__ redefinition in nested object literals", () => {
+			// exercises the pooled prop-clash records at two nesting depths
+			expect(() =>
+				parse("({ __proto__: 1, a: { __proto__: 2 }, __proto__: 3 })")
+			).toThrow(/Redefinition of __proto__/);
+			expect(() => parse("({ a: { __proto__: 1, __proto__: 2 } })")).toThrow(
+				/Redefinition of __proto__/
+			);
+			// reuse across sequential literals must reset the record
+			expect(() =>
+				parse("({ __proto__: 1 }); ({ __proto__: 2 });")
+			).not.toThrow();
+		});
+
+		it("validates regexp flags from the precomputed whitelist", () => {
+			expect(parse("/a/gimsy;").body[0].expression.regex.flags).toBe("gimsy");
+			expect(() => parse("/a/q;")).toThrow(/Invalid regular expression flag/);
+			expect(() => parse("/a/gg;")).toThrow(
+				/Duplicate regular expression flag/
+			);
+			// `v` needs ES2024 — invalid at the pinned ecmaVersion 2022
+			expect(() => parse("/a/v;")).toThrow(/Invalid regular expression flag/);
+		});
+
+		it("answers repeated ASI probes across a comment-holding gap", () => {
+			// the newline scan memoizes into the tokenizer's flag; both outcomes
+			const asi = parse("function f() { return /*\n*/ 1 }");
+			expect(asi.body[0].body.body[0].argument).toBeNull();
+			const noAsi = parse("function f() { return /* x */ 1 }");
+			expect(noAsi.body[0].body.body[0].argument.value).toBe(1);
+		});
+	});
 });
