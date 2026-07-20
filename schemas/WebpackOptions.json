@@ -2449,6 +2449,17 @@
           "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
           "type": "boolean"
         },
+        "dynamicImportCssPreload": {
+          "description": "Auto-emit `<link rel=\"preload\" as=\"style\">` for the CSS of every dynamically imported (`import()`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike `dynamicImportPreload`, the JavaScript itself is not preloaded. `true` uses the default order; a number sets the preload order.",
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
         "dynamicImportFetchPriority": {
           "description": "Specifies global fetchPriority for dynamic import.",
           "enum": ["low", "high", "auto", false]
@@ -5450,7 +5461,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((context: { entryName: string, entrypoint: import('../lib/Entrypoint'), hostType: 'html' | 'js', compilation: import('../lib/Compilation'), defaultHints: import('../lib/dependencies/HtmlEntryDependency').HtmlResourceHint[] }) => import('../lib/dependencies/HtmlEntryDependency').HtmlResourceHint[])"
+          "tsType": "((context: { entryName: string, entrypoint: import('../lib/Entrypoint'), hostType: 'html' | 'js', compilation: import('../lib/Compilation'), defaultHints: (import('../lib/dependencies/HtmlEntryDependency').HtmlResourceHint & { hostChunks: string[] })[] }) => import('../lib/dependencies/HtmlEntryDependency').HtmlResourceHint[])"
         }
       ]
     },

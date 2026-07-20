@@ -13046,6 +13046,11 @@ declare interface JavascriptParserOptions {
 	deferImport?: boolean;
 
 	/**
+	 * Auto-emit `<link rel="preload" as="style">` for the CSS of every dynamically imported (`import()`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike `dynamicImportPreload`, the JavaScript itself is not preloaded. `true` uses the default order; a number sets the preload order.
+	 */
+	dynamicImportCssPreload?: number | boolean;
+
+	/**
 	 * Specifies global fetchPriority for dynamic import.
 	 */
 	dynamicImportFetchPriority?: false | "auto" | "low" | "high";
@@ -19311,7 +19316,9 @@ declare interface Output {
 				entrypoint: Entrypoint;
 				hostType: "html" | "js";
 				compilation: Compilation;
-				defaultHints: HtmlResourceHintHtmlEntryDependency[];
+				defaultHints: (HtmlResourceHintHtmlEntryDependency & {
+					hostChunks: string[];
+				})[];
 		  }) => HtmlResourceHintHtmlEntryDependency[]);
 
 	/**
@@ -19739,7 +19746,9 @@ declare interface OutputNormalized {
 				entrypoint: Entrypoint;
 				hostType: "html" | "js";
 				compilation: Compilation;
-				defaultHints: HtmlResourceHintHtmlEntryDependency[];
+				defaultHints: (HtmlResourceHintHtmlEntryDependency & {
+					hostChunks: string[];
+				})[];
 		  }) => HtmlResourceHintHtmlEntryDependency[]);
 
 	/**
@@ -20606,6 +20615,11 @@ type PureCondition =
 declare interface RawChunkGroupOptions {
 	preloadOrder?: number;
 	prefetchOrder?: number;
+
+	/**
+	 * preload only the chunk's CSS (`as="style"`), not its JS
+	 */
+	cssPreloadOrder?: number;
 	fetchPriority?: "auto" | "low" | "high";
 }
 type RawDevTool = string | false;

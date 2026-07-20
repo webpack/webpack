@@ -51,6 +51,9 @@ Two surfaces are involved:
 10. **url-hints-global** — `output.urlHints`. Project-wide shorthand for the
     same `urlHints` list under every parser (JS / CSS / HTML). Parser-scoped
     rules and magic comments still override it.
+11. **async-css-preload** — `module.parser.javascript.dynamicImportCssPreload`.
+    Auto `<link rel="preload" as="style">` for a dynamically imported chunk's
+    CSS (parallel with the chunk; the JS itself is not preloaded).
 
 # webpack.config.js
 
@@ -403,6 +406,30 @@ module.exports = [
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
 		experiments: { html: true, outputModule: true }
+	},
+
+	/*
+	 * 11. ASYNC-CHUNK CSS PRELOAD — `parser.javascript.dynamicImportCssPreload`.
+	 * Auto-emit `<link rel="preload" as="style">` for a dynamically imported
+	 * chunk's CSS so it fetches in parallel with the chunk instead of after its
+	 * JS parses. Unlike `dynamicImportPreload`, the JS itself is not preloaded.
+	 */
+	{
+		name: "async-css-preload",
+		mode: "production",
+		entry: { home: { import: "./src/routes/async-host.js", html: true } },
+		output: {
+			path: distFor("async-css-preload"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			module: true,
+			resourceHints: true
+		},
+		module: {
+			parser: { javascript: { dynamicImportCssPreload: true } }
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true, css: true }
 	}
 ];
 ```
@@ -537,7 +564,9 @@ app.get("/product/:id", (req, res) => {
 own subsystem — use `module.parser.javascript.dynamicImportPrefetch` /
 `dynamicImportPreload` / `dynamicImportFetchPriority`, or per-call
 `/* webpackPrefetch: true */` magic comments. Those route through
-webpack's existing on-demand chunk-load runtime.
+webpack's existing on-demand chunk-load runtime. `dynamicImportCssPreload`
+is a CSS-only variant: it preloads a dynamically imported chunk's stylesheet
+(`as="style"`) in parallel with the chunk, without preloading its JS.
 
 # Precedence
 
@@ -889,4 +918,52 @@ url-hints-global:
       [used exports unknown]
       entry ./src/routes/home-with-assets.js __html_545c7cf9_0
   url-hints-global (webpack X.X.X) compiled successfully
+
+async-css-preload:
+  assets by path *.js 17.9 KiB
+    asset runtime.d394ae11.js 13.3 KiB [emitted] [immutable] [javascript module] (name: runtime)
+    asset home.3b1666bf.js 1.33 KiB [emitted] [immutable] [javascript module] (name: home)
+    asset __html_f953a09c_0.23a3e02c.chunk.js 1.22 KiB [emitted] [immutable] [javascript module] (name: __html_f953a09c_0)
+    asset mid.abf213d5.chunk.js 1.14 KiB [emitted] [immutable] [javascript module] (name: mid)
+    asset styled-route.89138c94.chunk.js 934 bytes [emitted] [immutable] [javascript module] (name: styled-route)
+  assets by chunk 0 bytes (auxiliary name: styled-route)
+    asset 31d6cfe0d16ae931b73c.woff 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff] (auxiliary name: styled-route)
+    asset 31d6cfe0d16ae931b73c.woff2 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff2] (auxiliary name: styled-route)
+  asset styled-route.84a7fce8.chunk.css 313 bytes [emitted] [immutable] (name: styled-route)
+  asset home.7d2447ba.html 237 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 14.7 KiB (237 bytes) = runtime.d394ae11.js 13.3 KiB home.3b1666bf.js 1.33 KiB 1 auxiliary asset
+  Entrypoint __html_f953a09c_0 14.6 KiB = runtime.d394ae11.js 13.3 KiB __html_f953a09c_0.23a3e02c.chunk.js 1.22 KiB
+  runtime modules 8.45 KiB 13 modules
+  cacheable modules 574 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url) 104 bytes (html) 181 bytes (css)
+    modules by path ./src/ 460 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url)
+      javascript modules 460 bytes
+        ./src/routes/async-host.js 310 bytes [built] [code generated]
+          [used exports unknown]
+          entry ./src/routes/async-host.js __html_f953a09c_0
+        ./src/routes/async-mid.js 90 bytes [built] [code generated]
+          [exports: default]
+          [used exports unknown]
+          import() ./async-mid.js ./src/routes/async-host.js 4:0-54
+        ./src/routes/async-styled.js 60 bytes [built] [code generated]
+          [exports: default]
+          [used exports unknown]
+          import() ./async-styled.js ./src/routes/async-mid.js 2:1-67
+      asset modules 2 bytes (asset) 84 bytes (asset-url)
+        ./src/fonts/inter.woff2 1 bytes (asset) 42 bytes (asset-url) [built] [code generated]
+          [no exports]
+          [used exports unknown]
+          css url() ../fonts/inter.woff2 css ./src/styles/app.css 4:6-28
+        ./src/fonts/inter.woff 1 bytes (asset) 42 bytes (asset-url) [built] [code generated]
+          [no exports]
+          [used exports unknown]
+          css url() ../fonts/inter.woff css ./src/styles/app.css 5:6-27
+    data:text/html,<!doctype html><html><head><script src="./src/routes/async-host.js"></script></hea...(truncated) 114 bytes (javascript) 104 bytes (html) [built] [code generated]
+      [exports: default]
+      [used exports unknown]
+      entry data:text/html,<!doctype html><.. home
+    css ./src/styles/app.css 181 bytes [built] [code generated]
+      [no exports]
+      [used exports unknown]
+      harmony side effect evaluation ../styles/app.css ./src/routes/async-styled.js 1:0-27
+  async-css-preload (webpack X.X.X) compiled successfully
 ```

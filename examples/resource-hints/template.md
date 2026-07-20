@@ -51,6 +51,9 @@ Two surfaces are involved:
 10. **url-hints-global** — `output.urlHints`. Project-wide shorthand for the
     same `urlHints` list under every parser (JS / CSS / HTML). Parser-scoped
     rules and magic comments still override it.
+11. **async-css-preload** — `module.parser.javascript.dynamicImportCssPreload`.
+    Auto `<link rel="preload" as="style">` for a dynamically imported chunk's
+    CSS (parallel with the chunk; the JS itself is not preloaded).
 
 # webpack.config.js
 
@@ -152,7 +155,9 @@ app.get("/product/:id", (req, res) => {
 own subsystem — use `module.parser.javascript.dynamicImportPrefetch` /
 `dynamicImportPreload` / `dynamicImportFetchPriority`, or per-call
 `/* webpackPrefetch: true */` magic comments. Those route through
-webpack's existing on-demand chunk-load runtime.
+webpack's existing on-demand chunk-load runtime. `dynamicImportCssPreload`
+is a CSS-only variant: it preloads a dynamically imported chunk's stylesheet
+(`as="style"`) in parallel with the chunk, without preloading its JS.
 
 # Precedence
 

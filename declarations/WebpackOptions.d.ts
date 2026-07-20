@@ -641,7 +641,9 @@ export type ResourceHints =
 			entrypoint: import("../lib/Entrypoint");
 			hostType: "html" | "js";
 			compilation: import("../lib/Compilation");
-			defaultHints: import("../lib/dependencies/HtmlEntryDependency").HtmlResourceHint[];
+			defaultHints: (import("../lib/dependencies/HtmlEntryDependency").HtmlResourceHint & {
+				hostChunks: string[];
+			})[];
 	  }) => import("../lib/dependencies/HtmlEntryDependency").HtmlResourceHint[]);
 /**
  * Emit a JSON manifest of the resolved resource hints for each entrypoint (the same descriptors as `stats.entrypoints[].resourceHints`) as an output asset at this path. Lets an SSR server inject the `<link>` tags itself without walking the chunk graph — webpack's analogue of Vite's `build.ssrManifest`. Empty when `output.resourceHints` is `"none"`.
@@ -3980,6 +3982,10 @@ export interface JavascriptParserOptions {
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
 	 */
 	deferImport?: boolean;
+	/**
+	 * Auto-emit `<link rel="preload" as="style">` for the CSS of every dynamically imported (`import()`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike `dynamicImportPreload`, the JavaScript itself is not preloaded. `true` uses the default order; a number sets the preload order.
+	 */
+	dynamicImportCssPreload?: number | boolean;
 	/**
 	 * Specifies global fetchPriority for dynamic import.
 	 */

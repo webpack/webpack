@@ -346,5 +346,29 @@ module.exports = [
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
 		experiments: { html: true, outputModule: true }
+	},
+
+	/*
+	 * 11. ASYNC-CHUNK CSS PRELOAD — `parser.javascript.dynamicImportCssPreload`.
+	 * Auto-emit `<link rel="preload" as="style">` for a dynamically imported
+	 * chunk's CSS so it fetches in parallel with the chunk instead of after its
+	 * JS parses. Unlike `dynamicImportPreload`, the JS itself is not preloaded.
+	 */
+	{
+		name: "async-css-preload",
+		mode: "production",
+		entry: { home: { import: "./src/routes/async-host.js", html: true } },
+		output: {
+			path: distFor("async-css-preload"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			module: true,
+			resourceHints: true
+		},
+		module: {
+			parser: { javascript: { dynamicImportCssPreload: true } }
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true, css: true }
 	}
 ];
