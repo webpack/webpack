@@ -391,6 +391,19 @@ describe("CssSyntax — parser entry points", () => {
 		expect(rules).toHaveLength(1);
 	});
 
+	it("shares one empty child-rules list across rules with only declarations", () => {
+		// A body with no nested rules returns the shared frozen empty list rather
+		// than allocating a fresh `[]` per rule (see `_EMPTY_LIST`).
+		const { rules } = parseABlocksContents("x:1;y:2", 0);
+		expect(rules).toHaveLength(0);
+		const ss = parseAStylesheet(".a{x:1}.b{y:2}");
+		const a = /** @type {import("../lib/css/syntax").Rule} */ (ss.rules[0]);
+		const b = /** @type {import("../lib/css/syntax").Rule} */ (ss.rules[1]);
+		expect(a.childRules).toHaveLength(0);
+		expect(a.childRules).toBe(b.childRules);
+		expect(Object.isFrozen(a.childRules)).toBe(true);
+	});
+
 	it("re-parses a nested rule whose selector starts <ident><colon> as a qualified rule", () => {
 		// consume-a-declaration bails on the top-level `{` (step 8 would reject
 		// it) and the caller re-parses the input as a qualified rule (CSS Nesting)
