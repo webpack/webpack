@@ -1154,8 +1154,16 @@ describe("JavascriptParser", () => {
 		 * @param {string} source source code
 		 * @returns {EXPECTED_ANY} program AST
 		 */
+		// `lazyNodes` is webpack's private extension of acorn's Options
+		const parseOptions = /** @type {import("acorn").Options} */ (
+			/** @type {unknown} */ ({ ecmaVersion: 2022, lazyNodes: true })
+		);
+		/**
+		 * @param {string} source source code
+		 * @returns {EXPECTED_ANY} program AST (loosely typed for node access)
+		 */
 		const parse = (source) =>
-			WebpackParser.parse(source, { ecmaVersion: 2022, lazyNodes: true });
+			/** @type {EXPECTED_ANY} */ (WebpackParser.parse(source, parseOptions));
 
 		it("shares one string between an escape-free quasi's raw and cooked", () => {
 			// eslint-disable-next-line no-template-curly-in-string
