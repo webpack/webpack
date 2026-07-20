@@ -3948,6 +3948,20 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 		expect(nodes[4999].attributes[0].value).toBe("4999");
 	});
 
+	it("re-shrinks the columns after a pathologically large document", () => {
+		// > 64 Ki nodes and attributes grow the columns past the shrink
+		// threshold; the release after the parse re-shrinks them and the next
+		// parse must work from the re-grown baseline
+		let src = "";
+		for (let i = 0; i < 70000; i++) src += `<i data-n="${i}"></i>`;
+		const nodes = body(src);
+		expect(nodes).toHaveLength(70000);
+		expect(nodes[69999].attributes[0].value).toBe("69999");
+		const small = body('<b class="c">x</b>');
+		expect(small).toHaveLength(1);
+		expect(small[0].attributes[0].value).toBe("c");
+	});
+
 	it("merges texts left adjacent by a skipped comment", () => {
 		const nodes = bodyOf("a<!--c-->b", { comments: true });
 		expect(nodes).toEqual([

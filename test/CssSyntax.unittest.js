@@ -391,6 +391,31 @@ describe("CssSyntax — parser entry points", () => {
 		expect(rules).toHaveLength(1);
 	});
 
+	it("re-parses a nested rule whose selector starts <ident><colon> as a qualified rule", () => {
+		// consume-a-declaration bails on the top-level `{` (step 8 would reject
+		// it) and the caller re-parses the input as a qualified rule (CSS Nesting)
+		const { decls, rules } = parseABlocksContents(
+			"a:hover span { color: red }"
+		);
+		expect(decls).toHaveLength(0);
+		expect(rules).toHaveLength(1);
+		const rule = /** @type {import("../lib/css/syntax").Rule} */ (rules[0]);
+		expect(rule.type).toBe(NodeType.QualifiedRule);
+		expect(rule.declarations).toHaveLength(1);
+	});
+
+	it("keeps a top-level {}-block in a custom property value", () => {
+		const { decls } = parseABlocksContents("--x: { a: b }; color: red");
+		expect(decls).toHaveLength(2);
+		expect(
+			/** @type {import("../lib/css/syntax").Declaration} */ (decls[0]).name
+		).toBe("--x");
+	});
+
+	it("parseADeclaration rejects a non-custom declaration with a {}-block value", () => {
+		expect(parseADeclaration("color: { a: b }")).toBeUndefined();
+	});
+
 	it("parseAStylesheet builds nested rules and a full range", () => {
 		const src = "@media screen{.a{color:red}}b{y:2}";
 		const ss = parseAStylesheet(src);
@@ -547,6 +572,31 @@ describe("CssSyntax — SourceProcessor", () => {
 			.use({ [NodeType.Comment]: (path) => seen.push(path.source()) })
 			.process("a{color:red/*!c*/}");
 		expect(seen).toEqual(["/*!c*/"]);
+	});
+
+	it("re-shrinks the SoA buffers after a pathologically large rule", () => {
+		// one top-level rule with > 64 Ki component-value nodes grows the SoA
+		// buffers past the shrink threshold; the next parse must work after the
+		// post-parse release re-shrinks them
+		const big = `a{b:${"x ".repeat(70000)}}`;
+		let idents = 0;
+		new SourceProcessor()
+			.use({ [NodeType.Ident]: () => idents++ })
+			.process(big);
+		// 70000 value idents + the selector ident
+		expect(idents).toBe(70001);
+		/** @type {string[]} */
+		const names = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
+					[NodeType.Declaration]: (
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => names.push(path.name())
+				})
+			)
+			.process("a{c:1}");
+		expect(names).toEqual(["c"]);
 	});
 
 	it('as: "block-contents" walks a block\'s contents (style attribute)', () => {
