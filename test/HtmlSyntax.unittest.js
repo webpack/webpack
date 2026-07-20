@@ -15,7 +15,6 @@ const {
 	QUOTE_NONE,
 	QUOTE_SINGLE,
 	decodeEntities,
-	decodeEntitiesWithMap,
 	escapeAttribute,
 	escapeText,
 	parseHtml: parseHtmlRefs,
@@ -2831,21 +2830,21 @@ describe("tokenize", () => {
 		});
 	});
 
-	describe("decodeEntitiesWithMap", () => {
+	describe("decodeEntities with map", () => {
 		it("should return the input and no map when nothing decodes", () => {
-			expect(decodeEntitiesWithMap("plain text")).toEqual({
+			expect(decodeEntities("plain text", false, true)).toEqual({
 				text: "plain text",
 				map: undefined
 			});
 			// Attribute rule keeps `&amp=1` literal — no map either.
-			expect(decodeEntitiesWithMap("&amp=1", true)).toEqual({
+			expect(decodeEntities("&amp=1", true, true)).toEqual({
 				text: "&amp=1",
 				map: undefined
 			});
 		});
 
 		it("should map decoded boundaries back to raw offsets", () => {
-			const { text, map } = decodeEntitiesWithMap("a&amp;b", true);
+			const { text, map } = decodeEntities("a&amp;b", true, true);
 			expect(text).toBe("a&b");
 			// Boundaries: `a` 0, decoded `&` starts at raw 1, `b` at raw 6, end 7.
 			expect(map).toEqual([0, 1, 6, 7]);
@@ -2859,7 +2858,7 @@ describe("tokenize", () => {
 		});
 
 		it("should map around numeric references and trailing text", () => {
-			const { text, map } = decodeEntitiesWithMap("x&#32;yz", true);
+			const { text, map } = decodeEntities("x&#32;yz", true, true);
 			expect(text).toBe("x yz");
 			expect(map).toEqual([0, 1, 6, 7, 8]);
 		});
