@@ -599,6 +599,12 @@ describe("CssSyntax — SourceProcessor", () => {
 			.process(big);
 		// 70000 value idents + the selector ident
 		expect(idents).toBe(70001);
+		// again: the regrow-hint path must restore exactly enough capacity
+		idents = 0;
+		new SourceProcessor()
+			.use({ [NodeType.Ident]: () => idents++ })
+			.process(big);
+		expect(idents).toBe(70001);
 		/** @type {string[]} */
 		const names = [];
 		new SourceProcessor()
