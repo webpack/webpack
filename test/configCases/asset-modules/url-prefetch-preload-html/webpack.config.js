@@ -9,13 +9,16 @@ module.exports = {
 	},
 	output: {
 		assetModuleFilename: "[name][ext]",
-		publicPath: "https://example.com/public/",
-		// Project-wide default — `<img src>` (and other URL-referenced
-		// assets in HTML) get a `<link rel="prefetch">` injected at
-		// chunk startup, same machinery as `new URL(...)` in JS and
-		// `url(...)` in CSS.
-		resourceHints: {
-			assets: [{ test: /\.png$/, prefetch: true, fetchPriority: "low" }]
+		publicPath: "https://example.com/public/"
+	},
+	module: {
+		// `<img src>` (and other URL-referenced HTML sources) get a
+		// `<link rel="prefetch">` injected at chunk startup, same
+		// machinery as `new URL(...)` in JS and `url(...)` in CSS.
+		parser: {
+			html: {
+				urlHints: [{ test: /\.png$/, prefetch: true, fetchPriority: "low" }]
+			}
 		}
 	}
 };

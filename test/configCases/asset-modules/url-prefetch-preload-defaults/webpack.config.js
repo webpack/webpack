@@ -6,19 +6,17 @@ module.exports = {
 	target: "web",
 	output: {
 		assetModuleFilename: "[name][ext]",
-		publicPath: "https://example.com/public/",
-		// Project-wide defaults — apply to every `new URL(..., import.meta.url)`
-		// without an explicit `webpackPrefetch` / `webpackPreload` comment.
-		// Lives on `output` (not on the JS parser) so the same defaults can
-		// later also be honored by CSS / HTML URL references.
-		resourceHints: {
-			assets: {
-				prefetch: true,
-				fetchPriority: "low"
-			}
-		}
+		publicPath: "https://example.com/public/"
 	},
 	module: {
+		// Project-wide defaults for `new URL(..., import.meta.url)` — the JS
+		// parser applies them to every URL without an explicit `webpackPrefetch` /
+		// `webpackPreload` comment.
+		parser: {
+			javascript: {
+				urlHints: [{ prefetch: true, fetchPriority: "low" }]
+			}
+		},
 		rules: [
 			{
 				test: /\.(png|woff2)$/,

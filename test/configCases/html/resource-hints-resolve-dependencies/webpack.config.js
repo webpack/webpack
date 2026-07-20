@@ -1,9 +1,11 @@
 "use strict";
 
-// Vite-style `resolveDependencies(deps, { hostType, entryName, compilation })`
-// escape hatch: filter / rewrite the entrypoint's `<link>` descriptors before
-// they land in `stats.entrypoints[name].resourceHints`. Common uses: swap
-// URLs to a CDN, drop hints by route, add SSR-only entries.
+// Vite-style filter/rewrite hook: `output.resourceHints: fn` receives the auto
+// `defaultHints` for an entrypoint plus context (`entryName`, `entrypoint`,
+// `hostType`, `compilation`) and returns the final descriptor list. This same
+// callback applies both to the HTML `<head>` emission and to
+// `stats.entrypoints[name].resourceHints`. Common uses: swap URLs to a CDN,
+// drop hints by route, add SSR-only entries.
 
 const fs = require("fs");
 const path = require("path");
@@ -21,21 +23,19 @@ module.exports = {
 		chunkFilename: "[name].chunk.mjs",
 		module: true,
 		assetModuleFilename: "[name][ext]",
-		resourceHints: {
-			resolveDependencies: (deps, { entryName, hostType }) => {
-				// Rewrite every href through a "CDN" origin, drop the PNG,
-				// and stamp the entry name onto a `data-entry` marker via
-				// a synthetic descriptor (returned last).
-				const kept = deps
-					.filter((d) => d.href !== "image.png")
-					.map((d) => ({ ...d, href: `https://cdn.example.com/${d.href}` }));
-				kept.push({
-					rel: "preload",
-					href: `https://cdn.example.com/marker-${entryName}-${hostType}`,
-					as: "fetch"
-				});
-				return kept;
-			}
+		resourceHints: ({ entryName, hostType, defaultHints }) => {
+			// Rewrite every href through a "CDN" origin, drop the PNG,
+			// and stamp the entry name onto a `data-entry` marker via
+			// a synthetic descriptor (returned last).
+			const kept = defaultHints
+				.filter((d) => d.href !== "image.png")
+				.map((d) => ({ ...d, href: `https://cdn.example.com/${d.href}` }));
+			kept.push({
+				rel: "preload",
+				href: `https://cdn.example.com/marker-${entryName}-${hostType}`,
+				as: "fetch"
+			});
+			return kept;
 		}
 	},
 	optimization: { chunkIds: "named" },

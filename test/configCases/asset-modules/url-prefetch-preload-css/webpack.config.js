@@ -1,5 +1,10 @@
 "use strict";
 
+const rules = [
+	{ test: /\.(png|webp|jpg)$/, prefetch: true, fetchPriority: "low" },
+	{ test: /\.woff2$/, preload: true, fetchPriority: "high" }
+];
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
@@ -9,26 +14,15 @@ module.exports = {
 	},
 	output: {
 		assetModuleFilename: "[name][ext]",
-		publicPath: "https://example.com/public/",
-		// Array form — `test` / `include` / `exclude` scope each rule.
-		// Use the standard `ModuleFilenameHelpers` matcher, so the same
-		// regex / string / function shapes work as for `module.rules`.
-		resourceHints: {
-			assets: [
-				{
-					test: /\.(png|webp|jpg)$/,
-					prefetch: true,
-					fetchPriority: "low"
-				},
-				{
-					test: /\.woff2$/,
-					preload: true,
-					fetchPriority: "high"
-				}
-			]
-		}
+		publicPath: "https://example.com/public/"
 	},
 	module: {
+		// Same `urlHints` set on both JS and CSS parsers — the JS `new URL(...)`
+		// pipeline and the CSS `url(...)` pipeline each apply their own rules.
+		parser: {
+			javascript: { urlHints: rules },
+			css: { urlHints: rules }
+		},
 		rules: [
 			{
 				test: /\.(png|woff2)$/,

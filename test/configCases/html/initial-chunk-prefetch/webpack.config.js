@@ -1,6 +1,6 @@
 "use strict";
 
-// `output.resourceHints.chunks: "prefetch"` — auto-emit `<link rel="prefetch">`
+// `output.resourceHints: "prefetch"` — auto-emit `<link rel="prefetch">`
 // for the entry's initial dependency chunks (Rsbuild `performance.prefetch = true`
 // equivalent). Prefetch is an idle-time hint, so `as`/`integrity`/`nonce` are
 // not required — the tag stays minimal.
@@ -20,9 +20,7 @@ module.exports = {
 		filename: "[name].mjs",
 		chunkFilename: "[name].chunk.mjs",
 		module: true,
-		resourceHints: {
-			chunks: "prefetch"
-		}
+		resourceHints: "prefetch"
 	},
 	optimization: {
 		chunkIds: "named",

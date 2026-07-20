@@ -1,6 +1,6 @@
 "use strict";
 
-// Custom `output.resourceHints.chunks` (array form): literal hrefs (preconnect,
+// Custom `output.resourceHints` (array form): literal hrefs (preconnect,
 // font), an `entry` reference (expanded to its chunk URLs) and a `chunk`
 // reference (resolved + de-duplicated against the auto initial-graph preload).
 
@@ -23,26 +23,24 @@ module.exports = {
 		html: {
 			integrity: true
 		},
-		resourceHints: {
-			chunks: [
-				{ rel: "preconnect", href: "https://cdn.example.com" },
-				{
-					rel: "preload",
-					href: "/fonts/inter.woff2",
-					as: "font",
-					type: "font/woff2",
-					crossorigin: true
-				},
-				{ rel: "prefetch", entry: "second" },
-				{ rel: "preload", chunk: "runtime" },
-				{ rel: "preload", chunk: "second", integrity: false },
-				// Unresolvable/empty descriptors are silently dropped.
-				{ rel: "preconnect" },
-				{ rel: "preload", chunk: "does-not-exist" },
-				{ rel: "prefetch", entry: "does-not-exist" },
-				{ rel: "preload" }
-			]
-		}
+		resourceHints: [
+			{ rel: "preconnect", href: "https://cdn.example.com" },
+			{
+				rel: "preload",
+				href: "/fonts/inter.woff2",
+				as: "font",
+				type: "font/woff2",
+				crossorigin: true
+			},
+			{ rel: "prefetch", entry: "second" },
+			{ rel: "preload", chunk: "runtime" },
+			{ rel: "preload", chunk: "second", integrity: false },
+			// Unresolvable/empty descriptors are silently dropped.
+			{ rel: "preconnect" },
+			{ rel: "preload", chunk: "does-not-exist" },
+			{ rel: "prefetch", entry: "does-not-exist" },
+			{ rel: "preload" }
+		]
 	},
 	optimization: {
 		chunkIds: "named",

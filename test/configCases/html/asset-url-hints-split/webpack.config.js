@@ -21,11 +21,16 @@ module.exports = {
 		filename: "[name].mjs",
 		chunkFilename: "[name].chunk.mjs",
 		module: true,
-		assetModuleFilename: "[name][ext]",
-		resourceHints: {
-			// Rule-based hint for images in addition to the magic comment on
-			// the font — proves both channels reach the HTML head.
-			assets: [{ test: /\.png$/, prefetch: true, fetchPriority: "low" }]
+		assetModuleFilename: "[name][ext]"
+	},
+	module: {
+		// Rule-based hint for images in addition to the magic comment on the
+		// font — proves both channels reach the HTML head. Set on the JS parser
+		// because the image reference is a JS `new URL(...)`.
+		parser: {
+			javascript: {
+				urlHints: [{ test: /\.png$/, prefetch: true, fetchPriority: "low" }]
+			}
 		}
 	},
 	optimization: {
