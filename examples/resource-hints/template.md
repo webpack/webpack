@@ -36,9 +36,16 @@ Two surfaces are involved:
 6. **url-hints-scoped** — `module.rules[].parser.urlHints`. Because parser
    options are scope-aware, a rule can narrow `urlHints` to a subtree
    (e.g. critical routes upgrade `prefetch` → `preload`).
-7. **ssr** — `stats: { chunkGroupResourceHints: true }` + `output.resourceHints`.
-   JS-only build; hints land in `stats.entrypoints[name].resourceHints` and
-   the server renders them into the initial HTML shell.
+7. **ssr** — `output.resourceHintsManifest` + `output.resourceHints`. JS-only
+   build; hints are written to a JSON file (`{ [entry]: descriptors }`) and are
+   also on `stats.entrypoints[name].resourceHints`. The server renders them into
+   the initial HTML shell.
+8. **font-preload** — `module.parser.css.fontPreload: true`. Auto-emit
+   `<link rel="preload" as="font">` for the primary `@font-face` `src` in the
+   initial CSS. Only the first url per `@font-face` is preloaded.
+9. **none** — `output.resourceHints: "none"`. Hard off switch: no `<link>`
+   anywhere and empty stats / manifest. (`false` only disables the auto chunk
+   hints; URL-asset hints keep firing.)
 
 # webpack.config.js
 
@@ -58,7 +65,31 @@ _{{src/routes/home.js}}_
 _{{src/routes/home-with-assets.js}}_
 ```
 
-# SSR: reading the stats manifest
+# src/routes/home-with-css.js
+
+```javascript
+_{{src/routes/home-with-css.js}}_
+```
+
+# src/styles/app.css
+
+```css
+_{{src/styles/app.css}}_
+```
+
+# SSR: the manifest file
+
+With `output.resourceHintsManifest: "ssr-hints.json"`, webpack writes the
+manifest for you during the build — no stats plumbing needed:
+
+```js
+// dist/ssr/ssr-hints.json
+const manifest = require("./dist/ssr/ssr-hints.json");
+// { "home": [ { rel, href, as?, type?, media?, fetchPriority? }, ... ], "product": [ ... ] }
+```
+
+Prefer computing it in-process (e.g. custom filtering)? The same data is on
+`stats.entrypoints[name].resourceHints`:
 
 ```js
 const webpack = require("webpack");

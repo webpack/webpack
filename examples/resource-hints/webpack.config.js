@@ -87,7 +87,8 @@ module.exports = [
 				},
 				// Chunk / entry references — webpack fills in the emitted filename.
 				{ rel: "modulepreload", chunk: "runtime" },
-				{ rel: "prefetch", entry: "settings" }
+				// `fetchPriority` is emitted on prefetch too (spec draft allows it).
+				{ rel: "prefetch", entry: "settings", fetchPriority: "low" }
 			]
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
@@ -220,10 +221,11 @@ module.exports = [
 
 	/*
 	 * 7. SSR MANIFEST — a JS-only build (no HTML entry). `output.resourceHints:
-	 * true` enables the auto defaults, `stats: { chunkGroupResourceHints: true }`
-	 * surfaces them at `stats.entrypoints[name].resourceHints`. The server reads
-	 * that array and renders one `<link>` per descriptor into the initial HTML
-	 * shell it sends to the browser.
+	 * true` enables the auto defaults; `output.resourceHintsManifest` writes them
+	 * to a JSON file (`{ [entry]: descriptors }`) at build time so the server can
+	 * inject the `<link>` tags without walking the chunk graph. The same data is
+	 * also on `stats.entrypoints[name].resourceHints` (opt in with
+	 * `stats: { chunkGroupResourceHints: true }`).
 	 */
 	{
 		name: "ssr",
@@ -240,7 +242,8 @@ module.exports = [
 			assetModuleFilename: "assets/[name].[hash:8][ext]",
 			publicPath: "/static/",
 			module: true,
-			resourceHints: true
+			resourceHints: true,
+			resourceHintsManifest: "ssr-hints.json"
 		},
 		module: {
 			parser: {
@@ -260,5 +263,53 @@ module.exports = [
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
 		experiments: { outputModule: true },
 		stats: { chunkGroupResourceHints: true }
+	},
+
+	/*
+	 * 8. FONT PRELOAD — `module.parser.css.fontPreload: true` auto-emits
+	 * `<link rel="preload" as="font">` for the primary `src` of each
+	 * `@font-face` reachable from an HTML entry's initial CSS. Only the first
+	 * url per `@font-face` is preloaded (preloading every format would
+	 * double-download); `urlHints` rules / magic comments still override.
+	 */
+	{
+		name: "font-preload",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home-with-css.js", html: true } },
+		output: {
+			path: distFor("font-preload"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			assetModuleFilename: "assets/[name].[hash:8][ext]",
+			module: true,
+			resourceHints: true
+		},
+		module: {
+			parser: { css: { fontPreload: true } },
+			rules: [{ test: /\.woff2?$/, type: "asset/resource" }]
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true, css: true }
+	},
+
+	/*
+	 * 9. OFF — `output.resourceHints: "none"` is a hard off switch: no `<link>`
+	 * is emitted anywhere (chunk hints and URL-asset hints), and the stats /
+	 * manifest lists are empty. `false` only disables the auto chunk hints —
+	 * URL-asset hints from magic comments / `urlHints` keep firing.
+	 */
+	{
+		name: "none",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home.js", html: true } },
+		output: {
+			path: distFor("none"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			module: true,
+			resourceHints: "none"
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
 	}
 ];

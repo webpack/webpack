@@ -36,9 +36,16 @@ Two surfaces are involved:
 6. **url-hints-scoped** — `module.rules[].parser.urlHints`. Because parser
    options are scope-aware, a rule can narrow `urlHints` to a subtree
    (e.g. critical routes upgrade `prefetch` → `preload`).
-7. **ssr** — `stats: { chunkGroupResourceHints: true }` + `output.resourceHints`.
-   JS-only build; hints land in `stats.entrypoints[name].resourceHints` and
-   the server renders them into the initial HTML shell.
+7. **ssr** — `output.resourceHintsManifest` + `output.resourceHints`. JS-only
+   build; hints are written to a JSON file (`{ [entry]: descriptors }`) and are
+   also on `stats.entrypoints[name].resourceHints`. The server renders them into
+   the initial HTML shell.
+8. **font-preload** — `module.parser.css.fontPreload: true`. Auto-emit
+   `<link rel="preload" as="font">` for the primary `@font-face` `src` in the
+   initial CSS. Only the first url per `@font-face` is preloaded.
+9. **none** — `output.resourceHints: "none"`. Hard off switch: no `<link>`
+   anywhere and empty stats / manifest. (`false` only disables the auto chunk
+   hints; URL-asset hints keep firing.)
 
 # webpack.config.js
 
@@ -52,6 +59,10 @@ Two surfaces are involved:
 
 const path = require("path");
 
+/**
+ * @param {string} name compilation name
+ * @returns {string} per-scenario output directory
+ */
 const distFor = (name) => path.join(__dirname, "dist", name);
 
 /** @type {import("webpack").Configuration[]} */
@@ -128,7 +139,8 @@ module.exports = [
 				},
 				// Chunk / entry references — webpack fills in the emitted filename.
 				{ rel: "modulepreload", chunk: "runtime" },
-				{ rel: "prefetch", entry: "settings" }
+				// `fetchPriority` is emitted on prefetch too (spec draft allows it).
+				{ rel: "prefetch", entry: "settings", fetchPriority: "low" }
 			]
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
@@ -261,10 +273,11 @@ module.exports = [
 
 	/*
 	 * 7. SSR MANIFEST — a JS-only build (no HTML entry). `output.resourceHints:
-	 * true` enables the auto defaults, `stats: { chunkGroupResourceHints: true }`
-	 * surfaces them at `stats.entrypoints[name].resourceHints`. The server reads
-	 * that array and renders one `<link>` per descriptor into the initial HTML
-	 * shell it sends to the browser.
+	 * true` enables the auto defaults; `output.resourceHintsManifest` writes them
+	 * to a JSON file (`{ [entry]: descriptors }`) at build time so the server can
+	 * inject the `<link>` tags without walking the chunk graph. The same data is
+	 * also on `stats.entrypoints[name].resourceHints` (opt in with
+	 * `stats: { chunkGroupResourceHints: true }`).
 	 */
 	{
 		name: "ssr",
@@ -281,13 +294,19 @@ module.exports = [
 			assetModuleFilename: "assets/[name].[hash:8][ext]",
 			publicPath: "/static/",
 			module: true,
-			resourceHints: true
+			resourceHints: true,
+			resourceHintsManifest: "ssr-hints.json"
 		},
 		module: {
 			parser: {
 				javascript: {
 					urlHints: [
-						{ test: /\.woff2$/, preload: true, as: "font", fetchPriority: "high" }
+						{
+							test: /\.woff2$/,
+							preload: true,
+							as: "font",
+							fetchPriority: "high"
+						}
 					]
 				}
 			},
@@ -296,6 +315,54 @@ module.exports = [
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
 		experiments: { outputModule: true },
 		stats: { chunkGroupResourceHints: true }
+	},
+
+	/*
+	 * 8. FONT PRELOAD — `module.parser.css.fontPreload: true` auto-emits
+	 * `<link rel="preload" as="font">` for the primary `src` of each
+	 * `@font-face` reachable from an HTML entry's initial CSS. Only the first
+	 * url per `@font-face` is preloaded (preloading every format would
+	 * double-download); `urlHints` rules / magic comments still override.
+	 */
+	{
+		name: "font-preload",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home-with-css.js", html: true } },
+		output: {
+			path: distFor("font-preload"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			assetModuleFilename: "assets/[name].[hash:8][ext]",
+			module: true,
+			resourceHints: true
+		},
+		module: {
+			parser: { css: { fontPreload: true } },
+			rules: [{ test: /\.woff2?$/, type: "asset/resource" }]
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true, css: true }
+	},
+
+	/*
+	 * 9. OFF — `output.resourceHints: "none"` is a hard off switch: no `<link>`
+	 * is emitted anywhere (chunk hints and URL-asset hints), and the stats /
+	 * manifest lists are empty. `false` only disables the auto chunk hints —
+	 * URL-asset hints from magic comments / `urlHints` keep firing.
+	 */
+	{
+		name: "none",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home.js", html: true } },
+		output: {
+			path: distFor("none"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			module: true,
+			resourceHints: "none"
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
 	}
 ];
 ```
@@ -335,7 +402,44 @@ const iconOverride = new URL(
 console.log(font.href, hero.href, thumb.href, iconOverride.href);
 ```
 
-# SSR: reading the stats manifest
+# src/routes/home-with-css.js
+
+```javascript
+// The initial-graph CSS declares an `@font-face`; `parser.css.fontPreload`
+// auto-emits a `<link rel="preload" as="font">` for its primary src.
+import "../styles/app.css";
+
+console.log("home with css");
+```
+
+# src/styles/app.css
+
+```css
+@font-face {
+	font-family: "Inter";
+	src:
+		url("../fonts/inter.woff2") format("woff2"),
+		url("../fonts/inter.woff") format("woff");
+}
+
+body {
+	font-family: "Inter", sans-serif;
+}
+```
+
+# SSR: the manifest file
+
+With `output.resourceHintsManifest: "ssr-hints.json"`, webpack writes the
+manifest for you during the build — no stats plumbing needed:
+
+```js
+// dist/ssr/ssr-hints.json
+const manifest = require("./dist/ssr/ssr-hints.json");
+// { "home": [ { rel, href, as?, type?, media?, fetchPriority? }, ... ], "product": [ ... ] }
+```
+
+Prefer computing it in-process (e.g. custom filtering)? The same data is on
+`stats.entrypoints[name].resourceHints`:
 
 ```js
 const webpack = require("webpack");
@@ -460,12 +564,12 @@ prefetch:
 
 custom-array:
   asset runtime.0211bee8.js 6.64 KiB [emitted] [immutable] [javascript module] (name: runtime)
-  asset home.31bcb9fe.js 1.66 KiB [emitted] [immutable] [javascript module] (name: home)
+  asset home.31bcb9fe.js 1.7 KiB [emitted] [immutable] [javascript module] (name: home)
   asset __html_9b425bba_0.3c97e6b8.chunk.js 1.25 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
   asset settings.3988ca2b.js 1.23 KiB [emitted] [immutable] [javascript module] (name: settings)
   asset src_routes_settings_js.94a93042.chunk.js 961 bytes [emitted] [immutable] [javascript module]
-  asset home.840e826f.html 564 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 8.3 KiB (564 bytes) = runtime.0211bee8.js 6.64 KiB home.31bcb9fe.js 1.66 KiB 1 auxiliary asset
+  asset home.17b8ead9.html 604 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 8.34 KiB (604 bytes) = runtime.0211bee8.js 6.64 KiB home.31bcb9fe.js 1.7 KiB 1 auxiliary asset
   Entrypoint settings 7.87 KiB = runtime.0211bee8.js 6.64 KiB settings.3988ca2b.js 1.23 KiB
   Entrypoint __html_9b425bba_0 7.89 KiB = runtime.0211bee8.js 6.64 KiB __html_9b425bba_0.3c97e6b8.chunk.js 1.25 KiB
   runtime modules 3.62 KiB 8 modules
@@ -486,11 +590,11 @@ custom-array:
 
 callback:
   asset runtime.a4154a99.js 6.64 KiB [emitted] [immutable] [javascript module] (name: runtime)
-  asset home.6d8d52f7.js 1.4 KiB [emitted] [immutable] [javascript module] (name: home)
+  asset home.6d8d52f7.js 1.42 KiB [emitted] [immutable] [javascript module] (name: home)
   asset __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
   asset src_routes_settings_js.2107bc69.chunk.js 943 bytes [emitted] [immutable] [javascript module]
-  asset home.7460df9b.html 318 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 8.04 KiB (318 bytes) = runtime.a4154a99.js 6.64 KiB home.6d8d52f7.js 1.4 KiB 1 auxiliary asset
+  asset home.c5cd1660.html 339 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 8.06 KiB (339 bytes) = runtime.a4154a99.js 6.64 KiB home.6d8d52f7.js 1.42 KiB 1 auxiliary asset
   Entrypoint __html_9b425bba_0 7.9 KiB = runtime.a4154a99.js 6.64 KiB __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB
   runtime modules 3.62 KiB 8 modules
   cacheable modules 470 bytes (javascript) 98 bytes (html)
@@ -606,6 +710,7 @@ ssr:
     asset home.27a0472f.js 4.25 KiB [emitted] [immutable] [javascript module] (name: home)
     asset runtime.d0e8e650.js 4.13 KiB [emitted] [immutable] [javascript module] (name: runtime)
     asset product.0b6623b2.js 1.34 KiB [emitted] [immutable] [javascript module] (name: product)
+  asset ssr-hints.json 447 bytes [emitted]
   Entrypoint home 8.38 KiB = runtime.d0e8e650.js 4.13 KiB home.27a0472f.js 4.25 KiB 4 auxiliary assets
   Entrypoint product 5.46 KiB = runtime.d0e8e650.js 4.13 KiB product.0b6623b2.js 1.34 KiB 1 auxiliary asset
   runtime modules 2.37 KiB 6 modules
@@ -641,4 +746,64 @@ ssr:
         [used exports unknown]
         entry ./src/routes/product.js product
   ssr (webpack X.X.X) compiled successfully
+
+font-preload:
+  assets by path *.js 7.19 KiB
+    asset runtime.ffe2a219.js 4.48 KiB [emitted] [immutable] [javascript module] (name: runtime)
+    asset home.86c41536.js 1.5 KiB [emitted] [immutable] [javascript module] (name: home)
+    asset __html_d6cdf5c7_0.184f91d7.chunk.js 1.21 KiB [emitted] [immutable] [javascript module] (name: __html_d6cdf5c7_0)
+  assets by path assets/ 0 bytes
+    asset assets/inter.31d6cfe0.woff 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff] (auxiliary name: __html_d6cdf5c7_0)
+    asset assets/inter.31d6cfe0.woff2 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff2] (auxiliary name: __html_d6cdf5c7_0)
+  asset home.a7a56b53.html 386 bytes [emitted] [immutable] (auxiliary name: home)
+  asset __html_d6cdf5c7_0.cc28d3e3.css 315 bytes [emitted] [immutable] (name: __html_d6cdf5c7_0)
+  Entrypoint home 5.98 KiB (386 bytes) = runtime.ffe2a219.js 4.48 KiB home.86c41536.js 1.5 KiB 1 auxiliary asset
+  Entrypoint __html_d6cdf5c7_0 6 KiB = runtime.ffe2a219.js 4.48 KiB __html_d6cdf5c7_0.184f91d7.chunk.js 1.21 KiB __html_d6cdf5c7_0.cc28d3e3.css 315 bytes 2 auxiliary assets
+  runtime modules 2.04 KiB 8 modules
+  cacheable modules 322 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url) 107 bytes (html) 181 bytes (css)
+    modules by path ./src/ 205 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url)
+      ./src/routes/home-with-css.js 205 bytes [built] [code generated]
+        [no exports]
+        [used exports unknown]
+        entry ./src/routes/home-with-css.js __html_d6cdf5c7_0
+      ./src/fonts/inter.woff2 1 bytes (asset) 42 bytes (asset-url) [built] [code generated]
+        [no exports]
+        [used exports unknown]
+        css url() ../fonts/inter.woff2 css ./src/styles/app.css 4:6-28
+      ./src/fonts/inter.woff 1 bytes (asset) 42 bytes (asset-url) [built] [code generated]
+        [no exports]
+        [used exports unknown]
+        css url() ../fonts/inter.woff css ./src/styles/app.css 5:6-27
+    data:text/html,<!doctype html><html><head><script src="./src/routes/home-with-css.js"></script></...(truncated) 117 bytes (javascript) 107 bytes (html) [built] [code generated]
+      [exports: default]
+      [used exports unknown]
+      entry data:text/html,<!doctype html><.. home
+    css ./src/styles/app.css 181 bytes [built] [code generated]
+      [no exports]
+      [used exports unknown]
+      harmony side effect evaluation ../styles/app.css ./src/routes/home-with-css.js 3:0-27
+  font-preload (webpack X.X.X) compiled successfully
+
+none:
+  asset runtime.a4154a99.js 6.64 KiB [emitted] [immutable] [javascript module] (name: runtime)
+  asset __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
+  asset home.6d8d52f7.js 1.26 KiB [emitted] [immutable] [javascript module] (name: home)
+  asset src_routes_settings_js.2107bc69.chunk.js 943 bytes [emitted] [immutable] [javascript module]
+  asset home.a96deb30.html 184 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 7.9 KiB (184 bytes) = runtime.a4154a99.js 6.64 KiB home.6d8d52f7.js 1.26 KiB 1 auxiliary asset
+  Entrypoint __html_9b425bba_0 7.9 KiB = runtime.a4154a99.js 6.64 KiB __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB
+  runtime modules 3.62 KiB 8 modules
+  cacheable modules 470 bytes (javascript) 98 bytes (html)
+    data:text/html,<!doctype html><html><head><script src="./src/routes/home.js"></script></head><bod...(truncated) 108 bytes (javascript) 98 bytes (html) [built] [code generated]
+      [exports: default]
+      [used exports unknown]
+      entry data:text/html,<!doctype html><.. home
+    ./src/routes/home.js 328 bytes [built] [code generated]
+      [used exports unknown]
+      entry ./src/routes/home.js __html_9b425bba_0
+    ./src/routes/settings.js 34 bytes [built] [code generated]
+      [exports: default]
+      [used exports unknown]
+      import() ./settings.js ./src/routes/home.js 5:19-42
+  none (webpack X.X.X) compiled successfully
 ```

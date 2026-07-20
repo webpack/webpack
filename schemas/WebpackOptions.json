@@ -2145,6 +2145,10 @@
           "type": "string",
           "minLength": 1
         },
+        "fetchPriority": {
+          "description": "The `fetchpriority` attribute. Emitted on `preload` / `modulepreload` and on `prefetch` (the spec now permits it there).",
+          "enum": ["low", "high", "auto"]
+        },
         "href": {
           "description": "A literal URL used verbatim (external resource, `preconnect` origin, or an already-hashed asset).",
           "type": "string"
@@ -4393,6 +4397,9 @@
         "resourceHints": {
           "$ref": "#/definitions/ResourceHints"
         },
+        "resourceHintsManifest": {
+          "$ref": "#/definitions/ResourceHintsManifest"
+        },
         "scriptType": {
           "$ref": "#/definitions/ScriptType"
         },
@@ -4737,6 +4744,9 @@
         },
         "resourceHints": {
           "$ref": "#/definitions/ResourceHints"
+        },
+        "resourceHintsManifest": {
+          "$ref": "#/definitions/ResourceHintsManifest"
         },
         "scriptType": {
           "$ref": "#/definitions/ScriptType"
@@ -5411,7 +5421,7 @@
       ]
     },
     "ResourceHints": {
-      "description": "Resource-hint (`<link rel=\"prefetch\">` / `<link rel=\"preload\">` / `<link rel=\"modulepreload\">`) emission for extracted HTML entries and for URL-referenced assets carrying `webpackPrefetch` / `webpackPreload` (either from magic comments or from `module.parser.<type>.urlHints` rules). `true` auto-emits `<link rel=\"modulepreload\">` (ESM output) or `<link rel=\"preload\" as=\"script\">` (classic) for each of the entry's initial dependency chunks; `\"prefetch\"` uses `<link rel=\"prefetch\">`; `\"preload\"` is an alias of `true`; an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: \"html\" | \"js\"`, `compilation`) and returns the final list (this same callback replaces the removed `resolveDependencies` hook). `false` disables chunk hints; URL-referenced asset hints from magic comments / `urlHints` rules still fire — via the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime.",
+      "description": "Resource-hint (`<link rel=\"prefetch\">` / `<link rel=\"preload\">` / `<link rel=\"modulepreload\">`) emission for extracted HTML entries and for URL-referenced assets carrying `webpackPrefetch` / `webpackPreload` (either from magic comments or from `module.parser.<type>.urlHints` rules). `true` auto-emits `<link rel=\"modulepreload\">` (ESM output) or `<link rel=\"preload\" as=\"script\">` (classic) for each of the entry's initial dependency chunks; `\"prefetch\"` uses `<link rel=\"prefetch\">`; `\"preload\"` is an alias of `true`; an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: \"html\" | \"js\"`, `compilation`) and returns the final list (this same callback replaces the removed `resolveDependencies` hook). `false` disables chunk hints; URL-referenced asset hints from magic comments / `urlHints` rules still fire — via the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime. `\"none\"` is a hard off switch: no `<link>` is emitted anywhere (chunk hints and URL-asset hints), and `stats.entrypoints[].resourceHints` / the `output.resourceHintsManifest` file are empty.",
       "anyOf": [
         {
           "type": "array",
@@ -5420,7 +5430,7 @@
           }
         },
         {
-          "enum": ["prefetch", "preload"]
+          "enum": ["prefetch", "preload", "none"]
         },
         {
           "type": "boolean"
@@ -5430,6 +5440,11 @@
           "tsType": "((context: { entryName: string, entrypoint: import('../lib/Entrypoint'), hostType: 'html' | 'js', compilation: import('../lib/Compilation'), defaultHints: import('../lib/dependencies/HtmlEntryDependency').HtmlResourceHint[] }) => import('../lib/dependencies/HtmlEntryDependency').HtmlResourceHint[])"
         }
       ]
+    },
+    "ResourceHintsManifest": {
+      "description": "Emit a JSON manifest of the resolved resource hints for each entrypoint (the same descriptors as `stats.entrypoints[].resourceHints`) as an output asset at this path. Lets an SSR server inject the `<link>` tags itself without walking the chunk graph — webpack's analogue of Vite's `build.ssrManifest`. Empty when `output.resourceHints` is `\"none\"`.",
+      "type": "string",
+      "minLength": 1
     },
     "RuleSetCondition": {
       "description": "A condition matcher.",

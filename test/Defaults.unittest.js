@@ -759,6 +759,7 @@ describe("snapshots", () => {
 		    "pathinfo": false,
 		    "publicPath": "auto",
 		    "resourceHints": undefined,
+		    "resourceHintsManifest": undefined,
 		    "scriptType": false,
 		    "sourceMapFilename": "[file].map[query]",
 		    "sourcePrefix": undefined,
