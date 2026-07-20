@@ -676,6 +676,10 @@ export type StrictModuleResolution = boolean;
  */
 export type UniqueName = string;
 /**
+ * Project-wide URL-referenced-asset hint rules, applied as the base `urlHints` of every parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>`). A shorthand for repeating the same list under each `module.parser.<type>.urlHints`; parser-scoped rules and per-URL magic comments still override these.
+ */
+export type OutputUrlHints = UrlHintRule[];
+/**
  * Fall back to non-streaming WebAssembly instantiation when streaming compilation fails because the server does not serve `.wasm` files with the `application/wasm` MIME type.
  */
 export type WasmStreamingFallback = boolean;
@@ -2639,6 +2643,10 @@ export interface Output {
 	 */
 	uniqueName?: UniqueName;
 	/**
+	 * Project-wide URL-referenced-asset hint rules, applied as the base `urlHints` of every parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>`). A shorthand for repeating the same list under each `module.parser.<type>.urlHints`; parser-scoped rules and per-URL magic comments still override these.
+	 */
+	urlHints?: OutputUrlHints;
+	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	wasmLoading?: WasmLoading;
@@ -2906,6 +2914,47 @@ export interface TrustedTypes {
 	 * The name of the Trusted Types policy created by webpack to serve bundle chunks.
 	 */
 	policyName?: string;
+}
+/**
+ * One default-hint rule for URL-referenced assets emitted by this parser (JS `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`). `test` / `include` / `exclude` match against the asset's request; omit all three to apply to every asset. Matching rules set the same fields a `webpackPrefetch` / `webpackPreload` / `webpackAs` / `webpackType` / `webpackMedia` / `webpackFetchPriority` magic comment would; explicit magic comments on the same URL still win.
+ */
+export interface UrlHintRule {
+	/**
+	 * Default `as` attribute (script / style / font / image / …).
+	 */
+	as?: string;
+	/**
+	 * A condition matcher.
+	 */
+	exclude?: RuleSetCondition;
+	/**
+	 * Default fetchpriority for prefetch / preload links.
+	 */
+	fetchPriority?: "low" | "high" | "auto" | false;
+	/**
+	 * A condition matcher.
+	 */
+	include?: RuleSetCondition;
+	/**
+	 * Default `media` attribute (e.g. `"(min-width: 800px)"`).
+	 */
+	media?: string;
+	/**
+	 * When true, emit `<link rel="prefetch">` for matching assets without an explicit hint comment.
+	 */
+	prefetch?: boolean;
+	/**
+	 * When true, emit `<link rel="preload">` for matching assets without an explicit hint comment.
+	 */
+	preload?: boolean;
+	/**
+	 * A condition matcher.
+	 */
+	test?: RuleSetCondition;
+	/**
+	 * Default `type` attribute (MIME).
+	 */
+	type?: string;
 }
 /**
  * Configuration object for web performance recommendations.
@@ -3526,47 +3575,6 @@ export interface CssAutoOrModuleParserOptions {
 	 * URL-referenced-asset default hint rules for this parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`).
 	 */
 	urlHints?: UrlHints;
-}
-/**
- * One default-hint rule for URL-referenced assets emitted by this parser (JS `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`). `test` / `include` / `exclude` match against the asset's request; omit all three to apply to every asset. Matching rules set the same fields a `webpackPrefetch` / `webpackPreload` / `webpackAs` / `webpackType` / `webpackMedia` / `webpackFetchPriority` magic comment would; explicit magic comments on the same URL still win.
- */
-export interface UrlHintRule {
-	/**
-	 * Default `as` attribute (script / style / font / image / …).
-	 */
-	as?: string;
-	/**
-	 * A condition matcher.
-	 */
-	exclude?: RuleSetCondition;
-	/**
-	 * Default fetchpriority for prefetch / preload links.
-	 */
-	fetchPriority?: "low" | "high" | "auto" | false;
-	/**
-	 * A condition matcher.
-	 */
-	include?: RuleSetCondition;
-	/**
-	 * Default `media` attribute (e.g. `"(min-width: 800px)"`).
-	 */
-	media?: string;
-	/**
-	 * When true, emit `<link rel="prefetch">` for matching assets without an explicit hint comment.
-	 */
-	prefetch?: boolean;
-	/**
-	 * When true, emit `<link rel="preload">` for matching assets without an explicit hint comment.
-	 */
-	preload?: boolean;
-	/**
-	 * A condition matcher.
-	 */
-	test?: RuleSetCondition;
-	/**
-	 * Default `type` attribute (MIME).
-	 */
-	type?: string;
 }
 /**
  * Generator options for css modules.
@@ -4515,6 +4523,10 @@ export interface OutputNormalized {
 	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
 	 */
 	uniqueName?: UniqueName;
+	/**
+	 * Project-wide URL-referenced-asset hint rules, applied as the base `urlHints` of every parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>`). A shorthand for repeating the same list under each `module.parser.<type>.urlHints`; parser-scoped rules and per-URL magic comments still override these.
+	 */
+	urlHints?: OutputUrlHints;
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */

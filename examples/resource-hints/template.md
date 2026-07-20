@@ -13,7 +13,8 @@ Two surfaces are involved:
 - `module.parser.<type>.urlHints` — controls per-**URL-referenced-asset**
   defaults (fonts, images, workers) for `new URL(...)`, CSS `url(...)`,
   HTML `<img src>`, etc. Per-URL `webpackPreload` / `webpackPrefetch` magic
-  comments still win.
+  comments still win. `output.urlHints` is a project-wide shorthand that seeds
+  the same list under every parser at once.
 
 ## Scenarios
 
@@ -46,6 +47,9 @@ Two surfaces are involved:
 9. **none** — `output.resourceHints: "none"`. Hard off switch: no `<link>`
    anywhere and empty stats / manifest. (`false` only disables the auto chunk
    hints; URL-asset hints keep firing.)
+10. **url-hints-global** — `output.urlHints`. Project-wide shorthand for the
+    same `urlHints` list under every parser (JS / CSS / HTML). Parser-scoped
+    rules and magic comments still override it.
 
 # webpack.config.js
 

@@ -1,0 +1,7 @@
+.a {
+	background-image: url(./image.png);
+}
+@font-face {
+	font-family: "F";
+	src: url(./font.woff2) format("woff2");
+}

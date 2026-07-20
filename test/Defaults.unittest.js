@@ -768,6 +768,7 @@ describe("snapshots", () => {
 		    "strictModuleResolution": false,
 		    "trustedTypes": undefined,
 		    "uniqueName": "webpack",
+		    "urlHints": undefined,
 		    "wasmLoading": "fetch",
 		    "wasmStreamingFallback": true,
 		    "webassemblyModuleFilename": "[hash].module.wasm",

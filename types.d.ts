@@ -9843,6 +9843,11 @@ declare interface HtmlResourceHintHtmlEntryDependency {
 	 * SRI for a chunk/entry ref; follows `output.html.integrity` by default, `false` opts out
 	 */
 	integrity?: boolean;
+
+	/**
+	 * the `fetchpriority` attribute (allowed on `preload`/`modulepreload`/`prefetch`)
+	 */
+	fetchPriority?: "auto" | "low" | "high";
 }
 type HtmlResourceHintRel =
 	"prefetch" | "preload" | "modulepreload" | "preconnect" | "dns-prefetch";
@@ -19361,6 +19366,11 @@ declare interface Output {
 	uniqueName?: string;
 
 	/**
+	 * Project-wide URL-referenced-asset hint rules, applied as the base `urlHints` of every parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>`). A shorthand for repeating the same list under each `module.parser.<type>.urlHints`; parser-scoped rules and per-URL magic comments still override these.
+	 */
+	urlHints?: UrlHintRule[];
+
+	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	wasmLoading?: string | false;
@@ -19777,6 +19787,11 @@ declare interface OutputNormalized {
 	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
 	 */
 	uniqueName?: string;
+
+	/**
+	 * Project-wide URL-referenced-asset hint rules, applied as the base `urlHints` of every parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>`). A shorthand for repeating the same list under each `module.parser.<type>.urlHints`; parser-scoped rules and per-URL magic comments still override these.
+	 */
+	urlHints?: UrlHintRule[];
 
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).

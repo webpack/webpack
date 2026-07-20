@@ -13,7 +13,8 @@ Two surfaces are involved:
 - `module.parser.<type>.urlHints` — controls per-**URL-referenced-asset**
   defaults (fonts, images, workers) for `new URL(...)`, CSS `url(...)`,
   HTML `<img src>`, etc. Per-URL `webpackPreload` / `webpackPrefetch` magic
-  comments still win.
+  comments still win. `output.urlHints` is a project-wide shorthand that seeds
+  the same list under every parser at once.
 
 ## Scenarios
 
@@ -46,6 +47,9 @@ Two surfaces are involved:
 9. **none** — `output.resourceHints: "none"`. Hard off switch: no `<link>`
    anywhere and empty stats / manifest. (`false` only disables the auto chunk
    hints; URL-asset hints keep firing.)
+10. **url-hints-global** — `output.urlHints`. Project-wide shorthand for the
+    same `urlHints` list under every parser (JS / CSS / HTML). Parser-scoped
+    rules and magic comments still override it.
 
 # webpack.config.js
 
@@ -360,6 +364,35 @@ module.exports = [
 			chunkFilename: "[name].[contenthash:8].chunk.js",
 			module: true,
 			resourceHints: "none"
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
+	},
+
+	/*
+	 * 10. GLOBAL URL HINTS — `output.urlHints` is a project-wide shorthand for
+	 * the same rule list under every parser (JS `new URL`, CSS `url()`, HTML
+	 * `<img src>`), so you write it once. Parser-scoped `parser.<type>.urlHints`
+	 * and per-URL magic comments still override it.
+	 */
+	{
+		name: "url-hints-global",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home-with-assets.js", html: true } },
+		output: {
+			path: distFor("url-hints-global"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			assetModuleFilename: "assets/[name].[hash:8][ext]",
+			module: true,
+			resourceHints: true,
+			urlHints: [
+				{ test: /\.woff2$/, preload: true, as: "font", fetchPriority: "high" },
+				{ test: /\.(png|jpg|webp)$/, prefetch: true, fetchPriority: "low" }
+			]
+		},
+		module: {
+			rules: [{ test: /\.(png|jpg|webp|woff2)$/, type: "asset/resource" }]
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
 		experiments: { html: true, outputModule: true }
@@ -806,4 +839,47 @@ none:
       [used exports unknown]
       import() ./settings.js ./src/routes/home.js 5:19-42
   none (webpack X.X.X) compiled successfully
+
+url-hints-global:
+  assets by path assets/ 0 bytes
+    assets by path assets/*.png 0 bytes
+      asset assets/icon.31d6cfe0.png 0 bytes [emitted] [immutable] [from: src/icon.png] (auxiliary name: __html_545c7cf9_0)
+      asset assets/thumb.31d6cfe0.png 0 bytes [emitted] [immutable] [from: src/thumb.png] (auxiliary name: __html_545c7cf9_0)
+    asset assets/banner.31d6cfe0.jpg 0 bytes [emitted] [immutable] [from: src/hero/banner.jpg] (auxiliary name: __html_545c7cf9_0)
+    asset assets/inter.31d6cfe0.woff2 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff2] (auxiliary name: __html_545c7cf9_0)
+  assets by path *.js 10.2 KiB
+    asset runtime.0428e0d3.js 4.94 KiB [emitted] [immutable] [javascript module] (name: runtime)
+    asset __html_545c7cf9_0.34832faf.chunk.js 3.6 KiB [emitted] [immutable] [javascript module] (name: __html_545c7cf9_0)
+    asset home.e89aa7f6.js 1.71 KiB [emitted] [immutable] [javascript module] (name: home)
+  asset home.001b1beb.html 577 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 6.65 KiB (577 bytes) = runtime.0428e0d3.js 4.94 KiB home.e89aa7f6.js 1.71 KiB 1 auxiliary asset
+  Entrypoint __html_545c7cf9_0 8.54 KiB = runtime.0428e0d3.js 4.94 KiB __html_545c7cf9_0.34832faf.chunk.js 3.6 KiB 4 auxiliary assets
+  runtime modules 2.38 KiB 7 modules
+  cacheable modules 4 bytes (asset) 1.04 KiB (javascript) 110 bytes (html)
+    asset modules 4 bytes (asset) 168 bytes (javascript)
+      modules by path ./src/*.png 2 bytes (asset) 84 bytes (javascript)
+        ./src/thumb.png 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+          [no exports]
+          [used exports unknown]
+          new URL() ../thumb.png ./src/routes/home-with-assets.js 8:14-54
+        ./src/icon.png 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+          [no exports]
+          [used exports unknown]
+          new URL() ../icon.png ./src/routes/home-with-assets.js 11:21-14:1
+      ./src/fonts/inter.woff2 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+        [no exports]
+        [used exports unknown]
+        new URL() ../fonts/inter.woff2 ./src/routes/home-with-assets.js 6:13-61
+      ./src/hero/banner.jpg 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+        [no exports]
+        [used exports unknown]
+        new URL() ../hero/banner.jpg ./src/routes/home-with-assets.js 7:13-59
+    data:text/html,<!doctype html><html><head><script src="./src/routes/home-with-assets.js"></script...(truncated) 120 bytes (javascript) 110 bytes (html) [built] [code generated]
+      [exports: default]
+      [used exports unknown]
+      entry data:text/html,<!doctype html><.. home
+    ./src/routes/home-with-assets.js 778 bytes [built] [code generated]
+      [used exports unknown]
+      entry ./src/routes/home-with-assets.js __html_545c7cf9_0
+  url-hints-global (webpack X.X.X) compiled successfully
 ```

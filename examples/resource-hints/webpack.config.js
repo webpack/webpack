@@ -311,5 +311,34 @@ module.exports = [
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
 		experiments: { html: true, outputModule: true }
+	},
+
+	/*
+	 * 10. GLOBAL URL HINTS — `output.urlHints` is a project-wide shorthand for
+	 * the same rule list under every parser (JS `new URL`, CSS `url()`, HTML
+	 * `<img src>`), so you write it once. Parser-scoped `parser.<type>.urlHints`
+	 * and per-URL magic comments still override it.
+	 */
+	{
+		name: "url-hints-global",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home-with-assets.js", html: true } },
+		output: {
+			path: distFor("url-hints-global"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			assetModuleFilename: "assets/[name].[hash:8][ext]",
+			module: true,
+			resourceHints: true,
+			urlHints: [
+				{ test: /\.woff2$/, preload: true, as: "font", fetchPriority: "high" },
+				{ test: /\.(png|jpg|webp)$/, prefetch: true, fetchPriority: "low" }
+			]
+		},
+		module: {
+			rules: [{ test: /\.(png|jpg|webp|woff2)$/, type: "asset/resource" }]
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
 	}
 ];

@@ -4447,6 +4447,9 @@
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
         },
+        "urlHints": {
+          "$ref": "#/definitions/OutputUrlHints"
+        },
         "wasmLoading": {
           "$ref": "#/definitions/WasmLoading"
         },
@@ -4772,6 +4775,9 @@
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
         },
+        "urlHints": {
+          "$ref": "#/definitions/OutputUrlHints"
+        },
         "wasmLoading": {
           "$ref": "#/definitions/WasmLoading"
         },
@@ -4800,6 +4806,13 @@
         "enabledLibraryTypes",
         "enabledWasmLoadingTypes"
       ]
+    },
+    "OutputUrlHints": {
+      "description": "Project-wide URL-referenced-asset hint rules, applied as the base `urlHints` of every parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>`). A shorthand for repeating the same list under each `module.parser.<type>.urlHints`; parser-scoped rules and per-URL magic comments still override these.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/UrlHintRule"
+      }
     },
     "Parallelism": {
       "description": "The number of parallel processed modules in the compilation.",
