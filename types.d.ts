@@ -23163,10 +23163,6 @@ declare abstract class RuntimeTemplate {
 	supportsDynamicImport(): boolean;
 	supportsEcmaScriptModuleSyntax(): boolean;
 	supportsModulePreload(): boolean;
-
-	/**
-	 * @returns true, when `new URL(…, import.meta.url)` can be emitted in its analyzable literal form
-	 */
 	supportsAnalyzableEsm(): boolean;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
