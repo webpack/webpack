@@ -23158,6 +23158,7 @@ declare abstract class RuntimeTemplate {
 	supportsDynamicImport(): boolean;
 	supportsEcmaScriptModuleSyntax(): boolean;
 	supportsModulePreload(): boolean;
+	supportsAnalyzableEsm(): boolean;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
 
@@ -23501,6 +23502,10 @@ declare abstract class RuntimeTemplate {
 		 * if set, will be filled with runtime requirements
 		 */
 		runtimeRequirements: Set<string>;
+		/**
+		 * the module the `import()` is emitted into
+		 */
+		originModule?: Module;
 	}): string;
 
 	/**
@@ -23661,6 +23666,10 @@ declare abstract class RuntimeTemplate {
 		 * if set, will be filled with runtime requirements
 		 */
 		runtimeRequirements: Set<string>;
+		/**
+		 * the module the `import()` is emitted into
+		 */
+		originModule?: Module;
 	}): string;
 
 	/**
@@ -27192,6 +27201,7 @@ declare namespace exports {
 	export namespace RuntimeGlobals {
 		export let amdDefine: "__webpack_require__.amdD";
 		export let amdOptions: "__webpack_require__.amdO";
+		export let analyzableChunkImport: "__webpack_require__.ei";
 		export let asyncModule: "__webpack_require__.a";
 		export let asyncModuleDoneSymbol: "__webpack_require__.aD";
 		export let asyncModuleExportSymbol: "__webpack_require__.aE";

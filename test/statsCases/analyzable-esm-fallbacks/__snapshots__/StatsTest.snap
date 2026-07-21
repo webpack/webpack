@@ -1,0 +1,88 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases analyzable-esm-fallbacks should print correct stats for analyzable-esm-fallbacks 1`] = `
+"analyzable:
+  asset main.mjs X KiB [emitted] [javascript module] (name: main)
+  asset async_js.mjs X bytes [emitted] [javascript module]
+  runtime modules X KiB 4 modules
+  cacheable modules X bytes
+    ./index.js X bytes [built] [code generated]
+    ./async.js X bytes [built] [code generated]
+  analyzable (webpack x.x.x) compiled successfully in X ms
+
+public-path-override:
+  asset main.mjs X KiB [emitted] [javascript module] (name: main)
+  asset async_js.mjs X bytes [emitted] [javascript module]
+  runtime modules X KiB 7 modules
+  cacheable modules X bytes
+    ./index-public-path-override.js X bytes [built] [code generated]
+    ./async.js X bytes [built] [code generated]
+  public-path-override (webpack x.x.x) compiled successfully in X ms
+
+fetch-priority:
+  asset main.mjs X KiB [emitted] [javascript module] (name: main)
+  asset async_js.mjs X bytes [emitted] [javascript module]
+  runtime modules X KiB 6 modules
+  cacheable modules X bytes
+    ./index-fetch-priority.js X bytes [built] [code generated]
+    ./async.js X bytes [built] [code generated]
+  fetch-priority (webpack x.x.x) compiled successfully in X ms
+
+prefetch:
+  asset main.mjs X KiB [emitted] [javascript module] (name: main)
+  asset mid_js.mjs X bytes [emitted] [javascript module]
+  asset async_js.mjs X bytes [emitted] [javascript module]
+  runtime modules X KiB 9 modules
+  cacheable modules X bytes
+    ./index-prefetch.js X bytes [built] [code generated]
+    ./mid.js X bytes [built] [code generated]
+    ./async.js X bytes [built] [code generated]
+  prefetch (webpack x.x.x) compiled successfully in X ms
+
+content-hash:
+  asset main.mjs X KiB [emitted] [javascript module] (name: main)
+  asset async_js.XXXXXXXXXXXXXXXXXXXX.mjs X bytes [emitted] [immutable] [javascript module]
+  runtime modules X KiB 6 modules
+  cacheable modules X bytes
+    ./index.js X bytes [built] [code generated]
+    ./async.js X bytes [built] [code generated]
+  content-hash (webpack x.x.x) compiled successfully in X ms
+
+templated-public-path:
+  asset main.mjs X KiB [emitted] [javascript module] (name: main)
+  asset async_js.mjs X bytes [emitted] [javascript module]
+  runtime modules X KiB 7 modules
+  cacheable modules X bytes
+    ./index.js X bytes [built] [code generated]
+    ./async.js X bytes [built] [code generated]
+  templated-public-path (webpack x.x.x) compiled successfully in X ms
+
+bare-public-path:
+  asset main.mjs X KiB [emitted] [javascript module] (name: main)
+  asset async_js.mjs X bytes [emitted] [javascript module]
+  runtime modules X KiB 7 modules
+  cacheable modules X bytes
+    ./index.js X bytes [built] [code generated]
+    ./async.js X bytes [built] [code generated]
+  bare-public-path (webpack x.x.x) compiled successfully in X ms
+
+shared-chunk:
+  asset a.mjs X KiB [emitted] [javascript module] (name: a)
+  asset b.mjs X KiB [emitted] [javascript module] (name: b)
+  asset async_js.mjs X bytes [emitted] [javascript module]
+  runtime modules X KiB 12 modules
+  cacheable modules X bytes
+    ./a.js X bytes [built] [code generated]
+    ./b.js X bytes [built] [code generated]
+    ./async.js X bytes [built] [code generated]
+  shared-chunk (webpack x.x.x) compiled successfully in X ms
+
+hmr:
+  asset main.mjs X KiB [emitted] [javascript module] (name: main)
+  asset async_js.mjs X bytes [emitted] [javascript module]
+  runtime modules X KiB 11 modules
+  cacheable modules X bytes
+    ./index.js X bytes [built] [code generated]
+    ./async.js X bytes [built] [code generated]
+  hmr (webpack x.x.x) compiled successfully in X ms"
+`;
