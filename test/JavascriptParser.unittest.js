@@ -1507,6 +1507,25 @@ describe("JavascriptParser", () => {
 			);
 		});
 
+		// Variable declarations id-walk their initializers, so the D2
+		// expression handlers fire in their most common host (var/let/const
+		// inits) both at a non-pinned top level and inside id-walked bodies.
+		it("should drive identical hook sequences through variable declarations", () => {
+			expectSameWalk(
+				`var a = req("x"), b = a.b.c, c = a.m(b);
+				let d = a ? b : c, e = { p: a, q: b.c };
+				const f = a + b, g = h;
+				var { x, y: z } = a, [p, ...q] = b;
+				function uses(h) {
+					var i = h.j(), k = new h.L(i);
+					const m = i && k || h;
+					let n = req(i);
+					return n;
+				}
+				uses(a);`
+			);
+		});
+
 		it("should drive identical hook sequences for top-level and nested await", () => {
 			expectSameWalk(
 				`await x;
