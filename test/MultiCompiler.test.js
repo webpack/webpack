@@ -290,6 +290,75 @@ describe("MultiCompiler", () => {
 		});
 	});
 
+	it("should expose the active MultiWatching on `watching`", (done) => {
+		const compiler = createMultiCompiler();
+		expect(compiler.watching).toBeUndefined();
+		const watching = /** @type {import("../lib/MultiWatching")} */ (
+			/** @type {unknown} */ (
+				compiler.watch({}, (err, _stats) => {
+					if (err) return done(err);
+				})
+			)
+		);
+		expect(compiler.watching).toBe(watching);
+		watching.close(() => {
+			expect(compiler.watching).toBeUndefined();
+			compiler.close(done);
+		});
+	});
+
+	it("should close the active watching and clear `watching` when the compiler is closed directly", (done) => {
+		const compiler = createMultiCompiler();
+		let watchCloseCalled = 0;
+		compiler.hooks.watchClose.tap("MultiCompiler test", () => {
+			watchCloseCalled++;
+		});
+		compiler.watch({}, (err, _stats) => {
+			if (err) return done(err);
+		});
+		expect(compiler.watching).toBeDefined();
+		compiler.close(() => {
+			expect(compiler.watching).toBeUndefined();
+			expect(watchCloseCalled).toBe(1);
+			done();
+		});
+	});
+
+	it("should expose `watching` when dependency validation fails", (done) => {
+		const compiler = /** @type {import("../").MultiCompiler} */ (
+			webpack(
+				/** @type {import("../").MultiConfiguration} */ ([
+					{
+						name: "a",
+						context: path.join(__dirname, "fixtures"),
+						entry: "./a.js",
+						dependencies: ["missing"]
+					},
+					{
+						name: "b",
+						context: path.join(__dirname, "fixtures"),
+						entry: "./b.js"
+					}
+				])
+			)
+		);
+		/** @type {Error | null | undefined} */
+		let error;
+		const watching = /** @type {import("../lib/MultiWatching")} */ (
+			/** @type {unknown} */ (
+				compiler.watch({}, (err) => {
+					error = err;
+				})
+			)
+		);
+		expect(error).toBeInstanceOf(Error);
+		expect(compiler.watching).toBe(watching);
+		watching.close(() => {
+			expect(compiler.watching).toBeUndefined();
+			compiler.close(done);
+		});
+	});
+
 	it("should respect parallelism and dependencies for running", (done) => {
 		const compiler = createMultiCompiler(
 			/** @type {import("../").MultiCompilerOptions} */ ({
