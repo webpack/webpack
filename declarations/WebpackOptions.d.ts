@@ -2897,7 +2897,7 @@ export interface ResourceHintsOptions {
 	 */
 	manifest?: string;
 	/**
-	 * Inject a tiny inline `<script>` polyfill for `<link rel="modulepreload">` into extracted HTML pages when the target environment (per `output.environment.modulePreload`) lacks native support. `true` (default) injects only when needed; `false` never injects — the `<link>` tags are still emitted but do nothing on browsers without support (useful under a strict CSP that forbids inline scripts).
+	 * Inject a tiny inline `<script>` polyfill for `<link rel="modulepreload">` into extracted HTML pages. Defaults from the target's modulepreload support (`output.environment.modulePreload`) — `true` when the environment lacks native support, `false` when it has it. Set `false` to never inject (the `<link>` tags are still emitted but do nothing on browsers without support — useful under a strict CSP that forbids inline scripts).
 	 */
 	modulePreloadPolyfill?: boolean;
 	/**
