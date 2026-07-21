@@ -2,7 +2,9 @@
 
 Status: **in progress** — Phase 0 landed (see §7); A1 (functions, methods,
 arrows, paren/arrow disambiguation) and A2 (loops, switch, try, throw,
-labels, break/continue, with, empty, debugger) landed; A3–A6 next.
+labels, break/continue, with, empty, debugger) landed; A3 binding patterns
+(parseBindingAtom/List, rest/default) landed — toAssignable/checkLVal stay
+acorn until their cluster; A4–A6 next.
 Scope: `lib/javascript/syntax.js` (the tuned acorn-based parser) and its single
 production consumer `lib/javascript/JavascriptParser.js`.
 
