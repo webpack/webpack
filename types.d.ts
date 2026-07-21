@@ -4368,14 +4368,9 @@ declare interface ConcatenatedModuleInfo {
 	index: number;
 
 	/**
-	 * a "weird" CommonJS module rendered inside an IIFE with real module/exports objects
+	 * a "weird" CommonJS module executed via the CJS wrapper runtime helper with real module/exports objects
 	 */
 	cjsWrapped?: boolean;
-
-	/**
-	 * the wrapped module's `{ exports }` object variable
-	 */
-	moduleObjectName?: string;
 	ast?: Program;
 	internalSource?: Source;
 	source?: ReplaceSource;
@@ -27207,6 +27202,7 @@ declare namespace exports {
 		export let uncaughtErrorHandler: "__webpack_require__.oe";
 		export let wasmInstances: "__webpack_require__.w";
 		export let worker: "__webpack_require__.wc";
+		export let commonJsWrap: "__webpack_require__.cjs";
 	}
 	export const UsageState: Readonly<{
 		Unused: 0;
