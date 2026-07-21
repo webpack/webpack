@@ -1321,6 +1321,22 @@ export interface Experiments {
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
 	/**
+	 * Split self-contained, side-effect-free named exports into their own modules so async-only exports can follow the async chunk instead of staying in the initial chunk.
+	 * @experimental
+	 */
+	moduleSplitting?:
+		| boolean
+		| {
+				/**
+				 * A condition matched against a module's resource path (string is matched as a substring).
+				 */
+				exclude?: ModuleSplittingFilter;
+				/**
+				 * A condition matched against a module's resource path (string is matched as a substring).
+				 */
+				include?: ModuleSplittingFilter;
+		  };
+	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
 	 * @since 5.106.0
 	 * @experimental
@@ -1407,6 +1423,22 @@ export interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
+	/**
+	 * Split self-contained, side-effect-free named exports into their own modules so async-only exports can follow the async chunk instead of staying in the initial chunk.
+	 * @experimental
+	 */
+	moduleSplitting?:
+		| boolean
+		| {
+				/**
+				 * A condition matched against a module's resource path (string is matched as a substring).
+				 */
+				exclude?: ModuleSplittingFilter;
+				/**
+				 * A condition matched against a module's resource path (string is matched as a substring).
+				 */
+				include?: ModuleSplittingFilter;
+		  };
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
 	 * @since 5.106.0
@@ -2940,6 +2972,17 @@ export interface ModuleOptionsNormalized {
 	 */
 	unsafeCache?: boolean | import("../lib/Compilation").UnsafeCachePredicate;
 }
+
+/**
+ * A condition matched against a module's resource path (string is matched as a substring).
+ */
+export type ModuleSplittingFilter =
+	| Array<
+			| /** A condition (RegExp or substring) matched against a module's resource path. */ RegExp
+			| string
+	  >
+	| RegExp
+	| string;
 
 /**
  * Name of the configuration. Used when loading multiple configurations.
@@ -5240,6 +5283,10 @@ export interface RuleSetRule {
 	 * Match module mimetype when load from Data URI.
 	 */
 	mimetype?: RuleSetConditionOrConditions;
+	/**
+	 * Allow or forbid splitting this module's self-contained async-only exports into separate modules (experiments.moduleSplitting).
+	 */
+	moduleSplitting?: boolean;
 	/**
 	 * Only execute the first matching rule in this array.
 	 */
