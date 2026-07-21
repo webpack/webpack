@@ -1526,6 +1526,152 @@ describe("JavascriptParser", () => {
 			);
 		});
 
+		// Exercises the D2 handlers' hook-bail early returns (free-rooted
+		// chains resolve member info; taps that return true stop the walk),
+		// the strict-mode-in-module-output reports, and the foreign-pinned /
+		// empty list fallbacks — all asserted equal across both backends.
+		it("should match the object walk on D2 hook-bails and foreign-pinned lists", () => {
+			/**
+			 * @param {string} code source
+			 * @param {boolean} soaAst backend
+			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
+			 * @param {"auto" | "script"} sourceType source type
+			 * @param {boolean} moduleOutput emit as strict-mode module output
+			 * @returns {string[]} recorded events
+			 */
+			const walk = (code, soaAst, setup, sourceType, moduleOutput) => {
+				const parser = new JavascriptParser(sourceType, { soaAst });
+				/** @type {string[]} */
+				const events = [];
+				setup(parser, events);
+				const state = moduleOutput
+					? {
+							module: {
+								addWarning: (/** @type {Error} */ w) =>
+									events.push(`warn:${w.message}`),
+								addError: (/** @type {Error} */ e) =>
+									events.push(`err:${e.message}`)
+							},
+							compilation: { runtimeTemplate: { isModule: () => true } }
+						}
+					: {};
+				parser.parse(
+					code,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ (state)
+					)
+				);
+				return events;
+			};
+			/**
+			 * @param {string} code source
+			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
+			 * @param {("auto" | "script")=} sourceType source type
+			 * @param {boolean=} moduleOutput strict-mode module output
+			 * @returns {void} asserts both backends agree
+			 */
+			const same = (code, setup, sourceType = "auto", moduleOutput = false) => {
+				expect(
+					walk(code, true, setup, sourceType, moduleOutput).join("\n")
+				).toBe(walk(code, false, setup, sourceType, moduleOutput).join("\n"));
+			};
+			/**
+			 * @param {string[]} e events
+			 * @param {string} label event label
+			 * @returns {() => boolean} tap returning true
+			 */
+			const bail = (e, label) => () => {
+				e.push(label);
+				return true;
+			};
+			const noop = () => {};
+
+			// member "expression": name hook bail, then member-chain hook bail
+			same("free.a.b;", (p, e) => {
+				p.hooks.expression.for("free.a.b").tap("t", bail(e, "expr"));
+			});
+			same("free.a.b;", (p, e) => {
+				p.hooks.expressionMemberChain.for("free").tap("t", bail(e, "chain"));
+			});
+			// member "call": call-rooted chain, memberChainOfCallMemberChain bail
+			same("free().a.b;", (p, e) => {
+				p.hooks.memberChainOfCallMemberChain
+					.for("free")
+					.tap("t", bail(e, "mcocmc"));
+			});
+			// call: callMemberChainOfCallMemberChain / callMemberChain / call bails
+			same("free().b();", (p, e) => {
+				p.hooks.callMemberChainOfCallMemberChain
+					.for("free")
+					.tap("t", bail(e, "cmcocmc"));
+			});
+			same("free(1);", (p, e) => {
+				p.hooks.callMemberChain.for("free").tap("t", bail(e, "callChain"));
+			});
+			same("free(1);", (p, e) => {
+				p.hooks.call.for("free").tap("t", bail(e, "call"));
+			});
+			// call: import().then importCall bail; defined-plain-callee fast path
+			same("import('x').then(free);", (p, e) => {
+				p.hooks.importCall.tap("t", bail(e, "importCall"));
+			});
+			same("function f(a) { a; } f(free);", noop);
+			// logical / conditional operator hooks returning a value
+			same("free && other;", (p, e) => {
+				p.hooks.expressionLogicalOperator.tap("t", () => {
+					e.push("logical");
+					return true;
+				});
+			});
+			same("free ? a : b;", (p, e) => {
+				p.hooks.expressionConditionalOperator.tap("t", () => {
+					e.push("cond-true");
+					return true;
+				});
+			});
+			same("free ? a : b;", (p, e) => {
+				p.hooks.expressionConditionalOperator.tap("t", () => {
+					e.push("cond-false");
+					return false;
+				});
+			});
+			// typeof: direct bail and the optional-chain argument bail
+			same("typeof free;", (p, e) => {
+				p.hooks.typeof.for("free").tap("t", bail(e, "typeof"));
+			});
+			same("typeof free?.a;", (p, e) => {
+				p.hooks.typeof.for("free.a").tap("t", bail(e, "typeofChain"));
+			});
+			// assignment: rename (kept / overridden) and assignMemberChain bail
+			same("dst = free;", (p, e) => {
+				p.hooks.canRename.for("free").tap("t", () => true);
+			});
+			same("dst = free;", (p, e) => {
+				p.hooks.canRename.for("free").tap("t", () => true);
+				p.hooks.rename.for("free").tap("t", bail(e, "rename"));
+			});
+			same("free.a = 1;", (p, e) => {
+				p.hooks.assignMemberChain.for("free").tap("t", bail(e, "assignChain"));
+			});
+			// new hook bail
+			same("new free();", (p, e) => {
+				p.hooks.new.for("free").tap("t", bail(e, "new"));
+			});
+			// assignment: pattern targets and the plain member/other target tails
+			same("[x] = free;", noop);
+			same("({ y } = free);", noop);
+			same("free.a = free.b;", noop);
+			// strict-mode-in-module-output reports on the id walk
+			same("delete free; und = 1; free = 1;", noop, "script", true);
+			// call-rooted member descent, computed-member call, sequence not at
+			// statement level, and empty / foreign-pinned lists
+			same(
+				// eslint-disable-next-line no-template-curly-in-string
+				"free().a.b; free[key](1); z = (free.a, free.b); free(class {}); ({}); `t${class {}}u`; [free.m()];",
+				noop
+			);
+		});
+
 		it("should drive identical hook sequences for top-level and nested await", () => {
 			expectSameWalk(
 				`await x;
