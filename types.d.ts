@@ -3365,6 +3365,10 @@ declare class Compilation {
 			[RenderManifestEntry[], RenderManifestOptions],
 			RenderManifestEntry[]
 		>;
+		renderChunkAsset: SyncWaterfallHook<
+			[Source, RenderChunkAssetContext],
+			Source
+		>;
 		fullHash: SyncHook<[Hash]>;
 		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 		moduleAsset: SyncHook<[Module, string]>;
@@ -21482,6 +21486,22 @@ declare interface RenderBootstrapContext {
 	 */
 	hash: string;
 }
+declare interface RenderChunkAssetContext {
+	/**
+	 * the chunk the asset belongs to
+	 */
+	chunk: Chunk;
+
+	/**
+	 * the final (post-hash) asset filename
+	 */
+	filename: string;
+
+	/**
+	 * the asset info
+	 */
+	assetInfo: AssetInfo;
+}
 declare interface RenderContextCssModulesPlugin {
 	/**
 	 * the chunk
@@ -23682,8 +23702,8 @@ declare abstract class RuntimeTemplate {
 	substituteAnalyzableEsmPlaceholders(source: Source, chunk: Chunk): Source;
 
 	/**
-	 * Mixes the render hashes of chunks that `chunk`'s modules analyzably reference
-	 * (as post-hash filename placeholders) into `hash`, so `chunk` re-hashes — and its
+	 * Mixes the render hashes of chunks that `chunk`'s modules reference as analyzable
+	 * literals (post-hash filename placeholders) into `hash`, so `chunk` re-hashes — and its
 	 * cached asset is re-rendered and re-substituted — whenever a referenced chunk's
 	 * filename changes. Without this the placeholder-only source is hash-invariant to
 	 * the target (the analyzable form drops the `__webpack_require__.u` runtime module
