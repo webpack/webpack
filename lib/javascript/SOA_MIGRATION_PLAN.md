@@ -404,9 +404,40 @@ harvested name) and asserts the facade walk drives byte-identical
 sequences to the object walk — green at baseline over a grammar-complete
 sample, react and lodash. This is the gate every D1 walker-conversion PR
 re-runs.
-Next: the id-based walk core itself (dispatch table over numeric type
-ids, facades only at escape points, object-fallback for foreign
-subtrees), then default-on with the escape hatch.
+**D1 walk core landed (statement + function + leaf-expression clusters,
+identifier name resolution)**: the walk pass now dispatches on the numeric
+column type. `syntax.js` exports the facade→store/id symbol keys and the
+`TYPE` name→id table; `JavascriptParser` extracts each statement switch
+into a shared `_dispatch*Statement` (object walker and id-walk fallback
+both use it) and adds an id-based walk core (`_walk*Id`). acorn always
+builds the root `Program` as an object, so the walk is entered from the
+body array (`_walkStatementsIdList`): SoA facades id-walk, foreign
+top-level nodes (import/export/class) fall back to the object walker.
+Converted to id-native, recursing on child ids: block, expression-
+statement, return/throw, if, while, do-while, empty/debugger, and —
+critically for the walk to descend into real code —
+function/function-expression/arrow bodies (params/patterns stay on the
+object walker, the block body id-walks). Leaf expressions with no
+unconditional broadcast hook (literal, array, spread, update, await) plus
+`Identifier` (name resolved from the columns via the source slice or the
+escaped-name side value, so a tap-less identifier never materializes) are
+id-native; every other expression type materializes and hands off to the
+object walker. Foreign (acorn-built) subtrees sit at ref 0 with the node
+memoized on the parent facade, and a list a foreign element pinned onto
+its facade falls back to the object list walker. Coverage: the
+`test/JavascriptParser.unittest.js` equivalence harness gains a
+function-wrapped descent fixture (every id-native handler reached as a
+direct child of an id-native statement), an await fixture, and focused
+`soaAst`-on batteries for the plugin-return `if` branches, the
+`terminate`-hook path, strict-mode-in-module-output diagnostics and the
+statement-hook bail — all asserting byte-identical id/object sequences.
+Both parser unittest suites and the corpus equivalence stay green.
+Next: convert the remaining hot expression types (member, call — with the
+D2 name-keyed `HookMap` resolution from column reads,
+`getMemberExpressionInfo` and the call/member-chain analysis) and the
+remaining statement/expression clusters, then default-on with the
+`soaAst: false` escape hatch once the module-level benchmarks show
+end-to-end wins.
 
 ## 5. Measurement protocol
 

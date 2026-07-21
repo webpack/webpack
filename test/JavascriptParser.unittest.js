@@ -1420,6 +1420,240 @@ describe("JavascriptParser", () => {
 			);
 		});
 
+		// A non-pinned top level (no import/export/class at module scope) whose
+		// statements the id-walk descends into, so the id-based walk core —
+		// function/arrow bodies, block/if/while/do-while, return/throw,
+		// array/spread/update and column-resolved identifiers — drives the run
+		// rather than the object fallback.
+		it("should drive identical hook sequences through the id-walk core", () => {
+			// every id-native expression handler is a direct child of an id-native
+			// statement (bare statement / return / array), never buried in a
+			// still-fallback var declarator, so the id walk actually reaches it.
+			expectSameWalk(
+				`function outer(a, b, c) {
+					if (a) b; else a;
+					while (c) c--;
+					do a++; while (a < 10);
+					[a, b, , ...c];
+					a++;
+					--b;
+					;
+					debugger;
+					(function rec(n) { return rec; });
+					(function () {});
+					(x => x + 1);
+					(y => { return y; });
+					1;
+					a;
+					return a;
+				}
+				function term(a) { return a; a(); }
+				function pinned() { class C {} C; }
+				function foreignChild() { return class {}; }
+				[class {}];
+				outer(1, 2, 3);
+				term(4);
+				pinned();
+				foreignChild();
+				var g = outer;
+				g;
+				\\u0067;
+				throw g;`
+			);
+		});
+
+		it("should drive identical hook sequences for top-level and nested await", () => {
+			expectSameWalk(
+				`await x;
+				async function af(p) { return await p; }
+				af;`
+			);
+		});
+
+		// The equivalence recorders return undefined, so the guarded and
+		// result-driven `if` branches of the id walk need a plugin that returns a
+		// value; assert the id and object walks still agree under it.
+		it("should match the object walk on id-walk if-statement branches", () => {
+			const code = "function f(a, b) { if (a) b; else a; }";
+			/**
+			 * @param {boolean} soaAst backend
+			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
+			 * @returns {string[]} recorded events
+			 */
+			const walkWith = (soaAst, setup) => {
+				const parser = new JavascriptParser("auto", { soaAst });
+				/** @type {string[]} */
+				const events = [];
+				setup(parser, events);
+				parser.parse(
+					code,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return events;
+			};
+			/**
+			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
+			 * @returns {void} asserts both backends agree
+			 */
+			const sameWith = (setup) => {
+				expect(walkWith(true, setup).join("\n")).toBe(
+					walkWith(false, setup).join("\n")
+				);
+			};
+			/**
+			 * @param {EXPECTED_ANY} value statementIf result or guard frame
+			 * @param {boolean} guard tap collectGuards instead of statementIf
+			 * @returns {(parser: EXPECTED_ANY, events: string[]) => void} setup
+			 */
+			const setup =
+				(value, guard) =>
+				(
+					/** @type {EXPECTED_ANY} */ parser,
+					/** @type {string[]} */ events
+				) => {
+					if (guard) {
+						parser.hooks.collectGuards.tap("test", () => value);
+					} else {
+						parser.hooks.statementIf.tap("test", () => value);
+					}
+					parser.hooks.expression.for("a").tap("test", () => {
+						events.push("a");
+					});
+					parser.hooks.expression.for("b").tap("test", () => {
+						events.push("b");
+					});
+				};
+			sameWith(setup(true, false)); // result truthy -> consequent only
+			sameWith(setup(false, false)); // result falsy -> alternate only
+			sameWith(setup({ consequent: {}, alternate: {} }, true)); // guarded branches
+		});
+
+		// Strict-mode-in-module-output diagnostics fire on the id walk for the
+		// literal / function-params / arrow-params / update-target constructs,
+		// each reached as a direct child of an id-native statement.
+		it("should report the same strict-mode violations on both walks", () => {
+			/**
+			 * @param {boolean} soaAst backend
+			 * @returns {string[]} sorted diagnostic messages
+			 */
+			const walk = (soaAst) => {
+				// script (sloppy) source so legacy octal parses; the module output
+				// then makes it a strict-mode violation at walk time
+				const parser = new JavascriptParser("script", { soaAst });
+				/** @type {string[]} */
+				const messages = [];
+				const state = /** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({
+						module: {
+							addWarning: (/** @type {Error} */ w) => messages.push(w.message),
+							addError: (/** @type {Error} */ e) => messages.push(e.message)
+						},
+						compilation: {
+							runtimeTemplate: { isModule: () => true }
+						}
+					})
+				);
+				parser.parse(
+					`07;
+					function f(a, a) { return a; }
+					(eval => eval);
+					undefined++;`,
+					state
+				);
+				return messages.sort();
+			};
+			const soa = walk(true);
+			expect(soa).toEqual(walk(false));
+			expect(soa.length).toBeGreaterThan(0);
+		});
+
+		// A `terminate` tap flips `scope.terminated`, exercising the id walk's
+		// return/throw terminate path and the following-statement skip.
+		it("should set scope.terminated via the terminate hook on both walks", () => {
+			/**
+			 * @param {boolean} soaAst backend
+			 * @param {string} keyword `return` or `throw`
+			 * @returns {string[]} recorded events
+			 */
+			const walk = (soaAst, keyword) => {
+				const parser = new JavascriptParser("auto", { soaAst });
+				/** @type {string[]} */
+				const events = [];
+				parser.hooks.terminate.tap("test", () => true);
+				parser.hooks.unusedStatement.tap("test", () => true);
+				parser.hooks.expression.for("after").tap("test", () => {
+					events.push("after");
+				});
+				parser.parse(
+					`function f(a) { ${keyword} a; after; }`,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return events;
+			};
+			for (const keyword of ["return", "throw"]) {
+				expect(walk(true, keyword)).toEqual(walk(false, keyword));
+				// the terminated scope marks `after;` unused, so it is skipped
+				expect(walk(true, keyword)).not.toContain("after");
+			}
+			// an `if` whose both branches terminate marks the whole `if` terminated
+			/**
+			 * @param {boolean} soaAst backend
+			 * @returns {string[]} recorded events
+			 */
+			const bothWalk = (soaAst) => {
+				const parser = new JavascriptParser("auto", { soaAst });
+				/** @type {string[]} */
+				const events = [];
+				parser.hooks.terminate.tap("test", () => true);
+				parser.hooks.unusedStatement.tap("test", () => true);
+				parser.hooks.expression.for("after").tap("test", () => {
+					events.push("after");
+				});
+				parser.parse(
+					"function f(a) { if (a) return a; else return a; after; }",
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return events;
+			};
+			expect(bothWalk(true)).toEqual(bothWalk(false));
+			expect(bothWalk(true)).not.toContain("after");
+		});
+
+		it("should honor a statement-hook bail on the id walk", () => {
+			/**
+			 * @param {boolean} soaAst backend
+			 * @returns {string[]} recorded events
+			 */
+			const walk = (soaAst) => {
+				const parser = new JavascriptParser("auto", { soaAst });
+				/** @type {string[]} */
+				const events = [];
+				parser.hooks.statement.tap("test", (s) => {
+					events.push(s.type);
+					if (s.type === "ExpressionStatement") return true;
+				});
+				parser.hooks.expression.for("inner").tap("test", () => {
+					events.push("inner");
+				});
+				parser.parse(
+					"function f() { inner; }",
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return events;
+			};
+			expect(walk(true)).toEqual(walk(false));
+			// the ExpressionStatement bail prevents the inner identifier walk
+			expect(walk(true)).not.toContain("inner");
+		});
+
 		for (const [name, read] of [
 			[
 				"react.development.js",
