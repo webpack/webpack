@@ -1217,4 +1217,70 @@ describe("JavascriptParser", () => {
 			expect(noAsi.body[0].body.body[0].argument.value).toBe(1);
 		});
 	});
+
+	describe("walk hook probing", () => {
+		it("should fire expression hooks for tapped identifiers only", () => {
+			const parser = new JavascriptParser("auto");
+			/** @type {string[]} */
+			const calls = [];
+			parser.hooks.expression.for("tapped").tap("test", (expr) => {
+				calls.push(/** @type {{ name: string }} */ (expr).name);
+			});
+			parser.parse(
+				"tapped; untapped; tapped;",
+				/** @type {import("../lib/Parser").ParserState} */ ({})
+			);
+			expect(calls).toEqual(["tapped", "tapped"]);
+		});
+
+		it("should serve members, optionals and ranges to expressionMemberChain taps", () => {
+			const parser = new JavascriptParser("auto");
+			/** @type {EXPECTED_ANY} */
+			let seen;
+			parser.hooks.expressionMemberChain
+				.for("obj")
+				.tap("test", (expr, members, membersOptionals, memberRanges) => {
+					seen = {
+						members: [...members],
+						membersOptionals: [...membersOptionals],
+						memberRanges: memberRanges.map((r) => [...r])
+					};
+					return true;
+				});
+			parser.parse(
+				"obj.a?.b;",
+				/** @type {import("../lib/Parser").ParserState} */ ({})
+			);
+			expect(seen.members).toEqual(["a", "b"]);
+			expect(seen.membersOptionals).toEqual([false, true]);
+			expect(seen.memberRanges).toEqual([
+				[0, 3],
+				[0, 5]
+			]);
+		});
+
+		it("should keep extractMemberExpressionChain complete for direct callers", () => {
+			const parser = new JavascriptParser("auto");
+			/** @type {EXPECTED_ANY} */
+			let chain;
+			parser.hooks.statement.tap("test", (statement) => {
+				if (statement.type === "ExpressionStatement") {
+					chain = parser.extractMemberExpressionChain(
+						/** @type {EXPECTED_ANY} */ (statement).expression
+					);
+				}
+			});
+			parser.parse(
+				'a.b["c"];',
+				/** @type {import("../lib/Parser").ParserState} */ ({})
+			);
+			expect(chain.members).toEqual(["c", "b"]);
+			expect(chain.membersOptionals).toEqual([false, false]);
+			expect(chain.memberRanges).toEqual([
+				[0, 3],
+				[0, 1]
+			]);
+			expect(chain.object.name).toBe("a");
+		});
+	});
 });

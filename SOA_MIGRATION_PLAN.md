@@ -10,6 +10,9 @@ checkLVal/yield/await cluster landed — **Phase A is complete**: no acorn
 node-construction path remains reachable in lazy mode (acorn stays for
 non-lazy mode, predicates and the token machinery already owned earlier).
 Next: Phase B construction seam.
+Walk-side profiling (Phase D scouting) landed two contained wins: hook-tap
+probing before arg materialization and deferred member-chain side arrays —
+walk churn 78 → 65 MB on typescript.js, walk wall time neutral-to-better.
 Measured at A5: parse churn 124 → 110 MB on typescript.js and parse wall
 time ≈ 4–5% faster (owned parseSubscripts is on the hottest expression
 path).
