@@ -351,6 +351,12 @@ the bound for eager consumers. C1 proceeds with candidate 2 as the default
 facade builder; the compat battery from the spike lands with C1's facades and
 canary builds decide whether the enumeration cut is acceptable ecosystem-wide.
 
+**C1 scaffolding landed**: `lib/javascript/SoaAst.js` — the per-parse column
+store (growth, flat child lists, identity-stable candidate-2 facades for the
+first six node types) with the compat battery as `test/SoaAst.unittest.js`.
+Not yet wired into parsing; next steps are full node-type coverage, then
+flipping the `_emit*` seam per grammar cluster.
+
 ## 5. Measurement protocol
 
 For every phase-gate PR: `yarn benchmark` on `js-parser-unit` (tokenize /
