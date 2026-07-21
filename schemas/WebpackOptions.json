@@ -893,7 +893,14 @@
         },
         "html": {
           "description": "Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/OutputHtmlOptions"
+            }
+          ]
         },
         "import": {
           "$ref": "#/definitions/EntryItem"
@@ -952,7 +959,14 @@
         },
         "html": {
           "description": "Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/OutputHtmlOptions"
+            }
+          ]
         },
         "import": {
           "description": "Module(s) that are loaded upon startup. The last one is exported.",

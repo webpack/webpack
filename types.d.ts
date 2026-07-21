@@ -6950,7 +6950,7 @@ declare interface EntryDescription {
 	/**
 	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
 	 */
-	html?: boolean;
+	html?: boolean | OutputHtmlOptions;
 
 	/**
 	 * Module(s) that are loaded upon startup.
@@ -7020,7 +7020,7 @@ declare interface EntryDescriptionNormalized {
 	/**
 	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
 	 */
-	html?: boolean;
+	html?: boolean | OutputHtmlOptions;
 
 	/**
 	 * Module(s) that are loaded upon startup. The last one is exported.

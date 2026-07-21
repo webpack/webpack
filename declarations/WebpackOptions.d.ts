@@ -1265,7 +1265,7 @@ export interface EntryDescription {
 	/**
 	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
 	 */
-	html?: boolean;
+	html?: boolean | OutputHtmlOptions;
 	/**
 	 * Module(s) that are loaded upon startup.
 	 */
@@ -1294,6 +1294,74 @@ export interface EntryDescription {
 	 * Mark this entry as a worker so its output file uses 'output.workerChunkFilename'.
 	 */
 	worker?: boolean;
+}
+/**
+ * Options for the generated HTML files.
+ */
+export interface OutputHtmlOptions {
+	/**
+	 * Inject a `<base>` element into the page `<head>`. A string sets `href`; an object sets both `href` and optionally `target`. Skipped if the HTML already contains a `<base>` element.
+	 */
+	base?:
+		| string
+		| {
+				/**
+				 * Value for the `href` attribute of the `<base>` element.
+				 */
+				href: string;
+				/**
+				 * Value for the `target` attribute of the `<base>` element (e.g. `"_blank"`).
+				 */
+				target?: string;
+		  };
+	/**
+	 * Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon path (e.g. `{ "icon": "./favicon.svg", "apple-touch-icon": "./apple.png" }`); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.
+	 */
+	favicon?:
+		| boolean
+		| string
+		| {
+				/**
+				 * Path to the icon file linked for this `rel`.
+				 */
+				[k: string]: string;
+		  }
+		| ((name: string) => boolean | string | {[rel: string]: string});
+	/**
+	 * Where to place injected chunk `<script>`/`<link>` tags. `"body"` (default; `"head"` with `output.module`) keeps them next to the entry tag — end of `<body>` on generated pages; `"head"` moves them into `<head>`; `false` suppresses sibling-chunk injection (entry tags and resource hints remain).
+	 */
+	inject?: ("body" | "head") | false;
+	/**
+	 * Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; `"script"` inlines only JavaScript, `"style"` only CSS; an array of `RegExp` patterns matches against the chunk name.
+	 */
+	inline?: RegExp[] | ("script" | "style") | boolean;
+	/**
+	 * Add Subresource Integrity (SRI) `integrity` attributes to injected `<script>`/`<link>` tags. `true` uses `['sha384']`; an array sets the hash algorithms; a function receives each referenced asset and returns the algorithms to use or `false` to skip it.
+	 */
+	integrity?:
+		| string[]
+		| boolean
+		| ((asset: {
+				chunk: import("../lib/Chunk");
+				filename: string;
+		  }) => string[] | false);
+	/**
+	 * Inject `<meta>` tags into the page `<head>`. Each key is the `name` attribute (or `"charset"` for a charset declaration); the value is the `content` string. Keys beginning with `og:` use the `property` attribute instead of `name`. A tag is skipped if the HTML already contains a meta with the same name.
+	 */
+	meta?: {
+		/**
+		 * Content string for the meta tag.
+		 */
+		[k: string]: string;
+	};
+	/**
+	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
+	 */
+	scriptLoading?: "auto" | "blocking" | "defer";
+	/**
+	 * Sets the `<title>` of the generated HTML page. Skipped if the HTML already contains a `<title>` element.
+	 */
+	title?: string;
 }
 /**
  * Options for library.
@@ -2762,74 +2830,6 @@ export interface Environment {
 	templateLiteral?: boolean;
 }
 /**
- * Options for the generated HTML files.
- */
-export interface OutputHtmlOptions {
-	/**
-	 * Inject a `<base>` element into the page `<head>`. A string sets `href`; an object sets both `href` and optionally `target`. Skipped if the HTML already contains a `<base>` element.
-	 */
-	base?:
-		| string
-		| {
-				/**
-				 * Value for the `href` attribute of the `<base>` element.
-				 */
-				href: string;
-				/**
-				 * Value for the `target` attribute of the `<base>` element (e.g. `"_blank"`).
-				 */
-				target?: string;
-		  };
-	/**
-	 * Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon path (e.g. `{ "icon": "./favicon.svg", "apple-touch-icon": "./apple.png" }`); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.
-	 */
-	favicon?:
-		| boolean
-		| string
-		| {
-				/**
-				 * Path to the icon file linked for this `rel`.
-				 */
-				[k: string]: string;
-		  }
-		| ((name: string) => boolean | string | {[rel: string]: string});
-	/**
-	 * Where to place injected chunk `<script>`/`<link>` tags. `"body"` (default; `"head"` with `output.module`) keeps them next to the entry tag — end of `<body>` on generated pages; `"head"` moves them into `<head>`; `false` suppresses sibling-chunk injection (entry tags and resource hints remain).
-	 */
-	inject?: ("body" | "head") | false;
-	/**
-	 * Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; `"script"` inlines only JavaScript, `"style"` only CSS; an array of `RegExp` patterns matches against the chunk name.
-	 */
-	inline?: RegExp[] | ("script" | "style") | boolean;
-	/**
-	 * Add Subresource Integrity (SRI) `integrity` attributes to injected `<script>`/`<link>` tags. `true` uses `['sha384']`; an array sets the hash algorithms; a function receives each referenced asset and returns the algorithms to use or `false` to skip it.
-	 */
-	integrity?:
-		| string[]
-		| boolean
-		| ((asset: {
-				chunk: import("../lib/Chunk");
-				filename: string;
-		  }) => string[] | false);
-	/**
-	 * Inject `<meta>` tags into the page `<head>`. Each key is the `name` attribute (or `"charset"` for a charset declaration); the value is the `content` string. Keys beginning with `og:` use the `property` attribute instead of `name`. A tag is skipped if the HTML already contains a meta with the same name.
-	 */
-	meta?: {
-		/**
-		 * Content string for the meta tag.
-		 */
-		[k: string]: string;
-	};
-	/**
-	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
-	 */
-	scriptLoading?: "auto" | "blocking" | "defer";
-	/**
-	 * Sets the `<title>` of the generated HTML page. Skipped if the HTML already contains a `<title>` element.
-	 */
-	title?: string;
-}
-/**
  * A custom resource-hint `<link>` for `output.html.resourceHints`. Exactly one of `href` / `chunk` / `entry` names the target.
  */
 export interface HtmlResourceHint {
@@ -3727,7 +3727,7 @@ export interface EntryDescriptionNormalized {
 	/**
 	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
 	 */
-	html?: boolean;
+	html?: boolean | OutputHtmlOptions;
 	/**
 	 * Module(s) that are loaded upon startup. The last one is exported.
 	 */
