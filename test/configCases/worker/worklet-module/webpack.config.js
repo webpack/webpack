@@ -20,6 +20,16 @@ class AssertNoBootstrapPlugin {
 					) {
 						throw new Error("module worklet emitted a bootstrap/shim");
 					}
+					// Analyzable literal specifier, not the runtime `__webpack_require__.u(id)` form.
+					if (
+						!/addModule\(new URL\(\/\* worklet import \*\/ "\.\/\w+\.chunk\.mjs", import\.meta\.url\)\)/.test(
+							main
+						)
+					) {
+						throw new Error(
+							"module worklet did not emit the analyzable new URL"
+						);
+					}
 				}
 			);
 		});
