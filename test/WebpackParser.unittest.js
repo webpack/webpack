@@ -2181,6 +2181,455 @@ describe("WebpackParser", () => {
 			expect(arrayFacade.elements[1].argument.name).toBe("y");
 		});
 
+		/**
+		 * Reads each child once (cold), again (memoized), then writes a
+		 * replacement through the setter and reads it back.
+		 * @param {EXPECTED_ANY} facade facade under test
+		 * @param {string[]} keys child property names
+		 */
+		const exerciseChildren = (facade, keys) => {
+			for (const key of keys) {
+				const first = facade[key];
+				expect(facade[key]).toBe(first);
+				const replacement = { replaced: key };
+				facade[key] = replacement;
+				expect(facade[key]).toBe(replacement);
+			}
+		};
+
+		it("should serve loop facades", () => {
+			const source = "abcdefghijklmnopqrstuvwxyz";
+			const ast = new SoaAst(source);
+			/**
+			 * @param {number} i offset (single-letter identifier at i)
+			 * @returns {number} identifier ref
+			 */
+			const ident = (i) => ast.allocNode(SoaAst.TYPE_IDENTIFIER, i, i + 1);
+			const forStmt = ast.allocNode(SoaAst.TYPE_FOR_STATEMENT, 0, 20);
+			ast.kid0[forStmt] = ident(0);
+			ast.kid1[forStmt] = ident(1);
+			ast.kid2[forStmt] = ident(2);
+			ast.aux[forStmt] = ast.allocNode(SoaAst.TYPE_EMPTY_STATEMENT, 3, 4);
+			const forFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(forStmt));
+			expect(forFacade.type).toBe("ForStatement");
+			expect(forFacade.init.name).toBe("a");
+			expect(forFacade.test.name).toBe("b");
+			expect(forFacade.update.name).toBe("c");
+			expect(forFacade.body.type).toBe("EmptyStatement");
+			exerciseChildren(forFacade, ["init", "test", "update", "body"]);
+
+			const forIn = ast.allocNode(SoaAst.TYPE_FOR_IN_STATEMENT, 0, 20);
+			ast.kid0[forIn] = ident(4);
+			ast.kid1[forIn] = ident(5);
+			ast.kid2[forIn] = ident(6);
+			const forInFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(forIn));
+			expect(forInFacade.type).toBe("ForInStatement");
+			expect(forInFacade.await).toBeUndefined();
+			expect(forInFacade.left.name).toBe("e");
+			expect(forInFacade.right.name).toBe("f");
+			expect(forInFacade.body.name).toBe("g");
+			exerciseChildren(forInFacade, ["left", "right", "body"]);
+
+			const forOf = ast.allocNode(SoaAst.TYPE_FOR_OF_STATEMENT, 0, 20);
+			ast.kid0[forOf] = ident(7);
+			ast.kid1[forOf] = ident(8);
+			ast.kid2[forOf] = ident(9);
+			ast.flags[forOf] = SoaAst.FLAG_AWAIT;
+			const forOfFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(forOf));
+			expect(forOfFacade.type).toBe("ForOfStatement");
+			expect(forOfFacade.await).toBe(true);
+			expect(forOfFacade.left.name).toBe("h");
+
+			const whileStmt = ast.allocNode(SoaAst.TYPE_WHILE_STATEMENT, 0, 20);
+			ast.kid0[whileStmt] = ident(10);
+			ast.kid1[whileStmt] = ident(11);
+			const whileFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(whileStmt));
+			expect(whileFacade.type).toBe("WhileStatement");
+			expect(whileFacade.test.name).toBe("k");
+			expect(whileFacade.body.name).toBe("l");
+			exerciseChildren(whileFacade, ["test", "body"]);
+
+			const doWhile = ast.allocNode(SoaAst.TYPE_DO_WHILE_STATEMENT, 0, 20);
+			ast.kid0[doWhile] = ident(12);
+			ast.kid1[doWhile] = ident(13);
+			const doWhileFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(doWhile));
+			expect(doWhileFacade.type).toBe("DoWhileStatement");
+			expect(doWhileFacade.body.name).toBe("m");
+			expect(doWhileFacade.test.name).toBe("n");
+			exerciseChildren(doWhileFacade, ["body", "test"]);
+		});
+
+		it("should serve switch, try, label and with facades", () => {
+			const source = "abcdefghijklmnopqrstuvwxyz";
+			const ast = new SoaAst(source);
+			/**
+			 * @param {number} i offset (single-letter identifier at i)
+			 * @returns {number} identifier ref
+			 */
+			const ident = (i) => ast.allocNode(SoaAst.TYPE_IDENTIFIER, i, i + 1);
+			const caseA = ast.allocNode(SoaAst.TYPE_SWITCH_CASE, 0, 10);
+			ast.kid0[caseA] = ident(0);
+			ast.setList(caseA, [
+				ast.allocNode(SoaAst.TYPE_EMPTY_STATEMENT, 2, 3),
+				ast.allocNode(SoaAst.TYPE_DEBUGGER_STATEMENT, 4, 5)
+			]);
+			const caseFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(caseA));
+			expect(caseFacade.type).toBe("SwitchCase");
+			expect(caseFacade.test.name).toBe("a");
+			expect(
+				caseFacade.consequent.map((/** @type {EXPECTED_ANY} */ s) => s.type)
+			).toEqual(["EmptyStatement", "DebuggerStatement"]);
+			exerciseChildren(caseFacade, ["consequent", "test"]);
+			const defaultCase = ast.allocNode(SoaAst.TYPE_SWITCH_CASE, 0, 10);
+			expect(
+				/** @type {EXPECTED_ANY} */ (ast.nodeAt(defaultCase)).test
+			).toBeNull();
+
+			const switchStmt = ast.allocNode(SoaAst.TYPE_SWITCH_STATEMENT, 0, 12);
+			ast.kid0[switchStmt] = ident(1);
+			ast.setList(switchStmt, [caseA, defaultCase]);
+			const switchFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(switchStmt));
+			expect(switchFacade.type).toBe("SwitchStatement");
+			expect(switchFacade.discriminant.name).toBe("b");
+			expect(switchFacade.cases).toHaveLength(2);
+			expect(switchFacade.cases[0]).toBe(caseFacade);
+			exerciseChildren(switchFacade, ["discriminant", "cases"]);
+
+			const block = ast.allocNode(SoaAst.TYPE_BLOCK_STATEMENT, 0, 2);
+			const handlerBody = ast.allocNode(SoaAst.TYPE_BLOCK_STATEMENT, 6, 8);
+			const handler = ast.allocNode(SoaAst.TYPE_CATCH_CLAUSE, 3, 8);
+			ast.kid0[handler] = ident(4);
+			ast.kid1[handler] = handlerBody;
+			const finalizer = ast.allocNode(SoaAst.TYPE_BLOCK_STATEMENT, 9, 11);
+			const tryStmt = ast.allocNode(SoaAst.TYPE_TRY_STATEMENT, 0, 11);
+			ast.kid0[tryStmt] = block;
+			ast.kid1[tryStmt] = handler;
+			ast.kid2[tryStmt] = finalizer;
+			const tryFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(tryStmt));
+			expect(tryFacade.type).toBe("TryStatement");
+			expect(tryFacade.block.type).toBe("BlockStatement");
+			expect(tryFacade.handler.type).toBe("CatchClause");
+			expect(tryFacade.handler.param.name).toBe("e");
+			expect(tryFacade.handler.body).toBe(ast.nodeAt(handlerBody));
+			expect(tryFacade.finalizer.range).toEqual([9, 11]);
+			exerciseChildren(tryFacade, ["block", "handler", "finalizer"]);
+			exerciseChildren(ast.nodeAt(handler), ["param", "body"]);
+
+			const throwStmt = ast.allocNode(SoaAst.TYPE_THROW_STATEMENT, 0, 8);
+			ast.kid0[throwStmt] = ident(6);
+			const throwFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(throwStmt));
+			expect(throwFacade.type).toBe("ThrowStatement");
+			expect(throwFacade.argument.name).toBe("g");
+
+			const breakStmt = ast.allocNode(SoaAst.TYPE_BREAK_STATEMENT, 0, 9);
+			ast.kid0[breakStmt] = ident(7);
+			const breakFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(breakStmt));
+			expect(breakFacade.type).toBe("BreakStatement");
+			expect(breakFacade.label.name).toBe("h");
+			exerciseChildren(breakFacade, ["label"]);
+			const continueStmt = ast.allocNode(SoaAst.TYPE_CONTINUE_STATEMENT, 0, 9);
+			const continueFacade = /** @type {EXPECTED_ANY} */ (
+				ast.nodeAt(continueStmt)
+			);
+			expect(continueFacade.type).toBe("ContinueStatement");
+			expect(continueFacade.label).toBeNull();
+
+			const labeled = ast.allocNode(SoaAst.TYPE_LABELED_STATEMENT, 0, 12);
+			ast.kid0[labeled] = breakStmt;
+			ast.kid1[labeled] = ident(8);
+			const labeledFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(labeled));
+			expect(labeledFacade.type).toBe("LabeledStatement");
+			expect(labeledFacade.body).toBe(breakFacade);
+			expect(labeledFacade.label.name).toBe("i");
+			exerciseChildren(labeledFacade, ["body", "label"]);
+
+			const withStmt = ast.allocNode(SoaAst.TYPE_WITH_STATEMENT, 0, 12);
+			ast.kid0[withStmt] = ident(9);
+			ast.kid1[withStmt] = block;
+			const withFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(withStmt));
+			expect(withFacade.type).toBe("WithStatement");
+			expect(withFacade.object.name).toBe("j");
+			expect(withFacade.body.type).toBe("BlockStatement");
+			exerciseChildren(withFacade, ["object", "body"]);
+		});
+
+		it("should serve template facades from the interleaved span", () => {
+			// eslint-disable-next-line no-template-curly-in-string
+			const source = "t`a${b}c`";
+			const ast = new SoaAst(source);
+			const tag = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 0, 1);
+			const quasi0 = ast.allocNode(SoaAst.TYPE_TEMPLATE_ELEMENT, 2, 3);
+			ast.values[quasi0] = { raw: "a", cooked: "a" };
+			const expr = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 5, 6);
+			const quasi1 = ast.allocNode(SoaAst.TYPE_TEMPLATE_ELEMENT, 7, 8);
+			ast.values[quasi1] = { raw: "c", cooked: "c" };
+			ast.flags[quasi1] = SoaAst.FLAG_TAIL;
+			const template = ast.allocNode(SoaAst.TYPE_TEMPLATE_LITERAL, 1, 9);
+			ast.setList(template, [quasi0, expr, quasi1]);
+			const tagged = ast.allocNode(
+				SoaAst.TYPE_TAGGED_TEMPLATE_EXPRESSION,
+				0,
+				9
+			);
+			ast.kid0[tagged] = tag;
+			ast.kid1[tagged] = template;
+
+			const taggedFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(tagged));
+			expect(taggedFacade.type).toBe("TaggedTemplateExpression");
+			expect(taggedFacade.tag.name).toBe("t");
+			const templateFacade = taggedFacade.quasi;
+			expect(templateFacade.type).toBe("TemplateLiteral");
+			expect(
+				templateFacade.expressions.map(
+					(/** @type {EXPECTED_ANY} */ e) => e.name
+				)
+			).toEqual(["b"]);
+			expect(
+				templateFacade.quasis.map(
+					(/** @type {EXPECTED_ANY} */ q) => q.value.cooked
+				)
+			).toEqual(["a", "c"]);
+			expect(templateFacade.quasis[0].tail).toBe(false);
+			expect(templateFacade.quasis[1].tail).toBe(true);
+			exerciseChildren(taggedFacade, ["tag", "quasi"]);
+			exerciseChildren(templateFacade, ["expressions", "quasis"]);
+
+			// substitution-free template: one quasi, no expressions
+			const only = ast.allocNode(SoaAst.TYPE_TEMPLATE_ELEMENT, 2, 3);
+			ast.values[only] = { raw: "a", cooked: "a" };
+			ast.flags[only] = SoaAst.FLAG_TAIL;
+			const bare = ast.allocNode(SoaAst.TYPE_TEMPLATE_LITERAL, 1, 9);
+			ast.setList(bare, [only]);
+			const bareFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(bare));
+			expect(bareFacade.expressions).toEqual([]);
+			expect(bareFacade.quasis).toHaveLength(1);
+		});
+
+		it("should serve class facades", () => {
+			const source = "class A extends B { #m() {} static p = c; static { ; } }";
+			const ast = new SoaAst(source);
+			const classId = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 6, 7);
+			const superClass = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 16, 17);
+			const privateName = ast.allocNode(SoaAst.TYPE_PRIVATE_IDENTIFIER, 20, 22);
+			const methodFn = ast.allocNode(SoaAst.TYPE_FUNCTION_EXPRESSION, 22, 27);
+			const method = ast.allocNode(SoaAst.TYPE_METHOD_DEFINITION, 20, 27);
+			ast.kid0[method] = privateName;
+			ast.kid1[method] = methodFn;
+			ast.aux[method] = 4; // "method"
+			const fieldKey = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 35, 36);
+			const fieldValue = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 39, 40);
+			const field = ast.allocNode(SoaAst.TYPE_PROPERTY_DEFINITION, 28, 41);
+			ast.kid0[field] = fieldKey;
+			ast.kid1[field] = fieldValue;
+			ast.flags[field] = SoaAst.FLAG_STATIC;
+			const staticBlock = ast.allocNode(SoaAst.TYPE_STATIC_BLOCK, 42, 55);
+			ast.setList(staticBlock, [
+				ast.allocNode(SoaAst.TYPE_EMPTY_STATEMENT, 51, 52)
+			]);
+			const classBody = ast.allocNode(SoaAst.TYPE_CLASS_BODY, 18, 56);
+			ast.setList(classBody, [method, field, staticBlock]);
+			const classDecl = ast.allocNode(SoaAst.TYPE_CLASS_DECLARATION, 0, 56);
+			ast.kid0[classDecl] = classId;
+			ast.kid1[classDecl] = superClass;
+			ast.kid2[classDecl] = classBody;
+
+			const classFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(classDecl));
+			expect(classFacade.type).toBe("ClassDeclaration");
+			expect(classFacade.id.name).toBe("A");
+			expect(classFacade.superClass.name).toBe("B");
+			const bodyFacade = classFacade.body;
+			expect(bodyFacade.type).toBe("ClassBody");
+			const [methodFacade, fieldFacade, staticBlockFacade] = bodyFacade.body;
+			expect(methodFacade.type).toBe("MethodDefinition");
+			expect(methodFacade.static).toBe(false);
+			expect(methodFacade.computed).toBe(false);
+			expect(methodFacade.kind).toBe("method");
+			expect(methodFacade.key.type).toBe("PrivateIdentifier");
+			expect(methodFacade.key.name).toBe("m");
+			expect(methodFacade.value.type).toBe("FunctionExpression");
+			expect(fieldFacade.type).toBe("PropertyDefinition");
+			expect(fieldFacade.static).toBe(true);
+			expect(fieldFacade.key.name).toBe("p");
+			expect(fieldFacade.value.name).toBe("c");
+			expect(staticBlockFacade.type).toBe("StaticBlock");
+			expect(staticBlockFacade.body[0].type).toBe("EmptyStatement");
+			exerciseChildren(classFacade, ["id", "superClass", "body"]);
+			exerciseChildren(methodFacade, ["key", "value"]);
+			exerciseChildren(fieldFacade, ["key", "value"]);
+			exerciseChildren(staticBlockFacade, ["body"]);
+
+			// escaped private names land in the side list
+			const escaped = ast.allocNode(SoaAst.TYPE_PRIVATE_IDENTIFIER, 20, 22);
+			ast.values[escaped] = "esc";
+			expect(/** @type {EXPECTED_ANY} */ (ast.nodeAt(escaped)).name).toBe(
+				"esc"
+			);
+
+			const superNode = ast.allocNode(SoaAst.TYPE_SUPER, 0, 5);
+			expect(/** @type {EXPECTED_ANY} */ (ast.nodeAt(superNode)).type).toBe(
+				"Super"
+			);
+			const meta = ast.allocNode(SoaAst.TYPE_META_PROPERTY, 0, 10);
+			ast.kid0[meta] = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 6, 7);
+			ast.kid1[meta] = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 16, 17);
+			const metaFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(meta));
+			expect(metaFacade.type).toBe("MetaProperty");
+			expect(metaFacade.meta.name).toBe("A");
+			expect(metaFacade.property.name).toBe("B");
+			exerciseChildren(metaFacade, ["meta", "property"]);
+		});
+
+		it("should serve import and export facades", () => {
+			const source = 'import d, { a as b } from "m";';
+			const ast = new SoaAst(source);
+			const defaultLocal = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 7, 8);
+			const defaultSpecifier = ast.allocNode(
+				SoaAst.TYPE_IMPORT_DEFAULT_SPECIFIER,
+				7,
+				8
+			);
+			ast.kid0[defaultSpecifier] = defaultLocal;
+			const imported = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 12, 13);
+			const local = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 17, 18);
+			const specifier = ast.allocNode(SoaAst.TYPE_IMPORT_SPECIFIER, 12, 18);
+			ast.kid0[specifier] = imported;
+			ast.kid1[specifier] = local;
+			const sourceLiteral = ast.allocNode(SoaAst.TYPE_LITERAL, 26, 29);
+			ast.values[sourceLiteral] = "m";
+			const importDecl = ast.allocNode(SoaAst.TYPE_IMPORT_DECLARATION, 0, 30);
+			ast.kid0[importDecl] = sourceLiteral;
+			ast.flags[importDecl] = SoaAst.FLAG_ES2025;
+			ast.setList(importDecl, [defaultSpecifier, specifier]);
+
+			const importFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(importDecl));
+			expect(importFacade.type).toBe("ImportDeclaration");
+			expect(importFacade.attributes).toEqual([]);
+			expect(importFacade.source.value).toBe("m");
+			const [defaultFacade, specifierFacade] = importFacade.specifiers;
+			expect(defaultFacade.type).toBe("ImportDefaultSpecifier");
+			expect(defaultFacade.local.name).toBe("d");
+			expect(specifierFacade.type).toBe("ImportSpecifier");
+			expect(specifierFacade.imported.name).toBe("a");
+			expect(specifierFacade.local.name).toBe("b");
+			exerciseChildren(importFacade, ["specifiers", "source"]);
+			exerciseChildren(specifierFacade, ["imported", "local"]);
+			exerciseChildren(defaultFacade, ["local"]);
+
+			// pre-ES2025 declarations carry no `attributes` key at all
+			const oldImport = ast.allocNode(SoaAst.TYPE_IMPORT_DECLARATION, 0, 30);
+			expect(
+				"attributes" in /** @type {EXPECTED_ANY} */ (ast.nodeAt(oldImport))
+			).toBe(false);
+
+			const namespaceSpecifier = ast.allocNode(
+				SoaAst.TYPE_IMPORT_NAMESPACE_SPECIFIER,
+				7,
+				8
+			);
+			ast.kid0[namespaceSpecifier] = defaultLocal;
+			const namespaceFacade = /** @type {EXPECTED_ANY} */ (
+				ast.nodeAt(namespaceSpecifier)
+			);
+			expect(namespaceFacade.type).toBe("ImportNamespaceSpecifier");
+			expect(namespaceFacade.local.name).toBe("d");
+
+			const attrKey = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 7, 8);
+			const attrValue = ast.allocNode(SoaAst.TYPE_LITERAL, 26, 29);
+			ast.values[attrValue] = "m";
+			const attribute = ast.allocNode(SoaAst.TYPE_IMPORT_ATTRIBUTE, 7, 29);
+			ast.kid0[attribute] = attrKey;
+			ast.kid1[attribute] = attrValue;
+			const attributeFacade = /** @type {EXPECTED_ANY} */ (
+				ast.nodeAt(attribute)
+			);
+			expect(attributeFacade.type).toBe("ImportAttribute");
+			expect(attributeFacade.key.name).toBe("d");
+			expect(attributeFacade.value.value).toBe("m");
+			exerciseChildren(attributeFacade, ["key", "value"]);
+			const withAttributes = ast.allocNode(
+				SoaAst.TYPE_IMPORT_DECLARATION,
+				0,
+				30
+			);
+			ast.flags[withAttributes] = SoaAst.FLAG_ES2025;
+			ast.values[withAttributes] = [attributeFacade];
+			expect(
+				/** @type {EXPECTED_ANY} */ (ast.nodeAt(withAttributes)).attributes
+			).toEqual([attributeFacade]);
+
+			const importExpr = ast.allocNode(SoaAst.TYPE_IMPORT_EXPRESSION, 0, 30);
+			ast.kid0[importExpr] = sourceLiteral;
+			ast.flags[importExpr] = SoaAst.FLAG_ES2025;
+			const importExprFacade = /** @type {EXPECTED_ANY} */ (
+				ast.nodeAt(importExpr)
+			);
+			expect(importExprFacade.type).toBe("ImportExpression");
+			expect(importExprFacade.source.value).toBe("m");
+			expect(importExprFacade.options).toBeNull();
+			exerciseChildren(importExprFacade, ["source"]);
+			const oldImportExpr = ast.allocNode(SoaAst.TYPE_IMPORT_EXPRESSION, 0, 30);
+			expect(
+				"options" in /** @type {EXPECTED_ANY} */ (ast.nodeAt(oldImportExpr))
+			).toBe(false);
+
+			const exportLocal = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 12, 13);
+			const exported = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 17, 18);
+			const exportSpecifier = ast.allocNode(
+				SoaAst.TYPE_EXPORT_SPECIFIER,
+				12,
+				18
+			);
+			ast.kid0[exportSpecifier] = exportLocal;
+			ast.kid1[exportSpecifier] = exported;
+			const namedExport = ast.allocNode(
+				SoaAst.TYPE_EXPORT_NAMED_DECLARATION,
+				0,
+				30
+			);
+			ast.kid1[namedExport] = sourceLiteral;
+			ast.flags[namedExport] = SoaAst.FLAG_ES2025;
+			ast.setList(namedExport, [exportSpecifier]);
+			const namedFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(namedExport));
+			expect(namedFacade.type).toBe("ExportNamedDeclaration");
+			expect(namedFacade.declaration).toBeNull();
+			expect(namedFacade.attributes).toEqual([]);
+			expect(namedFacade.source.value).toBe("m");
+			const exportSpecifierFacade = namedFacade.specifiers[0];
+			expect(exportSpecifierFacade.type).toBe("ExportSpecifier");
+			expect(exportSpecifierFacade.local.name).toBe("a");
+			expect(exportSpecifierFacade.exported.name).toBe("b");
+			exerciseChildren(namedFacade, ["declaration", "specifiers", "source"]);
+			exerciseChildren(exportSpecifierFacade, ["local", "exported"]);
+
+			const defaultExport = ast.allocNode(
+				SoaAst.TYPE_EXPORT_DEFAULT_DECLARATION,
+				0,
+				30
+			);
+			ast.kid0[defaultExport] = exportLocal;
+			const defaultExportFacade = /** @type {EXPECTED_ANY} */ (
+				ast.nodeAt(defaultExport)
+			);
+			expect(defaultExportFacade.type).toBe("ExportDefaultDeclaration");
+			expect(defaultExportFacade.declaration.name).toBe("a");
+			exerciseChildren(defaultExportFacade, ["declaration"]);
+
+			const allExport = ast.allocNode(
+				SoaAst.TYPE_EXPORT_ALL_DECLARATION,
+				0,
+				30
+			);
+			ast.kid0[allExport] = exported;
+			ast.kid1[allExport] = sourceLiteral;
+			ast.flags[allExport] = SoaAst.FLAG_ES2025;
+			const allFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(allExport));
+			expect(allFacade.type).toBe("ExportAllDeclaration");
+			expect(allFacade.exported.name).toBe("b");
+			expect(allFacade.source.value).toBe("m");
+			expect(allFacade.attributes).toEqual([]);
+			exerciseChildren(allFacade, ["exported", "source"]);
+		});
+
 		it("should grow columns and the flat buffer beyond their initial capacity", () => {
 			const ast = new SoaAst("x");
 			/** @type {number[]} */
