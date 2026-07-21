@@ -3,28 +3,47 @@
 const { EventEmitter } = require("events");
 const createBackend = require("../lib/hmr/lazyCompilationBackend");
 
+/** @typedef {import("../lib/hmr/LazyCompilationPlugin").BackendApi} BackendApi */
+/** @typedef {import("http").Server} Server */
+/** @typedef {import("net").Socket} Socket */
+
 const PREFIX = "/lazy-compilation-using-";
 
+/** @returns {Server} a fake http.Server */
 const makeServer = () => {
 	const server = new EventEmitter();
-	server.address = () => ({ address: "127.0.0.1", family: "IPv4", port: 1234 });
-	server.close = (cb) => cb && cb();
-	return server;
+	Object.assign(server, {
+		address: () => ({ address: "127.0.0.1", family: "IPv4", port: 1234 }),
+		close: (/** @type {() => void} */ cb) => cb && cb()
+	});
+	return /** @type {Server} */ (/** @type {unknown} */ (server));
 };
 
+/** @returns {Socket} a fake socket */
 const makeSocket = () => {
 	const socket = new EventEmitter();
-	socket.setNoDelay = () => {};
-	// mirror http socket teardown: destroy triggers a close event
-	socket.destroy = () => socket.emit("close");
-	return socket;
+	Object.assign(socket, {
+		setNoDelay: () => {},
+		// mirror http socket teardown: destroy triggers a close event
+		destroy: () => socket.emit("close")
+	});
+	return /** @type {Socket} */ (/** @type {unknown} */ (socket));
 };
 
 /**
- * @param {EXPECTED_ANY} api backend api
- * @param {EventEmitter} server fake server
+ * @param {string} id module identifier
+ * @returns {import("../lib/Module")} a fake module
+ */
+const makeModule = (id) =>
+	/** @type {import("../lib/Module")} */ (
+		/** @type {unknown} */ ({ identifier: () => id })
+	);
+
+/**
+ * @param {BackendApi} api backend api
+ * @param {Server} server fake server
  * @param {string} url request url
- * @returns {EventEmitter} the request socket
+ * @returns {Socket} the request socket
  */
 const connect = (api, server, url) => {
 	const socket = makeSocket();
@@ -41,30 +60,35 @@ describe("lazyCompilationBackend", () => {
 	afterEach(() => jest.useRealTimers());
 
 	/**
-	 * @returns {{ api: EXPECTED_ANY, server: EventEmitter, invalidate: jest.Mock }} harness
+	 * @returns {{ api: BackendApi, server: Server, invalidate: jest.Mock }} harness
 	 */
 	const setup = () => {
 		const server = makeServer();
 		const invalidate = jest.fn();
-		const compiler = {
-			getInfrastructureLogger: () => ({ log() {}, warn() {} }),
-			watching: { invalidate }
-		};
+		const compiler = /** @type {import("../lib/Compiler")} */ (
+			/** @type {unknown} */ ({
+				getInfrastructureLogger: () => ({ log() {}, warn() {} }),
+				watching: { invalidate }
+			})
+		);
+		/** @type {BackendApi | undefined} */
 		let api;
 		createBackend({
 			client: "client",
 			server: () => server,
-			listen: (s) => s.emit("listening")
+			listen: (/** @type {Server} */ s) => s.emit("listening")
 		})(compiler, (err, result) => {
 			if (err) throw err;
 			api = result;
 		});
+		// listen fires "listening" synchronously, so api is set by now
+		if (!api) throw new Error("backend did not initialize synchronously");
 		return { api, server, invalidate };
 	};
 
 	it("activates a module while a client is connected and invalidates once", () => {
 		const { api, server, invalidate } = setup();
-		const mod = { identifier: () => "mod-a" };
+		const mod = makeModule("mod-a");
 		const { data: key } = api.module(mod);
 		expect(api.module(mod).active).toBe(false);
 
@@ -79,7 +103,7 @@ describe("lazyCompilationBackend", () => {
 
 	it("keeps the module active until the last client disconnects, then drops it", () => {
 		const { api, server } = setup();
-		const mod = { identifier: () => "mod-a" };
+		const mod = makeModule("mod-a");
 		const { data: key } = api.module(mod);
 		const s1 = connect(api, server, PREFIX + key);
 		const s2 = connect(api, server, PREFIX + key);
@@ -97,7 +121,7 @@ describe("lazyCompilationBackend", () => {
 
 	it("does not schedule idle timers or hang after dispose", () => {
 		const { api, server } = setup();
-		const mod = { identifier: () => "mod-a" };
+		const mod = makeModule("mod-a");
 		const { data: key } = api.module(mod);
 		connect(api, server, PREFIX + key);
 
@@ -114,7 +138,7 @@ describe("lazyCompilationBackend", () => {
 
 	it("clears a pending idle timer on dispose", () => {
 		const { api, server } = setup();
-		const mod = { identifier: () => "mod-a" };
+		const mod = makeModule("mod-a");
 		const { data: key } = api.module(mod);
 		const s1 = connect(api, server, PREFIX + key);
 
