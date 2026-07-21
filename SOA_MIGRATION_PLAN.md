@@ -1,6 +1,7 @@
 # JavaScript syntax parser: Structure-of-Arrays migration plan
 
-Status: **in progress** — Phase 0 landed (see §7); Phase A next.
+Status: **in progress** — Phase 0 landed (see §7); Phase A1 (functions,
+methods, arrows, paren/arrow disambiguation) landed; A2–A6 next.
 Scope: `lib/javascript/syntax.js` (the tuned acorn-based parser) and its single
 production consumer `lib/javascript/JavascriptParser.js`.
 

@@ -1454,6 +1454,189 @@ describe("WebpackParser", () => {
 		});
 	});
 
+	describe("function grammar fast path", () => {
+		it("should build single-shape nodes for declarations, expressions and arrows", () => {
+			const { ast } = parse(
+				"function f(a) { return a; }\nvar g = function named() {};\nvar h = (a, b) => a + b;\nvar i = async x => x;"
+			);
+			const [f, g, h, i] = /** @type {EXPECTED_ANY[]} */ (ast.body);
+			expect(f.type).toBe("FunctionDeclaration");
+			expect(f.id.name).toBe("f");
+			expect(f.generator).toBe(false);
+			expect(f.async).toBe(false);
+			expect(f.expression).toBe(false);
+			expect(f.range).toEqual([0, 27]);
+			expect(g.declarations[0].init.type).toBe("FunctionExpression");
+			expect(g.declarations[0].init.id.name).toBe("named");
+			const arrow = h.declarations[0].init;
+			expect(arrow.type).toBe("ArrowFunctionExpression");
+			expect(arrow.id).toBeNull();
+			expect(arrow.expression).toBe(true);
+			const asyncArrow = i.declarations[0].init;
+			expect(asyncArrow.async).toBe(true);
+			expect(asyncArrow.params[0].name).toBe("x");
+		});
+
+		it("should keep acorn's enumeration order on function nodes", () => {
+			const { ast } = parse("function f() {}");
+			expect(Object.keys(ast.body[0])).toEqual([
+				"type",
+				"start",
+				"end",
+				"id",
+				"expression",
+				"generator",
+				"async",
+				"params",
+				"body"
+			]);
+		});
+
+		it("should parse generators, async functions and methods", () => {
+			const { ast } = parse(
+				"async function* ag(a = 1, ...rest) { yield await a; }\n({ m() {}, get g() { return 1; }, set s(v) {}, *gen() {}, async am() {} });"
+			);
+			const ag = /** @type {EXPECTED_ANY} */ (ast.body[0]);
+			expect(ag.generator).toBe(true);
+			expect(ag.async).toBe(true);
+			const props = /** @type {EXPECTED_ANY} */ (ast.body[1]).expression
+				.properties;
+			expect(
+				props.map((/** @type {EXPECTED_ANY} */ p) => p.value.type)
+			).toEqual([
+				"FunctionExpression",
+				"FunctionExpression",
+				"FunctionExpression",
+				"FunctionExpression",
+				"FunctionExpression"
+			]);
+			expect(props[3].value.generator).toBe(true);
+			expect(props[4].value.async).toBe(true);
+		});
+
+		it("should allow super property access in object methods", () => {
+			const { ast } = parse("({ m() { return super.x; } });");
+			expect(ast.body[0].type).toBe("ExpressionStatement");
+		});
+
+		it("should keep acorn's early errors", () => {
+			// hanging generator declaration
+			expect(() => parse("if (x) function* f() {}")).toThrow(
+				/Unexpected token/
+			);
+			// strict directive with non-simple params
+			expect(() => parse("function f(a = 1) { 'use strict'; }")).toThrow(
+				/Illegal 'use strict' directive/
+			);
+			// duplicate params: sloppy simple ok, strict rejected
+			expect(parse("function f(a, a) {}").ast).toBeDefined();
+			expect(() => parse("'use strict'; function f(a, a) {}")).toThrow(
+				/Argument name clash/
+			);
+			expect(() => parse("function f(a, [a]) {}")).toThrow(
+				/Argument name clash/
+			);
+			// strict-mode function name re-check
+			expect(() => parse("'use strict'; function eval() {}")).toThrow(
+				/Binding eval in strict mode/
+			);
+			// yield in generator default params
+			expect(() => parse("function* g(a = yield) {}")).toThrow(
+				/Yield expression cannot be a default value/
+			);
+		});
+
+		it("should keep acorn's paren and arrow-head errors", () => {
+			expect(() => parse("()")).toThrow(/Unexpected token/);
+			expect(() => parse("(,)")).toThrow(/Unexpected token/);
+			expect(() => parse("(a,)")).toThrow(/Unexpected token/);
+			expect(() => parse("(...a)")).toThrow(/Unexpected token/);
+			expect(() => parse("(a, ...b)")).toThrow(/Unexpected token/);
+			expect(() => parse("(a, ...b,) => 0")).toThrow(
+				/Comma is not permitted after the rest element/
+			);
+		});
+
+		it("should distinguish parens from arrow heads", () => {
+			const { ast } = parse(
+				"(a, b);\n(x, ...y) => 0;\n(c,) => c;\nvar v = (d);"
+			);
+			const body = /** @type {EXPECTED_ANY[]} */ (ast.body);
+			expect(body[0].expression.type).toBe("SequenceExpression");
+			expect(body[1].expression.type).toBe("ArrowFunctionExpression");
+			expect(body[1].expression.params[1].type).toBe("RestElement");
+			expect(body[2].expression.type).toBe("ArrowFunctionExpression");
+			expect(body[3].declarations[0].init.type).toBe("Identifier");
+		});
+
+		it("should serve ParenthesizedExpression under preserveParens", () => {
+			const { WebpackParser } = require("../lib/javascript/syntax");
+
+			const ast = /** @type {EXPECTED_ANY} */ (
+				WebpackParser.parse(
+					"(a, b);",
+					/** @type {import("acorn").Options} */ (
+						/** @type {unknown} */ ({
+							ecmaVersion: "latest",
+							sourceType: "script",
+							preserveParens: true,
+							lazyNodes: true
+						})
+					)
+				)
+			);
+			expect(ast.body[0].expression.type).toBe("ParenthesizedExpression");
+			expect(ast.body[0].expression.expression.type).toBe("SequenceExpression");
+		});
+
+		it("should set the directive prologue on function bodies", () => {
+			const { ast } = parse("function f() { 'use strict'; return this; }");
+			const body = /** @type {EXPECTED_ANY} */ (ast.body[0]).body.body;
+			expect(body[0].directive).toBe("use strict");
+		});
+
+		it("should keep the function fast path off for parser plugins overriding inlined methods", () => {
+			const { WebpackParser } = require("../lib/javascript/syntax");
+
+			let calls = 0;
+			class Plugin extends WebpackParser {
+				/**
+				 * @param {EXPECTED_ANY} node function node
+				 * @param {boolean} allowDuplicates whether duplicates are allowed
+				 * @returns {void}
+				 */
+				checkParams(node, allowDuplicates) {
+					calls++;
+					// @ts-expect-error acorn's internal method is untyped
+					return super.checkParams(node, allowDuplicates);
+				}
+			}
+			const ast = /** @type {EXPECTED_ANY} */ (
+				Plugin.parse(
+					"function f(a) {} (b) => b;",
+					/** @type {import("acorn").Options} */ (
+						/** @type {unknown} */ ({
+							ecmaVersion: "latest",
+							sourceType: "script",
+							lazyNodes: true
+						})
+					)
+				)
+			);
+			expect(calls).toBeGreaterThan(0);
+			expect(ast.body[0].type).toBe("FunctionDeclaration");
+		});
+
+		it("should delegate the function grammar below ES2017", () => {
+			const { ast } = parse("function* g(a) { yield a; }", {
+				ecmaVersion: 6
+			});
+			const g = /** @type {EXPECTED_ANY} */ (ast.body[0]);
+			expect(g.type).toBe("FunctionDeclaration");
+			expect(g.generator).toBe(true);
+		});
+	});
+
 	// The SoA-migration correctness gate: lazy-mode output must be
 	// indistinguishable from plain acorn on real-world sources.
 	describe("corpus equivalence", () => {
