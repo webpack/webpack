@@ -8,11 +8,13 @@ module.exports = {
 	experiments: {
 		outputModule: true
 	},
+	optimization: {
+		realContentHash: true
+	},
 	output: {
 		module: true,
 		publicPath: "auto",
-		// A digest-suffixed content hash is unknown during code generation; the
-		// analyzable literal is baked via post-hash placeholder substitution.
-		chunkFilename: "[name].[contenthash:base64:8].mjs"
+		filename: "main.[contenthash].mjs",
+		chunkFilename: "[name].[contenthash].mjs"
 	}
 };

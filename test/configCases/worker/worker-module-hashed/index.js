@@ -17,14 +17,15 @@ it("should run an ESM worker with a content-hashed chunk filename", async () => 
 	await worker.terminate();
 });
 
-it("should fall back to the runtime form when the chunk filename is hashed", () => {
+it("should bake the hashed worker filename into an analyzable literal", () => {
 	const bundle = fs.readFileSync(
 		path.join(__STATS__.outputPath, "bundle0.mjs"),
 		"utf8"
 	);
-	const chunkFilename = `${"__webpack_require__"}.u`;
-
-	// A hashed filename isn't known at code-gen time, so the runtime helper stays.
-	expect(bundle).toContain(chunkFilename);
-	expect(bundle).not.toContain(`/* worker ${"import"} */ "./worker`);
+	// The hashed filename is baked by post-hash placeholder substitution — the
+	// literal must name the emitted worker chunk file, with no runtime helper left.
+	const match = /\/\* worker import \*\/ "\.\/(worker[^"]+\.mjs)"/.exec(bundle);
+	expect(match).not.toBe(null);
+	expect(fs.existsSync(path.join(__STATS__.outputPath, match[1]))).toBe(true);
+	expect(bundle).not.toContain(`${"__webpack_require__"}.u`);
 });

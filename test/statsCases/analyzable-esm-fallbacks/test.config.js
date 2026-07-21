@@ -5,7 +5,8 @@ const path = require("path");
 
 const HELPER = "__webpack_require__.ei";
 
-// Per case: which emitted entry to inspect and what to assert.
+// Per case: which emitted entry to inspect (a name, or a RegExp for hashed names)
+// and what to assert.
 // - "analyzable": the baseline — emits the `.ei` helper.
 // - "fallback": the whole build has no analyzable import, so no `.ei` is emitted at all.
 // - "callSiteFallback": the target chunk loads via runtime `.e(...)`; a nested import
@@ -15,8 +16,13 @@ const CASES = {
 	analyzable: { file: "main.mjs", expect: "analyzable" },
 	"public-path-override": { file: "main.mjs", expect: "fallback" },
 	"fetch-priority": { file: "main.mjs", expect: "fallback" },
-	"content-hash": { file: "main.mjs", expect: "fallback" },
-	"templated-public-path": { file: "main.mjs", expect: "fallback" },
+	"content-hash": { file: "main.mjs", expect: "analyzable" },
+	"templated-public-path": { file: "main.mjs", expect: "analyzable" },
+	"entry-fullhash": { file: /^main\./, expect: "analyzable" },
+	"entry-chunkhash": { file: /^main\./, expect: "fallback" },
+	"entry-contenthash-no-rch": { file: /^main\./, expect: "fallback" },
+	"entry-filename-function": { file: "main.mjs", expect: "fallback" },
+	"bare-templated-public-path": { file: "main.mjs", expect: "fallback" },
 	"bare-public-path": { file: "main.mjs", expect: "fallback" },
 	"shared-chunk": { file: "a.mjs", expect: "fallback" },
 	hmr: { file: "main.mjs", expect: "fallback" },
@@ -39,13 +45,16 @@ module.exports = {
 			const { compilation } = child;
 			const name = /** @type {string} */ (compilation.name);
 			const testCase = CASES[name];
-			const output = fs.readFileSync(
-				path.join(
-					/** @type {string} */ (compilation.outputOptions.path),
-					testCase.file
-				),
-				"utf8"
-			);
+			const outputPath = /** @type {string} */ (compilation.outputOptions.path);
+			const file =
+				typeof testCase.file === "string"
+					? testCase.file
+					: /** @type {string} */ (
+							fs
+								.readdirSync(outputPath)
+								.find((f) => /** @type {RegExp} */ (testCase.file).test(f))
+						);
+			const output = fs.readFileSync(path.join(outputPath, file), "utf8");
 			if (testCase.expect === "analyzable") {
 				expect(output).toContain(HELPER);
 			} else if (testCase.expect === "callSiteFallback") {
