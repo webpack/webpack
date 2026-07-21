@@ -322,6 +322,35 @@ OSS fixture).
   (`yarn fix:special`), delete dead object-only paths that the support matrix
   no longer needs, changeset rollup.
 
+## 4.1 C0 facade spike — verdict (measured)
+
+Synthetic 700k-node column store shaped like typescript.js (statement >
+call > member > identifiers), 100k statements, Node 22:
+
+| Candidate                           | materialize ALL | program-hook shape | 10M scalar reads | retained (all) | estree enumeration                     |
+| ----------------------------------- | --------------- | ------------------ | ---------------- | -------------- | -------------------------------------- |
+| plain nodes (today)                 | 33.7 ms         | free               | 22 ms            | 48.1 MB        | full                                   |
+| 1 — own accessors, defineProperties | 697 ms (20×)    | 76 ms              | 22 ms            | 64 MB          | **full**                               |
+| 1b — accessors in object literals   | 520 ms          | 92 ms              | 205 ms           | 384 MB         | full, but dictionary-mode objects      |
+| 2 — prototype accessors             | 94 ms (2.8×)    | **5.4 ms**         | 21 ms            | **40.4 MB**    | children invisible to keys/spread/JSON |
+| 3 — eager plain fields              | 63 ms (1.9×)    | O(tree)            | 22 ms            | 53.4 MB        | full                                   |
+
+Columns alone: 17.8 MB ≈ 25 B/node (validates the §3.1 estimate).
+
+**Verdict:** tiered. Default facade = **candidate 2** (prototype accessors,
+class per type): materialization 2.8× a plain node but only for nodes that
+reach a tap, `hooks.program`/`hooks.statement` hand-outs nearly free, scalar
+reads at parity, and even worst-case full materialization retains less than
+today's plain AST. Its one compat cut — children invisible to
+`Object.keys`/spread/`for-in`/`JSON.stringify` — is served by **candidate 1**
+(defineProperties) as an opt-in full-enumeration mode, and by the existing
+`parse.soaAst: false` object-backend escape hatch. Candidate 1b (accessor
+object literals) is rejected outright: V8 gives such literals
+dictionary-mode shapes (11× slower reads, 8× memory). Candidate 3 remains
+the bound for eager consumers. C1 proceeds with candidate 2 as the default
+facade builder; the compat battery from the spike lands with C1's facades and
+canary builds decide whether the enumeration cut is acceptable ecosystem-wide.
+
 ## 5. Measurement protocol
 
 For every phase-gate PR: `yarn benchmark` on `js-parser-unit` (tokenize /
