@@ -23693,11 +23693,12 @@ declare abstract class RuntimeTemplate {
 	}): string;
 
 	/**
-	 * Rewrites the post-hash chunk-filename placeholders baked into a rendered JS
-	 * chunk's analyzable ESM literals to the referenced chunks' real filenames. Called
-	 * from the JS `render` hook — after hashing, before assets are emitted — so
-	 * downstream passes (minify, devtool, realContentHash) see the substituted literal.
-	 * Returns `source` unchanged when the chunk has no placeholders.
+	 * Rewrites the post-hash placeholders baked into a rendered JS chunk's analyzable
+	 * ESM literals — a referenced chunk's real filename, or the `[fullhash]` publicPath —
+	 * now that the hash is known. Called from the shared `renderChunkAsset` hook, before
+	 * the asset is cached or emitted, so downstream passes (minify, devtool,
+	 * realContentHash) see the substituted literal. Returns `source` unchanged when the
+	 * chunk has no placeholders.
 	 */
 	substituteAnalyzableEsmPlaceholders(source: Source, chunk: Chunk): Source;
 
@@ -27245,6 +27246,7 @@ declare namespace exports {
 		export let amdDefine: "__webpack_require__.amdD";
 		export let amdOptions: "__webpack_require__.amdO";
 		export let analyzableChunkImport: "__webpack_require__.ei";
+		export let analyzableEsmFullHash: "analyzable esm full hash";
 		export let asyncModule: "__webpack_require__.a";
 		export let asyncModuleDoneSymbol: "__webpack_require__.aD";
 		export let asyncModuleExportSymbol: "__webpack_require__.aE";

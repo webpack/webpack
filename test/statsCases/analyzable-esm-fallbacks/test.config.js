@@ -17,9 +17,8 @@ const CASES = {
 	"public-path-override": { file: "main.mjs", expect: "fallback" },
 	"fetch-priority": { file: "main.mjs", expect: "fallback" },
 	"content-hash": { file: "main.mjs", expect: "analyzable" },
-	// A [fullhash] publicPath needs the consuming chunk re-rendered after the full
-	// hash (a follow-up); for now it keeps the runtime form.
-	"templated-public-path": { file: "main.mjs", expect: "fallback" },
+	// A [fullhash] publicPath with a static prefix is baked as a post-hash placeholder.
+	"templated-public-path": { file: "main.mjs", expect: "analyzable" },
 	"entry-fullhash": { file: /^main\./, expect: "analyzable" },
 	"entry-chunkhash": { file: /^main\./, expect: "fallback" },
 	"entry-contenthash-no-rch": { file: /^main\./, expect: "fallback" },

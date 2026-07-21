@@ -39,12 +39,10 @@ module.exports = [
 	base("fetch-priority", { entry: "./index-fetch-priority" }),
 	base("prefetch", { entry: "./index-prefetch" }),
 	// A hashed chunk filename is baked as a post-hash placeholder and substituted at
-	// render time, so this is analyzable now.
+	// render time, so these two are analyzable now.
 	base("content-hash", {
 		output: { chunkFilename: "[name].[contenthash].mjs" }
 	}),
-	// A [fullhash] publicPath still falls back (needs the consuming chunk re-rendered
-	// after the full hash — a follow-up).
 	base("templated-public-path", {
 		output: { publicPath: "/assets/[fullhash]/" }
 	}),
