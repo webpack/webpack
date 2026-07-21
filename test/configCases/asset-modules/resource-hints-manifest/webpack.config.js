@@ -47,6 +47,12 @@ module.exports = {
 								"test.js",
 								new webpack.sources.RawSource(data)
 							);
+							// Pre-emit the manifest path so the plugin (a later stage)
+							// takes the `updateAsset` branch instead of `emitAsset`.
+							compilation.emitAsset(
+								"ssr-hints.json",
+								new webpack.sources.RawSource("placeholder")
+							);
 						}
 					);
 				});
