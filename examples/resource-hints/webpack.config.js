@@ -404,5 +404,108 @@ module.exports = [
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
 		experiments: { html: true, outputModule: true }
+	},
+
+	/*
+	 * 13. FULL OBJECT — every knob in one place. `initial` is the chunk-hint
+	 * behavior; `urlHints` seeds URL-asset defaults under every parser;
+	 * `preconnect` warms the CDN; `modulePreloadPolyfill` toggles the polyfill;
+	 * `manifest` writes the SSR JSON file.
+	 */
+	{
+		name: "object-form",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home-with-assets.js", html: true } },
+		output: {
+			path: distFor("object-form"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			assetModuleFilename: "assets/[name].[hash:8][ext]",
+			publicPath: "https://cdn.example.com/static/",
+			crossOriginLoading: "anonymous",
+			module: true,
+			resourceHints: {
+				initial: true,
+				urlHints: [
+					{ test: /\.woff2$/, preload: true, as: "font", fetchPriority: "high" }
+				],
+				preconnect: true,
+				modulePreloadPolyfill: true,
+				manifest: "ssr-hints.json"
+			}
+		},
+		module: {
+			rules: [{ test: /\.(png|jpg|webp|woff2)$/, type: "asset/resource" }]
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
+	},
+
+	/*
+	 * 14. STRICT CSP — `modulePreloadPolyfill: false`. The polyfill default is
+	 * derived from `output.environment.modulePreload`; on a target without native
+	 * support it would inject an inline `<script>`. Under a CSP that forbids
+	 * inline scripts, opt out — the `<link rel="modulepreload">` tags still emit.
+	 */
+	{
+		name: "csp-no-polyfill",
+		mode: "production",
+		target: ["web", "es2015"],
+		entry: { home: { import: "./src/routes/home.js", html: true } },
+		output: {
+			path: distFor("csp-no-polyfill"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			module: true,
+			environment: { modulePreload: false },
+			resourceHints: { initial: true, modulePreloadPolyfill: false }
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
+	},
+
+	/*
+	 * 15. ASYNC JS + CSS PRELOAD — `parser.javascript.dynamicImportPreload`
+	 * couples both (like Vite): a dynamically imported chunk's JS and CSS are
+	 * preloaded together. Contrast with scenario 11 (`dynamicImportCssPreload`),
+	 * which preloads only the CSS.
+	 */
+	{
+		name: "async-js-css-preload",
+		mode: "production",
+		entry: { home: { import: "./src/routes/async-host.js", html: true } },
+		output: {
+			path: distFor("async-js-css-preload"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			module: true,
+			resourceHints: true
+		},
+		module: {
+			parser: { javascript: { dynamicImportPreload: true } }
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true, css: true }
+	},
+
+	/*
+	 * 16. ESM DEFAULT — nothing set. Because `output.module` is on, `initial`
+	 * defaults to `true` (Vite-style), so the entry's initial chunks get
+	 * `<link rel="modulepreload">` with no `resourceHints` config at all.
+	 * Classic output stays opt-in.
+	 */
+	{
+		name: "esm-default",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home.js", html: true } },
+		output: {
+			path: distFor("esm-default"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			module: true
+			// no `resourceHints` — ESM output enables it by default
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
 	}
 ];

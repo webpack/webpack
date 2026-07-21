@@ -62,6 +62,17 @@ Two surfaces are involved:
 12. **auto-preconnect** — `output.resourceHints.preconnect`. Emit
     `<link rel="preconnect">` for a cross-origin `output.publicPath` origin
     (the CDN serving your bundles / assets).
+13. **object-form** — every knob in one object: `{ initial, urlHints,
+    preconnect, modulePreloadPolyfill, manifest }`.
+14. **csp-no-polyfill** — `modulePreloadPolyfill: false`. The polyfill default
+    is derived from `output.environment.modulePreload`; opt out under a strict
+    CSP that forbids inline scripts.
+15. **async-js-css-preload** — `module.parser.javascript.dynamicImportPreload`.
+    Couples JS **and** CSS of an async chunk (Vite parity) — contrast with
+    scenario 11's CSS-only `dynamicImportCssPreload`.
+16. **esm-default** — nothing set. ESM output (`output.module`) enables
+    `initial` by default, so initial chunks get `<link rel="modulepreload">`
+    with no `resourceHints` config.
 
 # webpack.config.js
 

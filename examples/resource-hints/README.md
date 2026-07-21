@@ -62,6 +62,17 @@ Two surfaces are involved:
 12. **auto-preconnect** — `output.resourceHints.preconnect`. Emit
     `<link rel="preconnect">` for a cross-origin `output.publicPath` origin
     (the CDN serving your bundles / assets).
+13. **object-form** — every knob in one object: `{ initial, urlHints,
+    preconnect, modulePreloadPolyfill, manifest }`.
+14. **csp-no-polyfill** — `modulePreloadPolyfill: false`. The polyfill default
+    is derived from `output.environment.modulePreload`; opt out under a strict
+    CSP that forbids inline scripts.
+15. **async-js-css-preload** — `module.parser.javascript.dynamicImportPreload`.
+    Couples JS **and** CSS of an async chunk (Vite parity) — contrast with
+    scenario 11's CSS-only `dynamicImportCssPreload`.
+16. **esm-default** — nothing set. ESM output (`output.module`) enables
+    `initial` by default, so initial chunks get `<link rel="modulepreload">`
+    with no `resourceHints` config.
 
 # webpack.config.js
 
@@ -469,6 +480,109 @@ module.exports = [
 			crossOriginLoading: "anonymous",
 			module: true,
 			resourceHints: { initial: true, preconnect: true }
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
+	},
+
+	/*
+	 * 13. FULL OBJECT — every knob in one place. `initial` is the chunk-hint
+	 * behavior; `urlHints` seeds URL-asset defaults under every parser;
+	 * `preconnect` warms the CDN; `modulePreloadPolyfill` toggles the polyfill;
+	 * `manifest` writes the SSR JSON file.
+	 */
+	{
+		name: "object-form",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home-with-assets.js", html: true } },
+		output: {
+			path: distFor("object-form"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			assetModuleFilename: "assets/[name].[hash:8][ext]",
+			publicPath: "https://cdn.example.com/static/",
+			crossOriginLoading: "anonymous",
+			module: true,
+			resourceHints: {
+				initial: true,
+				urlHints: [
+					{ test: /\.woff2$/, preload: true, as: "font", fetchPriority: "high" }
+				],
+				preconnect: true,
+				modulePreloadPolyfill: true,
+				manifest: "ssr-hints.json"
+			}
+		},
+		module: {
+			rules: [{ test: /\.(png|jpg|webp|woff2)$/, type: "asset/resource" }]
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
+	},
+
+	/*
+	 * 14. STRICT CSP — `modulePreloadPolyfill: false`. The polyfill default is
+	 * derived from `output.environment.modulePreload`; on a target without native
+	 * support it would inject an inline `<script>`. Under a CSP that forbids
+	 * inline scripts, opt out — the `<link rel="modulepreload">` tags still emit.
+	 */
+	{
+		name: "csp-no-polyfill",
+		mode: "production",
+		target: ["web", "es2015"],
+		entry: { home: { import: "./src/routes/home.js", html: true } },
+		output: {
+			path: distFor("csp-no-polyfill"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			module: true,
+			environment: { modulePreload: false },
+			resourceHints: { initial: true, modulePreloadPolyfill: false }
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
+	},
+
+	/*
+	 * 15. ASYNC JS + CSS PRELOAD — `parser.javascript.dynamicImportPreload`
+	 * couples both (like Vite): a dynamically imported chunk's JS and CSS are
+	 * preloaded together. Contrast with scenario 11 (`dynamicImportCssPreload`),
+	 * which preloads only the CSS.
+	 */
+	{
+		name: "async-js-css-preload",
+		mode: "production",
+		entry: { home: { import: "./src/routes/async-host.js", html: true } },
+		output: {
+			path: distFor("async-js-css-preload"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			module: true,
+			resourceHints: true
+		},
+		module: {
+			parser: { javascript: { dynamicImportPreload: true } }
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true, css: true }
+	},
+
+	/*
+	 * 16. ESM DEFAULT — nothing set. Because `output.module` is on, `initial`
+	 * defaults to `true` (Vite-style), so the entry's initial chunks get
+	 * `<link rel="modulepreload">` with no `resourceHints` config at all.
+	 * Classic output stays opt-in.
+	 */
+	{
+		name: "esm-default",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home.js", html: true } },
+		output: {
+			path: distFor("esm-default"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			module: true
+			// no `resourceHints` — ESM output enables it by default
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
 		experiments: { html: true, outputModule: true }
@@ -962,20 +1076,20 @@ url-hints-global:
   url-hints-global (webpack X.X.X) compiled successfully
 
 async-css-preload:
-  assets by path *.js 17.9 KiB
-    asset runtime.d394ae11.js 13.3 KiB [emitted] [immutable] [javascript module] (name: runtime)
-    asset home.3b1666bf.js 1.33 KiB [emitted] [immutable] [javascript module] (name: home)
-    asset __html_f953a09c_0.23a3e02c.chunk.js 1.22 KiB [emitted] [immutable] [javascript module] (name: __html_f953a09c_0)
+  assets by path *.js 18 KiB
+    asset runtime.86ed35f7.js 13.4 KiB [emitted] [immutable] [javascript module] (name: runtime)
+    asset home.5b5cf1a7.js 1.33 KiB [emitted] [immutable] [javascript module] (name: home)
+    asset __html_f953a09c_0.14374736.chunk.js 1.22 KiB [emitted] [immutable] [javascript module] (name: __html_f953a09c_0)
     asset mid.abf213d5.chunk.js 1.14 KiB [emitted] [immutable] [javascript module] (name: mid)
     asset styled-route.89138c94.chunk.js 934 bytes [emitted] [immutable] [javascript module] (name: styled-route)
   assets by chunk 0 bytes (auxiliary name: styled-route)
     asset 31d6cfe0d16ae931b73c.woff 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff] (auxiliary name: styled-route)
     asset 31d6cfe0d16ae931b73c.woff2 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff2] (auxiliary name: styled-route)
   asset styled-route.84a7fce8.chunk.css 313 bytes [emitted] [immutable] (name: styled-route)
-  asset home.7d2447ba.html 237 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 14.7 KiB (237 bytes) = runtime.d394ae11.js 13.3 KiB home.3b1666bf.js 1.33 KiB 1 auxiliary asset
-  Entrypoint __html_f953a09c_0 14.6 KiB = runtime.d394ae11.js 13.3 KiB __html_f953a09c_0.23a3e02c.chunk.js 1.22 KiB
-  runtime modules 8.45 KiB 13 modules
+  asset home.098c8950.html 237 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 14.7 KiB (237 bytes) = runtime.86ed35f7.js 13.4 KiB home.5b5cf1a7.js 1.33 KiB 1 auxiliary asset
+  Entrypoint __html_f953a09c_0 14.6 KiB = runtime.86ed35f7.js 13.4 KiB __html_f953a09c_0.14374736.chunk.js 1.22 KiB
+  runtime modules 8.49 KiB 13 modules
   cacheable modules 574 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url) 104 bytes (html) 181 bytes (css)
     modules by path ./src/ 460 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url)
       javascript modules 460 bytes
@@ -1031,4 +1145,142 @@ auto-preconnect:
       [used exports unknown]
       import() ./settings.js ./src/routes/home.js 5:19-42
   auto-preconnect (webpack X.X.X) compiled successfully
+
+object-form:
+  assets by path assets/ 0 bytes
+    assets by path assets/*.png 0 bytes
+      asset assets/icon.31d6cfe0.png 0 bytes [emitted] [immutable] [from: src/icon.png] (auxiliary name: __html_545c7cf9_0)
+      asset assets/thumb.31d6cfe0.png 0 bytes [emitted] [immutable] [from: src/thumb.png] (auxiliary name: __html_545c7cf9_0)
+    asset assets/banner.31d6cfe0.jpg 0 bytes [emitted] [immutable] [from: src/hero/banner.jpg] (auxiliary name: __html_545c7cf9_0)
+    asset assets/inter.31d6cfe0.woff2 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff2] (auxiliary name: __html_545c7cf9_0)
+  assets by path *.js 10.2 KiB
+    asset runtime.87fc0bb3.js 4.25 KiB [emitted] [immutable] [javascript module] (name: runtime)
+    asset __html_545c7cf9_0.4a6474cf.chunk.js 3.58 KiB [emitted] [immutable] [javascript module] (name: __html_545c7cf9_0)
+    asset home.8518ca20.js 2.34 KiB [emitted] [immutable] [javascript module] (name: home)
+  asset home.9538f127.html 1.18 KiB [emitted] [immutable] (auxiliary name: home)
+  asset ssr-hints.json 673 bytes [emitted]
+  Entrypoint home 6.59 KiB (1.18 KiB) = runtime.87fc0bb3.js 4.25 KiB home.8518ca20.js 2.34 KiB 1 auxiliary asset
+  Entrypoint __html_545c7cf9_0 7.83 KiB = runtime.87fc0bb3.js 4.25 KiB __html_545c7cf9_0.4a6474cf.chunk.js 3.58 KiB 4 auxiliary assets
+  runtime modules 1.94 KiB 6 modules
+  cacheable modules 4 bytes (asset) 1.04 KiB (javascript) 110 bytes (html)
+    asset modules 4 bytes (asset) 168 bytes (javascript)
+      modules by path ./src/*.png 2 bytes (asset) 84 bytes (javascript)
+        ./src/thumb.png 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+          [no exports]
+          [used exports unknown]
+          new URL() ../thumb.png ./src/routes/home-with-assets.js 8:14-54
+        ./src/icon.png 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+          [no exports]
+          [used exports unknown]
+          new URL() ../icon.png ./src/routes/home-with-assets.js 11:21-14:1
+      ./src/fonts/inter.woff2 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+        [no exports]
+        [used exports unknown]
+        new URL() ../fonts/inter.woff2 ./src/routes/home-with-assets.js 6:13-61
+      ./src/hero/banner.jpg 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+        [no exports]
+        [used exports unknown]
+        new URL() ../hero/banner.jpg ./src/routes/home-with-assets.js 7:13-59
+    data:text/html,<!doctype html><html><head><script src="./src/routes/home-with-assets.js"></script...(truncated) 120 bytes (javascript) 110 bytes (html) [built] [code generated]
+      [exports: default]
+      [used exports unknown]
+      entry data:text/html,<!doctype html><.. home
+    ./src/routes/home-with-assets.js 778 bytes [built] [code generated]
+      [used exports unknown]
+      entry ./src/routes/home-with-assets.js __html_545c7cf9_0
+  object-form (webpack X.X.X) compiled successfully
+
+csp-no-polyfill:
+  asset runtime.34e66c4f.js 11 KiB [emitted] [immutable] [javascript module] (name: runtime)
+  asset home.88328dd2.js 1.17 KiB [emitted] [immutable] [javascript module] (name: home)
+  asset __html_9b425bba_0.7fa16e80.chunk.js 1.09 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
+  asset src_routes_settings_js.c8a41bd7.chunk.js 866 bytes [emitted] [immutable] [javascript module]
+  asset home.c76a1b84.html 237 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 12.2 KiB (237 bytes) = runtime.34e66c4f.js 11 KiB home.88328dd2.js 1.17 KiB 1 auxiliary asset
+  Entrypoint __html_9b425bba_0 12.1 KiB = runtime.34e66c4f.js 11 KiB __html_9b425bba_0.7fa16e80.chunk.js 1.09 KiB
+  runtime modules 6.99 KiB 9 modules
+  cacheable modules 470 bytes (javascript) 98 bytes (html)
+    data:text/html,<!doctype html><html><head><script src="./src/routes/home.js"></script></head><bod...(truncated) 108 bytes (javascript) 98 bytes (html) [built] [code generated]
+      [exports: default]
+      [used exports unknown]
+      entry data:text/html,<!doctype html><.. home
+    ./src/routes/home.js 328 bytes [built] [code generated]
+      [used exports unknown]
+      entry ./src/routes/home.js __html_9b425bba_0
+    ./src/routes/settings.js 34 bytes [built] [code generated]
+      [exports: default]
+      [used exports unknown]
+      import() ./settings.js ./src/routes/home.js 5:19-42
+  csp-no-polyfill (webpack X.X.X) compiled successfully
+
+async-js-css-preload:
+  assets by path *.js 18.5 KiB
+    asset runtime.b157f8b1.js 13.9 KiB [emitted] [immutable] [javascript module] (name: runtime)
+    asset home.b596a374.js 1.33 KiB [emitted] [immutable] [javascript module] (name: home)
+    asset __html_f953a09c_0.c1556bc8.chunk.js 1.22 KiB [emitted] [immutable] [javascript module] (name: __html_f953a09c_0)
+    asset mid.8851ee6b.chunk.js 1.14 KiB [emitted] [immutable] [javascript module] (name: mid)
+    asset styled-route.89138c94.chunk.js 934 bytes [emitted] [immutable] [javascript module] (name: styled-route)
+  assets by chunk 0 bytes (auxiliary name: styled-route)
+    asset 31d6cfe0d16ae931b73c.woff 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff] (auxiliary name: styled-route)
+    asset 31d6cfe0d16ae931b73c.woff2 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff2] (auxiliary name: styled-route)
+  asset styled-route.84a7fce8.chunk.css 313 bytes [emitted] [immutable] (name: styled-route)
+  asset home.783c7765.html 237 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 15.3 KiB (237 bytes) = runtime.b157f8b1.js 13.9 KiB home.b596a374.js 1.33 KiB 1 auxiliary asset
+  Entrypoint __html_f953a09c_0 15.2 KiB = runtime.b157f8b1.js 13.9 KiB __html_f953a09c_0.c1556bc8.chunk.js 1.22 KiB
+  runtime modules 8.92 KiB 13 modules
+  cacheable modules 574 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url) 104 bytes (html) 181 bytes (css)
+    modules by path ./src/ 460 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url)
+      javascript modules 460 bytes
+        ./src/routes/async-host.js 310 bytes [built] [code generated]
+          [used exports unknown]
+          entry ./src/routes/async-host.js __html_f953a09c_0
+        ./src/routes/async-mid.js 90 bytes [built] [code generated]
+          [exports: default]
+          [used exports unknown]
+          import() ./async-mid.js ./src/routes/async-host.js 4:0-54
+        ./src/routes/async-styled.js 60 bytes [built] [code generated]
+          [exports: default]
+          [used exports unknown]
+          import() ./async-styled.js ./src/routes/async-mid.js 2:1-67
+      asset modules 2 bytes (asset) 84 bytes (asset-url)
+        ./src/fonts/inter.woff2 1 bytes (asset) 42 bytes (asset-url) [built] [code generated]
+          [no exports]
+          [used exports unknown]
+          css url() ../fonts/inter.woff2 css ./src/styles/app.css 4:6-28
+        ./src/fonts/inter.woff 1 bytes (asset) 42 bytes (asset-url) [built] [code generated]
+          [no exports]
+          [used exports unknown]
+          css url() ../fonts/inter.woff css ./src/styles/app.css 5:6-27
+    data:text/html,<!doctype html><html><head><script src="./src/routes/async-host.js"></script></hea...(truncated) 114 bytes (javascript) 104 bytes (html) [built] [code generated]
+      [exports: default]
+      [used exports unknown]
+      entry data:text/html,<!doctype html><.. home
+    css ./src/styles/app.css 181 bytes [built] [code generated]
+      [no exports]
+      [used exports unknown]
+      harmony side effect evaluation ../styles/app.css ./src/routes/async-styled.js 1:0-27
+  async-js-css-preload (webpack X.X.X) compiled successfully
+
+esm-default:
+  asset runtime.a4154a99.js 6.64 KiB [emitted] [immutable] [javascript module] (name: runtime)
+  asset home.6d8d52f7.js 1.31 KiB [emitted] [immutable] [javascript module] (name: home)
+  asset __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
+  asset src_routes_settings_js.2107bc69.chunk.js 943 bytes [emitted] [immutable] [javascript module]
+  asset home.6a0b13a2.html 237 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 7.95 KiB (237 bytes) = runtime.a4154a99.js 6.64 KiB home.6d8d52f7.js 1.31 KiB 1 auxiliary asset
+  Entrypoint __html_9b425bba_0 7.9 KiB = runtime.a4154a99.js 6.64 KiB __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB
+  runtime modules 3.62 KiB 8 modules
+  cacheable modules 470 bytes (javascript) 98 bytes (html)
+    data:text/html,<!doctype html><html><head><script src="./src/routes/home.js"></script></head><bod...(truncated) 108 bytes (javascript) 98 bytes (html) [built] [code generated]
+      [exports: default]
+      [used exports unknown]
+      entry data:text/html,<!doctype html><.. home
+    ./src/routes/home.js 328 bytes [built] [code generated]
+      [used exports unknown]
+      entry ./src/routes/home.js __html_9b425bba_0
+    ./src/routes/settings.js 34 bytes [built] [code generated]
+      [exports: default]
+      [used exports unknown]
+      import() ./settings.js ./src/routes/home.js 5:19-42
+  esm-default (webpack X.X.X) compiled successfully
 ```
