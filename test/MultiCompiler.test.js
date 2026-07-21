@@ -290,6 +290,35 @@ describe("MultiCompiler", () => {
 		});
 	});
 
+	it("should expose the active MultiWatching on `watching`", (done) => {
+		const compiler = createMultiCompiler();
+		expect(compiler.watching).toBeUndefined();
+		const watching = /** @type {import("../lib/MultiWatching")} */ (
+			/** @type {unknown} */ (
+				compiler.watch({}, (err, _stats) => {
+					if (err) return done(err);
+				})
+			)
+		);
+		expect(compiler.watching).toBe(watching);
+		watching.close(() => {
+			expect(compiler.watching).toBeUndefined();
+			done();
+		});
+	});
+
+	it("should clear `watching` when the compiler is closed directly", (done) => {
+		const compiler = createMultiCompiler();
+		compiler.watch({}, (err, _stats) => {
+			if (err) return done(err);
+		});
+		expect(compiler.watching).toBeDefined();
+		compiler.close(() => {
+			expect(compiler.watching).toBeUndefined();
+			done();
+		});
+	});
+
 	it("should respect parallelism and dependencies for running", (done) => {
 		const compiler = createMultiCompiler(
 			/** @type {import("../").MultiCompilerOptions} */ ({

@@ -16900,6 +16900,7 @@ declare class MultiCompiler {
 	compilers: Compiler[];
 	dependencies: WeakMap<Compiler, string[]>;
 	running: boolean;
+	watching?: MultiWatching;
 	get options(): WebpackOptionsNormalized[] & MultiCompilerOptions;
 	get outputPath(): string;
 
