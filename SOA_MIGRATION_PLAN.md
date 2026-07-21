@@ -5,8 +5,11 @@ arrows, paren/arrow disambiguation) and A2 (loops, switch, try, throw,
 labels, break/continue, with, empty, debugger), A3 binding patterns, A4
 classes (parseClass cluster incl. fields, static blocks, private names) and
 A5 expression tails (sequences, subscript chains + ChainExpression,
-parseExprList, parsePropertyName) landed. Remaining: A6 export tail, the
-toAssignable/checkLVal cluster, yield/await tails, meta properties.
+parseExprList, parsePropertyName), A6 exports and the toAssignable/
+checkLVal/yield/await cluster landed — **Phase A is complete**: no acorn
+node-construction path remains reachable in lazy mode (acorn stays for
+non-lazy mode, predicates and the token machinery already owned earlier).
+Next: Phase B construction seam.
 Measured at A5: parse churn 124 → 110 MB on typescript.js and parse wall
 time ≈ 4–5% faster (owned parseSubscripts is on the hottest expression
 path).

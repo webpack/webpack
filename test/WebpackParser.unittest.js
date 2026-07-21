@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore ypeof averyvery ahri aafom Unsyntactic
+// cspell:ignore ypeof averyvery ahri aafom Unsyntactic retag
 
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
 
@@ -1853,6 +1853,103 @@ describe("WebpackParser", () => {
 				false
 			]);
 			expect(props[1].key.value).toBe(42);
+		});
+	});
+
+	describe("export, yield/await and LVal fast paths", () => {
+		/**
+		 * @param {string} code module source
+		 * @returns {EXPECTED_ANY} program body
+		 */
+		const moduleBody = (code) => parse(code, { sourceType: "module" }).ast.body;
+
+		it("should parse all export forms", () => {
+			const body = moduleBody(
+				'export const a = 1, [b] = x;\nexport default function () {}\nexport * as ns from "m";\nexport { a as y, a as "z-str" };\nexport { d } from "m";'
+			);
+			expect(body.map((/** @type {EXPECTED_ANY} */ s) => s.type)).toEqual([
+				"ExportNamedDeclaration",
+				"ExportDefaultDeclaration",
+				"ExportAllDeclaration",
+				"ExportNamedDeclaration",
+				"ExportNamedDeclaration"
+			]);
+			expect(body[2].exported.name).toBe("ns");
+			expect(body[3].specifiers[1].exported.value).toBe("z-str");
+			expect(body[4].source.value).toBe("m");
+		});
+
+		it("should keep acorn's export errors", () => {
+			const moduleParse = (/** @type {string} */ code) =>
+				parse(code, { sourceType: "module" });
+			expect(() => moduleParse("export default 1; export default 2;")).toThrow(
+				/Duplicate export 'default'/
+			);
+			expect(() =>
+				moduleParse("export const a = 1; export { a as a };")
+			).toThrow(/Duplicate export 'a'/);
+			expect(() =>
+				moduleParse("export const [a, {b}] = x; export { b as a };")
+			).toThrow(/Duplicate export 'a'/);
+			expect(() => moduleParse('export { "str" };')).toThrow(
+				/string literal cannot be used as an exported binding/
+			);
+			expect(() => moduleParse("export { missing };")).toThrow(
+				/Export 'missing' is not defined/
+			);
+		});
+
+		it("should parse yield and await forms on single shapes", () => {
+			const { ast } = parse(
+				"function* g() { yield; yield 1; yield* inner(); }\nasync function a() { return await p; }"
+			);
+			const body = /** @type {EXPECTED_ANY[]} */ (ast.body);
+			const yields = body[0].body.body.map(
+				(/** @type {EXPECTED_ANY} */ s) => s.expression
+			);
+			expect(yields[0].argument).toBeNull();
+			expect(yields[0].delegate).toBe(false);
+			expect(yields[1].argument.value).toBe(1);
+			expect(yields[2].delegate).toBe(true);
+			expect(body[1].body.body[0].argument.type).toBe("AwaitExpression");
+		});
+
+		it("should retag assignment destructuring targets in place", () => {
+			const { ast } = parse(
+				"({ a, b: [c = 1], ...rest } = o);\n[x.y, ...z] = xs;"
+			);
+			const body = /** @type {EXPECTED_ANY[]} */ (ast.body);
+			const objectTarget = body[0].expression.left;
+			expect(objectTarget.type).toBe("ObjectPattern");
+			expect(objectTarget.properties[2].type).toBe("RestElement");
+			expect(objectTarget.properties[1].value.elements[0].type).toBe(
+				"AssignmentPattern"
+			);
+			const arrayTarget = body[1].expression.left;
+			expect(arrayTarget.type).toBe("ArrayPattern");
+			expect(arrayTarget.elements[0].type).toBe("MemberExpression");
+		});
+
+		it("should keep acorn's LVal errors", () => {
+			expect(() => parse("a?.b = 1;")).toThrow(
+				/Optional chaining cannot appear in left-hand side/
+			);
+			expect(() => parse("[a += 1] = x;")).toThrow(
+				/Only '=' operator can be used for specifying default value/
+			);
+			expect(() => parse("({ ...{} } = o);")).toThrow(/Unexpected token/);
+			expect(() => parse("[...a = 1] = x;")).toThrow(
+				/Rest elements cannot have a default value/
+			);
+			expect(() => parse("({ get g() {} } = o);")).toThrow(
+				/Object pattern can't contain getter or setter/
+			);
+			expect(() =>
+				parse("async function f() { let await; }", { sourceType: "module" })
+			).toThrow(/Cannot use 'await' as identifier inside an async function/);
+			expect(() => parse("let let = 1;")).toThrow(
+				/let is disallowed as a lexically bound name/
+			);
 		});
 	});
 
