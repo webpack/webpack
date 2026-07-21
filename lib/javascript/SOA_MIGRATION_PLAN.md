@@ -432,12 +432,32 @@ direct child of an id-native statement), an await fixture, and focused
 `terminate`-hook path, strict-mode-in-module-output diagnostics and the
 statement-hook bail — all asserting byte-identical id/object sequences.
 Both parser unittest suites and the corpus equivalence stay green.
-Next: convert the remaining hot expression types (member, call — with the
-D2 name-keyed `HookMap` resolution from column reads,
-`getMemberExpressionInfo` and the call/member-chain analysis) and the
-remaining statement/expression clusters, then default-on with the
-`soaAst: false` escape hatch once the module-level benchmarks show
-end-to-end wins.
+**D2 expression cluster landed**: the id walk now dispatches the remaining
+SoA-backed expression types — member, call (incl. IIFE detection,
+`callMemberChain`/`call` on the evaluated callee, `import().then`), new,
+binary/logical, conditional (guarded branches), assignment, unary
+(`typeof`/`delete`), sequence (statement-level splitting), object/property
+(shorthand + computed keys + spread), template literal (interleaved
+`expressions`), chain and yield. Member/call chain analysis
+(`getMemberExpressionInfo`, name-keyed `HookMap` resolution) runs on the
+materialized facade at the hook boundary — an escape point — while the
+operand/argument/property descent reads child ids from the columns via a
+shared `_walkExprChildId` / `_walkExprListId` (foreign-pinned children and
+lists fall back to the object walker off the facade, as in D1). Since C1
+still constructs a facade per node eagerly in `_soaAlloc`, walk-side
+materialization is not yet observable in heap; this slice is the structural
+consumer half, ready for the producer to stop eager-building facades (the
+Phase B2/C follow-up that turns the id walk into an actual heap win).
+Tagged templates and meta properties stay acorn-built (foreign), so they
+remain on the object walker until their emit sites are owned. Coverage: a
+grammar-broad D2 fixture drives every new id-native handler as a direct
+child of an id-native statement, plus react/lodash; all assert
+byte-identical id/object hook sequences.
+Next: stop eager facade construction in `_soaAlloc` (columns only, facades
+via `nodeAt` on demand) so member/call name probing can resolve from
+columns without materializing, drive the D4 materialization counter under
+30%, then default-on with the `soaAst: false` escape hatch once the
+module-level benchmarks show end-to-end wins.
 
 ## 5. Measurement protocol
 

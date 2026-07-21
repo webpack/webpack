@@ -1462,6 +1462,51 @@ describe("JavascriptParser", () => {
 			);
 		});
 
+		// The D2 expression cluster (member / call / new / binary / logical /
+		// conditional / assignment / unary / sequence / object / template /
+		// chain / yield), each reached as a direct child of an id-native
+		// statement so the id walk descends into it rather than the object
+		// fallback.
+		it("should drive identical hook sequences through the D2 expression cluster", () => {
+			expectSameWalk(
+				`function d2(a, b, c) {
+					a.b.c;
+					a["b"].c;
+					a.b?.c;
+					a.b().c.d;
+					foo(a, b.c, ...c);
+					a.m(b, c);
+					new a.b(c, d);
+					new C();
+					a + b * c - d;
+					a && b || c;
+					a ? b : c;
+					a ? b.c : d.e;
+					x = a;
+					x = a.b;
+					x.y = b;
+					({ a } = c);
+					[a, b] = c;
+					x += a.b(c);
+					typeof a;
+					typeof a?.b;
+					!a;
+					delete a.b;
+					(a, b, c);
+					a(), b(c);
+					({ a, b: c, [d]: e, m() {}, ...a });
+					\`t\${a}u\${b.c}v\`;
+					a?.b?.();
+					return a.b(c);
+				}
+				function* g(a) { yield a; yield* a.b; return; }
+				d2(1, 2, 3);
+				g(4);
+				this.x;
+				[a.b, foo(c), a ? b : c, -a, a || b];`
+			);
+		});
+
 		it("should drive identical hook sequences for top-level and nested await", () => {
 			expectSameWalk(
 				`await x;
