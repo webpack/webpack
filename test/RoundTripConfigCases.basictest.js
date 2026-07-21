@@ -61,12 +61,9 @@ describe("RoundTripConfigCases", () => {
 				const testDir = path.join(categoryDir, testName);
 				if (!fs.statSync(testDir).isDirectory()) continue;
 
-				const testConfigPath = path.join(testDir, "test.config.js");
-				if (!fs.existsSync(testConfigPath)) continue;
-
-				const testConfig = require(testConfigPath);
-
-				if (!testConfig.roundTrip) continue;
+				// Opt-in marker only; never `require` arbitrary `test.config.js` files —
+				// some run harness-only code that throws when loaded standalone.
+				if (!fs.existsSync(path.join(testDir, "roundTrip.js"))) continue;
 
 				const filterPath = path.join(testDir, "test.filter.js");
 				if (fs.existsSync(filterPath) && !require(filterPath)()) continue;
