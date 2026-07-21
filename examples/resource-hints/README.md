@@ -12,7 +12,9 @@ Two surfaces are involved:
   `HtmlResourceHint[]` / a function — equivalent to `{ initial: … }`) **or** the
   full object `{ initial, urlHints, preconnect, modulePreloadPolyfill, manifest }`.
   Hints land in an HTML entry's `<head>` (or `stats.entrypoints[name].resourceHints`
-  / the `manifest` file for SSR).
+  / the `manifest` file for SSR). `initial` **defaults on for ESM output**
+  (`output.module`) — like Vite, since native `import()` would otherwise
+  waterfall; classic output stays opt-in.
 - `module.parser.<type>.urlHints` — controls per-**URL-referenced-asset**
   defaults (fonts, images, workers) for `new URL(...)`, CSS `url(...)`,
   HTML `<img src>`, etc. Per-URL `webpackPreload` / `webpackPrefetch` magic
@@ -770,12 +772,12 @@ url-hints-scoped:
       asset assets/thumb.31d6cfe0.png 0 bytes [emitted] [immutable] [from: src/thumb.png] (auxiliary name: __html_545c7cf9_0)
     asset assets/banner.31d6cfe0.jpg 0 bytes [emitted] [immutable] [from: src/hero/banner.jpg] (auxiliary name: __html_545c7cf9_0)
     asset assets/inter.31d6cfe0.woff2 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff2] (auxiliary name: __html_545c7cf9_0)
-  assets by path *.js 9.97 KiB
+  assets by path *.js 10 KiB
     asset runtime.0428e0d3.js 4.94 KiB [emitted] [immutable] [javascript module] (name: runtime)
     asset __html_545c7cf9_0.34832faf.chunk.js 3.6 KiB [emitted] [immutable] [javascript module] (name: __html_545c7cf9_0)
-    asset home.e89aa7f6.js 1.43 KiB [emitted] [immutable] [javascript module] (name: home)
-  asset home.7cbc76a7.html 313 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 6.37 KiB (313 bytes) = runtime.0428e0d3.js 4.94 KiB home.e89aa7f6.js 1.43 KiB 1 auxiliary asset
+    asset home.e89aa7f6.js 1.49 KiB [emitted] [immutable] [javascript module] (name: home)
+  asset home.27242e89.html 366 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 6.42 KiB (366 bytes) = runtime.0428e0d3.js 4.94 KiB home.e89aa7f6.js 1.49 KiB 1 auxiliary asset
   Entrypoint __html_545c7cf9_0 8.54 KiB = runtime.0428e0d3.js 4.94 KiB __html_545c7cf9_0.34832faf.chunk.js 3.6 KiB 4 auxiliary assets
   runtime modules 2.38 KiB 7 modules
   cacheable modules 4 bytes (asset) 1.04 KiB (javascript) 110 bytes (html)

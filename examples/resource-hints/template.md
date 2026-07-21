@@ -12,7 +12,9 @@ Two surfaces are involved:
   `HtmlResourceHint[]` / a function — equivalent to `{ initial: … }`) **or** the
   full object `{ initial, urlHints, preconnect, modulePreloadPolyfill, manifest }`.
   Hints land in an HTML entry's `<head>` (or `stats.entrypoints[name].resourceHints`
-  / the `manifest` file for SSR).
+  / the `manifest` file for SSR). `initial` **defaults on for ESM output**
+  (`output.module`) — like Vite, since native `import()` would otherwise
+  waterfall; classic output stays opt-in.
 - `module.parser.<type>.urlHints` — controls per-**URL-referenced-asset**
   defaults (fonts, images, workers) for `new URL(...)`, CSS `url(...)`,
   HTML `<img src>`, etc. Per-URL `webpackPreload` / `webpackPrefetch` magic
