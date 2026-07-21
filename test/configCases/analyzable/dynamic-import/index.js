@@ -14,11 +14,11 @@ it("should emit an analyzable literal import() for module output", () => {
 		path.join(__STATS__.outputPath, "bundle0.mjs"),
 		"utf8"
 	);
-	// A statically-named specifier a foreign bundler can follow, plus webpack's
-	// own installer — instead of the runtime ensure-chunk form.
-	const ensureChunk = `${"__webpack_require__"}.e`;
+	// A statically-named specifier a foreign bundler can follow, wrapped in the
+	// analyzable-import helper instead of the runtime `ensureChunk(id)` call.
+	const ensureChunkCall = `${"__webpack_require__"}.e(`;
 
 	expect(bundle).toContain('import(/*! import() | dynamic */ "./dynamic.mjs")');
-	expect(bundle).toContain(`.then(${"__webpack_require__"}.C)`);
-	expect(bundle).not.toContain(ensureChunk);
+	expect(bundle).toContain(`${"__webpack_require__"}.ei(`);
+	expect(bundle).not.toContain(ensureChunkCall);
 });
