@@ -1647,6 +1647,97 @@ describe("WebpackParser", () => {
 		});
 	});
 
+	describe("statement grammar fast path", () => {
+		it("should build single-shape loop, switch and try nodes", () => {
+			const { ast } = parse(
+				"for (let i = 0; i < 3; i++) f(i);\n" +
+					"for (const k in o) g(k);\n" +
+					"for (const v of a) h(v);\n" +
+					"while (a) b();\n" +
+					"do c(); while (d);\n" +
+					"switch (x) { case 1: a(); break; default: b(); }\n" +
+					"try { a(); } catch (e) { b(e); } finally { c(); }\n" +
+					"debugger;\n;\n" +
+					"l: for (;;) { continue l; }"
+			);
+			const body = /** @type {EXPECTED_ANY[]} */ (ast.body);
+			expect(body.map((s) => s.type)).toEqual([
+				"ForStatement",
+				"ForInStatement",
+				"ForOfStatement",
+				"WhileStatement",
+				"DoWhileStatement",
+				"SwitchStatement",
+				"TryStatement",
+				"DebuggerStatement",
+				"EmptyStatement",
+				"LabeledStatement"
+			]);
+			expect(body[2].await).toBe(false);
+			expect(body[5].cases).toHaveLength(2);
+			expect(body[5].cases[1].test).toBeNull();
+			expect(body[6].handler.param.name).toBe("e");
+			expect(body[9].body.body.body[0].type).toBe("ContinueStatement");
+			expect(body[0].range).toEqual([0, 33]);
+		});
+
+		it("should parse for-await, bare catch and with", () => {
+			const { ast } = parse(
+				"async function f() { for await (const c of chunks) use(c); }\n" +
+					"try { a(); } catch { b(); }\n" +
+					"with (obj) { y = 1; }"
+			);
+			const body = /** @type {EXPECTED_ANY[]} */ (ast.body);
+			const forAwait = body[0].body.body[0];
+			expect(forAwait.type).toBe("ForOfStatement");
+			expect(forAwait.await).toBe(true);
+			expect(body[1].handler.param).toBeNull();
+			expect(body[2].type).toBe("WithStatement");
+		});
+
+		it("should keep Annex B for-in initializers and reject the rest", () => {
+			expect(parse("for (var x = 1 in y) ;").ast).toBeDefined();
+			expect(() => parse("for (let x = 1 in y) ;")).toThrow(
+				/may not have an initializer/
+			);
+			expect(() => parse("for (var [a] = [] in y) ;")).toThrow(
+				/may not have an initializer/
+			);
+			expect(() => parse("for (let x of a, b) ;")).toThrow(/Unexpected token/);
+		});
+
+		it("should keep acorn's statement early errors", () => {
+			expect(() => parse("throw\nnew Error()")).toThrow(
+				/Illegal newline after throw/
+			);
+			expect(() => parse("switch (x) { default: a(); default: b(); }")).toThrow(
+				/Multiple default clauses/
+			);
+			expect(() => parse("try { a(); }")).toThrow(
+				/Missing catch or finally clause/
+			);
+			expect(() => parse("for (;;) { continue missing; }")).toThrow(
+				/Unsyntactic continue/
+			);
+			expect(() => parse("break;")).toThrow(/Unsyntactic break/);
+			expect(() => parse("s: switch (x) { case 1: continue s; }")).toThrow(
+				/Unsyntactic continue/
+			);
+			expect(() => parse("'use strict'; with (obj) {}")).toThrow(
+				/'with' in strict mode/
+			);
+			expect(() => parse("l: l: for (;;) ;")).toThrow(
+				/Label 'l' is already declared/
+			);
+			expect(() => parse("try {} catch ([a, a]) {}")).toThrow(
+				/already been declared/
+			);
+			expect(() =>
+				parse("async function f() { for await (x in y) ; }")
+			).toThrow(/Unexpected token/);
+		});
+	});
+
 	// The SoA-migration correctness gate: lazy-mode output must be
 	// indistinguishable from plain acorn on real-world sources.
 	describe("corpus equivalence", () => {

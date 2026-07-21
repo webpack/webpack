@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Own function/arrow parsing in the JS syntax parser and reduce its allocations.
+Own function, arrow and statement parsing in the JS parser, cut allocations.
