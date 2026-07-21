@@ -35,6 +35,7 @@ const {
 	Token,
 	TokenStream,
 	buildSkipSet,
+	normalizeUrl,
 	parseABlocksContents,
 	parseACommaSeparatedListOfComponentValues,
 	parseAComponentValue,
@@ -391,6 +392,19 @@ describe("CssSyntax — parser entry points", () => {
 		expect(rules).toHaveLength(1);
 	});
 
+	it("shares one empty child-rules list across rules with only declarations", () => {
+		// A body with no nested rules returns the shared frozen empty list rather
+		// than allocating a fresh `[]` per rule (see `_EMPTY_LIST`).
+		const { rules } = parseABlocksContents("x:1;y:2", 0);
+		expect(rules).toHaveLength(0);
+		const ss = parseAStylesheet(".a{x:1}.b{y:2}");
+		const a = /** @type {import("../lib/css/syntax").Rule} */ (ss.rules[0]);
+		const b = /** @type {import("../lib/css/syntax").Rule} */ (ss.rules[1]);
+		expect(a.childRules).toHaveLength(0);
+		expect(a.childRules).toBe(b.childRules);
+		expect(Object.isFrozen(a.childRules)).toBe(true);
+	});
+
 	it("re-parses a nested rule whose selector starts <ident><colon> as a qualified rule", () => {
 		// consume-a-declaration bails on the top-level `{` (step 8 would reject
 		// it) and the caller re-parses the input as a qualified rule (CSS Nesting)
@@ -584,6 +598,12 @@ describe("CssSyntax — SourceProcessor", () => {
 			.use({ [NodeType.Ident]: () => idents++ })
 			.process(big);
 		// 70000 value idents + the selector ident
+		expect(idents).toBe(70001);
+		// again: the regrow-hint path must restore exactly enough capacity
+		idents = 0;
+		new SourceProcessor()
+			.use({ [NodeType.Ident]: () => idents++ })
+			.process(big);
 		expect(idents).toBe(70001);
 		/** @type {string[]} */
 		const names = [];
@@ -1118,5 +1138,31 @@ describe("CssSyntax — path accessors", () => {
 			)
 			.process(".b { margin: 0; }");
 		expect(out).toEqual([[true, 1, 0]]);
+	});
+});
+
+describe("CssSyntax — normalizeUrl", () => {
+	it("should return a plain url unchanged", () => {
+		const s = "./images/photo.png";
+		expect(normalizeUrl(s, false)).toBe(s);
+	});
+
+	it("should keep data: URIs verbatim (case-insensitive) without decoding", () => {
+		expect(normalizeUrl("data:image/png;base64,AA%2F", false)).toBe(
+			"data:image/png;base64,AA%2F"
+		);
+		expect(normalizeUrl("DATA:text/plain,x%41", false)).toBe(
+			"DATA:text/plain,x%41"
+		);
+	});
+
+	it("should trim whitespace, strip escaped newlines and decode escapes", () => {
+		expect(normalizeUrl("  img.png\t ", true)).toBe("img.png");
+		expect(normalizeUrl("im\\\ng.png", true)).toBe("img.png");
+		expect(normalizeUrl("./im\\61 ges/a.png", false)).toBe("./images/a.png");
+	});
+
+	it("should decode percent-encoding outside data: URIs", () => {
+		expect(normalizeUrl("./%2E/img.png", false)).toBe("././img.png");
 	});
 });
