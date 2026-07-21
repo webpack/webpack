@@ -353,8 +353,10 @@ canary builds decide whether the enumeration cut is acceptable ecosystem-wide.
 
 **C1 scaffolding landed** (inside `syntax.js`, like the CSS/HTML SoA
 backends live in their own `syntax.js`): the per-parse `SoaAst` column store
-(growth, flat child lists, identity-stable candidate-2 facades for the first
-six node types), exported for the compat battery in
+(growth, flat child lists — now with `kid2`/`aux` columns, the shared
+operator/kind tables and sparse literal values — identity-stable candidate-2
+facades for the 18 highest-frequency node types ≈ 90% of real-world nodes),
+exported for the compat battery in
 `test/WebpackParser.unittest.js`. Not yet wired into parsing; next steps are
 full node-type coverage, then flipping the `_emit*` seam per grammar
 cluster.

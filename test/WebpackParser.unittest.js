@@ -2065,6 +2065,60 @@ describe("WebpackParser", () => {
 			]);
 		});
 
+		it("should serve operators, kinds, literals and ternary children", () => {
+			const source = "if (a < 1) return this; var x = -n;";
+			const ast = new SoaAst(source);
+			const a = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 4, 5);
+			const one = ast.allocNode(SoaAst.TYPE_LITERAL, 8, 9);
+			ast.aux[one] = SoaAst.LITERAL_NUMBER;
+			ast.values[one] = 1;
+			const test = ast.allocNode(SoaAst.TYPE_BINARY_EXPRESSION, 4, 9);
+			ast.kid0[test] = a;
+			ast.kid1[test] = one;
+			ast.aux[test] = /** @type {number} */ (SoaAst.OPERATOR_IDS.get("<"));
+			const thisExpr = ast.allocNode(SoaAst.TYPE_THIS_EXPRESSION, 18, 22);
+			const ret = ast.allocNode(SoaAst.TYPE_RETURN_STATEMENT, 11, 23);
+			ast.kid0[ret] = thisExpr;
+			const ifStmt = ast.allocNode(SoaAst.TYPE_IF_STATEMENT, 0, 23);
+			ast.kid0[ifStmt] = test;
+			ast.kid1[ifStmt] = ret;
+			// alternate stays 0 = null
+			const n = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 33, 34);
+			const neg = ast.allocNode(SoaAst.TYPE_UNARY_EXPRESSION, 32, 34);
+			ast.kid0[neg] = n;
+			ast.aux[neg] = /** @type {number} */ (SoaAst.OPERATOR_IDS.get("-"));
+			ast.flags[neg] |= SoaAst.FLAG_PREFIX;
+			const x = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 28, 29);
+			const declarator = ast.allocNode(SoaAst.TYPE_VARIABLE_DECLARATOR, 28, 35);
+			ast.kid0[declarator] = x;
+			ast.kid1[declarator] = neg;
+			const declaration = ast.allocNode(
+				SoaAst.TYPE_VARIABLE_DECLARATION,
+				24,
+				36
+			);
+			ast.aux[declaration] = 0; // var
+			ast.setList(declaration, [declarator]);
+
+			const ifFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(ifStmt));
+			expect(ifFacade.type).toBe("IfStatement");
+			expect(ifFacade.test.type).toBe("BinaryExpression");
+			expect(ifFacade.test.operator).toBe("<");
+			expect(ifFacade.test.left.name).toBe("a");
+			expect(ifFacade.test.right.value).toBe(1);
+			expect(ifFacade.test.right.raw).toBe("1");
+			expect(ifFacade.consequent.argument.type).toBe("ThisExpression");
+			expect(ifFacade.alternate).toBeNull();
+			const declFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(declaration));
+			expect(declFacade.kind).toBe("var");
+			const declaratorFacade = declFacade.declarations[0];
+			expect(declaratorFacade.type).toBe("VariableDeclarator");
+			expect(declaratorFacade.id.name).toBe("x");
+			expect(declaratorFacade.init.operator).toBe("-");
+			expect(declaratorFacade.init.prefix).toBe(true);
+			expect(declaratorFacade.init.argument.name).toBe("n");
+		});
+
 		it("should grow columns and the flat buffer beyond their initial capacity", () => {
 			const ast = new SoaAst("x");
 			/** @type {number[]} */
