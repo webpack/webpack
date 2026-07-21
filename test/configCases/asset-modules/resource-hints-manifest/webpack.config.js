@@ -20,8 +20,7 @@ module.exports = {
 		chunkFilename: "[name].chunk.js",
 		assetModuleFilename: "[name][ext]",
 		publicPath: "https://cdn.example.com/",
-		resourceHints: true,
-		resourceHintsManifest: "ssr-hints.json"
+		resourceHints: { initial: true, manifest: "ssr-hints.json" }
 	},
 	optimization: { chunkIds: "named", runtimeChunk: "single" },
 	module: {

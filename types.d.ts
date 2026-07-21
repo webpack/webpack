@@ -9626,9 +9626,9 @@ declare interface HtmlEntryInfo {
 	type:
 		| "html"
 		| "script"
+		| "stylesheet"
 		| "prefetch"
 		| "preload"
-		| "stylesheet"
 		| "modulepreload"
 		| "script-module";
 	css?: boolean;
@@ -19086,11 +19086,6 @@ declare interface Output {
 	asyncChunks?: boolean;
 
 	/**
-	 * Auto-emit `<link rel="preconnect">` for the origin of a cross-origin `output.publicPath` (the origin bundles and assets are served from) into extracted HTML entries and the resource-hint stats / manifest. Mirrors `output.crossOriginLoading`. No-op when `publicPath` is relative or `"auto"`.
-	 */
-	autoPreconnect?: boolean;
-
-	/**
 	 * Add a comment in the UMD wrapper.
 	 */
 	auxiliaryComment?: string | LibraryCustomUmdCommentObject;
@@ -19288,11 +19283,6 @@ declare interface Output {
 	module?: boolean;
 
 	/**
-	 * Inject a tiny inline `<script>` polyfill for `<link rel="modulepreload">` into extracted HTML pages when the target environment (per `output.environment.modulePreload`) lacks native support. `true` (default) injects only when needed; `false` never injects — the `<link>` tags are still emitted but do nothing on browsers without support (useful under a strict CSP that forbids inline scripts).
-	 */
-	modulePreloadPolyfill?: boolean;
-
-	/**
 	 * The output directory as **absolute path** (required).
 	 */
 	path?: string;
@@ -19308,11 +19298,12 @@ declare interface Output {
 	publicPath?: string | TemplatePathFn<PathData>;
 
 	/**
-	 * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">`) emission for extracted HTML entries and for URL-referenced assets carrying `webpackPrefetch` / `webpackPreload` (either from magic comments or from `module.parser.<type>.urlHints` rules). `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; `"preload"` is an alias of `true`; an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (this same callback replaces the removed `resolveDependencies` hook). `false` disables chunk hints; URL-referenced asset hints from magic comments / `urlHints` rules still fire — via the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime. `"none"` is a hard off switch: no `<link>` is emitted anywhere (chunk hints and URL-asset hints), and `stats.entrypoints[].resourceHints` / the `output.resourceHintsManifest` file are empty.
+	 * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">` / `<link rel="preconnect">`) emission for extracted HTML entries and URL-referenced assets. Accepts the initial-graph shorthand (boolean / `"prefetch"` / `"preload"` / `"none"` / `HtmlResourceHint[]` / function — equivalent to `{ initial: <value> }`) or the full object form `{ initial, urlHints, preconnect, modulePreloadPolyfill, manifest }`.
 	 */
 	resourceHints?:
 		| boolean
 		| "none"
+		| ResourceHintsOptions
 		| HtmlResourceHintWebpackOptions[]
 		| "prefetch"
 		| "preload"
@@ -19325,11 +19316,6 @@ declare interface Output {
 					hostChunks: string[];
 				})[];
 		  }) => HtmlResourceHintHtmlEntryDependency[]);
-
-	/**
-	 * Emit a JSON manifest of the resolved resource hints for each entrypoint (the same descriptors as `stats.entrypoints[].resourceHints`) as an output asset at this path. Lets an SSR server inject the `<link>` tags itself without walking the chunk graph — webpack's analogue of Vite's `build.ssrManifest`. Empty when `output.resourceHints` is `"none"`.
-	 */
-	resourceHintsManifest?: string;
 
 	/**
 	 * This option enables loading async chunks via a custom script type, such as script type="module".
@@ -19376,11 +19362,6 @@ declare interface Output {
 	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
 	 */
 	uniqueName?: string;
-
-	/**
-	 * Project-wide URL-referenced-asset hint rules, applied as the base `urlHints` of every parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>`). A shorthand for repeating the same list under each `module.parser.<type>.urlHints`; parser-scoped rules and per-URL magic comments still override these.
-	 */
-	urlHints?: UrlHintRule[];
 
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
@@ -19534,11 +19515,6 @@ declare interface OutputNormalized {
 	 * Enable/disable creating async chunks that are loaded on demand.
 	 */
 	asyncChunks?: boolean;
-
-	/**
-	 * Auto-emit `<link rel="preconnect">` for the origin of a cross-origin `output.publicPath` (the origin bundles and assets are served from) into extracted HTML entries and the resource-hint stats / manifest. Mirrors `output.crossOriginLoading`. No-op when `publicPath` is relative or `"auto"`.
-	 */
-	autoPreconnect?: boolean;
 
 	/**
 	 * Add charset attribute for script tag.
@@ -19723,11 +19699,6 @@ declare interface OutputNormalized {
 	module?: boolean;
 
 	/**
-	 * Inject a tiny inline `<script>` polyfill for `<link rel="modulepreload">` into extracted HTML pages when the target environment (per `output.environment.modulePreload`) lacks native support. `true` (default) injects only when needed; `false` never injects — the `<link>` tags are still emitted but do nothing on browsers without support (useful under a strict CSP that forbids inline scripts).
-	 */
-	modulePreloadPolyfill?: boolean;
-
-	/**
 	 * The output directory as **absolute path** (required).
 	 */
 	path?: string;
@@ -19743,28 +19714,9 @@ declare interface OutputNormalized {
 	publicPath?: string | TemplatePathFn<PathData>;
 
 	/**
-	 * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">`) emission for extracted HTML entries and for URL-referenced assets carrying `webpackPrefetch` / `webpackPreload` (either from magic comments or from `module.parser.<type>.urlHints` rules). `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; `"preload"` is an alias of `true`; an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (this same callback replaces the removed `resolveDependencies` hook). `false` disables chunk hints; URL-referenced asset hints from magic comments / `urlHints` rules still fire — via the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime. `"none"` is a hard off switch: no `<link>` is emitted anywhere (chunk hints and URL-asset hints), and `stats.entrypoints[].resourceHints` / the `output.resourceHintsManifest` file are empty.
+	 * Full resource-hint configuration.
 	 */
-	resourceHints?:
-		| boolean
-		| "none"
-		| HtmlResourceHintWebpackOptions[]
-		| "prefetch"
-		| "preload"
-		| ((context: {
-				entryName: string;
-				entrypoint: Entrypoint;
-				hostType: "html" | "js";
-				compilation: Compilation;
-				defaultHints: (HtmlResourceHintHtmlEntryDependency & {
-					hostChunks: string[];
-				})[];
-		  }) => HtmlResourceHintHtmlEntryDependency[]);
-
-	/**
-	 * Emit a JSON manifest of the resolved resource hints for each entrypoint (the same descriptors as `stats.entrypoints[].resourceHints`) as an output asset at this path. Lets an SSR server inject the `<link>` tags itself without walking the chunk graph — webpack's analogue of Vite's `build.ssrManifest`. Empty when `output.resourceHints` is `"none"`.
-	 */
-	resourceHintsManifest?: string;
+	resourceHints?: ResourceHintsOptions;
 
 	/**
 	 * This option enables loading async chunks via a custom script type, such as script type="module".
@@ -19806,11 +19758,6 @@ declare interface OutputNormalized {
 	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
 	 */
 	uniqueName?: string;
-
-	/**
-	 * Project-wide URL-referenced-asset hint rules, applied as the base `urlHints` of every parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>`). A shorthand for repeating the same list under each `module.parser.<type>.urlHints`; parser-scoped rules and per-URL magic comments still override these.
-	 */
-	urlHints?: UrlHintRule[];
 
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
@@ -22488,6 +22435,50 @@ declare interface ResourceDataWithData {
 	context?: string;
 	data: ResourceSchemeData & Partial<ResolveRequest>;
 }
+
+/**
+ * Full resource-hint configuration.
+ */
+declare interface ResourceHintsOptions {
+	/**
+	 * Initial dependency-graph chunk hints. `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; `"preload"` is an alias of `true`; `false` disables chunk hints (URL-asset hints from magic comments / `urlHints` still fire); `"none"` is a hard off switch (no `<link>` anywhere, empty stats / manifest); an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (replaces the removed `resolveDependencies` hook).
+	 */
+	initial?:
+		| boolean
+		| "none"
+		| HtmlResourceHintWebpackOptions[]
+		| "prefetch"
+		| "preload"
+		| ((context: {
+				entryName: string;
+				entrypoint: Entrypoint;
+				hostType: "html" | "js";
+				compilation: Compilation;
+				defaultHints: (HtmlResourceHintHtmlEntryDependency & {
+					hostChunks: string[];
+				})[];
+		  }) => HtmlResourceHintHtmlEntryDependency[]);
+
+	/**
+	 * Emit a JSON manifest of the resolved resource hints for each entrypoint (the same descriptors as `stats.entrypoints[].resourceHints`) as an output asset at this path. Lets an SSR server inject the `<link>` tags itself without walking the chunk graph — webpack's analogue of Vite's `build.ssrManifest`. Empty when `initial` is `"none"`.
+	 */
+	manifest?: string;
+
+	/**
+	 * Inject a tiny inline `<script>` polyfill for `<link rel="modulepreload">` into extracted HTML pages when the target environment (per `output.environment.modulePreload`) lacks native support. `true` (default) injects only when needed; `false` never injects — the `<link>` tags are still emitted but do nothing on browsers without support (useful under a strict CSP that forbids inline scripts).
+	 */
+	modulePreloadPolyfill?: boolean;
+
+	/**
+	 * Auto-emit `<link rel="preconnect">` for the origin of a cross-origin `output.publicPath` (the origin bundles and assets are served from) into extracted HTML entries and the resource-hint stats / manifest. Mirrors `output.crossOriginLoading`. No-op when `publicPath` is relative or `"auto"`.
+	 */
+	preconnect?: boolean;
+
+	/**
+	 * Project-wide URL-referenced-asset hint rules, applied as the base `urlHints` of every parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>`). Parser-scoped `module.parser.<type>.urlHints` rules and per-URL magic comments still override these.
+	 */
+	urlHints?: UrlHintRule[];
+}
 declare interface ResourceSchemeData {
 	/**
 	 * mime type of the resource
@@ -24510,9 +24501,9 @@ type SourceType =
 	| "html"
 	| "script"
 	| "css-url"
+	| "stylesheet"
 	| "prefetch"
 	| "preload"
-	| "stylesheet"
 	| "modulepreload"
 	| "script-module"
 	| "src"
@@ -24525,9 +24516,9 @@ type SourceTypeOrResolver =
 	| "html"
 	| "script"
 	| "css-url"
+	| "stylesheet"
 	| "prefetch"
 	| "preload"
-	| "stylesheet"
 	| "modulepreload"
 	| "script-module"
 	| "src"

@@ -3268,10 +3268,6 @@
       },
       "required": ["defaultRules", "generator", "parser", "rules"]
     },
-    "ModulePreloadPolyfill": {
-      "description": "Inject a tiny inline `<script>` polyfill for `<link rel=\"modulepreload\">` into extracted HTML pages when the target environment (per `output.environment.modulePreload`) lacks native support. `true` (default) injects only when needed; `false` never injects — the `<link>` tags are still emitted but do nothing on browsers without support (useful under a strict CSP that forbids inline scripts).",
-      "type": "boolean"
-    },
     "Name": {
       "description": "Name of the configuration. Used when loading multiple configurations.",
       "type": "string"
@@ -4254,10 +4250,6 @@
           "description": "Enable/disable creating async chunks that are loaded on demand.",
           "type": "boolean"
         },
-        "autoPreconnect": {
-          "description": "Auto-emit `<link rel=\"preconnect\">` for the origin of a cross-origin `output.publicPath` (the origin bundles and assets are served from) into extracted HTML entries and the resource-hint stats / manifest. Mirrors `output.crossOriginLoading`. No-op when `publicPath` is relative or `\"auto\"`.",
-          "type": "boolean"
-        },
         "auxiliaryComment": {
           "cli": {
             "exclude": true
@@ -4397,9 +4389,6 @@
         "module": {
           "$ref": "#/definitions/OutputModule"
         },
-        "modulePreloadPolyfill": {
-          "$ref": "#/definitions/ModulePreloadPolyfill"
-        },
         "path": {
           "$ref": "#/definitions/Path"
         },
@@ -4411,9 +4400,6 @@
         },
         "resourceHints": {
           "$ref": "#/definitions/ResourceHints"
-        },
-        "resourceHintsManifest": {
-          "$ref": "#/definitions/ResourceHintsManifest"
         },
         "scriptType": {
           "$ref": "#/definitions/ScriptType"
@@ -4461,9 +4447,6 @@
         },
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
-        },
-        "urlHints": {
-          "$ref": "#/definitions/OutputUrlHints"
         },
         "wasmLoading": {
           "$ref": "#/definitions/WasmLoading"
@@ -4639,10 +4622,6 @@
           "description": "Enable/disable creating async chunks that are loaded on demand.",
           "type": "boolean"
         },
-        "autoPreconnect": {
-          "description": "Auto-emit `<link rel=\"preconnect\">` for the origin of a cross-origin `output.publicPath` (the origin bundles and assets are served from) into extracted HTML entries and the resource-hint stats / manifest. Mirrors `output.crossOriginLoading`. No-op when `publicPath` is relative or `\"auto\"`.",
-          "type": "boolean"
-        },
         "charset": {
           "$ref": "#/definitions/Charset"
         },
@@ -4752,9 +4731,6 @@
         "module": {
           "$ref": "#/definitions/OutputModule"
         },
-        "modulePreloadPolyfill": {
-          "$ref": "#/definitions/ModulePreloadPolyfill"
-        },
         "path": {
           "$ref": "#/definitions/Path"
         },
@@ -4765,10 +4741,7 @@
           "$ref": "#/definitions/PublicPath"
         },
         "resourceHints": {
-          "$ref": "#/definitions/ResourceHints"
-        },
-        "resourceHintsManifest": {
-          "$ref": "#/definitions/ResourceHintsManifest"
+          "$ref": "#/definitions/ResourceHintsOptions"
         },
         "scriptType": {
           "$ref": "#/definitions/ScriptType"
@@ -4793,9 +4766,6 @@
         },
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
-        },
-        "urlHints": {
-          "$ref": "#/definitions/OutputUrlHints"
         },
         "wasmLoading": {
           "$ref": "#/definitions/WasmLoading"
@@ -4825,13 +4795,6 @@
         "enabledLibraryTypes",
         "enabledWasmLoadingTypes"
       ]
-    },
-    "OutputUrlHints": {
-      "description": "Project-wide URL-referenced-asset hint rules, applied as the base `urlHints` of every parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>`). A shorthand for repeating the same list under each `module.parser.<type>.urlHints`; parser-scoped rules and per-URL magic comments still override these.",
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/UrlHintRule"
-      }
     },
     "Parallelism": {
       "description": "The number of parallel processed modules in the compilation.",
@@ -5453,7 +5416,18 @@
       ]
     },
     "ResourceHints": {
-      "description": "Resource-hint (`<link rel=\"prefetch\">` / `<link rel=\"preload\">` / `<link rel=\"modulepreload\">`) emission for extracted HTML entries and for URL-referenced assets carrying `webpackPrefetch` / `webpackPreload` (either from magic comments or from `module.parser.<type>.urlHints` rules). `true` auto-emits `<link rel=\"modulepreload\">` (ESM output) or `<link rel=\"preload\" as=\"script\">` (classic) for each of the entry's initial dependency chunks; `\"prefetch\"` uses `<link rel=\"prefetch\">`; `\"preload\"` is an alias of `true`; an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: \"html\" | \"js\"`, `compilation`) and returns the final list (this same callback replaces the removed `resolveDependencies` hook). `false` disables chunk hints; URL-referenced asset hints from magic comments / `urlHints` rules still fire — via the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime. `\"none\"` is a hard off switch: no `<link>` is emitted anywhere (chunk hints and URL-asset hints), and `stats.entrypoints[].resourceHints` / the `output.resourceHintsManifest` file are empty.",
+      "description": "Resource-hint (`<link rel=\"prefetch\">` / `<link rel=\"preload\">` / `<link rel=\"modulepreload\">` / `<link rel=\"preconnect\">`) emission for extracted HTML entries and URL-referenced assets. Accepts the initial-graph shorthand (boolean / `\"prefetch\"` / `\"preload\"` / `\"none\"` / `HtmlResourceHint[]` / function — equivalent to `{ initial: <value> }`) or the full object form `{ initial, urlHints, preconnect, modulePreloadPolyfill, manifest }`.",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ResourceHintsInitial"
+        },
+        {
+          "$ref": "#/definitions/ResourceHintsOptions"
+        }
+      ]
+    },
+    "ResourceHintsInitial": {
+      "description": "Initial dependency-graph chunk hints. `true` auto-emits `<link rel=\"modulepreload\">` (ESM output) or `<link rel=\"preload\" as=\"script\">` (classic) for each of the entry's initial dependency chunks; `\"prefetch\"` uses `<link rel=\"prefetch\">`; `\"preload\"` is an alias of `true`; `false` disables chunk hints (URL-asset hints from magic comments / `urlHints` still fire); `\"none\"` is a hard off switch (no `<link>` anywhere, empty stats / manifest); an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: \"html\" | \"js\"`, `compilation`) and returns the final list (replaces the removed `resolveDependencies` hook).",
       "anyOf": [
         {
           "type": "array",
@@ -5473,10 +5447,35 @@
         }
       ]
     },
-    "ResourceHintsManifest": {
-      "description": "Emit a JSON manifest of the resolved resource hints for each entrypoint (the same descriptors as `stats.entrypoints[].resourceHints`) as an output asset at this path. Lets an SSR server inject the `<link>` tags itself without walking the chunk graph — webpack's analogue of Vite's `build.ssrManifest`. Empty when `output.resourceHints` is `\"none\"`.",
-      "type": "string",
-      "minLength": 1
+    "ResourceHintsOptions": {
+      "description": "Full resource-hint configuration.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "initial": {
+          "$ref": "#/definitions/ResourceHintsInitial"
+        },
+        "manifest": {
+          "description": "Emit a JSON manifest of the resolved resource hints for each entrypoint (the same descriptors as `stats.entrypoints[].resourceHints`) as an output asset at this path. Lets an SSR server inject the `<link>` tags itself without walking the chunk graph — webpack's analogue of Vite's `build.ssrManifest`. Empty when `initial` is `\"none\"`.",
+          "type": "string",
+          "minLength": 1
+        },
+        "modulePreloadPolyfill": {
+          "description": "Inject a tiny inline `<script>` polyfill for `<link rel=\"modulepreload\">` into extracted HTML pages when the target environment (per `output.environment.modulePreload`) lacks native support. `true` (default) injects only when needed; `false` never injects — the `<link>` tags are still emitted but do nothing on browsers without support (useful under a strict CSP that forbids inline scripts).",
+          "type": "boolean"
+        },
+        "preconnect": {
+          "description": "Auto-emit `<link rel=\"preconnect\">` for the origin of a cross-origin `output.publicPath` (the origin bundles and assets are served from) into extracted HTML entries and the resource-hint stats / manifest. Mirrors `output.crossOriginLoading`. No-op when `publicPath` is relative or `\"auto\"`.",
+          "type": "boolean"
+        },
+        "urlHints": {
+          "description": "Project-wide URL-referenced-asset hint rules, applied as the base `urlHints` of every parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>`). Parser-scoped `module.parser.<type>.urlHints` rules and per-URL magic comments still override these.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UrlHintRule"
+          }
+        }
+      }
     },
     "RuleSetCondition": {
       "description": "A condition matcher.",

@@ -17,9 +17,7 @@ module.exports = {
 		filename: "[name].js",
 		chunkFilename: "[name].chunk.js",
 		publicPath: "https://cdn.example.com/",
-		autoPreconnect: true,
-		resourceHints: true,
-		resourceHintsManifest: "hints.json"
+		resourceHints: { initial: true, preconnect: true, manifest: "hints.json" }
 	},
 	optimization: { chunkIds: "named", runtimeChunk: "single" },
 	plugins: [

@@ -7,14 +7,17 @@ the one that fits your app and copy from it.
 
 Two surfaces are involved:
 
-- `output.resourceHints` — controls the **initial chunk graph** hints emitted
-  into an HTML entry's `<head>` (or exposed on `stats.entrypoints[name].resourceHints`
-  for SSR frameworks).
+- `output.resourceHints` — the emission config. It accepts the **initial chunk
+  graph** shorthand directly (`true` / `"prefetch"` / `"none"` /
+  `HtmlResourceHint[]` / a function — equivalent to `{ initial: … }`) **or** the
+  full object `{ initial, urlHints, preconnect, modulePreloadPolyfill, manifest }`.
+  Hints land in an HTML entry's `<head>` (or `stats.entrypoints[name].resourceHints`
+  / the `manifest` file for SSR).
 - `module.parser.<type>.urlHints` — controls per-**URL-referenced-asset**
   defaults (fonts, images, workers) for `new URL(...)`, CSS `url(...)`,
   HTML `<img src>`, etc. Per-URL `webpackPreload` / `webpackPrefetch` magic
-  comments still win. `output.urlHints` is a project-wide shorthand that seeds
-  the same list under every parser at once.
+  comments still win. `output.resourceHints.urlHints` is a project-wide shorthand
+  that seeds the same list under every parser at once.
 
 ## Scenarios
 
@@ -38,7 +41,7 @@ Two surfaces are involved:
 6. **url-hints-scoped** — `module.rules[].parser.urlHints`. Because parser
    options are scope-aware, a rule can narrow `urlHints` to a subtree
    (e.g. critical routes upgrade `prefetch` → `preload`).
-7. **ssr** — `output.resourceHintsManifest` + `output.resourceHints`. JS-only
+7. **ssr** — `output.resourceHints.manifest` + `output.resourceHints`. JS-only
    build; hints are written to a JSON file (`{ [entry]: descriptors }`) and are
    also on `stats.entrypoints[name].resourceHints`. The server renders them into
    the initial HTML shell.
@@ -48,13 +51,13 @@ Two surfaces are involved:
 9. **none** — `output.resourceHints: "none"`. Hard off switch: no `<link>`
    anywhere and empty stats / manifest. (`false` only disables the auto chunk
    hints; URL-asset hints keep firing.)
-10. **url-hints-global** — `output.urlHints`. Project-wide shorthand for the
+10. **url-hints-global** — `output.resourceHints.urlHints`. Project-wide shorthand for the
     same `urlHints` list under every parser (JS / CSS / HTML). Parser-scoped
     rules and magic comments still override it.
 11. **async-css-preload** — `module.parser.javascript.dynamicImportCssPreload`.
     Auto `<link rel="preload" as="style">` for a dynamically imported chunk's
     CSS (parallel with the chunk; the JS itself is not preloaded).
-12. **auto-preconnect** — `output.autoPreconnect`. Emit
+12. **auto-preconnect** — `output.resourceHints.preconnect`. Emit
     `<link rel="preconnect">` for a cross-origin `output.publicPath` origin
     (the CDN serving your bundles / assets).
 
@@ -288,7 +291,7 @@ module.exports = [
 	/*
 	 * 7. SSR MANIFEST — a JS-only build (no HTML entry). The callback tags the
 	 * runtime chunk high-priority using `hostChunks` (Vite's `hostId`);
-	 * `output.resourceHintsManifest` writes the result to a JSON file
+	 * `output.resourceHints.manifest` writes the result to a JSON file
 	 * (`{ [entry]: descriptors }`) so the server can inject the `<link>`s without
 	 * walking the chunk graph. The same data is on
 	 * `stats.entrypoints[name].resourceHints` (`stats: { chunkGroupResourceHints: true }`).
@@ -308,11 +311,15 @@ module.exports = [
 			assetModuleFilename: "assets/[name].[hash:8][ext]",
 			publicPath: "/static/",
 			module: true,
-			resourceHints: ({ defaultHints }) =>
-				defaultHints.map((d) =>
-					d.hostChunks.includes("runtime") ? { ...d, fetchPriority: "high" } : d
-				),
-			resourceHintsManifest: "ssr-hints.json"
+			resourceHints: {
+				initial: ({ defaultHints }) =>
+					defaultHints.map((d) =>
+						d.hostChunks.includes("runtime")
+							? { ...d, fetchPriority: "high" }
+							: d
+					),
+				manifest: "ssr-hints.json"
+			}
 		},
 		module: {
 			parser: {
@@ -383,7 +390,7 @@ module.exports = [
 	},
 
 	/*
-	 * 10. GLOBAL URL HINTS — `output.urlHints` is a project-wide shorthand for
+	 * 10. GLOBAL URL HINTS — `output.resourceHints.urlHints` is a project-wide shorthand for
 	 * the same rule list under every parser (JS `new URL`, CSS `url()`, HTML
 	 * `<img src>`), so you write it once. Parser-scoped `parser.<type>.urlHints`
 	 * and per-URL magic comments still override it.
@@ -398,11 +405,18 @@ module.exports = [
 			chunkFilename: "[name].[contenthash:8].chunk.js",
 			assetModuleFilename: "assets/[name].[hash:8][ext]",
 			module: true,
-			resourceHints: true,
-			urlHints: [
-				{ test: /\.woff2$/, preload: true, as: "font", fetchPriority: "high" },
-				{ test: /\.(png|jpg|webp)$/, prefetch: true, fetchPriority: "low" }
-			]
+			resourceHints: {
+				initial: true,
+				urlHints: [
+					{
+						test: /\.woff2$/,
+						preload: true,
+						as: "font",
+						fetchPriority: "high"
+					},
+					{ test: /\.(png|jpg|webp)$/, prefetch: true, fetchPriority: "low" }
+				]
+			}
 		},
 		module: {
 			rules: [{ test: /\.(png|jpg|webp|woff2)$/, type: "asset/resource" }]
@@ -436,7 +450,7 @@ module.exports = [
 	},
 
 	/*
-	 * 12. AUTO PRECONNECT — `output.autoPreconnect`. When bundles/assets are
+	 * 12. AUTO PRECONNECT — `output.resourceHints.preconnect`. When bundles/assets are
 	 * served from a cross-origin CDN (`output.publicPath`), emit a
 	 * `<link rel="preconnect">` for that origin so the browser opens the
 	 * connection early. Mirrors `output.crossOriginLoading`.
@@ -452,8 +466,7 @@ module.exports = [
 			publicPath: "https://cdn.example.com/static/",
 			crossOriginLoading: "anonymous",
 			module: true,
-			autoPreconnect: true,
-			resourceHints: true
+			resourceHints: { initial: true, preconnect: true }
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
 		experiments: { html: true, outputModule: true }
@@ -523,7 +536,7 @@ body {
 
 # SSR: the manifest file
 
-With `output.resourceHintsManifest: "ssr-hints.json"`, webpack writes the
+With `output.resourceHints.manifest: "ssr-hints.json"`, webpack writes the
 manifest for you during the build — no stats plumbing needed:
 
 ```js

@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-it("should write output.resourceHintsManifest as a JSON asset", () => {
+it("should write output.resourceHints.manifest as a JSON asset", () => {
 	const manifest = JSON.parse(
 		fs.readFileSync(path.resolve(__dirname, "ssr-hints.json"), "utf-8")
 	);

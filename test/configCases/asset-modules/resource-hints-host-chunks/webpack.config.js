@@ -19,19 +19,21 @@ module.exports = {
 		chunkFilename: "[name].chunk.js",
 		assetModuleFilename: "[name][ext]",
 		publicPath: "https://cdn.example.com/",
-		resourceHints: ({ defaultHints }) => {
-			// Every hint must carry its origin chunk name(s).
-			for (const d of defaultHints) {
-				if (!Array.isArray(d.hostChunks) || d.hostChunks.length === 0) {
-					throw new Error(`hint ${d.href} has no hostChunks`);
+		resourceHints: {
+			initial: ({ defaultHints }) => {
+				// Every hint must carry its origin chunk name(s).
+				for (const d of defaultHints) {
+					if (!Array.isArray(d.hostChunks) || d.hostChunks.length === 0) {
+						throw new Error(`hint ${d.href} has no hostChunks`);
+					}
 				}
-			}
-			// Rewrite only hints originating from the runtime chunk.
-			return defaultHints.map((d) =>
-				d.hostChunks.includes("runtime") ? { ...d, href: `${d.href}?rt` } : d
-			);
-		},
-		resourceHintsManifest: "hints.json"
+				// Rewrite only hints originating from the runtime chunk.
+				return defaultHints.map((d) =>
+					d.hostChunks.includes("runtime") ? { ...d, href: `${d.href}?rt` } : d
+				);
+			},
+			manifest: "hints.json"
+		}
 	},
 	optimization: { chunkIds: "named", runtimeChunk: "single" },
 	module: {

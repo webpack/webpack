@@ -23,8 +23,7 @@ module.exports = {
 		environment: {
 			modulePreload: false
 		},
-		modulePreloadPolyfill: false,
-		resourceHints: true
+		resourceHints: { initial: true, modulePreloadPolyfill: false }
 	},
 	optimization: {
 		chunkIds: "named",

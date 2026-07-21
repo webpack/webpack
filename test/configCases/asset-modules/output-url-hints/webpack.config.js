@@ -15,10 +15,12 @@ module.exports = {
 		assetModuleFilename: "[name][ext]",
 		publicPath: "https://example.com/public/",
 		// One project-wide list — applies to JS and CSS URL references alike.
-		urlHints: [
-			{ test: /\.woff2$/, preload: true, as: "font" },
-			{ test: /\.png$/, prefetch: true, fetchPriority: "low" }
-		]
+		resourceHints: {
+			urlHints: [
+				{ test: /\.woff2$/, preload: true, as: "font" },
+				{ test: /\.png$/, prefetch: true, fetchPriority: "low" }
+			]
+		}
 	},
 	module: {
 		parser: {

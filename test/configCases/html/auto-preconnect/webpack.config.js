@@ -17,8 +17,7 @@ module.exports = {
 		chunkFilename: "[name].chunk.js",
 		publicPath: "https://cdn.example.com/assets/",
 		crossOriginLoading: "anonymous",
-		autoPreconnect: true,
-		resourceHints: true
+		resourceHints: { initial: true, preconnect: true }
 	},
 	optimization: { chunkIds: "named", runtimeChunk: "single" },
 	experiments: { html: true },
