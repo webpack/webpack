@@ -8677,7 +8677,7 @@ declare interface FileCacheOptions {
 	/**
 	 * Compression type used for the cache files.
 	 */
-	compression?: false | "gzip" | "brotli";
+	compression?: false | "gzip" | "brotli" | "zstd";
 
 	/**
 	 * Algorithm used for generation the hash (see node.js crypto package).

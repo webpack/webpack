@@ -188,6 +188,7 @@ Object {
           false,
           "gzip",
           "brotli",
+          "zstd",
         ],
       },
     ],
