@@ -9,7 +9,12 @@ parseExprList, parsePropertyName), A6 exports and the toAssignable/
 checkLVal/yield/await cluster landed — **Phase A is complete**: no acorn
 node-construction path remains reachable in lazy mode (acorn stays for
 non-lazy mode, predicates and the token machinery already owned earlier).
-Next: Phase B construction seam.
+Next: Phase B. **B1 landed** — all 44 single-shape constructions now route
+through module-level `_emit*` slots (verified zero-cost). B2 learning: the
+accessor conversion only pays off when refs change representation, so it
+lands per method cluster together with Phase C's emitter swap instead of as
+a standalone whole-file pass; the first cluster to convert is
+toAssignable/checkLVal (self-contained recursion, narrow field set).
 Walk-side profiling (Phase D scouting) landed two contained wins: hook-tap
 probing before arg materialization and deferred member-chain side arrays —
 walk churn 78 → 65 MB on typescript.js, walk wall time neutral-to-better.
