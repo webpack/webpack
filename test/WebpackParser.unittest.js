@@ -2119,6 +2119,68 @@ describe("WebpackParser", () => {
 			expect(declaratorFacade.init.argument.name).toBe("n");
 		});
 
+		it("should serve function, object, pattern and wrapper facades", () => {
+			const source = "async function* f({a = 1, ...r}) { yield [x, ...y]; }";
+			const ast = new SoaAst(source);
+			const fnId = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 16, 17);
+			const a = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 19, 20);
+			const one = ast.allocNode(SoaAst.TYPE_LITERAL, 23, 24);
+			ast.values[one] = 1;
+			const defaulted = ast.allocNode(SoaAst.TYPE_ASSIGNMENT_PATTERN, 19, 24);
+			ast.kid0[defaulted] = a;
+			ast.kid1[defaulted] = one;
+			const aProp = ast.allocNode(SoaAst.TYPE_PROPERTY, 19, 24);
+			ast.kid0[aProp] = a;
+			ast.kid1[aProp] = defaulted;
+			ast.flags[aProp] = SoaAst.FLAG_SHORTHAND;
+			const r = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 29, 30);
+			const rest = ast.allocNode(SoaAst.TYPE_REST_ELEMENT, 26, 30);
+			ast.kid0[rest] = r;
+			const pattern = ast.allocNode(SoaAst.TYPE_OBJECT_PATTERN, 18, 31);
+			ast.setList(pattern, [aProp, rest]);
+			const x = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 42, 43);
+			const y = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 48, 49);
+			const spread = ast.allocNode(SoaAst.TYPE_SPREAD_ELEMENT, 45, 49);
+			ast.kid0[spread] = y;
+			const array = ast.allocNode(SoaAst.TYPE_ARRAY_EXPRESSION, 41, 50);
+			ast.setList(array, [x, spread]);
+			const yielded = ast.allocNode(SoaAst.TYPE_YIELD_EXPRESSION, 35, 50);
+			ast.kid0[yielded] = array;
+			ast.flags[yielded] = 0;
+			const yieldStmt = ast.allocNode(SoaAst.TYPE_EXPRESSION_STATEMENT, 35, 51);
+			ast.kid0[yieldStmt] = yielded;
+			const body = ast.allocNode(SoaAst.TYPE_BLOCK_STATEMENT, 33, 53);
+			ast.setList(body, [yieldStmt]);
+			const fn = ast.allocNode(SoaAst.TYPE_FUNCTION_DECLARATION, 0, 53);
+			ast.kid0[fn] = fnId;
+			ast.kid1[fn] = body;
+			ast.setList(fn, [pattern]);
+			ast.flags[fn] = SoaAst.FLAG_ASYNC | SoaAst.FLAG_GENERATOR;
+
+			const fnFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(fn));
+			expect(fnFacade.type).toBe("FunctionDeclaration");
+			expect(fnFacade.async).toBe(true);
+			expect(fnFacade.generator).toBe(true);
+			expect(fnFacade.expression).toBe(false);
+			expect(fnFacade.id.name).toBe("f");
+			const objectPattern = fnFacade.params[0];
+			expect(objectPattern.type).toBe("ObjectPattern");
+			const [shorthand, restProp] = objectPattern.properties;
+			expect(shorthand.shorthand).toBe(true);
+			expect(shorthand.kind).toBe("init");
+			expect(shorthand.value.type).toBe("AssignmentPattern");
+			expect(shorthand.value.right.value).toBe(1);
+			expect(restProp.type).toBe("RestElement");
+			expect(restProp.argument.name).toBe("r");
+			const yieldedFacade = fnFacade.body.body[0].expression;
+			expect(yieldedFacade.type).toBe("YieldExpression");
+			expect(yieldedFacade.delegate).toBe(false);
+			const arrayFacade = yieldedFacade.argument;
+			expect(arrayFacade.elements[0].name).toBe("x");
+			expect(arrayFacade.elements[1].type).toBe("SpreadElement");
+			expect(arrayFacade.elements[1].argument.name).toBe("y");
+		});
+
 		it("should grow columns and the flat buffer beyond their initial capacity", () => {
 			const ast = new SoaAst("x");
 			/** @type {number[]} */
