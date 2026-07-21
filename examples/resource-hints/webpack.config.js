@@ -87,7 +87,8 @@ module.exports = [
 				},
 				// Chunk / entry references — webpack fills in the emitted filename.
 				{ rel: "modulepreload", chunk: "runtime" },
-				{ rel: "prefetch", entry: "settings" }
+				// `fetchPriority` is emitted on prefetch too (spec draft allows it).
+				{ rel: "prefetch", entry: "settings", fetchPriority: "low" }
 			]
 		},
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
@@ -111,10 +112,13 @@ module.exports = [
 			chunkFilename: "[name].[contenthash:8].chunk.js",
 			module: true,
 			resourceHints: ({ entryName, hostType, defaultHints }) => {
-				// Rewrite every auto hint to the CDN and stamp a per-entry marker.
+				// Full control: drop / keep / add. `d.hostChunks` names the
+				// referencing chunk(s) (Vite's `hostId`) so you can act per origin.
+				// (In the HTML build path kept auto hints render with their prebuilt
+				// tag; the SSR / manifest path — scenario 7 — also honors rewrites.)
 				const cdn = "https://cdn.example.com";
 				return [
-					...defaultHints.map((d) => ({ ...d, href: `${cdn}${d.href}` })),
+					...defaultHints,
 					{
 						rel: "preload",
 						href: `${cdn}/hero-${entryName}-${hostType}.jpg`,
@@ -219,11 +223,12 @@ module.exports = [
 	},
 
 	/*
-	 * 7. SSR MANIFEST — a JS-only build (no HTML entry). `output.resourceHints:
-	 * true` enables the auto defaults, `stats: { chunkGroupResourceHints: true }`
-	 * surfaces them at `stats.entrypoints[name].resourceHints`. The server reads
-	 * that array and renders one `<link>` per descriptor into the initial HTML
-	 * shell it sends to the browser.
+	 * 7. SSR MANIFEST — a JS-only build (no HTML entry). The callback tags the
+	 * runtime chunk high-priority using `hostChunks` (Vite's `hostId`);
+	 * `output.resourceHints.manifest` writes the result to a JSON file
+	 * (`{ [entry]: descriptors }`) so the server can inject the `<link>`s without
+	 * walking the chunk graph. The same data is on
+	 * `stats.entrypoints[name].resourceHints` (`stats: { chunkGroupResourceHints: true }`).
 	 */
 	{
 		name: "ssr",
@@ -240,7 +245,15 @@ module.exports = [
 			assetModuleFilename: "assets/[name].[hash:8][ext]",
 			publicPath: "/static/",
 			module: true,
-			resourceHints: true
+			resourceHints: {
+				initial: ({ defaultHints }) =>
+					defaultHints.map((d) =>
+						d.hostChunks.includes("runtime")
+							? { ...d, fetchPriority: "high" }
+							: d
+					),
+				manifest: "ssr-hints.json"
+			}
 		},
 		module: {
 			parser: {
@@ -260,5 +273,239 @@ module.exports = [
 		optimization: { runtimeChunk: "single", chunkIds: "named" },
 		experiments: { outputModule: true },
 		stats: { chunkGroupResourceHints: true }
+	},
+
+	/*
+	 * 8. FONT PRELOAD — `module.parser.css.fontPreload: true` auto-emits
+	 * `<link rel="preload" as="font">` for the primary `src` of each
+	 * `@font-face` reachable from an HTML entry's initial CSS. Only the first
+	 * url per `@font-face` is preloaded (preloading every format would
+	 * double-download); `urlHints` rules / magic comments still override.
+	 */
+	{
+		name: "font-preload",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home-with-css.js", html: true } },
+		output: {
+			path: distFor("font-preload"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			assetModuleFilename: "assets/[name].[hash:8][ext]",
+			module: true,
+			resourceHints: true
+		},
+		module: {
+			parser: { css: { fontPreload: true } },
+			rules: [{ test: /\.woff2?$/, type: "asset/resource" }]
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true, css: true }
+	},
+
+	/*
+	 * 9. OFF — `output.resourceHints: "none"` is a hard off switch: no `<link>`
+	 * is emitted anywhere (chunk hints and URL-asset hints), and the stats /
+	 * manifest lists are empty. `false` only disables the auto chunk hints —
+	 * URL-asset hints from magic comments / `urlHints` keep firing.
+	 */
+	{
+		name: "none",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home.js", html: true } },
+		output: {
+			path: distFor("none"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			module: true,
+			resourceHints: "none"
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
+	},
+
+	/*
+	 * 10. GLOBAL URL HINTS — `output.resourceHints.urlHints` is a project-wide shorthand for
+	 * the same rule list under every parser (JS `new URL`, CSS `url()`, HTML
+	 * `<img src>`), so you write it once. Parser-scoped `parser.<type>.urlHints`
+	 * and per-URL magic comments still override it.
+	 */
+	{
+		name: "url-hints-global",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home-with-assets.js", html: true } },
+		output: {
+			path: distFor("url-hints-global"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			assetModuleFilename: "assets/[name].[hash:8][ext]",
+			module: true,
+			resourceHints: {
+				initial: true,
+				urlHints: [
+					{
+						test: /\.woff2$/,
+						preload: true,
+						as: "font",
+						fetchPriority: "high"
+					},
+					{ test: /\.(png|jpg|webp)$/, prefetch: true, fetchPriority: "low" }
+				]
+			}
+		},
+		module: {
+			rules: [{ test: /\.(png|jpg|webp|woff2)$/, type: "asset/resource" }]
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
+	},
+
+	/*
+	 * 11. ASYNC-CHUNK CSS PRELOAD — `parser.javascript.dynamicImportCssPreload`.
+	 * Auto-emit `<link rel="preload" as="style">` for a dynamically imported
+	 * chunk's CSS so it fetches in parallel with the chunk instead of after its
+	 * JS parses. Unlike `dynamicImportPreload`, the JS itself is not preloaded.
+	 */
+	{
+		name: "async-css-preload",
+		mode: "production",
+		entry: { home: { import: "./src/routes/async-host.js", html: true } },
+		output: {
+			path: distFor("async-css-preload"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			module: true,
+			resourceHints: true
+		},
+		module: {
+			parser: { javascript: { dynamicImportCssPreload: true } }
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true, css: true }
+	},
+
+	/*
+	 * 12. AUTO PRECONNECT — `output.resourceHints.preconnect`. When bundles/assets are
+	 * served from a cross-origin CDN (`output.publicPath`), emit a
+	 * `<link rel="preconnect">` for that origin so the browser opens the
+	 * connection early. Mirrors `output.crossOriginLoading`.
+	 */
+	{
+		name: "auto-preconnect",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home.js", html: true } },
+		output: {
+			path: distFor("auto-preconnect"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			publicPath: "https://cdn.example.com/static/",
+			crossOriginLoading: "anonymous",
+			module: true,
+			resourceHints: { initial: true, preconnect: true }
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
+	},
+
+	/*
+	 * 13. FULL OBJECT — every knob in one place. `initial` is the chunk-hint
+	 * behavior; `urlHints` seeds URL-asset defaults under every parser;
+	 * `preconnect` warms the CDN; `modulePreloadPolyfill` toggles the polyfill;
+	 * `manifest` writes the SSR JSON file.
+	 */
+	{
+		name: "object-form",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home-with-assets.js", html: true } },
+		output: {
+			path: distFor("object-form"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			assetModuleFilename: "assets/[name].[hash:8][ext]",
+			publicPath: "https://cdn.example.com/static/",
+			crossOriginLoading: "anonymous",
+			module: true,
+			resourceHints: {
+				initial: true,
+				urlHints: [
+					{ test: /\.woff2$/, preload: true, as: "font", fetchPriority: "high" }
+				],
+				preconnect: true,
+				modulePreloadPolyfill: true,
+				manifest: "ssr-hints.json"
+			}
+		},
+		module: {
+			rules: [{ test: /\.(png|jpg|webp|woff2)$/, type: "asset/resource" }]
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
+	},
+
+	/*
+	 * 14. STRICT CSP — `modulePreloadPolyfill: false`. The polyfill default is
+	 * derived from `output.environment.modulePreload`; on a target without native
+	 * support it would inject an inline `<script>`. Under a CSP that forbids
+	 * inline scripts, opt out — the `<link rel="modulepreload">` tags still emit.
+	 */
+	{
+		name: "csp-no-polyfill",
+		mode: "production",
+		target: ["web", "es2015"],
+		entry: { home: { import: "./src/routes/home.js", html: true } },
+		output: {
+			path: distFor("csp-no-polyfill"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			module: true,
+			environment: { modulePreload: false },
+			resourceHints: { initial: true, modulePreloadPolyfill: false }
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
+	},
+
+	/*
+	 * 15. ASYNC JS + CSS PRELOAD — `parser.javascript.dynamicImportPreload`
+	 * couples both (like Vite): a dynamically imported chunk's JS and CSS are
+	 * preloaded together. Contrast with scenario 11 (`dynamicImportCssPreload`),
+	 * which preloads only the CSS.
+	 */
+	{
+		name: "async-js-css-preload",
+		mode: "production",
+		entry: { home: { import: "./src/routes/async-host.js", html: true } },
+		output: {
+			path: distFor("async-js-css-preload"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			module: true,
+			resourceHints: true
+		},
+		module: {
+			parser: { javascript: { dynamicImportPreload: true } }
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true, css: true }
+	},
+
+	/*
+	 * 16. ESM DEFAULT — nothing set. Because `output.module` is on, `initial`
+	 * defaults to `true` (Vite-style), so the entry's initial chunks get
+	 * `<link rel="modulepreload">` with no `resourceHints` config at all.
+	 * Classic output stays opt-in.
+	 */
+	{
+		name: "esm-default",
+		mode: "production",
+		entry: { home: { import: "./src/routes/home.js", html: true } },
+		output: {
+			path: distFor("esm-default"),
+			filename: "[name].[contenthash:8].js",
+			chunkFilename: "[name].[contenthash:8].chunk.js",
+			module: true
+			// no `resourceHints` — ESM output enables it by default
+		},
+		optimization: { runtimeChunk: "single", chunkIds: "named" },
+		experiments: { html: true, outputModule: true }
 	}
 ];

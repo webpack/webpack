@@ -23,20 +23,19 @@ module.exports = {
 		chunkFilename: "[name].chunk.mjs",
 		module: true,
 		assetModuleFilename: "[name][ext]",
-		resourceHints: ({ entryName, hostType, defaultHints }) => {
+		resourceHints: ({ entryName, hostType, defaultHints }) => [
 			// Rewrite every href through a "CDN" origin, drop the PNG,
 			// and stamp the entry name onto a `data-entry` marker via
 			// a synthetic descriptor (returned last).
-			const kept = defaultHints
+			...defaultHints
 				.filter((d) => d.href !== "image.png")
-				.map((d) => ({ ...d, href: `https://cdn.example.com/${d.href}` }));
-			kept.push({
+				.map((d) => ({ ...d, href: `https://cdn.example.com/${d.href}` })),
+			{
 				rel: "preload",
 				href: `https://cdn.example.com/marker-${entryName}-${hostType}`,
 				as: "fetch"
-			});
-			return kept;
-		}
+			}
+		]
 	},
 	optimization: { chunkIds: "named" },
 	experiments: { html: true, outputModule: true },

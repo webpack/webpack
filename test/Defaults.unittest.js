@@ -1483,7 +1483,12 @@ describe("snapshots", () => {
 		-     "module": false,
 		+     "module": true,
 		@@ ... @@
+		-     "resourceHints": undefined,
 		-     "scriptType": false,
+		+     "resourceHints": Object {
+		+       "initial": true,
+		+       "modulePreloadPolyfill": false,
+		+     },
 		+     "scriptType": "module",
 		@@ ... @@
 		-     "workerChunkFilename": "[name].js",
@@ -2043,7 +2048,12 @@ describe("snapshots", () => {
 		-     "module": false,
 		+     "module": true,
 		@@ ... @@
+		-     "resourceHints": undefined,
 		-     "scriptType": false,
+		+     "resourceHints": Object {
+		+       "initial": true,
+		+       "modulePreloadPolyfill": false,
+		+     },
 		+     "scriptType": "module",
 		@@ ... @@
 		-     "workerChunkFilename": "[name].js",
@@ -2229,7 +2239,12 @@ describe("snapshots", () => {
 		-     "module": false,
 		+     "module": true,
 		@@ ... @@
+		-     "resourceHints": undefined,
 		-     "scriptType": false,
+		+     "resourceHints": Object {
+		+       "initial": true,
+		+       "modulePreloadPolyfill": false,
+		+     },
 		+     "scriptType": "module",
 		@@ ... @@
 		-     "workerChunkFilename": "[name].js",
@@ -2418,7 +2433,12 @@ describe("snapshots", () => {
 		-     "module": false,
 		+     "module": true,
 		@@ ... @@
+		-     "resourceHints": undefined,
 		-     "scriptType": false,
+		+     "resourceHints": Object {
+		+       "initial": true,
+		+       "modulePreloadPolyfill": false,
+		+     },
 		+     "scriptType": "module",
 		@@ ... @@
 		-     "workerChunkFilename": "[name].js",
@@ -2608,7 +2628,12 @@ describe("snapshots", () => {
 		-     "module": false,
 		+     "module": true,
 		@@ ... @@
+		-     "resourceHints": undefined,
 		-     "scriptType": false,
+		+     "resourceHints": Object {
+		+       "initial": true,
+		+       "modulePreloadPolyfill": false,
+		+     },
 		+     "scriptType": "module",
 		@@ ... @@
 		-     "workerChunkFilename": "[name].js",
@@ -3076,7 +3101,12 @@ describe("snapshots", () => {
 			-     "module": false,
 			+     "module": true,
 			@@ ... @@
+			-     "resourceHints": undefined,
 			-     "scriptType": false,
+			+     "resourceHints": Object {
+			+       "initial": true,
+			+       "modulePreloadPolyfill": false,
+			+     },
 			+     "scriptType": "module",
 			@@ ... @@
 			-     "wasmLoading": "fetch",
@@ -3257,7 +3287,12 @@ describe("snapshots", () => {
 			-     "module": false,
 			+     "module": true,
 			@@ ... @@
+			-     "resourceHints": undefined,
 			-     "scriptType": false,
+			+     "resourceHints": Object {
+			+       "initial": true,
+			+       "modulePreloadPolyfill": false,
+			+     },
 			+     "scriptType": "module",
 			@@ ... @@
 			-     "wasmLoading": "fetch",
@@ -4941,7 +4976,12 @@ describe("snapshots", () => {
 			-     "module": false,
 			+     "module": true,
 			@@ ... @@
+			-     "resourceHints": undefined,
 			-     "scriptType": false,
+			+     "resourceHints": Object {
+			+       "initial": true,
+			+       "modulePreloadPolyfill": false,
+			+     },
 			+     "scriptType": "module",
 			@@ ... @@
 			-     "wasmLoading": "fetch",
