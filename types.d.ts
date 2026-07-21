@@ -23507,6 +23507,10 @@ declare abstract class RuntimeTemplate {
 		 * if set, will be filled with runtime requirements
 		 */
 		runtimeRequirements: Set<string>;
+		/**
+		 * the module the `import()` is emitted into
+		 */
+		originModule?: Module;
 	}): string;
 
 	/**
@@ -23667,6 +23671,10 @@ declare abstract class RuntimeTemplate {
 		 * if set, will be filled with runtime requirements
 		 */
 		runtimeRequirements: Set<string>;
+		/**
+		 * the module the `import()` is emitted into
+		 */
+		originModule?: Module;
 	}): string;
 
 	/**
