@@ -15,6 +15,10 @@ accessor conversion only pays off when refs change representation, so it
 lands per method cluster together with Phase C's emitter swap instead of as
 a standalone whole-file pass; the first cluster to convert is
 toAssignable/checkLVal (self-contained recursion, narrow field set).
+**C1 landed** (see §4.1): full facade coverage for every reachable estree
+type, and the `_emit*` seam now has a SoA arm — opt-in via the `soaAst`
+parse option, corpus-equivalence-gated over both backends, off by default
+until Phase D absorbs the double-bookkeeping cost.
 Walk-side profiling (Phase D scouting) landed two contained wins: hook-tap
 probing before arg materialization and deferred member-chain side arrays —
 walk churn 78 → 65 MB on typescript.js, walk wall time neutral-to-better.
@@ -355,13 +359,43 @@ canary builds decide whether the enumeration cut is acceptable ecosystem-wide.
 backends live in their own `syntax.js`): the per-parse `SoaAst` column store
 (growth, flat child lists — now with `kid2`/`aux` columns, the shared
 operator/kind tables and sparse literal values — identity-stable candidate-2
-facades for 34 node types — the full expression core, functions, objects
-and patterns; remaining tail: classes, templates, loops/switch/try, labels
-and module declarations),
-exported for the compat battery in
-`test/WebpackParser.unittest.js`. Not yet wired into parsing; next steps are
-full node-type coverage, then flipping the `_emit*` seam per grammar
-cluster.
+facades), exported for the compat battery in
+`test/WebpackParser.unittest.js`.
+
+**C1 facade coverage complete**: every estree type the lazy parser can
+produce has a numeric type and facade — expression core, functions,
+objects, patterns, classes, templates, all statements and the module
+declarations. `ParenthesizedExpression` (`preserveParens` only) stays
+object-backed. Layout notes: `TemplateLiteral` interleaves `quasis`/
+`expressions` into one flat span (`2n + 1` entries); non-empty
+import/export `attributes` live in the sparse side list behind a
+`FLAG_ES2025` presence bit (mirroring acorn's ecmaVersion ≥ 16 field).
+
+**C1 seam flip landed (opt-in)**: a `soaAst: true` parse option (lazy mode
+only) installs a per-parse `SoaAst` into a module-level slot; all 44
+`_emit*` emitters then fill columns and return registered facades. Owned
+children wire by ref; foreign children (acorn-built nodes from
+not-yet-owned sites: classes, import/export declarations, tagged
+templates, meta properties, `copyNode` copies) memoize onto the facade —
+mixed trees are fully supported, which also serves rare shapes (pre-ES2018
+`for-of` keeps the object backend). Escaped identifier names land in the
+side list (escapes always cook shorter, so a length check detects them);
+`regex`/`bigint` payloads arrive as plain post-construction writes and
+live as own facade fields. Born-unfinished nodes (`Property`,
+`SwitchCase`) mirror their object-backend shapes and are filled in place
+through facade setters. Gate: the corpus equivalence harness runs every
+fixture through both backends (facade-aware comparison — children served
+from prototype getters are checked via `in` + value reads; strictness for
+plain nodes unchanged), all green. The seam's added `_soaStore === null`
+check is flat on the object backend (interleaved A/B on typescript.js).
+SoA parse currently costs ~65% more wall time than the object backend on
+typescript.js — the anticipated C-phase double bookkeeping (columns +
+eager facades + megamorphic facade construction at the generic emit
+helper), which is why the backend stays **off by default** per the §4
+contingency: it flips on with Phase D (id-walking makes facade
+construction lazy for real) once the end-to-end wins materialize.
+Next: D1 (id-based walk core) driving down eager materialization, then
+default-on with the escape hatch.
 
 ## 5. Measurement protocol
 

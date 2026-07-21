@@ -2648,6 +2648,174 @@ describe("WebpackParser", () => {
 		});
 	});
 
+	describe("SoA emission (soaAst)", () => {
+		const { WebpackParser } = require("../lib/javascript/syntax");
+
+		/**
+		 * @param {string} code source
+		 * @param {object=} extra extra parse options
+		 * @returns {EXPECTED_ANY} program node
+		 */
+		const soaParse = (code, extra) =>
+			WebpackParser.parse(
+				code,
+				/** @type {import("acorn").Options} */ (
+					/** @type {unknown} */ ({
+						ecmaVersion: "latest",
+						sourceType: "module",
+						lazyNodes: true,
+						soaAst: true,
+						...extra
+					})
+				)
+			);
+
+		it("should emit facades from the seam and keep the object backend without the option", () => {
+			const soa = soaParse("const x = a.b(1);");
+			expect(SoaAst.isFacade(soa.body[0])).toBe(true);
+			expect(SoaAst.isFacade(soa.body[0].declarations[0].init)).toBe(true);
+			const plain = WebpackParser.parse(
+				"const x = a.b(1);",
+				/** @type {import("acorn").Options} */ (
+					/** @type {unknown} */ ({
+						ecmaVersion: "latest",
+						sourceType: "module",
+						lazyNodes: true
+					})
+				)
+			);
+			expect(SoaAst.isFacade(/** @type {EXPECTED_ANY} */ (plain).body[0])).toBe(
+				false
+			);
+			// without lazy mode the option is inert
+			const nonLazy = WebpackParser.parse(
+				"const x = 1;",
+				/** @type {import("acorn").Options} */ (
+					/** @type {unknown} */ ({
+						ecmaVersion: "latest",
+						sourceType: "module",
+						soaAst: true
+					})
+				)
+			);
+			expect(
+				SoaAst.isFacade(/** @type {EXPECTED_ANY} */ (nonLazy).body[0])
+			).toBe(false);
+		});
+
+		it("should serve escaped identifier names from the side list", () => {
+			const ast = soaParse("var \\u0061bc = 1;");
+			const declarator = ast.body[0].declarations[0];
+			expect(declarator.id.name).toBe("abc");
+			expect(declarator.id.end - declarator.id.start).toBe(8);
+		});
+
+		it("should keep regex, bigint and template payloads intact", () => {
+			// eslint-disable-next-line no-template-curly-in-string
+			const ast = soaParse("x = /ab/gu; y = 12n; z = `p${q}r`;");
+			const regex = ast.body[0].expression.right;
+			expect(regex.regex).toEqual({ pattern: "ab", flags: "gu" });
+			expect(regex.value).toBeInstanceOf(RegExp);
+			expect(regex.raw).toBe("/ab/gu");
+			const bigint = ast.body[1].expression.right;
+			expect(bigint.value).toBe(BigInt(12));
+			expect(bigint.bigint).toBe("12");
+			const template = ast.body[2].expression.right;
+			expect(
+				template.quasis.map((/** @type {EXPECTED_ANY} */ q) => q.value.cooked)
+			).toEqual(["p", "r"]);
+			expect(template.quasis[1].tail).toBe(true);
+			expect(template.expressions[0].name).toBe("q");
+		});
+
+		it("should memoize foreign children from not-yet-owned construction sites", () => {
+			// class expressions still come from acorn's start/finish path
+			const ast = soaParse("var x = class C {}; f(class D {}, 1);");
+			const declarator = ast.body[0].declarations[0];
+			expect(SoaAst.isFacade(declarator)).toBe(true);
+			expect(SoaAst.isFacade(declarator.init)).toBe(false);
+			expect(declarator.init.type).toBe("ClassExpression");
+			expect(declarator.init.id.name).toBe("C");
+			const call = ast.body[1].expression;
+			expect(SoaAst.isFacade(call)).toBe(true);
+			expect(SoaAst.isFacade(call.arguments[0])).toBe(false);
+			expect(call.arguments[0].type).toBe("ClassExpression");
+			expect(call.arguments[1].value).toBe(1);
+		});
+
+		it("should pin template lists containing foreign expressions", () => {
+			// eslint-disable-next-line no-template-curly-in-string
+			const ast = soaParse("t = `a${class E {}}b`;");
+			const template = ast.body[0].expression.right;
+			expect(template.expressions[0].type).toBe("ClassExpression");
+			expect(template.quasis).toHaveLength(2);
+		});
+
+		it("should survive toAssignable re-tagging through facades", () => {
+			const ast = soaParse("({ a = 1, ...r } = o); [x, ...y] = z;");
+			const objectPattern = ast.body[0].expression.left;
+			expect(objectPattern.type).toBe("ObjectPattern");
+			expect(objectPattern.properties[0].value.type).toBe("AssignmentPattern");
+			expect(objectPattern.properties[1].type).toBe("RestElement");
+			const arrayPattern = ast.body[1].expression.left;
+			expect(arrayPattern.type).toBe("ArrayPattern");
+			expect(arrayPattern.elements[1].type).toBe("RestElement");
+			expect("operator" in arrayPattern).toBe(false);
+		});
+
+		it("should fill born-unfinished property and switch-case facades", () => {
+			const ast = soaParse(
+				"o = { p: 1, q, get g() {}, m() {} }; switch (s) { case 1: a; break; default: b; }"
+			);
+			const properties = ast.body[0].expression.right.properties;
+			expect(
+				properties.map((/** @type {EXPECTED_ANY} */ p) => [
+					p.kind,
+					p.shorthand,
+					p.method
+				])
+			).toEqual([
+				["init", false, false],
+				["init", true, false],
+				["get", false, false],
+				["init", false, true]
+			]);
+			// shorthand values are copies, matching acorn's `copyNode`
+			expect(properties[1].value).not.toBe(properties[1].key);
+			expect(properties[1].value.name).toBe("q");
+			const cases = ast.body[1].cases;
+			expect(cases[0].test.value).toBe(1);
+			expect(
+				cases[0].consequent.map((/** @type {EXPECTED_ANY} */ s) => s.type)
+			).toEqual(["ExpressionStatement", "BreakStatement"]);
+			expect(cases[1].test).toBeNull();
+			expect(cases[1].end).toBeGreaterThan(0);
+		});
+
+		it("should keep pre-ES2018 for-of on the object backend", () => {
+			const ast = soaParse("for (x of y) z;", {
+				ecmaVersion: 8,
+				sourceType: "script"
+			});
+			const forOf = ast.body[0];
+			expect(forOf.type).toBe("ForOfStatement");
+			expect(SoaAst.isFacade(forOf)).toBe(false);
+			expect("await" in forOf).toBe(false);
+			// the ES2018+ form is a facade and carries `await`
+			const modern = soaParse("for await (const v of it) v;").body[0];
+			expect(SoaAst.isFacade(modern)).toBe(true);
+			expect(modern.await).toBe(true);
+		});
+
+		it("should omit facade children from enumeration by design", () => {
+			const statement = soaParse("f(x);").body[0];
+			expect(SoaAst.isFacade(statement)).toBe(true);
+			expect(Object.keys(statement)).toEqual(["type", "start", "end"]);
+			expect("expression" in statement).toBe(true);
+			expect(statement.expression.callee.name).toBe("f");
+		});
+	});
+
 	// The SoA-migration correctness gate: lazy-mode output must be
 	// indistinguishable from plain acorn on real-world sources.
 	describe("corpus equivalence", () => {
@@ -2770,75 +2938,91 @@ describe("WebpackParser", () => {
 				if (typeof eObj.type === "string") {
 					ctx = /** @type {{ type: string, start: number }} */ (e);
 				}
-				let eCount = 0;
+				// SoA facades serve children from non-enumerable prototype
+				// getters (the documented C0 trade-off), so presence uses `in`
+				// and only own enumerable keys are checked for extras — for
+				// plain lazy nodes both checks match the old own-key equality
 				for (const k in eObj) {
 					if (SKIPPED_KEYS.has(k)) continue;
-					eCount++;
-					if (!Object.prototype.hasOwnProperty.call(aObj, k)) {
+					if (!(k in aObj)) {
 						throw new Error(`${at}: missing key ${k}`);
 					}
 					stack.push([aObj[k], eObj[k], k]);
 				}
-				let aCount = 0;
 				for (const k in aObj) {
-					if (!SKIPPED_KEYS.has(k)) aCount++;
-				}
-				if (aCount !== eCount) {
-					throw new Error(
-						`${at}: extra keys ${Object.keys(aObj)
-							.filter(
-								(k) =>
-									!SKIPPED_KEYS.has(k) &&
-									!Object.prototype.hasOwnProperty.call(eObj, k)
-							)
-							.join(", ")}`
-					);
+					if (
+						!SKIPPED_KEYS.has(k) &&
+						!Object.prototype.hasOwnProperty.call(eObj, k)
+					) {
+						throw new Error(`${at}: extra key ${k}`);
+					}
 				}
 			}
 		};
 
 		for (const [name, sourceType, read] of corpus) {
-			it(`should produce acorn's AST for ${name}`, () => {
-				const code = read();
-				/** @type {import("acorn").Comment[]} */
-				const expectedComments = [];
-				const expected = acorn.parse(code, {
-					ecmaVersion: "latest",
-					sourceType,
-					allowHashBang: true,
-					allowReturnOutsideFunction: sourceType === "script",
-					onComment: expectedComments
-				});
-				/** @type {import("../lib/javascript/JavascriptParser").Comment[]} */
-				const actualComments = [];
-				const actual = WebpackParser.parse(
-					code,
-					/** @type {import("acorn").Options} */ (
-						/** @type {unknown} */ ({
-							ecmaVersion: "latest",
-							sourceType,
-							allowHashBang: true,
-							allowReturnOutsideFunction: sourceType === "script",
-							lazyNodes: true,
-							lazyComments: actualComments
-						})
-					)
-				);
-				expectSameAst(actual, expected);
-				expect(actualComments).toHaveLength(expectedComments.length);
-				for (let i = 0; i < expectedComments.length; i++) {
-					const e = expectedComments[i];
-					const a = actualComments[i];
-					if (
-						a.type !== e.type ||
-						a.start !== e.start ||
-						a.end !== e.end ||
-						a.value !== e.value
-					) {
-						throw new Error(`comment ${i} (${e.type}@${e.start}) differs`);
+			for (const soaAst of [false, true]) {
+				it(`should produce acorn's AST for ${name}${
+					soaAst ? " (SoA backend)" : ""
+				}`, () => {
+					const code = read();
+					/** @type {import("acorn").Comment[]} */
+					const expectedComments = [];
+					const expected = acorn.parse(code, {
+						ecmaVersion: "latest",
+						sourceType,
+						allowHashBang: true,
+						allowReturnOutsideFunction: sourceType === "script",
+						onComment: expectedComments
+					});
+					/** @type {import("../lib/javascript/JavascriptParser").Comment[]} */
+					const actualComments = [];
+					const actual = WebpackParser.parse(
+						code,
+						/** @type {import("acorn").Options} */ (
+							/** @type {unknown} */ ({
+								ecmaVersion: "latest",
+								sourceType,
+								allowHashBang: true,
+								allowReturnOutsideFunction: sourceType === "script",
+								lazyNodes: true,
+								soaAst,
+								lazyComments: actualComments
+							})
+						)
+					);
+					if (soaAst) {
+						// prove the column backend actually engaged (module-only
+						// fixtures keep acorn-built import/export statements, so
+						// probe their emitted children too)
+						expect(
+							/** @type {EXPECTED_ANY} */ (actual).body.some(
+								(/** @type {EXPECTED_ANY} */ s) =>
+									SoaAst.isFacade(s) ||
+									SoaAst.isFacade(s.source) ||
+									(s.specifiers &&
+										s.specifiers.some((/** @type {EXPECTED_ANY} */ sp) =>
+											SoaAst.isFacade(sp)
+										))
+							)
+						).toBe(true);
 					}
-				}
-			}, 180000);
+					expectSameAst(actual, expected);
+					expect(actualComments).toHaveLength(expectedComments.length);
+					for (let i = 0; i < expectedComments.length; i++) {
+						const e = expectedComments[i];
+						const a = actualComments[i];
+						if (
+							a.type !== e.type ||
+							a.start !== e.start ||
+							a.end !== e.end ||
+							a.value !== e.value
+						) {
+							throw new Error(`comment ${i} (${e.type}@${e.start}) differs`);
+						}
+					}
+				}, 180000);
+			}
 		}
 	});
 });
