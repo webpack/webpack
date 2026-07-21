@@ -394,8 +394,19 @@ eager facades + megamorphic facade construction at the generic emit
 helper), which is why the backend stays **off by default** per the §4
 contingency: it flips on with Phase D (id-walking makes facade
 construction lazy for real) once the end-to-end wins materialize.
-Next: D1 (id-based walk core) driving down eager materialization, then
-default-on with the escape hatch.
+**D1 gate landed**: `JavascriptParser` accepts a `soaAst` parser option
+(internal, off by default, reset per parse through the reused options
+object) and a hook-sequence equivalence harness in
+`test/JavascriptParser.unittest.js` records every walk-driven hook
+(program/finish/statement/statementIf/importCall/topLevelAwait plus the
+name-keyed expression/call/new/member-chain maps tapped for every
+harvested name) and asserts the facade walk drives byte-identical
+sequences to the object walk — green at baseline over a grammar-complete
+sample, react and lodash. This is the gate every D1 walker-conversion PR
+re-runs.
+Next: the id-based walk core itself (dispatch table over numeric type
+ids, facades only at escape points, object-fallback for foreign
+subtrees), then default-on with the escape hatch.
 
 ## 5. Measurement protocol
 

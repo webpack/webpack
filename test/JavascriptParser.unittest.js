@@ -1283,4 +1283,170 @@ describe("JavascriptParser", () => {
 			expect(chain.object.name).toBe("a");
 		});
 	});
+
+	// The Phase D correctness gate (SOA_MIGRATION_PLAN.md): walking the SoA
+	// facade tree must drive exactly the hook call sequence the object tree
+	// drives, node for node.
+	describe("SoA walk equivalence (hook sequences)", () => {
+		const fs = require("fs");
+		const path = require("path");
+		const { SoaAst } = require("../lib/javascript/syntax");
+
+		/**
+		 * Over-approximates every identifier-ish word so the name-keyed
+		 * HookMaps can be tapped exhaustively (keywords never fire).
+		 * @param {string} code source
+		 * @returns {Set<string>} candidate names
+		 */
+		const collectNames = (code) => {
+			/** @type {Set<string>} */
+			const names = new Set();
+			for (const match of code.matchAll(/[$A-Z_a-z][$\w]*/g)) {
+				names.add(match[0]);
+			}
+			return names;
+		};
+
+		/**
+		 * Walks `code` with every walk-driven hook recording, and returns the
+		 * event sequence.
+		 * @param {string} code source
+		 * @param {Set<string>} names names to tap on the name-keyed HookMaps
+		 * @param {boolean} soaAst whether to emit into the column store
+		 * @returns {{ events: string[], sawFacade: boolean }} recorded walk
+		 */
+		const recordWalk = (code, names, soaAst) => {
+			const parser = new JavascriptParser("auto", { soaAst });
+			/** @type {string[]} */
+			const events = [];
+			let sawFacade = false;
+			/**
+			 * @param {string} kind event label
+			 * @returns {(node: EXPECTED_ANY) => void} recording tap
+			 */
+			const record = (kind) => (node) => {
+				events.push(
+					node && node.range
+						? `${kind}:${node.type}@${node.range[0]}-${node.range[1]}`
+						: `${kind}:${node && node.type}`
+				);
+			};
+			parser.hooks.program.tap("test", (ast) => {
+				events.push(`program:${ast.body.length}`);
+				sawFacade = /** @type {EXPECTED_ANY} */ (ast).body.some(
+					(/** @type {EXPECTED_ANY} */ s) =>
+						SoaAst.isFacade(s) ||
+						SoaAst.isFacade(s.source) ||
+						(s.specifiers &&
+							s.specifiers.some((/** @type {EXPECTED_ANY} */ sp) =>
+								SoaAst.isFacade(sp)
+							))
+				);
+			});
+			parser.hooks.finish.tap("test", (ast) => {
+				events.push(`finish:${ast.body.length}`);
+			});
+			parser.hooks.statement.tap("test", record("statement"));
+			parser.hooks.statementIf.tap("test", record("if"));
+			parser.hooks.importCall.tap("test", record("importCall"));
+			parser.hooks.topLevelAwait.tap("test", record("topLevelAwait"));
+			for (const name of names) {
+				parser.hooks.expression.for(name).tap("test", record(`expr ${name}`));
+				parser.hooks.call.for(name).tap("test", record(`call ${name}`));
+				parser.hooks.new.for(name).tap("test", record(`new ${name}`));
+				parser.hooks.expressionMemberChain
+					.for(name)
+					.tap("test", record(`chain ${name}`));
+				parser.hooks.callMemberChain
+					.for(name)
+					.tap("test", record(`callChain ${name}`));
+			}
+			parser.parse(
+				code,
+				/** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			return { events, sawFacade };
+		};
+
+		/**
+		 * @param {string} code source
+		 * @returns {void} asserts both backends drive identical sequences
+		 */
+		const expectSameWalk = (code) => {
+			const names = collectNames(code);
+			const object = recordWalk(code, names, false);
+			const soa = recordWalk(code, names, true);
+			expect(object.sawFacade).toBe(false);
+			expect(soa.sawFacade).toBe(true);
+			expect(soa.events.length).toBeGreaterThan(0);
+			// compare via join so a jest diff stays readable on mismatch
+			expect(soa.events.join("\n")).toBe(object.events.join("\n"));
+		};
+
+		it("should drive identical hook sequences over the full grammar", () => {
+			expectSameWalk(
+				`import d, { a as b } from "m";
+				import * as ns from "n";
+				export const answer = 42;
+				export { b as c };
+				export default function named(p = 1, ...rest) { return p; }
+				class K extends ns.Base {
+					static #priv = 1;
+					get g() { return super.x; }
+					static { K.ready = true; }
+					[d + "computed"](q) { new.target; return q ?? this; }
+				}
+				label: for (let i = 0, j = 10; i < j; i++) {
+					if (i % 2) continue label;
+					else if (i > 5) break label;
+				}
+				for (const k in ns) delete ns[k];
+				for await (const v of ns.gen()) await v;
+				while (b) do b--; while (b > 0);
+				switch (d) { case 1: b(); break; default: ; }
+				try { throw new Error("x"); } catch { debugger; } finally { }
+				const { p = 1, ...restObj } = ns, [x, , ...ys] = [1, 2, 3];
+				let t = \`a\${b}c\${d.e(1)}\`;
+				t = tag\`only\${b}\`;
+				b &&= d; b ||= d; b ??= d;
+				(function iife() {})();
+				(async () => { await import("dyn"); })();
+				a.b?.c?.(); ns["computed"].deep;
+				typeof b === "string" ? void 0 : ~x;
+				obj: { b; }
+				const re = /ab+c/gu, big = 12345678901234567890n;`
+			);
+		});
+
+		for (const [name, read] of [
+			[
+				"react.development.js",
+				() =>
+					fs.readFileSync(
+						path.join(
+							path.dirname(require.resolve("react/package.json")),
+							"cjs/react.development.js"
+						),
+						"utf8"
+					)
+			],
+			[
+				"lodash.js",
+				() =>
+					fs.readFileSync(
+						path.join(
+							path.dirname(require.resolve("lodash/package.json")),
+							"lodash.js"
+						),
+						"utf8"
+					)
+			]
+		]) {
+			it(`should drive identical hook sequences over ${name}`, () => {
+				expectSameWalk(/** @type {() => string} */ (read)());
+			}, 120000);
+		}
+	});
 });

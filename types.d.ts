@@ -10851,6 +10851,7 @@ declare class JavascriptParser extends ParserClass {
 			typescript?: boolean;
 			importPhases?: boolean;
 			strictModeViolations?: false | "error" | "warn";
+			soaAst?: boolean;
 		}
 	);
 	hooks: Readonly<{
@@ -11364,6 +11365,7 @@ declare class JavascriptParser extends ParserClass {
 		typescript?: boolean;
 		importPhases?: boolean;
 		strictModeViolations?: false | "error" | "warn";
+		soaAst?: boolean;
 	};
 	scope: ScopeInfo;
 	state: JavascriptParserState;
@@ -19849,6 +19851,11 @@ declare interface ParseOptions {
 	 * internal: for `auto`, let the parser downgrade module->script in place instead of re-parsing
 	 */
 	moduleFallback?: boolean;
+
+	/**
+	 * internal: emit the AST into the SoA column store, serving facade nodes (SOA_MIGRATION_PLAN.md)
+	 */
+	soaAst?: boolean;
 }
 declare interface ParseResult {
 	ast: Program;
