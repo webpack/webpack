@@ -49,6 +49,16 @@ describe("WebpackParser", () => {
 			expect(comments[1].loc).toBeUndefined();
 		});
 
+		it("should memoize comment ranges and accept explicit writes", () => {
+			const { comments } = parse("// a\n// b\n");
+			const range = comments[0].range;
+			expect(range).toEqual([0, 4]);
+			// memoized second read returns the same array
+			expect(comments[0].range).toBe(range);
+			comments[0].range = [1, 2];
+			expect(comments[0].range).toEqual([1, 2]);
+		});
+
 		it("should memoize and accept explicit value writes", () => {
 			const { comments } = parse("// abc\n");
 			expect(comments[0].value).toBe(" abc");

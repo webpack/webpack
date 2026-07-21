@@ -367,6 +367,28 @@ Shape statistics (typescript.js; other fixtures agree within a few points):
 - Single-pass walk vs parse (typescript.js): walk ≈ 366 ms, parse ≈ 491 ms —
   the walker is worth nearly as much CPU as the parse, justifying Phase D.
 
+Allocation-churn profile (sampling heap profiler, typescript.js): ≈ 124 MB
+allocated per parse, dominated by node objects and child arrays
+(`parseExprAtom`, `parseExprList`, `parseSubscript`) — the churn the SoA
+backend exists to eliminate.
+
+**A1 allocation pass (landed).** Profile-guided, CPU-neutrality gated:
+skip the param-clash record for zero-param/single-identifier-param functions,
+pool function-body `labels` arrays, serve comment `range` lazily like node
+ranges. typescript.js: churn 124 → 119 MB/parse, retained AST+comments
+98.1 → 95.2 MB, wall time neutral.
+
+**Rejected with data** (do not retry in object-AST form):
+
+- Scope/Set pooling across `exitScope`: −4 MB churn but ≈ 5% parse CPU —
+  old-to-new write barriers on pooled objects plus `Set#clear` reallocating
+  its backing table cancel the win.
+- Long-identifier interning (flat copies past the 12-char slice threshold,
+  own cache table): −3 MB retained but ≈ 5–8% parse CPU on miss-heavy symbol
+  spaces like typescript.js, where flattening on every eviction outweighs
+  the sharing. Name-string deduplication belongs to Phase C, where names become
+  offset-derived reads through the existing `WORD_CACHE` interning.
+
 ## 8. Non-goals
 
 - No change to the non-lazy mode (direct `WebpackParser` users, plugin
