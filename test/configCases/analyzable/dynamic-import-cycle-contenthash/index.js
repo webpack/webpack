@@ -2,11 +2,9 @@ import fs from "fs";
 import path from "path";
 
 it("should keep the runtime form on a chunk-group cycle instead of erroring", async () => {
-	// Both named chunks are reachable from the entry directly AND from each other,
-	// so neither module is "available" at the other — each cyclic import would
-	// really embed the other's [contenthash] filename, making realContentHash
-	// circular. Both cyclic edges must fall back to the runtime form (and the
-	// build must not throw).
+	// chunk-a and chunk-b import each other, so both are async chunks that hash in the
+	// same pass — neither is guaranteed hashed before the other, so each cyclic edge is
+	// not ordering-safe and keeps the runtime form (and the build must not throw).
 	const a = await import(/* webpackChunkName: "chunk-a" */ "./a.js");
 	expect(a.default).toBe("a");
 	const b = await import(/* webpackChunkName: "chunk-b" */ "./b.js");

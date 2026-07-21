@@ -11,7 +11,15 @@ module.exports = {
 	output: {
 		module: true,
 		publicPath: "auto",
-		filename: "main.[contenthash].mjs",
-		chunkFilename: "[name].[contenthash].mjs"
+		chunkFilename: "[name].mjs"
+	},
+	optimization: {
+		splitChunks: {
+			chunks: "all",
+			minSize: 1,
+			cacheGroups: {
+				vendor: { test: /vendor/, name: "vendor", enforce: true }
+			}
+		}
 	}
 };

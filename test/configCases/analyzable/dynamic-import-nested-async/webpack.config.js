@@ -11,7 +11,7 @@ module.exports = {
 	output: {
 		module: true,
 		publicPath: "auto",
-		filename: "main.[contenthash].mjs",
+		// Hashed chunk filenames are baked as post-hash placeholders.
 		chunkFilename: "[name].[contenthash].mjs"
 	}
 };

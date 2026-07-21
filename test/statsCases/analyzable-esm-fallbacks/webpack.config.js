@@ -46,24 +46,21 @@ module.exports = [
 	base("templated-public-path", {
 		output: { publicPath: "/assets/[fullhash]/" }
 	}),
-	// A `[fullhash]` entry name changes with any build change, so post-hash
-	// content may be embedded into it.
+	// The consuming chunk's hash picks up the referenced chunk's hash, so a hashed entry
+	// name (fullhash / chunkhash / contenthash — even without realContentHash) tracks the
+	// embedded filename and stays cache-correct. All three are analyzable.
 	base("entry-fullhash", {
 		output: {
 			filename: "[name].[fullhash].mjs",
 			chunkFilename: "[name].[contenthash].mjs"
 		}
 	}),
-	// A `[chunkhash]` entry name would stay stable while the embedded chunk
-	// filename changes — post-hash embedding must fall back.
 	base("entry-chunkhash", {
 		output: {
 			filename: "[name].[chunkhash].mjs",
 			chunkFilename: "[name].[contenthash].mjs"
 		}
 	}),
-	// A `[contenthash]` entry name only tracks embedded content when
-	// optimization.realContentHash re-hashes emitted assets — off here, so fall back.
 	base("entry-contenthash-no-rch", {
 		output: {
 			filename: "[name].[contenthash].mjs",

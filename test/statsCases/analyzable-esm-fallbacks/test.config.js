@@ -20,12 +20,16 @@ const CASES = {
 	// A [fullhash] publicPath with a static prefix is baked as a post-hash placeholder.
 	"templated-public-path": { file: "main.mjs", expect: "analyzable" },
 	"entry-fullhash": { file: /^main\./, expect: "analyzable" },
-	"entry-chunkhash": { file: /^main\./, expect: "fallback" },
-	"entry-contenthash-no-rch": { file: /^main\./, expect: "fallback" },
+	// The consuming chunk's hash picks up the referenced hash, so a [chunkhash] or
+	// [contenthash] (even without realContentHash) consuming chunk stays cache-correct.
+	"entry-chunkhash": { file: /^main\./, expect: "analyzable" },
+	"entry-contenthash-no-rch": { file: /^main\./, expect: "analyzable" },
+	// A function filename template can't be reasoned about → fall back.
 	"entry-filename-function": { file: "main.mjs", expect: "fallback" },
 	"bare-templated-public-path": { file: "main.mjs", expect: "fallback" },
 	"bare-public-path": { file: "main.mjs", expect: "fallback" },
-	"shared-chunk": { file: "a.mjs", expect: "fallback" },
+	// A chunk shared across chunk groups is analyzable — the `.ei` helper de-duplicates by id.
+	"shared-chunk": { file: "a.mjs", expect: "analyzable" },
 	hmr: { file: "main.mjs", expect: "fallback" },
 	prefetch: {
 		file: "main.mjs",

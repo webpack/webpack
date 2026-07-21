@@ -2,16 +2,15 @@
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	target: "node",
 	mode: "development",
 	devtool: false,
 	experiments: {
 		outputModule: true
 	},
 	output: {
-		module: true,
-		publicPath: "auto",
-		filename: "main.[contenthash].mjs",
+		// A [chunkhash] entry name (no realContentHash): its hash must pick up the
+		// referenced chunk's hash so the baked literal never goes stale across rebuilds.
+		filename: "main.[chunkhash].mjs",
 		chunkFilename: "[name].[contenthash].mjs"
 	}
 };

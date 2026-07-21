@@ -69,7 +69,7 @@ entry-fullhash:
 entry-chunkhash:
   asset main.XXXXXXXXXXXXXXXXXXXX.mjs X KiB [emitted] [immutable] [javascript module] (name: main)
   asset async_js.XXXXXXXXXXXXXXXXXXXX.mjs X bytes [emitted] [immutable] [javascript module]
-  runtime modules X KiB 6 modules
+  runtime modules X KiB 4 modules
   cacheable modules X bytes
     ./index.js X bytes [built] [code generated]
     ./async.js X bytes [built] [code generated]
@@ -78,7 +78,7 @@ entry-chunkhash:
 entry-contenthash-no-rch:
   asset main.XXXXXXXXXXXXXXXXXXXX.mjs X KiB [emitted] [immutable] [javascript module] (name: main)
   asset async_js.XXXXXXXXXXXXXXXXXXXX.mjs X bytes [emitted] [immutable] [javascript module]
-  runtime modules X KiB 6 modules
+  runtime modules X KiB 4 modules
   cacheable modules X bytes
     ./index.js X bytes [built] [code generated]
     ./async.js X bytes [built] [code generated]
@@ -115,7 +115,7 @@ shared-chunk:
   asset a.mjs X KiB [emitted] [javascript module] (name: a)
   asset b.mjs X KiB [emitted] [javascript module] (name: b)
   asset async_js.mjs X bytes [emitted] [javascript module]
-  runtime modules X KiB 12 modules
+  runtime modules X KiB 8 modules
   cacheable modules X bytes
     ./a.js X bytes [built] [code generated]
     ./b.js X bytes [built] [code generated]
