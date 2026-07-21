@@ -145,6 +145,7 @@ describe("snapshots", () => {
 		    "futureDefaults": false,
 		    "html": true,
 		    "lazyCompilation": undefined,
+		    "moduleSplitting": false,
 		    "outputModule": false,
 		    "sourceImport": false,
 		    "syncWebAssembly": false,

@@ -1052,6 +1052,83 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "experiments-module-splitting": Object {
+    "configs": Array [
+      Object {
+        "description": "Split self-contained, side-effect-free named exports into their own modules so async-only exports can follow the async chunk instead of staying in the initial chunk.",
+        "multiple": false,
+        "path": "experiments.moduleSplitting",
+        "type": "boolean",
+      },
+    ],
+    "description": "Split self-contained, side-effect-free named exports into their own modules so async-only exports can follow the async chunk instead of staying in the initial chunk.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-module-splitting-exclude": Object {
+    "configs": Array [
+      Object {
+        "description": "A condition (RegExp or substring) matched against a module's resource path.",
+        "multiple": true,
+        "path": "experiments.moduleSplitting.exclude[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "A condition (RegExp or substring) matched against a module's resource path.",
+        "multiple": true,
+        "path": "experiments.moduleSplitting.exclude[]",
+        "type": "string",
+      },
+    ],
+    "description": "A condition (RegExp or substring) matched against a module's resource path.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "experiments-module-splitting-exclude-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'experiments.moduleSplitting.exclude' configuration. A condition matched against a module's resource path (string is matched as a substring).",
+        "multiple": false,
+        "path": "experiments.moduleSplitting.exclude",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'experiments.moduleSplitting.exclude' configuration. A condition matched against a module's resource path (string is matched as a substring).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-module-splitting-include": Object {
+    "configs": Array [
+      Object {
+        "description": "A condition (RegExp or substring) matched against a module's resource path.",
+        "multiple": true,
+        "path": "experiments.moduleSplitting.include[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "A condition (RegExp or substring) matched against a module's resource path.",
+        "multiple": true,
+        "path": "experiments.moduleSplitting.include[]",
+        "type": "string",
+      },
+    ],
+    "description": "A condition (RegExp or substring) matched against a module's resource path.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "experiments-module-splitting-include-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'experiments.moduleSplitting.include' configuration. A condition matched against a module's resource path (string is matched as a substring).",
+        "multiple": false,
+        "path": "experiments.moduleSplitting.include",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'experiments.moduleSplitting.include' configuration. A condition matched against a module's resource path (string is matched as a substring).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-output-module": Object {
     "configs": Array [
       Object {
@@ -8986,6 +9063,19 @@ Object {
     "description": "Logical NOT.",
     "multiple": true,
     "simpleType": "string",
+  },
+  "module-rules-module-splitting": Object {
+    "configs": Array [
+      Object {
+        "description": "Allow or forbid splitting this module's self-contained async-only exports into separate modules (experiments.moduleSplitting).",
+        "multiple": true,
+        "path": "module.rules[].moduleSplitting",
+        "type": "boolean",
+      },
+    ],
+    "description": "Allow or forbid splitting this module's self-contained async-only exports into separate modules (experiments.moduleSplitting).",
+    "multiple": true,
+    "simpleType": "boolean",
   },
   "module-rules-phase": Object {
     "configs": Array [
