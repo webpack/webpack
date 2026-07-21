@@ -4368,14 +4368,9 @@ declare interface ConcatenatedModuleInfo {
 	index: number;
 
 	/**
-	 * a "weird" CommonJS module rendered inside an IIFE with real module/exports objects
+	 * a "weird" CommonJS module executed via the CJS wrapper runtime helper with real module/exports objects
 	 */
 	cjsWrapped?: boolean;
-
-	/**
-	 * the wrapped module's `{ exports }` object variable
-	 */
-	moduleObjectName?: string;
 	ast?: Program;
 	internalSource?: Source;
 	source?: ReplaceSource;
@@ -27204,6 +27199,7 @@ declare namespace exports {
 		export let baseURI: "__webpack_require__.b";
 		export let chunkCallback: "webpackChunk";
 		export let chunkName: "__webpack_require__.cn";
+		export let commonJsWrap: "__webpack_require__.cjs";
 		export let compatGetDefaultExport: "__webpack_require__.n";
 		export let compileWasm: "__webpack_require__.vs";
 		export let createFakeNamespaceObject: "__webpack_require__.t";
