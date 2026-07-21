@@ -217,6 +217,10 @@ export type HttpUriOptionsAllowedUris = (
 	RegExp | string | import("../lib/schemes/HttpUriPlugin").AllowedUriFn
 )[];
 /**
+ * A condition matched against a module's resource path (string is matched as a substring).
+ */
+export type ModuleSplittingFilter = (RegExp | string)[] | RegExp | string;
+/**
  * Extend configuration from another configuration (only works when using webpack-cli).
  */
 export type Extends = ExtendsItem[] | ExtendsItem;
@@ -1586,6 +1590,22 @@ export interface Experiments {
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
 	/**
+	 * Split self-contained, side-effect-free named exports into their own modules so async-only exports can follow the async chunk instead of staying in the initial chunk.
+	 * @experimental
+	 */
+	moduleSplitting?:
+		| boolean
+		| {
+				/**
+				 * A condition matched against a module's resource path (string is matched as a substring).
+				 */
+				exclude?: ModuleSplittingFilter;
+				/**
+				 * A condition matched against a module's resource path (string is matched as a substring).
+				 */
+				include?: ModuleSplittingFilter;
+		  };
+	/**
 	 * Allow output javascript files as module source type.
 	 * @since 5.0.0
 	 * @experimental
@@ -1950,6 +1970,10 @@ export interface RuleSetRule {
 	 * Match module mimetype when load from Data URI.
 	 */
 	mimetype?: RuleSetConditionOrConditions;
+	/**
+	 * Allow or forbid splitting this module's self-contained async-only exports into separate modules (experiments.moduleSplitting).
+	 */
+	moduleSplitting?: boolean;
 	/**
 	 * Only execute the first matching rule in this array.
 	 */
@@ -4017,6 +4041,22 @@ export interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
+	/**
+	 * Split self-contained, side-effect-free named exports into their own modules so async-only exports can follow the async chunk instead of staying in the initial chunk.
+	 * @experimental
+	 */
+	moduleSplitting?:
+		| boolean
+		| {
+				/**
+				 * A condition matched against a module's resource path (string is matched as a substring).
+				 */
+				exclude?: ModuleSplittingFilter;
+				/**
+				 * A condition matched against a module's resource path (string is matched as a substring).
+				 */
+				include?: ModuleSplittingFilter;
+		  };
 	/**
 	 * Allow output javascript files as module source type.
 	 * @since 5.0.0
