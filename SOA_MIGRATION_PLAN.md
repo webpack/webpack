@@ -2,9 +2,14 @@
 
 Status: **in progress** — Phase 0 landed (see §7); A1 (functions, methods,
 arrows, paren/arrow disambiguation) and A2 (loops, switch, try, throw,
-labels, break/continue, with, empty, debugger) landed; A3 binding patterns
-(parseBindingAtom/List, rest/default) landed — toAssignable/checkLVal stay
-acorn until their cluster; A4–A6 next.
+labels, break/continue, with, empty, debugger), A3 binding patterns, A4
+classes (parseClass cluster incl. fields, static blocks, private names) and
+A5 expression tails (sequences, subscript chains + ChainExpression,
+parseExprList, parsePropertyName) landed. Remaining: A6 export tail, the
+toAssignable/checkLVal cluster, yield/await tails, meta properties.
+Measured at A5: parse churn 124 → 110 MB on typescript.js and parse wall
+time ≈ 4–5% faster (owned parseSubscripts is on the hottest expression
+path).
 Scope: `lib/javascript/syntax.js` (the tuned acorn-based parser) and its single
 production consumer `lib/javascript/JavascriptParser.js`.
 

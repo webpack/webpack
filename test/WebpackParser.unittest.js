@@ -1738,6 +1738,124 @@ describe("WebpackParser", () => {
 		});
 	});
 
+	describe("class and expression-tail fast paths", () => {
+		it("should parse class declarations, fields, private names and static blocks", () => {
+			const { ast } = parse(
+				"class C extends B {\n" +
+					"  static sf = 1;\n" +
+					"  f = 2;\n" +
+					"  #p = 3;\n" +
+					"  static { init(); }\n" +
+					"  constructor() { super(); }\n" +
+					"  m() { return this.#p; }\n" +
+					"  static get g() { return 1; }\n" +
+					"  *gen() {}\n" +
+					"  async am() {}\n" +
+					"}\n" +
+					"var D = class {};"
+			);
+			const c = /** @type {EXPECTED_ANY} */ (ast.body[0]);
+			expect(c.type).toBe("ClassDeclaration");
+			expect(c.superClass.name).toBe("B");
+			expect(
+				c.body.body.map((/** @type {EXPECTED_ANY} */ el) => el.type)
+			).toEqual([
+				"PropertyDefinition",
+				"PropertyDefinition",
+				"PropertyDefinition",
+				"StaticBlock",
+				"MethodDefinition",
+				"MethodDefinition",
+				"MethodDefinition",
+				"MethodDefinition",
+				"MethodDefinition"
+			]);
+			expect(c.body.body[2].key.type).toBe("PrivateIdentifier");
+			expect(c.body.body[4].kind).toBe("constructor");
+			expect(c.body.body[7].value.generator).toBe(true);
+			expect(
+				/** @type {EXPECTED_ANY} */ (ast.body[1]).declarations[0].init.id
+			).toBeNull();
+		});
+
+		it("should keep acorn's class early errors", () => {
+			expect(() =>
+				parse("class A { constructor() {} constructor() {} }")
+			).toThrow(/Duplicate constructor/);
+			expect(() => parse("class A { static prototype() {} }")).toThrow(
+				/static property named prototype/
+			);
+			expect(() => parse("class A { get constructor() {} }")).toThrow(
+				/Constructor can't have get\/set modifier/
+			);
+			expect(() => parse("class A { *constructor() {} }")).toThrow(
+				/Constructor can't be a generator/
+			);
+			expect(() => parse("class A { constructor = 1; }")).toThrow(
+				/field named 'constructor'/
+			);
+			expect(() => parse("class A { #constructor; }")).toThrow(
+				/element named '#constructor'/
+			);
+			expect(() => parse("class A { #x; #x; }")).toThrow(
+				/already been declared/
+			);
+			expect(() => parse("class A { #x; m() { return #y in this; } }")).toThrow(
+				/must be declared in an enclosing class/
+			);
+			expect(() => parse("class A { get g(a) {} }")).toThrow(
+				/getter should have no params/
+			);
+			expect(() => parse("class A { set s() {} }")).toThrow(
+				/setter should have exactly one param/
+			);
+		});
+
+		it("should treat modifier names as element names when unaccompanied", () => {
+			const { ast } = parse(
+				"class A { static() {} async() {} get() {} set() {} static static() {} }"
+			);
+			const names = /** @type {EXPECTED_ANY} */ (ast.body[0]).body.body.map(
+				(/** @type {EXPECTED_ANY} */ el) =>
+					`${el.static ? "s:" : ""}${el.key.name}`
+			);
+			expect(names).toEqual(["static", "async", "get", "set", "s:static"]);
+		});
+
+		it("should build ChainExpression and SequenceExpression single shapes", () => {
+			const { ast } = parse("a?.b.c?.[d]?.(e);\nx = (a, b, c);");
+			const body = /** @type {EXPECTED_ANY[]} */ (ast.body);
+			expect(body[0].expression.type).toBe("ChainExpression");
+			expect(body[0].expression.range).toEqual([0, 16]);
+			const seq = body[1].expression.right;
+			expect(seq.type).toBe("SequenceExpression");
+			expect(seq.expressions).toHaveLength(3);
+		});
+
+		it("should keep expression-list holes and spread positions", () => {
+			const { ast } = parse("f(...a, b);\nconst xs = [1, , 3, ...rest,];");
+			const body = /** @type {EXPECTED_ANY[]} */ (ast.body);
+			expect(body[0].expression.arguments[0].type).toBe("SpreadElement");
+			const elements = body[1].declarations[0].init.elements;
+			expect(elements).toHaveLength(4);
+			expect(elements[1]).toBeNull();
+			expect(elements[3].type).toBe("SpreadElement");
+		});
+
+		it("should parse computed, numeric and string property names", () => {
+			const { ast } = parse('({ ["c" + k]: 1, 42: 2, "s": 3, id: 4 });');
+			const props = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression
+				.properties;
+			expect(props.map((/** @type {EXPECTED_ANY} */ p) => p.computed)).toEqual([
+				true,
+				false,
+				false,
+				false
+			]);
+			expect(props[1].key.value).toBe(42);
+		});
+	});
+
 	// The SoA-migration correctness gate: lazy-mode output must be
 	// indistinguishable from plain acorn on real-world sources.
 	describe("corpus equivalence", () => {
