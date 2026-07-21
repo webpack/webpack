@@ -27121,6 +27121,7 @@ declare namespace exports {
 		export let baseURI: "__webpack_require__.b";
 		export let chunkCallback: "webpackChunk";
 		export let chunkName: "__webpack_require__.cn";
+		export let commonJsWrap: "__webpack_require__.cjs";
 		export let compatGetDefaultExport: "__webpack_require__.n";
 		export let compileWasm: "__webpack_require__.vs";
 		export let createFakeNamespaceObject: "__webpack_require__.t";
@@ -27202,7 +27203,6 @@ declare namespace exports {
 		export let uncaughtErrorHandler: "__webpack_require__.oe";
 		export let wasmInstances: "__webpack_require__.w";
 		export let worker: "__webpack_require__.wc";
-		export let commonJsWrap: "__webpack_require__.cjs";
 	}
 	export const UsageState: Readonly<{
 		Unused: 0;
