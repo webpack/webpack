@@ -25,13 +25,11 @@ it("should bake the hashed chunk filename into an analyzable import", () => {
 
 it("should leave placeholder-like user strings untouched", () => {
 	const decoyChunk = "___WEBPACK_ANALYZABLE_CHUNK_zz___";
-	const decoyPublicPath = "___WEBPACK_ANALYZABLE_PUBLIC_PATH___";
 	const bundle = fs.readFileSync(
 		path.join(__STATS__.outputPath, "bundle0.mjs"),
 		"utf8"
 	);
-	// An unknown chunk token and a publicPath token without a templated publicPath
-	// were not emitted by webpack, so the substitution pass must not touch them.
+	// An unknown chunk token (no chunk maps to it) was not emitted by webpack, so
+	// the render-time substitution must leave it untouched.
 	expect(bundle).toContain(decoyChunk);
-	expect(bundle).toContain(decoyPublicPath);
 });

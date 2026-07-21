@@ -38,11 +38,13 @@ module.exports = [
 	base("public-path-override", { entry: "./index-public-path-override" }),
 	base("fetch-priority", { entry: "./index-fetch-priority" }),
 	base("prefetch", { entry: "./index-prefetch" }),
-	// Post-hash placeholder substitution bakes the hashed chunk filename and the
-	// fullhash-templated publicPath, so these two are analyzable now.
+	// A hashed chunk filename is baked as a post-hash placeholder and substituted at
+	// render time, so this is analyzable now.
 	base("content-hash", {
 		output: { chunkFilename: "[name].[contenthash].mjs" }
 	}),
+	// A [fullhash] publicPath still falls back (needs the consuming chunk re-rendered
+	// after the full hash — a follow-up).
 	base("templated-public-path", {
 		output: { publicPath: "/assets/[fullhash]/" }
 	}),

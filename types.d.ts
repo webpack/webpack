@@ -23673,6 +23673,29 @@ declare abstract class RuntimeTemplate {
 	}): string;
 
 	/**
+	 * Rewrites the post-hash chunk-filename placeholders baked into a rendered JS
+	 * chunk's analyzable ESM literals to the referenced chunks' real filenames. Called
+	 * from the JS `render` hook — after hashing, before assets are emitted — so
+	 * downstream passes (minify, devtool, realContentHash) see the substituted literal.
+	 * Returns `source` unchanged when the chunk has no placeholders.
+	 */
+	substituteAnalyzableEsmPlaceholders(source: Source, chunk: Chunk): Source;
+
+	/**
+	 * Mixes the render hashes of chunks that `chunk`'s modules analyzably reference
+	 * (as post-hash filename placeholders) into `hash`, so `chunk` re-hashes — and its
+	 * cached asset is re-rendered and re-substituted — whenever a referenced chunk's
+	 * filename changes. Without this the placeholder-only source is hash-invariant to
+	 * the target (the analyzable form drops the `__webpack_require__.u` runtime module
+	 * that normally carries this dependency). Called from the JS `chunkHash` hook.
+	 */
+	updateHashForAnalyzableEsmReferences(
+		hash: Hash,
+		chunk: Chunk,
+		chunkGraph: ChunkGraph
+	): void;
+
+	/**
 	 * Async module factory.
 	 */
 	asyncModuleFactory(__0: {
