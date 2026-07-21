@@ -1453,4 +1453,198 @@ describe("WebpackParser", () => {
 			expect(ast.body[0].type).toBe("WithStatement");
 		});
 	});
+
+	// The SoA-migration correctness gate: lazy-mode output must be
+	// indistinguishable from plain acorn on real-world sources.
+	describe("corpus equivalence", () => {
+		const fs = require("fs");
+		const path = require("path");
+		const acorn = require("acorn");
+		const { WebpackParser } = require("../lib/javascript/syntax");
+
+		/**
+		 * @param {string} pkg package name
+		 * @param {string} rel path within the package
+		 * @returns {string} file contents
+		 */
+		const readPkgFile = (pkg, rel) =>
+			fs.readFileSync(
+				path.join(path.dirname(require.resolve(`${pkg}/package.json`)), rel),
+				"utf8"
+			);
+
+		/** @type {[name: string, sourceType: "script" | "module", read: () => string][]} */
+		const corpus = [
+			[
+				"typescript.js",
+				"script",
+				() =>
+					fs.readFileSync(
+						require.resolve("typescript/lib/typescript.js"),
+						"utf8"
+					)
+			],
+			// three's `exports` map hides package.json — resolve the main entry
+			// (build/three.cjs) and read its siblings
+			[
+				"three.module.js",
+				"module",
+				() =>
+					fs.readFileSync(
+						path.join(
+							path.dirname(require.resolve("three")),
+							"three.module.js"
+						),
+						"utf8"
+					)
+			],
+			[
+				"three.module.min.js",
+				"module",
+				() =>
+					fs.readFileSync(
+						path.join(
+							path.dirname(require.resolve("three")),
+							"three.module.min.js"
+						),
+						"utf8"
+					)
+			],
+			[
+				"react.development.js",
+				"script",
+				() => readPkgFile("react", "cjs/react.development.js")
+			],
+			[
+				"react-dom.development.js",
+				"script",
+				() => readPkgFile("react-dom", "cjs/react-dom.development.js")
+			],
+			["lodash.js", "script", () => readPkgFile("lodash", "lodash.js")],
+			["lodash-es", "module", () => readPkgFile("lodash-es", "lodash.js")]
+		];
+
+		// lazy nodes serve `range` from a prototype getter equal to
+		// [start, end] by construction and never serve `loc`
+		const SKIPPED_KEYS = new Set(["range", "loc"]);
+
+		/**
+		 * Iterative deep compare (recursion would overflow on minified inputs);
+		 * throws on the first mismatch since a jest matcher per node would
+		 * dominate the runtime on multi-million-node fixtures.
+		 * @param {unknown} actual lazy-mode AST root
+		 * @param {unknown} expected acorn AST root
+		 */
+		const expectSameAst = (actual, expected) => {
+			/** @type {[unknown, unknown, string][]} */
+			const stack = [[actual, expected, "Program"]];
+			/** @type {{ type: string, start: number }} */
+			let ctx = /** @type {EXPECTED_ANY} */ (expected);
+			while (stack.length > 0) {
+				const [a, e, key] = /** @type {[unknown, unknown, string]} */ (
+					stack.pop()
+				);
+				const at = `${ctx.type}@${ctx.start} .${key}`;
+				if (e === null || typeof e !== "object") {
+					if (!Object.is(a, e)) {
+						throw new Error(`${at}: expected ${String(e)}, got ${String(a)}`);
+					}
+					continue;
+				}
+				if (e instanceof RegExp) {
+					if (!(a instanceof RegExp) || String(a) !== String(e)) {
+						throw new Error(`${at}: expected ${e}, got ${String(a)}`);
+					}
+					continue;
+				}
+				if (Array.isArray(e)) {
+					if (!Array.isArray(a) || a.length !== e.length) {
+						throw new Error(
+							`${at}: expected array of ${e.length}, got ${
+								Array.isArray(a) ? `array of ${a.length}` : typeof a
+							}`
+						);
+					}
+					for (let i = e.length - 1; i >= 0; i--) stack.push([a[i], e[i], key]);
+					continue;
+				}
+				if (typeof a !== "object" || a === null || Array.isArray(a)) {
+					throw new Error(`${at}: expected object, got ${String(a)}`);
+				}
+				const eObj = /** @type {Record<string, unknown>} */ (e);
+				const aObj = /** @type {Record<string, unknown>} */ (a);
+				if (typeof eObj.type === "string") {
+					ctx = /** @type {{ type: string, start: number }} */ (e);
+				}
+				let eCount = 0;
+				for (const k in eObj) {
+					if (SKIPPED_KEYS.has(k)) continue;
+					eCount++;
+					if (!Object.prototype.hasOwnProperty.call(aObj, k)) {
+						throw new Error(`${at}: missing key ${k}`);
+					}
+					stack.push([aObj[k], eObj[k], k]);
+				}
+				let aCount = 0;
+				for (const k in aObj) {
+					if (!SKIPPED_KEYS.has(k)) aCount++;
+				}
+				if (aCount !== eCount) {
+					throw new Error(
+						`${at}: extra keys ${Object.keys(aObj)
+							.filter(
+								(k) =>
+									!SKIPPED_KEYS.has(k) &&
+									!Object.prototype.hasOwnProperty.call(eObj, k)
+							)
+							.join(", ")}`
+					);
+				}
+			}
+		};
+
+		for (const [name, sourceType, read] of corpus) {
+			it(`should produce acorn's AST for ${name}`, () => {
+				const code = read();
+				/** @type {import("acorn").Comment[]} */
+				const expectedComments = [];
+				const expected = acorn.parse(code, {
+					ecmaVersion: "latest",
+					sourceType,
+					allowHashBang: true,
+					allowReturnOutsideFunction: sourceType === "script",
+					onComment: expectedComments
+				});
+				/** @type {import("../lib/javascript/JavascriptParser").Comment[]} */
+				const actualComments = [];
+				const actual = WebpackParser.parse(
+					code,
+					/** @type {import("acorn").Options} */ (
+						/** @type {unknown} */ ({
+							ecmaVersion: "latest",
+							sourceType,
+							allowHashBang: true,
+							allowReturnOutsideFunction: sourceType === "script",
+							lazyNodes: true,
+							lazyComments: actualComments
+						})
+					)
+				);
+				expectSameAst(actual, expected);
+				expect(actualComments).toHaveLength(expectedComments.length);
+				for (let i = 0; i < expectedComments.length; i++) {
+					const e = expectedComments[i];
+					const a = actualComments[i];
+					if (
+						a.type !== e.type ||
+						a.start !== e.start ||
+						a.end !== e.end ||
+						a.value !== e.value
+					) {
+						throw new Error(`comment ${i} (${e.type}@${e.start}) differs`);
+					}
+				}
+			}, 180000);
+		}
+	});
 });

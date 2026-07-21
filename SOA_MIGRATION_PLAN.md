@@ -1,6 +1,6 @@
 # JavaScript syntax parser: Structure-of-Arrays migration plan
 
-Status: **proposed** — investigation done, no implementation started.
+Status: **in progress** — Phase 0 landed (see §7); Phase A next.
 Scope: `lib/javascript/syntax.js` (the tuned acorn-based parser) and its single
 production consumer `lib/javascript/JavascriptParser.js`.
 
@@ -132,9 +132,10 @@ Per node (1-based id, 0 = null):
   unescaped on demand. Rare payloads (bigint, regex pattern/flags, escaped
   identifiers where slice ≠ name, directives) go into a sparse side `Map`
   keyed by id.
-- Growth: geometric doubling from 4096 with a pre-sizing estimate (measure the
-  observed nodes-per-source-byte ratio in Phase 0; expect ≈ len/13). Scratch
-  list arrays are pooled; the columns themselves start out not pooled (see Phase E).
+- Growth: geometric doubling from 4096 with a pre-sizing estimate (measured in
+  Phase 0: one node per ≈ 6–19 source bytes, ≈ len/10 on typical code — see
+  Appendix A). Scratch list arrays are pooled; the columns themselves start
+  out not pooled (see Phase E).
 
 ### 3.2 Facades (the estree compatibility layer)
 
@@ -321,7 +322,51 @@ CPU or peak-heap regression in its gate benchmarks.
 | Walk rewrite (Phase D) destabilizes dependency extraction                                  | Corpus equivalence harness at the hook level: record hook call sequences + arguments (type/range) before/after and diff; full integration suite                                            |
 | `Uint8` type enum drifts from string `type` values                                         | Single generated table mapping enum ↔ string, used by both emitter and facades; unittest asserts bijection                                                                                 |
 
-## 7. Non-goals
+## 7. Phase 0 status and baseline (measured)
+
+Landed in this branch:
+
+- Corpus AST-equivalence harness — `test/WebpackParser.unittest.js`,
+  `describe("corpus equivalence")`: deep-compares lazy-mode output (nodes and
+  comments) against plain acorn over typescript.js, three.module(.min).js,
+  react, react-dom, lodash and lodash-es. Green at baseline; this is the
+  correctness gate every later phase re-runs.
+- Walk-only benchmarks — `test/benchmarkCases/js-parser-unit`, `mode 'walk'`
+  variants (typescript, three.module.js, lodash.js): pre-parse once, measure
+  `JavascriptParser`'s hooks+walk in isolation. Heap tracking for benches is
+  covered by the harness's CodSpeed memory runner mode; the retained-AST
+  numbers below were measured directly (fresh process per fixture, warm-up
+  parse, `global.gc()` before/after holding the AST).
+
+Baseline numbers (Node 22, x64 Linux, this container — re-measure relative
+deltas on the same machine, not against these absolutes):
+
+| Fixture             | Source  | Nodes   | Source bytes/node | Retained AST | AST bytes/node |
+| ------------------- | ------- | ------- | ----------------- | ------------ | -------------- |
+| typescript.js       | 8.72 MB | 949,463 | 9.6               | 93.1 MB      | 102.8          |
+| three.module.js     | 0.62 MB | 60,698  | 10.7              | 5.8 MB       | 100.2          |
+| three.module.min.js | 0.35 MB | 57,011  | 6.4               | 5.3 MB       | 98.1           |
+| lodash.js           | 0.52 MB | 29,590  | 18.5              | 2.8 MB       | 98.8           |
+
+Shape statistics (typescript.js; other fixtures agree within a few points):
+
+- Identifier 43.1%, MemberExpression 8.5%, Literal 8.0%, CallExpression 7.8%
+  — the four hottest types cover ~67% of all nodes.
+- Fixed (non-list) node children: max 4; only 377 of 949k nodes (0.04%) carry
+  a 4th fixed child (`ForStatement`) — `kid0..2` columns with an `aux`
+  overflow slot is the right layout.
+- Array-valued fields: 0.18 per node, 0.34 elements per node — one shared
+  `flat` buffer stays small relative to the node count.
+- String-valued fields: 0.66 per node, dominated by identifier `name` and
+  literal `raw` — confirming derive-from-source-offsets as the primary string
+  strategy.
+- The retained object AST costs ~100 bytes/node on every fixture (~10× the
+  source size). The §3.1 column layout costs ~32 bytes/node → target ≈ 3×
+  AST-heap reduction before any facade savings.
+- Single-pass walk vs parse (typescript.js): walk ≈ 366 ms, parse ≈ 491 ms —
+  the walker is worth nearly as much CPU as the parse, justifying Phase D.
+
+## 8. Non-goals
 
 - No change to the non-lazy mode (direct `WebpackParser` users, plugin
   subclasses overriding parse methods) — it keeps acorn object nodes.

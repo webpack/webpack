@@ -84,6 +84,76 @@ export default (bench) => {
 		});
 	});
 
+	// ---- walk only: pre-parse once outside the measured loop, then drive the
+	// hooks/walk over the retained AST (parse() treats an object source as a
+	// preParsed Program); isolates walker changes from parser changes ----
+	/** @typedef {import("../../../lib/Parser").PreparsedAst} PreparsedAst */
+	/**
+	 * @param {string} code source code
+	 * @param {"auto" | "module" | "script"} sourceType source type
+	 * @returns {PreparsedAst} preParsed Program with comments attached
+	 */
+	const preParse = (code, sourceType) => {
+		const { ast, comments } = JavascriptParser._parse(code, {
+			sourceType,
+			locations: false,
+			ranges: true,
+			comments: true,
+			importPhases: false
+		});
+		const preParsed = /** @type {PreparsedAst} */ (
+			/** @type {unknown} */ (ast)
+		);
+		preParsed.comments = comments;
+		return preParsed;
+	};
+
+	/** @type {PreparsedAst} */
+	let typescriptAst;
+	bench.add(
+		"unit benchmark \"js-parser-unit\", mode 'walk'",
+		() => {
+			new JavascriptParser("auto").parse(typescriptAst, {
+				source: typescriptSource
+			});
+		},
+		{
+			beforeAll() {
+				typescriptAst = preParse(typescriptSource, "auto");
+			}
+		}
+	);
+
+	/** @type {PreparsedAst} */
+	let threeEsmAst;
+	bench.add(
+		"unit benchmark \"js-parser-unit\", mode 'walk three.module.js'",
+		() => {
+			new JavascriptParser("module").parse(threeEsmAst, {
+				source: threeEsmSource
+			});
+		},
+		{
+			beforeAll() {
+				threeEsmAst = preParse(threeEsmSource, "module");
+			}
+		}
+	);
+
+	/** @type {PreparsedAst} */
+	let lodashAst;
+	bench.add(
+		"unit benchmark \"js-parser-unit\", mode 'walk lodash.js'",
+		() => {
+			new JavascriptParser("auto").parse(lodashAst, { source: lodashSource });
+		},
+		{
+			beforeAll() {
+				lodashAst = preParse(lodashSource, "auto");
+			}
+		}
+	);
+
 	// ---- parse: popular sources ----
 	bench.add(
 		"unit benchmark \"js-parser-unit\", source 'three.module.js'",
