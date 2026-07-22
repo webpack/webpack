@@ -256,15 +256,21 @@ module.exports = {
 };
 
 if (require.main === module) {
+	// When --write is set, the file is written in place; otherwise drift fails.
+	const doWrite = process.argv.includes("--write");
 	(async () => {
 		const generated = await generateInternalSerializables();
 		const current = fs.readFileSync(TARGET, "utf8");
-		if (generated === current) {
-			console.error("up to date");
-			return;
+		if (generated === current) return;
+		if (doWrite) {
+			fs.writeFileSync(TARGET, generated);
+			console.error(`wrote ${path.relative(ROOT, TARGET)}`);
+		} else {
+			console.error(
+				`${path.relative(ROOT, TARGET)} is outdated. Run: yarn fix:serializables`
+			);
+			process.exitCode = 1;
 		}
-		fs.writeFileSync(TARGET, generated);
-		console.error(`wrote ${path.relative(ROOT, TARGET)}`);
 	})().catch((err) => {
 		console.error(err);
 		process.exitCode = 1;
