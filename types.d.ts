@@ -3960,21 +3960,6 @@ declare interface CompilationHooksAsyncWebAssemblyModulesPlugin {
 		Source
 	>;
 }
-declare interface CompilationHooksCssModulesPlugin {
-	renderModulePackage: SyncWaterfallHook<
-		[Source, Module, ChunkRenderContextCssModulesPlugin],
-		Source
-	>;
-	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
-
-	/**
-	 * called for each CSS source type (CSS_IMPORT_TYPE, CSS_TYPE) with the chunk's modules pre-sorted by full module name; return an ordered `Module[]` to override the default import-order topological sort, or return `undefined` to keep the default
-	 */
-	orderModules: SyncBailHook<
-		[Chunk, Module[], Compilation],
-		undefined | void | Module[]
-	>;
-}
 
 /**
  * Renames an inlined module's top-level declaration (and all its references) when
@@ -5465,9 +5450,12 @@ declare interface CssImportDependencyMeta {
 type CssLayer = undefined | string;
 declare class CssLoadingRuntimeModule extends RuntimeModule {
 	constructor(runtimeRequirements: ReadonlySet<string>);
-	static getCompilationHooks: (
-		compilation: Compilation
-	) => CssLoadingRuntimeModulePluginHooks;
+	static getCompilationHooks: (compilation: Compilation) => {
+		createStylesheet: SyncWaterfallHook<[string, Chunk], string>;
+		linkPreload: SyncWaterfallHook<[string, Chunk], string>;
+		linkPrefetch: SyncWaterfallHook<[string, Chunk], string>;
+		linkInsert: SyncWaterfallHook<[string, Chunk], string>;
+	};
 
 	/**
 	 * Runtime modules without any dependencies to other runtime modules
@@ -5494,12 +5482,6 @@ declare class CssLoadingRuntimeModule extends RuntimeModule {
 	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
-}
-declare interface CssLoadingRuntimeModulePluginHooks {
-	createStylesheet: SyncWaterfallHook<[string, Chunk], string>;
-	linkPreload: SyncWaterfallHook<[string, Chunk], string>;
-	linkPrefetch: SyncWaterfallHook<[string, Chunk], string>;
-	linkInsert: SyncWaterfallHook<[string, Chunk], string>;
 }
 declare abstract class CssModule extends NormalModule {
 	cssLayer: CssLayer;
@@ -5682,7 +5664,20 @@ declare class CssModulesPlugin {
 	 */
 	renderChunk(
 		__0: RenderContextCssModulesPlugin,
-		hooks: CompilationHooksCssModulesPlugin
+		hooks: {
+			renderModulePackage: SyncWaterfallHook<
+				[Source, Module, ChunkRenderContextCssModulesPlugin],
+				Source
+			>;
+			chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+			/**
+			 * Called for each CSS source type (CSS_IMPORT_TYPE, CSS_TYPE) with the chunk's modules pre-sorted by full module name; return an ordered `Module[]` to override the default import-order topological sort, or return `undefined` to keep the default.
+			 */
+			orderModules: SyncBailHook<
+				[Chunk, Module[], Compilation],
+				undefined | void | Module[]
+			>;
+		}
 	): Source;
 
 	/**
@@ -5691,7 +5686,20 @@ declare class CssModulesPlugin {
 	static renderModule(
 		module: CssModule,
 		renderContext: ChunkRenderContextCssModulesPlugin,
-		hooks: CompilationHooksCssModulesPlugin
+		hooks: {
+			renderModulePackage: SyncWaterfallHook<
+				[Source, Module, ChunkRenderContextCssModulesPlugin],
+				Source
+			>;
+			chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+			/**
+			 * Called for each CSS source type (CSS_IMPORT_TYPE, CSS_TYPE) with the chunk's modules pre-sorted by full module name; return an ordered `Module[]` to override the default import-order topological sort, or return `undefined` to keep the default.
+			 */
+			orderModules: SyncBailHook<
+				[Chunk, Module[], Compilation],
+				undefined | void | Module[]
+			>;
+		}
 	): null | Source;
 
 	/**
@@ -5706,9 +5714,20 @@ declare class CssModulesPlugin {
 	 * Returns true, when the chunk has css.
 	 */
 	static chunkHasCss(chunk: Chunk, chunkGraph: ChunkGraph): boolean;
-	static getCompilationHooks: (
-		compilation: Compilation
-	) => CompilationHooksCssModulesPlugin;
+	static getCompilationHooks: (compilation: Compilation) => {
+		renderModulePackage: SyncWaterfallHook<
+			[Source, Module, ChunkRenderContextCssModulesPlugin],
+			Source
+		>;
+		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+		/**
+		 * Called for each CSS source type (CSS_IMPORT_TYPE, CSS_TYPE) with the chunk's modules pre-sorted by full module name; return an ordered `Module[]` to override the default import-order topological sort, or return `undefined` to keep the default.
+		 */
+		orderModules: SyncBailHook<
+			[Chunk, Module[], Compilation],
+			undefined | void | Module[]
+		>;
+	};
 }
 declare abstract class CssParser extends ParserClass {
 	defaultMode: "global" | "auto" | "local" | "pure";
@@ -9618,33 +9637,6 @@ declare interface HotModuleReplacementPluginLoaderContext {
 declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
-declare interface HtmlCompilationHooks {
-	/**
-	 * called with the list of extra tags to inject into each page (initially empty) plus the current HTML; push `HtmlTagDescriptor`s and return the list — webpack serializes and places them by `injectTo`. A structured alternative to the string-level `transformHtml` for adding tags; runs before CSP so injected inline tags are hashed
-	 */
-	injectTags: AsyncSeriesWaterfallHook<
-		[HtmlTagDescriptor[], HtmlInjectTagsContext],
-		HtmlTagDescriptor[]
-	>;
-
-	/**
-	 * called with the page's `<script>`/`<link>`/`<style>`/`<meta>` tags (webpack's own and any injected) as mutable descriptors; mutate `attrs` (add a `nonce`/`data-*`, switch `defer`↔`async`, …), set `remove: true`, or change `injectTo` to move a tag between `<head>` and `<body>`, and webpack rewrites the changed tags. Add new tags with `injectTags` instead
-	 */
-	transformTags: AsyncSeriesHook<[HtmlMutableTag[], HtmlTransformTagsContext]>;
-
-	/**
-	 * called with each emitted page's final HTML (all sentinels resolved) just before it is written; return the (possibly transformed) HTML — e.g. to minify, inject a CSP meta, or rewrite tags
-	 */
-	transformHtml: AsyncSeriesWaterfallHook<
-		[string, HtmlTransformHtmlContext],
-		string
-	>;
-
-	/**
-	 * called once each page's HTML asset has been finalized — a post-emit notification (nothing to return)
-	 */
-	htmlEmitted: AsyncSeriesHook<[HtmlEmittedContext]>;
-}
 declare interface HtmlEmittedContext {
 	outputName: string;
 }
@@ -9778,9 +9770,32 @@ declare class HtmlModulesPlugin {
 	/**
 	 * Per-compilation hooks for the experimental HTML support.
 	 */
-	static getCompilationHooks: (
-		compilation: Compilation
-	) => HtmlCompilationHooks;
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * Called with the list of extra tags to inject into each page (initially empty) plus the current HTML; push `HtmlTagDescriptor`s and return the list — webpack serializes and places them by `injectTo`. A structured alternative to the string-level `transformHtml` for adding tags; runs before CSP so injected inline tags are hashed.
+		 */
+		injectTags: AsyncSeriesWaterfallHook<
+			[HtmlTagDescriptor[], HtmlInjectTagsContext],
+			HtmlTagDescriptor[]
+		>;
+		/**
+		 * Called with the page's `<script>`/`<link>`/`<style>`/`<meta>` tags (webpack's own and any injected) as mutable descriptors; mutate `attrs` (add a `nonce`/`data-*`, switch `defer`↔`async`, …), set `remove: true`, or change `injectTo` to move a tag between `<head>` and `<body>`, and webpack rewrites the changed tags. Add new tags with `injectTags` instead.
+		 */
+		transformTags: AsyncSeriesHook<
+			[HtmlMutableTag[], HtmlTransformTagsContext]
+		>;
+		/**
+		 * Called with each emitted page's final HTML (all sentinels resolved) just before it is written; return the (possibly transformed) HTML — e.g. to minify, inject a CSP meta, or rewrite tags.
+		 */
+		transformHtml: AsyncSeriesWaterfallHook<
+			[string, HtmlTransformHtmlContext],
+			string
+		>;
+		/**
+		 * Called once each page's HTML asset has been finalized — a post-emit notification (nothing to return).
+		 */
+		htmlEmitted: AsyncSeriesHook<[HtmlEmittedContext]>;
+	};
 }
 declare interface HtmlMutableTag {
 	/**
