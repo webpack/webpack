@@ -167,7 +167,7 @@ Run targeted tests — `yarn test:base --testPathPatterns="<pattern>"` or `yarn 
 Every user-facing change needs a changeset file:
 
 ```bash
-# Create .changeset/<descriptive-name>.md with this format:
+# Create .changeset/<NNN>-<descriptive-name>.md with this format:
 ---
 "webpack": patch    # or minor / major
 ---
@@ -180,6 +180,10 @@ Use `patch` for bug fixes, `minor` for new features, `major` for breaking change
 **Keep the description as short as possible** — a single imperative sentence, ≤ 80 characters, **first character capitalized**, **trailing period** ("Fix split-chunks cache key collision."). Changesets are concatenated into `CHANGELOG.md` verbatim. Multi-paragraph rationale belongs in the PR body, not the changeset.
 
 **One changeset per pull request** — when a PR contains several related changes, fold them into a single changeset entry (one sentence naming them, using the highest applicable bump level) instead of adding one file per change. Only add separate changeset files when the changes are genuinely unrelated to each other; the length limit may be relaxed slightly for a combined entry.
+
+**Union same-topic entries** — before adding a changeset, scan `.changeset/` for an existing pending entry covering the same area (same option, parser, subsystem, or bug family) and fold your change into it rather than adding a near-duplicate. A cluster of "Speed up JavaScript parsing." lines is one entry, not seven.
+
+**Filename controls ordering — prefix by importance.** Changesets render grouped by bump level (Major → Minor → Patch); within each section entries appear in **sorted `.changeset` filename order**. Name every changeset `NNN-<description>.md` with a zero-padded numeric prefix (`010-`, `020-`, …) so the lowest number sorts first and lands at the top of its section. Order by importance: user-facing features first, then correctness fixes, then performance, then internal/build/chore. Pick a prefix that slots your entry into the right place relative to the files already there (leave gaps so later entries fit between).
 
 ### 4. Updating Examples (if needed)
 
