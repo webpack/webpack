@@ -199,7 +199,7 @@
     "three": "^0.185.1",
     "tinybench": "^6.0.1",
     "toml": "^4.1.1",
-    "tooling": "webpack/tooling#v1.26.4",
+    "tooling": "bjohansebas/tooling-webpack#feat/since-default",
     "ts-loader": "^9.6.0",
     "typescript": "^6.0.3",
     "unified": "^11.0.5",
