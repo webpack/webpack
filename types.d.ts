@@ -3230,7 +3230,13 @@ declare class Compilation {
 			[(string[] | ReferencedExport)[], Dependency, RuntimeSpec],
 			(string[] | ReferencedExport)[]
 		>;
+		/**
+		 * @since 5.32.0
+		 */
 		executeModule: SyncHook<[ExecuteModuleArgument, ExecuteModuleContext]>;
+		/**
+		 * @since 5.33.0
+		 */
 		prepareModuleExecution: AsyncParallelHook<
 			[ExecuteModuleArgument, ExecuteModuleContext]
 		>;
@@ -3358,6 +3364,9 @@ declare class Compilation {
 			ProcessAssetsAdditionalOptions
 		>;
 		afterProcessAssets: SyncHook<[CompilationAssets]>;
+		/**
+		 * @since 5.8.0
+		 */
 		processAdditionalAssets: AsyncSeriesHook<[CompilationAssets]>;
 		needAdditionalSeal: SyncBailHook<[], boolean | void>;
 		afterSeal: AsyncSeriesHook<[]>;
@@ -3960,21 +3969,6 @@ declare interface CompilationHooksAsyncWebAssemblyModulesPlugin {
 		Source
 	>;
 }
-declare interface CompilationHooksCssModulesPlugin {
-	renderModulePackage: SyncWaterfallHook<
-		[Source, Module, ChunkRenderContextCssModulesPlugin],
-		Source
-	>;
-	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
-
-	/**
-	 * called for each CSS source type (CSS_IMPORT_TYPE, CSS_TYPE) with the chunk's modules pre-sorted by full module name; return an ordered `Module[]` to override the default import-order topological sort, or return `undefined` to keep the default
-	 */
-	orderModules: SyncBailHook<
-		[Chunk, Module[], Compilation],
-		undefined | void | Module[]
-	>;
-}
 
 /**
  * Renames an inlined module's top-level declaration (and all its references) when
@@ -4141,17 +4135,29 @@ declare class Compiler {
 		make: AsyncParallelHook<[Compilation]>;
 		finishMake: AsyncParallelHook<[Compilation]>;
 		afterCompile: AsyncSeriesHook<[Compilation]>;
+		/**
+		 * @since 5.67.0
+		 */
 		readRecords: AsyncSeriesHook<[]>;
+		/**
+		 * @since 5.67.0
+		 */
 		emitRecords: AsyncSeriesHook<[]>;
 		watchRun: AsyncSeriesHook<[Compiler]>;
 		failed: SyncHook<[Error]>;
 		invalid: SyncHook<[null | string, number]>;
 		watchClose: SyncHook<[]>;
+		/**
+		 * @since 5.17.0
+		 */
 		shutdown: AsyncSeriesHook<[]>;
 		infrastructureLog: SyncBailHook<
 			[string, string, undefined | any[]],
 			true | void
 		>;
+		/**
+		 * @since 5.106.0
+		 */
 		validate: SyncHook<[]>;
 		environment: SyncHook<[]>;
 		afterEnvironment: SyncHook<[]>;
@@ -4352,10 +4358,12 @@ type ConcatSourceChild = string | Source | SourceLike;
 
 /**
  * Advanced options for module concatenation.
+ * @since 5.109.0
  */
 declare interface ConcatenateModulesOptions {
 	/**
 	 * Also concatenate CommonJS modules with statically analyzable exports. Defaults to 'true'.
+	 * @default true
 	 */
 	commonjs?: boolean;
 }
@@ -5465,9 +5473,24 @@ declare interface CssImportDependencyMeta {
 type CssLayer = undefined | string;
 declare class CssLoadingRuntimeModule extends RuntimeModule {
 	constructor(runtimeRequirements: ReadonlySet<string>);
-	static getCompilationHooks: (
-		compilation: Compilation
-	) => CssLoadingRuntimeModulePluginHooks;
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * @since 5.66.0
+		 */
+		createStylesheet: SyncWaterfallHook<[string, Chunk], string>;
+		/**
+		 * @since 5.91.0
+		 */
+		linkPreload: SyncWaterfallHook<[string, Chunk], string>;
+		/**
+		 * @since 5.91.0
+		 */
+		linkPrefetch: SyncWaterfallHook<[string, Chunk], string>;
+		/**
+		 * @since 5.107.0
+		 */
+		linkInsert: SyncWaterfallHook<[string, Chunk], string>;
+	};
 
 	/**
 	 * Runtime modules without any dependencies to other runtime modules
@@ -5494,12 +5517,6 @@ declare class CssLoadingRuntimeModule extends RuntimeModule {
 	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
-}
-declare interface CssLoadingRuntimeModulePluginHooks {
-	createStylesheet: SyncWaterfallHook<[string, Chunk], string>;
-	linkPreload: SyncWaterfallHook<[string, Chunk], string>;
-	linkPrefetch: SyncWaterfallHook<[string, Chunk], string>;
-	linkInsert: SyncWaterfallHook<[string, Chunk], string>;
 }
 declare abstract class CssModule extends NormalModule {
 	cssLayer: CssLayer;
@@ -5682,7 +5699,27 @@ declare class CssModulesPlugin {
 	 */
 	renderChunk(
 		__0: RenderContextCssModulesPlugin,
-		hooks: CompilationHooksCssModulesPlugin
+		hooks: {
+			/**
+			 * @since 5.94.0
+			 */
+			renderModulePackage: SyncWaterfallHook<
+				[Source, Module, ChunkRenderContextCssModulesPlugin],
+				Source
+			>;
+			/**
+			 * @since 5.94.0
+			 */
+			chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+			/**
+			 * Called for each CSS source type (CSS_IMPORT_TYPE, CSS_TYPE) with the chunk's modules pre-sorted by full module name; return an ordered `Module[]` to override the default import-order topological sort, or return `undefined` to keep the default.
+			 * @since 5.107.0
+			 */
+			orderModules: SyncBailHook<
+				[Chunk, Module[], Compilation],
+				undefined | void | Module[]
+			>;
+		}
 	): Source;
 
 	/**
@@ -5691,7 +5728,27 @@ declare class CssModulesPlugin {
 	static renderModule(
 		module: CssModule,
 		renderContext: ChunkRenderContextCssModulesPlugin,
-		hooks: CompilationHooksCssModulesPlugin
+		hooks: {
+			/**
+			 * @since 5.94.0
+			 */
+			renderModulePackage: SyncWaterfallHook<
+				[Source, Module, ChunkRenderContextCssModulesPlugin],
+				Source
+			>;
+			/**
+			 * @since 5.94.0
+			 */
+			chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+			/**
+			 * Called for each CSS source type (CSS_IMPORT_TYPE, CSS_TYPE) with the chunk's modules pre-sorted by full module name; return an ordered `Module[]` to override the default import-order topological sort, or return `undefined` to keep the default.
+			 * @since 5.107.0
+			 */
+			orderModules: SyncBailHook<
+				[Chunk, Module[], Compilation],
+				undefined | void | Module[]
+			>;
+		}
 	): null | Source;
 
 	/**
@@ -5706,9 +5763,27 @@ declare class CssModulesPlugin {
 	 * Returns true, when the chunk has css.
 	 */
 	static chunkHasCss(chunk: Chunk, chunkGraph: ChunkGraph): boolean;
-	static getCompilationHooks: (
-		compilation: Compilation
-	) => CompilationHooksCssModulesPlugin;
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * @since 5.94.0
+		 */
+		renderModulePackage: SyncWaterfallHook<
+			[Source, Module, ChunkRenderContextCssModulesPlugin],
+			Source
+		>;
+		/**
+		 * @since 5.94.0
+		 */
+		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+		/**
+		 * Called for each CSS source type (CSS_IMPORT_TYPE, CSS_TYPE) with the chunk's modules pre-sorted by full module name; return an ordered `Module[]` to override the default import-order topological sort, or return `undefined` to keep the default.
+		 * @since 5.107.0
+		 */
+		orderModules: SyncBailHook<
+			[Chunk, Module[], Compilation],
+			undefined | void | Module[]
+		>;
+	};
 }
 declare abstract class CssParser extends ParserClass {
 	defaultMode: "global" | "auto" | "local" | "pure";
@@ -5796,11 +5871,15 @@ declare interface CssParserOptions {
 
 	/**
 	 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+	 * @default true
+	 * @since 5.109.0
 	 */
 	customMedia?: boolean;
 
 	/**
 	 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+	 * @default true
+	 * @since 5.109.0
 	 */
 	customSelectors?: boolean;
 
@@ -5811,6 +5890,8 @@ declare interface CssParserOptions {
 
 	/**
 	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+	 * @default false
+	 * @since 5.109.0
 	 */
 	fontPreload?: boolean;
 
@@ -7249,6 +7330,7 @@ declare interface Environment {
 
 	/**
 	 * The environment supports generator functions and yield ('function* () { yield ... }').
+	 * @since 5.109.0
 	 */
 	generator?: boolean;
 
@@ -7289,6 +7371,7 @@ declare interface Environment {
 
 	/**
 	 * The environment supports `<link rel="modulepreload">` to preload EcmaScript modules.
+	 * @since 5.109.0
 	 */
 	modulePreload?: boolean;
 
@@ -7467,78 +7550,102 @@ declare interface Experiments {
 
 	/**
 	 * Support WebAssembly as asynchronous EcmaScript Module. `"auto"` (the default) enables it unless a loader is registered for WebAssembly files.
+	 * @default "auto"
+	 * @since 5.0.0
 	 * @experimental
 	 */
 	asyncWebAssembly?: boolean | "auto";
 
 	/**
 	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
+	 * @default true
+	 * @since 5.62.0
 	 * @experimental
 	 */
 	backCompat?: boolean;
 
 	/**
 	 * Build http(s): urls using a lockfile and resource content cache.
+	 * @since 5.49.0
 	 * @experimental
 	 */
 	buildHttp?: HttpUriOptions | (string | RegExp | ((uri: string) => boolean))[];
 
 	/**
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
+	 * @default false
+	 * @since 5.54.0
 	 * @experimental
 	 */
 	cacheUnaffected?: boolean;
 
 	/**
 	 * Enable css support. `"auto"` (the default) enables the built-in CSS support unless a loader is registered for CSS files.
+	 * @default "auto"
+	 * @since 5.66.0
 	 * @experimental
 	 */
 	css?: boolean | "auto";
 
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 * @default false
+	 * @since 5.100.0
 	 * @experimental
 	 */
 	deferImport?: boolean;
 
 	/**
 	 * Apply defaults of next major version.
+	 * @default false
+	 * @since 5.53.0
 	 * @experimental
 	 */
 	futureDefaults?: boolean;
 
 	/**
 	 * Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points. `"auto"` (the default) enables it unless a loader is registered for HTML files.
+	 * @default "auto"
+	 * @since 5.107.0
 	 * @experimental
 	 */
 	html?: boolean | "auto";
 
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
+	 * @since 5.17.0
 	 * @experimental
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
 
 	/**
 	 * Allow output javascript files as module source type.
+	 * @default false
+	 * @since 5.0.0
 	 * @experimental
 	 */
 	outputModule?: boolean;
 
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
+	 * @default false
+	 * @since 5.106.0
 	 * @experimental
 	 */
 	sourceImport?: boolean;
 
 	/**
 	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
+	 * @default false
+	 * @since 5.0.0
 	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
 
 	/**
 	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
+	 * @default "auto"
+	 * @since 5.107.0
 	 * @experimental
 	 */
 	typescript?: boolean | "auto";
@@ -7550,78 +7657,91 @@ declare interface Experiments {
 declare interface ExperimentsNormalized {
 	/**
 	 * Support WebAssembly as asynchronous EcmaScript Module. `"auto"` (the default) enables it unless a loader is registered for WebAssembly files.
+	 * @since 5.0.0
 	 * @experimental
 	 */
 	asyncWebAssembly?: boolean | "auto";
 
 	/**
 	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
+	 * @since 5.62.0
 	 * @experimental
 	 */
 	backCompat?: boolean;
 
 	/**
 	 * Build http(s): urls using a lockfile and resource content cache.
+	 * @since 5.49.0
 	 * @experimental
 	 */
 	buildHttp?: HttpUriOptions;
 
 	/**
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
+	 * @since 5.54.0
 	 * @experimental
 	 */
 	cacheUnaffected?: boolean;
 
 	/**
 	 * Enable css support. `"auto"` (the default) enables the built-in CSS support unless a loader is registered for CSS files.
+	 * @since 5.66.0
 	 * @experimental
 	 */
 	css?: boolean | "auto";
 
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 * @since 5.100.0
 	 * @experimental
 	 */
 	deferImport?: boolean;
 
 	/**
 	 * Apply defaults of next major version.
+	 * @since 5.53.0
 	 * @experimental
 	 */
 	futureDefaults?: boolean;
 
 	/**
 	 * Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points. `"auto"` (the default) enables it unless a loader is registered for HTML files.
+	 * @since 5.107.0
 	 * @experimental
 	 */
 	html?: boolean | "auto";
 
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
+	 * @since 5.17.0
 	 * @experimental
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
 
 	/**
 	 * Allow output javascript files as module source type.
+	 * @since 5.0.0
 	 * @experimental
 	 */
 	outputModule?: boolean;
 
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
+	 * @since 5.106.0
 	 * @experimental
 	 */
 	sourceImport?: boolean;
 
 	/**
 	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
+	 * @since 5.0.0
 	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
 
 	/**
 	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
+	 * @since 5.107.0
 	 * @experimental
 	 */
 	typescript?: boolean | "auto";
@@ -8254,6 +8374,7 @@ type ExternalItemValue =
 declare interface ExternalItemValueObjectKnown {
 	/**
 	 * How an external's exports interoperate with ES module imports, independent of the importing module's strictness (similar to Rollup's `output.interop`). 'default': treat as CommonJS, the default import is the whole exports (Node.js semantics). 'esModule': treat as an ES module namespace, the default import is unboxed to `.default`.
+	 * @since 5.109.0
 	 */
 	interop?: "default" | "esModule";
 }
@@ -9604,17 +9725,6 @@ declare interface HtmlAfterEmitContext {
 declare interface HtmlBeforeEmitContext {
 	outputName: string;
 }
-declare interface HtmlCompilationHooks {
-	/**
-	 * called with each emitted page's final HTML (all sentinels resolved) just before it is written; return the (possibly transformed) HTML — e.g. to minify, inject a CSP meta, or rewrite tags
-	 */
-	beforeEmit: AsyncSeriesWaterfallHook<[string, HtmlBeforeEmitContext], string>;
-
-	/**
-	 * called once each page's HTML asset has been finalized — a post-emit notification (nothing to return)
-	 */
-	afterEmit: AsyncSeriesHook<[HtmlAfterEmitContext]>;
-}
 declare interface HtmlEntryInfo {
 	request: string;
 	entryName: string;
@@ -9713,9 +9823,21 @@ declare class HtmlModulesPlugin {
 	/**
 	 * Per-compilation hooks for the experimental HTML support.
 	 */
-	static getCompilationHooks: (
-		compilation: Compilation
-	) => HtmlCompilationHooks;
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * Called with each emitted page's final HTML (all sentinels resolved) just before it is written; return the (possibly transformed) HTML — e.g. to minify, inject a CSP meta, or rewrite tags.
+		 * @since 5.109.0
+		 */
+		beforeEmit: AsyncSeriesWaterfallHook<
+			[string, HtmlBeforeEmitContext],
+			string
+		>;
+		/**
+		 * Called once each page's HTML asset has been finalized — a post-emit notification (nothing to return).
+		 * @since 5.109.0
+		 */
+		afterEmit: AsyncSeriesHook<[HtmlAfterEmitContext]>;
+	};
 }
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
@@ -9739,6 +9861,7 @@ declare abstract class HtmlParser extends ParserClass {
 declare interface HtmlParserOptions {
 	/**
 	 * Configure how the HTML source is parsed: `"document"` (the default) parses a full page; any other value is the tag name of the context element to parse the source as that element's inner HTML (a fragment) — e.g. `"template"` for a neutral fragment, or `"tbody"` so context-sensitive tags like a bare `<tr>`/`<td>` are kept instead of dropped.
+	 * @since 5.109.0
 	 */
 	as?: string;
 
@@ -9849,6 +9972,7 @@ type HtmlResourceHintRel =
 
 /**
  * A custom resource-hint `<link>` for `output.html.resourceHints`. Exactly one of `href` / `chunk` / `entry` names the target.
+ * @since 5.109.0
  */
 declare interface HtmlResourceHintWebpackOptions {
 	/**
@@ -10369,56 +10493,67 @@ type ImportMetaParserOptions = ImportMetaParserOptionsKnown &
 
 /**
  * Enable/disable evaluating import.meta fields. Omitted fields are enabled and unknown fields are preserved. Custom fields are allowed.
+ * @since 5.109.0
  */
 declare interface ImportMetaParserOptionsKnown {
 	/**
 	 * Enable/disable evaluating import.meta.dirname.
+	 * @default true
 	 */
 	dirname?: boolean;
 
 	/**
 	 * Enable/disable evaluating import.meta.env.
+	 * @default true
 	 */
 	env?: boolean;
 
 	/**
 	 * Enable/disable evaluating import.meta.filename.
+	 * @default true
 	 */
 	filename?: boolean;
 
 	/**
 	 * Enable/disable evaluating import.meta.main.
+	 * @default true
 	 */
 	main?: boolean;
 
 	/**
 	 * Enable/disable evaluating import.meta.resolve.
+	 * @default true
 	 */
 	resolve?: boolean;
 
 	/**
 	 * Enable/disable evaluating import.meta.url.
+	 * @default true
 	 */
 	url?: boolean;
 
 	/**
 	 * Enable/disable evaluating import.meta.webpack.
+	 * @default true
 	 */
 	webpack?: boolean;
 
 	/**
 	 * Enable/disable evaluating import.meta.webpackContext.
+	 * @default true
 	 */
 	webpackContext?: boolean;
 
 	/**
 	 * Enable/disable evaluating import.meta.webpackHot.
+	 * @default true
 	 */
 	webpackHot?: boolean;
 }
 
 /**
  * Enable/disable evaluating import.meta fields. Omitted fields are enabled and unknown fields are preserved. Custom fields are allowed.
+ * @since 5.109.0
  */
 declare interface ImportMetaParserOptionsUnknown {
 	[index: string]: boolean;
@@ -10484,6 +10619,8 @@ declare interface InfrastructureLogging {
 
 	/**
 	 * Show build progress. `"auto"` shows it only for interactive terminals. This option is only used when no custom console is provided.
+	 * @default false
+	 * @since 5.109.0
 	 */
 	progress?: boolean | "auto";
 
@@ -10933,9 +11070,15 @@ declare class JavascriptParser extends ParserClass {
 				undefined | null | BasicEvaluatedExpression
 			>
 		>;
+		/**
+		 * @since 5.73.0
+		 */
 		evaluateNewExpression: HookMap<
 			SyncBailHook<[NewExpression], undefined | null | BasicEvaluatedExpression>
 		>;
+		/**
+		 * @since 5.73.0
+		 */
 		evaluateCallExpression: HookMap<
 			SyncBailHook<
 				[CallExpression],
@@ -11024,6 +11167,9 @@ declare class JavascriptParser extends ParserClass {
 			],
 			boolean | void
 		>;
+		/**
+		 * @since 5.109.0
+		 */
 		preStatementByType: HookMap<
 			SyncBailHook<
 				[
@@ -11092,6 +11238,9 @@ declare class JavascriptParser extends ParserClass {
 			],
 			boolean | void
 		>;
+		/**
+		 * @since 5.109.0
+		 */
 		blockPreStatementByType: HookMap<
 			SyncBailHook<
 				[
@@ -11161,6 +11310,9 @@ declare class JavascriptParser extends ParserClass {
 			boolean | void
 		>;
 		statementIf: SyncBailHook<[IfStatement], boolean | void>;
+		/**
+		 * @since 5.105.0
+		 */
 		collectGuards: SyncBailHook<[Expression], void | GuardCollection>;
 		classExtendsExpression: SyncBailHook<
 			[
@@ -11176,6 +11328,9 @@ declare class JavascriptParser extends ParserClass {
 			],
 			boolean | void
 		>;
+		/**
+		 * @since 5.36.0
+		 */
 		classBodyValue: SyncBailHook<
 			[
 				Expression,
@@ -11277,9 +11432,15 @@ declare class JavascriptParser extends ParserClass {
 		varDeclaration: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		varDeclarationLet: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		varDeclarationConst: HookMap<SyncBailHook<[Identifier], boolean | void>>;
+		/**
+		 * @since 5.100.0
+		 */
 		varDeclarationUsing: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		varDeclarationVar: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		pattern: HookMap<SyncBailHook<[Identifier], boolean | void>>;
+		/**
+		 * @since 5.101.3
+		 */
 		collectDestructuringAssignmentProperties: SyncBailHook<
 			[Expression],
 			boolean | void
@@ -11358,6 +11519,9 @@ declare class JavascriptParser extends ParserClass {
 		>;
 		optionalChaining: SyncBailHook<[ChainExpression], boolean | void>;
 		new: HookMap<SyncBailHook<[NewExpression], boolean | void>>;
+		/**
+		 * @since 5.71.0
+		 */
 		binaryExpression: SyncBailHook<[BinaryExpression], boolean | void>;
 		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		expressionMemberChain: HookMap<
@@ -11378,8 +11542,14 @@ declare class JavascriptParser extends ParserClass {
 			boolean | void
 		>;
 		program: SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
+		/**
+		 * @since 5.99.0
+		 */
 		terminate: SyncBailHook<[ReturnStatement | ThrowStatement], boolean | void>;
 		finish: SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
+		/**
+		 * @since 5.99.9
+		 */
 		unusedStatement: SyncBailHook<[Statement], boolean | void>;
 	}>;
 	sourceType: "module" | "auto" | "script";
@@ -13037,11 +13207,15 @@ declare interface JavascriptParserOptions {
 
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 * @default false
+	 * @since 5.100.0
 	 */
 	deferImport?: boolean;
 
 	/**
 	 * Auto-emit `<link rel="preload" as="style">` for the CSS of every dynamically imported (`import()`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike `dynamicImportPreload`, the JavaScript itself is not preloaded. `true` uses the default order; a number sets the preload order.
+	 * @default false
+	 * @since 5.109.0
 	 */
 	dynamicImportCssPreload?: number | boolean;
 
@@ -13179,6 +13353,8 @@ declare interface JavascriptParserOptions {
 
 	/**
 	 * Specifies the behavior of constructs that break at runtime in strict mode (e.g. 'with', 'arguments.callee', assigning to read-only globals) when modules are emitted as ES module output.
+	 * @default "warn"
+	 * @since 5.109.0
 	 */
 	strictModeViolations?: false | "error" | "warn";
 
@@ -13235,6 +13411,8 @@ declare interface JavascriptParserOptions {
 
 	/**
 	 * Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().
+	 * @default false
+	 * @since 5.109.0
 	 */
 	worklet?: boolean | string[];
 
@@ -17518,6 +17696,9 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		resolveForScheme: HookMap<
 			AsyncSeriesBailHook<[ResourceDataWithData, ResolveData], true | void>
 		>;
+		/**
+		 * @since 5.49.0
+		 */
 		resolveInScheme: HookMap<
 			AsyncSeriesBailHook<[ResourceDataWithData, ResolveData], true | void>
 		>;
@@ -17752,6 +17933,9 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				> &
 				Record<string, SyncBailHook<[Generator, GeneratorOptions], void>>
 		>;
+		/**
+		 * @since 5.81.0
+		 */
 		createModuleClass: HookMap<
 			SyncBailHook<[CreateData, ResolveData], void | Module>
 		>;
@@ -19441,6 +19625,7 @@ declare interface OutputFileSystem {
 declare interface OutputHtmlOptions {
 	/**
 	 * Inject a `<base>` element into the page `<head>`. A string sets `href`; an object sets both `href` and optionally `target`. Skipped if the HTML already contains a `<base>` element.
+	 * @since 5.109.0
 	 */
 	base?:
 		| string
@@ -19457,6 +19642,8 @@ declare interface OutputHtmlOptions {
 
 	/**
 	 * Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon path (e.g. `{ "icon": "./favicon.svg", "apple-touch-icon": "./apple.png" }`); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.
+	 * @default false
+	 * @since 5.109.0
 	 */
 	favicon?:
 		| string
@@ -19466,16 +19653,19 @@ declare interface OutputHtmlOptions {
 
 	/**
 	 * Where to place injected chunk `<script>`/`<link>` tags. `"body"` (default; `"head"` with `output.module`) keeps them next to the entry tag — end of `<body>` on generated pages; `"head"` moves them into `<head>`; `false` suppresses sibling-chunk injection (entry tags and resource hints remain).
+	 * @since 5.109.0
 	 */
 	inject?: false | "body" | "head";
 
 	/**
 	 * Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; `"script"` inlines only JavaScript, `"style"` only CSS; an array of `RegExp` patterns matches against the chunk name.
+	 * @since 5.109.0
 	 */
 	inline?: boolean | "script" | "style" | RegExp[];
 
 	/**
 	 * Add Subresource Integrity (SRI) `integrity` attributes to injected `<script>`/`<link>` tags. `true` uses `['sha384']`; an array sets the hash algorithms; a function receives each referenced asset and returns the algorithms to use or `false` to skip it.
+	 * @since 5.109.0
 	 */
 	integrity?:
 		| boolean
@@ -19484,16 +19674,19 @@ declare interface OutputHtmlOptions {
 
 	/**
 	 * Inject `<meta>` tags into the page `<head>`. Each key is the `name` attribute (or `"charset"` for a charset declaration); the value is the `content` string. Keys beginning with `og:` use the `property` attribute instead of `name`. A tag is skipped if the HTML already contains a meta with the same name.
+	 * @since 5.109.0
 	 */
 	meta?: { [index: string]: string };
 
 	/**
 	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
+	 * @default "auto"
 	 */
 	scriptLoading?: "auto" | "defer" | "blocking";
 
 	/**
 	 * Sets the `<title>` of the generated HTML page. Skipped if the HTML already contains a `<title>` element.
+	 * @since 5.109.0
 	 */
 	title?: string;
 }
@@ -22434,10 +22627,12 @@ declare interface ResourceDataWithData {
 
 /**
  * Full resource-hint configuration.
+ * @since 5.109.0
  */
 declare interface ResourceHintsOptions {
 	/**
 	 * Initial dependency-graph chunk hints. `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; `"preload"` is an alias of `true`; `false` disables chunk hints (URL-asset hints from magic comments / `urlHints` still fire); `"none"` is a hard off switch (no `<link>` anywhere, empty stats / manifest); an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (replaces the removed `resolveDependencies` hook).
+	 * @since 5.109.0
 	 */
 	initial?:
 		| boolean
@@ -25199,6 +25394,7 @@ declare interface StatsOptions {
 
 	/**
 	 * Include the resolved `<link>` resource-hint descriptors for each entrypoint (`entrypoints[name].resourceHints`). Combines `output.resourceHints.chunks` (initial-graph modulepreload/preload/prefetch) with `output.resourceHints.assets` (URL-referenced fonts / images / …). Lets SSR frameworks inject the hints server-side without walking the chunk graph themselves; the analogue of Vite's `build.ssrManifest`.
+	 * @since 5.109.0
 	 */
 	chunkGroupResourceHints?: boolean;
 
@@ -25957,6 +26153,7 @@ declare interface UpdateHashContextGenerator {
 
 /**
  * One default-hint rule for URL-referenced assets emitted by this parser (JS `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`). `test` / `include` / `exclude` match against the asset's request; omit all three to apply to every asset. Matching rules set the same fields a `webpackPrefetch` / `webpackPreload` / `webpackAs` / `webpackType` / `webpackMedia` / `webpackFetchPriority` magic comment would; explicit magic comments on the same URL still win.
+ * @since 5.109.0
  */
 declare interface UrlHintRule {
 	/**

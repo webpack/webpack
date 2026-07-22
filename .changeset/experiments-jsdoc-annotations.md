@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Annotate experiment options in the generated types with `@experimental`, `@since` and `@default` JSDoc tags.
+Annotate configuration options and public hooks in the generated types with `@since`, `@default` and `@experimental` JSDoc tags.
