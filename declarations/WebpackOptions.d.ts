@@ -677,7 +677,6 @@ export type StrictModuleResolution = boolean;
 export type UniqueName = string;
 /**
  * Fall back to non-streaming WebAssembly instantiation when streaming compilation fails because the server does not serve `.wasm` files with the `application/wasm` MIME type.
- * @default true
  * @since 5.109.0
  */
 export type WasmStreamingFallback = boolean;
@@ -837,13 +836,11 @@ export type CssParserContainer = boolean;
 export type CssParserCustomIdents = boolean;
 /**
  * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
- * @default true
  * @since 5.109.0
  */
 export type CssParserCustomMedia = boolean;
 /**
  * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
- * @default true
  * @since 5.109.0
  */
 export type CssParserCustomSelectors = boolean;
@@ -857,7 +854,6 @@ export type CssParserDashedIdents = boolean;
 export type CssParserExportType = "link" | "text" | "css-style-sheet" | "style";
 /**
  * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
- * @default false
  * @since 5.109.0
  */
 export type CssParserFontPreload = boolean;
@@ -1392,14 +1388,12 @@ export interface LibraryCustomUmdObject {
 export interface Experiments {
 	/**
 	 * Support WebAssembly as asynchronous EcmaScript Module. `"auto"` (the default) enables it unless a loader is registered for WebAssembly files.
-	 * @default "auto"
 	 * @since 5.0.0
 	 * @experimental
 	 */
 	asyncWebAssembly?: "auto" | boolean;
 	/**
 	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
-	 * @default true
 	 * @since 5.62.0
 	 * @experimental
 	 */
@@ -1412,35 +1406,30 @@ export interface Experiments {
 	buildHttp?: HttpUriAllowedUris | HttpUriOptions;
 	/**
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
-	 * @default false
 	 * @since 5.54.0
 	 * @experimental
 	 */
 	cacheUnaffected?: boolean;
 	/**
 	 * Enable css support. `"auto"` (the default) enables the built-in CSS support unless a loader is registered for CSS files.
-	 * @default "auto"
 	 * @since 5.66.0
 	 * @experimental
 	 */
 	css?: "auto" | boolean;
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
-	 * @default false
 	 * @since 5.100.0
 	 * @experimental
 	 */
 	deferImport?: boolean;
 	/**
 	 * Apply defaults of next major version.
-	 * @default false
 	 * @since 5.53.0
 	 * @experimental
 	 */
 	futureDefaults?: boolean;
 	/**
 	 * Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points. `"auto"` (the default) enables it unless a loader is registered for HTML files.
-	 * @default "auto"
 	 * @since 5.107.0
 	 * @experimental
 	 */
@@ -1453,28 +1442,24 @@ export interface Experiments {
 	lazyCompilation?: boolean | LazyCompilationOptions;
 	/**
 	 * Allow output javascript files as module source type.
-	 * @default false
 	 * @since 5.0.0
 	 * @experimental
 	 */
 	outputModule?: boolean;
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
-	 * @default false
 	 * @since 5.106.0
 	 * @experimental
 	 */
 	sourceImport?: boolean;
 	/**
 	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
-	 * @default false
 	 * @since 5.0.0
 	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
 	/**
 	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
-	 * @default "auto"
 	 * @since 5.107.0
 	 * @experimental
 	 */
@@ -1631,7 +1616,6 @@ export interface InfrastructureLogging {
 	level?: "none" | "error" | "warn" | "info" | "log" | "verbose";
 	/**
 	 * Show build progress. `"auto"` shows it only for interactive terminals. This option is only used when no custom console is provided.
-	 * @default false
 	 * @since 5.109.0
 	 */
 	progress?: "auto" | boolean;
@@ -2194,7 +2178,6 @@ export interface Optimization {
 export interface ConcatenateModulesOptions {
 	/**
 	 * Also concatenate CommonJS modules with statically analyzable exports. Defaults to 'true'.
-	 * @default true
 	 */
 	commonjs?: boolean;
 }
@@ -2837,7 +2820,6 @@ export interface OutputHtmlOptions {
 		  };
 	/**
 	 * Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon path (e.g. `{ "icon": "./favicon.svg", "apple-touch-icon": "./apple.png" }`); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.
-	 * @default false
 	 * @since 5.109.0
 	 */
 	favicon?:
@@ -2883,7 +2865,6 @@ export interface OutputHtmlOptions {
 	};
 	/**
 	 * How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.
-	 * @default "auto"
 	 */
 	scriptLoading?: "auto" | "blocking" | "defer";
 	/**
@@ -3770,13 +3751,11 @@ export interface CssParserOptions {
 	as?: CssParserAs;
 	/**
 	 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
-	 * @default true
 	 * @since 5.109.0
 	 */
 	customMedia?: CssParserCustomMedia;
 	/**
 	 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
-	 * @default true
 	 * @since 5.109.0
 	 */
 	customSelectors?: CssParserCustomSelectors;
@@ -3786,7 +3765,6 @@ export interface CssParserOptions {
 	exportType?: CssParserExportType;
 	/**
 	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
-	 * @default false
 	 * @since 5.109.0
 	 */
 	fontPreload?: CssParserFontPreload;
@@ -4063,13 +4041,11 @@ export interface JavascriptParserOptions {
 	createRequire?: boolean | string;
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
-	 * @default false
 	 * @since 5.100.0
 	 */
 	deferImport?: boolean;
 	/**
 	 * Auto-emit `<link rel="preload" as="style">` for the CSS of every dynamically imported (`import()`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike `dynamicImportPreload`, the JavaScript itself is not preloaded. `true` uses the default order; a number sets the preload order.
-	 * @default false
 	 * @since 5.109.0
 	 */
 	dynamicImportCssPreload?: number | boolean;
@@ -4181,7 +4157,6 @@ export interface JavascriptParserOptions {
 	strictExportPresence?: boolean;
 	/**
 	 * Specifies the behavior of constructs that break at runtime in strict mode (e.g. 'with', 'arguments.callee', assigning to read-only globals) when modules are emitted as ES module output.
-	 * @default "warn"
 	 * @since 5.109.0
 	 */
 	strictModeViolations?: "error" | "warn" | false;
@@ -4228,7 +4203,6 @@ export interface JavascriptParserOptions {
 	worker?: string[] | boolean;
 	/**
 	 * Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().
-	 * @default false
 	 * @since 5.109.0
 	 */
 	worklet?: string[] | boolean;
@@ -4911,47 +4885,38 @@ export interface GeneratorOptionsByModuleTypeUnknown {
 export interface ImportMetaParserOptionsKnown {
 	/**
 	 * Enable/disable evaluating import.meta.dirname.
-	 * @default true
 	 */
 	dirname?: boolean;
 	/**
 	 * Enable/disable evaluating import.meta.env.
-	 * @default true
 	 */
 	env?: boolean;
 	/**
 	 * Enable/disable evaluating import.meta.filename.
-	 * @default true
 	 */
 	filename?: boolean;
 	/**
 	 * Enable/disable evaluating import.meta.main.
-	 * @default true
 	 */
 	main?: boolean;
 	/**
 	 * Enable/disable evaluating import.meta.resolve.
-	 * @default true
 	 */
 	resolve?: boolean;
 	/**
 	 * Enable/disable evaluating import.meta.url.
-	 * @default true
 	 */
 	url?: boolean;
 	/**
 	 * Enable/disable evaluating import.meta.webpack.
-	 * @default true
 	 */
 	webpack?: boolean;
 	/**
 	 * Enable/disable evaluating import.meta.webpackContext.
-	 * @default true
 	 */
 	webpackContext?: boolean;
 	/**
 	 * Enable/disable evaluating import.meta.webpackHot.
-	 * @default true
 	 */
 	webpackHot?: boolean;
 }

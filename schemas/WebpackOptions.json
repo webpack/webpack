@@ -370,8 +370,7 @@
       "properties": {
         "commonjs": {
           "description": "Also concatenate CommonJS modules with statically analyzable exports. Defaults to 'true'.",
-          "type": "boolean",
-          "default": true
+          "type": "boolean"
         }
       },
       "added": "5.109.0"
@@ -612,14 +611,12 @@
     "CssParserCustomMedia": {
       "description": "Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).",
       "type": "boolean",
-      "added": "5.109.0",
-      "default": true
+      "added": "5.109.0"
     },
     "CssParserCustomSelectors": {
       "description": "Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).",
       "type": "boolean",
-      "added": "5.109.0",
-      "default": true
+      "added": "5.109.0"
     },
     "CssParserDashedIdents": {
       "description": "Enable/disable renaming of dashed identifiers, e. g. custom properties.",
@@ -632,8 +629,7 @@
     "CssParserFontPreload": {
       "description": "Auto-emit `<link rel=\"preload\" as=\"font\">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.",
       "type": "boolean",
-      "added": "5.109.0",
-      "default": false
+      "added": "5.109.0"
     },
     "CssParserFunction": {
       "description": "Enable/disable renaming of `@function` names.",
@@ -1238,15 +1234,13 @@
             }
           ],
           "experimental": true,
-          "added": "5.0.0",
-          "default": "auto"
+          "added": "5.0.0"
         },
         "backCompat": {
           "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
           "type": "boolean",
           "experimental": true,
-          "added": "5.62.0",
-          "default": true
+          "added": "5.62.0"
         },
         "buildHttp": {
           "description": "Build http(s): urls using a lockfile and resource content cache.",
@@ -1265,8 +1259,7 @@
           "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
           "type": "boolean",
           "experimental": true,
-          "added": "5.54.0",
-          "default": false
+          "added": "5.54.0"
         },
         "css": {
           "description": "Enable css support. `\"auto\"` (the default) enables the built-in CSS support unless a loader is registered for CSS files.",
@@ -1281,22 +1274,19 @@
             }
           ],
           "experimental": true,
-          "added": "5.66.0",
-          "default": "auto"
+          "added": "5.66.0"
         },
         "deferImport": {
           "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
           "type": "boolean",
           "experimental": true,
-          "added": "5.100.0",
-          "default": false
+          "added": "5.100.0"
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
           "type": "boolean",
           "experimental": true,
-          "added": "5.53.0",
-          "default": false
+          "added": "5.53.0"
         },
         "html": {
           "description": "Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points. `\"auto\"` (the default) enables it unless a loader is registered for HTML files.",
@@ -1311,8 +1301,7 @@
             }
           ],
           "experimental": true,
-          "added": "5.107.0",
-          "default": "auto"
+          "added": "5.107.0"
         },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
@@ -1331,22 +1320,19 @@
           "description": "Allow output javascript files as module source type.",
           "type": "boolean",
           "experimental": true,
-          "added": "5.0.0",
-          "default": false
+          "added": "5.0.0"
         },
         "sourceImport": {
           "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
           "type": "boolean",
           "experimental": true,
-          "added": "5.106.0",
-          "default": false
+          "added": "5.106.0"
         },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
           "type": "boolean",
           "experimental": true,
-          "added": "5.0.0",
-          "default": false
+          "added": "5.0.0"
         },
         "typescript": {
           "description": "Enable typescript support. `\"auto\"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.",
@@ -1361,8 +1347,7 @@
             }
           ],
           "experimental": true,
-          "added": "5.107.0",
-          "default": "auto"
+          "added": "5.107.0"
         }
       }
     },
@@ -2374,48 +2359,39 @@
       "properties": {
         "dirname": {
           "description": "Enable/disable evaluating import.meta.dirname.",
-          "type": "boolean",
-          "default": true
+          "type": "boolean"
         },
         "env": {
           "description": "Enable/disable evaluating import.meta.env.",
-          "type": "boolean",
-          "default": true
+          "type": "boolean"
         },
         "filename": {
           "description": "Enable/disable evaluating import.meta.filename.",
-          "type": "boolean",
-          "default": true
+          "type": "boolean"
         },
         "main": {
           "description": "Enable/disable evaluating import.meta.main.",
-          "type": "boolean",
-          "default": true
+          "type": "boolean"
         },
         "resolve": {
           "description": "Enable/disable evaluating import.meta.resolve.",
-          "type": "boolean",
-          "default": true
+          "type": "boolean"
         },
         "url": {
           "description": "Enable/disable evaluating import.meta.url.",
-          "type": "boolean",
-          "default": true
+          "type": "boolean"
         },
         "webpack": {
           "description": "Enable/disable evaluating import.meta.webpack.",
-          "type": "boolean",
-          "default": true
+          "type": "boolean"
         },
         "webpackContext": {
           "description": "Enable/disable evaluating import.meta.webpackContext.",
-          "type": "boolean",
-          "default": true
+          "type": "boolean"
         },
         "webpackHot": {
           "description": "Enable/disable evaluating import.meta.webpackHot.",
-          "type": "boolean",
-          "default": true
+          "type": "boolean"
         }
       },
       "added": "5.109.0"
@@ -2463,8 +2439,7 @@
               "type": "boolean"
             }
           ],
-          "added": "5.109.0",
-          "default": false
+          "added": "5.109.0"
         },
         "stream": {
           "description": "Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.",
@@ -2510,8 +2485,7 @@
         "deferImport": {
           "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
           "type": "boolean",
-          "added": "5.100.0",
-          "default": false
+          "added": "5.100.0"
         },
         "dynamicImportCssPreload": {
           "description": "Auto-emit `<link rel=\"preload\" as=\"style\">` for the CSS of every dynamically imported (`import()`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike `dynamicImportPreload`, the JavaScript itself is not preloaded. `true` uses the default order; a number sets the preload order.",
@@ -2523,8 +2497,7 @@
               "type": "boolean"
             }
           ],
-          "added": "5.109.0",
-          "default": false
+          "added": "5.109.0"
         },
         "dynamicImportFetchPriority": {
           "description": "Specifies global fetchPriority for dynamic import.",
@@ -2673,8 +2646,7 @@
         "strictModeViolations": {
           "description": "Specifies the behavior of constructs that break at runtime in strict mode (e.g. 'with', 'arguments.callee', assigning to read-only globals) when modules are emitted as ES module output.",
           "enum": ["error", "warn", false],
-          "added": "5.109.0",
-          "default": "warn"
+          "added": "5.109.0"
         },
         "strictThisContextOnImports": {
           "description": "Handle the this context correctly according to the spec for namespace objects.",
@@ -2758,8 +2730,7 @@
               "type": "boolean"
             }
           ],
-          "added": "5.109.0",
-          "default": false
+          "added": "5.109.0"
         },
         "wrappedContextCritical": {
           "description": "Enable warnings for partial dynamic dependencies.",
@@ -4607,8 +4578,7 @@
               "tsType": "((name: string) => boolean | string | { [rel: string]: string })"
             }
           ],
-          "added": "5.109.0",
-          "default": false
+          "added": "5.109.0"
         },
         "inject": {
           "description": "Where to place injected chunk `<script>`/`<link>` tags. `\"body\"` (default; `\"head\"` with `output.module`) keeps them next to the entry tag — end of `<body>` on generated pages; `\"head\"` moves them into `<head>`; `false` suppresses sibling-chunk injection (entry tags and resource hints remain).",
@@ -4675,8 +4645,7 @@
         },
         "scriptLoading": {
           "description": "How injected `<script>` tags load. `auto` (default) emits a module script for ES module output and `defer` otherwise; `defer` forces a deferred script; `blocking` emits a plain blocking script.",
-          "enum": ["auto", "blocking", "defer"],
-          "default": "auto"
+          "enum": ["auto", "blocking", "defer"]
         },
         "title": {
           "description": "Sets the `<title>` of the generated HTML page. Skipped if the HTML already contains a `<title>` element.",
@@ -6894,8 +6863,7 @@
     "WasmStreamingFallback": {
       "description": "Fall back to non-streaming WebAssembly instantiation when streaming compilation fails because the server does not serve `.wasm` files with the `application/wasm` MIME type.",
       "type": "boolean",
-      "added": "5.109.0",
-      "default": true
+      "added": "5.109.0"
     },
     "Watch": {
       "description": "Enter watch mode, which rebuilds on file change.",
