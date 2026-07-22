@@ -5798,6 +5798,9 @@ declare class CssModulesPlugin {
 	};
 }
 declare abstract class CssParser extends ParserClass {
+	hooks: Readonly<{
+		program: SyncBailHook<[string, ParserState], boolean | void>;
+	}>;
 	defaultMode: "global" | "auto" | "local" | "pure";
 	options: {
 		/**
@@ -6152,8 +6155,9 @@ declare class DefinePlugin {
 	/**
 	 * Create a new define plugin
 	 */
-	constructor(definitions: Definitions);
+	constructor(definitions: Definitions, options?: DefinePluginOptions);
 	definitions: Definitions;
+	type: "html" | "css" | "javascript";
 
 	/**
 	 * Applies the plugin by registering its hooks on the compiler.
@@ -6197,6 +6201,12 @@ declare class DefinePlugin {
 		objKeys?: null | Set<string>
 	) => string;
 	static toPropertyKey: (key: string) => string;
+}
+declare interface DefinePluginOptions {
+	/**
+	 * module type to apply definitions to
+	 */
+	type?: "html" | "css" | "javascript";
 }
 declare interface Definitions {
 	[index: string]: CodeValue;
@@ -10305,6 +10315,9 @@ declare interface HtmlParseOptions {
 	skip?: HtmlAstSkip;
 }
 declare abstract class HtmlParser extends ParserClass {
+	hooks: Readonly<{
+		program: SyncBailHook<[string, ParserState], boolean | void>;
+	}>;
 	magicCommentContext: ContextImport;
 	template?: (source: string, context: HtmlTemplateContext) => string;
 	fragmentContext?: string;
