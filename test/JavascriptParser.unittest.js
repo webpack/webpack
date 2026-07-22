@@ -1672,6 +1672,62 @@ describe("JavascriptParser", () => {
 			);
 		});
 
+		// Phase B2 seam: `toAssignable` re-tags an expression node into a
+		// pattern in place; the SoA column type must follow the facade type so
+		// the column stays authoritative (the lazy-facade prerequisite).
+		it("keeps the SoA column type in sync when toAssignable re-tags a node", () => {
+			const KEY_STORE = SoaAst.KEY_STORE;
+			const KEY_ID = SoaAst.KEY_ID;
+			const TYPE = SoaAst.TYPE;
+			/**
+			 * @param {EXPECTED_ANY} facade SoA facade
+			 * @returns {number} the facade's column type id
+			 */
+			const colType = (facade) => facade[KEY_STORE].types[facade[KEY_ID]];
+			const parser = new JavascriptParser("auto", { soaAst: true });
+			/** @type {EXPECTED_ANY[]} */
+			const lefts = [];
+			/** @type {EXPECTED_ANY[]} */
+			const params = [];
+			parser.hooks.program.tap("test", (ast) => {
+				for (const stmt of /** @type {EXPECTED_ANY} */ (ast).body) {
+					const expr = stmt.expression;
+					if (!expr) {
+						continue;
+					}
+					if (expr.type === "AssignmentExpression") {
+						lefts.push(expr.left);
+					} else if (expr.type === "ArrowFunctionExpression") {
+						params.push(expr.params[0]);
+					}
+				}
+			});
+			parser.parse(
+				"({ a } = b);\n[c, ...r] = d;\n((x = 1) => x);",
+				/** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			const objectPattern = lefts[0];
+			const arrayPattern = lefts[1];
+			const restElement = arrayPattern.elements[1];
+			const assignmentPattern = params[0];
+			// re-tagged to the pattern shapes
+			expect(objectPattern.type).toBe("ObjectPattern");
+			expect(arrayPattern.type).toBe("ArrayPattern");
+			expect(restElement.type).toBe("RestElement");
+			expect(assignmentPattern.type).toBe("AssignmentPattern");
+			// and the SoA column type id follows the re-tag
+			for (const facade of [
+				objectPattern,
+				arrayPattern,
+				restElement,
+				assignmentPattern
+			]) {
+				expect(colType(facade)).toBe(TYPE[facade.type]);
+			}
+		});
+
 		it("should drive identical hook sequences for top-level and nested await", () => {
 			expectSameWalk(
 				`await x;

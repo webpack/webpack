@@ -15,6 +15,19 @@ accessor conversion only pays off when refs change representation, so it
 lands per method cluster together with Phase C's emitter swap instead of as
 a standalone whole-file pass; the first cluster to convert is
 toAssignable/checkLVal (self-contained recursion, narrow field set).
+**B2 first slice landed**: `toAssignable`'s four in-place re-tags
+(`ObjectExpression`→`ObjectPattern`, `ArrayExpression`→`ArrayPattern`,
+`SpreadElement`→`RestElement`, `AssignmentExpression`→`AssignmentPattern`)
+route through a `_retag` seam that keeps the SoA column type in sync, so the
+column — not the facade field — is authoritative for a node's type after a
+re-tag. This removes a latent column/facade divergence (harmless today only
+because patterns are object-walked) and is the prerequisite for dropping the
+eager per-node facade in `_soaAlloc`: once every parse-time type read/write
+is seam-routed, `_soaAlloc` can build columns only and materialize facades
+lazily, cutting the measured SoA parse overhead (peak +97 MB / 1.7× vs the
+object backend on typescript.js — dominated by the eager candidate-2 facades)
+toward the columns-only target. Behavior-neutral (corpus equivalence green,
+benchmarks flat); a unittest asserts the column type follows each re-tag.
 **C1 landed** (see §4.1): full facade coverage for every reachable estree
 type, and the `_emit*` seam now has a SoA arm — opt-in via the `soaAst`
 parse option, corpus-equivalence-gated over both backends, off by default
