@@ -5835,6 +5835,26 @@ declare interface CssParserOptions {
 	urlHints?: UrlHintRule[];
 }
 type Declaration = FunctionDeclaration | VariableDeclaration | ClassDeclaration;
+declare interface DefaultHandlerOptions {
+	progressBar?:
+		| false
+		| Required<{
+				/**
+				 * Color used for the filled portion of the bar.
+				 */
+				color?: string;
+				/**
+				 * Name shown before the progress bar.
+				 */
+				name?: string;
+				/**
+				 * Width of the progress bar in characters. Default: 25.
+				 */
+				width?: number;
+		  }>;
+	estimatedTime?: boolean;
+	phaseTimings?: boolean;
+}
 type DefineConfigInput =
 	| Configuration
 	| MultiConfiguration
@@ -20392,23 +20412,7 @@ declare class ProgressPlugin {
 	static createDefaultHandler: (
 		profile: undefined | null | boolean,
 		logger: WebpackLogger,
-		progressBar?:
-			| false
-			| Required<{
-					/**
-					 * Color used for the filled portion of the bar.
-					 */
-					color?: string;
-					/**
-					 * Name shown before the progress bar.
-					 */
-					name?: string;
-					/**
-					 * Width of the progress bar in characters. Default: 25.
-					 */
-					width?: number;
-			  }>,
-		timing?: TimingOptions
+		options?: DefaultHandlerOptions
 	) => (percentage: number, msg: string, ...args: string[]) => void;
 }
 type ProgressPluginArgument =
@@ -25841,10 +25845,6 @@ declare interface TimestampAndHash {
 	safeTime: number;
 	timestamp?: number;
 	hash: string;
-}
-declare interface TimingOptions {
-	estimatedTime?: boolean;
-	phaseTimings?: boolean;
 }
 declare class TopLevelSymbol {
 	/**
