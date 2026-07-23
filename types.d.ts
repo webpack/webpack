@@ -9648,6 +9648,34 @@ declare interface HtmlEntryInfo {
 		| "script-module";
 	css?: boolean;
 }
+type HtmlFaviconIcon =
+	| string
+	| {
+			/**
+			 * Value for the `color` attribute (used by `rel="mask-icon"`).
+			 */
+			color?: string;
+			/**
+			 * Value for the `crossorigin` attribute.
+			 */
+			crossorigin?: "anonymous" | "use-credentials";
+			/**
+			 * Path to the icon file, emitted as a hashed asset.
+			 */
+			href: string;
+			/**
+			 * Value for the `media` attribute (e.g. `"(prefers-color-scheme: dark)"`).
+			 */
+			media?: string;
+			/**
+			 * Value for the `sizes` attribute (e.g. `"180x180"` or `"any"`).
+			 */
+			sizes?: string;
+			/**
+			 * Value for the `type` attribute; inferred from the file extension when omitted.
+			 */
+			type?: string;
+	  };
 declare abstract class HtmlGenerator extends Generator {
 	options: HtmlGeneratorOptions;
 
@@ -19476,13 +19504,76 @@ declare interface OutputHtmlOptions {
 		  };
 
 	/**
-	 * Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon path (e.g. `{ "icon": "./favicon.svg", "apple-touch-icon": "./apple.png" }`); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.
+	 * Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon — a path string, an object with the icon `href` plus extra link attributes (`sizes`, `media`, `color`, `type`, `crossorigin`), or an array of these for multiple icons under the same `rel` (e.g. several `sizes`, or light/dark `media` variants); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.
 	 */
 	favicon?:
 		| string
 		| boolean
-		| { [index: string]: string }
-		| ((name: string) => string | boolean | { [index: string]: string });
+		| {
+				[index: string]:
+					| string
+					| {
+							/**
+							 * Value for the `color` attribute (used by `rel="mask-icon"`).
+							 */
+							color?: string;
+							/**
+							 * Value for the `crossorigin` attribute.
+							 */
+							crossorigin?: "anonymous" | "use-credentials";
+							/**
+							 * Path to the icon file, emitted as a hashed asset.
+							 */
+							href: string;
+							/**
+							 * Value for the `media` attribute (e.g. `"(prefers-color-scheme: dark)"`).
+							 */
+							media?: string;
+							/**
+							 * Value for the `sizes` attribute (e.g. `"180x180"` or `"any"`).
+							 */
+							sizes?: string;
+							/**
+							 * Value for the `type` attribute; inferred from the file extension when omitted.
+							 */
+							type?: string;
+					  }
+					| HtmlFaviconIcon[];
+		  }
+		| ((name: string) =>
+				| string
+				| boolean
+				| {
+						[index: string]:
+							| string
+							| {
+									/**
+									 * Value for the `color` attribute (used by `rel="mask-icon"`).
+									 */
+									color?: string;
+									/**
+									 * Value for the `crossorigin` attribute.
+									 */
+									crossorigin?: "anonymous" | "use-credentials";
+									/**
+									 * Path to the icon file, emitted as a hashed asset.
+									 */
+									href: string;
+									/**
+									 * Value for the `media` attribute (e.g. `"(prefers-color-scheme: dark)"`).
+									 */
+									media?: string;
+									/**
+									 * Value for the `sizes` attribute (e.g. `"180x180"` or `"any"`).
+									 */
+									sizes?: string;
+									/**
+									 * Value for the `type` attribute; inferred from the file extension when omitted.
+									 */
+									type?: string;
+							  }
+							| HtmlFaviconIcon[];
+				  });
 
 	/**
 	 * Where to place injected chunk `<script>`/`<link>` tags. `"body"` (default; `"head"` with `output.module`) keeps them next to the entry tag — end of `<body>` on generated pages; `"head"` moves them into `<head>`; `false` suppresses sibling-chunk injection (entry tags and resource hints remain).

@@ -590,6 +590,37 @@ export type HotUpdateMainFilename = string;
  */
 export type OutputHtml = boolean | OutputHtmlOptions;
 /**
+ * A single favicon `<link>`: either a path string (used as the icon `href`) or an object with the icon `href` plus extra link attributes (`sizes`, `media`, `color`, `type`, `crossorigin`).
+ */
+export type HtmlFaviconIcon =
+	| string
+	| {
+			/**
+			 * Value for the `color` attribute (used by `rel="mask-icon"`).
+			 */
+			color?: string;
+			/**
+			 * Value for the `crossorigin` attribute.
+			 */
+			crossorigin?: "anonymous" | "use-credentials";
+			/**
+			 * Path to the icon file, emitted as a hashed asset.
+			 */
+			href: string;
+			/**
+			 * Value for the `media` attribute (e.g. `"(prefers-color-scheme: dark)"`).
+			 */
+			media?: string;
+			/**
+			 * Value for the `sizes` attribute (e.g. `"180x180"` or `"any"`).
+			 */
+			sizes?: string;
+			/**
+			 * Value for the `type` attribute; inferred from the file extension when omitted.
+			 */
+			type?: string;
+	  };
+/**
  * Specifies the filename template of non-initial output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
  */
 export type HtmlChunkFilename = FilenameTemplate;
@@ -2791,18 +2822,23 @@ export interface OutputHtmlOptions {
 				target?: string;
 		  };
 	/**
-	 * Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon path (e.g. `{ "icon": "./favicon.svg", "apple-touch-icon": "./apple.png" }`); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.
+	 * Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon — a path string, an object with the icon `href` plus extra link attributes (`sizes`, `media`, `color`, `type`, `crossorigin`), or an array of these for multiple icons under the same `rel` (e.g. several `sizes`, or light/dark `media` variants); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.
 	 */
 	favicon?:
 		| boolean
 		| string
 		| {
 				/**
-				 * Path to the icon file linked for this `rel`.
+				 * Icon(s) for a single `<link rel>`: one icon or an array of icons.
 				 */
-				[k: string]: string;
+				[k: string]: HtmlFaviconIcon[] | HtmlFaviconIcon;
 		  }
-		| ((name: string) => boolean | string | {[rel: string]: string});
+		| ((
+				name: string
+		  ) =>
+				| boolean
+				| string
+				| {[rel: string]: HtmlFaviconIcon | HtmlFaviconIcon[]});
 	/**
 	 * Where to place injected chunk `<script>`/`<link>` tags. `"body"` (default; `"head"` with `output.module`) keeps them next to the entry tag — end of `<body>` on generated pages; `"head"` moves them into `<head>`; `false` suppresses sibling-chunk injection (entry tags and resource hints remain).
 	 */

@@ -1995,6 +1995,51 @@
         }
       ]
     },
+    "HtmlFaviconIcon": {
+      "description": "A single favicon `<link>`: either a path string (used as the icon `href`) or an object with the icon `href` plus extra link attributes (`sizes`, `media`, `color`, `type`, `crossorigin`).",
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "color": {
+              "description": "Value for the `color` attribute (used by `rel=\"mask-icon\"`).",
+              "type": "string",
+              "minLength": 1
+            },
+            "crossorigin": {
+              "description": "Value for the `crossorigin` attribute.",
+              "enum": ["anonymous", "use-credentials"]
+            },
+            "href": {
+              "description": "Path to the icon file, emitted as a hashed asset.",
+              "type": "string",
+              "minLength": 1
+            },
+            "media": {
+              "description": "Value for the `media` attribute (e.g. `\"(prefers-color-scheme: dark)\"`).",
+              "type": "string",
+              "minLength": 1
+            },
+            "sizes": {
+              "description": "Value for the `sizes` attribute (e.g. `\"180x180\"` or `\"any\"`).",
+              "type": "string",
+              "minLength": 1
+            },
+            "type": {
+              "description": "Value for the `type` attribute; inferred from the file extension when omitted.",
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["href"]
+        }
+      ]
+    },
     "HtmlFilename": {
       "description": "Specifies the filename template of output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
       "oneOf": [
@@ -4514,7 +4559,7 @@
           ]
         },
         "favicon": {
-          "description": "Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon path (e.g. `{ \"icon\": \"./favicon.svg\", \"apple-touch-icon\": \"./apple.png\" }`); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.",
+          "description": "Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon — a path string, an object with the icon `href` plus extra link attributes (`sizes`, `media`, `color`, `type`, `crossorigin`), or an array of these for multiple icons under the same `rel` (e.g. several `sizes`, or light/dark `media` variants); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.",
           "anyOf": [
             {
               "type": "boolean"
@@ -4526,14 +4571,24 @@
             {
               "type": "object",
               "additionalProperties": {
-                "description": "Path to the icon file linked for this `rel`.",
-                "type": "string",
-                "minLength": 1
+                "description": "Icon(s) for a single `<link rel>`: one icon or an array of icons.",
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/HtmlFaviconIcon"
+                    },
+                    "minItems": 1
+                  },
+                  {
+                    "$ref": "#/definitions/HtmlFaviconIcon"
+                  }
+                ]
               }
             },
             {
               "instanceof": "Function",
-              "tsType": "((name: string) => boolean | string | { [rel: string]: string })"
+              "tsType": "((name: string) => boolean | string | { [rel: string]: HtmlFaviconIcon | HtmlFaviconIcon[] })"
             }
           ]
         },
