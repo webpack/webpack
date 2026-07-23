@@ -1995,6 +1995,51 @@
         }
       ]
     },
+    "HtmlFaviconIcon": {
+      "description": "A single favicon `<link>`: either a path string (used as the icon `href`) or an object with the icon `href` plus extra link attributes (`sizes`, `media`, `color`, `type`, `crossorigin`).",
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "color": {
+              "description": "Value for the `color` attribute (used by `rel=\"mask-icon\"`).",
+              "type": "string",
+              "minLength": 1
+            },
+            "crossorigin": {
+              "description": "Value for the `crossorigin` attribute.",
+              "enum": ["anonymous", "use-credentials"]
+            },
+            "href": {
+              "description": "Path to the icon file, emitted as a hashed asset.",
+              "type": "string",
+              "minLength": 1
+            },
+            "media": {
+              "description": "Value for the `media` attribute (e.g. `\"(prefers-color-scheme: dark)\"`).",
+              "type": "string",
+              "minLength": 1
+            },
+            "sizes": {
+              "description": "Value for the `sizes` attribute (e.g. `\"180x180\"` or `\"any\"`).",
+              "type": "string",
+              "minLength": 1
+            },
+            "type": {
+              "description": "Value for the `type` attribute; inferred from the file extension when omitted.",
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["href"]
+        }
+      ]
+    },
     "HtmlFilename": {
       "description": "Specifies the filename template of output html files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
       "oneOf": [
@@ -4518,8 +4563,50 @@
             }
           ]
         },
+        "csp": {
+          "description": "Inject a `<meta http-equiv=\"Content-Security-Policy\">` into every webpack-emitted HTML page. `false` (default) does nothing; `true` uses a strict baseline (`script-src 'self'`, `style-src 'self'`, `object-src 'none'`, `base-uri 'self'`) and appends a `sha256` hash of every inline `<script>`/`<style>` to `script-src`/`style-src`. An object customizes it. Skipped when the page already declares a CSP.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "hashFunction": {
+                  "description": "Hash algorithm used for inline `<script>`/`<style>` sources.",
+                  "enum": ["sha256", "sha384", "sha512"]
+                },
+                "nonce": {
+                  "description": "Placeholder nonce added to injected `<script>`/`<style>` tags and as a `'nonce-…'` source; rewrite it per request server-side.",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "policy": {
+                  "description": "CSP directives merged over the baseline. Each key is a directive (e.g. `\"script-src\"`); the value is a source string or list. Inline hashes and any `nonce` are still appended to `script-src`/`style-src`.",
+                  "type": "object",
+                  "additionalProperties": {
+                    "description": "A CSP source expression, or a list of them, for this directive.",
+                    "anyOf": [
+                      {
+                        "type": "array",
+                        "items": {
+                          "description": "A CSP source expression (e.g. `\"'self'\"`, `\"https://cdn.example.com\"`).",
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        },
         "favicon": {
-          "description": "Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon path (e.g. `{ \"icon\": \"./favicon.svg\", \"apple-touch-icon\": \"./apple.png\" }`); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.",
+          "description": "Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon — a path string, an object with the icon `href` plus extra link attributes (`sizes`, `media`, `color`, `type`, `crossorigin`), or an array of these for multiple icons under the same `rel` (e.g. several `sizes`, or light/dark `media` variants); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.",
           "anyOf": [
             {
               "type": "boolean"
@@ -4531,14 +4618,24 @@
             {
               "type": "object",
               "additionalProperties": {
-                "description": "Path to the icon file linked for this `rel`.",
-                "type": "string",
-                "minLength": 1
+                "description": "Icon(s) for a single `<link rel>`: one icon or an array of icons.",
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/HtmlFaviconIcon"
+                    },
+                    "minItems": 1
+                  },
+                  {
+                    "$ref": "#/definitions/HtmlFaviconIcon"
+                  }
+                ]
               }
             },
             {
               "instanceof": "Function",
-              "tsType": "((name: string) => boolean | string | { [rel: string]: string })"
+              "tsType": "((name: string) => boolean | string | { [rel: string]: HtmlFaviconIcon | HtmlFaviconIcon[] })"
             }
           ]
         },
@@ -4590,6 +4687,26 @@
             {
               "instanceof": "Function",
               "tsType": "((asset: { chunk: import('../lib/Chunk'), filename: string }) => string[] | false)"
+            }
+          ]
+        },
+        "manifest": {
+          "description": "Web app manifest for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing. A string is a path to an existing `.webmanifest` file to link. An object is the manifest contents — serialized, emitted as a hashed `.webmanifest` and linked with `<link rel=\"manifest\">`; its `icons`/`screenshots` `src` paths resolve like any request and are emitted as hashed assets. A function receives the page name and returns one of these.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": true
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "((name: string) => false | string | { [key: string]: EXPECTED_ANY })"
             }
           ]
         },

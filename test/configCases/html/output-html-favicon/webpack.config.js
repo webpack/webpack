@@ -26,7 +26,9 @@ const copyTest = {
 	}
 };
 
-/** @typedef {boolean | string | Record<string, string> | ((name: string) => boolean | string | Record<string, string>)} Favicon */
+/** @typedef {{ href: string, sizes?: string, media?: string, color?: string, type?: string, crossorigin?: "anonymous" | "use-credentials" }} FaviconIcon */
+/** @typedef {string | FaviconIcon | (string | FaviconIcon)[]} FaviconValue */
+/** @typedef {boolean | string | Record<string, FaviconValue> | ((name: string) => boolean | string | Record<string, FaviconValue>)} Favicon */
 
 /** @type {(name: string, favicon?: Favicon) => import("../../../../").Configuration} */
 const config = (name, favicon) => ({
@@ -74,6 +76,19 @@ module.exports = [
 	config("object", {
 		icon: "./src/icon.svg",
 		"apple-touch-icon": "./src/icon.png"
+	}),
+	// object icon with extra link attributes (sizes/type kept, href hashed)
+	config("attrs", {
+		"apple-touch-icon": { href: "./src/icon.png", sizes: "180x180" },
+		"mask-icon": { href: "./src/icon.svg", color: "#5bbad5" }
+	}),
+	// array of icons under one rel — several sizes / a dark-mode media variant
+	config("array", {
+		icon: [
+			{ href: "./src/icon.png", sizes: "16x16" },
+			{ href: "./src/icon.png", sizes: "32x32", type: "image/png" },
+			{ href: "./src/icon.svg", media: "(prefers-color-scheme: dark)" }
+		]
 	}),
 	// function notation — receives the page name, returns any favicon form
 	config("fn", (name) => (name === "fn" ? "./src/icon.svg" : false)),

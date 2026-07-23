@@ -10,6 +10,18 @@ This example demonstrates the experimental HTML modules support
   URL-rewritten HTML as a string and is _not_ emitted as a standalone file.
   There is no JavaScript entry point — the script is reached through the HTML.
 
+It also shows how to **generate a modern favicon set and web app manifest, and
+inject them** — without that being a core feature. `GenerateFaviconPlugin` builds
+a `favicon.ico`, an `apple-touch-icon`, `192`/`512` manifest icons and a
+`manifest.webmanifest` from `src/logo.png`, and caches the whole set with
+`compilation.getCache()` keyed by the source's content hash — so the generation
+only reruns when the logo changes. (Resizing to each size is the one step a real
+plugin does with an image library like sharp/jimp; the example keeps the bytes
+as-is so it needs no dependency.) It then injects the `<link rel="icon">`,
+`<link rel="apple-touch-icon">`, `<link rel="manifest">` and
+`<meta name="theme-color">` tags into every emitted page through the
+`output.html` `injectTags` hook.
+
 # webpack.config.js
 
 ```javascript

@@ -503,6 +503,11 @@ describe("snapshots", () => {
 		        "test": /\\\\\\.webmanifest\\$/i,
 		        "type": "asset/webmanifest",
 		      },
+		      Object {
+		        "dependency": "url",
+		        "mimetype": "application/manifest+json",
+		        "type": "asset/webmanifest",
+		      },
 		    ],
 		    "generator": Object {
 		      "css": Object {

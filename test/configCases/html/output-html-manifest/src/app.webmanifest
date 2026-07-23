@@ -1,0 +1,4 @@
+{
+  "name": "File App",
+  "icons": [{ "src": "./icon.png", "sizes": "48x48", "type": "image/png" }]
+}

@@ -11397,22 +11397,66 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-html-csp": Object {
+    "configs": Array [
+      Object {
+        "description": "Inject a \`<meta http-equiv=\\"Content-Security-Policy\\">\` into every webpack-emitted HTML page. \`false\` (default) does nothing; \`true\` uses a strict baseline (\`script-src 'self'\`, \`style-src 'self'\`, \`object-src 'none'\`, \`base-uri 'self'\`) and appends a \`sha256\` hash of every inline \`<script>\`/\`<style>\` to \`script-src\`/\`style-src\`. An object customizes it. Skipped when the page already declares a CSP.",
+        "multiple": false,
+        "path": "output.html.csp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Inject a \`<meta http-equiv=\\"Content-Security-Policy\\">\` into every webpack-emitted HTML page. \`false\` (default) does nothing; \`true\` uses a strict baseline (\`script-src 'self'\`, \`style-src 'self'\`, \`object-src 'none'\`, \`base-uri 'self'\`) and appends a \`sha256\` hash of every inline \`<script>\`/\`<style>\` to \`script-src\`/\`style-src\`. An object customizes it. Skipped when the page already declares a CSP.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-html-csp-hash-function": Object {
+    "configs": Array [
+      Object {
+        "description": "Hash algorithm used for inline \`<script>\`/\`<style>\` sources.",
+        "multiple": false,
+        "path": "output.html.csp.hashFunction",
+        "type": "enum",
+        "values": Array [
+          "sha256",
+          "sha384",
+          "sha512",
+        ],
+      },
+    ],
+    "description": "Hash algorithm used for inline \`<script>\`/\`<style>\` sources.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-html-csp-nonce": Object {
+    "configs": Array [
+      Object {
+        "description": "Placeholder nonce added to injected \`<script>\`/\`<style>\` tags and as a \`'nonce-…'\` source; rewrite it per request server-side.",
+        "multiple": false,
+        "path": "output.html.csp.nonce",
+        "type": "string",
+      },
+    ],
+    "description": "Placeholder nonce added to injected \`<script>\`/\`<style>\` tags and as a \`'nonce-…'\` source; rewrite it per request server-side.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-html-favicon": Object {
     "configs": Array [
       Object {
-        "description": "Favicon(s) for webpack-generated HTML (authored pages are left untouched). \`false\` (default) injects nothing; \`true\` injects the webpack logo; a string is a path to an icon; an object maps each \`<link rel>\` to an icon path (e.g. \`{ \\"icon\\": \\"./favicon.svg\\", \\"apple-touch-icon\\": \\"./apple.png\\" }\`); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.",
+        "description": "Favicon(s) for webpack-generated HTML (authored pages are left untouched). \`false\` (default) injects nothing; \`true\` injects the webpack logo; a string is a path to an icon; an object maps each \`<link rel>\` to an icon — a path string, an object with the icon \`href\` plus extra link attributes (\`sizes\`, \`media\`, \`color\`, \`type\`, \`crossorigin\`), or an array of these for multiple icons under the same \`rel\` (e.g. several \`sizes\`, or light/dark \`media\` variants); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.",
         "multiple": false,
         "path": "output.html.favicon",
         "type": "boolean",
       },
       Object {
-        "description": "Favicon(s) for webpack-generated HTML (authored pages are left untouched). \`false\` (default) injects nothing; \`true\` injects the webpack logo; a string is a path to an icon; an object maps each \`<link rel>\` to an icon path (e.g. \`{ \\"icon\\": \\"./favicon.svg\\", \\"apple-touch-icon\\": \\"./apple.png\\" }\`); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.",
+        "description": "Favicon(s) for webpack-generated HTML (authored pages are left untouched). \`false\` (default) injects nothing; \`true\` injects the webpack logo; a string is a path to an icon; an object maps each \`<link rel>\` to an icon — a path string, an object with the icon \`href\` plus extra link attributes (\`sizes\`, \`media\`, \`color\`, \`type\`, \`crossorigin\`), or an array of these for multiple icons under the same \`rel\` (e.g. several \`sizes\`, or light/dark \`media\` variants); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.",
         "multiple": false,
         "path": "output.html.favicon",
         "type": "string",
       },
     ],
-    "description": "Favicon(s) for webpack-generated HTML (authored pages are left untouched). \`false\` (default) injects nothing; \`true\` injects the webpack logo; a string is a path to an icon; an object maps each \`<link rel>\` to an icon path (e.g. \`{ \\"icon\\": \\"./favicon.svg\\", \\"apple-touch-icon\\": \\"./apple.png\\" }\`); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.",
+    "description": "Favicon(s) for webpack-generated HTML (authored pages are left untouched). \`false\` (default) injects nothing; \`true\` injects the webpack logo; a string is a path to an icon; an object maps each \`<link rel>\` to an icon — a path string, an object with the icon \`href\` plus extra link attributes (\`sizes\`, \`media\`, \`color\`, \`type\`, \`crossorigin\`), or an array of these for multiple icons under the same \`rel\` (e.g. several \`sizes\`, or light/dark \`media\` variants); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -11528,6 +11572,28 @@ Object {
     "description": "Clear all items provided in 'output.html.integrity' configuration. Add Subresource Integrity (SRI) \`integrity\` attributes to injected \`<script>\`/\`<link>\` tags. \`true\` uses \`['sha384']\`; an array sets the hash algorithms; a function receives each referenced asset and returns the algorithms to use or \`false\` to skip it.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "output-html-manifest": Object {
+    "configs": Array [
+      Object {
+        "description": "Web app manifest for webpack-generated HTML (authored pages are left untouched). \`false\` (default) injects nothing. A string is a path to an existing \`.webmanifest\` file to link. An object is the manifest contents — serialized, emitted as a hashed \`.webmanifest\` and linked with \`<link rel=\\"manifest\\">\`; its \`icons\`/\`screenshots\` \`src\` paths resolve like any request and are emitted as hashed assets. A function receives the page name and returns one of these.",
+        "multiple": false,
+        "path": "output.html.manifest",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "Web app manifest for webpack-generated HTML (authored pages are left untouched). \`false\` (default) injects nothing. A string is a path to an existing \`.webmanifest\` file to link. An object is the manifest contents — serialized, emitted as a hashed \`.webmanifest\` and linked with \`<link rel=\\"manifest\\">\`; its \`icons\`/\`screenshots\` \`src\` paths resolve like any request and are emitted as hashed assets. A function receives the page name and returns one of these.",
+        "multiple": false,
+        "path": "output.html.manifest",
+        "type": "string",
+      },
+    ],
+    "description": "Web app manifest for webpack-generated HTML (authored pages are left untouched). \`false\` (default) injects nothing. A string is a path to an existing \`.webmanifest\` file to link. An object is the manifest contents — serialized, emitted as a hashed \`.webmanifest\` and linked with \`<link rel=\\"manifest\\">\`; its \`icons\`/\`screenshots\` \`src\` paths resolve like any request and are emitted as hashed assets. A function receives the page name and returns one of these.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "output-html-script-loading": Object {
     "configs": Array [

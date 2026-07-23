@@ -157,6 +157,7 @@ Object {
   "foo": "postcss-modules-local-by-default_pure_modules_css-foo",
   "label": "postcss-modules-local-by-default_pure_modules_css-label",
   "local": "postcss-modules-local-by-default_pure_modules_css-local",
+  "modal": "postcss-modules-local-by-default_pure_modules_css-modal",
   "rotate": "postcss-modules-local-by-default_pure_modules_css-rotate",
 }
 `;
@@ -1488,7 +1489,7 @@ input { a_value: some-value; }
 
 /* should work with view transitions in ignored block */
 /* cssmodules-pure-ignore */
-::view-transition-group(modal) {
+::view-transition-group(postcss-modules-local-by-default_pure_modules_css-modal) {
 	animation-duration: 300ms;
 }
 
