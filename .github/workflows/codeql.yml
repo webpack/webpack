@@ -1,0 +1,23 @@
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+  schedule:
+    - cron: '0 0 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Analyze
+    uses: nodejs/web-team/.github/workflows/codeql.yml@9f3c83af227d721768d9dbb63009a47ed4f4282f
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
