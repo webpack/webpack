@@ -608,6 +608,13 @@ heap (40.6 → 31.4 MB); parse+walk retained-AST heap stays below the object
 backend (lodash 2.89 vs 3.04 MB, three.module 5.47 vs 6.23 MB); warm
 parse+walk CPU remains ~2× (52 vs 24 ms on lodash) from transient facade
 construction — the Phase-C2 grammar-flows-ids scope recovers that.
+CodSpeed's Memory runner then flagged the column growth itself: sizing at
+source/10 undershoots dense sources (typescript.js: 872k slots for 940k
+nodes), so every column doubled and then `trim()` copied again —
+≈125 MB of large allocations per typescript.js parse. Columns now size
+from the worst corpus density (source/6) and trim only above 2× waste:
+no fixture doubles, per-parse column churn drops to the single initial
+allocation (typescript.js ≈52 MB), wall/retained unchanged.
 
 ## 5. Measurement protocol
 
