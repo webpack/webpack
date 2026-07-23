@@ -16,10 +16,12 @@ const THEME_COLOR = "#8ed6fb";
 // image library (sharp / jimp); this example keeps the bytes as-is so it runs
 // with no dependency — swap in a resizer for production. This is the one step
 // the cache below exists to skip on rebuilds.
+/** @type {(png: Buffer, size: number) => Buffer} */
 const resize = (png, _size) => png;
 
 // Wrap a PNG buffer in a single-image ICO container (header + PNG bytes) — a
 // real, dependency-free `favicon.ico`.
+/** @type {(png: Buffer) => Buffer} */
 const pngToIco = (png) => {
 	const header = Buffer.alloc(6);
 	header.writeUInt16LE(1, 2); // type: icon

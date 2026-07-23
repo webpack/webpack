@@ -31,6 +31,32 @@ it("drops an existing attribute and adds another", () => {
 	expect(tag).toContain("src=");
 });
 
+it("moves a tag between <head> and <body> via injectTo", () => {
+	const html = readHtml("move.html");
+	const head = html.slice(html.indexOf("<head>"), html.indexOf("</head>"));
+	const body = html.slice(html.indexOf("<body>"), html.indexOf("</body>"));
+	// the <script> moved from <body> into <head>, keeping src + gaining crossorigin
+	expect(head).toContain("<script");
+	expect(head).toContain("src=");
+	expect(head).toContain('crossorigin="anonymous"');
+	expect(body).not.toContain("<script");
+	// the theme <meta> moved to the very start of <body>
+	expect(head).not.toContain('name="theme"');
+	expect(body).toMatch(/^<body><meta name="theme"/);
+});
+
+it("moves tags to the head start and the body end", () => {
+	const html = readHtml("move2.html");
+	const head = html.slice(html.indexOf("<head>"), html.indexOf("</head>"));
+	const body = html.slice(html.indexOf("<body>"), html.indexOf("</body>"));
+	// <script> prepended into <head> (right after the open tag)
+	expect(head).toMatch(/^<head><script/);
+	expect(body).not.toContain("<script");
+	// theme <meta> appended at the very end of <body>
+	expect(body).toMatch(/<meta name="theme"[^>]*>$/);
+	expect(head).not.toContain('name="theme"');
+});
+
 it("leaves output byte-identical when a tap mutates nothing", () => {
 	// same input + a no-op tap ⇒ only the entry filename differs between the two
 	// configs, so compare with that normalized away

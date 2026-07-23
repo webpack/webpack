@@ -83,6 +83,33 @@ module.exports = [
 			}
 		})
 	),
+	// move the <script> from <body> into <head> (also changing an attribute) and
+	// the theme <meta> from <head> to the start of <body>
+	config(
+		"move",
+		alterPlugin((tags) => {
+			for (const t of tags) {
+				if (t.tag === "script") {
+					t.injectTo = "head";
+					t.attrs.crossorigin = "anonymous";
+				}
+				if (t.tag === "meta" && t.attrs.name === "theme") {
+					t.injectTo = "body-prepend";
+				}
+			}
+		})
+	),
+	// move to the other two anchors: <script> to the start of <head>, the theme
+	// <meta> to the end of <body>
+	config(
+		"move2",
+		alterPlugin((tags) => {
+			for (const t of tags) {
+				if (t.tag === "script") t.injectTo = "head-prepend";
+				if (t.tag === "meta" && t.attrs.name === "theme") t.injectTo = "body";
+			}
+		})
+	),
 	// tap but mutate nothing — output must stay byte-identical
 	config(
 		"noop",

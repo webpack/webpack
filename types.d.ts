@@ -9628,7 +9628,7 @@ declare interface HtmlCompilationHooks {
 	>;
 
 	/**
-	 * called with the page's `<script>`/`<link>`/`<style>`/`<meta>` tags (webpack's own and any injected) as mutable descriptors; mutate `attrs` (add a `nonce`/`data-*`, switch `defer`↔`async`, …) or set `remove: true` and webpack rewrites each changed tag in place. Add new tags with `injectTags` instead
+	 * called with the page's `<script>`/`<link>`/`<style>`/`<meta>` tags (webpack's own and any injected) as mutable descriptors; mutate `attrs` (add a `nonce`/`data-*`, switch `defer`↔`async`, …), set `remove: true`, or change `injectTo` to move a tag between `<head>` and `<body>`, and webpack rewrites the changed tags. Add new tags with `injectTags` instead
 	 */
 	transformTags: AsyncSeriesHook<[HtmlMutableTag[], HtmlTransformTagsContext]>;
 
@@ -9792,6 +9792,11 @@ declare interface HtmlMutableTag {
 	 * mutable attributes; a string value renders `name="value"`, `true` a bare attribute, `false`/`undefined`/deleting the key drops it
 	 */
 	attrs: Record<string, undefined | string | boolean>;
+
+	/**
+	 * the tag's current region (`"head"`/`"body"`); set a different value to move it there (`*-prepend` to the region's start)
+	 */
+	injectTo?: "body" | "head" | "head-prepend" | "body-prepend";
 
 	/**
 	 * set true to delete the whole element
