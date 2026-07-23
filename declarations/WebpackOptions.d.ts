@@ -2858,6 +2858,16 @@ export interface OutputHtmlOptions {
 				filename: string;
 		  }) => string[] | false);
 	/**
+	 * Web app manifest for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing. A string is a path to an existing `.webmanifest` file to link. An object is the manifest contents — serialized, emitted as a hashed `.webmanifest` and linked with `<link rel="manifest">`; its `icons`/`screenshots` `src` paths resolve like any request and are emitted as hashed assets. A function receives the page name and returns one of these.
+	 */
+	manifest?:
+		| false
+		| string
+		| {
+				[k: string]: any;
+		  }
+		| ((name: string) => false | string | {[key: string]: EXPECTED_ANY});
+	/**
 	 * Inject `<meta>` tags into the page `<head>`. Each key is the `name` attribute (or `"charset"` for a charset declaration); the value is the `content` string. Keys beginning with `og:` use the `property` attribute instead of `name`. A tag is skipped if the HTML already contains a meta with the same name.
 	 */
 	meta?: {
