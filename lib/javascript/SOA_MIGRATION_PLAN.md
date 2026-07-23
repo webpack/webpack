@@ -521,6 +521,21 @@ handlers still materialize at hook boundaries; the next slices make those
 column-native: chain-name probing without `getMemberExpressionRoot`
 (materialize only when a name-keyed hook has taps), then id-based
 pre-walks, then a lazy `statementPath`.
+**D4 column-native chain probing landed**: `_walkMemberExpressionId` runs a
+column-native twin of the `getMemberExpressionRoot` descent
+(`_soaMemberChainHasNoInfo`) and descends without materializing whenever
+`getMemberExpressionInfo` is provably `undefined` — chains rooted at
+defined plain locals, dynamic-named members, and non-resolvable owned
+roots. Foreign links, static template members and call/meta-resolvable
+roots keep the facade path, so hook-visible behavior is untouched.
+`_walkCallExpressionId` hoists the defined-plain-callee fast path above
+facade construction (pure column reads under the existing
+`_evalIdentOwnTaps` guard), so `f(x)` on locals — the dominant call shape
+inside factory-wrapped bundles — never materializes the call. Measured
+walk-time materialization: react 82→69%, lodash 86→71%, wall time flat.
+Remaining buckets: the object-based pre-walks (~25–30%), per-statement
+facades for `statementPath` (~10–13%), and free-rooted chains (hook-
+relevant, irreducible).
 Next: stop eager facade construction in `_soaAlloc` (columns only, facades
 via `nodeAt` on demand) so member/call name probing can resolve from
 columns without materializing, drive the D4 materialization counter under

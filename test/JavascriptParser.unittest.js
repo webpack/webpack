@@ -1396,6 +1396,7 @@ describe("JavascriptParser", () => {
 					static #priv = 1;
 					get g() { return super.x; }
 					static { K.ready = true; }
+					pv() { return K.#priv; }
 					[d + "computed"](q) { new.target; return q ?? this; }
 				}
 				label: for (let i = 0, j = 10; i < j; i++) {
@@ -1570,6 +1571,30 @@ describe("JavascriptParser", () => {
 			);
 		});
 
+		// The column-native member/call chain probe: every root and member
+		// shape the probe classifies, on defined locals (probe answers) and on
+		// free roots (facade path), asserted equal across both backends.
+		it("should drive identical hook sequences through the chain probe shapes", () => {
+			expectSameWalk(
+				`function probe(v, k) {
+					v.m1;
+					v.a.b.c;
+					v["s"].w;
+					v[\`t\`].w2;
+					v[k].w3;
+					v().a.b;
+					"abc".length;
+					(class Q2 {}).nm;
+					(function () { this.x2; }).call(v);
+					(undefined)(v);
+					v(1, 2);
+				}
+				probe(o1, o2);
+				o1.free1.free2;
+				o1["s2"].free3;`
+			);
+		});
+
 		// Exercises the D2 handlers' hook-bail early returns (free-rooted
 		// chains resolve member info; taps that return true stop the walk),
 		// the strict-mode-in-module-output reports, and the foreign-pinned /
@@ -1725,6 +1750,13 @@ describe("JavascriptParser", () => {
 			// declarator hook bail skips the declarator's pattern and init
 			same("var alias = free;", (p, e) => {
 				p.hooks.declarator.tap("t", bail(e, "declBail"));
+			});
+			// a foreign evaluate tap disables the defined-callee fast path, so
+			// the call takes the hook-dispatch path on both backends
+			same("function fq(a) { a; } fq(free);", (p, e) => {
+				p.hooks.evaluate.for("Identifier").tap("t", () => {
+					e.push("evalIdent");
+				});
 			});
 			// D3 label hook: a `true` return skips the body, otherwise it walks
 			same("lab: free();", (p, e) => {
