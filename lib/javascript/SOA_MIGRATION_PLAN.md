@@ -551,6 +551,22 @@ react 69→68%, lodash 71→68%, three.module →66%, wall time flat. The
 `statementPath` bucket (`_preWalkStatementId` now ~21% on lodash) is the
 next slice; walk-side declarator analysis (~17%) and free-rooted chain
 resolution (~11%) follow.
+**D4 lazy `statementPath` landed**: the id walk and pre-walks push the
+column id onto the (now internal) `_statementPath` instead of a facade;
+the public `statementPath`/`prevStatement` became accessors that
+materialize pending ids in place on access (`nodeAt` is identity-stable,
+so late materialization is invisible to plugins), with
+`_statementPathTail()` serving the identity-compared sequence/ASI reads.
+Per-statement hooks (statement, pre/blockPre + typed via
+`SoaAst.TYPE_NAMES`, statementIf, collectGuards, terminate, label,
+declarator, unusedStatement) are tap-guarded, and the remaining handler
+facade uses (`if`/`switch`/`with`/`labeled`/for-in-of left) turned lazy —
+an owned non-identifier for-left walks its pattern off the facade, a
+plain identifier left walks nothing. Totals: react 68→59%, lodash
+68→55%, wall time flat. Remaining buckets are hook-serving (walk-side
+declarator/rename analysis ~22%, assignment targets ~15%, free-rooted
+chains ~14%, function params/`detectMode` ~8%) — the D4 counter is at
+the point where the lazy `_soaAlloc` flip decides the rest.
 Next: stop eager facade construction in `_soaAlloc` (columns only, facades
 via `nodeAt` on demand) so member/call name probing can resolve from
 columns without materializing, drive the D4 materialization counter under

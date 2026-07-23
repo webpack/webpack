@@ -11371,7 +11371,31 @@ declare class JavascriptParser extends ParserClass {
 	state: JavascriptParserState;
 	comments?: CommentJavascriptParser[];
 	semicolons?: Map<number, boolean>;
+	destructuringAssignmentProperties?: WeakMap<
+		Expression,
+		Set<DestructuringAssignmentProperty>
+	>;
+	currentTagData?:
+		| Record<string, any>
+		| TopLevelSymbol
+		| HarmonySettings
+		| ImportSettings
+		| CommonJsImportSettings
+		| CompatibilitySettings;
+	magicCommentContext: ContextImport;
+
+	/**
+	 * The statement path from the program down to the current statement.
+	 * Pending column ids (statements no hook has observed) materialize in
+	 * place on access — `nodeAt` is identity-stable, so entries always
+	 * compare equal to the nodes hooks receive.
+	 */
 	statementPath?: StatementPathItem[];
+
+	/**
+	 * The previously walked sibling statement (a pending column id
+	 * materializes on access).
+	 */
 	prevStatement?:
 		| ImportDeclaration
 		| ExportNamedDeclaration
@@ -11428,18 +11452,6 @@ declare class JavascriptParser extends ParserClass {
 		| ForInStatement
 		| ForOfStatement
 		| ExportDefaultDeclaration;
-	destructuringAssignmentProperties?: WeakMap<
-		Expression,
-		Set<DestructuringAssignmentProperty>
-	>;
-	currentTagData?:
-		| Record<string, any>
-		| TopLevelSymbol
-		| HarmonySettings
-		| ImportSettings
-		| CommonJsImportSettings
-		| CompatibilitySettings;
-	magicCommentContext: ContextImport;
 
 	/**
 	 * Destructuring assignment properties for.

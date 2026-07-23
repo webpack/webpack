@@ -1641,6 +1641,7 @@ describe("JavascriptParser", () => {
 					for (var i1 = 0; i1 < a; i1++) { var h10 = i1; }
 					for (let i2 in a) { var h11 = i2; }
 					for (const i3 of a) { var h12 = i3; }
+					for ([w1, w2] of a) { w1; }
 					h3; h4; h5; h6; h7; h8; h9; h10; h11; h12;
 					tg\`plain\`;
 					({ d1 } = a);
@@ -1787,6 +1788,23 @@ describe("JavascriptParser", () => {
 			same("var probe; probe;", (p, e) => {
 				p.hooks.varDeclaration.for("probe").tap("t", rec(e, "varDeclPass"));
 			});
+			// walk-side tap guards: guard collection and unused-statement pruning
+			same(
+				"function g1(a) { if (a) { probe; } else { probe; } } g1(x1);",
+				(p, e) => {
+					p.hooks.collectGuards.tap("t", (/** @type {EXPECTED_ANY} */ test) => {
+						e.push(`guards@${test.range[0]}`);
+					});
+				}
+			);
+			same("function g2(a) { return a; probe; var h1; } g2(x1);", (p, e) => {
+				p.hooks.terminate.tap("t", () => true);
+				p.hooks.unusedStatement.tap("t", bail(e, "unused"));
+			});
+			same("function g3(a) { return a; probe; } g3(x1);", (p, e) => {
+				p.hooks.terminate.tap("t", () => true);
+				p.hooks.unusedStatement.tap("t", rec(e, "unusedPass"));
+			});
 			// destructuring collection: statement-level assignment and declarator
 			same("({ probe } = someObj); someObj.other;", (p, e) => {
 				p.hooks.collectDestructuringAssignmentProperties.tap(
@@ -1806,6 +1824,110 @@ describe("JavascriptParser", () => {
 					}
 				);
 			});
+		});
+
+		// The lazy statement path: pending column ids materialize in place on
+		// access (identity-stable `nodeAt`), so hooks observe the same path
+		// contents, tail identity, `prevStatement` and ASI classification on
+		// both backends.
+		it("should serve identical statementPath state through hooks on both backends", () => {
+			/**
+			 * @param {string} code source
+			 * @param {boolean} soaAst backend
+			 * @returns {string[]} recorded events
+			 */
+			const walk = (code, soaAst) => {
+				const parser = new JavascriptParser("auto", { soaAst });
+				/** @type {string[]} */
+				const events = [];
+				parser.hooks.preStatement.tap("t", (stmt) => {
+					const path = /** @type {EXPECTED_ANY[]} */ (parser.statementPath);
+					events.push(
+						`pre ${path.length} ${path[path.length - 1] === stmt} ${path
+							.map((s) => `${s.type}@${s.range[0]}`)
+							.join(",")}`
+					);
+				});
+				parser.hooks.statement.tap("t", (stmt) => {
+					const prev = /** @type {EXPECTED_ANY} */ (parser.prevStatement);
+					events.push(
+						`stmt ${stmt.type}@${
+							/** @type {EXPECTED_ANY} */ (stmt).range[0]
+						} prev:${prev ? `${prev.type}@${prev.range[0]}` : "-"}`
+					);
+				});
+				parser.hooks.call.for("probe").tap("t", (expr) => {
+					events.push(
+						`call lvl:${parser.isStatementLevelExpression(
+							/** @type {EXPECTED_ANY} */ (expr)
+						)} asi:${parser.isAsiPosition(
+							/** @type {EXPECTED_ANY} */ (expr).range[0]
+						)}`
+					);
+				});
+				parser.parse(
+					code,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return events;
+			};
+			const code = `probe(1)
+probe(2); { probe(3); }
+function f() { if (probe(4)) { probe(5); } return probe(6) }
+(probe(7), probe(8));
+x1 = probe(9);
+f();`;
+			const object = walk(code, false);
+			const soa = walk(code, true);
+			expect(soa.length).toBeGreaterThan(0);
+			expect(soa.join("\n")).toBe(object.join("\n"));
+		});
+
+		// With no statement-keyed taps at all, a late path read (from an
+		// expression hook) must still yield materialized, identity-stable
+		// facade entries — never raw column ids.
+		it("materializes pending statement path entries identity-stably", () => {
+			const parser = new JavascriptParser("auto", { soaAst: true });
+			/** @type {EXPECTED_ANY[]} */
+			let first = [];
+			/** @type {EXPECTED_ANY[]} */
+			let second = [];
+			/** @type {EXPECTED_ANY} */
+			let prev;
+			parser.hooks.expression.for("probe").tap("t", () => {
+				first = [.../** @type {EXPECTED_ANY[]} */ (parser.statementPath)];
+				second = [.../** @type {EXPECTED_ANY[]} */ (parser.statementPath)];
+				prev = parser.prevStatement;
+			});
+			parser.parse(
+				"free1; { probe; }",
+				/** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			expect(first).toHaveLength(2);
+			expect(first[0].type).toBe("BlockStatement");
+			expect(first[1].type).toBe("ExpressionStatement");
+			expect(first.every((s, i) => s === second[i])).toBe(true);
+			expect(prev === undefined || typeof prev.type === "string").toBe(true);
+		});
+
+		// Outside a parse the accessors serve the raw (unset) state, and the
+		// setters keep the save/restore contract plugins rely on.
+		it("keeps the statementPath accessor contract outside a walk", () => {
+			const parser = new JavascriptParser("auto", { soaAst: true });
+			expect(parser.statementPath).toBeUndefined();
+			expect(parser.prevStatement).toBeUndefined();
+			const path = /** @type {EXPECTED_ANY} */ ([]);
+			parser.statementPath = path;
+			expect(parser.statementPath).toBe(path);
+			const prev = /** @type {EXPECTED_ANY} */ ({ type: "EmptyStatement" });
+			parser.prevStatement = prev;
+			expect(parser.prevStatement).toBe(prev);
+			parser.statementPath = undefined;
+			parser.prevStatement = undefined;
 		});
 
 		// Exercises the D2 handlers' hook-bail early returns (free-rooted
