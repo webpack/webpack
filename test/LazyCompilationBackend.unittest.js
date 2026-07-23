@@ -9,8 +9,8 @@ const createBackend = require("../lib/hmr/lazyCompilationBackend");
 
 const PREFIX = "/lazy-compilation-using-";
 
-// Bun can't install jest's `@sinonjs/fake-timers` (`setTimeout` isn't fakeable),
-// so these timer-driven cases are skipped there; they still run on Node.
+// Bun can't install jest's `@sinonjs/fake-timers` (`setTimeout` cannot be
+// faked), so these timer-driven cases are skipped there; they still run on Node.
 const itSkipBun = process.versions.bun ? it.skip : it;
 
 /** @returns {Server} a fake http.Server */

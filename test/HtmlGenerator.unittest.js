@@ -87,12 +87,22 @@ describe("HtmlGenerator post-processing", () => {
 		expect(out).toContain(sha256("h1{color:red}"));
 	});
 
-	it("prepends the CSP meta on a fragment with no head", () => {
+	it("injects the CSP meta on a bare fragment", () => {
 		const out = run("<style>a{color:red}</style>", { csp: true });
 		expect(out.startsWith('<meta http-equiv="Content-Security-Policy"')).toBe(
 			true
 		);
 		expect(out).toContain(sha256("a{color:red}"));
+	});
+
+	it("injects CSP past a non-CSP <meta> (not an author-declared policy)", () => {
+		const out = run(
+			'<head><meta charset="utf-8"><style>h1{color:red}</style></head><body></body>',
+			{ csp: true }
+		);
+		// the charset <meta> is not a CSP, so the strict policy is still injected
+		expect(out).toContain('http-equiv="Content-Security-Policy"');
+		expect(out).toContain(sha256("h1{color:red}"));
 	});
 
 	it("adds a placeholder nonce to existing and injected script/style", () => {
