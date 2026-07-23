@@ -18,12 +18,13 @@ _{{style.module.css}}_
 
 # webpack.config.js
 
-The config also registers a small plugin that reads each CSS module's name map
-(original class/id name -> generated scoped name) from
-`module.buildInfo.cssData.exports` and writes it to a JSON sidecar — the
-native-CSS equivalent of the postcss-modules `getJSON` callback. Lightning CSS
-exposes the same data as the `exports` value returned from `transform()`; webpack
-exposes it as data too, so no callback option is needed.
+The config also registers a small plugin that gives CSS modules **TypeScript
+types**. It reads each CSS module's name map (original class/id name ->
+generated scoped name) from `module.buildInfo.cssData.exports` — the same data
+webpack uses to build the JS exports, and the same data Lightning CSS returns as
+`exports` from `transform()` — and writes a `.d.ts` **next to the source file**
+so editors and `tsc` type `import … from "./x.module.css"`. No bundler ships
+this natively today; the map webpack already computes makes it a few lines.
 
 ```javascript
 _{{webpack.config.js}}_
@@ -53,36 +54,27 @@ _{{production:dist/output.css}}_
 _{{dist/1.output.css}}_
 ```
 
-# dist/style.module.css.json
+# style.module.css.d.ts
 
-The CSS Modules name map emitted by the plugin — the same shape postcss-modules
-passes to its `getJSON` callback.
-
-```json
-_{{dist/style.module.css.json}}_
-```
-
-# dist/style.module.css.d.ts
-
-The plugin also emits a TypeScript declaration so imports of the CSS module are
-typed. No bundler ships this natively today — the map webpack already computes
-makes it a few lines of plugin.
+The plugin writes this declaration **next to the CSS source** (not into `dist`),
+so it is picked up automatically by your editor and by `tsc`:
 
 ```typescript
-_{{dist/style.module.css.d.ts}}_
+_{{style.module.css.d.ts}}_
 ```
 
-With the declaration in place, the import in `example.js` is fully typed:
+With it in place, the import in `example.js` is fully typed — `main` is a
+`string`, a name that is not in the CSS is a compile error, and the editor
+autocompletes the class names:
 
 ```typescript
 import { main } from "./style.module.css"; // main: string
 ```
 
-To make an editor pick it up, write the `.d.ts` next to the source file (e.g.
-`style.module.css.d.ts`) instead of into `dist` — change the plugin's
-`emitAsset` to a write next to `module.resource`, or run it as a separate
-type-generation step. This example emits into `dist` to keep the source tree
-clean.
+Wiring it into a real project: run the build (or `webpack --watch`) so the
+`.d.ts` files stay in sync with the CSS, then either commit them or add
+`*.module.css.d.ts` to `.gitignore`. Because the declaration lives beside the
+source, no `paths`/ambient-module setup is needed.
 
 # What native CSS scopes (CSS Modules)
 
