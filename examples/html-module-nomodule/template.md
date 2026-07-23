@@ -1,6 +1,6 @@
 This example shows **module / nomodule differential serving** on top of the
 experimental HTML modules support (`experiments.html`), coordinated with the
-`output.html` `alterAssetTags` hook.
+`output.html` `injectTags` hook.
 
 Two builds run as a `MultiCompiler` array:
 
@@ -11,7 +11,7 @@ Two builds run as a `MultiCompiler` array:
   support. In a real project this build (only this one) runs the source through
   a transpiling loader (babel / swc) with old `targets`.
 
-The `NoModuleFallbackPlugin` taps `alterAssetTags` on the modern build and
+The `NoModuleFallbackPlugin` taps `injectTags` on the modern build and
 injects two tags into the page: the classic bundle as
 `<script nomodule defer src="app.legacy.js">`, and the standard Safari 10.1
 `nomodule` fix (Safari 10.1 supports modules but not the `nomodule` attribute,

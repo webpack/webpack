@@ -35,7 +35,7 @@ const pngToIco = (png) => {
 
 // Generates a full favicon set + web app manifest from `src/logo.png`, cached by
 // the source's content hash so the generation only reruns when the logo changes,
-// and injects all the `<link>`/`<meta>` tags via the `alterAssetTags` hook.
+// and injects all the `<link>`/`<meta>` tags via the `injectTags` hook.
 class GenerateFaviconPlugin {
 	/**
 	 * @param {import("../../").Compiler} compiler the compiler
@@ -87,7 +87,7 @@ class GenerateFaviconPlugin {
 				}
 			);
 
-			HtmlModulesPlugin.getCompilationHooks(compilation).alterAssetTags.tap(
+			HtmlModulesPlugin.getCompilationHooks(compilation).injectTags.tap(
 				NAME,
 				(tags) => {
 					tags.push(

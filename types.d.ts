@@ -9621,10 +9621,6 @@ declare class HotUpdateChunk extends Chunk {
 declare interface HtmlAfterEmitContext {
 	outputName: string;
 }
-declare interface HtmlAlterAssetTagsContext {
-	outputName: string;
-	html: string;
-}
 declare interface HtmlBeforeEmitContext {
 	outputName: string;
 }
@@ -9632,8 +9628,8 @@ declare interface HtmlCompilationHooks {
 	/**
 	 * called with the list of extra tags to inject into each page (initially empty) plus the current HTML; push `HtmlTagDescriptor`s and return the list — webpack serializes and places them by `injectTo`. A structured alternative to the string-level `beforeEmit` for adding tags; runs before CSP so injected inline tags are hashed
 	 */
-	alterAssetTags: AsyncSeriesWaterfallHook<
-		[HtmlTagDescriptor[], HtmlAlterAssetTagsContext],
+	injectTags: AsyncSeriesWaterfallHook<
+		[HtmlTagDescriptor[], HtmlInjectTagsContext],
 		HtmlTagDescriptor[]
 	>;
 
@@ -9737,6 +9733,10 @@ declare interface HtmlGeneratorOptions {
 	 * Emit the parsed and URL-rewritten HTML as a standalone `.html` output file alongside the module's JavaScript export. `true` always emits the file; `false` never does; `"inline"` exposes the processed HTML for inline write-back (e.g. `<iframe srcdoc>`) without emitting a standalone file. When unset, extraction defaults to `true` for HTML modules used as compilation entries (HTML entry points) and `false` for HTML modules imported from JavaScript. Filenames follow `output.htmlFilename` / `output.htmlChunkFilename`.
 	 */
 	extract?: boolean | "inline";
+}
+declare interface HtmlInjectTagsContext {
+	outputName: string;
+	html: string;
 }
 type HtmlModuleBuildInfo = KnownBuildInfo &
 	Record<string, any> &

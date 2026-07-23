@@ -1,6 +1,6 @@
 This example shows **module / nomodule differential serving** on top of the
 experimental HTML modules support (`experiments.html`), coordinated with the
-`output.html` `alterAssetTags` hook.
+`output.html` `injectTags` hook.
 
 Two builds run as a `MultiCompiler` array:
 
@@ -11,7 +11,7 @@ Two builds run as a `MultiCompiler` array:
   support. In a real project this build (only this one) runs the source through
   a transpiling loader (babel / swc) with old `targets`.
 
-The `NoModuleFallbackPlugin` taps `alterAssetTags` on the modern build and
+The `NoModuleFallbackPlugin` taps `injectTags` on the modern build and
 injects two tags into the page: the classic bundle as
 `<script nomodule defer src="app.legacy.js">`, and the standard Safari 10.1
 `nomodule` fix (Safari 10.1 supports modules but not the `nomodule` attribute,
@@ -41,7 +41,7 @@ const SAFARI_NOMODULE_FIX =
 const LEGACY_FILE = "app.legacy.js";
 
 // Injects the `nomodule` classic fallback (and the Safari fix) into the modern
-// page via the `alterAssetTags` hook. The modern entry `<script>` is already
+// page via the `injectTags` hook. The modern entry `<script>` is already
 // `type="module"` because that build uses `output.module`, so legacy browsers
 // skip it and run the `nomodule` bundle instead.
 class NoModuleFallbackPlugin {
@@ -50,7 +50,7 @@ class NoModuleFallbackPlugin {
 	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("NoModuleFallbackPlugin", (compilation) => {
-			HtmlModulesPlugin.getCompilationHooks(compilation).alterAssetTags.tap(
+			HtmlModulesPlugin.getCompilationHooks(compilation).injectTags.tap(
 				"NoModuleFallbackPlugin",
 				(tags) => {
 					tags.push(

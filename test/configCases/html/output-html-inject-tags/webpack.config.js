@@ -30,7 +30,7 @@ const copyTest = {
 };
 
 /**
- * A plugin that pushes the given descriptors via `alterAssetTags`. An array of
+ * A plugin that pushes the given descriptors via `injectTags`. An array of
  * arrays registers several taps (to check the waterfall accumulates).
  * @param {HtmlTagDescriptor[] | HtmlTagDescriptor[][]} groups tags per tap
  * @returns {import("../../../../").WebpackPluginInstance} the plugin
@@ -42,7 +42,7 @@ const tagPlugin = (groups) => ({
 			for (const [i, tags] of taps.entries()) {
 				HtmlModulesPlugin.getCompilationHooks(
 					/** @type {EXPECTED_ANY} */ (compilation)
-				).alterAssetTags.tap(`TagPlugin${i}`, (list) => {
+				).injectTags.tap(`TagPlugin${i}`, (list) => {
 					list.push(.../** @type {HtmlTagDescriptor[]} */ (tags));
 					return list;
 				});

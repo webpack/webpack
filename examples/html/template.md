@@ -20,7 +20,7 @@ plugin does with an image library like sharp/jimp; the example keeps the bytes
 as-is so it needs no dependency.) It then injects the `<link rel="icon">`,
 `<link rel="apple-touch-icon">`, `<link rel="manifest">` and
 `<meta name="theme-color">` tags into every emitted page through the
-`output.html` `alterAssetTags` hook.
+`output.html` `injectTags` hook.
 
 # webpack.config.js
 

@@ -20,7 +20,7 @@ plugin does with an image library like sharp/jimp; the example keeps the bytes
 as-is so it needs no dependency.) It then injects the `<link rel="icon">`,
 `<link rel="apple-touch-icon">`, `<link rel="manifest">` and
 `<meta name="theme-color">` tags into every emitted page through the
-`output.html` `alterAssetTags` hook.
+`output.html` `injectTags` hook.
 
 # webpack.config.js
 
@@ -62,7 +62,7 @@ const pngToIco = (png) => {
 
 // Generates a full favicon set + web app manifest from `src/logo.png`, cached by
 // the source's content hash so the generation only reruns when the logo changes,
-// and injects all the `<link>`/`<meta>` tags via the `alterAssetTags` hook.
+// and injects all the `<link>`/`<meta>` tags via the `injectTags` hook.
 class GenerateFaviconPlugin {
 	/**
 	 * @param {import("../../").Compiler} compiler the compiler
@@ -114,7 +114,7 @@ class GenerateFaviconPlugin {
 				}
 			);
 
-			HtmlModulesPlugin.getCompilationHooks(compilation).alterAssetTags.tap(
+			HtmlModulesPlugin.getCompilationHooks(compilation).injectTags.tap(
 				NAME,
 				(tags) => {
 					tags.push(

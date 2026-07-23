@@ -15,7 +15,7 @@ const SAFARI_NOMODULE_FIX =
 const LEGACY_FILE = "app.legacy.js";
 
 // Injects the `nomodule` classic fallback (and the Safari fix) into the modern
-// page via the `alterAssetTags` hook. The modern entry `<script>` is already
+// page via the `injectTags` hook. The modern entry `<script>` is already
 // `type="module"` because that build uses `output.module`, so legacy browsers
 // skip it and run the `nomodule` bundle instead.
 class NoModuleFallbackPlugin {
@@ -24,7 +24,7 @@ class NoModuleFallbackPlugin {
 	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("NoModuleFallbackPlugin", (compilation) => {
-			HtmlModulesPlugin.getCompilationHooks(compilation).alterAssetTags.tap(
+			HtmlModulesPlugin.getCompilationHooks(compilation).injectTags.tap(
 				"NoModuleFallbackPlugin",
 				(tags) => {
 					tags.push(
