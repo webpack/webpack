@@ -9621,6 +9621,10 @@ declare class HotUpdateChunk extends Chunk {
 declare interface HtmlAfterEmitContext {
 	outputName: string;
 }
+declare interface HtmlAlterTagsContext {
+	outputName: string;
+	html: string;
+}
 declare interface HtmlBeforeEmitContext {
 	outputName: string;
 }
@@ -9632,6 +9636,11 @@ declare interface HtmlCompilationHooks {
 		[HtmlTagDescriptor[], HtmlInjectTagsContext],
 		HtmlTagDescriptor[]
 	>;
+
+	/**
+	 * called with the page's `<script>`/`<link>`/`<style>`/`<meta>` tags (webpack's own and any injected) as mutable descriptors; mutate `attrs` (add a `nonce`/`data-*`, switch `defer`↔`async`, …) or set `remove: true` and webpack rewrites each changed tag in place. Add new tags with `injectTags` instead
+	 */
+	alterTags: AsyncSeriesHook<[HtmlMutableTag[], HtmlAlterTagsContext]>;
 
 	/**
 	 * called with each emitted page's final HTML (all sentinels resolved) just before it is written; return the (possibly transformed) HTML — e.g. to minify, inject a CSP meta, or rewrite tags
@@ -9776,6 +9785,22 @@ declare class HtmlModulesPlugin {
 	static getCompilationHooks: (
 		compilation: Compilation
 	) => HtmlCompilationHooks;
+}
+declare interface HtmlMutableTag {
+	/**
+	 * the (lowercased) tag name
+	 */
+	tag: string;
+
+	/**
+	 * mutable attributes; a string value renders `name="value"`, `true` a bare attribute, `false`/`undefined`/deleting the key drops it
+	 */
+	attrs: Record<string, undefined | string | boolean>;
+
+	/**
+	 * set true to delete the whole element
+	 */
+	remove?: boolean;
 }
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
