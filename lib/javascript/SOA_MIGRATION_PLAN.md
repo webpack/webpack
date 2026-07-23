@@ -499,6 +499,28 @@ entries. Coverage: a D3 grammar fixture (both top level and inside an
 id-walked function), plus battery cases for the label-hook bail, the
 declaration rename/declarator-hook paths, terminate merges across
 try/catch/finally shapes, and the `with` strict-module report.
+**D4 scouting (measured)**: a call-site-attributed materialization probe
+(facade table wiped at the program hook, `nodeAt` wrapped) puts walk-time
+materialization at 82–86% of nodes across react/lodash/three. The
+buckets: member-chain analysis via `getMemberExpressionRoot` (12–27%,
+dominant on ESM), object-walker delegation for IIFE bodies (dominant on
+CJS factory bundles — one delegation forfeited the id walk for the whole
+module body), the object-based pre-walk passes (~25–33% summed), and the
+per-statement facade for `statementPath`/hook broadcast (~10%). ~4–5% of
+facades cannot be rebuilt from columns (born-unfinished fills,
+regex/bigint payloads, pinned foreign children) and must stay eager or
+move payloads to the side list before the lazy flip.
+**D4 central re-entry seam landed**: `walkStatement`/`walkExpression`
+re-enter the id walk when handed an SoA facade (the object `walkExpression`
+switch moved to `_dispatchWalkExpression`, which the id walk's fallback
+calls directly to avoid re-entering the seam). This removed the
+object-walker delegation bucket entirely — CJS IIFE bodies now id-walk end
+to end — with wall time flat and the symbol-miss check flat on the object
+backend. The materialization total is unchanged for now because the id
+handlers still materialize at hook boundaries; the next slices make those
+column-native: chain-name probing without `getMemberExpressionRoot`
+(materialize only when a name-keyed hook has taps), then id-based
+pre-walks, then a lazy `statementPath`.
 Next: stop eager facade construction in `_soaAlloc` (columns only, facades
 via `nodeAt` on demand) so member/call name probing can resolve from
 columns without materializing, drive the D4 materialization counter under
