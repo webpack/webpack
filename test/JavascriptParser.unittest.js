@@ -2428,6 +2428,38 @@ f();`;
 					e.push(`mat:${ast.body[0].params.length}`);
 				});
 			});
+
+			// info-full member chains: free-string roots with a provably
+			// tapless cascade walk from the columns; any matching tap (call,
+			// callMemberChain, evaluateIdentifier, expression prefixes,
+			// unhandled chains) restores the facade path
+			same("Obj1.assign(free, 1); Obj1.deep.prop; C1['k'].m(free);", probe);
+			same("Obj2.m(free);", (p, e) => {
+				probe(p, e);
+				p.hooks.call.for("Obj2.m").tap("t", bail(e, "callTap"));
+			});
+			same("R1.a.b(free);", (p, e) => {
+				probe(p, e);
+				p.hooks.callMemberChain.for("R1").tap("t", bail(e, "chainTap"));
+			});
+			same("P1.env.X(free);", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluateIdentifier.for("P1.env.X").tap("t", () => {});
+			});
+			same("Obj4.a.b;", (p, e) => {
+				probe(p, e);
+				p.hooks.expression.for("Obj4.a").tap("t", bail(e, "prefixTap"));
+			});
+			same("U1.a.b;", (p, e) => {
+				probe(p, e);
+				p.hooks.unhandledExpressionMemberChain.for("U1").tap("t", () => {
+					e.push("unhandled");
+				});
+			});
+			// template members and call-rooted/`this`-rooted targets
+
+			same("T1[`k`].m(free); f1x().x = free; this.q1 = free;", probe);
+			same("Cfg.opt = free;", probe);
 		});
 
 		// a parse-time foreign expression pins its statement without registering

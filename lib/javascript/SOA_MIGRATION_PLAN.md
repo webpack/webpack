@@ -675,6 +675,20 @@ React walk materialization 38.5% → 35.5%, lodash 30.9% → 25.0% (the
 Remaining C2 buckets: call/assignment info-full paths and
 `getMemberExpressionRoot`, logical/conditional operator hooks
 (ConstPlugin always taps those), sequence/statement-path leftovers.
+**C2 slice 5 landed**: info-full member chains gate their hook cascades
+from the columns. `_soaMemberRootId` mirrors the `getMemberExpressionRoot`
+descent (serving the call-rooted `callMemberChainOfCallMemberChain` gate
+without materializing the chain), and `_soaDottedNameId` derives the
+exact `getMemberExpressionInfo` dotted name for free-string roots. On
+top of those: member callees skip evaluation and facades when
+`evaluateIdentifier`/`callMemberChain`/`call` have no tap for the derived
+names, member assignment targets skip when `assignMemberChain` cannot
+match the root info, and member expressions skip when no `expression`
+tap sits on the full name or any dot-boundary prefix (a superset of the
+prefix walk's dispatched names) and the member-chain hooks are untapped
+for the root. Tagged/defined roots, template members, and foreign links
+keep the facade path. React walk materialization 35.5% → 25.1%, lodash
+25.0% → 24.2%.
 
 ## 5. Measurement protocol
 
