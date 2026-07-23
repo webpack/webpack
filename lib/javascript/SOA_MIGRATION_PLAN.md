@@ -746,6 +746,23 @@ build taps `canRename` (require/URL/DefinePlugin), so it only
 accelerated plugin-less benchmark parses. Next: the facade constructors
 themselves (`FacadeBase` + per-type ctors, ~4% and the GC share) — the
 full id-flow through the grammar's recursion.
+**C3 slice 2 landed** (cheaper transients): two construction cuts.
+`_soaIdentifier` now lands the already-interned token name in the side
+list up front — the facade constructor had been re-deriving every plain
+identifier name with a `source.slice()` (one substring allocation per
+identifier) because the emitter kept `values` sparse while the
+constructor filled it anyway. And the facade classes no longer
+pre-declare their memo slots: transients (the vast majority) never
+memoize, so skipping the per-instance `UNSET` writes and the slots
+beats keeping memos in-object for the few registered facades that now
+spill on first materialization (interleaved A/B: ~5% off the bare
+typescript.js parse). Combined: typescript.js parse+walk 740 → ~685 ms
+(object 570–615 under the same noise), `IdentifierFacade` leaves the
+profile, GC 345 → 264 ms, retained 61.2 → 54.3 MB (−42% vs the object
+backend). Remaining SoA-specific profile entries: `FacadeBase` (~94 ms
+/ 2.7%), `nodeAt` (~100 ms), `trim` (~66 ms) — the next cut is the
+id-flow through the owned grammar methods so `_soaAlloc` stops
+constructing a facade per node at all.
 
 ## 5. Measurement protocol
 
