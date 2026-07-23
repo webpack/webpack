@@ -466,6 +466,22 @@ remain on the object walker until their emit sites are owned. Coverage: a
 grammar-broad D2 fixture drives every new id-native handler as a direct
 child of an id-native statement, plus react/lodash; all assert
 byte-identical id/object hook sequences.
+**Facade-shape + column-slack slice landed (heap snapshots, lodash, Node
+22 — no pointer compression in release builds, so 8 B/slot)**: facades sit
+in fast-properties mode at 72–104 B shallow — the earlier ~130 B/facade
+estimate folded in side allocations. The measured SoA-on overheads were
+(a) per-instance PropertyArray spill: memo writes land after construction,
+past slack-tracking finalization, so every memoized facade grew an
+out-of-object store plus shape transitions mid-walk (~0.5 MB); and (b)
+column pre-size slack: the ÷10 nodes-per-source-byte heuristic
+over-allocates ~2× on comment-heavy sources (~0.9 MB). Fixes: every facade
+class pre-declares exactly the memo slots its accessors use in its
+constructor (one stable shape per class, memos in-object — byte-neutral,
+transition/GC churn gone) and `SoaAst.trim()` snugs columns to the final
+count after the parse stops growing them (36 B/node retained, matching
+the layout). Wall time unchanged. Identifier `name` strings remain the
+last eager side allocation (~0.3 MB duplicated tokenizer slices) — fold
+into the lazy-facade flip.
 Next: stop eager facade construction in `_soaAlloc` (columns only, facades
 via `nodeAt` on demand) so member/call name probing can resolve from
 columns without materializing, drive the D4 materialization counter under

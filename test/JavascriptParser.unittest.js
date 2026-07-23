@@ -1728,6 +1728,32 @@ describe("JavascriptParser", () => {
 			}
 		});
 
+		// columns are pre-sized from a source-length heuristic and snugged by
+		// `trim()` once parsing stops growing them
+		it("trims column slack after parse and no-ops when already snug", () => {
+			const KEY_STORE = SoaAst.KEY_STORE;
+			const parser = new JavascriptParser("auto", { soaAst: true });
+			/** @type {EXPECTED_ANY} */
+			let store;
+			parser.hooks.program.tap("test", (ast) => {
+				store = /** @type {EXPECTED_ANY} */ (ast).body[0][KEY_STORE];
+			});
+			// long comment: the heuristic over-allocates, so trim must shrink
+			parser.parse(
+				`a(b); /* ${"x".repeat(4096)} */`,
+				/** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			expect(store.types).toHaveLength(store.count);
+			expect(store.flat).toHaveLength(store.flatTop);
+			const { types, flat } = store;
+			store.trim();
+			// already snug: the same backing arrays stay in place
+			expect(store.types).toBe(types);
+			expect(store.flat).toBe(flat);
+		});
+
 		it("should drive identical hook sequences for top-level and nested await", () => {
 			expectSameWalk(
 				`await x;
