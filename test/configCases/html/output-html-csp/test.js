@@ -13,7 +13,13 @@ const cspMeta = (html) =>
 const sha = (algo, body) =>
 	`'${algo}-${crypto.createHash(algo).update(body, "utf8").digest("base64")}'`;
 
-const inlineStyle = (html) => html.match(/<style[^>]*>([\s\S]*?)<\/style>/i)[1];
+// Extract a raw-text element's body without a tag-matching regexp.
+const bodyOf = (html, tag) => {
+	const start = html.indexOf(">", html.indexOf(`<${tag}`)) + 1;
+	return html.slice(start, html.indexOf(`</${tag}>`, start));
+};
+
+const inlineStyle = (html) => bodyOf(html, "style");
 
 it("injects no CSP by default", () => {
 	expect(cspMeta(readHtml("default.html"))).toHaveLength(0);
@@ -57,6 +63,6 @@ it("does not override a page that already declares a CSP", () => {
 it("hashes an inlined <script> body into script-src", () => {
 	const html = readHtml("inline-script.html");
 	const [policy] = cspMeta(html);
-	const scriptBody = html.match(/<script[^>]*>([\s\S]+?)<\/script>/i)[1];
+	const scriptBody = bodyOf(html, "script");
 	expect(policy).toContain(sha("sha256", scriptBody));
 });

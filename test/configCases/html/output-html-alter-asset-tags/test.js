@@ -55,7 +55,9 @@ it("hashes an injected inline <script> into the CSP", () => {
 	const policy = html.match(
 		/<meta http-equiv="Content-Security-Policy" content="([^"]*)"/i
 	)[1];
-	const body = html.match(/<script>([\s\S]*?)<\/script>/)[1];
+	// Extract the inline script body without a tag-matching regexp.
+	const start = html.indexOf(">", html.indexOf("<script")) + 1;
+	const body = html.slice(start, html.indexOf("</script>", start));
 	const hash = `'sha256-${crypto
 		.createHash("sha256")
 		.update(body, "utf8")
