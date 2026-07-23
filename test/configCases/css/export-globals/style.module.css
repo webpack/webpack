@@ -1,0 +1,23 @@
+.localClass {
+	color: red;
+}
+
+:global(.globalClass) {
+	color: green;
+}
+
+:global(#globalId) {
+	color: blue;
+}
+
+:global .bareGlobal {
+	color: pink;
+}
+
+.localAnchor :global(.nestedGlobal) {
+	color: orange;
+}
+
+:global(.global-foo-bar) {
+	color: cyan;
+}

@@ -409,6 +409,9 @@
         "dashedIdents": {
           "$ref": "#/definitions/CssParserDashedIdents"
         },
+        "exportGlobals": {
+          "$ref": "#/definitions/CssParserExportGlobals"
+        },
         "exportType": {
           "$ref": "#/definitions/CssParserExportType"
         },
@@ -565,6 +568,9 @@
         "dashedIdents": {
           "$ref": "#/definitions/CssParserDashedIdents"
         },
+        "exportGlobals": {
+          "$ref": "#/definitions/CssParserExportGlobals"
+        },
         "exportType": {
           "$ref": "#/definitions/CssParserExportType"
         },
@@ -617,6 +623,10 @@
     },
     "CssParserDashedIdents": {
       "description": "Enable/disable renaming of dashed identifiers, e. g. custom properties.",
+      "type": "boolean"
+    },
+    "CssParserExportGlobals": {
+      "description": "Also export the names of global class and id selectors (e.g. `:global(.foo)`), mapping each to its unscoped name.",
       "type": "boolean"
     },
     "CssParserExportType": {
