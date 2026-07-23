@@ -1,0 +1,22 @@
+@function --my-fn() {
+	result: red;
+}
+
+.func {
+	color: --my-fn();
+}
+
+.anchored {
+	anchor-name: --my-anchor;
+	anchor-scope: --my-anchor;
+}
+
+.shared {
+	--my-prop: 1;
+}
+
+@container style(--my-prop: 1) {
+	.query {
+		color: blue;
+	}
+}

@@ -1,0 +1,26 @@
+.card {
+	view-transition-name: cardName;
+	view-transition-class: cardClass;
+}
+
+.reserved {
+	view-transition-name: none;
+	view-transition-group: nearest;
+}
+
+.dashed {
+	view-transition-name: --dashedName;
+}
+
+::view-transition-group(cardName) {
+	animation-duration: 1s;
+}
+
+::view-transition-old(cardName),
+::view-transition-new(cardName) {
+	animation: none;
+}
+
+::view-transition-image-pair(*.cardClass) {
+	animation: none;
+}
