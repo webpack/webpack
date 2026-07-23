@@ -5348,11 +5348,6 @@ declare interface CssAutoOrModuleParserOptions {
 	dashedIdents?: boolean;
 
 	/**
-	 * Also export the names of global class and id selectors (e.g. `:global(.foo)`), mapping each to its unscoped name.
-	 */
-	exportGlobals?: boolean;
-
-	/**
 	 * Configure how CSS content is exported as default.
 	 */
 	exportType?: "link" | "text" | "css-style-sheet" | "style";
@@ -5617,11 +5612,6 @@ declare interface CssModuleParserOptions {
 	dashedIdents?: boolean;
 
 	/**
-	 * Also export the names of global class and id selectors (e.g. `:global(.foo)`), mapping each to its unscoped name.
-	 */
-	exportGlobals?: boolean;
-
-	/**
 	 * Configure how CSS content is exported as default.
 	 */
 	exportType?: "link" | "text" | "css-style-sheet" | "style";
@@ -5751,10 +5741,6 @@ declare abstract class CssParser extends ParserClass {
 		 * Enable/disable renaming of dashed identifiers, e. g. custom properties.
 		 */
 		dashedIdents: boolean;
-		/**
-		 * Also export the names of global class and id selectors (e.g. `:global(.foo)`), mapping each to its unscoped name.
-		 */
-		exportGlobals?: boolean;
 		/**
 		 * Configure how CSS content is exported as default.
 		 */
