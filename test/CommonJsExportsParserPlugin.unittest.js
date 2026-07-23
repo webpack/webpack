@@ -3,16 +3,19 @@
 const ModuleGraph = require("../lib/ModuleGraph");
 const CommonJsExportsParserPlugin = require("../lib/dependencies/CommonJsExportsParserPlugin");
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
+const { SoaAst } = require("../lib/javascript/syntax");
 
 describe("CommonJsExportsParserPlugin", () => {
 	/**
 	 * Parses CommonJS source with the plugin applied on the given backend.
 	 * @param {string} code source
 	 * @param {boolean} soaAst backend
+	 * @param {((ast: EXPECTED_ANY) => void)=} onProgram pre-walk program tap
 	 * @returns {{ deps: string[], bailout: string[] }} observed effects
 	 */
-	const parse = (code, soaAst) => {
+	const parse = (code, soaAst, onProgram) => {
 		const parser = new JavascriptParser("script", { soaAst });
+		if (onProgram) parser.hooks.program.tap("test", onProgram);
 		const moduleGraph = new ModuleGraph();
 		new CommonJsExportsParserPlugin(moduleGraph).apply(parser);
 		/** @type {string[]} */
@@ -70,6 +73,25 @@ describe("CommonJsExportsParserPlugin", () => {
 			"exports.a = function () { for (let i = 0; i < 2; i++) { this.b(); } };";
 		const object = parse(code, false);
 		const soa = parse(code, true);
+		expect(soa.deps).toEqual(object.deps);
+		expect(soa.bailout).toEqual(object.bailout);
+		expect(soa.bailout[0]).toMatch(/this in exported function/);
+	});
+
+	// a pinned parent serves memoized children whose facades were never
+	// registered; the scan must descend those on the raw columns (third-kid,
+	// `for` body in `aux`, list spans)
+	it("should descend unregistered subtrees on the columns", () => {
+		const code =
+			"exports.a = function () { for (let i = 0; i < 2; i++) { f(i ? this.b : 0); } };";
+		const object = parse(code, false);
+		const soa = parse(code, true, (/** @type {EXPECTED_ANY} */ ast) => {
+			const forStmt = ast.body[0].expression.right.body.body[0];
+			const store = forStmt[SoaAst.KEY_STORE];
+			// the access above memoized the facade into the body list; dropping
+			// its registration models a transient child served from a memo
+			store.facades[forStmt[SoaAst.KEY_ID]] = undefined;
+		});
 		expect(soa.deps).toEqual(object.deps);
 		expect(soa.bailout).toEqual(object.bailout);
 		expect(soa.bailout[0]).toMatch(/this in exported function/);
