@@ -17,6 +17,7 @@ const run = (content, { injected = [], csp, mutate } = {}) => {
 	return HtmlGenerator.renderHtml(content, model, csp);
 };
 
+/** @type {(body: string) => string} */
 const sha256 = (body) =>
 	`'sha256-${crypto.createHash("sha256").update(body, "utf8").digest("base64")}'`;
 
