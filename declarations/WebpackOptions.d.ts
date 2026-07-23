@@ -2822,6 +2822,30 @@ export interface OutputHtmlOptions {
 				target?: string;
 		  };
 	/**
+	 * Inject a `<meta http-equiv="Content-Security-Policy">` into every webpack-emitted HTML page. `false` (default) does nothing; `true` uses a strict baseline (`script-src 'self'`, `style-src 'self'`, `object-src 'none'`, `base-uri 'self'`) and appends a `sha256` hash of every inline `<script>`/`<style>` to `script-src`/`style-src`. An object customizes it. Skipped when the page already declares a CSP.
+	 */
+	csp?:
+		| boolean
+		| {
+				/**
+				 * Hash algorithm used for inline `<script>`/`<style>` sources.
+				 */
+				hashFunction?: "sha256" | "sha384" | "sha512";
+				/**
+				 * Placeholder nonce added to injected `<script>`/`<style>` tags and as a `'nonce-…'` source; rewrite it per request server-side.
+				 */
+				nonce?: string;
+				/**
+				 * CSP directives merged over the baseline. Each key is a directive (e.g. `"script-src"`); the value is a source string or list. Inline hashes and any `nonce` are still appended to `script-src`/`style-src`.
+				 */
+				policy?: {
+					/**
+					 * A CSP source expression, or a list of them, for this directive.
+					 */
+					[k: string]: string[] | string;
+				};
+		  };
+	/**
 	 * Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon — a path string, an object with the icon `href` plus extra link attributes (`sizes`, `media`, `color`, `type`, `crossorigin`), or an array of these for multiple icons under the same `rel` (e.g. several `sizes`, or light/dark `media` variants); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.
 	 */
 	favicon?:
