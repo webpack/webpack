@@ -662,6 +662,19 @@ call/logical/sequence shapes that can legitimately rename); wall
 neutral-to-positive under noise. Remaining C2 buckets: function facades
 from dispatch (`params` reads), call/assignment info-full paths,
 logical/conditional operator hooks (ConstPlugin always taps those).
+**C2 slice 4 landed**: function/arrow walks no longer materialize the
+function facade at dispatch. `_inFunctionScopeIds` mirrors
+`inFunctionScope` on the columns when every param is a plain identifier
+and the facade is unregistered: params (and the function-expression
+self-name in `kid0`) define by column-derived name through
+`_enterIdentifierId`, which materializes an identifier facade only when a
+name-keyed pattern hook matches its info. Pattern params, registered
+facades and the strict-mode diagnostics pass keep the object path.
+React walk materialization 38.5% → 35.5%, lodash 30.9% → 25.0% (the
+`_walkFunctionId` bucket drops to pattern-param functions only).
+Remaining C2 buckets: call/assignment info-full paths and
+`getMemberExpressionRoot`, logical/conditional operator hooks
+(ConstPlugin always taps those), sequence/statement-path leftovers.
 
 ## 5. Measurement protocol
 

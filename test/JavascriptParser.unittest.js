@@ -2151,8 +2151,10 @@ f();`;
 			same("[x] = free;", noop);
 			same("({ y } = free);", noop);
 			same("free.a = free.b;", noop);
-			// strict-mode-in-module-output reports on the id walk
+			// strict-mode-in-module-output reports on the id walk (functions
+			// keep the facade path for the param diagnostics)
 			same("delete free; und = 1; free = 1;", noop, "script", true);
+			same("function smp(a) { free(a); } smp;", noop, "script", true);
 			// call-rooted member descent, computed-member call, sequence not at
 			// statement level, and empty / foreign-pinned lists
 			same(
@@ -2391,6 +2393,39 @@ f();`;
 					const body = ast.body[0].body.body;
 					// materializing both expressions forces the facade paths
 					e.push(`mat:${body[0].expression.type}:${body[1].expression.type}`);
+				});
+			});
+
+			// function/arrow scope entry from the columns: identifier params
+			// define (and shadow) by name, self-names bind for recursion
+			same("function fp(a, b) { a; b; free; } fp;", probe);
+			same("function sh(free) { free; } sh; free;", probe);
+			same("var se = function named2(a) { named2; free; }; se;", (p, e) => {
+				probe(p, e);
+				p.hooks.expression.for("named2").tap("t", bail(e, "self"));
+			});
+			same(
+				"var af = (q) => { q; free; }; var ac = (r) => free; af; ac;",
+				probe
+			);
+			// a bailing pattern hook leaves the param undefined (its body use
+			// stays free); a passing one still defines it
+			same("function ph(pat2) { pat2; } ph;", (p, e) => {
+				p.hooks.pattern.for("pat2").tap("t", bail(e, "patHook"));
+				p.hooks.expression.for("pat2").tap("t", bail(e, "pat2expr"));
+			});
+			same("function ph2(pat3) { pat3; } ph2;", (p, e) => {
+				p.hooks.pattern.for("pat3").tap("t", () => {
+					e.push("patPass");
+				});
+				p.hooks.expression.for("pat3").tap("t", bail(e, "pat3expr"));
+			});
+			// pattern params and pre-registered facades keep the object path
+			same("function pp({ x2 }, [y2]) { x2; y2; free; } pp;", probe);
+			same("function reg(a) { free; } reg;", (p, e) => {
+				probe(p, e);
+				p.hooks.program.tap("t", (/** @type {EXPECTED_ANY} */ ast) => {
+					e.push(`mat:${ast.body[0].params.length}`);
 				});
 			});
 		});
