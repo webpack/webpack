@@ -9621,10 +9621,22 @@ declare class HotUpdateChunk extends Chunk {
 declare interface HtmlAfterEmitContext {
 	outputName: string;
 }
+declare interface HtmlAlterAssetTagsContext {
+	outputName: string;
+	html: string;
+}
 declare interface HtmlBeforeEmitContext {
 	outputName: string;
 }
 declare interface HtmlCompilationHooks {
+	/**
+	 * called with the list of extra tags to inject into each page (initially empty) plus the current HTML; push `HtmlTagDescriptor`s and return the list — webpack serializes and places them by `injectTo`. A structured alternative to the string-level `beforeEmit` for adding tags; runs before CSP so injected inline tags are hashed
+	 */
+	alterAssetTags: AsyncSeriesWaterfallHook<
+		[HtmlTagDescriptor[], HtmlAlterAssetTagsContext],
+		HtmlTagDescriptor[]
+	>;
+
 	/**
 	 * called with each emitted page's final HTML (all sentinels resolved) just before it is written; return the (possibly transformed) HTML — e.g. to minify, inject a CSP meta, or rewrite tags
 	 */
@@ -9948,6 +9960,32 @@ declare interface HtmlResourceHintWebpackOptions {
 	 * The `type` attribute (MIME type).
 	 */
 	type?: string;
+}
+declare interface HtmlTagDescriptor {
+	/**
+	 * tag name, e.g. `"script"` / `"link"` / `"meta"`
+	 */
+	tag: string;
+
+	/**
+	 * attributes; `true` renders a bare boolean attribute, `false`/`undefined` is omitted
+	 */
+	attrs?: Record<string, undefined | string | boolean>;
+
+	/**
+	 * inner content (ignored for void elements like `<link>`/`<meta>`)
+	 */
+	children?: string;
+
+	/**
+	 * placement; defaults to `"head"`
+	 */
+	injectTo?: "body" | "head" | "head-prepend" | "body-prepend";
+
+	/**
+	 * force a void element (no closing tag); inferred from the tag name when omitted
+	 */
+	voidTag?: boolean;
 }
 declare interface HtmlTemplateContext {
 	/**
