@@ -1,0 +1,8 @@
+.header {
+	color: rebeccapurple;
+}
+
+.link {
+	composes: header;
+	text-decoration: underline;
+}
