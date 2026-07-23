@@ -10,12 +10,147 @@ This example demonstrates the experimental HTML modules support
   URL-rewritten HTML as a string and is _not_ emitted as a standalone file.
   There is no JavaScript entry point — the script is reached through the HTML.
 
+It also shows how to **generate a modern favicon set and web app manifest, and
+inject them** — without that being a core feature. `GenerateFaviconPlugin` builds
+a `favicon.ico`, an `apple-touch-icon`, `192`/`512` manifest icons and a
+`manifest.webmanifest` from `src/logo.png`, and caches the whole set with
+`compilation.getCache()` keyed by the source's content hash — so the generation
+only reruns when the logo changes. (Resizing to each size is the one step a real
+plugin does with an image library like sharp/jimp; the example keeps the bytes
+as-is so it needs no dependency.) It then injects the `<link rel="icon">`,
+`<link rel="apple-touch-icon">`, `<link rel="manifest">` and
+`<meta name="theme-color">` tags into every emitted page through the
+`output.html` `injectTags` hook.
+
 # webpack.config.js
 
 ```javascript
 "use strict";
 
-/** @type {import("webpack").Configuration} */
+const fs = require("fs");
+const path = require("path");
+const {
+	html: { HtmlModulesPlugin }
+} = require("../../");
+
+// The modern icon set a web app ships: a legacy `favicon.ico`, an
+// `apple-touch-icon`, two manifest icons, and a theme color.
+const APPLE_TOUCH_SIZE = 180;
+const MANIFEST_SIZES = [192, 512];
+const THEME_COLOR = "#8ed6fb";
+
+// Resize the source icon to a square `size`. A real plugin does this with an
+// image library (sharp / jimp); this example keeps the bytes as-is so it runs
+// with no dependency — swap in a resizer for production. This is the one step
+// the cache below exists to skip on rebuilds.
+const resize = (png, _size) => png;
+
+// Wrap a PNG buffer in a single-image ICO container (header + PNG bytes) — a
+// real, dependency-free `favicon.ico`.
+const pngToIco = (png) => {
+	const header = Buffer.alloc(6);
+	header.writeUInt16LE(1, 2); // type: icon
+	header.writeUInt16LE(1, 4); // one image
+	const entry = Buffer.alloc(16);
+	// width/height 0 means 256; planes 1, 32bpp; then size and offset (6 + 16).
+	entry.writeUInt16LE(1, 4);
+	entry.writeUInt16LE(32, 6);
+	entry.writeUInt32LE(png.length, 8);
+	entry.writeUInt32LE(22, 12);
+	return Buffer.concat([header, entry, png]);
+};
+
+// Generates a full favicon set + web app manifest from `src/logo.png`, cached by
+// the source's content hash so the generation only reruns when the logo changes,
+// and injects all the `<link>`/`<meta>` tags via the `injectTags` hook.
+class GenerateFaviconPlugin {
+	/**
+	 * @param {import("../../").Compiler} compiler the compiler
+	 */
+	apply(compiler) {
+		const NAME = "GenerateFaviconPlugin";
+		const { RawSource } = compiler.webpack.sources;
+		const source = path.resolve(__dirname, "src/logo.png");
+
+		compiler.hooks.thisCompilation.tap(NAME, (compilation) => {
+			compilation.hooks.processAssets.tapPromise(
+				{
+					name: NAME,
+					stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL
+				},
+				async () => {
+					const png = fs.readFileSync(source);
+					// Rebuild the set when the source changes in watch mode.
+					compilation.fileDependencies.add(source);
+					const cache = compilation.getCache(NAME);
+					const etag = cache.getLazyHashedEtag(new RawSource(png));
+					const item = cache.getItemCache("favicon-set", etag);
+					let files = await item.getPromise();
+					if (!files) {
+						/** @type {Record<string, Buffer>} */
+						files = {
+							"favicon.ico": pngToIco(png),
+							"apple-touch-icon.png": resize(png, APPLE_TOUCH_SIZE)
+						};
+						const icons = MANIFEST_SIZES.map((size) => {
+							const src = `icon-${size}.png`;
+							files[src] = resize(png, size);
+							return { src, sizes: `${size}x${size}`, type: "image/png" };
+						});
+						files["manifest.webmanifest"] = Buffer.from(
+							JSON.stringify({
+								name: "webpack HTML example",
+								display: "standalone",
+								// eslint-disable-next-line camelcase
+								theme_color: THEME_COLOR,
+								icons
+							})
+						);
+						await item.storePromise(files);
+					}
+					for (const name of Object.keys(files)) {
+						compilation.emitAsset(name, new RawSource(files[name]));
+					}
+				}
+			);
+
+			HtmlModulesPlugin.getCompilationHooks(compilation).injectTags.tap(
+				NAME,
+				(tags) => {
+					tags.push(
+						{
+							tag: "link",
+							attrs: { rel: "icon", sizes: "any", href: "favicon.ico" },
+							injectTo: "head"
+						},
+						{
+							tag: "link",
+							attrs: {
+								rel: "apple-touch-icon",
+								sizes: `${APPLE_TOUCH_SIZE}x${APPLE_TOUCH_SIZE}`,
+								href: "apple-touch-icon.png"
+							},
+							injectTo: "head"
+						},
+						{
+							tag: "link",
+							attrs: { rel: "manifest", href: "manifest.webmanifest" },
+							injectTo: "head"
+						},
+						{
+							tag: "meta",
+							attrs: { name: "theme-color", content: THEME_COLOR },
+							injectTo: "head"
+						}
+					);
+					return tags;
+				}
+			);
+		});
+	}
+}
+
+/** @type {import("../../").Configuration} */
 const config = {
 	// `target: "web"` makes the CSS generator emit `.css` chunks (for the
 	// `<link rel="stylesheet">` and the inline `<style>`).
@@ -30,7 +165,10 @@ const config = {
 	experiments: {
 		html: true,
 		css: true
-	}
+	},
+	// Generates the favicon set + `manifest.webmanifest` (cached) and injects
+	// their tags.
+	plugins: [new GenerateFaviconPlugin()]
 };
 
 module.exports = config;
@@ -149,7 +287,7 @@ rewritten to the bundled asset.
 				margin: 2rem;
 			}
 		
-</style>
+</style><link rel="icon" sizes="any" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#8ed6fb">
 	</head>
 	<body>
 		<h1>HTML modules</h1>
@@ -183,14 +321,20 @@ rewritten to the bundled asset.
 ## Unoptimized
 
 ```
-assets by chunk 35.9 KiB (auxiliary name: page)
-  asset eda8c35d5b9a24e8efa6.png 19.6 KiB [emitted] [immutable] [from: src/logo@2x.png] (auxiliary name: page)
-  asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: src/logo.png] (auxiliary name: __html_6d047296_1, page)
-  asset index.html 1.7 KiB [emitted] (auxiliary name: page)
+assets by path *.png 77.9 KiB
+  assets by info 34.2 KiB [immutable]
+    asset eda8c35d5b9a24e8efa6.png 19.6 KiB [emitted] [immutable] [from: src/logo@2x.png] (auxiliary name: page)
+    asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: src/logo.png] (auxiliary name: __html_6d047296_1, page)
+  asset apple-touch-icon.png 14.6 KiB [emitted]
+  asset icon-192.png 14.6 KiB [emitted]
+  asset icon-512.png 14.6 KiB [emitted]
 assets by path *.js 11.4 KiB
   asset __html_6d047296_1.js 6.84 KiB [emitted] (name: __html_6d047296_1)
   asset page.js 3.57 KiB [emitted] (name: page)
   asset __html_6d047296_2.js 1.01 KiB [emitted] (name: __html_6d047296_2)
+asset favicon.ico 14.6 KiB [emitted]
+asset index.html 1.91 KiB [emitted] (auxiliary name: page)
+asset manifest.webmanifest 208 bytes [emitted]
 asset __html_6d047296_0.css 166 bytes [emitted] (name: __html_6d047296_0)
 chunk (runtime: __html_6d047296_0) __html_6d047296_0.css (__html_6d047296_0) 64 bytes (css) 0 bytes (runtime) [entry] [rendered]
   > ./styles.css __html_6d047296_0
@@ -226,14 +370,20 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-assets by chunk 35.5 KiB (auxiliary name: page)
-  asset eda8c35d5b9a24e8efa6.png 19.6 KiB [emitted] [immutable] [from: src/logo@2x.png] (auxiliary name: page)
-  asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: src/logo.png] (auxiliary name: __html_6d047296_1, page)
-  asset index.html 1.28 KiB [emitted] (auxiliary name: page)
+assets by path *.png 77.9 KiB
+  assets by info 34.2 KiB [immutable]
+    asset eda8c35d5b9a24e8efa6.png 19.6 KiB [emitted] [immutable] [from: src/logo@2x.png] (auxiliary name: page)
+    asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: src/logo.png] (auxiliary name: __html_6d047296_1, page)
+  asset apple-touch-icon.png 14.6 KiB [emitted]
+  asset icon-192.png 14.6 KiB [emitted]
+  asset icon-512.png 14.6 KiB [emitted]
 assets by path *.js 4.23 KiB
   asset page.js 2.29 KiB [emitted] [minimized] (name: page)
   asset __html_6d047296_1.js 1.8 KiB [emitted] [minimized] (name: __html_6d047296_1)
   asset __html_6d047296_2.js 143 bytes [emitted] [minimized] (name: __html_6d047296_2)
+asset favicon.ico 14.6 KiB [emitted]
+asset index.html 1.48 KiB [emitted] (auxiliary name: page)
+asset manifest.webmanifest 208 bytes [emitted]
 asset __html_6d047296_0.css 65 bytes [emitted] (name: __html_6d047296_0)
 chunk (runtime: __html_6d047296_0) __html_6d047296_0.css (__html_6d047296_0) 64 bytes (css) 0 bytes (runtime) [entry] [rendered]
   > ./styles.css __html_6d047296_0

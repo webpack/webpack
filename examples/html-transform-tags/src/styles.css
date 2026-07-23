@@ -1,0 +1,8 @@
+h1 {
+	font-family: sans-serif;
+	color: #2b3a42;
+}
+
+h1.ready {
+	color: #8ed6fb;
+}

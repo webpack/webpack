@@ -9618,22 +9618,35 @@ declare interface HotModuleReplacementPluginLoaderContext {
 declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
-declare interface HtmlAfterEmitContext {
-	outputName: string;
-}
-declare interface HtmlBeforeEmitContext {
-	outputName: string;
-}
 declare interface HtmlCompilationHooks {
+	/**
+	 * called with the list of extra tags to inject into each page (initially empty) plus the current HTML; push `HtmlTagDescriptor`s and return the list — webpack serializes and places them by `injectTo`. A structured alternative to the string-level `transformHtml` for adding tags; runs before CSP so injected inline tags are hashed
+	 */
+	injectTags: AsyncSeriesWaterfallHook<
+		[HtmlTagDescriptor[], HtmlInjectTagsContext],
+		HtmlTagDescriptor[]
+	>;
+
+	/**
+	 * called with the page's `<script>`/`<link>`/`<style>`/`<meta>` tags (webpack's own and any injected) as mutable descriptors; mutate `attrs` (add a `nonce`/`data-*`, switch `defer`↔`async`, …), set `remove: true`, or change `injectTo` to move a tag between `<head>` and `<body>`, and webpack rewrites the changed tags. Add new tags with `injectTags` instead
+	 */
+	transformTags: AsyncSeriesHook<[HtmlMutableTag[], HtmlTransformTagsContext]>;
+
 	/**
 	 * called with each emitted page's final HTML (all sentinels resolved) just before it is written; return the (possibly transformed) HTML — e.g. to minify, inject a CSP meta, or rewrite tags
 	 */
-	beforeEmit: AsyncSeriesWaterfallHook<[string, HtmlBeforeEmitContext], string>;
+	transformHtml: AsyncSeriesWaterfallHook<
+		[string, HtmlTransformHtmlContext],
+		string
+	>;
 
 	/**
 	 * called once each page's HTML asset has been finalized — a post-emit notification (nothing to return)
 	 */
-	afterEmit: AsyncSeriesHook<[HtmlAfterEmitContext]>;
+	htmlEmitted: AsyncSeriesHook<[HtmlEmittedContext]>;
+}
+declare interface HtmlEmittedContext {
+	outputName: string;
 }
 declare interface HtmlEntryInfo {
 	request: string;
@@ -9648,6 +9661,34 @@ declare interface HtmlEntryInfo {
 		| "script-module";
 	css?: boolean;
 }
+type HtmlFaviconIcon =
+	| string
+	| {
+			/**
+			 * Value for the `color` attribute (used by `rel="mask-icon"`).
+			 */
+			color?: string;
+			/**
+			 * Value for the `crossorigin` attribute.
+			 */
+			crossorigin?: "anonymous" | "use-credentials";
+			/**
+			 * Path to the icon file, emitted as a hashed asset.
+			 */
+			href: string;
+			/**
+			 * Value for the `media` attribute (e.g. `"(prefers-color-scheme: dark)"`).
+			 */
+			media?: string;
+			/**
+			 * Value for the `sizes` attribute (e.g. `"180x180"` or `"any"`).
+			 */
+			sizes?: string;
+			/**
+			 * Value for the `type` attribute; inferred from the file extension when omitted.
+			 */
+			type?: string;
+	  };
 declare abstract class HtmlGenerator extends Generator {
 	options: HtmlGeneratorOptions;
 
@@ -9698,6 +9739,10 @@ declare interface HtmlGeneratorOptions {
 	 */
 	extract?: boolean | "inline";
 }
+declare interface HtmlInjectTagsContext {
+	outputName: string;
+	html: string;
+}
 type HtmlModuleBuildInfo = KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo &
@@ -9736,6 +9781,27 @@ declare class HtmlModulesPlugin {
 	static getCompilationHooks: (
 		compilation: Compilation
 	) => HtmlCompilationHooks;
+}
+declare interface HtmlMutableTag {
+	/**
+	 * the (lowercased) tag name
+	 */
+	tag: string;
+
+	/**
+	 * mutable attributes; a string value renders `name="value"`, `true` a bare attribute, `false`/`undefined`/deleting the key drops it
+	 */
+	attrs: Record<string, undefined | string | boolean>;
+
+	/**
+	 * the tag's current region (`"head"`/`"body"`); set a different value to move it there (`*-prepend` to the region's start)
+	 */
+	injectTo?: "body" | "head" | "head-prepend" | "body-prepend";
+
+	/**
+	 * set true to delete the whole element
+	 */
+	remove?: boolean;
 }
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
@@ -9921,6 +9987,32 @@ declare interface HtmlResourceHintWebpackOptions {
 	 */
 	type?: string;
 }
+declare interface HtmlTagDescriptor {
+	/**
+	 * tag name, e.g. `"script"` / `"link"` / `"meta"`
+	 */
+	tag: string;
+
+	/**
+	 * attributes; `true` renders a bare boolean attribute, `false`/`undefined` is omitted
+	 */
+	attrs?: Record<string, undefined | string | boolean>;
+
+	/**
+	 * inner content (ignored for void elements like `<link>`/`<meta>`)
+	 */
+	children?: string;
+
+	/**
+	 * placement; defaults to `"head"`
+	 */
+	injectTo?: "body" | "head" | "head-prepend" | "body-prepend";
+
+	/**
+	 * force a void element (no closing tag); inferred from the tag name when omitted
+	 */
+	voidTag?: boolean;
+}
 declare interface HtmlTemplateContext {
 	/**
 	 * the html module being transformed
@@ -9961,6 +10053,13 @@ declare interface HtmlTemplateContext {
 	 * report an error on the module
 	 */
 	emitError: (error: string | Error) => void;
+}
+declare interface HtmlTransformHtmlContext {
+	outputName: string;
+}
+declare interface HtmlTransformTagsContext {
+	outputName: string;
+	html: string;
 }
 
 /**
@@ -19476,13 +19575,96 @@ declare interface OutputHtmlOptions {
 		  };
 
 	/**
-	 * Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon path (e.g. `{ "icon": "./favicon.svg", "apple-touch-icon": "./apple.png" }`); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.
+	 * Inject a `<meta http-equiv="Content-Security-Policy">` into every webpack-emitted HTML page. `false` (default) does nothing; `true` uses a strict baseline (`script-src 'self'`, `style-src 'self'`, `object-src 'none'`, `base-uri 'self'`) and appends a `sha256` hash of every inline `<script>`/`<style>` to `script-src`/`style-src`. An object customizes it. Skipped when the page already declares a CSP.
+	 */
+	csp?:
+		| boolean
+		| {
+				/**
+				 * Hash algorithm used for inline `<script>`/`<style>` sources.
+				 */
+				hashFunction?: "sha256" | "sha384" | "sha512";
+				/**
+				 * Placeholder nonce added to injected `<script>`/`<style>` tags and as a `'nonce-…'` source; rewrite it per request server-side.
+				 */
+				nonce?: string;
+				/**
+				 * CSP directives merged over the baseline. Each key is a directive (e.g. `"script-src"`); the value is a source string or list. Inline hashes and any `nonce` are still appended to `script-src`/`style-src`.
+				 */
+				policy?: { [index: string]: string | string[] };
+		  };
+
+	/**
+	 * Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon — a path string, an object with the icon `href` plus extra link attributes (`sizes`, `media`, `color`, `type`, `crossorigin`), or an array of these for multiple icons under the same `rel` (e.g. several `sizes`, or light/dark `media` variants); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.
 	 */
 	favicon?:
 		| string
 		| boolean
-		| { [index: string]: string }
-		| ((name: string) => string | boolean | { [index: string]: string });
+		| {
+				[index: string]:
+					| string
+					| {
+							/**
+							 * Value for the `color` attribute (used by `rel="mask-icon"`).
+							 */
+							color?: string;
+							/**
+							 * Value for the `crossorigin` attribute.
+							 */
+							crossorigin?: "anonymous" | "use-credentials";
+							/**
+							 * Path to the icon file, emitted as a hashed asset.
+							 */
+							href: string;
+							/**
+							 * Value for the `media` attribute (e.g. `"(prefers-color-scheme: dark)"`).
+							 */
+							media?: string;
+							/**
+							 * Value for the `sizes` attribute (e.g. `"180x180"` or `"any"`).
+							 */
+							sizes?: string;
+							/**
+							 * Value for the `type` attribute; inferred from the file extension when omitted.
+							 */
+							type?: string;
+					  }
+					| HtmlFaviconIcon[];
+		  }
+		| ((name: string) =>
+				| string
+				| boolean
+				| {
+						[index: string]:
+							| string
+							| {
+									/**
+									 * Value for the `color` attribute (used by `rel="mask-icon"`).
+									 */
+									color?: string;
+									/**
+									 * Value for the `crossorigin` attribute.
+									 */
+									crossorigin?: "anonymous" | "use-credentials";
+									/**
+									 * Path to the icon file, emitted as a hashed asset.
+									 */
+									href: string;
+									/**
+									 * Value for the `media` attribute (e.g. `"(prefers-color-scheme: dark)"`).
+									 */
+									media?: string;
+									/**
+									 * Value for the `sizes` attribute (e.g. `"180x180"` or `"any"`).
+									 */
+									sizes?: string;
+									/**
+									 * Value for the `type` attribute; inferred from the file extension when omitted.
+									 */
+									type?: string;
+							  }
+							| HtmlFaviconIcon[];
+				  });
 
 	/**
 	 * Where to place injected chunk `<script>`/`<link>` tags. `"body"` (default; `"head"` with `output.module`) keeps them next to the entry tag — end of `<body>` on generated pages; `"head"` moves them into `<head>`; `false` suppresses sibling-chunk injection (entry tags and resource hints remain).
@@ -19501,6 +19683,15 @@ declare interface OutputHtmlOptions {
 		| boolean
 		| string[]
 		| ((asset: { chunk: Chunk; filename: string }) => false | string[]);
+
+	/**
+	 * Web app manifest for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing. A string is a path to an existing `.webmanifest` file to link. An object is the manifest contents — serialized, emitted as a hashed `.webmanifest` and linked with `<link rel="manifest">`; its `icons`/`screenshots` `src` paths resolve like any request and are emitted as hashed assets. A function receives the page name and returns one of these.
+	 */
+	manifest?:
+		| string
+		| false
+		| { [index: string]: any }
+		| ((name: string) => string | false | { [index: string]: any });
 
 	/**
 	 * Inject `<meta>` tags into the page `<head>`. Each key is the `name` attribute (or `"charset"` for a charset declaration); the value is the `content` string. Keys beginning with `og:` use the `property` attribute instead of `name`. A tag is skipped if the HTML already contains a meta with the same name.

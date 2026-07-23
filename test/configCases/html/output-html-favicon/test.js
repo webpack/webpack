@@ -65,6 +65,30 @@ it("supports an object mapping each rel to an icon path", () => {
 	expect(emitted(hrefOf(apple))).toBe(true);
 });
 
+it("keeps extra link attributes (sizes/color) and still hashes the href", () => {
+	const html = readHtml("attrs.html");
+	const apple = html.match(/<link rel="apple-touch-icon"[^>]*>/i);
+	const mask = html.match(/<link rel="mask-icon"[^>]*>/i);
+	expect(apple[0]).toContain('sizes="180x180"');
+	expect(apple[0]).toContain('type="image/png"');
+	expect(hrefOf(apple)).toMatch(/^[0-9a-f]{16,}\.png$/);
+	expect(emitted(hrefOf(apple))).toBe(true);
+	expect(mask[0]).toContain('color="#5bbad5"');
+	expect(hrefOf(mask)).toMatch(/^[0-9a-f]{16,}\.svg$/);
+	expect(emitted(hrefOf(mask))).toBe(true);
+});
+
+it("supports an array of icons under one rel (sizes / media variants)", () => {
+	const html = readHtml("array.html");
+	const links = html.match(/<link rel="icon"[^>]*>/gi) || [];
+	// three <link rel="icon"> tags, one per array entry
+	expect(links).toHaveLength(3);
+	expect(links[0]).toContain('sizes="16x16"');
+	expect(links[1]).toContain('sizes="32x32"');
+	expect(links[2]).toContain('media="(prefers-color-scheme: dark)"');
+	for (const link of links) expect(emitted(hrefOf([link]))).toBe(true);
+});
+
 it("supports a function that receives the page name", () => {
 	const link = iconLink(readHtml("fn.html"));
 	expect(link).not.toBeNull();

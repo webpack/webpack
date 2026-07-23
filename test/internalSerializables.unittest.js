@@ -7,8 +7,12 @@ const {
 	generateInternalSerializables
 } = require("../tooling/generate-internal-serializables");
 
+// The generator formats with prettier, which trips Bun's `module` builtin
+// ("not an instance of Module"); this comparison runs on Node only.
+const itSkipBun = process.versions.bun ? it.skip : it;
+
 describe("internalSerializables", () => {
-	it("committed file should match the generator", async () => {
+	itSkipBun("committed file should match the generator", async () => {
 		const generated = await generateInternalSerializables();
 		const current = fs.readFileSync(TARGET, "utf8");
 		if (current !== generated) {

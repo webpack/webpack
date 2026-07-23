@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>CSP</title>
+
+		<!-- External stylesheet: bundled, then inlined into a <style> by
+		     `output.html.inline`, so CSP can hash it. -->
+		<link rel="stylesheet" href="./styles.css" />
+
+		<!-- Inline <style>: hashed as-is. -->
+		<style>
+			body {
+				font-family: sans-serif;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Content-Security-Policy</h1>
+
+		<!-- External script: bundled, then inlined into a <script> and hashed. -->
+		<script src="./app.js"></script>
+	</body>
+</html>
