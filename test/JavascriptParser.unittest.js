@@ -1955,6 +1955,47 @@ f();`;
 			);
 			expect(seen).toHaveLength(1);
 			expect(seen[0]).toBe(walked);
+			// the block pre-walk seam adopts the store the same way when it is
+			// the first id entry of the parse
+			const blockParser = new JavascriptParser("auto", { soaAst: true });
+			blockParser.hooks.program.tap("t", (ast) => {
+				blockParser.blockPreWalkStatement(ast.body[0]);
+				return true;
+			});
+			expect(() =>
+				blockParser.parse(
+					"var probed = 1;",
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				)
+			).not.toThrow();
+		});
+
+		// A pure import/export module has no owned facade at the top level, so
+		// the parse() store discovery finds nothing — the seams must adopt the
+		// store when nested owned statements enter the id walk, or the
+		// statementPath/prevStatement accessors crash materializing ids.
+		it("serves path accessors when the whole top level is foreign", () => {
+			const parser = new JavascriptParser("auto", { soaAst: true });
+			/** @type {EXPECTED_ANY[]} */
+			const paths = [];
+			parser.hooks.expression.for("probe").tap("t", () => {
+				paths.push(
+					parser.prevStatement,
+					.../** @type {EXPECTED_ANY[]} */ (parser.statementPath)
+				);
+			});
+			parser.parse(
+				"export const first = 1;\nexport function f() { probe; }",
+				/** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			expect(paths.length).toBeGreaterThan(0);
+			for (const entry of paths) {
+				if (entry !== undefined) expect(typeof entry.type).toBe("string");
+			}
 		});
 
 		// Exercises the D2 handlers' hook-bail early returns (free-rooted

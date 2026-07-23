@@ -13154,6 +13154,12 @@ declare interface JavascriptParserOptions {
 	requireJs?: boolean;
 
 	/**
+	 * Enable/disable the Structure-of-Arrays AST backend of the built-in JavaScript parser (column-store AST serving on-demand facade nodes to parser hooks). Enabled by default; disable to restore plain object AST nodes.
+	 * @experimental
+	 */
+	soaAst?: boolean;
+
+	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
 	 */
 	sourceImport?: boolean;
@@ -19867,7 +19873,7 @@ declare interface ParseOptions {
 	moduleFallback?: boolean;
 
 	/**
-	 * internal: emit the AST into the SoA column store, serving facade nodes (SOA_MIGRATION_PLAN.md)
+	 * emit the AST into the SoA column store, serving facade nodes (SOA_MIGRATION_PLAN.md); on by default
 	 */
 	soaAst?: boolean;
 }

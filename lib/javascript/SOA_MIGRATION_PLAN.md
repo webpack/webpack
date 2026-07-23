@@ -585,8 +585,29 @@ holding the AST: react 1.04→0.77 MB, lodash 3.68→2.91, three.module
 backend on all three fixtures. Warm parse+walk CPU is unchanged (transient
 facade construction remains; removing it is the Phase-C2
 grammar-flows-ids scope).
-Next: default-on with the `soaAst: false` escape hatch once the
-module-level benchmarks show end-to-end wins.
+**Default-on landed**: `soaAst` became a `JavascriptParserOptions` schema
+option defaulting to `true` (escape hatch `module.parser.javascript.soaAst:
+false`), plumbed through `defaults.js` and the three `createParser` sites;
+the parser-instance default flipped to on while the static `_parse` default
+stays on object nodes — direct `_parse` callers (the eslint-scope analyses
+in `JavascriptModulesPlugin`/`ConcatenatedModule`) traverse own keys and
+now pin `soaAst: false` explicitly. Running the full integration surface on
+the SoA backend surfaced three real gaps, each fixed with a regression
+test: (1) a pure import/export top level defeats the parse() store
+discovery (no owned facade in `Program.body`) while nested owned
+statements still push ids — the walk seams now adopt the store for the
+`statementPath`/`prevStatement` accessors; (2)
+`CommonJsExportsParserPlugin`'s generic `this`-scan enumerated own keys,
+which facades don't expose — facade child keys are now collected from the
+prototype accessors (separate cache per backend); (3) the eslint-scope
+consumers above must not receive facades (shorthand-pattern renames
+corrupted concatenated output). Phase E numbers (this container,
+interleaved A/B): an 86-module development build is wall-neutral (medians
+~723ms object vs ~747ms SoA, distributions overlap) at −23% end-of-build
+heap (40.6 → 31.4 MB); parse+walk retained-AST heap stays below the object
+backend (lodash 2.89 vs 3.04 MB, three.module 5.47 vs 6.23 MB); warm
+parse+walk CPU remains ~2× (52 vs 24 ms on lodash) from transient facade
+construction — the Phase-C2 grammar-flows-ids scope recovers that.
 
 ## 5. Measurement protocol
 

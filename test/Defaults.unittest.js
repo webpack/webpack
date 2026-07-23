@@ -599,6 +599,7 @@ describe("snapshots", () => {
 		        "exprContextRegExp": false,
 		        "exprContextRequest": ".",
 		        "importMeta": true,
+		        "soaAst": true,
 		        "sourceImport": false,
 		        "strictExportPresence": undefined,
 		        "strictModeViolations": "warn",
