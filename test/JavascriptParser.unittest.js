@@ -1789,16 +1789,22 @@ describe("JavascriptParser", () => {
 			});
 			// destructuring collection: statement-level assignment and declarator
 			same("({ probe } = someObj); someObj.other;", (p, e) => {
-				p.hooks.collectDestructuringAssignmentProperties.tap("t", (expr) => {
-					e.push(`collect@${expr.range[0]}`);
-					return true;
-				});
+				p.hooks.collectDestructuringAssignmentProperties.tap(
+					"t",
+					(/** @type {EXPECTED_ANY} */ expr) => {
+						e.push(`collect@${expr.range[0]}`);
+						return true;
+					}
+				);
 			});
 			same("const { probe } = someObj; someObj.other;", (p, e) => {
-				p.hooks.collectDestructuringAssignmentProperties.tap("t", (expr) => {
-					e.push(`collectDecl@${expr.range[0]}`);
-					return true;
-				});
+				p.hooks.collectDestructuringAssignmentProperties.tap(
+					"t",
+					(/** @type {EXPECTED_ANY} */ expr) => {
+						e.push(`collectDecl@${expr.range[0]}`);
+						return true;
+					}
+				);
 			});
 		});
 
