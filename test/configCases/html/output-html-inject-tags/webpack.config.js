@@ -122,5 +122,14 @@ module.exports = [
 		tagPlugin([{ tag: "script", children: "console.log(1)" }]),
 		"./src/main.js",
 		{ csp: true }
+	),
+	// a fragment with no <head>/<body>: head tags prepend, body tags append
+	config(
+		"fragment",
+		tagPlugin([
+			{ tag: "meta", attrs: { name: "frag-head" } },
+			{ tag: "script", attrs: { src: "/f.js" }, injectTo: "body" }
+		]),
+		"./src/fragment.html"
 	)
 ];

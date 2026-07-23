@@ -66,3 +66,26 @@ it("hashes an inlined <script> body into script-src", () => {
 	const scriptBody = bodyOf(html, "script");
 	expect(policy).toContain(sha("sha256", scriptBody));
 });
+
+it("prepends the CSP meta on a fragment with no <head>", () => {
+	const html = readHtml("fragment.html");
+	const [policy] = cspMeta(html);
+	// the meta is prepended (before the fragment's own content)
+	expect(html.indexOf("Content-Security-Policy")).toBeLessThan(
+		html.indexOf("<style")
+	);
+	// the inline <style> is still hashed
+	expect(policy).toContain(sha("sha256", inlineStyle(html)));
+});
+
+it("hashes tags as transformTags left them (removed dropped, kept hashed)", () => {
+	const html = readHtml("transform.html");
+	const [policy] = cspMeta(html);
+	// the 2nd <style> was removed — only one <style> remains
+	expect(html.match(/<style/g)).toHaveLength(1);
+	// the kept <style> got the attribute and is still hashed (its real body)
+	expect(html).toContain('<style data-x="1">');
+	expect(policy).toContain(sha("sha256", inlineStyle(html)));
+	// only the kept style contributes a hash; the removed one contributes none
+	expect(policy.match(/'sha256-/g)).toHaveLength(1);
+});

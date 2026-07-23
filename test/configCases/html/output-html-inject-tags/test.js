@@ -50,6 +50,15 @@ it("accumulates tags across multiple taps (waterfall)", () => {
 	expect(html).toContain('name="two"');
 });
 
+it("prepends head tags and appends body tags on a fragment with no head/body", () => {
+	const html = readHtml("fragment.html");
+	// head tag prepended before the fragment content
+	expect(at(html, 'name="frag-head"')).toBeGreaterThanOrEqual(0);
+	expect(at(html, 'name="frag-head"')).toBeLessThan(at(html, "<div"));
+	// body tag appended after the fragment content
+	expect(at(html, 'src="/f.js"')).toBeGreaterThan(at(html, "</div>"));
+});
+
 it("hashes an injected inline <script> into the CSP", () => {
 	const html = readHtml("csp.html");
 	const policy = html.match(
