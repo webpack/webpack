@@ -12096,7 +12096,9 @@ declare class JavascriptParser extends ParserClass {
 	): void;
 
 	/**
-	 * Processes the provided expression.
+	 * Processes the provided expression. An SoA facade re-enters the id walk
+	 * so an object-walker escape point never drags a whole subtree onto the
+	 * object walker; the symbol miss is flat on plain nodes.
 	 */
 	walkExpression(
 		expression:
