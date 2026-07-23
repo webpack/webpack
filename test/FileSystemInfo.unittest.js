@@ -4,6 +4,7 @@
 /** @typedef {import("../lib/FileSystemInfo").SnapshotOptions} SnapshotOptions */
 /** @typedef {import("../lib/errors/WebpackError")} WebpackError */
 /** @typedef {import("memfs").IFs} IFs */
+/** @typedef {import("../lib/util/fs").IStats} IStats */
 
 const util = require("util");
 const { Volume, createFsFromVolume } = require("memfs");
@@ -718,6 +719,47 @@ ${details(snapshot)}`)
 				if (err) return done(err);
 				expect(typeof hash).toBe("string");
 				done();
+			});
+		});
+	});
+
+	describe("unsupported directory entries", () => {
+		// #21482: entries that are neither file, dir nor symlink (FIFO, socket)
+		// reduce to `null`; the hash reduce must skip them like the tsh reduce.
+		const createFsWithSpecialFile = () => {
+			const fs = createFs();
+			fs.mkdirSync("/path/special");
+			fs.writeFileSync("/path/special/file.txt", "Hello World");
+			fs.writeFileSync("/path/special/socket", "");
+			const originalLstat = fs.lstat.bind(fs);
+			jest.spyOn(fs, "lstat").mockImplementation((path, callback) => {
+				originalLstat(
+					/** @type {string} */ (path),
+					(/** @type {Error | null} */ err, /** @type {IStats} */ stats) => {
+						if (!err && path === "/path/special/socket") {
+							stats.isFile = () => false;
+							stats.isDirectory = () => false;
+						}
+						/** @type {(err: Error | null, stats?: IStats) => void} */ (
+							callback
+						)(err, stats);
+					}
+				);
+			});
+			return fs;
+		};
+
+		it("should hash a context containing an unsupported entry", (done) => {
+			const fs = createFsWithSpecialFile();
+			createFsInfo(fs).getContextHash("/path/special", (err, hash) => {
+				if (err) return done(err);
+				expect(typeof hash).toBe("string");
+				// must equal the tsh reduce's hash, which skips the null entry
+				createFsInfo(fs).getContextTsh("/path/special", (err2, tsh) => {
+					if (err2) return done(err2);
+					expect(/** @type {NonNullable<typeof tsh>} */ (tsh).hash).toBe(hash);
+					done();
+				});
 			});
 		});
 	});
