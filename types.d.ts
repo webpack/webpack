@@ -4368,14 +4368,9 @@ declare interface ConcatenatedModuleInfo {
 	index: number;
 
 	/**
-	 * a "weird" CommonJS module rendered inside an IIFE with real module/exports objects
+	 * a "weird" CommonJS module executed via the CJS wrapper runtime helper with real module/exports objects
 	 */
 	cjsWrapped?: boolean;
-
-	/**
-	 * the wrapped module's `{ exports }` object variable
-	 */
-	moduleObjectName?: string;
 	ast?: Program;
 	internalSource?: Source;
 	source?: ReplaceSource;
@@ -5358,6 +5353,11 @@ declare interface CssAutoOrModuleParserOptions {
 	exportType?: "link" | "text" | "css-style-sheet" | "style";
 
 	/**
+	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+	 */
+	fontPreload?: boolean;
+
+	/**
 	 * Enable/disable renaming of `@function` names.
 	 */
 	function?: boolean;
@@ -5617,6 +5617,11 @@ declare interface CssModuleParserOptions {
 	exportType?: "link" | "text" | "css-style-sheet" | "style";
 
 	/**
+	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+	 */
+	fontPreload?: boolean;
+
+	/**
 	 * Enable/disable renaming of `@function` names.
 	 */
 	function?: boolean;
@@ -5741,6 +5746,10 @@ declare abstract class CssParser extends ParserClass {
 		 */
 		exportType?: "link" | "text" | "css-style-sheet" | "style";
 		/**
+		 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+		 */
+		fontPreload?: boolean;
+		/**
 		 * Enable/disable renaming of `@function` names.
 		 */
 		function: boolean;
@@ -5801,6 +5810,11 @@ declare interface CssParserOptions {
 	exportType?: "link" | "text" | "css-style-sheet" | "style";
 
 	/**
+	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+	 */
+	fontPreload?: boolean;
+
+	/**
 	 * Enable/disable `@import` at-rules handling.
 	 */
 	import?: boolean;
@@ -5821,6 +5835,26 @@ declare interface CssParserOptions {
 	urlHints?: UrlHintRule[];
 }
 type Declaration = FunctionDeclaration | VariableDeclaration | ClassDeclaration;
+declare interface DefaultHandlerOptions {
+	progressBar?:
+		| false
+		| Required<{
+				/**
+				 * Color used for the filled portion of the bar.
+				 */
+				color?: string;
+				/**
+				 * Name shown before the progress bar.
+				 */
+				name?: string;
+				/**
+				 * Width of the progress bar in characters. Default: 25.
+				 */
+				width?: number;
+		  }>;
+	estimatedTime?: boolean;
+	phaseTimings?: boolean;
+}
 type DefineConfigInput =
 	| Configuration
 	| MultiConfiguration
@@ -6734,7 +6768,7 @@ declare class ElectronTargetPlugin {
 	 * Creates an instance of ElectronTargetPlugin.
 	 */
 	constructor(
-		context?: "main" | "preload" | "renderer",
+		context?: "preload" | "main" | "renderer",
 		type?:
 			| "import"
 			| "var"
@@ -8663,7 +8697,7 @@ declare interface FileCacheOptions {
 	/**
 	 * Compression type used for the cache files.
 	 */
-	compression?: false | "gzip" | "brotli";
+	compression?: false | "gzip" | "brotli" | "zstd";
 
 	/**
 	 * Algorithm used for generation the hash (see node.js crypto package).
@@ -9607,8 +9641,8 @@ declare interface HtmlEntryInfo {
 	type:
 		| "html"
 		| "script"
-		| "prefetch"
 		| "stylesheet"
+		| "prefetch"
 		| "preload"
 		| "modulepreload"
 		| "script-module";
@@ -9824,6 +9858,11 @@ declare interface HtmlResourceHintHtmlEntryDependency {
 	 * SRI for a chunk/entry ref; follows `output.html.integrity` by default, `false` opts out
 	 */
 	integrity?: boolean;
+
+	/**
+	 * the `fetchpriority` attribute (allowed on `preload`/`modulepreload`/`prefetch`)
+	 */
+	fetchPriority?: "auto" | "low" | "high";
 }
 type HtmlResourceHintRel =
 	"prefetch" | "preload" | "modulepreload" | "preconnect" | "dns-prefetch";
@@ -9851,6 +9890,11 @@ declare interface HtmlResourceHintWebpackOptions {
 	 * Name of an entrypoint to hint; expands to one hint per initial chunk.
 	 */
 	entry?: string;
+
+	/**
+	 * The `fetchpriority` attribute. Emitted on `preload` / `modulepreload` and on `prefetch` (the spec now permits it there).
+	 */
+	fetchPriority?: "auto" | "low" | "high";
 
 	/**
 	 * A literal URL used verbatim (external resource, `preconnect` origin, or an already-hashed asset).
@@ -13031,6 +13075,11 @@ declare interface JavascriptParserOptions {
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
 	 */
 	deferImport?: boolean;
+
+	/**
+	 * Auto-emit `<link rel="preload" as="style">` for the CSS of every dynamically imported (`import()`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike `dynamicImportPreload`, the JavaScript itself is not preloaded. `true` uses the default order; a number sets the preload order.
+	 */
+	dynamicImportCssPreload?: number | boolean;
 
 	/**
 	 * Specifies global fetchPriority for dynamic import.
@@ -16893,6 +16942,7 @@ declare class MultiCompiler {
 	compilers: Compiler[];
 	dependencies: WeakMap<Compiler, string[]>;
 	running: boolean;
+	watching?: MultiWatching;
 	get options(): WebpackOptionsNormalized[] & MultiCompilerOptions;
 	get outputPath(): string;
 
@@ -19286,18 +19336,23 @@ declare interface Output {
 	publicPath?: string | TemplatePathFn<PathData>;
 
 	/**
-	 * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">`) emission for extracted HTML entries and for URL-referenced assets carrying `webpackPrefetch` / `webpackPreload` (either from magic comments or from `module.parser.<type>.urlHints` rules). `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (this same callback replaces the removed `resolveDependencies` hook). `false` disables chunk hints; URL-referenced asset hints from magic comments / `urlHints` rules still fire — via the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime.
+	 * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">` / `<link rel="preconnect">`) emission for extracted HTML entries and URL-referenced assets. Accepts the initial-graph shorthand (boolean / `"prefetch"` / `"preload"` / `"none"` / `HtmlResourceHint[]` / function — equivalent to `{ initial: <value> }`) or the full object form `{ initial, urlHints, preconnect, modulePreloadPolyfill, manifest }`. `initial` defaults on for ESM output (`output.module`), where native `import()` would otherwise waterfall; classic output stays opt-in.
 	 */
 	resourceHints?:
 		| boolean
+		| "none"
+		| ResourceHintsOptions
 		| HtmlResourceHintWebpackOptions[]
 		| "prefetch"
+		| "preload"
 		| ((context: {
 				entryName: string;
 				entrypoint: Entrypoint;
 				hostType: "html" | "js";
 				compilation: Compilation;
-				defaultHints: HtmlResourceHintHtmlEntryDependency[];
+				defaultHints: (HtmlResourceHintHtmlEntryDependency & {
+					hostChunks: string[];
+				})[];
 		  }) => HtmlResourceHintHtmlEntryDependency[]);
 
 	/**
@@ -19697,19 +19752,9 @@ declare interface OutputNormalized {
 	publicPath?: string | TemplatePathFn<PathData>;
 
 	/**
-	 * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">`) emission for extracted HTML entries and for URL-referenced assets carrying `webpackPrefetch` / `webpackPreload` (either from magic comments or from `module.parser.<type>.urlHints` rules). `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (this same callback replaces the removed `resolveDependencies` hook). `false` disables chunk hints; URL-referenced asset hints from magic comments / `urlHints` rules still fire — via the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime.
+	 * Full resource-hint configuration.
 	 */
-	resourceHints?:
-		| boolean
-		| HtmlResourceHintWebpackOptions[]
-		| "prefetch"
-		| ((context: {
-				entryName: string;
-				entrypoint: Entrypoint;
-				hostType: "html" | "js";
-				compilation: Compilation;
-				defaultHints: HtmlResourceHintHtmlEntryDependency[];
-		  }) => HtmlResourceHintHtmlEntryDependency[]);
+	resourceHints?: ResourceHintsOptions;
 
 	/**
 	 * This option enables loading async chunks via a custom script type, such as script type="module".
@@ -20394,23 +20439,7 @@ declare class ProgressPlugin {
 	static createDefaultHandler: (
 		profile: undefined | null | boolean,
 		logger: WebpackLogger,
-		progressBar?:
-			| false
-			| Required<{
-					/**
-					 * Color used for the filled portion of the bar.
-					 */
-					color?: string;
-					/**
-					 * Name shown before the progress bar.
-					 */
-					name?: string;
-					/**
-					 * Width of the progress bar in characters. Default: 25.
-					 */
-					width?: number;
-			  }>,
-		timing?: TimingOptions
+		options?: DefaultHandlerOptions
 	) => (percentage: number, msg: string, ...args: string[]) => void;
 }
 type ProgressPluginArgument =
@@ -20570,6 +20599,11 @@ type PureCondition =
 declare interface RawChunkGroupOptions {
 	preloadOrder?: number;
 	prefetchOrder?: number;
+
+	/**
+	 * preload only the chunk's CSS (`as="style"`), not its JS
+	 */
+	cssPreloadOrder?: number;
 	fetchPriority?: "auto" | "low" | "high";
 }
 type RawDevTool = string | false;
@@ -22428,6 +22462,50 @@ declare interface ResourceDataWithData {
 	context?: string;
 	data: ResourceSchemeData & Partial<ResolveRequest>;
 }
+
+/**
+ * Full resource-hint configuration.
+ */
+declare interface ResourceHintsOptions {
+	/**
+	 * Initial dependency-graph chunk hints. `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; `"preload"` is an alias of `true`; `false` disables chunk hints (URL-asset hints from magic comments / `urlHints` still fire); `"none"` is a hard off switch (no `<link>` anywhere, empty stats / manifest); an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (replaces the removed `resolveDependencies` hook).
+	 */
+	initial?:
+		| boolean
+		| "none"
+		| HtmlResourceHintWebpackOptions[]
+		| "prefetch"
+		| "preload"
+		| ((context: {
+				entryName: string;
+				entrypoint: Entrypoint;
+				hostType: "html" | "js";
+				compilation: Compilation;
+				defaultHints: (HtmlResourceHintHtmlEntryDependency & {
+					hostChunks: string[];
+				})[];
+		  }) => HtmlResourceHintHtmlEntryDependency[]);
+
+	/**
+	 * Emit a JSON manifest of the resolved resource hints for each entrypoint (the same descriptors as `stats.entrypoints[].resourceHints`) as an output asset at this path. Lets an SSR server inject the `<link>` tags itself without walking the chunk graph — webpack's analogue of Vite's `build.ssrManifest`. Empty when `initial` is `"none"`.
+	 */
+	manifest?: string;
+
+	/**
+	 * Inject a tiny inline `<script>` polyfill for `<link rel="modulepreload">` into extracted HTML pages. Defaults from the target's modulepreload support (`output.environment.modulePreload`) — `true` when the environment lacks native support, `false` when it has it. Set `false` to never inject (the `<link>` tags are still emitted but do nothing on browsers without support — useful under a strict CSP that forbids inline scripts).
+	 */
+	modulePreloadPolyfill?: boolean;
+
+	/**
+	 * Auto-emit `<link rel="preconnect">` for the origin of a cross-origin `output.publicPath` (the origin bundles and assets are served from) into extracted HTML entries and the resource-hint stats / manifest. Mirrors `output.crossOriginLoading`. No-op when `publicPath` is relative or `"auto"`.
+	 */
+	preconnect?: boolean;
+
+	/**
+	 * Project-wide URL-referenced-asset hint rules, applied as the base `urlHints` of every parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>`). Parser-scoped `module.parser.<type>.urlHints` rules and per-URL magic comments still override these.
+	 */
+	urlHints?: UrlHintRule[];
+}
 declare interface ResourceSchemeData {
 	/**
 	 * mime type of the resource
@@ -23112,6 +23190,7 @@ declare abstract class RuntimeTemplate {
 	supportsDynamicImport(): boolean;
 	supportsEcmaScriptModuleSyntax(): boolean;
 	supportsModulePreload(): boolean;
+	supportsAnalyzableEsm(): boolean;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
 
@@ -23455,6 +23534,10 @@ declare abstract class RuntimeTemplate {
 		 * if set, will be filled with runtime requirements
 		 */
 		runtimeRequirements: Set<string>;
+		/**
+		 * the module the `import()` is emitted into
+		 */
+		originModule?: Module;
 	}): string;
 
 	/**
@@ -23615,6 +23698,10 @@ declare abstract class RuntimeTemplate {
 		 * if set, will be filled with runtime requirements
 		 */
 		runtimeRequirements: Set<string>;
+		/**
+		 * the module the `import()` is emitted into
+		 */
+		originModule?: Module;
 	}): string;
 
 	/**
@@ -24450,8 +24537,8 @@ type SourceType =
 	| "html"
 	| "script"
 	| "css-url"
-	| "prefetch"
 	| "stylesheet"
+	| "prefetch"
 	| "preload"
 	| "modulepreload"
 	| "script-module"
@@ -24465,8 +24552,8 @@ type SourceTypeOrResolver =
 	| "html"
 	| "script"
 	| "css-url"
-	| "prefetch"
 	| "stylesheet"
+	| "prefetch"
 	| "preload"
 	| "modulepreload"
 	| "script-module"
@@ -25785,10 +25872,6 @@ declare interface TimestampAndHash {
 	safeTime: number;
 	timestamp?: number;
 	hash: string;
-}
-declare interface TimingOptions {
-	estimatedTime?: boolean;
-	phaseTimings?: boolean;
 }
 declare class TopLevelSymbol {
 	/**
@@ -27146,6 +27229,7 @@ declare namespace exports {
 	export namespace RuntimeGlobals {
 		export let amdDefine: "__webpack_require__.amdD";
 		export let amdOptions: "__webpack_require__.amdO";
+		export let analyzableChunkImport: "__webpack_require__.ei";
 		export let asyncModule: "__webpack_require__.a";
 		export let asyncModuleDoneSymbol: "__webpack_require__.aD";
 		export let asyncModuleExportSymbol: "__webpack_require__.aE";
@@ -27153,6 +27237,7 @@ declare namespace exports {
 		export let baseURI: "__webpack_require__.b";
 		export let chunkCallback: "webpackChunk";
 		export let chunkName: "__webpack_require__.cn";
+		export let commonJsWrap: "__webpack_require__.cjs";
 		export let compatGetDefaultExport: "__webpack_require__.n";
 		export let compileWasm: "__webpack_require__.vs";
 		export let createFakeNamespaceObject: "__webpack_require__.t";

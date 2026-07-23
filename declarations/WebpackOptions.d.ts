@@ -626,18 +626,24 @@ export type Path = string;
  */
 export type Pathinfo = "verbose" | boolean;
 /**
- * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">`) emission for extracted HTML entries and for URL-referenced assets carrying `webpackPrefetch` / `webpackPreload` (either from magic comments or from `module.parser.<type>.urlHints` rules). `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (this same callback replaces the removed `resolveDependencies` hook). `false` disables chunk hints; URL-referenced asset hints from magic comments / `urlHints` rules still fire — via the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime.
+ * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">` / `<link rel="preconnect">`) emission for extracted HTML entries and URL-referenced assets. Accepts the initial-graph shorthand (boolean / `"prefetch"` / `"preload"` / `"none"` / `HtmlResourceHint[]` / function — equivalent to `{ initial: <value> }`) or the full object form `{ initial, urlHints, preconnect, modulePreloadPolyfill, manifest }`. `initial` defaults on for ESM output (`output.module`), where native `import()` would otherwise waterfall; classic output stays opt-in.
  */
-export type ResourceHints =
+export type ResourceHints = ResourceHintsInitial | ResourceHintsOptions;
+/**
+ * Initial dependency-graph chunk hints. `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; `"preload"` is an alias of `true`; `false` disables chunk hints (URL-asset hints from magic comments / `urlHints` still fire); `"none"` is a hard off switch (no `<link>` anywhere, empty stats / manifest); an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (replaces the removed `resolveDependencies` hook).
+ */
+export type ResourceHintsInitial =
 	| HtmlResourceHint[]
-	| "prefetch"
+	| ("prefetch" | "preload" | "none")
 	| boolean
 	| ((context: {
 			entryName: string;
 			entrypoint: import("../lib/Entrypoint");
 			hostType: "html" | "js";
 			compilation: import("../lib/Compilation");
-			defaultHints: import("../lib/dependencies/HtmlEntryDependency").HtmlResourceHint[];
+			defaultHints: (import("../lib/dependencies/HtmlEntryDependency").HtmlResourceHint & {
+				hostChunks: string[];
+			})[];
 	  }) => import("../lib/dependencies/HtmlEntryDependency").HtmlResourceHint[]);
 /**
  * This option enables loading async chunks via a custom script type, such as script type="module".
@@ -841,6 +847,10 @@ export type CssParserDashedIdents = boolean;
  * Configure how CSS content is exported as default.
  */
 export type CssParserExportType = "link" | "text" | "css-style-sheet" | "style";
+/**
+ * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+ */
+export type CssParserFontPreload = boolean;
 /**
  * Enable/disable renaming of `@function` names.
  */
@@ -1150,7 +1160,7 @@ export interface FileCacheOptions {
 	/**
 	 * Compression type used for the cache files.
 	 */
-	compression?: false | "gzip" | "brotli";
+	compression?: false | "gzip" | "brotli" | "zstd";
 	/**
 	 * Algorithm used for generation the hash (see node.js crypto package).
 	 */
@@ -2578,7 +2588,7 @@ export interface Output {
 	 */
 	publicPath?: PublicPath;
 	/**
-	 * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">`) emission for extracted HTML entries and for URL-referenced assets carrying `webpackPrefetch` / `webpackPreload` (either from magic comments or from `module.parser.<type>.urlHints` rules). `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (this same callback replaces the removed `resolveDependencies` hook). `false` disables chunk hints; URL-referenced asset hints from magic comments / `urlHints` rules still fire — via the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime.
+	 * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">` / `<link rel="preconnect">`) emission for extracted HTML entries and URL-referenced assets. Accepts the initial-graph shorthand (boolean / `"prefetch"` / `"preload"` / `"none"` / `HtmlResourceHint[]` / function — equivalent to `{ initial: <value> }`) or the full object form `{ initial, urlHints, preconnect, modulePreloadPolyfill, manifest }`. `initial` defaults on for ESM output (`output.module`), where native `import()` would otherwise waterfall; classic output stays opt-in.
 	 */
 	resourceHints?: ResourceHints;
 	/**
@@ -2850,6 +2860,10 @@ export interface HtmlResourceHint {
 	 */
 	entry?: string;
 	/**
+	 * The `fetchpriority` attribute. Emitted on `preload` / `modulepreload` and on `prefetch` (the spec now permits it there).
+	 */
+	fetchPriority?: "low" | "high" | "auto";
+	/**
 	 * A literal URL used verbatim (external resource, `preconnect` origin, or an already-hashed asset).
 	 */
 	href?: string;
@@ -2867,6 +2881,72 @@ export interface HtmlResourceHint {
 	rel: "preload" | "prefetch" | "modulepreload" | "preconnect" | "dns-prefetch";
 	/**
 	 * The `type` attribute (MIME type).
+	 */
+	type?: string;
+}
+/**
+ * Full resource-hint configuration.
+ */
+export interface ResourceHintsOptions {
+	/**
+	 * Initial dependency-graph chunk hints. `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; `"preload"` is an alias of `true`; `false` disables chunk hints (URL-asset hints from magic comments / `urlHints` still fire); `"none"` is a hard off switch (no `<link>` anywhere, empty stats / manifest); an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (replaces the removed `resolveDependencies` hook).
+	 */
+	initial?: ResourceHintsInitial;
+	/**
+	 * Emit a JSON manifest of the resolved resource hints for each entrypoint (the same descriptors as `stats.entrypoints[].resourceHints`) as an output asset at this path. Lets an SSR server inject the `<link>` tags itself without walking the chunk graph — webpack's analogue of Vite's `build.ssrManifest`. Empty when `initial` is `"none"`.
+	 */
+	manifest?: string;
+	/**
+	 * Inject a tiny inline `<script>` polyfill for `<link rel="modulepreload">` into extracted HTML pages. Defaults from the target's modulepreload support (`output.environment.modulePreload`) — `true` when the environment lacks native support, `false` when it has it. Set `false` to never inject (the `<link>` tags are still emitted but do nothing on browsers without support — useful under a strict CSP that forbids inline scripts).
+	 */
+	modulePreloadPolyfill?: boolean;
+	/**
+	 * Auto-emit `<link rel="preconnect">` for the origin of a cross-origin `output.publicPath` (the origin bundles and assets are served from) into extracted HTML entries and the resource-hint stats / manifest. Mirrors `output.crossOriginLoading`. No-op when `publicPath` is relative or `"auto"`.
+	 */
+	preconnect?: boolean;
+	/**
+	 * Project-wide URL-referenced-asset hint rules, applied as the base `urlHints` of every parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>`). Parser-scoped `module.parser.<type>.urlHints` rules and per-URL magic comments still override these.
+	 */
+	urlHints?: UrlHintRule[];
+}
+/**
+ * One default-hint rule for URL-referenced assets emitted by this parser (JS `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`). `test` / `include` / `exclude` match against the asset's request; omit all three to apply to every asset. Matching rules set the same fields a `webpackPrefetch` / `webpackPreload` / `webpackAs` / `webpackType` / `webpackMedia` / `webpackFetchPriority` magic comment would; explicit magic comments on the same URL still win.
+ */
+export interface UrlHintRule {
+	/**
+	 * Default `as` attribute (script / style / font / image / …).
+	 */
+	as?: string;
+	/**
+	 * A condition matcher.
+	 */
+	exclude?: RuleSetCondition;
+	/**
+	 * Default fetchpriority for prefetch / preload links.
+	 */
+	fetchPriority?: "low" | "high" | "auto" | false;
+	/**
+	 * A condition matcher.
+	 */
+	include?: RuleSetCondition;
+	/**
+	 * Default `media` attribute (e.g. `"(min-width: 800px)"`).
+	 */
+	media?: string;
+	/**
+	 * When true, emit `<link rel="prefetch">` for matching assets without an explicit hint comment.
+	 */
+	prefetch?: boolean;
+	/**
+	 * When true, emit `<link rel="preload">` for matching assets without an explicit hint comment.
+	 */
+	preload?: boolean;
+	/**
+	 * A condition matcher.
+	 */
+	test?: RuleSetCondition;
+	/**
+	 * Default `type` attribute (MIME).
 	 */
 	type?: string;
 }
@@ -3471,6 +3551,10 @@ export interface CssAutoOrModuleParserOptions {
 	 */
 	exportType?: CssParserExportType;
 	/**
+	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+	 */
+	fontPreload?: CssParserFontPreload;
+	/**
 	 * Enable/disable renaming of `@function` names.
 	 */
 	function?: CssParserFunction;
@@ -3498,47 +3582,6 @@ export interface CssAutoOrModuleParserOptions {
 	 * URL-referenced-asset default hint rules for this parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`).
 	 */
 	urlHints?: UrlHints;
-}
-/**
- * One default-hint rule for URL-referenced assets emitted by this parser (JS `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`). `test` / `include` / `exclude` match against the asset's request; omit all three to apply to every asset. Matching rules set the same fields a `webpackPrefetch` / `webpackPreload` / `webpackAs` / `webpackType` / `webpackMedia` / `webpackFetchPriority` magic comment would; explicit magic comments on the same URL still win.
- */
-export interface UrlHintRule {
-	/**
-	 * Default `as` attribute (script / style / font / image / …).
-	 */
-	as?: string;
-	/**
-	 * A condition matcher.
-	 */
-	exclude?: RuleSetCondition;
-	/**
-	 * Default fetchpriority for prefetch / preload links.
-	 */
-	fetchPriority?: "low" | "high" | "auto" | false;
-	/**
-	 * A condition matcher.
-	 */
-	include?: RuleSetCondition;
-	/**
-	 * Default `media` attribute (e.g. `"(min-width: 800px)"`).
-	 */
-	media?: string;
-	/**
-	 * When true, emit `<link rel="prefetch">` for matching assets without an explicit hint comment.
-	 */
-	prefetch?: boolean;
-	/**
-	 * When true, emit `<link rel="preload">` for matching assets without an explicit hint comment.
-	 */
-	preload?: boolean;
-	/**
-	 * A condition matcher.
-	 */
-	test?: RuleSetCondition;
-	/**
-	 * Default `type` attribute (MIME).
-	 */
-	type?: string;
 }
 /**
  * Generator options for css modules.
@@ -3631,6 +3674,10 @@ export interface CssModuleParserOptions {
 	 */
 	exportType?: CssParserExportType;
 	/**
+	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+	 */
+	fontPreload?: CssParserFontPreload;
+	/**
 	 * Enable/disable renaming of `@function` names.
 	 */
 	function?: CssParserFunction;
@@ -3675,6 +3722,10 @@ export interface CssParserOptions {
 	 * Configure how CSS content is exported as default.
 	 */
 	exportType?: CssParserExportType;
+	/**
+	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+	 */
+	fontPreload?: CssParserFontPreload;
 	/**
 	 * Enable/disable `@import` at-rules handling.
 	 */
@@ -3936,6 +3987,10 @@ export interface JavascriptParserOptions {
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
 	 */
 	deferImport?: boolean;
+	/**
+	 * Auto-emit `<link rel="preload" as="style">` for the CSS of every dynamically imported (`import()`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike `dynamicImportPreload`, the JavaScript itself is not preloaded. `true` uses the default order; a number sets the preload order.
+	 */
+	dynamicImportCssPreload?: number | boolean;
 	/**
 	 * Specifies global fetchPriority for dynamic import.
 	 */
@@ -4440,9 +4495,9 @@ export interface OutputNormalized {
 	 */
 	publicPath?: PublicPath;
 	/**
-	 * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">`) emission for extracted HTML entries and for URL-referenced assets carrying `webpackPrefetch` / `webpackPreload` (either from magic comments or from `module.parser.<type>.urlHints` rules). `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (this same callback replaces the removed `resolveDependencies` hook). `false` disables chunk hints; URL-referenced asset hints from magic comments / `urlHints` rules still fire — via the HTML `<head>` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime.
+	 * Full resource-hint configuration.
 	 */
-	resourceHints?: ResourceHints;
+	resourceHints?: ResourceHintsOptions;
 	/**
 	 * This option enables loading async chunks via a custom script type, such as script type="module".
 	 */

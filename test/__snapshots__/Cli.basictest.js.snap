@@ -188,6 +188,7 @@ Object {
           false,
           "gzip",
           "brotli",
+          "zstd",
         ],
       },
     ],
@@ -2421,6 +2422,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-css-auto-font-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"font\\">\` for the primary \`src\` URL of each \`@font-face\` reachable from an HTML entry's initial CSS. Only the first URL per \`@font-face\` is preloaded (preloading every format would double-download). Off by default; \`parser.css.urlHints\` rules and per-URL magic comments still override the seeded defaults. Set \`output.crossOriginLoading\` so the preload matches the font's CORS fetch.",
+        "multiple": false,
+        "path": "module.parser.css/auto.fontPreload",
+        "type": "boolean",
+      },
+    ],
+    "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"font\\">\` for the primary \`src\` URL of each \`@font-face\` reachable from an HTML entry's initial CSS. Only the first URL per \`@font-face\` is preloaded (preloading every format would double-download). Off by default; \`parser.css.urlHints\` rules and per-URL magic comments still override the seeded defaults. Set \`output.crossOriginLoading\` so the preload matches the font's CORS fetch.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-auto-function": Object {
     "configs": Array [
       Object {
@@ -2755,6 +2769,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-css-font-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"font\\">\` for the primary \`src\` URL of each \`@font-face\` reachable from an HTML entry's initial CSS. Only the first URL per \`@font-face\` is preloaded (preloading every format would double-download). Off by default; \`parser.css.urlHints\` rules and per-URL magic comments still override the seeded defaults. Set \`output.crossOriginLoading\` so the preload matches the font's CORS fetch.",
+        "multiple": false,
+        "path": "module.parser.css.fontPreload",
+        "type": "boolean",
+      },
+    ],
+    "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"font\\">\` for the primary \`src\` URL of each \`@font-face\` reachable from an HTML entry's initial CSS. Only the first URL per \`@font-face\` is preloaded (preloading every format would double-download). Off by default; \`parser.css.urlHints\` rules and per-URL magic comments still override the seeded defaults. Set \`output.crossOriginLoading\` so the preload matches the font's CORS fetch.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-css-global-animation": Object {
     "configs": Array [
       Object {
@@ -2868,6 +2895,19 @@ Object {
     "description": "Configure how CSS content is exported as default.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-css-global-font-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"font\\">\` for the primary \`src\` URL of each \`@font-face\` reachable from an HTML entry's initial CSS. Only the first URL per \`@font-face\` is preloaded (preloading every format would double-download). Off by default; \`parser.css.urlHints\` rules and per-URL magic comments still override the seeded defaults. Set \`output.crossOriginLoading\` so the preload matches the font's CORS fetch.",
+        "multiple": false,
+        "path": "module.parser.css/global.fontPreload",
+        "type": "boolean",
+      },
+    ],
+    "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"font\\">\` for the primary \`src\` URL of each \`@font-face\` reachable from an HTML entry's initial CSS. Only the first URL per \`@font-face\` is preloaded (preloading every format would double-download). Off by default; \`parser.css.urlHints\` rules and per-URL magic comments still override the seeded defaults. Set \`output.crossOriginLoading\` so the preload matches the font's CORS fetch.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-css-global-function": Object {
     "configs": Array [
@@ -3271,6 +3311,19 @@ Object {
     "description": "Configure how CSS content is exported as default.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-css-module-font-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"font\\">\` for the primary \`src\` URL of each \`@font-face\` reachable from an HTML entry's initial CSS. Only the first URL per \`@font-face\` is preloaded (preloading every format would double-download). Off by default; \`parser.css.urlHints\` rules and per-URL magic comments still override the seeded defaults. Set \`output.crossOriginLoading\` so the preload matches the font's CORS fetch.",
+        "multiple": false,
+        "path": "module.parser.css/module.fontPreload",
+        "type": "boolean",
+      },
+    ],
+    "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"font\\">\` for the primary \`src\` URL of each \`@font-face\` reachable from an HTML entry's initial CSS. Only the first URL per \`@font-face\` is preloaded (preloading every format would double-download). Off by default; \`parser.css.urlHints\` rules and per-URL magic comments still override the seeded defaults. Set \`output.crossOriginLoading\` so the preload matches the font's CORS fetch.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-css-module-function": Object {
     "configs": Array [
@@ -4254,6 +4307,25 @@ Object {
     "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-dynamic-import-css-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"style\\">\` for the CSS of every dynamically imported (\`import()\`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike \`dynamicImportPreload\`, the JavaScript itself is not preloaded. \`true\` uses the default order; a number sets the preload order.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.dynamicImportCssPreload",
+        "type": "number",
+      },
+      Object {
+        "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"style\\">\` for the CSS of every dynamically imported (\`import()\`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike \`dynamicImportPreload\`, the JavaScript itself is not preloaded. \`true\` uses the default order; a number sets the preload order.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.dynamicImportCssPreload",
+        "type": "boolean",
+      },
+    ],
+    "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"style\\">\` for the CSS of every dynamically imported (\`import()\`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike \`dynamicImportPreload\`, the JavaScript itself is not preloaded. \`true\` uses the default order; a number sets the preload order.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-auto-dynamic-import-fetch-priority": Object {
     "configs": Array [
@@ -5456,6 +5528,25 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-dynamic-import-css-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"style\\">\` for the CSS of every dynamically imported (\`import()\`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike \`dynamicImportPreload\`, the JavaScript itself is not preloaded. \`true\` uses the default order; a number sets the preload order.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.dynamicImportCssPreload",
+        "type": "number",
+      },
+      Object {
+        "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"style\\">\` for the CSS of every dynamically imported (\`import()\`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike \`dynamicImportPreload\`, the JavaScript itself is not preloaded. \`true\` uses the default order; a number sets the preload order.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.dynamicImportCssPreload",
+        "type": "boolean",
+      },
+    ],
+    "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"style\\">\` for the CSS of every dynamically imported (\`import()\`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike \`dynamicImportPreload\`, the JavaScript itself is not preloaded. \`true\` uses the default order; a number sets the preload order.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-dynamic-import-fetch-priority": Object {
     "configs": Array [
       Object {
@@ -5647,6 +5738,25 @@ Object {
     "description": "Enable/disable parsing of import() syntax.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-import-css-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"style\\">\` for the CSS of every dynamically imported (\`import()\`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike \`dynamicImportPreload\`, the JavaScript itself is not preloaded. \`true\` uses the default order; a number sets the preload order.",
+        "multiple": false,
+        "path": "module.parser.javascript.dynamicImportCssPreload",
+        "type": "number",
+      },
+      Object {
+        "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"style\\">\` for the CSS of every dynamically imported (\`import()\`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike \`dynamicImportPreload\`, the JavaScript itself is not preloaded. \`true\` uses the default order; a number sets the preload order.",
+        "multiple": false,
+        "path": "module.parser.javascript.dynamicImportCssPreload",
+        "type": "boolean",
+      },
+    ],
+    "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"style\\">\` for the CSS of every dynamically imported (\`import()\`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike \`dynamicImportPreload\`, the JavaScript itself is not preloaded. \`true\` uses the default order; a number sets the preload order.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-dynamic-import-exports-presence": Object {
     "configs": Array [
@@ -6667,6 +6777,25 @@ Object {
     "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-dynamic-import-css-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"style\\">\` for the CSS of every dynamically imported (\`import()\`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike \`dynamicImportPreload\`, the JavaScript itself is not preloaded. \`true\` uses the default order; a number sets the preload order.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.dynamicImportCssPreload",
+        "type": "number",
+      },
+      Object {
+        "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"style\\">\` for the CSS of every dynamically imported (\`import()\`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike \`dynamicImportPreload\`, the JavaScript itself is not preloaded. \`true\` uses the default order; a number sets the preload order.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.dynamicImportCssPreload",
+        "type": "boolean",
+      },
+    ],
+    "description": "Auto-emit \`<link rel=\\"preload\\" as=\\"style\\">\` for the CSS of every dynamically imported (\`import()\`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike \`dynamicImportPreload\`, the JavaScript itself is not preloaded. \`true\` uses the default order; a number sets the preload order.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-esm-dynamic-import-fetch-priority": Object {
     "configs": Array [
@@ -11816,22 +11945,24 @@ Object {
   "output-resource-hints": Object {
     "configs": Array [
       Object {
-        "description": "Resource-hint (\`<link rel=\\"prefetch\\">\` / \`<link rel=\\"preload\\">\` / \`<link rel=\\"modulepreload\\">\`) emission for extracted HTML entries and for URL-referenced assets carrying \`webpackPrefetch\` / \`webpackPreload\` (either from magic comments or from \`module.parser.<type>.urlHints\` rules). \`true\` auto-emits \`<link rel=\\"modulepreload\\">\` (ESM output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic) for each of the entry's initial dependency chunks; \`\\"prefetch\\"\` uses \`<link rel=\\"prefetch\\">\`; an array of \`HtmlResourceHint\` descriptors replaces the auto set; a function receives the auto \`defaultHints\` plus context (\`entryName\`, \`entrypoint\`, \`hostType: \\"html\\" | \\"js\\"\`, \`compilation\`) and returns the final list (this same callback replaces the removed \`resolveDependencies\` hook). \`false\` disables chunk hints; URL-referenced asset hints from magic comments / \`urlHints\` rules still fire — via the HTML \`<head>\` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime.",
+        "description": "Initial dependency-graph chunk hints. \`true\` auto-emits \`<link rel=\\"modulepreload\\">\` (ESM output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic) for each of the entry's initial dependency chunks; \`\\"prefetch\\"\` uses \`<link rel=\\"prefetch\\">\`; \`\\"preload\\"\` is an alias of \`true\`; \`false\` disables chunk hints (URL-asset hints from magic comments / \`urlHints\` still fire); \`\\"none\\"\` is a hard off switch (no \`<link>\` anywhere, empty stats / manifest); an array of \`HtmlResourceHint\` descriptors replaces the auto set; a function receives the auto \`defaultHints\` plus context (\`entryName\`, \`entrypoint\`, \`hostType: \\"html\\" | \\"js\\"\`, \`compilation\`) and returns the final list (replaces the removed \`resolveDependencies\` hook).",
         "multiple": false,
         "path": "output.resourceHints",
         "type": "enum",
         "values": Array [
           "prefetch",
+          "preload",
+          "none",
         ],
       },
       Object {
-        "description": "Resource-hint (\`<link rel=\\"prefetch\\">\` / \`<link rel=\\"preload\\">\` / \`<link rel=\\"modulepreload\\">\`) emission for extracted HTML entries and for URL-referenced assets carrying \`webpackPrefetch\` / \`webpackPreload\` (either from magic comments or from \`module.parser.<type>.urlHints\` rules). \`true\` auto-emits \`<link rel=\\"modulepreload\\">\` (ESM output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic) for each of the entry's initial dependency chunks; \`\\"prefetch\\"\` uses \`<link rel=\\"prefetch\\">\`; an array of \`HtmlResourceHint\` descriptors replaces the auto set; a function receives the auto \`defaultHints\` plus context (\`entryName\`, \`entrypoint\`, \`hostType: \\"html\\" | \\"js\\"\`, \`compilation\`) and returns the final list (this same callback replaces the removed \`resolveDependencies\` hook). \`false\` disables chunk hints; URL-referenced asset hints from magic comments / \`urlHints\` rules still fire — via the HTML \`<head>\` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime.",
+        "description": "Initial dependency-graph chunk hints. \`true\` auto-emits \`<link rel=\\"modulepreload\\">\` (ESM output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic) for each of the entry's initial dependency chunks; \`\\"prefetch\\"\` uses \`<link rel=\\"prefetch\\">\`; \`\\"preload\\"\` is an alias of \`true\`; \`false\` disables chunk hints (URL-asset hints from magic comments / \`urlHints\` still fire); \`\\"none\\"\` is a hard off switch (no \`<link>\` anywhere, empty stats / manifest); an array of \`HtmlResourceHint\` descriptors replaces the auto set; a function receives the auto \`defaultHints\` plus context (\`entryName\`, \`entrypoint\`, \`hostType: \\"html\\" | \\"js\\"\`, \`compilation\`) and returns the final list (replaces the removed \`resolveDependencies\` hook).",
         "multiple": false,
         "path": "output.resourceHints",
         "type": "boolean",
       },
     ],
-    "description": "Resource-hint (\`<link rel=\\"prefetch\\">\` / \`<link rel=\\"preload\\">\` / \`<link rel=\\"modulepreload\\">\`) emission for extracted HTML entries and for URL-referenced assets carrying \`webpackPrefetch\` / \`webpackPreload\` (either from magic comments or from \`module.parser.<type>.urlHints\` rules). \`true\` auto-emits \`<link rel=\\"modulepreload\\">\` (ESM output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic) for each of the entry's initial dependency chunks; \`\\"prefetch\\"\` uses \`<link rel=\\"prefetch\\">\`; an array of \`HtmlResourceHint\` descriptors replaces the auto set; a function receives the auto \`defaultHints\` plus context (\`entryName\`, \`entrypoint\`, \`hostType: \\"html\\" | \\"js\\"\`, \`compilation\`) and returns the final list (this same callback replaces the removed \`resolveDependencies\` hook). \`false\` disables chunk hints; URL-referenced asset hints from magic comments / \`urlHints\` rules still fire — via the HTML \`<head>\` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime.",
+    "description": "Initial dependency-graph chunk hints. \`true\` auto-emits \`<link rel=\\"modulepreload\\">\` (ESM output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic) for each of the entry's initial dependency chunks; \`\\"prefetch\\"\` uses \`<link rel=\\"prefetch\\">\`; \`\\"preload\\"\` is an alias of \`true\`; \`false\` disables chunk hints (URL-asset hints from magic comments / \`urlHints\` still fire); \`\\"none\\"\` is a hard off switch (no \`<link>\` anywhere, empty stats / manifest); an array of \`HtmlResourceHint\` descriptors replaces the auto set; a function receives the auto \`defaultHints\` plus context (\`entryName\`, \`entrypoint\`, \`hostType: \\"html\\" | \\"js\\"\`, \`compilation\`) and returns the final list (replaces the removed \`resolveDependencies\` hook).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -11897,6 +12028,24 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "output-resource-hints-fetch-priority": Object {
+    "configs": Array [
+      Object {
+        "description": "The \`fetchpriority\` attribute. Emitted on \`preload\` / \`modulepreload\` and on \`prefetch\` (the spec now permits it there).",
+        "multiple": true,
+        "path": "output.resourceHints[].fetchPriority",
+        "type": "enum",
+        "values": Array [
+          "low",
+          "high",
+          "auto",
+        ],
+      },
+    ],
+    "description": "The \`fetchpriority\` attribute. Emitted on \`preload\` / \`modulepreload\` and on \`prefetch\` (the spec now permits it there).",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "output-resource-hints-href": Object {
     "configs": Array [
       Object {
@@ -11907,6 +12056,195 @@ Object {
       },
     ],
     "description": "A literal URL used verbatim (external resource, \`preconnect\` origin, or an already-hashed asset).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-initial": Object {
+    "configs": Array [
+      Object {
+        "description": "Initial dependency-graph chunk hints. \`true\` auto-emits \`<link rel=\\"modulepreload\\">\` (ESM output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic) for each of the entry's initial dependency chunks; \`\\"prefetch\\"\` uses \`<link rel=\\"prefetch\\">\`; \`\\"preload\\"\` is an alias of \`true\`; \`false\` disables chunk hints (URL-asset hints from magic comments / \`urlHints\` still fire); \`\\"none\\"\` is a hard off switch (no \`<link>\` anywhere, empty stats / manifest); an array of \`HtmlResourceHint\` descriptors replaces the auto set; a function receives the auto \`defaultHints\` plus context (\`entryName\`, \`entrypoint\`, \`hostType: \\"html\\" | \\"js\\"\`, \`compilation\`) and returns the final list (replaces the removed \`resolveDependencies\` hook).",
+        "multiple": false,
+        "path": "output.resourceHints.initial",
+        "type": "enum",
+        "values": Array [
+          "prefetch",
+          "preload",
+          "none",
+        ],
+      },
+      Object {
+        "description": "Initial dependency-graph chunk hints. \`true\` auto-emits \`<link rel=\\"modulepreload\\">\` (ESM output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic) for each of the entry's initial dependency chunks; \`\\"prefetch\\"\` uses \`<link rel=\\"prefetch\\">\`; \`\\"preload\\"\` is an alias of \`true\`; \`false\` disables chunk hints (URL-asset hints from magic comments / \`urlHints\` still fire); \`\\"none\\"\` is a hard off switch (no \`<link>\` anywhere, empty stats / manifest); an array of \`HtmlResourceHint\` descriptors replaces the auto set; a function receives the auto \`defaultHints\` plus context (\`entryName\`, \`entrypoint\`, \`hostType: \\"html\\" | \\"js\\"\`, \`compilation\`) and returns the final list (replaces the removed \`resolveDependencies\` hook).",
+        "multiple": false,
+        "path": "output.resourceHints.initial",
+        "type": "boolean",
+      },
+    ],
+    "description": "Initial dependency-graph chunk hints. \`true\` auto-emits \`<link rel=\\"modulepreload\\">\` (ESM output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic) for each of the entry's initial dependency chunks; \`\\"prefetch\\"\` uses \`<link rel=\\"prefetch\\">\`; \`\\"preload\\"\` is an alias of \`true\`; \`false\` disables chunk hints (URL-asset hints from magic comments / \`urlHints\` still fire); \`\\"none\\"\` is a hard off switch (no \`<link>\` anywhere, empty stats / manifest); an array of \`HtmlResourceHint\` descriptors replaces the auto set; a function receives the auto \`defaultHints\` plus context (\`entryName\`, \`entrypoint\`, \`hostType: \\"html\\" | \\"js\\"\`, \`compilation\`) and returns the final list (replaces the removed \`resolveDependencies\` hook).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-resource-hints-initial-as": Object {
+    "configs": Array [
+      Object {
+        "description": "The \`as\` attribute (\`script\`, \`style\`, \`font\`, …); defaults to \`script\` for chunk/entry references.",
+        "multiple": true,
+        "path": "output.resourceHints.initial[].as",
+        "type": "string",
+      },
+    ],
+    "description": "The \`as\` attribute (\`script\`, \`style\`, \`font\`, …); defaults to \`script\` for chunk/entry references.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-initial-chunk": Object {
+    "configs": Array [
+      Object {
+        "description": "Name of a chunk to hint; its emitted URL is resolved automatically.",
+        "multiple": true,
+        "path": "output.resourceHints.initial[].chunk",
+        "type": "string",
+      },
+    ],
+    "description": "Name of a chunk to hint; its emitted URL is resolved automatically.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-initial-crossorigin": Object {
+    "configs": Array [
+      Object {
+        "description": "The CORS mode; \`true\` maps to \`anonymous\`.",
+        "multiple": true,
+        "path": "output.resourceHints.initial[].crossorigin",
+        "type": "enum",
+        "values": Array [
+          "anonymous",
+          "use-credentials",
+        ],
+      },
+      Object {
+        "description": "The CORS mode; \`true\` maps to \`anonymous\`.",
+        "multiple": true,
+        "path": "output.resourceHints.initial[].crossorigin",
+        "type": "boolean",
+      },
+    ],
+    "description": "The CORS mode; \`true\` maps to \`anonymous\`.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-initial-entry": Object {
+    "configs": Array [
+      Object {
+        "description": "Name of an entrypoint to hint; expands to one hint per initial chunk.",
+        "multiple": true,
+        "path": "output.resourceHints.initial[].entry",
+        "type": "string",
+      },
+    ],
+    "description": "Name of an entrypoint to hint; expands to one hint per initial chunk.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-initial-fetch-priority": Object {
+    "configs": Array [
+      Object {
+        "description": "The \`fetchpriority\` attribute. Emitted on \`preload\` / \`modulepreload\` and on \`prefetch\` (the spec now permits it there).",
+        "multiple": true,
+        "path": "output.resourceHints.initial[].fetchPriority",
+        "type": "enum",
+        "values": Array [
+          "low",
+          "high",
+          "auto",
+        ],
+      },
+    ],
+    "description": "The \`fetchpriority\` attribute. Emitted on \`preload\` / \`modulepreload\` and on \`prefetch\` (the spec now permits it there).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-initial-href": Object {
+    "configs": Array [
+      Object {
+        "description": "A literal URL used verbatim (external resource, \`preconnect\` origin, or an already-hashed asset).",
+        "multiple": true,
+        "path": "output.resourceHints.initial[].href",
+        "type": "string",
+      },
+    ],
+    "description": "A literal URL used verbatim (external resource, \`preconnect\` origin, or an already-hashed asset).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-initial-integrity": Object {
+    "configs": Array [
+      Object {
+        "description": "Subresource Integrity for a chunk/entry reference. Follows \`output.html.integrity\` by default; set \`false\` to opt this hint out.",
+        "multiple": true,
+        "path": "output.resourceHints.initial[].integrity",
+        "type": "boolean",
+      },
+    ],
+    "description": "Subresource Integrity for a chunk/entry reference. Follows \`output.html.integrity\` by default; set \`false\` to opt this hint out.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "output-resource-hints-initial-media": Object {
+    "configs": Array [
+      Object {
+        "description": "The \`media\` attribute.",
+        "multiple": true,
+        "path": "output.resourceHints.initial[].media",
+        "type": "string",
+      },
+    ],
+    "description": "The \`media\` attribute.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-initial-rel": Object {
+    "configs": Array [
+      Object {
+        "description": "The \`rel\` of the resource hint.",
+        "multiple": true,
+        "path": "output.resourceHints.initial[].rel",
+        "type": "enum",
+        "values": Array [
+          "preload",
+          "prefetch",
+          "modulepreload",
+          "preconnect",
+          "dns-prefetch",
+        ],
+      },
+    ],
+    "description": "The \`rel\` of the resource hint.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-initial-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.resourceHints.initial' configuration. Initial dependency-graph chunk hints. \`true\` auto-emits \`<link rel=\\"modulepreload\\">\` (ESM output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic) for each of the entry's initial dependency chunks; \`\\"prefetch\\"\` uses \`<link rel=\\"prefetch\\">\`; \`\\"preload\\"\` is an alias of \`true\`; \`false\` disables chunk hints (URL-asset hints from magic comments / \`urlHints\` still fire); \`\\"none\\"\` is a hard off switch (no \`<link>\` anywhere, empty stats / manifest); an array of \`HtmlResourceHint\` descriptors replaces the auto set; a function receives the auto \`defaultHints\` plus context (\`entryName\`, \`entrypoint\`, \`hostType: \\"html\\" | \\"js\\"\`, \`compilation\`) and returns the final list (replaces the removed \`resolveDependencies\` hook).",
+        "multiple": false,
+        "path": "output.resourceHints.initial",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.resourceHints.initial' configuration. Initial dependency-graph chunk hints. \`true\` auto-emits \`<link rel=\\"modulepreload\\">\` (ESM output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic) for each of the entry's initial dependency chunks; \`\\"prefetch\\"\` uses \`<link rel=\\"prefetch\\">\`; \`\\"preload\\"\` is an alias of \`true\`; \`false\` disables chunk hints (URL-asset hints from magic comments / \`urlHints\` still fire); \`\\"none\\"\` is a hard off switch (no \`<link>\` anywhere, empty stats / manifest); an array of \`HtmlResourceHint\` descriptors replaces the auto set; a function receives the auto \`defaultHints\` plus context (\`entryName\`, \`entrypoint\`, \`hostType: \\"html\\" | \\"js\\"\`, \`compilation\`) and returns the final list (replaces the removed \`resolveDependencies\` hook).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-resource-hints-initial-type": Object {
+    "configs": Array [
+      Object {
+        "description": "The \`type\` attribute (MIME type).",
+        "multiple": true,
+        "path": "output.resourceHints.initial[].type",
+        "type": "string",
+      },
+    ],
+    "description": "The \`type\` attribute (MIME type).",
     "multiple": true,
     "simpleType": "string",
   },
@@ -11923,6 +12261,19 @@ Object {
     "multiple": true,
     "simpleType": "boolean",
   },
+  "output-resource-hints-manifest": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit a JSON manifest of the resolved resource hints for each entrypoint (the same descriptors as \`stats.entrypoints[].resourceHints\`) as an output asset at this path. Lets an SSR server inject the \`<link>\` tags itself without walking the chunk graph — webpack's analogue of Vite's \`build.ssrManifest\`. Empty when \`initial\` is \`\\"none\\"\`.",
+        "multiple": false,
+        "path": "output.resourceHints.manifest",
+        "type": "string",
+      },
+    ],
+    "description": "Emit a JSON manifest of the resolved resource hints for each entrypoint (the same descriptors as \`stats.entrypoints[].resourceHints\`) as an output asset at this path. Lets an SSR server inject the \`<link>\` tags itself without walking the chunk graph — webpack's analogue of Vite's \`build.ssrManifest\`. Empty when \`initial\` is \`\\"none\\"\`.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-resource-hints-media": Object {
     "configs": Array [
       Object {
@@ -11935,6 +12286,32 @@ Object {
     "description": "The \`media\` attribute.",
     "multiple": true,
     "simpleType": "string",
+  },
+  "output-resource-hints-module-preload-polyfill": Object {
+    "configs": Array [
+      Object {
+        "description": "Inject a tiny inline \`<script>\` polyfill for \`<link rel=\\"modulepreload\\">\` into extracted HTML pages. Defaults from the target's modulepreload support (\`output.environment.modulePreload\`) — \`true\` when the environment lacks native support, \`false\` when it has it. Set \`false\` to never inject (the \`<link>\` tags are still emitted but do nothing on browsers without support — useful under a strict CSP that forbids inline scripts).",
+        "multiple": false,
+        "path": "output.resourceHints.modulePreloadPolyfill",
+        "type": "boolean",
+      },
+    ],
+    "description": "Inject a tiny inline \`<script>\` polyfill for \`<link rel=\\"modulepreload\\">\` into extracted HTML pages. Defaults from the target's modulepreload support (\`output.environment.modulePreload\`) — \`true\` when the environment lacks native support, \`false\` when it has it. Set \`false\` to never inject (the \`<link>\` tags are still emitted but do nothing on browsers without support — useful under a strict CSP that forbids inline scripts).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-resource-hints-preconnect": Object {
+    "configs": Array [
+      Object {
+        "description": "Auto-emit \`<link rel=\\"preconnect\\">\` for the origin of a cross-origin \`output.publicPath\` (the origin bundles and assets are served from) into extracted HTML entries and the resource-hint stats / manifest. Mirrors \`output.crossOriginLoading\`. No-op when \`publicPath\` is relative or \`\\"auto\\"\`.",
+        "multiple": false,
+        "path": "output.resourceHints.preconnect",
+        "type": "boolean",
+      },
+    ],
+    "description": "Auto-emit \`<link rel=\\"preconnect\\">\` for the origin of a cross-origin \`output.publicPath\` (the origin bundles and assets are served from) into extracted HTML entries and the resource-hint stats / manifest. Mirrors \`output.crossOriginLoading\`. No-op when \`publicPath\` is relative or \`\\"auto\\"\`.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "output-resource-hints-rel": Object {
     "configs": Array [
@@ -11959,13 +12336,13 @@ Object {
   "output-resource-hints-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in 'output.resourceHints' configuration. Resource-hint (\`<link rel=\\"prefetch\\">\` / \`<link rel=\\"preload\\">\` / \`<link rel=\\"modulepreload\\">\`) emission for extracted HTML entries and for URL-referenced assets carrying \`webpackPrefetch\` / \`webpackPreload\` (either from magic comments or from \`module.parser.<type>.urlHints\` rules). \`true\` auto-emits \`<link rel=\\"modulepreload\\">\` (ESM output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic) for each of the entry's initial dependency chunks; \`\\"prefetch\\"\` uses \`<link rel=\\"prefetch\\">\`; an array of \`HtmlResourceHint\` descriptors replaces the auto set; a function receives the auto \`defaultHints\` plus context (\`entryName\`, \`entrypoint\`, \`hostType: \\"html\\" | \\"js\\"\`, \`compilation\`) and returns the final list (this same callback replaces the removed \`resolveDependencies\` hook). \`false\` disables chunk hints; URL-referenced asset hints from magic comments / \`urlHints\` rules still fire — via the HTML \`<head>\` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime.",
+        "description": "Clear all items provided in 'output.resourceHints' configuration. Initial dependency-graph chunk hints. \`true\` auto-emits \`<link rel=\\"modulepreload\\">\` (ESM output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic) for each of the entry's initial dependency chunks; \`\\"prefetch\\"\` uses \`<link rel=\\"prefetch\\">\`; \`\\"preload\\"\` is an alias of \`true\`; \`false\` disables chunk hints (URL-asset hints from magic comments / \`urlHints\` still fire); \`\\"none\\"\` is a hard off switch (no \`<link>\` anywhere, empty stats / manifest); an array of \`HtmlResourceHint\` descriptors replaces the auto set; a function receives the auto \`defaultHints\` plus context (\`entryName\`, \`entrypoint\`, \`hostType: \\"html\\" | \\"js\\"\`, \`compilation\`) and returns the final list (replaces the removed \`resolveDependencies\` hook).",
         "multiple": false,
         "path": "output.resourceHints",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in 'output.resourceHints' configuration. Resource-hint (\`<link rel=\\"prefetch\\">\` / \`<link rel=\\"preload\\">\` / \`<link rel=\\"modulepreload\\">\`) emission for extracted HTML entries and for URL-referenced assets carrying \`webpackPrefetch\` / \`webpackPreload\` (either from magic comments or from \`module.parser.<type>.urlHints\` rules). \`true\` auto-emits \`<link rel=\\"modulepreload\\">\` (ESM output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic) for each of the entry's initial dependency chunks; \`\\"prefetch\\"\` uses \`<link rel=\\"prefetch\\">\`; an array of \`HtmlResourceHint\` descriptors replaces the auto set; a function receives the auto \`defaultHints\` plus context (\`entryName\`, \`entrypoint\`, \`hostType: \\"html\\" | \\"js\\"\`, \`compilation\`) and returns the final list (this same callback replaces the removed \`resolveDependencies\` hook). \`false\` disables chunk hints; URL-referenced asset hints from magic comments / \`urlHints\` rules still fire — via the HTML \`<head>\` when the asset is reachable from an HTML entrypoint's initial chunks, otherwise from the JS chunk startup runtime.",
+    "description": "Clear all items provided in 'output.resourceHints' configuration. Initial dependency-graph chunk hints. \`true\` auto-emits \`<link rel=\\"modulepreload\\">\` (ESM output) or \`<link rel=\\"preload\\" as=\\"script\\">\` (classic) for each of the entry's initial dependency chunks; \`\\"prefetch\\"\` uses \`<link rel=\\"prefetch\\">\`; \`\\"preload\\"\` is an alias of \`true\`; \`false\` disables chunk hints (URL-asset hints from magic comments / \`urlHints\` still fire); \`\\"none\\"\` is a hard off switch (no \`<link>\` anywhere, empty stats / manifest); an array of \`HtmlResourceHint\` descriptors replaces the auto set; a function receives the auto \`defaultHints\` plus context (\`entryName\`, \`entrypoint\`, \`hostType: \\"html\\" | \\"js\\"\`, \`compilation\`) and returns the final list (replaces the removed \`resolveDependencies\` hook).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -11979,6 +12356,217 @@ Object {
       },
     ],
     "description": "The \`type\` attribute (MIME type).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-url-hints-as": Object {
+    "configs": Array [
+      Object {
+        "description": "Default \`as\` attribute (script / style / font / image / …).",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].as",
+        "type": "string",
+      },
+    ],
+    "description": "Default \`as\` attribute (script / style / font / image / …).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-url-hints-exclude": Object {
+    "configs": Array [
+      Object {
+        "description": "One default-hint rule for URL-referenced assets emitted by this parser (JS \`new URL(...)\`, CSS \`url(...)\`, HTML \`<img src>\` / \`<link href>\` / \`<script src>\`). \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset. Matching rules set the same fields a \`webpackPrefetch\` / \`webpackPreload\` / \`webpackAs\` / \`webpackType\` / \`webpackMedia\` / \`webpackFetchPriority\` magic comment would; explicit magic comments on the same URL still win.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].exclude",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "One default-hint rule for URL-referenced assets emitted by this parser (JS \`new URL(...)\`, CSS \`url(...)\`, HTML \`<img src>\` / \`<link href>\` / \`<script src>\`). \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset. Matching rules set the same fields a \`webpackPrefetch\` / \`webpackPreload\` / \`webpackAs\` / \`webpackType\` / \`webpackMedia\` / \`webpackFetchPriority\` magic comment would; explicit magic comments on the same URL still win.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].exclude",
+        "type": "string",
+      },
+    ],
+    "description": "One default-hint rule for URL-referenced assets emitted by this parser (JS \`new URL(...)\`, CSS \`url(...)\`, HTML \`<img src>\` / \`<link href>\` / \`<script src>\`). \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset. Matching rules set the same fields a \`webpackPrefetch\` / \`webpackPreload\` / \`webpackAs\` / \`webpackType\` / \`webpackMedia\` / \`webpackFetchPriority\` magic comment would; explicit magic comments on the same URL still win.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-url-hints-exclude-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].exclude.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].exclude.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-url-hints-fetch-priority": Object {
+    "configs": Array [
+      Object {
+        "description": "Default fetchpriority for prefetch / preload links.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].fetchPriority",
+        "type": "enum",
+        "values": Array [
+          "low",
+          "high",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Default fetchpriority for prefetch / preload links.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-url-hints-include": Object {
+    "configs": Array [
+      Object {
+        "description": "One default-hint rule for URL-referenced assets emitted by this parser (JS \`new URL(...)\`, CSS \`url(...)\`, HTML \`<img src>\` / \`<link href>\` / \`<script src>\`). \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset. Matching rules set the same fields a \`webpackPrefetch\` / \`webpackPreload\` / \`webpackAs\` / \`webpackType\` / \`webpackMedia\` / \`webpackFetchPriority\` magic comment would; explicit magic comments on the same URL still win.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].include",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "One default-hint rule for URL-referenced assets emitted by this parser (JS \`new URL(...)\`, CSS \`url(...)\`, HTML \`<img src>\` / \`<link href>\` / \`<script src>\`). \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset. Matching rules set the same fields a \`webpackPrefetch\` / \`webpackPreload\` / \`webpackAs\` / \`webpackType\` / \`webpackMedia\` / \`webpackFetchPriority\` magic comment would; explicit magic comments on the same URL still win.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].include",
+        "type": "string",
+      },
+    ],
+    "description": "One default-hint rule for URL-referenced assets emitted by this parser (JS \`new URL(...)\`, CSS \`url(...)\`, HTML \`<img src>\` / \`<link href>\` / \`<script src>\`). \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset. Matching rules set the same fields a \`webpackPrefetch\` / \`webpackPreload\` / \`webpackAs\` / \`webpackType\` / \`webpackMedia\` / \`webpackFetchPriority\` magic comment would; explicit magic comments on the same URL still win.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-url-hints-include-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].include.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].include.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-url-hints-media": Object {
+    "configs": Array [
+      Object {
+        "description": "Default \`media\` attribute (e.g. \`\\"(min-width: 800px)\\"\`).",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].media",
+        "type": "string",
+      },
+    ],
+    "description": "Default \`media\` attribute (e.g. \`\\"(min-width: 800px)\\"\`).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-url-hints-prefetch": Object {
+    "configs": Array [
+      Object {
+        "description": "When true, emit \`<link rel=\\"prefetch\\">\` for matching assets without an explicit hint comment.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].prefetch",
+        "type": "boolean",
+      },
+    ],
+    "description": "When true, emit \`<link rel=\\"prefetch\\">\` for matching assets without an explicit hint comment.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "output-resource-hints-url-hints-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "When true, emit \`<link rel=\\"preload\\">\` for matching assets without an explicit hint comment.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].preload",
+        "type": "boolean",
+      },
+    ],
+    "description": "When true, emit \`<link rel=\\"preload\\">\` for matching assets without an explicit hint comment.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "output-resource-hints-url-hints-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'output.resourceHints.urlHints' configuration. Project-wide URL-referenced-asset hint rules, applied as the base \`urlHints\` of every parser (JavaScript \`new URL(...)\`, CSS \`url(...)\`, HTML \`<img src>\` / \`<link href>\`). Parser-scoped \`module.parser.<type>.urlHints\` rules and per-URL magic comments still override these.",
+        "multiple": false,
+        "path": "output.resourceHints.urlHints",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'output.resourceHints.urlHints' configuration. Project-wide URL-referenced-asset hint rules, applied as the base \`urlHints\` of every parser (JavaScript \`new URL(...)\`, CSS \`url(...)\`, HTML \`<img src>\` / \`<link href>\`). Parser-scoped \`module.parser.<type>.urlHints\` rules and per-URL magic comments still override these.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-resource-hints-url-hints-test": Object {
+    "configs": Array [
+      Object {
+        "description": "One default-hint rule for URL-referenced assets emitted by this parser (JS \`new URL(...)\`, CSS \`url(...)\`, HTML \`<img src>\` / \`<link href>\` / \`<script src>\`). \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset. Matching rules set the same fields a \`webpackPrefetch\` / \`webpackPreload\` / \`webpackAs\` / \`webpackType\` / \`webpackMedia\` / \`webpackFetchPriority\` magic comment would; explicit magic comments on the same URL still win.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].test",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "One default-hint rule for URL-referenced assets emitted by this parser (JS \`new URL(...)\`, CSS \`url(...)\`, HTML \`<img src>\` / \`<link href>\` / \`<script src>\`). \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset. Matching rules set the same fields a \`webpackPrefetch\` / \`webpackPreload\` / \`webpackAs\` / \`webpackType\` / \`webpackMedia\` / \`webpackFetchPriority\` magic comment would; explicit magic comments on the same URL still win.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].test",
+        "type": "string",
+      },
+    ],
+    "description": "One default-hint rule for URL-referenced assets emitted by this parser (JS \`new URL(...)\`, CSS \`url(...)\`, HTML \`<img src>\` / \`<link href>\` / \`<script src>\`). \`test\` / \`include\` / \`exclude\` match against the asset's request; omit all three to apply to every asset. Matching rules set the same fields a \`webpackPrefetch\` / \`webpackPreload\` / \`webpackAs\` / \`webpackType\` / \`webpackMedia\` / \`webpackFetchPriority\` magic comment would; explicit magic comments on the same URL still win.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-url-hints-test-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].test.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].test.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-url-hints-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Default \`type\` attribute (MIME).",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].type",
+        "type": "string",
+      },
+    ],
+    "description": "Default \`type\` attribute (MIME).",
     "multiple": true,
     "simpleType": "string",
   },

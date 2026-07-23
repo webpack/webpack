@@ -276,4 +276,22 @@ describe("util/identifier", () => {
 			});
 		}
 	});
+
+	describe("toJsStringLiteral", () => {
+		const { toJsStringLiteral } = identifierUtil;
+		const LS = String.fromCharCode(0x2028);
+		const PS = String.fromCharCode(0x2029);
+
+		it("quotes a plain string like JSON.stringify", () => {
+			expect(toJsStringLiteral("./dynamic.mjs")).toBe('"./dynamic.mjs"');
+		});
+
+		it("escapes U+2028 and U+2029 so the literal stays single-line JS", () => {
+			const literal = toJsStringLiteral(`./a${LS}b${PS}c.mjs`);
+			expect(literal).toBe('"./a\\u2028b\\u2029c.mjs"');
+			// The raw separators must not survive into the emitted literal.
+			expect(literal).not.toContain(LS);
+			expect(literal).not.toContain(PS);
+		});
+	});
 });

@@ -1,0 +1,20 @@
+/* A non-@font-face url must stay untouched even with `fontPreload` on. */
+.bg {
+	background-image: url(./bg.png);
+}
+
+/* Two formats: only the first url (woff2) should be preloaded — preloading
+   both would download a font the browser never uses. */
+@font-face {
+	font-family: "A";
+	src:
+		url(./font.woff2) format("woff2"),
+		url(./font.woff) format("woff");
+}
+
+/* The heuristic seeds `preload` + `as="font"`, but a magic comment still wins:
+   here `webpackAs: "fetch"` overrides the seeded `as`. */
+@font-face {
+	font-family: "B";
+	src: /* webpackAs: "fetch" */ url("./other.woff2") format("woff2");
+}

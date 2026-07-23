@@ -151,6 +151,32 @@ export default 40 + file;
 		expect(execute()).toBe(42);
 	}, 100000);
 
+	it("should support zstd compression, or fail fast when unsupported", async () => {
+		const data = {
+			"index.js": `import file from "./file.js";
+export default 40 + file;
+`,
+			"file.js": "export default 2;"
+		};
+		await updateSrc(data);
+		// zstd streams require Node.js >= 22.15
+		if ("createZstdCompress" in require("zlib")) {
+			// cold build writes a zstd-compressed cache
+			await compile({ cache: { compression: "zstd" } });
+			expect(execute()).toBe(42);
+			expect((await readdir(cachePath)).some((f) => f.endsWith(".zst"))).toBe(
+				true
+			);
+			// warm build reads it back, exercising zstd decompression
+			await compile({ cache: { compression: "zstd" } });
+			expect(execute()).toBe(42);
+		} else {
+			await expect(compile({ cache: { compression: "zstd" } })).rejects.toThrow(
+				"cache.compression: 'zstd' requires Node.js >= 22.15.0"
+			);
+		}
+	}, 100000);
+
 	it("should merge multiple small files", async () => {
 		const files = Array.from({ length: 30 }).map((_, i) => `file${i}.js`);
 		const data = {

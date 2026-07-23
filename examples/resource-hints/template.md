@@ -7,13 +7,19 @@ the one that fits your app and copy from it.
 
 Two surfaces are involved:
 
-- `output.resourceHints` — controls the **initial chunk graph** hints emitted
-  into an HTML entry's `<head>` (or exposed on `stats.entrypoints[name].resourceHints`
-  for SSR frameworks).
+- `output.resourceHints` — the emission config. It accepts the **initial chunk
+  graph** shorthand directly (`true` / `"prefetch"` / `"none"` /
+  `HtmlResourceHint[]` / a function — equivalent to `{ initial: … }`) **or** the
+  full object `{ initial, urlHints, preconnect, modulePreloadPolyfill, manifest }`.
+  Hints land in an HTML entry's `<head>` (or `stats.entrypoints[name].resourceHints`
+  / the `manifest` file for SSR). `initial` **defaults on for ESM output**
+  (`output.module`) — like Vite, since native `import()` would otherwise
+  waterfall; classic output stays opt-in.
 - `module.parser.<type>.urlHints` — controls per-**URL-referenced-asset**
   defaults (fonts, images, workers) for `new URL(...)`, CSS `url(...)`,
   HTML `<img src>`, etc. Per-URL `webpackPreload` / `webpackPrefetch` magic
-  comments still win.
+  comments still win. `output.resourceHints.urlHints` is a project-wide shorthand
+  that seeds the same list under every parser at once.
 
 ## Scenarios
 
@@ -26,9 +32,10 @@ Two surfaces are involved:
    `<link>` list (preconnect, custom font, chunk/entry references).
 4. **callback** — `output.resourceHints: fn`. One hook that receives the auto
    `defaultHints` plus `{ entryName, entrypoint, hostType, compilation }` and
-   returns the final list. Replaces both the old `chunks: fn` and
-   `resolveDependencies` hooks; runs for HTML pages (`hostType === "html"`)
-   and JS-only entries (`hostType === "js"`).
+   returns the final list. Each hint carries `hostChunks` (the referencing chunk
+   names — Vite's `hostId`) so you can rewrite per origin chunk. Replaces both
+   the old `chunks: fn` and `resolveDependencies` hooks; runs for HTML pages
+   (`hostType === "html"`) and JS-only entries (`hostType === "js"`).
 5. **url-hints** — `module.parser.javascript.urlHints`. Rule-based
    `preload`/`prefetch` defaults for JS `new URL(...)` references. Same
    shape works under `parser.css.urlHints` (CSS `url(...)`) and
@@ -36,9 +43,36 @@ Two surfaces are involved:
 6. **url-hints-scoped** — `module.rules[].parser.urlHints`. Because parser
    options are scope-aware, a rule can narrow `urlHints` to a subtree
    (e.g. critical routes upgrade `prefetch` → `preload`).
-7. **ssr** — `stats: { chunkGroupResourceHints: true }` + `output.resourceHints`.
-   JS-only build; hints land in `stats.entrypoints[name].resourceHints` and
-   the server renders them into the initial HTML shell.
+7. **ssr** — `output.resourceHints.manifest` + `output.resourceHints`. JS-only
+   build; hints are written to a JSON file (`{ [entry]: descriptors }`) and are
+   also on `stats.entrypoints[name].resourceHints`. The server renders them into
+   the initial HTML shell.
+8. **font-preload** — `module.parser.css.fontPreload: true`. Auto-emit
+   `<link rel="preload" as="font">` for the primary `@font-face` `src` in the
+   initial CSS. Only the first url per `@font-face` is preloaded.
+9. **none** — `output.resourceHints: "none"`. Hard off switch: no `<link>`
+   anywhere and empty stats / manifest. (`false` only disables the auto chunk
+   hints; URL-asset hints keep firing.)
+10. **url-hints-global** — `output.resourceHints.urlHints`. Project-wide shorthand for the
+    same `urlHints` list under every parser (JS / CSS / HTML). Parser-scoped
+    rules and magic comments still override it.
+11. **async-css-preload** — `module.parser.javascript.dynamicImportCssPreload`.
+    Auto `<link rel="preload" as="style">` for a dynamically imported chunk's
+    CSS (parallel with the chunk; the JS itself is not preloaded).
+12. **auto-preconnect** — `output.resourceHints.preconnect`. Emit
+    `<link rel="preconnect">` for a cross-origin `output.publicPath` origin
+    (the CDN serving your bundles / assets).
+13. **object-form** — every knob in one object: `{ initial, urlHints,
+    preconnect, modulePreloadPolyfill, manifest }`.
+14. **csp-no-polyfill** — `modulePreloadPolyfill: false`. The polyfill default
+    is derived from `output.environment.modulePreload`; opt out under a strict
+    CSP that forbids inline scripts.
+15. **async-js-css-preload** — `module.parser.javascript.dynamicImportPreload`.
+    Couples JS **and** CSS of an async chunk (Vite parity) — contrast with
+    scenario 11's CSS-only `dynamicImportCssPreload`.
+16. **esm-default** — nothing set. ESM output (`output.module`) enables
+    `initial` by default, so initial chunks get `<link rel="modulepreload">`
+    with no `resourceHints` config.
 
 # webpack.config.js
 
@@ -58,7 +92,31 @@ _{{src/routes/home.js}}_
 _{{src/routes/home-with-assets.js}}_
 ```
 
-# SSR: reading the stats manifest
+# src/routes/home-with-css.js
+
+```javascript
+_{{src/routes/home-with-css.js}}_
+```
+
+# src/styles/app.css
+
+```css
+_{{src/styles/app.css}}_
+```
+
+# SSR: the manifest file
+
+With `output.resourceHints.manifest: "ssr-hints.json"`, webpack writes the
+manifest for you during the build — no stats plumbing needed:
+
+```js
+// dist/ssr/ssr-hints.json
+const manifest = require("./dist/ssr/ssr-hints.json");
+// { "home": [ { rel, href, as?, type?, media?, fetchPriority? }, ... ], "product": [ ... ] }
+```
+
+Prefer computing it in-process (e.g. custom filtering)? The same data is on
+`stats.entrypoints[name].resourceHints`:
 
 ```js
 const webpack = require("webpack");
@@ -116,7 +174,9 @@ app.get("/product/:id", (req, res) => {
 own subsystem — use `module.parser.javascript.dynamicImportPrefetch` /
 `dynamicImportPreload` / `dynamicImportFetchPriority`, or per-call
 `/* webpackPrefetch: true */` magic comments. Those route through
-webpack's existing on-demand chunk-load runtime.
+webpack's existing on-demand chunk-load runtime. `dynamicImportCssPreload`
+is a CSS-only variant: it preloads a dynamically imported chunk's stylesheet
+(`as="style"`) in parallel with the chunk, without preloading its JS.
 
 # Precedence
 
