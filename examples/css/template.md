@@ -57,18 +57,22 @@ _{{dist/1.output.css}}_
 # style.module.css.d.ts
 
 The plugin writes this declaration **next to the CSS source** (not into `dist`),
-so it is picked up automatically by your editor and by `tsc`:
+so it is picked up automatically by your editor and by `tsc`. It uses the same
+object shape as `typed-css-modules` / `css-modules-typescript-loader` — quoted
+keys, so kebab-case names and reserved words like `default` need no special
+handling — paired with `parser: { namedExports: false }` so the module's default
+export is that object:
 
 ```typescript
 _{{style.module.css.d.ts}}_
 ```
 
-With it in place, the import in `example.js` is fully typed — `main` is a
-`string`, a name that is not in the CSS is a compile error, and the editor
-autocompletes the class names:
+With it in place, the import in `example.js` is fully typed — `styles.main` is a
+`string`, `styles.nope` is a compile error, and the editor autocompletes the
+class names:
 
 ```typescript
-import { main } from "./style.module.css"; // main: string
+import styles from "./style.module.css"; // styles.main: string
 ```
 
 Wiring it into a real project: run the build (or `webpack --watch`) so the
