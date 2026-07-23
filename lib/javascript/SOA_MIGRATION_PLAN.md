@@ -536,6 +536,21 @@ walk-time materialization: react 82→69%, lodash 86→71%, wall time flat.
 Remaining buckets: the object-based pre-walks (~25–30%), per-statement
 facades for `statementPath` (~10–13%), and free-rooted chains (hook-
 relevant, irreducible).
+**D4 id-based pre-walks landed**: `preWalkStatement`/`blockPreWalkStatement`
+re-enter `_preWalkStatementId`/`_blockPreWalkStatementId`, which dispatch on
+the column type and descend on child ids; declarator scanning
+(`_preWalkVariableDeclarationId`) resolves plain identifier bindings from
+the columns and materializes the identifier only when a name-keyed
+pattern/var-declaration hook fires, and destructuring collection probes the
+assignment's left type from the columns. Foreign shapes (for-head and
+`using` declarations, pinned lists, born-unfinished switch consequents,
+anonymous default exports, tagged-template statements) keep the object path
+per statement. Statement facades are still materialized for `statementPath`
+parity, so the pre-walk bucket largely re-bills to that: totals moved
+react 69→68%, lodash 71→68%, three.module →66%, wall time flat. The
+`statementPath` bucket (`_preWalkStatementId` now ~21% on lodash) is the
+next slice; walk-side declarator analysis (~17%) and free-rooted chain
+resolution (~11%) follow.
 Next: stop eager facade construction in `_soaAlloc` (columns only, facades
 via `nodeAt` on demand) so member/call name probing can resolve from
 columns without materializing, drive the D4 materialization counter under

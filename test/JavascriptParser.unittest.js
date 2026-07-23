@@ -674,27 +674,53 @@ describe("JavascriptParser", () => {
 				if (evalExpr.isRegExp()) result.push(`regExp=${evalExpr.regExp}`);
 				if (evalExpr.isConditional()) {
 					result.push(
-						`options=[${/** @type {import("../lib/javascript/BasicEvaluatedExpression")[]} */ (evalExpr.options).map(evalExprToString).join("],[")}]`
+						`options=[${
+							/** @type {import("../lib/javascript/BasicEvaluatedExpression")[]} */ (
+								evalExpr.options
+							)
+								.map(evalExprToString)
+								.join("],[")
+						}]`
 					);
 				}
 				if (evalExpr.isArray()) {
 					result.push(
-						`items=[${/** @type {import("../lib/javascript/BasicEvaluatedExpression")[]} */ (evalExpr.items).map(evalExprToString).join("],[")}]`
+						`items=[${
+							/** @type {import("../lib/javascript/BasicEvaluatedExpression")[]} */ (
+								evalExpr.items
+							)
+								.map(evalExprToString)
+								.join("],[")
+						}]`
 					);
 				}
 				if (evalExpr.isConstArray()) {
 					result.push(
-						`array=[${/** @type {(string | number | boolean | null | RegExp | bigint)[]} */ (evalExpr.array).join("],[")}]`
+						`array=[${
+							/** @type {(string | number | boolean | null | RegExp | bigint)[]} */ (
+								evalExpr.array
+							).join("],[")
+						}]`
 					);
 				}
 				if (evalExpr.isTemplateString()) {
 					result.push(
-						`template=[${/** @type {import("../lib/javascript/BasicEvaluatedExpression")[]} */ (evalExpr.quasis).map(evalExprToString).join("],[")}]`
+						`template=[${
+							/** @type {import("../lib/javascript/BasicEvaluatedExpression")[]} */ (
+								evalExpr.quasis
+							)
+								.map(evalExprToString)
+								.join("],[")
+						}]`
 					);
 				}
 				if (evalExpr.isWrapped()) {
 					result.push(
-						`wrapped=[${evalExprToString(/** @type {import("../lib/javascript/BasicEvaluatedExpression")} */ (evalExpr.prefix))}]+[${evalExprToString(
+						`wrapped=[${evalExprToString(
+							/** @type {import("../lib/javascript/BasicEvaluatedExpression")} */ (
+								evalExpr.prefix
+							)
+						)}]+[${evalExprToString(
 							/** @type {import("../lib/javascript/BasicEvaluatedExpression")} */ (
 								evalExpr.postfix
 							)
@@ -1593,6 +1619,187 @@ describe("JavascriptParser", () => {
 				o1.free1.free2;
 				o1["s2"].free3;`
 			);
+		});
+
+		// The id-based pre-walk passes: hoisting (`var`/function declarations)
+		// and block scoping (`let`/`const`, destructuring collection) run on
+		// the columns. Every pre-walking statement shape descends here, plus
+		// the foreign fallbacks (for-head declarations, pinned lists,
+		// anonymous default exports, tagged-template statements).
+		it("should drive identical hook sequences through the id pre-walk passes", () => {
+			expectSameWalk(
+				`import "pm";
+				export default function () { inner1; }
+				function pre1(a, b) {
+					if (a) var h1 = 1; else var h2 = 2;
+					h1; h2;
+					while (a) { var h3 = 3; let s1 = 1; s1; }
+					do { var h4 = b; } while (a);
+					plab: { var h5 = 1; }
+					try { var h6 = 1; } catch (er) { var h7 = 2; } finally { var h8 = 3; }
+					switch (a) { case 1: var h9 = 1; let s2 = 2; s2; }
+					for (var i1 = 0; i1 < a; i1++) { var h10 = i1; }
+					for (let i2 in a) { var h11 = i2; }
+					for (const i3 of a) { var h12 = i3; }
+					h3; h4; h5; h6; h7; h8; h9; h10; h11; h12;
+					tg\`plain\`;
+					({ d1 } = a);
+					[d2] = a;
+					b.c = 1;
+					const { p1, q1: [r1] } = a;
+					var v1, v2 = b;
+					let l1 = 1, [l2] = a;
+					l1; l2; p1; r1; v1; v2;
+				}
+				pre1(g1, g2);
+				var top1 = g1;
+				{ class Pin1 {} var h13 = 1; let s3 = 2; s3; }
+				h13; top1;`
+			);
+		});
+
+		// The id pre-walk's hook seams: broadcast/typed pre-statement bails,
+		// the `preDeclarator` fallback, destructuring collection, and the
+		// name-keyed pattern / var-declaration hooks that decide whether an
+		// identifier facade materializes — asserted equal across backends.
+		it("should match the object pre-walk on hook bails and name-keyed declarations", () => {
+			/**
+			 * @param {string} code source
+			 * @param {boolean} soaAst backend
+			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
+			 * @returns {string[]} recorded events
+			 */
+			const walk = (code, soaAst, setup) => {
+				const parser = new JavascriptParser("auto", { soaAst });
+				/** @type {string[]} */
+				const events = [];
+				setup(parser, events);
+				// a defined `probe` silences this hook, a skipped define keeps it
+				parser.hooks.expression.for("probe").tap("t", () => {
+					events.push("expr probe");
+				});
+				parser.parse(
+					code,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return events;
+			};
+			/**
+			 * @param {string} code source
+			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
+			 * @returns {void} asserts both backends agree
+			 */
+			const same = (code, setup) => {
+				expect(walk(code, true, setup).join("\n")).toBe(
+					walk(code, false, setup).join("\n")
+				);
+			};
+			/**
+			 * @param {string[]} e events
+			 * @param {string} label event label
+			 * @returns {(node: EXPECTED_ANY) => void} recording tap
+			 */
+			const rec = (e, label) => (node) => {
+				e.push(`${label}@${node.range[0]}`);
+			};
+			/**
+			 * @param {string[]} e events
+			 * @param {string} label event label
+			 * @returns {(node: EXPECTED_ANY) => boolean} bailing tap
+			 */
+			const bail = (e, label) => (node) => {
+				e.push(`${label}@${node.range[0]}`);
+				return true;
+			};
+
+			const FIX =
+				"var probe; { let probe; probe; } function fn1() { var probe; probe; } fn1(); probe;";
+			// broadcast pre-statement observers fire for every statement
+			same(FIX, (p, e) => {
+				p.hooks.preStatement.tap("t", rec(e, "pre"));
+				p.hooks.blockPreStatement.tap("t", rec(e, "blockPre"));
+			});
+			// broadcast bails skip the declaration pre-walk → `probe` stays free
+			same(FIX, (p, e) => {
+				p.hooks.preStatement.tap("t", bail(e, "preBail"));
+			});
+			same(FIX, (p, e) => {
+				p.hooks.blockPreStatement.tap("t", bail(e, "blockPreBail"));
+			});
+			// type-keyed pre-statement hooks: observing and bailing
+			same(FIX, (p, e) => {
+				p.hooks.preStatementByType
+					.for("VariableDeclaration")
+					.tap("t", rec(e, "preVar"));
+				p.hooks.blockPreStatementByType
+					.for("VariableDeclaration")
+					.tap("t", rec(e, "blockPreVar"));
+			});
+			same(FIX, (p, e) => {
+				p.hooks.preStatementByType
+					.for("VariableDeclaration")
+					.tap("t", bail(e, "preVarBail"));
+			});
+			same(FIX, (p, e) => {
+				p.hooks.blockPreStatementByType
+					.for("VariableDeclaration")
+					.tap("t", bail(e, "blockPreVarBail"));
+			});
+			// a `preDeclarator` tap routes declarators through the object path
+			same(FIX, (p, e) => {
+				p.hooks.preDeclarator.tap("t", rec(e, "preDecl"));
+			});
+			same(FIX, (p, e) => {
+				p.hooks.preDeclarator.tap("t", bail(e, "preDeclBail"));
+			});
+			// name-keyed pattern hook: a bail skips the define, a pass defines
+			same(FIX, (p, e) => {
+				p.hooks.pattern.for("probe").tap("t", bail(e, "pattern"));
+			});
+			same(FIX, (p, e) => {
+				p.hooks.pattern.for("probe").tap("t", rec(e, "patternPass"));
+			});
+			// kind-keyed declaration hooks: handled (no define) per kind
+			same("var probe; probe;", (p, e) => {
+				p.hooks.varDeclarationVar.for("probe").tap("t", bail(e, "varVar"));
+			});
+			same("let probe; probe;", (p, e) => {
+				p.hooks.varDeclarationLet.for("probe").tap("t", bail(e, "varLet"));
+			});
+			same("const probe = 1; probe;", (p, e) => {
+				p.hooks.varDeclarationConst.for("probe").tap("t", bail(e, "varConst"));
+			});
+			same(
+				"async function f(res) { using probe = res(); probe; await using u2 = res(); u2; } f(other);",
+				(p, e) => {
+					p.hooks.varDeclarationUsing
+						.for("probe")
+						.tap("t", bail(e, "varUsing"));
+				}
+			);
+			// a passing kind hook falls through to the kind-agnostic hook
+			same("var probe; probe;", (p, e) => {
+				p.hooks.varDeclarationVar.for("probe").tap("t", rec(e, "varVarPass"));
+				p.hooks.varDeclaration.for("probe").tap("t", bail(e, "varDecl"));
+			});
+			same("var probe; probe;", (p, e) => {
+				p.hooks.varDeclaration.for("probe").tap("t", rec(e, "varDeclPass"));
+			});
+			// destructuring collection: statement-level assignment and declarator
+			same("({ probe } = someObj); someObj.other;", (p, e) => {
+				p.hooks.collectDestructuringAssignmentProperties.tap("t", (expr) => {
+					e.push(`collect@${expr.range[0]}`);
+					return true;
+				});
+			});
+			same("const { probe } = someObj; someObj.other;", (p, e) => {
+				p.hooks.collectDestructuringAssignmentProperties.tap("t", (expr) => {
+					e.push(`collectDecl@${expr.range[0]}`);
+					return true;
+				});
+			});
 		});
 
 		// Exercises the D2 handlers' hook-bail early returns (free-rooted
