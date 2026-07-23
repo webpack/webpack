@@ -62,14 +62,40 @@ const path = require("path");
 
 /** @typedef {import("webpack").Compiler} Compiler */
 
+// A valid JS identifier can be a named export; other keys (e.g. `--foo` custom
+// properties exported as `foo-bar`) are only reachable via `import * as styles`.
+const IDENTIFIER = /^[A-Za-z_$][\w$]*$/;
+
 /**
- * Emits the CSS Modules name map (original class/id name -> generated scoped
- * name) as a JSON sidecar per CSS module — the native-CSS equivalent of the
- * postcss-modules `getJSON` callback. The map is computed during code
- * generation and stored on `module.buildInfo.cssData.exports` (a
- * `Map<string, string>`), the same source webpack uses to build the JS exports.
+ * Renames a CSS module's export map into a `.d.ts`. webpack's native CSS
+ * defaults to `namedExports: true`, so each identifier-safe name is emitted as a
+ * `export const … : string`, matching `import { foo } from "./x.module.css"`.
+ * @param {string} source the CSS module resource path
+ * @param {Map<string, string>} exports the original-name -> scoped-name map
+ * @returns {string} the `.d.ts` contents
  */
-class CssModuleExportsJsonPlugin {
+const toDts = (source, exports) => {
+	const lines = [
+		`// Generated from ${path.basename(
+			source
+		)} by CssModuleTypesPlugin. Do not edit.`
+	];
+	for (const name of exports.keys()) {
+		if (IDENTIFIER.test(name)) lines.push(`export const ${name}: string;`);
+	}
+	return `${lines.join("\n")}\n`;
+};
+
+/**
+ * Emits, per CSS module, both the name map as JSON (the native-CSS equivalent of
+ * the postcss-modules `getJSON` callback) and a TypeScript `.d.ts` so
+ * `import … from "./x.module.css"` is typed. Both are derived from
+ * `module.buildInfo.cssData.exports` (a `Map<string, string>` of original name
+ * -> generated scoped name), the same source webpack uses for the JS exports —
+ * so no separate re-parse of the CSS is needed. Lightning CSS exposes the same
+ * data as the `exports` value returned from `transform()`.
+ */
+class CssModuleTypesPlugin {
 	/**
 	 * @param {Compiler} compiler the compiler
 	 * @returns {void}
@@ -79,11 +105,11 @@ class CssModuleExportsJsonPlugin {
 		const { Compilation } = compiler.webpack;
 
 		compiler.hooks.thisCompilation.tap(
-			"CssModuleExportsJsonPlugin",
+			"CssModuleTypesPlugin",
 			(compilation) => {
 				compilation.hooks.processAssets.tap(
 					{
-						name: "CssModuleExportsJsonPlugin",
+						name: "CssModuleTypesPlugin",
 						stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL
 					},
 					() => {
@@ -96,10 +122,20 @@ class CssModuleExportsJsonPlugin {
 							}
 							const { resource } =
 								/** @type {import("webpack").NormalModule} */ (module);
-							const json = Object.fromEntries(cssData.exports);
+							const base = path.basename(resource);
 							compilation.emitAsset(
-								`${path.basename(resource)}.json`,
-								new RawSource(`${JSON.stringify(json, null, 2)}\n`)
+								`${base}.json`,
+								new RawSource(
+									`${JSON.stringify(
+										Object.fromEntries(cssData.exports),
+										null,
+										2
+									)}\n`
+								)
+							);
+							compilation.emitAsset(
+								`${base}.d.ts`,
+								new RawSource(toDts(resource, cssData.exports))
 							);
 						}
 					}
@@ -117,7 +153,7 @@ const config = {
 	experiments: {
 		css: true
 	},
-	plugins: [new CssModuleExportsJsonPlugin()]
+	plugins: [new CssModuleTypesPlugin()]
 };
 
 module.exports = config;
@@ -630,6 +666,30 @@ passes to its `getJSON` callback.
 }
 ```
 
+# dist/style.module.css.d.ts
+
+The plugin also emits a TypeScript declaration so imports of the CSS module are
+typed. No bundler ships this natively today — the map webpack already computes
+makes it a few lines of plugin.
+
+```typescript
+// Generated from style.module.css by CssModuleTypesPlugin. Do not edit.
+export const large: string;
+export const main: string;
+```
+
+With the declaration in place, the import in `example.js` is fully typed:
+
+```typescript
+import { main } from "./style.module.css"; // main: string
+```
+
+To make an editor pick it up, write the `.d.ts` next to the source file (e.g.
+`style.module.css.d.ts`) instead of into `dist` — change the plugin's
+`emitAsset` to a write next to `module.resource`, or run it as a separate
+type-generation step. This example emits into `dist` to keep the source tree
+clean.
+
 # What native CSS scopes (CSS Modules)
 
 webpack's native CSS localizes more identifiers than any classic loader. For a
@@ -669,6 +729,7 @@ assets by path *.css 1.16 KiB
   asset output.css 1.04 KiB [emitted] (name: main)
   asset 1.output.css 125 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
+asset style.module.css.d.ts 128 bytes [emitted]
 asset style.module.css.json 46 bytes [emitted]
 Entrypoint main 16.3 KiB (14.6 KiB) = output.js 15.3 KiB output.css 1.04 KiB 1 auxiliary asset
 chunk (runtime: main) output.js, output.css (main) 254 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.87 KiB (runtime) [entry] [rendered]
@@ -698,6 +759,7 @@ assets by path *.css 475 bytes
   asset output.css 451 bytes [emitted] (name: main)
   asset 822.output.css 24 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
+asset style.module.css.d.ts 100 bytes [emitted]
 asset style.module.css.json 23 bytes [emitted]
 Entrypoint main 3.62 KiB (14.6 KiB) = output.js 3.18 KiB output.css 451 bytes 1 auxiliary asset
 chunk (runtime: main) output.js, output.css (main) 504 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.63 KiB (runtime) [entry] [rendered]

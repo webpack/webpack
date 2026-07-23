@@ -62,6 +62,28 @@ passes to its `getJSON` callback.
 _{{dist/style.module.css.json}}_
 ```
 
+# dist/style.module.css.d.ts
+
+The plugin also emits a TypeScript declaration so imports of the CSS module are
+typed. No bundler ships this natively today — the map webpack already computes
+makes it a few lines of plugin.
+
+```typescript
+_{{dist/style.module.css.d.ts}}_
+```
+
+With the declaration in place, the import in `example.js` is fully typed:
+
+```typescript
+import { main } from "./style.module.css"; // main: string
+```
+
+To make an editor pick it up, write the `.d.ts` next to the source file (e.g.
+`style.module.css.d.ts`) instead of into `dist` — change the plugin's
+`emitAsset` to a write next to `module.resource`, or run it as a separate
+type-generation step. This example emits into `dist` to keep the source tree
+clean.
+
 # What native CSS scopes (CSS Modules)
 
 webpack's native CSS localizes more identifiers than any classic loader. For a
