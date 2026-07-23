@@ -1526,6 +1526,50 @@ describe("JavascriptParser", () => {
 			);
 		});
 
+		// The D3 statement tail (for / for-in / for-of / switch / try-catch-
+		// finally / labeled / with / break / continue), each shape reached both
+		// at a non-pinned top level and inside an id-walked function body.
+		// `with` needs sloppy mode, so the fixture stays a plain script.
+		it("should drive identical hook sequences through the D3 statement tail", () => {
+			expectSameWalk(
+				`function d3(a, b, c) {
+					for (var i = 0; i < c; i++) a(i);
+					for (let j = 0, k = a.len(); j < k; j++) { b(j); }
+					for (;;) { break; }
+					for (x of a) b(x);
+					for (const v of a.list()) { v.m(); }
+					for (y in a.obj) delete a.obj[y];
+					for (const k2 in b) k2;
+					switch (a.kind()) { case b.c: a(); break; case 2: default: c(); }
+					switch (a) {}
+					switch (a) { case 1: class P {} P; }
+					outer: while (a) { inner: for (;;) { continue outer; } }
+					lbl: { a.tick(); }
+					for (i = 0; i < c; i++) a(i);
+					for (tag\`t\`; a; ) break;
+					try { a(); } catch (e) { e.m(); } finally { b(); }
+					try { a(); } catch { c(); }
+					try { throw a; } catch (e) { throw e; } finally { c(); }
+					try { return a; } catch ({ msg }) { msg; }
+					try { try { a(); } finally { b(); } } catch (e) { e; }
+					with (a.scope) { b; }
+					this;
+					import("dyn3");
+					return a;
+				}
+				d3(f1, f2, f3);
+				switch (f1.tag) { case 1: var hoisted = f2(); }
+				hoisted;
+				try { d3(); } finally { f2.done(); }
+				lab: for (var z = 0, w = f1.n; z < w; z++) {
+					if (z) continue lab; else break lab;
+				}
+				for (var m1 in f1) m1;
+				for (var m2 of f2.items()) m2;
+				with (f3) { f1; }`
+			);
+		});
+
 		// Exercises the D2 handlers' hook-bail early returns (free-rooted
 		// chains resolve member info; taps that return true stop the walk),
 		// the strict-mode-in-module-output reports, and the foreign-pinned /
@@ -1670,6 +1714,48 @@ describe("JavascriptParser", () => {
 				"free().a.b; free[key](1); z = (free.a, free.b); free(class {}); ({}); `t${class {}}u`; [free.m()];",
 				noop
 			);
+			// var-declaration rename: kept and overridden by the rename hook
+			same("var alias = free; alias.x;", (p, e) => {
+				p.hooks.canRename.for("free").tap("t", bail(e, "declCanRename"));
+			});
+			same("var alias = free;", (p, e) => {
+				p.hooks.canRename.for("free").tap("t", bail(e, "declCanRename"));
+				p.hooks.rename.for("free").tap("t", bail(e, "declRename"));
+			});
+			// declarator hook bail skips the declarator's pattern and init
+			same("var alias = free;", (p, e) => {
+				p.hooks.declarator.tap("t", bail(e, "declBail"));
+			});
+			// D3 label hook: a `true` return skips the body, otherwise it walks
+			same("lab: free();", (p, e) => {
+				p.hooks.label.for("lab").tap("t", bail(e, "label"));
+			});
+			same("lab: free();", (p, e) => {
+				p.hooks.label.for("lab").tap("t", () => {
+					e.push("labelPass");
+				});
+			});
+			// D3 terminate merges across try/catch/finally shapes
+			same(
+				"function t1(a) { try { return a; } catch (er) { return er; } finally { a(); } } t1(free);",
+				(p, e) => {
+					p.hooks.terminate.tap("t", bail(e, "term1"));
+				}
+			);
+			same(
+				"function t2(a) { try { return a; } finally { a(); } } t2(free);",
+				(p, e) => {
+					p.hooks.terminate.tap("t", bail(e, "term2"));
+				}
+			);
+			same(
+				"function t3(a) { try { a(); } finally { return a; } } t3(free);",
+				(p, e) => {
+					p.hooks.terminate.tap("t", bail(e, "term3"));
+				}
+			);
+			// D3: `with` reports in strict module output on the id walk
+			same("with (free) { other; }", noop, "script", true);
 		});
 
 		// Phase B2 seam: `toAssignable` re-tags an expression node into a

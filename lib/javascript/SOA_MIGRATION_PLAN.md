@@ -482,6 +482,23 @@ count after the parse stops growing them (36 B/node retained, matching
 the layout). Wall time unchanged. Identifier `name` strings remain the
 last eager side allocation (~0.3 MB duplicated tokenizer slices) — fold
 into the lazy-facade flip.
+**D3 statement tail landed**: the id walk now dispatches every remaining
+SoA-backed statement type — for (expression and acorn-built declaration
+inits), for-in/for-of (declaration or pattern left), switch (discriminant
+and per-case tests id-native; born-unfinished `SwitchCase.consequent` is
+facade-filled, never a column span, so case bodies stay on the object list
+walker), try/catch/finally (mirroring the terminated-state merge; catch
+params stay on the object walker like all patterns), labeled statements
+(label hook keyed by the column-derived name), `with`, and explicit no-op
+break/continue. For-head declarations are acorn-built (`parseForStatement`
+finishes the node itself), so they walk off the facade; dead-defensive
+fallbacks for shapes the emitters cannot produce (foreign declarators,
+column-backed case consequents) were dropped rather than left uncovered.
+The statement-id dispatch `default` now only serves future foreign-typed
+entries. Coverage: a D3 grammar fixture (both top level and inside an
+id-walked function), plus battery cases for the label-hook bail, the
+declaration rename/declarator-hook paths, terminate merges across
+try/catch/finally shapes, and the `with` strict-module report.
 Next: stop eager facade construction in `_soaAlloc` (columns only, facades
 via `nodeAt` on demand) so member/call name probing can resolve from
 columns without materializing, drive the D4 materialization counter under
