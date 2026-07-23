@@ -2384,6 +2384,47 @@ f();`;
 				);
 			});
 
+			// mixed params enter the scope column-native; pattern params alone
+			// materialize for the enterPattern/walkPattern pair
+			same("function mp(a, { b }, c = free, ...d) { free2; } mp;", probe);
+			same("var mpa = ({ e = free }, f) => free2; mpa;", probe);
+			same("var nfe = function named({ q }) { named; free; }; nfe;", probe);
+
+			// object properties walk from the columns: computed keys, shorthand
+			// values, getter/setter kinds; registered facades keep the semantics
+			same(
+				"function op(k, x) { o2 = { a: free, [k]: free2, x, " +
+					"get g() { return free3; }, set s(v) { free4; } }; } op;",
+				probe
+			);
+			same("o3 = { p: free };", (p, e) => {
+				probe(p, e);
+				p.hooks.program.tap("t", (/** @type {EXPECTED_ANY} */ ast) => {
+					// materializing the object registers its property facades
+					e.push(`mat:${ast.body[0].expression.right.properties.length}`);
+				});
+			});
+
+			// switch cases prewalk (hoisting) and walk on the columns; a
+			// materialized statement keeps the facade path
+			same(
+				"function sw(x) { switch (x) { case 1: var h1; free; break; " +
+					"case free2: { free3; } default: } h1; } sw;",
+				probe
+			);
+			same("switch (free) { case 1: free2; }", (p, e) => {
+				probe(p, e);
+				p.hooks.program.tap("t", (/** @type {EXPECTED_ANY} */ ast) => {
+					e.push(`mat:${ast.body[0].cases.length}`);
+				});
+			});
+			// a statement before the first case fails to parse on both backends
+			for (const soa of [true, false]) {
+				expect(() =>
+					walk("switch (free) { 0; case 1: ; }", soa, () => {})
+				).toThrow("Unexpected token");
+			}
+
 			// call/new inits are rename-inert unless a name-keyed callee dispatch
 			// (or a foreign tap on their evaluate hooks) could yield an identifier
 			same(

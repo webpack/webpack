@@ -23,12 +23,15 @@ entry, info-full member-chain hook gates, the column-native CommonJS
 plus the tighter column trim), taking walk materialization to 6.0% of
 nodes on typescript.js, 7.2% on lodash and 17.7% on react — bare-parse
 retained memory is now below the object backend on every measured
-fixture (typescript.js 73.0 vs 94.4 MB).
+fixture (typescript.js 61.2 vs 94.5 MB after C3 slice 1, which also
+opened the grammar-flows-ids phase: mixed-param column scope entry,
+single-shot `Property`/`SwitchCase` emission ending their parse-time
+pinning, and store-backed shorthand copies).
 Open question driving the next phase: CodSpeed's Simulation mode still
 shows ≈22% more instructions on the bare js-parser-unit benchmarks (and
 ≈26% on three-long production) — profile-attributed to parse-time
 transient facade construction in `_soaAlloc` (the grammar still flows
-nodes), i.e. the full-C2 "grammar flows ids" end-state, not walk
+nodes), i.e. the full "grammar flows ids" end-state, not walk
 materialization. CodSpeed's Memory rows flagging the parser unit
 benchmarks are the inherent accounting difference (one upfront column
 allocation registers as a large TypedArray allocation; the object
@@ -720,6 +723,29 @@ backend (103.4 → 73.0 MB), walk materialization 19.7% → 6.0% (lodash
 The remaining ~25% bare-parse instruction gap (CodSpeed js-parser-unit
 Simulation) is parse-time transient facade construction — the "grammar
 flows ids" end-state, not walk materialization.
+**C3 slice 1 landed** (grammar-flows-ids opening): a typescript.js CPU
+profile put the remaining SoA-specific cost in three places — the
+function-walk bail materializing every param list when any param is a
+pattern (`get params` → `listAt`, ~7% of the parse), the
+`Property`/`SwitchCase` born-unfinished two-phase constructions pinning
+every object property and switch case at parse (`_soaPin`, ~3%), and
+transient facade construction itself. The first two are gone:
+`_inFunctionScopeIds` now enters mixed param lists column-native
+(pattern params alone materialize for the `enterPattern`/`walkPattern`
+pair), and `parseProperty`/`parseSwitchStatement` collect into
+locals/scratch and emit finished single-shot nodes — the transient
+serves `checkPropClash`/pattern conversion from pre-warmed memos, and
+`copyNode` clones store-backed shorthand values onto fresh rows instead
+of foreign copies. The walk and pre-walk property/switch-case handlers
+descend the now-column-owned children with registered-facade guards.
+typescript.js retained drops 73.0 → 61.2 MB (−35% vs the object
+backend), bare parse+walk wall 858 → 740 ms (obj 580), and `_soaPin`
+disappears from the profile. A canRename-emptiness gate that skipped
+the rename evaluation wholesale was tried and reverted: every real
+build taps `canRename` (require/URL/DefinePlugin), so it only
+accelerated plugin-less benchmark parses. Next: the facade constructors
+themselves (`FacadeBase` + per-type ctors, ~4% and the GC share) — the
+full id-flow through the grammar's recursion.
 
 ## 5. Measurement protocol
 
