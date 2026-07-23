@@ -629,6 +629,25 @@ nodes), so every column doubled and then `trim()` copied again —
 from the worst corpus density (source/6) and trim only above 2× waste:
 no fixture doubles, per-parse column churn drops to the single initial
 allocation (typescript.js ≈52 MB), wall/retained unchanged.
+**C2 slice 2 landed**: the four hottest remaining materialization sites
+became column-native behind provability guards. Calls with a member callee
+skip the facade when the chain probe proves no info (explicitly excluding
+function/arrow objects — IIFE `.call`/`.bind` — and `import()` objects for
+the importCall hook, with an own-taps gate on
+`evaluate.for("MemberExpression")` that tolerates ImportMetaPlugin's
+never-identifier tap). Declarators with a plain identifier binding skip
+their facade when unregistered, untapped, and the init provably cannot
+rename (`_soaCannotRename`: defined plain identifier or info-free member
+chain); assignments do the same for identifier targets (plus empty
+pattern/assign hook maps for the target's info) and info-free member
+targets. `detectMode` reads the first statement from the list columns
+(cooked literal values sit in `values`); registered blocks and pinned
+first statements keep the facade list. React-fixture walk materialization
+drops 66.7% → 47.4% of nodes; interleaved A/B: lodash parse+walk wins
+every round (~2–7%, its object-literal inits stay on the facade path),
+86-module build wall ≤ baseline with heap unchanged. Remaining C2
+buckets: binary/logical/conditional handler evaluate gating, function
+facades from dispatch (`params` reads), object-literal declarator inits.
 
 ## 5. Measurement protocol
 

@@ -2211,6 +2211,148 @@ f();`;
 			same("with (free) { other; }", noop, "script", true);
 		});
 
+		// C2 slice 2: calls, assignments, declarators and mode detection descend
+		// from the columns when hooks provably cannot match; every guarded shape
+		// must stay indistinguishable from the object backend.
+		it("should match the object walk on the column-native fast paths", () => {
+			/**
+			 * @param {string} code source
+			 * @param {boolean} soaAst backend
+			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
+			 * @returns {string[]} recorded events
+			 */
+			const walk = (code, soaAst, setup) => {
+				const parser = new JavascriptParser("auto", { soaAst });
+				/** @type {string[]} */
+				const events = [];
+				setup(parser, events);
+				parser.parse(
+					code,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return events;
+			};
+			/**
+			 * @param {string} code source
+			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
+			 * @returns {void} asserts both backends agree
+			 */
+			const same = (code, setup) => {
+				expect(walk(code, true, setup).join("\n")).toBe(
+					walk(code, false, setup).join("\n")
+				);
+			};
+			/**
+			 * @param {string[]} e events
+			 * @param {string} label event label
+			 * @returns {() => boolean} tap returning true
+			 */
+			const bail = (e, label) => () => {
+				e.push(label);
+				return true;
+			};
+			/**
+			 * @param {EXPECTED_ANY} p parser
+			 * @param {string[]} e events
+			 * @returns {void} records mode state on every `free` expression
+			 */
+			const probe = (p, e) => {
+				p.hooks.expression.for("free").tap("t", () => {
+					e.push(`free strict:${p.scope.isStrict} asm:${p.scope.isAsmJs}`);
+				});
+			};
+
+			// member-callee fast path: defined-rooted hook-free chains still walk
+			// their object, computed keys and arguments
+			same(
+				"function c1(o, k) { o.m(free); o[k](free); o.a.b(free); } c1;",
+				probe
+			);
+			// function/arrow/import/foreign objects keep the facade semantics
+			// (IIFE `.call`/`.bind`, the importCall hook, class expressions)
+			same("(function () { free; }).call(this);", probe);
+			same("(() => { free; }).call(this);", probe);
+			same("(function () { free; }).bind(this)();", probe);
+			same("(class {}).m(free);", probe);
+			same("import('x').then(free);", (p, e) => {
+				probe(p, e);
+				p.hooks.importCall.tap("t", bail(e, "importCall"));
+			});
+			// a foreign MemberExpression evaluate tap disables the member fast paths
+			same("function c2(o) { o.m(free); } c2;", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluate.for("MemberExpression").tap("t", () => {});
+			});
+
+			// declarators: no-init, defined-identifier and hook-free member inits
+			// walk from the columns; other shapes keep the rename analysis
+			same(
+				"function d1(o) { var a; var b = o; var c = o.p; var L = 1; " +
+					"var d = free, e2 = undefined; var { pp } = o; } d1;",
+				probe
+			);
+			same("var pre = free;", (p, e) => {
+				probe(p, e);
+				p.hooks.preDeclarator.tap("t", () => e.push("preDecl"));
+			});
+
+			// assignments: defined-identifier and hook-free member shapes descend
+			// column-native; named assign/pattern taps keep the facade path
+			same("function a1(x, y) { x = y; x = y.p; y.q = free; } a1;", probe);
+			same("function a2(y) { dst = y; } a2;", (p, e) => {
+				p.hooks.assign.for("dst").tap("t", bail(e, "assign"));
+			});
+			same("function a3(y) { pat = y; } a3;", (p, e) => {
+				p.hooks.pattern.for("pat").tap("t", bail(e, "pattern"));
+			});
+			same("function a4(x, y) { x = y; free; } a4;", (p, e) => {
+				probe(p, e);
+				p.hooks.program.tap("t", (/** @type {EXPECTED_ANY} */ ast) => {
+					// materializing the assignment forces the facade path
+					e.push(`mat:${ast.body[0].body.body[0].expression.type}`);
+				});
+			});
+
+			// detectMode from the columns: directives, parenthesized literals
+			// (loose by design), non-directives, empty and pre-registered bodies
+			same("function s1() { 'use strict'; free; } s1;", probe);
+			same("function s2() { 'use asm'; free; } s2;", probe);
+			same("function s3() { ('use strict'); free; } s3;", probe);
+			same("function s4() { 0; free; } s4;", probe);
+			same("function s5() {} s5; free;", probe);
+			same("var ar = () => { 'use strict'; free; }; ar;", probe);
+			same("function s6() { 'use strict'; free; } s6;", (p, e) => {
+				probe(p, e);
+				p.hooks.program.tap("t", (/** @type {EXPECTED_ANY} */ ast) => {
+					// materializing the body registers the block for detectMode
+					e.push(`mat:${ast.body[0].body.body.length}`);
+				});
+			});
+		});
+
+		// a parse-time foreign expression pins its statement without registering
+		// the enclosing block — detectMode must read it through the facade list
+		it("serves detectMode from a pinned first statement", () => {
+			const TYPE = SoaAst.TYPE;
+			const store = /** @type {EXPECTED_ANY} */ (new SoaAst("'use asm';"));
+			const stmtId = store.allocNode(TYPE.ExpressionStatement, 0, 10);
+			const blockId = store.allocNode(TYPE.BlockStatement, 0, 10);
+			store.flat[0] = stmtId;
+			store.flatTop = 1;
+			store.listStarts[blockId] = 0;
+			store.listLens[blockId] = 1;
+			const parser = /** @type {EXPECTED_ANY} */ (
+				new JavascriptParser("auto", { soaAst: true })
+			);
+			parser.scope = { isStrict: false, isAsmJs: false };
+			store.nodeAt(stmtId).expression = { type: "Literal", value: "use asm" };
+			parser._detectModeId(store, blockId);
+			expect(parser.scope.isAsmJs).toBe(true);
+			expect(parser.scope.isStrict).toBe(false);
+		});
+
 		// Phase B2 seam: `toAssignable` re-tags an expression node into a
 		// pattern in place; the SoA column type must follow the facade type so
 		// the column stays authoritative (the lazy-facade prerequisite).
