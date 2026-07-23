@@ -9,6 +9,10 @@ const createBackend = require("../lib/hmr/lazyCompilationBackend");
 
 const PREFIX = "/lazy-compilation-using-";
 
+// Bun can't install jest's `@sinonjs/fake-timers` (`setTimeout` isn't fakeable),
+// so these timer-driven cases are skipped there; they still run on Node.
+const itSkipBun = process.versions.bun ? it.skip : it;
+
 /** @returns {Server} a fake http.Server */
 const makeServer = () => {
 	const server = new EventEmitter();
@@ -86,40 +90,46 @@ describe("lazyCompilationBackend", () => {
 		return { api, server, invalidate };
 	};
 
-	it("activates a module while a client is connected and invalidates once", () => {
-		const { api, server, invalidate } = setup();
-		const mod = makeModule("mod-a");
-		const { data: key } = api.module(mod);
-		expect(api.module(mod).active).toBe(false);
+	itSkipBun(
+		"activates a module while a client is connected and invalidates once",
+		() => {
+			const { api, server, invalidate } = setup();
+			const mod = makeModule("mod-a");
+			const { data: key } = api.module(mod);
+			expect(api.module(mod).active).toBe(false);
 
-		connect(api, server, PREFIX + key);
-		expect(api.module(mod).active).toBe(true);
-		expect(invalidate).toHaveBeenCalledTimes(1);
+			connect(api, server, PREFIX + key);
+			expect(api.module(mod).active).toBe(true);
+			expect(invalidate).toHaveBeenCalledTimes(1);
 
-		// a second client for the same module doesn't re-invalidate
-		connect(api, server, PREFIX + key);
-		expect(invalidate).toHaveBeenCalledTimes(1);
-	});
+			// a second client for the same module doesn't re-invalidate
+			connect(api, server, PREFIX + key);
+			expect(invalidate).toHaveBeenCalledTimes(1);
+		}
+	);
 
-	it("keeps the module active until the last client disconnects, then drops it", () => {
-		const { api, server } = setup();
-		const mod = makeModule("mod-a");
-		const { data: key } = api.module(mod);
-		const s1 = connect(api, server, PREFIX + key);
-		const s2 = connect(api, server, PREFIX + key);
+	itSkipBun(
+		"keeps the module active until the last client disconnects, then drops it",
+		() => {
+			const { api, server } = setup();
+			const mod = makeModule("mod-a");
+			const { data: key } = api.module(mod);
+			const s1 = connect(api, server, PREFIX + key);
+			const s2 = connect(api, server, PREFIX + key);
 
-		// first disconnect: still one client left after the idle delay
-		s1.emit("close");
-		jest.advanceTimersByTime(120000);
-		expect(api.module(mod).active).toBe(true);
+			// first disconnect: still one client left after the idle delay
+			s1.emit("close");
+			jest.advanceTimersByTime(120000);
+			expect(api.module(mod).active).toBe(true);
 
-		// last disconnect: module goes idle
-		s2.emit("close");
-		jest.advanceTimersByTime(120000);
-		expect(api.module(mod).active).toBe(false);
-	});
+			// last disconnect: module goes idle
+			s2.emit("close");
+			jest.advanceTimersByTime(120000);
+			expect(api.module(mod).active).toBe(false);
+		}
+	);
 
-	it("does not schedule idle timers or hang after dispose", () => {
+	itSkipBun("does not schedule idle timers or hang after dispose", () => {
 		const { api, server } = setup();
 		const mod = makeModule("mod-a");
 		const { data: key } = api.module(mod);
@@ -136,7 +146,7 @@ describe("lazyCompilationBackend", () => {
 		expect(jest.getTimerCount()).toBe(0);
 	});
 
-	it("clears a pending idle timer on dispose", () => {
+	itSkipBun("clears a pending idle timer on dispose", () => {
 		const { api, server } = setup();
 		const mod = makeModule("mod-a");
 		const { data: key } = api.module(mod);
