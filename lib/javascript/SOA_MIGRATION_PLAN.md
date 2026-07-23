@@ -608,6 +608,20 @@ heap (40.6 → 31.4 MB); parse+walk retained-AST heap stays below the object
 backend (lodash 2.89 vs 3.04 MB, three.module 5.47 vs 6.23 MB); warm
 parse+walk CPU remains ~2× (52 vs 24 ms on lodash) from transient facade
 construction — the Phase-C2 grammar-flows-ids scope recovers that.
+**C2 slice 1 landed**: profiling the no-tap parse+walk showed
+`adaptDirectivePrologue` materializing (and registering) every
+function-body statement through `listAt`/`nodeAt` just to stamp
+`.directive` — the single hottest facade path. The parser now flags
+directive-prologue members in the columns (`FLAG_DIRECTIVE`) and
+`ExpressionStatementFacade` derives the extra in its constructor; pinned
+bodies keep the object path. Identifier names additionally memoize into
+the `values` side list on first derivation, shared by pre-walk hook
+probes, walk resolution and rebuilt facades. lodash parse+walk drops
+52 → 44 ms (−15%); build heap unchanged (31.6 MB vs object 40.5); the
+held-store retained micro-benchmark pays for the memoized names
+(lodash 2.8 → 3.15 MB) — irrelevant to builds, whose stores die per
+module. Remaining C2 buckets: walk-time child materialization in
+binary/assignment/declarator handlers and member-root probing.
 CodSpeed's Memory runner then flagged the column growth itself: sizing at
 source/10 undershoots dense sources (typescript.js: 872k slots for 940k
 nodes), so every column doubled and then `trim()` copied again —

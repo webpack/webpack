@@ -1972,6 +1972,24 @@ f();`;
 			).not.toThrow();
 		});
 
+		// On a store without parse-flow facades (nothing memoized the names
+		// yet), the id-walk name probe derives from the source and memoizes.
+		it("derives and memoizes identifier names from the columns", () => {
+			const { SoaAst } = require("../lib/javascript/syntax");
+
+			const source = "probe";
+			const store = /** @type {EXPECTED_ANY} */ (new SoaAst(source));
+			const id = store.allocNode(SoaAst.TYPE_IDENTIFIER, 0, 5);
+			const parser = /** @type {EXPECTED_ANY} */ (
+				new JavascriptParser("auto", { soaAst: true })
+			);
+			const first = parser._soaIdentName(store, id);
+			expect(first).toBe("probe");
+			// second read serves the memoized string identity-stably
+			expect(parser._soaIdentName(store, id)).toBe(first);
+			expect(store.values[id]).toBe(first);
+		});
+
 		// A pure import/export module has no owned facade at the top level, so
 		// the parse() store discovery finds nothing — the seams must adopt the
 		// store when nested owned statements enter the id walk, or the

@@ -2863,6 +2863,25 @@ describe("WebpackParser", () => {
 			expect(store.nodeAt(program)).toBe(root);
 		});
 
+		// the parser flags directive-prologue members in the columns instead of
+		// materializing every function-body statement to stamp `.directive`
+		it("should serve function-body directives from the columns", () => {
+			const ast = soaParse(
+				"function f() { 'use strict'; \"use asm\"; ('nope'); 'late'; }"
+			);
+			const body = ast.body[0].body.body;
+			expect(body[0].directive).toBe("use strict");
+			expect(body[1].directive).toBe("use asm");
+			// parenthesized strings and post-prologue strings are not directives
+			expect(body[2].directive).toBeUndefined();
+			expect(Object.keys(body[2])).not.toContain("directive");
+			expect(body[3].directive).toBeUndefined();
+			// a pinned body (foreign statement) takes the object path
+			const pinned = soaParse("function g() { 'use strict'; class X {} }")
+				.body[0].body.body;
+			expect(pinned[0].directive).toBe("use strict");
+		});
+
 		it("should pin foreign children in the update and body slots", () => {
 			const conditional = soaParse("c ? x : class A {};").body[0].expression;
 			expect(conditional.alternate.type).toBe("ClassExpression");
