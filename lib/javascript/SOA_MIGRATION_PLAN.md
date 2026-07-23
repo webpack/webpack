@@ -1,43 +1,44 @@
 # JavaScript syntax parser: Structure-of-Arrays migration plan
 
-Status: **in progress — SoA is the default backend; Phase C2 walk
-optimization is the active front.** Landed so far, in order (details in
-§4/§7): Phase 0 baselines; **Phase A complete** (A1–A6: every grammar
-construction owned in lazy mode, no acorn node-construction path remains
-reachable); **B1** (all 44 single-shape constructions route through
-module-level `_emit*` slots, verified zero-cost) with B2's `_retag` seam
-keeping the column type authoritative through `toAssignable`; **C1** (full
-facade coverage for every reachable estree type, SoA arm behind the
-`soaAst` parse option, corpus-equivalence-gated); **D** (id-based walker
-and pre-walks dispatching on column types, lazy `statementPath`, lazy
-facade construction — facades register only for state the columns cannot
+Status: **in progress — SoA is the default backend; Phase C3
+(grammar flows ids) is the active front and its expression half is
+done.** Landed so far, in order (details in §4/§7): Phase 0 baselines;
+**Phase A complete** (A1–A6: every grammar construction owned in lazy
+mode, no acorn node-construction path remains reachable); **B1** (all 44
+single-shape constructions route through module-level `_emit*` slots,
+verified zero-cost) with B2's `_retag` seam keeping the column type
+authoritative through `toAssignable`; **C1** (full facade coverage for
+every reachable estree type, SoA arm behind the `soaAst` parse option,
+corpus-equivalence-gated); **D** (id-based walker and pre-walks
+dispatching on column types, lazy `statementPath`, lazy facade
+construction — facades register only for state the columns cannot
 rebuild); the **default flip** — `soaAst` is a `JavascriptParserOptions`
 option defaulting to `true`, `module.parser.javascript.soaAst: false` is
 the escape hatch, the eslint-scope consumers keep object ASTs pinned —
 measured wall-neutral at −23% end-of-build heap on the 86-module dev
-build; and **C2 slices 1–7** (directive flags + name memoization,
+build; **C2 slices 1–7** (directive flags + name memoization,
 column-native call/assignment/declarator/detectMode handlers,
 rename-inert types with unary/binary gating, column-native function scope
 entry, info-full member-chain hook gates, the column-native CommonJS
 `this` scan, and the rename-inert Call/New/Logical/Conditional extension
-plus the tighter column trim), taking walk materialization to 6.0% of
-nodes on typescript.js, 7.2% on lodash and 17.7% on react — bare-parse
-retained memory is now below the object backend on every measured
-fixture (typescript.js 61.2 vs 94.5 MB after C3 slice 1, which also
-opened the grammar-flows-ids phase: mixed-param column scope entry,
-single-shot `Property`/`SwitchCase` emission ending their parse-time
-pinning, and store-backed shorthand copies).
-Open question driving the next phase: CodSpeed's Simulation mode still
-shows ≈22% more instructions on the bare js-parser-unit benchmarks (and
-≈26% on three-long production) — profile-attributed to parse-time
-transient facade construction in `_soaAlloc` (the grammar still flows
-nodes), i.e. the full "grammar flows ids" end-state, not walk
-materialization. CodSpeed's Memory rows flagging the parser unit
-benchmarks are the inherent accounting difference (one upfront column
-allocation registers as a large TypedArray allocation; the object
-backend's per-node churn is invisible to that counter — measured live
-memory favors SoA on every fixture) and await maintainer
-acknowledgment on the CodSpeed dashboard.
+plus the tighter column trim), taking walk materialization to 6.4% of
+nodes on typescript.js, 7.2% on lodash and 17.7% on react; and **C3
+slices 1–3** — the grammar now flows raw refs (numbers) for the entire
+expression, pattern and function-expression grammar: flipped emitters
+allocate a row and return its id with no transient facade at all, and
+node objects appear at parse only for statements, declarators, switch
+cases, export specifiers and the foreign (acorn-delegated) constructs,
+which materialize their raw-ref children at the seam. typescript.js
+retained is 55.6 vs 94.6 MB (−41%), bare parse+walk ~595 vs ~560 ms —
+the SoA-specific wall gap shrank from ~115 ms to ~35 ms.
+Next: flow ids through the statement grammar and the `parseTopLevel`
+boundary (a `ParseResult{store, rootId}` seam) so statement facades and
+the per-statement `program.body` objects disappear too. CodSpeed's
+Memory rows flagging the parser unit benchmarks are the inherent
+accounting difference (one upfront column allocation registers as a
+large TypedArray allocation; the object backend's per-node churn is
+invisible to that counter — measured live memory favors SoA on every
+fixture) and await maintainer acknowledgment on the CodSpeed dashboard.
 Scope: `lib/javascript/syntax.js` (the tuned acorn-based parser) and its single
 production consumer `lib/javascript/JavascriptParser.js`.
 
@@ -763,6 +764,34 @@ backend). Remaining SoA-specific profile entries: `FacadeBase` (~94 ms
 / 2.7%), `nodeAt` (~100 ms), `trim` (~66 ms) — the next cut is the
 id-flow through the owned grammar methods so `_soaAlloc` stops
 constructing a facade per node at all.
+**C3 slice 3 landed** (expression grammar flows raw refs): every
+expression, pattern and function-expression emitter now allocates its
+row and returns the raw ref — a plain number — instead of a transient
+facade; only statements, declarators, switch cases, export specifiers
+and function declarations still hand back node objects at parse. The
+grammar reads flowing nodes through one accessor seam (`_refIs`,
+`_refStart`/`_refEnd`, `_refIdentName`, `_refOptional`,
+`_refTemplateTail`) whose raw-ref arms read the columns, and foreign
+consumers materialize at the seam via `_refMat` (class ids, supers,
+keys and values, import/export specifiers and sources, meta
+properties, tagged templates, dynamic-import children).
+`toAssignable`/`checkLVal*` gained raw-ref arms that retag and descend
+the columns in place (a pinned owner delegates to the facade path so
+memoized foreign children stay visible), the `__proto__` clash check
+moved into parse-time locals stashed by `parseProperty` (no key facade
+needed), and previously-blind base helpers were owned raw-ref-aware:
+`isAsyncProp`, `parsePropertyValue`, `parseGetterSetter`,
+`isSimpleAssignTarget`, `toAssignableList`, the import
+specifier/attribute methods and `parseImportMeta`. Two acorn checks
+proved unreachable for raw refs and are documented instead of
+duplicated (ident-`await` in `toAssignable`, member-binding in
+`checkLValSimple`). typescript.js bare parse+walk drops 685 → ~595 ms
+vs obj ~560 ms — the SoA-specific wall gap shrank from ~115 ms two
+slices ago to ~35 ms — with retained memory holding at 55.6 vs 94.6 MB
+(−41%). Parse-time facade construction is now limited to the
+statement family; the next cut is the statement grammar and the
+`parseTopLevel`/`ParseResult{store, rootId}` boundary so
+`program.body` stops carrying per-statement objects.
 
 ## 5. Measurement protocol
 

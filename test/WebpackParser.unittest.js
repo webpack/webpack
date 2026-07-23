@@ -2928,6 +2928,335 @@ describe("WebpackParser", () => {
 		});
 	});
 
+	describe("grammar id-flow (raw refs through the owned grammar)", () => {
+		const { WebpackParser } = require("../lib/javascript/syntax");
+
+		/**
+		 * @param {string} code source
+		 * @param {object=} extra extra parse options
+		 * @param {boolean=} soaAst backend
+		 * @returns {EXPECTED_ANY} program node
+		 */
+		const parseOn = (code, extra, soaAst = true) =>
+			WebpackParser.parse(
+				code,
+				/** @type {import("acorn").Options} */ (
+					/** @type {unknown} */ ({
+						ecmaVersion: "latest",
+						sourceType: "module",
+						lazyNodes: true,
+						soaAst,
+						...extra
+					})
+				)
+			);
+
+		/**
+		 * @param {string} code source
+		 * @param {string} message expected error
+		 * @param {object=} extra extra parse options
+		 */
+		const expectBothThrow = (code, message, extra) => {
+			for (const soaAst of [false, true]) {
+				expect(() => parseOn(code, extra, soaAst)).toThrow(message);
+			}
+		};
+
+		/**
+		 * @param {string} code source
+		 * @param {object=} extra extra parse options
+		 */
+		const expectBothParse = (code, extra) => {
+			for (const soaAst of [false, true]) {
+				expect(() => parseOn(code, extra, soaAst)).not.toThrow();
+			}
+		};
+
+		it("converts raw refs to patterns with acorn's error surface", () => {
+			expectBothThrow(
+				"a?.b = 1;",
+				"Optional chaining cannot appear in left-hand side"
+			);
+			expectBothThrow(
+				"a?.b += 1;",
+				"Optional chaining cannot appear in left-hand side"
+			);
+			expectBothThrow(
+				"a?.b++;",
+				"Optional chaining cannot appear in left-hand side"
+			);
+			expectBothThrow("(1) = 2;", "Assigning to rvalue");
+			expectBothThrow("1++;", "Assigning to rvalue", {
+				sourceType: "script"
+			});
+			expectBothThrow('"use strict"; eval = 1;', "Assigning to eval", {
+				sourceType: "script"
+			});
+			expectBothThrow(
+				"[a += 1] = x;",
+				"Only '=' operator can be used for specifying default value."
+			);
+			expectBothThrow("(a.b) => 1;", "Assigning to rvalue");
+			expectBothThrow("({ ...{ a } } = x);", "Unexpected token");
+			expectBothThrow(
+				"({ get g() {} } = x);",
+				"Object pattern can't contain getter or setter"
+			);
+			expectBothThrow(
+				"[...a = 1] = x;",
+				"Rest elements cannot have a default value"
+			);
+			expectBothThrow(
+				"async (await) => 1;",
+				"Cannot use 'await' as identifier inside an async function",
+				{ sourceType: "script" }
+			);
+			// the pinned-owner delegation: foreign children only the facade sees
+			expectBothThrow("[class {}] = x;", "Assigning to rvalue");
+			expectBothThrow("({a: class {}} = x);", "Assigning to rvalue");
+			// valid conversions across the same arms
+			expectBothParse("({ a, b: [c, ...d], e = 1, ...rest } = x);");
+			expectBothParse("[p, , q = 1, [r], { s }] = y;");
+			expectBothParse("for (a.b of c);", { sourceType: "script" });
+		});
+
+		it("keeps acorn's property-value and accessor error surface", () => {
+			expectBothThrow("({*g: 1});", "Unexpected token");
+			expectBothThrow("const {m(){}} = x;", "Unexpected token");
+			expectBothThrow(
+				"({set s() {}});",
+				"setter should have exactly one param"
+			);
+			expectBothThrow("({get g(a) {}});", "getter should have no params");
+			expectBothThrow("({set s(...r) {}});", "Setter cannot use rest params");
+			expectBothThrow("({*a});", "Unexpected token");
+			expectBothThrow("({1});", "Unexpected token");
+			expectBothThrow("({async get x() {}});", "Unexpected token");
+			expectBothParse("({await} = x);", { sourceType: "script" });
+			expectBothParse("o = {async m() {}, *g() {}, [k]: 1, sh};", {
+				sourceType: "script"
+			});
+		});
+
+		it("polices `__proto__` inits from the parse-time stash", () => {
+			expectBothThrow(
+				"({__proto__: 1, __proto__: 2});",
+				"Redefinition of __proto__ property"
+			);
+			expectBothThrow(
+				'({"__proto__": 1, __proto__: 2});',
+				"Redefinition of __proto__ property"
+			);
+			// destructuring double-proto is legal (the record is cleared)
+			expectBothParse("({__proto__: a, __proto__: b} = c);");
+			// computed, method and shorthand keys are exempt like in acorn
+			expectBothParse('({["__proto__"]: 1, __proto__: 2});');
+			expectBothParse("({__proto__(){}, __proto__: 1});");
+			expectBothParse("({__proto__, __proto__: 1});", {
+				sourceType: "script"
+			});
+			// a spread between inits must not leak the previous key's stash
+			expectBothParse("({__proto__: 1, ...rest});");
+			// without a destructuring record the clash raises directly
+			expectBothThrow(
+				"t = 1 + {__proto__: 1, __proto__: 2};",
+				"Redefinition of __proto__ property"
+			);
+		});
+
+		it("keeps delete guards over raw refs", () => {
+			expectBothThrow('"use strict"; delete x;', "Deleting local variable", {
+				sourceType: "script"
+			});
+			expectBothThrow(
+				"class C { #p; m() { delete this.#p; } }",
+				"Private fields can not be deleted"
+			);
+			expectBothThrow(
+				"class C { #p; m() { delete (this?.#p); } }",
+				"Private fields can not be deleted"
+			);
+			expectBothParse("delete a.b; delete c;", { sourceType: "script" });
+			// preserveParens wraps the target; the guards unwrap it
+			expectBothThrow('"use strict"; delete (x);', "Deleting local variable", {
+				sourceType: "script",
+				preserveParens: true
+			});
+			expectBothThrow(
+				"class C { #p; m() { delete ((this.#p)); } }",
+				"Private fields can not be deleted",
+				{ preserveParens: true }
+			);
+		});
+
+		it("keeps loop-head guards over raw refs", () => {
+			expectBothThrow("for (async of [1]);", "Unexpected token");
+			// a newline defeats the async-arrow probe, leaving the of-guard
+			expectBothThrow("for (async\nof [1]);", "Unexpected token");
+			expectBothThrow(
+				"for (let.a of b);",
+				"The left-hand side of a for-of loop may not start with 'let'.",
+				{ sourceType: "script" }
+			);
+			expectBothThrow(
+				"{ using x; }",
+				"Missing initializer in using declaration",
+				{ sourceType: "script" }
+			);
+		});
+
+		it("keeps the ES6-only trailing-rest restriction", () => {
+			// array-level rest (checked inline in the conversion arm)
+			expectBothThrow("([x, ...[b]]) => 0;", "Unexpected token", {
+				ecmaVersion: 6,
+				sourceType: "script"
+			});
+			// paren-level rest (checked in `toAssignableList`)
+			expectBothThrow("(a, ...[b]) => 0;", "Unexpected token", {
+				ecmaVersion: 6,
+				sourceType: "script"
+			});
+			expectBothParse("(a, ...b) => 0;", {
+				ecmaVersion: 6,
+				sourceType: "script"
+			});
+			expectBothParse("([a,,]) => 0;", {
+				ecmaVersion: 6,
+				sourceType: "script"
+			});
+		});
+
+		it("materializes raw refs at foreign seams", () => {
+			// call arguments with a foreign element pin a materialized list
+			const call = parseOn("f(a, class {});").body[0].expression;
+			expect(call.arguments[0].name).toBe("a");
+			expect(call.arguments[1].type).toBe("ClassExpression");
+			// template with id and foreign expressions materializes both lists
+			// eslint-disable-next-line no-template-curly-in-string
+			const template = parseOn("t = `a${q}${class E {}}b`;").body[0].expression
+				.right;
+			expect(template.expressions[0].name).toBe("q");
+			expect(template.expressions[1].type).toBe("ClassExpression");
+			expect(template.quasis).toHaveLength(3);
+			// conditional with a foreign alternate memoizes onto the owner
+			const cond = parseOn("x = c ? 1 : class {};").body[0].expression.right;
+			expect(cond.alternate.type).toBe("ClassExpression");
+			// foreign kid0 children: private-in left, unary foreign argument
+			expectBothParse("class C { #p; m(o) { return #p in o; } }");
+			expectBothParse("t = typeof class {};");
+			// tagged templates hold materialized tag and quasi
+			// eslint-disable-next-line no-template-curly-in-string
+			const tagged = parseOn("f`a${b}c`;").body[0].expression;
+			expect(tagged.tag.name).toBe("f");
+			expect(tagged.quasi.expressions[0].name).toBe("b");
+			// new.target and import.meta serve materialized ident children
+			const meta = parseOn("function f() { return new.target; }").body[0].body
+				.body[0].argument;
+			expect(meta.property.name).toBe("target");
+			const importMeta = parseOn("import.meta.url;").body[0].expression;
+			expect(importMeta.object.property.name).toBe("meta");
+			expectBothThrow(
+				"import.foo;",
+				"The only valid meta property for import is 'import.meta'"
+			);
+			expectBothThrow(
+				"import.met\\u0061;",
+				"'import.meta' must not contain escaped characters"
+			);
+		});
+
+		it("materializes import/export seams and phase imports", () => {
+			const imp = parseOn(
+				'import d, { a, b as c } from "m"; import * as ns from "n";'
+			);
+			expect(imp.body[0].specifiers[0].local.name).toBe("d");
+			expect(imp.body[0].specifiers[1].imported.name).toBe("a");
+			expect(imp.body[0].specifiers[2].local.name).toBe("c");
+			expect(imp.body[0].source.value).toBe("m");
+			expect(imp.body[1].specifiers[0].local.name).toBe("ns");
+			const attrs = parseOn(
+				'import j from "m" with { type: "json", "s": "t" };'
+			).body[0].attributes;
+			expect(attrs[0].key.name).toBe("type");
+			expect(attrs[1].key.value).toBe("s");
+			expectBothThrow('import j from "m" with { t: 1 };', "Unexpected token");
+			const dyn = parseOn("p = import(spec, { with: {} });").body[0].expression
+				.right;
+			expect(dyn.source.name).toBe("spec");
+			expect(dyn.options.type).toBe("ObjectExpression");
+			const exp = parseOn(
+				'let a; export { a as bee, a as "s-name" }; export * as all from "o"; export default a;'
+			);
+			expect(exp.body[1].specifiers[0].exported.name).toBe("bee");
+			expect(exp.body[1].specifiers[1].exported.value).toBe("s-name");
+			expect(exp.body[2].exported.name).toBe("all");
+			expect(exp.body[2].source.value).toBe("o");
+			expect(exp.body[3].declaration.name).toBe("a");
+			expectBothThrow(
+				'let a; export {a as "\uD800"};',
+				"An export name cannot include a lone surrogate."
+			);
+			const phase = parseOn('import defer * as ns from "m";', {
+				importPhases: true
+			});
+			expect(phase.body[0].phase).toBe("defer");
+			expect(phase.body[0].specifiers[0].local.name).toBe("ns");
+			// `defer` as a plain default import name, not a phase
+			const noPhase = parseOn('import defer from "m";', {
+				importPhases: true
+			});
+			expect(noPhase.body[0].specifiers[0].local.name).toBe("defer");
+		});
+
+		it("grows the flat buffer from an id-flow list", () => {
+			const elements = Array.from({ length: 600 }, () => "1").join(",");
+			const ast = parseOn(`x = [${elements}];`);
+			expect(ast.body[0].expression.right.elements).toHaveLength(600);
+		});
+
+		it("delegates to acorn's node paths without lazy mode", () => {
+			const ast = /** @type {EXPECTED_ANY} */ (
+				WebpackParser.parse(
+					'import d, { a as b } from "m" with { t: "j" }; import * as ns from "n"; import.meta; export { d }; ({ get g() { return 1; }, set s(v) {} }); (x, y) => x;',
+					/** @type {import("acorn").Options} */ (
+						/** @type {unknown} */ ({
+							ecmaVersion: "latest",
+							sourceType: "module"
+						})
+					)
+				)
+			);
+			expect(ast.body[0].specifiers[0].local.name).toBe("d");
+			expect(ast.body[1].specifiers[0].local.name).toBe("ns");
+			expect(ast.body[2].expression.property.name).toBe("meta");
+		});
+
+		it("materializes for an overriding checkPropClash subclass", () => {
+			/** @type {string[]} */
+			const seen = [];
+			class ClashProbe extends WebpackParser {
+				/**
+				 * @param {EXPECTED_ANY} prop property node
+				 */
+				checkPropClash(prop) {
+					seen.push(prop.key.name || String(prop.key.value));
+				}
+			}
+			ClashProbe.parse(
+				"o = { p: 1, q: 2 };",
+				/** @type {import("acorn").Options} */ (
+					/** @type {unknown} */ ({
+						ecmaVersion: "latest",
+						sourceType: "module",
+						lazyNodes: true,
+						soaAst: true
+					})
+				)
+			);
+			expect(seen).toEqual(["p", "q"]);
+		});
+	});
+
 	// The SoA-migration correctness gate: lazy-mode output must be
 	// indistinguishable from plain acorn on real-world sources.
 	describe("corpus equivalence", () => {
