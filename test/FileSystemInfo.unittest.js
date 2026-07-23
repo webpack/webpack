@@ -733,18 +733,13 @@ ${details(snapshot)}`)
 			fs.writeFileSync("/path/special/socket", "");
 			const originalLstat = fs.lstat.bind(fs);
 			jest.spyOn(fs, "lstat").mockImplementation((path, callback) => {
-				originalLstat(
-					/** @type {string} */ (path),
-					(/** @type {Error | null} */ err, /** @type {IStats} */ stats) => {
-						if (!err && path === "/path/special/socket") {
-							stats.isFile = () => false;
-							stats.isDirectory = () => false;
-						}
-						/** @type {(err: Error | null, stats?: IStats) => void} */ (
-							callback
-						)(err, stats);
+				originalLstat(path, (err, stats) => {
+					if (!err && stats && path === "/path/special/socket") {
+						stats.isFile = () => false;
+						stats.isDirectory = () => false;
 					}
-				);
+					/** @type {EXPECTED_ANY} */ (callback)(err, stats);
+				});
 			});
 			return fs;
 		};
