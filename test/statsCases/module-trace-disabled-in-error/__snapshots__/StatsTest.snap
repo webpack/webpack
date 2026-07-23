@@ -12,12 +12,12 @@ Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/module-trace-di
 
 ERROR in ./parse-error.js 3:4
 Module parse failed: Unexpected token (3:4)
+File was parsed as module type 'javascript/auto'.
 You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
-| Here
-| could
-> be :)
-| your
-| code
+  2 | could
+> 3 | be :)
+    |     ^
+  4 | your
 
 webpack x.x.x compiled with 2 errors in X ms"
 `;

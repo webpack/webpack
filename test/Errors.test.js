@@ -393,7 +393,7 @@ describe("Errors", () => {
 		  "errors": Array [
 		    Object {
 		      "loc": "2:12",
-		      "message": "Module parse failed: Unexpected token (2:12)\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n| window.foo = {\\n>   bar: true,;\\n| };\\n| ",
+		      "message": "Module parse failed: Unexpected token (2:12)\\nFile was parsed as module type 'javascript/auto'.\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n  1 | window.foo = {\\n> 2 |   bar: true,;\\n    |             ^\\n  3 | };",
 		      "moduleId": 0,
 		      "moduleIdentifier": "<cwd>/test/fixtures/errors/has-syntax-error.js",
 		      "moduleName": "./has-syntax-error.js",
@@ -797,7 +797,7 @@ describe("Loaders", () => {
 		  "errors": Array [
 		    Object {
 		      "loc": "1:0",
-		      "message": "Module parse failed: Unexpected token (1:0)\\nFile was processed with these loaders:\\n * ./identity-loader.js\\nYou may need an additional loader to handle the result of these loaders.\\n> <!DOCTYPE html>\\n| <html>\\n| 	<body>",
+		      "message": "Module parse failed: Unexpected token (1:0)\\nFile was parsed as module type 'javascript/auto'.\\nFile was processed with these loaders:\\n * ./identity-loader.js\\nYou may need an additional loader to handle the result of these loaders.\\n> 1 | <!DOCTYPE html>\\n    | ^\\n  2 | <html>",
 		      "moduleId": "./abc.html",
 		      "moduleIdentifier": "<cwd>/test/fixtures/errors/identity-loader.js!<cwd>/test/fixtures/errors/abc.html",
 		      "moduleName": "./abc.html",
@@ -828,7 +828,7 @@ describe("Loaders", () => {
 		  "errors": Array [
 		    Object {
 		      "loc": "1:0",
-		      "message": "Module parse failed: Unexpected token (1:0)\\nFile was processed with these loaders:\\n * ./identity-loader.js\\n * ./add-comment-loader.js\\nYou may need an additional loader to handle the result of these loaders.\\n> <!DOCTYPE html>\\n| <html>\\n| 	<body>",
+		      "message": "Module parse failed: Unexpected token (1:0)\\nFile was parsed as module type 'javascript/auto'.\\nFile was processed with these loaders:\\n * ./identity-loader.js\\n * ./add-comment-loader.js\\nYou may need an additional loader to handle the result of these loaders.\\n> 1 | <!DOCTYPE html>\\n    | ^\\n  2 | <html>",
 		      "moduleId": "./abc.html",
 		      "moduleIdentifier": "<cwd>/test/fixtures/errors/identity-loader.js!<cwd>/test/fixtures/errors/add-comment-loader.js!<cwd>/test/fixtures/errors/abc.html",
 		      "moduleName": "./abc.html",
@@ -857,7 +857,7 @@ describe("Loaders", () => {
 		  "errors": Array [
 		    Object {
 		      "loc": "1:0",
-		      "message": "Module parse failed: Unexpected token (1:0)\\nFile was processed with these loaders:\\n * ./identity-loader.js\\n * ./add-comment-loader.js\\nYou may need an additional loader to handle the result of these loaders.\\n> <!DOCTYPE html>\\n| <html>\\n| 	<body>",
+		      "message": "Module parse failed: Unexpected token (1:0)\\nFile was parsed as module type 'javascript/auto'.\\nFile was processed with these loaders:\\n * ./identity-loader.js\\n * ./add-comment-loader.js\\nYou may need an additional loader to handle the result of these loaders.\\n> 1 | <!DOCTYPE html>\\n    | ^\\n  2 | <html>",
 		      "moduleId": "./abc.html",
 		      "moduleIdentifier": "<cwd>/test/fixtures/errors/identity-loader.js!<cwd>/test/fixtures/errors/add-comment-loader.js!<cwd>/test/fixtures/errors/abc.html",
 		      "moduleName": "./abc.html",
@@ -883,7 +883,7 @@ describe("Loaders", () => {
 		  "errors": Array [
 		    Object {
 		      "loc": "1:0",
-		      "message": "Module parse failed: Unexpected token (1:0)\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n> <!DOCTYPE html>\\n| <html>\\n| 	<body>",
+		      "message": "Module parse failed: Unexpected token (1:0)\\nFile was parsed as module type 'javascript/auto'.\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n> 1 | <!DOCTYPE html>\\n    | ^\\n  2 | <html>",
 		      "moduleId": "./abc.html",
 		      "moduleIdentifier": "<cwd>/test/fixtures/errors/abc.html",
 		      "moduleName": "./abc.html",
@@ -908,7 +908,7 @@ describe("Loaders", () => {
 		  "errors": Array [
 		    Object {
 		      "loc": "1:0",
-		      "message": "Module parse failed: Unexpected character ' ' (1:0)\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n(Source code omitted for this binary file)",
+		      "message": "Module parse failed: Unexpected character ' ' (1:0)\\nFile was parsed as module type 'javascript/auto'.\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n(Source code omitted for this binary file)",
 		      "moduleId": "../font.ttf",
 		      "moduleIdentifier": "<cwd>/test/fixtures/font.ttf",
 		      "moduleName": "../font.ttf",
