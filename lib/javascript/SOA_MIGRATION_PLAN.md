@@ -648,6 +648,20 @@ every round (~2–7%, its object-literal inits stay on the facade path),
 86-module build wall ≤ baseline with heap unchanged. Remaining C2
 buckets: binary/logical/conditional handler evaluate gating, function
 facades from dispatch (`params` reads), object-literal declarator inits.
+**C2 slice 3 landed**: `_soaCannotRename` now also answers true for
+evaluation-inert types — object/function/arrow/array/template/binary/
+conditional/update/await/yield and non-typeof unary inits — via a
+per-parse table that verifies the evaluate taps (the parser's own taps on
+these only build computed values; indirection dispatchers like
+New/Call/Sequence/Chain/Logical stay out since their evaluation can
+forward an identifier). Non-typeof unary expressions and non-`in` binary expressions (while
+only the harmony `in` tap sits on `binaryExpression`) walk facade-free on
+the operator id in `aux`. React walk materialization 47.4% → 38.5%,
+lodash 39.9% → 30.9% (the remaining declarator inits are
+call/logical/sequence shapes that can legitimately rename); wall
+neutral-to-positive under noise. Remaining C2 buckets: function facades
+from dispatch (`params` reads), call/assignment info-full paths,
+logical/conditional operator hooks (ConstPlugin always taps those).
 
 ## 5. Measurement protocol
 

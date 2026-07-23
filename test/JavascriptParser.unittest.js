@@ -2330,6 +2330,69 @@ f();`;
 					e.push(`mat:${ast.body[0].body.body.length}`);
 				});
 			});
+
+			// evaluation-inert init/right types (object/function/arrow/array/
+			// template/binary/non-typeof unary/conditional) skip the rename
+			// analysis; typeof stays on the facade path
+			same(
+				"function i1(o) { var v1 = {}; var v2 = function () { free; }; " +
+					"var v3 = () => free; var v4 = [free]; var v5 = `t`; " +
+					"var v6 = 1 + 2; var v7 = -o; var v8 = typeof free; " +
+					"var v9 = o ? free : 1; x9 = {}; } i1;",
+				probe
+			);
+			same("async function i2(o) { var v = await free; } i2;", probe);
+			same("function* i3(o) { var v = yield free; var u = o++; } i3;", probe);
+			// a foreign tap (or interceptor) on an inert type's evaluate hook
+			// restores the facade path
+			same("var o2 = {};", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluate.for("ObjectExpression").tap("t", () => {});
+			});
+			same("var L2 = 1;", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluate.for("Literal").tap("t", () => {});
+			});
+			same("var L3 = 1;", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluate.for("Literal").intercept({});
+			});
+
+			// binary operators walk facade-free while only the harmony `in`
+			// tap (or nothing) sits on the hook; `in` and foreign taps dispatch
+			same("free + free; free in free;", probe);
+			same("free + free; free in free;", (p, e) => {
+				probe(p, e);
+				p.hooks.binaryExpression.tap(
+					"HarmonyImportDependencyParserPlugin",
+					(/** @type {EXPECTED_ANY} */ expr) => {
+						if (expr.operator !== "in") return;
+						e.push("in-tap");
+						return true;
+					}
+				);
+			});
+			same("free + free;", (p, e) => {
+				probe(p, e);
+				p.hooks.binaryExpression.tap(
+					"t",
+					(/** @type {EXPECTED_ANY} */ expr) => {
+						e.push(`bin:${expr.operator}`);
+					}
+				);
+			});
+
+			// non-typeof unaries walk facade-free; typeof and pre-registered
+			// facades keep the object semantics
+			same("-free; !free; void free; delete free.x; typeof free;", probe);
+			same("function u1() { -free; free + free; } u1;", (p, e) => {
+				probe(p, e);
+				p.hooks.program.tap("t", (/** @type {EXPECTED_ANY} */ ast) => {
+					const body = ast.body[0].body.body;
+					// materializing both expressions forces the facade paths
+					e.push(`mat:${body[0].expression.type}:${body[1].expression.type}`);
+				});
+			});
 		});
 
 		// a parse-time foreign expression pins its statement without registering
