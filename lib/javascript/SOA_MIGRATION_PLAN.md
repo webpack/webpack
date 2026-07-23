@@ -15,21 +15,26 @@ rebuild); the **default flip** — `soaAst` is a `JavascriptParserOptions`
 option defaulting to `true`, `module.parser.javascript.soaAst: false` is
 the escape hatch, the eslint-scope consumers keep object ASTs pinned —
 measured wall-neutral at −23% end-of-build heap on the 86-module dev
-build; and **C2 slices 1–5** (directive flags + name memoization,
+build; and **C2 slices 1–7** (directive flags + name memoization,
 column-native call/assignment/declarator/detectMode handlers,
 rename-inert types with unary/binary gating, column-native function scope
-entry, and info-full member-chain hook gates), taking react walk
-materialization from 66.7% to 25.1% of nodes and lodash to 24.2%.
-Open question driving the next slice: CodSpeed's Simulation mode still
-shows ≈20% more instructions on the react development build (and ≈23% on
-three-long production) than the object backend — the remaining
-materializations are mostly hook-bound, so the next step is an
-instruction-level profile of that fixture rather than further
-materialization counting. CodSpeed's Memory rows flagging the parser unit
+entry, info-full member-chain hook gates, the column-native CommonJS
+`this` scan, and the rename-inert Call/New/Logical/Conditional extension
+plus the tighter column trim), taking walk materialization to 6.0% of
+nodes on typescript.js, 7.2% on lodash and 17.7% on react — bare-parse
+retained memory is now below the object backend on every measured
+fixture (typescript.js 73.0 vs 94.4 MB).
+Open question driving the next phase: CodSpeed's Simulation mode still
+shows ≈22% more instructions on the bare js-parser-unit benchmarks (and
+≈26% on three-long production) — profile-attributed to parse-time
+transient facade construction in `_soaAlloc` (the grammar still flows
+nodes), i.e. the full-C2 "grammar flows ids" end-state, not walk
+materialization. CodSpeed's Memory rows flagging the parser unit
 benchmarks are the inherent accounting difference (one upfront column
 allocation registers as a large TypedArray allocation; the object
-backend's per-node churn is invisible to that counter) and await
-maintainer acknowledgment on the CodSpeed dashboard.
+backend's per-node churn is invisible to that counter — measured live
+memory favors SoA on every fixture) and await maintainer
+acknowledgment on the CodSpeed dashboard.
 Scope: `lib/javascript/syntax.js` (the tuned acorn-based parser) and its single
 production consumer `lib/javascript/JavascriptParser.js`.
 
@@ -694,6 +699,27 @@ property definitions (computed-key rule) and the `this` result.
 `getChildKeys` disappears from the react build profile and the facade
 constructor cost drops; wall stays neutral. The plan's opening status
 header was also rewritten to the current position.
+**C2 slice 7 landed**: a retained-memory breakdown on typescript.js
+(the largest parser-unit fixture) showed the bare walk still 9% above
+the object backend — 34.5 MB of walk-materialized facades (185k nodes,
+19.7%) plus ~20 MB of column slack (the length/6 pre-size heuristic
+left 38% capacity unused, under the old only-trim-past-2x rule). Two
+fixes: `trim()` now snugs whenever slack exceeds 1/8 of capacity and
+~2k nodes (normal code runs 9.5–18.5 chars/node, minified 6.5, so the
+/6 estimate stays for growth safety); and `_soaCannotRename` extends to
+Call/New/Logical/Conditional inits whose evaluation provably cannot
+yield an identifier — own-tap gates plus the name-keyed
+`evaluateCallExpression`/`evaluateCallExpressionMember`/
+`evaluateNewExpression` dispatch checks, with logical/conditional
+recursing into the operands their evaluation could pass through.
+Zero-tap `expressionLogicalOperator`/`expressionConditionalOperator`
+(+`collectGuards`) walks also descend without materializing the hook
+argument. typescript.js retained flips from +9% to −23% vs the object
+backend (103.4 → 73.0 MB), walk materialization 19.7% → 6.0% (lodash
+24.2% → 7.2%, react 25.1% → 17.7%), lodash parse+walk wall ~40 → 28 ms.
+The remaining ~25% bare-parse instruction gap (CodSpeed js-parser-unit
+Simulation) is parse-time transient facade construction — the "grammar
+flows ids" end-state, not walk materialization.
 
 ## 5. Measurement protocol
 

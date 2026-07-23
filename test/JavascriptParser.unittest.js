@@ -2384,6 +2384,81 @@ f();`;
 				);
 			});
 
+			// call/new inits are rename-inert unless a name-keyed callee dispatch
+			// (or a foreign tap on their evaluate hooks) could yield an identifier
+			same(
+				"function n1(o, k) { var r1 = f0(free); var r2 = o.mm(free); " +
+					"var r3 = o.replace(free, free); var r4 = o['concat'](free); " +
+					"var r5 = o[k](free); var r6 = f0()(free); var r7 = new F0(free); " +
+					"var r8 = new RegExp('a'); var r9 = new o.C(free); " +
+					"dst2 = f0(free); } n1;",
+				probe
+			);
+			same("var t1 = g0(free);", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluateCallExpression.for("g0").tap("t", () => {
+					e.push("evalCall");
+				});
+			});
+			same("function n2(o) { var t2 = o.custom(free); } n2;", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluateCallExpressionMember.for("custom").tap("t", () => {
+					e.push("evalMember");
+				});
+			});
+			same("var t3 = new Tapped(free);", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluateNewExpression.for("Tapped").tap("t", () => {
+					e.push("evalNew");
+				});
+			});
+			same("var t4 = f0(free); var t5 = new F0(free);", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluate.for("CallExpression").tap("t", () => {});
+				p.hooks.evaluate.for("NewExpression").tap("t", () => {});
+			});
+
+			// logical/conditional inits are rename-inert when every operand the
+			// evaluation could pass through is
+			same(
+				"function n3(a, b, c) { var m1 = a && b; var m2 = {} || []; " +
+					"var m3 = a ?? b; var m4 = a ? b : c; var m5 = a && free; " +
+					"var m6 = a ? free : b; var m7 = a ? b : free; } n3;",
+				probe
+			);
+			same("var t6 = free && free2; var t7 = free ? free2 : free3;", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluate.for("LogicalExpression").tap("t", () => {});
+				p.hooks.evaluate.for("ConditionalExpression").tap("t", () => {});
+			});
+
+			// zero-tap logical/conditional expressions descend on the columns;
+			// operator/guard taps and pre-registered facades keep the dispatch
+			same("free && (free2 || free3); free ? free2 : free3;", probe);
+			same("free && free2;", (p, e) => {
+				probe(p, e);
+				p.hooks.expressionLogicalOperator.tap("t", bail(e, "logic"));
+			});
+			same("free ? free2 : free3;", (p, e) => {
+				probe(p, e);
+				p.hooks.expressionConditionalOperator.tap("t", bail(e, "cond"));
+			});
+			same("free ? free2 : free3;", (p, e) => {
+				probe(p, e);
+				p.hooks.collectGuards.tap("t", () => {
+					e.push("guards");
+				});
+			});
+			same("free && free2; free ? free2 : free3;", (p, e) => {
+				probe(p, e);
+				p.hooks.program.tap("t", (/** @type {EXPECTED_ANY} */ ast) => {
+					// materializing both expressions forces the facade paths
+					e.push(
+						`mat:${ast.body[0].expression.type}:${ast.body[1].expression.type}`
+					);
+				});
+			});
+
 			// non-typeof unaries walk facade-free; typeof and pre-registered
 			// facades keep the object semantics
 			same("-free; !free; void free; delete free.x; typeof free;", probe);
@@ -2483,6 +2558,31 @@ f();`;
 			expect(parser.scope.isStrict).toBe(false);
 		});
 
+		// the rename-inert descent must stay conservative on child refs it
+		// cannot read (foreign children sit at ref 0)
+		it("guards the rename-inert descent on foreign child refs", () => {
+			const TYPE = SoaAst.TYPE;
+			const store = /** @type {EXPECTED_ANY} */ (new SoaAst("x"));
+			const parser = /** @type {EXPECTED_ANY} */ (
+				new JavascriptParser("auto", { soaAst: true })
+			);
+			parser._evalCallOwnTaps = true;
+			parser._evalNewOwnTaps = true;
+			parser._evalLogicalOwnTaps = true;
+			parser._evalConditionalOwnTaps = true;
+			const callId = store.allocNode(TYPE.CallExpression, 0, 1);
+			const newId = store.allocNode(TYPE.NewExpression, 0, 1);
+			const logicalId = store.allocNode(TYPE.LogicalExpression, 0, 1);
+			const condId = store.allocNode(TYPE.ConditionalExpression, 0, 1);
+			for (const id of [callId, newId, logicalId, condId]) {
+				expect(parser._soaCannotRename(store, id)).toBe(false);
+			}
+			// a member callee with a foreign property ref is equally unreadable
+			const memberId = store.allocNode(TYPE.MemberExpression, 0, 1);
+			store.kid0[callId] = memberId;
+			expect(parser._soaCannotRename(store, callId)).toBe(false);
+		});
+
 		// Phase B2 seam: `toAssignable` re-tags an expression node into a
 		// pattern in place; the SoA column type must follow the facade type so
 		// the column stays authoritative (the lazy-facade prerequisite).
@@ -2543,26 +2643,39 @@ f();`;
 		// `trim()` once parsing stops growing them
 		it("trims column slack after parse and no-ops when already snug", () => {
 			const KEY_STORE = SoaAst.KEY_STORE;
-			const parser = new JavascriptParser("auto", { soaAst: true });
-			/** @type {EXPECTED_ANY} */
-			let store;
-			parser.hooks.program.tap("test", (ast) => {
-				store = /** @type {EXPECTED_ANY} */ (ast).body[0][KEY_STORE];
-			});
-			// long comment: the heuristic over-allocates, so trim must shrink
-			parser.parse(
-				`a(b); /* ${"x".repeat(4096)} */`,
-				/** @type {import("../lib/Parser").ParserState} */ (
-					/** @type {unknown} */ ({})
-				)
-			);
-			expect(store.types).toHaveLength(store.count);
-			expect(store.flat).toHaveLength(store.flatTop);
-			const { types, flat } = store;
-			store.trim();
+			/**
+			 * @param {string} code source
+			 * @returns {EXPECTED_ANY} the parse's store
+			 */
+			const parseStore = (code) => {
+				const parser = new JavascriptParser("auto", { soaAst: true });
+				/** @type {EXPECTED_ANY} */
+				let store;
+				parser.hooks.program.tap("test", (ast) => {
+					store = /** @type {EXPECTED_ANY} */ (ast).body[0][KEY_STORE];
+				});
+				parser.parse(
+					code,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return store;
+			};
+			// long comment: the heuristic over-allocates far past the absolute
+			// trim floor, so the columns must come back snug
+			const big = parseStore(`a(b); /* ${"x".repeat(1 << 16)} */`);
+			expect(big.types).toHaveLength(big.count);
+			expect(big.flat).toHaveLength(big.flatTop);
+			const { types, flat } = big;
+			big.trim();
 			// already snug: the same backing arrays stay in place
-			expect(store.types).toBe(types);
-			expect(store.flat).toBe(flat);
+			expect(big.types).toBe(types);
+			expect(big.flat).toBe(flat);
+			// small slack stays untrimmed — the copies would cost more than the
+			// few KB they free
+			const small = parseStore(`a(b); /* ${"x".repeat(4096)} */`);
+			expect(small.capacity).toBeGreaterThan(small.count);
 		});
 
 		it("should drive identical hook sequences for top-level and nested await", () => {
