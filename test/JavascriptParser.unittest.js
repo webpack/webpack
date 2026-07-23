@@ -1930,6 +1930,33 @@ f();`;
 			parser.prevStatement = undefined;
 		});
 
+		// A plugin taking over traversal from the program hook walks statements
+		// the pre-walk seams have not registered yet — the walked facade must
+		// become the registered one so hooks serve that exact object.
+		it("registers a facade walked before the pre-walk passes", () => {
+			const parser = new JavascriptParser("auto", { soaAst: true });
+			/** @type {EXPECTED_ANY[]} */
+			const seen = [];
+			/** @type {EXPECTED_ANY} */
+			let walked;
+			parser.hooks.program.tap("t", (ast) => {
+				walked = ast.body[0];
+				parser.walkStatement(walked);
+				return true;
+			});
+			parser.hooks.statement.tap("t", (statement) => {
+				seen.push(statement);
+			});
+			parser.parse(
+				"probe;",
+				/** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			expect(seen).toHaveLength(1);
+			expect(seen[0]).toBe(walked);
+		});
+
 		// Exercises the D2 handlers' hook-bail early returns (free-rooted
 		// chains resolve member info; taps that return true stop the walk),
 		// the strict-mode-in-module-output reports, and the foreign-pinned /

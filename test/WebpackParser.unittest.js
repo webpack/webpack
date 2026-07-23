@@ -2814,6 +2814,99 @@ describe("WebpackParser", () => {
 			expect("expression" in statement).toBe(true);
 			expect(statement.expression.callee.name).toBe("f");
 		});
+
+		// Setter writes carry state the columns cannot rebuild, so each write
+		// must both stick and pin the facade against rebuilding.
+		it("should serve setter-written children back on every facade shape", () => {
+			const body = soaParse(
+				"a.b(c); x + y; -z; t ? u : v; (p, q); a?.b; var d = e; " +
+					"function f(g) { return h; } new I(j); [k, ...l]; ({ m: n }); " +
+					"((o = 1) => o)();"
+			).body;
+			const call = body[0].expression;
+			/** @type {[EXPECTED_ANY, string[]][]} */
+			const targets = [
+				[body[0], ["expression"]],
+				[call, ["callee", "arguments"]],
+				[call.callee, ["object", "property"]],
+				[body[1].expression, ["left", "right"]],
+				[body[2].expression, ["argument"]],
+				[body[3].expression, ["test", "consequent", "alternate"]],
+				[body[4].expression, ["expressions"]],
+				[body[5].expression, ["expression"]],
+				[body[6], ["declarations"]],
+				[body[6].declarations[0], ["id", "init"]],
+				[body[7], ["id", "params", "body"]],
+				[body[7].body, ["body"]],
+				[body[7].body.body[0], ["argument"]],
+				[body[8].expression, ["callee", "arguments"]],
+				[body[9].expression, ["elements"]],
+				[body[9].expression.elements[1], ["argument"]],
+				[body[10].expression, ["properties"]],
+				[body[11].expression.callee.params[0], ["left", "right"]]
+			];
+			for (const [facade, keys] of targets) {
+				expect(SoaAst.isFacade(facade)).toBe(true);
+				for (const key of keys) {
+					const replacement = { replaced: key };
+					facade[key] = replacement;
+					expect(facade[key]).toBe(replacement);
+				}
+			}
+			// the root Program facade only exists on hand-built stores
+			const { ast: store, program } = buildCallAst();
+			const root = /** @type {EXPECTED_ANY} */ (store.nodeAt(program));
+			/** @type {EXPECTED_ANY[]} */
+			const replacementBody = [];
+			root.body = replacementBody;
+			expect(root.body).toBe(replacementBody);
+			expect(store.nodeAt(program)).toBe(root);
+		});
+
+		it("should pin foreign children in the update and body slots", () => {
+			const conditional = soaParse("c ? x : class A {};").body[0].expression;
+			expect(conditional.alternate.type).toBe("ClassExpression");
+			expect(SoaAst.isFacade(conditional.alternate)).toBe(false);
+			expect(conditional.test.name).toBe("c");
+			// a parser plugin replacing statement nodes hands the for body back
+			// as a plain object, reaching the 4th-slot (aux) foreign-child path
+			class StatementReplacingParser extends WebpackParser {
+				/**
+				 * @param {EXPECTED_ANY} node started statement node
+				 * @param {EXPECTED_ANY} expr parsed expression
+				 * @returns {EXPECTED_ANY} plain-object statement
+				 */
+				parseExpressionStatement(node, expr) {
+					const finished = /** @type {EXPECTED_ANY} */ (
+						super.parseExpressionStatement(node, expr)
+					);
+					return {
+						type: "ExpressionStatement",
+						start: finished.start,
+						end: finished.end,
+						expression: finished.expression
+					};
+				}
+			}
+			const ast = /** @type {EXPECTED_ANY} */ (
+				StatementReplacingParser.parse(
+					"for (;; class B {}) x;",
+					/** @type {import("acorn").Options} */ (
+						/** @type {unknown} */ ({
+							ecmaVersion: "latest",
+							sourceType: "module",
+							lazyNodes: true,
+							soaAst: true
+						})
+					)
+				)
+			);
+			const forStmt = ast.body[0];
+			expect(SoaAst.isFacade(forStmt)).toBe(true);
+			expect(forStmt.update.type).toBe("ClassExpression");
+			expect(SoaAst.isFacade(forStmt.body)).toBe(false);
+			expect(forStmt.body.expression.name).toBe("x");
+		});
 	});
 
 	// The SoA-migration correctness gate: lazy-mode output must be

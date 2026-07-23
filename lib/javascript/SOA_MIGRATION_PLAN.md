@@ -567,10 +567,25 @@ plain identifier left walks nothing. Totals: react 68→59%, lodash
 declarator/rename analysis ~22%, assignment targets ~15%, free-rooted
 chains ~14%, function params/`detectMode` ~8%) — the D4 counter is at
 the point where the lazy `_soaAlloc` flip decides the rest.
-Next: stop eager facade construction in `_soaAlloc` (columns only, facades
-via `nodeAt` on demand) so member/call name probing can resolve from
-columns without materializing, drive the D4 materialization counter under
-30%, then default-on with the `soaAst: false` escape hatch once the
+**D4 lazy `_soaAlloc` landed**: `_soaAlloc` (and the identifier / literal /
+template-element fast paths) no longer register facades — the grammar still
+flows a transient facade object, but `nodeAt` rebuilds an identical one
+from the columns on demand. `_soaPin` registers a facade only when it takes
+on state the columns cannot rebuild: born-unfinished fills (Property,
+SwitchCase), foreign-child memo writes (kid/list/template pin branches),
+and every facade memo setter; the four `walkStatement`/`walkExpression`/
+pre-walk seams plus `_walkStatementsIdList` register the object-held facade
+before re-entering the id walk so identity survives the handoff.
+`LiteralFacade` now derives the estree `regex`/`bigint` extras from the
+columns (raw-text split for regex — `RegExp#source` escapes `/`) since
+acorn's post-construction writes land on transient objects. Post-parse
+registered facades drop to 8–11% of nodes; retained heap after parse+walk
+holding the AST: react 1.04→0.77 MB, lodash 3.68→2.91, three.module
+8.11→5.59 (−21 to −31%) — soaAst-on now retains less than the object
+backend on all three fixtures. Warm parse+walk CPU is unchanged (transient
+facade construction remains; removing it is the Phase-C2
+grammar-flows-ids scope).
+Next: default-on with the `soaAst: false` escape hatch once the
 module-level benchmarks show end-to-end wins.
 
 ## 5. Measurement protocol
