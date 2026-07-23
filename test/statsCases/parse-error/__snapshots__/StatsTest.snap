@@ -8,12 +8,12 @@ orphan modules X bytes [orphan] 1 module
 
 ERROR in ./b.js 6:7
 Module parse failed: Unexpected token (6:7)
+File was parsed as module type 'javascript/auto'.
 You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
-| includes
-| a
-> parser )
-| error
-| in
+  5 | a
+> 6 | parser )
+    |        ^
+  7 | error
  @ ./a.js 2:0-13
  @ ./index.js 2:0-13
 
