@@ -35,7 +35,7 @@ const alterPlugin = (mutate) => ({
 		compiler.hooks.compilation.tap("AlterPlugin", (compilation) => {
 			HtmlModulesPlugin.getCompilationHooks(
 				/** @type {EXPECTED_ANY} */ (compilation)
-			).alterTags.tap("AlterPlugin", mutate);
+			).transformTags.tap("AlterPlugin", mutate);
 		});
 	}
 });
@@ -53,7 +53,7 @@ const config = (name, plugin) => ({
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
-	// no alterTags tap — tags untouched
+	// no transformTags tap — tags untouched
 	config("default"),
 	// add a nonce to every <script>
 	config(

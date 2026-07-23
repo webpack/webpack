@@ -9618,16 +9618,9 @@ declare interface HotModuleReplacementPluginLoaderContext {
 declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
-declare interface HtmlAlterHtmlContext {
-	outputName: string;
-}
-declare interface HtmlAlterTagsContext {
-	outputName: string;
-	html: string;
-}
 declare interface HtmlCompilationHooks {
 	/**
-	 * called with the list of extra tags to inject into each page (initially empty) plus the current HTML; push `HtmlTagDescriptor`s and return the list — webpack serializes and places them by `injectTo`. A structured alternative to the string-level `alterHtml` for adding tags; runs before CSP so injected inline tags are hashed
+	 * called with the list of extra tags to inject into each page (initially empty) plus the current HTML; push `HtmlTagDescriptor`s and return the list — webpack serializes and places them by `injectTo`. A structured alternative to the string-level `transformHtml` for adding tags; runs before CSP so injected inline tags are hashed
 	 */
 	injectTags: AsyncSeriesWaterfallHook<
 		[HtmlTagDescriptor[], HtmlInjectTagsContext],
@@ -9637,12 +9630,15 @@ declare interface HtmlCompilationHooks {
 	/**
 	 * called with the page's `<script>`/`<link>`/`<style>`/`<meta>` tags (webpack's own and any injected) as mutable descriptors; mutate `attrs` (add a `nonce`/`data-*`, switch `defer`↔`async`, …) or set `remove: true` and webpack rewrites each changed tag in place. Add new tags with `injectTags` instead
 	 */
-	alterTags: AsyncSeriesHook<[HtmlMutableTag[], HtmlAlterTagsContext]>;
+	transformTags: AsyncSeriesHook<[HtmlMutableTag[], HtmlTransformTagsContext]>;
 
 	/**
 	 * called with each emitted page's final HTML (all sentinels resolved) just before it is written; return the (possibly transformed) HTML — e.g. to minify, inject a CSP meta, or rewrite tags
 	 */
-	alterHtml: AsyncSeriesWaterfallHook<[string, HtmlAlterHtmlContext], string>;
+	transformHtml: AsyncSeriesWaterfallHook<
+		[string, HtmlTransformHtmlContext],
+		string
+	>;
 
 	/**
 	 * called once each page's HTML asset has been finalized — a post-emit notification (nothing to return)
@@ -10052,6 +10048,13 @@ declare interface HtmlTemplateContext {
 	 * report an error on the module
 	 */
 	emitError: (error: string | Error) => void;
+}
+declare interface HtmlTransformHtmlContext {
+	outputName: string;
+}
+declare interface HtmlTransformTagsContext {
+	outputName: string;
+	html: string;
 }
 
 /**

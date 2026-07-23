@@ -5,7 +5,7 @@ const page = require("./page.html");
 
 const read = (name) => fs.readFileSync(path.resolve(__dirname, name), "utf-8");
 
-it("should run alterHtml taps as a waterfall (later taps see earlier output)", () => {
+it("should run transformHtml taps as a waterfall (later taps see earlier output)", () => {
 	const html = read("page.html");
 	// tap 1 injected the CSP meta...
 	expect(html).toContain('http-equiv="Content-Security-Policy"');

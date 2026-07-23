@@ -6,7 +6,7 @@ const readHtml = (name) =>
 
 const scriptTag = (html) => html.match(/<script[^>]*>/i)[0];
 
-it("leaves tags untouched with no alterTags tap", () => {
+it("leaves tags untouched with no transformTags tap", () => {
 	const html = readHtml("default.html");
 	expect(html).toContain('<meta name="theme" content="a">');
 	expect(scriptTag(html)).not.toContain("nonce");
