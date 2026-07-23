@@ -5,7 +5,7 @@ const page = require("./page.html");
 
 const read = (name) => fs.readFileSync(path.resolve(__dirname, name), "utf-8");
 
-it("should run beforeEmit taps as a waterfall (later taps see earlier output)", () => {
+it("should run alterHtml taps as a waterfall (later taps see earlier output)", () => {
 	const html = read("page.html");
 	// tap 1 injected the CSP meta...
 	expect(html).toContain('http-equiv="Content-Security-Policy"');
@@ -18,6 +18,6 @@ it("should not affect the module's JS export (hook runs on the emitted asset)", 
 	expect(page).not.toContain("csp:");
 });
 
-it("should call afterEmit with each finalized page's output name", () => {
+it("should call htmlEmitted with each finalized page's output name", () => {
 	expect(read("pages.txt")).toBe("page.html");
 });

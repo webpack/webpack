@@ -9618,19 +9618,16 @@ declare interface HotModuleReplacementPluginLoaderContext {
 declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
-declare interface HtmlAfterEmitContext {
+declare interface HtmlAlterHtmlContext {
 	outputName: string;
 }
 declare interface HtmlAlterTagsContext {
 	outputName: string;
 	html: string;
 }
-declare interface HtmlBeforeEmitContext {
-	outputName: string;
-}
 declare interface HtmlCompilationHooks {
 	/**
-	 * called with the list of extra tags to inject into each page (initially empty) plus the current HTML; push `HtmlTagDescriptor`s and return the list — webpack serializes and places them by `injectTo`. A structured alternative to the string-level `beforeEmit` for adding tags; runs before CSP so injected inline tags are hashed
+	 * called with the list of extra tags to inject into each page (initially empty) plus the current HTML; push `HtmlTagDescriptor`s and return the list — webpack serializes and places them by `injectTo`. A structured alternative to the string-level `alterHtml` for adding tags; runs before CSP so injected inline tags are hashed
 	 */
 	injectTags: AsyncSeriesWaterfallHook<
 		[HtmlTagDescriptor[], HtmlInjectTagsContext],
@@ -9645,12 +9642,15 @@ declare interface HtmlCompilationHooks {
 	/**
 	 * called with each emitted page's final HTML (all sentinels resolved) just before it is written; return the (possibly transformed) HTML — e.g. to minify, inject a CSP meta, or rewrite tags
 	 */
-	beforeEmit: AsyncSeriesWaterfallHook<[string, HtmlBeforeEmitContext], string>;
+	alterHtml: AsyncSeriesWaterfallHook<[string, HtmlAlterHtmlContext], string>;
 
 	/**
 	 * called once each page's HTML asset has been finalized — a post-emit notification (nothing to return)
 	 */
-	afterEmit: AsyncSeriesHook<[HtmlAfterEmitContext]>;
+	htmlEmitted: AsyncSeriesHook<[HtmlEmittedContext]>;
+}
+declare interface HtmlEmittedContext {
+	outputName: string;
 }
 declare interface HtmlEntryInfo {
 	request: string;
