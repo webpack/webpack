@@ -11,7 +11,7 @@ document.getElementsByTagName("main")[0].className = main;
 
 # style.css
 
-```javascript
+```css
 @import "style-imported.css";
 @import "https://fonts.googleapis.com/css?family=Open+Sans";
 
@@ -19,6 +19,108 @@ body {
 	background: green;
 	font-family: "Open Sans";
 }
+```
+
+# style.module.css
+
+```css
+:root {
+	--large: 72px;
+}
+
+.main {
+	font-size: var(--large);
+	color: darkblue;
+}
+
+@media (min-width: 1024px) {
+	.main {
+		color: green;
+	}
+}
+
+@supports (display: grid) {
+	.main {
+		display: grid
+	}
+}
+```
+
+# webpack.config.js
+
+The config also registers a small plugin that reads each CSS module's name map
+(original class/id name -> generated scoped name) from
+`module.buildInfo.cssData.exports` and writes it to a JSON sidecar — the
+native-CSS equivalent of the postcss-modules `getJSON` callback. Lightning CSS
+exposes the same data as the `exports` value returned from `transform()`; webpack
+exposes it as data too, so no callback option is needed.
+
+```javascript
+"use strict";
+
+const path = require("path");
+
+/** @typedef {import("webpack").Compiler} Compiler */
+
+/**
+ * Emits the CSS Modules name map (original class/id name -> generated scoped
+ * name) as a JSON sidecar per CSS module — the native-CSS equivalent of the
+ * postcss-modules `getJSON` callback. The map is computed during code
+ * generation and stored on `module.buildInfo.cssData.exports` (a
+ * `Map<string, string>`), the same source webpack uses to build the JS exports.
+ */
+class CssModuleExportsJsonPlugin {
+	/**
+	 * @param {Compiler} compiler the compiler
+	 * @returns {void}
+	 */
+	apply(compiler) {
+		const { RawSource } = compiler.webpack.sources;
+		const { Compilation } = compiler.webpack;
+
+		compiler.hooks.thisCompilation.tap(
+			"CssModuleExportsJsonPlugin",
+			(compilation) => {
+				compilation.hooks.processAssets.tap(
+					{
+						name: "CssModuleExportsJsonPlugin",
+						stage: Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL
+					},
+					() => {
+						for (const module of compilation.modules) {
+							const cssData =
+								/** @type {{ exports?: Map<string, string> }=} */
+								(module.buildInfo && module.buildInfo.cssData);
+							if (!cssData || !cssData.exports || cssData.exports.size === 0) {
+								continue;
+							}
+							const { resource } =
+								/** @type {import("webpack").NormalModule} */ (module);
+							const json = Object.fromEntries(cssData.exports);
+							compilation.emitAsset(
+								`${path.basename(resource)}.json`,
+								new RawSource(`${JSON.stringify(json, null, 2)}\n`)
+							);
+						}
+					}
+				);
+			}
+		);
+	}
+}
+
+/** @type {import("webpack").Configuration} */
+const config = {
+	output: {
+		uniqueName: "app"
+	},
+	experiments: {
+		css: true
+	},
+	plugins: [new CssModuleExportsJsonPlugin()]
+};
+
+module.exports = config;
 ```
 
 # dist/output.js
@@ -516,6 +618,45 @@ body {
 }
 ```
 
+# dist/style.module.css.json
+
+The CSS Modules name map emitted by the plugin — the same shape postcss-modules
+passes to its `getJSON` callback.
+
+```json
+{
+  "large": "--QRIlVD",
+  "main": "zI6JBT"
+}
+```
+
+# What native CSS scopes (CSS Modules)
+
+webpack's native CSS localizes more identifiers than any classic loader. For a
+`css/module` (or auto-detected `*.module.css`):
+
+- **Always:** class (`.foo`) and id (`#foo`) selectors.
+- **Explicit, per parser option (all default `true`):** `@keyframes` +
+  `animation-name` (`animation`), grid line/area names (`grid`),
+  `@counter-style` + `list-style` (`customIdents`), `@container` +
+  `container-name` (`container`), `@function` names + calls (`function`),
+  `view-transition-name`/`-group`/`-class` + `::view-transition-*()` pseudo
+  arguments (`customIdents`).
+- **Auto (any `--foo` dashed ident, via `dashedIdents`, default `true`):** custom
+  properties and `var(--foo)` incl. cross-file `var(--foo from "./x.css")` and
+  `from global`; `@property` / `@font-palette-values` / `@color-profile` names;
+  anchor positioning (`anchor-name`, `position-anchor`, `anchor()`,
+  `@position-try`, `anchor-scope`); scroll-driven-animation names; and
+  `@container style(--foo)` queries. New dashed-ident CSS features are covered
+  automatically, with no feature-specific code.
+- **Composition / values:** `composes` (same-file, `from "./x.css"`,
+  `from global`), `@value` (incl. cross-file), ICSS `:import` / `:export`.
+
+Intentionally left **global** (they coordinate across documents or the whole
+app, so scoping would break them): `@layer` and `@page` names,
+`@font-feature-values` family names, `@view-transition` `types`, and
+`:global(...)` selectors.
+
 # Info
 
 ## Unoptimized
@@ -528,6 +669,7 @@ assets by path *.css 1.16 KiB
   asset output.css 1.04 KiB [emitted] (name: main)
   asset 1.output.css 125 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
+asset style.module.css.json 46 bytes [emitted]
 Entrypoint main 16.3 KiB (14.6 KiB) = output.js 15.3 KiB output.css 1.04 KiB 1 auxiliary asset
 chunk (runtime: main) output.js, output.css (main) 254 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.87 KiB (runtime) [entry] [rendered]
   > ./example.js main
@@ -556,6 +698,7 @@ assets by path *.css 475 bytes
   asset output.css 451 bytes [emitted] (name: main)
   asset 822.output.css 24 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
+asset style.module.css.json 23 bytes [emitted]
 Entrypoint main 3.62 KiB (14.6 KiB) = output.js 3.18 KiB output.css 451 bytes 1 auxiliary asset
 chunk (runtime: main) output.js, output.css (main) 504 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.63 KiB (runtime) [entry] [rendered]
   > ./example.js main
