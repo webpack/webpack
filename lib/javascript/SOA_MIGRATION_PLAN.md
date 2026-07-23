@@ -1,43 +1,35 @@
 # JavaScript syntax parser: Structure-of-Arrays migration plan
 
-Status: **in progress** — Phase 0 landed (see §7); A1 (functions, methods,
-arrows, paren/arrow disambiguation) and A2 (loops, switch, try, throw,
-labels, break/continue, with, empty, debugger), A3 binding patterns, A4
-classes (parseClass cluster incl. fields, static blocks, private names) and
-A5 expression tails (sequences, subscript chains + ChainExpression,
-parseExprList, parsePropertyName), A6 exports and the toAssignable/
-checkLVal/yield/await cluster landed — **Phase A is complete**: no acorn
-node-construction path remains reachable in lazy mode (acorn stays for
-non-lazy mode, predicates and the token machinery already owned earlier).
-Next: Phase B. **B1 landed** — all 44 single-shape constructions now route
-through module-level `_emit*` slots (verified zero-cost). B2 learning: the
-accessor conversion only pays off when refs change representation, so it
-lands per method cluster together with Phase C's emitter swap instead of as
-a standalone whole-file pass; the first cluster to convert is
-toAssignable/checkLVal (self-contained recursion, narrow field set).
-**B2 first slice landed**: `toAssignable`'s four in-place re-tags
-(`ObjectExpression`→`ObjectPattern`, `ArrayExpression`→`ArrayPattern`,
-`SpreadElement`→`RestElement`, `AssignmentExpression`→`AssignmentPattern`)
-route through a `_retag` seam that keeps the SoA column type in sync, so the
-column — not the facade field — is authoritative for a node's type after a
-re-tag. This removes a latent column/facade divergence (harmless today only
-because patterns are object-walked) and is the prerequisite for dropping the
-eager per-node facade in `_soaAlloc`: once every parse-time type read/write
-is seam-routed, `_soaAlloc` can build columns only and materialize facades
-lazily, cutting the measured SoA parse overhead (peak +97 MB / 1.7× vs the
-object backend on typescript.js — dominated by the eager candidate-2 facades)
-toward the columns-only target. Behavior-neutral (corpus equivalence green,
-benchmarks flat); a unittest asserts the column type follows each re-tag.
-**C1 landed** (see §4.1): full facade coverage for every reachable estree
-type, and the `_emit*` seam now has a SoA arm — opt-in via the `soaAst`
-parse option, corpus-equivalence-gated over both backends, off by default
-until Phase D absorbs the double-bookkeeping cost.
-Walk-side profiling (Phase D scouting) landed two contained wins: hook-tap
-probing before arg materialization and deferred member-chain side arrays —
-walk churn 78 → 65 MB on typescript.js, walk wall time neutral-to-better.
-Measured at A5: parse churn 124 → 110 MB on typescript.js and parse wall
-time ≈ 4–5% faster (owned parseSubscripts is on the hottest expression
-path).
+Status: **in progress — SoA is the default backend; Phase C2 walk
+optimization is the active front.** Landed so far, in order (details in
+§4/§7): Phase 0 baselines; **Phase A complete** (A1–A6: every grammar
+construction owned in lazy mode, no acorn node-construction path remains
+reachable); **B1** (all 44 single-shape constructions route through
+module-level `_emit*` slots, verified zero-cost) with B2's `_retag` seam
+keeping the column type authoritative through `toAssignable`; **C1** (full
+facade coverage for every reachable estree type, SoA arm behind the
+`soaAst` parse option, corpus-equivalence-gated); **D** (id-based walker
+and pre-walks dispatching on column types, lazy `statementPath`, lazy
+facade construction — facades register only for state the columns cannot
+rebuild); the **default flip** — `soaAst` is a `JavascriptParserOptions`
+option defaulting to `true`, `module.parser.javascript.soaAst: false` is
+the escape hatch, the eslint-scope consumers keep object ASTs pinned —
+measured wall-neutral at −23% end-of-build heap on the 86-module dev
+build; and **C2 slices 1–5** (directive flags + name memoization,
+column-native call/assignment/declarator/detectMode handlers,
+rename-inert types with unary/binary gating, column-native function scope
+entry, and info-full member-chain hook gates), taking react walk
+materialization from 66.7% to 25.1% of nodes and lodash to 24.2%.
+Open question driving the next slice: CodSpeed's Simulation mode still
+shows ≈20% more instructions on the react development build (and ≈23% on
+three-long production) than the object backend — the remaining
+materializations are mostly hook-bound, so the next step is an
+instruction-level profile of that fixture rather than further
+materialization counting. CodSpeed's Memory rows flagging the parser unit
+benchmarks are the inherent accounting difference (one upfront column
+allocation registers as a large TypedArray allocation; the object
+backend's per-node churn is invisible to that counter) and await
+maintainer acknowledgment on the CodSpeed dashboard.
 Scope: `lib/javascript/syntax.js` (the tuned acorn-based parser) and its single
 production consumer `lib/javascript/JavascriptParser.js`.
 
@@ -689,6 +681,19 @@ prefix walk's dispatched names) and the member-chain hooks are untapped
 for the root. Tagged/defined roots, template members, and foreign links
 keep the facade path. React walk materialization 35.5% → 25.1%, lodash
 25.0% → 24.2%.
+**C2 slice 6 landed**: profiling the actual react development build (not
+the bare-parser attribution harness, which runs without plugins) showed
+`CommonJsExportsParserPlugin`'s exported-function `this` scan as the top
+remaining SoA cost — its generic `getChildKeys` walk read every facade
+child getter, materializing whole exported subtrees. The scan now
+descends store-backed subtrees on the column refs directly (kid slots
+plus the list span are exactly the owned children; `ForStatement`'s
+fourth child overflows into `aux` and is read explicitly), materializing
+only registered nodes — whose children may be foreign or mutated —
+property definitions (computed-key rule) and the `this` result.
+`getChildKeys` disappears from the react build profile and the facade
+constructor cost drops; wall stays neutral. The plan's opening status
+header was also rewritten to the current position.
 
 ## 5. Measurement protocol
 
