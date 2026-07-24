@@ -758,6 +758,121 @@ describe("CssSyntax — SourceProcessor", () => {
 	});
 });
 
+describe("CssSyntax — minify comment preservation", () => {
+	/**
+	 * @param {string} src css source
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src) =>
+		new SourceProcessor().process(src, { minimize: true }).code;
+
+	it("keeps `/*!` license comments and drops the rest", () => {
+		expect(min("/*! keep */\n/* drop */\na{color:red}")).toBe(
+			"/*! keep */a{color:red}"
+		);
+	});
+
+	it("keeps @license / @preserve comments (terser's set), case-insensitively", () => {
+		expect(min("/* @license MIT */a{x:1}")).toBe("/* @license MIT */a{x:1}");
+		expect(min("/*@preserve*/a{x:1}")).toBe("/*@preserve*/a{x:1}");
+		expect(min("/* @LICENSE */a{x:1}")).toBe("/* @LICENSE */a{x:1}");
+		// A plain annotation-free comment is still dropped.
+		expect(min("/* just a note */a{x:1}")).toBe("a{x:1}");
+	});
+
+	it("emits a kept comment after the last rule (trailing flush)", () => {
+		expect(min("a{color:red}/*! end */")).toBe("a{color:red}/*! end */");
+	});
+
+	it("re-emits an inner kept comment at the next rule boundary", () => {
+		// The comment sits inside `a`'s block in source; a kept comment re-emits
+		// before the next top-level rule, so it lands between the two rules.
+		expect(min("a{color:red/*! x */}b{c:1}")).toBe(
+			"a{color:red}/*! x */b{c:1}"
+		);
+	});
+
+	it("keeps a comment while also firing the Comment visitor", () => {
+		/** @type {string[]} */
+		const seen = [];
+		const { code: out } = new SourceProcessor()
+			.use({
+				[NodeType.Comment]: (
+					/** @type {import("../lib/css/syntax").CssPath} */ path
+				) => seen.push(path.source())
+			})
+			.process("/*! k */a{color:red}", { minimize: true });
+		expect(out).toBe("/*! k */a{color:red}");
+		expect(seen).toEqual(["/*! k */"]);
+	});
+
+	it("ignores `skip` while printing (every node is needed for serialization)", () => {
+		// A prelude/type skip would drop selector or value nodes; printing must
+		// override it so the minified output stays complete.
+		const out = new SourceProcessor().process(".a .b{color:red}", {
+			minimize: true,
+			skip: {
+				selectorPrelude: true,
+				types: buildSkipSet([NodeType.Ident])
+			}
+		}).code;
+		expect(out).toBe(".a .b{color:red}");
+	});
+});
+
+describe("CssSyntax — minify token-boundary safety", () => {
+	/**
+	 * @param {string} src css source
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src) =>
+		new SourceProcessor().process(src, { minimize: true }).code;
+
+	it("separates tokens a dropped comment used to keep apart", () => {
+		// Without a separator these read back as one dimension and as one ident —
+		// dropping a comment must never merge the tokens it stood between.
+		expect(min("a{margin:1px/**/2}")).toBe("a{margin:1px 2}");
+		expect(min("@media screen/**/and/**/(min-width:1px){a{c:1}}")).toBe(
+			"@media screen and (min-width:1px){a{c:1}}"
+		);
+	});
+
+	it("separates rewritten numbers that would fuse", () => {
+		// `1.0.5` is two numbers; normalized to `1` and `.5` they would join as the
+		// single number `1.5`.
+		expect(min("a{margin:1.0.5}")).toBe("a{margin:1 .5}");
+	});
+
+	it("separates every junction that would read back as one token", () => {
+		// One case per fusion rule; each right-hand side is a single token when the
+		// space is removed (`/*` even opens a comment).
+		const cases = [
+			["a{b:1 //**/*}", "a{b:1 / *}"],
+			["a{b:./**/5}", "a{b:. 5}"],
+			["a{b:+/**/5}", "a{b:+ 5}"],
+			["a{b:#/**/fff}", "a{b:# fff}"],
+			["a{b:@/**/x}", "a{b:@ x}"],
+			["a{b:x/**/\\40 y}", "a{b:x \\40 y}"],
+			["a{b:\\40/**/x}", "a{b:\\40 x}"],
+			// Non-ASCII is an ident code point, so these would join into one ident.
+			["a{b:\u00E9/**/\u00E9}", "a{b:\u00E9 \u00E9}"],
+			// `<!` and `->` guard an accidental CDO / CDC.
+			["a{b:</**/!x}", "a{b:< !x}"],
+			["a{b:x-/**/>y}", "a{b:x- >y}"]
+		];
+		for (const [src, expected] of cases) expect(min(src)).toBe(expected);
+	});
+
+	it("does not separate tokens that cannot fuse", () => {
+		// A comment is not whitespace, so `.a/**/.b` stays the compound `.a.b` —
+		// inserting a space here would silently make it a descendant selector.
+		expect(min(".a/**/.b{c:1}")).toBe(".a.b{c:1}");
+		expect(min(".a.b{c:1}")).toBe(".a.b{c:1}");
+		expect(min(".a>.b{c:1}")).toBe(".a>.b{c:1}");
+		expect(min("a{width:calc(1px + 2px)}")).toBe("a{width:calc(1px + 2px)}");
+	});
+});
+
 describe("CssSyntax — nesting and error recovery", () => {
 	/**
 	 * @param {string} src css source
@@ -1106,13 +1221,10 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 		expect(valueTypes).toContain(NodeType.Dimension);
 	});
 
-	it("accepts skip as SourceProcessor instance options (no per-call skip)", () => {
+	it("accepts skip as per-call process options", () => {
 		/** @type {string[]} */
 		const seen = [];
-		new SourceProcessor({
-			as: "block-contents",
-			skip: { types: buildSkipSet([NodeType.Number]) }
-		})
+		new SourceProcessor()
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Number]: () => seen.push("num"),
@@ -1121,8 +1233,11 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 					) => seen.push(path.value())
 				})
 			)
-			.process("p: 1 foo");
-		// The instance-level skip drops numbers; `process` needed no options.
+			.process("p: 1 foo", {
+				as: "block-contents",
+				skip: { types: buildSkipSet([NodeType.Number]) }
+			});
+		// The per-call skip drops numbers.
 		expect(seen).toEqual(["foo"]);
 	});
 });
