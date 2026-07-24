@@ -27,6 +27,8 @@ Each member of the working group is required to adhere to the [governance model 
   **Alexander Akait**
 - [@avivkeller](https://github.com/avivkeller) -
   **Aviv Keller** <<me@aviv.sh>> (he/him)
+- [@bjohansebas](https://github.com/bjohansebas) -
+  **Sebastian Beltran** <<bjohansebas@gmail.com>> (he/him)
 - [@hai-x](https://github.com/hai-x) -
   **hai-x** <<haijie0619@gmail.com>>
 - [@sokra](https://github.com/sokra) -
