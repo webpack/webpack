@@ -1045,9 +1045,6 @@ function createBenchInstance() {
 		new Bench({
 			now: hrtimeNow,
 			throws: true,
-			warmup: true,
-			warmupIterations: 2,
-			iterations: 8,
 			setup(task, mode) {
 				if (!task) {
 					return;
