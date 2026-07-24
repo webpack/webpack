@@ -2876,6 +2876,24 @@ f();`;
 			expect(small.capacity).toBeGreaterThan(small.count);
 		});
 
+		it("serves the estree compatibility boundary through toEstreeNode", () => {
+			const { toEstreeNode } = require("../lib/javascript/syntax");
+
+			const KEY_STORE = SoaAst.KEY_STORE;
+			const { ast } = JavascriptParser._parse("a(b);", {
+				sourceType: "auto",
+				ranges: true,
+				soaAst: true
+			});
+			const store = /** @type {EXPECTED_ANY} */ (ast).body[0][KEY_STORE];
+			// identity-stable: repeated calls serve the memoized facade
+			const node = toEstreeNode(store, 1);
+			expect(node).toBe(store.nodeAt(1));
+			expect(typeof (/** @type {EXPECTED_ANY} */ (node).type)).toBe("string");
+			// ref 0 is the null node
+			expect(toEstreeNode(store, 0)).toBeNull();
+		});
+
 		it("should drive identical hook sequences for top-level and nested await", () => {
 			expectSameWalk(
 				`await x;

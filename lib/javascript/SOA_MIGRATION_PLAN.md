@@ -875,7 +875,9 @@ gate/hook migration returns in follow-up PRs (this history holds the
 measured design and its soundness fix for one-sided const folds).
 Until then the tapped statement/declarator hooks materialize through
 the `toEstreeNode` compat boundary, which costs full builds a known
-regression vs main that the hook PRs will win back.
+regression the hook PRs will win back (typescript full build measured
+~1924 ms vs main's 1583 after the revert, from parity with the gates
+in; peak RSS ~304 vs 298 MB; parse-only untouched).
 
 **C5 slice 2 landed** (transient stores skip `trim()` + absent-child
 fast path): fresh full-build profiles put the whole `_reallocColumns`
