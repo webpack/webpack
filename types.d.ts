@@ -11887,6 +11887,24 @@ declare class JavascriptParser extends ParserClass {
 	): void;
 
 	/**
+	 * Pairs a column gate with an already-registered tap on `hook`. The gate
+	 * must return false only when that tap (matched by function identity)
+	 * would bail without observing its node arguments or calling back into
+	 * the parser; the id walk then skips both the facade materialization and
+	 * the hook call. Taps without a gate always force materialization.
+	 */
+	registerColumnGate(
+		hook: object,
+		fn: (...args: any[]) => any,
+		gate: (
+			parser: JavascriptParser,
+			store: syntax,
+			id: number,
+			ownerId: number
+		) => boolean
+	): void;
+
+	/**
 	 * Walks a statements that is nested within a parent statement
 	 * and can potentially be a non-block statement.
 	 * This enforces the nested statement to never be in ASI position.
@@ -28084,6 +28102,49 @@ declare namespace exports {
 		RawLoaderDefinitionFunction,
 		LoaderContext
 	};
+}
+
+/**
+ * Column store for one parse plus the facade memo table. Owned per parse —
+ * never a module-level singleton — so an escaped facade can never dangle
+ * over recycled columns (the GC frees both together).
+ */
+declare abstract class syntax {
+	source: string;
+	count: number;
+	capacity: number;
+	starts: Int32Array;
+	ends: Int32Array;
+	kid0: Int32Array;
+	kid1: Int32Array;
+	kid2: Int32Array;
+	aux: Int32Array;
+	listStarts: Int32Array;
+	listLens: Int32Array;
+	flat: Int32Array;
+	types: Uint8Array;
+	flags: Uint8Array;
+	flatTop: number;
+	values: any[];
+	facades: (undefined | object)[];
+	allocNode(type: number, start: number, end: number): number;
+
+	/**
+	 * Seals a child list into the shared flat buffer.
+	 */
+	setList(id: number, childRefs: number[]): void;
+
+	/**
+	 * Snugs columns to the final node count — the pre-size heuristic
+	 * over-allocates up to ~2x on comment-heavy sources.
+	 */
+	trim(): void;
+
+	/**
+	 * Identity-stable facade for a node ref (0 serves `null`).
+	 */
+	nodeAt(id: number): null | object;
+	listAt(id: number): (null | object)[];
 }
 declare const topLevelSymbolTag: unique symbol;
 

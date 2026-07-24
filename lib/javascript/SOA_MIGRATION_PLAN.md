@@ -36,7 +36,18 @@ noise (≈ 1%, ~555 vs ~548 ms).
 C4 (profile-led follow-ups on real builds) is underway: slice 1
 cut the three-long production gap from a locally reproduced +17% to
 +3-8% via a single backing buffer for the store columns and a
-column-native member-root descent. CodSpeed's
+column-native member-root descent. **C5 slice 1 (column gates)**
+attacked the full-build main-vs-branch gap the first popular-library
+sweep exposed (typescript +20% CPU / +17% peak RSS, three-long +10%,
+lodash +7%): core plugins now pair their `statement` /
+`preDeclarator` / `declarator` / `statementIf` /
+`expressionLogical|ConditionalOperator` / `collectGuards` taps with
+column gates (`parser.registerColumnGate`) encoding their own bail
+conditions, so the id walk skips both facade materialization and the
+hook call when every tap is gated off — lodash is now neutral
+(−0.9%), three-long ≈ +5-6%, typescript ≈ +15% CPU with peak RSS down
+to +5.7% (−32 MB). The typescript CPU residue is parse-side owned
+grammar overhead, next slice's profile target. CodSpeed's
 Memory rows flagging the parser unit benchmarks are the inherent
 accounting difference (one upfront column allocation registers as a
 large TypedArray allocation; the object backend's per-node churn is
@@ -855,6 +866,38 @@ those taps are live (~8 ms/build); the parse-time `_refMat`
 import/export seams (~6 ms/build) would need import/export specifiers
 owned as rows end to end. three-long production sits at ~+3-8%
 (within run noise) after slices 1-2, from a reproduced +17%.
+
+**C5 slice 1 landed** (column gates — the "structural" tail wasn't):
+the first full main-vs-branch popular-library sweep (cold production
+builds, interleaved medians) showed the branch regressing end to end —
+typescript +20.2% CPU / +17.4% peak RSS, three-long +10.5%, lodash
++7.3%, react neutral — and profiling attributed it to the hook-forced
+materialization recorded under slice 2 as structural, at scale
+(typescript.js: 24.5 k declarators × 7 `preDeclarator` taps, 19 k ifs
+under `statementIf`/`collectGuards`, every statement under two
+`statement` taps). The contract stays intact but the _bail_ no longer
+requires the node: `parser.registerColumnGate(hook, tapFn, gate)`
+pairs a tap (matched by function identity) with a column predicate
+encoding that tap's own bail conditions; `_soaHookNeeded` lets the id
+walkers skip materialization _and_ the hook call only when every tap
+on the hook is gated and none passes (any third-party tap or
+interceptor forces the old path). Gates landed beside all core taps —
+SideEffectsFlag/InnerGraph (`statement`, `preDeclarator`,
+`declarator`), Compatibility, API, ConstExports, CommonJsImports,
+CreateRequire, ImportParser, WorkerAndWorklet (`preDeclarator`),
+ConstPlugin (`statementIf`, `expressionLogical|ConditionalOperator`
+via the new conservative `_soaEvalUnknowable` column probe) and
+HarmonyImportDependencyParserPlugin (`collectGuards`, keyed off
+`lastHarmonyImportOrder`). On a typescript build the gates skip 141 k
+statement / 22.6 k preDeclarator / 18 k statementIf calls with a few
+hundred materializations left. After: lodash −0.9% (neutral),
+three-long +5-6%, typescript ≈ +15% CPU with peak RSS +5.7% (−32 MB
+from +17.4%); retained heap unchanged. The typescript CPU residue now
+profiles as parse-side owned-grammar overhead (emit/`parseIdent`/
+`readWord` families, ~200 ms on the 9 MB file) plus gate probe cost
+(`StackedMap.get` +19 ms) — the C5 slice 2 target, alongside the
+bytes/6 capacity heuristic (946 k rows vs 1.52 M capacity on
+typescript.js) for the remaining peak-RSS gap.
 
 ## 5. Measurement protocol
 
