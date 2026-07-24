@@ -2856,12 +2856,12 @@ f();`;
 				);
 				return store;
 			};
-			const bigSource = `a(b); /* ${"x".repeat(1 << 16)} */`;
+			const bigSource = `a(b); s = "${"(".repeat(1 << 16)}";`;
 			// the walk path marks the parse transient — the slack stays
 			const big = parseStore(bigSource);
 			expect(big.capacity).toBeGreaterThan(big.count);
-			// long comment: the heuristic over-allocates far past the absolute
-			// trim floor, so a direct trim must snug the columns
+			// a separator-dense string literal makes the density estimate
+			// overshoot far past the trim floor, so a direct trim must snug
 			big.trim();
 			expect(big.types).toHaveLength(big.count);
 			expect(big.flat).toHaveLength(big.flatTop);

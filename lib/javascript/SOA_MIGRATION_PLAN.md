@@ -995,7 +995,26 @@ a parser subclass overriding the inlined function methods) falls back
 to object emitters instead of crashing in acorn's
 `adaptDirectivePrologue` on a raw ref.
 
-## 5. Measurement protocol
+**Slice: store-lifecycle costs (the SoA-vs-object warm-parse gap).**
+Profiling SoA against the owned object emitters (same tokenizer and
+grammar, different emission seam) on minified sources exposed three
+per-parse lifecycle costs unique to the store: (1) the flat
+`source/6` capacity divisor undershot dense sources up to 2.4×
+(lodash.min is 2.62 B/node), re-copying every column mid-parse —
+replaced with a mid-file separator-density sample (~1 node per
+punctuation char, ±15% across the corpus, 8 KB scan) plus a
+final-count projection in `_grow` from bytes-consumed, so an
+undershoot grows once, right-sized; (2) the progressively-grown
+sparse `values` array re-paid backing-store copies on ~50%-density
+name writes (measured ~5× per-write at 1M nodes) — the store is now
+pre-sized to capacity and right-trimmed by `trim()`; (3) the
+per-parse `_packFacades` repack existed only because a first pin at
+a large index demoted the bare `[]` to dictionary elements — the
+first pin now sizes the memo to capacity (fast holey stores ever
+after) and the repack is gone. lodash.min warm parse 13.3 → 10.2 ms
+(object mode 9.6), three.cjs 115 → 96 ms — now ahead of object mode
+(97 ms); the tighter estimate also cuts transient buffer capacity on
+loose sources (typescript initial columns 1.6× → 1.12× final count).
 
 For every phase-gate PR: `yarn benchmark` on `js-parser-unit` (tokenize /
 parse / parse+walk / heap variants) and the module-level cases named above,

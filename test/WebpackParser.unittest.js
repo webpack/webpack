@@ -2648,6 +2648,22 @@ describe("WebpackParser", () => {
 			expect(root.body).toHaveLength(5000);
 			expect(root.body[4999].start).toBe(4999);
 		});
+
+		it("grows straight to the density-projected capacity", () => {
+			// an all-whitespace sample estimates no separators at all
+			expect(new SoaAst("").capacity).toBe(256);
+			const ast = new SoaAst(" ".repeat(50000));
+			expect(ast.capacity).toBe(256);
+			const first = ast.allocNode(TYPE_IDENTIFIER, 10, 12);
+			ast.values[first] = "a";
+			// a pre-grow pin must survive the side-store move identity-stable
+			const pinned = ast.nodeAt(first);
+			for (let i = 1; i < 300; i++) ast.allocNode(TYPE_IDENTIFIER, 200, 201);
+			// 257 nodes from 200 consumed bytes project far past one doubling
+			expect(ast.capacity).toBeGreaterThan(512);
+			expect(ast.nodeAt(first)).toBe(pinned);
+			expect(ast.values[first]).toBe("a");
+		});
 	});
 
 	describe("SoA emission", () => {
@@ -3286,12 +3302,12 @@ describe("WebpackParser", () => {
 		});
 
 		it("detaches a still-shared flat view when trimming the columns", () => {
-			// comment padding inflates the node-capacity heuristic (forcing a
-			// trim) while the big list keeps the never-grown flat view over
+			// a separator-dense string inflates the density estimate (forcing
+			// a trim) while the big list keeps the never-grown flat view over
 			// half-full, so only the trim would pin the original buffer
 			const elements = Array.from({ length: 2500 }, () => "1").join(",");
-			const ast = parseOn(`/*${"x".repeat(50000)}*/ x = [${elements}];`);
-			expect(ast.body[0].expression.right.elements).toHaveLength(2500);
+			const ast = parseOn(`s = "${"(".repeat(5000)}"; x = [${elements}];`);
+			expect(ast.body[1].expression.right.elements).toHaveLength(2500);
 		});
 
 		it("delegates to acorn's node paths without lazy mode", () => {
