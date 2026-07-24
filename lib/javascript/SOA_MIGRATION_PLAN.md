@@ -927,6 +927,19 @@ within noise). Remaining typescript CPU residue: `nodeAt` from
 (~90 ms), SoA emission (`_emitCallExpression`/`_soaIdentifier`/
 `_soaLiteral`, ~75 ms), `buildLineStarts` (+16 ms).
 
+**Perf slice: packed facade memo.** A `%HasDictionaryElements` probe
+showed the parse-time facade pins (first pin at a large index on a
+bare `[]`) demote `store.facades` to dictionary elements, turning
+every memo probe in the read-heavy walk — `nodeAt`'s cache check and
+the absent-child fast paths — into a hash lookup. `_packFacades()`
+now repacks the memo into a packed-elements array (sized to `count`,
+pins carried over, identity preserved) once at the end of every SoA
+parse; parse-time pins stay on the cheap sparse array. typescript
+full build ~1883 → ~1780 ms with peak RSS 282 → ~270 MB. Parse-only
+(production options, typescript.js warm): acorn 698 ms, SoA ~390 ms
+(1.8×), retained heap 126 → 34 MB (3.7×). `store.values` measured
+holey-but-fast (no fix needed).
+
 ## 5. Measurement protocol
 
 For every phase-gate PR: `yarn benchmark` on `js-parser-unit` (tokenize /
