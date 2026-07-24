@@ -2896,14 +2896,13 @@ describe("WebpackParser", () => {
 				 * @returns {EXPECTED_ANY} plain-object statement
 				 */
 				parseExpressionStatement(node, expr) {
-					const finished = /** @type {EXPECTED_ANY} */ (
-						super.parseExpressionStatement(node, expr)
-					);
+					super.parseExpressionStatement(node, expr);
+					// built from parser state: the super result is a raw ref
 					return {
 						type: "ExpressionStatement",
-						start: finished.start,
-						end: finished.end,
-						expression: finished.expression
+						start: node.start,
+						end: this.lastTokEnd,
+						expression: expr
 					};
 				}
 			}
@@ -2924,7 +2923,9 @@ describe("WebpackParser", () => {
 			expect(SoaAst.isFacade(forStmt)).toBe(true);
 			expect(forStmt.update.type).toBe("ClassExpression");
 			expect(SoaAst.isFacade(forStmt.body)).toBe(false);
-			expect(forStmt.body.expression.name).toBe("x");
+			expect(forStmt.body.type).toBe("ExpressionStatement");
+			expect(forStmt.body.start).toBe(20);
+			expect(forStmt.body.end).toBe(22);
 		});
 	});
 
@@ -2971,6 +2972,67 @@ describe("WebpackParser", () => {
 				expect(() => parseOn(code, extra, soaAst)).not.toThrow();
 			}
 		};
+
+		it("stamps the commonjs source type as script on the Program", () => {
+			for (const soaAst of [false, true]) {
+				const ast = parseOn(
+					"module.exports = 1;",
+					{ sourceType: "commonjs" },
+					soaAst
+				);
+				expect(ast.type).toBe("Program");
+				expect(ast.sourceType).toBe("script");
+			}
+		});
+
+		it("recovers labels on statement heads delegated to acorn", () => {
+			// `await`/`async`/`using` heads delegate to base parseStatement,
+			// whose label check is blind to raw refs (test262
+			// statements/labeled/value-await-non-module)
+			const script = { sourceType: "script" };
+			for (const code of [
+				"await: 1;",
+				"aw\\u0061it: 1;",
+				"'use strict'; await: 1;",
+				"async: 1;",
+				"using: 1;",
+				"await: for (;;) break await;",
+				"if (1) await: 1;",
+				"l: await: 1;"
+			]) {
+				expectBothParse(code, script);
+				const stmts = parseOn(code, script).body;
+				const labeled = stmts[stmts.length - 1];
+				expect(labeled.type).toBe(
+					code.startsWith("if") ? "IfStatement" : "LabeledStatement"
+				);
+			}
+			expect(parseOn("await: 1;", script).body[0].label.name).toBe("await");
+			// non-label shapes keep erroring identically
+			expectBothThrow("(await): 1;", "Unexpected token", script);
+			expectBothThrow("await.b: 1;", "Unexpected token", script);
+			expectBothThrow("await: 1;", "Unexpected token");
+			expectBothThrow(
+				"await: await: 1;",
+				"Label 'await' is already declared",
+				script
+			);
+
+			// the module->script downgrade retry recovers the label too
+			const JavascriptParser = require("../lib/javascript/JavascriptParser");
+
+			for (const soaAst of [false, true]) {
+				const parser = new JavascriptParser("auto", { soaAst });
+				expect(() =>
+					parser.parse(
+						"await: 1;",
+						/** @type {import("../lib/Parser").ParserState} */ (
+							/** @type {unknown} */ ({})
+						)
+					)
+				).not.toThrow();
+			}
+		});
 
 		it("converts raw refs to patterns with acorn's error surface", () => {
 			expectBothThrow(

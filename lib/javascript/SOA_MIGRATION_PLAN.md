@@ -1,8 +1,8 @@
 # JavaScript syntax parser: Structure-of-Arrays migration plan
 
 Status: **in progress — SoA is the default backend; Phase C3
-(grammar flows ids) is the active front and its expression half is
-done.** Landed so far, in order (details in §4/§7): Phase 0 baselines;
+(grammar flows ids) is complete: the whole grammar, statements and the
+Program included, flows raw refs.** Landed so far, in order (details in §4/§7): Phase 0 baselines;
 **Phase A complete** (A1–A6: every grammar construction owned in lazy
 mode, no acorn node-construction path remains reachable); **B1** (all 44
 single-shape constructions route through module-level `_emit*` slots,
@@ -23,17 +23,17 @@ entry, info-full member-chain hook gates, the column-native CommonJS
 `this` scan, and the rename-inert Call/New/Logical/Conditional extension
 plus the tighter column trim), taking walk materialization to 6.4% of
 nodes on typescript.js, 7.2% on lodash and 17.7% on react; and **C3
-slices 1–3** — the grammar now flows raw refs (numbers) for the entire
-expression, pattern and function-expression grammar: flipped emitters
-allocate a row and return its id with no transient facade at all, and
-node objects appear at parse only for statements, declarators, switch
-cases, export specifiers and the foreign (acorn-delegated) constructs,
-which materialize their raw-ref children at the seam. typescript.js
-retained is 55.6 vs 94.6 MB (−41%), bare parse+walk ~595 vs ~560 ms —
-the SoA-specific wall gap shrank from ~115 ms to ~35 ms.
-Next: flow ids through the statement grammar and the `parseTopLevel`
-boundary (a `ParseResult{store, rootId}` seam) so statement facades and
-the per-statement `program.body` objects disappear too. CodSpeed's
+slices 1–4** — the grammar now flows raw refs (numbers) end to end:
+every expression, pattern, function and statement emitter allocates a
+row and returns its id with no transient facade at all, the Program is
+itself a store row served by a lazy-body `ProgramFacade`, foreign
+import/export/class statements are adopted onto rows so ESM top levels
+stay in the columns, and `JavascriptParser.parse` drives all four
+passes (module pre-walk included) off the root id. typescript.js
+retained is 53.6 vs 94.6 MB (−43%), and the bare parse+walk SoA wall
+gap — ~115 ms two slices ago, ~35 ms after slice 3 — is now within
+noise (≈ 1%, ~555 vs ~548 ms).
+Next: C4 cleanups and profile-led follow-ups on real builds. CodSpeed's
 Memory rows flagging the parser unit benchmarks are the inherent
 accounting difference (one upfront column allocation registers as a
 large TypedArray allocation; the object backend's per-node churn is
@@ -792,6 +792,31 @@ slices ago to ~35 ms — with retained memory holding at 55.6 vs 94.6 MB
 statement family; the next cut is the statement grammar and the
 `parseTopLevel`/`ParseResult{store, rootId}` boundary so
 `program.body` stops carrying per-statement objects.
+
+**C3 slice 4 landed** (statement grammar and the `parseTopLevel`
+boundary flow ids): all 21 statement emitters return raw refs, the
+Program is a store row (aux carries `sourceType`) returned through a
+lazy-body `ProgramFacade`, and an owned `parseTopLevel` wires the
+top-level list into the columns. Foreign statements that acorn still
+builds (import/export/class declarations) are _adopted_: they get a
+row and register as its facade, so one import no longer pins a whole
+module body. `JavascriptParser.parse` now runs detectMode and all
+pre-walk/walk passes on the root id (with a new
+`_modulePreWalkStatementsId` and adopted-type arms in the id
+dispatchers), falling back to the object walkers only when a program
+hook materialized — and possibly replaced — `ast.body`;
+`HarmonyDetectionParserPlugin` and `UseStrictPlugin`, which read the
+body on every module, probe the columns instead (via the exported
+`SoaAst.KEY_MEMO` seam), so real builds keep the id path. Also fixes a
+slice 3 regression caught by test262: acorn's label detection reads
+`expr.type` and is blind to raw refs, so `await:`/`async:`/`using:`
+labels (delegated statement heads) mis-parsed; the owned
+`parseExpressionStatement` now recovers the pending label
+(statements/labeled/value-await-non-module). typescript.js retained
+is 53.6 vs 94.6 MB (−43%) and the bare parse+walk wall gap closed to
+within noise (≈ 1%, ~555 vs ~548 ms). Parse-time transient facades are
+gone entirely; node objects at parse now exist only for adopted/foreign
+constructs and seam materializations.
 
 ## 5. Measurement protocol
 

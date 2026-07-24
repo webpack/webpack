@@ -2020,6 +2020,149 @@ f();`;
 		// chains resolve member info; taps that return true stop the walk),
 		// the strict-mode-in-module-output reports, and the foreign-pinned /
 		// empty list fallbacks — all asserted equal across both backends.
+		// slice 4: the Program is a store row — module-level declarations are
+		// adopted rows dispatched from the columns, and a program hook that
+		// materializes `body` routes the walk through the object passes
+		it("should match the object walk on module-level imports/exports/classes", () => {
+			/**
+			 * @param {string} code source
+			 * @param {boolean} soaAst backend
+			 * @param {((parser: EXPECTED_ANY, events: string[]) => void)=} setup taps
+			 * @returns {string[]} recorded events
+			 */
+			const walk = (code, soaAst, setup) => {
+				const parser = new JavascriptParser("auto", { soaAst });
+				/** @type {string[]} */
+				const events = [];
+				const state = {
+					module: {
+						type: "javascript/auto",
+						buildMeta: {},
+						buildInfo: {},
+						addPresentationalDependency: () => {},
+						addWarning: (/** @type {Error} */ w) =>
+							events.push(`warn:${w.message}`),
+						addError: (/** @type {Error} */ e) =>
+							events.push(`err:${e.message}`)
+					},
+					compilation: { runtimeTemplate: { isModule: () => true } }
+				};
+				if (setup) setup(parser, events);
+				parser.hooks.preStatement.tap("t", (/** @type {EXPECTED_ANY} */ s) => {
+					events.push(`pre:${s.type}@${s.range[0]}`);
+				});
+				parser.hooks.blockPreStatement.tap(
+					"t",
+					(/** @type {EXPECTED_ANY} */ s) => {
+						events.push(`blockPre:${s.type}@${s.range[0]}`);
+					}
+				);
+				parser.hooks.statement.tap("t", (/** @type {EXPECTED_ANY} */ s) => {
+					events.push(`stmt:${s.type}@${s.range[0]}`);
+				});
+				parser.hooks.import.tap("t", (s, source) => {
+					events.push(`import:${source}`);
+				});
+				parser.hooks.importSpecifier.tap("t", (s, source, exportName, name) => {
+					events.push(`importSpec:${source}:${exportName}:${name}`);
+				});
+				parser.hooks.export.tap("t", (/** @type {EXPECTED_ANY} */ s) => {
+					events.push(`export@${s.range[0]}`);
+				});
+				parser.hooks.exportImport.tap("t", (s, source) => {
+					events.push(`exportImport:${source}`);
+				});
+				parser.hooks.exportSpecifier.tap("t", (s, name, spec) => {
+					events.push(`exportSpec:${name}:${spec}`);
+				});
+				parser.parse(
+					code,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ (state)
+					)
+				);
+				return events;
+			};
+			/**
+			 * @param {string} code source
+			 * @param {((parser: EXPECTED_ANY, events: string[]) => void)=} setup taps
+			 * @returns {void} asserts both backends agree
+			 */
+			const same = (code, setup) => {
+				expect(walk(code, true, setup).join("\n")).toBe(
+					walk(code, false, setup).join("\n")
+				);
+			};
+			const MOD =
+				'import d, { a as b } from "m"; class C {} const i = new C(); ' +
+				"export default class D extends C {} export const v = b; " +
+				'export { v as w }; export * from "n"; d(b, i);';
+			same(MOD);
+			// a program tap materializing the body pins the object walk path
+			same(MOD, (p, e) => {
+				p.hooks.program.tap("t", (/** @type {EXPECTED_ANY} */ ast) => {
+					e.push(`body:${ast.body.length}`);
+				});
+			});
+			same("");
+			same("'use strict'; free;");
+			same("'use asm'; free;");
+			// a foreign first expression pins the directive probe's statement
+			same("t`x`; 'use strict'; free;");
+			same('"use strict"; import x from "m"; x;');
+		});
+
+		it("should detect module syntax on the columns in HarmonyDetectionParserPlugin", () => {
+			const HarmonyDetectionParserPlugin = require("../lib/dependencies/HarmonyDetectionParserPlugin");
+
+			/**
+			 * @param {string} code source
+			 * @param {boolean} soaAst backend
+			 * @param {{ esm?: boolean, pin?: boolean }=} opts esm module type / pin body
+			 * @returns {boolean} whether harmony was enabled
+			 */
+			const run = (code, soaAst, { esm = false, pin = false } = {}) => {
+				const parser = new JavascriptParser("auto", { soaAst });
+				if (pin) {
+					// materializes the body before the detection tap runs
+					parser.hooks.program.tap({ name: "pin", stage: -1000 }, (ast) => {
+						if (ast.body.length === -1) throw new Error("unreachable");
+					});
+				}
+				new HarmonyDetectionParserPlugin().apply(
+					/** @type {EXPECTED_ANY} */ (parser)
+				);
+				/** @type {EXPECTED_ANY} */
+				const state = {
+					module: {
+						type: esm ? "javascript/esm" : "javascript/auto",
+						buildMeta: {},
+						buildInfo: {},
+						addPresentationalDependency: () => {}
+					}
+				};
+				parser.parse(
+					code,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ (state)
+					)
+				);
+				return state.module.buildMeta.exportsType === "namespace";
+			};
+			for (const soaAst of [false, true]) {
+				expect(run('import x from "m"; x;', soaAst)).toBe(true);
+				expect(run("export const x = 1;", soaAst)).toBe(true);
+				expect(run("export default 1;", soaAst)).toBe(true);
+				expect(run('export * from "n";', soaAst)).toBe(true);
+				expect(run("const x = 1;", soaAst)).toBe(false);
+				// a pinned body falls back to the object scan
+				expect(run('import x from "m"; x;', soaAst, { pin: true })).toBe(true);
+				expect(run("const x = 1;", soaAst, { pin: true })).toBe(false);
+				// the esm module type short-circuits the scan entirely
+				expect(run("const x = 1;", soaAst, { esm: true })).toBe(true);
+			}
+		});
+
 		it("should match the object walk on D2 hook-bails and foreign-pinned lists", () => {
 			/**
 			 * @param {string} code source
