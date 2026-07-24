@@ -965,6 +965,23 @@ parse work (`nextToken` 16%, grammar dispatch, GC of touched rows);
 `declareName` is already Set-backed, the word-intern cache already
 covers identifier strings, context shims are monomorphic.
 
+**Slice: the `soaAst` option is gone — the built-in parser is always
+SoA.** The `module.parser.javascript.soaAst` escape hatch was removed
+from the schema/defaults and the parser constructor; object nodes now
+only enter through a custom `parse` function, and the A/B equivalence
+tests drive their object side through that same seam. The two
+`lib/dependencies` files keep their SoA-aware branches deliberately:
+facade children are lazy prototype accessors, invisible to
+`Object.keys`, so a generic own-key child walker
+(`CommonJsExportsParserPlugin`'s `this` scan, #21178) silently loses
+facade subtrees — verified in a fresh always-SoA process. Measured
+and rejected parser-side alternatives (do not retry): own enumerable
+accessors per instance via `Object.defineProperties` _or_
+literal-declared accessors both cost ~300× per facade construction
+(V8 lowers both to the runtime define-property slow path), which
+would poison the statement-hook materialization path. The remaining
+plugin-side SoA knowledge migrates out in the hook PRs.
+
 ## 5. Measurement protocol
 
 For every phase-gate PR: `yarn benchmark` on `js-parser-unit` (tokenize /
