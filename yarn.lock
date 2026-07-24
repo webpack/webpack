@@ -687,7 +687,7 @@
     human-id "^4.1.1"
     prettier "^2.7.1"
 
-"@codspeed/core@^5.5.0":
+"@codspeed/core@^5.5.0", "@codspeed/core@^5.7.1":
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/@codspeed/core/-/core-5.7.1.tgz#d242510013f540cbb55109c44eb5f837796e2213"
   integrity sha512-7mrFkqaY14rXu3XHv3o7bK3btLK0LFRxfeK3bQC8dLduI/Ty9eq8Hv8rx04FAY/onQbRTx3rUUQg5xprYHpATQ==
@@ -697,6 +697,13 @@
     form-data "^4.0.4"
     node-gyp-build "^4.6.0"
     stack-trace "1.0.0-pre2"
+
+"@codspeed/tinybench-plugin@^5.7.1":
+  version "5.7.1"
+  resolved "https://registry.yarnpkg.com/@codspeed/tinybench-plugin/-/tinybench-plugin-5.7.1.tgz#8a8877290ab492ae59b8d65651637b6c803deda5"
+  integrity sha512-4YZvqqbic55rJrjqawB8wHnKkCklFlHlrTfnLB8/w2EXEJ7XwkFpRDSGYQxV30K4K6llRLc0aYvYy1WwgCqVBw==
+  dependencies:
+    "@codspeed/core" "^5.7.1"
 
 "@cspell/cspell-bundled-dicts@10.0.1":
   version "10.0.1"
