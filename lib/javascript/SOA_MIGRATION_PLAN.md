@@ -939,6 +939,32 @@ still below. Remaining walk-phase levers: anonymous-tap self time
 (~90 ms), `StackedMap.get` (~58 ms), `listAt` (~20 ms) — the C-phase
 id-walk extension targets.
 
+**Perf slice: parse-loop plateau (three probes, all measured
+negative — do not retry).** (1) Dropping the `values[id] = name`
+identifier store (deriving names lazily by slice) is a net loss:
++65 ms/parse on typescript.js, because the tokenizer's interned
+string makes the store nearly free while every grammar/walk name read
+would pay a fresh slice allocation. (2) Tightening the capacity
+heuristic (`/6` → `/9`, corpus densities run 7.5–18.5 B/node for
+readable code, 2.6 minified) moves no CPU and no resident memory —
+allocation slack is untouched zeroed pages, so a better estimator
+only improves the `arrayBuffers` accounting number; not worth the
+grow-copy risk on compact sources. (3) Resizable `ArrayBuffer`
+columns (in-place `resize()`, no grow copies): V8 12.4 penalizes
+element access through views on resizable buffers ~2× — for
+length-tracking _and_ fixed-length views — which would poison every
+column op. Corpus-wide standing (production options, warm, per
+file): 1.25–1.75× faster than acorn (typescript 660 → 384 ms,
+three.cjs 127 → 81, terser bundle.min 78 → 49). Memory, stated per
+metric: JS heap for a retained typescript.js AST 126 → 42 MB
+(3×, and ~1.5 M fewer heap objects of GC pressure); adding the
+column buffers (external, not in `heapUsed`) makes total allocated
+94 vs 126 MB and resident roughly 74 vs 126 MB — earlier "3.7× less"
+notes counted the JS heap only. Remaining self-time is inherent
+parse work (`nextToken` 16%, grammar dispatch, GC of touched rows);
+`declareName` is already Set-backed, the word-intern cache already
+covers identifier strings, context shims are monomorphic.
+
 ## 5. Measurement protocol
 
 For every phase-gate PR: `yarn benchmark` on `js-parser-unit` (tokenize /
