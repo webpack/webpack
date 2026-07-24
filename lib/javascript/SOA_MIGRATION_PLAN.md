@@ -982,6 +982,19 @@ literal-declared accessors both cost ~300× per facade construction
 would poison the statement-hook materialization path. The remaining
 plugin-side SoA knowledge migrates out in the hook PRs.
 
+**Slice: the internal `soaAst` parse option flipped to an inverted
+`estree` option.** SoA is now the unconditional default for every
+parse (including direct `_parse` callers); consumers that need plain
+object nodes — own-key traversals like the eslint-scope analyses in
+`JavascriptModulesPlugin` and `ConcatenatedModule` — opt back in with
+`estree: true`. Flipping the default surfaced a latent constraint:
+raw refs only flow through the owned grammar, so `_soaAst` now also
+requires `_fnFastPath` and `_subscriptFastPath` — a parse that would
+delegate node-producing paths to acorn (ecmaVersion below ES2020, or
+a parser subclass overriding the inlined function methods) falls back
+to object emitters instead of crashing in acorn's
+`adaptDirectivePrologue` on a raw ref.
+
 ## 5. Measurement protocol
 
 For every phase-gate PR: `yarn benchmark` on `js-parser-unit` (tokenize /

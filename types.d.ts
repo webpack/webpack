@@ -20101,9 +20101,9 @@ declare interface ParseOptions {
 	moduleFallback?: boolean;
 
 	/**
-	 * emit the AST into the SoA column store, serving facade nodes (SOA_MIGRATION_PLAN.md); on by default
+	 * emit plain estree object nodes instead of the default SoA column store — own-key traversals (eslint-scope) need them
 	 */
-	soaAst?: boolean;
+	estree?: boolean;
 
 	/**
 	 * internal: the store dies with the caller's walk, so skip the column snug after parse

@@ -10,15 +10,15 @@ const JavascriptParser = require("../lib/javascript/JavascriptParser");
  * Backend selector for A/B tests: the built-in parser is always SoA, so the
  * object-node side routes through the custom-parse seam like user parse
  * functions do.
- * @param {boolean} soaAst backend
+ * @param {boolean} soa backend
  * @returns {ConstructorParameters<typeof JavascriptParser>[1]} parser options
  */
-const backendOptions = (soaAst) =>
-	soaAst
+const backendOptions = (soa) =>
+	soa
 		? {}
 		: {
 				parse: (code, options) =>
-					JavascriptParser._parse(code, { ...options, soaAst: false })
+					JavascriptParser._parse(code, { ...options, estree: true })
 			};
 
 describe("JavascriptParser", () => {
@@ -1353,11 +1353,11 @@ describe("JavascriptParser", () => {
 		 * event sequence.
 		 * @param {string} code source
 		 * @param {Set<string>} names names to tap on the name-keyed HookMaps
-		 * @param {boolean} soaAst whether to emit into the column store
+		 * @param {boolean} soa whether to emit into the column store
 		 * @returns {{ events: string[], sawFacade: boolean }} recorded walk
 		 */
-		const recordWalk = (code, names, soaAst) => {
-			const parser = new JavascriptParser("auto", backendOptions(soaAst));
+		const recordWalk = (code, names, soa) => {
+			const parser = new JavascriptParser("auto", backendOptions(soa));
 			/** @type {string[]} */
 			const events = [];
 			let sawFacade = false;
@@ -1682,12 +1682,12 @@ describe("JavascriptParser", () => {
 		it("should match the object pre-walk on hook bails and name-keyed declarations", () => {
 			/**
 			 * @param {string} code source
-			 * @param {boolean} soaAst backend
+			 * @param {boolean} soa backend
 			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
 			 * @returns {string[]} recorded events
 			 */
-			const walk = (code, soaAst, setup) => {
-				const parser = new JavascriptParser("auto", backendOptions(soaAst));
+			const walk = (code, soa, setup) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
 				/** @type {string[]} */
 				const events = [];
 				setup(parser, events);
@@ -1849,11 +1849,11 @@ describe("JavascriptParser", () => {
 		it("should serve identical statementPath state through hooks on both backends", () => {
 			/**
 			 * @param {string} code source
-			 * @param {boolean} soaAst backend
+			 * @param {boolean} soa backend
 			 * @returns {string[]} recorded events
 			 */
-			const walk = (code, soaAst) => {
-				const parser = new JavascriptParser("auto", backendOptions(soaAst));
+			const walk = (code, soa) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
 				/** @type {string[]} */
 				const events = [];
 				parser.hooks.preStatement.tap("t", (stmt) => {
@@ -2040,12 +2040,12 @@ f();`;
 		it("should match the object walk on module-level imports/exports/classes", () => {
 			/**
 			 * @param {string} code source
-			 * @param {boolean} soaAst backend
+			 * @param {boolean} soa backend
 			 * @param {((parser: EXPECTED_ANY, events: string[]) => void)=} setup taps
 			 * @returns {string[]} recorded events
 			 */
-			const walk = (code, soaAst, setup) => {
-				const parser = new JavascriptParser("auto", backendOptions(soaAst));
+			const walk = (code, soa, setup) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
 				/** @type {string[]} */
 				const events = [];
 				const state = {
@@ -2131,12 +2131,12 @@ f();`;
 
 			/**
 			 * @param {string} code source
-			 * @param {boolean} soaAst backend
+			 * @param {boolean} soa backend
 			 * @param {{ esm?: boolean, pin?: boolean }=} opts esm module type / pin body
 			 * @returns {boolean} whether harmony was enabled
 			 */
-			const run = (code, soaAst, { esm = false, pin = false } = {}) => {
-				const parser = new JavascriptParser("auto", backendOptions(soaAst));
+			const run = (code, soa, { esm = false, pin = false } = {}) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
 				if (pin) {
 					// materializes the body before the detection tap runs
 					parser.hooks.program.tap({ name: "pin", stage: -1000 }, (ast) => {
@@ -2163,31 +2163,31 @@ f();`;
 				);
 				return state.module.buildMeta.exportsType === "namespace";
 			};
-			for (const soaAst of [false, true]) {
-				expect(run('import x from "m"; x;', soaAst)).toBe(true);
-				expect(run("export const x = 1;", soaAst)).toBe(true);
-				expect(run("export default 1;", soaAst)).toBe(true);
-				expect(run('export * from "n";', soaAst)).toBe(true);
-				expect(run("const x = 1;", soaAst)).toBe(false);
+			for (const soa of [false, true]) {
+				expect(run('import x from "m"; x;', soa)).toBe(true);
+				expect(run("export const x = 1;", soa)).toBe(true);
+				expect(run("export default 1;", soa)).toBe(true);
+				expect(run('export * from "n";', soa)).toBe(true);
+				expect(run("const x = 1;", soa)).toBe(false);
 				// a pinned body falls back to the object scan
-				expect(run('import x from "m"; x;', soaAst, { pin: true })).toBe(true);
-				expect(run("const x = 1;", soaAst, { pin: true })).toBe(false);
+				expect(run('import x from "m"; x;', soa, { pin: true })).toBe(true);
+				expect(run("const x = 1;", soa, { pin: true })).toBe(false);
 				// the esm module type short-circuits the scan entirely
-				expect(run("const x = 1;", soaAst, { esm: true })).toBe(true);
+				expect(run("const x = 1;", soa, { esm: true })).toBe(true);
 			}
 		});
 
 		it("should match the object walk on D2 hook-bails and foreign-pinned lists", () => {
 			/**
 			 * @param {string} code source
-			 * @param {boolean} soaAst backend
+			 * @param {boolean} soa backend
 			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
 			 * @param {"auto" | "script"} sourceType source type
 			 * @param {boolean} moduleOutput emit as strict-mode module output
 			 * @returns {string[]} recorded events
 			 */
-			const walk = (code, soaAst, setup, sourceType, moduleOutput) => {
-				const parser = new JavascriptParser(sourceType, backendOptions(soaAst));
+			const walk = (code, soa, setup, sourceType, moduleOutput) => {
+				const parser = new JavascriptParser(sourceType, backendOptions(soa));
 				/** @type {string[]} */
 				const events = [];
 				setup(parser, events);
@@ -2376,12 +2376,12 @@ f();`;
 		it("should match the object walk on the column-native fast paths", () => {
 			/**
 			 * @param {string} code source
-			 * @param {boolean} soaAst backend
+			 * @param {boolean} soa backend
 			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
 			 * @returns {string[]} recorded events
 			 */
-			const walk = (code, soaAst, setup) => {
-				const parser = new JavascriptParser("auto", backendOptions(soaAst));
+			const walk = (code, soa, setup) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
 				/** @type {string[]} */
 				const events = [];
 				setup(parser, events);
@@ -2873,8 +2873,7 @@ f();`;
 			// a direct `_parse` may retain the AST, so its store comes back snug
 			const { ast } = JavascriptParser._parse(bigSource, {
 				sourceType: "auto",
-				ranges: true,
-				soaAst: true
+				ranges: true
 			});
 			const retained = /** @type {EXPECTED_ANY} */ (ast).body[0][KEY_STORE];
 			expect(retained.types).toHaveLength(retained.count);
@@ -2891,8 +2890,7 @@ f();`;
 			const KEY_STORE = SoaAst.KEY_STORE;
 			const { ast } = JavascriptParser._parse("a(b);", {
 				sourceType: "auto",
-				ranges: true,
-				soaAst: true
+				ranges: true
 			});
 			const store = /** @type {EXPECTED_ANY} */ (ast).body[0][KEY_STORE];
 			// identity-stable: repeated calls serve the memoized facade
@@ -2917,12 +2915,12 @@ f();`;
 		it("should match the object walk on id-walk if-statement branches", () => {
 			const code = "function f(a, b) { if (a) b; else a; }";
 			/**
-			 * @param {boolean} soaAst backend
+			 * @param {boolean} soa backend
 			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
 			 * @returns {string[]} recorded events
 			 */
-			const walkWith = (soaAst, setup) => {
-				const parser = new JavascriptParser("auto", backendOptions(soaAst));
+			const walkWith = (soa, setup) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
 				/** @type {string[]} */
 				const events = [];
 				setup(parser, events);
@@ -2976,13 +2974,13 @@ f();`;
 		// each reached as a direct child of an id-native statement.
 		it("should report the same strict-mode violations on both walks", () => {
 			/**
-			 * @param {boolean} soaAst backend
+			 * @param {boolean} soa backend
 			 * @returns {string[]} sorted diagnostic messages
 			 */
-			const walk = (soaAst) => {
+			const walk = (soa) => {
 				// script (sloppy) source so legacy octal parses; the module output
 				// then makes it a strict-mode violation at walk time
-				const parser = new JavascriptParser("script", backendOptions(soaAst));
+				const parser = new JavascriptParser("script", backendOptions(soa));
 				/** @type {string[]} */
 				const messages = [];
 				const state = /** @type {import("../lib/Parser").ParserState} */ (
@@ -3014,12 +3012,12 @@ f();`;
 		// return/throw terminate path and the following-statement skip.
 		it("should set scope.terminated via the terminate hook on both walks", () => {
 			/**
-			 * @param {boolean} soaAst backend
+			 * @param {boolean} soa backend
 			 * @param {string} keyword `return` or `throw`
 			 * @returns {string[]} recorded events
 			 */
-			const walk = (soaAst, keyword) => {
-				const parser = new JavascriptParser("auto", backendOptions(soaAst));
+			const walk = (soa, keyword) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
 				/** @type {string[]} */
 				const events = [];
 				parser.hooks.terminate.tap("test", () => true);
@@ -3042,11 +3040,11 @@ f();`;
 			}
 			// an `if` whose both branches terminate marks the whole `if` terminated
 			/**
-			 * @param {boolean} soaAst backend
+			 * @param {boolean} soa backend
 			 * @returns {string[]} recorded events
 			 */
-			const bothWalk = (soaAst) => {
-				const parser = new JavascriptParser("auto", backendOptions(soaAst));
+			const bothWalk = (soa) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
 				/** @type {string[]} */
 				const events = [];
 				parser.hooks.terminate.tap("test", () => true);
@@ -3068,11 +3066,11 @@ f();`;
 
 		it("should honor a statement-hook bail on the id walk", () => {
 			/**
-			 * @param {boolean} soaAst backend
+			 * @param {boolean} soa backend
 			 * @returns {string[]} recorded events
 			 */
-			const walk = (soaAst) => {
-				const parser = new JavascriptParser("auto", backendOptions(soaAst));
+			const walk = (soa) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
 				/** @type {string[]} */
 				const events = [];
 				parser.hooks.statement.tap("test", (s) => {

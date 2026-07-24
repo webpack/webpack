@@ -9,19 +9,19 @@ describe("CommonJsExportsParserPlugin", () => {
 	/**
 	 * Parses CommonJS source with the plugin applied on the given backend.
 	 * @param {string} code source
-	 * @param {boolean} soaAst backend
+	 * @param {boolean} soa backend
 	 * @param {((ast: EXPECTED_ANY) => void)=} onProgram pre-walk program tap
 	 * @returns {{ deps: string[], bailout: string[] }} observed effects
 	 */
-	const parse = (code, soaAst, onProgram) => {
+	const parse = (code, soa, onProgram) => {
 		// object nodes enter through the custom-parse seam (always-SoA parser)
 		const parser = new JavascriptParser(
 			"script",
-			soaAst
+			soa
 				? {}
 				: {
 						parse: (code, options) =>
-							JavascriptParser._parse(code, { ...options, soaAst: false })
+							JavascriptParser._parse(code, { ...options, estree: true })
 					}
 		);
 		if (onProgram) parser.hooks.program.tap("test", onProgram);

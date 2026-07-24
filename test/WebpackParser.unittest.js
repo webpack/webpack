@@ -462,7 +462,8 @@ describe("WebpackParser", () => {
 		const names = (code) => {
 			/** @type {string[]} */
 			const found = [];
-			JSON.stringify(parse(code).ast, (_key, value) => {
+			// JSON.stringify only sees own keys, so pin the object backend
+			JSON.stringify(parse(code, { estree: true }).ast, (_key, value) => {
 				if (value && value.type === "Identifier") found.push(value.name);
 				return value;
 			});
@@ -1489,7 +1490,8 @@ describe("WebpackParser", () => {
 		});
 
 		it("should keep acorn's enumeration order on function nodes", () => {
-			const { ast } = parse("function f() {}");
+			// own-key order is an object-backend contract
+			const { ast } = parse("function f() {}", { estree: true });
 			expect(Object.keys(ast.body[0])).toEqual([
 				"type",
 				"start",
@@ -2648,7 +2650,7 @@ describe("WebpackParser", () => {
 		});
 	});
 
-	describe("SoA emission (soaAst)", () => {
+	describe("SoA emission", () => {
 		const { WebpackParser } = require("../lib/javascript/syntax");
 
 		/**
@@ -2664,13 +2666,12 @@ describe("WebpackParser", () => {
 						ecmaVersion: "latest",
 						sourceType: "module",
 						lazyNodes: true,
-						soaAst: true,
 						...extra
 					})
 				)
 			);
 
-		it("should emit facades from the seam and keep the object backend without the option", () => {
+		it("should emit facades by default and keep the object backend under estree", () => {
 			const soa = soaParse("const x = a.b(1);");
 			expect(SoaAst.isFacade(soa.body[0])).toBe(true);
 			expect(SoaAst.isFacade(soa.body[0].declarations[0].init)).toBe(true);
@@ -2680,7 +2681,8 @@ describe("WebpackParser", () => {
 					/** @type {unknown} */ ({
 						ecmaVersion: "latest",
 						sourceType: "module",
-						lazyNodes: true
+						lazyNodes: true,
+						estree: true
 					})
 				)
 			);
@@ -2693,8 +2695,7 @@ describe("WebpackParser", () => {
 				/** @type {import("acorn").Options} */ (
 					/** @type {unknown} */ ({
 						ecmaVersion: "latest",
-						sourceType: "module",
-						soaAst: true
+						sourceType: "module"
 					})
 				)
 			);
@@ -2913,8 +2914,7 @@ describe("WebpackParser", () => {
 						/** @type {unknown} */ ({
 							ecmaVersion: "latest",
 							sourceType: "module",
-							lazyNodes: true,
-							soaAst: true
+							lazyNodes: true
 						})
 					)
 				)
@@ -2935,10 +2935,10 @@ describe("WebpackParser", () => {
 		/**
 		 * @param {string} code source
 		 * @param {object=} extra extra parse options
-		 * @param {boolean=} soaAst backend
+		 * @param {boolean=} soa backend
 		 * @returns {EXPECTED_ANY} program node
 		 */
-		const parseOn = (code, extra, soaAst = true) =>
+		const parseOn = (code, extra, soa = true) =>
 			WebpackParser.parse(
 				code,
 				/** @type {import("acorn").Options} */ (
@@ -2946,7 +2946,7 @@ describe("WebpackParser", () => {
 						ecmaVersion: "latest",
 						sourceType: "module",
 						lazyNodes: true,
-						soaAst,
+						estree: !soa,
 						...extra
 					})
 				)
@@ -2958,8 +2958,8 @@ describe("WebpackParser", () => {
 		 * @param {object=} extra extra parse options
 		 */
 		const expectBothThrow = (code, message, extra) => {
-			for (const soaAst of [false, true]) {
-				expect(() => parseOn(code, extra, soaAst)).toThrow(message);
+			for (const soa of [false, true]) {
+				expect(() => parseOn(code, extra, soa)).toThrow(message);
 			}
 		};
 
@@ -2968,17 +2968,17 @@ describe("WebpackParser", () => {
 		 * @param {object=} extra extra parse options
 		 */
 		const expectBothParse = (code, extra) => {
-			for (const soaAst of [false, true]) {
-				expect(() => parseOn(code, extra, soaAst)).not.toThrow();
+			for (const soa of [false, true]) {
+				expect(() => parseOn(code, extra, soa)).not.toThrow();
 			}
 		};
 
 		it("stamps the commonjs source type as script on the Program", () => {
-			for (const soaAst of [false, true]) {
+			for (const soa of [false, true]) {
 				const ast = parseOn(
 					"module.exports = 1;",
 					{ sourceType: "commonjs" },
-					soaAst
+					soa
 				);
 				expect(ast.type).toBe("Program");
 				expect(ast.sourceType).toBe("script");
@@ -3021,15 +3021,15 @@ describe("WebpackParser", () => {
 			// the module->script downgrade retry recovers the label too
 			const JavascriptParser = require("../lib/javascript/JavascriptParser");
 
-			for (const soaAst of [false, true]) {
+			for (const soa of [false, true]) {
 				// object nodes enter through the custom-parse seam (always-SoA parser)
 				const parser = new JavascriptParser(
 					"auto",
-					soaAst
+					soa
 						? {}
 						: {
 								parse: (code, options) =>
-									JavascriptParser._parse(code, { ...options, soaAst: false })
+									JavascriptParser._parse(code, { ...options, estree: true })
 							}
 				);
 				expect(() =>
@@ -3328,8 +3328,7 @@ describe("WebpackParser", () => {
 					/** @type {unknown} */ ({
 						ecmaVersion: "latest",
 						sourceType: "module",
-						lazyNodes: true,
-						soaAst: true
+						lazyNodes: true
 					})
 				)
 			);
@@ -3482,9 +3481,9 @@ describe("WebpackParser", () => {
 		};
 
 		for (const [name, sourceType, read] of corpus) {
-			for (const soaAst of [false, true]) {
+			for (const soa of [false, true]) {
 				it(`should produce acorn's AST for ${name}${
-					soaAst ? " (SoA backend)" : ""
+					soa ? " (SoA backend)" : ""
 				}`, () => {
 					const code = read();
 					/** @type {import("acorn").Comment[]} */
@@ -3507,12 +3506,12 @@ describe("WebpackParser", () => {
 								allowHashBang: true,
 								allowReturnOutsideFunction: sourceType === "script",
 								lazyNodes: true,
-								soaAst,
+								estree: !soa,
 								lazyComments: actualComments
 							})
 						)
 					);
-					if (soaAst) {
+					if (soa) {
 						// prove the column backend actually engaged (module-only
 						// fixtures keep acorn-built import/export statements, so
 						// probe their emitted children too)
