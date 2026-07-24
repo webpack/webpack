@@ -1461,6 +1461,7 @@ describe("JavascriptParser", () => {
 					if (a) b; else a;
 					while (c) c--;
 					do a++; while (a < 10);
+					for (;;) { break; }
 					[a, b, , ...c];
 					a++;
 					--b;
@@ -2823,8 +2824,8 @@ f();`;
 			}
 		});
 
-		// columns are pre-sized from a source-length heuristic and snugged by
-		// `trim()` once parsing stops growing them
+		// columns are pre-sized from a source-length heuristic; non-transient
+		// parses snug them with `trim()`, the transient walk path skips it
 		it("trims column slack after parse and no-ops when already snug", () => {
 			const KEY_STORE = SoaAst.KEY_STORE;
 			/**
@@ -2846,9 +2847,13 @@ f();`;
 				);
 				return store;
 			};
+			const bigSource = `a(b); /* ${"x".repeat(1 << 16)} */`;
+			// the walk path marks the parse transient — the slack stays
+			const big = parseStore(bigSource);
+			expect(big.capacity).toBeGreaterThan(big.count);
 			// long comment: the heuristic over-allocates far past the absolute
-			// trim floor, so the columns must come back snug
-			const big = parseStore(`a(b); /* ${"x".repeat(1 << 16)} */`);
+			// trim floor, so a direct trim must snug the columns
+			big.trim();
 			expect(big.types).toHaveLength(big.count);
 			expect(big.flat).toHaveLength(big.flatTop);
 			const { types, flat } = big;
@@ -2856,9 +2861,18 @@ f();`;
 			// already snug: the same backing arrays stay in place
 			expect(big.types).toBe(types);
 			expect(big.flat).toBe(flat);
+			// a direct `_parse` may retain the AST, so its store comes back snug
+			const { ast } = JavascriptParser._parse(bigSource, {
+				sourceType: "auto",
+				ranges: true,
+				soaAst: true
+			});
+			const retained = /** @type {EXPECTED_ANY} */ (ast).body[0][KEY_STORE];
+			expect(retained.types).toHaveLength(retained.count);
 			// small slack stays untrimmed — the copies would cost more than the
 			// few KB they free
 			const small = parseStore(`a(b); /* ${"x".repeat(4096)} */`);
+			small.trim();
 			expect(small.capacity).toBeGreaterThan(small.count);
 		});
 

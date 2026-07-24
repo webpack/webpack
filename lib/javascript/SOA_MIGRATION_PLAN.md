@@ -46,8 +46,10 @@ column gates (`parser.registerColumnGate`) encoding their own bail
 conditions, so the id walk skips both facade materialization and the
 hook call when every tap is gated off — lodash is now neutral
 (−0.9%), three-long ≈ +5-6%, typescript ≈ +15% CPU with peak RSS down
-to +5.7% (−32 MB). The typescript CPU residue is parse-side owned
-grammar overhead, next slice's profile target. CodSpeed's
+to +5.7% (−32 MB). **C5 slice 2** removed the post-parse `trim()` copy
+for transient production stores and stopped materializing owner
+facades to probe absent child slots: typescript −8% wall with peak
+RSS below main, lodash faster than main (−4%). CodSpeed's
 Memory rows flagging the parser unit benchmarks are the inherent
 accounting difference (one upfront column allocation registers as a
 large TypedArray allocation; the object backend's per-node churn is
@@ -898,6 +900,32 @@ profiles as parse-side owned-grammar overhead (emit/`parseIdent`/
 (`StackedMap.get` +19 ms) — the C5 slice 2 target, alongside the
 bytes/6 capacity heuristic (946 k rows vs 1.52 M capacity on
 typescript.js) for the remaining peak-RSS gap.
+
+**C5 slice 2 landed** (transient stores skip `trim()` + absent-child
+fast path): fresh full-build profiles put the whole `_reallocColumns`
+copy cost in post-parse `trim()` (none in `_grow`; 24–190 ms/build on
+typescript, variance from page-fault/GC interplay), and a corpus probe
+overturned the trim rationale — untrimmed slack is untouched zeroed
+pages (virtual, barely resident), while the trim itself pays a full
+copy _and_ transiently doubles resident pages, so it was costing CPU
+and peak RSS to optimize the GC-visible `byteLength`. Production
+parses now pass `transientAst: true` (the store dies with the walk)
+and `parse()` skips the snug; direct `_parse` callers keep trimming
+(they may retain the AST). The same probe showed the "6.4 bytes/node
+floor" is wrong for minified sources (lodash.min.js: 2.62) — the /6
+capacity heuristic under-allocates those and they pay geometric `_grow`
+copies (~1× final size, acceptable); left as-is. Also: `kid === 0`
+child slots no longer materialize the owner facade to distinguish
+absent from foreign — a foreign child is always pinned onto its
+owner's memoized facade, so `store.facades[id] === undefined` proves
+absence (`_walkExprChildId`, `_walkArrayExpressionId` empty/pinned
+lists). typescript full build: 2045 → 1883 ms median (−8%), peak RSS
+308 → 282 MB (main: 298 MB — the branch now sits _below_ main);
+lodash flips faster than main (−4%); three-long unchanged (+4%,
+within noise). Remaining typescript CPU residue: `nodeAt` from
+`_walkExprChildId` fallbacks and `listAt` list materialization
+(~90 ms), SoA emission (`_emitCallExpression`/`_soaIdentifier`/
+`_soaLiteral`, ~75 ms), `buildLineStarts` (+16 ms).
 
 ## 5. Measurement protocol
 
