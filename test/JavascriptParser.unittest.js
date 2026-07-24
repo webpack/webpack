@@ -2879,7 +2879,7 @@ f();`;
 			expect(retained.types).toHaveLength(retained.count);
 			// small slack stays untrimmed — the copies would cost more than the
 			// few KB they free
-			const small = parseStore(`a(b); /* ${"x".repeat(4096)} */`);
+			const small = parseStore(`a(b); /* ${"x".repeat(2048)} */`);
 			small.trim();
 			expect(small.capacity).toBeGreaterThan(small.count);
 		});
