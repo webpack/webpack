@@ -10994,7 +10994,6 @@ declare class JavascriptParser extends ParserClass {
 			typescript?: boolean;
 			importPhases?: boolean;
 			strictModeViolations?: false | "error" | "warn";
-			soaAst?: boolean;
 		}
 	);
 	hooks: Readonly<{
@@ -11508,7 +11507,6 @@ declare class JavascriptParser extends ParserClass {
 		typescript?: boolean;
 		importPhases?: boolean;
 		strictModeViolations?: false | "error" | "warn";
-		soaAst?: boolean;
 	};
 	scope: ScopeInfo;
 	state: JavascriptParserState;
@@ -13300,12 +13298,6 @@ declare interface JavascriptParserOptions {
 	 * Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.
 	 */
 	requireJs?: boolean;
-
-	/**
-	 * Enable/disable the Structure-of-Arrays AST backend of the built-in JavaScript parser (column-store AST serving on-demand facade nodes to parser hooks). Enabled by default; disable to restore plain object AST nodes.
-	 * @experimental
-	 */
-	soaAst?: boolean;
 
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.

@@ -3022,7 +3022,16 @@ describe("WebpackParser", () => {
 			const JavascriptParser = require("../lib/javascript/JavascriptParser");
 
 			for (const soaAst of [false, true]) {
-				const parser = new JavascriptParser("auto", { soaAst });
+				// object nodes enter through the custom-parse seam (always-SoA parser)
+				const parser = new JavascriptParser(
+					"auto",
+					soaAst
+						? {}
+						: {
+								parse: (code, options) =>
+									JavascriptParser._parse(code, { ...options, soaAst: false })
+						  }
+				);
 				expect(() =>
 					parser.parse(
 						"await: 1;",

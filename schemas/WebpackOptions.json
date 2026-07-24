@@ -2640,11 +2640,6 @@
           "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
           "type": "boolean"
         },
-        "soaAst": {
-          "description": "Enable/disable the Structure-of-Arrays AST backend of the built-in JavaScript parser (column-store AST serving on-demand facade nodes to parser hooks). Enabled by default; disable to restore plain object AST nodes.",
-          "type": "boolean",
-          "experimental": true
-        },
         "sourceImport": {
           "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
           "type": "boolean"

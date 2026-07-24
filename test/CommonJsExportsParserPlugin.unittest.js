@@ -14,7 +14,16 @@ describe("CommonJsExportsParserPlugin", () => {
 	 * @returns {{ deps: string[], bailout: string[] }} observed effects
 	 */
 	const parse = (code, soaAst, onProgram) => {
-		const parser = new JavascriptParser("script", { soaAst });
+		// object nodes enter through the custom-parse seam (always-SoA parser)
+		const parser = new JavascriptParser(
+			"script",
+			soaAst
+				? {}
+				: {
+						parse: (code, options) =>
+							JavascriptParser._parse(code, { ...options, soaAst: false })
+				  }
+		);
 		if (onProgram) parser.hooks.program.tap("test", onProgram);
 		const moduleGraph = new ModuleGraph();
 		new CommonJsExportsParserPlugin(moduleGraph).apply(parser);
