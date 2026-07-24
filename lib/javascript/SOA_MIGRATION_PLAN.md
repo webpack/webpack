@@ -933,12 +933,21 @@ bare `[]`) demote `store.facades` to dictionary elements, turning
 every memo probe in the read-heavy walk — `nodeAt`'s cache check and
 the absent-child fast paths — into a hash lookup. `_packFacades()`
 now repacks the memo into a packed-elements array (sized to `count`,
-pins carried over, identity preserved) once at the end of every SoA
-parse; parse-time pins stay on the cheap sparse array. typescript
-full build ~1883 → ~1780 ms with peak RSS 282 → ~270 MB. Parse-only
-(production options, typescript.js warm): acorn 698 ms, SoA ~390 ms
-(1.8×), retained heap 126 → 34 MB (3.7×). `store.values` measured
-holey-but-fast (no fix needed).
+pins carried over, identity preserved) once at the end of every
+transient SoA parse; parse-time pins stay on the cheap sparse array,
+and direct (retaining) `_parse` callers keep the trim instead — one
+flag picks the post-parse treatment. The pack uses `new Array(n)
+.fill(undefined)` (a plain memory fill); the first cut used
+`Array.from({ length })`, which walks n observable property reads
+(~45 ms on 946 k rows — measured 70 ms per 1.5 M). typescript full
+build ~1883 → ~1673 ms (main: 1583, gap +5.7%) with peak RSS 282 →
+~277 MB (main: 298). Parse-only (production options, typescript.js
+warm): acorn 698 ms, SoA ~390-410 ms (~1.75×), retained heap 126 →
+34 MB (3.7×). Measured dead ends (do not retry): packing
+`store.values` upfront — its ~500 k scatter-stores are the hottest
+emission lines (`values[id] = name/value`), but the per-parse fill +
+12 MB churn cancels the win on both the fill and `Array.from`
+variants; progressive holey growth stays cheapest.
 
 ## 5. Measurement protocol
 
