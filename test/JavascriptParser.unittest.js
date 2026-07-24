@@ -3196,6 +3196,12 @@ f();`;
 				};
 				// defined roots stay unknown; free roots may fold via plugins
 				expect(at("a && a.b")).toBe(true);
+				// the right side alone can fold these — they must materialize
+				expect(at("a && false")).toBe(false);
+				expect(at("a || true")).toBe(false);
+				expect(at('a + "s"')).toBe(false);
+				expect(at("a + a")).toBe(true);
+				expect(at("a - 1")).toBe(true);
 				expect(at("a === 1")).toBe(true);
 				expect(at("1 === a")).toBe(true);
 				expect(at("!a")).toBe(true);
@@ -3216,7 +3222,7 @@ f();`;
 			});
 			parse(
 				parser,
-				'function f(a) { function g(x) { return x; } probe; return (a && a.b) || (a === 1) || (1 === a) || !a || (typeof a) || g(a) || window.q || a[g].b || ("x" === "y") || undefined; }'
+				'function f(a) { function g(x) { return x; } probe; return (a && a.b) || (a && false) || (a || true) || (a + "s") || (a + a) || (a - 1) || (a === 1) || (1 === a) || !a || (typeof a) || g(a) || window.q || a[g].b || ("x" === "y") || undefined; }'
 			);
 			expect(rows.size).toBeGreaterThan(0);
 		});
@@ -3224,7 +3230,12 @@ f();`;
 		it("treats foreign evaluate taps as able to fold anything", () => {
 			const parser = new JavascriptParser("auto", { soaAst: true });
 			// a foreign tap on each shape's evaluator defeats the probe
-			for (const type of ["Identifier", "MemberExpression", "CallExpression"]) {
+			for (const type of [
+				"Identifier",
+				"MemberExpression",
+				"CallExpression",
+				"BinaryExpression"
+			]) {
 				parser.hooks.evaluate.for(type).tap("ForeignPlugin", () => undefined);
 			}
 			/** @type {EXPECTED_ANY} */
@@ -3246,10 +3257,11 @@ f();`;
 				expect(at("a")).toBe(false);
 				expect(at("a.b")).toBe(false);
 				expect(at("g(a)")).toBe(false);
+				expect(at("a === 1")).toBe(false);
 			});
 			parse(
 				parser,
-				"function f(a) { function g(x) { return x; } probe; return a || a.b || g(a); }"
+				"function f(a) { function g(x) { return x; } probe; return a || a.b || g(a) || (a === 1); }"
 			);
 			expect(rows.size).toBeGreaterThan(0);
 		});
