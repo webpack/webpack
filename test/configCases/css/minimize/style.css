@@ -1,0 +1,54 @@
+/*! license: keep me */
+/* drop this comment */
+.a ,
+.b {
+	color : red ;
+	background : url(./img.png) ;
+}
+
+/* Declaration `:` trim, comma spacing, custom-property verbatim, !important, a
+   function's comma spaces, calc() operator spaces, and combinators — every one
+   a safety case the minifier must get exactly right. */
+.c > .d ,
+.e {
+	--custom :  a  b  ;
+	margin : 0  auto ;
+	color : rgb(1, 2, 3) !important ;
+	width : calc( 1px + 2px ) ;
+}
+
+/* Safe value transforms: number normalization, hex shortening, rgb()/hex color
+   minification — each value-identical. Custom properties, ids and hsl()/rgba()
+   with alpha are deliberately left untouched. */
+.transforms {
+	color : #FF0000 ;
+	background : #AABBCC ;
+	background-image : linear-gradient( #AABBCC , #FF0000 ) ;
+	border-color : rgb(0, 128, 128) ;
+	margin : 0.50px 1.0px 0 ;
+	--raw : 0.50 ;
+	fill : hsl(0, 100%, 50%) ;
+	stroke : rgba(0, 0, 0, 0.5) ;
+	outline-color : rgba(0, 0, 0, 0) ;
+}
+
+#ABCDEF {
+	x : 1 ;
+}
+
+:not( .f ) .g {
+	content : "; } , keep {" ;
+}
+
+/* Interleaved declaration / nested-rule order must be preserved. */
+.h {
+	color : red ;
+	.i { x : 1 }
+	color : green ;
+}
+
+@media screen and ( min-width : 100px ) {
+	.a {
+		content : "; } , keep {" ;
+	}
+}

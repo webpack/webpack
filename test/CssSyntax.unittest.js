@@ -1006,13 +1006,10 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 		expect(valueTypes).toContain(NodeType.Dimension);
 	});
 
-	it("accepts skip as SourceProcessor instance options (no per-call skip)", () => {
+	it("accepts skip as per-call process options", () => {
 		/** @type {string[]} */
 		const seen = [];
-		new SourceProcessor({
-			as: "block-contents",
-			skip: { types: buildSkipSet([NodeType.Number]) }
-		})
+		new SourceProcessor()
 			.use(
 				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
 					[NodeType.Number]: () => seen.push("num"),
@@ -1021,8 +1018,11 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 					) => seen.push(path.value())
 				})
 			)
-			.process("p: 1 foo");
-		// The instance-level skip drops numbers; `process` needed no options.
+			.process("p: 1 foo", {
+				as: "block-contents",
+				skip: { types: buildSkipSet([NodeType.Number]) }
+			});
+		// The per-call skip drops numbers.
 		expect(seen).toEqual(["foo"]);
 	});
 });
