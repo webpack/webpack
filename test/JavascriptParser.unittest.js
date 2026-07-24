@@ -19,7 +19,7 @@ const backendOptions = (soaAst) =>
 		: {
 				parse: (code, options) =>
 					JavascriptParser._parse(code, { ...options, soaAst: false })
-		  };
+			};
 
 describe("JavascriptParser", () => {
 	/* eslint-disable no-unused-vars */
@@ -2200,7 +2200,7 @@ f();`;
 									events.push(`err:${e.message}`)
 							},
 							compilation: { runtimeTemplate: { isModule: () => true } }
-					  }
+						}
 					: {};
 				parser.parse(
 					code,

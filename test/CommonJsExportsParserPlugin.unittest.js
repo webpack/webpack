@@ -22,7 +22,7 @@ describe("CommonJsExportsParserPlugin", () => {
 				: {
 						parse: (code, options) =>
 							JavascriptParser._parse(code, { ...options, soaAst: false })
-				  }
+					}
 		);
 		if (onProgram) parser.hooks.program.tap("test", onProgram);
 		const moduleGraph = new ModuleGraph();

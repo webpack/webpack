@@ -3030,7 +3030,7 @@ describe("WebpackParser", () => {
 						: {
 								parse: (code, options) =>
 									JavascriptParser._parse(code, { ...options, soaAst: false })
-						  }
+							}
 				);
 				expect(() =>
 					parser.parse(
