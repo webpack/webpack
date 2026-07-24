@@ -2643,7 +2643,7 @@ describe("WebpackParser", () => {
 			ast.setList(program, refs);
 			expect(ast.count).toBe(5002);
 			expect(ast.types[refs[4999]]).toBe(TYPE_IDENTIFIER);
-			expect(ast.listLens[program]).toBe(5000);
+			expect(ast.flat[ast.listStarts[program]]).toBe(5000);
 			const root = /** @type {EXPECTED_ANY} */ (ast.nodeAt(program));
 			expect(root.body).toHaveLength(5000);
 			expect(root.body[4999].start).toBe(4999);

@@ -1016,6 +1016,21 @@ after) and the repack is gone. lodash.min warm parse 13.3 → 10.2 ms
 (97 ms); the tighter estimate also cuts transient buffer capacity on
 loose sources (typescript initial columns 1.6× → 1.12× final count).
 
+**Slice: `listLens` folded into a `flat` length prefix.** Line-level
+profiling put the residual SoA-vs-object gap in store lifecycle
+(buffer zeroing scales with column bytes) and the `_soaListId`
+element copy. Each list span in `flat` is now `[length, ...refs]`
+with `flatTop` starting at 1, so a node without a list reads length
+0 through its zero `listStarts` for free and the `listLens` column
+is gone — 34 → 30 bytes/node on every buffer (typescript columns
+35.5 → 31.6 MB, ctor memset −12%). The one-pass foreign scan in
+`_soaListId` also proves the common all-refs shape and takes a
+branchless copy. typescript warm parse now beats object mode by 11%
+(456 vs 514 ms); the remaining object-mode edge is confined to tiny
+ultra-dense files (lodash.min −8.5%, acorn.js −4%) — the per-parse
+store setup floor, repaid in walk CPU and 2–2.5× lower retained
+memory versus acorn.
+
 For every phase-gate PR: `yarn benchmark` on `js-parser-unit` (tokenize /
 parse / parse+walk / heap variants) and the module-level cases named above,
 same machine, interleaved A/B runs, report median ± CI as the benchmark
