@@ -3,7 +3,6 @@
 const fs = require("fs");
 const path = require("path");
 const {
-	Node,
 	NodeType,
 	SourceProcessor,
 	TT_AT_KEYWORD,
@@ -32,7 +31,6 @@ const {
 	TT_STRING,
 	TT_URL,
 	TT_WHITESPACE,
-	Token,
 	TokenStream,
 	buildSkipSet,
 	normalizeUrl,
@@ -468,7 +466,7 @@ describe("CssSyntax — Node / Token", () => {
 		const decl = /** @type {import("../lib/css/syntax").Declaration} */ (
 			parseADeclaration("color: red")
 		);
-		expect(decl).toBeInstanceOf(Node);
+		expect(decl.type).toBe(NodeType.Declaration);
 		expect(decl.range).toEqual([decl.start, decl.end]);
 		expect(decl.toString()).toBe("color: red");
 	});
@@ -497,7 +495,7 @@ describe("CssSyntax — Node / Token", () => {
 		const ident = /** @type {import("../lib/css/syntax").Token} */ (
 			parseAComponentValue("foo")
 		);
-		expect(ident).toBeInstanceOf(Token);
+		expect(ident.type).toBe(NodeType.Ident);
 		expect(ident.value).toBe("foo");
 		expect(ident.value).toBe("foo");
 	});
