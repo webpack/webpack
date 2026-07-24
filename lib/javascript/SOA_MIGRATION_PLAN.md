@@ -33,7 +33,10 @@ passes (module pre-walk included) off the root id. typescript.js
 retained is 53.6 vs 94.6 MB (−43%), and the bare parse+walk SoA wall
 gap — ~115 ms two slices ago, ~35 ms after slice 3 — is now within
 noise (≈ 1%, ~555 vs ~548 ms).
-Next: C4 cleanups and profile-led follow-ups on real builds. CodSpeed's
+C4 (profile-led follow-ups on real builds) is underway: slice 1
+cut the three-long production gap from a locally reproduced +17% to
++3-8% via a single backing buffer for the store columns and a
+column-native member-root descent. CodSpeed's
 Memory rows flagging the parser unit benchmarks are the inherent
 accounting difference (one upfront column allocation registers as a
 large TypedArray allocation; the object backend's per-node churn is
@@ -817,6 +820,26 @@ is 53.6 vs 94.6 MB (−43%) and the bare parse+walk wall gap closed to
 within noise (≈ 1%, ~555 vs ~548 ms). Parse-time transient facades are
 gone entirely; node objects at parse now exist only for adopted/foreign
 constructs and seam materializations.
+
+**C4 slice 1 landed** (three-long production CPU): CodSpeed's
+recurring Simulation regression on three-long production (−21%)
+reproduced locally at +17% (interleaved same-machine A/B). Profiling
+attributed the gap to per-parse fixed cost and facade materialization
+under the production passes on ~1100 tiny ESM modules. Two cuts: the
+store's twelve per-parse TypedArray allocations collapsed into one
+backing ArrayBuffer with views (measured 5x cheaper construction;
+`_grow`/`trim` share the layout via `_reallocColumns`, and `trim`
+detaches a still-shared `flat` view so it cannot pin the untrimmed
+buffer), and `getMemberExpressionRoot` gained a store-backed arm that
+descends the columns via `_soaMemberRootId`, materializing only the
+chain root for the object-path callers (`getMemberExpressionInfo`,
+object `walkCallExpression`). three-long production A/B after: +2.5%
+and +8.5% across two 11-run rounds (from a stable +17%); typescript.js
+bare parse+walk and retained memory (−43%) unchanged. The remaining
+tail decomposes into statement-hook materialization (~8 ms/build,
+`SideEffectsFlagPlugin`'s `statement` tap), parse-time import/export
+seam materialization via `_refMat` (~6 ms/build) and the evaluate-path
+long tail — the next C4 targets.
 
 ## 5. Measurement protocol
 

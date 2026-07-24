@@ -3276,6 +3276,15 @@ describe("WebpackParser", () => {
 			expect(ast.body[0].expression.right.elements).toHaveLength(600);
 		});
 
+		it("detaches a still-shared flat view when trimming the columns", () => {
+			// comment padding inflates the node-capacity heuristic (forcing a
+			// trim) while the big list keeps the never-grown flat view over
+			// half-full, so only the trim would pin the original buffer
+			const elements = Array.from({ length: 2500 }, () => "1").join(",");
+			const ast = parseOn(`/*${"x".repeat(50000)}*/ x = [${elements}];`);
+			expect(ast.body[0].expression.right.elements).toHaveLength(2500);
+		});
+
 		it("delegates to acorn's node paths without lazy mode", () => {
 			const ast = /** @type {EXPECTED_ANY} */ (
 				WebpackParser.parse(
