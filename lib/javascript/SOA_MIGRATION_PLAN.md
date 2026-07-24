@@ -1023,7 +1023,7 @@ element copy. Each list span in `flat` is now `[length, ...refs]`
 with `flatTop` starting at 1, so a node without a list reads length
 0 through its zero `listStarts` for free and the `listLens` column
 is gone — 34 → 30 bytes/node on every buffer (typescript columns
-35.5 → 31.6 MB, ctor memset −12%). The one-pass foreign scan in
+35.5 → 31.6 MB, ctor zeroing −12%). The one-pass foreign scan in
 `_soaListId` also proves the common all-refs shape and takes a
 branchless copy. typescript warm parse now beats object mode by 11%
 (456 vs 514 ms); the remaining object-mode edge is confined to tiny
