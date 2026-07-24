@@ -947,7 +947,19 @@ warm): acorn 698 ms, SoA ~390-410 ms (~1.75×), retained heap 126 →
 `store.values` upfront — its ~500 k scatter-stores are the hottest
 emission lines (`values[id] = name/value`), but the per-parse fill +
 12 MB churn cancels the win on both the fill and `Array.from`
-variants; progressive holey growth stays cheapest.
+variants; progressive holey growth stays cheapest. The recurring
+"wrong map" deopt cluster is warm-up only (114 of ~128 deopts in the
+first parse, ~1/parse steady state) — cold-start, not throughput.
+
+**Perf slice: SIMD line scan.** After the facade fixes, `nodeAt`
+residual fell 122 → 21 ms/build and `buildLineStarts` (43 ms, a cost
+main shares) became the top concrete item: LF-only sources (nearly
+everything on npm) now scan with the SIMD-backed `indexOf` (~3× the
+char loop; any CR or LS/PS falls back). typescript full build
+~1673 → ~1604 ms — parity with main (1583 ms) within noise, peak RSS
+still below. Remaining walk-phase levers: anonymous-tap self time
+(~90 ms), `StackedMap.get` (~58 ms), `listAt` (~20 ms) — the C-phase
+id-walk extension targets.
 
 ## 5. Measurement protocol
 
