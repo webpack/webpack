@@ -841,6 +841,21 @@ tail decomposes into statement-hook materialization (~8 ms/build,
 seam materialization via `_refMat` (~6 ms/build) and the evaluate-path
 long tail — the next C4 targets.
 
+**C4 slice 2 landed** (new-expression gate; structural-tail record):
+`_walkNewExpressionId` mirrors the call-expression gate — a defined,
+untagged identifier callee matches no name-keyed `new` hook, so
+`new LocalClass()` (the dominant three.js shape) walks straight from
+the columns. The rest of the profiled three-long tail is structural
+under the current hook contracts and is recorded here rather than
+chased: `hooks.statement` (SideEffectsFlagPlugin, InnerGraphPlugin)
+and `hooks.preDeclarator` (eight production taps) receive
+identity-stable node objects by contract — InnerGraph keys WeakMaps by
+statement identity — so every statement/declarator materializes while
+those taps are live (~8 ms/build); the parse-time `_refMat`
+import/export seams (~6 ms/build) would need import/export specifiers
+owned as rows end to end. three-long production sits at ~+3-8%
+(within run noise) after slices 1-2, from a reproduced +17%.
+
 ## 5. Measurement protocol
 
 For every phase-gate PR: `yarn benchmark` on `js-parser-unit` (tokenize /
