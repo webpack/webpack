@@ -11512,7 +11512,31 @@ declare class JavascriptParser extends ParserClass {
 	state: JavascriptParserState;
 	comments?: CommentJavascriptParser[];
 	semicolons?: Map<number, boolean>;
+	destructuringAssignmentProperties?: WeakMap<
+		Expression,
+		Set<DestructuringAssignmentProperty>
+	>;
+	currentTagData?:
+		| Record<string, any>
+		| TopLevelSymbol
+		| HarmonySettings
+		| ImportSettings
+		| CommonJsImportSettings
+		| CompatibilitySettings;
+	magicCommentContext: ContextImport;
+
+	/**
+	 * The statement path from the program down to the current statement.
+	 * Pending column ids (statements no hook has observed) materialize in
+	 * place on access — `nodeAt` is identity-stable, so entries always
+	 * compare equal to the nodes hooks receive.
+	 */
 	statementPath?: StatementPathItem[];
+
+	/**
+	 * The previously walked sibling statement (a pending column id
+	 * materializes on access).
+	 */
 	prevStatement?:
 		| ImportDeclaration
 		| ExportNamedDeclaration
@@ -11569,18 +11593,6 @@ declare class JavascriptParser extends ParserClass {
 		| ForInStatement
 		| ForOfStatement
 		| ExportDefaultDeclaration;
-	destructuringAssignmentProperties?: WeakMap<
-		Expression,
-		Set<DestructuringAssignmentProperty>
-	>;
-	currentTagData?:
-		| Record<string, any>
-		| TopLevelSymbol
-		| HarmonySettings
-		| ImportSettings
-		| CommonJsImportSettings
-		| CompatibilitySettings;
-	magicCommentContext: ContextImport;
 
 	/**
 	 * Destructuring assignment properties for.
@@ -12237,7 +12249,9 @@ declare class JavascriptParser extends ParserClass {
 	): void;
 
 	/**
-	 * Processes the provided expression.
+	 * Processes the provided expression. An SoA facade re-enters the id walk
+	 * so an object-walker escape point never drags a whole subtree onto the
+	 * object walker; the symbol miss is flat on plain nodes.
 	 */
 	walkExpression(
 		expression:
@@ -20085,6 +20099,16 @@ declare interface ParseOptions {
 	 * internal: for `auto`, let the parser downgrade module->script in place instead of re-parsing
 	 */
 	moduleFallback?: boolean;
+
+	/**
+	 * emit plain estree object nodes instead of the default SoA column store — own-key traversals (eslint-scope) need them
+	 */
+	estree?: boolean;
+
+	/**
+	 * internal: the store dies with the caller's walk, so skip the column snug after parse
+	 */
+	transientAst?: boolean;
 }
 declare interface ParseResult {
 	ast: Program;
