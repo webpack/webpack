@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html case-insensitive exported tests extracts assets from upper- and mixed-case tags and attributes 1`] = `
+"<!doctype html>
+<html>
+	<head>
+		<META NAME=\\"Thumbnail\\" CONTENT=\\"31d6cfe0d16ae931b73c.png\\" />
+	</head>
+	<body>
+		<IMG SRC=\\"31d6cfe0d16ae931b73c.png\\" />
+		<Img SrC=\\"31d6cfe0d16ae931b73c.png\\" />
+		<INPUT TYPE=\\"IMAGE\\" SRC=\\"31d6cfe0d16ae931b73c.png\\" />
+		<VIDEO POSTER=\\"31d6cfe0d16ae931b73c.png\\"></VIDEO>
+		<picture><SOURCE SRCSET=\\"31d6cfe0d16ae931b73c.png\\" /></picture>
+		<EMBED SRC=\\"31d6cfe0d16ae931b73c.png\\" />
+		<OBJECT DATA=\\"31d6cfe0d16ae931b73c.png\\"></OBJECT>
+		<svg><rect FILL=\\"url(31d6cfe0d16ae931b73c.png)\\" /></svg>
+	</body>
+</html>
+"
+`;

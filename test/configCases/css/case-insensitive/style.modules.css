@@ -1,0 +1,38 @@
+/* At-rules, properties, functions and keywords are ASCII case-insensitive;
+   written upper/mixed-case here so the parser must lower-case before matching. */
+
+@KEYFRAMES Spin {
+	FROM {
+		transform: rotate(0);
+	}
+	TO {
+		transform: rotate(360deg);
+	}
+}
+
+.base {
+	color: red !IMPORTANT;
+}
+
+.box {
+	COMPOSES: base;
+	Animation-Name: Spin;
+	background: URL(./img.png);
+}
+
+@MEDIA (min-width: 100px) {
+	.box {
+		background-image: IMAGE-SET(URL(./img.png) 1x);
+	}
+}
+
+@SUPPORTS (DISPLAY: grid) {
+	.grid {
+		display: grid;
+	}
+}
+
+@FONT-FACE {
+	font-family: "My Font";
+	src: URL(./font.woff2) format("woff2");
+}

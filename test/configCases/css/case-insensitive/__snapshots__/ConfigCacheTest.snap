@@ -1,0 +1,115 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css case-insensitive exported tests handles upper- and mixed-case CSS names case-insensitively: classes 1`] = `
+Object {
+  "Spin": "style_modules_css-Spin",
+  "base": "style_modules_css-base",
+  "box": "style_modules_css-box style_modules_css-base",
+  "grid": "style_modules_css-grid",
+}
+`;
+
+exports[`ConfigCacheTestCases css case-insensitive exported tests handles upper- and mixed-case CSS names case-insensitively: classes 2`] = `
+Object {
+  "Spin": "style_modules_css-Spin",
+  "base": "style_modules_css-base",
+  "box": "style_modules_css-box style_modules_css-base",
+  "grid": "style_modules_css-grid",
+}
+`;
+
+exports[`ConfigCacheTestCases css case-insensitive exported tests handles upper- and mixed-case CSS names case-insensitively: css 1`] = `
+Array [
+  "/*!*******************************!*\\\\
+  !*** css ./style.modules.css ***!
+  \\\\*******************************/
+/* At-rules, properties, functions and keywords are ASCII case-insensitive;
+   written upper/mixed-case here so the parser must lower-case before matching. */
+
+@KEYFRAMES style_modules_css-Spin {
+	FROM {
+		transform: rotate(0);
+	}
+	TO {
+		transform: rotate(360deg);
+	}
+}
+
+.style_modules_css-base {
+	color: red !IMPORTANT;
+}
+
+.style_modules_css-box {
+	Animation-Name: style_modules_css-Spin;
+	background: url(09a1a1112c577c279435.png);
+}
+
+@MEDIA (min-width: 100px) {
+	.style_modules_css-box {
+		background-image: IMAGE-SET(url(09a1a1112c577c279435.png) 1x);
+	}
+}
+
+@SUPPORTS (DISPLAY: grid) {
+	.style_modules_css-grid {
+		display: grid;
+	}
+}
+
+@FONT-FACE {
+	font-family: \\"My Font\\";
+	src: url(31d6cfe0d16ae931b73c.woff2) format(\\"woff2\\");
+}
+
+
+/*# sourceMappingURL=bundle0.css.map*/",
+]
+`;
+
+exports[`ConfigCacheTestCases css case-insensitive exported tests handles upper- and mixed-case CSS names case-insensitively: css 2`] = `
+Array [
+  "/*!*******************************!*\\\\
+  !*** css ./style.modules.css ***!
+  \\\\*******************************/
+/* At-rules, properties, functions and keywords are ASCII case-insensitive;
+   written upper/mixed-case here so the parser must lower-case before matching. */
+
+@KEYFRAMES style_modules_css-Spin {
+	FROM {
+		transform: rotate(0);
+	}
+	TO {
+		transform: rotate(360deg);
+	}
+}
+
+.style_modules_css-base {
+	color: red !IMPORTANT;
+}
+
+.style_modules_css-box {
+	Animation-Name: style_modules_css-Spin;
+	background: url(09a1a1112c577c279435.png);
+}
+
+@MEDIA (min-width: 100px) {
+	.style_modules_css-box {
+		background-image: IMAGE-SET(url(09a1a1112c577c279435.png) 1x);
+	}
+}
+
+@SUPPORTS (DISPLAY: grid) {
+	.style_modules_css-grid {
+		display: grid;
+	}
+}
+
+@FONT-FACE {
+	font-family: \\"My Font\\";
+	src: url(31d6cfe0d16ae931b73c.woff2) format(\\"woff2\\");
+}
+
+
+/*# sourceMappingURL=bundle0.css.map*/",
+]
+`;
