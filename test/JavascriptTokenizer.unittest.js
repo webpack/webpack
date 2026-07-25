@@ -92,6 +92,8 @@ describe("JavascriptTokenizer", () => {
 			"x <!-- html comment\ny",
 			"--> not-at-start; \n--> at start",
 			"let of = 1; for (of of of) {}",
+			"for (x of /re/g) {}",
+			"function* g(){ yield /re/g; }",
 			"import.meta.url; new.target;",
 			"日本語 = 'ok'; \\u0041B = 2;",
 			"// line\n/* block */ 42",
@@ -268,6 +270,68 @@ describe("JavascriptTokenizer", () => {
 			const target = tokenizer.curContext();
 			tokenizer.overrideContext(target);
 			expect(tokenizer.curContext()).toBe(target);
+		});
+
+		it("tokenizes an astral identifier through fullCharCodeAt", () => {
+			const astral = String.fromCodePoint(0x1d49c); // 𝒜
+			const code = `var ${astral} = 1;`;
+			expect(tokenize(code)).toEqual(tokenizeAcorn(code));
+		});
+
+		it("re-reads a template with an octal escape as invalidTemplate", () => {
+			const tokens = tokenize("tag`\\1`");
+			expect(tokens.some(([label]) => label === "invalidTemplate")).toBe(true);
+		});
+
+		it("rejects an octal string escape in strict (module) mode", () => {
+			expect(() => tokenize("'\\1'", { sourceType: "module" })).toThrow(
+				/Octal literal in strict mode/
+			);
+		});
+
+		it("raises on other malformed escapes and low-version constructs", () => {
+			expect(() => tokenize("'\\u{110000}'")).toThrow(
+				/Code point out of bounds/
+			);
+			expect(() => tokenize("'\\xZZ'")).toThrow(/character escape/i);
+			expect(() => tokenize("\\u0020")).toThrow(/Invalid Unicode escape/);
+			expect(() => tokenize("/a/\\u0067")).toThrow(/Unexpected token/);
+			expect(() => tokenize("#x", { ecmaVersion: 2021 })).toThrow(
+				/Unexpected character/
+			);
+			expect(() => tokenize("`x`", { ecmaVersion: 5 })).toThrow(
+				/Unexpected character/
+			);
+			expect(() => tokenize("'\\u{41}'", { ecmaVersion: 5 })).toThrow(
+				/Unexpected token/
+			);
+		});
+
+		it("resolves yield inside a generator (inGeneratorContext)", () => {
+			const code = "function* g() { yield x; }";
+			expect(tokenize(code)).toEqual(tokenizeAcorn(code));
+		});
+
+		it("allows an unescaped line/paragraph separator in a string", () => {
+			const ls = String.fromCharCode(0x2028);
+			const ps = String.fromCharCode(0x2029);
+			const code = `'a${ls}b${ps}c'`;
+			expect(tokenize(code)).toEqual(tokenizeAcorn(code));
+		});
+
+		it("scans an invalid template containing a lone dollar sign", () => {
+			// the bad escape forces the invalid-template scan, which sees `$` not `${`
+			const tokens = tokenize("tag`\\1 a$b`");
+			expect(tokens.some(([label]) => label === "invalidTemplate")).toBe(true);
+		});
+	});
+
+	describe("real-world breadth vs acorn", () => {
+		it("matches acorn across acorn's own source", () => {
+			const fs = require("fs");
+
+			const source = fs.readFileSync(require.resolve("acorn"), "utf8");
+			expect(tokenize(source)).toEqual(tokenizeAcorn(source));
 		});
 	});
 });
