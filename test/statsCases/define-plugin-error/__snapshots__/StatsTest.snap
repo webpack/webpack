@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases define-plugin-error should print correct stats for define-plugin-error 1`] = `
+"asset main.js X KiB [emitted] (name: main)
+./index.js X bytes [built] [code generated] [1 error]
+
+ERROR in ./index.js 1:12
+Module parse failed: DefinePlugin: failed to evaluate value for \\"typeof PRODUCTION\\" (\`(( invalid syntax\`): Unexpected token (1:12)
+File was parsed as module type 'javascript/auto'.
+You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
+> 1 | console.log(typeof PRODUCTION);
+    |             ^
+  2 |
+
+webpack x.x.x compiled with 1 error in X ms"
+`;
