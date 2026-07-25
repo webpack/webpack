@@ -9,8 +9,20 @@ const require = createRequire(import.meta.url);
 /** @typedef {import("../../..").Configuration} Configuration */
 /** @typedef {import("../../..").Stats} Stats */
 /** @typedef {import("../../..").Watching} Watching */
-/** @typedef {import("./suite.mjs").BenchmarkDefinition} BenchmarkDefinition */
 /** @typedef {Configuration | (() => Configuration)} ConfigurationFactory */
+/** @typedef {() => unknown | Promise<unknown>} BenchFn */
+/** @typedef {() => void | Promise<void>} HookFn */
+
+/**
+ * @typedef {object} BenchmarkDefinition
+ * @property {string} name benchmark case
+ * @property {BenchFn} fn benchmarked function
+ * @property {boolean=} async whether the benchmark function is asynchronous
+ * @property {HookFn=} beforeEach hook before every round
+ * @property {HookFn=} afterEach hook after every round
+ * @property {HookFn=} beforeAll hook before the first execution
+ * @property {HookFn=} afterAll hook after the last execution
+ */
 
 /**
  * @param {ConfigurationFactory} config configuration or factory

@@ -29,10 +29,8 @@ const acornParse = (source, sourceType) =>
 		source,
 		/** @type {import("../../../../lib/javascript/JavascriptParser").InternalParseOptions} */ ({
 			sourceType,
-			ecmaVersion: "latest",
 			comments: true,
 			ranges: true,
-			semicolons: true,
 			allowHashBang: true
 		})
 	);
@@ -70,10 +68,8 @@ export default {
 			fn() {
 				sink = JavascriptParser._parse(moduleSource, {
 					sourceType: "module",
-					ecmaVersion: "latest",
 					comments: false,
 					ranges: false,
-					semicolons: false,
 					allowHashBang: true
 				}).comments.length;
 			}
@@ -83,10 +79,8 @@ export default {
 			fn() {
 				sink = JavascriptParser._parse(autoFallbackSource, {
 					sourceType: "auto",
-					ecmaVersion: "latest",
 					comments: true,
 					ranges: true,
-					semicolons: true,
 					allowHashBang: true
 				}).comments.length;
 			}
