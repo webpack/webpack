@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Build the HTML parser's helpers and state at module scope to cut per-parse allocation.
+Speed up the HTML parser and cut its peak memory: module-scope helpers/state and tokenizer callbacks, plus exact AST column pre-sizing.
