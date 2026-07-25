@@ -1,5 +1,4 @@
 import { createRequire } from "module";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -14,7 +13,7 @@ let chains = [];
 /** @type {string} */
 let sink = "";
 
-export default defineSuite({
+export default {
 	name: "unit/util/property",
 	setup() {
 		names = [];
@@ -53,4 +52,4 @@ export default defineSuite({
 			}
 		}
 	]
-});
+};

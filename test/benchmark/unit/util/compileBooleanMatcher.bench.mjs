@@ -1,5 +1,4 @@
 import { createRequire } from "module";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -14,7 +13,7 @@ let namedIdMap = {};
 /** @type {unknown} */
 let sink;
 
-export default defineSuite({
+export default {
 	name: "unit/util/compileBooleanMatcher",
 	setup() {
 		// The chunk-loading runtime compiles one matcher per chunk-having
@@ -50,4 +49,4 @@ export default defineSuite({
 			}
 		}
 	]
-});
+};

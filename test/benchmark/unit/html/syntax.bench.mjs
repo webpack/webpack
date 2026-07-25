@@ -1,6 +1,5 @@
 import { createRequire } from "module";
 import { generateHtmlSource } from "../../helpers/sources.mjs";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -10,34 +9,51 @@ const htmlSyntax =
 
 /** @type {string} */
 let htmlSource = "";
+/** @type {string} */
+let fragmentSource = "";
 /** @type {unknown} */
 let sink;
 
-export default defineSuite({
+export default {
 	name: "unit/html/syntax",
 	setup() {
 		// ~150 KiB document: nested sections, tables, templates, entities.
 		htmlSource = generateHtmlSource(400);
+		fragmentSource = '<td class="cell">one <b>two</b> &amp; three</td>'.repeat(
+			2000
+		);
 	},
 	teardown() {
 		if (sink === -1) console.log(sink);
 	},
 	benches: [
 		{
-			name: "build AST full document",
+			name: "parse full document",
 			fn() {
-				sink = htmlSyntax.buildHtmlAst(htmlSource);
+				sink = htmlSyntax.parseHtml(htmlSource);
 			}
 		},
 		{
-			name: "build AST skipping text and comments",
+			name: "parse skipping text and comments",
 			fn() {
-				// The reduced tree HtmlParser-style consumers build.
-				sink = htmlSyntax.buildHtmlAst(htmlSource, undefined, {
-					text: true,
-					comments: true
+				sink = htmlSyntax.parseHtml(htmlSource, 0, {
+					skip: { text: true, comments: true }
 				});
+			}
+		},
+		{
+			name: "parse table fragment",
+			fn() {
+				sink = htmlSyntax.parseHtml(fragmentSource, 0, {
+					fragmentContext: "tr"
+				});
+			}
+		},
+		{
+			name: "process document without visitors",
+			fn() {
+				sink = new htmlSyntax.SourceProcessor().use({}).process(htmlSource);
 			}
 		}
 	]
-});
+};

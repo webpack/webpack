@@ -1,6 +1,5 @@
 import { createRequire } from "module";
 import { mulberry32 } from "../../helpers/prng.mjs";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -30,7 +29,7 @@ function shuffle(items, seed) {
 	}
 }
 
-export default defineSuite({
+export default {
 	name: "unit/util/comparators",
 	setup() {
 		strings = Array.from(
@@ -63,4 +62,4 @@ export default defineSuite({
 			}
 		}
 	]
-});
+};

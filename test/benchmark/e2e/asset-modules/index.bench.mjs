@@ -1,50 +1,75 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import { generateAssetProject } from "../../helpers/project.mjs";
-import { defineSuite, prepareConfig, runBuild } from "../../lib/index.mjs";
+import {
+	createBuildBench,
+	createBuildScenarios
+} from "../../lib/webpack.mjs";
 
 const caseDir = path.dirname(fileURLToPath(import.meta.url));
+const generated = path.join(caseDir, "generated");
+const entry = path.join(generated, "index.js");
 
-/** @type {string} */
-let entry = "";
+/**
+ * @param {"asset" | "asset/bytes" | "asset/inline" | "asset/resource" | "asset/source"} type module type
+ * @param {number=} maxSize automatic inline threshold
+ * @returns {import("../../../..").Configuration} configuration
+ */
+const assetConfig = (type, maxSize) => ({
+	entry,
+	module: {
+		rules: [
+			{
+				test: /\.bin$/,
+				type,
+				...(maxSize === undefined
+					? {}
+					: { parser: { dataUrlCondition: { maxSize } } })
+			}
+		]
+	}
+});
 
-export default defineSuite({
+export default {
 	name: "e2e/asset-modules",
 	async setup() {
-		entry = await generateAssetProject({
-			dir: path.join(caseDir, "generated"),
+		await generateAssetProject({
+			dir: generated,
 			count: 150,
-			size: 4096
+			size: (index) => (index % 2 === 0 ? 512 : 16_384)
 		});
 	},
 	benches: [
-		{
-			name: "asset/resource development build",
-			fn() {
-				return runBuild(
-					prepareConfig(caseDir, "resource", {
-						mode: "development",
-						entry,
-						module: {
-							rules: [{ test: /\.bin$/, type: "asset/resource" }]
-						}
-					})
-				);
-			}
-		},
-		{
+		...createBuildScenarios({
+			caseDir,
+			entryFile: entry,
+			namePrefix: "asset/resource",
+			config: assetConfig("asset/resource")
+		}),
+		createBuildBench({
 			name: "asset/inline development build",
-			fn() {
-				return runBuild(
-					prepareConfig(caseDir, "inline", {
-						mode: "development",
-						entry,
-						module: {
-							rules: [{ test: /\.bin$/, type: "asset/inline" }]
-						}
-					})
-				);
-			}
-		}
+			caseDir,
+			config: { ...assetConfig("asset/inline"), mode: "development" }
+		}),
+		createBuildBench({
+			name: "asset/source development build",
+			caseDir,
+			config: { ...assetConfig("asset/source"), mode: "development" }
+		}),
+		createBuildBench({
+			name: "asset/bytes development build",
+			caseDir,
+			config: { ...assetConfig("asset/bytes"), mode: "development" }
+		}),
+		createBuildBench({
+			name: "asset automatic mixed development build",
+			caseDir,
+			config: { ...assetConfig("asset", 8192), mode: "development" }
+		}),
+		createBuildBench({
+			name: "asset automatic resource development build",
+			caseDir,
+			config: { ...assetConfig("asset", 256), mode: "development" }
+		})
 	]
-});
+};

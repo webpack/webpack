@@ -1,5 +1,4 @@
 import { createRequire } from "module";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -18,7 +17,7 @@ let sink = 0;
 const getKey = (/** @type {GroupingItem} */ item) => item.key;
 const getSize = (/** @type {GroupingItem} */ item) => item.size;
 
-export default defineSuite({
+export default {
 	name: "unit/util/deterministicGrouping",
 	setup() {
 		singleTypeItems = [];
@@ -69,4 +68,4 @@ export default defineSuite({
 			}
 		}
 	]
-});
+};

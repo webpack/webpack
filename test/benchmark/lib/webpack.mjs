@@ -10,6 +10,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 /** @typedef {import("../../..").Stats} Stats */
 /** @typedef {import("../../..").Watching} Watching */
 /** @typedef {import("./suite.mjs").BenchmarkDefinition} BenchmarkDefinition */
+/** @typedef {Configuration | (() => Configuration)} ConfigurationFactory */
 
 /**
  * The webpack of the current working tree. Non-comparative by design: no
@@ -79,12 +80,13 @@ export function runBuild(config) {
 		(resolve, reject) => {
 			const compiler = webpack(config);
 			compiler.run((err, stats) => {
-				if (err) return reject(err);
-				if (stats && (stats.hasWarnings() || stats.hasErrors())) {
-					return reject(new Error(stats.toString()));
-				}
+				const statsError =
+					stats && (stats.hasWarnings() || stats.hasErrors())
+						? new Error(stats.toString())
+						: undefined;
 				compiler.close((closeErr) => {
-					if (closeErr) return reject(closeErr);
+					const buildError = err || statsError || closeErr;
+					if (buildError) return reject(buildError);
 					if (stats) stats.toString();
 					resolve();
 				});
@@ -94,24 +96,42 @@ export function runBuild(config) {
 }
 
 /**
- * @typedef {object} WatchRebuildOptions
+ * @typedef {object} BuildBenchOptions
  * @property {string} name benchmark name
  * @property {string} caseDir directory of the e2e case
- * @property {Configuration} config partial configuration; entry must be a file path
- * @property {string} entryFile absolute path of the file touched to trigger rebuilds
- * @property {Partial<BenchmarkDefinition>=} overrides sampling overrides
+ * @property {ConfigurationFactory} config configuration or fresh config factory
  */
 
 /**
- * Benchmark an incremental rebuild: a watcher is opened once, each measured
- * round appends a changed statement to the entry and awaits the rebuild.
- * The two alternating suffixes have equal length so the parsed source only
- * flips between two shapes instead of growing.
+ * @param {BuildBenchOptions} options options
+ * @returns {BenchmarkDefinition} build benchmark
+ */
+export function createBuildBench({ name, caseDir, config }) {
+	return {
+		name,
+		fn() {
+			const resolvedConfig =
+				typeof config === "function" ? config() : config;
+			return runBuild(prepareConfig(caseDir, name, resolvedConfig));
+		}
+	};
+}
+
+/**
+ * @typedef {object} WatchRebuildOptions
+ * @property {string} name benchmark name
+ * @property {string} caseDir directory of the e2e case
+ * @property {ConfigurationFactory} config partial configuration; entry must be a file path
+ * @property {string} entryFile absolute path of the file touched to trigger rebuilds
+ */
+
+/**
+ * Benchmark rebuilds while alternating between equal-length source changes.
  * @param {WatchRebuildOptions} options options
- * @returns {BenchmarkDefinition} a benchmark definition for defineSuite
+ * @returns {BenchmarkDefinition} a benchmark definition
  */
 export function createWatchRebuildBench(options) {
-	const { name, caseDir, config, entryFile, overrides } = options;
+	const { name, caseDir, config, entryFile } = options;
 
 	const { promises: fsp } = require("fs");
 
@@ -121,6 +141,8 @@ export function createWatchRebuildBench(options) {
 	let originalContent = "";
 	/** @type {((err: Error | null, stats?: Stats) => void) | undefined} */
 	let next;
+	/** @type {Stats | undefined} */
+	let completedStats;
 	let iteration = 0;
 
 	/**
@@ -134,11 +156,8 @@ export function createWatchRebuildBench(options) {
 			 */
 			(resolve, reject) => {
 				next = (err, stats) => {
+					next = undefined;
 					if (err || !stats) return reject(err);
-					if (stats.hasWarnings() || stats.hasErrors()) {
-						return reject(new Error(stats.toString()));
-					}
-					stats.toString();
 					resolve();
 				};
 			}
@@ -149,16 +168,39 @@ export function createWatchRebuildBench(options) {
 		async beforeAll() {
 			originalContent = await fsp.readFile(entryFile, "utf8");
 			const webpack = loadWebpack();
+			const resolvedConfig =
+				typeof config === "function" ? config() : config;
 			const watchConfig = prepareConfig(caseDir, name, {
-				...config,
+				...resolvedConfig,
 				// Keep rebuilds warm but bounded, like a dev-server session.
 				cache: { type: "memory", maxGenerations: 1 }
 			});
 			const firstBuild = nextBuild();
-			watching = webpack(watchConfig).watch({}, (err, stats) => {
-				if (next) next(err, stats);
+			const compiler = webpack(watchConfig);
+			compiler.hooks.afterDone.tap("BenchmarkWatchRebuild", () => {
+				if (next) next(null, completedStats);
 			});
-			await firstBuild;
+			watching = compiler.watch({}, (err, stats) => {
+				if (err || !stats) {
+					if (next) next(err, stats);
+					return;
+				}
+				if (stats.hasWarnings() || stats.hasErrors()) {
+					if (next) next(new Error(stats.toString()));
+					return;
+				}
+				stats.toString();
+				completedStats = stats;
+			});
+			try {
+				await firstBuild;
+			} catch (err) {
+				await new Promise((resolve) => {
+					/** @type {Watching} */ (watching).close(() => resolve(undefined));
+				});
+				watching = undefined;
+				throw err;
+			}
 		},
 		async fn() {
 			const build = nextBuild();
@@ -167,30 +209,92 @@ export function createWatchRebuildBench(options) {
 				entryFile,
 				`${originalContent};console.log(${iteration % 2});`
 			);
+			/** @type {Watching} */ (watching).invalidate();
 			await build;
 		},
 		async afterAll() {
-			await new Promise(
-				/**
-				 * @param {(value: void) => void} resolve resolve
-				 * @param {(err?: Error | null) => void} reject reject
-				 */
-				(resolve, reject) => {
-					if (!watching) {
-						resolve();
-						return;
-					}
-					watching.close((closeErr) => {
-						if (closeErr) {
-							reject(closeErr);
+			try {
+				await new Promise(
+					/**
+					 * @param {(value: void) => void} resolve resolve
+					 * @param {(err?: Error | null) => void} reject reject
+					 */
+					(resolve, reject) => {
+						if (!watching) {
+							resolve();
 							return;
 						}
-						resolve();
-					});
-				}
-			);
-			await fsp.writeFile(entryFile, originalContent);
-		},
-		...overrides
+						watching.close((closeErr) => {
+							if (closeErr) {
+								reject(closeErr);
+								return;
+							}
+							resolve();
+						});
+					}
+				);
+			} finally {
+				watching = undefined;
+				next = undefined;
+				completedStats = undefined;
+				await fsp.writeFile(entryFile, originalContent);
+			}
+		}
 	};
+}
+
+/**
+ * @typedef {object} BuildScenarioOptions
+ * @property {string} caseDir directory of the e2e case
+ * @property {string} entryFile entry file changed by the rebuild scenario
+ * @property {ConfigurationFactory} config shared configuration
+ * @property {string=} namePrefix benchmark name prefix
+ * @property {boolean=} production include a production build
+ * @property {boolean=} rebuild include a development rebuild
+ */
+
+/**
+ * @param {BuildScenarioOptions} options options
+ * @returns {BenchmarkDefinition[]} development, production and rebuild benches
+ */
+export function createBuildScenarios(options) {
+	const {
+		caseDir,
+		entryFile,
+		config,
+		namePrefix = "",
+		production = true,
+		rebuild = true
+	} = options;
+	const prefix = namePrefix ? `${namePrefix} ` : "";
+	const resolveConfig = () =>
+		typeof config === "function" ? config() : config;
+	/** @type {BenchmarkDefinition[]} */
+	const benches = [
+		createBuildBench({
+			name: `${prefix}development build`,
+			caseDir,
+			config: () => ({ ...resolveConfig(), mode: "development" })
+		})
+	];
+	if (production) {
+		benches.push(
+			createBuildBench({
+				name: `${prefix}production build`,
+				caseDir,
+				config: () => ({ ...resolveConfig(), mode: "production" })
+			})
+		);
+	}
+	if (rebuild) {
+		benches.push(
+			createWatchRebuildBench({
+				name: `${prefix}development rebuild`,
+				caseDir,
+				entryFile,
+				config: () => ({ ...resolveConfig(), mode: "development" })
+			})
+		);
+	}
+	return benches;
 }

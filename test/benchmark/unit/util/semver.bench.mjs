@@ -1,5 +1,4 @@
 import { createRequire } from "module";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -25,7 +24,7 @@ let parsedRanges = [];
 /** @type {unknown} */
 let sink;
 
-export default defineSuite({
+export default {
 	name: "unit/util/semver",
 	setup() {
 		parsedRanges = RANGES.map((range) => semver.parseRange(range));
@@ -68,4 +67,4 @@ export default defineSuite({
 			}
 		}
 	]
-});
+};

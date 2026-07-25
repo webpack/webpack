@@ -1,5 +1,4 @@
 import { createRequire } from "module";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -13,7 +12,7 @@ let lines = [];
 let values = [];
 let sink = "";
 
-export default defineSuite({
+export default {
 	name: "unit/util/createMappings",
 	setup() {
 		lines = Array.from({ length: 20_000 }, (_, i) => {
@@ -65,4 +64,4 @@ export default defineSuite({
 			}
 		}
 	]
-});
+};

@@ -1,5 +1,4 @@
 import { createRequire } from "module";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -11,7 +10,7 @@ const numberHash =
 let identifiers = [];
 let sink = 0;
 
-export default defineSuite({
+export default {
 	name: "unit/util/numberHash",
 	setup() {
 		// Module-identifier-shaped strings — what deterministic ids hash.
@@ -43,4 +42,4 @@ export default defineSuite({
 			}
 		}
 	]
-});
+};

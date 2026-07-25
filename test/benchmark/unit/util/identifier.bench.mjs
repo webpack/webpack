@@ -1,5 +1,4 @@
 import { createRequire } from "module";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -16,7 +15,7 @@ let sink = "";
 /** @type {Record<string, unknown>} */
 let cacheObject = {};
 
-export default defineSuite({
+export default {
 	name: "unit/util/identifier",
 	setup() {
 		requests = [];
@@ -75,4 +74,4 @@ export default defineSuite({
 			}
 		}
 	]
-});
+};
