@@ -1,32 +1,25 @@
 import path from "path";
-import { fileURLToPath } from "url";
 import { generateModuleTree } from "../../helpers/project.mjs";
-import {
-	createBuildBench,
-	createWatchRebuildBench
-} from "../../lib/webpack.mjs";
+import { createBuildScenarios } from "../../lib/webpack.mjs";
 
-const caseDir = path.dirname(fileURLToPath(import.meta.url));
+const caseDir = import.meta.dirname;
 const generated = path.join(caseDir, "generated");
 const entry = path.join(generated, "module-0.js");
+const name = "e2e/source-map";
 
 /**
- * @param {import("../../../..").Configuration["devtool"]} devtool devtool
- * @param {"development" | "production"=} mode mode
- * @returns {import("../../lib/suite.mjs").BenchmarkDefinition} benchmark
+ * @param {false | string} devtool devtool
+ * @returns {ReturnType<typeof createBuildScenarios>} benchmarks
  */
-const sourceMapBuild = (devtool, mode = "development") =>
-	createBuildBench({
-		name:
-			devtool === false
-				? `${mode} build without source maps`
-				: `${mode} build with ${devtool}`,
-		caseDir,
-		config: { mode, entry, devtool }
+const sourceMapScenarios = (devtool) =>
+	createBuildScenarios({
+		case: devtool === false ? "none" : devtool,
+		entryFile: entry,
+		config: { entry, devtool }
 	});
 
 export default {
-	name: "e2e/source-map",
+	name,
 	async setup() {
 		await generateModuleTree({
 			dir: generated,
@@ -35,18 +28,12 @@ export default {
 		});
 	},
 	benches: [
-		sourceMapBuild(false),
-		sourceMapBuild("eval"),
-		sourceMapBuild("eval-source-map"),
-		sourceMapBuild("eval-cheap-source-map"),
-		sourceMapBuild("cheap-module-source-map"),
-		sourceMapBuild("source-map"),
-		sourceMapBuild("hidden-nosources-source-map", "production"),
-		createWatchRebuildBench({
-			name: "development rebuild with source-map",
-			caseDir,
-			entryFile: entry,
-			config: { mode: "development", entry, devtool: "source-map" }
-		})
+		...sourceMapScenarios(false),
+		...sourceMapScenarios("eval"),
+		...sourceMapScenarios("eval-source-map"),
+		...sourceMapScenarios("eval-cheap-source-map"),
+		...sourceMapScenarios("cheap-module-source-map"),
+		...sourceMapScenarios("source-map"),
+		...sourceMapScenarios("hidden-nosources-source-map")
 	]
 };

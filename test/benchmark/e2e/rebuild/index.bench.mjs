@@ -1,16 +1,16 @@
 import path from "path";
-import { fileURLToPath } from "url";
 import { generateModuleTree } from "../../helpers/project.mjs";
 import { createWatchRebuildBench } from "../../lib/webpack.mjs";
 
-const caseDir = path.dirname(fileURLToPath(import.meta.url));
+const caseDir = import.meta.dirname;
 const generated = path.join(caseDir, "generated");
 const entry = path.join(generated, "module-0.js");
 const dependency = path.join(generated, "module-1.js");
 const leaf = path.join(generated, "module-149.js");
+const name = "e2e/rebuild";
 
 export default {
-	name: "e2e/rebuild",
+	name,
 	async setup() {
 		await generateModuleTree({
 			dir: generated,
@@ -20,8 +20,7 @@ export default {
 	},
 	benches: [
 		createWatchRebuildBench({
-			name: "development rebuild after entry change",
-			caseDir,
+			case: "entry-change",
 			entryFile: entry,
 			config: {
 				mode: "development",
@@ -29,8 +28,7 @@ export default {
 			}
 		}),
 		createWatchRebuildBench({
-			name: "development rebuild after dependency change",
-			caseDir,
+			case: "dependency-change",
 			entryFile: dependency,
 			config: {
 				mode: "development",
@@ -38,8 +36,7 @@ export default {
 			}
 		}),
 		createWatchRebuildBench({
-			name: "development rebuild after leaf change",
-			caseDir,
+			case: "leaf-change",
 			entryFile: leaf,
 			config: {
 				mode: "development",

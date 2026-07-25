@@ -1,18 +1,15 @@
 import path from "path";
-import { fileURLToPath } from "url";
 import { generateJsonProject } from "../../helpers/project.mjs";
-import {
-	createBuildBench,
-	createBuildScenarios
-} from "../../lib/webpack.mjs";
+import { createBuildScenarios } from "../../lib/webpack.mjs";
 
-const caseDir = path.dirname(fileURLToPath(import.meta.url));
+const caseDir = import.meta.dirname;
 const generated = path.join(caseDir, "generated");
 const entry = path.join(generated, "index.js");
 const selectedEntry = path.join(generated, "selected.js");
+const name = "e2e/json-modules";
 
 export default {
-	name: "e2e/json-modules",
+	name,
 	async setup() {
 		await generateJsonProject({
 			dir: generated,
@@ -22,29 +19,26 @@ export default {
 	},
 	benches: [
 		...createBuildScenarios({
-			caseDir,
 			entryFile: entry,
 			config: { entry }
 		}),
-		createBuildBench({
-			name: "development build with deep export analysis",
-			caseDir,
+		...createBuildScenarios({
+			case: "deep-export-analysis",
+			entryFile: entry,
 			config: {
-				mode: "development",
 				entry,
 				module: { parser: { json: { exportsDepth: Infinity } } }
 			}
 		}),
-		createBuildBench({
-			name: "production build with selected exports",
-			caseDir,
-			config: { mode: "production", entry: selectedEntry }
+		...createBuildScenarios({
+			case: "selected-exports",
+			entryFile: selectedEntry,
+			config: { entry: selectedEntry }
 		}),
-		createBuildBench({
-			name: "production build without JSON.parse generation",
-			caseDir,
+		...createBuildScenarios({
+			case: "without-json-parse",
+			entryFile: entry,
 			config: {
-				mode: "production",
 				entry,
 				module: { generator: { json: { JSONParse: false } } }
 			}

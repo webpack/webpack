@@ -1,14 +1,11 @@
 import path from "path";
-import { fileURLToPath } from "url";
 import { generateAssetProject } from "../../helpers/project.mjs";
-import {
-	createBuildBench,
-	createBuildScenarios
-} from "../../lib/webpack.mjs";
+import { createBuildScenarios } from "../../lib/webpack.mjs";
 
-const caseDir = path.dirname(fileURLToPath(import.meta.url));
+const caseDir = import.meta.dirname;
 const generated = path.join(caseDir, "generated");
 const entry = path.join(generated, "index.js");
+const name = "e2e/asset-modules";
 
 /**
  * @param {"asset" | "asset/bytes" | "asset/inline" | "asset/resource" | "asset/source"} type module type
@@ -31,7 +28,7 @@ const assetConfig = (type, maxSize) => ({
 });
 
 export default {
-	name: "e2e/asset-modules",
+	name,
 	async setup() {
 		await generateAssetProject({
 			dir: generated,
@@ -41,35 +38,34 @@ export default {
 	},
 	benches: [
 		...createBuildScenarios({
-			caseDir,
+			case: "asset/resource",
 			entryFile: entry,
-			namePrefix: "asset/resource",
 			config: assetConfig("asset/resource")
 		}),
-		createBuildBench({
-			name: "asset/inline development build",
-			caseDir,
-			config: { ...assetConfig("asset/inline"), mode: "development" }
+		...createBuildScenarios({
+			case: "asset/inline",
+			entryFile: entry,
+			config: assetConfig("asset/inline")
 		}),
-		createBuildBench({
-			name: "asset/source development build",
-			caseDir,
-			config: { ...assetConfig("asset/source"), mode: "development" }
+		...createBuildScenarios({
+			case: "asset/source",
+			entryFile: entry,
+			config: assetConfig("asset/source")
 		}),
-		createBuildBench({
-			name: "asset/bytes development build",
-			caseDir,
-			config: { ...assetConfig("asset/bytes"), mode: "development" }
+		...createBuildScenarios({
+			case: "asset/bytes",
+			entryFile: entry,
+			config: assetConfig("asset/bytes")
 		}),
-		createBuildBench({
-			name: "asset automatic mixed development build",
-			caseDir,
-			config: { ...assetConfig("asset", 8192), mode: "development" }
+		...createBuildScenarios({
+			case: "automatic-mixed",
+			entryFile: entry,
+			config: assetConfig("asset", 8192)
 		}),
-		createBuildBench({
-			name: "asset automatic resource development build",
-			caseDir,
-			config: { ...assetConfig("asset", 256), mode: "development" }
+		...createBuildScenarios({
+			case: "automatic-resource",
+			entryFile: entry,
+			config: assetConfig("asset", 256)
 		})
 	]
 };
