@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Reduce allocations and redundant module-graph lookups in stats extraction.
+Speed up stats generation and cut its peak memory: reuse cached sort comparators instead of thrashing the comparator caches on every sort, and drop redundant module-graph lookups and allocations in the extractors.
