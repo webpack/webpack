@@ -3,7 +3,6 @@
 const fs = require("fs");
 const path = require("path");
 const {
-	Node,
 	NodeType,
 	SourceProcessor,
 	TT_AT_KEYWORD,
@@ -32,7 +31,6 @@ const {
 	TT_STRING,
 	TT_URL,
 	TT_WHITESPACE,
-	Token,
 	TokenStream,
 	buildSkipSet,
 	normalizeUrl,
@@ -299,6 +297,16 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 		).toBe(true);
 	});
 
+	it("reads declarations / childRules as null on non-rule nodes", () => {
+		// Only rules populate the decl / child-rule slots; a function (or any
+		// non-rule container) has no entry and must read back `null`.
+		const fn = /** @type {import("../lib/css/syntax").QualifiedRule} */ (
+			/** @type {unknown} */ (parseAComponentValue("calc(1 + 2)"))
+		);
+		expect(fn.declarations).toBeNull();
+		expect(fn.childRules).toBeNull();
+	});
+
 	it("preserves stray closers, CDO and CDC as component values", () => {
 		expect(cvTypes(")]}")).toEqual([
 			NodeType.RightParenthesis,
@@ -468,7 +476,7 @@ describe("CssSyntax — Node / Token", () => {
 		const decl = /** @type {import("../lib/css/syntax").Declaration} */ (
 			parseADeclaration("color: red")
 		);
-		expect(decl).toBeInstanceOf(Node);
+		expect(decl.type).toBe(NodeType.Declaration);
 		expect(decl.range).toEqual([decl.start, decl.end]);
 		expect(decl.toString()).toBe("color: red");
 	});
@@ -497,13 +505,105 @@ describe("CssSyntax — Node / Token", () => {
 		const ident = /** @type {import("../lib/css/syntax").Token} */ (
 			parseAComponentValue("foo")
 		);
-		expect(ident).toBeInstanceOf(Token);
+		expect(ident.type).toBe(NodeType.Ident);
 		expect(ident.value).toBe("foo");
 		expect(ident.value).toBe("foo");
+	});
+
+	it("exposes every parseA* reader accessor", () => {
+		/**
+		 * @param {string} src source
+		 * @returns {import("../lib/css/syntax").Token} the component value as a token
+		 */
+		const tok = (src) =>
+			/** @type {import("../lib/css/syntax").Token} */ (
+				parseAComponentValue(src)
+			);
+
+		// loc over the source
+		const decl = /** @type {import("../lib/css/syntax").Declaration} */ (
+			parseADeclaration("color: red")
+		);
+		expect(decl.loc.start).toEqual({ line: 1, column: 0 });
+		expect(decl.loc.end.line).toBe(1);
+
+		// unescaped: ident escapes resolved; string drops its quotes
+		expect(tok("a\\62 c").unescaped).toBe("abc");
+		expect(tok('"x"').unescaped).toBe("x");
+
+		// hash value drops the `#` prefix (raw-value slice)
+		expect(tok("#id").value).toBe("id");
+
+		// function name offsets + unescapedName
+		const fn = /** @type {import("../lib/css/syntax").FunctionNode} */ (
+			parseAComponentValue("foo(1)")
+		);
+		expect([fn.nameStart, fn.nameEnd]).toEqual([0, 3]);
+		expect(fn.unescapedName).toBe("foo");
+
+		// simple-block opening token
+		expect(
+			/** @type {import("../lib/css/syntax").SimpleBlock} */ (
+				parseAComponentValue("[a]")
+			).token
+		).toBe("[");
+
+		// prelude + blockEnd on a qualified rule
+		const src = "a { x: 1 }";
+		const rule = /** @type {import("../lib/css/syntax").QualifiedRule} */ (
+			parseARule(src)
+		);
+		expect(rule.prelude.length).toBeGreaterThan(0);
+		expect(rule.blockEnd).toBe(src.length);
 	});
 });
 
 describe("CssSyntax — SourceProcessor", () => {
+	it("exposes range / unescaped / typeFlag / setEnd / setBlockEnd on the path", () => {
+		/** @type {Record<string, unknown>} */
+		const seen = {};
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/css/syntax").VisitorMap} */ ({
+					[NodeType.Hash]: (
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => {
+						seen.typeFlag = path.typeFlag();
+						// `A.value` on a hash drops the `#` (raw-value slice).
+						seen.hashValue = path.value();
+					},
+					[NodeType.Number]: (
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => {
+						seen.numFlag = path.typeFlag();
+					},
+					[NodeType.String]: (
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => {
+						seen.unescaped = path.unescaped();
+					},
+					[NodeType.Ident]: (
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => {
+						seen.range = path.range();
+					},
+					[NodeType.QualifiedRule]: (
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => {
+						// Round-trip the writers (set each field back to its own value).
+						path.setEnd(path.node, path.end());
+						path.setBlockEnd(path.node, path.blockEnd());
+					}
+				})
+			)
+			.process('a { z-index: 5; content: "x"; color: #123 }');
+		expect(seen.typeFlag).toBe("unrestricted");
+		expect(seen.numFlag).toBe("integer");
+		expect(seen.hashValue).toBe("123");
+		expect(seen.unescaped).toBe("x");
+		expect(Array.isArray(seen.range)).toBe(true);
+	});
+
 	it("fires enter / exit visitors in source order", () => {
 		/** @type {string[]} */
 		const log = [];
