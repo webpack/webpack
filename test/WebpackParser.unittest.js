@@ -249,10 +249,53 @@ describe("WebpackParser", () => {
 			);
 		});
 
-		it("should delegate escapes to acorn", () => {
+		it("should cook the common single-char escapes on the fast path", () => {
 			expect(literal('var x = "a\\nb"').value).toBe("a\nb");
+			expect(literal('var x = "a\\tb"').value).toBe("a\tb");
+			expect(literal('var x = "a\\rb"').value).toBe("a\rb");
+			expect(literal('var x = "a\\bb"').value).toBe("a\bb");
+			expect(literal('var x = "a\\fb"').value).toBe("a\fb");
+			expect(literal('var x = "a\\vb"').value).toBe("a\u000Bb");
+			expect(literal('var x = "a\\\\b"').value).toBe("a\\b");
 			expect(literal("var x = 'it\\'s'").value).toBe("it's");
-			expect(literal('var x = "a\\\n b"').value).toBe("a b");
+			expect(literal('var x = "q\\"q"').value).toBe('q"q');
+			// unknown escapes are the escaped char verbatim
+			expect(literal('var x = "a\\qb"').value).toBe("aqb");
+			expect(literal('var x = "a\\éb"').value).toBe("aéb");
+		});
+
+		it("should cook line continuations on the fast path", () => {
+			expect(literal('var x = "a\\\nb"').value).toBe("ab");
+			expect(literal('var x = "a\\\r\nb"').value).toBe("ab");
+			expect(literal('var x = "a\\\rb"').value).toBe("ab");
+			expect(
+				literal(`var x = "a\\${String.fromCharCode(0x2028)}b"`).value
+			).toBe("ab");
+			expect(
+				literal(`var x = "a\\${String.fromCharCode(0x2029)}b"`).value
+			).toBe("ab");
+		});
+
+		it("should delegate hex, unicode and octal escapes to acorn", () => {
+			expect(literal('var x = "a\\x41b"').value).toBe("aAb");
+			expect(literal('var x = "a\\u0041b"').value).toBe("aAb");
+			expect(literal('var x = "a\\u{1F600}b"').value).toBe("a\u{1F600}b");
+			expect(literal('var x = "a\\101b"').value).toBe("aAb");
+			expect(literal('var x = "a\\0b"').value).toBe("a b");
+			// octal in strict mode still throws through the delegated path
+			expect(() => parse('"use strict";\nvar x = "\\101";')).toThrow(
+				/Octal literal in strict mode/
+			);
+		});
+
+		it("should cook a string mixing owned and delegated escapes", () => {
+			expect(literal('var x = "a\\n\\x41\\t\\\\z"').value).toBe("a\nA\t\\z");
+		});
+
+		it("should report a lone trailing backslash as unterminated", () => {
+			expect(() => parse('var x = "abc\\')).toThrow(
+				/Unterminated string constant/
+			);
 		});
 
 		it("should report strings broken by a line terminator", () => {
