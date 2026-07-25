@@ -1446,6 +1446,10 @@ describe("WebpackParser", () => {
 		});
 
 		it("should cook escapes and yield null for invalid template escapes", () => {
+			/**
+			 * @param {string} code source with a template literal
+			 * @returns {string | null} the first quasi's cooked value
+			 */
 			const cooked = (code) => {
 				const statement =
 					/** @type {import("estree").ExpressionStatement} */
