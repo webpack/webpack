@@ -29,6 +29,7 @@ const assetConfig = (type, maxSize) => ({
 
 export default {
 	name,
+	iterations: 8,
 	async setup() {
 		await generateAssetProject({
 			dir: generated,

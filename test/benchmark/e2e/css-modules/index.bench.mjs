@@ -10,6 +10,7 @@ const name = "e2e/css-modules";
 
 export default {
 	name,
+	iterations: 8,
 	async setup() {
 		await generateCssProject({
 			dir: generated,

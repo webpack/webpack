@@ -28,7 +28,7 @@ const { values } = parseArgs({
 	}
 });
 
-const filter = toRegExp(values.filter);
+const filter = toRegExp(values.filter ?? process.env.FILTER);
 const negativeFilter = toRegExp(
 	values["negative-filter"] ?? process.env.NEGATIVE_FILTER
 );

@@ -42,6 +42,7 @@ import { Bench, hrtimeNow } from "tinybench";
  * @typedef {object} BenchmarkDefinition
  * @property {string} name benchmark case, unique within the suite
  * @property {BenchFn} fn benchmarked function
+ * @property {boolean=} async whether the benchmark function is asynchronous
  * @property {HookFn=} beforeEach hook outside the measured region, before every round
  * @property {HookFn=} afterEach hook outside the measured region, after every round
  * @property {HookFn=} beforeAll hook before the first execution of this benchmark
@@ -195,15 +196,23 @@ export async function runSuites(files, options) {
 
 			for (const definition of benches) {
 				const id = `${suite.name}/${definition.name}`;
+				const iterations = suite.iterations;
 				const bench = withCodSpeed(
 					new Bench({
 						name: suite.name,
 						now: hrtimeNow,
 						throws: true,
-						iterations: suite.iterations
+						iterations,
+						time: iterations === undefined ? undefined : 0,
+						warmupIterations:
+							iterations === undefined
+								? undefined
+								: Math.max(1, Math.ceil(iterations / 10)),
+						warmupTime: iterations === undefined ? undefined : 0
 					})
 				);
 				bench.add(id, definition.fn, {
+					async: definition.async,
 					beforeAll: definition.beforeAll,
 					beforeEach: definition.beforeEach,
 					afterEach: definition.afterEach,

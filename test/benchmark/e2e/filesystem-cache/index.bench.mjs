@@ -49,7 +49,7 @@ const cacheConfigs = (outputPath, benchName, mode, compression) => {
  * @param {string} caseName benchmark case
  * @param {"development" | "production"} mode mode
  * @param {false | "gzip" | "brotli"} compression cache compression
- * @returns {{ name: string, beforeAll: () => Promise<void>, fn: () => Promise<void>, afterAll: () => Promise<void> }} benchmark
+ * @returns {{ name: string, async: boolean, beforeAll: () => Promise<void>, fn: () => Promise<void>, afterAll: () => Promise<void> }} benchmark
  */
 const warmCacheBench = (caseName, mode, compression) => {
 	const benchName = `${caseName}/${mode}-build`;
@@ -59,6 +59,7 @@ const warmCacheBench = (caseName, mode, compression) => {
 	let outputPath;
 	return {
 		name: benchName,
+		async: true,
 		async beforeAll() {
 			outputPath = await createOutputPath();
 			config = cacheConfigs(outputPath, benchName, mode, compression);
@@ -95,6 +96,7 @@ const coldCacheBench = () => {
 	let outputPath;
 	return {
 		name: benchName,
+		async: true,
 		async beforeAll() {
 			outputPath = await createOutputPath();
 			config = cacheConfigs(outputPath, benchName, "development", false);
@@ -126,6 +128,7 @@ const coldCacheBench = () => {
 
 export default {
 	name,
+	iterations: 8,
 	async setup() {
 		await generateModuleTree({
 			dir: generated,
