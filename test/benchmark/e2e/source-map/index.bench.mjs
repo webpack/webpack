@@ -20,6 +20,7 @@ const sourceMapScenarios = (devtool) =>
 
 export default {
 	name,
+	iterations: 8,
 	async setup() {
 		await generateModuleTree({
 			dir: generated,

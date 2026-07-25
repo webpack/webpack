@@ -10,6 +10,7 @@ const name = "e2e/json-modules";
 
 export default {
 	name,
+	iterations: 8,
 	async setup() {
 		await generateJsonProject({
 			dir: generated,

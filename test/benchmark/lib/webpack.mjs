@@ -125,6 +125,7 @@ export function createBuildBench(options) {
 	let outputPath;
 	return {
 		name: benchName,
+		async: true,
 		async beforeAll() {
 			outputPath = await createOutputPath();
 		},
@@ -193,6 +194,7 @@ export function createWatchRebuildBench(options) {
 
 	return {
 		name: benchName,
+		async: true,
 		async beforeAll() {
 			originalContent = await fs.readFile(entryFile, "utf8");
 			outputPath = await createOutputPath();

@@ -11,6 +11,7 @@ const name = "e2e/code-splitting";
 
 export default {
 	name,
+	iterations: 8,
 	async setup() {
 		// Every 7th edge is a dynamic import → dozens of async chunks, which
 		// exercises chunk graph building and splitChunks.

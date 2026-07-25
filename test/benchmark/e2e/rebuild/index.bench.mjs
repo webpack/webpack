@@ -11,6 +11,7 @@ const name = "e2e/rebuild";
 
 export default {
 	name,
+	iterations: 8,
 	async setup() {
 		await generateModuleTree({
 			dir: generated,

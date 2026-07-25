@@ -90,6 +90,15 @@ runner uses 10% as many warmup iterations and disables time-based sampling only
 when an explicit iteration count is present. Every benchmark runs in isolation
 and the heap is drained between benchmarks.
 
+E2E suites use eight measured iterations and one warmup to bound macro-runner
+usage.
+
+CI runs the full suite weekly and on manual dispatches. Pull requests labeled
+`Run All Benchmark` run every benchmark, while `Run Recommended Benchmarks`
+selects affected suites and shards from the changed files. CodSpeed fills
+unmeasured benchmarks from the baseline as a
+[partial run](https://codspeed.io/docs/features/partial-runs).
+
 Fixtures must not depend on time, ambient files or `Math.random()`. Generated
 e2e projects belong in a `generated/` directory, which is ignored by Git and
 recreated by the suite.
