@@ -17,7 +17,11 @@ const {
 	decodeEntities,
 	escapeAttribute,
 	escapeText,
+	parseCssUrls,
 	parseHtml: parseHtmlRefs,
+	parseMsapplicationTask,
+	parseSrc,
+	parseSrcset,
 	tokenize
 } = require("../lib/html/syntax");
 
@@ -4247,5 +4251,135 @@ describe("parseHtml — path accessor completeness", () => {
 			`firstChildType:${NodeType.Text}`,
 			"nextSibling:0"
 		]);
+	});
+});
+
+describe("parseSrcset", () => {
+	it("should return a single candidate with byte offsets", () => {
+		expect(parseSrcset("a.png")).toEqual([["a.png", 0, 5]]);
+	});
+
+	it("should accept width, density and height descriptors", () => {
+		expect(parseSrcset("a.png 480w")).toEqual([["a.png", 0, 5]]);
+		expect(parseSrcset("a.png 2x")).toEqual([["a.png", 0, 5]]);
+		expect(parseSrcset("a.png 480w 2h")).toEqual([["a.png", 0, 5]]);
+	});
+
+	it("should parse several comma-separated candidates", () => {
+		expect(parseSrcset("a.png 480w, b.png 800w")).toEqual([
+			["a.png", 0, 5],
+			["b.png", 12, 17]
+		]);
+	});
+
+	it("should accept a url that ends in a trailing comma", () => {
+		expect(parseSrcset("a.png,")).toEqual([["a.png", 0, 5]]);
+	});
+
+	it("should throw on a zero width descriptor", () => {
+		expect(() => parseSrcset("a.png 0w")).toThrow(/Invalid srcset descriptor/);
+	});
+
+	it("should throw on a negative density descriptor", () => {
+		expect(() => parseSrcset("a.png -1x")).toThrow(/Invalid srcset descriptor/);
+	});
+
+	it("should throw on conflicting descriptors", () => {
+		expect(() => parseSrcset("a.png 480w 2x")).toThrow(
+			/Invalid srcset descriptor/
+		);
+	});
+
+	it("should throw on an unrecognized descriptor", () => {
+		expect(() => parseSrcset("a.png foo")).toThrow(/Invalid srcset descriptor/);
+	});
+
+	it("should throw on duplicate or conflicting typed descriptors", () => {
+		expect(() => parseSrcset("a.png 1w 2w")).toThrow(/Invalid srcset/);
+		expect(() => parseSrcset("a.png 0h")).toThrow(/Invalid srcset/);
+		expect(() => parseSrcset("a.png 2x 1h")).toThrow(/Invalid srcset/);
+	});
+
+	it("should traverse the in-parens descriptor state", () => {
+		expect(() => parseSrcset("a.png (min-width:1px)x")).toThrow(
+			/Invalid srcset descriptor/
+		);
+		// a parenthesized descriptor that runs to EOF
+		expect(() => parseSrcset("a.png (foo")).toThrow(/Invalid srcset/);
+	});
+
+	it("should handle whitespace between a descriptor and EOF", () => {
+		expect(parseSrcset("a.png 1w ")).toEqual([["a.png", 0, 5]]);
+		// a second descriptor after the inter-descriptor whitespace
+		expect(() => parseSrcset("a.png 1w x2")).toThrow(/Invalid srcset/);
+	});
+
+	it("should throw when there are no image candidate strings", () => {
+		expect(() => parseSrcset("   ")).toThrow(
+			/Must contain one or more image candidate strings/
+		);
+	});
+});
+
+describe("parseSrc", () => {
+	const NBSP = String.fromCharCode(0xa0);
+	const DEL = String.fromCharCode(0x7f);
+
+	it("should trim ASCII whitespace and keep offsets", () => {
+		expect(parseSrc("  a.png  ")).toEqual([["a.png", 2, 7]]);
+	});
+
+	it("should trim a surrounding U+00A0 no-break space", () => {
+		expect(parseSrc(`${NBSP}a.png${NBSP}`)).toEqual([["a.png", 1, 6]]);
+	});
+
+	it("should strip ignorable control characters from the value", () => {
+		expect(parseSrc(`a${DEL}.png`)).toEqual([["a.png", 0, 6]]);
+	});
+
+	it("should throw on empty and whitespace-only input", () => {
+		expect(() => parseSrc("")).toThrow(/Must be non-empty/);
+		expect(() => parseSrc("   ")).toThrow(/Must be non-empty/);
+	});
+
+	it("should throw when only ignorable characters remain", () => {
+		expect(() => parseSrc(DEL)).toThrow(/Must be non-empty/);
+	});
+});
+
+describe("parseMsapplicationTask", () => {
+	it("should extract the icon-uri value with offsets", () => {
+		expect(
+			parseMsapplicationTask("name=n;action-uri=http://x;icon-uri=icon.png")
+		).toEqual([["icon.png", 36, 44]]);
+	});
+
+	it("should return nothing when there is no icon-uri", () => {
+		expect(parseMsapplicationTask("name=n;action-uri=http://x")).toEqual([]);
+	});
+
+	it("should return nothing for an empty icon-uri value", () => {
+		expect(parseMsapplicationTask("icon-uri=   ")).toEqual([]);
+	});
+
+	it("should trim whitespace around the icon-uri value", () => {
+		expect(parseMsapplicationTask("name=n;icon-uri= icon.png ;x=y")).toEqual([
+			["icon.png", 17, 25]
+		]);
+	});
+});
+
+describe("parseCssUrls", () => {
+	it("should extract an unquoted url() reference from a presentation attribute", () => {
+		expect(parseCssUrls("fill:url(a.png)")).toEqual([["a.png", 9, 14]]);
+	});
+
+	it("should extract a quoted url() reference", () => {
+		expect(parseCssUrls('fill:url("a.png")')).toEqual([["a.png", 10, 15]]);
+		expect(parseCssUrls("fill:url('a.png')")).toEqual([["a.png", 10, 15]]);
+	});
+
+	it("should return nothing when the value carries no url()", () => {
+		expect(parseCssUrls("fill:red")).toEqual([]);
 	});
 });
