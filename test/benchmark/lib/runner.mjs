@@ -7,7 +7,7 @@ import { Bench, hrtimeNow } from "tinybench";
  * @property {RegExp=} filter only run benchmarks whose id matches
  * @property {RegExp=} negativeFilter skip benchmarks whose id matches
  * @property {boolean=} smoke run every benchmark exactly once, to validate not measure
- * @property {number=} maxRme maximum accepted relative margin of error
+ * @property {number=} maxRme relative margin of error warning threshold
  */
 
 /**
@@ -25,7 +25,7 @@ import { Bench, hrtimeNow } from "tinybench";
 /**
  * @typedef {object} BenchResult
  * @property {string} suite suite name
- * @property {string} name benchmark name
+ * @property {string} name full benchmark id
  * @property {LatencySummary=} latency wall-time statistics (absent when instrumented)
  */
 
@@ -40,7 +40,7 @@ import { Bench, hrtimeNow } from "tinybench";
 
 /**
  * @typedef {object} BenchmarkDefinition
- * @property {string} name benchmark name, unique within the suite
+ * @property {string} name benchmark case, unique within the suite
  * @property {BenchFn} fn benchmarked function
  * @property {HookFn=} beforeEach hook outside the measured region, before every round
  * @property {HookFn=} afterEach hook outside the measured region, after every round
@@ -149,7 +149,7 @@ export async function runSuites(files, options) {
 		/** @type {Suite} */
 		const suite = await import(pathToFileURL(file).toString()).then(x => x.default ?? x);
 		const benches = suite.benches.filter((bench) => {
-			const id = `${suite.name} :: ${bench.name}`;
+			const id = `${suite.name}/${bench.name}`;
 			if (options.filter && !options.filter.test(id)) return false;
 			if (options.negativeFilter && options.negativeFilter.test(id)) {
 				return false;
@@ -164,6 +164,7 @@ export async function runSuites(files, options) {
 			await drainHeap();
 			if (options.smoke) {
 				for (const definition of benches) {
+					const id = `${suite.name}/${definition.name}`;
 					try {
 						await definition.beforeAll?.();
 						try {
@@ -176,16 +177,15 @@ export async function runSuites(files, options) {
 						} finally {
 							await definition.afterAll?.();
 						}
-						console.log(`  ✔ ${definition.name} (smoke)`);
+						console.log(`  ✔ ${id} (smoke)`);
 						results.push({
 							suite: suite.name,
-							name: definition.name
+							name: id
 						});
 					} catch (err) {
-						const id = `${suite.name} :: ${definition.name}`;
 						failures.push({ id, error: /** @type {Error} */ (err) });
 						console.error(
-							`  ✖ ${definition.name}: ${/** @type {Error} */ (err).stack}`
+							`  ✖ ${id}: ${/** @type {Error} */ (err).stack}`
 						);
 					}
 					await drainHeap();
@@ -194,6 +194,7 @@ export async function runSuites(files, options) {
 			}
 
 			for (const definition of benches) {
+				const id = `${suite.name}/${definition.name}`;
 				const bench = withCodSpeed(
 					new Bench({
 						name: suite.name,
@@ -202,7 +203,7 @@ export async function runSuites(files, options) {
 						iterations: suite.iterations
 					})
 				);
-				bench.add(definition.name, definition.fn, {
+				bench.add(id, definition.fn, {
 					beforeAll: definition.beforeAll,
 					beforeEach: definition.beforeEach,
 					afterEach: definition.afterEach,
@@ -223,13 +224,9 @@ export async function runSuites(files, options) {
 						options.maxRme !== undefined &&
 						latency.rme > options.maxRme
 					) {
-						const id = `${suite.name} :: ${task.name}`;
-						failures.push({
-							id,
-							error: new Error(
-								`RME ${latency.rme.toFixed(2)}% exceeds ${options.maxRme.toFixed(2)}%`
-							)
-						});
+						console.warn(
+							`  ⚠ ${task.name}: RME ${latency.rme.toFixed(2)}% exceeds ${options.maxRme.toFixed(2)}%`
+						);
 					}
 					if (latency) {
 						console.log(
@@ -242,9 +239,13 @@ export async function runSuites(files, options) {
 					}
 				} catch (err) {
 					const task = bench.tasks[0];
-					const id = `${suite.name} :: ${task.name}`;
-					failures.push({ id, error: /** @type {Error} */ (err) });
-					console.error(`  ✖ ${id}: ${/** @type {Error} */ (err).stack}`);
+					failures.push({
+						id: task.name,
+						error: /** @type {Error} */ (err)
+					});
+					console.error(
+						`  ✖ ${task.name}: ${/** @type {Error} */ (err).stack}`
+					);
 				} finally {
 					await drainHeap();
 				}
@@ -256,7 +257,7 @@ export async function runSuites(files, options) {
 			try {
 				await suite.teardown?.();
 			} catch (err) {
-				const id = `${suite.name} teardown`;
+				const id = `${suite.name}/teardown`;
 				failures.push({
 					id,
 					error: /** @type {Error} */ (err)

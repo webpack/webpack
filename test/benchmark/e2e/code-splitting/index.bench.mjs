@@ -1,19 +1,16 @@
 import path from "path";
-import { fileURLToPath } from "url";
 import { generateModuleTree } from "../../helpers/project.mjs";
-import {
-	createBuildBench,
-	createBuildScenarios
-} from "../../lib/webpack.mjs";
+import { createBuildScenarios } from "../../lib/webpack.mjs";
 
-const caseDir = path.dirname(fileURLToPath(import.meta.url));
+const caseDir = import.meta.dirname;
 const esmGenerated = path.join(caseDir, "generated", "esm");
 const esmEntry = path.join(esmGenerated, "module-0.js");
 const commonJsGenerated = path.join(caseDir, "generated", "commonjs");
 const commonJsEntry = path.join(commonJsGenerated, "module-0.js");
+const name = "e2e/code-splitting";
 
 export default {
-	name: "e2e/code-splitting",
+	name,
 	async setup() {
 		// Every 7th edge is a dynamic import → dozens of async chunks, which
 		// exercises chunk graph building and splitChunks.
@@ -34,33 +31,29 @@ export default {
 	},
 	benches: [
 		...createBuildScenarios({
-			caseDir,
+			case: "esm",
 			entryFile: esmEntry,
-			namePrefix: "ESM",
 			config: { entry: esmEntry }
 		}),
 		...createBuildScenarios({
-			caseDir,
+			case: "commonjs",
 			entryFile: commonJsEntry,
-			namePrefix: "CommonJS",
 			config: { entry: commonJsEntry }
 		}),
-		createBuildBench({
-			name: "production build with splitChunks all",
-			caseDir,
+		...createBuildScenarios({
+			case: "esm/split-chunks-all",
+			entryFile: esmEntry,
 			config: {
-				mode: "production",
 				entry: esmEntry,
 				optimization: {
 					splitChunks: { chunks: "all", minSize: 1000 }
 				}
 			}
 		}),
-		createBuildBench({
-			name: "production build with splitChunks maxSize",
-			caseDir,
+		...createBuildScenarios({
+			case: "esm/split-chunks-max-size",
+			entryFile: esmEntry,
 			config: {
-				mode: "production",
 				entry: esmEntry,
 				optimization: {
 					splitChunks: {
@@ -71,11 +64,10 @@ export default {
 				}
 			}
 		}),
-		createBuildBench({
-			name: "development build with single runtime chunk",
-			caseDir,
+		...createBuildScenarios({
+			case: "esm/single-runtime-chunk",
+			entryFile: esmEntry,
 			config: {
-				mode: "development",
 				entry: esmEntry,
 				optimization: { runtimeChunk: "single" }
 			}

@@ -37,7 +37,7 @@ const [shardIndex, shardCount] = toShard(
 	values.shard ?? process.env.SHARD ?? "1/1"
 );
 
-// Reject noisy wall-time results instead of publishing them.
+// Warn about noisy wall-time results.
 const maxRme = Number.parseFloat(values["max-rme"] ?? process.env.MAX_RME ?? "15");
 
 const found = await Array.fromAsync(

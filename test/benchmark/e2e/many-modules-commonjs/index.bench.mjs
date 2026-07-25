@@ -1,17 +1,14 @@
 import path from "path";
-import { fileURLToPath } from "url";
 import { generateModuleTree } from "../../helpers/project.mjs";
-import {
-	createBuildBench,
-	createBuildScenarios
-} from "../../lib/webpack.mjs";
+import { createBuildScenarios } from "../../lib/webpack.mjs";
 
-const caseDir = path.dirname(fileURLToPath(import.meta.url));
+const caseDir = import.meta.dirname;
 const generated = path.join(caseDir, "generated");
 const entry = path.join(generated, "module-0.js");
+const name = "e2e/many-modules-commonjs";
 
 export default {
-	name: "e2e/many-modules-commonjs",
+	name,
 	async setup() {
 		await generateModuleTree({
 			dir: generated,
@@ -21,20 +18,18 @@ export default {
 	},
 	benches: [
 		...createBuildScenarios({
-			caseDir,
 			entryFile: entry,
 			config: { entry }
 		}),
-		createBuildBench({
-			name: "Node.js development build",
-			caseDir,
-			config: { mode: "development", entry, target: "node" }
+		...createBuildScenarios({
+			case: "node",
+			entryFile: entry,
+			config: { entry, target: "node" }
 		}),
-		createBuildBench({
-			name: "production build without minimization",
-			caseDir,
+		...createBuildScenarios({
+			case: "without-minimization",
+			entryFile: entry,
 			config: {
-				mode: "production",
 				entry,
 				optimization: { minimize: false }
 			}

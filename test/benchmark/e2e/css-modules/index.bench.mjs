@@ -6,9 +6,10 @@ import { createBuildScenarios } from "../../lib/webpack.mjs";
 const caseDir = path.dirname(fileURLToPath(import.meta.url));
 const generated = path.join(caseDir, "generated");
 const entry = path.join(generated, "index.js");
+const name = "e2e/css-modules";
 
 export default {
-	name: "e2e/css-modules",
+	name,
 	async setup() {
 		await generateCssProject({
 			dir: generated,
@@ -17,7 +18,6 @@ export default {
 		});
 	},
 	benches: createBuildScenarios({
-		caseDir,
 		entryFile: entry,
 		config: {
 			entry,

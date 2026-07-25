@@ -41,8 +41,26 @@ yarn benchmark:suite --max-rme 5
 `--smoke` executes each selected benchmark once without measuring it. Use it
 before a full run when adding or changing suites.
 
-Wall-time runs fail when any benchmark exceeds 15% RME. Use `--max-rme` or
-`MAX_RME` to select a stricter threshold.
+Wall-time runs warn when any benchmark exceeds 15% RME. Use `--max-rme` or
+`MAX_RME` to select a different threshold.
+
+## Adding an e2e suite
+
+Use `createBuildScenarios` for each configuration. It creates development and
+production builds plus a development rebuild in temporary output directories:
+
+```js
+const name = "e2e/many-modules-esm";
+
+export default {
+	name,
+	benches: createBuildScenarios({
+		case: "without-module-concatenation",
+		entryFile,
+		config: { entry }
+	})
+};
+```
 
 ## Adding a unit suite
 

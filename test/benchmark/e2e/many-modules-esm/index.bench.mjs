@@ -1,17 +1,14 @@
 import path from "path";
-import { fileURLToPath } from "url";
 import { generateModuleTree } from "../../helpers/project.mjs";
-import {
-	createBuildBench,
-	createBuildScenarios
-} from "../../lib/webpack.mjs";
+import { createBuildScenarios } from "../../lib/webpack.mjs";
 
-const caseDir = path.dirname(fileURLToPath(import.meta.url));
+const caseDir = import.meta.dirname;
 const generated = path.join(caseDir, "generated");
 const entry = path.join(generated, "module-0.js");
+const name = "e2e/many-modules-esm";
 
 export default {
-	name: "e2e/many-modules-esm",
+	name,
 	async setup() {
 		await generateModuleTree({
 			dir: generated,
@@ -21,42 +18,37 @@ export default {
 	},
 	benches: [
 		...createBuildScenarios({
-			caseDir,
 			entryFile: entry,
 			config: { entry }
 		}),
-		createBuildBench({
-			name: "development build with module concatenation",
-			caseDir,
+		...createBuildScenarios({
+			case: "with-module-concatenation",
+			entryFile: entry,
 			config: {
-				mode: "development",
 				entry,
 				optimization: { concatenateModules: true }
 			}
 		}),
-		createBuildBench({
-			name: "production build without module concatenation",
-			caseDir,
+		...createBuildScenarios({
+			case: "without-module-concatenation",
+			entryFile: entry,
 			config: {
-				mode: "production",
 				entry,
 				optimization: { concatenateModules: false }
 			}
 		}),
-		createBuildBench({
-			name: "production build without minimization",
-			caseDir,
+		...createBuildScenarios({
+			case: "without-minimization",
+			entryFile: entry,
 			config: {
-				mode: "production",
 				entry,
 				optimization: { minimize: false }
 			}
 		}),
-		createBuildBench({
-			name: "production build without concatenation or minimization",
-			caseDir,
+		...createBuildScenarios({
+			case: "without-concatenation-or-minimization",
+			entryFile: entry,
 			config: {
-				mode: "production",
 				entry,
 				optimization: { concatenateModules: false, minimize: false }
 			}
