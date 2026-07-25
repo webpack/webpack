@@ -52,7 +52,7 @@
     "fix:serializables": "node tooling/generate-internal-serializables.js --write",
     "build:examples": "cd examples && node buildAll.js",
     "benchmark": "node --max-old-space-size=6144 --experimental-vm-modules --trace-deprecation --hash-seed=1 --random-seed=1 --no-opt --predictable --predictable-gc-schedule --interpreted-frames-native-stack --allow-natives-syntax --expose-gc --no-concurrent-sweeping ./test/BenchmarkTestCases.benchmark.mjs",
-    "benchmark:suite": "node --max-old-space-size=6144 --hash-seed=1 --random-seed=1 --no-opt --predictable --predictable-gc-schedule --interpreted-frames-native-stack --allow-natives-syntax --expose-gc --no-concurrent-sweeping ./test/benchmark/lib/cli.mjs",
+    "benchmark:suite": "node --perf-prof --perf-basic-prof --max-old-space-size=6144 --hash-seed=1 --random-seed=1 --no-opt --predictable --predictable-gc-schedule --interpreted-frames-native-stack --allow-natives-syntax --expose-gc --no-concurrent-sweeping ./test/benchmark/lib/cli.mjs",
     "benchmark:unit": "yarn benchmark:suite --dir unit",
     "benchmark:e2e": "yarn benchmark:suite --dir e2e",
     "pretest": "yarn lint",
