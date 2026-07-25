@@ -297,6 +297,14 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 		).toBe(true);
 	});
 
+	it("reads declarations / childRules as null on non-rule nodes", () => {
+		// Only rules populate the decl / child-rule slots; a function (or any
+		// non-rule container) has no entry and must read back `null`.
+		const fn = parseAComponentValue("calc(1 + 2)");
+		expect(fn.declarations).toBeNull();
+		expect(fn.childRules).toBeNull();
+	});
+
 	it("preserves stray closers, CDO and CDC as component values", () => {
 		expect(cvTypes(")]}")).toEqual([
 			NodeType.RightParenthesis,
