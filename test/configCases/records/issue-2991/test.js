@@ -1,5 +1,7 @@
 try {
-	require("pkgs/somepackage/foo");
+	// IgnoredModule is always sideEffectFree; value use keeps it in records.
+	const ignored = require("pkgs/somepackage/foo");
+	void ignored;
 } catch (e) {}
 
 it("should write relative paths to records", function() {

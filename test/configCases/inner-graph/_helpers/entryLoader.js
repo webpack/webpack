@@ -2,7 +2,8 @@
 module.exports = function () {
 	const { name, expect, usedExports } = JSON.parse(this.query.slice(1));
 	return [
-		`if (Math.random() < 0) require(${JSON.stringify(
+		// Value use (not bare): harness needs exports marked used for inner-graph tracking.
+		`if (Math.random() < 0) void require(${JSON.stringify(
 			`../_helpers/testModuleLoader?${JSON.stringify(usedExports)}!`
 		)});`,
 		"",

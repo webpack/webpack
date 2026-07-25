@@ -3,7 +3,8 @@ import { exportDefaultUsed as export2 } from "./package1/script2";
 import { exportDefaultUsed as export3 } from "./package2/script";
 
 it("should load module correctly", () => {
-	require("./module");
+	// Keep module exports/imports used for default-used tracking.
+	void require("./module");
 });
 
 if (process.env.NODE_ENV === "production") {

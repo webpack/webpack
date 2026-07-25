@@ -1,0 +1,9 @@
+{
+  "sideEffects": [
+    "./test1.js",
+    "./test2.js",
+    "./test3.js",
+    "./test4.js",
+    "./no-source-map.js"
+  ]
+}
