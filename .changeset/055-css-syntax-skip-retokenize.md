@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Speed up CSS parsing: skip redundant token re-reads and, in non-modules mode, drop selector-prelude tokens without materializing a node.
+Speed up non-modules CSS parsing: skip redundant token re-reads, drop selector-prelude tokens without materializing nodes, allocate rule preludes lazily, and fast-path empty list seals.
