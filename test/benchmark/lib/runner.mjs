@@ -2,6 +2,8 @@ import { pathToFileURL } from "url";
 import { withCodSpeed } from "@codspeed/tinybench-plugin";
 import { Bench, hrtimeNow } from "tinybench";
 
+/** @typedef {import("tinybench").Task} Task */
+
 /**
  * @typedef {object} RunnerOptions
  * @property {RegExp=} filter only run benchmarks whose id matches

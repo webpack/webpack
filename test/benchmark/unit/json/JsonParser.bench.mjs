@@ -28,7 +28,9 @@ const createState = () =>
 			module: {
 				buildInfo: {},
 				buildMeta: {},
-				dependencies: [],
+				dependencies:
+					/** @type {import("../../../../lib/Dependency")[]} */ ([]),
+				/** @param {import("../../../../lib/Dependency")} dependency dependency */
 				addDependency(dependency) {
 					this.dependencies.push(dependency);
 				}

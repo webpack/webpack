@@ -98,13 +98,19 @@ export default {
 		{
 			name: "deserialize 60000 numeric values",
 			fn() {
-				sink = middleware.deserialize(numericSerialized, {}).length;
+				sink =
+					/** @type {import("../../../../lib/serialization/BinaryMiddleware").PrimitiveSerializableType[]} */ (
+						middleware.deserialize(numericSerialized, {})
+					).length;
 			}
 		},
 		{
 			name: "deserialize numeric values from 64-byte chunks",
 			fn() {
-				sink = middleware.deserialize(fragmentedSerialized, {}).length;
+				sink =
+					/** @type {import("../../../../lib/serialization/BinaryMiddleware").PrimitiveSerializableType[]} */ (
+						middleware.deserialize(fragmentedSerialized, {})
+					).length;
 			}
 		},
 		{
@@ -117,7 +123,10 @@ export default {
 		{
 			name: "deserialize 10000 mixed values",
 			fn() {
-				sink = middleware.deserialize(mixedSerialized, {}).length;
+				sink =
+					/** @type {import("../../../../lib/serialization/BinaryMiddleware").PrimitiveSerializableType[]} */ (
+						middleware.deserialize(mixedSerialized, {})
+					).length;
 			}
 		}
 	]
