@@ -1,8 +1,9 @@
 "use strict";
 
-// cspell:ignore ypeof averyvery ahri aafom Unsyntactic
+// cspell:ignore ypeof averyvery ahri aafom Unsyntactic retag
 
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
+const { SoaAst } = require("../lib/javascript/syntax");
 
 /**
  * @param {string} code source code the parser mapped
@@ -47,6 +48,16 @@ describe("WebpackParser", () => {
 			expect(comments[1].range).toEqual([20, 27]);
 			// comments carry no `loc` — locations derive from offsets
 			expect(comments[1].loc).toBeUndefined();
+		});
+
+		it("should memoize comment ranges and accept explicit writes", () => {
+			const { comments } = parse("// a\n// b\n");
+			const range = comments[0].range;
+			expect(range).toEqual([0, 4]);
+			// memoized second read returns the same array
+			expect(comments[0].range).toBe(range);
+			comments[0].range = [1, 2];
+			expect(comments[0].range).toEqual([1, 2]);
 		});
 
 		it("should memoize and accept explicit value writes", () => {
@@ -451,7 +462,8 @@ describe("WebpackParser", () => {
 		const names = (code) => {
 			/** @type {string[]} */
 			const found = [];
-			JSON.stringify(parse(code).ast, (_key, value) => {
+			// JSON.stringify only sees own keys, so pin the object backend
+			JSON.stringify(parse(code, { estree: true }).ast, (_key, value) => {
 				if (value && value.type === "Identifier") found.push(value.name);
 				return value;
 			});
@@ -1452,5 +1464,2101 @@ describe("WebpackParser", () => {
 			expect(parses).toBe(2);
 			expect(ast.body[0].type).toBe("WithStatement");
 		});
+	});
+
+	describe("function grammar fast path", () => {
+		it("should build single-shape nodes for declarations, expressions and arrows", () => {
+			const { ast } = parse(
+				"function f(a) { return a; }\nvar g = function named() {};\nvar h = (a, b) => a + b;\nvar i = async x => x;"
+			);
+			const [f, g, h, i] = /** @type {EXPECTED_ANY[]} */ (ast.body);
+			expect(f.type).toBe("FunctionDeclaration");
+			expect(f.id.name).toBe("f");
+			expect(f.generator).toBe(false);
+			expect(f.async).toBe(false);
+			expect(f.expression).toBe(false);
+			expect(f.range).toEqual([0, 27]);
+			expect(g.declarations[0].init.type).toBe("FunctionExpression");
+			expect(g.declarations[0].init.id.name).toBe("named");
+			const arrow = h.declarations[0].init;
+			expect(arrow.type).toBe("ArrowFunctionExpression");
+			expect(arrow.id).toBeNull();
+			expect(arrow.expression).toBe(true);
+			const asyncArrow = i.declarations[0].init;
+			expect(asyncArrow.async).toBe(true);
+			expect(asyncArrow.params[0].name).toBe("x");
+		});
+
+		it("should keep acorn's enumeration order on function nodes", () => {
+			// own-key order is an object-backend contract
+			const { ast } = parse("function f() {}", { estree: true });
+			expect(Object.keys(ast.body[0])).toEqual([
+				"type",
+				"start",
+				"end",
+				"id",
+				"expression",
+				"generator",
+				"async",
+				"params",
+				"body"
+			]);
+		});
+
+		it("should parse generators, async functions and methods", () => {
+			const { ast } = parse(
+				"async function* ag(a = 1, ...rest) { yield await a; }\n({ m() {}, get g() { return 1; }, set s(v) {}, *gen() {}, async am() {} });"
+			);
+			const ag = /** @type {EXPECTED_ANY} */ (ast.body[0]);
+			expect(ag.generator).toBe(true);
+			expect(ag.async).toBe(true);
+			const props = /** @type {EXPECTED_ANY} */ (ast.body[1]).expression
+				.properties;
+			expect(
+				props.map((/** @type {EXPECTED_ANY} */ p) => p.value.type)
+			).toEqual([
+				"FunctionExpression",
+				"FunctionExpression",
+				"FunctionExpression",
+				"FunctionExpression",
+				"FunctionExpression"
+			]);
+			expect(props[3].value.generator).toBe(true);
+			expect(props[4].value.async).toBe(true);
+		});
+
+		it("should allow super property access in object methods", () => {
+			const { ast } = parse("({ m() { return super.x; } });");
+			expect(ast.body[0].type).toBe("ExpressionStatement");
+		});
+
+		it("should keep acorn's early errors", () => {
+			// hanging generator declaration
+			expect(() => parse("if (x) function* f() {}")).toThrow(
+				/Unexpected token/
+			);
+			// strict directive with non-simple params
+			expect(() => parse("function f(a = 1) { 'use strict'; }")).toThrow(
+				/Illegal 'use strict' directive/
+			);
+			// duplicate params: sloppy simple ok, strict rejected
+			expect(parse("function f(a, a) {}").ast).toBeDefined();
+			expect(() => parse("'use strict'; function f(a, a) {}")).toThrow(
+				/Argument name clash/
+			);
+			expect(() => parse("function f(a, [a]) {}")).toThrow(
+				/Argument name clash/
+			);
+			// strict-mode function name re-check
+			expect(() => parse("'use strict'; function eval() {}")).toThrow(
+				/Binding eval in strict mode/
+			);
+			// yield in generator default params
+			expect(() => parse("function* g(a = yield) {}")).toThrow(
+				/Yield expression cannot be a default value/
+			);
+		});
+
+		it("should keep acorn's paren and arrow-head errors", () => {
+			expect(() => parse("()")).toThrow(/Unexpected token/);
+			expect(() => parse("(,)")).toThrow(/Unexpected token/);
+			expect(() => parse("(a,)")).toThrow(/Unexpected token/);
+			expect(() => parse("(...a)")).toThrow(/Unexpected token/);
+			expect(() => parse("(a, ...b)")).toThrow(/Unexpected token/);
+			expect(() => parse("(a, ...b,) => 0")).toThrow(
+				/Comma is not permitted after the rest element/
+			);
+		});
+
+		it("should distinguish parens from arrow heads", () => {
+			const { ast } = parse(
+				"(a, b);\n(x, ...y) => 0;\n(c,) => c;\nvar v = (d);"
+			);
+			const body = /** @type {EXPECTED_ANY[]} */ (ast.body);
+			expect(body[0].expression.type).toBe("SequenceExpression");
+			expect(body[1].expression.type).toBe("ArrowFunctionExpression");
+			expect(body[1].expression.params[1].type).toBe("RestElement");
+			expect(body[2].expression.type).toBe("ArrowFunctionExpression");
+			expect(body[3].declarations[0].init.type).toBe("Identifier");
+		});
+
+		it("should serve ParenthesizedExpression under preserveParens", () => {
+			const { WebpackParser } = require("../lib/javascript/syntax");
+
+			const ast = /** @type {EXPECTED_ANY} */ (
+				WebpackParser.parse(
+					"(a, b);",
+					/** @type {import("acorn").Options} */ (
+						/** @type {unknown} */ ({
+							ecmaVersion: "latest",
+							sourceType: "script",
+							preserveParens: true,
+							lazyNodes: true
+						})
+					)
+				)
+			);
+			expect(ast.body[0].expression.type).toBe("ParenthesizedExpression");
+			expect(ast.body[0].expression.expression.type).toBe("SequenceExpression");
+		});
+
+		it("should set the directive prologue on function bodies", () => {
+			const { ast } = parse("function f() { 'use strict'; return this; }");
+			const body = /** @type {EXPECTED_ANY} */ (ast.body[0]).body.body;
+			expect(body[0].directive).toBe("use strict");
+		});
+
+		it("should keep the function fast path off for parser plugins overriding inlined methods", () => {
+			const { WebpackParser } = require("../lib/javascript/syntax");
+
+			let calls = 0;
+			class Plugin extends WebpackParser {
+				/**
+				 * @param {EXPECTED_ANY} node function node
+				 * @param {boolean} allowDuplicates whether duplicates are allowed
+				 * @returns {void}
+				 */
+				checkParams(node, allowDuplicates) {
+					calls++;
+					// @ts-expect-error acorn's internal method is untyped
+					return super.checkParams(node, allowDuplicates);
+				}
+			}
+			const ast = /** @type {EXPECTED_ANY} */ (
+				Plugin.parse(
+					"function f(a) {} (b) => b;",
+					/** @type {import("acorn").Options} */ (
+						/** @type {unknown} */ ({
+							ecmaVersion: "latest",
+							sourceType: "script",
+							lazyNodes: true
+						})
+					)
+				)
+			);
+			expect(calls).toBeGreaterThan(0);
+			expect(ast.body[0].type).toBe("FunctionDeclaration");
+		});
+
+		it("should delegate the function grammar below ES2017", () => {
+			const { ast } = parse("function* g(a) { yield a; }", {
+				ecmaVersion: 6
+			});
+			const g = /** @type {EXPECTED_ANY} */ (ast.body[0]);
+			expect(g.type).toBe("FunctionDeclaration");
+			expect(g.generator).toBe(true);
+		});
+	});
+
+	describe("statement grammar fast path", () => {
+		it("should build single-shape loop, switch and try nodes", () => {
+			const { ast } = parse(
+				"for (let i = 0; i < 3; i++) f(i);\n" +
+					"for (const k in o) g(k);\n" +
+					"for (const v of a) h(v);\n" +
+					"while (a) b();\n" +
+					"do c(); while (d);\n" +
+					"switch (x) { case 1: a(); break; default: b(); }\n" +
+					"try { a(); } catch (e) { b(e); } finally { c(); }\n" +
+					"debugger;\n;\n" +
+					"l: for (;;) { continue l; }"
+			);
+			const body = /** @type {EXPECTED_ANY[]} */ (ast.body);
+			expect(body.map((s) => s.type)).toEqual([
+				"ForStatement",
+				"ForInStatement",
+				"ForOfStatement",
+				"WhileStatement",
+				"DoWhileStatement",
+				"SwitchStatement",
+				"TryStatement",
+				"DebuggerStatement",
+				"EmptyStatement",
+				"LabeledStatement"
+			]);
+			expect(body[2].await).toBe(false);
+			expect(body[5].cases).toHaveLength(2);
+			expect(body[5].cases[1].test).toBeNull();
+			expect(body[6].handler.param.name).toBe("e");
+			expect(body[9].body.body.body[0].type).toBe("ContinueStatement");
+			expect(body[0].range).toEqual([0, 33]);
+		});
+
+		it("should parse for-await, bare catch and with", () => {
+			const { ast } = parse(
+				"async function f() { for await (const c of chunks) use(c); }\n" +
+					"try { a(); } catch { b(); }\n" +
+					"with (obj) { y = 1; }"
+			);
+			const body = /** @type {EXPECTED_ANY[]} */ (ast.body);
+			const forAwait = body[0].body.body[0];
+			expect(forAwait.type).toBe("ForOfStatement");
+			expect(forAwait.await).toBe(true);
+			expect(body[1].handler.param).toBeNull();
+			expect(body[2].type).toBe("WithStatement");
+		});
+
+		it("should keep Annex B for-in initializers and reject the rest", () => {
+			expect(parse("for (var x = 1 in y) ;").ast).toBeDefined();
+			expect(() => parse("for (let x = 1 in y) ;")).toThrow(
+				/may not have an initializer/
+			);
+			expect(() => parse("for (var [a] = [] in y) ;")).toThrow(
+				/may not have an initializer/
+			);
+			expect(() => parse("for (let x of a, b) ;")).toThrow(/Unexpected token/);
+		});
+
+		it("should keep acorn's statement early errors", () => {
+			expect(() => parse("throw\nnew Error()")).toThrow(
+				/Illegal newline after throw/
+			);
+			expect(() => parse("switch (x) { default: a(); default: b(); }")).toThrow(
+				/Multiple default clauses/
+			);
+			expect(() => parse("try { a(); }")).toThrow(
+				/Missing catch or finally clause/
+			);
+			expect(() => parse("for (;;) { continue missing; }")).toThrow(
+				/Unsyntactic continue/
+			);
+			expect(() => parse("break;")).toThrow(/Unsyntactic break/);
+			expect(() => parse("s: switch (x) { case 1: continue s; }")).toThrow(
+				/Unsyntactic continue/
+			);
+			expect(() => parse("'use strict'; with (obj) {}")).toThrow(
+				/'with' in strict mode/
+			);
+			expect(() => parse("l: l: for (;;) ;")).toThrow(
+				/Label 'l' is already declared/
+			);
+			expect(() => parse("try {} catch ([a, a]) {}")).toThrow(
+				/already been declared/
+			);
+			expect(() =>
+				parse("async function f() { for await (x in y) ; }")
+			).toThrow(/Unexpected token/);
+		});
+	});
+
+	describe("class and expression-tail fast paths", () => {
+		it("should parse class declarations, fields, private names and static blocks", () => {
+			const { ast } = parse(
+				"class C extends B {\n" +
+					"  static sf = 1;\n" +
+					"  f = 2;\n" +
+					"  #p = 3;\n" +
+					"  static { init(); }\n" +
+					"  constructor() { super(); }\n" +
+					"  m() { return this.#p; }\n" +
+					"  static get g() { return 1; }\n" +
+					"  *gen() {}\n" +
+					"  async am() {}\n" +
+					"}\n" +
+					"var D = class {};"
+			);
+			const c = /** @type {EXPECTED_ANY} */ (ast.body[0]);
+			expect(c.type).toBe("ClassDeclaration");
+			expect(c.superClass.name).toBe("B");
+			expect(
+				c.body.body.map((/** @type {EXPECTED_ANY} */ el) => el.type)
+			).toEqual([
+				"PropertyDefinition",
+				"PropertyDefinition",
+				"PropertyDefinition",
+				"StaticBlock",
+				"MethodDefinition",
+				"MethodDefinition",
+				"MethodDefinition",
+				"MethodDefinition",
+				"MethodDefinition"
+			]);
+			expect(c.body.body[2].key.type).toBe("PrivateIdentifier");
+			expect(c.body.body[4].kind).toBe("constructor");
+			expect(c.body.body[7].value.generator).toBe(true);
+			expect(
+				/** @type {EXPECTED_ANY} */ (ast.body[1]).declarations[0].init.id
+			).toBeNull();
+		});
+
+		it("should keep acorn's class early errors", () => {
+			expect(() =>
+				parse("class A { constructor() {} constructor() {} }")
+			).toThrow(/Duplicate constructor/);
+			expect(() => parse("class A { static prototype() {} }")).toThrow(
+				/static property named prototype/
+			);
+			expect(() => parse("class A { get constructor() {} }")).toThrow(
+				/Constructor can't have get\/set modifier/
+			);
+			expect(() => parse("class A { *constructor() {} }")).toThrow(
+				/Constructor can't be a generator/
+			);
+			expect(() => parse("class A { constructor = 1; }")).toThrow(
+				/field named 'constructor'/
+			);
+			expect(() => parse("class A { #constructor; }")).toThrow(
+				/element named '#constructor'/
+			);
+			expect(() => parse("class A { #x; #x; }")).toThrow(
+				/already been declared/
+			);
+			expect(() => parse("class A { #x; m() { return #y in this; } }")).toThrow(
+				/must be declared in an enclosing class/
+			);
+			expect(() => parse("class A { get g(a) {} }")).toThrow(
+				/getter should have no params/
+			);
+			expect(() => parse("class A { set s() {} }")).toThrow(
+				/setter should have exactly one param/
+			);
+		});
+
+		it("should treat modifier names as element names when unaccompanied", () => {
+			const { ast } = parse(
+				"class A { static() {} async() {} get() {} set() {} static static() {} }"
+			);
+			const names = /** @type {EXPECTED_ANY} */ (ast.body[0]).body.body.map(
+				(/** @type {EXPECTED_ANY} */ el) =>
+					`${el.static ? "s:" : ""}${el.key.name}`
+			);
+			expect(names).toEqual(["static", "async", "get", "set", "s:static"]);
+		});
+
+		it("should build ChainExpression and SequenceExpression single shapes", () => {
+			const { ast } = parse("a?.b.c?.[d]?.(e);\nx = (a, b, c);");
+			const body = /** @type {EXPECTED_ANY[]} */ (ast.body);
+			expect(body[0].expression.type).toBe("ChainExpression");
+			expect(body[0].expression.range).toEqual([0, 16]);
+			const seq = body[1].expression.right;
+			expect(seq.type).toBe("SequenceExpression");
+			expect(seq.expressions).toHaveLength(3);
+		});
+
+		it("should keep expression-list holes and spread positions", () => {
+			const { ast } = parse("f(...a, b);\nconst xs = [1, , 3, ...rest,];");
+			const body = /** @type {EXPECTED_ANY[]} */ (ast.body);
+			expect(body[0].expression.arguments[0].type).toBe("SpreadElement");
+			const elements = body[1].declarations[0].init.elements;
+			expect(elements).toHaveLength(4);
+			expect(elements[1]).toBeNull();
+			expect(elements[3].type).toBe("SpreadElement");
+		});
+
+		it("should parse computed, numeric and string property names", () => {
+			const { ast } = parse('({ ["c" + k]: 1, 42: 2, "s": 3, id: 4 });');
+			const props = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression
+				.properties;
+			expect(props.map((/** @type {EXPECTED_ANY} */ p) => p.computed)).toEqual([
+				true,
+				false,
+				false,
+				false
+			]);
+			expect(props[1].key.value).toBe(42);
+		});
+	});
+
+	describe("export, yield/await and LVal fast paths", () => {
+		/**
+		 * @param {string} code module source
+		 * @returns {EXPECTED_ANY} program body
+		 */
+		const moduleBody = (code) => parse(code, { sourceType: "module" }).ast.body;
+
+		it("should parse all export forms", () => {
+			const body = moduleBody(
+				'export const a = 1, [b] = x;\nexport default function () {}\nexport * as ns from "m";\nexport { a as y, a as "z-str" };\nexport { d } from "m";'
+			);
+			expect(body.map((/** @type {EXPECTED_ANY} */ s) => s.type)).toEqual([
+				"ExportNamedDeclaration",
+				"ExportDefaultDeclaration",
+				"ExportAllDeclaration",
+				"ExportNamedDeclaration",
+				"ExportNamedDeclaration"
+			]);
+			expect(body[2].exported.name).toBe("ns");
+			expect(body[3].specifiers[1].exported.value).toBe("z-str");
+			expect(body[4].source.value).toBe("m");
+		});
+
+		it("should keep acorn's export errors", () => {
+			const moduleParse = (/** @type {string} */ code) =>
+				parse(code, { sourceType: "module" });
+			expect(() => moduleParse("export default 1; export default 2;")).toThrow(
+				/Duplicate export 'default'/
+			);
+			expect(() =>
+				moduleParse("export const a = 1; export { a as a };")
+			).toThrow(/Duplicate export 'a'/);
+			expect(() =>
+				moduleParse("export const [a, {b}] = x; export { b as a };")
+			).toThrow(/Duplicate export 'a'/);
+			expect(() => moduleParse('export { "str" };')).toThrow(
+				/string literal cannot be used as an exported binding/
+			);
+			expect(() => moduleParse("export { missing };")).toThrow(
+				/Export 'missing' is not defined/
+			);
+		});
+
+		it("should parse yield and await forms on single shapes", () => {
+			const { ast } = parse(
+				"function* g() { yield; yield 1; yield* inner(); }\nasync function a() { return await p; }"
+			);
+			const body = /** @type {EXPECTED_ANY[]} */ (ast.body);
+			const yields = body[0].body.body.map(
+				(/** @type {EXPECTED_ANY} */ s) => s.expression
+			);
+			expect(yields[0].argument).toBeNull();
+			expect(yields[0].delegate).toBe(false);
+			expect(yields[1].argument.value).toBe(1);
+			expect(yields[2].delegate).toBe(true);
+			expect(body[1].body.body[0].argument.type).toBe("AwaitExpression");
+		});
+
+		it("should retag assignment destructuring targets in place", () => {
+			const { ast } = parse(
+				"({ a, b: [c = 1], ...rest } = o);\n[x.y, ...z] = xs;"
+			);
+			const body = /** @type {EXPECTED_ANY[]} */ (ast.body);
+			const objectTarget = body[0].expression.left;
+			expect(objectTarget.type).toBe("ObjectPattern");
+			expect(objectTarget.properties[2].type).toBe("RestElement");
+			expect(objectTarget.properties[1].value.elements[0].type).toBe(
+				"AssignmentPattern"
+			);
+			const arrayTarget = body[1].expression.left;
+			expect(arrayTarget.type).toBe("ArrayPattern");
+			expect(arrayTarget.elements[0].type).toBe("MemberExpression");
+		});
+
+		it("should keep acorn's LVal errors", () => {
+			expect(() => parse("a?.b = 1;")).toThrow(
+				/Optional chaining cannot appear in left-hand side/
+			);
+			expect(() => parse("[a += 1] = x;")).toThrow(
+				/Only '=' operator can be used for specifying default value/
+			);
+			expect(() => parse("({ ...{} } = o);")).toThrow(/Unexpected token/);
+			expect(() => parse("[...a = 1] = x;")).toThrow(
+				/Rest elements cannot have a default value/
+			);
+			expect(() => parse("({ get g() {} } = o);")).toThrow(
+				/Object pattern can't contain getter or setter/
+			);
+			expect(() =>
+				parse("async function f() { let await; }", { sourceType: "module" })
+			).toThrow(/Cannot use 'await' as identifier inside an async function/);
+			expect(() => parse("let let = 1;")).toThrow(
+				/let is disallowed as a lexically bound name/
+			);
+		});
+	});
+
+	// The C0-verdict facade battery for the SoA backend that will replace
+	// the object AST (SOA_MIGRATION_PLAN.md phase C).
+	const {
+		FLAG_OPTIONAL,
+		TYPE_CALL_EXPRESSION,
+		TYPE_EXPRESSION_STATEMENT,
+		TYPE_IDENTIFIER,
+		TYPE_MEMBER_EXPRESSION,
+		TYPE_PROGRAM
+	} = SoaAst;
+
+	/**
+	 * Builds columns for `obj.prop(arg);` and returns the store plus ids.
+	 * @returns {EXPECTED_ANY} store and node ids
+	 */
+	const buildCallAst = () => {
+		const source = "obj.prop(arg);";
+		const ast = new SoaAst(source);
+		const obj = ast.allocNode(TYPE_IDENTIFIER, 0, 3);
+		const prop = ast.allocNode(TYPE_IDENTIFIER, 4, 8);
+		const member = ast.allocNode(TYPE_MEMBER_EXPRESSION, 0, 8);
+		ast.kid0[member] = obj;
+		ast.kid1[member] = prop;
+		const arg = ast.allocNode(TYPE_IDENTIFIER, 9, 12);
+		const call = ast.allocNode(TYPE_CALL_EXPRESSION, 0, 13);
+		ast.kid0[call] = member;
+		ast.setList(call, [arg]);
+		const statement = ast.allocNode(TYPE_EXPRESSION_STATEMENT, 0, 14);
+		ast.kid0[statement] = call;
+		const program = ast.allocNode(TYPE_PROGRAM, 0, 14);
+		ast.setList(program, [statement]);
+		return { ast, obj, member, call, statement, program };
+	};
+
+	describe("SoA column store", () => {
+		it("should serve estree-shaped facades from the columns", () => {
+			const { ast, program } = buildCallAst();
+			const root = /** @type {EXPECTED_ANY} */ (ast.nodeAt(program));
+			expect(root.type).toBe("Program");
+			const statement = root.body[0];
+			expect(statement.type).toBe("ExpressionStatement");
+			const call = statement.expression;
+			expect(call.type).toBe("CallExpression");
+			expect(call.callee.type).toBe("MemberExpression");
+			expect(call.callee.object.name).toBe("obj");
+			expect(call.callee.property.name).toBe("prop");
+			expect(call.arguments).toHaveLength(1);
+			expect(call.arguments[0].name).toBe("arg");
+			expect(call.start).toBe(0);
+			expect(call.end).toBe(13);
+			expect(call.range).toEqual([0, 13]);
+		});
+
+		it("should keep facade identity and memoization stable", () => {
+			const { ast, call, statement } = buildCallAst();
+			const statementFacade = /** @type {EXPECTED_ANY} */ (
+				ast.nodeAt(statement)
+			);
+			expect(statementFacade.expression).toBe(ast.nodeAt(call));
+			expect(statementFacade.expression).toBe(statementFacade.expression);
+			const args = statementFacade.expression.arguments;
+			expect(statementFacade.expression.arguments).toBe(args);
+			const range = statementFacade.range;
+			expect(statementFacade.range).toBe(range);
+		});
+
+		it("should accept mutation like plain estree nodes", () => {
+			const { ast, call } = buildCallAst();
+			const callFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(call));
+			callFacade.callee = "REPLACED";
+			expect(callFacade.callee).toBe("REPLACED");
+			callFacade.type = "NewExpression";
+			expect(callFacade.type).toBe("NewExpression");
+			callFacade.range = [1, 2];
+			expect(callFacade.range).toEqual([1, 2]);
+		});
+
+		it("should serve flags and null children", () => {
+			const { ast, member } = buildCallAst();
+			ast.flags[member] |= FLAG_OPTIONAL;
+			const memberFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(member));
+			expect(memberFacade.optional).toBe(true);
+			expect(memberFacade.computed).toBe(false);
+			expect(ast.nodeAt(0)).toBeNull();
+		});
+
+		it("should keep symbol slots invisible to enumeration and JSON", () => {
+			const { ast, call } = buildCallAst();
+			const callFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(call));
+			// the C0 verdict's documented trade-off: own scalars enumerate,
+			// prototype-served children do not (full enumeration is the opt-in
+			// defineProperties mode of a later step)
+			expect(Object.keys(callFacade)).toEqual([
+				"type",
+				"start",
+				"end",
+				"optional"
+			]);
+			expect(JSON.stringify(callFacade)).toBe(
+				'{"type":"CallExpression","start":0,"end":13,"optional":false}'
+			);
+			// reading a child memoizes into a symbol slot — still not enumerated
+			expect(callFacade.callee.type).toBe("MemberExpression");
+			expect(Object.keys(callFacade)).toEqual([
+				"type",
+				"start",
+				"end",
+				"optional"
+			]);
+		});
+
+		it("should serve operators, kinds, literals and ternary children", () => {
+			const source = "if (a < 1) return this; var x = -n;";
+			const ast = new SoaAst(source);
+			const a = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 4, 5);
+			const one = ast.allocNode(SoaAst.TYPE_LITERAL, 8, 9);
+			ast.aux[one] = SoaAst.LITERAL_NUMBER;
+			ast.values[one] = 1;
+			const test = ast.allocNode(SoaAst.TYPE_BINARY_EXPRESSION, 4, 9);
+			ast.kid0[test] = a;
+			ast.kid1[test] = one;
+			ast.aux[test] = /** @type {number} */ (SoaAst.OPERATOR_IDS.get("<"));
+			const thisExpr = ast.allocNode(SoaAst.TYPE_THIS_EXPRESSION, 18, 22);
+			const ret = ast.allocNode(SoaAst.TYPE_RETURN_STATEMENT, 11, 23);
+			ast.kid0[ret] = thisExpr;
+			const ifStmt = ast.allocNode(SoaAst.TYPE_IF_STATEMENT, 0, 23);
+			ast.kid0[ifStmt] = test;
+			ast.kid1[ifStmt] = ret;
+			// alternate stays 0 = null
+			const n = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 33, 34);
+			const neg = ast.allocNode(SoaAst.TYPE_UNARY_EXPRESSION, 32, 34);
+			ast.kid0[neg] = n;
+			ast.aux[neg] = /** @type {number} */ (SoaAst.OPERATOR_IDS.get("-"));
+			ast.flags[neg] |= SoaAst.FLAG_PREFIX;
+			const x = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 28, 29);
+			const declarator = ast.allocNode(SoaAst.TYPE_VARIABLE_DECLARATOR, 28, 35);
+			ast.kid0[declarator] = x;
+			ast.kid1[declarator] = neg;
+			const declaration = ast.allocNode(
+				SoaAst.TYPE_VARIABLE_DECLARATION,
+				24,
+				36
+			);
+			ast.aux[declaration] = 0; // var
+			ast.setList(declaration, [declarator]);
+
+			const ifFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(ifStmt));
+			expect(ifFacade.type).toBe("IfStatement");
+			expect(ifFacade.test.type).toBe("BinaryExpression");
+			expect(ifFacade.test.operator).toBe("<");
+			expect(ifFacade.test.left.name).toBe("a");
+			expect(ifFacade.test.right.value).toBe(1);
+			expect(ifFacade.test.right.raw).toBe("1");
+			expect(ifFacade.consequent.argument.type).toBe("ThisExpression");
+			expect(ifFacade.alternate).toBeNull();
+			const declFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(declaration));
+			expect(declFacade.kind).toBe("var");
+			const declaratorFacade = declFacade.declarations[0];
+			expect(declaratorFacade.type).toBe("VariableDeclarator");
+			expect(declaratorFacade.id.name).toBe("x");
+			expect(declaratorFacade.init.operator).toBe("-");
+			expect(declaratorFacade.init.prefix).toBe(true);
+			expect(declaratorFacade.init.argument.name).toBe("n");
+		});
+
+		it("should serve function, object, pattern and wrapper facades", () => {
+			const source = "async function* f({a = 1, ...r}) { yield [x, ...y]; }";
+			const ast = new SoaAst(source);
+			const fnId = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 16, 17);
+			const a = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 19, 20);
+			const one = ast.allocNode(SoaAst.TYPE_LITERAL, 23, 24);
+			ast.values[one] = 1;
+			const defaulted = ast.allocNode(SoaAst.TYPE_ASSIGNMENT_PATTERN, 19, 24);
+			ast.kid0[defaulted] = a;
+			ast.kid1[defaulted] = one;
+			const aProp = ast.allocNode(SoaAst.TYPE_PROPERTY, 19, 24);
+			ast.kid0[aProp] = a;
+			ast.kid1[aProp] = defaulted;
+			ast.flags[aProp] = SoaAst.FLAG_SHORTHAND;
+			const r = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 29, 30);
+			const rest = ast.allocNode(SoaAst.TYPE_REST_ELEMENT, 26, 30);
+			ast.kid0[rest] = r;
+			const pattern = ast.allocNode(SoaAst.TYPE_OBJECT_PATTERN, 18, 31);
+			ast.setList(pattern, [aProp, rest]);
+			const x = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 42, 43);
+			const y = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 48, 49);
+			const spread = ast.allocNode(SoaAst.TYPE_SPREAD_ELEMENT, 45, 49);
+			ast.kid0[spread] = y;
+			const array = ast.allocNode(SoaAst.TYPE_ARRAY_EXPRESSION, 41, 50);
+			ast.setList(array, [x, spread]);
+			const yielded = ast.allocNode(SoaAst.TYPE_YIELD_EXPRESSION, 35, 50);
+			ast.kid0[yielded] = array;
+			ast.flags[yielded] = 0;
+			const yieldStmt = ast.allocNode(SoaAst.TYPE_EXPRESSION_STATEMENT, 35, 51);
+			ast.kid0[yieldStmt] = yielded;
+			const body = ast.allocNode(SoaAst.TYPE_BLOCK_STATEMENT, 33, 53);
+			ast.setList(body, [yieldStmt]);
+			const fn = ast.allocNode(SoaAst.TYPE_FUNCTION_DECLARATION, 0, 53);
+			ast.kid0[fn] = fnId;
+			ast.kid1[fn] = body;
+			ast.setList(fn, [pattern]);
+			ast.flags[fn] = SoaAst.FLAG_ASYNC | SoaAst.FLAG_GENERATOR;
+
+			const fnFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(fn));
+			expect(fnFacade.type).toBe("FunctionDeclaration");
+			expect(fnFacade.async).toBe(true);
+			expect(fnFacade.generator).toBe(true);
+			expect(fnFacade.expression).toBe(false);
+			expect(fnFacade.id.name).toBe("f");
+			const objectPattern = fnFacade.params[0];
+			expect(objectPattern.type).toBe("ObjectPattern");
+			const [shorthand, restProp] = objectPattern.properties;
+			expect(shorthand.shorthand).toBe(true);
+			expect(shorthand.kind).toBe("init");
+			expect(shorthand.value.type).toBe("AssignmentPattern");
+			expect(shorthand.value.right.value).toBe(1);
+			expect(restProp.type).toBe("RestElement");
+			expect(restProp.argument.name).toBe("r");
+			const yieldedFacade = fnFacade.body.body[0].expression;
+			expect(yieldedFacade.type).toBe("YieldExpression");
+			expect(yieldedFacade.delegate).toBe(false);
+			const arrayFacade = yieldedFacade.argument;
+			expect(arrayFacade.elements[0].name).toBe("x");
+			expect(arrayFacade.elements[1].type).toBe("SpreadElement");
+			expect(arrayFacade.elements[1].argument.name).toBe("y");
+		});
+
+		/**
+		 * Reads each child once (cold), again (memoized), then writes a
+		 * replacement through the setter and reads it back.
+		 * @param {EXPECTED_ANY} facade facade under test
+		 * @param {string[]} keys child property names
+		 */
+		const exerciseChildren = (facade, keys) => {
+			for (const key of keys) {
+				const first = facade[key];
+				expect(facade[key]).toBe(first);
+				const replacement = { replaced: key };
+				facade[key] = replacement;
+				expect(facade[key]).toBe(replacement);
+			}
+		};
+
+		it("should serve loop facades", () => {
+			const source = "abcdefghijklmnopqrstuvwxyz";
+			const ast = new SoaAst(source);
+			/**
+			 * @param {number} i offset (single-letter identifier at i)
+			 * @returns {number} identifier ref
+			 */
+			const ident = (i) => ast.allocNode(SoaAst.TYPE_IDENTIFIER, i, i + 1);
+			const forStmt = ast.allocNode(SoaAst.TYPE_FOR_STATEMENT, 0, 20);
+			ast.kid0[forStmt] = ident(0);
+			ast.kid1[forStmt] = ident(1);
+			ast.kid2[forStmt] = ident(2);
+			ast.aux[forStmt] = ast.allocNode(SoaAst.TYPE_EMPTY_STATEMENT, 3, 4);
+			const forFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(forStmt));
+			expect(forFacade.type).toBe("ForStatement");
+			expect(forFacade.init.name).toBe("a");
+			expect(forFacade.test.name).toBe("b");
+			expect(forFacade.update.name).toBe("c");
+			expect(forFacade.body.type).toBe("EmptyStatement");
+			exerciseChildren(forFacade, ["init", "test", "update", "body"]);
+
+			const forIn = ast.allocNode(SoaAst.TYPE_FOR_IN_STATEMENT, 0, 20);
+			ast.kid0[forIn] = ident(4);
+			ast.kid1[forIn] = ident(5);
+			ast.kid2[forIn] = ident(6);
+			const forInFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(forIn));
+			expect(forInFacade.type).toBe("ForInStatement");
+			expect(forInFacade.await).toBeUndefined();
+			expect(forInFacade.left.name).toBe("e");
+			expect(forInFacade.right.name).toBe("f");
+			expect(forInFacade.body.name).toBe("g");
+			exerciseChildren(forInFacade, ["left", "right", "body"]);
+
+			const forOf = ast.allocNode(SoaAst.TYPE_FOR_OF_STATEMENT, 0, 20);
+			ast.kid0[forOf] = ident(7);
+			ast.kid1[forOf] = ident(8);
+			ast.kid2[forOf] = ident(9);
+			ast.flags[forOf] = SoaAst.FLAG_AWAIT;
+			const forOfFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(forOf));
+			expect(forOfFacade.type).toBe("ForOfStatement");
+			expect(forOfFacade.await).toBe(true);
+			expect(forOfFacade.left.name).toBe("h");
+
+			const whileStmt = ast.allocNode(SoaAst.TYPE_WHILE_STATEMENT, 0, 20);
+			ast.kid0[whileStmt] = ident(10);
+			ast.kid1[whileStmt] = ident(11);
+			const whileFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(whileStmt));
+			expect(whileFacade.type).toBe("WhileStatement");
+			expect(whileFacade.test.name).toBe("k");
+			expect(whileFacade.body.name).toBe("l");
+			exerciseChildren(whileFacade, ["test", "body"]);
+
+			const doWhile = ast.allocNode(SoaAst.TYPE_DO_WHILE_STATEMENT, 0, 20);
+			ast.kid0[doWhile] = ident(12);
+			ast.kid1[doWhile] = ident(13);
+			const doWhileFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(doWhile));
+			expect(doWhileFacade.type).toBe("DoWhileStatement");
+			expect(doWhileFacade.body.name).toBe("m");
+			expect(doWhileFacade.test.name).toBe("n");
+			exerciseChildren(doWhileFacade, ["body", "test"]);
+		});
+
+		it("should serve switch, try, label and with facades", () => {
+			const source = "abcdefghijklmnopqrstuvwxyz";
+			const ast = new SoaAst(source);
+			/**
+			 * @param {number} i offset (single-letter identifier at i)
+			 * @returns {number} identifier ref
+			 */
+			const ident = (i) => ast.allocNode(SoaAst.TYPE_IDENTIFIER, i, i + 1);
+			const caseA = ast.allocNode(SoaAst.TYPE_SWITCH_CASE, 0, 10);
+			ast.kid0[caseA] = ident(0);
+			ast.setList(caseA, [
+				ast.allocNode(SoaAst.TYPE_EMPTY_STATEMENT, 2, 3),
+				ast.allocNode(SoaAst.TYPE_DEBUGGER_STATEMENT, 4, 5)
+			]);
+			const caseFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(caseA));
+			expect(caseFacade.type).toBe("SwitchCase");
+			expect(caseFacade.test.name).toBe("a");
+			expect(
+				caseFacade.consequent.map((/** @type {EXPECTED_ANY} */ s) => s.type)
+			).toEqual(["EmptyStatement", "DebuggerStatement"]);
+			exerciseChildren(caseFacade, ["consequent", "test"]);
+			const defaultCase = ast.allocNode(SoaAst.TYPE_SWITCH_CASE, 0, 10);
+			expect(
+				/** @type {EXPECTED_ANY} */ (ast.nodeAt(defaultCase)).test
+			).toBeNull();
+
+			const switchStmt = ast.allocNode(SoaAst.TYPE_SWITCH_STATEMENT, 0, 12);
+			ast.kid0[switchStmt] = ident(1);
+			ast.setList(switchStmt, [caseA, defaultCase]);
+			const switchFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(switchStmt));
+			expect(switchFacade.type).toBe("SwitchStatement");
+			expect(switchFacade.discriminant.name).toBe("b");
+			expect(switchFacade.cases).toHaveLength(2);
+			expect(switchFacade.cases[0]).toBe(caseFacade);
+			exerciseChildren(switchFacade, ["discriminant", "cases"]);
+
+			const block = ast.allocNode(SoaAst.TYPE_BLOCK_STATEMENT, 0, 2);
+			const handlerBody = ast.allocNode(SoaAst.TYPE_BLOCK_STATEMENT, 6, 8);
+			const handler = ast.allocNode(SoaAst.TYPE_CATCH_CLAUSE, 3, 8);
+			ast.kid0[handler] = ident(4);
+			ast.kid1[handler] = handlerBody;
+			const finalizer = ast.allocNode(SoaAst.TYPE_BLOCK_STATEMENT, 9, 11);
+			const tryStmt = ast.allocNode(SoaAst.TYPE_TRY_STATEMENT, 0, 11);
+			ast.kid0[tryStmt] = block;
+			ast.kid1[tryStmt] = handler;
+			ast.kid2[tryStmt] = finalizer;
+			const tryFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(tryStmt));
+			expect(tryFacade.type).toBe("TryStatement");
+			expect(tryFacade.block.type).toBe("BlockStatement");
+			expect(tryFacade.handler.type).toBe("CatchClause");
+			expect(tryFacade.handler.param.name).toBe("e");
+			expect(tryFacade.handler.body).toBe(ast.nodeAt(handlerBody));
+			expect(tryFacade.finalizer.range).toEqual([9, 11]);
+			exerciseChildren(tryFacade, ["block", "handler", "finalizer"]);
+			exerciseChildren(ast.nodeAt(handler), ["param", "body"]);
+
+			const throwStmt = ast.allocNode(SoaAst.TYPE_THROW_STATEMENT, 0, 8);
+			ast.kid0[throwStmt] = ident(6);
+			const throwFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(throwStmt));
+			expect(throwFacade.type).toBe("ThrowStatement");
+			expect(throwFacade.argument.name).toBe("g");
+
+			const breakStmt = ast.allocNode(SoaAst.TYPE_BREAK_STATEMENT, 0, 9);
+			ast.kid0[breakStmt] = ident(7);
+			const breakFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(breakStmt));
+			expect(breakFacade.type).toBe("BreakStatement");
+			expect(breakFacade.label.name).toBe("h");
+			exerciseChildren(breakFacade, ["label"]);
+			const continueStmt = ast.allocNode(SoaAst.TYPE_CONTINUE_STATEMENT, 0, 9);
+			const continueFacade = /** @type {EXPECTED_ANY} */ (
+				ast.nodeAt(continueStmt)
+			);
+			expect(continueFacade.type).toBe("ContinueStatement");
+			expect(continueFacade.label).toBeNull();
+
+			const labeled = ast.allocNode(SoaAst.TYPE_LABELED_STATEMENT, 0, 12);
+			ast.kid0[labeled] = breakStmt;
+			ast.kid1[labeled] = ident(8);
+			const labeledFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(labeled));
+			expect(labeledFacade.type).toBe("LabeledStatement");
+			expect(labeledFacade.body).toBe(breakFacade);
+			expect(labeledFacade.label.name).toBe("i");
+			exerciseChildren(labeledFacade, ["body", "label"]);
+
+			const withStmt = ast.allocNode(SoaAst.TYPE_WITH_STATEMENT, 0, 12);
+			ast.kid0[withStmt] = ident(9);
+			ast.kid1[withStmt] = block;
+			const withFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(withStmt));
+			expect(withFacade.type).toBe("WithStatement");
+			expect(withFacade.object.name).toBe("j");
+			expect(withFacade.body.type).toBe("BlockStatement");
+			exerciseChildren(withFacade, ["object", "body"]);
+		});
+
+		it("should serve template facades from the interleaved span", () => {
+			// eslint-disable-next-line no-template-curly-in-string
+			const source = "t`a${b}c`";
+			const ast = new SoaAst(source);
+			const tag = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 0, 1);
+			const quasi0 = ast.allocNode(SoaAst.TYPE_TEMPLATE_ELEMENT, 2, 3);
+			ast.values[quasi0] = { raw: "a", cooked: "a" };
+			const expr = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 5, 6);
+			const quasi1 = ast.allocNode(SoaAst.TYPE_TEMPLATE_ELEMENT, 7, 8);
+			ast.values[quasi1] = { raw: "c", cooked: "c" };
+			ast.flags[quasi1] = SoaAst.FLAG_TAIL;
+			const template = ast.allocNode(SoaAst.TYPE_TEMPLATE_LITERAL, 1, 9);
+			ast.setList(template, [quasi0, expr, quasi1]);
+			const tagged = ast.allocNode(
+				SoaAst.TYPE_TAGGED_TEMPLATE_EXPRESSION,
+				0,
+				9
+			);
+			ast.kid0[tagged] = tag;
+			ast.kid1[tagged] = template;
+
+			const taggedFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(tagged));
+			expect(taggedFacade.type).toBe("TaggedTemplateExpression");
+			expect(taggedFacade.tag.name).toBe("t");
+			const templateFacade = taggedFacade.quasi;
+			expect(templateFacade.type).toBe("TemplateLiteral");
+			expect(
+				templateFacade.expressions.map(
+					(/** @type {EXPECTED_ANY} */ e) => e.name
+				)
+			).toEqual(["b"]);
+			expect(
+				templateFacade.quasis.map(
+					(/** @type {EXPECTED_ANY} */ q) => q.value.cooked
+				)
+			).toEqual(["a", "c"]);
+			expect(templateFacade.quasis[0].tail).toBe(false);
+			expect(templateFacade.quasis[1].tail).toBe(true);
+			exerciseChildren(taggedFacade, ["tag", "quasi"]);
+			exerciseChildren(templateFacade, ["expressions", "quasis"]);
+
+			// substitution-free template: one quasi, no expressions
+			const only = ast.allocNode(SoaAst.TYPE_TEMPLATE_ELEMENT, 2, 3);
+			ast.values[only] = { raw: "a", cooked: "a" };
+			ast.flags[only] = SoaAst.FLAG_TAIL;
+			const bare = ast.allocNode(SoaAst.TYPE_TEMPLATE_LITERAL, 1, 9);
+			ast.setList(bare, [only]);
+			const bareFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(bare));
+			expect(bareFacade.expressions).toEqual([]);
+			expect(bareFacade.quasis).toHaveLength(1);
+		});
+
+		it("should serve class facades", () => {
+			const source = "class A extends B { #m() {} static p = c; static { ; } }";
+			const ast = new SoaAst(source);
+			const classId = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 6, 7);
+			const superClass = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 16, 17);
+			const privateName = ast.allocNode(SoaAst.TYPE_PRIVATE_IDENTIFIER, 20, 22);
+			const methodFn = ast.allocNode(SoaAst.TYPE_FUNCTION_EXPRESSION, 22, 27);
+			const method = ast.allocNode(SoaAst.TYPE_METHOD_DEFINITION, 20, 27);
+			ast.kid0[method] = privateName;
+			ast.kid1[method] = methodFn;
+			ast.aux[method] = 4; // "method"
+			const fieldKey = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 35, 36);
+			const fieldValue = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 39, 40);
+			const field = ast.allocNode(SoaAst.TYPE_PROPERTY_DEFINITION, 28, 41);
+			ast.kid0[field] = fieldKey;
+			ast.kid1[field] = fieldValue;
+			ast.flags[field] = SoaAst.FLAG_STATIC;
+			const staticBlock = ast.allocNode(SoaAst.TYPE_STATIC_BLOCK, 42, 55);
+			ast.setList(staticBlock, [
+				ast.allocNode(SoaAst.TYPE_EMPTY_STATEMENT, 51, 52)
+			]);
+			const classBody = ast.allocNode(SoaAst.TYPE_CLASS_BODY, 18, 56);
+			ast.setList(classBody, [method, field, staticBlock]);
+			const classDecl = ast.allocNode(SoaAst.TYPE_CLASS_DECLARATION, 0, 56);
+			ast.kid0[classDecl] = classId;
+			ast.kid1[classDecl] = superClass;
+			ast.kid2[classDecl] = classBody;
+
+			const classFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(classDecl));
+			expect(classFacade.type).toBe("ClassDeclaration");
+			expect(classFacade.id.name).toBe("A");
+			expect(classFacade.superClass.name).toBe("B");
+			const bodyFacade = classFacade.body;
+			expect(bodyFacade.type).toBe("ClassBody");
+			const [methodFacade, fieldFacade, staticBlockFacade] = bodyFacade.body;
+			expect(methodFacade.type).toBe("MethodDefinition");
+			expect(methodFacade.static).toBe(false);
+			expect(methodFacade.computed).toBe(false);
+			expect(methodFacade.kind).toBe("method");
+			expect(methodFacade.key.type).toBe("PrivateIdentifier");
+			expect(methodFacade.key.name).toBe("m");
+			expect(methodFacade.value.type).toBe("FunctionExpression");
+			expect(fieldFacade.type).toBe("PropertyDefinition");
+			expect(fieldFacade.static).toBe(true);
+			expect(fieldFacade.key.name).toBe("p");
+			expect(fieldFacade.value.name).toBe("c");
+			expect(staticBlockFacade.type).toBe("StaticBlock");
+			expect(staticBlockFacade.body[0].type).toBe("EmptyStatement");
+			exerciseChildren(classFacade, ["id", "superClass", "body"]);
+			exerciseChildren(methodFacade, ["key", "value"]);
+			exerciseChildren(fieldFacade, ["key", "value"]);
+			exerciseChildren(staticBlockFacade, ["body"]);
+
+			// escaped private names land in the side list
+			const escaped = ast.allocNode(SoaAst.TYPE_PRIVATE_IDENTIFIER, 20, 22);
+			ast.values[escaped] = "esc";
+			expect(/** @type {EXPECTED_ANY} */ (ast.nodeAt(escaped)).name).toBe(
+				"esc"
+			);
+
+			const superNode = ast.allocNode(SoaAst.TYPE_SUPER, 0, 5);
+			expect(/** @type {EXPECTED_ANY} */ (ast.nodeAt(superNode)).type).toBe(
+				"Super"
+			);
+			const meta = ast.allocNode(SoaAst.TYPE_META_PROPERTY, 0, 10);
+			ast.kid0[meta] = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 6, 7);
+			ast.kid1[meta] = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 16, 17);
+			const metaFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(meta));
+			expect(metaFacade.type).toBe("MetaProperty");
+			expect(metaFacade.meta.name).toBe("A");
+			expect(metaFacade.property.name).toBe("B");
+			exerciseChildren(metaFacade, ["meta", "property"]);
+		});
+
+		it("should serve import and export facades", () => {
+			const source = 'import d, { a as b } from "m";';
+			const ast = new SoaAst(source);
+			const defaultLocal = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 7, 8);
+			const defaultSpecifier = ast.allocNode(
+				SoaAst.TYPE_IMPORT_DEFAULT_SPECIFIER,
+				7,
+				8
+			);
+			ast.kid0[defaultSpecifier] = defaultLocal;
+			const imported = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 12, 13);
+			const local = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 17, 18);
+			const specifier = ast.allocNode(SoaAst.TYPE_IMPORT_SPECIFIER, 12, 18);
+			ast.kid0[specifier] = imported;
+			ast.kid1[specifier] = local;
+			const sourceLiteral = ast.allocNode(SoaAst.TYPE_LITERAL, 26, 29);
+			ast.values[sourceLiteral] = "m";
+			const importDecl = ast.allocNode(SoaAst.TYPE_IMPORT_DECLARATION, 0, 30);
+			ast.kid0[importDecl] = sourceLiteral;
+			ast.flags[importDecl] = SoaAst.FLAG_ES2025;
+			ast.setList(importDecl, [defaultSpecifier, specifier]);
+
+			const importFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(importDecl));
+			expect(importFacade.type).toBe("ImportDeclaration");
+			expect(importFacade.attributes).toEqual([]);
+			expect(importFacade.source.value).toBe("m");
+			const [defaultFacade, specifierFacade] = importFacade.specifiers;
+			expect(defaultFacade.type).toBe("ImportDefaultSpecifier");
+			expect(defaultFacade.local.name).toBe("d");
+			expect(specifierFacade.type).toBe("ImportSpecifier");
+			expect(specifierFacade.imported.name).toBe("a");
+			expect(specifierFacade.local.name).toBe("b");
+			exerciseChildren(importFacade, ["specifiers", "source"]);
+			exerciseChildren(specifierFacade, ["imported", "local"]);
+			exerciseChildren(defaultFacade, ["local"]);
+
+			// pre-ES2025 declarations carry no `attributes` key at all
+			const oldImport = ast.allocNode(SoaAst.TYPE_IMPORT_DECLARATION, 0, 30);
+			expect(
+				"attributes" in /** @type {EXPECTED_ANY} */ (ast.nodeAt(oldImport))
+			).toBe(false);
+
+			const namespaceSpecifier = ast.allocNode(
+				SoaAst.TYPE_IMPORT_NAMESPACE_SPECIFIER,
+				7,
+				8
+			);
+			ast.kid0[namespaceSpecifier] = defaultLocal;
+			const namespaceFacade = /** @type {EXPECTED_ANY} */ (
+				ast.nodeAt(namespaceSpecifier)
+			);
+			expect(namespaceFacade.type).toBe("ImportNamespaceSpecifier");
+			expect(namespaceFacade.local.name).toBe("d");
+
+			const attrKey = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 7, 8);
+			const attrValue = ast.allocNode(SoaAst.TYPE_LITERAL, 26, 29);
+			ast.values[attrValue] = "m";
+			const attribute = ast.allocNode(SoaAst.TYPE_IMPORT_ATTRIBUTE, 7, 29);
+			ast.kid0[attribute] = attrKey;
+			ast.kid1[attribute] = attrValue;
+			const attributeFacade = /** @type {EXPECTED_ANY} */ (
+				ast.nodeAt(attribute)
+			);
+			expect(attributeFacade.type).toBe("ImportAttribute");
+			expect(attributeFacade.key.name).toBe("d");
+			expect(attributeFacade.value.value).toBe("m");
+			exerciseChildren(attributeFacade, ["key", "value"]);
+			const withAttributes = ast.allocNode(
+				SoaAst.TYPE_IMPORT_DECLARATION,
+				0,
+				30
+			);
+			ast.flags[withAttributes] = SoaAst.FLAG_ES2025;
+			ast.values[withAttributes] = [attributeFacade];
+			expect(
+				/** @type {EXPECTED_ANY} */ (ast.nodeAt(withAttributes)).attributes
+			).toEqual([attributeFacade]);
+
+			const importExpr = ast.allocNode(SoaAst.TYPE_IMPORT_EXPRESSION, 0, 30);
+			ast.kid0[importExpr] = sourceLiteral;
+			ast.flags[importExpr] = SoaAst.FLAG_ES2025;
+			const importExprFacade = /** @type {EXPECTED_ANY} */ (
+				ast.nodeAt(importExpr)
+			);
+			expect(importExprFacade.type).toBe("ImportExpression");
+			expect(importExprFacade.source.value).toBe("m");
+			expect(importExprFacade.options).toBeNull();
+			exerciseChildren(importExprFacade, ["source"]);
+			const oldImportExpr = ast.allocNode(SoaAst.TYPE_IMPORT_EXPRESSION, 0, 30);
+			expect(
+				"options" in /** @type {EXPECTED_ANY} */ (ast.nodeAt(oldImportExpr))
+			).toBe(false);
+
+			const exportLocal = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 12, 13);
+			const exported = ast.allocNode(SoaAst.TYPE_IDENTIFIER, 17, 18);
+			const exportSpecifier = ast.allocNode(
+				SoaAst.TYPE_EXPORT_SPECIFIER,
+				12,
+				18
+			);
+			ast.kid0[exportSpecifier] = exportLocal;
+			ast.kid1[exportSpecifier] = exported;
+			const namedExport = ast.allocNode(
+				SoaAst.TYPE_EXPORT_NAMED_DECLARATION,
+				0,
+				30
+			);
+			ast.kid1[namedExport] = sourceLiteral;
+			ast.flags[namedExport] = SoaAst.FLAG_ES2025;
+			ast.setList(namedExport, [exportSpecifier]);
+			const namedFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(namedExport));
+			expect(namedFacade.type).toBe("ExportNamedDeclaration");
+			expect(namedFacade.declaration).toBeNull();
+			expect(namedFacade.attributes).toEqual([]);
+			expect(namedFacade.source.value).toBe("m");
+			const exportSpecifierFacade = namedFacade.specifiers[0];
+			expect(exportSpecifierFacade.type).toBe("ExportSpecifier");
+			expect(exportSpecifierFacade.local.name).toBe("a");
+			expect(exportSpecifierFacade.exported.name).toBe("b");
+			exerciseChildren(namedFacade, ["declaration", "specifiers", "source"]);
+			exerciseChildren(exportSpecifierFacade, ["local", "exported"]);
+
+			const defaultExport = ast.allocNode(
+				SoaAst.TYPE_EXPORT_DEFAULT_DECLARATION,
+				0,
+				30
+			);
+			ast.kid0[defaultExport] = exportLocal;
+			const defaultExportFacade = /** @type {EXPECTED_ANY} */ (
+				ast.nodeAt(defaultExport)
+			);
+			expect(defaultExportFacade.type).toBe("ExportDefaultDeclaration");
+			expect(defaultExportFacade.declaration.name).toBe("a");
+			exerciseChildren(defaultExportFacade, ["declaration"]);
+
+			const allExport = ast.allocNode(
+				SoaAst.TYPE_EXPORT_ALL_DECLARATION,
+				0,
+				30
+			);
+			ast.kid0[allExport] = exported;
+			ast.kid1[allExport] = sourceLiteral;
+			ast.flags[allExport] = SoaAst.FLAG_ES2025;
+			const allFacade = /** @type {EXPECTED_ANY} */ (ast.nodeAt(allExport));
+			expect(allFacade.type).toBe("ExportAllDeclaration");
+			expect(allFacade.exported.name).toBe("b");
+			expect(allFacade.source.value).toBe("m");
+			expect(allFacade.attributes).toEqual([]);
+			exerciseChildren(allFacade, ["exported", "source"]);
+		});
+
+		it("should grow columns and the flat buffer beyond their initial capacity", () => {
+			const ast = new SoaAst("x");
+			/** @type {number[]} */
+			const refs = [];
+			for (let i = 0; i < 5000; i++) {
+				refs.push(ast.allocNode(TYPE_IDENTIFIER, i, i + 1));
+			}
+			const program = ast.allocNode(TYPE_PROGRAM, 0, 5000);
+			ast.setList(program, refs);
+			expect(ast.count).toBe(5002);
+			expect(ast.types[refs[4999]]).toBe(TYPE_IDENTIFIER);
+			expect(ast.flat[ast.listStarts[program]]).toBe(5000);
+			const root = /** @type {EXPECTED_ANY} */ (ast.nodeAt(program));
+			expect(root.body).toHaveLength(5000);
+			expect(root.body[4999].start).toBe(4999);
+		});
+
+		it("grows straight to the density-projected capacity", () => {
+			// an all-whitespace sample estimates no separators at all
+			expect(new SoaAst("").capacity).toBe(256);
+			const ast = new SoaAst(" ".repeat(50000));
+			expect(ast.capacity).toBe(256);
+			const first = ast.allocNode(TYPE_IDENTIFIER, 10, 12);
+			ast.values[first] = "a";
+			// a pre-grow pin must survive the side-store move identity-stable
+			const pinned = ast.nodeAt(first);
+			for (let i = 1; i < 300; i++) ast.allocNode(TYPE_IDENTIFIER, 200, 201);
+			// 257 nodes from 200 consumed bytes project far past one doubling
+			expect(ast.capacity).toBeGreaterThan(512);
+			expect(ast.nodeAt(first)).toBe(pinned);
+			expect(ast.values[first]).toBe("a");
+		});
+	});
+
+	describe("SoA emission", () => {
+		const { WebpackParser } = require("../lib/javascript/syntax");
+
+		/**
+		 * @param {string} code source
+		 * @param {object=} extra extra parse options
+		 * @returns {EXPECTED_ANY} program node
+		 */
+		const soaParse = (code, extra) =>
+			WebpackParser.parse(
+				code,
+				/** @type {import("acorn").Options} */ (
+					/** @type {unknown} */ ({
+						ecmaVersion: "latest",
+						sourceType: "module",
+						lazyNodes: true,
+						...extra
+					})
+				)
+			);
+
+		it("should emit facades by default and keep the object backend under estree", () => {
+			const soa = soaParse("const x = a.b(1);");
+			expect(SoaAst.isFacade(soa.body[0])).toBe(true);
+			expect(SoaAst.isFacade(soa.body[0].declarations[0].init)).toBe(true);
+			const plain = WebpackParser.parse(
+				"const x = a.b(1);",
+				/** @type {import("acorn").Options} */ (
+					/** @type {unknown} */ ({
+						ecmaVersion: "latest",
+						sourceType: "module",
+						lazyNodes: true,
+						estree: true
+					})
+				)
+			);
+			expect(SoaAst.isFacade(/** @type {EXPECTED_ANY} */ (plain).body[0])).toBe(
+				false
+			);
+			// without lazy mode the option is inert
+			const nonLazy = WebpackParser.parse(
+				"const x = 1;",
+				/** @type {import("acorn").Options} */ (
+					/** @type {unknown} */ ({
+						ecmaVersion: "latest",
+						sourceType: "module"
+					})
+				)
+			);
+			expect(
+				SoaAst.isFacade(/** @type {EXPECTED_ANY} */ (nonLazy).body[0])
+			).toBe(false);
+		});
+
+		it("should serve escaped identifier names from the side list", () => {
+			const ast = soaParse("var \\u0061bc = 1;");
+			const declarator = ast.body[0].declarations[0];
+			expect(declarator.id.name).toBe("abc");
+			expect(declarator.id.end - declarator.id.start).toBe(8);
+		});
+
+		it("should keep regex, bigint and template payloads intact", () => {
+			// eslint-disable-next-line no-template-curly-in-string
+			const ast = soaParse("x = /ab/gu; y = 12n; z = `p${q}r`;");
+			const regex = ast.body[0].expression.right;
+			expect(regex.regex).toEqual({ pattern: "ab", flags: "gu" });
+			expect(regex.value).toBeInstanceOf(RegExp);
+			expect(regex.raw).toBe("/ab/gu");
+			const bigint = ast.body[1].expression.right;
+			expect(bigint.value).toBe(BigInt(12));
+			expect(bigint.bigint).toBe("12");
+			const template = ast.body[2].expression.right;
+			expect(
+				template.quasis.map((/** @type {EXPECTED_ANY} */ q) => q.value.cooked)
+			).toEqual(["p", "r"]);
+			expect(template.quasis[1].tail).toBe(true);
+			expect(template.expressions[0].name).toBe("q");
+		});
+
+		it("should memoize foreign children from not-yet-owned construction sites", () => {
+			// class expressions still come from acorn's start/finish path
+			const ast = soaParse("var x = class C {}; f(class D {}, 1);");
+			const declarator = ast.body[0].declarations[0];
+			expect(SoaAst.isFacade(declarator)).toBe(true);
+			expect(SoaAst.isFacade(declarator.init)).toBe(false);
+			expect(declarator.init.type).toBe("ClassExpression");
+			expect(declarator.init.id.name).toBe("C");
+			const call = ast.body[1].expression;
+			expect(SoaAst.isFacade(call)).toBe(true);
+			expect(SoaAst.isFacade(call.arguments[0])).toBe(false);
+			expect(call.arguments[0].type).toBe("ClassExpression");
+			expect(call.arguments[1].value).toBe(1);
+		});
+
+		it("should pin template lists containing foreign expressions", () => {
+			// eslint-disable-next-line no-template-curly-in-string
+			const ast = soaParse("t = `a${class E {}}b`;");
+			const template = ast.body[0].expression.right;
+			expect(template.expressions[0].type).toBe("ClassExpression");
+			expect(template.quasis).toHaveLength(2);
+		});
+
+		it("should survive toAssignable re-tagging through facades", () => {
+			const ast = soaParse("({ a = 1, ...r } = o); [x, ...y] = z;");
+			const objectPattern = ast.body[0].expression.left;
+			expect(objectPattern.type).toBe("ObjectPattern");
+			expect(objectPattern.properties[0].value.type).toBe("AssignmentPattern");
+			expect(objectPattern.properties[1].type).toBe("RestElement");
+			const arrayPattern = ast.body[1].expression.left;
+			expect(arrayPattern.type).toBe("ArrayPattern");
+			expect(arrayPattern.elements[1].type).toBe("RestElement");
+			expect("operator" in arrayPattern).toBe(false);
+		});
+
+		it("should fill born-unfinished property and switch-case facades", () => {
+			const ast = soaParse(
+				"o = { p: 1, q, get g() {}, m() {} }; switch (s) { case 1: a; break; default: b; }"
+			);
+			const properties = ast.body[0].expression.right.properties;
+			expect(
+				properties.map((/** @type {EXPECTED_ANY} */ p) => [
+					p.kind,
+					p.shorthand,
+					p.method
+				])
+			).toEqual([
+				["init", false, false],
+				["init", true, false],
+				["get", false, false],
+				["init", false, true]
+			]);
+			// shorthand values are copies, matching acorn's `copyNode`
+			expect(properties[1].value).not.toBe(properties[1].key);
+			expect(properties[1].value.name).toBe("q");
+			const cases = ast.body[1].cases;
+			expect(cases[0].test.value).toBe(1);
+			expect(
+				cases[0].consequent.map((/** @type {EXPECTED_ANY} */ s) => s.type)
+			).toEqual(["ExpressionStatement", "BreakStatement"]);
+			expect(cases[1].test).toBeNull();
+			expect(cases[1].end).toBeGreaterThan(0);
+		});
+
+		it("should keep pre-ES2018 for-of on the object backend", () => {
+			const ast = soaParse("for (x of y) z;", {
+				ecmaVersion: 8,
+				sourceType: "script"
+			});
+			const forOf = ast.body[0];
+			expect(forOf.type).toBe("ForOfStatement");
+			expect(SoaAst.isFacade(forOf)).toBe(false);
+			expect("await" in forOf).toBe(false);
+			// the ES2018+ form is a facade and carries `await`
+			const modern = soaParse("for await (const v of it) v;").body[0];
+			expect(SoaAst.isFacade(modern)).toBe(true);
+			expect(modern.await).toBe(true);
+		});
+
+		it("should omit facade children from enumeration by design", () => {
+			const statement = soaParse("f(x);").body[0];
+			expect(SoaAst.isFacade(statement)).toBe(true);
+			expect(Object.keys(statement)).toEqual(["type", "start", "end"]);
+			expect("expression" in statement).toBe(true);
+			expect(statement.expression.callee.name).toBe("f");
+		});
+
+		// Setter writes carry state the columns cannot rebuild, so each write
+		// must both stick and pin the facade against rebuilding.
+		it("should serve setter-written children back on every facade shape", () => {
+			const body = soaParse(
+				"a.b(c); x + y; -z; t ? u : v; (p, q); a?.b; var d = e; " +
+					"function f(g) { return h; } new I(j); [k, ...l]; ({ m: n }); " +
+					"((o = 1) => o)();"
+			).body;
+			const call = body[0].expression;
+			/** @type {[EXPECTED_ANY, string[]][]} */
+			const targets = [
+				[body[0], ["expression"]],
+				[call, ["callee", "arguments"]],
+				[call.callee, ["object", "property"]],
+				[body[1].expression, ["left", "right"]],
+				[body[2].expression, ["argument"]],
+				[body[3].expression, ["test", "consequent", "alternate"]],
+				[body[4].expression, ["expressions"]],
+				[body[5].expression, ["expression"]],
+				[body[6], ["declarations"]],
+				[body[6].declarations[0], ["id", "init"]],
+				[body[7], ["id", "params", "body"]],
+				[body[7].body, ["body"]],
+				[body[7].body.body[0], ["argument"]],
+				[body[8].expression, ["callee", "arguments"]],
+				[body[9].expression, ["elements"]],
+				[body[9].expression.elements[1], ["argument"]],
+				[body[10].expression, ["properties"]],
+				[body[11].expression.callee.params[0], ["left", "right"]]
+			];
+			for (const [facade, keys] of targets) {
+				expect(SoaAst.isFacade(facade)).toBe(true);
+				for (const key of keys) {
+					const replacement = { replaced: key };
+					facade[key] = replacement;
+					expect(facade[key]).toBe(replacement);
+				}
+			}
+			// the root Program facade only exists on hand-built stores
+			const { ast: store, program } = buildCallAst();
+			const root = /** @type {EXPECTED_ANY} */ (store.nodeAt(program));
+			/** @type {EXPECTED_ANY[]} */
+			const replacementBody = [];
+			root.body = replacementBody;
+			expect(root.body).toBe(replacementBody);
+			expect(store.nodeAt(program)).toBe(root);
+		});
+
+		// the parser flags directive-prologue members in the columns instead of
+		// materializing every function-body statement to stamp `.directive`
+		it("should serve function-body directives from the columns", () => {
+			const ast = soaParse(
+				"function f() { 'use strict'; \"use asm\"; ('nope'); 'late'; }"
+			);
+			const body = ast.body[0].body.body;
+			expect(body[0].directive).toBe("use strict");
+			expect(body[1].directive).toBe("use asm");
+			// parenthesized strings and post-prologue strings are not directives
+			expect(body[2].directive).toBeUndefined();
+			expect(Object.keys(body[2])).not.toContain("directive");
+			expect(body[3].directive).toBeUndefined();
+			// a pinned body (foreign statement) takes the object path
+			const pinned = soaParse("function g() { 'use strict'; class X {} }")
+				.body[0].body.body;
+			expect(pinned[0].directive).toBe("use strict");
+		});
+
+		it("should pin foreign children in the update and body slots", () => {
+			const conditional = soaParse("c ? x : class A {};").body[0].expression;
+			expect(conditional.alternate.type).toBe("ClassExpression");
+			expect(SoaAst.isFacade(conditional.alternate)).toBe(false);
+			expect(conditional.test.name).toBe("c");
+			// a parser plugin replacing statement nodes hands the for body back
+			// as a plain object, reaching the 4th-slot (aux) foreign-child path
+			class StatementReplacingParser extends WebpackParser {
+				/**
+				 * @param {EXPECTED_ANY} node started statement node
+				 * @param {EXPECTED_ANY} expr parsed expression
+				 * @returns {EXPECTED_ANY} plain-object statement
+				 */
+				parseExpressionStatement(node, expr) {
+					super.parseExpressionStatement(node, expr);
+					// built from parser state: the super result is a raw ref
+					return {
+						type: "ExpressionStatement",
+						start: node.start,
+						end: this.lastTokEnd,
+						expression: expr
+					};
+				}
+			}
+			const ast = /** @type {EXPECTED_ANY} */ (
+				StatementReplacingParser.parse(
+					"for (;; class B {}) x;",
+					/** @type {import("acorn").Options} */ (
+						/** @type {unknown} */ ({
+							ecmaVersion: "latest",
+							sourceType: "module",
+							lazyNodes: true
+						})
+					)
+				)
+			);
+			const forStmt = ast.body[0];
+			expect(SoaAst.isFacade(forStmt)).toBe(true);
+			expect(forStmt.update.type).toBe("ClassExpression");
+			expect(SoaAst.isFacade(forStmt.body)).toBe(false);
+			expect(forStmt.body.type).toBe("ExpressionStatement");
+			expect(forStmt.body.start).toBe(20);
+			expect(forStmt.body.end).toBe(22);
+		});
+	});
+
+	describe("grammar id-flow (raw refs through the owned grammar)", () => {
+		const { WebpackParser } = require("../lib/javascript/syntax");
+
+		/**
+		 * @param {string} code source
+		 * @param {object=} extra extra parse options
+		 * @param {boolean=} soa backend
+		 * @returns {EXPECTED_ANY} program node
+		 */
+		const parseOn = (code, extra, soa = true) =>
+			WebpackParser.parse(
+				code,
+				/** @type {import("acorn").Options} */ (
+					/** @type {unknown} */ ({
+						ecmaVersion: "latest",
+						sourceType: "module",
+						lazyNodes: true,
+						estree: !soa,
+						...extra
+					})
+				)
+			);
+
+		/**
+		 * @param {string} code source
+		 * @param {string} message expected error
+		 * @param {object=} extra extra parse options
+		 */
+		const expectBothThrow = (code, message, extra) => {
+			for (const soa of [false, true]) {
+				expect(() => parseOn(code, extra, soa)).toThrow(message);
+			}
+		};
+
+		/**
+		 * @param {string} code source
+		 * @param {object=} extra extra parse options
+		 */
+		const expectBothParse = (code, extra) => {
+			for (const soa of [false, true]) {
+				expect(() => parseOn(code, extra, soa)).not.toThrow();
+			}
+		};
+
+		it("stamps the commonjs source type as script on the Program", () => {
+			for (const soa of [false, true]) {
+				const ast = parseOn(
+					"module.exports = 1;",
+					{ sourceType: "commonjs" },
+					soa
+				);
+				expect(ast.type).toBe("Program");
+				expect(ast.sourceType).toBe("script");
+			}
+		});
+
+		it("recovers labels on statement heads delegated to acorn", () => {
+			// `await`/`async`/`using` heads delegate to base parseStatement,
+			// whose label check is blind to raw refs (test262
+			// statements/labeled/value-await-non-module)
+			const script = { sourceType: "script" };
+			for (const code of [
+				"await: 1;",
+				"aw\\u0061it: 1;",
+				"'use strict'; await: 1;",
+				"async: 1;",
+				"using: 1;",
+				"await: for (;;) break await;",
+				"if (1) await: 1;",
+				"l: await: 1;"
+			]) {
+				expectBothParse(code, script);
+				const stmts = parseOn(code, script).body;
+				const labeled = stmts[stmts.length - 1];
+				expect(labeled.type).toBe(
+					code.startsWith("if") ? "IfStatement" : "LabeledStatement"
+				);
+			}
+			expect(parseOn("await: 1;", script).body[0].label.name).toBe("await");
+			// non-label shapes keep erroring identically
+			expectBothThrow("(await): 1;", "Unexpected token", script);
+			expectBothThrow("await.b: 1;", "Unexpected token", script);
+			expectBothThrow("await: 1;", "Unexpected token");
+			expectBothThrow(
+				"await: await: 1;",
+				"Label 'await' is already declared",
+				script
+			);
+
+			// the module->script downgrade retry recovers the label too
+			const JavascriptParser = require("../lib/javascript/JavascriptParser");
+
+			for (const soa of [false, true]) {
+				// object nodes enter through the custom-parse seam (always-SoA parser)
+				const parser = new JavascriptParser(
+					"auto",
+					soa
+						? {}
+						: {
+								parse: (code, options) =>
+									JavascriptParser._parse(code, { ...options, estree: true })
+							}
+				);
+				expect(() =>
+					parser.parse(
+						"await: 1;",
+						/** @type {import("../lib/Parser").ParserState} */ (
+							/** @type {unknown} */ ({})
+						)
+					)
+				).not.toThrow();
+			}
+		});
+
+		it("converts raw refs to patterns with acorn's error surface", () => {
+			expectBothThrow(
+				"a?.b = 1;",
+				"Optional chaining cannot appear in left-hand side"
+			);
+			expectBothThrow(
+				"a?.b += 1;",
+				"Optional chaining cannot appear in left-hand side"
+			);
+			expectBothThrow(
+				"a?.b++;",
+				"Optional chaining cannot appear in left-hand side"
+			);
+			expectBothThrow("(1) = 2;", "Assigning to rvalue");
+			expectBothThrow("1++;", "Assigning to rvalue", {
+				sourceType: "script"
+			});
+			expectBothThrow('"use strict"; eval = 1;', "Assigning to eval", {
+				sourceType: "script"
+			});
+			expectBothThrow(
+				"[a += 1] = x;",
+				"Only '=' operator can be used for specifying default value."
+			);
+			expectBothThrow("(a.b) => 1;", "Assigning to rvalue");
+			expectBothThrow("({ ...{ a } } = x);", "Unexpected token");
+			expectBothThrow(
+				"({ get g() {} } = x);",
+				"Object pattern can't contain getter or setter"
+			);
+			expectBothThrow(
+				"[...a = 1] = x;",
+				"Rest elements cannot have a default value"
+			);
+			expectBothThrow(
+				"async (await) => 1;",
+				"Cannot use 'await' as identifier inside an async function",
+				{ sourceType: "script" }
+			);
+			// the pinned-owner delegation: foreign children only the facade sees
+			expectBothThrow("[class {}] = x;", "Assigning to rvalue");
+			expectBothThrow("({a: class {}} = x);", "Assigning to rvalue");
+			// valid conversions across the same arms
+			expectBothParse("({ a, b: [c, ...d], e = 1, ...rest } = x);");
+			expectBothParse("[p, , q = 1, [r], { s }] = y;");
+			expectBothParse("for (a.b of c);", { sourceType: "script" });
+		});
+
+		it("keeps acorn's property-value and accessor error surface", () => {
+			expectBothThrow("({*g: 1});", "Unexpected token");
+			expectBothThrow("const {m(){}} = x;", "Unexpected token");
+			expectBothThrow(
+				"({set s() {}});",
+				"setter should have exactly one param"
+			);
+			expectBothThrow("({get g(a) {}});", "getter should have no params");
+			expectBothThrow("({set s(...r) {}});", "Setter cannot use rest params");
+			expectBothThrow("({*a});", "Unexpected token");
+			expectBothThrow("({1});", "Unexpected token");
+			expectBothThrow("({async get x() {}});", "Unexpected token");
+			expectBothParse("({await} = x);", { sourceType: "script" });
+			expectBothParse("o = {async m() {}, *g() {}, [k]: 1, sh};", {
+				sourceType: "script"
+			});
+		});
+
+		it("polices `__proto__` inits from the parse-time stash", () => {
+			expectBothThrow(
+				"({__proto__: 1, __proto__: 2});",
+				"Redefinition of __proto__ property"
+			);
+			expectBothThrow(
+				'({"__proto__": 1, __proto__: 2});',
+				"Redefinition of __proto__ property"
+			);
+			// destructuring double-proto is legal (the record is cleared)
+			expectBothParse("({__proto__: a, __proto__: b} = c);");
+			// computed, method and shorthand keys are exempt like in acorn
+			expectBothParse('({["__proto__"]: 1, __proto__: 2});');
+			expectBothParse("({__proto__(){}, __proto__: 1});");
+			expectBothParse("({__proto__, __proto__: 1});", {
+				sourceType: "script"
+			});
+			// a spread between inits must not leak the previous key's stash
+			expectBothParse("({__proto__: 1, ...rest});");
+			// without a destructuring record the clash raises directly
+			expectBothThrow(
+				"t = 1 + {__proto__: 1, __proto__: 2};",
+				"Redefinition of __proto__ property"
+			);
+		});
+
+		it("keeps delete guards over raw refs", () => {
+			expectBothThrow('"use strict"; delete x;', "Deleting local variable", {
+				sourceType: "script"
+			});
+			expectBothThrow(
+				"class C { #p; m() { delete this.#p; } }",
+				"Private fields can not be deleted"
+			);
+			expectBothThrow(
+				"class C { #p; m() { delete (this?.#p); } }",
+				"Private fields can not be deleted"
+			);
+			expectBothParse("delete a.b; delete c;", { sourceType: "script" });
+			// preserveParens wraps the target; the guards unwrap it
+			expectBothThrow('"use strict"; delete (x);', "Deleting local variable", {
+				sourceType: "script",
+				preserveParens: true
+			});
+			expectBothThrow(
+				"class C { #p; m() { delete ((this.#p)); } }",
+				"Private fields can not be deleted",
+				{ preserveParens: true }
+			);
+		});
+
+		it("keeps loop-head guards over raw refs", () => {
+			expectBothThrow("for (async of [1]);", "Unexpected token");
+			// a newline defeats the async-arrow probe, leaving the of-guard
+			expectBothThrow("for (async\nof [1]);", "Unexpected token");
+			expectBothThrow(
+				"for (let.a of b);",
+				"The left-hand side of a for-of loop may not start with 'let'.",
+				{ sourceType: "script" }
+			);
+			expectBothThrow(
+				"{ using x; }",
+				"Missing initializer in using declaration",
+				{ sourceType: "script" }
+			);
+		});
+
+		it("keeps the ES6-only trailing-rest restriction", () => {
+			// array-level rest (checked inline in the conversion arm)
+			expectBothThrow("([x, ...[b]]) => 0;", "Unexpected token", {
+				ecmaVersion: 6,
+				sourceType: "script"
+			});
+			// paren-level rest (checked in `toAssignableList`)
+			expectBothThrow("(a, ...[b]) => 0;", "Unexpected token", {
+				ecmaVersion: 6,
+				sourceType: "script"
+			});
+			expectBothParse("(a, ...b) => 0;", {
+				ecmaVersion: 6,
+				sourceType: "script"
+			});
+			expectBothParse("([a,,]) => 0;", {
+				ecmaVersion: 6,
+				sourceType: "script"
+			});
+		});
+
+		it("materializes raw refs at foreign seams", () => {
+			// call arguments with a foreign element pin a materialized list
+			const call = parseOn("f(a, class {});").body[0].expression;
+			expect(call.arguments[0].name).toBe("a");
+			expect(call.arguments[1].type).toBe("ClassExpression");
+			// template with id and foreign expressions materializes both lists
+			// eslint-disable-next-line no-template-curly-in-string
+			const template = parseOn("t = `a${q}${class E {}}b`;").body[0].expression
+				.right;
+			expect(template.expressions[0].name).toBe("q");
+			expect(template.expressions[1].type).toBe("ClassExpression");
+			expect(template.quasis).toHaveLength(3);
+			// conditional with a foreign alternate memoizes onto the owner
+			const cond = parseOn("x = c ? 1 : class {};").body[0].expression.right;
+			expect(cond.alternate.type).toBe("ClassExpression");
+			// foreign kid0 children: private-in left, unary foreign argument
+			expectBothParse("class C { #p; m(o) { return #p in o; } }");
+			expectBothParse("t = typeof class {};");
+			// tagged templates hold materialized tag and quasi
+			// eslint-disable-next-line no-template-curly-in-string
+			const tagged = parseOn("f`a${b}c`;").body[0].expression;
+			expect(tagged.tag.name).toBe("f");
+			expect(tagged.quasi.expressions[0].name).toBe("b");
+			// new.target and import.meta serve materialized ident children
+			const meta = parseOn("function f() { return new.target; }").body[0].body
+				.body[0].argument;
+			expect(meta.property.name).toBe("target");
+			const importMeta = parseOn("import.meta.url;").body[0].expression;
+			expect(importMeta.object.property.name).toBe("meta");
+			expectBothThrow(
+				"import.foo;",
+				"The only valid meta property for import is 'import.meta'"
+			);
+			expectBothThrow(
+				"import.met\\u0061;",
+				"'import.meta' must not contain escaped characters"
+			);
+		});
+
+		it("materializes import/export seams and phase imports", () => {
+			const imp = parseOn(
+				'import d, { a, b as c } from "m"; import * as ns from "n";'
+			);
+			expect(imp.body[0].specifiers[0].local.name).toBe("d");
+			expect(imp.body[0].specifiers[1].imported.name).toBe("a");
+			expect(imp.body[0].specifiers[2].local.name).toBe("c");
+			expect(imp.body[0].source.value).toBe("m");
+			expect(imp.body[1].specifiers[0].local.name).toBe("ns");
+			const attrs = parseOn(
+				'import j from "m" with { type: "json", "s": "t" };'
+			).body[0].attributes;
+			expect(attrs[0].key.name).toBe("type");
+			expect(attrs[1].key.value).toBe("s");
+			expectBothThrow('import j from "m" with { t: 1 };', "Unexpected token");
+			const dyn = parseOn("p = import(spec, { with: {} });").body[0].expression
+				.right;
+			expect(dyn.source.name).toBe("spec");
+			expect(dyn.options.type).toBe("ObjectExpression");
+			const exp = parseOn(
+				'let a; export { a as bee, a as "s-name" }; export * as all from "o"; export default a;'
+			);
+			expect(exp.body[1].specifiers[0].exported.name).toBe("bee");
+			expect(exp.body[1].specifiers[1].exported.value).toBe("s-name");
+			expect(exp.body[2].exported.name).toBe("all");
+			expect(exp.body[2].source.value).toBe("o");
+			expect(exp.body[3].declaration.name).toBe("a");
+			expectBothThrow(
+				'let a; export {a as "\uD800"};',
+				"An export name cannot include a lone surrogate."
+			);
+			const phase = parseOn('import defer * as ns from "m";', {
+				importPhases: true
+			});
+			expect(phase.body[0].phase).toBe("defer");
+			expect(phase.body[0].specifiers[0].local.name).toBe("ns");
+			// `defer` as a plain default import name, not a phase
+			const noPhase = parseOn('import defer from "m";', {
+				importPhases: true
+			});
+			expect(noPhase.body[0].specifiers[0].local.name).toBe("defer");
+		});
+
+		it("grows the flat buffer from an id-flow list", () => {
+			const elements = Array.from({ length: 600 }, () => "1").join(",");
+			const ast = parseOn(`x = [${elements}];`);
+			expect(ast.body[0].expression.right.elements).toHaveLength(600);
+		});
+
+		it("detaches a still-shared flat view when trimming the columns", () => {
+			// a separator-dense string inflates the density estimate (forcing
+			// a trim) while the big list keeps the never-grown flat view over
+			// half-full, so only the trim would pin the original buffer
+			const elements = Array.from({ length: 2500 }, () => "1").join(",");
+			const ast = parseOn(`s = "${"(".repeat(5000)}"; x = [${elements}];`);
+			expect(ast.body[1].expression.right.elements).toHaveLength(2500);
+		});
+
+		it("delegates to acorn's node paths without lazy mode", () => {
+			const ast = /** @type {EXPECTED_ANY} */ (
+				WebpackParser.parse(
+					'import d, { a as b } from "m" with { t: "j" }; import * as ns from "n"; import.meta; export { d }; ({ get g() { return 1; }, set s(v) {} }); (x, y) => x;',
+					/** @type {import("acorn").Options} */ (
+						/** @type {unknown} */ ({
+							ecmaVersion: "latest",
+							sourceType: "module"
+						})
+					)
+				)
+			);
+			expect(ast.body[0].specifiers[0].local.name).toBe("d");
+			expect(ast.body[1].specifiers[0].local.name).toBe("ns");
+			expect(ast.body[2].expression.property.name).toBe("meta");
+		});
+
+		it("materializes for an overriding checkPropClash subclass", () => {
+			/** @type {string[]} */
+			const seen = [];
+			class ClashProbe extends WebpackParser {
+				/**
+				 * @param {EXPECTED_ANY} prop property node
+				 */
+				checkPropClash(prop) {
+					seen.push(prop.key.name || String(prop.key.value));
+				}
+			}
+			ClashProbe.parse(
+				"o = { p: 1, q: 2 };",
+				/** @type {import("acorn").Options} */ (
+					/** @type {unknown} */ ({
+						ecmaVersion: "latest",
+						sourceType: "module",
+						lazyNodes: true
+					})
+				)
+			);
+			expect(seen).toEqual(["p", "q"]);
+		});
+	});
+
+	// The SoA-migration correctness gate: lazy-mode output must be
+	// indistinguishable from plain acorn on real-world sources.
+	describe("corpus equivalence", () => {
+		const fs = require("fs");
+		const path = require("path");
+		const acorn = require("acorn");
+		const { WebpackParser } = require("../lib/javascript/syntax");
+
+		/**
+		 * @param {string} pkg package name
+		 * @param {string} rel path within the package
+		 * @returns {string} file contents
+		 */
+		const readPkgFile = (pkg, rel) =>
+			fs.readFileSync(
+				path.join(path.dirname(require.resolve(`${pkg}/package.json`)), rel),
+				"utf8"
+			);
+
+		/** @type {[name: string, sourceType: "script" | "module", read: () => string][]} */
+		const corpus = [
+			[
+				"typescript.js",
+				"script",
+				() =>
+					fs.readFileSync(
+						require.resolve("typescript/lib/typescript.js"),
+						"utf8"
+					)
+			],
+			// three's `exports` map hides package.json — resolve the main entry
+			// (build/three.cjs) and read its siblings
+			[
+				"three.module.js",
+				"module",
+				() =>
+					fs.readFileSync(
+						path.join(
+							path.dirname(require.resolve("three")),
+							"three.module.js"
+						),
+						"utf8"
+					)
+			],
+			[
+				"three.module.min.js",
+				"module",
+				() =>
+					fs.readFileSync(
+						path.join(
+							path.dirname(require.resolve("three")),
+							"three.module.min.js"
+						),
+						"utf8"
+					)
+			],
+			[
+				"react.development.js",
+				"script",
+				() => readPkgFile("react", "cjs/react.development.js")
+			],
+			[
+				"react-dom.development.js",
+				"script",
+				() => readPkgFile("react-dom", "cjs/react-dom.development.js")
+			],
+			["lodash.js", "script", () => readPkgFile("lodash", "lodash.js")],
+			["lodash-es", "module", () => readPkgFile("lodash-es", "lodash.js")]
+		];
+
+		// lazy nodes serve `range` from a prototype getter equal to
+		// [start, end] by construction and never serve `loc`
+		const SKIPPED_KEYS = new Set(["range", "loc"]);
+
+		/**
+		 * Iterative deep compare (recursion would overflow on minified inputs);
+		 * throws on the first mismatch since a jest matcher per node would
+		 * dominate the runtime on multi-million-node fixtures.
+		 * @param {unknown} actual lazy-mode AST root
+		 * @param {unknown} expected acorn AST root
+		 */
+		const expectSameAst = (actual, expected) => {
+			/** @type {[unknown, unknown, string][]} */
+			const stack = [[actual, expected, "Program"]];
+			/** @type {{ type: string, start: number }} */
+			let ctx = /** @type {EXPECTED_ANY} */ (expected);
+			while (stack.length > 0) {
+				const [a, e, key] = /** @type {[unknown, unknown, string]} */ (
+					stack.pop()
+				);
+				const at = `${ctx.type}@${ctx.start} .${key}`;
+				if (e === null || typeof e !== "object") {
+					if (!Object.is(a, e)) {
+						throw new Error(`${at}: expected ${String(e)}, got ${String(a)}`);
+					}
+					continue;
+				}
+				if (e instanceof RegExp) {
+					if (!(a instanceof RegExp) || String(a) !== String(e)) {
+						throw new Error(`${at}: expected ${e}, got ${String(a)}`);
+					}
+					continue;
+				}
+				if (Array.isArray(e)) {
+					if (!Array.isArray(a) || a.length !== e.length) {
+						throw new Error(
+							`${at}: expected array of ${e.length}, got ${
+								Array.isArray(a) ? `array of ${a.length}` : typeof a
+							}`
+						);
+					}
+					for (let i = e.length - 1; i >= 0; i--) stack.push([a[i], e[i], key]);
+					continue;
+				}
+				if (typeof a !== "object" || a === null || Array.isArray(a)) {
+					throw new Error(`${at}: expected object, got ${String(a)}`);
+				}
+				const eObj = /** @type {Record<string, unknown>} */ (e);
+				const aObj = /** @type {Record<string, unknown>} */ (a);
+				if (typeof eObj.type === "string") {
+					ctx = /** @type {{ type: string, start: number }} */ (e);
+				}
+				// SoA facades serve children from non-enumerable prototype
+				// getters (the documented C0 trade-off), so presence uses `in`
+				// and only own enumerable keys are checked for extras — for
+				// plain lazy nodes both checks match the old own-key equality
+				for (const k in eObj) {
+					if (SKIPPED_KEYS.has(k)) continue;
+					if (!(k in aObj)) {
+						throw new Error(`${at}: missing key ${k}`);
+					}
+					stack.push([aObj[k], eObj[k], k]);
+				}
+				for (const k in aObj) {
+					if (
+						!SKIPPED_KEYS.has(k) &&
+						!Object.prototype.hasOwnProperty.call(eObj, k)
+					) {
+						throw new Error(`${at}: extra key ${k}`);
+					}
+				}
+			}
+		};
+
+		for (const [name, sourceType, read] of corpus) {
+			for (const soa of [false, true]) {
+				it(`should produce acorn's AST for ${name}${
+					soa ? " (SoA backend)" : ""
+				}`, () => {
+					const code = read();
+					/** @type {import("acorn").Comment[]} */
+					const expectedComments = [];
+					const expected = acorn.parse(code, {
+						ecmaVersion: "latest",
+						sourceType,
+						allowHashBang: true,
+						allowReturnOutsideFunction: sourceType === "script",
+						onComment: expectedComments
+					});
+					/** @type {import("../lib/javascript/JavascriptParser").Comment[]} */
+					const actualComments = [];
+					const actual = WebpackParser.parse(
+						code,
+						/** @type {import("acorn").Options} */ (
+							/** @type {unknown} */ ({
+								ecmaVersion: "latest",
+								sourceType,
+								allowHashBang: true,
+								allowReturnOutsideFunction: sourceType === "script",
+								lazyNodes: true,
+								estree: !soa,
+								lazyComments: actualComments
+							})
+						)
+					);
+					if (soa) {
+						// prove the column backend actually engaged (module-only
+						// fixtures keep acorn-built import/export statements, so
+						// probe their emitted children too)
+						expect(
+							/** @type {EXPECTED_ANY} */ (actual).body.some(
+								(/** @type {EXPECTED_ANY} */ s) =>
+									SoaAst.isFacade(s) ||
+									SoaAst.isFacade(s.source) ||
+									(s.specifiers &&
+										s.specifiers.some((/** @type {EXPECTED_ANY} */ sp) =>
+											SoaAst.isFacade(sp)
+										))
+							)
+						).toBe(true);
+					}
+					expectSameAst(actual, expected);
+					expect(actualComments).toHaveLength(expectedComments.length);
+					for (let i = 0; i < expectedComments.length; i++) {
+						const e = expectedComments[i];
+						const a = actualComments[i];
+						if (
+							a.type !== e.type ||
+							a.start !== e.start ||
+							a.end !== e.end ||
+							a.value !== e.value
+						) {
+							throw new Error(`comment ${i} (${e.type}@${e.start}) differs`);
+						}
+					}
+				}, 180000);
+			}
+		}
 	});
 });

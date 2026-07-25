@@ -6,6 +6,21 @@
 const BasicEvaluatedExpression = require("../lib/javascript/BasicEvaluatedExpression");
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
 
+/**
+ * Backend selector for A/B tests: the built-in parser is always SoA, so the
+ * object-node side routes through the custom-parse seam like user parse
+ * functions do.
+ * @param {boolean} soa backend
+ * @returns {ConstructorParameters<typeof JavascriptParser>[1]} parser options
+ */
+const backendOptions = (soa) =>
+	soa
+		? {}
+		: {
+				parse: (code, options) =>
+					JavascriptParser._parse(code, { ...options, estree: true })
+			};
+
 describe("JavascriptParser", () => {
 	/* eslint-disable no-unused-vars */
 	/** @type {EXPECTED_ANY} */ let abc;
@@ -674,27 +689,53 @@ describe("JavascriptParser", () => {
 				if (evalExpr.isRegExp()) result.push(`regExp=${evalExpr.regExp}`);
 				if (evalExpr.isConditional()) {
 					result.push(
-						`options=[${/** @type {import("../lib/javascript/BasicEvaluatedExpression")[]} */ (evalExpr.options).map(evalExprToString).join("],[")}]`
+						`options=[${
+							/** @type {import("../lib/javascript/BasicEvaluatedExpression")[]} */ (
+								evalExpr.options
+							)
+								.map(evalExprToString)
+								.join("],[")
+						}]`
 					);
 				}
 				if (evalExpr.isArray()) {
 					result.push(
-						`items=[${/** @type {import("../lib/javascript/BasicEvaluatedExpression")[]} */ (evalExpr.items).map(evalExprToString).join("],[")}]`
+						`items=[${
+							/** @type {import("../lib/javascript/BasicEvaluatedExpression")[]} */ (
+								evalExpr.items
+							)
+								.map(evalExprToString)
+								.join("],[")
+						}]`
 					);
 				}
 				if (evalExpr.isConstArray()) {
 					result.push(
-						`array=[${/** @type {(string | number | boolean | null | RegExp | bigint)[]} */ (evalExpr.array).join("],[")}]`
+						`array=[${
+							/** @type {(string | number | boolean | null | RegExp | bigint)[]} */ (
+								evalExpr.array
+							).join("],[")
+						}]`
 					);
 				}
 				if (evalExpr.isTemplateString()) {
 					result.push(
-						`template=[${/** @type {import("../lib/javascript/BasicEvaluatedExpression")[]} */ (evalExpr.quasis).map(evalExprToString).join("],[")}]`
+						`template=[${
+							/** @type {import("../lib/javascript/BasicEvaluatedExpression")[]} */ (
+								evalExpr.quasis
+							)
+								.map(evalExprToString)
+								.join("],[")
+						}]`
 					);
 				}
 				if (evalExpr.isWrapped()) {
 					result.push(
-						`wrapped=[${evalExprToString(/** @type {import("../lib/javascript/BasicEvaluatedExpression")} */ (evalExpr.prefix))}]+[${evalExprToString(
+						`wrapped=[${evalExprToString(
+							/** @type {import("../lib/javascript/BasicEvaluatedExpression")} */ (
+								evalExpr.prefix
+							)
+						)}]+[${evalExprToString(
 							/** @type {import("../lib/javascript/BasicEvaluatedExpression")} */ (
 								evalExpr.postfix
 							)
@@ -1216,5 +1257,1866 @@ describe("JavascriptParser", () => {
 			const noAsi = parse("function f() { return /* x */ 1 }");
 			expect(noAsi.body[0].body.body[0].argument.value).toBe(1);
 		});
+	});
+
+	describe("walk hook probing", () => {
+		it("should fire expression hooks for tapped identifiers only", () => {
+			const parser = new JavascriptParser("auto");
+			/** @type {string[]} */
+			const calls = [];
+			parser.hooks.expression.for("tapped").tap("test", (expr) => {
+				calls.push(/** @type {{ name: string }} */ (expr).name);
+			});
+			parser.parse(
+				"tapped; untapped; tapped;",
+				/** @type {import("../lib/Parser").ParserState} */ ({})
+			);
+			expect(calls).toEqual(["tapped", "tapped"]);
+		});
+
+		it("should serve members, optionals and ranges to expressionMemberChain taps", () => {
+			const parser = new JavascriptParser("auto");
+			/** @type {EXPECTED_ANY} */
+			let seen;
+			parser.hooks.expressionMemberChain
+				.for("obj")
+				.tap("test", (expr, members, membersOptionals, memberRanges) => {
+					seen = {
+						members: [...members],
+						membersOptionals: [...membersOptionals],
+						memberRanges: memberRanges.map((r) => [...r])
+					};
+					return true;
+				});
+			parser.parse(
+				"obj.a?.b;",
+				/** @type {import("../lib/Parser").ParserState} */ ({})
+			);
+			expect(seen.members).toEqual(["a", "b"]);
+			expect(seen.membersOptionals).toEqual([false, true]);
+			expect(seen.memberRanges).toEqual([
+				[0, 3],
+				[0, 5]
+			]);
+		});
+
+		it("should keep extractMemberExpressionChain complete for direct callers", () => {
+			const parser = new JavascriptParser("auto");
+			/** @type {EXPECTED_ANY} */
+			let chain;
+			parser.hooks.statement.tap("test", (statement) => {
+				if (statement.type === "ExpressionStatement") {
+					chain = parser.extractMemberExpressionChain(
+						/** @type {EXPECTED_ANY} */ (statement).expression
+					);
+				}
+			});
+			parser.parse(
+				'a.b["c"];',
+				/** @type {import("../lib/Parser").ParserState} */ ({})
+			);
+			expect(chain.members).toEqual(["c", "b"]);
+			expect(chain.membersOptionals).toEqual([false, false]);
+			expect(chain.memberRanges).toEqual([
+				[0, 3],
+				[0, 1]
+			]);
+			expect(chain.object.name).toBe("a");
+		});
+	});
+
+	// The Phase D correctness gate (SOA_MIGRATION_PLAN.md): walking the SoA
+	// facade tree must drive exactly the hook call sequence the object tree
+	// drives, node for node.
+	describe("SoA walk equivalence (hook sequences)", () => {
+		const fs = require("fs");
+		const path = require("path");
+		const { SoaAst } = require("../lib/javascript/syntax");
+
+		/**
+		 * Over-approximates every identifier-ish word so the name-keyed
+		 * HookMaps can be tapped exhaustively (keywords never fire).
+		 * @param {string} code source
+		 * @returns {Set<string>} candidate names
+		 */
+		const collectNames = (code) => {
+			/** @type {Set<string>} */
+			const names = new Set();
+			for (const match of code.matchAll(/[$A-Z_a-z][$\w]*/g)) {
+				names.add(match[0]);
+			}
+			return names;
+		};
+
+		/**
+		 * Walks `code` with every walk-driven hook recording, and returns the
+		 * event sequence.
+		 * @param {string} code source
+		 * @param {Set<string>} names names to tap on the name-keyed HookMaps
+		 * @param {boolean} soa whether to emit into the column store
+		 * @returns {{ events: string[], sawFacade: boolean }} recorded walk
+		 */
+		const recordWalk = (code, names, soa) => {
+			const parser = new JavascriptParser("auto", backendOptions(soa));
+			/** @type {string[]} */
+			const events = [];
+			let sawFacade = false;
+			/**
+			 * @param {string} kind event label
+			 * @returns {(node: EXPECTED_ANY) => void} recording tap
+			 */
+			const record = (kind) => (node) => {
+				events.push(
+					node && node.range
+						? `${kind}:${node.type}@${node.range[0]}-${node.range[1]}`
+						: `${kind}:${node && node.type}`
+				);
+			};
+			parser.hooks.program.tap("test", (ast) => {
+				events.push(`program:${ast.body.length}`);
+				sawFacade = /** @type {EXPECTED_ANY} */ (ast).body.some(
+					(/** @type {EXPECTED_ANY} */ s) =>
+						SoaAst.isFacade(s) ||
+						SoaAst.isFacade(s.source) ||
+						(s.specifiers &&
+							s.specifiers.some((/** @type {EXPECTED_ANY} */ sp) =>
+								SoaAst.isFacade(sp)
+							))
+				);
+			});
+			parser.hooks.finish.tap("test", (ast) => {
+				events.push(`finish:${ast.body.length}`);
+			});
+			parser.hooks.statement.tap("test", record("statement"));
+			parser.hooks.statementIf.tap("test", record("if"));
+			parser.hooks.importCall.tap("test", record("importCall"));
+			parser.hooks.topLevelAwait.tap("test", record("topLevelAwait"));
+			for (const name of names) {
+				parser.hooks.expression.for(name).tap("test", record(`expr ${name}`));
+				parser.hooks.call.for(name).tap("test", record(`call ${name}`));
+				parser.hooks.new.for(name).tap("test", record(`new ${name}`));
+				parser.hooks.expressionMemberChain
+					.for(name)
+					.tap("test", record(`chain ${name}`));
+				parser.hooks.callMemberChain
+					.for(name)
+					.tap("test", record(`callChain ${name}`));
+			}
+			parser.parse(
+				code,
+				/** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			return { events, sawFacade };
+		};
+
+		/**
+		 * @param {string} code source
+		 * @returns {void} asserts both backends drive identical sequences
+		 */
+		const expectSameWalk = (code) => {
+			const names = collectNames(code);
+			const object = recordWalk(code, names, false);
+			const soa = recordWalk(code, names, true);
+			expect(object.sawFacade).toBe(false);
+			expect(soa.sawFacade).toBe(true);
+			expect(soa.events.length).toBeGreaterThan(0);
+			// compare via join so a jest diff stays readable on mismatch
+			expect(soa.events.join("\n")).toBe(object.events.join("\n"));
+		};
+
+		it("should drive identical hook sequences over the full grammar", () => {
+			expectSameWalk(
+				`import d, { a as b } from "m";
+				import * as ns from "n";
+				export const answer = 42;
+				export { b as c };
+				export default function named(p = 1, ...rest) { return p; }
+				class K extends ns.Base {
+					static #priv = 1;
+					get g() { return super.x; }
+					static { K.ready = true; }
+					pv() { return K.#priv; }
+					[d + "computed"](q) { new.target; return q ?? this; }
+				}
+				label: for (let i = 0, j = 10; i < j; i++) {
+					if (i % 2) continue label;
+					else if (i > 5) break label;
+				}
+				for (const k in ns) delete ns[k];
+				for await (const v of ns.gen()) await v;
+				while (b) do b--; while (b > 0);
+				switch (d) { case 1: b(); break; default: ; }
+				try { throw new Error("x"); } catch { debugger; } finally { }
+				const { p = 1, ...restObj } = ns, [x, , ...ys] = [1, 2, 3];
+				let t = \`a\${b}c\${d.e(1)}\`;
+				t = tag\`only\${b}\`;
+				b &&= d; b ||= d; b ??= d;
+				(function iife() {})();
+				(async () => { await import("dyn"); })();
+				a.b?.c?.(); ns["computed"].deep;
+				typeof b === "string" ? void 0 : ~x;
+				obj: { b; }
+				const re = /ab+c/gu, big = 12345678901234567890n;`
+			);
+		});
+
+		// A non-pinned top level (no import/export/class at module scope) whose
+		// statements the id-walk descends into, so the id-based walk core —
+		// function/arrow bodies, block/if/while/do-while, return/throw,
+		// array/spread/update and column-resolved identifiers — drives the run
+		// rather than the object fallback.
+		it("should drive identical hook sequences through the id-walk core", () => {
+			// every id-native expression handler is a direct child of an id-native
+			// statement (bare statement / return / array), never buried in a
+			// still-fallback var declarator, so the id walk actually reaches it.
+			expectSameWalk(
+				`function outer(a, b, c) {
+					if (a) b; else a;
+					while (c) c--;
+					do a++; while (a < 10);
+					for (;;) { break; }
+					[a, b, , ...c];
+					a++;
+					--b;
+					;
+					debugger;
+					(function rec(n) { return rec; });
+					(function () {});
+					(x => x + 1);
+					(y => { return y; });
+					1;
+					a;
+					return a;
+				}
+				function term(a) { return a; a(); }
+				function pinned() { class C {} C; }
+				function foreignChild() { return class {}; }
+				[class {}];
+				outer(1, 2, 3);
+				term(4);
+				pinned();
+				foreignChild();
+				var g = outer;
+				g;
+				\\u0067;
+				throw g;`
+			);
+		});
+
+		// The D2 expression cluster (member / call / new / binary / logical /
+		// conditional / assignment / unary / sequence / object / template /
+		// chain / yield), each reached as a direct child of an id-native
+		// statement so the id walk descends into it rather than the object
+		// fallback.
+		it("should drive identical hook sequences through the D2 expression cluster", () => {
+			expectSameWalk(
+				`function d2(a, b, c) {
+					a.b.c;
+					a["b"].c;
+					a.b?.c;
+					a.b().c.d;
+					foo(a, b.c, ...c);
+					a.m(b, c);
+					new a.b(c, d);
+					new C();
+					a + b * c - d;
+					a && b || c;
+					a ? b : c;
+					a ? b.c : d.e;
+					x = a;
+					x = a.b;
+					x.y = b;
+					({ a } = c);
+					[a, b] = c;
+					x += a.b(c);
+					typeof a;
+					typeof a?.b;
+					!a;
+					delete a.b;
+					(a, b, c);
+					a(), b(c);
+					({ a, b: c, [d]: e, m() {}, ...a });
+					\`t\${a}u\${b.c}v\`;
+					a?.b?.();
+					return a.b(c);
+				}
+				function* g(a) { yield a; yield* a.b; return; }
+				d2(1, 2, 3);
+				g(4);
+				this.x;
+				[a.b, foo(c), a ? b : c, -a, a || b];`
+			);
+		});
+
+		// Variable declarations id-walk their initializers, so the D2
+		// expression handlers fire in their most common host (var/let/const
+		// inits) both at a non-pinned top level and inside id-walked bodies.
+		it("should drive identical hook sequences through variable declarations", () => {
+			expectSameWalk(
+				`var a = req("x"), b = a.b.c, c = a.m(b);
+				let d = a ? b : c, e = { p: a, q: b.c };
+				const f = a + b, g = h;
+				var { x, y: z } = a, [p, ...q] = b;
+				function uses(h) {
+					var i = h.j(), k = new h.L(i);
+					const m = i && k || h;
+					let n = req(i);
+					return n;
+				}
+				uses(a);`
+			);
+		});
+
+		// The D3 statement tail (for / for-in / for-of / switch / try-catch-
+		// finally / labeled / with / break / continue), each shape reached both
+		// at a non-pinned top level and inside an id-walked function body.
+		// `with` needs sloppy mode, so the fixture stays a plain script.
+		it("should drive identical hook sequences through the D3 statement tail", () => {
+			expectSameWalk(
+				`function d3(a, b, c) {
+					for (var i = 0; i < c; i++) a(i);
+					for (let j = 0, k = a.len(); j < k; j++) { b(j); }
+					for (;;) { break; }
+					for (x of a) b(x);
+					for (const v of a.list()) { v.m(); }
+					for (y in a.obj) delete a.obj[y];
+					for (const k2 in b) k2;
+					switch (a.kind()) { case b.c: a(); break; case 2: default: c(); }
+					switch (a) {}
+					switch (a) { case 1: class P {} P; }
+					outer: while (a) { inner: for (;;) { continue outer; } }
+					lbl: { a.tick(); }
+					for (i = 0; i < c; i++) a(i);
+					for (tag\`t\`; a; ) break;
+					try { a(); } catch (e) { e.m(); } finally { b(); }
+					try { a(); } catch { c(); }
+					try { throw a; } catch (e) { throw e; } finally { c(); }
+					try { return a; } catch ({ msg }) { msg; }
+					try { try { a(); } finally { b(); } } catch (e) { e; }
+					with (a.scope) { b; }
+					this;
+					import("dyn3");
+					return a;
+				}
+				d3(f1, f2, f3);
+				switch (f1.tag) { case 1: var hoisted = f2(); }
+				hoisted;
+				try { d3(); } finally { f2.done(); }
+				lab: for (var z = 0, w = f1.n; z < w; z++) {
+					if (z) continue lab; else break lab;
+				}
+				for (var m1 in f1) m1;
+				for (var m2 of f2.items()) m2;
+				with (f3) { f1; }`
+			);
+		});
+
+		// The column-native member/call chain probe: every root and member
+		// shape the probe classifies, on defined locals (probe answers) and on
+		// free roots (facade path), asserted equal across both backends.
+		it("should drive identical hook sequences through the chain probe shapes", () => {
+			expectSameWalk(
+				`function probe(v, k) {
+					v.m1;
+					v.a.b.c;
+					v["s"].w;
+					v[\`t\`].w2;
+					v[k].w3;
+					v().a.b;
+					"abc".length;
+					(class Q2 {}).nm;
+					(function () { this.x2; }).call(v);
+					(undefined)(v);
+					v(1, 2);
+				}
+				probe(o1, o2);
+				o1.free1.free2;
+				o1["s2"].free3;`
+			);
+		});
+
+		// The id-based pre-walk passes: hoisting (`var`/function declarations)
+		// and block scoping (`let`/`const`, destructuring collection) run on
+		// the columns. Every pre-walking statement shape descends here, plus
+		// the foreign fallbacks (for-head declarations, pinned lists,
+		// anonymous default exports, tagged-template statements).
+		it("should drive identical hook sequences through the id pre-walk passes", () => {
+			expectSameWalk(
+				`import "pm";
+				export default function () { inner1; }
+				function pre1(a, b) {
+					if (a) var h1 = 1; else var h2 = 2;
+					h1; h2;
+					while (a) { var h3 = 3; let s1 = 1; s1; }
+					do { var h4 = b; } while (a);
+					plab: { var h5 = 1; }
+					try { var h6 = 1; } catch (er) { var h7 = 2; } finally { var h8 = 3; }
+					switch (a) { case 1: var h9 = 1; let s2 = 2; s2; }
+					for (var i1 = 0; i1 < a; i1++) { var h10 = i1; }
+					for (let i2 in a) { var h11 = i2; }
+					for (const i3 of a) { var h12 = i3; }
+					for ([w1, w2] of a) { w1; }
+					h3; h4; h5; h6; h7; h8; h9; h10; h11; h12;
+					tg\`plain\`;
+					({ d1 } = a);
+					[d2] = a;
+					b.c = 1;
+					const { p1, q1: [r1] } = a;
+					var v1, v2 = b;
+					let l1 = 1, [l2] = a;
+					l1; l2; p1; r1; v1; v2;
+				}
+				pre1(g1, g2);
+				var top1 = g1;
+				{ class Pin1 {} var h13 = 1; let s3 = 2; s3; }
+				h13; top1;`
+			);
+		});
+
+		// The id pre-walk's hook seams: broadcast/typed pre-statement bails,
+		// the `preDeclarator` fallback, destructuring collection, and the
+		// name-keyed pattern / var-declaration hooks that decide whether an
+		// identifier facade materializes — asserted equal across backends.
+		it("should match the object pre-walk on hook bails and name-keyed declarations", () => {
+			/**
+			 * @param {string} code source
+			 * @param {boolean} soa backend
+			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
+			 * @returns {string[]} recorded events
+			 */
+			const walk = (code, soa, setup) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
+				/** @type {string[]} */
+				const events = [];
+				setup(parser, events);
+				// a defined `probe` silences this hook, a skipped define keeps it
+				parser.hooks.expression.for("probe").tap("t", () => {
+					events.push("expr probe");
+				});
+				parser.parse(
+					code,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return events;
+			};
+			/**
+			 * @param {string} code source
+			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
+			 * @returns {void} asserts both backends agree
+			 */
+			const same = (code, setup) => {
+				expect(walk(code, true, setup).join("\n")).toBe(
+					walk(code, false, setup).join("\n")
+				);
+			};
+			/**
+			 * @param {string[]} e events
+			 * @param {string} label event label
+			 * @returns {(node: EXPECTED_ANY) => void} recording tap
+			 */
+			const rec = (e, label) => (node) => {
+				e.push(`${label}@${node.range[0]}`);
+			};
+			/**
+			 * @param {string[]} e events
+			 * @param {string} label event label
+			 * @returns {(node: EXPECTED_ANY) => boolean} bailing tap
+			 */
+			const bail = (e, label) => (node) => {
+				e.push(`${label}@${node.range[0]}`);
+				return true;
+			};
+
+			const FIX =
+				"var probe; { let probe; probe; } function fn1() { var probe; probe; } fn1(); probe;";
+			// broadcast pre-statement observers fire for every statement
+			same(FIX, (p, e) => {
+				p.hooks.preStatement.tap("t", rec(e, "pre"));
+				p.hooks.blockPreStatement.tap("t", rec(e, "blockPre"));
+			});
+			// broadcast bails skip the declaration pre-walk → `probe` stays free
+			same(FIX, (p, e) => {
+				p.hooks.preStatement.tap("t", bail(e, "preBail"));
+			});
+			same(FIX, (p, e) => {
+				p.hooks.blockPreStatement.tap("t", bail(e, "blockPreBail"));
+			});
+			// type-keyed pre-statement hooks: observing and bailing
+			same(FIX, (p, e) => {
+				p.hooks.preStatementByType
+					.for("VariableDeclaration")
+					.tap("t", rec(e, "preVar"));
+				p.hooks.blockPreStatementByType
+					.for("VariableDeclaration")
+					.tap("t", rec(e, "blockPreVar"));
+			});
+			same(FIX, (p, e) => {
+				p.hooks.preStatementByType
+					.for("VariableDeclaration")
+					.tap("t", bail(e, "preVarBail"));
+			});
+			same(FIX, (p, e) => {
+				p.hooks.blockPreStatementByType
+					.for("VariableDeclaration")
+					.tap("t", bail(e, "blockPreVarBail"));
+			});
+			// a `preDeclarator` tap routes declarators through the object path
+			same(FIX, (p, e) => {
+				p.hooks.preDeclarator.tap("t", rec(e, "preDecl"));
+			});
+			same(FIX, (p, e) => {
+				p.hooks.preDeclarator.tap("t", bail(e, "preDeclBail"));
+			});
+			// name-keyed pattern hook: a bail skips the define, a pass defines
+			same(FIX, (p, e) => {
+				p.hooks.pattern.for("probe").tap("t", bail(e, "pattern"));
+			});
+			same(FIX, (p, e) => {
+				p.hooks.pattern.for("probe").tap("t", rec(e, "patternPass"));
+			});
+			// kind-keyed declaration hooks: handled (no define) per kind
+			same("var probe; probe;", (p, e) => {
+				p.hooks.varDeclarationVar.for("probe").tap("t", bail(e, "varVar"));
+			});
+			same("let probe; probe;", (p, e) => {
+				p.hooks.varDeclarationLet.for("probe").tap("t", bail(e, "varLet"));
+			});
+			same("const probe = 1; probe;", (p, e) => {
+				p.hooks.varDeclarationConst.for("probe").tap("t", bail(e, "varConst"));
+			});
+			same(
+				"async function f(res) { using probe = res(); probe; await using u2 = res(); u2; } f(other);",
+				(p, e) => {
+					p.hooks.varDeclarationUsing
+						.for("probe")
+						.tap("t", bail(e, "varUsing"));
+				}
+			);
+			// a passing kind hook falls through to the kind-agnostic hook
+			same("var probe; probe;", (p, e) => {
+				p.hooks.varDeclarationVar.for("probe").tap("t", rec(e, "varVarPass"));
+				p.hooks.varDeclaration.for("probe").tap("t", bail(e, "varDecl"));
+			});
+			same("var probe; probe;", (p, e) => {
+				p.hooks.varDeclaration.for("probe").tap("t", rec(e, "varDeclPass"));
+			});
+			// walk-side tap guards: guard collection and unused-statement pruning
+			same(
+				"function g1(a) { if (a) { probe; } else { probe; } } g1(x1);",
+				(p, e) => {
+					p.hooks.collectGuards.tap("t", (/** @type {EXPECTED_ANY} */ test) => {
+						e.push(`guards@${test.range[0]}`);
+					});
+				}
+			);
+			same("function g2(a) { return a; probe; var h1; } g2(x1);", (p, e) => {
+				p.hooks.terminate.tap("t", () => true);
+				p.hooks.unusedStatement.tap("t", bail(e, "unused"));
+			});
+			same("function g3(a) { return a; probe; } g3(x1);", (p, e) => {
+				p.hooks.terminate.tap("t", () => true);
+				p.hooks.unusedStatement.tap("t", rec(e, "unusedPass"));
+			});
+			// destructuring collection: statement-level assignment and declarator
+			same("({ probe } = someObj); someObj.other;", (p, e) => {
+				p.hooks.collectDestructuringAssignmentProperties.tap(
+					"t",
+					(/** @type {EXPECTED_ANY} */ expr) => {
+						e.push(`collect@${expr.range[0]}`);
+						return true;
+					}
+				);
+			});
+			same("const { probe } = someObj; someObj.other;", (p, e) => {
+				p.hooks.collectDestructuringAssignmentProperties.tap(
+					"t",
+					(/** @type {EXPECTED_ANY} */ expr) => {
+						e.push(`collectDecl@${expr.range[0]}`);
+						return true;
+					}
+				);
+			});
+		});
+
+		// The lazy statement path: pending column ids materialize in place on
+		// access (identity-stable `nodeAt`), so hooks observe the same path
+		// contents, tail identity, `prevStatement` and ASI classification on
+		// both backends.
+		it("should serve identical statementPath state through hooks on both backends", () => {
+			/**
+			 * @param {string} code source
+			 * @param {boolean} soa backend
+			 * @returns {string[]} recorded events
+			 */
+			const walk = (code, soa) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
+				/** @type {string[]} */
+				const events = [];
+				parser.hooks.preStatement.tap("t", (stmt) => {
+					const path = /** @type {EXPECTED_ANY[]} */ (parser.statementPath);
+					events.push(
+						`pre ${path.length} ${path[path.length - 1] === stmt} ${path
+							.map((s) => `${s.type}@${s.range[0]}`)
+							.join(",")}`
+					);
+				});
+				parser.hooks.statement.tap("t", (stmt) => {
+					const prev = /** @type {EXPECTED_ANY} */ (parser.prevStatement);
+					events.push(
+						`stmt ${stmt.type}@${
+							/** @type {EXPECTED_ANY} */ (stmt).range[0]
+						} prev:${prev ? `${prev.type}@${prev.range[0]}` : "-"}`
+					);
+				});
+				parser.hooks.call.for("probe").tap("t", (expr) => {
+					events.push(
+						`call lvl:${parser.isStatementLevelExpression(
+							/** @type {EXPECTED_ANY} */ (expr)
+						)} asi:${parser.isAsiPosition(
+							/** @type {EXPECTED_ANY} */ (expr).range[0]
+						)}`
+					);
+				});
+				parser.parse(
+					code,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return events;
+			};
+			const code = `probe(1)
+probe(2); { probe(3); }
+function f() { if (probe(4)) { probe(5); } return probe(6) }
+(probe(7), probe(8));
+x1 = probe(9);
+f();`;
+			const object = walk(code, false);
+			const soa = walk(code, true);
+			expect(soa.length).toBeGreaterThan(0);
+			expect(soa.join("\n")).toBe(object.join("\n"));
+		});
+
+		// With no statement-keyed taps at all, a late path read (from an
+		// expression hook) must still yield materialized, identity-stable
+		// facade entries — never raw column ids.
+		it("materializes pending statement path entries identity-stably", () => {
+			const parser = new JavascriptParser("auto");
+			/** @type {EXPECTED_ANY[]} */
+			let first = [];
+			/** @type {EXPECTED_ANY[]} */
+			let second = [];
+			/** @type {EXPECTED_ANY} */
+			let prev;
+			parser.hooks.expression.for("probe").tap("t", () => {
+				first = [.../** @type {EXPECTED_ANY[]} */ (parser.statementPath)];
+				second = [.../** @type {EXPECTED_ANY[]} */ (parser.statementPath)];
+				prev = parser.prevStatement;
+			});
+			parser.parse(
+				"free1; { probe; }",
+				/** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			expect(first).toHaveLength(2);
+			expect(first[0].type).toBe("BlockStatement");
+			expect(first[1].type).toBe("ExpressionStatement");
+			expect(first.every((s, i) => s === second[i])).toBe(true);
+			expect(prev === undefined || typeof prev.type === "string").toBe(true);
+		});
+
+		// Outside a parse the accessors serve the raw (unset) state, and the
+		// setters keep the save/restore contract plugins rely on.
+		it("keeps the statementPath accessor contract outside a walk", () => {
+			const parser = new JavascriptParser("auto");
+			expect(parser.statementPath).toBeUndefined();
+			expect(parser.prevStatement).toBeUndefined();
+			const path = /** @type {EXPECTED_ANY} */ ([]);
+			parser.statementPath = path;
+			expect(parser.statementPath).toBe(path);
+			const prev = /** @type {EXPECTED_ANY} */ ({ type: "EmptyStatement" });
+			parser.prevStatement = prev;
+			expect(parser.prevStatement).toBe(prev);
+			parser.statementPath = undefined;
+			parser.prevStatement = undefined;
+		});
+
+		// A plugin taking over traversal from the program hook walks statements
+		// the pre-walk seams have not registered yet — the walked facade must
+		// become the registered one so hooks serve that exact object.
+		it("registers a facade walked before the pre-walk passes", () => {
+			const parser = new JavascriptParser("auto");
+			/** @type {EXPECTED_ANY[]} */
+			const seen = [];
+			/** @type {EXPECTED_ANY} */
+			let walked;
+			parser.hooks.program.tap("t", (ast) => {
+				walked = ast.body[0];
+				parser.walkStatement(walked);
+				return true;
+			});
+			parser.hooks.statement.tap("t", (statement) => {
+				seen.push(statement);
+			});
+			parser.parse(
+				"probe;",
+				/** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			expect(seen).toHaveLength(1);
+			expect(seen[0]).toBe(walked);
+			// the block pre-walk seam adopts the store the same way when it is
+			// the first id entry of the parse
+			const blockParser = new JavascriptParser("auto");
+			blockParser.hooks.program.tap("t", (ast) => {
+				blockParser.blockPreWalkStatement(ast.body[0]);
+				return true;
+			});
+			expect(() =>
+				blockParser.parse(
+					"var probed = 1;",
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				)
+			).not.toThrow();
+		});
+
+		// On a store without parse-flow facades (nothing memoized the names
+		// yet), the id-walk name probe derives from the source and memoizes.
+		it("derives and memoizes identifier names from the columns", () => {
+			const { SoaAst } = require("../lib/javascript/syntax");
+
+			const source = "probe";
+			const store = /** @type {EXPECTED_ANY} */ (new SoaAst(source));
+			const id = store.allocNode(SoaAst.TYPE_IDENTIFIER, 0, 5);
+			const parser = /** @type {EXPECTED_ANY} */ (new JavascriptParser("auto"));
+			const first = parser._soaIdentName(store, id);
+			expect(first).toBe("probe");
+			// second read serves the memoized string identity-stably
+			expect(parser._soaIdentName(store, id)).toBe(first);
+			expect(store.values[id]).toBe(first);
+		});
+
+		// A pure import/export module has no owned facade at the top level, so
+		// the parse() store discovery finds nothing — the seams must adopt the
+		// store when nested owned statements enter the id walk, or the
+		// statementPath/prevStatement accessors crash materializing ids.
+		it("serves path accessors when the whole top level is foreign", () => {
+			const parser = new JavascriptParser("auto");
+			/** @type {EXPECTED_ANY[]} */
+			const paths = [];
+			parser.hooks.expression.for("probe").tap("t", () => {
+				paths.push(
+					parser.prevStatement,
+					.../** @type {EXPECTED_ANY[]} */ (parser.statementPath)
+				);
+			});
+			parser.parse(
+				"export const first = 1;\nexport function f() { probe; }",
+				/** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			expect(paths.length).toBeGreaterThan(0);
+			for (const entry of paths) {
+				if (entry !== undefined) expect(typeof entry.type).toBe("string");
+			}
+		});
+
+		// Exercises the D2 handlers' hook-bail early returns (free-rooted
+		// chains resolve member info; taps that return true stop the walk),
+		// the strict-mode-in-module-output reports, and the foreign-pinned /
+		// empty list fallbacks — all asserted equal across both backends.
+		// slice 4: the Program is a store row — module-level declarations are
+		// adopted rows dispatched from the columns, and a program hook that
+		// materializes `body` routes the walk through the object passes
+		it("should match the object walk on module-level imports/exports/classes", () => {
+			/**
+			 * @param {string} code source
+			 * @param {boolean} soa backend
+			 * @param {((parser: EXPECTED_ANY, events: string[]) => void)=} setup taps
+			 * @returns {string[]} recorded events
+			 */
+			const walk = (code, soa, setup) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
+				/** @type {string[]} */
+				const events = [];
+				const state = {
+					module: {
+						type: "javascript/auto",
+						buildMeta: {},
+						buildInfo: {},
+						addPresentationalDependency: () => {},
+						addWarning: (/** @type {Error} */ w) =>
+							events.push(`warn:${w.message}`),
+						addError: (/** @type {Error} */ e) =>
+							events.push(`err:${e.message}`)
+					},
+					compilation: { runtimeTemplate: { isModule: () => true } }
+				};
+				if (setup) setup(parser, events);
+				parser.hooks.preStatement.tap("t", (/** @type {EXPECTED_ANY} */ s) => {
+					events.push(`pre:${s.type}@${s.range[0]}`);
+				});
+				parser.hooks.blockPreStatement.tap(
+					"t",
+					(/** @type {EXPECTED_ANY} */ s) => {
+						events.push(`blockPre:${s.type}@${s.range[0]}`);
+					}
+				);
+				parser.hooks.statement.tap("t", (/** @type {EXPECTED_ANY} */ s) => {
+					events.push(`stmt:${s.type}@${s.range[0]}`);
+				});
+				parser.hooks.import.tap("t", (s, source) => {
+					events.push(`import:${source}`);
+				});
+				parser.hooks.importSpecifier.tap("t", (s, source, exportName, name) => {
+					events.push(`importSpec:${source}:${exportName}:${name}`);
+				});
+				parser.hooks.export.tap("t", (/** @type {EXPECTED_ANY} */ s) => {
+					events.push(`export@${s.range[0]}`);
+				});
+				parser.hooks.exportImport.tap("t", (s, source) => {
+					events.push(`exportImport:${source}`);
+				});
+				parser.hooks.exportSpecifier.tap("t", (s, name, spec) => {
+					events.push(`exportSpec:${name}:${spec}`);
+				});
+				parser.parse(
+					code,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ (state)
+					)
+				);
+				return events;
+			};
+			/**
+			 * @param {string} code source
+			 * @param {((parser: EXPECTED_ANY, events: string[]) => void)=} setup taps
+			 * @returns {void} asserts both backends agree
+			 */
+			const same = (code, setup) => {
+				expect(walk(code, true, setup).join("\n")).toBe(
+					walk(code, false, setup).join("\n")
+				);
+			};
+			const MOD =
+				'import d, { a as b } from "m"; class C {} const i = new C(); ' +
+				"export default class D extends C {} export const v = b; " +
+				'export { v as w }; export * from "n"; d(b, i);';
+			same(MOD);
+			// a program tap materializing the body pins the object walk path
+			same(MOD, (p, e) => {
+				p.hooks.program.tap("t", (/** @type {EXPECTED_ANY} */ ast) => {
+					e.push(`body:${ast.body.length}`);
+				});
+			});
+			same("");
+			same("'use strict'; free;");
+			same("'use asm'; free;");
+			// a foreign first expression pins the directive probe's statement
+			same("t`x`; 'use strict'; free;");
+			same('"use strict"; import x from "m"; x;');
+		});
+
+		it("should detect module syntax on the columns in HarmonyDetectionParserPlugin", () => {
+			const HarmonyDetectionParserPlugin = require("../lib/dependencies/HarmonyDetectionParserPlugin");
+
+			/**
+			 * @param {string} code source
+			 * @param {boolean} soa backend
+			 * @param {{ esm?: boolean, pin?: boolean }=} opts esm module type / pin body
+			 * @returns {boolean} whether harmony was enabled
+			 */
+			const run = (code, soa, { esm = false, pin = false } = {}) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
+				if (pin) {
+					// materializes the body before the detection tap runs
+					parser.hooks.program.tap({ name: "pin", stage: -1000 }, (ast) => {
+						if (ast.body.length === -1) throw new Error("unreachable");
+					});
+				}
+				new HarmonyDetectionParserPlugin().apply(
+					/** @type {EXPECTED_ANY} */ (parser)
+				);
+				/** @type {EXPECTED_ANY} */
+				const state = {
+					module: {
+						type: esm ? "javascript/esm" : "javascript/auto",
+						buildMeta: {},
+						buildInfo: {},
+						addPresentationalDependency: () => {}
+					}
+				};
+				parser.parse(
+					code,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ (state)
+					)
+				);
+				return state.module.buildMeta.exportsType === "namespace";
+			};
+			for (const soa of [false, true]) {
+				expect(run('import x from "m"; x;', soa)).toBe(true);
+				expect(run("export const x = 1;", soa)).toBe(true);
+				expect(run("export default 1;", soa)).toBe(true);
+				expect(run('export * from "n";', soa)).toBe(true);
+				expect(run("const x = 1;", soa)).toBe(false);
+				// a pinned body falls back to the object scan
+				expect(run('import x from "m"; x;', soa, { pin: true })).toBe(true);
+				expect(run("const x = 1;", soa, { pin: true })).toBe(false);
+				// the esm module type short-circuits the scan entirely
+				expect(run("const x = 1;", soa, { esm: true })).toBe(true);
+			}
+		});
+
+		it("should match the object walk on D2 hook-bails and foreign-pinned lists", () => {
+			/**
+			 * @param {string} code source
+			 * @param {boolean} soa backend
+			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
+			 * @param {"auto" | "script"} sourceType source type
+			 * @param {boolean} moduleOutput emit as strict-mode module output
+			 * @returns {string[]} recorded events
+			 */
+			const walk = (code, soa, setup, sourceType, moduleOutput) => {
+				const parser = new JavascriptParser(sourceType, backendOptions(soa));
+				/** @type {string[]} */
+				const events = [];
+				setup(parser, events);
+				const state = moduleOutput
+					? {
+							module: {
+								addWarning: (/** @type {Error} */ w) =>
+									events.push(`warn:${w.message}`),
+								addError: (/** @type {Error} */ e) =>
+									events.push(`err:${e.message}`)
+							},
+							compilation: { runtimeTemplate: { isModule: () => true } }
+						}
+					: {};
+				parser.parse(
+					code,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ (state)
+					)
+				);
+				return events;
+			};
+			/**
+			 * @param {string} code source
+			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
+			 * @param {("auto" | "script")=} sourceType source type
+			 * @param {boolean=} moduleOutput strict-mode module output
+			 * @returns {void} asserts both backends agree
+			 */
+			const same = (code, setup, sourceType = "auto", moduleOutput = false) => {
+				expect(
+					walk(code, true, setup, sourceType, moduleOutput).join("\n")
+				).toBe(walk(code, false, setup, sourceType, moduleOutput).join("\n"));
+			};
+			/**
+			 * @param {string[]} e events
+			 * @param {string} label event label
+			 * @returns {() => boolean} tap returning true
+			 */
+			const bail = (e, label) => () => {
+				e.push(label);
+				return true;
+			};
+			const noop = () => {};
+
+			// member "expression": name hook bail, then member-chain hook bail
+			same("free.a.b;", (p, e) => {
+				p.hooks.expression.for("free.a.b").tap("t", bail(e, "expr"));
+			});
+			same("free.a.b;", (p, e) => {
+				p.hooks.expressionMemberChain.for("free").tap("t", bail(e, "chain"));
+			});
+			// member "call": call-rooted chain, memberChainOfCallMemberChain bail
+			same("free().a.b;", (p, e) => {
+				p.hooks.memberChainOfCallMemberChain
+					.for("free")
+					.tap("t", bail(e, "mcocmc"));
+			});
+			// call: callMemberChainOfCallMemberChain / callMemberChain / call bails
+			same("free().b();", (p, e) => {
+				p.hooks.callMemberChainOfCallMemberChain
+					.for("free")
+					.tap("t", bail(e, "cmcocmc"));
+			});
+			same("free(1);", (p, e) => {
+				p.hooks.callMemberChain.for("free").tap("t", bail(e, "callChain"));
+			});
+			same("free(1);", (p, e) => {
+				p.hooks.call.for("free").tap("t", bail(e, "call"));
+			});
+			// call: import().then importCall bail; defined-plain-callee fast path
+			same("import('x').then(free);", (p, e) => {
+				p.hooks.importCall.tap("t", bail(e, "importCall"));
+			});
+			same("function f(a) { a; } f(free);", noop);
+			// logical / conditional operator hooks returning a value
+			same("free && other;", (p, e) => {
+				p.hooks.expressionLogicalOperator.tap("t", () => {
+					e.push("logical");
+					return true;
+				});
+			});
+			same("free ? a : b;", (p, e) => {
+				p.hooks.expressionConditionalOperator.tap("t", () => {
+					e.push("cond-true");
+					return true;
+				});
+			});
+			same("free ? a : b;", (p, e) => {
+				p.hooks.expressionConditionalOperator.tap("t", () => {
+					e.push("cond-false");
+					return false;
+				});
+			});
+			// typeof: direct bail and the optional-chain argument bail
+			same("typeof free;", (p, e) => {
+				p.hooks.typeof.for("free").tap("t", bail(e, "typeof"));
+			});
+			same("typeof free?.a;", (p, e) => {
+				p.hooks.typeof.for("free.a").tap("t", bail(e, "typeofChain"));
+			});
+			// assignment: rename (kept / overridden) and assignMemberChain bail
+			same("dst = free;", (p, e) => {
+				p.hooks.canRename.for("free").tap("t", () => true);
+			});
+			same("dst = free;", (p, e) => {
+				p.hooks.canRename.for("free").tap("t", () => true);
+				p.hooks.rename.for("free").tap("t", bail(e, "rename"));
+			});
+			same("free.a = 1;", (p, e) => {
+				p.hooks.assignMemberChain.for("free").tap("t", bail(e, "assignChain"));
+			});
+			// new hook bail
+			same("new free();", (p, e) => {
+				p.hooks.new.for("free").tap("t", bail(e, "new"));
+			});
+			// assignment: pattern targets and the plain member/other target tails
+			same("[x] = free;", noop);
+			same("({ y } = free);", noop);
+			same("free.a = free.b;", noop);
+			// strict-mode-in-module-output reports on the id walk (functions
+			// keep the facade path for the param diagnostics)
+			same("delete free; und = 1; free = 1;", noop, "script", true);
+			same("function smp(a) { free(a); } smp;", noop, "script", true);
+			// call-rooted member descent, computed-member call, sequence not at
+			// statement level, and empty / foreign-pinned lists
+			same(
+				// eslint-disable-next-line no-template-curly-in-string
+				"free().a.b; free[key](1); z = (free.a, free.b); free(class {}); ({}); `t${class {}}u`; [free.m()];",
+				noop
+			);
+			// var-declaration rename: kept and overridden by the rename hook
+			same("var alias = free; alias.x;", (p, e) => {
+				p.hooks.canRename.for("free").tap("t", bail(e, "declCanRename"));
+			});
+			same("var alias = free;", (p, e) => {
+				p.hooks.canRename.for("free").tap("t", bail(e, "declCanRename"));
+				p.hooks.rename.for("free").tap("t", bail(e, "declRename"));
+			});
+			// declarator hook bail skips the declarator's pattern and init
+			same("var alias = free;", (p, e) => {
+				p.hooks.declarator.tap("t", bail(e, "declBail"));
+			});
+			// a foreign evaluate tap disables the defined-callee fast path, so
+			// the call takes the hook-dispatch path on both backends
+			same("function fq(a) { a; } fq(free);", (p, e) => {
+				p.hooks.evaluate.for("Identifier").tap("t", () => {
+					e.push("evalIdent");
+				});
+			});
+			// D3 label hook: a `true` return skips the body, otherwise it walks
+			same("lab: free();", (p, e) => {
+				p.hooks.label.for("lab").tap("t", bail(e, "label"));
+			});
+			same("lab: free();", (p, e) => {
+				p.hooks.label.for("lab").tap("t", () => {
+					e.push("labelPass");
+				});
+			});
+			// D3 terminate merges across try/catch/finally shapes
+			same(
+				"function t1(a) { try { return a; } catch (er) { return er; } finally { a(); } } t1(free);",
+				(p, e) => {
+					p.hooks.terminate.tap("t", bail(e, "term1"));
+				}
+			);
+			same(
+				"function t2(a) { try { return a; } finally { a(); } } t2(free);",
+				(p, e) => {
+					p.hooks.terminate.tap("t", bail(e, "term2"));
+				}
+			);
+			same(
+				"function t3(a) { try { a(); } finally { return a; } } t3(free);",
+				(p, e) => {
+					p.hooks.terminate.tap("t", bail(e, "term3"));
+				}
+			);
+			// D3: `with` reports in strict module output on the id walk
+			same("with (free) { other; }", noop, "script", true);
+		});
+
+		// C2 slice 2: calls, assignments, declarators and mode detection descend
+		// from the columns when hooks provably cannot match; every guarded shape
+		// must stay indistinguishable from the object backend.
+		it("should match the object walk on the column-native fast paths", () => {
+			/**
+			 * @param {string} code source
+			 * @param {boolean} soa backend
+			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
+			 * @returns {string[]} recorded events
+			 */
+			const walk = (code, soa, setup) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
+				/** @type {string[]} */
+				const events = [];
+				setup(parser, events);
+				parser.parse(
+					code,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return events;
+			};
+			/**
+			 * @param {string} code source
+			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
+			 * @returns {void} asserts both backends agree
+			 */
+			const same = (code, setup) => {
+				expect(walk(code, true, setup).join("\n")).toBe(
+					walk(code, false, setup).join("\n")
+				);
+			};
+			/**
+			 * @param {string[]} e events
+			 * @param {string} label event label
+			 * @returns {() => boolean} tap returning true
+			 */
+			const bail = (e, label) => () => {
+				e.push(label);
+				return true;
+			};
+			/**
+			 * @param {EXPECTED_ANY} p parser
+			 * @param {string[]} e events
+			 * @returns {void} records mode state on every `free` expression
+			 */
+			const probe = (p, e) => {
+				p.hooks.expression.for("free").tap("t", () => {
+					e.push(`free strict:${p.scope.isStrict} asm:${p.scope.isAsmJs}`);
+				});
+			};
+
+			// member-callee fast path: defined-rooted hook-free chains still walk
+			// their object, computed keys and arguments
+			same(
+				"function c1(o, k) { o.m(free); o[k](free); o.a.b(free); } c1;",
+				probe
+			);
+			// function/arrow/import/foreign objects keep the facade semantics
+			// (IIFE `.call`/`.bind`, the importCall hook, class expressions)
+			same("(function () { free; }).call(this);", probe);
+			same("(() => { free; }).call(this);", probe);
+			same("(function () { free; }).bind(this)();", probe);
+			same("(class {}).m(free);", probe);
+			same("import('x').then(free);", (p, e) => {
+				probe(p, e);
+				p.hooks.importCall.tap("t", bail(e, "importCall"));
+			});
+			// a foreign MemberExpression evaluate tap disables the member fast paths
+			same("function c2(o) { o.m(free); } c2;", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluate.for("MemberExpression").tap("t", () => {});
+			});
+
+			// declarators: no-init, defined-identifier and hook-free member inits
+			// walk from the columns; other shapes keep the rename analysis
+			same(
+				"function d1(o) { var a; var b = o; var c = o.p; var L = 1; " +
+					"var d = free, e2 = undefined; var { pp } = o; } d1;",
+				probe
+			);
+			same("var pre = free;", (p, e) => {
+				probe(p, e);
+				p.hooks.preDeclarator.tap("t", () => e.push("preDecl"));
+			});
+
+			// assignments: defined-identifier and hook-free member shapes descend
+			// column-native; named assign/pattern taps keep the facade path
+			same("function a1(x, y) { x = y; x = y.p; y.q = free; } a1;", probe);
+			same("function a2(y) { dst = y; } a2;", (p, e) => {
+				p.hooks.assign.for("dst").tap("t", bail(e, "assign"));
+			});
+			same("function a3(y) { pat = y; } a3;", (p, e) => {
+				p.hooks.pattern.for("pat").tap("t", bail(e, "pattern"));
+			});
+			same("function a4(x, y) { x = y; free; } a4;", (p, e) => {
+				probe(p, e);
+				p.hooks.program.tap("t", (/** @type {EXPECTED_ANY} */ ast) => {
+					// materializing the assignment forces the facade path
+					e.push(`mat:${ast.body[0].body.body[0].expression.type}`);
+				});
+			});
+
+			// detectMode from the columns: directives, parenthesized literals
+			// (loose by design), non-directives, empty and pre-registered bodies
+			same("function s1() { 'use strict'; free; } s1;", probe);
+			same("function s2() { 'use asm'; free; } s2;", probe);
+			same("function s3() { ('use strict'); free; } s3;", probe);
+			same("function s4() { 0; free; } s4;", probe);
+			same("function s5() {} s5; free;", probe);
+			same("var ar = () => { 'use strict'; free; }; ar;", probe);
+			same("function s6() { 'use strict'; free; } s6;", (p, e) => {
+				probe(p, e);
+				p.hooks.program.tap("t", (/** @type {EXPECTED_ANY} */ ast) => {
+					// materializing the body registers the block for detectMode
+					e.push(`mat:${ast.body[0].body.body.length}`);
+				});
+			});
+
+			// evaluation-inert init/right types (object/function/arrow/array/
+			// template/binary/non-typeof unary/conditional) skip the rename
+			// analysis; typeof stays on the facade path
+			same(
+				"function i1(o) { var v1 = {}; var v2 = function () { free; }; " +
+					"var v3 = () => free; var v4 = [free]; var v5 = `t`; " +
+					"var v6 = 1 + 2; var v7 = -o; var v8 = typeof free; " +
+					"var v9 = o ? free : 1; x9 = {}; } i1;",
+				probe
+			);
+			same("async function i2(o) { var v = await free; } i2;", probe);
+			same("function* i3(o) { var v = yield free; var u = o++; } i3;", probe);
+			// a foreign tap (or interceptor) on an inert type's evaluate hook
+			// restores the facade path
+			same("var o2 = {};", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluate.for("ObjectExpression").tap("t", () => {});
+			});
+			same("var L2 = 1;", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluate.for("Literal").tap("t", () => {});
+			});
+			same("var L3 = 1;", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluate.for("Literal").intercept({});
+			});
+
+			// binary operators walk facade-free while only the harmony `in`
+			// tap (or nothing) sits on the hook; `in` and foreign taps dispatch
+			same("free + free; free in free;", probe);
+			same("free + free; free in free;", (p, e) => {
+				probe(p, e);
+				p.hooks.binaryExpression.tap(
+					"HarmonyImportDependencyParserPlugin",
+					(/** @type {EXPECTED_ANY} */ expr) => {
+						if (expr.operator !== "in") return;
+						e.push("in-tap");
+						return true;
+					}
+				);
+			});
+			same("free + free;", (p, e) => {
+				probe(p, e);
+				p.hooks.binaryExpression.tap(
+					"t",
+					(/** @type {EXPECTED_ANY} */ expr) => {
+						e.push(`bin:${expr.operator}`);
+					}
+				);
+			});
+
+			// mixed params enter the scope column-native; pattern params alone
+			// materialize for the enterPattern/walkPattern pair
+			same("function mp(a, { b }, c = free, ...d) { free2; } mp;", probe);
+			same("var mpa = ({ e = free }, f) => free2; mpa;", probe);
+			same("var nfe = function named({ q }) { named; free; }; nfe;", probe);
+
+			// object properties walk from the columns: computed keys, shorthand
+			// values, getter/setter kinds; registered facades keep the semantics
+			same(
+				"function op(k, x) { o2 = { a: free, [k]: free2, x, " +
+					"get g() { return free3; }, set s(v) { free4; } }; } op;",
+				probe
+			);
+			same("o3 = { p: free };", (p, e) => {
+				probe(p, e);
+				p.hooks.program.tap("t", (/** @type {EXPECTED_ANY} */ ast) => {
+					// materializing the object registers its property facades
+					e.push(`mat:${ast.body[0].expression.right.properties.length}`);
+				});
+			});
+
+			// switch cases prewalk (hoisting) and walk on the columns; a
+			// materialized statement keeps the facade path
+			same(
+				"function sw(x) { switch (x) { case 1: var h1; free; break; " +
+					"case free2: { free3; } default: } h1; } sw;",
+				probe
+			);
+			same("switch (free) { case 1: free2; }", (p, e) => {
+				probe(p, e);
+				p.hooks.program.tap("t", (/** @type {EXPECTED_ANY} */ ast) => {
+					e.push(`mat:${ast.body[0].cases.length}`);
+				});
+			});
+			// a statement before the first case fails to parse on both backends
+			for (const soa of [true, false]) {
+				expect(() =>
+					walk("switch (free) { 0; case 1: ; }", soa, () => {})
+				).toThrow("Unexpected token");
+			}
+
+			// call/new inits are rename-inert unless a name-keyed callee dispatch
+			// (or a foreign tap on their evaluate hooks) could yield an identifier
+			same(
+				"function n1(o, k) { var r1 = f0(free); var r2 = o.mm(free); " +
+					"var r3 = o.replace(free, free); var r4 = o['concat'](free); " +
+					"var r5 = o[k](free); var r6 = f0()(free); var r7 = new F0(free); " +
+					"var r8 = new RegExp('a'); var r9 = new o.C(free); " +
+					"dst2 = f0(free); } n1;",
+				probe
+			);
+			same("var t1 = g0(free);", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluateCallExpression.for("g0").tap("t", () => {
+					e.push("evalCall");
+				});
+			});
+			same("function n2(o) { var t2 = o.custom(free); } n2;", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluateCallExpressionMember.for("custom").tap("t", () => {
+					e.push("evalMember");
+				});
+			});
+			same("var t3 = new Tapped(free);", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluateNewExpression.for("Tapped").tap("t", () => {
+					e.push("evalNew");
+				});
+			});
+			same("var t4 = f0(free); var t5 = new F0(free);", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluate.for("CallExpression").tap("t", () => {});
+				p.hooks.evaluate.for("NewExpression").tap("t", () => {});
+			});
+
+			// logical/conditional inits are rename-inert when every operand the
+			// evaluation could pass through is
+			same(
+				"function n3(a, b, c) { var m1 = a && b; var m2 = {} || []; " +
+					"var m3 = a ?? b; var m4 = a ? b : c; var m5 = a && free; " +
+					"var m6 = a ? free : b; var m7 = a ? b : free; } n3;",
+				probe
+			);
+			same("var t6 = free && free2; var t7 = free ? free2 : free3;", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluate.for("LogicalExpression").tap("t", () => {});
+				p.hooks.evaluate.for("ConditionalExpression").tap("t", () => {});
+			});
+
+			// zero-tap logical/conditional expressions descend on the columns;
+			// operator/guard taps and pre-registered facades keep the dispatch
+			same("free && (free2 || free3); free ? free2 : free3;", probe);
+			same("free && free2;", (p, e) => {
+				probe(p, e);
+				p.hooks.expressionLogicalOperator.tap("t", bail(e, "logic"));
+			});
+			same("free ? free2 : free3;", (p, e) => {
+				probe(p, e);
+				p.hooks.expressionConditionalOperator.tap("t", bail(e, "cond"));
+			});
+			same("free ? free2 : free3;", (p, e) => {
+				probe(p, e);
+				p.hooks.collectGuards.tap("t", () => {
+					e.push("guards");
+				});
+			});
+			same("free && free2; free ? free2 : free3;", (p, e) => {
+				probe(p, e);
+				p.hooks.program.tap("t", (/** @type {EXPECTED_ANY} */ ast) => {
+					// materializing both expressions forces the facade paths
+					e.push(
+						`mat:${ast.body[0].expression.type}:${ast.body[1].expression.type}`
+					);
+				});
+			});
+
+			// non-typeof unaries walk facade-free; typeof and pre-registered
+			// facades keep the object semantics
+			same("-free; !free; void free; delete free.x; typeof free;", probe);
+			same("function u1() { -free; free + free; } u1;", (p, e) => {
+				probe(p, e);
+				p.hooks.program.tap("t", (/** @type {EXPECTED_ANY} */ ast) => {
+					const body = ast.body[0].body.body;
+					// materializing both expressions forces the facade paths
+					e.push(`mat:${body[0].expression.type}:${body[1].expression.type}`);
+				});
+			});
+
+			// function/arrow scope entry from the columns: identifier params
+			// define (and shadow) by name, self-names bind for recursion
+			same("function fp(a, b) { a; b; free; } fp;", probe);
+			same("function sh(free) { free; } sh; free;", probe);
+			same("var se = function named2(a) { named2; free; }; se;", (p, e) => {
+				probe(p, e);
+				p.hooks.expression.for("named2").tap("t", bail(e, "self"));
+			});
+			same(
+				"var af = (q) => { q; free; }; var ac = (r) => free; af; ac;",
+				probe
+			);
+			// a bailing pattern hook leaves the param undefined (its body use
+			// stays free); a passing one still defines it
+			same("function ph(pat2) { pat2; } ph;", (p, e) => {
+				p.hooks.pattern.for("pat2").tap("t", bail(e, "patHook"));
+				p.hooks.expression.for("pat2").tap("t", bail(e, "pat2expr"));
+			});
+			same("function ph2(pat3) { pat3; } ph2;", (p, e) => {
+				p.hooks.pattern.for("pat3").tap("t", () => {
+					e.push("patPass");
+				});
+				p.hooks.expression.for("pat3").tap("t", bail(e, "pat3expr"));
+			});
+			// pattern params and pre-registered facades keep the object path
+			same("function pp({ x2 }, [y2]) { x2; y2; free; } pp;", probe);
+			same("function reg(a) { free; } reg;", (p, e) => {
+				probe(p, e);
+				p.hooks.program.tap("t", (/** @type {EXPECTED_ANY} */ ast) => {
+					e.push(`mat:${ast.body[0].params.length}`);
+				});
+			});
+
+			// info-full member chains: free-string roots with a provably
+			// tapless cascade walk from the columns; any matching tap (call,
+			// callMemberChain, evaluateIdentifier, expression prefixes,
+			// unhandled chains) restores the facade path
+			same("Obj1.assign(free, 1); Obj1.deep.prop; C1['k'].m(free);", probe);
+			same("Obj2.m(free);", (p, e) => {
+				probe(p, e);
+				p.hooks.call.for("Obj2.m").tap("t", bail(e, "callTap"));
+			});
+			same("R1.a.b(free);", (p, e) => {
+				probe(p, e);
+				p.hooks.callMemberChain.for("R1").tap("t", bail(e, "chainTap"));
+			});
+			same("P1.env.X(free);", (p, e) => {
+				probe(p, e);
+				p.hooks.evaluateIdentifier.for("P1.env.X").tap("t", () => {});
+			});
+			same("Obj4.a.b;", (p, e) => {
+				probe(p, e);
+				p.hooks.expression.for("Obj4.a").tap("t", bail(e, "prefixTap"));
+			});
+			same("U1.a.b;", (p, e) => {
+				probe(p, e);
+				p.hooks.unhandledExpressionMemberChain.for("U1").tap("t", () => {
+					e.push("unhandled");
+				});
+			});
+			// template members and call-rooted/`this`-rooted targets
+
+			same("T1[`k`].m(free); f1x().x = free; this.q1 = free;", probe);
+			same("Cfg.opt = free;", probe);
+		});
+
+		// a parse-time foreign expression pins its statement without registering
+		// the enclosing block — detectMode must read it through the facade list
+		it("serves detectMode from a pinned first statement", () => {
+			const TYPE = SoaAst.TYPE;
+			const store = /** @type {EXPECTED_ANY} */ (new SoaAst("'use asm';"));
+			const stmtId = store.allocNode(TYPE.ExpressionStatement, 0, 10);
+			const blockId = store.allocNode(TYPE.BlockStatement, 0, 10);
+			store.setList(blockId, [stmtId]);
+			const parser = /** @type {EXPECTED_ANY} */ (new JavascriptParser("auto"));
+			parser.scope = { isStrict: false, isAsmJs: false };
+			store.nodeAt(stmtId).expression = { type: "Literal", value: "use asm" };
+			parser._detectModeId(store, blockId);
+			expect(parser.scope.isAsmJs).toBe(true);
+			expect(parser.scope.isStrict).toBe(false);
+		});
+
+		// the rename-inert descent must stay conservative on child refs it
+		// cannot read (foreign children sit at ref 0)
+		it("guards the rename-inert descent on foreign child refs", () => {
+			const TYPE = SoaAst.TYPE;
+			const store = /** @type {EXPECTED_ANY} */ (new SoaAst("x"));
+			const parser = /** @type {EXPECTED_ANY} */ (new JavascriptParser("auto"));
+			parser._evalCallOwnTaps = true;
+			parser._evalNewOwnTaps = true;
+			parser._evalLogicalOwnTaps = true;
+			parser._evalConditionalOwnTaps = true;
+			const callId = store.allocNode(TYPE.CallExpression, 0, 1);
+			const newId = store.allocNode(TYPE.NewExpression, 0, 1);
+			const logicalId = store.allocNode(TYPE.LogicalExpression, 0, 1);
+			const condId = store.allocNode(TYPE.ConditionalExpression, 0, 1);
+			for (const id of [callId, newId, logicalId, condId]) {
+				expect(parser._soaCannotRename(store, id)).toBe(false);
+			}
+			// a member callee with a foreign property ref is equally unreadable
+			const memberId = store.allocNode(TYPE.MemberExpression, 0, 1);
+			store.kid0[callId] = memberId;
+			expect(parser._soaCannotRename(store, callId)).toBe(false);
+		});
+
+		// Phase B2 seam: `toAssignable` re-tags an expression node into a
+		// pattern in place; the SoA column type must follow the facade type so
+		// the column stays authoritative (the lazy-facade prerequisite).
+		it("keeps the SoA column type in sync when toAssignable re-tags a node", () => {
+			const KEY_STORE = SoaAst.KEY_STORE;
+			const KEY_ID = SoaAst.KEY_ID;
+			const TYPE = SoaAst.TYPE;
+			/**
+			 * @param {EXPECTED_ANY} facade SoA facade
+			 * @returns {number} the facade's column type id
+			 */
+			const colType = (facade) => facade[KEY_STORE].types[facade[KEY_ID]];
+			const parser = new JavascriptParser("auto");
+			/** @type {EXPECTED_ANY[]} */
+			const lefts = [];
+			/** @type {EXPECTED_ANY[]} */
+			const params = [];
+			parser.hooks.program.tap("test", (ast) => {
+				for (const stmt of /** @type {EXPECTED_ANY} */ (ast).body) {
+					const expr = stmt.expression;
+					if (!expr) {
+						continue;
+					}
+					if (expr.type === "AssignmentExpression") {
+						lefts.push(expr.left);
+					} else if (expr.type === "ArrowFunctionExpression") {
+						params.push(expr.params[0]);
+					}
+				}
+			});
+			parser.parse(
+				"({ a } = b);\n[c, ...r] = d;\n((x = 1) => x);",
+				/** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({})
+				)
+			);
+			const objectPattern = lefts[0];
+			const arrayPattern = lefts[1];
+			const restElement = arrayPattern.elements[1];
+			const assignmentPattern = params[0];
+			// re-tagged to the pattern shapes
+			expect(objectPattern.type).toBe("ObjectPattern");
+			expect(arrayPattern.type).toBe("ArrayPattern");
+			expect(restElement.type).toBe("RestElement");
+			expect(assignmentPattern.type).toBe("AssignmentPattern");
+			// and the SoA column type id follows the re-tag
+			for (const facade of [
+				objectPattern,
+				arrayPattern,
+				restElement,
+				assignmentPattern
+			]) {
+				expect(colType(facade)).toBe(TYPE[facade.type]);
+			}
+		});
+
+		// columns are pre-sized from a source-length heuristic; non-transient
+		// parses snug them with `trim()`, the transient walk path skips it
+		it("trims column slack after parse and no-ops when already snug", () => {
+			const KEY_STORE = SoaAst.KEY_STORE;
+			/**
+			 * @param {string} code source
+			 * @returns {EXPECTED_ANY} the parse's store
+			 */
+			const parseStore = (code) => {
+				const parser = new JavascriptParser("auto");
+				/** @type {EXPECTED_ANY} */
+				let store;
+				parser.hooks.program.tap("test", (ast) => {
+					store = /** @type {EXPECTED_ANY} */ (ast).body[0][KEY_STORE];
+				});
+				parser.parse(
+					code,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return store;
+			};
+			const bigSource = `a(b); s = "${"(".repeat(1 << 16)}";`;
+			// the walk path marks the parse transient — the slack stays
+			const big = parseStore(bigSource);
+			expect(big.capacity).toBeGreaterThan(big.count);
+			// a separator-dense string literal makes the density estimate
+			// overshoot far past the trim floor, so a direct trim must snug
+			big.trim();
+			expect(big.types).toHaveLength(big.count);
+			expect(big.flat).toHaveLength(big.flatTop);
+			const { types, flat } = big;
+			big.trim();
+			// already snug: the same backing arrays stay in place
+			expect(big.types).toBe(types);
+			expect(big.flat).toBe(flat);
+			// a direct `_parse` may retain the AST, so its store comes back snug
+			const { ast } = JavascriptParser._parse(bigSource, {
+				sourceType: "auto",
+				ranges: true
+			});
+			const retained = /** @type {EXPECTED_ANY} */ (ast).body[0][KEY_STORE];
+			expect(retained.types).toHaveLength(retained.count);
+			// small slack stays untrimmed — the copies would cost more than the
+			// few KB they free
+			const small = parseStore(`a(b); /* ${"x".repeat(2048)} */`);
+			small.trim();
+			expect(small.capacity).toBeGreaterThan(small.count);
+		});
+
+		it("serves the estree compatibility boundary through toEstreeNode", () => {
+			const { toEstreeNode } = require("../lib/javascript/syntax");
+
+			const KEY_STORE = SoaAst.KEY_STORE;
+			const { ast } = JavascriptParser._parse("a(b);", {
+				sourceType: "auto",
+				ranges: true
+			});
+			const store = /** @type {EXPECTED_ANY} */ (ast).body[0][KEY_STORE];
+			// identity-stable: repeated calls serve the memoized facade
+			const node = toEstreeNode(store, 1);
+			expect(node).toBe(store.nodeAt(1));
+			expect(typeof (/** @type {EXPECTED_ANY} */ (node).type)).toBe("string");
+			// ref 0 is the null node
+			expect(toEstreeNode(store, 0)).toBeNull();
+		});
+
+		it("should drive identical hook sequences for top-level and nested await", () => {
+			expectSameWalk(
+				`await x;
+				async function af(p) { return await p; }
+				af;`
+			);
+		});
+
+		// The equivalence recorders return undefined, so the guarded and
+		// result-driven `if` branches of the id walk need a plugin that returns a
+		// value; assert the id and object walks still agree under it.
+		it("should match the object walk on id-walk if-statement branches", () => {
+			const code = "function f(a, b) { if (a) b; else a; }";
+			/**
+			 * @param {boolean} soa backend
+			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
+			 * @returns {string[]} recorded events
+			 */
+			const walkWith = (soa, setup) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
+				/** @type {string[]} */
+				const events = [];
+				setup(parser, events);
+				parser.parse(
+					code,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return events;
+			};
+			/**
+			 * @param {(parser: EXPECTED_ANY, events: string[]) => void} setup taps
+			 * @returns {void} asserts both backends agree
+			 */
+			const sameWith = (setup) => {
+				expect(walkWith(true, setup).join("\n")).toBe(
+					walkWith(false, setup).join("\n")
+				);
+			};
+			/**
+			 * @param {EXPECTED_ANY} value statementIf result or guard frame
+			 * @param {boolean} guard tap collectGuards instead of statementIf
+			 * @returns {(parser: EXPECTED_ANY, events: string[]) => void} setup
+			 */
+			const setup =
+				(value, guard) =>
+				(
+					/** @type {EXPECTED_ANY} */ parser,
+					/** @type {string[]} */ events
+				) => {
+					if (guard) {
+						parser.hooks.collectGuards.tap("test", () => value);
+					} else {
+						parser.hooks.statementIf.tap("test", () => value);
+					}
+					parser.hooks.expression.for("a").tap("test", () => {
+						events.push("a");
+					});
+					parser.hooks.expression.for("b").tap("test", () => {
+						events.push("b");
+					});
+				};
+			sameWith(setup(true, false)); // result truthy -> consequent only
+			sameWith(setup(false, false)); // result falsy -> alternate only
+			sameWith(setup({ consequent: {}, alternate: {} }, true)); // guarded branches
+		});
+
+		// Strict-mode-in-module-output diagnostics fire on the id walk for the
+		// literal / function-params / arrow-params / update-target constructs,
+		// each reached as a direct child of an id-native statement.
+		it("should report the same strict-mode violations on both walks", () => {
+			/**
+			 * @param {boolean} soa backend
+			 * @returns {string[]} sorted diagnostic messages
+			 */
+			const walk = (soa) => {
+				// script (sloppy) source so legacy octal parses; the module output
+				// then makes it a strict-mode violation at walk time
+				const parser = new JavascriptParser("script", backendOptions(soa));
+				/** @type {string[]} */
+				const messages = [];
+				const state = /** @type {import("../lib/Parser").ParserState} */ (
+					/** @type {unknown} */ ({
+						module: {
+							addWarning: (/** @type {Error} */ w) => messages.push(w.message),
+							addError: (/** @type {Error} */ e) => messages.push(e.message)
+						},
+						compilation: {
+							runtimeTemplate: { isModule: () => true }
+						}
+					})
+				);
+				parser.parse(
+					`07;
+					function f(a, a) { return a; }
+					(eval => eval);
+					undefined++;`,
+					state
+				);
+				return messages.sort();
+			};
+			const soa = walk(true);
+			expect(soa).toEqual(walk(false));
+			expect(soa.length).toBeGreaterThan(0);
+		});
+
+		// A `terminate` tap flips `scope.terminated`, exercising the id walk's
+		// return/throw terminate path and the following-statement skip.
+		it("should set scope.terminated via the terminate hook on both walks", () => {
+			/**
+			 * @param {boolean} soa backend
+			 * @param {string} keyword `return` or `throw`
+			 * @returns {string[]} recorded events
+			 */
+			const walk = (soa, keyword) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
+				/** @type {string[]} */
+				const events = [];
+				parser.hooks.terminate.tap("test", () => true);
+				parser.hooks.unusedStatement.tap("test", () => true);
+				parser.hooks.expression.for("after").tap("test", () => {
+					events.push("after");
+				});
+				parser.parse(
+					`function f(a) { ${keyword} a; after; }`,
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return events;
+			};
+			for (const keyword of ["return", "throw"]) {
+				expect(walk(true, keyword)).toEqual(walk(false, keyword));
+				// the terminated scope marks `after;` unused, so it is skipped
+				expect(walk(true, keyword)).not.toContain("after");
+			}
+			// an `if` whose both branches terminate marks the whole `if` terminated
+			/**
+			 * @param {boolean} soa backend
+			 * @returns {string[]} recorded events
+			 */
+			const bothWalk = (soa) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
+				/** @type {string[]} */
+				const events = [];
+				parser.hooks.terminate.tap("test", () => true);
+				parser.hooks.unusedStatement.tap("test", () => true);
+				parser.hooks.expression.for("after").tap("test", () => {
+					events.push("after");
+				});
+				parser.parse(
+					"function f(a) { if (a) return a; else return a; after; }",
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return events;
+			};
+			expect(bothWalk(true)).toEqual(bothWalk(false));
+			expect(bothWalk(true)).not.toContain("after");
+		});
+
+		it("should honor a statement-hook bail on the id walk", () => {
+			/**
+			 * @param {boolean} soa backend
+			 * @returns {string[]} recorded events
+			 */
+			const walk = (soa) => {
+				const parser = new JavascriptParser("auto", backendOptions(soa));
+				/** @type {string[]} */
+				const events = [];
+				parser.hooks.statement.tap("test", (s) => {
+					events.push(s.type);
+					if (s.type === "ExpressionStatement") return true;
+				});
+				parser.hooks.expression.for("inner").tap("test", () => {
+					events.push("inner");
+				});
+				parser.parse(
+					"function f() { inner; }",
+					/** @type {import("../lib/Parser").ParserState} */ (
+						/** @type {unknown} */ ({})
+					)
+				);
+				return events;
+			};
+			expect(walk(true)).toEqual(walk(false));
+			// the ExpressionStatement bail prevents the inner identifier walk
+			expect(walk(true)).not.toContain("inner");
+		});
+
+		for (const [name, read] of [
+			[
+				"react.development.js",
+				() =>
+					fs.readFileSync(
+						path.join(
+							path.dirname(require.resolve("react/package.json")),
+							"cjs/react.development.js"
+						),
+						"utf8"
+					)
+			],
+			[
+				"lodash.js",
+				() =>
+					fs.readFileSync(
+						path.join(
+							path.dirname(require.resolve("lodash/package.json")),
+							"lodash.js"
+						),
+						"utf8"
+					)
+			]
+		]) {
+			it(`should drive identical hook sequences over ${name}`, () => {
+				expectSameWalk(/** @type {() => string} */ (read)());
+			}, 120000);
+		}
 	});
 });
