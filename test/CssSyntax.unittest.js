@@ -300,7 +300,9 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 	it("reads declarations / childRules as null on non-rule nodes", () => {
 		// Only rules populate the decl / child-rule slots; a function (or any
 		// non-rule container) has no entry and must read back `null`.
-		const fn = parseAComponentValue("calc(1 + 2)");
+		const fn = /** @type {import("../lib/css/syntax").QualifiedRule} */ (
+			/** @type {unknown} */ (parseAComponentValue("calc(1 + 2)"))
+		);
 		expect(fn.declarations).toBeNull();
 		expect(fn.childRules).toBeNull();
 	});
