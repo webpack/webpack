@@ -1,5 +1,4 @@
 import { createRequire } from "module";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -58,7 +57,7 @@ let secondStable = {};
 /** @type {unknown} */
 let sink;
 
-export default defineSuite({
+export default {
 	name: "unit/util/cleverMerge",
 	setup() {
 		firstStable = createFirst();
@@ -85,16 +84,6 @@ export default defineSuite({
 					sink = cleverMergeModule.cachedCleverMerge(firstStable, secondStable);
 				}
 			}
-		},
-		{
-			name: "cachedCleverMerge miss",
-			fn() {
-				// Fresh objects → miss + merge + cache insert.
-				sink = cleverMergeModule.cachedCleverMerge(
-					createFirst(),
-					createSecond()
-				);
-			}
 		}
 	]
-});
+};

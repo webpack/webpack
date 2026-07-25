@@ -1,6 +1,5 @@
 import { createRequire } from "module";
 import { deterministicBytes } from "../../helpers/prng.mjs";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -25,7 +24,7 @@ function hashChunks(algorithm) {
 	sink = hash.digest("hex");
 }
 
-export default defineSuite({
+export default {
 	name: "unit/util/createHash",
 	setup() {
 		// 1 MiB in 4 KiB chunks — the shape of module source hashing.
@@ -73,4 +72,4 @@ export default defineSuite({
 			}
 		}
 	]
-});
+};

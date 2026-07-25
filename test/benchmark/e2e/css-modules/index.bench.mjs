@@ -1,48 +1,28 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import { generateCssProject } from "../../helpers/project.mjs";
-import { defineSuite, prepareConfig, runBuild } from "../../lib/index.mjs";
+import { createBuildScenarios } from "../../lib/webpack.mjs";
 
 const caseDir = path.dirname(fileURLToPath(import.meta.url));
+const generated = path.join(caseDir, "generated");
+const entry = path.join(generated, "index.js");
 
-/** @type {string} */
-let entry = "";
-
-export default defineSuite({
+export default {
 	name: "e2e/css-modules",
 	async setup() {
-		entry = await generateCssProject({
-			dir: path.join(caseDir, "generated"),
+		await generateCssProject({
+			dir: generated,
 			count: 40,
 			rulesPerFile: 30
 		});
 	},
-	benches: [
-		{
-			name: "development build",
-			fn() {
-				return runBuild(
-					prepareConfig(caseDir, "development", {
-						mode: "development",
-						entry,
-						target: "web",
-						experiments: { css: true }
-					})
-				);
-			}
-		},
-		{
-			name: "production build",
-			fn() {
-				return runBuild(
-					prepareConfig(caseDir, "production", {
-						mode: "production",
-						entry,
-						target: "web",
-						experiments: { css: true }
-					})
-				);
-			}
+	benches: createBuildScenarios({
+		caseDir,
+		entryFile: entry,
+		config: {
+			entry,
+			target: "web",
+			experiments: { css: true }
 		}
-	]
-});
+	})
+};

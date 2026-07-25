@@ -1,5 +1,4 @@
 import { createRequire } from "module";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -45,7 +44,7 @@ const groupConfigs = [
 	}
 ];
 
-export default defineSuite({
+export default {
 	name: "unit/util/smartGrouping",
 	setup() {
 		const types = ["javascript/auto", "javascript/esm", "css/auto", "asset"];
@@ -68,4 +67,4 @@ export default defineSuite({
 			}
 		}
 	]
-});
+};

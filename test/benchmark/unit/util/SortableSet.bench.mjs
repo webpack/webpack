@@ -1,6 +1,5 @@
 import { createRequire } from "module";
 import { mulberry32 } from "../../helpers/prng.mjs";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -17,7 +16,7 @@ let shuffledIds = [];
 let set = new SortableSet();
 let sink = 0;
 
-export default defineSuite({
+export default {
 	name: "unit/util/SortableSet",
 	setup() {
 		// Deterministically shuffled mix of numeric and named ids, the shape
@@ -58,4 +57,4 @@ export default defineSuite({
 			}
 		}
 	]
-});
+};

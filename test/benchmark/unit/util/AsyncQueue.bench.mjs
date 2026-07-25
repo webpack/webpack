@@ -1,5 +1,4 @@
 import { createRequire } from "module";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -47,7 +46,7 @@ function processItems(items) {
 	});
 }
 
-export default defineSuite({
+export default {
 	name: "unit/util/AsyncQueue",
 	setup() {
 		uniqueItems = Array.from({ length: 5000 }, (_, i) => i);
@@ -72,4 +71,4 @@ export default defineSuite({
 			}
 		}
 	]
-});
+};

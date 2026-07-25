@@ -1,44 +1,43 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import { generateModuleTree } from "../../helpers/project.mjs";
-import { defineSuite, prepareConfig, runBuild } from "../../lib/index.mjs";
+import {
+	createBuildBench,
+	createBuildScenarios
+} from "../../lib/webpack.mjs";
 
 const caseDir = path.dirname(fileURLToPath(import.meta.url));
+const generated = path.join(caseDir, "generated");
+const entry = path.join(generated, "module-0.js");
 
-/** @type {string} */
-let entry = "";
-
-export default defineSuite({
+export default {
 	name: "e2e/many-modules-commonjs",
 	async setup() {
-		entry = await generateModuleTree({
-			dir: path.join(caseDir, "generated"),
+		await generateModuleTree({
+			dir: generated,
 			count: 250,
 			format: "cjs"
 		});
 	},
 	benches: [
-		{
-			name: "development build",
-			fn() {
-				return runBuild(
-					prepareConfig(caseDir, "development", {
-						mode: "development",
-						entry
-					})
-				);
+		...createBuildScenarios({
+			caseDir,
+			entryFile: entry,
+			config: { entry }
+		}),
+		createBuildBench({
+			name: "Node.js development build",
+			caseDir,
+			config: { mode: "development", entry, target: "node" }
+		}),
+		createBuildBench({
+			name: "production build without minimization",
+			caseDir,
+			config: {
+				mode: "production",
+				entry,
+				optimization: { minimize: false }
 			}
-		},
-		{
-			name: "production build",
-			fn() {
-				return runBuild(
-					prepareConfig(caseDir, "production", {
-						mode: "production",
-						entry
-					})
-				);
-			}
-		}
+		})
 	]
-});
+};

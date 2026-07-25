@@ -89,7 +89,7 @@ export async function generateModuleTree(options) {
  */
 
 /**
- * Generate `<n>.module.css` files plus a JS entry importing all of them.
+ * Generate plain/module CSS files with static and dynamic imports.
  * @param {CssProjectOptions} options options
  * @returns {Promise<string>} absolute path of the entry module
  */
@@ -99,14 +99,27 @@ export async function generateCssProject(options) {
 	/** @type {string[]} */
 	const imports = [];
 	for (let i = 0; i < count; i++) {
+		const isModule = i % 2 !== 0;
+		const isDynamic = i % 4 === 0;
+		const request = `./style-${i}${isModule ? ".module" : ""}.css`;
 		await fs.writeFile(
-			path.join(dir, `style-${i}.module.css`),
-			generateCssSource(rulesPerFile, true)
+			path.join(dir, request.slice(2)),
+			generateCssSource(rulesPerFile, isModule)
 		);
-		imports.push(
-			`import * as style${i} from ${JSON.stringify(`./style-${i}.module.css`)};`,
-			`used += Object.keys(style${i}).length;`
-		);
+		if (isDynamic) {
+			imports.push(
+				isModule
+					? `used += Object.keys(await import(${JSON.stringify(request)})).length;`
+					: `await import(${JSON.stringify(request)});`
+			);
+		} else if (isModule) {
+			imports.push(
+				`import * as style${i} from ${JSON.stringify(request)};`,
+				`used += Object.keys(style${i}).length;`
+			);
+		} else {
+			imports.push(`import ${JSON.stringify(request)};`);
+		}
 	}
 	const entry = path.join(dir, "index.js");
 	await fs.writeFile(
@@ -120,7 +133,7 @@ export async function generateCssProject(options) {
  * @typedef {object} AssetProjectOptions
  * @property {string} dir output directory
  * @property {number} count number of assets
- * @property {number=} size bytes per asset (default 4096)
+ * @property {number | ((index: number) => number)=} size bytes per asset (default 4096)
  */
 
 /**
@@ -134,9 +147,10 @@ export async function generateAssetProject(options) {
 	/** @type {string[]} */
 	const imports = [];
 	for (let i = 0; i < count; i++) {
+		const assetSize = typeof size === "function" ? size(i) : size;
 		await fs.writeFile(
 			path.join(dir, `asset-${i}.bin`),
-			deterministicBytes(i + 1, size)
+			deterministicBytes(i + 1, assetSize)
 		);
 		imports.push(
 			`import asset${i} from ${JSON.stringify(`./asset-${i}.bin`)};`,
@@ -152,6 +166,12 @@ export async function generateAssetProject(options) {
 }
 
 /**
+ * @typedef {object} JsonProject
+ * @property {string} entry entry importing every JSON export
+ * @property {string} selectedEntry entry importing one export per JSON file
+ */
+
+/**
  * @typedef {object} JsonProjectOptions
  * @property {string} dir output directory
  * @property {number} count number of JSON modules
@@ -159,15 +179,17 @@ export async function generateAssetProject(options) {
  */
 
 /**
- * Generate JSON modules plus a JS entry importing all of them.
+ * Generate JSON modules with whole-object and selected-property imports.
  * @param {JsonProjectOptions} options options
- * @returns {Promise<string>} absolute path of the entry module
+ * @returns {Promise<JsonProject>} absolute paths of the entry modules
  */
 export async function generateJsonProject(options) {
 	const { dir, count, entriesPerFile = 200 } = options;
 	await recreate(dir);
 	/** @type {string[]} */
 	const imports = [];
+	/** @type {string[]} */
+	const selectedImports = [];
 	for (let i = 0; i < count; i++) {
 		/** @type {Record<string, unknown>} */
 		const data = {};
@@ -183,9 +205,14 @@ export async function generateJsonProject(options) {
 			path.join(dir, `data-${i}.json`),
 			JSON.stringify(data, null, "\t")
 		);
+		const request = `./data-${i}.json`;
 		imports.push(
-			`import data${i} from ${JSON.stringify(`./data-${i}.json`)};`,
+			`import data${i} from ${JSON.stringify(request)}${i % 2 === 0 ? ' with { type: "json" }' : ""};`,
 			`total += Object.keys(data${i}).length;`
+		);
+		selectedImports.push(
+			`import selected${i} from ${JSON.stringify(request)}${i % 2 === 0 ? ' with { type: "json" }' : ""};`,
+			`selected += selected${i}.key_${i}_0.nested;`
 		);
 	}
 	const entry = path.join(dir, "index.js");
@@ -193,5 +220,10 @@ export async function generateJsonProject(options) {
 		entry,
 		`let total = 0;\n${imports.join("\n")}\nexport default total;\n`
 	);
-	return entry;
+	const selectedEntry = path.join(dir, "selected.js");
+	await fs.writeFile(
+		selectedEntry,
+		`let selected = 0;\n${selectedImports.join("\n")}\nexport default selected;\n`
+	);
+	return { entry, selectedEntry };
 }

@@ -1,5 +1,4 @@
 import { createRequire } from "module";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -13,7 +12,7 @@ const findGraphRoots =
 let nodes = [];
 let sink = 0;
 
-export default defineSuite({
+export default {
 	name: "unit/util/findGraphRoots",
 	setup() {
 		// 5000-node graph with deterministic edges: forward jumps like a module
@@ -46,4 +45,4 @@ export default defineSuite({
 			}
 		}
 	]
-});
+};

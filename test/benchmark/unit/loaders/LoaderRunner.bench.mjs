@@ -1,7 +1,6 @@
 import { createRequire } from "module";
 import path from "path";
 import { fileURLToPath } from "url";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -61,7 +60,7 @@ function runPipelines(loaders, count) {
 	});
 }
 
-export default defineSuite({
+export default {
 	name: "unit/loaders/LoaderRunner",
 	teardown() {
 		if (sink === "unreachable") console.log(sink);
@@ -86,4 +85,4 @@ export default defineSuite({
 			}
 		}
 	]
-});
+};

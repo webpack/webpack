@@ -1,5 +1,4 @@
 import { createRequire } from "module";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -66,7 +65,7 @@ let ruleSet = ruleSetCompiler.compile([]);
 let requests = [];
 let sink = 0;
 
-export default defineSuite({
+export default {
 	name: "unit/rules/RuleSetCompiler",
 	setup() {
 		ruleSet = ruleSetCompiler.compile([{ rules: createRules() }]);
@@ -116,4 +115,4 @@ export default defineSuite({
 			}
 		}
 	]
-});
+};

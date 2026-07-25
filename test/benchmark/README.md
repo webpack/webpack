@@ -35,10 +35,14 @@ yarn benchmark:suite --dir unit --smoke
 yarn benchmark:suite --dir e2e --shard 1/2
 yarn benchmark:suite --list
 yarn benchmark:suite --json test/js/benchmark-results.json
+yarn benchmark:suite --max-rme 5
 ```
 
 `--smoke` executes each selected benchmark once without measuring it. Use it
 before a full run when adding or changing suites.
+
+Wall-time runs fail when any benchmark exceeds 15% RME. Use `--max-rme` or
+`MAX_RME` to select a stricter threshold.
 
 ## Adding a unit suite
 
@@ -49,9 +53,24 @@ before a full run when adding or changing suites.
    the measured function.
 4. Cover distinct expensive paths with separate benches, without splitting one
    operation into tiny implementation-detail benchmarks.
-5. Keep a measured invocation long enough to reduce timer noise by batching
-   small operations over a fixed fixture.
+5. Keep a measured invocation long enough to reduce timer noise by processing
+   a fixed fixture inside the benchmark function.
 6. Run the suite in smoke and measurement modes.
+
+Default-export the suite config directly:
+
+```js
+export default {
+	name: "unit/util/example",
+	benches: [{ name: "process fixture", fn() {} }]
+};
+```
+
+Leave `iterations` unspecified to use tinybench's sampling defaults. If a suite
+is unstable, start with `iterations: 100` and increase it by 50 as needed. The
+runner uses 10% as many warmup iterations and disables time-based sampling only
+when an explicit iteration count is present. Every benchmark runs in isolation
+and the heap is drained between benchmarks.
 
 Fixtures must not depend on time, ambient files or `Math.random()`. Generated
 e2e projects belong in a `generated/` directory, which is ignored by Git and

@@ -1,45 +1,53 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import { generateJsonProject } from "../../helpers/project.mjs";
-import { defineSuite, prepareConfig, runBuild } from "../../lib/index.mjs";
+import {
+	createBuildBench,
+	createBuildScenarios
+} from "../../lib/webpack.mjs";
 
 const caseDir = path.dirname(fileURLToPath(import.meta.url));
+const generated = path.join(caseDir, "generated");
+const entry = path.join(generated, "index.js");
+const selectedEntry = path.join(generated, "selected.js");
 
-/** @type {string} */
-let entry = "";
-
-export default defineSuite({
+export default {
 	name: "e2e/json-modules",
 	async setup() {
-		entry = await generateJsonProject({
-			dir: path.join(caseDir, "generated"),
+		await generateJsonProject({
+			dir: generated,
 			count: 60,
 			entriesPerFile: 200
 		});
 	},
 	benches: [
-		{
-			name: "development build",
-			fn() {
-				return runBuild(
-					prepareConfig(caseDir, "development", {
-						mode: "development",
-						entry
-					})
-				);
+		...createBuildScenarios({
+			caseDir,
+			entryFile: entry,
+			config: { entry }
+		}),
+		createBuildBench({
+			name: "development build with deep export analysis",
+			caseDir,
+			config: {
+				mode: "development",
+				entry,
+				module: { parser: { json: { exportsDepth: Infinity } } }
 			}
-		},
-		{
-			name: "production build with tree shaking",
-			fn() {
-				// Production exercises JSON export analysis and mangling.
-				return runBuild(
-					prepareConfig(caseDir, "production", {
-						mode: "production",
-						entry
-					})
-				);
+		}),
+		createBuildBench({
+			name: "production build with selected exports",
+			caseDir,
+			config: { mode: "production", entry: selectedEntry }
+		}),
+		createBuildBench({
+			name: "production build without JSON.parse generation",
+			caseDir,
+			config: {
+				mode: "production",
+				entry,
+				module: { generator: { json: { JSONParse: false } } }
 			}
-		}
+		})
 	]
-});
+};

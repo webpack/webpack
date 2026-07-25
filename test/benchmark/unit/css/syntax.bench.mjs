@@ -1,6 +1,5 @@
 import { createRequire } from "module";
 import { generateCssSource } from "../../helpers/sources.mjs";
-import { defineSuite } from "../../lib/index.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -12,7 +11,7 @@ const cssSyntax =
 let cssSource = "";
 let sink = 0;
 
-export default defineSuite({
+export default {
 	name: "unit/css/syntax",
 	setup() {
 		// ~100 KiB of rules, media queries, urls and calc() expressions.
@@ -47,4 +46,4 @@ export default defineSuite({
 			}
 		}
 	]
-});
+};

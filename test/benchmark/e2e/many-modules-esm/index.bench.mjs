@@ -1,44 +1,65 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import { generateModuleTree } from "../../helpers/project.mjs";
-import { defineSuite, prepareConfig, runBuild } from "../../lib/index.mjs";
+import {
+	createBuildBench,
+	createBuildScenarios
+} from "../../lib/webpack.mjs";
 
 const caseDir = path.dirname(fileURLToPath(import.meta.url));
+const generated = path.join(caseDir, "generated");
+const entry = path.join(generated, "module-0.js");
 
-/** @type {string} */
-let entry = "";
-
-export default defineSuite({
+export default {
 	name: "e2e/many-modules-esm",
 	async setup() {
-		entry = await generateModuleTree({
-			dir: path.join(caseDir, "generated"),
+		await generateModuleTree({
+			dir: generated,
 			count: 250,
 			format: "esm"
 		});
 	},
 	benches: [
-		{
-			name: "development build",
-			fn() {
-				return runBuild(
-					prepareConfig(caseDir, "development", {
-						mode: "development",
-						entry
-					})
-				);
+		...createBuildScenarios({
+			caseDir,
+			entryFile: entry,
+			config: { entry }
+		}),
+		createBuildBench({
+			name: "development build with module concatenation",
+			caseDir,
+			config: {
+				mode: "development",
+				entry,
+				optimization: { concatenateModules: true }
 			}
-		},
-		{
-			name: "production build",
-			fn() {
-				return runBuild(
-					prepareConfig(caseDir, "production", {
-						mode: "production",
-						entry
-					})
-				);
+		}),
+		createBuildBench({
+			name: "production build without module concatenation",
+			caseDir,
+			config: {
+				mode: "production",
+				entry,
+				optimization: { concatenateModules: false }
 			}
-		}
+		}),
+		createBuildBench({
+			name: "production build without minimization",
+			caseDir,
+			config: {
+				mode: "production",
+				entry,
+				optimization: { minimize: false }
+			}
+		}),
+		createBuildBench({
+			name: "production build without concatenation or minimization",
+			caseDir,
+			config: {
+				mode: "production",
+				entry,
+				optimization: { concatenateModules: false, minimize: false }
+			}
+		})
 	]
-});
+};
