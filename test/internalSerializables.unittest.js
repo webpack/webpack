@@ -16,6 +16,7 @@ describe("internalSerializables", () => {
 			TARGET,
 			generateInternalSerializables
 		} = require("../tooling/generate-internal-serializables");
+
 		const generated = await generateInternalSerializables();
 		const current = fs.readFileSync(TARGET, "utf8");
 		if (current !== generated) {
