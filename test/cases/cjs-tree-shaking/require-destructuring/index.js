@@ -30,6 +30,44 @@ it("should static analyze require destructuring with default values", () => {
 	expect(usedExports).toEqual(["a", "usedExports"]);
 });
 
+it("should static analyze destructuring of a require binding", () => {
+	const m = require("./module-binding");
+	const { a, usedExports } = m;
+	expect(a).toBe("a");
+	expect(usedExports).toEqual(["a", "usedExports"]);
+});
+
+it("should static analyze aliased destructuring of a require binding", () => {
+	const m = require("./module-binding");
+	const { a: renamedA, usedExports } = m;
+	expect(renamedA).toBe("a");
+	expect(usedExports).toEqual(["a", "usedExports"]);
+});
+
+it("should collect every destructuring of the same require binding", () => {
+	const m = require("./module-binding-multi");
+	const { a } = m;
+	const { b, usedExports } = m;
+	expect(a).toBe("a");
+	expect(b).toBe("b");
+	expect(usedExports).toEqual(["a", "b", "usedExports"]);
+});
+
+it("should combine destructuring and member access on a require binding", () => {
+	const m = require("./module-binding-mixed");
+	const { a } = m;
+	expect(a).toBe("a");
+	expect(m.b).toBe("b");
+	expect(m.usedExports).toEqual(["a", "b", "usedExports"]);
+});
+
+it("should bail on rest element when destructuring a require binding", () => {
+	const m = require("./module-binding-rest");
+	const { usedExports, ...rest } = m;
+	expect(usedExports).toBe(true);
+	expect(rest).toEqual({ a: "a", b: "b" });
+});
+
 it("should bail on rest element in require destructuring", () => {
 	const { usedExports, ...rest } = require("./module-rest");
 	expect(usedExports).toBe(true);
