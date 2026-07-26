@@ -9,7 +9,7 @@ const CommonJsExportRequireDependency = require("../lib/dependencies/CommonJsExp
 const ESM_MODULE_EXPORTS_NAME = "module.exports";
 
 /**
- * @param {boolean | null} provided provided flag of the imported `"module.exports"` export
+ * @param {boolean | null | undefined} provided provided flag of the imported `"module.exports"` export
  * @param {string} exportsType imported module exports type
  * @returns {{ moduleGraph: ModuleGraph, importedModule: Module }} fakes
  */
@@ -50,7 +50,8 @@ describe("CommonJsExportRequireDependency.getExports", () => {
 		// Regression: providing star-reexport names here leaks them permanently
 		// (the exports merge is monotonic), so the result would depend on module
 		// processing order and break cross-runtime persistent caching.
-		const { moduleGraph, importedModule } = setup(null);
+		// `undefined` = not yet determined; `null`/`false` are settled and must not defer.
+		const { moduleGraph, importedModule } = setup(undefined);
 		expect(fullReexportDep().getExports(moduleGraph)).toEqual({
 			exports: [],
 			dependencies: [importedModule]
