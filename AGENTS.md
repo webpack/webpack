@@ -6,13 +6,40 @@
 
 A `> [!REQUIRED]` callout placed immediately under a heading marks that whole section as **mandatory and not optional**: follow it exactly, do not paraphrase, do not skip, do not substitute a similar-looking convention from other tooling. Reviewers have repeatedly flagged that REQUIRED sections (especially the [Pull request body](#pull-request-body)) are being skipped or partially filled in — doing so blocks the PR every time. Read each REQUIRED section in full whenever it applies; do not rely on memory or on a previous task's output. Sections without the callout are normal guidance — apply judgement.
 
-## Project Overview
+## Project overview
+
+webpack is a JavaScript module bundler. It builds a dependency graph from entry modules and emits optimized static assets (chunks) for browsers, Node.js, and other targets. The config API is defined by JSON schemas and everything is wired through a `tapable` plugin/hook architecture.
+
+## Tech stack
+
+- **Language:** JavaScript. `lib/` is **CommonJS only**; types are declared via JSDoc `@typedef` and compiled into `types.d.ts`.
+- **Package manager:** **yarn** (not npm).
+- **Parser:** acorn (JavaScript AST).
+- **Tests:** jest, run through the `test:base` wrapper (never bare `jest`).
+- **Type checking / generation:** TypeScript, driven over the JSDoc annotations.
+
+## Commands
+
+All commands are defined in `package.json` `scripts`.
+
+| Command | What it does |
+| --- | --- |
+| `yarn fix` | `fix:code` (ESLint) + `fix:special` (regenerate types/validators) + `fmt` (Prettier). Prefer as the final step. |
+| `yarn fix:special` | Regenerate `types.d.ts`, declarations, schema validators, and generated runtime code. |
+| `yarn tsc` | TypeScript type check (catches type errors in JSDoc annotations). |
+| `yarn test:base --testPathPatterns="<pattern>"` | Run targeted tests. Also `yarn test:base -t "<name>"`. |
+| `yarn test:base -u` | Update snapshots (eyeball the diff first). |
+| `yarn cover:unit` | Unit-test coverage. |
+| `yarn build:examples` | Build the `examples/` (verify after changing options). |
+| `yarn test` | Full suite — don't run unless asked. |
+
+Never invoke `yarn jest`/`npx jest` directly: the required `--experimental-vm-modules` node flag lives only in the `test:base` wrapper, and bare jest crashes ESM/test262 suites. See [TESTING_DOCS.md](TESTING_DOCS.md) for how to run a single case.
+
+## Architecture
 
 > [!REQUIRED]
 
 The directory listings below are the canonical map of the repository. **Whenever you add, rename, or remove a top-level directory** (under the repo root, under `lib/`, under `test/`, or under `schemas/`) you must update the matching bullet here in the same commit. CI does not check this — drift is only caught by humans, which is why it must be part of the change itself. If a new directory does not fit any existing group, add a new group rather than dropping the entry.
-
-webpack is a JavaScript module bundler. Package manager: **yarn**.
 
 **Source**
 
@@ -72,10 +99,6 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 - `examples/` — Usage examples (build with `yarn build:examples`).
 - `.changeset/` — Pending changeset files for the next release.
 
-**Auto-generated — do not edit by hand; regenerate via `yarn fix:special`**
-
-- `types.d.ts`, `declarations/**/*.d.ts`, `schemas/**/*.check.{js,d.ts}`, generated runtime code under `lib/`.
-
 **Hand-maintained type declarations (these _are_ editable)**
 
 - `declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`.
@@ -88,7 +111,16 @@ webpack is a JavaScript module bundler. Package manager: **yarn**.
 - `.github/workflows/`, `.github/scripts/` — CI.
 - `test/patches/` — test-only dependency patches (e.g. jest-worker) applied via `git apply` in the CI Bun test job.
 
-## Coding Standards
+**How data flows — adding or renaming a webpack option** requires edits in every layer, in this order:
+
+1. **Schema** — `schemas/WebpackOptions.json` (or `schemas/plugins/<Name>.json`).
+2. **Defaults** — `lib/config/defaults.js`.
+3. **Normalization** — `lib/config/normalization.js`.
+4. **Implementation** — the site that consumes the option.
+
+Skipping any layer silently breaks the option. After editing schemas, run `yarn fix:special` so `lib/` code can reference the updated types. If you added or modified options, consider updating `examples/` and run `yarn build:examples` to verify.
+
+## Code conventions
 
 ### Source language: CommonJS + JSDoc
 
@@ -118,63 +150,21 @@ Comments inside `lib/`, `hot/`, `tooling/`, and `test/` must be **as short as po
 
 JSDoc on exported symbols stays as-is — that's the type contract, not commentary.
 
-## Performance and memory
+## Testing
 
-webpack is a bundler — users measure it by build time and peak heap usage. Many changes in `lib/` end up on per-module hot paths (sometimes per module × runtime, or per chunk × module) on user builds, so constant factors compound. Always weigh the time and memory cost of a change, including bug fixes and refactors: less allocation, smaller `Map`/`Set` footprints, and fewer closures retained on hot paths are wins worth pursuing — less is better. When introducing or holding any per-`Compilation` state, ask whether it can be released after seal/emit so large compilation data structures are not retained longer than necessary. See #15521 for an example of how this class of memory issue can surface.
-
-### Keep instance shapes stable
-
-Initialize **every** instance field in the constructor, including ones first assigned later in a method — default them to `undefined`/`null`. Assigning `this.newField` for the first time outside the constructor forces a V8 hidden-class (Shape) transition, so instances of one class end up split across shapes and the inline caches reading them go polymorphic/megamorphic — a hot property read can cost ~2× at two shapes and more when megamorphic, and code already optimized for the first shape deopts with a `wrong map` bailout. Never `delete` an instance field (it forces the object into dictionary mode); set it to `undefined` instead. The win per field is small for a single trailing field, but the rule is uniform on purpose so reviewers don't judge it case by case — it is why, for example, `Dependency` sets all its `_loc*` slots up front. Deliberate symbol-keyed sparse slots are the documented exception.
-
-When adding a field to a class whose fields are compiled into `types.d.ts` (public, non-`_`-prefixed), re-run `yarn fix:special` — constructor order determines member order in the generated declarations.
-
-## Auto-generated files
-
-> [!REQUIRED]
-
-These files are produced by `yarn fix:special` and must not be edited by hand:
-
-- `types.d.ts` — compiled from JSDoc + schemas.
-- `declarations/**/*.d.ts` — per-schema/plugin declarations emitted from `schemas/**/*.json`.
-- `schemas/**/*.check.{js,d.ts}` — precompiled schema validators.
-- Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
-
-The hand-maintained type declarations (`declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`) _are_ editable.
-
-Re-run `yarn fix:special` **before the next commit** whenever you touch:
-
-- `schemas/**/*.json` — reshapes validators, declarations, and `types.d.ts`.
-- `lib/**/*.js` JSDoc on anything reachable from a public export — regenerates `types.d.ts`.
-- `tooling/generate-runtime-code.js`, `tooling/generate-wasm-code.js`, or any file they consume.
-
-CI's `lint` job verifies these outputs are up to date. The combined `yarn fix` script runs `fix:code` + `fix:special` + `fmt` in one go; prefer it as the final step.
-
-## Development Workflow
-
-### 1. Making Changes
-
-Modify source code in `lib/` as needed.
-
-**Adding or renaming a webpack option** requires edits in every layer, in this order:
-
-1. **Schema** — `schemas/WebpackOptions.json` (or `schemas/plugins/<Name>.json`).
-2. **Defaults** — `lib/config/defaults.js`.
-3. **Normalization** — `lib/config/normalization.js`.
-4. **Implementation** — the site that consumes the option.
-
-Skipping any layer silently breaks the option. After editing schemas, run `yarn fix:special` so `lib/` code can reference the updated types.
-
-### 2. Writing and Running Tests
+For directory structure, naming, and how to run a single case, see [TESTING_DOCS.md](TESTING_DOCS.md).
 
 **For bug fixes, always write the test case first.** Run the test to confirm it fails, then make the code change and re-run. For new features, tests can be written alongside or after.
 
 **Prefer integration tests over unit tests.** Cover behavior with an integration case (`configCases/`, `watchCases/`, `hotCases/`, `statsCases/`, …) that drives a real `webpack()` build whenever the behavior can be exercised that way — they catch real-world regressions a mocked unit test misses. Reach for a `*.unittest.js` only for pure helpers/utilities that a build can't naturally reach.
 
-Run targeted tests — `yarn test:base --testPathPatterns="<pattern>"` or `yarn test:base -t "<name>"`. Never invoke `yarn jest`/`npx jest` directly: the required `--experimental-vm-modules` node flag lives only in the `test:base` wrapper, and bare jest crashes ESM/test262 suites. Don't run `yarn test` unless asked. When updating snapshots (`yarn test:base -u`), eyeball the diff first. See [TESTING_DOCS.md](TESTING_DOCS.md) for details.
+Run targeted tests — `yarn test:base --testPathPatterns="<pattern>"` or `yarn test:base -t "<name>"`. Never invoke `yarn jest`/`npx jest` directly: the required `--experimental-vm-modules` node flag lives only in the `test:base` wrapper, and bare jest crashes ESM/test262 suites. Don't run `yarn test` unless asked. When updating snapshots (`yarn test:base -u`), eyeball the diff first.
 
 **Cover every line you add or change.** A commit must not lower coverage: each new branch, fast path, and fallback needs a test that exercises it (Codecov enforces this on the patch, target 90%+). When a change adds branches that integration cases don't reach — e.g. tokenizer fast paths and their cold-path fallbacks — add a focused `*.unittest.js` that drives each branch (both the fast and delegated paths). Check `yarn cover:unit` locally, or the PR's Codecov "patch" report, and add cases until no changed line is missing.
 
-### 3. Adding a Changeset
+## Git & PR rules
+
+### Adding a Changeset
 
 Every user-facing change needs a changeset file:
 
@@ -197,20 +187,7 @@ Use `patch` for bug fixes, `minor` for new features, `major` for breaking change
 
 **Filename controls ordering — prefix by importance.** Changesets render grouped by bump level (Major → Minor → Patch); within each section entries appear in **sorted `.changeset` filename order**. Name every changeset `NNN-<description>.md` with a zero-padded numeric prefix (`010-`, `020-`, …) so the lowest number sorts first and lands at the top of its section. Order by importance: user-facing features first, then correctness fixes, then performance, then internal/build/chore. Pick a prefix that slots your entry into the right place relative to the files already there (leave gaps so later entries fit between).
 
-### 4. Updating Examples (if needed)
-
-If WebpackOptions were added or modified, consider updating examples in `examples/`. Run `yarn build:examples` to verify.
-
-### 5. Linting and Formatting
-
-```bash
-yarn fix           # fix:code (ESLint) + fix:special (regenerate types/validators) + fmt (Prettier)
-yarn tsc           # TypeScript type check (catches type errors in JSDoc annotations)
-```
-
-### 6. Git Commit & Pull Request
-
-#### Branch name
+### Branch name
 
 > [!REQUIRED]
 
@@ -238,7 +215,7 @@ Do **not** use `claude/`, `claude-code/`, `bot/`, `ai/`, or any tool/agent ident
 
 If the task harness pre-created a branch with a different prefix, rename it before the first push: `git branch -m <new-name>`.
 
-#### Commit rules
+### Commit rules
 
 > [!REQUIRED]
 
@@ -256,7 +233,7 @@ git -c user.name="<login>" -c user.email="<email>" commit -m "…"
 
 **Keep the commit description body compact:** lead with a short imperative subject, and add body paragraphs only when the change is complex enough to need them — then keep them tight. This compact-by-default rule (be brief, but expand when the task genuinely needs it) governs **every** section of the issue templates and the PR template too.
 
-#### Pull request body
+### Pull request body
 
 > [!REQUIRED]
 
@@ -317,11 +294,11 @@ Required answer per section — **one sentence each is the target, two or three 
 - **If relevant, what needs to be documented…** — list doc updates or write `n/a`.
 - **Use of AI** — state that AI was used and how. Per the [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md), omitting or misrepresenting this can get the PR closed.
 
-#### After push — verify PR body
+### After push — verify PR body
 
 After every `git push` of a new branch, check whether a PR was auto-created (webpack has this webhook). If so, `update_pull_request` to install the full template — the auto-created body never matches.
 
-#### After opening the PR — wait for Copilot review
+### After opening the PR — wait for Copilot review
 
 > [!REQUIRED]
 
@@ -333,3 +310,43 @@ Every webpack PR gets an automated **GitHub Copilot code review** on the initial
    - If wrong, reply on the thread with a short reason — never ignore silently.
 3. After every push, Copilot re-reviews. Repeat step 2. The loop ends when Copilot's latest review has zero outstanding threads.
 4. Only `unsubscribe_pr_activity` once all comments are handled and CI is green, or when the user tells you to stop.
+
+## Do not touch
+
+> [!REQUIRED]
+
+These files are produced by `yarn fix:special` and must not be edited by hand:
+
+- `types.d.ts` — compiled from JSDoc + schemas.
+- `declarations/**/*.d.ts` — per-schema/plugin declarations emitted from `schemas/**/*.json`.
+- `schemas/**/*.check.{js,d.ts}` — precompiled schema validators.
+- Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
+
+The hand-maintained type declarations (`declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`) _are_ editable.
+
+Re-run `yarn fix:special` **before the next commit** whenever you touch:
+
+- `schemas/**/*.json` — reshapes validators, declarations, and `types.d.ts`.
+- `lib/**/*.js` JSDoc on anything reachable from a public export — regenerates `types.d.ts`.
+- `tooling/generate-runtime-code.js`, `tooling/generate-wasm-code.js`, or any file they consume.
+
+CI's `lint` job verifies these outputs are up to date. The combined `yarn fix` script runs `fix:code` + `fix:special` + `fmt` in one go; prefer it as the final step.
+
+## Gotchas
+
+### Performance and memory
+
+webpack is a bundler — users measure it by build time and peak heap usage. Many changes in `lib/` end up on per-module hot paths (sometimes per module × runtime, or per chunk × module) on user builds, so constant factors compound. Always weigh the time and memory cost of a change, including bug fixes and refactors: less allocation, smaller `Map`/`Set` footprints, and fewer closures retained on hot paths are wins worth pursuing — less is better. When introducing or holding any per-`Compilation` state, ask whether it can be released after seal/emit so large compilation data structures are not retained longer than necessary. See #15521 for an example of how this class of memory issue can surface.
+
+### Keep instance shapes stable
+
+Initialize **every** instance field in the constructor, including ones first assigned later in a method — default them to `undefined`/`null`. Assigning `this.newField` for the first time outside the constructor forces a V8 hidden-class (Shape) transition, so instances of one class end up split across shapes and the inline caches reading them go polymorphic/megamorphic — a hot property read can cost ~2× at two shapes and more when megamorphic, and code already optimized for the first shape deopts with a `wrong map` bailout. Never `delete` an instance field (it forces the object into dictionary mode); set it to `undefined` instead. The win per field is small for a single trailing field, but the rule is uniform on purpose so reviewers don't judge it case by case — it is why, for example, `Dependency` sets all its `_loc*` slots up front. Deliberate symbol-keyed sparse slots are the documented exception.
+
+When adding a field to a class whose fields are compiled into `types.d.ts` (public, non-`_`-prefixed), re-run `yarn fix:special` — constructor order determines member order in the generated declarations.
+
+## @imports
+
+Keep this file short; pull detail in on demand from:
+
+- [TESTING_DOCS.md](TESTING_DOCS.md) — test directory structure, naming, and how to run a single case.
+- [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md) — required reading before disclosing **Use of AI** in a PR.
