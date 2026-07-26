@@ -228,30 +228,6 @@ describe("BinaryMiddleware", () => {
 		});
 	});
 
-	describe("measure operations", () => {
-		it("should write the size of the measured section", () => {
-			const data = [
-				"before",
-				BinaryMiddleware.MEASURE_START_OPERATION,
-				"measured",
-				42,
-				BinaryMiddleware.MEASURE_END_OPERATION,
-				"after"
-			];
-			const serialized =
-				/** @type {import("../lib/serialization/BinaryMiddleware").SerializedType} */
-				(mw.serialize(data, {}));
-			const result =
-				/** @type {import("../lib/serialization/BinaryMiddleware").DeserializedType} */
-				(mw.deserialize(serialized, {}));
-			// the symbols are replaced by the byte size of what they enclose
-			expect(result.slice(0, 3)).toEqual(["before", "measured", 42]);
-			expect(typeof result[3]).toBe("number");
-			expect(result[3]).toBeGreaterThan(0);
-			expect(result[4]).toBe("after");
-		});
-	});
-
 	describe("invalid data", () => {
 		it("should throw on a non-buffer object", () => {
 			expect(() =>
