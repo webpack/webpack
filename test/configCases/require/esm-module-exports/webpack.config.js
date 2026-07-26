@@ -7,6 +7,12 @@ const webpack = require("../../../..");
 module.exports = {
 	mode: "development",
 	target: "node",
+	// Dev mode snapshots are timestamp-only; add the content-hash fallback so
+	// cache validation is deterministic across runtimes (Bun/Deno mtime timing).
+	snapshot: {
+		module: { timestamp: true, hash: true },
+		resolve: { timestamp: true, hash: true }
+	},
 	// Enable used-exports tracking so the chicken-and-egg path between
 	// `getReferencedExports` and the unwrap helper is exercised — the
 	// regression this would catch is webpack falling back to `.named` for
