@@ -118,7 +118,10 @@ describe("WatchDetection", () => {
 					watcher = /** @type {import("../").Watching} */ (
 						compiler.watch(
 							{
-								aggregateTimeout: 50
+								aggregateTimeout: 50,
+								// Deno's node:fs.watch compat drops/delays change events, so
+								// native detection is flaky here; poll for deterministic pickup.
+								...(process.versions.deno ? { poll: 100 } : {})
 							},
 							() => {}
 						)
