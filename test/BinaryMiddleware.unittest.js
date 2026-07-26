@@ -1,5 +1,6 @@
 "use strict";
 
+const v8 = require("v8");
 const BinaryMiddleware = require("../lib/serialization/BinaryMiddleware");
 const SerializerMiddleware = require("../lib/serialization/SerializerMiddleware");
 
@@ -243,6 +244,18 @@ describe("BinaryMiddleware", () => {
 	});
 
 	describe("invalid streams", () => {
+		it("should throw on a payload from a newer V8 format version", () => {
+			const payload = v8.serialize([1, "x"]);
+			payload[1] = 0x7f; // pretend it was written by a newer V8
+			const header = Buffer.alloc(9);
+			header[0] = 0xf1;
+			header.writeUInt32LE(payload.length, 1);
+			header.writeUInt32LE(0, 5);
+			expect(() => mw.deserialize([header, payload], {})).toThrow(
+				/V8 serialization format version 127/
+			);
+		});
+
 		it("should throw on an unexpected header byte", () => {
 			expect(() => mw.deserialize([Buffer.from([0x1d])], {})).toThrow(
 				/Unexpected header byte/
