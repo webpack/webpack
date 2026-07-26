@@ -135,7 +135,7 @@ Skipping any layer silently breaks the option. After editing schemas, run `yarn 
 
 ### Type annotations
 
-Prefer the most specific real type. `EXPECTED_ANY`, `EXPECTED_OBJECT`, and `EXPECTED_FUNCTION` (aliases for `any`, `object`, `Function`) are an escape hatch, not a default — use them **only** when the value genuinely can be any value, any object, or any function. When you simply don't know the type yet, reach for `unknown` and narrow it, rather than widening to `EXPECTED_ANY`. This applies in `test/` too: if a real type (e.g. an imported `import("…").Foo`) fits, use it instead of `EXPECTED_ANY`.
+Prefer the most specific real type. `EXPECTED_ANY`, `EXPECTED_OBJECT`, and `EXPECTED_FUNCTION` (aliases for `any`, `object`, `Function`) are an escape hatch, not a default — reach for one **only** when the value genuinely can be any value, any object, or any function, and **never** when a real type fits. `unknown` is the same: use it for a value whose type you can't yet name (then narrow it), but if a real type (e.g. an imported `import("…").Foo`) fits, use that instead. This applies in `test/` too.
 
 Prefer a generic (`@template`) over a widened type whenever a function's output type depends on its input — it keeps callers precisely typed instead of collapsing to `EXPECTED_ANY`.
 
