@@ -15239,10 +15239,6 @@ type Matcher =
 	| RegExp
 	| ((str: string) => boolean)
 	| (string | RegExp | ((str: string) => boolean))[];
-
-/**
- * Extract fragment index.
- */
 declare interface MaybeMergeableInitFragment<GenerateContext> {
 	key?: string;
 	stage: number;
