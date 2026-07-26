@@ -1,14 +1,15 @@
-import Form from "./form";
-import { ns as formNs } from "./formNamespace";
-import { formItemUsed } from "./FormItem";
-import { formListUsed } from "./FormList";
-import { useFormUsed } from "./useForm";
-import { errorListUsed } from "./ErrorList";
+import Input from "./input";
+import { ns as inputNs } from "./inputNamespace";
+import { searchUsed } from "./Search";
+import { passwordUsed } from "./Password";
+import { textAreaUsed } from "./TextArea";
+import { otpUsed } from "./OTP";
+import { groupUsed } from "./Group";
 import { Menu } from "./menu";
 import { menuItemUsed } from "./MenuItem";
 import { subMenuUsed } from "./SubMenu";
 import { menuDividerUsed } from "./MenuDivider";
-import { Form as ReForm, Menu as ReMenu } from "./barrel";
+import { Input as ReInput, Menu as ReMenu } from "./barrel";
 import { logger } from "./logger";
 import { logUsed } from "./log";
 import { infoUsed } from "./info";
@@ -20,15 +21,17 @@ import { SelectFull } from "./selectWithOptGroup";
 import { optionUsed } from "./Option";
 import { purePanelUsed } from "./PurePanel";
 import { secretPanelUsed } from "./SecretPanel";
+import { red } from "./colors";
 
-it("should tree-shake unused Form sub-components (export default)", () => {
-	const Item = Form.Item;
-	expect(Item()).toBe("FormItem");
+it("should tree-shake unused Input sub-components (export default)", () => {
+	const Search = Input.Search;
+	expect(Search()).toBe("Search");
 	if (process.env.NODE_ENV === "production") {
-		expect(formItemUsed).toBe(true);
-		expect(formListUsed).toBe(false);
-		expect(useFormUsed).toBe(false);
-		expect(errorListUsed).toBe(false);
+		expect(searchUsed).toBe(true);
+		expect(passwordUsed).toBe(false);
+		expect(textAreaUsed).toBe(false);
+		expect(otpUsed).toBe(false);
+		expect(groupUsed).toBe(false);
 	}
 });
 
@@ -44,8 +47,8 @@ it("should tree-shake unused Menu sub-components (export { Menu })", () => {
 });
 
 it("should tree-shake through re-export barrel", () => {
-	const Item = ReForm.Item;
-	expect(Item()).toBe("FormItem");
+	const Search = ReInput.Search;
+	expect(Search()).toBe("Search");
 	const Divider = ReMenu.Divider;
 	expect(Divider()).toBe("MenuDivider");
 });
@@ -61,13 +64,14 @@ it("should tree-shake unused logger methods (real-world logger pattern)", () => 
 });
 
 it("should tree-shake through import * as ns (two-level nesting)", () => {
-	const Item = formNs.default.Item;
-	expect(Item()).toBe("FormItem");
+	const Search = inputNs.default.Search;
+	expect(Search()).toBe("Search");
 	if (process.env.NODE_ENV === "production") {
-		expect(formItemUsed).toBe(true);
-		expect(formListUsed).toBe(false);
-		expect(useFormUsed).toBe(false);
-		expect(errorListUsed).toBe(false);
+		expect(searchUsed).toBe(true);
+		expect(passwordUsed).toBe(false);
+		expect(textAreaUsed).toBe(false);
+		expect(otpUsed).toBe(false);
+		expect(groupUsed).toBe(false);
 	}
 });
 
@@ -98,4 +102,10 @@ it("should NOT optimize upstream module when downstream uses whole object", () =
 		// selectWithOptGroup.js CAN optimize it away
 		expect(secretPanelUsed).toBe(false);
 	}
+});
+
+it("should not crash on unused palette export with .primary mutation", () => {
+	// Mirrors @ant-design/colors: `const x = [...]; x.primary = x[5]`
+	// Using only `red` must still evaluate the module (redDark shaken safely).
+	expect(red.primary).toBe("#f5222d");
 });

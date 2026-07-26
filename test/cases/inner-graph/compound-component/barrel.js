@@ -1,3 +1,3 @@
 // Re-export pattern: export { X } from './module'
-export { default as Form } from "./form";
+export { default as Input } from "./input";
 export { Menu } from "./menu";
