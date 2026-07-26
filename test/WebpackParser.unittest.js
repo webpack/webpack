@@ -1676,4 +1676,147 @@ describe("WebpackParser", () => {
 			expect(ast.body[0].type).toBe("WithStatement");
 		});
 	});
+
+	describe("import phases (owned defer/source parsing)", () => {
+		/**
+		 * @param {string} code source
+		 * @param {object=} options extra parse options
+		 * @returns {import("../lib/javascript/JavascriptParser").ParseResult["ast"]["body"][0]} first statement
+		 */
+		const first = (code, options) =>
+			parse(code, { sourceType: "module", importPhases: true, ...options }).ast
+				.body[0];
+
+		it("should tag `import defer` and `import source` declarations with a phase", () => {
+			expect(first('import defer * as ns from "x";')).toMatchObject({
+				type: "ImportDeclaration",
+				phase: "defer"
+			});
+			expect(first('import source src from "x";')).toMatchObject({
+				type: "ImportDeclaration",
+				phase: "source"
+			});
+		});
+
+		it("should treat defer/source as the default name when followed by `from` or a comma", () => {
+			const deferName =
+				/** @type {import("estree").ImportDeclaration & { phase?: string }} */
+				(first('import defer from "x";'));
+			expect(deferName.phase).toBeUndefined();
+			expect(deferName.specifiers[0].type).toBe("ImportDefaultSpecifier");
+			const withNamed =
+				/** @type {import("estree").ImportDeclaration} */
+				(first('import source, { a } from "x";'));
+			expect(withNamed.specifiers.map((s) => s.type)).toEqual([
+				"ImportDefaultSpecifier",
+				"ImportSpecifier"
+			]);
+		});
+
+		it("should reject phase modifiers on the wrong specifier shape", () => {
+			expect(() => first('import defer notNamespace from "x";')).toThrow(
+				/'import defer' can only be used with namespace imports/
+			);
+			expect(() => first('import source * as ns from "x";')).toThrow(
+				/'import source' can only be used with direct identifier specifier imports/
+			);
+			// a defer/source default name may only be followed by `* as`/`{…}`
+			expect(() => first('import defer, x from "x";')).toThrow(
+				/Unexpected token/
+			);
+			// a source phase rejects named specifiers after the default import
+			expect(() => first('import source a, { b } from "x";')).toThrow(
+				/'import source' can only be used with direct identifier specifier imports/
+			);
+		});
+
+		it("should parse `import.defer()` / `import.source()` dynamic imports with a phase", () => {
+			const declarationFor = (/** @type {string} */ code) =>
+				/** @type {import("estree").ImportExpression & { phase?: string }} */
+				(
+					/** @type {import("estree").VariableDeclaration} */ (first(code))
+						.declarations[0].init
+				);
+			expect(declarationFor('const y = import.defer("x");')).toMatchObject({
+				type: "ImportExpression",
+				phase: "defer"
+			});
+			expect(declarationFor('const y = import.source("x");')).toMatchObject({
+				type: "ImportExpression",
+				phase: "source"
+			});
+		});
+
+		it("should reject a phase meta-property that is not a dynamic import", () => {
+			expect(() => first("const y = import.defer;")).toThrow(
+				/'import\.defer' can only be used in a dynamic import/
+			);
+			expect(() => first('const y = new import.defer("x");')).toThrow(
+				/import call cannot be the target of `new`/
+			);
+		});
+
+		it("should keep acorn's import.meta checks under owned parsing", () => {
+			expect(first("const y = import.meta;")).toMatchObject({
+				type: "VariableDeclaration"
+			});
+			expect(() => first("const y = import.foo;")).toThrow(
+				/only valid meta property for import is 'import\.meta'/
+			);
+			expect(() => first("const y = import.m\\u0065ta;")).toThrow(
+				/'import\.meta' must not contain escaped characters/
+			);
+			expect(() =>
+				first("const y = import.meta;", { sourceType: "script" })
+			).toThrow(/Cannot use 'import\.meta' outside a module/);
+		});
+
+		it("should delegate import.meta and specifiers to acorn when phases are off", () => {
+			expect(
+				parse("const y = import.meta;", {
+					sourceType: "module",
+					importPhases: false
+				}).ast.body[0].type
+			).toBe("VariableDeclaration");
+			expect(
+				parse('import a from "x";', {
+					sourceType: "module",
+					importPhases: false
+				}).ast.body[0].type
+			).toBe("ImportDeclaration");
+		});
+	});
+
+	describe("import attributes (owned with/assert clause)", () => {
+		/**
+		 * @param {string} code source
+		 * @returns {import("estree").ImportDeclaration} the import declaration
+		 */
+		const importDeclaration = (code) =>
+			/** @type {import("estree").ImportDeclaration} */
+			(parse(code, { sourceType: "module" }).ast.body[0]);
+
+		it("should parse `with` and legacy `assert` attribute clauses", () => {
+			expect(
+				importDeclaration('import x from "x" with { type: "json" };').type
+			).toBe("ImportDeclaration");
+			expect(
+				importDeclaration('import x from "x" assert { type: "json" };').type
+			).toBe("ImportDeclaration");
+			expect(importDeclaration('import x from "x" with {};').type).toBe(
+				"ImportDeclaration"
+			);
+			expect(
+				importDeclaration('import x from "x" with { type: "json", };').type
+			).toBe("ImportDeclaration");
+		});
+
+		it("should reject a duplicate attribute key", () => {
+			expect(() =>
+				parse('import x from "x" with { type: "json", type: "js" };', {
+					sourceType: "module"
+				})
+			).toThrow(/Duplicate attribute key 'type'/);
+		});
+	});
 });
