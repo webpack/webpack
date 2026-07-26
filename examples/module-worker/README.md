@@ -266,7 +266,7 @@ export const add = (content, from) => {
 /******/ 
 /******/ /* webpack/runtime/import chunk loading */
 /******/ (() => {
-/******/ 	__webpack_require__.b = new URL("./", import.meta.url);
+/******/ 	// no baseURI
 /******/ 	
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
@@ -324,6 +324,8 @@ export const add = (content, from) => {
 /******/ 	
 /******/ 	// no external install chunk
 /******/ 	
+/******/ 	// no analyzable chunk import
+/******/ 	
 /******/ 	// no on chunks loaded
 /******/ 	// no HMR
 /******/ 	
@@ -341,7 +343,7 @@ let __webpack_exports__ = {};
   !*** ./example.js ***!
   \********************/
 /*! unknown exports (runtime-defined) */
-/*! runtime requirements: __webpack_require__.p, __webpack_require__.b, __webpack_require__.u, __webpack_require__.e, __webpack_require__, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__.e, __webpack_require__, __webpack_require__.* */
 document.body.innerHTML = `
 	<pre id="history"></pre>
 	<form>
@@ -367,7 +369,7 @@ const output2 = document.getElementById("output2");
 /// CHAT with shared worker ///
 
 const chatWorker = new SharedWorker(
-	new URL(/* worker import */ __webpack_require__.p + __webpack_require__.u(377), __webpack_require__.b),
+	new URL(/* worker import */ "/dist/chat.js", import.meta.url),
 	{
 		name: "chat",
 		type: "module"
@@ -421,7 +423,7 @@ fib1.addEventListener("change", async () => {
 
 /// FIBONACCI with worker ///
 
-const fibWorker = new Worker(new URL(/* worker import */ __webpack_require__.p + __webpack_require__.u(721), __webpack_require__.b), {
+const fibWorker = new Worker(new URL(/* worker import */ "/dist/workers/fibonacci.js", import.meta.url), {
 	name: "fibonacci",
 	type: "module"
 	/* webpackEntryOptions: { filename: "workers/[name].js" } */
@@ -608,6 +610,8 @@ fibWorker.onmessage = event => {
 /******/ 	// no preloaded
 /******/ 	
 /******/ 	// no external install chunk
+/******/ 	
+/******/ 	// no analyzable chunk import
 /******/ 	
 /******/ 	// no on chunks loaded
 /******/ 	// no HMR
@@ -821,6 +825,8 @@ var e={};const t={};function o(r){const s=t[r];if(void 0!==s)return s.exports;co
 /******/ 	
 /******/ 	// no external install chunk
 /******/ 	
+/******/ 	// no analyzable chunk import
+/******/ 	
 /******/ 	// no on chunks loaded
 /******/ 	// no HMR
 /******/ 	
@@ -886,9 +892,9 @@ function fibonacci(n) {
 ## Unoptimized
 
 ```
-asset main.js 9.38 KiB [emitted] [javascript module] (name: main)
-asset chat.js 7.29 KiB [emitted] [javascript module] (name: chat)
-asset workers/fibonacci.js 6.94 KiB [emitted] [javascript module] (name: fibonacci)
+asset main.js 9.26 KiB [emitted] [javascript module] (name: main)
+asset chat.js 7.34 KiB [emitted] [javascript module] (name: chat)
+asset workers/fibonacci.js 6.99 KiB [emitted] [javascript module] (name: fibonacci)
 asset 936.js 1.04 KiB [emitted] [javascript module]
 asset 129.js 881 bytes [emitted] [javascript module]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
@@ -899,21 +905,21 @@ chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
     [used exports unknown]
     import() ./fibonacci ./example.js 70:30-51
     import() ./fibonacci ./fib-worker.js 2:29-50
-chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 3.5 KiB (runtime) [entry] [rendered]
+chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 3.54 KiB (runtime) [entry] [rendered]
   > ./example.js 25:19-31:1
-  runtime modules 3.5 KiB 7 modules
+  runtime modules 3.54 KiB 7 modules
   ./chat-worker.js 442 bytes [built] [code generated]
     [used exports unknown]
     new Worker() ./chat-worker.js ./example.js 25:19-31:1
-chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 3.5 KiB (runtime) [entry] [rendered]
+chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 3.54 KiB (runtime) [entry] [rendered]
   > ./example.js 80:18-84:2
-  runtime modules 3.5 KiB 7 modules
+  runtime modules 3.54 KiB 7 modules
   ./fib-worker.js 176 bytes [built] [code generated]
     [used exports unknown]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 3.68 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 3.67 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.68 KiB 7 modules
+  runtime modules 3.67 KiB 7 modules
   ./example.js 2.25 KiB [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -931,7 +937,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset main.js 2.55 KiB [emitted] [javascript module] [minimized] (name: main)
+asset main.js 2.56 KiB [emitted] [javascript module] [minimized] (name: main)
 asset chat.js 1.28 KiB [emitted] [javascript module] [minimized] (name: chat)
 asset workers/fibonacci.js 1.13 KiB [emitted] [javascript module] [minimized] (name: fibonacci)
 asset 936.js 221 bytes [emitted] [javascript module] [minimized]
@@ -944,21 +950,21 @@ chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
     [all exports used]
     import() ./fibonacci ./example.js 70:30-51
     import() ./fibonacci ./fib-worker.js 2:29-50
-chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 3.27 KiB (runtime) [entry] [rendered]
+chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 3.3 KiB (runtime) [entry] [rendered]
   > ./example.js 25:19-31:1
-  runtime modules 3.27 KiB 6 modules
+  runtime modules 3.3 KiB 6 modules
   ./chat-worker.js 442 bytes [built] [code generated]
     [no exports used]
     new Worker() ./chat-worker.js ./example.js 25:19-31:1
-chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 3.27 KiB (runtime) [entry] [rendered]
+chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 3.3 KiB (runtime) [entry] [rendered]
   > ./example.js 80:18-84:2
-  runtime modules 3.27 KiB 6 modules
+  runtime modules 3.3 KiB 6 modules
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 3.44 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 3.43 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.44 KiB 6 modules
+  runtime modules 3.43 KiB 6 modules
   ./example.js 2.25 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main

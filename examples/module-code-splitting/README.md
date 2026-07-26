@@ -208,6 +208,8 @@ export function reset() {
 /******/ 	
 /******/ 	// no external install chunk
 /******/ 	
+/******/ 	// no analyzable chunk import
+/******/ 	
 /******/ 	// no on chunks loaded
 /******/ 	// no HMR
 /******/ 	
@@ -259,11 +261,11 @@ var e={};const t={};function r(o){const n=t[o];if(void 0!==n)return n.exports;co
 ## Unoptimized
 
 ```
-asset output.js 7.23 KiB [emitted] [javascript module] (name: main)
+asset output.js 7.28 KiB [emitted] [javascript module] (name: main)
 asset 1.output.js 1.34 KiB [emitted] [javascript module]
-chunk (runtime: main) output.js (main) 420 bytes (javascript) 3.51 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 420 bytes (javascript) 3.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.51 KiB 7 modules
+  runtime modules 3.54 KiB 7 modules
   ./example.js + 1 modules 420 bytes [built] [code generated]
     [no exports]
     [no exports used]
@@ -291,9 +293,9 @@ chunk (runtime: main) 481.output.js 146 bytes [rendered]
     [exports: decrement, increment, reset, value]
     import() ./counter ./example.js + 1 modules ./example.js 4:23-42
     import() ./counter ./example.js + 1 modules ./methods.js 2:8-27
-chunk (runtime: main) output.js (main) 420 bytes (javascript) 3.51 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 420 bytes (javascript) 3.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.51 KiB 7 modules
+  runtime modules 3.54 KiB 7 modules
   ./example.js + 1 modules 420 bytes [built] [code generated]
     [no exports]
     [no exports used]
