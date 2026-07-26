@@ -129,6 +129,10 @@ The directory listings below are the canonical map of the repository. **Whenever
 
 Skipping any layer silently breaks the option. After editing schemas, run `yarn fix:special` so `lib/` code can reference the updated types. If you added or modified options, consider updating `examples/` and run `yarn build:examples` to verify.
 
+The two config layers differ: **`normalization.js`** canonicalizes the user-supplied config shape (shorthand → full form); **`defaults.js`** fills in values (often mode/target-dependent). Edit whichever matches your change.
+
+**Adding a new dependency type:** pair the `Dependency` subclass with a `DependencyTemplate` (it emits the generated code), register the class with `makeSerializable(...)`, and wire the template into `compilation.dependencyTemplates`.
+
 ## Code conventions
 
 ### Source language: CommonJS + JSDoc
@@ -354,6 +358,14 @@ Re-run `yarn fix:special` **before the next commit** whenever you touch:
 CI's `lint` job verifies these outputs are up to date. The combined `yarn fix` script runs `fix:code` + `fix:special` + `fmt` in one go; prefer it as the final step.
 
 ## Gotchas
+
+### Target the Node baseline
+
+`lib/` and `hot/` ship untranspiled and must run on **Node ≥ 10.13** (the CI matrix goes down to Node 10.x). Don't use syntax or runtime APIs newer than that baseline — e.g. no optional chaining (`?.`) or nullish coalescing (`??`) — or the code passes locally and fails the Node 10 CI job.
+
+### Register serializable classes
+
+Persistent caching serializes the module graph, so any new serializable class (a `Module`, `Dependency`, or error subclass, a cached value, …) must call `makeSerializable(...)` — the pattern is used across ~140 files. Run `yarn fix:serializables` to regenerate `internalSerializables`; forgetting silently breaks the persistent cache.
 
 ### Performance and memory
 
