@@ -14,7 +14,6 @@ require("./helpers/warmup-webpack");
  */
 
 const path = require("path");
-const vm = require("vm");
 const fs = require("graceful-fs");
 /** @type {{ sync: (p: string) => void }} */
 const rimraf = require("rimraf");
@@ -36,31 +35,6 @@ const categories = fs
 			.readdirSync(path.join(casesPath, cat))
 			.filter((folder) => !folder.includes("_"))
 	}));
-
-/**
- * Whether a case emits an ESM bundle (run via `vm.SourceTextModule`).
- * @param {string} testDirectory case directory
- * @param {SuiteConfig} config suite config
- * @param {boolean} isUniversal whether the suite forces module output
- * @returns {boolean} true if the case needs ESM output to run
- */
-const needsEsmOutput = (testDirectory, config, isUniversal) => {
-	if (isUniversal) return true;
-	const configPath = path.join(testDirectory, "webpack.config.js");
-	if (!fs.existsSync(configPath)) return false;
-
-	let options = require(configPath);
-
-	if (typeof options === "function") {
-		options = /** @type {EXPECTED_ANY} */ (options)({ config });
-	}
-	return (Array.isArray(options) ? options : [options]).some(
-		(o) =>
-			o &&
-			((o.experiments && o.experiments.outputModule) ||
-				(o.output && o.output.module))
-	);
-};
 
 /**
  * @param {SuiteConfig} config suite config
@@ -88,21 +62,6 @@ const describeCases = (config) => {
 						// eslint-disable-next-line jest/no-disabled-tests
 						describe.skip(testName, () => {
 							it("filtered", () => {});
-						});
-
-						continue;
-					}
-
-					// ESM-output cases run the emitted `.mjs` through
-					// `vm.SourceTextModule` (needs --experimental-vm-modules); skip them
-					// on runtimes without it, e.g. Deno's node:vm.
-					if (
-						!vm.SourceTextModule &&
-						needsEsmOutput(testDirectory, config, isUniversal)
-					) {
-						// eslint-disable-next-line jest/no-disabled-tests
-						describe.skip(testName, () => {
-							it("requires vm.SourceTextModule", () => {});
 						});
 
 						continue;
