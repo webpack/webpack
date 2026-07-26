@@ -5291,6 +5291,11 @@ declare interface CreateData {
 	 * enable/disable extracting source map
 	 */
 	extractSourceMap: boolean;
+
+	/**
+	 * import attributes from the import statement
+	 */
+	importAttributes?: ImportAttributes;
 	settings: ModuleSettings;
 }
 type CreateReadStreamFSImplementation = FSImplementation & {
@@ -17396,6 +17401,7 @@ declare class NormalModule extends Module {
 	matchResource?: string;
 	loaders: LoaderItem[];
 	extractSourceMap: boolean;
+	importAttributes?: ImportAttributes;
 	hot: boolean;
 	error: null | Error;
 	getResource(): null | string;
@@ -17630,6 +17636,11 @@ declare interface NormalModuleCreateDataNormalModuleObject_1<
 	 * enable/disable extracting source map
 	 */
 	extractSourceMap: boolean;
+
+	/**
+	 * import attributes from the import statement
+	 */
+	importAttributes?: ImportAttributes;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
