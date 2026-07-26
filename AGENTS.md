@@ -14,7 +14,6 @@ webpack is a JavaScript module bundler. It builds a dependency graph from entry 
 
 - **Language:** JavaScript. `lib/` is **CommonJS only**; types are declared via JSDoc `@typedef` and compiled into `types.d.ts`.
 - **Package manager:** **yarn** (not npm).
-- **Parser:** acorn (JavaScript AST).
 - **Tests:** jest, run through the `test:base` wrapper (never bare `jest`).
 - **Type checking / generation:** TypeScript, driven over the JSDoc annotations.
 
