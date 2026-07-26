@@ -34,6 +34,7 @@ All commands are defined in `package.json` `scripts`.
 | `yarn test:test262` / `yarn test:html5lib` / `yarn test:css-parsing` | Spec-conformance suites. |
 | `yarn test:base -u` | Update snapshots (eyeball the diff first). |
 | `yarn cover:unit` | Unit-test coverage. |
+| `yarn types:cover` | Type-coverage report (share of `lib/` that is precisely typed). |
 | `yarn build:examples` | Build the `examples/` (verify after changing options). |
 | `yarn test` | Full suite — don't run unless asked. |
 
@@ -167,6 +168,8 @@ For directory structure, naming, and how to run a single case, see [TESTING_DOCS
 Run targeted tests — `yarn test:base --testPathPatterns="<pattern>"` or `yarn test:base -t "<name>"`. Never invoke `yarn jest`/`npx jest` directly: the required `--experimental-vm-modules` node flag lives only in the `test:base` wrapper, and bare jest crashes ESM/test262 suites. Don't run `yarn test` unless asked. When updating snapshots (`yarn test:base -u`), eyeball the diff first.
 
 **Cover every line you add or change.** A commit must not lower coverage: each new branch, fast path, and fallback needs a test that exercises it (Codecov enforces this on the patch, target 90%+). When a change adds branches that integration cases don't reach — e.g. tokenizer fast paths and their cold-path fallbacks — add a focused `*.unittest.js` that drives each branch (both the fast and delegated paths). Check `yarn cover:unit` locally, or the PR's Codecov "patch" report, and add cases until no changed line is missing.
+
+**Don't lower type coverage either.** webpack tracks how much of `lib/` is precisely typed; CI collects it (`yarn types:cover:report`) and reports the delta on the PR. Keep it from dropping — prefer real types over `EXPECTED_ANY` (see [Type annotations](#type-annotations)), and run `yarn types:cover` locally if you widened any annotations.
 
 ## Git & PR rules
 
