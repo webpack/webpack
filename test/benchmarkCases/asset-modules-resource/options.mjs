@@ -1,8 +1,10 @@
 import fs from "fs/promises";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
+import memoryScaledCount from "../../harness/benchmark/scale.mjs";
 
-const items = Array.from({ length: 25 }).fill("image");
+// Large graph in memory mode only — see scale.mjs; keeps the simulation bench small.
+const items = Array.from({ length: memoryScaledCount(25, 500) }).fill("image");
 
 /**
  * @param {string} text text in svg code

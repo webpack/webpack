@@ -1,8 +1,11 @@
 import fs from "fs/promises";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
+import memoryScaledCount from "../../harness/benchmark/scale.mjs";
 
-const items = Array.from({ length: 25 }).fill("file");
+// Large graph in memory mode so the peak live set (and the rebuild delta) is well
+// above the ~256 KB page-quantization noise floor; small elsewhere.
+const items = Array.from({ length: memoryScaledCount(25, 600) }).fill("file");
 
 /**
  * @param {number} i index

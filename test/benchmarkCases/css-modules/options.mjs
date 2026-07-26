@@ -1,8 +1,11 @@
 import fs from "fs/promises";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
+import memoryScaledCount from "../../harness/benchmark/scale.mjs";
 
-const items = Array.from({ length: 10 }).fill("css");
+// Large graph in memory mode only (see scale.mjs); small for simulation/walltime.
+// Kept modest: generateCSS grows the rule count per file, so total CSS is O(n^2).
+const items = Array.from({ length: memoryScaledCount(10, 120) }).fill("css");
 
 /**
  * @param {number} i index
