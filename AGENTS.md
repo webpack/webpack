@@ -23,22 +23,22 @@ webpack is a JavaScript module bundler. It builds a dependency graph from entry 
 
 All commands are defined in `package.json` `scripts`.
 
-| Command | What it does |
-| --- | --- |
-| `yarn fix` | `fix:code` (ESLint) + `fix:special` (regenerate types/validators) + `fmt` (Prettier). Prefer as the final step. |
-| `yarn fix:special` | Regenerate `types.d.ts`, declarations, schema validators, and generated runtime code. |
-| `yarn lint` | Full lint: ESLint + generated-output checks + every `tsc` project + Prettier + spellcheck (what CI runs). |
-| `yarn tsc` | TypeScript type check of `lib/` JSDoc (catches type errors in annotations). |
-| `yarn validate:changeset` | Validate the pending `.changeset/` files. |
-| `yarn test:base --testPathPatterns="<pattern>"` | Run targeted tests. Also `yarn test:base -t "<name>"`. |
-| `yarn test:unit` | Run all `*.unittest.js`. |
-| `yarn test:integration` | Run the integration suites (`basictest`/`longtest`/`test`). |
-| `yarn test:test262` / `yarn test:html5lib` / `yarn test:css-parsing` | Spec-conformance suites. |
-| `yarn test:base -u` | Update snapshots (eyeball the diff first). |
-| `yarn cover:unit` | Unit-test coverage. |
-| `yarn types:cover` | Type-coverage report (share of `lib/` that is precisely typed). |
-| `yarn build:examples` | Build the `examples/` (verify after changing options). |
-| `yarn test` | Full suite — don't run unless asked. |
+| Command                                                              | What it does                                                                                                    |
+| -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `yarn fix`                                                           | `fix:code` (ESLint) + `fix:special` (regenerate types/validators) + `fmt` (Prettier). Prefer as the final step. |
+| `yarn fix:special`                                                   | Regenerate `types.d.ts`, declarations, schema validators, and generated runtime code.                           |
+| `yarn lint`                                                          | Full lint: ESLint + generated-output checks + every `tsc` project + Prettier + spellcheck (what CI runs).       |
+| `yarn tsc`                                                           | TypeScript type check of `lib/` JSDoc (catches type errors in annotations).                                     |
+| `yarn validate:changeset`                                            | Validate the pending `.changeset/` files.                                                                       |
+| `yarn test:base --testPathPatterns="<pattern>"`                      | Run targeted tests. Also `yarn test:base -t "<name>"`.                                                          |
+| `yarn test:unit`                                                     | Run all `*.unittest.js`.                                                                                        |
+| `yarn test:integration`                                              | Run the integration suites (`basictest`/`longtest`/`test`).                                                     |
+| `yarn test:test262` / `yarn test:html5lib` / `yarn test:css-parsing` | Spec-conformance suites.                                                                                        |
+| `yarn test:base -u`                                                  | Update snapshots (eyeball the diff first).                                                                      |
+| `yarn cover:unit`                                                    | Unit-test coverage.                                                                                             |
+| `yarn types:cover`                                                   | Type-coverage report (share of `lib/` that is precisely typed).                                                 |
+| `yarn build:examples`                                                | Build the `examples/` (verify after changing options).                                                          |
+| `yarn test`                                                          | Full suite — don't run unless asked.                                                                            |
 
 Never invoke `yarn jest`/`npx jest` directly: the required `--experimental-vm-modules` node flag lives only in the `test:base` wrapper, and bare jest crashes ESM/test262 suites. See [TESTING_DOCS.md](TESTING_DOCS.md) for how to run a single case.
 
@@ -367,7 +367,7 @@ CI's `lint` job verifies these outputs are up to date. The combined `yarn fix` s
 
 ### Target the Node baseline
 
-`lib/` and `hot/` ship untranspiled and must run on **Node ≥ 10.13** (the CI matrix goes down to Node 10.x). Don't use syntax or runtime APIs newer than that baseline — e.g. no optional chaining (`?.`) or nullish coalescing (`??`) — or the code passes locally and fails the Node 10 CI job.
+`lib/` and `hot/` ship as raw source (no build step) and must run on **Node ≥ 10.13** (the CI matrix goes down to Node 10.x). Don't use syntax or runtime APIs newer than that baseline — e.g. no optional chaining (`?.`) or nullish coalescing (`??`) — or the code passes locally and fails the Node 10 CI job.
 
 ### Register serializable classes
 
