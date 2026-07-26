@@ -23366,6 +23366,14 @@ declare abstract class RuntimeTemplate {
 	 * use `_getAnalyzableChunkSpecifier` instead, which also handles a fixed path.
 	 */
 	supportsAnalyzableEsmUrl(): boolean;
+
+	/**
+	 * Builds the analyzable `new URL(specifier, import.meta.url)` expression the ESM
+	 * wasm/asset loader backends use to reference an emitted binary relative to the
+	 * current module (via `output.importMetaName`) instead of the runtime public-path
+	 * global — the form other bundlers and webpack itself can statically follow.
+	 */
+	importMetaUrl(specifier: string): string;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
 
