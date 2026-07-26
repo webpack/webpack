@@ -39,6 +39,8 @@ All commands are defined in `package.json` `scripts`.
 
 Never invoke `yarn jest`/`npx jest` directly: the required `--experimental-vm-modules` node flag lives only in the `test:base` wrapper, and bare jest crashes ESM/test262 suites. See [TESTING_DOCS.md](TESTING_DOCS.md) for how to run a single case.
 
+**CI checks that must pass:** `lint`, `unit`, `basic`, `integration` (Node 10→26 × ubuntu/macOS/windows, sharded `a`/`b`), `test262`, plus **CodSpeed** (performance + memory mode) and a **Bun** job. CodSpeed memory mode is sensitive to fixture size, and the Bun job runs under `--smol` and surfaces OOMs the Node suites don't — watch both when touching hot paths or large test fixtures.
+
 ## Architecture
 
 > [!REQUIRED]
@@ -214,6 +216,8 @@ Valid `<type>` values: `fix`, `feat`, `refactor`, `perf`, `test`, `chore`, `ci`,
 11. `chore` — anything else.
 
 When a change spans several categories, classify by its primary purpose (a bug fix that also adds a test is `fix`, not `test`; a feature with docs is `feat`). The chosen `<type>` is the same value used for the "What kind of change does this PR introduce?" answer, so derive both from this list.
+
+**PR/commit titles** follow conventional-commit `type(scope): subject`, scope optional (e.g. `perf(css): …`, `feat(caching): …`, `fix: …`). The `type` matches the branch prefix above.
 
 Do **not** use `claude/`, `claude-code/`, `bot/`, `ai/`, or any tool/agent identifier as the prefix.
 
