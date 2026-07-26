@@ -10,6 +10,8 @@ A `> [!REQUIRED]` callout placed immediately under a heading marks that whole se
 
 webpack is a JavaScript module bundler. It builds a dependency graph from entry modules and emits optimized static assets (chunks) for browsers, Node.js, and other targets. The config API is defined by JSON schemas and everything is wired through a `tapable` plugin/hook architecture.
 
+**Core model:** a `Compiler` drives the build; each run creates a `Compilation` holding the module graph (`Module`s) and output `Chunk`s, which is then `seal`ed and `emit`ted. Plugins expose an `apply(compiler)` method and tap the `tapable` hooks they need.
+
 ## Tech stack
 
 - **Language:** JavaScript. `lib/` is **CommonJS only**; types are declared via JSDoc `@typedef` and compiled into `types.d.ts`.
@@ -166,6 +168,14 @@ For directory structure, naming, and how to run a single case, see [TESTING_DOCS
 **Prefer integration tests over unit tests.** Cover behavior with an integration case (`configCases/`, `watchCases/`, `hotCases/`, `statsCases/`, …) that drives a real `webpack()` build whenever the behavior can be exercised that way — they catch real-world regressions a mocked unit test misses. Reach for a `*.unittest.js` only for pure helpers/utilities that a build can't naturally reach.
 
 Run targeted tests — `yarn test:base --testPathPatterns="<pattern>"` or `yarn test:base -t "<name>"`. Never invoke `yarn jest`/`npx jest` directly: the required `--experimental-vm-modules` node flag lives only in the `test:base` wrapper, and bare jest crashes ESM/test262 suites. Don't run `yarn test` unless asked. When updating snapshots (`yarn test:base -u`), eyeball the diff first.
+
+**Run one integration case** by name (`<category> <case-name>`, e.g. `css basic`):
+
+```sh
+yarn test:basic --testPathPatterns="ConfigTestCases" --testNamePattern="<category> <case>"
+```
+
+Swap `ConfigTestCases` for `StatsTestCases`, `HotTestCases`, `WatchTestCases`, … (full matrix in [TESTING_DOCS.md](TESTING_DOCS.md)). The `test262`/`html5lib`/`css-parsing` suites are git submodules — run `git submodule update --init test/<dir>` first, or they fail confusingly.
 
 **Cover every line you add or change.** A commit must not lower coverage: each new branch, fast path, and fallback needs a test that exercises it (Codecov enforces this on the patch, target 90%+). When a change adds branches that integration cases don't reach — e.g. tokenizer fast paths and their cold-path fallbacks — add a focused `*.unittest.js` that drives each branch (both the fast and delegated paths). Check `yarn cover:unit` locally, or the PR's Codecov "patch" report, and add cases until no changed line is missing.
 
@@ -347,7 +357,7 @@ CI's `lint` job verifies these outputs are up to date. The combined `yarn fix` s
 
 ### Performance and memory
 
-webpack is a bundler — users measure it by build time and peak heap usage. Many changes in `lib/` end up on per-module hot paths (sometimes per module × runtime, or per chunk × module) on user builds, so constant factors compound. Always weigh the time and memory cost of a change, including bug fixes and refactors: less allocation, smaller `Map`/`Set` footprints, and fewer closures retained on hot paths are wins worth pursuing — less is better. When introducing or holding any per-`Compilation` state, ask whether it can be released after seal/emit so large compilation data structures are not retained longer than necessary. See #15521 for an example of how this class of memory issue can surface.
+webpack is a bundler — users measure it by build time and peak heap usage. Many changes in `lib/` end up on per-module hot paths (sometimes per module × runtime, or per chunk × module) on user builds, so constant factors compound. Always weigh the time and memory cost of a change, including bug fixes and refactors: less allocation, smaller `Map`/`Set` footprints, and fewer closures retained on hot paths are wins worth pursuing — less is better. When introducing or holding any per-`Compilation` state, ask whether it can be released after seal/emit so large compilation data structures are not retained longer than necessary. See #15521 for an example of how this class of memory issue can surface. Sanity-check a perf change locally with `FILTER="<case-name>" yarn benchmark` before CodSpeed flags a regression in CI.
 
 ### Keep instance shapes stable
 
