@@ -100,8 +100,11 @@ self.fetch = async url => {
 	}
 };
 
+// Deno aliases parentPort.postMessage to the global self.postMessage, so the
+// override below would recurse into itself; bind the original first.
+const postToParent = parentPort.postMessage.bind(parentPort);
 self.postMessage = data => {
-	parentPort.postMessage(data);
+	postToParent(data);
 };
 // Deliver parentPort messages to self.onmessage, buffering until it is set
 // (browsers queue messages until onmessage is assigned; the worker module may

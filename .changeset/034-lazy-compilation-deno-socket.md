@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Guard `req.socket.setNoDelay` in the lazy-compilation backend for runtimes without it (e.g. Deno).
+Fix lazy-compilation backend on Deno: guard `setNoDelay` and force-close connections on dispose.
