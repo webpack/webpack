@@ -25,8 +25,13 @@ All commands are defined in `package.json` `scripts`.
 | --- | --- |
 | `yarn fix` | `fix:code` (ESLint) + `fix:special` (regenerate types/validators) + `fmt` (Prettier). Prefer as the final step. |
 | `yarn fix:special` | Regenerate `types.d.ts`, declarations, schema validators, and generated runtime code. |
-| `yarn tsc` | TypeScript type check (catches type errors in JSDoc annotations). |
+| `yarn lint` | Full lint: ESLint + generated-output checks + every `tsc` project + Prettier + spellcheck (what CI runs). |
+| `yarn tsc` | TypeScript type check of `lib/` JSDoc (catches type errors in annotations). |
+| `yarn validate:changeset` | Validate the pending `.changeset/` files. |
 | `yarn test:base --testPathPatterns="<pattern>"` | Run targeted tests. Also `yarn test:base -t "<name>"`. |
+| `yarn test:unit` | Run all `*.unittest.js`. |
+| `yarn test:integration` | Run the integration suites (`basictest`/`longtest`/`test`). |
+| `yarn test:test262` / `yarn test:html5lib` / `yarn test:css-parsing` | Spec-conformance suites. |
 | `yarn test:base -u` | Update snapshots (eyeball the diff first). |
 | `yarn cover:unit` | Unit-test coverage. |
 | `yarn build:examples` | Build the `examples/` (verify after changing options). |
@@ -342,10 +347,3 @@ webpack is a bundler — users measure it by build time and peak heap usage. Man
 Initialize **every** instance field in the constructor, including ones first assigned later in a method — default them to `undefined`/`null`. Assigning `this.newField` for the first time outside the constructor forces a V8 hidden-class (Shape) transition, so instances of one class end up split across shapes and the inline caches reading them go polymorphic/megamorphic — a hot property read can cost ~2× at two shapes and more when megamorphic, and code already optimized for the first shape deopts with a `wrong map` bailout. Never `delete` an instance field (it forces the object into dictionary mode); set it to `undefined` instead. The win per field is small for a single trailing field, but the rule is uniform on purpose so reviewers don't judge it case by case — it is why, for example, `Dependency` sets all its `_loc*` slots up front. Deliberate symbol-keyed sparse slots are the documented exception.
 
 When adding a field to a class whose fields are compiled into `types.d.ts` (public, non-`_`-prefixed), re-run `yarn fix:special` — constructor order determines member order in the generated declarations.
-
-## @imports
-
-Keep this file short; pull detail in on demand from:
-
-- [TESTING_DOCS.md](TESTING_DOCS.md) — test directory structure, naming, and how to run a single case.
-- [webpack AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md) — required reading before disclosing **Use of AI** in a PR.
