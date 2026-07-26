@@ -369,6 +369,10 @@ CI's `lint` job verifies these outputs are up to date. The combined `yarn fix` s
 
 `lib/` and `hot/` ship as raw source (no build step) and must run on **Node ≥ 10.13** (the CI matrix goes down to Node 10.x). Don't use syntax or runtime APIs newer than that baseline — e.g. no optional chaining (`?.`) or nullish coalescing (`??`) — or the code passes locally and fails the Node 10 CI job.
 
+### Lint covers every file, docs included
+
+The `lint` job runs Prettier (`fmt:check`) and cspell (`lint:spellcheck`) across the **whole repo** — Markdown and this guide too, not just `lib/`. Run `yarn fix` before pushing even a docs-only change: an unaligned Markdown table or a word cspell doesn't know fails `lint` on its own. For a new/unusual word, add it to the `words` list in `cspell.json` (or reword); Prettier reformats Markdown tables, so hand-written columns must match its output.
+
 ### Register serializable classes
 
 Persistent caching serializes the module graph, so any new serializable class (a `Module`, `Dependency`, or error subclass, a cached value, …) must call `makeSerializable(...)` — the pattern is used across ~140 files. Run `yarn fix:serializables` to regenerate `internalSerializables`; forgetting silently breaks the persistent cache.
