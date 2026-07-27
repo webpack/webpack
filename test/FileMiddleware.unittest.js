@@ -222,7 +222,7 @@ describe("FileMiddleware getReferencedFilenames", () => {
 
 	it("rejects when the section table does not match the file size", async () => {
 		const content = buildFile([Buffer.from([1, 2, 3]), "file-a"]);
-		const fs = fsWithFile(content);
+		const fs = /** @type {EXPECTED_ANY} */ (fsWithFile(content));
 		// the table sums to fewer bytes than the file actually has
 		fs.stat = (
 			/** @type {string} */ _file,
