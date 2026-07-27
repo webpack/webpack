@@ -3,11 +3,9 @@
 const fs = require("fs");
 const internalSerializables = require("../lib/util/internalSerializables");
 
-// Node-only: the generator formats with prettier, which trips Bun's `module`
-// builtin ("not an instance of Module"), and requiring every serializable at
-// once OOM-crashes the Bun `--smol` worker (each module loads fine on its own,
-// as the build suites exercise under Bun — only the 143-at-once aggregate here
-// exceeds the worker heap cap).
+// The generator formats with prettier, which trips Bun's `module` builtin
+// ("not an instance of Module"), so this check is Node-only. The per-entry
+// require checks below run fine on Bun (loading all 143 costs only a few MB).
 const itSkipBun = process.versions.bun ? it.skip : it;
 
 describe("internalSerializables", () => {
@@ -38,7 +36,7 @@ describe("internalSerializables", () => {
 	// Guards against entries whose `require` path doesn't resolve — such a typo
 	// only surfaces when deserializing a cold cache without the owning plugin loaded
 	for (const [request, loader] of Object.entries(internalSerializables)) {
-		itSkipBun(`should load "${request}"`, () => {
+		it(`should load "${request}"`, () => {
 			expect(loader).not.toThrow();
 		});
 	}
