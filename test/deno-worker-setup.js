@@ -7,6 +7,11 @@
 // of the real entry — which Deno runs as CommonJS. This avoids the
 // --unstable-detect-cjs flag. No-op on Node/Bun (gated on process.versions.deno).
 if (process.versions.deno) {
+	// Deno's native fs.watch (like Bun's) misses change events under jest's worker
+	// threads, so watchpack drops edits and the watch suites hang until timeout;
+	// force polling. Mirrors the Bun preload's workaround.
+	if (!process.env.WATCHPACK_POLLING) process.env.WATCHPACK_POLLING = "100";
+
 	const fs = require("fs");
 	const os = require("os");
 	const path = require("path");
