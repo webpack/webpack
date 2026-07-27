@@ -2,6 +2,18 @@
 
 "use strict";
 
+// Cache compiled module bytecode on disk (available since Node.js 22.8)
+// eslint-disable-next-line n/no-unsupported-features/node-builtins
+const { enableCompileCache } = require("module");
+
+if (enableCompileCache) {
+	try {
+		enableCompileCache();
+	} catch (_error) {
+		// Nothing
+	}
+}
+
 /**
  * @param {string} command process to run
  * @param {string[]} args command line arguments
