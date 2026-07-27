@@ -110,68 +110,74 @@ describe("ProfilingPlugin in real Chrome", () => {
 	// Bun/Deno (no puppeteer Chrome) and Node < 18 are known here, so skip visibly;
 	// a Chrome that fails to launch on supported Node is only known in beforeAll.
 	const itChrome = onBunOrDeno || nodeMajor < 18 ? it.skip : it;
-	itChrome("should generate a trace Chrome DevTools can load (#17234)", (done) => {
-		if (!browser) {
-			console.warn("Skipping: could not launch Chrome via puppeteer-core.");
-			return done();
-		}
+	itChrome(
+		"should generate a trace Chrome DevTools can load (#17234)",
+		(done) => {
+			if (!browser) {
+				console.warn("Skipping: could not launch Chrome via puppeteer-core.");
+				return done();
+			}
 
-		// Narrowed handle so the type survives into the callbacks below.
-		const activeBrowser = browser;
+			// Narrowed handle so the type survives into the callbacks below.
+			const activeBrowser = browser;
 
-		const webpack = require("..");
+			const webpack = require("..");
 
-		const outputPath = path.join(__dirname, "js/profiling-chrome");
-		const eventsPath = path.join(outputPath, "events.json");
+			const outputPath = path.join(__dirname, "js/profiling-chrome");
+			const eventsPath = path.join(outputPath, "events.json");
 
-		rimraf(outputPath, () => {
-			const compiler = webpack({
-				context: __dirname,
-				entry: "./fixtures/a.js",
-				output: { path: path.join(outputPath, "dist") },
-				plugins: [new webpack.debug.ProfilingPlugin({ outputPath: eventsPath })]
-			});
-			compiler.run(async (err) => {
-				if (err) return done(err);
-				try {
-					/** @type {TraceEvent[]} */
-					const events = JSON.parse(fs.readFileSync(eventsPath, "utf8"));
-					const page = await activeBrowser.newPage();
-					// Run Chrome DevTools' trace bootstrap (MetaHandler) in the real
-					// browser: iterate the TracingStartedInBrowser frames and pick the
-					// parent-less main frame. A missing `frames` array threw
-					// "frames is not iterable" and the whole trace failed to load.
-					const result = await page.evaluate(
-						(/** @type {TraceEvent[]} */ evs) => {
-							const event = evs.find(
-								(e) => e && e.name === "TracingStartedInBrowser"
-							);
-							if (!event) return { ok: false, threw: null, mainFrame: null };
-							/** @type {string | null} */
-							let threw = null;
-							/** @type {string | null} */
-							let mainFrame = null;
-							try {
-								for (const frame of event.args.data.frames) {
-									if (!frame.parent) mainFrame = frame.frame;
+			rimraf(outputPath, () => {
+				const compiler = webpack({
+					context: __dirname,
+					entry: "./fixtures/a.js",
+					output: { path: path.join(outputPath, "dist") },
+					plugins: [
+						new webpack.debug.ProfilingPlugin({ outputPath: eventsPath })
+					]
+				});
+				compiler.run(async (err) => {
+					if (err) return done(err);
+					try {
+						/** @type {TraceEvent[]} */
+						const events = JSON.parse(fs.readFileSync(eventsPath, "utf8"));
+						const page = await activeBrowser.newPage();
+						// Run Chrome DevTools' trace bootstrap (MetaHandler) in the real
+						// browser: iterate the TracingStartedInBrowser frames and pick the
+						// parent-less main frame. A missing `frames` array threw
+						// "frames is not iterable" and the whole trace failed to load.
+						const result = await page.evaluate(
+							(/** @type {TraceEvent[]} */ evs) => {
+								const event = evs.find(
+									(e) => e && e.name === "TracingStartedInBrowser"
+								);
+								if (!event) return { ok: false, threw: null, mainFrame: null };
+								/** @type {string | null} */
+								let threw = null;
+								/** @type {string | null} */
+								let mainFrame = null;
+								try {
+									for (const frame of event.args.data.frames) {
+										if (!frame.parent) mainFrame = frame.frame;
+									}
+								} catch (err_) {
+									threw = err_ instanceof Error ? err_.message : String(err_);
 								}
-							} catch (err_) {
-								threw = err_ instanceof Error ? err_.message : String(err_);
-							}
-							return { ok: threw === null, threw, mainFrame };
-						},
-						events
-					);
-					await page.close();
+								return { ok: threw === null, threw, mainFrame };
+							},
+							events
+						);
+						await page.close();
 
-					expect(result.threw).toBeNull();
-					expect(result.ok).toBe(true);
-					expect(typeof result.mainFrame).toBe("string");
-					done();
-				} catch (err_) {
-					done(err_);
-				}
+						expect(result.threw).toBeNull();
+						expect(result.ok).toBe(true);
+						expect(typeof result.mainFrame).toBe("string");
+						done();
+					} catch (err_) {
+						done(err_);
+					}
+				});
 			});
-		});
-	}, 120000);
+		},
+		120000
+	);
 });

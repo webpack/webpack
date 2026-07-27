@@ -46,7 +46,9 @@ const restoreTimers = () => {
 const timerCount = () => pendingTimers.size;
 
 const advanceTimersByTime = (/** @type {number} */ ms) => {
-	for (const timer of [...pendingTimers]) {
+	// Deleting the current entry during Set iteration is safe; callbacks here don't
+	// schedule new timers, so iterating the live set needs no snapshot copy.
+	for (const timer of pendingTimers) {
 		if (timer.delay <= ms) {
 			pendingTimers.delete(timer);
 			timer.callback();
