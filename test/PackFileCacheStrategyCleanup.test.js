@@ -230,9 +230,91 @@ describe("PackFileCacheStrategy cleanup", () => {
 		await strategy._cleanupUnusedFiles(new Set(), new Set(["retained"]));
 		expect(readCounts.get(retainedPath)).toBe(2);
 		// entries of files that are no longer alive are pruned
-		strategy._referencedFilesCache.set("ghost", []);
+		strategy._referencedFilesCache.set("ghost", {
+			mtimeMs: 0,
+			referenced: []
+		});
 		await strategy._cleanupUnusedFiles(new Set(), new Set(["retained"]));
 		expect(strategy._referencedFilesCache.has("ghost")).toBe(false);
 		expect(strategy._referencedFilesCache.has("retained")).toBe(true);
+	});
+
+	it("re-reads a retained file rewritten in place by a concurrent process", async () => {
+		const fs = require("graceful-fs");
+
+		const PackFileCacheStrategy = require("../lib/cache/PackFileCacheStrategy");
+
+		fs.mkdirSync(tempPath, { recursive: true });
+		fs.writeFileSync(
+			path.join(tempPath, "retained.pack"),
+			buildFileWithPointers(["nested-a"])
+		);
+		fs.writeFileSync(
+			path.join(tempPath, "nested-a.pack"),
+			buildFileWithPointers([])
+		);
+		fs.writeFileSync(
+			path.join(tempPath, "nested-b.pack"),
+			buildFileWithPointers([])
+		);
+		const oldTime = new Date(Date.now() - 2 * 60 * 60 * 1000);
+		for (const file of ["retained.pack", "nested-a.pack", "nested-b.pack"]) {
+			fs.utimesSync(path.join(tempPath, file), oldTime, oldTime);
+		}
+
+		/** @type {EXPECTED_ANY} */
+		const logger = {
+			time: () => {},
+			timeEnd: () => {},
+			log: () => {},
+			debug: () => {},
+			warn: () => {},
+			error: () => {},
+			getChildLogger: () => logger
+		};
+		const strategy = new PackFileCacheStrategy({
+			compiler: /** @type {EXPECTED_ANY} */ ({
+				options: { output: { hashFunction: "md4" } }
+			}),
+			fs,
+			context: tempPath,
+			cacheLocation: tempPath,
+			version: "test",
+			logger,
+			snapshot: /** @type {EXPECTED_ANY} */ ({
+				managedPaths: [],
+				immutablePaths: []
+			}),
+			maxAge: 1000 * 60
+		});
+
+		// first store memoizes retained -> nested-a
+		await strategy._cleanupUnusedFiles(new Set(), new Set(["retained"]));
+		expect(fs.readdirSync(tempPath).sort()).toEqual([
+			"nested-a.pack",
+			"retained.pack"
+		]);
+
+		// a concurrent process rewrites retained.pack to reference nested-b
+		fs.writeFileSync(
+			path.join(tempPath, "retained.pack"),
+			buildFileWithPointers(["nested-b"])
+		);
+		fs.writeFileSync(
+			path.join(tempPath, "nested-b.pack"),
+			buildFileWithPointers([])
+		);
+		// old but newer than the memoized mtime, so the memo must be refreshed
+		const newerOldTime = new Date(Date.now() - 60 * 60 * 1000);
+		for (const file of ["retained.pack", "nested-b.pack"]) {
+			fs.utimesSync(path.join(tempPath, file), newerOldTime, newerOldTime);
+		}
+
+		// a stale memo would keep nested-a alive and delete nested-b
+		await strategy._cleanupUnusedFiles(new Set(), new Set(["retained"]));
+		expect(fs.readdirSync(tempPath).sort()).toEqual([
+			"nested-b.pack",
+			"retained.pack"
+		]);
 	});
 });
