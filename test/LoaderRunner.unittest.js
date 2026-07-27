@@ -882,26 +882,26 @@ describe("runLoaders", () => {
 	} catch (_err) {
 		// require(esm) is not supported in this runtime
 	}
-	if (canRequireEsm) {
-		it("should load an esm loader using require()", (done) => {
-			runLoaders(
-				{
-					resource: path.resolve(fixtures, "resource.bin"),
-					loaders: [path.resolve(fixtures, "esm-loader.mjs")]
-				},
-				(err, result) => {
-					if (err) return done(err);
-					expect(result.result).toEqual(["resource-esm"]);
-					expect(result.cacheable).toBe(true);
-					expect(result.fileDependencies).toEqual([
-						path.resolve(fixtures, "resource.bin")
-					]);
-					expect(result.contextDependencies).toEqual([]);
-					done();
-				}
-			);
-		});
-	}
+	// Skip (report skipped, don't silently drop) where require(esm) is unsupported, e.g. Deno.
+	const itRequireEsm = canRequireEsm ? it : it.skip;
+	itRequireEsm("should load an esm loader using require()", (done) => {
+		runLoaders(
+			{
+				resource: path.resolve(fixtures, "resource.bin"),
+				loaders: [path.resolve(fixtures, "esm-loader.mjs")]
+			},
+			(err, result) => {
+				if (err) return done(err);
+				expect(result.result).toEqual(["resource-esm"]);
+				expect(result.cacheable).toBe(true);
+				expect(result.fileDependencies).toEqual([
+					path.resolve(fixtures, "resource.bin")
+				]);
+				expect(result.contextDependencies).toEqual([]);
+				done();
+			}
+		);
+	});
 
 	if (Number(process.versions.modules) >= 83) {
 		it("should load a commonjs loader using import()", (done) => {

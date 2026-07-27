@@ -14,8 +14,7 @@ const base = (name, devtool) => ({
 		rules: [
 			{
 				test: /chunk/,
-				loader: "babel-loader",
-				options: {}
+				loader: path.resolve(__dirname, "identity-loader.js")
 			}
 		]
 	},

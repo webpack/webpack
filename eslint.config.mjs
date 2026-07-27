@@ -169,7 +169,10 @@ export default defineConfig([
 	},
 	{
 		// puppeteer-core is ESM-only (v25+) and is loaded via dynamic import here
-		files: ["test/ProfilingPlugin.unittest.js"],
+		files: [
+			"test/ProfilingPlugin.unittest.js",
+			"test/WebpackDevServer.longtest.js"
+		],
 		languageOptions: {
 			ecmaVersion: 2020
 		}

@@ -17,22 +17,18 @@ const os = require("os");
 const path = require("path");
 
 // Drives a real webpack-dev-server (added as a compiler plugin) in real Chrome via
-// puppeteer-core. Bun and Deno report a Node-compatible version; require puppeteer
-// and the dev server lazily so the suite self-skips where they (or Chrome) are
-// missing. webpack-dev-server needs Node >= 22.15 (its floor, above puppeteer's >= 18).
+// puppeteer-core. puppeteer-core is ESM-only (v25+) and can't be require()d under
+// Jest's vm, so it is loaded via dynamic import in beforeAll; the suite self-skips
+// where it or Chrome is missing. webpack-dev-server needs Node >= 22.15.
 const [nodeMajor, nodeMinor] = process.versions.node.split(".").map(Number);
 const nodeSupported = nodeMajor > 22 || (nodeMajor === 22 && nodeMinor >= 15);
 
-/** @type {typeof import("puppeteer-core") | undefined} */
-let puppeteer;
 /** @type {typeof import("webpack-dev-server") | undefined} */
 let WebpackDevServer;
 if (nodeSupported) {
 	try {
-		puppeteer = require("puppeteer-core");
 		WebpackDevServer = require("webpack-dev-server");
 	} catch (_err) {
-		puppeteer = undefined;
 		WebpackDevServer = undefined;
 	}
 }
@@ -299,8 +295,20 @@ describe("WebpackDevServer integration in real Chrome", () => {
 	/** @type {import("puppeteer-core").Browser | undefined} */
 	let browser;
 
+	// Unsupported Node or a missing dev server is known here, so skip visibly; a missing
+	// puppeteer or a Chrome that won't launch is only known in beforeAll (runtime skip).
+	const itChrome = nodeSupported && WebpackDevServer ? it : it.skip;
+
 	beforeAll(async () => {
-		if (!puppeteer || !WebpackDevServer) return;
+		if (!WebpackDevServer) return;
+		/** @type {typeof import("puppeteer-core").default} */
+		let puppeteer;
+		try {
+			// require() of puppeteer-core throws under Jest since it is ESM-only (v25+).
+			puppeteer = (await import("puppeteer-core")).default;
+		} catch (_err) {
+			return;
+		}
 		ensureWebpackSelfLink();
 		try {
 			/** @type {import("puppeteer-core").LaunchOptions} */
@@ -324,121 +332,133 @@ describe("WebpackDevServer integration in real Chrome", () => {
 		if (browser) await browser.close();
 	});
 
-	it("applies a hot module replacement update without reloading the page", async () => {
-		if (!browser) {
-			console.warn("Skipping: could not launch Chrome via puppeteer-core.");
-			return;
-		}
+	itChrome(
+		"applies a hot module replacement update without reloading the page",
+		async () => {
+			if (!browser) {
+				console.warn("Skipping: could not launch Chrome via puppeteer-core.");
+				return;
+			}
 
-		const { dir, messagePath } = writeFixture();
-		const port = await findPort();
-		const { server, watching } = await startServer(dir, port, {
-			hot: true,
-			liveReload: false
-		});
-		const page = await browser.newPage();
-		try {
-			await page.goto(`http://127.0.0.1:${port}/`, {
-				waitUntil: "domcontentloaded"
+			const { dir, messagePath } = writeFixture();
+			const port = await findPort();
+			const { server, watching } = await startServer(dir, port, {
+				hot: true,
+				liveReload: false
 			});
-			await waitForAppText(page, "MESSAGE_V1", 20000);
+			const page = await browser.newPage();
+			try {
+				await page.goto(`http://127.0.0.1:${port}/`, {
+					waitUntil: "domcontentloaded"
+				});
+				await waitForAppText(page, "MESSAGE_V1", 20000);
 
-			// Marker on window survives an HMR patch but not a full page reload.
-			await page.evaluate(() => {
-				/** @type {EXPECTED_ANY} */ (window).__notReloaded = true;
+				// Marker on window survives an HMR patch but not a full page reload.
+				await page.evaluate(() => {
+					/** @type {EXPECTED_ANY} */ (window).__notReloaded = true;
+				});
+
+				fs.writeFileSync(messagePath, messageSource("V2"));
+				await waitForAppText(page, "MESSAGE_V2", 20000);
+
+				const notReloaded = await page.evaluate(
+					() => /** @type {EXPECTED_ANY} */ (window).__notReloaded === true
+				);
+				expect(notReloaded).toBe(true);
+			} finally {
+				await page.close();
+				await new Promise((resolve) => {
+					watching.close(resolve);
+				});
+				await stopServer(server);
+				fs.rmSync(dir, { recursive: true, force: true });
+			}
+		},
+		90000
+	);
+
+	itChrome(
+		"reloads the whole page on change when live reload is used",
+		async () => {
+			if (!browser) {
+				console.warn("Skipping: could not launch Chrome via puppeteer-core.");
+				return;
+			}
+
+			const { dir, messagePath } = writeFixture();
+			const port = await findPort();
+			const { server, watching } = await startServer(dir, port, {
+				hot: false,
+				liveReload: true
 			});
+			const page = await browser.newPage();
+			try {
+				await page.goto(`http://127.0.0.1:${port}/`, {
+					waitUntil: "domcontentloaded"
+				});
+				await waitForAppText(page, "MESSAGE_V1", 20000);
 
-			fs.writeFileSync(messagePath, messageSource("V2"));
-			await waitForAppText(page, "MESSAGE_V2", 20000);
+				await page.evaluate(() => {
+					/** @type {EXPECTED_ANY} */ (window).__notReloaded = true;
+				});
 
-			const notReloaded = await page.evaluate(
-				() => /** @type {EXPECTED_ANY} */ (window).__notReloaded === true
-			);
-			expect(notReloaded).toBe(true);
-		} finally {
-			await page.close();
-			await new Promise((resolve) => {
-				watching.close(resolve);
+				fs.writeFileSync(messagePath, messageSource("V2"));
+				await waitForAppText(page, "MESSAGE_V2", 20000);
+
+				const notReloaded = await page.evaluate(
+					() => /** @type {EXPECTED_ANY} */ (window).__notReloaded === true
+				);
+				expect(notReloaded).toBe(false);
+			} finally {
+				await page.close();
+				await new Promise((resolve) => {
+					watching.close(resolve);
+				});
+				await stopServer(server);
+				fs.rmSync(dir, { recursive: true, force: true });
+			}
+		},
+		90000
+	);
+
+	itChrome(
+		"shows the error overlay (enabled by default) on a compile error",
+		async () => {
+			if (!browser) {
+				console.warn("Skipping: could not launch Chrome via puppeteer-core.");
+				return;
+			}
+
+			const { dir, messagePath } = writeFixture();
+			const port = await findPort();
+			// No `overlay: false` here — exercise the default overlay.
+			const { server, watching } = await startServer(dir, port, {
+				hot: true,
+				liveReload: false,
+				client: { logging: "none" }
 			});
-			await stopServer(server);
-			fs.rmSync(dir, { recursive: true, force: true });
-		}
-	}, 90000);
+			const page = await browser.newPage();
+			try {
+				await page.goto(`http://127.0.0.1:${port}/`, {
+					waitUntil: "domcontentloaded"
+				});
+				await waitForAppText(page, "MESSAGE_V1", 20000);
+				expect(await hasOverlay(page)).toBe(false);
 
-	it("reloads the whole page on change when live reload is used", async () => {
-		if (!browser) {
-			console.warn("Skipping: could not launch Chrome via puppeteer-core.");
-			return;
-		}
-
-		const { dir, messagePath } = writeFixture();
-		const port = await findPort();
-		const { server, watching } = await startServer(dir, port, {
-			hot: false,
-			liveReload: true
-		});
-		const page = await browser.newPage();
-		try {
-			await page.goto(`http://127.0.0.1:${port}/`, {
-				waitUntil: "domcontentloaded"
-			});
-			await waitForAppText(page, "MESSAGE_V1", 20000);
-
-			await page.evaluate(() => {
-				/** @type {EXPECTED_ANY} */ (window).__notReloaded = true;
-			});
-
-			fs.writeFileSync(messagePath, messageSource("V2"));
-			await waitForAppText(page, "MESSAGE_V2", 20000);
-
-			const notReloaded = await page.evaluate(
-				() => /** @type {EXPECTED_ANY} */ (window).__notReloaded === true
-			);
-			expect(notReloaded).toBe(false);
-		} finally {
-			await page.close();
-			await new Promise((resolve) => {
-				watching.close(resolve);
-			});
-			await stopServer(server);
-			fs.rmSync(dir, { recursive: true, force: true });
-		}
-	}, 90000);
-
-	it("shows the error overlay (enabled by default) on a compile error", async () => {
-		if (!browser) {
-			console.warn("Skipping: could not launch Chrome via puppeteer-core.");
-			return;
-		}
-
-		const { dir, messagePath } = writeFixture();
-		const port = await findPort();
-		// No `overlay: false` here — exercise the default overlay.
-		const { server, watching } = await startServer(dir, port, {
-			hot: true,
-			liveReload: false,
-			client: { logging: "none" }
-		});
-		const page = await browser.newPage();
-		try {
-			await page.goto(`http://127.0.0.1:${port}/`, {
-				waitUntil: "domcontentloaded"
-			});
-			await waitForAppText(page, "MESSAGE_V1", 20000);
-			expect(await hasOverlay(page)).toBe(false);
-
-			// An unterminated string is a module parse error; the default overlay
-			// should surface the failed compilation.
-			fs.writeFileSync(messagePath, '"use strict";\nmodule.exports = "oops');
-			await waitForOverlay(page, true, 20000);
-			expect(await hasOverlay(page)).toBe(true);
-		} finally {
-			await page.close();
-			await new Promise((resolve) => {
-				watching.close(resolve);
-			});
-			await stopServer(server);
-			fs.rmSync(dir, { recursive: true, force: true });
-		}
-	}, 90000);
+				// An unterminated string is a module parse error; the default overlay
+				// should surface the failed compilation.
+				fs.writeFileSync(messagePath, '"use strict";\nmodule.exports = "oops');
+				await waitForOverlay(page, true, 20000);
+				expect(await hasOverlay(page)).toBe(true);
+			} finally {
+				await page.close();
+				await new Promise((resolve) => {
+					watching.close(resolve);
+				});
+				await stopServer(server);
+				fs.rmSync(dir, { recursive: true, force: true });
+			}
+		},
+		90000
+	);
 });

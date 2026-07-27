@@ -245,17 +245,17 @@ describe("BinaryMiddleware", () => {
 
 	describe("invalid streams", () => {
 		it("should throw on a payload from a newer V8 format version", () => {
-			const payload = v8.serialize([1, "x"]);
-			// The version guard only applies to the V8 wire format (0xff + version);
-			// Bun's node:v8 polyfill uses a different format, so skip it there.
-			if (payload[0] !== 0xff) return;
-			payload[1] = 0x7f; // pretend it was written by a newer V8
+			// Guard is byte-based (0xff + version vs. the runtime's own v8.serialize(null)[1]);
+			// a hand-built payload runs on Node/Deno/Bun and throws before v8.deserialize.
+			const supportedVersion = v8.serialize(null)[1];
+			const futureVersion = Math.min(supportedVersion + 1, 0xff);
+			const payload = Buffer.from([0xff, futureVersion]);
 			const header = Buffer.alloc(9);
-			header[0] = 0xf1;
-			header.writeUInt32LE(payload.length, 1);
-			header.writeUInt32LE(0, 5);
+			header[0] = 0xf1; // VALUES_HEADER
+			header.writeUInt32LE(payload.length, 1); // payload size
+			header.writeUInt32LE(0, 5); // no retained buffers
 			expect(() => mw.deserialize([header, payload], {})).toThrow(
-				/V8 serialization format version 127/
+				new RegExp(`V8 serialization format version ${futureVersion}`)
 			);
 		});
 
