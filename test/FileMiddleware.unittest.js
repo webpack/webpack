@@ -174,7 +174,8 @@ describe("FileMiddleware getReferencedFilenames", () => {
 		).resolves.toEqual(["file-a"]);
 	});
 
-	(zlib.zstdCompressSync ? it : it.skip)(
+	// zstd is only available on Node.js >= 22.15
+	("zstdCompressSync" in zlib ? it : it.skip)(
 		"supports zstd compressed files",
 		async () => {
 			const content = buildFile(["file-a"]);
