@@ -375,6 +375,13 @@ export default 40 + file;
 		// the old-but-still-referenced pack (c stayed cached in it) survives
 		expect(remaining).toContain("1.pack");
 		expect(remaining).toContain("index.pack");
+		// once c stops being used it expires, and its pack gets deleted too
+		await backdateCache();
+		await new Promise((resolve) => {
+			setTimeout(resolve, 6000);
+		});
+		await c("de");
+		expect(await readdir(cachePath)).not.toContain("1.pack");
 	}, 60000);
 
 	it("should keep recently modified unreferenced cache files", async () => {
