@@ -219,4 +219,29 @@ describe("FileMiddleware getReferencedFilenames", () => {
 			/read failed/
 		);
 	});
+
+	it("rejects when the section table does not match the file size", async () => {
+		const content = buildFile([Buffer.from([1, 2, 3]), "file-a"]);
+		const fs = fsWithFile(content);
+		// the table sums to fewer bytes than the file actually has
+		fs.stat = (
+			/** @type {string} */ _file,
+			/** @type {EXPECTED_ANY} */ callback
+		) => process.nextTick(() => callback(null, { size: content.length + 10 }));
+		await expect(getReferencedFilenames(fs, "index.pack")).rejects.toThrow(
+			/Section table does not match size/
+		);
+	});
+
+	it("rejects when stat errors", async () => {
+		const content = buildFile([Buffer.from([1, 2, 3]), "file-a"]);
+		const fs = fsWithFile(content);
+		fs.stat = (
+			/** @type {string} */ _file,
+			/** @type {EXPECTED_ANY} */ callback
+		) => process.nextTick(() => callback(new Error("stat failed")));
+		await expect(getReferencedFilenames(fs, "index.pack")).rejects.toThrow(
+			/stat failed/
+		);
+	});
 });
