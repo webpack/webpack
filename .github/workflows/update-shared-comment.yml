@@ -1,7 +1,5 @@
 name: Update shared comment
 
-# Sole writer of the sticky CI report comment. Producing workflows only upload
-# their section as an artifact, so none of them needs write access to the PR.
 on:
   workflow_run:
     workflows: [Github Actions, Publish to pkg.pr.new]
@@ -11,16 +9,11 @@ permissions:
   contents: read
 
 concurrency:
-  # One writer per pull request, queued rather than cancelled: each run carries the
-  # other workflow's section over from the comment it reads, so cancelling a pending
-  # write would drop that section. Fork pull requests have no `pull_requests` entry.
-  group: update-shared-comment-${{ github.event.workflow_run.pull_requests[0].number || format('{0}@{1}', github.event.workflow_run.head_repository.full_name, github.event.workflow_run.head_branch) }}
+  group: update-shared-comment-${{ format('{0}@{1}', github.event.workflow_run.head_repository.full_name, github.event.workflow_run.head_branch) }}
   cancel-in-progress: false
 
 jobs:
   update:
-    # Only a green pull request run carries a report; pushes, failures and cancelled
-    # runs have nothing to say.
     if: |
       github.repository == 'webpack/webpack' &&
       github.event.workflow_run.event == 'pull_request' &&
@@ -33,9 +26,6 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      # Each artifact holds a single `<section>.md`, so they merge into one directory.
-      # Downloading fails when a producing job was skipped instead of run, which
-      # leaves nothing to post; `hashFiles` below turns that into a no-op.
       - name: Download the report sections
         continue-on-error: true
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
@@ -46,21 +36,37 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Resolve the pull request
+      - name: Resolve Pull Request Number
         id: pr
-        if: hashFiles('sections/*.md') != ''
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
-          result-encoding: string
           script: |
             const run = context.payload.workflow_run;
-            if (run.pull_requests.length > 0) return run.pull_requests[0].number;
-            // `pull_requests` is empty for a fork; the head commit still resolves.
-            const { data } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
-              ...context.repo,
-              commit_sha: run.head_sha
-            });
-            return data.length > 0 ? data[0].number : "";
+
+            // 1. For same-repo Pull Requests the run is already linked to its PR(s).
+            if (run.pull_requests && run.pull_requests.length) {
+              core.setOutput('number', run.pull_requests[0].number);
+              return;
+            }
+
+            // 2. For forks that list is empty, so find the open Pull Request who has the
+            // correct branch information
+            const match = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              head: `${context.payload.workflow_run.head_repository.owner.login}:${context.payload.workflow_run.head_branch}`,
+              sort: 'updated',
+              direction: 'desc',
+              per_page: 1,
+            }).then(r => r.data[0]);
+
+            if (!match) {
+              core.info(`No open pull request found for HEAD ${run.head_sha}`);
+              return;
+            }
+
+            core.setOutput('number', match.number);
 
       - name: Find the shared comment
         id: find
