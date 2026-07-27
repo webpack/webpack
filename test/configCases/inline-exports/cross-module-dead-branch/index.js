@@ -153,6 +153,51 @@ it("keeps require() in both branches when the test is not statically known", () 
 	expect(hasModule("./kept_cjs_b.js")).toBe(true);
 });
 
+it("ternary: imported boolean gates the dead branch require().prop", () => {
+	const v = isDEV
+		? require("./dead_cjs_full_ternary.js").value
+		: require("./live_cjs_full.js").value;
+	expect(v).toBe("LIVE_CJS_FULL");
+	expect(hasModule("./dead_cjs_full_ternary.js")).toBe(false);
+	expect(hasModule("./live_cjs_full.js")).toBe(true);
+});
+
+it("if-statement: imported boolean gates the dead branch require().prop", () => {
+	let v;
+	if (isProd) {
+		v = require("./live_cjs_full.js").value;
+	} else {
+		v = require("./dead_cjs_full_if.js").value;
+	}
+	expect(v).toBe("LIVE_CJS_FULL");
+	expect(hasModule("./dead_cjs_full_if.js")).toBe(false);
+});
+
+it("imported boolean gates the dead branch require().prop()", () => {
+	const v = isDEV
+		? require("./dead_cjs_full_call.js").get()
+		: require("./live_cjs_full.js").get();
+	expect(v).toBe("LIVE_CJS_FULL_CALL");
+	expect(hasModule("./dead_cjs_full_call.js")).toBe(false);
+});
+
+it("nested if: dead inner branch under an unknown outer branch drops its require().prop", () => {
+	let v = require("./live_cjs_full.js").value;
+	if (obj.flag) {
+		if (isDEV) {
+			v = require("./dead_cjs_full_nested.js").value;
+		}
+	}
+	expect(v).toBe("LIVE_CJS_FULL");
+	expect(hasModule("./dead_cjs_full_nested.js")).toBe(false);
+});
+
+it("keeps require().prop when the test is not statically known", () => {
+	const v = obj.flag ? require("./kept_cjs_full.js").value : "fallback";
+	expect(v).toBe("fallback");
+	expect(hasModule("./kept_cjs_full.js")).toBe(true);
+});
+
 it("ternary: imported boolean gates the dead branch import()", async () => {
 	const ns = await (isDEV ? import("./dead_dyn.js") : import("./live_dyn.js"));
 	expect(ns.V).toBe("LIVE_DYN");
