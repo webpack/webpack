@@ -155,7 +155,7 @@ describe("FileMiddleware getReferencedFilenames", () => {
 		content.writeUInt32LE(0xffffffff, 4);
 		await expect(
 			getReferencedFilenames(fsWithFile(content), "index.pack")
-		).rejects.toThrow(/allocate|out of range|Invalid/i);
+		).rejects.toThrow(/Invalid section size/);
 	});
 
 	it("supports gzip and brotli compressed files", async () => {
