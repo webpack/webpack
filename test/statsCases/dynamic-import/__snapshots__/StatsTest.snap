@@ -9,10 +9,10 @@ Entrypoint main X MiB = runtime.js X KiB common.js X MiB main.js X KiB
 runtime modules X KiB 12 modules
 built modules X MiB [built]
   modules by path ../../../node_modules/ X MiB
-    modules by path ../../../node_modules/react/ X KiB 4 modules
-    modules by path ../../../node_modules/react-dom/ X MiB
-      modules by path ../../../node_modules/react-dom/*.js X KiB 2 modules
-      modules by path ../../../node_modules/react-dom/cjs/*.js X MiB 2 modules
+    modules by path ../../../node_modules/react-dom/ X MiB 4 modules
+    modules by path ../../../node_modules/react/ X KiB
+      ../../../node_modules/react/index.js X bytes [built] [code generated]
+      ../../../node_modules/react/cjs/react.development.js X KiB [built] [code generated]
     modules by path ../../../node_modules/scheduler/ X KiB
       ../../../node_modules/scheduler/index.js X bytes [built] [code generated]
       ../../../node_modules/scheduler/cjs/scheduler.development.js X KiB [built] [code generated]

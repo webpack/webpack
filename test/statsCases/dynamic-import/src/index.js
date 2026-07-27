@@ -15,11 +15,11 @@ class AsyncComponent extends React.Component {
 
 	render() {
 		const { state: { Component } } = this
-		return <Component />
+		return React.createElement(Component)
 	}
 }
 
-const App = () => <AsyncComponent page='home' />
+const App = () => React.createElement(AsyncComponent, { page: 'home' })
 const root = createRoot(document.getElementById('app'))
 
-root.render(<App />)
+root.render(React.createElement(App))
