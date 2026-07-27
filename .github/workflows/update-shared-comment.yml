@@ -11,12 +11,20 @@ permissions:
   contents: read
 
 concurrency:
-  # One writer per pull request; the newest report supersedes whatever it cancels.
-  group: update-shared-comment-${{ github.event.workflow_run.pull_requests[0].number || github.event.workflow_run.head_branch }}
-  cancel-in-progress: true
+  # One writer per pull request, queued rather than cancelled: each run carries the
+  # other workflow's section over from the comment it reads, so cancelling a pending
+  # write would drop that section. Fork pull requests have no `pull_requests` entry.
+  group: update-shared-comment-${{ github.event.workflow_run.pull_requests[0].number || format('{0}@{1}', github.event.workflow_run.head_repository.full_name, github.event.workflow_run.head_branch) }}
+  cancel-in-progress: false
 
 jobs:
   update:
+    # Only a green pull request run carries a report; pushes, failures and cancelled
+    # runs have nothing to say.
+    if: |
+      github.repository == 'webpack/webpack' &&
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -26,7 +34,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # Each artifact holds a single `<section>.md`, so they merge into one directory.
+      # Downloading fails when a producing job was skipped instead of run, which
+      # leaves nothing to post; `hashFiles` below turns that into a no-op.
       - name: Download the report sections
+        continue-on-error: true
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           pattern: pr-report-*
@@ -44,7 +55,7 @@ jobs:
           script: |
             const run = context.payload.workflow_run;
             if (run.pull_requests.length > 0) return run.pull_requests[0].number;
-            // A push to `main` reports on the pull request that was merged.
+            // `pull_requests` is empty for a fork; the head commit still resolves.
             const { data } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
               ...context.repo,
               commit_sha: run.head_sha
