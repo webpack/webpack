@@ -130,7 +130,10 @@ describe("PackFileCacheStrategy cleanup", () => {
 			/** @type {string} */ flags,
 			/** @type {EXPECTED_ANY} */ callback
 		) => {
-			readCounts.set(file, (readCounts.get(file) || 0) + 1);
+			// the strategy joins paths with "/"; normalize so lookups built with
+			// path.join match on Windows too
+			const key = path.normalize(file);
+			readCounts.set(key, (readCounts.get(key) || 0) + 1);
 			gracefulFs.open(file, flags, callback);
 		};
 
