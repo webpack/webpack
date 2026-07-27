@@ -1,17 +1,26 @@
 import * as circularA from "./circular-a";
 import * as exportRequire from "./export-require";
 import * as moduleId from "./module-id";
+import * as moduleLoaded from "./module-loaded";
 import reexportRequire from "./reexport-require";
+import * as requireCache from "./require-cache";
+import * as requireMain from "./require-main";
 import "./side-effect-only";
 import * as sloppy from "./sloppy";
 import * as wrapWithRequire from "./wrap-with-require";
 
-it("should keep unsupported CommonJS modules working", () => {
+it("should keep modules with unsupported export shapes working", () => {
 	expect(sloppy.s).toBe("sloppy");
 	expect(typeof moduleId.id).not.toBe("undefined");
 	expect(exportRequire.inner.s).toBe("sloppy");
 	expect(wrapWithRequire.default.s).toBe("sloppy");
 	expect(global.__webpackWrappedSideEffect).toBe("ran");
+});
+
+it("should keep modules reading the module cache working", () => {
+	expect(requireCache.cached).toBe(true);
+	expect(requireMain.hasMain).toBe(true);
+	expect(moduleLoaded.loaded).toBe(false);
 });
 
 it("should keep a whole `module.exports = require(...)` re-export working", () => {
@@ -23,9 +32,19 @@ it("should keep circular CommonJS requires working", () => {
 	expect(circularA.bName).toBe("b");
 });
 
-it("should not concatenate any of the unsupported modules", () => {
+it("should concatenate only the supported modules", () => {
 	const concatModules = __STATS__.modules.filter((m) => m.modules);
-	expect(concatModules.length).toBe(0);
+	expect(concatModules.length).toBe(1);
+	const inner = concatModules[0].modules.map((m) => m.name).sort();
+	expect(inner).toEqual([
+		"./circular-a.js",
+		"./circular-b.js",
+		"./export-require.js",
+		"./index.js",
+		"./reexport-require.js",
+		"./side-effect-only.js",
+		"./wrap-with-require.js"
+	]);
 });
 
 it("should report a bailout reason for each unsupported module", () => {
@@ -44,13 +63,15 @@ it("should report a bailout reason for each unsupported module", () => {
 	expect(bailoutsOf("module-id.js")).toContainEqual(
 		expect.stringContaining("module.id")
 	);
-	expect(bailoutsOf("export-require.js")).toContainEqual(
-		expect.stringContaining("unsupported dependency")
+	expect(bailoutsOf("module-loaded.js")).toContainEqual(
+		expect.stringContaining("module.loaded")
 	);
-	expect(bailoutsOf("wrap-with-require.js")).toContainEqual(
-		expect.stringContaining("not supported when wrapping")
+	// runtime requirements reachable only through presentational dependencies
+	expect(bailoutsOf("require-cache.js")).toContainEqual(
+		expect.stringContaining("__webpack_require__.c")
 	);
-	expect(bailoutsOf("side-effect-only.js")).toContainEqual(
-		expect.stringContaining("not an ECMAScript module")
+	expect(bailoutsOf("require-main.js")).toContainEqual(
+		expect.stringContaining("__webpack_require__.c")
 	);
+	delete global.__webpackWrappedSideEffect;
 });

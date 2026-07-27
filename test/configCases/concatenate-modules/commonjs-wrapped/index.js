@@ -16,6 +16,7 @@ import * as methodThis from "./method-this";
 import * as mixedThenReassign from "./mixed-then-reassign";
 import * as moduleExportsExports from "./module-exports-exports";
 import * as multiReassign from "./multi-reassign";
+import * as newRequire from "./new-require";
 import nullExport from "./primitive-null";
 import numberExport from "./primitive-number";
 import stringExport from "./primitive-string";
@@ -24,33 +25,33 @@ import reassign from "./reassign";
 import * as thisExports from "./this-exports";
 import * as thisRead from "./this-read";
 
-it("should wrap module.exports reassigned to an object", () => {
+it("should support module.exports reassigned to an object", () => {
 	expect(reassign.r).toBe("reassigned");
 	expect(reassign.n).toBe(1);
 });
 
-it("should wrap module.exports reassigned to a function with statics", () => {
+it("should support module.exports reassigned to a function with statics", () => {
 	expect(double(21)).toBe(42);
 	expect(double.tag).toBe("fn");
 });
 
-it("should wrap module.exports reassigned to an arrow function", () => {
+it("should support module.exports reassigned to an arrow function", () => {
 	expect(arrow(1)).toBe(2);
 });
 
-it("should wrap module.exports reassigned to a class", () => {
+it("should support module.exports reassigned to a class", () => {
 	const c = new Counter();
 	expect(c.inc()).toBe(1);
 	expect(c.inc()).toBe(2);
 });
 
-it("should wrap module.exports reassigned to primitives", () => {
+it("should support module.exports reassigned to a primitive", () => {
 	expect(numberExport).toBe(42);
 	expect(stringExport).toBe("hello");
 	expect(nullExport).toBe(null);
 });
 
-it("should wrap module.exports reassigned to an array", () => {
+it("should support module.exports reassigned to an array", () => {
 	expect(array).toEqual([1, 2, 3]);
 });
 
@@ -61,33 +62,33 @@ it("should preserve `this` as the exports object", () => {
 	expect(callContext.run()).toBe("ctx-ok");
 });
 
-it("should wrap Object.defineProperty / defineProperties getters", () => {
+it("should support exports defined via Object.defineProperty/defineProperties", () => {
 	expect(defineProperty.d).toBe("defined");
 	expect(defineProperties.a).toBe(1);
 	expect(defineProperties.b).toBe(2);
 });
 
-it("should wrap object literals with getters", () => {
+it("should support an exports object literal with getters", () => {
 	expect(getterObject.x).toBe(5);
 	expect(getterObject.y).toBe(6);
 });
 
-it("should wrap a module whose exports object escapes", () => {
+it("should support an exports object that escapes the module", () => {
 	expect(escaped.e).toBe("escaped");
 	expect(escaped.mutated).toBe(true);
 });
 
-it("should honor the __esModule interop flag when wrapping", () => {
+it("should honor the __esModule interop flag", () => {
 	expect(esmoduleDefault).toBe("the-default");
 	expect(esmoduleNamed).toBe("n");
 });
 
-it("should wrap the `module.exports = exports = {}` alias form", () => {
+it("should support the `module.exports = exports = {}` alias form", () => {
 	expect(moduleExportsExports.z).toBe(9);
 	expect(moduleExportsExports.y).toBe(10);
 });
 
-it("should wrap parenthesized `(module.exports = {}).x =`", () => {
+it("should support parenthesized `(module.exports = {}).x =`", () => {
 	expect(iifeAssign.x).toBe(3);
 });
 
@@ -104,12 +105,15 @@ it("should take the last of multiple module.exports reassignments", () => {
 	expect(mixedThenReassign.early).toBe(undefined);
 });
 
-it("should wrap conditional and frozen exports", () => {
+it("should support exports built in a conditional branch", () => {
 	expect(conditional.branch).toBe("b");
+});
+
+it("should support a frozen exports object", () => {
 	expect(frozen.f).toBe(1);
 });
 
-it("should wrap an object whose method uses `this`", () => {
+it("should support an exports method that reads `this`", () => {
 	expect(methodThis.getValue()).toBe(10);
 });
 
@@ -119,9 +123,64 @@ it("should keep live bindings through a getter", () => {
 	expect(liveBinding.v).toBe(7);
 });
 
+it("should follow Node's `new require()` semantics when concatenated", () => {
+	// object and function exports pass through the `new` unchanged
+	expect(newRequire.objectExport).toBe(reassign);
+	expect(newRequire.fnExportIsFn).toBe(true);
+	expect(newRequire.fnExportTag).toBe("fn");
+	expect(newRequire.fnExportCall).toBe(42);
+	// a primitive export is discarded in favor of the constructed instance
+	expect(newRequire.primitiveIsNotTheString).toBe(true);
+	expect(newRequire.primitiveIsObject).toBe(true);
+	expect(newRequire.primitiveIsRequireInstance).toBe(true);
+	expect(newRequire.primitiveIsNotStringExport).toBe(true);
+	expect(newRequire.primitiveKeys).toBe(0);
+});
+
+it("should follow Node's semantics for called and constructed `new require()`", () => {
+	// `new require()()` calls the exported function
+	expect(newRequire.newRequireCall).toBe(42);
+	expect(newRequire.newRequireArrowCall).toBe(2);
+	// `new (require())()` constructs the exported class/function
+	expect(newRequire.constructedIsCounter).toBe(true);
+	expect(newRequire.constructedInc).toBe(1);
+	expect(newRequire.constructedFnIsInstance).toBe(true);
+	expect(newRequire.constructedFnKeys).toBe(0);
+	// calling the instance built from a primitive export throws, as in Node.js
+	expect(newRequire.callPrimitiveThrowsTypeError).toBe(true);
+});
+
 it("should concatenate every wrapped CommonJS module into the entry", () => {
 	const concatModules = __STATS__.modules.filter((m) => m.modules);
 	expect(concatModules.length).toBe(1);
-	// index.js + all 25 wrapped fixtures
-	expect(concatModules[0].modules.length).toBe(26);
+	// named rather than counted, so a mismatch says which module dropped out
+	expect(concatModules[0].modules.map((m) => m.name).sort()).toEqual([
+		"./array-export.js",
+		"./arrow.js",
+		"./call-context.js",
+		"./class-export.js",
+		"./conditional.js",
+		"./define-properties.js",
+		"./define-property.js",
+		"./escaped.js",
+		"./esmodule-flag.js",
+		"./exports-local-reassign.js",
+		"./frozen.js",
+		"./getter-object.js",
+		"./iife-assign.js",
+		"./index.js",
+		"./live-binding.js",
+		"./method-this.js",
+		"./mixed-then-reassign.js",
+		"./module-exports-exports.js",
+		"./multi-reassign.js",
+		"./new-require.js",
+		"./primitive-null.js",
+		"./primitive-number.js",
+		"./primitive-string.js",
+		"./reassign-fn.js",
+		"./reassign.js",
+		"./this-exports.js",
+		"./this-read.js"
+	]);
 });
