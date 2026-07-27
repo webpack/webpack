@@ -333,6 +333,50 @@ export default 40 + file;
 		expect(execute()).toBe(43);
 	}, 60000);
 
+	it("should delete old unused packs", async () => {
+		// ported from #14661: entry churn with a tiny maxAge orphans whole packs
+		const data = {
+			"a.js": "export default 1;",
+			"b.js": "export default 2;",
+			"c.js": "export default 3;",
+			"d.js": "export default 4;",
+			"e.js": "export default 5;"
+		};
+		await updateSrc(data);
+		const backdateCache = async () => {
+			const oldTime = new Date(Date.now() - 2 * 60 * 60 * 1000);
+			for (const file of await readdir(cachePath)) {
+				await utimes(path.join(cachePath, file), oldTime, oldTime);
+			}
+		};
+		const c = (/** @type {string} */ items) => {
+			/** @type {Record<string, string>} */
+			const entry = {};
+			for (const item of items) entry[item] = `./src/${item}.js`;
+			return compile({ entry, cache: { ...config.cache, maxAge: 5000 } });
+		};
+		await c("ab");
+		// content pack and index
+		await expect(readdir(cachePath)).resolves.toHaveLength(2);
+		await c("c");
+		// new content pack, old one still within the grace period, index and index.old
+		await expect(readdir(cachePath)).resolves.toHaveLength(4);
+		// item expiry needs real elapsed time; the grace period is aged via utimes
+		await backdateCache();
+		await new Promise((resolve) => {
+			setTimeout(resolve, 6000);
+		});
+		await c("cde");
+		const remaining = await readdir(cachePath);
+		// unreferenced files beyond the grace period are gone: the pack holding
+		// only the expired a/b items and the old index backup
+		expect(remaining).not.toContain("0.pack");
+		expect(remaining).not.toContain("index.pack.old");
+		// the old-but-still-referenced pack (c stayed cached in it) survives
+		expect(remaining).toContain("1.pack");
+		expect(remaining).toContain("index.pack");
+	}, 60000);
+
 	it("should keep recently modified unreferenced cache files", async () => {
 		await updateSrc({
 			"index.js": "export default 42;"
