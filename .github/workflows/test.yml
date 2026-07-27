@@ -67,8 +67,7 @@ jobs:
     if: github.repository == 'webpack/webpack' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -87,15 +86,19 @@ jobs:
       - name: Collect types coverage
         run: yarn types:cover:report
 
-      - uses: jwalton/gh-find-current-pr@f3d61b485d2801773f7a07b2aaa3306bd8f8e653 # v1.3.5
-        id: findPr
+      - name: Build the types coverage report
+        run: node .github/scripts/types-coverage-comment.mjs
+        env:
+          LCOV_PATH: ./coverage/lcov.info
+          OUTPUT_PATH: ${{ runner.temp }}/types-coverage.md
+          COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
 
-      - uses: Nef10/lcov-reporter-action@797ec1c1e78e3a9a7890c1a104d58b9e05fcef76 # v0.3.0
+      # Picked up by `update-shared-comment.yml`, the sole writer of the comment.
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          pr-number: ${{ steps.findPr.outputs.number }}
-          lcov-file: ./coverage/lcov.info
-          title: Types Coverage
-          delete-old-comments: true
+          name: pr-report-types-coverage
+          path: ${{ runner.temp }}/types-coverage.md
+          retention-days: 1
 
   validate-legacy-node:
     runs-on: ubuntu-latest

@@ -1,0 +1,78 @@
+name: Update shared comment
+
+# Sole writer of the sticky CI report comment. Producing workflows only upload
+# their section as an artifact, so none of them needs write access to the PR.
+on:
+  workflow_run:
+    workflows: [Github Actions, Publish to pkg.pr.new]
+    types: [completed]
+
+permissions:
+  contents: read
+
+concurrency:
+  # One writer per pull request; the newest report supersedes whatever it cancels.
+  group: update-shared-comment-${{ github.event.workflow_run.pull_requests[0].number || github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # Each artifact holds a single `<section>.md`, so they merge into one directory.
+      - name: Download the report sections
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: pr-report-*
+          merge-multiple: true
+          path: sections
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resolve the pull request
+        id: pr
+        if: hashFiles('sections/*.md') != ''
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          result-encoding: string
+          script: |
+            const run = context.payload.workflow_run;
+            if (run.pull_requests.length > 0) return run.pull_requests[0].number;
+            // A push to `main` reports on the pull request that was merged.
+            const { data } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              ...context.repo,
+              commit_sha: run.head_sha
+            });
+            return data.length > 0 ? data[0].number : "";
+
+      - name: Find the shared comment
+        id: find
+        if: steps.pr.outputs.result != ''
+        uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4.0.0
+        with:
+          issue-number: ${{ steps.pr.outputs.result }}
+          comment-author: github-actions[bot]
+          body-includes: <!-- webpack-ci-report -->
+
+      - name: Assemble the comment
+        if: steps.pr.outputs.result != ''
+        run: node .github/scripts/pr-report-comment.mjs
+        env:
+          SECTIONS_PATH: sections
+          EXISTING_BODY: ${{ steps.find.outputs.comment-body }}
+          OUTPUT_PATH: ${{ runner.temp }}/pr-report-comment.md
+
+      - name: Create or update the shared comment
+        if: steps.pr.outputs.result != ''
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
+        with:
+          issue-number: ${{ steps.pr.outputs.result }}
+          comment-id: ${{ steps.find.outputs.comment-id }}
+          body-path: ${{ runner.temp }}/pr-report-comment.md
+          edit-mode: replace
