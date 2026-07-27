@@ -1,5 +1,51 @@
 # webpack
 
+## 5.109.1
+
+### Patch Changes
+
+- Fix stray semicolon emitted before an imported call following a parenthesized sequence element. (by [@alexander-akait](https://github.com/alexander-akait) in [#21533](https://github.com/webpack/webpack/pull/21533))
+
+- Make `require(esm)` `module.exports` re-export analysis independent of module processing order. (by [@alexander-akait](https://github.com/alexander-akait) in [#21521](https://github.com/webpack/webpack/pull/21521))
+
+- Ignore ERR_SERVER_NOT_RUNNING on lazy-compilation backend dispose so `compiler.close()` succeeds on Bun. (by [@alexander-akait](https://github.com/alexander-akait) in [#21521](https://github.com/webpack/webpack/pull/21521))
+
+- Name the failing key when DefinePlugin fails to evaluate a `typeof` value. (by [@alexander-akait](https://github.com/alexander-akait) in [#21503](https://github.com/webpack/webpack/pull/21503))
+
+- Improve Deno compatibility: guard `setNoDelay` and force-close connections on lazy-compilation backend dispose, and return a real `ArrayBuffer` from the Node async/sync wasm loader so `WebAssembly.instantiate` accepts it. (by [@alexander-akait](https://github.com/alexander-akait) in [#21524](https://github.com/webpack/webpack/pull/21524))
+
+- Speed up the HTML parser and cut its peak memory: module-scope helpers/state and tokenizer callbacks, plus exact AST column pre-sizing. (by [@alexander-akait](https://github.com/alexander-akait) in [#21492](https://github.com/webpack/webpack/pull/21492))
+
+- Track CommonJS build dependencies by parsing sources when `require.cache` children are unavailable (e.g. Bun). (by [@alexander-akait](https://github.com/alexander-akait) in [#21531](https://github.com/webpack/webpack/pull/21531))
+
+- Cook common string-literal escapes on the JS parser fast path and own the tokenizer's cold-path readers. (by [@alexander-akait](https://github.com/alexander-akait) in [#21500](https://github.com/webpack/webpack/pull/21500))
+
+- Build the CSS `parseA*` AST on the SoA store instead of node classes, cutting parse memory and time. (by [@alexander-akait](https://github.com/alexander-akait) in [#21498](https://github.com/webpack/webpack/pull/21498))
+
+- Speed up and cut memory of the experimental CSS and HTML parsers: drop two derivable AST node columns, and scan long string, url, comment, and plaintext token bodies natively. (by [@alexander-akait](https://github.com/alexander-akait) in [#21504](https://github.com/webpack/webpack/pull/21504))
+
+- Speed up non-modules CSS parsing: skip redundant token re-reads, drop selector-prelude tokens without materializing nodes, allocate rule preludes lazily, and fast-path empty list seals. (by [@alexander-akait](https://github.com/alexander-akait) in [#21511](https://github.com/webpack/webpack/pull/21511))
+
+- Speed up stats generation and cut its peak memory: reuse cached sort comparators instead of thrashing the comparator caches on every sort, and drop redundant module-graph lookups and allocations in the extractors. (by [@alexander-akait](https://github.com/alexander-akait) in [#21506](https://github.com/webpack/webpack/pull/21506))
+
+- Speed up CSS parsing: byte-range function-name checks, indexed sibling lookahead. (by [@bjohansebas](https://github.com/bjohansebas) in [#21520](https://github.com/webpack/webpack/pull/21520))
+
+- Reduce allocations and redundant work across the code-generation, module-concatenation, exports/usage-analysis, hashing, and chunk-splitting hot paths. (by [@alexander-akait](https://github.com/alexander-akait) in [#21516](https://github.com/webpack/webpack/pull/21516))
+
+- Enable the Node.js compile cache in the webpack CLI entry point. (by [@bjohansebas](https://github.com/bjohansebas) in [#21523](https://github.com/webpack/webpack/pull/21523))
+
+- Encode the persistent cache with V8's value serializer. (by [@avivkeller](https://github.com/avivkeller) in [#21514](https://github.com/webpack/webpack/pull/21514))
+
+- Speed up SplitChunksPlugin: reject non-subset chunk sets with 64-bit signatures, cache unnamed entry keys, and drop per-module closures. (by [@avivkeller](https://github.com/avivkeller) in [#21529](https://github.com/webpack/webpack/pull/21529))
+
+- Initialize `NormalModule._ast` in the constructor so each instance keeps a single hidden-class shape. (by [@alexander-akait](https://github.com/alexander-akait) in [#21515](https://github.com/webpack/webpack/pull/21515))
+
+- Reduce allocations in the binary serialization hot paths. (by [@alexander-akait](https://github.com/alexander-akait) in [#21526](https://github.com/webpack/webpack/pull/21526))
+
+- Deduplicate and simplify several lib modules and speed up AggressiveMergingPlugin. (by [@alexander-akait](https://github.com/alexander-akait) in [#21525](https://github.com/webpack/webpack/pull/21525))
+
+- Rename nested `const`/`let __webpack_require__` and `__webpack_exports__` declarations in bundled webpack output. (by [@hai-x](https://github.com/hai-x) in [#21508](https://github.com/webpack/webpack/pull/21508))
+
 ## 5.109.0
 
 ### Minor Changes
