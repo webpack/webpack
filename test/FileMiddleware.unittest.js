@@ -234,8 +234,8 @@ describe("FileMiddleware getReferencedFilenames", () => {
 	});
 
 	it("rejects when stat errors", async () => {
+		const content = buildFile([Buffer.from([1, 2, 3]), "file-a"]);
 		const fs = /** @type {EXPECTED_ANY} */ (fsWithFile(content));
-		const fs = fsWithFile(content);
 		fs.stat = (
 			/** @type {string} */ _file,
 			/** @type {EXPECTED_ANY} */ callback
