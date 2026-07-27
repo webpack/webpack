@@ -112,7 +112,11 @@ describe("FileMiddleware getReferencedFilenames", () => {
 			close: (
 				/** @type {number} */ _fd,
 				/** @type {(err: Error | null) => void} */ callback
-			) => process.nextTick(() => callback(null))
+			) => process.nextTick(() => callback(null)),
+			stat: (
+				/** @type {string} */ _file,
+				/** @type {EXPECTED_ANY} */ callback
+			) => process.nextTick(() => callback(null, { size: content.length }))
 		});
 
 	it("extracts pointer names between content sections", async () => {
