@@ -107,7 +107,10 @@ describe("ProfilingPlugin in real Chrome", () => {
 		if (browser) await browser.close();
 	});
 
-	it("should generate a trace Chrome DevTools can load (#17234)", (done) => {
+	// Bun/Deno (no puppeteer Chrome) and Node < 18 are known here, so skip visibly;
+	// a Chrome that fails to launch on supported Node is only known in beforeAll.
+	const itChrome = onBunOrDeno || nodeMajor < 18 ? it.skip : it;
+	itChrome("should generate a trace Chrome DevTools can load (#17234)", (done) => {
 		if (!browser) {
 			console.warn("Skipping: could not launch Chrome via puppeteer-core.");
 			return done();

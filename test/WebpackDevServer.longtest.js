@@ -299,6 +299,10 @@ describe("WebpackDevServer integration in real Chrome", () => {
 	/** @type {import("puppeteer-core").Browser | undefined} */
 	let browser;
 
+	// puppeteer/dev-server absence (unsupported Node, Bun, Deno) is known here, so skip
+	// visibly; a Chrome that fails to launch where they load is only known in beforeAll.
+	const itChrome = puppeteer && WebpackDevServer ? it : it.skip;
+
 	beforeAll(async () => {
 		if (!puppeteer || !WebpackDevServer) return;
 		ensureWebpackSelfLink();
@@ -324,7 +328,7 @@ describe("WebpackDevServer integration in real Chrome", () => {
 		if (browser) await browser.close();
 	});
 
-	it("applies a hot module replacement update without reloading the page", async () => {
+	itChrome("applies a hot module replacement update without reloading the page", async () => {
 		if (!browser) {
 			console.warn("Skipping: could not launch Chrome via puppeteer-core.");
 			return;
@@ -365,7 +369,7 @@ describe("WebpackDevServer integration in real Chrome", () => {
 		}
 	}, 90000);
 
-	it("reloads the whole page on change when live reload is used", async () => {
+	itChrome("reloads the whole page on change when live reload is used", async () => {
 		if (!browser) {
 			console.warn("Skipping: could not launch Chrome via puppeteer-core.");
 			return;
@@ -405,7 +409,7 @@ describe("WebpackDevServer integration in real Chrome", () => {
 		}
 	}, 90000);
 
-	it("shows the error overlay (enabled by default) on a compile error", async () => {
+	itChrome("shows the error overlay (enabled by default) on a compile error", async () => {
 		if (!browser) {
 			console.warn("Skipping: could not launch Chrome via puppeteer-core.");
 			return;
