@@ -1,5 +1,6 @@
 "use strict";
 
+const v8 = require("v8");
 const BinaryMiddleware = require("../lib/serialization/BinaryMiddleware");
 const SerializerMiddleware = require("../lib/serialization/SerializerMiddleware");
 
@@ -174,6 +175,7 @@ describe("BinaryMiddleware", () => {
 			BigInt(100000),
 			BigInt("123456789012345678901234567890"),
 			Buffer.from("hello"),
+			Buffer.alloc(0),
 			Buffer.alloc(10000, 1)
 		];
 		for (const chunkSize of [1, 2, 3, 5, 8, 13, 64]) {
@@ -210,7 +212,50 @@ describe("BinaryMiddleware", () => {
 		}
 	});
 
+	describe("large streams", () => {
+		it("should split values exceeding the section size into several sections", () => {
+			// 20 MiB of strings, above the 16 MiB at which a section is closed
+			const data = [];
+			for (let i = 0; i < 20; i++) data.push(`${i}`.repeat(1024 * 1024));
+			data.push(Buffer.from("tail"), 42);
+			const serialized =
+				/** @type {import("../lib/serialization/BinaryMiddleware").SerializedType} */
+				(mw.serialize(data, {}));
+			// two values sections, each with its own header and payload
+			expect(
+				serialized.filter((item) => Buffer.isBuffer(item) && item[0] === 0xf1)
+			).toHaveLength(2);
+			expect(mw.deserialize(serialized, {})).toEqual(data);
+		});
+	});
+
+	describe("invalid data", () => {
+		it("should throw on a non-buffer object", () => {
+			expect(() =>
+				mw.serialize(/** @type {EXPECTED_ANY} */ ([{ a: 1 }]), {})
+			).toThrow(/Unexpected object/);
+		});
+
+		it("should throw on a non-lazy function", () => {
+			expect(() =>
+				mw.serialize(/** @type {EXPECTED_ANY} */ ([() => 1]), {})
+			).toThrow(/Unexpected function/);
+		});
+	});
+
 	describe("invalid streams", () => {
+		it("should throw on a payload from a newer V8 format version", () => {
+			const payload = v8.serialize([1, "x"]);
+			payload[1] = 0x7f; // pretend it was written by a newer V8
+			const header = Buffer.alloc(9);
+			header[0] = 0xf1;
+			header.writeUInt32LE(payload.length, 1);
+			header.writeUInt32LE(0, 5);
+			expect(() => mw.deserialize([header, payload], {})).toThrow(
+				/V8 serialization format version 127/
+			);
+		});
+
 		it("should throw on an unexpected header byte", () => {
 			expect(() => mw.deserialize([Buffer.from([0x1d])], {})).toThrow(
 				/Unexpected header byte/
@@ -218,9 +263,12 @@ describe("BinaryMiddleware", () => {
 		});
 
 		it("should throw on unexpected end of stream", () => {
-			// string section claiming 10 content bytes with only 2 present
+			// values section claiming a 10 byte payload with only 2 bytes present
 			expect(() =>
-				mw.deserialize([Buffer.from([0x1e, 10, 0, 0, 0, 0x61, 0x62])], {})
+				mw.deserialize(
+					[Buffer.from([0xf1, 10, 0, 0, 0, 0, 0, 0, 0, 0x61, 0x62])],
+					{}
+				)
 			).toThrow(/Unexpected end of stream/);
 		});
 
@@ -229,7 +277,7 @@ describe("BinaryMiddleware", () => {
 			expect(() =>
 				mw.deserialize(
 					[
-						Buffer.from([0x1e, 10, 0, 0, 0, 0x61, 0x62]),
+						Buffer.from([0xf1, 10, 0, 0, 0, 0, 0, 0, 0, 0x61, 0x62]),
 						/** @type {EXPECTED_ANY} */ (lazy)
 					],
 					{}
@@ -241,7 +289,7 @@ describe("BinaryMiddleware", () => {
 			// lazy section with one zero-length entry must be followed by a lazy fn
 			expect(() =>
 				mw.deserialize(
-					[Buffer.from([0x0b, 1, 0, 0, 0, 0, 0, 0, 0]), Buffer.from([0x0c])],
+					[Buffer.from([0xf2, 1, 0, 0, 0, 0, 0, 0, 0]), Buffer.from([0xf1])],
 					{}
 				)
 			).toThrow(/Unexpected non-lazy element in stream/);
