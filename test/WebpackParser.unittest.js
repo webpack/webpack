@@ -385,6 +385,22 @@ describe("WebpackParser", () => {
 			}
 		});
 
+		it("should look past a parenthesized element's trailing `)` for the separator", () => {
+			// a parenthesized node's range excludes its wrapping parens, so the
+			// `,`/`;` separator sits behind one or more `)` — still non-ASI. `pos`
+			// is the end of the inner `a`, i.e. the first trailing `)`.
+			for (const [code, pos] of [
+				["(a),b", 2],
+				["((a)),b", 3],
+				["(a) ,b", 2],
+				["(a);b", 2]
+			]) {
+				const parser = new JavascriptParser("auto");
+				parser._source = /** @type {string} */ (code);
+				expect(parser._isAsiPosition(/** @type {number} */ (pos))).toBe(false);
+			}
+		});
+
 		it("should assume ASI when no source text is available", () => {
 			const parser = new JavascriptParser("auto");
 			parser.statementPath = [/** @type {EXPECTED_ANY} */ ({ range: [0, 1] })];
