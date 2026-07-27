@@ -106,6 +106,61 @@ describe("PackFileCacheStrategy cleanup", () => {
 		]);
 	});
 
+	it("aborts the whole cleanup and deletes nothing when a retained file is unreadable", async () => {
+		const fs = require("graceful-fs");
+
+		const PackFileCacheStrategy = require("../lib/cache/PackFileCacheStrategy");
+
+		fs.mkdirSync(tempPath, { recursive: true });
+		// walking this retained file fails: the live set would be incomplete
+		fs.writeFileSync(path.join(tempPath, "corrupt.pack"), "not a pack file");
+		// stale orphan that a successful cleanup would delete
+		fs.writeFileSync(path.join(tempPath, "orphan-old.pack"), "orphan");
+		const oldTime = new Date(Date.now() - 2 * 60 * 60 * 1000);
+		for (const file of ["corrupt.pack", "orphan-old.pack"]) {
+			fs.utimesSync(path.join(tempPath, file), oldTime, oldTime);
+		}
+
+		/** @type {string[]} */
+		const warnings = [];
+		/** @type {EXPECTED_ANY} */
+		const logger = {
+			time: () => {},
+			timeEnd: () => {},
+			log: () => {},
+			debug: () => {},
+			warn: (/** @type {string} */ message) => warnings.push(message),
+			error: () => {},
+			getChildLogger: () => logger
+		};
+		const strategy = new PackFileCacheStrategy({
+			compiler: /** @type {EXPECTED_ANY} */ ({
+				options: { output: { hashFunction: "md4" } }
+			}),
+			fs,
+			context: tempPath,
+			cacheLocation: tempPath,
+			version: "test",
+			logger,
+			snapshot: /** @type {EXPECTED_ANY} */ ({
+				managedPaths: [],
+				immutablePaths: []
+			}),
+			maxAge: 1000 * 60
+		});
+
+		await strategy._cleanupUnusedFiles(new Set(), new Set(["corrupt"]));
+
+		// nothing was deleted, not even the stale orphan
+		expect(fs.readdirSync(tempPath).sort()).toEqual([
+			"corrupt.pack",
+			"orphan-old.pack"
+		]);
+		expect(warnings).toEqual([
+			expect.stringMatching(/Cleanup of unused cache files failed/)
+		]);
+	});
+
 	it("walks each retained file only once across stores", async () => {
 		const gracefulFs = require("graceful-fs");
 
