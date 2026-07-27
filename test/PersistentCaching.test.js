@@ -308,6 +308,46 @@ import 'lodash';
 		await expect(getCacheFileTimes()).resolves.toEqual(firstCacheFileTimes);
 	}, 20000);
 
+	it("should delete no longer referenced cache files after storing", async () => {
+		await updateSrc({
+			"index.js": `import file from "./file.js";
+export default 40 + file;
+`,
+			"file.js": "export default 2;"
+		});
+		await compile();
+		// plant an orphan file and age every cache file beyond the cleanup grace period
+		const orphan = "0123456789abcdef0123456789abcdef.pack";
+		await writeFile(path.join(cachePath, orphan), "orphan");
+		const oldTime = new Date(Date.now() - 2 * 60 * 60 * 1000);
+		for (const file of await readdir(cachePath)) {
+			await utimes(path.join(cachePath, file), oldTime, oldTime);
+		}
+		await updateSrc({
+			"file.js": "export default 3;"
+		});
+		await compile();
+		expect(await readdir(cachePath)).not.toContain(orphan);
+		// every file the new index references must have survived the cleanup
+		await compile();
+		expect(execute()).toBe(43);
+	}, 60000);
+
+	it("should keep recently modified unreferenced cache files", async () => {
+		await updateSrc({
+			"index.js": "export default 42;"
+		});
+		await compile();
+		// fresh orphan: within the cleanup grace period, so it must survive
+		const orphan = "0123456789abcdef0123456789abcdef.pack";
+		await writeFile(path.join(cachePath, orphan), "orphan");
+		await updateSrc({
+			"index.js": "export default 43;"
+		});
+		await compile();
+		expect(await readdir(cachePath)).toContain(orphan);
+	}, 60000);
+
 	it("should not invalidate cache files if timestamps changed with dynamic import()", async () => {
 		const configAdditions = {
 			entry: "./src/main.js",
