@@ -156,6 +156,21 @@ describe("PackFileCacheStrategy cleanup", () => {
 		expect(fs.readdirSync(tempPath).sort()).toEqual(["unreferenced.json"]);
 	});
 
+	it("deletes an orphan with an old modification time on the first store", async () => {
+		const fs = require("graceful-fs");
+
+		fs.mkdirSync(tempPath, { recursive: true });
+		fs.writeFileSync(path.join(tempPath, "orphan.pack"), "orphan");
+		// a cache that kept its modification times must not wait to be recorded first
+		const oldTime = new Date(Date.now() - 2 * 60 * 60 * 1000);
+		fs.utimesSync(path.join(tempPath, "orphan.pack"), oldTime, oldTime);
+
+		const strategy = createStrategy(fs);
+
+		await strategy._cleanupUnusedFiles(new Set(), new Set());
+		expect(fs.readdirSync(tempPath)).not.toContain("orphan.pack");
+	});
+
 	it("restarts the grace period when an orphaned name is rewritten", async () => {
 		const fs = require("graceful-fs");
 
