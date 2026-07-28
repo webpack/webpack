@@ -5,7 +5,8 @@ const fs = __non_webpack_require__("fs");
 const path = __non_webpack_require__("path");
 
 it("should name css sources by their resource path, like js sources", () => {
-	globalThis.__keepCssAlive = s;
+	// reference the module so the css module stays in the graph
+	expect(typeof s.title).toBe("string");
 	const mapFile = fs.readdirSync(__dirname).find((f) => f.endsWith(".css.map"));
 	const map = JSON.parse(fs.readFileSync(path.join(__dirname, mapFile), "utf-8"));
 	expect(map.sources).toContain("webpack:///./style.css");
