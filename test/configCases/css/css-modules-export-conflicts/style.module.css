@@ -1,0 +1,97 @@
+/* Cross-kind conflicts — these should warn */
+
+.foo {
+	color: red;
+}
+
+:root {
+	--foo: blue;
+}
+
+.bar {
+	color: green;
+}
+
+@keyframes bar {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+.baz {
+	animation: baz 1s;
+}
+
+@counter-style baz {
+	system: cyclic;
+	symbols: "*";
+	suffix: " ";
+}
+
+.qux {
+	color: yellow;
+}
+
+:export {
+	qux: overridden;
+}
+
+/* Same-kind duplicates — these should NOT warn */
+
+/* Multiple class selectors that all declare the same class */
+.dup-class { color: black; }
+.dup-class { color: navy; }
+.dup-class:hover { color: gray; }
+
+/* Multiple id selectors that all declare the same id */
+#dup-id { color: red; }
+#dup-id { color: maroon; }
+#dup-id:hover { color: blue; }
+
+/* Multiple custom property declarations with the same name */
+:root { --dup-prop: red; }
+:root { --dup-prop: blue; }
+.dup-class { --dup-prop: green; }
+
+/* Multiple @keyframes with the same name */
+@keyframes dup-kf {
+	0% { left: 0; }
+}
+@keyframes dup-kf {
+	100% { left: 100px; }
+}
+
+/* Multiple @value declarations with the same name */
+@value dup-val: red;
+@value dup-val: blue;
+
+/* Multiple :export blocks declaring the same name */
+:export {
+	dup-export: a;
+}
+:export {
+	dup-export: b;
+}
+
+/* Multiple @container declarations with the same name */
+@container dup-container (width > 100px) {
+	p { color: red; }
+}
+@container dup-container (width > 200px) {
+	p { color: blue; }
+}
+
+/* Multiple @counter-style declarations with the same name */
+@counter-style dup-counter {
+	system: cyclic;
+	symbols: "*";
+	suffix: " ";
+}
+@counter-style dup-counter {
+	system: cyclic;
+	symbols: "+";
+	suffix: " ";
+}
