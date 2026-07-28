@@ -3,11 +3,9 @@
 /** @typedef {import("../../../../").Configuration} Configuration */
 /** @typedef {import("../../../../").GeneratorOptionsByModuleTypeKnown} GeneratorOptionsByModuleTypeKnown */
 
-/** @type {Configuration} */
-module.exports = {
+const common = {
 	target: "web",
 	node: { __dirname: false, __filename: false },
-	mode: "development",
 	module: {
 		rules: [
 			{
@@ -20,3 +18,9 @@ module.exports = {
 	},
 	experiments: { css: true }
 };
+
+/** @type {Configuration[]} */
+module.exports = [
+	{ ...common, mode: "development" },
+	{ ...common, mode: "production", devtool: false }
+];
