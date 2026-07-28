@@ -18,6 +18,11 @@ it("should resolve cross-module composes to the class value too", () => {
 	expect(consumer["consume-late"]).toBe("s-consume-late s-late");
 });
 
+it("should fall back to all matches when the requester's family is absent", () => {
+	// 'accent' only exists as a dashed ident; composes keeps resolving it
+	expect(consumer.fallback).toBe("s-fallback --s-accent");
+});
+
 it("should keep the class value for an export name shared with a custom identifier", () => {
 	expect(s.reveal).toBe("s-reveal");
 });

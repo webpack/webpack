@@ -7,3 +7,10 @@
 	composes: late from "./style.module.css";
 	color: purple;
 }
+
+/* 'accent' only exists as a dashed ident: the requester's family is absent,
+   so resolution falls back to all matches (legacy behavior) */
+.fallback {
+	composes: accent from "./style.module.css";
+	color: purple;
+}
