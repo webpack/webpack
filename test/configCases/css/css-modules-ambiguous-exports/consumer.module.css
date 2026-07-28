@@ -1,0 +1,9 @@
+.consume {
+	composes: sidebar from "./style.module.css";
+	color: purple;
+}
+
+.consume-late {
+	composes: late from "./style.module.css";
+	color: purple;
+}

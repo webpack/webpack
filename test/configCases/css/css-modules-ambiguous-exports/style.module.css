@@ -17,6 +17,15 @@
 	color: blue;
 }
 
+/* dashed ident declared before the same-named class */
+.early {
+	--late: red;
+}
+
+.late {
+	color: red;
+}
+
 /* same name for a class and a keyframes name renames identically: no warning */
 .shared {
 	animation-name: shared;

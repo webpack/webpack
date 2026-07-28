@@ -1,3 +1,4 @@
+import * as consumer from "./consumer.module.css";
 import * as s from "./style.module.css";
 
 const fs = __non_webpack_require__("fs");
@@ -8,6 +9,13 @@ it("should keep the class value for an export name shared with a grid identifier
 	expect(s.sidebar).toBe("s-sidebar");
 	// a grid identifier without a same-named class keeps its export
 	expect(s.main).toBe("s-main-main");
+});
+
+it("should resolve cross-module composes to the class value too", () => {
+	// ICSS resolution must agree with the module's own JS export
+	expect(consumer.consume).toBe("s-consume s-sidebar");
+	// even when the demoted dashed entry comes first in the source
+	expect(consumer["consume-late"]).toBe("s-consume-late s-late");
 });
 
 it("should keep the class value for an export name shared with a custom identifier", () => {
