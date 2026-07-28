@@ -12,6 +12,7 @@ Array [
   "Composition is only allowed when selector is single local class name not in \\"exportName33\\", \\"exportName34\\"",
   "Composition is only allowed when selector is single local class name not in \\"exportName37\\", \\"exportName38\\"",
   "Self-referencing name \\"exportName40\\" not found",
+  "Export name 'red' is ambiguous: it resolves to the identifier 'red', so the renamed value of the custom identifier '--red' is not accessible from JavaScript — rename one of them if both are needed",
   "Missing whitespace after ':local' in ':local.b {'",
   "Missing whitespace after ':global' in ':global, .foobar :global {'",
   "Missing whitespace after ':global' in ':global.bar {'",

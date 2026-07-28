@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  "Export name 'space-y-reverse' is ambiguous: it resolves to the identifier 'space-y-reverse', so the renamed value of the custom identifier '--space-y-reverse' is not accessible from JavaScript — rename one of them if both are needed",
+  "Export name 'space-x-reverse' is ambiguous: it resolves to the identifier 'space-x-reverse', so the renamed value of the custom identifier '--space-x-reverse' is not accessible from JavaScript — rename one of them if both are needed",
+  "Export name 'divide-y-reverse' is ambiguous: it resolves to the identifier 'divide-y-reverse', so the renamed value of the custom identifier '--divide-y-reverse' is not accessible from JavaScript — rename one of them if both are needed",
+  "Export name 'divide-x-reverse' is ambiguous: it resolves to the identifier 'divide-x-reverse', so the renamed value of the custom identifier '--divide-x-reverse' is not accessible from JavaScript — rename one of them if both are needed",
+  "Export name 'space-y-reverse' is ambiguous: it resolves to the identifier 'space-y-reverse', so the renamed value of the custom identifier '--space-y-reverse' is not accessible from JavaScript — rename one of them if both are needed",
+  "Export name 'space-x-reverse' is ambiguous: it resolves to the identifier 'space-x-reverse', so the renamed value of the custom identifier '--space-x-reverse' is not accessible from JavaScript — rename one of them if both are needed",
+  "Export name 'divide-y-reverse' is ambiguous: it resolves to the identifier 'divide-y-reverse', so the renamed value of the custom identifier '--divide-y-reverse' is not accessible from JavaScript — rename one of them if both are needed",
+  "Export name 'divide-x-reverse' is ambiguous: it resolves to the identifier 'divide-x-reverse', so the renamed value of the custom identifier '--divide-x-reverse' is not accessible from JavaScript — rename one of them if both are needed",
+]
+`;

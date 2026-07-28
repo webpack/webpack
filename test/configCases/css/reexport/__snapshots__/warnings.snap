@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`warnings 1`] = `
+Array [
+  "Export name 'my-var-u1' is ambiguous: it resolves to the identifier 'my-var-u1', so the renamed value of the custom identifier '--my-var-u1' is not accessible from JavaScript — rename one of them if both are needed",
+  "Export name 'my-var-u1' is ambiguous: it resolves to the identifier 'my-var-u1', so the renamed value of the custom identifier '--my-var-u1' is not accessible from JavaScript — rename one of them if both are needed",
+]
+`;

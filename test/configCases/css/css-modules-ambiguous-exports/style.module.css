@@ -1,0 +1,41 @@
+.reveal {
+	color: red;
+}
+
+/* two usages of --reveal: the ambiguity is warned only once */
+.viewer {
+	view-timeline-name: --reveal;
+	animation-timeline: --reveal;
+}
+
+.layout {
+	grid-template-areas: "sidebar main";
+}
+
+.sidebar {
+	grid-area: sidebar;
+	color: blue;
+}
+
+/* same name for a class and a keyframes name renames identically: no warning */
+.shared {
+	animation-name: shared;
+}
+
+@keyframes shared {
+	from {
+		opacity: 0;
+	}
+}
+
+/* composes appends onto the same class key: no warning */
+.combined {
+	composes: shared;
+	color: green;
+}
+
+/* repeated dashed ident: no warning */
+.themed {
+	--accent: red;
+	color: var(--accent);
+}
