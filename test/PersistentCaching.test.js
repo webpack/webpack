@@ -346,6 +346,43 @@ export default 40 + file;
 		expect(execute()).toBe(44);
 	}, 60000);
 
+	it("should reclaim every expired pack in a single store", async () => {
+		/** @type {Record<string, string>} */
+		const data = {};
+		for (let i = 0; i < 6; i++) {
+			// bulky modules so each round persists its own content pack
+			data[`m${i}.js`] = `export default ${i};\n// ${"y".repeat(120000)}`;
+		}
+		await updateSrc(data);
+		const c = (/** @type {string[]} */ items) => {
+			/** @type {Record<string, string>} */
+			const entry = {};
+			for (const item of items) entry[item] = `./src/${item}.js`;
+			return compile({ entry, cache: { ...config.cache, maxAge: 500 } });
+		};
+		// build up several packs, one per round
+		for (let i = 0; i < 6; i++) await c([`m${i}`]);
+		const packsBefore = (await readdir(cachePath)).filter((f) =>
+			/^\d+\.pack$/.test(f)
+		);
+		expect(packsBefore.length).toBeGreaterThan(2);
+		// let every cached item pass maxAge, then store once
+		await new Promise((resolve) => {
+			setTimeout(resolve, 1000);
+		});
+		await updateSrc({ "fresh.js": "export default 1;" });
+		await c(["fresh"]);
+		await ageUnreferenced();
+		// a changed source so this build actually stores and runs the cleanup
+		await updateSrc({ "fresh.js": "export default 2;" });
+		await c(["fresh"]);
+		// a single collection drops all of them, not one pack per build
+		const packsAfter = (await readdir(cachePath)).filter((f) =>
+			/^\d+\.pack$/.test(f)
+		);
+		expect(packsAfter.length).toBeLessThan(packsBefore.length - 1);
+	}, 60000);
+
 	it("should delete old unused packs", async () => {
 		// ported from #14661: entry churn with a tiny maxAge orphans whole packs
 		const data = {
