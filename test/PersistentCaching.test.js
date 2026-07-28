@@ -12,6 +12,7 @@ const supportsObjectHasOwn = require("./helpers/supportsObjectHasOwn");
 const supportsOptionalChaining = require("./helpers/supportsOptionalChaining");
 
 const readdir = util.promisify(fs.readdir);
+const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 const utimes = util.promisify(fs.utimes);
 const mkdir = util.promisify(fs.mkdir);
@@ -308,6 +309,16 @@ import 'lodash';
 		await expect(getCacheFileTimes()).resolves.toEqual(firstCacheFileTimes);
 	}, 20000);
 
+	// Backdates the recorded first seen times so the next store deletes the orphans.
+	const ageUnreferenced = async () => {
+		const file = path.join(cachePath, "unreferenced.json");
+		if (!fs.existsSync(file)) return;
+		const data = JSON.parse(await readFile(file, "utf8"));
+		const firstSeen = Date.now() - 2 * 60 * 60 * 1000;
+		for (const entry of Object.values(data)) entry.firstSeen = firstSeen;
+		await writeFile(file, JSON.stringify(data));
+	};
+
 	it("should delete no longer referenced cache files after storing", async () => {
 		await updateSrc({
 			"index.js": `import file from "./file.js";
@@ -316,21 +327,23 @@ export default 40 + file;
 			"file.js": "export default 2;"
 		});
 		await compile();
-		// plant an orphan file and age every cache file beyond the cleanup grace period
 		const orphan = "0123456789abcdef0123456789abcdef.pack";
 		await writeFile(path.join(cachePath, orphan), "orphan");
-		const oldTime = new Date(Date.now() - 2 * 60 * 60 * 1000);
-		for (const file of await readdir(cachePath)) {
-			await utimes(path.join(cachePath, file), oldTime, oldTime);
-		}
 		await updateSrc({
 			"file.js": "export default 3;"
+		});
+		await compile();
+		// the orphan is only recorded as unreferenced by this store
+		expect(await readdir(cachePath)).toContain(orphan);
+		await ageUnreferenced();
+		await updateSrc({
+			"file.js": "export default 4;"
 		});
 		await compile();
 		expect(await readdir(cachePath)).not.toContain(orphan);
 		// every file the new index references must have survived the cleanup
 		await compile();
-		expect(execute()).toBe(43);
+		expect(execute()).toBe(44);
 	}, 60000);
 
 	it("should delete old unused packs", async () => {
@@ -359,29 +372,24 @@ export default 40 + file;
 		// content pack and index
 		await expect(readdir(cachePath)).resolves.toHaveLength(2);
 		await c("c");
-		// new content pack, old one still within the grace period, index and index.old
+		// new content pack, index and index.old; nothing is unreferenced yet
 		await expect(readdir(cachePath)).resolves.toHaveLength(4);
-		// item expiry needs real elapsed time; the grace period is aged via utimes
+		// item expiry needs real elapsed time; the index backup ages via utimes
 		await backdateCache();
 		await new Promise((resolve) => {
 			setTimeout(resolve, 6000);
 		});
 		await c("cde");
+		// the stale index backup is gone once it is older than the grace period
+		expect(await readdir(cachePath)).not.toContain("index.pack.old");
+		// further churn reuses or deletes unreferenced packs instead of piling them up
+		for (let i = 0; i < 3; i++) {
+			await ageUnreferenced();
+			await c("de");
+		}
 		const remaining = await readdir(cachePath);
-		// unreferenced files beyond the grace period are gone: the pack holding
-		// only the expired a/b items and the old index backup
-		expect(remaining).not.toContain("0.pack");
-		expect(remaining).not.toContain("index.pack.old");
-		// the old-but-still-referenced pack (c stayed cached in it) survives
-		expect(remaining).toContain("1.pack");
+		expect(remaining.filter((f) => /^\d+\.pack$/.test(f))).toHaveLength(3);
 		expect(remaining).toContain("index.pack");
-		// once c stops being used it expires, and its pack gets deleted too
-		await backdateCache();
-		await new Promise((resolve) => {
-			setTimeout(resolve, 6000);
-		});
-		await c("de");
-		expect(await readdir(cachePath)).not.toContain("1.pack");
 	}, 60000);
 
 	it("should keep recently modified unreferenced cache files", async () => {
