@@ -1,62 +1,70 @@
-/* Cross-kind conflicts — these should warn */
+/* Cross-kind conflicts where a class shares its name with a CSS-scoped
+   kind (custom property, @keyframes, @counter-style, @container). Class
+   wins the JS export in every case, even when the CSS-scoped kind
+   appears first in source order. */
 
-.foo {
+.class-vs-var {
 	color: red;
 }
-
 :root {
-	--foo: blue;
+	--class-vs-var: blue;
 }
 
-.bar {
+/* CSS-scoped side declared first: still demoted (class wins by kind, not order). */
+:root {
+	--var-then-class: red;
+}
+.var-then-class {
+	color: blue;
+}
+
+.class-vs-keyframes {
 	color: green;
 }
-
-@keyframes bar {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
-	}
+@keyframes class-vs-keyframes {
+	from { opacity: 0; }
+	to { opacity: 1; }
 }
 
-.baz {
-	animation: baz 1s;
+.class-vs-counter {
+	color: yellow;
 }
-
-@counter-style baz {
+@counter-style class-vs-counter {
 	system: cyclic;
 	symbols: "*";
 	suffix: " ";
 }
 
-.qux {
-	color: yellow;
+.class-vs-container {
+	color: purple;
+}
+@container class-vs-container (width > 100px) {
+	p { color: red; }
 }
 
+/* Cross-kind conflicts where no class is available to demote the other side —
+   warn but do not change behavior. */
+
+.class-vs-export {
+	color: orange;
+}
 :export {
-	qux: overridden;
+	class-vs-export: overridden-by-export;
 }
 
-/* Same-kind duplicates — these should NOT warn */
+/* Same-kind duplicates — silent (repeated declarations of the same
+   thing are legal in CSS). */
 
-/* Multiple class selectors that all declare the same class */
 .dup-class { color: black; }
 .dup-class { color: navy; }
 .dup-class:hover { color: gray; }
 
-/* Multiple id selectors that all declare the same id */
 #dup-id { color: red; }
 #dup-id { color: maroon; }
-#dup-id:hover { color: blue; }
 
-/* Multiple custom property declarations with the same name */
 :root { --dup-prop: red; }
 :root { --dup-prop: blue; }
-.dup-class { --dup-prop: green; }
 
-/* Multiple @keyframes with the same name */
 @keyframes dup-kf {
 	0% { left: 0; }
 }
@@ -64,11 +72,9 @@
 	100% { left: 100px; }
 }
 
-/* Multiple @value declarations with the same name */
 @value dup-val: red;
 @value dup-val: blue;
 
-/* Multiple :export blocks declaring the same name */
 :export {
 	dup-export: a;
 }
@@ -76,7 +82,6 @@
 	dup-export: b;
 }
 
-/* Multiple @container declarations with the same name */
 @container dup-container (width > 100px) {
 	p { color: red; }
 }
@@ -84,7 +89,6 @@
 	p { color: blue; }
 }
 
-/* Multiple @counter-style declarations with the same name */
 @counter-style dup-counter {
 	system: cyclic;
 	symbols: "*";
