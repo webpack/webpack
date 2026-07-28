@@ -1,0 +1,4 @@
+{
+	"name": "universal",
+	"icons": [{ "src": "./icon.png", "sizes": "1x1", "type": "image/png" }]
+}

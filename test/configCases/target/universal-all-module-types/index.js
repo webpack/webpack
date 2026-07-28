@@ -1,11 +1,15 @@
 import cjsValue from "./cjs";
+import dataUrlModule from "data:text/javascript,export default 'data-url'";
 import jsonData from "./data.json" with { type: "json" };
 import defer * as deferred from "./deferred.js";
 import { esmValue } from "./esm.js";
+import { loaderTarget } from "./loader-target.js";
 import autoAsset from "./small.dat";
 import bytesRule from "./raw.bin";
 import html from "./page.html";
 import inlineSvg from "./inline.svg";
+import * as autoCssModule from "./auto.modules.css";
+import * as autoGlobalCss from "./plain-auto.css";
 import * as globalCss from "./global.css";
 import * as cssModule from "./styles.module.css";
 import sheet from "./style.css" with { type: "css" };
@@ -34,6 +38,14 @@ it("supports esm imports/exports", () => {
 
 it("supports commonjs interop", () => {
 	expect(cjsValue).toBe("cjs");
+});
+
+it("reports the build target to loaders", () => {
+	expect(loaderTarget).toBe(CONFIG_NAME);
+});
+
+it("supports `data:` uri modules", () => {
+	expect(dataUrlModule).toBe("data-url");
 });
 
 it("supports json modules with import attributes", () => {
@@ -118,6 +130,16 @@ it("supports css modules with named exports", () => {
 
 it("supports global css", () => {
 	expect(globalCss).toEqual({});
+});
+
+it("supports css/auto detecting css modules by filename", () => {
+	expect(typeof autoCssModule["auto-box"]).toBe("string");
+	expect(autoGlobalCss).toEqual({});
+});
+
+it("supports css in an async chunk", async () => {
+	const { lazyClass } = await import("./lazy-style.js");
+	expect(typeof lazyClass).toBe("string");
 });
 
 it("supports html modules", () => {

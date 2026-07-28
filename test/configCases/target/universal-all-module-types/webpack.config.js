@@ -17,6 +17,10 @@ const rules = [
 		generator: { dataUrl: { mimetype: "text/plain" } }
 	},
 	{ test: /\.wat$/, loader: "wast-loader", type: "webassembly/async" },
+	{
+		test: /loader-target\.js$/,
+		loader: path.resolve(__dirname, "loader-target-loader.js")
+	},
 	{ test: /\.module\.css$/, type: "css/module" },
 	{ test: /\.global\.css$/, type: "css/global" }
 ];
