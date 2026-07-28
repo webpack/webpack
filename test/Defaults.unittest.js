@@ -3054,7 +3054,7 @@ describe("snapshots", () => {
 			+       "module": true,
 			@@ ... @@
 			-     "target": "web",
-			+     "target": undefined,
+			+     "target": "universal",
 			@@ ... @@
 			-         "importMeta": true,
 			+         "importMeta": "preserve-unknown",
@@ -3240,7 +3240,7 @@ describe("snapshots", () => {
 			+       "module": true,
 			@@ ... @@
 			-     "target": "web",
-			+     "target": undefined,
+			+     "target": "universal",
 			@@ ... @@
 			-         "importMeta": true,
 			+         "importMeta": "preserve-unknown",
