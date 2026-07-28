@@ -38,6 +38,8 @@ const buildFileWithPointers = (pointerNames) => {
  */
 const seedUnreferenced = (fs, directory, files) => {
 	const firstSeen = Date.now() - 2 * 60 * 60 * 1000;
+	// a restore refreshes modification times, but not within the recent write window
+	const restored = new Date(Date.now() - 5 * 60 * 1000);
 	/** @type {Record<string, { firstSeen: number, size: number }>} */
 	const data = {};
 	for (const file of files) {
@@ -45,6 +47,7 @@ const seedUnreferenced = (fs, directory, files) => {
 			firstSeen,
 			size: fs.statSync(path.join(directory, file)).size
 		};
+		fs.utimesSync(path.join(directory, file), restored, restored);
 	}
 	fs.writeFileSync(
 		path.join(directory, "unreferenced.json"),
@@ -137,8 +140,8 @@ describe("PackFileCacheStrategy cleanup", () => {
 		fs.mkdirSync(tempPath, { recursive: true });
 		fs.writeFileSync(path.join(tempPath, "orphan.pack"), "orphan");
 		// a restored cache refreshes modification times, so aging must not use them
-		const now = new Date();
-		fs.utimesSync(path.join(tempPath, "orphan.pack"), now, now);
+		const restored = new Date(Date.now() - 5 * 60 * 1000);
+		fs.utimesSync(path.join(tempPath, "orphan.pack"), restored, restored);
 
 		const strategy = createStrategy(fs);
 
@@ -149,11 +152,27 @@ describe("PackFileCacheStrategy cleanup", () => {
 			"unreferenced.json"
 		]);
 
-		// a later store past the grace period deletes it, despite the fresh mtime
+		// a later store past the grace period deletes it, despite the refreshed mtime
 		seedUnreferenced(fs, tempPath, ["orphan.pack"]);
-		fs.utimesSync(path.join(tempPath, "orphan.pack"), now, now);
+		fs.utimesSync(path.join(tempPath, "orphan.pack"), restored, restored);
 		await strategy._cleanupUnusedFiles(new Set(), new Set());
 		expect(fs.readdirSync(tempPath).sort()).toEqual(["unreferenced.json"]);
+	});
+
+	it("keeps a recorded orphan that was just written", async () => {
+		const fs = require("graceful-fs");
+
+		fs.mkdirSync(tempPath, { recursive: true });
+		fs.writeFileSync(path.join(tempPath, "orphan.pack"), "orphan");
+		seedUnreferenced(fs, tempPath, ["orphan.pack"]);
+		// a concurrent build may have just reused the name, so the record is not trusted
+		const now = new Date();
+		fs.utimesSync(path.join(tempPath, "orphan.pack"), now, now);
+
+		const strategy = createStrategy(fs);
+
+		await strategy._cleanupUnusedFiles(new Set(), new Set());
+		expect(fs.readdirSync(tempPath)).toContain("orphan.pack");
 	});
 
 	it("deletes an orphan with an old modification time on the first store", async () => {

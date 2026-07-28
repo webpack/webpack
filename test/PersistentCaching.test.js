@@ -309,13 +309,18 @@ import 'lodash';
 		await expect(getCacheFileTimes()).resolves.toEqual(firstCacheFileTimes);
 	}, 20000);
 
-	// Backdates the recorded first seen times so the next store deletes the orphans.
+	// Backdates the recorded first seen times so the next store deletes the orphans,
+	// and ages their files past the recent write window like a restore would.
 	const ageUnreferenced = async () => {
 		const file = path.join(cachePath, "unreferenced.json");
 		if (!fs.existsSync(file)) return;
 		const data = JSON.parse(await readFile(file, "utf8"));
 		const firstSeen = Date.now() - 2 * 60 * 60 * 1000;
-		for (const entry of Object.values(data)) entry.firstSeen = firstSeen;
+		const restored = new Date(Date.now() - 5 * 60 * 1000);
+		for (const [name, entry] of Object.entries(data)) {
+			entry.firstSeen = firstSeen;
+			await utimes(path.join(cachePath, name), restored, restored);
+		}
 		await writeFile(file, JSON.stringify(data));
 	};
 
