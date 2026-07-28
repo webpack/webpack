@@ -675,11 +675,9 @@ declare class AsyncWebAssemblyModulesPlugin {
 	renderModule(
 		module: Module,
 		renderContext: WebAssemblyRenderContext,
-		hooks: CompilationHooksAsyncWebAssemblyModulesPlugin
+		hooks: CompilationHooks
 	): Source;
-	static getCompilationHooks: (
-		compilation: Compilation
-	) => CompilationHooksAsyncWebAssemblyModulesPlugin;
+	static getCompilationHooks: (compilation: Compilation) => CompilationHooks;
 }
 declare interface AsyncWebAssemblyModulesPluginOptions {
 	/**
@@ -2759,13 +2757,6 @@ declare interface ChunkRenderContextCssModulesPlugin {
 	 */
 	moduleSourceContent: Source;
 }
-
-/**
- * Renames an inlined module's top-level declaration (and all its references) when
- * its name is already taken in the shared startup scope, recording the chosen name
- * in `allUsedNames`. Lets inlined modules be emitted without a per-entry/per-chunk
- * IIFE by resolving name collisions instead of isolating each module.
- */
 declare interface ChunkRenderContextJavascriptModulesPlugin {
 	/**
 	 * the chunk
@@ -2917,15 +2908,13 @@ declare class CleanPlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
-	static getCompilationHooks: (
-		compilation: Compilation
-	) => CleanPluginCompilationHooks;
-}
-declare interface CleanPluginCompilationHooks {
-	/**
-	 * when returning true the file/directory will be kept during cleaning, returning false will clean it and ignore the following plugins and config
-	 */
-	keep: SyncBailHook<[string], boolean | void>;
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * When returning true the file/directory will be kept during cleaning, returning false will clean it and ignore the following plugins and config.
+		 * @since 5.20.0
+		 */
+		keep: SyncBailHook<[string], boolean | void>;
+	};
 }
 declare interface ClearCacheOptions {
 	/**
@@ -3230,7 +3219,13 @@ declare class Compilation {
 			[(string[] | ReferencedExport)[], Dependency, RuntimeSpec],
 			(string[] | ReferencedExport)[]
 		>;
+		/**
+		 * @since 5.32.0
+		 */
 		executeModule: SyncHook<[ExecuteModuleArgument, ExecuteModuleContext]>;
+		/**
+		 * @since 5.33.0
+		 */
 		prepareModuleExecution: AsyncParallelHook<
 			[ExecuteModuleArgument, ExecuteModuleContext]
 		>;
@@ -3358,6 +3353,9 @@ declare class Compilation {
 			ProcessAssetsAdditionalOptions
 		>;
 		afterProcessAssets: SyncHook<[CompilationAssets]>;
+		/**
+		 * @since 5.8.0
+		 */
 		processAdditionalAssets: AsyncSeriesHook<[CompilationAssets]>;
 		needAdditionalSeal: SyncBailHook<[], boolean | void>;
 		afterSeal: AsyncSeriesHook<[]>;
@@ -3954,92 +3952,11 @@ declare class Compilation {
 declare interface CompilationAssets {
 	[index: string]: Source;
 }
-declare interface CompilationHooksAsyncWebAssemblyModulesPlugin {
+declare interface CompilationHooks {
 	renderModuleContent: SyncWaterfallHook<
 		[Source, Module, WebAssemblyRenderContext],
 		Source
 	>;
-}
-declare interface CompilationHooksCssModulesPlugin {
-	renderModulePackage: SyncWaterfallHook<
-		[Source, Module, ChunkRenderContextCssModulesPlugin],
-		Source
-	>;
-	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
-
-	/**
-	 * called for each CSS source type (CSS_IMPORT_TYPE, CSS_TYPE) with the chunk's modules pre-sorted by full module name; return an ordered `Module[]` to override the default import-order topological sort, or return `undefined` to keep the default
-	 */
-	orderModules: SyncBailHook<
-		[Chunk, Module[], Compilation],
-		undefined | void | Module[]
-	>;
-}
-
-/**
- * Renames an inlined module's top-level declaration (and all its references) when
- * its name is already taken in the shared startup scope, recording the chosen name
- * in `allUsedNames`. Lets inlined modules be emitted without a per-entry/per-chunk
- * IIFE by resolving name collisions instead of isolating each module.
- */
-declare interface CompilationHooksJavascriptModulesPlugin {
-	renderModuleContent: SyncWaterfallHook<
-		[Source, Module, ModuleRenderContext],
-		Source
-	>;
-	renderModuleContainer: SyncWaterfallHook<
-		[Source, Module, ModuleRenderContext],
-		Source
-	>;
-	renderModulePackage: SyncWaterfallHook<
-		[Source, Module, ModuleRenderContext],
-		Source
-	>;
-	renderChunk: SyncWaterfallHook<
-		[Source, RenderContextJavascriptModulesPlugin],
-		Source
-	>;
-	renderMain: SyncWaterfallHook<
-		[Source, RenderContextJavascriptModulesPlugin],
-		Source
-	>;
-	renderContent: SyncWaterfallHook<
-		[Source, RenderContextJavascriptModulesPlugin],
-		Source
-	>;
-	render: SyncWaterfallHook<
-		[Source, RenderContextJavascriptModulesPlugin],
-		Source
-	>;
-	renderStartup: SyncWaterfallHook<
-		[Source, Module, StartupRenderContext],
-		Source
-	>;
-	renderRequire: SyncWaterfallHook<[string, RenderBootstrapContext], string>;
-	inlineInRuntimeBailout: SyncBailHook<
-		[Module, Partial<RenderBootstrapContext>],
-		string | void
-	>;
-	embedInRuntimeBailout: SyncBailHook<
-		[Module, RenderContextJavascriptModulesPlugin],
-		string | void
-	>;
-	strictRuntimeBailout: SyncBailHook<
-		[RenderContextJavascriptModulesPlugin],
-		string | void
-	>;
-	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
-	useSourceMap: SyncBailHook<
-		[Chunk, RenderContextJavascriptModulesPlugin],
-		boolean | void
-	>;
-}
-declare interface CompilationHooksModuleFederationPlugin {
-	addContainerEntryDependency: SyncHook<Dependency>;
-	addFederationRuntimeDependency: SyncHook<Dependency>;
-}
-declare interface CompilationHooksRealContentHashPlugin {
-	updateHash: SyncBailHook<[Buffer[], string], string | void>;
 }
 
 /**
@@ -4141,17 +4058,29 @@ declare class Compiler {
 		make: AsyncParallelHook<[Compilation]>;
 		finishMake: AsyncParallelHook<[Compilation]>;
 		afterCompile: AsyncSeriesHook<[Compilation]>;
+		/**
+		 * @since 5.67.0
+		 */
 		readRecords: AsyncSeriesHook<[]>;
+		/**
+		 * @since 5.67.0
+		 */
 		emitRecords: AsyncSeriesHook<[]>;
 		watchRun: AsyncSeriesHook<[Compiler]>;
 		failed: SyncHook<[Error]>;
 		invalid: SyncHook<[null | string, number]>;
 		watchClose: SyncHook<[]>;
+		/**
+		 * @since 5.17.0
+		 */
 		shutdown: AsyncSeriesHook<[]>;
 		infrastructureLog: SyncBailHook<
 			[string, string, undefined | any[]],
 			true | void
 		>;
+		/**
+		 * @since 5.106.0
+		 */
 		validate: SyncHook<[]>;
 		environment: SyncHook<[]>;
 		afterEnvironment: SyncHook<[]>;
@@ -4352,6 +4281,7 @@ type ConcatSourceChild = string | Source | SourceLike;
 
 /**
  * Advanced options for module concatenation.
+ * @since 5.109.0
  */
 declare interface ConcatenateModulesOptions {
 	/**
@@ -5465,9 +5395,24 @@ declare interface CssImportDependencyMeta {
 type CssLayer = undefined | string;
 declare class CssLoadingRuntimeModule extends RuntimeModule {
 	constructor(runtimeRequirements: ReadonlySet<string>);
-	static getCompilationHooks: (
-		compilation: Compilation
-	) => CssLoadingRuntimeModulePluginHooks;
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * @since 5.66.0
+		 */
+		createStylesheet: SyncWaterfallHook<[string, Chunk], string>;
+		/**
+		 * @since 5.91.0
+		 */
+		linkPreload: SyncWaterfallHook<[string, Chunk], string>;
+		/**
+		 * @since 5.91.0
+		 */
+		linkPrefetch: SyncWaterfallHook<[string, Chunk], string>;
+		/**
+		 * @since 5.107.0
+		 */
+		linkInsert: SyncWaterfallHook<[string, Chunk], string>;
+	};
 
 	/**
 	 * Runtime modules without any dependencies to other runtime modules
@@ -5494,12 +5439,6 @@ declare class CssLoadingRuntimeModule extends RuntimeModule {
 	 * @deprecated In webpack 6, call getSourceBasicTypes() directly on the module instance instead of using this static method.
 	 */
 	static getSourceBasicTypes(module: Module): ReadonlySet<string>;
-}
-declare interface CssLoadingRuntimeModulePluginHooks {
-	createStylesheet: SyncWaterfallHook<[string, Chunk], string>;
-	linkPreload: SyncWaterfallHook<[string, Chunk], string>;
-	linkPrefetch: SyncWaterfallHook<[string, Chunk], string>;
-	linkInsert: SyncWaterfallHook<[string, Chunk], string>;
 }
 declare abstract class CssModule extends NormalModule {
 	cssLayer: CssLayer;
@@ -5682,7 +5621,27 @@ declare class CssModulesPlugin {
 	 */
 	renderChunk(
 		__0: RenderContextCssModulesPlugin,
-		hooks: CompilationHooksCssModulesPlugin
+		hooks: {
+			/**
+			 * @since 5.94.0
+			 */
+			renderModulePackage: SyncWaterfallHook<
+				[Source, Module, ChunkRenderContextCssModulesPlugin],
+				Source
+			>;
+			/**
+			 * @since 5.94.0
+			 */
+			chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+			/**
+			 * Called for each CSS source type (CSS_IMPORT_TYPE, CSS_TYPE) with the chunk's modules pre-sorted by full module name; return an ordered `Module[]` to override the default import-order topological sort, or return `undefined` to keep the default.
+			 * @since 5.107.0
+			 */
+			orderModules: SyncBailHook<
+				[Chunk, Module[], Compilation],
+				undefined | void | Module[]
+			>;
+		}
 	): Source;
 
 	/**
@@ -5691,7 +5650,27 @@ declare class CssModulesPlugin {
 	static renderModule(
 		module: CssModule,
 		renderContext: ChunkRenderContextCssModulesPlugin,
-		hooks: CompilationHooksCssModulesPlugin
+		hooks: {
+			/**
+			 * @since 5.94.0
+			 */
+			renderModulePackage: SyncWaterfallHook<
+				[Source, Module, ChunkRenderContextCssModulesPlugin],
+				Source
+			>;
+			/**
+			 * @since 5.94.0
+			 */
+			chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+			/**
+			 * Called for each CSS source type (CSS_IMPORT_TYPE, CSS_TYPE) with the chunk's modules pre-sorted by full module name; return an ordered `Module[]` to override the default import-order topological sort, or return `undefined` to keep the default.
+			 * @since 5.107.0
+			 */
+			orderModules: SyncBailHook<
+				[Chunk, Module[], Compilation],
+				undefined | void | Module[]
+			>;
+		}
 	): null | Source;
 
 	/**
@@ -5706,9 +5685,27 @@ declare class CssModulesPlugin {
 	 * Returns true, when the chunk has css.
 	 */
 	static chunkHasCss(chunk: Chunk, chunkGraph: ChunkGraph): boolean;
-	static getCompilationHooks: (
-		compilation: Compilation
-	) => CompilationHooksCssModulesPlugin;
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * @since 5.94.0
+		 */
+		renderModulePackage: SyncWaterfallHook<
+			[Source, Module, ChunkRenderContextCssModulesPlugin],
+			Source
+		>;
+		/**
+		 * @since 5.94.0
+		 */
+		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+		/**
+		 * Called for each CSS source type (CSS_IMPORT_TYPE, CSS_TYPE) with the chunk's modules pre-sorted by full module name; return an ordered `Module[]` to override the default import-order topological sort, or return `undefined` to keep the default.
+		 * @since 5.107.0
+		 */
+		orderModules: SyncBailHook<
+			[Chunk, Module[], Compilation],
+			undefined | void | Module[]
+		>;
+	};
 }
 declare abstract class CssParser extends ParserClass {
 	defaultMode: "global" | "auto" | "local" | "pure";
@@ -5796,11 +5793,13 @@ declare interface CssParserOptions {
 
 	/**
 	 * Enable/disable resolution of `@custom-media` at-rules (file-local build-time substitution).
+	 * @since 5.109.0
 	 */
 	customMedia?: boolean;
 
 	/**
 	 * Enable/disable resolution of `@custom-selector` at-rules (file-local build-time expansion to `:is(...)`).
+	 * @since 5.109.0
 	 */
 	customSelectors?: boolean;
 
@@ -5811,6 +5810,7 @@ declare interface CssParserOptions {
 
 	/**
 	 * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
+	 * @since 5.109.0
 	 */
 	fontPreload?: boolean;
 
@@ -5901,7 +5901,15 @@ declare class DefinePlugin {
 		}) => CodeValuePrimitive,
 		options?: true | string[] | RuntimeValueOptions
 	): RuntimeValue;
-	static getCompilationHooks: (compilation: Compilation) => DefinePluginHooks;
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * @since 5.104.0
+		 */
+		definitions: SyncWaterfallHook<
+			[Record<string, CodeValue>],
+			Record<string, CodeValue>
+		>;
+	};
 	static VALUE_DEP_MAIN: "webpack/DefinePlugin_hash";
 	static VALUE_DEP_PREFIX: "webpack/DefinePlugin ";
 	static getMergedDefinitionNode: (
@@ -5917,12 +5925,6 @@ declare class DefinePlugin {
 		objKeys?: null | Set<string>
 	) => string;
 	static toPropertyKey: (key: string) => string;
-}
-declare interface DefinePluginHooks {
-	definitions: SyncWaterfallHook<
-		[Record<string, CodeValue>],
-		Record<string, CodeValue>
-	>;
 }
 declare interface Definitions {
 	[index: string]: CodeValue;
@@ -7269,6 +7271,7 @@ declare interface Environment {
 
 	/**
 	 * The environment supports generator functions and yield ('function* () { yield ... }').
+	 * @since 5.109.0
 	 */
 	generator?: boolean;
 
@@ -7309,6 +7312,7 @@ declare interface Environment {
 
 	/**
 	 * The environment supports `<link rel="modulepreload">` to preload EcmaScript modules.
+	 * @since 5.109.0
 	 */
 	modulePreload?: boolean;
 
@@ -7487,78 +7491,91 @@ declare interface Experiments {
 
 	/**
 	 * Support WebAssembly as asynchronous EcmaScript Module. `"auto"` (the default) enables it unless a loader is registered for WebAssembly files.
+	 * @since 5.0.0
 	 * @experimental
 	 */
 	asyncWebAssembly?: boolean | "auto";
 
 	/**
 	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
+	 * @since 5.62.0
 	 * @experimental
 	 */
 	backCompat?: boolean;
 
 	/**
 	 * Build http(s): urls using a lockfile and resource content cache.
+	 * @since 5.49.0
 	 * @experimental
 	 */
 	buildHttp?: HttpUriOptions | (string | RegExp | ((uri: string) => boolean))[];
 
 	/**
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
+	 * @since 5.54.0
 	 * @experimental
 	 */
 	cacheUnaffected?: boolean;
 
 	/**
 	 * Enable css support. `"auto"` (the default) enables the built-in CSS support unless a loader is registered for CSS files.
+	 * @since 5.66.0
 	 * @experimental
 	 */
 	css?: boolean | "auto";
 
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 * @since 5.100.0
 	 * @experimental
 	 */
 	deferImport?: boolean;
 
 	/**
 	 * Apply defaults of next major version.
+	 * @since 5.53.0
 	 * @experimental
 	 */
 	futureDefaults?: boolean;
 
 	/**
 	 * Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points. `"auto"` (the default) enables it unless a loader is registered for HTML files.
+	 * @since 5.107.0
 	 * @experimental
 	 */
 	html?: boolean | "auto";
 
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
+	 * @since 5.17.0
 	 * @experimental
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
 
 	/**
 	 * Allow output javascript files as module source type.
+	 * @since 5.0.0
 	 * @experimental
 	 */
 	outputModule?: boolean;
 
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
+	 * @since 5.106.0
 	 * @experimental
 	 */
 	sourceImport?: boolean;
 
 	/**
 	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
+	 * @since 5.0.0
 	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
 
 	/**
 	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
+	 * @since 5.107.0
 	 * @experimental
 	 */
 	typescript?: boolean | "auto";
@@ -7570,78 +7587,91 @@ declare interface Experiments {
 declare interface ExperimentsNormalized {
 	/**
 	 * Support WebAssembly as asynchronous EcmaScript Module. `"auto"` (the default) enables it unless a loader is registered for WebAssembly files.
+	 * @since 5.0.0
 	 * @experimental
 	 */
 	asyncWebAssembly?: boolean | "auto";
 
 	/**
 	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
+	 * @since 5.62.0
 	 * @experimental
 	 */
 	backCompat?: boolean;
 
 	/**
 	 * Build http(s): urls using a lockfile and resource content cache.
+	 * @since 5.49.0
 	 * @experimental
 	 */
 	buildHttp?: HttpUriOptions;
 
 	/**
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
+	 * @since 5.54.0
 	 * @experimental
 	 */
 	cacheUnaffected?: boolean;
 
 	/**
 	 * Enable css support. `"auto"` (the default) enables the built-in CSS support unless a loader is registered for CSS files.
+	 * @since 5.66.0
 	 * @experimental
 	 */
 	css?: boolean | "auto";
 
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 * @since 5.100.0
 	 * @experimental
 	 */
 	deferImport?: boolean;
 
 	/**
 	 * Apply defaults of next major version.
+	 * @since 5.53.0
 	 * @experimental
 	 */
 	futureDefaults?: boolean;
 
 	/**
 	 * Enable HTML entry support. Treats `.html` files as a first-class module type so they can be used directly as entry points. `"auto"` (the default) enables it unless a loader is registered for HTML files.
+	 * @since 5.107.0
 	 * @experimental
 	 */
 	html?: boolean | "auto";
 
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
+	 * @since 5.17.0
 	 * @experimental
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
 
 	/**
 	 * Allow output javascript files as module source type.
+	 * @since 5.0.0
 	 * @experimental
 	 */
 	outputModule?: boolean;
 
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
+	 * @since 5.106.0
 	 * @experimental
 	 */
 	sourceImport?: boolean;
 
 	/**
 	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
+	 * @since 5.0.0
 	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
 
 	/**
 	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when Node.js supports it (>= 22.6) and no loader is registered for TypeScript files.
+	 * @since 5.107.0
 	 * @experimental
 	 */
 	typescript?: boolean | "auto";
@@ -8274,6 +8304,7 @@ type ExternalItemValue =
 declare interface ExternalItemValueObjectKnown {
 	/**
 	 * How an external's exports interoperate with ES module imports, independent of the importing module's strictness (similar to Rollup's `output.interop`). 'default': treat as CommonJS, the default import is the whole exports (Node.js semantics). 'esModule': treat as an ES module namespace, the default import is unboxed to `.default`.
+	 * @since 5.109.0
 	 */
 	interop?: "default" | "esModule";
 }
@@ -8310,7 +8341,12 @@ declare class ExternalModule extends Module {
 		unsafeCacheData: UnsafeCacheData,
 		normalModuleFactory: NormalModuleFactory
 	): void;
-	static getCompilationHooks: (compilation: Compilation) => ExternalModuleHooks;
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * @since 5.106.0
+		 */
+		chunkCondition: SyncBailHook<[Chunk, Compilation], boolean>;
+	};
 	static ModuleExternalInitFragment: typeof ModuleExternalInitFragment;
 	static getExternalModuleNodeCommonjsInitFragment: (
 		runtimeTemplate: RuntimeTemplate,
@@ -8326,9 +8362,6 @@ declare class ExternalModule extends Module {
 type ExternalModuleBuildInfo = KnownBuildInfo &
 	Record<string, any> &
 	KnownExternalModuleBuildInfo;
-declare interface ExternalModuleHooks {
-	chunkCondition: SyncBailHook<[Chunk, Compilation], boolean>;
-}
 declare interface ExternalModuleInfo {
 	type: "external";
 	module: Module;
@@ -9618,33 +9651,6 @@ declare interface HotModuleReplacementPluginLoaderContext {
 declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
-declare interface HtmlCompilationHooks {
-	/**
-	 * called with the list of extra tags to inject into each page (initially empty) plus the current HTML; push `HtmlTagDescriptor`s and return the list — webpack serializes and places them by `injectTo`. A structured alternative to the string-level `transformHtml` for adding tags; runs before CSP so injected inline tags are hashed
-	 */
-	injectTags: AsyncSeriesWaterfallHook<
-		[HtmlTagDescriptor[], HtmlInjectTagsContext],
-		HtmlTagDescriptor[]
-	>;
-
-	/**
-	 * called with the page's `<script>`/`<link>`/`<style>`/`<meta>` tags (webpack's own and any injected) as mutable descriptors; mutate `attrs` (add a `nonce`/`data-*`, switch `defer`↔`async`, …), set `remove: true`, or change `injectTo` to move a tag between `<head>` and `<body>`, and webpack rewrites the changed tags. Add new tags with `injectTags` instead
-	 */
-	transformTags: AsyncSeriesHook<[HtmlMutableTag[], HtmlTransformTagsContext]>;
-
-	/**
-	 * called with each emitted page's final HTML (all sentinels resolved) just before it is written; return the (possibly transformed) HTML — e.g. to minify, inject a CSP meta, or rewrite tags
-	 */
-	transformHtml: AsyncSeriesWaterfallHook<
-		[string, HtmlTransformHtmlContext],
-		string
-	>;
-
-	/**
-	 * called once each page's HTML asset has been finalized — a post-emit notification (nothing to return)
-	 */
-	htmlEmitted: AsyncSeriesHook<[HtmlEmittedContext]>;
-}
 declare interface HtmlEmittedContext {
 	outputName: string;
 }
@@ -9778,9 +9784,36 @@ declare class HtmlModulesPlugin {
 	/**
 	 * Per-compilation hooks for the experimental HTML support.
 	 */
-	static getCompilationHooks: (
-		compilation: Compilation
-	) => HtmlCompilationHooks;
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * Called with the list of extra tags to inject into each page (initially empty) plus the current HTML; push `HtmlTagDescriptor`s and return the list — webpack serializes and places them by `injectTo`. A structured alternative to the string-level `transformHtml` for adding tags; runs before CSP so injected inline tags are hashed.
+		 * @since 5.109.0
+		 */
+		injectTags: AsyncSeriesWaterfallHook<
+			[HtmlTagDescriptor[], HtmlInjectTagsContext],
+			HtmlTagDescriptor[]
+		>;
+		/**
+		 * Called with the page's `<script>`/`<link>`/`<style>`/`<meta>` tags (webpack's own and any injected) as mutable descriptors; mutate `attrs` (add a `nonce`/`data-*`, switch `defer`↔`async`, …), set `remove: true`, or change `injectTo` to move a tag between `<head>` and `<body>`, and webpack rewrites the changed tags. Add new tags with `injectTags` instead.
+		 * @since 5.109.0
+		 */
+		transformTags: AsyncSeriesHook<
+			[HtmlMutableTag[], HtmlTransformTagsContext]
+		>;
+		/**
+		 * Called with each emitted page's final HTML (all sentinels resolved) just before it is written; return the (possibly transformed) HTML — e.g. to minify, inject a CSP meta, or rewrite tags.
+		 * @since 5.109.0
+		 */
+		transformHtml: AsyncSeriesWaterfallHook<
+			[string, HtmlTransformHtmlContext],
+			string
+		>;
+		/**
+		 * Called once each page's HTML asset has been finalized — a post-emit notification (nothing to return).
+		 * @since 5.109.0
+		 */
+		htmlEmitted: AsyncSeriesHook<[HtmlEmittedContext]>;
+	};
 }
 declare interface HtmlMutableTag {
 	/**
@@ -9825,6 +9858,7 @@ declare abstract class HtmlParser extends ParserClass {
 declare interface HtmlParserOptions {
 	/**
 	 * Configure how the HTML source is parsed: `"document"` (the default) parses a full page; any other value is the tag name of the context element to parse the source as that element's inner HTML (a fragment) — e.g. `"template"` for a neutral fragment, or `"tbody"` so context-sensitive tags like a bare `<tr>`/`<td>` are kept instead of dropped.
+	 * @since 5.109.0
 	 */
 	as?: string;
 
@@ -9935,6 +9969,7 @@ type HtmlResourceHintRel =
 
 /**
  * A custom resource-hint `<link>` for `output.html.resourceHints`. Exactly one of `href` / `chunk` / `entry` names the target.
+ * @since 5.109.0
  */
 declare interface HtmlResourceHintWebpackOptions {
 	/**
@@ -10488,6 +10523,7 @@ type ImportMetaParserOptions = ImportMetaParserOptionsKnown &
 
 /**
  * Enable/disable evaluating import.meta fields. Omitted fields are enabled and unknown fields are preserved. Custom fields are allowed.
+ * @since 5.109.0
  */
 declare interface ImportMetaParserOptionsKnown {
 	/**
@@ -10538,6 +10574,7 @@ declare interface ImportMetaParserOptionsKnown {
 
 /**
  * Enable/disable evaluating import.meta fields. Omitted fields are enabled and unknown fields are preserved. Custom fields are allowed.
+ * @since 5.109.0
  */
 declare interface ImportMetaParserOptionsUnknown {
 	[index: string]: boolean;
@@ -10603,6 +10640,7 @@ declare interface InfrastructureLogging {
 
 	/**
 	 * Show build progress. `"auto"` shows it only for interactive terminals. This option is only used when no custom console is provided.
+	 * @since 5.109.0
 	 */
 	progress?: boolean | "auto";
 
@@ -10926,7 +10964,79 @@ declare class JavascriptModulesPlugin {
 	renderModule(
 		module: Module,
 		renderContext: ModuleRenderContext,
-		hooks: CompilationHooksJavascriptModulesPlugin
+		hooks: {
+			renderModuleContent: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			renderModuleContainer: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			renderModulePackage: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			render: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			/**
+			 * @since 5.41.0
+			 */
+			renderContent: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			renderStartup: SyncWaterfallHook<
+				[Source, Module, StartupRenderContext],
+				Source
+			>;
+			renderChunk: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			renderMain: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			renderRequire: SyncWaterfallHook<
+				[string, RenderBootstrapContext],
+				string
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			inlineInRuntimeBailout: SyncBailHook<
+				[Module, Partial<RenderBootstrapContext>],
+				string | void
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			embedInRuntimeBailout: SyncBailHook<
+				[Module, RenderContextJavascriptModulesPlugin],
+				string | void
+			>;
+			/**
+			 * @since 5.26.1
+			 */
+			strictRuntimeBailout: SyncBailHook<
+				[RenderContextJavascriptModulesPlugin],
+				string | void
+			>;
+			chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+			/**
+			 * @since 5.2.1
+			 */
+			useSourceMap: SyncBailHook<
+				[Chunk, RenderContextJavascriptModulesPlugin],
+				boolean | void
+			>;
+		}
 	): null | Source;
 
 	/**
@@ -10934,7 +11044,79 @@ declare class JavascriptModulesPlugin {
 	 */
 	renderChunk(
 		renderContext: RenderContextJavascriptModulesPlugin,
-		hooks: CompilationHooksJavascriptModulesPlugin
+		hooks: {
+			renderModuleContent: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			renderModuleContainer: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			renderModulePackage: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			render: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			/**
+			 * @since 5.41.0
+			 */
+			renderContent: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			renderStartup: SyncWaterfallHook<
+				[Source, Module, StartupRenderContext],
+				Source
+			>;
+			renderChunk: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			renderMain: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			renderRequire: SyncWaterfallHook<
+				[string, RenderBootstrapContext],
+				string
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			inlineInRuntimeBailout: SyncBailHook<
+				[Module, Partial<RenderBootstrapContext>],
+				string | void
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			embedInRuntimeBailout: SyncBailHook<
+				[Module, RenderContextJavascriptModulesPlugin],
+				string | void
+			>;
+			/**
+			 * @since 5.26.1
+			 */
+			strictRuntimeBailout: SyncBailHook<
+				[RenderContextJavascriptModulesPlugin],
+				string | void
+			>;
+			chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+			/**
+			 * @since 5.2.1
+			 */
+			useSourceMap: SyncBailHook<
+				[Chunk, RenderContextJavascriptModulesPlugin],
+				boolean | void
+			>;
+		}
 	): Source;
 
 	/**
@@ -10942,7 +11124,79 @@ declare class JavascriptModulesPlugin {
 	 */
 	renderMain(
 		renderContext: MainRenderContext,
-		hooks: CompilationHooksJavascriptModulesPlugin,
+		hooks: {
+			renderModuleContent: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			renderModuleContainer: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			renderModulePackage: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			render: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			/**
+			 * @since 5.41.0
+			 */
+			renderContent: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			renderStartup: SyncWaterfallHook<
+				[Source, Module, StartupRenderContext],
+				Source
+			>;
+			renderChunk: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			renderMain: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			renderRequire: SyncWaterfallHook<
+				[string, RenderBootstrapContext],
+				string
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			inlineInRuntimeBailout: SyncBailHook<
+				[Module, Partial<RenderBootstrapContext>],
+				string | void
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			embedInRuntimeBailout: SyncBailHook<
+				[Module, RenderContextJavascriptModulesPlugin],
+				string | void
+			>;
+			/**
+			 * @since 5.26.1
+			 */
+			strictRuntimeBailout: SyncBailHook<
+				[RenderContextJavascriptModulesPlugin],
+				string | void
+			>;
+			chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+			/**
+			 * @since 5.2.1
+			 */
+			useSourceMap: SyncBailHook<
+				[Chunk, RenderContextJavascriptModulesPlugin],
+				boolean | void
+			>;
+		},
 		compilation: Compilation
 	): Source;
 
@@ -10952,7 +11206,79 @@ declare class JavascriptModulesPlugin {
 	updateHashWithBootstrap(
 		hash: Hash,
 		renderContext: RenderBootstrapContext,
-		hooks: CompilationHooksJavascriptModulesPlugin
+		hooks: {
+			renderModuleContent: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			renderModuleContainer: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			renderModulePackage: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			render: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			/**
+			 * @since 5.41.0
+			 */
+			renderContent: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			renderStartup: SyncWaterfallHook<
+				[Source, Module, StartupRenderContext],
+				Source
+			>;
+			renderChunk: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			renderMain: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			renderRequire: SyncWaterfallHook<
+				[string, RenderBootstrapContext],
+				string
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			inlineInRuntimeBailout: SyncBailHook<
+				[Module, Partial<RenderBootstrapContext>],
+				string | void
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			embedInRuntimeBailout: SyncBailHook<
+				[Module, RenderContextJavascriptModulesPlugin],
+				string | void
+			>;
+			/**
+			 * @since 5.26.1
+			 */
+			strictRuntimeBailout: SyncBailHook<
+				[RenderContextJavascriptModulesPlugin],
+				string | void
+			>;
+			chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+			/**
+			 * @since 5.2.1
+			 */
+			useSourceMap: SyncBailHook<
+				[Chunk, RenderContextJavascriptModulesPlugin],
+				boolean | void
+			>;
+		}
 	): void;
 
 	/**
@@ -10960,7 +11286,79 @@ declare class JavascriptModulesPlugin {
 	 */
 	renderBootstrap(
 		renderContext: RenderBootstrapContext,
-		hooks: CompilationHooksJavascriptModulesPlugin
+		hooks: {
+			renderModuleContent: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			renderModuleContainer: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			renderModulePackage: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			render: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			/**
+			 * @since 5.41.0
+			 */
+			renderContent: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			renderStartup: SyncWaterfallHook<
+				[Source, Module, StartupRenderContext],
+				Source
+			>;
+			renderChunk: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			renderMain: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			renderRequire: SyncWaterfallHook<
+				[string, RenderBootstrapContext],
+				string
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			inlineInRuntimeBailout: SyncBailHook<
+				[Module, Partial<RenderBootstrapContext>],
+				string | void
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			embedInRuntimeBailout: SyncBailHook<
+				[Module, RenderContextJavascriptModulesPlugin],
+				string | void
+			>;
+			/**
+			 * @since 5.26.1
+			 */
+			strictRuntimeBailout: SyncBailHook<
+				[RenderContextJavascriptModulesPlugin],
+				string | void
+			>;
+			chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+			/**
+			 * @since 5.2.1
+			 */
+			useSourceMap: SyncBailHook<
+				[Chunk, RenderContextJavascriptModulesPlugin],
+				boolean | void
+			>;
+		}
 	): Bootstrap;
 
 	/**
@@ -10968,7 +11366,79 @@ declare class JavascriptModulesPlugin {
 	 */
 	renderRequire(
 		renderContext: RenderBootstrapContext,
-		hooks: CompilationHooksJavascriptModulesPlugin
+		hooks: {
+			renderModuleContent: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			renderModuleContainer: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			renderModulePackage: SyncWaterfallHook<
+				[Source, Module, ModuleRenderContext],
+				Source
+			>;
+			render: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			/**
+			 * @since 5.41.0
+			 */
+			renderContent: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			renderStartup: SyncWaterfallHook<
+				[Source, Module, StartupRenderContext],
+				Source
+			>;
+			renderChunk: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			renderMain: SyncWaterfallHook<
+				[Source, RenderContextJavascriptModulesPlugin],
+				Source
+			>;
+			renderRequire: SyncWaterfallHook<
+				[string, RenderBootstrapContext],
+				string
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			inlineInRuntimeBailout: SyncBailHook<
+				[Module, Partial<RenderBootstrapContext>],
+				string | void
+			>;
+			/**
+			 * @since 5.22.0
+			 */
+			embedInRuntimeBailout: SyncBailHook<
+				[Module, RenderContextJavascriptModulesPlugin],
+				string | void
+			>;
+			/**
+			 * @since 5.26.1
+			 */
+			strictRuntimeBailout: SyncBailHook<
+				[RenderContextJavascriptModulesPlugin],
+				string | void
+			>;
+			chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+			/**
+			 * @since 5.2.1
+			 */
+			useSourceMap: SyncBailHook<
+				[Chunk, RenderContextJavascriptModulesPlugin],
+				boolean | void
+			>;
+		}
 	): string;
 
 	/**
@@ -10978,9 +11448,76 @@ declare class JavascriptModulesPlugin {
 		chunk: Chunk,
 		outputOptions: OutputNormalizedWithDefaults
 	): ChunkFilenameTemplate;
-	static getCompilationHooks: (
-		compilation: Compilation
-	) => CompilationHooksJavascriptModulesPlugin;
+	static getCompilationHooks: (compilation: Compilation) => {
+		renderModuleContent: SyncWaterfallHook<
+			[Source, Module, ModuleRenderContext],
+			Source
+		>;
+		renderModuleContainer: SyncWaterfallHook<
+			[Source, Module, ModuleRenderContext],
+			Source
+		>;
+		renderModulePackage: SyncWaterfallHook<
+			[Source, Module, ModuleRenderContext],
+			Source
+		>;
+		render: SyncWaterfallHook<
+			[Source, RenderContextJavascriptModulesPlugin],
+			Source
+		>;
+		/**
+		 * @since 5.41.0
+		 */
+		renderContent: SyncWaterfallHook<
+			[Source, RenderContextJavascriptModulesPlugin],
+			Source
+		>;
+		/**
+		 * @since 5.22.0
+		 */
+		renderStartup: SyncWaterfallHook<
+			[Source, Module, StartupRenderContext],
+			Source
+		>;
+		renderChunk: SyncWaterfallHook<
+			[Source, RenderContextJavascriptModulesPlugin],
+			Source
+		>;
+		renderMain: SyncWaterfallHook<
+			[Source, RenderContextJavascriptModulesPlugin],
+			Source
+		>;
+		renderRequire: SyncWaterfallHook<[string, RenderBootstrapContext], string>;
+		/**
+		 * @since 5.22.0
+		 */
+		inlineInRuntimeBailout: SyncBailHook<
+			[Module, Partial<RenderBootstrapContext>],
+			string | void
+		>;
+		/**
+		 * @since 5.22.0
+		 */
+		embedInRuntimeBailout: SyncBailHook<
+			[Module, RenderContextJavascriptModulesPlugin],
+			string | void
+		>;
+		/**
+		 * @since 5.26.1
+		 */
+		strictRuntimeBailout: SyncBailHook<
+			[RenderContextJavascriptModulesPlugin],
+			string | void
+		>;
+		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
+		/**
+		 * @since 5.2.1
+		 */
+		useSourceMap: SyncBailHook<
+			[Chunk, RenderContextJavascriptModulesPlugin],
+			boolean | void
+		>;
+	};
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
 declare class JavascriptParser extends ParserClass {
@@ -11052,9 +11589,15 @@ declare class JavascriptParser extends ParserClass {
 				undefined | null | BasicEvaluatedExpression
 			>
 		>;
+		/**
+		 * @since 5.73.0
+		 */
 		evaluateNewExpression: HookMap<
 			SyncBailHook<[NewExpression], undefined | null | BasicEvaluatedExpression>
 		>;
+		/**
+		 * @since 5.73.0
+		 */
 		evaluateCallExpression: HookMap<
 			SyncBailHook<
 				[CallExpression],
@@ -11143,6 +11686,9 @@ declare class JavascriptParser extends ParserClass {
 			],
 			boolean | void
 		>;
+		/**
+		 * @since 5.109.0
+		 */
 		preStatementByType: HookMap<
 			SyncBailHook<
 				[
@@ -11211,6 +11757,9 @@ declare class JavascriptParser extends ParserClass {
 			],
 			boolean | void
 		>;
+		/**
+		 * @since 5.109.0
+		 */
 		blockPreStatementByType: HookMap<
 			SyncBailHook<
 				[
@@ -11280,6 +11829,9 @@ declare class JavascriptParser extends ParserClass {
 			boolean | void
 		>;
 		statementIf: SyncBailHook<[IfStatement], boolean | void>;
+		/**
+		 * @since 5.105.0
+		 */
 		collectGuards: SyncBailHook<[Expression], void | GuardCollection>;
 		classExtendsExpression: SyncBailHook<
 			[
@@ -11295,6 +11847,9 @@ declare class JavascriptParser extends ParserClass {
 			],
 			boolean | void
 		>;
+		/**
+		 * @since 5.36.0
+		 */
 		classBodyValue: SyncBailHook<
 			[
 				Expression,
@@ -11396,9 +11951,15 @@ declare class JavascriptParser extends ParserClass {
 		varDeclaration: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		varDeclarationLet: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		varDeclarationConst: HookMap<SyncBailHook<[Identifier], boolean | void>>;
+		/**
+		 * @since 5.100.0
+		 */
 		varDeclarationUsing: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		varDeclarationVar: HookMap<SyncBailHook<[Identifier], boolean | void>>;
 		pattern: HookMap<SyncBailHook<[Identifier], boolean | void>>;
+		/**
+		 * @since 5.101.3
+		 */
 		collectDestructuringAssignmentProperties: SyncBailHook<
 			[Expression],
 			boolean | void
@@ -11477,6 +12038,9 @@ declare class JavascriptParser extends ParserClass {
 		>;
 		optionalChaining: SyncBailHook<[ChainExpression], boolean | void>;
 		new: HookMap<SyncBailHook<[NewExpression], boolean | void>>;
+		/**
+		 * @since 5.71.0
+		 */
 		binaryExpression: SyncBailHook<[BinaryExpression], boolean | void>;
 		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		expressionMemberChain: HookMap<
@@ -11497,8 +12061,14 @@ declare class JavascriptParser extends ParserClass {
 			boolean | void
 		>;
 		program: SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
+		/**
+		 * @since 5.99.0
+		 */
 		terminate: SyncBailHook<[ReturnStatement | ThrowStatement], boolean | void>;
 		finish: SyncBailHook<[Program, CommentJavascriptParser[]], boolean | void>;
+		/**
+		 * @since 5.99.9
+		 */
 		unusedStatement: SyncBailHook<[Statement], boolean | void>;
 	}>;
 	sourceType: "module" | "auto" | "script";
@@ -13156,11 +13726,13 @@ declare interface JavascriptParserOptions {
 
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 * @since 5.100.0
 	 */
 	deferImport?: boolean;
 
 	/**
 	 * Auto-emit `<link rel="preload" as="style">` for the CSS of every dynamically imported (`import()`) chunk, so the stylesheet fetches in parallel with the chunk's JavaScript instead of after it parses. Unlike `dynamicImportPreload`, the JavaScript itself is not preloaded. `true` uses the default order; a number sets the preload order.
+	 * @since 5.109.0
 	 */
 	dynamicImportCssPreload?: number | boolean;
 
@@ -13298,6 +13870,7 @@ declare interface JavascriptParserOptions {
 
 	/**
 	 * Specifies the behavior of constructs that break at runtime in strict mode (e.g. 'with', 'arguments.callee', assigning to read-only globals) when modules are emitted as ES module output.
+	 * @since 5.109.0
 	 */
 	strictModeViolations?: false | "error" | "warn";
 
@@ -13354,6 +13927,7 @@ declare interface JavascriptParserOptions {
 
 	/**
 	 * Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().
+	 * @since 5.109.0
 	 */
 	worklet?: boolean | string[];
 
@@ -14971,13 +15545,6 @@ type LogTypeEnum =
 	| "status";
 declare const MEASURE_END_OPERATION: unique symbol;
 declare const MEASURE_START_OPERATION: unique symbol;
-
-/**
- * Renames an inlined module's top-level declaration (and all its references) when
- * its name is already taken in the shared startup scope, recording the chosen name
- * in `allUsedNames`. Lets inlined modules be emitted without a per-entry/per-chunk
- * IIFE by resolving name collisions instead of isolating each module.
- */
 declare interface MainRenderContext {
 	/**
 	 * the chunk
@@ -15800,9 +16367,16 @@ declare class ModuleChunkLoadingRuntimeModule extends RuntimeModule {
 	 * Creates an instance of ModuleChunkLoadingRuntimeModule.
 	 */
 	constructor(runtimeRequirements: ReadonlySet<string>);
-	static getCompilationHooks: (
-		compilation: Compilation
-	) => JsonpCompilationPluginHooks;
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * @since 5.41.0
+		 */
+		linkPreload: SyncWaterfallHook<[string, Chunk], string>;
+		/**
+		 * @since 5.41.0
+		 */
+		linkPrefetch: SyncWaterfallHook<[string, Chunk], string>;
+	};
 
 	/**
 	 * Runtime modules without any dependencies to other runtime modules
@@ -16000,9 +16574,16 @@ declare class ModuleFederationPlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
-	static getCompilationHooks: (
-		compilation: Compilation
-	) => CompilationHooksModuleFederationPlugin;
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * @since 5.96.0
+		 */
+		addContainerEntryDependency: SyncHook<Dependency>;
+		/**
+		 * @since 5.96.0
+		 */
+		addFederationRuntimeDependency: SyncHook<Dependency>;
+	};
 }
 declare interface ModuleFederationPluginOptions {
 	/**
@@ -16822,13 +17403,6 @@ declare interface ModuleReferenceOptions {
 	 */
 	asiSafe?: boolean;
 }
-
-/**
- * Renames an inlined module's top-level declaration (and all its references) when
- * its name is already taken in the shared startup scope, recording the chosen name
- * in `allUsedNames`. Lets inlined modules be emitted without a per-entry/per-chunk
- * IIFE by resolving name collisions instead of isolating each module.
- */
 declare interface ModuleRenderContext {
 	/**
 	 * the chunk
@@ -17434,9 +18008,55 @@ declare class NormalModule extends Module {
 			| (string | RegExp | ((content: string) => boolean))[],
 		request: string
 	): boolean;
-	static getCompilationHooks(
-		compilation: Compilation
-	): NormalModuleCompilationHooks;
+	static getCompilationHooks(compilation: Compilation): {
+		/**
+		 * Use the `readResource` hook instead.
+		 * @deprecated
+		 */
+		readResourceForScheme: HookMap<
+			FakeHook<
+				AsyncSeriesBailHook<[string, NormalModule], null | string | Buffer>
+			>
+		>;
+		/**
+		 * @since 5.58.0
+		 */
+		readResource: HookMap<
+			AsyncSeriesBailHook<[AnyLoaderContext], null | string | Buffer>
+		>;
+		loader: SyncHook<[AnyLoaderContext, NormalModule]>;
+		beforeLoaders: SyncHook<[LoaderItem[], NormalModule, AnyLoaderContext]>;
+		/**
+		 * @since 5.59.0
+		 */
+		beforeParse: SyncHook<[NormalModule]>;
+		/**
+		 * @since 5.59.0
+		 */
+		beforeSnapshot: SyncHook<[NormalModule]>;
+		/**
+		 * @since 5.99.0
+		 */
+		processResult: SyncWaterfallHook<
+			[
+				[
+					string | Buffer,
+					undefined | string | RawSourceMap,
+					undefined | PreparsedAst
+				],
+				NormalModule
+			],
+			[
+				string | Buffer,
+				undefined | string | RawSourceMap,
+				undefined | PreparsedAst
+			]
+		>;
+		/**
+		 * @since 5.49.0
+		 */
+		needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
+	};
 	static deserialize(
 		context: ObjectDeserializerContextObjectMiddlewareObject_4
 	): NormalModule;
@@ -17450,36 +18070,6 @@ declare class NormalModule extends Module {
 type NormalModuleBuildInfo = KnownBuildInfo &
 	Record<string, any> &
 	KnownNormalModuleBuildInfo;
-declare interface NormalModuleCompilationHooks {
-	loader: SyncHook<[AnyLoaderContext, NormalModule]>;
-	beforeLoaders: SyncHook<[LoaderItem[], NormalModule, AnyLoaderContext]>;
-	beforeParse: SyncHook<[NormalModule]>;
-	beforeSnapshot: SyncHook<[NormalModule]>;
-	readResourceForScheme: HookMap<
-		FakeHook<
-			AsyncSeriesBailHook<[string, NormalModule], null | string | Buffer>
-		>
-	>;
-	readResource: HookMap<
-		AsyncSeriesBailHook<[AnyLoaderContext], null | string | Buffer>
-	>;
-	processResult: SyncWaterfallHook<
-		[
-			[
-				string | Buffer,
-				undefined | string | RawSourceMap,
-				undefined | PreparsedAst
-			],
-			NormalModule
-		],
-		[
-			string | Buffer,
-			undefined | string | RawSourceMap,
-			undefined | PreparsedAst
-		]
-	>;
-	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
-}
 declare interface NormalModuleCreateDataNormalModuleObject_1<
 	T extends string = string
 > {
@@ -17633,6 +18223,9 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		resolveForScheme: HookMap<
 			AsyncSeriesBailHook<[ResourceDataWithData, ResolveData], true | void>
 		>;
+		/**
+		 * @since 5.49.0
+		 */
 		resolveInScheme: HookMap<
 			AsyncSeriesBailHook<[ResourceDataWithData, ResolveData], true | void>
 		>;
@@ -17867,6 +18460,9 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 				> &
 				Record<string, SyncBailHook<[Generator, GeneratorOptions], void>>
 		>;
+		/**
+		 * @since 5.81.0
+		 */
 		createModuleClass: HookMap<
 			SyncBailHook<[CreateData, ResolveData], void | Module>
 		>;
@@ -19556,6 +20152,7 @@ declare interface OutputFileSystem {
 declare interface OutputHtmlOptions {
 	/**
 	 * Inject a `<base>` element into the page `<head>`. A string sets `href`; an object sets both `href` and optionally `target`. Skipped if the HTML already contains a `<base>` element.
+	 * @since 5.109.0
 	 */
 	base?:
 		| string
@@ -19592,6 +20189,7 @@ declare interface OutputHtmlOptions {
 
 	/**
 	 * Favicon(s) for webpack-generated HTML (authored pages are left untouched). `false` (default) injects nothing; `true` injects the webpack logo; a string is a path to an icon; an object maps each `<link rel>` to an icon — a path string, an object with the icon `href` plus extra link attributes (`sizes`, `media`, `color`, `type`, `crossorigin`), or an array of these for multiple icons under the same `rel` (e.g. several `sizes`, or light/dark `media` variants); a function receives the page name and returns one of these. Every icon is emitted as a hashed asset.
+	 * @since 5.109.0
 	 */
 	favicon?:
 		| string
@@ -19664,16 +20262,19 @@ declare interface OutputHtmlOptions {
 
 	/**
 	 * Where to place injected chunk `<script>`/`<link>` tags. `"body"` (default; `"head"` with `output.module`) keeps them next to the entry tag — end of `<body>` on generated pages; `"head"` moves them into `<head>`; `false` suppresses sibling-chunk injection (entry tags and resource hints remain).
+	 * @since 5.109.0
 	 */
 	inject?: false | "body" | "head";
 
 	/**
 	 * Inline the content of matching chunks directly into the HTML instead of emitting a separate `<script>`/`<link>` tag. `true` inlines every chunk; `"script"` inlines only JavaScript, `"style"` only CSS; an array of `RegExp` patterns matches against the chunk name.
+	 * @since 5.109.0
 	 */
 	inline?: boolean | "script" | "style" | RegExp[];
 
 	/**
 	 * Add Subresource Integrity (SRI) `integrity` attributes to injected `<script>`/`<link>` tags. `true` uses `['sha384']`; an array sets the hash algorithms; a function receives each referenced asset and returns the algorithms to use or `false` to skip it.
+	 * @since 5.109.0
 	 */
 	integrity?:
 		| boolean
@@ -19691,6 +20292,7 @@ declare interface OutputHtmlOptions {
 
 	/**
 	 * Inject `<meta>` tags into the page `<head>`. Each key is the `name` attribute (or `"charset"` for a charset declaration); the value is the `content` string. Keys beginning with `og:` use the `property` attribute instead of `name`. A tag is skipped if the HTML already contains a meta with the same name.
+	 * @since 5.109.0
 	 */
 	meta?: { [index: string]: string };
 
@@ -19701,6 +20303,7 @@ declare interface OutputHtmlOptions {
 
 	/**
 	 * Sets the `<title>` of the generated HTML page. Skipped if the HTML already contains a `<title>` element.
+	 * @since 5.109.0
 	 */
 	title?: string;
 }
@@ -21419,9 +22022,12 @@ declare class RealContentHashPlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
-	static getCompilationHooks: (
-		compilation: Compilation
-	) => CompilationHooksRealContentHashPlugin;
+	static getCompilationHooks: (compilation: Compilation) => {
+		/**
+		 * @since 5.8.0
+		 */
+		updateHash: SyncBailHook<[Buffer[], string], string | void>;
+	};
 }
 declare interface RealContentHashPluginOptions {
 	/**
@@ -21636,13 +22242,6 @@ declare interface RemotesConfig {
 declare interface RemotesObject {
 	[index: string]: string | RemotesConfig | string[];
 }
-
-/**
- * Renames an inlined module's top-level declaration (and all its references) when
- * its name is already taken in the shared startup scope, recording the chosen name
- * in `allUsedNames`. Lets inlined modules be emitted without a per-entry/per-chunk
- * IIFE by resolving name collisions instead of isolating each module.
- */
 declare interface RenderBootstrapContext {
 	/**
 	 * the chunk
@@ -21715,13 +22314,6 @@ declare interface RenderContextCssModulesPlugin {
 	 */
 	modules: CssModule[];
 }
-
-/**
- * Renames an inlined module's top-level declaration (and all its references) when
- * its name is already taken in the shared startup scope, recording the chosen name
- * in `allUsedNames`. Lets inlined modules be emitted without a per-entry/per-chunk
- * IIFE by resolving name collisions instead of isolating each module.
- */
 declare interface RenderContextJavascriptModulesPlugin {
 	/**
 	 * the chunk
@@ -22625,10 +23217,12 @@ declare interface ResourceDataWithData {
 
 /**
  * Full resource-hint configuration.
+ * @since 5.109.0
  */
 declare interface ResourceHintsOptions {
 	/**
 	 * Initial dependency-graph chunk hints. `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; `"preload"` is an alias of `true`; `false` disables chunk hints (URL-asset hints from magic comments / `urlHints` still fire); `"none"` is a hard off switch (no `<link>` anywhere, empty stats / manifest); an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (replaces the removed `resolveDependencies` hook).
+	 * @since 5.109.0
 	 */
 	initial?:
 		| boolean
@@ -24935,13 +25529,6 @@ declare interface StarListSerializerContext {
 		obj?: LazyOptions
 	) => LazyFunction<any, any, any, LazyOptions>;
 }
-
-/**
- * Renames an inlined module's top-level declaration (and all its references) when
- * its name is already taken in the shared startup scope, recording the chosen name
- * in `allUsedNames`. Lets inlined modules be emitted without a per-entry/per-chunk
- * IIFE by resolving name collisions instead of isolating each module.
- */
 declare interface StartupRenderContext {
 	/**
 	 * the chunk
@@ -25390,6 +25977,7 @@ declare interface StatsOptions {
 
 	/**
 	 * Include the resolved `<link>` resource-hint descriptors for each entrypoint (`entrypoints[name].resourceHints`). Combines `output.resourceHints.chunks` (initial-graph modulepreload/preload/prefetch) with `output.resourceHints.assets` (URL-referenced fonts / images / …). Lets SSR frameworks inject the hints server-side without walking the chunk graph themselves; the analogue of Vite's `build.ssrManifest`.
+	 * @since 5.109.0
 	 */
 	chunkGroupResourceHints?: boolean;
 
@@ -26144,6 +26732,7 @@ declare interface UpdateHashContextGenerator {
 
 /**
  * One default-hint rule for URL-referenced assets emitted by this parser (JS `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`). `test` / `include` / `exclude` match against the asset's request; omit all three to apply to every asset. Matching rules set the same fields a `webpackPrefetch` / `webpackPreload` / `webpackAs` / `webpackType` / `webpackMedia` / `webpackFetchPriority` magic comment would; explicit magic comments on the same URL still win.
+ * @since 5.109.0
  */
 declare interface UrlHintRule {
 	/**
