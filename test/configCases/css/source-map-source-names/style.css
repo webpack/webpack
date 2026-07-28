@@ -1,3 +1,6 @@
+@import "./shared.css" layer(base);
+@import "./shared.css" layer(theme);
+
 body {
 	background: red;
 }
