@@ -19,8 +19,8 @@ const getSourceMap = (filename) => {
 it("should compile successfully and have individual css sourcemap", async () => {
 	let map = getSourceMap("bundle0.css.map");
 	expect(map.sources).toStrictEqual([
-		"webpack:///css ./bar.css",
-		"webpack:///css ./foo.css"
+		"webpack:///./bar.css",
+		"webpack:///./foo.css"
 	]);
 	expect(() => {
 		readFile("bundle0.js.map");
