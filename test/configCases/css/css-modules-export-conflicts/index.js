@@ -12,6 +12,10 @@ it("should give the class the JS export key when @keyframes / @counter-style / @
 	expect(styles["class-vs-container"]).toBe("class-vs-container");
 });
 
+it("should give the class the JS export key when a grid line name shares the name", () => {
+	expect(styles["class-vs-grid"]).toBe("class-vs-grid");
+});
+
 it("should preserve same-kind duplicate exports without warning", () => {
 	expect(styles["dup-class"]).toBe("dup-class");
 	expect(styles["dup-id"]).toBe("dup-id");
