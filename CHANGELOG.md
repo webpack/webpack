@@ -1,5 +1,21 @@
 # webpack
 
+## 5.109.2
+
+### Patch Changes
+
+- Resolve aliases pointing at a package directory whose name ends with `.js` again. (by [@alexander-akait](https://github.com/alexander-akait) in [#21542](https://github.com/webpack/webpack/pull/21542))
+
+- Name CSS sources in source maps by their resource path, without the `css ` prefix. (by [@bjohansebas](https://github.com/bjohansebas) in [#21536](https://github.com/webpack/webpack/pull/21536))
+
+- Delete no longer referenced files from the filesystem cache directory after storing the cache, age them by recorded time so restored caches are cleaned too, and collect every fully expired pack in one store instead of one per build. (by [@bjohansebas](https://github.com/bjohansebas) in [#21528](https://github.com/webpack/webpack/pull/21528))
+
+- Report `"universal"` as the loader context target for the universal target. (by [@alexander-akait](https://github.com/alexander-akait) in [#21540](https://github.com/webpack/webpack/pull/21540))
+
+- Skip `require().prop` in dead branches gated by inlined imported constants. (by [@hai-x](https://github.com/hai-x) in [#21517](https://github.com/webpack/webpack/pull/21517))
+
+- Annotate configuration options and public hooks in the generated types with the `@since` JSDoc tag. (by [@bjohansebas](https://github.com/bjohansebas) in [#21473](https://github.com/webpack/webpack/pull/21473))
+
 ## 5.109.1
 
 ### Patch Changes
