@@ -1,4 +1,5 @@
 import * as styles from "./style.module.css";
+import * as neighbor from "./neighbor.module.css";
 
 it("should give the class the JS export key when a custom property shares the name", () => {
 	expect(styles["class-vs-var"]).toBe("class-vs-var");
@@ -14,6 +15,13 @@ it("should give the class the JS export key when @keyframes / @counter-style / @
 
 it("should give the class the JS export key when a grid line name shares the name", () => {
 	expect(styles["class-vs-grid"]).toBe("class-vs-grid");
+});
+
+it("should resolve @value cross-module lookups to the class winner, not the demoted entry", () => {
+	// var-then-class: custom property is declared first in style.module.css,
+	// so a first-match resolver would return the demoted `--var-then-class`.
+	expect(neighbor["var-then-class"]).toBe(styles["var-then-class"]);
+	expect(neighbor["class-vs-grid"]).toBe(styles["class-vs-grid"]);
 });
 
 it("should preserve same-kind duplicate exports without warning", () => {
