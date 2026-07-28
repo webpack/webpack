@@ -308,6 +308,97 @@ import 'lodash';
 		await expect(getCacheFileTimes()).resolves.toEqual(firstCacheFileTimes);
 	}, 20000);
 
+	it("should delete no longer referenced cache files after storing", async () => {
+		await updateSrc({
+			"index.js": `import file from "./file.js";
+export default 40 + file;
+`,
+			"file.js": "export default 2;"
+		});
+		await compile();
+		// plant an orphan file and age every cache file beyond the cleanup grace period
+		const orphan = "0123456789abcdef0123456789abcdef.pack";
+		await writeFile(path.join(cachePath, orphan), "orphan");
+		const oldTime = new Date(Date.now() - 2 * 60 * 60 * 1000);
+		for (const file of await readdir(cachePath)) {
+			await utimes(path.join(cachePath, file), oldTime, oldTime);
+		}
+		await updateSrc({
+			"file.js": "export default 3;"
+		});
+		await compile();
+		expect(await readdir(cachePath)).not.toContain(orphan);
+		// every file the new index references must have survived the cleanup
+		await compile();
+		expect(execute()).toBe(43);
+	}, 60000);
+
+	it("should delete old unused packs", async () => {
+		// ported from #14661: entry churn with a tiny maxAge orphans whole packs
+		const data = {
+			"a.js": "export default 1;",
+			"b.js": "export default 2;",
+			"c.js": "export default 3;",
+			"d.js": "export default 4;",
+			"e.js": "export default 5;"
+		};
+		await updateSrc(data);
+		const backdateCache = async () => {
+			const oldTime = new Date(Date.now() - 2 * 60 * 60 * 1000);
+			for (const file of await readdir(cachePath)) {
+				await utimes(path.join(cachePath, file), oldTime, oldTime);
+			}
+		};
+		const c = (/** @type {string} */ items) => {
+			/** @type {Record<string, string>} */
+			const entry = {};
+			for (const item of items) entry[item] = `./src/${item}.js`;
+			return compile({ entry, cache: { ...config.cache, maxAge: 5000 } });
+		};
+		await c("ab");
+		// content pack and index
+		await expect(readdir(cachePath)).resolves.toHaveLength(2);
+		await c("c");
+		// new content pack, old one still within the grace period, index and index.old
+		await expect(readdir(cachePath)).resolves.toHaveLength(4);
+		// item expiry needs real elapsed time; the grace period is aged via utimes
+		await backdateCache();
+		await new Promise((resolve) => {
+			setTimeout(resolve, 6000);
+		});
+		await c("cde");
+		const remaining = await readdir(cachePath);
+		// unreferenced files beyond the grace period are gone: the pack holding
+		// only the expired a/b items and the old index backup
+		expect(remaining).not.toContain("0.pack");
+		expect(remaining).not.toContain("index.pack.old");
+		// the old-but-still-referenced pack (c stayed cached in it) survives
+		expect(remaining).toContain("1.pack");
+		expect(remaining).toContain("index.pack");
+		// once c stops being used it expires, and its pack gets deleted too
+		await backdateCache();
+		await new Promise((resolve) => {
+			setTimeout(resolve, 6000);
+		});
+		await c("de");
+		expect(await readdir(cachePath)).not.toContain("1.pack");
+	}, 60000);
+
+	it("should keep recently modified unreferenced cache files", async () => {
+		await updateSrc({
+			"index.js": "export default 42;"
+		});
+		await compile();
+		// fresh orphan: within the cleanup grace period, so it must survive
+		const orphan = "0123456789abcdef0123456789abcdef.pack";
+		await writeFile(path.join(cachePath, orphan), "orphan");
+		await updateSrc({
+			"index.js": "export default 43;"
+		});
+		await compile();
+		expect(await readdir(cachePath)).toContain(orphan);
+	}, 60000);
+
 	it("should not invalidate cache files if timestamps changed with dynamic import()", async () => {
 		const configAdditions = {
 			entry: "./src/main.js",
