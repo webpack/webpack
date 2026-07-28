@@ -1,5 +1,6 @@
 {
   "sideEffects": [
-    "./effect.js"
+    "./effect.js",
+    "./effect-ternary.js"
   ]
 }
