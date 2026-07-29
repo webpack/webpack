@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html fragment-context-select exported tests should drop input tags when fragment context is select 1`] = `
+"<input>
+"
+`;
