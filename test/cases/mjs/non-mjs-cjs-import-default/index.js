@@ -32,24 +32,38 @@ it("should get correct values when importing named exports from a CommonJs modul
 			default: "default"
 		}
 	});
-	expect(star).toEqual({
-		data: "ok",
-		default: "default"
-	});
+	// Object-literal exports use default-with-named interop (same as mjs).
+	expect(star).toEqual(
+		nsObj({
+			default: {
+				data: "ok",
+				default: "default"
+			},
+			data: "ok"
+		})
+	);
 	expect({ star }).toEqual({
-		star: {
-			data: "ok",
-			default: "default"
-		}
+		star: nsObj({
+			default: {
+				data: "ok",
+				default: "default"
+			},
+			data: "ok"
+		})
 	});
 	expect(star.default).toEqual({
 		data: "ok",
 		default: "default"
 	});
-	expect(ns).toEqual({
-		data: "ok",
-		default: "default"
-	});
+	expect(ns).toEqual(
+		nsObj({
+			default: {
+				data: "ok",
+				default: "default"
+			},
+			data: "ok"
+		})
+	);
 	expect(def1).toEqual({
 		data: "ok",
 		default: "default"
@@ -62,10 +76,13 @@ it("should get correct values when importing named exports from a CommonJs modul
 	expect({ data2 }).toEqual({ data2: "ok" });
 	expect(reexport).toEqual(
 		nsObj({
-			ns: {
-				data: "ok",
-				default: "default"
-			},
+			ns: nsObj({
+				default: {
+					data: "ok",
+					default: "default"
+				},
+				data: "ok"
+			}),
 			default: {
 				data: "ok",
 				default: "default"
