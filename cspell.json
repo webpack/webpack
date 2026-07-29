@@ -115,6 +115,7 @@
     "Ewald",
     "exitance",
     "externref",
+    "fanout",
     "fetchpriority",
     "fontobject",
     "filebase",

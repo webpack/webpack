@@ -30,8 +30,15 @@ import { simpleGit } from "simple-git";
  * @typedef {object} BenchmarkTask
  * @property {string} id task id (benchmark + scenario)
  * @property {string} benchmark benchmark name
- * @property {Scenario=} scenario scenario (omitted for `-unit` benchmarks)
+ * @property {Scenario=} scenario scenario (omitted for `-unit` and suite benchmarks)
+ * @property {string=} suiteFile absolute path of a suite-format `*.bench.mjs` file
  * @property {Baseline[]} baselines baselines measured in one task
+ */
+
+/**
+ * @typedef {object} DiscoveredBenchmark
+ * @property {string} name benchmark name
+ * @property {string=} suiteFile absolute path of a suite-format `*.bench.mjs` file
  */
 
 // One libuv thread → fs completions fire in submission order, making module
@@ -218,6 +225,8 @@ class BenchmarkRunner {
 		/** @type {string} */
 		this.casesPath = path.join(__dirname, "benchmarkCases");
 		/** @type {string} */
+		this.suitesPath = path.join(__dirname, "benchmark");
+		/** @type {string} */
 		this.baseOutputPath = path.join(__dirname, "js", "benchmark");
 		/** @type {BenchmarkWorker | undefined} */
 		this.workerPool = undefined;
@@ -285,9 +294,50 @@ class BenchmarkRunner {
 	}
 
 	/**
+	 * Discover suite-format benchmark files (`test/benchmark/{unit,e2e}`).
+	 * A suite's name is its path-derived id: `unit/<lib-path>` for unit suites,
+	 * `e2e/<case>` for e2e suites.
+	 * @param {RegExp | undefined} FILTER filter
+	 * @param {RegExp | undefined} NEGATIVE_FILTER negative filter
+	 * @returns {Promise<DiscoveredBenchmark[]>} suite benchmarks
+	 */
+	async discoverSuiteBenchmarks(FILTER, NEGATIVE_FILTER) {
+		/** @type {string[]} */
+		let files;
+
+		try {
+			files = /** @type {string[]} */ (
+				await fs.readdir(this.suitesPath, { recursive: true })
+			);
+		} catch (_err) {
+			return [];
+		}
+
+		/** @type {DiscoveredBenchmark[]} */
+		const suites = [];
+
+		for (const file of files) {
+			const normalized = file.split(path.sep).join("/");
+			if (!normalized.endsWith(".bench.mjs")) continue;
+			if (!/^(?:unit|e2e)\//.test(normalized)) continue;
+
+			const name = normalized.startsWith("e2e/")
+				? normalized.split("/").slice(0, 2).join("/")
+				: normalized.slice(0, -".bench.mjs".length);
+
+			if (FILTER && !FILTER.test(name)) continue;
+			if (NEGATIVE_FILTER && NEGATIVE_FILTER.test(name)) continue;
+
+			suites.push({ name, suiteFile: path.join(this.suitesPath, file) });
+		}
+
+		return suites.sort((a, b) => a.name.localeCompare(b.name));
+	}
+
+	/**
 	 * Discover benchmark case directories, honoring FILTER / NEGATIVE_FILTER and
 	 * interleaving the long-running cases so shards stay balanced.
-	 * @returns {Promise<string[]>} benchmark names
+	 * @returns {Promise<DiscoveredBenchmark[]>} benchmark names
 	 */
 	async discoverBenchmarks() {
 		const FILTER =
@@ -328,16 +378,19 @@ class BenchmarkRunner {
 			}
 		}
 
-		return benchmarks;
+		return [
+			...benchmarks.map((name) => ({ name })),
+			...(await this.discoverSuiteBenchmarks(FILTER, NEGATIVE_FILTER))
+		];
 	}
 
 	/**
 	 * Build the benchmark tasks for this shard. Each non-unit benchmark expands
 	 * to one task per scenario (all baselines measured within the task); `-unit`
-	 * benchmarks have no scenarios and become a single task; `-runtime`
-	 * benchmarks skip the rebuild scenario, which emits the same output as the
-	 * initial build.
-	 * @param {string[]} benchmarks discovered benchmarks
+	 * and suite benchmarks have no scenarios and become a single task;
+	 * `-runtime` benchmarks skip the rebuild scenario, which emits the same
+	 * output as the initial build.
+	 * @param {DiscoveredBenchmark[]} benchmarks discovered benchmarks
 	 * @param {[number, number]} shard shard [part, count]
 	 * @param {Baseline[]} baselines baselines
 	 * @returns {BenchmarkTask[]} benchmark tasks
@@ -358,7 +411,12 @@ class BenchmarkRunner {
 		/** @type {BenchmarkTask[]} */
 		const benchmarkTasks = [];
 
-		for (const benchmark of shardBenchmarks) {
+		for (const { name: benchmark, suiteFile } of shardBenchmarks) {
+			if (suiteFile) {
+				benchmarkTasks.push({ id: benchmark, benchmark, suiteFile, baselines });
+				continue;
+			}
+
 			if (benchmark.includes("-unit")) {
 				benchmarkTasks.push({ id: benchmark, benchmark, baselines });
 				continue;
@@ -391,7 +449,10 @@ class BenchmarkRunner {
 		/** @type {Set<string>} */
 		const prepared = new Set();
 
-		for (const { benchmark } of benchmarkTasks) {
+		for (const { benchmark, suiteFile } of benchmarkTasks) {
+			// Suite benchmarks run their own `setup()` in the worker — a suite is
+			// never split across tasks, so no other worker depends on its fixtures.
+			if (suiteFile) continue;
 			if (prepared.has(benchmark)) continue;
 			prepared.add(benchmark);
 
@@ -442,7 +503,13 @@ class BenchmarkRunner {
 				console.log(
 					`Result: ${firstStats.text} is ${Math.round(
 						(secondStats.mean / firstStats.mean) * 100 - 100
-					)}% ${secondStats.maxConfidence < firstStats.minConfidence ? "slower than" : secondStats.minConfidence > firstStats.maxConfidence ? "faster than" : "the same as"} ${secondStats.text}`
+					)}% ${
+						secondStats.maxConfidence < firstStats.minConfidence
+							? "slower than"
+							: secondStats.minConfidence > firstStats.maxConfidence
+								? "faster than"
+								: "the same as"
+					} ${secondStats.text}`
 				);
 			}
 		}
@@ -474,7 +541,9 @@ class BenchmarkRunner {
 
 		if (failedTasks.length > 0) {
 			throw new Error(
-				`${failedTasks.length} benchmark task(s) failed: ${failedTasks.join(", ")}`
+				`${failedTasks.length} benchmark task(s) failed: ${failedTasks.join(
+					", "
+				)}`
 			);
 		}
 	}
@@ -553,7 +622,11 @@ class BenchmarkRunner {
 		this.workerPool = workerPool;
 
 		console.log(
-			`\nRunning ${benchmarkTasks.length} benchmark task(s) across ${numWorkers} worker(s) (cpu cap ${cpuWorkers}, memory cap ${memWorkers} @ ${totalGiB.toFixed(1)} GiB)\n`
+			`\nRunning ${
+				benchmarkTasks.length
+			} benchmark task(s) across ${numWorkers} worker(s) (cpu cap ${cpuWorkers}, memory cap ${memWorkers} @ ${totalGiB.toFixed(
+				1
+			)} GiB)\n`
 		);
 
 		try {

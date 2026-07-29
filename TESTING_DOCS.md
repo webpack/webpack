@@ -21,6 +21,11 @@ This document explains the structure of the `test/` directory in the Webpack pro
 
 `exec` is reported per scenario, so a `development`/`production` pair shows what scope hoisting and minification are worth at runtime.
 
+### 2b. `benchmark/`
+
+- **Purpose**: Suite-format benchmarks: `unit/` for webpack internals (mirrors `lib/`), `e2e/` for full builds, `helpers/` and `lib/` for deterministic fixture generators and webpack lifecycle helpers.
+- **Usage**: Runs through the benchmark harness alongside `benchmarkCases/`: `FILTER="<suite>" yarn benchmark` (e.g. `FILTER="unit/util/semver"`).
+
 ### 3. `cases/`
 
 - **Purpose**: General test cases covering core functionalities.
@@ -141,6 +146,7 @@ yarn test
 | `test/watchCases/`        | `yarn test:base --testPathPatterns="WatchTestCases"`                                          |
 | `test/hotCases/`          | `yarn test:base --testPathPatterns="HotTestCases"`                                            |
 | `test/benchmarkCases/`    | `FILTER="<case-name>" yarn benchmark`                                                         |
+| `test/benchmark/`         | `FILTER="<suite name>" yarn benchmark`                                                        |
 | `test/test262-cases/`     | `yarn test:test262` (requires `git submodule update --init test/test262-cases` first)         |
 | `test/html5lib-tests/`    | `yarn test:html5lib` (requires `git submodule update --init test/html5lib-tests` first)       |
 | `test/css-parsing-tests/` | `yarn test:css-parsing` (requires `git submodule update --init test/css-parsing-tests` first) |

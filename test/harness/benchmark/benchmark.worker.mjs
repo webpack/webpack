@@ -28,6 +28,16 @@ import { Bench, hrtimeNow } from "tinybench";
 /** @typedef {import("../../BenchmarkTestCases.benchmark.mjs").Scenario} Scenario */
 /** @typedef {import("../../BenchmarkTestCases.benchmark.mjs").Baseline} Baseline */
 /** @typedef {import("../../BenchmarkTestCases.benchmark.mjs").BenchmarkTask} BenchmarkTask */
+/** @typedef {import("../../benchmark/lib/webpack.mjs").BenchmarkDefinition} SuiteBenchmarkDefinition */
+
+/**
+ * @typedef {object} Suite
+ * @property {string} name suite name, prefixed with "unit/" or "e2e/"
+ * @property {() => void | Promise<void>=} setup runs once before the suite's benchmarks
+ * @property {() => void | Promise<void>=} teardown runs once after the suite's benchmarks
+ * @property {number=} iterations measured rounds per benchmark
+ * @property {SuiteBenchmarkDefinition[]} benches benchmarks, executed in order
+ */
 
 /**
  * @typedef {object} ResultExtra
@@ -1241,9 +1251,58 @@ function attachResultCollector(bench, results) {
 }
 
 /**
+ * Register a suite-format benchmark file (`test/benchmark/{unit,e2e}`) onto
+ * `bench`. Suites measure the current lib only (no baselines, no scenarios);
+ * their benches carry their own hooks. Suite-level `setup` runs before the
+ * suite's first bench and `teardown` after its last — symmetrically in both
+ * the memory-mode prime pass and the measured pass, so re-running a pass
+ * always sees freshly set up fixtures.
+ * @param {Bench} bench bench
+ * @param {BenchmarkTask} task benchmark task
+ * @returns {Promise<void>}
+ */
+async function registerSuiteBenchmark(bench, task) {
+	const suiteFile = /** @type {string} */ (task.suiteFile);
+	/** @type {Suite} */
+	const suite = (await import(`${pathToFileURL(suiteFile)}`)).default;
+	const benches = suite.benches;
+	const state = { initialized: false };
+
+	for (const [index, definition] of benches.entries()) {
+		const isLast = index === benches.length - 1;
+		const taskName = `${suite.name}/${definition.name}`;
+
+		console.log(`Register: suite benchmark "${taskName}"`);
+
+		bench.add(taskName, definition.fn, {
+			// Forces async handling for benches whose fn returns a promise
+			// without being an async function (tinybench detects only the latter).
+			async: definition.async,
+			async beforeAll() {
+				if (!state.initialized) {
+					await suite.setup?.();
+					state.initialized = true;
+				}
+				await definition.beforeAll?.();
+			},
+			beforeEach: definition.beforeEach,
+			afterEach: definition.afterEach,
+			async afterAll() {
+				await definition.afterAll?.();
+				if (isLast) {
+					state.initialized = false;
+					await suite.teardown?.();
+				}
+			}
+		});
+	}
+}
+
+/**
  * Register one benchmark task's benches onto `bench`. `-unit` benchmarks
  * register their own tasks against the current lib, `-runtime` benchmarks
- * measure the compiled output; others add one build/watch bench per baseline.
+ * measure the compiled output, suite benchmarks load their suite file; others
+ * add one build/watch bench per baseline.
  * @param {Bench} bench bench
  * @param {BenchmarkTask} task benchmark task
  * @param {string} casesPath benchmark cases directory
@@ -1254,6 +1313,11 @@ async function registerBenchmark(bench, task, casesPath) {
 	const LAST_COMMIT = typeof process.env.LAST_COMMIT !== "undefined";
 	const testDirectory = path.join(casesPath, benchmark);
 	const isRuntime = benchmark.includes("-runtime");
+
+	if (task.suiteFile) {
+		await registerSuiteBenchmark(bench, task);
+		return;
+	}
 
 	if (benchmark.includes("-unit")) {
 		// Unit benchmarks register their own tasks against the current lib; they
@@ -1356,7 +1420,11 @@ export async function run({
 
 	return {
 		benchmark: task.benchmark,
-		scenario: task.scenario ? task.scenario.name : "unit",
+		scenario: task.scenario
+			? task.scenario.name
+			: task.suiteFile
+				? "suite"
+				: "unit",
 		results
 	};
 }
