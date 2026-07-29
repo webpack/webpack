@@ -52,6 +52,17 @@ describe("ExportInfo", () => {
 			expect(info.canMangleUse).toBeUndefined();
 			expect(info.provided).toBe(true);
 		});
+
+		it("recurses into an owned nested exportsInfo", () => {
+			const info = new ExportInfo("foo");
+			const nested = info.createNestedExportsInfo();
+			const nestedExport = nested.getExportInfo("bar");
+			nestedExport.canMangleUse = false;
+
+			info._resetUseInfo();
+
+			expect(nested.getExportInfo("bar").canMangleUse).toBeUndefined();
+		});
 	});
 });
 
@@ -78,5 +89,17 @@ describe("ExportsInfo", () => {
 
 		expect(exportsInfo.getExportInfo("foo").canMangleUse).toBeUndefined();
 		expect(exportsInfo.getExportInfo("foo").provided).toBe(true);
+	});
+
+	it("_resetUsedExports follows the redirect target", () => {
+		const exportsInfo = new ExportsInfo();
+		const redirectTarget = new ExportsInfo();
+		exportsInfo.setRedirectNamedTo(redirectTarget);
+		const info = redirectTarget.getExportInfo("foo");
+		info.canMangleUse = false;
+
+		exportsInfo._resetUsedExports();
+
+		expect(redirectTarget.getExportInfo("foo").canMangleUse).toBeUndefined();
 	});
 });
