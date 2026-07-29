@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html adoption-agency-table exported tests should handle formatting elements misnested inside table context 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>adoption-agency-table</title></head>
+<body>
+<table><b><tr><td>foo</td></tr></b></table>
+</body>
+</html>
+"
+`;

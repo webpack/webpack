@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html fragment-context-modes exported tests should parse fragments using RCDATA, RAWTEXT, script-data and plaintext modes 1`] = `
+"<p>text inside rcdata context</p>
+<img src=\\"./asset.png\\">
+"
+`;
+
+exports[`ConfigTestCases html fragment-context-modes exported tests should parse fragments using RCDATA, RAWTEXT, script-data and plaintext modes 2`] = `
+".body { color: red; }
+<img src=\\"1533dedc3e2a08df8a07.png\\">
+"
+`;
+
+exports[`ConfigTestCases html fragment-context-modes exported tests should parse fragments using RCDATA, RAWTEXT, script-data and plaintext modes 3`] = `
+"var x = '<img src=\\"1533dedc3e2a08df8a07.png\\">';
+"
+`;
+
+exports[`ConfigTestCases html fragment-context-modes exported tests should parse fragments using RCDATA, RAWTEXT, script-data and plaintext modes 4`] = `
+"this is plaintext
+<img src=\\"1533dedc3e2a08df8a07.png\\">
+"
+`;
+
+exports[`ConfigTestCases html fragment-context-modes exported tests should parse fragments using RCDATA, RAWTEXT, script-data and plaintext modes 5`] = `
+"<p>text inside rcdata context</p>
+<img src=\\"1533dedc3e2a08df8a07.png\\">
+"
+`;
+
+exports[`ConfigTestCases html fragment-context-modes exported tests should parse fragments using RCDATA, RAWTEXT, script-data and plaintext modes 6`] = `
+".body { color: red; }
+<img src=\\"./asset.png\\">
+"
+`;
+
+exports[`ConfigTestCases html fragment-context-modes exported tests should parse fragments using RCDATA, RAWTEXT, script-data and plaintext modes 7`] = `
+"var x = '<img src=\\"1533dedc3e2a08df8a07.png\\">';
+"
+`;
+
+exports[`ConfigTestCases html fragment-context-modes exported tests should parse fragments using RCDATA, RAWTEXT, script-data and plaintext modes 8`] = `
+"this is plaintext
+<img src=\\"1533dedc3e2a08df8a07.png\\">
+"
+`;
+
+exports[`ConfigTestCases html fragment-context-modes exported tests should parse fragments using RCDATA, RAWTEXT, script-data and plaintext modes 9`] = `
+"<p>text inside rcdata context</p>
+<img src=\\"1533dedc3e2a08df8a07.png\\">
+"
+`;
+
+exports[`ConfigTestCases html fragment-context-modes exported tests should parse fragments using RCDATA, RAWTEXT, script-data and plaintext modes 10`] = `
+".body { color: red; }
+<img src=\\"1533dedc3e2a08df8a07.png\\">
+"
+`;
+
+exports[`ConfigTestCases html fragment-context-modes exported tests should parse fragments using RCDATA, RAWTEXT, script-data and plaintext modes 11`] = `
+"var x = '<img src=\\"./asset.png\\">';
+"
+`;
+
+exports[`ConfigTestCases html fragment-context-modes exported tests should parse fragments using RCDATA, RAWTEXT, script-data and plaintext modes 12`] = `
+"this is plaintext
+<img src=\\"1533dedc3e2a08df8a07.png\\">
+"
+`;
+
+exports[`ConfigTestCases html fragment-context-modes exported tests should parse fragments using RCDATA, RAWTEXT, script-data and plaintext modes 13`] = `
+"<p>text inside rcdata context</p>
+<img src=\\"1533dedc3e2a08df8a07.png\\">
+"
+`;
+
+exports[`ConfigTestCases html fragment-context-modes exported tests should parse fragments using RCDATA, RAWTEXT, script-data and plaintext modes 14`] = `
+".body { color: red; }
+<img src=\\"1533dedc3e2a08df8a07.png\\">
+"
+`;
+
+exports[`ConfigTestCases html fragment-context-modes exported tests should parse fragments using RCDATA, RAWTEXT, script-data and plaintext modes 15`] = `
+"var x = '<img src=\\"1533dedc3e2a08df8a07.png\\">';
+"
+`;
+
+exports[`ConfigTestCases html fragment-context-modes exported tests should parse fragments using RCDATA, RAWTEXT, script-data and plaintext modes 16`] = `
+"this is plaintext
+<img src=\\"./asset.png\\">
+"
+`;

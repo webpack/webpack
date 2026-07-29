@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html fragment-context-select exported tests should ignore input tags when fragment context is select 1`] = `
+"<input src=\\"./asset.png\\">
+"
+`;
+
+exports[`ConfigTestCases html fragment-context-select exported tests should ignore input tags when fragment context is select 2`] = `
+"<input src=\\"57f00dfba5f1ca9fa168.png\\">
+"
+`;
