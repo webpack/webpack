@@ -72,6 +72,31 @@ describe("NormalModule", () => {
 		});
 	});
 
+	describe("#_cleanupParserForCache and #_restoreParserAndGenerator", () => {
+		it("releases the parser and re-acquires parser and generator from the factory", () => {
+			const factoryParser = /** @type {Parser} */ (
+				/** @type {unknown} */ ({ parse() {} })
+			);
+			const factoryGenerator = /** @type {Generator} */ (
+				/** @type {unknown} */ ({ generate() {} })
+			);
+			const normalModuleFactory =
+				/** @type {import("../lib/NormalModuleFactory")} */ (
+					/** @type {unknown} */ ({
+						getParser: () => factoryParser,
+						getGenerator: () => factoryGenerator
+					})
+				);
+
+			normalModule._cleanupParserForCache();
+			expect(normalModule.parser).toBeUndefined();
+
+			normalModule._restoreParserAndGenerator(normalModuleFactory);
+			expect(normalModule.parser).toBe(factoryParser);
+			expect(normalModule.generator).toBe(factoryGenerator);
+		});
+	});
+
 	describe("#readableIdentifier", () => {
 		it("calls the given requestShortener with the user request", () => {
 			const spy = jest.fn();

@@ -162,4 +162,10 @@ describe("AsyncQueue", () => {
 		// stop before the async beforeAdd hook completes
 		queue.stop();
 	});
+
+	it("should ignore invalidate for an item that was never added", () => {
+		const queue = createQueue();
+
+		expect(() => queue.invalidate(42)).not.toThrow();
+	});
 });
