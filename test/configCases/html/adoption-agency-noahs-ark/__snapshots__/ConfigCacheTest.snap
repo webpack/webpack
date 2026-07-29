@@ -5,6 +5,8 @@ exports[`ConfigCacheTestCases html adoption-agency-noahs-ark exported tests shou
 <html>
 <head><title>adoption-agency-noahs-ark</title></head>
 <body>
+<p><b><b><b><b>bold</p>
+<p>still bold</b></p>
 <b><i><s><u><p></b></u></s></i></p>
 </body>
 </html>
