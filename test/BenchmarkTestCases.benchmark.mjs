@@ -334,7 +334,9 @@ class BenchmarkRunner {
 	/**
 	 * Build the benchmark tasks for this shard. Each non-unit benchmark expands
 	 * to one task per scenario (all baselines measured within the task); `-unit`
-	 * benchmarks have no scenarios and become a single task.
+	 * benchmarks have no scenarios and become a single task; `-runtime`
+	 * benchmarks skip the rebuild scenario, which emits the same output as the
+	 * initial build.
 	 * @param {string[]} benchmarks discovered benchmarks
 	 * @param {[number, number]} shard shard [part, count]
 	 * @param {Baseline[]} baselines baselines
@@ -362,7 +364,11 @@ class BenchmarkRunner {
 				continue;
 			}
 
-			for (const scenario of this.scenarios) {
+			const scenarios = benchmark.includes("-runtime")
+				? this.scenarios.filter((scenario) => !scenario.watch)
+				: this.scenarios;
+
+			for (const scenario of scenarios) {
 				benchmarkTasks.push({
 					id: `${benchmark}-${scenario.name}`,
 					benchmark,
