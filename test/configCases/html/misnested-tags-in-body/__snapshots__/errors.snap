@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
-
-exports[`errors 1`] = `
-Array [
-  "Unable to make progress during code generation because of circular code generation dependency: <TEST_DIR>/index.js|87ba4eced20c49919a4cbaa62767b44c",
-]
-`;

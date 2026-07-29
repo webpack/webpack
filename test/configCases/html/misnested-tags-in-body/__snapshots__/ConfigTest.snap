@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html misnested-tags-in-body exported tests should handle various misnested tags and aliases in the body 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>misnested-tags-in-body</title></head>
+<body>
+<meta charset=\\"utf-8\\">
+<a><a></a>
+<nobr><nobr></nobr>
+<select><input></select>
+<select><select></select>
+<image src=\\"1533dedc3e2a08df8a07.png\\">
+<noembed>foo</noembed>
+</body>
+</html>
+"
+`;
