@@ -49,12 +49,12 @@ a {
 	}
 }
 
-.bounce {
+.bounce-cls {
 	animation-name: bounce;
 	animation: bounce2 1s ease;
 }
 
-.bounce2 {
+.bounce2-cls {
 	color: green;
 	animation: bounce 1s ease;
 	animation-name: bounce2;

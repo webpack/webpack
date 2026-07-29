@@ -1,0 +1,4 @@
+/* Cross-module `@value from` lookups must resolve to the class winner even
+   when the demoted cross-kind entry was declared first in the source. */
+@value var-then-class from "./style.module.css";
+@value class-vs-grid from "./style.module.css";

@@ -157,27 +157,27 @@
 }
 
 @value selector: my-selector-value;
-.selector { value: selector; }
+.selector-cls { value: selector; }
 
 @value other-selector from "./selectors.module.css";
-.other-selector { value: other-selector; }
+.other-selector-cls { value: other-selector; }
 
 @value other-selector as alias-other-selector from "./selectors.module.css";
-.alias-other-selector { value: alias-other-selector; }
+.alias-other-selector-cls { value: alias-other-selector; }
 
 @value reexport-selector from "./selectors.module.css";
-.reexport-selector { value: reexport-selector; }
+.reexport-selector-cls { value: reexport-selector; }
 
 @value reexport-selector as reexport-selector-alias from "./selectors.module.css";
-.reexport-selector-alias { value: reexport-selector-alias; }
+.reexport-selector-alias-cls { value: reexport-selector-alias; }
 
 @value colors: "./colors.module.css";
 @value third from colors;
-.third { background-color: third; }
+.third-cls { background-color: third; }
 
 @value danger as danger-alias-selector from "./colors.module.css";
 @value rename-3: danger-alias-selector;
-.rename-3 { background-color: rename-3; }
+.rename-3-cls { background-color: rename-3; }
 
 .local-class {
 	color: white;

@@ -8,7 +8,7 @@
 .\3A \) {}
 
 /* scope ids */
-#foobar { a_value: some-value; }
+#foobar-id { a_value: some-value; }
 
 /* scope escaped ids */
 #\#test {}
@@ -285,7 +285,7 @@
 .foo { a_value: some-value; }
 
 /* localize keyframes */
-@keyframes foo { from { a_value: some-value; } to { a_value: some-value; } }
+@keyframes foo-kf { from { a_value: some-value; } to { a_value: some-value; } }
 
 /* localize keyframes starting with special characters */
 @keyframes \@foo { from { color: red; } to { color: blue; } }
@@ -294,7 +294,7 @@
 @keyframes f\@oo { from { color: red; } to { color: blue; } }
 
 /* localize explicit keyframes */
-@keyframes :local(foo) { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
+@keyframes :local(foo-local-kf) { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
 @-webkit-keyframes :global(bar) { from { color: red; } to { color: blue; } }
 @keyframes local(local-name) { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
 @keyframes :local(colon-local-name) { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
@@ -302,7 +302,7 @@
 @keyframes :global(colon-global-name) { 0% { color: red; } 33.3% { color: yellow; } 100% { color: blue; } }
 
 /* ignore :export statements */
-:export { foo: __foo; }
+:export { foo-export: __foo; }
 
 /* ignore :import statements */
 :import("./import.modules.css") { local-foo: __foo; }
@@ -557,7 +557,7 @@ input { a_value: some-value; }
 }
 
 /* duplicate-name */
-#duplicate-name { color: red; }
+#duplicate-name-id { color: red; }
 .duplicate-name { color: red; }
 
 /* in-media */

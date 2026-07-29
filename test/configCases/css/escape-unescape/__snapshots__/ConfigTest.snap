@@ -6,6 +6,7 @@ Object {
   "##": "style_modules_css-##",
   "#.#.#": "style_modules_css-#.#.#",
   "#fake-id": "style_modules_css-#fake-id",
+  "#fake-id-x": "style_modules_css-#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "style_modules_css-++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "style_modules_css--a-b-c-",
   "-a0-34a___f": "style_modules_css--a0-34a___f",
@@ -47,6 +48,7 @@ Object {
   "test": "style_modules_css-test",
   "{}": "style_modules_css-{}",
   "©": "style_modules_css-©",
+  "©id": "style_modules_css-©id",
   "“‘’”": "style_modules_css-“‘’”",
   "⌘⌥": "style_modules_css-⌘⌥",
   "☺☃": "style_modules_css-☺☃",
@@ -63,6 +65,7 @@ Object {
   "##": "style_modules_css-##",
   "#.#.#": "style_modules_css-#.#.#",
   "#fake-id": "style_modules_css-#fake-id",
+  "#fake-id-x": "style_modules_css-#fake-id-x",
   "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.": "style_modules_css-++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.",
   "-a-b-c-": "style_modules_css--a-b-c-",
   "-a0-34a___f": "style_modules_css--a0-34a___f",
@@ -104,6 +107,7 @@ Object {
   "test": "style_modules_css-test",
   "{}": "style_modules_css-{}",
   "©": "style_modules_css-©",
+  "©id": "style_modules_css-©id",
   "“‘’”": "style_modules_css-“‘’”",
   "⌘⌥": "style_modules_css-⌘⌥",
   "☺☃": "style_modules_css-☺☃",
@@ -175,8 +179,8 @@ Array [
 	color: aliceblue;
 }
 
-/* matches the element with id=\\"#fake-id\\" */
-#style_modules_css-\\\\#fake-id {
+/* matches the element with id=\\"#fake-id-x\\" */
+#style_modules_css-\\\\#fake-id-x {
 	color: antiquewhite;
 }
 
@@ -185,8 +189,8 @@ Array [
 	color: azure;
 }
 
-/* matches the element with id=\\"©\\" */
-#style_modules_css-© {
+/* matches the element with id=\\"©id\\" */
+#style_modules_css-©id {
 	color: black;
 }
 
@@ -320,8 +324,8 @@ Array [
 	color: aliceblue;
 }
 
-/* matches the element with id=\\"#fake-id\\" */
-#style_modules_css-\\\\#fake-id {
+/* matches the element with id=\\"#fake-id-x\\" */
+#style_modules_css-\\\\#fake-id-x {
 	color: antiquewhite;
 }
 
@@ -330,8 +334,8 @@ Array [
 	color: azure;
 }
 
-/* matches the element with id=\\"©\\" */
-#style_modules_css-© {
+/* matches the element with id=\\"©id\\" */
+#style_modules_css-©id {
 	color: black;
 }
 

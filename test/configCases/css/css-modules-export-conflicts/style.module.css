@@ -1,0 +1,119 @@
+/* Cross-kind conflicts where a class shares its name with a CSS-scoped
+   kind (custom property, @keyframes, @counter-style, @container). Class
+   wins the JS export in every case, even when the CSS-scoped kind
+   appears first in source order. */
+
+.class-vs-var {
+	color: red;
+}
+:root {
+	--class-vs-var: blue;
+}
+
+/* CSS-scoped side declared first: still demoted (class wins by kind, not order). */
+:root {
+	--var-then-class: red;
+}
+.var-then-class {
+	color: blue;
+}
+
+.class-vs-keyframes {
+	color: green;
+}
+@keyframes class-vs-keyframes {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+.class-vs-counter {
+	color: yellow;
+}
+@counter-style class-vs-counter {
+	system: cyclic;
+	symbols: "*";
+	suffix: " ";
+}
+
+.class-vs-container {
+	color: purple;
+}
+@container class-vs-container (width > 100px) {
+	p { color: red; }
+}
+
+/* Class ↔ grid line name: class wins, the grid identifier is still scoped
+   in the emitted CSS but drops out of the JS export map. */
+
+.class-vs-grid {
+	color: brown;
+}
+.grid-parent {
+	grid-template-columns: [class-vs-grid] 1fr;
+}
+
+/* Cross-kind conflicts where no class is available to demote the other side —
+   warn but do not change behavior. Both source orderings must warn (the
+   `class` appearing after `:export` used to be silenced by an ordering bug). */
+
+.class-vs-export {
+	color: orange;
+}
+:export {
+	class-vs-export: overridden-by-export;
+}
+
+:export {
+	export-then-class: overridden-by-export;
+}
+.export-then-class {
+	color: teal;
+}
+
+/* Same-kind duplicates — silent (repeated declarations of the same
+   thing are legal in CSS). */
+
+.dup-class { color: black; }
+.dup-class { color: navy; }
+.dup-class:hover { color: gray; }
+
+#dup-id { color: red; }
+#dup-id { color: maroon; }
+
+:root { --dup-prop: red; }
+:root { --dup-prop: blue; }
+
+@keyframes dup-kf {
+	0% { left: 0; }
+}
+@keyframes dup-kf {
+	100% { left: 100px; }
+}
+
+@value dup-val: red;
+@value dup-val: blue;
+
+:export {
+	dup-export: a;
+}
+:export {
+	dup-export: b;
+}
+
+@container dup-container (width > 100px) {
+	p { color: red; }
+}
+@container dup-container (width > 200px) {
+	p { color: blue; }
+}
+
+@counter-style dup-counter {
+	system: cyclic;
+	symbols: "*";
+	suffix: " ";
+}
+@counter-style dup-counter {
+	system: cyclic;
+	symbols: "+";
+	suffix: " ";
+}
