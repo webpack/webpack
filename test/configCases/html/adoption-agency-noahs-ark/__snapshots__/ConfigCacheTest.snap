@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html adoption-agency-noahs-ark exported tests should handle the noahs ark condition in the adoption agency algorithm 1`] = `
+"<!DOCTYPE html>
+<html>
+<head><title>adoption-agency-noahs-ark</title></head>
+<body>
+<b><i><s><u><p></b></u></s></i></p>
+</body>
+</html>
+"
+`;
