@@ -23945,6 +23945,25 @@ declare abstract class RuntimeTemplate {
 	supportsEcmaScriptModuleSyntax(): boolean;
 	supportsModulePreload(): boolean;
 	supportsAnalyzableEsm(): boolean;
+
+	/**
+	 * Whether an asset whose URL argument is only known at runtime (e.g. a wasm
+	 * binary path built from `wasmModuleId`) may be referenced with the analyzable
+	 * chunk-relative `new URL(path, import.meta.url)` form. Requires ESM output
+	 * (`supportsAnalyzableEsm`) and an `auto` public path — only then is the bare
+	 * relative URL equivalent to the runtime `__webpack_require__.p + path` form.
+	 * Callers that can bake the public path into a static literal specifier should
+	 * use `_getAnalyzableChunkSpecifier` instead, which also handles a fixed path.
+	 */
+	supportsAnalyzableEsmUrl(): boolean;
+
+	/**
+	 * Builds the analyzable `new URL(specifier, import.meta.url)` expression the ESM
+	 * wasm/asset loader backends use to reference an emitted binary relative to the
+	 * current module (via `output.importMetaName`) instead of the runtime public-path
+	 * global — the form other bundlers and webpack itself can statically follow.
+	 */
+	importMetaUrl(specifier: string): string;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
 
