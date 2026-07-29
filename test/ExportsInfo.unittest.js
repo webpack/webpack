@@ -18,6 +18,24 @@ describe("ExportInfo", () => {
 			expect(info.pureProvide).toBeUndefined();
 		});
 
+		it("keeps an owned nested exportsInfo and resets it in place", () => {
+			const info = new ExportInfo("foo");
+			const nested = info.createNestedExportsInfo();
+			const nestedExport = nested.getExportInfo("bar");
+			nestedExport.provided = true;
+			nestedExport.canMangleUse = false;
+
+			info._resetProvideInfo();
+
+			const kept =
+				/** @type {import("../lib/ExportsInfo")} */
+				(info.getNestedExportsInfo());
+			expect(kept).toBe(nested);
+			// provide side reset in place, use side untouched
+			expect(kept.getExportInfo("bar").provided).toBeUndefined();
+			expect(kept.getExportInfo("bar").canMangleUse).toBe(false);
+		});
+
 		it("resets provide-side fields to the undetermined state", () => {
 			const info = new ExportInfo("foo");
 			info.provided = true;
@@ -89,6 +107,15 @@ describe("ExportsInfo", () => {
 
 		expect(exportsInfo.getExportInfo("foo").canMangleUse).toBeUndefined();
 		expect(exportsInfo.getExportInfo("foo").provided).toBe(true);
+	});
+
+	it("_resetUsedExports drops the inlined-exports fast-path flag", () => {
+		const exportsInfo = new ExportsInfo();
+		exportsInfo.markInlinedExports();
+
+		exportsInfo._resetUsedExports();
+
+		expect(exportsInfo._hasInlinedExports).toBe(false);
 	});
 
 	it("_resetUsedExports follows the redirect target", () => {
