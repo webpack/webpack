@@ -19,3 +19,10 @@ it("should bailout on indirect module.exports = object", () => {
 	expect(m.unused).toBe("unused");
 	expect(m.usedExports).toBe(null);
 });
+
+it("should bailout on __proto__ in module.exports object literal", () => {
+	const m = require("./proto");
+	expect(m.used).toBe("used");
+	expect(Object.getPrototypeOf(m)).toBe(null);
+	expect(m.usedExports).toBe(null);
+});
