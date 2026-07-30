@@ -58,4 +58,16 @@ if (typeof URL === "undefined" || typeof setTimeout === "undefined") {
 	if (typeof globalThis.queueMicrotask === "undefined") {
 		globalThis.queueMicrotask = (callback) => Promise.resolve().then(callback);
 	}
+
+	// structuredClone has no builtin export either; the v8 serializer round-trip
+	// covers the structured-cloneable values (meriyah clones AST nodes with it).
+	if (typeof globalThis.structuredClone === "undefined") {
+		try {
+			const { deserialize, serialize } = require("node:v8");
+
+			globalThis.structuredClone = (value) => deserialize(serialize(value));
+		} catch (_err) {
+			// no v8 serializer available
+		}
+	}
 }
