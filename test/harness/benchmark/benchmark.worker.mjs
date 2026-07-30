@@ -4,7 +4,6 @@ import { Session } from "inspector";
 import { createRequire } from "module";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
-import v8 from "v8";
 import vm from "vm";
 import {
 	InstrumentHooks,
@@ -57,13 +56,6 @@ import { Bench, hrtimeNow } from "tinybench";
 
 const GENERATE_PROFILE = typeof process.env.PROFILE !== "undefined";
 const codspeedRunnerMode = getCodspeedRunnerMode();
-
-// Under the instrumented runner wall time runs ~30-50x slow, so V8's 1s
-// memory-reducer heartbeats land inside measured regions and their page-pool
-// trim/recommit housekeeping is attributed to the benchmark. Pin it off.
-if (codspeedRunnerMode === "memory") {
-	v8.setFlagsFromString("--no-memory-reducer");
-}
 
 // Emitted entry of a `-runtime` benchmark; fixed so the bench can locate it.
 const RUNTIME_BUNDLE_FILENAME = "bundle.js";
