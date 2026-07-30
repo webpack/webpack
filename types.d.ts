@@ -13570,6 +13570,18 @@ declare class JavascriptParser extends ParserClass {
 	getComments(range: [number, number]): CommentJavascriptParser[];
 
 	/**
+	 * Reports whether `identifier` may occur as a word in the source text of
+	 * `range`. A conservative pre-filter for expensive AST scans: `false` means
+	 * it certainly does not occur, while a match inside a comment or a string
+	 * yields `true`. Also `true` when no source text is available (preparsed
+	 * AST), so callers must stay correct without the filter.
+	 */
+	sourceMayContainIdentifier(
+		range: [number, number],
+		identifier: string
+	): boolean;
+
+	/**
 	 * Checks whether this javascript parser is asi position.
 	 */
 	isAsiPosition(pos: number): boolean;
