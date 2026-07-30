@@ -757,6 +757,9 @@ const knownBugs = [
 	// `yield` as a strict-mode reserved word: webpack parses the source in
 	// sloppy mode, so the expected parse-time SyntaxError is not raised.
 	"expressions/dynamic-import/import-attributes/2nd-param-yield-ident-invalid.js",
+	// A top-level `await using` makes the module async, like a bare top-level
+	// `await` does, so the Script-goal early error is not raised.
+	"statements/await-using/syntax/await-using-not-allowed-at-top-level-of-script.js",
 	// `#mark in obj` requires the deferred namespace target to report
 	// `isExtensible() === false` to throw a TypeError. webpack's proxy
 	// target is mutable until init runs and cannot be frozen up-front
