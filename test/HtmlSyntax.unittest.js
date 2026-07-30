@@ -4831,3 +4831,102 @@ describe("htmlMinify — assets webpack only passes through", () => {
 		);
 	});
 });
+
+describe("SourceProcessor — minify serialization edge cases", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} source html source
+	 * @returns {string} minified serialization
+	 */
+	const minify = (source) =>
+		new SourceProcessor().process(source, { minimize: true }).code;
+
+	describe("cloned / reconstructed formatting elements", () => {
+		it("keeps the reconstructed <b> around text after an implied </p>", () => {
+			expect(minify("<p><b>a<p>b")).toBe("<p><b>a</b></p><p><b>b</b></p>");
+		});
+
+		it("keeps the adoption-agency clone of <b> inside <p>", () => {
+			expect(minify("<b><p>x</b>y</p>")).toBe("<b></b><p><b>x</b>y</p>");
+		});
+
+		it("keeps cloned attributes on the reconstructed element", () => {
+			expect(minify('<b x="1"><p>x</b>y</p>')).toBe(
+				'<b x="1"></b><p><b x="1">x</b>y</p>'
+			);
+		});
+
+		it("keeps the reconstructed <b> in a full document round-trip", () => {
+			expect(
+				minify(
+					"<!DOCTYPE html><html><head></head><body><p><b>a<p>b</body></html>"
+				)
+			).toBe(
+				"<!DOCTYPE html><html><head></head><body><p><b>a</b></p><p><b>b</b></p></body></html>"
+			);
+		});
+
+		it("escapes a quote-holding cloned attribute value safely", () => {
+			expect(minify("<b a='x\"y'><p>t</b>")).toBe(
+				'<b a=\'x"y\'></b><p><b a="x&quot;y">t</b></p>'
+			);
+		});
+
+		it("rebuilds renamed void tokens instead of dropping them", () => {
+			expect(minify('<image src="a&amp;b">')).toBe('<img src="a&amp;b">');
+			expect(minify("a</br>b")).toBe("a<br>b");
+		});
+
+		it("materializes an implied <body> once attributes merge onto it", () => {
+			expect(minify('<div>a</div><body class="x">')).toBe(
+				'<body class="x"><div>a</div></body>'
+			);
+		});
+
+		it("still omits parser-inserted html/head/body and table sections", () => {
+			expect(minify("<p>x")).toBe("<p>x</p>");
+			expect(minify("<table><tr><td>x</td></tr></table>")).toBe(
+				"<table><tr><td>x</td></tr></table>"
+			);
+			expect(minify("<table><td>x")).toBe("<table><td>x</td></table>");
+		});
+	});
+
+	describe("<noscript> content", () => {
+		it("re-escapes decoded text inside <noscript>", () => {
+			expect(minify("<body><noscript>a &lt;b&gt; c</noscript>")).toBe(
+				"<body><noscript>a &lt;b&gt; c</noscript></body>"
+			);
+		});
+
+		it("round-trips elements nested inside <noscript>", () => {
+			expect(minify('<noscript><link href="x"></noscript>')).toBe(
+				'<noscript><link href="x"></noscript>'
+			);
+		});
+	});
+
+	describe("comments", () => {
+		it("keeps both halves of a downlevel-revealed conditional block", () => {
+			expect(minify('<!--[if !IE]><!--><link href="x"><!--<![endif]-->')).toBe(
+				'<!--[if !IE]><!--><link href="x"><!--<![endif]-->'
+			);
+			expect(minify("<!--[if IE]><p>ie only</p><![endif]-->")).toBe(
+				"<!--[if IE]><p>ie only</p><![endif]-->"
+			);
+		});
+
+		it("keeps server-side include directives", () => {
+			expect(minify('<!--#include virtual="a.html" -->')).toBe(
+				'<!--#include virtual="a.html" -->'
+			);
+		});
+	});
+
+	describe("<plaintext>", () => {
+		it("never emits a </plaintext> end tag", () => {
+			expect(minify("<plaintext>foo")).toBe("<plaintext>foo");
+		});
+	});
+});
