@@ -330,9 +330,10 @@ describe("Compiler (filesystem caching, css devtool)", () => {
 
 	/**
 	 * @param {import("../declarations/WebpackOptions").DevTool} devtool devtool to build with
+	 * @param {string=} devtoolModuleFilenameTemplate template to build with
 	 * @returns {Promise<string>} the emitted bundle
 	 */
-	function build(devtool) {
+	function build(devtool, devtoolModuleFilenameTemplate) {
 		const webpack = require("..");
 
 		return new Promise((resolve, reject) => {
@@ -353,7 +354,11 @@ describe("Compiler (filesystem caching, css devtool)", () => {
 						}
 					]
 				},
-				output: { path: path.join(cachePath, "dist"), filename: "bundle.js" }
+				output: {
+					path: path.join(cachePath, "dist"),
+					filename: "bundle.js",
+					devtoolModuleFilenameTemplate
+				}
 			});
 
 			compiler.run((err, stats) => {
@@ -386,6 +391,26 @@ describe("Compiler (filesystem caching, css devtool)", () => {
 	it("should not reuse a hidden result for a non-hidden devtool", async () => {
 		expect(await build("hidden-source-map")).not.toMatch(INLINE_MAP_REGEXP);
 		expect(await build("source-map")).toMatch(INLINE_MAP_REGEXP);
+	});
+
+	it("should not reuse inlined css map names for another template", async () => {
+		await build("source-map");
+
+		const bundle = await build(
+			"source-map",
+			"webpack://custom/[resource-path]"
+		);
+		const match =
+			/sourceMappingURL=data:application\/json;charset=utf-8;base64,([\w+/=]+)/.exec(
+				bundle
+			);
+		const map = JSON.parse(
+			Buffer.from(/** @type {RegExpExecArray} */ (match)[1], "base64").toString(
+				"utf8"
+			)
+		);
+
+		expect(map.sources).toContain("webpack://custom/./style.css");
 	});
 
 	it("should not reuse sources of an inlined css map for nosources", async () => {
