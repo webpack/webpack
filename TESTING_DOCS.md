@@ -13,6 +13,13 @@ This document explains the structure of the `test/` directory in the Webpack pro
 
 - **Purpose**: Contains test cases for benchmarking Webpack's performance.
 - **Usage**: Measures build times, memory usage, and optimization impact.
+- **Kinds of case** (picked from the directory name):
+  - _build_ (default, e.g. `many-modules-esm/`) — a `webpack.config.mjs` plus an entry; measures one build per scenario (`mode-development`, `mode-development-rebuild`, `mode-production`).
+  - `*-unit` (e.g. `js-parser-unit/`) — an `index.bench.mjs` exporting `default (bench) => {…}`; measures a piece of `lib/` directly, with no scenarios.
+  - `*-runtime` (e.g. `many-modules-interop-runtime/`) — measures **the emitted bundle**, not the build. The case is compiled once per scenario outside any measured region; the `exec` task then instantiates the output (runtime bootstrap plus every module factory that runs at import time) and calls the entry's exported `run` on it. The rebuild scenario is skipped, since it emits the same output.
+- **Writing a `*-runtime` case**: the entry must export `run(seed)`, do its work with that opaque seed, and return the result — otherwise the compiler folds the workload away and the bench measures nothing (both are checked and fail the run). The harness forces `target: "node"` and a `commonjs2` library so the output can be instantiated in-process; generate large fixtures from `options.mjs` (`setup()`), as the build cases do.
+
+`exec` is reported per scenario, so a `development`/`production` pair shows what scope hoisting and minification are worth at runtime.
 
 ### 3. `cases/`
 

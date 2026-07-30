@@ -1,8 +1,10 @@
 import { writeFile } from "fs";
 import fs from "fs/promises";
 import { Session } from "inspector";
+import { createRequire } from "module";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
+import vm from "vm";
 import {
 	InstrumentHooks,
 	getCodspeedRunnerMode,
@@ -49,8 +51,16 @@ import { Bench, hrtimeNow } from "tinybench";
  * @property {typeof run} run run one benchmark task
  */
 
+/** @typedef {{ run: (seed: number) => unknown }} RuntimeBundleExports */
+/** @typedef {{ taskName: string, collectBy: string }} TaskNames */
+
 const GENERATE_PROFILE = typeof process.env.PROFILE !== "undefined";
 const codspeedRunnerMode = getCodspeedRunnerMode();
+
+// Emitted entry of a `-runtime` benchmark; fixed so the bench can locate it.
+const RUNTIME_BUNDLE_FILENAME = "bundle.js";
+// `run()` input. Opaque to the compiler, so the workload can't be constant-folded.
+const RUNTIME_SEED = 7;
 
 /** @type {string} */
 let baseOutputPath;
@@ -1037,6 +1047,120 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 }
 
 /**
+ * Force the output shape a runtime bench needs: a single CommonJS bundle Node
+ * can instantiate, exposing the entry's exports on `module.exports`.
+ * @param {Configuration} config configuration
+ * @returns {Configuration} configuration
+ */
+function prepareRuntimeConfiguration(config) {
+	config.target = config.target || "node";
+	config.output = {
+		...config.output,
+		filename: RUNTIME_BUNDLE_FILENAME,
+		library: { type: "commonjs2" }
+	};
+	return config;
+}
+
+/**
+ * Compile the case and return a factory instantiating the emitted bundle.
+ * Building and V8-compiling the output happen here, outside every measured
+ * region, so the bench times only the generated code. The compiled function is
+ * reused across iterations — calling it re-runs the bundle body without
+ * re-parsing it, and each call gets a fresh `module`, so the bundle's module
+ * registry starts out empty.
+ * @param {Webpack} webpack webpack
+ * @param {Configuration} config configuration
+ * @returns {Promise<() => RuntimeBundleExports>} bundle instantiation
+ */
+async function compileRuntimeBundle(webpack, config) {
+	await runWebpack(webpack, config);
+
+	const outputPath = /** @type {string} */ (
+		/** @type {NonNullable<Configuration["output"]>} */ (config.output).path
+	);
+	const bundlePath = path.join(outputPath, RUNTIME_BUNDLE_FILENAME);
+	const source = await fs.readFile(bundlePath, "utf8");
+	const factory = vm.compileFunction(
+		source,
+		["module", "exports", "require", "__filename", "__dirname"],
+		{ filename: bundlePath }
+	);
+	// Bound to the emitted bundle so externals and node-target chunk loading
+	// resolve exactly as they would for a real consumer of the output.
+	const bundleRequire = createRequire(bundlePath);
+
+	return () => {
+		const bundleModule = { exports: {} };
+
+		factory(
+			bundleModule,
+			bundleModule.exports,
+			bundleRequire,
+			bundlePath,
+			outputPath
+		);
+
+		return /** @type {RuntimeBundleExports} */ (bundleModule.exports);
+	};
+}
+
+/**
+ * Register the runtime bench for one baseline. One measured region per
+ * iteration: instantiate the emitted bundle (runtime bootstrap plus every
+ * module factory that runs at import time), then call the entry's exported
+ * `run` on it, so both the boot and the steady-state cost of the generated
+ * code are counted.
+ * @param {object} params params
+ * @param {Bench} params.bench bench
+ * @param {(measure: string) => TaskNames} params.createNames task names factory
+ * @param {Webpack} params.webpack webpack
+ * @param {Configuration} params.config config
+ * @returns {Promise<void>}
+ */
+async function addRuntimeBench({ bench, createNames, webpack, config }) {
+	const instantiate = await compileRuntimeBundle(
+		webpack,
+		prepareRuntimeConfiguration(config)
+	);
+
+	// Probe once so a case exporting nothing measurable fails at registration
+	// instead of reporting a task that does no work.
+	if (typeof instantiate().run !== "function") {
+		throw new Error(
+			`The entry of runtime benchmark "${config.name}" must export a \`run\` function.`
+		);
+	}
+
+	const exec = createNames("exec");
+
+	// Holds what the measured region produced, so the work behind it stays
+	// observable; the `afterAll` assertion is what reads it back.
+	/** @type {unknown} */
+	let execResult;
+
+	bench.add(
+		exec.taskName,
+		() => {
+			execResult = instantiate().run(RUNTIME_SEED);
+		},
+		{
+			beforeAll() {
+				/** @type {Task} */
+				(this).collectBy = exec.collectBy;
+			},
+			afterAll() {
+				if (execResult === undefined) {
+					throw new Error(
+						`\`run()\` of runtime benchmark "${config.name}" returned nothing; return the workload result so it can't be optimized away`
+					);
+				}
+			}
+		}
+	);
+}
+
+/**
  * Create the CodSpeed-wrapped bench shared by one or many benchmarks.
  * @returns {Promise<Bench>} bench
  */
@@ -1118,8 +1242,8 @@ function attachResultCollector(bench, results) {
 
 /**
  * Register one benchmark task's benches onto `bench`. `-unit` benchmarks
- * register their own tasks against the current lib; others add one build/watch
- * bench per baseline.
+ * register their own tasks against the current lib, `-runtime` benchmarks
+ * measure the compiled output; others add one build/watch bench per baseline.
  * @param {Bench} bench bench
  * @param {BenchmarkTask} task benchmark task
  * @param {string} casesPath benchmark cases directory
@@ -1129,6 +1253,7 @@ async function registerBenchmark(bench, task, casesPath) {
 	const { benchmark, scenario, baselines } = task;
 	const LAST_COMMIT = typeof process.env.LAST_COMMIT !== "undefined";
 	const testDirectory = path.join(casesPath, benchmark);
+	const isRuntime = benchmark.includes("-runtime");
 
 	if (benchmark.includes("-unit")) {
 		// Unit benchmarks register their own tasks against the current lib; they
@@ -1169,13 +1294,30 @@ async function registerBenchmark(bench, task, casesPath) {
 		);
 
 		const stringifiedScenario = JSON.stringify(scenario);
-		const collectBy = `${benchmark}, scenario '${stringifiedScenario}'`;
-		const taskName = `benchmark "${benchmark}", scenario '${stringifiedScenario}'${LAST_COMMIT ? "" : ` ${baseline.name} (${baseline.rev})`}`;
+
+		/**
+		 * @param {string} measure measured region, empty for build benches
+		 * @returns {TaskNames} task names
+		 */
+		const createNames = (measure) => {
+			const suffix = measure ? `, measure '${measure}'` : "";
+
+			return {
+				collectBy: `${benchmark}, scenario '${stringifiedScenario}'${suffix}`,
+				taskName: `benchmark "${benchmark}", scenario '${stringifiedScenario}'${suffix}${LAST_COMMIT ? "" : ` ${baseline.name} (${baseline.rev})`}`
+			};
+		};
+
 		const fullTaskName = `benchmark "${benchmark}", scenario '${stringifiedScenario}' ${baseline.name} ${baseline.rev ? `(${baseline.rev})` : ""}`;
 
 		console.log(`Register: ${fullTaskName}`);
 
-		const params = { bench, taskName, collectBy, webpack, config };
+		if (isRuntime) {
+			await addRuntimeBench({ bench, createNames, webpack, config });
+			continue;
+		}
+
+		const params = { bench, ...createNames(""), webpack, config };
 
 		await (scenario.watch ? addWatchBench(params) : addBuildBench(params));
 	}
