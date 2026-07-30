@@ -757,6 +757,9 @@ const knownBugs = [
 	// `yield` as a strict-mode reserved word: webpack parses the source in
 	// sloppy mode, so the expected parse-time SyntaxError is not raised.
 	"expressions/dynamic-import/import-attributes/2nd-param-yield-ident-invalid.js",
+	// A top-level `await using` makes the module async, like a bare top-level
+	// `await` does, so the Script-goal early error is not raised.
+	"statements/await-using/syntax/await-using-not-allowed-at-top-level-of-script.js",
 	// `#mark in obj` requires the deferred namespace target to report
 	// `isExtensible() === false` to throw a TypeError. webpack's proxy
 	// target is mutable until init runs and cannot be frozen up-front
@@ -774,6 +777,9 @@ const knownBugs = [
 	"import/import-defer/errors/get-other-while-evaluating-async/main.js",
 	// Exact interleaving of top-level-await and deferred evaluation order.
 	"import/import-defer/evaluation-top-level-await/flattening-order/main.js",
+	// A deferred module must wait for the whole strongly-connected component when a
+	// dependency's cycle root is still evaluating-async (`IsModuleSCCEvaluated`).
+	"import/import-defer/evaluation-top-level-await/async-cycle-dependency-of-deferred-module/main.js",
 	// Just bugs, need to fix
 	// `Reflect.preventExtensions(ns)` should return true and the deferred
 	// namespace should report `isExtensible() === false` per the TC39 spec —
