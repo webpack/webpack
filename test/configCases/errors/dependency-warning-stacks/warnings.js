@@ -1,17 +1,16 @@
 "use strict";
 
 module.exports = [
-	// the nested error keeps its stack, so its frames become the details
+	// the nested error keeps its stack, so its frames become the details, which
+	// the plugin then overrides
 	[
 		/Critical dependency: the request of a dependency is an expression/,
-		{ details: /^ {4}at \S+\.getWarnings \(/ }
+		{ details: /^overridden at \S+\.getWarnings \(/ }
 	],
-	// a `hideStack` nested error has no details; its frames lead the own stack
+	// a `hideStack` nested error has no details; its frames lead the own stack,
+	// which the plugin then overrides
 	[
 		/export 'missing' \(imported as 'missing'\) was not found/,
-		{
-			stack:
-				/^ {4}at \S+\.getLinkingErrors \([\s\S]*\n\nModuleDependencyWarning: export 'missing'/
-		}
+		{ stack: /^overridden ModuleDependencyWarning: export 'missing'/ }
 	]
 ];
