@@ -30,8 +30,9 @@ const cacheConfigs = (outputPath, benchName, mode, compression) => {
 			idleTimeoutForInitialStore: 0
 		}
 	});
-	const fileCache =
-		/** @type {import("../../../..").FileCacheOptions} */ (write.cache);
+	const fileCache = /** @type {import("../../../..").FileCacheOptions} */ (
+		write.cache
+	);
 	return {
 		write,
 		read: {

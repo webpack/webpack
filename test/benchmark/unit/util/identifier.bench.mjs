@@ -21,9 +21,15 @@ export default {
 		requests = [];
 		for (let i = 0; i < 400; i++) {
 			requests.push(
-				`/home/user/project/node_modules/pkg-${i % 40}/lib/deep/nested/file-${i}.js`,
-				`/home/user/project/src/components/feature-${i % 25}/Component${i}.js?query=${i}#fragment`,
-				`/home/user/project/node_modules/loader-${i % 7}/index.js!/home/user/project/src/entry-${i}.css`
+				`/home/user/project/node_modules/pkg-${
+					i % 40
+				}/lib/deep/nested/file-${i}.js`,
+				`/home/user/project/src/components/feature-${
+					i % 25
+				}/Component${i}.js?query=${i}#fragment`,
+				`/home/user/project/node_modules/loader-${
+					i % 7
+				}/index.js!/home/user/project/src/entry-${i}.css`
 			);
 		}
 	},
