@@ -5619,6 +5619,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "dedupe": {
+          "description": "Skip the runtime-injected `<link rel=\"prefetch\">` for a chunk that is already preloaded or prefetched in the document (avoids a duplicate request in some browsers such as Chrome).",
+          "type": "boolean"
+        },
         "initial": {
           "$ref": "#/definitions/ResourceHintsInitial"
         },

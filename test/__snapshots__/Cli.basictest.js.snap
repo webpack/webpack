@@ -12081,6 +12081,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "output-resource-hints-dedupe": Object {
+    "configs": Array [
+      Object {
+        "description": "Skip the runtime-injected \`<link rel=\\"prefetch\\">\` for a chunk that is already preloaded or prefetched in the document (avoids a duplicate request in some browsers such as Chrome).",
+        "multiple": false,
+        "path": "output.resourceHints.dedupe",
+        "type": "boolean",
+      },
+    ],
+    "description": "Skip the runtime-injected \`<link rel=\\"prefetch\\">\` for a chunk that is already preloaded or prefetched in the document (avoids a duplicate request in some browsers such as Chrome).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-resource-hints-entry": Object {
     "configs": Array [
       Object {
