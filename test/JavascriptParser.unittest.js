@@ -1216,5 +1216,106 @@ describe("JavascriptParser", () => {
 			const noAsi = parse("function f() { return /* x */ 1 }");
 			expect(noAsi.body[0].body.body[0].argument.value).toBe(1);
 		});
+
+		it("classifies keywords from the per-slot memo on repeated parses", () => {
+			const src =
+				"function gate(input) { if (input) return input; return null; }";
+			// first parse fills the word-type memo; the second serves from it
+			const first = parse(src);
+			const second = parse(src);
+			expect(first.body[0].type).toBe("FunctionDeclaration");
+			expect(second.body[0].type).toBe("FunctionDeclaration");
+			expect(second.body[0].body.body[0].type).toBe("IfStatement");
+		});
+
+		it("re-classifies a cache-hit word under a different keyword set", () => {
+			// same words, distinct WordLookups: the second parse hits WORD_CACHE
+			// but misses the other option set's memo and must re-classify
+			const src = "value1 = value2 instanceof Gate;";
+			const modern = parse(src);
+			const legacy = /** @type {EXPECTED_ANY} */ (
+				WebpackParser.parse(
+					src,
+					/** @type {import("acorn").Options} */ (
+						/** @type {unknown} */ ({ ecmaVersion: 5, lazyNodes: true })
+					)
+				)
+			);
+			expect(modern.body[0].expression.right.operator).toBe("instanceof");
+			expect(legacy.body[0].expression.right.operator).toBe("instanceof");
+		});
+
+		it("classifies escaped keywords via the cold word path", () => {
+			expect(() => parse("\\u0069f (x) y;")).toThrow(
+				/Escape sequence in keyword/
+			);
+		});
+
+		it("classifies one-char and over-long words off the word cache", () => {
+			const short = parse("a + b;").body[0].expression;
+			expect(short.left.name).toBe("a");
+			expect(short.right.name).toBe("b");
+			const long = parse("extraordinarilyLongIdentifier = 1;").body[0]
+				.expression;
+			expect(long.left.name).toBe("extraordinarilyLongIdentifier");
+		});
+
+		it("rejects a conditional whose test is a bare arrow (identity probe)", () => {
+			expect(() => parse("() => {} ? a : b")).toThrow(/Unexpected token/);
+			// the probe must not leak across expressions: a later conditional works
+			const ok = parse("f = (x) => x + 1; y = c ? a : b;");
+			expect(ok.body[0].expression.right.type).toBe("ArrowFunctionExpression");
+			expect(ok.body[1].expression.right.type).toBe("ConditionalExpression");
+		});
+
+		it("keeps arrow behavior when a plugin overrides parseArrowExpression", () => {
+			// overriding disables `_arrowFastPath`; the type-based fallback probes
+			// must reproduce the same accepts and rejects
+			const plugin = /** @type {EXPECTED_ANY} */ (
+				(/** @type {EXPECTED_ANY} */ P) =>
+					class extends P {
+						/**
+						 * @param {...EXPECTED_ANY} args acorn args
+						 * @returns {EXPECTED_ANY} arrow node
+						 */
+						parseArrowExpression(...args) {
+							return super.parseArrowExpression(...args);
+						}
+					}
+			);
+			const Extended = WebpackParser.extend(plugin);
+			expect(() => Extended.parse("() => {} ? a : b", parseOptions)).toThrow(
+				/Unexpected token/
+			);
+			const ast = /** @type {EXPECTED_ANY} */ (
+				Extended.parse("f = (x) => x + 1;", parseOptions)
+			);
+			expect(ast.body[0].expression.right.type).toBe("ArrowFunctionExpression");
+		});
+
+		it("serves comment ranges lazily with a stable memo and writable slot", () => {
+			/** @type {EXPECTED_ANY[]} */
+			const comments = [];
+			WebpackParser.parse(
+				"// hi\nvar x = 1; /* block */",
+				/** @type {import("acorn").Options} */ (
+					/** @type {unknown} */ ({
+						ecmaVersion: 2022,
+						lazyNodes: true,
+						lazyComments: comments
+					})
+				)
+			);
+			expect(comments).toHaveLength(2);
+			const line = comments[0];
+			expect(line.range).toEqual([0, 5]);
+			// memoized: repeated reads return one array identity
+			expect(line.range).toBe(line.range);
+			expect(line.value).toBe(" hi");
+			const block = comments[1];
+			expect(block.range).toEqual([17, 28]);
+			block.range = [1, 2];
+			expect(block.range).toEqual([1, 2]);
+		});
 	});
 });

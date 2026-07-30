@@ -2,6 +2,7 @@
 
 // cspell:ignore apos notpre Elig reconsumes xyzabc zzzunknown codepoint DFFF ampx noncharacter FFFE
 // cspell:ignore selectedcontent mtext mglyph colgroups viewbox definitionurl
+// cspell:ignore scripty
 
 const fs = require("fs");
 const path = require("path");
@@ -4381,5 +4382,296 @@ describe("parseCssUrls", () => {
 
 	it("should return nothing when the value carries no url()", () => {
 		expect(parseCssUrls("fill:red")).toEqual([]);
+	});
+});
+
+// Fused state transitions: the tokenizer executes 100%-predictable follow-up
+// arcs inline (tag-open alpha scan, end-tag peek, fused `<` after text runs,
+// quoted-value scan after the opening quote, end-tag-name alpha runs,
+// attribute-name scan from before-attribute-name) — each case drives one fused
+// branch and its EOF edge, expecting the exact spec token/error stream.
+describe("tokenize — fused state transitions", () => {
+	/**
+	 * @param {string} html input
+	 * @returns {[string, ...EXPECTED_ANY[]][]} token + parse-error stream
+	 */
+	const walk = (html) => {
+		/** @type {[string, ...EXPECTED_ANY[]][]} */
+		const out = [];
+		tokenize(html, 0, {
+			openTag: (input, start, end, ns, ne, selfClosing) => {
+				out.push(["open", input.slice(ns, ne), selfClosing]);
+				return end;
+			},
+			closeTag: (input, start, end, ns, ne) => {
+				out.push(["close", input.slice(ns, ne)]);
+				return end;
+			},
+			attribute: (input, ns, ne, vs, ve, qt) => {
+				out.push([
+					"attr",
+					input.slice(ns, ne),
+					vs === -1 ? null : input.slice(vs, ve),
+					qt
+				]);
+				if (vs === -1) return ne;
+				if (qt !== QUOTE_NONE) return ve + 1;
+				return ve;
+			},
+			comment: (input, start, end) => {
+				out.push(["comment", input.slice(start, end)]);
+				return end;
+			},
+			doctype: (input, start, end) => {
+				out.push(["doctype", input.slice(start, end)]);
+				return end;
+			},
+			text: (input, start, end) => {
+				out.push(["text", input.slice(start, end)]);
+				return end;
+			},
+			parseError: (input, code, start, end, severity) => {
+				out.push(["error", code, start, end, severity]);
+			}
+		});
+		return out;
+	};
+
+	it("open-tag alpha scan to EOF", () => {
+		expect(walk("<a")).toEqual([
+			["error", "eof-in-tag", 2, 2, "error"],
+			["open", "a", false]
+		]);
+	});
+
+	it("open-tag multi-char name to EOF", () => {
+		expect(walk("<abc")).toEqual([
+			["error", "eof-in-tag", 4, 4, "error"],
+			["open", "abc", false]
+		]);
+	});
+
+	it("open-tag closed", () => {
+		expect(walk("<a>")).toEqual([["open", "a", false]]);
+	});
+
+	it("end-tag alpha scan to EOF", () => {
+		expect(walk("</x")).toEqual([
+			["error", "eof-in-tag", 3, 3, "error"],
+			["close", "x"]
+		]);
+	});
+
+	it("bare end-tag open at EOF", () => {
+		expect(walk("</")).toEqual([
+			["error", "eof-before-tag-name", 2, 2, "warning"],
+			["text", "</"]
+		]);
+	});
+
+	it("text then bare end-tag open at EOF", () => {
+		expect(walk("a</")).toEqual([
+			["error", "eof-before-tag-name", 3, 3, "warning"],
+			["text", "a</"]
+		]);
+	});
+
+	it("missing end tag name", () => {
+		expect(walk("</>")).toEqual([
+			["error", "missing-end-tag-name", 2, 3, "warning"],
+			["text", "</>"]
+		]);
+	});
+
+	it("end-tag open non-alpha -> bogus comment", () => {
+		expect(walk("</ x>")).toEqual([
+			["error", "invalid-first-character-of-tag-name", 2, 3, "warning"],
+			["comment", "</ x>"]
+		]);
+	});
+
+	it("text ends exactly at tag", () => {
+		expect(walk("ab<i>c")).toEqual([
+			["text", "ab"],
+			["open", "i", false],
+			["text", "c"]
+		]);
+	});
+
+	it("text with no further `<`", () => {
+		expect(walk("ab")).toEqual([["text", "ab"]]);
+	});
+
+	it("entity then fused tag", () => {
+		expect(walk("a&amp;b<i>")).toEqual([
+			["text", "a&amp;b"],
+			["open", "i", false]
+		]);
+	});
+
+	it("empty double-quoted value", () => {
+		expect(walk('<a b="">')).toEqual([
+			["attr", "b", "", 1],
+			["open", "a", false]
+		]);
+	});
+
+	it("unterminated double-quoted value", () => {
+		expect(walk('<a b="')).toEqual([
+			["error", "eof-in-tag", 6, 6, "error"],
+			["attr", "b", "", 1],
+			["open", "a", false]
+		]);
+	});
+
+	it("empty single-quoted value", () => {
+		expect(walk("<a b=''>")).toEqual([
+			["attr", "b", "", 2],
+			["open", "a", false]
+		]);
+	});
+
+	it("unterminated single-quoted value", () => {
+		expect(walk("<a b='")).toEqual([
+			["error", "eof-in-tag", 6, 6, "error"],
+			["attr", "b", "", 2],
+			["open", "a", false]
+		]);
+	});
+
+	it("plain double-quoted value", () => {
+		expect(walk('<a b="v">')).toEqual([
+			["attr", "b", "v", 1],
+			["open", "a", false]
+		]);
+	});
+
+	it("plain single-quoted value", () => {
+		expect(walk("<a b='v'>")).toEqual([
+			["attr", "b", "v", 2],
+			["open", "a", false]
+		]);
+	});
+
+	it("entity in double-quoted value", () => {
+		expect(walk('<a b="&amp;">')).toEqual([
+			["attr", "b", "&amp;", 1],
+			["open", "a", false]
+		]);
+	});
+
+	it("entity in single-quoted value", () => {
+		expect(walk("<a b='&amp;'>")).toEqual([
+			["attr", "b", "&amp;", 2],
+			["open", "a", false]
+		]);
+	});
+
+	it("script end-tag name truncated", () => {
+		expect(walk("<script>x</scr")).toEqual([
+			["open", "script", false],
+			["error", "eof-in-tag", 14, 14, "error"],
+			["text", "x"],
+			["close", "scr"]
+		]);
+	});
+
+	it("rcdata end-tag name truncated", () => {
+		expect(walk("<title>x</tit")).toEqual([
+			["open", "title", false],
+			["error", "eof-in-tag", 13, 13, "error"],
+			["text", "x"],
+			["close", "tit"]
+		]);
+	});
+
+	it("rawtext end-tag name truncated", () => {
+		expect(walk("<style>x</sty")).toEqual([
+			["open", "style", false],
+			["error", "eof-in-tag", 13, 13, "error"],
+			["text", "x"],
+			["close", "sty"]
+		]);
+	});
+
+	it("script-escaped end-tag name truncated", () => {
+		expect(walk("<script><!--x</scr")).toEqual([
+			["open", "script", false],
+			["error", "eof-in-tag", 18, 18, "error"],
+			["text", "<!--x"],
+			["close", "scr"]
+		]);
+	});
+
+	it("script end-tag name overlong", () => {
+		expect(walk("<script>x</scripty>y</script>")).toEqual([
+			["open", "script", false],
+			["text", "x</scripty>y"],
+			["close", "script"]
+		]);
+	});
+
+	it("rcdata fused `<`", () => {
+		expect(walk("<title>a<b</title>")).toEqual([
+			["open", "title", false],
+			["text", "a<b"],
+			["close", "title"]
+		]);
+	});
+
+	it("rawtext fused `<`", () => {
+		expect(walk("<style>a<b</style>")).toEqual([
+			["open", "style", false],
+			["text", "a<b"],
+			["close", "style"]
+		]);
+	});
+
+	it("script fused `<`", () => {
+		expect(walk("<script>a<b</script>")).toEqual([
+			["open", "script", false],
+			["text", "a<b"],
+			["close", "script"]
+		]);
+	});
+
+	it("nUL as attribute-name first char", () => {
+		expect(walk("<a \u0000x>")).toEqual([
+			["error", "unexpected-null-character", 3, 4, "warning"],
+			["attr", "\u0000x", null, 0],
+			["open", "a", false]
+		]);
+	});
+
+	it("quote as attribute-name first char", () => {
+		expect(walk('<a "x>')).toEqual([
+			["error", "unexpected-character-in-attribute-name", 3, 4, "warning"],
+			["attr", '"x', null, 0],
+			["open", "a", false]
+		]);
+	});
+
+	it("apostrophe as attribute-name first char", () => {
+		expect(walk("<a 'x>")).toEqual([
+			["error", "unexpected-character-in-attribute-name", 3, 4, "warning"],
+			["attr", "'x", null, 0],
+			["open", "a", false]
+		]);
+	});
+
+	it("less-than as attribute-name first char", () => {
+		expect(walk("<a <b>")).toEqual([
+			["error", "unexpected-character-in-attribute-name", 3, 4, "warning"],
+			["attr", "<b", null, 0],
+			["open", "a", false]
+		]);
+	});
+
+	it("plain attribute-name runs", () => {
+		expect(walk("<a bc de>")).toEqual([
+			["attr", "bc", null, 0],
+			["attr", "de", null, 0],
+			["open", "a", false]
+		]);
 	});
 });
