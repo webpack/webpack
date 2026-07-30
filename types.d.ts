@@ -12007,6 +12007,7 @@ declare class JavascriptParser extends ParserClass {
 				| ThisExpression
 				| UpdateExpression
 				| YieldExpression
+				| VariableDeclaration
 				| ForOfStatement
 			],
 			boolean | void
@@ -14201,7 +14202,7 @@ declare interface KnownBuildInfo {
 	isCircular?: boolean;
 
 	/**
-	 * module uses top-level `for await…of`, which can't be lowered to a generator
+	 * module uses top-level `for await…of` or `await using`, which can't be lowered to a generator
 	 */
 	usesTopLevelAwaitForOf?: boolean;
 }
@@ -14329,6 +14330,11 @@ declare interface KnownJavascriptModuleBuildInfo {
 	 * whether this module was parsed with `optimization.inlineExports` enabled (gates inlining of its exports)
 	 */
 	inlineExports?: boolean;
+
+	/**
+	 * module scope holds a `using`/`await using` declaration, so its resources must be disposed when the module finished evaluating
+	 */
+	usesTopLevelUsingDeclaration?: boolean;
 }
 declare interface KnownJavascriptModuleBuildMeta {
 	strictHarmonyModule?: boolean;

@@ -774,6 +774,9 @@ const knownBugs = [
 	"import/import-defer/errors/get-other-while-evaluating-async/main.js",
 	// Exact interleaving of top-level-await and deferred evaluation order.
 	"import/import-defer/evaluation-top-level-await/flattening-order/main.js",
+	// A deferred module must wait for the whole strongly-connected component when a
+	// dependency's cycle root is still evaluating-async (`IsModuleSCCEvaluated`).
+	"import/import-defer/evaluation-top-level-await/async-cycle-dependency-of-deferred-module/main.js",
 	// Just bugs, need to fix
 	// `Reflect.preventExtensions(ns)` should return true and the deferred
 	// namespace should report `isExtensible() === false` per the TC39 spec —
