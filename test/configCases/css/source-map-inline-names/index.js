@@ -38,7 +38,12 @@ it("should keep module identifier decorations out of inline css map sources", ()
 	}
 });
 
-if (__STATS_I__ === 0) {
+if (__STATS_I__ === 2) {
+	it("should template sources a loader reported for non-modules", () => {
+		const sources = readInlineMaps().flatMap((map) => map.sources);
+		expect(sources).toContain("webpack:///./virtual-partial.css");
+	});
+} else if (__STATS_I__ === 0) {
 	it("should name inline css map sources like emitted asset maps do", () => {
 		const merged = readInlineMaps().find((map) => map.sources.length > 1);
 		expect(merged.sources).toContain("webpack:///./main.css");
