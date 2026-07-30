@@ -51,10 +51,15 @@ describe("ExportInfo", () => {
 
 		it("clears the target map, the max-target memo and canInlineProvide", () => {
 			const info = new ExportInfo("foo");
-			info.setTarget({}, /** @type {EXPECTED_ANY} */ ({}), ["a"], 1);
+			info.setTarget(
+				/** @type {EXPECTED_ANY} */ ({}),
+				/** @type {EXPECTED_ANY} */ ({}),
+				["a"],
+				1
+			);
 			// prime the memo so a stale entry would be observable
 			info._getMaxTarget();
-			info.canInlineProvide = true;
+			info.canInlineProvide = /** @type {EXPECTED_ANY} */ (true);
 
 			info._resetProvideInfo();
 
@@ -117,10 +122,15 @@ describe("ExportInfo", () => {
 
 			info._resetUseInfo();
 
-			expect(info._globalUsed).toBeUndefined();
-			expect(info._usedInRuntime).toBeUndefined();
-			expect(info._hasUseInRuntimeInfo).toBe(false);
-			expect(info._usedName).toBeNull();
+			// no use info at all until the plugin re-initializes
+			expect(info.getUsed("main")).toBe(UsageState.NoInfo);
+			// after re-init the cleared state reads as unused in every runtime
+			info.setHasUseInfo();
+			expect(info.getUsed(undefined)).toBe(UsageState.Unused);
+			expect(info.getUsed("main")).toBe(UsageState.Unused);
+			// and a fresh use resolves to the export's own name, not the stale "a"
+			info.setUsed(UsageState.Used, "main");
+			expect(info.getUsedName(undefined, "main")).toBe("foo");
 		});
 
 		it("recurses through two levels of owned nested exports info", () => {
