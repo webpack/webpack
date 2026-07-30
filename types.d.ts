@@ -686,6 +686,16 @@ declare interface AsyncWebAssemblyModulesPluginOptions {
 	mangleImports?: boolean;
 }
 declare abstract class AsyncWebAssemblyParser extends ParserClass {}
+type AtRule = NodeSyntax & {
+	name: string;
+	nameStart: number;
+	nameEnd: number;
+	prelude: ComponentValue[];
+	declarations: null | DeclarationSyntax[];
+	childRules: null | RuleSyntax[];
+	blockStart: number;
+	blockEnd: number;
+};
 
 /**
  * Records modules from one compilation and adds them back as prefetch
@@ -745,7 +755,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Exclude all modules matching any of these conditions.
 	 */
-	exclude?: string | RegExp | ((str: string) => boolean) | Rule[];
+	exclude?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
 
 	/**
 	 * If true, banner will be placed at the end of the output.
@@ -755,7 +765,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules matching any of these conditions.
 	 */
-	include?: string | RegExp | ((str: string) => boolean) | Rule[];
+	include?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
 
 	/**
 	 * If true, banner will not be wrapped in a comment.
@@ -770,7 +780,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules that pass test assertion.
 	 */
-	test?: string | RegExp | ((str: string) => boolean) | Rule[];
+	test?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
 }
 declare interface BaseResolveRequest {
 	/**
@@ -1194,6 +1204,12 @@ declare abstract class BasicEvaluatedExpression {
 	): BasicEvaluatedExpression;
 }
 type BeforeContextResolveData = ContextResolveData & ContextOptions;
+declare interface BindCache<T> {
+	(cache: object): BindCacheResultFn<T>;
+}
+declare interface BindCacheResultFn<T> {
+	(value: string): T;
+}
 declare interface Bootstrap {
 	header: string[];
 	beforeStartup: string[];
@@ -4253,6 +4269,7 @@ declare class Compiler {
 		check?: (value: T) => boolean
 	): void;
 }
+type ComponentValue = Token | FunctionNode | SimpleBlock;
 declare class ConcatSource extends Source {
 	constructor(...args: ConcatSourceChild[]);
 	getChildren(): Source[];
@@ -5834,7 +5851,55 @@ declare interface CssParserOptions {
 	 */
 	urlHints?: UrlHintRule[];
 }
-type Declaration = FunctionDeclaration | VariableDeclaration | ClassDeclaration;
+declare interface CssProcessOptions {
+	/**
+	 * shared loc converter (default a fresh one over the input)
+	 */
+	locConverter?: LocConverter;
+
+	/**
+	 * walk into block bodies' nested rules (default true)
+	 */
+	recurseBlocks?: boolean;
+
+	/**
+	 * which top-level production to consume the source as (see `TOP_LEVEL_CONSUMERS`): `"stylesheet"` (default) or `"block-contents"` (a block's contents, e.g. an HTML `style` attribute)
+	 */
+	as?: "stylesheet" | "block-contents";
+
+	/**
+	 * what the grammar may leave un-materialized to go faster — safe only for parts nothing reads in the active parse; default skip nothing. Ignored while printing (`minimize`), which needs every node
+	 */
+	skip?: SkipOptions;
+
+	/**
+	 * print the safely-minified serialization (collapsed whitespace, dropped redundant separators) as `process` walks and return `{ code, map }` (default false = walk only, return `undefined`)
+	 */
+	minimize?: boolean;
+
+	/**
+	 * name of the input in the emitted source map (`sources[0]` / `file`); only read while printing
+	 */
+	source?: string;
+
+	/**
+	 * the input's contents for the map's `sourcesContent`; only read while printing
+	 */
+	content?: string;
+}
+type DeclarationEstreeIndex =
+	FunctionDeclaration | VariableDeclaration | ClassDeclaration;
+type DeclarationSyntax = NodeSyntax & {
+	name: string;
+	nameStart: number;
+	nameEnd: number;
+	value: ComponentValue[];
+	important: boolean;
+};
+declare interface DecodedEntitiesWithMap {
+	text: string;
+	map?: number[];
+}
 declare interface DefaultHandlerOptions {
 	progressBar?:
 		| false
@@ -9000,6 +9065,12 @@ declare interface Flags {
 declare interface FullHashChunkModuleHashes {
 	[index: string]: string;
 }
+type FunctionNode = NodeSyntax & {
+	name: string;
+	nameStart: number;
+	nameEnd: number;
+	value: ComponentValue[];
+};
 declare interface GenerateContext {
 	/**
 	 * mapping from dependencies to templates
@@ -9651,6 +9722,46 @@ declare interface HotModuleReplacementPluginLoaderContext {
 declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
+declare interface HtmlAstSkip {
+	/**
+	 * drop every `Text` node. Raw-text element bodies (`<script>`/`<style>`/…) aren't emitted either — their content span is recorded as the element's `contentEnd` (see `RAW_TEXT_ELEMENTS`) so a consumer can read `[tagEnd, contentEnd]` by offset. For consumers that read text by offset (e.g. `HtmlParser`), never the html5lib serializer.
+	 */
+	text?: boolean;
+
+	/**
+	 * drop comment nodes entirely. Not for consumers that read comments (e.g. webpack magic comments).
+	 */
+	comments?: boolean;
+
+	/**
+	 * drop the doctype node; quirks-mode detection is unaffected.
+	 */
+	doctype?: boolean;
+}
+declare interface HtmlAttribute {
+	/**
+	 * lowercased (and, in foreign content, adjusted) attribute name
+	 */
+	name: string;
+	value: string;
+
+	/**
+	 * name used by the html5lib tree serializer (foreign-namespaced)
+	 */
+	serializedName?: string;
+
+	/**
+	 * source offset, or -1 on adoption-agency clones
+	 */
+	nameStart: number;
+	nameEnd: number;
+
+	/**
+	 * source offset, or -1 when valueless / on clones
+	 */
+	valueStart: number;
+	valueEnd: number;
+}
 declare interface HtmlEmittedContext {
 	outputName: string;
 }
@@ -9836,6 +9947,17 @@ declare interface HtmlMutableTag {
 	 */
 	remove?: boolean;
 }
+declare interface HtmlParseOptions {
+	/**
+	 * context element name for fragment parsing (e.g. `td`, `svg path`); omit for a full document
+	 */
+	fragmentContext?: string;
+
+	/**
+	 * node kinds to omit from the AST (see `HtmlAstSkip`); omit to build the full tree
+	 */
+	skip?: HtmlAstSkip;
+}
 declare abstract class HtmlParser extends ParserClass {
 	magicCommentContext: ContextImport;
 	template?: (source: string, context: HtmlTemplateContext) => string;
@@ -9912,6 +10034,22 @@ declare interface HtmlParserOptions {
 	 * URL-referenced-asset default hint rules for this parser (JavaScript `new URL(...)`, CSS `url(...)`, HTML `<img src>` / `<link href>` / `<script src>`).
 	 */
 	urlHints?: UrlHintRule[];
+}
+declare interface HtmlProcessOptions {
+	/**
+	 * context element tag name for fragment parsing (see `parseHtml`); the HTML analog of the CSS parser's `as` parse-mode option
+	 */
+	fragmentContext?: string;
+
+	/**
+	 * node kinds to omit from the AST for speed/memory (see `HtmlAstSkip`)
+	 */
+	skip?: HtmlAstSkip;
+
+	/**
+	 * print the safely-minified serialization (nodes rebuilt from source, inert comments dropped) as `process` walks, and return it (default false = walk only, return `""`)
+	 */
+	minimize?: boolean;
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**
@@ -10088,6 +10226,51 @@ declare interface HtmlTemplateContext {
 	 * report an error on the module
 	 */
 	emitError: (error: string | Error) => void;
+}
+declare interface HtmlTokenCallbacks {
+	openTag?: (
+		input: string,
+		start: number,
+		end: number,
+		nameStart: number,
+		nameEnd: number,
+		selfClosing: boolean
+	) => number;
+	closeTag?: (
+		input: string,
+		start: number,
+		end: number,
+		nameStart: number,
+		nameEnd: number
+	) => number;
+	text?: (input: string, start: number, end: number) => number;
+	attribute?: (
+		input: string,
+		nameStart: number,
+		nameEnd: number,
+		valueStart: number,
+		valueEnd: number,
+		quoteType: number
+	) => number;
+	comment?: (input: string, start: number, end: number) => number;
+	doctype?: (input: string, start: number, end: number) => number;
+	parseError?: (
+		input: string,
+		code: string,
+		start: number,
+		end: number,
+		severity: ParseErrorSeverity
+	) => void;
+
+	/**
+	 * returns true when the adjusted current node is in a foreign (SVG/MathML) namespace, vetoing RAWTEXT/RCDATA/script content-mode switches
+	 */
+	isForeign?: () => boolean;
+
+	/**
+	 * context element tag name for fragment parsing; seeds the initial content mode
+	 */
+	fragmentContext?: string;
 }
 declare interface HtmlTransformHtmlContext {
 	outputName: string;
@@ -11527,7 +11710,10 @@ declare class JavascriptParser extends ParserClass {
 	constructor(
 		sourceType?: "module" | "auto" | "script",
 		options?: {
-			parse?: (code: string, options: ParseOptions) => ParseResult;
+			parse?: (
+				code: string,
+				options: ParseOptionsJavascriptParser
+			) => ParseResult;
 			typescript?: boolean;
 			importPhases?: boolean;
 			strictModeViolations?: false | "error" | "warn";
@@ -11879,7 +12065,7 @@ declare class JavascriptParser extends ParserClass {
 					| ExportAllDeclaration
 					| ExportDefaultDeclaration
 				),
-				Declaration
+				DeclarationEstreeIndex
 			],
 			boolean | void
 		>;
@@ -12074,7 +12260,10 @@ declare class JavascriptParser extends ParserClass {
 	}>;
 	sourceType: "module" | "auto" | "script";
 	options: {
-		parse?: (code: string, options: ParseOptions) => ParseResult;
+		parse?: (
+			code: string,
+			options: ParseOptionsJavascriptParser
+		) => ParseResult;
 		typescript?: boolean;
 		importPhases?: boolean;
 		strictModeViolations?: false | "error" | "warn";
@@ -12655,7 +12844,7 @@ declare class JavascriptParser extends ParserClass {
 	 * Processes the provided declaration.
 	 */
 	enterDeclaration(
-		declaration: Declaration,
+		declaration: DeclarationEstreeIndex,
 		onIdent: (ident: string, identifier: Identifier) => void
 	): void;
 
@@ -13826,7 +14015,7 @@ declare interface JavascriptParserOptions {
 	/**
 	 * Function to parser source code.
 	 */
-	parse?: (code: string, options: ParseOptions) => ParseResult;
+	parse?: (code: string, options: ParseOptionsJavascriptParser) => ParseResult;
 
 	/**
 	 * Mark the listed top-level function names for pure-function-based tree shaking.
@@ -15493,6 +15682,16 @@ declare class LoaderTargetPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+declare abstract class LocConverter {
+	line: number;
+	column: number;
+	pos: number;
+
+	/**
+	 * Returns location converter.
+	 */
+	get(pos: number): LocConverter;
+}
 declare abstract class LocalModule {
 	name: string;
 	idx: number;
@@ -15684,6 +15883,9 @@ declare abstract class MainTemplate {
 	) => InterpolatedPathAndAssetInfo;
 	get requireFn(): "__webpack_require__";
 	get outputOptions(): Output;
+}
+declare interface MakeCacheableResult<T> {
+	(value: string, cache?: object): T;
 }
 declare interface MakeDirectoryOptions {
 	recursive?: boolean;
@@ -17739,6 +17941,42 @@ declare abstract class MultiWatching {
 	 */
 	close(callback: (err: null | Error, result?: void) => void): void;
 }
+declare interface MutableToken {
+	/**
+	 * one of the `TT_*` constants
+	 */
+	type: number;
+
+	/**
+	 * byte offset of the token's first code point
+	 */
+	start: number;
+
+	/**
+	 * byte offset just past the token's last code point
+	 */
+	end: number;
+
+	/**
+	 * hash tokens: starts an ident sequence
+	 */
+	isId: boolean;
+
+	/**
+	 * url tokens: first content code point
+	 */
+	contentStart: number;
+
+	/**
+	 * url tokens: just past the last content code point
+	 */
+	contentEnd: number;
+
+	/**
+	 * dimension tokens: first unit-ident code point
+	 */
+	unitStart: number;
+}
 declare class NamedChunkIdsPlugin {
 	/**
 	 * Creates an instance of NamedChunkIdsPlugin.
@@ -17917,6 +18155,9 @@ declare interface NodeOptions {
 	 */
 	global?: boolean | "warn";
 }
+declare interface NodePrinter<TPath, TNode> {
+	(path: TPath, writer: PrintContext<TPath, TNode>): string;
+}
 declare class NodeSourcePlugin {
 	constructor();
 
@@ -17924,6 +18165,45 @@ declare class NodeSourcePlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface NodeSyntax {
+	/**
+	 * node-type discriminator
+	 */
+	type: number;
+
+	/**
+	 * byte offset of the node's first code point
+	 */
+	start: number;
+
+	/**
+	 * byte offset just past the node's last code point
+	 */
+	end: number;
+
+	/**
+	 * the `[start, end)` byte range
+	 */
+	range: [number, number];
+
+	/**
+	 * source location (1-based line, 0-based column)
+	 */
+	loc: {
+		start: { line: number; column: number };
+		end: { line: number; column: number };
+	};
+
+	/**
+	 * source slice for this node
+	 */
+	toString: () => string;
+
+	/**
+	 * name with CSS escapes resolved (name-bearing nodes only)
+	 */
+	unescapedName: string;
 }
 declare class NodeTargetPlugin {
 	/**
@@ -20662,7 +20942,8 @@ type OutputNormalizedWithDefaults = OutputNormalized & {
 declare interface ParameterizedComparator<TArg extends object, T> {
 	(tArg: TArg): Comparator<T>;
 }
-declare interface ParseOptions {
+type ParseErrorSeverity = "error" | "warning";
+declare interface ParseOptionsJavascriptParser {
 	sourceType: "module" | "script";
 	ecmaVersion: ecmaVersion;
 	locations?: boolean;
@@ -20690,6 +20971,12 @@ declare interface ParseOptions {
 	 * internal: for `auto`, let the parser downgrade module->script in place instead of re-parsing
 	 */
 	moduleFallback?: boolean;
+}
+declare interface ParseOptionsSyntax {
+	/**
+	 * optional comment-token callback; the public `parse*` entry points use it to build the `TokenStream` so the outer parser's comment tracker still sees magic comments inside the consumed range
+	 */
+	comment?: (input: string, start: number, end: number) => number;
 }
 declare interface ParseResult {
 	ast: Program;
@@ -21092,6 +21379,55 @@ declare class PrefixSource extends Source {
 declare interface PreparsedAst {
 	[index: string]: any;
 }
+
+/**
+ * The per-node output store handed to a language node printer as its `writer`. It
+ * carries the print `options` (today just `mode`) and one map: a finished node ->
+ * its printed text. A printer *returns* its text (`printNode` stores it) and reads
+ * a child's with `get`, so a parent composes its own text from its children's —
+ * the map is what makes that composition (and the CSS value transforms built on
+ * it) possible. `take` flushes a finished top-level node into the output and drops
+ * the map, so a streaming grammar never holds more than one top-level subtree.
+ */
+declare class PrintContext<TPath, TNode> {
+	constructor(options: PrintOptions, printer: NodePrinter<TPath, TNode>);
+	options: PrintOptions;
+
+	/**
+	 * Run the node printer for `node` and store what it returns (the grammar calls
+	 * this once the node's visitors and children are done). `path` is on `node`.
+	 */
+	printNode(node: TNode, path: TPath): void;
+	get(node: TNode): string;
+
+	/**
+	 * Emit one finished top-level node: first any kept comments that precede it,
+	 * then a source mapping anchoring its output start to `[srcLine, srcCol]`, then
+	 * its text — and drop the per-node store so the next top-level node starts
+	 * clean. `srcOffset` / `srcLine` / `srcCol` are the node's source position; a
+	 * grammar that doesn't map positions (e.g. HTML) omits them (no comments, no
+	 * mapping — the map ends up empty).
+	 */
+	take(
+		node: TNode,
+		srcOffset?: number,
+		srcLine?: number,
+		srcCol?: number
+	): void;
+
+	/**
+	 * Queue a literal to carry through to the output at source offset `pos` — a
+	 * comment the printer chose to keep (e.g. a `/*!` license banner). Calls
+	 * arrive in source order; each lands just before the first top-level node
+	 * starting after `pos` (or at the end, via {@link result}).
+	 */
+	insert(pos: number, text: string): void;
+	sourceMap(options: SourceMapOptions): SourceMap;
+	result(): string;
+}
+declare interface PrintOptions {
+	mode: "minify" | "beautify";
+}
 declare interface PrintedElement {
 	element: string;
 	content?: string;
@@ -21365,6 +21701,13 @@ declare interface ProvidesObject {
 }
 type PureCondition =
 	boolean | ((compilation: Compilation, module: Module) => boolean);
+type QualifiedRule = NodeSyntax & {
+	prelude: ComponentValue[];
+	declarations: null | DeclarationSyntax[];
+	childRules: null | RuleSyntax[];
+	blockStart: number;
+	blockEnd: number;
+};
 declare interface RawChunkGroupOptions {
 	preloadOrder?: number;
 	prefetchOrder?: number;
@@ -23312,7 +23655,7 @@ declare interface RestoreProvidedDataExports {
 	pureProvide?: boolean;
 	exportsInfo?: RestoreProvidedData;
 }
-type Rule = string | RegExp | ((str: string) => boolean);
+type RuleAlias = string | RegExp | ((str: string) => boolean);
 declare interface RuleSet {
 	/**
 	 * map of references in the rule set (may grow over time)
@@ -23751,6 +24094,7 @@ type RuleSetUseItem =
 			 */
 			options?: string | { [index: string]: any };
 	  };
+type RuleSyntax = AtRule | QualifiedRule;
 declare class RuntimeChunkPlugin {
 	/**
 	 * Creates an instance of RuntimeChunkPlugin.
@@ -24780,9 +25124,30 @@ declare class SideEffectsFlagPlugin {
 	): undefined | boolean;
 }
 type SideEffectsFlagValue = undefined | string | boolean | string[];
+type SimpleBlock = NodeSyntax & {
+	token: SimpleBlockToken;
+	value: ComponentValue[];
+};
+type SimpleBlockToken = "[" | "(" | "{";
 type SimpleType = "string" | "number" | "boolean";
 declare class SizeOnlySource extends Source {
 	constructor(size: number);
+}
+declare interface SkipOptions {
+	/**
+	 * component-value node types to drop from declaration value / function-arg lists (indexed by `NodeType`, 1 = skip; build with `buildSkipSet`)
+	 */
+	types?: Uint8Array;
+
+	/**
+	 * drop qualified-rule (selector) preludes — the rule and its block are still produced (default false)
+	 */
+	selectorPrelude?: boolean;
+
+	/**
+	 * drop at-rule preludes — the at-rule and its block are still produced (default false)
+	 */
+	atRulePrelude?: boolean;
 }
 declare abstract class Snapshot {
 	startTime?: number;
@@ -25174,6 +25539,14 @@ declare interface SourceLike {
 	 */
 	clearCache?: (options?: ClearCacheOptions, visited?: WeakSet<Source>) => void;
 }
+declare interface SourceMap {
+	version: 3;
+	file: string;
+	sources: string[];
+	sourcesContent?: string[];
+	names: string[];
+	mappings: string;
+}
 declare class SourceMapDevToolPlugin {
 	/**
 	 * Creates an instance of SourceMapDevToolPlugin.
@@ -25210,7 +25583,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Exclude modules that match the given value from source map generation.
 	 */
-	exclude?: string | RegExp | ((str: string) => boolean) | Rule[];
+	exclude?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
 
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.
@@ -25231,12 +25604,12 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Decide whether to ignore source files that match the specified value in the SourceMap.
 	 */
-	ignoreList?: string | RegExp | ((str: string) => boolean) | Rule[];
+	ignoreList?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
 
 	/**
 	 * Include source maps for module paths that match the given value.
 	 */
-	include?: string | RegExp | ((str: string) => boolean) | Rule[];
+	include?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
 
 	/**
 	 * Indicates whether SourceMaps from loaders should be used (defaults to true).
@@ -25272,7 +25645,11 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Include source maps for modules based on their extension (defaults to .js and .css).
 	 */
-	test?: string | RegExp | ((str: string) => boolean) | Rule[];
+	test?: string | RegExp | ((str: string) => boolean) | RuleAlias[];
+}
+declare interface SourceMapOptions {
+	source: string;
+	content?: string;
 }
 declare class SourceMapSource extends Source {
 	constructor(
@@ -25313,6 +25690,189 @@ declare class SourceMapSource extends Source {
 declare interface SourcePosition {
 	line: number;
 	column?: number;
+}
+
+/**
+ * Visitor coordinator: owns the visitor registry and drives a language
+ * `grammar` over the source. Language-agnostic — each syntax (CSS, HTML, …)
+ * binds its own grammar, node-type enum and (optionally) node printer.
+ * Babel-style usage:
+ * ```
+ * processor.use({ [NodeType.X]: (path) => {}, [NodeType.Y]: { enter, exit } });
+ * processor.process(source);
+ * ```
+ */
+declare abstract class SourceProcessorClass<
+	TPath,
+	TNode,
+	TProcessOptions = object
+> {
+	/**
+	 * Register a Babel-style visitor map; calls accumulate per node type.
+	 * A bucket is a function (= `{ enter }`) or `{ enter?, exit? }`.
+	 */
+	use(
+		map: VisitorMap<TPath>
+	): SourceProcessorClass<TPath, TNode, TProcessOptions>;
+
+	/**
+	 * Parse `input` once and fire the visitors in source order. With `minimize`
+	 * (and a printer supplied at construction) the same walk also prints — a
+	 * {@link PrintContext} is created, each node's printer fires into it as the node
+	 * finishes, and the result is returned as `{ code, map }`: the serialized output
+	 * and its input->output source map, always, independent of the pipeline's own
+	 * source-map setting (`source` / `content` name the map's input). Without
+	 * `minimize` it only walks and returns `undefined`. A single parse — printing
+	 * never re-parses; all configuration is per-call.
+	 */
+	process(
+		input: string,
+		options: TProcessOptions & {
+			minimize: true;
+			source?: string;
+			content?: string;
+		}
+	): { code: string; map: SourceMap };
+	process(input: string, options?: TProcessOptions): undefined;
+}
+
+/**
+ * The generic visitor coordinator (`util/SourceProcessor`) bound to the HTML
+ * `grammar`. Babel-style usage:
+ * ```
+ * new SourceProcessor().use({ [NodeType.Element]: (path) => {}, [NodeType.Comment]: { enter, exit } }).process(source, { skip });
+ * ```
+ * @experimental exposed as `webpack.html.syntax.SourceProcessor`; unstable API
+ */
+declare class SourceProcessorSyntaxClass_1 extends SourceProcessorClass<
+	{
+		get node(): number;
+		get parent(): null | number;
+		/**
+		 * Stop the walk descending into the current node (enter only).
+		 */
+		skipChildren(): void;
+		type(n?: number): number;
+		start(n?: number): number;
+		end(n?: number): number;
+		/**
+		 * Raw source slice `[start, end)` — valid only during the walk (the printer's
+		 * window), before `parseHtml` releases `_htmlSource`.
+		 */
+		source(n?: number): string;
+		tagName(n?: number): string;
+		namespace(n?: number): number;
+		selfClosing(n?: number): boolean;
+		attributes(n?: number): HtmlAttribute[];
+		attributeCount(n?: number): number;
+		/**
+		 * The i-th attribute of an element, as an id for the `attribute*` reads.
+		 */
+		attributeAt(i: number, n?: number): number;
+		/**
+		 * Linear lookup by (lowercased) name.
+		 */
+		findAttribute(name: string, n?: number): number;
+		attributeName(a: number): string;
+		attributeValue(a: number): string;
+		attributeNameStart(a: number): number;
+		attributeNameEnd(a: number): number;
+		attributeValueStart(a: number): number;
+		attributeValueEnd(a: number): number;
+		tagEnd(n?: number): number;
+		nameEnd(n?: number): number;
+		/**
+		 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
+		 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
+		 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
+		 * real source tag: its offsets are zero-width or borrow the triggering token,
+		 * so the sliced name doesn't match this element. The empty string lets a printer
+		 * treat such an element as transparent.
+		 */
+		openTag(n?: number): string;
+		/**
+		 * An element's end tag, generated as `</name>` from the opening tag's own name
+		 * (exact source casing, correct for foreign camelCase elements). Generated, not
+		 * sliced: element `end` offsets don't span the end tag, and an omitted optional
+		 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. Not meaningful
+		 * for void / implied elements — the printer only calls it for the rest.
+		 */
+		closeTag(n?: number): string;
+		contentEnd(n?: number): number;
+		templateContent(n?: number): number;
+		data(n?: number): string;
+		doctypeName(n?: number): string;
+		doctypePublicId(_n?: number): null | string;
+		doctypeSystemId(_n?: number): null | string;
+		firstChild(n?: number): number;
+		nextSibling(n?: number): number;
+		parentOf(n?: number): number;
+		children(n?: number): number[];
+	},
+	number,
+	HtmlProcessOptions
+> {
+	constructor();
+	static PrintContext: typeof PrintContext;
+}
+
+/**
+ * The generic visitor coordinator (`util/SourceProcessor`) bound to the CSS
+ * `grammar`. All configuration is per `process` call. `process(src, { minimize:
+ * true })` returns `{ code, map }` — the safely-minified serialization (built by
+ * the same walk that fires visitors) and its source map; without `minimize` it
+ * just walks and returns `undefined`. Babel-style usage:
+ * ```
+ * new SourceProcessor().use({ [NodeType.AtRule]: (path) => {} }).process(source, { skip });
+ * ```
+ * @experimental exposed as `webpack.css.syntax.SourceProcessor`; unstable API
+ */
+declare class SourceProcessorSyntaxClass_2 extends SourceProcessorClass<
+	{
+		get node(): NodeSyntax;
+		get parent(): null | NodeSyntax;
+		get index(): number;
+		/**
+		 * Stop the walk descending into the current node (enter only).
+		 */
+		skipChildren(): void;
+		inValue(): boolean;
+		type(n?: NodeSyntax): number;
+		start(n?: NodeSyntax): number;
+		end(n?: NodeSyntax): number;
+		range(n?: NodeSyntax): [number, number];
+		loc(n?: NodeSyntax): {
+			start: { line: number; column: number };
+			end: { line: number; column: number };
+		};
+		source(n?: NodeSyntax): string;
+		value(n?: NodeSyntax): string;
+		unescaped(n?: NodeSyntax): string;
+		typeFlag(n?: NodeSyntax): string;
+		contentStart(n?: NodeSyntax): number;
+		contentEnd(n?: NodeSyntax): number;
+		name(n?: NodeSyntax): string;
+		nameStart(n?: NodeSyntax): number;
+		nameEnd(n?: NodeSyntax): number;
+		unescapedName(n?: NodeSyntax): string;
+		children(n?: NodeSyntax): ComponentValue[];
+		prelude(n?: NodeSyntax): ComponentValue[];
+		childCount(n?: NodeSyntax): number;
+		childAt(n: NodeSyntax, i: number): ComponentValue;
+		declarations(n?: NodeSyntax): null | DeclarationSyntax[];
+		childRules(n?: NodeSyntax): null | RuleSyntax[];
+		blockStart(n?: NodeSyntax): number;
+		blockEnd(n?: NodeSyntax): number;
+		important(n?: NodeSyntax): boolean;
+		blockToken(n?: NodeSyntax): SimpleBlockToken;
+		setEnd(n: NodeSyntax, v: number): void;
+		setBlockEnd(n: NodeSyntax, v: number): void;
+	},
+	NodeSyntax,
+	CssProcessOptions
+> {
+	constructor();
+	static PrintContext: typeof PrintContext;
 }
 declare interface SourceTable {
 	[index: string]: SourceBucket;
@@ -26487,6 +27047,7 @@ declare interface StreamOptions {
 declare interface Stringable {
 	toString: () => string;
 }
+type Stylesheet = NodeSyntax & { rules: RuleSyntax[] };
 type Supports = undefined | string;
 declare class SyncModuleIdsPlugin {
 	/**
@@ -26650,6 +27211,95 @@ declare interface TimestampAndHash {
 	safeTime: number;
 	timestamp?: number;
 	hash: string;
+}
+type Token = NodeSyntax & {
+	value: string;
+	unescaped: string;
+	numericValue: number;
+	typeFlag: "number" | "id" | "integer" | "unrestricted";
+	sign: "" | "+" | "-";
+	unit: string;
+	contentStart: number;
+	contentEnd: number;
+};
+
+/**
+ * Position-based view over the lexer — webpack's stand-in for the spec's
+ * "normalize into a token stream" (CSS Syntax §9). It unifies the lexer and the
+ * stream in one class: the `readToken` primitive lexes one token (the CSS
+ * tokenizer), and the spec token-stream operations `next` / `consume` /
+ * `discard` / `mark` / `restoreMark` / `discardMark` drive it from a byte
+ * cursor. `parse*` entry points wrap a source string in one of these and every
+ * `consume*` algorithm reads tokens from it.
+ * No token buffer is kept: the cursor is a byte offset and the only state is
+ * the next token (lazily tokenized once and cached until consumed). The
+ * declaration-vs-qualified-rule backtracking in `consumeABlocksContents`
+ * rewinds by `mark`ing / `restoreMark`ing that byte offset, which simply
+ * re-tokenizes the rewound span — comment tokens are filtered here and fire
+ * `onComment` once each, tracked by a monotonic high-water mark so a
+ * re-tokenized span never re-fires them.
+ * `SourceProcessor` is handed this class (not an instance) and threads it to
+ * the grammar, so a different language can drive the same visitor machinery by
+ * swapping the tokenizer — the per-token `readToken` primitive — for its own.
+ */
+declare class TokenStream {
+	constructor(
+		input: string,
+		pos?: number,
+		locConverter?: LocConverter,
+		onComment?: (input: string, start: number, end: number) => number
+	);
+	input: string;
+	locConverter: LocConverter;
+
+	/**
+	 * The next token (CSS Syntax §3 "next token") — the upcoming token without
+	 * consuming it; the `<eof-token>` once the source is exhausted. This is the
+	 * token the consume algorithms dispatch on (the spec's "process"). Tokenized
+	 * from `_pos` on first use and cached until consumed; comment tokens are
+	 * skipped here, firing `onComment` once each.
+	 */
+	next(): MutableToken;
+
+	/**
+	 * Consume a token (CSS Syntax §3 "consume a token") — return the next token
+	 * and advance the cursor past it. The returned token is valid until the next
+	 * `next` re-tokenizes (the reused instance is not cleared by advancing).
+	 */
+	consume(): MutableToken;
+
+	/**
+	 * Discard a token (CSS Syntax §3 "discard a token") — advance the cursor past
+	 * the next token without returning it.
+	 */
+	discard(): void;
+
+	/**
+	 * Advance past the already-peeked next token, skipping the redundant `next()`
+	 * re-check `consume` / `discard` pay. Precondition: the caller has just called
+	 * `next()` (so `_tok` is the cached next token and `_hasNext` is true) and that
+	 * token is not the `<eof-token>` — the hot "peek, decide, advance" sites where
+	 * both always hold. Callers that can't guarantee a non-EOF cached token use
+	 * `consume` / `discard` instead.
+	 */
+	advance(): void;
+
+	/**
+	 * Mark (CSS Syntax §3 "mark") — push the current cursor position.
+	 */
+	mark(): void;
+
+	/**
+	 * Restore a mark (CSS Syntax §3 "restore a mark") — pop the last mark and
+	 * rewind the cursor to it. The rewound span is re-tokenized on the next read;
+	 * already-fired comments are not re-fired (`_commentHigh`).
+	 */
+	restoreMark(): void;
+
+	/**
+	 * Discard a mark (CSS Syntax §3 "discard a mark") — pop without rewinding.
+	 */
+	discardMark(): void;
 }
 declare class TopLevelSymbol {
 	/**
@@ -26976,6 +27626,14 @@ declare class VirtualUrlPlugin {
 	 */
 	getCacheVersion(version: string | true | (() => string)): undefined | string;
 	static DEFAULT_SCHEME: string;
+}
+type VisitorBucket<TPath> =
+	VisitorFn<TPath> | { enter?: VisitorFn<TPath>; exit?: VisitorFn<TPath> };
+declare interface VisitorFn<TPath> {
+	(path: TPath): void;
+}
+declare interface VisitorMap<TPath> {
+	[index: number]: VisitorBucket<TPath>;
 }
 type WarningFilterItemTypes =
 	string | RegExp | ((warning: StatsError, warningString: string) => boolean);
@@ -27822,6 +28480,31 @@ type WriteStreamOptions = StreamOptions & {
 	fs?: null | CreateWriteStreamFSImplementation;
 	flush?: boolean;
 };
+declare interface _functionSyntax {
+	/**
+	 * Decode HTML character references in a string. Handles all numeric
+	 * references (with WHATWG remap of 0x00, surrogates, out-of-range, and the
+	 * C1 Windows-1252 table) and the full WHATWG named character references
+	 * table. Unknown or malformed references are left as literal text.
+	 * When `isAttribute` is `true`, applies the WHATWG
+	 * "consumed-as-part-of-an-attribute" rule: a named reference without a
+	 * trailing `;` whose next character is `=` or ASCII alphanumeric is left
+	 * undecoded, so e.g. `&amp=foo` stays literal in an attribute value but
+	 * decodes to `&=foo` in text.
+	 * With `withMap` the result also carries a boundary map from the decoded
+	 * string back to raw offsets, so spans computed on the decoded text (e.g.
+	 * srcset candidate URLs) can be translated to source ranges. `map[i]` is the
+	 * raw offset of decoded boundary `i` (`0..text.length`); boundaries inside a
+	 * reference's decoded text map to the reference start. `map` is `undefined`
+	 * when nothing was decoded (then `text === str`).
+	 */
+	(str: string, isAttribute?: boolean): string;
+	(
+		str: string,
+		isAttribute: undefined | boolean,
+		withMap: true
+	): DecodedEntitiesWithMap;
+}
 
 /**
  * Returns compiler or MultiCompiler.
@@ -28214,9 +28897,496 @@ declare namespace exports {
 		export { AsyncWebAssemblyModulesPlugin, EnableWasmLoadingPlugin };
 	}
 	export namespace css {
+		export namespace syntax {
+			export let A: {
+				get node(): NodeSyntax;
+				get parent(): null | NodeSyntax;
+				get index(): number;
+				/**
+				 * Stop the walk descending into the current node (enter only).
+				 */
+				skipChildren(): void;
+				inValue(): boolean;
+				type(n?: NodeSyntax): number;
+				start(n?: NodeSyntax): number;
+				end(n?: NodeSyntax): number;
+				range(n?: NodeSyntax): [number, number];
+				loc(n?: NodeSyntax): {
+					start: { line: number; column: number };
+					end: { line: number; column: number };
+				};
+				source(n?: NodeSyntax): string;
+				value(n?: NodeSyntax): string;
+				unescaped(n?: NodeSyntax): string;
+				typeFlag(n?: NodeSyntax): string;
+				contentStart(n?: NodeSyntax): number;
+				contentEnd(n?: NodeSyntax): number;
+				name(n?: NodeSyntax): string;
+				nameStart(n?: NodeSyntax): number;
+				nameEnd(n?: NodeSyntax): number;
+				unescapedName(n?: NodeSyntax): string;
+				children(n?: NodeSyntax): ComponentValue[];
+				prelude(n?: NodeSyntax): ComponentValue[];
+				childCount(n?: NodeSyntax): number;
+				childAt(n: NodeSyntax, i: number): ComponentValue;
+				declarations(n?: NodeSyntax): null | DeclarationSyntax[];
+				childRules(n?: NodeSyntax): null | RuleSyntax[];
+				blockStart(n?: NodeSyntax): number;
+				blockEnd(n?: NodeSyntax): number;
+				important(n?: NodeSyntax): boolean;
+				blockToken(n?: NodeSyntax): SimpleBlockToken;
+				setEnd(n: NodeSyntax, v: number): void;
+				setBlockEnd(n: NodeSyntax, v: number): void;
+			};
+			export namespace NodeType {
+				export let Ident: number;
+				export let Function: number;
+				export let AtKeyword: number;
+				export let Hash: number;
+				export let String: number;
+				export let BadString: number;
+				export let Url: number;
+				export let BadUrl: number;
+				export let Delim: number;
+				export let Number: number;
+				export let Percentage: number;
+				export let Dimension: number;
+				export let Whitespace: number;
+				export let Colon: number;
+				export let Semicolon: number;
+				export let Comma: number;
+				export let RightParenthesis: number;
+				export let RightSquareBracket: number;
+				export let RightCurlyBracket: number;
+				export let CDO: number;
+				export let CDC: number;
+				export let SimpleBlock: number;
+				export let Declaration: number;
+				export let AtRule: number;
+				export let QualifiedRule: number;
+				export let Stylesheet: number;
+				export let Comment: number;
+			}
+			export let TT_AT_KEYWORD: 16;
+			export let TT_BAD_STRING_TOKEN: 4;
+			export let TT_BAD_URL_TOKEN: 19;
+			export let TT_CDC: 25;
+			export let TT_CDO: 24;
+			export let TT_COLON: 14;
+			export let TT_COMMA: 13;
+			export let TT_COMMENT: 1;
+			export let TT_DELIM: 6;
+			export let TT_DIMENSION: 23;
+			export let TT_EOF: 26;
+			export let TT_FUNCTION: 17;
+			export let TT_HASH: 5;
+			export let TT_IDENTIFIER: 20;
+			export let TT_LEFT_CURLY_BRACKET: 9;
+			export let TT_LEFT_PARENTHESIS: 7;
+			export let TT_LEFT_SQUARE_BRACKET: 8;
+			export let TT_NUMBER: 21;
+			export let TT_PERCENTAGE: 22;
+			export let TT_RIGHT_CURLY_BRACKET: 12;
+			export let TT_RIGHT_PARENTHESIS: 10;
+			export let TT_RIGHT_SQUARE_BRACKET: 11;
+			export let TT_SEMICOLON: 15;
+			export let TT_STRING: 3;
+			export let TT_URL: 18;
+			export let TT_WHITESPACE: 2;
+			export let buildSkipSet: (nodeTypes: number[]) => Uint8Array;
+			export let equalsLowerCase: (s: string, lit: string) => boolean;
+			export let escapeIdentifier: MakeCacheableResult<string> & {
+				bindCache: BindCache<string>;
+			};
+			export let isDashedIdentifier: (identifier: string) => boolean;
+			export let isWhitespace: (cc: number) => boolean;
+			export let normalizeUrl: (str: string, isString: boolean) => string;
+			export let parseABlocksContents: (
+				input: string | TokenStream,
+				pos?: number,
+				options?: ParseOptionsSyntax
+			) => { decls: DeclarationSyntax[]; rules: RuleSyntax[] };
+			export let parseACommaSeparatedListOfComponentValues: (
+				input: string | TokenStream,
+				pos?: number,
+				options?: ParseOptionsSyntax
+			) => ComponentValue[][];
+			export let parseAComponentValue: (
+				input: string | TokenStream,
+				pos?: number,
+				options?: ParseOptionsSyntax
+			) => undefined | Token | FunctionNode | SimpleBlock;
+			export let parseADeclaration: (
+				input: string | TokenStream,
+				pos?: number,
+				options?: ParseOptionsSyntax
+			) => undefined | DeclarationSyntax;
+			export let parseAListOfComponentValues: (
+				input: string | TokenStream,
+				pos?: number,
+				options?: ParseOptionsSyntax
+			) => ComponentValue[];
+			export let parseARule: (
+				input: string | TokenStream,
+				pos?: number,
+				options?: ParseOptionsSyntax
+			) => undefined | AtRule | QualifiedRule;
+			export let parseAStylesheet: (
+				input: string | TokenStream,
+				pos?: number,
+				options?: ParseOptionsSyntax
+			) => Stylesheet;
+			export let parseAStylesheetsContents: (
+				input: string | TokenStream,
+				pos?: number,
+				options?: ParseOptionsSyntax
+			) => RuleSyntax[];
+			export let printer: (
+				path: {
+					get node(): NodeSyntax;
+					get parent(): null | NodeSyntax;
+					get index(): number;
+					/**
+					 * Stop the walk descending into the current node (enter only).
+					 */
+					skipChildren(): void;
+					inValue(): boolean;
+					type(n?: NodeSyntax): number;
+					start(n?: NodeSyntax): number;
+					end(n?: NodeSyntax): number;
+					range(n?: NodeSyntax): [number, number];
+					loc(n?: NodeSyntax): {
+						start: { line: number; column: number };
+						end: { line: number; column: number };
+					};
+					source(n?: NodeSyntax): string;
+					value(n?: NodeSyntax): string;
+					unescaped(n?: NodeSyntax): string;
+					typeFlag(n?: NodeSyntax): string;
+					contentStart(n?: NodeSyntax): number;
+					contentEnd(n?: NodeSyntax): number;
+					name(n?: NodeSyntax): string;
+					nameStart(n?: NodeSyntax): number;
+					nameEnd(n?: NodeSyntax): number;
+					unescapedName(n?: NodeSyntax): string;
+					children(n?: NodeSyntax): ComponentValue[];
+					prelude(n?: NodeSyntax): ComponentValue[];
+					childCount(n?: NodeSyntax): number;
+					childAt(n: NodeSyntax, i: number): ComponentValue;
+					declarations(n?: NodeSyntax): null | DeclarationSyntax[];
+					childRules(n?: NodeSyntax): null | RuleSyntax[];
+					blockStart(n?: NodeSyntax): number;
+					blockEnd(n?: NodeSyntax): number;
+					important(n?: NodeSyntax): boolean;
+					blockToken(n?: NodeSyntax): SimpleBlockToken;
+					setEnd(n: NodeSyntax, v: number): void;
+					setBlockEnd(n: NodeSyntax, v: number): void;
+				},
+				writer: PrintContext<
+					{
+						get node(): NodeSyntax;
+						get parent(): null | NodeSyntax;
+						get index(): number;
+						/**
+						 * Stop the walk descending into the current node (enter only).
+						 */
+						skipChildren(): void;
+						inValue(): boolean;
+						type(n?: NodeSyntax): number;
+						start(n?: NodeSyntax): number;
+						end(n?: NodeSyntax): number;
+						range(n?: NodeSyntax): [number, number];
+						loc(n?: NodeSyntax): {
+							start: { line: number; column: number };
+							end: { line: number; column: number };
+						};
+						source(n?: NodeSyntax): string;
+						value(n?: NodeSyntax): string;
+						unescaped(n?: NodeSyntax): string;
+						typeFlag(n?: NodeSyntax): string;
+						contentStart(n?: NodeSyntax): number;
+						contentEnd(n?: NodeSyntax): number;
+						name(n?: NodeSyntax): string;
+						nameStart(n?: NodeSyntax): number;
+						nameEnd(n?: NodeSyntax): number;
+						unescapedName(n?: NodeSyntax): string;
+						children(n?: NodeSyntax): ComponentValue[];
+						prelude(n?: NodeSyntax): ComponentValue[];
+						childCount(n?: NodeSyntax): number;
+						childAt(n: NodeSyntax, i: number): ComponentValue;
+						declarations(n?: NodeSyntax): null | DeclarationSyntax[];
+						childRules(n?: NodeSyntax): null | RuleSyntax[];
+						blockStart(n?: NodeSyntax): number;
+						blockEnd(n?: NodeSyntax): number;
+						important(n?: NodeSyntax): boolean;
+						blockToken(n?: NodeSyntax): SimpleBlockToken;
+						setEnd(n: NodeSyntax, v: number): void;
+						setBlockEnd(n: NodeSyntax, v: number): void;
+					},
+					NodeSyntax
+				>
+			) => string;
+			export let rangeEquals: (
+				input: string,
+				start: number,
+				end: number,
+				lit: string
+			) => boolean;
+			export let rangeEqualsLowerCase: (
+				input: string,
+				start: number,
+				end: number,
+				lit: string
+			) => boolean;
+			export let readToken: (
+				input: string,
+				pos: number,
+				out: MutableToken
+			) => undefined | MutableToken;
+			export let toLowerCaseIfNeeded: (s: string) => string;
+			export let unescapeIdentifier: MakeCacheableResult<string> & {
+				bindCache: BindCache<string>;
+			};
+			export { SourceProcessorSyntaxClass_2 as SourceProcessor, TokenStream };
+		}
 		export { CssModulesPlugin };
 	}
 	export namespace html {
+		export namespace syntax {
+			export let A: {
+				get node(): number;
+				get parent(): null | number;
+				/**
+				 * Stop the walk descending into the current node (enter only).
+				 */
+				skipChildren(): void;
+				type(n?: number): number;
+				start(n?: number): number;
+				end(n?: number): number;
+				/**
+				 * Raw source slice `[start, end)` — valid only during the walk (the printer's
+				 * window), before `parseHtml` releases `_htmlSource`.
+				 */
+				source(n?: number): string;
+				tagName(n?: number): string;
+				namespace(n?: number): number;
+				selfClosing(n?: number): boolean;
+				attributes(n?: number): HtmlAttribute[];
+				attributeCount(n?: number): number;
+				/**
+				 * The i-th attribute of an element, as an id for the `attribute*` reads.
+				 */
+				attributeAt(i: number, n?: number): number;
+				/**
+				 * Linear lookup by (lowercased) name.
+				 */
+				findAttribute(name: string, n?: number): number;
+				attributeName(a: number): string;
+				attributeValue(a: number): string;
+				attributeNameStart(a: number): number;
+				attributeNameEnd(a: number): number;
+				attributeValueStart(a: number): number;
+				attributeValueEnd(a: number): number;
+				tagEnd(n?: number): number;
+				nameEnd(n?: number): number;
+				/**
+				 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
+				 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
+				 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
+				 * real source tag: its offsets are zero-width or borrow the triggering token,
+				 * so the sliced name doesn't match this element. The empty string lets a printer
+				 * treat such an element as transparent.
+				 */
+				openTag(n?: number): string;
+				/**
+				 * An element's end tag, generated as `</name>` from the opening tag's own name
+				 * (exact source casing, correct for foreign camelCase elements). Generated, not
+				 * sliced: element `end` offsets don't span the end tag, and an omitted optional
+				 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. Not meaningful
+				 * for void / implied elements — the printer only calls it for the rest.
+				 */
+				closeTag(n?: number): string;
+				contentEnd(n?: number): number;
+				templateContent(n?: number): number;
+				data(n?: number): string;
+				doctypeName(n?: number): string;
+				doctypePublicId(_n?: number): null | string;
+				doctypeSystemId(_n?: number): null | string;
+				firstChild(n?: number): number;
+				nextSibling(n?: number): number;
+				parentOf(n?: number): number;
+				children(n?: number): number[];
+			};
+			export let NS_HTML: 0;
+			export let NS_MATHML: 1;
+			export let NS_SVG: 2;
+			export namespace NodeType {
+				export let Document: 1;
+				export let DocumentFragment: 2;
+				export let Element: 3;
+				export let Text: 4;
+				export let Comment: 5;
+				export let Doctype: 6;
+			}
+			export let QUOTE_DOUBLE: 1;
+			export let QUOTE_NONE: 0;
+			export let QUOTE_SINGLE: 2;
+			export let SVG_TAG_ADJUST: any;
+			export let decodeEntities: _functionSyntax;
+			export let escapeAttribute: (s: string) => string;
+			export let escapeText: (s: string) => string;
+			export let isAsciiWhitespace: (cc: number) => boolean;
+			export let parseCssUrls: (input: string) => [string, number, number][];
+			export let parseHtml: (
+				input: string,
+				pos?: number,
+				options?: HtmlParseOptions
+			) => number;
+			export let parseMsapplicationTask: (
+				input: string
+			) => [string, number, number][];
+			export let parseSrc: (input: string) => [string, number, number][];
+			export let parseSrcset: (input: string) => [string, number, number][];
+			export let printer: (
+				path: {
+					get node(): number;
+					get parent(): null | number;
+					/**
+					 * Stop the walk descending into the current node (enter only).
+					 */
+					skipChildren(): void;
+					type(n?: number): number;
+					start(n?: number): number;
+					end(n?: number): number;
+					/**
+					 * Raw source slice `[start, end)` — valid only during the walk (the printer's
+					 * window), before `parseHtml` releases `_htmlSource`.
+					 */
+					source(n?: number): string;
+					tagName(n?: number): string;
+					namespace(n?: number): number;
+					selfClosing(n?: number): boolean;
+					attributes(n?: number): HtmlAttribute[];
+					attributeCount(n?: number): number;
+					/**
+					 * The i-th attribute of an element, as an id for the `attribute*` reads.
+					 */
+					attributeAt(i: number, n?: number): number;
+					/**
+					 * Linear lookup by (lowercased) name.
+					 */
+					findAttribute(name: string, n?: number): number;
+					attributeName(a: number): string;
+					attributeValue(a: number): string;
+					attributeNameStart(a: number): number;
+					attributeNameEnd(a: number): number;
+					attributeValueStart(a: number): number;
+					attributeValueEnd(a: number): number;
+					tagEnd(n?: number): number;
+					nameEnd(n?: number): number;
+					/**
+					 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
+					 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
+					 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
+					 * real source tag: its offsets are zero-width or borrow the triggering token,
+					 * so the sliced name doesn't match this element. The empty string lets a printer
+					 * treat such an element as transparent.
+					 */
+					openTag(n?: number): string;
+					/**
+					 * An element's end tag, generated as `</name>` from the opening tag's own name
+					 * (exact source casing, correct for foreign camelCase elements). Generated, not
+					 * sliced: element `end` offsets don't span the end tag, and an omitted optional
+					 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. Not meaningful
+					 * for void / implied elements — the printer only calls it for the rest.
+					 */
+					closeTag(n?: number): string;
+					contentEnd(n?: number): number;
+					templateContent(n?: number): number;
+					data(n?: number): string;
+					doctypeName(n?: number): string;
+					doctypePublicId(_n?: number): null | string;
+					doctypeSystemId(_n?: number): null | string;
+					firstChild(n?: number): number;
+					nextSibling(n?: number): number;
+					parentOf(n?: number): number;
+					children(n?: number): number[];
+				},
+				writer: PrintContext<
+					{
+						get node(): number;
+						get parent(): null | number;
+						/**
+						 * Stop the walk descending into the current node (enter only).
+						 */
+						skipChildren(): void;
+						type(n?: number): number;
+						start(n?: number): number;
+						end(n?: number): number;
+						/**
+						 * Raw source slice `[start, end)` — valid only during the walk (the printer's
+						 * window), before `parseHtml` releases `_htmlSource`.
+						 */
+						source(n?: number): string;
+						tagName(n?: number): string;
+						namespace(n?: number): number;
+						selfClosing(n?: number): boolean;
+						attributes(n?: number): HtmlAttribute[];
+						attributeCount(n?: number): number;
+						/**
+						 * The i-th attribute of an element, as an id for the `attribute*` reads.
+						 */
+						attributeAt(i: number, n?: number): number;
+						/**
+						 * Linear lookup by (lowercased) name.
+						 */
+						findAttribute(name: string, n?: number): number;
+						attributeName(a: number): string;
+						attributeValue(a: number): string;
+						attributeNameStart(a: number): number;
+						attributeNameEnd(a: number): number;
+						attributeValueStart(a: number): number;
+						attributeValueEnd(a: number): number;
+						tagEnd(n?: number): number;
+						nameEnd(n?: number): number;
+						/**
+						 * Raw source of an element's opening tag, `[start, tagEnd)` — attribute quoting
+						 * / spacing / case preserved byte-for-byte (walk-window only) — or `""` for a
+						 * parser-inserted element (auto `html`/`head`/`body`/`tbody`, …), which has no
+						 * real source tag: its offsets are zero-width or borrow the triggering token,
+						 * so the sliced name doesn't match this element. The empty string lets a printer
+						 * treat such an element as transparent.
+						 */
+						openTag(n?: number): string;
+						/**
+						 * An element's end tag, generated as `</name>` from the opening tag's own name
+						 * (exact source casing, correct for foreign camelCase elements). Generated, not
+						 * sliced: element `end` offsets don't span the end tag, and an omitted optional
+						 * end tag (`<li>`, `<p>`, …) still serializes to the same DOM. Not meaningful
+						 * for void / implied elements — the printer only calls it for the rest.
+						 */
+						closeTag(n?: number): string;
+						contentEnd(n?: number): number;
+						templateContent(n?: number): number;
+						data(n?: number): string;
+						doctypeName(n?: number): string;
+						doctypePublicId(_n?: number): null | string;
+						doctypeSystemId(_n?: number): null | string;
+						firstChild(n?: number): number;
+						nextSibling(n?: number): number;
+						parentOf(n?: number): number;
+						children(n?: number): number[];
+					},
+					number
+				>
+			) => string;
+			export let tokenize: (
+				input: string,
+				pos?: number,
+				callbacks?: HtmlTokenCallbacks
+			) => number;
+			export { SourceProcessorSyntaxClass_1 as SourceProcessor };
+		}
 		export { HtmlModulesPlugin };
 	}
 	export namespace library {
