@@ -184,6 +184,8 @@ For directory structure, naming, and how to run a single case, see [TESTING_DOCS
 
 Run targeted tests — `yarn test:base --testPathPatterns="<pattern>"` or `yarn test:base -t "<name>"`. Never invoke `yarn jest`/`npx jest` directly: the required `--experimental-vm-modules` node flag lives only in the `test:base` wrapper, and bare jest crashes ESM/test262 suites. Don't run `yarn test` unless asked. When updating snapshots (`yarn test:base -u`), eyeball the diff first.
 
+**Run only tests specific to your change — leave the broad suites to CI.** Pick the unit/integration cases that cover the touched code (`--testPathPatterns` / `--testNamePattern`) instead of sweeping whole suites. In particular, do **not** run the spec-conformance suites (`yarn test:test262` / `yarn test:html5lib` / `yarn test:css-parsing`) as a routine local verification step — `test262` alone takes tens of minutes — and don't run the full `test:integration` matrix locally. CI runs all of them on every push; locally, cover new tokenizer/parser edges with focused unittest cases instead.
+
 **Run one integration case** by name (`<category> <case-name>`, e.g. `css basic`):
 
 ```sh
