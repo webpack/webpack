@@ -11,7 +11,12 @@ module.exports = [
 	// a `hideStack` nested error has no details; its frames lead the own stack,
 	// which the plugin then overrides
 	[
-		/export 'missing' \(imported as 'missing'\) was not found/,
-		{ stack: /^overridden ModuleDependencyWarning: export 'missing'/ }
+		/export '(?:missing|missingToo)' \(imported as '(?:missing|missingToo)'\) was not found/,
+		{ stack: /^overridden ModuleDependencyWarning: export '/ }
+	],
+	// the same, but assigned before anything read the derived stack
+	[
+		/export '(?:missing|missingToo)' \(imported as '(?:missing|missingToo)'\) was not found/,
+		{ stack: /^overridden unread stack$/ }
 	]
 ];

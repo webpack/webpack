@@ -15,6 +15,7 @@ module.exports = {
 		(compiler) => {
 			compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {
 				compilation.hooks.afterSeal.tapPromise(PLUGIN_NAME, async () => {
+					let assignedUnread = false;
 					for (const item of compilation.warnings) {
 						const warning =
 							/** @type {import("../../../../").WebpackError} */
@@ -22,6 +23,10 @@ module.exports = {
 						const details = warning.details;
 						if (details) {
 							warning.details = `overridden ${details.split("\n")[0].trim()}`;
+						} else if (!assignedUnread) {
+							// assigning before the first read must win over the derived stack
+							assignedUnread = true;
+							warning.stack = "overridden unread stack";
 						} else {
 							const stack = /** @type {string} */ (warning.stack);
 							// reading must be stable — the engine may replace the own
