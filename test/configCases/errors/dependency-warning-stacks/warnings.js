@@ -5,7 +5,8 @@ module.exports = [
 	// the plugin then overrides
 	[
 		/Critical dependency: the request of a dependency is an expression/,
-		{ details: /^overridden at \S+\.getWarnings \(/ }
+		// JSC omits the `Class.` prefix V8 puts in front of a method frame
+		{ details: /^overridden at (?:\S+\.)?getWarnings \(/ }
 	],
 	// a `hideStack` nested error has no details; its frames lead the own stack,
 	// which the plugin then overrides
