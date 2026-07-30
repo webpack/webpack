@@ -2036,4 +2036,71 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		expect(calls).toBeGreaterThan(0);
 		expect(tokens.length).toBeGreaterThan(5);
 	});
+
+	it("keeps the delegated tokenizer cold paths reachable with the fast loop off", () => {
+		class Plugin extends WebpackParser {
+			/**
+			 * @param {import("acorn").TokenType} prevType previous token type
+			 * @returns {void}
+			 */
+			updateContext(prevType) {
+				// @ts-expect-error acorn internal
+				return super.updateContext(prevType);
+			}
+		}
+		// with the fast loop off acorn's own readToken_* family runs, so the
+		// multi-char operators land in the owned finishOp and the comments in
+		// the owned skipSpace's cold delegate
+		const code =
+			"a === b && (c >>>= d) ** 2; /* c */ x ??= y; // trailing\n z >>> 1;";
+		const values = [
+			...Plugin.tokenizer(code, {
+				ecmaVersion: "latest",
+				sourceType: "script"
+			})
+		].map((token) => /** @type {EXPECTED_ANY} */ (token).value);
+		expect(values).toContain("===");
+		expect(values).toContain(">>>=");
+		expect(values).toContain("??=");
+		expect(values).toContain(">>>");
+		expect(values).toContain("**");
+	});
+
+	it("runs the inlined token-context hooks when finishToken is overridden", () => {
+		let calls = 0;
+		class Plugin extends WebpackParser {
+			/**
+			 * @param {import("acorn").TokenType} type token type
+			 * @param {string=} value token value
+			 * @returns {void}
+			 */
+			finishToken(type, value) {
+				calls++;
+				return super.finishToken(type, value);
+			}
+		}
+		// the override only disables the inline token finisher, so every token
+		// now takes the owned finishToken and its inlined updateContext arcs
+		const code = "if (a) (b); while (c) { d } (function () {})();";
+		const ast = Plugin.parse(code, lazyOptions);
+		expect(calls).toBeGreaterThan(10);
+		expect(JSON.stringify(ast)).toBe(
+			JSON.stringify(WebpackParser.parse(code, lazyOptions))
+		);
+	});
+
+	it("reads private names through readWord1's cache and cold reader", () => {
+		// private names are the one word production that still goes through
+		// acorn's readWord1 (the owned readWord serves every other identifier)
+		const ast = WebpackParser.parse(
+			"class A { #ahri = 1; get v() { return this.#ahri; } #\\u0062 = 2; #café = 3; }",
+			lazyOptions
+		);
+		expect(ast.body[0].type).toBe("ClassDeclaration");
+		expect(() =>
+			WebpackParser.parse("class A { #a = this.#missing; }", lazyOptions)
+		).toThrow(
+			/Private field '#missing' must be declared in an enclosing class/
+		);
+	});
 });
