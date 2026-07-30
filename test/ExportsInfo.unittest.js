@@ -134,7 +134,7 @@ describe("ExportsInfo", () => {
 		expect(exportsInfo._hasInlinedExports).toBe(false);
 	});
 
-	it("_resetUsedExports follows the redirect target", () => {
+	it("_resetUsedExports does not wipe a redirect target owned by another module", () => {
 		const exportsInfo = new ExportsInfo();
 		const redirectTarget = new ExportsInfo();
 		exportsInfo.setRedirectNamedTo(redirectTarget);
@@ -143,6 +143,8 @@ describe("ExportsInfo", () => {
 
 		exportsInfo._resetUsedExports();
 
-		expect(redirectTarget.getExportInfo("foo").canMangleUse).toBeUndefined();
+		// the target belongs to target.module; wiping it would lose usage that
+		// module's own reset/re-trace is responsible for
+		expect(redirectTarget.getExportInfo("foo").canMangleUse).toBe(false);
 	});
 });
