@@ -1,0 +1,17 @@
+diff --git a/node_modules/jest-runner/build/testWorker.js b/node_modules/jest-runner/build/testWorker.js
+index 958a515..07abb47 100644
+--- a/node_modules/jest-runner/build/testWorker.js
++++ b/node_modules/jest-runner/build/testWorker.js
+@@ -322,7 +322,11 @@ async function runTestInternal(path, globalConfig, projectConfig, resolver, cont
+     }
+     if (globalConfig.logHeapUsage) {
+       globalThis.gc?.();
+-      result.memoryUsage = process.memoryUsage().heapUsed;
++      // webpack: Bun's native memoryUsage can fail transiently under --smol;
++      // heap logging is diagnostic, so a failed read must not fail the suite.
++      try {
++        result.memoryUsage = process.memoryUsage().heapUsed;
++      } catch (e) {}
+     }
+     await tearDownEnv();
+ 

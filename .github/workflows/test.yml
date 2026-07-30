@@ -334,9 +334,12 @@ jobs:
       # Bun runs with worker_threads (see test:base:bun): in-band's single heap
       # OOMs the runner on the full suite and Bun's child_process workers hang, but
       # threads work once jest-worker loads the Bun preload per thread. Apply that
-      # patch here (Bun only) rather than via a repo-wide postinstall.
+      # patch here (Bun only) rather than via a repo-wide postinstall. The
+      # jest-runner patch tolerates Bun's transient memoryUsage failures.
       - if: matrix.runtime == 'bun'
-        run: git apply test/patches/jest-worker+30.4.1.patch
+        run: |
+          git apply test/patches/jest-worker+30.4.1.patch
+          git apply test/patches/jest-runner+30.4.2.patch
 
       # Deno and Bun both run with jest's parallel workers. The HotTestCases
       # suites are dropped for Deno only (see test:deno): under Deno's event-loop
