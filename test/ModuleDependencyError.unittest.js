@@ -77,5 +77,75 @@ describe("ModuleDependencyError", () => {
 				).error
 			).toBe(env.error);
 		});
+
+		it("allows overwriting the derived details", () => {
+			const error =
+				/** @type {NonNullable<typeof env.moduleDependencyError>} */ (
+					env.moduleDependencyError
+				);
+			error.details = "custom";
+			expect(error.details).toBe("custom");
+		});
+	});
+
+	describe("when the nested error hides its stack", () => {
+		/**
+		 * @returns {InstanceType<typeof ModuleDependencyError>} error
+		 */
+		function create() {
+			const nested = /** @type {Error & { hideStack?: boolean }} */ (
+				new Error("Nested Message")
+			);
+			nested.hideStack = true;
+			return new ModuleDependencyError(
+				/** @type {import("../lib/Module")} */ (
+					/** @type {unknown} */ ("myModule")
+				),
+				nested,
+				/** @type {import("../lib/Dependency").DependencyLocation} */ (
+					/** @type {unknown} */ ("Location")
+				)
+			);
+		}
+
+		it("has no details", () => {
+			expect(create().details).toBeUndefined();
+		});
+
+		it("prepends the frames of the nested error to its own stack", () => {
+			const error = create();
+			const stack = /** @type {string} */ (error.stack);
+			expect(stack).toMatch(
+				path.join("test", "ModuleDependencyError.unittest.js:")
+			);
+			expect(stack).toContain("\n\nModuleDependencyError: Nested Message");
+			// the derived stack is stable across reads
+			expect(error.stack).toBe(stack);
+		});
+
+		it("allows overwriting the derived stack", () => {
+			const error = create();
+			error.stack = "custom";
+			expect(error.stack).toBe("custom");
+		});
+	});
+
+	describe("when the nested error has no stack", () => {
+		it("keeps details and stack usable", () => {
+			const nested = /** @type {Error & { hideStack?: boolean }} */ (
+				/** @type {unknown} */ ({ message: "No Stack", hideStack: true })
+			);
+			const error = new ModuleDependencyError(
+				/** @type {import("../lib/Module")} */ (
+					/** @type {unknown} */ ("myModule")
+				),
+				nested,
+				/** @type {import("../lib/Dependency").DependencyLocation} */ (
+					/** @type {unknown} */ ("Location")
+				)
+			);
+			expect(error.details).toBeUndefined();
+			expect(error.stack).toMatch(/^ModuleDependencyError: No Stack/);
+		});
 	});
 });
