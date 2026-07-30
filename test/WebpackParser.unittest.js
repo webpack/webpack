@@ -1940,7 +1940,9 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			"try { f() } catch { g() }",
 			lazyOptions
 		);
-		expect(catchAst.body[0].handler.param).toBeNull();
+		expect(
+			/** @type {EXPECTED_ANY} */ (catchAst.body[0]).handler.param
+		).toBeNull();
 		// for-await outside async context is rejected
 		expect(() =>
 			WebpackParser.parse("for await (const x of y) f(x);", lazyOptions)
@@ -1976,9 +1978,11 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			 */
 			constructor(options, input, startPos) {
 				super(options, input, startPos);
-				/** @type {{ test: (name: string) => boolean }} */ (
+				/** @type {{ reservedWordsStrictBind: { test: (name: string) => boolean } }} */ (
 					/** @type {unknown} */ (this)
-				).reservedWordsStrictBind = { test: (name) => name === "customBad" };
+				).reservedWordsStrictBind = {
+					test: (/** @type {string} */ name) => name === "customBad"
+				};
 			}
 		}
 		expect(() =>
