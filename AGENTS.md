@@ -342,9 +342,9 @@ After every `git push` of a new branch, check whether a PR was auto-created (web
 
 **Never post to GitHub on your own initiative.** Pushing commits to your own branch is fine; publishing text other people read is not. This covers PR comments, review replies, issue comments, edits to the PR body after it is opened, and every reply to a bot — CodSpeed, Codecov, Copilot, Bugbot, EasyCLA.
 
-When a bot or a reviewer raises something and you have an answer, bring it **into the session** instead: report what you found, show the reply you would send, and let the requester decide whether it is posted. Most bot noise needs no reply at all — a benchmark that swings on a re-run, a coverage report still waiting on uploads — and an explanation nobody asked for costs maintainers more attention than the finding did.
+The rule bans **posting**, not **reading**. What may be skipped is bot noise — a status check, a benchmark that swings on a re-run, a coverage report still waiting on uploads, a changeset/preview echo. Replying to those costs maintainers more attention than the finding did.
 
-Fixing the underlying problem in code and pushing it needs no permission. Only the public writing does.
+Everything that names a possible bug, regression, or improvement must be investigated, whoever raised it — a human reviewer, or an AI reviewer such as Copilot, Bugbot, or CodeRabbit. Being posted by a bot account is no reason to dismiss it; judge the claim, not the author. Reproduce it, then either fix it in code and push (that needs no permission) or, if you believe it is wrong, bring it **into the session**: report what you found, show the reply you would send, and let the requester decide whether it is posted. Never leave such a finding unanswered.
 
 ### After opening the PR — wait for Copilot review
 
