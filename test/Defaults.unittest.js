@@ -1491,6 +1491,7 @@ describe("snapshots", () => {
 		-     "resourceHints": undefined,
 		-     "scriptType": false,
 		+     "resourceHints": Object {
+		+       "dedupe": false,
 		+       "initial": true,
 		+       "modulePreloadPolyfill": false,
 		+     },
@@ -2056,6 +2057,7 @@ describe("snapshots", () => {
 		-     "resourceHints": undefined,
 		-     "scriptType": false,
 		+     "resourceHints": Object {
+		+       "dedupe": false,
 		+       "initial": true,
 		+       "modulePreloadPolyfill": false,
 		+     },
@@ -2247,6 +2249,7 @@ describe("snapshots", () => {
 		-     "resourceHints": undefined,
 		-     "scriptType": false,
 		+     "resourceHints": Object {
+		+       "dedupe": false,
 		+       "initial": true,
 		+       "modulePreloadPolyfill": false,
 		+     },
@@ -2441,6 +2444,7 @@ describe("snapshots", () => {
 		-     "resourceHints": undefined,
 		-     "scriptType": false,
 		+     "resourceHints": Object {
+		+       "dedupe": false,
 		+       "initial": true,
 		+       "modulePreloadPolyfill": false,
 		+     },
@@ -2636,6 +2640,7 @@ describe("snapshots", () => {
 		-     "resourceHints": undefined,
 		-     "scriptType": false,
 		+     "resourceHints": Object {
+		+       "dedupe": false,
 		+       "initial": true,
 		+       "modulePreloadPolyfill": false,
 		+     },
@@ -3109,6 +3114,7 @@ describe("snapshots", () => {
 			-     "resourceHints": undefined,
 			-     "scriptType": false,
 			+     "resourceHints": Object {
+			+       "dedupe": false,
 			+       "initial": true,
 			+       "modulePreloadPolyfill": false,
 			+     },
@@ -3295,6 +3301,7 @@ describe("snapshots", () => {
 			-     "resourceHints": undefined,
 			-     "scriptType": false,
 			+     "resourceHints": Object {
+			+       "dedupe": false,
 			+       "initial": true,
 			+       "modulePreloadPolyfill": false,
 			+     },
@@ -4997,6 +5004,7 @@ describe("snapshots", () => {
 			-     "resourceHints": undefined,
 			-     "scriptType": false,
 			+     "resourceHints": Object {
+			+       "dedupe": false,
 			+       "initial": true,
 			+       "modulePreloadPolyfill": false,
 			+     },
