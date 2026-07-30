@@ -28636,6 +28636,8 @@ declare namespace exports {
 		) => null | Problem[];
 	}
 	export namespace ModuleFilenameHelpers {
+		export let DEFAULT_MODULE_FILENAME_TEMPLATE: string;
+		export let DEFAULT_FALLBACK_MODULE_FILENAME_TEMPLATE: string;
 		export let ALL_LOADERS_RESOURCE: string;
 		export let REGEXP_ALL_LOADERS_RESOURCE: RegExp;
 		export let LOADERS_RESOURCE: string;
