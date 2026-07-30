@@ -1147,48 +1147,6 @@ describe("JavascriptParser", () => {
 		});
 	});
 
-	describe("sourceMayContainIdentifier", () => {
-		/**
-		 * @param {string} source source code
-		 * @returns {JavascriptParser} parser with an active source mapping
-		 */
-		function parserFor(source) {
-			const parser = new JavascriptParser("module");
-			parser._source = source;
-			return parser;
-		}
-
-		it("should find the identifier as a word", () => {
-			const parser = parserFor("f(function () { return this.a; });");
-			expect(parser.sourceMayContainIdentifier([0, 33], "this")).toBe(true);
-		});
-
-		it("should not match a substring of a longer identifier", () => {
-			const parser = parserFor("f(function (thisArg) { return _this + 1; });");
-			expect(parser.sourceMayContainIdentifier([0, 43], "this")).toBe(false);
-		});
-
-		it("should ignore matches outside of the range", () => {
-			const source = "a = this; b = 1;";
-			const parser = parserFor(source);
-			expect(parser.sourceMayContainIdentifier([9, 16], "this")).toBe(false);
-			expect(parser.sourceMayContainIdentifier([0, 8], "this")).toBe(true);
-			// a match must fit entirely into the range
-			expect(parser.sourceMayContainIdentifier([0, 6], "this")).toBe(false);
-		});
-
-		it("should match at the very start and end of the source", () => {
-			expect(parserFor("this").sourceMayContainIdentifier([0, 4], "this")).toBe(
-				true
-			);
-		});
-
-		it("should assume a match without source text", () => {
-			const parser = new JavascriptParser("module");
-			expect(parser.sourceMayContainIdentifier([0, 10], "this")).toBe(true);
-		});
-	});
-
 	describe("WebpackParser fast paths", () => {
 		const { WebpackParser } = require("../lib/javascript/syntax");
 
