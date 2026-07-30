@@ -5,6 +5,7 @@ import { passwordUsed } from "./Password";
 import { textAreaUsed } from "./TextArea";
 import { otpUsed } from "./OTP";
 import { groupUsed } from "./Group";
+import { getBumpCount } from "./sideEffectBump";
 import { Menu } from "./menu";
 import { menuItemUsed } from "./MenuItem";
 import { subMenuUsed } from "./SubMenu";
@@ -32,6 +33,9 @@ it("should tree-shake unused Input sub-components (export default)", () => {
 		expect(textAreaUsed).toBe(false);
 		expect(otpUsed).toBe(false);
 		expect(groupUsed).toBe(false);
+		// Impure Input.setup = bump() must run (export still live)
+		expect(getBumpCount()).toBe(1);
+		expect(Input.setup).toBe("setup");
 	}
 });
 

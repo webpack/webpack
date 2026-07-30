@@ -14403,7 +14403,7 @@ declare interface KnownBuildInfo {
 	usesTopLevelAwaitForOf?: boolean;
 
 	/**
-	 * maps export local name to static property names of object literal exports
+	 * maps export local name to static property names assigned on the exported object (compound component)
 	 */
 	objectExportProperties?: Map<string, string[]>;
 }
