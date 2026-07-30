@@ -6,7 +6,7 @@ const path = require("path");
  * @param {string} name config name
  * @param {object} options options
  * @param {string=} options.devtoolModuleFilenameTemplate custom template under test
- * @param {boolean=} options.withLoader whether to run the css through a loader reporting its own map
+ * @param {string=} options.loader a loader reporting its own map, relative to this directory
  * @returns {import("../../../../").Configuration} webpack configuration
  */
 const makeConfig = (name, options = {}) => ({
@@ -21,8 +21,8 @@ const makeConfig = (name, options = {}) => ({
 				test: /\.css$/,
 				type: "css/auto",
 				parser: { exportType: "text" },
-				use: options.withLoader
-					? [path.resolve(__dirname, "loader.js")]
+				use: options.loader
+					? [path.resolve(__dirname, options.loader)]
 					: undefined
 			}
 		]
@@ -37,5 +37,6 @@ module.exports = [
 	makeConfig("custom-template", {
 		devtoolModuleFilenameTemplate: "webpack://custom/[resource-path]"
 	}),
-	makeConfig("loader-reported-sources", { withLoader: true })
+	makeConfig("loader-reported-sources", { loader: "loader.js" }),
+	makeConfig("loader-reported-urls", { loader: "remote-loader.js" })
 ];

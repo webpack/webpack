@@ -27,6 +27,13 @@ const readInlineMaps = () => {
 	return maps;
 };
 
+// `Array.prototype.flat`/`flatMap` are not available on the oldest supported node
+const readInlineMapSources = () => {
+	const sources = [];
+	for (const map of readInlineMaps()) sources.push(...map.sources);
+	return sources;
+};
+
 it("should keep module identifier decorations out of inline css map sources", () => {
 	const maps = readInlineMaps();
 	expect(maps.length).toBeGreaterThan(0);
@@ -40,8 +47,15 @@ it("should keep module identifier decorations out of inline css map sources", ()
 
 if (__STATS_I__ === 2) {
 	it("should template sources a loader reported for non-modules", () => {
-		const sources = readInlineMaps().flatMap((map) => map.sources);
-		expect(sources).toContain("webpack:///./virtual-partial.css");
+		expect(readInlineMapSources()).toContain(
+			"webpack:///./virtual-partial.css"
+		);
+	});
+} else if (__STATS_I__ === 3) {
+	it("should keep absolute urls a loader reported as they are", () => {
+		expect(readInlineMapSources()).toContain(
+			"https://example.com/remote.css"
+		);
 	});
 } else if (__STATS_I__ === 0) {
 	it("should name inline css map sources like emitted asset maps do", () => {
