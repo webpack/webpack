@@ -24,6 +24,11 @@ module.exports = {
 							warning.details = `overridden ${details.split("\n")[0].trim()}`;
 						} else {
 							const stack = /** @type {string} */ (warning.stack);
+							// reading must be stable — the engine may replace the own
+							// `stack` property while the derived one is materialized
+							if (warning.stack !== stack) {
+								throw new Error("derived stack changed between reads");
+							}
 							warning.stack = `overridden ${stack.split("\n\n")[1]}`;
 						}
 					}
