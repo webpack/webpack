@@ -2,7 +2,7 @@
 
 const ExportsInfo = require("../lib/ExportsInfo");
 
-const { ExportInfo } = ExportsInfo;
+const { ExportInfo, UsageState } = ExportsInfo;
 
 describe("ExportInfo", () => {
 	describe("_resetProvideInfo", () => {
@@ -48,6 +48,32 @@ describe("ExportInfo", () => {
 			expect(info.terminalBinding).toBe(false);
 			expect(info.canMangleProvide).toBeUndefined();
 		});
+
+		it("clears the target map, the max-target memo and canInlineProvide", () => {
+			const info = new ExportInfo("foo");
+			info.setTarget({}, /** @type {EXPECTED_ANY} */ ({}), ["a"], 1);
+			// prime the memo so a stale entry would be observable
+			info._getMaxTarget();
+			info.canInlineProvide = true;
+
+			info._resetProvideInfo();
+
+			expect(info._target).toBeUndefined();
+			expect(info._maxTarget).toBeUndefined();
+			expect(info.canInlineProvide).toBeUndefined();
+		});
+
+		it("resets two levels of owned nested exports info in place", () => {
+			const info = new ExportInfo("foo");
+			const nested = info.createNestedExportsInfo();
+			const deep = nested.getExportInfo("bar").createNestedExportsInfo();
+			deep.getExportInfo("baz").provided = true;
+
+			info._resetProvideInfo();
+
+			expect(nested.getExportInfo("bar").getNestedExportsInfo()).toBe(deep);
+			expect(deep.getExportInfo("baz").provided).toBeUndefined();
+		});
 	});
 
 	describe("_resetUseInfo", () => {
@@ -80,6 +106,32 @@ describe("ExportInfo", () => {
 			info._resetUseInfo();
 
 			expect(nested.getExportInfo("bar").canMangleUse).toBeUndefined();
+		});
+
+		it("resets global and per-runtime usage state and the used name", () => {
+			const info = new ExportInfo("foo");
+			info.setHasUseInfo();
+			info.setUsed(UsageState.Used, undefined);
+			info.setUsed(UsageState.Used, "main");
+			info.setUsedName("a");
+
+			info._resetUseInfo();
+
+			expect(info._globalUsed).toBeUndefined();
+			expect(info._usedInRuntime).toBeUndefined();
+			expect(info._hasUseInRuntimeInfo).toBe(false);
+			expect(info._usedName).toBeNull();
+		});
+
+		it("recurses through two levels of owned nested exports info", () => {
+			const info = new ExportInfo("foo");
+			const nested = info.createNestedExportsInfo();
+			const deep = nested.getExportInfo("bar").createNestedExportsInfo();
+			deep.getExportInfo("baz").canMangleUse = false;
+
+			info._resetUseInfo();
+
+			expect(deep.getExportInfo("baz").canMangleUse).toBeUndefined();
 		});
 	});
 
