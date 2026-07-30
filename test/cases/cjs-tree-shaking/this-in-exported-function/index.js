@@ -58,6 +58,12 @@ it("should still tree-shake when this is used in an exported class", () => {
 	expect(m.usedExports).toEqual(["Impl", "usedExports"]);
 });
 
+it("should still tree-shake when this only occurs as a word part or in a string", () => {
+	const m = require("./module-this-word");
+	expect(m.a("x")).toBe("string16");
+	expect(m.usedExports).toEqual(["a", "usedExports"]);
+});
+
 it("should still tree-shake when the exported values contain no this", () => {
 	const m = require("./module-no-this");
 	expect(m.a()).toBe("function");
