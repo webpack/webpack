@@ -6,6 +6,7 @@ module.exports = function loader(source) {
 	// partial does.
 	this.callback(null, source, {
 		version: 3,
+		file: "",
 		sources: ["./virtual-partial.css"],
 		sourcesContent: [".virtual-rule {\n\tcolor: red;\n}\n"],
 		names: [],
