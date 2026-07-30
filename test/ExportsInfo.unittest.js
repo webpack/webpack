@@ -82,6 +82,22 @@ describe("ExportInfo", () => {
 			expect(nested.getExportInfo("bar").canMangleUse).toBeUndefined();
 		});
 	});
+
+	describe("setHasProvideInfo", () => {
+		it("recurses into an owned nested exportsInfo so a provide reset can be re-merged", () => {
+			const info = new ExportInfo("foo");
+			const nested = info.createNestedExportsInfo();
+			nested.getExportInfo("bar").provided = true;
+
+			info._resetProvideInfo();
+			info.setHasProvideInfo();
+
+			// FlagDependencyExports only upgrades provided from false/null, never
+			// from undefined, so the re-init must reach nested exports too
+			expect(nested.getExportInfo("bar").provided).toBe(false);
+			expect(nested.getExportInfo("bar").canMangleProvide).toBe(true);
+		});
+	});
 });
 
 describe("ExportsInfo", () => {
