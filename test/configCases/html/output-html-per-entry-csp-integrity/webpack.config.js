@@ -1,8 +1,7 @@
 "use strict";
 
-// `inline` decides the shape of a chunk's tag while the page's HTML is
-// generated — once per HTML module, which can back several entries — so it can
-// only be set on `output.html`; webpack warns instead of dropping it silently.
+// `csp` and `integrity` are resolved when a page is emitted, so an entry's
+// `html` object overrides `output.html` for its own page only.
 
 const fs = require("fs");
 const path = require("path");
@@ -32,10 +31,26 @@ const copyTest = {
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
+	target: "web",
 	entry: {
-		a: { import: "./src/a.js", html: { inline: true } }
+		inherit: "./src/main.js",
+		"csp-off": { import: "./src/main.js", html: { csp: false } },
+		"integrity-off": { import: "./src/main.js", html: { integrity: false } },
+		"csp-policy": {
+			import: "./src/main.js",
+			html: { csp: { policy: { "img-src": ["'self'"] } } }
+		},
+		// an authored page needs no wrapper, but its entry's options still apply
+		authored: {
+			import: "./src/page.html",
+			html: { csp: false, integrity: false }
+		}
 	},
-	output: { filename: "[name].js", html: true },
+	output: {
+		filename: "[name].js",
+		crossOriginLoading: "anonymous",
+		html: { csp: true, integrity: true }
+	},
 	experiments: { html: true },
 	plugins: [copyTest]
 };
