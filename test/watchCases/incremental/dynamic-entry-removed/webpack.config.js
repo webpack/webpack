@@ -13,8 +13,12 @@ module.exports = (env, { srcPath }) => ({
 	output: {
 		filename: "[name].js"
 	},
-	entry: () =>
-		fs.existsSync(path.join(srcPath, "extra-flag.js"))
-			? { main: "./index.js", extra: "./extra.js" }
-			: { main: "./index.js" }
+	entry: () => {
+		/** @type {Record<string, string>} */
+		const entries = { main: "./index.js" };
+		if (fs.existsSync(path.join(srcPath, "extra-flag.js"))) {
+			entries.extra = "./extra.js";
+		}
+		return entries;
+	}
 });
