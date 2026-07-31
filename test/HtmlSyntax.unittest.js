@@ -4675,3 +4675,76 @@ describe("tokenize — fused state transitions", () => {
 		]);
 	});
 });
+
+describe("htmlMinify — assets webpack only passes through", () => {
+	const htmlMinify = require("../lib/html/htmlMinify");
+
+	/**
+	 * @param {string} src html source
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src) => htmlMinify({ "page.html": src }).code;
+
+	it("keeps server-side template tags", () => {
+		// `<?php … ?>` is a bogus comment per §13.2.5.42, so the inert-comment rule
+		// would delete the whole directive from a copied template.
+		expect(min("<?php echo $t; ?>\n<html><body><p>a</p></body></html>")).toBe(
+			"<?php echo $t; ?><html><body><p>a</p></body></html>"
+		);
+		expect(min("<html><body><!-- inert --><p>a</p></body></html>")).toBe(
+			"<html><body><p>a</p></body></html>"
+		);
+	});
+
+	it("keeps text-level template placeholders unescaped", () => {
+		// Escaping these to `&lt;%= t %&gt;` breaks the server-side render.
+		expect(min("<div>   <%= t %>   </div>")).toBe("<div>   <%= t %>   </div>");
+		expect(min("<div>{{ t }}</div>")).toBe("<div>{{ t }}</div>");
+	});
+
+	it("still escapes text that would re-parse as markup", () => {
+		// `a &lt;b&gt;c` decodes to `a <b>c`; emitting that raw would build a real
+		// `<b>` element, so the escaped form has to survive.
+		expect(min("<p>a &lt;b&gt;c</p>")).toBe("<p>a &lt;b&gt;c</p>");
+		expect(min("<p>a&amp;b</p>")).toBe("<p>a&amp;b</p>");
+		// Foster-parented text merges into one node whose range no longer covers
+		// its data — the source slice would drop the `c`.
+		expect(min("<table>a<tr><td>b</td></tr>c</table>")).toBe(
+			"ac<table><tr><td>b</td></tr></table>"
+		);
+		// A trailing `<` has to stay escaped: dropping a comment after it would
+		// let it fuse with the next sibling into a tag.
+		expect(min("<p>a<</p>")).toBe("<p>a&lt;</p>");
+		expect(min("<p>a<<!--c--></p>")).toBe("<p>a&lt;</p>");
+	});
+
+	it("keeps template expressions containing ampersands", () => {
+		// `&&` is everywhere in EJS/PHP conditionals; escaping it to `&amp;&amp;`
+		// breaks the server-side render just as escaping `<` does.
+		expect(min("<div><%= a && b %></div>")).toBe("<div><%= a && b %></div>");
+		expect(min("<div><% if (a && b) { %>x<% } %></div>")).toBe(
+			"<div><% if (a && b) { %>x<% } %></div>"
+		);
+		expect(min("<p>a & b</p>")).toBe("<p>a & b</p>");
+		expect(min("<p>a &foo; b</p>")).toBe("<p>a &foo; b</p>");
+	});
+
+	it("escapes a character reference left open at the end", () => {
+		// The next sibling could complete it (`a &am` + `p;`) once a comment
+		// between them is dropped, so only a closed tail passes through.
+		expect(min("<p>a &</p>")).toBe("<p>a &amp;</p>");
+		expect(min("<p>a &am</p>")).toBe("<p>a &amp;am</p>");
+		expect(min("<p>a &am<!--c-->p;</p>")).toBe("<p>a &amp;amp;</p>");
+	});
+
+	it("keeps the body of literal-text elements raw", () => {
+		// `script` / `style` bodies are not markup, so `<` must not be escaped —
+		// `a &lt; b` would change what the script does.
+		expect(min("<script>if (a < b) { x(); }</script>")).toBe(
+			"<script>if (a < b) { x(); }</script>"
+		);
+		expect(min("<style>.a { color: red }</style>")).toBe(
+			"<style>.a { color: red }</style>"
+		);
+	});
+});

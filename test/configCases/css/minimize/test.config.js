@@ -57,6 +57,9 @@ module.exports = {
 		// An id selector that looks like a hex color is NOT shortened (ids are
 		// case-sensitive and not colors).
 		expect(css).toContain("#ABCDEF{x:1}");
+		// Input the grammar rejects (`*zoom: 1`) is carried through verbatim
+		// instead of being dropped, so minifying loses nothing the source had.
+		expect(css).toContain(".hacks{*zoom : 1;_height:1px;color:red}");
 		// Whitespace around a top-level combinator (`.c > .d`) is trimmed, but the
 		// descendant combinator (the space in `:not(.f) .g`) is meaningful and kept.
 		expect(css).toContain(".c>.d,.e{");
