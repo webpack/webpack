@@ -1,5 +1,9 @@
 "use strict";
 
+// `csp`, `inline` and `integrity` are resolved once for the whole compilation,
+// so an entry's `html` object can't override them — webpack warns instead of
+// silently dropping them.
+
 const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
@@ -29,26 +33,15 @@ const copyTest = {
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
-		a: { import: "./src/a.js", html: { favicon: false } },
-		b: { import: "./src/b.js", html: { inject: "head" } },
-		c: { import: "./src/c.js", html: { favicon: "./src/icon.svg" } },
-		d: "./src/d.js",
-		e: { import: "./src/e.js", html: true },
-		f: {
-			import: "./src/f.js",
-			html: { title: "Page f", scriptLoading: "blocking" }
+		a: {
+			import: "./src/a.js",
+			html: { csp: true, inline: true, integrity: true }
 		}
 	},
 	output: {
 		filename: "[name].js",
-		html: {
-			favicon: true,
-			manifest: { name: "Global app" },
-			title: "Global title",
-			// eslint-disable-next-line unicorn/text-encoding-identifier-case
-			meta: { charset: "utf-8", description: "global description" },
-			inject: "body"
-		}
+		crossOriginLoading: "anonymous",
+		html: true
 	},
 	experiments: { html: true },
 	plugins: [copyTest]

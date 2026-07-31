@@ -7049,7 +7049,7 @@ declare interface EntryDescription {
 	filename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
-	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
+	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. An object overrides `output.html` option by option for this entry; `csp`, `inline` and `integrity` apply to every emitted page and can only be set on `output.html`.
 	 */
 	html?: boolean | OutputHtmlOptions;
 
@@ -7119,7 +7119,7 @@ declare interface EntryDescriptionNormalized {
 	filename?: string | TemplatePathFn<PathDataChunk>;
 
 	/**
-	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
+	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. An object overrides `output.html` option by option for this entry; `csp`, `inline` and `integrity` apply to every emitted page and can only be set on `output.html`.
 	 */
 	html?: boolean | OutputHtmlOptions;
 
