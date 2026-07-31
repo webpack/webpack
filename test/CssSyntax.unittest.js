@@ -881,6 +881,15 @@ describe("CssSyntax — minify keeps input the grammar rejects", () => {
 	const min = (src) =>
 		new SourceProcessor().process(src, { minimize: true }).code;
 
+	it("keeps the sourceMappingURL pragma", () => {
+		// A `/*#` pragma is a link, not a comment — dropping it breaks the map of
+		// an already-built stylesheet webpack only passes through.
+		expect(min("/*# sourceMappingURL=a.css.map */\n.v{color:red}")).toBe(
+			"/*# sourceMappingURL=a.css.map */.v{color:red}"
+		);
+		expect(min("/* inert */.v{color:red}")).toBe(".v{color:red}");
+	});
+
 	it("keeps a declaration neither production accepts", () => {
 		// The IE star hack is not a declaration and not a qualified rule, so §5.4
 		// discards it; minifying must still emit what the source had.
