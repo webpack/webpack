@@ -22,5 +22,19 @@ module.exports = [
 				/"await" is not allowed as a binding name\. The output is an ES module, where "await" is a reserved word\./
 		}
 	],
+	[{ message: /"await" is not allowed as a binding name/ }],
+	[
+		{
+			message:
+				/"static" is a reserved word in strict mode and is not allowed as a parameter name/
+		}
+	],
+	[
+		{
+			message:
+				/"package" is a reserved word in strict mode and is not allowed as a parameter name/
+		}
+	],
+	[{ message: /"await" is not allowed as a parameter name/ }],
 	[{ message: /"await" is not allowed as a binding name/ }]
 ];

@@ -28,6 +28,18 @@ function awaitLocal() {
 }
 class await {}
 
+// Parameters are bindings too, including on arrow functions.
+function reservedParam(static) {
+	return static;
+}
+var arrowParam = (package) => package;
+function awaitParam(await) {
+	return await;
+}
+
+// A named class expression binds its name, same as a declaration.
+var namedClass = class await {};
+
 // Unaffected: reserved words are valid as property and method names.
 var properties = { static: 1, public: 2, await: 3 };
 var readsProperty = properties.static + properties.public;
@@ -44,6 +56,10 @@ module.exports = {
 	arguments,
 	awaitLocal,
 	await,
+	reservedParam,
+	arrowParam,
+	awaitParam,
+	namedClass,
 	readsProperty,
 	normalBinding
 };
