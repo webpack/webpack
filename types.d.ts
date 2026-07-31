@@ -27238,11 +27238,11 @@ type Token = NodeSyntax & {
 /**
  * Position-based view over the lexer — webpack's stand-in for the spec's
  * "normalize into a token stream" (CSS Syntax §9). It unifies the lexer and the
- * stream in one class: `next` lexes one token (an inlined `readToken` — see
- * that function for the shared contract), and the spec token-stream operations
- * `next` / `consume` / `discard` / `mark` / `restoreMark` / `discardMark` drive
- * it from a byte cursor. `parse*` entry points wrap a source string in one of
- * these and every `consume*` algorithm reads tokens from it.
+ * stream in one class: the `readToken` primitive lexes one token (the CSS
+ * tokenizer), and the spec token-stream operations `next` / `consume` /
+ * `discard` / `mark` / `restoreMark` / `discardMark` drive it from a byte
+ * cursor. `parse*` entry points wrap a source string in one of these and every
+ * `consume*` algorithm reads tokens from it.
  * No token buffer is kept: the cursor is a byte offset and the only state is
  * the next token (lazily tokenized once and cached until consumed). The
  * declaration-vs-qualified-rule backtracking in `consumeABlocksContents`
@@ -27252,7 +27252,7 @@ type Token = NodeSyntax & {
  * re-tokenized span never re-fires them.
  * `SourceProcessor` is handed this class (not an instance) and threads it to
  * the grammar, so a different language can drive the same visitor machinery by
- * swapping the tokenizer for its own.
+ * swapping the tokenizer — the per-token `readToken` primitive — for its own.
  */
 declare class TokenStream {
 	constructor(
