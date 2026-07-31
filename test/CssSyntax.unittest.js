@@ -1381,3 +1381,17 @@ describe("CssSyntax — normalizeUrl", () => {
 		expect(normalizeUrl("./%2E/img.png", false)).toBe("././img.png");
 	});
 });
+
+describe("CssSyntax — SourceProcessor without visitors", () => {
+	it("streams a stylesheet through the recycle-only sink", () => {
+		// Zero registered buckets: the grammar consumes with `_recycleTopLevel`
+		// (no walk); nested rules exercise the per-top-level buffer recycling.
+		expect(() =>
+			new SourceProcessor()
+				.use({})
+				.process(
+					".a { color: red; } @media (min-width: 1px) { .b { margin: 0 } }"
+				)
+		).not.toThrow();
+	});
+});

@@ -1836,3 +1836,271 @@ describe("WebpackParser", () => {
 		});
 	});
 });
+
+describe("WebpackParser acorn-override fast-path gates", () => {
+	const { WebpackParser } = require("../lib/javascript/syntax");
+
+	/** @type {import("acorn").Options} */
+	const lazyOptions = /** @type {import("acorn").Options} */ (
+		/** @type {unknown} */ ({
+			ecmaVersion: "latest",
+			sourceType: "script",
+			lazyNodes: true
+		})
+	);
+
+	it("keeps the function fast path off for plugins overriding its inlined methods", () => {
+		let calls = 0;
+		class Plugin extends WebpackParser {
+			/**
+			 * @param {import("acorn").Node} node function node
+			 * @returns {void}
+			 */
+			initFunction(node) {
+				calls++;
+				// @ts-expect-error acorn internal
+				return super.initFunction(node);
+			}
+
+			/**
+			 * @param {import("acorn").Node[]} params parameter nodes
+			 * @returns {boolean} whether all params are plain identifiers
+			 */
+			isSimpleParamList(params) {
+				calls++;
+				// @ts-expect-error acorn internal
+				return super.isSimpleParamList(params);
+			}
+		}
+		const code = "function f(a) { return a; } const g = (x) => x + 1;";
+		const ast = Plugin.parse(code, lazyOptions);
+		expect(calls).toBeGreaterThan(0);
+		expect(ast.body.map((s) => s.type)).toEqual([
+			"FunctionDeclaration",
+			"VariableDeclaration"
+		]);
+		expect(JSON.stringify(ast)).toBe(
+			JSON.stringify(WebpackParser.parse(code, lazyOptions))
+		);
+	});
+
+	it("keeps dynamically dispatched overrides working on the function fast path", () => {
+		let calls = 0;
+		class Plugin extends WebpackParser {
+			/**
+			 * @param {import("acorn").Node} node function node
+			 * @param {boolean} allowDuplicates whether duplicate params are allowed
+			 * @returns {void}
+			 */
+			checkParams(node, allowDuplicates) {
+				calls++;
+				// @ts-expect-error acorn internal
+				return super.checkParams(node, allowDuplicates);
+			}
+		}
+		Plugin.parse("function f(a, b) { return a + b; }", lazyOptions);
+		expect(calls).toBeGreaterThan(0);
+	});
+
+	it("keeps the statement-head fast path off for plugins overriding those parsers", () => {
+		let calls = 0;
+		class Plugin extends WebpackParser {
+			/**
+			 * @param {import("acorn").Node} node started statement node
+			 * @returns {import("acorn").Node} for statement
+			 */
+			parseForStatement(node) {
+				calls++;
+				// @ts-expect-error acorn internal
+				return super.parseForStatement(node);
+			}
+		}
+		const code = "for (let i = 0; i < 2; i++) f(i); while (a) b();";
+		const ast = Plugin.parse(code, lazyOptions);
+		expect(calls).toBe(1);
+		expect(ast.body.map((s) => s.type)).toEqual([
+			"ForStatement",
+			"WhileStatement"
+		]);
+		expect(JSON.stringify(ast)).toBe(
+			JSON.stringify(WebpackParser.parse(code, lazyOptions))
+		);
+	});
+
+	it("parses the statement-head edge arcs identically to acorn", () => {
+		// multiple-default switch is a SyntaxError
+		expect(() =>
+			WebpackParser.parse(
+				"switch (x) { default: a(); default: b(); }",
+				lazyOptions
+			)
+		).toThrow(/Multiple default clauses/);
+		// param-less catch (ES2019) parses
+		const catchAst = WebpackParser.parse(
+			"try { f() } catch { g() }",
+			lazyOptions
+		);
+		expect(
+			/** @type {EXPECTED_ANY} */ (catchAst.body[0]).handler.param
+		).toBeNull();
+		// for-await outside async context is rejected
+		expect(() =>
+			WebpackParser.parse("for await (const x of y) f(x);", lazyOptions)
+		).toThrow(/Unexpected token/);
+		// labeled loops resolve break/continue through the shared label records
+		const labeled = WebpackParser.parse(
+			"outer: for (;;) { for (;;) { continue outer; } break outer; }",
+			lazyOptions
+		);
+		expect(labeled.body[0].type).toBe("LabeledStatement");
+		expect(() => WebpackParser.parse("break missing;", lazyOptions)).toThrow(
+			/Unsyntactic break/
+		);
+	});
+
+	it("serves the strict-bind probe from the Set stand-in and its .test fallback", () => {
+		const strictOptions = /** @type {import("acorn").Options} */ (
+			/** @type {unknown} */ ({
+				ecmaVersion: "latest",
+				sourceType: "module",
+				lazyNodes: true
+			})
+		);
+		expect(() => WebpackParser.parse("eval = 1;", strictOptions)).toThrow(
+			/Assigning to eval in strict mode/
+		);
+		// a runtime-replaced reservedWordsStrictBind takes the .test() fallback
+		class Plugin extends WebpackParser {
+			/**
+			 * @param {import("acorn").Options} options parser options
+			 * @param {string} input source code
+			 * @param {number=} startPos start position
+			 */
+			constructor(options, input, startPos) {
+				super(options, input, startPos);
+				/** @type {{ reservedWordsStrictBind: { test: (name: string) => boolean } }} */ (
+					/** @type {unknown} */ (this)
+				).reservedWordsStrictBind = {
+					test: (/** @type {string} */ name) => name === "customBad"
+				};
+			}
+		}
+		expect(() =>
+			Plugin.parse('"use strict"; customBad = 1;', lazyOptions)
+		).toThrow(/Assigning to customBad in strict mode/);
+		expect(() =>
+			Plugin.parse('"use strict"; eval = 1;', lazyOptions)
+		).not.toThrow();
+	});
+
+	it("keeps list-producer overrides working with the scratch pool", () => {
+		let calls = 0;
+		class Plugin extends WebpackParser {
+			/**
+			 * @param {import("acorn").Node} item paren item
+			 * @returns {import("acorn").Node} paren item
+			 */
+			parseParenItem(item) {
+				calls++;
+				return item;
+			}
+		}
+		const code = "const s = (a, b); f(1, [2, 3]);";
+		const ast = Plugin.parse(code, lazyOptions);
+		expect(calls).toBeGreaterThan(0);
+		expect(JSON.stringify(ast)).toBe(
+			JSON.stringify(WebpackParser.parse(code, lazyOptions))
+		);
+	});
+
+	it("keeps the token fast path off for plugins overriding tokenizer internals", () => {
+		let calls = 0;
+		class Plugin extends WebpackParser {
+			/**
+			 * @param {import("acorn").TokenType} prevType previous token type
+			 * @returns {void}
+			 */
+			updateContext(prevType) {
+				calls++;
+				// @ts-expect-error acorn internal
+				return super.updateContext(prevType);
+			}
+		}
+		// non-lazy: the extended fast token loop must gate off for the override
+		const tokens = [
+			...Plugin.tokenizer("a + { b: 1 };", {
+				ecmaVersion: "latest",
+				sourceType: "script"
+			})
+		];
+		expect(calls).toBeGreaterThan(0);
+		expect(tokens.length).toBeGreaterThan(5);
+	});
+
+	it("keeps the delegated tokenizer cold paths reachable with the fast loop off", () => {
+		class Plugin extends WebpackParser {
+			/**
+			 * @param {import("acorn").TokenType} prevType previous token type
+			 * @returns {void}
+			 */
+			updateContext(prevType) {
+				// @ts-expect-error acorn internal
+				return super.updateContext(prevType);
+			}
+		}
+		// with the fast loop off acorn's own readToken_* family runs, so the
+		// multi-char operators land in the owned finishOp and the comments in
+		// the owned skipSpace's cold delegate
+		const code =
+			"a === b && (c >>>= d) ** 2; /* c */ x ??= y; // trailing\n z >>> 1;";
+		const values = [
+			...Plugin.tokenizer(code, {
+				ecmaVersion: "latest",
+				sourceType: "script"
+			})
+		].map((token) => /** @type {EXPECTED_ANY} */ (token).value);
+		expect(values).toContain("===");
+		expect(values).toContain(">>>=");
+		expect(values).toContain("??=");
+		expect(values).toContain(">>>");
+		expect(values).toContain("**");
+	});
+
+	it("runs the inlined token-context hooks when finishToken is overridden", () => {
+		let calls = 0;
+		class Plugin extends WebpackParser {
+			/**
+			 * @param {import("acorn").TokenType} type token type
+			 * @param {string=} value token value
+			 * @returns {void}
+			 */
+			finishToken(type, value) {
+				calls++;
+				return super.finishToken(type, value);
+			}
+		}
+		// the override only disables the inline token finisher, so every token
+		// now takes the owned finishToken and its inlined updateContext arcs
+		const code = "if (a) (b); while (c) { d } (function () {})();";
+		const ast = Plugin.parse(code, lazyOptions);
+		expect(calls).toBeGreaterThan(10);
+		expect(JSON.stringify(ast)).toBe(
+			JSON.stringify(WebpackParser.parse(code, lazyOptions))
+		);
+	});
+
+	it("reads private names through readWord1's cache and cold reader", () => {
+		// private names are the one word production that still goes through
+		// acorn's readWord1 (the owned readWord serves every other identifier)
+		const ast = WebpackParser.parse(
+			"class A { #ahri = 1; get v() { return this.#ahri; } #\\u0062 = 2; #café = 3; }",
+			lazyOptions
+		);
+		expect(ast.body[0].type).toBe("ClassDeclaration");
+		expect(() =>
+			WebpackParser.parse("class A { #a = this.#missing; }", lazyOptions)
+		).toThrow(
+			/Private field '#missing' must be declared in an enclosing class/
+		);
+	});
+});
