@@ -30,13 +30,12 @@ module.exports = {
 	},
 	optimization: {
 		minimize: true,
-		// None of these claim CSS or HTML: the default JS minimizer's matcher only
-		// covers `.js`, the `exclude` cancels the `.html` matcher for the probe
-		// name, and a plugin function has no options at all.
+		// None of these claim CSS or HTML: two real minimizers whose matchers cover
+		// other types, and a plugin function with no options at all.
 		minimizer: [
 			"...",
 			new MinimizerPlugin({ test: /\.[cm]?js(\?.*)?$/i }),
-			new MinimizerPlugin({ test: /\.html$/i, exclude: /file/ }),
+			new MinimizerPlugin({ test: /\.json$/i, include: /\.txt$/i }),
 			(compiler) => {
 				compiler.hooks.done.tap("NoopMinimizer", () => {});
 			}

@@ -4712,5 +4712,20 @@ describe("htmlMinify — assets webpack only passes through", () => {
 		expect(min("<table>a<tr><td>b</td></tr>c</table>")).toBe(
 			"ac<table><tr><td>b</td></tr></table>"
 		);
+		// A trailing `<` has to stay escaped: dropping a comment after it would
+		// let it fuse with the next sibling into a tag.
+		expect(min("<p>a<</p>")).toBe("<p>a&lt;</p>");
+		expect(min("<p>a<<!--c--></p>")).toBe("<p>a&lt;</p>");
+	});
+
+	it("keeps the body of literal-text elements raw", () => {
+		// `script` / `style` bodies are not markup, so `<` must not be escaped —
+		// `a &lt; b` would change what the script does.
+		expect(min("<script>if (a < b) { x(); }</script>")).toBe(
+			"<script>if (a < b) { x(); }</script>"
+		);
+		expect(min("<style>.a { color: red }</style>")).toBe(
+			"<style>.a { color: red }</style>"
+		);
 	});
 });
