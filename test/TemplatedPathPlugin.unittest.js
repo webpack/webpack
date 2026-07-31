@@ -33,10 +33,38 @@ describe("TemplatedPathPlugin.interpolate", () => {
 		expect(interpolate("[file]", data)).toBe("/a/b/file.js");
 	});
 
+	it("keeps [contained-path] and [contained-file] inside the output directory", () => {
+		const outside = { filename: "../../node_modules/pkg/file.png" };
+		expect(interpolate("[contained-path][base]", outside)).toBe(
+			"_/_/node_modules/pkg/file.png"
+		);
+		expect(interpolate("[contained-file]", outside)).toBe(
+			"_/_/node_modules/pkg/file.png"
+		);
+		// parent segments are resolved before being replaced
+		expect(
+			interpolate("[contained-path][base]", { filename: "a/../../b/file.png" })
+		).toBe("_/b/file.png");
+		// absolute roots, including another Windows drive
+		expect(interpolate("[contained-file]", { filename: "/a/file.png" })).toBe(
+			"_/a/file.png"
+		);
+		expect(
+			interpolate("[contained-file]", { filename: "D:\\a\\file.png" })
+		).toBe("_/a/file.png");
+	});
+
+	it("keeps [contained-path] empty for a file in the context", () => {
+		expect(
+			interpolate("[contained-path][base]", { filename: "file.png" })
+		).toBe("file.png");
+	});
+
 	it("interpolates data-uri filename placeholders", () => {
 		const data = { filename: "data:image/png;base64,AAAA" };
 		expect(interpolate("[ext]", data)).toBe(".png");
 		expect(interpolate("[base][query][fragment][path]", data)).toBe("");
+		expect(interpolate("[contained-path][contained-file]", data)).toBe("");
 		// unknown mime type yields an empty [ext]
 		expect(interpolate("[ext]", { filename: "data:weird/x,AA" })).toBe("");
 	});
