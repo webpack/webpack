@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Safely minify webpack's own CSS (with source maps) and HTML output when `optimization.minimize` is enabled.
+Safely minify CSS (with source maps) and HTML assets when `optimization.minimize` is enabled, unless another minimizer already handled them.

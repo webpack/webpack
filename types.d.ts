@@ -14357,16 +14357,6 @@ declare interface KnownAssetInfo {
 	javascriptModule?: boolean;
 
 	/**
-	 * true, when the asset was rendered by webpack's native CSS pipeline
-	 */
-	css?: boolean;
-
-	/**
-	 * true, when the asset was rendered by webpack's native HTML pipeline
-	 */
-	html?: boolean;
-
-	/**
 	 * true, when file is a manifest
 	 */
 	manifest?: boolean;
