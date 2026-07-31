@@ -18,5 +18,8 @@ module.exports = [
 	],
 	[{ message: /Assigning to the read-only global "NaN" is not allowed/ }],
 	[{ message: /Assigning to the read-only global "Infinity" is not allowed/ }],
-	[{ message: /Assigning to "eval" is not allowed/ }]
+	[{ message: /Assigning to "eval" is not allowed/ }],
+	// shadowing `arguments` suppresses the member checks, but the binding itself
+	// is a strict-mode SyntaxError
+	[{ message: /"arguments" is not allowed as a binding name/ }]
 ];
