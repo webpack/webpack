@@ -4675,3 +4675,42 @@ describe("tokenize — fused state transitions", () => {
 		]);
 	});
 });
+
+describe("htmlMinify — assets webpack only passes through", () => {
+	const htmlMinify = require("../lib/html/htmlMinify");
+
+	/**
+	 * @param {string} src html source
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src) => htmlMinify({ "page.html": src }).code;
+
+	it("keeps server-side template tags", () => {
+		// `<?php … ?>` is a bogus comment per §13.2.5.42, so the inert-comment rule
+		// would delete the whole directive from a copied template.
+		expect(min("<?php echo $t; ?>\n<html><body><p>a</p></body></html>")).toBe(
+			"<?php echo $t; ?><html><body><p>a</p></body></html>"
+		);
+		expect(min("<html><body><!-- inert --><p>a</p></body></html>")).toBe(
+			"<html><body><p>a</p></body></html>"
+		);
+	});
+
+	it("keeps text-level template placeholders unescaped", () => {
+		// Escaping these to `&lt;%= t %&gt;` breaks the server-side render.
+		expect(min("<div>   <%= t %>   </div>")).toBe("<div>   <%= t %>   </div>");
+		expect(min("<div>{{ t }}</div>")).toBe("<div>{{ t }}</div>");
+	});
+
+	it("still escapes text that would re-parse as markup", () => {
+		// `a &lt;b&gt;c` decodes to `a <b>c`; emitting that raw would build a real
+		// `<b>` element, so the escaped form has to survive.
+		expect(min("<p>a &lt;b&gt;c</p>")).toBe("<p>a &lt;b&gt;c</p>");
+		expect(min("<p>a&amp;b</p>")).toBe("<p>a&amp;b</p>");
+		// Foster-parented text merges into one node whose range no longer covers
+		// its data — the source slice would drop the `c`.
+		expect(min("<table>a<tr><td>b</td></tr>c</table>")).toBe(
+			"ac<table><tr><td>b</td></tr></table>"
+		);
+	});
+});

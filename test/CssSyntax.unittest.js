@@ -873,6 +873,58 @@ describe("CssSyntax — minify token-boundary safety", () => {
 	});
 });
 
+describe("CssSyntax — minify keeps input the grammar rejects", () => {
+	/**
+	 * @param {string} src css source
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src) =>
+		new SourceProcessor().process(src, { minimize: true }).code;
+
+	it("keeps the sourceMappingURL pragma", () => {
+		// A `/*#` pragma is a link, not a comment — dropping it breaks the map of
+		// an already-built stylesheet webpack only passes through.
+		expect(min("/*# sourceMappingURL=a.css.map */\n.v{color:red}")).toBe(
+			"/*# sourceMappingURL=a.css.map */.v{color:red}"
+		);
+		expect(min("/* inert */.v{color:red}")).toBe(".v{color:red}");
+	});
+
+	it("keeps a declaration neither production accepts", () => {
+		// The IE star hack is not a declaration and not a qualified rule, so §5.4
+		// discards it; minifying must still emit what the source had.
+		expect(min("a{*zoom:1;_height:1px;color:red}")).toBe(
+			"a{*zoom:1;_height:1px;color:red}"
+		);
+		expect(min("a{color:red;*zoom:1}")).toBe("a{color:red;*zoom:1}");
+		expect(min("@media screen{a{*zoom:1;color:red}}")).toBe(
+			"@media screen{a{*zoom:1;color:red}}"
+		);
+	});
+
+	it("keeps rejected input in a block's contents", () => {
+		expect(min("a{foo bar;color:red}")).toBe("a{foo bar;color:red}");
+		// A `{}` block in a value routes the whole declaration to the qualified-rule
+		// production; its contents are rejected there but must survive.
+		expect(min("a{color:{{x}}}")).toBe("a{color:{{x}}}");
+	});
+
+	it("trims to the rejected input itself", () => {
+		// Surrounding whitespace belongs to the block's own separators, and a span
+		// holding only whitespace carries nothing at all.
+		expect(min("a{   *zoom:1   ;color:red}")).toBe("a{*zoom:1;color:red}");
+		expect(min("a{;;;color:red}")).toBe("a{color:red}");
+	});
+
+	it("never materializes rejected input for a walk-only parse", () => {
+		// `Raw` exists only for the printer — a plain parse still drops the input,
+		// so consumers never see a node type they don't know.
+		const rule = parseAStylesheet("a{*zoom:1;color:red}").rules[0];
+		expect(rule.declarations).toHaveLength(1);
+		expect(rule.childRules).toHaveLength(0);
+	});
+});
+
 describe("CssSyntax — nesting and error recovery", () => {
 	/**
 	 * @param {string} src css source

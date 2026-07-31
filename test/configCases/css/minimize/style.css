@@ -36,6 +36,14 @@
 	x : 1 ;
 }
 
+/* Input the CSS grammar rejects (an IE star hack) is still carried through
+   verbatim — minifying must never drop what the unminified asset keeps. */
+.hacks {
+	*zoom : 1 ;
+	_height : 1px ;
+	color : red ;
+}
+
 :not( .f ) .g {
 	content : "; } , keep {" ;
 }

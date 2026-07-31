@@ -28980,6 +28980,7 @@ declare namespace exports {
 				export let QualifiedRule: number;
 				export let Stylesheet: number;
 				export let Comment: number;
+				export let Raw: number;
 			}
 			export let TT_AT_KEYWORD: 16;
 			export let TT_BAD_STRING_TOKEN: 4;
