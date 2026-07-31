@@ -24,5 +24,19 @@ module.exports = [
 		output: { module: true },
 		experiments: { outputModule: true },
 		externalsPresets: { nodeModules: true }
+	},
+	{
+		// `allowlist` keeps matching packages bundled while externalizing the rest.
+		target: "node",
+		entry: "./allowlist.js",
+		externalsPresets: {
+			nodeModules: {
+				allowlist: [
+					/^allow-regex(?:\/|$)/,
+					"allow-string",
+					(request) => request === "allow-fn"
+				]
+			}
+		}
 	}
 ];

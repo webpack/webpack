@@ -1678,7 +1678,42 @@
         },
         "nodeModules": {
           "description": "Treat installed packages (requests resolving into a 'node_modules' directory) as external and load them via require()/import at runtime instead of bundling them (useful for server-side rendering builds).",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "description": "Enable or disable externalizing installed packages.",
+              "type": "boolean"
+            },
+            {
+              "description": "Externalize installed packages with options.",
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "allowlist": {
+                  "description": "Keep these requests bundled instead of externalizing them.",
+                  "type": "array",
+                  "items": {
+                    "description": "A request that should stay bundled.",
+                    "anyOf": [
+                      {
+                        "description": "Requests matching the RegExp stay bundled.",
+                        "instanceof": "RegExp",
+                        "tsType": "RegExp"
+                      },
+                      {
+                        "description": "An exact request that should stay bundled.",
+                        "type": "string"
+                      },
+                      {
+                        "description": "A function returning true for requests that should stay bundled.",
+                        "instanceof": "Function",
+                        "tsType": "((request: string) => boolean)"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
         },
         "nwjs": {
           "description": "Treat NW.js legacy nw.gui module as external and load it via require() when used.",

@@ -1725,7 +1725,14 @@ export interface ExternalsPresets {
 	/**
 	 * Treat installed packages (requests resolving into a 'node_modules' directory) as external and load them via require()/import at runtime instead of bundling them (useful for server-side rendering builds).
 	 */
-	nodeModules?: boolean;
+	nodeModules?:
+		| boolean
+		| {
+				/**
+				 * Keep these requests bundled instead of externalizing them.
+				 */
+				allowlist?: (RegExp | string | ((request: string) => boolean))[];
+		  };
 	/**
 	 * Treat NW.js legacy nw.gui module as external and load it via require() when used.
 	 */

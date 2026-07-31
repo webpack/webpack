@@ -1253,13 +1253,45 @@ Object {
   "externals-presets-node-modules": Object {
     "configs": Array [
       Object {
-        "description": "Treat installed packages (requests resolving into a 'node_modules' directory) as external and load them via require()/import at runtime instead of bundling them (useful for server-side rendering builds).",
+        "description": "Enable or disable externalizing installed packages.",
         "multiple": false,
         "path": "externalsPresets.nodeModules",
         "type": "boolean",
       },
     ],
-    "description": "Treat installed packages (requests resolving into a 'node_modules' directory) as external and load them via require()/import at runtime instead of bundling them (useful for server-side rendering builds).",
+    "description": "Enable or disable externalizing installed packages.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-node-modules-allowlist": Object {
+    "configs": Array [
+      Object {
+        "description": "Requests matching the RegExp stay bundled.",
+        "multiple": true,
+        "path": "externalsPresets.nodeModules.allowlist[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "An exact request that should stay bundled.",
+        "multiple": true,
+        "path": "externalsPresets.nodeModules.allowlist[]",
+        "type": "string",
+      },
+    ],
+    "description": "Requests matching the RegExp stay bundled. An exact request that should stay bundled.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "externals-presets-node-modules-allowlist-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'externalsPresets.nodeModules.allowlist' configuration. Keep these requests bundled instead of externalizing them.",
+        "multiple": false,
+        "path": "externalsPresets.nodeModules.allowlist",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'externalsPresets.nodeModules.allowlist' configuration. Keep these requests bundled instead of externalizing them.",
     "multiple": false,
     "simpleType": "boolean",
   },
