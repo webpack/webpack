@@ -3383,6 +3383,34 @@ describe("parseHtml", () => {
 			).toBe(3);
 		});
 
+		it("should close an open <a> when another start tag opens", () => {
+			// The "in body" <a> rule runs the algorithm for the open <a> and drops it
+			// from both the formatting list and the stack, so the two are siblings.
+			const nodes = body("<a href=1>1<a href=2>2");
+			expect(nodes.map((n) => n.tagName)).toEqual(["a", "a"]);
+			expect(nodes[1].children).toHaveLength(1);
+		});
+
+		it("should drop an open <a> the algorithm could not reach", () => {
+			// The <table> is a scope boundary, so the algorithm leaves the outer <a>
+			// in the formatting list and the <a> rule has to remove it itself.
+			const nodes = body("<a href=1><table><a href=2>");
+			expect(nodes.map((n) => n.tagName)).toEqual(["a"]);
+			expect(
+				/** @type {MatElement[]} */ (nodes[0].children).map((n) => n.tagName)
+			).toEqual(["a", "table"]);
+		});
+
+		it("should drop formatting elements past the inner-loop limit", () => {
+			// Five formatting elements between <b> and the furthest block take the
+			// algorithm's inner loop past three, which drops the deepest entries
+			// from the formatting list rather than reopening them inside <p>.
+			const nodes = body("<b><i><u><s><em><p>x</b>y");
+			expect(nodes.map((n) => n.tagName)).toEqual(["b", "u"]);
+			const p = find("<b><i><u><s><em><p>x</b>y", "p");
+			expect(/** @type {MatElement} */ (p.children[0]).tagName).toBe("b");
+		});
+
 		it("should not duplicate an attribute span when a formatting element is cloned", () => {
 			// The <a> is reopened around <div> by the algorithm; the clone must not
 			// reuse the original's href span, or the parser emits two dependencies.
