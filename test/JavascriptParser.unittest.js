@@ -1145,6 +1145,46 @@ describe("JavascriptParser", () => {
 			};
 			expect(parser.getLocation({ loc })).toBe(loc);
 		});
+
+		// `buildLineStarts` serves LF-only and CRLF sources from a native
+		// `indexOf` search and everything else from the char-code fallback —
+		// both paths must agree with acorn's `lineBreak` semantics.
+		const lineBreakCases = /** @type {[string, string, number[]][]} */ ([
+			["lf", "a;\nbb;\nccc;", [0, 3, 7]],
+			["crlf", "a;\r\nbb;\r\nccc;", [0, 4, 9]],
+			["lone cr", "a;\rbb;\rccc;", [0, 3, 7]],
+			["mixed cr and lf", "a;\rbb;\nccc;", [0, 3, 7]],
+			["line separator", "a;\u2028bb;\u2028ccc;", [0, 3, 7]],
+			["paragraph separator", "a;\u2029bb;\u2029ccc;", [0, 3, 7]]
+		]);
+
+		for (const [name, source, starts] of lineBreakCases) {
+			it(`should map offsets across ${name} line breaks`, () => {
+				const parser = parserFor(source);
+				for (let line = 0; line < starts.length; line++) {
+					const start = starts[line];
+					expect(parser.getLocation({ start, end: start + 1 })).toEqual({
+						start: { line: line + 1, column: 0 },
+						end: { line: line + 1, column: 1 }
+					});
+				}
+			});
+		}
+
+		it("should reuse the line table across calls", () => {
+			const parser = parserFor("a;\nbb;\n");
+			expect(parser.getLocation({ start: 0, end: 1 })).toEqual({
+				start: { line: 1, column: 0 },
+				end: { line: 1, column: 1 }
+			});
+			const lineStarts = parser._lineStarts;
+			expect(lineStarts).toEqual([0, 3, 7]);
+			expect(parser.getLocation({ start: 4, end: 5 })).toEqual({
+				start: { line: 2, column: 1 },
+				end: { line: 2, column: 2 }
+			});
+			expect(parser._lineStarts).toBe(lineStarts);
+		});
 	});
 
 	describe("WebpackParser fast paths", () => {
