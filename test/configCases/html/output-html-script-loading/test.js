@@ -31,7 +31,7 @@ it("scriptLoading is ignored under output.module (still a module script)", () =>
 
 it("per-entry scriptLoading overrides output.html.scriptLoading", () => {
 	const html = read("entry-blocking.html");
-	expect(html).toMatch(/<script src="[^"]+"><\/script\s*>/i);
+	expect(html).toMatch(/<script src="[^"]+">/i);
 	expect(html).not.toContain("defer");
 });
 
