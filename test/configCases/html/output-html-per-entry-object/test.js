@@ -5,8 +5,9 @@ const readHtml = (name) =>
 	fs.readFileSync(path.resolve(__dirname, name), "utf-8");
 
 const iconLink = (html) => html.match(/<link rel="icon"[^>]*>/i);
-const scriptRe = /<script[^>]* src="__html_[a-f0-9]+_0\.js"[^>]*>/;
-const deferScriptRe = /<script defer src="__html_[a-f0-9]+_0\.js"><\/script>/;
+const scriptRe = /<script[^>]* src="__html_[a-f0-9]+_0\.js"[^>]*>/i;
+const deferScriptRe =
+	/<script defer src="__html_[a-f0-9]+_0\.js"><\/script\s*>/i;
 const inHead = (html) => html.match(/<head>([\s\S]*?)<\/head>/i)[1];
 const inBody = (html) => html.match(/<body>([\s\S]*?)<\/body>/i)[1];
 

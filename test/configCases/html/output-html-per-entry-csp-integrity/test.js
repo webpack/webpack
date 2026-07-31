@@ -11,7 +11,7 @@ const cspContent = (html) => {
 };
 
 const integrityTags = (html) =>
-	(html.match(/<(?:script|link)\b[^>]*>/g) || [])
+	(html.match(/<(?:script|link)\b[^>]*>/gi) || [])
 		.map((tag) => ({
 			url: (tag.match(/(?:src|href)="([^"]+)"/) || [])[1],
 			integrity: (tag.match(/integrity="([^"]+)"/) || [])[1]
