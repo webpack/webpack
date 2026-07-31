@@ -332,6 +332,8 @@
     "repo",
     "repoint",
     "reresolve",
+    "retarget",
+    "retargets",
     "repos",
     "repr",
     "rels",
