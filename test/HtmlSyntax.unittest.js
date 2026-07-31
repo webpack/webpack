@@ -4292,32 +4292,45 @@ describe("parseHtml — path accessor completeness", () => {
 							`doctype:${path.doctypePublicId(n)}/${path.doctypeSystemId(n)}`
 						);
 					},
-					[NodeType.Element]: (path) => {
-						if (path.tagName() !== "div") return;
-						log.push(`node:${path.node !== null}`);
-						log.push(
-							`parentTag:${path.tagName(/** @type {number} */ (path.parent))}`
-						);
-						log.push(`parentOf:${path.parentOf() === path.parent}`);
-						log.push(`attrs:${path.attributeCount()}`);
-						const id = path.findAttribute("id");
-						log.push(`id:${path.attributeName(id)}=${path.attributeValue(id)}`);
-						log.push(
-							`idName:${SRC.slice(
-								path.attributeNameStart(id),
-								path.attributeNameEnd(id)
-							)}`
-						);
-						log.push(
-							`idValue:${SRC.slice(
-								path.attributeValueStart(id),
-								path.attributeValueEnd(id)
-							)}`
-						);
-						const checked = path.attributeAt(1);
-						log.push(`checkedValueStart:${path.attributeValueStart(checked)}`);
-						log.push(`firstChildType:${path.type(path.firstChild())}`);
-						log.push(`nextSibling:${path.nextSibling()}`);
+					[NodeType.Element]: {
+						enter: (path) => {
+							if (path.tagName() !== "div") return;
+							log.push(`node:${path.node !== null}`);
+							log.push(
+								`parentTag:${path.tagName(/** @type {number} */ (path.parent))}`
+							);
+							log.push(`parentOf:${path.parentOf() === path.parent}`);
+							log.push(`attrs:${path.attributeCount()}`);
+							const id = path.findAttribute("id");
+							log.push(
+								`id:${path.attributeName(id)}=${path.attributeValue(id)}`
+							);
+							log.push(
+								`idName:${SRC.slice(
+									path.attributeNameStart(id),
+									path.attributeNameEnd(id)
+								)}`
+							);
+							log.push(
+								`idValue:${SRC.slice(
+									path.attributeValueStart(id),
+									path.attributeValueEnd(id)
+								)}`
+							);
+							const checked = path.attributeAt(1);
+							log.push(
+								`checkedValueStart:${path.attributeValueStart(checked)}`
+							);
+						},
+						// The walk streams: a completed child subtree is visited and
+						// unlinked while its parent is still open, so an element's own
+						// child links read as empty from either half of its visit. Walk
+						// structure from `parseHtml`'s materialized tree instead.
+						exit: (path) => {
+							if (path.tagName() !== "div") return;
+							log.push(`firstChildType:${path.type(path.firstChild())}`);
+							log.push(`nextSibling:${path.nextSibling()}`);
+						}
 					}
 				})
 			)
@@ -4332,7 +4345,7 @@ describe("parseHtml — path accessor completeness", () => {
 			"idName:id",
 			"idValue:d",
 			"checkedValueStart:-1",
-			`firstChildType:${NodeType.Text}`,
+			"firstChildType:0",
 			"nextSibling:0"
 		]);
 	});
