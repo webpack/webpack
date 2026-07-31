@@ -3,6 +3,11 @@
 const fs = require("fs");
 const path = require("path");
 
+/**
+ * @param {Record<string, unknown> | undefined} env env
+ * @param {{ srcPath: string }} argv argv
+ * @returns {import("../../../../").Configuration} configuration
+ */
 module.exports = (env, { srcPath }) => ({
 	mode: "development",
 	output: {
