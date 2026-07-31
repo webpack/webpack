@@ -402,6 +402,8 @@
     "repo",
     "repoint",
     "reresolve",
+    "retarget",
+    "retargets",
     "repos",
     "repr",
     "resizer",
