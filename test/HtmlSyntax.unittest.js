@@ -4718,6 +4718,25 @@ describe("htmlMinify — assets webpack only passes through", () => {
 		expect(min("<p>a<<!--c--></p>")).toBe("<p>a&lt;</p>");
 	});
 
+	it("keeps template expressions containing ampersands", () => {
+		// `&&` is everywhere in EJS/PHP conditionals; escaping it to `&amp;&amp;`
+		// breaks the server-side render just as escaping `<` does.
+		expect(min("<div><%= a && b %></div>")).toBe("<div><%= a && b %></div>");
+		expect(min("<div><% if (a && b) { %>x<% } %></div>")).toBe(
+			"<div><% if (a && b) { %>x<% } %></div>"
+		);
+		expect(min("<p>a & b</p>")).toBe("<p>a & b</p>");
+		expect(min("<p>a &foo; b</p>")).toBe("<p>a &foo; b</p>");
+	});
+
+	it("escapes a character reference left open at the end", () => {
+		// The next sibling could complete it (`a &am` + `p;`) once a comment
+		// between them is dropped, so only a closed tail passes through.
+		expect(min("<p>a &</p>")).toBe("<p>a &amp;</p>");
+		expect(min("<p>a &am</p>")).toBe("<p>a &amp;am</p>");
+		expect(min("<p>a &am<!--c-->p;</p>")).toBe("<p>a &amp;amp;</p>");
+	});
+
 	it("keeps the body of literal-text elements raw", () => {
 		// `script` / `style` bodies are not markup, so `<` must not be escaped —
 		// `a &lt; b` would change what the script does.
