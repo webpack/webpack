@@ -3328,6 +3328,89 @@ describe("parseHtml", () => {
 			expect(nodes).toHaveLength(1);
 		});
 
+		// Noah's Ark only counts entries whose attributes match, so the depth the
+		// second <p> reconstructs to reports whether two <b>s compared equal.
+		/**
+		 * @param {string} src source
+		 * @returns {number} nested `b` depth of the last body child
+		 */
+		const reconstructedDepth = (src) => {
+			const nodes = body(src);
+			let node = nodes[nodes.length - 1];
+			let depth = 0;
+			for (;;) {
+				const next = /** @type {MatElement} */ (node.children[0]);
+				if (!next || next.type !== NodeType.Element || next.tagName !== "b") {
+					break;
+				}
+				depth++;
+				node = next;
+			}
+			return depth;
+		};
+
+		it("should count equal attributes toward Noah's Ark", () => {
+			expect(
+				reconstructedDepth(
+					"<p><b class=x><b class=x><b class=x><b class=x>1</p><p>2"
+				)
+			).toBe(3);
+		});
+
+		it("should not count differing attribute values toward Noah's Ark", () => {
+			expect(
+				reconstructedDepth(
+					"<p><b class=x><b class=y><b class=z><b class=w>1</p><p>2"
+				)
+			).toBe(4);
+		});
+
+		it("should not count attribute values of differing length toward Noah's Ark", () => {
+			expect(
+				reconstructedDepth(
+					"<p><b class=x><b class=xx><b class=x><b class=x>1</p><p>2"
+				)
+			).toBe(4);
+		});
+
+		it("should count equal valueless attributes toward Noah's Ark", () => {
+			// A valueless attribute stores its value rather than a source range, so
+			// this takes the resolved-value comparison instead of the range one.
+			expect(
+				reconstructedDepth(
+					"<p><b hidden><b hidden><b hidden><b hidden>1</p><p>2"
+				)
+			).toBe(3);
+		});
+
+		it("should close an open <a> when another start tag opens", () => {
+			// The "in body" <a> rule runs the algorithm for the open <a> and drops it
+			// from both the formatting list and the stack, so the two are siblings.
+			const nodes = body("<a href=1>1<a href=2>2");
+			expect(nodes.map((n) => n.tagName)).toEqual(["a", "a"]);
+			expect(nodes[1].children).toHaveLength(1);
+		});
+
+		it("should drop an open <a> the algorithm could not reach", () => {
+			// The <table> is a scope boundary, so the algorithm leaves the outer <a>
+			// in the formatting list and the <a> rule has to remove it itself.
+			const nodes = body("<a href=1><table><a href=2>");
+			expect(nodes.map((n) => n.tagName)).toEqual(["a"]);
+			expect(
+				/** @type {MatElement[]} */ (nodes[0].children).map((n) => n.tagName)
+			).toEqual(["a", "table"]);
+		});
+
+		it("should drop formatting elements past the inner-loop limit", () => {
+			// Five formatting elements between <b> and the furthest block take the
+			// algorithm's inner loop past three, which drops the deepest entries
+			// from the formatting list rather than reopening them inside <p>.
+			const nodes = body("<b><i><u><s><em><p>x</b>y");
+			expect(nodes.map((n) => n.tagName)).toEqual(["b", "u"]);
+			const p = find("<b><i><u><s><em><p>x</b>y", "p");
+			expect(/** @type {MatElement} */ (p.children[0]).tagName).toBe("b");
+		});
+
 		it("should not duplicate an attribute span when a formatting element is cloned", () => {
 			// The <a> is reopened around <div> by the algorithm; the clone must not
 			// reuse the original's href span, or the parser emits two dependencies.
