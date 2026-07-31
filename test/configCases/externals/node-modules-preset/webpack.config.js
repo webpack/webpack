@@ -34,6 +34,7 @@ module.exports = [
 				allowlist: [
 					/^allow-regex(?:\/|$)/,
 					"allow-string",
+					"allow-hash-imports",
 					(request) => request === "allow-fn"
 				]
 			}
