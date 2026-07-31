@@ -13,7 +13,8 @@ module.exports = [
 		},
 		resolve: {
 			alias: {
-				"aliased-pkg$": path.resolve(__dirname, "aliased.js")
+				"aliased-pkg$": path.resolve(__dirname, "aliased.js"),
+				"alias-to-pkg$": "real-pkg"
 			}
 		}
 	},
