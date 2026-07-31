@@ -40,6 +40,15 @@ function awaitParam(await) {
 // A named class expression binds its name, same as a declaration.
 var namedClass = class await {};
 
+// A called function expression is walked as an IIFE, not through
+// walkFunctionExpression.
+var iifeName = (function yield() {
+	return 1;
+})();
+var iifeParam = (function (static) {
+	return static;
+})(1);
+
 // Unaffected: reserved words are valid as property and method names.
 var properties = { static: 1, public: 2, await: 3 };
 var readsProperty = properties.static + properties.public;
@@ -60,6 +69,8 @@ module.exports = {
 	arrowParam,
 	awaitParam,
 	namedClass,
+	iifeName,
+	iifeParam,
 	readsProperty,
 	normalBinding
 };

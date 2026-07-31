@@ -36,5 +36,17 @@ module.exports = [
 		}
 	],
 	[{ message: /"await" is not allowed as a parameter name/ }],
-	[{ message: /"await" is not allowed as a binding name/ }]
+	[{ message: /"await" is not allowed as a binding name/ }],
+	[
+		{
+			message:
+				/"yield" is a reserved word in strict mode and is not allowed as a binding name/
+		}
+	],
+	[
+		{
+			message:
+				/"static" is a reserved word in strict mode and is not allowed as a parameter name/
+		}
+	]
 ];
