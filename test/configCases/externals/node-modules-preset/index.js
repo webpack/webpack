@@ -3,10 +3,16 @@
 const dep = require("fake-dep");
 const local = require("./local");
 const aliased = require("aliased-pkg");
+const asset = require("asset-pkg/logo.svg");
 
 it("externalizes packages resolving into node_modules", () => {
 	// stubbed at runtime by test.config.js; a bundled copy would report "package"
 	expect(dep.where).toBe("runtime");
+});
+
+it("bundles a package's non-JS asset instead of externalizing it", () => {
+	// externalizing the .svg would make node require() a missing module at runtime
+	expect(asset).toMatch(/\.svg$/);
 });
 
 it("bundles relative requests", () => {
