@@ -340,6 +340,34 @@ describe("MultiCompiler", () => {
 		});
 	});
 
+	it("should report which compilers changed on the aggregated 'done' hook", (done) => {
+		const compiler = createMultiCompiler();
+		/** @type {string[][]} */
+		const changedNames = [];
+		compiler.hooks.done.tap(
+			"MultiCompiler test",
+			(_stats, changedCompilers) => {
+				changedNames.push(
+					changedCompilers.map((c) => /** @type {string} */ (c.name))
+				);
+			}
+		);
+		let phase = 0;
+		compiler.watch({}, (err) => {
+			if (err) return done(err);
+			if (phase === 0) {
+				phase = 1;
+				expect(changedNames).toEqual([["a", "b"]]);
+				/** @type {NonNullable<import("../").Compiler["watching"]>} */
+				(compiler.compilers[1].watching).invalidate();
+			} else if (phase === 1) {
+				phase = 2;
+				expect(changedNames).toEqual([["a", "b"], ["b"]]);
+				compiler.close(done);
+			}
+		});
+	});
+
 	it("should expose `watching` when dependency validation fails", (done) => {
 		const compiler = /** @type {import("../").MultiCompiler} */ (
 			webpack(

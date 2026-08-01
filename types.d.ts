@@ -17809,7 +17809,7 @@ declare class MultiCompiler {
 		options: MultiCompilerOptions
 	);
 	hooks: Readonly<{
-		done: SyncHook<[MultiStats]>;
+		done: SyncHook<[MultiStats, Compiler[]]>;
 		invalid: MultiHook<SyncHook<[null | string, number]>>;
 		run: MultiHook<AsyncSeriesHook<[Compiler]>>;
 		watchClose: SyncHook<[]>;
