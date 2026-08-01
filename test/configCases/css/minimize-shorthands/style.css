@@ -98,3 +98,12 @@
 .t33 { padding: 2px/2px }
 /*! declined: ...and for a keyword box */
 .t34 { border-width: 1px/1px }
+
+/*! declined: a CSS-wide keyword is only valid as the whole value, so the repeated form is already discarded */
+.t40 { margin: inherit inherit }
+/*! declined: the same for the other four */
+.t41 { padding: unset unset }
+/*! declined: ...and the `/` box is no way around it */
+.t42 { border-radius: revert revert / revert revert }
+/*! `auto` is a per-side value, not a CSS-wide keyword */
+.t43 { margin: auto auto }

@@ -1182,6 +1182,30 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		expect(min("a{--margin:1px 1px}")).toBe("a{--margin:1px 1px}");
 	});
 
+	it("keeps a box repeating a CSS-wide keyword", () => {
+		// Each is only valid as the whole value, so the repeated form is already
+		// discarded — collapsing it would switch the declaration on.
+		expect(min("a{margin:inherit inherit}")).toBe("a{margin:inherit inherit}");
+		expect(min("a{margin:initial initial}")).toBe("a{margin:initial initial}");
+		expect(min("a{margin:unset unset}")).toBe("a{margin:unset unset}");
+		expect(min("a{margin:revert revert}")).toBe("a{margin:revert revert}");
+		expect(min("a{margin:revert-layer revert-layer}")).toBe(
+			"a{margin:revert-layer revert-layer}"
+		);
+		// The names match case-insensitively, and the `/` box is no way around it.
+		expect(min("a{margin:INHERIT INHERIT}")).toBe("a{margin:INHERIT INHERIT}");
+		expect(min("a{border-radius:inherit inherit/inherit inherit}")).toBe(
+			"a{border-radius:inherit inherit/inherit inherit}"
+		);
+		// One keyword alone is the valid form, so it is left as it is.
+		expect(min("a{margin:inherit}")).toBe("a{margin:inherit}");
+		// `auto` and `currentcolor` are per-side values, not CSS-wide keywords.
+		expect(min("a{margin:auto auto}")).toBe("a{margin:auto}");
+		expect(min("a{border-color:currentcolor currentcolor}")).toBe(
+			"a{border-color:currentcolor}"
+		);
+	});
+
 	it("collapses each side of `border-radius`'s `/` on its own", () => {
 		expect(min("a{border-radius:1px 1px 1px 1px / 1px 1px 1px 1px}")).toBe(
 			"a{border-radius:1px}"
