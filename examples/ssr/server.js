@@ -1,39 +1,38 @@
-"use strict";
+import { readFileSync } from "node:fs";
 
-// The *server* half of the app. It renders the same components to HTML and
-// consumes the artifacts of the client build:
-//
-//   - `ssr-manifest.json` (from `SSRManifestPlugin`) to know which client
-//     assets to preload for the modules it rendered, and
-//   - `__webpack_css_server_styles__` to inline the CSS collected during the
-//     render as critical CSS.
-//
-// Build it for Node with the installed packages externalized:
-//
-//   {
-//     target: "node",
-//     externalsPresets: { node: true, nodeModules: true }
-//   }
+// The Node half of the app: it renders the route to HTML and consumes the
+// client build's artifacts. Read at request time so a rebuilt client is picked
+// up without restarting the server.
+const manifest = JSON.parse(
+	readFileSync("dist/client/ssr-manifest.json", "utf8")
+);
 
-import { render } from "./page.js";
-import manifest from "./dist/ssr-manifest.json";
-
-export function renderDocument() {
+export async function renderDocument() {
+	// The route is code-split, so only its modules load here — and only their
+	// CSS ends up in the collected styles below.
+	const { render } = await import("./page.js");
 	const body = render();
 
-	// CSS collected while rendering on the server (a webpack module variable).
+	// CSS collected while rendering without a DOM; empty in the browser, where
+	// the same runtime puts the styles into the document instead.
 	const criticalCss = __webpack_css_server_styles__;
 
-	// Preload the client assets the rendered page needs, from the manifest.
-	const preloads = (manifest["./page.js"] || [])
-		.filter((file) => file.endsWith(".js"))
-		.map((file) => `<link rel="modulepreload" href="${file}">`)
+	// Exactly the client files the rendered module needs, including the chunks
+	// it depends on — without them the browser would discover them one round
+	// trip too late.
+	const files = manifest["./page.js"] || [];
+	const tags = files
+		.map((file) =>
+			file.endsWith(".css")
+				? `<link rel="stylesheet" href="${file}">`
+				: `<link rel="modulepreload" href="${file}">`
+		)
 		.join("");
 
 	return `<!doctype html>
 <html>
 	<head>
-		${preloads}
+		${tags}
 		<style>${criticalCss}</style>
 	</head>
 	<body>${body}</body>
