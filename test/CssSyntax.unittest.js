@@ -887,6 +887,20 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		// A closed string still unquotes.
 		expect(min('@unknown [foo="bar"')).toBe("@unknown [foo=bar];");
 	});
+
+	it("consumes a CRLF pair as one escape terminator", () => {
+		// The tokenizer takes CRLF as a single terminator, so dropping only the CR
+		// would leave a raw newline inside the identifier — `.A\nbc`, which is two
+		// selectors, not the class `Abc`.
+		expect(min(".\\41\r\nbc{color:red}")).toBe(".Abc{color:red}");
+		expect(min("#\\41\r\nbc{color:red}")).toBe("#Abc{color:red}");
+		// Every other whitespace is a single terminator.
+		for (const space of [" ", "\t", "\n", "\r", "\f"]) {
+			expect(min(`.\\41${space}bc{color:red}`)).toBe(".Abc{color:red}");
+		}
+		// An escape that has to stay keeps its whole CRLF terminator.
+		expect(min(".\\31\r\nabc{color:red}")).toBe(".\\31\r\nabc{color:red}");
+	});
 });
 
 describe("CssSyntax — minify keeps input the grammar rejects", () => {
