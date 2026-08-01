@@ -371,6 +371,7 @@ These files are produced by `yarn fix:special` and must not be edited by hand:
 - `declarations/**/*.d.ts` — per-schema/plugin declarations emitted from `schemas/**/*.json`.
 - `schemas/**/*.check.{js,d.ts}` — precompiled schema validators.
 - Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
+- `lib/css/shorthands.js` — the CSS minifier's `{1,4}` box-shorthand table, derived from `mdn-data` by `tooling/generate-css-shorthands.js`.
 
 The hand-maintained type declarations (`declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`) _are_ editable.
 
@@ -378,7 +379,7 @@ Re-run `yarn fix:special` **before the next commit** whenever you touch:
 
 - `schemas/**/*.json` — reshapes validators, declarations, and `types.d.ts`.
 - `lib/**/*.js` JSDoc on anything reachable from a public export — regenerates `types.d.ts`.
-- `tooling/generate-runtime-code.js`, `tooling/generate-wasm-code.js`, or any file they consume.
+- `tooling/generate-runtime-code.js`, `tooling/generate-wasm-code.js`, `tooling/generate-css-shorthands.js`, or any file they consume (including the `mdn-data` version in `package.json`).
 
 CI's `lint` job verifies these outputs are up to date. The combined `yarn fix` script runs `fix:code` + `fix:special` + `fmt` in one go; prefer it as the final step.
 
