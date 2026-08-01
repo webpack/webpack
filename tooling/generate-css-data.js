@@ -125,6 +125,33 @@ const collectColorArgumentFunctions = () => {
 	return names.sort();
 };
 
+// Arbitrary substitution functions CSS Values 5 defines but `mdn-data` does not
+// describe yet, so the derivation below cannot see them.
+const EXTRA_SUBSTITUTION_FUNCTIONS = [
+	"first-valid",
+	"if",
+	"inherit",
+	"random-item"
+];
+
+/**
+ * The functions that substitute an arbitrary token sequence, spotted by the
+ * `<declaration-value>` in their own syntax — that production _is_ "any token
+ * sequence". Over-inclusive by design: `paint()`'s trailing arguments are the
+ * worklet's, not a substituted value, but declining a collapse only costs bytes.
+ * @returns {string[]} the function names, sorted
+ */
+const collectSubstitutionFunctions = () => {
+	const names = [...EXTRA_SUBSTITUTION_FUNCTIONS];
+	for (const [name, syntax] of definitions) {
+		if (!name.endsWith("()")) continue;
+		if (references(syntax).includes("declaration-value")) {
+			names.push(name.slice(0, -2));
+		}
+	}
+	return names.sort();
+};
+
 /**
  * @param {number[]} channels the `[r, g, b]` bytes
  * @returns {string} the shortest hex spelling — 3 digits when every byte is a repeated pair
@@ -195,6 +222,7 @@ const boxShorthands = collectBoxShorthands(false);
 const slashShorthands = collectBoxShorthands(true);
 const colorFunctions = collectColorArgumentFunctions();
 const colorNames = collectColorNames();
+const substitutionFunctions = collectSubstitutionFunctions();
 
 const source = `/*
 	MIT License http://www.opensource.org/licenses/mit-license.php
@@ -220,6 +248,11 @@ const SLASH_BOX_SHORTHANDS = ${setLiteral(slashShorthands)};
 // arguments: a gradient nested in \`image-set()\` is matched as the gradient.
 const COLOR_ARGUMENT_FUNCTIONS = ${setLiteral(colorFunctions)};
 
+// Functions that substitute an arbitrary token sequence, so two identical
+// references need not be one repeated value: with \`--x:1px 2px\`,
+// \`margin:var(--x) var(--x)\` is four values, not two.
+const SUBSTITUTION_FUNCTIONS = ${setLiteral(substitutionFunctions)};
+
 // Packed \`0xrrggbb\` -> the shortest named color with that value. Only names that
 // can beat \`#rrggbb\`; anything longer would never be picked.
 const RGB_TO_NAME = new Map([
@@ -235,9 +268,10 @@ module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
 module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
+module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
 `;
 
-const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${colorNames.length} color names`;
+const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names`;
 const current = fs.existsSync(TARGET) ? fs.readFileSync(TARGET, "utf8") : "";
 if (current === source) {
 	process.stdout.write(`lib/css/data.js is up to date (${summary})\n`);

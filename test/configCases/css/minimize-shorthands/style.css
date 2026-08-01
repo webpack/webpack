@@ -1,6 +1,6 @@
-/* Shorthand collapsing. The `{1,4}` box properties come from
-   `lib/css/shorthands.js`, generated out of `mdn-data` by
-   `tooling/generate-css-shorthands.js`; `flex`'s keyword spellings are a
+/* Shorthand collapsing. The `{1,4}` box properties and the substitution
+   functions come from `lib/css/data.js`, generated out of `mdn-data` by
+   `tooling/generate-css-data.js`; `flex`'s keyword spellings are a
    hand-maintained table, because no machine-readable source states them.
 
    Cases ported from cssnano's `postcss-minify-params` / `postcss-merge-longhand`
@@ -80,6 +80,17 @@
 .t30 { flex: 1 1 0% }
 /*! declined: a prefixed property is a different property */
 .t31 { -webkit-box-flex: 0 0 auto }
+
+/*! declined: `attr()` substitutes a token sequence too, through its fallback */
+.t35 { margin: attr(data-m type(<length>), 1px 2px 3px) attr(data-m type(<length>), 1px 2px 3px) }
+/*! declined: the same for `if()` */
+.t36 { margin: if(style(--x: 1): 1px 2px 3px; else: 4px) if(style(--x: 1): 1px 2px 3px; else: 4px) }
+/*! declined: ...and `inherit()`, which substitutes a custom property's whole value */
+.t37 { margin: inherit(--gap) inherit(--gap) }
+/*! declined: ...and `first-valid()` */
+.t38 { margin: first-valid(1px 2px 3px) first-valid(1px 2px 3px) }
+/*! a function only ending in a substitution's name is a different function */
+.t39 { margin: myvar(1px) myvar(1px) }
 
 /*! declined: only `border-radius` takes a second box, so a `/` elsewhere is invalid — collapsing it would switch the declaration on */
 .t32 { margin: 1px 1px/1px 1px }
