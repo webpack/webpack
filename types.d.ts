@@ -24303,8 +24303,10 @@ declare abstract class RuntimeTemplate {
 
 	/**
 	 * Expression for the global registry that collects CSS server-side when there
-	 * is no DOM (SSR). An SSR host reads it from `globalThis`; it is keyed by the
-	 * style/chunk identifier and namespaced by `output.uniqueName`.
+	 * is no DOM (SSR). Read it with `__webpack_css_server_styles__`; it is keyed
+	 * by the style/chunk identifier and namespaced by `output.uniqueName`.
+	 * Targets without `globalThis` go through the `__webpack_require__.g`
+	 * polyfill, so consumers must also require `RuntimeGlobals.global`.
 	 */
 	cssServerStyleRegistry(): string;
 	supportsConst(): boolean;
@@ -28751,6 +28753,7 @@ declare namespace exports {
 		export let getChunkScriptFilename: "__webpack_require__.u";
 		export let getChunkUpdateCssFilename: "__webpack_require__.hk";
 		export let getChunkUpdateScriptFilename: "__webpack_require__.hu";
+		export let getCssServerStyles: "__webpack_require__.cs";
 		export let getFullHash: "__webpack_require__.h";
 		export let getTrustedTypesPolicy: "__webpack_require__.tt";
 		export let getUpdateManifestFilename: "__webpack_require__.hmrF";
