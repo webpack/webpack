@@ -794,6 +794,14 @@ describe("Validation", () => {
 		`)
 	);
 
+	createTestCase(
+		"SSRManifestPlugin filename",
+		{
+			plugins: [new (require("..").SSRManifestPlugin)({ filename: 42 })]
+		},
+		(msg) => expect(msg).toMatch(/options\.filename/)
+	);
+
 	describe("did you mean", () => {
 		createTestCase(
 			"module.rules",
