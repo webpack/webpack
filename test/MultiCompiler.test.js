@@ -324,6 +324,22 @@ describe("MultiCompiler", () => {
 		});
 	});
 
+	it("should trigger the aggregated 'shutdown' hook once per child compiler on close", (done) => {
+		const compiler = createMultiCompiler();
+		let shutdownCalled = 0;
+		compiler.hooks.shutdown.tapPromise("MultiCompiler test", async () => {
+			shutdownCalled++;
+		});
+		compiler.watch({}, (err, _stats) => {
+			if (err) return done(err);
+		});
+		compiler.close((err) => {
+			if (err) return done(err);
+			expect(shutdownCalled).toBe(2);
+			done();
+		});
+	});
+
 	it("should expose `watching` when dependency validation fails", (done) => {
 		const compiler = /** @type {import("../").MultiCompiler} */ (
 			webpack(

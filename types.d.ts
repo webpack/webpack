@@ -17813,6 +17813,7 @@ declare class MultiCompiler {
 		invalid: MultiHook<SyncHook<[null | string, number]>>;
 		run: MultiHook<AsyncSeriesHook<[Compiler]>>;
 		watchClose: SyncHook<[]>;
+		shutdown: MultiHook<AsyncSeriesHook<[]>>;
 		watchRun: MultiHook<AsyncSeriesHook<[Compiler]>>;
 		infrastructureLog: MultiHook<
 			SyncBailHook<[string, string, undefined | any[]], true | void>
