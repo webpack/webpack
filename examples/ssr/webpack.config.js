@@ -28,9 +28,9 @@ const client = {
 /** @type {import("webpack").Configuration} */
 const server = {
 	name: "server",
-	// neutral platform: browser APIs are guarded at runtime, so the CSS runtime
-	// collects the styles instead of touching a DOM that is not there
-	target: ["web", "node"],
+	// a node target has no DOM, so `import.meta.env.SSR` is `true` here and the
+	// CSS runtime collects the styles rather than linking them into a page
+	target: "node",
 	entry: "./server.js",
 	output: {
 		path: path.resolve(__dirname, "dist/server"),
@@ -49,10 +49,20 @@ const server = {
 				// the client build already wrote these files; only the URL is needed here
 				generator: { emit: false }
 			}
-		]
+		],
+		generator: {
+			css: {
+				// a document-less target emits no stylesheets by default; opt in,
+				// because the collected CSS below is read back from them
+				exportsOnly: false
+			}
+		}
 	},
 	optimization: {
 		chunkIds: "named"
+	},
+	experiments: {
+		outputModule: true
 	}
 };
 

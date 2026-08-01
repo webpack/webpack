@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 
 // The Node half of the app: it renders the route to HTML and consumes the
-// client build's artifacts. Read at request time so a rebuilt client is picked
-// up without restarting the server.
+// client build's artifacts. Read once at startup; re-read per request if the
+// client is rebuilt while the server is running.
 const manifest = JSON.parse(
 	readFileSync("dist/client/ssr-manifest.json", "utf8")
 );
@@ -13,9 +13,9 @@ export async function renderDocument() {
 	const { render } = await import("./page.js");
 	const body = render();
 
-	// CSS collected while rendering without a DOM; empty in the browser, where
-	// the same runtime puts the styles into the document instead.
-	const criticalCss = __webpack_css_server_styles__;
+	// CSS collected while rendering without a DOM. `SSR` is `true` only in a
+	// node build, so this branch is dropped from the browser bundle entirely.
+	const criticalCss = import.meta.env.SSR ? __webpack_css_server_styles__ : "";
 
 	// Exactly the client files the rendered module needs, including the chunks
 	// it depends on — without them the browser would discover them one round
