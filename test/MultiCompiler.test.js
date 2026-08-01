@@ -358,7 +358,7 @@ describe("MultiCompiler", () => {
 			if (phase === 0) {
 				phase = 1;
 				expect(changedNames).toEqual([["a", "b"]]);
-				/** @type {import("../lib/Watching")} */
+				/** @type {NonNullable<import("../").Compiler["watching"]>} */
 				(compiler.compilers[1].watching).invalidate();
 			} else if (phase === 1) {
 				phase = 2;
