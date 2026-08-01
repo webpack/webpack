@@ -43,6 +43,7 @@ module.exports = {
 			  "electronPreload": false,
 			  "electronRenderer": false,
 			  "node": true,
+			  "nodeModules": false,
 			  "nwjs": false,
 			  "web": false,
 			}
