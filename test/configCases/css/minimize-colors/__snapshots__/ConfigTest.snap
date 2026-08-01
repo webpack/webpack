@@ -39,6 +39,6 @@ Array [
   "/*! webpack: a hash inside a non-color function is an id reference */.t34{background:-moz-element(#Abc)}",
   "/*! webpack: a hash inside a gradient is a color */.t35{background:linear-gradient(#abc,red)}",
   "/*! webpack: -webkit-tap-highlight-color does not leak to the next declaration */.t36{-webkit-tap-highlight-color:rgba(0,0,0,0);color:transparent}",
-  "/*! webpack: a color in an at-rule prelude has no enclosing property */@supports (color: transparent){.t37{color:red}}",
+  "/*! webpack: a color in an at-rule prelude has no enclosing property */@supports (color:transparent){.t37{color:red}}",
 ]
 `;

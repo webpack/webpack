@@ -44,5 +44,15 @@ Array [
   "/*! webpack: !important loses its leading space */.t41{color:red!important}",
   "/*! webpack: a required value space collapses to one */.t42{margin:0 auto}",
   "/*! webpack: calc() operator spaces are meaningful */.t43{width:calc(1px + 2px)}",
+  "/*! webpack: a media feature test */@media (min-width:100px){.t44{color:red}}",
+  "/*! webpack: ...with whitespace on both sides */@media screen and (min-width:100px){.t45{color:red}}",
+  "/*! webpack: a Media Queries Level 4 range */@media (width>=40rem){.t46{color:red}}",
+  "/*! webpack: ...on both sides of the feature */@media (400px<=width<=700px){.t47{color:red}}",
+  "/*! webpack: a container query */@container card (width>400px){.t48{color:red}}",
+  "/*! webpack: an @supports condition */@supports (display:grid){.t49{color:red}}",
+  "/*! webpack: ...on a custom property */@supports (--x:1){.t50{color:red}}",
+  "/*! webpack: a ratio keeps its slash spacing */@media (aspect-ratio:16 / 9){.t51{color:red}}",
+  "/*! webpack: a pseudo-class \`:\` is not a condition separator */.t52 :hover{color:red}",
+  "/*! webpack: a \`(…)\` inside a value is a calc sub-expression, not a condition */.t53{width:calc(10px - (100px / var(--x)))}",
 ]
 `;

@@ -852,7 +852,9 @@ describe("CssSyntax — minify token-boundary safety", () => {
 			["a{b:+/**/5}", "a{b:+ 5}"],
 			["a{b:#/**/fff}", "a{b:# fff}"],
 			["a{b:@/**/x}", "a{b:@ x}"],
-			["a{b:x/**/\\40 y}", "a{b:x \\40 y}"],
+			// The escape's own terminator is no longer needed once `y` follows it
+			// inside the token, but the separator the comment stood for is.
+			["a{b:x/**/\\40 y}", "a{b:x \\40y}"],
 			["a{b:\\40/**/x}", "a{b:\\40 x}"],
 			// Non-ASCII is an ident code point, so these would join into one ident.
 			["a{b:\u00E9/**/\u00E9}", "a{b:\u00E9 \u00E9}"],

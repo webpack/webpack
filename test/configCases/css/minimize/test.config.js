@@ -66,7 +66,8 @@ module.exports = {
 		expect(css).toContain(":not(.f) .g{");
 		// Interleaved declaration / nested-rule order is preserved.
 		expect(css).toContain(".h{color:red;.i{x:1}color:green}");
-		// @media prelude collapses, its block trims.
-		expect(css).toContain("@media screen and (min-width : 100px){");
+		// @media prelude collapses, its block trims, and the whitespace around the
+		// feature test's `:` — insignificant in a query condition — goes.
+		expect(css).toContain("@media screen and (min-width:100px){");
 	}
 };
