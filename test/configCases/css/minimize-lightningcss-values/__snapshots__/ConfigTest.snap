@@ -30,7 +30,7 @@ Array [
   "/*! test_color: .foo { color: hwb(194 50% 0%) } */.foo{color:hwb(194 50% 0%)}",
   "/*! test_color: .foo { color: hwb(194 50 0) } */.foo{color:hwb(194 50 0)}",
   "/*! test_color: .foo { color: hwb(194 50% 50%) } */.foo{color:hwb(194 50% 50%)}",
-  "/*! test_color: .foo { color: light-dark(#FFF, #FFF) } */.foo{color:light-dark(#FFF,#FFF)}",
+  "/*! test_color: .foo { color: light-dark(#FFF, #FFF) } */.foo{color:light-dark(#fff,#fff)}",
   "/*! test_color: .foo { color: ActiveText } */.foo{color:ActiveText}",
   "/*! test_color: .foo { color: lab(29.2345% 39.3825 20.0664); } */.foo{color:lab(29.2345% 39.3825 20.0664)}",
   "/*! test_color: .foo { color: lab(29.2345 39.3825 20.0664); } */.foo{color:lab(29.2345 39.3825 20.0664)}",

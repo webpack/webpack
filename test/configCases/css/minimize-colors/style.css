@@ -80,3 +80,23 @@
 .t36 { -webkit-tap-highlight-color: rgba(0,0,0,0); color: rgba(0,0,0,0) }
 /*! webpack: a color in an at-rule prelude has no enclosing property */
 @supports (color: rgba(0,0,0,0)) { .t37 { color: red } }
+
+/* The named colors and the color-taking functions come from `lib/css/data.js`,
+   generated out of `mdn-data` + `color-name` by `tooling/generate-css-data.js`.
+   The table holds only names that beat their own hex, so a name never appears
+   where the hex was already shorter. */
+
+/*! data: a name shorter than its 6-hex */
+.t38 { color: #A0522D }
+/*! data: the same, from rgb() */
+.t39 { color: rgb(218, 112, 214) }
+/*! data: a 3-hex beats every name for that value */
+.t40 { color: #000000; background: #0000FF; border-color: #FFFFFF }
+/*! data: `drop-shadow()` takes a color, so its hash is one */
+.t41 { filter: drop-shadow(2px 2px #FF0000) }
+/*! data: so does `light-dark()` */
+.t42 { color: light-dark(#FF0000, #00FF00) }
+/*! data: `element()` does not — its hash is an id reference */
+.t43 { background: element(#Abc) }
+/*! data: nor does `image-set()`; the nested gradient is matched instead */
+.t44 { background: image-set(linear-gradient(#FF0000, #0000FF) 1x) }
