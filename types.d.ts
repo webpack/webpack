@@ -10059,7 +10059,7 @@ declare interface HtmlProcessOptions {
 	skip?: HtmlAstSkip;
 
 	/**
-	 * print the safely-minified serialization (nodes rebuilt from source, inert comments dropped, opening tags rewritten) as `process` walks, and return it (default false = walk only, return `""`)
+	 * print the safely-minified serialization (nodes rebuilt from source, inert comments dropped, opening-tag whitespace collapsed) as `process` walks, and return it (default false = walk only, return `""`)
 	 */
 	minimize?: boolean;
 }

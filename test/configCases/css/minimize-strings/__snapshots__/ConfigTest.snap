@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-strings minimize-strings should compile 1`] = `
+Array [
+  "/*! normalize-string: should prefer double quotes by default */.t01:after{content:\\"\\"}",
+  "/*! normalize-string: should transform single quotes to double quotes by default */.t02:after{content:\\"\\"}",
+  "/*! normalize-string: should keep single quotes inside a double quoted string intact */.t03:after{content:\\"'string' is intact\\"}",
+  "/*! normalize-string: should keep double quotes inside a single quoted string intact */.t04:after{content:'\\"string\\" is intact'}",
+  "/*! normalize-string: should transform escaped single quotation marks if possible */.t05:after{content:\\"'string' is intact\\"}",
+  "/*! normalize-string: should transform escaped double quotation marks if possible */.t06:after{content:'\\"string\\" is intact'}",
+  "/*! normalize-string: should not transform quotation marks when mixed */.t07:after{content:\\"\\\\\\"string\\\\\\" is 'intact'\\"}",
+  "/*! normalize-string: should not transform quotation marks when mixed (2) */.t08:after{content:'\\"string\\" is \\\\'intact\\\\''}",
+  "/*! normalize-string: should transform escaped single quotation marks when mixed */.t09:after{content:'\\\\'string\\\\' is \\"intact\\"'}",
+  "/*! normalize-string: should transform escaped double quotation marks when mixed */.t10:after{content:\\"'string' is \\\\\\"intact\\\\\\"\\"}",
+  "/*! normalize-string: should work with the attr function */.t11:after{content:\\"(\\" attr(href) \\")\\"}",
+  "/*! normalize-string: should join multiple line strings */.t12:after{content:\\" > this is some really\\\\
+                     long text which is broken\\\\
+                     over several lines.\\"}",
+  "/*! normalize-string: should work with quotes */.t13{quotes:\\"«\\" \\"»\\"}",
+  "/*! normalize-string: should work with language overrides */.t14{font-language-override:\\"DAN\\"}",
+  "/*! normalize-string: should work with css grids */.t15{grid-template:\\"a a a\\" \\"b b b\\"}",
+  "/*! normalize-string: should work with css grids (2) */.t16{grid-template-areas:\\"a a a\\" \\"b b b\\"}",
+  "/*! normalize-string: should work with list styles */.t17{list-style-type:\\"-\\"}",
+  "/*! normalize-string: should work with text emphasis styles */.t18{text-emphasis-style:\\"\\\\25B2\\"}",
+  "/*! normalize-string: should work with text overflow */.t19{text-overflow:\\"…\\" \\"…\\"}",
+  "/*! normalize-string: should work with font */.t20{font:1em/1.5 \\"slab serif\\"}",
+  "/*! normalize-string: should work with font family */.t21{font-family:\\"slab serif\\"}",
+  "/*! normalize-string: should work with font feature settings */.t22{font-feature-settings:\\"frac\\"}",
+  "/*! normalize-string: should work with web fonts */@font-face{font-family:\\"slab serif\\";src:local(\\"slab serif\\"),url(http://x.test/slab.ttf) format(\\"truetype\\")}",
+  "/*! normalize-string: should work in attribute selectors */[rel=\\"external link\\"]{color:#00f}",
+  "/*! normalize-string: should change strings (1) */[a='escaped quotes \\" h1, h1, h1 \\" h1, h1, h1']{color:#00f}",
+  "/*! normalize-string: should change strings (2) */[a=\\"escaped quotes ' h1, h1, h1 ' h1, h1, h1\\"]{color:#00f}",
+  "/*! normalize-string: should work for grid-column */.t23{grid-column:span 2}",
+  "/*! normalize-string: should work for grid-column #2 */.t24{grid-column:span 2 / 1}",
+  "/*! normalize-string: should work for grid-column #3 */.t25{grid-column:\\"span 2\\"}",
+  "/*! normalize-string: should work for columns */.t26{columns:2 auto}",
+  "/*! webpack: a hex escape is never rewritten */.t27:after{content:\\"\\\\27\\"}",
+  "/*! webpack: a \`\\\\\`-newline continuation stays (dropping it can fuse a hex escape) */.t28:after{content:\\"\\\\61\\\\
+b\\"}",
+  "/*! webpack: a custom property's value is opaque, quotes included */.t29{--quoted:'kept'}",
+  "/*! webpack: a string in an at-rule prelude normalizes too */@supports (content: \\"x\\"){.t30{color:red}}",
+  "/*! webpack: an EOF escape swallowing the final quote leaves the string alone */.t32:after{content:\\"x\\\\\\"}",
+]
+`;
+
+exports[`ConfigTestCases css minimize-strings minimize-strings should compile 2`] = `
+Array [
+  "/*! webpack: a string the tokenizer closes at EOF keeps its one quote */.t31:after{content:\\"unterminated}",
+]
+`;

@@ -1,0 +1,96 @@
+/* Ported from cssnano's `postcss-convert-values` and `postcss-normalize-whitespace`
+   suites. webpack normalizes numbers but never converts units, rounds, or drops a
+   zero's unit — `0px` is not `0` inside `calc()` or a `flex-basis`, and `0s` is
+   not a valid `transition-duration` — so those cases are here as passthroughs,
+   marking where a future optimization would show up. */
+
+/*! convert-values: should convert milliseconds to seconds */
+.t01 { transition-duration: 500ms }
+/*! convert-values: should convert milliseconds to seconds (2) */
+.t02 { animation: opacity 0ms 1000ms }
+/*! convert-values: should convert seconds to milliseconds */
+.t03 { transition-duration: .005s }
+/*! convert-values: should convert values in custom properties */
+.t04 { --my-variable: 500ms }
+/*! convert-values: should strip the leading plus */
+.t05 { width: +14px }
+/*! convert-values: should convert px to pc */
+.t06 { width: 16px }
+/*! convert-values: should convert px to pt */
+.t07 { width: 120px }
+/*! convert-values: should convert px to in */
+.t08 { width: 192px }
+/*! convert-values: should strip the unit from zero lengths */
+.t09 { margin: 0em 0% 0px 0pc }
+/*! convert-values: should trim trailing zeros */
+.t10 { width: 109.00000000000px }
+/*! convert-values: should trim trailing zeros (2) */
+.t11 { width: 0.00px }
+/*! convert-values: should trim trailing zeros (3) */
+.t12 { width: 100.00% }
+/*! convert-values: should strip the unit from a zero percentage */
+.t13 { opacity: 0% }
+/*! convert-values: should normalize a bare decimal point */
+.t14 { opacity: 1. }
+.t15 { opacity: .0 }
+/*! convert-values: should normalize a bare decimal point with a unit */
+.t16 { width: 10.px }
+.t17 { width: .0px }
+/*! convert-values: should normalize inside calc */
+.t18 { width: calc(10.px + .0px) }
+/*! convert-values: should drop the leading zero */
+.t19 { top: 0.25rem }
+/*! convert-values: should drop the leading zero of a negative number */
+.t20 { letter-spacing: -0.1rem }
+/*! convert-values: should keep the unit's case */
+.t21 { font-size: 20PX }
+/*! convert-values: should trim trailing zeros of a percentage */
+.t22 { height: 12.500% }
+/*! convert-values: should strip zero units per declaration */
+.t23 { height: 0em; max-height: 0em }
+/*! convert-values: should not round by default */
+.t24 { right: 6.66667px }
+/*! convert-values: should drop the leading zero of an opacity */
+.t25 { opacity: 0.0625 }
+
+/*! normalize-whitespace: should trim whitespace from nested functions */
+.t26 { width: calc(10px - ( 100px / var(--test) )) }
+/*! normalize-whitespace: should trim whitespace from nested functions (uppercase) */
+.t27 { width: CALC(10px - ( 100px / var(--test) )) }
+/*! normalize-whitespace: should trim whitespace from css variables */
+.t28 { width: var(--foo, calc(10px + 10px)) }
+/*! normalize-whitespace: should trim whitespace from env variables */
+.t29 { width: env(--foo, calc(10px + 10px)) }
+/*! normalize-whitespace: should preserve space in custom property */
+.t30 { --prop:   }
+/*! normalize-whitespace: should not add space around empty custom property */
+.t31 { --prop: }
+/*! normalize-whitespace: should not trim spaces inside of nested var function */
+.t32 { background: var(--my-var, var(--my-background, pink, )) }
+/*! normalize-whitespace: should not trim spaces inside of var inside calc */
+.t33 { height: calc(var(--text-xxxl, ) * var(--text-scale-ratio-up, )) }
+/*! normalize-whitespace: should not trim spaces inside of var function */
+.t34 { border-radius: 10px var(--foobar, ) }
+/*! normalize-whitespace: should not trim spaces inside of env function */
+.t35 { border-radius: env(border-rad, ) }
+/*! normalize-whitespace: should not trim spaces inside of constant function */
+.t36 { border-radius: constant(border-rad, ) }
+/*! normalize-whitespace: should preserve whitespace after custom property declaration */
+.t37 { --foo: bar }
+
+/* Cases beyond the upstream suites, covering what webpack's own printer decides. */
+
+/*! webpack: a number in a selector prelude keeps its sign (An+B) */
+.t38:nth-child(2n+1) { color: red }
+/*! webpack: unicode-range tokenizes as numbers, so it stays verbatim */
+@font-face { unicode-range: U+0025-00FF, u+4?? }
+/*! webpack: scientific notation is left alone */
+.t39 { width: 1e3px }
+/*! webpack: two numbers a rewrite could fuse stay separated */
+.t40 { margin: 1.0.5 }
+/*! webpack: !important loses its leading space */
+.t41 { color: red   !important }
+/*! webpack: a required value space collapses to one */
+.t42 { margin: 0    auto }
+/*! webpack: calc() operator spaces are meaningful */
+.t43 { width: calc(1px + 2px) }

@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-urls minimize-urls should compile 1`] = `
+Array [
+  "@import url(http://website.test/foo.css);",
+  "/*! normalize-url: should strip double quotes */.t01{background:url(http://website.test/cat.jpg)}",
+  "/*! normalize-url: should strip single quotes */.t02{background:url(http://website.test/cat.jpg)}",
+  "/*! normalize-url: should strip double quotes uppercase URL */.t03{background:URL(http://website.test/cat.jpg)}",
+  "/*! normalize-url: should not escape more than one special character */.t04{background:url(\\"http://website.test/assets_(test).png\\")}",
+  "/*! normalize-url: should remove the default port */.t05{background:url(http://website.test:80/image.png)}",
+  "/*! normalize-url: should not remove the fragment */.t06{background:url(http://website.test/test.svg#icon)}",
+  "/*! normalize-url: should normalize directory traversal */.t07{background:url(http://website.test/assets/css/../font/t.eot)}",
+  "/*! normalize-url: should preserve trailing slashes */.t08{background:url(https://localhost:4321/api/woff2/inter.woff2/)}",
+  "/*! normalize-url: should normalize urls with special characters */.t09{background:url(\\"http://website.test/test/../(images)/1.png\\")}",
+  "/*! normalize-url: should minimise whitespace inside the url function */.t10{background:url(http://website.test/test.png)}",
+  "/*! normalize-url: should minimise whitespace inside the url function (2) */.t11{background:url()}",
+  "/*! normalize-url: should minimise whitespace inside the url string */.t12{background:url(http://website.test/test.png)}",
+  "/*! normalize-url: should minimise whitespace inside the url string (2) */.t13{background:url(\\"               \\")}",
+  "/*! webpack: an empty url() */.t14{background:url()}",
+  "/*! webpack: a protocol-relative url */.t15{background:url(//cdn.website.test/cat.jpg)}",
+  "/*! webpack: a data: URI keeps a quote it needs */.t16{background:url(data:image/svg+xml,%3Csvg\\\\ width=\\\\'1\\\\'%3E%3C/svg%3E)}",
+  "/*! webpack: a data: URI that needs no quote */.t17{background:url(data:image/svg+xml,%3Csvg%3E%3C/svg%3E)}",
+  "/*! webpack: a same-document fragment reference */.t18{clip-path:url(#myClip)}",
+  "/*! webpack: a url holding a quote is wrapped in the other quote */.t19{background:url(http://website.test/foo\\\\\\"bar.jpg)}",
+  "/*! webpack: src: url() in @font-face */@font-face{src:url(http://website.test/slab.ttf) format(\\"truetype\\")}",
+  "/*! webpack: a custom property's url() is opaque */.t20{--bg:url( http://website.test/cat.jpg )}",
+  "/*! webpack: a url() whose string the tokenizer never closed is passed through */.t21{background:url(\\")}",
+]
+`;

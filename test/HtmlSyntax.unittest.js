@@ -4853,7 +4853,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 		it("keeps cloned attributes on the reconstructed element", () => {
 			expect(minify('<b x="1"><p>x</b>y</p>')).toBe(
-				"<b x=1></b><p><b x=1>x</b>y</p>"
+				'<b x="1"></b><p><b x="1">x</b>y</p>'
 			);
 		});
 
@@ -4869,18 +4869,18 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 		it("escapes a quote-holding cloned attribute value safely", () => {
 			expect(minify("<b a='x\"y'><p>t</b>")).toBe(
-				"<b a='x\"y'></b><p><b a='x\"y'>t</b></p>"
+				'<b a=\'x"y\'></b><p><b a="x&quot;y">t</b></p>'
 			);
 		});
 
 		it("rebuilds renamed void tokens instead of dropping them", () => {
-			expect(minify('<image src="a&amp;b">')).toBe("<img src=a&amp;b>");
+			expect(minify('<image src="a&amp;b">')).toBe('<img src="a&amp;b">');
 			expect(minify("a</br>b")).toBe("a<br>b");
 		});
 
 		it("materializes an implied <body> once attributes merge onto it", () => {
 			expect(minify('<div>a</div><body class="x">')).toBe(
-				"<body class=x><div>a</div></body>"
+				'<body class="x"><div>a</div></body>'
 			);
 		});
 
@@ -4902,7 +4902,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 		it("round-trips elements nested inside <noscript>", () => {
 			expect(minify('<noscript><link href="x"></noscript>')).toBe(
-				"<noscript><link href=x></noscript>"
+				'<noscript><link href="x"></noscript>'
 			);
 		});
 	});
@@ -4910,7 +4910,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 	describe("comments", () => {
 		it("keeps both halves of a downlevel-revealed conditional block", () => {
 			expect(minify('<!--[if !IE]><!--><link href="x"><!--<![endif]-->')).toBe(
-				"<!--[if !IE]><!--><link href=x><!--<![endif]-->"
+				'<!--[if !IE]><!--><link href="x"><!--<![endif]-->'
 			);
 			expect(minify("<!--[if IE]><p>ie only</p><![endif]-->")).toBe(
 				"<!--[if IE]><p>ie only</p><![endif]-->"
@@ -4928,128 +4928,5 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 		it("never emits a </plaintext> end tag", () => {
 			expect(minify("<plaintext>foo")).toBe("<plaintext>foo");
 		});
-	});
-});
-
-describe("SourceProcessor — minify opening tags", () => {
-	const { SourceProcessor } = require("../lib/html/syntax");
-
-	/**
-	 * @param {string} source html source
-	 * @returns {string} minified serialization
-	 */
-	const minify = (source) =>
-		new SourceProcessor().process(source, { minimize: true }).code;
-
-	// Ported from html-minifier-terser's `removing attribute quotes` and
-	// `keeping trailing slashes in tags` suites. Every case re-parses to the same
-	// DOM — the transform is spelling, never content.
-	it("drops quotes a value does not need", () => {
-		expect(
-			minify('<p title="blah" class="a23B-foo.bar_baz:qux" id="moo">foo</p>')
-		).toBe("<p title=blah class=a23B-foo.bar_baz:qux id=moo>foo</p>");
-		expect(minify('<script type="module">alert(1);</script>')).toBe(
-			"<script type=module>alert(1);</script>"
-		);
-		expect(minify('<a href="#" title="foo#bar">x</a>')).toBe(
-			"<a href=# title=foo#bar>x</a>"
-		);
-		expect(minify('<p class="foo|bar:baz"></p>')).toBe(
-			"<p class=foo|bar:baz></p>"
-		);
-		expect(minify('<p onclick="x">x</p>')).toBe("<p onclick=x>x</p>");
-	});
-
-	it("keeps quotes a value does need", () => {
-		// Whitespace and `>` end an unquoted value; the rest are parse errors in
-		// one, so they keep their quotes too.
-		expect(minify('<input value="hello world">')).toBe(
-			'<input value="hello world">'
-		);
-		expect(minify('<p data-x="a>b"></p>')).toBe('<p data-x="a>b"></p>');
-		expect(minify('<p data-x="a=b"></p>')).toBe('<p data-x="a=b"></p>');
-		expect(minify('<p data-x="a<b"></p>')).toBe('<p data-x="a<b"></p>');
-		expect(minify('<p data-x="a`b"></p>')).toBe('<p data-x="a`b"></p>');
-		expect(minify('<p data-x="a\nb"></p>')).toBe('<p data-x="a\nb"></p>');
-		expect(minify("<link href=\"<?php echo 'http://foo/' ?>\">")).toBe(
-			"<link href=\"<?php echo 'http://foo/' ?>\">"
-		);
-	});
-
-	it("picks the quote that needs no escaping", () => {
-		expect(minify("<p data-x='a\"b'></p>")).toBe("<p data-x='a\"b'></p>");
-		expect(minify('<p data-x="a\'b"></p>')).toBe('<p data-x="a\'b"></p>');
-		// A single-quoted value that needs no quotes at all loses them.
-		expect(minify("<p title='blah'>x</p>")).toBe("<p title=blah>x</p>");
-	});
-
-	it("keeps a value ending in `/` quoted", () => {
-		// Unquoted, the `/` would fuse with a following `>` for parsers that read
-		// `/>` as self-closing.
-		expect(minify('<a href="http://example.com/" title="blah">x</a>')).toBe(
-			'<a href="http://example.com/" title=blah>x</a>'
-		);
-		expect(minify("<a href=x/>y</a>")).toBe('<a href="x/">y</a>');
-	});
-
-	it("writes an empty value as the equivalent valueless attribute", () => {
-		expect(minify('<input value="" disabled="disabled">')).toBe(
-			"<input value disabled=disabled>"
-		);
-		expect(minify("<a href='' title='t'>x</a>")).toBe("<a href title=t>x</a>");
-	});
-
-	it("collapses the whitespace between attributes", () => {
-		expect(minify('<div   class="a"\n\tid="b"   >x</div>')).toBe(
-			"<div class=a id=b>x</div>"
-		);
-		expect(minify("<div\n>x</div>")).toBe("<div>x</div>");
-	});
-
-	it("keeps a self-closing tag self-closing", () => {
-		expect(minify('<img src="test"/>')).toBe("<img src=test />");
-		expect(minify('<img title="foo" src="test"/>')).toBe(
-			"<img title=foo src=test />"
-		);
-		expect(minify('<img src="a b"/>')).toBe('<img src="a b"/>');
-		expect(minify("<br />")).toBe("<br/>");
-		expect(minify('<svg><rect x="1"/></svg>')).toBe("<svg><rect x=1 /></svg>");
-	});
-
-	it("keeps the source casing of names", () => {
-		expect(minify('<svg viewBox="0 0 1 1"><rect X="1"></rect></svg>')).toBe(
-			'<svg viewBox="0 0 1 1"><rect X=1></rect></svg>'
-		);
-		expect(minify('<DIV CLASS="a">x</DIV>')).toBe("<DIV CLASS=a>x</DIV>");
-	});
-
-	it("keeps a raw value byte-for-byte", () => {
-		// Character references decode the same quoted or not, so the raw bytes go
-		// through untouched.
-		expect(minify('<img src="a&amp;b" alt="&#x41;">')).toBe(
-			"<img src=a&amp;b alt=&#x41;>"
-		);
-		expect(minify('<a href="a?b&c">x</a>')).toBe("<a href=a?b&c>x</a>");
-	});
-
-	it("keeps the source tag when an attribute is not part of it", () => {
-		// A repeated `<html>` / `<body>` tag merges its attributes onto the element
-		// already open, so those cannot be sliced out of this tag's source.
-		expect(minify('<html lang="en"><p>x</p><html class="late">')).toBe(
-			'<html lang="en"><p>x</p></html>'
-		);
-	});
-
-	it("leaves everything outside an opening tag alone", () => {
-		expect(minify("<pre>  a  b  </pre>")).toBe("<pre>  a  b  </pre>");
-		expect(minify('<textarea class="t">\n  keep  </textarea>')).toBe(
-			"<textarea class=t>  keep  </textarea>"
-		);
-		expect(minify('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">')).toBe(
-			'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">'
-		);
-		expect(minify("<style>a{color:red}</style>")).toBe(
-			"<style>a{color:red}</style>"
-		);
 	});
 });

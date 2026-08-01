@@ -1,0 +1,57 @@
+/* Ported from cssnano's `postcss-discard-empty` suite, plus the at-rules whose
+   empty block still carries meaning (which cssnano drops and webpack keeps). */
+
+/*! discard-empty: should remove empty @ rules */
+@font-face;
+/*! discard-empty: should remove empty @ rules (2) */
+@font-face {}
+/*! discard-empty: should not mangle @ rules with decls */
+@font-face { font-family: Helvetica }
+/*! discard-empty: should not mangle @ rules with parameters */
+@charset "utf-8";
+/*! discard-empty: should remove empty rules */
+h1{}h2{}h4{}h5,h6{}
+/*! discard-empty: should remove empty declarations */
+.t01 { color: }
+/*! discard-empty: should remove null selectors */
+{ color: blue }
+/*! discard-empty: should remove null selectors in media queries */
+@media screen, print { {} }
+/*! discard-empty: should remove empty media queries */
+@media screen, print { h1,h2{} }
+/*! discard-empty: should not be responsible for removing comments */
+.t02 { /* comment */ }
+/*! discard-empty: should preserve empty custom properties */
+.t03 { --tw-shadow: ; --something-else: }
+/*! discard-empty: should preserve empty layers */
+@layer a {}
+@layer b {}
+@layer b { .t04 { color: red } }
+@layer a { .t05 { color: green } }
+
+/* Cases beyond the upstream suite, covering what webpack's own printer decides. */
+
+/*! webpack: an empty @keyframes still runs the animation, so it is kept */
+@keyframes t06 {}
+/*! webpack: an empty keyframe contributes nothing, so it is dropped */
+@keyframes t07 { from {} to { opacity: 1 } }
+/*! webpack: every keyframe empty leaves the keyframes rule behind */
+@keyframes t08 { from {} }
+/*! webpack: an empty @supports is inert */
+@supports (display: grid) {}
+/*! webpack: an empty @container is inert */
+@container (min-width: 1px) {}
+/*! webpack: an empty @page is kept (its margin boxes are not modelled) */
+@page {}
+/*! webpack: an empty @scope is kept */
+@scope (.t09) {}
+/*! webpack: a nested empty rule is dropped, the outer one survives */
+.t10 { color: red; .t11 {} }
+/*! webpack: an outer rule left empty by its nested rules is dropped */
+.t12 { .t13 {} }
+/*! webpack: input the grammar rejects is not "empty" */
+.t14 { *zoom: 1 }
+/*! webpack: an empty declaration next to a real one */
+.t15 { color: ; background: red }
+/*! webpack: an empty custom property survives next to a dropped declaration */
+.t16 { --empty: ; color: ; background: red }
