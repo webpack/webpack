@@ -7,9 +7,6 @@ const config = {
 	optimization: {
 		chunkIds: "named" // keep filenames stable across modes (for this example)
 	},
-	experiments: {
-		css: true
-	},
 	plugins: [new webpack.SSRManifestPlugin()]
 };
 

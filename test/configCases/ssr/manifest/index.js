@@ -31,6 +31,13 @@ it("expands concatenated modules into individual source keys", () => {
 	expect(manifest["./helper.js"]).toEqual(manifest["./async.js"]);
 });
 
+it("leaves paths unprefixed when publicPath is empty", () => {
+	// the node target defaults `publicPath` to "", unlike the web target's "auto"
+	for (const files of Object.values(manifest)) {
+		for (const file of files) expect(file.startsWith("/")).toBe(false);
+	}
+});
+
 it("loads the async chunk at runtime", () =>
 	import("./async").then((m) => {
 		expect(m.default).toBe(42);

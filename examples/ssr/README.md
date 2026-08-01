@@ -44,9 +44,6 @@ const config = {
 	optimization: {
 		chunkIds: "named" // keep filenames stable across modes (for this example)
 	},
-	experiments: {
-		css: true
-	},
 	plugins: [new webpack.SSRManifestPlugin()]
 };
 
@@ -99,8 +96,7 @@ The server renders the same components and combines the manifest (for preloads) 
 //
 //   {
 //     target: "node",
-//     externalsPresets: { node: true, nodeModules: true },
-//     experiments: { css: true }
+//     externalsPresets: { node: true, nodeModules: true }
 //   }
 
 import { render } from "./page.js";
@@ -115,7 +111,7 @@ export function renderDocument() {
 	// Preload the client assets the rendered page needs, from the manifest.
 	const preloads = (manifest["./page.js"] || [])
 		.filter((file) => file.endsWith(".js"))
-		.map((file) => `<link rel="modulepreload" href="/${file}">`)
+		.map((file) => `<link rel="modulepreload" href="${file}">`)
 		.join("");
 
 	return `<!doctype html>

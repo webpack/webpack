@@ -12,8 +12,7 @@
 //
 //   {
 //     target: "node",
-//     externalsPresets: { node: true, nodeModules: true },
-//     experiments: { css: true }
+//     externalsPresets: { node: true, nodeModules: true }
 //   }
 
 import { render } from "./page.js";
@@ -28,7 +27,7 @@ export function renderDocument() {
 	// Preload the client assets the rendered page needs, from the manifest.
 	const preloads = (manifest["./page.js"] || [])
 		.filter((file) => file.endsWith(".js"))
-		.map((file) => `<link rel="modulepreload" href="/${file}">`)
+		.map((file) => `<link rel="modulepreload" href="${file}">`)
 		.join("");
 
 	return `<!doctype html>
