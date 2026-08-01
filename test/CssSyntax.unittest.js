@@ -925,6 +925,81 @@ describe("CssSyntax — minify keeps input the grammar rejects", () => {
 	});
 });
 
+describe("CssSyntax — minify value-safety edge cases", () => {
+	/**
+	 * @param {string} src css source
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src) =>
+		new SourceProcessor().process(src, { minimize: true }).code;
+
+	it("keeps An+B selector arguments verbatim (no sign stripping)", () => {
+		expect(min("a:nth-child(2n+1){b:c}")).toBe("a:nth-child(2n+1){b:c}");
+		expect(min("a:nth-last-child(-n+3){b:c}")).toBe(
+			"a:nth-last-child(-n+3){b:c}"
+		);
+		expect(min("a:nth-of-type(2n-1){b:c}")).toBe("a:nth-of-type(2n-1){b:c}");
+		expect(min("a:nth-child(+3){b:c}")).toBe("a:nth-child(+3){b:c}");
+		expect(min("a:nth-child(even){b:c}")).toBe("a:nth-child(even){b:c}");
+	});
+
+	it("still normalizes numbers in declaration values", () => {
+		expect(min("a{margin:+1.50px}")).toBe("a{margin:1.5px}");
+		expect(min("a{margin:0.50px 1.0px 0}")).toBe("a{margin:.5px 1px 0}");
+	});
+
+	it("keeps unicode-range values verbatim", () => {
+		expect(min("@font-face{unicode-range:U+0025-00FF}")).toBe(
+			"@font-face{unicode-range:U+0025-00FF}"
+		);
+		expect(min("@font-face{unicode-range:u+4??}")).toBe(
+			"@font-face{unicode-range:u+4??}"
+		);
+		expect(min("@font-face{unicode-range:U+26}")).toBe(
+			"@font-face{unicode-range:U+26}"
+		);
+		expect(min("@font-face{unicode-range:U+0-7F,U+80-FF}")).toBe(
+			"@font-face{unicode-range:U+0-7F,U+80-FF}"
+		);
+	});
+
+	it("does not turn an invalid mixed-channel rgb() into a valid color", () => {
+		expect(min("a{color:rgb(50%,100,30)}")).toBe("a{color:rgb(50%,100,30)}");
+		expect(min("a{color:rgb(50%,100%,30)}")).toBe("a{color:rgb(50%,100%,30)}");
+	});
+
+	it("still minifies all-number and all-percentage rgb()", () => {
+		expect(min("a{color:rgb(255,0,0)}")).toBe("a{color:red}");
+		expect(min("a{color:rgb(100%,0%,0%)}")).toBe("a{color:red}");
+	});
+
+	it("keeps a hash inside a non-color function verbatim (id reference)", () => {
+		expect(min("a{background:-moz-element(#Abc)}")).toBe(
+			"a{background:-moz-element(#Abc)}"
+		);
+	});
+
+	it("still minifies top-level and gradient hashes as colors", () => {
+		expect(min("a{color:#ABCDEF}")).toBe("a{color:#abcdef}");
+		expect(min("a{b:linear-gradient(#AABBCC,#FF0000)}")).toBe(
+			"a{b:linear-gradient(#abc,red)}"
+		);
+	});
+
+	it("does not leak the value context into the next parse after a visitor throw", () => {
+		const processor = new SourceProcessor().use({
+			[NodeType.Ident]: (
+				/** @type {import("../lib/css/syntax").CssPath} */ path
+			) => {
+				if (path.inValue()) throw new Error("boom");
+			}
+		});
+		expect(() => processor.process("a{color:red}")).toThrow("boom");
+		// A leaked in-value flag would treat the selector hash as a color here.
+		expect(min("#Face{color:red}")).toBe("#Face{color:red}");
+	});
+});
+
 describe("CssSyntax — nesting and error recovery", () => {
 	/**
 	 * @param {string} src css source
