@@ -1,14 +1,17 @@
 # Server-Side Rendering (SSR)
 
-This example shows the building blocks webpack provides for server-side rendering, aligned with the SSR features of Vite and Rspack/Rsbuild:
+Two builds from one source tree — a browser bundle and a Node bundle that renders the same route to HTML — using the SSR building blocks webpack provides:
 
-- **`SSRManifestPlugin`** emits `ssr-manifest.json`, mapping each source module to the client assets (JS chunks and CSS) it needs. The server uses it to inject `<link rel="modulepreload">` / stylesheet tags for exactly what it rendered.
-- **`__webpack_css_server_styles__`** returns the CSS collected during a server render, so the critical CSS can be inlined into the HTML (no flash of unstyled content).
-- **`externalsPresets.nodeModules`** externalizes installed packages from the Node server build, so dependencies are `require`d at runtime instead of bundled.
+| Feature                                              | What it does                                                                                                                                 |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `SSRManifestPlugin`                                  | Emits `ssr-manifest.json`: source module → the client files needed to run it, so the server can preload exactly what it rendered.             |
+| `ManifestPlugin`                                     | Emits `manifest.json`: emitted asset → its source, plus the entrypoint graph, for asset pipelines and backend templating.                     |
+| `__webpack_css_server_styles__`                      | The CSS collected while rendering without a DOM, ready to inline as critical CSS.                                                            |
+| `externalsPresets: { node, nodeModules }`            | Keeps node builtins and installed packages out of the server bundle; `allowlist` bundles individual packages anyway.                          |
+| `generator: { emit: false }`                         | The server build resolves asset URLs without writing the files a second time — the client build already emitted them.                        |
+| `import.meta.env.*`                                  | `MODE` / `DEV` / `PROD` / `BASE_URL`, plus `SSR` (`true` in a `target: "node"` build) to drop server-only code from the browser bundle.       |
 
-## Client build
-
-The client build emits the browser assets and the SSR manifest. `page.js` is code-split, so it (and its CSS) become a separate chunk described by the manifest.
+The server build targets the neutral `["web", "node"]` platform: the runtime guards browser APIs behind `typeof document === "undefined"`, which is what lets the CSS runtime collect styles instead of writing them into a document that is not there.
 
 # example.js
 
@@ -22,28 +25,32 @@ _{{example.js}}_
 _{{page.js}}_
 ```
 
+# server.js
+
+```javascript
+_{{server.js}}_
+```
+
 # webpack.config.js
 
 ```javascript
 _{{webpack.config.js}}_
 ```
 
-# dist/ssr-manifest.json
+# dist/client/ssr-manifest.json
 
-The manifest maps each source module to the client files needed to load it.
+Keyed by source module. `./page.js` lists its own chunk, its CSS, and any chunk it depends on.
 
 ```json
-_{{dist/ssr-manifest.json}}_
+_{{dist/client/ssr-manifest.json}}_
 ```
 
-## Server usage
+# dist/client/manifest.json
 
-The server renders the same components and combines the manifest (for preloads) with the collected critical CSS.
+Keyed by emitted asset, with the entrypoint graph alongside it.
 
-# server.js
-
-```javascript
-_{{server.js}}_
+```json
+_{{dist/client/manifest.json}}_
 ```
 
 # Info
