@@ -5,9 +5,13 @@
     "moduleResolution": "bundler"
   },
   "include": [
+    "declarations.d.ts",
     "test/*.benchmark.mjs",
     "test/harness/benchmark/**/*.mjs",
     "test/benchmarkCases/**/webpack.config.mjs",
-    "test/benchmarkCases/**/options.mjs"
+    "test/benchmarkCases/**/options.mjs",
+    "test/benchmark/lib/**/*.mjs",
+    "test/benchmark/helpers/**/*.mjs",
+    "test/benchmark/**/*.bench.mjs"
   ]
 }
