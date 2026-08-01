@@ -68,5 +68,26 @@ module.exports = {
 		expect(css).toContain(".h{color:red;.i{x:1}color:green}");
 		// @media prelude collapses, its block trims.
 		expect(css).toContain("@media screen and (min-width : 100px){");
+
+		// Quote normalization: an attribute value that is a bare identifier drops
+		// its quotes, one that is not keeps them; strings prefer `"`; a `url()`
+		// that is also a valid url-token loses its quotes.
+		expect(css).toContain('[data-kind=card],[data-kind="a card"]{');
+		expect(css).toContain(".png)");
+		expect(css).toContain("content:\"'quoted'\"");
+		// Easing functions collapse to the equal, shorter spelling.
+		expect(css).toContain("transition-timing-function:ease-in-out");
+		expect(css).toContain("animation-timing-function:step-start");
+
+		// Rules whose block ends up empty are dropped, at every nesting level.
+		expect(css).not.toContain(".empty");
+		expect(css).not.toContain(".also-empty");
+		expect(css).not.toContain("@media print");
+
+		// `-webkit-tap-highlight-color` keeps the function form.
+		expect(css).toContain("-webkit-tap-highlight-color:rgba(0,0,0,0)");
+
+		// An empty custom property survives; an empty regular declaration does not.
+		expect(css).toContain(".kept{--empty:;color:red}");
 	}
 };

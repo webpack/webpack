@@ -5873,7 +5873,7 @@ declare interface CssProcessOptions {
 	skip?: SkipOptions;
 
 	/**
-	 * print the safely-minified serialization (collapsed whitespace, dropped redundant separators) as `process` walks and return `{ code, map }` (default false = walk only, return `undefined`)
+	 * print the safely-minified serialization (collapsed whitespace, dropped redundant separators, the `printer`'s value transforms) as `process` walks and return `{ code, map }` (default false = walk only, return `undefined`)
 	 */
 	minimize?: boolean;
 
@@ -10059,7 +10059,7 @@ declare interface HtmlProcessOptions {
 	skip?: HtmlAstSkip;
 
 	/**
-	 * print the safely-minified serialization (nodes rebuilt from source, inert comments dropped) as `process` walks, and return it (default false = walk only, return `""`)
+	 * print the safely-minified serialization (nodes rebuilt from source, inert comments dropped, opening tags rewritten) as `process` walks, and return it (default false = walk only, return `""`)
 	 */
 	minimize?: boolean;
 }

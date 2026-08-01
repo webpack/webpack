@@ -60,3 +60,30 @@
 		content : "; } , keep {" ;
 	}
 }
+
+/* Quote normalization (strings, attribute selectors and url()), easing-function
+   keywords and empty-rule removal — the rest of the value-identical set. */
+[ data-kind = 'card' ] ,
+[ data-kind = 'a card' ] {
+	background : url( './img.png' ) ;
+	content : '\'quoted\'' ;
+	transition-timing-function : cubic-bezier( 0.42 , 0 , 0.58 , 1 ) ;
+	animation-timing-function : steps( 1 , jump-start ) ;
+}
+
+.empty { }
+@media print { .also-empty { } }
+
+/* `transparent` is not substituted for this one property: some mobile WebKit
+   builds honor the function form and ignore the keyword. */
+.tap {
+	-webkit-tap-highlight-color : rgba( 0 , 0 , 0 , 0 ) ;
+}
+
+/* An empty custom property is the guaranteed-invalid value a `var()` fallback
+   reads, so it survives while an empty regular declaration does not. */
+.kept {
+	--empty : ;
+	color : ;
+	color : red ;
+}

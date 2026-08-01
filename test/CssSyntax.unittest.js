@@ -1522,3 +1522,444 @@ describe("CssSyntax — SourceProcessor without visitors", () => {
 		).not.toThrow();
 	});
 });
+
+describe("CssSyntax — minify string quoting", () => {
+	/**
+	 * @param {string} src css source
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src) =>
+		new SourceProcessor().process(src, { minimize: true }).code;
+
+	// Ported from cssnano's `postcss-normalize-string` suite.
+	it("prefers double quotes", () => {
+		expect(min('p:after{content:""}')).toBe('p:after{content:""}');
+		expect(min("p:after{content:''}")).toBe('p:after{content:""}');
+	});
+
+	it("keeps a wrapper that already avoids escaping a literal quote", () => {
+		expect(min("p:after{content:\"'string' is intact\"}")).toBe(
+			"p:after{content:\"'string' is intact\"}"
+		);
+		expect(min("p:after{content:'\"string\" is intact'}")).toBe(
+			"p:after{content:'\"string\" is intact'}"
+		);
+	});
+
+	it("swaps the wrapper to unescape a quote", () => {
+		expect(min("p:after{content:'\\'string\\' is intact'}")).toBe(
+			"p:after{content:\"'string' is intact\"}"
+		);
+		expect(min('p:after{content:"\\"string\\" is intact"}')).toBe(
+			"p:after{content:'\"string\" is intact'}"
+		);
+	});
+
+	it("leaves a string holding literal quotes of both kinds alone", () => {
+		expect(min('p:after{content:"\\"string\\" is \'intact\'"}')).toBe(
+			'p:after{content:"\\"string\\" is \'intact\'"}'
+		);
+		expect(min("p:after{content:'\"string\" is \\'intact\\''}")).toBe(
+			"p:after{content:'\"string\" is \\'intact\\''}"
+		);
+	});
+
+	it("keeps the wrapper but unescapes the other quote when both are escaped", () => {
+		expect(min("p:after{content:'\\'string\\' is \\\"intact\\\"'}")).toBe(
+			"p:after{content:'\\'string\\' is \"intact\"'}"
+		);
+		expect(min('p:after{content:"\\\'string\\\' is \\"intact\\""}')).toBe(
+			'p:after{content:"\'string\' is \\"intact\\""}'
+		);
+	});
+
+	it("normalizes strings everywhere a value can hold one", () => {
+		expect(min("p:after{content:'(' attr(href) ')'}")).toBe(
+			'p:after{content:"(" attr(href) ")"}'
+		);
+		expect(min("q{quotes:'«' \"»\"}")).toBe('q{quotes:"«" "»"}');
+		expect(min("p{font-language-override:'DAN'}")).toBe(
+			'p{font-language-override:"DAN"}'
+		);
+		expect(min("p{grid-template:'a a a' \"b b b\"}")).toBe(
+			'p{grid-template:"a a a" "b b b"}'
+		);
+		expect(min("ul{list-style-type:'-'}")).toBe('ul{list-style-type:"-"}');
+		expect(min("p{text-emphasis-style:'\\25B2'}")).toBe(
+			'p{text-emphasis-style:"\\25B2"}'
+		);
+		expect(min("p{font:1em/1.5 'slab serif'}")).toBe(
+			'p{font:1em/1.5 "slab serif"}'
+		);
+		expect(
+			min(
+				"@font-face{font-family:'slab serif';src:local('slab serif'),url(slab.ttf) format('truetype')}"
+			)
+		).toBe(
+			'@font-face{font-family:"slab serif";src:local("slab serif"),url(slab.ttf) format("truetype")}'
+		);
+	});
+
+	it("normalizes strings in an attribute selector", () => {
+		expect(min('[a="escaped \\" quote"]{color:#00f}')).toBe(
+			"[a='escaped \" quote']{color:#00f}"
+		);
+		expect(min("[a='escaped \\' quote']{color:#00f}")).toBe(
+			'[a="escaped \' quote"]{color:#00f}'
+		);
+	});
+
+	it("keeps a hex escape and a line continuation verbatim", () => {
+		// Unlike cssnano, a `\`-newline continuation stays: dropping it can fuse
+		// into a preceding hex escape (`"\61\<nl>b"` would decode to U+061B).
+		expect(min('a{content:"\\61\\\nb"}')).toBe('a{content:"\\61\\\nb"}');
+		expect(min("a{content:'\\27'}")).toBe('a{content:"\\27"}');
+	});
+
+	it("leaves a string the tokenizer closed at EOF alone", () => {
+		expect(min("a{content:'abc")).toBe("a{content:'abc}");
+	});
+});
+
+describe("CssSyntax — minify url quoting", () => {
+	/**
+	 * @param {string} src css source
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src) =>
+		new SourceProcessor().process(src, { minimize: true }).code;
+
+	// Ported from cssnano's `postcss-normalize-url` suite (quote / whitespace
+	// handling only — the URL itself is never rewritten, since webpack passes it
+	// through to a server that may read it verbatim).
+	it("strips quotes a url-token does not need", () => {
+		expect(min('h1{background:url("cat.jpg")}')).toBe(
+			"h1{background:url(cat.jpg)}"
+		);
+		expect(min("h1{background:url('cat.jpg')}")).toBe(
+			"h1{background:url(cat.jpg)}"
+		);
+		expect(min('h1{background:URL("cat.jpg")}')).toBe(
+			"h1{background:URL(cat.jpg)}"
+		);
+		expect(min("@import url('foo.css');")).toBe("@import url(foo.css);");
+		expect(min('h1{background:url("")}')).toBe("h1{background:url()}");
+	});
+
+	it("keeps quotes a url-token would need", () => {
+		expect(min('h1{background:url("http://x.com/assets_(test).png")}')).toBe(
+			'h1{background:url("http://x.com/assets_(test).png")}'
+		);
+		expect(min('h1{background:url("cat pic.jpg")}')).toBe(
+			'h1{background:url("cat pic.jpg")}'
+		);
+		expect(min('h1{background:url("a\\"b.png")}')).toBe(
+			"h1{background:url('a\"b.png')}"
+		);
+		expect(
+			min(
+				"h1{background:url(\"data:image/svg+xml,%3Csvg width='1'%3E%3C/svg%3E\")}"
+			)
+		).toBe(
+			"h1{background:url(\"data:image/svg+xml,%3Csvg width='1'%3E%3C/svg%3E\")}"
+		);
+	});
+
+	it("drops the padding inside a url-token", () => {
+		expect(min("h1{background:url(               test.png           )}")).toBe(
+			"h1{background:url(test.png)}"
+		);
+		expect(min("h1{background:url(               )}")).toBe(
+			"h1{background:url()}"
+		);
+	});
+
+	it("never rewrites the URL itself", () => {
+		// cssnano resolves `..`, drops default ports and `./` — all of which change
+		// what the server is asked for.
+		expect(min("h1{background:url(http://website.com:80/image.png)}")).toBe(
+			"h1{background:url(http://website.com:80/image.png)}"
+		);
+		expect(min("h1{background:url(css/../font/t.eot)}")).toBe(
+			"h1{background:url(css/../font/t.eot)}"
+		);
+		expect(min("h1{background:url(./images/cat.png)}")).toBe(
+			"h1{background:url(./images/cat.png)}"
+		);
+		expect(min("h1{background:url(test.svg#icon)}")).toBe(
+			"h1{background:url(test.svg#icon)}"
+		);
+	});
+});
+
+describe("CssSyntax — minify empty rules", () => {
+	/**
+	 * @param {string} src css source
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src) =>
+		new SourceProcessor().process(src, { minimize: true }).code;
+
+	// Ported from cssnano's `postcss-discard-empty` suite.
+	it("drops style rules whose block ends up empty", () => {
+		expect(min("h1{}h2{}h4{}h5,h6{}")).toBe("");
+		expect(min("h1{color:}")).toBe("");
+		expect(min("h1{/*comment*/}")).toBe("");
+		expect(min("h1{}h2{color:red}")).toBe("h2{color:red}");
+		expect(min("@media screen{h1,h2{}}")).toBe("");
+		expect(min("@media screen,print{h1{}h2{color:red}}")).toBe(
+			"@media screen,print{h2{color:red}}"
+		);
+	});
+
+	it("keeps an at-rule whose empty block still carries meaning", () => {
+		// An empty `@keyframes` still runs the animation (so its events fire), and
+		// an empty `@layer` declares that layer's place in the cascade order.
+		expect(min("@keyframes a{}")).toBe("@keyframes a{}");
+		expect(min("@layer a{}@layer b{}")).toBe("@layer a{}@layer b{}");
+		expect(min("@font-face{}")).toBe("@font-face{}");
+		expect(min('@charset "utf-8";')).toBe('@charset "utf-8";');
+	});
+
+	it("drops an empty keyframe but never the keyframes rule", () => {
+		expect(min("@keyframes a{from{}to{opacity:1}}")).toBe(
+			"@keyframes a{to{opacity:1}}"
+		);
+		expect(min("@keyframes a{from{}}")).toBe("@keyframes a{}");
+	});
+
+	it("keeps a rule the grammar rejected the contents of", () => {
+		// `*zoom:1` is not a declaration, so the block is "empty" to the parser —
+		// but the source had content, so the rule must survive.
+		expect(min("a{*zoom:1}")).toBe("a{*zoom:1}");
+	});
+});
+
+describe("CssSyntax — minify easing functions", () => {
+	/**
+	 * @param {string} src css source
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src) =>
+		new SourceProcessor().process(src, { minimize: true }).code;
+
+	/**
+	 * @param {string} fixture the easing function as authored
+	 * @returns {string} what it minifies to as a timing-function value
+	 */
+	const easing = (fixture) =>
+		min(`a{transition-timing-function:${fixture}}`).slice(
+			"a{transition-timing-function:".length,
+			-1
+		);
+
+	// Ported from cssnano's `postcss-normalize-timing-functions` suite and
+	// lightningcss's easing-function tests.
+	it("collapses a cubic-bezier() that is exactly a keyword", () => {
+		expect(easing("cubic-bezier(0.25, 0.1, 0.25, 1)")).toBe("ease");
+		expect(easing("CUBIC-BEZIER(0.25, 0.1, 0.25, 1)")).toBe("ease");
+		expect(easing("cubic-bezier(0.250, 0.10, 0.250, 1)")).toBe("ease");
+		expect(easing("cubic-bezier(0, 0, 1, 1)")).toBe("linear");
+		expect(easing("cubic-bezier(0.42, 0, 1, 1)")).toBe("ease-in");
+		expect(easing("cubic-bezier(0, 0, 0.58, 1)")).toBe("ease-out");
+		expect(easing("cubic-bezier(0.42, 0, 0.58, 1)")).toBe("ease-in-out");
+	});
+
+	it("keeps a cubic-bezier() that is not a keyword", () => {
+		expect(easing("cubic-bezier(0.58, 0.2, 0.11, 1.2)")).toBe(
+			"cubic-bezier(.58,.2,.11,1.2)"
+		);
+		expect(easing("cubic-bezier()")).toBe("cubic-bezier()");
+		expect(easing("cubic-bezier(0, 0, 1, 1, 1, 1)")).toBe(
+			"cubic-bezier(0,0,1,1,1,1)"
+		);
+	});
+
+	it("keeps a cubic-bezier() whose arguments are not plain numbers", () => {
+		// A `var()` is unknown until custom-property substitution, and a dimension
+		// makes the declaration invalid — rewriting one would activate it.
+		expect(easing("cubic-bezier(0.25, var(--foo), 0.25, 1)")).toBe(
+			"cubic-bezier(.25,var(--foo),.25,1)"
+		);
+		expect(easing("cubic-bezier(0.250, 1e-1px, 0.250, 1)")).toBe(
+			"cubic-bezier(.25,1e-1px,.25,1)"
+		);
+		expect(easing("var(--anim1)")).toBe("var(--anim1)");
+	});
+
+	it("collapses a single-step steps() to its keyword", () => {
+		expect(easing("steps(1, start)")).toBe("step-start");
+		expect(easing("steps(1, START)")).toBe("step-start");
+		expect(easing("STEPS(1, start)")).toBe("step-start");
+		expect(easing("steps(1, jump-start)")).toBe("step-start");
+		expect(easing("steps(1, end)")).toBe("step-end");
+		expect(easing("steps(1, jump-end)")).toBe("step-end");
+		expect(easing("steps(1, JUMP-END)")).toBe("step-end");
+	});
+
+	it("drops the default steps() position and aliases jump-start", () => {
+		expect(easing("steps(10, end)")).toBe("steps(10)");
+		expect(easing("steps(10, jump-end)")).toBe("steps(10)");
+		expect(easing("steps(5, jump-start)")).toBe("steps(5,start)");
+		expect(easing("steps(5,start)")).toBe("steps(5,start)");
+	});
+
+	it("keeps a steps() nothing shorter is equal to", () => {
+		expect(easing("steps(1)")).toBe("steps(1)");
+		expect(easing("steps(15)")).toBe("steps(15)");
+		expect(easing("steps(5, jump-both)")).toBe("steps(5,jump-both)");
+		expect(easing("steps(5, jump-none)")).toBe("steps(5,jump-none)");
+		expect(easing("steps(10, start())")).toBe("steps(10,start())");
+	});
+
+	it("minifies every easing function in a list", () => {
+		expect(
+			min(
+				"h1{animation-timing-function:cubic-bezier(0, 0, 1, 1),cubic-bezier(0, 0, 1, 1),steps(1, start)}"
+			)
+		).toBe("h1{animation-timing-function:linear,linear,step-start}");
+		expect(min("a{animation:fade 3s cubic-bezier(0.25, 0.1, 0.25, 1)}")).toBe(
+			"a{animation:fade 3s ease}"
+		);
+		expect(min("a{transition:color 3s steps(1, jump-start)}")).toBe(
+			"a{transition:color 3s step-start}"
+		);
+	});
+
+	it("leaves an easing function inside a custom property verbatim", () => {
+		expect(min("a{--e:cubic-bezier(0.25, 0.1, 0.25, 1)}")).toBe(
+			"a{--e:cubic-bezier(0.25, 0.1, 0.25, 1)}"
+		);
+	});
+});
+
+describe("CssSyntax — minify attribute selectors", () => {
+	/**
+	 * @param {string} src css source
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src) =>
+		new SourceProcessor().process(src, { minimize: true }).code;
+
+	// Ported from lightningcss's attribute-selector tests.
+	it("unquotes a value that is a bare identifier", () => {
+		expect(min('[foo="baz"]{color:red}')).toBe("[foo=baz]{color:red}");
+		expect(min('.test:not([foo="bar"]){color:red}')).toBe(
+			".test:not([foo=bar]){color:red}"
+		);
+		expect(min('[foo="--baz"]{color:red}')).toBe("[foo=--baz]{color:red}");
+		expect(min('[foo="a-b_c"]{color:red}')).toBe("[foo=a-b_c]{color:red}");
+	});
+
+	it("keeps quotes a bare identifier could not carry", () => {
+		expect(min('[foo="foo bar"]{color:red}')).toBe(
+			'[foo="foo bar"]{color:red}'
+		);
+		expect(min('[foo=""]{color:red}')).toBe('[foo=""]{color:red}');
+		// `1px` is a dimension, `-1` a number and `a.b` two tokens — none re-parse
+		// as the single identifier the quoted value stands for.
+		expect(min('[foo="1px"]{color:red}')).toBe('[foo="1px"]{color:red}');
+		expect(min('[foo="-1"]{color:red}')).toBe('[foo="-1"]{color:red}');
+		expect(min('[foo="-"]{color:red}')).toBe('[foo="-"]{color:red}');
+		expect(min('[foo="a.b"]{color:red}')).toBe('[foo="a.b"]{color:red}');
+		expect(min('[foo="a\\"b"]{color:red}')).toBe("[foo='a\"b']{color:red}");
+	});
+
+	it("unquotes behind every matcher and keeps the modifier separated", () => {
+		expect(min('[foo~="baz"]{color:red}')).toBe("[foo~=baz]{color:red}");
+		expect(min('[foo|="baz"]{color:red}')).toBe("[foo|=baz]{color:red}");
+		expect(min('[foo^="baz"]{color:red}')).toBe("[foo^=baz]{color:red}");
+		expect(min('[foo$="baz"]{color:red}')).toBe("[foo$=baz]{color:red}");
+		expect(min('[foo*="baz"]{color:red}')).toBe("[foo*=baz]{color:red}");
+		expect(min('[foo="baz" i]{color:red}')).toBe("[foo=baz i]{color:red}");
+		expect(min('[foo="baz"i]{color:red}')).toBe("[foo=baz i]{color:red}");
+		expect(min('[foo="a b" s]{color:red}')).toBe('[foo="a b" s]{color:red}');
+	});
+
+	it("drops the whitespace the `[…]` grammar allows anywhere", () => {
+		expect(min("[ foo ]{color:red}")).toBe("[foo]{color:red}");
+		expect(min("[ foo = bar ]{color:red}")).toBe("[foo=bar]{color:red}");
+		expect(min("[ foo ^= 'bar' i ]{color:red}")).toBe(
+			"[foo^=bar i]{color:red}"
+		);
+	});
+
+	it("leaves a `[…]` that is not a matcher alone", () => {
+		// Grid line names sit in a value, and a bare `[…]` has no `=` to unquote
+		// behind — a string there is a value, not an attribute match.
+		expect(min('a{grid-template-columns:[full-start] 1fr "x"}')).toBe(
+			'a{grid-template-columns:[full-start] 1fr "x"}'
+		);
+		expect(min("a{grid-template-columns:['x']}")).toBe(
+			'a{grid-template-columns:["x"]}'
+		);
+		expect(min("[data-x]{color:red}")).toBe("[data-x]{color:red}");
+	});
+});
+
+describe("CssSyntax — minify color safety", () => {
+	/**
+	 * @param {string} src css source
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src) =>
+		new SourceProcessor().process(src, { minimize: true }).code;
+
+	// Ported from cssnano's `postcss-colormin` suite (the transforms webpack
+	// applies — hex shortening and rgb()/rgba(); hsl() is deliberately not
+	// converted, since its hue math can round to a different byte).
+	it("shortens hex colors", () => {
+		expect(min("h1{background:#FFFFFF}")).toBe("h1{background:#fff}");
+		expect(min("h1{background:#F0FFFF}")).toBe("h1{background:azure}");
+		expect(min("h1{text-shadow:1px 1px 2px #000000}")).toBe(
+			"h1{text-shadow:1px 1px 2px #000}"
+		);
+		expect(
+			min("h1{background:linear-gradient(#ffffff,#999999) no-repeat}")
+		).toBe("h1{background:linear-gradient(#fff,#999) no-repeat}");
+	});
+
+	it("shortens rgb()/rgba() that resolve to an opaque color", () => {
+		expect(min("h1{text-shadow:1px 1px 2px rgb(255, 255, 255)}")).toBe(
+			"h1{text-shadow:1px 1px 2px #fff}"
+		);
+		expect(min("h1{color:rgb(100%,100%,100%)}")).toBe("h1{color:#fff}");
+		expect(
+			min("h1{background:linear-gradient(rgb(50, 50, 50) 0%,blue 100%)}")
+		).toBe("h1{background:linear-gradient(#323232 0%,blue 100%)}");
+	});
+
+	it("keeps a color it cannot prove identical", () => {
+		expect(min("h1{color:rgb(50%, 23, 54)}")).toBe("h1{color:rgb(50%,23,54)}");
+		expect(min("h1{box-shadow:0 1px 3px rgba(255, 230, 220, 0.5)}")).toBe(
+			"h1{box-shadow:0 1px 3px rgba(255,230,220,.5)}"
+		);
+		expect(min("h1{text-shadow:1px 1px 2px hsl(0,0%,100%)}")).toBe(
+			"h1{text-shadow:1px 1px 2px hsl(0,0%,100%)}"
+		);
+		expect(min("h1{font-family:black}")).toBe("h1{font-family:black}");
+		expect(min("h1{width:calc(100vw / 2 - 6px + 0)}")).toBe(
+			"h1{width:calc(100vw / 2 - 6px + 0)}"
+		);
+	});
+
+	it("keeps -webkit-tap-highlight-color as a function", () => {
+		// Some mobile WebKit builds ignore the `transparent` keyword here while
+		// honoring the equivalent `rgba(0,0,0,0)`.
+		expect(min("h1{-webkit-tap-highlight-color:rgba(0,0,0,0)}")).toBe(
+			"h1{-webkit-tap-highlight-color:rgba(0,0,0,0)}"
+		);
+		expect(min("h1{-WebKit-Tap-Highlight-Color:rgba(0,0,0,0)}")).toBe(
+			"h1{-WebKit-Tap-Highlight-Color:rgba(0,0,0,0)}"
+		);
+		expect(min("h1{-webkit-tap-highlight-color:transparent}")).toBe(
+			"h1{-webkit-tap-highlight-color:transparent}"
+		);
+		// The guard is scoped to that one property.
+		expect(min("h1{color:rgba(0,0,0,0)}")).toBe("h1{color:transparent}");
+		// It also does not leak into the next declaration.
+		expect(
+			min("h1{-webkit-tap-highlight-color:rgba(0,0,0,0);color:rgb(0,0,0)}")
+		).toBe("h1{-webkit-tap-highlight-color:rgba(0,0,0,0);color:#000}");
+	});
+});
