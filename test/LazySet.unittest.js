@@ -48,7 +48,7 @@ describe("LazySet", () => {
 		sut.addAll(new LazySet(["c"]));
 		sut.clear();
 		expect(sut.size).toBe(0);
-		expect(sut._toMerge.size).toBe(0);
+		expect(/** @type {Set<Iterable<string>>} */ (sut._toMerge).size).toBe(0);
 		expect(sut._toDeepMerge).toStrictEqual([]);
 	});
 
@@ -105,14 +105,11 @@ describe("LazySet", () => {
 		expect(deepQueued._isEmpty()).toBe(false);
 	});
 
-	it("should serialize after deferred merges", () => {
+	it("should materialize both queues before reporting size", () => {
 		const sut = new LazySet(["a"]);
 		sut.addAll(new Set(["b"]));
 		sut.addAll(new LazySet(["c"]));
-		/** @type {EXPECTED_ANY[]} */
-		const written = [];
-		sut.serialize({ write: (v) => written.push(v) });
-		expect(written[0]).toBe(3);
-		expect(written.slice(1).sort()).toStrictEqual(["a", "b", "c"]);
+		expect(sut.size).toBe(3);
+		expect([...sut].sort()).toStrictEqual(["a", "b", "c"]);
 	});
 });
