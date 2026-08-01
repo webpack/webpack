@@ -21,7 +21,6 @@ const path = require("path");
 const zlib = require("zlib");
 
 const cssMinify = require("../lib/css/cssMinify");
-const { unescapeIdentifier } = require("../lib/css/syntax");
 
 const ROOT = path.resolve(__dirname, "..");
 const CACHE = path.join(ROOT, "node_modules/.cache/css-minifier-comparison");
@@ -35,6 +34,7 @@ const PACKAGES = [
 	"esbuild@0.25",
 	"lightningcss@1",
 	"postcss@8",
+	"postcss-selector-parser@7",
 	"tailwindcss@4",
 	"@tailwindcss/cli@4"
 ];
@@ -156,32 +156,29 @@ const minifiers = () => {
 	];
 };
 
-// A class token, read off selectors a real parser produced — a size win that
-// drops one of these is not a size win. A hex escape may swallow one whitespace
-// as its terminator (`.\32 xl` is the single class `2xl`), so it has to be
-// matched as part of the name, or the *input* tokenizes into the wrong classes.
-const ESCAPE = String.raw`\\[\da-fA-F]{1,6}[ \t\n\f\r]?|\\[^\n]`;
-const CLASS_RE = new RegExp(
-	// eslint-disable-next-line no-irregular-whitespace -- U+00A0 is a range bound here, not whitespace
-	String.raw`\.(-?(?:${ESCAPE}|[_a-zA-Z -￿])(?:${ESCAPE}|[-\w -￿])*)`,
-	"g"
-);
-
 /**
- * Every class a stylesheet's selectors mention, escapes resolved — `.\32 xl` and
- * `.\32xl` are two spellings of one class, and a minifier is free to pick either.
+ * Every class a stylesheet's selectors mention. Both layers are real parsers —
+ * postcss for the rules, postcss-selector-parser for their selectors — because a
+ * size win that drops a class is not a size win, and hand-matching `.name` gets
+ * the count wrong: a hex escape may swallow its terminating whitespace, so
+ * `.\32 xl` and `.\32xl` are one class, and a `.` inside `[href=".foo"]` is not
+ * one at all. The parser resolves both, so equivalent re-spellings compare equal.
  * @param {EXPECTED_ANY} postcss the postcss export
+ * @param {EXPECTED_ANY} selectorParser the postcss-selector-parser export
  * @param {string} css a stylesheet
  * @returns {Set<string>} the classes it matches on
  */
-const classSelectors = (postcss, css) => {
+const classSelectors = (postcss, selectorParser, css) => {
 	const set = new Set();
+	const collect = selectorParser((/** @type {EXPECTED_ANY} */ root) => {
+		root.walkClasses((/** @type {EXPECTED_ANY} */ node) => set.add(node.value));
+	});
 	postcss.parse(css).walkRules((/** @type {EXPECTED_ANY} */ rule) => {
-		CLASS_RE.lastIndex = 0;
-		let m = CLASS_RE.exec(rule.selector);
-		while (m !== null) {
-			set.add(unescapeIdentifier(m[1]));
-			m = CLASS_RE.exec(rule.selector);
+		// A selector the parser rejects is not a class source worth guessing at.
+		try {
+			collect.processSync(rule.selector);
+		} catch (_error) {
+			// ignore
 		}
 	});
 	return set;
@@ -196,13 +193,14 @@ const kb = (bytes) => `${(bytes / 1024).toFixed(1)} KB`;
 const main = async () => {
 	setup();
 	const postcss = load("postcss");
+	const selectorParser = load("postcss-selector-parser");
 	for (const [label, file] of fixtures()) {
 		// A trailing sourceMappingURL is a build artifact, not stylesheet content,
 		// and the minifiers disagree on keeping it.
 		const css = fs
 			.readFileSync(file, "utf8")
 			.replace(/\/\*#\s*sourceMappingURL=[^*]*\*\/\s*$/, "");
-		const before = classSelectors(postcss, css);
+		const before = classSelectors(postcss, selectorParser, css);
 		const gzipped = zlib.gzipSync(Buffer.from(css), { level: 9 }).length;
 		process.stdout.write(
 			`\n${label} — ${kb(Buffer.byteLength(css))} (${kb(gzipped)} gzip), ${before.size} classes\n`
@@ -219,7 +217,7 @@ const main = async () => {
 				const took = Number(process.hrtime.bigint() - started) / 1e6;
 				if (took < best) best = took;
 			}
-			const after = classSelectors(postcss, out);
+			const after = classSelectors(postcss, selectorParser, out);
 			const lost = [...before].filter((c) => !after.has(c));
 			const outGzip = zlib.gzipSync(Buffer.from(out), { level: 9 }).length;
 			process.stdout.write(
