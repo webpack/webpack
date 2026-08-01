@@ -4929,4 +4929,30 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 			expect(minify("<plaintext>foo")).toBe("<plaintext>foo");
 		});
 	});
+
+	describe("opening-tag whitespace", () => {
+		it("collapses the run before a valueless attribute", () => {
+			expect(minify("<p   hidden   class='x'>t</p>")).toBe(
+				"<p hidden class='x'>t</p>"
+			);
+			expect(minify("<input    disabled>")).toBe("<input disabled>");
+			expect(minify("<p   a   b   c>t</p>")).toBe("<p a b c>t</p>");
+		});
+
+		it("keeps a foreign element's self-closing slash", () => {
+			expect(minify("<svg><circle   r='1'   /></svg>")).toBe(
+				"<svg><circle r='1'/></svg>"
+			);
+			// After an unquoted value the `/` needs its space, or it would fuse
+			// into the value.
+			expect(minify("<svg><circle   r=1   /></svg>")).toBe(
+				"<svg><circle r=1 /></svg>"
+			);
+			expect(minify("<svg><circle/></svg>")).toBe("<svg><circle/></svg>");
+		});
+
+		it("leaves a `/` that is the last character of an unquoted value", () => {
+			expect(minify("<a href=x/>t</a>")).toBe("<a href=x/>t</a>");
+		});
+	});
 });
