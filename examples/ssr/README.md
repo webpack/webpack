@@ -9,9 +9,10 @@ Two builds from one source tree — a browser bundle and a Node bundle that rend
 | `__webpack_css_server_styles__`                      | The CSS collected while rendering without a DOM, ready to inline as critical CSS.                                                            |
 | `externalsPresets: { node, nodeModules }`            | Keeps node builtins and installed packages out of the server bundle; `allowlist` bundles individual packages anyway.                          |
 | `generator: { emit: false }`                         | The server build resolves asset URLs without writing the files a second time — the client build already emitted them.                        |
-| `import.meta.env.*`                                  | `MODE` / `DEV` / `PROD` / `BASE_URL`, plus `SSR` (`true` in a `target: "node"` build) to drop server-only code from the browser bundle.       |
+| `generator.css.exportsOnly`                          | Defaults to `true` on a document-less target, so a server build emits no stylesheets at all; set it to `false` to write them anyway.          |
+| `import.meta.env.*`                                  | `SSR` is `true` in this `target: "node"` build and `false` in the client one, so server-only branches leave the browser bundle. Also `MODE` / `DEV` / `PROD` / `BASE_URL`. |
 
-The server build targets the neutral `["web", "node"]` platform: the runtime guards browser APIs behind `typeof document === "undefined"`, which is what lets the CSS runtime collect styles instead of writing them into a document that is not there.
+The server build targets `node`, so webpack knows there is no DOM: `import.meta.env.SSR` folds to `true`, and the CSS runtime collects the styles instead of linking them into a page. It opts back into emitting stylesheets (`exportsOnly: false`) only because the collected CSS is read back from them; leave the default on and the server build writes no CSS at all.
 
 # example.js
 
@@ -45,8 +46,8 @@ export function render() {
 import { readFileSync } from "node:fs";
 
 // The Node half of the app: it renders the route to HTML and consumes the
-// client build's artifacts. Read at request time so a rebuilt client is picked
-// up without restarting the server.
+// client build's artifacts. Read once at startup; re-read per request if the
+// client is rebuilt while the server is running.
 const manifest = JSON.parse(
 	readFileSync("dist/client/ssr-manifest.json", "utf8")
 );
@@ -57,9 +58,9 @@ export async function renderDocument() {
 	const { render } = await import("./page.js");
 	const body = render();
 
-	// CSS collected while rendering without a DOM; empty in the browser, where
-	// the same runtime puts the styles into the document instead.
-	const criticalCss = __webpack_css_server_styles__;
+	// CSS collected while rendering without a DOM. `SSR` is `true` only in a
+	// node build, so this branch is dropped from the browser bundle entirely.
+	const criticalCss = import.meta.env.SSR ? __webpack_css_server_styles__ : "";
 
 	// Exactly the client files the rendered module needs, including the chunks
 	// it depends on — without them the browser would discover them one round
@@ -117,9 +118,9 @@ const client = {
 /** @type {import("webpack").Configuration} */
 const server = {
 	name: "server",
-	// neutral platform: browser APIs are guarded at runtime, so the CSS runtime
-	// collects the styles instead of touching a DOM that is not there
-	target: ["web", "node"],
+	// a node target has no DOM, so `import.meta.env.SSR` is `true` here and the
+	// CSS runtime collects the styles rather than linking them into a page
+	target: "node",
 	entry: "./server.js",
 	output: {
 		path: path.resolve(__dirname, "dist/server"),
@@ -138,10 +139,20 @@ const server = {
 				// the client build already wrote these files; only the URL is needed here
 				generator: { emit: false }
 			}
-		]
+		],
+		generator: {
+			css: {
+				// a document-less target emits no stylesheets by default; opt in,
+				// because the collected CSS below is read back from them
+				exportsOnly: false
+			}
+		}
 	},
 	optimization: {
 		chunkIds: "named"
+	},
+	experiments: {
+		outputModule: true
 	}
 };
 
@@ -238,14 +249,14 @@ client:
   client (webpack X.X.X) compiled successfully
 
 server:
-  asset main.mjs 15.9 KiB [emitted] [javascript module] (name: main)
+  asset main.mjs 14 KiB [emitted] [javascript module] (name: main)
   asset page_js.mjs 867 bytes [emitted] [javascript module]
   asset page_js.css 121 bytes [emitted]
-  chunk (runtime: main) main.mjs (main) 1.28 KiB (javascript) 8.39 KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) main.mjs (main) 1.33 KiB (javascript) 6.95 KiB (runtime) [entry] [rendered]
     > ./server.js main
-    runtime modules 8.39 KiB 11 modules
+    runtime modules 6.95 KiB 11 modules
     dependent modules 42 bytes [dependent] 1 module
-    ./server.js 1.24 KiB [built] [code generated]
+    ./server.js 1.29 KiB [built] [code generated]
       [exports: renderDocument]
       [used exports unknown]
       entry ./server.js main
@@ -297,13 +308,13 @@ client:
   client (webpack X.X.X) compiled successfully
 
 server:
-  asset main.mjs 3.42 KiB [emitted] [javascript module] [minimized] (name: main)
+  asset main.mjs 2.67 KiB [emitted] [javascript module] [minimized] (name: main)
   asset page_js-page_css.mjs 258 bytes [emitted] [javascript module] [minimized]
   asset page_js-page_css.css 30 bytes [emitted] [minimized]
-  chunk (runtime: main) main.mjs (main) 1.28 KiB (javascript) 8.17 KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) main.mjs (main) 1.33 KiB (javascript) 6.72 KiB (runtime) [entry] [rendered]
     > ./server.js main
-    runtime modules 8.17 KiB 10 modules
-    ./server.js + 1 modules 1.28 KiB [not cacheable] [built] [code generated]
+    runtime modules 6.72 KiB 10 modules
+    ./server.js + 1 modules 1.33 KiB [not cacheable] [built] [code generated]
       [exports: renderDocument]
       [all exports used]
       entry ./server.js main

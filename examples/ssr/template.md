@@ -9,9 +9,10 @@ Two builds from one source tree — a browser bundle and a Node bundle that rend
 | `__webpack_css_server_styles__`                      | The CSS collected while rendering without a DOM, ready to inline as critical CSS.                                                            |
 | `externalsPresets: { node, nodeModules }`            | Keeps node builtins and installed packages out of the server bundle; `allowlist` bundles individual packages anyway.                          |
 | `generator: { emit: false }`                         | The server build resolves asset URLs without writing the files a second time — the client build already emitted them.                        |
-| `import.meta.env.*`                                  | `MODE` / `DEV` / `PROD` / `BASE_URL`, plus `SSR` (`true` in a `target: "node"` build) to drop server-only code from the browser bundle.       |
+| `generator.css.exportsOnly`                          | Defaults to `true` on a document-less target, so a server build emits no stylesheets at all; set it to `false` to write them anyway.          |
+| `import.meta.env.*`                                  | `SSR` is `true` in this `target: "node"` build and `false` in the client one, so server-only branches leave the browser bundle. Also `MODE` / `DEV` / `PROD` / `BASE_URL`. |
 
-The server build targets the neutral `["web", "node"]` platform: the runtime guards browser APIs behind `typeof document === "undefined"`, which is what lets the CSS runtime collect styles instead of writing them into a document that is not there.
+The server build targets `node`, so webpack knows there is no DOM: `import.meta.env.SSR` folds to `true`, and the CSS runtime collects the styles instead of linking them into a page. It opts back into emitting stylesheets (`exportsOnly: false`) only because the collected CSS is read back from them; leave the default on and the server build writes no CSS at all.
 
 # example.js
 
