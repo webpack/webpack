@@ -797,7 +797,12 @@ describe("Validation", () => {
 	createTestCase(
 		"SSRManifestPlugin filename",
 		{
-			plugins: [new (require("..").SSRManifestPlugin)({ filename: 42 })]
+			plugins: [
+				new (require("..").SSRManifestPlugin)(
+					// deliberately the wrong type, which is what the schema has to reject
+					/** @type {EXPECTED_ANY} */ ({ filename: 42 })
+				)
+			]
 		},
 		(msg) => expect(msg).toMatch(/options\.filename/)
 	);
