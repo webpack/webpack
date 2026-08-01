@@ -80,3 +80,10 @@
 .t30 { flex: 1 1 0% }
 /*! declined: a prefixed property is a different property */
 .t31 { -webkit-box-flex: 0 0 auto }
+
+/*! declined: only `border-radius` takes a second box, so a `/` elsewhere is invalid — collapsing it would switch the declaration on */
+.t32 { margin: 1px 1px/1px 1px }
+/*! declined: the same for a property whose one box would otherwise collapse */
+.t33 { padding: 2px/2px }
+/*! declined: ...and for a keyword box */
+.t34 { border-width: 1px/1px }

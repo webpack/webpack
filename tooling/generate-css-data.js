@@ -46,10 +46,16 @@ const BOX_NOTATION = /\{1,4\}/;
 // count it as one of them.
 const POSITIONAL_KEYWORD = /\bfill\b/;
 
+// A second box after a `/` (only `border-radius` today). Everywhere else a `/`
+// makes the declaration invalid, so the minifier must leave it alone rather than
+// collapse it into something the browser would start honoring.
+const SLASH_NOTATION = /\//;
+
 /**
- * @returns {string[]} the `{1,4}` box-shorthand property names, sorted
+ * @param {boolean} withSlash whether to collect the properties taking a second `/` box
+ * @returns {string[]} the matching `{1,4}` box-shorthand property names, sorted
  */
-const collectBoxShorthands = () => {
+const collectBoxShorthands = (withSlash) => {
 	const names = [];
 	for (const [
 		name,
@@ -61,6 +67,7 @@ const collectBoxShorthands = () => {
 		if (property.status !== "standard") continue;
 		if (!BOX_NOTATION.test(property.syntax)) continue;
 		if (POSITIONAL_KEYWORD.test(property.syntax)) continue;
+		if (SLASH_NOTATION.test(property.syntax) !== withSlash) continue;
 		names.push(name);
 	}
 	return names.sort();
@@ -173,12 +180,19 @@ const collectColorNames = () => {
 };
 
 /**
+ * A `new Set([…])` literal as Prettier would print it — one line when a single
+ * entry fits, one entry per line otherwise. The generated file is checked by
+ * `fmt:check` like any other, so the generator has to match it.
  * @param {string[]} names entries
- * @returns {string} them as a `new Set([…])` body
+ * @returns {string} the literal
  */
-const setBody = (names) => names.map((name) => `\t"${name}"`).join(",\n");
+const setLiteral = (names) =>
+	names.length === 1
+		? `new Set(["${names[0]}"])`
+		: `new Set([\n${names.map((name) => `\t"${name}"`).join(",\n")}\n])`;
 
-const boxShorthands = collectBoxShorthands();
+const boxShorthands = collectBoxShorthands(false);
+const slashShorthands = collectBoxShorthands(true);
 const colorFunctions = collectColorArgumentFunctions();
 const colorNames = collectColorNames();
 
@@ -196,16 +210,15 @@ const source = `/*
 // is copied from the opposite side. That makes a repeated value redundant:
 // \`margin:1px 1px 1px 1px\` is \`margin:1px\`. \`border-radius\` collapses each side
 // of its \`/\` independently.
-const BOX_SHORTHANDS = new Set([
-${setBody(boxShorthands)}
-]);
+const BOX_SHORTHANDS = ${setLiteral([...boxShorthands, ...slashShorthands].sort())};
+
+// The subset carrying a second box after a \`/\`, which collapses on its own.
+const SLASH_BOX_SHORTHANDS = ${setLiteral(slashShorthands)};
 
 // Functions that take a \`<color>\` directly, so a hash among their arguments is a
 // hex color rather than a case-sensitive reference (\`element(#id)\`). Only direct
 // arguments: a gradient nested in \`image-set()\` is matched as the gradient.
-const COLOR_ARGUMENT_FUNCTIONS = new Set([
-${setBody(colorFunctions)}
-]);
+const COLOR_ARGUMENT_FUNCTIONS = ${setLiteral(colorFunctions)};
 
 // Packed \`0xrrggbb\` -> the shortest named color with that value. Only names that
 // can beat \`#rrggbb\`; anything longer would never be picked.
@@ -221,9 +234,10 @@ ${colorNames
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
 module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;
+module.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 `;
 
-const summary = `${boxShorthands.length} box shorthands, ${colorFunctions.length} color functions, ${colorNames.length} color names`;
+const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${colorNames.length} color names`;
 const current = fs.existsSync(TARGET) ? fs.readFileSync(TARGET, "utf8") : "";
 if (current === source) {
 	process.stdout.write(`lib/css/data.js is up to date (${summary})\n`);

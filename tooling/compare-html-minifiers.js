@@ -68,6 +68,19 @@ const setup = () => {
 const load = (name) => require(path.join(MODULES, name));
 
 /**
+ * The parse5 node shape this walk reads. parse5 ships its own types, but it is
+ * installed outside the repo (see `setup`), so tsc cannot resolve them.
+ * @typedef {object} Parse5Node
+ * @property {string} nodeName
+ * @property {string=} tagName
+ * @property {string=} value text, on a `#text` node
+ * @property {{ name: string, value: string }[]=} attrs
+ * @property {Parse5Node[]=} childNodes
+ * @property {Parse5Node=} content a `<template>`'s document fragment
+ */
+/** @typedef {{ parse: (html: string) => Parse5Node }} Parse5 */
+
+/**
  * Two kinds of real HTML: an app shell (attribute- and `<meta>`-heavy, little
  * text) and a document (mostly text, with the `<pre>` blocks whose whitespace no
  * minifier may touch). The documents are rendered from Markdown by `marked`
@@ -152,7 +165,7 @@ const VERBATIM_TEXT = new Set(["pre", "textarea", "script", "style"]);
  * ordinary text collapse (that is the whole point of minifying), so only what
  * survives collapsing is compared — except inside `VERBATIM_TEXT`, where the
  * bytes have to match exactly.
- * @param {EXPECTED_ANY} parse5 the parse5 export
+ * @param {Parse5} parse5 the parse5 export
  * @param {string} html a document
  * @returns {{ elements: Map<string, number>, attributes: Map<string, number>, empty: Set<string>, text: string }} its fingerprint
  */
@@ -170,14 +183,13 @@ const fingerprint = (parse5, html) => {
 	/** @type {string[]} */
 	const text = [];
 	/**
-	 * @param {EXPECTED_ANY} node a parse5 node
+	 * @param {Parse5Node} node a parse5 node
 	 * @param {boolean} verbatim whether text below it keeps its bytes
 	 */
 	const walk = (node, verbatim) => {
 		if (node.nodeName === "#text") {
-			const value = verbatim
-				? node.value
-				: node.value.replace(/\s+/g, " ").trim();
+			const raw = node.value || "";
+			const value = verbatim ? raw : raw.replace(/\s+/g, " ").trim();
 			if (value.length !== 0) text.push(value);
 			return;
 		}
@@ -191,7 +203,7 @@ const fingerprint = (parse5, html) => {
 			const children = node.childNodes || [];
 			(children.length === 0 ? empty : filled).add(node.tagName);
 		}
-		const below = verbatim || VERBATIM_TEXT.has(node.tagName);
+		const below = verbatim || VERBATIM_TEXT.has(node.tagName || "");
 		for (const child of node.childNodes || []) walk(child, below);
 		// A `<template>`'s children hang off `content`, not `childNodes`.
 		if (node.content !== undefined) walk(node.content, below);
@@ -226,7 +238,7 @@ const kb = (bytes) => `${(bytes / 1024).toFixed(1)} KB`;
 
 const main = async () => {
 	setup();
-	const parse5 = load("parse5");
+	const parse5 = /** @type {Parse5} */ (load("parse5"));
 	for (const [label, html] of fixtures()) {
 		const before = fingerprint(parse5, html);
 		const gzipped = zlib.gzipSync(Buffer.from(html), { level: 9 }).length;
