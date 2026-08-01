@@ -1,5 +1,8 @@
 "use strict";
 
+// `csp` and `integrity` are resolved when a page is emitted, so an entry's
+// `html` object overrides `output.html` for its own page only.
+
 const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
@@ -28,27 +31,25 @@ const copyTest = {
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
+	target: "web",
 	entry: {
-		a: { import: "./src/a.js", html: { favicon: false } },
-		b: { import: "./src/b.js", html: { inject: "head" } },
-		c: { import: "./src/c.js", html: { favicon: "./src/icon.svg" } },
-		d: "./src/d.js",
-		e: { import: "./src/e.js", html: true },
-		f: {
-			import: "./src/f.js",
-			html: { title: "Page f", scriptLoading: "blocking" }
+		inherit: "./src/main.js",
+		"csp-off": { import: "./src/main.js", html: { csp: false } },
+		"integrity-off": { import: "./src/main.js", html: { integrity: false } },
+		"csp-policy": {
+			import: "./src/main.js",
+			html: { csp: { policy: { "img-src": ["'self'"] } } }
+		},
+		// an authored page needs no wrapper, but its entry's options still apply
+		authored: {
+			import: "./src/page.html",
+			html: { csp: false, integrity: false }
 		}
 	},
 	output: {
 		filename: "[name].js",
-		html: {
-			favicon: true,
-			manifest: { name: "Global app" },
-			title: "Global title",
-			// eslint-disable-next-line unicorn/text-encoding-identifier-case
-			meta: { charset: "utf-8", description: "global description" },
-			inject: "body"
-		}
+		crossOriginLoading: "anonymous",
+		html: { csp: true, integrity: true }
 	},
 	experiments: { html: true },
 	plugins: [copyTest]

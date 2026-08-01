@@ -28,3 +28,15 @@ it("scriptLoading is ignored under output.module (still a module script)", () =>
 	expect(html).toMatch(/<script type="module" src="[^"]+">/);
 	expect(html).not.toContain("defer");
 });
+
+it("per-entry scriptLoading overrides output.html.scriptLoading", () => {
+	const html = read("entry-blocking.html");
+	expect(html).toMatch(/<script src="[^"]+">/i);
+	expect(html).not.toContain("defer");
+});
+
+it("per-entry scriptLoading is ignored under output.module", () => {
+	const html = read("module-entry-warning.html");
+	expect(html).toMatch(/<script type="module" src="[^"]+">/);
+	expect(html).not.toContain("defer");
+});

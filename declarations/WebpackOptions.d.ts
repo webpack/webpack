@@ -1314,7 +1314,7 @@ export interface EntryDescription {
 	 */
 	filename?: EntryFilename;
 	/**
-	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
+	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. An object overrides `output.html` option by option for this entry; `inline` is resolved once per generated page and can only be set on `output.html`.
 	 */
 	html?: boolean | OutputHtmlOptions;
 	/**
@@ -3903,7 +3903,7 @@ export interface EntryDescriptionNormalized {
 	 */
 	filename?: Filename;
 	/**
-	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. Overrides `output.html` for this entry.
+	 * Generate an HTML file for this entrypoint with its JS and CSS output chunks injected. An object overrides `output.html` option by option for this entry; `inline` is resolved once per generated page and can only be set on `output.html`.
 	 */
 	html?: boolean | OutputHtmlOptions;
 	/**

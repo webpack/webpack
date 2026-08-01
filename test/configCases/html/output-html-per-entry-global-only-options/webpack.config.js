@@ -1,5 +1,9 @@
 "use strict";
 
+// `inline` decides the shape of a chunk's tag while the page's HTML is
+// generated — once per HTML module, which can back several entries — so it can
+// only be set on `output.html`; webpack warns instead of dropping it silently.
+
 const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
@@ -29,27 +33,9 @@ const copyTest = {
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
-		a: { import: "./src/a.js", html: { favicon: false } },
-		b: { import: "./src/b.js", html: { inject: "head" } },
-		c: { import: "./src/c.js", html: { favicon: "./src/icon.svg" } },
-		d: "./src/d.js",
-		e: { import: "./src/e.js", html: true },
-		f: {
-			import: "./src/f.js",
-			html: { title: "Page f", scriptLoading: "blocking" }
-		}
+		a: { import: "./src/a.js", html: { inline: true } }
 	},
-	output: {
-		filename: "[name].js",
-		html: {
-			favicon: true,
-			manifest: { name: "Global app" },
-			title: "Global title",
-			// eslint-disable-next-line unicorn/text-encoding-identifier-case
-			meta: { charset: "utf-8", description: "global description" },
-			inject: "body"
-		}
-	},
+	output: { filename: "[name].js", html: true },
 	experiments: { html: true },
 	plugins: [copyTest]
 };
