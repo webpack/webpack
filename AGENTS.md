@@ -162,6 +162,14 @@ Spell names out in full — functions, variables, parameters, properties. Prefer
 
 The only exceptions are (1) established abbreviations webpack already uses pervasively (`ast`, `ns` for namespace, `id`, `url`, `css`, `js`, `dir`, `env`, `fs`) or spec-defined ones (`afe` for the HTML spec's "active formatting elements"), and (2) throwaway loop indices (`i`, `j`, `k`). When an abbreviation isn't already common in the codebase or the relevant spec, write the full word.
 
+### Path regexps and helpers live in one file
+
+> [!REQUIRED]
+
+`lib/util/identifier.js` is the single home for path-shape regexps (`ABSOLUTE_PATH_REGEXP`, `WINDOWS_ABS_PATH_REGEXP`, `WINDOWS_PATH_SEPARATOR_REGEXP`, …) and for the helpers built on them (`parseResource`, `makePathsRelative`, `contextify`, `absolutify`, `getUndoPath`, …). **Import them from there — never re-declare a local copy**, even a one-liner like `/^[a-z]:[\\/]/i` or `/\\/g`. Duplicates drift apart, and each one becomes a second, subtly different definition of "absolute path" or "path separator" for the same codebase.
+
+Before writing any regexp that matches a path shape, read the top of `lib/util/identifier.js` and its `module.exports` block. If the regexp you need is defined there but not exported, **export it and import it** rather than copying it. Only define a new one locally when nothing there fits — and then keep it next to the single function that uses it.
+
 ### Source file headers
 
 Every source file under `lib/` (and `hot/`, `tooling/`) opens with the MIT license header. When adding a **new** file, set the `Author` line to its actual author (`Author <Name> @<github-handle>`) — don't copy another file's author line.
