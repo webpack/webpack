@@ -19,10 +19,8 @@ export default defineConfig([
 		"!test/**/deprecations.js",
 		"!test/**/infrastructure-log.js",
 		"!test/helpers/*.*",
-		"!test/benchmarkCases/**/*.mjs",
 		"!test/benchmark/**/*.mjs",
 		"test/benchmark/**/generated/**",
-		"!test/harness/benchmark/**/*.mjs",
 		"!test/_helpers/**/*.mjs",
 		"!test/runner/*.js",
 		"test/js/**/*.*",
@@ -197,16 +195,7 @@ export default defineConfig([
 		}
 	},
 	{
-		files: [
-			"setup/**/*.js",
-			"tooling/**/*.js",
-			"test/*.benchmark.mjs",
-			"test/harness/benchmark/**/*.mjs",
-			"test/benchmarkCases/**/webpack.config.mjs",
-			"test/benchmarkCases/**/options.mjs",
-			"test/benchmark/**/*.mjs",
-			"test/benchmarkCases/**/index.bench.mjs"
-		],
+		files: ["setup/**/*.js", "tooling/**/*.js", "test/benchmark/**/*.mjs"],
 		languageOptions: {
 			ecmaVersion: 2022
 		},

@@ -1,16 +1,18 @@
 import fs from "fs/promises";
-import { dirname, resolve } from "path";
-import { fileURLToPath } from "url";
-import memoryScaledCount from "../../harness/benchmark/scale.mjs";
+import path from "path";
+import { createRuntimeBench } from "../../lib/webpack.mjs";
+
+const caseDir = import.meta.dirname;
+const generated = path.join(caseDir, "generated");
+const entry = path.join(generated, "module.js");
+const name = "e2e/many-modules-interop-runtime";
 
 // Five modules per group — an ESM leaf, two CommonJS leaves, and one consumer
 // of each kind reaching across the other module system — so the bundle mixes
 // both systems at every level instead of only at the entry. 2042 modules total.
 const GROUP_COUNT = 400;
 const GROUPS_PER_BARREL = 10;
-// Memory mode measures allocations and the workload loop allocates nothing, so
-// instantiating the graph is the whole signal there; a couple of rounds suffice.
-const ROUNDS = memoryScaledCount(30, 2);
+const ROUNDS = 30;
 const TABLE_SIZE = 8;
 
 /**
@@ -172,63 +174,68 @@ ${body.join("\n")}
 `;
 }
 
-export async function setup() {
-	const __dirname = dirname(fileURLToPath(import.meta.url));
-	const generated = resolve(__dirname, "./generated");
+export default {
+	name,
+	iterations: 8,
+	async setup() {
+		await fs.rm(generated, { recursive: true, force: true });
+		await fs.mkdir(generated, { recursive: true });
 
-	await fs.rm(generated, { recursive: true, force: true });
-	await fs.mkdir(generated, { recursive: true });
-
-	/** @type {string[]} */
-	const barrels = [];
-
-	for (let start = 0; start < GROUP_COUNT; start += GROUPS_PER_BARREL) {
 		/** @type {string[]} */
-		const esmConsumers = [];
+		const barrels = [];
 
-		for (
-			let index = start;
-			index < Math.min(start + GROUPS_PER_BARREL, GROUP_COUNT);
-			index++
-		) {
+		for (let start = 0; start < GROUP_COUNT; start += GROUPS_PER_BARREL) {
+			/** @type {string[]} */
+			const esmConsumers = [];
+
+			for (
+				let index = start;
+				index < Math.min(start + GROUPS_PER_BARREL, GROUP_COUNT);
+				index++
+			) {
+				await fs.writeFile(
+					path.join(generated, `esm-${index}.js`),
+					generateEsm(index)
+				);
+				await fs.writeFile(
+					path.join(generated, `commonjs-${index}.js`),
+					generateCommonJs(index)
+				);
+				await fs.writeFile(
+					path.join(generated, `commonjs-callable-${index}.js`),
+					generateCommonJsCallable(index)
+				);
+				await fs.writeFile(
+					path.join(generated, `commonjs-consumer-${index}.js`),
+					generateCommonJsConsumer(index)
+				);
+				await fs.writeFile(
+					path.join(generated, `esm-consumer-${index}.js`),
+					generateEsmConsumer(index)
+				);
+				esmConsumers.push(`./esm-consumer-${index}.js`);
+			}
+
+			const barrel = `./barrel-${start / GROUPS_PER_BARREL}.js`;
+
 			await fs.writeFile(
-				resolve(generated, `./esm-${index}.js`),
-				generateEsm(index)
+				path.join(generated, barrel),
+				generateBarrel(esmConsumers)
 			);
-			await fs.writeFile(
-				resolve(generated, `./commonjs-${index}.js`),
-				generateCommonJs(index)
-			);
-			await fs.writeFile(
-				resolve(generated, `./commonjs-callable-${index}.js`),
-				generateCommonJsCallable(index)
-			);
-			await fs.writeFile(
-				resolve(generated, `./commonjs-consumer-${index}.js`),
-				generateCommonJsConsumer(index)
-			);
-			await fs.writeFile(
-				resolve(generated, `./esm-consumer-${index}.js`),
-				generateEsmConsumer(index)
-			);
-			esmConsumers.push(`./esm-consumer-${index}.js`);
+			barrels.push(barrel);
 		}
 
-		const barrel = `./barrel-${start / GROUPS_PER_BARREL}.js`;
-
 		await fs.writeFile(
-			resolve(generated, barrel),
-			generateBarrel(esmConsumers)
+			path.join(generated, "barrel.js"),
+			generateBarrel(barrels)
 		);
-		barrels.push(barrel);
-	}
-
-	await fs.writeFile(
-		resolve(generated, "./barrel.js"),
-		generateBarrel(barrels)
-	);
-	await fs.writeFile(
-		resolve(generated, "./module.js"),
-		generateAggregator(GROUP_COUNT)
-	);
-}
+		await fs.writeFile(
+			path.join(generated, "module.js"),
+			generateAggregator(GROUP_COUNT)
+		);
+	},
+	benches: [
+		createRuntimeBench({ config: { entry, mode: "development" } }),
+		createRuntimeBench({ config: { entry, mode: "production" } })
+	]
+};

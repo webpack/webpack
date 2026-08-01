@@ -2,8 +2,13 @@ import fs from "fs/promises";
 import { createRequire } from "module";
 import os from "os";
 import path from "path";
+import vm from "vm";
 
 const require = createRequire(import.meta.url);
+
+const RUNTIME_BUNDLE_FILENAME = "bundle.js";
+// Opaque to the compiled bundle, so the workload can't be folded away.
+const RUNTIME_SEED = 7;
 
 /** @typedef {import("../../..")} Webpack */
 /** @typedef {import("../../..").Configuration} Configuration */
@@ -32,7 +37,7 @@ const resolveConfig = (config) =>
 	typeof config === "function" ? config() : config;
 
 /**
- * @param {"build" | "rebuild"} operation benchmarked operation
+ * @param {"build" | "rebuild" | "runtime"} operation benchmarked operation
  * @param {ConfigurationFactory} config configuration or factory
  * @param {string | undefined} caseName benchmark case
  * @returns {string} benchmark case
@@ -301,6 +306,125 @@ export function createWatchRebuildBench(options) {
 	};
 }
 
+/** @typedef {{ run: (seed: number) => unknown }} RuntimeBundleExports */
+
+/**
+ * Compile the case and return a factory instantiating the emitted bundle.
+ * Building and V8-compiling the output happen here, outside every measured
+ * region, so the bench times only the generated code. Each call re-runs the
+ * bundle body without re-parsing it and gets a fresh `module`, so the bundle's
+ * module registry starts out empty.
+ * @param {Configuration} config configuration
+ * @returns {Promise<() => RuntimeBundleExports>} bundle instantiation
+ */
+async function compileRuntimeBundle(config) {
+	await runBuild(config);
+
+	const outputPath = /** @type {string} */ (
+		/** @type {NonNullable<Configuration["output"]>} */ (config.output).path
+	);
+	const bundlePath = path.join(outputPath, RUNTIME_BUNDLE_FILENAME);
+	const source = await fs.readFile(bundlePath, "utf8");
+	const factory = vm.compileFunction(
+		source,
+		["module", "exports", "require", "__filename", "__dirname"],
+		{ filename: bundlePath }
+	);
+	// Bound to the emitted bundle so externals and node-target chunk loading
+	// resolve exactly as they would for a real consumer of the output.
+	const bundleRequire = createRequire(bundlePath);
+
+	return () => {
+		const bundleModule = { exports: {} };
+
+		factory(
+			bundleModule,
+			bundleModule.exports,
+			bundleRequire,
+			bundlePath,
+			outputPath
+		);
+
+		return /** @type {RuntimeBundleExports} */ (bundleModule.exports);
+	};
+}
+
+/**
+ * @typedef {object} RuntimeBenchOptions
+ * @property {string=} case benchmark case
+ * @property {ConfigurationFactory} config configuration or fresh config factory
+ */
+
+/**
+ * Benchmark the emitted bundle instead of the build. One iteration instantiates
+ * the output (runtime bootstrap plus every module factory that runs at import
+ * time) and calls the entry's exported `run`, so boot and steady-state cost of
+ * the generated code are both counted. The entry must export `run(seed)` and
+ * return its result — otherwise the workload folds away (both are checked).
+ * @param {RuntimeBenchOptions} options options
+ * @returns {BenchmarkDefinition} runtime benchmark
+ */
+export function createRuntimeBench(options) {
+	const { case: caseName, config } = options;
+	const benchName = createBenchmarkCase("runtime", config, caseName);
+	/** @type {string | undefined} */
+	let outputPath;
+	/** @type {(() => RuntimeBundleExports) | undefined} */
+	let instantiate;
+	// Holds what the measured region produced, so the work behind it stays
+	// observable; the `afterAll` assertion is what reads it back.
+	/** @type {unknown} */
+	let executionResult;
+
+	return {
+		name: benchName,
+		async beforeAll() {
+			outputPath = await createOutputPath();
+			// A single CommonJS bundle Node can instantiate, exposing the entry's
+			// exports on `module.exports`.
+			const runtimeConfig = prepareConfig(outputPath, benchName, {
+				target: "node",
+				...resolveConfig(config)
+			});
+			runtimeConfig.output = {
+				...runtimeConfig.output,
+				filename: RUNTIME_BUNDLE_FILENAME,
+				library: { type: "commonjs2" }
+			};
+
+			instantiate = await compileRuntimeBundle(runtimeConfig);
+
+			// Probe once so a case exporting nothing measurable fails here instead
+			// of reporting a task that does no work.
+			if (typeof instantiate().run !== "function") {
+				throw new Error(
+					`The entry of runtime benchmark "${benchName}" must export a \`run\` function`
+				);
+			}
+		},
+		fn() {
+			executionResult = /** @type {() => RuntimeBundleExports} */ (
+				instantiate
+			)().run(RUNTIME_SEED);
+		},
+		async afterAll() {
+			instantiate = undefined;
+			const currentResult = executionResult;
+			executionResult = undefined;
+			if (outputPath !== undefined) {
+				const currentOutputPath = outputPath;
+				outputPath = undefined;
+				await fs.rm(currentOutputPath, { recursive: true, force: true });
+			}
+			if (currentResult === undefined) {
+				throw new Error(
+					`\`run()\` of runtime benchmark "${benchName}" returned nothing; return the workload result so it can't be optimized away`
+				);
+			}
+		}
+	};
+}
+
 /**
  * @typedef {object} BuildScenarioOptions
  * @property {string=} case benchmark case
@@ -317,16 +441,16 @@ export function createBuildScenarios(options) {
 	return [
 		createBuildBench({
 			case: caseName,
-			config: () => ({ ...resolveConfig(config), mode: "development" }),
+			config: () => ({ ...resolveConfig(config), mode: "development" })
 		}),
 		createBuildBench({
 			case: caseName,
-			config: () => ({ ...resolveConfig(config), mode: "production" }),
+			config: () => ({ ...resolveConfig(config), mode: "production" })
 		}),
 		createWatchRebuildBench({
 			case: caseName,
 			entryFile,
-			config: () => ({ ...resolveConfig(config), mode: "development" }),
+			config: () => ({ ...resolveConfig(config), mode: "development" })
 		})
 	];
 }

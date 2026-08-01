@@ -59,7 +59,9 @@ export async function generateModuleTree(options) {
 				body.push(
 					esm
 						? `export const lazy${k} = import(${JSON.stringify(specifier)});`
-						: `require.ensure([], () => { total += require(${JSON.stringify(specifier)}); });`
+						: `require.ensure([], () => { total += require(${JSON.stringify(
+								specifier
+							)}); });`
 				);
 			} else if (esm) {
 				head.push(`import child${k} from ${JSON.stringify(specifier)};`);
@@ -109,7 +111,9 @@ export async function generateCssProject(options) {
 		if (isDynamic) {
 			imports.push(
 				isModule
-					? `used += Object.keys(await import(${JSON.stringify(request)})).length;`
+					? `used += Object.keys(await import(${JSON.stringify(
+							request
+						)})).length;`
 					: `await import(${JSON.stringify(request)});`
 			);
 		} else if (isModule) {
@@ -160,7 +164,9 @@ export async function generateAssetProject(options) {
 	const entry = path.join(dir, "index.js");
 	await fs.writeFile(
 		entry,
-		`/** @type {string[]} */\nconst urls = [];\n${imports.join("\n")}\nexport default urls;\n`
+		`/** @type {string[]} */\nconst urls = [];\n${imports.join(
+			"\n"
+		)}\nexport default urls;\n`
 	);
 	return entry;
 }
@@ -207,11 +213,15 @@ export async function generateJsonProject(options) {
 		);
 		const request = `./data-${i}.json`;
 		imports.push(
-			`import data${i} from ${JSON.stringify(request)}${i % 2 === 0 ? ' with { type: "json" }' : ""};`,
+			`import data${i} from ${JSON.stringify(request)}${
+				i % 2 === 0 ? ' with { type: "json" }' : ""
+			};`,
 			`total += Object.keys(data${i}).length;`
 		);
 		selectedImports.push(
-			`import selected${i} from ${JSON.stringify(request)}${i % 2 === 0 ? ' with { type: "json" }' : ""};`,
+			`import selected${i} from ${JSON.stringify(request)}${
+				i % 2 === 0 ? ' with { type: "json" }' : ""
+			};`,
 			`selected += selected${i}.key_${i}_0.nested;`
 		);
 	}
@@ -223,7 +233,9 @@ export async function generateJsonProject(options) {
 	const selectedEntry = path.join(dir, "selected.js");
 	await fs.writeFile(
 		selectedEntry,
-		`let selected = 0;\n${selectedImports.join("\n")}\nexport default selected;\n`
+		`let selected = 0;\n${selectedImports.join(
+			"\n"
+		)}\nexport default selected;\n`
 	);
 	return { entry, selectedEntry };
 }

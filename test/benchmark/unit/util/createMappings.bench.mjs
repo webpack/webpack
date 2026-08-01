@@ -36,9 +36,8 @@ export default {
 					]
 				: first;
 		});
-		values = Array.from(
-			{ length: 10_000 },
-			(_, i) => (i % 2 === 0 ? i * 7919 : i * -3571)
+		values = Array.from({ length: 10_000 }, (_, i) =>
+			i % 2 === 0 ? i * 7919 : i * -3571
 		);
 	},
 	teardown() {

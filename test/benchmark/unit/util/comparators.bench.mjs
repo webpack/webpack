@@ -34,8 +34,7 @@ export default {
 	setup() {
 		strings = Array.from(
 			{ length: 10_000 },
-			(_, i) =>
-				`node_modules/package-${i % 200}/chunk-${i % 80}/module-${i}.js`
+			(_, i) => `node_modules/package-${i % 200}/chunk-${i % 80}/module-${i}.js`
 		);
 		ids = Array.from({ length: 10_000 }, (_, i) =>
 			i % 5 === 0 ? `chunk-${i}` : i

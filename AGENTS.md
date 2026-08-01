@@ -42,7 +42,7 @@ All commands are defined in `package.json` `scripts`.
 
 Never invoke `yarn jest`/`npx jest` directly: the required `--experimental-vm-modules` node flag lives only in the `test:base` wrapper, and bare jest crashes ESM/test262 suites. See [TESTING_DOCS.md](TESTING_DOCS.md) for how to run a single case.
 
-**CI checks that must pass:** `lint`, `unit`, `basic`, `integration` (Node 10→26 × ubuntu/macOS/windows, sharded `a`/`b`), `test262`, plus **CodSpeed** (performance + memory mode) and a **Bun** job. CodSpeed memory mode is sensitive to fixture size, and the Bun job runs under `--smol` and surfaces OOMs the Node suites don't — watch both when touching hot paths or large test fixtures.
+**CI checks that must pass:** `lint`, `unit`, `basic`, `integration` (Node 10→26 × ubuntu/macOS/windows, sharded `a`/`b`), `test262`, plus a **Bun** job. The Bun job runs under `--smol` and surfaces OOMs the Node suites don't — watch it when touching hot paths or large test fixtures. **CodSpeed** benchmarks (`Benchmark suite` workflow) run weekly and on labeled PRs (`Run All Benchmark` / `Run Recommended Benchmarks`) — label perf-sensitive PRs so regressions surface before merge.
 
 ## Architecture
 
@@ -101,8 +101,8 @@ The directory listings below are the canonical map of the repository. **Whenever
 
 **Tests** — see [TESTING_DOCS.md](TESTING_DOCS.md) for directory structure, naming, and how to run a single case.
 
-- `test/` — All test suites (`cases/`, `configCases/`, `watchCases/`, `hotCases/`, `statsCases/`, `typesCases/`, `test262-cases/`, `html5lib-tests/`, `css-parsing-tests/`, `benchmarkCases/`, `memoryLimitCases/`, etc.). `RoundTripConfigCases` re-bundles the output of `configCases` marked with a `roundTrip.js` file.
-- `test/benchmark/` — Suite-format benchmarks: `unit/` mirrors `lib/` for focused core benchmarks, `e2e/` holds full-build workloads, `helpers/` and `lib/` hold deterministic fixture generators and webpack lifecycle helpers; run by the benchmark harness (`FILTER="<suite>" yarn benchmark`).
+- `test/` — All test suites (`cases/`, `configCases/`, `watchCases/`, `hotCases/`, `statsCases/`, `typesCases/`, `test262-cases/`, `html5lib-tests/`, `css-parsing-tests/`, `memoryLimitCases/`, etc.). `RoundTripConfigCases` re-bundles the output of `configCases` marked with a `roundTrip.js` file.
+- `test/benchmark/` — Non-comparative benchmark suite: `unit/` mirrors `lib/` for focused core benchmarks, `e2e/` holds full-build workloads, `helpers/` and `lib/` hold deterministic fixture generators and the runner; run with `yarn benchmark:suite` (see `test/benchmark/README.md`).
 
 **Examples & changesets**
 
@@ -403,7 +403,7 @@ Persistent caching serializes the module graph, so any new serializable class (a
 
 ### Performance and memory
 
-webpack is a bundler — users measure it by build time and peak heap usage. Many changes in `lib/` end up on per-module hot paths (sometimes per module × runtime, or per chunk × module) on user builds, so constant factors compound. Always weigh the time and memory cost of a change, including bug fixes and refactors: less allocation, smaller `Map`/`Set` footprints, and fewer closures retained on hot paths are wins worth pursuing — less is better. When introducing or holding any per-`Compilation` state, ask whether it can be released after seal/emit so large compilation data structures are not retained longer than necessary. See #15521 for an example of how this class of memory issue can surface. Sanity-check a perf change locally with `FILTER="<case-name>" yarn benchmark` before CodSpeed flags a regression in CI.
+webpack is a bundler — users measure it by build time and peak heap usage. Many changes in `lib/` end up on per-module hot paths (sometimes per module × runtime, or per chunk × module) on user builds, so constant factors compound. Always weigh the time and memory cost of a change, including bug fixes and refactors: less allocation, smaller `Map`/`Set` footprints, and fewer closures retained on hot paths are wins worth pursuing — less is better. When introducing or holding any per-`Compilation` state, ask whether it can be released after seal/emit so large compilation data structures are not retained longer than necessary. See #15521 for an example of how this class of memory issue can surface. Sanity-check a perf change locally with `yarn benchmark:suite --filter "<suite or bench name>"` before CodSpeed flags a regression in CI.
 
 ### Keep instance shapes stable
 

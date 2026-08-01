@@ -336,6 +336,7 @@
     "testlink",
     "testloader",
     "testvalue",
+    "threadpool",
     "tileimage",
     "timestamping",
     "thumbnailurl",

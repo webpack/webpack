@@ -75,7 +75,10 @@ export default {
 		{
 			name: "run 1000 three-loader pipelines",
 			fn() {
-				return runPipelines([identityLoader, simpleLoader, identityLoader], 1000);
+				return runPipelines(
+					[identityLoader, simpleLoader, identityLoader],
+					1000
+				);
 			}
 		},
 		{

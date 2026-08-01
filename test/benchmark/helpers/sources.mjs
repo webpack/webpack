@@ -12,7 +12,9 @@ import { mulberry32, randomInt } from "./prng.mjs";
 function javaScriptParagraph(index) {
 	const i = index;
 	return `
-const value${i} = { a: ${i}, b: "str${i}", c: [${i}, ${i + 1}, ${i + 2}], d: null };
+const value${i} = { a: ${i}, b: "str${i}", c: [${i}, ${i + 1}, ${
+		i + 2
+	}], d: null };
 let counter${i} = ${i};
 function helper${i}(arg, { opt = ${i}, ...rest } = {}) {
 	const mapped = arg.map((x) => x * opt + counter${i});
@@ -111,7 +113,7 @@ export function generateCssSource(rules, asModule = false) {
 		}
 		declarations.push(
 			`\tcolor: ${CSS_COLORS[i % CSS_COLORS.length]};`,
-			"\tbackground: url(\"data:image/gif;base64,R0lGODlhAQABAAAAACw=\") no-repeat;",
+			'\tbackground: url("data:image/gif;base64,R0lGODlhAQABAAAAACw=") no-repeat;',
 			"\tmax-width: calc(100% - var(--spacing) * 2);"
 		);
 		parts.push(`${selector} {\n${declarations.join("\n")}\n}`);
@@ -131,11 +133,11 @@ export function generateCssSource(rules, asModule = false) {
 export function generateHtmlSource(sections) {
 	const parts = [
 		"<!DOCTYPE html>",
-		"<html lang=\"en\">",
+		'<html lang="en">',
 		"<head>",
-		"<meta charset=\"utf-8\">",
+		'<meta charset="utf-8">',
 		"<title>Benchmark fixture</title>",
-		"<link rel=\"stylesheet\" href=\"./styles.css\">",
+		'<link rel="stylesheet" href="./styles.css">',
 		"</head>",
 		"<body>"
 	];
@@ -148,7 +150,9 @@ export function generateHtmlSource(sections) {
 			"<ul>",
 			`<li>first ${i}</li><li>second ${i}</li><li>third ${i}</li>`,
 			"</ul>",
-			`<table><tr><td>${i}</td><td>${i * 2}</td></tr><tr><td colspan="2">${i * 3}</td></tr></table>`,
+			`<table><tr><td>${i}</td><td>${i * 2}</td></tr><tr><td colspan="2">${
+				i * 3
+			}</td></tr></table>`,
 			`<img src="./image-${i % 5}.png" alt="img ${i}" width="10" height="10">`,
 			i % 6 === 0
 				? `<template><div class="tpl">${i}</div></template>`
@@ -156,6 +160,6 @@ export function generateHtmlSource(sections) {
 			"</section>"
 		);
 	}
-	parts.push("<script>console.log(\"end\");</script>", "</body>", "</html>");
+	parts.push('<script>console.log("end");</script>', "</body>", "</html>");
 	return parts.join("\n");
 }

@@ -17,12 +17,13 @@ test/**/*.*
 !test/*.md
 !test/helpers/*.*
 !test/harness/**/*.*
-!test/benchmarkCases/**/*.mjs
+!test/benchmark/**/*.mjs
+!test/benchmark/README.md
 test/js/**/*.*
 test/test262-cases/**/*.*
 
 # Ignore some folders
-benchmark/
+/benchmark/
 coverage/
 
 # Ignore generated files
