@@ -166,11 +166,11 @@ webpack X.X.X compiled successfully
 assets by path *.js 3.45 KiB
   asset output.js 3.25 KiB [emitted] [minimized] (name: main)
   asset page_js-page_css.output.js 200 bytes [emitted] [minimized]
-assets by path *.css 74 bytes
-  asset page_js-page_css.output.css 38 bytes [emitted]
-  asset output.css 36 bytes [emitted] (name: main)
+assets by path *.css 58 bytes
+  asset page_js-page_css.output.css 30 bytes [emitted] [minimized]
+  asset output.css 28 bytes [emitted] [minimized] (name: main)
 asset ssr-manifest.json 340 bytes [emitted]
-Entrypoint main 3.29 KiB = output.js 3.25 KiB output.css 36 bytes
+Entrypoint main 3.28 KiB = output.js 3.25 KiB output.css 28 bytes
 chunk (runtime: main) output.js, output.css (main) 295 bytes (javascript) 35 bytes (css) 9.2 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 9.2 KiB 9 modules
