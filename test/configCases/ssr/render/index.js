@@ -29,8 +29,9 @@ it("composes the SSR manifest and collected css into a rendered document", async
 
 	// the collected css is the page's stylesheet, inlined as critical css
 	expect(criticalCss).toContain("rebeccapurple");
-	// the manifest drove a modulepreload for the page's client chunk
-	expect(doc).toMatch(/<link rel="modulepreload" href="page_js[^"]*\.mjs">/);
+	// the manifest drove a modulepreload for the page's client chunk, rooted so it
+	// resolves the same from any route rather than against the rendered page's URL
+	expect(doc).toMatch(/<link rel="modulepreload" href="\/page_js[^"]*\.mjs">/);
 	// the rendered markup and the inlined critical css are both in the document
 	expect(doc).toContain("<style>");
 	expect(doc).toContain("rebeccapurple");
