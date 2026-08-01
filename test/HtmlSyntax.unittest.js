@@ -4290,6 +4290,55 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	});
 });
 
+describe("SourceProcessor — streamed walk offsets", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	// `HtmlParser` folds a head element's `end` into its injection anchor at
+	// `enter` and consumes the anchor in the same visit, so a provisional `end`
+	// there would misplace injected tags. The streamed walk only starts once the
+	// parse reaches `in body`, which is what keeps every head element a
+	// completed subtree with a final `end` — assert that directly.
+	it("reports final end offsets for head elements", () => {
+		const SRC = [
+			"<!DOCTYPE html><html><head><title>t</title>",
+			'<script src="a.js"></script>',
+			"<style>.a{color:red}</style>",
+			'<link rel="stylesheet" href="a.css">',
+			"</head><body><p>x</p></body></html>"
+		].join("");
+		/** @type {[string, number, number][]} */
+		const seen = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/html/syntax").VisitorMap} */ ({
+					[NodeType.Element]: (path) => {
+						seen.push([path.tagName(), path.start(), path.end()]);
+					}
+				})
+			)
+			.process(SRC);
+		// A final `end` spans the element's own end tag; a provisional one would
+		// stop at the start tag's `>`.
+		const spans = new Map(
+			seen.map(([name, start, end]) => [name, SRC.slice(start, end)])
+		);
+		expect(spans.get("title")).toBe("<title>t</title>");
+		expect(spans.get("script")).toBe('<script src="a.js"></script>');
+		expect(spans.get("style")).toBe("<style>.a{color:red}</style>");
+		expect(spans.get("link")).toBe('<link rel="stylesheet" href="a.css">');
+		expect(seen.map((s) => s[0])).toEqual([
+			"html",
+			"head",
+			"title",
+			"script",
+			"style",
+			"link",
+			"body",
+			"p"
+		]);
+	});
+});
+
 describe("parseHtml — path accessor completeness", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
@@ -4306,45 +4355,32 @@ describe("parseHtml — path accessor completeness", () => {
 							`doctype:${path.doctypePublicId(n)}/${path.doctypeSystemId(n)}`
 						);
 					},
-					[NodeType.Element]: {
-						enter: (path) => {
-							if (path.tagName() !== "div") return;
-							log.push(`node:${path.node !== null}`);
-							log.push(
-								`parentTag:${path.tagName(/** @type {number} */ (path.parent))}`
-							);
-							log.push(`parentOf:${path.parentOf() === path.parent}`);
-							log.push(`attrs:${path.attributeCount()}`);
-							const id = path.findAttribute("id");
-							log.push(
-								`id:${path.attributeName(id)}=${path.attributeValue(id)}`
-							);
-							log.push(
-								`idName:${SRC.slice(
-									path.attributeNameStart(id),
-									path.attributeNameEnd(id)
-								)}`
-							);
-							log.push(
-								`idValue:${SRC.slice(
-									path.attributeValueStart(id),
-									path.attributeValueEnd(id)
-								)}`
-							);
-							const checked = path.attributeAt(1);
-							log.push(
-								`checkedValueStart:${path.attributeValueStart(checked)}`
-							);
-						},
-						// The walk streams: a completed child subtree is visited and
-						// unlinked while its parent is still open, so an element's own
-						// child links read as empty from either half of its visit. Walk
-						// structure from `parseHtml`'s materialized tree instead.
-						exit: (path) => {
-							if (path.tagName() !== "div") return;
-							log.push(`firstChildType:${path.type(path.firstChild())}`);
-							log.push(`nextSibling:${path.nextSibling()}`);
-						}
+					[NodeType.Element]: (path) => {
+						if (path.tagName() !== "div") return;
+						log.push(`node:${path.node !== null}`);
+						log.push(
+							`parentTag:${path.tagName(/** @type {number} */ (path.parent))}`
+						);
+						log.push(`parentOf:${path.parentOf() === path.parent}`);
+						log.push(`attrs:${path.attributeCount()}`);
+						const id = path.findAttribute("id");
+						log.push(`id:${path.attributeName(id)}=${path.attributeValue(id)}`);
+						log.push(
+							`idName:${SRC.slice(
+								path.attributeNameStart(id),
+								path.attributeNameEnd(id)
+							)}`
+						);
+						log.push(
+							`idValue:${SRC.slice(
+								path.attributeValueStart(id),
+								path.attributeValueEnd(id)
+							)}`
+						);
+						const checked = path.attributeAt(1);
+						log.push(`checkedValueStart:${path.attributeValueStart(checked)}`);
+						log.push(`firstChildType:${path.type(path.firstChild())}`);
+						log.push(`nextSibling:${path.nextSibling()}`);
 					}
 				})
 			)
@@ -4359,7 +4395,7 @@ describe("parseHtml — path accessor completeness", () => {
 			"idName:id",
 			"idValue:d",
 			"checkedValueStart:-1",
-			"firstChildType:0",
+			`firstChildType:${NodeType.Text}`,
 			"nextSibling:0"
 		]);
 	});
