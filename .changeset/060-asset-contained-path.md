@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `[contained-path]`/`[contained-file]` placeholders keeping assets inside `output.path`.
+Keep assets of modules outside of `context` inside `output.path` and add `[contained-path]`/`[contained-file]` placeholders.
