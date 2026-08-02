@@ -26,6 +26,9 @@ exports[`ConfigCacheTestCases html minimize-transforms minimize-transforms shoul
 	<img srcset=\\"bare.png, next.png 2x\\" alt=\\"descriptor-less keeps its space\\">
 	<img srcset=\\"a.png 100w 2x\\" alt=\\"invalid srcset kept\\">
 	<img srcset=\\"data:image/gif;base64,R0lGOD 1x,b.png 2x\\" alt=\\"comma in url\\">
+	<a rel=\\"noopener noreferrer\\" ping=\\"/a /b\\" href=x>token lists collapse</a>
+	<iframe sandbox=\\"allow-scripts allow-forms\\"></iframe>
+	<label for=\\"a  b\\">for keeps its spaces: an id may contain one</label>
 	<a href=\\"x?a=1\\" title=\\"quoted: has =\\">kept quoted</a>
 	<a href=plain.html>unquoted</a>
 	<br>

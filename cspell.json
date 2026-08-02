@@ -155,6 +155,8 @@
     "instanceof",
     "inversed",
     "itemprop",
+    "itemref",
+    "itemtype",
     "itemscope",
     "imagesrcset",
     "jhnns",
