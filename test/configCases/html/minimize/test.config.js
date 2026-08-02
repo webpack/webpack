@@ -19,17 +19,20 @@ module.exports = {
 		expect(html).not.toContain("drop this comment");
 		expect(html).toContain("<!--[if IE]><p>ie only</p><![endif]-->");
 
-		// DOM-absent whitespace (between the doctype and `<html>`) falls away.
-		expect(html).toContain('<!DOCTYPE html><html lang="en">');
+		// DOM-absent whitespace (between the doctype and `<html>`) falls away,
+		// and a value that needs no quotes loses them.
+		expect(html).toContain("<!doctype html><html lang=en>");
 
 		// Text, entities and inline structure stay byte-for-byte (never collapsed
 		// or re-encoded): the same computed DOM.
 		expect(html).toContain("<p>Hello <b>world</b> &amp; friends</p>");
 
-		// Omitted optional end tags are materialized (`</li>`), and the parser's
-		// implied `<tbody>` stays transparent while cells get their `</td>`.
-		expect(html).toContain("</li><li>two");
-		expect(html).toContain("<table><tr><td>a</td><td>b</td></tr></table>");
+		// An optional end tag the next sibling implies is left out (§13.1.2.4),
+		// and the parser's implied `<tbody>` stays transparent.
+		expect(html).toContain("<li>one");
+		expect(html).toContain("<li>two");
+		expect(html).not.toContain("</li>");
+		expect(html).toContain("<table><tr><td>a<td>b</table>");
 
 		// `<pre>` whitespace is significant and preserved verbatim.
 		expect(html).toContain("<pre>  preformatted\n   text\n</pre>");

@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html minimize-transforms minimize-transforms should compile 1`] = `
+"<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content=\\"width=device-width,initial-scale=1,viewport-fit=cover\\"><meta name=description content=\\"a,  b kept as written\\"><title>Transform corpus</title><style type=text/css>:root{--gap:8px}body{margin:0;color:red}.card{border-radius:4px;background:#fff}</style><style type=text/template>a { not css </style></head><body>
+	
+	<!--[if IE]><p>conditional comment, kept</p><![endif]-->
+	<div class=\\"a b\\" id=upper>source casing folds</div>
+	<div class=trimmed style=color:red;padding:0>token list and declarations</div>
+	<div style=\\"content: '}'\\">declines: escapes the wrapper</div>
+	<div style=\\"--custom: {a:b}\\">declines: custom property braces</div>
+	<p>optional end tags</p>
+	<ul><li>one<li>two</ul>
+	<dl><dt>a<dd>b<dt>c</dt></dl>
+	<table><tr><td>a<td>b<tr><td>c</table>
+	<table><thead><tr><th>h<tbody><tr><td>a</table>
+	<a><p>trailing p kept: parent absorbs</p></a>
+	<my-el><p>trailing p kept: custom element</p></my-el>
+	<form method=get novalidate>
+		<input type=checkbox checked disabled>
+		<input type=text disabled=true>
+		<select multiple><option selected>a<option>b</select>
+		<textarea readonly>  keep  me  </textarea>
+	</form>
+	<div checked=checked>not boolean here</div>
+	<img srcset=\\"a.png 1x,b.png 2x\\" src=a.png alt=\\"unquoted where legal\\">
+	<img srcset=\\"bare.png, next.png 2x\\" alt=\\"descriptor-less keeps its space\\">
+	<img srcset=\\"a.png 100w 2x\\" alt=\\"invalid srcset kept\\">
+	<img srcset=\\"data:image/gif;base64,R0lGOD 1x,b.png 2x\\" alt=\\"comma in url\\">
+	<a rel=\\"noopener noreferrer\\" ping=\\"/a /b\\" href=x>token lists collapse</a>
+	<iframe sandbox=\\"allow-scripts allow-forms\\"></iframe>
+	<label for=\\"a  b\\">for keeps its spaces: an id may contain one</label>
+	<a href=trimmed.html>url ends trimmed</a>
+	<img src=a.png width=10 height=20 alt=\\"  alt keeps its spaces  \\">
+	<table><tr><td width=\\"  50%  \\" colspan=7>legacy percentage kept, integer normalized</table>
+	<textarea rows=3 cols=4>x</textarea>
+	<input type=file accept=.png,.jpg>
+	<map><area coords=1,2,3 shape=rect></map>
+	<img sizes=\\"(max-width: 100px)   100px,200px\\" srcset=\\"s.png 1x\\" alt=\\"sizes keeps its media condition\\">
+	<a href=\\"x?a=1\\" title=\\"quoted: has =\\">kept quoted</a>
+	<a href=plain.html>unquoted</a>
+	<br>
+	<input type=text>
+	<svg viewBox=\\"0 0 8 8\\"><rect x=1 y=2 class=\\"a    b\\"/><circle R=1 /><myCustomThing/></svg>
+	<script type=application/json>{\\"a\\":1,\\"b\\":[1,2],\\"s\\":\\"keep   spaces\\"}</script>
+	<script type=application/ld+json>{\\"@context\\":\\"https://schema.org\\",\\"big\\":12345678901234567890,\\"n\\":1.0}</script>
+	<script type=importmap>{\\"imports\\":{\\"a\\":\\"./a.js\\"}}</script>
+	<script type=speculationrules>{\\"prerender\\":[{\\"urls\\":[\\"/x\\"]}]}</script>
+	<script type=application/json>not json {  kept</script>
+	<script type=text/template>{ \\"a\\" :  1 }  kept</script>
+	<pre>  preformatted
+   text
+</pre>
+	
+	<div class=\\"  a b\\">nbsp is a class token of its own</div>
+	<a href= nbsp.html>nbsp stays in the url</a>
+	<table><tr><td colspan= 2>nbsp is not integer whitespace<td colspan=+2>plus does not parse as non-negative</table>
+	<ol start=5><li>signed integer normalizes</ol>
+	<ol start=-5><li>negative normalizes</ol>
+	<meta name=viewport content=\\" width=device-width,initial-scale=1\\">
+	<input type=file accept= .png,.jpg>
+	<img srcset=\\"a.png  1x\\" alt=\\"nbsp descriptor kept\\">
+	<script type= application/json>{ \\"a\\" : 1 }</script>
+	<style type= text/css>a { color : red ; }
+</style>
+	<aİx id=x>only ascii folds in a name</aİx>
+	<table><caption>caption end tag goes<col><col><tr><td>a</table>
+	<table><caption>whitespace behind it keeps the tag</caption> <col><tr><td>a</table>
+	<table><col><colgroup><col><tr><td>a</table>
+	<table><colgroup span=2><col><colgroup><tr><td>a</table>
+	<p>a > b, &lt; and &amp; still escape</p>
+	<input type=file accept=\\"image/ png,.jpg\\">
+	<map><area shape=poly coords=\\"1 2,3,4 5\\"></map>
+
+
+</body></html>"
+`;

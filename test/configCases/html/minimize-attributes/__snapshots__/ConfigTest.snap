@@ -1,41 +1,38 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ConfigTestCases html minimize-attributes minimize-attributes should compile 1`] = `
-"<!DOCTYPE html><html lang=\\"en\\"><head>
-	<title>Attribute corpus</title>
-</head>
-<body>
-	<p title=\\"blah\\" class=\\"a23B-foo.bar_baz:qux\\" id=\\"moo\\">removing attribute quotes</p>
+"<!doctype html><html lang=en><head><title>Attribute corpus</title></head><body>
+	<p title=blah class=a23B-foo.bar_baz:qux id=moo>removing attribute quotes</p>
 	<input value=\\"hello world\\">
 	
-	<script type=\\"application/json\\">{\\"a\\":1}</script>
-	<a href=\\"#\\" title=\\"foo#bar\\">x</a>
-	<a href=\\"http://example.test/\\" title=\\"blah\\">trailing slash</a>
-	<a title=\\"blah\\" href=\\"http://example.test/\\">trailing slash, last</a>
-	<a href=\\"http://example.test/\\" title=\\"\\">empty value</a>
-	<p class=\\"foo|bar:baz\\">no quotes needed</p>
-	<p onclick=\\"x\\">event handler</p>
+	<script type=application/json>{\\"a\\":1}</script>
+	<a href=# title=foo#bar>x</a>
+	<a href=http://example.test/ title=blah>trailing slash</a>
+	<a title=blah href=http://example.test/>trailing slash, last</a>
+	<a href=http://example.test/ title=\\"\\">empty value</a>
+	<p class=foo|bar:baz>no quotes needed</p>
+	<p onclick=x>event handler</p>
 	<link href=\\"<?php echo 'http://foo/' ?>\\">
-	<p data-gt=\\"a>b\\" data-eq=\\"a=b\\" data-lt=\\"a&lt;b\\" data-tick=\\"a\`b\\">must stay quoted</p>
+	<p data-gt=\\"a>b\\" data-eq=\\"a=b\\" data-lt=a&lt;b data-tick=\\"a\`b\\">must stay quoted</p>
 	<p data-nl=\\"a
 b\\">newline in a value</p>
-	<p data-dq=\\"a&quot;b\\">double quote in a value</p>
+	<p data-dq=a&quot;b>double quote in a value</p>
 	<p data-sq='a\\"b'>the other quote wins</p>
-	<p data-amp=\\"a?b&c\\" data-ref=\\"a&amp;b\\">raw value bytes</p>
-	<input type=\\"text\\" value=\\"\\" disabled=\\"disabled\\" checked>
-	<div class=\\"a\\" id=\\"b\\">collapsed attribute whitespace</div>
+	<p data-amp=a?b&c data-ref=a&amp;b>raw value bytes</p>
+	<input type=text value=\\"\\" disabled checked>
+	<div class=a id=b>collapsed attribute whitespace</div>
 	<div>no attributes</div>
-	<br/>
-	<img src=\\"data:image/gif;base64,R0lGOD\\" alt='say \\"hi\\"'/>
-	<svg viewBox=\\"0 0 8 8\\"><rect x=\\"1\\" y=\\"2\\"/><circle R=\\"1\\"/></svg>
-	<DIV CLASS=\\"a\\">source casing</DIV>
+	<br>
+	<img src=data:image/gif;base64,R0lGOD alt='say \\"hi\\"'>
+	<svg viewBox=\\"0 0 8 8\\"><rect x=1 y=2 /><circle R=1 /></svg>
+	<div class=a>source casing</div>
 	<p a=1>duplicate attribute</p>
-	<p data-slash=\\"/end/\\">value ending in a slash</p>
+	<p data-slash=/end/>value ending in a slash</p>
 	<a href=x/>unquoted value ending in a slash</a>
 	<pre>  preformatted
    text
 </pre>
-	<textarea class=\\"t\\">  keep  me  </textarea>
+	<textarea class=t>  keep  me  </textarea>
 	
 	<!--[if IE]><p>kept: conditional comment</p><![endif]-->
 

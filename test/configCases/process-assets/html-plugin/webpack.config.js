@@ -3,6 +3,9 @@
 const {
 	sources: { RawSource, OriginalSource, ReplaceSource },
 	Compilation,
+	html: {
+		syntax: { NodeType, SourceProcessor }
+	},
 	util: { createHash },
 	optimize: { RealContentHashPlugin }
 } = require("../../../../");
@@ -149,26 +152,30 @@ class HtmlInlinePlugin {
 							const content = /** @type {string} */ (asset.source.source());
 							/** @type {{ start: number, length: number, asset: Asset }[]} */
 							const matches = [];
-							const regExp =
-								/<script\s+src\s*=\s*"([^"]+)"(?:\s+[^"=\s]+(?:\s*=\s*(?:"[^"]*"|\S+))?)*\s*><\/script>/g;
-							let match = regExp.exec(content);
-							while (match) {
-								let url = match[1];
-								if (url.startsWith(publicPath)) {
-									url = url.slice(publicPath.length);
-								}
-								if (this.inline.test(url)) {
-									const asset = /** @type {Asset} */ (
-										compilation.getAsset(url)
-									);
-									matches.push({
-										start: match.index,
-										length: match[0].length,
-										asset
-									});
-								}
-								match = regExp.exec(content);
-							}
+							// Minification runs first (`OPTIMIZE_SIZE`) and rewrites the tag
+							// — quoting, spacing, casing — so the scripts are read out of
+							// webpack's own parser rather than matched with a regex.
+							new SourceProcessor()
+								.use({
+									[NodeType.Element]: (path) => {
+										if (path.tagName() !== "script") return;
+										let url;
+										for (const attribute of path.attributes()) {
+											if (attribute.name === "src") url = attribute.value;
+										}
+										if (url === undefined) return;
+										if (url.startsWith(publicPath)) {
+											url = url.slice(publicPath.length);
+										}
+										if (!this.inline.test(url)) return;
+										matches.push({
+											start: path.start(),
+											length: path.end() - path.start(),
+											asset: /** @type {Asset} */ (compilation.getAsset(url))
+										});
+									}
+								})
+								.process(content, {});
 							if (matches.length > 0) {
 								const newSource = new ReplaceSource(asset.source, name);
 								for (const { start, length, asset } of matches) {

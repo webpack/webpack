@@ -14,27 +14,31 @@ module.exports = {
 	module: {
 		generator: {
 			html: {
-				// Emit the processed HTML as a real `.html` file the minimizer runs on.
 				extract: true
+			}
+		},
+		parser: {
+			html: {
+				// The corpus is about serialization, so its `src` / `srcset` stay
+				// literal instead of resolving to hashed assets.
+				sources: false
 			}
 		}
 	},
 	optimization: {
 		minimize: true,
-		// The default minimizer is replaced by the test harness, so wire the HTML
-		// minify function into one minimizer plugin the same way the production
-		// default does (lib/config/defaults.js): an array of minify functions, each
-		// routed by its own `filter`, in a single instance / worker pool.
+		// The harness replaces the default minimizer, so wire the HTML one the way
+		// `lib/config/defaults.js` does.
 		minimizer: [
 			{
 				apply: (compiler) => {
 					new MinimizerPlugin({
-						test: /\.(?:[cm]?js|html)(\?.*)?$/i,
+						test: /\.html(\?.*)?$/i,
 						// In-process, so the coverage instrument sees the minify run:
 						// the worker pool is another process and reports nothing.
 						parallel: false,
-						minify: [MinimizerPlugin.terserMinify, htmlMinify],
-						minimizerOptions: [{ compress: { passes: 2 } }, {}]
+						minify: [htmlMinify],
+						minimizerOptions: [{}]
 					}).apply(/** @type {EXPECTED_ANY} */ (compiler));
 				}
 			}
