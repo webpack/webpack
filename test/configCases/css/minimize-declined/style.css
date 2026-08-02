@@ -54,10 +54,11 @@
 /*! declined: inside `calc()` a bare `0` is a `<number>`, so the expression stops
    parsing (every tool keeps this one) */
 .t18 { width: calc(0px + 1px) }
-/*! declined: hue math rounds to a different byte than the engine does — measured
-   against headless Chromium, spec-exact rounding still misses 12 of 1560 hsl()
-   samples by one, and clean-css and lightningcss disagree with each other on
-   `hwb()` (cssnano: #40bf5e) */
+/*! declined: only where it has to round — an hsl() landing on a byte exactly
+   converts (see `minimize-colors`), and 1500 of those were checked against
+   headless Chromium. This one rounds, and rounding is where engines part
+   company: spec-exact rounding still misses 12 of 1560 samples by one
+   (cssnano: #40bf5e) */
 .t19 { background: hsl(134, 50%, 50%) }
 /*! declined: the same, one step further out (esbuild: #00c3ff, lightningcss: #00c4ff) */
 .t20 { background: hwb(194 0% 0%) }

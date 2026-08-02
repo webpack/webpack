@@ -44,7 +44,7 @@ module.exports = {
 		expect(css).toContain(
 			".transforms{color:red;background:#abc;" +
 				"background-image:linear-gradient(#abc,red);border-color:teal;" +
-				"margin:.5px 1px 0;--raw:0.50;fill:hsl(0,100%,50%);" +
+				"margin:.5px 1px 0;--raw:0.50;fill:red;" +
 				"stroke:rgba(0,0,0,.5);outline-color:#0000}"
 		);
 		// - #FF0000 -> red, #AABBCC -> #abc, rgb(0,128,128) -> teal (name shortest)
@@ -53,7 +53,8 @@ module.exports = {
 		// - hashes inside a value function (gradient) are colors too, so shortened
 		// - margin numbers normalized (leading/trailing zeros)
 		// - custom property `--raw` value stays verbatim (0.50, not normalized)
-		// - hsl() left as-is (hue rounding could change the byte); rgba() kept,
+		// - hsl(0,100%,50%) lands on a byte with nothing to round, so it converts
+		//   (one that had to round would keep its function); rgba() kept,
 		//   only its numbers normalized (.5)
 		// An id selector that looks like a hex color is NOT shortened (ids are
 		// case-sensitive and not colors).
