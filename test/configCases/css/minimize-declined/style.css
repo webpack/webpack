@@ -14,7 +14,9 @@
 .t03 { width: 33.33333333% }
 /*! declined: lossy — rounding away a small difference (lightningcss: 1px) */
 .t04 { width: 1.0000001px }
-/*! declined: exact, but 4-digit hex predates no browser we can assume (lightningcss: #0000) */
+/*! declined here only because this case builds for no particular target — with
+   `output.environment.cssColorHexAlpha` false it stays, and otherwise it is
+   `#0000` (see the `minimize-environment` case) (lightningcss: #0000) */
 .t05 { background-color: transparent }
 /*! declined: exact, but range syntax drops every pre-2022 browser (lightningcss: (width>=1200px)) */
 @media (min-width: 1200px) { .t06 { color: red } }

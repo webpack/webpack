@@ -21,7 +21,7 @@ Array [
   "/*! test_color: .foo { color: hsl(100 100% 50% / .8) } */.foo{color:hsl(100 100% 50% / .8)}",
   "/*! test_color: .foo { color: hsla(100, 100%, 50%, .8) } */.foo{color:hsla(100,100%,50%,.8)}",
   "/*! test_color: .foo { color: hsla(100 100% 50% / .8) } */.foo{color:hsla(100 100% 50% / .8)}",
-  "/*! test_color: .foo { color: transparent } */.foo{color:transparent}",
+  "/*! test_color: .foo { color: transparent } */.foo{color:#0000}",
   "/*! test_color: .foo { color: currentColor } */.foo{color:currentColor}",
   "/*! test_color: .foo { color: ButtonBorder } */.foo{color:ButtonBorder}",
   "/*! test_color: .foo { color: hwb(194 0% 0%) } */.foo{color:hwb(194 0% 0%)}",

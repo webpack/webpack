@@ -1,0 +1,14 @@
+/* `output.environment.cssColorHexAlpha` decides whether the shortest spelling of
+   a fully transparent color is reachable. This build sets it false, so every
+   case here keeps the form an engine without CSS Color 4 hex alpha can read. */
+
+/*! the keyword stays a keyword */
+.t01 { background-color: transparent }
+/*! ...and the function stays the keyword, which every engine reads */
+.t02 { background-color: rgba(0, 0, 0, 0) }
+/*! ...including inside a gradient */
+.t03 { background-image: linear-gradient(red, transparent) }
+/*! an opaque color is not gated: it has no alpha to spell */
+.t04 { color: rgb(0, 0, 0) }
+/*! a source hex with alpha is the author's own, and is only shortened */
+.t05 { color: #00000000 }

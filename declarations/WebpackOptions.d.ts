@@ -2872,6 +2872,11 @@ export interface Environment {
 	 */
 	const?: boolean;
 	/**
+	 * The environment supports 4- and 8-digit hex colors ('#rgba', '#rrggbbaa').
+	 * @since 5.110.0
+	 */
+	cssColorHexAlpha?: boolean;
+	/**
 	 * The environment supports destructuring ('{ a, b } = obj').
 	 */
 	destructuring?: boolean;

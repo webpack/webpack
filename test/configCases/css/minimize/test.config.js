@@ -45,10 +45,11 @@ module.exports = {
 			".transforms{color:red;background:#abc;" +
 				"background-image:linear-gradient(#abc,red);border-color:teal;" +
 				"margin:.5px 1px 0;--raw:0.50;fill:hsl(0,100%,50%);" +
-				"stroke:rgba(0,0,0,.5);outline-color:transparent}"
+				"stroke:rgba(0,0,0,.5);outline-color:#0000}"
 		);
 		// - #FF0000 -> red, #AABBCC -> #abc, rgb(0,128,128) -> teal (name shortest)
-		// - rgba(0,0,0,0) (transparent black) -> the `transparent` keyword
+		// - rgba(0,0,0,0) (transparent black) -> `#0000`, since this build states
+		//   no target and every current engine reads a hex alpha
 		// - hashes inside a value function (gradient) are colors too, so shortened
 		// - margin numbers normalized (leading/trailing zeros)
 		// - custom property `--raw` value stays verbatim (0.50, not normalized)

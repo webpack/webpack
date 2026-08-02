@@ -1146,6 +1146,11 @@
           "description": "The environment supports const and let for variable declarations.",
           "type": "boolean"
         },
+        "cssColorHexAlpha": {
+          "description": "The environment supports 4- and 8-digit hex colors ('#rgba', '#rrggbbaa').",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "destructuring": {
           "description": "The environment supports destructuring ('{ a, b } = obj').",
           "type": "boolean"

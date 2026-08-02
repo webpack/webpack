@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-environment minimize-environment should compile 1`] = `
+Array [
+  "/*! the keyword stays a keyword */.t01{background-color:transparent}",
+  "/*! ...and the function stays the keyword, which every engine reads */.t02{background-color:transparent}",
+  "/*! ...including inside a gradient */.t03{background-image:linear-gradient(red,transparent)}",
+  "/*! an opaque color is not gated: it has no alpha to spell */.t04{color:#000}",
+  "/*! a source hex with alpha is the author's own, and is only shortened */.t05{color:#0000}",
+]
+`;
