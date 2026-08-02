@@ -4969,4 +4969,41 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 			expect(minify("<a href=x/>t</a>")).toBe("<a href=x/>t</a>");
 		});
 	});
+
+	// A fixture can't carry these: `.gitattributes` checks every `test/` file
+	// out with LF, so CR only reaches the parser from a string built here.
+	describe("carriage returns in text", () => {
+		it("normalizes a CRLF to one newline", () => {
+			expect(minify("<p>a\r\nb</p>")).toBe("<p>a\nb</p>");
+		});
+
+		it("normalizes a lone CR to a newline", () => {
+			// Preprocessing maps CR to LF without changing length, so the raw
+			// source is not the text's serialization even at equal lengths.
+			expect(minify("<p>a\rb</p>")).toBe("<p>a\nb</p>");
+			expect(minify("<p>a\r\rb</p>")).toBe("<p>a\n\nb</p>");
+		});
+
+		it("keeps a CRLF text run whole when it leads an insertion mode", () => {
+			// `leadingWs` splits this run, and its source span has to survive
+			// the CRLF collapsing or the tail of the run is dropped.
+			expect(minify("<head>\r\n\t<title>T</title>\r\n</head>")).toBe(
+				"<head>\n\t<title>T</title>\n</head>"
+			);
+			// Foster-parented whitespace takes the same split.
+			expect(minify("<table>\r\n\t<tr><td>x</table>")).toBe(
+				minify("<table>\n\t<tr><td>x</table>")
+			);
+		});
+
+		it("keeps whitespace that decoded from character references", () => {
+			expect(minify("<head>&#10;&#9;<title>T</title></head>")).toBe(
+				"<head>\n\t<title>T</title></head>"
+			);
+		});
+
+		it("leaves a CR inside a literal-text element alone", () => {
+			expect(minify("<script>a\r\nb</script>")).toBe("<script>a\nb</script>");
+		});
+	});
 });
