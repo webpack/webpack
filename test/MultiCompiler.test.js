@@ -425,6 +425,46 @@ describe("MultiCompiler", () => {
 		});
 	});
 
+	it("should not stay running after dependency validation fails", (done) => {
+		const compiler = /** @type {import("../").MultiCompiler} */ (
+			webpack(
+				/** @type {import("../").MultiConfiguration} */ ([
+					{
+						name: "a",
+						context: path.join(__dirname, "fixtures"),
+						entry: "./a.js",
+						dependencies: ["missing"]
+					},
+					{
+						name: "b",
+						context: path.join(__dirname, "fixtures"),
+						entry: "./b.js"
+					}
+				])
+			)
+		);
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		compiler.run((err) => {
+			expect(/** @type {Error} */ (err).message).toMatch(
+				/Compiler dependency `missing` not found/
+			);
+			// A retry must report the real error again, not a ConcurrentCompilationError
+			compiler.run((err2) => {
+				expect(/** @type {Error} */ (err2).message).toMatch(
+					/Compiler dependency `missing` not found/
+				);
+				compiler.watch({}, (err3) => {
+					expect(/** @type {Error} */ (err3).message).toMatch(
+						/Compiler dependency `missing` not found/
+					);
+					compiler.close(done);
+				});
+			});
+		});
+	});
+
 	it("should expose `watching` when dependency validation fails", (done) => {
 		const compiler = /** @type {import("../").MultiCompiler} */ (
 			webpack(
