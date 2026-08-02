@@ -4836,12 +4836,13 @@ describe("htmlMinify — assets webpack only passes through", () => {
 
 	it("keeps the body of literal-text elements raw", () => {
 		// `script` / `style` bodies are not markup, so `<` must not be escaped —
-		// `a &lt; b` would change what the script does.
+		// `a &lt; b` would change what the script does. A `<style>` body is still
+		// run through the CSS minifier, which is not an escaping pass.
 		expect(min("<script>if (a < b) { x(); }</script>")).toBe(
 			"<script>if (a < b) { x(); }</script>"
 		);
-		expect(min("<style>.a { color: red }</style>")).toBe(
-			"<style>.a { color: red }</style>"
+		expect(min("<style>.a[x='<'] { color: red }</style>")).toBe(
+			'<style>.a[x="<"]{color:red}</style>'
 		);
 	});
 });
@@ -5039,6 +5040,49 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 	// A fixture can't carry these: `.gitattributes` checks every `test/` file
 	// out with LF, so CR only reaches the parser from a string built here.
+	describe("inline <style>", () => {
+		it("minifies the body with webpack's CSS minifier", () => {
+			expect(minify("<style>a { color : red ; }</style>")).toBe(
+				"<style>a{color:red}</style>"
+			);
+			// The CSS minifier's own transforms apply, shorthand collapsing included.
+			expect(minify("<style>.x { margin : 0 0 0 0 }</style>")).toBe(
+				"<style>.x{margin:0}</style>"
+			);
+		});
+
+		it("minifies a `type` that still means CSS", () => {
+			expect(minify('<style type="text/css">a { color : red }</style>')).toBe(
+				"<style type=text/css>a{color:red}</style>"
+			);
+		});
+
+		it("leaves a body that is not CSS alone", () => {
+			expect(minify('<style type="text/template">a { not css </style>')).toBe(
+				"<style type=text/template>a { not css </style>"
+			);
+		});
+
+		it("leaves an empty body alone", () => {
+			expect(minify("<style></style>")).toBe("<style></style>");
+			expect(minify("<style>  </style>")).toBe("<style>  </style>");
+		});
+
+		it("minifies a foreign-content <style>, which is CSS too", () => {
+			expect(minify("<svg><style>a { color : red }</style></svg>")).toBe(
+				"<svg><style>a{color:red}</style></svg>"
+			);
+		});
+
+		it("leaves a <script> body alone", () => {
+			// Minifying JS needs terser, whose API is async while this printer is
+			// not — see the `htmlMinify` notes.
+			expect(minify("<script>var  a  =  1 ;</script>")).toBe(
+				"<script>var  a  =  1 ;</script>"
+			);
+		});
+	});
+
 	describe("srcset", () => {
 		it("reduces whitespace to what the grammar needs", () => {
 			expect(minify('<img srcset="a.png 1x,   b.png 2x">')).toBe(
@@ -5259,9 +5303,9 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 		});
 
 		it("keeps a literal-text body under <head>", () => {
-			expect(minify("<head>\n<style>  a  </style>\n</head>")).toBe(
-				"<head><style>  a  </style></head>"
-			);
+			expect(
+				minify("<head>\n<style>  a { color : red }  </style>\n</head>")
+			).toBe("<head><style>a{color:red}</style></head>");
 		});
 
 		it("keeps text that only looks inert", () => {
