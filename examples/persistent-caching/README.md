@@ -61,7 +61,7 @@ module.exports = config;
 ## Unoptimized
 
 ```
-asset output.js 3.64 MiB [emitted] (name: main)
+asset output.js 3.65 MiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 2.27 MiB (javascript) 1.71 KiB (runtime) [entry]
   > ./example.js main
   cached modules 2.27 MiB (javascript) 1.71 KiB (runtime) [cached] 1528 modules

@@ -384,9 +384,9 @@ assets by path *.js 4.23 KiB
   asset __html_6d047296_1.js 1.8 KiB [emitted] [minimized] (name: __html_6d047296_1)
   asset __html_6d047296_2.js 143 bytes [emitted] [minimized] (name: __html_6d047296_2)
 asset favicon.ico 14.6 KiB [emitted]
-asset index.html 1.48 KiB [emitted] (auxiliary name: page)
+asset index.html 844 bytes [emitted] [minimized] (auxiliary name: page)
 asset manifest.webmanifest 208 bytes [emitted]
-asset __html_6d047296_0.css 65 bytes [emitted] (name: __html_6d047296_0)
+asset __html_6d047296_0.css 49 bytes [emitted] [minimized] (name: __html_6d047296_0)
 chunk (runtime: __html_6d047296_0) __html_6d047296_0.css (__html_6d047296_0) 64 bytes (css) 0 bytes (runtime) [entry] [rendered]
   > ./styles.css __html_6d047296_0
   runtime modules 0 bytes 1 module

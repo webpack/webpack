@@ -167,10 +167,9 @@ desktop:
 
 ```
 mobile:
-  asset mobile.js 200 bytes [emitted] [minimized] (name: main)
-  chunk (runtime: main) mobile.js (main) 114 bytes [entry] [rendered]
+  asset mobile.js 36 bytes [emitted] [minimized] (name: main)
+  chunk (runtime: main) mobile.js (main) 94 bytes [entry] [rendered]
     > ./example main
-    dependent modules 20 bytes [dependent] 1 module
     ./example.js 94 bytes [built] [code generated]
       [no exports used]
       entry ./example main

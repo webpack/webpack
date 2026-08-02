@@ -184,7 +184,7 @@ legacy:
 
 ```
 modern:
-  asset index.html 759 bytes [emitted] (auxiliary name: page)
+  asset index.html 618 bytes [emitted] [minimized] (auxiliary name: page)
   asset page.modern.js 582 bytes [emitted] [javascript module] [minimized] (name: page)
   asset __html_6d047296_0.modern.js 90 bytes [emitted] [javascript module] [minimized] (name: __html_6d047296_0)
   chunk (runtime: __html_6d047296_0) __html_6d047296_0.modern.js (__html_6d047296_0) 300 bytes [entry] [rendered]
