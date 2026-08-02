@@ -852,7 +852,9 @@ describe("CssSyntax — minify token-boundary safety", () => {
 			["a{b:+/**/5}", "a{b:+ 5}"],
 			["a{b:#/**/fff}", "a{b:# fff}"],
 			["a{b:@/**/x}", "a{b:@ x}"],
-			["a{b:x/**/\\40 y}", "a{b:x \\40 y}"],
+			// The escape's own terminator is no longer needed once `y` follows it
+			// inside the token, but the separator the comment stood for is.
+			["a{b:x/**/\\40 y}", "a{b:x \\40y}"],
 			["a{b:\\40/**/x}", "a{b:\\40 x}"],
 			// Non-ASCII is an ident code point, so these would join into one ident.
 			["a{b:\u00E9/**/\u00E9}", "a{b:\u00E9 \u00E9}"],
@@ -870,6 +872,34 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min(".a.b{c:1}")).toBe(".a.b{c:1}");
 		expect(min(".a>.b{c:1}")).toBe(".a>.b{c:1}");
 		expect(min("a{width:calc(1px + 2px)}")).toBe("a{width:calc(1px + 2px)}");
+	});
+
+	// An unterminated string only exists at EOF (a newline makes it a bad-string
+	// instead), and there the stylesheet ends too — so a build never reaches this,
+	// but `webpack.css.syntax` minifies whatever source it is handed.
+	it("keeps an attribute value the tokenizer closed at EOF", () => {
+		// `"bar` has no closing quote, so unquoting it would drop the `r`. An
+		// at-rule prelude still prints at EOF, unlike a qualified rule (§5.4.3).
+		expect(min('@unknown [foo="bar')).toBe('@unknown [foo="bar];');
+		expect(min("@unknown [foo='bar")).toBe("@unknown [foo='bar];");
+		// The escape swallows the final quote, so this one is unterminated too.
+		expect(min('@unknown [foo="bar\\"')).toBe('@unknown [foo="bar\\"];');
+		// A closed string still unquotes.
+		expect(min('@unknown [foo="bar"')).toBe("@unknown [foo=bar];");
+	});
+
+	it("consumes a CRLF pair as one escape terminator", () => {
+		// The tokenizer takes CRLF as a single terminator, so dropping only the CR
+		// would leave a raw newline inside the identifier — `.A\nbc`, which is two
+		// selectors, not the class `Abc`.
+		expect(min(".\\41\r\nbc{color:red}")).toBe(".Abc{color:red}");
+		expect(min("#\\41\r\nbc{color:red}")).toBe("#Abc{color:red}");
+		// Every other whitespace is a single terminator.
+		for (const space of [" ", "\t", "\n", "\r", "\f"]) {
+			expect(min(`.\\41${space}bc{color:red}`)).toBe(".Abc{color:red}");
+		}
+		// An escape that has to stay keeps its whole CRLF terminator.
+		expect(min(".\\31\r\nabc{color:red}")).toBe(".\\31\r\nabc{color:red}");
 	});
 });
 
@@ -997,6 +1027,211 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 		expect(() => processor.process("a{color:red}")).toThrow("boom");
 		// A leaked in-value flag would treat the selector hash as a color here.
 		expect(min("#Face{color:red}")).toBe("#Face{color:red}");
+	});
+});
+
+// The `configCases/css/minimize-*` cases cover these transforms end to end, but
+// `minimizer-webpack-plugin` runs `minify` in its worker pool, so nothing there
+// is reachable by the coverage instrument. These drive the same code in-process.
+describe("CssSyntax — minify transforms, in-process", () => {
+	/**
+	 * @param {string} src css source
+	 * @returns {string} the minified serialization
+	 */
+	const min = (src) =>
+		new SourceProcessor().process(src, { minimize: true }).code;
+
+	/**
+	 * @param {string} value a `transition-timing-function` value
+	 * @returns {string} the minified value
+	 */
+	const easing = (value) =>
+		min(`a{transition-timing-function:${value}}`).slice(
+			"a{transition-timing-function:".length,
+			-1
+		);
+
+	it("rewrites cubic-bezier() to the keyword naming the same curve", () => {
+		expect(easing("cubic-bezier(0,0,1,1)")).toBe("linear");
+		expect(easing("cubic-bezier(.25,.1,.25,1)")).toBe("ease");
+		expect(easing("cubic-bezier(.42,0,1,1)")).toBe("ease-in");
+		expect(easing("cubic-bezier(0,0,.58,1)")).toBe("ease-out");
+		expect(easing("cubic-bezier(.42,0,.58,1)")).toBe("ease-in-out");
+	});
+
+	it("keeps a cubic-bezier() no keyword names", () => {
+		// Not four arguments, so not the form the equivalences are stated for.
+		expect(easing("cubic-bezier(0,0,1)")).toBe("cubic-bezier(0,0,1)");
+		expect(easing("cubic-bezier(0,0,1,1,1)")).toBe("cubic-bezier(0,0,1,1,1)");
+		// A non-plain-number argument could be anything at computed-value time.
+		expect(easing("cubic-bezier(0,0,1,x)")).toBe("cubic-bezier(0,0,1,x)");
+		// A curve with no keyword of its own.
+		expect(easing("cubic-bezier(.1,.2,.3,.4)")).toBe(
+			"cubic-bezier(.1,.2,.3,.4)"
+		);
+	});
+
+	it("rewrites steps() to its keyword, and drops the default position", () => {
+		expect(easing("steps(1,start)")).toBe("step-start");
+		expect(easing("steps(1,jump-start)")).toBe("step-start");
+		expect(easing("steps(1,end)")).toBe("step-end");
+		// `end` is the default, so only the position goes.
+		expect(easing("steps(3,end)")).toBe("steps(3)");
+		expect(easing("steps(3,jump-end)")).toBe("steps(3)");
+		// `start` is not the default, so it stays.
+		expect(easing("steps(2,start)")).toBe("steps(2,start)");
+	});
+
+	it("keeps a steps() outside those equivalences", () => {
+		expect(easing("steps(2,jump-both)")).toBe("steps(2,jump-both)");
+		expect(easing("steps(x,end)")).toBe("steps(x,end)");
+		expect(easing("steps(2)")).toBe("steps(2)");
+	});
+
+	it("unquotes a url() whose body is also a valid url-token", () => {
+		expect(min('a{background:url("a.png")}')).toBe("a{background:url(a.png)}");
+		expect(min("a{background:url('a.png')}")).toBe("a{background:url(a.png)}");
+	});
+
+	it("keeps url() quotes a url-token could not carry", () => {
+		expect(min('a{background:url("a b.png")}')).toBe(
+			'a{background:url("a b.png")}'
+		);
+		expect(min('a{background:url("a(b).png")}')).toBe(
+			'a{background:url("a(b).png")}'
+		);
+		expect(min('a{background:url("a\\\\b.png")}')).toBe(
+			'a{background:url("a\\\\b.png")}'
+		);
+		// A control code point, and an already-unquoted url.
+		expect(min('a{background:url("a\u0001b.png")}')).toBe(
+			'a{background:url("a\u0001b.png")}'
+		);
+		expect(min("a{background:url(a.png)}")).toBe("a{background:url(a.png)}");
+	});
+
+	it("picks the string quote that needs the fewest escapes", () => {
+		expect(min('a{content:"say \\"hi\\""}')).toBe("a{content:'say \"hi\"'}");
+		expect(min("a{content:'plain'}")).toBe('a{content:"plain"}');
+		// Already the cheaper quote, so both of these stay as written.
+		expect(min('a{content:"it\'s"}')).toBe('a{content:"it\'s"}');
+		expect(min("a{content:'say \"hi\"'}")).toBe("a{content:'say \"hi\"'}");
+		// Both quotes appear, so neither spelling is cheaper.
+		expect(min('a{content:"has \'both\' and \\"q\\""}')).toBe(
+			'a{content:"has \'both\' and \\"q\\""}'
+		);
+	});
+
+	it("rewrites a `flex` value to its keyword spelling", () => {
+		expect(min("a{flex:0 0 auto}")).toBe("a{flex:none}");
+		expect(min("a{flex:1 1 auto}")).toBe("a{flex:auto}");
+		// The names match case-insensitively; the property keeps its own spelling.
+		expect(min("a{FLEX:0 0 AUTO}")).toBe("a{FLEX:none}");
+	});
+
+	it("keeps a `flex` value no keyword spells", () => {
+		// `flex:1` means `1 1 0%`, and a length `0` is not a percentage `0%`.
+		expect(min("a{flex:1 1 0}")).toBe("a{flex:1 1 0}");
+		expect(min("a{flex:1 1}")).toBe("a{flex:1 1}");
+		// A prefixed property is a different property.
+		expect(min("a{-webkit-box-flex:0 0 auto}")).toBe(
+			"a{-webkit-box-flex:0 0 auto}"
+		);
+	});
+
+	it("re-quotes a string whose escapes the other quote would avoid", () => {
+		expect(min("a{content:'it\\'s'}")).toBe('a{content:"it\'s"}');
+		// Both quotes appear escaped, so switching saves nothing.
+		expect(min("a{content:'a\\'b\"c'}")).toBe("a{content:'a\\'b\"c'}");
+	});
+
+	it("keeps an attribute string whose backslash is not the final escape", () => {
+		expect(min('a[href="a\\\\bc"]{b:c}')).toBe('a[href="a\\\\bc"]{b:c}');
+		expect(min('a[href="ab\\\\"]{b:c}')).toBe('a[href="ab\\\\"]{b:c}');
+	});
+
+	it("unquotes an attribute selector value that is a bare ident", () => {
+		expect(min('a[href="x"]{b:c}')).toBe("a[href=x]{b:c}");
+		expect(min("a[href='x']{b:c}")).toBe("a[href=x]{b:c}");
+		expect(min('a[href="--x"]{b:c}')).toBe("a[href=--x]{b:c}");
+		// The case-sensitivity flag rides along after the value.
+		expect(min('a[href="x" i]{b:c}')).toBe("a[href=x i]{b:c}");
+	});
+
+	it("drops the box values CSS's `{1,4}` notation already implies", () => {
+		expect(min("a{margin:1px 1px 1px 1px}")).toBe("a{margin:1px}");
+		expect(min("a{margin:1px 2px 1px 2px}")).toBe("a{margin:1px 2px}");
+		expect(min("a{margin:1px 2px 3px 2px}")).toBe("a{margin:1px 2px 3px}");
+		expect(min("a{margin:1px 2px 1px}")).toBe("a{margin:1px 2px}");
+		expect(min("a{padding:0 0}")).toBe("a{padding:0}");
+		expect(min("a{border-color:red red red red}")).toBe("a{border-color:red}");
+	});
+
+	it("keeps a box the notation does not shorten", () => {
+		expect(min("a{margin:1px 2px 3px 4px}")).toBe("a{margin:1px 2px 3px 4px}");
+		// Five values is not the notation, so nothing is implied.
+		expect(min("a{margin:1px 1px 1px 1px 1px}")).toBe(
+			"a{margin:1px 1px 1px 1px 1px}"
+		);
+		// A substitution expands to a token sequence, so two references need not
+		// be one repeated value.
+		expect(min("a{margin:var(--g) var(--g)}")).toBe(
+			"a{margin:var(--g) var(--g)}"
+		);
+		// A custom property's value is verbatim.
+		expect(min("a{--margin:1px 1px}")).toBe("a{--margin:1px 1px}");
+	});
+
+	it("keeps a box repeating a CSS-wide keyword", () => {
+		// Each is only valid as the whole value, so the repeated form is already
+		// discarded — collapsing it would switch the declaration on.
+		expect(min("a{margin:inherit inherit}")).toBe("a{margin:inherit inherit}");
+		expect(min("a{margin:initial initial}")).toBe("a{margin:initial initial}");
+		expect(min("a{margin:unset unset}")).toBe("a{margin:unset unset}");
+		expect(min("a{margin:revert revert}")).toBe("a{margin:revert revert}");
+		expect(min("a{margin:revert-layer revert-layer}")).toBe(
+			"a{margin:revert-layer revert-layer}"
+		);
+		// The names match case-insensitively, and the `/` box is no way around it.
+		expect(min("a{margin:INHERIT INHERIT}")).toBe("a{margin:INHERIT INHERIT}");
+		expect(min("a{border-radius:inherit inherit/inherit inherit}")).toBe(
+			"a{border-radius:inherit inherit/inherit inherit}"
+		);
+		// One keyword alone is the valid form, so it is left as it is.
+		expect(min("a{margin:inherit}")).toBe("a{margin:inherit}");
+		// `auto` and `currentcolor` are per-side values, not CSS-wide keywords.
+		expect(min("a{margin:auto auto}")).toBe("a{margin:auto}");
+		expect(min("a{border-color:currentcolor currentcolor}")).toBe(
+			"a{border-color:currentcolor}"
+		);
+	});
+
+	it("collapses each side of `border-radius`'s `/` on its own", () => {
+		expect(min("a{border-radius:1px 1px 1px 1px / 1px 1px 1px 1px}")).toBe(
+			"a{border-radius:1px}"
+		);
+		expect(min("a{border-radius:1px 1px / 2px 2px}")).toBe(
+			"a{border-radius:1px/2px}"
+		);
+		expect(min("a{border-radius:1px 2px / 3px 4px}")).toBe(
+			"a{border-radius:1px 2px/3px 4px}"
+		);
+		expect(min("a{border-radius:50%}")).toBe("a{border-radius:50%}");
+	});
+
+	it("leaves a `/` alone on a property that takes only one box", () => {
+		// The browser discards these, so collapsing would switch them on.
+		expect(min("a{margin:1px 1px/1px 1px}")).toBe("a{margin:1px 1px/1px 1px}");
+		expect(min("a{padding:2px/2px}")).toBe("a{padding:2px/2px}");
+	});
+
+	it("keeps an attribute value that is not a bare ident", () => {
+		expect(min('a[href="x y"]{b:c}')).toBe('a[href="x y"]{b:c}');
+		expect(min('a[href=""]{b:c}')).toBe('a[href=""]{b:c}');
+		// A digit start and a lone `-` are both invalid ident spellings.
+		expect(min('a[href="1x"]{b:c}')).toBe('a[href="1x"]{b:c}');
+		expect(min('a[href="-"]{b:c}')).toBe('a[href="-"]{b:c}');
+		expect(min("a[href]{b:c}")).toBe("a[href]{b:c}");
 	});
 });
 

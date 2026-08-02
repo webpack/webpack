@@ -1,0 +1,7 @@
+/* A string the tokenizer closes at EOF has no matching final quote, so it keeps
+   the one quote it has — rewriting the wrapper would move where the string ends.
+   It gets its own chunk because an unterminated string swallows the rest of the
+   stylesheet it is emitted into. */
+
+/*! webpack: a string the tokenizer closes at EOF keeps its one quote */
+.t31:after { content: "unterminated

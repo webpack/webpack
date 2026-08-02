@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-declined minimize-declined should compile 1`] = `
+Array [
+  "/*! declined: lossy — 0x20/255 is .12549, not .125 (lightningcss: #00000020) */.t01{color:rgba(0,0,0,.125)}",
+  "/*! declined: lossy — 0x80/255 is .50196, not .5 (lightningcss: #00000080) */.t02{color:rgba(0,0,0,.5)}",
+  "/*! declined: lossy — 6-significant-digit rounding (lightningcss: 33.3333%) */.t03{width:33.33333333%}",
+  "/*! declined: lossy — rounding away a small difference (lightningcss: 1px) */.t04{width:1.0000001px}",
+  "/*! declined: exact, but 4-digit hex predates no browser we can assume (lightningcss: #0000) */.t05{background-color:transparent}",
+  "/*! declined: exact, but range syntax drops every pre-2022 browser (lightningcss: (width>=1200px)) */@media (min-width:1200px){.t06{color:red}}",
+  "/*! declined: merging longhands into their shorthand needs a per-property table (lightningcss: margin:1px 2px) */.t07{margin-top:1px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
+  "/*! declined: a keyword's numeric equivalent needs one too (lightningcss: 400) */.t08{font-weight:normal}",
+  "/*! declined: needs unit algebra (lightningcss: calc(1.5em + 3.75rem)) */.t09{width:calc(3rem + calc(1.5em + .75rem))}",
+  "/*! declined: observable through getComputedStyle().getPropertyValue() (lightningcss: .5rem) */.t10{--radius:0.5rem}",
+  "/*! declined: ...including the unit (cssnano: .5s) */.t11{--duration:500ms}",
+  "/*! declined: legacy single-colon spelling, worth ~0.03% (lightningcss: :before) */.t12::before{color:red}",
+  "/*! declined: the same, with the universal selector dropped (lightningcss: :before) */*::before{color:red}",
+  "/*! declined: a \`/*!\` banner is kept, as cssnano, csso and clean-css also do (lightningcss drops it) */.t13{color:red}",
+  "/*! declined: merging rules that share a block reorders the cascade (csso, cssnano) */.t14{color:red}.t15{color:red}",
+  "/*! declined: dropping a duplicate declaration assumes nothing reads the cascade (esbuild, cssnano) */.t16{color:red;color:red}",
+  "/*! declined: unit conversion, exact here but not for every value (cssnano: 1pc) */.t17{width:16px}",
+  "/*! declined: a zero's unit matters in \`flex-basis\` and inside \`calc()\` (cssnano: 0) */.t18{margin:0px}",
+  "/*! declined: hsl() hue math can round to a different byte (cssnano: #40bf5e) */.t19{background:hsl(134,50%,50%)}",
+]
+`;

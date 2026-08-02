@@ -1,0 +1,307 @@
+/* Ported from lightningcss's `minify_test` cases (src/lib.rs), grouped by the
+   test function they come from. Each case is labelled with a `/*!` comment the
+   minifier keeps, so the snapshot shows one case per entry.
+
+   lightningcss rewrites what a selector or a query *means* wherever the result
+   is equivalent for its browser targets — `:nth-child(2n+1)` becomes
+   `:nth-child(odd)`, `::before` becomes `:before`, `(min-width: 1px)` becomes
+   `(width >= 1px)`. webpack has no targets to reason from, and range syntax
+   alone would drop every pre-2022 browser, so those are passthroughs here —
+   they mark where a future, targets-aware optimization would show up.
+
+   A case written `{}` upstream carries a `color:red` here, because webpack
+   drops a rule whose block ends up empty, and a case whose braces do not
+   balance is left out, because it would swallow every case after it. */
+
+/*! test_selectors: :nth-col(2n) {width: 20px} */
+:nth-col(2n) {width: 20px}
+/*! test_selectors: :nth-col(10n-1) {width: 20px} */
+:nth-col(10n-1) {width: 20px}
+/*! test_selectors: :nth-col(-n+2) {width: 20px} */
+:nth-col(-n+2) {width: 20px}
+/*! test_selectors: :nth-col(even) {width: 20px} */
+:nth-col(even) {width: 20px}
+/*! test_selectors: :nth-col(odd) {width: 20px} */
+:nth-col(odd) {width: 20px}
+/*! test_selectors: :nth-last-col(2n) {width: 20px} */
+:nth-last-col(2n) {width: 20px}
+/*! test_selectors: :nth-last-col(10n-1) {width: 20px} */
+:nth-last-col(10n-1) {width: 20px}
+/*! test_selectors: :nth-last-col(-n+2) {width: 20px} */
+:nth-last-col(-n+2) {width: 20px}
+/*! test_selectors: :nth-last-col(even) {width: 20px} */
+:nth-last-col(even) {width: 20px}
+/*! test_selectors: :nth-last-col(odd) {width: 20px} */
+:nth-last-col(odd) {width: 20px}
+/*! test_selectors: :nth-child(odd) {width: 20px} */
+:nth-child(odd) {width: 20px}
+/*! test_selectors: :nth-child(2n) {width: 20px} */
+:nth-child(2n) {width: 20px}
+/*! test_selectors: :nth-child(2n+1) {width: 20px} */
+:nth-child(2n+1) {width: 20px}
+/*! test_selectors: :first-child {width: 20px} */
+:first-child {width: 20px}
+/*! test_selectors: :nth-child(1) {width: 20px} */
+:nth-child(1) {width: 20px}
+/*! test_selectors: :nth-last-child(1) {width: 20px} */
+:nth-last-child(1) {width: 20px}
+/*! test_selectors: :nth-of-type(1) {width: 20px} */
+:nth-of-type(1) {width: 20px}
+/*! test_selectors: :nth-last-of-type(1) {width: 20px} */
+:nth-last-of-type(1) {width: 20px}
+/*! test_selectors: :nth-child(even of li.important) {width: 20px} */
+:nth-child(even of li.important) {width: 20px}
+/*! test_selectors: :nth-child(1 of li.important) {width: 20px} */
+:nth-child(1 of li.important) {width: 20px}
+/*! test_selectors: :nth-last-child(even of li.important) {width: 20px} */
+:nth-last-child(even of li.important) {width: 20px}
+/*! test_selectors: :nth-last-child(1 of li.important) {width: 20px} */
+:nth-last-child(1 of li.important) {width: 20px}
+/*! test_selectors: :nth-last-child(1 of.important) {width: 20px} */
+:nth-last-child(1 of.important) {width: 20px}
+/*! test_selectors: [foo="baz"] {color:red} */
+[foo="baz"] {color:red}
+/*! test_selectors: [foo="foo bar"] {color:red} */
+[foo="foo bar"] {color:red}
+/*! test_selectors: [foo="foo bar baz"] {color:red} */
+[foo="foo bar baz"] {color:red}
+/*! test_selectors: [foo=""] {color:red} */
+[foo=""] {color:red}
+/*! test_selectors: .test:not([foo="bar"]) {color:red} */
+.test:not([foo="bar"]) {color:red}
+/*! test_selectors: .test + .foo {color:red} */
+.test + .foo {color:red}
+/*! test_selectors: .test ~ .foo {color:red} */
+.test ~ .foo {color:red}
+/*! test_selectors: .test .foo {color:red} */
+.test .foo {color:red}
+/*! test_selectors: .custom-range::-webkit-slider-thumb:active {color:red} */
+.custom-range::-webkit-slider-thumb:active {color:red}
+/*! test_selectors: .test:not(.foo, .bar) {color:red} */
+.test:not(.foo, .bar) {color:red}
+/*! test_selectors: .test:is(.foo, .bar) {color:red} */
+.test:is(.foo, .bar) {color:red}
+/*! test_selectors: .test:where(.foo, .bar) {color:red} */
+.test:where(.foo, .bar) {color:red}
+/*! test_selectors: .test:where(.foo, .bar) {color:red} */
+.test:where(.foo, .bar) {color:red}
+/*! test_selectors: :host {color:red} */
+:host {color:red}
+/*! test_selectors: :host(.foo) {color:red} */
+:host(.foo) {color:red}
+/*! test_selectors: custom-element::part(foo) {color:red} */
+custom-element::part(foo) {color:red}
+/*! test_selectors: .sm\:text-5xl { font-size: 3rem } */
+.sm\:text-5xl { font-size: 3rem }
+/*! test_selectors: a:has(> img) {color:red} */
+a:has(> img) {color:red}
+/*! test_selectors: dt:has(+ dt) {color:red} */
+dt:has(+ dt) {color:red}
+/*! test_selectors: section:not(:has(h1, h2, h3, h4, h5, h6)) {color:red} */
+section:not(:has(h1, h2, h3, h4, h5, h6)) {color:red}
+/*! test_selectors: :has(.sibling ~ .target) {color:red} */
+:has(.sibling ~ .target) {color:red}
+/*! test_selectors: .x:has(> .a > .b) {color:red} */
+.x:has(> .a > .b) {color:red}
+/*! test_selectors: .x:has(.bar, #foo) {color:red} */
+.x:has(.bar, #foo) {color:red}
+/*! test_selectors: .x:has(span + span) {color:red} */
+.x:has(span + span) {color:red}
+/*! test_selectors: a:has(:visited) {color:red} */
+a:has(:visited) {color:red}
+/*! test_selectors: a:last-child::first-letter {color:red} */
+a:last-child::first-letter {color:red}
+/*! test_selectors: a:lang(en) {color:red} */
+a:lang(en) {color:red}
+/*! test_selectors: a:lang(en, fr) {color:red} */
+a:lang(en, fr) {color:red}
+/*! test_selectors: a:lang('en') {color:red} */
+a:lang('en') {color:red}
+/*! test_selectors: a:-webkit-any(.foo, .bar) {color:red} */
+a:-webkit-any(.foo, .bar) {color:red}
+/*! test_selectors: a:-moz-any(.foo, .bar) {color:red} */
+a:-moz-any(.foo, .bar) {color:red}
+/*! test_selectors: .foo::cue {color: red} */
+.foo::cue {color: red}
+/*! test_selectors: .foo::cue-region {color: red} */
+.foo::cue-region {color: red}
+/*! test_selectors: .foo::cue(b) {color: red} */
+.foo::cue(b) {color: red}
+/*! test_selectors: .foo::cue-region(b) {color: red} */
+.foo::cue-region(b) {color: red}
+/*! test_selectors: ::cue(v[voice='active']) {color: yellow;} */
+::cue(v[voice='active']) {color: yellow;}
+/*! test_selectors: :foo(bar) { color: yellow } */
+:foo(bar) { color: yellow }
+/*! test_selectors: ::foo(bar) { color: yellow } */
+::foo(bar) { color: yellow }
+/*! test_selectors: ::foo(*) { color: yellow } */
+::foo(*) { color: yellow }
+/*! test_selectors: :is(.foo) { color: yellow } */
+:is(.foo) { color: yellow }
+/*! test_selectors: :is(#foo) { color: yellow } */
+:is(#foo) { color: yellow }
+/*! test_selectors: a:is(.foo) { color: yellow } */
+a:is(.foo) { color: yellow }
+/*! test_selectors: a:is([data-test]) { color: yellow } */
+a:is([data-test]) { color: yellow }
+/*! test_selectors: .foo:is(a) { color: yellow } */
+.foo:is(a) { color: yellow }
+/*! test_selectors: .foo:is(*|a) { color: yellow } */
+.foo:is(*|a) { color: yellow }
+/*! test_selectors: .foo:is(*) { color: yellow } */
+.foo:is(*) { color: yellow }
+/*! test_selectors: @namespace svg url(http://www.w3.org/2000/svg); .foo:is(svg|a) { color: yellow } */
+@namespace svg url(http://www.w3.org/2000/svg); .foo:is(svg|a) { color: yellow }
+/*! test_selectors: a:is(.foo .bar) { color: yellow } */
+a:is(.foo .bar) { color: yellow }
+/*! test_selectors: :is(.foo, .bar) { color: yellow } */
+:is(.foo, .bar) { color: yellow }
+/*! test_selectors: a:is(:not(.foo)) { color: yellow } */
+a:is(:not(.foo)) { color: yellow }
+/*! test_selectors: a:is(:first-child) { color: yellow } */
+a:is(:first-child) { color: yellow }
+/*! test_selectors: a:is(:has(.foo)) { color: yellow } */
+a:is(:has(.foo)) { color: yellow }
+/*! test_selectors: a:is(:is(.foo)) { color: yellow } */
+a:is(:is(.foo)) { color: yellow }
+/*! test_selectors: :host(:hover) {color: red} */
+:host(:hover) {color: red}
+/*! test_selectors: ::slotted(:hover) {color: red} */
+::slotted(:hover) {color: red}
+/*! test_selectors: :root::view-transition {position: fixed} */
+:root::view-transition {position: fixed}
+/*! test_selectors: :root:active-view-transition {position: fixed} */
+:root:active-view-transition {position: fixed}
+/*! test_selectors: :root:active-view-transition-type(slide-in) {position: fixed} */
+:root:active-view-transition-type(slide-in) {position: fixed}
+/*! test_selectors: :root:active-view-transition-type(slide-in, reverse) {position: fixed} */
+:root:active-view-transition-type(slide-in, reverse) {position: fixed}
+/*! test_selectors: wa-checkbox:state(disabled) {color:red} */
+wa-checkbox:state(disabled) {color:red}
+/*! test_selectors: button:state(checked) {background:blue} */
+button:state(checked) {background:blue}
+/*! test_selectors: input:state(custom-state) {border:1px solid} */
+input:state(custom-state) {border:1px solid}
+/*! test_selectors: button:active:not(:state(disabled))::part(control) {border:1px solid} */
+button:active:not(:state(disabled))::part(control) {border:1px solid}
+/*! test_selectors: .foo ::deep .bar {width: 20px} */
+.foo ::deep .bar {width: 20px}
+/*! test_selectors: .foo::deep .bar {width: 20px} */
+.foo::deep .bar {width: 20px}
+/*! test_selectors: .foo ::deep.bar {width: 20px} */
+.foo ::deep.bar {width: 20px}
+/*! test_selectors: .foo ::unknown .bar {width: 20px} */
+.foo ::unknown .bar {width: 20px}
+/*! test_selectors: .foo ::unknown(foo) .bar {width: 20px} */
+.foo ::unknown(foo) .bar {width: 20px}
+/*! test_selectors: .foo ::unknown:only-child {width: 20px} */
+.foo ::unknown:only-child {width: 20px}
+/*! test_selectors: .foo ::unknown(.foo) .bar {width: 20px} */
+.foo ::unknown(.foo) .bar {width: 20px}
+/*! test_selectors: .foo ::unknown(.foo .bar / .baz) .bar {width: 20px} */
+.foo ::unknown(.foo .bar / .baz) .bar {width: 20px}
+/*! test_selectors: .foo ::unknown(something(foo)) .bar {width: 20px} */
+.foo ::unknown(something(foo)) .bar {width: 20px}
+/*! test_selectors: .foo ::unknown([abc]) .bar {width: 20px} */
+.foo ::unknown([abc]) .bar {width: 20px}
+/*! test_media: @media (min-width: 240px) { .foo { color: chartreuse }} */
+@media (min-width: 240px) { .foo { color: chartreuse }}
+/*! test_media: @media (width < 240px) { .foo { color: chartreuse }} */
+@media (width < 240px) { .foo { color: chartreuse }}
+/*! test_media: @media (width <= 240px) { .foo { color: chartreuse }} */
+@media (width <= 240px) { .foo { color: chartreuse }}
+/*! test_media: @media (width > 240px) { .foo { color: chartreuse }} */
+@media (width > 240px) { .foo { color: chartreuse }}
+/*! test_media: @media (width >= 240px) { .foo { color: chartreuse }} */
+@media (width >= 240px) { .foo { color: chartreuse }}
+/*! test_media: @media (240px < width) { .foo { color: chartreuse }} */
+@media (240px < width) { .foo { color: chartreuse }}
+/*! test_media: @media (240px <= width) { .foo { color: chartreuse }} */
+@media (240px <= width) { .foo { color: chartreuse }}
+/*! test_media: @media (240px > width) { .foo { color: chartreuse }} */
+@media (240px > width) { .foo { color: chartreuse }}
+/*! test_media: @media (240px >= width) { .foo { color: chartreuse }} */
+@media (240px >= width) { .foo { color: chartreuse }}
+/*! test_media: @media (100px < width < 200px) { .foo { color: chartreuse }} */
+@media (100px < width < 200px) { .foo { color: chartreuse }}
+/*! test_media: @media (100px <= width <= 200px) { .foo { color: chartreuse }} */
+@media (100px <= width <= 200px) { .foo { color: chartreuse }}
+/*! test_media: @media (min-width: 30em) and (max-width: 50em) { .foo { color: chartreuse }} */
+@media (min-width: 30em) and (max-width: 50em) { .foo { color: chartreuse }}
+/*! test_media: @media screen, print { .foo { color: chartreuse }} */
+@media screen, print { .foo { color: chartreuse }}
+/*! test_media: @media (hover: hover) { .foo { color: chartreuse }} */
+@media (hover: hover) { .foo { color: chartreuse }}
+/*! test_media: @media (hover) { .foo { color: chartreuse }} */
+@media (hover) { .foo { color: chartreuse }}
+/*! test_media: @media (aspect-ratio: 11/5) { .foo { color: chartreuse }} */
+@media (aspect-ratio: 11/5) { .foo { color: chartreuse }}
+/*! test_media: @media (aspect-ratio: 2/1) { .foo { color: chartreuse }} */
+@media (aspect-ratio: 2/1) { .foo { color: chartreuse }}
+/*! test_media: @media (aspect-ratio: 2) { .foo { color: chartreuse }} */
+@media (aspect-ratio: 2) { .foo { color: chartreuse }}
+/*! test_media: @media not screen and (color) { .foo { color: chartreuse }} */
+@media not screen and (color) { .foo { color: chartreuse }}
+/*! test_media: @media only screen and (color) { .foo { color: chartreuse }} */
+@media only screen and (color) { .foo { color: chartreuse }}
+/*! test_media: @media (update: slow) or (hover: none) { .foo { color: chartreuse }} */
+@media (update: slow) or (hover: none) { .foo { color: chartreuse }}
+/*! test_media: @media (width < 600px) and (height < 600px) { .foo { color: chartreuse }} */
+@media (width < 600px) and (height < 600px) { .foo { color: chartreuse }}
+/*! test_media: @media (not (color)) or (hover) { .foo { color: chartreuse }} */
+@media (not (color)) or (hover) { .foo { color: chartreuse }}
+/*! test_media: @media (min-width: calc(200px + 40px)) { .foo { color: chartreuse }} */
+@media (min-width: calc(200px + 40px)) { .foo { color: chartreuse }}
+/*! test_media: @media (min-width: calc(1em + 5px)) { .foo { color: chartreuse }} */
+@media (min-width: calc(1em + 5px)) { .foo { color: chartreuse }}
+/*! test_media: @media { .foo { color: chartreuse }} */
+@media { .foo { color: chartreuse }}
+/*! test_media: @media all { .foo { color: chartreuse }} */
+@media all { .foo { color: chartreuse }}
+/*! test_media: @media not (((color) or (hover))) { .foo { color: chartreuse }} */
+@media not (((color) or (hover))) { .foo { color: chartreuse }}
+/*! test_media: @media (hover) and ((color) and (test)) { .foo { color: chartreuse }} */
+@media (hover) and ((color) and (test)) { .foo { color: chartreuse }}
+/*! test_media: @media (grid: 1) { .foo { color: chartreuse }} */
+@media (grid: 1) { .foo { color: chartreuse }}
+/*! test_media: @media (width >= calc(2px + 4px)) { .foo { color: chartreuse }} */
+@media (width >= calc(2px + 4px)) { .foo { color: chartreuse }}
+/*! test_container_queries: .foo{ container-type: inline-size } */
+.foo{ container-type: inline-size }
+/*! test_container_queries: .foo{ container-name: none; } */
+.foo{ container-name: none; }
+/*! test_container_queries: .foo{ container-name: foo; } */
+.foo{ container-name: foo; }
+/*! test_container_queries: .foo{ container: foo / normal; } */
+.foo{ container: foo / normal; }
+/*! test_container_queries: .foo{ container: foo / inline-size; } */
+.foo{ container: foo / inline-size; }
+/*! test_container_queries: .foo { width: calc(1cqw + 2cqw) } */
+.foo { width: calc(1cqw + 2cqw) }
+/*! test_container_queries: .foo { width: calc(1cqh + 2cqh) } */
+.foo { width: calc(1cqh + 2cqh) }
+/*! test_container_queries: .foo { width: calc(1cqi + 2cqi) } */
+.foo { width: calc(1cqi + 2cqi) }
+/*! test_container_queries: .foo { width: calc(1cqb + 2cqb) } */
+.foo { width: calc(1cqb + 2cqb) }
+/*! test_container_queries: .foo { width: calc(1cqmin + 2cqmin) } */
+.foo { width: calc(1cqmin + 2cqmin) }
+/*! test_container_queries: .foo { width: calc(1cqmax + 2cqmax) } */
+.foo { width: calc(1cqmax + 2cqmax) }
+/*! test_page_rule: @page {margin: 0.5cm} */
+@page {margin: 0.5cm}
+/*! test_page_rule: @page :left {margin: 0.5cm} */
+@page :left {margin: 0.5cm}
+/*! test_page_rule: @page :right {margin: 0.5cm} */
+@page :right {margin: 0.5cm}
+/*! test_page_rule: @page LandscapeTable {margin: 0.5cm} */
+@page LandscapeTable {margin: 0.5cm}
+/*! test_page_rule: @page CompanyLetterHead:first {margin: 0.5cm} */
+@page CompanyLetterHead:first {margin: 0.5cm}
+/*! test_page_rule: @page:first {margin: 0.5cm} */
+@page:first {margin: 0.5cm}
+/*! test_page_rule: @page :blank:first {margin: 0.5cm} */
+@page :blank:first {margin: 0.5cm}
+/*! test_page_rule: @page toc, index {margin: 0.5cm} */
+@page toc, index {margin: 0.5cm}

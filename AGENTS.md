@@ -89,7 +89,7 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/wasm/`, `lib/wasm-async/`, `lib/wasm-sync/` — WebAssembly module support.
 - `hot/` — Runtime code shipped to browsers for HMR (browser-side, not Node tooling).
 - `bin/` — `webpack` CLI entry point.
-- `tooling/` — Repo-internal build scripts (runtime/wasm code generators, hash-debug tool); invoked by `yarn fix:special`.
+- `tooling/` — Repo-internal scripts: build/codegen (runtime/wasm generators, hash-debug tool) invoked by `yarn fix:special`, plus standalone analysis tools such as `compare-css-minifiers.js` / `compare-html-minifiers.js` (`yarn benchmark:css-minifiers`, `yarn benchmark:html-minifiers`), which install the packages they compare against into `node_modules/.cache/` on first run rather than into webpack's dependencies.
 - `assembly/` — WebAssembly source for the hash function.
 - `setup/` — One-time setup scripts.
 
@@ -371,6 +371,7 @@ These files are produced by `yarn fix:special` and must not be edited by hand:
 - `declarations/**/*.d.ts` — per-schema/plugin declarations emitted from `schemas/**/*.json`.
 - `schemas/**/*.check.{js,d.ts}` — precompiled schema validators.
 - Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
+- `lib/css/data.js` — the CSS minifier's derived tables (box shorthands, color-argument functions, named colors), built from `mdn-data` + `color-name` by `tooling/generate-css-data.js`.
 
 The hand-maintained type declarations (`declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`) _are_ editable.
 
@@ -378,7 +379,7 @@ Re-run `yarn fix:special` **before the next commit** whenever you touch:
 
 - `schemas/**/*.json` — reshapes validators, declarations, and `types.d.ts`.
 - `lib/**/*.js` JSDoc on anything reachable from a public export — regenerates `types.d.ts`.
-- `tooling/generate-runtime-code.js`, `tooling/generate-wasm-code.js`, or any file they consume.
+- `tooling/generate-runtime-code.js`, `tooling/generate-wasm-code.js`, `tooling/generate-css-data.js`, or any file they consume (including the `mdn-data` / `color-name` versions in `package.json`).
 
 CI's `lint` job verifies these outputs are up to date. The combined `yarn fix` script runs `fix:code` + `fix:special` + `fmt` in one go; prefer it as the final step.
 
