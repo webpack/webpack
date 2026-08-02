@@ -4866,8 +4866,10 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 		});
 
 		it("keeps cloned attributes on the reconstructed element", () => {
+			// The reconstructed clone is synthesized, not sliced from source, and
+			// synthesized values always keep their quotes.
 			expect(minify('<b x="1"><p>x</b>y</p>')).toBe(
-				'<b x="1"></b><p><b x="1">x</b>y</p>'
+				'<b x=1></b><p><b x="1">x</b>y</p>'
 			);
 		});
 
@@ -4916,7 +4918,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 		it("round-trips elements nested inside <noscript>", () => {
 			expect(minify('<noscript><link href="x"></noscript>')).toBe(
-				'<noscript><link href="x"></noscript>'
+				"<noscript><link href=x></noscript>"
 			);
 		});
 	});
@@ -4924,7 +4926,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 	describe("comments", () => {
 		it("keeps both halves of a downlevel-revealed conditional block", () => {
 			expect(minify('<!--[if !IE]><!--><link href="x"><!--<![endif]-->')).toBe(
-				'<!--[if !IE]><!--><link href="x"><!--<![endif]-->'
+				"<!--[if !IE]><!--><link href=x><!--<![endif]-->"
 			);
 			expect(minify("<!--[if IE]><p>ie only</p><![endif]-->")).toBe(
 				"<!--[if IE]><p>ie only</p><![endif]-->"
@@ -4947,7 +4949,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 	describe("opening-tag whitespace", () => {
 		it("collapses the run before a valueless attribute", () => {
 			expect(minify("<p   hidden   class='x'>t</p>")).toBe(
-				"<p hidden class='x'>t</p>"
+				"<p hidden class=x>t</p>"
 			);
 			expect(minify("<input    disabled>")).toBe("<input disabled>");
 			expect(minify("<p   a   b   c>t</p>")).toBe("<p a b c>t</p>");
@@ -4955,7 +4957,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 		it("keeps a foreign element's self-closing slash", () => {
 			expect(minify("<svg><circle   r='1'   /></svg>")).toBe(
-				"<svg><circle r='1'/></svg>"
+				"<svg><circle r=1 /></svg>"
 			);
 			// After an unquoted value the `/` needs its space, or it would fuse
 			// into the value.
@@ -4967,6 +4969,71 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 		it("leaves a `/` that is the last character of an unquoted value", () => {
 			expect(minify("<a href=x/>t</a>")).toBe("<a href=x/>t</a>");
+		});
+	});
+
+	describe("attribute quotes", () => {
+		it("drops quotes a value does not need", () => {
+			expect(minify('<a href="x.html">t</a>')).toBe("<a href=x.html>t</a>");
+			expect(minify("<a href='x.html'>t</a>")).toBe("<a href=x.html>t</a>");
+		});
+
+		it("keeps quotes around every character that terminates a value", () => {
+			// §13.1.2.3: whitespace, quotes, backtick, `=`, `<` and `>`. The
+			// character has to be literal in the source — the rule reads the raw
+			// value, so an encoded one is unquotable (covered below).
+			for (const value of [
+				"a b",
+				"a\tb",
+				"a\nb",
+				"a\fb",
+				"a\rb",
+				"a'b",
+				"a`b",
+				"a=b",
+				"a<b",
+				"a>b"
+			]) {
+				const source = `<a title="${value}">t</a>`;
+				expect(minify(source)).toBe(source);
+			}
+			expect(minify("<a title='a\"b'>t</a>")).toBe("<a title='a\"b'>t</a>");
+		});
+
+		it("keeps the quotes on an empty value", () => {
+			// `name=` with nothing after it is not a valueless attribute.
+			expect(minify('<a href="">t</a>')).toBe('<a href="">t</a>');
+		});
+
+		it("leaves a character reference encoded", () => {
+			// References decode the same unquoted, so the raw bytes carry over —
+			// including one encoding a character that could not appear literally.
+			expect(minify('<a title="a&amp;b">t</a>')).toBe("<a title=a&amp;b>t</a>");
+			expect(minify('<a title="a&quot;b">t</a>')).toBe(
+				"<a title=a&quot;b>t</a>"
+			);
+		});
+
+		it("keeps the space a foreign self-closing slash needs", () => {
+			expect(minify('<svg><circle r="1"/></svg>')).toBe(
+				"<svg><circle r=1 /></svg>"
+			);
+		});
+
+		it("leaves an unquoted sentinel matchable by the late asset passes", () => {
+			// `HtmlGenerator` resolves these after minification, so the quote it
+			// matches has to be optional — see `INTEGRITY_SENTINEL_REGEXP`.
+			const sentinel = "__WEBPACK_HTML_INTEGRITY__6d61696e__javascript__END__";
+			const out = minify(
+				`<script src="a.js" integrity="${sentinel}"></script>`
+			);
+			expect(out).toBe(`<script src=a.js integrity=${sentinel}></script>`);
+			expect(
+				out.replace(
+					/ integrity=(["']?)__WEBPACK_HTML_INTEGRITY__([0-9a-f]+)__([a-z]+)__END__\1/g,
+					' integrity="sha384-x"'
+				)
+			).toBe('<script src=a.js integrity="sha384-x"></script>');
 		});
 	});
 

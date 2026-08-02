@@ -20,6 +20,6 @@ module.exports = {
 		expect(css).toContain("\n");
 
 		// HTML is claimed by nothing, so webpack still minifies it.
-		expect(read("page.html")).toContain('<!DOCTYPE html><html lang="en">');
+		expect(read("page.html")).toContain("<!DOCTYPE html><html lang=en>");
 	}
 };

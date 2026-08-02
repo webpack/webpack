@@ -17,6 +17,6 @@ module.exports = {
 		// both itself (the banner is `BannerPlugin`'s, and its presence shows that
 		// plugin was not mistaken for a CSS minimizer).
 		expect(read("main.css")).toBe("/*! banner */.native{color:red}");
-		expect(read("page.html")).toContain('<!DOCTYPE html><html lang="en">');
+		expect(read("page.html")).toContain("<!DOCTYPE html><html lang=en>");
 	}
 };

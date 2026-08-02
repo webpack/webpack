@@ -19,8 +19,9 @@ module.exports = {
 		expect(html).not.toContain("drop this comment");
 		expect(html).toContain("<!--[if IE]><p>ie only</p><![endif]-->");
 
-		// DOM-absent whitespace (between the doctype and `<html>`) falls away.
-		expect(html).toContain('<!DOCTYPE html><html lang="en">');
+		// DOM-absent whitespace (between the doctype and `<html>`) falls away,
+		// and a value that needs no quotes loses them.
+		expect(html).toContain("<!DOCTYPE html><html lang=en>");
 
 		// Text, entities and inline structure stay byte-for-byte (never collapsed
 		// or re-encoded): the same computed DOM.
