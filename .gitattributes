@@ -23,6 +23,7 @@ test/configCases/html/webmanifest-icons/** eol=lf
 test/configCases/html/webmanifest-build-http/** eol=lf
 test/configCases/html/minimize-attributes/** eol=lf
 test/configCases/html/minimize-integrity/** eol=lf
+test/configCases/html/minimize-transforms/** eol=lf
 examples/* eol=lf
 bin/* eol=lf
 *.svg eol=lf

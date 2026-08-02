@@ -228,6 +228,7 @@
     "nonrecursive",
     "nosource",
     "nosources",
+    "novalidate",
     "nwjs",
     "oklab",
     "oklch",

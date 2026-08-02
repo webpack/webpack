@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="a,  b kept as written">
+	<title>Transform corpus</title>
+	<style type="text/css">
+		:root { --gap : 8px ; }
+		body { margin : 0 0 0 0 ; color : #ff0000 ; }
+		.card { border-radius : 4px 4px 4px 4px ; background : rgb(255, 255, 255) ; }
+	</style>
+	<style type="text/template">a { not css </style>
+</head>
+<body>
+	<!-- inert comment, dropped -->
+	<!--[if IE]><p>conditional comment, kept</p><![endif]-->
+	<DIV CLASS="a    b" ID="upper">source casing folds</DIV>
+	<div class="  trimmed  " style="color: #ff0000;  padding: 0 0 0 0">token list and declarations</div>
+	<div style="content: '}'">declines: escapes the wrapper</div>
+	<div style="--custom: {a:b}">declines: custom property braces</div>
+	<p>optional end tags</p>
+	<ul><li>one</li><li>two</li></ul>
+	<dl><dt>a</dt><dd>b</dd><dt>c</dt></dl>
+	<table><tbody><tr><td>a</td><td>b</td></tr><tr><td>c</td></tr></tbody></table>
+	<table><thead><tr><th>h</th></tr></thead><tbody><tr><td>a</td></tr></tbody></table>
+	<a><p>trailing p kept: parent absorbs</p></a>
+	<my-el><p>trailing p kept: custom element</p></my-el>
+	<form method="get" novalidate="novalidate">
+		<input type="checkbox" checked="checked" disabled="disabled">
+		<input type="text" disabled="true">
+		<select multiple="multiple"><option selected="selected">a</option><option>b</option></select>
+		<textarea readonly="readonly">  keep  me  </textarea>
+	</form>
+	<div checked="checked">not boolean here</div>
+	<img srcset="a.png 1x,   b.png 2x" src="a.png" alt="unquoted where legal">
+	<img srcset="  bare.png   ,  next.png 2x  " alt="descriptor-less keeps its space">
+	<img srcset="a.png 100w 2x" alt="invalid srcset kept">
+	<img srcset="data:image/gif;base64,R0lGOD 1x, b.png 2x" alt="comma in url">
+	<a href="x?a=1" title="quoted: has =">kept quoted</a>
+	<a href="plain.html">unquoted</a>
+	<br/>
+	<input type="text" />
+	<svg viewBox="0 0 8 8"><rect x="1" y="2" class="a    b"/><circle R="1"/><myCustomThing/></svg>
+	<pre>  preformatted
+   text
+</pre>
+</body>
+</html>
