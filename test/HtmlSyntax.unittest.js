@@ -4977,6 +4977,20 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 	// `configCases/html/minimize-transforms`, whose snapshot is the corpus. CR
 	// cases cannot live there: `.gitattributes` checks every `test/` file out
 	// with LF, so a CR only reaches the parser from a string built here.
+	describe("implied <body> with leading whitespace", () => {
+		it("materializes the tag so the text node survives", () => {
+			// Found by running the html5lib serializer corpus through minify. A
+			// transparent implied `<body>` puts the run where re-parsing drops it:
+			// before `<body>` starts, the insertion modes ignore whitespace.
+			expect(minify("</html> foo")).toBe("<body> foo");
+			expect(minify("</body> foo")).toBe("<body> foo");
+			expect(minify("<colgroup> foo")).toBe("<body> foo");
+			// Nothing to keep when the run is not in the body to begin with.
+			expect(minify(" foo")).toBe("foo");
+			expect(minify("<p>x</p>")).toBe("<p>x");
+		});
+	});
+
 	describe("carriage returns in text", () => {
 		it("normalizes a CRLF to one newline", () => {
 			expect(minify("<p>a\r\nb</p>")).toBe("<p>a\nb");
