@@ -88,14 +88,11 @@ const canonicalValue = (tagName, name, value) => {
 	if (integerOn !== undefined && integerOn.has(tagName)) {
 		return parseHtmlInteger(value, SIGNED_INTEGER_ATTRIBUTES.has(name));
 	}
-	const commaList = COMMA_LIST_ATTRIBUTES.get(name);
-	if (commaList !== undefined) {
+	if (COMMA_LIST_ATTRIBUTES.has(name)) {
+		// "Split a string on commas" strips each token's edges, nothing inside it.
 		return value
 			.split(",")
-			.map((item) => {
-				const trimmed = item.replace(/^[\t\n\f\r ]+|[\t\n\f\r ]+$/g, "");
-				return commaList ? trimmed : trimmed.replace(/[\t\n\f\r ]+/g, "");
-			})
+			.map((item) => item.replace(/^[\t\n\f\r ]+|[\t\n\f\r ]+$/g, ""))
 			.join(",");
 	}
 	return value;

@@ -68,6 +68,8 @@ exports[`ConfigTestCases html minimize-transforms minimize-transforms should com
 	<table><col><colgroup><col><tr><td>a</table>
 	<table><colgroup span=2><col><colgroup><tr><td>a</table>
 	<p>a > b, &lt; and &amp; still escape</p>
+	<input type=file accept=\\"image/ png,.jpg\\">
+	<map><area shape=poly coords=\\"1 2,3,4 5\\"></map>
 
 
 </body></html>"
