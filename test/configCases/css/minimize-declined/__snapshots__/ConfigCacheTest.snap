@@ -8,13 +8,18 @@ Array [
   "/*! declined: lossy — rounding away a small difference (lightningcss: 1px) */.t04{width:1.0000001px}",
   "/*! declined: exact, but 4-digit hex predates no browser we can assume (lightningcss: #0000) */.t05{background-color:transparent}",
   "/*! declined: exact, but range syntax drops every pre-2022 browser (lightningcss: (width>=1200px)) */@media (min-width:1200px){.t06{color:red}}",
-  "/*! declined: merging longhands into their shorthand needs a per-property table (lightningcss: margin:1px 2px) */.t07{margin-top:1px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
-  "/*! declined: a keyword's numeric equivalent needs one too (lightningcss: 400) */.t08{font-weight:normal}",
+  "/*! declined: a longhand between them is stepped over by the merge, so only an
+   adjacent four become the shorthand (lightningcss: margin:1px 2px) */.t07{margin-top:1px;margin-right:2px;color:red;margin-bottom:1px;margin-left:2px}",
+  "/*! declined: \`bolder\` and \`lighter\` are relative to the parent's weight, so they
+   have no fixed number (lightningcss: bolder) */.t08{font-weight:bolder}",
   "/*! declined: needs unit algebra (lightningcss: calc(1.5em + 3.75rem)) */.t09{width:calc(3rem + calc(1.5em + .75rem))}",
-  "/*! declined: observable through getComputedStyle().getPropertyValue() (lightningcss: .5rem) */.t10{--radius:0.5rem}",
+  "/*! declined: observable through getComputedStyle().getPropertyValue(), which is
+   the one place a declaration's authored text survives — planned behind an
+   option, not on by default (lightningcss: .5rem) */.t10{--radius:0.5rem}",
   "/*! declined: ...including the unit (cssnano: .5s) */.t11{--duration:500ms}",
-  "/*! declined: legacy single-colon spelling, worth ~0.03% (lightningcss: :before) */.t12::before{color:red}",
-  "/*! declined: the same, with the universal selector dropped (lightningcss: :before) */*::before{color:red}",
+  "/*! declined: dropping the universal selector a pseudo-element implies (lightningcss: :before) */*:before{color:red}",
+  "/*! declined: a substitution can expand to the second component \`translateX\`
+   rejects, so converting it would revive a dropped declaration (lightningcss: translate) */.t12{transform:translateX(var(--x))}",
   "/*! declined: a \`/*!\` banner is kept, as cssnano, csso and clean-css also do (lightningcss drops it) */.t13{color:red}",
   "/*! declined: merging rules that share a block reorders the cascade (csso, cssnano) */.t14{color:red}.t15{color:red}",
   "/*! declined: dropping a duplicate declaration assumes nothing reads the cascade (esbuild, cssnano) */.t16{color:red;color:red}",

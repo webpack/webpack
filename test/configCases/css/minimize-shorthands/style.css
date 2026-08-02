@@ -107,3 +107,47 @@
 .t42 { border-radius: revert revert / revert revert }
 /*! `auto` is a per-side value, not a CSS-wide keyword */
 .t43 { margin: auto auto }
+
+/* Merging a box family's four longhands into the shorthand it is, and the
+   font-weight keywords CSS Fonts 4 defines as numbers. */
+
+/*! merge-longhand: four sides become the shorthand */
+.t44 { margin-top: 1px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }
+/*! merge-longhand: ...in whatever order they were written */
+.t45 { margin-left: 2px; margin-bottom: 1px; margin-right: 2px; margin-top: 1px }
+/*! merge-longhand: ...and the `{1,4}` collapse still applies */
+.t46 { padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0 }
+/*! merge-longhand: `inset`'s longhands are the bare side names */
+.t47 { top: 1px; right: 2px; bottom: 3px; left: 4px }
+/*! merge-longhand: border-color, border-style and border-width all qualify */
+.t48 { border-top-color: red; border-right-color: red; border-bottom-color: red; border-left-color: red }
+/*! merge-longhand: a component may be a function */
+.t49 { margin-top: calc(1px + 2px); margin-right: 2px; margin-bottom: 1px; margin-left: 2px }
+/*! merge-longhand: inside an at-rule too */
+@media (min-width: 1px) { .t50 { margin-top: 1px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px } }
+/*! declined: an incomplete family is not the shorthand */
+.t51 { margin-top: 1px; margin-right: 2px; margin-bottom: 1px }
+/*! declined: `!important` must agree across the four */
+.t52 { margin-top: 1px !important; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }
+/*! merge-longhand: ...and does when all four carry it */
+.t53 { margin-top: 1px !important; margin-right: 2px !important; margin-bottom: 1px !important; margin-left: 2px !important }
+/*! declined: a substitution could expand to more than one component */
+.t54 { margin-top: var(--x); margin-right: 2px; margin-bottom: 1px; margin-left: 2px }
+/*! declined: a CSS-wide keyword is only valid as the whole value */
+.t55 { margin-top: inherit; margin-right: inherit; margin-bottom: inherit; margin-left: inherit }
+/*! declined: a longhand holding two components is already invalid */
+.t56 { margin-top: 1px 2px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }
+/*! declined: a repeated longhand makes the cascade decide, not the order */
+.t57 { margin-top: 1px; margin-top: 3px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }
+/*! declined: `border-radius`'s longhands are corners, which `{1,4}` orders differently */
+.t58 { border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; border-bottom-left-radius: 1px }
+/*! font-weight: the keyword CSS Fonts 4 defines as 400 */
+.t59 { font-weight: normal }
+/*! font-weight: ...and as 700, whatever its case */
+.t60 { font-weight: BOLD }
+/*! font-weight: the `@font-face` descriptor means the same */
+@font-face { font-family: x; font-weight: normal }
+/*! declined: inside the `font` shorthand a `normal` may be the style or variant */
+.t61 { font: normal 12px serif }
+/*! declined: the keyword means something else on every other property */
+.t62 { font-variant: normal; line-height: normal }

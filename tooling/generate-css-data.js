@@ -29,7 +29,7 @@ const colorName = require("color-name");
 const colorNamePackage = require("color-name/package.json");
 /** @type {SyntaxTable} */
 const functions = require("mdn-data/css/functions.json");
-/** @type {{ [name: string]: { syntax?: string, status?: string } }} */
+/** @type {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[] } }} */
 const properties = require("mdn-data/css/properties.json");
 /** @type {SyntaxTable} */
 const syntaxes = require("mdn-data/css/syntaxes.json");
@@ -76,6 +76,39 @@ const collectBoxShorthands = (withSlash) => {
 		names.push(name);
 	}
 	return names.sort();
+};
+
+// The box side a longhand covers, read off its name. `border-radius` and
+// `corner-shape` are deliberately unmatched: their four longhands are corners
+// (`top-left` …), which `{1,4}` orders differently.
+const BOX_SIDES = ["top", "right", "bottom", "left"];
+
+/**
+ * The `{1,4}` box shorthands whose four longhands map onto the four sides, in
+ * `top right bottom left` order. Merging four such longhands into the shorthand
+ * sets exactly the same properties — nothing extra is reset.
+ * @param {string[]} shorthands the box-shorthand property names
+ * @returns {[string, string[]][]} `[shorthand, longhands]`, sorted
+ */
+const collectBoxLonghands = (shorthands) => {
+	/** @type {[string, string[]][]} */
+	const out = [];
+	for (const name of shorthands) {
+		const longhands = properties[name].computed;
+		if (!Array.isArray(longhands) || longhands.length !== 4) continue;
+		const sides = BOX_SIDES.map((side) =>
+			longhands.find(
+				(longhand) =>
+					longhand === side ||
+					longhand.includes(`-${side}-`) ||
+					longhand.endsWith(`-${side}`)
+			)
+		);
+		if (sides.includes(undefined)) continue;
+		if (new Set(sides).size !== 4) continue;
+		out.push([name, /** @type {string[]} */ (sides)]);
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
 
 // Every value-definition production, function ones included. `functions.json`
@@ -229,6 +262,10 @@ const setLiteral = (names) =>
 
 const boxShorthands = collectBoxShorthands(false);
 const slashShorthands = collectBoxShorthands(true);
+const boxLonghands = collectBoxLonghands([
+	...boxShorthands,
+	...slashShorthands
+]);
 const colorFunctions = collectColorArgumentFunctions();
 const colorNames = collectColorNames();
 const substitutionFunctions = collectSubstitutionFunctions();
@@ -252,6 +289,21 @@ const BOX_SHORTHANDS = ${setLiteral([...boxShorthands, ...slashShorthands].sort(
 // The subset carrying a second box after a \`/\`, which collapses on its own.
 const SLASH_BOX_SHORTHANDS = ${setLiteral(slashShorthands)};
 
+// The four longhands each box shorthand sets, in \`top right bottom left\` order.
+// Only the families whose longhands are the four sides: merging those into the
+// shorthand sets exactly the same properties, resetting nothing extra. Corner
+// families (\`border-radius\`) are absent — \`{1,4}\` orders their longhands
+// differently.
+// prettier-ignore
+const BOX_LONGHANDS = new Map([
+${boxLonghands
+	.map(
+		([shorthand, longhands]) =>
+			`\t["${shorthand}", [${longhands.map((l) => `"${l}"`).join(", ")}]]`
+	)
+	.join(",\n")}
+]);
+
 // Functions that take a \`<color>\` directly, so a hash among their arguments is a
 // hex color rather than a case-sensitive reference (\`element(#id)\`). Only direct
 // arguments: a gradient nested in \`image-set()\` is matched as the gradient.
@@ -273,6 +325,7 @@ ${colorNames
 	.join(",\n")}
 ]);
 
+module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
 module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;

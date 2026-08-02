@@ -50,7 +50,7 @@ Array [
   "/*! test_selectors: .x:has(.bar, #foo) {color:red} */.x:has(.bar,#foo){color:red}",
   "/*! test_selectors: .x:has(span + span) {color:red} */.x:has(span + span){color:red}",
   "/*! test_selectors: a:has(:visited) {color:red} */a:has(:visited){color:red}",
-  "/*! test_selectors: a:last-child::first-letter {color:red} */a:last-child::first-letter{color:red}",
+  "/*! test_selectors: a:last-child::first-letter {color:red} */a:last-child:first-letter{color:red}",
   "/*! test_selectors: a:lang(en) {color:red} */a:lang(en){color:red}",
   "/*! test_selectors: a:lang(en, fr) {color:red} */a:lang(en,fr){color:red}",
   "/*! test_selectors: a:lang('en') {color:red} */a:lang(\\"en\\"){color:red}",

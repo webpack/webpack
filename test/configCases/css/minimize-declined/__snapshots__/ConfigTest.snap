@@ -8,8 +8,10 @@ Array [
   "/*! declined: lossy — rounding away a small difference (lightningcss: 1px) */.t04{width:1.0000001px}",
   "/*! declined: exact, but 4-digit hex predates no browser we can assume (lightningcss: #0000) */.t05{background-color:transparent}",
   "/*! declined: exact, but range syntax drops every pre-2022 browser (lightningcss: (width>=1200px)) */@media (min-width:1200px){.t06{color:red}}",
-  "/*! declined: merging longhands into their shorthand needs a per-property table (lightningcss: margin:1px 2px) */.t07{margin-top:1px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
-  "/*! declined: a keyword's numeric equivalent needs one too (lightningcss: 400) */.t08{font-weight:normal}",
+  "/*! declined: a longhand between them is stepped over by the merge, so only an
+   adjacent four become the shorthand (lightningcss: margin:1px 2px) */.t07{margin-top:1px;margin-right:2px;color:red;margin-bottom:1px;margin-left:2px}",
+  "/*! declined: \`bolder\` and \`lighter\` are relative to the parent's weight, so they
+   have no fixed number (lightningcss: bolder) */.t08{font-weight:bolder}",
   "/*! declined: needs unit algebra (lightningcss: calc(1.5em + 3.75rem)) */.t09{width:calc(3rem + calc(1.5em + .75rem))}",
   "/*! declined: observable through getComputedStyle().getPropertyValue(), which is
    the one place a declaration's authored text survives — planned behind an
