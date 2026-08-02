@@ -30,6 +30,9 @@ module.exports = {
 				apply: (compiler) => {
 					new MinimizerPlugin({
 						test: /\.(?:[cm]?js|html)(\?.*)?$/i,
+						// In-process, so the coverage instrument sees the minify run:
+						// the worker pool is another process and reports nothing.
+						parallel: false,
 						minify: [MinimizerPlugin.terserMinify, htmlMinify],
 						minimizerOptions: [{ compress: { passes: 2 } }, {}]
 					}).apply(/** @type {EXPECTED_ANY} */ (compiler));

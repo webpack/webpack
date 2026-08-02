@@ -149,11 +149,13 @@ class HtmlInlinePlugin {
 							const content = /** @type {string} */ (asset.source.source());
 							/** @type {{ start: number, length: number, asset: Asset }[]} */
 							const matches = [];
+							// Minification runs first (`OPTIMIZE_SIZE`) and drops the quotes
+							// a value does not need, so the match takes them optionally.
 							const regExp =
-								/<script\s+src\s*=\s*"([^"]+)"(?:\s+[^"=\s]+(?:\s*=\s*(?:"[^"]*"|\S+))?)*\s*><\/script>/g;
+								/<script\s+src\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))(?:\s+[^"=\s]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|\S+))?)*\s*><\/script>/g;
 							let match = regExp.exec(content);
 							while (match) {
-								let url = match[1];
+								let url = match[1] || match[2] || match[3];
 								if (url.startsWith(publicPath)) {
 									url = url.slice(publicPath.length);
 								}
