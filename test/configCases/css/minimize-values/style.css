@@ -130,3 +130,15 @@
 /*! webpack: a second component makes `translateX` invalid — converting it would
    revive the declaration, so a comma keeps the function */
 .t58 { transform: translateX(1px, 2px) }
+/*! convert-values: a zero length needs no unit (CSS Values 4 §5) */
+.t59 { margin: 0px }
+/*! convert-values: every length unit, and `%` is a different type */
+.t60 { width: 0em; height: 0vh; top: 0cm; left: 0Q; right: 0% }
+/*! webpack: a zero time, angle or `<flex>` still needs its unit */
+.t61 { transition-duration: 0s; rotate: 0deg; grid-template-columns: 0fr 1fr }
+/*! webpack: `flex-basis` keeps it — IE 11 drops a `flex` whose basis has none */
+.t62 { flex-basis: 0px }
+/*! webpack: ...and so does the shorthand carrying one */
+.t63 { flex: 1 1 0px }
+/*! webpack: one component of several */
+.t64 { margin: 0px 1px }

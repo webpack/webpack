@@ -19,14 +19,28 @@ Array [
    the one place a declaration's authored text survives — planned behind an
    option, not on by default (lightningcss: .5rem) */.t10{--radius:0.5rem}",
   "/*! declined: ...including the unit (cssnano: .5s) */.t11{--duration:500ms}",
-  "/*! declined: dropping the universal selector a pseudo-element implies (lightningcss: :before) */*:before{color:red}",
+  "/*! declined: a \`*\` parted from the compound is a descendant combinator, not a
+   redundant universal selector (every tool keeps this one) */* :before{color:red}",
   "/*! declined: a substitution can expand to the second component \`translateX\`
    rejects, so converting it would revive a dropped declaration (lightningcss: translate) */.t12{transform:translateX(var(--x))}",
   "/*! declined: a \`/*!\` banner is kept, as cssnano, csso and clean-css also do (lightningcss drops it) */.t13{color:red}",
   "/*! declined: merging rules that share a block reorders the cascade (csso, cssnano) */.t14{color:red}.t15{color:red}",
-  "/*! declined: dropping a duplicate declaration assumes nothing reads the cascade (esbuild, cssnano) */.t16{color:red;color:red}",
+  "/*! declined: not identical, so the first is a fallback for an engine that cannot
+   read the second — dropping it is how esbuild and lightningcss lose this pair
+   (csso, cssnano and clean-css keep it too) */.t16{color:#fff;color:color(display-p3 1 1 1)}",
   "/*! declined: unit conversion, exact here but not for every value (cssnano: 1pc) */.t17{width:16px}",
-  "/*! declined: a zero's unit matters in \`flex-basis\` and inside \`calc()\` (cssnano: 0) */.t18{margin:0px}",
-  "/*! declined: hsl() hue math can round to a different byte (cssnano: #40bf5e) */.t19{background:hsl(134,50%,50%)}",
+  "/*! declined: inside \`calc()\` a bare \`0\` is a \`<number>\`, so the expression stops
+   parsing (every tool keeps this one) */.t18{width:calc(0px + 1px)}",
+  "/*! declined: hue math rounds to a different byte than the engine does — measured
+   against headless Chromium, spec-exact rounding still misses 12 of 1560 hsl()
+   samples by one, and clean-css and lightningcss disagree with each other on
+   \`hwb()\` (cssnano: #40bf5e) */.t19{background:hsl(134,50%,50%)}",
+  "/*! declined: the same, one step further out (esbuild: #00c3ff, lightningcss: #00c4ff) */.t20{background:hwb(194 0% 0%)}",
+  "/*! merge-longhand: a duplicate declaration resolves to the last of them */.t21{color:red}",
+  "/*! ...whatever stands between */.t22{background:blue;color:red}",
+  "/*! ...and however the earlier one was spelled */.t23{color:red}",
+  "/*! ...including a custom property */.t24{--x:1}",
+  "/*! declined: the importance differs, so they are not the same declaration */.t25{color:red;color:red!important}",
+  "/*! declined: a prefixed spelling is a different property */.t26{display:-webkit-flex;display:flex}",
 ]
 `;
