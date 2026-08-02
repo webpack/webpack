@@ -4800,9 +4800,10 @@ describe("htmlMinify — assets webpack only passes through", () => {
 	});
 
 	it("still escapes text that would re-parse as markup", () => {
-		// `a &lt;b&gt;c` decodes to `a <b>c`; emitting that raw would build a real
-		// `<b>` element, so the escaped form has to survive.
-		expect(min("<p>a &lt;b&gt;c")).toBe("<p>a &lt;b&gt;c");
+		// `a &lt;b&gt;c` decodes to `a <b>c`; emitting the `<` raw would build a
+		// real `<b>` element, so that one stays escaped. A bare `>` is only ever a
+		// character in text.
+		expect(min("<p>a &lt;b&gt;c")).toBe("<p>a &lt;b>c");
 		expect(min("<p>a&amp;b")).toBe("<p>a&amp;b");
 		// Foster-parented text merges into one node whose range no longer covers
 		// its data — the source slice would drop the `c`.
@@ -4913,7 +4914,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 	describe("<noscript> content", () => {
 		it("re-escapes decoded text inside <noscript>", () => {
 			expect(minify("<body><noscript>a &lt;b&gt; c</noscript>")).toBe(
-				"<body><noscript>a &lt;b&gt; c</noscript></body>"
+				"<body><noscript>a &lt;b> c</noscript></body>"
 			);
 		});
 
@@ -5009,7 +5010,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 			// mode that both splits the run and keeps it — `<head>`/`<html>` drop
 			// their whitespace as inert.
 			expect(minify("<table><colgroup>\r\n\t<col></colgroup></table>")).toBe(
-				"<table><colgroup>\n\t<col></colgroup></table>"
+				"<table><colgroup>\n\t<col></table>"
 			);
 			expect(minify("<table>\r\n\t<tr><td>x</table>")).toBe(
 				minify("<table>\n\t<tr><td>x</table>")
@@ -5020,7 +5021,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 			// Decoding shortens the run, so the split cannot count its offsets in
 			// the source either.
 			expect(minify("<table><colgroup>&#10;&#9;<col></colgroup></table>")).toBe(
-				"<table><colgroup>\n\t<col></colgroup></table>"
+				"<table><colgroup>\n\t<col></table>"
 			);
 		});
 

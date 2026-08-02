@@ -73,5 +73,10 @@
 	<script type=" application/json">{ "a" : 1 }</script>
 	<style type=" text/css">a { color : red ; }</style>
 	<AİX ID="x">only ascii folds in a name</AİX>
+	<table><caption>caption end tag goes</caption><colgroup><col><col></colgroup><tbody><tr><td>a</td></tr></tbody></table>
+	<table><caption>whitespace behind it keeps the tag</caption> <colgroup><col></colgroup><tr><td>a</td></tr></table>
+	<table><colgroup><col></colgroup><colgroup><col></colgroup><tr><td>a</td></tr></table>
+	<table><colgroup span="2"><col></colgroup><colgroup></colgroup><tr><td>a</td></tr></table>
+	<p>a &gt; b, &lt; and &amp; still escape</p>
 </body>
 </html>

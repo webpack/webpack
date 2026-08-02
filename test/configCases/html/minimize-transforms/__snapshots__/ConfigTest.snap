@@ -63,6 +63,11 @@ exports[`ConfigTestCases html minimize-transforms minimize-transforms should com
 	<style type= text/css>a { color : red ; }
 </style>
 	<aİx id=x>only ascii folds in a name</aİx>
+	<table><caption>caption end tag goes<col><col><tr><td>a</table>
+	<table><caption>whitespace behind it keeps the tag</caption> <col><tr><td>a</table>
+	<table><col><colgroup><col><tr><td>a</table>
+	<table><colgroup span=2><col><colgroup><tr><td>a</table>
+	<p>a > b, &lt; and &amp; still escape</p>
 
 
 </body></html>"
