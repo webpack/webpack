@@ -28,11 +28,12 @@
 .t08 { font-weight: bolder }
 /*! declined: needs unit algebra (lightningcss: calc(1.5em + 3.75rem)) */
 .t09 { width: calc(3rem + calc(1.5em + .75rem)) }
-/*! declined: observable through getComputedStyle().getPropertyValue(), which is
-   the one place a declaration's authored text survives — planned behind an
-   option, not on by default (lightningcss: .5rem) */
+/*! declined by default: observable through getComputedStyle().getPropertyValue(),
+   the one place a declaration's authored text survives, and no other minifier
+   rewrites it by default either — `transforms.customPropertyValues` opts in
+   (see the `minimize-transforms-option` case) (lightningcss: .5rem) */
 .t10 { --radius: 0.5rem }
-/*! declined: ...including the unit (cssnano: .5s) */
+/*! declined by default: ...including the unit (cssnano: .5s) */
 .t11 { --duration: 500ms }
 /*! declined: a `*` parted from the compound is a descendant combinator, not a
    redundant universal selector (every tool keeps this one) */
@@ -74,3 +75,10 @@
 .t25 { color: red; color: red !important }
 /*! declined: a prefixed spelling is a different property */
 .t26 { display: -webkit-flex; display: flex }
+/*! declined: a `@supports` condition is the declaration being tested, so
+   rewriting its value asks a different question — the engines that read
+   `#0000` are not the ones that read `rgba(0,0,0,0)` (esbuild, clean-css and
+   lightningcss leave it alone too; csso rewrites it) */
+@supports (color: rgba(0, 0, 0, 0)) { .t27 { color: red } }
+/*! declined: ...at any nesting depth, and under `not` */
+@supports not ((color: rgb(0, 0, 0)) and (color: hsl(0, 100%, 50%))) { .t28 { color: red } }

@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-transforms-option minimize-transforms-option should compile 1`] = `
+Array [
+  "/*! the numbers normalize, as in any other value */.t01{--duration:color .15s ease-in-out,background .15s}",
+  "/*! ...and so does a color function's spelling */.t02{--shadow:inset 0 3px 5px rgba(0,0,0,.125)}",
+  "/*! ...and the whitespace between tokens collapses */.t03{--gap:1px 2px}",
+  "/*! a zero keeps its unit: the value may be substituted into a calc() */.t04{--zero:0px}",
+  "/*! \`rgba(0,0,0,0)\` keeps its function: the property it lands in is unknown, so
+   the -webkit-tap-highlight-color bug cannot be ruled out */.t05{--tap:rgba(0,0,0,0)}",
+  "/*! a string's own bytes are its value */.t06{--label:\\"  keep  me  \\"}",
+  "/*! \`unicode-range\` is not a custom property, and its \`U+…\` tokenizes as numbers */@font-face{font-family:x;unicode-range:U+0-7F, U+0100-024F}",
+]
+`;

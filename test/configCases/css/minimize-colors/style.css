@@ -78,7 +78,8 @@
 .t35 { background: linear-gradient(#AABBCC, #FF0000) }
 /*! webpack: -webkit-tap-highlight-color does not leak to the next declaration */
 .t36 { -webkit-tap-highlight-color: rgba(0,0,0,0); color: rgba(0,0,0,0) }
-/*! webpack: a color in an at-rule prelude has no enclosing property */
+/*! webpack: a `@supports` condition is the declaration being tested, so its
+   color keeps the spelling the test asked about */
 @supports (color: rgba(0,0,0,0)) { .t37 { color: red } }
 
 /* The named colors and the color-taking functions come from `lib/css/data.js`,

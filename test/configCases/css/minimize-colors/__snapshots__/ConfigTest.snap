@@ -39,7 +39,8 @@ Array [
   "/*! webpack: a hash inside a non-color function is an id reference */.t34{background:-moz-element(#Abc)}",
   "/*! webpack: a hash inside a gradient is a color */.t35{background:linear-gradient(#abc,red)}",
   "/*! webpack: -webkit-tap-highlight-color does not leak to the next declaration */.t36{-webkit-tap-highlight-color:rgba(0,0,0,0);color:#0000}",
-  "/*! webpack: a color in an at-rule prelude has no enclosing property */@supports (color:#0000){.t37{color:red}}",
+  "/*! webpack: a \`@supports\` condition is the declaration being tested, so its
+   color keeps the spelling the test asked about */@supports (color:rgba(0,0,0,0)){.t37{color:red}}",
   "/*! data: a name shorter than its 6-hex */.t38{color:sienna}",
   "/*! data: the same, from rgb() */.t39{color:orchid}",
   "/*! data: a 3-hex beats every name for that value */.t40{color:#000;background:#00f;border-color:#fff}",
