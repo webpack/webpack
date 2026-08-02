@@ -182,8 +182,8 @@ webpack X.X.X compiled successfully
 assets by path *.js 857 bytes
   asset index.js 805 bytes [emitted] [minimized] (name: index)
   asset __html_6d047296_1.js 52 bytes [emitted] [minimized] (name: __html_6d047296_1)
-asset index.html 570 bytes [emitted] (auxiliary name: index)
-asset __html_6d047296_0.css 82 bytes [emitted] (name: __html_6d047296_0)
+asset index.html 326 bytes [emitted] [minimized] (auxiliary name: index)
+asset __html_6d047296_0.css 64 bytes [emitted] [minimized] (name: __html_6d047296_0)
 chunk (runtime: index) index.js (index) 540 bytes (javascript) 530 bytes (html) [entry] [rendered]
   > ./src/index.html index
   ./src/index.html 540 bytes (javascript) 530 bytes (html) [built] [code generated]

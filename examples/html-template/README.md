@@ -253,8 +253,8 @@ assets by path *.js 1.11 KiB
   asset __html_6d047296_0.js 46 bytes [emitted] [minimized] (name: __html_6d047296_0)
 assets by chunk 15 KiB (auxiliary name: index)
   asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: src/logo.png] (auxiliary name: index)
-  asset index.html 407 bytes [emitted] (auxiliary name: index)
-asset special.html 218 bytes [emitted] (auxiliary name: special)
+  asset index.html 404 bytes [emitted] [minimized] (auxiliary name: index)
+asset special.html 215 bytes [emitted] [minimized] (auxiliary name: special)
 chunk (runtime: index) index.js (index) 14.6 KiB (asset) 42 bytes (asset-url) 391 bytes (javascript) 381 bytes (html) [entry] [rendered]
   > ./src/index.html index
   dependent modules 14.6 KiB (asset) 42 bytes (asset-url) [dependent] 1 module

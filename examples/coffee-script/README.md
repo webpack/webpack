@@ -32,9 +32,13 @@ module.exports = 42
 /*!*********************!*\
   !*** ./cup1.coffee ***!
   \*********************/
-/*! unknown exports (runtime-defined) */
+/*! default exports */
+/*! export again [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export answer [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export cool [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export external [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_require__ */
-/*! CommonJS bailout: module.exports is used directly at 1:0-14 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = {
@@ -117,7 +121,7 @@ console.log(__webpack_require__(/*! ./cup1 */ 1));
 ## Unoptimized
 
 ```
-asset output.js 2.25 KiB [emitted] (name: main)
+asset output.js 2.55 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 206 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 175 bytes [dependent] 2 modules
