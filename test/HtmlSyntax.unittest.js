@@ -5040,6 +5040,46 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 	// A fixture can't carry these: `.gitattributes` checks every `test/` file
 	// out with LF, so CR only reaches the parser from a string built here.
+	describe("class attribute", () => {
+		it("collapses the token separators", () => {
+			expect(minify('<p class="a    b">t</p>')).toBe('<p class="a b">t');
+			expect(minify('<p class="  a b  ">t</p>')).toBe('<p class="a b">t');
+			expect(minify('<p class="  a  ">t</p>')).toBe("<p class=a>t");
+		});
+
+		it("leaves foreign content alone", () => {
+			expect(minify('<svg><rect class="a    b"/></svg>')).toBe(
+				'<svg><rect class="a    b"/></svg>'
+			);
+		});
+	});
+
+	describe("boolean attributes", () => {
+		it("drops a value that carries nothing", () => {
+			expect(minify('<input disabled="disabled">')).toBe("<input disabled>");
+			expect(minify('<input disabled="">')).toBe("<input disabled>");
+			expect(minify('<input DISABLED="DISABLED">')).toBe("<input disabled>");
+			expect(
+				minify('<script async="async" defer="defer" src="a.js"></script>')
+			).toBe("<script async defer src=a.js></script>");
+		});
+
+		it("only where the attribute is boolean", () => {
+			// `checked` on a `<div>` is an ordinary attribute whose value a script
+			// may read.
+			expect(minify('<div checked="checked">t</div>')).toBe(
+				"<div checked=checked>t</div>"
+			);
+			expect(minify('<option selected="selected">a</option>')).toBe(
+				"<option selected>a"
+			);
+		});
+
+		it("leaves a value the spec does not canonicalize", () => {
+			expect(minify('<input disabled="true">')).toBe("<input disabled=true>");
+		});
+	});
+
 	describe("style attribute", () => {
 		it("minifies the declaration list", () => {
 			expect(minify('<p style="color: red;  margin: 0 0 0 0">t</p>')).toBe(
