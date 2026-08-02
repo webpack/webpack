@@ -5039,6 +5039,53 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 	// A fixture can't carry these: `.gitattributes` checks every `test/` file
 	// out with LF, so CR only reaches the parser from a string built here.
+	describe("srcset", () => {
+		it("reduces whitespace to what the grammar needs", () => {
+			expect(minify('<img srcset="a.png 1x,   b.png 2x">')).toBe(
+				'<img srcset="a.png 1x,b.png 2x">'
+			);
+			expect(minify('<link imagesrcset="a.png 1x,  b.png 2x">')).toBe(
+				'<link imagesrcset="a.png 1x,b.png 2x">'
+			);
+		});
+
+		it("keeps the space a descriptor-less candidate needs", () => {
+			// Without one the URL runs past the comma and swallows the next
+			// candidate.
+			expect(minify('<img srcset="  a.png   ,  b.png 2x  ">')).toBe(
+				'<img srcset="a.png, b.png 2x">'
+			);
+		});
+
+		it("keeps a comma that belongs to a URL", () => {
+			expect(
+				minify('<img srcset="data:image/gif;base64,R0lGOD 1x, b.png 2x">')
+			).toBe('<img srcset="data:image/gif;base64,R0lGOD 1x,b.png 2x">');
+			expect(minify('<img srcset="a.png?w=1,2 100w, b.png 200w">')).toBe(
+				'<img srcset="a.png?w=1,2 100w,b.png 200w">'
+			);
+		});
+
+		it("hands back anything the grammar rejects", () => {
+			expect(minify('<img srcset="a.png 100w 2x">')).toBe(
+				'<img srcset="a.png 100w 2x">'
+			);
+		});
+
+		it("leaves a value carrying a character reference alone", () => {
+			// It would decode to something the grammar reads differently.
+			expect(minify('<img srcset="a.png&#32;1x, b.png 2x">')).toBe(
+				'<img srcset="a.png&#32;1x, b.png 2x">'
+			);
+		});
+
+		it("leaves foreign content alone", () => {
+			expect(minify('<svg><image srcset="a.png 1x,   b.png 2x"/></svg>')).toBe(
+				'<svg><image srcset="a.png 1x,   b.png 2x"/></svg>'
+			);
+		});
+	});
+
 	describe("name casing", () => {
 		it("folds an HTML tag and attribute name to lowercase", () => {
 			expect(minify('<DIV CLASS="a">t</DIV>')).toBe("<div class=a>t</div>");
