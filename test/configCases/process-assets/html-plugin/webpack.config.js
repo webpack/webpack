@@ -152,10 +152,17 @@ class HtmlInlinePlugin {
 							// Minification runs first (`OPTIMIZE_SIZE`) and drops the quotes
 							// a value does not need, so the match takes them optionally.
 							const regExp =
-								/<script\s+src\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))(?:\s+[^"=\s]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|\S+))?)*\s*><\/script>/g;
+								/<script((?:\s+[^\s"'>/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'`=<>]+))?)*)\s*>\s*<\/script(?:\s[^>]*)?>/g;
+							const srcRegExp =
+								/(?:^|\s)src\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'`=<>]+))/;
 							let match = regExp.exec(content);
 							while (match) {
-								let url = match[1] || match[2] || match[3];
+								const src = srcRegExp.exec(match[1]);
+								if (src === null) {
+									match = regExp.exec(content);
+									continue;
+								}
+								let url = src[1] || src[2] || src[3];
 								if (url.startsWith(publicPath)) {
 									url = url.slice(publicPath.length);
 								}

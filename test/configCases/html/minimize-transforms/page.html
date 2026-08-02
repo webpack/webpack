@@ -61,5 +61,17 @@
 	<pre>  preformatted
    text
 </pre>
+	<!-- ASCII-only grammars: a Unicode trim would change what these parse to -->
+	<div class="  a b">nbsp is a class token of its own</div>
+	<a href=" nbsp.html">nbsp stays in the url</a>
+	<table><tr><td colspan=" 2">nbsp is not integer whitespace</td><td colspan="+2">plus does not parse as non-negative</td></tr></table>
+	<ol start="+5"><li>signed integer normalizes</li></ol>
+	<ol start=" -05 "><li>negative normalizes</li></ol>
+	<meta name="viewport" content=" width=device-width, initial-scale=1">
+	<input type="file" accept=" .png , .jpg">
+	<img srcset="a.png  1x" alt="nbsp descriptor kept">
+	<script type=" application/json">{ "a" : 1 }</script>
+	<style type=" text/css">a { color : red ; }</style>
+	<AİX ID="x">only ascii folds in a name</AİX>
 </body>
 </html>

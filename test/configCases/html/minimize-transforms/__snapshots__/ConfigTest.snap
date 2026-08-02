@@ -50,6 +50,19 @@ exports[`ConfigTestCases html minimize-transforms minimize-transforms should com
 	<pre>  preformatted
    text
 </pre>
+	
+	<div class=\\"  a b\\">nbsp is a class token of its own</div>
+	<a href= nbsp.html>nbsp stays in the url</a>
+	<table><tr><td colspan= 2>nbsp is not integer whitespace<td colspan=+2>plus does not parse as non-negative</table>
+	<ol start=5><li>signed integer normalizes</ol>
+	<ol start=-5><li>negative normalizes</ol>
+	<meta name=viewport content=\\" width=device-width,initial-scale=1\\">
+	<input type=file accept= .png,.jpg>
+	<img srcset=\\"a.png  1x\\" alt=\\"nbsp descriptor kept\\">
+	<script type= application/json>{ \\"a\\" : 1 }</script>
+	<style type= text/css>a { color : red ; }
+</style>
+	<aİx id=x>only ascii folds in a name</aİx>
 
 
 </body></html>"

@@ -5,7 +5,11 @@ const path = require("path");
 const cssSyntax = require("../../../../lib/css/syntax");
 const {
 	BOOLEAN_ATTRIBUTES,
-	SRCSET_ATTRIBUTES
+	COMMA_LIST_ATTRIBUTES,
+	INTEGER_ATTRIBUTES,
+	SIGNED_INTEGER_ATTRIBUTES,
+	SRCSET_ATTRIBUTES,
+	URL_ATTRIBUTES
 } = require("../../../../lib/html/data");
 const {
 	NodeType,
@@ -14,18 +18,42 @@ const {
 } = require("../../../../lib/html/syntax");
 
 /**
+ * The HTML integer parse rules, spelled out here rather than reused from `lib/`
+ * so the check does not inherit the minifier's own idea of what an integer is.
+ * They skip ASCII whitespace only, and stop at the first non-digit.
+ * @param {string} value attribute value
+ * @param {boolean} signed whether the signed rules apply
+ * @returns {string} the parsed integer, or `<invalid>` when there is none
+ */
+const parseHtmlInteger = (value, signed) => {
+	let i = 0;
+	while (i < value.length && "\t\n\f\r ".includes(value[i])) i++;
+	let sign = 1;
+	if (signed && (value[i] === "-" || value[i] === "+")) {
+		if (value[i] === "-") sign = -1;
+		i++;
+	}
+	const start = i;
+	while (i < value.length && value[i] >= "0" && value[i] <= "9") i++;
+	if (i === start) return `<invalid>${value}`;
+	return String(sign * Number(value.slice(start, i)));
+};
+
+/**
  * An attribute value reduced to what it means, so a transform that rewrites the
  * bytes without changing the meaning does not read as a difference.
+ * @param {string} tagName lowercased element name
  * @param {string} name attribute name
  * @param {string} value attribute value
  * @returns {string} its canonical form
  */
-const canonicalValue = (name, value) => {
+const canonicalValue = (tagName, name, value) => {
 	if (BOOLEAN_ATTRIBUTES.has(name)) return "<boolean>";
 	if (name === "class") {
+		// The ordered set parser splits on ASCII whitespace and drops the empties.
 		return value
-			.trim()
 			.split(/[\t\n\f\r ]+/)
+			.filter(Boolean)
 			.join(" ");
 	}
 	if (name === "style") {
@@ -47,7 +75,28 @@ const canonicalValue = (name, value) => {
 		}
 	}
 	if (name === "content") {
-		return value.replace(/[\t\n\f\r ]*([,;=])[\t\n\f\r ]*/g, "$1").trim();
+		return value
+			.replace(/[\t\n\f\r ]*([,;=])[\t\n\f\r ]*/g, "$1")
+			.replace(/^[\t\n\f\r ]+|[\t\n\f\r ]+$/g, "");
+	}
+	const urlOn = URL_ATTRIBUTES.get(name);
+	if (urlOn !== undefined && urlOn.has(tagName)) {
+		// The URL parser strips C0 controls and space — not NBSP.
+		return value.replace(/^[\u0000-\u0020]+|[\u0000-\u0020]+$/g, "");
+	}
+	const integerOn = INTEGER_ATTRIBUTES.get(name);
+	if (integerOn !== undefined && integerOn.has(tagName)) {
+		return parseHtmlInteger(value, SIGNED_INTEGER_ATTRIBUTES.has(name));
+	}
+	const commaList = COMMA_LIST_ATTRIBUTES.get(name);
+	if (commaList !== undefined) {
+		return value
+			.split(",")
+			.map((item) => {
+				const trimmed = item.replace(/^[\t\n\f\r ]+|[\t\n\f\r ]+$/g, "");
+				return commaList ? trimmed : trimmed.replace(/[\t\n\f\r ]+/g, "");
+			})
+			.join(",");
 	}
 	return value;
 };
@@ -65,21 +114,22 @@ const tree = (html) => {
 	new SourceProcessor()
 		.use({
 			[NodeType.Element]: (nodePath) => {
+				const tagName = nodePath.tagName();
 				const attributes = nodePath
 					.attributes()
 					.map(
 						(attribute) =>
-							`${attribute.name}=${canonicalValue(attribute.name, attribute.value)}`
+							`${attribute.name}=${canonicalValue(tagName, attribute.name, attribute.value)}`
 					)
 					.sort()
 					.join(" ");
-				out.push(`<${nodePath.tagName()} ${attributes}>`);
+				out.push(`<${tagName} ${attributes}>`);
 			},
 			[NodeType.Text]: (nodePath) => {
 				const parent = nodePath.parentOf();
 				const parentName = parent === 0 ? "" : nodePath.tagName(parent);
 				if (parentName === "style") {
-					out.push(`#css:${canonicalValue("style", nodePath.data())}`);
+					out.push(`#css:${canonicalValue("", "style", nodePath.data())}`);
 					return;
 				}
 				// Whitespace nothing renders is dropped by design.
