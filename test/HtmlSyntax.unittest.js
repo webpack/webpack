@@ -3578,7 +3578,7 @@ describe("parseHtml — SourceProcessor", () => {
 			.use({
 				[NodeType.Document]: (path) => seen.push([path.type(), path.parent])
 			})
-			.process("<p>x</p>");
+			.process("<p>x");
 		expect(seen).toEqual([[NodeType.Document, null]]);
 	});
 
@@ -3627,7 +3627,7 @@ describe("parseHtml — SourceProcessor", () => {
 			.use({ [NodeType.Element]: () => a++ })
 			.use({ [NodeType.Element]: () => b++ });
 		expect(sp).toBeInstanceOf(SourceProcessor);
-		sp.process("<p>x</p>");
+		sp.process("<p>x");
 		expect(a).toBe(b);
 		expect(a).toBeGreaterThan(0);
 	});
@@ -4786,10 +4786,10 @@ describe("htmlMinify — assets webpack only passes through", () => {
 		// `<?php … ?>` is a bogus comment per §13.2.5.42, so the inert-comment rule
 		// would delete the whole directive from a copied template.
 		expect(min("<?php echo $t; ?>\n<html><body><p>a</p></body></html>")).toBe(
-			"<?php echo $t; ?><html><body><p>a</p></body></html>"
+			"<?php echo $t; ?><html><body><p>a</body></html>"
 		);
 		expect(min("<html><body><!-- inert --><p>a</p></body></html>")).toBe(
-			"<html><body><p>a</p></body></html>"
+			"<html><body><p>a</body></html>"
 		);
 	});
 
@@ -4802,17 +4802,17 @@ describe("htmlMinify — assets webpack only passes through", () => {
 	it("still escapes text that would re-parse as markup", () => {
 		// `a &lt;b&gt;c` decodes to `a <b>c`; emitting that raw would build a real
 		// `<b>` element, so the escaped form has to survive.
-		expect(min("<p>a &lt;b&gt;c</p>")).toBe("<p>a &lt;b&gt;c</p>");
-		expect(min("<p>a&amp;b</p>")).toBe("<p>a&amp;b</p>");
+		expect(min("<p>a &lt;b&gt;c")).toBe("<p>a &lt;b&gt;c");
+		expect(min("<p>a&amp;b")).toBe("<p>a&amp;b");
 		// Foster-parented text merges into one node whose range no longer covers
 		// its data — the source slice would drop the `c`.
 		expect(min("<table>a<tr><td>b</td></tr>c</table>")).toBe(
-			"ac<table><tr><td>b</td></tr></table>"
+			"ac<table><tr><td>b</table>"
 		);
 		// A trailing `<` has to stay escaped: dropping a comment after it would
 		// let it fuse with the next sibling into a tag.
-		expect(min("<p>a<</p>")).toBe("<p>a&lt;</p>");
-		expect(min("<p>a<<!--c--></p>")).toBe("<p>a&lt;</p>");
+		expect(min("<p>a<</p>")).toBe("<p>a&lt;");
+		expect(min("<p>a<<!--c--></p>")).toBe("<p>a&lt;");
 	});
 
 	it("keeps template expressions containing ampersands", () => {
@@ -4822,16 +4822,16 @@ describe("htmlMinify — assets webpack only passes through", () => {
 		expect(min("<div><% if (a && b) { %>x<% } %></div>")).toBe(
 			"<div><% if (a && b) { %>x<% } %></div>"
 		);
-		expect(min("<p>a & b</p>")).toBe("<p>a & b</p>");
-		expect(min("<p>a &foo; b</p>")).toBe("<p>a &foo; b</p>");
+		expect(min("<p>a & b")).toBe("<p>a & b");
+		expect(min("<p>a &foo; b")).toBe("<p>a &foo; b");
 	});
 
 	it("escapes a character reference left open at the end", () => {
 		// The next sibling could complete it (`a &am` + `p;`) once a comment
 		// between them is dropped, so only a closed tail passes through.
-		expect(min("<p>a &</p>")).toBe("<p>a &amp;</p>");
-		expect(min("<p>a &am</p>")).toBe("<p>a &amp;am</p>");
-		expect(min("<p>a &am<!--c-->p;</p>")).toBe("<p>a &amp;amp;</p>");
+		expect(min("<p>a &</p>")).toBe("<p>a &amp;");
+		expect(min("<p>a &am</p>")).toBe("<p>a &amp;am");
+		expect(min("<p>a &am<!--c-->p;</p>")).toBe("<p>a &amp;amp;");
 	});
 
 	it("keeps the body of literal-text elements raw", () => {
@@ -4858,18 +4858,18 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 	describe("cloned / reconstructed formatting elements", () => {
 		it("keeps the reconstructed <b> around text after an implied </p>", () => {
-			expect(minify("<p><b>a<p>b")).toBe("<p><b>a</b></p><p><b>b</b></p>");
+			expect(minify("<p><b>a<p>b")).toBe("<p><b>a</b><p><b>b</b>");
 		});
 
 		it("keeps the adoption-agency clone of <b> inside <p>", () => {
-			expect(minify("<b><p>x</b>y</p>")).toBe("<b></b><p><b>x</b>y</p>");
+			expect(minify("<b><p>x</b>y</p>")).toBe("<b></b><p><b>x</b>y");
 		});
 
 		it("keeps cloned attributes on the reconstructed element", () => {
 			// The reconstructed clone is synthesized, not sliced from source, and
 			// synthesized values always keep their quotes.
 			expect(minify('<b x="1"><p>x</b>y</p>')).toBe(
-				'<b x=1></b><p><b x="1">x</b>y</p>'
+				'<b x=1></b><p><b x="1">x</b>y'
 			);
 		});
 
@@ -4879,13 +4879,13 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 					"<!DOCTYPE html><html><head></head><body><p><b>a<p>b</body></html>"
 				)
 			).toBe(
-				"<!DOCTYPE html><html><head></head><body><p><b>a</b></p><p><b>b</b></p></body></html>"
+				"<!DOCTYPE html><html><head></head><body><p><b>a</b><p><b>b</b></body></html>"
 			);
 		});
 
 		it("escapes a quote-holding cloned attribute value safely", () => {
 			expect(minify("<b a='x\"y'><p>t</b>")).toBe(
-				'<b a=\'x"y\'></b><p><b a="x&quot;y">t</b></p>'
+				'<b a=\'x"y\'></b><p><b a="x&quot;y">t</b>'
 			);
 		});
 
@@ -4901,11 +4901,11 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 		});
 
 		it("still omits parser-inserted html/head/body and table sections", () => {
-			expect(minify("<p>x")).toBe("<p>x</p>");
-			expect(minify("<table><tr><td>x</td></tr></table>")).toBe(
-				"<table><tr><td>x</td></tr></table>"
+			expect(minify("<p>x")).toBe("<p>x");
+			expect(minify("<table><tr><td>x</table>")).toBe(
+				"<table><tr><td>x</table>"
 			);
-			expect(minify("<table><td>x")).toBe("<table><td>x</td></table>");
+			expect(minify("<table><td>x")).toBe("<table><td>x</table>");
 		});
 	});
 
@@ -4949,10 +4949,10 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 	describe("opening-tag whitespace", () => {
 		it("collapses the run before a valueless attribute", () => {
 			expect(minify("<p   hidden   class='x'>t</p>")).toBe(
-				"<p hidden class=x>t</p>"
+				"<p hidden class=x>t"
 			);
 			expect(minify("<input    disabled>")).toBe("<input disabled>");
-			expect(minify("<p   a   b   c>t</p>")).toBe("<p a b c>t</p>");
+			expect(minify("<p   a   b   c>t</p>")).toBe("<p a b c>t");
 		});
 
 		it("keeps a foreign element's self-closing slash", () => {
@@ -5039,6 +5039,80 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 	// A fixture can't carry these: `.gitattributes` checks every `test/` file
 	// out with LF, so CR only reaches the parser from a string built here.
+	describe("optional end tags", () => {
+		it("omits an end tag the next sibling implies", () => {
+			expect(minify("<ul><li>a</li><li>b</li></ul>")).toBe(
+				"<ul><li>a<li>b</ul>"
+			);
+			expect(minify("<dl><dt>a</dt><dd>b</dd></dl>")).toBe(
+				"<dl><dt>a<dd>b</dl>"
+			);
+			expect(
+				minify("<select><option>a</option><option>b</option></select>")
+			).toBe("<select><option>a<option>b</select>");
+			expect(
+				minify(
+					"<table><tr><td>a</td><td>b</td></tr><tr><td>c</td></tr></table>"
+				)
+			).toBe("<table><tr><td>a<td>b<tr><td>c</table>");
+		});
+
+		it("omits an end tag when nothing follows in the parent", () => {
+			expect(minify("<div><p>x</p></div>")).toBe("<div><p>x</div>");
+			expect(minify("<ul><li>a</li></ul>")).toBe("<ul><li>a</ul>");
+		});
+
+		it("keeps an end tag the spec gives no such clause", () => {
+			// `</dt>` and `</thead>` may only go when a specific element follows.
+			expect(minify("<dl><dd>b</dd><dt>c</dt></dl>")).toBe(
+				"<dl><dd>b<dt>c</dt></dl>"
+			);
+			expect(minify("<table><thead><tr><td>a</table>")).toBe(
+				"<table><thead><tr><td>a</thead></table>"
+			);
+		});
+
+		it("keeps an end tag when anything else follows", () => {
+			expect(minify("<ul><li>a</li>tail</ul>")).toBe("<ul><li>a</li>tail</ul>");
+			expect(minify("<div><p>a</p><span>b</span></div>")).toBe(
+				"<div><p>a</p><span>b</span></div>"
+			);
+			// The comment is dropped, but the decision reads the tree, not the
+			// output — conservative, and never wrong.
+			expect(minify("<ul><li>a</li><!--c--><li>b</li></ul>")).toBe(
+				"<ul><li>a</li><li>b</ul>"
+			);
+		});
+
+		it("keeps a trailing </p> where the parent would absorb what follows", () => {
+			for (const parent of ["a", "audio", "del", "ins", "map", "video"]) {
+				expect(minify(`<${parent}><p>x</p></${parent}>`)).toBe(
+					`<${parent}><p>x</p></${parent}>`
+				);
+			}
+			// An autonomous custom element is spelled with a hyphen.
+			expect(minify("<my-el><p>x</p></my-el>")).toBe("<my-el><p>x</p></my-el>");
+		});
+
+		it("keeps an end tag a parser-implied sibling cannot close", () => {
+			// The following `<tbody>` / `<tr>` is implied, so it prints no start tag
+			// — dropping this end tag would continue the element instead.
+			expect(
+				minify("<table><thead><tr><th>h</th></tr></thead><tr><td>a</table>")
+			).toBe(
+				minify("<table><thead><tr><th>h</th></tr></thead><tr><td>a</table>")
+			);
+			const src = "<table><thead></thead><tr><td>y</td></tr></table>";
+			expect(minify(src)).toContain("</thead>");
+		});
+
+		it("leaves foreign elements alone", () => {
+			expect(minify("<svg><g><path/></g></svg>")).toBe(
+				"<svg><g><path/></g></svg>"
+			);
+		});
+	});
+
 	describe("inert whitespace", () => {
 		it("drops whitespace directly under <head> and <html>", () => {
 			expect(
@@ -5056,7 +5130,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 			expect(minify("<body>\n\t<p>x</p>\n</body>")).toBe(
 				"<body>\n\t<p>x</p>\n</body>"
 			);
-			expect(minify("<p>a <b>b</b> c</p>")).toBe("<p>a <b>b</b> c</p>");
+			expect(minify("<p>a <b>b</b> c")).toBe("<p>a <b>b</b> c");
 		});
 
 		it("keeps a literal-text body under <head>", () => {
@@ -5074,14 +5148,14 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 	describe("carriage returns in text", () => {
 		it("normalizes a CRLF to one newline", () => {
-			expect(minify("<p>a\r\nb</p>")).toBe("<p>a\nb</p>");
+			expect(minify("<p>a\r\nb</p>")).toBe("<p>a\nb");
 		});
 
 		it("normalizes a lone CR to a newline", () => {
 			// Preprocessing maps CR to LF without changing length, so the raw
 			// source is not the text's serialization even at equal lengths.
-			expect(minify("<p>a\rb</p>")).toBe("<p>a\nb</p>");
-			expect(minify("<p>a\r\rb</p>")).toBe("<p>a\n\nb</p>");
+			expect(minify("<p>a\rb</p>")).toBe("<p>a\nb");
+			expect(minify("<p>a\r\rb</p>")).toBe("<p>a\n\nb");
 		});
 
 		it("keeps a CRLF text run whole when it leads an insertion mode", () => {
