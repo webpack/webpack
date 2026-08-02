@@ -21,7 +21,7 @@ module.exports = {
 
 		// DOM-absent whitespace (between the doctype and `<html>`) falls away,
 		// and a value that needs no quotes loses them.
-		expect(html).toContain("<!DOCTYPE html><html lang=en>");
+		expect(html).toContain("<!doctype html><html lang=en>");
 
 		// Text, entities and inline structure stay byte-for-byte (never collapsed
 		// or re-encoded): the same computed DOM.

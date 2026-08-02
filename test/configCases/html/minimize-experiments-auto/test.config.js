@@ -17,7 +17,7 @@ module.exports = {
 		expect(read("experiments.txt")).toBe(JSON.stringify("auto"));
 
 		// Rendered by webpack itself.
-		expect(read("page.html")).toContain("<!DOCTYPE html><html lang=en>");
+		expect(read("page.html")).toContain("<!doctype html><html lang=en>");
 
 		// Emitted by another plugin and unclaimed, so the built-in minifier takes
 		// it too: the inert comment goes, and the `<%= title %>` placeholder

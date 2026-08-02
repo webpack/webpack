@@ -4880,7 +4880,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 					"<!DOCTYPE html><html><head></head><body><p><b>a<p>b</body></html>"
 				)
 			).toBe(
-				"<!DOCTYPE html><html><head></head><body><p><b>a</b><p><b>b</b></body></html>"
+				"<!doctype html><html><head></head><body><p><b>a</b><p><b>b</b></body></html>"
 			);
 		});
 
@@ -5040,6 +5040,76 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 	// A fixture can't carry these: `.gitattributes` checks every `test/` file
 	// out with LF, so CR only reaches the parser from a string built here.
+	describe("style attribute", () => {
+		it("minifies the declaration list", () => {
+			expect(minify('<p style="color: red;  margin: 0 0 0 0">t</p>')).toBe(
+				"<p style=color:red;margin:0>t"
+			);
+			expect(minify('<p style="background: rgb(255, 255, 255)">t</p>')).toBe(
+				"<p style=background:#fff>t"
+			);
+		});
+
+		it("quotes around whichever quote the result carries", () => {
+			expect(minify("<p style=\"grid-template-areas: 'a b'\">t</p>")).toBe(
+				"<p style='grid-template-areas:\"a b\"'>t"
+			);
+		});
+
+		it("declines a value that escapes the wrapping rule", () => {
+			// A stray `}` or a custom property holding braces would not stay one
+			// rule, so the source spelling stands.
+			expect(minify("<p style=\"content: '}'\">t</p>")).toBe(
+				"<p style=\"content: '}'\">t"
+			);
+			expect(minify('<p style="--custom: {a:b}">t</p>')).toBe(
+				'<p style="--custom: {a:b}">t'
+			);
+		});
+
+		it("leaves an empty value and foreign content alone", () => {
+			expect(minify('<p style="">t</p>')).toBe('<p style="">t');
+			expect(minify('<svg><rect style="fill: red ;"/></svg>')).toBe(
+				'<svg><rect style="fill: red ;"/></svg>'
+			);
+		});
+	});
+
+	describe("viewport meta", () => {
+		it("drops whitespace its grammar ignores", () => {
+			expect(
+				minify(
+					'<meta name="viewport" content="width=device-width, initial-scale=1">'
+				)
+			).toBe(
+				'<meta name=viewport content="width=device-width,initial-scale=1">'
+			);
+		});
+
+		it("leaves any other meta content alone", () => {
+			expect(minify('<meta name="description" content="a,  b">')).toBe(
+				'<meta name=description content="a,  b">'
+			);
+		});
+	});
+
+	describe("doctype", () => {
+		it("folds the keyword and the name, which parsing folds too", () => {
+			expect(minify("<!DOCTYPE HTML><p>x")).toBe("<!doctype html><p>x");
+			expect(minify("<!DOCTYPE   html><p>x")).toBe("<!doctype html><p>x");
+		});
+
+		it("keeps the identifiers, which are case-sensitive strings", () => {
+			expect(
+				minify(
+					'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://x/s.dtd"><p>x'
+				)
+			).toBe(
+				'<!doctype html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://x/s.dtd"><p>x'
+			);
+		});
+	});
+
 	describe("inline <style>", () => {
 		it("minifies the body with webpack's CSS minifier", () => {
 			expect(minify("<style>a { color : red ; }</style>")).toBe(
@@ -5291,7 +5361,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 			).toBe(
 				// The run after `</body>` is inside `<body>` per the "after body"
 				// insertion mode, so it stays.
-				"<!DOCTYPE html><html><head><title>T</title></head><body><p>x</p>\n</body></html>"
+				"<!doctype html><html><head><title>T</title></head><body><p>x</p>\n</body></html>"
 			);
 		});
 
