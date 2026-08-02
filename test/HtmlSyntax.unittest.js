@@ -3152,6 +3152,20 @@ describe("parseHtml", () => {
 		).toBe("two");
 	});
 
+	it("should replace NULL with U+FFFD in raw text", () => {
+		const script = find("<script>a\u0000b</script>", "script");
+		expect(
+			/** @type {MatText} */ (/** @type {unknown} */ (script.children[0])).data
+		).toBe("a\uFFFDb");
+	});
+
+	it("should drop NULL from ordinary text", () => {
+		const nodes = body("a\u0000b");
+		expect(
+			/** @type {MatText} */ (/** @type {unknown} */ (nodes[0])).data
+		).toBe("ab");
+	});
+
 	it("should merge adjacent text nodes", () => {
 		// Foster-parenting the table's text next to the leading text exercises
 		// the adjacent-text-node merge.
