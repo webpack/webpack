@@ -87,6 +87,38 @@ const load = (name) => require(path.join(MODULES, name));
  * rather than written here, so they are as messy as a real docs page.
  * @returns {[string, string][]} `[label, html]` for every fixture
  */
+// The third real shape: an app shell whose weight is inline critical CSS and
+// form markup. Neither installed fixture carries an inline `<style>`, a
+// `srcset` or a boolean attribute, so without this the comparison cannot see
+// what a minifier does with any of them.
+const APP_SHELL = `<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<title>Dashboard</title>
+	<style>
+		:root { --gap : 8px ; }
+		body { margin : 0 0 0 0 ; font-family : system-ui , sans-serif ; }
+		.header { display : flex ; padding : 8px 16px 8px 16px ; color : #ff0000 ; }
+		.card { border-radius : 4px 4px 4px 4px ; background : rgb(255, 255, 255) ; }
+		@media (min-width : 600px) { .card { padding : 0 0 ; } }
+	</style>
+</head>
+<body>
+	<div class="header  main   sticky" style="color: #ff0000;  padding: 0 0 0 0">
+		<img srcset="logo.png 1x,   logo@2x.png 2x" src="logo.png" alt="Logo">
+	</div>
+	<form method="post">
+		<input type="checkbox" checked="checked" disabled="disabled">
+		<select multiple="multiple"><option selected="selected">a</option><option>b</option></select>
+		<textarea readonly="readonly">keep  me</textarea>
+	</form>
+	<ul class="list   items"><li>one</li><li>two</li></ul>
+	<script src="app.js" async="async" defer="defer"></script>
+</body>
+</html>`;
+
 const fixtures = () => {
 	const { marked } = load("marked");
 	/** @type {[string, string][]} */
@@ -100,6 +132,7 @@ const fixtures = () => {
 	]) {
 		out.push([label, fs.readFileSync(file, "utf8")]);
 	}
+	out.push(["App shell (inline critical CSS)", APP_SHELL]);
 	for (const [label, file] of [
 		["webpack README (rendered)", path.join(ROOT, "README.md")],
 		["webpack CHANGELOG (rendered)", path.join(ROOT, "CHANGELOG.md")]
@@ -160,6 +193,25 @@ const minifiers = () => {
 const VERBATIM_TEXT = new Set(["pre", "textarea", "script", "style"]);
 
 /**
+ * A `<style>` body is CSS, not bytes: several of these minifiers rewrite it, so
+ * comparing it verbatim would report every one of them as losing text. It is
+ * canonicalized through webpack's CSS minifier instead, which compares what the
+ * sheet means. That leaves a CSS-level mistake to webpack's own CSS suites —
+ * this tool is checking the HTML around it.
+ * @param {string} css a `<style>` body
+ * @returns {string} its canonical form
+ */
+const canonicalCss = (css) => {
+	try {
+		const { SourceProcessor } = require("../lib/css/syntax");
+
+		return new SourceProcessor().process(css, { minimize: true }).code;
+	} catch (_err) {
+		return css;
+	}
+};
+
+/**
  * A DOM fingerprint: every element with its attributes, plus the text, walked
  * out of a real HTML parser rather than matched with a regex. Whitespace runs in
  * ordinary text collapse (that is the whole point of minifying), so only what
@@ -185,10 +237,16 @@ const fingerprint = (parse5, html) => {
 	/**
 	 * @param {Parse5Node} node a parse5 node
 	 * @param {boolean} verbatim whether text below it keeps its bytes
+	 * @param {string=} parent the enclosing element's tag name
 	 */
-	const walk = (node, verbatim) => {
+	const walk = (node, verbatim, parent) => {
 		if (node.nodeName === "#text") {
 			const raw = node.value || "";
+			if (parent === "style") {
+				const css = canonicalCss(raw);
+				if (css.length !== 0) text.push(css);
+				return;
+			}
 			const value = verbatim ? raw : raw.replace(/\s+/g, " ").trim();
 			if (value.length !== 0) text.push(value);
 			return;
@@ -204,11 +262,12 @@ const fingerprint = (parse5, html) => {
 			(children.length === 0 ? empty : filled).add(node.tagName);
 		}
 		const below = verbatim || VERBATIM_TEXT.has(node.tagName || "");
-		for (const child of node.childNodes || []) walk(child, below);
+		const name = node.tagName || parent;
+		for (const child of node.childNodes || []) walk(child, below, name);
 		// A `<template>`'s children hang off `content`, not `childNodes`.
-		if (node.content !== undefined) walk(node.content, below);
+		if (node.content !== undefined) walk(node.content, below, name);
 	};
-	walk(parse5.parse(html), false);
+	walk(parse5.parse(html), false, undefined);
 	for (const key of filled) empty.delete(key);
 	return { elements, attributes, empty, text: text.join(" ") };
 };
