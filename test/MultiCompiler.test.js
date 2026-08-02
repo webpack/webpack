@@ -244,6 +244,63 @@ describe("MultiCompiler", () => {
 		});
 	});
 
+	it("should compute the common outputPath by path segments", (done) => {
+		/**
+		 * @param {string} pathA output path for a
+		 * @param {string} pathB output path for b
+		 * @returns {import("../").MultiCompiler} compiler
+		 */
+		const createWithOutputPaths = (pathA, pathB) =>
+			/** @type {import("../").MultiCompiler} */ (
+				webpack(
+					/** @type {import("../").MultiConfiguration} */ ([
+						{
+							name: "a",
+							context: path.join(__dirname, "fixtures"),
+							entry: "./a.js",
+							output: { path: pathA }
+						},
+						{
+							name: "b",
+							context: path.join(__dirname, "fixtures"),
+							entry: "./b.js",
+							output: { path: pathB }
+						}
+					])
+				)
+			);
+		const base = path.join(__dirname, "js", "output-path");
+		// A sibling directory sharing a name prefix is not a common ancestor.
+		const prefixed = createWithOutputPaths(
+			path.join(base, "dist"),
+			path.join(base, "dist-modern")
+		);
+		expect(prefixed.outputPath).toBe(base);
+		const nested = createWithOutputPaths(
+			path.join(base, "dist", "a"),
+			path.join(base, "dist", "b")
+		);
+		expect(nested.outputPath).toBe(path.join(base, "dist"));
+		const same = createWithOutputPaths(
+			path.join(base, "dist"),
+			path.join(base, "dist")
+		);
+		expect(same.outputPath).toBe(path.join(base, "dist"));
+		// Root ancestor: keeps the trailing-separator parent working.
+		const root = createWithOutputPaths("/", "/foo");
+		expect(root.outputPath).toBe("/");
+		prefixed.close((err) => {
+			if (err) return done(err);
+			nested.close((err2) => {
+				if (err2) return done(err2);
+				same.close((err3) => {
+					if (err3) return done(err3);
+					root.close(done);
+				});
+			});
+		});
+	});
+
 	it("should watch again correctly after first compilation", (done) => {
 		const compiler = createMultiCompiler();
 		compiler.run((err, _stats) => {
