@@ -5039,6 +5039,39 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 	// A fixture can't carry these: `.gitattributes` checks every `test/` file
 	// out with LF, so CR only reaches the parser from a string built here.
+	describe("inert whitespace", () => {
+		it("drops whitespace directly under <head> and <html>", () => {
+			expect(
+				minify(
+					"<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<title>T</title>\n\t</head>\n\t<body><p>x</p></body>\n</html>"
+				)
+			).toBe(
+				// The run after `</body>` is inside `<body>` per the "after body"
+				// insertion mode, so it stays.
+				"<!DOCTYPE html><html><head><title>T</title></head><body><p>x</p>\n</body></html>"
+			);
+		});
+
+		it("keeps whitespace under <body>, which renders", () => {
+			expect(minify("<body>\n\t<p>x</p>\n</body>")).toBe(
+				"<body>\n\t<p>x</p>\n</body>"
+			);
+			expect(minify("<p>a <b>b</b> c</p>")).toBe("<p>a <b>b</b> c</p>");
+		});
+
+		it("keeps a literal-text body under <head>", () => {
+			expect(minify("<head>\n<style>  a  </style>\n</head>")).toBe(
+				"<head><style>  a  </style></head>"
+			);
+		});
+
+		it("keeps text that only looks inert", () => {
+			// Non-whitespace under `<head>` is foster-parented into `<body>`, where
+			// it renders — only the whitespace run before it is dropped.
+			expect(minify("<head>  hi  </head>")).toBe("<head></head>hi  ");
+		});
+	});
+
 	describe("carriage returns in text", () => {
 		it("normalizes a CRLF to one newline", () => {
 			expect(minify("<p>a\r\nb</p>")).toBe("<p>a\nb</p>");
@@ -5052,20 +5085,23 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 		});
 
 		it("keeps a CRLF text run whole when it leads an insertion mode", () => {
-			// `leadingWs` splits this run, and its source span has to survive
-			// the CRLF collapsing or the tail of the run is dropped.
-			expect(minify("<head>\r\n\t<title>T</title>\r\n</head>")).toBe(
-				"<head>\n\t<title>T</title>\n</head>"
+			// `leadingWs` splits this run, and its source span has to survive the
+			// CRLF collapsing or the tail is dropped. `<colgroup>` is the insertion
+			// mode that both splits the run and keeps it — `<head>`/`<html>` drop
+			// their whitespace as inert.
+			expect(minify("<table><colgroup>\r\n\t<col></colgroup></table>")).toBe(
+				"<table><colgroup>\n\t<col></colgroup></table>"
 			);
-			// Foster-parented whitespace takes the same split.
 			expect(minify("<table>\r\n\t<tr><td>x</table>")).toBe(
 				minify("<table>\n\t<tr><td>x</table>")
 			);
 		});
 
 		it("keeps whitespace that decoded from character references", () => {
-			expect(minify("<head>&#10;&#9;<title>T</title></head>")).toBe(
-				"<head>\n\t<title>T</title></head>"
+			// Decoding shortens the run, so the split cannot count its offsets in
+			// the source either.
+			expect(minify("<table><colgroup>&#10;&#9;<col></colgroup></table>")).toBe(
+				"<table><colgroup>\n\t<col></colgroup></table>"
 			);
 		});
 
