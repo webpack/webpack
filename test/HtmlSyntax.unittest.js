@@ -5039,6 +5039,84 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 	// A fixture can't carry these: `.gitattributes` checks every `test/` file
 	// out with LF, so CR only reaches the parser from a string built here.
+	describe("name casing", () => {
+		it("folds an HTML tag and attribute name to lowercase", () => {
+			expect(minify('<DIV CLASS="a">t</DIV>')).toBe("<div class=a>t</div>");
+			expect(minify("<INPUT DISABLED>")).toBe("<input disabled>");
+		});
+
+		it("folds only ASCII, which is all the parser folds", () => {
+			expect(minify('<aÀ-豈 src="i.png">t</aÀ-豈>')).toBe(
+				"<aÀ-豈 src=i.png>t</aÀ-豈>"
+			);
+		});
+
+		it("leaves foreign content's source casing alone", () => {
+			// SVG admits names no adjustment table would case-correct on the way
+			// back in, and `xlink:href` keeps its prefix.
+			expect(minify('<svg viewBox="0 0 8 8"><myCustomThing/></svg>')).toBe(
+				'<svg viewBox="0 0 8 8"><myCustomThing/></svg>'
+			);
+			expect(minify('<svg><textPath xlink:href="#p">a</textPath></svg>')).toBe(
+				"<svg><textPath xlink:href=#p>a</textPath></svg>"
+			);
+		});
+	});
+
+	describe("self-closing slash", () => {
+		it("drops a slash the HTML parser ignores", () => {
+			expect(minify("<br/>")).toBe("<br>");
+			expect(minify('<input type="text" />')).toBe("<input type=text>");
+			expect(minify("<div/>t</div>")).toBe("<div>t</div>");
+		});
+
+		it("keeps the slash that self-closes a foreign element", () => {
+			expect(minify('<svg><circle r="1"/></svg>')).toBe(
+				"<svg><circle r=1 /></svg>"
+			);
+		});
+
+		it("keeps a slash that is the last character of a value", () => {
+			expect(minify("<a href=x/>t</a>")).toBe("<a href=x/>t</a>");
+		});
+	});
+
+	describe("implied <tbody> start tag", () => {
+		it("omits a start tag the parser re-implies", () => {
+			expect(minify("<table><tbody><tr><td>a</td></tr></tbody></table>")).toBe(
+				"<table><tr><td>a</table>"
+			);
+		});
+
+		it("keeps it when the section would not be re-implied", () => {
+			// Nothing implies an empty `<tbody>`, and an attribute-carrying one is
+			// not the element the parser would create.
+			expect(minify("<table><tbody></tbody></table>")).toBe(
+				"<table><tbody></table>"
+			);
+			expect(
+				minify("<table><tbody class=x><tr><td>a</td></tr></tbody></table>")
+			).toBe("<table><tbody class=x><tr><td>a</table>");
+			expect(
+				minify("<table><tbody><!--c--><tr><td>a</td></tr></tbody></table>")
+			).toBe("<table><tbody><tr><td>a</table>");
+		});
+
+		it("keeps it when the preceding section dropped its end tag", () => {
+			// Otherwise these rows continue that section instead of starting one.
+			expect(
+				minify(
+					"<table><tbody><tr><td>a</td></tr></tbody><tbody><tr><td>b</td></tr></tbody></table>"
+				)
+			).toBe("<table><tr><td>a<tbody><tr><td>b</table>");
+			expect(
+				minify(
+					"<table><thead><tr><th>h</th></tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
+				)
+			).toBe("<table><thead><tr><th>h<tbody><tr><td>a</table>");
+		});
+	});
+
 	describe("optional end tags", () => {
 		it("omits an end tag the next sibling implies", () => {
 			expect(minify("<ul><li>a</li><li>b</li></ul>")).toBe(

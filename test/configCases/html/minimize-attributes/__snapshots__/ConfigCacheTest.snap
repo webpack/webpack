@@ -22,10 +22,10 @@ b\\">newline in a value</p>
 	<input type=text value=\\"\\" disabled=disabled checked>
 	<div class=a id=b>collapsed attribute whitespace</div>
 	<div>no attributes</div>
-	<br/>
-	<img src=data:image/gif;base64,R0lGOD alt='say \\"hi\\"'/>
+	<br>
+	<img src=data:image/gif;base64,R0lGOD alt='say \\"hi\\"'>
 	<svg viewBox=\\"0 0 8 8\\"><rect x=1 y=2 /><circle R=1 /></svg>
-	<DIV CLASS=a>source casing</DIV>
+	<div class=a>source casing</div>
 	<p a=1>duplicate attribute</p>
 	<p data-slash=/end/>value ending in a slash</p>
 	<a href=x/>unquoted value ending in a slash</a>
