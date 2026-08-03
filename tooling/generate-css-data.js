@@ -182,6 +182,26 @@ const assertGrammarsParse = () => {
 	}
 };
 
+/**
+ * Each convertible group's reference unit: the shortest-scaled one a conversion
+ * may emit, so a value counted in the group's base comes back through a unit
+ * that exists. Derived from the scale table rather than named here, so a unit
+ * joining the group cannot leave this stale.
+ * @returns {[string, [string, number]][]} `[group, [unit, scale]]`, sorted
+ */
+const collectUnitGroupBase = () => {
+	/** @type {Map<string, [string, number]>} */
+	const base = new Map();
+	for (const [unit, group, scale] of SUPPLEMENT.absoluteUnitScale) {
+		if (!SUPPLEMENT.unitConversionTargets.includes(unit)) continue;
+		const previous = base.get(group);
+		if (previous === undefined || scale < previous[1]) {
+			base.set(group, [unit, scale]);
+		}
+	}
+	return [...base].sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
 // The types a number lands on. Everything else a grammar reaches (`<color>`,
 // `<image>`, an identifier) carries no magnitude of its own.
 const NUMERIC_TYPES = new Set([
@@ -247,30 +267,6 @@ const collectIntegerProperties = () => {
 	for (const [name, entry] of Object.entries(properties)) {
 		if (typeof entry.syntax !== "string") continue;
 		if (numericLeaves(entry.syntax).some(([type]) => type === "integer")) {
-			out.push(name);
-		}
-	}
-	return out.sort();
-};
-
-/**
- * The properties every one of whose numeric leaves is annotated non-negative.
- * Under-approximate on purpose, the mirror of the set above: it is read to
- * allow a rewrite, so a property `mdn-data` leaves unannotated is simply
- * absent. `width` is absent for that reason — `<calc-size()>` contributes an
- * unannotated leaf — and `margin-top` is absent because a margin really may be
- * negative.
- * @returns {string[]} the property names, sorted
- */
-const collectNonNegativeProperties = () => {
-	const out = [];
-	for (const [name, entry] of Object.entries(properties)) {
-		if (typeof entry.syntax !== "string") continue;
-		const leaves = numericLeaves(entry.syntax);
-		if (
-			leaves.length !== 0 &&
-			leaves.every(([, minimum]) => minimum !== null && minimum >= 0)
-		) {
 			out.push(name);
 		}
 	}
@@ -515,7 +511,7 @@ const colorNames = collectColorNames();
 const mathFunctions = collectMathFunctions();
 const substitutionFunctions = collectSubstitutionFunctions();
 const integerProperties = collectIntegerProperties();
-const nonNegativeProperties = collectNonNegativeProperties();
+const unitGroupBase = collectUnitGroupBase();
 
 const source = `/*
 	MIT License http://www.opensource.org/licenses/mit-license.php
@@ -613,6 +609,14 @@ const ABSOLUTE_UNIT_SCALE = new Map([${SUPPLEMENT.absoluteUnitScale
 	.map(([unit, group, scale]) => `["${unit}", ["${group}", ${scale}]]`)
 	.join(", ")}]);
 
+// Each convertible group's reference unit, as \`group -> [unit, scale]\`. A sum
+// counted in the group's base unit divides by the scale to get back to a unit
+// that can be written down.
+/** @type {Map<string, [string, number]>} */
+const UNIT_GROUP_BASE = new Map([${unitGroupBase
+	.map(([group, [unit, scale]]) => `["${group}", ["${unit}", ${scale}]]`)
+	.join(", ")}]);
+
 // The units a conversion may emit. Every one is CSS 2.1's, so rewriting into it
 // cannot outrun what an engine reading the stylesheet already parses.
 const UNIT_CONVERSION_TARGETS = ${setLiteral(SUPPLEMENT.unitConversionTargets)};
@@ -626,12 +630,6 @@ const ANGLE_UNITS = ${setLiteral(SUPPLEMENT.angleUnits)};
 // (\`z-index: calc(1.5)\` computes to \`2\`), so this is read to refuse a rewrite,
 // and one name too many costs only that rewrite.
 const INTEGER_PROPERTIES = ${setLiteral(integerProperties)};
-
-// Properties every one of whose numeric leaves \`mdn-data\` annotates as
-// non-negative. Deliberately narrow, being read to allow a rewrite: a property
-// the dataset leaves unannotated is simply absent, so a bare negative is never
-// mistaken for one an engine would have clamped.
-const NON_NEGATIVE_PROPERTIES = ${setLiteral(nonNegativeProperties)};
 
 // Packed \`0xrrggbb\` -> the shortest named color with that value. Only names that
 // can beat \`#rrggbb\`; anything longer would never be picked.
@@ -659,15 +657,15 @@ module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
 module.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
 module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
-module.exports.NON_NEGATIVE_PROPERTIES = NON_NEGATIVE_PROPERTIES;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
+module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;
 `;
 
-const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer and ${nonNegativeProperties.length} non-negative properties`;
+const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties`;
 // Formatted here rather than left to `yarn fmt`, so the comparison below is
 // against what the repo actually checks in.
 prettier

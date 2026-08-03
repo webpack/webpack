@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-calc minimize-calc should compile 1`] = `
+Array [
+  "/*! calc: a sum of one unit is that unit */.c01{width:3px}",
+  "/*! calc: ...and subtraction the same way */.c02{width:6px}",
+  "/*! calc: a product by a plain number */.c03{width:2px}",
+  "/*! calc: ...on either side of the \`*\` */.c04{width:9pt}",
+  "/*! calc: division by a plain number */.c05{width:2.5px}",
+  "/*! calc: parentheses group, and the group folds first */.c06{width:9px}",
+  "/*! calc: a nested calc() is the parentheses it prints as */.c07{width:6px}",
+  "/*! calc: units fixed against each other are one term */.c08{width:97px}",
+  "/*! calc: ...and the result takes the shortest unit equal to it */.c09{width:6pc}",
+  "/*! calc: a longer chain */.c10{width:6px}",
+  "/*! calc: times convert too */.c11{transition-duration:1001ms}",
+  "/*! calc: a percentage scales by a number */.c12{width:100%}",
+  "/*! calc: zero keeps the shorthand's zero-unit drop */.c13{width:0}",
+  "/*! calc: one angle unit adds exactly, and survives the trig \`rotate()\` runs it
+   through — checked in headless Chromium against the same matrix */.c14{rotate:90deg}",
+  "/*! calc: ...in whichever unit it was written */.c15{rotate:.5turn}",
+  "/*! declined: two units that only layout can add */.d01{width:calc(100% - 10px)}",
+  "/*! declined: a relative unit against an absolute one */.d02{width:calc(1em + 2px)}",
+  "/*! declined: a substitution could be anything */.d03{width:calc(var(--x) + 1px)}",
+  "/*! declined: mixed base types are invalid CSS, and folding would make them valid */.d04{width:calc(1px + 1deg)}",
+  "/*! declined: division by zero is not a number */.d05{width:calc(1px/0)}",
+  "/*! declined: the result would need more digits than the expression */.d06{width:calc(100%/3)}",
+  "/*! declined: a math function other than calc() */.d07{width:min(1px + 2px,4px)}",
+  "/*! declined: two angle units — only \`deg\`/\`grad\`/\`turn\` convert exactly, and
+   nothing converts them here, so they stay two terms */.d08{rotate:calc(45deg + .125turn)}",
+  "/*! unwrap: a positive dimension means the same bare */.u01{width:3px}",
+  "/*! unwrap: a percentage too — no \`<integer>\` carries one */.u02{width:50%}",
+  "/*! unwrap: an integer is an integer either way */.u03{z-index:2}",
+  "/*! unwrap: a fraction is safe where the property takes no \`<integer>\` */.u04{opacity:.5}",
+  "/*! unwrap: ...line-height likewise */.u05{line-height:1.5}",
+  "/*! kept: \`z-index: 1.5\` is dropped, \`calc(1.5)\` rounds to 2 */.u06{z-index:calc(1.5)}",
+  "/*! kept: \`width: -5px\` is dropped, \`calc(-5px)\` clamps to 0 */.u07{width:calc(-5px)}",
+  "/*! kept: a negative stays wrapped whatever the property */.u08{margin-left:calc(-5px)}",
+  "/*! declined: a \`@supports\` condition is the syntax being tested */@supports (width:calc(1px + 2px)){.s01{color:red}}",
+  "/*! declined: a custom property hands its text back through getPropertyValue() */.s02{--gap:calc(1px + 2px)}",
+]
+`;
