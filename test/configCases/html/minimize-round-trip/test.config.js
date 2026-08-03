@@ -9,6 +9,7 @@ const {
 	INTEGER_ATTRIBUTES,
 	SIGNED_INTEGER_ATTRIBUTES,
 	SRCSET_ATTRIBUTES,
+	TOKEN_LIST_ATTRIBUTES,
 	URL_ATTRIBUTES
 } = require("../../../../lib/html/data");
 const {
@@ -40,6 +41,14 @@ const parseHtmlInteger = (value, signed) => {
 };
 
 /**
+ * @param {Set<string> | null | undefined} on the elements a table entry covers
+ * @param {string} tagName lowercased element name
+ * @returns {boolean} whether the entry covers this element
+ */
+const appliesTo = (on, tagName) =>
+	on !== undefined && (on === null || on.has(tagName));
+
+/**
  * An attribute value reduced to what it means, so a transform that rewrites the
  * bytes without changing the meaning does not read as a difference.
  * @param {string} tagName lowercased element name
@@ -48,8 +57,8 @@ const parseHtmlInteger = (value, signed) => {
  * @returns {string} its canonical form
  */
 const canonicalValue = (tagName, name, value) => {
-	if (BOOLEAN_ATTRIBUTES.has(name)) return "<boolean>";
-	if (name === "class") {
+	if (appliesTo(BOOLEAN_ATTRIBUTES.get(name), tagName)) return "<boolean>";
+	if (appliesTo(TOKEN_LIST_ATTRIBUTES.get(name), tagName)) {
 		// The ordered set parser splits on ASCII whitespace and drops the empties.
 		return value
 			.split(/[\t\n\f\r ]+/)
@@ -79,13 +88,11 @@ const canonicalValue = (tagName, name, value) => {
 			.replace(/[\t\n\f\r ]*([,;=])[\t\n\f\r ]*/g, "$1")
 			.replace(/^[\t\n\f\r ]+|[\t\n\f\r ]+$/g, "");
 	}
-	const urlOn = URL_ATTRIBUTES.get(name);
-	if (urlOn !== undefined && urlOn.has(tagName)) {
+	if (appliesTo(URL_ATTRIBUTES.get(name), tagName)) {
 		// The URL parser strips C0 controls and space — not NBSP.
 		return value.replace(/^[\u0000-\u0020]+|[\u0000-\u0020]+$/g, "");
 	}
-	const integerOn = INTEGER_ATTRIBUTES.get(name);
-	if (integerOn !== undefined && integerOn.has(tagName)) {
+	if (appliesTo(INTEGER_ATTRIBUTES.get(name), tagName)) {
 		return parseHtmlInteger(value, SIGNED_INTEGER_ATTRIBUTES.has(name));
 	}
 	if (COMMA_LIST_ATTRIBUTES.has(name)) {
