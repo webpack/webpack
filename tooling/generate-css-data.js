@@ -911,10 +911,23 @@ const setLiteral = (names) =>
 const mapLiteral = (entries) =>
 	`new Map([${entries.map(([key, value]) => `["${key}", "${value}"]`).join(", ")}])`;
 
+/**
+ * @param {(number | null)[]} values the table
+ * @returns {string} its array literal
+ */
+const numberListLiteral = (values) => `[${values.map(String).join(", ")}]`;
+
+/**
+ * @param {[number, number][]} entries `[argument, degrees]` pairs
+ * @returns {string} the `Map` literal
+ */
+const arcLiteral = (entries) =>
+	`new Map([${entries.map(([value, degrees]) => `[${value}, ${degrees}]`).join(", ")}])`;
+
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], droppableWhenEmptyAtRules: string[], steppedFunctions: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], droppableWhenEmptyAtRules: string[], steppedFunctions: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[] }} */
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
 	cssWideKeywords: ["inherit", "initial", "revert", "revert-layer", "unset"],
@@ -997,7 +1010,50 @@ const SUPPLEMENT = {
 		["deg", 90],
 		["grad", 100],
 		["turn", 0.25]
-	]
+	],
+	// Sine and tangent an eighth turn apart, `null` where the value is
+	// irrational. `Math.sin` cannot supply either — `Math.sin(Math.PI)` is
+	// 1.2e-16 rather than 0, and a table that says a value is exactly zero is the
+	// whole point. Tangent is stated beside sine rather than divided out of it:
+	// on the odd eighths sine and cosine are both irrational and their ratio is
+	// not, which no table of the two can show. Cosine and the three inverses are
+	// derived below.
+	eighthTurnSine: [0, null, 1, null, 0, null, -1, null],
+	eighthTurnTangent: [0, 1, null, -1, 0, 1, null, -1]
+};
+
+// Degrees in an eighth turn, which is what an index into the tables below is.
+const EIGHTH_TURN_DEGREES = 45;
+
+/**
+ * Cosine at each eighth turn, from sine: `cos(θ)` is `sin(θ + 90°)`, and 90° is
+ * two eighths.
+ * @returns {(number | null)[]} the eight values
+ */
+const collectEighthTurnCosine = () =>
+	SUPPLEMENT.eighthTurnSine.map(
+		(_, eighth) => SUPPLEMENT.eighthTurnSine[(eighth + 2) % 8]
+	);
+
+/**
+ * One inverse trig function's answers, by inverting the table it inverts over
+ * that function's principal branch — `asin` answers in [-90°, 90°], `acos` in
+ * [0°, 180°], `atan` in (-90°, 90°). Only the eighth turns survive, which is
+ * exactly where the answer is a whole number of degrees.
+ * @param {(number | null)[]} table the forward table
+ * @param {number} from the first eighth of the branch
+ * @param {number} to the last eighth of the branch
+ * @returns {[number, number][]} `[argument, degrees]`, by rising argument
+ */
+const collectArcAngles = (table, from, to) => {
+	/** @type {[number, number][]} */
+	const out = [];
+	for (let eighth = from; eighth <= to; eighth++) {
+		const value = table[((eighth % 8) + 8) % 8];
+		if (value === null) continue;
+		out.push([value, eighth * EIGHTH_TURN_DEGREES]);
+	}
+	return out.sort((a, b) => a[0] - b[0]);
 };
 
 /**
@@ -1020,6 +1076,7 @@ const generate = () => {
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
 	const integerProperties = collectIntegerProperties();
 	const unitGroupBase = collectUnitGroupBase();
+	const eighthTurnCosine = collectEighthTurnCosine();
 
 	const source = `/*
 	MIT License http://www.opensource.org/licenses/mit-license.php
@@ -1166,6 +1223,30 @@ const QUARTER_TURN_ANGLE = new Map([${SUPPLEMENT.quarterTurnAngle
 		.map(([unit, count]) => `["${unit}", ${count}]`)
 		.join(", ")}]);
 
+// Sine, cosine and tangent at each eighth turn from zero, \`null\` where the
+// value is irrational — sine and cosine on the odd eighths, tangent on the
+// asymptotes. Cosine is sine a quarter turn along.
+/** @type {(number | null)[]} */
+const EIGHTH_TURN_SINE = ${numberListLiteral(SUPPLEMENT.eighthTurnSine)};
+
+/** @type {(number | null)[]} */
+const EIGHTH_TURN_COSINE = ${numberListLiteral(eighthTurnCosine)};
+
+/** @type {(number | null)[]} */
+const EIGHTH_TURN_TANGENT = ${numberListLiteral(SUPPLEMENT.eighthTurnTangent)};
+
+// What each inverse trig function answers, as \`argument -> degrees\`, by
+// inverting the table above it over that function's principal branch. Every
+// other argument is transcendental and leaves the call written out.
+/** @type {Map<number, number>} */
+const ARC_SINE_DEGREES = ${arcLiteral(collectArcAngles(SUPPLEMENT.eighthTurnSine, -2, 2))};
+
+/** @type {Map<number, number>} */
+const ARC_COSINE_DEGREES = ${arcLiteral(collectArcAngles(eighthTurnCosine, 0, 4))};
+
+/** @type {Map<number, number>} */
+const ARC_TANGENT_DEGREES = ${arcLiteral(collectArcAngles(SUPPLEMENT.eighthTurnTangent, -1, 1))};
+
 // Properties whose grammar can reach an \`<integer>\`. Deliberately wide: a
 // non-integer where an integer is expected is rounded rather than dropped
 // (\`z-index: calc(1.5)\` computes to \`2\`), so this is read to refuse a rewrite,
@@ -1185,6 +1266,9 @@ ${colorNames
 
 module.exports.ABSOLUTE_UNIT_SCALE = ABSOLUTE_UNIT_SCALE;
 module.exports.ANGLE_UNITS = ANGLE_UNITS;
+module.exports.ARC_COSINE_DEGREES = ARC_COSINE_DEGREES;
+module.exports.ARC_SINE_DEGREES = ARC_SINE_DEGREES;
+module.exports.ARC_TANGENT_DEGREES = ARC_TANGENT_DEGREES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
@@ -1193,6 +1277,9 @@ module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.CSS_WIDE_KEYWORDS = CSS_WIDE_KEYWORDS;
 module.exports.CUBIC_BEZIER_KEYWORDS = CUBIC_BEZIER_KEYWORDS;
 module.exports.DROPPABLE_WHEN_EMPTY_AT_RULES = DROPPABLE_WHEN_EMPTY_AT_RULES;
+module.exports.EIGHTH_TURN_COSINE = EIGHTH_TURN_COSINE;
+module.exports.EIGHTH_TURN_SINE = EIGHTH_TURN_SINE;
+module.exports.EIGHTH_TURN_TANGENT = EIGHTH_TURN_TANGENT;
 module.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
 module.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
