@@ -1,8 +1,10 @@
 /* Ported from cssnano's `postcss-convert-values` and `postcss-normalize-whitespace`
-   suites. webpack normalizes numbers but never converts units, rounds, or drops a
-   zero's unit — `0px` is not `0` inside `calc()` or a `flex-basis`, and `0s` is
-   not a valid `transition-duration` — so those cases are here as passthroughs,
-   marking where a future optimization would show up. */
+   suites. webpack normalizes a number, rounds it to 6 significant digits and
+   reaches for a shorter unit fixed against the one written — but only where the
+   engine cannot tell: a zero's unit stays inside `calc()` and on a `flex-basis`,
+   an angle keeps every digit (`rotate()` runs it through trig), and nothing is
+   touched in a `@supports` condition, which tests the declaration rather than
+   applying it. */
 
 /*! convert-values: should convert milliseconds to seconds */
 .t01 { transition-duration: 500ms }
@@ -119,3 +121,112 @@
 .t52 :hover { color: red }
 /*! webpack: a `(…)` inside a value is a calc sub-expression, not a condition */
 .t53 { width: calc(10px - ( 100px / var(--x) )) }
+/*! lightningcss: translate(10px) — translateX's second component defaults to 0 */
+.t54 { transform: translateX(10px) }
+/*! lightningcss: translate(-100%) rotate(3deg) */
+.t55 { transform: translateX(-100%) rotate(3deg) }
+/*! webpack: the argument may be any single component */
+.t56 { transform: translateX(calc(1px + 2px)) }
+/*! webpack: translateY has no one-argument equivalent, so it stays */
+.t57 { transform: translateY(10px) }
+/*! webpack: a second component makes `translateX` invalid — converting it would
+   revive the declaration, so a comma keeps the function */
+.t58 { transform: translateX(1px, 2px) }
+/*! convert-values: a zero length needs no unit (CSS Values 4 §5) */
+.t59 { margin: 0px }
+/*! convert-values: every length unit, and `%` is a different type */
+.t60 { width: 0em; height: 0vh; top: 0cm; left: 0Q; right: 0% }
+/*! webpack: a zero time, angle or `<flex>` still needs its unit */
+.t61 { transition-duration: 0s; rotate: 0deg; grid-template-columns: 0fr 1fr }
+/*! webpack: `flex-basis` keeps it — IE 11 drops a `flex` whose basis has none */
+.t62 { flex-basis: 0px }
+/*! webpack: ...and so does the shorthand carrying one */
+.t63 { flex: 1 1 0px }
+/*! webpack: one component of several */
+.t64 { margin: 0px 1px }
+/*! lightningcss: (width>=1200px) — `min-X: Y` is exactly `X >= Y` */
+@media (min-width: 1200px) { .t65 { color: red } }
+/*! lightningcss: (width<=1199.98px) */
+@media (max-width: 1199.98px) { .t66 { color: red } }
+/*! webpack: every range-type feature, and nested conditions */
+@media (min-resolution: 2dppx) { .t67 { color: red } }
+@media ((min-width: 1px) and (max-height: 2px)) { .t68 { color: red } }
+/*! webpack: `@container` carries media features too, name and all */
+@container card (min-width: 1px) { .t69 { color: red } }
+/*! declined: a plain feature has no range spelling to reach for */
+@media (width: 100px) { .t70 { color: red } }
+/*! declined: a `@supports` condition is a declaration, not a media feature */
+@supports (min-width: 1px) { .t71 { color: red } }
+
+/* Rounding and unit conversion, each verified against headless Chromium: the
+   computed style of the authored form and of the emitted one are identical. */
+
+/*! webpack: 6 significant digits is below what the engine reports */
+.t72 { width: 33.33333333% }
+/*! webpack: ...and below the 1/64px it lays a length out in */
+.t73 { width: 1.0000001px }
+/*! webpack: ...for a unitless number too */
+.t74 { opacity: 0.123456789 }
+/*! webpack: declined: an angle is amplified by the trig in rotate() */
+.t75 { transform: rotate(33.33333333deg) }
+/*! webpack: ...but a plain number argument rounds */
+.t76 { transform: scale(1.123456789) }
+/*! webpack: declined: past 1e4 the rounded error would pass 1/64px */
+.t77 { width: 33333.33333px }
+/*! webpack: the units CSS Values 4 fixes against each other convert */
+.t78 { width: 16px }
+.t79 { width: 12pt }
+.t80 { width: 10mm }
+.t81 { transition-duration: 400ms }
+/*! webpack: ...only when the ratio divides exactly */
+.t82 { width: 1.3px }
+/*! webpack: declined: `q` is a source only — Safari read it first in 15 */
+.t83 { width: 10mm; height: 40q }
+/*! webpack: declined: a `@supports` condition tests the unit itself */
+@supports (width: 16px) { .t84 { color: red } }
+/*! webpack: ...and the value it is tested with */
+@supports (color: rgba(0, 0, 0, .5)) { .t85 { color: red } }
+/*! webpack: a media feature is evaluated, not tested, so it converts */
+@media (min-width: 1200px) { .t86 { color: red } }
+/*! webpack: an alpha is the byte the engine already quantizes it to */
+.t87 { color: rgba(0, 0, 0, .5) }
+.t88 { color: rgba(255, 0, 0, .2) }
+/*! webpack: ...collapsing to 4 digits when every pair repeats */
+.t89 { color: rgba(255, 0, 0, .8) }
+/*! webpack: declined: a custom property keeps its authored text */
+.t90 { --width: 16px; --alpha: rgba(0, 0, 0, .5); --round: 33.33333333% }
+
+/* The polar and Lab color functions, each conversion read back from a canvas in
+   headless Chromium: 11368 of them, none differing. */
+
+/*! webpack: hwb() converts like hsl() */
+.t91 { color: hwb(0 0% 100%) }
+/*! webpack: declined: a channel exactly on a `.5` boundary */
+.t92 { color: hwb(194 0% 0%) }
+/*! webpack: lab(), lch(), oklab() and oklch() reach sRGB */
+.t93 { color: lab(100% 0 0) }
+.t94 { color: lab(50% 40 59.5) }
+.t95 { color: lch(29.2345% 44.2 45deg) }
+.t96 { color: oklab(1 0 0) }
+.t97 { color: oklch(70% 0.1 200) }
+/*! webpack: ...with a percentage axis scaled to the space's own 100% */
+.t98 { color: oklab(40.101% 0.1147% 0.0453%) }
+/*! webpack: declined: outside the sRGB gamut, a hex would clip it */
+.t99 { color: oklch(90% 0.4 140) }
+/*! webpack: an alpha rides along into the hex */
+.t100 { color: hsl(100 100% 50% / .8) }
+
+/* Four box longhands merge with unrelated declarations between them. */
+
+/*! webpack: the merge steps over what does not write the family */
+.t101 { margin-top: 1px; margin-right: 2px; color: red; margin-bottom: 1px; margin-left: 2px }
+/*! webpack: declined: the shorthand itself between them */
+.t102 { margin-top: 1px; margin: 9px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }
+/*! webpack: declined: a logical property that writes the same sides */
+.t103 { margin-top: 1px; margin-inline: 9px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }
+/*! webpack: declined: `all` writes everything */
+.t104 { margin-top: 1px; all: unset; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }
+/*! webpack: declined: `border` writes every border-color longhand */
+.t105 { border-top-color: red; border: 1px solid; border-right-color: red; border-bottom-color: red; border-left-color: red }
+/*! webpack: ...but an unrelated property between them does not */
+.t106 { border-top-color: red; color: red; border-right-color: red; border-bottom-color: red; border-left-color: red }

@@ -5403,6 +5403,22 @@ declare interface CssData {
 	 */
 	exportLocs?: Map<string, { line: number; column: number }>;
 }
+declare interface CssEnvironment {
+	/**
+	 * 4- and 8-digit hex colors (`#rgba`, `#rrggbbaa`) are available
+	 */
+	cssColorHexAlpha?: boolean;
+
+	/**
+	 * the `inset` shorthand property is available
+	 */
+	cssInsetShorthand?: boolean;
+
+	/**
+	 * media query range syntax (`(width >= 600px)`) is available
+	 */
+	cssMediaQueryRange?: boolean;
+}
 declare abstract class CssGenerator extends Generator {
 	options: CssModuleGeneratorOptions;
 
@@ -5934,6 +5950,11 @@ declare interface CssProcessOptions {
 	 * the input's contents for the map's `sourcesContent`; only read while printing
 	 */
 	content?: string;
+
+	/**
+	 * what the target can read (the CSS entries of `output.environment`), so a spelling it would not understand is never reached for; only read while printing, and an absent entry means the modern spelling is available
+	 */
+	environment?: CssEnvironment;
 }
 type DeclarationEstreeIndex =
 	FunctionDeclaration | VariableDeclaration | ClassDeclaration;
@@ -7359,6 +7380,24 @@ declare interface Environment {
 	 * The environment supports const and let for variable declarations.
 	 */
 	const?: boolean;
+
+	/**
+	 * The environment supports 4- and 8-digit hex colors ('#rgba', '#rrggbbaa').
+	 * @since 5.110.0
+	 */
+	cssColorHexAlpha?: boolean;
+
+	/**
+	 * The environment supports the 'inset' shorthand property.
+	 * @since 5.110.0
+	 */
+	cssInsetShorthand?: boolean;
+
+	/**
+	 * The environment supports media query range syntax ('(width >= 600px)').
+	 * @since 5.110.0
+	 */
+	cssMediaQueryRange?: boolean;
 
 	/**
 	 * The environment supports destructuring ('{ a, b } = obj').
@@ -10132,6 +10171,11 @@ declare interface HtmlProcessOptions {
 	 * print the safely-minified serialization (nodes rebuilt from source, inert comments dropped, opening-tag whitespace collapsed) as `process` walks, and return it (default false = walk only, return `""`)
 	 */
 	minimize?: boolean;
+
+	/**
+	 * what the target can read, forwarded to the CSS minifier this runs over an inline `<style>` and every `style=""`
+	 */
+	environment?: CssEnvironment;
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**
@@ -21538,6 +21582,7 @@ declare class PrintContext<TPath, TNode> {
 }
 declare interface PrintOptions {
 	mode: "minify" | "beautify";
+	environment?: Readonly<Record<string, boolean>>;
 }
 declare interface PrintedElement {
 	element: string;
@@ -29349,7 +29394,7 @@ declare namespace exports {
 			export let QUOTE_DOUBLE: 1;
 			export let QUOTE_NONE: 0;
 			export let QUOTE_SINGLE: 2;
-			export let SVG_TAG_ADJUST: any;
+			export let SVG_TAG_ADJUST: Record<string, string>;
 			export let decodeEntities: _functionSyntax;
 			export let escapeAttribute: (s: string) => string;
 			export let escapeText: (s: string) => string;

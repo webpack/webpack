@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-environment minimize-environment should compile 1`] = `
+Array [
+  "/*! the keyword stays a keyword */.t01{background-color:transparent}",
+  "/*! ...and the function stays the keyword, which every engine reads */.t02{background-color:transparent}",
+  "/*! ...including inside a gradient */.t03{background-image:linear-gradient(red,transparent)}",
+  "/*! an opaque color is not gated: it has no alpha to spell */.t04{color:#000}",
+  "/*! a source hex with alpha is the author's own, and is only shortened */.t05{color:#0000}",
+  "/*! a partly transparent color keeps its function: the hex would need the alpha */.t08{color:rgba(0,0,0,.5)}",
+  "/*! ...whatever the channels are */.t09{color:rgba(255,0,0,.2)}",
+  "/*! rounding and unit conversion are not gated — no engine reads one and not the
+   other, so they apply here too */.t10{width:1pc;height:33.3333%}",
+  "/*! a media feature keeps the \`min-\`/\`max-\` spelling every engine reads */@media (min-width:1200px){.t06{color:red}}",
+  "/*! ...at any nesting depth */@media ((min-width:1px) and (max-height:2px)){.t07{color:red}}",
+  "/*! the \`inset\` shorthand is newer than the four longhands it merges */.t11{top:1px;right:2px;bottom:1px;left:2px}",
+  "/*! ...unlike \`margin\`, whose shorthand is as old as its longhands */.t12{margin:1px 2px}",
+  "/*! ...and a source \`inset\` is the author's own, so it still collapses */.t13{inset:1px}",
+]
+`;

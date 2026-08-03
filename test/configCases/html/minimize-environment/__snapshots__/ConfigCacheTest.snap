@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html minimize-environment minimize-environment should compile 1`] = `
+"<!doctype html><html lang=en><head><style>.t01{background-color:transparent}.t02{top:1px;right:2px;bottom:1px;left:2px}@media (min-width:1200px){.t03{color:red}}.t04{width:1pc;height:33.3333%}</style></head><body>
+<p style=color:transparent>a style attribute is gated too</p>
+<p style=top:1px;right:2px;bottom:1px;left:2px>...for every gate</p>
+
+
+</body></html>"
+`;

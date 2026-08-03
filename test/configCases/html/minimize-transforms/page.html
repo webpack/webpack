@@ -40,6 +40,15 @@
 	<a rel="noopener   noreferrer" ping="  /a    /b  " href="x">token lists collapse</a>
 	<iframe sandbox="  allow-scripts   allow-forms  "></iframe>
 	<label for="a  b">for keeps its spaces: an id may contain one</label>
+	<output for="a   b">for is a token list here</output>
+	<link rel="  stylesheet  " sizes="  16x16   32x32  " href="s.css">
+	<link rel="preload" as="script" blocking="  render   render  " href="p.js">
+	<div part="  a   b  " itemscope="itemscope" itemtype="  https://schema.org/Thing  ">globals</div>
+	<div headingreset="headingreset" headingoffset="  02  " tabindex=" -01 ">heading globals</div>
+	<table><tr><th id="h">h</th><td headers="  h   h2  " rowspan="  02 ">headers is a token list</td></tr></table>
+	<ol><li value=" +5 ">li value is signed</li></ol>
+	<img src="a.png" hspace=" 04 " vspace="  0 " longdesc="  d.html " lowsrc=" l.png " alt="legacy img attributes">
+	<object codebase="  c/ " data=" o.bin " width=" 08 " hspace=" 02 "></object>
 	<a href="  trimmed.html  ">url ends trimmed</a>
 	<img src=" a.png " width="  10  " height=" 020 " alt="  alt keeps its spaces  ">
 	<table><tr><td width="  50%  " colspan=" 007 ">legacy percentage kept, integer normalized</td></tr></table>
@@ -80,5 +89,14 @@
 	<p>a &gt; b, &lt; and &amp; still escape</p>
 	<input type="file" accept=" image/ png , .jpg ">
 	<map><area shape="poly" coords=" 1 2 , 3 , 4 5 "></map>
+	<input type="checkbox" alpha="alpha">
+	<template shadowrootclonable="shadowrootclonable" shadowrootserializable="shadowrootserializable"><span>a</span></template>
+	<img controls="controls" src="a.png" alt="controls is boolean on img now">
+	<table><tr><td nowrap="nowrap">obsolete but still boolean</td></tr></table>
+	<hr noshade="noshade">
+	<div alpha="x">not boolean here</div>
+	<p>R&amp;D, AT&amp;T and a query x?a=1&amp;b=2 keep a bare ampersand</p>
+	<p>but &amp;amp;, &amp;lt; and &amp;#38; stay escaped: they would read back as a reference</p>
+	<p>caf&eacute; and &nbsp; decode to the character itself</p>
 </body>
 </html>

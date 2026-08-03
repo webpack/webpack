@@ -2,24 +2,51 @@
 
 exports[`ConfigCacheTestCases css minimize-declined minimize-declined should compile 1`] = `
 Array [
-  "/*! declined: lossy — 0x20/255 is .12549, not .125 (lightningcss: #00000020) */.t01{color:rgba(0,0,0,.125)}",
-  "/*! declined: lossy — 0x80/255 is .50196, not .5 (lightningcss: #00000080) */.t02{color:rgba(0,0,0,.5)}",
-  "/*! declined: lossy — 6-significant-digit rounding (lightningcss: 33.3333%) */.t03{width:33.33333333%}",
-  "/*! declined: lossy — rounding away a small difference (lightningcss: 1px) */.t04{width:1.0000001px}",
-  "/*! declined: exact, but 4-digit hex predates no browser we can assume (lightningcss: #0000) */.t05{background-color:transparent}",
-  "/*! declined: exact, but range syntax drops every pre-2022 browser (lightningcss: (width>=1200px)) */@media (min-width:1200px){.t06{color:red}}",
-  "/*! declined: merging longhands into their shorthand needs a per-property table (lightningcss: margin:1px 2px) */.t07{margin-top:1px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
-  "/*! declined: a keyword's numeric equivalent needs one too (lightningcss: 400) */.t08{font-weight:normal}",
+  "/*! declined here only because this case builds for no particular target — with
+   \`output.environment.cssColorHexAlpha\` false it stays, and otherwise it is
+   \`#0000\` (see the \`minimize-environment\` case) (lightningcss: #0000) */.t05{background-color:#0000}",
+  "/*! declined here only because this case builds for no particular target — with
+   \`output.environment.cssMediaQueryRange\` false it stays, and otherwise it is
+   \`(width>=1200px)\` (see the \`minimize-environment\` case) */@media (width>=1200px){.t06{color:red}}",
+  "/*! declined: a declaration between them that writes the same family would be
+   stepped over by the merge — \`mdn-data\` maps \`margin-top\` back to \`margin\`
+   alone, so the whole \`margin*\` prefix is blocked rather than trusted */.t07{margin-top:1px;margin-right:2px;margin-inline:9px;margin-bottom:1px;margin-left:2px}",
+  "/*! declined: \`bolder\` and \`lighter\` are relative to the parent's weight, so they
+   have no fixed number (lightningcss: bolder) */.t08{font-weight:bolder}",
   "/*! declined: needs unit algebra (lightningcss: calc(1.5em + 3.75rem)) */.t09{width:calc(3rem + calc(1.5em + .75rem))}",
-  "/*! declined: observable through getComputedStyle().getPropertyValue() (lightningcss: .5rem) */.t10{--radius:0.5rem}",
+  "/*! declined: observable through getComputedStyle().getPropertyValue(), the one
+   place a declaration's authored text survives, and no other minifier rewrites
+   it by default either — planned behind an option (lightningcss: .5rem) */.t10{--radius:0.5rem}",
   "/*! declined: ...including the unit (cssnano: .5s) */.t11{--duration:500ms}",
-  "/*! declined: legacy single-colon spelling, worth ~0.03% (lightningcss: :before) */.t12::before{color:red}",
-  "/*! declined: the same, with the universal selector dropped (lightningcss: :before) */*::before{color:red}",
+  "/*! declined: a \`*\` parted from the compound is a descendant combinator, not a
+   redundant universal selector (every tool keeps this one) */* :before{color:red}",
+  "/*! declined: a substitution can expand to the second component \`translateX\`
+   rejects, so converting it would revive a dropped declaration (lightningcss: translate) */.t12{transform:translateX(var(--x))}",
   "/*! declined: a \`/*!\` banner is kept, as cssnano, csso and clean-css also do (lightningcss drops it) */.t13{color:red}",
   "/*! declined: merging rules that share a block reorders the cascade (csso, cssnano) */.t14{color:red}.t15{color:red}",
-  "/*! declined: dropping a duplicate declaration assumes nothing reads the cascade (esbuild, cssnano) */.t16{color:red;color:red}",
-  "/*! declined: unit conversion, exact here but not for every value (cssnano: 1pc) */.t17{width:16px}",
-  "/*! declined: a zero's unit matters in \`flex-basis\` and inside \`calc()\` (cssnano: 0) */.t18{margin:0px}",
-  "/*! declined: hsl() hue math can round to a different byte (cssnano: #40bf5e) */.t19{background:hsl(134,50%,50%)}",
+  "/*! declined: not identical, so the first is a fallback for an engine that cannot
+   read the second — dropping it is how esbuild and lightningcss lose this pair
+   (csso, cssnano and clean-css keep it too) */.t16{color:#fff;color:color(display-p3 1 1 1)}",
+  "/*! declined: inside \`calc()\` a bare \`0\` is a \`<number>\`, so the expression stops
+   parsing (every tool keeps this one) */.t18{width:calc(0px + 1px)}",
+  "/*! declined: a channel landing on a \`.5\` boundary is the one place engines
+   disagree — this one's blue is exactly 93.5 (cssnano: #40bf5e) */.t19{background:hsl(134,50%,50%)}",
+  "/*! declined: the same, and the case esbuild and lightningcss answer differently
+   (esbuild: #00c3ff, lightningcss: #00c4ff — headless Chromium says #00c3ff) */.t20{background:hwb(194 0% 0%)}",
+  "/*! declined: outside the sRGB gamut, so a hex would clip it to a different color
+   rather than respell the same one */.t20a{background:lab(50% 100 -100)}",
+  "/*! declined: ...and in the Lab family a channel within 0.1 of a boundary, since
+   webpack's matrix chain and the engine's disagree by up to 0.035 of a byte */.t20b{background:lab(20% 40 0)}",
+  "/*! merge-longhand: a duplicate declaration resolves to the last of them */.t21{color:red}",
+  "/*! ...whatever stands between */.t22{background:blue;color:red}",
+  "/*! ...and however the earlier one was spelled */.t23{color:red}",
+  "/*! ...including a custom property */.t24{--x:1}",
+  "/*! declined: the importance differs, so they are not the same declaration */.t25{color:red;color:red!important}",
+  "/*! declined: a prefixed spelling is a different property */.t26{display:-webkit-flex;display:flex}",
+  "/*! declined: a \`@supports\` condition is the declaration being tested, so
+   rewriting its value asks a different question — the engines that read
+   \`#0000\` are not the ones that read \`rgba(0,0,0,0)\` (esbuild, clean-css and
+   lightningcss leave it alone too; csso rewrites it) */@supports (color:rgba(0,0,0,0)){.t27{color:red}}",
+  "/*! declined: ...at any nesting depth, and under \`not\` */@supports not ((color:rgb(0,0,0)) and (color:hsl(0,100%,50%))){.t28{color:red}}",
 ]
 `;

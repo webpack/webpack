@@ -135,3 +135,35 @@
 @media (min-width: 100px) { .t54 { color: red } }
 /*! webpack: ...and `@supports` keeps behaving as a condition */
 @supports (color: red) { .t55 { color: red } }
+/*! lightningcss: .t56:before — Selectors 4 §3.3 keeps the one-colon spelling */
+.t56::before { color: red }
+/*! lightningcss: .t57:after */
+.t57::after { color: red }
+/*! lightningcss: .t58:first-line */
+.t58::first-line { color: red }
+/*! lightningcss: .t59:first-letter */
+.t59::first-letter { color: red }
+/*! lightningcss: .t60:hover:before */
+.t60:hover::before { color: red }
+/*! lightningcss: .t61:before .t61:after — one rule, both collapse */
+.t61::before .t61::after { color: red }
+/*! webpack: the name's case is the author's, only the colon goes */
+.t62::BEFORE { color: red }
+/*! webpack: ::selection came after CSS2, so it has no one-colon spelling */
+.t63::selection { color: red }
+/*! webpack: ...nor do ::placeholder, ::backdrop or a vendor pseudo-element */
+.t64::placeholder, .t65::backdrop, .t66::-webkit-scrollbar { color: red }
+/*! webpack: a `selector()` condition is an at-rule prelude, left alone */
+@supports selector(::before) { .t67 { color: red } }
+/*! lightningcss: :before — a compound already implies its universal selector */
+*::before { color: red }
+/*! lightningcss: .t68 */
+*.t68 { color: red }
+/*! webpack: an id or attribute qualifies the compound the same way */
+*#t69, *[data-t70] { color: red }
+/*! webpack: parted from the compound it is a descendant combinator */
+* .t71 { color: red }
+/*! webpack: ...and on its own it is the selector */
+* { color: red }
+/*! webpack: a namespaced universal is not redundant */
+svg|*, *|*.t72 { color: red }

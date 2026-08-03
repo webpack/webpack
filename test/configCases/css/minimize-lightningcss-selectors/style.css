@@ -4,10 +4,12 @@
 
    lightningcss rewrites what a selector or a query *means* wherever the result
    is equivalent for its browser targets — `:nth-child(2n+1)` becomes
-   `:nth-child(odd)`, `::before` becomes `:before`, `(min-width: 1px)` becomes
-   `(width >= 1px)`. webpack has no targets to reason from, and range syntax
-   alone would drop every pre-2022 browser, so those are passthroughs here —
-   they mark where a future, targets-aware optimization would show up.
+   `:nth-child(odd)`, `(min-width: 1px)` becomes `(width >= 1px)`. webpack has no
+   targets to reason from, and range syntax alone would drop every pre-2022
+   browser, so those are passthroughs here — they mark where a future,
+   targets-aware optimization would show up. The one-colon pseudo-element
+   spelling needs no targets (Selectors 4 §3.3 requires every engine to accept
+   it), so webpack collapses `::first-letter` where these cases keep it.
 
    A case written `{}` upstream carries a `color:red` here, because webpack
    drops a rule whose block ends up empty, and a case whose braces do not

@@ -78,7 +78,8 @@
 .t35 { background: linear-gradient(#AABBCC, #FF0000) }
 /*! webpack: -webkit-tap-highlight-color does not leak to the next declaration */
 .t36 { -webkit-tap-highlight-color: rgba(0,0,0,0); color: rgba(0,0,0,0) }
-/*! webpack: a color in an at-rule prelude has no enclosing property */
+/*! webpack: a `@supports` condition is the declaration being tested, so its
+   color keeps the spelling the test asked about */
 @supports (color: rgba(0,0,0,0)) { .t37 { color: red } }
 
 /* The named colors and the color-taking functions come from `lib/css/data.js`,
@@ -100,3 +101,19 @@
 .t43 { background: element(#Abc) }
 /*! data: nor does `image-set()`; the nested gradient is matched instead */
 .t44 { background: image-set(linear-gradient(#FF0000, #0000FF) 1x) }
+/*! colormin: an hsl() that lands on a byte exactly */
+.h01 { color: hsl(0, 100%, 50%); background: hsl(240, 100%, 50%) }
+/*! colormin: ...whatever spelling it was written in */
+.h02 { color: hsl(0deg, 100%, 50%); background: hsl(0 100% 50% / 1) }
+/*! declined: this one has to round, and that is where engines part company */
+.h03 { color: hsl(134, 50%, 50%) }
+/*! declined: ...as does a plain grey at 50% */
+.h04 { color: hsl(0, 0%, 50%) }
+/*! a partly transparent one takes the hex-alpha spelling, gated on the target */
+.h05 { color: hsla(0, 100%, 50%, .5) }
+/*! declined: an angle unit other than `deg` needs its own conversion */
+.h06 { color: hsl(0turn, 100%, 50%) }
+/*! declined: a substitution, and a saturation out of range */
+.h07 { color: hsl(var(--h), 100%, 50%); background: hsl(0, 150%, 50%) }
+/*! declined: hwb() — esbuild says #00c3ff, lightningcss says #00c4ff */
+.h08 { color: hwb(194 0% 0%) }

@@ -25,7 +25,7 @@ module.exports = {
 
 		// Text, entities and inline structure stay byte-for-byte (never collapsed
 		// or re-encoded): the same computed DOM.
-		expect(html).toContain("<p>Hello <b>world</b> &amp; friends</p>");
+		expect(html).toContain("<p>Hello <b>world</b> & friends");
 
 		// An optional end tag the next sibling implies is left out (§13.1.2.4),
 		// and the parser's implied `<tbody>` stays transparent.

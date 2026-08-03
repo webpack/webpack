@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+	/* the keyword stays a keyword */
+	.t01 { background-color: rgba(0, 0, 0, 0) }
+	/* the four longhands stay longhands: `inset` is CSS Position 3 */
+	.t02 { top: 1px; right: 2px; bottom: 1px; left: 2px }
+	/* the media feature keeps the `min-` spelling */
+	@media (min-width: 1200px) { .t03 { color: red } }
+	/* not gated, so these still apply */
+	.t04 { width: 16px; height: 33.33333333% }
+</style>
+</head>
+<body>
+<p style="color: rgba(0, 0, 0, 0)">a style attribute is gated too</p>
+<p style="top: 1px; right: 2px; bottom: 1px; left: 2px">...for every gate</p>
+</body>
+</html>

@@ -29,6 +29,15 @@ exports[`ConfigTestCases html minimize-transforms minimize-transforms should com
 	<a rel=\\"noopener noreferrer\\" ping=\\"/a /b\\" href=x>token lists collapse</a>
 	<iframe sandbox=\\"allow-scripts allow-forms\\"></iframe>
 	<label for=\\"a  b\\">for keeps its spaces: an id may contain one</label>
+	<output for=\\"a b\\">for is a token list here</output>
+	<link rel=stylesheet sizes=\\"16x16 32x32\\" href=s.css>
+	<link rel=preload as=script blocking=\\"render render\\" href=p.js>
+	<div part=\\"a b\\" itemscope itemtype=https://schema.org/Thing>globals</div>
+	<div headingreset headingoffset=2 tabindex=-1>heading globals</div>
+	<table><tr><th id=h>h<td headers=\\"h h2\\" rowspan=2>headers is a token list</table>
+	<ol><li value=5>li value is signed</ol>
+	<img src=a.png hspace=4 vspace=0 longdesc=d.html lowsrc=l.png alt=\\"legacy img attributes\\">
+	<object codebase=c/ data=o.bin width=8 hspace=2></object>
 	<a href=trimmed.html>url ends trimmed</a>
 	<img src=a.png width=10 height=20 alt=\\"  alt keeps its spaces  \\">
 	<table><tr><td width=\\"  50%  \\" colspan=7>legacy percentage kept, integer normalized</table>
@@ -67,9 +76,18 @@ exports[`ConfigTestCases html minimize-transforms minimize-transforms should com
 	<table><caption>whitespace behind it keeps the tag</caption> <col><tr><td>a</table>
 	<table><col><colgroup><col><tr><td>a</table>
 	<table><colgroup span=2><col><colgroup><tr><td>a</table>
-	<p>a > b, &lt; and &amp; still escape</p>
+	<p>a > b, &lt; and & still escape</p>
 	<input type=file accept=\\"image/ png,.jpg\\">
 	<map><area shape=poly coords=\\"1 2,3,4 5\\"></map>
+	<input type=checkbox alpha>
+	<template shadowrootclonable shadowrootserializable><span>a</span></template>
+	<img controls src=a.png alt=\\"controls is boolean on img now\\">
+	<table><tr><td nowrap>obsolete but still boolean</table>
+	<hr noshade>
+	<div alpha=x>not boolean here</div>
+	<p>R&D, AT&T and a query x?a=1&b=2 keep a bare ampersand</p>
+	<p>but &amp;amp;, &amp;lt; and &amp;#38; stay escaped: they would read back as a reference</p>
+	<p>café and   decode to the character itself</p>
 
 
 </body></html>"

@@ -44,15 +44,17 @@ module.exports = {
 		expect(css).toContain(
 			".transforms{color:red;background:#abc;" +
 				"background-image:linear-gradient(#abc,red);border-color:teal;" +
-				"margin:.5px 1px 0;--raw:0.50;fill:hsl(0,100%,50%);" +
-				"stroke:rgba(0,0,0,.5);outline-color:transparent}"
+				"margin:.5px 1px 0;--raw:0.50;fill:red;" +
+				"stroke:#00000080;outline-color:#0000}"
 		);
 		// - #FF0000 -> red, #AABBCC -> #abc, rgb(0,128,128) -> teal (name shortest)
-		// - rgba(0,0,0,0) (transparent black) -> the `transparent` keyword
+		// - rgba(0,0,0,0) (transparent black) -> `#0000`, since this build states
+		//   no target and every current engine reads a hex alpha
 		// - hashes inside a value function (gradient) are colors too, so shortened
 		// - margin numbers normalized (leading/trailing zeros)
 		// - custom property `--raw` value stays verbatim (0.50, not normalized)
-		// - hsl() left as-is (hue rounding could change the byte); rgba() kept,
+		// - hsl(0,100%,50%) lands on a byte with nothing to round, so it converts
+		//   (one that had to round would keep its function); rgba() kept,
 		//   only its numbers normalized (.5)
 		// An id selector that looks like a hex color is NOT shortened (ids are
 		// case-sensitive and not colors).
@@ -68,6 +70,6 @@ module.exports = {
 		expect(css).toContain(".h{color:red;.i{x:1}color:green}");
 		// @media prelude collapses, its block trims, and the whitespace around the
 		// feature test's `:` — insignificant in a query condition — goes.
-		expect(css).toContain("@media screen and (min-width:100px){");
+		expect(css).toContain("@media screen and (width>=100px){");
 	}
 };
