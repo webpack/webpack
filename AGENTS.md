@@ -371,8 +371,10 @@ These files are produced by `yarn fix:special` and must not be edited by hand:
 - `declarations/**/*.d.ts` — per-schema/plugin declarations emitted from `schemas/**/*.json`.
 - `schemas/**/*.check.{js,d.ts}` — precompiled schema validators.
 - Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
-- `lib/css/data.js` — the CSS minifier's derived tables (box shorthands, color-argument functions, named colors), built from `mdn-data` + `color-name` by `tooling/generate-css-data.js`.
-- `lib/html/data.js` — the HTML minifier's attribute tables (boolean, URL, integer, token-list attributes), distilled from webref's HTML IDL (vendored as `tooling/html-reflect.json`) plus the generator's `SUPPLEMENT`, by `tooling/generate-html-data.js`.
+- `lib/css/data.js` — every table the CSS minifier looks a name up in: derived from `mdn-data` + `color-name` (box shorthands, color-argument and math functions, named colors) plus the generator's `SUPPLEMENT` of spec-prose tables, by `tooling/generate-css-data.js`.
+- `lib/html/data.js` — every table the HTML parser and minifier look a name up in: the reflected-attribute tables distilled from webref's HTML IDL (vendored as `tooling/html-reflect.json`), plus the generator's `SUPPLEMENT` and `PARSER_TABLES` of §13.2 tree-construction vocabulary, by `tooling/generate-html-data.js`.
+
+Both `syntax.js` files are algorithm only — a new lookup table belongs in the matching generator, not next to the code that reads it.
 
 The hand-maintained type declarations (`declarations.d.ts`, `declarations.test.d.ts`, `module.d.ts`) _are_ editable.
 

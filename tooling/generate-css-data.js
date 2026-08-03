@@ -15,10 +15,10 @@
 // without `--write` and fails when the checked-in file no longer matches, so a
 // data-package bump lands as a reviewable diff rather than as silent drift.
 //
-// Tables no dataset states stay hand-written in `lib/css/syntax.js`, each with
-// the reason: the `cubic-bezier()` and `flex` keyword equivalences (spec prose,
-// not machine-readable) and the at-rules whose empty block is inert (a judgement
-// about what an empty block still does).
+// Tables no dataset states are the `SUPPLEMENT` below — spec prose spelled out,
+// each entry with the reason it is not derivable. They are emitted from here
+// too, so every table the minifier looks a name up in lives in one file and
+// `lib/css/syntax.js` stays algorithm.
 
 const fs = require("fs");
 const path = require("path");
@@ -35,6 +35,7 @@ const properties = require("mdn-data/css/properties.json");
 const syntaxes = require("mdn-data/css/syntaxes.json");
 /** @type {PackageManifest} */
 const mdnDataPackage = require("mdn-data/package.json");
+const prettier = require("prettier");
 
 const TARGET = path.resolve(__dirname, "../lib/css/data.js");
 const write = process.argv.includes("--write");
@@ -194,6 +195,28 @@ const collectSubstitutionFunctions = () => {
 	return names.sort();
 };
 
+// The productions that only a math expression is written with, so a function
+// referencing one takes math expressions and nothing else.
+const MATH_PRODUCTIONS = ["calc-sum", "calc-product", "calc-value"];
+
+/**
+ * CSS Values 4's math functions, spotted by the `<calc-sum>` in their own
+ * syntax: inside one, everything is a math expression, so `*` and `/` there are
+ * operators the whitespace around carries nothing for.
+ * @returns {string[]} the function names, sorted
+ */
+const collectMathFunctions = () => {
+	/** @type {string[]} */
+	const names = [];
+	for (const [name, syntax] of definitions) {
+		if (!name.endsWith("()")) continue;
+		if (references(syntax).some((child) => MATH_PRODUCTIONS.includes(child))) {
+			names.push(name.slice(0, -2));
+		}
+	}
+	return names.sort();
+};
+
 /**
  * @param {number[]} channels the `[r, g, b]` bytes
  * @returns {string} the shortest hex spelling — 3 digits when every byte is a repeated pair
@@ -249,16 +272,66 @@ const collectColorNames = () => {
 };
 
 /**
- * A `new Set([…])` literal as Prettier would print it — one line when a single
- * entry fits, one entry per line otherwise. The generated file is checked by
- * `fmt:check` like any other, so the generator has to match it.
  * @param {string[]} names entries
- * @returns {string} the literal
+ * @returns {string} its `new Set([…])` literal — prettier wraps it on emit
  */
 const setLiteral = (names) =>
-	names.length === 1
-		? `new Set(["${names[0]}"])`
-		: `new Set([\n${names.map((name) => `\t"${name}"`).join(",\n")}\n])`;
+	`new Set([${names.map((name) => `"${name}"`).join(", ")}])`;
+
+/**
+ * @param {[string, string][]} entries the table
+ * @returns {string} its `new Map([…])` literal — prettier wraps it on emit
+ */
+const mapLiteral = (entries) =>
+	`new Map([${entries.map(([key, value]) => `["${key}", "${value}"]`).join(", ")}])`;
+
+// Spec prose no dataset states: an equivalence between two spellings, or a
+// judgement about what a construct still does. Each carries the reason it has to
+// be written out rather than derived.
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], droppableWhenEmptyAtRules: string[] }} */
+const SUPPLEMENT = {
+	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
+	cssWideKeywords: ["inherit", "initial", "revert", "revert-layer", "unset"],
+	// CSS Easing 1 §2 defines each keyword as exactly this curve; the syntax
+	// database describes `cubic-bezier()`'s shape, not which curves have a name.
+	// Keyed by the arguments as `Number` prints them.
+	cubicBezierKeywords: [
+		["0.25,0.1,0.25,1", "ease"],
+		["0,0,1,1", "linear"],
+		["0.42,0,1,1", "ease-in"],
+		["0,0,0.58,1", "ease-out"],
+		["0.42,0,0.58,1", "ease-in-out"]
+	],
+	// CSS Flexbox 7.1.1's two keyword spellings. `1 1 0` is deliberately absent:
+	// the one-value `flex:1` expands to `1 1 0%`, and a length `0` is not a
+	// percentage `0%` when the container's main size is indefinite.
+	flexKeywords: [
+		["0 0 auto", "none"],
+		["1 1 auto", "auto"]
+	],
+	// CSS Fonts 4 §2.2 defines these two keywords as those weights, and the
+	// computed value is the number either way. `bolder` / `lighter` are relative
+	// to the parent's weight, so they have no fixed number.
+	fontWeightNumbers: [
+		["normal", "400"],
+		["bold", "700"]
+	],
+	// Selectors 4 §3.3: engines must accept the one-colon spelling for the
+	// pseudo-elements CSS 1 and 2 introduced. Only these four — `::selection` and
+	// the rest have no legacy spelling.
+	legacyPseudoElements: ["before", "after", "first-line", "first-letter"],
+	// What may follow the `*` a compound selector implies: another simple
+	// selector in the same compound. Selector syntax, not a value grammar.
+	compoundContinuations: [":", ".", "#", "["],
+	// `flex-basis` is the one place a zero's unit is still load-bearing: IE 11
+	// drops a `flex` shorthand whose basis has none, and the shorthand carries
+	// one too.
+	zeroUnitKeepingProperties: ["flex", "flex-basis"],
+	// At-rules whose empty block is inert. Not `@keyframes` (an empty one still
+	// runs the animation, firing its events) and not `@layer` (an empty block
+	// declares the layer's cascade order).
+	droppableWhenEmptyAtRules: ["media", "supports", "container"]
+};
 
 const boxShorthands = collectBoxShorthands(false);
 const slashShorthands = collectBoxShorthands(true);
@@ -268,6 +341,7 @@ const boxLonghands = collectBoxLonghands([
 ]);
 const colorFunctions = collectColorArgumentFunctions();
 const colorNames = collectColorNames();
+const mathFunctions = collectMathFunctions();
 const substitutionFunctions = collectSubstitutionFunctions();
 
 const source = `/*
@@ -314,6 +388,41 @@ const COLOR_ARGUMENT_FUNCTIONS = ${setLiteral(colorFunctions)};
 // \`margin:var(--x) var(--x)\` is four values, not two.
 const SUBSTITUTION_FUNCTIONS = ${setLiteral(substitutionFunctions)};
 
+// CSS Values 4's math functions: everything inside one is a math expression, so
+// \`*\` and \`/\` there are operators, and the whitespace around them carries nothing.
+const MATH_FUNCTIONS = ${setLiteral(mathFunctions)};
+
+// A CSS-wide keyword is only valid as the whole value, so a box repeating one is
+// invalid and already discarded — collapsing it would switch the declaration on.
+const CSS_WIDE_KEYWORDS = ${setLiteral(SUPPLEMENT.cssWideKeywords)};
+
+// \`<easing-function>\` argument lists that are exactly a shorter keyword, keyed
+// by the arguments as \`Number\` prints them.
+const CUBIC_BEZIER_KEYWORDS = ${mapLiteral(SUPPLEMENT.cubicBezierKeywords)};
+
+// The two \`flex\` values CSS Flexbox 7.1.1 gives a keyword spelling.
+const FLEX_KEYWORDS = ${mapLiteral(SUPPLEMENT.flexKeywords)};
+
+// The \`font-weight\` keywords CSS Fonts 4 §2.2 defines as a number, which is what
+// \`getComputedStyle().fontWeight\` reports either way.
+const FONT_WEIGHT_NUMBERS = ${mapLiteral(SUPPLEMENT.fontWeightNumbers)};
+
+// Selectors 4 §3.3: the pseudo-elements engines must also accept with one colon,
+// so their second colon carries nothing.
+const LEGACY_PSEUDO_ELEMENTS = ${setLiteral(SUPPLEMENT.legacyPseudoElements)};
+
+// What may follow the \`*\` a compound selector implies: another simple selector
+// in the same compound. A separator between them would be a descendant
+// combinator instead, and \`|\` makes the \`*\` a namespace's, not a redundant one.
+const COMPOUND_CONTINUATIONS = ${setLiteral(SUPPLEMENT.compoundContinuations)};
+
+// The properties whose zero length keeps its unit — the one place it is still
+// load-bearing.
+const ZERO_UNIT_KEEPING_PROPERTIES = ${setLiteral(SUPPLEMENT.zeroUnitKeepingProperties)};
+
+// At-rules whose empty block is inert, so dropping it changes nothing.
+const DROPPABLE_WHEN_EMPTY_AT_RULES = ${setLiteral(SUPPLEMENT.droppableWhenEmptyAtRules)};
+
 // Packed \`0xrrggbb\` -> the shortest named color with that value. Only names that
 // can beat \`#rrggbb\`; anything longer would never be picked.
 const RGB_TO_NAME = new Map([
@@ -328,21 +437,39 @@ ${colorNames
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
 module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
+module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
+module.exports.CSS_WIDE_KEYWORDS = CSS_WIDE_KEYWORDS;
+module.exports.CUBIC_BEZIER_KEYWORDS = CUBIC_BEZIER_KEYWORDS;
+module.exports.DROPPABLE_WHEN_EMPTY_AT_RULES = DROPPABLE_WHEN_EMPTY_AT_RULES;
+module.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;
+module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
+module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
+module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
+module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;
 `;
 
 const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names`;
-const current = fs.existsSync(TARGET) ? fs.readFileSync(TARGET, "utf8") : "";
-if (current === source) {
-	process.stdout.write(`lib/css/data.js is up to date (${summary})\n`);
-} else if (write) {
-	fs.writeFileSync(TARGET, source);
-	process.stdout.write(`lib/css/data.js updated (${summary})\n`);
-} else {
-	process.stderr.write(
-		"lib/css/data.js is out of date — run `yarn fix:special`\n"
-	);
-	process.exitCode = 1;
-}
+// Formatted here rather than left to `yarn fmt`, so the comparison below is
+// against what the repo actually checks in.
+prettier
+	.resolveConfig(TARGET)
+	.then((config) => prettier.format(source, { ...config, filepath: TARGET }))
+	.then((formatted) => {
+		const current = fs.existsSync(TARGET)
+			? fs.readFileSync(TARGET, "utf8")
+			: "";
+		if (current === formatted) {
+			process.stdout.write(`lib/css/data.js is up to date (${summary})\n`);
+		} else if (write) {
+			fs.writeFileSync(TARGET, formatted);
+			process.stdout.write(`lib/css/data.js updated (${summary})\n`);
+		} else {
+			process.stderr.write(
+				"lib/css/data.js is out of date — run `yarn fix:special`\n"
+			);
+			process.exitCode = 1;
+		}
+	});
