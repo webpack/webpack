@@ -4311,13 +4311,18 @@ type ConcatenatedModuleBuildInfo = KnownBuildInfo &
 	KnownConcatenatedModuleBuildInfo;
 declare interface ConcatenatedModuleInfo {
 	type: "concatenated";
-	module: Module;
-	index: number;
 
 	/**
-	 * a "weird" CommonJS module executed via the CJS wrapper runtime helper with real module/exports objects
+	 * the body renders inside the lazy CJS wrapper with real module/exports instead of being scope-hoisted into the shared scope
 	 */
-	cjsWrapped?: boolean;
+	wrapped: boolean;
+
+	/**
+	 * a wrapped body reached by an eager import edge, so its accessor is called at its own slot in evaluation order
+	 */
+	eager: boolean;
+	module: Module;
+	index: number;
 	ast?: Program;
 	internalSource?: Source;
 	source?: ReplaceSource;
@@ -4329,6 +4334,11 @@ declare interface ConcatenatedModuleInfo {
 	exportMap?: Map<string, string>;
 	rawExportMap?: Map<string, string>;
 	namespaceExportSymbol?: string;
+
+	/**
+	 * name of the lazy wrapper accessor function (calling it evaluates the module and returns its exports)
+	 */
+	namespaceFnName?: string;
 	namespaceObjectName?: string;
 
 	/**
@@ -4418,6 +4428,36 @@ declare class ConcatenationScope {
 	isModuleInScope(module: Module): boolean;
 
 	/**
+	 * Whether an in-scope module's body renders inside the lazy wrapper.
+	 */
+	isModuleWrapped(module: Module): boolean;
+
+	/**
+	 * Marks a wrapped module as eagerly imported, so its accessor is called at its
+	 * own slot in evaluation order instead of from inside the importing body.
+	 */
+	registerEagerModule(module: Module): void;
+
+	/**
+	 * Whether the current module runs inside the lazy wrapper. Exports then live
+	 * on a real exports object, not hoisted bindings, so templates emit runtime
+	 * code.
+	 */
+	isWrapped(): boolean;
+
+	/**
+	 * Records a `require(...)` call that was replaced as a whole by a
+	 * concatenation reference, so nothing else rewrites a range inside it.
+	 */
+	registerReplacedRequire(range: [number, number]): void;
+
+	/**
+	 * Checks whether an offset sits inside an already-replaced `require(...)` call.
+	 * Containment, not exact match: `new require(...)` is replaced from `new`.
+	 */
+	isInsideReplacedRequire(start: number): boolean;
+
+	/**
 	 * Records the symbol that should be used when the current module exports a
 	 * named binding.
 	 */
@@ -4459,6 +4499,11 @@ declare class ConcatenationScope {
 	 * module references.
 	 */
 	static isModuleReference(name: string): boolean;
+
+	/**
+	 * Finds all encoded module references in a generated source.
+	 */
+	static findModuleReferences(source: Source): ModuleReferenceMatch[];
 
 	/**
 	 * Parses an encoded module reference back into its module index and
@@ -4792,7 +4837,10 @@ declare class ConstDependency extends NullDependency {
 	/**
 	 * Returns true if the dependency can be concatenated (scope hoisting).
 	 */
-	static canConcatenate(dependency: Dependency): boolean;
+	static canConcatenate(
+		dependency: Dependency,
+		concatenateCommonJsModules: boolean
+	): boolean;
 	static TRANSITIVE: symbol;
 	static LAZY_UNTIL_LOCAL: "local";
 	static LAZY_UNTIL_ID: "id";
@@ -6205,7 +6253,7 @@ declare class Dependency {
 	/**
 	 * Returns true if this dependency can be concatenated
 	 */
-	canConcatenate(): boolean;
+	canConcatenate(concatenateCommonJsModules: boolean): boolean;
 
 	/**
 	 * Serializes this instance into the provided serializer context.
@@ -6241,7 +6289,10 @@ declare class Dependency {
 	/**
 	 * Returns true if the dependency can be concatenated (scope hoisting).
 	 */
-	static canConcatenate(dependency: Dependency): boolean;
+	static canConcatenate(
+		dependency: Dependency,
+		concatenateCommonJsModules: boolean
+	): boolean;
 	static TRANSITIVE: symbol;
 	static LAZY_UNTIL_LOCAL: "local";
 	static LAZY_UNTIL_ID: "id";
@@ -8406,6 +8457,7 @@ declare class ExternalModule extends Module {
 		unsafeCacheData: UnsafeCacheData,
 		normalModuleFactory: NormalModuleFactory
 	): void;
+	canBeWrappedInConcatenation(): boolean;
 	static getCompilationHooks: (compilation: Compilation) => {
 		/**
 		 * @since 5.106.0
@@ -8429,6 +8481,16 @@ type ExternalModuleBuildInfo = KnownBuildInfo &
 	KnownExternalModuleBuildInfo;
 declare interface ExternalModuleInfo {
 	type: "external";
+
+	/**
+	 * the module's `require()` call is deferred behind an accessor instead of running at its own slot; unlike a wrapped concatenated member there is no body and no CJS wrapper, so any external may be wrapped
+	 */
+	wrapped: boolean;
+
+	/**
+	 * a wrapped module reached by an eager import edge, so its accessor is called at its own slot in evaluation order
+	 */
+	eager: boolean;
 	module: Module;
 	runtimeCondition?: string | boolean | SortableSet<string>;
 	nonDeferAccess: boolean;
@@ -8438,6 +8500,11 @@ declare interface ExternalModuleInfo {
 	 * module.exports / harmony namespace object
 	 */
 	name?: string;
+
+	/**
+	 * lazy module accessor
+	 */
+	namespaceFnName?: string;
 
 	/**
 	 * decoupled namespace object that keeps original export names when the exports are mangled
@@ -9569,7 +9636,10 @@ declare class HarmonyImportDependency extends ModuleDependency {
 	/**
 	 * Returns true if the dependency can be concatenated (scope hoisting).
 	 */
-	static canConcatenate(dependency: Dependency): boolean;
+	static canConcatenate(
+		dependency: Dependency,
+		concatenateCommonJsModules: boolean
+	): boolean;
 	static TRANSITIVE: symbol;
 	static LAZY_UNTIL_LOCAL: "local";
 	static LAZY_UNTIL_ID: "id";
@@ -16678,7 +16748,10 @@ declare class ModuleDependency extends Dependency {
 	/**
 	 * Returns true if the dependency can be concatenated (scope hoisting).
 	 */
-	static canConcatenate(dependency: Dependency): boolean;
+	static canConcatenate(
+		dependency: Dependency,
+		concatenateCommonJsModules: boolean
+	): boolean;
 	static TRANSITIVE: symbol;
 	static LAZY_UNTIL_LOCAL: "local";
 	static LAZY_UNTIL_ID: "id";
@@ -17604,6 +17677,11 @@ declare abstract class ModuleProfile {
 	 */
 	mergeInto(realProfile: ModuleProfile): void;
 }
+declare interface ModuleReferenceMatch {
+	start: number;
+	end: number;
+	name: string;
+}
 declare interface ModuleReferenceOptions {
 	/**
 	 * the properties or exports selected from the referenced module
@@ -17629,6 +17707,11 @@ declare interface ModuleReferenceOptions {
 	 * true, when a whole-namespace reference may use a decoupled namespace object that keeps the original export names
 	 */
 	mangleableNamespace: boolean;
+
+	/**
+	 * true, when the reference resolves to the module's own exports value with plain property access, skipping ESM interop (how `require()` and a wrapped module's side-effect init see it)
+	 */
+	moduleExportsAccess: boolean;
 
 	/**
 	 * if the position is ASI safe or unknown
@@ -19124,7 +19207,10 @@ declare class NullDependency extends Dependency {
 	/**
 	 * Returns true if the dependency can be concatenated (scope hoisting).
 	 */
-	static canConcatenate(dependency: Dependency): boolean;
+	static canConcatenate(
+		dependency: Dependency,
+		concatenateCommonJsModules: boolean
+	): boolean;
 	static TRANSITIVE: symbol;
 	static LAZY_UNTIL_LOCAL: "local";
 	static LAZY_UNTIL_ID: "id";
@@ -28728,9 +28814,10 @@ declare namespace exports {
 		export let baseURI: "__webpack_require__.b";
 		export let chunkCallback: "webpackChunk";
 		export let chunkName: "__webpack_require__.cn";
-		export let commonJsWrap: "__webpack_require__.cjs";
 		export let compatGetDefaultExport: "__webpack_require__.n";
 		export let compileWasm: "__webpack_require__.vs";
+		export let concatenationWrap: "__webpack_require__.cw";
+		export let constructRequire: "__webpack_require__.cr";
 		export let createFakeNamespaceObject: "__webpack_require__.t";
 		export let createScript: "__webpack_require__.ts";
 		export let createScriptUrl: "__webpack_require__.tu";

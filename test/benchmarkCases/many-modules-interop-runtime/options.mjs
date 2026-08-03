@@ -40,7 +40,7 @@ export default function identity(x) {
  * @returns {string} generated module
  */
 function generateCommonJs(index) {
-	return `const table = [];
+	return `"use strict"; const table = [];
 for (let i = 0; i < ${TABLE_SIZE}; i++) {
 	table.push((i * ${index} + 3) | 0);
 }
@@ -65,7 +65,7 @@ module.exports.identity = function identity(x) {
  * @returns {string} generated module
  */
 function generateCommonJsCallable(index) {
-	return `module.exports = function callable(x) {
+	return `"use strict"; module.exports = function callable(x) {
 	return (x + ${index}) | 0;
 };
 
@@ -82,7 +82,7 @@ module.exports.extra = function extra(x) {
  * @returns {string} generated module
  */
 function generateCommonJsConsumer(index) {
-	return `const esm = require("./esm-${index}.js");
+	return `"use strict"; const esm = require("./esm-${index}.js");
 const commonjs = require("./commonjs-${index}.js");
 
 module.exports.call = function call(x) {

@@ -10,7 +10,6 @@ export { mod3 };
 export { theDefaultExpression }
 
 const { expectSourceToContain, expectSourceToMatch } = require("../../../helpers/expectSource");
-const regexEscape = require("../../../helpers/regexEscape.js");
 
 // It's important to use propertyName when generating object members to ensure that the exported property name
 // uses the same accessor syntax (quotes vs. dot notatation) as the imported property name on the other end
@@ -36,9 +35,12 @@ it("should use the same accessor syntax for import and export", function() {
 	// Array format: "bar", 0, bar (value) or "bar", () => bar (getter)
 	expectSourceToMatch(source, `\\/\\* harmony export \\*\\/   "bar", .*bar`);
 
-	// Checking formation of imports
-	expectSourceToMatch(source, `${regexEscape("const { harmonyexport_cjsimport } = (__webpack_require__(/*! ./harmony-module */ ")}\\d+${regexEscape(").bar);")}`);
-	expectSourceToMatch(source, `${regexEscape("const harmonyexport_cjsimportdefault = (__webpack_require__(/*! ./export-default-expression */ ")}\\d+${regexEscape(")[\"default\"]);")}`);
+	// Checking formation of imports. Both targets become wrapped members, read
+	// through lazy accessors: `.bar` unquoted and `["default"]` quoted, as exported.
+	// The accessor call is parenthesized so `new`/call positions keep binding to the
+	// export rather than to the wrapper accessor.
+	expectSourceToContain(source, "const { harmonyexport_cjsimport } = (harmony_module_namespaceFn().bar);");
+	expectSourceToContain(source, "const harmonyexport_cjsimportdefault = (export_default_expression_namespaceFn()[\"default\"]);");
 
 	// Checking concatenatedmodule.js formation of exports
 	expectSourceToContain(source, "mod3: () => (/* reexport */ harmony_module_3_namespaceObject)");

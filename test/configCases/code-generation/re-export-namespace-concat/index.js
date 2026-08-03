@@ -63,33 +63,35 @@ it("should use/preserve accessor form for import object and namespaces", functio
 	// `obj1` is mangled here (its namespace escapes via `const x1 = m_1`, which is rendered as a decoupled
 	// namespace object that keeps the original names); the mangled accessor name is matched as `\w+` below, but
 	// the accessor *form* (dot vs. quotes) is still pinned.
+	// The wrapper accessor call is parenthesized so `new`/call positions keep binding to the export rather than
+	// to the accessor; the original source's own parens are preserved around it.
 
 	expectSourceToContain(source, 'const x1 = module1_namespaceObject;');
-	expectSourceToMatch(source, re('const x2 = module1/* obj1 */.@;'));
+	expectSourceToMatch(source, re('const x2 = (module1_namespaceFn().@);'));
 
-	expectSourceToMatch(source, re('const z1 = module1/* obj1 */.@["plants"];'));
-	expectSourceToMatch(source, re('const z2 = module1/* obj1 */.@["funcs"]();'));
-	expectSourceToMatch(source, re('const z3 = module1/* obj1 */.@["pots"];'));
-	expectSourceToMatch(source, re('const z4 = module1/* obj1 */.@["subs"]();'));
+	expectSourceToMatch(source, re('const z1 = (module1_namespaceFn().@)["plants"];'));
+	expectSourceToMatch(source, re('const z2 = (module1_namespaceFn().@)["funcs"]();'));
+	expectSourceToMatch(source, re('const z3 = (module1_namespaceFn().@)["pots"];'));
+	expectSourceToMatch(source, re('const z4 = (module1_namespaceFn().@)["subs"]();'));
 
-	expectSourceToMatch(source, re('const a = module1/* obj1 */.@["flip"].flap;'));
-	expectSourceToMatch(source, re('const b = module1/* obj1 */.@.zip["zap"];'));
-	expectSourceToMatch(source, re('const c = module1/* obj1 */.@["ding"].dong();'));
-	expectSourceToMatch(source, re('const d = module1/* obj1 */.@.sing["song"]();'));
+	expectSourceToMatch(source, re('const a = (module1_namespaceFn().@)["flip"].flap;'));
+	expectSourceToMatch(source, re('const b = (module1_namespaceFn().@).zip["zap"];'));
+	expectSourceToMatch(source, re('const c = (module1_namespaceFn().@)["ding"].dong();'));
+	expectSourceToMatch(source, re('const d = (module1_namespaceFn().@).sing["song"]();'));
 
-	expectSourceToMatch(source, re('const aa = module1/* obj1 */.@["zoom"];'));
+	expectSourceToMatch(source, re('const aa = (module1_namespaceFn().@)["zoom"];'));
 
-	expectSourceToMatch(source, re('const bb = module1/* obj1 */.@.up.down?.left.right;'));
+	expectSourceToMatch(source, re('const bb = (module1_namespaceFn().@).up.down?.left.right;'));
 
-	expectSourceToMatch(source, re('const ww = (__webpack_require__(/*! ./module1 */ 602)/* .obj1 */ .@)["bing"]?.bang;'));
-	expectSourceToMatch(source, re('const xx = (__webpack_require__(/*! ./module1 */ 602)/* .obj1 */ .@)["pip"].pop();'));
-	expectSourceToMatch(source, re('const yy = (__webpack_require__(/*! ./module3 */ 818)/* .m_2.m_1.obj1 */ .@.@.@)["tip"].top();'));
+	expectSourceToMatch(source, re('const ww = (module1_namespaceFn().@)["bing"]?.bang;'));
+	expectSourceToMatch(source, re('const xx = (module1_namespaceFn().@)["pip"].pop();'));
+	expectSourceToMatch(source, re('const yy = (module3_namespaceFn().@.@.@)["tip"].top();'));
 
 	expectSourceToContain(source, 'data_namespaceObject.a.a["unknownProperty"].depth = "deep";');
 
-	expectSourceToMatch(source, re('(module1/* obj1 */.@)["aaa"].bbb;'));
-	expectSourceToMatch(source, re('(module1/* obj1 */.@)["ccc"].ddd;'));
-	expectSourceToMatch(source, re('(module1/* obj1 */.@["eee"]).fff;'));
-	expectSourceToMatch(source, re('(module1/* obj1 */.@["ggg"]).hhh;'));
-	expectSourceToMatch(source, re('((module1/* obj1 */.@)["iii"]).jjj;'));
+	expectSourceToMatch(source, re('((module1_namespaceFn().@))["aaa"].bbb;'));
+	expectSourceToMatch(source, re('((module1_namespaceFn().@))["ccc"].ddd;'));
+	expectSourceToMatch(source, re('((module1_namespaceFn().@)["eee"]).fff;'));
+	expectSourceToMatch(source, re('((module1_namespaceFn().@)["ggg"]).hhh;'));
+	expectSourceToMatch(source, re('(((module1_namespaceFn().@))["iii"]).jjj;'));
 });

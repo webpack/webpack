@@ -11,7 +11,7 @@ cacheable modules X bytes
       ModuleConcatenation bailout: Cannot concat with ./eval.js: Module uses eval()
       ModuleConcatenation bailout: Cannot concat with ./module-id.js: Module uses module.id
       ModuleConcatenation bailout: Cannot concat with ./module-loaded.js: Module uses module.loaded
-      ModuleConcatenation bailout: Cannot concat with ./ref-from-cjs.js: Module ./ref-from-cjs.js is referenced from these modules with unsupported syntax: ./cjs.js (referenced with cjs require)
+      ModuleConcatenation bailout: Cannot concat with ./ref-from-cjs.js because of ./cjs.js
     ./entry.js X bytes [built] [code generated]
     ./cjs.js X bytes [built] [code generated]
       CommonJS bailout: module.exports is used directly at 3:0-14
