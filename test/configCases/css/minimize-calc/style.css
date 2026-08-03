@@ -79,3 +79,45 @@
 @supports (width: calc(1px + 2px)) { .s01 { color: red } }
 /*! declined: a custom property hands its text back through getPropertyValue() */
 .s02 { --gap: calc(1px + 2px) }
+
+/* min(), max() and clamp(). The set of math functions and how many arguments
+   each takes come from the spec's own grammars; what each one means is written
+   in the minifier, so a function with no meaning yet is left alone. */
+
+/*! math: the smallest of a list of one unit */
+.m01 { width: min(1px,2px) }
+/*! math: ...and the largest */
+.m02 { width: max(1px,2px) }
+/*! math: however many arguments the grammar allows */
+.m03 { width: min(3px,2px,1px) }
+/*! math: units fixed against each other compare too, then take the shortest */
+.m04 { width: min(1in,100px) }
+/*! math: clamp() is the middle one */
+.m05 { width: clamp(1px,5px,3px) }
+/*! math: ...and the lower bound wins a contradictory pair (CSS Values 4 §10.4) */
+.m06 { width: clamp(4px,1px,9px) }
+/*! math: a nested calc() has already folded by the time this runs */
+.m07 { width: min(calc(1px + 1px),3px) }
+/*! math: times compare */
+.m08 { transition-duration: max(1s,500ms) }
+/*! math: so do plain numbers */
+.m09 { opacity: max(.2,.5) }
+
+/*! declined: a percentage basis can be negative (background-position against an
+   oversized image), and picking the smaller of two depends on that sign */
+.n01 { width: min(50%,60%) }
+/*! declined: only layout knows which is smaller */
+.n02 { width: min(1em,2px) }
+/*! declined: a substitution could be anything */
+.n03 { width: min(var(--x),1px) }
+/*! declined: clamp() takes exactly three */
+.n04 { width: clamp(1px,2px) }
+/*! declined: round() leads with a strategy, so its arguments are not all
+   expressions and the grammar-read arity leaves it out */
+.n05 { width: round(down,5px,2px) }
+/*! declined: a math function whose meaning is not written yet */
+.n06 { width: hypot(3px,4px) }
+/*! declined: ...abs() likewise, and a negative would keep its calc() anyway */
+.n07 { width: abs(-5px) }
+/*! kept: a negative folds but keeps the parentheses */
+.n08 { width: min(-5px,-2px) }
