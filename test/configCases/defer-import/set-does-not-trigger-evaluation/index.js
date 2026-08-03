@@ -1,5 +1,9 @@
 import defer * as ns from "./dep.js";
 
+// `import defer` leaves ./dep.js unevaluated, so this only clears a counter a
+// previous test file left behind where a worker shares globals (Bun)
+delete globalThis.evaluations;
+
 it("does not evaluate the deferred module on `import defer`", () => {
 	expect(globalThis.evaluations).toBe(undefined);
 });
