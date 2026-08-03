@@ -1990,12 +1990,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// The grammar says exactly three.
 			["clamp(1px,2px)"],
 			["clamp(1px,2px,3px,4px)"],
-			// `round()` leads with a strategy, so it has no arity to read.
-			["round(down,5px,2px)"],
+			// `calc-size()` leads with a basis, so it has no arity to read.
+			["calc-size(auto,size)"],
 			// Math functions whose meaning is not written yet.
 			["sqrt(4)"],
 			["pow(2,3)"],
-			["mod(7px,3px)"],
+			["log(8,2)"],
 			["atan2(1,1)"]
 		])("leaves %s alone", (expression) => {
 			expect(value(expression)).toBe(expression);
@@ -2039,6 +2039,57 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(value("hypot(6px,8px,0px)")).toBe("10px");
 			// Irrational for most inputs.
 			expect(value("hypot(1px,1px)")).toBe("hypot(1px,1px)");
+		});
+	});
+
+	describe("round(), mod() and rem()", () => {
+		it("rounds to a step, by each of the grammar's strategies", () => {
+			expect(value("round(5px,2px)")).toBe("6px");
+			expect(value("round(nearest,5.5px,1px)")).toBe("6px");
+			expect(value("round(up,4.5px,2px)")).toBe("6px");
+			expect(value("round(down,5.5px,2px)")).toBe("4px");
+			expect(value("round(to-zero,5.5px,2px)")).toBe("4px");
+			// `down` is the floor, so a negative goes further from zero, and
+			// `to-zero` truncates instead.
+			expect(value("round(down,-4.5px,2px)")).toBe("calc(-6px)");
+			expect(value("round(to-zero,-5.5px,2px)")).toBe("calc(-4px)");
+		});
+
+		it("splits mod() and rem() on whose sign the result takes", () => {
+			expect(value("mod(-7px,3px)")).toBe("2px");
+			expect(value("rem(-7px,3px)")).toBe("calc(-1px)");
+			expect(value("mod(7px,-3px)")).toBe("calc(-2px)");
+			expect(value("rem(7px,-3px)")).toBe("1px");
+		});
+
+		it.each([
+			// Exactly on a step is where engines part company: these are step
+			// functions, so an ulp in the engine's own conversion moves the answer a
+			// whole step. Chromium reads `round(down,10cm,2cm)` as `8cm` and
+			// `mod(10px,-2px)` as `-2px`, both a step off the exact answer.
+			["round(4px,2px)"],
+			["mod(10px,-2px)"],
+			["rem(10px,2px)"],
+			// A zero step is NaN, which engines render differently; a negative one
+			// is not reasoned about here.
+			["round(5px,0px)"],
+			["round(5px,-2px)"],
+			["mod(5px,0px)"],
+			// Two units only layout can compare.
+			["round(5em,2px)"],
+			["mod(50%,20%)"]
+		])("leaves %s alone", (expression) => {
+			expect(value(expression)).toBe(expression);
+		});
+
+		it("keeps the unit a stepped argument was written with", () => {
+			// `4.5cm` and `45mm` are the same length, but not the same step:
+			// Chromium reads `round(down,4.5cm,1.5cm)` as `3cm` and the `mm`
+			// spelling as `4.5cm`, so the conversion that holds everywhere else is
+			// suppressed in here.
+			expect(value("round(down,4.5cm,1.5cm)")).toBe("round(down,4.5cm,1.5cm)");
+			// Outside one it still applies.
+			expect(value("4.5cm")).toBe("45mm");
 		});
 	});
 });

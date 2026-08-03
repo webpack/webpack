@@ -203,17 +203,41 @@ const collectUnitGroupBase = () => {
 };
 
 /**
+ * The keywords a production is, when it is nothing but a choice between them —
+ * `<rounding-strategy>` is `nearest | up | down | to-zero`. Anything with a
+ * type reference or a structure in it is not a keyword set and returns `null`.
+ * @param {string} name the production name
+ * @returns {string[] | null} the keywords, sorted, or `null`
+ */
+const keywordChoices = (name) => {
+	const syntax = definitions.get(name);
+	if (syntax === undefined) return null;
+	const tree = grammarOf(syntax);
+	const items = tree.type === "oneOf" ? tree.items : [tree];
+	/** @type {string[]} */
+	const out = [];
+	for (const item of items) {
+		if (item.type !== "keyword") return null;
+		out.push(item.name);
+	}
+	return out.sort();
+};
+
+/**
  * How many `<calc-sum>` arguments each math function takes, read off its own
  * grammar: `min( <calc-sum># )` is one or more, `clamp( <calc-sum>#{3} )` is
- * exactly three, `log( <calc-sum>, <calc-sum>? )` is one or two. A function
- * taking anything else is absent — `round()` leads with a rounding strategy and
- * `calc-size()` with a basis, and neither is an expression to evaluate — so the
- * minifier reads the absence as "not foldable" rather than carrying its own
- * list of which functions those are.
+ * exactly three, `log( <calc-sum>, <calc-sum>? )` is one or two. An optional
+ * leading keyword is read too — `round( <rounding-strategy>?, …)` — and comes
+ * back beside the count. A function taking anything else is absent:
+ * `calc-size()` leads with a basis, which is an expression this cannot evaluate,
+ * so the minifier reads the absence as "not foldable" rather than carrying its
+ * own list of which functions those are.
  * @param {string[]} names the math function names
- * @returns {[string, [number, number]][]} `[name, [min, max]]`, sorted
+ * @returns {[string, [number, number], string[]][]} `[name, [min, max], keywords]`, sorted
  */
 const collectMathFunctionArity = (names) => {
+	/** @type {string[]} */
+	let keywords = [];
 	/**
 	 * @param {SyntaxNode} node a grammar node
 	 * @returns {[number, number] | null} the `<calc-sum>` count it contributes
@@ -229,6 +253,19 @@ const collectMathFunctionArity = (names) => {
 			case "parens":
 				return count(node.body);
 			case "multiplier": {
+				// An optional keyword argument: not an expression, so it carries no
+				// `<calc-sum>` of its own, but the function still accepts it.
+				if (
+					node.min === 0 &&
+					node.max === 1 &&
+					node.body.type === "type" &&
+					node.body.name !== "calc-sum"
+				) {
+					const choices = keywordChoices(node.body.name);
+					if (choices === null) return null;
+					keywords = choices;
+					return [0, 0];
+				}
 				const inner = count(node.body);
 				if (inner === null) return null;
 				const min = inner[0] * node.min;
@@ -250,15 +287,16 @@ const collectMathFunctionArity = (names) => {
 				return null;
 		}
 	};
-	/** @type {[string, [number, number]][]} */
+	/** @type {[string, [number, number], string[]][]} */
 	const out = [];
 	for (const name of names) {
 		const syntax = definitions.get(`${name}()`);
 		if (syntax === undefined) continue;
 		const tree = grammarOf(syntax);
 		if (tree.type !== "function" || tree.body === null) continue;
+		keywords = [];
 		const arity = count(tree.body);
-		if (arity !== null) out.push([name, arity]);
+		if (arity !== null) out.push([name, arity, keywords]);
 	}
 	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
@@ -489,7 +527,7 @@ const mapLiteral = (entries) =>
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], droppableWhenEmptyAtRules: string[], steppedFunctions: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[] }} */
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
 	cssWideKeywords: ["inherit", "initial", "revert", "revert-layer", "unset"],
@@ -528,6 +566,13 @@ const SUPPLEMENT = {
 	// drops a `flex` shorthand whose basis has none, and the shorthand carries
 	// one too.
 	zeroUnitKeepingProperties: ["flex", "flex-basis"],
+	// The math functions whose result is a step of their arguments. Which ones
+	// those are follows from what each computes, and no dataset states that — the
+	// grammars describe their shape. It is a table because a rewrite that holds
+	// everywhere else does not hold inside one: `4.5cm` and `45mm` are the same
+	// length, but headless Chromium reads `round(down,4.5cm,1.5cm)` as `3cm` and
+	// `round(down,45mm,15mm)` as `4.5cm`.
+	steppedFunctions: ["mod", "rem", "round"],
 	// At-rules whose empty block is inert. Not `@keyframes` (an empty one still
 	// runs the animation, firing its events) and not `@layer` (an empty block
 	// declares the layer's cascade order).
@@ -641,6 +686,18 @@ const MATH_FUNCTION_ARITY = new Map([${mathFunctionArity
 	.map(([name, [min, max]]) => `["${name}", [${min}, ${max}]]`)
 	.join(", ")}]);
 
+// The optional keyword a math function may lead with, for the ones whose
+// grammar offers a choice of them (\`round( <rounding-strategy>?, … )\`). Read
+// off that production, so a strategy joining it needs no edit here.
+/** @type {Map<string, string[]>} */
+const MATH_FUNCTION_KEYWORDS = new Map([${mathFunctionArity
+	.filter(([, , keywords]) => keywords.length !== 0)
+	.map(
+		([name, , keywords]) =>
+			`["${name}", [${keywords.map((k) => `"${k}"`).join(", ")}]]`
+	)
+	.join(", ")}]);
+
 // A CSS-wide keyword is only valid as the whole value, so a box repeating one is
 // invalid and already discarded — collapsing it would switch the declaration on.
 const CSS_WIDE_KEYWORDS = ${setLiteral(SUPPLEMENT.cssWideKeywords)};
@@ -671,6 +728,10 @@ const ZERO_UNIT_KEEPING_PROPERTIES = ${setLiteral(SUPPLEMENT.zeroUnitKeepingProp
 
 // At-rules whose empty block is inert, so dropping it changes nothing.
 const DROPPABLE_WHEN_EMPTY_AT_RULES = ${setLiteral(SUPPLEMENT.droppableWhenEmptyAtRules)};
+
+// The math functions whose result steps with their arguments, so a value inside
+// one keeps the unit and the digits it was written with.
+const STEPPED_FUNCTIONS = ${setLiteral(SUPPLEMENT.steppedFunctions)};
 
 // The units fixed against each other (CSS Values 4 §6.2, §8), as
 // \`unit -> [group, how many of the group's base unit one is]\`. Two units in the
@@ -729,8 +790,10 @@ module.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
 module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
 module.exports.MATH_FUNCTION_ARITY = MATH_FUNCTION_ARITY;
+module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
+module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
 module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;
