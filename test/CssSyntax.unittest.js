@@ -1932,7 +1932,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["calc(1px/0)"],
 			// Neither the sum nor the product is exact in a double.
 			["calc(.1px + .2px)"],
-			["calc(7px/3)"],
+			["calc(1px/7)"],
 			["calc(3px/1.1)"],
 			["calc(1e20px + 1px)"],
 			["calc(1e308px*1e10)"],
@@ -1978,7 +1978,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
-	describe("min(), max() and clamp()", () => {
+	describe("min(), max(), clamp(), abs(), sign() and hypot()", () => {
 		it.each([
 			// A percentage basis can be negative, and which of two is smaller then
 			// depends on that sign — unlike scaling one, which is linear.
@@ -1993,9 +1993,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// `round()` leads with a strategy, so it has no arity to read.
 			["round(down,5px,2px)"],
 			// Math functions whose meaning is not written yet.
-			["hypot(3px,4px)"],
-			["abs(-5px)"],
-			["sign(-5px)"]
+			["sqrt(4)"],
+			["pow(2,3)"],
+			["mod(7px,3px)"],
+			["atan2(1,1)"]
 		])("leaves %s alone", (expression) => {
 			expect(value(expression)).toBe(expression);
 		});
@@ -2017,6 +2018,27 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it("keeps the parentheses on a negative, as calc() does", () => {
 			expect(value("min(-5px,-2px)")).toBe("calc(-5px)");
+		});
+
+		it("drops a sign with abs(), whatever the unit scales by", () => {
+			// Every length unit scales by a positive factor, so the coefficient's
+			// sign is the value's even where the factor is not known here.
+			expect(value("abs(-5px)")).toBe("5px");
+			expect(value("abs(-1em)")).toBe("1em");
+		});
+
+		it("turns a sign() into the number it is", () => {
+			expect(minify("a{z-index:sign(5px)}")).toBe("a{z-index:1}");
+			expect(minify("a{z-index:sign(0px)}")).toBe("a{z-index:0}");
+			// A negative keeps its parentheses, as everywhere else.
+			expect(minify("a{z-index:sign(-5px)}")).toBe("a{z-index:calc(-1)}");
+		});
+
+		it("takes hypot() only where the root is exact", () => {
+			expect(value("hypot(3px,4px)")).toBe("5px");
+			expect(value("hypot(6px,8px,0px)")).toBe("10px");
+			// Irrational for most inputs.
+			expect(value("hypot(1px,1px)")).toBe("hypot(1px,1px)");
 		});
 	});
 });
