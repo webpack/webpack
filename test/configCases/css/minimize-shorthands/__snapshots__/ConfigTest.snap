@@ -63,7 +63,7 @@ Array [
   "/*! font-weight: the keyword CSS Fonts 4 defines as 400 */.t59{font-weight:400}",
   "/*! font-weight: ...and as 700, whatever its case */.t60{font-weight:700}",
   "/*! font-weight: the \`@font-face\` descriptor means the same */@font-face{font-family:x;font-weight:400}",
-  "/*! declined: inside the \`font\` shorthand a \`normal\` may be the style or variant */.t61{font:normal 12px serif}",
+  "/*! declined: inside the \`font\` shorthand a \`normal\` may be the style or variant */.t61{font:normal 9pt serif}",
   "/*! declined: the keyword means something else on every other property */.t62{font-variant:normal;line-height:normal}",
 ]
 `;

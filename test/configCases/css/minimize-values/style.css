@@ -1,8 +1,10 @@
 /* Ported from cssnano's `postcss-convert-values` and `postcss-normalize-whitespace`
-   suites. webpack normalizes numbers but never converts units, rounds, or drops a
-   zero's unit — `0px` is not `0` inside `calc()` or a `flex-basis`, and `0s` is
-   not a valid `transition-duration` — so those cases are here as passthroughs,
-   marking where a future optimization would show up. */
+   suites. webpack normalizes a number, rounds it to 6 significant digits and
+   reaches for a shorter unit fixed against the one written — but only where the
+   engine cannot tell: a zero's unit stays inside `calc()` and on a `flex-basis`,
+   an angle keeps every digit (`rotate()` runs it through trig), and nothing is
+   touched in a `@supports` condition, which tests the declaration rather than
+   applying it. */
 
 /*! convert-values: should convert milliseconds to seconds */
 .t01 { transition-duration: 500ms }
@@ -155,3 +157,41 @@
 @media (width: 100px) { .t70 { color: red } }
 /*! declined: a `@supports` condition is a declaration, not a media feature */
 @supports (min-width: 1px) { .t71 { color: red } }
+
+/* Rounding and unit conversion, each verified against headless Chromium: the
+   computed style of the authored form and of the emitted one are identical. */
+
+/*! webpack: 6 significant digits is below what the engine reports */
+.t72 { width: 33.33333333% }
+/*! webpack: ...and below the 1/64px it lays a length out in */
+.t73 { width: 1.0000001px }
+/*! webpack: ...for a unitless number too */
+.t74 { opacity: 0.123456789 }
+/*! webpack: declined: an angle is amplified by the trig in rotate() */
+.t75 { transform: rotate(33.33333333deg) }
+/*! webpack: ...but a plain number argument rounds */
+.t76 { transform: scale(1.123456789) }
+/*! webpack: declined: past 1e4 the rounded error would pass 1/64px */
+.t77 { width: 33333.33333px }
+/*! webpack: the units CSS Values 4 fixes against each other convert */
+.t78 { width: 16px }
+.t79 { width: 12pt }
+.t80 { width: 10mm }
+.t81 { transition-duration: 400ms }
+/*! webpack: ...only when the ratio divides exactly */
+.t82 { width: 1.3px }
+/*! webpack: declined: `q` is a source only — Safari read it first in 15 */
+.t83 { width: 10mm; height: 40q }
+/*! webpack: declined: a `@supports` condition tests the unit itself */
+@supports (width: 16px) { .t84 { color: red } }
+/*! webpack: ...and the value it is tested with */
+@supports (color: rgba(0, 0, 0, .5)) { .t85 { color: red } }
+/*! webpack: a media feature is evaluated, not tested, so it converts */
+@media (min-width: 1200px) { .t86 { color: red } }
+/*! webpack: an alpha is the byte the engine already quantizes it to */
+.t87 { color: rgba(0, 0, 0, .5) }
+.t88 { color: rgba(255, 0, 0, .2) }
+/*! webpack: ...collapsing to 4 digits when every pair repeats */
+.t89 { color: rgba(255, 0, 0, .8) }
+/*! webpack: declined: a custom property keeps its authored text */
+.t90 { --width: 16px; --alpha: rgba(0, 0, 0, .5); --round: 33.33333333% }

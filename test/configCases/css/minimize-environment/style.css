@@ -12,6 +12,13 @@
 .t04 { color: rgb(0, 0, 0) }
 /*! a source hex with alpha is the author's own, and is only shortened */
 .t05 { color: #00000000 }
+/*! a partly transparent color keeps its function: the hex would need the alpha */
+.t08 { color: rgba(0, 0, 0, .5) }
+/*! ...whatever the channels are */
+.t09 { color: rgba(255, 0, 0, .2) }
+/*! rounding and unit conversion are not gated — no engine reads one and not the
+   other, so they apply here too */
+.t10 { width: 16px; height: 33.33333333% }
 
 /*! a media feature keeps the `min-`/`max-` spelling every engine reads */
 @media (min-width: 1200px) { .t06 { color: red } }

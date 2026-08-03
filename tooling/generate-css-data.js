@@ -288,7 +288,7 @@ const mapLiteral = (entries) =>
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], droppableWhenEmptyAtRules: string[] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[] }} */
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
 	cssWideKeywords: ["inherit", "initial", "revert", "revert-layer", "unset"],
@@ -330,7 +330,32 @@ const SUPPLEMENT = {
 	// At-rules whose empty block is inert. Not `@keyframes` (an empty one still
 	// runs the animation, firing its events) and not `@layer` (an empty block
 	// declares the layer's cascade order).
-	droppableWhenEmptyAtRules: ["media", "supports", "container"]
+	droppableWhenEmptyAtRules: ["media", "supports", "container"],
+	// CSS Values 4 §6.2 and §8: the units fixed against each other. `units.json`
+	// names them but states neither their type nor the ratios. Counted in a base
+	// that makes every one an integer — 1/36576 inch, the smallest subdivision
+	// that clears both the 96/72/6 divisors and the 127 in `2.54` — so the
+	// ratios carry no float error of their own and a conversion either divides
+	// exactly or is declined.
+	absoluteUnitScale: [
+		["px", "length", 381],
+		["pc", "length", 6096],
+		["pt", "length", 508],
+		["in", "length", 36576],
+		["cm", "length", 14400],
+		["mm", "length", 1440],
+		["q", "length", 360],
+		["ms", "time", 1],
+		["s", "time", 1000]
+	],
+	// The units a conversion may emit — every one of them CSS 2.1's, so no engine
+	// reading the stylesheet can fail to read the rewritten unit. `q` is a source
+	// only: CSS Values 3 added it, and Safari did not read it before 15.
+	unitConversionTargets: ["px", "pc", "pt", "in", "cm", "mm", "ms", "s"],
+	// The angle units, which are excluded from rounding: `rotate()` runs its
+	// argument through trig, which amplifies a truncated digit into a different
+	// computed matrix (measured in headless Chromium).
+	angleUnits: ["deg", "grad", "rad", "turn"]
 };
 
 const boxShorthands = collectBoxShorthands(false);
@@ -423,6 +448,22 @@ const ZERO_UNIT_KEEPING_PROPERTIES = ${setLiteral(SUPPLEMENT.zeroUnitKeepingProp
 // At-rules whose empty block is inert, so dropping it changes nothing.
 const DROPPABLE_WHEN_EMPTY_AT_RULES = ${setLiteral(SUPPLEMENT.droppableWhenEmptyAtRules)};
 
+// The units fixed against each other (CSS Values 4 §6.2, §8), as
+// \`unit -> [group, how many of the group's base unit one is]\`. Two units in the
+// same group convert into each other exactly when the ratio is binary-exact.
+/** @type {Map<string, [string, number]>} */
+const ABSOLUTE_UNIT_SCALE = new Map([${SUPPLEMENT.absoluteUnitScale
+	.map(([unit, group, scale]) => `["${unit}", ["${group}", ${scale}]]`)
+	.join(", ")}]);
+
+// The units a conversion may emit. Every one is CSS 2.1's, so rewriting into it
+// cannot outrun what an engine reading the stylesheet already parses.
+const UNIT_CONVERSION_TARGETS = ${setLiteral(SUPPLEMENT.unitConversionTargets)};
+
+// The angle units. Excluded from rounding: \`rotate()\` runs its argument through
+// trig, which turns a truncated digit into a different computed matrix.
+const ANGLE_UNITS = ${setLiteral(SUPPLEMENT.angleUnits)};
+
 // Packed \`0xrrggbb\` -> the shortest named color with that value. Only names that
 // can beat \`#rrggbb\`; anything longer would never be picked.
 const RGB_TO_NAME = new Map([
@@ -434,6 +475,8 @@ ${colorNames
 	.join(",\n")}
 ]);
 
+module.exports.ABSOLUTE_UNIT_SCALE = ABSOLUTE_UNIT_SCALE;
+module.exports.ANGLE_UNITS = ANGLE_UNITS;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
 module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
@@ -448,6 +491,7 @@ module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
+module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;
 `;
 

@@ -2,10 +2,6 @@
 
 exports[`ConfigTestCases css minimize-declined minimize-declined should compile 1`] = `
 Array [
-  "/*! declined: lossy — 0x20/255 is .12549, not .125 (lightningcss: #00000020) */.t01{color:rgba(0,0,0,.125)}",
-  "/*! declined: lossy — 0x80/255 is .50196, not .5 (lightningcss: #00000080) */.t02{color:rgba(0,0,0,.5)}",
-  "/*! declined: lossy — 6-significant-digit rounding (lightningcss: 33.3333%) */.t03{width:33.33333333%}",
-  "/*! declined: lossy — rounding away a small difference (lightningcss: 1px) */.t04{width:1.0000001px}",
   "/*! declined here only because this case builds for no particular target — with
    \`output.environment.cssColorHexAlpha\` false it stays, and otherwise it is
    \`#0000\` (see the \`minimize-environment\` case) (lightningcss: #0000) */.t05{background-color:#0000}",
@@ -30,7 +26,6 @@ Array [
   "/*! declined: not identical, so the first is a fallback for an engine that cannot
    read the second — dropping it is how esbuild and lightningcss lose this pair
    (csso, cssnano and clean-css keep it too) */.t16{color:#fff;color:color(display-p3 1 1 1)}",
-  "/*! declined: unit conversion, exact here but not for every value (cssnano: 1pc) */.t17{width:16px}",
   "/*! declined: inside \`calc()\` a bare \`0\` is a \`<number>\`, so the expression stops
    parsing (every tool keeps this one) */.t18{width:calc(0px + 1px)}",
   "/*! declined: only where it has to round — an hsl() landing on a byte exactly
