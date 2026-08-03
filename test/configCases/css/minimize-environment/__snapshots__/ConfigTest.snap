@@ -13,5 +13,8 @@ Array [
    other, so they apply here too */.t10{width:1pc;height:33.3333%}",
   "/*! a media feature keeps the \`min-\`/\`max-\` spelling every engine reads */@media (min-width:1200px){.t06{color:red}}",
   "/*! ...at any nesting depth */@media ((min-width:1px) and (max-height:2px)){.t07{color:red}}",
+  "/*! the \`inset\` shorthand is newer than the four longhands it merges */.t11{top:1px;right:2px;bottom:1px;left:2px}",
+  "/*! ...unlike \`margin\`, whose shorthand is as old as its longhands */.t12{margin:1px 2px}",
+  "/*! ...and a source \`inset\` is the author's own, so it still collapses */.t13{inset:1px}",
 ]
 `;

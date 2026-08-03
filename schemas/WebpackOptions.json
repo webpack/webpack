@@ -1151,6 +1151,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "cssInsetShorthand": {
+          "description": "The environment supports the 'inset' shorthand property.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "cssMediaQueryRange": {
           "description": "The environment supports media query range syntax ('(width >= 600px)').",
           "type": "boolean",

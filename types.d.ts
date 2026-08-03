@@ -5360,6 +5360,7 @@ declare interface CssEnvironment {
 	 * 4- and 8-digit hex colors (`#rgba`, `#rrggbbaa`) are available
 	 */
 	cssColorHexAlpha?: boolean;
+	cssInsetShorthand?: boolean;
 
 	/**
 	 * media query range syntax (`(width >= 600px)`) is available
@@ -7325,6 +7326,7 @@ declare interface Environment {
 	 * @since 5.110.0
 	 */
 	cssColorHexAlpha?: boolean;
+	cssInsetShorthand?: boolean;
 
 	/**
 	 * The environment supports media query range syntax ('(width >= 600px)').

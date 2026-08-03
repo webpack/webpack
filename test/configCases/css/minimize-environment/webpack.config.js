@@ -10,6 +10,7 @@ module.exports = {
 		// the whole option flow is exercised rather than the serializer alone.
 		environment: {
 			cssColorHexAlpha: false,
+			cssInsetShorthand: false,
 			cssMediaQueryRange: false
 		}
 	},

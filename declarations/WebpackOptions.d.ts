@@ -2877,6 +2877,10 @@ export interface Environment {
 	 */
 	cssColorHexAlpha?: boolean;
 	/**
+	 * The environment supports the 'inset' shorthand property.
+	 */
+	cssInsetShorthand?: boolean;
+	/**
 	 * The environment supports media query range syntax ('(width >= 600px)').
 	 * @since 5.110.0
 	 */

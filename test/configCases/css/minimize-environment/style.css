@@ -1,6 +1,7 @@
-/* `output.environment.cssColorHexAlpha` decides whether the shortest spelling of
-   a fully transparent color is reachable. This build sets it false, so every
-   case here keeps the form an engine without CSS Color 4 hex alpha can read. */
+/* The `output.environment` CSS entries decide which newer spellings the minifier
+   may reach for. This build sets all three false, so every case here keeps the
+   form an engine without CSS Color 4 hex alpha, Media Queries 4 range syntax or
+   the CSS Position 3 `inset` shorthand can read. */
 
 /*! the keyword stays a keyword */
 .t01 { background-color: transparent }
@@ -24,3 +25,9 @@
 @media (min-width: 1200px) { .t06 { color: red } }
 /*! ...at any nesting depth */
 @media ((min-width: 1px) and (max-height: 2px)) { .t07 { color: red } }
+/*! the `inset` shorthand is newer than the four longhands it merges */
+.t11 { top: 1px; right: 2px; bottom: 1px; left: 2px }
+/*! ...unlike `margin`, whose shorthand is as old as its longhands */
+.t12 { margin-top: 1px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }
+/*! ...and a source `inset` is the author's own, so it still collapses */
+.t13 { inset: 1px 1px 1px 1px }
