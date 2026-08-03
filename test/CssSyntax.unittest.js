@@ -1759,9 +1759,11 @@ describe("CssSyntax — SourceProcessor without visitors", () => {
 });
 
 describe("CssSyntax minify — the value transforms' rejection paths", () => {
+	/** @typedef {import("../lib/css/syntax").CssEnvironment} CssEnvironment */
+
 	/**
 	 * @param {string} css a stylesheet
-	 * @param {object=} environment the target's CSS abilities
+	 * @param {CssEnvironment=} environment the target's CSS abilities
 	 * @returns {string} its minified serialization
 	 */
 	const minify = (css, environment) =>
@@ -1769,12 +1771,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 	/**
 	 * @param {string} value a declaration value
-	 * @param {object=} environment the target's CSS abilities
+	 * @param {CssEnvironment=} environment the target's CSS abilities
 	 * @returns {string} the value as it is printed back
 	 */
 	const value = (value, environment) => {
 		const out = minify(`a{x:${value}}`, environment);
-		return /^a\{x:([\s\S]*)\}$/.exec(out)[1];
+		return /** @type {RegExpExecArray} */ (/^a\{x:([\s\S]*)\}$/.exec(out))[1];
 	};
 
 	describe("polar and Lab colors", () => {
