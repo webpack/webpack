@@ -833,7 +833,7 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		// dropping a comment must never merge the tokens it stood between.
 		expect(min("a{margin:1px/**/2}")).toBe("a{margin:1px 2}");
 		expect(min("@media screen/**/and/**/(min-width:1px){a{c:1}}")).toBe(
-			"@media screen and (min-width:1px){a{c:1}}"
+			"@media screen and (width>=1px){a{c:1}}"
 		);
 	});
 

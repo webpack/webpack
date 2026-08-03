@@ -142,3 +142,16 @@
 .t63 { flex: 1 1 0px }
 /*! webpack: one component of several */
 .t64 { margin: 0px 1px }
+/*! lightningcss: (width>=1200px) — `min-X: Y` is exactly `X >= Y` */
+@media (min-width: 1200px) { .t65 { color: red } }
+/*! lightningcss: (width<=1199.98px) */
+@media (max-width: 1199.98px) { .t66 { color: red } }
+/*! webpack: every range-type feature, and nested conditions */
+@media (min-resolution: 2dppx) { .t67 { color: red } }
+@media ((min-width: 1px) and (max-height: 2px)) { .t68 { color: red } }
+/*! webpack: `@container` carries media features too, name and all */
+@container card (min-width: 1px) { .t69 { color: red } }
+/*! declined: a plain feature has no range spelling to reach for */
+@media (width: 100px) { .t70 { color: red } }
+/*! declined: a `@supports` condition is a declaration, not a media feature */
+@supports (min-width: 1px) { .t71 { color: red } }

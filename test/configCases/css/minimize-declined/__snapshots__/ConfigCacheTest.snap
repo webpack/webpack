@@ -9,7 +9,9 @@ Array [
   "/*! declined here only because this case builds for no particular target — with
    \`output.environment.cssColorHexAlpha\` false it stays, and otherwise it is
    \`#0000\` (see the \`minimize-environment\` case) (lightningcss: #0000) */.t05{background-color:#0000}",
-  "/*! declined: exact, but range syntax drops every pre-2022 browser (lightningcss: (width>=1200px)) */@media (min-width:1200px){.t06{color:red}}",
+  "/*! declined here only because this case builds for no particular target — with
+   \`output.environment.cssMediaQueryRange\` false it stays, and otherwise it is
+   \`(width>=1200px)\` (see the \`minimize-environment\` case) */@media (width>=1200px){.t06{color:red}}",
   "/*! declined: a longhand between them is stepped over by the merge, so only an
    adjacent four become the shorthand (lightningcss: margin:1px 2px) */.t07{margin-top:1px;margin-right:2px;color:red;margin-bottom:1px;margin-left:2px}",
   "/*! declined: \`bolder\` and \`lighter\` are relative to the parent's weight, so they

@@ -67,7 +67,7 @@ exports[`ConfigTestCases html minimize-transforms minimize-transforms should com
 	<table><caption>whitespace behind it keeps the tag</caption> <col><tr><td>a</table>
 	<table><col><colgroup><col><tr><td>a</table>
 	<table><colgroup span=2><col><colgroup><tr><td>a</table>
-	<p>a > b, &lt; and &amp; still escape</p>
+	<p>a > b, &lt; and & still escape</p>
 	<input type=file accept=\\"image/ png,.jpg\\">
 	<map><area shape=poly coords=\\"1 2,3,4 5\\"></map>
 	<input type=checkbox alpha>
@@ -76,6 +76,9 @@ exports[`ConfigTestCases html minimize-transforms minimize-transforms should com
 	<table><tr><td nowrap>obsolete but still boolean</table>
 	<hr noshade>
 	<div alpha=x>not boolean here</div>
+	<p>R&D, AT&T and a query x?a=1&b=2 keep a bare ampersand</p>
+	<p>but &amp;amp;, &amp;lt; and &amp;#38; stay escaped: they would read back as a reference</p>
+	<p>café and   decode to the character itself</p>
 
 
 </body></html>"

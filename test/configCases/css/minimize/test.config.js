@@ -70,6 +70,6 @@ module.exports = {
 		expect(css).toContain(".h{color:red;.i{x:1}color:green}");
 		// @media prelude collapses, its block trims, and the whitespace around the
 		// feature test's `:` — insignificant in a query condition — goes.
-		expect(css).toContain("@media screen and (min-width:100px){");
+		expect(css).toContain("@media screen and (width>=100px){");
 	}
 };

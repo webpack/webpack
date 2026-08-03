@@ -9,7 +9,8 @@ module.exports = {
 		// The default minimizer wiring reads this and passes it to `cssMinify`, so
 		// the whole option flow is exercised rather than the serializer alone.
 		environment: {
-			cssColorHexAlpha: false
+			cssColorHexAlpha: false,
+			cssMediaQueryRange: false
 		}
 	},
 	optimization: {

@@ -44,8 +44,8 @@ Array [
   "/*! webpack: !important loses its leading space */.t41{color:red!important}",
   "/*! webpack: a required value space collapses to one */.t42{margin:0 auto}",
   "/*! webpack: calc() operator spaces are meaningful */.t43{width:calc(1px + 2px)}",
-  "/*! webpack: a media feature test */@media (min-width:100px){.t44{color:red}}",
-  "/*! webpack: ...with whitespace on both sides */@media screen and (min-width:100px){.t45{color:red}}",
+  "/*! webpack: a media feature test */@media (width>=100px){.t44{color:red}}",
+  "/*! webpack: ...with whitespace on both sides */@media screen and (width>=100px){.t45{color:red}}",
   "/*! webpack: a Media Queries Level 4 range */@media (width>=40rem){.t46{color:red}}",
   "/*! webpack: ...on both sides of the feature */@media (400px<=width<=700px){.t47{color:red}}",
   "/*! webpack: a container query */@container card (width>400px){.t48{color:red}}",
@@ -66,5 +66,11 @@ Array [
   "/*! webpack: \`flex-basis\` keeps it — IE 11 drops a \`flex\` whose basis has none */.t62{flex-basis:0px}",
   "/*! webpack: ...and so does the shorthand carrying one */.t63{flex:1 1 0px}",
   "/*! webpack: one component of several */.t64{margin:0 1px}",
+  "/*! lightningcss: (width>=1200px) — \`min-X: Y\` is exactly \`X >= Y\` */@media (width>=1200px){.t65{color:red}}",
+  "/*! lightningcss: (width<=1199.98px) */@media (width<=1199.98px){.t66{color:red}}",
+  "/*! webpack: every range-type feature, and nested conditions */@media (resolution>=2dppx){.t67{color:red}}@media ((width>=1px) and (height<=2px)){.t68{color:red}}",
+  "/*! webpack: \`@container\` carries media features too, name and all */@container card (width>=1px){.t69{color:red}}",
+  "/*! declined: a plain feature has no range spelling to reach for */@media (width:100px){.t70{color:red}}",
+  "/*! declined: a \`@supports\` condition is a declaration, not a media feature */@supports (min-width:1px){.t71{color:red}}",
 ]
 `;

@@ -51,7 +51,7 @@ Array [
   "/*! merge-longhand: \`inset\`'s longhands are the bare side names */.t47{inset:1px 2px 3px 4px}",
   "/*! merge-longhand: border-color, border-style and border-width all qualify */.t48{border-color:red}",
   "/*! merge-longhand: a component may be a function */.t49{margin:calc(1px + 2px) 2px 1px}",
-  "/*! merge-longhand: inside an at-rule too */@media (min-width:1px){.t50{margin:1px 2px}}",
+  "/*! merge-longhand: inside an at-rule too */@media (width>=1px){.t50{margin:1px 2px}}",
   "/*! declined: an incomplete family is not the shorthand */.t51{margin-top:1px;margin-right:2px;margin-bottom:1px}",
   "/*! declined: \`!important\` must agree across the four */.t52{margin-top:1px!important;margin-right:2px;margin-bottom:1px;margin-left:2px}",
   "/*! merge-longhand: ...and does when all four carry it */.t53{margin:1px 2px!important}",

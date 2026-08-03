@@ -7,5 +7,7 @@ Array [
   "/*! ...including inside a gradient */.t03{background-image:linear-gradient(red,transparent)}",
   "/*! an opaque color is not gated: it has no alpha to spell */.t04{color:#000}",
   "/*! a source hex with alpha is the author's own, and is only shortened */.t05{color:#0000}",
+  "/*! a media feature keeps the \`min-\`/\`max-\` spelling every engine reads */@media (min-width:1200px){.t06{color:red}}",
+  "/*! ...at any nesting depth */@media ((min-width:1px) and (max-height:2px)){.t07{color:red}}",
 ]
 `;

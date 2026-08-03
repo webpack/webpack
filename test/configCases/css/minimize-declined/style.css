@@ -18,7 +18,9 @@
    `output.environment.cssColorHexAlpha` false it stays, and otherwise it is
    `#0000` (see the `minimize-environment` case) (lightningcss: #0000) */
 .t05 { background-color: transparent }
-/*! declined: exact, but range syntax drops every pre-2022 browser (lightningcss: (width>=1200px)) */
+/*! declined here only because this case builds for no particular target — with
+   `output.environment.cssMediaQueryRange` false it stays, and otherwise it is
+   `(width>=1200px)` (see the `minimize-environment` case) */
 @media (min-width: 1200px) { .t06 { color: red } }
 /*! declined: a longhand between them is stepped over by the merge, so only an
    adjacent four become the shorthand (lightningcss: margin:1px 2px) */

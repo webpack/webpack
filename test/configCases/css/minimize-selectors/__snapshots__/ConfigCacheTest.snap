@@ -52,7 +52,7 @@ Array [
   "/*! webpack: a descendant combinator before a pseudo-class in a scope root */@scope (div :hover){.t51{color:red}}",
   "/*! webpack: ...and in a scope limit */@scope (.a .b) to (.c :where(.d)){.t52{color:red}}",
   "/*! webpack: a combinator's own whitespace still goes */@scope (div>p) to (span+em){.t53{color:red}}",
-  "/*! webpack: a query condition still loses the whitespace around its \`:\` */@media (min-width:100px){.t54{color:red}}",
+  "/*! webpack: a query condition still loses the whitespace around its \`:\` */@media (width>=100px){.t54{color:red}}",
   "/*! webpack: ...and \`@supports\` keeps behaving as a condition */@supports (color:red){.t55{color:red}}",
   "/*! lightningcss: .t56:before — Selectors 4 §3.3 keeps the one-colon spelling */.t56:before{color:red}",
   "/*! lightningcss: .t57:after */.t57:after{color:red}",

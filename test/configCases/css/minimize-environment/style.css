@@ -12,3 +12,8 @@
 .t04 { color: rgb(0, 0, 0) }
 /*! a source hex with alpha is the author's own, and is only shortened */
 .t05 { color: #00000000 }
+
+/*! a media feature keeps the `min-`/`max-` spelling every engine reads */
+@media (min-width: 1200px) { .t06 { color: red } }
+/*! ...at any nesting depth */
+@media ((min-width: 1px) and (max-height: 2px)) { .t07 { color: red } }

@@ -5360,6 +5360,11 @@ declare interface CssEnvironment {
 	 * 4- and 8-digit hex colors (`#rgba`, `#rrggbbaa`) are available
 	 */
 	cssColorHexAlpha?: boolean;
+
+	/**
+	 * media query range syntax (`(width >= 600px)`) is available
+	 */
+	cssMediaQueryRange?: boolean;
 }
 declare abstract class CssGenerator extends Generator {
 	options: CssModuleGeneratorOptions;
@@ -7320,6 +7325,12 @@ declare interface Environment {
 	 * @since 5.110.0
 	 */
 	cssColorHexAlpha?: boolean;
+
+	/**
+	 * The environment supports media query range syntax ('(width >= 600px)').
+	 * @since 5.110.0
+	 */
+	cssMediaQueryRange?: boolean;
 
 	/**
 	 * The environment supports destructuring ('{ a, b } = obj').
