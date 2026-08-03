@@ -186,6 +186,31 @@ Run targeted tests — `yarn test:base --testPathPatterns="<pattern>"` or `yarn 
 
 **Run only tests specific to your change — leave the broad suites to CI.** Pick the cases that cover the touched code (`--testPathPatterns` / `--testNamePattern`) instead of sweeping whole suites. In particular, do **not** run the spec-conformance suites (`yarn test:test262` / `yarn test:html5lib` / `yarn test:css-parsing`) as a routine local verification step — `test262` alone takes tens of minutes — and don't run the full `test:integration` matrix locally. CI runs all of them on every push; locally, run the `configCases/` relevant to your change.
 
+This is a hard rule, not a preference: a broad local sweep costs many minutes, and on a busy machine it manufactures timeout failures that look like regressions but reproduce nowhere else. Narrow the pattern until the run is seconds. Two habits keep this honest:
+
+- **Never read a pass/fail verdict through a pipe.** `yarn test:base … | grep …` discards jest's exit code, so a red run reads as green. Check the exit status, or read the `Tests:` summary line directly.
+- **Never attribute a failure without a base run.** Before assuming a failing case is yours, re-run that exact case on the unmodified files. Most surprises are pre-existing or contention flakes.
+
+### Verifying a performance or memory change
+
+> [!REQUIRED]
+
+A perf/memory claim needs evidence, and the cheap kinds are the trustworthy ones. Prefer, in this order:
+
+1. **Counting** — call counts, allocation counts, retained object counts. Deterministic; run it once.
+2. **CPU-profile attribution** — `node --cpu-prof`, then sum self time per bucket. Robust to a loaded machine.
+3. **Retained heap** — `node --expose-gc`, GC several times, read `v8.getHeapStatistics().used_heap_size`.
+4. **Wall/CPU timing** — last resort. Interleave the arms in one process, report `n` and dispersion, and treat a difference smaller than the run-to-run spread as no result.
+
+`FILTER="<case-name>" yarn benchmark` drives the repo's own cases; `test/benchmarkCases/` is the fixture set.
+
+Pitfalls that have produced wrong conclusions here:
+
+- **Micro-benchmarks of one function lie.** V8's escape analysis deletes non-escaping allocations and the compilation cache hides repeated `new Function` cost. Measure inside a real build.
+- **Changing async structure is not neutral.** Adding a `process.nextTick`/`setImmediate`, or collapsing callbacks, reorders module processing and drags order-dependent work with it. Prove the order is unchanged before believing the delta.
+- **Pick a fixture that actually emits.** `three-long` tree-shakes to a 0-byte bundle in production, so it skips codegen/render/minify entirely and inflates any front-end phase's share. Corroborate on a case that emits code.
+- **Verify semantics every time** — module count, hash of the emitted files on disk, and errors/warnings counts must be unchanged. Comparing two empty outputs proves nothing.
+
 **Run one integration case** by name (`<category> <case-name>`, e.g. `css basic`):
 
 ```sh
