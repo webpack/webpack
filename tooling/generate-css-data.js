@@ -1027,13 +1027,15 @@ const SUPPLEMENT = {
 	// function *means* is spelled out here, as the three things the minifier's
 	// engine needs and nothing more:
 	//
-	//   read   how the arguments are read: `same-unit` (all reduce to one shared
-	//          unit), `number` (all reduce to plain numbers), `eighth-turn` (one
-	//          angle, as a whole number of eighth turns from zero)
-	//   apply  which arithmetic runs — the engine implements each name once, so
-	//          the six trig entries share one `lookup` between them
+	//   read   which reader in `lib/css/mathPrimitives.js` reads its arguments
+	//   apply  which arithmetic there runs — one entry however many functions
+	//          select it, so the six trig ones share `lookup` between them
 	//   result the unit the answer carries: `same` as its arguments, `` for a
 	//          number, or an angle unit
+	//
+	// `read` and `apply` are the exported names, and the generated table holds
+	// the functions themselves rather than the names — a name no longer exported
+	// fails generation instead of quietly unfolding nothing.
 	//
 	// Adding a function is adding a line here; a name whose arithmetic is already
 	// implemented needs nothing else. `calc()` has no entry — it is not one value
@@ -1045,26 +1047,26 @@ const SUPPLEMENT = {
 	// the same length, but headless Chromium reads `round(down,4.5cm,1.5cm)` as
 	// `3cm` and `round(down,45mm,15mm)` as `4.5cm`.
 	mathFunctionFold: [
-		["abs", "same-unit", "absolute", "same", null, false],
-		["acos", "number", "lookup", "deg", "ARC_COSINE_DEGREES", false],
-		["asin", "number", "lookup", "deg", "ARC_SINE_DEGREES", false],
-		["atan", "number", "lookup", "deg", "ARC_TANGENT_DEGREES", false],
-		["atan2", "same-unit", "arcTangent2", "deg", null, false],
-		["clamp", "same-unit", "clamp", "same", null, false],
-		["cos", "eighth-turn", "lookup", "", "EIGHTH_TURN_COSINE", false],
-		["exp", "number", "exponential", "", null, false],
-		["hypot", "same-unit", "hypotenuse", "same", null, false],
-		["log", "number", "logarithm", "", null, false],
-		["max", "same-unit", "maximum", "same", null, false],
-		["min", "same-unit", "minimum", "same", null, false],
-		["mod", "same-unit", "modulus", "same", null, true],
-		["pow", "number", "power", "", null, false],
-		["rem", "same-unit", "remainder", "same", null, true],
-		["round", "same-unit", "round", "same", null, true],
-		["sign", "same-unit", "sign", "", null, false],
-		["sin", "eighth-turn", "lookup", "", "EIGHTH_TURN_SINE", false],
-		["sqrt", "number", "squareRoot", "", null, false],
-		["tan", "eighth-turn", "lookup", "", "EIGHTH_TURN_TANGENT", false]
+		["abs", "readSameUnit", "absolute", "same", null, false],
+		["acos", "readNumber", "lookup", "deg", "ARC_COSINE_DEGREES", false],
+		["asin", "readNumber", "lookup", "deg", "ARC_SINE_DEGREES", false],
+		["atan", "readNumber", "lookup", "deg", "ARC_TANGENT_DEGREES", false],
+		["atan2", "readSameUnit", "arcTangent2", "deg", null, false],
+		["clamp", "readSameUnit", "clamp", "same", null, false],
+		["cos", "readEighthTurn", "lookup", "", "EIGHTH_TURN_COSINE", false],
+		["exp", "readNumber", "exponential", "", null, false],
+		["hypot", "readSameUnit", "hypotenuse", "same", null, false],
+		["log", "readNumber", "logarithm", "", null, false],
+		["max", "readSameUnit", "maximum", "same", null, false],
+		["min", "readSameUnit", "minimum", "same", null, false],
+		["mod", "readSameUnit", "modulus", "same", null, true],
+		["pow", "readNumber", "power", "", null, false],
+		["rem", "readSameUnit", "remainder", "same", null, true],
+		["round", "readSameUnit", "round", "same", null, true],
+		["sign", "readSameUnit", "sign", "", null, false],
+		["sin", "readEighthTurn", "lookup", "", "EIGHTH_TURN_SINE", false],
+		["sqrt", "readNumber", "squareRoot", "", null, false],
+		["tan", "readEighthTurn", "lookup", "", "EIGHTH_TURN_TANGENT", false]
 	]
 };
 
@@ -1102,12 +1104,40 @@ const collectArcAngles = (table, from, to) => {
 	return out.sort((a, b) => a[0] - b[0]);
 };
 
+// `readEighthTurn` is not exported under that name: it is the reader
+// `eighthTurnReader` builds once the quarter-turn table exists, which only
+// `lib/css/data.js` can do.
+const GENERATED_READERS = new Set(["readEighthTurn"]);
+
+/**
+ * Fail generation when a descriptor names an arithmetic `lib/css/mathPrimitives`
+ * does not export. The generated table holds the functions themselves, so an
+ * unresolved name would otherwise reach `lib/css/data.js` as a bare identifier.
+ */
+const assertPrimitivesExist = () => {
+	const primitives = require("../lib/css/mathPrimitives");
+
+	for (const [name, read, apply] of SUPPLEMENT.mathFunctionFold) {
+		for (const key of [read, apply]) {
+			if (GENERATED_READERS.has(key)) continue;
+			if (
+				typeof (/** @type {EXPECTED_ANY} */ (primitives)[key]) !== "function"
+			) {
+				throw new Error(
+					`${name}() names "${key}", which lib/css/mathPrimitives does not export`
+				);
+			}
+		}
+	}
+};
+
 /**
  * Read every table out of the datasets and write `lib/css/data.js`, or report
  * that it is out of date.
  */
 const generate = () => {
 	assertGrammarsParse();
+	assertPrimitivesExist();
 
 	const boxShorthands = collectBoxShorthands(false);
 	const slashShorthands = collectBoxShorthands(true);
@@ -1136,6 +1166,30 @@ const generate = () => {
 // Sources: mdn-data ${mdnDataPackage.version}, color-name ${colorNamePackage.version}.
 
 "use strict";
+
+const {
+	absolute,
+	arcTangent2,
+	clamp,
+	eighthTurnReader,
+	exponential,
+	hypotenuse,
+	logarithm,
+	lookup,
+	maximum,
+	minimum,
+	modulus,
+	power,
+	readNumber,
+	readSameUnit,
+	remainder,
+	round,
+	sign,
+	squareRoot
+} = require("./mathPrimitives");
+
+/** @typedef {(sums: Map<string, number>[]) => [string, number[]] | null} MathArgumentReader */
+/** @typedef {(values: number[], strategy: string, table: Map<number, number> | null) => number | null} MathOperation */
 
 // Properties whose value is CSS's \`{1,4}\` box notation, where an omitted value
 // is copied from the opposite side. That makes a repeated value redundant:
@@ -1296,17 +1350,21 @@ const ARC_COSINE_DEGREES = ${numberMapLiteral(collectArcAngles(eighthTurnCosine,
 /** @type {Map<number, number>} */
 const ARC_TANGENT_DEGREES = ${numberMapLiteral(collectArcAngles(SUPPLEMENT.eighthTurnTangent, -1, 1))};
 
+// The reader that needs a table, built once here — \`mathPrimitives\` knows the
+// arithmetic of an eighth turn but not which units spell one.
+const readEighthTurn = eighthTurnReader(QUARTER_TURN_ANGLE);
+
 // What folding each math function comes down to, as
 // \`name -> { read, apply, result, table }\`: how its arguments are read, which
-// arithmetic runs, and the unit the answer carries. \`lib/css/syntax.js\`
-// implements each \`read\` and \`apply\` name once and dispatches through this, so
-// it names no function of its own.
-/** @type {Map<string, { read: string, apply: string, result: string, table: Map<number, number> | null }>} */
+// arithmetic runs, and the unit the answer carries. \`read\` and \`apply\` are the
+// functions themselves, so \`lib/css/syntax.js\` drives the fold while naming
+// neither a math function nor an arithmetic of its own.
+/** @type {Map<string, { read: MathArgumentReader, apply: MathOperation, result: string, table: Map<number, number> | null }>} */
 const MATH_FUNCTION_FOLD = new Map([
 ${SUPPLEMENT.mathFunctionFold
 	.map(
 		([name, read, apply, result, table]) =>
-			`\t["${name}", { read: "${read}", apply: "${apply}", result: "${result}", table: ${table === null ? "null" : table} }]`
+			`\t["${name}", { read: ${read}, apply: ${apply}, result: "${result}", table: ${table === null ? "null" : table} }]`
 	)
 	.join(",\n")}
 ]);
