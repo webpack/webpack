@@ -221,6 +221,45 @@ describe("CssValueSyntax", () => {
 			expect(MATH_FUNCTION_ARITY.has("calc-size")).toBe(false);
 		});
 
+		it("derives cosine and the inverses off the two stated tables", () => {
+			const {
+				ARC_COSINE_DEGREES,
+				ARC_SINE_DEGREES,
+				ARC_TANGENT_DEGREES,
+				EIGHTH_TURN_COSINE,
+				EIGHTH_TURN_SINE,
+				EIGHTH_TURN_TANGENT
+			} = require("../lib/css/data");
+			// `cos(θ)` is `sin(θ + 90°)`, and 90° is two eighths.
+			for (let eighth = 0; eighth < 8; eighth++) {
+				expect(EIGHTH_TURN_COSINE[eighth]).toBe(
+					EIGHTH_TURN_SINE[(eighth + 2) % 8]
+				);
+			}
+			// Each inverse is its table read back over the function's principal
+			// branch, so every answer has to land on the value it came from.
+			for (const [table, arc] of [
+				[EIGHTH_TURN_SINE, ARC_SINE_DEGREES],
+				[EIGHTH_TURN_COSINE, ARC_COSINE_DEGREES],
+				[EIGHTH_TURN_TANGENT, ARC_TANGENT_DEGREES]
+			]) {
+				for (const [value, degrees] of arc) {
+					const eighth = (((degrees / 45) % 8) + 8) % 8;
+					expect(table[eighth]).toBe(value);
+				}
+			}
+			expect([...ARC_SINE_DEGREES]).toEqual([
+				[-1, -90],
+				[0, 0],
+				[1, 90]
+			]);
+			expect([...ARC_TANGENT_DEGREES]).toEqual([
+				[-1, -45],
+				[0, 0],
+				[1, 45]
+			]);
+		});
+
 		it("never names a function the spec's math set does not", () => {
 			// The arity table is read to decide whether a function may be folded, so
 			// it has to stay a subset of the functions the grammars call math ones.
