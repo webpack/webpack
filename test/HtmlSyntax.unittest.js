@@ -4290,6 +4290,128 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	});
 });
 
+describe("SourceProcessor — streamed walk recycling", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	// Every case here is sized past the flush batch (4096 nodes) so the walk
+	// actually enters an open element, flushes under it and recycles node ids —
+	// the paths a document that fits in one batch never reaches.
+	const BIG = 5000;
+
+	/**
+	 * @param {string} inner repeated markup
+	 * @returns {string} a document larger than one flush batch
+	 */
+	const bigBody = (inner) =>
+		`<!DOCTYPE html><html><body>${inner.repeat(BIG)}</body></html>`;
+
+	/**
+	 * @param {string} src source
+	 * @param {import("../lib/html/syntax").HtmlProcessOptions=} options options
+	 * @returns {string[]} `+tag` / `-tag` in visit order
+	 */
+	const walk = (src, options) => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/html/syntax").VisitorMap} */ ({
+					[NodeType.Element]: {
+						enter: (path) => log.push(`+${path.tagName()}`),
+						exit: (path) => log.push(`-${path.tagName()}`)
+					}
+				})
+			)
+			.process(src, options);
+		return log;
+	};
+
+	it("visits every element once across flush batches", () => {
+		const log = walk(bigBody("<p><b>x</b></p>"));
+		expect(log.filter((l) => l === "+p")).toHaveLength(BIG);
+		expect(log.filter((l) => l === "+b")).toHaveLength(BIG);
+		// enter/exit stay balanced, so nothing was visited twice or dropped
+		expect(log.filter((l) => l.startsWith("+"))).toHaveLength(
+			log.filter((l) => l.startsWith("-")).length
+		);
+	});
+
+	it("keeps parents around their children across a recycle", () => {
+		const log = walk(bigBody("<p><b>x</b></p>"));
+		const body = log.slice(log.indexOf("+body") + 1, log.lastIndexOf("-body"));
+		for (let i = 0; i < body.length; i += 4) {
+			expect(body.slice(i, i + 4)).toEqual(["+p", "+b", "-b", "-p"]);
+		}
+	});
+
+	it("honours skipChildren() on a streamed element", () => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/html/syntax").VisitorMap} */ ({
+					[NodeType.Element]: {
+						enter: (path) => {
+							log.push(`+${path.tagName()}`);
+							// `div` stays open while its subtree streams, so its skipped
+							// descendants are the ones the walk tracks without entering
+							if (path.tagName() === "div") path.skipChildren();
+						},
+						exit: (path) => log.push(`-${path.tagName()}`)
+					}
+				})
+			)
+			.process(
+				`<!DOCTYPE html><html><body><div>${"<p><b>x</b></p>".repeat(BIG)}</div></body></html>`
+			);
+		// the skipped element itself still exits; nothing below it is visited
+		expect(log.filter((l) => l === "+div")).toHaveLength(1);
+		expect(log.filter((l) => l === "-div")).toHaveLength(1);
+		expect(log.filter((l) => l.endsWith("p") || l.endsWith("b"))).toHaveLength(
+			0
+		);
+		// every exit pairs with an enter
+		const open = [];
+		for (const entry of log) {
+			if (entry.startsWith("+")) open.push(entry.slice(1));
+			else expect(open.pop()).toBe(entry.slice(1));
+		}
+		expect(open).toHaveLength(0);
+	});
+
+	it("merges adjacent text across a flush boundary", () => {
+		/** @type {string[]} */
+		const text = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/html/syntax").VisitorMap} */ ({
+					[NodeType.Text]: (path) => text.push(path.data())
+				})
+			)
+			// entity references split the tokenizer's text runs; the walk must not
+			// also split the node, so one text child stays one visit
+			.process(
+				`<!DOCTYPE html><html><body><p>${"a&amp;b".repeat(BIG)}</p></body></html>`
+			);
+		expect(text).toHaveLength(1);
+		expect(text[0]).toHaveLength(BIG * 3);
+	});
+
+	it("streams a document whose form element leaves the open stack", () => {
+		// `</form>` removes the element from the middle of the open stack, which
+		// forces the entered-prefix scan down its full-scan path.
+		const log = walk(bigBody("<form><p>x</p></form>"));
+		expect(log.filter((l) => l === "+form")).toHaveLength(BIG);
+		expect(log.filter((l) => l === "-form")).toHaveLength(BIG);
+	});
+
+	it("streams tables, where flushing is held back", () => {
+		const log = walk(bigBody("<table><tr><td>a</td></tr></table>"));
+		expect(log.filter((l) => l === "+table")).toHaveLength(BIG);
+		expect(log.filter((l) => l === "+td")).toHaveLength(BIG);
+	});
+});
+
 describe("SourceProcessor — streamed walk offsets", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
