@@ -1534,10 +1534,12 @@ const assertPrimitivesExist = () => {
 };
 
 /**
- * Read every table out of the datasets and write `lib/css/data.js`, or report
- * that it is out of date.
+ * Read every table out of the datasets and build the file they belong in.
+ * Separate from writing it, so a test can assert the checked-in
+ * `lib/css/data.js` is what this produces without touching the disk.
+ * @returns {{ source: string, summary: string }} the unformatted file and what it holds
  */
-const generate = () => {
+const collectData = () => {
 	assertGrammarsParse();
 	assertPrimitivesExist();
 
@@ -1808,6 +1810,14 @@ module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// 
 `;
 
 	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity`;
+	return { source, summary };
+};
+
+/**
+ * Write `lib/css/data.js`, or report that it is out of date.
+ */
+const generate = () => {
+	const { source, summary } = collectData();
 	// Formatted here rather than left to `yarn fmt`, so the comparison below is
 	// against what the repo actually checks in.
 	prettier
@@ -1833,5 +1843,7 @@ module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// 
 
 if (require.main === module) generate();
 
+module.exports.DATA_TARGET = TARGET;
+module.exports.collectData = collectData;
 module.exports.parseValueSyntax = parseValueSyntax;
 module.exports.walkValueSyntax = walkValueSyntax;

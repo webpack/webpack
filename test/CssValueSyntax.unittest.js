@@ -1,6 +1,10 @@
 "use strict";
 
+const fs = require("fs");
+const prettier = require("prettier");
 const {
+	DATA_TARGET,
+	collectData,
 	parseValueSyntax,
 	walkValueSyntax
 } = require("../tooling/generate-css-data");
@@ -306,6 +310,21 @@ describe("CssValueSyntax", () => {
 			for (const name of MATH_FUNCTION_ARITY.keys()) {
 				expect(MATH_FUNCTIONS.has(name)).toBe(true);
 			}
+		});
+	});
+
+	describe("the file those tables are emitted into", () => {
+		it("is what the generator produces from today's datasets", async () => {
+			// The same comparison `yarn lint:special` makes, so a `mdn-data` bump or
+			// an edited `SUPPLEMENT` fails here too rather than only in CI's lint job
+			// — and every collector above runs, which is what proves them.
+			const { source } = collectData();
+			const config = await prettier.resolveConfig(DATA_TARGET);
+			const formatted = await prettier.format(source, {
+				...config,
+				filepath: DATA_TARGET
+			});
+			expect(formatted).toBe(fs.readFileSync(DATA_TARGET, "utf8"));
 		});
 	});
 });
