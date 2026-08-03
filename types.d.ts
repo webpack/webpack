@@ -10101,6 +10101,11 @@ declare interface HtmlProcessOptions {
 	 * print the safely-minified serialization (nodes rebuilt from source, inert comments dropped, opening-tag whitespace collapsed) as `process` walks, and return it (default false = walk only, return `""`)
 	 */
 	minimize?: boolean;
+
+	/**
+	 * what the target can read, forwarded to the CSS minifier this runs over an inline `<style>` and every `style=""`
+	 */
+	environment?: CssEnvironment;
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**
@@ -21491,6 +21496,7 @@ declare class PrintContext<TPath, TNode> {
 }
 declare interface PrintOptions {
 	mode: "minify" | "beautify";
+	environment?: Readonly<Record<string, boolean>>;
 }
 declare interface PrintedElement {
 	element: string;
@@ -29301,7 +29307,7 @@ declare namespace exports {
 			export let QUOTE_DOUBLE: 1;
 			export let QUOTE_NONE: 0;
 			export let QUOTE_SINGLE: 2;
-			export let SVG_TAG_ADJUST: any;
+			export let SVG_TAG_ADJUST: Record<string, string>;
 			export let decodeEntities: _functionSyntax;
 			export let escapeAttribute: (s: string) => string;
 			export let escapeText: (s: string) => string;

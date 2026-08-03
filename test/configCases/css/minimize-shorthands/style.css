@@ -139,6 +139,14 @@
 .t56 { margin-top: 1px 2px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }
 /*! declined: a repeated longhand makes the cascade decide, not the order */
 .t57 { margin-top: 1px; margin-top: 3px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }
+/*! declined: something between the four writes the same family, so the merge would move it */
+.t57b { margin-top: 1px; margin-inline-start: 9px; margin-right: 2px; margin-bottom: 3px; margin-left: 4px }
+/*! declined: ...and a vendor prefix does not hide that — Chromium reads `-webkit-margin-start` */
+.t57c { margin-top: 1px; -webkit-margin-start: 9px; margin-right: 2px; margin-bottom: 3px; margin-left: 4px }
+/*! merge-longhand: an unrelated property between them is free to move */
+.t57d { margin-top: 1px; color: red; margin-right: 2px; margin-bottom: 3px; margin-left: 4px }
+/*! declined: `all` writes every family */
+.t57e { margin-top: 1px; all: unset; margin-right: 2px; margin-bottom: 3px; margin-left: 4px }
 /*! declined: `border-radius`'s longhands are corners, which `{1,4}` orders differently */
 .t58 { border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; border-bottom-left-radius: 1px }
 /*! font-weight: the keyword CSS Fonts 4 defines as 400 */
