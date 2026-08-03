@@ -18,6 +18,9 @@ it("should inline constants from modules with import and re-export declarations"
 	expect(REMOVE_with_all_module_declarations).toBe(321);
 	// END
 	expect(globalThis.__inlineConstModuleDeclarationsSideEffect).toBe(3);
+	// the counter outlives this bundle where a worker shares globals between
+	// test files (Bun), so the next run of this case would start from 3
+	delete globalThis.__inlineConstModuleDeclarationsSideEffect;
 	const block = generated.match(/\/\/ START([\s\S]*)\/\/ END/)[1];
 	expect(
 		block.includes(`((/* inlined export .REMOVE_with_import */123)).toBe(123)`)
