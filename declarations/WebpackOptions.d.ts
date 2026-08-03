@@ -2878,6 +2878,7 @@ export interface Environment {
 	cssColorHexAlpha?: boolean;
 	/**
 	 * The environment supports the 'inset' shorthand property.
+	 * @since 5.110.0
 	 */
 	cssInsetShorthand?: boolean;
 	/**

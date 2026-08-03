@@ -5360,6 +5360,10 @@ declare interface CssEnvironment {
 	 * 4- and 8-digit hex colors (`#rgba`, `#rrggbbaa`) are available
 	 */
 	cssColorHexAlpha?: boolean;
+
+	/**
+	 * the `inset` shorthand property is available
+	 */
 	cssInsetShorthand?: boolean;
 
 	/**
@@ -7326,6 +7330,11 @@ declare interface Environment {
 	 * @since 5.110.0
 	 */
 	cssColorHexAlpha?: boolean;
+
+	/**
+	 * The environment supports the 'inset' shorthand property.
+	 * @since 5.110.0
+	 */
 	cssInsetShorthand?: boolean;
 
 	/**

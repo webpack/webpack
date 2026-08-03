@@ -10948,6 +10948,45 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-css-color-hex-alpha": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports 4- and 8-digit hex colors ('#rgba', '#rrggbbaa').",
+        "multiple": false,
+        "path": "output.environment.cssColorHexAlpha",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports 4- and 8-digit hex colors ('#rgba', '#rrggbbaa').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-css-inset-shorthand": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports the 'inset' shorthand property.",
+        "multiple": false,
+        "path": "output.environment.cssInsetShorthand",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports the 'inset' shorthand property.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-css-media-query-range": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports media query range syntax ('(width >= 600px)').",
+        "multiple": false,
+        "path": "output.environment.cssMediaQueryRange",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports media query range syntax ('(width >= 600px)').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-destructuring": Object {
     "configs": Array [
       Object {
