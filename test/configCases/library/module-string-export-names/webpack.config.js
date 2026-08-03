@@ -4,7 +4,14 @@
 /** @typedef {import("../../../../").Compiler} Compiler */
 /** @typedef {import("../../../../types").Configuration} Configuration */
 
-const STRING_NAMES = ["str name", "re str", "ns name", "deep str"];
+const STRING_NAMES = [
+	"str name",
+	"re str",
+	"ns name",
+	"deep str",
+	"foo bar",
+	"foo-bar"
+];
 
 /**
  * @this {Compiler}
@@ -25,6 +32,11 @@ function expectQuotedExportNames() {
 				// The unquoted form is a syntax error
 				expect(source).not.toContain(`as ${stringName}`);
 			}
+			// Redeclaring a generated binding is a syntax error
+			const declared = (
+				source.match(/\bconst __webpack_exports__\w+/g) || []
+			).map((declaration) => declaration.slice("const ".length));
+			expect(declared).toHaveLength(new Set(declared).size);
 		});
 	};
 	this.hooks.compilation.tap("testcase", handler);
