@@ -51,8 +51,8 @@ Array [
   "/*! declined: only layout knows which is smaller */.n02{width:min(1em,2px)}",
   "/*! declined: a substitution could be anything */.n03{width:min(var(--x),1px)}",
   "/*! declined: clamp() takes exactly three */.n04{width:clamp(1px,2px)}",
-  "/*! declined: round() leads with a strategy, so its arguments are not all
-   expressions and the grammar-read arity leaves it out */.n05{width:round(down,5px,2px)}",
+  "/*! declined: calc-size() leads with a basis, which is an expression this does
+   not evaluate, so it is the one math function with no arity to read */.n05{width:calc-size(auto,size)}",
   "/*! declined: a math function whose meaning is not written yet */.n06{width:sqrt(4)}",
   "/*! declined: ...pow() likewise */.n07{width:pow(2,3)}",
   "/*! kept: a negative folds but keeps the parentheses */.n08{width:calc(-5px)}",
@@ -67,5 +67,23 @@ Array [
   "/*! declined: abs() of a percentage depends on the basis sign */.a09{width:abs(-50%)}",
   "/*! math: a relative unit still has a known sign — every length unit scales by
    a positive factor, so abs() only has to drop the minus */.a10{width:1em}",
+  "/*! stepped: round() to the nearest step, a tie going toward positive infinity */.p01{margin-left:6px}",
+  "/*! stepped: ...and each of the three named strategies */.p02{margin-left:6px}",
+  "/*! stepped: down is the floor, so a negative goes further from zero */.p03{margin-left:calc(-6px)}",
+  "/*! stepped: to-zero truncates instead */.p04{margin-left:4px}",
+  "/*! stepped: nearest may be named explicitly */.p05{margin-left:6px}",
+  "/*! stepped: mod() takes the divisor's sign */.p06{margin-left:2px}",
+  "/*! stepped: rem() takes the dividend's */.p07{margin-left:calc(-1px)}",
+  "/*! stepped: ...which is the difference between them */.p08{margin-left:calc(-2px)}",
+  "/*! declined: exactly on a step is where engines part company — Chromium reads
+   \`round(down,10cm,2cm)\` as \`8cm\` and \`mod(10px,-2px)\` as \`-2px\`, both a whole
+   step off the exact answer */.q01{margin-left:round(4px,2px)}",
+  "/*! declined: ...the same boundary for mod() */.q02{margin-left:mod(10px,-2px)}",
+  "/*! declined: ...and for rem() */.q03{margin-left:rem(10px,2px)}",
+  "/*! declined: a zero step is NaN, which engines render differently */.q04{margin-left:round(5px,0px)}",
+  "/*! declined: a negative step is not reasoned about */.q05{margin-left:round(5px,-2px)}",
+  "/*! declined: two units only layout can compare */.q06{margin-left:round(5em,2px)}",
+  "/*! kept as written: a unit rewrite that holds anywhere else does not hold in a
+   step function, so the arguments keep the unit they were given */.q07{margin-left:round(down,4.5cm,1.5cm)}",
 ]
 `;

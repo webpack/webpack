@@ -185,7 +185,11 @@ describe("CssValueSyntax", () => {
 	});
 
 	describe("the arity read off those grammars", () => {
-		const { MATH_FUNCTIONS, MATH_FUNCTION_ARITY } = require("../lib/css/data");
+		const {
+			MATH_FUNCTIONS,
+			MATH_FUNCTION_ARITY,
+			MATH_FUNCTION_KEYWORDS
+		} = require("../lib/css/data");
 
 		it("counts each math function's `<calc-sum>` arguments", () => {
 			expect(MATH_FUNCTION_ARITY.get("calc")).toEqual([1, 1]);
@@ -197,10 +201,23 @@ describe("CssValueSyntax", () => {
 			expect(MATH_FUNCTION_ARITY.get("log")).toEqual([1, 2]);
 		});
 
-		it("leaves out the ones whose arguments are not all expressions", () => {
-			// `round()` leads with a rounding strategy and `calc-size()` with a
-			// basis, so neither can be evaluated by counting `<calc-sum>`s.
-			expect(MATH_FUNCTION_ARITY.has("round")).toBe(false);
+		it("reads an optional leading keyword beside the count", () => {
+			// `round( <rounding-strategy>?, <calc-sum>, <calc-sum> )` — two
+			// expressions, and the strategies come off `<rounding-strategy>`.
+			expect(MATH_FUNCTION_ARITY.get("round")).toEqual([2, 2]);
+			expect(MATH_FUNCTION_KEYWORDS.get("round")).toEqual([
+				"down",
+				"nearest",
+				"to-zero",
+				"up"
+			]);
+			// Nothing else in the set offers one.
+			expect(MATH_FUNCTION_KEYWORDS.size).toBe(1);
+		});
+
+		it("leaves out the one whose arguments are not all expressions", () => {
+			// `calc-size()` leads with a basis, which is an expression this cannot
+			// evaluate by counting `<calc-sum>`s.
 			expect(MATH_FUNCTION_ARITY.has("calc-size")).toBe(false);
 		});
 
