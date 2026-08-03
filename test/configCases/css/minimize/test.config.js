@@ -37,8 +37,9 @@ module.exports = {
 		expect(css).toContain("margin:0 auto");
 		// rgb() minifies to the shortest color; `!important` loses its leading space.
 		expect(css).toContain("color:#010203!important");
-		// calc() operator spaces are meaningful and preserved.
-		expect(css).toContain("width:calc(1px + 2px)");
+		// calc() operator spaces are meaningful and preserved. Two units only
+		// layout can add, so the folding leaves the spacing to be judged here.
+		expect(css).toContain("width:calc(1em + 2px)");
 
 		// Safe value transforms (each value-identical):
 		expect(css).toContain(

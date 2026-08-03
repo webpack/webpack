@@ -871,7 +871,10 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min(".a/**/.b{c:1}")).toBe(".a.b{c:1}");
 		expect(min(".a.b{c:1}")).toBe(".a.b{c:1}");
 		expect(min(".a>.b{c:1}")).toBe(".a>.b{c:1}");
-		expect(min("a{width:calc(1px + 2px)}")).toBe("a{width:calc(1px + 2px)}");
+		// The whitespace around a `+` is what makes it an operator (CSS Values 4
+		// §10.1) — `1em+2px` is not an expression. Two units that cannot be added
+		// here, so the folding leaves the spacing to be judged on its own.
+		expect(min("a{width:calc(1em + 2px)}")).toBe("a{width:calc(1em + 2px)}");
 	});
 
 	// An unterminated string only exists at EOF (a newline makes it a bad-string
@@ -1905,6 +1908,72 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			const css = "a{top:1px;right:2px;bottom:1px;left:2px}";
 			expect(minify(css, { cssInsetShorthand: false })).toBe(css);
 			expect(minify(css)).toBe("a{inset:1px 2px}");
+		});
+	});
+
+	describe("calc folding", () => {
+		// A fold has to stay the value an engine would have computed, and a folded
+		// expression is no longer there to be recomputed — so every step that
+		// cannot be shown exact declines and leaves the expression written out.
+		it.each([
+			// Two units only layout can add.
+			["calc(100% - 10px)"],
+			["calc(1em + 2px)"],
+			["calc(1px + 1deg)"],
+			// A substitution could expand to anything.
+			["calc(var(--x) + 1px)"],
+			// Not arithmetic at all.
+			["calc(1px + auto)"],
+			["calc(1px +)"],
+			["calc()"],
+			// The grammar takes only a number on the right of a `/`, and a product
+			// needs one plain number for the result to keep the units it had.
+			["calc(2px*3px)"],
+			["calc(1px/0)"],
+			// Neither the sum nor the product is exact in a double.
+			["calc(.1px + .2px)"],
+			["calc(7px/3)"],
+			["calc(3px/1.1)"],
+			["calc(1e20px + 1px)"],
+			["calc(1e308px*1e10)"],
+			// Longer folded than written.
+			["calc(100%/3)"],
+			// A math function this does not evaluate.
+			["min(1px + 2px,4px)"]
+		])("leaves %s alone", (expression) => {
+			expect(value(expression)).toBe(expression);
+		});
+
+		it("folds through a parenthesized group and a nested calc()", () => {
+			expect(value("calc((1px + 2px)*3)")).toBe("9px");
+			expect(value("calc(calc(1px + 2px) + 3px)")).toBe("6px");
+		});
+
+		it("counts units fixed against each other in one term", () => {
+			expect(value("calc(1in + 1px)")).toBe("97px");
+			expect(value("calc(2.5cm + 5mm)")).toBe("3cm");
+		});
+
+		it("keeps the parentheses on a negative, whatever the property", () => {
+			// `width: -5px` is dropped where `width: calc(-5px)` clamps to 0.
+			expect(minify("a{width:calc(0px - 5px)}")).toBe("a{width:calc(-5px)}");
+			expect(minify("a{margin-left:calc(0px - 5px)}")).toBe(
+				"a{margin-left:calc(-5px)}"
+			);
+		});
+
+		it("keeps them on a fraction only where the property takes an integer", () => {
+			// `z-index: calc(1.5)` computes to 2; `z-index: 1.5` is dropped.
+			expect(minify("a{z-index:calc(1.5)}")).toBe("a{z-index:calc(1.5)}");
+			expect(minify("a{opacity:calc(.5)}")).toBe("a{opacity:.5}");
+		});
+
+		it("does not run inside a `@supports` condition or a custom property", () => {
+			const supports = "@supports (width:calc(1px + 2px)){a{color:red}}";
+			expect(minify(supports)).toBe(supports);
+			expect(minify("a{--gap:calc(1px + 2px)}")).toBe(
+				"a{--gap:calc(1px + 2px)}"
+			);
 		});
 	});
 });
