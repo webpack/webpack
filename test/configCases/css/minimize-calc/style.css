@@ -20,6 +20,8 @@
 .c08 { width: calc(1in + 1px) }
 /*! calc: ...and the result takes the shortest unit equal to it */
 .c09 { width: calc(2in - 1in) }
+/*! calc: ...which is any unit of the group, not only the one it counts in */
+.c10a { width: calc(1cm + 1mm) }
 /*! calc: a longer chain */
 .c10 { width: calc(1px + 2px + 3px) }
 /*! calc: times convert too */
@@ -72,6 +74,8 @@
 .u07 { width: calc(-5px) }
 /*! kept: a negative stays wrapped whatever the property */
 .u08 { margin-left: calc(0px - 5px) }
+/*! kept: `width: calc(0)` is a number and dropped, `width: 0` is a length */
+.u09 { width: calc(1 - 1) }
 
 /* Where the fold must not run at all. */
 
