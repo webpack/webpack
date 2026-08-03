@@ -1,7 +1,6 @@
 "use strict";
 
 const fs = require("fs");
-const prettier = require("prettier");
 const {
 	DATA_TARGET,
 	collectData,
@@ -314,10 +313,17 @@ describe("CssValueSyntax", () => {
 	});
 
 	describe("the file those tables are emitted into", () => {
-		it("is what the generator produces from today's datasets", async () => {
+		// Prettier reaches its ESM entry through a dynamic import, which the `vm`
+		// shims Bun and Deno run jest on reject; `lint:special` makes the same
+		// comparison on Node.
+		const itNode = process.versions.bun || process.versions.deno ? it.skip : it;
+
+		itNode("is what the generator produces from today's datasets", async () => {
 			// The same comparison `yarn lint:special` makes, so a `mdn-data` bump or
 			// an edited `SUPPLEMENT` fails here too rather than only in CI's lint job
 			// — and every collector above runs, which is what proves them.
+			const prettier = require("prettier");
+
 			const { source } = collectData();
 			const config = await prettier.resolveConfig(DATA_TARGET);
 			const formatted = await prettier.format(source, {

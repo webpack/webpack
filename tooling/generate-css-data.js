@@ -41,7 +41,6 @@ const properties = require("mdn-data/css/properties.json");
 const syntaxes = require("mdn-data/css/syntaxes.json");
 /** @type {PackageManifest} */
 const mdnDataPackage = require("mdn-data/package.json");
-const prettier = require("prettier");
 
 // CSS Value Definition Syntax (CSS Values 4 §2) — the notation every `mdn-data`
 // grammar is written in — parsed into a tree the collectors below analyze.
@@ -1817,6 +1816,10 @@ module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// 
  * Write `lib/css/data.js`, or report that it is out of date.
  */
 const generate = () => {
+	// Required here, not at the top: `collectData` is imported by a test that runs
+	// on Bun and Deno, where prettier's dynamic import fails under jest's `vm`.
+	const prettier = require("prettier");
+
 	const { source, summary } = collectData();
 	// Formatted here rather than left to `yarn fmt`, so the comparison below is
 	// against what the repo actually checks in.
