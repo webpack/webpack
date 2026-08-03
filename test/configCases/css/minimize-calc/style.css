@@ -92,6 +92,13 @@
 .u08 { margin-left: calc(0px - 5px) }
 /*! kept: `width: calc(0)` is a number and dropped, `width: 0` is a length */
 .u09 { width: calc(1 - 1) }
+/*! kept: a shorthand reaches `<integer>` through its longhands — `columns: 1.5`
+   is dropped, `calc(1.5)` rounds to 2 columns */
+.u10 { columns: calc(1.5) }
+/*! ...beside the other value it sets */
+.u11 { columns: calc(1.5) 20em }
+/*! unwrap: an integer through that same longhand is still an integer */
+.u12 { columns: calc(1 + 1) }
 
 /* Where the fold must not run at all. */
 

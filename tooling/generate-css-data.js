@@ -719,6 +719,21 @@ const numericLeaves = (syntax) => {
 	 */
 	const walk = (definition) => {
 		walkValueSyntax(grammarOf(definition), (node) => {
+			// A shorthand names no leaf of its own: `columns` reaches `<integer>`
+			// only through `<'column-count'>`. Keyed apart from the type names,
+			// which `<'color'>` and `<color>` would otherwise share.
+			if (node.type === "property") {
+				const nested = properties[node.name];
+				if (
+					nested !== undefined &&
+					typeof nested.syntax === "string" &&
+					!seen.has(`'${node.name}`)
+				) {
+					seen.add(`'${node.name}`);
+					walk(nested.syntax);
+				}
+				return;
+			}
 			if (node.type !== "type") return;
 			if (NUMERIC_TYPES.has(node.name)) {
 				found.push([node.name, node.min]);

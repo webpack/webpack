@@ -224,6 +224,16 @@ describe("CssValueSyntax", () => {
 			expect(MATH_FUNCTION_ARITY.has("calc-size")).toBe(false);
 		});
 
+		it("follows a shorthand into its longhands", () => {
+			// `columns` names no leaf itself: it reaches `<integer>` only through
+			// `<'column-count'>`, and a walk that stopped at `<'…'>` would miss it.
+			const { INTEGER_PROPERTIES } = require("../lib/css/data");
+
+			expect(INTEGER_PROPERTIES.has("columns")).toBe(true);
+			expect(INTEGER_PROPERTIES.has("column-count")).toBe(true);
+			expect(INTEGER_PROPERTIES.has("column-width")).toBe(false);
+		});
+
 		it("derives cosine and the inverses off the two stated tables", () => {
 			const {
 				ARC_COSINE_DEGREES,
