@@ -72,7 +72,7 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/javascript/` — JavaScript parsing (acorn), generation, exports analysis.
   - `lib/json/` — JSON modules.
   - `lib/library/` — UMD/AMD/ESM/CommonJS library output formats.
-  - `lib/loaders/` — Loader execution runtime (vendored loader-runner): pitching/normal loader iteration and loader module loading.
+  - `lib/loaders/` — Loader execution runtime (vendored loader-runner): pitching/normal loader iteration and loader module loading, plus the `experiments.parallelLoader` worker pool and its built-in pitch loader.
   - `lib/logging/` — Logger API and console formatting.
   - `lib/optimize/` — Optimization plugins (`SplitChunksPlugin`, `ConcatenatedModule`, …).
   - `lib/performance/` — Asset/entrypoint size hints.

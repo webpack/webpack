@@ -1592,6 +1592,10 @@ export interface Experiments {
 	 */
 	outputModule?: boolean;
 	/**
+	 * Move parts of the build off the main thread into a worker pool. Requires the 'worker_threads' module.
+	 */
+	parallel?: Parallel;
+	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
 	 * @since 5.106.0
 	 * @experimental
@@ -1689,6 +1693,38 @@ export interface LazyCompilationDefaultBackendOptions {
 		| import("../lib/hmr/lazyCompilationBackend").HttpsServerOptions
 		| import("../lib/hmr/lazyCompilationBackend").HttpServerOptions
 		| import("../lib/hmr/lazyCompilationBackend").CreateServerFunction;
+}
+/**
+ * Move parts of the build off the main thread into a worker pool. Requires the 'worker_threads' module.
+ * @since 5.110.0
+ * @experimental
+ */
+export interface Parallel {
+	/**
+	 * Run loader chains in a worker pool.
+	 */
+	loader?: boolean | ParallelLoaderOptions;
+}
+/**
+ * Options for the parallel loader worker pool.
+ */
+export interface ParallelLoaderOptions {
+	/**
+	 * Time in milliseconds an idle worker is kept alive before it is terminated. Use 0 to terminate workers as soon as the pool goes idle.
+	 */
+	poolTimeout?: number;
+	/**
+	 * Additional Node.js arguments passed to each worker.
+	 */
+	workerNodeArgs?: string[];
+	/**
+	 * Number of loader chains a single worker processes in parallel.
+	 */
+	workerParallelJobs?: number;
+	/**
+	 * Number of spawned workers. Defaults to the number of CPUs minus one.
+	 */
+	workers?: number;
 }
 /**
  * Enable presets of externals for specific targets.
@@ -4009,6 +4045,10 @@ export interface ExperimentsNormalized {
 	 */
 	outputModule?: boolean;
 	/**
+	 * Move parts of the build off the main thread into a worker pool. Requires the 'worker_threads' module.
+	 */
+	parallel?: ParallelNormalized;
+	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
 	 * @since 5.106.0
 	 * @experimental
@@ -4026,6 +4066,17 @@ export interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	typescript?: "auto" | boolean;
+}
+/**
+ * Move parts of the build off the main thread into a worker pool. Requires the 'worker_threads' module.
+ * @since 5.110.0
+ * @experimental
+ */
+export interface ParallelNormalized {
+	/**
+	 * Run loader chains in a worker pool.
+	 */
+	loader?: false | ParallelLoaderOptions;
 }
 /**
  * Generator options for html modules.

@@ -7625,6 +7625,11 @@ declare interface Experiments {
 	outputModule?: boolean;
 
 	/**
+	 * Move parts of the build off the main thread into a worker pool. Requires the 'worker_threads' module.
+	 */
+	parallel?: Parallel;
+
+	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
 	 * @since 5.106.0
 	 * @experimental
@@ -7719,6 +7724,11 @@ declare interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	outputModule?: boolean;
+
+	/**
+	 * Move parts of the build off the main thread into a worker pool. Requires the 'worker_threads' module.
+	 */
+	parallel?: ParallelNormalized;
 
 	/**
 	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.
@@ -20964,6 +20974,55 @@ type OutputNormalizedWithDefaults = OutputNormalized & {
 	>;
 	wasmLoading: NonNullable<undefined | string | false>;
 };
+
+/**
+ * Move parts of the build off the main thread into a worker pool. Requires the 'worker_threads' module.
+ * @since 5.110.0
+ * @experimental
+ */
+declare interface Parallel {
+	/**
+	 * Run loader chains in a worker pool.
+	 */
+	loader?: boolean | ParallelLoaderOptions;
+}
+
+/**
+ * Options for the parallel loader worker pool.
+ */
+declare interface ParallelLoaderOptions {
+	/**
+	 * Time in milliseconds an idle worker is kept alive before it is terminated. Use 0 to terminate workers as soon as the pool goes idle.
+	 */
+	poolTimeout?: number;
+
+	/**
+	 * Additional Node.js arguments passed to each worker.
+	 */
+	workerNodeArgs?: string[];
+
+	/**
+	 * Number of loader chains a single worker processes in parallel.
+	 */
+	workerParallelJobs?: number;
+
+	/**
+	 * Number of spawned workers. Defaults to the number of CPUs minus one.
+	 */
+	workers?: number;
+}
+
+/**
+ * Move parts of the build off the main thread into a worker pool. Requires the 'worker_threads' module.
+ * @since 5.110.0
+ * @experimental
+ */
+declare interface ParallelNormalized {
+	/**
+	 * Run loader chains in a worker pool.
+	 */
+	loader?: false | ParallelLoaderOptions;
+}
 declare interface ParameterizedComparator<TArg extends object, T> {
 	(tArg: TArg): Comparator<T>;
 }
@@ -29622,6 +29681,9 @@ declare namespace exports {
 		};
 	}
 	export namespace experiments {
+		export namespace parallel {
+			export const loader: string;
+		}
 		export namespace schemes {
 			export { HttpUriPlugin, VirtualUrlPlugin };
 		}

@@ -1336,6 +1336,9 @@
           "experimental": true,
           "added": "5.0.0"
         },
+        "parallel": {
+          "$ref": "#/definitions/Parallel"
+        },
         "sourceImport": {
           "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
           "type": "boolean",
@@ -1467,6 +1470,9 @@
           "type": "boolean",
           "experimental": true,
           "added": "5.0.0"
+        },
+        "parallel": {
+          "$ref": "#/definitions/ParallelNormalized"
         },
         "sourceImport": {
           "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-source-phase-imports. This allows importing modules at source phase.",
@@ -5013,6 +5019,76 @@
         "enabledLibraryTypes",
         "enabledWasmLoadingTypes"
       ]
+    },
+    "Parallel": {
+      "description": "Move parts of the build off the main thread into a worker pool. Requires the 'worker_threads' module.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "loader": {
+          "description": "Run loader chains in a worker pool.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/ParallelLoaderOptions"
+            }
+          ]
+        }
+      },
+      "experimental": true,
+      "added": "5.110.0"
+    },
+    "ParallelLoaderOptions": {
+      "description": "Options for the parallel loader worker pool.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "poolTimeout": {
+          "description": "Time in milliseconds an idle worker is kept alive before it is terminated. Use 0 to terminate workers as soon as the pool goes idle.",
+          "type": "number",
+          "minimum": 0
+        },
+        "workerNodeArgs": {
+          "description": "Additional Node.js arguments passed to each worker.",
+          "type": "array",
+          "items": {
+            "description": "A Node.js argument passed to each worker.",
+            "type": "string"
+          }
+        },
+        "workerParallelJobs": {
+          "description": "Number of loader chains a single worker processes in parallel.",
+          "type": "number",
+          "minimum": 1
+        },
+        "workers": {
+          "description": "Number of spawned workers. Defaults to the number of CPUs minus one.",
+          "type": "number",
+          "minimum": 1
+        }
+      }
+    },
+    "ParallelNormalized": {
+      "description": "Move parts of the build off the main thread into a worker pool. Requires the 'worker_threads' module.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "loader": {
+          "description": "Run loader chains in a worker pool.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "$ref": "#/definitions/ParallelLoaderOptions"
+            }
+          ]
+        }
+      },
+      "experimental": true,
+      "added": "5.110.0"
     },
     "Parallelism": {
       "description": "The number of parallel processed modules in the compilation.",
