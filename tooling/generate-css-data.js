@@ -19,6 +19,10 @@
 // each entry with the reason it is not derivable. They are emitted from here
 // too, so every table the minifier looks a name up in lives in one file and
 // `lib/css/syntax.js` stays algorithm.
+//
+// The parser for the notation those grammars are written in lives here as well,
+// and is exported for its own tests. Requiring this file parses nothing: the
+// generation runs only when it is the entry point.
 
 const fs = require("fs");
 const path = require("path");
@@ -27,6 +31,8 @@ const colorName = require("color-name");
 /** @typedef {{ [name: string]: { syntax: string } }} SyntaxTable */
 /** @type {PackageManifest} */
 const colorNamePackage = require("color-name/package.json");
+/** @type {{ [name: string]: { syntax?: string } }} */
+const atRules = require("mdn-data/css/at-rules.json");
 /** @type {SyntaxTable} */
 const functions = require("mdn-data/css/functions.json");
 /** @type {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[] } }} */
@@ -35,7 +41,391 @@ const properties = require("mdn-data/css/properties.json");
 const syntaxes = require("mdn-data/css/syntaxes.json");
 /** @type {PackageManifest} */
 const mdnDataPackage = require("mdn-data/package.json");
-const prettier = require("prettier");
+
+// CSS Value Definition Syntax (CSS Values 4 §2) — the notation every `mdn-data`
+// grammar is written in — parsed into a tree the collectors below analyze.
+// Generation time only: `lib/css/data.js` carries the answers, so the minifier
+// never parses a grammar at runtime.
+
+/** @typedef {{ type: "keyword", name: string }} KeywordNode */
+/** @typedef {{ type: "literal", value: string }} LiteralNode */
+/** @typedef {{ type: "type", name: string, min: number | null, max: number | null }} TypeNode */
+/** @typedef {{ type: "property", name: string }} PropertyNode */
+/** @typedef {{ type: "function", name: string, body: SyntaxNode | null }} FunctionCallNode */
+/** @typedef {{ type: "group" | "parens", body: SyntaxNode }} GroupNode */
+/** @typedef {{ type: "sequence" | "oneOf" | "anyOf" | "allOf", items: SyntaxNode[] }} CombinatorNode */
+/** @typedef {{ type: "multiplier", min: number, max: number, comma: boolean, body: SyntaxNode }} MultiplierNode */
+/** @typedef {KeywordNode | LiteralNode | TypeNode | PropertyNode | FunctionCallNode | GroupNode | CombinatorNode | MultiplierNode} SyntaxNode */
+
+// A keyword or a function name. An at-rule prelude names its keyword with a
+// leading `@`, so that joins the identifier set; `+` and `(` do not, since a
+// name carrying either (`<an+b>`, `<calc-size()>`) only ever appears inside
+// `< >`, which never reaches here — and both are notation out here.
+const IDENTIFIER = /[\w\-%@]/;
+
+// A repeat range is digits, and follows its atom with no space. Statement-level
+// grammars use `{` for the block itself (`<keyframe-selector># { … }`), so the
+// shape is what tells the two apart.
+const REPEAT_RANGE = /^\d+(,\s*\d*)?$/;
+
+// `mdn-data` carries a footnote dagger inside `<an+b>`. It marks spec prose, not
+// syntax, and there is nothing in the notation it could mean.
+const FOOTNOTE = /†/g;
+
+/**
+ * One value definition, parsed.
+ */
+class ValueSyntaxParser {
+	/**
+	 * @param {string} source the value definition
+	 */
+	constructor(source) {
+		this.source = source.replace(FOOTNOTE, "");
+		this.pos = 0;
+		// `)` ends a sequence only inside parentheses; `general-enclosed` spells a
+		// bare `)` as a literal outside any.
+		this.parenDepth = 0;
+	}
+
+	/**
+	 * @returns {SyntaxNode} the parsed definition
+	 */
+	parse() {
+		const node = this._parseOneOf();
+		this._skipWhitespace();
+		if (this.pos !== this.source.length) {
+			throw new Error(
+				`unexpected "${this.source.slice(this.pos)}" at ${this.pos}`
+			);
+		}
+		return node;
+	}
+
+	_skipWhitespace() {
+		while (this.pos < this.source.length && /\s/.test(this.source[this.pos])) {
+			this.pos++;
+		}
+	}
+
+	/**
+	 * @param {string} text the text to match at the cursor
+	 * @returns {boolean} true when it is there
+	 */
+	_at(text) {
+		return this.source.startsWith(text, this.pos);
+	}
+
+	/**
+	 * @param {string} text the expected text
+	 */
+	_expect(text) {
+		this._skipWhitespace();
+		if (!this._at(text)) {
+			throw new Error(`expected "${text}" at ${this.pos}`);
+		}
+		this.pos += text.length;
+	}
+
+	/**
+	 * `a | b` — exactly one. The loosest combinator, so the entry point.
+	 * @returns {SyntaxNode} the alternation, or its one branch
+	 */
+	_parseOneOf() {
+		const items = [this._parseAnyOf()];
+		for (;;) {
+			this._skipWhitespace();
+			// `||` binds tighter and starts with the same character.
+			if (!this._at("|") || this._at("||")) break;
+			this.pos++;
+			items.push(this._parseAnyOf());
+		}
+		return items.length === 1 ? items[0] : { type: "oneOf", items };
+	}
+
+	/**
+	 * `a || b` — one or more, any order.
+	 * @returns {SyntaxNode} the group, or its one branch
+	 */
+	_parseAnyOf() {
+		const items = [this._parseAllOf()];
+		for (;;) {
+			this._skipWhitespace();
+			if (!this._at("||")) break;
+			this.pos += 2;
+			items.push(this._parseAllOf());
+		}
+		return items.length === 1 ? items[0] : { type: "anyOf", items };
+	}
+
+	/**
+	 * `a && b` — all of them, any order.
+	 * @returns {SyntaxNode} the group, or its one branch
+	 */
+	_parseAllOf() {
+		const items = [this._parseSequence()];
+		for (;;) {
+			this._skipWhitespace();
+			if (!this._at("&&")) break;
+			this.pos += 2;
+			items.push(this._parseSequence());
+		}
+		return items.length === 1 ? items[0] : { type: "allOf", items };
+	}
+
+	/**
+	 * `a b` — juxtaposition, the tightest combinator.
+	 * @returns {SyntaxNode} the sequence, or its one term
+	 */
+	_parseSequence() {
+		/** @type {SyntaxNode[]} */
+		const items = [];
+		for (;;) {
+			this._skipWhitespace();
+			if (this.pos === this.source.length) break;
+			const c = this.source[this.pos];
+			if (c === "]" || c === "|" || c === "&") break;
+			if (c === ")" && this.parenDepth !== 0) break;
+			items.push(this._parseTerm());
+		}
+		if (items.length === 0) {
+			throw new Error(`empty sequence at ${this.pos}`);
+		}
+		return items.length === 1 ? items[0] : { type: "sequence", items };
+	}
+
+	/**
+	 * One atom and whatever multiplier follows it.
+	 * @returns {SyntaxNode} the term
+	 */
+	_parseTerm() {
+		let node = this._parseAtom();
+		// Multipliers stack: `<bg-layer>#?` is a comma list, itself optional.
+		for (;;) {
+			const wrapped = this._parseMultiplier(node);
+			if (wrapped === null) return node;
+			node = wrapped;
+		}
+	}
+
+	/**
+	 * @param {SyntaxNode} body the atom the multiplier applies to
+	 * @returns {SyntaxNode | null} the wrapped atom, or `null` when none follows
+	 */
+	_parseMultiplier(body) {
+		const c = this.source[this.pos];
+		if (c === "?") {
+			this.pos++;
+			return { type: "multiplier", min: 0, max: 1, comma: false, body };
+		}
+		if (c === "*") {
+			this.pos++;
+			return { type: "multiplier", min: 0, max: Infinity, comma: false, body };
+		}
+		if (c === "+") {
+			this.pos++;
+			return { type: "multiplier", min: 1, max: Infinity, comma: false, body };
+		}
+		// `!` marks a group that must produce at least one value; for the analyses
+		// here that is the group itself, so it is consumed and carries nothing.
+		if (c === "!") {
+			this.pos++;
+			return { type: "multiplier", min: 1, max: 1, comma: false, body };
+		}
+		if (c === "#") {
+			this.pos++;
+			const range = this._parseRepeatRange();
+			return {
+				type: "multiplier",
+				min: range === null ? 1 : range[0],
+				max: range === null ? Infinity : range[1],
+				comma: true,
+				body
+			};
+		}
+		if (c === "{") {
+			const range = this._parseRepeatRange();
+			if (range === null) return null;
+			return {
+				type: "multiplier",
+				min: range[0],
+				max: range[1],
+				comma: false,
+				body
+			};
+		}
+		return null;
+	}
+
+	/**
+	 * `{a}` or `{a,b}` or `{a,}`.
+	 * @returns {[number, number] | null} the bounds, or `null` when none follows
+	 */
+	_parseRepeatRange() {
+		if (this.source[this.pos] !== "{") return null;
+		const end = this.source.indexOf("}", this.pos);
+		if (end === -1) return null;
+		const text = this.source.slice(this.pos + 1, end);
+		if (!REPEAT_RANGE.test(text)) return null;
+		this.pos = end + 1;
+		const parts = text.split(",");
+		const min = Number(parts[0]);
+		if (parts.length === 1) return [min, min];
+		const upper = parts[1].trim();
+		return [min, upper === "" ? Infinity : Number(upper)];
+	}
+
+	/**
+	 * @returns {SyntaxNode} the atom
+	 */
+	_parseAtom() {
+		const c = this.source[this.pos];
+		if (c === "[") {
+			this.pos++;
+			const body = this._parseOneOf();
+			this._expect("]");
+			return { type: "group", body };
+		}
+		// Literal parentheses the value itself must carry (`( <calc-sum> )`), not
+		// the grouping `[ ]` does.
+		if (c === "(") {
+			this.pos++;
+			this.parenDepth++;
+			const body = this._parseOneOf();
+			this._expect(")");
+			this.parenDepth--;
+			return { type: "parens", body };
+		}
+		if (c === "<") return this._parseTypeReference();
+		if (c === "'" || c === '"') return this._parseQuoted();
+		// `,` and `/` separate values; the rest punctuate a statement-level grammar
+		// (an at-rule prelude, a block, a media feature) rather than a value.
+		if (c === "," || c === "/" || c === ":" || c === ";" || c === ")") {
+			this.pos++;
+			return { type: "literal", value: c };
+		}
+		if (c === "{" || c === "}") {
+			this.pos++;
+			return { type: "literal", value: c };
+		}
+		return this._parseIdentifier();
+	}
+
+	/**
+	 * `<length>`, `<length [0,∞]>`, `<'margin-top'>`.
+	 * @returns {TypeNode | PropertyNode} the reference
+	 */
+	_parseTypeReference() {
+		const end = this.source.indexOf(">", this.pos);
+		if (end === -1) throw new Error(`unterminated "<" at ${this.pos}`);
+		const inner = this.source.slice(this.pos + 1, end).trim();
+		this.pos = end + 1;
+		if (inner.startsWith("'") && inner.endsWith("'")) {
+			return { type: "property", name: inner.slice(1, -1) };
+		}
+		const bracket = inner.indexOf("[");
+		if (bracket === -1) {
+			return { type: "type", name: inner, min: null, max: null };
+		}
+		const name = inner.slice(0, bracket).trim();
+		const range = inner.slice(bracket + 1, inner.lastIndexOf("]")).split(",");
+		return {
+			type: "type",
+			name,
+			min: parseBound(range[0]),
+			max: parseBound(range[1])
+		};
+	}
+
+	/**
+	 * @returns {LiteralNode} the quoted literal
+	 */
+	_parseQuoted() {
+		const quote = this.source[this.pos];
+		const end = this.source.indexOf(quote, this.pos + 1);
+		if (end === -1) throw new Error(`unterminated ${quote} at ${this.pos}`);
+		const value = this.source.slice(this.pos + 1, end);
+		this.pos = end + 1;
+		return { type: "literal", value };
+	}
+
+	/**
+	 * A keyword, or a function when `(` follows the name.
+	 * @returns {KeywordNode | FunctionCallNode} the atom
+	 */
+	_parseIdentifier() {
+		const start = this.pos;
+		while (
+			this.pos < this.source.length &&
+			IDENTIFIER.test(this.source[this.pos])
+		) {
+			this.pos++;
+		}
+		if (this.pos === start) {
+			throw new Error(`unexpected "${this.source[this.pos]}" at ${this.pos}`);
+		}
+		const name = this.source.slice(start, this.pos);
+		if (this.source[this.pos] !== "(") return { type: "keyword", name };
+		this.pos++;
+		this.parenDepth++;
+		this._skipWhitespace();
+		// `name()` — a function taking nothing.
+		if (this._at(")")) {
+			this.pos++;
+			this.parenDepth--;
+			return { type: "function", name, body: null };
+		}
+		const body = this._parseOneOf();
+		this._expect(")");
+		this.parenDepth--;
+		return { type: "function", name, body };
+	}
+}
+
+/**
+ * A range bound: a number, possibly with a unit (`0s`), possibly infinite.
+ * @param {string} text one side of a `[min,max]` annotation
+ * @returns {number | null} the bound, or `null` when it is not a number
+ */
+const parseBound = (text) => {
+	const value = text.trim();
+	if (value === "∞") return Infinity;
+	if (value === "-∞") return -Infinity;
+	const match = /^-?\d*\.?\d+/.exec(value);
+	return match === null ? null : Number(match[0]);
+};
+
+/**
+ * @param {string} source a value definition
+ * @returns {SyntaxNode} its tree
+ */
+const parseValueSyntax = (source) => new ValueSyntaxParser(source).parse();
+
+/**
+ * Every node in the tree, the root first.
+ * @param {SyntaxNode} node the root
+ * @param {(node: SyntaxNode) => void} visit called once per node
+ */
+const walkValueSyntax = (node, visit) => {
+	visit(node);
+	switch (node.type) {
+		case "oneOf":
+		case "anyOf":
+		case "allOf":
+		case "sequence":
+			for (const item of node.items) walkValueSyntax(item, visit);
+			break;
+		case "group":
+		case "parens":
+		case "multiplier":
+			walkValueSyntax(node.body, visit);
+			break;
+		case "function":
+			if (node.body !== null) walkValueSyntax(node.body, visit);
+			break;
+		default:
+			break;
+	}
+};
 
 const TARGET = path.resolve(__dirname, "../lib/css/data.js");
 const write = process.argv.includes("--write");
@@ -131,6 +521,256 @@ for (const [name, entry] of Object.entries(syntaxes)) {
 const references = (syntax) => {
 	const found = syntax.match(/<[^>\s]+>/g);
 	return found === null ? [] : found.map((name) => name.slice(1, -1));
+};
+
+/** @type {Map<string, SyntaxNode>} */
+const grammars = new Map();
+
+/**
+ * @param {string} syntax a value definition
+ * @returns {SyntaxNode} its tree, parsed once
+ */
+const grammarOf = (syntax) => {
+	let tree = grammars.get(syntax);
+	if (tree === undefined) {
+		tree = parseValueSyntax(syntax);
+		grammars.set(syntax, tree);
+	}
+	return tree;
+};
+
+// Parse every grammar the datasets state, so a `mdn-data` bump that reaches for
+// notation this parser does not know fails here rather than silently emptying a
+// table below. `selectors.json` is deliberately not among them: it mixes real
+// grammar with prose examples (`".class"`, `"A > B"`), so it is not all parsable
+// and nothing here reads it yet.
+const assertGrammarsParse = () => {
+	/**
+	 * @param {string} label what the grammar belongs to
+	 * @param {string} syntax the definition
+	 */
+	const check = (label, syntax) => {
+		try {
+			grammarOf(syntax);
+		} catch (err) {
+			throw new Error(
+				`${label} does not parse: ${/** @type {Error} */ (err).message}\n  ${syntax}`,
+				{ cause: err }
+			);
+		}
+	};
+	for (const [name, syntax] of definitions) check(`<${name}>`, syntax);
+	for (const [name, entry] of Object.entries(properties)) {
+		if (typeof entry.syntax === "string") check(name, entry.syntax);
+	}
+	for (const [name, entry] of Object.entries(atRules)) {
+		if (typeof entry.syntax === "string") check(`@${name}`, entry.syntax);
+	}
+};
+
+/**
+ * Each convertible group's reference unit: the shortest-scaled one a conversion
+ * may emit, so a value counted in the group's base comes back through a unit
+ * that exists. Derived from the scale table rather than named here, so a unit
+ * joining the group cannot leave this stale.
+ * @returns {[string, [string, number]][]} `[group, [unit, scale]]`, sorted
+ */
+const collectUnitGroupBase = () => {
+	/** @type {Map<string, [string, number]>} */
+	const base = new Map();
+	for (const [unit, group, scale] of SUPPLEMENT.absoluteUnitScale) {
+		if (!SUPPLEMENT.unitConversionTargets.includes(unit)) continue;
+		const previous = base.get(group);
+		if (previous === undefined || scale < previous[1]) {
+			base.set(group, [unit, scale]);
+		}
+	}
+	return [...base].sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * The keywords a production is, when it is nothing but a choice between them —
+ * `<rounding-strategy>` is `nearest | up | down | to-zero`. Anything with a
+ * type reference or a structure in it is not a keyword set and returns `null`.
+ * @param {string} name the production name
+ * @returns {string[] | null} the keywords, sorted, or `null`
+ */
+const keywordChoices = (name) => {
+	const syntax = definitions.get(name);
+	if (syntax === undefined) return null;
+	const tree = grammarOf(syntax);
+	const items = tree.type === "oneOf" ? tree.items : [tree];
+	/** @type {string[]} */
+	const out = [];
+	for (const item of items) {
+		if (item.type !== "keyword") return null;
+		out.push(item.name);
+	}
+	return out.sort();
+};
+
+/**
+ * How many `<calc-sum>` arguments each math function takes, read off its own
+ * grammar: `min( <calc-sum># )` is one or more, `clamp( <calc-sum>#{3} )` is
+ * exactly three, `log( <calc-sum>, <calc-sum>? )` is one or two. An optional
+ * leading keyword is read too — `round( <rounding-strategy>?, …)` — and comes
+ * back beside the count. A function taking anything else is absent:
+ * `calc-size()` leads with a basis, which is an expression this cannot evaluate,
+ * so the minifier reads the absence as "not foldable" rather than carrying its
+ * own list of which functions those are.
+ * @param {string[]} names the math function names
+ * @returns {[string, [number, number], string[]][]} `[name, [min, max], keywords]`, sorted
+ */
+const collectMathFunctionArity = (names) => {
+	/** @type {string[]} */
+	let keywords = [];
+	/**
+	 * @param {SyntaxNode} node a grammar node
+	 * @returns {[number, number] | null} the `<calc-sum>` count it contributes
+	 */
+	const count = (node) => {
+		switch (node.type) {
+			case "type":
+				return node.name === "calc-sum" ? [1, 1] : null;
+			case "literal":
+				// The separators between arguments carry no argument of their own.
+				return node.value === "," ? [0, 0] : null;
+			case "group":
+			case "parens":
+				return count(node.body);
+			case "multiplier": {
+				// An optional keyword argument: not an expression, so it carries no
+				// `<calc-sum>` of its own, but the function still accepts it.
+				if (
+					node.min === 0 &&
+					node.max === 1 &&
+					node.body.type === "type" &&
+					node.body.name !== "calc-sum"
+				) {
+					const choices = keywordChoices(node.body.name);
+					if (choices === null) return null;
+					keywords = choices;
+					return [0, 0];
+				}
+				const inner = count(node.body);
+				if (inner === null) return null;
+				const min = inner[0] * node.min;
+				const max = inner[1] * node.max;
+				return Number.isNaN(min) || Number.isNaN(max) ? null : [min, max];
+			}
+			case "sequence": {
+				let min = 0;
+				let max = 0;
+				for (const item of node.items) {
+					const inner = count(item);
+					if (inner === null) return null;
+					min += inner[0];
+					max += inner[1];
+				}
+				return [min, max];
+			}
+			default:
+				return null;
+		}
+	};
+	/** @type {[string, [number, number], string[]][]} */
+	const out = [];
+	for (const name of names) {
+		const syntax = definitions.get(`${name}()`);
+		if (syntax === undefined) continue;
+		const tree = grammarOf(syntax);
+		if (tree.type !== "function" || tree.body === null) continue;
+		keywords = [];
+		const arity = count(tree.body);
+		if (arity !== null) out.push([name, arity, keywords]);
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+// The types a number lands on. Everything else a grammar reaches (`<color>`,
+// `<image>`, an identifier) carries no magnitude of its own.
+const NUMERIC_TYPES = new Set([
+	"angle",
+	"flex",
+	"frequency",
+	"integer",
+	"length",
+	"number",
+	"percentage",
+	"resolution",
+	"time"
+]);
+
+/**
+ * Every numeric leaf a grammar can reach, each with the lower bound its
+ * annotation states — `null` where it states none, which is most of them:
+ * `mdn-data` annotates `padding-top` but not `opacity`, whose `<opacity-value>`
+ * expands to a bare `<number> | <percentage>`.
+ * @param {string} syntax a value definition
+ * @returns {[string, number | null][]} the leaves as `[type, minimum]`
+ */
+const numericLeaves = (syntax) => {
+	/** @type {[string, number | null][]} */
+	const found = [];
+	/** @type {Set<string>} */
+	const seen = new Set();
+	/**
+	 * @param {string} definition the definition to walk
+	 */
+	const walk = (definition) => {
+		walkValueSyntax(grammarOf(definition), (node) => {
+			// A shorthand names no leaf of its own: `columns` reaches `<integer>`
+			// only through `<'column-count'>`. Keyed apart from the type names,
+			// which `<'color'>` and `<color>` would otherwise share.
+			if (node.type === "property") {
+				const nested = properties[node.name];
+				if (
+					nested !== undefined &&
+					typeof nested.syntax === "string" &&
+					!seen.has(`'${node.name}`)
+				) {
+					seen.add(`'${node.name}`);
+					walk(nested.syntax);
+				}
+				return;
+			}
+			if (node.type !== "type") return;
+			if (NUMERIC_TYPES.has(node.name)) {
+				found.push([node.name, node.min]);
+				return;
+			}
+			// One name for two leaves, and the annotation binds to both.
+			if (node.name === "length-percentage") {
+				found.push(["length", node.min], ["percentage", node.min]);
+				return;
+			}
+			const nested = definitions.get(node.name);
+			if (nested !== undefined && !seen.has(node.name)) {
+				seen.add(node.name);
+				walk(nested);
+			}
+		});
+	};
+	walk(syntax);
+	return found;
+};
+
+/**
+ * The properties whose grammar can reach an `<integer>`. Over-approximate on
+ * purpose: it is read to refuse a rewrite (a non-integer where an integer is
+ * expected is rounded, not dropped — `z-index: calc(1.5)` computes to `2`), so
+ * naming one property too many costs a rewrite and naming one too few is a bug.
+ * @returns {string[]} the property names, sorted
+ */
+const collectIntegerProperties = () => {
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		if (typeof entry.syntax !== "string") continue;
+		if (numericLeaves(entry.syntax).some(([type]) => type === "integer")) {
+			out.push(name);
+		}
+	}
+	return out.sort();
 };
 
 /**
@@ -285,10 +925,32 @@ const setLiteral = (names) =>
 const mapLiteral = (entries) =>
 	`new Map([${entries.map(([key, value]) => `["${key}", "${value}"]`).join(", ")}])`;
 
+/**
+ * @param {[number, number][]} entries number-keyed pairs
+ * @returns {string} the `Map` literal
+ */
+const numberMapLiteral = (entries) =>
+	`new Map([${entries.map(([key, value]) => `[${key}, ${value}]`).join(", ")}])`;
+
+/**
+ * A trig table as `eighth turn -> value`, the irrational eighths simply absent
+ * — the same "not in the table, not foldable" rule the inverses already use.
+ * @param {(number | null)[]} values the value at each eighth
+ * @returns {[number, number][]} the entries
+ */
+const eighthTurnEntries = (values) => {
+	/** @type {[number, number][]} */
+	const out = [];
+	for (const [eighth, value] of values.entries()) {
+		if (value !== null) out.push([eighth, value]);
+	}
+	return out;
+};
+
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][] }} */
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
 	cssWideKeywords: ["inherit", "initial", "revert", "revert-layer", "unset"],
@@ -355,21 +1017,565 @@ const SUPPLEMENT = {
 	// The angle units, which are excluded from rounding: `rotate()` runs its
 	// argument through trig, which amplifies a truncated digit into a different
 	// computed matrix (measured in headless Chromium).
-	angleUnits: ["deg", "grad", "rad", "turn"]
+	angleUnits: ["deg", "grad", "rad", "turn"],
+	// CSS Values 4 §8.1: a quarter turn, in each unit that spells it exactly.
+	// The trig functions are only folded on these, so the table is what says
+	// where. `rad` has no entry — a quarter turn is π/2 of them, which no double
+	// is — and, like the ratios above, no dataset states any of this.
+	quarterTurnAngle: [
+		["deg", 90],
+		["grad", 100],
+		["turn", 0.25]
+	],
+	// Sine and tangent an eighth turn apart, `null` where the value is
+	// irrational. `Math.sin` cannot supply either — `Math.sin(Math.PI)` is
+	// 1.2e-16 rather than 0, and a table that says a value is exactly zero is the
+	// whole point. Tangent is stated beside sine rather than divided out of it:
+	// on the odd eighths sine and cosine are both irrational and their ratio is
+	// not, which no table of the two can show. Cosine and the three inverses are
+	// derived below.
+	eighthTurnSine: [0, null, 1, null, 0, null, -1, null],
+	eighthTurnTangent: [0, 1, null, -1, 0, 1, null, -1],
+	// What folding each math function comes down to. The grammars state only the
+	// shape — every argument of every one of them is a `<calc-sum>` — so what a
+	// function *means* is spelled out here, as the three things the minifier's
+	// engine needs and nothing more:
+	//
+	//   read   which reader in `lib/css/mathPrimitives.js` reads its arguments
+	//   apply  which arithmetic there runs — one entry however many functions
+	//          select it, so the six trig ones share `lookup` between them
+	//   result the unit the answer carries: `same` as its arguments, `` for a
+	//          number, or an angle unit
+	//
+	// `read` and `apply` are the exported names, and the generated table holds
+	// the functions themselves rather than the names — a name no longer exported
+	// fails generation instead of quietly unfolding nothing.
+	//
+	// Adding a function is adding a line here; a name whose arithmetic is already
+	// implemented needs nothing else. `calc()` has no entry — it is not one value
+	// but whatever sum its argument reduced to — and `calc-size()` none either,
+	// since it leads with a basis rather than an expression.
+	//
+	// `stepped` marks the ones whose result is a step of their arguments, where a
+	// unit rewrite that holds everywhere else does not: `4.5cm` and `45mm` are
+	// the same length, but headless Chromium reads `round(down,4.5cm,1.5cm)` as
+	// `3cm` and `round(down,45mm,15mm)` as `4.5cm`.
+	mathFunctionFold: [
+		["abs", "readSameUnit", "absolute", "same", null, false],
+		["acos", "readNumber", "lookup", "deg", "ARC_COSINE_DEGREES", false],
+		["asin", "readNumber", "lookup", "deg", "ARC_SINE_DEGREES", false],
+		["atan", "readNumber", "lookup", "deg", "ARC_TANGENT_DEGREES", false],
+		["atan2", "readSameUnit", "arcTangent2", "deg", null, false],
+		["clamp", "readSameUnit", "clamp", "same", null, false],
+		["cos", "readEighthTurn", "lookup", "", "EIGHTH_TURN_COSINE", false],
+		["exp", "readNumber", "exponential", "", null, false],
+		["hypot", "readSameUnit", "hypotenuse", "same", null, false],
+		["log", "readNumber", "logarithm", "", null, false],
+		["max", "readSameUnit", "maximum", "same", null, false],
+		["min", "readSameUnit", "minimum", "same", null, false],
+		["mod", "readSameUnit", "modulus", "same", null, true],
+		["pow", "readNumber", "power", "", null, false],
+		["rem", "readSameUnit", "remainder", "same", null, true],
+		["round", "readSameUnit", "round", "same", null, true],
+		["sign", "readSameUnit", "sign", "", null, false],
+		["sin", "readEighthTurn", "lookup", "", "EIGHTH_TURN_SINE", false],
+		["sqrt", "readNumber", "squareRoot", "", null, false],
+		["tan", "readEighthTurn", "lookup", "", "EIGHTH_TURN_TANGENT", false]
+	],
+	// The arithmetic each math function folds by, in dependency order. No dataset
+	// states any of it — the grammars say only that every argument is a
+	// `<calc-sum>` — and it is emitted from here rather than written beside the
+	// printer so that one file carries both what each function does and the
+	// arithmetic it does it with. `lib/css/syntax.js` then names neither.
+	//
+	// Every operation answers a number or `null`, and `null` leaves the call
+	// written out. That is the discipline the whole fold rests on: a folded
+	// expression is no longer there for the engine to recompute, so a result
+	// carrying any rounding of its own is declined rather than printed.
+	mathPrimitives: [
+		[
+			"exactAdd",
+			`/**
+ * Add two doubles, or decline when the sum carries rounding of its own.
+ * @param {number} a one term
+ * @param {number} b the other
+ * @returns {number | null} their exact sum, or \`null\`
+ */
+const exactAdd = (a, b) => {
+	const sum = a + b;
+	return sum - b === a && sum - a === b ? sum : null;
+};`
+		],
+		[
+			"exactMultiply",
+			`/**
+ * Multiply, or decline, on the same terms.
+ * @param {number} a the value
+ * @param {number} k the factor
+ * @returns {number | null} their exact product, or \`null\`
+ */
+const exactMultiply = (a, k) => {
+	const product = a * k;
+	if (!Number.isFinite(product)) return null;
+	if (a === 0 || k === 0) return product;
+	return product / k === a ? product : null;
+};`
+		],
+		[
+			"exactDivide",
+			`/**
+ * Divide, or decline, on the same terms.
+ * @param {number} a the value
+ * @param {number} k the divisor
+ * @returns {number | null} their exact quotient, or \`null\`
+ */
+const exactDivide = (a, k) => {
+	if (k === 0) return null;
+	const quotient = a / k;
+	if (!Number.isFinite(quotient)) return null;
+	return quotient * k === a ? quotient : null;
+};`
+		],
+		[
+			"exactFloorDivide",
+			`/**
+ * \`floor(value / step)\` for a positive step, checked against the step exactly.
+ * The double quotient can land an ulp either side of an integer, which would put
+ * the multiple a whole step out, so the candidate is verified by multiplying
+ * back and nudged at most once either way.
+ * @param {number} value the dividend
+ * @param {number} step the divisor, greater than zero
+ * @returns {number | null} the floor, or \`null\` when it cannot be pinned down
+ */
+const exactFloorDivide = (value, step) => {
+	let n = Math.floor(value / step);
+	if (!Number.isFinite(n)) return null;
+	for (let attempt = 0; attempt < 3; attempt++) {
+		const at = exactMultiply(n, step);
+		const next = exactMultiply(n + 1, step);
+		if (at === null || next === null) return null;
+		if (at > value) {
+			n--;
+			continue;
+		}
+		if (next <= value) {
+			n++;
+			continue;
+		}
+		return n;
+	}
+	return null;
+};`
+		],
+		[
+			"exactSquareRoot",
+			`/**
+ * The square root of a value, where it is one that can be written down. IEEE-754
+ * makes \`Math.sqrt\` correctly rounded, so squaring the result back is a complete
+ * test — and it fails for every irrational root, which is most of them.
+ * @param {number} value the radicand
+ * @returns {number | null} the root, or \`null\`
+ */
+const exactSquareRoot = (value) => {
+	if (!(value >= 0)) return null;
+	const root = Math.sqrt(value);
+	const back = exactMultiply(root, root);
+	return back === null || back !== value ? null : root;
+};`
+		],
+		[
+			"POWER_LIMIT",
+			`// Beyond this an integer exponent is not worth multiplying out, and every result
+// overflows a double for all but a base within an ulp of 1.
+const POWER_LIMIT = 64;`
+		],
+		[
+			"exactIntegerPower",
+			`/**
+ * \`base ** exponent\` for a whole exponent, by multiplying out. Every step is
+ * checked, so the result is the one an engine computing in doubles gets — which
+ * \`Math.pow\` is not required to be for a general exponent.
+ * @param {number} base the base
+ * @param {number} exponent a whole exponent
+ * @returns {number | null} the power, or \`null\`
+ */
+const exactIntegerPower = (base, exponent) => {
+	if (!Number.isInteger(exponent) || Math.abs(exponent) > POWER_LIMIT) {
+		return null;
+	}
+	let power = 1;
+	for (let n = Math.abs(exponent); n > 0; n--) {
+		const next = exactMultiply(power, base);
+		if (next === null) return null;
+		power = next;
+	}
+	return exponent < 0 ? exactDivide(1, power) : power;
+};`
+		],
+		[
+			"readSameUnit",
+			`/**
+ * One evaluated argument list, read as a shared unit and its coefficients. A
+ * percentage is refused: its basis can be negative (a \`background-position\`
+ * against an image wider than its box), and comparing two of them depends on
+ * that sign in a way \`calc()\`'s arithmetic does not — scaling a percentage is
+ * linear, picking the smaller of two is not.
+ * @param {Map<string, number>[]} sums the evaluated arguments
+ * @returns {[string, number[]] | null} the shared unit and the coefficients
+ */
+const readSameUnit = (sums) => {
+	/** @type {string | null} */
+	let shared = null;
+	/** @type {number[]} */
+	const values = [];
+	for (const sum of sums) {
+		if (sum.size !== 1) return null;
+		const [[key, coefficient]] = sum;
+		if (key === "%") return null;
+		if (shared === null) shared = key;
+		else if (shared !== key) return null;
+		values.push(coefficient);
+	}
+	return shared === null ? null : [shared, values];
+};`
+		],
+		[
+			"readNumber",
+			`/**
+ * The same, narrowed to arguments that reduced to a plain \`<number>\`.
+ * @param {Map<string, number>[]} sums the evaluated arguments
+ * @returns {[string, number[]] | null} the unit (always \`""\`) and the numbers
+ */
+const readNumber = (sums) => {
+	const shared = readSameUnit(sums);
+	return shared === null || shared[0] !== "" ? null : shared;
+};`
+		],
+		[
+			"eighthTurnReader",
+			`/**
+ * A reader answering which eighth turn a single angle argument is, as the one
+ * "coefficient" — a lookup key rather than a magnitude, which \`lookup\` takes. A
+ * plain number is an angle in radians, where only zero lands on a whole one.
+ * @param {Map<string, number>} quarterTurnAngle a quarter turn in each unit that spells one exactly
+ * @returns {(sums: Map<string, number>[]) => [string, number[]] | null} the reader
+ */
+const eighthTurnReader = (quarterTurnAngle) => (sums) => {
+	const shared = readSameUnit(sums);
+	if (shared === null) return null;
+	const [unit, [angle]] = shared;
+	if (unit === "") return angle === 0 ? ["", [0]] : null;
+	const quarter = quarterTurnAngle.get(unit);
+	if (quarter === undefined) return null;
+	// Halving a quarter turn is exact in each unit that spells one: 45, 50 and an
+	// eighth, which is a power of two.
+	const eighths = exactDivide(angle, quarter / 2);
+	if (eighths === null || !Number.isInteger(eighths)) return null;
+	return ["", [((eighths % 8) + 8) % 8]];
+};`
+		],
+		[
+			"minimum",
+			`/**
+ * @param {number[]} values the coefficients
+ * @returns {number} the smallest
+ */
+const minimum = (values) => Math.min(...values);`
+		],
+		[
+			"maximum",
+			`/**
+ * @param {number[]} values the coefficients
+ * @returns {number} the largest
+ */
+const maximum = (values) => Math.max(...values);`
+		],
+		[
+			"clamp",
+			`/**
+ * CSS Values 4 §10.4: the lower bound wins a contradictory pair.
+ * @param {number[]} values the lower bound, the value and the upper bound
+ * @returns {number} the value held between them
+ */
+const clamp = ([lower, value, upper]) =>
+	Math.max(lower, Math.min(value, upper));`
+		],
+		[
+			"absolute",
+			`/**
+ * @param {number[]} values the one coefficient
+ * @returns {number} its magnitude
+ */
+const absolute = ([value]) => Math.abs(value);`
+		],
+		[
+			"sign",
+			`/**
+ * The one operation whose answer changes unit: a sign is a \`<number>\`. Every
+ * unit reaching here scales by a positive factor, so the coefficient's sign is
+ * the value's even where the factor is not known.
+ * @param {number[]} values the one coefficient
+ * @returns {number} its sign
+ */
+const sign = ([value]) => Math.sign(value);`
+		],
+		[
+			"hypotenuse",
+			`/**
+ * @param {number[]} values the coefficients
+ * @returns {number | null} the root of their sum of squares, or \`null\`
+ */
+const hypotenuse = (values) => {
+	let total = 0;
+	for (const value of values) {
+		const square = exactMultiply(value, value);
+		if (square === null) return null;
+		const sum = exactAdd(total, square);
+		if (sum === null) return null;
+		total = sum;
+	}
+	return exactSquareRoot(total);
+};`
+		],
+		[
+			"round",
+			`/**
+ * The multiple of \`step\` that \`strategy\` rounds \`value\` to, as CSS Values 4
+ * §10.6 defines them and headless Chromium confirms: \`nearest\` breaks a tie
+ * toward positive infinity, and the other three are the ceiling, the floor and
+ * the truncation. A step of zero is NaN per the spec and engines do not agree
+ * on what that renders as; a negative one is left alone rather than reasoned
+ * about.
+ * @param {number[]} values the value and the step
+ * @param {string} strategy one of the grammar's rounding strategies
+ * @returns {number | null} the rounded multiple, or \`null\`
+ */
+const round = ([value, step], strategy) => {
+	if (!(step > 0)) return null;
+	const below = exactFloorDivide(value, step);
+	if (below === null) return null;
+	const at = /** @type {number} */ (exactMultiply(below, step));
+	// Exactly on a step is where engines stop agreeing: these are step functions,
+	// so an ulp of error in the engine's own conversion moves the answer a whole
+	// step. Headless Chromium reads \`round(down,10cm,2cm)\` as \`8cm\` and
+	// \`round(down,-7cm,.5cm)\` as \`-7.5cm\`. Away from a boundary the gap is orders
+	// of magnitude wider than any such error, so only the boundary is refused.
+	if (at === value) return null;
+	let multiple;
+	if (strategy === "down") {
+		multiple = below;
+	} else if (strategy === "up") {
+		multiple = below + 1;
+	} else if (strategy === "to-zero") {
+		multiple = value < 0 ? below + 1 : below;
+	} else {
+		// The remainder is in \`[0, step)\`, so twice it against the step is the
+		// comparison, and an exact half rounds up — toward positive infinity.
+		const remainder = exactAdd(value, -at);
+		if (remainder === null) return null;
+		const doubled = exactMultiply(remainder, 2);
+		if (doubled === null) return null;
+		multiple = doubled >= step ? below + 1 : below;
+	}
+	return exactMultiply(multiple, step);
+};`
+		],
+		[
+			"modulus",
+			`/**
+ * The remainder carrying the divisor's sign.
+ * @param {number[]} values the dividend and the divisor
+ * @returns {number | null} the remainder, or \`null\`
+ */
+const modulus = ([value, divisor]) => {
+	if (divisor === 0) return null;
+	const remainder = value % divisor;
+	// A zero remainder is the boundary these two share with \`round()\`, and engines
+	// do not agree on it: headless Chromium reads \`mod(10px,-2px)\` and
+	// \`mod(-9px,3px)\` as the divisor where both are zero.
+	if (remainder === 0) return null;
+	// A remainder on the other side of zero is brought back across it.
+	return remainder < 0 === divisor < 0
+		? remainder
+		: exactAdd(remainder, divisor);
+};`
+		],
+		[
+			"remainder",
+			`/**
+ * The remainder carrying the dividend's sign, which is what \`%\` already does.
+ * @param {number[]} values the dividend and the divisor
+ * @returns {number | null} the remainder, or \`null\`
+ */
+const remainder = ([value, divisor]) => {
+	if (divisor === 0) return null;
+	// The same zero boundary \`modulus\` declines.
+	const rest = value % divisor;
+	return rest === 0 ? null : rest;
+};`
+		],
+		[
+			"squareRoot",
+			`/**
+ * @param {number[]} values the one radicand
+ * @returns {number | null} its root, or \`null\`
+ */
+const squareRoot = ([value]) => exactSquareRoot(value);`
+		],
+		[
+			"power",
+			`/**
+ * @param {number[]} values the base and the exponent
+ * @returns {number | null} the power, or \`null\`
+ */
+const power = ([base, exponent]) => exactIntegerPower(base, exponent);`
+		],
+		[
+			"logarithm",
+			`/**
+ * A logarithm is transcendental except where it lands on a whole power of its
+ * base, so the candidate is raised back and only an exact match is taken. The
+ * natural logarithm's base is not a double at all, which leaves only \`log(1)\`.
+ * @param {number[]} values the value and, optionally, the base
+ * @returns {number | null} the logarithm, or \`null\`
+ */
+const logarithm = ([value, base]) => {
+	if (base === undefined) return value === 1 ? 0 : null;
+	const exponent = Math.round(Math.log(value) / Math.log(base));
+	const back = exactIntegerPower(base, exponent);
+	return back === null || back !== value ? null : exponent;
+};`
+		],
+		[
+			"exponential",
+			`/**
+ * \`e\` is not a double, so every other power of it is a number this cannot write
+ * down and an engine's math library rounds its own way.
+ * @param {number[]} values the one exponent
+ * @returns {number | null} the power of \`e\`, or \`null\`
+ */
+const exponential = ([value]) => (value === 0 ? 1 : null);`
+		],
+		[
+			"lookup",
+			`/**
+ * Read the answer out of the table the descriptor carries. Absent means the
+ * value is one no stylesheet can hold, so the call stays written out.
+ * @param {number[]} values the one lookup key
+ * @param {string} _strategy unused
+ * @param {Map<number, number> | null} table the descriptor's table
+ * @returns {number | null} the answer, or \`null\`
+ */
+const lookup = ([key], _strategy, table) => {
+	const value = /** @type {Map<number, number>} */ (table).get(key);
+	return value === undefined ? null : value;
+};`
+		],
+		[
+			"arcTangent2",
+			`/**
+ * The eight directions the arc tangent of a ratio is a whole number of degrees
+ * in, an eighth turn apart. Both zero is refused: the spec leaves it to the
+ * engine.
+ * @param {number[]} values the two coordinates
+ * @returns {number | null} the angle in degrees, or \`null\`
+ */
+const arcTangent2 = ([y, x]) => {
+	if (y === 0 && x === 0) return null;
+	if (y === 0) return x > 0 ? 0 : 180;
+	if (x === 0) return y > 0 ? 90 : -90;
+	if (Math.abs(y) !== Math.abs(x)) return null;
+	if (x > 0) return y > 0 ? 45 : -45;
+	return y > 0 ? 135 : -135;
+};`
+		]
+	]
 };
 
-const boxShorthands = collectBoxShorthands(false);
-const slashShorthands = collectBoxShorthands(true);
-const boxLonghands = collectBoxLonghands([
-	...boxShorthands,
-	...slashShorthands
-]);
-const colorFunctions = collectColorArgumentFunctions();
-const colorNames = collectColorNames();
-const mathFunctions = collectMathFunctions();
-const substitutionFunctions = collectSubstitutionFunctions();
+// Degrees in an eighth turn, which is what an index into the tables below is.
+const EIGHTH_TURN_DEGREES = 45;
 
-const source = `/*
+/**
+ * Cosine at each eighth turn, from sine: `cos(θ)` is `sin(θ + 90°)`, and 90° is
+ * two eighths.
+ * @returns {(number | null)[]} the eight values
+ */
+const collectEighthTurnCosine = () =>
+	SUPPLEMENT.eighthTurnSine.map(
+		(_, eighth) => SUPPLEMENT.eighthTurnSine[(eighth + 2) % 8]
+	);
+
+/**
+ * One inverse trig function's answers, by inverting the table it inverts over
+ * that function's principal branch — `asin` answers in [-90°, 90°], `acos` in
+ * [0°, 180°], `atan` in (-90°, 90°). Only the eighth turns survive, which is
+ * exactly where the answer is a whole number of degrees.
+ * @param {(number | null)[]} table the forward table
+ * @param {number} from the first eighth of the branch
+ * @param {number} to the last eighth of the branch
+ * @returns {[number, number][]} `[argument, degrees]`, by rising argument
+ */
+const collectArcAngles = (table, from, to) => {
+	/** @type {[number, number][]} */
+	const out = [];
+	for (let eighth = from; eighth <= to; eighth++) {
+		const value = table[((eighth % 8) + 8) % 8];
+		if (value === null) continue;
+		out.push([value, eighth * EIGHTH_TURN_DEGREES]);
+	}
+	return out.sort((a, b) => a[0] - b[0]);
+};
+
+// `readEighthTurn` is not a primitive of its own: it is the reader
+// `eighthTurnReader` builds once the quarter-turn table exists.
+const GENERATED_READERS = new Set(["readEighthTurn"]);
+
+/**
+ * Fail generation when a descriptor names an arithmetic that is not among the
+ * ones emitted. The generated table holds the functions themselves, so an
+ * unresolved name would otherwise reach `lib/css/data.js` as a bare identifier.
+ */
+const assertPrimitivesExist = () => {
+	const defined = new Set(SUPPLEMENT.mathPrimitives.map(([name]) => name));
+	for (const [name, read, apply] of SUPPLEMENT.mathFunctionFold) {
+		for (const key of [read, apply]) {
+			if (GENERATED_READERS.has(key) || defined.has(key)) continue;
+			throw new Error(
+				`${name}() names "${key}", which is not one of the emitted primitives`
+			);
+		}
+	}
+};
+
+/**
+ * Read every table out of the datasets and build the file they belong in.
+ * Separate from writing it, so a test can assert the checked-in
+ * `lib/css/data.js` is what this produces without touching the disk.
+ * @returns {{ source: string, summary: string }} the unformatted file and what it holds
+ */
+const collectData = () => {
+	assertGrammarsParse();
+	assertPrimitivesExist();
+
+	const boxShorthands = collectBoxShorthands(false);
+	const slashShorthands = collectBoxShorthands(true);
+	const boxLonghands = collectBoxLonghands([
+		...boxShorthands,
+		...slashShorthands
+	]);
+	const colorFunctions = collectColorArgumentFunctions();
+	const colorNames = collectColorNames();
+	const mathFunctions = collectMathFunctions();
+	const substitutionFunctions = collectSubstitutionFunctions();
+	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
+	const integerProperties = collectIntegerProperties();
+	const unitGroupBase = collectUnitGroupBase();
+	const eighthTurnCosine = collectEighthTurnCosine();
+	const steppedFunctions = SUPPLEMENT.mathFunctionFold
+		.filter(([, , , , , stepped]) => stepped)
+		.map(([name]) => name);
+
+	const source = `/*
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author sheo13666q @sheo13666q
 */
@@ -378,6 +1584,15 @@ const source = `/*
 // Sources: mdn-data ${mdnDataPackage.version}, color-name ${colorNamePackage.version}.
 
 "use strict";
+
+/** @typedef {(sums: Map<string, number>[]) => [string, number[]] | null} MathArgumentReader */
+/** @typedef {(values: number[], strategy: string, table: Map<number, number> | null) => number | null} MathOperation */
+
+// The arithmetic the math-function descriptors at the end of this file bind to.
+// It knows nothing of CSS beyond the shape of an evaluated argument, and names
+// no math function: which one uses which is the descriptors' business, and
+// \`lib/css/syntax.js\` only drives the binding.
+${SUPPLEMENT.mathPrimitives.map(([, body]) => body).join("\n\n")}
 
 // Properties whose value is CSS's \`{1,4}\` box notation, where an omitted value
 // is copied from the opposite side. That makes a repeated value redundant:
@@ -409,8 +1624,8 @@ ${boxLonghands
 // \`border\`, \`border-top\` and \`border-block-start-color\` all write its longhands
 // and \`mdn-data\`'s \`computed\` lists only some of them.
 const BOX_FAMILY_PREFIX = new Map([${boxLonghands
-	.map(([shorthand]) => `["${shorthand}", "${shorthand.split("-")[0]}"]`)
-	.join(", ")}]);
+		.map(([shorthand]) => `["${shorthand}", "${shorthand.split("-")[0]}"]`)
+		.join(", ")}]);
 
 // Functions that take a \`<color>\` directly, so a hash among their arguments is a
 // hex color rather than a case-sensitive reference (\`element(#id)\`). Only direct
@@ -425,6 +1640,27 @@ const SUBSTITUTION_FUNCTIONS = ${setLiteral(substitutionFunctions)};
 // CSS Values 4's math functions: everything inside one is a math expression, so
 // \`*\` and \`/\` there are operators, and the whitespace around them carries nothing.
 const MATH_FUNCTIONS = ${setLiteral(mathFunctions)};
+
+// How many \`<calc-sum>\` arguments each of them takes, off its own grammar. A
+// function whose arguments are not all expressions (\`round()\` leads with a
+// strategy, \`calc-size()\` with a basis) is absent, and absence is what the
+// folding reads as "leave this one alone".
+/** @type {Map<string, [number, number]>} */
+const MATH_FUNCTION_ARITY = new Map([${mathFunctionArity
+		.map(([name, [min, max]]) => `["${name}", [${min}, ${max}]]`)
+		.join(", ")}]);
+
+// The optional keyword a math function may lead with, for the ones whose
+// grammar offers a choice of them (\`round( <rounding-strategy>?, … )\`). Read
+// off that production, so a strategy joining it needs no edit here.
+/** @type {Map<string, string[]>} */
+const MATH_FUNCTION_KEYWORDS = new Map([${mathFunctionArity
+		.filter(([, , keywords]) => keywords.length !== 0)
+		.map(
+			([name, , keywords]) =>
+				`["${name}", [${keywords.map((k) => `"${k}"`).join(", ")}]]`
+		)
+		.join(", ")}]);
 
 // A CSS-wide keyword is only valid as the whole value, so a box repeating one is
 // invalid and already discarded — collapsing it would switch the declaration on.
@@ -457,13 +1693,25 @@ const ZERO_UNIT_KEEPING_PROPERTIES = ${setLiteral(SUPPLEMENT.zeroUnitKeepingProp
 // At-rules whose empty block is inert, so dropping it changes nothing.
 const DROPPABLE_WHEN_EMPTY_AT_RULES = ${setLiteral(SUPPLEMENT.droppableWhenEmptyAtRules)};
 
+// The math functions whose result steps with their arguments, so a value inside
+// one keeps the unit and the digits it was written with.
+const STEPPED_FUNCTIONS = ${setLiteral(steppedFunctions)};
+
 // The units fixed against each other (CSS Values 4 §6.2, §8), as
 // \`unit -> [group, how many of the group's base unit one is]\`. Two units in the
 // same group convert into each other exactly when the ratio is binary-exact.
 /** @type {Map<string, [string, number]>} */
 const ABSOLUTE_UNIT_SCALE = new Map([${SUPPLEMENT.absoluteUnitScale
-	.map(([unit, group, scale]) => `["${unit}", ["${group}", ${scale}]]`)
-	.join(", ")}]);
+		.map(([unit, group, scale]) => `["${unit}", ["${group}", ${scale}]]`)
+		.join(", ")}]);
+
+// Each convertible group's reference unit, as \`group -> [unit, scale]\`. A sum
+// counted in the group's base unit divides by the scale to get back to a unit
+// that can be written down.
+/** @type {Map<string, [string, number]>} */
+const UNIT_GROUP_BASE = new Map([${unitGroupBase
+		.map(([group, [unit, scale]]) => `["${group}", ["${unit}", ${scale}]]`)
+		.join(", ")}]);
 
 // The units a conversion may emit. Every one is CSS 2.1's, so rewriting into it
 // cannot outrun what an engine reading the stylesheet already parses.
@@ -472,6 +1720,63 @@ const UNIT_CONVERSION_TARGETS = ${setLiteral(SUPPLEMENT.unitConversionTargets)};
 // The angle units. Excluded from rounding: \`rotate()\` runs its argument through
 // trig, which turns a truncated digit into a different computed matrix.
 const ANGLE_UNITS = ${setLiteral(SUPPLEMENT.angleUnits)};
+
+// A quarter turn in each unit that spells it exactly (CSS Values 4 §8.1), as
+// \`unit -> the count\`. The trig functions are folded only where their argument
+// is a whole number of these, which is where sine and cosine are rational.
+/** @type {Map<string, number>} */
+const QUARTER_TURN_ANGLE = new Map([${SUPPLEMENT.quarterTurnAngle
+		.map(([unit, count]) => `["${unit}", ${count}]`)
+		.join(", ")}]);
+
+// Sine, cosine and tangent as \`eighth turn from zero -> value\`. The eighths
+// where the value is irrational are absent — sine and cosine on the odd ones,
+// tangent on the asymptotes. Cosine is sine a quarter turn along.
+/** @type {Map<number, number>} */
+const EIGHTH_TURN_SINE = ${numberMapLiteral(eighthTurnEntries(SUPPLEMENT.eighthTurnSine))};
+
+/** @type {Map<number, number>} */
+const EIGHTH_TURN_COSINE = ${numberMapLiteral(eighthTurnEntries(eighthTurnCosine))};
+
+/** @type {Map<number, number>} */
+const EIGHTH_TURN_TANGENT = ${numberMapLiteral(eighthTurnEntries(SUPPLEMENT.eighthTurnTangent))};
+
+// What each inverse trig function answers, as \`argument -> degrees\`, by
+// inverting the table above it over that function's principal branch. Every
+// other argument is transcendental and leaves the call written out.
+/** @type {Map<number, number>} */
+const ARC_SINE_DEGREES = ${numberMapLiteral(collectArcAngles(SUPPLEMENT.eighthTurnSine, -2, 2))};
+
+/** @type {Map<number, number>} */
+const ARC_COSINE_DEGREES = ${numberMapLiteral(collectArcAngles(eighthTurnCosine, 0, 4))};
+
+/** @type {Map<number, number>} */
+const ARC_TANGENT_DEGREES = ${numberMapLiteral(collectArcAngles(SUPPLEMENT.eighthTurnTangent, -1, 1))};
+
+// The reader that needs a table, built once here — \`mathPrimitives\` knows the
+// arithmetic of an eighth turn but not which units spell one.
+const readEighthTurn = eighthTurnReader(QUARTER_TURN_ANGLE);
+
+// What folding each math function comes down to, as
+// \`name -> { read, apply, result, table }\`: how its arguments are read, which
+// arithmetic runs, and the unit the answer carries. \`read\` and \`apply\` are the
+// functions themselves, so \`lib/css/syntax.js\` drives the fold while naming
+// neither a math function nor an arithmetic of its own.
+/** @type {Map<string, { read: MathArgumentReader, apply: MathOperation, result: string, table: Map<number, number> | null }>} */
+const MATH_FUNCTION_FOLD = new Map([
+${SUPPLEMENT.mathFunctionFold
+	.map(
+		([name, read, apply, result, table]) =>
+			`\t["${name}", { read: ${read}, apply: ${apply}, result: "${result}", table: ${table === null ? "null" : table} }]`
+	)
+	.join(",\n")}
+]);
+
+// Properties whose grammar can reach an \`<integer>\`. Deliberately wide: a
+// non-integer where an integer is expected is rounded rather than dropped
+// (\`z-index: calc(1.5)\` computes to \`2\`), so this is read to refuse a rewrite,
+// and one name too many costs only that rewrite.
+const INTEGER_PROPERTIES = ${setLiteral(integerProperties)};
 
 // Packed \`0xrrggbb\` -> the shortest named color with that value. Only names that
 // can beat \`#rrggbb\`; anything longer would never be picked.
@@ -486,6 +1791,9 @@ ${colorNames
 
 module.exports.ABSOLUTE_UNIT_SCALE = ABSOLUTE_UNIT_SCALE;
 module.exports.ANGLE_UNITS = ANGLE_UNITS;
+module.exports.ARC_COSINE_DEGREES = ARC_COSINE_DEGREES;
+module.exports.ARC_SINE_DEGREES = ARC_SINE_DEGREES;
+module.exports.ARC_TANGENT_DEGREES = ARC_TANGENT_DEGREES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
@@ -494,36 +1802,66 @@ module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.CSS_WIDE_KEYWORDS = CSS_WIDE_KEYWORDS;
 module.exports.CUBIC_BEZIER_KEYWORDS = CUBIC_BEZIER_KEYWORDS;
 module.exports.DROPPABLE_WHEN_EMPTY_AT_RULES = DROPPABLE_WHEN_EMPTY_AT_RULES;
+module.exports.EIGHTH_TURN_COSINE = EIGHTH_TURN_COSINE;
+module.exports.EIGHTH_TURN_SINE = EIGHTH_TURN_SINE;
+module.exports.EIGHTH_TURN_TANGENT = EIGHTH_TURN_TANGENT;
 module.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
+module.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
 module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
+module.exports.MATH_FUNCTION_ARITY = MATH_FUNCTION_ARITY;
+module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
+module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
+module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
+module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
-module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;
+module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;
+module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;
 `;
 
-const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names`;
-// Formatted here rather than left to `yarn fmt`, so the comparison below is
-// against what the repo actually checks in.
-prettier
-	.resolveConfig(TARGET)
-	.then((config) => prettier.format(source, { ...config, filepath: TARGET }))
-	.then((formatted) => {
-		const current = fs.existsSync(TARGET)
-			? fs.readFileSync(TARGET, "utf8")
-			: "";
-		if (current === formatted) {
-			process.stdout.write(`lib/css/data.js is up to date (${summary})\n`);
-		} else if (write) {
-			fs.writeFileSync(TARGET, formatted);
-			process.stdout.write(`lib/css/data.js updated (${summary})\n`);
-		} else {
-			process.stderr.write(
-				"lib/css/data.js is out of date — run `yarn fix:special`\n"
-			);
-			process.exitCode = 1;
-		}
-	});
+	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity`;
+	return { source, summary };
+};
+
+/**
+ * Write `lib/css/data.js`, or report that it is out of date.
+ */
+const generate = () => {
+	// Required here, not at the top: `collectData` is imported by a test that runs
+	// on Bun and Deno, where prettier's dynamic import fails under jest's `vm`.
+	const prettier = require("prettier");
+
+	const { source, summary } = collectData();
+	// Formatted here rather than left to `yarn fmt`, so the comparison below is
+	// against what the repo actually checks in.
+	prettier
+		.resolveConfig(TARGET)
+		.then((config) => prettier.format(source, { ...config, filepath: TARGET }))
+		.then((formatted) => {
+			const current = fs.existsSync(TARGET)
+				? fs.readFileSync(TARGET, "utf8")
+				: "";
+			if (current === formatted) {
+				process.stdout.write(`lib/css/data.js is up to date (${summary})\n`);
+			} else if (write) {
+				fs.writeFileSync(TARGET, formatted);
+				process.stdout.write(`lib/css/data.js updated (${summary})\n`);
+			} else {
+				process.stderr.write(
+					"lib/css/data.js is out of date — run `yarn fix:special`\n"
+				);
+				process.exitCode = 1;
+			}
+		});
+};
+
+if (require.main === module) generate();
+
+module.exports.DATA_TARGET = TARGET;
+module.exports.collectData = collectData;
+module.exports.parseValueSyntax = parseValueSyntax;
+module.exports.walkValueSyntax = walkValueSyntax;

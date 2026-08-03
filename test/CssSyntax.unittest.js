@@ -871,7 +871,10 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min(".a/**/.b{c:1}")).toBe(".a.b{c:1}");
 		expect(min(".a.b{c:1}")).toBe(".a.b{c:1}");
 		expect(min(".a>.b{c:1}")).toBe(".a>.b{c:1}");
-		expect(min("a{width:calc(1px + 2px)}")).toBe("a{width:calc(1px + 2px)}");
+		// The whitespace around a `+` is what makes it an operator (CSS Values 4
+		// §10.1) — `1em+2px` is not an expression. Two units that cannot be added
+		// here, so the folding leaves the spacing to be judged on its own.
+		expect(min("a{width:calc(1em + 2px)}")).toBe("a{width:calc(1em + 2px)}");
 	});
 
 	// An unterminated string only exists at EOF (a newline makes it a bad-string
@@ -1905,6 +1908,311 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			const css = "a{top:1px;right:2px;bottom:1px;left:2px}";
 			expect(minify(css, { cssInsetShorthand: false })).toBe(css);
 			expect(minify(css)).toBe("a{inset:1px 2px}");
+		});
+	});
+
+	describe("calc folding", () => {
+		// A fold has to stay the value an engine would have computed, and a folded
+		// expression is no longer there to be recomputed — so every step that
+		// cannot be shown exact declines and leaves the expression written out.
+		it.each([
+			// Two units only layout can add.
+			["calc(100% - 10px)"],
+			["calc(1em + 2px)"],
+			["calc(1px + 1deg)"],
+			// A substitution could expand to anything.
+			["calc(var(--x) + 1px)"],
+			// Not arithmetic at all.
+			["calc(1px + auto)"],
+			["calc(1px +)"],
+			["calc()"],
+			// The grammar takes only a number on the right of a `/`, and a product
+			// needs one plain number for the result to keep the units it had.
+			["calc(2px*3px)"],
+			["calc(1px/0)"],
+			// Neither the sum nor the product is exact in a double.
+			["calc(.1px + .2px)"],
+			["calc(1px/7)"],
+			["calc(3px/1.1)"],
+			["calc(1e20px + 1px)"],
+			["calc(1e308px*1e10)"],
+			// Longer folded than written.
+			["calc(100%/3)"],
+			// A math function whose meaning is not written yet, so the sum inside it
+			// folds but the call does not.
+			["sqrt(4px)"]
+		])("leaves %s alone", (expression) => {
+			expect(value(expression)).toBe(expression);
+		});
+
+		it("folds through a parenthesized group and a nested calc()", () => {
+			expect(value("calc((1px + 2px)*3)")).toBe("9px");
+			expect(value("calc(calc(1px + 2px) + 3px)")).toBe("6px");
+		});
+
+		it("counts units fixed against each other in one term", () => {
+			expect(value("calc(1in + 1px)")).toBe("97px");
+			expect(value("calc(2.5cm + 5mm)")).toBe("3cm");
+		});
+
+		it("prints the term in whichever unit of its group spells it", () => {
+			// No `px` count equals these, so reaching the answer through the group's
+			// reference unit alone would leave every one of them written out.
+			expect(value("calc(1cm + 1mm)")).toBe("11mm");
+			expect(value("calc(1in + 1cm)")).toBe("3.54cm");
+			expect(value("calc(4.5cm + 0cm)")).toBe("45mm");
+			// And a sum no unit of the group spells exactly still declines.
+			expect(value("calc(1px + 1cm)")).toBe("calc(1px + 1cm)");
+		});
+
+		it("keeps the parentheses on a negative, whatever the property", () => {
+			// `width: -5px` is dropped where `width: calc(-5px)` clamps to 0.
+			expect(minify("a{width:calc(0px - 5px)}")).toBe("a{width:calc(-5px)}");
+			expect(minify("a{margin-left:calc(0px - 5px)}")).toBe(
+				"a{margin-left:calc(-5px)}"
+			);
+		});
+
+		it("keeps them on a fraction only where the property takes an integer", () => {
+			// `z-index: calc(1.5)` computes to 2; `z-index: 1.5` is dropped.
+			expect(minify("a{z-index:calc(1.5)}")).toBe("a{z-index:calc(1.5)}");
+			expect(minify("a{opacity:calc(.5)}")).toBe("a{opacity:.5}");
+		});
+
+		it("prints a sum two units deep as the sum it reduced to", () => {
+			expect(value("calc((1em + 1px)*2)")).toBe("calc(2em + 2px)");
+			expect(value("calc(2*(1em + 1px))")).toBe("calc(2em + 2px)");
+			expect(value("calc((100% + 1px)/2)")).toBe("calc(50% + .5px)");
+			expect(value("calc(1px + 2em + 3px)")).toBe("calc(4px + 2em)");
+			// The terms keep the order they were first written, and a negative one
+			// is the subtraction it is.
+			expect(value("calc(1em - 2em + 1px)")).toBe("calc(-1em + 1px)");
+			expect(value("calc(1px - calc(1em + 1px))")).toBe("calc(0px - 1em)");
+		});
+
+		it("keeps a zero term of a sum two units deep", () => {
+			// Which units may be added to which is a type rule, so dropping the term
+			// would turn an expression the engine rejects into one it accepts.
+			expect(value("calc(1px + 1deg - 1deg)")).toBe("calc(1px + 0deg)");
+			expect(value("calc((1em + 1px)*0)")).toBe("calc(0em + 0px)");
+		});
+
+		it("keeps them on a unitless zero", () => {
+			// `calc(0)` is a number, so `width:calc(0)` is dropped and renders at
+			// `auto`; `width:0` is a length and renders at 0.
+			expect(minify("a{width:calc(0)}")).toBe("a{width:calc(0)}");
+			expect(minify("a{width:calc(1 - 1)}")).toBe("a{width:calc(0)}");
+			// A zero carrying a unit is a length either way.
+			expect(minify("a{width:calc(5px - 5px)}")).toBe("a{width:0}");
+		});
+
+		it("does not run inside a `@supports` condition or a custom property", () => {
+			const supports = "@supports (width:calc(1px + 2px)){a{color:red}}";
+			expect(minify(supports)).toBe(supports);
+			expect(minify("a{--gap:calc(1px + 2px)}")).toBe(
+				"a{--gap:calc(1px + 2px)}"
+			);
+		});
+	});
+
+	describe("min(), max(), clamp(), abs(), sign() and hypot()", () => {
+		it.each([
+			// A percentage basis can be negative, and which of two is smaller then
+			// depends on that sign — unlike scaling one, which is linear.
+			["min(50%,60%)"],
+			// Only layout knows which of these is smaller.
+			["min(1em,2px)"],
+			["min(100%,500px)"],
+			["min(var(--x),1px)"],
+			// The grammar says exactly three.
+			["clamp(1px,2px)"],
+			["clamp(1px,2px,3px,4px)"],
+			// `calc-size()` leads with a basis, so it has no arity to read — and it
+			// is now the only math function with no meaning written for it.
+			["calc-size(auto,size)"]
+		])("leaves %s alone", (expression) => {
+			expect(value(expression)).toBe(expression);
+		});
+
+		it("picks across however many arguments the grammar allows", () => {
+			expect(value("min(3px,2px,1px)")).toBe("1px");
+			expect(value("max(1px,2px,3px,4px,5px)")).toBe("5px");
+		});
+
+		it("compares units fixed against each other", () => {
+			expect(value("min(1in,100px)")).toBe("6pc");
+			expect(value("max(1s,500ms)")).toBe("1s");
+		});
+
+		it("clamps, with the lower bound winning a contradictory pair", () => {
+			expect(value("clamp(1px,5px,3px)")).toBe("3px");
+			expect(value("clamp(4px,1px,9px)")).toBe("4px");
+		});
+
+		it("keeps the parentheses on a negative, as calc() does", () => {
+			expect(value("min(-5px,-2px)")).toBe("calc(-5px)");
+		});
+
+		it("drops a sign with abs(), whatever the unit scales by", () => {
+			// Every length unit scales by a positive factor, so the coefficient's
+			// sign is the value's even where the factor is not known here.
+			expect(value("abs(-5px)")).toBe("5px");
+			expect(value("abs(-1em)")).toBe("1em");
+		});
+
+		it("turns a sign() into the number it is", () => {
+			expect(minify("a{z-index:sign(5px)}")).toBe("a{z-index:1}");
+			// Zero keeps its parentheses too — see the unitless-zero case below.
+			expect(minify("a{z-index:sign(0px)}")).toBe("a{z-index:calc(0)}");
+			// A negative keeps its parentheses, as everywhere else.
+			expect(minify("a{z-index:sign(-5px)}")).toBe("a{z-index:calc(-1)}");
+		});
+
+		it("takes hypot() only where the root is exact", () => {
+			expect(value("hypot(3px,4px)")).toBe("5px");
+			expect(value("hypot(6px,8px,0px)")).toBe("10px");
+			// Irrational for most inputs.
+			expect(value("hypot(1px,1px)")).toBe("hypot(1px,1px)");
+		});
+	});
+
+	describe("round(), mod() and rem()", () => {
+		it("rounds to a step, by each of the grammar's strategies", () => {
+			expect(value("round(5px,2px)")).toBe("6px");
+			expect(value("round(nearest,5.5px,1px)")).toBe("6px");
+			expect(value("round(up,4.5px,2px)")).toBe("6px");
+			expect(value("round(down,5.5px,2px)")).toBe("4px");
+			expect(value("round(to-zero,5.5px,2px)")).toBe("4px");
+			// `down` is the floor, so a negative goes further from zero, and
+			// `to-zero` truncates instead.
+			expect(value("round(down,-4.5px,2px)")).toBe("calc(-6px)");
+			expect(value("round(to-zero,-5.5px,2px)")).toBe("calc(-4px)");
+		});
+
+		it("splits mod() and rem() on whose sign the result takes", () => {
+			expect(value("mod(-7px,3px)")).toBe("2px");
+			expect(value("rem(-7px,3px)")).toBe("calc(-1px)");
+			expect(value("mod(7px,-3px)")).toBe("calc(-2px)");
+			expect(value("rem(7px,-3px)")).toBe("1px");
+		});
+
+		it.each([
+			// Exactly on a step is where engines part company: these are step
+			// functions, so an ulp in the engine's own conversion moves the answer a
+			// whole step. Chromium reads `round(down,10cm,2cm)` as `8cm` and
+			// `mod(10px,-2px)` as `-2px`, both a step off the exact answer.
+			["round(4px,2px)"],
+			["mod(10px,-2px)"],
+			["rem(10px,2px)"],
+			// A zero step is NaN, which engines render differently; a negative one
+			// is not reasoned about here.
+			["round(5px,0px)"],
+			["round(5px,-2px)"],
+			["mod(5px,0px)"],
+			// Two units only layout can compare.
+			["round(5em,2px)"],
+			["mod(50%,20%)"]
+		])("leaves %s alone", (expression) => {
+			expect(value(expression)).toBe(expression);
+		});
+
+		it("keeps that unit through a fold in the argument too", () => {
+			// A fold prints in whichever unit is shortest, which is the rewrite these
+			// arguments refuse: Chromium reads `round(down,4.5cm,1.5cm)` as 113.386px
+			// and `round(down,45mm,15mm)` as 170.079px.
+			expect(value("round(down,calc(4.5cm),calc(1.5cm))")).toBe(
+				"round(down,calc(4.5cm),calc(1.5cm))"
+			);
+			expect(value("round(down,min(4.5cm,9cm),1.5cm)")).toBe(
+				"round(down,min(4.5cm,9cm),1.5cm)"
+			);
+			// Including a stepped function inside a stepped function.
+			expect(value("round(down,round(down,10cm,3cm),1cm)")).toBe(
+				"round(down,round(down,10cm,3cm),1cm)"
+			);
+			// The function's own result is not an argument of one, so it still folds.
+			expect(value("round(5px,2px)")).toBe("6px");
+		});
+
+		it("keeps the unit a stepped argument was written with", () => {
+			// `4.5cm` and `45mm` are the same length, but not the same step:
+			// Chromium reads `round(down,4.5cm,1.5cm)` as `3cm` and the `mm`
+			// spelling as `4.5cm`, so the conversion that holds everywhere else is
+			// suppressed in here.
+			expect(value("round(down,4.5cm,1.5cm)")).toBe("round(down,4.5cm,1.5cm)");
+			// Outside one it still applies.
+			expect(value("4.5cm")).toBe("45mm");
+		});
+	});
+
+	describe("sqrt(), pow(), log(), exp() and the trig functions", () => {
+		it.each([
+			// Irrational, so there is no value to write down.
+			["calc(sqrt(2)*1px)"],
+			["calc(pow(2,.5)*1px)"],
+			// `e` is not a double, which leaves only the powers of it this knows.
+			["calc(exp(1)*1px)"],
+			["calc(log(10)*1px)"],
+			// Not a whole power of the base.
+			["calc(log(9,2)*1px)"],
+			// Sine and cosine are irrational an odd eighth turn from zero, and
+			// tangent has an asymptote on the odd quarters.
+			["calc(sin(30deg)*1px)"],
+			["calc(sin(45deg)*1px)"],
+			["calc(cos(50grad)*1px)"],
+			["calc(tan(90deg)*1px)"],
+			// A radian is not a whole number of eighth turns except at zero.
+			["calc(sin(1)*1px)"],
+			["calc(cos(1rad)*1px)"],
+			// The inverse functions answer with an angle only at three arguments.
+			["asin(.5)"],
+			["atan2(1,2)"],
+			// Both zero is left to the engine.
+			["atan2(0,0)"]
+		])("leaves %s alone", (expression) => {
+			expect(value(expression)).toBe(expression);
+		});
+
+		it("takes a root or a power that multiplies back exactly", () => {
+			expect(value("calc(sqrt(4)*1px)")).toBe("2px");
+			expect(value("calc(sqrt(2.25)*1px)")).toBe("1.5px");
+			expect(value("calc(pow(2,3)*1px)")).toBe("8px");
+			expect(value("calc(pow(2,-2)*1px)")).toBe(".25px");
+			expect(value("calc(pow(2,0)*1px)")).toBe("1px");
+		});
+
+		it("takes a logarithm that lands on a whole power of its base", () => {
+			expect(value("calc(log(8,2)*1px)")).toBe("3px");
+			expect(value("calc(log(1,10)*1px)")).toBe("0");
+			expect(value("calc(exp(0)*1px)")).toBe("1px");
+		});
+
+		it("takes sine, cosine and tangent an eighth turn apart", () => {
+			expect(value("calc(cos(0)*1px)")).toBe("1px");
+			expect(value("calc(sin(90deg)*1px)")).toBe("1px");
+			expect(value("calc(sin(.25turn)*1px)")).toBe("1px");
+			expect(value("calc(cos(100grad)*1px)")).toBe("0");
+			expect(value("calc(cos(180deg)*1px)")).toBe("calc(-1px)");
+			expect(value("calc(tan(45deg)*1px)")).toBe("1px");
+			expect(value("calc(tan(180deg)*1px)")).toBe("0");
+		});
+
+		it("answers the inverse functions in degrees", () => {
+			expect(value("asin(1)")).toBe("90deg");
+			expect(value("acos(0)")).toBe("90deg");
+			expect(value("atan(1)")).toBe("45deg");
+			expect(value("atan2(1,1)")).toBe("45deg");
+			expect(value("atan2(0,-1)")).toBe("180deg");
+			// A ratio of two lengths is a number, so it answers the same way.
+			expect(value("atan2(1px,-1px)")).toBe("135deg");
+		});
+
+		it("prints a folded operand of an outer expression bare", () => {
+			// No property judges it in here, so a fraction or a zero needs no
+			// `calc()` of its own — which is what lets the outer fold go on.
+			expect(value("calc(sin(0)*1px)")).toBe("0");
+			expect(value("calc(1px*pow(2,3))")).toBe("8px");
+			expect(value("min(sqrt(4)*1px,3px)")).toBe("2px");
 		});
 	});
 });
