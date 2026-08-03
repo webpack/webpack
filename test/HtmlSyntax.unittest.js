@@ -4398,11 +4398,26 @@ describe("SourceProcessor — streamed walk recycling", () => {
 	});
 
 	it("streams a document whose form element leaves the open stack", () => {
-		// `</form>` removes the element from the middle of the open stack, which
-		// forces the entered-prefix scan down its full-scan path.
 		const log = walk(bigBody("<form><p>x</p></form>"));
 		expect(log.filter((l) => l === "+form")).toHaveLength(BIG);
 		expect(log.filter((l) => l === "-form")).toHaveLength(BIG);
+	});
+
+	it("does not re-visit an element the form end tag left open", () => {
+		// `</form>` removes the form from the *middle* of the open stack while the
+		// `div` inside it stays open, so nothing has finished. Reconciling against
+		// the open stack there closes and re-enters the live `div` — visits stay
+		// balanced, so only the visit count catches it.
+		const log = walk(
+			`<!DOCTYPE html><html><body><form>${"<p>x</p>".repeat(
+				BIG
+			)}<div></form><p>y</p></div></body></html>`
+		);
+		expect(log.filter((l) => l === "+div")).toHaveLength(1);
+		expect(log.filter((l) => l === "-div")).toHaveLength(1);
+		// the div nests inside the form in the tree, so it closes first
+		const divExit = log.lastIndexOf("-div");
+		expect(log.indexOf("-form")).toBeGreaterThan(divExit);
 	});
 
 	it("streams tables, where flushing is held back", () => {
