@@ -247,3 +247,8 @@
 /*! declined: the inverse functions answer with a whole number of degrees at
    three arguments only */
 .f05 { rotate: asin(.5) }
+/*! declined: a fold inside a stepped function would print the shortest unit,
+   which is the rewrite that function's own arguments refuse */
+.q08 { margin-left: round(down,calc(4.5cm),calc(1.5cm)) }
+/*! declined: ...including another stepped function */
+.q09 { margin-left: round(down,round(down,10cm,3cm),1cm) }

@@ -2116,6 +2116,24 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(value(expression)).toBe(expression);
 		});
 
+		it("keeps that unit through a fold in the argument too", () => {
+			// A fold prints in whichever unit is shortest, which is the rewrite these
+			// arguments refuse: Chromium reads `round(down,4.5cm,1.5cm)` as 113.386px
+			// and `round(down,45mm,15mm)` as 170.079px.
+			expect(value("round(down,calc(4.5cm),calc(1.5cm))")).toBe(
+				"round(down,calc(4.5cm),calc(1.5cm))"
+			);
+			expect(value("round(down,min(4.5cm,9cm),1.5cm)")).toBe(
+				"round(down,min(4.5cm,9cm),1.5cm)"
+			);
+			// Including a stepped function inside a stepped function.
+			expect(value("round(down,round(down,10cm,3cm),1cm)")).toBe(
+				"round(down,round(down,10cm,3cm),1cm)"
+			);
+			// The function's own result is not an argument of one, so it still folds.
+			expect(value("round(5px,2px)")).toBe("6px");
+		});
+
 		it("keeps the unit a stepped argument was written with", () => {
 			// `4.5cm` and `45mm` are the same length, but not the same step:
 			// Chromium reads `round(down,4.5cm,1.5cm)` as `3cm` and the `mm`
