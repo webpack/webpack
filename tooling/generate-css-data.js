@@ -912,22 +912,31 @@ const mapLiteral = (entries) =>
 	`new Map([${entries.map(([key, value]) => `["${key}", "${value}"]`).join(", ")}])`;
 
 /**
- * @param {(number | null)[]} values the table
- * @returns {string} its array literal
- */
-const numberListLiteral = (values) => `[${values.map(String).join(", ")}]`;
-
-/**
- * @param {[number, number][]} entries `[argument, degrees]` pairs
+ * @param {[number, number][]} entries number-keyed pairs
  * @returns {string} the `Map` literal
  */
-const arcLiteral = (entries) =>
-	`new Map([${entries.map(([value, degrees]) => `[${value}, ${degrees}]`).join(", ")}])`;
+const numberMapLiteral = (entries) =>
+	`new Map([${entries.map(([key, value]) => `[${key}, ${value}]`).join(", ")}])`;
+
+/**
+ * A trig table as `eighth turn -> value`, the irrational eighths simply absent
+ * — the same "not in the table, not foldable" rule the inverses already use.
+ * @param {(number | null)[]} values the value at each eighth
+ * @returns {[number, number][]} the entries
+ */
+const eighthTurnEntries = (values) => {
+	/** @type {[number, number][]} */
+	const out = [];
+	for (const [eighth, value] of values.entries()) {
+		if (value !== null) out.push([eighth, value]);
+	}
+	return out;
+};
 
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], droppableWhenEmptyAtRules: string[], steppedFunctions: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][] }} */
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
 	cssWideKeywords: ["inherit", "initial", "revert", "revert-layer", "unset"],
@@ -966,13 +975,6 @@ const SUPPLEMENT = {
 	// drops a `flex` shorthand whose basis has none, and the shorthand carries
 	// one too.
 	zeroUnitKeepingProperties: ["flex", "flex-basis"],
-	// The math functions whose result is a step of their arguments. Which ones
-	// those are follows from what each computes, and no dataset states that — the
-	// grammars describe their shape. It is a table because a rewrite that holds
-	// everywhere else does not hold inside one: `4.5cm` and `45mm` are the same
-	// length, but headless Chromium reads `round(down,4.5cm,1.5cm)` as `3cm` and
-	// `round(down,45mm,15mm)` as `4.5cm`.
-	steppedFunctions: ["mod", "rem", "round"],
 	// At-rules whose empty block is inert. Not `@keyframes` (an empty one still
 	// runs the animation, firing its events) and not `@layer` (an empty block
 	// declares the layer's cascade order).
@@ -1019,7 +1021,51 @@ const SUPPLEMENT = {
 	// not, which no table of the two can show. Cosine and the three inverses are
 	// derived below.
 	eighthTurnSine: [0, null, 1, null, 0, null, -1, null],
-	eighthTurnTangent: [0, 1, null, -1, 0, 1, null, -1]
+	eighthTurnTangent: [0, 1, null, -1, 0, 1, null, -1],
+	// What folding each math function comes down to. The grammars state only the
+	// shape — every argument of every one of them is a `<calc-sum>` — so what a
+	// function *means* is spelled out here, as the three things the minifier's
+	// engine needs and nothing more:
+	//
+	//   read   how the arguments are read: `same-unit` (all reduce to one shared
+	//          unit), `number` (all reduce to plain numbers), `eighth-turn` (one
+	//          angle, as a whole number of eighth turns from zero)
+	//   apply  which arithmetic runs — the engine implements each name once, so
+	//          the six trig entries share one `lookup` between them
+	//   result the unit the answer carries: `same` as its arguments, `` for a
+	//          number, or an angle unit
+	//
+	// Adding a function is adding a line here; a name whose arithmetic is already
+	// implemented needs nothing else. `calc()` has no entry — it is not one value
+	// but whatever sum its argument reduced to — and `calc-size()` none either,
+	// since it leads with a basis rather than an expression.
+	//
+	// `stepped` marks the ones whose result is a step of their arguments, where a
+	// unit rewrite that holds everywhere else does not: `4.5cm` and `45mm` are
+	// the same length, but headless Chromium reads `round(down,4.5cm,1.5cm)` as
+	// `3cm` and `round(down,45mm,15mm)` as `4.5cm`.
+	mathFunctionFold: [
+		["abs", "same-unit", "absolute", "same", null, false],
+		["acos", "number", "lookup", "deg", "ARC_COSINE_DEGREES", false],
+		["asin", "number", "lookup", "deg", "ARC_SINE_DEGREES", false],
+		["atan", "number", "lookup", "deg", "ARC_TANGENT_DEGREES", false],
+		["atan2", "same-unit", "arcTangent2", "deg", null, false],
+		["clamp", "same-unit", "clamp", "same", null, false],
+		["cos", "eighth-turn", "lookup", "", "EIGHTH_TURN_COSINE", false],
+		["exp", "number", "exponential", "", null, false],
+		["hypot", "same-unit", "hypotenuse", "same", null, false],
+		["log", "number", "logarithm", "", null, false],
+		["max", "same-unit", "maximum", "same", null, false],
+		["min", "same-unit", "minimum", "same", null, false],
+		["mod", "same-unit", "modulus", "same", null, true],
+		["pow", "number", "power", "", null, false],
+		["rem", "same-unit", "remainder", "same", null, true],
+		["round", "same-unit", "round", "same", null, true],
+		["sign", "same-unit", "sign", "", null, false],
+		["sin", "eighth-turn", "lookup", "", "EIGHTH_TURN_SINE", false],
+		["sqrt", "number", "squareRoot", "", null, false],
+		["tan", "eighth-turn", "lookup", "", "EIGHTH_TURN_TANGENT", false]
+	]
 };
 
 // Degrees in an eighth turn, which is what an index into the tables below is.
@@ -1077,6 +1123,9 @@ const generate = () => {
 	const integerProperties = collectIntegerProperties();
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
+	const steppedFunctions = SUPPLEMENT.mathFunctionFold
+		.filter(([, , , , , stepped]) => stepped)
+		.map(([name]) => name);
 
 	const source = `/*
 	MIT License http://www.opensource.org/licenses/mit-license.php
@@ -1189,7 +1238,7 @@ const DROPPABLE_WHEN_EMPTY_AT_RULES = ${setLiteral(SUPPLEMENT.droppableWhenEmpty
 
 // The math functions whose result steps with their arguments, so a value inside
 // one keeps the unit and the digits it was written with.
-const STEPPED_FUNCTIONS = ${setLiteral(SUPPLEMENT.steppedFunctions)};
+const STEPPED_FUNCTIONS = ${setLiteral(steppedFunctions)};
 
 // The units fixed against each other (CSS Values 4 §6.2, §8), as
 // \`unit -> [group, how many of the group's base unit one is]\`. Two units in the
@@ -1223,29 +1272,44 @@ const QUARTER_TURN_ANGLE = new Map([${SUPPLEMENT.quarterTurnAngle
 		.map(([unit, count]) => `["${unit}", ${count}]`)
 		.join(", ")}]);
 
-// Sine, cosine and tangent at each eighth turn from zero, \`null\` where the
-// value is irrational — sine and cosine on the odd eighths, tangent on the
-// asymptotes. Cosine is sine a quarter turn along.
-/** @type {(number | null)[]} */
-const EIGHTH_TURN_SINE = ${numberListLiteral(SUPPLEMENT.eighthTurnSine)};
+// Sine, cosine and tangent as \`eighth turn from zero -> value\`. The eighths
+// where the value is irrational are absent — sine and cosine on the odd ones,
+// tangent on the asymptotes. Cosine is sine a quarter turn along.
+/** @type {Map<number, number>} */
+const EIGHTH_TURN_SINE = ${numberMapLiteral(eighthTurnEntries(SUPPLEMENT.eighthTurnSine))};
 
-/** @type {(number | null)[]} */
-const EIGHTH_TURN_COSINE = ${numberListLiteral(eighthTurnCosine)};
+/** @type {Map<number, number>} */
+const EIGHTH_TURN_COSINE = ${numberMapLiteral(eighthTurnEntries(eighthTurnCosine))};
 
-/** @type {(number | null)[]} */
-const EIGHTH_TURN_TANGENT = ${numberListLiteral(SUPPLEMENT.eighthTurnTangent)};
+/** @type {Map<number, number>} */
+const EIGHTH_TURN_TANGENT = ${numberMapLiteral(eighthTurnEntries(SUPPLEMENT.eighthTurnTangent))};
 
 // What each inverse trig function answers, as \`argument -> degrees\`, by
 // inverting the table above it over that function's principal branch. Every
 // other argument is transcendental and leaves the call written out.
 /** @type {Map<number, number>} */
-const ARC_SINE_DEGREES = ${arcLiteral(collectArcAngles(SUPPLEMENT.eighthTurnSine, -2, 2))};
+const ARC_SINE_DEGREES = ${numberMapLiteral(collectArcAngles(SUPPLEMENT.eighthTurnSine, -2, 2))};
 
 /** @type {Map<number, number>} */
-const ARC_COSINE_DEGREES = ${arcLiteral(collectArcAngles(eighthTurnCosine, 0, 4))};
+const ARC_COSINE_DEGREES = ${numberMapLiteral(collectArcAngles(eighthTurnCosine, 0, 4))};
 
 /** @type {Map<number, number>} */
-const ARC_TANGENT_DEGREES = ${arcLiteral(collectArcAngles(SUPPLEMENT.eighthTurnTangent, -1, 1))};
+const ARC_TANGENT_DEGREES = ${numberMapLiteral(collectArcAngles(SUPPLEMENT.eighthTurnTangent, -1, 1))};
+
+// What folding each math function comes down to, as
+// \`name -> { read, apply, result, table }\`: how its arguments are read, which
+// arithmetic runs, and the unit the answer carries. \`lib/css/syntax.js\`
+// implements each \`read\` and \`apply\` name once and dispatches through this, so
+// it names no function of its own.
+/** @type {Map<string, { read: string, apply: string, result: string, table: Map<number, number> | null }>} */
+const MATH_FUNCTION_FOLD = new Map([
+${SUPPLEMENT.mathFunctionFold
+	.map(
+		([name, read, apply, result, table]) =>
+			`\t["${name}", { read: "${read}", apply: "${apply}", result: "${result}", table: ${table === null ? "null" : table} }]`
+	)
+	.join(",\n")}
+]);
 
 // Properties whose grammar can reach an \`<integer>\`. Deliberately wide: a
 // non-integer where an integer is expected is rounded rather than dropped
@@ -1286,6 +1350,7 @@ module.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
 module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
 module.exports.MATH_FUNCTION_ARITY = MATH_FUNCTION_ARITY;
+module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
 module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;
