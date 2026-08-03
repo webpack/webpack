@@ -5902,6 +5902,11 @@ declare interface CssProcessOptions {
 	 * the input's contents for the map's `sourcesContent`; only read while printing
 	 */
 	content?: string;
+
+	/**
+	 * what the target can read (the CSS entries of `output.environment`), so a spelling it would not understand is never reached for; only read while printing, and an absent entry means the modern spelling is available
+	 */
+	environment?: CssEnvironment;
 }
 type DeclarationEstreeIndex =
 	FunctionDeclaration | VariableDeclaration | ClassDeclaration;

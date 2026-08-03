@@ -1757,3 +1757,152 @@ describe("CssSyntax — SourceProcessor without visitors", () => {
 		).not.toThrow();
 	});
 });
+
+describe("CssSyntax minify — the value transforms' rejection paths", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {object=} environment the target's CSS abilities
+	 * @returns {string} its minified serialization
+	 */
+	const minify = (css, environment) =>
+		new SourceProcessor().process(css, { minimize: true, environment }).code;
+
+	/**
+	 * @param {string} value a declaration value
+	 * @param {object=} environment the target's CSS abilities
+	 * @returns {string} the value as it is printed back
+	 */
+	const value = (value, environment) => {
+		const out = minify(`a{x:${value}}`, environment);
+		return /^a\{x:([\s\S]*)\}$/.exec(out)[1];
+	};
+
+	describe("polar and Lab colors", () => {
+		// Each conversion was checked against headless Chromium; these cases pin
+		// the arguments the converter refuses rather than guesses at.
+		it.each([
+			["hsl(0,100%,50%)", "red"],
+			["hsl(0 100% 50%)", "red"],
+			["hsla(0,100%,50%,1)", "red"],
+			["hwb(0 0% 100%)", "#000"],
+			["lab(100% 0 0)", "#fff"],
+			["lch(29.2345% 44.2 45deg)", "#752d15"],
+			["oklab(1 0 0)", "#fff"],
+			["oklch(70% .1 200)", "#40b1b7"],
+			["oklab(40.101% .1147% .0453%)", "#484848"]
+		])("converts %s", (input, expected) => {
+			expect(value(input)).toBe(expected);
+		});
+
+		it.each([
+			// a channel on a `.5` boundary: implementations round it both ways
+			["hsl(134,50%,50%)"],
+			["hwb(194 0% 0%)"],
+			// past the sRGB gamut, so a hex would clip to a different color
+			["lab(50% 100 -100)"],
+			["oklch(90% .4 140)"],
+			// within the Lab family's wider margin
+			["lab(20% 40 0)"],
+			// a non-percentage saturation / lightness is not the grammar converted
+			["hsl(0,1,.5)"],
+			// a hue in a unit the converter does not read
+			["hsl(.5turn,100%,50%)"],
+			// out of range
+			["hsl(0,150%,50%)"],
+			// a substitution, so the arguments are unknown until computed
+			["hsl(var(--h),100%,50%)"],
+			// the wrong argument count
+			["hsl(0,100%)"],
+			["lab(50% 40)"],
+			// an alpha out of range
+			["hsl(0 100% 50% / 1.5)"]
+		])("keeps %s", (input) => {
+			expect(value(input).replace(/\s+/g, "")).toBe(input.replace(/\s+/g, ""));
+		});
+
+		it("keeps a partly transparent color when the target has no hex alpha", () => {
+			expect(value("hsl(0 100% 50% / .8)", { cssColorHexAlpha: false })).toBe(
+				"hsl(0 100% 50% / .8)"
+			);
+			expect(value("rgba(255,0,0,.8)", { cssColorHexAlpha: false })).toBe(
+				"rgba(255,0,0,.8)"
+			);
+		});
+
+		it("spells an alpha as hex when it does", () => {
+			expect(value("hsl(0 100% 50% / .8)")).toBe("#f00c");
+			// the author's own number, so no boundary guard — `rgba()` agrees
+			expect(value("hsl(0 100% 50% / .5)")).toBe("#ff000080");
+			expect(value("rgba(255,0,0,.2)")).toBe("#f003");
+			expect(value("rgba(0,0,0,.5)")).toBe("#00000080");
+		});
+	});
+
+	describe("rounding and unit conversion", () => {
+		it.each([
+			["33.33333333%", "33.3333%"],
+			["1.0000001px", "1px"],
+			["16px", "1pc"],
+			["12pt", "1pc"],
+			["10mm", "1cm"],
+			["400ms", ".4s"],
+			[".005s", "5ms"],
+			["0.75pt", "1px"]
+		])("rewrites %s", (input, expected) => {
+			expect(value(input)).toBe(expected);
+		});
+
+		it.each([
+			// an angle: `rotate()` amplifies a truncated digit through trig
+			["33.33333333deg"],
+			["1.5turn"],
+			// past the magnitude the rounding was measured for
+			["33333.33333px"],
+			// no exact ratio to a shorter unit
+			["1.3px"],
+			// `q` is a conversion source, never a target
+			["40q"],
+			// scientific notation is left alone
+			["1e3px"],
+			// a unit outside the absolute families
+			["1.5em"],
+			["50%"]
+		])("keeps %s", (input) => {
+			expect(value(input)).toBe(input);
+		});
+
+		it("leaves a `@supports` condition as written", () => {
+			expect(minify("@supports (width:16px){a{x:16px}}")).toBe(
+				"@supports (width:16px){a{x:1pc}}"
+			);
+			expect(minify("@supports (color:rgba(0,0,0,.5)){a{x:1px}}")).toBe(
+				"@supports (color:rgba(0,0,0,.5)){a{x:1px}}"
+			);
+		});
+	});
+
+	describe("box longhands merging across a gap", () => {
+		it("steps over a declaration that writes another family", () => {
+			expect(
+				minify(
+					"a{margin-top:1px;margin-right:2px;color:red;margin-bottom:1px;margin-left:2px}"
+				)
+			).toBe("a{margin:1px 2px;color:red}");
+		});
+
+		it.each([
+			["the shorthand itself", "margin:9px"],
+			["a logical property", "margin-inline:9px"],
+			["`all`", "all:unset"]
+		])("declines across %s", (_name, between) => {
+			const css = `a{margin-top:1px;${between};margin-right:2px;margin-bottom:1px;margin-left:2px}`;
+			expect(minify(css)).toBe(css);
+		});
+
+		it("declines `inset` when the target cannot read the shorthand", () => {
+			const css = "a{top:1px;right:2px;bottom:1px;left:2px}";
+			expect(minify(css, { cssInsetShorthand: false })).toBe(css);
+			expect(minify(css)).toBe("a{inset:1px 2px}");
+		});
+	});
+});

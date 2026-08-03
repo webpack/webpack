@@ -109,7 +109,7 @@
 .h03 { color: hsl(134, 50%, 50%) }
 /*! declined: ...as does a plain grey at 50% */
 .h04 { color: hsl(0, 0%, 50%) }
-/*! declined: a partly transparent one needs the hex-alpha spelling */
+/*! a partly transparent one takes the hex-alpha spelling, gated on the target */
 .h05 { color: hsla(0, 100%, 50%, .5) }
 /*! declined: an angle unit other than `deg` needs its own conversion */
 .h06 { color: hsl(0turn, 100%, 50%) }
