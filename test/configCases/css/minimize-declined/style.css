@@ -26,8 +26,6 @@
 /*! declined: `bolder` and `lighter` are relative to the parent's weight, so they
    have no fixed number (lightningcss: bolder) */
 .t08 { font-weight: bolder }
-/*! declined: needs unit algebra (lightningcss: calc(1.5em + 3.75rem)) */
-.t09 { width: calc(3rem + calc(1.5em + .75rem)) }
 /*! declined: observable through getComputedStyle().getPropertyValue(), the one
    place a declaration's authored text survives, and no other minifier rewrites
    it by default either — planned behind an option (lightningcss: .5rem) */

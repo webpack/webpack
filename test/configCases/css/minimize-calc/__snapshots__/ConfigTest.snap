@@ -19,6 +19,13 @@ Array [
   "/*! calc: one angle unit adds exactly, and survives the trig \`rotate()\` runs it
    through — checked in headless Chromium against the same matrix */.c14{rotate:90deg}",
   "/*! calc: ...in whichever unit it was written */.c15{rotate:.5turn}",
+  "/*! sum: a product distributes over the terms */.t01{width:calc(2em + 2px)}",
+  "/*! sum: ...and so does a division */.t02{width:calc(50% + .5px)}",
+  "/*! sum: terms of the same unit gather wherever they were written */.t03{width:calc(4px + 2em)}",
+  "/*! sum: a negative term is the subtraction it is */.t04{width:calc(-1em + 1px)}",
+  "/*! sum: ...gathering through a nested calc() as well */.t06{width:calc(3.75rem + 1.5em)}",
+  "/*! kept: a zero term stays — which units may be added to which is a type rule,
+   and dropping it would make an expression the engine rejects into one it takes */.t05{width:calc(1px + 0deg)}",
   "/*! declined: two units that only layout can add */.d01{width:calc(100% - 10px)}",
   "/*! declined: a relative unit against an absolute one */.d02{width:calc(1em + 2px)}",
   "/*! declined: a substitution could be anything */.d03{width:calc(var(--x) + 1px)}",
@@ -55,8 +62,8 @@ Array [
   "/*! declined: clamp() takes exactly three */.n04{width:clamp(1px,2px)}",
   "/*! declined: calc-size() leads with a basis, which is an expression this does
    not evaluate, so it is the one math function with no arity to read */.n05{width:calc-size(auto,size)}",
-  "/*! declined: a math function whose meaning is not written yet */.n06{width:sqrt(4)}",
-  "/*! declined: ...pow() likewise */.n07{width:pow(2,3)}",
+  "/*! declined: an irrational root is not a value a stylesheet can hold */.n06{width:calc(sqrt(2)*1px)}",
+  "/*! declined: ...nor a power that does not multiply back */.n07{width:calc(pow(2,.5)*1px)}",
   "/*! kept: a negative folds but keeps the parentheses */.n08{width:calc(-5px)}",
   "/*! math: abs() drops the sign */.a01{width:5px}",
   "/*! math: ...and leaves a positive alone */.a02{width:5px}",
@@ -87,5 +94,24 @@ Array [
   "/*! declined: two units only layout can compare */.q06{margin-left:round(5em,2px)}",
   "/*! kept as written: a unit rewrite that holds anywhere else does not hold in a
    step function, so the arguments keep the unit they were given */.q07{margin-left:round(down,4.5cm,1.5cm)}",
+  "/*! exact: a root that squares back */.e01{width:1.5px}",
+  "/*! exact: a whole power, multiplied out */.e02{width:8px}",
+  "/*! exact: ...including a negative exponent */.e03{width:.25px}",
+  "/*! exact: a logarithm that lands on a whole power of its base */.e04{width:3px}",
+  "/*! exact: e to the zero */.e05{width:1px}",
+  "/*! trig: a quarter turn, in whichever unit spells one */.e06{width:1px}",
+  "/*! trig: ...and the same angle written as a turn */.e07{width:1px}",
+  "/*! trig: a half turn is where cosine is negative, so it keeps its parentheses */.e08{width:calc(-1px)}",
+  "/*! trig: tangent is rational an eighth turn apart, where sine and cosine are not */.e09{width:1px}",
+  "/*! trig: the inverse functions answer with an angle, in degrees */.e10{rotate:90deg}",
+  "/*! trig: ...and atan2() reads a ratio, so two lengths answer the same way */.e11{rotate:135deg}",
+  "/*! exact: a folded operand of an outer expression is printed bare — no property
+   judges it in here, which is what lets the outer fold go on */.e12{width:2px}",
+  "/*! declined: sine is irrational an odd eighth turn from zero */.f01{width:calc(sin(30deg)*1px)}",
+  "/*! declined: ...and tangent has an asymptote on the odd quarters */.f02{width:calc(tan(90deg)*1px)}",
+  "/*! declined: a radian is a whole number of eighth turns only at zero */.f03{width:calc(cos(1rad)*1px)}",
+  "/*! declined: \`e\` is not a double, so no other power of it can be written down */.f04{width:calc(exp(1)*1px)}",
+  "/*! declined: the inverse functions answer with a whole number of degrees at
+   three arguments only */.f05{rotate:asin(.5)}",
 ]
 `;
