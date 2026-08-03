@@ -1938,8 +1938,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["calc(1e308px*1e10)"],
 			// Longer folded than written.
 			["calc(100%/3)"],
-			// A math function this does not evaluate.
-			["min(1px + 2px,4px)"]
+			// A math function whose meaning is not written yet, so the sum inside it
+			// folds but the call does not.
+			["sqrt(4px)"]
 		])("leaves %s alone", (expression) => {
 			expect(value(expression)).toBe(expression);
 		});
@@ -1974,6 +1975,48 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("a{--gap:calc(1px + 2px)}")).toBe(
 				"a{--gap:calc(1px + 2px)}"
 			);
+		});
+	});
+
+	describe("min(), max() and clamp()", () => {
+		it.each([
+			// A percentage basis can be negative, and which of two is smaller then
+			// depends on that sign — unlike scaling one, which is linear.
+			["min(50%,60%)"],
+			// Only layout knows which of these is smaller.
+			["min(1em,2px)"],
+			["min(100%,500px)"],
+			["min(var(--x),1px)"],
+			// The grammar says exactly three.
+			["clamp(1px,2px)"],
+			["clamp(1px,2px,3px,4px)"],
+			// `round()` leads with a strategy, so it has no arity to read.
+			["round(down,5px,2px)"],
+			// Math functions whose meaning is not written yet.
+			["hypot(3px,4px)"],
+			["abs(-5px)"],
+			["sign(-5px)"]
+		])("leaves %s alone", (expression) => {
+			expect(value(expression)).toBe(expression);
+		});
+
+		it("picks across however many arguments the grammar allows", () => {
+			expect(value("min(3px,2px,1px)")).toBe("1px");
+			expect(value("max(1px,2px,3px,4px,5px)")).toBe("5px");
+		});
+
+		it("compares units fixed against each other", () => {
+			expect(value("min(1in,100px)")).toBe("6pc");
+			expect(value("max(1s,500ms)")).toBe("1s");
+		});
+
+		it("clamps, with the lower bound winning a contradictory pair", () => {
+			expect(value("clamp(1px,5px,3px)")).toBe("3px");
+			expect(value("clamp(4px,1px,9px)")).toBe("4px");
+		});
+
+		it("keeps the parentheses on a negative, as calc() does", () => {
+			expect(value("min(-5px,-2px)")).toBe("calc(-5px)");
 		});
 	});
 });

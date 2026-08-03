@@ -202,6 +202,67 @@ const collectUnitGroupBase = () => {
 	return [...base].sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
 
+/**
+ * How many `<calc-sum>` arguments each math function takes, read off its own
+ * grammar: `min( <calc-sum># )` is one or more, `clamp( <calc-sum>#{3} )` is
+ * exactly three, `log( <calc-sum>, <calc-sum>? )` is one or two. A function
+ * taking anything else is absent — `round()` leads with a rounding strategy and
+ * `calc-size()` with a basis, and neither is an expression to evaluate — so the
+ * minifier reads the absence as "not foldable" rather than carrying its own
+ * list of which functions those are.
+ * @param {string[]} names the math function names
+ * @returns {[string, [number, number]][]} `[name, [min, max]]`, sorted
+ */
+const collectMathFunctionArity = (names) => {
+	/**
+	 * @param {SyntaxNode} node a grammar node
+	 * @returns {[number, number] | null} the `<calc-sum>` count it contributes
+	 */
+	const count = (node) => {
+		switch (node.type) {
+			case "type":
+				return node.name === "calc-sum" ? [1, 1] : null;
+			case "literal":
+				// The separators between arguments carry no argument of their own.
+				return node.value === "," ? [0, 0] : null;
+			case "group":
+			case "parens":
+				return count(node.body);
+			case "multiplier": {
+				const inner = count(node.body);
+				if (inner === null) return null;
+				const min = inner[0] * node.min;
+				const max = inner[1] * node.max;
+				return Number.isNaN(min) || Number.isNaN(max) ? null : [min, max];
+			}
+			case "sequence": {
+				let min = 0;
+				let max = 0;
+				for (const item of node.items) {
+					const inner = count(item);
+					if (inner === null) return null;
+					min += inner[0];
+					max += inner[1];
+				}
+				return [min, max];
+			}
+			default:
+				return null;
+		}
+	};
+	/** @type {[string, [number, number]][]} */
+	const out = [];
+	for (const name of names) {
+		const syntax = definitions.get(`${name}()`);
+		if (syntax === undefined) continue;
+		const tree = grammarOf(syntax);
+		if (tree.type !== "function" || tree.body === null) continue;
+		const arity = count(tree.body);
+		if (arity !== null) out.push([name, arity]);
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
 // The types a number lands on. Everything else a grammar reaches (`<color>`,
 // `<image>`, an identifier) carries no magnitude of its own.
 const NUMERIC_TYPES = new Set([
@@ -510,6 +571,7 @@ const colorFunctions = collectColorArgumentFunctions();
 const colorNames = collectColorNames();
 const mathFunctions = collectMathFunctions();
 const substitutionFunctions = collectSubstitutionFunctions();
+const mathFunctionArity = collectMathFunctionArity(mathFunctions);
 const integerProperties = collectIntegerProperties();
 const unitGroupBase = collectUnitGroupBase();
 
@@ -569,6 +631,15 @@ const SUBSTITUTION_FUNCTIONS = ${setLiteral(substitutionFunctions)};
 // CSS Values 4's math functions: everything inside one is a math expression, so
 // \`*\` and \`/\` there are operators, and the whitespace around them carries nothing.
 const MATH_FUNCTIONS = ${setLiteral(mathFunctions)};
+
+// How many \`<calc-sum>\` arguments each of them takes, off its own grammar. A
+// function whose arguments are not all expressions (\`round()\` leads with a
+// strategy, \`calc-size()\` with a basis) is absent, and absence is what the
+// folding reads as "leave this one alone".
+/** @type {Map<string, [number, number]>} */
+const MATH_FUNCTION_ARITY = new Map([${mathFunctionArity
+	.map(([name, [min, max]]) => `["${name}", [${min}, ${max}]]`)
+	.join(", ")}]);
 
 // A CSS-wide keyword is only valid as the whole value, so a box repeating one is
 // invalid and already discarded — collapsing it would switch the declaration on.
@@ -657,6 +728,7 @@ module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
 module.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
 module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
+module.exports.MATH_FUNCTION_ARITY = MATH_FUNCTION_ARITY;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
@@ -665,7 +737,7 @@ module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;
 `;
 
-const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties`;
+const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity`;
 // Formatted here rather than left to `yarn fmt`, so the comparison below is
 // against what the repo actually checks in.
 prettier

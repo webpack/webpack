@@ -183,4 +183,33 @@ describe("CssValueSyntax", () => {
 			expect(failed).toEqual([]);
 		});
 	});
+
+	describe("the arity read off those grammars", () => {
+		const { MATH_FUNCTIONS, MATH_FUNCTION_ARITY } = require("../lib/css/data");
+
+		it("counts each math function's `<calc-sum>` arguments", () => {
+			expect(MATH_FUNCTION_ARITY.get("calc")).toEqual([1, 1]);
+			expect(MATH_FUNCTION_ARITY.get("min")).toEqual([1, Infinity]);
+			expect(MATH_FUNCTION_ARITY.get("max")).toEqual([1, Infinity]);
+			expect(MATH_FUNCTION_ARITY.get("clamp")).toEqual([3, 3]);
+			expect(MATH_FUNCTION_ARITY.get("atan2")).toEqual([2, 2]);
+			// `log( <calc-sum>, <calc-sum>? )` — the second one is optional.
+			expect(MATH_FUNCTION_ARITY.get("log")).toEqual([1, 2]);
+		});
+
+		it("leaves out the ones whose arguments are not all expressions", () => {
+			// `round()` leads with a rounding strategy and `calc-size()` with a
+			// basis, so neither can be evaluated by counting `<calc-sum>`s.
+			expect(MATH_FUNCTION_ARITY.has("round")).toBe(false);
+			expect(MATH_FUNCTION_ARITY.has("calc-size")).toBe(false);
+		});
+
+		it("never names a function the spec's math set does not", () => {
+			// The arity table is read to decide whether a function may be folded, so
+			// it has to stay a subset of the functions the grammars call math ones.
+			for (const name of MATH_FUNCTION_ARITY.keys()) {
+				expect(MATH_FUNCTIONS.has(name)).toBe(true);
+			}
+		});
+	});
 });

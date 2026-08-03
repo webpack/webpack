@@ -24,7 +24,7 @@ Array [
   "/*! declined: mixed base types are invalid CSS, and folding would make them valid */.d04{width:calc(1px + 1deg)}",
   "/*! declined: division by zero is not a number */.d05{width:calc(1px/0)}",
   "/*! declined: the result would need more digits than the expression */.d06{width:calc(100%/3)}",
-  "/*! declined: a math function other than calc() */.d07{width:min(1px + 2px,4px)}",
+  "/*! declined: a math function other than calc() */.d07{width:3px}",
   "/*! declined: two angle units — only \`deg\`/\`grad\`/\`turn\` convert exactly, and
    nothing converts them here, so they stay two terms */.d08{rotate:calc(45deg + .125turn)}",
   "/*! unwrap: a positive dimension means the same bare */.u01{width:3px}",
@@ -37,5 +37,24 @@ Array [
   "/*! kept: a negative stays wrapped whatever the property */.u08{margin-left:calc(-5px)}",
   "/*! declined: a \`@supports\` condition is the syntax being tested */@supports (width:calc(1px + 2px)){.s01{color:red}}",
   "/*! declined: a custom property hands its text back through getPropertyValue() */.s02{--gap:calc(1px + 2px)}",
+  "/*! math: the smallest of a list of one unit */.m01{width:1px}",
+  "/*! math: ...and the largest */.m02{width:2px}",
+  "/*! math: however many arguments the grammar allows */.m03{width:1px}",
+  "/*! math: units fixed against each other compare too, then take the shortest */.m04{width:6pc}",
+  "/*! math: clamp() is the middle one */.m05{width:3px}",
+  "/*! math: ...and the lower bound wins a contradictory pair (CSS Values 4 §10.4) */.m06{width:4px}",
+  "/*! math: a nested calc() has already folded by the time this runs */.m07{width:2px}",
+  "/*! math: times compare */.m08{transition-duration:1s}",
+  "/*! math: so do plain numbers */.m09{opacity:.5}",
+  "/*! declined: a percentage basis can be negative (background-position against an
+   oversized image), and picking the smaller of two depends on that sign */.n01{width:min(50%,60%)}",
+  "/*! declined: only layout knows which is smaller */.n02{width:min(1em,2px)}",
+  "/*! declined: a substitution could be anything */.n03{width:min(var(--x),1px)}",
+  "/*! declined: clamp() takes exactly three */.n04{width:clamp(1px,2px)}",
+  "/*! declined: round() leads with a strategy, so its arguments are not all
+   expressions and the grammar-read arity leaves it out */.n05{width:round(down,5px,2px)}",
+  "/*! declined: a math function whose meaning is not written yet */.n06{width:hypot(3px,4px)}",
+  "/*! declined: ...abs() likewise, and a negative would keep its calc() anyway */.n07{width:abs(-5px)}",
+  "/*! kept: a negative folds but keeps the parentheses */.n08{width:calc(-5px)}",
 ]
 `;
