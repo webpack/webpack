@@ -230,10 +230,11 @@ describe("CssValueSyntax", () => {
 				EIGHTH_TURN_SINE,
 				EIGHTH_TURN_TANGENT
 			} = require("../lib/css/data");
+
 			// `cos(θ)` is `sin(θ + 90°)`, and 90° is two eighths.
 			for (let eighth = 0; eighth < 8; eighth++) {
-				expect(EIGHTH_TURN_COSINE[eighth]).toBe(
-					EIGHTH_TURN_SINE[(eighth + 2) % 8]
+				expect(EIGHTH_TURN_COSINE.get(eighth)).toBe(
+					EIGHTH_TURN_SINE.get((eighth + 2) % 8)
 				);
 			}
 			// Each inverse is its table read back over the function's principal
@@ -245,7 +246,7 @@ describe("CssValueSyntax", () => {
 			]) {
 				for (const [value, degrees] of arc) {
 					const eighth = (((degrees / 45) % 8) + 8) % 8;
-					expect(table[eighth]).toBe(value);
+					expect(table.get(eighth)).toBe(value);
 				}
 			}
 			expect([...ARC_SINE_DEGREES]).toEqual([
@@ -258,6 +259,45 @@ describe("CssValueSyntax", () => {
 				[0, 0],
 				[1, 45]
 			]);
+		});
+
+		it("gives every folded function a descriptor the engine can drive", () => {
+			// `read` and `apply` are names `lib/css/syntax.js` looks up, so a typo in
+			// either would leave the function quietly unfolded rather than fail. One
+			// input per descriptor is what notices.
+			const { SourceProcessor } = require("../lib/css/syntax");
+			const { MATH_FUNCTION_FOLD } = require("../lib/css/data");
+
+			/** @type {{ [name: string]: [string, string] }} */
+			const folds = {
+				abs: ["width:abs(-5px)", "width:5px"],
+				acos: ["rotate:acos(0)", "rotate:90deg"],
+				asin: ["rotate:asin(1)", "rotate:90deg"],
+				atan: ["rotate:atan(1)", "rotate:45deg"],
+				atan2: ["rotate:atan2(1px,-1px)", "rotate:135deg"],
+				clamp: ["width:clamp(1px,5px,3px)", "width:3px"],
+				cos: ["width:calc(cos(0)*1px)", "width:1px"],
+				exp: ["width:calc(exp(0)*1px)", "width:1px"],
+				hypot: ["width:hypot(3px,4px)", "width:5px"],
+				log: ["width:calc(log(8,2)*1px)", "width:3px"],
+				max: ["width:max(1px,2px)", "width:2px"],
+				min: ["width:min(1px,2px)", "width:1px"],
+				mod: ["margin-left:mod(-7px,3px)", "margin-left:2px"],
+				pow: ["width:calc(pow(2,3)*1px)", "width:8px"],
+				rem: ["margin-left:rem(7px,3px)", "margin-left:1px"],
+				round: ["margin-left:round(5px,2px)", "margin-left:6px"],
+				sign: ["z-index:sign(5px)", "z-index:1"],
+				sin: ["width:calc(sin(90deg)*1px)", "width:1px"],
+				sqrt: ["width:calc(sqrt(4)*1px)", "width:2px"],
+				tan: ["width:calc(tan(45deg)*1px)", "width:1px"]
+			};
+			expect(Object.keys(folds).sort()).toEqual([...MATH_FUNCTION_FOLD.keys()]);
+			for (const [name, [input, expected]] of Object.entries(folds)) {
+				const { code } = new SourceProcessor().process(`a{${input}}`, {
+					minimize: true
+				});
+				expect(`${name}: ${code}`).toBe(`${name}: a{${expected}}`);
+			}
 		});
 
 		it("never names a function the spec's math set does not", () => {
