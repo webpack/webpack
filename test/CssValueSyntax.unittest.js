@@ -3,9 +3,9 @@
 const {
 	parseValueSyntax,
 	walkValueSyntax
-} = require("../tooling/css-value-syntax");
+} = require("../tooling/generate-css-data");
 
-/** @typedef {import("../tooling/css-value-syntax").SyntaxNode} SyntaxNode */
+/** @typedef {import("../tooling/generate-css-data").SyntaxNode} SyntaxNode */
 
 /**
  * A one-line spelling of a parsed tree, so a case states the shape it expects
