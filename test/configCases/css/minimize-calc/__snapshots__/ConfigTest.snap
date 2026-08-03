@@ -53,8 +53,19 @@ Array [
   "/*! declined: clamp() takes exactly three */.n04{width:clamp(1px,2px)}",
   "/*! declined: round() leads with a strategy, so its arguments are not all
    expressions and the grammar-read arity leaves it out */.n05{width:round(down,5px,2px)}",
-  "/*! declined: a math function whose meaning is not written yet */.n06{width:hypot(3px,4px)}",
-  "/*! declined: ...abs() likewise, and a negative would keep its calc() anyway */.n07{width:abs(-5px)}",
+  "/*! declined: a math function whose meaning is not written yet */.n06{width:sqrt(4)}",
+  "/*! declined: ...pow() likewise */.n07{width:pow(2,3)}",
   "/*! kept: a negative folds but keeps the parentheses */.n08{width:calc(-5px)}",
+  "/*! math: abs() drops the sign */.a01{width:5px}",
+  "/*! math: ...and leaves a positive alone */.a02{width:5px}",
+  "/*! math: sign() is the one that changes the unit — a sign is a number */.a03{z-index:1}",
+  "/*! math: ...and a negative one keeps its parentheses */.a04{z-index:calc(-1)}",
+  "/*! math: hypot() where the root is exact */.a05{width:5px}",
+  "/*! math: ...however many arguments, and in whichever unit */.a06{width:10px}",
+  "/*! math: ...including units fixed against each other */.a07{width:5in}",
+  "/*! declined: hypot() is irrational for most inputs */.a08{width:hypot(1px,1px)}",
+  "/*! declined: abs() of a percentage depends on the basis sign */.a09{width:abs(-50%)}",
+  "/*! math: a relative unit still has a known sign — every length unit scales by
+   a positive factor, so abs() only has to drop the minus */.a10{width:1em}",
 ]
 `;
