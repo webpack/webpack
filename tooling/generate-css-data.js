@@ -527,7 +527,7 @@ const mapLiteral = (entries) =>
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], droppableWhenEmptyAtRules: string[], steppedFunctions: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], droppableWhenEmptyAtRules: string[], steppedFunctions: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][] }} */
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
 	cssWideKeywords: ["inherit", "initial", "revert", "revert-layer", "unset"],
@@ -601,7 +601,16 @@ const SUPPLEMENT = {
 	// The angle units, which are excluded from rounding: `rotate()` runs its
 	// argument through trig, which amplifies a truncated digit into a different
 	// computed matrix (measured in headless Chromium).
-	angleUnits: ["deg", "grad", "rad", "turn"]
+	angleUnits: ["deg", "grad", "rad", "turn"],
+	// CSS Values 4 §8.1: a quarter turn, in each unit that spells it exactly.
+	// The trig functions are only folded on these, so the table is what says
+	// where. `rad` has no entry — a quarter turn is π/2 of them, which no double
+	// is — and, like the ratios above, no dataset states any of this.
+	quarterTurnAngle: [
+		["deg", 90],
+		["grad", 100],
+		["turn", 0.25]
+	]
 };
 
 assertGrammarsParse();
@@ -757,6 +766,14 @@ const UNIT_CONVERSION_TARGETS = ${setLiteral(SUPPLEMENT.unitConversionTargets)};
 // trig, which turns a truncated digit into a different computed matrix.
 const ANGLE_UNITS = ${setLiteral(SUPPLEMENT.angleUnits)};
 
+// A quarter turn in each unit that spells it exactly (CSS Values 4 §8.1), as
+// \`unit -> the count\`. The trig functions are folded only where their argument
+// is a whole number of these, which is where sine and cosine are rational.
+/** @type {Map<string, number>} */
+const QUARTER_TURN_ANGLE = new Map([${SUPPLEMENT.quarterTurnAngle
+	.map(([unit, count]) => `["${unit}", ${count}]`)
+	.join(", ")}]);
+
 // Properties whose grammar can reach an \`<integer>\`. Deliberately wide: a
 // non-integer where an integer is expected is rounded rather than dropped
 // (\`z-index: calc(1.5)\` computes to \`2\`), so this is read to refuse a rewrite,
@@ -791,6 +808,7 @@ module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
 module.exports.MATH_FUNCTION_ARITY = MATH_FUNCTION_ARITY;
 module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
+module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;

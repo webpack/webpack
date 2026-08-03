@@ -1979,6 +1979,24 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("a{opacity:calc(.5)}")).toBe("a{opacity:.5}");
 		});
 
+		it("prints a sum two units deep as the sum it reduced to", () => {
+			expect(value("calc((1em + 1px)*2)")).toBe("calc(2em + 2px)");
+			expect(value("calc(2*(1em + 1px))")).toBe("calc(2em + 2px)");
+			expect(value("calc((100% + 1px)/2)")).toBe("calc(50% + .5px)");
+			expect(value("calc(1px + 2em + 3px)")).toBe("calc(4px + 2em)");
+			// The terms keep the order they were first written, and a negative one
+			// is the subtraction it is.
+			expect(value("calc(1em - 2em + 1px)")).toBe("calc(-1em + 1px)");
+			expect(value("calc(1px - calc(1em + 1px))")).toBe("calc(0px - 1em)");
+		});
+
+		it("keeps a zero term of a sum two units deep", () => {
+			// Which units may be added to which is a type rule, so dropping the term
+			// would turn an expression the engine rejects into one it accepts.
+			expect(value("calc(1px + 1deg - 1deg)")).toBe("calc(1px + 0deg)");
+			expect(value("calc((1em + 1px)*0)")).toBe("calc(0em + 0px)");
+		});
+
 		it("keeps them on a unitless zero", () => {
 			// `calc(0)` is a number, so `width:calc(0)` is dropped and renders at
 			// `auto`; `width:0` is a length and renders at 0.
@@ -2009,13 +2027,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// The grammar says exactly three.
 			["clamp(1px,2px)"],
 			["clamp(1px,2px,3px,4px)"],
-			// `calc-size()` leads with a basis, so it has no arity to read.
-			["calc-size(auto,size)"],
-			// Math functions whose meaning is not written yet.
-			["sqrt(4)"],
-			["pow(2,3)"],
-			["log(8,2)"],
-			["atan2(1,1)"]
+			// `calc-size()` leads with a basis, so it has no arity to read — and it
+			// is now the only math function with no meaning written for it.
+			["calc-size(auto,size)"]
 		])("leaves %s alone", (expression) => {
 			expect(value(expression)).toBe(expression);
 		});
@@ -2110,6 +2124,77 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(value("round(down,4.5cm,1.5cm)")).toBe("round(down,4.5cm,1.5cm)");
 			// Outside one it still applies.
 			expect(value("4.5cm")).toBe("45mm");
+		});
+	});
+
+	describe("sqrt(), pow(), log(), exp() and the trig functions", () => {
+		it.each([
+			// Irrational, so there is no value to write down.
+			["calc(sqrt(2)*1px)"],
+			["calc(pow(2,.5)*1px)"],
+			// `e` is not a double, which leaves only the powers of it this knows.
+			["calc(exp(1)*1px)"],
+			["calc(log(10)*1px)"],
+			// Not a whole power of the base.
+			["calc(log(9,2)*1px)"],
+			// Sine and cosine are irrational an odd eighth turn from zero, and
+			// tangent has an asymptote on the odd quarters.
+			["calc(sin(30deg)*1px)"],
+			["calc(sin(45deg)*1px)"],
+			["calc(cos(50grad)*1px)"],
+			["calc(tan(90deg)*1px)"],
+			// A radian is not a whole number of eighth turns except at zero.
+			["calc(sin(1)*1px)"],
+			["calc(cos(1rad)*1px)"],
+			// The inverse functions answer with an angle only at three arguments.
+			["asin(.5)"],
+			["atan2(1,2)"],
+			// Both zero is left to the engine.
+			["atan2(0,0)"]
+		])("leaves %s alone", (expression) => {
+			expect(value(expression)).toBe(expression);
+		});
+
+		it("takes a root or a power that multiplies back exactly", () => {
+			expect(value("calc(sqrt(4)*1px)")).toBe("2px");
+			expect(value("calc(sqrt(2.25)*1px)")).toBe("1.5px");
+			expect(value("calc(pow(2,3)*1px)")).toBe("8px");
+			expect(value("calc(pow(2,-2)*1px)")).toBe(".25px");
+			expect(value("calc(pow(2,0)*1px)")).toBe("1px");
+		});
+
+		it("takes a logarithm that lands on a whole power of its base", () => {
+			expect(value("calc(log(8,2)*1px)")).toBe("3px");
+			expect(value("calc(log(1,10)*1px)")).toBe("0");
+			expect(value("calc(exp(0)*1px)")).toBe("1px");
+		});
+
+		it("takes sine, cosine and tangent an eighth turn apart", () => {
+			expect(value("calc(cos(0)*1px)")).toBe("1px");
+			expect(value("calc(sin(90deg)*1px)")).toBe("1px");
+			expect(value("calc(sin(.25turn)*1px)")).toBe("1px");
+			expect(value("calc(cos(100grad)*1px)")).toBe("0");
+			expect(value("calc(cos(180deg)*1px)")).toBe("calc(-1px)");
+			expect(value("calc(tan(45deg)*1px)")).toBe("1px");
+			expect(value("calc(tan(180deg)*1px)")).toBe("0");
+		});
+
+		it("answers the inverse functions in degrees", () => {
+			expect(value("asin(1)")).toBe("90deg");
+			expect(value("acos(0)")).toBe("90deg");
+			expect(value("atan(1)")).toBe("45deg");
+			expect(value("atan2(1,1)")).toBe("45deg");
+			expect(value("atan2(0,-1)")).toBe("180deg");
+			// A ratio of two lengths is a number, so it answers the same way.
+			expect(value("atan2(1px,-1px)")).toBe("135deg");
+		});
+
+		it("prints a folded operand of an outer expression bare", () => {
+			// No property judges it in here, so a fraction or a zero needs no
+			// `calc()` of its own — which is what lets the outer fold go on.
+			expect(value("calc(sin(0)*1px)")).toBe("0");
+			expect(value("calc(1px*pow(2,3))")).toBe("8px");
+			expect(value("min(sqrt(4)*1px,3px)")).toBe("2px");
 		});
 	});
 });
