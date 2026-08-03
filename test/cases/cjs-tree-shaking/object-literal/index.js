@@ -29,3 +29,9 @@ it("should keep sibling exports when an object method uses this", () => {
 	expect(m.getValue()).toBe(10);
 	expect(m.usedExports).toBe(true);
 });
+
+it("should drop unused data properties with a side-effect-free value", () => {
+	const m = require("./pure");
+	expect(m.used).toBe("used");
+	expect(m.getCount()).toBe(0);
+});
