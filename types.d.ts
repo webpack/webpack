@@ -8483,12 +8483,12 @@ declare interface ExternalModuleInfo {
 	type: "external";
 
 	/**
-	 * the body renders inside the lazy CJS wrapper with real module/exports instead of being scope-hoisted into the shared scope
+	 * the module's `require()` call is deferred behind an accessor instead of running at its own slot; unlike a wrapped concatenated member there is no body and no CJS wrapper, so any external may be wrapped
 	 */
 	wrapped: boolean;
 
 	/**
-	 * a wrapped body reached by an eager import edge, so its accessor is called at its own slot in evaluation order
+	 * a wrapped module reached by an eager import edge, so its accessor is called at its own slot in evaluation order
 	 */
 	eager: boolean;
 	module: Module;
