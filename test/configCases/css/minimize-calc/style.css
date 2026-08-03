@@ -225,6 +225,9 @@
 .e03 { width: calc(pow(2,-2)*1px) }
 /*! exact: a logarithm that lands on a whole power of its base */
 .e04 { width: calc(log(8,2)*1px) }
+/*! exact: ...and a base of zero is one such, since `ln(1)/ln(0)` is `-0` and
+   `0` to that power is the `1` it came from */
+.e04a { width: calc(log(1,0)*1px) }
 /*! exact: e to the zero */
 .e05 { width: calc(exp(0)*1px) }
 /*! trig: a quarter turn, in whichever unit spells one */
@@ -251,6 +254,10 @@
 .f03 { width: calc(cos(1rad)*1px) }
 /*! declined: `e` is not a double, so no other power of it can be written down */
 .f04 { width: calc(exp(1)*1px) }
+/*! declined: a base of one makes the quotient `0/0`, which is not a number */
+.f04a { width: calc(log(1,1)*1px) }
+/*! declined: ...and a negative base has no logarithm at all */
+.f04b { width: calc(log(1,-2)*1px) }
 /*! declined: the inverse functions answer with a whole number of degrees at
    three arguments only */
 .f05 { rotate: asin(.5) }

@@ -102,6 +102,8 @@ Array [
   "/*! exact: a whole power, multiplied out */.e02{width:8px}",
   "/*! exact: ...including a negative exponent */.e03{width:.25px}",
   "/*! exact: a logarithm that lands on a whole power of its base */.e04{width:3px}",
+  "/*! exact: ...and a base of zero is one such, since \`ln(1)/ln(0)\` is \`-0\` and
+   \`0\` to that power is the \`1\` it came from */.e04a{width:0}",
   "/*! exact: e to the zero */.e05{width:1px}",
   "/*! trig: a quarter turn, in whichever unit spells one */.e06{width:1px}",
   "/*! trig: ...and the same angle written as a turn */.e07{width:1px}",
@@ -115,6 +117,8 @@ Array [
   "/*! declined: ...and tangent has an asymptote on the odd quarters */.f02{width:calc(tan(90deg)*1px)}",
   "/*! declined: a radian is a whole number of eighth turns only at zero */.f03{width:calc(cos(1rad)*1px)}",
   "/*! declined: \`e\` is not a double, so no other power of it can be written down */.f04{width:calc(exp(1)*1px)}",
+  "/*! declined: a base of one makes the quotient \`0/0\`, which is not a number */.f04a{width:calc(log(1,1)*1px)}",
+  "/*! declined: ...and a negative base has no logarithm at all */.f04b{width:calc(log(1,-2)*1px)}",
   "/*! declined: the inverse functions answer with a whole number of degrees at
    three arguments only */.f05{rotate:asin(.5)}",
   "/*! declined: a fold inside a stepped function would print the shortest unit,
