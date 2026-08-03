@@ -1955,6 +1955,16 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(value("calc(2.5cm + 5mm)")).toBe("3cm");
 		});
 
+		it("prints the term in whichever unit of its group spells it", () => {
+			// No `px` count equals these, so reaching the answer through the group's
+			// reference unit alone would leave every one of them written out.
+			expect(value("calc(1cm + 1mm)")).toBe("11mm");
+			expect(value("calc(1in + 1cm)")).toBe("3.54cm");
+			expect(value("calc(4.5cm + 0cm)")).toBe("45mm");
+			// And a sum no unit of the group spells exactly still declines.
+			expect(value("calc(1px + 1cm)")).toBe("calc(1px + 1cm)");
+		});
+
 		it("keeps the parentheses on a negative, whatever the property", () => {
 			// `width: -5px` is dropped where `width: calc(-5px)` clamps to 0.
 			expect(minify("a{width:calc(0px - 5px)}")).toBe("a{width:calc(-5px)}");
@@ -1967,6 +1977,15 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// `z-index: calc(1.5)` computes to 2; `z-index: 1.5` is dropped.
 			expect(minify("a{z-index:calc(1.5)}")).toBe("a{z-index:calc(1.5)}");
 			expect(minify("a{opacity:calc(.5)}")).toBe("a{opacity:.5}");
+		});
+
+		it("keeps them on a unitless zero", () => {
+			// `calc(0)` is a number, so `width:calc(0)` is dropped and renders at
+			// `auto`; `width:0` is a length and renders at 0.
+			expect(minify("a{width:calc(0)}")).toBe("a{width:calc(0)}");
+			expect(minify("a{width:calc(1 - 1)}")).toBe("a{width:calc(0)}");
+			// A zero carrying a unit is a length either way.
+			expect(minify("a{width:calc(5px - 5px)}")).toBe("a{width:0}");
 		});
 
 		it("does not run inside a `@supports` condition or a custom property", () => {
@@ -2029,7 +2048,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it("turns a sign() into the number it is", () => {
 			expect(minify("a{z-index:sign(5px)}")).toBe("a{z-index:1}");
-			expect(minify("a{z-index:sign(0px)}")).toBe("a{z-index:0}");
+			// Zero keeps its parentheses too — see the unitless-zero case below.
+			expect(minify("a{z-index:sign(0px)}")).toBe("a{z-index:calc(0)}");
 			// A negative keeps its parentheses, as everywhere else.
 			expect(minify("a{z-index:sign(-5px)}")).toBe("a{z-index:calc(-1)}");
 		});
