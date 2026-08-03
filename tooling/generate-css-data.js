@@ -403,6 +403,15 @@ ${boxLonghands
 	.join(",\n")}
 ]);
 
+// The name prefix a declaration between two box longhands must not carry for the
+// merge to step over it. The shorthand's first segment, which is deliberately
+// wider than the family: \`border-color\` blocks every \`border*\` property, since
+// \`border\`, \`border-top\` and \`border-block-start-color\` all write its longhands
+// and \`mdn-data\`'s \`computed\` lists only some of them.
+const BOX_FAMILY_PREFIX = new Map([${boxLonghands
+	.map(([shorthand]) => `["${shorthand}", "${shorthand.split("-")[0]}"]`)
+	.join(", ")}]);
+
 // Functions that take a \`<color>\` directly, so a hash among their arguments is a
 // hex color rather than a case-sensitive reference (\`element(#id)\`). Only direct
 // arguments: a gradient nested in \`image-set()\` is matched as the gradient.
@@ -477,6 +486,7 @@ ${colorNames
 
 module.exports.ABSOLUTE_UNIT_SCALE = ABSOLUTE_UNIT_SCALE;
 module.exports.ANGLE_UNITS = ANGLE_UNITS;
+module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
 module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;

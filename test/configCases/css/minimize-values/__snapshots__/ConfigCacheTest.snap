@@ -87,5 +87,17 @@ Array [
   "/*! webpack: an alpha is the byte the engine already quantizes it to */.t87{color:#00000080}.t88{color:#f003}",
   "/*! webpack: ...collapsing to 4 digits when every pair repeats */.t89{color:#f00c}",
   "/*! webpack: declined: a custom property keeps its authored text */.t90{--width:16px;--alpha:rgba(0, 0, 0, .5);--round:33.33333333%}",
+  "/*! webpack: hwb() converts like hsl() */.t91{color:#000}",
+  "/*! webpack: declined: a channel exactly on a \`.5\` boundary */.t92{color:hwb(194 0% 0%)}",
+  "/*! webpack: lab(), lch(), oklab() and oklch() reach sRGB */.t93{color:#fff}.t94{color:#bf5700}.t95{color:#752d15}.t96{color:#fff}.t97{color:#40b1b7}",
+  "/*! webpack: ...with a percentage axis scaled to the space's own 100% */.t98{color:#484848}",
+  "/*! webpack: declined: outside the sRGB gamut, a hex would clip it */.t99{color:oklch(90% .4 140)}",
+  "/*! webpack: an alpha rides along into the hex */.t100{color:#5f0c}",
+  "/*! webpack: the merge steps over what does not write the family */.t101{margin:1px 2px;color:red}",
+  "/*! webpack: declined: the shorthand itself between them */.t102{margin-top:1px;margin:9px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
+  "/*! webpack: declined: a logical property that writes the same sides */.t103{margin-top:1px;margin-inline:9px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
+  "/*! webpack: declined: \`all\` writes everything */.t104{margin-top:1px;all:unset;margin-right:2px;margin-bottom:1px;margin-left:2px}",
+  "/*! webpack: declined: \`border\` writes every border-color longhand */.t105{border-top-color:red;border:1px solid;border-right-color:red;border-bottom-color:red;border-left-color:red}",
+  "/*! webpack: ...but an unrelated property between them does not */.t106{border-color:red;color:red}",
 ]
 `;
