@@ -23,10 +23,13 @@
 const fs = require("fs");
 const path = require("path");
 const colorName = require("color-name");
+/** @typedef {import("./css-value-syntax").SyntaxNode} SyntaxNode */
 /** @typedef {{ version: string }} PackageManifest */
 /** @typedef {{ [name: string]: { syntax: string } }} SyntaxTable */
 /** @type {PackageManifest} */
 const colorNamePackage = require("color-name/package.json");
+/** @type {{ [name: string]: { syntax?: string } }} */
+const atRules = require("mdn-data/css/at-rules.json");
 /** @type {SyntaxTable} */
 const functions = require("mdn-data/css/functions.json");
 /** @type {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[] } }} */
@@ -36,6 +39,7 @@ const syntaxes = require("mdn-data/css/syntaxes.json");
 /** @type {PackageManifest} */
 const mdnDataPackage = require("mdn-data/package.json");
 const prettier = require("prettier");
+const { parseValueSyntax, walkValueSyntax } = require("./css-value-syntax");
 
 const TARGET = path.resolve(__dirname, "../lib/css/data.js");
 const write = process.argv.includes("--write");
@@ -131,6 +135,212 @@ for (const [name, entry] of Object.entries(syntaxes)) {
 const references = (syntax) => {
 	const found = syntax.match(/<[^>\s]+>/g);
 	return found === null ? [] : found.map((name) => name.slice(1, -1));
+};
+
+/** @type {Map<string, SyntaxNode>} */
+const grammars = new Map();
+
+/**
+ * @param {string} syntax a value definition
+ * @returns {SyntaxNode} its tree, parsed once
+ */
+const grammarOf = (syntax) => {
+	let tree = grammars.get(syntax);
+	if (tree === undefined) {
+		tree = parseValueSyntax(syntax);
+		grammars.set(syntax, tree);
+	}
+	return tree;
+};
+
+// Parse every grammar the datasets state, so a `mdn-data` bump that reaches for
+// notation this parser does not know fails here rather than silently emptying a
+// table below. `selectors.json` is deliberately not among them: it mixes real
+// grammar with prose examples (`".class"`, `"A > B"`), so it is not all parsable
+// and nothing here reads it yet.
+const assertGrammarsParse = () => {
+	/**
+	 * @param {string} label what the grammar belongs to
+	 * @param {string} syntax the definition
+	 */
+	const check = (label, syntax) => {
+		try {
+			grammarOf(syntax);
+		} catch (err) {
+			throw new Error(
+				`${label} does not parse: ${/** @type {Error} */ (err).message}\n  ${syntax}`,
+				{ cause: err }
+			);
+		}
+	};
+	for (const [name, syntax] of definitions) check(`<${name}>`, syntax);
+	for (const [name, entry] of Object.entries(properties)) {
+		if (typeof entry.syntax === "string") check(name, entry.syntax);
+	}
+	for (const [name, entry] of Object.entries(atRules)) {
+		if (typeof entry.syntax === "string") check(`@${name}`, entry.syntax);
+	}
+};
+
+// The types a number lands on. Everything else a grammar reaches (`<color>`,
+// `<image>`, an identifier) carries no magnitude of its own.
+const NUMERIC_TYPES = new Set([
+	"angle",
+	"flex",
+	"frequency",
+	"integer",
+	"length",
+	"number",
+	"percentage",
+	"resolution",
+	"time"
+]);
+
+/**
+ * Every numeric leaf a grammar can reach, each with the lower bound its
+ * annotation states — `null` where it states none, which is most of them:
+ * `mdn-data` annotates `padding-top` but not `opacity`, whose `<opacity-value>`
+ * expands to a bare `<number> | <percentage>`.
+ * @param {string} syntax a value definition
+ * @returns {[string, number | null][]} the leaves as `[type, minimum]`
+ */
+const numericLeaves = (syntax) => {
+	/** @type {[string, number | null][]} */
+	const found = [];
+	/** @type {Set<string>} */
+	const seen = new Set();
+	/**
+	 * @param {string} definition the definition to walk
+	 */
+	const walk = (definition) => {
+		walkValueSyntax(grammarOf(definition), (node) => {
+			if (node.type !== "type") return;
+			if (NUMERIC_TYPES.has(node.name)) {
+				found.push([node.name, node.min]);
+				return;
+			}
+			// One name for two leaves, and the annotation binds to both.
+			if (node.name === "length-percentage") {
+				found.push(["length", node.min], ["percentage", node.min]);
+				return;
+			}
+			const nested = definitions.get(node.name);
+			if (nested !== undefined && !seen.has(node.name)) {
+				seen.add(node.name);
+				walk(nested);
+			}
+		});
+	};
+	walk(syntax);
+	return found;
+};
+
+/**
+ * The properties whose grammar can reach an `<integer>`. Over-approximate on
+ * purpose: it is read to refuse a rewrite (a non-integer where an integer is
+ * expected is rounded, not dropped — `z-index: calc(1.5)` computes to `2`), so
+ * naming one property too many costs a rewrite and naming one too few is a bug.
+ * @returns {string[]} the property names, sorted
+ */
+const collectIntegerProperties = () => {
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		if (typeof entry.syntax !== "string") continue;
+		if (numericLeaves(entry.syntax).some(([type]) => type === "integer")) {
+			out.push(name);
+		}
+	}
+	return out.sort();
+};
+
+/**
+ * The properties every one of whose numeric leaves is annotated non-negative.
+ * Under-approximate on purpose, the mirror of the set above: it is read to
+ * allow a rewrite, so a property `mdn-data` leaves unannotated is simply
+ * absent. `width` is absent for that reason — `<calc-size()>` contributes an
+ * unannotated leaf — and `margin-top` is absent because a margin really may be
+ * negative.
+ * @returns {string[]} the property names, sorted
+ */
+const collectNonNegativeProperties = () => {
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		if (typeof entry.syntax !== "string") continue;
+		const leaves = numericLeaves(entry.syntax);
+		if (
+			leaves.length !== 0 &&
+			leaves.every(([, minimum]) => minimum !== null && minimum >= 0)
+		) {
+			out.push(name);
+		}
+	}
+	return out.sort();
+};
+
+/**
+ * Shorthand -> every longhand it writes, following the relation all the way
+ * down: `mdn-data` states `border -> border-width, border-style, border-color`,
+ * so only the closure reaches `border-top-color`.
+ * @returns {[string, string[]][]} the entries, sorted by shorthand
+ */
+const collectPropertyLonghands = () => {
+	/**
+	 * @param {string} name a property
+	 * @param {Set<string>} seen the properties already expanded on this path
+	 * @returns {string[]} the longhands it writes, or itself when it writes none
+	 */
+	const expand = (name, seen) => {
+		const entry = properties[name];
+		const sub = entry === undefined ? undefined : entry.computed;
+		if (!Array.isArray(sub)) return [name];
+		/** @type {string[]} */
+		const out = [];
+		for (const child of sub) {
+			if (seen.has(child)) continue;
+			seen.add(child);
+			out.push(...expand(child, seen));
+		}
+		return out;
+	};
+	/** @type {[string, string[]][]} */
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		// `all` writes every property there is; `mdn-data` states it as writing
+		// only itself, and spelling out all of them would say nothing a consumer
+		// cannot already read from the name.
+		if (name === "all" || !Array.isArray(entry.computed)) continue;
+		const longhands = [...new Set(expand(name, new Set([name])))].sort();
+		if (longhands.length !== 0) out.push([name, longhands]);
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * The inverse: longhand -> every shorthand that can write it. This is the
+ * lookup a cascade question actually asks ("does anything between these two
+ * declarations write the same property?").
+ * @param {[string, string[]][]} longhands the closure above
+ * @returns {[string, string[]][]} the entries, sorted by longhand
+ */
+const collectPropertyWriters = (longhands) => {
+	/** @type {Map<string, Set<string>>} */
+	const writers = new Map();
+	for (const [shorthand, expanded] of longhands) {
+		for (const longhand of expanded) {
+			let set = writers.get(longhand);
+			if (set === undefined) {
+				set = new Set();
+				writers.set(longhand, set);
+			}
+			set.add(shorthand);
+		}
+	}
+	return [...writers]
+		.map(
+			([longhand, set]) =>
+				/** @type {[string, string[]]} */ ([longhand, [...set].sort()])
+		)
+		.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
 
 /**
@@ -358,6 +568,8 @@ const SUPPLEMENT = {
 	angleUnits: ["deg", "grad", "rad", "turn"]
 };
 
+assertGrammarsParse();
+
 const boxShorthands = collectBoxShorthands(false);
 const slashShorthands = collectBoxShorthands(true);
 const boxLonghands = collectBoxLonghands([
@@ -368,6 +580,10 @@ const colorFunctions = collectColorArgumentFunctions();
 const colorNames = collectColorNames();
 const mathFunctions = collectMathFunctions();
 const substitutionFunctions = collectSubstitutionFunctions();
+const integerProperties = collectIntegerProperties();
+const nonNegativeProperties = collectNonNegativeProperties();
+const propertyLonghands = collectPropertyLonghands();
+const propertyWriters = collectPropertyWriters(propertyLonghands);
 
 const source = `/*
 	MIT License http://www.opensource.org/licenses/mit-license.php
@@ -473,6 +689,41 @@ const UNIT_CONVERSION_TARGETS = ${setLiteral(SUPPLEMENT.unitConversionTargets)};
 // trig, which turns a truncated digit into a different computed matrix.
 const ANGLE_UNITS = ${setLiteral(SUPPLEMENT.angleUnits)};
 
+// Shorthand -> every longhand it writes, the relation followed all the way down
+// (\`border\` reaches \`border-top-color\` only through \`border-color\`). \`all\` is
+// absent: it writes every property there is.
+const PROPERTY_LONGHANDS = new Map([
+${propertyLonghands
+	.map(
+		([shorthand, longhands]) =>
+			`\t["${shorthand}", [${longhands.map((l) => `"${l}"`).join(", ")}]]`
+	)
+	.join(",\n")}
+]);
+
+// The inverse: longhand -> every shorthand that can write it. What a cascade
+// question asks, so it is the direction stored rather than inverted on use.
+const PROPERTY_WRITERS = new Map([
+${propertyWriters
+	.map(
+		([longhand, shorthands]) =>
+			`\t["${longhand}", [${shorthands.map((s) => `"${s}"`).join(", ")}]]`
+	)
+	.join(",\n")}
+]);
+
+// Properties whose grammar can reach an \`<integer>\`. Deliberately wide: a
+// non-integer where an integer is expected is rounded rather than dropped
+// (\`z-index: calc(1.5)\` computes to \`2\`), so this is read to refuse a rewrite,
+// and one name too many costs only that rewrite.
+const INTEGER_PROPERTIES = ${setLiteral(integerProperties)};
+
+// Properties every one of whose numeric leaves \`mdn-data\` annotates as
+// non-negative. Deliberately narrow, being read to allow a rewrite: a property
+// the dataset leaves unannotated is simply absent, so a bare negative is never
+// mistaken for one an engine would have clamped.
+const NON_NEGATIVE_PROPERTIES = ${setLiteral(nonNegativeProperties)};
+
 // Packed \`0xrrggbb\` -> the shortest named color with that value. Only names that
 // can beat \`#rrggbb\`; anything longer would never be picked.
 const RGB_TO_NAME = new Map([
@@ -496,8 +747,12 @@ module.exports.CUBIC_BEZIER_KEYWORDS = CUBIC_BEZIER_KEYWORDS;
 module.exports.DROPPABLE_WHEN_EMPTY_AT_RULES = DROPPABLE_WHEN_EMPTY_AT_RULES;
 module.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
+module.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
 module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
+module.exports.NON_NEGATIVE_PROPERTIES = NON_NEGATIVE_PROPERTIES;
+module.exports.PROPERTY_LONGHANDS = PROPERTY_LONGHANDS;
+module.exports.PROPERTY_WRITERS = PROPERTY_WRITERS;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
@@ -505,7 +760,7 @@ module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;
 `;
 
-const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names`;
+const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${propertyLonghands.length} shorthands over ${propertyWriters.length} longhands, ${integerProperties.length} integer and ${nonNegativeProperties.length} non-negative properties`;
 // Formatted here rather than left to `yarn fmt`, so the comparison below is
 // against what the repo actually checks in.
 prettier
