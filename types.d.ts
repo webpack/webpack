@@ -5437,6 +5437,11 @@ declare interface CssEnvironment {
 	 * media query range syntax (`(width >= 600px)`) is available
 	 */
 	cssMediaQueryRange?: boolean;
+
+	/**
+	 * the browserslist selection (`["chrome 100", "safari 15"]`), so vendor prefixes are added / dropped for exactly these browsers; absent leaves prefixes untouched
+	 */
+	browsers?: string[];
 }
 declare abstract class CssGenerator extends Generator {
 	options: CssModuleGeneratorOptions;

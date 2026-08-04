@@ -1836,6 +1836,11 @@
     globby "^11.0.0"
     read-yaml-file "^1.1.0"
 
+"@mdn/browser-compat-data@^8.0.9":
+  version "8.0.9"
+  resolved "https://registry.yarnpkg.com/@mdn/browser-compat-data/-/browser-compat-data-8.0.9.tgz#a336f5c4f954497e8c7b6654aff6708842124553"
+  integrity sha512-CSBqqNiMPRLpG/rY0YHLHoncsHuHd9oTA7QRLHwWUOOnQiEjxuF4sCAAI4bd75FG7WlOP/GMt6P2oN6kysjN8Q==
+
 "@napi-rs/wasm-runtime@^1.1.4", "@napi-rs/wasm-runtime@^1.1.6":
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/@napi-rs/wasm-runtime/-/wasm-runtime-1.1.6.tgz#ed33806d0f9be98dc76d0c3d4fd872fda701b5d5"

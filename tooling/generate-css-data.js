@@ -26,11 +26,21 @@
 
 const fs = require("fs");
 const path = require("path");
+const bcd =
+	/** @type {{ css: { properties: { [name: string]: BcdNode }, selectors: { [name: string]: BcdNode }, "at-rules": { [name: string]: BcdNode }, types: { [name: string]: BcdNode } }, __meta: { version: string } }} */ (
+		/** @type {unknown} */ (require("@mdn/browser-compat-data"))
+	);
 const colorName = require("color-name");
+
 /** @typedef {{ version: string }} PackageManifest */
 /** @typedef {{ [name: string]: { syntax: string } }} SyntaxTable */
 /** @typedef {{ [name: string]: { syntax?: string } }} PartialSyntaxTable */
 /** @typedef {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[] } }} PartialPropertyTable */
+/** @typedef {{ version_added?: string | boolean | null, version_removed?: string | boolean | null, prefix?: string }} BcdSupport */
+/** @typedef {{ support: { [browser: string]: BcdSupport | BcdSupport[] } }} BcdCompat */
+/** @typedef {{ __compat?: BcdCompat }} BcdNode */
+const bcdVersion = bcd.__meta.version;
+
 /** @type {PackageManifest} */
 const colorNamePackage = require("color-name/package.json");
 /** @type {PartialSyntaxTable} */
@@ -2509,11 +2519,33 @@ const mapLiteral = (entries) =>
 	`new Map([${entries.map(([key, value]) => `["${key}", "${value}"]`).join(", ")}])`;
 
 /**
+
  * @param {[string, number][]} entries string-keyed, number-valued pairs
  * @returns {string} the `Map` literal
  */
 const countMapLiteral = (entries) =>
 	`new Map([${entries.map(([key, value]) => `["${key}", ${value}]`).join(", ")}])`;
+
+/**
+ * A prefix table's `new Map([…])` literal: `name -> [prefix, [browser, from,
+ * to][]][]`. `Infinity` prints as a bare identifier the runtime reads back.
+ * @param {[string, [string, [string, number, number][]][]][]} table the axis table
+ * @returns {string} its `new Map([…])` literal — prettier wraps it on emit
+ */
+const prefixLiteral = (table) =>
+	`new Map([${table
+		.map(([name, prefixes]) => {
+			const body = prefixes
+				.map(([prefix, browsers]) => {
+					const list = browsers
+						.map(([browser, from, to]) => `["${browser}", ${from}, ${to}]`)
+						.join(", ");
+					return `["${prefix}", [${list}]]`;
+				})
+				.join(", ");
+			return `["${name}", [${body}]]`;
+		})
+		.join(", ")}])`;
 
 /**
  * @param {[number, number][]} entries number-keyed pairs
@@ -3410,6 +3442,151 @@ const assertClassesArePrintable = (slots) => {
 	}
 };
 
+// BCD browser id -> browserslist name. BCD-only engines (oculus, deno, bun,
+// nodejs) have no browserslist query, so a prefix they alone would need can
+// never be selected — those ids are absent and their entries drop out.
+const BCD_TO_BROWSERSLIST = new Map([
+	["chrome", "chrome"],
+	["chrome_android", "and_chr"],
+	["edge", "edge"],
+	["firefox", "firefox"],
+	["firefox_android", "and_ff"],
+	["ie", "ie"],
+	["opera", "opera"],
+	["opera_android", "op_mob"],
+	["safari", "safari"],
+	["safari_ios", "ios_saf"],
+	["samsunginternet_android", "samsung"],
+	["webview_android", "android"],
+	["webview_ios", "ios_saf"]
+]);
+
+// The prefix a browser's engine actually uses, so an obsolete cross-engine one
+// BCD still lists (Safari keeps `-khtml-user-select` from its KHTML days, with
+// no removal version) is never carried and so never added. Edge and Opera list
+// both their old and Chromium prefixes; the version windows sort out which
+// applies. A browser absent here contributes no prefixes.
+const BROWSER_PREFIXES = new Map([
+	["chrome", ["-webkit-"]],
+	["chrome_android", ["-webkit-"]],
+	["safari", ["-webkit-"]],
+	["safari_ios", ["-webkit-"]],
+	["samsunginternet_android", ["-webkit-"]],
+	["webview_android", ["-webkit-"]],
+	["webview_ios", ["-webkit-"]],
+	["edge", ["-webkit-", "-ms-"]],
+	["opera", ["-webkit-", "-o-"]],
+	["opera_android", ["-webkit-", "-o-"]],
+	["firefox", ["-moz-"]],
+	["firefox_android", ["-moz-"]],
+	["ie", ["-ms-"]]
+]);
+
+// A BCD version to one comparable integer `major * 100000 + minor`, so the
+// runtime orders versions with a plain `<` and never a float compare (`15.10`
+// must sort above `15.4`). `true` (since forever) is 0; `≤n` is that n; a
+// version that never arrived (`false` / `null`) is null.
+/**
+ * @param {string | boolean | null | undefined} version a BCD `version_added` / `version_removed`
+ * @returns {number | null} the encoded version, or null when it never applied
+ */
+const encodeVersion = (version) => {
+	if (version === true) return 0;
+	if (version === false || version === null || version === undefined) {
+		return null;
+	}
+	const [major, minor] = String(version).replace(/^≤/, "").split(".");
+	const parsedMajor = Number.parseInt(major, 10);
+	if (Number.isNaN(parsedMajor)) return null;
+	return parsedMajor * 100000 + (Number.parseInt(minor, 10) || 0);
+};
+
+// One construct's prefixes as `prefix -> [browserslistName, prefixedFrom,
+// unprefixedFrom][]`: a target browser at version V needs the prefix exactly
+// when `prefixedFrom <= V < unprefixedFrom`. A browser whose unprefixed form
+// never arrived carries `Infinity`, so it always needs the prefix (Safari and
+// `-webkit-user-select`); one whose windows are all empty is dropped.
+/**
+ * @param {BcdCompat | undefined} compat the construct's `__compat` block
+ * @returns {[string, [string, number, number][]][] | null} `[prefix, [browser, from, to][]][]`, or null
+ */
+const collectPrefixes = (compat) => {
+	if (!compat || !compat.support) return null;
+	/** @type {Map<string, Map<string, [number, number]>>} */
+	const byPrefix = new Map();
+	for (const [bcdBrowser, raw] of Object.entries(compat.support)) {
+		const browser = BCD_TO_BROWSERSLIST.get(bcdBrowser);
+		if (browser === undefined) continue;
+		const allowed = BROWSER_PREFIXES.get(bcdBrowser);
+		if (allowed === undefined) continue;
+		const entries = Array.isArray(raw) ? raw : [raw];
+		let unprefixedFrom = null;
+		for (const entry of entries) {
+			if (entry.prefix) continue;
+			const added = encodeVersion(entry.version_added);
+			if (added !== null) unprefixedFrom = added;
+		}
+		const target = unprefixedFrom === null ? Infinity : unprefixedFrom;
+		for (const entry of entries) {
+			// A selector prefix is compound (`-webkit-input-` on `::placeholder`), so
+			// match the engine's prefix at the start rather than whole — that still
+			// drops an obsolete cross-engine one (`-khtml-` on `user-select`).
+			const entryPrefix = entry.prefix;
+			if (!entryPrefix || !allowed.some((p) => entryPrefix.startsWith(p))) {
+				continue;
+			}
+			const prefixedFrom = encodeVersion(entry.version_added);
+			if (prefixedFrom === null || prefixedFrom >= target) continue;
+			let browsers = byPrefix.get(entryPrefix);
+			if (browsers === undefined) {
+				browsers = new Map();
+				byPrefix.set(entryPrefix, browsers);
+			}
+			// `safari_ios` and `webview_ios` both fold onto `ios_saf`; keep the
+			// widest window (earliest prefix start, latest unprefixed arrival).
+			const existing = browsers.get(browser);
+			browsers.set(
+				browser,
+				existing === undefined
+					? [prefixedFrom, target]
+					: [Math.min(existing[0], prefixedFrom), Math.max(existing[1], target)]
+			);
+		}
+	}
+	if (byPrefix.size === 0) return null;
+	/** @type {[string, [string, number, number][]][]} */
+	const out = [];
+	for (const [prefix, browsers] of byPrefix) {
+		/** @type {[string, number, number][]} */
+		const list = [...browsers].map(([browser, [from, to]]) => [
+			browser,
+			from,
+			to
+		]);
+		out.push([prefix, list]);
+	}
+	return out;
+};
+
+// The prefixed constructs the minifier looks up, one table per axis it meets a
+// prefix on: a property name, a selector, an at-rule. Standard entries only — a
+// construct BCD marks non-standard is a vendor's own, not a spelling of a
+// standard one.
+/**
+ * @param {{ [name: string]: BcdNode }} group a BCD axis (`css.properties`, `css.selectors`, `css["at-rules"]`)
+ * @returns {[string, [string, [string, number, number][]][]][]} the axis table, sorted
+ */
+const collectPrefixTable = (group) => {
+	/** @type {[string, [string, [string, number, number][]][]][]} */
+	const table = [];
+	for (const [name, node] of Object.entries(group)) {
+		if (name.startsWith("__")) continue;
+		const prefixes = collectPrefixes(node.__compat);
+		if (prefixes !== null) table.push([name, prefixes]);
+	}
+	return table.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
 /**
  * Read every table out of the datasets and build the file they belong in.
  * Separate from writing it, so a test can assert the checked-in
@@ -3483,6 +3660,9 @@ const collectData = () => {
 	const lengthOnlyFunctions = collectLengthOnlyFunctions();
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
+	const prefixedProperties = collectPrefixTable(bcd.css.properties);
+	const prefixedSelectors = collectPrefixTable(bcd.css.selectors);
+	const prefixedAtRules = collectPrefixTable(bcd.css["at-rules"]);
 	const steppedFunctions = SUPPLEMENT.mathFunctionFold
 		.filter(([, , , , , stepped]) => stepped)
 		.map(([name]) => name);
@@ -3493,7 +3673,7 @@ const collectData = () => {
 */
 
 // GENERATED by tooling/generate-css-data.js — do not edit.
-// Sources: mdn-data ${mdnDataPackage.version}, color-name ${colorNamePackage.version}.
+// Sources: mdn-data ${mdnDataPackage.version}, color-name ${colorNamePackage.version}, @mdn/browser-compat-data ${bcdVersion}.
 
 "use strict";
 
@@ -3918,6 +4098,20 @@ ${colorNames
 	.join(",\n")}
 ]);
 
+// Prefixed constructs the minifier reads back, one table per axis, as \`name ->
+// [prefix, [browserslistBrowser, prefixedFrom, unprefixedFrom][]][]\`. Versions
+// are \`major * 100000 + minor\`; a target browser at version V needs the prefix
+// when \`prefixedFrom <= V < unprefixedFrom\` (\`Infinity\` = never unprefixed).
+// Non-standard-only constructs are absent.
+/** @type {Map<string, [string, [string, number, number][]][]>} */
+const PREFIXED_PROPERTIES = ${prefixLiteral(prefixedProperties)};
+
+/** @type {Map<string, [string, [string, number, number][]][]>} */
+const PREFIXED_SELECTORS = ${prefixLiteral(prefixedSelectors)};
+
+/** @type {Map<string, [string, [string, number, number][]][]>} */
+const PREFIXED_AT_RULES = ${prefixLiteral(prefixedAtRules)};
+
 module.exports.ABSOLUTE_UNIT_SCALE = ABSOLUTE_UNIT_SCALE;
 module.exports.ALPHA_VALUE_PROPERTIES = ALPHA_VALUE_PROPERTIES;\nmodule.exports.ANGLE_UNITS = ANGLE_UNITS;
 module.exports.ARC_COSINE_DEGREES = ARC_COSINE_DEGREES;
@@ -3954,6 +4148,9 @@ module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;
 module.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
+module.exports.PREFIXED_AT_RULES = PREFIXED_AT_RULES;
+module.exports.PREFIXED_PROPERTIES = PREFIXED_PROPERTIES;
+module.exports.PREFIXED_SELECTORS = PREFIXED_SELECTORS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
@@ -3965,7 +4162,7 @@ module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;
 `;
 
-	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${negativeAcceptingProperties.length} negative-accepting properties, ${lengthOnlyFunctions.length} length-only functions, ${pairLonghands.length} pair shorthands, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity, ${cssModulesKeywords.length} css modules scoped properties (${cssModulesKeywords.reduce((total, [, , table]) => total + table.length, 0)} keywords)`;
+	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${negativeAcceptingProperties.length} negative-accepting properties, ${lengthOnlyFunctions.length} length-only functions, ${pairLonghands.length} pair shorthands, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity, ${cssModulesKeywords.length} css modules scoped properties (${cssModulesKeywords.reduce((total, [, , table]) => total + table.length, 0)} keywords), ${prefixedProperties.length} prefixed properties, ${prefixedSelectors.length} prefixed selectors, ${prefixedAtRules.length} prefixed at-rules`;
 	return { source, summary };
 };
 
