@@ -15,25 +15,19 @@ const fs = require("fs");
 const net = require("net");
 const os = require("os");
 const path = require("path");
+const webpack = require("..");
+const launchChrome = require("./helpers/launchChrome");
 
 // Drives a real webpack-dev-server (added as a compiler plugin) in real Chrome via
-// puppeteer-core. puppeteer-core is ESM-only (v25+) and can't be require()d under
-// Jest's vm, so it is loaded via dynamic import in beforeAll; the suite self-skips
-// where it or Chrome is missing. webpack-dev-server needs Node >= 22.15.
+// puppeteer-core. webpack-dev-server needs Node >= 22.15 and the integration matrix
+// goes down to Node 10, so the suite is skipped there — a Chrome that will not
+// launch is a failure, not a skip.
 const [nodeMajor, nodeMinor] = process.versions.node.split(".").map(Number);
 const nodeSupported = nodeMajor > 22 || (nodeMajor === 22 && nodeMinor >= 15);
 
 /** @type {typeof import("webpack-dev-server") | undefined} */
 let WebpackDevServer;
-if (nodeSupported) {
-	try {
-		WebpackDevServer = require("webpack-dev-server");
-	} catch (_err) {
-		WebpackDevServer = undefined;
-	}
-}
-
-const webpack = require("..");
+if (nodeSupported) WebpackDevServer = require("webpack-dev-server");
 
 // webpack-dev-server resolves `webpack/hot/dev-server` from its own location, but
 // this repo is the `webpack` package itself and is not installed under
@@ -292,40 +286,15 @@ const startServer = (dir, port, devServerOptions) => {
 };
 
 describe("WebpackDevServer integration in real Chrome", () => {
-	/** @type {import("puppeteer-core").Browser | undefined} */
+	/** @type {import("puppeteer-core").Browser} */
 	let browser;
 
-	// Unsupported Node or a missing dev server is known here, so skip visibly; a missing
-	// puppeteer or a Chrome that won't launch is only known in beforeAll (runtime skip).
-	const itChrome = nodeSupported && WebpackDevServer ? it : it.skip;
+	const itChrome = nodeSupported ? it : it.skip;
 
 	beforeAll(async () => {
-		if (!WebpackDevServer) return;
-		/** @type {typeof import("puppeteer-core").default} */
-		let puppeteer;
-		try {
-			// require() of puppeteer-core throws under Jest since it is ESM-only (v25+).
-			puppeteer = (await import("puppeteer-core")).default;
-		} catch (_err) {
-			return;
-		}
+		if (!nodeSupported) return;
 		ensureWebpackSelfLink();
-		try {
-			/** @type {import("puppeteer-core").LaunchOptions} */
-			const launchOptions = {
-				headless: true,
-				args: ["--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"]
-			};
-			if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-				launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
-			} else {
-				launchOptions.channel = "chrome";
-			}
-			browser = await puppeteer.launch(launchOptions);
-		} catch (_err) {
-			// No usable Chrome in this environment — the tests self-skip below.
-			browser = undefined;
-		}
+		browser = await launchChrome();
 	}, 120000);
 
 	afterAll(async () => {
@@ -335,11 +304,6 @@ describe("WebpackDevServer integration in real Chrome", () => {
 	itChrome(
 		"applies a hot module replacement update without reloading the page",
 		async () => {
-			if (!browser) {
-				console.warn("Skipping: could not launch Chrome via puppeteer-core.");
-				return;
-			}
-
 			const { dir, messagePath } = writeFixture();
 			const port = await findPort();
 			const { server, watching } = await startServer(dir, port, {
@@ -380,11 +344,6 @@ describe("WebpackDevServer integration in real Chrome", () => {
 	itChrome(
 		"reloads the whole page on change when live reload is used",
 		async () => {
-			if (!browser) {
-				console.warn("Skipping: could not launch Chrome via puppeteer-core.");
-				return;
-			}
-
 			const { dir, messagePath } = writeFixture();
 			const port = await findPort();
 			const { server, watching } = await startServer(dir, port, {
@@ -424,11 +383,6 @@ describe("WebpackDevServer integration in real Chrome", () => {
 	itChrome(
 		"shows the error overlay (enabled by default) on a compile error",
 		async () => {
-			if (!browser) {
-				console.warn("Skipping: could not launch Chrome via puppeteer-core.");
-				return;
-			}
-
 			const { dir, messagePath } = writeFixture();
 			const port = await findPort();
 			// No `overlay: false` here — exercise the default overlay.
