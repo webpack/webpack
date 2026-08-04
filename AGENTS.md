@@ -200,6 +200,10 @@ For directory structure, naming, and how to run a single case, see [TESTING_DOCS
 
 **Prefer integration tests over unit tests.** Cover behavior with an integration case (`configCases/`, `watchCases/`, `hotCases/`, `statsCases/`, …) that drives a real `webpack()` build whenever the behavior can be exercised that way — they catch real-world regressions a mocked unit test misses. Reach for a `*.unittest.js` only for pure helpers/utilities that a build can't naturally reach.
 
+**Snapshot printed code; assert everything else.** When what a test checks _is_ generated output — emitted bundles, minified CSS / HTML, serialized ASTs, stats text — use `toMatchSnapshot()` rather than hand-written `expect(...).toBe(...)` on fragments of it. A hand-written expectation over printed code pins one substring and silently ignores every other byte the printer emits, so a regression next to it passes; a snapshot shows the whole diff and is reviewed as one. The reverse holds for everything that is not printed output — behavior, invariants, equivalences, error paths — where an explicit `expect` states the contract and a snapshot only records whatever happened to be true.
+
+Two things follow. Never snapshot a value a test cannot produce on every machine: a snapshot that is skipped when an optional tool (a browser, a native binary) is absent is reported as obsolete and fails the run there. And keep control characters out of a snapshot — one NUL makes git treat the file as binary and stop showing its diff, which is the only reason the snapshot exists.
+
 Run targeted tests — `yarn test:base --testPathPatterns="<pattern>"` or `yarn test:base -t "<name>"`. Never invoke `yarn jest`/`npx jest` directly: the required `--experimental-vm-modules` node flag lives only in the `test:base` wrapper, and bare jest crashes ESM/test262 suites. Don't run `yarn test` unless asked. When updating snapshots (`yarn test:base -u`), eyeball the diff first.
 
 **Run only tests specific to your change — leave the broad suites to CI.** Pick the cases that cover the touched code (`--testPathPatterns` / `--testNamePattern`) instead of sweeping whole suites.

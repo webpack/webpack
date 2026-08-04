@@ -6,29 +6,25 @@ const { SourceProcessor: CssSourceProcessor } = require("../lib/css/syntax");
 const { SourceProcessor: HtmlSourceProcessor } = require("../lib/html/syntax");
 
 // The minifiers claim their rewrites are equivalent *to the engine*, which only
-// a real engine can confirm: every `configCases` stylesheet and page is minified
-// and both spellings are handed to Chromium, which must build the same CSSOM and
-// the same DOM from each. The corpus is also snapshotted so a change in what the
-// printers emit is visible even when it stays equivalent.
+// an engine can confirm: every `configCases` stylesheet and page is minified and
+// both spellings are handed to Chromium, which must compute the same style from
+// each rule and build the same element tree and rendered text from each page.
+// Nothing here is snapshotted — the assertion is the equivalence itself, and the
+// printers' output is snapshotted by the suites that test printing.
 
-// Two fixtures are vendored minified Tailwind (~2 MB each); they would dominate
-// the corpus snapshot without covering syntax the other fixtures miss. Every
-// other `.css` / `.html` under `configCases` is included, whichever category it
-// sits in — a stylesheet belonging to an html test exercises the same printer.
-const MAX_FIXTURE_SIZE = 100 * 1024;
 const CONFIG_CASES = path.join(__dirname, "configCases");
 
+/** @typedef {{ name: string, raw: string, min: string }} Fixture */
+
 /**
- * Every fixture of one extension under a directory, largest ones skipped.
+ * Every fixture of one extension under a directory.
  * @param {string} dir directory to walk
  * @param {string} extension file extension including the dot
- * @returns {Promise<{ files: string[], skipped: string[] }>} sorted fixture paths, and the ones left out
+ * @returns {Promise<string[]>} sorted fixture paths
  */
 const collectFixtures = async (dir, extension) => {
 	/** @type {string[]} */
 	const files = [];
-	/** @type {string[]} */
-	const skipped = [];
 	/**
 	 * @param {string} current directory to read
 	 * @returns {Promise<void>} when the subtree has been read
@@ -38,31 +34,25 @@ const collectFixtures = async (dir, extension) => {
 		await Promise.all(
 			entries.map(async (entry) => {
 				const full = path.join(current, entry.name);
-				if (entry.isDirectory()) {
-					await walk(full);
-				} else if (entry.name.endsWith(extension)) {
-					const { size } = await fs.stat(full);
-					if (size > MAX_FIXTURE_SIZE) skipped.push(full);
-					else files.push(full);
-				}
+				if (entry.isDirectory()) await walk(full);
+				else if (entry.name.endsWith(extension)) files.push(full);
 			})
 		);
 	};
 	await walk(dir);
-	return { files: files.sort(), skipped: skipped.sort() };
+	return files.sort();
 };
 
 /**
  * Load fixtures and minify each one on its own — concatenating first would let a
  * deliberately malformed page corrupt every fixture after it.
- * @param {string} dir directory to walk
  * @param {string} extension file extension including the dot
  * @param {(source: string) => string} minify the printer to run
- * @returns {Promise<{ cases: { name: string, raw: string, min: string }[], skipped: string[] }>} the corpus
+ * @returns {Promise<Fixture[]>} the corpus
  */
-const buildCorpus = async (dir, extension, minify) => {
-	const { files, skipped } = await collectFixtures(dir, extension);
-	const cases = await Promise.all(
+const buildCorpus = async (extension, minify) => {
+	const files = await collectFixtures(CONFIG_CASES, extension);
+	return Promise.all(
 		files.map(async (file) => {
 			const raw = await fs.readFile(file, "utf8");
 			return {
@@ -74,14 +64,11 @@ const buildCorpus = async (dir, extension, minify) => {
 			};
 		})
 	);
-	return { cases, skipped };
 };
 
-/** @typedef {{ cases: { name: string, raw: string, min: string }[], skipped: string[] }} Corpus */
-
-/** @type {Corpus} */
+/** @type {Fixture[]} */
 let cssCorpus;
-/** @type {Corpus} */
+/** @type {Fixture[]} */
 let htmlCorpus;
 /** @type {Promise<void> | undefined} */
 let building;
@@ -94,14 +81,12 @@ const buildCorpora = () => {
 	if (building === undefined) {
 		building = (async () => {
 			cssCorpus = await buildCorpus(
-				CONFIG_CASES,
 				".css",
 				(source) =>
 					/** @type {{ code: string }} */
 					(new CssSourceProcessor().process(source, { minimize: true })).code
 			);
 			htmlCorpus = await buildCorpus(
-				CONFIG_CASES,
 				".html",
 				(source) =>
 					/** @type {{ code: string }} */
@@ -111,47 +96,6 @@ const buildCorpora = () => {
 	}
 	return building;
 };
-
-/**
- * The corpus as one file, each fixture labelled so a snapshot diff names it.
- * @param {{ name: string, min: string }[]} cases the corpus
- * @param {string} open comment opener for the language
- * @param {string} close comment closer for the language
- * @returns {string} the concatenated minified corpus
- */
-const CONTROL_CHARACTER_RE = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
-
-const concatenate = (cases, open, close) =>
-	cases
-		.map((c) => `${open} ${c.name} ${close}\n${c.min}`)
-		.join("\n")
-		// A fixture holds a literal NUL (`html/null-char-parse`); one such byte
-		// makes git treat the snapshot as binary and stop showing its diff, which
-		// is the only thing the snapshot is for.
-		.replace(
-			CONTROL_CHARACTER_RE,
-			(c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`
-		);
-
-describe("minified corpus", () => {
-	beforeAll(buildCorpora, 120000);
-
-	it("should minify every configCases stylesheet the same way", () => {
-		expect(cssCorpus.skipped.map((f) => path.basename(f))).toMatchSnapshot(
-			"skipped"
-		);
-		expect(concatenate(cssCorpus.cases, "/*", "*/")).toMatchSnapshot("css");
-	});
-
-	it("should minify every configCases page the same way", () => {
-		expect(htmlCorpus.skipped.map((f) => path.basename(f))).toMatchSnapshot(
-			"skipped"
-		);
-		expect(concatenate(htmlCorpus.cases, "<!--", "-->")).toMatchSnapshot(
-			"html"
-		);
-	});
-});
 
 // Optional dependency: the browser checks only run where puppeteer-core (and a
 // Chrome it can launch) are present. puppeteer-core needs Node >= 18 and is
@@ -164,25 +108,22 @@ const globalScope = /** @type {{ Bun?: unknown, Deno?: unknown }} */ (
 const onBunOrDeno = Boolean(globalScope.Bun) || Boolean(globalScope.Deno);
 const nodeMajor = Number.parseInt(process.versions.node, 10);
 
-// DOM differences this harness found in the HTML minifier that are defects, not
-// intended transforms. Listed rather than snapshotted so they read as a bug
-// list, and so any *other* fixture whose DOM changes still fails the run.
+// DOM differences this harness found that are defects in the HTML minifier, not
+// intended transforms. Listed rather than tolerated wholesale, so any *other*
+// fixture whose DOM changes still fails, and so fixing one fails here too.
 const KNOWN_HTML_DEFECTS = new Map([
 	[
 		"test/configCases/html/minimize-attributes/page.html",
 		// A second `<body>` start tag has its attributes merged onto the already-open
-		// body (§13.2.6.4.7). Dropping the tag drops the merge: `class` is lost.
+		// body (§13.2.6.4.7). The tag is dropped without the merge, losing `class`.
 		"element 3: http://www.w3.org/1999/xhtml|body[class] vs http://www.w3.org/1999/xhtml|body[]"
 	],
-	// A `]]>` that the parser leaves as text is not reproduced, so rendered text
-	// changes.
+	// `<![CDATA[` outside foreign content is a bogus comment ending at the first
+	// `>` (§13.2.5.42), leaving the rest as text. It is modelled as a CDATA
+	// section through `]]>` instead, so dropping it as a comment eats that text.
 	["test/configCases/html/basic/page.html", "rendered text differs"],
 	[
 		"test/configCases/html/full-lexer-integration/page.html",
-		"rendered text differs"
-	],
-	[
-		"test/configCases/html/minimize-transforms/page.html",
 		"rendered text differs"
 	]
 ]);
@@ -225,7 +166,7 @@ describe("printer output in real Chrome", () => {
 			// No usable Chrome in this environment — the tests self-skip below.
 			browser = undefined;
 		}
-	}, 120000);
+	}, 300000);
 
 	afterAll(async () => {
 		if (browser) await browser.close();
@@ -240,93 +181,81 @@ describe("printer output in real Chrome", () => {
 				console.warn("Skipping: could not launch Chrome via puppeteer-core.");
 				return;
 			}
-			const result = await page.evaluate((cases) => {
+			const differences = await page.evaluate((cases) => {
 				/**
-				 * Every element in document order, as namespace, name and the set of
-				 * attribute *names*. Values are compared separately: the minifier
-				 * rewrites some of them (`class`, `style`, `srcset`, boolean
-				 * attributes) to a different string the DOM parses the same way.
-				 * @param {Document} doc the parsed document
-				 * @returns {Element[]} the elements
-				 */
-				const elements = (doc) => [...doc.querySelectorAll("*")];
-				/**
+				 * An element as namespace, name and the set of attribute *names*.
+				 * Values are excluded: the minifier respells some of them (`class`,
+				 * `style`, `srcset`, boolean attributes) to a different string the DOM
+				 * parses the same way.
 				 * @param {Element} node an element
-				 * @returns {string} its shape, without attribute values
+				 * @returns {string} its shape
 				 */
 				const shape = (node) =>
 					`${node.namespaceURI}|${node.localName}[${[...node.attributes]
 						.map((a) => a.name)
 						.sort()
 						.join(",")}]`;
+				/**
+				 * The text the page renders. A `<script>` / `<style>` body is data, not
+				 * rendered text, and is minified in its own right (the JSON of an
+				 * `application/ld+json` block, the CSS of a `<style>`), so it is not
+				 * part of this comparison.
+				 * @param {Document} doc the parsed document
+				 * @returns {string} the rendered text
+				 */
+				const renderedText = (doc) => {
+					if (!doc.body) return "";
+					const clone = /** @type {HTMLElement} */ (doc.body.cloneNode(true));
+					for (const el of clone.querySelectorAll("script,style")) el.remove();
+					return clone.textContent || "";
+				};
 				/** @type {{ name: string, why: string }[]} */
-				const structural = [];
-				/** @type {{ name: string, attribute: string, raw: string, min: string }[]} */
-				const rewritten = [];
+				const found = [];
 				for (const one of cases) {
 					const rawDoc = new DOMParser().parseFromString(one.raw, "text/html");
 					const minDoc = new DOMParser().parseFromString(one.min, "text/html");
-					const rawText = rawDoc.body ? rawDoc.body.textContent || "" : "";
-					const minText = minDoc.body ? minDoc.body.textContent || "" : "";
 					// Whitespace between inline elements is rendered, so it must survive.
-					if (rawText !== minText) {
-						structural.push({ name: one.name, why: "rendered text differs" });
+					if (renderedText(rawDoc) !== renderedText(minDoc)) {
+						found.push({ name: one.name, why: "rendered text differs" });
 						continue;
 					}
-					const rawEls = elements(rawDoc);
-					const minEls = elements(minDoc);
+					const rawEls = [...rawDoc.querySelectorAll("*")];
+					const minEls = [...minDoc.querySelectorAll("*")];
 					if (rawEls.length !== minEls.length) {
-						structural.push({
+						found.push({
 							name: one.name,
 							why: `element count ${rawEls.length} vs ${minEls.length}`
 						});
 						continue;
 					}
 					for (let i = 0; i < rawEls.length; i++) {
-						const a = shape(rawEls[i]);
-						const b = shape(minEls[i]);
-						if (a !== b) {
-							structural.push({
+						const before = shape(rawEls[i]);
+						const after = shape(minEls[i]);
+						if (before !== after) {
+							found.push({
 								name: one.name,
-								why: `element ${i}: ${a} vs ${b}`
+								why: `element ${i}: ${before} vs ${after}`
 							});
 							break;
 						}
-						for (const attribute of rawEls[i].attributes) {
-							const before = attribute.value;
-							const after = minEls[i].getAttribute(attribute.name) || "";
-							if (before !== after) {
-								rewritten.push({
-									name: one.name,
-									attribute: attribute.name,
-									raw: before,
-									min: after
-								});
-							}
-						}
 					}
 				}
-				return { structural, rewritten };
-			}, htmlCorpus.cases);
-			// The element tree and the rendered text are the DOM the page builds —
-			// no minification may change either, except where a defect is recorded.
+				return found;
+			}, htmlCorpus);
+			// The element tree and the rendered text are the DOM the page builds — no
+			// minification may change either, except where a defect is recorded.
 			expect(
-				result.structural.filter(
+				differences.filter(
 					(one) => KNOWN_HTML_DEFECTS.get(one.name) !== one.why
 				)
 			).toEqual([]);
 			// Every recorded defect must still reproduce: fixing one fails here, which
 			// is the prompt to delete its entry.
-			expect(result.structural.map((one) => one.name).sort()).toEqual(
+			expect(differences.map((one) => one.name).sort()).toEqual(
 				[...KNOWN_HTML_DEFECTS.keys()].sort()
 			);
-			// Attribute values the minifier respells (`class`, `style`, `srcset`,
-			// boolean attributes) are allowed to differ — the DOM parses them the
-			// same. What each one becomes is visible in the corpus snapshot above,
-			// which is browser-free and so always recorded.
-			expect(Array.isArray(result.rewritten)).toBe(true);
 		},
-		300000
+		600000
 	);
 
 	itChrome(
@@ -336,13 +265,13 @@ describe("printer output in real Chrome", () => {
 				console.warn("Skipping: could not launch Chrome via puppeteer-core.");
 				return;
 			}
-			const mismatches = await page.evaluate((cases) => {
+			const differences = await page.evaluate((cases) => {
 				const probe = document.createElement("div");
 				document.body.append(probe);
 				/**
-				 * The engine's computed value for every property a declaration sets,
-				 * so an equivalent respelling (`bold` / `700`, `300ms` / `0.3s`,
-				 * `1.5pt` / `2px`) compares equal and an unsafe one does not.
+				 * The engine's computed value for every property a declaration sets, so
+				 * an equivalent respelling (`bold` / `700`, `300ms` / `0.3s`, `1.5pt` /
+				 * `2px`) compares equal and an unsafe one does not.
 				 * @param {string} declaration the declaration block
 				 * @returns {string} its computed form
 				 */
@@ -358,12 +287,11 @@ describe("printer output in real Chrome", () => {
 					return out.sort().join(";");
 				};
 				/**
-				 * Declaration-bearing rules in order, plus the shape of the at-rules
-				 * around them. An empty rule is dropped by the minifier and a
-				 * prelude may be respelled (`(min-width: 1px)` / `(width >= 1px)`),
-				 * so neither is compared here.
+				 * Declaration-bearing rules in order. An empty rule is dropped by the
+				 * minifier and an at-rule prelude may be respelled (`(min-width: 1px)` /
+				 * `(width >= 1px)`), so neither is compared.
 				 * @param {string} source the stylesheet
-				 * @returns {{ kind: string, sel: string, decl: string }[] | null} its rules, or null when it does not parse
+				 * @returns {{ sel: string, decl: string }[] | null} its rules, or null when it does not parse
 				 */
 				const rules = (source) => {
 					const sheet = new CSSStyleSheet();
@@ -372,28 +300,22 @@ describe("printer output in real Chrome", () => {
 					} catch (_err) {
 						return null;
 					}
-					/** @type {{ kind: string, sel: string, decl: string }[]} */
+					/** @type {{ sel: string, decl: string }[]} */
 					const out = [];
 					/**
 					 * @param {CSSRuleList} list rules to walk
 					 */
 					const walk = (list) => {
 						for (const rule of list) {
-							const grouping = /** @type {CSSGroupingRule} */ (rule).cssRules;
-							if (grouping) {
-								out.push({
-									kind: rule.constructor.name,
-									sel: "",
-									decl: ""
-								});
-								walk(grouping);
+							const nested = /** @type {CSSGroupingRule} */ (rule).cssRules;
+							if (nested) {
+								walk(nested);
 								continue;
 							}
 							const style = /** @type {CSSStyleRule} */ (rule).style;
 							// An empty rule renders nothing, so dropping it is safe.
 							if (!style || style.length === 0) continue;
 							out.push({
-								kind: rule.constructor.name,
 								sel:
 									/** @type {CSSStyleRule} */ (rule).selectorText ||
 									/** @type {CSSKeyframeRule} */ (rule).keyText ||
@@ -406,53 +328,41 @@ describe("printer output in real Chrome", () => {
 					return out;
 				};
 				/** @type {{ name: string, why: string }[]} */
-				const structural = [];
-				/** @type {{ name: string, why: string }[]} */
-				const computedDiff = [];
+				const found = [];
 				for (const one of cases) {
 					const raw = rules(one.raw);
 					const min = rules(one.min);
 					if (raw === null || min === null) {
-						structural.push({
-							name: one.name,
-							why: "stylesheet did not parse"
-						});
+						found.push({ name: one.name, why: "stylesheet did not parse" });
 						continue;
 					}
-					if (raw.length !== min.length) {
-						structural.push({
-							name: one.name,
-							why: `rule count ${raw.length} vs ${min.length}`
-						});
-						continue;
+					// A rule the minifier drops shifts every rule after it, so compare by
+					// selector rather than by position.
+					const bySelector = new Map();
+					for (const rule of min) {
+						if (!bySelector.has(rule.sel)) bySelector.set(rule.sel, []);
+						bySelector.get(rule.sel).push(rule.decl);
 					}
-					for (let i = 0; i < raw.length; i++) {
-						if (raw[i].kind !== min[i].kind || raw[i].sel !== min[i].sel) {
-							structural.push({
+					for (const rule of raw) {
+						const candidates = bySelector.get(rule.sel);
+						if (candidates === undefined || candidates.length === 0) continue;
+						const index = candidates.indexOf(rule.decl);
+						if (index === -1) {
+							found.push({
 								name: one.name,
-								why: `rule ${i}: ${raw[i].kind} ${raw[i].sel} vs ${min[i].kind} ${min[i].sel}`
+								why: `${rule.sel}: computed ${rule.decl} vs ${candidates[0]}`
 							});
 							break;
 						}
-						if (raw[i].decl !== min[i].decl) {
-							computedDiff.push({
-								name: one.name,
-								why: `rule ${i} (${raw[i].sel}) computed ${raw[i].decl} vs ${min[i].decl}`
-							});
-							break;
-						}
+						candidates.splice(index, 1);
 					}
 				}
-				return { structural, computed: computedDiff };
-			}, cssCorpus.cases);
-			// Where the two stylesheets expose the same rule, the engine must compute
-			// the same style from it — that is what "safely minified" means.
-			expect(mismatches.computed).toEqual([]);
-			// Dropping an empty rule and respelling an at-rule prelude are intended,
-			// so rule-count and prelude deltas are not asserted; the corpus snapshot
-			// above is what makes a change in them visible.
-			expect(Array.isArray(mismatches.structural)).toBe(true);
+				return found;
+			}, cssCorpus);
+			// Where both stylesheets carry the same rule, the engine must compute the
+			// same style from it — that is what "safely minified" means.
+			expect(differences).toEqual([]);
 		},
-		300000
+		600000
 	);
 });
