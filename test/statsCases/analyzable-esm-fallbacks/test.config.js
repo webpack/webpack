@@ -14,7 +14,9 @@ const HELPER = "__webpack_require__.ei";
 const CASES = {
 	analyzable: { file: "main.mjs", expect: "analyzable" },
 	"public-path-override": { file: "main.mjs", expect: "fallback" },
-	"fetch-priority": { file: "main.mjs", expect: "fallback" },
+	// `fetchPriority` is unsupported for ESM output, so it must not degrade the
+	// output — the analyzable form is still emitted (documented limitation).
+	"fetch-priority": { file: "main.mjs", expect: "analyzable" },
 	"content-hash": { file: "main.mjs", expect: "fallback" },
 	"templated-public-path": { file: "main.mjs", expect: "fallback" },
 	"bare-public-path": { file: "main.mjs", expect: "fallback" },
