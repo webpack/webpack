@@ -2088,6 +2088,23 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			).toBe("a{column-rule:medium groove rebeccapurple;color:red}");
 		});
 
+		it("declines a hash that is no color, at the lengths CSS omits", () => {
+			// Only 3, 4, 6 and 8 digits are a hex color. Merging a 5- or 7-digit
+			// one would make the whole shorthand invalid, taking the width and
+			// style down with a color the engine was already dropping.
+			for (const hash of ["#12345", "#1234567"]) {
+				const css = `a{outline-width:3px;outline-style:dashed;outline-color:${hash}}`;
+				expect(minify(css)).toBe(css);
+			}
+			for (const hash of ["#123", "#1234", "#123456", "#12345678"]) {
+				expect(
+					minify(
+						`a{outline-width:3px;outline-style:dashed;outline-color:${hash}}`
+					)
+				).toBe(`a{outline:3px dashed ${hash}}`);
+			}
+		});
+
 		it("declines a value only another slot would take", () => {
 			// Invalid as written, and a merge must not rescue it into a shorthand
 			// the engine would read.

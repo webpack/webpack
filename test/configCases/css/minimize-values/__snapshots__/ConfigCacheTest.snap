@@ -144,6 +144,8 @@ Array [
    and a merge must not rescue it into a shorthand it would read */.t134{flex-direction:3px;flex-wrap:wrap}",
   "/*! webpack: declined: ...a unit no slot's type carries is not classified at all */.t135{outline-width:2s;outline-style:dashed;outline-color:red}",
   "/*! webpack: declined: ...and only a zero number is a length without one */.t136{outline-width:3;outline-style:dashed;outline-color:red}",
+  "/*! webpack: declined: only 3, 4, 6 and 8 digits are a hex color, so merging a
+   5-digit hash would invalidate the shorthand and drop the width and style too */.t137{outline-width:3px;outline-style:dashed;outline-color:#12345}",
   "/*! webpack: declined: \`list-style-type\` takes any identifier, so no other value
    in the family is unambiguous — an image included */.t133{list-style-type:square;list-style-position:inside;list-style-image:url(data:image/gif;base64,R0lGODlhAQABAAAAACw=)}",
 ]
