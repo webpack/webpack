@@ -73,6 +73,14 @@ Array [
   "/*! webpack: one component of several */.t64{margin:0 1px}",
   "/*! lightningcss: (width>=1200px) — \`min-X: Y\` is exactly \`X >= Y\` */@media (width>=1200px){.t65{color:red}}",
   "/*! lightningcss: (width<=1199.98px) */@media (width<=1199.98px){.t66{color:red}}",
+  "/*! webpack: a shorthand setting exactly two longhands merges like a box family */.t70{margin-block:1px 2px}",
+  "/*! ...collapsing to one value when both are equal */.t71{padding-inline:1px}",
+  "/*! ...and \`gap\`, whose longhands are named for the axes */.t72{gap:1px 2px}",
+  "/*! declined: two-value \`overflow\` is far newer than \`overflow-x\`/\`-y\`, so the
+   merge would lose both declarations on a target that reads only the longhands */.t73{overflow-x:hidden;overflow-y:scroll}",
+  "/*! declined: ...and \`place-items\` is newer than \`align-items\` the same way */.t74{align-items:center;justify-items:start}",
+  "/*! declined: a declaration between them writing the same family would be
+   stepped over by the merge */.t75{margin-block-start:1px;margin:0;margin-block-end:2px}",
   "/*! lightningcss: (1200px<=width<=2000px) — an \`and\` of two one-sided ranges on
    one feature is the interval it describes, whichever order they are written */@media (1200px<=width<=2000px){.t65a{color:red}}@media (1200px<=width<=2000px){.t65b{color:red}}",
   "/*! declined: two comparisons the same way round are no interval */@media (width>=1200px) and (width>=1300px){.t65c{color:red}}",
