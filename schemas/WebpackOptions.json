@@ -5452,10 +5452,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "fetchPriority": {
-          "description": "The `fetchpriority` attribute for the auto-emitted initial-graph hints (`initial`). Only meaningful for hints webpack writes into extracted HTML, where the browser's preload scanner sees them — a `fetchpriority` on a `<link rel=\"modulepreload\">` injected at runtime is ignored by browsers.",
-          "enum": ["low", "high", "auto"]
-        },
         "initial": {
           "$ref": "#/definitions/ResourceHintsInitial"
         },

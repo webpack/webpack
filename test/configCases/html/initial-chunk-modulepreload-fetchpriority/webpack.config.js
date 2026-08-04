@@ -1,9 +1,10 @@
 "use strict";
 
-// `output.resourceHints.fetchPriority` — applied to the auto initial-graph hints,
-// which webpack writes into the extracted HTML. Those are parser-inserted, so the
-// browser's preload scanner honors the attribute (it is ignored on runtime-injected
-// `modulepreload` links).
+// `fetchpriority` on the auto initial-graph hints, set through the `resourceHints`
+// function form (map each default hint to a fresh descriptor — returning the default
+// object itself reuses its prebuilt tag). Worth covering because these hints land in
+// the extracted HTML: the preload scanner sees them, so the attribute is honored,
+// whereas browsers ignore it on a runtime-injected `modulepreload` link.
 
 const fs = require("fs");
 const path = require("path");
@@ -18,7 +19,12 @@ module.exports = {
 		filename: "[name].mjs",
 		chunkFilename: "[name].chunk.mjs",
 		module: true,
-		resourceHints: { fetchPriority: "high" }
+		resourceHints: ({ defaultHints }) =>
+			defaultHints.map((h) => ({
+				rel: h.rel,
+				chunk: h.chunk,
+				fetchPriority: "high"
+			}))
 	},
 	optimization: { chunkIds: "named", runtimeChunk: "single" },
 	experiments: { html: true, outputModule: true },
