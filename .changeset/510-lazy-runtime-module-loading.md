@@ -1,5 +1,5 @@
 ---
-"webpack": patch
+"webpack": minor
 ---
 
-Cut startup memory by loading runtime modules only when a build emits one.
+Add `Compilation#addLazyRuntimeModule` and load runtime modules only when used.
