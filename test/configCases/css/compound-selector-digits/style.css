@@ -1,0 +1,16 @@
+.p1.c1 {
+	color: red;
+}
+
+div.parent1.child1 {
+	color: green;
+}
+
+:is(div.a1.b2) {
+	color: blue;
+}
+
+/*! a real number does still take a following `.5` on */
+.n {
+	margin: 1/**/.5px;
+}
