@@ -134,8 +134,7 @@ The directory listings below are the canonical map of the repository. **Whenever
 
 Skipping any layer silently breaks the option. After editing schemas, run `yarn fix:special` so `lib/` code can reference the updated types. If you added or modified options, consider updating `examples/` and run `yarn build:examples` to verify.
 
-> [!REQUIRED]
-> **Never hand-edit what `yarn fix:special` generates**, even when it also reformats files you did not touch. That churn means your local toolchain resolved differently from CI's — the fix is to commit only your own hunks, then **verify them against the generator** (re-run it and diff), never to hand-write what you think it would emit. A hand-written JSDoc block that omits the `@since` line the schema's `added` keyword produces, or a `types.d.ts` member the JSDoc implies, fails `lint` with `… need to be updated` and nothing else.
+> [!REQUIRED] > **Never hand-edit what `yarn fix:special` generates**, even when it also reformats files you did not touch. That churn means your local toolchain resolved differently from CI's — the fix is to commit only your own hunks, then **verify them against the generator** (re-run it and diff), never to hand-write what you think it would emit. A hand-written JSDoc block that omits the `@since` line the schema's `added` keyword produces, or a `types.d.ts` member the JSDoc implies, fails `lint` with `… need to be updated` and nothing else.
 
 **A nested minifier needs the same options as the outer one.** `lib/html/htmlMinify.js` runs the CSS minifier over an inline `<style>` and every `style=""`, so `output.environment` has to be handed to both — otherwise a `.css` asset and the same declaration inline disagree about what the target can read. Any future HTML-minifies-JS hook has the same obligation.
 
@@ -208,8 +207,7 @@ Run targeted tests — `yarn test:base --testPathPatterns="<pattern>"` or `yarn 
 
 **Run only tests specific to your change — leave the broad suites to CI.** Pick the cases that cover the touched code (`--testPathPatterns` / `--testNamePattern`) instead of sweeping whole suites.
 
-> [!REQUIRED]
-> **Two kinds of change are exempt, because "the tests for my change" is the wrong frame for them.** Touch `schemas/**`, `lib/config/**`, or anything `yarn fix:special` generates, and the blast radius is the whole option surface, not the feature: run `yarn lint` and `yarn test:basic` in full before pushing. `basic` is also what gates the `integration` matrix in `.github/workflows/test.yml` (`integration: needs: basic`), so a red `basic` stops every integration upload and leaves Codecov reporting a patch coverage computed from `unit` alone — a failure that reads like a coverage problem but is not one.
+> [!REQUIRED] > **Two kinds of change are exempt, because "the tests for my change" is the wrong frame for them.** Touch `schemas/**`, `lib/config/**`, or anything `yarn fix:special` generates, and the blast radius is the whole option surface, not the feature: run `yarn lint` and `yarn test:basic` in full before pushing. `basic` is also what gates the `integration` matrix in `.github/workflows/test.yml` (`integration: needs: basic`), so a red `basic` stops every integration upload and leaves Codecov reporting a patch coverage computed from `unit` alone — a failure that reads like a coverage problem but is not one.
 
 `yarn lint` is a `&&` chain, so the first stage that trips on sandbox drift hides every stage after it. When `lint:special` reports declarations "need to be updated" that `main` reports too, do not stop there — run the rest by hand (`lint:types`, `lint:types-test`, `lint:types-benchmark`, `lint:types-module-test`, `lint:types-hot`, `fmt:check`, `lint:spellcheck`). `lint:types-test` is the one that catches `tsc` errors in `test/`, and skipping it is how a red `lint` survives a "lint passed locally".
 
@@ -402,17 +400,30 @@ The rule bans **posting**, not **reading**. What may be skipped is bot noise —
 
 Everything that names a possible bug, regression, or improvement must be investigated, whoever raised it — a human reviewer, or an AI reviewer such as Copilot, Bugbot, or CodeRabbit. Being posted by a bot account is no reason to dismiss it; judge the claim, not the author. Reproduce it, then either fix it in code and push (that needs no permission) or, if you believe it is wrong, bring it **into the session**: report what you found, show the reply you would send, and let the requester decide whether it is posted. Never leave such a finding unanswered.
 
-### After opening the PR — wait for Copilot review
+### After opening the PR — a red check is yours to fix
 
 > [!REQUIRED]
 
-Every webpack PR gets an automated **GitHub Copilot code review** on the initial commit and on every subsequent push. You must always wait for it and address every comment.
+**`lint`, `unit`, `basic`, and `integration` failing on your PR is never something to explain, defer, or wait out — fix it and push.** These four gate the merge, they run the same commands you can run locally, and a failure in them is a failure you introduced until a run on unmodified `main` proves otherwise. There is no such thing as ending a wake on one of them without either a pushed commit or a reply naming the blocker.
 
-1. After `create_pull_request`, subscribe to the PR (`subscribe_pr_activity`) so Copilot's review wakes the session. Do **not** poll.
-2. When the review arrives, read every comment:
-   - If correct, push a fix in a new commit.
+Read the failing job's log rather than guessing (`get_job_logs`), reproduce it locally, fix the cause, and re-run the same command CI ran before pushing. Two failures recur often enough to name:
+
+- **cspell** rejects a word — reword it (the codebase is American English, and [Naming](#naming) forbids abbreviations) or, for a genuine term, add it to `cspell.json`.
+- **A snapshot lives in more than one suite.** `ConfigTestCases` and `ConfigCacheTestCases` both snapshot `configCases/`, and `--testPathPatterns=ConfigTestCases` does **not** match `ConfigCacheTestCases`. Update snapshots with `yarn test:basic --testNamePattern="<case>" -u` (no path filter), then run `yarn test:basic` in full.
+
+Anything else red — CodSpeed, Codecov, a preview build — is judged on its merits, not fixed on reflex; see [Writing on GitHub — ask first](#writing-on-github--ask-first) for which reports are noise. A Codecov `project` drop while `integration` has not uploaded yet, and a CodSpeed comparison against a base that never ran, are both artifacts and say so in their own output.
+
+### After opening the PR — wait for the automated reviews
+
+> [!REQUIRED]
+
+Every webpack PR is reviewed automatically on the initial commit and on every subsequent push — **GitHub Copilot**, and whatever else the repository has enabled (**Cursor Bugbot**, CodeRabbit, …). You must always wait for them and address every comment from each. A finding from a bot is judged on the claim, never on the author: reproduce it before you decide.
+
+1. After `create_pull_request`, subscribe to the PR (`subscribe_pr_activity`) so a review wakes the session. Do **not** poll.
+2. When a review arrives, read every comment:
+   - If correct, push a fix in a new commit — **including when the bug is one your own PR introduced**, which is the common case for a bot flagging a line you just wrote.
    - If wrong, draft the reply and ask the requester before posting it (see [Writing on GitHub — ask first](#writing-on-github--ask-first)) — never ignore silently.
-3. After every push, Copilot re-reviews. Repeat step 2. The loop ends when Copilot's latest review has zero outstanding threads.
+3. After every push, the reviewers run again. Repeat step 2. The loop ends when the latest review from each has zero outstanding threads.
 4. Only `unsubscribe_pr_activity` once all comments are handled and CI is green, or when the user tells you to stop.
 
 ## Do not touch
