@@ -4461,6 +4461,14 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 		).toBe("@keyframes s{to{opacity:1}}");
 	});
 
+	it("pairs a cased `@Keyframes` with its prefixed twin (case-insensitive)", () => {
+		expect(
+			minify("@-webkit-keyframes s{to{opacity:1}}@Keyframes s{to{opacity:1}}", [
+				"chrome 40"
+			])
+		).toBe("@-webkit-keyframes s{to{opacity:1}}@Keyframes s{to{opacity:1}}");
+	});
+
 	it("gives each same-named at-rule its own copy, so the last still wins", () => {
 		expect(
 			minify("@keyframes s{to{opacity:1}}@keyframes s{to{opacity:.5}}", [
