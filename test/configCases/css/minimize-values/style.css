@@ -175,6 +175,12 @@
 /*! declined: a declaration between them writing the same family would be
    stepped over by the merge */
 .t75 { margin-block-start: 1px; margin: 0; margin-block-end: 2px }
+/*! declined: a CSS-wide keyword beside another value is a shorthand the engine
+   drops whole, so the pair collapse refuses one exactly as a box does */
+.t76 { margin-block-start: inherit; margin-block-end: 1px }
+.t76a { margin-block-start: inherit; margin-block-end: inherit }
+/*! declined: ...and a substitution could expand to both values at once */
+.t77 { margin-block-start: var(--x); margin-block-end: var(--x) }
 /*! lightningcss: (1200px<=width<=2000px) — an `and` of two one-sided ranges on
    one feature is the interval it describes, whichever order they are written */
 @media (min-width: 1200px) and (max-width: 2000px) { .t65a { color: red } }
@@ -277,6 +283,10 @@
 .t111 { corner-start-start-shape: bevel; corner-end-start-shape: notch }
 /*! webpack: ...the edge `mdn-data` mistook it for still merges as stated */
 .t112 { corner-start-start-shape: bevel; corner-start-end-shape: notch }
+/*! webpack: two corner shorthands share a longhand, so only the first may claim
+   it — the second landing on the first's blanked tail would drop that tail */
+.t113 { corner-top-right-shape: notch; corner-top-left-shape: bevel; corner-bottom-left-shape: scoop }
+.t114 { corner-end-start-shape: scoop; corner-start-start-shape: bevel; corner-start-end-shape: notch }
 
 /* An order-free `||` shorthand merges when each value parses back to its slot. */
 
