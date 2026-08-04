@@ -1965,12 +1965,21 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(value("calc(1px + 1cm)")).toBe("calc(1px + 1cm)");
 		});
 
-		it("keeps the parentheses on a negative, whatever the property", () => {
+		it("keeps the parentheses on a negative the property refuses", () => {
 			// `width: -5px` is dropped where `width: calc(-5px)` clamps to 0.
 			expect(minify("a{width:calc(0px - 5px)}")).toBe("a{width:calc(-5px)}");
-			expect(minify("a{margin-left:calc(0px - 5px)}")).toBe(
-				"a{margin-left:calc(-5px)}"
+			// `<line-width>` states no range, so nothing licenses the rewrite.
+			expect(minify("a{border-width:calc(0px - 5px)}")).toBe(
+				"a{border-width:calc(-5px)}"
 			);
+		});
+
+		it("takes them off one the property accepts", () => {
+			expect(minify("a{margin-left:calc(0px - 5px)}")).toBe(
+				"a{margin-left:-5px}"
+			);
+			// The shorthand defers wholly to those longhands, so it accepts one too.
+			expect(minify("a{margin:calc(0px - 5px)}")).toBe("a{margin:-5px}");
 		});
 
 		it("keeps them on a fraction only where the property takes an integer", () => {
@@ -2064,8 +2073,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("a{z-index:sign(5px)}")).toBe("a{z-index:1}");
 			// Zero keeps its parentheses too — see the unitless-zero case below.
 			expect(minify("a{z-index:sign(0px)}")).toBe("a{z-index:calc(0)}");
-			// A negative keeps its parentheses, as everywhere else.
-			expect(minify("a{z-index:sign(-5px)}")).toBe("a{z-index:calc(-1)}");
+			// `z-index` takes a negative, so the answer prints bare.
+			expect(minify("a{z-index:sign(-5px)}")).toBe("a{z-index:-1}");
 		});
 
 		it("takes hypot() only where the root is exact", () => {

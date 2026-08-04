@@ -88,8 +88,20 @@
 .u06 { z-index: calc(1.5) }
 /*! kept: `width: -5px` is dropped, `calc(-5px)` clamps to 0 */
 .u07 { width: calc(-5px) }
-/*! kept: a negative stays wrapped whatever the property */
+/*! unwrap: ...but a negative is a value in its own right where the property
+   takes one */
 .u08 { margin-left: calc(0px - 5px) }
+/*! unwrap: ...through a shorthand that defers to those longhands */
+.u08a { margin: calc(0px - 5px) }
+/*! unwrap: ...and where the negative is an integer */
+.u08b { z-index: calc(1 - 3) }
+/*! kept: a fraction is still a fraction where an `<integer>` is wanted */
+.u08c { z-index: calc(1.5 - 3) }
+/*! kept: `<line-width>` states no range, so nothing licenses the rewrite —
+   `border-width: -5px` is dropped, `calc(-5px)` clamps to 0 */
+.u08d { border-width: calc(1px - 6px) }
+/*! kept: ...and a shorthand that states its own lengths is not its longhands */
+.u08e { padding: calc(1px - 6px) }
 /*! kept: `width: calc(0)` is a number and dropped, `width: 0` is a length */
 .u09 { width: calc(1 - 1) }
 /*! kept: a shorthand reaches `<integer>` through its longhands — `columns: 1.5`
