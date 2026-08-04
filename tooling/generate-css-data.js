@@ -469,10 +469,14 @@ const collectBoxShorthands = (withSlash) => {
 	return names.sort();
 };
 
-// The box side a longhand covers, read off its name. `border-radius` and
-// `corner-shape` are deliberately unmatched: their four longhands are corners
-// (`top-left` …), which `{1,4}` orders differently.
+// The box side a longhand covers, read off its name.
 const BOX_SIDES = ["top", "right", "bottom", "left"];
+
+// The corner order `{1,4}` writes, which is not the order `computed` lists them
+// in: `border-radius` names them clockwise from the top left, `corner-shape`
+// names them by row. Matched on the longhand's own name so neither array's
+// order is trusted.
+const BOX_CORNERS = ["top-left", "top-right", "bottom-right", "bottom-left"];
 
 /**
  * The shorthands that set exactly two longhands, positionally, separated by a
@@ -552,15 +556,20 @@ const collectBoxLonghands = (shorthands) => {
 	for (const name of shorthands) {
 		const longhands = properties[name].computed;
 		if (!Array.isArray(longhands) || longhands.length !== 4) continue;
-		const sides = BOX_SIDES.map((side) =>
+		const match = (/** @type {string} */ part) =>
 			longhands.find(
 				(longhand) =>
-					longhand === side ||
-					longhand.includes(`-${side}-`) ||
-					longhand.endsWith(`-${side}`)
-			)
-		);
-		if (sides.includes(undefined)) continue;
+					longhand === part ||
+					longhand.includes(`-${part}-`) ||
+					longhand.endsWith(`-${part}`)
+			);
+		// A corner name holds two side names (`border-top-left-radius` answers both
+		// `top` and `left`), so a sides match only counts when it is one-to-one.
+		const distinct = (/** @type {(string | undefined)[]} */ found) =>
+			!found.includes(undefined) && new Set(found).size === found.length;
+		let sides = BOX_SIDES.map(match);
+		if (!distinct(sides)) sides = BOX_CORNERS.map(match);
+		if (!distinct(sides)) continue;
 		if (new Set(sides).size !== 4) continue;
 		out.push([name, /** @type {string[]} */ (sides)]);
 	}
@@ -2266,11 +2275,10 @@ const BOX_SHORTHANDS = ${setLiteral([...boxShorthands, ...slashShorthands].sort(
 // The subset carrying a second box after a \`/\`, which collapses on its own.
 const SLASH_BOX_SHORTHANDS = ${setLiteral(slashShorthands)};
 
-// The four longhands each box shorthand sets, in \`top right bottom left\` order.
-// Only the families whose longhands are the four sides: merging those into the
-// shorthand sets exactly the same properties, resetting nothing extra. Corner
-// families (\`border-radius\`) are absent — \`{1,4}\` orders their longhands
-// differently.
+// The four longhands each box shorthand sets, in the order \`{1,4}\` writes them:
+// \`top right bottom left\`, or clockwise from the top left for a corner family.
+// Only the families whose longhands are those four: merging those into the
+// shorthand sets exactly the same properties, resetting nothing extra.
 // prettier-ignore
 const BOX_LONGHANDS = new Map([
 ${boxLonghands
@@ -2502,7 +2510,6 @@ module.exports.ARC_SINE_DEGREES = ARC_SINE_DEGREES;
 module.exports.ARC_TANGENT_DEGREES = ARC_TANGENT_DEGREES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
-module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
 module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
@@ -2525,6 +2532,7 @@ module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
 module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
 module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;
 module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;
+module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;

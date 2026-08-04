@@ -116,5 +116,9 @@ Array [
   "/*! webpack: declined: \`all\` writes everything */.t104{margin-top:1px;all:unset;margin-right:2px;margin-bottom:1px;margin-left:2px}",
   "/*! webpack: declined: \`border\` writes every border-color longhand */.t105{border-top-color:red;border:1px solid;border-right-color:red;border-bottom-color:red;border-left-color:red}",
   "/*! webpack: ...but an unrelated property between them does not */.t106{border-color:red;color:red}",
+  "/*! webpack: the four corners merge too, clockwise from the top left */.t107{border-radius:1px 2px 3px 4px}",
+  "/*! webpack: declined: a corner set to two radii needs the shorthand's \`/\` form */.t108{border-top-left-radius:1px 2px;border-top-right-radius:1px 2px;border-bottom-right-radius:1px 2px;border-bottom-left-radius:1px 2px}",
+  "/*! webpack: declined: a logical corner writes the same corners */.t109{border-top-left-radius:1px;border-start-start-radius:9px;border-top-right-radius:2px;border-bottom-right-radius:3px;border-bottom-left-radius:4px}",
+  "/*! webpack: \`corner-shape\` lists its longhands by row, not clockwise */.t110{corner-shape:squircle bevel scoop notch}",
 ]
 `;
