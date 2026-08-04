@@ -4461,6 +4461,16 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 		).toBe("@keyframes s{to{opacity:1}}");
 	});
 
+	it("gives each same-named at-rule its own copy, so the last still wins", () => {
+		expect(
+			minify("@keyframes s{to{opacity:1}}@keyframes s{to{opacity:.5}}", [
+				"chrome 40"
+			])
+		).toBe(
+			"@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}@-webkit-keyframes s{to{opacity:.5}}@keyframes s{to{opacity:.5}}"
+		);
+	});
+
 	it("does nothing without a target list", () => {
 		expect(minify("@keyframes s{to{opacity:1}}")).toBe(
 			"@keyframes s{to{opacity:1}}"
@@ -4515,6 +4525,20 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 	it("leaves a selector list alone — prefixing one would drop the whole list", () => {
 		expect(minify(".a::placeholder,.b{color:red}", ["chrome 40"])).toBe(
 			".a::placeholder,.b{color:red}"
+		);
+	});
+
+	it("gives each same-pseudo rule its own copy, so the last still wins", () => {
+		expect(
+			minify("::placeholder{color:red}::placeholder{color:blue}", ["chrome 40"])
+		).toBe(
+			"::-webkit-input-placeholder{color:red}::placeholder{color:red}::-webkit-input-placeholder{color:blue}::placeholder{color:blue}"
+		);
+	});
+
+	it("matches a pseudo name case-insensitively", () => {
+		expect(minify("::PLACEHOLDER{color:red}", ["chrome 40"])).toBe(
+			"::-webkit-input-placeholder{color:red}::PLACEHOLDER{color:red}"
 		);
 	});
 
