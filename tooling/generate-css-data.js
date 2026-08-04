@@ -475,6 +475,71 @@ const collectBoxShorthands = (withSlash) => {
 const BOX_SIDES = ["top", "right", "bottom", "left"];
 
 /**
+ * The shorthands that set exactly two longhands, positionally, separated by a
+ * space: `<'a'>{1,2}` or `<'a'> <'b'>?`. Order-free (`||`) and `/`-separated
+ * pairs are left out — their value order is not the `computed` order — as is
+ * anything taking a comma list. Merging two such longhands sets exactly what
+ * they did: a shorthand gathering a whole family resets more than `computed`
+ * names (`border` clears `border-image`, `font` clears `font-size-adjust`),
+ * which is why only the two-longhand ones are read this way.
+ * @returns {[string, string[]][]} `[shorthand, [first, second]]`, sorted
+ */
+const collectPairLonghands = () => {
+	/** @type {[string, string[]][]} */
+	const out = [];
+	for (const [name, property] of Object.entries(properties)) {
+		if (property.status !== "standard") continue;
+		if (typeof property.syntax !== "string") continue;
+		const longhands = property.computed;
+		if (!Array.isArray(longhands) || longhands.length !== 2) continue;
+		let tree;
+		try {
+			tree = grammarOf(property.syntax);
+		} catch (_err) {
+			continue;
+		}
+		// `<'a'>{1,2}` — one production written once or twice.
+		const repeated =
+			tree.type === "multiplier" &&
+			tree.min === 1 &&
+			tree.max === 2 &&
+			!tree.comma;
+		// `<'a'> <'b'>?` — the second optional, in the order `computed` lists.
+		const sequence =
+			tree.type === "sequence" &&
+			tree.items.length === 2 &&
+			tree.items[1].type === "multiplier" &&
+			tree.items[1].min === 0 &&
+			tree.items[1].max === 1;
+		if (!repeated && !sequence) continue;
+		// `<'a'> [ / <'b'> ]?` reads as a sequence too, and a `/` is not a space.
+		let slashed = false;
+		walkValueSyntax(tree, (node) => {
+			if (node.type === "literal" && node.value === "/") slashed = true;
+		});
+		if (slashed) continue;
+		out.push([name, longhands]);
+	}
+	// Two shorthands claiming the same two longhands cannot both be right, and
+	// `mdn-data` has such a pair today (`corner-block-start-shape` and
+	// `corner-inline-start-shape`), so neither is trusted. Chromium computes a
+	// different corner for the second than the table states.
+	/** @type {Map<string, number>} */
+	const claims = new Map();
+	for (const [, longhands] of out) {
+		const key = longhands.join(" ");
+		claims.set(key, (claims.get(key) || 0) + 1);
+	}
+	const newer = new Set(SUPPLEMENT.newerPairShorthands);
+	return out
+		.filter(
+			([name, longhands]) =>
+				claims.get(longhands.join(" ")) === 1 && !newer.has(name)
+		)
+		.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
  * The `{1,4}` box shorthands whose four longhands map onto the four sides, in
  * `top right bottom left` order. Merging four such longhands into the shorthand
  * sets exactly the same properties — nothing extra is reset.
@@ -1377,7 +1442,8 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
 	cssWideKeywords: ["inherit", "initial", "revert", "revert-layer", "unset"],
@@ -1416,6 +1482,18 @@ const SUPPLEMENT = {
 	// drops a `flex` shorthand whose basis has none, and the shorthand carries
 	// one too.
 	zeroUnitKeepingProperties: ["flex", "flex-basis"],
+	// Pair shorthands materially newer than the longhands they merge, so a target
+	// reading the longhands may not read the shorthand — and the merge would lose
+	// both declarations rather than one. `overflow-x`/`-y` and `align-items` are
+	// as old as CSS 2 / flexbox, while two-value `overflow` and `place-items` are
+	// 2018-era. `output.environment` states this for `inset` alone, so the rest
+	// are named here.
+	newerPairShorthands: [
+		"overflow",
+		"place-content",
+		"place-items",
+		"place-self"
+	],
 	// The properties a negative value is valid on, which decides whether
 	// `calc(-5px)` may lose its parentheses. Not derivable: every range
 	// `mdn-data` states is a non-negative one (`[0,∞]`, `[0,100]`, `[1,∞]`,
@@ -2152,6 +2230,7 @@ const collectData = () => {
 	const integerProperties = collectIntegerProperties();
 	const cssModulesKeywords = collectCssModulesKeywords();
 	const negativeAcceptingProperties = collectNegativeAcceptingProperties();
+	const pairLonghands = collectPairLonghands();
 	const lengthOnlyFunctions = collectLengthOnlyFunctions();
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
@@ -2201,6 +2280,13 @@ ${boxLonghands
 	)
 	.join(",\n")}
 ]);
+
+// The shorthands setting exactly two longhands, positionally — the same merge
+// as the box families, two values wide. Only these: a shorthand gathering a
+// whole family resets longhands \`computed\` does not name.
+const PAIR_LONGHANDS = new Map([${pairLonghands
+		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
+		.join(", ")}]);
 
 // The name prefix a declaration between two box longhands must not carry for the
 // merge to step over it. The shorthand's first segment, which is deliberately
@@ -2416,6 +2502,7 @@ module.exports.ARC_SINE_DEGREES = ARC_SINE_DEGREES;
 module.exports.ARC_TANGENT_DEGREES = ARC_TANGENT_DEGREES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
+module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
 module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
@@ -2448,7 +2535,7 @@ module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;
 `;
 
-	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${negativeAcceptingProperties.length} negative-accepting properties, ${lengthOnlyFunctions.length} length-only functions, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity, ${cssModulesKeywords.length} css modules scoped properties (${cssModulesKeywords.reduce((total, [, , table]) => total + table.length, 0)} keywords)`;
+	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${negativeAcceptingProperties.length} negative-accepting properties, ${lengthOnlyFunctions.length} length-only functions, ${pairLonghands.length} pair shorthands, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity, ${cssModulesKeywords.length} css modules scoped properties (${cssModulesKeywords.reduce((total, [, , table]) => total + table.length, 0)} keywords)`;
 	return { source, summary };
 };
 
