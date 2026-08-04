@@ -956,6 +956,10 @@ div {
 	-webkit-animation-name: my-app-style_module_css-animationName;
 }
 
+.my-app-style_module_css-animationTimeline {
+	animation: 3s auto my-app-style_module_css-animationName;
+}
+
 .my-app-style_module_css-d {
 	--my-app-style_module_css-animation-name: animationName;
 }
@@ -3748,6 +3752,10 @@ div {
 	-webkit-animation-name: animationName;
 }
 
+.animationTimeline {
+	animation: 3s auto animationName;
+}
+
 .d {
 	--animation-name: animationName;
 }
@@ -6474,6 +6482,10 @@ div {
 .c {
 	animation-name: animationName;
 	-webkit-animation-name: animationName;
+}
+
+.animationTimeline {
+	animation: 3s auto animationName;
 }
 
 .d {
@@ -9276,6 +9288,10 @@ div {
 	-webkit-animation-name: bvLAsC;
 }
 
+.gcvc5A {
+	animation: 3s auto bvLAsC;
+}
+
 .ot4wJ0 {
 	--q2l5qf: animationName;
 }
@@ -11192,6 +11208,7 @@ Object {
   "again": "my-app-style_module_css-again",
   "animation": "my-app-style_module_css-animation",
   "animation-name-test": "my-app-style_module_css-animation-name-test",
+  "animationTimeline": "my-app-style_module_css-animationTimeline",
   "animationUpperCase": "my-app-style_module_css-animationUpperCase",
   "apply-sharp": "my-app-style_module_css-apply-sharp",
   "article-footer": "my-app-style_module_css-article-footer",
@@ -12291,6 +12308,10 @@ div {
 .my-app-style_module_css-c {
 	animation-name: animationName;
 	-webkit-animation-name: animationName;
+}
+
+.my-app-style_module_css-animationTimeline {
+	animation: 3s auto animationName;
 }
 
 .my-app-style_module_css-d {

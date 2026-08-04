@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Scope counter names in CSS modules and fix `counter()` counter-style references.
+Scope counter names in CSS modules; fix the `counter()` counter-style and `animation` timeline keywords.
