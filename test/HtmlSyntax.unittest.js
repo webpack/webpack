@@ -4433,6 +4433,36 @@ describe("SourceProcessor — streamed walk recycling", () => {
 		expect(log.filter((l) => l === "+table")).toHaveLength(BIG_ROWS);
 		expect(log.filter((l) => l === "+td")).toHaveLength(BIG_ROWS);
 	});
+
+	it.each([
+		[
+			"below the threshold",
+			"<!DOCTYPE html><html><body><p>a</p></body></html>"
+		],
+		["past the threshold", bigBody("<p><b>x</b></p>")]
+	])("honours skipChildren() on the root, %s", (_label, src) => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/html/syntax").VisitorMap} */ ({
+					[NodeType.Document]: {
+						enter: (path) => {
+							log.push("+doc");
+							path.skipChildren();
+						},
+						exit: () => log.push("-doc")
+					},
+					[NodeType.Element]: {
+						enter: (path) => log.push(`+${path.tagName()}`),
+						exit: (path) => log.push(`-${path.tagName()}`)
+					}
+				})
+			)
+			.process(src);
+		// the root still closes; nothing beneath it is visited at all
+		expect(log).toEqual(["+doc", "-doc"]);
+	});
 });
 
 describe("SourceProcessor — streamed walk offsets", () => {
