@@ -122,6 +122,21 @@ During the test run, webpack compiles this project and compares the result with 
 - Unit tests verify individual module functionality.
 - Integration tests ensure multiple components work together.
 
+### Suites that drive a real browser
+
+`ProfilingPlugin.unittest.js`, `SyntaxBrowserEquivalence.unittest.js` and
+`WebpackDevServer.longtest.js` launch Chrome through `test/helpers/launchChrome.js`.
+**A browser that will not launch fails the suite — it is never skipped**, so no
+environment can report these checks as passing without having run them. The
+helper uses the installed Chrome channel; set `PUPPETEER_EXECUTABLE_PATH` to
+point at another binary.
+
+They are excluded from `test:bun` / `test:deno` (see the `--testPathIgnorePatterns`
+in those scripts): under Jest on Bun, loading the ESM-only `puppeteer-core` fails
+outright with "Provided module is not an instance of Module", and Jest's
+`require(ESM)` fallback needs Node >= 24.9. Drop the exclusion once those
+runtimes can load it.
+
 ## How to Run Tests
 
 To execute all tests:
