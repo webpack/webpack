@@ -1125,6 +1125,43 @@ const reachesColor = (name, seen) => {
 };
 
 /**
+ * The properties a negative value is valid on. The stated names carry the
+ * evidence; a shorthand that states no number of its own and defers entirely to
+ * `<'longhand'>` references accepts one exactly when all of them do, which is
+ * how `margin` and `inset` are reached from their sides. Iterated to a fixed
+ * point so a shorthand of shorthands (`margin-block` off `margin-top`) resolves
+ * whichever order the table is in.
+ * @returns {string[]} the property names, sorted
+ */
+const collectNegativeAcceptingProperties = () => {
+	const accepting = new Set(SUPPLEMENT.negativeAcceptingProperties);
+	for (let changed = true; changed;) {
+		changed = false;
+		for (const [name, entry] of Object.entries(properties)) {
+			if (accepting.has(name) || typeof entry.syntax !== "string") continue;
+			/** @type {string[]} */
+			const referenced = [];
+			let ownNumber = false;
+			walkValueSyntax(grammarOf(entry.syntax), (node) => {
+				if (node.type === "property") {
+					referenced.push(node.name);
+				} else if (
+					node.type === "type" &&
+					numericLeaves(`<${node.name}>`).length
+				) {
+					ownNumber = true;
+				}
+			});
+			if (ownNumber || referenced.length === 0) continue;
+			if (!referenced.every((child) => accepting.has(child))) continue;
+			accepting.add(name);
+			changed = true;
+		}
+	}
+	return [...accepting].sort();
+};
+
+/**
  * @returns {string[]} the functions that take a color argument directly, sorted
  */
 const collectColorArgumentFunctions = () => {
@@ -1281,7 +1318,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
 	cssWideKeywords: ["inherit", "initial", "revert", "revert-layer", "unset"],
@@ -1320,6 +1357,61 @@ const SUPPLEMENT = {
 	// drops a `flex` shorthand whose basis has none, and the shorthand carries
 	// one too.
 	zeroUnitKeepingProperties: ["flex", "flex-basis"],
+	// The properties a negative value is valid on, which decides whether
+	// `calc(-5px)` may lose its parentheses. Not derivable: every range
+	// `mdn-data` states is a non-negative one (`[0,∞]`, `[0,100]`, `[1,∞]`,
+	// `[0,1]`, `[1,1000]`), so an absent annotation is silence rather than
+	// permission — `<line-width>` carries none yet rejects a negative, and
+	// unwrapping there would turn a clamped `0` into a dropped declaration.
+	// Each name below was checked in headless Chromium: the bare spelling has
+	// to compute to the negative, not merely agree with the wrapped one, since
+	// two declarations that are both dropped agree while accepting nothing.
+	// Only the names needing that evidence are listed — a shorthand that reaches
+	// its numbers solely through `<'longhand'>` references is derived below.
+	negativeAcceptingProperties: [
+		"animation-delay",
+		"background-position",
+		"background-position-x",
+		"background-position-y",
+		"bottom",
+		"inset-block-end",
+		"inset-block-start",
+		"inset-inline-end",
+		"inset-inline-start",
+		"left",
+		"letter-spacing",
+		"margin-block-end",
+		"margin-block-start",
+		"margin-bottom",
+		"margin-inline-end",
+		"margin-inline-start",
+		"margin-left",
+		"margin-right",
+		"margin-top",
+		"offset-distance",
+		"order",
+		"outline-offset",
+		"perspective-origin",
+		"right",
+		"rotate",
+		"scroll-margin",
+		"scroll-margin-block",
+		"scroll-margin-bottom",
+		"scroll-margin-inline",
+		"scroll-margin-left",
+		"scroll-margin-right",
+		"scroll-margin-top",
+		"stroke-dashoffset",
+		"text-indent",
+		"text-underline-offset",
+		"top",
+		"transform-origin",
+		"transition-delay",
+		"translate",
+		"vertical-align",
+		"word-spacing",
+		"z-index"
+	],
 	// At-rules whose empty block is inert. Not `@keyframes` (an empty one still
 	// runs the animation, firing its events) and not `@layer` (an empty block
 	// declares the layer's cascade order).
@@ -1996,6 +2088,7 @@ const collectData = () => {
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
 	const integerProperties = collectIntegerProperties();
 	const cssModulesKeywords = collectCssModulesKeywords();
+	const negativeAcceptingProperties = collectNegativeAcceptingProperties();
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
 	const steppedFunctions = SUPPLEMENT.mathFunctionFold
@@ -2222,6 +2315,12 @@ ${cssModulesKeywords
 // The parser option gating each of them.
 const CSS_MODULES_KEYWORD_OPTIONS = ${mapLiteral(cssModulesKeywords.map(([name, option]) => [name, option]))};
 
+// The properties a negative value is valid on, so \`calc(-5px)\` may lose its
+// parentheses there. Read to permit a rewrite, which is the opposite of
+// \`INTEGER_PROPERTIES\` above: naming one property too many is a bug, naming one
+// too few only costs a rewrite.
+const NEGATIVE_ACCEPTING_PROPERTIES = ${setLiteral(negativeAcceptingProperties)};
+
 // Packed \`0xrrggbb\` -> the shortest named color with that value. Only names that
 // can beat \`#rrggbb\`; anything longer would never be picked.
 const RGB_TO_NAME = new Map([
@@ -2259,6 +2358,7 @@ module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
 module.exports.MATH_FUNCTION_ARITY = MATH_FUNCTION_ARITY;
 module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
 module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
+module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
@@ -2269,7 +2369,7 @@ module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;
 `;
 
-	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity, ${cssModulesKeywords.length} css modules scoped properties (${cssModulesKeywords.reduce((total, [, , table]) => total + table.length, 0)} keywords)`;
+	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${negativeAcceptingProperties.length} negative-accepting properties, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity, ${cssModulesKeywords.length} css modules scoped properties (${cssModulesKeywords.reduce((total, [, , table]) => total + table.length, 0)} keywords)`;
 	return { source, summary };
 };
 

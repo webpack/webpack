@@ -224,6 +224,22 @@ describe("CssValueSyntax", () => {
 			expect(MATH_FUNCTION_ARITY.has("calc-size")).toBe(false);
 		});
 
+		it("only permits a negative where something states one", () => {
+			// The opposite polarity to `INTEGER_PROPERTIES`: this one is read to
+			// allow a rewrite, so an unannotated grammar must not reach it.
+			// `<line-width>` is the case that proves it — no range, no negatives.
+			const { NEGATIVE_ACCEPTING_PROPERTIES } = require("../lib/css/data");
+
+			expect(NEGATIVE_ACCEPTING_PROPERTIES.has("margin-top")).toBe(true);
+			expect(NEGATIVE_ACCEPTING_PROPERTIES.has("border-width")).toBe(false);
+			expect(NEGATIVE_ACCEPTING_PROPERTIES.has("line-height")).toBe(false);
+			// A shorthand deferring wholly to accepting longhands is derived...
+			expect(NEGATIVE_ACCEPTING_PROPERTIES.has("margin")).toBe(true);
+			expect(NEGATIVE_ACCEPTING_PROPERTIES.has("inset")).toBe(true);
+			// ...and one stating lengths of its own is not.
+			expect(NEGATIVE_ACCEPTING_PROPERTIES.has("padding")).toBe(false);
+		});
+
 		it("follows a shorthand into its longhands", () => {
 			// `columns` names no leaf itself: it reaches `<integer>` only through
 			// `<'column-count'>`, and a walk that stopped at `<'…'>` would miss it.

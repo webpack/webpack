@@ -42,7 +42,14 @@ Array [
   "/*! unwrap: ...line-height likewise */.u05{line-height:1.5}",
   "/*! kept: \`z-index: 1.5\` is dropped, \`calc(1.5)\` rounds to 2 */.u06{z-index:calc(1.5)}",
   "/*! kept: \`width: -5px\` is dropped, \`calc(-5px)\` clamps to 0 */.u07{width:calc(-5px)}",
-  "/*! kept: a negative stays wrapped whatever the property */.u08{margin-left:calc(-5px)}",
+  "/*! unwrap: ...but a negative is a value in its own right where the property
+   takes one */.u08{margin-left:-5px}",
+  "/*! unwrap: ...through a shorthand that defers to those longhands */.u08a{margin:-5px}",
+  "/*! unwrap: ...and where the negative is an integer */.u08b{z-index:-2}",
+  "/*! kept: a fraction is still a fraction where an \`<integer>\` is wanted */.u08c{z-index:calc(-1.5)}",
+  "/*! kept: \`<line-width>\` states no range, so nothing licenses the rewrite —
+   \`border-width: -5px\` is dropped, \`calc(-5px)\` clamps to 0 */.u08d{border-width:calc(-5px)}",
+  "/*! kept: ...and a shorthand that states its own lengths is not its longhands */.u08e{padding:calc(-5px)}",
   "/*! kept: \`width: calc(0)\` is a number and dropped, \`width: 0\` is a length */.u09{width:calc(0)}",
   "/*! kept: a shorthand reaches \`<integer>\` through its longhands — \`columns: 1.5\`
    is dropped, \`calc(1.5)\` rounds to 2 columns */.u10{columns:calc(1.5)}",
@@ -72,7 +79,7 @@ Array [
   "/*! math: abs() drops the sign */.a01{width:5px}",
   "/*! math: ...and leaves a positive alone */.a02{width:5px}",
   "/*! math: sign() is the one that changes the unit — a sign is a number */.a03{z-index:1}",
-  "/*! math: ...and a negative one keeps its parentheses */.a04{z-index:calc(-1)}",
+  "/*! math: ...and a negative one keeps its parentheses */.a04{z-index:-1}",
   "/*! math: hypot() where the root is exact */.a05{width:5px}",
   "/*! math: ...however many arguments, and in whichever unit */.a06{width:10px}",
   "/*! math: ...including units fixed against each other */.a07{width:5in}",
@@ -82,12 +89,12 @@ Array [
    a positive factor, so abs() only has to drop the minus */.a10{width:1em}",
   "/*! stepped: round() to the nearest step, a tie going toward positive infinity */.p01{margin-left:6px}",
   "/*! stepped: ...and each of the three named strategies */.p02{margin-left:6px}",
-  "/*! stepped: down is the floor, so a negative goes further from zero */.p03{margin-left:calc(-6px)}",
+  "/*! stepped: down is the floor, so a negative goes further from zero */.p03{margin-left:-6px}",
   "/*! stepped: to-zero truncates instead */.p04{margin-left:4px}",
   "/*! stepped: nearest may be named explicitly */.p05{margin-left:6px}",
   "/*! stepped: mod() takes the divisor's sign */.p06{margin-left:2px}",
-  "/*! stepped: rem() takes the dividend's */.p07{margin-left:calc(-1px)}",
-  "/*! stepped: ...which is the difference between them */.p08{margin-left:calc(-2px)}",
+  "/*! stepped: rem() takes the dividend's */.p07{margin-left:-1px}",
+  "/*! stepped: ...which is the difference between them */.p08{margin-left:-2px}",
   "/*! declined: exactly on a step is where engines part company — Chromium reads
    \`round(down,10cm,2cm)\` as \`8cm\` and \`mod(10px,-2px)\` as \`-2px\`, both a whole
    step off the exact answer */.q01{margin-left:round(4px,2px)}",
