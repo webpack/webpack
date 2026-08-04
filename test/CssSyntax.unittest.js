@@ -2696,6 +2696,12 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 		expect(minify("a{color:red}", ["chrome 40"])).toBe("a{color:red}");
 	});
 
+	it("drops another engine's prefix a chrome-only target never reads", () => {
+		expect(
+			minify("a{-moz-user-select:none;user-select:none}", ["chrome 120"])
+		).toBe("a{user-select:none}");
+	});
+
 	it("reads a browser version's minor part, not just the major", () => {
 		// `appearance` loses its prefix in Safari at 15.4; 15.3 still needs `-webkit-`.
 		expect(minify("a{appearance:none}", ["safari 15.3"])).toBe(
@@ -2791,6 +2797,23 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 		);
 	});
 
+	it("leaves a nested at-rule alone — its scope has no top-level twin", () => {
+		expect(
+			minify("@media screen{@keyframes s{to{opacity:1}}}", ["chrome 40"])
+		).toBe("@media screen{@keyframes s{to{opacity:1}}}");
+	});
+
+	it("does not suppress a scoped copy from a top-level prefixed rule", () => {
+		expect(
+			minify(
+				"@-webkit-keyframes s{to{opacity:1}}@media screen{@keyframes s{to{opacity:.3}}}",
+				["chrome 40"]
+			)
+		).toBe(
+			"@-webkit-keyframes s{to{opacity:1}}@media screen{@keyframes s{to{opacity:.3}}}"
+		);
+	});
+
 	it("does nothing without a target list", () => {
 		expect(minify("@keyframes s{to{opacity:1}}")).toBe(
 			"@keyframes s{to{opacity:1}}"
@@ -2860,6 +2883,32 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 		expect(minify("::PLACEHOLDER{color:red}", ["chrome 40"])).toBe(
 			"::-webkit-input-placeholder{color:red}::PLACEHOLDER{color:red}"
 		);
+	});
+
+	it("prefixes a functional pseudo, carrying its argument", () => {
+		expect(minify(":dir(rtl){color:red}", ["firefox 40"])).toBe(
+			":-moz-dir(rtl){color:red}:dir(rtl){color:red}"
+		);
+	});
+
+	it("keeps two functional pseudos with different arguments distinct", () => {
+		expect(
+			minify(":dir(rtl){color:red}:dir(ltr){color:blue}", ["firefox 40"])
+		).toBe(
+			":-moz-dir(rtl){color:red}:dir(rtl){color:red}:-moz-dir(ltr){color:blue}:dir(ltr){color:blue}"
+		);
+	});
+
+	it("leaves a pseudo inside a functional selector untouched", () => {
+		expect(minify(":is(:autofill){color:red}", ["chrome 40"])).toBe(
+			":is(:autofill){color:red}"
+		);
+	});
+
+	it("leaves a nested rule alone — its scope has no top-level twin", () => {
+		expect(
+			minify("@media screen{::placeholder{color:red}}", ["chrome 40"])
+		).toBe("@media screen{::placeholder{color:red}}");
 	});
 
 	it("does nothing without a target list", () => {
