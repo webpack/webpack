@@ -23159,6 +23159,12 @@ declare abstract class RuntimeTemplate {
 	supportsEcmaScriptModuleSyntax(): boolean;
 	supportsModulePreload(): boolean;
 	supportsAnalyzableEsm(): boolean;
+
+	/**
+	 * Whether async wasm binaries are referenced by a baked `new URL(…, import.meta.url)`
+	 * at the module call site instead of the generic runtime path builder.
+	 */
+	supportsAnalyzableWasm(): boolean;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
 
