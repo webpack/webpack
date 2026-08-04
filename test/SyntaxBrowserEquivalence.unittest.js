@@ -162,17 +162,191 @@ describe("printer output in real Chrome", () => {
 				return;
 			}
 			const differences = await page.evaluate((cases) => {
+				const probe = document.createElement("div");
+				document.body.append(probe);
 				/**
-				 * An element as namespace, name and the set of attribute *names*.
-				 * Values are excluded: the minifier respells some of them (`class`,
-				 * `style`, `srcset`, boolean attributes) to a different string the DOM
-				 * parses the same way.
+				 * The engine's computed value for every property a declaration sets, so
+				 * an equivalent respelling (`rgb(255, 0, 0)` / `red`) compares equal.
+				 * @param {string} declaration the declaration block
+				 * @returns {string} its computed form
+				 */
+				const computed = (declaration) => {
+					probe.style.cssText = "";
+					probe.style.cssText = declaration;
+					const style = getComputedStyle(probe);
+					/** @type {string[]} */
+					const out = [];
+					for (const property of probe.style) {
+						out.push(`${property}:${style.getPropertyValue(property)}`);
+					}
+					return out.sort().join(";");
+				};
+				/** @type {Map<string, string | undefined>} */
+				const reflections = new Map();
+				/**
+				 * The IDL property an attribute reflects through, so the engine's own
+				 * parse of the value can be read back: `colspan` is a `number`, a
+				 * boolean attribute is a `boolean`, and a set of space-separated tokens
+				 * is a `DOMTokenList` whatever element it sits on (`sizes` is one on
+				 * `<link>` but a comma-separated list on `<img>`).
+				 * @param {Element} node the element carrying it
+				 * @param {string} name the attribute name
+				 * @returns {string | undefined} the property name, if it reflects
+				 */
+				const reflectionOf = (node, name) => {
+					const key = `${node.localName} ${name}`;
+					if (reflections.has(key)) return reflections.get(key);
+					// `class` and `for` are the two reflections whose IDL name is not the
+					// attribute name with the case put back, and an attribute reflected
+					// both ways (`rel` / `relList`) is read as the token list.
+					const camel = name.replace(/-([a-z])/g, (_m, c) => c.toUpperCase());
+					/** @type {string[]} */
+					let candidates = [`${camel}List`, camel];
+					if (name === "class") candidates = ["classList"];
+					else if (name === "for") candidates = ["htmlFor"];
+					/** @type {string | undefined} */
+					let found;
+					for (const candidate of candidates) {
+						if (candidate in node) {
+							found = candidate;
+							break;
+						}
+					}
+					// A `colspan` reflects as `colSpan`, which no rule spells out.
+					for (
+						let proto = Object.getPrototypeOf(node);
+						proto !== null && found === undefined;
+						proto = Object.getPrototypeOf(proto)
+					) {
+						for (const property of Object.getOwnPropertyNames(proto)) {
+							if (property.toLowerCase() === name) {
+								found = property;
+								break;
+							}
+						}
+					}
+					reflections.set(key, found);
+					return found;
+				};
+				// Written from the HTML spec's value grammars rather than from
+				// `lib/html/data.js`, so the minifier is checked against the spec and
+				// not against its own idea of it.
+				//
+				// "Strip leading and trailing ASCII whitespace", then the URL parser
+				// removes every remaining tab and newline.
+				const URL_ATTRIBUTES = new Set([
+					"action",
+					"background",
+					"cite",
+					"codebase",
+					"data",
+					"formaction",
+					"href",
+					"itemid",
+					"longdesc",
+					"lowsrc",
+					"manifest",
+					"poster",
+					"profile",
+					"src"
+				]);
+				// A comma-separated list whose items are each stripped of leading and
+				// trailing ASCII whitespace, and whose empty items are skipped.
+				const COMMA_LIST_ATTRIBUTES = new Set([
+					"accept",
+					"coords",
+					"imagesizes",
+					"imagesrcset",
+					"sizes",
+					"srcset"
+				]);
+				// A space-separated list the engine does not reflect as a DOMTokenList.
+				const TOKEN_LIST_ATTRIBUTES = new Set([
+					"headers",
+					"itemprop",
+					"itemref",
+					"itemtype",
+					"ping"
+				]);
+				// Set by its presence alone, and parsed by the rules for non-negative
+				// integers — for attributes this engine reflects no IDL property for.
+				const BOOLEAN_ATTRIBUTES = new Set([
+					"alpha",
+					"controls",
+					"headingreset",
+					"itemscope"
+				]);
+				const INTEGER_ATTRIBUTES = new Set(["headingoffset"]);
+				// A dimension value: leading whitespace is skipped and the number is read
+				// digit by digit, so leading zeros carry nothing — but a trailing `%` does.
+				const DIMENSION_ATTRIBUTES = new Set(["height", "width"]);
+				/**
+				 * An attribute value with everything the spec calls insignificant
+				 * removed, so a respelling the engine folds away compares equal.
+				 * @param {Element} node the element carrying it
+				 * @param {Attr} attribute the attribute
+				 * @returns {string} its normalized value
+				 */
+				const value = (node, attribute) => {
+					const name = attribute.name;
+					const raw = attribute.value;
+					if (attribute.namespaceURI !== null) return raw;
+					if (name === "style") return computed(raw);
+					const property = reflectionOf(node, name);
+					const properties = /** @type {Record<string, unknown>} */ (
+						/** @type {unknown} */ (node)
+					);
+					const reflected =
+						property === undefined ? undefined : properties[property];
+					if (typeof reflected === "boolean") return "";
+					if (typeof reflected === "number") return String(reflected);
+					if (reflected instanceof DOMTokenList) {
+						return [...reflected].sort().join(" ");
+					}
+					if (BOOLEAN_ATTRIBUTES.has(name)) return "";
+					if (INTEGER_ATTRIBUTES.has(name)) {
+						return String(Number.parseInt(raw, 10));
+					}
+					if (DIMENSION_ATTRIBUTES.has(name)) {
+						const parsed = /^[\t\n\f\r ]*(\d+(?:\.\d+)?)([%*]?)/.exec(raw);
+						return parsed === null
+							? raw
+							: `${Number.parseFloat(parsed[1])}${parsed[2]}`;
+					}
+					if (URL_ATTRIBUTES.has(name)) {
+						return raw.replace(/[\t\n\r]/g, "").trim();
+					}
+					if (TOKEN_LIST_ATTRIBUTES.has(name)) {
+						return raw
+							.split(/[\t\n\f\r ]+/)
+							.filter(Boolean)
+							.sort()
+							.join(" ");
+					}
+					// The viewport meta is a comma-separated list of `key=value` pairs;
+					// every other `content` is opaque text.
+					if (
+						COMMA_LIST_ATTRIBUTES.has(name) ||
+						(name === "content" &&
+							node.localName === "meta" &&
+							(node.getAttribute("name") || "").toLowerCase() === "viewport")
+					) {
+						return raw
+							.split(",")
+							.map((one) => one.replace(/^[\t\n\f\r ]+|[\t\n\f\r ]+$/g, ""))
+							.filter(Boolean)
+							.join(",");
+					}
+					return raw;
+				};
+				/**
+				 * An element as namespace, name and attributes.
 				 * @param {Element} node an element
 				 * @returns {string} its shape
 				 */
 				const shape = (node) =>
 					`${node.namespaceURI}|${node.localName}[${[...node.attributes]
-						.map((a) => a.name)
+						.map((one) => `${one.name}=${value(node, one)}`)
 						.sort()
 						.join(",")}]`;
 				/**
@@ -307,8 +481,8 @@ describe("printer output in real Chrome", () => {
 						found.push({ name: one.name, why: "stylesheet did not parse" });
 						continue;
 					}
-					// A rule the minifier drops shifts every rule after it, so compare by
-					// selector rather than by position.
+					// Merging a rule into an earlier one shifts every rule after it, so
+					// match by selector rather than by position.
 					const bySelector = new Map();
 					for (const rule of min) {
 						if (!bySelector.has(rule.sel)) bySelector.set(rule.sel, []);
@@ -316,7 +490,10 @@ describe("printer output in real Chrome", () => {
 					}
 					for (const rule of raw) {
 						const candidates = bySelector.get(rule.sel);
-						if (candidates === undefined || candidates.length === 0) continue;
+						if (candidates === undefined || candidates.length === 0) {
+							found.push({ name: one.name, why: `${rule.sel}: rule dropped` });
+							break;
+						}
 						const index = candidates.indexOf(rule.decl);
 						if (index === -1) {
 							found.push({
