@@ -2519,7 +2519,6 @@ const mapLiteral = (entries) =>
 	`new Map([${entries.map(([key, value]) => `["${key}", "${value}"]`).join(", ")}])`;
 
 /**
-
  * @param {[string, number][]} entries string-keyed, number-valued pairs
  * @returns {string} the `Map` literal
  */
