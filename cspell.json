@@ -461,7 +461,10 @@
     "Abaz",
     "Guardable",
     "strtok",
-    "typebox"
+    "typebox",
+    "gurmukhi",
+    "hanja",
+    "iroha"
   ],
   "ignoreRegExpList": [
     "/Author.+/",

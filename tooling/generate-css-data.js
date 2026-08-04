@@ -773,6 +773,337 @@ const collectIntegerProperties = () => {
 	return out.sort();
 };
 
+// CSS Modules keyword tables. A `css/module` localizes the custom identifiers in
+// a handful of property values (`animation-name: spin` names a scoped
+// `@keyframes`), so the parser needs to know which idents in those values are
+// the grammar's own keywords instead. That set is the literal keywords of each
+// property's grammar, and how many times one may be spelled before the next is
+// the name — both read off the grammar here rather than listed.
+
+/** @typedef {{ type: "ident" }} IdentNode */
+/** @typedef {{ type: "opaque" }} OpaqueNode */
+/** @typedef {{ type: "sequence" | "oneOf" | "anyOf" | "allOf", items: ExpandedNode[] }} ExpandedCombinatorNode */
+/** @typedef {{ type: "group" | "parens", body: ExpandedNode }} ExpandedGroupNode */
+/** @typedef {{ type: "multiplier", min: number, max: number, comma: boolean, body: ExpandedNode }} ExpandedMultiplierNode */
+/** @typedef {KeywordNode | LiteralNode | IdentNode | OpaqueNode | ExpandedCombinatorNode | ExpandedGroupNode | ExpandedMultiplierNode} ExpandedNode */
+
+// Productions that stand for the localizable name itself.
+const IDENT_PRODUCTIONS = new Set(["custom-ident", "dashed-ident"]);
+
+/**
+ * One grammar with every `<production>` / `<'property'>` reference resolved, so
+ * the keyword walk sees one tree. Recursion and function bodies become `opaque`:
+ * a name inside `minmax(…)` is not a top-level ident, so no keyword of its own
+ * is read there.
+ * @param {SyntaxNode} node the node to expand
+ * @param {Set<string>} seen productions already on this path
+ * @returns {ExpandedNode} the expanded node
+ */
+const expandValueSyntax = (node, seen) => {
+	switch (node.type) {
+		case "type": {
+			if (IDENT_PRODUCTIONS.has(node.name)) return { type: "ident" };
+			const syntax = definitions.get(node.name);
+			if (syntax === undefined || seen.has(node.name)) {
+				return { type: "opaque" };
+			}
+			return expandValueSyntax(grammarOf(syntax), new Set(seen).add(node.name));
+		}
+		case "property": {
+			const key = `'${node.name}'`;
+			const entry = properties[node.name];
+			if (
+				entry === undefined ||
+				typeof entry.syntax !== "string" ||
+				seen.has(key)
+			) {
+				return { type: "opaque" };
+			}
+			return expandValueSyntax(grammarOf(entry.syntax), new Set(seen).add(key));
+		}
+		case "sequence":
+		case "oneOf":
+		case "anyOf":
+		case "allOf":
+			return {
+				type: node.type,
+				items: node.items.map((item) => expandValueSyntax(item, seen))
+			};
+		case "group":
+		case "parens":
+			return { type: node.type, body: expandValueSyntax(node.body, seen) };
+		case "multiplier":
+			return { ...node, body: expandValueSyntax(node.body, seen) };
+		case "function":
+			return { type: "opaque" };
+		default:
+			return node;
+	}
+};
+
+/**
+ * Whether a branch *is* the name slot. An opaque alternative doesn't stop it
+ * from being one — `<keyframes-name>` is `<custom-ident> | <string>`, and the
+ * string spelling is still the name.
+ * @param {ExpandedNode} node the branch
+ * @returns {boolean} true when the branch is the name
+ */
+const isIdentBranch = (node) => {
+	switch (node.type) {
+		case "ident":
+			return true;
+		case "group":
+		case "parens":
+		case "multiplier":
+			return isIdentBranch(node.body);
+		case "oneOf":
+			return (
+				node.items.some(isIdentBranch) &&
+				node.items.every(
+					(item) => isIdentBranch(item) || item.type === "opaque"
+				)
+			);
+		default:
+			return false;
+	}
+};
+
+/**
+ * Whether the name slot is anywhere under this node.
+ * @param {ExpandedNode} node the node
+ * @returns {boolean} true when it is
+ */
+const reachesIdent = (node) => {
+	switch (node.type) {
+		case "ident":
+			return true;
+		case "sequence":
+		case "oneOf":
+		case "anyOf":
+		case "allOf":
+			return node.items.some(reachesIdent);
+		case "group":
+		case "parens":
+		case "multiplier":
+			return reachesIdent(node.body);
+		default:
+			return false;
+	}
+};
+
+/**
+ * Merge `source` into `target`. A value spells only one branch of an
+ * alternation, so those combine by the larger count; everything else can be
+ * spelled together, so those add.
+ * @param {Map<string, number>} target the table to merge into
+ * @param {Map<string, number>} source the table to merge
+ * @param {boolean} alternation whether the two are alternatives
+ */
+const mergeKeywordTable = (target, source, alternation) => {
+	for (const [name, count] of source) {
+		const previous = target.get(name);
+		if (previous === undefined) {
+			target.set(name, count);
+		} else {
+			target.set(
+				name,
+				alternation ? Math.max(previous, count) : previous + count
+			);
+		}
+	}
+};
+
+/**
+ * Every keyword under one node, mapped to how many times it may be spelled
+ * before the next one is the name.
+ * @param {ExpandedNode} node the node
+ * @param {boolean} unbounded whether its slot repeats without bound
+ * @param {boolean} excluded whether a keyword here can never be the name
+ * @returns {Map<string, number>} the keyword table
+ */
+const keywordTableOf = (node, unbounded, excluded) => {
+	/** @type {Map<string, number>} */
+	const out = new Map();
+	switch (node.type) {
+		case "keyword":
+			out.set(node.name, unbounded || excluded ? Infinity : 1);
+			break;
+		case "oneOf": {
+			// A keyword spelled as an alternative *of* the name slot cannot also be
+			// that name, or the value would be ambiguous.
+			const hasIdentBranch = node.items.some(isIdentBranch);
+			for (const item of node.items) {
+				mergeKeywordTable(
+					out,
+					keywordTableOf(
+						item,
+						unbounded,
+						excluded || (hasIdentBranch && !isIdentBranch(item))
+					),
+					true
+				);
+			}
+			break;
+		}
+		case "allOf": {
+			// `&&` requires every operand, so a keyword standing next to the name is
+			// excluded from it for the same reason.
+			const hasIdent = node.items.some(reachesIdent);
+			for (const item of node.items) {
+				mergeKeywordTable(
+					out,
+					keywordTableOf(
+						item,
+						unbounded,
+						excluded || (hasIdent && !reachesIdent(item))
+					),
+					false
+				);
+			}
+			break;
+		}
+		case "anyOf":
+		case "sequence":
+			for (const item of node.items) {
+				mergeKeywordTable(
+					out,
+					keywordTableOf(item, unbounded, excluded),
+					false
+				);
+			}
+			break;
+		case "group":
+		case "parens":
+			mergeKeywordTable(
+				out,
+				keywordTableOf(node.body, unbounded, excluded),
+				false
+			);
+			break;
+		case "multiplier":
+			// Comma repetition doesn't accumulate — the parser starts a fresh keyword
+			// tally at every top-level comma.
+			mergeKeywordTable(
+				out,
+				keywordTableOf(
+					node.body,
+					unbounded || (!node.comma && node.max === Infinity),
+					excluded
+				),
+				false
+			);
+			break;
+		default:
+			break;
+	}
+	return out;
+};
+
+/**
+ * The keyword table of one value definition.
+ * @param {string} syntax the value definition
+ * @returns {Map<string, number>} the keyword table
+ */
+const keywordTable = (syntax) =>
+	keywordTableOf(expandValueSyntax(grammarOf(syntax), new Set()), false, false);
+
+// Which properties a `css/module` reads a scoped name out of, and the parser
+// option gating each. Selecting them is webpack's policy, not something a
+// dataset states; every keyword below is still derived from the named grammar.
+// `@counter-style` descriptors are keyed by descriptor name, which is what the
+// parser sees inside the at-rule's block.
+/** @type {[string, string, "property" | "counter-style-descriptor"][]} */
+const CSS_MODULES_SCOPED_PROPERTIES = [
+	["animation", "animation", "property"],
+	["animation-name", "animation", "property"],
+	["container", "container", "property"],
+	["container-name", "container", "property"],
+	["list-style", "customIdents", "property"],
+	["list-style-type", "customIdents", "property"],
+	["system", "customIdents", "counter-style-descriptor"],
+	["fallback", "customIdents", "counter-style-descriptor"],
+	["speak-as", "customIdents", "counter-style-descriptor"],
+	["counter-reset", "customIdents", "property"],
+	["counter-increment", "customIdents", "property"],
+	["counter-set", "customIdents", "property"],
+	["view-transition-name", "customIdents", "property"],
+	["view-transition-group", "customIdents", "property"],
+	["view-transition-class", "customIdents", "property"],
+	["grid", "grid", "property"],
+	["grid-area", "grid", "property"],
+	["grid-column", "grid", "property"],
+	["grid-column-end", "grid", "property"],
+	["grid-column-start", "grid", "property"],
+	["grid-row", "grid", "property"],
+	["grid-row-end", "grid", "property"],
+	["grid-row-start", "grid", "property"],
+	["grid-template", "grid", "property"],
+	["grid-template-areas", "grid", "property"],
+	["grid-template-columns", "grid", "property"],
+	["grid-template-rows", "grid", "property"]
+];
+
+/**
+ * @returns {[string, string, [string, number][]][]} each scoped property, its gating option and its keyword table
+ */
+const collectCssModulesKeywords = () => {
+	/** @type {Map<string, [string, number][]>} */
+	const supplement = new Map();
+	for (const [name, keyword, count] of SUPPLEMENT.cssModulesKeywordSupplement) {
+		const entries = supplement.get(name);
+		if (entries === undefined) supplement.set(name, [[keyword, count]]);
+		else entries.push([keyword, count]);
+	}
+	const counterStyleDescriptors =
+		/** @type {Record<string, { syntax?: string }>} */
+		(
+			/** @type {{ descriptors?: EXPECTED_OBJECT }} */
+			(atRules["@counter-style"]).descriptors
+		);
+	/** @type {[string, string, [string, number][]][]} */
+	const out = [];
+	for (const [name, option, kind] of CSS_MODULES_SCOPED_PROPERTIES) {
+		const entry =
+			/** @type {{ syntax?: string } | undefined} */
+			(kind === "property" ? properties[name] : counterStyleDescriptors[name]);
+		const table =
+			entry === undefined || typeof entry.syntax !== "string"
+				? new Map()
+				: keywordTable(entry.syntax);
+		// A `<counter-style-name>` slot accepts any predefined style by name, so
+		// those are keywords there rather than a local `@counter-style`.
+		if (
+			entry !== undefined &&
+			typeof entry.syntax === "string" &&
+			[
+				...references(entry.syntax),
+				...(name === "list-style" ? ["counter-style"] : [])
+			].some((reference) => reference.includes("counter-style"))
+		) {
+			for (const style of SUPPLEMENT.predefinedCounterStyles) {
+				if (!table.has(style)) table.set(style, 1);
+			}
+		}
+		for (const [keyword, count] of supplement.get(name) || []) {
+			if (!table.has(keyword)) table.set(keyword, count);
+		}
+		// UA counters are never a local name, whatever the grammar allows.
+		if (name.startsWith("counter-")) {
+			for (const counter of SUPPLEMENT.predefinedCounterNames) {
+				table.set(counter, Infinity);
+			}
+		}
+		// A CSS-wide keyword is never a custom ident. Descriptors take none.
+		if (kind === "property") {
+			for (const keyword of SUPPLEMENT.cssWideKeywords) {
+				table.set(keyword, Infinity);
+			}
+		}
+		out.push([name, option, [...table].sort(([a], [b]) => (a < b ? -1 : 1))]);
+	}
+	return out;
+};
+
 /**
  * Whether a production can be a color without passing through a function of its
  * own. The minifier reads the hash's immediate parent, so a gradient nested in
@@ -950,7 +1281,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
 	cssWideKeywords: ["inherit", "initial", "revert", "revert-layer", "unset"],
@@ -1489,6 +1820,101 @@ const arcTangent2 = ([y, x]) => {
 	return y > 0 ? 135 : -135;
 };`
 		]
+	],
+	// CSS Counter Styles 3 §6's predefined styles. `mdn-data` models
+	// `<counter-style-name>` as a bare `<custom-ident>`, so the names a UA already
+	// defines are nowhere in the dataset — but a stylesheet naming one means the
+	// predefined style, not a local `@counter-style`, so they must not be scoped.
+	predefinedCounterStyles: [
+		"arabic-indic",
+		"armenian",
+		"bengali",
+		"cambodian",
+		"circle",
+		"cjk-decimal",
+		"cjk-earthly-branch",
+		"cjk-heavenly-stem",
+		"cjk-ideographic",
+		"decimal",
+		"decimal-leading-zero",
+		"devanagari",
+		"disc",
+		"disclosure-closed",
+		"disclosure-open",
+		"ethiopic-numeric",
+		"georgian",
+		"gujarati",
+		/* cspell:disable-next-line */
+		"gurmukhi",
+		"hebrew",
+		"hiragana",
+		/* cspell:disable-next-line */
+		"hiragana-iroha",
+		"japanese-formal",
+		"japanese-informal",
+		"kannada",
+		"katakana",
+		/* cspell:disable-next-line */
+		"katakana-iroha",
+		"khmer",
+		"korean-hangul-formal",
+		/* cspell:disable-next-line */
+		"korean-hanja-formal",
+		/* cspell:disable-next-line */
+		"korean-hanja-informal",
+		"lao",
+		"lower-alpha",
+		"lower-armenian",
+		"lower-greek",
+		"lower-latin",
+		"lower-roman",
+		"malayalam",
+		"mongolian",
+		"myanmar",
+		"oriya",
+		"persian",
+		"simp-chinese-formal",
+		"simp-chinese-informal",
+		"square",
+		"tamil",
+		"telugu",
+		"thai",
+		"tibetan",
+		"trad-chinese-formal",
+		"trad-chinese-informal",
+		"upper-alpha",
+		"upper-armenian",
+		"upper-latin",
+		"upper-roman"
+	],
+	// UA-maintained counters: `list-item` numbers a list, `page` / `pages` are the
+	// paged-media counters. `<counter-name>` is a bare `<custom-ident>` in the
+	// dataset, so nothing there says a UA already increments these.
+	predefinedCounterNames: ["list-item", "page", "pages"],
+	// Keyword slots the published grammars do not carry yet. Each is a keyword a
+	// value can spell where a scoped name would otherwise be read, so leaving it
+	// out would localize it.
+	// Each entry is `[property, keyword, count]`, with `count` read the same way
+	// as a derived one — `Infinity` for a keyword the name slot excludes.
+	cssModulesKeywordSupplement: [
+		// `view-transition-group` has no `mdn-data` entry at all, and
+		// `view-transition-name` predates the `auto` the spec since added. Both
+		// spell their keywords as alternatives of the name, so none is ever one.
+		["view-transition-group", "normal", Infinity],
+		["view-transition-group", "contain", Infinity],
+		["view-transition-group", "nearest", Infinity],
+		["view-transition-name", "auto", Infinity],
+		// CSS Grid 3's masonry track value, not yet in the published grammar.
+		["grid-template-columns", "masonry", 1],
+		["grid-template-rows", "masonry", 1],
+		["grid-template", "masonry", 1],
+		["grid", "masonry", 1],
+		// The `grid` shorthand spells `auto-flow` literally rather than referencing
+		// `<'grid-auto-flow'>`, so that longhand's own keywords are not reachable
+		// from the shorthand's grammar.
+		["grid", "row", 1],
+		["grid", "column", 1],
+		["grid", "dense", 1]
 	]
 };
 
@@ -1569,6 +1995,7 @@ const collectData = () => {
 	const substitutionFunctions = collectSubstitutionFunctions();
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
 	const integerProperties = collectIntegerProperties();
+	const cssModulesKeywords = collectCssModulesKeywords();
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
 	const steppedFunctions = SUPPLEMENT.mathFunctionFold
@@ -1778,6 +2205,23 @@ ${SUPPLEMENT.mathFunctionFold
 // and one name too many costs only that rewrite.
 const INTEGER_PROPERTIES = ${setLiteral(integerProperties)};
 
+// The keywords of every property a \`css/module\` reads a scoped name out of,
+// each mapped to how many times it may be spelled before the next one is the
+// name (\`Infinity\` — never the name). Derived from each property's grammar.
+const CSS_MODULES_KEYWORDS = new Map([
+${cssModulesKeywords
+	.map(
+		([name, , table]) =>
+			`\t["${name}", new Map([${table
+				.map(([keyword, count]) => `["${keyword}", ${count}]`)
+				.join(", ")}])]`
+	)
+	.join(",\n")}
+]);
+
+// The parser option gating each of them.
+const CSS_MODULES_KEYWORD_OPTIONS = ${mapLiteral(cssModulesKeywords.map(([name, option]) => [name, option]))};
+
 // Packed \`0xrrggbb\` -> the shortest named color with that value. Only names that
 // can beat \`#rrggbb\`; anything longer would never be picked.
 const RGB_TO_NAME = new Map([
@@ -1799,6 +2243,8 @@ module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
 module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
+module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;
+module.exports.CSS_MODULES_KEYWORD_OPTIONS = CSS_MODULES_KEYWORD_OPTIONS;
 module.exports.CSS_WIDE_KEYWORDS = CSS_WIDE_KEYWORDS;
 module.exports.CUBIC_BEZIER_KEYWORDS = CUBIC_BEZIER_KEYWORDS;
 module.exports.DROPPABLE_WHEN_EMPTY_AT_RULES = DROPPABLE_WHEN_EMPTY_AT_RULES;
@@ -1823,7 +2269,7 @@ module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;
 `;
 
-	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity`;
+	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity, ${cssModulesKeywords.length} css modules scoped properties (${cssModulesKeywords.reduce((total, [, , table]) => total + table.length, 0)} keywords)`;
 	return { source, summary };
 };
 

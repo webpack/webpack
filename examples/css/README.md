@@ -655,7 +655,8 @@ webpack's native CSS localizes more identifiers than any classic loader. For a
   `@counter-style` + `list-style` (`customIdents`), `@container` +
   `container-name` (`container`), `@function` names + calls (`function`),
   `view-transition-name`/`-group`/`-class` + `::view-transition-*()` pseudo
-  arguments (`customIdents`).
+  arguments (`customIdents`), counter names (`counter-reset`/`-increment`/`-set`
+  + `counter()` / `counters()` / `target-counter()`, `customIdents`).
 - **Auto (any `--foo` dashed ident, via `dashedIdents`, default `true`):** custom
   properties and `var(--foo)` incl. cross-file `var(--foo from "./x.css")` and
   `from global`; `@property` / `@font-palette-values` / `@color-profile` names;

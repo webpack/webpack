@@ -818,6 +818,10 @@ div {
 	-webkit-animation-name: animationName;
 }
 
+.animationTimeline {
+	animation: 3s auto animationName;
+}
+
 .d {
 	--animation-name: animationName;
 }
