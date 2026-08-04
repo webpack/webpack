@@ -1,10 +1,10 @@
 /* Ported from cssnano's `postcss-convert-values` and `postcss-normalize-whitespace`
-   suites. webpack normalizes a number, rounds it to 6 significant digits and
-   reaches for a shorter unit fixed against the one written — but only where the
-   engine cannot tell: a zero's unit stays inside `calc()` and on a `flex-basis`,
-   an angle keeps every digit (`rotate()` runs it through trig), and nothing is
+   suites. webpack normalizes a number and rounds it to 6 significant digits, and
+   rewrites a time into the shorter of `ms` / `s` — but only where the engine
+   cannot tell: a zero's unit stays inside `calc()` and on a `flex-basis`, an
+   angle keeps every digit (`rotate()` runs it through trig), and nothing is
    touched in a `@supports` condition, which tests the declaration rather than
-   applying it. */
+   applying it. A length keeps its unit unless `convertLengthUnits` is on. */
 
 /*! convert-values: should convert milliseconds to seconds */
 .t01 { transition-duration: 500ms }
@@ -16,11 +16,11 @@
 .t04 { --my-variable: 500ms }
 /*! convert-values: should strip the leading plus */
 .t05 { width: +14px }
-/*! convert-values: should convert px to pc */
+/*! declined: px -> pc/pt/in is exact, but it fires ~10 times in all of Bootstrap
+   and costs as many bytes as it saves once compressed, so it is off by default
+   (`convertLengthUnits`) — as it is in cssnano's default preset */
 .t06 { width: 16px }
-/*! convert-values: should convert px to pt */
 .t07 { width: 120px }
-/*! convert-values: should convert px to in */
 .t08 { width: 192px }
 /*! convert-values: should strip the unit from zero lengths */
 .t09 { margin: 0em 0% 0px 0pc }

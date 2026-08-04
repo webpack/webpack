@@ -1782,6 +1782,20 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		return /** @type {RegExpExecArray} */ (/^a\{x:([\s\S]*)\}$/.exec(out))[1];
 	};
 
+	/**
+	 * The same, with the length-unit rewrite on — off by default, so the cases
+	 * that are about which unit a length prints in have to ask for it.
+	 * @param {string} value a declaration value
+	 * @returns {string} the value as it is printed back
+	 */
+	const converted = (value) => {
+		const out = new SourceProcessor().process(`a{x:${value}}`, {
+			minimize: true,
+			convertLengthUnits: true
+		}).code;
+		return /** @type {RegExpExecArray} */ (/^a\{x:([\s\S]*)\}$/.exec(out))[1];
+	};
+
 	describe("polar and Lab colors", () => {
 		// Each conversion was checked against headless Chromium; these cases pin
 		// the arguments the converter refuses rather than guesses at.
@@ -1847,14 +1861,20 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			["33.33333333%", "33.3333%"],
 			["1.0000001px", "1px"],
+			["400ms", ".4s"],
+			[".005s", "5ms"]
+		])("rewrites %s", (input, expected) => {
+			expect(value(input)).toBe(expected);
+		});
+
+		it.each([
 			["16px", "1pc"],
 			["12pt", "1pc"],
 			["10mm", "1cm"],
-			["400ms", ".4s"],
-			[".005s", "5ms"],
 			["0.75pt", "1px"]
-		])("rewrites %s", (input, expected) => {
-			expect(value(input)).toBe(expected);
+		])("rewrites %s with convertLengthUnits", (input, expected) => {
+			expect(converted(input)).toBe(expected);
+			expect(value(input)).toBe(input.replace("0.75", ".75"));
 		});
 
 		it.each([
@@ -1877,9 +1897,11 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("leaves a `@supports` condition as written", () => {
-			expect(minify("@supports (width:16px){a{x:16px}}")).toBe(
-				"@supports (width:16px){a{x:1pc}}"
-			);
+			const out = new SourceProcessor().process(
+				"@supports (width:16px){a{x:16px}}",
+				{ minimize: true, convertLengthUnits: true }
+			).code;
+			expect(out).toBe("@supports (width:16px){a{x:1pc}}");
 			expect(minify("@supports (color:rgba(0,0,0,.5)){a{x:1px}}")).toBe(
 				"@supports (color:rgba(0,0,0,.5)){a{x:1px}}"
 			);
@@ -1958,9 +1980,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it("prints the term in whichever unit of its group spells it", () => {
 			// No `px` count equals these, so reaching the answer through the group's
 			// reference unit alone would leave every one of them written out.
-			expect(value("calc(1cm + 1mm)")).toBe("11mm");
-			expect(value("calc(1in + 1cm)")).toBe("3.54cm");
-			expect(value("calc(4.5cm + 0cm)")).toBe("45mm");
+			expect(converted("calc(1cm + 1mm)")).toBe("11mm");
+			expect(converted("calc(1in + 1cm)")).toBe("3.54cm");
+			expect(converted("calc(4.5cm + 0cm)")).toBe("45mm");
 			// And a sum no unit of the group spells exactly still declines.
 			expect(value("calc(1px + 1cm)")).toBe("calc(1px + 1cm)");
 		});
@@ -2049,7 +2071,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("compares units fixed against each other", () => {
-			expect(value("min(1in,100px)")).toBe("6pc");
+			expect(converted("min(1in,100px)")).toBe("6pc");
 			expect(value("max(1s,500ms)")).toBe("1s");
 		});
 
@@ -2150,7 +2172,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// suppressed in here.
 			expect(value("round(down,4.5cm,1.5cm)")).toBe("round(down,4.5cm,1.5cm)");
 			// Outside one it still applies.
-			expect(value("4.5cm")).toBe("45mm");
+			expect(converted("4.5cm")).toBe("45mm");
 		});
 	});
 
@@ -2223,5 +2245,54 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(value("calc(1px*pow(2,3))")).toBe("8px");
 			expect(value("min(sqrt(4)*1px,3px)")).toBe("2px");
 		});
+	});
+});
+
+describe("CssSyntax — convertLengthUnits", () => {
+	/**
+	 * @param {string} value a `width` value
+	 * @param {boolean=} convertLengthUnits whether lengths may change unit
+	 * @returns {string} the minified value
+	 */
+	const width = (value, convertLengthUnits = false) =>
+		new SourceProcessor()
+			.process(`a{width:${value}}`, { minimize: true, convertLengthUnits })
+			.code.slice("a{width:".length, -1);
+
+	it("keeps a length in the unit it was written with by default", () => {
+		expect(width("16px")).toBe("16px");
+		expect(width("120px")).toBe("120px");
+		expect(width("192px")).toBe("192px");
+		expect(width("10mm")).toBe("10mm");
+	});
+
+	it("rewrites one into the shortest equal unit when asked", () => {
+		expect(width("16px", true)).toBe("1pc");
+		expect(width("120px", true)).toBe("90pt");
+		expect(width("192px", true)).toBe("2in");
+		expect(width("10mm", true)).toBe("1cm");
+	});
+
+	it("converts a time either way — only lengths are gated", () => {
+		const duration = (/** @type {string} */ value) =>
+			new SourceProcessor()
+				.process(`a{transition-duration:${value}}`, { minimize: true })
+				.code.slice("a{transition-duration:".length, -1);
+		expect(duration("500ms")).toBe(".5s");
+		expect(duration(".005s")).toBe("5ms");
+	});
+
+	it("still folds a sum into a unit the expression was written with", () => {
+		// The fold is the win here, not the unit: printing `11mm` introduces no
+		// unit the author did not write, where `1pc` for `16px` would.
+		expect(width("calc(1cm + 1mm)")).toBe("11mm");
+		expect(width("calc(2in - 1in)")).toBe("1in");
+		expect(width("calc(1px + 15px)")).toBe("16px");
+		expect(width("calc(1px + 15px)", true)).toBe("1pc");
+	});
+
+	it("declines a sum that reaches no written unit exactly", () => {
+		// `1cm` is not a whole number of `px`, and `px` is all the gate leaves.
+		expect(width("calc(1cm + 1px)")).toBe("calc(1cm + 1px)");
 	});
 });

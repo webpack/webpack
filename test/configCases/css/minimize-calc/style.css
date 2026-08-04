@@ -18,9 +18,9 @@
 .c07 { width: calc(calc(1px + 2px) + 3px) }
 /*! calc: units fixed against each other are one term */
 .c08 { width: calc(1in + 1px) }
-/*! calc: ...and the result takes the shortest unit equal to it */
+/*! calc: ...and the result prints in a unit the expression was written with */
 .c09 { width: calc(2in - 1in) }
-/*! calc: ...which is any unit of the group, not only the one it counts in */
+/*! calc: ...the shortest of them where it was written with several */
 .c10a { width: calc(1cm + 1mm) }
 /*! calc: a longer chain */
 .c10 { width: calc(1px + 2px + 3px) }
@@ -129,7 +129,7 @@
 .m02 { width: max(1px,2px) }
 /*! math: however many arguments the grammar allows */
 .m03 { width: min(3px,2px,1px) }
-/*! math: units fixed against each other compare too, then take the shortest */
+/*! math: units fixed against each other compare too, then print in a written one */
 .m04 { width: min(1in,100px) }
 /*! math: clamp() is the middle one */
 .m05 { width: clamp(1px,5px,3px) }
@@ -280,8 +280,8 @@
 .c21 { width: calc-size(calc-size(auto, 1px + 2px), 3px + 4px) }
 /*! declined: `size` is not a constant, so nothing reduces */
 .c22 { width: calc-size(auto, size + 10px) }
-/*! declined: a fold inside a stepped function would print the shortest unit,
-   which is the rewrite that function's own arguments refuse */
+/*! declined: a fold inside a stepped function would re-unit its result, which is
+   the rewrite that function's own arguments refuse */
 .q08 { margin-left: round(down,calc(4.5cm),calc(1.5cm)) }
 /*! declined: ...including another stepped function */
 .q09 { margin-left: round(down,round(down,10cm,3cm),1cm) }

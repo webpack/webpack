@@ -5955,6 +5955,11 @@ declare interface CssProcessOptions {
 	 * what the target can read (the CSS entries of `output.environment`), so a spelling it would not understand is never reached for; only read while printing, and an absent entry means the modern spelling is available
 	 */
 	environment?: CssEnvironment;
+
+	/**
+	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
+	 */
+	convertLengthUnits?: boolean;
 }
 type DeclarationEstreeIndex =
 	FunctionDeclaration | VariableDeclaration | ClassDeclaration;
@@ -21583,6 +21588,7 @@ declare class PrintContext<TPath, TNode> {
 declare interface PrintOptions {
 	mode: "minify" | "beautify";
 	environment?: Readonly<Record<string, boolean>>;
+	convertLengthUnits?: boolean;
 }
 declare interface PrintedElement {
 	element: string;

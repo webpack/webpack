@@ -8,7 +8,8 @@
 	.t02 { top: 1px; right: 2px; bottom: 1px; left: 2px }
 	/* the media feature keeps the `min-` spelling */
 	@media (min-width: 1200px) { .t03 { color: red } }
-	/* not gated, so these still apply */
+	/* rounding is not gated, so it still applies; the length keeps its unit
+	   because that rewrite is off for every target, not only a gated one */
 	.t04 { width: 16px; height: 33.33333333% }
 </style>
 </head>
