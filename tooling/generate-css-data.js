@@ -1162,6 +1162,27 @@ const collectNegativeAcceptingProperties = () => {
 };
 
 /**
+ * The functions with a length argument and no other kind of number, so a zero
+ * inside one may drop its unit: a bare `0` is a `<length>` wherever one is accepted. Any
+ * other numeric type disqualifies the whole function, because the rewrite would
+ * otherwise revive a declaration the engine drops — `scale(0px)` is invalid and
+ * `scale(0)` is not.
+ * @returns {string[]} the function names, without their parentheses, sorted
+ */
+const collectLengthOnlyFunctions = () => {
+	const names = new Set();
+	for (const [name, syntax] of definitions) {
+		if (!name.endsWith("()")) continue;
+		const leaves = numericLeaves(syntax);
+		if (!leaves.some(([type]) => type === "length")) continue;
+		if (leaves.every(([type]) => type === "length" || type === "percentage")) {
+			names.add(name.slice(0, -2).toLowerCase());
+		}
+	}
+	return [...names].sort();
+};
+
+/**
  * @returns {string[]} the functions that take a color argument directly, sorted
  */
 const collectColorArgumentFunctions = () => {
@@ -2089,6 +2110,7 @@ const collectData = () => {
 	const integerProperties = collectIntegerProperties();
 	const cssModulesKeywords = collectCssModulesKeywords();
 	const negativeAcceptingProperties = collectNegativeAcceptingProperties();
+	const lengthOnlyFunctions = collectLengthOnlyFunctions();
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
 	const steppedFunctions = SUPPLEMENT.mathFunctionFold
@@ -2321,6 +2343,12 @@ const CSS_MODULES_KEYWORD_OPTIONS = ${mapLiteral(cssModulesKeywords.map(([name, 
 // too few only costs a rewrite.
 const NEGATIVE_ACCEPTING_PROPERTIES = ${setLiteral(negativeAcceptingProperties)};
 
+// The functions whose every numeric argument is a length, so a zero inside one
+// drops its unit the way a whole component's does. Read to permit a rewrite:
+// any other numeric type would make the bare \`0\` mean something else, or make
+// a dropped declaration valid.
+const LENGTH_ONLY_FUNCTIONS = ${setLiteral(lengthOnlyFunctions)};
+
 // Packed \`0xrrggbb\` -> the shortest named color with that value. Only names that
 // can beat \`#rrggbb\`; anything longer would never be picked.
 const RGB_TO_NAME = new Map([
@@ -2353,6 +2381,7 @@ module.exports.EIGHTH_TURN_TANGENT = EIGHTH_TURN_TANGENT;
 module.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
 module.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
+module.exports.LENGTH_ONLY_FUNCTIONS = LENGTH_ONLY_FUNCTIONS;
 module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
 module.exports.MATH_FUNCTION_ARITY = MATH_FUNCTION_ARITY;
@@ -2369,7 +2398,7 @@ module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;
 `;
 
-	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${negativeAcceptingProperties.length} negative-accepting properties, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity, ${cssModulesKeywords.length} css modules scoped properties (${cssModulesKeywords.reduce((total, [, , table]) => total + table.length, 0)} keywords)`;
+	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${negativeAcceptingProperties.length} negative-accepting properties, ${lengthOnlyFunctions.length} length-only functions, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity, ${cssModulesKeywords.length} css modules scoped properties (${cssModulesKeywords.reduce((total, [, , table]) => total + table.length, 0)} keywords)`;
 	return { source, summary };
 };
 
