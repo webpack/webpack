@@ -2618,3 +2618,219 @@ describe("CssSyntax — convertLengthUnits", () => {
 		expect(width("calc(1cm + 1px)")).toBe("calc(1cm + 1px)");
 	});
 });
+
+describe("CssSyntax minify — vendor prefixes (properties)", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {string[]=} browsers the browserslist selection
+	 * @returns {string} its minified serialization
+	 */
+	const minify = (css, browsers) =>
+		new SourceProcessor().process(css, {
+			minimize: true,
+			environment: browsers ? { browsers } : undefined
+		}).code;
+
+	it("adds the prefix a browser below the unprefixed version needs", () => {
+		expect(minify("a{user-select:none}", ["chrome 40"])).toBe(
+			"a{-webkit-user-select:none;user-select:none}"
+		);
+	});
+
+	it("adds `-moz-` for Firefox and `-ms-` for IE from their own engine", () => {
+		expect(minify("a{user-select:none}", ["firefox 40"])).toBe(
+			"a{-moz-user-select:none;user-select:none}"
+		);
+		expect(minify("a{user-select:none}", ["ie 11"])).toBe(
+			"a{-ms-user-select:none;user-select:none}"
+		);
+	});
+
+	it("adds every prefix the mixed selection needs, once each", () => {
+		expect(minify("a{user-select:none}", ["chrome 40", "firefox 40"])).toBe(
+			"a{-webkit-user-select:none;-moz-user-select:none;user-select:none}"
+		);
+	});
+
+	it("leaves a declaration alone when the target reads it unprefixed", () => {
+		expect(minify("a{user-select:none}", ["chrome 120"])).toBe(
+			"a{user-select:none}"
+		);
+	});
+
+	it("never doubles a prefix the source already carries", () => {
+		expect(
+			minify("a{-webkit-user-select:none;user-select:none}", ["chrome 40"])
+		).toBe("a{-webkit-user-select:none;user-select:none}");
+	});
+
+	it("drops a prefixed declaration no target needs, unprefixed sibling present", () => {
+		expect(
+			minify("a{-webkit-user-select:none;user-select:none}", ["chrome 120"])
+		).toBe("a{user-select:none}");
+	});
+
+	it("keeps a prefix a target still needs (Safari never unprefixed it)", () => {
+		expect(
+			minify("a{-webkit-user-select:none;user-select:none}", ["safari 17"])
+		).toBe("a{-webkit-user-select:none;user-select:none}");
+	});
+
+	it("keeps a prefixed-only declaration — it is the only thing that paints", () => {
+		expect(minify("a{-webkit-user-select:none}", ["chrome 120"])).toBe(
+			"a{-webkit-user-select:none}"
+		);
+	});
+
+	it("never carries an obsolete cross-engine prefix (`-khtml-` for Safari)", () => {
+		expect(minify("a{user-select:none}", ["safari 17"])).not.toContain(
+			"-khtml-"
+		);
+	});
+
+	it("does nothing without a target list", () => {
+		expect(minify("a{user-select:none}")).toBe("a{user-select:none}");
+	});
+
+	it("does nothing for a property no browser ever prefixed", () => {
+		expect(minify("a{color:red}", ["chrome 40"])).toBe("a{color:red}");
+	});
+
+	it("reads a browser version's minor part, not just the major", () => {
+		// `appearance` loses its prefix in Safari at 15.4; 15.3 still needs `-webkit-`.
+		expect(minify("a{appearance:none}", ["safari 15.3"])).toBe(
+			"a{-webkit-appearance:none;appearance:none}"
+		);
+		expect(minify("a{appearance:none}", ["safari 15.4"])).toBe(
+			"a{appearance:none}"
+		);
+	});
+
+	it("reads a version range by its low end", () => {
+		expect(minify("a{appearance:none}", ["ios_saf 15.2-15.3"])).toBe(
+			"a{-webkit-appearance:none;appearance:none}"
+		);
+	});
+
+	it("treats Safari Technology Preview as newest (no prefix)", () => {
+		expect(minify("a{user-select:none}", ["safari TP"])).toBe(
+			"a{-webkit-user-select:none;user-select:none}"
+		);
+	});
+
+	it("adds the prefix on both of two rules using it (decision memoized)", () => {
+		expect(
+			minify("a{user-select:none}b{user-select:auto}", ["chrome 40"])
+		).toBe(
+			"a{-webkit-user-select:none;user-select:none}b{-webkit-user-select:auto;user-select:auto}"
+		);
+	});
+
+	it("keeps prefixing correct through a nested rule", () => {
+		expect(minify("@media screen{a{user-select:none}}", ["chrome 40"])).toBe(
+			"@media screen{a{-webkit-user-select:none;user-select:none}}"
+		);
+	});
+});
+
+describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {string[]=} browsers the browserslist selection
+	 * @returns {string} its minified serialization
+	 */
+	const minify = (css, browsers) =>
+		new SourceProcessor().process(css, {
+			minimize: true,
+			environment: browsers ? { browsers } : undefined
+		}).code;
+
+	it("prepends a prefixed copy an old target needs", () => {
+		expect(minify("@keyframes s{to{opacity:1}}", ["chrome 40"])).toBe(
+			"@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}"
+		);
+	});
+
+	it("leaves it alone when the target reads it unprefixed", () => {
+		expect(minify("@keyframes s{to{opacity:1}}", ["chrome 120"])).toBe(
+			"@keyframes s{to{opacity:1}}"
+		);
+	});
+
+	it("does not double a prefixed copy the source already has", () => {
+		expect(
+			minify("@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}", [
+				"chrome 40"
+			])
+		).toBe("@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}");
+	});
+
+	it("drops a prefixed at-rule no target needs after its unprefixed twin", () => {
+		expect(
+			minify("@keyframes s{to{opacity:1}}@-webkit-keyframes s{to{opacity:1}}", [
+				"chrome 120"
+			])
+		).toBe("@keyframes s{to{opacity:1}}");
+	});
+
+	it("does nothing without a target list", () => {
+		expect(minify("@keyframes s{to{opacity:1}}")).toBe(
+			"@keyframes s{to{opacity:1}}"
+		);
+	});
+});
+
+describe("CssSyntax minify — vendor prefixes (selectors)", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {string[]=} browsers the browserslist selection
+	 * @returns {string} its minified serialization
+	 */
+	const minify = (css, browsers) =>
+		new SourceProcessor().process(css, {
+			minimize: true,
+			environment: browsers ? { browsers } : undefined
+		}).code;
+
+	it("prepends the engine spelling a target needs, keeping the source colons", () => {
+		expect(minify("::placeholder{color:red}", ["chrome 40"])).toBe(
+			"::-webkit-input-placeholder{color:red}::placeholder{color:red}"
+		);
+	});
+
+	it("prefixes a pseudo behind a compound selector", () => {
+		expect(minify("input::placeholder{color:red}", ["chrome 40"])).toBe(
+			"input::-webkit-input-placeholder{color:red}input::placeholder{color:red}"
+		);
+	});
+
+	it("adds `-moz-` for `::selection` on Firefox", () => {
+		expect(minify("::selection{color:red}", ["firefox 40"])).toBe(
+			"::-moz-selection{color:red}::selection{color:red}"
+		);
+	});
+
+	it("leaves a pseudo alone when the target reads it unprefixed", () => {
+		expect(minify("::placeholder{color:red}", ["chrome 120"])).toBe(
+			"::placeholder{color:red}"
+		);
+	});
+
+	it("drops a prefixed pseudo no target needs after its unprefixed twin", () => {
+		expect(
+			minify("::placeholder{color:red}::-webkit-input-placeholder{color:red}", [
+				"chrome 120"
+			])
+		).toBe("::placeholder{color:red}");
+	});
+
+	it("leaves a selector list alone — prefixing one would drop the whole list", () => {
+		expect(minify(".a::placeholder,.b{color:red}", ["chrome 40"])).toBe(
+			".a::placeholder,.b{color:red}"
+		);
+	});
+
+	it("does nothing without a target list", () => {
+		expect(minify("::placeholder{color:red}")).toBe("::placeholder{color:red}");
+	});
+});
