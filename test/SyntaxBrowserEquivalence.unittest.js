@@ -132,12 +132,12 @@ const FILED_CSS_DEFECTS = new Map([
 	],
 	[
 		"test/configCases/css/css-modules/at-rule-value.module.css",
-		"a rule under `@media small` computes a different colour"
+		"a rule under `@media small` computes a different color"
 	]
 ]);
 
 /**
- * @typedef {{ kind: string, cond: string }} Condition
+ * @typedef {{ kind: string, condition: string }} Condition
  * @typedef {{ chain: Condition[], text: string }} Rule
  * @typedef {{ facets: Record<string, string[]>, styles: Rule[][] }} Facets
  */
@@ -146,8 +146,8 @@ const FILED_CSS_DEFECTS = new Map([
  * @typedef {object} PageHelpers
  * @property {(source: string) => Rule[] | null} cssRules the rules of a stylesheet, in cascade order
  * @property {(html: string) => Facets} htmlFacets everything a page's DOM is made of
- * @property {(conds: string[], sizes: number[]) => string[]} containerSignatures which sizes each container query holds at
- * @property {(conds: string[]) => string[]} supportsSignatures whether each support condition holds
+ * @property {(conditions: string[], sizes: number[]) => string[]} containerSignatures which sizes each container query holds at
+ * @property {(conditions: string[]) => string[]} supportsSignatures whether each support condition holds
  */
 
 /**
@@ -186,16 +186,16 @@ const installHelpers = () => {
 	]);
 
 	/**
-	 * The pixel a colour paints as. A colour carried in one space and the same
-	 * colour carried in another are one colour if the engine paints them alike —
+	 * The pixel a color paints as. A color carried in one space and the same
+	 * color carried in another are one color if the engine paints them alike —
 	 * which is what `lch()` rewritten to sRGB has to mean — and the computed value
 	 * keeps the space, so it cannot answer that on its own.
 	 * @param {string} value a computed value
-	 * @returns {string} the value, or the pixel when it is a colour
+	 * @returns {string} the value, or the pixel when it is a color
 	 */
 	const painted = (value) => {
-		// An assignment the engine rejects leaves the previous colour in place, so
-		// a value is a colour only when it reads back the same from either start.
+		// An assignment the engine rejects leaves the previous color in place, so
+		// a value is a color only when it reads back the same from either start.
 		context.fillStyle = "#000";
 		context.fillStyle = value;
 		const fromBlack = context.fillStyle;
@@ -259,11 +259,11 @@ const installHelpers = () => {
 				return call;
 			}
 		});
-		// A colour written into a value the engine cannot compute — a `var()`
-		// fallback — is still a colour, and `#ff0` is `rgb(255,255,0)`.
+		// A color written into a value the engine cannot compute — a `var()`
+		// fallback — is still a color, and `#ff0` is `rgb(255,255,0)`.
 		out = out.replace(
 			/#[\da-f]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\([^()]*\)/gi,
-			(colour) => painted(colour)
+			(color) => painted(color)
 		);
 		return (
 			out
@@ -386,27 +386,29 @@ const installHelpers = () => {
 			if (kind === "media") {
 				return {
 					kind,
-					cond: /** @type {CSSMediaRule} */ (rule).media.mediaText
+					condition: /** @type {CSSMediaRule} */ (rule).media.mediaText
 				};
 			}
 			if (kind === "container") {
 				const container = /** @type {CSSContainerRule} */ (rule);
 				return {
 					kind,
-					cond: `${container.containerName || ""}|${container.containerQuery}`
+					condition: `${container.containerName || ""}|${
+						container.containerQuery
+					}`
 				};
 			}
 			if (kind === "supports") {
 				return {
 					kind,
-					cond: /** @type {CSSSupportsRule} */ (rule).conditionText
+					condition: /** @type {CSSSupportsRule} */ (rule).conditionText
 				};
 			}
 			const selector = /** @type {CSSStyleRule} */ (rule).selectorText;
-			if (selector !== undefined) return { kind: "style", cond: selector };
+			if (selector !== undefined) return { kind: "style", condition: selector };
 			// A `@layer`, `@keyframes` or `@scope` prelude names or selects; there is
 			// nothing to evaluate, so it stands as written.
-			return { kind, cond: prelude(rule) };
+			return { kind, condition: prelude(rule) };
 		};
 		/**
 		 * @param {CSSRuleList} list rules to walk
@@ -664,7 +666,7 @@ const installHelpers = () => {
 				facets.elements.push(shapeOf(element, depth));
 				const name =
 					element.namespaceURI === NS_HTML ? element.localName : null;
-				// The text this element holds itself, so text moved to a neighbour
+				// The text this element holds itself, so text moved to a neighbor
 				// cannot hide in the document-wide concatenation. Only where it
 				// reaches the page: whitespace between two `<head>` children, or
 				// between `</head>` and `<body>`, renders nothing, and a `<style>` or
@@ -730,11 +732,11 @@ const installHelpers = () => {
 	/**
 	 * Which of a set of container sizes each query holds at, asked of the engine
 	 * by building the container and reading a sentinel back out of it.
-	 * @param {string[]} conds `name|query` pairs
+	 * @param {string[]} conditions `name|query` pairs
 	 * @param {number[]} sizes container edge lengths in px
 	 * @returns {string[]} one bit per size, per condition
 	 */
-	const containerSignatures = (conds, sizes) => {
+	const containerSignatures = (conditions, sizes) => {
 		const holder = document.createElement("div");
 		const inner = document.createElement("div");
 		inner.className = "eq-probe";
@@ -742,10 +744,10 @@ const installHelpers = () => {
 		document.body.append(holder);
 		const sheet = document.createElement("style");
 		document.head.append(sheet);
-		const out = conds.map((cond) => {
-			const split = cond.indexOf("|");
-			const named = cond.slice(0, split) || "eq";
-			const query = cond.slice(split + 1);
+		const out = conditions.map((condition) => {
+			const split = condition.indexOf("|");
+			const named = condition.slice(0, split) || "eq";
+			const query = condition.slice(split + 1);
 			holder.style.cssText = `container-type: size; container-name: ${named}`;
 			sheet.textContent = `@container ${named} ${query} { .eq-probe { --eq-hit: 1 } }`;
 			return sizes
@@ -763,11 +765,11 @@ const installHelpers = () => {
 	};
 
 	/**
-	 * @param {string[]} conds support conditions
+	 * @param {string[]} conditions support conditions
 	 * @returns {string[]} whether the engine supports each
 	 */
-	const supportsSignatures = (conds) =>
-		conds.map((cond) => (CSS.supports(cond) ? "1" : "0"));
+	const supportsSignatures = (conditions) =>
+		conditions.map((condition) => (CSS.supports(condition) ? "1" : "0"));
 
 	/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window)).__eq =
 		{
@@ -815,9 +817,9 @@ describe("printer output in real Chrome", () => {
 		const byKind = new Map();
 		for (const rules of groups) {
 			for (const rule of rules) {
-				for (const { kind, cond } of rule.chain) {
+				for (const { kind, condition } of rule.chain) {
 					if (!byKind.has(kind)) byKind.set(kind, new Set());
-					/** @type {Set<string>} */ (byKind.get(kind)).add(cond);
+					/** @type {Set<string>} */ (byKind.get(kind)).add(condition);
 				}
 			}
 		}
@@ -826,9 +828,9 @@ describe("printer output in real Chrome", () => {
 		// Sample either side of every length any condition names, so a threshold
 		// that moved by one pixel separates them.
 		const edges = new Set([1, 200, 400, 600, 800, 1024]);
-		for (const conds of byKind.values()) {
-			for (const cond of conds) {
-				for (const [number] of cond.matchAll(/\d+(?:\.\d+)?/g)) {
+		for (const conditions of byKind.values()) {
+			for (const condition of conditions) {
+				for (const [number] of condition.matchAll(/\d+(?:\.\d+)?/g)) {
 					const value = Math.round(Number(number));
 					if (value > 0 && value < 10000) {
 						edges
@@ -844,29 +846,29 @@ describe("printer output in real Chrome", () => {
 		const supports = [...(byKind.get("supports") || [])];
 		if (supports.length > 0) {
 			const answers = await page.evaluate(
-				(conds) =>
+				(conditions) =>
 					/** @type {{ __eq: PageHelpers }} */ (
 						/** @type {unknown} */ (window)
-					).__eq.supportsSignatures(conds),
+					).__eq.supportsSignatures(conditions),
 				supports
 			);
-			for (const [i, cond] of supports.entries()) {
-				signatures.set(`supports ${cond}`, answers[i]);
+			for (const [i, condition] of supports.entries()) {
+				signatures.set(`supports ${condition}`, answers[i]);
 			}
 		}
 
 		const containers = [...(byKind.get("container") || [])];
 		if (containers.length > 0) {
 			const answers = await page.evaluate(
-				(conds, at) =>
+				(conditions, at) =>
 					/** @type {{ __eq: PageHelpers }} */ (
 						/** @type {unknown} */ (window)
-					).__eq.containerSignatures(conds, at),
+					).__eq.containerSignatures(conditions, at),
 				containers,
 				sizes
 			);
-			for (const [i, cond] of containers.entries()) {
-				signatures.set(`container ${cond}`, answers[i]);
+			for (const [i, condition] of containers.entries()) {
+				signatures.set(`container ${condition}`, answers[i]);
 			}
 		}
 
@@ -883,8 +885,10 @@ describe("printer output in real Chrome", () => {
 			for (const viewport of viewports) {
 				await page.setViewport(viewport);
 				const answers = await page.evaluate(
-					(conds) =>
-						conds.map((cond) => (matchMedia(cond).matches ? "1" : "0")),
+					(conditions) =>
+						conditions.map((condition) =>
+							matchMedia(condition).matches ? "1" : "0"
+						),
 					media
 				);
 				for (const [i, bit] of answers.entries()) bits[i] += bit;
@@ -904,8 +908,10 @@ describe("printer output in real Chrome", () => {
 					await page.emulateMediaType(type);
 					await page.emulateMediaFeatures(features);
 					const answers = await page.evaluate(
-						(conds) =>
-							conds.map((cond) => (matchMedia(cond).matches ? "1" : "0")),
+						(conditions) =>
+							conditions.map((condition) =>
+								matchMedia(condition).matches ? "1" : "0"
+							),
 						media
 					);
 					for (const [i, bit] of answers.entries()) bits[i] += bit;
@@ -913,8 +919,8 @@ describe("printer output in real Chrome", () => {
 			}
 			await page.emulateMediaType(undefined);
 			await page.emulateMediaFeatures([]);
-			for (const [i, cond] of media.entries()) {
-				signatures.set(`media ${cond}`, bits[i]);
+			for (const [i, condition] of media.entries()) {
+				signatures.set(`media ${condition}`, bits[i]);
 			}
 		}
 		return signatures;
@@ -929,9 +935,9 @@ describe("printer output in real Chrome", () => {
 	 */
 	const keyOf = (rule, signatures) =>
 		`${rule.chain
-			.map(({ kind, cond }) => {
-				const answer = signatures.get(`${kind} ${cond}`);
-				return `@${kind}<${answer === undefined ? cond : answer}>`;
+			.map(({ kind, condition }) => {
+				const answer = signatures.get(`${kind} ${condition}`);
+				return `@${kind}<${answer === undefined ? condition : answer}>`;
 			})
 			.join(" >> ")} ${rule.text}`;
 
