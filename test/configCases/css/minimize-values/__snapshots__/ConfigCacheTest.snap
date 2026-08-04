@@ -11,6 +11,11 @@ Array [
   "/*! convert-values: should convert px to pt */.t07{width:90pt}",
   "/*! convert-values: should convert px to in */.t08{width:2in}",
   "/*! convert-values: should strip the unit from zero lengths */.t09{margin:0 0% 0 0}",
+  "/*! convert-values: ...inside a call whose every number is a length too */.t09a{transform:translate(0,0)}",
+  "/*! convert-values: ...however deep the shape nests them */.t09b{clip-path:inset(0 1px 0 2px)}",
+  "/*! declined: \`scale()\` takes a \`<number>\`, so \`scale(0px)\` is dropped where
+   \`scale(0)\` is a transform — the rewrite would revive the declaration */.t09c{transform:scale(0px)}",
+  "/*! declined: ...and an angle is not a length either */.t09d{transform:rotate(0deg)}",
   "/*! convert-values: should trim trailing zeros */.t10{width:109px}",
   "/*! convert-values: should trim trailing zeros (2) */.t11{width:0}",
   "/*! convert-values: should trim trailing zeros (3) */.t12{width:100%}",
