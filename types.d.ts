@@ -24477,6 +24477,13 @@ declare abstract class RuntimeTemplate {
 	 * global — the form other bundlers and webpack itself can statically follow.
 	 */
 	importMetaUrl(specifier: string): string;
+
+	/**
+	 * Whether async wasm binaries are referenced by a fully baked
+	 * `new URL("./<file>.wasm", import.meta.url)` at the module call site, rather than
+	 * by `supportsAnalyzableEsmUrl`'s runtime-built path under an `import.meta.url` base.
+	 */
+	supportsAnalyzableWasm(): boolean;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
 
