@@ -4293,17 +4293,21 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 describe("SourceProcessor — streamed walk recycling", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
-	// Every case here is sized past the flush batch (4096 nodes) so the walk
-	// actually enters an open element, flushes under it and recycles node ids —
-	// the paths a document that fits in one batch never reaches.
-	const BIG = 5000;
+	// Every case here is sized past the streaming threshold (49152 nodes) so the
+	// walk actually enters an open element, flushes under it and recycles node
+	// ids — the paths a document walked in one pass at EOF never reaches. The
+	// repeat counts are per-shape because the threshold counts nodes, not
+	// repetitions: two/three-node shapes need `BIG`, a five-node row needs fewer.
+	const BIG = 40000;
+	const BIG_ROWS = 15000;
 
 	/**
 	 * @param {string} inner repeated markup
-	 * @returns {string} a document larger than one flush batch
+	 * @param {number=} times repetitions (default `BIG`)
+	 * @returns {string} a document past the streaming threshold
 	 */
-	const bigBody = (inner) =>
-		`<!DOCTYPE html><html><body>${inner.repeat(BIG)}</body></html>`;
+	const bigBody = (inner, times = BIG) =>
+		`<!DOCTYPE html><html><body>${inner.repeat(times)}</body></html>`;
 
 	/**
 	 * @param {string} src source
@@ -4389,12 +4393,16 @@ describe("SourceProcessor — streamed walk recycling", () => {
 				})
 			)
 			// entity references split the tokenizer's text runs; the walk must not
-			// also split the node, so one text child stays one visit
+			// also split the node, so one text child stays one visit. The leading
+			// paragraphs are what push the parse past the streaming threshold, so
+			// the entity run at the tail is reached with the walk already streaming.
 			.process(
-				`<!DOCTYPE html><html><body><p>${"a&amp;b".repeat(BIG)}</p></body></html>`
+				`<!DOCTYPE html><html><body>${"<p>x</p>".repeat(
+					BIG
+				)}<p id="tail">${"a&amp;b".repeat(2000)}</p></body></html>`
 			);
-		expect(text).toHaveLength(1);
-		expect(text[0]).toHaveLength(BIG * 3);
+		expect(text).toHaveLength(BIG + 1);
+		expect(text[text.length - 1]).toHaveLength(2000 * 3);
 	});
 
 	it("streams a document whose form element leaves the open stack", () => {
@@ -4421,9 +4429,9 @@ describe("SourceProcessor — streamed walk recycling", () => {
 	});
 
 	it("streams tables, where flushing is held back", () => {
-		const log = walk(bigBody("<table><tr><td>a</td></tr></table>"));
-		expect(log.filter((l) => l === "+table")).toHaveLength(BIG);
-		expect(log.filter((l) => l === "+td")).toHaveLength(BIG);
+		const log = walk(bigBody("<table><tr><td>a</td></tr></table>", BIG_ROWS));
+		expect(log.filter((l) => l === "+table")).toHaveLength(BIG_ROWS);
+		expect(log.filter((l) => l === "+td")).toHaveLength(BIG_ROWS);
 	});
 });
 
