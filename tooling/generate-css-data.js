@@ -522,12 +522,14 @@ const collectPairLonghands = () => {
 			if (node.type === "literal" && node.value === "/") slashed = true;
 		});
 		if (slashed) continue;
-		out.push([name, longhands]);
+		const override = SUPPLEMENT.pairLonghandOverrides.find(
+			([property]) => property === name
+		);
+		out.push([name, override === undefined ? longhands : override[1]]);
 	}
-	// Two shorthands claiming the same two longhands cannot both be right, and
-	// `mdn-data` has such a pair today (`corner-block-start-shape` and
-	// `corner-inline-start-shape`), so neither is trusted. Chromium computes a
-	// different corner for the second than the table states.
+	// Two shorthands claiming the same two longhands cannot both be right, so
+	// neither is trusted — a backstop for the next `mdn-data` collision, the one
+	// today being corrected above.
 	/** @type {Map<string, number>} */
 	const claims = new Map();
 	for (const [, longhands] of out) {
@@ -541,6 +543,17 @@ const collectPairLonghands = () => {
 				claims.get(longhands.join(" ")) === 1 && !newer.has(name)
 		)
 		.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * The pair shorthands only a merge collapsing to one value may emit, because
+ * their two-value form is newer than the longhands.
+ * @param {[string, string[]][]} pairs the collected pair shorthands
+ * @returns {string[]} the property names, sorted
+ */
+const collectOneValuePairShorthands = (pairs) => {
+	const named = new Set(SUPPLEMENT.oneValuePairShorthands);
+	return pairs.map(([name]) => name).filter((name) => named.has(name));
 };
 
 /**
@@ -1451,7 +1464,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -1497,11 +1510,21 @@ const SUPPLEMENT = {
 	// as old as CSS 2 / flexbox, while two-value `overflow` and `place-items` are
 	// 2018-era. `output.environment` states this for `inset` alone, so the rest
 	// are named here.
-	newerPairShorthands: [
-		"overflow",
-		"place-content",
-		"place-items",
-		"place-self"
+	newerPairShorthands: ["place-content", "place-items", "place-self"],
+	// Pair shorthands whose *two-value* form is the newer one, so the merge is
+	// safe only where it collapses to a single value: `overflow: hidden` is CSS
+	// 2.1 and reads everywhere `overflow-x` does, while `overflow: hidden scroll`
+	// is 2018-era. Every other name above is newer in its one-value form too.
+	oneValuePairShorthands: ["overflow"],
+	// Two longhands `mdn-data` maps to the wrong pair. Corrected from headless
+	// Chromium, which computes `corner-inline-start-shape` onto the two corners
+	// on the inline-start edge; the table gives it the block-start edge's pair,
+	// the one `corner-block-start-shape` already holds.
+	pairLonghandOverrides: [
+		[
+			"corner-inline-start-shape",
+			["corner-start-start-shape", "corner-end-start-shape"]
+		]
 	],
 	// The properties a negative value is valid on, which decides whether
 	// `calc(-5px)` may lose its parentheses. Not derivable: every range
@@ -2240,6 +2263,7 @@ const collectData = () => {
 	const cssModulesKeywords = collectCssModulesKeywords();
 	const negativeAcceptingProperties = collectNegativeAcceptingProperties();
 	const pairLonghands = collectPairLonghands();
+	const oneValuePairShorthands = collectOneValuePairShorthands(pairLonghands);
 	const lengthOnlyFunctions = collectLengthOnlyFunctions();
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
@@ -2295,6 +2319,10 @@ ${boxLonghands
 const PAIR_LONGHANDS = new Map([${pairLonghands
 		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
 		.join(", ")}]);
+
+// The subset whose two-value form is newer than the longhands, so only a merge
+// collapsing to one value may emit it.
+const ONE_VALUE_PAIR_SHORTHANDS = ${setLiteral(oneValuePairShorthands)};
 
 // The name prefix a declaration between two box longhands must not carry for the
 // merge to step over it. The shorthand's first segment, which is deliberately
@@ -2532,6 +2560,7 @@ module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
 module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
 module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;
 module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;
+module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;

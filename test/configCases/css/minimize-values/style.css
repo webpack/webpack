@@ -166,8 +166,12 @@
 /*! declined: two-value `overflow` is far newer than `overflow-x`/`-y`, so the
    merge would lose both declarations on a target that reads only the longhands */
 .t73 { overflow-x: hidden; overflow-y: scroll }
-/*! declined: ...and `place-items` is newer than `align-items` the same way */
+/*! webpack: ...but one-value `overflow` is CSS 2.1, as old as the longhands */
+.t73a { overflow-x: hidden; overflow-y: hidden }
+/*! declined: `place-items` is newer than `align-items` in every form */
 .t74 { align-items: center; justify-items: start }
+/*! declined: ...so an equal pair is no safer */
+.t74a { align-items: center; justify-items: center }
 /*! declined: a declaration between them writing the same family would be
    stepped over by the merge */
 .t75 { margin-block-start: 1px; margin: 0; margin-block-end: 2px }
@@ -269,3 +273,7 @@
 .t109 { border-top-left-radius: 1px; border-start-start-radius: 9px; border-top-right-radius: 2px; border-bottom-right-radius: 3px; border-bottom-left-radius: 4px }
 /*! webpack: `corner-shape` lists its longhands by row, not clockwise */
 .t110 { corner-top-left-shape: squircle; corner-top-right-shape: bevel; corner-bottom-right-shape: scoop; corner-bottom-left-shape: notch }
+/*! webpack: corrected to Chromium's pair, not `mdn-data`'s block-start one */
+.t111 { corner-start-start-shape: bevel; corner-end-start-shape: notch }
+/*! webpack: ...the edge `mdn-data` mistook it for still merges as stated */
+.t112 { corner-start-start-shape: bevel; corner-start-end-shape: notch }

@@ -78,7 +78,9 @@ Array [
   "/*! ...and \`gap\`, whose longhands are named for the axes */.t72{gap:1px 2px}",
   "/*! declined: two-value \`overflow\` is far newer than \`overflow-x\`/\`-y\`, so the
    merge would lose both declarations on a target that reads only the longhands */.t73{overflow-x:hidden;overflow-y:scroll}",
-  "/*! declined: ...and \`place-items\` is newer than \`align-items\` the same way */.t74{align-items:center;justify-items:start}",
+  "/*! webpack: ...but one-value \`overflow\` is CSS 2.1, as old as the longhands */.t73a{overflow:hidden}",
+  "/*! declined: \`place-items\` is newer than \`align-items\` in every form */.t74{align-items:center;justify-items:start}",
+  "/*! declined: ...so an equal pair is no safer */.t74a{align-items:center;justify-items:center}",
   "/*! declined: a declaration between them writing the same family would be
    stepped over by the merge */.t75{margin-block-start:1px;margin:0;margin-block-end:2px}",
   "/*! lightningcss: (1200px<=width<=2000px) — an \`and\` of two one-sided ranges on
@@ -120,5 +122,7 @@ Array [
   "/*! webpack: declined: a corner set to two radii needs the shorthand's \`/\` form */.t108{border-top-left-radius:1px 2px;border-top-right-radius:1px 2px;border-bottom-right-radius:1px 2px;border-bottom-left-radius:1px 2px}",
   "/*! webpack: declined: a logical corner writes the same corners */.t109{border-top-left-radius:1px;border-start-start-radius:9px;border-top-right-radius:2px;border-bottom-right-radius:3px;border-bottom-left-radius:4px}",
   "/*! webpack: \`corner-shape\` lists its longhands by row, not clockwise */.t110{corner-shape:squircle bevel scoop notch}",
+  "/*! webpack: corrected to Chromium's pair, not \`mdn-data\`'s block-start one */.t111{corner-inline-start-shape:bevel notch}",
+  "/*! webpack: ...the edge \`mdn-data\` mistook it for still merges as stated */.t112{corner-block-start-shape:bevel notch}",
 ]
 `;
