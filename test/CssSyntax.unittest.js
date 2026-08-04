@@ -1782,6 +1782,20 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		return /** @type {RegExpExecArray} */ (/^a\{x:([\s\S]*)\}$/.exec(out))[1];
 	};
 
+	/**
+	 * The same, with the length-unit rewrite on — off by default, so the cases
+	 * that are about which unit a length prints in have to ask for it.
+	 * @param {string} value a declaration value
+	 * @returns {string} the value as it is printed back
+	 */
+	const converted = (value) => {
+		const out = new SourceProcessor().process(`a{x:${value}}`, {
+			minimize: true,
+			convertLengthUnits: true
+		}).code;
+		return /** @type {RegExpExecArray} */ (/^a\{x:([\s\S]*)\}$/.exec(out))[1];
+	};
+
 	describe("polar and Lab colors", () => {
 		// Each conversion was checked against headless Chromium; these cases pin
 		// the arguments the converter refuses rather than guesses at.
@@ -1847,14 +1861,20 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			["33.33333333%", "33.3333%"],
 			["1.0000001px", "1px"],
+			["400ms", ".4s"],
+			[".005s", "5ms"]
+		])("rewrites %s", (input, expected) => {
+			expect(value(input)).toBe(expected);
+		});
+
+		it.each([
 			["16px", "1pc"],
 			["12pt", "1pc"],
 			["10mm", "1cm"],
-			["400ms", ".4s"],
-			[".005s", "5ms"],
 			["0.75pt", "1px"]
-		])("rewrites %s", (input, expected) => {
-			expect(value(input)).toBe(expected);
+		])("rewrites %s with convertLengthUnits", (input, expected) => {
+			expect(converted(input)).toBe(expected);
+			expect(value(input)).toBe(input.replace("0.75", ".75"));
 		});
 
 		it.each([
@@ -1877,9 +1897,11 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("leaves a `@supports` condition as written", () => {
-			expect(minify("@supports (width:16px){a{x:16px}}")).toBe(
-				"@supports (width:16px){a{x:1pc}}"
-			);
+			const out = new SourceProcessor().process(
+				"@supports (width:16px){a{x:16px}}",
+				{ minimize: true, convertLengthUnits: true }
+			).code;
+			expect(out).toBe("@supports (width:16px){a{x:1pc}}");
 			expect(minify("@supports (color:rgba(0,0,0,.5)){a{x:1px}}")).toBe(
 				"@supports (color:rgba(0,0,0,.5)){a{x:1px}}"
 			);
@@ -1908,6 +1930,235 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			const css = "a{top:1px;right:2px;bottom:1px;left:2px}";
 			expect(minify(css, { cssInsetShorthand: false })).toBe(css);
 			expect(minify(css)).toBe("a{inset:1px 2px}");
+		});
+
+		it("merges the four corners, matched by name rather than position", () => {
+			// `corner-shape` lists its longhands by row and `{1,4}` writes them
+			// clockwise, so a positional read would cross two of them over.
+			expect(
+				minify(
+					"a{border-top-left-radius:1px;border-top-right-radius:2px;border-bottom-right-radius:3px;border-bottom-left-radius:4px}"
+				)
+			).toBe("a{border-radius:1px 2px 3px 4px}");
+			expect(
+				minify(
+					"a{corner-top-left-shape:squircle;corner-top-right-shape:bevel;corner-bottom-right-shape:scoop;corner-bottom-left-shape:notch}"
+				)
+			).toBe("a{corner-shape:squircle bevel scoop notch}");
+		});
+
+		it("declines a corner carrying two radii, which needs the `/` form", () => {
+			const css =
+				"a{border-top-left-radius:1px 2px;border-top-right-radius:1px 2px;border-bottom-right-radius:1px 2px;border-bottom-left-radius:1px 2px}";
+			expect(minify(css)).toBe(css);
+		});
+
+		it("lets only the first of two shorthands claim a shared longhand", () => {
+			// `corner-top-shape` and `corner-left-shape` both set the top-left
+			// corner; the second landing on the first's blanked tail would drop it.
+			expect(
+				minify(
+					"a{corner-top-right-shape:notch;corner-top-left-shape:bevel;corner-bottom-left-shape:scoop}"
+				)
+			).toBe("a{corner-top-right-shape:notch;corner-left-shape:bevel scoop}");
+			expect(
+				minify(
+					"a{corner-end-start-shape:scoop;corner-start-start-shape:bevel;corner-start-end-shape:notch}"
+				)
+			).toBe(
+				"a{corner-end-start-shape:scoop;corner-block-start-shape:bevel notch}"
+			);
+		});
+	});
+
+	describe("pair and order-free shorthand merging", () => {
+		it("merges the two longhands a pair shorthand sets", () => {
+			expect(minify("a{margin-block-start:1px;margin-block-end:2px}")).toBe(
+				"a{margin-block:1px 2px}"
+			);
+			expect(minify("a{padding-inline-start:1px;padding-inline-end:1px}")).toBe(
+				"a{padding-inline:1px}"
+			);
+			expect(minify("a{row-gap:1px;column-gap:2px}")).toBe("a{gap:1px 2px}");
+		});
+
+		it("corrects the corner pair `mdn-data` misstates", () => {
+			// Chromium puts `corner-inline-start-shape` on the inline-start edge;
+			// the dataset gives it the block-start edge's pair.
+			expect(
+				minify("a{corner-start-start-shape:bevel;corner-end-start-shape:notch}")
+			).toBe("a{corner-inline-start-shape:bevel notch}");
+			expect(
+				minify("a{corner-start-start-shape:bevel;corner-start-end-shape:notch}")
+			).toBe("a{corner-block-start-shape:bevel notch}");
+		});
+
+		it("merges `overflow` only where it collapses to one value", () => {
+			expect(minify("a{overflow-x:hidden;overflow-y:hidden}")).toBe(
+				"a{overflow:hidden}"
+			);
+			const two = "a{overflow-x:hidden;overflow-y:scroll}";
+			expect(minify(two)).toBe(two);
+		});
+
+		it("declines `place-items`, newer than its longhands in every form", () => {
+			const css = "a{align-items:center;justify-items:center}";
+			expect(minify(css)).toBe(css);
+		});
+
+		it("refuses a pair the box collapse would refuse", () => {
+			// A CSS-wide keyword beside another value is a shorthand no engine
+			// accepts, and a `var()` may expand to both values at once.
+			const wide = "a{margin-block-start:inherit;margin-block-end:1px}";
+			expect(minify(wide)).toBe(wide);
+			const sub = "a{margin-block-start:var(--x);margin-block-end:var(--x)}";
+			expect(minify(sub)).toBe(sub);
+		});
+
+		it("merges an order-free shorthand's slots in grammar order", () => {
+			expect(
+				minify("a{outline-width:3px;outline-style:dashed;outline-color:red}")
+			).toBe("a{outline:3px dashed red}");
+			expect(
+				minify(
+					"a{column-rule-width:medium;column-rule-style:groove;column-rule-color:rebeccapurple}"
+				)
+			).toBe("a{column-rule:medium groove rebeccapurple}");
+			expect(
+				minify(
+					"a{text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#123;text-decoration-thickness:10%}"
+				)
+			).toBe("a{text-decoration:none solid #123 10%}");
+			expect(minify("a{flex-direction:column;flex-wrap:wrap}")).toBe(
+				"a{flex-flow:column wrap}"
+			);
+			expect(minify("a{text-wrap-mode:nowrap;text-wrap-style:balance}")).toBe(
+				"a{text-wrap:nowrap balance}"
+			);
+			expect(minify('a{text-emphasis-style:"x";text-emphasis-color:red}')).toBe(
+				'a{text-emphasis:"x" red}'
+			);
+		});
+
+		it("classifies a zero length, a system color and a written unit", () => {
+			expect(
+				minify(
+					"a{outline-width:0;outline-style:none;outline-color:currentcolor}"
+				)
+			).toBe("a{outline:0 none currentcolor}");
+			expect(
+				minify(
+					"a{text-decoration-line:line-through;text-decoration-style:double;text-decoration-color:CanvasText;text-decoration-thickness:from-font}"
+				)
+			).toBe("a{text-decoration:line-through double CanvasText from-font}");
+		});
+
+		it.each([
+			// `auto` is both an `outline-style` and an `outline-color`.
+			["a{outline-width:3px;outline-style:auto;outline-color:auto}"],
+			// A substitution could stand for any slot.
+			["a{outline-width:3px;outline-style:dashed;outline-color:var(--c)}"],
+			// A CSS-wide keyword means something else in a shorthand.
+			["a{flex-direction:column;flex-wrap:inherit}"],
+			// No slot takes a length, so the declaration is invalid either way.
+			["a{flex-direction:3px;flex-wrap:wrap}"],
+			// A unit no slot's type carries is not classified at all.
+			["a{outline-width:2s;outline-style:dashed;outline-color:red}"],
+			// Only a zero number is a length without a unit.
+			["a{outline-width:3;outline-style:dashed;outline-color:red}"],
+			// `list-style-type` takes any identifier, so nothing else is unambiguous.
+			[
+				"a{list-style-type:square;list-style-position:inside;list-style-image:url(a.png)}"
+			]
+		])("declines %s", (css) => {
+			expect(minify(css)).toBe(css);
+		});
+
+		it("declines when a family member stands between the slots", () => {
+			const css =
+				"a{outline-width:3px;outline-offset:1px;outline-style:dashed;outline-color:red}";
+			expect(minify(css)).toBe(css);
+		});
+
+		it("steps over a property outside the family", () => {
+			expect(
+				minify(
+					"a{column-rule-width:medium;color:red;column-rule-style:groove;column-rule-color:rebeccapurple}"
+				)
+			).toBe("a{column-rule:medium groove rebeccapurple;color:red}");
+		});
+
+		it("declines a hash that is no color, at the lengths CSS omits", () => {
+			// Only 3, 4, 6 and 8 digits are a hex color. Merging a 5- or 7-digit
+			// one would make the whole shorthand invalid, taking the width and
+			// style down with a color the engine was already dropping.
+			for (const hash of ["#12345", "#1234567"]) {
+				const css = `a{outline-width:3px;outline-style:dashed;outline-color:${hash}}`;
+				expect(minify(css)).toBe(css);
+			}
+			for (const hash of ["#123", "#1234", "#123456", "#12345678"]) {
+				expect(
+					minify(
+						`a{outline-width:3px;outline-style:dashed;outline-color:${hash}}`
+					)
+				).toBe(`a{outline:3px dashed ${hash}}`);
+			}
+		});
+
+		it("declines a value only another slot would take", () => {
+			// Invalid as written, and a merge must not rescue it into a shorthand
+			// the engine would read.
+			const css =
+				"a{list-style-type:url(a.png);list-style-position:inside;list-style-image:none}";
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("calc-size() and the length-only calls", () => {
+		it("reduces the size argument in place", () => {
+			expect(minify("a{width:calc-size(auto,1px + 2px)}")).toBe(
+				"a{width:calc-size(auto,3px)}"
+			);
+			// The outer call reduces around an already-reduced inner one.
+			expect(
+				minify("a{width:calc-size(calc-size(auto,1px + 2px),3px + 4px)}")
+			).toBe("a{width:calc-size(calc-size(auto,3px),7px)}");
+		});
+
+		it("declines when the argument is not constant", () => {
+			// `size` is the sized element's own value, so nothing folds.
+			const css = "a{width:calc-size(auto,size + 10px)}";
+			expect(minify(css)).toBe(css);
+		});
+
+		it("drops a zero's unit inside a call whose every number is a length", () => {
+			expect(minify("a{transform:translate(0px, 0em)}")).toBe(
+				"a{transform:translate(0,0)}"
+			);
+			expect(minify("a{clip-path:inset(0px 1px 0em 2px)}")).toBe(
+				"a{clip-path:inset(0 1px 0 2px)}"
+			);
+			// `scale()` takes a `<number>`, so `scale(0px)` is dropped where
+			// `scale(0)` is a transform — the rewrite would revive it.
+			const scale = "a{transform:scale(0px)}";
+			expect(minify(scale)).toBe(scale);
+		});
+	});
+
+	describe("media-feature range intervals", () => {
+		it("collapses an `and` of two one-sided ranges, either order", () => {
+			expect(
+				minify("@media (min-width:1200px) and (max-width:2000px){a{color:red}}")
+			).toBe("@media (1200px<=width<=2000px){a{color:red}}");
+			expect(
+				minify("@media (max-width:2000px) and (min-width:1200px){a{color:red}}")
+			).toBe("@media (1200px<=width<=2000px){a{color:red}}");
+		});
+
+		it("declines two comparisons the same way round", () => {
+			expect(
+				minify("@media (min-width:1200px) and (min-width:1300px){a{color:red}}")
+			).toBe("@media (width>=1200px) and (width>=1300px){a{color:red}}");
 		});
 	});
 
@@ -1958,19 +2209,28 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it("prints the term in whichever unit of its group spells it", () => {
 			// No `px` count equals these, so reaching the answer through the group's
 			// reference unit alone would leave every one of them written out.
-			expect(value("calc(1cm + 1mm)")).toBe("11mm");
-			expect(value("calc(1in + 1cm)")).toBe("3.54cm");
-			expect(value("calc(4.5cm + 0cm)")).toBe("45mm");
+			expect(converted("calc(1cm + 1mm)")).toBe("11mm");
+			expect(converted("calc(1in + 1cm)")).toBe("3.54cm");
+			expect(converted("calc(4.5cm + 0cm)")).toBe("45mm");
 			// And a sum no unit of the group spells exactly still declines.
 			expect(value("calc(1px + 1cm)")).toBe("calc(1px + 1cm)");
 		});
 
-		it("keeps the parentheses on a negative, whatever the property", () => {
+		it("keeps the parentheses on a negative the property refuses", () => {
 			// `width: -5px` is dropped where `width: calc(-5px)` clamps to 0.
 			expect(minify("a{width:calc(0px - 5px)}")).toBe("a{width:calc(-5px)}");
-			expect(minify("a{margin-left:calc(0px - 5px)}")).toBe(
-				"a{margin-left:calc(-5px)}"
+			// `<line-width>` states no range, so nothing licenses the rewrite.
+			expect(minify("a{border-width:calc(0px - 5px)}")).toBe(
+				"a{border-width:calc(-5px)}"
 			);
+		});
+
+		it("takes them off one the property accepts", () => {
+			expect(minify("a{margin-left:calc(0px - 5px)}")).toBe(
+				"a{margin-left:-5px}"
+			);
+			// The shorthand defers wholly to those longhands, so it accepts one too.
+			expect(minify("a{margin:calc(0px - 5px)}")).toBe("a{margin:-5px}");
 		});
 
 		it("keeps them on a fraction only where the property takes an integer", () => {
@@ -2040,7 +2300,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("compares units fixed against each other", () => {
-			expect(value("min(1in,100px)")).toBe("6pc");
+			expect(converted("min(1in,100px)")).toBe("6pc");
 			expect(value("max(1s,500ms)")).toBe("1s");
 		});
 
@@ -2064,8 +2324,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("a{z-index:sign(5px)}")).toBe("a{z-index:1}");
 			// Zero keeps its parentheses too — see the unitless-zero case below.
 			expect(minify("a{z-index:sign(0px)}")).toBe("a{z-index:calc(0)}");
-			// A negative keeps its parentheses, as everywhere else.
-			expect(minify("a{z-index:sign(-5px)}")).toBe("a{z-index:calc(-1)}");
+			// `z-index` takes a negative, so the answer prints bare.
+			expect(minify("a{z-index:sign(-5px)}")).toBe("a{z-index:-1}");
 		});
 
 		it("takes hypot() only where the root is exact", () => {
@@ -2141,7 +2401,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// suppressed in here.
 			expect(value("round(down,4.5cm,1.5cm)")).toBe("round(down,4.5cm,1.5cm)");
 			// Outside one it still applies.
-			expect(value("4.5cm")).toBe("45mm");
+			expect(converted("4.5cm")).toBe("45mm");
 		});
 	});
 
@@ -2214,5 +2474,54 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(value("calc(1px*pow(2,3))")).toBe("8px");
 			expect(value("min(sqrt(4)*1px,3px)")).toBe("2px");
 		});
+	});
+});
+
+describe("CssSyntax — convertLengthUnits", () => {
+	/**
+	 * @param {string} value a `width` value
+	 * @param {boolean=} convertLengthUnits whether lengths may change unit
+	 * @returns {string} the minified value
+	 */
+	const width = (value, convertLengthUnits = false) =>
+		new SourceProcessor()
+			.process(`a{width:${value}}`, { minimize: true, convertLengthUnits })
+			.code.slice("a{width:".length, -1);
+
+	it("keeps a length in the unit it was written with by default", () => {
+		expect(width("16px")).toBe("16px");
+		expect(width("120px")).toBe("120px");
+		expect(width("192px")).toBe("192px");
+		expect(width("10mm")).toBe("10mm");
+	});
+
+	it("rewrites one into the shortest equal unit when asked", () => {
+		expect(width("16px", true)).toBe("1pc");
+		expect(width("120px", true)).toBe("90pt");
+		expect(width("192px", true)).toBe("2in");
+		expect(width("10mm", true)).toBe("1cm");
+	});
+
+	it("converts a time either way — only lengths are gated", () => {
+		const duration = (/** @type {string} */ value) =>
+			new SourceProcessor()
+				.process(`a{transition-duration:${value}}`, { minimize: true })
+				.code.slice("a{transition-duration:".length, -1);
+		expect(duration("500ms")).toBe(".5s");
+		expect(duration(".005s")).toBe("5ms");
+	});
+
+	it("still folds a sum into a unit the expression was written with", () => {
+		// The fold is the win here, not the unit: printing `11mm` introduces no
+		// unit the author did not write, where `1pc` for `16px` would.
+		expect(width("calc(1cm + 1mm)")).toBe("11mm");
+		expect(width("calc(2in - 1in)")).toBe("1in");
+		expect(width("calc(1px + 15px)")).toBe("16px");
+		expect(width("calc(1px + 15px)", true)).toBe("1pc");
+	});
+
+	it("declines a sum that reaches no written unit exactly", () => {
+		// `1cm` is not a whole number of `px`, and `px` is all the gate leaves.
+		expect(width("calc(1cm + 1px)")).toBe("calc(1cm + 1px)");
 	});
 });

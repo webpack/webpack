@@ -1,10 +1,10 @@
 /* Ported from cssnano's `postcss-convert-values` and `postcss-normalize-whitespace`
-   suites. webpack normalizes a number, rounds it to 6 significant digits and
-   reaches for a shorter unit fixed against the one written — but only where the
-   engine cannot tell: a zero's unit stays inside `calc()` and on a `flex-basis`,
-   an angle keeps every digit (`rotate()` runs it through trig), and nothing is
+   suites. webpack normalizes a number and rounds it to 6 significant digits, and
+   rewrites a time into the shorter of `ms` / `s` — but only where the engine
+   cannot tell: a zero's unit stays inside `calc()` and on a `flex-basis`, an
+   angle keeps every digit (`rotate()` runs it through trig), and nothing is
    touched in a `@supports` condition, which tests the declaration rather than
-   applying it. */
+   applying it. A length keeps its unit unless `convertLengthUnits` is on. */
 
 /*! convert-values: should convert milliseconds to seconds */
 .t01 { transition-duration: 500ms }
@@ -16,14 +16,23 @@
 .t04 { --my-variable: 500ms }
 /*! convert-values: should strip the leading plus */
 .t05 { width: +14px }
-/*! convert-values: should convert px to pc */
+/*! declined: px -> pc/pt/in is exact, but it fires ~10 times in all of Bootstrap
+   and costs as many bytes as it saves once compressed, so it is off by default
+   (`convertLengthUnits`) — as it is in cssnano's default preset */
 .t06 { width: 16px }
-/*! convert-values: should convert px to pt */
 .t07 { width: 120px }
-/*! convert-values: should convert px to in */
 .t08 { width: 192px }
 /*! convert-values: should strip the unit from zero lengths */
 .t09 { margin: 0em 0% 0px 0pc }
+/*! convert-values: ...inside a call whose every number is a length too */
+.t09a { transform: translate(0px, 0em) }
+/*! convert-values: ...however deep the shape nests them */
+.t09b { clip-path: inset(0px 1px 0em 2px) }
+/*! declined: `scale()` takes a `<number>`, so `scale(0px)` is dropped where
+   `scale(0)` is a transform — the rewrite would revive the declaration */
+.t09c { transform: scale(0px) }
+/*! declined: ...and an angle is not a length either */
+.t09d { transform: rotate(0deg) }
 /*! convert-values: should trim trailing zeros */
 .t10 { width: 109.00000000000px }
 /*! convert-values: should trim trailing zeros (2) */
@@ -148,6 +157,38 @@
 @media (min-width: 1200px) { .t65 { color: red } }
 /*! lightningcss: (width<=1199.98px) */
 @media (max-width: 1199.98px) { .t66 { color: red } }
+/*! webpack: a shorthand setting exactly two longhands merges like a box family */
+.t70 { margin-block-start: 1px; margin-block-end: 2px }
+/*! ...collapsing to one value when both are equal */
+.t71 { padding-inline-start: 1px; padding-inline-end: 1px }
+/*! ...and `gap`, whose longhands are named for the axes */
+.t72 { row-gap: 1px; column-gap: 2px }
+/*! declined: two-value `overflow` is far newer than `overflow-x`/`-y`, so the
+   merge would lose both declarations on a target that reads only the longhands */
+.t73 { overflow-x: hidden; overflow-y: scroll }
+/*! webpack: ...but one-value `overflow` is CSS 2.1, as old as the longhands */
+.t73a { overflow-x: hidden; overflow-y: hidden }
+/*! declined: `place-items` is newer than `align-items` in every form */
+.t74 { align-items: center; justify-items: start }
+/*! declined: ...so an equal pair is no safer */
+.t74a { align-items: center; justify-items: center }
+/*! declined: a declaration between them writing the same family would be
+   stepped over by the merge */
+.t75 { margin-block-start: 1px; margin: 0; margin-block-end: 2px }
+/*! declined: a CSS-wide keyword beside another value is a shorthand the engine
+   drops whole, so the pair collapse refuses one exactly as a box does */
+.t76 { margin-block-start: inherit; margin-block-end: 1px }
+.t76a { margin-block-start: inherit; margin-block-end: inherit }
+/*! declined: ...and a substitution could expand to both values at once */
+.t77 { margin-block-start: var(--x); margin-block-end: var(--x) }
+/*! lightningcss: (1200px<=width<=2000px) — an `and` of two one-sided ranges on
+   one feature is the interval it describes, whichever order they are written */
+@media (min-width: 1200px) and (max-width: 2000px) { .t65a { color: red } }
+@media (max-width: 2000px) and (min-width: 1200px) { .t65b { color: red } }
+/*! declined: two comparisons the same way round are no interval */
+@media (min-width: 1200px) and (min-width: 1300px) { .t65c { color: red } }
+/*! declined: `or` is not a conjunction */
+@media (min-width: 1200px) or (max-width: 2000px) { .t65d { color: red } }
 /*! webpack: every range-type feature, and nested conditions */
 @media (min-resolution: 2dppx) { .t67 { color: red } }
 @media ((min-width: 1px) and (max-height: 2px)) { .t68 { color: red } }
@@ -230,3 +271,59 @@
 .t105 { border-top-color: red; border: 1px solid; border-right-color: red; border-bottom-color: red; border-left-color: red }
 /*! webpack: ...but an unrelated property between them does not */
 .t106 { border-top-color: red; color: red; border-right-color: red; border-bottom-color: red; border-left-color: red }
+/*! webpack: the four corners merge too, clockwise from the top left */
+.t107 { border-top-left-radius: 1px; border-top-right-radius: 2px; border-bottom-right-radius: 3px; border-bottom-left-radius: 4px }
+/*! webpack: declined: a corner set to two radii needs the shorthand's `/` form */
+.t108 { border-top-left-radius: 1px 2px; border-top-right-radius: 1px 2px; border-bottom-right-radius: 1px 2px; border-bottom-left-radius: 1px 2px }
+/*! webpack: declined: a logical corner writes the same corners */
+.t109 { border-top-left-radius: 1px; border-start-start-radius: 9px; border-top-right-radius: 2px; border-bottom-right-radius: 3px; border-bottom-left-radius: 4px }
+/*! webpack: `corner-shape` lists its longhands by row, not clockwise */
+.t110 { corner-top-left-shape: squircle; corner-top-right-shape: bevel; corner-bottom-right-shape: scoop; corner-bottom-left-shape: notch }
+/*! webpack: corrected to Chromium's pair, not `mdn-data`'s block-start one */
+.t111 { corner-start-start-shape: bevel; corner-end-start-shape: notch }
+/*! webpack: ...the edge `mdn-data` mistook it for still merges as stated */
+.t112 { corner-start-start-shape: bevel; corner-start-end-shape: notch }
+/*! webpack: two corner shorthands share a longhand, so only the first may claim
+   it — the second landing on the first's blanked tail would drop that tail */
+.t113 { corner-top-right-shape: notch; corner-top-left-shape: bevel; corner-bottom-left-shape: scoop }
+.t114 { corner-end-start-shape: scoop; corner-start-start-shape: bevel; corner-start-end-shape: notch }
+
+/* An order-free `||` shorthand merges when each value parses back to its slot. */
+
+/*! webpack: a length, a style keyword and a color are each one slot's */
+.t120 { outline-width: 3px; outline-style: dashed; outline-color: red }
+/*! webpack: ...a zero length keeps a slot of its own, and a color keyword too */
+.t121 { outline-width: 0; outline-style: none; outline-color: currentcolor }
+/*! webpack: declined: `auto` is both an `outline-style` and an `outline-color` */
+.t122 { outline-width: 3px; outline-style: auto; outline-color: auto }
+/*! webpack: declined: a substitution could stand for any of the three */
+.t123 { outline-width: 3px; outline-style: dashed; outline-color: var(--c) }
+/*! webpack: declined: a CSS-wide keyword means something else in a shorthand */
+.t124 { flex-direction: column; flex-wrap: inherit }
+/*! webpack: the merge steps over what does not write the family */
+.t125 { column-rule-width: medium; color: red; column-rule-style: groove; column-rule-color: rebeccapurple }
+/*! webpack: declined: `outline-offset` is in the family and would be stepped over */
+.t126 { outline-width: 3px; outline-offset: 1px; outline-style: dashed; outline-color: red }
+/*! webpack: four slots, and a percentage only the thickness takes */
+.t127 { text-decoration-line: none; text-decoration-style: solid; text-decoration-color: #123; text-decoration-thickness: 10% }
+/*! webpack: a system color is a color keyword like any other */
+.t128 { text-decoration-line: line-through; text-decoration-style: double; text-decoration-color: CanvasText; text-decoration-thickness: from-font }
+/*! webpack: two-slot families merge the same way */
+.t129 { text-emphasis-style: sesame; text-emphasis-color: #abc }
+.t130 { flex-direction: row-reverse; flex-wrap: wrap-reverse }
+.t131 { text-wrap-mode: wrap; text-wrap-style: pretty }
+/*! webpack: only `text-emphasis-style` takes a string */
+.t132 { text-emphasis-style: "x"; text-emphasis-color: red }
+/*! webpack: declined: a value no slot takes — the browser drops the declaration,
+   and a merge must not rescue it into a shorthand it would read */
+.t134 { flex-direction: 3px; flex-wrap: wrap }
+/*! webpack: declined: ...a unit no slot's type carries is not classified at all */
+.t135 { outline-width: 2s; outline-style: dashed; outline-color: red }
+/*! webpack: declined: ...and only a zero number is a length without one */
+.t136 { outline-width: 3; outline-style: dashed; outline-color: red }
+/*! webpack: declined: only 3, 4, 6 and 8 digits are a hex color, so merging a
+   5-digit hash would invalidate the shorthand and drop the width and style too */
+.t137 { outline-width: 3px; outline-style: dashed; outline-color: #12345 }
+/*! webpack: declined: `list-style-type` takes any identifier, so no other value
+   in the family is unambiguous — an image included */
+.t133 { list-style-type: square; list-style-position: inside; list-style-image: url("data:image/gif;base64,R0lGODlhAQABAAAAACw=") }

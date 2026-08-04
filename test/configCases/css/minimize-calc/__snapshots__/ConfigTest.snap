@@ -5,13 +5,13 @@ Array [
   "/*! calc: a sum of one unit is that unit */.c01{width:3px}",
   "/*! calc: ...and subtraction the same way */.c02{width:6px}",
   "/*! calc: a product by a plain number */.c03{width:2px}",
-  "/*! calc: ...on either side of the \`*\` */.c04{width:9pt}",
+  "/*! calc: ...on either side of the \`*\` */.c04{width:12px}",
   "/*! calc: division by a plain number */.c05{width:2.5px}",
   "/*! calc: parentheses group, and the group folds first */.c06{width:9px}",
   "/*! calc: a nested calc() is the parentheses it prints as */.c07{width:6px}",
   "/*! calc: units fixed against each other are one term */.c08{width:97px}",
-  "/*! calc: ...and the result takes the shortest unit equal to it */.c09{width:6pc}",
-  "/*! calc: ...which is any unit of the group, not only the one it counts in */.c10a{width:11mm}",
+  "/*! calc: ...and the result prints in a unit the expression was written with */.c09{width:1in}",
+  "/*! calc: ...the shortest of them where it was written with several */.c10a{width:11mm}",
   "/*! calc: a longer chain */.c10{width:6px}",
   "/*! calc: times convert too */.c11{transition-duration:1001ms}",
   "/*! calc: a percentage scales by a number */.c12{width:100%}",
@@ -42,7 +42,14 @@ Array [
   "/*! unwrap: ...line-height likewise */.u05{line-height:1.5}",
   "/*! kept: \`z-index: 1.5\` is dropped, \`calc(1.5)\` rounds to 2 */.u06{z-index:calc(1.5)}",
   "/*! kept: \`width: -5px\` is dropped, \`calc(-5px)\` clamps to 0 */.u07{width:calc(-5px)}",
-  "/*! kept: a negative stays wrapped whatever the property */.u08{margin-left:calc(-5px)}",
+  "/*! unwrap: ...but a negative is a value in its own right where the property
+   takes one */.u08{margin-left:-5px}",
+  "/*! unwrap: ...through a shorthand that defers to those longhands */.u08a{margin:-5px}",
+  "/*! unwrap: ...and where the negative is an integer */.u08b{z-index:-2}",
+  "/*! kept: a fraction is still a fraction where an \`<integer>\` is wanted */.u08c{z-index:calc(-1.5)}",
+  "/*! kept: \`<line-width>\` states no range, so nothing licenses the rewrite —
+   \`border-width: -5px\` is dropped, \`calc(-5px)\` clamps to 0 */.u08d{border-width:calc(-5px)}",
+  "/*! kept: ...and a shorthand that states its own lengths is not its longhands */.u08e{padding:calc(-5px)}",
   "/*! kept: \`width: calc(0)\` is a number and dropped, \`width: 0\` is a length */.u09{width:calc(0)}",
   "/*! kept: a shorthand reaches \`<integer>\` through its longhands — \`columns: 1.5\`
    is dropped, \`calc(1.5)\` rounds to 2 columns */.u10{columns:calc(1.5)}",
@@ -53,7 +60,7 @@ Array [
   "/*! math: the smallest of a list of one unit */.m01{width:1px}",
   "/*! math: ...and the largest */.m02{width:2px}",
   "/*! math: however many arguments the grammar allows */.m03{width:1px}",
-  "/*! math: units fixed against each other compare too, then take the shortest */.m04{width:6pc}",
+  "/*! math: units fixed against each other compare too, then print in a written one */.m04{width:1in}",
   "/*! math: clamp() is the middle one */.m05{width:3px}",
   "/*! math: ...and the lower bound wins a contradictory pair (CSS Values 4 §10.4) */.m06{width:4px}",
   "/*! math: a nested calc() has already folded by the time this runs */.m07{width:2px}",
@@ -72,7 +79,7 @@ Array [
   "/*! math: abs() drops the sign */.a01{width:5px}",
   "/*! math: ...and leaves a positive alone */.a02{width:5px}",
   "/*! math: sign() is the one that changes the unit — a sign is a number */.a03{z-index:1}",
-  "/*! math: ...and a negative one keeps its parentheses */.a04{z-index:calc(-1)}",
+  "/*! math: ...and a negative one keeps its parentheses */.a04{z-index:-1}",
   "/*! math: hypot() where the root is exact */.a05{width:5px}",
   "/*! math: ...however many arguments, and in whichever unit */.a06{width:10px}",
   "/*! math: ...including units fixed against each other */.a07{width:5in}",
@@ -82,12 +89,12 @@ Array [
    a positive factor, so abs() only has to drop the minus */.a10{width:1em}",
   "/*! stepped: round() to the nearest step, a tie going toward positive infinity */.p01{margin-left:6px}",
   "/*! stepped: ...and each of the three named strategies */.p02{margin-left:6px}",
-  "/*! stepped: down is the floor, so a negative goes further from zero */.p03{margin-left:calc(-6px)}",
+  "/*! stepped: down is the floor, so a negative goes further from zero */.p03{margin-left:-6px}",
   "/*! stepped: to-zero truncates instead */.p04{margin-left:4px}",
   "/*! stepped: nearest may be named explicitly */.p05{margin-left:6px}",
   "/*! stepped: mod() takes the divisor's sign */.p06{margin-left:2px}",
-  "/*! stepped: rem() takes the dividend's */.p07{margin-left:calc(-1px)}",
-  "/*! stepped: ...which is the difference between them */.p08{margin-left:calc(-2px)}",
+  "/*! stepped: rem() takes the dividend's */.p07{margin-left:-1px}",
+  "/*! stepped: ...which is the difference between them */.p08{margin-left:-2px}",
   "/*! declined: exactly on a step is where engines part company — Chromium reads
    \`round(down,10cm,2cm)\` as \`8cm\` and \`mod(10px,-2px)\` as \`-2px\`, both a whole
    step off the exact answer */.q01{margin-left:round(4px,2px)}",
@@ -121,8 +128,12 @@ Array [
   "/*! declined: ...and a negative base has no logarithm at all */.f04b{width:calc(log(1,-2)*1px)}",
   "/*! declined: the inverse functions answer with a whole number of degrees at
    three arguments only */.f05{rotate:asin(.5)}",
-  "/*! declined: a fold inside a stepped function would print the shortest unit,
-   which is the rewrite that function's own arguments refuse */.q08{margin-left:round(down,calc(4.5cm),calc(1.5cm))}",
+  "/*! math: \`calc-size()\` is not read as a whole — its basis is no expression —
+   but the size it is given still reduces */.c20{width:calc-size(auto,15px)}",
+  "/*! math: ...at every depth it nests */.c21{width:calc-size(calc-size(auto,3px),7px)}",
+  "/*! declined: \`size\` is not a constant, so nothing reduces */.c22{width:calc-size(auto,size + 10px)}",
+  "/*! declined: a fold inside a stepped function would re-unit its result, which is
+   the rewrite that function's own arguments refuse */.q08{margin-left:round(down,calc(4.5cm),calc(1.5cm))}",
   "/*! declined: ...including another stepped function */.q09{margin-left:round(down,round(down,10cm,3cm),1cm)}",
 ]
 `;

@@ -10,7 +10,7 @@ Array [
   "/*! a partly transparent color keeps its function: the hex would need the alpha */.t08{color:rgba(0,0,0,.5)}",
   "/*! ...whatever the channels are */.t09{color:rgba(255,0,0,.2)}",
   "/*! rounding and unit conversion are not gated — no engine reads one and not the
-   other, so they apply here too */.t10{width:1pc;height:33.3333%}",
+   other, so they apply here too */.t10{width:16px;height:33.3333%}",
   "/*! a media feature keeps the \`min-\`/\`max-\` spelling every engine reads */@media (min-width:1200px){.t06{color:red}}",
   "/*! ...at any nesting depth */@media ((min-width:1px) and (max-height:2px)){.t07{color:red}}",
   "/*! the \`inset\` shorthand is newer than the four longhands it merges */.t11{top:1px;right:2px;bottom:1px;left:2px}",

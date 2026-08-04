@@ -3,6 +3,8 @@
 const fs = require("fs");
 const {
 	DATA_TARGET,
+	acceptedValues,
+	assertClassesArePrintable,
 	collectData,
 	parseValueSyntax,
 	walkValueSyntax
@@ -218,10 +220,37 @@ describe("CssValueSyntax", () => {
 			expect(MATH_FUNCTION_KEYWORDS.size).toBe(1);
 		});
 
+		it("still finds the `<calc-sum>` argument of the one it leaves out", () => {
+			// `calc-size()` is refused as a whole, so its size is reduced in place.
+			// Derived from the grammar's argument order, not from its name.
+			const { MATH_FUNCTION_SUM_ARGUMENTS } = require("../lib/css/data");
+
+			expect(MATH_FUNCTION_SUM_ARGUMENTS.get("calc-size")).toEqual([1]);
+			// Everything the fold already reads is left out of this table.
+			expect(MATH_FUNCTION_SUM_ARGUMENTS.has("min")).toBe(false);
+			expect(MATH_FUNCTION_SUM_ARGUMENTS.has("round")).toBe(false);
+		});
+
 		it("leaves out the one whose arguments are not all expressions", () => {
 			// `calc-size()` leads with a basis, which is an expression this cannot
 			// evaluate by counting `<calc-sum>`s.
 			expect(MATH_FUNCTION_ARITY.has("calc-size")).toBe(false);
+		});
+
+		it("only permits a negative where something states one", () => {
+			// The opposite polarity to `INTEGER_PROPERTIES`: this one is read to
+			// allow a rewrite, so an unannotated grammar must not reach it.
+			// `<line-width>` is the case that proves it — no range, no negatives.
+			const { NEGATIVE_ACCEPTING_PROPERTIES } = require("../lib/css/data");
+
+			expect(NEGATIVE_ACCEPTING_PROPERTIES.has("margin-top")).toBe(true);
+			expect(NEGATIVE_ACCEPTING_PROPERTIES.has("border-width")).toBe(false);
+			expect(NEGATIVE_ACCEPTING_PROPERTIES.has("line-height")).toBe(false);
+			// A shorthand deferring wholly to accepting longhands is derived...
+			expect(NEGATIVE_ACCEPTING_PROPERTIES.has("margin")).toBe(true);
+			expect(NEGATIVE_ACCEPTING_PROPERTIES.has("inset")).toBe(true);
+			// ...and one stating lengths of its own is not.
+			expect(NEGATIVE_ACCEPTING_PROPERTIES.has("padding")).toBe(false);
 		});
 
 		it("follows a shorthand into its longhands", () => {
@@ -319,6 +348,43 @@ describe("CssValueSyntax", () => {
 			for (const name of MATH_FUNCTION_ARITY.keys()) {
 				expect(MATH_FUNCTIONS.has(name)).toBe(true);
 			}
+		});
+	});
+
+	describe("acceptedValues", () => {
+		it("follows a `<'property'>` reference into what that property accepts", () => {
+			// Followed, not named: a slot written `<'color'>` takes a color value,
+			// and would claim nothing if the reference were left as a keyword.
+			const { keywords, classes } = acceptedValues("<'color'>");
+			expect([...classes]).toContain("color");
+			expect([...keywords]).toEqual([]);
+		});
+
+		it("accepts nothing from a syntax it cannot parse", () => {
+			expect(acceptedValues("<")).toEqual({
+				keywords: new Set(),
+				classes: new Set()
+			});
+		});
+	});
+
+	describe("assertClassesArePrintable", () => {
+		it("passes a slot naming a class the printer sorts values into", () => {
+			expect(() =>
+				assertClassesArePrintable(
+					new Map([["outline-color", { classes: new Set(["color"]) }]])
+				)
+			).not.toThrow();
+		});
+
+		it("rejects a slot naming a class the printer has no test for", () => {
+			// Such a slot would claim a value the printer never offers it, making an
+			// ambiguous merge read as unambiguous.
+			expect(() =>
+				assertClassesArePrintable(
+					new Map([["rotate", { classes: new Set(["angle"]) }]])
+				)
+			).toThrow("rotate accepts <angle>, which the printer cannot classify");
 		});
 	});
 

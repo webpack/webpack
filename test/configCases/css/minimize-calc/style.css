@@ -18,9 +18,9 @@
 .c07 { width: calc(calc(1px + 2px) + 3px) }
 /*! calc: units fixed against each other are one term */
 .c08 { width: calc(1in + 1px) }
-/*! calc: ...and the result takes the shortest unit equal to it */
+/*! calc: ...and the result prints in a unit the expression was written with */
 .c09 { width: calc(2in - 1in) }
-/*! calc: ...which is any unit of the group, not only the one it counts in */
+/*! calc: ...the shortest of them where it was written with several */
 .c10a { width: calc(1cm + 1mm) }
 /*! calc: a longer chain */
 .c10 { width: calc(1px + 2px + 3px) }
@@ -88,8 +88,20 @@
 .u06 { z-index: calc(1.5) }
 /*! kept: `width: -5px` is dropped, `calc(-5px)` clamps to 0 */
 .u07 { width: calc(-5px) }
-/*! kept: a negative stays wrapped whatever the property */
+/*! unwrap: ...but a negative is a value in its own right where the property
+   takes one */
 .u08 { margin-left: calc(0px - 5px) }
+/*! unwrap: ...through a shorthand that defers to those longhands */
+.u08a { margin: calc(0px - 5px) }
+/*! unwrap: ...and where the negative is an integer */
+.u08b { z-index: calc(1 - 3) }
+/*! kept: a fraction is still a fraction where an `<integer>` is wanted */
+.u08c { z-index: calc(1.5 - 3) }
+/*! kept: `<line-width>` states no range, so nothing licenses the rewrite —
+   `border-width: -5px` is dropped, `calc(-5px)` clamps to 0 */
+.u08d { border-width: calc(1px - 6px) }
+/*! kept: ...and a shorthand that states its own lengths is not its longhands */
+.u08e { padding: calc(1px - 6px) }
 /*! kept: `width: calc(0)` is a number and dropped, `width: 0` is a length */
 .u09 { width: calc(1 - 1) }
 /*! kept: a shorthand reaches `<integer>` through its longhands — `columns: 1.5`
@@ -117,7 +129,7 @@
 .m02 { width: max(1px,2px) }
 /*! math: however many arguments the grammar allows */
 .m03 { width: min(3px,2px,1px) }
-/*! math: units fixed against each other compare too, then take the shortest */
+/*! math: units fixed against each other compare too, then print in a written one */
 .m04 { width: min(1in,100px) }
 /*! math: clamp() is the middle one */
 .m05 { width: clamp(1px,5px,3px) }
@@ -261,8 +273,15 @@
 /*! declined: the inverse functions answer with a whole number of degrees at
    three arguments only */
 .f05 { rotate: asin(.5) }
-/*! declined: a fold inside a stepped function would print the shortest unit,
-   which is the rewrite that function's own arguments refuse */
+/*! math: `calc-size()` is not read as a whole — its basis is no expression —
+   but the size it is given still reduces */
+.c20 { width: calc-size(auto, 10px + 5px) }
+/*! math: ...at every depth it nests */
+.c21 { width: calc-size(calc-size(auto, 1px + 2px), 3px + 4px) }
+/*! declined: `size` is not a constant, so nothing reduces */
+.c22 { width: calc-size(auto, size + 10px) }
+/*! declined: a fold inside a stepped function would re-unit its result, which is
+   the rewrite that function's own arguments refuse */
 .q08 { margin-left: round(down,calc(4.5cm),calc(1.5cm)) }
 /*! declined: ...including another stepped function */
 .q09 { margin-left: round(down,round(down,10cm,3cm),1cm) }

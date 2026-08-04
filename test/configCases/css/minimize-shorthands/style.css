@@ -147,7 +147,7 @@
 .t57d { margin-top: 1px; color: red; margin-right: 2px; margin-bottom: 3px; margin-left: 4px }
 /*! declined: `all` writes every family */
 .t57e { margin-top: 1px; all: unset; margin-right: 2px; margin-bottom: 3px; margin-left: 4px }
-/*! declined: `border-radius`'s longhands are corners, which `{1,4}` orders differently */
+/*! webpack: `border-radius`'s longhands are corners, matched by name */
 .t58 { border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; border-bottom-left-radius: 1px }
 /*! font-weight: the keyword CSS Fonts 4 defines as 400 */
 .t59 { font-weight: normal }
