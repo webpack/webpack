@@ -4778,73 +4778,202 @@ describe("htmlMinify — assets webpack only passes through", () => {
 
 	/**
 	 * @param {string} src html source
-	 * @returns {string} the minified serialization
+	 * @returns {Promise<string>} the minified serialization
 	 */
-	const min = (src) => htmlMinify({ "page.html": src }).code;
+	const min = async (src) => (await htmlMinify({ "page.html": src })).code;
 
-	it("keeps server-side template tags", () => {
+	it("keeps server-side template tags", async () => {
 		// `<?php … ?>` is a bogus comment per §13.2.5.42, so the inert-comment rule
 		// would delete the whole directive from a copied template.
-		expect(min("<?php echo $t; ?>\n<html><body><p>a</p></body></html>")).toBe(
-			"<?php echo $t; ?><html><body><p>a</body></html>"
-		);
-		expect(min("<html><body><!-- inert --><p>a</p></body></html>")).toBe(
+		expect(
+			await min("<?php echo $t; ?>\n<html><body><p>a</p></body></html>")
+		).toBe("<?php echo $t; ?><html><body><p>a</body></html>");
+		expect(await min("<html><body><!-- inert --><p>a</p></body></html>")).toBe(
 			"<html><body><p>a</body></html>"
 		);
 	});
 
-	it("keeps text-level template placeholders unescaped", () => {
+	it("keeps text-level template placeholders unescaped", async () => {
 		// Escaping these to `&lt;%= t %&gt;` breaks the server-side render.
-		expect(min("<div>   <%= t %>   </div>")).toBe("<div>   <%= t %>   </div>");
-		expect(min("<div>{{ t }}</div>")).toBe("<div>{{ t }}</div>");
+		expect(await min("<div>   <%= t %>   </div>")).toBe(
+			"<div>   <%= t %>   </div>"
+		);
+		expect(await min("<div>{{ t }}</div>")).toBe("<div>{{ t }}</div>");
 	});
 
-	it("still escapes text that would re-parse as markup", () => {
+	it("still escapes text that would re-parse as markup", async () => {
 		// `a &lt;b&gt;c` decodes to `a <b>c`; emitting the `<` raw would build a
 		// real `<b>` element, so that one stays escaped. A bare `>` is only ever a
 		// character in text.
-		expect(min("<p>a &lt;b&gt;c")).toBe("<p>a &lt;b>c");
-		expect(min("<p>a&amp;b")).toBe("<p>a&amp;b");
+		expect(await min("<p>a &lt;b&gt;c")).toBe("<p>a &lt;b>c");
+		expect(await min("<p>a&amp;b")).toBe("<p>a&amp;b");
 		// Foster-parented text merges into one node whose range no longer covers
 		// its data — the source slice would drop the `c`.
-		expect(min("<table>a<tr><td>b</td></tr>c</table>")).toBe(
+		expect(await min("<table>a<tr><td>b</td></tr>c</table>")).toBe(
 			"ac<table><tr><td>b</table>"
 		);
 		// A trailing `<` has to stay escaped: dropping a comment after it would
 		// let it fuse with the next sibling into a tag.
-		expect(min("<p>a<</p>")).toBe("<p>a&lt;");
-		expect(min("<p>a<<!--c--></p>")).toBe("<p>a&lt;");
+		expect(await min("<p>a<</p>")).toBe("<p>a&lt;");
+		expect(await min("<p>a<<!--c--></p>")).toBe("<p>a&lt;");
 	});
 
-	it("keeps template expressions containing ampersands", () => {
+	it("keeps template expressions containing ampersands", async () => {
 		// `&&` is everywhere in EJS/PHP conditionals; escaping it to `&amp;&amp;`
 		// breaks the server-side render just as escaping `<` does.
-		expect(min("<div><%= a && b %></div>")).toBe("<div><%= a && b %></div>");
-		expect(min("<div><% if (a && b) { %>x<% } %></div>")).toBe(
+		expect(await min("<div><%= a && b %></div>")).toBe(
+			"<div><%= a && b %></div>"
+		);
+		expect(await min("<div><% if (a && b) { %>x<% } %></div>")).toBe(
 			"<div><% if (a && b) { %>x<% } %></div>"
 		);
-		expect(min("<p>a & b")).toBe("<p>a & b");
-		expect(min("<p>a &foo; b")).toBe("<p>a &foo; b");
+		expect(await min("<p>a & b")).toBe("<p>a & b");
+		expect(await min("<p>a &foo; b")).toBe("<p>a &foo; b");
 	});
 
-	it("escapes a character reference left open at the end", () => {
+	it("escapes a character reference left open at the end", async () => {
 		// The next sibling could complete it (`a &am` + `p;`) once a comment
 		// between them is dropped, so only a closed tail passes through.
-		expect(min("<p>a &</p>")).toBe("<p>a &amp;");
-		expect(min("<p>a &am</p>")).toBe("<p>a &amp;am");
-		expect(min("<p>a &am<!--c-->p;</p>")).toBe("<p>a &amp;amp;");
+		expect(await min("<p>a &</p>")).toBe("<p>a &amp;");
+		expect(await min("<p>a &am</p>")).toBe("<p>a &amp;am");
+		expect(await min("<p>a &am<!--c-->p;</p>")).toBe("<p>a &amp;amp;");
 	});
 
-	it("keeps the body of literal-text elements raw", () => {
+	it("keeps the body of literal-text elements raw", async () => {
 		// `script` / `style` bodies are not markup, so `<` must not be escaped —
-		// `a &lt; b` would change what the script does. A `<style>` body is still
-		// run through the CSS minifier, which is not an escaping pass.
-		expect(min("<script>if (a < b) { x(); }</script>")).toBe(
-			"<script>if (a < b) { x(); }</script>"
+		// `a &lt; b` would change what the script does. Both bodies still run
+		// through their own minifier, which is not an escaping pass.
+		expect(await min("<script>if (a < b) { x(); }</script>")).toBe(
+			"<script>a<b&&x();</script>"
 		);
-		expect(min("<style>.a[x='<'] { color: red }</style>")).toBe(
+		expect(await min("<style>.a[x='<'] { color: red }</style>")).toBe(
 			'<style>.a[x="<"]{color:red}</style>'
 		);
+	});
+});
+
+describe("htmlMinify — inline script", () => {
+	const htmlMinify = require("../lib/html/htmlMinify");
+
+	/**
+	 * @param {string} src html source
+	 * @param {object=} minimizerOptions minimizer options
+	 * @returns {Promise<string>} the minified serialization
+	 */
+	const min = async (src, minimizerOptions) =>
+		(await htmlMinify({ "page.html": src }, undefined, minimizerOptions)).code;
+
+	it("minifies a classic script", async () => {
+		expect(
+			await min(
+				"<script>var hello = 1; var world = hello + 2; f(world)</script>"
+			)
+		).toBe("<script>var hello=1,world=hello+2;f(world);</script>");
+	});
+
+	it("minifies a script whose type is a JavaScript MIME essence", async () => {
+		for (const type of [
+			"text/javascript",
+			"application/javascript",
+			"text/ecmascript",
+			"TEXT/JAVASCRIPT",
+			"  text/javascript  "
+		]) {
+			expect(
+				await min(`<script type="${type}">var a = 1; f(a)</script>`)
+			).toContain("var a=1;f(a);");
+		}
+	});
+
+	it("parses a module as a module, so its top level can be mangled", async () => {
+		expect(
+			await min('<script type="module">import x from "y"; f(x)</script>')
+		).toBe('<script type=module>import m from"y";f(m);</script>');
+		expect(await min("<script>var x = 1; f(x)</script>")).toBe(
+			"<script>var x=1;f(x);</script>"
+		);
+	});
+
+	it("escapes a `</script>` the minified output would otherwise carry", async () => {
+		expect(await min('<script>var a = "<" + "/script>"; f(a)</script>')).toBe(
+			'<script>var a="<\\/script>";f(a);</script>'
+		);
+	});
+
+	it("escapes it even when the build asked terser not to", async () => {
+		for (const terserOptions of [
+			{ format: { inline_script: false } },
+			{ output: { inline_script: false } }
+		]) {
+			expect(
+				await min('<script>var a = "<" + "/script>"; f(a)</script>', {
+					terserOptions
+				})
+			).toBe('<script>var a="<\\/script>";f(a);</script>');
+		}
+	});
+
+	it("honors the rest of the build's terser options", async () => {
+		expect(
+			await min("<script>/*! keep */var a = 1; f(a)</script>", {
+				terserOptions: { format: { comments: /^!/ } }
+			})
+		).toBe("<script>/*! keep */var a=1;f(a);</script>");
+	});
+
+	it("leaves a data block alone — the browser never executes it", async () => {
+		expect(await min('<script type="text/template">var a = 1;</script>')).toBe(
+			"<script type=text/template>var a = 1;</script>"
+		);
+		// An essence match is the whole string, so a parameter makes it data too.
+		expect(
+			await min(
+				'<script type="text/javascript; charset=utf-8">var a = 1;</script>'
+			)
+		).toBe('<script type="text/javascript; charset=utf-8">var a = 1;</script>');
+	});
+
+	it("leaves JSON to the JSON minifier", async () => {
+		expect(
+			await min('<script type="application/json">{ "a" : 1 }</script>')
+		).toBe('<script type=application/json>{"a":1}</script>');
+		expect(
+			await min('<script type="application/ld+json">{ "a" : 1 }</script>')
+		).toBe('<script type=application/ld+json>{"a":1}</script>');
+	});
+
+	it("keeps a body terser cannot parse", async () => {
+		expect(await min("<script>this is ( not js</script>")).toBe(
+			"<script>this is ( not js</script>"
+		);
+	});
+
+	it("leaves an empty or whitespace-only body alone", async () => {
+		expect(await min("<script></script>")).toBe("<script></script>");
+		expect(await min("<script>   \n  </script>")).toBe(
+			"<script>   \n  </script>"
+		);
+		expect(await min('<script src="a.js"></script>')).toBe(
+			"<script src=a.js></script>"
+		);
+	});
+
+	it("minifies every script in the document, resolving each body once", async () => {
+		expect(
+			await min(
+				"<script>var a = 1; f(a)</script><script>var b = 2; f(b)</script><script>var a = 1; f(a)</script>"
+			)
+		).toBe(
+			"<script>var a=1;f(a);</script><script>var b=2;f(b);</script><script>var a=1;f(a);</script>"
+		);
+	});
+
+	it("minifies a script nested in the body, next to other content", async () => {
+		expect(
+			await min(
+				"<html><body><p>x</p><script>var a = 1; f(a)</script></body></html>"
+			)
+		).toBe("<html><body><p>x</p><script>var a=1;f(a);</script></body></html>");
 	});
 });
 

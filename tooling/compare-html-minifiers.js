@@ -151,7 +151,10 @@ const minifiers = () => {
 	const htmlnano = load("htmlnano");
 	const swc = load("@swc/html");
 	return [
-		["webpack", (html) => htmlMinify({ "input.html": html }).code],
+		[
+			"webpack",
+			(html) => htmlMinify({ "input.html": html }).then((r) => r.code)
+		],
 		[
 			"html-minifier-terser",
 			(html) =>
