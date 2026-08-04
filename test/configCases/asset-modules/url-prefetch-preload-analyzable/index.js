@@ -19,6 +19,17 @@ it("should still inject the <link> for a hinted new URL()", () => {
 	expect(preloaded.as).toBe("font");
 });
 
+it("should build the <link> href from a generator publicPath", () => {
+	// The startup hint must use the asset's own url, not `output.publicPath` +
+	// filename, or the preload points at a different origin than the call site.
+	const preloaded = findLink((l) => l.href.endsWith("/cdn.svg"));
+	expect(preloaded).toBeDefined();
+	expect(preloaded.href).toBe("https://cdn.example.com/cdn.svg");
+
+	const icon = new URL(/* webpackPreload: true */ "./cdn.svg", import.meta.url);
+	expect(icon.href).toBe("https://cdn.example.com/cdn.svg");
+});
+
 it("should resolve the hinted URLs correctly", () => {
 	const image = new URL(/* webpackPrefetch: true */ "./image.png", import.meta.url);
 	const font = new URL(/* webpackPreload: true */ "./font.woff2", import.meta.url);

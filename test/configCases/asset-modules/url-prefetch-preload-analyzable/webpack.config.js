@@ -27,6 +27,11 @@ module.exports = {
 			{
 				test: /\.(png|woff2)$/,
 				type: "asset/resource"
+			},
+			{
+				test: /\.svg$/,
+				type: "asset/resource",
+				generator: { publicPath: "https://cdn.example.com/" }
 			}
 		]
 	}
