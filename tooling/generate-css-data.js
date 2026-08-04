@@ -687,6 +687,44 @@ const collectMathFunctionArity = (names) => {
 	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
 
+/**
+ * Where a math function the whole-call fold cannot read still takes a
+ * `<calc-sum>`, so that argument can be reduced in place. `calc-size()` is the
+ * one today: its basis is not an expression, which is exactly why counting
+ * `<calc-sum>`s refuses the function, and the size it is given still reduces.
+ * @param {string[]} names the math function names
+ * @param {[string, [number, number], string[]][]} arity the functions the fold already reads
+ * @returns {[string, number[]][]} each name with its `<calc-sum>` argument positions
+ */
+const collectMathFunctionSumArguments = (names, arity) => {
+	const readable = new Set(arity.map(([name]) => name));
+	/** @type {[string, number[]][]} */
+	const out = [];
+	for (const name of names) {
+		const syntax = definitions.get(`${name}()`);
+		if (syntax === undefined || readable.has(name)) continue;
+		const tree = grammarOf(syntax);
+		if (tree.type !== "function" || tree.body === null) continue;
+		const items = tree.body.type === "sequence" ? tree.body.items : [tree.body];
+		/** @type {number[]} */
+		const positions = [];
+		let position = 0;
+		let readable_ = true;
+		for (const item of items) {
+			if (item.type === "literal" && item.value === ",") {
+				position++;
+			} else if (item.type === "type" && item.name === "calc-sum") {
+				positions.push(position);
+			} else if (item.type !== "type") {
+				// Anything but a plain argument makes the positions unreliable.
+				readable_ = false;
+			}
+		}
+		if (readable_ && positions.length) out.push([name, positions]);
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
 // The types a number lands on. Everything else a grammar reaches (`<color>`,
 // `<image>`, an identifier) carries no magnitude of its own.
 const NUMERIC_TYPES = new Set([
@@ -2107,6 +2145,10 @@ const collectData = () => {
 	const mathFunctions = collectMathFunctions();
 	const substitutionFunctions = collectSubstitutionFunctions();
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
+	const mathFunctionSumArguments = collectMathFunctionSumArguments(
+		mathFunctions,
+		mathFunctionArity
+	);
 	const integerProperties = collectIntegerProperties();
 	const cssModulesKeywords = collectCssModulesKeywords();
 	const negativeAcceptingProperties = collectNegativeAcceptingProperties();
@@ -2202,6 +2244,13 @@ const MATH_FUNCTION_KEYWORDS = new Map([${mathFunctionArity
 			([name, , keywords]) =>
 				`["${name}", [${keywords.map((k) => `"${k}"`).join(", ")}]]`
 		)
+		.join(", ")}]);
+
+// Where a function the fold cannot read as a whole still takes a \`<calc-sum>\`,
+// so that argument reduces on its own. Keyed by name to the argument positions.
+/** @type {Map<string, number[]>} */
+const MATH_FUNCTION_SUM_ARGUMENTS = new Map([${mathFunctionSumArguments
+		.map(([name, positions]) => `["${name}", [${positions.join(", ")}]]`)
 		.join(", ")}]);
 
 // A CSS-wide keyword is only valid as the whole value, so a box repeating one is
@@ -2381,12 +2430,13 @@ module.exports.EIGHTH_TURN_TANGENT = EIGHTH_TURN_TANGENT;
 module.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
 module.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
-module.exports.LENGTH_ONLY_FUNCTIONS = LENGTH_ONLY_FUNCTIONS;
 module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
+module.exports.LENGTH_ONLY_FUNCTIONS = LENGTH_ONLY_FUNCTIONS;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
 module.exports.MATH_FUNCTION_ARITY = MATH_FUNCTION_ARITY;
 module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
 module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
+module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;
 module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;
