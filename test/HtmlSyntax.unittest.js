@@ -4428,6 +4428,27 @@ describe("SourceProcessor — streamed walk recycling", () => {
 		expect(log.indexOf("-form")).toBeGreaterThan(divExit);
 	});
 
+	it("visits a form subtree the walk never entered before `</form>`", () => {
+		// Same mid-stack removal, but the bulk sits *before* the form, so the walk
+		// is streaming yet has never entered the form when `</form>` takes it off
+		// the stack. Keying the halt on "was it entered" loses the whole subtree.
+		const log = walk(
+			`<!DOCTYPE html><html><body>${"<p>x</p>".repeat(
+				BIG
+			)}<form><div></form><p>y</p></div></body></html>`
+		);
+		expect(log.slice(log.indexOf("+form"))).toEqual([
+			"+form",
+			"+div",
+			"+p",
+			"-p",
+			"-div",
+			"-form",
+			"-body",
+			"-html"
+		]);
+	});
+
 	it("streams tables, where flushing is held back", () => {
 		const log = walk(bigBody("<table><tr><td>a</td></tr></table>", BIG_ROWS));
 		expect(log.filter((l) => l === "+table")).toHaveLength(BIG_ROWS);
