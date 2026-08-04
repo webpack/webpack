@@ -400,20 +400,25 @@ The rule bans **posting**, not **reading**. What may be skipped is bot noise —
 
 Everything that names a possible bug, regression, or improvement must be investigated, whoever raised it — a human reviewer, or an AI reviewer such as Copilot, Bugbot, or CodeRabbit. Being posted by a bot account is no reason to dismiss it; judge the claim, not the author. Reproduce it, then either fix it in code and push (that needs no permission) or, if you believe it is wrong, bring it **into the session**: report what you found, show the reply you would send, and let the requester decide whether it is posted. Never leave such a finding unanswered.
 
-### After opening the PR — a red check is yours to fix
+### After opening the PR — every check ends green
 
 > [!REQUIRED]
 
-**`lint`, `unit`, `basic`, and `integration` failing on your PR is never something to explain, defer, or wait out — fix it and push.** These four gate the merge, they run the same commands you can run locally, and a failure in them is a failure you introduced until a run on unmodified `main` proves otherwise. There is no such thing as ending a wake on one of them without either a pushed commit or a reply naming the blocker.
+**The target is the whole run green — every check, not a chosen few.** A red check on your PR is never something to explain, defer, or wait out. There is no such thing as ending a wake on one without either a pushed commit or a reply naming the blocker, and "that one is not important" is not a judgement to make on your own.
+
+Two things follow from that, and neither is an exception to it:
+
+- **A check that failed once is re-run before it is believed.** Infrastructure fails: a runner dies, a network fetch times out, an engine crashes on its own bug (the `runtimes (bun)` job has died on a segmentation fault inside Bun itself, with every test file reporting PASS first). Re-run the failing job. **If the re-run fails the same way, ignore it and move on** — do not keep re-running it, do not rewrite working code around it, and do not hold the PR on it.
+- **Coverage is read last** — see the rule at the end of this section.
+
+`lint`, `unit`, `basic`, and `integration` are the ones that reproduce locally, so they are never the ones you re-run and shrug at: they run the same commands you can run yourself, and a failure in them is a failure you introduced until a run on unmodified `main` proves otherwise. Fix them and push.
 
 Read the failing job's log rather than guessing (`get_job_logs`), reproduce it locally, fix the cause, and re-run the same command CI ran before pushing. Two failures recur often enough to name:
 
 - **cspell** rejects a word — reword it (the codebase is American English, and [Naming](#naming) forbids abbreviations) or, for a genuine term, add it to `cspell.json`.
 - **A snapshot lives in more than one suite.** `ConfigTestCases` and `ConfigCacheTestCases` both snapshot `configCases/`, and `--testPathPatterns=ConfigTestCases` does **not** match `ConfigCacheTestCases`. Update snapshots with `yarn test:basic --testNamePattern="<case>" -u` (no path filter), then run `yarn test:basic` in full.
 
-Anything else red — CodSpeed, Codecov, a preview build — is judged on its merits, not fixed on reflex; see [Writing on GitHub — ask first](#writing-on-github--ask-first) for which reports are noise. A CodSpeed comparison against a base that never ran is an artifact and says so in its own output.
-
-**Every check is expected to end green — but a check that failed once is re-run before it is believed.** Infrastructure fails: a runner dies, a network fetch times out, an engine crashes on its own bug (the `runtimes (bun)` job has died on a segmentation fault inside Bun itself, with every test file reporting PASS first). Re-run the failing job. **If the re-run fails the same way, ignore it and move on** — do not keep re-running it, do not rewrite working code around it, and do not hold the PR on it. This is the escape hatch for infrastructure only: it never applies to `lint`, `unit`, `basic`, or `integration`, which reproduce locally and are yours to fix per the rule above.
+A report that measures rather than tests — CodSpeed, a preview build — still gets investigated, but it is answered with evidence, not with a reflex commit. Reproduce the claim first (see [Verifying a performance or memory change](#verifying-a-performance-or-memory-change)); a comparison against a base that never ran, or across different runner environments, is an artifact and says so in its own output. Reporting an artifact as an artifact is a green outcome — silently leaving it unexamined is not. Posting a reply to one of these bots needs permission ([Writing on GitHub — ask first](#writing-on-github--ask-first)).
 
 **Do not read, chase, or act on coverage until every other check is green.** Coverage arrives last: `unit`, `basic`, `integration`, `test262` and the rest each upload their own flag, and Codecov recomputes the totals after each one. Until the final upload lands, the numbers on the PR are a partial sum — `project` will show a drop, the comment will be updated in place several times with different percentages, and a `-0.2%` at that moment means "some suites have not reported yet", not "you lost coverage". **Codecov being red while coverage changed is the normal state of a healthy PR mid-run** and is not a failure to fix. Read the report once the rest of CI is green; only then is a genuine patch gap worth adding a test for. Chasing an intermediate number costs a round of pointless commits and, worse, tempts changes to `lib/` that exist only to move a percentage.
 
