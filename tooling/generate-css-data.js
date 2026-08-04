@@ -556,6 +556,138 @@ const collectOneValuePairShorthands = (pairs) => {
 	return pairs.map(([name]) => name).filter((name) => named.has(name));
 };
 
+// The value types a grammar walk stops at rather than expands: what a minifier
+// can tell one authored component from another by. Anything else is expanded,
+// so `<line-width>` yields `length` plus its three keywords.
+const VALUE_CLASSES = new Set([
+	"angle",
+	"color",
+	"custom-ident",
+	"dashed-ident",
+	"frequency",
+	"ident",
+	"image",
+	"integer",
+	"length",
+	"number",
+	"percentage",
+	"resolution",
+	"string",
+	"time",
+	"url"
+]);
+
+/**
+ * What a property accepts as a whole value: the keywords it names, and the
+ * value classes it reaches. Expands `<'property'>` and `<syntax>` references
+ * but stops at a class, and skips a function's arguments — `hsl(… none …)`
+ * makes `none` no keyword of `<color>`.
+ * @param {string} syntax the value-definition syntax
+ * @returns {{ keywords: Set<string>, classes: Set<string> }} what it accepts
+ */
+const acceptedValues = (syntax) => {
+	const keywords = new Set();
+	const classes = new Set();
+	const seen = new Set();
+	/**
+	 * @param {string} source a value-definition syntax to expand
+	 * @returns {void}
+	 */
+	const expand = (source) => {
+		if (seen.has(source)) return;
+		seen.add(source);
+		let tree;
+		try {
+			tree = parseValueSyntax(source);
+		} catch (_err) {
+			return;
+		}
+		/**
+		 * @param {EXPECTED_ANY} node the node to walk
+		 * @param {boolean} inFunction whether it sits in a function's arguments
+		 * @returns {void}
+		 */
+		const walk = (node, inFunction) => {
+			if (node.type === "keyword") {
+				if (!inFunction) keywords.add(node.name);
+				return;
+			}
+			if (node.type === "type") {
+				if (inFunction) return;
+				if (VALUE_CLASSES.has(node.name)) classes.add(node.name);
+				else if (syntaxes[node.name]) expand(syntaxes[node.name].syntax);
+				// A type no dataset spells out matches nothing at print time, so
+				// naming it keeps the slot from claiming a value it would accept.
+				else classes.add(node.name);
+				return;
+			}
+			if (node.type === "property") {
+				if (!inFunction && properties[node.name]) {
+					expand(/** @type {string} */ (properties[node.name].syntax));
+				}
+				return;
+			}
+			if (node.type === "function") {
+				if (node.body !== null) walk(node.body, true);
+				return;
+			}
+			if (node.items) for (const item of node.items) walk(item, inFunction);
+			else if (node.body) walk(node.body, inFunction);
+		};
+		walk(tree, false);
+	};
+	expand(syntax);
+	return { keywords, classes };
+};
+
+/**
+ * CSS keywords are case-insensitive, so a table read back by a lowercased
+ * lookup holds them lowercased — `currentColor` and `CanvasText` included.
+ * @param {Set<string>} keywords the keywords as the grammar spells them
+ * @returns {string[]} the lowercased names, deduplicated and sorted
+ */
+const lowerSorted = (keywords) =>
+	[...new Set([...keywords].map((keyword) => keyword.toLowerCase()))].sort();
+
+/**
+ * The shorthands written as an order-free `||` of their own longhands, each
+ * appearing once: `outline`, `text-decoration`, … Merging those emits every
+ * value in grammar order, which `||` accepts in any order, so the only question
+ * is whether each value parses back into the longhand it was authored on — the
+ * per-slot tables below are what answers it.
+ * @returns {[string, string[]][]} `[shorthand, longhands]` in grammar order
+ */
+const collectFamilyLonghands = () => {
+	const verified = new Set(SUPPLEMENT.familyShorthands);
+	/** @type {[string, string[]][]} */
+	const out = [];
+	for (const [name, property] of Object.entries(properties)) {
+		if (!verified.has(name)) continue;
+		if (typeof property.syntax !== "string") continue;
+		const longhands = property.computed;
+		if (!Array.isArray(longhands) || longhands.length < 2) continue;
+		let tree;
+		try {
+			tree = parseValueSyntax(property.syntax);
+		} catch (_err) {
+			continue;
+		}
+		if (tree.type !== "anyOf") continue;
+		const slots = tree.items.map((item) =>
+			item.type === "property" ? item.name : null
+		);
+		if (slots.includes(null)) continue;
+		if (slots.length !== longhands.length) continue;
+		if (
+			slots.some((slot) => !longhands.includes(/** @type {string} */ (slot)))
+		) {
+			continue;
+		}
+		out.push([name, /** @type {string[]} */ (slots)]);
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
 /**
  * The `{1,4}` box shorthands whose four longhands map onto the four sides, in
  * `top right bottom left` order. Merging four such longhands into the shorthand
@@ -1464,7 +1596,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -1516,6 +1648,25 @@ const SUPPLEMENT = {
 	// 2.1 and reads everywhere `overflow-x` does, while `overflow: hidden scroll`
 	// is 2018-era. Every other name above is newer in its one-value form too.
 	oneValuePairShorthands: ["overflow"],
+	// The `||`-of-longhands shorthands a merge may emit. Positive evidence, so
+	// named rather than derived twice over: `mdn-data`'s `computed` under-reports
+	// what a shorthand resets (`border` clears `border-image`, `font` clears
+	// `font-size-adjust`), and states no version, so neither "resets nothing
+	// else" nor "as old as its longhands" is readable from it. Each name below
+	// was checked in headless Chromium against a block that also set every other
+	// property in the family, and none of them lost one: `outline` keeps
+	// `outline-offset`, `text-decoration` keeps `text-decoration-skip-ink` and
+	// both `text-underline-*`, `text-emphasis` keeps `text-emphasis-position`.
+	// `caret` is the one candidate left out — it is far newer than `caret-color`.
+	familyShorthands: [
+		"column-rule",
+		"flex-flow",
+		"list-style",
+		"outline",
+		"text-decoration",
+		"text-emphasis",
+		"text-wrap"
+	],
 	// Two longhands `mdn-data` maps to the wrong pair. Corrected from headless
 	// Chromium, which computes `corner-inline-start-shape` onto the two corners
 	// on the inline-start edge; the table gives it the block-start edge's pair,
@@ -2234,6 +2385,35 @@ const assertPrimitivesExist = () => {
 	}
 };
 
+// The value classes `lib/css/syntax.js` sorts a printed component into. A slot
+// naming any other one could claim a value the printer would not offer it, so
+// the merge would read a value as unambiguous when it is not.
+const PRINTER_VALUE_CLASSES = new Set([
+	"color",
+	"custom-ident",
+	"ident",
+	"image",
+	"length",
+	"percentage",
+	"string",
+	"url"
+]);
+
+/**
+ * @param {Map<string, { classes: Set<string> }>} slots the family slots
+ * @returns {void}
+ */
+const assertClassesArePrintable = (slots) => {
+	for (const [name, { classes }] of slots) {
+		for (const value of classes) {
+			if (PRINTER_VALUE_CLASSES.has(value)) continue;
+			throw new Error(
+				`${name} accepts <${value}>, which the printer cannot classify`
+			);
+		}
+	}
+};
+
 /**
  * Read every table out of the datasets and build the file they belong in.
  * Separate from writing it, so a test can assert the checked-in
@@ -2264,6 +2444,20 @@ const collectData = () => {
 	const negativeAcceptingProperties = collectNegativeAcceptingProperties();
 	const pairLonghands = collectPairLonghands();
 	const oneValuePairShorthands = collectOneValuePairShorthands(pairLonghands);
+	const familyLonghands = collectFamilyLonghands();
+	const slotAccepts = new Map();
+	for (const [, longhands] of familyLonghands) {
+		for (const longhand of longhands) {
+			slotAccepts.set(
+				longhand,
+				acceptedValues(/** @type {string} */ (properties[longhand].syntax))
+			);
+		}
+	}
+	assertClassesArePrintable(slotAccepts);
+	const colorKeywords = lowerSorted(
+		acceptedValues(syntaxes.color.syntax).keywords
+	);
 	const lengthOnlyFunctions = collectLengthOnlyFunctions();
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
@@ -2323,6 +2517,40 @@ const PAIR_LONGHANDS = new Map([${pairLonghands
 // The subset whose two-value form is newer than the longhands, so only a merge
 // collapsing to one value may emit it.
 const ONE_VALUE_PAIR_SHORTHANDS = ${setLiteral(oneValuePairShorthands)};
+
+// The shorthands written as an order-free \`||\` of their own longhands, each
+// appearing once, in grammar order. A merge emits every value, so the only
+// question is whether each parses back into the longhand it was authored on.
+// prettier-ignore
+const FAMILY_LONGHANDS = new Map([${familyLonghands
+		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
+		.join(", ")}]);
+
+// What each of those longhands accepts as a whole value: the keywords it names,
+// and the value classes it reaches. A value acceptable to a second slot is what
+// makes the merge ambiguous, and \`FAMILY_SLOT_CLASSES\` names a type the printer
+// cannot classify as readily as one it can, so an unknown one declines.
+// prettier-ignore
+const FAMILY_SLOT_KEYWORDS = new Map([${[...slotAccepts]
+		.map(
+			([name, { keywords }]) =>
+				`["${name}", ${JSON.stringify(lowerSorted(keywords))}]`
+		)
+		.join(", ")}]);
+
+// prettier-ignore
+const FAMILY_SLOT_CLASSES = new Map([${[...slotAccepts]
+		.map(
+			([name, { classes }]) =>
+				`["${name}", ${JSON.stringify([...classes].sort())}]`
+		)
+		.join(", ")}]);
+
+// The identifiers that are a \`<color>\` on their own — named, system and the two
+// context-dependent ones. Read off the \`<color>\` grammar outside any function,
+// so a channel keyword like the \`none\` in \`hsl(0 none 0)\` is not among them.
+// cspell:ignore ${colorKeywords.join(" ")}
+const COLOR_KEYWORDS = ${setLiteral(colorKeywords)};
 
 // The name prefix a declaration between two box longhands must not carry for the
 // merge to step over it. The shorthand's first segment, which is deliberately
@@ -2540,6 +2768,7 @@ module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
 module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
+module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;
 module.exports.CSS_MODULES_KEYWORD_OPTIONS = CSS_MODULES_KEYWORD_OPTIONS;
@@ -2549,6 +2778,9 @@ module.exports.DROPPABLE_WHEN_EMPTY_AT_RULES = DROPPABLE_WHEN_EMPTY_AT_RULES;
 module.exports.EIGHTH_TURN_COSINE = EIGHTH_TURN_COSINE;
 module.exports.EIGHTH_TURN_SINE = EIGHTH_TURN_SINE;
 module.exports.EIGHTH_TURN_TANGENT = EIGHTH_TURN_TANGENT;
+module.exports.FAMILY_LONGHANDS = FAMILY_LONGHANDS;
+module.exports.FAMILY_SLOT_CLASSES = FAMILY_SLOT_CLASSES;
+module.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;
 module.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
 module.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;

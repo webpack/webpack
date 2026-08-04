@@ -277,3 +277,40 @@
 .t111 { corner-start-start-shape: bevel; corner-end-start-shape: notch }
 /*! webpack: ...the edge `mdn-data` mistook it for still merges as stated */
 .t112 { corner-start-start-shape: bevel; corner-start-end-shape: notch }
+
+/* An order-free `||` shorthand merges when each value parses back to its slot. */
+
+/*! webpack: a length, a style keyword and a color are each one slot's */
+.t120 { outline-width: 3px; outline-style: dashed; outline-color: red }
+/*! webpack: ...a zero length keeps a slot of its own, and a color keyword too */
+.t121 { outline-width: 0; outline-style: none; outline-color: currentcolor }
+/*! webpack: declined: `auto` is both an `outline-style` and an `outline-color` */
+.t122 { outline-width: 3px; outline-style: auto; outline-color: auto }
+/*! webpack: declined: a substitution could stand for any of the three */
+.t123 { outline-width: 3px; outline-style: dashed; outline-color: var(--c) }
+/*! webpack: declined: a CSS-wide keyword means something else in a shorthand */
+.t124 { flex-direction: column; flex-wrap: inherit }
+/*! webpack: the merge steps over what does not write the family */
+.t125 { column-rule-width: medium; color: red; column-rule-style: groove; column-rule-color: rebeccapurple }
+/*! webpack: declined: `outline-offset` is in the family and would be stepped over */
+.t126 { outline-width: 3px; outline-offset: 1px; outline-style: dashed; outline-color: red }
+/*! webpack: four slots, and a percentage only the thickness takes */
+.t127 { text-decoration-line: none; text-decoration-style: solid; text-decoration-color: #123; text-decoration-thickness: 10% }
+/*! webpack: a system color is a color keyword like any other */
+.t128 { text-decoration-line: line-through; text-decoration-style: double; text-decoration-color: CanvasText; text-decoration-thickness: from-font }
+/*! webpack: two-slot families merge the same way */
+.t129 { text-emphasis-style: sesame; text-emphasis-color: #abc }
+.t130 { flex-direction: row-reverse; flex-wrap: wrap-reverse }
+.t131 { text-wrap-mode: wrap; text-wrap-style: pretty }
+/*! webpack: only `text-emphasis-style` takes a string */
+.t132 { text-emphasis-style: "x"; text-emphasis-color: red }
+/*! webpack: declined: a value no slot takes — the browser drops the declaration,
+   and a merge must not rescue it into a shorthand it would read */
+.t134 { flex-direction: 3px; flex-wrap: wrap }
+/*! webpack: declined: ...a unit no slot's type carries is not classified at all */
+.t135 { outline-width: 2s; outline-style: dashed; outline-color: red }
+/*! webpack: declined: ...and only a zero number is a length without one */
+.t136 { outline-width: 3; outline-style: dashed; outline-color: red }
+/*! webpack: declined: `list-style-type` takes any identifier, so no other value
+   in the family is unambiguous — an image included */
+.t133 { list-style-type: square; list-style-position: inside; list-style-image: url("data:image/gif;base64,R0lGODlhAQABAAAAACw=") }
