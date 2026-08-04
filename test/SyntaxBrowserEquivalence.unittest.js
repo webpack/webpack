@@ -108,13 +108,6 @@ const globalScope = /** @type {{ Bun?: unknown, Deno?: unknown }} */ (
 const onBunOrDeno = Boolean(globalScope.Bun) || Boolean(globalScope.Deno);
 const nodeMajor = Number.parseInt(process.versions.node, 10);
 
-// DOM differences this harness found that are defects in the HTML minifier,
-// not intended transforms. Empty: the ones it found have been fixed. An entry
-// here is tolerated only for the exact difference it names, and every entry must
-// still reproduce, so fixing one fails this suite until it is removed.
-/** @type {Map<string, string>} */
-const KNOWN_HTML_DEFECTS = new Map();
-
 describe("printer output in real Chrome", () => {
 	/** @type {import("puppeteer-core").Browser | undefined} */
 	let browser;
@@ -230,17 +223,8 @@ describe("printer output in real Chrome", () => {
 				return found;
 			}, htmlCorpus);
 			// The element tree and the rendered text are the DOM the page builds — no
-			// minification may change either, except where a defect is recorded.
-			expect(
-				differences.filter(
-					(one) => KNOWN_HTML_DEFECTS.get(one.name) !== one.why
-				)
-			).toEqual([]);
-			// Every recorded defect must still reproduce: fixing one fails here, which
-			// is the prompt to delete its entry.
-			expect(differences.map((one) => one.name).sort()).toEqual(
-				[...KNOWN_HTML_DEFECTS.keys()].sort()
-			);
+			// minification may change either.
+			expect(differences).toEqual([]);
 		},
 		600000
 	);
