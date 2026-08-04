@@ -3697,6 +3697,20 @@ declare class Compilation {
 	}): void;
 
 	/**
+	 * Queues a runtime module whose implementation is loaded on demand, for
+	 * `_attachPendingRuntimeModules` to build once the requirement pass is over.
+	 * `runtimeRequirementInTree` is a sync hook, so a tap cannot await the load
+	 * itself; anything the tap reads off the requirement set must be captured
+	 * before queueing, since `create` runs later.
+	 */
+	addLazyRuntimeModule(
+		chunk: Chunk,
+		load: () => any,
+		create: (loaded?: any) => RuntimeModule,
+		chunkGraph?: ChunkGraph
+	): void;
+
+	/**
 	 * Adds runtime module.
 	 */
 	addRuntimeModule(
