@@ -1,7 +1,55 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`minified corpus should minify every configCases page the same way: html 1`] = `
-"<!-- test/configCases/html/_pages/about.html -->
+"<!-- test/configCases/asset-modules/_static/file.html -->
+<!doctype html><html lang=en><head><meta charset=UTF-8><title>Title</title></head><body>
+
+
+
+</body></html>
+<!-- test/configCases/asset-modules/url-prefetch-preload-html/page.html -->
+<!doctype html><html lang=en><body>
+<img src=./image.png alt=hero>
+
+
+<img src=./logo.png alt=logo>
+
+
+</body></html>
+<!-- test/configCases/asset-modules/webpack-ignore/file.html -->
+<div>test</div>
+
+<!-- test/configCases/contenthash/hash-placeholders/page.html -->
+<!doctype html><html><head><title>Hash placeholders</title><link rel=icon href=./icon.png></head><body>
+<img src=./bg.png alt=bg>
+
+
+</body></html>
+<!-- test/configCases/css/minimize-minimizer-detection/page.html -->
+<!doctype html><html lang=en><body>
+    <p>native</p>
+  
+
+</body></html>
+<!-- test/configCases/css/minimize-minimizer-in-plugins/page.html -->
+<!doctype html><html lang=en><body>
+    <p>native</p>
+  
+
+</body></html>
+<!-- test/configCases/css/minimize-minimizer-include-only/page.html -->
+<!doctype html><html lang=en><body>
+    <p>native</p>
+  
+
+</body></html>
+<!-- test/configCases/css/minimize-user-minimizer-both-types/page.html -->
+<!doctype html><html lang=en><body>
+    <p>native</p>
+  
+
+</body></html>
+<!-- test/configCases/html/_pages/about.html -->
 <!doctype html><html><body>
 <p>about</p>
 
@@ -951,7 +999,7 @@ b\\">newline in a value</p>
 </body></html>
 <!-- test/configCases/html/null-char-parse/page.html -->
 <!doctype html><html><head><title>null-char-parse</title></head><body>
-<textarea>before after</textarea>
+<textarea>before\\\\u0000after</textarea>
 <xmp>raw�text</xmp>
 
 
@@ -2245,13 +2293,108 @@ some content here...
 
 
 
+</body></html>
+<!-- test/configCases/module-classes/css-and-html/page.html -->
+<!doctype html><html><head><title>Test</title></head><body>
+		<h1>Hello</h1>
+	
+
+</body></html>
+<!-- test/configCases/target/universal-all-module-types/page.html -->
+<!doctype html><html lang=en><head><meta charset=UTF-8><title>Document</title></head><body>
+<img src=./asset.png alt=test>
+
+
+</body></html>
+<!-- test/configCases/target/universal-html-entry/page.html -->
+<!doctype html><html lang=en><head><meta charset=UTF-8><title>Universal</title><link rel=manifest href=./app.webmanifest><link rel=stylesheet href=./styles.css></head><body>
+<img src=./icon.png alt=icon>
+<script src=./entry.js></script>
+
+
 </body></html>"
 `;
 
 exports[`minified corpus should minify every configCases page the same way: skipped 1`] = `Array []`;
 
 exports[`minified corpus should minify every configCases stylesheet the same way: css 1`] = `
-"/* test/configCases/css/async-chunk-node/style.css */
+"/* test/configCases/asset-modules/bytes/style.css */
+body{--my-url:url(\\"./file.svg\\")}
+/* test/configCases/asset-modules/css-font-preload/style.css */
+.bg{background-image:url(./bg.png)}@font-face{font-family:\\"A\\";src:url(./font.woff2) format(\\"woff2\\"),url(./font.woff) format(\\"woff\\")}@font-face{font-family:\\"B\\";src:url(./other.woff2) format(\\"woff2\\")}
+/* test/configCases/asset-modules/entry-with-runtimeChunk/entry.css */
+.class{background:#000}
+/* test/configCases/asset-modules/errored/style.css */
+a{color:red}
+/* test/configCases/asset-modules/http-url/dev-defaults.webpack.lock.data/http_localhost_9990/index_cache_502725659b59ae63a82a.css */
+
+/* test/configCases/asset-modules/http-url/dev-defaults.webpack.lock.data/http_localhost_9990/index_query_169a64b251bcdc02a084.css */
+
+/* test/configCases/asset-modules/http-url/errors.webpack.lock.data/http_localhost_9990/index_query_169a64b251bcdc02a084.css */
+
+/* test/configCases/asset-modules/http-url/frozen-verify.webpack.lock.data/http_localhost_9990/index_cache_502725659b59ae63a82a.css */
+
+/* test/configCases/asset-modules/http-url/frozen-verify.webpack.lock.data/http_localhost_9990/index_query_169a64b251bcdc02a084.css */
+
+/* test/configCases/asset-modules/http-url/prod-defaults.webpack.lock.data/http_localhost_9990/index_cache_502725659b59ae63a82a.css */
+
+/* test/configCases/asset-modules/http-url/prod-defaults.webpack.lock.data/http_localhost_9990/index_query_169a64b251bcdc02a084.css */
+
+/* test/configCases/asset-modules/http-url/server/index.css */
+
+/* test/configCases/asset-modules/keep-source-maps/data/asset.css */
+body{background-color:red}
+/* test/configCases/asset-modules/only-entry/entry.css */
+.class{background:#000}
+/* test/configCases/asset-modules/output-url-hints/style.css */
+.a{background-image:url(./image.png)}@font-face{font-family:\\"F\\";src:url(./font.woff2) format(\\"woff2\\")}
+/* test/configCases/asset-modules/url-prefetch-preload-css/style.css */
+.bg{background-image:url(./image.png)}@font-face{font-family:\\"MyFont\\";src:url(./font.woff2) format(\\"woff2\\")}.hero{background-image:url(./data.png)}
+/* test/configCases/asset-modules/url-prefetch-preload/style.css */
+
+/* test/configCases/asset-modules/url-relative/index.css */
+
+/* test/configCases/asset-modules/url-target-node1/index.css */
+
+/* test/configCases/asset-modules/url-target-node2/index.css */
+
+/* test/configCases/asset-modules/url-target-node3/index.css */
+
+/* test/configCases/asset-modules/url-target-web1/index.css */
+
+/* test/configCases/asset-modules/url-target-webworker2/index.css */
+
+/* test/configCases/asset-modules/webpack-ignore/file.css */
+body{color:red}
+/* test/configCases/chunk-index/issue-18008/m.css */
+.m{color:red}
+/* test/configCases/chunk-index/issue-18008/n.css */
+.n{color:red}
+/* test/configCases/chunk-index/recalc-index/a.css */
+.a{color:red}
+/* test/configCases/chunk-index/recalc-index/b.css */
+@import \\"./a.css\\";.b{color:blue}
+/* test/configCases/chunks-order/cjs/shared.css */
+body{color:red}
+/* test/configCases/chunks-order/cjs/style.css */
+body{background:red}
+/* test/configCases/chunks-order/module/shared.css */
+body{color:red}
+/* test/configCases/chunks-order/module/style.css */
+body{background:red}
+/* test/configCases/concatenate-modules/commonjs-wrapped-css/style.module.css */
+.foo{color:red}
+/* test/configCases/contenthash/css-generator-options-string/style.module.css */
+.class-a{color:red}.class-b{color:blue}
+/* test/configCases/contenthash/css-generator-options/style.module.css */
+.class-a{color:red}.class-b{color:blue}
+/* test/configCases/contenthash/hash-placeholders/async.css */
+.async{color:hotpink}
+/* test/configCases/contenthash/hash-placeholders/style.css */
+.app{background-image:url(./bg.png);color:rebeccapurple}
+/* test/configCases/crossorigin/set-crossorigin/style.css */
+body{color:red}
+/* test/configCases/css/async-chunk-node/style.css */
 .class{color:red}
 /* test/configCases/css/auto-default/style.css */
 body{color:red}
@@ -3238,10 +3381,10 @@ width: 16px;
 height: 16px;
 }}:root{--a:1}:root{--foo:}:root{--foo:}:root{--var:value}div{width:100\\\\%;width:100px2p;width:75pt;width:100UNKNOWN;width:100НЕИЗВЕСТНО}table{color:\\\\red}a{background:\\\\;a}h1\\\\\\\\{color:\\\\\\\\}.prop{\\\\62 olor:red}div{prop:1Hz;prop:1kHz}a{animation:test}a{animation:тест}a{animation:т\\\\ест}a{animation:😋}a{animation:\\\\\\\\😋}a{animation:\\\\😋}div{z-index:12;z-index:123;z-index:-456;z-index:0;z-index:-0}div{width:100e\\\\x;width:100ex;width:75pt}div{width:0%;width:.1%;width:100%;width:100.5%;width:100.1%;width:1e0%;width:1e1%;width:1e2%;width:10e-1%;width:10e-5%;width:10e+2%}div{margin:-5%;margin:-5.5%}a:before{content:\\"This string is demarcated by double quotes.\\";content:\\"This string is demarcated by single quotes.\\";content:'This is a string with \\" an escaped double quote.';content:\\"This string also has \\\\22 an escaped double quote.\\";content:\\"This is a string with ' an escaped single quote.\\";content:\\"This string also has \\\\27 an escaped single quote.\\";content:\\"This is a string with \\\\\\\\ an escaped backslash.\\";content:\\"This string also has \\\\22an escaped double quote.\\";content:\\"This string also has \\\\22  an escaped double quote.\\";content:\\"This string has a \\\\Aline break in it.\\";content:\\"A really long \\\\
 awesome string\\";content:\\";'@ /**/\\\\\\"\\";content:'\\\\'\\"\\\\\\\\';content:\\"a\\\\
-b\\";content:\\"a\\\\b\\";content:\\"a\\\\
+b\\";content:\\"a\\\\\\\\u000cb\\";content:\\"a\\\\
 \\\\
 \\\\
-\\\\\\\\
+\\\\\\\\u000c\\\\
 b\\";content:\\"a\\\\62 c\\"}a[title=\\"a not s\\\\
 o very long title\\"]{color:red}a[title=\\"a not so very long title\\"]{color:red}div{family-name:\\"A;' /**/\\"}.foo{content:\\";'@ /**/\\\\\\"\\";content:'\\\\'\\"\\\\\\\\'}div{prop:[];prop:[row1-start];prop:[row1-start-with-spaces-around];prop:[red #fff 9pt];prop:[row1-start] 25% [row1-end row2-start] 25% [row2-end]}#delay{font-size:14px;transition-property:font-size;transition-duration:4s;transition-delay:2s}.box{transition:width 2s,height 2s,background-color 2s,transform 2s}.time{transition-duration:4s}@font-face{font-family:\\"Ampersand\\";src:local(\\"Times New Roman\\");unicode-range:U+26;unicode-range:u+26;unicode-range:U+0-7F;unicode-range:U+0025-00FF;unicode-range:U+4??;unicode-range:U+0025-00FF, U+4??;unicode-range:U+A5, U+4E00-9FFF, U+30??, U+FF00-FF9F;unicode-range:U+????;unicode-range:U+??????;unicode-range:U+12;unicode-range:U+12e112;unicode-range:U+1e1ee1;unicode-range:U+1e1ee1-FFFFFF;unicode-range:U+1e1ee?;unicode-range:U+12-13}div{background:\\\\URL(https://example.com/image.png);background:URL(https://example.com/image.png);background:\\\\URL(\\"https://example.com/image.png\\");background:url(data:image/png;base64,iRxVB0);background:url(#IDofSVGpath);background:url(\\"//aa.com/img.svg\\" prefetch);background:url(\\"//aa.com/img.svg\\" foo bar baz func(test));background:url(\\"http://example.com/image.svg\\" param(--color var(--primary-color)));background:url();--foo:\\"http://www.example.com/pinkish.gif\\";background:src(\\"http://www.example.com/pinkish.gif\\");background:SRC(\\"http://www.example.com/pinkish.gif\\");background:src(var(--foo));background:u\\\\rl(https://example.com/image.png);background:URL(https://example.com/ima\\\\)ge.png);background:url(https://example.com/image.png)}.delim{a1:@ 12;a2:1 # 1;a3:(1 2 3);a4:1 + 1;a5:+s1;a6:\\"test\\",\\"test\\";a7:1 - 2 - 3;a8:fn(\\"test\\");a9:< >;a10:\\\\ ;a11:$;a12:--1;a13:- 1;a14:ident1<!-- abc -->ident2;a15:--fn(\\"test\\");a16:+3.4e2;a17:+3.4e-2;a18:+3.4e+2;a19:12.1 .1;a20:+-12.2;a21:12 .;a22:\\\\A;a23:\\\\00000A;a23:\\\\00000AB;a24:\\\\123456B}
 /* test/configCases/css/parsing/style.css */
@@ -3549,7 +3692,229 @@ mg.png\\\\
 /* test/configCases/css/webworker/base.modules.css */
 .base{display:block}
 /* test/configCases/css/webworker/style.modules.css */
-.header{composes:base from \\"./base.modules.css\\";color:red}"
+.header{composes:base from \\"./base.modules.css\\";color:red}
+/* test/configCases/defer-import/css-export-types/style-attr.css */
+.defer-attr-class{color:seagreen;padding:33px}
+/* test/configCases/defer-import/css-export-types/style-stylesheet.css */
+.defer-stylesheet-class{color:tomato;padding:22px}
+/* test/configCases/defer-import/css-export-types/style-text.css */
+.defer-text-class{color:rebeccapurple;padding:11px}
+/* test/configCases/entry/depend-on-non-js/a.css */
+
+/* test/configCases/entry/depend-on-non-js/b.css */
+
+/* test/configCases/errors/generator-generate-error/style-other.css */
+div{background:url(./in-style.png);background:url(./in-style-source.png)}
+/* test/configCases/errors/generator-generate-error/style.css */
+a{color:red}
+/* test/configCases/errors/generator-generate-error/style.modules.css */
+.class{color:red}
+/* test/configCases/html/css-imported-from-js/style.css */
+.hero{color:green}
+/* test/configCases/html/css-mixed-link-and-js-import/imported.css */
+.hero{color:green}.imported{content:\\"imported\\"}
+/* test/configCases/html/css-mixed-link-and-js-import/imports-shared.css */
+@import \\"./shared.css\\";.imports-shared{content:\\"imports-shared\\"}
+/* test/configCases/html/css-mixed-link-and-js-import/linked.css */
+.hero{color:red}.linked{content:\\"linked\\"}
+/* test/configCases/html/css-mixed-link-and-js-import/shared.css */
+.shared{content:\\"shared\\"}
+/* test/configCases/html/css-multi-entry-order/a.css */
+.a{content:\\"a\\"}
+/* test/configCases/html/css-multi-entry-order/b.css */
+.b{content:\\"b\\"}
+/* test/configCases/html/css-runtime-and-split-chunks/app-style.css */
+.hero{color:green}
+/* test/configCases/html/css-runtime-and-split-chunks/vendor-style.css */
+.vendor{content:\\"vendor-style\\"}
+/* test/configCases/html/css-split-chunks-order/style1.css */
+.hero{color:red}
+/* test/configCases/html/css-split-chunks-order/style2.css */
+.hero{color:green}
+/* test/configCases/html/entry-script-and-stylesheet/styles.css */
+.box{color:green}
+/* test/configCases/html/html-entry-point-css/style.css */
+.hero{background:url(./image.png) no-repeat;color:red}
+/* test/configCases/html/iframe-srcdoc-css/imported.css */
+body{color:red}
+/* test/configCases/html/iframe-srcdoc-css/linked.css */
+p{font-weight:700}
+/* test/configCases/html/js-css-html/style.css */
+.class{background:url(./image.png)}
+/* test/configCases/html/link/alt-style.css */
+.bar{background:url(./icon.png);color:blue}
+/* test/configCases/html/link/style.css */
+.foo{background:url(./image.png);color:red}
+/* test/configCases/html/output-html-crossorigin/src/style.css */
+.a{color:red}
+/* test/configCases/html/output-html-css/src/styles.css */
+.x{color:red}
+/* test/configCases/html/output-html-depend-on-css/src/theme.css */
+.theme{color:red}
+/* test/configCases/html/output-html-entry/src/a.css */
+.x{color:red}
+/* test/configCases/html/output-html-inject/src/css-a.css */
+.a{color:red}
+/* test/configCases/html/output-html-inject/src/css-b.css */
+.b{color:yellow}
+/* test/configCases/html/output-html-inject/src/css-c.css */
+.c{color:teal}
+/* test/configCases/html/output-html-inject/src/shared.css */
+p{color:green}
+/* test/configCases/html/output-html-inject/src/split-main.css */
+@import \\"./shared.css\\";body{color:blue}
+/* test/configCases/html/output-html-inject/src/style.css */
+body{color:red}
+/* test/configCases/html/output-html-inline/src/style-url.css */
+.bg{background:url(./img.png)}.bg-quoted{background:url(./img.png)}.bg-data{background:url(data:image/png;base64,AAAA)}
+/* test/configCases/html/output-html-inline/src/style.css */
+body{color:red}
+/* test/configCases/html/output-html-inline/src/tricky.css */
+.a:before{content:\\"</style>\\"}.b{color:green}
+/* test/configCases/html/output-html-integrity/src/preload.css */
+.pre{color:blue}
+/* test/configCases/html/output-html-integrity/src/style.css */
+.box{color:red}
+/* test/configCases/html/parser-sources-html-shared-assets/shared.css */
+body{color:red}
+/* test/configCases/html/parser-sources-types/styles.css */
+.from-link{color:blue}
+/* test/configCases/html/preload-prefetch/preload-style.css */
+body{color:red}
+/* test/configCases/html/script-src-sibling-attrs/style.css */
+.hero{color:green}
+/* test/configCases/html/script-src/style.css */
+body{color:red}
+/* test/configCases/html/stylesheet-entry-runtime-chunk/style.css */
+.hero{color:red}
+/* test/configCases/html/vite-alignment/src/style.css */
+body{color:blue}
+/* test/configCases/lazy-barrel/side-effect-css-async/lib/unused.css */
+.unused{color:blue}
+/* test/configCases/lazy-barrel/side-effect-css-async/lib/used.css */
+.used{color:red}
+/* test/configCases/lazy-barrel/side-effect-import/lib/Button.css */
+.button-unused{color:blue}
+/* test/configCases/lazy-barrel/side-effect-import/lib/Dialog.css */
+.dialog-used{color:red}
+/* test/configCases/library/module-useless-export-requirement/style.css */
+.main{color:red}
+/* test/configCases/module-classes/css-and-html/style.css */
+body{background:red}
+/* test/configCases/module/issue-16040/bar.css */
+.bar{color:#fff}
+/* test/configCases/module/issue-16040/foo.css */
+.foo{color:#fff}
+/* test/configCases/output/charset/chunk1.css */
+a{color:red}
+/* test/configCases/parsing/bom/style.css */
+﻿body{color:red}
+/* test/configCases/parsing/url-ignore/file2.css */
+a{color:red}
+/* test/configCases/parsing/url-ignore/file4.css */
+a{color:red}
+/* test/configCases/plugins/manifest-plugin/shared.css */
+body{color:red}
+/* test/configCases/plugins/manifest-plugin/style.css */
+body{background:red}
+/* test/configCases/plugins/mini-css-extract-plugin/a.css */
+@import \\"./dependency.css\\";.a{color:red}
+/* test/configCases/plugins/mini-css-extract-plugin/b.css */
+.b{color:red}
+/* test/configCases/plugins/mini-css-extract-plugin/c.css */
+@import \\"./dependency.css\\";.c{color:red}
+/* test/configCases/plugins/mini-css-extract-plugin/chunk.css */
+@import \\"./dependency.css\\";.chunk{color:red}
+/* test/configCases/plugins/mini-css-extract-plugin/d.css */
+@import \\"./dependency.css\\";.d{color:red}
+/* test/configCases/plugins/mini-css-extract-plugin/dependency.css */
+.dependency{color:red}
+/* test/configCases/race-conditions/import-module/inner.module.css */
+@value someBottom from \\"./vars.module.css\\";
+/* test/configCases/race-conditions/import-module/style.module.css */
+@value someBottom from \\"./inner.module.css\\";.cold{bottom:someBottom}
+/* test/configCases/race-conditions/import-module/style1.module.css */
+@value someBottom from \\"./inner.module.css\\";.cold{bottom:someBottom}
+/* test/configCases/race-conditions/import-module/vars.module.css */
+@value someBottom: 8px;@value someBottom1: 8px;
+/* test/configCases/rule-set/oneOf/index.css */
+body{color:red}
+/* test/configCases/source-map/css-modules-link-fine-grained-mappings/style.module.css */
+.btn{color:red}.card{padding:10px}.alert{background:yellow}
+/* test/configCases/source-map/css-modules-link-source-map/style.module.css */
+.btn{color:red}.card{padding:10px}
+/* test/configCases/source-map/default-filename-extensions-css/style.css */
+body{background-color:red}
+/* test/configCases/source-map/devtools-customize/bar.css */
+body{color:red}
+/* test/configCases/source-map/devtools-customize/foo.css */
+@import url(./bar.css);
+/* test/configCases/source-map/devtools-default/bar.css */
+body{color:red}
+/* test/configCases/source-map/devtools-default/foo.css */
+@import url(./bar.css);
+/* test/configCases/source-map/extract-source-map-css/app.css */
+*{box-sizing:border-box}.row{display:flex;margin-right:-15px;margin-left:-15px}.col-inner{display:flex;align-items:center;justify-content:center;color:#fff;height:50px;background:coral}.col-s3{flex:0 1 25%;padding:0 15px}/*# sourceMappingURL=app.css.map*/
+/* test/configCases/split-chunks/css-enforce/node_modules/package/styles.css */
+body{background:green}
+/* test/configCases/split-chunks/css-enforce/style.css */
+body{background:red}
+/* test/configCases/target/universal-all-module-types/auto.modules.css */
+.auto-box{color:purple}
+/* test/configCases/target/universal-all-module-types/global.css */
+.global-box{color:blue}
+/* test/configCases/target/universal-all-module-types/lazy.module.css */
+.lazy-box{color:orange}
+/* test/configCases/target/universal-all-module-types/plain-auto.css */
+.plain-auto-box{color:teal}
+/* test/configCases/target/universal-all-module-types/style.css */
+.box{color:red}
+/* test/configCases/target/universal-all-module-types/styles.module.css */
+.box{color:green}
+/* test/configCases/target/universal-css/style.css */
+body{background:red}
+/* test/configCases/target/universal-css/style.modules.css */
+.foo{color:red}
+/* test/configCases/target/universal-css/style2.css */
+body{color:blue}
+/* test/configCases/target/universal-css/style2.modules.css */
+.bar{background:blue}
+/* test/configCases/target/universal-html-entry/entry.module.css */
+.box{color:green}
+/* test/configCases/target/universal-html-entry/styles.css */
+.page{color:red}
+/* test/configCases/web/fetch-priority/style-1.css */
+a{color:red}
+/* test/configCases/web/fetch-priority/style-2.css */
+a{color:red}
+/* test/configCases/web/fetch-priority/style.css */
+a{color:red}
+/* test/configCases/web/nonce/chunk.css */
+.class{color:red}
+/* test/configCases/web/prefetch-preload-module-jsonp/chunk1-a.css */
+a{color:red}
+/* test/configCases/web/prefetch-preload-module-jsonp/chunk1.css */
+a{color:red}
+/* test/configCases/web/prefetch-preload-module-jsonp/chunk2.css */
+a{color:blue}
+/* test/configCases/web/prefetch-preload-module-only-js/chunk1-a.css */
+a{color:red}
+/* test/configCases/web/prefetch-preload-module-only-js/chunk1.css */
+a{color:red}
+/* test/configCases/web/prefetch-preload-module-only-js/chunk2.css */
+a{color:blue}
+/* test/configCases/web/prefetch-preload-module/chunk1-a.css */
+a{color:red}
+/* test/configCases/web/prefetch-preload-module/chunk1.css */
+a{color:red}
+/* test/configCases/web/prefetch-preload-module/chunk2.css */
+a{color:blue}
+/* test/configCases/web/prefetch-preload/chunk1-a.css */
+a{color:red}
+/* test/configCases/web/prefetch-preload/chunk1.css */
+a{color:red}
+/* test/configCases/web/prefetch-preload/chunk2.css */
+a{color:blue}"
 `;
 
 exports[`minified corpus should minify every configCases stylesheet the same way: skipped 1`] = `

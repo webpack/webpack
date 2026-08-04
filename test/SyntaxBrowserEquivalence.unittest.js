@@ -1,6 +1,6 @@
 "use strict";
 
-const fs = require("fs");
+const fs = require("fs/promises");
 const path = require("path");
 const { SourceProcessor: CssSourceProcessor } = require("../lib/css/syntax");
 const { SourceProcessor: HtmlSourceProcessor } = require("../lib/html/syntax");
@@ -12,35 +12,43 @@ const { SourceProcessor: HtmlSourceProcessor } = require("../lib/html/syntax");
 // printers emit is visible even when it stays equivalent.
 
 // Two fixtures are vendored minified Tailwind (~2 MB each); they would dominate
-// the corpus snapshot without covering syntax the other 600 files miss.
+// the corpus snapshot without covering syntax the other fixtures miss. Every
+// other `.css` / `.html` under `configCases` is included, whichever category it
+// sits in — a stylesheet belonging to an html test exercises the same printer.
 const MAX_FIXTURE_SIZE = 100 * 1024;
+const CONFIG_CASES = path.join(__dirname, "configCases");
 
 /**
  * Every fixture of one extension under a directory, largest ones skipped.
  * @param {string} dir directory to walk
  * @param {string} extension file extension including the dot
- * @returns {{ files: string[], skipped: string[] }} sorted fixture paths, and the ones left out
+ * @returns {Promise<{ files: string[], skipped: string[] }>} sorted fixture paths, and the ones left out
  */
-const collectFixtures = (dir, extension) => {
+const collectFixtures = async (dir, extension) => {
 	/** @type {string[]} */
 	const files = [];
 	/** @type {string[]} */
 	const skipped = [];
 	/**
 	 * @param {string} current directory to read
+	 * @returns {Promise<void>} when the subtree has been read
 	 */
-	const walk = (current) => {
-		for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
-			const full = path.join(current, entry.name);
-			if (entry.isDirectory()) {
-				walk(full);
-			} else if (entry.name.endsWith(extension)) {
-				if (fs.statSync(full).size > MAX_FIXTURE_SIZE) skipped.push(full);
-				else files.push(full);
-			}
-		}
+	const walk = async (current) => {
+		const entries = await fs.readdir(current, { withFileTypes: true });
+		await Promise.all(
+			entries.map(async (entry) => {
+				const full = path.join(current, entry.name);
+				if (entry.isDirectory()) {
+					await walk(full);
+				} else if (entry.name.endsWith(extension)) {
+					const { size } = await fs.stat(full);
+					if (size > MAX_FIXTURE_SIZE) skipped.push(full);
+					else files.push(full);
+				}
+			})
+		);
 	};
-	walk(dir);
+	await walk(dir);
 	return { files: files.sort(), skipped: skipped.sort() };
 };
 
@@ -50,35 +58,59 @@ const collectFixtures = (dir, extension) => {
  * @param {string} dir directory to walk
  * @param {string} extension file extension including the dot
  * @param {(source: string) => string} minify the printer to run
- * @returns {{ cases: { name: string, raw: string, min: string }[], skipped: string[] }} the corpus
+ * @returns {Promise<{ cases: { name: string, raw: string, min: string }[], skipped: string[] }>} the corpus
  */
-const buildCorpus = (dir, extension, minify) => {
-	const { files, skipped } = collectFixtures(dir, extension);
-	const cases = files.map((file) => {
-		const raw = fs.readFileSync(file, "utf8");
-		return {
-			name: path.relative(path.join(__dirname, ".."), file).replace(/\\/g, "/"),
-			raw,
-			min: minify(raw)
-		};
-	});
+const buildCorpus = async (dir, extension, minify) => {
+	const { files, skipped } = await collectFixtures(dir, extension);
+	const cases = await Promise.all(
+		files.map(async (file) => {
+			const raw = await fs.readFile(file, "utf8");
+			return {
+				name: path
+					.relative(path.join(__dirname, ".."), file)
+					.replace(/\\/g, "/"),
+				raw,
+				min: minify(raw)
+			};
+		})
+	);
 	return { cases, skipped };
 };
 
-const cssCorpus = buildCorpus(
-	path.join(__dirname, "configCases/css"),
-	".css",
-	(source) =>
-		/** @type {{ code: string }} */
-		(new CssSourceProcessor().process(source, { minimize: true })).code
-);
-const htmlCorpus = buildCorpus(
-	path.join(__dirname, "configCases/html"),
-	".html",
-	(source) =>
-		/** @type {{ code: string }} */
-		(new HtmlSourceProcessor().process(source, { minimize: true })).code
-);
+/** @typedef {{ cases: { name: string, raw: string, min: string }[], skipped: string[] }} Corpus */
+
+/** @type {Corpus} */
+let cssCorpus;
+/** @type {Corpus} */
+let htmlCorpus;
+/** @type {Promise<void> | undefined} */
+let building;
+
+/**
+ * Build both corpora once, however many suites ask for them.
+ * @returns {Promise<void>} when both are ready
+ */
+const buildCorpora = () => {
+	if (building === undefined) {
+		building = (async () => {
+			cssCorpus = await buildCorpus(
+				CONFIG_CASES,
+				".css",
+				(source) =>
+					/** @type {{ code: string }} */
+					(new CssSourceProcessor().process(source, { minimize: true })).code
+			);
+			htmlCorpus = await buildCorpus(
+				CONFIG_CASES,
+				".html",
+				(source) =>
+					/** @type {{ code: string }} */
+					(new HtmlSourceProcessor().process(source, { minimize: true })).code
+			);
+		})();
+	}
+	return building;
+};
 
 /**
  * The corpus as one file, each fixture labelled so a snapshot diff names it.
@@ -87,10 +119,23 @@ const htmlCorpus = buildCorpus(
  * @param {string} close comment closer for the language
  * @returns {string} the concatenated minified corpus
  */
+const CONTROL_CHARACTER_RE = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
+
 const concatenate = (cases, open, close) =>
-	cases.map((c) => `${open} ${c.name} ${close}\n${c.min}`).join("\n");
+	cases
+		.map((c) => `${open} ${c.name} ${close}\n${c.min}`)
+		.join("\n")
+		// A fixture holds a literal NUL (`html/null-char-parse`); one such byte
+		// makes git treat the snapshot as binary and stop showing its diff, which
+		// is the only thing the snapshot is for.
+		.replace(
+			CONTROL_CHARACTER_RE,
+			(c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`
+		);
 
 describe("minified corpus", () => {
+	beforeAll(buildCorpora, 120000);
+
 	it("should minify every configCases stylesheet the same way", () => {
 		expect(cssCorpus.skipped.map((f) => path.basename(f))).toMatchSnapshot(
 			"skipped"
@@ -149,6 +194,7 @@ describe("printer output in real Chrome", () => {
 	let page;
 
 	beforeAll(async () => {
+		await buildCorpora();
 		if (onBunOrDeno || nodeMajor < 18) return;
 		/** @type {typeof import("puppeteer-core").default} */
 		let puppeteer;
