@@ -273,6 +273,13 @@
 /*! declined: the inverse functions answer with a whole number of degrees at
    three arguments only */
 .f05 { rotate: asin(.5) }
+/*! math: `calc-size()` is not read as a whole — its basis is no expression —
+   but the size it is given still reduces */
+.c20 { width: calc-size(auto, 10px + 5px) }
+/*! math: ...at every depth it nests */
+.c21 { width: calc-size(calc-size(auto, 1px + 2px), 3px + 4px) }
+/*! declined: `size` is not a constant, so nothing reduces */
+.c22 { width: calc-size(auto, size + 10px) }
 /*! declined: a fold inside a stepped function would print the shortest unit,
    which is the rewrite that function's own arguments refuse */
 .q08 { margin-left: round(down,calc(4.5cm),calc(1.5cm)) }

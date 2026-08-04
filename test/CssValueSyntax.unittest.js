@@ -218,6 +218,17 @@ describe("CssValueSyntax", () => {
 			expect(MATH_FUNCTION_KEYWORDS.size).toBe(1);
 		});
 
+		it("still finds the `<calc-sum>` argument of the one it leaves out", () => {
+			// `calc-size()` is refused as a whole, so its size is reduced in place.
+			// Derived from the grammar's argument order, not from its name.
+			const { MATH_FUNCTION_SUM_ARGUMENTS } = require("../lib/css/data");
+
+			expect(MATH_FUNCTION_SUM_ARGUMENTS.get("calc-size")).toEqual([1]);
+			// Everything the fold already reads is left out of this table.
+			expect(MATH_FUNCTION_SUM_ARGUMENTS.has("min")).toBe(false);
+			expect(MATH_FUNCTION_SUM_ARGUMENTS.has("round")).toBe(false);
+		});
+
 		it("leaves out the one whose arguments are not all expressions", () => {
 			// `calc-size()` leads with a basis, which is an expression this cannot
 			// evaluate by counting `<calc-sum>`s.
