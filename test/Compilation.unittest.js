@@ -10,6 +10,59 @@ const createCompilation = () => {
 };
 
 describe("Compilation", () => {
+	describe("addLazyRuntimeModule", () => {
+		it("attaches the queued runtime module once its load resolves", (done) => {
+			const compilation = createCompilation();
+			const chunk = compilation.addChunk("a");
+
+			const RuntimeModule = require("../lib/RuntimeModule");
+
+			class TestRuntimeModule extends RuntimeModule {
+				constructor() {
+					super("test");
+				}
+
+				generate() {
+					return "";
+				}
+			}
+			compilation.addLazyRuntimeModule(
+				chunk,
+				() => Promise.resolve(TestRuntimeModule),
+				(Ctor) => new Ctor()
+			);
+			expect(compilation.chunkGraph.getNumberOfRuntimeModules(chunk)).toBe(0);
+			compilation._attachPendingRuntimeModules((err) => {
+				expect(err).toBeNull();
+				expect(compilation.chunkGraph.getNumberOfRuntimeModules(chunk)).toBe(1);
+				done();
+			});
+		});
+
+		it("reports a load that rejects", (done) => {
+			const compilation = createCompilation();
+			const chunk = compilation.addChunk("a");
+			const error = new Error("cannot load");
+			compilation.addLazyRuntimeModule(
+				chunk,
+				() => Promise.reject(error),
+				(Ctor) => new Ctor()
+			);
+			compilation._attachPendingRuntimeModules((err) => {
+				expect(err).toBe(error);
+				done();
+			});
+		});
+
+		it("does nothing when nothing was queued", (done) => {
+			const compilation = createCompilation();
+			compilation._attachPendingRuntimeModules((err) => {
+				expect(err).toBeNull();
+				done();
+			});
+		});
+	});
+
 	describe("deleteAsset / renameAsset reverse index", () => {
 		it("deleteAsset removes the file from chunk.files and chunk.auxiliaryFiles", () => {
 			const compilation = createCompilation();
