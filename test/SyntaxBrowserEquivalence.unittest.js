@@ -298,15 +298,26 @@ describe("printer output in real Chrome", () => {
 				return raw;
 			};
 			/**
-			 * An element as namespace, name and attributes.
+			 * An element as depth, namespace, name and attributes — everything the
+			 * parser must build the same, and nothing the printer may respell.
+			 * Attribute order, quoting, entity spelling and omitted end tags are all
+			 * free to differ. The depth is what makes the flat element list in document
+			 * order stand for the tree, so re-parenting cannot pass unseen.
 			 * @param {Element} node an element
 			 * @returns {string} its shape
 			 */
-			const shape = (node) =>
-				`${node.namespaceURI}|${node.localName}[${[...node.attributes]
+			const shape = (node) => {
+				let depth = 0;
+				for (let up = node.parentElement; up !== null; up = up.parentElement) {
+					depth++;
+				}
+				return `${depth}|${node.namespaceURI}|${node.localName}[${[
+					...node.attributes
+				]
 					.map((one) => `${one.name}=${value(node, one)}`)
 					.sort()
 					.join(",")}]`;
+			};
 			/**
 			 * The text the page renders. A `<script>` / `<style>` body is data, not
 			 * rendered text, and is minified in its own right (the JSON of an
