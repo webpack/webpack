@@ -2889,6 +2889,10 @@ export interface HtmlResourceHint {
  */
 export interface ResourceHintsOptions {
 	/**
+	 * The `fetchpriority` attribute for the auto-emitted initial-graph hints (`initial`). Only meaningful for hints webpack writes into extracted HTML, where the browser's preload scanner sees them — a `fetchpriority` on a `<link rel="modulepreload">` injected at runtime is ignored by browsers.
+	 */
+	fetchPriority?: "low" | "high" | "auto";
+	/**
 	 * Initial dependency-graph chunk hints. `true` auto-emits `<link rel="modulepreload">` (ESM output) or `<link rel="preload" as="script">` (classic) for each of the entry's initial dependency chunks; `"prefetch"` uses `<link rel="prefetch">`; `"preload"` is an alias of `true`; `false` disables chunk hints (URL-asset hints from magic comments / `urlHints` still fire); `"none"` is a hard off switch (no `<link>` anywhere, empty stats / manifest); an array of `HtmlResourceHint` descriptors replaces the auto set; a function receives the auto `defaultHints` plus context (`entryName`, `entrypoint`, `hostType: "html" | "js"`, `compilation`) and returns the final list (replaces the removed `resolveDependencies` hook).
 	 */
 	initial?: ResourceHintsInitial;
