@@ -2843,6 +2843,8 @@ const generate = () => {
 if (require.main === module) generate();
 
 module.exports.DATA_TARGET = TARGET;
+module.exports.acceptedValues = acceptedValues;
+module.exports.assertClassesArePrintable = assertClassesArePrintable;
 module.exports.collectData = collectData;
 module.exports.parseValueSyntax = parseValueSyntax;
 module.exports.walkValueSyntax = walkValueSyntax;

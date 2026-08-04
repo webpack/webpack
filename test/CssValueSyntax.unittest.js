@@ -3,6 +3,8 @@
 const fs = require("fs");
 const {
 	DATA_TARGET,
+	acceptedValues,
+	assertClassesArePrintable,
 	collectData,
 	parseValueSyntax,
 	walkValueSyntax
@@ -346,6 +348,43 @@ describe("CssValueSyntax", () => {
 			for (const name of MATH_FUNCTION_ARITY.keys()) {
 				expect(MATH_FUNCTIONS.has(name)).toBe(true);
 			}
+		});
+	});
+
+	describe("acceptedValues", () => {
+		it("follows a `<'property'>` reference into what that property accepts", () => {
+			// Followed, not named: a slot written `<'color'>` takes a color value,
+			// and would claim nothing if the reference were left as a keyword.
+			const { keywords, classes } = acceptedValues("<'color'>");
+			expect([...classes]).toContain("color");
+			expect([...keywords]).toEqual([]);
+		});
+
+		it("accepts nothing from a syntax it cannot parse", () => {
+			expect(acceptedValues("<")).toEqual({
+				keywords: new Set(),
+				classes: new Set()
+			});
+		});
+	});
+
+	describe("assertClassesArePrintable", () => {
+		it("passes a slot naming a class the printer sorts values into", () => {
+			expect(() =>
+				assertClassesArePrintable(
+					new Map([["outline-color", { classes: new Set(["color"]) }]])
+				)
+			).not.toThrow();
+		});
+
+		it("rejects a slot naming a class the printer has no test for", () => {
+			// Such a slot would claim a value the printer never offers it, making an
+			// ambiguous merge read as unambiguous.
+			expect(() =>
+				assertClassesArePrintable(
+					new Map([["rotate", { classes: new Set(["angle"]) }]])
+				)
+			).toThrow("rotate accepts <angle>, which the printer cannot classify");
 		});
 	});
 
