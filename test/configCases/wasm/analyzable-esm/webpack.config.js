@@ -66,5 +66,15 @@ module.exports = [
 		// `output.publicPath`, so it can't be baked into a shared literal.
 		output: { chunkFilename: "c-[name].mjs", publicPath: "./" },
 		plugins: [expectations("c-flat.mjs", "module.id, ")]
+	}),
+	base({
+		// Truncated `[hash:<n>]` on the runtime form: the helper slices the hash it is
+		// handed rather than reading a baked literal.
+		output: {
+			chunkFilename: "d-[name].mjs",
+			publicPath: "./",
+			webassemblyModuleFilename: "[id].[hash:6].wasm"
+		},
+		plugins: [expectations("d-flat.mjs", "module.id, ")]
 	})
 ];
