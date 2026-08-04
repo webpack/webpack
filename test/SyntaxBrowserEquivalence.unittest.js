@@ -108,25 +108,12 @@ const globalScope = /** @type {{ Bun?: unknown, Deno?: unknown }} */ (
 const onBunOrDeno = Boolean(globalScope.Bun) || Boolean(globalScope.Deno);
 const nodeMajor = Number.parseInt(process.versions.node, 10);
 
-// DOM differences this harness found that are defects in the HTML minifier, not
-// intended transforms. Listed rather than tolerated wholesale, so any *other*
-// fixture whose DOM changes still fails, and so fixing one fails here too.
-const KNOWN_HTML_DEFECTS = new Map([
-	[
-		"test/configCases/html/minimize-attributes/page.html",
-		// A second `<body>` start tag has its attributes merged onto the already-open
-		// body (§13.2.6.4.7). The tag is dropped without the merge, losing `class`.
-		"element 3: http://www.w3.org/1999/xhtml|body[class] vs http://www.w3.org/1999/xhtml|body[]"
-	],
-	// `<![CDATA[` outside foreign content is a bogus comment ending at the first
-	// `>` (§13.2.5.42), leaving the rest as text. It is modelled as a CDATA
-	// section through `]]>` instead, so dropping it as a comment eats that text.
-	["test/configCases/html/basic/page.html", "rendered text differs"],
-	[
-		"test/configCases/html/full-lexer-integration/page.html",
-		"rendered text differs"
-	]
-]);
+// DOM differences this harness found that are defects in the HTML minifier,
+// not intended transforms. Empty: the ones it found have been fixed. An entry
+// here is tolerated only for the exact difference it names, and every entry must
+// still reproduce, so fixing one fails this suite until it is removed.
+/** @type {Map<string, string>} */
+const KNOWN_HTML_DEFECTS = new Map();
 
 describe("printer output in real Chrome", () => {
 	/** @type {import("puppeteer-core").Browser | undefined} */
