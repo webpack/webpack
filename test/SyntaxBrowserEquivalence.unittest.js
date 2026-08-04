@@ -133,10 +133,6 @@ const FILED_CSS_DEFECTS = new Map([
 	[
 		"test/configCases/css/css-modules/at-rule-value.module.css",
 		"a rule under `@media small` computes a different colour"
-	],
-	[
-		"test/configCases/css/minimize-values/style.css",
-		"one longhand of an `all:` expansion differs"
 	]
 ]);
 
