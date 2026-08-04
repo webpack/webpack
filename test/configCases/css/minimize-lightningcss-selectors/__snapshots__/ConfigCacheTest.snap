@@ -109,7 +109,7 @@ Array [
   "/*! test_media: @media (240px >= width) { .foo { color: chartreuse }} */@media (240px>=width){.foo{color:chartreuse}}",
   "/*! test_media: @media (100px < width < 200px) { .foo { color: chartreuse }} */@media (100px<width<200px){.foo{color:chartreuse}}",
   "/*! test_media: @media (100px <= width <= 200px) { .foo { color: chartreuse }} */@media (100px<=width<=200px){.foo{color:chartreuse}}",
-  "/*! test_media: @media (min-width: 30em) and (max-width: 50em) { .foo { color: chartreuse }} */@media (width>=30em) and (width<=50em){.foo{color:chartreuse}}",
+  "/*! test_media: @media (min-width: 30em) and (max-width: 50em) { .foo { color: chartreuse }} */@media (30em<=width<=50em){.foo{color:chartreuse}}",
   "/*! test_media: @media screen, print { .foo { color: chartreuse }} */@media screen,print{.foo{color:chartreuse}}",
   "/*! test_media: @media (hover: hover) { .foo { color: chartreuse }} */@media (hover:hover){.foo{color:chartreuse}}",
   "/*! test_media: @media (hover) { .foo { color: chartreuse }} */@media (hover){.foo{color:chartreuse}}",

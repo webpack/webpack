@@ -157,6 +157,14 @@
 @media (min-width: 1200px) { .t65 { color: red } }
 /*! lightningcss: (width<=1199.98px) */
 @media (max-width: 1199.98px) { .t66 { color: red } }
+/*! lightningcss: (1200px<=width<=2000px) — an `and` of two one-sided ranges on
+   one feature is the interval it describes, whichever order they are written */
+@media (min-width: 1200px) and (max-width: 2000px) { .t65a { color: red } }
+@media (max-width: 2000px) and (min-width: 1200px) { .t65b { color: red } }
+/*! declined: two comparisons the same way round are no interval */
+@media (min-width: 1200px) and (min-width: 1300px) { .t65c { color: red } }
+/*! declined: `or` is not a conjunction */
+@media (min-width: 1200px) or (max-width: 2000px) { .t65d { color: red } }
 /*! webpack: every range-type feature, and nested conditions */
 @media (min-resolution: 2dppx) { .t67 { color: red } }
 @media ((min-width: 1px) and (max-height: 2px)) { .t68 { color: red } }
