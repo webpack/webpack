@@ -1967,6 +1967,61 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("combinators inside a selector function", () => {
+		it.each([
+			[":where(.a > .b){color:red}", ":where(.a>.b){color:red}"],
+			[":is(.a > .b, .c ~ .d){color:red}", ":is(.a>.b,.c~.d){color:red}"],
+			[":not(.a + .b){color:red}", ":not(.a+.b){color:red}"],
+			[":has(.a > .b){color:red}", ":has(.a>.b){color:red}"],
+			[":nth-child(2n + 3){color:red}", ":nth-child(2n+3){color:red}"],
+			[
+				":nth-child(2n of .a > .b){color:red}",
+				":nth-child(2n of .a>.b){color:red}"
+			],
+			// The same trim reaches a selector wherever one is applied.
+			[
+				"@media (min-width:1px){:where(.a > .b){color:red}}",
+				"@media (width>=1px){:where(.a>.b){color:red}}"
+			],
+			[
+				"@layer x{:where(.a > .b){color:red}}",
+				"@layer x{:where(.a>.b){color:red}}"
+			],
+			[".x{&:where(.a > .b){color:red}}", ".x{&:where(.a>.b){color:red}}"]
+		])(
+			"drops the whitespace a combinator does not need: %s",
+			(css, expected) => {
+				expect(minify(css)).toBe(expected);
+			}
+		);
+
+		it("keeps the whitespace a math expression does need", () => {
+			// `+` and `-` are operators only with whitespace on both sides.
+			expect(minify("a{width:calc(1em + 2px)}")).toBe(
+				"a{width:calc(1em + 2px)}"
+			);
+		});
+
+		it("keeps a `@supports` condition as written", () => {
+			// The condition is the syntax being tested, and an engine hands it back
+			// verbatim — `selector(.a>.b)` builds a different CSSOM from `.a > .b`.
+			expect(minify("@supports selector(.a > .b){c{color:red}}")).toBe(
+				"@supports selector(.a > .b){c{color:red}}"
+			);
+			expect(minify("@supports selector(:is(.a > .b)){c{color:red}}")).toBe(
+				"@supports selector(:is(.a > .b)){c{color:red}}"
+			);
+		});
+
+		it("leaves a value function of the same name alone", () => {
+			// `element()` takes an id selector, but in a value there is no combinator
+			// to trim and the argument is a reference.
+			expect(minify("a{background:element(#a)}")).toBe(
+				"a{background:element(#a)}"
+			);
+		});
+	});
+
 	describe("keyframe selectors", () => {
 		// A `calc()` inside a math expression is what a parenthesis already says,
 		// but a declaration holding a substitution keeps its value as written, so

@@ -1504,6 +1504,34 @@ const collectNthPseudoFunctions = () => {
 	return names.sort();
 };
 
+// A production naming a selector: what a function taking one has in its grammar.
+const SELECTOR_PRODUCTION_REGEXP = /<[a-z-]*selector[a-z-]*>/;
+
+/**
+ * The functions whose argument is a selector, spotted by the selector
+ * production their own grammar names — inside one a `>` / `+` / `~` is a
+ * combinator, so the whitespace around it carries nothing. Both spellings are
+ * read: a pseudo-class from the selector table, and `selector()` from the
+ * syntax that defines `@supports`'s form of it.
+ * @returns {string[]} the function names, sorted
+ */
+const collectSelectorFunctions = () => {
+	const names = new Set();
+	for (const [name, entry] of Object.entries(selectors)) {
+		if (entry.status !== "standard") continue;
+		if (typeof entry.syntax !== "string") continue;
+		if (!SELECTOR_PRODUCTION_REGEXP.test(entry.syntax)) continue;
+		const fn = /^::?([a-z-]+)\(\)$/.exec(name);
+		if (fn !== null) names.add(fn[1]);
+	}
+	for (const [, syntax] of definitions) {
+		// `supports-selector-fn` is `selector( <complex-selector> )`.
+		const fn = /^([a-z-]+)\(\s*<[a-z-]*selector[a-z-]*>/.exec(syntax);
+		if (fn !== null) names.add(fn[1]);
+	}
+	return [...names].sort();
+};
+
 /**
  * The functions that substitute an arbitrary token sequence, spotted by the
  * `<declaration-value>` in their own syntax — that production _is_ "any token
@@ -2476,6 +2504,7 @@ const collectData = () => {
 	const mathFunctions = collectMathFunctions();
 	const substitutionFunctions = collectSubstitutionFunctions();
 	const nthPseudoFunctions = collectNthPseudoFunctions();
+	const selectorFunctions = collectSelectorFunctions();
 	const zeroAngleFunctions = collectZeroAngleFunctions();
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
 	const mathFunctionSumArguments = collectMathFunctionSumArguments(
@@ -2617,6 +2646,10 @@ const SUBSTITUTION_FUNCTIONS = ${setLiteral(substitutionFunctions)};
 // The pseudo-class functions whose argument is An+B, where \`2n+1\` is the
 // notation \`odd\` names in one byte less.
 const NTH_PSEUDO_FUNCTIONS = ${setLiteral(nthPseudoFunctions)};
+
+// The functions whose argument is a selector, so a \`>\` / \`+\` / \`~\` inside one
+// is a combinator and needs no whitespace around it.
+const SELECTOR_FUNCTIONS = ${setLiteral(selectorFunctions)};
 
 // The functions every argument of which is an angle, so a zero one needs no
 // unit wherever it stands.
@@ -2848,7 +2881,7 @@ module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;
-module.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
+module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
