@@ -15,7 +15,7 @@ Array [
   "/*! convert-values: ...however deep the shape nests them */.t09b{clip-path:inset(0 1px 0 2px)}",
   "/*! declined: \`scale()\` takes a \`<number>\`, so \`scale(0px)\` is dropped where
    \`scale(0)\` is a transform — the rewrite would revive the declaration */.t09c{transform:scale(0px)}",
-  "/*! declined: ...and an angle is not a length either */.t09d{transform:rotate(0deg)}",
+  "/*! webpack: a zero angle drops its unit where the grammar names <zero> */.t09d{transform:rotate(0)}",
   "/*! convert-values: should trim trailing zeros */.t10{width:109px}",
   "/*! convert-values: should trim trailing zeros (2) */.t11{width:0}",
   "/*! convert-values: should trim trailing zeros (3) */.t12{width:100%}",

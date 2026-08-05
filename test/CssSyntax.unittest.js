@@ -1909,6 +1909,25 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a zero angle", () => {
+		it.each([
+			["a{transform:rotate(0deg)}", "a{transform:rotate(0)}"],
+			["a{transform:rotate3d(0,0,1,0deg)}", "a{transform:rotate3d(0,0,1,0)}"],
+			["a{transform:skew(0deg,0deg)}", "a{transform:skew(0,0)}"],
+			["a{filter:hue-rotate(0turn)}", "a{filter:hue-rotate(0)}"]
+		])("drops the unit where the grammar names <zero>: %s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the angle is not zero", "a{transform:rotate(90deg)}"],
+			["the function takes no <zero>", "a{transition-duration:0s}"],
+			["it is not a function argument", "a{width:0deg}"]
+		])("keeps the unit where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("nested calc() and keyframe selectors", () => {
 		it("drops the `calc` a parenthesis already says (Values 4 §10.1)", () => {
 			expect(minify("a{width:calc(1em + calc(var(--w)*2))}")).toBe(

@@ -1465,6 +1465,23 @@ const EXTRA_SUBSTITUTION_FUNCTIONS = [
 ];
 
 /**
+ * The functions taking a bare `0` where an angle is expected, spotted by the
+ * `<zero>` their own grammar names alongside `<angle>`.
+ * @returns {string[]} the function names, sorted
+ */
+const collectZeroAngleFunctions = () => {
+	const names = [];
+	for (const [name, entry] of Object.entries(functions)) {
+		if (typeof entry.syntax !== "string") continue;
+		if (!entry.syntax.includes("<zero>")) continue;
+		if (!name.endsWith("()")) continue;
+		// Function names match ASCII case-insensitively; the printer lowercases.
+		names.push(name.slice(0, -2).toLowerCase());
+	}
+	return names.sort();
+};
+
+/**
  * The pseudo-class functions taking An+B, spotted by the `<an+b>` their own
  * grammar names — the notation `odd` and `even` are the keywords of.
  * @returns {string[]} the function names, sorted
@@ -2454,6 +2471,7 @@ const collectData = () => {
 	const mathFunctions = collectMathFunctions();
 	const substitutionFunctions = collectSubstitutionFunctions();
 	const nthPseudoFunctions = collectNthPseudoFunctions();
+	const zeroAngleFunctions = collectZeroAngleFunctions();
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
 	const mathFunctionSumArguments = collectMathFunctionSumArguments(
 		mathFunctions,
@@ -2594,6 +2612,10 @@ const SUBSTITUTION_FUNCTIONS = ${setLiteral(substitutionFunctions)};
 // The pseudo-class functions whose argument is An+B, where \`2n+1\` is the
 // notation \`odd\` names in one byte less.
 const NTH_PSEUDO_FUNCTIONS = ${setLiteral(nthPseudoFunctions)};
+
+// The functions taking \`<zero>\` where an angle is expected, so a zero angle
+// needs no unit.
+const ZERO_ANGLE_FUNCTIONS = ${setLiteral(zeroAngleFunctions)};
 
 // CSS Values 4's math functions: everything inside one is a math expression, so
 // \`*\` and \`/\` there are operators, and the whitespace around them carries nothing.
@@ -2823,6 +2845,7 @@ module.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;
+module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
 module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;
