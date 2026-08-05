@@ -287,7 +287,36 @@ describe("tokenize", () => {
 				return end;
 			}
 		});
-		// CDATA content should NOT be parsed as tags
+		// `<![CDATA[` only opens a CDATA section when there is an adjusted current
+		// node outside the HTML namespace (§13.2.5.42). Without an `isForeign`
+		// callback there is none, so this is a bogus comment ending at the first
+		// `>` — as in a browser, which leaves the trailing `]]>` as text.
+		expect(results).toEqual([
+			["open", "div"],
+			["comment", "<![CDATA[<img src='x'>"],
+			["close", "div"]
+		]);
+	});
+
+	it("should handle CDATA sections in foreign content", () => {
+		/** @type {unknown[]} */
+		const results = [];
+		tokenize("<div><![CDATA[<img src='x'>]]></div>", 0, {
+			isForeign: () => true,
+			comment: (input, start, end) => {
+				results.push(["comment", input.slice(start, end)]);
+				return end;
+			},
+			openTag: (input, start, end, ns, ne) => {
+				results.push(["open", input.slice(ns, ne)]);
+				return end;
+			},
+			closeTag: (input, start, end, ns, ne) => {
+				results.push(["close", input.slice(ns, ne)]);
+				return end;
+			}
+		});
+		// In foreign content the section runs to `]]>` and its content is not tags.
 		expect(results).toEqual([
 			["open", "div"],
 			["comment", "<![CDATA[<img src='x'>]]>"],
@@ -2656,10 +2685,15 @@ describe("tokenize", () => {
 			expect(comments).toEqual(["<!x"]);
 		});
 
-		it("reports eof-in-cdata as an error", () => {
+		it("reports an unclosed CDATA outside foreign content as a bogus comment", () => {
+			// No adjusted current node, so `<![CDATA[` is not a CDATA section but an
+			// incorrectly-opened comment (§13.2.5.42); `eof-in-cdata` is unreachable
+			// from here and is covered by the foreign-content path.
 			const errors = collectErrors("<![CDATA[unclosed");
+			// The bogus comment state emits its token at EOF without a further
+			// parse error, so this is the only one.
 			expect(errors).toEqual([
-				{ code: "eof-in-cdata", slice: "", severity: "error" }
+				{ code: "incorrectly-opened-comment", slice: "<!", severity: "warning" }
 			]);
 		});
 
