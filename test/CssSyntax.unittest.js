@@ -1911,6 +1911,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 	});
 
 	describe("unicode-range", () => {
+		/** @type {(value: string) => string} */
 		const range = (value) =>
 			minify(`@font-face{unicode-range:${value}}`).slice(25, -1);
 
