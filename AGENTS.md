@@ -102,6 +102,7 @@ The directory listings below are the canonical map of the repository. **Whenever
 **Tests** — see [TESTING_DOCS.md](TESTING_DOCS.md) for directory structure, naming, and how to run a single case.
 
 - `test/` — All test suites (`cases/`, `configCases/`, `watchCases/`, `hotCases/`, `statsCases/`, `typesCases/`, `test262-cases/`, `html5lib-tests/`, `css-parsing-tests/`, `benchmarkCases/`, `memoryLimitCases/`, etc.). `RoundTripConfigCases` re-bundles the output of `configCases` marked with a `roundTrip.js` file.
+- `test/benchmark/` — Suite-format benchmarks: `unit/` mirrors `lib/` for focused core benchmarks, `e2e/` holds full-build workloads, `helpers/` and `lib/` hold deterministic fixture generators and webpack lifecycle helpers; run by the benchmark harness (`FILTER="<suite>" yarn benchmark`).
 
 **Examples & changesets**
 

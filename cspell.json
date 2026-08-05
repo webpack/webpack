@@ -142,6 +142,7 @@
     "Ewald",
     "exitance",
     "externref",
+    "fanout",
     "fetchpriority",
     "fontobject",
     "formnovalidate",
