@@ -1930,7 +1930,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["it is already shortest", "U+0-7F"],
 			["a single code point", "U+26"],
 			["a wildcard that carries a digit", "U+4??"],
-			["the full range", "U+0-10FFFF"]
+			["the full range", "U+0-10FFFF"],
+			["the value is no urange at all", "auto"],
+			["the token carries no digits", "U+"]
 		])("keeps it where %s", (_name, value) => {
 			expect(range(value)).toBe(value);
 		});
@@ -1986,6 +1988,16 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it("leaves `from` alone where it is not a keyframe selector", () => {
 			expect(minify("@media print{a{from:1}}")).toBe("@media print{a{from:1}}");
+		});
+
+		// Only a comma at depth zero parts the list, so a `from` any of these
+		// enclose is not the selector the rewrite is looking for.
+		it.each([
+			["a group", "@keyframes k{:is(from,to),from{opacity:0}}"],
+			["an attribute value", '@keyframes k{[a=","],from{opacity:0}}'],
+			["an escape", String.raw`@keyframes k{fro\,m,from{opacity:0}}`]
+		])("splits the list past a comma %s holds", (_name, css) => {
+			expect(minify(css)).toBe(css.replace(",from{", ",0%{"));
 		});
 	});
 
