@@ -1074,6 +1074,32 @@ const COLOR_PRODUCTIONS = new Set([
 const NAME_PRODUCTIONS = new Set(["custom-ident", "ident"]);
 
 /**
+ * The generic font families, expanded out of the production naming them. An
+ * unquoted one of these is the generic rather than a family with that name, so
+ * a quoted family spelled like one keeps its quotes.
+ * @returns {string[]} the keywords, sorted
+ */
+const collectGenericFontFamilies = () => {
+	const names = new Set();
+	const walk = (syntax, seen) => {
+		for (const part of syntax.split("|")) {
+			const term = part.trim();
+			const reference = /^<([a-z-]+)>$/.exec(term);
+			if (reference === null) {
+				if (/^[a-z][a-z-]*$/.test(term)) names.add(term);
+				continue;
+			}
+			const next = definitions.get(reference[1]);
+			if (next !== undefined && !seen.has(reference[1])) {
+				walk(next, new Set(seen).add(reference[1]));
+			}
+		}
+	};
+	walk(definitions.get("generic-family"), new Set(["generic-family"]));
+	return [...names].sort();
+};
+
+/**
  * The properties whose value is a `<repeat-style>`, where the one-value form
  * repeats itself on both axes — so two equal keywords are what one already says.
  * @returns {string[]} the property names, sorted
@@ -2654,6 +2680,7 @@ const collectData = () => {
 	const colorOnlyProperties = collectColorOnlyProperties();
 	const initialValueKeywords = collectInitialValueKeywords();
 	const repeatStyleProperties = collectRepeatStyleProperties();
+	const genericFontFamilies = collectGenericFontFamilies();
 	const backgroundPositionProperties = collectBackgroundPositionProperties();
 	const shortenableColorNames = collectShortenableColorNames(colorNames);
 	const zeroAngleFunctions = collectZeroAngleFunctions();
@@ -2801,6 +2828,10 @@ const NTH_PSEUDO_FUNCTIONS = ${setLiteral(nthPseudoFunctions)};
 // The properties taking a color and never an identifier of the author's own, so
 // a named color written in one is that color and may be spelled the shortest way.
 const COLOR_ONLY_PROPERTIES = ${setLiteral(colorOnlyProperties)};
+
+// The generic font families: an unquoted one of these names the generic rather
+// than a family called that, so a quoted family spelled like one keeps its quotes.
+const GENERIC_FONT_FAMILIES = ${setLiteral(genericFontFamilies)};
 
 // The properties whose value is a \`<bg-position>\`, where \`center\` is the \`50%\`
 // that axis defaults to.
@@ -3052,7 +3083,7 @@ module.exports.FAMILY_SLOT_CLASSES = FAMILY_SLOT_CLASSES;
 module.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;
 module.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
-module.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
+module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
 module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.LENGTH_ONLY_FUNCTIONS = LENGTH_ONLY_FUNCTIONS;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;

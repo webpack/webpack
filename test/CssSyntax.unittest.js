@@ -1997,6 +1997,38 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a font family the quotes carry nothing for", () => {
+		it.each([
+			[
+				'a{font-family:"Helvetica Neue",Arial}',
+				"a{font-family:Helvetica Neue,Arial}"
+			],
+			['a{font-family:"Arial"}', "a{font-family:Arial}"],
+			[
+				'a{font-family:"Foo Bar","sans-serif"}',
+				'a{font-family:Foo Bar,"sans-serif"}'
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// Unquoted, each of these would read as the grammar's own keyword.
+			["it is a generic family", 'a{font-family:"serif"}'],
+			["it is a CSS-wide keyword", 'a{font-family:"inherit"}'],
+			// …and each of these is text no identifier run could spell.
+			["a word starts with a digit", 'a{font-family:"1st Ave"}'],
+			["a word is no identifier", 'a{font-family:"a.b"}'],
+			["two spaces part its words", 'a{font-family:"My  Font"}'],
+			// The family slot of the shorthand is read among the other slots.
+			["it is the `font` shorthand", 'a{font:12px "Foo Bar"}'],
+			["the property takes a string", 'a{content:"Foo Bar"}'],
+			["it is a custom property's value", 'a{--x:"Foo Bar"}']
+		])("keeps the quotes where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("a transform naming the same matrix", () => {
 		it.each([
 			["a{transform:translate(0,10px)}", "a{transform:translateY(10px)}"],
