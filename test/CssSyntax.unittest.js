@@ -1967,6 +1967,40 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a named color the shortest spelling beats", () => {
+		it.each([
+			["a{color:white}", "a{color:#fff}"],
+			["a{color:lightgoldenrodyellow}", "a{color:#fafad2}"],
+			// Two names carry this value and neither beats the hex.
+			["a{color:magenta}", "a{color:#f0f}"],
+			["a{color:WHITE}", "a{color:#fff}"],
+			["a{border:1px solid white}", "a{border:1px solid #fff}"],
+			[
+				"a{box-shadow:0 0 1px lightgoldenrodyellow}",
+				"a{box-shadow:0 0 1px #fafad2}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// Already the shortest text for its value.
+			["it is its own shortest spelling", "a{color:red}"],
+			["a same-length hex ties it", "a{color:cyan}"],
+			// An identifier here may be the author's own name.
+			["the property names a keyframe", "a{animation-name:white}"],
+			["the property names a grid area", "a{grid-area:white}"],
+			["the property also takes an image", "a{background:white}"],
+			["it is a custom property's value", "a{--x:white}"],
+			[
+				"it is the syntax a condition tests",
+				"@supports (color:white){a{color:red}}"
+			]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("combinators inside a selector function", () => {
 		it.each([
 			[":where(.a > .b){color:red}", ":where(.a>.b){color:red}"],
@@ -2171,7 +2205,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				minify(
 					"a{column-rule-width:medium;column-rule-style:groove;column-rule-color:rebeccapurple}"
 				)
-			).toBe("a{column-rule:medium groove rebeccapurple}");
+			).toBe("a{column-rule:medium groove #639}");
 			expect(
 				minify(
 					"a{text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#123;text-decoration-thickness:10%}"
@@ -2233,7 +2267,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				minify(
 					"a{column-rule-width:medium;color:red;column-rule-style:groove;column-rule-color:rebeccapurple}"
 				)
-			).toBe("a{column-rule:medium groove rebeccapurple;color:red}");
+			).toBe("a{column-rule:medium groove #639;color:red}");
 		});
 
 		it("declines a hash that is no color, at the lengths CSS omits", () => {

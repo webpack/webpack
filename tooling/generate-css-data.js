@@ -1031,6 +1031,72 @@ const collectIntegerProperties = () => {
 	return out.sort();
 };
 
+/**
+ * Every production one grammar can reach, following both `<production>` and
+ * `<'property'>` references to a fixed point.
+ * @param {string} syntax a value definition
+ * @returns {Set<string>} the reachable production names (a property as `'name'`)
+ */
+const reachableProductions = (syntax) => {
+	const seen = new Set();
+	const queue = [syntax];
+	while (queue.length !== 0) {
+		const current = /** @type {string} */ (queue.pop());
+		for (const raw of references(current)) {
+			const isProperty = raw.startsWith("'") && raw.endsWith("'");
+			const name = isProperty ? raw.slice(1, -1) : raw;
+			if (seen.has(raw)) continue;
+			seen.add(raw);
+			const entry = properties[name];
+			const next = isProperty
+				? entry !== undefined && typeof entry.syntax === "string"
+					? entry.syntax
+					: undefined
+				: definitions.get(name);
+			if (next !== undefined) queue.push(next);
+		}
+	}
+	return seen;
+};
+
+// A grammar reaching one of these takes a color.
+const COLOR_PRODUCTIONS = new Set([
+	"color",
+	"named-color",
+	"absolute-color-base",
+	"absolute-color-function",
+	"system-color"
+]);
+
+// …and one reaching either of these takes a bare identifier that is not a color,
+// so a named color there may be the author's own name (`animation-name: red`).
+// `<dashed-ident>` is not one: it starts with `--`, which no color name does.
+const NAME_PRODUCTIONS = new Set(["custom-ident", "ident"]);
+
+/**
+ * The properties whose grammar takes a color and never a bare identifier of the
+ * author's own, so a named color written in one is unambiguously that color and
+ * may be rewritten to whichever spelling is shortest. Under-approximate on
+ * purpose: naming one property too few only costs bytes, while naming one too
+ * many would rewrite an identifier that means something else.
+ * @returns {string[]} the property names, sorted
+ */
+const collectColorOnlyProperties = () => {
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		if (typeof entry.syntax !== "string") continue;
+		const reachable = reachableProductions(entry.syntax);
+		let color = false;
+		let named = false;
+		for (const production of reachable) {
+			if (COLOR_PRODUCTIONS.has(production)) color = true;
+			if (NAME_PRODUCTIONS.has(production)) named = true;
+		}
+		if (color && !named) out.push(name);
+	}
+	return out.sort();
+};
+
 // CSS Modules keyword tables. A `css/module` localizes the custom identifiers in
 // a handful of property values (`animation-name: spin` names a scoped
 // `@keyframes`), so the parser needs to know which idents in those values are
@@ -1624,6 +1690,32 @@ const collectColorNames = () => {
 		}
 	}
 	return [...shortest].sort((a, b) => a[0] - b[0]);
+};
+
+/**
+ * The other side of the same table: each named color that its own hex — or a
+ * shorter name for the same value — beats, as name -> that shorter spelling.
+ * `collectColorNames` already says which value each name carries and which name
+ * wins a value, so this is that pair read back rather than a second list.
+ * @param {[number, string][]} colorNames the packed-value -> shortest-name entries
+ * @returns {[string, string][]} the entries, sorted by name
+ */
+const collectShortenableColorNames = (colorNames) => {
+	const byValue = new Map(colorNames);
+	const spec = syntaxes["named-color"].syntax
+		.split("|")
+		.map((name) => name.trim());
+	/** @type {[string, string][]} */
+	const out = [];
+	for (const name of spec) {
+		const channels = colorName[name];
+		const [red, green, blue] = channels;
+		const packed = (red << 16) | (green << 8) | blue;
+		// Whichever the minifier would print for this value, hex or a name.
+		const winner = byValue.get(packed) || hex(channels);
+		if (winner.length < name.length) out.push([name, winner]);
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
 
 /**
@@ -2505,6 +2597,8 @@ const collectData = () => {
 	const substitutionFunctions = collectSubstitutionFunctions();
 	const nthPseudoFunctions = collectNthPseudoFunctions();
 	const selectorFunctions = collectSelectorFunctions();
+	const colorOnlyProperties = collectColorOnlyProperties();
+	const shortenableColorNames = collectShortenableColorNames(colorNames);
 	const zeroAngleFunctions = collectZeroAngleFunctions();
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
 	const mathFunctionSumArguments = collectMathFunctionSumArguments(
@@ -2646,6 +2740,21 @@ const SUBSTITUTION_FUNCTIONS = ${setLiteral(substitutionFunctions)};
 // The pseudo-class functions whose argument is An+B, where \`2n+1\` is the
 // notation \`odd\` names in one byte less.
 const NTH_PSEUDO_FUNCTIONS = ${setLiteral(nthPseudoFunctions)};
+
+// The properties taking a color and never an identifier of the author's own, so
+// a named color written in one is that color and may be spelled the shortest way.
+const COLOR_ONLY_PROPERTIES = ${setLiteral(colorOnlyProperties)};
+
+// Each named color a shorter spelling beats -> that spelling, so a name written
+// where a color is unambiguous prints as the shortest text for the same value.
+const COLOR_NAME_TO_SHORTEST = new Map([
+${shortenableColorNames
+	.map(
+		([name, shortest]) =>
+			`\t[${JSON.stringify(name)}, ${JSON.stringify(shortest)}]`
+	)
+	.join(",\n")}
+]);
 
 // The functions whose argument is a selector, so a \`>\` / \`+\` / \`~\` inside one
 // is a combinator and needs no whitespace around it.
@@ -2851,7 +2960,7 @@ module.exports.ARC_TANGENT_DEGREES = ARC_TANGENT_DEGREES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
-module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
+module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;\nmodule.exports.COLOR_NAME_TO_SHORTEST = COLOR_NAME_TO_SHORTEST;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;
 module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;
