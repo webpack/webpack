@@ -1967,6 +1967,26 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("An+B in its shortest notation", () => {
+		it.each([
+			[":nth-child(0n+3){color:red}", ":nth-child(3){color:red}"],
+			[":nth-child(0n-3){color:red}", ":nth-child(-3){color:red}"],
+			[":nth-child(-0n+3){color:red}", ":nth-child(3){color:red}"],
+			[":nth-last-child(0n+2){color:red}", ":nth-last-child(2){color:red}"],
+			[":nth-child(2n+1){color:red}", ":nth-child(odd){color:red}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the step is not zero", ":nth-child(2n+3){color:red}"],
+			["it is already a plain B", ":nth-child(3){color:red}"],
+			["an `of` clause follows it", ":nth-child(0n+3 of .a){color:red}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("a named color the shortest spelling beats", () => {
 		it.each([
 			["a{color:white}", "a{color:#fff}"],
