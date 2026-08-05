@@ -1908,6 +1908,25 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("repeated selectors in a list", () => {
+		it("keeps only the first spelling of a repeated selector", () => {
+			expect(minify(".a,.a{color:red}")).toBe(".a{color:red}");
+			expect(minify(".a,.b,.a{color:red}")).toBe(".a,.b{color:red}");
+		});
+
+		it("keeps the written order", () => {
+			expect(minify("b,a{color:red}")).toBe("b,a{color:red}");
+		});
+
+		it.each([
+			["inside `:is()`", "li:is(.b,.b),h1{color:red}"],
+			["inside an attribute value", '[data-x="a,a"],.z{color:red}'],
+			["behind an escape", "a.\\,b,.z{color:red}"]
+		])("does not read a comma %s as a separator", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("box longhands merging across a gap", () => {
 		it("steps over a declaration that writes another family", () => {
 			expect(
