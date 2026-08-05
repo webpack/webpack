@@ -42,4 +42,41 @@ describe("Template", () => {
 		expect(content).toContain("// keep this line comment");
 		expect(content).toContain("/* keep */");
 	});
+
+	it("should reject async codeGeneration in renderRuntimeModules", () => {
+		/**
+		 * @param {() => unknown} codeGeneration codeGeneration implementation
+		 * @returns {import("webpack-sources").Source} rendered source
+		 */
+		const render = (codeGeneration) =>
+			Template.renderRuntimeModules(
+				[
+					/** @type {import("../lib/RuntimeModule")} */
+					(
+						/** @type {unknown} */ ({
+							identifier: () => "runtime-module",
+							codeGeneration
+						})
+					)
+				],
+				/** @type {EXPECTED_ANY} */ ({
+					chunk: { runtime: undefined },
+					chunkGraph: {},
+					dependencyTemplates: {},
+					moduleGraph: {},
+					runtimeTemplate: {}
+				})
+			);
+
+		expect(() => render(() => Promise.resolve({ sources: new Map() }))).toThrow(
+			/does not support async codeGeneration/
+		);
+		expect(() =>
+			render(() => ({
+				// eslint-disable-next-line unicorn/no-thenable
+				then: (/** @type {(value: unknown) => void} */ resolve) =>
+					resolve({ sources: new Map() })
+			}))
+		).toThrow(/does not support async codeGeneration/);
+	});
 });
