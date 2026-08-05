@@ -1909,6 +1909,37 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("nested calc() and keyframe selectors", () => {
+		it("drops the `calc` a parenthesis already says (Values 4 §10.1)", () => {
+			expect(minify("a{width:calc(1em + calc(var(--w)*2))}")).toBe(
+				"a{width:calc(1em + (var(--w)*2))}"
+			);
+			// A single term needs neither the keyword nor the parenthesis.
+			expect(minify("a{width:clamp(1px,calc(2em),100px)}")).toBe(
+				"a{width:clamp(1px,2em,100px)}"
+			);
+		});
+
+		it("keeps a `calc()` that stands on its own", () => {
+			expect(minify("a{width:calc(1em + 2px)}")).toBe(
+				"a{width:calc(1em + 2px)}"
+			);
+		});
+
+		it("writes a `from` keyframe selector as the `0%` it names", () => {
+			expect(minify("@keyframes k{from{opacity:0}to{opacity:1}}")).toBe(
+				"@keyframes k{0%{opacity:0}to{opacity:1}}"
+			);
+			expect(minify("@-webkit-keyframes k{from,50%{opacity:0}}")).toBe(
+				"@-webkit-keyframes k{0%,50%{opacity:0}}"
+			);
+		});
+
+		it("leaves `from` alone where it is not a keyframe selector", () => {
+			expect(minify("@media print{a{from:1}}")).toBe("@media print{a{from:1}}");
+		});
+	});
+
 	describe("custom property values", () => {
 		it.each([
 			["a leading zero", "a{--x:0.5rem}", "a{--x:.5rem}"],
@@ -2445,8 +2476,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A fold prints in whichever unit is shortest, which is the rewrite these
 			// arguments refuse: Chromium reads `round(down,4.5cm,1.5cm)` as 113.386px
 			// and `round(down,45mm,15mm)` as 170.079px.
+			// The `calc()` keyword goes (a parenthesis says it inside a math
+			// expression) but the unit it guards stays.
 			expect(value("round(down,calc(4.5cm),calc(1.5cm))")).toBe(
-				"round(down,calc(4.5cm),calc(1.5cm))"
+				"round(down,(4.5cm),(1.5cm))"
 			);
 			expect(value("round(down,min(4.5cm,9cm),1.5cm)")).toBe(
 				"round(down,min(4.5cm,9cm),1.5cm)"
