@@ -1073,6 +1073,57 @@ const COLOR_PRODUCTIONS = new Set([
 // `<dashed-ident>` is not one: it starts with `--`, which no color name does.
 const NAME_PRODUCTIONS = new Set(["custom-ident", "ident"]);
 
+// What `display`'s two-keyword form leaves out, which no dataset states — CSS
+// Display 3 §2: an omitted `<display-inside>` is `flow`, an omitted
+// `<display-outside>` is `block` save for `ruby`, whose own default is `inline`.
+const DISPLAY_DEFAULT_INSIDE = "flow";
+const DISPLAY_DEFAULT_OUTSIDE = "block";
+const DISPLAY_INLINE_DEFAULTED_INSIDES = new Set(["ruby"]);
+// …and the one legacy keyword its own name does not spell: §2.5 states
+// `inline-block` is the short form of `inline flow-root`.
+const DISPLAY_UNNAMED_LEGACY = new Map([["inline flow-root", "inline-block"]]);
+
+/**
+ * Each two-keyword `display` -> the single keyword naming the same box, worked
+ * out from the keyword lists the grammar states and the defaults above rather
+ * than listed: a `flow` inside is the default, a `block` outside is the default,
+ * and an `inline` one has a legacy keyword where `display-legacy` spells it.
+ * @returns {[string, string][]} the entries, sorted by the two-keyword form
+ */
+const collectDisplayShortForms = () => {
+	const keywords = (name) =>
+		definitions
+			.get(name)
+			.split("|")
+			.map((one) => one.trim())
+			.filter((one) => /^[a-z][a-z-]*$/.test(one));
+	const outsides = keywords("display-outside");
+	const insides = keywords("display-inside");
+	const legacy = new Set(keywords("display-legacy"));
+	/** @type {[string, string][]} */
+	const out = [];
+	for (const outside of outsides) {
+		for (const inside of insides) {
+			const pair = `${outside} ${inside}`;
+			const defaultOutside = DISPLAY_INLINE_DEFAULTED_INSIDES.has(inside)
+				? "inline"
+				: DISPLAY_DEFAULT_OUTSIDE;
+			let short = null;
+			if (inside === DISPLAY_DEFAULT_INSIDE) {
+				short = outside;
+			} else if (outside === defaultOutside) {
+				short = inside;
+			} else if (legacy.has(`${outside}-${inside}`)) {
+				short = `${outside}-${inside}`;
+			} else {
+				short = DISPLAY_UNNAMED_LEGACY.get(pair) || null;
+			}
+			if (short !== null && short.length < pair.length) out.push([pair, short]);
+		}
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
 /**
  * The generic font families, expanded out of the production naming them. An
  * unquoted one of these is the generic rather than a family with that name, so
@@ -2681,6 +2732,7 @@ const collectData = () => {
 	const initialValueKeywords = collectInitialValueKeywords();
 	const repeatStyleProperties = collectRepeatStyleProperties();
 	const genericFontFamilies = collectGenericFontFamilies();
+	const displayShortForms = collectDisplayShortForms();
 	const backgroundPositionProperties = collectBackgroundPositionProperties();
 	const shortenableColorNames = collectShortenableColorNames(colorNames);
 	const zeroAngleFunctions = collectZeroAngleFunctions();
@@ -2828,6 +2880,15 @@ const NTH_PSEUDO_FUNCTIONS = ${setLiteral(nthPseudoFunctions)};
 // The properties taking a color and never an identifier of the author's own, so
 // a named color written in one is that color and may be spelled the shortest way.
 const COLOR_ONLY_PROPERTIES = ${setLiteral(colorOnlyProperties)};
+
+// Each two-keyword \`display\` -> the single keyword naming the same box.
+const DISPLAY_SHORT_FORMS = new Map([
+${displayShortForms
+	.map(
+		([pair, short]) => `\t[${JSON.stringify(pair)}, ${JSON.stringify(short)}]`
+	)
+	.join(",\n")}
+]);
 
 // The generic font families: an unquoted one of these names the generic rather
 // than a family called that, so a quoted family spelled like one keeps its quotes.
@@ -3074,7 +3135,7 @@ module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;
 module.exports.CSS_MODULES_KEYWORD_OPTIONS = CSS_MODULES_KEYWORD_OPTIONS;
 module.exports.CSS_WIDE_KEYWORDS = CSS_WIDE_KEYWORDS;
 module.exports.CUBIC_BEZIER_KEYWORDS = CUBIC_BEZIER_KEYWORDS;
-module.exports.DROPPABLE_WHEN_EMPTY_AT_RULES = DROPPABLE_WHEN_EMPTY_AT_RULES;
+module.exports.DISPLAY_SHORT_FORMS = DISPLAY_SHORT_FORMS;\nmodule.exports.DROPPABLE_WHEN_EMPTY_AT_RULES = DROPPABLE_WHEN_EMPTY_AT_RULES;
 module.exports.EIGHTH_TURN_COSINE = EIGHTH_TURN_COSINE;
 module.exports.EIGHTH_TURN_SINE = EIGHTH_TURN_SINE;
 module.exports.EIGHTH_TURN_TANGENT = EIGHTH_TURN_TANGENT;

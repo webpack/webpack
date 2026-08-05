@@ -1997,6 +1997,75 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a two-keyword display naming one box", () => {
+		it.each([
+			["a{display:inline flow-root}", "a{display:inline-block}"],
+			["a{display:block flow}", "a{display:block}"],
+			// `<display-outside> || <display-inside>` is order-free.
+			["a{display:flow block}", "a{display:block}"],
+			["a{display:block table}", "a{display:table}"],
+			["a{display:inline flow}", "a{display:inline}"],
+			// `ruby` is the one inside whose own default outside is `inline`.
+			["a{display:inline ruby}", "a{display:ruby}"],
+			["a{display:run-in flow}", "a{display:run-in}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// `inline-table` is no shorter than the two keywords it stands for.
+			["the short form saves nothing", "a{display:inline table}"],
+			["it is already one keyword", "a{display:flex}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("the font shorthand's weight", () => {
+		it.each([
+			["a{font:bold 12px/1.5 Arial}", "a{font:700 12px/1.5 Arial}"],
+			["a{font:italic bold 12px Arial}", "a{font:italic 700 12px Arial}"],
+			["a{font:bold small Arial}", "a{font:700 small Arial}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// The family only ever follows the size, so this `bold` is a family name.
+			["no size follows it", "a{font:12px bold}"],
+			["there is no size at all", "a{font:bold}"]
+		])("keeps the word where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a transition written in slot order", () => {
+		it.each([
+			["a{transition:ease-in 2s opacity}", "a{transition:opacity 2s ease-in}"],
+			["a{transition:2s opacity}", "a{transition:opacity 2s}"],
+			// The first time is the duration and the second the delay, both kept.
+			["a{transition:2s 1s opacity}", "a{transition:opacity 2s 1s}"],
+			[
+				"a{transition:allow-discrete 2s opacity}",
+				"a{transition:opacity 2s allow-discrete}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["it is already in order", "a{transition:opacity 2s ease-in}"],
+			// An easing keyword names a property just as well, so which slot it
+			// fills is the engine's to decide.
+			["no component is a name of its own", "a{transition:ease 2s}"],
+			["a substitution stands there", "a{transition:var(--x) 2s}"],
+			["two layers are written", "a{transition:opacity 2s,color 3s}"],
+			["there is one component", "a{transition:none}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("a font family the quotes carry nothing for", () => {
 		it.each([
 			[
