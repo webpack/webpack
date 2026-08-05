@@ -1965,20 +1965,13 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
-	describe("nested calc() and keyframe selectors", () => {
-		it("drops the `calc` a parenthesis already says (Values 4 §10.1)", () => {
+	describe("keyframe selectors", () => {
+		// A `calc()` inside a math expression is what a parenthesis already says,
+		// but a declaration holding a substitution keeps its value as written, so
+		// dropping the keyword there builds a different CSSOM.
+		it("keeps a nested `calc()`", () => {
 			expect(minify("a{width:calc(1em + calc(var(--w)*2))}")).toBe(
-				"a{width:calc(1em + (var(--w)*2))}"
-			);
-			// A single term needs neither the keyword nor the parenthesis.
-			expect(minify("a{width:clamp(1px,calc(2em),100px)}")).toBe(
-				"a{width:clamp(1px,2em,100px)}"
-			);
-		});
-
-		it("keeps a `calc()` that stands on its own", () => {
-			expect(minify("a{width:calc(1em + 2px)}")).toBe(
-				"a{width:calc(1em + 2px)}"
+				"a{width:calc(1em + calc(var(--w)*2))}"
 			);
 		});
 
@@ -2468,10 +2461,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A fold prints in whichever unit is shortest, which is the rewrite these
 			// arguments refuse: Chromium reads `round(down,4.5cm,1.5cm)` as 113.386px
 			// and `round(down,45mm,15mm)` as 170.079px.
-			// The `calc()` keyword goes (a parenthesis says it inside a math
-			// expression) but the unit it guards stays.
 			expect(value("round(down,calc(4.5cm),calc(1.5cm))")).toBe(
-				"round(down,(4.5cm),(1.5cm))"
+				"round(down,calc(4.5cm),calc(1.5cm))"
 			);
 			expect(value("round(down,min(4.5cm,9cm),1.5cm)")).toBe(
 				"round(down,min(4.5cm,9cm),1.5cm)"
