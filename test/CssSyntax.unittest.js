@@ -1967,6 +1967,57 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a value the property's own grammar already implies", () => {
+		it.each([
+			// One `<repeat-style>` value is what two equal ones say.
+			["a{background-repeat:repeat repeat}", "a{background-repeat:repeat}"],
+			[
+				"a{background-repeat:no-repeat no-repeat}",
+				"a{background-repeat:no-repeat}"
+			],
+			["a{mask-repeat:round round}", "a{mask-repeat:round}"],
+			// `center` is the `50%` each axis defaults to.
+			["a{background-position:center center}", "a{background-position:50%}"],
+			["a{background-position:center}", "a{background-position:50%}"],
+			// `initial` computes to the initial value, which is often a shorter word.
+			["a{min-width:initial}", "a{min-width:auto}"],
+			["a{outline-width:initial}", "a{outline-width:medium}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the two values differ", "a{background-repeat:repeat no-repeat}"],
+			["only one axis is centered", "a{background-position:center 10px}"],
+			["the initial value is no shorter", "a{color:initial}"],
+			["a shorthand states no value of its own", "a{margin:initial}"],
+			["it is a custom property's value", "a{--x:initial}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("grid-template-areas", () => {
+		it("keeps the cell names and drops the whitespace parting the rows", () => {
+			expect(minify('a{grid-template-areas:"a  a" "b  b"}')).toBe(
+				'a{grid-template-areas:"a a""b b"}'
+			);
+		});
+
+		it("keeps the space two null cells need", () => {
+			// `..` is one null cell; `. .` is two, so the space between them counts.
+			expect(minify('a{grid-template-areas:". ." "b b"}')).toBe(
+				'a{grid-template-areas:". .""b b"}'
+			);
+		});
+
+		it("keeps a value that is not a row list", () => {
+			expect(minify("a{grid-template-areas:none}")).toBe(
+				"a{grid-template-areas:none}"
+			);
+		});
+	});
+
 	describe("An+B in its shortest notation", () => {
 		it.each([
 			[":nth-child(0n+3){color:red}", ":nth-child(3){color:red}"],

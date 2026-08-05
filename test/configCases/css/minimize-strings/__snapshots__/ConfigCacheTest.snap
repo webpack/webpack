@@ -19,7 +19,7 @@ Array [
   "/*! normalize-string: should work with quotes */.t13{quotes:\\"«\\" \\"»\\"}",
   "/*! normalize-string: should work with language overrides */.t14{font-language-override:\\"DAN\\"}",
   "/*! normalize-string: should work with css grids */.t15{grid-template:\\"a a a\\" \\"b b b\\"}",
-  "/*! normalize-string: should work with css grids (2) */.t16{grid-template-areas:\\"a a a\\" \\"b b b\\"}",
+  "/*! normalize-string: should work with css grids (2) */.t16{grid-template-areas:\\"a a a\\"\\"b b b\\"}",
   "/*! normalize-string: should work with list styles */.t17{list-style-type:\\"-\\"}",
   "/*! normalize-string: should work with text emphasis styles */.t18{text-emphasis-style:\\"\\\\25B2\\"}",
   "/*! normalize-string: should work with text overflow */.t19{text-overflow:\\"…\\" \\"…\\"}",

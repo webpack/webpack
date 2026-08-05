@@ -1074,6 +1074,60 @@ const COLOR_PRODUCTIONS = new Set([
 const NAME_PRODUCTIONS = new Set(["custom-ident", "ident"]);
 
 /**
+ * The properties whose value is a `<repeat-style>`, where the one-value form
+ * repeats itself on both axes — so two equal keywords are what one already says.
+ * @returns {string[]} the property names, sorted
+ */
+const collectRepeatStyleProperties = () => {
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		if (typeof entry.syntax !== "string") continue;
+		if (reachableProductions(entry.syntax).has("repeat-style")) out.push(name);
+	}
+	return out.sort();
+};
+
+/**
+ * The properties whose value is a `<bg-position>`, where `center` is the `50%`
+ * the axis defaults to anyway.
+ * @returns {string[]} the property names, sorted
+ */
+const collectBackgroundPositionProperties = () => {
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		if (typeof entry.syntax !== "string") continue;
+		const reachable = reachableProductions(entry.syntax);
+		// The longhand only: a shorthand's `center` sits among other components,
+		// where the three- and four-value forms read a keyword rather than a length.
+		if (reachable.has("bg-position") && !reachable.has("bg-layer")) {
+			out.push(name);
+		}
+	}
+	return out.sort();
+};
+
+/**
+ * Each property whose initial value is a keyword shorter than `initial` itself
+ * -> that keyword. `initial` computes to the initial value whatever the
+ * property, so the two are the same declaration and the shorter one is written.
+ * A shorthand states its initial as the list of its longhands rather than a
+ * value, which is what keeps one out of this table.
+ * @returns {[string, string][]} the entries, sorted by property
+ */
+const collectInitialValueKeywords = () => {
+	/** @type {[string, string][]} */
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		const initial = entry.initial;
+		if (typeof initial !== "string") continue;
+		if (!/^[a-z][a-z-]*$/.test(initial)) continue;
+		if (initial.length >= "initial".length) continue;
+		out.push([name, initial]);
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
  * The properties whose grammar takes a color and never a bare identifier of the
  * author's own, so a named color written in one is unambiguously that color and
  * may be rewritten to whichever spelling is shortest. Under-approximate on
@@ -2598,6 +2652,9 @@ const collectData = () => {
 	const nthPseudoFunctions = collectNthPseudoFunctions();
 	const selectorFunctions = collectSelectorFunctions();
 	const colorOnlyProperties = collectColorOnlyProperties();
+	const initialValueKeywords = collectInitialValueKeywords();
+	const repeatStyleProperties = collectRepeatStyleProperties();
+	const backgroundPositionProperties = collectBackgroundPositionProperties();
 	const shortenableColorNames = collectShortenableColorNames(colorNames);
 	const zeroAngleFunctions = collectZeroAngleFunctions();
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
@@ -2744,6 +2801,25 @@ const NTH_PSEUDO_FUNCTIONS = ${setLiteral(nthPseudoFunctions)};
 // The properties taking a color and never an identifier of the author's own, so
 // a named color written in one is that color and may be spelled the shortest way.
 const COLOR_ONLY_PROPERTIES = ${setLiteral(colorOnlyProperties)};
+
+// The properties whose value is a \`<bg-position>\`, where \`center\` is the \`50%\`
+// that axis defaults to.
+const BACKGROUND_POSITION_PROPERTIES = ${setLiteral(backgroundPositionProperties)};
+
+// The properties whose value is a \`<repeat-style>\`, where one value already
+// says what two equal ones do.
+const REPEAT_STYLE_PROPERTIES = ${setLiteral(repeatStyleProperties)};
+
+// Each property whose initial value is a keyword shorter than \`initial\` -> that
+// keyword, which is the same declaration written in fewer bytes.
+const INITIAL_VALUE_KEYWORDS = new Map([
+${initialValueKeywords
+	.map(
+		([name, initial]) =>
+			`\t[${JSON.stringify(name)}, ${JSON.stringify(initial)}]`
+	)
+	.join(",\n")}
+]);
 
 // Each named color a shorter spelling beats -> that spelling, so a name written
 // where a color is unambiguous prints as the shortest text for the same value.
@@ -2959,7 +3035,7 @@ module.exports.ARC_SINE_DEGREES = ARC_SINE_DEGREES;
 module.exports.ARC_TANGENT_DEGREES = ARC_TANGENT_DEGREES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
-module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
+module.exports.BACKGROUND_POSITION_PROPERTIES = BACKGROUND_POSITION_PROPERTIES;\nmodule.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
 module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;\nmodule.exports.COLOR_NAME_TO_SHORTEST = COLOR_NAME_TO_SHORTEST;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;
 module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
@@ -2976,7 +3052,7 @@ module.exports.FAMILY_SLOT_CLASSES = FAMILY_SLOT_CLASSES;
 module.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;
 module.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
-module.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
+module.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
 module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.LENGTH_ONLY_FUNCTIONS = LENGTH_ONLY_FUNCTIONS;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
@@ -2989,7 +3065,7 @@ module.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
-module.exports.RGB_TO_NAME = RGB_TO_NAME;
+module.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
