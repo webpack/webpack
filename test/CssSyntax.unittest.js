@@ -1997,6 +1997,67 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a transform naming the same matrix", () => {
+		it.each([
+			["a{transform:translate(0,10px)}", "a{transform:translateY(10px)}"],
+			["a{transform:translate(10px,0)}", "a{transform:translate(10px)}"],
+			["a{transform:translate3d(0,0,5px)}", "a{transform:translateZ(5px)}"],
+			[
+				"a{transform:translate3d(1px,2px,0)}",
+				"a{transform:translate(1px,2px)}"
+			],
+			["a{transform:scale(2,2)}", "a{transform:scale(2)}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["no axis is zero", "a{transform:translate(1px,2px)}"],
+			["the factors differ", "a{transform:scale(2,3)}"],
+			// A substitution could expand to something the shorter call rejects.
+			["a substitution stands there", "a{transform:translate(var(--x),0)}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a linear gradient's default direction", () => {
+		it.each([
+			[
+				"a{background:linear-gradient(to bottom,#fff,#000)}",
+				"a{background:linear-gradient(#fff,#000)}"
+			],
+			[
+				"a{background:linear-gradient(180deg,red,blue)}",
+				"a{background:linear-gradient(red,blue)}"
+			],
+			[
+				"a{background:repeating-linear-gradient(to bottom,red,blue)}",
+				"a{background:repeating-linear-gradient(red,blue)}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			[
+				"the direction is not the default",
+				"a{background:linear-gradient(to right,#fff,#000)}"
+			],
+			// A prefixed gradient measures its angle the other way round.
+			[
+				"the gradient is prefixed",
+				"a{background:-webkit-linear-gradient(180deg,red,blue)}"
+			],
+			[
+				"there is no direction to drop",
+				"a{background:linear-gradient(red,blue)}"
+			]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("grid-template-areas", () => {
 		it("keeps the cell names and drops the whitespace parting the rows", () => {
 			expect(minify('a{grid-template-areas:"a  a" "b  b"}')).toBe(
