@@ -1465,8 +1465,11 @@ const EXTRA_SUBSTITUTION_FUNCTIONS = [
 ];
 
 /**
- * The functions taking a bare `0` where an angle is expected, spotted by the
- * `<zero>` their own grammar names alongside `<angle>`.
+ * The functions every argument of which is an angle, spotted by the `<zero>`
+ * their own grammar names alongside `<angle>` and by naming no other type.
+ * `rotate3d()` is excluded by that second test: its first three arguments are
+ * `<number>`s, so a `0deg` there is a declaration the engine drops, and giving
+ * it a unitless zero would revive one.
  * @returns {string[]} the function names, sorted
  */
 const collectZeroAngleFunctions = () => {
@@ -1475,6 +1478,8 @@ const collectZeroAngleFunctions = () => {
 		if (typeof entry.syntax !== "string") continue;
 		if (!entry.syntax.includes("<zero>")) continue;
 		if (!name.endsWith("()")) continue;
+		const types = entry.syntax.match(/<[a-z-]+>/g) || [];
+		if (types.some((one) => one !== "<angle>" && one !== "<zero>")) continue;
 		// Function names match ASCII case-insensitively; the printer lowercases.
 		names.push(name.slice(0, -2).toLowerCase());
 	}
@@ -2613,8 +2618,8 @@ const SUBSTITUTION_FUNCTIONS = ${setLiteral(substitutionFunctions)};
 // notation \`odd\` names in one byte less.
 const NTH_PSEUDO_FUNCTIONS = ${setLiteral(nthPseudoFunctions)};
 
-// The functions taking \`<zero>\` where an angle is expected, so a zero angle
-// needs no unit.
+// The functions every argument of which is an angle, so a zero one needs no
+// unit wherever it stands.
 const ZERO_ANGLE_FUNCTIONS = ${setLiteral(zeroAngleFunctions)};
 
 // CSS Values 4's math functions: everything inside one is a math expression, so

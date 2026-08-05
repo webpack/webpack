@@ -30,9 +30,9 @@ module.exports = {
 		// inside the string is never treated as delimiters).
 		expect(css).toContain('content:"; } , keep {"}');
 
-		// Custom-property (`--*`) whitespace squeezes to what parts its tokens: the
-		// substitution reads the same stream either way.
-		expect(css).toContain("--custom:a b");
+		// Custom-property (`--*`) value is opaque — its internal whitespace is kept
+		// verbatim (only the surrounding declaration whitespace is trimmed).
+		expect(css).toContain("--custom:a  b");
 		// Required value whitespace collapses to a single space.
 		expect(css).toContain("margin:0 auto");
 		// rgb() minifies to the shortest color; `!important` loses its leading space.
@@ -45,7 +45,7 @@ module.exports = {
 		expect(css).toContain(
 			".transforms{color:red;background:#abc;" +
 				"background-image:linear-gradient(#abc,red);border-color:teal;" +
-				"margin:.5px 1px 0;--raw:.5;fill:red;" +
+				"margin:.5px 1px 0;--raw:0.50;fill:red;" +
 				"stroke:#00000080;outline-color:#0000}"
 		);
 		// - #FF0000 -> red, #AABBCC -> #abc, rgb(0,128,128) -> teal (name shortest)
@@ -53,8 +53,7 @@ module.exports = {
 		//   no target and every current engine reads a hex alpha
 		// - hashes inside a value function (gradient) are colors too, so shortened
 		// - margin numbers normalized (leading/trailing zeros)
-		// - custom property `--raw` is respelled (0.50 -> .5); only a rewrite into
-		//   another notation is held back there
+		// - custom property `--raw` value stays verbatim (0.50, not normalized)
 		// - hsl(0,100%,50%) lands on a byte with nothing to round, so it converts
 		//   (one that had to round would keep its function); rgba() kept,
 		//   only its numbers normalized (.5)

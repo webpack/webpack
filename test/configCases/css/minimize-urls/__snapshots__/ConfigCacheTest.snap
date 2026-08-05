@@ -23,7 +23,7 @@ Array [
   "/*! webpack: a same-document fragment reference */.t18{clip-path:url(#myClip)}",
   "/*! webpack: a url holding a quote is wrapped in the other quote */.t19{background:url(http://website.test/foo\\\\\\"bar.jpg)}",
   "/*! webpack: src: url() in @font-face */@font-face{src:url(http://website.test/slab.ttf) format(\\"truetype\\")}",
-  "/*! webpack: a custom property's url() keeps its target, minus the padding */.t20{--bg:url(http://website.test/cat.jpg)}",
+  "/*! webpack: a custom property's url() is opaque */.t20{--bg:url( http://website.test/cat.jpg )}",
   "/*! webpack: a url() whose string the tokenizer never closed is passed through */.t21{background:url(\\")}",
 ]
 `;

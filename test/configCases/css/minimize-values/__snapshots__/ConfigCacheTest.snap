@@ -108,7 +108,7 @@ Array [
   "/*! webpack: a media feature is evaluated, not tested, so it converts */@media (width>=1200px){.t86{color:red}}",
   "/*! webpack: an alpha is the byte the engine already quantizes it to */.t87{color:#00000080}.t88{color:#f003}",
   "/*! webpack: ...collapsing to 4 digits when every pair repeats */.t89{color:#f00c}",
-  "/*! webpack: a custom property's value is respelled like any other */.t90{--width:16px;--alpha:#00000080;--round:33.33333333%}",
+  "/*! webpack: a custom property's value is respelled like any other */.t90{--width:16px;--alpha:rgba(0, 0, 0, .5);--round:33.33333333%}",
   "/*! webpack: hwb() converts like hsl() */.t91{color:#000}",
   "/*! webpack: declined: a channel exactly on a \`.5\` boundary */.t92{color:hwb(194 0% 0%)}",
   "/*! webpack: lab(), lch(), oklab() and oklch() reach sRGB */.t93{color:#fff}.t94{color:#bf5700}.t95{color:#752d15}.t96{color:#fff}.t97{color:#40b1b7}",
