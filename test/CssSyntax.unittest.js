@@ -982,9 +982,10 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 		expect(min("a{margin:0.50px 1.0px 0}")).toBe("a{margin:.5px 1px 0}");
 	});
 
-	it("keeps unicode-range values verbatim", () => {
+	it("keeps unicode-range values off the numeric path", () => {
+		// Shortened as the urange it is, never by the generic number printer.
 		expect(min("@font-face{unicode-range:U+0025-00FF}")).toBe(
-			"@font-face{unicode-range:U+0025-00FF}"
+			"@font-face{unicode-range:U+25-FF}"
 		);
 		expect(min("@font-face{unicode-range:u+4??}")).toBe(
 			"@font-face{unicode-range:u+4??}"
@@ -1906,6 +1907,35 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("@supports (color:rgba(0,0,0,.5)){a{x:1px}}")).toBe(
 				"@supports (color:rgba(0,0,0,.5)){a{x:1px}}"
 			);
+		});
+	});
+
+	describe("unicode-range", () => {
+		const range = (value) =>
+			minify(`@font-face{unicode-range:${value}}`).slice(25, -1);
+
+		it.each([
+			["leading zeros carry nothing", "U+0025-00FF", "U+25-FF"],
+			["a block is what `??` says", "U+1E00-1EFF", "U+1E??"],
+			["and the whole low block", "U+0000-00FF", "U+??"],
+			["zeros before a wildcard too", "U+00??", "U+??"],
+			["mixed case is kept", "U+1e00-1EFF", "U+1e??"]
+		])("%s: %s", (_name, input, expected) => {
+			expect(range(input)).toBe(expected);
+		});
+
+		it.each([
+			["the end is not F-aligned", "U+1E00-1EFE"],
+			["it is already shortest", "U+0-7F"],
+			["a single code point", "U+26"],
+			["a wildcard that carries a digit", "U+4??"],
+			["the full range", "U+0-10FFFF"]
+		])("keeps it where %s", (_name, value) => {
+			expect(range(value)).toBe(value);
+		});
+
+		it("shortens each range of a list", () => {
+			expect(range("U+0000-00FF,U+1E00-1EFF")).toBe("U+??,U+1E??");
 		});
 	});
 

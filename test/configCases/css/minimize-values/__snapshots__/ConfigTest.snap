@@ -43,7 +43,7 @@ Array [
   "/*! normalize-whitespace: should not trim spaces inside of constant function */.t36{border-radius:constant(border-rad,)}",
   "/*! normalize-whitespace: should preserve whitespace after custom property declaration */.t37{--foo:bar}",
   "/*! webpack: \`2n+1\` is what \`odd\` names; the other An+B keep their signs */.t38:nth-child(odd){color:red}",
-  "/*! webpack: unicode-range tokenizes as numbers, so it stays verbatim */@font-face{unicode-range:U+0025-00FF, u+4??}",
+  "/*! webpack: unicode-range tokenizes as numbers, so it stays verbatim */@font-face{unicode-range:U+25-FF,u+4??}",
   "/*! webpack: scientific notation is left alone */.t39{width:1e3px}",
   "/*! webpack: two numbers a rewrite could fuse stay separated */.t40{margin:1 .5}",
   "/*! webpack: !important loses its leading space */.t41{color:red!important}",
