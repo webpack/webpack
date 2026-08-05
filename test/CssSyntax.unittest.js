@@ -967,7 +967,8 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 		new SourceProcessor().process(src, { minimize: true }).code;
 
 	it("keeps An+B selector arguments verbatim (no sign stripping)", () => {
-		expect(min("a:nth-child(2n+1){b:c}")).toBe("a:nth-child(2n+1){b:c}");
+		// `odd` is the one An+B a keyword names in fewer bytes; the rest stay.
+		expect(min("a:nth-child(2n+1){b:c}")).toBe("a:nth-child(odd){b:c}");
 		expect(min("a:nth-last-child(-n+3){b:c}")).toBe(
 			"a:nth-last-child(-n+3){b:c}"
 		);
@@ -981,9 +982,10 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 		expect(min("a{margin:0.50px 1.0px 0}")).toBe("a{margin:.5px 1px 0}");
 	});
 
-	it("keeps unicode-range values verbatim", () => {
+	it("keeps unicode-range values off the numeric path", () => {
+		// Shortened as the urange it is, never by the generic number printer.
 		expect(min("@font-face{unicode-range:U+0025-00FF}")).toBe(
-			"@font-face{unicode-range:U+0025-00FF}"
+			"@font-face{unicode-range:U+25-FF}"
 		);
 		expect(min("@font-face{unicode-range:u+4??}")).toBe(
 			"@font-face{unicode-range:u+4??}"
@@ -1905,6 +1907,97 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("@supports (color:rgba(0,0,0,.5)){a{x:1px}}")).toBe(
 				"@supports (color:rgba(0,0,0,.5)){a{x:1px}}"
 			);
+		});
+	});
+
+	describe("unicode-range", () => {
+		/** @type {(value: string) => string} */
+		const range = (value) =>
+			minify(`@font-face{unicode-range:${value}}`).slice(25, -1);
+
+		it.each([
+			["leading zeros carry nothing", "U+0025-00FF", "U+25-FF"],
+			["a block is what `??` says", "U+1E00-1EFF", "U+1E??"],
+			["and the whole low block", "U+0000-00FF", "U+??"],
+			["zeros before a wildcard too", "U+00??", "U+??"],
+			["mixed case is kept", "U+1e00-1EFF", "U+1e??"]
+		])("%s: %s", (_name, input, expected) => {
+			expect(range(input)).toBe(expected);
+		});
+
+		it.each([
+			["the end is not F-aligned", "U+1E00-1EFE"],
+			["it is already shortest", "U+0-7F"],
+			["a single code point", "U+26"],
+			["a wildcard that carries a digit", "U+4??"],
+			["the full range", "U+0-10FFFF"],
+			["the value is no urange at all", "auto"],
+			["the token carries no digits", "U+"]
+		])("keeps it where %s", (_name, value) => {
+			expect(range(value)).toBe(value);
+		});
+
+		it("shortens each range of a list", () => {
+			expect(range("U+0000-00FF,U+1E00-1EFF")).toBe("U+??,U+1E??");
+		});
+	});
+
+	describe("a zero angle", () => {
+		it.each([
+			["a{transform:rotate(0deg)}", "a{transform:rotate(0)}"],
+			["a{transform:skew(0deg,0deg)}", "a{transform:skew(0,0)}"],
+			["a{filter:hue-rotate(0turn)}", "a{filter:hue-rotate(0)}"]
+		])("drops the unit where the grammar names <zero>: %s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the angle is not zero", "a{transform:rotate(90deg)}"],
+			// `rotate3d`'s first three arguments are numbers, so a `0deg` there is a
+			// declaration the engine drops — a unitless zero would revive it.
+			[
+				"a slot of the call takes a number",
+				"a{transform:rotate3d(0deg,0,1,45deg)}"
+			],
+			["that call's own angle sits last", "a{transform:rotate3d(0,0,1,0deg)}"],
+			["the function takes no <zero>", "a{transition-duration:0s}"],
+			["it is not a function argument", "a{width:0deg}"]
+		])("keeps the unit where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("keyframe selectors", () => {
+		// A `calc()` inside a math expression is what a parenthesis already says,
+		// but a declaration holding a substitution keeps its value as written, so
+		// dropping the keyword there builds a different CSSOM.
+		it("keeps a nested `calc()`", () => {
+			expect(minify("a{width:calc(1em + calc(var(--w)*2))}")).toBe(
+				"a{width:calc(1em + calc(var(--w)*2))}"
+			);
+		});
+
+		it("writes a `from` keyframe selector as the `0%` it names", () => {
+			expect(minify("@keyframes k{from{opacity:0}to{opacity:1}}")).toBe(
+				"@keyframes k{0%{opacity:0}to{opacity:1}}"
+			);
+			expect(minify("@-webkit-keyframes k{from,50%{opacity:0}}")).toBe(
+				"@-webkit-keyframes k{0%,50%{opacity:0}}"
+			);
+		});
+
+		it("leaves `from` alone where it is not a keyframe selector", () => {
+			expect(minify("@media print{a{from:1}}")).toBe("@media print{a{from:1}}");
+		});
+
+		// Only a comma at depth zero parts the list, so a `from` any of these
+		// enclose is not the selector the rewrite is looking for.
+		it.each([
+			["a group", "@keyframes k{:is(from,to),from{opacity:0}}"],
+			["an attribute value", '@keyframes k{[a=","],from{opacity:0}}'],
+			["an escape", String.raw`@keyframes k{fro\,m,from{opacity:0}}`]
+		])("splits the list past a comma %s holds", (_name, css) => {
+			expect(minify(css)).toBe(css.replace(",from{", ",0%{"));
 		});
 	});
 

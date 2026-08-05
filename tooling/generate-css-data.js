@@ -37,6 +37,7 @@ const atRules = require("mdn-data/css/at-rules.json");
 const functions = require("mdn-data/css/functions.json");
 /** @type {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[] } }} */
 const properties = require("mdn-data/css/properties.json");
+const selectors = require("mdn-data/css/selectors.json");
 /** @type {SyntaxTable} */
 const syntaxes = require("mdn-data/css/syntaxes.json");
 /** @type {PackageManifest} */
@@ -1464,6 +1465,46 @@ const EXTRA_SUBSTITUTION_FUNCTIONS = [
 ];
 
 /**
+ * The functions every argument of which is an angle, spotted by the `<zero>`
+ * their own grammar names alongside `<angle>` and by naming no other type.
+ * `rotate3d()` is excluded by that second test: its first three arguments are
+ * `<number>`s, so a `0deg` there is a declaration the engine drops, and giving
+ * it a unitless zero would revive one.
+ * @returns {string[]} the function names, sorted
+ */
+const collectZeroAngleFunctions = () => {
+	const names = [];
+	for (const [name, entry] of Object.entries(functions)) {
+		if (typeof entry.syntax !== "string") continue;
+		if (!entry.syntax.includes("<zero>")) continue;
+		if (!name.endsWith("()")) continue;
+		const types = entry.syntax.match(/<[a-z-]+>/g) || [];
+		if (types.some((one) => one !== "<angle>" && one !== "<zero>")) continue;
+		// Function names match ASCII case-insensitively; the printer lowercases.
+		names.push(name.slice(0, -2).toLowerCase());
+	}
+	return names.sort();
+};
+
+/**
+ * The pseudo-class functions taking An+B, spotted by the `<an+b>` their own
+ * grammar names — the notation `odd` and `even` are the keywords of.
+ * @returns {string[]} the function names, sorted
+ */
+const collectNthPseudoFunctions = () => {
+	const names = [];
+	for (const [name, entry] of Object.entries(selectors)) {
+		if (entry.status !== "standard") continue;
+		if (typeof entry.syntax !== "string") continue;
+		// The An+B pseudo-classes are exactly the ones whose grammar names it.
+		if (!entry.syntax.includes("<an+b>")) continue;
+		if (!name.startsWith(":") || !name.endsWith("()")) continue;
+		names.push(name.slice(1, -2));
+	}
+	return names.sort();
+};
+
+/**
  * The functions that substitute an arbitrary token sequence, spotted by the
  * `<declaration-value>` in their own syntax — that production _is_ "any token
  * sequence". Over-inclusive by design: `paint()`'s trailing arguments are the
@@ -2434,6 +2475,8 @@ const collectData = () => {
 	const colorNames = collectColorNames();
 	const mathFunctions = collectMathFunctions();
 	const substitutionFunctions = collectSubstitutionFunctions();
+	const nthPseudoFunctions = collectNthPseudoFunctions();
+	const zeroAngleFunctions = collectZeroAngleFunctions();
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
 	const mathFunctionSumArguments = collectMathFunctionSumArguments(
 		mathFunctions,
@@ -2570,6 +2613,14 @@ const COLOR_ARGUMENT_FUNCTIONS = ${setLiteral(colorFunctions)};
 // references need not be one repeated value: with \`--x:1px 2px\`,
 // \`margin:var(--x) var(--x)\` is four values, not two.
 const SUBSTITUTION_FUNCTIONS = ${setLiteral(substitutionFunctions)};
+
+// The pseudo-class functions whose argument is An+B, where \`2n+1\` is the
+// notation \`odd\` names in one byte less.
+const NTH_PSEUDO_FUNCTIONS = ${setLiteral(nthPseudoFunctions)};
+
+// The functions every argument of which is an angle, so a zero one needs no
+// unit wherever it stands.
+const ZERO_ANGLE_FUNCTIONS = ${setLiteral(zeroAngleFunctions)};
 
 // CSS Values 4's math functions: everything inside one is a math expression, so
 // \`*\` and \`/\` there are operators, and the whitespace around them carries nothing.
@@ -2792,6 +2843,7 @@ module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
 module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
 module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;
 module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;
+module.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
@@ -2801,6 +2853,7 @@ module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
 module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;
+module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;
 `;
 
