@@ -69,6 +69,6 @@ Array [
   "/*! webpack: an id or attribute qualifies the compound the same way */#t69,[data-t70]{color:red}",
   "/*! webpack: parted from the compound it is a descendant combinator */* .t71{color:red}",
   "/*! webpack: ...and on its own it is the selector */*{color:red}",
-  "/*! webpack: a namespaced universal is not redundant */svg|*,*|*.t72{color:red}",
+  "/*! webpack: a namespaced universal is not redundant */*|*.t72,svg|*{color:red}",
 ]
 `;
