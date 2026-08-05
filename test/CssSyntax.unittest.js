@@ -1908,6 +1908,48 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("custom property values", () => {
+		it.each([
+			["a leading zero", "a{--x:0.5rem}", "a{--x:.5rem}"],
+			["the space around a comma", "a{--x:a , b}", "a{--x:a,b}"],
+			["a run of whitespace", "a{--x:1px    2px}", "a{--x:1px 2px}"],
+			["the padding inside a call", "a{--x:f( y )}", "a{--x:f(y)}"],
+			[
+				"a `var()` fallback's comma",
+				"a{--x:var(--y, 2px)}",
+				"a{--x:var(--y,2px)}"
+			]
+		])("squeezes %s", (_name, css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["a color into another notation", "a{--x:rgb(0 0 0/.1)}"],
+			["a hash", "a{--x:#AABBCC}"],
+			["a time into a shorter unit", "a{--x:500ms}"],
+			["an easing into its keyword", "a{--x:cubic-bezier(.25,.1,.25,1)}"],
+			["a sum into its total", "a{--x:calc(1px + 2px)}"],
+			["a string's quotes", "a{--x:'kept'}"],
+			["what a string carries", 'a{--x:"a , b"}']
+		])("holds back %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+
+		it("still rewrites the same value on a normal property", () => {
+			expect(minify("a{color:rgb(0 0 0/.1)}")).toBe("a{color:#0000001a}");
+			expect(minify("a{transition-duration:500ms}")).toBe(
+				"a{transition-duration:.5s}"
+			);
+			expect(minify("a{width:calc(1px + 2px)}")).toBe("a{width:3px}");
+		});
+
+		it("leaves `unicode-range` alone, whose `U+…` reads as numbers", () => {
+			expect(minify("@font-face{unicode-range:U+0-7F}")).toBe(
+				"@font-face{unicode-range:U+0-7F}"
+			);
+		});
+	});
+
 	describe("repeated selectors in a list", () => {
 		it("keeps only the first spelling of a repeated selector", () => {
 			expect(minify(".a,.a{color:red}")).toBe(".a{color:red}");

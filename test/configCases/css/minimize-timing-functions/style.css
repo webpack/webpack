@@ -80,7 +80,7 @@
 
 /* Cases beyond the upstream suite, covering what webpack's own printer decides. */
 
-/*! webpack: a custom property's easing function is opaque */
+/*! webpack: a custom property's easing keeps its notation, respelled */
 .t39 { --easing: cubic-bezier(0.25, 0.1, 0.25, 1) }
 /*! webpack: a signed argument still resolves to the keyword */
 .t40 { animation-timing-function: cubic-bezier(+0.42, -0, 0.58, 1) }

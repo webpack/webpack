@@ -26,9 +26,8 @@
 /*! declined: `bolder` and `lighter` are relative to the parent's weight, so they
    have no fixed number (lightningcss: bolder) */
 .t08 { font-weight: bolder }
-/*! declined: observable through getComputedStyle().getPropertyValue(), the one
-   place a declaration's authored text survives, and no other minifier rewrites
-   it by default either — planned behind an option (lightningcss: .5rem) */
+/*! webpack: a custom property's tokens are respelled — the substitution reads
+   the same stream (lightningcss: .5rem) */
 .t10 { --radius: 0.5rem }
 /*! declined: ...including the unit (cssnano: .5s) */
 .t11 { --duration: 500ms }

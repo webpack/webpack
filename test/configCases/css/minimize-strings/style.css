@@ -72,7 +72,7 @@
 /*! webpack: a `\`-newline continuation stays (dropping it can fuse a hex escape) */
 .t28:after { content: "\61\
 b" }
-/*! webpack: a custom property's value is opaque, quotes included */
+/*! webpack: a custom property's string is handed back as written */
 .t29 { --quoted: 'kept' }
 /*! webpack: a string in an at-rule prelude normalizes too */
 @supports (content: 'x') { .t30 { color: red } }
