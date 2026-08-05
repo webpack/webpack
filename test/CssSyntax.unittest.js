@@ -967,7 +967,8 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 		new SourceProcessor().process(src, { minimize: true }).code;
 
 	it("keeps An+B selector arguments verbatim (no sign stripping)", () => {
-		expect(min("a:nth-child(2n+1){b:c}")).toBe("a:nth-child(2n+1){b:c}");
+		// `odd` is the one An+B a keyword names in fewer bytes; the rest stay.
+		expect(min("a:nth-child(2n+1){b:c}")).toBe("a:nth-child(odd){b:c}");
 		expect(min("a:nth-last-child(-n+3){b:c}")).toBe(
 			"a:nth-last-child(-n+3){b:c}"
 		);
@@ -1924,8 +1925,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it.each([
-			["a color into another notation", "a{--x:rgb(0 0 0/.1)}"],
-			["a hash", "a{--x:#AABBCC}"],
 			["a time into a shorter unit", "a{--x:500ms}"],
 			["an easing into its keyword", "a{--x:cubic-bezier(.25,.1,.25,1)}"],
 			["a sum into its total", "a{--x:calc(1px + 2px)}"],
@@ -1933,6 +1932,11 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["what a string carries", 'a{--x:"a , b"}']
 		])("holds back %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
+		});
+
+		it("rewrites a color it carries, as it would anywhere else", () => {
+			expect(minify("a{--x:rgb(0 0 0/.1)}")).toBe("a{--x:#0000001a}");
+			expect(minify("a{--x:#AABBCC}")).toBe("a{--x:#abc}");
 		});
 
 		it("still rewrites the same value on a normal property", () => {

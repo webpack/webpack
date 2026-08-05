@@ -15,7 +15,7 @@ Array [
   "/*! lightningcss: .test:where(.foo, .bar) */.test:where(.foo,.bar){color:red}",
   "/*! lightningcss: ::-webkit-slider-thumb:active */.custom-range::-webkit-slider-thumb:active{color:red}",
   "/*! lightningcss: :nth-child(2n) */:nth-child(2n){width:20px}",
-  "/*! lightningcss: :nth-child(2n+1) */:nth-child(2n+1){width:20px}",
+  "/*! lightningcss: :nth-child(2n+1) */:nth-child(odd){width:20px}",
   "/*! lightningcss: :nth-child(odd) */:nth-child(odd){width:20px}",
   "/*! lightningcss: :nth-child(1) */:nth-child(1){width:20px}",
   "/*! lightningcss: :nth-last-child(1) */:nth-last-child(1){width:20px}",

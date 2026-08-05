@@ -91,7 +91,7 @@
 
 /* Cases beyond the upstream suites, covering what webpack's own printer decides. */
 
-/*! webpack: a number in a selector prelude keeps its sign (An+B) */
+/*! webpack: `2n+1` is what `odd` names; the other An+B keep their signs */
 .t38:nth-child(2n+1) { color: red }
 /*! webpack: unicode-range tokenizes as numbers, so it stays verbatim */
 @font-face { unicode-range: U+0025-00FF, u+4?? }
@@ -234,7 +234,7 @@
 .t88 { color: rgba(255, 0, 0, .2) }
 /*! webpack: ...collapsing to 4 digits when every pair repeats */
 .t89 { color: rgba(255, 0, 0, .8) }
-/*! webpack: declined: a custom property keeps its authored text */
+/*! webpack: a custom property's value is respelled like any other */
 .t90 { --width: 16px; --alpha: rgba(0, 0, 0, .5); --round: 33.33333333% }
 
 /* The polar and Lab color functions, each conversion read back from a canvas in

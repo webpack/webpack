@@ -14,7 +14,7 @@ Array [
   "/*! test_selectors: :nth-last-col(odd) {width: 20px} */:nth-last-col(odd){width:20px}",
   "/*! test_selectors: :nth-child(odd) {width: 20px} */:nth-child(odd){width:20px}",
   "/*! test_selectors: :nth-child(2n) {width: 20px} */:nth-child(2n){width:20px}",
-  "/*! test_selectors: :nth-child(2n+1) {width: 20px} */:nth-child(2n+1){width:20px}",
+  "/*! test_selectors: :nth-child(2n+1) {width: 20px} */:nth-child(odd){width:20px}",
   "/*! test_selectors: :first-child {width: 20px} */:first-child{width:20px}",
   "/*! test_selectors: :nth-child(1) {width: 20px} */:nth-child(1){width:20px}",
   "/*! test_selectors: :nth-last-child(1) {width: 20px} */:nth-last-child(1){width:20px}",

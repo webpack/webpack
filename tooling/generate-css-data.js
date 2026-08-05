@@ -37,6 +37,7 @@ const atRules = require("mdn-data/css/at-rules.json");
 const functions = require("mdn-data/css/functions.json");
 /** @type {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[] } }} */
 const properties = require("mdn-data/css/properties.json");
+const selectors = require("mdn-data/css/selectors.json");
 /** @type {SyntaxTable} */
 const syntaxes = require("mdn-data/css/syntaxes.json");
 /** @type {PackageManifest} */
@@ -1464,6 +1465,24 @@ const EXTRA_SUBSTITUTION_FUNCTIONS = [
 ];
 
 /**
+ * The pseudo-class functions taking An+B, spotted by the `<an+b>` their own
+ * grammar names — the notation `odd` and `even` are the keywords of.
+ * @returns {string[]} the function names, sorted
+ */
+const collectNthPseudoFunctions = () => {
+	const names = [];
+	for (const [name, entry] of Object.entries(selectors)) {
+		if (entry.status !== "standard") continue;
+		if (typeof entry.syntax !== "string") continue;
+		// The An+B pseudo-classes are exactly the ones whose grammar names it.
+		if (!entry.syntax.includes("<an+b>")) continue;
+		if (!name.startsWith(":") || !name.endsWith("()")) continue;
+		names.push(name.slice(1, -2));
+	}
+	return names.sort();
+};
+
+/**
  * The functions that substitute an arbitrary token sequence, spotted by the
  * `<declaration-value>` in their own syntax — that production _is_ "any token
  * sequence". Over-inclusive by design: `paint()`'s trailing arguments are the
@@ -2434,6 +2453,7 @@ const collectData = () => {
 	const colorNames = collectColorNames();
 	const mathFunctions = collectMathFunctions();
 	const substitutionFunctions = collectSubstitutionFunctions();
+	const nthPseudoFunctions = collectNthPseudoFunctions();
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
 	const mathFunctionSumArguments = collectMathFunctionSumArguments(
 		mathFunctions,
@@ -2570,6 +2590,10 @@ const COLOR_ARGUMENT_FUNCTIONS = ${setLiteral(colorFunctions)};
 // references need not be one repeated value: with \`--x:1px 2px\`,
 // \`margin:var(--x) var(--x)\` is four values, not two.
 const SUBSTITUTION_FUNCTIONS = ${setLiteral(substitutionFunctions)};
+
+// The pseudo-class functions whose argument is An+B, where \`2n+1\` is the
+// notation \`odd\` names in one byte less.
+const NTH_PSEUDO_FUNCTIONS = ${setLiteral(nthPseudoFunctions)};
 
 // CSS Values 4's math functions: everything inside one is a math expression, so
 // \`*\` and \`/\` there are operators, and the whitespace around them carries nothing.
@@ -2798,6 +2822,7 @@ module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
+module.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
 module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;
