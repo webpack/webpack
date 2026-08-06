@@ -18,6 +18,42 @@ function getPropertyValue(property) {
 	return this[property];
 }
 
+/** @type {typeof import("../../lib/html/syntax") | undefined} */
+let htmlSyntax;
+
+/**
+ * The top-level elements of an HTML fragment, each with the source that spelled
+ * it. Parsing goes through webpack's own HTML parser so this fake models no HTML
+ * itself; a nested element is skipped by its range falling inside the last one
+ * kept, and the implied `<html>` / `<head>` wrappers carry an empty range.
+ * @param {string} html fragment source
+ * @returns {{ tag: string, source: string }[]} the fragment's top-level elements
+ */
+const parseFragment = (html) => {
+	if (htmlSyntax === undefined) htmlSyntax = require("../../lib/html/syntax");
+	const { SourceProcessor, NodeType } = htmlSyntax;
+	/** @type {{ tag: string, source: string }[]} */
+	const elements = [];
+	let lastEnd = 0;
+	new SourceProcessor()
+		.use({
+			[NodeType.Element]: {
+				enter: (path) => {
+					const start = path.start();
+					const end = path.end();
+					if (end === 0 || start < lastEnd) return;
+					lastEnd = end;
+					elements.push({
+						tag: path.tagName(),
+						source: html.slice(start, end)
+					});
+				}
+			}
+		})
+		.process(html, {});
+	return elements;
+};
+
 class FakeDocument {
 	/**
 	 * @param {string} basePath base path
@@ -68,7 +104,7 @@ class FakeDocument {
 		const list = this._elementsByTagName.get(type);
 		if (list === undefined) return;
 		const idx = list.indexOf(element);
-		list.splice(idx, 1);
+		if (idx >= 0) list.splice(idx, 1);
 	}
 
 	/**
@@ -188,6 +224,8 @@ class FakeElement {
 		this.sheet = type === "link" ? new FakeSheet(this, basePath) : undefined;
 		this._textContent = "";
 		this._innerHTML = "";
+		/** Source that spelled this element, when `innerHTML` parsed it into being. */
+		this._outerHTML = "";
 		/** @type {Map<string, EventHandler[]> | undefined} */
 		this._eventListeners = undefined;
 		/** @type {EventHandler | undefined} */
@@ -211,11 +249,24 @@ class FakeElement {
 	}
 
 	set innerHTML(value) {
-		// FakeDocument doesn't parse HTML — the HMR DOM-patch test only
-		// asserts on the raw string passed in, so storing it verbatim is
-		// enough for verification.
 		this._innerHTML =
 			value === undefined || value === null ? "" : String(value);
+		// Kept verbatim above (tests read the raw string back), and parsed into
+		// children here — the HMR head reconciliation walks them.
+		this._children = [];
+		for (const { tag, source } of parseFragment(this._innerHTML)) {
+			const element = this._document.createElement(tag);
+			element._outerHTML = source;
+			this._attach(element);
+		}
+	}
+
+	get children() {
+		return this._children;
+	}
+
+	get outerHTML() {
+		return this._outerHTML;
 	}
 
 	/**
