@@ -111,10 +111,6 @@ const buildCorpora = () => {
 // matches this set exactly, so an entry outlives its defect by exactly one run.
 const FILED_CSS_DEFECTS = new Map([
 	[
-		"test/configCases/css/minimize-strings/unterminated.css",
-		"a string closed at EOF takes the printer's `}` into its content"
-	],
-	[
 		"test/configCases/css/minimize-strings/style.css",
 		"a string closed at EOF stops swallowing the rules after it"
 	],
