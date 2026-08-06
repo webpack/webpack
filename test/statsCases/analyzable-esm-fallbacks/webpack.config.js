@@ -37,10 +37,12 @@ module.exports = [
 	// Also analyzable: a chunk in several groups still dedupes through `.ei`'s
 	// `installedChunks` bookkeeping, so sharing does not need the runtime form.
 	base("shared-chunk", { entry: { a: "./a", b: "./b" } }),
+	// Also analyzable: `.ei` runs every `ensureChunk` handler but the JS loader, so a
+	// chunk's prefetch/preload children are still injected by `.f.prefetch`.
+	base("prefetch", { entry: "./index-prefetch" }),
 	// Every case below must fall back with no `.ei` emitted.
 	base("public-path-override", { entry: "./index-public-path-override" }),
 	base("fetch-priority", { entry: "./index-fetch-priority" }),
-	base("prefetch", { entry: "./index-prefetch" }),
 	base("content-hash", {
 		output: { chunkFilename: "[name].[contenthash].mjs" }
 	}),
