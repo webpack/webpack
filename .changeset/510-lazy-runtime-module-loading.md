@@ -2,4 +2,5 @@
 "webpack": minor
 ---
 
-Add `Compilation#addLazyRuntimeModule`; load built-in modules only when used.
+Add `Compilation#addLazyRuntimeModule` and `NormalModuleFactory` hook
+`prepareModuleType`; load built-in modules only when used.

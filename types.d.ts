@@ -18686,6 +18686,10 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		afterResolve: AsyncSeriesBailHook<[ResolveData], false | void>;
 		createModule: AsyncSeriesBailHook<[CreateData, ResolveData], void | Module>;
 		module: SyncWaterfallHook<[Module, CreateData, ResolveData], Module>;
+		/**
+		 * @since 5.110.0
+		 */
+		prepareModuleType: HookMap<AsyncSeriesHook<[]>>;
 		createParser: TypedHookMap<
 			Record<
 				"javascript/auto",
