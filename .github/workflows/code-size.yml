@@ -36,14 +36,15 @@ jobs:
 
       # The report `main` last produced. Prefer the run for this PR's base commit
       # and fall back to the newest successful one, so a PR opened against an
-      # older `main` is still compared against something.
+      # older `main` is still compared against something. `event=push` keeps a
+      # pull request whose head branch is itself named `main` out of the answer.
       - name: Find the baseline run
         id: baseline
         env:
           GH_TOKEN: ${{ github.token }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
-          query="repos/$GITHUB_REPOSITORY/actions/workflows/code-size.yml/runs?branch=main&status=success&per_page=1"
+          query="repos/$GITHUB_REPOSITORY/actions/workflows/code-size.yml/runs?branch=main&event=push&status=success&per_page=1"
           run_id=""
           # `|| true`: without a baseline the run still reports its own totals,
           # so a query a fork's token may not answer must not fail the job.

@@ -116,6 +116,10 @@ const MAX_ASSET_ROWS = 5;
 
 // A `[contenthash]` renames the asset on every content change; the report keys
 // on the normalized name so a size change reads as a change, not add + remove.
+// Hex only, which is `output.hashDigest`'s default: the other digests share an
+// alphabet with ordinary file names, and matching those would rename real
+// assets. A case that picks one (`hash/digest`) reports add + remove instead —
+// the same bytes, split over two rows.
 const HASH_REGEXP = /[0-9a-f]{8,}/gi;
 
 const UNITS = ["B", "KiB", "MiB", "GiB"];
@@ -199,13 +203,9 @@ const applyDefaults = (options, index, testDirectory, outputDirectory) => {
 		}`;
 	}
 	if (!options.optimization) options.optimization = {};
-	if (options.optimization.minimizer === undefined) {
-		// The default minimizer without its worker pool: the case-level pool
-		// already saturates the cpus, and nested pools starve each other.
-		options.optimization.minimizer = [
-			new (require("minimizer-webpack-plugin"))({ parallel: false })
-		];
-	}
+	// `optimization.minimizer` is deliberately left alone: webpack's default is
+	// not `new TerserPlugin()` but two compress passes plus the native CSS and
+	// HTML minifiers, so overriding it would report unminified CSS/HTML.
 	if (!options.snapshot) options.snapshot = {};
 	if (!options.snapshot.managedPaths) {
 		options.snapshot.managedPaths = [path.resolve(rootPath, "node_modules")];
@@ -317,6 +317,11 @@ const measureCase = async ({ category, name }) => {
 
 	/** @type {Compiler | MultiCompiler | undefined} */
 	let compiler;
+	// `emit` does not run for a compilation whose errors stopped it (production
+	// defaults `optimization.emitOnErrors` to false), and runtime modules it
+	// generated never reached an asset — they are not bytes anyone ships.
+	/** @type {Set<Compilation>} */
+	const emitted = new Set();
 	try {
 		const activeCompiler = /** @type {Compiler | MultiCompiler} */ (
 			webpack(
@@ -338,6 +343,7 @@ const measureCase = async ({ category, name }) => {
 		for (const [index, child] of compilers.entries()) {
 			const prefix = compilers.length === 1 ? "" : `${child.name || index}/`;
 			child.hooks.emit.tap("CodeSizeMeasure", (compilation) => {
+				emitted.add(compilation);
 				for (const asset of compilation.getAssets()) {
 					const metrics = measureAsset(asset.source.buffer());
 					const name = `${prefix}${asset.name.replace(HASH_REGEXP, "[hash]")}`;
@@ -374,9 +380,14 @@ const measureCase = async ({ category, name }) => {
 		for (const compilation of compilations) {
 			result.errors += compilation.errors.length;
 		}
-		result.runtimeModules = measureRuntimeModules(compilations);
+		result.runtimeModules = measureRuntimeModules(
+			compilations.filter((compilation) => emitted.has(compilation))
+		);
 		for (const { bytes } of Object.values(result.runtimeModules)) {
 			result.metrics.runtime += bytes;
+		}
+		if (emitted.size === 0) {
+			result.noOutput = `build: ${result.errors} error(s), nothing emitted`;
 		}
 	} catch (err) {
 		result.noOutput = `build: ${/** @type {Error} */ (err).message}`;
