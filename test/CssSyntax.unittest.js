@@ -1121,6 +1121,20 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		expect(min("a{background:url(a.png)}")).toBe("a{background:url(a.png)}");
 	});
 
+	it("closes a url() the tokenizer closed at EOF", () => {
+		// Without the `)`, the `}` the printer writes next lands inside the url.
+		expect(min("a{background:url(a.png")).toBe("a{background:url(a.png)}");
+		// §4.3.6 reads the dangling `\` as an escape and §4.3.7 ends one at EOF with
+		// U+FFFD, so the url keeps that code point rather than losing it.
+		expect(min("a{background:url(a.png\\")).toBe(
+			"a{background:url(a.png\uFFFD)}"
+		);
+		// An even run escapes itself and closes nothing.
+		expect(min("a{background:url(a.png\\\\")).toBe(
+			"a{background:url(a.png\\\\)}"
+		);
+	});
+
 	it("picks the string quote that needs the fewest escapes", () => {
 		expect(min('a{content:"say \\"hi\\""}')).toBe("a{content:'say \"hi\"'}");
 		expect(min("a{content:'plain'}")).toBe('a{content:"plain"}');
