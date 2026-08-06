@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Terminate a CSS string or `url()` the tokenizer closed at EOF when printing it.
+Terminate a CSS string or `url()` closed at EOF when printing, and register `ModuleDependencyError` as serializable.
