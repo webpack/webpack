@@ -81,3 +81,75 @@ a:--heading {
 
 /* Defined after its use — custom-media names are stylesheet-global. */
 @custom-media --wide (min-width: 60em);
+
+/* Media Queries 5 3: `true` / `false` are always-matching / never-matching. */
+@custom-media --always true;
+@custom-media --never false;
+
+@media (--always) {
+	.always {
+		color: red;
+	}
+}
+
+@media (--never) {
+	.never {
+		color: red;
+	}
+}
+
+/* A constant folds into the query around it rather than being written out. */
+@media (--always) and (min-width: 100px) {
+	.and-true {
+		color: red;
+	}
+}
+
+@media (--never) and (min-width: 100px) {
+	.and-false {
+		color: red;
+	}
+}
+
+@media (--never), (min-width: 100px) {
+	.or-false {
+		color: red;
+	}
+}
+
+@media screen and (--never) {
+	.type-and-false {
+		color: red;
+	}
+}
+
+@media not (--never) {
+	.not-false {
+		color: red;
+	}
+}
+
+/* A value that is itself a custom-media reference resolves through it. */
+@custom-media --nested (--narrow);
+@custom-media --nested-boolean (--always);
+
+@media (--nested) {
+	.nested {
+		color: red;
+	}
+}
+
+@media (--nested-boolean) and (min-width: 100px) {
+	.nested-boolean {
+		color: red;
+	}
+}
+
+/* A comma list may name other custom media; a `false` segment drops out of it. */
+@custom-media --list (--narrow), (--never), (min-width: 80em);
+
+@media (--list) {
+	.list-through-names {
+		color: red;
+	}
+}

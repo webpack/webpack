@@ -40,6 +40,29 @@ it("should inline a media-type @custom-media value", () => {
 	expect(css).toMatch(/@media not all\s*\{/);
 });
 
+it("should fold a `true` / `false` @custom-media into the query around it", () => {
+	const css = readBundle();
+	// Nothing left to test: the query matches everywhere / nowhere.
+	expect(css).toMatch(/@media all\s*\{\s*\.always/);
+	expect(css).toMatch(/@media not all\s*\{\s*\.never/);
+	// A constant term drops out of an `and`, and takes the whole query with it.
+	expect(css).toContain("@media (min-width: 100px)");
+	expect(css).toMatch(/@media not all\s*\{\s*\.and-false/);
+	expect(css).toMatch(/@media not all\s*\{\s*\.type-and-false/);
+	// `or` keeps the other branch, and `not false` is always true.
+	expect(css).toMatch(/@media \(min-width: 100px\)\s*\{\s*\.or-false/);
+	expect(css).toMatch(/@media all\s*\{\s*\.not-false/);
+});
+
+it("should resolve a @custom-media whose value names another one", () => {
+	const css = readBundle();
+	expect(css).toMatch(/@media \(max-width: 30em\)\s*\{\s*\.nested/);
+	expect(css).toMatch(
+		/@media \(min-width: 100px\)\s*\{\s*\.nested-boolean/
+	);
+	expect(css).toContain("((max-width: 30em) or (min-width: 80em))");
+});
+
 it("should expand a @custom-selector to :is()", () => {
 	const css = readBundle();
 	expect(css).toContain(":is(h1, h2, h3)");
