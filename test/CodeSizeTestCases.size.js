@@ -657,17 +657,30 @@ const formatMarkdown = (report, baseline) => {
 	return `${lines.join("\n")}\n`;
 };
 
+/** @type {Set<string>} */
+const OPTIONS = new Set([
+	"output",
+	"baseline",
+	"summary",
+	"filter",
+	"negative-filter"
+]);
+
 /**
  * @param {string[]} argv process arguments
  * @returns {Record<string, string>} parsed `--name value` flags
  */
 const parseArgs = (argv) => {
+	// A fixed key set with no prototype: an unknown `--flag` is a typo worth
+	// reporting, and a key like `--__proto__` never reaches an assignment.
 	/** @type {Record<string, string>} */
-	const args = {};
+	const args = Object.create(null);
 	for (let i = 0; i < argv.length; i++) {
-		if (argv[i].startsWith("--") && argv[i + 1]) {
-			args[argv[i].slice(2)] = argv[++i];
-		}
+		if (!argv[i].startsWith("--")) continue;
+		const key = argv[i].slice(2);
+		if (!OPTIONS.has(key)) throw new Error(`Unknown option --${key}`);
+		if (!argv[i + 1]) throw new Error(`Option --${key} needs a value`);
+		args[key] = argv[++i];
 	}
 	return args;
 };
