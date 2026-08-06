@@ -881,12 +881,17 @@ describe("CssSyntax — minify token-boundary safety", () => {
 	// instead), and there the stylesheet ends too — so a build never reaches this,
 	// but `webpack.css.syntax` minifies whatever source it is handed.
 	it("keeps an attribute value the tokenizer closed at EOF", () => {
-		// `"bar` has no closing quote, so unquoting it would drop the `r`. An
-		// at-rule prelude still prints at EOF, unlike a qualified rule (§5.4.3).
-		expect(min('@unknown [foo="bar')).toBe('@unknown [foo="bar];');
-		expect(min("@unknown [foo='bar")).toBe("@unknown [foo='bar];");
+		// `"bar` has no closing quote, so unquoting it would drop the `r` — the
+		// quote is written back instead, which is what keeps the value `bar` once
+		// the prelude's own `];` follows it. An at-rule prelude still prints at
+		// EOF, unlike a qualified rule (§5.4.3).
+		expect(min('@unknown [foo="bar')).toBe('@unknown [foo="bar"];');
+		expect(min("@unknown [foo='bar")).toBe("@unknown [foo='bar'];");
 		// The escape swallows the final quote, so this one is unterminated too.
-		expect(min('@unknown [foo="bar\\"')).toBe('@unknown [foo="bar\\"];');
+		expect(min('@unknown [foo="bar\\"')).toBe('@unknown [foo="bar\\""];');
+		// A `\` left dangling at EOF contributes nothing, so it goes rather than
+		// escaping the quote written back after it.
+		expect(min('@unknown [foo="bar\\')).toBe('@unknown [foo="bar"];');
 		// A closed string still unquotes.
 		expect(min('@unknown [foo="bar"')).toBe("@unknown [foo=bar];");
 	});
