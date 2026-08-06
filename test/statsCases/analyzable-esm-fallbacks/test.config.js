@@ -16,7 +16,7 @@ const CASES = {
 	"fetch-priority": { file: "main.mjs", expect: "analyzable" },
 	"content-hash": { file: "main.mjs", expect: "fallback" },
 	"templated-public-path": { file: "main.mjs", expect: "fallback" },
-	"bare-public-path": { file: "main.mjs", expect: "fallback" },
+	"bare-public-path": { file: "main.mjs", expect: "analyzable" },
 	"shared-chunk": { file: "a.mjs", expect: "analyzable" },
 	prefetch: { file: "main.mjs", expect: "analyzable" },
 	hmr: { file: "main.mjs", expect: "fallback" }
