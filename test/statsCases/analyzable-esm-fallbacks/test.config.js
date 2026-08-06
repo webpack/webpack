@@ -20,7 +20,7 @@ const CASES = {
 	"content-hash": { file: "main.mjs", expect: "fallback" },
 	"templated-public-path": { file: "main.mjs", expect: "fallback" },
 	"bare-public-path": { file: "main.mjs", expect: "fallback" },
-	"shared-chunk": { file: "a.mjs", expect: "fallback" },
+	"shared-chunk": { file: "a.mjs", expect: "analyzable" },
 	hmr: { file: "main.mjs", expect: "fallback" },
 	prefetch: {
 		file: "main.mjs",
