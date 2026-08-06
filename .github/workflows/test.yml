@@ -117,6 +117,9 @@ jobs:
 
   basic:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -133,6 +136,87 @@ jobs:
       - run: yarn link webpack --frozen-lockfile
 
       - run: yarn test:basic --ci
+
+      # The suite above already built every config case — measure what it left
+      # in `test/js` instead of building a second time. Everything below reports
+      # only, so it must never decide whether this job passes.
+      - name: Measure the emitted assets
+        id: sizes
+        continue-on-error: true
+        run: |
+          node tooling/collect-asset-sizes.js --commit "${{ github.event.pull_request.head.sha || github.sha }}" --out "$RUNNER_TEMP/asset-sizes-head.json"
+          if [ "${{ github.event_name }}" = "push" ]; then
+            cp "$RUNNER_TEMP/asset-sizes-head.json" "$RUNNER_TEMP/asset-sizes-baseline.json"
+          fi
+
+      # `main` publishes the baseline; a pull request restores the newest one
+      # rather than rebuilding it. Restoring is never paired with a save here, so
+      # a pull request can only ever read a baseline `main` produced.
+      - name: Publish the baseline asset sizes
+        if: github.event_name == 'push' && steps.sizes.outcome == 'success'
+        continue-on-error: true
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/asset-sizes-baseline.json
+          key: asset-sizes-${{ github.sha }}
+
+      - name: Restore the baseline asset sizes
+        id: baseline
+        if: github.event_name == 'pull_request' && steps.sizes.outcome == 'success'
+        continue-on-error: true
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/asset-sizes-baseline.json
+          key: asset-sizes-${{ github.sha }}
+          restore-keys: asset-sizes-
+
+      - name: Compare against the baseline
+        id: compare
+        if: steps.baseline.outputs.cache-matched-key != ''
+        continue-on-error: true
+        run: |
+          node tooling/compare-asset-sizes.js \
+            --base "$RUNNER_TEMP/asset-sizes-baseline.json" \
+            --head "$RUNNER_TEMP/asset-sizes-head.json" \
+            --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --out "$RUNNER_TEMP/asset-sizes.md" \
+            --out-status "$RUNNER_TEMP/asset-sizes-status.json"
+          node tooling/compare-asset-sizes.js \
+            --base "$RUNNER_TEMP/asset-sizes-baseline.json" \
+            --head "$RUNNER_TEMP/asset-sizes-head.json" \
+            --limit 1000 >> "$GITHUB_STEP_SUMMARY"
+          node -e 'const s=require(`${process.env.RUNNER_TEMP}/asset-sizes-status.json`);console.log(`changed=${s.changed + s.added + s.removed}`)' >> "$GITHUB_OUTPUT"
+
+      # Forks keep the job summary: their token cannot write to the pull request.
+      - name: Comment the asset size report
+        if: steps.compare.outcome == 'success' && github.event.pull_request.head.repo.full_name == github.repository
+        continue-on-error: true
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          CHANGED: ${{ steps.compare.outputs.changed }}
+        with:
+          script: |
+            const fs = require("fs");
+            const marker = "<!-- webpack-asset-sizes -->";
+            const body = fs.readFileSync(`${process.env.RUNNER_TEMP}/asset-sizes.md`, "utf8");
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number
+            });
+            const existing = comments.find((comment) => (comment.body || "").includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body
+              });
+            } else if (process.env.CHANGED !== "0") {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
 
   unit:
     runs-on: ubuntu-latest
