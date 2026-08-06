@@ -91,7 +91,15 @@ This document explains the structure of the `test/` directory in the Webpack pro
 - **Purpose**: Contains unit tests for various functionalities.
 - **Usage**: Ensures individual modules and functions work as expected.
 
-### 15. `BannerPlugin.test.js`
+### 15. `CodeSizeTestCases.size.js`
+
+- **Purpose**: Measures how large the code webpack generates is, so a change to `lib/` that grows (or shrinks) every bundle is visible.
+- **Usage**: `yarn test:size` builds every `configCases/` case — one plain Node.js process, outside jest, no worker pool — and writes a JSON report of what each case emitted: the raw, gzip, brotli and zstd size of every asset, plus a per-runtime-module breakdown (total bytes over the suite, how many cases emit it, the biggest single instance) — which is what shows _which_ runtime grew, which is no longer emitted at all, and which one is simply large. The CI job (`.github/workflows/code-size.yml`) compares the report against the one `main` last uploaded and puts the diff in the job summary.
+- **It never fails.** There is nothing to assert here and no size budget to breach: a growing bundle is information, not a defect. Cases whose expected result _is_ a build error emit nothing and are reported as such, with the reason, rather than counted as failures.
+- **Options**: `--output <file>` (report path), `--baseline <file>` (report to compare against), `--summary <file>` (append the markdown comparison, e.g. `$GITHUB_STEP_SUMMARY`), `--filter` / `--negative-filter` (regexps matched against `<category>/<case>`, also read from `FILTER` / `NEGATIVE_FILTER`).
+- **Note**: the cases are built with the defaults a user gets — minification on, no `output.pathinfo` — not with the `ConfigTestCases` ones. Needs Node.js >= 22.15 for zstd.
+
+### 16. `BannerPlugin.test.js`
 
 - **Purpose**: Tests Webpack’s `BannerPlugin` functionality.
 - **Usage**: Ensures that the plugin correctly adds banners to the bundled files.
@@ -156,6 +164,7 @@ yarn test
 | `test/watchCases/`        | `yarn test:base --testPathPatterns="WatchTestCases"`                                          |
 | `test/hotCases/`          | `yarn test:base --testPathPatterns="HotTestCases"`                                            |
 | `test/benchmarkCases/`    | `FILTER="<case-name>" yarn benchmark`                                                         |
+| `lib/runtime/`            | `yarn test:size` (size of the generated code; `--filter "<category>/"` narrows it)            |
 | `test/test262-cases/`     | `yarn test:test262` (requires `git submodule update --init test/test262-cases` first)         |
 | `test/html5lib-tests/`    | `yarn test:html5lib` (requires `git submodule update --init test/html5lib-tests` first)       |
 | `test/css-parsing-tests/` | `yarn test:css-parsing` (requires `git submodule update --init test/css-parsing-tests` first) |

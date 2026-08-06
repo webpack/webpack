@@ -35,6 +35,7 @@ All commands are defined in `package.json` `scripts`.
 | `yarn test:integration`                                              | Run the integration suites (`basictest`/`longtest`/`test`).                                                     |
 | `yarn test:test262` / `yarn test:html5lib` / `yarn test:css-parsing` | Spec-conformance suites.                                                                                        |
 | `yarn test:base -u`                                                  | Update snapshots (eyeball the diff first).                                                                      |
+| `yarn test:size`                                                     | Size of the generated code over all `configCases/` (raw/gzip/brotli/zstd + runtime modules).                    |
 | `yarn cover:unit`                                                    | Unit-test coverage.                                                                                             |
 | `yarn types:cover`                                                   | Type-coverage report (share of `lib/` that is precisely typed).                                                 |
 | `yarn build:examples`                                                | Build the `examples/` (verify after changing options).                                                          |
@@ -230,6 +231,8 @@ A perf/memory claim needs evidence, and the cheap kinds are the trustworthy ones
 4. **Wall/CPU timing** — last resort. Interleave the arms in one process, report `n` and dispersion, and treat a difference smaller than the run-to-run spread as no result.
 
 `FILTER="<case-name>" yarn benchmark` drives the repo's own cases; `test/benchmarkCases/` is the fixture set.
+
+A claim about the **size of what webpack emits** is the counting kind, and `yarn test:size` is how it is counted: it builds every `configCases/` case with the defaults a user gets and reports the runtime-module source bytes plus the raw/gzip/brotli/zstd size of every asset, so a change to `lib/runtime/` or to a dependency template shows up as bytes on the wire. Compare two runs with `--baseline <report>`; the `Code Size` CI job does the same against the report `main` last uploaded and writes the diff into its job summary.
 
 Pitfalls that have produced wrong conclusions here:
 
@@ -477,6 +480,14 @@ CI's `lint` job verifies these outputs are up to date. The combined `yarn fix` s
 ### Runtime code ships to every target
 
 Code that emits runtime into the bundle — chunk loading (`lib/web/` JSONP, `lib/esm/`, `lib/node/`, `lib/webworker/`), prefetch/preload/resource hints, library and externals presets — is **per-target**: each preset (browsers/JSONP, ESM `output.module`, `node`, `webworker`, `deno`, `electron`, `bun`, and the **universal** `target: ["web", "node"]` neutral-platform path) has its own runtime module or wiring. Changing one and forgetting the others is the easy mistake here. When you touch runtime-emitting code, apply it to **every** affected target and add an integration case per target (typically `target: "web"`, `experiments.outputModule`, and `target: ["web", "node"]`; add `node`/`webworker`/`bun`/`deno`/`electron` when they're in scope). The universal/neutral-platform runtime guards browser-only APIs behind `typeof document === "undefined"`, so those bundles run Node-side without a DOM — its config case must gate DOM assertions on `typeof document !== "undefined"` (see `configCases/target/universal-prefetch-preload`).
+
+**Then look at what it costs on the wire.** `yarn test:size` — and the `Code Size` CI job, which compares against the report `main` last uploaded and writes the diff into its job summary — builds every `configCases/` case and reports the raw/gzip/brotli/zstd size of every asset **and a per-runtime-module table**: total bytes over the suite, how many cases emit it, and the biggest single instance. **It is information, never a verdict: it does not fail, and a runtime change that moves the numbers is not a defect.** It exists to answer three questions, so answer them:
+
+- **What changed in the runtime?** The table names the runtime module and the byte delta (`hasOwnProperty shorthand +10.33 KiB, in 83 cases`), so a change that moved bytes you did not mean to move — or moved none when you added a runtime feature — is visible at a glance.
+- **Is dead runtime still shipping?** A runtime module you made unreachable should read `0 (gone)`; one still emitted in cases that cannot reach it is the bug this catches.
+- **Is a runtime simply too big?** The "biggest emitted" column ranks what a single bundle carries. A new runtime module near the top of that list deserves a second look before it ships.
+
+Say what it reported in the PR when the numbers moved.
 
 ### Lint covers every file, docs included
 
