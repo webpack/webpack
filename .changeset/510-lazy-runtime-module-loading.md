@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `Compilation#addLazyRuntimeModule`; defer runtime and error modules.
+Add `Compilation#addLazyRuntimeModule`; defer runtime, error and watch modules.
