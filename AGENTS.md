@@ -503,9 +503,30 @@ Say what it reported in the PR when the numbers moved.
 
 The `lint` job runs Prettier (`fmt:check`) and cspell (`lint:spellcheck`) across the **whole repo** — Markdown and this guide too, not just `lib/`. Run `yarn fix` before pushing even a docs-only change: an unaligned Markdown table or a word cspell doesn't know fails `lint` on its own. For a new/unusual word, add it to the `words` list in `cspell.json` (or reword); Prettier reformats Markdown tables, so hand-written columns must match its output.
 
-### Register serializable classes
+### The persistent cache has to keep working
 
-Persistent caching serializes the module graph, so any new serializable class (a `Module`, `Dependency`, or error subclass, a cached value, …) must call `makeSerializable(...)` — the pattern is used across ~140 files. Run `yarn fix:serializables` to regenerate `internalSerializables`; forgetting silently breaks the persistent cache.
+> [!REQUIRED]
+
+Persistent caching is a shipped feature, not a test mode. `ConfigCacheTestCases` re-runs **every** `configCases/` case with `cache.type: "filesystem"` and fails it if the second or third run writes anything back into the pack. The log line is:
+
+```
+Pack got invalid because of write to: <identifier>
+```
+
+and `<identifier>` is the thing that was **not** restored — it was rebuilt instead. On a user's machine that is work redone on every incremental build, so **treat this as a defect and find the cause**. Do not silence it.
+
+Persistent caching serializes the module graph, so any new serializable class (a `Module`, `Dependency`, or error subclass, a cached value, …) must call `makeSerializable(...)` — the pattern is used across ~140 files — and `yarn fix:serializables` regenerates `internalSerializables`. Forgetting is the most common cause, and it is silent apart from the line above.
+
+The cache suite runs with `infrastructureLogging.debug`, so the log usually names the real cause a few lines earlier. What each one means:
+
+- `No serializer registered for <Class>` — that class never called `makeSerializable(...)`.
+- `Skipped not serializable cache item '<key>'` — something reachable from the value cannot be written.
+- `Restoring failed for <identifier> from pack: <err>` — it _was_ written, and deserialization threw. Deserialization re-enters the constructor with **no arguments**, so a constructor that dereferences a parameter (`err.message`) must guard (`err ? err.message : ""`).
+- Nothing at all — the identifier is not stable between runs, or the module reports that it needs rebuilding.
+
+**Never silence it with `test.filter.js`.** `module.exports = (config) => !config.cache` drops the case from the cache suite entirely, so nothing about that feature is cache-tested any more — including the parts that did work. A new case must pass under both suites.
+
+The one expected write webpack ships today is a module carrying a **build error**: `NormalModule.needBuild` returns true whenever `this.error` is set, because webpack retries errors on every build. A case whose subject _is_ an error therefore invalidates the pack by design, and states so with an `infrastructure-log.js` returning `[/Pack got invalid because of write to/]` when `cache.type === "filesystem"` (~20 cases already do). That is the only mechanism that needs no further justification; any other expectation carries the reason it is not a bug, written next to it — and "it is noise here" is not a reason.
 
 ### Performance and memory
 

@@ -23,11 +23,11 @@ it("should patch the HTML <head> in place when it changes beyond <title>", (done
 			// attribute. Only that element is replaced — no reload, and the
 			// stylesheet link webpack put in the head is still there.
 			expect(window.location.__reloadCount__ || 0).toBe(0);
-			const metas = document.head.children.filter(
+			const metaElements = document.head.children.filter(
 				(el) => el.nodeName === "META"
 			);
-			expect(metas).toHaveLength(1);
-			expect(metas[0].outerHTML).toContain('content="v2"');
+			expect(metaElements).toHaveLength(1);
+			expect(metaElements[0].outerHTML).toContain('content="v2"');
 			expect(document.head.children).toContain(injected);
 			// Body patching runs as usual once the head reconciles.
 			expect(document.body.innerHTML).toContain("head test");
