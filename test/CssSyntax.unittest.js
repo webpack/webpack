@@ -1099,8 +1099,9 @@ describe("CssSyntax — minify transforms, in-process", () => {
 	});
 
 	it("keeps url() quotes a url-token could not carry", () => {
+		// One code point is a byte shorter escaped; two are not.
 		expect(min('a{background:url("a b.png")}')).toBe(
-			'a{background:url("a b.png")}'
+			"a{background:url(a\\ b.png)}"
 		);
 		expect(min('a{background:url("a(b).png")}')).toBe(
 			'a{background:url("a(b).png")}'
@@ -1993,6 +1994,46 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a shorthand states no value of its own", "a{margin:initial}"],
 			["it is a custom property's value", "a{--x:initial}"]
 		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a value holding a substitution", () => {
+		// The engine keeps such a value as the token stream it was written as until
+		// the substitution resolves, so every rewrite inside one is declined.
+		it.each([
+			["a named color", "a{background-color:var(--a,var(--b,white))}"],
+			["a transform", "a{transform:var(--a) translate(0,10px)}"],
+			["a font family", 'a{font-family:var(--x),"Foo Bar"}'],
+			["a url()", 'a{background:var(--a) url("a b.png")}'],
+			["a repeated pair", "a{background-repeat:var(--x) var(--x)}"],
+			["a two-keyword display", "a{display:var(--x) flow}"],
+			["an `initial`", "a{min-width:var(--x,initial)}"],
+			["the font shorthand's weight", "a{font:bold var(--s1) Arial}"],
+			["a transition's slots", "a{transition:var(--p) 2s opacity}"]
+		])("keeps %s as written", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a url() whose quotes an escape replaces", () => {
+		it.each([
+			['a{background:url("a b.png")}', "a{background:url(a\\ b.png)}"],
+			['a{background:url("a(b.png")}', "a{background:url(a\\(b.png)}"],
+			['a{background:url("a)b.png")}', "a{background:url(a\\)b.png)}"],
+			["a{background:url('a b.png')}", "a{background:url(a\\ b.png)}"],
+			['a{background:url("a\'b.png")}', "a{background:url(a\\'b.png)}"],
+			['a{background:url("http://x/y z")}', "a{background:url(http://x/y\\ z)}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// Two escapes cost the two bytes the quotes did, so nothing is saved.
+			["two code points need escaping", 'a{background:url("a b c.png")}'],
+			// A control code point takes a hex escape, which is never shorter.
+			["a control code point stands there", 'a{background:url("a\tb.png")}']
+		])("keeps the quotes where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
 	});

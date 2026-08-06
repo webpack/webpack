@@ -1091,9 +1091,9 @@ const DISPLAY_UNNAMED_LEGACY = new Map([["inline flow-root", "inline-block"]]);
  * @returns {[string, string][]} the entries, sorted by the two-keyword form
  */
 const collectDisplayShortForms = () => {
+	/** @type {(name: string) => string[]} */
 	const keywords = (name) =>
-		definitions
-			.get(name)
+		(definitions.get(name) || "")
 			.split("|")
 			.map((one) => one.trim())
 			.filter((one) => /^[a-z][a-z-]*$/.test(one));
@@ -1132,6 +1132,7 @@ const collectDisplayShortForms = () => {
  */
 const collectGenericFontFamilies = () => {
 	const names = new Set();
+	/** @type {(syntax: string, seen: Set<string>) => void} */
 	const walk = (syntax, seen) => {
 		for (const part of syntax.split("|")) {
 			const term = part.trim();
@@ -1146,7 +1147,7 @@ const collectGenericFontFamilies = () => {
 			}
 		}
 	};
-	walk(definitions.get("generic-family"), new Set(["generic-family"]));
+	walk(definitions.get("generic-family") || "", new Set(["generic-family"]));
 	return [...names].sort();
 };
 
@@ -1195,7 +1196,9 @@ const collectInitialValueKeywords = () => {
 	/** @type {[string, string][]} */
 	const out = [];
 	for (const [name, entry] of Object.entries(properties)) {
-		const initial = entry.initial;
+		// `mdn-data`'s own types omit the field, which its data does carry.
+		const initial = /** @type {{ initial?: string | string[] }} */ (entry)
+			.initial;
 		if (typeof initial !== "string") continue;
 		if (!/^[a-z][a-z-]*$/.test(initial)) continue;
 		if (initial.length >= "initial".length) continue;
@@ -1831,7 +1834,7 @@ const collectColorNames = () => {
  * @param {[number, string][]} colorNames the packed-value -> shortest-name entries
  * @returns {[string, string][]} the entries, sorted by name
  */
-const collectShortenableColorNames = (colorNames) => {
+const collectShorterColorSpellings = (colorNames) => {
 	const byValue = new Map(colorNames);
 	const spec = syntaxes["named-color"].syntax
 		.split("|")
@@ -2734,7 +2737,7 @@ const collectData = () => {
 	const genericFontFamilies = collectGenericFontFamilies();
 	const displayShortForms = collectDisplayShortForms();
 	const backgroundPositionProperties = collectBackgroundPositionProperties();
-	const shortenableColorNames = collectShortenableColorNames(colorNames);
+	const shorterColorSpellings = collectShorterColorSpellings(colorNames);
 	const zeroAngleFunctions = collectZeroAngleFunctions();
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
 	const mathFunctionSumArguments = collectMathFunctionSumArguments(
@@ -2916,7 +2919,7 @@ ${initialValueKeywords
 // Each named color a shorter spelling beats -> that spelling, so a name written
 // where a color is unambiguous prints as the shortest text for the same value.
 const COLOR_NAME_TO_SHORTEST = new Map([
-${shortenableColorNames
+${shorterColorSpellings
 	.map(
 		([name, shortest]) =>
 			`\t[${JSON.stringify(name)}, ${JSON.stringify(shortest)}]`
@@ -3125,11 +3128,11 @@ module.exports.ANGLE_UNITS = ANGLE_UNITS;
 module.exports.ARC_COSINE_DEGREES = ARC_COSINE_DEGREES;
 module.exports.ARC_SINE_DEGREES = ARC_SINE_DEGREES;
 module.exports.ARC_TANGENT_DEGREES = ARC_TANGENT_DEGREES;
-module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
+module.exports.BACKGROUND_POSITION_PROPERTIES = BACKGROUND_POSITION_PROPERTIES;\nmodule.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
-module.exports.BACKGROUND_POSITION_PROPERTIES = BACKGROUND_POSITION_PROPERTIES;\nmodule.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
-module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;\nmodule.exports.COLOR_NAME_TO_SHORTEST = COLOR_NAME_TO_SHORTEST;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;
-module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;
+module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
+module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
+module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;\nmodule.exports.COLOR_NAME_TO_SHORTEST = COLOR_NAME_TO_SHORTEST;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;
 module.exports.CSS_MODULES_KEYWORD_OPTIONS = CSS_MODULES_KEYWORD_OPTIONS;
