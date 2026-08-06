@@ -36,23 +36,27 @@ jobs:
 
       # The report `main` last produced. Prefer the run for this PR's base commit
       # and fall back to the newest successful one, so a PR opened against an
-      # older `main` is still compared against something. `event=push` keeps a
-      # pull request whose head branch is itself named `main` out of the answer.
+      # older `main` is still compared against something.
       - name: Find the baseline run
         id: baseline
         env:
           GH_TOKEN: ${{ github.token }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
-          query="repos/$GITHUB_REPOSITORY/actions/workflows/code-size.yml/runs?branch=main&event=push&status=success&per_page=1"
+          query="repos/$GITHUB_REPOSITORY/actions/workflows/code-size.yml/runs?branch=main&status=success&per_page=20"
+          # Any run of `main` that is not a pull request: a manually dispatched
+          # one is a baseline too, while a pull request whose head branch is
+          # itself named `main` is not. The API takes one `event` at a time, so
+          # the unwanted one is filtered out here rather than in the query.
+          pick='[.workflow_runs[] | select(.event != "pull_request")][0].id // empty'
           run_id=""
           # `|| true`: without a baseline the run still reports its own totals,
           # so a query a fork's token may not answer must not fail the job.
           if [ -n "$BASE_SHA" ]; then
-            run_id=$(gh api "$query&head_sha=$BASE_SHA" --jq '.workflow_runs[0].id // empty' || true)
+            run_id=$(gh api "$query&head_sha=$BASE_SHA" --jq "$pick" || true)
           fi
           if [ -z "$run_id" ]; then
-            run_id=$(gh api "$query" --jq '.workflow_runs[0].id // empty' || true)
+            run_id=$(gh api "$query" --jq "$pick" || true)
           fi
           echo "run-id=$run_id" >> "$GITHUB_OUTPUT"
           echo "Baseline run: ${run_id:-none}"
