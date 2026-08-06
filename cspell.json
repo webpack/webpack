@@ -211,6 +211,8 @@
     "rowspan",
     "xrrggbb",
     "lightningcss",
+    "khtml",
+    "prefixable",
     "lintunit",
     "loadername",
     "loglevel",
