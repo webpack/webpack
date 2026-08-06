@@ -222,26 +222,9 @@ This is a hard rule, not a preference: a broad local sweep costs many minutes, a
 
 > [!REQUIRED]
 
-**When CI is red, read its log — do not reproduce the whole job locally.** The run already holds the answer, and re-running `yarn lint` or a full suite here costs minutes and a great many tokens to rediscover one line. Fetch the failing job's log, find the one assertion or rule it names, fix that, and re-run only the narrow command covering it.
+**When CI is red, read its log — do not reproduce the whole job locally.** The run already holds the answer, and re-running `yarn lint` or a whole suite to rediscover one line costs minutes and a great many tokens. Filter the run to its failing jobs (`gh run view <run-id> --json jobs --jq '.jobs[] | select(.conclusion=="failure")'`, or `list_workflow_jobs`), read that job's log (`gh run view --job <id> --log-failed`, or `get_job_logs` with `return_content` — its tail is mostly `Post job cleanup`, so ask for enough lines to clear that), then reproduce **only the case it names**: `yarn test:base --testPathPatterns="<file>"`, `yarn test:basic --testNamePattern="<category> <case>"`, or `npx eslint <file>`.
 
-The listing endpoints return the whole run and are far too large to read; filter to the failing jobs first:
-
-```sh
-# The failing jobs of the newest run on a branch, by id and name.
-gh run list --branch "<branch>" --limit 1 --json databaseId --jq '.[0].databaseId'
-gh run view <run-id> --json jobs \
-  --jq '.jobs[] | select(.conclusion=="failure") | "\(.databaseId) \(.name)"'
-gh run view --job <job-id> --log-failed
-```
-
-Through the GitHub MCP tools the same three steps are `actions_list` (`list_workflow_runs`, filtered by branch), `actions_list` (`list_workflow_jobs`) and `get_job_logs` with `return_content: true` and a `tail_lines` of 50–150. A job's log tail is mostly `Post job cleanup`, so `--log-failed` — or a `tail_lines` large enough to clear the cleanup — is what actually shows the error.
-
-Two traps worth naming, both of which have cost a full needless local run:
-
-- **The job named in a step is not the job.** `Run yarn lint` is a step inside the `lint` job; passing a step's id to the log endpoint returns the wrong output. Select on the object that has a `steps` array.
-- **`yarn lint` stops at its first stage.** A CI `lint` failure in `lint:code` means the later stages never ran, so it says nothing about them — and equally, a local `lint:special` complaint that `main` also makes says nothing about CI. Neither is evidence about the other; read the log for what actually failed.
-
-Reproduce locally only the single case the log names, and only once you have it: `yarn test:base --testPathPatterns="<file>"` for a unit failure, `yarn test:basic --testNamePattern="<category> <case>"` for a config case, `npx eslint <file>` for a lint rule.
+Two traps: a step is not a job — `Run yarn lint` sits inside the `lint` job, and a step's id fetches the wrong log, so select the object with a `steps` array. And `yarn lint` stops at its first stage, so a CI failure in `lint:code` says nothing about the later ones, just as a local `lint:special` complaint `main` also makes says nothing about CI.
 
 ### Verifying a performance or memory change
 

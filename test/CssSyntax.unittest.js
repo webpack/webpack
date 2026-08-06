@@ -1992,7 +1992,20 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["only one axis is centered", "a{background-position:center 10px}"],
 			["the initial value is no shorter", "a{color:initial}"],
 			["a shorthand states no value of its own", "a{margin:initial}"],
-			["it is a custom property's value", "a{--x:initial}"]
+			["it is a custom property's value", "a{--x:initial}"],
+			// The production also sits in shorthands, where a repeated value is some
+			// other slot — and `background: red red` is a declaration the engine
+			// drops, not one to make valid.
+			["the pair is not a repeat style", "a{background:red red}"],
+			["the pair is a shorthand's other slot", "a{mask:none none}"],
+			// `repeat-x` is the one-value spelling of a pair, so it never doubles.
+			["the keyword never pairs", "a{background-repeat:repeat-x repeat-x}"],
+			// `mdn-data` states `black` as this one's initial, which it cannot take.
+			[
+				"the stated initial is not a value it takes",
+				"a{flood-opacity:initial}"
+			],
+			["the same, on the other opacity", "a{stop-opacity:initial}"]
 		])("keeps it where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
@@ -2010,7 +2023,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a two-keyword display", "a{display:var(--x) flow}"],
 			["an `initial`", "a{min-width:var(--x,initial)}"],
 			["the font shorthand's weight", "a{font:bold var(--s1) Arial}"],
-			["a transition's slots", "a{transition:var(--p) 2s opacity}"]
+			["a transition's slots", "a{transition:var(--p) 2s opacity}"],
+			["`transparent`", "a{color:var(--x,transparent)}"],
+			["a `translateX()`", "a{transform:var(--a) translateX(1px)}"],
+			["a zero angle", "a{transform:var(--a) rotate(0deg)}"]
 		])("keeps %s as written", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});

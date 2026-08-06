@@ -1166,6 +1166,23 @@ const collectRepeatStyleProperties = () => {
 };
 
 /**
+ * The keywords one `<repeat-style>` axis can be, so a pair is only collapsed
+ * where both halves really are that axis rather than some other slot of a
+ * shorthand the production merely sits in (`background: red red`).
+ * @returns {string[]} the keywords, sorted
+ */
+const collectRepeatStyleKeywords = () => {
+	const syntax = definitions.get("repeat-style") || "";
+	// Only the `{1,2}` group pairs: `repeat-x` / `repeat-y` beside it are the
+	// one-value spellings of a pair, and repeating one of those is not a value.
+	const pairing = /\[([^\]]*)\]\{1,2\}/.exec(syntax);
+	if (pairing === null) {
+		throw new Error("`repeat-style` no longer states a `{1,2}` group");
+	}
+	return lowerSorted(acceptedValues(pairing[1]).keywords);
+};
+
+/**
  * The properties whose value is a `<bg-position>`, where `center` is the `50%`
  * the axis defaults to anyway.
  * @returns {string[]} the property names, sorted
@@ -1202,6 +1219,12 @@ const collectInitialValueKeywords = () => {
 		if (typeof initial !== "string") continue;
 		if (!/^[a-z][a-z-]*$/.test(initial)) continue;
 		if (initial.length >= "initial".length) continue;
+		// `mdn-data` states an initial its own property does not accept for a few
+		// entries (`flood-opacity`'s reads `black`), and writing one back would
+		// swap a working declaration for one the engine drops. Only a keyword the
+		// property's own grammar names is the value `initial` computes to.
+		if (typeof entry.syntax !== "string") continue;
+		if (!acceptedValues(entry.syntax).keywords.has(initial)) continue;
 		out.push([name, initial]);
 	}
 	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
@@ -2734,6 +2757,7 @@ const collectData = () => {
 	const colorOnlyProperties = collectColorOnlyProperties();
 	const initialValueKeywords = collectInitialValueKeywords();
 	const repeatStyleProperties = collectRepeatStyleProperties();
+	const repeatStyleKeywords = collectRepeatStyleKeywords();
 	const genericFontFamilies = collectGenericFontFamilies();
 	const displayShortForms = collectDisplayShortForms();
 	const backgroundPositionProperties = collectBackgroundPositionProperties();
@@ -2900,6 +2924,10 @@ const GENERIC_FONT_FAMILIES = ${setLiteral(genericFontFamilies)};
 // The properties whose value is a \`<bg-position>\`, where \`center\` is the \`50%\`
 // that axis defaults to.
 const BACKGROUND_POSITION_PROPERTIES = ${setLiteral(backgroundPositionProperties)};
+
+// The keywords one \`<repeat-style>\` axis can be: a pair only collapses where
+// both halves are one of these.
+const REPEAT_STYLE_KEYWORDS = ${setLiteral(repeatStyleKeywords)};
 
 // The properties whose value is a \`<repeat-style>\`, where one value already
 // says what two equal ones do.
@@ -3160,7 +3188,7 @@ module.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
-module.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
+module.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
