@@ -2821,16 +2821,32 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// Neither the sum nor the product is exact in a double.
 			["calc(.1px + .2px)"],
 			["calc(1px/7)"],
-			["calc(3px/1.1)"],
 			["calc(1e20px + 1px)"],
 			["calc(1e308px*1e10)"],
-			// Longer folded than written.
-			["calc(100%/3)"],
+			// Past the range the rounding covers, so every digit is kept — and all
+			// of them together are longer than the expression.
+			["calc(123456px/1.1)"],
 			// A math function whose meaning is not written yet, so the sum inside it
 			// folds but the call does not.
 			["sqrt(4px)"]
 		])("leaves %s alone", (expression) => {
 			expect(value(expression)).toBe(expression);
+		});
+
+		it.each([
+			// The fold prints a double back, so its result is rounded the way an
+			// authored number is — six significant digits.
+			["calc(3px/1.1)", "2.72727px"],
+			["calc(100%/3)", "33.3333%"],
+			["calc(1/3*1px)", ".333333px"],
+			["calc((6/10 - .375)*1em)", ".225em"],
+			["calc((6/14 - .375)*1em)", ".0535714em"],
+			// An angle keeps every digit: `rotate()` runs it through trig.
+			["calc(1turn/3)", "calc(1turn/3)"],
+			// Above the range the rounding covers the digits carry, so they stay.
+			["calc(1e4px + 1px)", "10001px"]
+		])("%s folds to %s", (expression, expected) => {
+			expect(value(expression)).toBe(expected);
 		});
 
 		it("folds through a parenthesized group and a nested calc()", () => {
