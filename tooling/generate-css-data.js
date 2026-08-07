@@ -642,6 +642,88 @@ const acceptedValues = (syntax) => {
 };
 
 /**
+ * The spellings stated for a class no dataset writes out, or `null`.
+ * @param {string} name the class name
+ * @returns {string[] | null} the spellings, or `null` if none are stated
+ */
+const statedClassSpellings = (name) => {
+	for (const [one, spellings] of SUPPLEMENT.classSpellings) {
+		if (one === name) return spellings;
+	}
+	return null;
+};
+
+/**
+ * Whether a value definition offers only values a printed component is looked
+ * up by — a keyword, or a call named by its function. A class it reaches counts
+ * when it is spelled out in turn: `<image>` is (a `<url>`, or a gradient call),
+ * `<color>` is not (`#fff` is neither).
+ * @param {string} source the value-definition syntax
+ * @param {Set<string>} seen the class names already on this walk
+ * @returns {boolean} whether every value of it is spelled
+ */
+const isSpelledSyntax = (source, seen) => {
+	let tree;
+	try {
+		tree = parseValueSyntax(source);
+	} catch (_err) {
+		return false;
+	}
+	let spelled = true;
+	/**
+	 * @param {EXPECTED_ANY} node the node to walk
+	 * @returns {void}
+	 */
+	const walk = (node) => {
+		if (!spelled) return;
+		// A call's arguments are its own; the component is spelled by its name.
+		if (node.type === "keyword" || node.type === "function") return;
+		if (node.type === "type") {
+			if (seen.has(node.name)) return;
+			seen.add(node.name);
+			if (statedClassSpellings(node.name) !== null) return;
+			const entry = syntaxes[node.name];
+			if (entry === undefined || !isSpelledSyntax(entry.syntax, seen)) {
+				spelled = false;
+			}
+			return;
+		}
+		if (node.type === "property") {
+			spelled = false;
+			return;
+		}
+		if (node.items) for (const item of node.items) walk(item);
+		else if (node.body) walk(node.body);
+	};
+	walk(tree);
+	return spelled;
+};
+
+/**
+ * Whether every value of a class is one `slotSpellings` reports.
+ * @param {string} name the class name
+ * @returns {boolean} whether it is spelled out
+ */
+const isSpelledClass = (name) => {
+	if (statedClassSpellings(name) !== null) return true;
+	const entry = syntaxes[name];
+	return entry !== undefined && isSpelledSyntax(entry.syntax, new Set([name]));
+};
+
+/**
+ * A stated class is stated because no dataset writes it out; once one does, the
+ * derived spelling is the one to read.
+ * @returns {void}
+ */
+const checkStatedClassSpellings = () => {
+	for (const [name] of SUPPLEMENT.classSpellings) {
+		if (syntaxes[name] !== undefined) {
+			throw new Error(`\`<${name}>\` is spelled out by mdn-data now`);
+		}
+	}
+};
+
+/**
  * CSS keywords are case-insensitive, so a table read back by a lowercased
  * lookup holds them lowercased — `currentColor` and `CanvasText` included.
  * @param {Set<string>} keywords the keywords as the grammar spells them
@@ -1398,18 +1480,27 @@ const enclosingGroupBody = (text) => {
 	return null;
 };
 
+// A layered shorthand names its last layer apart from the rest, that one
+// holding the slots the earlier layers do not — `background`'s color. A value
+// with no top-level comma is exactly that layer, which is the only shape the
+// printer folds.
+const FINAL_LAYER_REGEXP = /^<[a-z-]+>[#?*+]*\s*,\s*<([a-z-]+)>$/;
+
 /**
  * A shorthand's slots: the `||` its value is an order-free set of, reached
- * through the one named production a `<single-transition>#`-shaped grammar
- * states it as.
+ * through the one named production a `<single-transition>#`- or
+ * `<bg-layer># , <final-bg-layer>`-shaped grammar states it as.
  * @param {string} syntax the shorthand's value definition
  * @returns {string[] | null} the slots, or `null` when the value is not such a set
  */
 const shorthandSlots = (syntax) => {
 	let text = syntax.trim();
-	const named = /^<([a-z-]+)>[#?*+]?$/.exec(text);
-	if (named !== null && syntaxes[named[1]] !== undefined) {
-		text = syntaxes[named[1]].syntax.trim();
+	const named = /^<([a-z-]+)>[#?*+]*$/.exec(text);
+	const layered = named === null ? FINAL_LAYER_REGEXP.exec(text) : null;
+	const production =
+		named !== null ? named[1] : layered !== null ? layered[1] : null;
+	if (production !== null && syntaxes[production] !== undefined) {
+		text = syntaxes[production].syntax.trim();
 	}
 	const direct = splitTopLevelAnyOf(text);
 	if (direct !== null) return direct;
@@ -1463,8 +1554,12 @@ const slotSpellings = (slot) => {
 			return;
 		}
 		walkValueSyntax(tree, (node) => {
+			const statedSpellings =
+				node.type === "type" ? statedClassSpellings(node.name) : null;
 			if (node.type === "function") {
 				out.add(`${node.name.toLowerCase()}()`);
+			} else if (statedSpellings !== null) {
+				for (const one of statedSpellings) out.add(one);
 			} else if (node.type === "type" && syntaxes[node.name] !== undefined) {
 				expand(syntaxes[node.name].syntax);
 			} else if (
@@ -1486,10 +1581,11 @@ const slotSpellings = (slot) => {
  * nothing, but only under three conditions, and every one of them is a rewrite
  * that turned a declaration the engine drops into one it accepts:
  * the keyword must be named by exactly one slot (`animation`'s `none` is both a
- * name and a fill mode), that slot must take keywords and nothing else
- * (`mask: url(a.svg) none` fills one slot twice and is dropped, so removing the
- * `none` would revive it), and it must be a slot of its own rather than one
- * reached through a `/`.
+ * name and a fill mode), every value that slot takes must be one the spellings
+ * report (`mask: url(a.svg) none` fills one slot twice and is dropped, so
+ * removing the `none` would revive it — a `<color>` slot cannot be checked that
+ * way, `#fff` being no spelling), and it must be a slot of its own rather than
+ * one reached through a `/`.
  * @returns {[string, [string, string[]][]][]} the entries, sorted by property
  */
 const collectShorthandInitialKeywords = () => {
@@ -1508,7 +1604,7 @@ const collectShorthandInitialKeywords = () => {
 			return {
 				named: new Set([...values.keywords].map((one) => one.toLowerCase())),
 				spellings: slotSpellings(slot),
-				keywordsOnly: values.classes.size === 0
+				spelledOnly: [...values.classes].every(isSpelledClass)
 			};
 		});
 		/** @type {[string, string[]][]} */
@@ -1522,7 +1618,7 @@ const collectShorthandInitialKeywords = () => {
 			}
 			if (hits.length !== 1) continue;
 			const slot = accepted[hits[0]];
-			if (!slot.keywordsOnly) continue;
+			if (!slot.spelledOnly) continue;
 			if (slots[hits[0]].includes("/")) continue;
 			if (!SINGLE_TERM_SLOT_REGEXP.test(slots[hits[0]])) continue;
 			droppable.push([keyword, [...slot.spellings].sort()]);
@@ -2327,7 +2423,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -2509,6 +2605,10 @@ const SUPPLEMENT = {
 	// instead of adding to it — merging two would change which one runs.
 	// `@layer` is not here: a layer's blocks do add to it.
 	replacedByNameAtRules: ["keyframes"],
+	// CSS Values 4 §4.5.1: `<url> = <url()> | <src()>`. `syntaxes.json` has no
+	// `<url>` entry and `functions.json` neither call, so the one class whose
+	// every value is a call has to be stated for the walk to spell it.
+	classSpellings: [["url", ["url()", "src()"]]],
 	// CSS Values 4 §6.2 and §8: the units fixed against each other. `units.json`
 	// names them but states neither their type nor the ratios. Counted in a base
 	// that makes every one an integer — 1/36576 inch, the smallest subdivision
@@ -3222,6 +3322,7 @@ const collectData = () => {
 		])
 	].sort();
 	const [positionXKeywords, positionYKeywords] = collectPositionKeywordAxes();
+	checkStatedClassSpellings();
 	const shorthandInitialKeywords = collectShorthandInitialKeywords();
 	const shadowProperties = collectShadowProperties();
 	const mergeableAtRules = collectMergeableAtRules();

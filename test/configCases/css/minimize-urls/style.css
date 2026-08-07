@@ -57,6 +57,16 @@
 @font-face { src: url("http://website.test/slab.ttf") format('truetype') }
 /*! webpack: a custom property's url() is opaque */
 .t20 { --bg: url( "http://website.test/cat.jpg" ) }
+/*! webpack: a data: URI's payload is decoded, its escapes being content the URL
+   parser reads back — all but the bytes a url-token cannot carry */
+.t22 { background: url("data:image/svg+xml,%3csvg%20fill=%27red%27%3e%3c/svg%3e") }
+/*! webpack: ...including base64 padding */
+.t23 { background: url("data:image/png;base64,AAA%3D") }
+/*! declined: the data: URI's own metadata is not payload — outside it an escape
+   is structure, and there webpack's own url normalization has already decoded it */
+.t25 { background: url("data:image/svg%2Bxml,x") }
+/*! declined: `#` would start the fragment and `%` the next escape */
+.t26 { background: url("data:text/plain,a%23b%25c") }
 /*! webpack: a url() whose string the tokenizer never closed is passed through */
 .t21 { background: url("
 ) }

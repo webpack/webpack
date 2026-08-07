@@ -19,11 +19,17 @@ Array [
   "/*! webpack: an empty url() */.t14{background:url()}",
   "/*! webpack: a protocol-relative url */.t15{background:url(//cdn.website.test/cat.jpg)}",
   "/*! webpack: a data: URI keeps a quote it needs */.t16{background:url(data:image/svg+xml,%3Csvg\\\\ width=\\\\'1\\\\'%3E%3C/svg%3E)}",
-  "/*! webpack: a data: URI that needs no quote */.t17{background:url(data:image/svg+xml,%3Csvg%3E%3C/svg%3E)}",
+  "/*! webpack: a data: URI that needs no quote */.t17{background:url(data:image/svg+xml,<svg></svg>)}",
   "/*! webpack: a same-document fragment reference */.t18{clip-path:url(#myClip)}",
   "/*! webpack: a url holding a quote is wrapped in the other quote */.t19{background:url(http://website.test/foo\\\\\\"bar.jpg)}",
   "/*! webpack: src: url() in @font-face */@font-face{src:url(http://website.test/slab.ttf)format(\\"truetype\\")}",
   "/*! webpack: a custom property's url() is opaque */.t20{--bg:url( http://website.test/cat.jpg )}",
+  "/*! webpack: a data: URI's payload is decoded, its escapes being content the URL
+   parser reads back — all but the bytes a url-token cannot carry */.t22{background:url(data:image/svg+xml,<svg%20fill=%27red%27></svg>)}",
+  "/*! webpack: ...including base64 padding */.t23{background:url(data:image/png;base64,AAA=)}",
+  "/*! declined: the data: URI's own metadata is not payload — outside it an escape
+   is structure, and there webpack's own url normalization has already decoded it */.t25{background:url(data:image/svg%2Bxml,x)}",
+  "/*! declined: \`#\` would start the fragment and \`%\` the next escape */.t26{background:url(data:text/plain,a%23b%25c)}",
   "/*! webpack: a url() whose string the tokenizer never closed is passed through */.t21{background:url(\\")}",
 ]
 `;

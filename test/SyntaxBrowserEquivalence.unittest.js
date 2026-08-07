@@ -921,6 +921,25 @@ describe("printer output in real Chrome", () => {
 		return signatures;
 	};
 
+	// A `data:` URL as serialized by the CSSOM: its metadata, then the payload.
+	const DATA_URL_REGEXP = /url\("(data:[^,"]*,)((?:[^"\\]|\\.)*)"\)/gi;
+
+	/**
+	 * Two spellings of one data URI are the same URL — the parser decodes the
+	 * payload's escapes before anything reads it, so `%3D` and `=` name the same
+	 * byte. Read both sides decoded so the difference is not a difference.
+	 * @param {string} text a rule's text
+	 * @returns {string} it, with every data URI's payload decoded
+	 */
+	const decodeDataUrls = (text) =>
+		text.replace(DATA_URL_REGEXP, (whole, metadata, payload) => {
+			try {
+				return `url("${metadata}${decodeURIComponent(payload)}")`;
+			} catch (_err) {
+				return whole;
+			}
+		});
+
 	/**
 	 * A rule as the conditions it really holds under and the style it really
 	 * computes to.
@@ -934,7 +953,7 @@ describe("printer output in real Chrome", () => {
 				const answer = signatures.get(`${kind} ${condition}`);
 				return `@${kind}<${answer === undefined ? condition : answer}>`;
 			})
-			.join(" >> ")} ${rule.text}`;
+			.join(" >> ")} ${decodeDataUrls(rule.text)}`;
 
 	/**
 	 * Split a selector list on its own commas — not the ones inside `:is(…)`, an
@@ -1000,6 +1019,10 @@ describe("printer output in real Chrome", () => {
 		// The same selector twice in a row, under the same conditions and computing
 		// the same style, is the one rule it resolves to — which is what joining
 		// them into a list leaves, the engine keeping a selector once per list.
+		/**
+		 * @param {Rule[]} rules rules in cascade order
+		 * @returns {string[]} their keys, an adjacent repeat collapsed
+		 */
 		const keys = (rules) =>
 			perSelector(rules)
 				.map((rule) => keyOf(rule, signatures))

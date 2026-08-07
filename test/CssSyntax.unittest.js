@@ -1154,10 +1154,19 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		expect(min("a{FLEX:0 0 AUTO}")).toBe("a{FLEX:none}");
 	});
 
+	it("drops a `flex` shrink factor that is its own default", () => {
+		expect(min("a{flex:0 1 auto}")).toBe("a{flex:0 auto}");
+		expect(min("a{flex:1 1 0px}")).toBe("a{flex:1 0px}");
+		expect(min("a{flex:2 1 50%}")).toBe("a{flex:2 50%}");
+	});
+
 	it("keeps a `flex` value no keyword spells", () => {
 		// `flex:1` means `1 1 0%`, and a length `0` is not a percentage `0%`.
 		expect(min("a{flex:1 1 0}")).toBe("a{flex:1 1 0}");
 		expect(min("a{flex:1 1}")).toBe("a{flex:1 1}");
+		// A basis a factor could be read as: CSS Flexbox 1 §7.1.1 reads a unitless
+		// zero not preceded by two factors as a factor, so `1 1 0` is not `1 0`.
+		expect(min("a{flex:3 1 0}")).toBe("a{flex:3 1 0}");
 		// A prefixed property is a different property.
 		expect(min("a{-webkit-box-flex:0 0 auto}")).toBe(
 			"a{-webkit-box-flex:0 0 auto}"
@@ -2155,6 +2164,22 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{border-image:url(a.png)30%}"
 			],
 			["a{text-decoration:none solid red}", "a{text-decoration:red}"],
+			// A slot every value of which is a keyword or a call — `<bg-image>` is
+			// `none` or one of the image functions — is checked for a sibling just
+			// as a keywords-only one is.
+			["a{background:none #fff}", "a{background:#fff}"],
+			["a{background:#fff none}", "a{background:#fff}"],
+			["a{background:red scroll}", "a{background:red}"],
+			["a{background:red repeat}", "a{background:red}"],
+			["a{background:none red repeat scroll}", "a{background:red}"],
+			// `background-origin` and `background-clip` are two slots of one
+			// production, so neither of their initials is the one slot's own.
+			[
+				"a{background:padding-box border-box none}",
+				"a{background:padding-box border-box}"
+			],
+			["a{border-image:none 30}", "a{border-image:30}"],
+			["a{mask:none luminance}", "a{mask:luminance}"],
 			["a{TRANSITION:opacity 1s EASE}", "a{TRANSITION:opacity 1s}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
@@ -2187,7 +2212,23 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["the first layer is empty", "a{transition:,opacity 1s ease}"],
 			["the last layer is empty", "a{transition:opacity 1s ease,}"],
 			["the property is no shorthand", "a{border-style:none}"],
-			["the slot takes more than keywords", "a{border:medium solid red}"]
+			// `<line-width>` reaches `<length>`, which no spelling names, so a
+			// sibling filling that slot cannot be recognized.
+			[
+				"the slot takes a value no spelling names",
+				"a{border:medium solid red}"
+			],
+			// An image function fills `<bg-image>` as much as `none` does.
+			["a call fills the image slot", "a{background:none url(a.png)}"],
+			[
+				"the same, past a gradient",
+				"a{background:none linear-gradient(red,blue)}"
+			],
+			["a background is the keyword alone", "a{background:none}"],
+			["a background states two layers", "a{background:none,url(a.png)}"],
+			// A `/` reaches a slot through another's value, so the components are no
+			// longer this one flat list.
+			["a background states a size", "a{background:none 50%/cover}"]
 		])("keeps it where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
@@ -2393,7 +2434,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it.each([
 			["the value is a keyword", "a{transform:none}"],
-			["a component is no call", "a{background:red none}"],
+			["a component is no call", "a{background:red repeat-x}"],
 			["the same, past a call", "a{mask:url(a.svg) none}"],
 			["there is one component", "a{filter:blur(2px)}"]
 		])("keeps the value where %s", (_name, css) => {
@@ -2441,6 +2482,94 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a control code point stands there", 'a{background:url("a\tb.png")}']
 		])("keeps the quotes where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a data URI's percent-escapes", () => {
+		it.each([
+			[
+				'a{background:url("data:image/svg+xml,%3csvg%20fill=%27red%27%3e%3c/svg%3e")}',
+				"a{background:url(\"data:image/svg+xml,<svg fill='red'></svg>\")}"
+			],
+			[
+				'a{background:url("data:image/png;base64,AAA%3D")}',
+				"a{background:url(data:image/png;base64,AAA=)}"
+			],
+			// Decoding leaves a body the url-token spelling can carry.
+			[
+				'a{background:url("data:text/plain,a%2Cb")}',
+				"a{background:url(data:text/plain,a,b)}"
+			],
+			// A url written as a url-token decodes too, keeping only the bytes the
+			// token cannot carry — there are no quotes here to hold them.
+			[
+				"a{background:url(data:image/svg+xml,%3csvg%20fill=%27red%27%3e%3c/svg%3e)}",
+				"a{background:url(data:image/svg+xml,<svg%20fill=%27red%27></svg>)}"
+			],
+			[
+				"a{background:url(data:image/png;base64,AAA%3D)}",
+				"a{background:url(data:image/png;base64,AAA=)}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// An escape the url-token already carries is one this printer did not
+			// write, so its `\%` is not read as the start of a percent-escape.
+			["a url-token carries an escape", "a{background:url(data:t,a\\%20b%3c)}"],
+			["it is no data URI", "a{background:url(x.png?a=%26b)}"],
+			["it holds no escape at all", "a{background:url(data:t,ab)}"]
+		])("keeps a url-token as written where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+
+		it.each([
+			// Outside a data URI's payload an escape is structure, not content:
+			// `%26` in a query is a literal `&`, not a separator.
+			[
+				"it is a query's value",
+				'a{background:url("x.png?a=%26b")}',
+				"a{background:url(x.png?a=%26b)}"
+			],
+			[
+				"it is a path segment",
+				'a{background:url("a%2Fb.png")}',
+				"a{background:url(a%2Fb.png)}"
+			],
+			[
+				"it is the data URI's own metadata",
+				'a{background:url("data:x%2Fy,z")}',
+				"a{background:url(data:x%2Fy,z)}"
+			],
+			// `#` would start the fragment and `%` the next escape.
+			[
+				"the byte would start a fragment",
+				'a{background:url("data:t,a%23b")}',
+				"a{background:url(data:t,a%23b)}"
+			],
+			[
+				"the byte would start an escape",
+				'a{background:url("data:t,a%25b")}',
+				"a{background:url(data:t,a%25b)}"
+			],
+			[
+				"the byte is a control code point",
+				'a{background:url("data:t,a%00b")}',
+				"a{background:url(data:t,a%00b)}"
+			],
+			[
+				"the byte would end the string",
+				'a{background:url("data:t,a%22b")}',
+				"a{background:url(data:t,a%22b)}"
+			],
+			[
+				"the byte would extend the escape",
+				'a{background:url("data:t,a%5Cb")}',
+				"a{background:url(data:t,a%5Cb)}"
+			]
+		])("keeps them where %s", (_name, css, expected) => {
+			expect(minify(css)).toBe(expected);
 		});
 	});
 
