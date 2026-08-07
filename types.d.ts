@@ -10380,8 +10380,25 @@ declare interface HtmlTokenCallbacks {
 		valueEnd: number,
 		quoteType: number
 	) => number;
-	comment?: (input: string, start: number, end: number) => number;
-	doctype?: (input: string, start: number, end: number) => number;
+	comment?: (
+		input: string,
+		start: number,
+		end: number,
+		dataStart: number,
+		dataEnd: number
+	) => number;
+	doctype?: (
+		input: string,
+		start: number,
+		end: number,
+		nameStart: number,
+		nameEnd: number,
+		publicStart: number,
+		publicEnd: number,
+		systemStart: number,
+		systemEnd: number,
+		forceQuirks: boolean
+	) => number;
 	parseError?: (
 		input: string,
 		code: string,
