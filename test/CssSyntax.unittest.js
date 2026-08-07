@@ -2262,7 +2262,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a length past them is not zero", "a{box-shadow:0 0 0 1px red}"],
 			["the value is a keyword", "a{box-shadow:none}"],
 			["the property states no shadow", "a{stroke-dasharray:1 0 0}"],
-			["a layer holds a string", 'a{box-shadow:0 0 0 0 red,"a"}']
+			["a layer holds a string", 'a{box-shadow:0 0 0 0 red,"a"}'],
+			// A comma with nothing either side is a layer no shadow fills.
+			["a trailing comma parts an empty layer", "a{box-shadow:0 0 0 0 red,}"],
+			["a leading comma does the same", "a{box-shadow:,0 0 0 0 red}"]
 		])("keeps the value where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
