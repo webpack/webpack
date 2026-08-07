@@ -881,12 +881,17 @@ describe("CssSyntax — minify token-boundary safety", () => {
 	// instead), and there the stylesheet ends too — so a build never reaches this,
 	// but `webpack.css.syntax` minifies whatever source it is handed.
 	it("keeps an attribute value the tokenizer closed at EOF", () => {
-		// `"bar` has no closing quote, so unquoting it would drop the `r`. An
-		// at-rule prelude still prints at EOF, unlike a qualified rule (§5.4.3).
-		expect(min('@unknown [foo="bar')).toBe('@unknown [foo="bar];');
-		expect(min("@unknown [foo='bar")).toBe("@unknown [foo='bar];");
+		// `"bar` has no closing quote, so unquoting it would drop the `r` — the
+		// quote is written back instead, which is what keeps the value `bar` once
+		// the prelude's own `];` follows it. An at-rule prelude still prints at
+		// EOF, unlike a qualified rule (§5.4.3).
+		expect(min('@unknown [foo="bar')).toBe('@unknown [foo="bar"];');
+		expect(min("@unknown [foo='bar")).toBe("@unknown [foo='bar'];");
 		// The escape swallows the final quote, so this one is unterminated too.
-		expect(min('@unknown [foo="bar\\"')).toBe('@unknown [foo="bar\\"];');
+		expect(min('@unknown [foo="bar\\"')).toBe('@unknown [foo="bar\\""];');
+		// A `\` left dangling at EOF contributes nothing, so it goes rather than
+		// escaping the quote written back after it.
+		expect(min('@unknown [foo="bar\\')).toBe('@unknown [foo="bar"];');
 		// A closed string still unquotes.
 		expect(min('@unknown [foo="bar"')).toBe("@unknown [foo=bar];");
 	});
@@ -1114,6 +1119,20 @@ describe("CssSyntax — minify transforms, in-process", () => {
 			'a{background:url("a\u0001b.png")}'
 		);
 		expect(min("a{background:url(a.png)}")).toBe("a{background:url(a.png)}");
+	});
+
+	it("closes a url() the tokenizer closed at EOF", () => {
+		// Without the `)`, the `}` the printer writes next lands inside the url.
+		expect(min("a{background:url(a.png")).toBe("a{background:url(a.png)}");
+		// §4.3.6 reads the dangling `\` as an escape and §4.3.7 ends one at EOF with
+		// U+FFFD, so the url keeps that code point rather than losing it.
+		expect(min("a{background:url(a.png\\")).toBe(
+			"a{background:url(a.png\uFFFD)}"
+		);
+		// An even run escapes itself and closes nothing.
+		expect(min("a{background:url(a.png\\\\")).toBe(
+			"a{background:url(a.png\\\\)}"
+		);
 	});
 
 	it("picks the string quote that needs the fewest escapes", () => {

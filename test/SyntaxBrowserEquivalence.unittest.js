@@ -111,10 +111,6 @@ const buildCorpora = () => {
 // matches this set exactly, so an entry outlives its defect by exactly one run.
 const FILED_CSS_DEFECTS = new Map([
 	[
-		"test/configCases/css/minimize-strings/unterminated.css",
-		"a string closed at EOF takes the printer's `}` into its content"
-	],
-	[
 		"test/configCases/css/minimize-strings/style.css",
 		"a string closed at EOF stops swallowing the rules after it"
 	],
@@ -129,10 +125,6 @@ const FILED_CSS_DEFECTS = new Map([
 	[
 		"test/configCases/css/minimize-lightningcss-values/style.css",
 		"attr()'s empty fallback comma is dropped"
-	],
-	[
-		"test/configCases/css/css-modules/at-rule-value.module.css",
-		"a rule under `@media small` computes a different color"
 	]
 ]);
 
@@ -327,6 +319,9 @@ const installHelpers = () => {
 	const computed = (declaration) => {
 		probe.style.cssText = "";
 		probe.style.cssText = declaration;
+		// A declaration carrying `transition-*` animates the shared probe away from
+		// the previous rule's value, and the computed style would be read in flight.
+		for (const animation of probe.getAnimations()) animation.cancel();
 		const style = getComputedStyle(probe);
 		/** @type {string[]} */
 		const out = [];
