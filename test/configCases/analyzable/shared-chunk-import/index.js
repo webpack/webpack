@@ -14,7 +14,7 @@ it("should dedupe a shared chunk loaded through the analyzable import", async ()
 	expect(b.value).toBe("one:vendor");
 	expect(c.value).toBe("two:vendor");
 	expect(a).toBe(b);
-	expect(globalThis.__vendorEvaluations).toBe(1);
+	expect(global.__vendorEvaluations).toBe(1);
 });
 
 it("should emit the analyzable literal for the shared chunks", () => {
