@@ -2068,6 +2068,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			],
 			["a comma parts two layers", "a{background-position:left top,right top}"],
 			["the two keywords share an axis", "a{background-position:left right}"],
+			["the same, on the other axis", "a{background-position:top bottom}"],
 			// `transform-origin` takes a z offset past the position, so its keywords
 			// are not the whole value and the table leaves it out.
 			[
@@ -2092,8 +2093,11 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{column-rule:medium none red}", "a{column-rule:medium red}"],
 			["a{outline:medium none}", "a{outline:medium}"],
 			["a{flex-flow:row wrap}", "a{flex-flow:wrap}"],
-			// Both slots hold their initial, so the shortest one says both.
+			// Both slots hold their initial, so the shortest one says both — whichever
+			// order they were written in.
 			["a{flex-flow:row nowrap}", "a{flex-flow:row}"],
+			["a{flex-flow:nowrap row}", "a{flex-flow:row}"],
+			["a{border:none medium}", "a{border:medium}"],
 			["a{list-style:disc outside}", "a{list-style:disc}"],
 			["a{mask:url(a.svg) match-source add}", "a{mask:url(a.svg)}"],
 			[
