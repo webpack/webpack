@@ -3,4 +3,4 @@
 ---
 
 Add `Compilation#addLazyRuntimeModule` and `NormalModuleFactory` hook
-`prepareModuleType`; load built-in modules only when used.
+`prepareModuleType`; load parsers and generators only when their type is used.
