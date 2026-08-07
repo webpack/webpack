@@ -2270,9 +2270,16 @@ export interface Optimization {
 	 */
 	mergeDuplicateChunks?: boolean;
 	/**
-	 * Enable minimizing the output. Uses optimization.minimizer.
+	 * Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures what a minimizer may do beyond the transforms that always apply.
 	 */
-	minimize?: boolean;
+	minimize?:
+		| boolean
+		| {
+				/**
+				 * What the HTML minimizer may do beyond the transforms that always apply.
+				 */
+				html?: OptimizationMinimizeHtml;
+		  };
 	/**
 	 * Minimizer(s) to use for minimizing the output.
 	 */
@@ -2336,6 +2343,17 @@ export interface ConcatenateModulesOptions {
 	 * Also concatenate CommonJS modules with statically analyzable exports. Defaults to 'true'.
 	 */
 	commonjs?: boolean;
+}
+/**
+ * What the HTML minimizer may do beyond the transforms that always apply.
+ * @since 5.110.0
+ */
+export interface OptimizationMinimizeHtml {
+	/**
+	 * Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace is significant, and never removed entirely — dropping it would join two inline elements that render apart.
+	 * @since 5.110.0
+	 */
+	collapseWhitespace?: boolean;
 }
 /**
  * Plugin instance.
@@ -4424,9 +4442,17 @@ export interface OptimizationNormalized {
 	 */
 	mergeDuplicateChunks?: boolean;
 	/**
-	 * Enable minimizing the output. Uses optimization.minimizer.
+	 * Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures what a minimizer may do beyond the transforms that always apply.
 	 */
-	minimize?: boolean;
+	minimize?:
+		| boolean
+		| {
+				/**
+				 * What the HTML minimizer may do beyond the transforms that always apply.
+				 * @since 5.110.0
+				 */
+				html?: OptimizationMinimizeHtml;
+		  };
 	/**
 	 * Minimizer(s) to use for minimizing the output.
 	 */

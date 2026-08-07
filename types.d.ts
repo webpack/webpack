@@ -10181,6 +10181,11 @@ declare interface HtmlProcessOptions {
 	 * what the target can read, forwarded to the CSS minifier this runs over an inline `<style>` and every `style=""`
 	 */
 	environment?: CssEnvironment;
+
+	/**
+	 * collapse each run of whitespace in text to a single space, except where an ancestor renders it verbatim (default false)
+	 */
+	collapseWhitespace?: boolean;
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**
@@ -19577,9 +19582,17 @@ declare interface Optimization {
 	mergeDuplicateChunks?: boolean;
 
 	/**
-	 * Enable minimizing the output. Uses optimization.minimizer.
+	 * Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures what a minimizer may do beyond the transforms that always apply.
 	 */
-	minimize?: boolean;
+	minimize?:
+		| boolean
+		| {
+				/**
+				 * What the HTML minimizer may do beyond the transforms that always apply.
+				 * @since 5.110.0
+				 */
+				html?: OptimizationMinimizeHtml;
+		  };
 
 	/**
 	 * Minimizer(s) to use for minimizing the output.
@@ -19667,6 +19680,18 @@ declare interface Optimization {
 }
 
 /**
+ * What the HTML minimizer may do beyond the transforms that always apply.
+ * @since 5.110.0
+ */
+declare interface OptimizationMinimizeHtml {
+	/**
+	 * Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace is significant, and never removed entirely — dropping it would join two inline elements that render apart.
+	 * @since 5.110.0
+	 */
+	collapseWhitespace?: boolean;
+}
+
+/**
  * Enables/Disables integrated optimizations.
  */
 declare interface OptimizationNormalized {
@@ -19727,9 +19752,17 @@ declare interface OptimizationNormalized {
 	mergeDuplicateChunks?: boolean;
 
 	/**
-	 * Enable minimizing the output. Uses optimization.minimizer.
+	 * Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures what a minimizer may do beyond the transforms that always apply.
 	 */
-	minimize?: boolean;
+	minimize?:
+		| boolean
+		| {
+				/**
+				 * What the HTML minimizer may do beyond the transforms that always apply.
+				 * @since 5.110.0
+				 */
+				html?: OptimizationMinimizeHtml;
+		  };
 
 	/**
 	 * Minimizer(s) to use for minimizing the output.
@@ -19857,7 +19890,17 @@ type OptimizationNormalizedWithDefaults = OptimizationNormalized & {
 	mangleWasmImports: NonNullable<undefined | boolean>;
 	portableRecords: NonNullable<undefined | boolean>;
 	realContentHash: NonNullable<undefined | boolean>;
-	minimize: NonNullable<undefined | boolean>;
+	minimize: NonNullable<
+		| undefined
+		| boolean
+		| {
+				/**
+				 * What the HTML minimizer may do beyond the transforms that always apply.
+				 * @since 5.110.0
+				 */
+				html?: OptimizationMinimizeHtml;
+		  }
+	>;
 	minimizer: (
 		| ((this: Compiler, compiler: Compiler) => void)
 		| WebpackPluginInstance

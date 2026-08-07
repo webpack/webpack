@@ -9920,13 +9920,26 @@ Object {
   "optimization-minimize": Object {
     "configs": Array [
       Object {
-        "description": "Enable minimizing the output. Uses optimization.minimizer.",
+        "description": "Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures what a minimizer may do beyond the transforms that always apply.",
         "multiple": false,
         "path": "optimization.minimize",
         "type": "boolean",
       },
     ],
-    "description": "Enable minimizing the output. Uses optimization.minimizer.",
+    "description": "Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures what a minimizer may do beyond the transforms that always apply.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-html-collapse-whitespace": Object {
+    "configs": Array [
+      Object {
+        "description": "Collapse each run of whitespace in text to a single space. Left alone inside \`pre\`, \`textarea\` and \`listing\`, where whitespace is significant, and never removed entirely — dropping it would join two inline elements that render apart.",
+        "multiple": false,
+        "path": "optimization.minimize.html.collapseWhitespace",
+        "type": "boolean",
+      },
+    ],
+    "description": "Collapse each run of whitespace in text to a single space. Left alone inside \`pre\`, \`textarea\` and \`listing\`, where whitespace is significant, and never removed entirely — dropping it would join two inline elements that render apart.",
     "multiple": false,
     "simpleType": "boolean",
   },
