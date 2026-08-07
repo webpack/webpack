@@ -68,10 +68,11 @@ const prepareOptions = require("./helpers/prepareOptions");
 
 /**
  * @typedef {object} Change
- * @property {string} name case or asset name
+ * @property {string} name `<case> <asset>`
  * @property {"added" | "removed" | "changed"} status change kind
+ * @property {Metrics} before baseline metrics, zeroed when the asset is new
+ * @property {Metrics} after current metrics, zeroed when the asset is gone
  * @property {Metrics} delta current minus baseline
- * @property {Change[]} assets changed assets, empty for an asset change
  */
 
 /**
@@ -102,20 +103,26 @@ const ZSTD_LEVEL = 19;
  */
 const METRICS = ["runtime", "raw", "gzip", "brotli", "zstd"];
 
+/**
+ * What an asset weighs once encoded — reported next to its raw size, since a
+ * generator change and what it saves on the wire are not the same number.
+ * @type {Metric[]}
+ */
+const COMPRESSED = ["gzip", "brotli", "zstd"];
+
 /** @type {Record<Metric, string>} */
 const METRIC_LABELS = {
 	runtime: "Runtime modules",
 	raw: "Raw",
-	gzip: `Gzip (level ${GZIP_LEVEL})`,
-	brotli: `Brotli (quality ${BROTLI_QUALITY})`,
-	zstd: `Zstd (level ${ZSTD_LEVEL})`
+	gzip: `Gzip (${GZIP_LEVEL})`,
+	brotli: `Brotli (${BROTLI_QUALITY})`,
+	zstd: `Zstd (${ZSTD_LEVEL})`
 };
 
 // The workflow greps its own pull request comment by this, so it must not change.
 const COMMENT_MARKER = "<!-- code-size-report -->";
 
-const MAX_CASE_ROWS = 40;
-const MAX_ASSET_ROWS = 5;
+const MAX_ASSET_ROWS = 30;
 
 // A `[contenthash]` renames the asset on every content change; the report keys
 // on the normalized name so a size change reads as a change, not add + remove.
@@ -433,53 +440,43 @@ const formatBytes = (bytes) => {
 };
 
 /**
- * @param {Report} baseline baseline report
- * @param {Report} current current report
- * @returns {Change[]} changed cases with their changed assets, biggest first
+ * @param {number} before baseline bytes
+ * @param {number} after current bytes
+ * @returns {string} signed percentage, or a word when there is nothing to divide by
  */
-const compareReports = (baseline, current) => {
-	/**
-	 * @param {Record<string, Metrics>} before baseline entries
-	 * @param {Record<string, Metrics>} after current entries
-	 * @returns {Change[]} changed entries, largest gzip delta first
-	 */
-	const compare = (before, after) => {
-		/** @type {Change[]} */
-		const changes = [];
-		for (const name of new Set([
-			...Object.keys(before),
-			...Object.keys(after)
-		])) {
-			const delta = createMetrics();
-			for (const metric of METRICS) {
-				delta[metric] =
-					(after[name] ? after[name][metric] : 0) -
-					(before[name] ? before[name][metric] : 0);
-			}
-			if (METRICS.every((metric) => delta[metric] === 0)) continue;
-			changes.push({
-				name,
-				status:
-					name in before ? (name in after ? "changed" : "removed") : "added",
-				delta,
-				assets: []
-			});
-		}
-		return changes.sort(
-			(a, b) => Math.abs(b.delta.gzip) - Math.abs(a.delta.gzip)
-		);
-	};
+const formatPercent = (before, after) => {
+	if (before === after) return "—";
+	if (before === 0) return "new";
+	if (after === 0) return "gone";
+	const percent = ((after - before) / before) * 100;
+	return `${percent > 0 ? "🔺 +" : "🔻 "}${percent.toFixed(2)}%`;
+};
 
-	const changes = compare(caseMetrics(baseline), caseMetrics(current));
-	for (const change of changes) {
-		const before = baseline.cases[change.name];
-		const after = current.cases[change.name];
-		change.assets = compare(
-			before ? before.assets : {},
-			after ? after.assets : {}
-		);
+/**
+ * @param {Record<string, Metrics>} before baseline entries
+ * @param {Record<string, Metrics>} after current entries
+ * @returns {Change[]} changed entries, largest raw delta first
+ */
+const compareMetrics = (before, after) => {
+	/** @type {Change[]} */
+	const changes = [];
+	for (const name of new Set([...Object.keys(before), ...Object.keys(after)])) {
+		const empty = createMetrics();
+		const from = before[name] || empty;
+		const to = after[name] || empty;
+		const delta = createMetrics();
+		for (const metric of METRICS) delta[metric] = to[metric] - from[metric];
+		if (METRICS.every((metric) => delta[metric] === 0)) continue;
+		changes.push({
+			name,
+			status:
+				name in before ? (name in after ? "changed" : "removed") : "added",
+			before: from,
+			after: to,
+			delta
+		});
 	}
-	return changes;
+	return changes.sort((a, b) => Math.abs(b.delta.raw) - Math.abs(a.delta.raw));
 };
 
 const MAX_RUNTIME_ROWS = 25;
@@ -571,21 +568,75 @@ const formatRuntimeModules = (report, baseline) => {
 
 	/** @type {string[]} */
 	const lines = [
-		`<details><summary>${baseline ? `${rows.length} runtime module(s) changed` : `${rows.length} runtime module(s) emitted`}</summary>`,
+		`<details><summary>${
+			baseline
+				? `${rows.length} runtime module(s) changed`
+				: `${rows.length} runtime module(s) emitted`
+		}</summary>`,
 		"",
-		`| Runtime module | Total${baseline ? " | Change" : ""} | In cases | Biggest emitted |`,
+		`| Runtime module | Total${
+			baseline ? " | Change" : ""
+		} | In cases | Biggest emitted |`,
 		`| :-- | --: |${baseline ? " --: |" : ""} --: | --: |`
 	];
 	for (const { name, now, delta } of rows.slice(0, MAX_RUNTIME_ROWS)) {
 		// `cases: 0` means the baseline emitted it and this run does not — dead
 		// runtime, or a case that stopped emitting.
 		lines.push(
-			`| \`${name}\` | ${formatBytes(now.bytes)}${baseline ? ` | ${delta > 0 ? "+" : ""}${formatBytes(delta)}` : ""} | ${now.cases}${now.cases === 0 ? " (gone)" : ""} | ${formatBytes(now.largest)} |`
+			`| \`${name}\` | ${formatBytes(now.bytes)}${
+				baseline ? ` | ${delta > 0 ? "+" : ""}${formatBytes(delta)}` : ""
+			} | ${now.cases}${now.cases === 0 ? " (gone)" : ""} | ${formatBytes(
+				now.largest
+			)} |`
 		);
 	}
 	if (rows.length > MAX_RUNTIME_ROWS) {
 		lines.push(
-			`| … ${rows.length - MAX_RUNTIME_ROWS} more, see the uploaded report |${baseline ? " |" : ""} | | |`
+			`| … ${rows.length - MAX_RUNTIME_ROWS} more, see the uploaded report |${
+				baseline ? " |" : ""
+			} | | |`
+		);
+	}
+	lines.push("", "</details>", "");
+
+	return lines;
+};
+
+/**
+ * With no baseline there is nothing to diff, so rank what the suite emits —
+ * which is the other question worth asking of an asset: what is the big one.
+ * @param {Report} report current report
+ * @returns {string[]} markdown lines
+ */
+const formatBiggestAssets = (report) => {
+	const assets = Object.entries(assetMetrics(report)).sort(
+		(a, b) => b[1].raw - a[1].raw
+	);
+	if (assets.length === 0) return [];
+
+	/** @type {string[]} */
+	const lines = [
+		`<details><summary>${assets.length} asset(s) emitted, biggest first</summary>`,
+		"",
+		`| Asset | Raw | ${COMPRESSED.map((metric) => METRIC_LABELS[metric]).join(
+			" | "
+		)} |`,
+		`| :-- | --: |${COMPRESSED.map(() => " --: |").join("")}`
+	];
+	for (const [name, metrics] of assets.slice(0, MAX_ASSET_ROWS)) {
+		lines.push(
+			`| \`${name}\` | ${formatBytes(metrics.raw)} | ${COMPRESSED.map(
+				(metric) => formatBytes(metrics[metric])
+			).join(" | ")} |`
+		);
+	}
+	if (assets.length > MAX_ASSET_ROWS) {
+		lines.push(
+			`| … ${
+				assets.length - MAX_ASSET_ROWS
+			} more asset(s), see the uploaded report |${COMPRESSED.map(
+				() => " |"
+			).join("")} |`
 		);
 	}
 	lines.push("", "</details>", "");
@@ -608,21 +659,23 @@ const formatMarkdown = (report, baseline) => {
 		""
 	];
 
+	const built = `Built \`test/configCases\` with the defaults a user gets: ${
+		report.meta.cases
+	} case(s), ${report.meta.assets} asset(s)${
+		report.meta.withoutOutput > 0
+			? `, ${report.meta.withoutOutput} emitted nothing`
+			: ""
+	}.`;
+
 	if (!baseline) {
 		lines.push(
-			`Built \`test/configCases\` with the defaults a user gets: ${report.meta.cases} case(s), ${report.meta.assets} asset(s)${report.meta.withoutOutput > 0 ? `, ${report.meta.withoutOutput} emitted nothing` : ""}.`,
+			built,
 			"",
 			"No baseline report was found for `main`, so there is nothing to compare against yet.",
 			"",
-			"| Metric | Total |",
-			"| :-- | --: |"
+			...formatRuntimeModules(report),
+			...formatBiggestAssets(report)
 		);
-		for (const metric of METRICS) {
-			lines.push(
-				`| ${METRIC_LABELS[metric]} | ${formatBytes(report.totals[metric])} |`
-			);
-		}
-		lines.push("", ...formatRuntimeModules(report));
 		return `${lines.join("\n")}\n`;
 	}
 
@@ -643,12 +696,16 @@ const formatMarkdown = (report, baseline) => {
 			sameMetrics
 		)
 	};
-	const moved = METRICS.some(
-		(metric) => report.totals[metric] !== baseline.totals[metric]
-	);
+	const changes = compareMetrics(assetMetrics(baseline), assetMetrics(report));
+	const short = (/** @type {Report} */ report) =>
+		report.meta.commit ? `\`${report.meta.commit.slice(0, 7)}\`` : "unknown";
 
 	lines.push(
-		`Merging this PR will **${moved ? "change" : "not change"}** the size of the code webpack generates.`,
+		`Comparing ${short(report)} against ${short(
+			baseline
+		)}. Merging this PR will **${
+			changes.length === 0 ? "not change" : "change"
+		}** the code webpack generates.`,
 		"",
 		"| | Changed | New | Deleted | Unchanged |",
 		"| :-- | --: | --: | --: | --: |"
@@ -656,24 +713,6 @@ const formatMarkdown = (report, baseline) => {
 	for (const [label, count] of Object.entries(counts)) {
 		lines.push(
 			`| ${label} | ${count.changed} | ${count.added} | ${count.removed} | ${count.unchanged} |`
-		);
-	}
-	lines.push("");
-
-	const short = (/** @type {Report} */ report) =>
-		report.meta.commit ? `\`${report.meta.commit.slice(0, 7)}\`` : "unknown";
-
-	lines.push(
-		`| Metric | Baseline (${short(baseline)}) | Current (${short(report)}) | Change |`,
-		"| :-- | --: | --: | --: |"
-	);
-	for (const metric of METRICS) {
-		const before = baseline.totals[metric];
-		const delta = report.totals[metric] - before;
-		const percent =
-			before === 0 ? "new" : `${((delta / before) * 100).toFixed(2)}%`;
-		lines.push(
-			`| ${METRIC_LABELS[metric]} | ${formatBytes(before)} | ${formatBytes(report.totals[metric])} | ${delta === 0 ? "—" : `${delta > 0 ? "🔺 +" : "🔻 "}${formatBytes(delta)} (${delta > 0 ? "+" : ""}${percent})`} |`
 		);
 	}
 	lines.push("");
@@ -689,56 +728,54 @@ const formatMarkdown = (report, baseline) => {
 	if (stopped.length > 0) {
 		lines.push(
 			"> [!NOTE]",
-			`> ${stopped.length} case(s) emitted in the baseline and emit nothing here, so part of the delta is theirs: ${stopped.map((name) => `\`${name}\``).join(", ")}`,
+			`> ${
+				stopped.length
+			} case(s) emitted in the baseline and emit nothing here, so part of the delta is theirs: ${stopped
+				.map((name) => `\`${name}\``)
+				.join(", ")}`,
 			""
 		);
 	}
 
 	lines.push(...formatRuntimeModules(report, baseline));
 
-	const changes = compareReports(baseline, report);
 	if (changes.length === 0) {
-		lines.push("No case changed size.");
+		lines.push(built, "", "No asset changed size.");
 		return `${lines.join("\n")}\n`;
 	}
 
-	const empty = METRICS.map(() => " |").join("");
-	/**
-	 * @param {Change} change change
-	 * @returns {string} one signed cell per metric
-	 */
-	const cells = ({ delta }) =>
-		METRICS.map((metric) =>
-			delta[metric] === 0
-				? "—"
-				: `${delta[metric] > 0 ? "+" : ""}${formatBytes(delta[metric])}`
-		).join(" | ");
-
+	// The asset view: one row per emitted file, so a minifier change reads as the
+	// files it shrank rather than as one number over the whole suite. Raw is what
+	// the generator wrote; the rest is what each encoding makes of it.
 	lines.push(
-		`<details><summary>${changes.length} case(s) changed size</summary>`,
+		`<details open><summary>${changes.length} asset(s) changed size</summary>`,
 		"",
-		`| Case | ${METRICS.map((metric) => METRIC_LABELS[metric]).join(" | ")} |`,
-		`| :-- |${METRICS.map(() => " --: |").join("")}`
+		`| Asset | Raw (before → after) | ${COMPRESSED.map(
+			(metric) => METRIC_LABELS[metric]
+		).join(" | ")} |`,
+		`| :-- | --: |${COMPRESSED.map(() => " --: |").join("")}`
 	);
-	for (const change of changes.slice(0, MAX_CASE_ROWS)) {
-		lines.push(
-			`| \`${change.name}\`${change.status === "changed" ? "" : ` (${change.status})`} | ${cells(change)} |`
-		);
-		for (const asset of change.assets.slice(0, MAX_ASSET_ROWS)) {
-			lines.push(`| &nbsp;&nbsp;↳ \`${asset.name}\` | ${cells(asset)} |`);
-		}
-		if (change.assets.length > MAX_ASSET_ROWS) {
-			lines.push(
-				`| &nbsp;&nbsp;↳ … ${change.assets.length - MAX_ASSET_ROWS} more asset(s) |${empty}`
-			);
-		}
+	for (const change of changes.slice(0, MAX_ASSET_ROWS)) {
+		const raw = `${
+			change.status === "added" ? "—" : formatBytes(change.before.raw)
+		} → ${
+			change.status === "removed" ? "—" : formatBytes(change.after.raw)
+		} (${formatPercent(change.before.raw, change.after.raw)})`;
+		const compressed = COMPRESSED.map((metric) =>
+			formatPercent(change.before[metric], change.after[metric])
+		).join(" | ");
+		lines.push(`| \`${change.name}\` | ${raw} | ${compressed} |`);
 	}
-	if (changes.length > MAX_CASE_ROWS) {
+	if (changes.length > MAX_ASSET_ROWS) {
 		lines.push(
-			`| … ${changes.length - MAX_CASE_ROWS} more case(s), see the uploaded report |${empty}`
+			`| … ${
+				changes.length - MAX_ASSET_ROWS
+			} more asset(s), see the uploaded report |${COMPRESSED.map(
+				() => " |"
+			).join("")} |`
 		);
 	}
-	lines.push("", "</details>");
+	lines.push("", "</details>", "", built);
 
 	return `${lines.join("\n")}\n`;
 };
@@ -817,7 +854,7 @@ const discoverCases = (filter, negativeFilter) => {
  */
 const readBaseline = (file) => {
 	if (!fs.existsSync(file)) {
-		console.log(`No baseline report at ${file}, reporting totals only.`);
+		console.log(`No baseline report at ${file}, reporting this run only.`);
 		return undefined;
 	}
 	/** @type {Report} */
@@ -887,7 +924,9 @@ const run = async () => {
 		}
 		if ((index + 1) % 100 === 0 || index + 1 === cases.length) {
 			console.log(
-				`  ${index + 1}/${cases.length} case(s) in ${Math.round((Date.now() - started) / 1000)}s`
+				`  ${index + 1}/${cases.length} case(s) in ${Math.round(
+					(Date.now() - started) / 1000
+				)}s`
 			);
 		}
 	}
