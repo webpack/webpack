@@ -1358,7 +1358,7 @@ const slotSpellings = (slot) => {
  * that turned a declaration the engine drops into one it accepts:
  * the keyword must be named by exactly one slot (`animation`'s `none` is both a
  * name and a fill mode), that slot must take keywords and nothing else
- * (`mask: url(a.svg) none` fills one slot twice and is dropped, so unwriting the
+ * (`mask: url(a.svg) none` fills one slot twice and is dropped, so removing the
  * `none` would revive it), and it must be a slot of its own rather than one
  * reached through a `/`.
  * @returns {[string, [string, string[]][]][]} the entries, sorted by property
