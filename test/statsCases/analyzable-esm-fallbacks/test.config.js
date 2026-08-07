@@ -19,7 +19,9 @@ const CASES = {
 	"bare-public-path": { file: "main.mjs", expect: "analyzable" },
 	"shared-chunk": { file: "a.mjs", expect: "analyzable" },
 	prefetch: { file: "main.mjs", expect: "analyzable" },
-	hmr: { file: "main.mjs", expect: "fallback" }
+	// The hot require wraps `.ei` like `.e`, so an update still blocks on a chunk
+	// load in flight and HMR does not force the runtime form.
+	hmr: { file: "main.mjs", expect: "analyzable" }
 };
 
 module.exports = {

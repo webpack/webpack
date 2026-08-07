@@ -43,14 +43,18 @@ module.exports = [
 	// Also analyzable: an empty public path leaves a bare specifier, which is made
 	// explicitly relative — the same thing the chunk loader does.
 	base("bare-public-path", { output: { publicPath: "" } }),
+	// Also analyzable: a native `import()` carries no `fetchPriority`, and the ESM chunk
+	// loader ignores the argument, so the hint never forces the runtime form.
+	base("fetch-priority", { entry: "./index-fetch-priority" }),
+	// Also analyzable: the hot require wraps `.ei` the same way it wraps `.e`, so an
+	// update still blocks on an in-flight chunk load.
+	base("hmr", { plugins: [new webpack.HotModuleReplacementPlugin()] }),
 	// Every case below must fall back with no `.ei` emitted.
 	base("public-path-override", { entry: "./index-public-path-override" }),
-	base("fetch-priority", { entry: "./index-fetch-priority" }),
 	base("content-hash", {
 		output: { chunkFilename: "[name].[contenthash].mjs" }
 	}),
 	base("templated-public-path", {
 		output: { publicPath: "/assets/[fullhash]/" }
-	}),
-	base("hmr", { plugins: [new webpack.HotModuleReplacementPlugin()] })
+	})
 ];
