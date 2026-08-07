@@ -1217,6 +1217,174 @@ const collectPositionProperties = () => {
 };
 
 /**
+ * Split a value definition on one top-level combinator, `[…]` / `<…>` / `(…)`
+ * nesting aside. A top-level `|` while splitting on `||` means the definition is
+ * an alternation of whole values rather than a set of slots.
+ * @param {string} syntax the value definition
+ * @returns {string[] | null} the parts, or `null` when there are not two of them
+ */
+const splitTopLevelAnyOf = (syntax) => {
+	const parts = [];
+	let depth = 0;
+	let start = 0;
+	for (let i = 0; i < syntax.length; i++) {
+		const character = syntax[i];
+		if (character === "[" || character === "<" || character === "(") {
+			depth++;
+		} else if (character === "]" || character === ">" || character === ")") {
+			depth--;
+		} else if (depth === 0 && character === "|") {
+			if (syntax[i + 1] !== "|") return null;
+			parts.push(syntax.slice(start, i));
+			start = i + 2;
+			i++;
+		}
+	}
+	parts.push(syntax.slice(start));
+	return parts.length > 1 ? parts.map((part) => part.trim()) : null;
+};
+
+// A whole-value `[…]` group, and a slot a keyword may be dropped out of: one
+// term, no `/` — a slot behind a `/` is reached through another one's value.
+const WHOLE_GROUP_REGEXP = /^\[([\s\S]*)\][#?*+!]?$/;
+const SINGLE_TERM_SLOT_REGEXP = /^(?:<'?[a-z-]+'?>|\[[^[\]]*\])[#?*+]?$/;
+
+/**
+ * The body of a `[…]` enclosing the whole definition, if the first `[` is the
+ * one the last `]` closes.
+ * @param {string} text a value definition
+ * @returns {string | null} the body, or `null` when the brackets enclose less
+ */
+const enclosingGroupBody = (text) => {
+	const match = WHOLE_GROUP_REGEXP.exec(text);
+	if (match === null) return null;
+	let depth = 0;
+	for (let i = 0; i < text.length; i++) {
+		if (text[i] === "[") {
+			depth++;
+		} else if (text[i] === "]" && --depth === 0) {
+			return i === text.lastIndexOf("]") ? match[1].trim() : null;
+		}
+	}
+	return null;
+};
+
+/**
+ * A shorthand's slots: the `||` its value is an order-free set of, reached
+ * through the one named production a `<single-transition>#`-shaped grammar
+ * states it as.
+ * @param {string} syntax the shorthand's value definition
+ * @returns {string[] | null} the slots, or `null` when the value is not such a set
+ */
+const shorthandSlots = (syntax) => {
+	let text = syntax.trim();
+	const named = /^<([a-z-]+)>[#?*+]?$/.exec(text);
+	if (named !== null && syntaxes[named[1]] !== undefined) {
+		text = syntaxes[named[1]].syntax.trim();
+	}
+	const direct = splitTopLevelAnyOf(text);
+	if (direct !== null) return direct;
+	const body = enclosingGroupBody(text);
+	return body === null ? null : splitTopLevelAnyOf(body);
+};
+
+/**
+ * The keyword a property's initial value is, following a shorthand down to the
+ * first longhand that states one.
+ * @param {string} name the property name
+ * @param {number} depth the shorthand nesting walked so far
+ * @returns {string | null} the keyword, or `null` when the initial is not one
+ */
+const initialKeyword = (name, depth) => {
+	const entry = properties[name];
+	if (entry === undefined || depth > 4) return null;
+	// `mdn-data`'s own types omit the field, which its data does carry.
+	const initial = /** @type {{ initial?: string | string[] }} */ (entry)
+		.initial;
+	if (Array.isArray(initial)) return initialKeyword(initial[0], depth + 1);
+	if (typeof initial !== "string") return null;
+	return /^[a-z][a-z-]*$/.test(initial) ? initial : null;
+};
+
+/**
+ * Each shorthand -> the keywords a value of it may drop, and for each the other
+ * keywords its slot takes. A slot holding what it already defaults to says
+ * nothing, but only under three conditions, and every one of them is a rewrite
+ * that turned a declaration the engine drops into one it accepts:
+ * the keyword must be named by exactly one slot (`animation`'s `none` is both a
+ * name and a fill mode), that slot must take keywords and nothing else
+ * (`mask: url(a.svg) none` fills one slot twice and is dropped, so unwriting the
+ * `none` would revive it), and it must be a slot of its own rather than one
+ * reached through a `/`.
+ * @returns {[string, [string, string[]][]][]} the entries, sorted by property
+ */
+const collectShorthandInitialKeywords = () => {
+	/** @type {[string, [string, string[]][]][]} */
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		// A prefixed spelling is a different property with its own grammar.
+		if (name.startsWith("-")) continue;
+		const initial = /** @type {{ initial?: string | string[] }} */ (entry)
+			.initial;
+		if (!Array.isArray(initial) || typeof entry.syntax !== "string") continue;
+		const slots = shorthandSlots(entry.syntax);
+		if (slots === null) continue;
+		const accepted = slots.map((slot) => {
+			const values = acceptedValues(slot);
+			return {
+				named: new Set([...values.keywords].map((one) => one.toLowerCase())),
+				keywordsOnly: values.classes.size === 0
+			};
+		});
+		/** @type {[string, string[]][]} */
+		const droppable = [];
+		for (const longhand of initial) {
+			const keyword = initialKeyword(longhand, 0);
+			if (keyword === null) continue;
+			const hits = [];
+			for (let i = 0; i < accepted.length; i++) {
+				if (accepted[i].named.has(keyword)) hits.push(i);
+			}
+			if (hits.length !== 1) continue;
+			const slot = accepted[hits[0]];
+			if (!slot.keywordsOnly) continue;
+			if (slots[hits[0]].includes("/")) continue;
+			if (!SINGLE_TERM_SLOT_REGEXP.test(slots[hits[0]])) continue;
+			droppable.push([keyword, [...slot.named].sort()]);
+		}
+		if (droppable.length !== 0) {
+			out.push([name, droppable.sort(([a], [b]) => (a < b ? -1 : 1))]);
+		}
+	}
+	return out.sort(([a], [b]) => (a < b ? -1 : 1));
+};
+
+/**
+ * Each `font-stretch` keyword -> the percentage it names. The keywords are read
+ * off the property's own grammar; only the percentages are stated.
+ * @returns {[string, string][]} the entries, in the grammar's order
+ */
+const collectFontStretchPercentages = () => {
+	const entry = properties["font-stretch"];
+	if (entry === undefined || typeof entry.syntax !== "string") {
+		throw new Error("`font-stretch` is gone from mdn-data");
+	}
+	const named = acceptedValues(entry.syntax).keywords;
+	const stated = new Map(SUPPLEMENT.fontStretchPercentages);
+	for (const keyword of named) {
+		if (!stated.has(keyword)) {
+			throw new Error(`\`font-stretch\` gained the keyword \`${keyword}\``);
+		}
+	}
+	for (const [keyword] of stated) {
+		if (!named.has(keyword)) {
+			throw new Error(`\`font-stretch\` no longer states \`${keyword}\``);
+		}
+	}
+	return [...stated];
+};
+
+/**
  * The keywords each axis of a `<position>` accepts -> the percentage that
  * keyword resolves to. The two axes are read off the grammar's own
  * `[ … ] || [ … ]` alternative; only the percentages are stated.
@@ -1993,7 +2161,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -2021,6 +2189,20 @@ const SUPPLEMENT = {
 	fontWeightNumbers: [
 		["normal", "400"],
 		["bold", "700"]
+	],
+	// CSS Fonts 4 §4.5 gives each width keyword as that percentage, in a prose
+	// table; the grammar names the keywords beside a `<percentage>` without
+	// saying which one each is.
+	fontStretchPercentages: [
+		["ultra-condensed", "50%"],
+		["extra-condensed", "62.5%"],
+		["condensed", "75%"],
+		["semi-condensed", "87.5%"],
+		["normal", "100%"],
+		["semi-expanded", "112.5%"],
+		["expanded", "125%"],
+		["extra-expanded", "150%"],
+		["ultra-expanded", "200%"]
 	],
 	// CSS Backgrounds 3 §3.6 defines each edge keyword as that percentage of the
 	// axis, as prose — the grammar states which axis a keyword is, never what it
@@ -2851,6 +3033,8 @@ const collectData = () => {
 	const displayShortForms = collectDisplayShortForms();
 	const positionProperties = collectPositionProperties();
 	const [positionXKeywords, positionYKeywords] = collectPositionKeywordAxes();
+	const shorthandInitialKeywords = collectShorthandInitialKeywords();
+	const fontStretchPercentages = collectFontStretchPercentages();
 	const transformListProperties = collectTransformListProperties();
 	const shorterColorSpellings = collectShorterColorSpellings(colorNames);
 	const zeroAngleFunctions = collectZeroAngleFunctions();
@@ -3007,6 +3191,27 @@ ${displayShortForms
 	)
 	.join(",\n")}
 ]);
+
+// Each shorthand -> the keywords one of its values may drop, each with the rest
+// of the keywords its own slot takes. A sibling out of that set means the value
+// fills the slot twice, which is a declaration the engine drops.
+const SHORTHAND_INITIAL_KEYWORDS = new Map([
+${shorthandInitialKeywords
+	.map(
+		([name, entries]) =>
+			`\t[${JSON.stringify(name)}, new Map([${entries
+				.map(
+					([keyword, siblings]) =>
+						`[${JSON.stringify(keyword)}, ${setLiteral(siblings)}]`
+				)
+				.join(", ")}])]`
+	)
+	.join(",\n")}
+]);
+
+// Each \`font-stretch\` keyword -> the percentage it names, which is the same
+// value in fewer bytes.
+const FONT_STRETCH_PERCENTAGES = ${mapLiteral(fontStretchPercentages)};
 
 // The generic font families: an unquoted one of these names the generic rather
 // than a family called that, so a quoted family spelled like one keeps its quotes.
@@ -3289,7 +3494,7 @@ module.exports.EIGHTH_TURN_TANGENT = EIGHTH_TURN_TANGENT;
 module.exports.FAMILY_LONGHANDS = FAMILY_LONGHANDS;
 module.exports.FAMILY_SLOT_CLASSES = FAMILY_SLOT_CLASSES;
 module.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;
-module.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;
+module.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;\nmodule.exports.FONT_STRETCH_PERCENTAGES = FONT_STRETCH_PERCENTAGES;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
 module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
 module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
@@ -3305,7 +3510,7 @@ module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
-module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
+module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
 module.exports.TRANSFORM_LIST_PROPERTIES = TRANSFORM_LIST_PROPERTIES;\nmodule.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;

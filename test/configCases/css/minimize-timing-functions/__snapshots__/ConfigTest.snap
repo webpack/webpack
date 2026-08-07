@@ -36,7 +36,7 @@ Array [
   "/*! timing: ease-in-out passes through */.t32{animation-timing-function:ease-in-out}",
   "/*! timing: should support multiple timing functions */.t33{animation-timing-function:linear,linear,step-start}",
   "/*! timing: should support multiple timing functions (transition) */.t34{transition-timing-function:ease-in-out,ease-in}",
-  "/*! timing: in the animation shorthand */.t35{animation:fade 3s ease}",
+  "/*! timing: in the animation shorthand */.t35{animation:fade 3s}",
   "/*! timing: in the -webkit-animation shorthand */.t36{-webkit-animation:fade 3s ease}",
   "/*! timing: in the transition shorthand */.t37{transition:color 3s step-start}",
   "/*! timing: broken syntax */",

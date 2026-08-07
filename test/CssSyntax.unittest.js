@@ -2061,6 +2061,78 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a shorthand slot holding its own initial", () => {
+		it.each([
+			["a{transition:height .35s ease}", "a{transition:height.35s}"],
+			["a{transition:opacity 1s ease 2s}", "a{transition:opacity 1s 2s}"],
+			["a{transition:all 1s ease}", "a{transition:all 1s}"],
+			["a{transition:opacity 1s normal}", "a{transition:opacity 1s}"],
+			["a{animation:x 1s ease}", "a{animation:x 1s}"],
+			["a{animation:x 2s ease normal running}", "a{animation:x 2s}"],
+			["a{border:2px none red}", "a{border:2px red}"],
+			["a{column-rule:medium none red}", "a{column-rule:medium red}"],
+			["a{outline:medium none}", "a{outline:medium}"],
+			["a{flex-flow:row wrap}", "a{flex-flow:wrap}"],
+			// Both slots hold their initial, so the shortest one says both.
+			["a{flex-flow:row nowrap}", "a{flex-flow:row}"],
+			["a{list-style:disc outside}", "a{list-style:disc}"],
+			["a{mask:url(a.svg) match-source add}", "a{mask:url(a.svg)}"],
+			[
+				"a{border-image:url(a.png) 30% stretch}",
+				"a{border-image:url(a.png)30%}"
+			],
+			["a{text-decoration:none solid red}", "a{text-decoration:red}"],
+			["a{TRANSITION:opacity 1s EASE}", "a{TRANSITION:opacity 1s}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			[
+				"the keyword is not the initial",
+				"a{transition:height .35s ease-in-out}"
+			],
+			// `none` is both an animation name and a fill mode, so which slot it
+			// fills is not a question the grammar answers.
+			["two slots name the keyword", "a{animation:x 1s none}"],
+			["the same, on a list style", "a{list-style:none}"],
+			// `mask: url(…) none` fills `<mask-reference>` twice and is a declaration
+			// the engine drops — unwriting the `none` would revive it.
+			["a sibling fills the same slot", "a{mask:url(a.svg) none}"],
+			["the value is the keyword alone", "a{border:none}"],
+			[
+				"a comma parts two layers",
+				"a{transition:opacity 1s ease,color 1s ease}"
+			],
+			["the property is no shorthand", "a{border-style:none}"],
+			["the slot takes more than keywords", "a{border:medium solid red}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a font-stretch keyword", () => {
+		it.each([
+			["a{font-stretch:ultra-condensed}", "a{font-stretch:50%}"],
+			["a{font-stretch:condensed}", "a{font-stretch:75%}"],
+			["a{font-stretch:semi-condensed}", "a{font-stretch:87.5%}"],
+			["a{font-stretch:normal}", "a{font-stretch:100%}"],
+			["a{font-stretch:expanded}", "a{font-stretch:125%}"],
+			["a{font-stretch:ultra-expanded}", "a{font-stretch:200%}"],
+			["a{font-stretch:CONDENSED}", "a{font-stretch:75%}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the value is already a percentage", "a{font-stretch:75%}"],
+			["it is a custom property's value", "a{--x:condensed}"],
+			["the value holds a substitution", "a{font-stretch:var(--x,condensed)}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("a transform list's inter-function whitespace", () => {
 		it.each([
 			[
@@ -2177,16 +2249,15 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[
 				"a{transition:allow-discrete 2s opacity}",
 				"a{transition:opacity 2s allow-discrete}"
-			]
+			],
+			// The easing slot holds its own initial, so it goes before the reorder.
+			["a{transition:ease 2s}", "a{transition:2s}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
 
 		it.each([
 			["it is already in order", "a{transition:opacity 2s ease-in}"],
-			// An easing keyword names a property just as well, so which slot it
-			// fills is the engine's to decide.
-			["no component is a name of its own", "a{transition:ease 2s}"],
 			["a substitution stands there", "a{transition:var(--x) 2s}"],
 			["two layers are written", "a{transition:opacity 2s,color 3s}"],
 			["there is one component", "a{transition:none}"]
