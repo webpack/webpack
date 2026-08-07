@@ -129,6 +129,7 @@ const MAX_ROWS = 20;
 // The hashes webpack states it put in a filename, whatever `output.hashDigest`
 // spelled them in. Substituting these exact strings beats matching an alphabet:
 // base26/32/64url share theirs with ordinary file names.
+/** @type {("fullhash" | "chunkhash" | "modulehash" | "contenthash")[]} */
 const HASH_INFO_KEYS = ["fullhash", "chunkhash", "modulehash", "contenthash"];
 
 // Fallback for a hash nothing recorded — one a loader embedded, or a case that
