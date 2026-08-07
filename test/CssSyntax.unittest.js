@@ -1996,9 +1996,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{background-repeat:no-repeat}"
 			],
 			["a{mask-repeat:round round}", "a{mask-repeat:round}"],
-			// `center` is the `50%` each axis defaults to.
-			["a{background-position:center center}", "a{background-position:50%}"],
-			["a{background-position:center}", "a{background-position:50%}"],
 			// `initial` computes to the initial value, which is often a shorter word.
 			["a{min-width:initial}", "a{min-width:auto}"],
 			["a{outline-width:initial}", "a{outline-width:medium}"]
@@ -2026,6 +2023,293 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			],
 			["the same, on the other opacity", "a{stop-opacity:initial}"]
 		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a position written as edge keywords", () => {
+		it.each([
+			["a{background-position:center}", "a{background-position:50%}"],
+			["a{background-position:center center}", "a{background-position:50%}"],
+			["a{background-position:left}", "a{background-position:0%}"],
+			["a{background-position:right}", "a{background-position:100%}"],
+			["a{background-position:left center}", "a{background-position:0%}"],
+			["a{background-position:left top}", "a{background-position:0%0%}"],
+			// `<position>`'s keyword pair is order-free, so both readings resolve.
+			["a{background-position:top left}", "a{background-position:0%0%}"],
+			["a{background-position:left bottom}", "a{background-position:0%100%}"],
+			[
+				"a{background-position:center bottom}",
+				"a{background-position:50%100%}"
+			],
+			[
+				"a{background-position:right bottom}",
+				"a{background-position:100%100%}"
+			],
+			["a{background-position:LEFT BOTTOM}", "a{background-position:0%100%}"],
+			["a{object-position:left top}", "a{object-position:0%0%}"],
+			["a{mask-position:left top}", "a{mask-position:0%0%}"],
+			["a{perspective-origin:left top}", "a{perspective-origin:0%0%}"],
+			// `transform-origin` spells its axes out rather than naming a position,
+			// and a depth only follows a third component.
+			["a{transform-origin:left top}", "a{transform-origin:0%0%}"],
+			["a{transform-origin:center bottom}", "a{transform-origin:50%100%}"],
+			["a{offset-anchor:left top}", "a{offset-anchor:0%0%}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// `top` is `50% 0%`, which the keyword already says in fewer bytes.
+			["the percentages are no shorter", "a{background-position:top}"],
+			["the same, on the other edge", "a{background-position:bottom}"],
+			// An offset beside a keyword is the 3/4-value syntax, where the keyword
+			// names the edge to measure from rather than a place on the axis.
+			["an offset follows a keyword", "a{background-position:left 10px}"],
+			[
+				"both axes carry an offset",
+				"a{background-position:left 10px top 20px}"
+			],
+			["a comma parts two layers", "a{background-position:left top,right top}"],
+			["the two keywords share an axis", "a{background-position:left right}"],
+			["the same, on the other axis", "a{background-position:top bottom}"],
+			// A third component is `transform-origin`'s z offset, which the two-value
+			// collapse has no reading of.
+			["a depth follows the position", "a{transform-origin:left top 10px}"],
+			["the position is a shorthand's slot", "a{background:left top}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a position whose second value is the centre", () => {
+		it.each([
+			["a{background-position:50% 50%}", "a{background-position:50%}"],
+			["a{background-position:10px center}", "a{background-position:10px}"],
+			["a{background-position:left 50%}", "a{background-position:left}"],
+			["a{background-position:0 center}", "a{background-position:0}"],
+			["a{object-position:25% 50%}", "a{object-position:25%}"],
+			["a{mask-position:3em center}", "a{mask-position:3em}"],
+			["a{transform-origin:50% 50%}", "a{transform-origin:50%}"],
+			["a{transform-origin:10px center}", "a{transform-origin:10px}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// `top` is no x-position, so the pair is the order-free keyword syntax
+			// and half of it alone would be a value the engine drops.
+			[
+				"the first value is on the other axis",
+				"a{background-position:top 50%}"
+			],
+			["the second value is no centre", "a{background-position:10px 20px}"],
+			["both axes carry an offset", "a{background-position:left 1em top 50%}"],
+			["the property is no position", "a{background-repeat:round center}"],
+			["the position is a shorthand's slot", "a{background:10px center}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a shorthand slot holding its own initial", () => {
+		it.each([
+			["a{transition:height .35s ease}", "a{transition:height.35s}"],
+			["a{transition:opacity 1s ease 2s}", "a{transition:opacity 1s 2s}"],
+			["a{transition:all 1s ease}", "a{transition:all 1s}"],
+			["a{transition:opacity 1s normal}", "a{transition:opacity 1s}"],
+			// A comma parts two layers, and each holds its own set of slots.
+			[
+				"a{transition:opacity 1s ease,color 1s ease}",
+				"a{transition:opacity 1s,color 1s}"
+			],
+			[
+				"a{transition:all .3s cubic-bezier(.4,0,.2,1),color .2s ease}",
+				"a{transition:all.3s cubic-bezier(.4,0,.2,1),color.2s}"
+			],
+			// Only the layer whose slots are unambiguous gives its keyword up.
+			[
+				"a{transition:opacity 1s ease,ease 1s ease}",
+				"a{transition:opacity 1s,ease 1s ease}"
+			],
+			[
+				"a{transition:1s ease color,2s opacity}",
+				"a{transition:color 1s,opacity 2s}"
+			],
+			["a{animation:x 1s ease}", "a{animation:x 1s}"],
+			["a{animation:x 2s ease normal running}", "a{animation:x 2s}"],
+			["a{border:2px none red}", "a{border:2px red}"],
+			["a{column-rule:medium none red}", "a{column-rule:medium red}"],
+			["a{outline:medium none}", "a{outline:medium}"],
+			["a{flex-flow:row wrap}", "a{flex-flow:wrap}"],
+			// Both slots hold their initial, so the shortest one says both — whichever
+			// order they were written in.
+			["a{flex-flow:row nowrap}", "a{flex-flow:row}"],
+			["a{flex-flow:nowrap row}", "a{flex-flow:row}"],
+			["a{border:none medium}", "a{border:medium}"],
+			["a{list-style:disc outside}", "a{list-style:disc}"],
+			["a{mask:url(a.svg) match-source add}", "a{mask:url(a.svg)}"],
+			[
+				"a{border-image:url(a.png) 30% stretch}",
+				"a{border-image:url(a.png)30%}"
+			],
+			["a{text-decoration:none solid red}", "a{text-decoration:red}"],
+			["a{TRANSITION:opacity 1s EASE}", "a{TRANSITION:opacity 1s}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			[
+				"the keyword is not the initial",
+				"a{transition:height .35s ease-in-out}"
+			],
+			// `none` is both an animation name and a fill mode, so which slot it
+			// fills is not a question the grammar answers.
+			["two slots name the keyword", "a{animation:x 1s none}"],
+			["the same, on a list style", "a{list-style:none}"],
+			// `mask: url(…) none` fills `<mask-reference>` twice and is a declaration
+			// the engine drops — removing the `none` would revive it.
+			["a sibling fills the same slot", "a{mask:url(a.svg) none}"],
+			// A function fills the easing slot as much as a keyword does.
+			["a call fills the same slot", "a{transition:opacity 1s ease steps(4)}"],
+			["the same, on an animation", "a{animation:x 1s ease linear(0,1)}"],
+			["the value is the keyword alone", "a{border:none}"],
+			// Each layer keeps its own siblings, so the ambiguous one stays whole.
+			[
+				"a layer's own sibling fills the slot",
+				"a{transition:ease 1s ease,ease 2s ease}"
+			],
+			// A string could carry the comma the layer split reads.
+			["a layer holds a string", 'a{transition:"a" 1s ease}'],
+			["a layer is empty", "a{transition:opacity 1s ease,,color 2s ease}"],
+			["the first layer is empty", "a{transition:,opacity 1s ease}"],
+			["the last layer is empty", "a{transition:opacity 1s ease,}"],
+			["the property is no shorthand", "a{border-style:none}"],
+			["the slot takes more than keywords", "a{border:medium solid red}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a font-stretch keyword", () => {
+		it.each([
+			["a{font-stretch:ultra-condensed}", "a{font-stretch:50%}"],
+			["a{font-stretch:condensed}", "a{font-stretch:75%}"],
+			["a{font-stretch:semi-condensed}", "a{font-stretch:87.5%}"],
+			["a{font-stretch:normal}", "a{font-stretch:100%}"],
+			["a{font-stretch:expanded}", "a{font-stretch:125%}"],
+			["a{font-stretch:ultra-expanded}", "a{font-stretch:200%}"],
+			["a{font-stretch:CONDENSED}", "a{font-stretch:75%}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the value is already a percentage", "a{font-stretch:75%}"],
+			["it is a custom property's value", "a{--x:condensed}"],
+			["the value holds a substitution", "a{font-stretch:var(--x,condensed)}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a filter function's omitted argument", () => {
+		it.each([
+			["a{filter:grayscale(1)}", "a{filter:grayscale()}"],
+			["a{filter:grayscale(100%)}", "a{filter:grayscale()}"],
+			["a{filter:invert(1)}", "a{filter:invert()}"],
+			["a{filter:blur(0)}", "a{filter:blur()}"],
+			["a{backdrop-filter:saturate(1)}", "a{backdrop-filter:saturate()}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the amount is not the omitted one", "a{filter:grayscale(0)}"],
+			["the same, as a percentage", "a{filter:grayscale(50%)}"],
+			[
+				"the function takes no optional argument",
+				"a{filter:drop-shadow(0 0 1px red)}"
+			],
+			["a substitution stands there", "a{filter:grayscale(var(--x))}"]
+		])("keeps the value where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a shadow's trailing zero lengths", () => {
+		it.each([
+			[
+				"a{box-shadow:0 0 0 0 #22242626 inset}",
+				"a{box-shadow:0 0#22242626 inset}"
+			],
+			["a{box-shadow:-1px 0 0 0 #bababc}", "a{box-shadow:-1px 0#bababc}"],
+			["a{box-shadow:inset 0 0 0 0 red}", "a{box-shadow:inset 0 0 red}"],
+			["a{box-shadow:1px 2px 3px 0 red}", "a{box-shadow:1px 2px 3px red}"],
+			["a{text-shadow:1px 1px 0 red}", "a{text-shadow:1px 1px red}"],
+			[
+				"a{box-shadow:0 0 0 0 red,1px 1px 0 0 blue}",
+				"a{box-shadow:0 0 red,1px 1px blue}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// The two offsets are what the grammar makes mandatory.
+			["the two offsets are all there is", "a{box-shadow:0 0 red}"],
+			["a length past them is not zero", "a{box-shadow:0 0 0 1px red}"],
+			["the value is a keyword", "a{box-shadow:none}"],
+			["the property states no shadow", "a{stroke-dasharray:1 0 0}"],
+			["a layer holds a string", 'a{box-shadow:0 0 0 0 red,"a"}'],
+			// A comma with nothing either side is a layer no shadow fills.
+			["a trailing comma parts an empty layer", "a{box-shadow:0 0 0 0 red,}"],
+			["a leading comma does the same", "a{box-shadow:,0 0 0 0 red}"]
+		])("keeps the value where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("the whitespace between two calls", () => {
+		it.each([
+			[
+				"a{transform:scale(2) rotate(45deg)}",
+				"a{transform:scale(2)rotate(45deg)}"
+			],
+			[
+				"a{transform:scale(.85) translateY(-.5rem) rotate(45deg)}",
+				"a{transform:scale(.85)translateY(-.5rem)rotate(45deg)}"
+			],
+			// Grammar matching skips whitespace whatever the property, which is what
+			// reaches the prefixed spellings no dataset names.
+			[
+				"a{-webkit-transform:translateY(-14px) scale(.8)}",
+				"a{-webkit-transform:translateY(-14px)scale(.8)}"
+			],
+			["a{filter:brightness(0) invert(1)}", "a{filter:brightness(0)invert()}"],
+			[
+				"a{-webkit-filter:blur(2px) saturate(2)}",
+				"a{-webkit-filter:blur(2px)saturate(2)}"
+			],
+			[
+				"a{backdrop-filter:blur(2px) saturate(2)}",
+				"a{backdrop-filter:blur(2px)saturate(2)}"
+			],
+			[
+				"a{grid-template-columns:repeat(2,1fr) minmax(0,1fr)}",
+				"a{grid-template-columns:repeat(2,1fr)minmax(0,1fr)}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the value is a keyword", "a{transform:none}"],
+			["a component is no call", "a{background:red none}"],
+			["the same, past a call", "a{mask:url(a.svg) none}"],
+			["there is one component", "a{filter:blur(2px)}"]
+		])("keeps the value where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
 	});
@@ -2124,16 +2408,15 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[
 				"a{transition:allow-discrete 2s opacity}",
 				"a{transition:opacity 2s allow-discrete}"
-			]
+			],
+			// The easing slot holds its own initial, so it goes before the reorder.
+			["a{transition:ease 2s}", "a{transition:2s}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
 
 		it.each([
 			["it is already in order", "a{transition:opacity 2s ease-in}"],
-			// An easing keyword names a property just as well, so which slot it
-			// fills is the engine's to decide.
-			["no component is a name of its own", "a{transition:ease 2s}"],
 			["a substitution stands there", "a{transition:var(--x) 2s}"],
 			["two layers are written", "a{transition:opacity 2s,color 3s}"],
 			["there is one component", "a{transition:none}"]
@@ -2675,16 +2958,32 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// Neither the sum nor the product is exact in a double.
 			["calc(.1px + .2px)"],
 			["calc(1px/7)"],
-			["calc(3px/1.1)"],
 			["calc(1e20px + 1px)"],
 			["calc(1e308px*1e10)"],
-			// Longer folded than written.
-			["calc(100%/3)"],
+			// Past the range the rounding covers, so every digit is kept — and all
+			// of them together are longer than the expression.
+			["calc(123456px/1.1)"],
 			// A math function whose meaning is not written yet, so the sum inside it
 			// folds but the call does not.
 			["sqrt(4px)"]
 		])("leaves %s alone", (expression) => {
 			expect(value(expression)).toBe(expression);
+		});
+
+		it.each([
+			// The fold prints a double back, so its result is rounded the way an
+			// authored number is — six significant digits.
+			["calc(3px/1.1)", "2.72727px"],
+			["calc(100%/3)", "33.3333%"],
+			["calc(1/3*1px)", ".333333px"],
+			["calc((6/10 - .375)*1em)", ".225em"],
+			["calc((6/14 - .375)*1em)", ".0535714em"],
+			// An angle keeps every digit: `rotate()` runs it through trig.
+			["calc(1turn/3)", "calc(1turn/3)"],
+			// Above the range the rounding covers the digits carry, so they stay.
+			["calc(1e4px + 1px)", "10001px"]
+		])("%s folds to %s", (expression, expected) => {
+			expect(value(expression)).toBe(expected);
 		});
 
 		it("folds through a parenthesized group and a nested calc()", () => {

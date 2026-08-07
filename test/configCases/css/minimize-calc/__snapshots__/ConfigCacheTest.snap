@@ -31,7 +31,10 @@ Array [
   "/*! declined: a substitution could be anything */.d03{width:calc(var(--x) + 1px)}",
   "/*! declined: mixed base types are invalid CSS, and folding would make them valid */.d04{width:calc(1px + 1deg)}",
   "/*! declined: division by zero is not a number */.d05{width:calc(1px/0)}",
-  "/*! declined: the result would need more digits than the expression */.d06{width:calc(100%/3)}",
+  "/*! declined: past the range the rounding covers every digit carries, and all of
+   them are longer than the expression */.d06{width:calc(123456px/1.1)}",
+  "/*! the fold prints a double back, so its result is rounded to six digits */.f20{width:33.3333%}",
+  "/*! an angle keeps every digit — \`rotate()\` runs it through trig */.f21{rotate:calc(1turn/3)}",
   "/*! declined: a math function other than calc() */.d07{width:3px}",
   "/*! declined: two angle units — only \`deg\`/\`grad\`/\`turn\` convert exactly, and
    nothing converts them here, so they stay two terms */.d08{rotate:calc(45deg + .125turn)}",
