@@ -112,19 +112,24 @@ const buildCorpora = () => {
 const FILED_CSS_DEFECTS = new Map([
 	[
 		"test/configCases/css/minimize-strings/style.css",
-		"a string closed at EOF stops swallowing the rules after it"
+		"a bad-string stops swallowing the rules after it"
 	],
 	[
 		"test/configCases/css/minimize-urls/style.css",
-		"a url() closed at EOF stops swallowing the rules after it"
+		"a bad-url stops swallowing the rules after it"
 	],
 	[
 		"test/configCases/css/parsing/cases/bad-url-token.css",
 		"a bad-url token stops swallowing the rules after it"
 	],
 	[
+		// Not a printer defect: Chrome drops `attr( name unit )` when a space sits
+		// before the `)` and the type is a bare unit — `attr( name unit)`,
+		// `attr(name  unit)`, `attr( name type(<length>) )` and `attr( name unit, )`
+		// all parse. Trimming that space is right, and leaves the minified sheet
+		// applying a declaration the engine threw away in the original.
 		"test/configCases/css/minimize-lightningcss-values/style.css",
-		"attr()'s empty fallback comma is dropped"
+		"Chrome parses `attr( name unit )` and its trimmed form differently"
 	]
 ]);
 
