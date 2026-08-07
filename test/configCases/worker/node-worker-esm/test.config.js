@@ -16,7 +16,12 @@ module.exports = {
 			"utf8"
 		);
 
-		if (!/import\(\) chunk loading for javascript/.test(workerCode)) {
+		// Either the runtime chunk-loading handler or the analyzable literal that
+		// replaces it — both load the async chunk with `import()`.
+		if (
+			!/import\(\) chunk loading for javascript/.test(workerCode) &&
+			!/import\([^;]*"\.\/chunk_js\.bundle\.mjs"\)/.test(workerCode)
+		) {
 			throw new Error(
 				"import() was not found in the worker code for loading async chunks"
 			);

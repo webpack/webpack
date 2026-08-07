@@ -32,19 +32,25 @@ const base = (name, extra = {}) => ({
 
 /** @type {import("../../../").Configuration[]} */
 module.exports = [
-	// Analyzable: emits `import("./async.mjs")` + the `.ei` helper — the only build
-	// with extra runtime. Every case below must fall back with no `.ei` emitted.
+	// Analyzable: emits `import("./async.mjs")` + the `.ei` helper.
 	base("analyzable"),
+	// Also analyzable: a chunk in several groups still dedupes through `.ei`'s
+	// `installedChunks` bookkeeping, so sharing does not need the runtime form.
+	base("shared-chunk", { entry: { a: "./a", b: "./b" } }),
+	// Also analyzable: `.ei` runs every `ensureChunk` handler but the JS loader, so a
+	// chunk's prefetch/preload children are still injected by `.f.prefetch`.
+	base("prefetch", { entry: "./index-prefetch" }),
+	// Also analyzable: an empty public path leaves a bare specifier, which is made
+	// explicitly relative — the same thing the chunk loader does.
+	base("bare-public-path", { output: { publicPath: "" } }),
+	// Every case below must fall back with no `.ei` emitted.
 	base("public-path-override", { entry: "./index-public-path-override" }),
 	base("fetch-priority", { entry: "./index-fetch-priority" }),
-	base("prefetch", { entry: "./index-prefetch" }),
 	base("content-hash", {
 		output: { chunkFilename: "[name].[contenthash].mjs" }
 	}),
 	base("templated-public-path", {
 		output: { publicPath: "/assets/[fullhash]/" }
 	}),
-	base("bare-public-path", { output: { publicPath: "" } }),
-	base("shared-chunk", { entry: { a: "./a", b: "./b" } }),
 	base("hmr", { plugins: [new webpack.HotModuleReplacementPlugin()] })
 ];

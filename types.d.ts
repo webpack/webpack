@@ -14654,6 +14654,11 @@ declare interface KnownJavascriptModuleBuildInfo {
 	needCreateRequire?: boolean;
 
 	/**
+	 * module reassigns `__webpack_public_path__` at runtime, using in APIPlugin
+	 */
+	usingPublicPathOverride?: boolean;
+
+	/**
 	 * names of locally declared functions known to be free of side effects
 	 */
 	pureFunctions?: Set<string>;
