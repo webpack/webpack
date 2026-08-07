@@ -28,6 +28,9 @@ const prepareOptions = require("./helpers/prepareOptions");
  * @typedef {object} CaseResult
  * @property {Metrics} metrics summed over every emitted asset
  * @property {Record<string, Metrics>} assets metrics per normalized asset name
+ * @property {Record<string, string[]>} runtimes runtime module names per runtime,
+ * sorted — how many a runtime carries, and which ones, is the deterministic half
+ * of what this measures; their bytes in isolation are not what anyone downloads
  * @property {number} errors number of compilation errors
  * @property {string=} noOutput why the case emitted nothing — a build a case
  * expects to error (its own snapshot records it) counts as measured, not failed:
@@ -64,7 +67,7 @@ const outputBaseDir = path.join(__dirname, "js", "size");
 
 // Bumped whenever a compression setting or the report shape changes, so a stale
 // baseline is reported as incomparable instead of compared against silently.
-const REPORT_VERSION = 3;
+const REPORT_VERSION = 4;
 
 // The settings a CDN serves static assets with, so a delta here is a delta a
 // user downloads.
@@ -229,6 +232,45 @@ const applyDefaults = (options, index, testDirectory, outputDirectory) => {
 };
 
 /**
+ * Which runtime modules each runtime carries. A count is the deterministic thing
+ * to compare — it catches a runtime module added for one target and forgotten for
+ * another — and the names say what moved when a count does.
+ * @param {Compilation[]} compilations compilations that emitted
+ * @param {string} prefix compiler name prefix for a multi-compiler case
+ * @returns {Record<string, string[]>} sorted runtime module names per runtime
+ */
+const collectRuntimes = (compilations, prefix) => {
+	/** @type {Record<string, Set<string>>} */
+	const perRuntime = {};
+	for (const compilation of compilations) {
+		const { chunkGraph } = compilation;
+		for (const chunk of compilation.chunks) {
+			// A worker or `runtimeChunk` runtime is named by a hash, which would
+			// rename the row on every content change — same reason asset names are
+			// normalized. Several hashed runtimes in one case then share a row and
+			// report the union of what they carry, which is stable where their
+			// names are not.
+			const runtime = (
+				typeof chunk.runtime === "string"
+					? chunk.runtime
+					: chunk.runtime === undefined
+						? "*"
+						: [...chunk.runtime].sort().join("+")
+			).replace(HASH_REGEXP, "[hash]");
+			for (const module of chunkGraph.getChunkRuntimeModulesIterable(chunk)) {
+				const key = `${prefix}${runtime}`;
+				const names = perRuntime[key] || (perRuntime[key] = new Set());
+				// A runtime module can hang off several chunks of one runtime.
+				names.add(module.name || module.identifier());
+			}
+		}
+	}
+	return Object.fromEntries(
+		Object.entries(perRuntime).map(([key, names]) => [key, [...names].sort()])
+	);
+};
+
+/**
  * @param {Compiler | MultiCompiler} compiler compiler to close
  * @returns {Promise<void>} resolves once closed, errors ignored
  */
@@ -263,6 +305,7 @@ const measureCase = async ({ category, name }) => {
 	const result = {
 		metrics: createMetrics(),
 		assets: {},
+		runtimes: {},
 		errors: 0
 	};
 
@@ -297,8 +340,9 @@ const measureCase = async ({ category, name }) => {
 	let compiler;
 	// `emit` does not run for a compilation whose errors stopped it (production
 	// defaults `optimization.emitOnErrors` to false), so it ships no bytes.
-	/** @type {Set<Compilation>} */
-	const emitted = new Set();
+	// Kept with the compiler prefix each one is reported under.
+	/** @type {Map<Compilation, string>} */
+	const emitted = new Map();
 	try {
 		const activeCompiler = /** @type {Compiler | MultiCompiler} */ (
 			webpack(
@@ -320,7 +364,7 @@ const measureCase = async ({ category, name }) => {
 		for (const [index, child] of compilers.entries()) {
 			const prefix = compilers.length === 1 ? "" : `${child.name || index}/`;
 			child.hooks.emit.tap("CodeSizeMeasure", (compilation) => {
-				emitted.add(compilation);
+				emitted.set(compilation, prefix);
 				for (const asset of compilation.getAssets()) {
 					const metrics = measureAsset(asset.source.buffer());
 					const name = `${prefix}${normalizeAssetName(asset.name, asset.info)}`;
@@ -357,12 +401,16 @@ const measureCase = async ({ category, name }) => {
 		for (const compilation of compilations) {
 			result.errors += compilation.errors.length;
 		}
+		for (const [compilation, prefix] of emitted) {
+			Object.assign(result.runtimes, collectRuntimes([compilation], prefix));
+		}
 		if (emitted.size === 0) {
 			result.noOutput = `build: ${result.errors} error(s), nothing emitted`;
 		}
 	} catch (err) {
 		result.noOutput = `build: ${/** @type {Error} */ (err).message}`;
 		result.assets = {};
+		result.runtimes = {};
 		result.metrics = createMetrics();
 	} finally {
 		DEFAULTS.HASH_FUNCTION = hashFunction;
@@ -528,6 +576,94 @@ const changeMarker = (delta) =>
 	delta > 0 ? "🔴 ↑" : delta < 0 ? "🟢 ↓" : "🔀";
 
 /**
+ * @param {Report} report report
+ * @returns {Record<string, string[]>} runtime module names per `<case> <runtime>`
+ */
+const runtimeModules = (report) => {
+	/** @type {Record<string, string[]>} */
+	const runtimes = {};
+	for (const [name, result] of Object.entries(report.cases)) {
+		for (const [runtime, names] of Object.entries(result.runtimes)) {
+			runtimes[`${name} ${runtime}`] = names;
+		}
+	}
+	return runtimes;
+};
+
+/**
+ * How many runtime modules each runtime carries, and which ones came or went.
+ * A count is what a change to `lib/runtime/` moves deterministically, and the
+ * names say what moved — the bytes are already in the asset table.
+ * @param {Report} report current report
+ * @param {Report} baseline baseline report
+ * @returns {string[]} markdown lines
+ */
+const formatRuntimes = (report, baseline) => {
+	const before = runtimeModules(baseline);
+	const after = runtimeModules(report);
+	const rows = [...new Set([...Object.keys(before), ...Object.keys(after)])]
+		.map((name) => {
+			const was = before[name] || [];
+			const now = after[name] || [];
+			const wasSet = new Set(was);
+			const nowSet = new Set(now);
+			return {
+				name,
+				gone: !(name in after),
+				fresh: !(name in before),
+				before: was.length,
+				after: now.length,
+				added: now.filter((entry) => !wasSet.has(entry)),
+				removed: was.filter((entry) => !nowSet.has(entry))
+			};
+		})
+		.filter((row) => row.added.length > 0 || row.removed.length > 0)
+		.sort(
+			(a, b) =>
+				b.added.length +
+					b.removed.length -
+					(a.added.length + a.removed.length) || a.name.localeCompare(b.name)
+		);
+
+	if (rows.length === 0) {
+		return ["No runtime gained or lost a runtime module.", ""];
+	}
+
+	/** @type {string[]} */
+	const lines = [
+		`<details><summary>${rows.length} runtime(s) changed which runtime modules they carry${
+			rows.length > MAX_ROWS ? `, biggest ${MAX_ROWS} by number moved` : ""
+		}</summary>`,
+		"",
+		"| | Runtime | Modules | Added | Removed |",
+		"| :-: | :-- | --: | :-- | :-- |"
+	];
+	const list = (/** @type {string[]} */ names) =>
+		names.length === 0 ? "—" : names.map((name) => `\`${name}\``).join(", ");
+	for (const row of rows.slice(0, MAX_ROWS)) {
+		lines.push(
+			`| ${
+				row.fresh
+					? "➕"
+					: row.gone
+						? "➖"
+						: changeMarker(row.after - row.before)
+			} | \`${row.name}\` | ${row.gone ? "— (gone)" : row.before === row.after ? row.after : `${row.before} → ${row.after}`} | ${list(
+				row.added
+			)} | ${list(row.removed)} |`
+		);
+	}
+	if (rows.length > MAX_ROWS) {
+		lines.push(
+			`| | … ${rows.length - MAX_ROWS} more runtime(s), see the uploaded report | | | |`
+		);
+	}
+	lines.push("", "</details>", "");
+
+	return lines;
+};
+
+/**
  * With no baseline there is nothing to diff, so rank what the suite emits —
  * which is the other question worth asking of an asset: what is the big one.
  * @param {Report} report current report
@@ -625,6 +761,17 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 				sameMetrics
 			),
 			change: sumDelta(assetMetrics(baseline), assetMetrics(report), "raw")
+		},
+		{
+			// A runtime carries no bytes of its own — its modules land in the assets
+			// above — so this row counts runtimes and leaves the byte column empty.
+			label: "Runtimes",
+			counts: countChanges(
+				runtimeModules(baseline),
+				runtimeModules(report),
+				(a, b) => a.length === b.length && a.every((name, i) => name === b[i])
+			),
+			change: 0
 		}
 	];
 	const short = (/** @type {Report} */ report) =>
@@ -731,7 +878,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 		);
 	}
 
-	lines.push(built);
+	lines.push(...formatRuntimes(report, baseline), built);
 
 	return `${lines.join("\n")}\n`;
 };
@@ -859,6 +1006,7 @@ const run = async () => {
 			results[testCase.id] = {
 				metrics: createMetrics(),
 				assets: {},
+				runtimes: {},
 				errors: 0,
 				noOutput: `harness: ${/** @type {Error} */ (err).message}`
 			};

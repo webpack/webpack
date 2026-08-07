@@ -35,7 +35,7 @@ All commands are defined in `package.json` `scripts`.
 | `yarn test:integration`                                              | Run the integration suites (`basictest`/`longtest`/`test`).                                                     |
 | `yarn test:test262` / `yarn test:html5lib` / `yarn test:css-parsing` | Spec-conformance suites.                                                                                        |
 | `yarn test:base -u`                                                  | Update snapshots (eyeball the diff first).                                                                      |
-| `yarn test:size`                                                     | Size of the generated code over all `configCases/` (raw/gzip/brotli/zstd per emitted asset).                    |
+| `yarn test:size`                                                     | Size of the generated code over all `configCases/` (per asset, plus runtime module counts per runtime).         |
 | `yarn cover:unit`                                                    | Unit-test coverage.                                                                                             |
 | `yarn types:cover`                                                   | Type-coverage report (share of `lib/` that is precisely typed).                                                 |
 | `yarn build:examples`                                                | Build the `examples/` (verify after changing options).                                                          |
@@ -492,7 +492,8 @@ Code that emits runtime into the bundle — chunk loading (`lib/web/` JSONP, `li
 **Then look at what it costs on the wire.** `yarn test:size` — and the `Code Size` CI job, which compares against the report `main` last uploaded and comments the diff on the pull request — builds every `configCases/` case and reports **one row per changed asset**: raw before → after, plus what each of gzip/brotli/zstd makes of it. **It is information, never a verdict: it does not fail, and a change that moves the numbers is not a defect.** It exists to answer two questions, so answer them:
 
 - **Which files changed, and by how much?** The asset table is the headline, so a generator or minifier change reads as the files it moved rather than as one number over the suite. A suite-wide total is deliberately not reported: it says nothing you can act on. Raw is what the generator wrote; the compressed columns are what a user downloads, and the two disagree often enough to be worth reading together — a rewrite that saves raw bytes but not gzip bytes has mostly moved entropy around.
-- **Which way did it go?** A row is marked 🔴 ↑ when it grew and 🟢 ↓ when it shrank, so the direction reads before the number does. Only emitted assets are reported: a per-runtime-module table was tried and removed, because the bytes a runtime module weighs in isolation say nothing a real case does not say better.
+- **Which way did it go?** A row is marked 🔴 ↑ when it grew and 🟢 ↓ when it shrank, so the direction reads before the number does.
+- **Did a runtime gain or lose a runtime module?** A second table counts the runtime modules each runtime carries and names the ones that came or went. Bytes are deliberately not reported per runtime module — what one weighs in isolation is not what anyone downloads, and the asset table already carries the real number. The count is: it catches a runtime module added for one target and forgotten for another, which is the mistake this section is about.
 
 Read the "emitted nothing" note before the numbers: a case whose build now errors contributes no bytes, which otherwise reads as an improvement.
 
