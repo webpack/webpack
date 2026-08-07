@@ -5798,9 +5798,6 @@ declare class CssModulesPlugin {
 	};
 }
 declare abstract class CssParser extends ParserClass {
-	hooks: Readonly<{
-		program: SyncBailHook<[string, ParserState], boolean | void>;
-	}>;
 	defaultMode: "global" | "auto" | "local" | "pure";
 	options: {
 		/**
@@ -10315,9 +10312,6 @@ declare interface HtmlParseOptions {
 	skip?: HtmlAstSkip;
 }
 declare abstract class HtmlParser extends ParserClass {
-	hooks: Readonly<{
-		program: SyncBailHook<[string, ParserState], boolean | void>;
-	}>;
 	magicCommentContext: ContextImport;
 	template?: (source: string, context: HtmlTemplateContext) => string;
 	fragmentContext?: string;
