@@ -1960,7 +1960,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a slot of the call takes a number",
 				"a{transform:rotate3d(0deg,0,1,45deg)}"
 			],
-			["that call's own angle sits last", "a{transform:rotate3d(0,0,1,0deg)}"],
+			// A rotation about two axes is one no single-axis call names, so the
+			// call stays `rotate3d()` and its own angle keeps the unit.
+			["that call's own angle sits last", "a{transform:rotate3d(1,1,0,0deg)}"],
 			["the function takes no <zero>", "a{transition-duration:0s}"],
 			["it is not a function argument", "a{width:0deg}"]
 		])("keeps the unit where %s", (_name, css) => {
@@ -2310,7 +2312,23 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{transform:translate3d(1px,2px,0)}",
 				"a{transform:translate(1px,2px)}"
 			],
-			["a{transform:scale(2,2)}", "a{transform:scale(2)}"]
+			["a{transform:scale(2,2)}", "a{transform:scale(2)}"],
+			["a{transform:scale3d(1,1,1)}", "a{transform:scale(1)}"],
+			["a{transform:scale3d(2,3,1)}", "a{transform:scale(2,3)}"],
+			// The vector is normalized, so only each component's sign carries.
+			["a{transform:rotate3d(0,0,1,45deg)}", "a{transform:rotate(45deg)}"],
+			["a{transform:rotate3d(0,0,2,45deg)}", "a{transform:rotate(45deg)}"],
+			["a{transform:rotate3d(1,0,0,45deg)}", "a{transform:rotateX(45deg)}"],
+			["a{transform:rotate3d(0,1,0,-20deg)}", "a{transform:rotateY(-20deg)}"],
+			// A negative axis turns the same amount the other way.
+			["a{transform:rotate3d(0,0,-1,45deg)}", "a{transform:rotate(-45deg)}"],
+			[
+				"a{transform:rotate3d(0,-1,0,.25turn)}",
+				"a{transform:rotateY(-.25turn)}"
+			],
+			// The angle keeps its unit: it moved out of a call whose other slots
+			// take a number, not into one.
+			["a{transform:rotate3d(0,0,1,0deg)}", "a{transform:rotate(0deg)}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
@@ -2319,7 +2337,50 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["no axis is zero", "a{transform:translate(1px,2px)}"],
 			["the factors differ", "a{transform:scale(2,3)}"],
 			// A substitution could expand to something the shorter call rejects.
-			["a substitution stands there", "a{transform:translate(var(--x),0)}"]
+			["a substitution stands there", "a{transform:translate(var(--x),0)}"],
+			// Two axes are a rotation no single-axis call names.
+			["the rotation is about no axis", "a{transform:rotate3d(1,1,0,45deg)}"],
+			["every component is zero", "a{transform:rotate3d(0,0,0,45deg)}"],
+			// `scale3d` along z is a scaling the plane cannot hold.
+			["the z factor is not one", "a{transform:scale3d(2,2,2)}"],
+			[
+				"the angle's sign is not in its text",
+				"a{transform:rotate3d(0,0,-1,var(--a))}"
+			]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a string escape the character itself spells", () => {
+		it.each([
+			['a{content:"\\30 "}', 'a{content:"0"}'],
+			['a{content:"\\41 "}', 'a{content:"A"}'],
+			['a{content:"a\\62 c"}', 'a{content:"abc"}'],
+			// Only one whitespace closes an escape; the rest is text.
+			['a{content:"\\31 23"}', 'a{content:"123"}'],
+			['a{content:"\\3c \\3e "}', 'a{content:"<>"}'],
+			['a{content:"\\20 x"}', 'a{content:" x"}'],
+			['a{font-family:"\\41 rial"}', 'a{font-family:"Arial"}']
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// Past ASCII the bytes would depend on the encoding the file is served
+			// with, which an escape never does.
+			["the character is not ASCII", 'a{content:"\\f005"}'],
+			["the same, for a dash", 'a{content:"\\2014"}'],
+			// Each would only need escaping again.
+			["the character is a quote", 'a{content:"\\22 "}'],
+			["the character is a backslash", 'a{content:"\\5c "}'],
+			["the character is a control one", 'a{content:"\\a "}'],
+			["it is a custom property's value", 'a{--fa:"\\30 "}'],
+			// The `A` would become a fifth digit of the escape before it.
+			["a digit would join the escape before it", 'a{content:"\\f005\\41 "}'],
+			["the same, for a digit", 'a{content:"\\f005\\31 "}'],
+			// The space would close the escape before it rather than follow it.
+			["a space would close the escape before it", 'a{content:"\\f00\\20 x"}']
 		])("keeps it where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});

@@ -34,9 +34,12 @@ Array [
   "/*! normalize-string: should work for grid-column #2 */.t24{grid-column:span 2 / 1}",
   "/*! normalize-string: should work for grid-column #3 */.t25{grid-column:\\"span 2\\"}",
   "/*! normalize-string: should work for columns */.t26{columns:2 auto}",
-  "/*! webpack: a hex escape is never rewritten */.t27:after{content:\\"\\\\27\\"}",
-  "/*! webpack: a \`\\\\\`-newline continuation stays (dropping it can fuse a hex escape) */.t28:after{content:\\"\\\\61\\\\
+  "/*! webpack: an escaped quote keeps its escape — writing it out needs another */.t27:after{content:\\"\\\\27\\"}",
+  "/*! webpack: a \`\\\\\`-newline continuation stays (dropping it can fuse a hex escape) */.t28:after{content:\\"a\\\\
 b\\"}",
+  "/*! webpack: an escape the character itself spells is written out */.t33:after{content:\\"abc\\"}",
+  "/*! webpack: past ASCII the bytes would depend on the file's encoding */.t34:after{content:\\"\\\\f005\\"}",
+  "/*! webpack: a digit next to an open escape would join it */.t35:after{content:\\"\\\\f005\\\\41 \\"}",
   "/*! webpack: a custom property's value is opaque, quotes included */.t29{--quoted:'kept'}",
   "/*! webpack: a string in an at-rule prelude normalizes too */@supports (content:\\"x\\"){.t30{color:red}}",
   "/*! webpack: an EOF escape swallowing the final quote leaves the string alone */.t32:after{content:\\"x\\\\\\"}",

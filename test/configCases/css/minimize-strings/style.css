@@ -67,11 +67,17 @@
 
 /* Cases beyond the upstream suite, covering what webpack's own printer decides. */
 
-/*! webpack: a hex escape is never rewritten */
+/*! webpack: an escaped quote keeps its escape — writing it out needs another */
 .t27:after { content: "\27" }
 /*! webpack: a `\`-newline continuation stays (dropping it can fuse a hex escape) */
 .t28:after { content: "\61\
 b" }
+/*! webpack: an escape the character itself spells is written out */
+.t33:after { content: "\61 \62 c" }
+/*! webpack: past ASCII the bytes would depend on the file's encoding */
+.t34:after { content: "\f005" }
+/*! webpack: a digit next to an open escape would join it */
+.t35:after { content: "\f005\41 " }
 /*! webpack: a custom property's value is opaque, quotes included */
 .t29 { --quoted: 'kept' }
 /*! webpack: a string in an at-rule prelude normalizes too */
