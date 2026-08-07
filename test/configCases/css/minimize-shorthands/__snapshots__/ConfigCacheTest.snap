@@ -77,5 +77,7 @@ Array [
   "/*! background-position: a second value naming the centre is what an omitted one means */.t64{background-position:50%}",
   "/*! background-position: ...and an offset keeps the pair out of the percentage rewrite */.t64b{background-position:10px}",
   "/*! declined: \`top\` is no x-position, so half the pair alone is a value the engine drops */.t64c{background-position:top 50%}",
+  "/*! transform-origin: the axes are spelled out rather than named, but still a position */.t65{transform-origin:50%100%}",
+  "/*! declined: a third component is the z offset, which the collapse has no reading of */.t65b{transform-origin:left top 10px}",
 ]
 `;

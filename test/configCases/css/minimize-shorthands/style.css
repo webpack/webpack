@@ -175,3 +175,7 @@
 .t64b { background-position: 10px center }
 /*! declined: `top` is no x-position, so half the pair alone is a value the engine drops */
 .t64c { background-position: top 50% }
+/*! transform-origin: the axes are spelled out rather than named, but still a position */
+.t65 { transform-origin: center bottom }
+/*! declined: a third component is the z offset, which the collapse has no reading of */
+.t65b { transform-origin: left top 10px }

@@ -2050,6 +2050,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{object-position:left top}", "a{object-position:0%0%}"],
 			["a{mask-position:left top}", "a{mask-position:0%0%}"],
 			["a{perspective-origin:left top}", "a{perspective-origin:0%0%}"],
+			// `transform-origin` spells its axes out rather than naming a position,
+			// and a depth only follows a third component.
+			["a{transform-origin:left top}", "a{transform-origin:0%0%}"],
+			["a{transform-origin:center bottom}", "a{transform-origin:50%100%}"],
 			["a{offset-anchor:left top}", "a{offset-anchor:0%0%}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
@@ -2069,12 +2073,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a comma parts two layers", "a{background-position:left top,right top}"],
 			["the two keywords share an axis", "a{background-position:left right}"],
 			["the same, on the other axis", "a{background-position:top bottom}"],
-			// `transform-origin` takes a z offset past the position, so its keywords
-			// are not the whole value and the table leaves it out.
-			[
-				"the position is only part of the value",
-				"a{transform-origin:left top}"
-			],
+			// A third component is `transform-origin`'s z offset, which the two-value
+			// collapse has no reading of.
+			["a depth follows the position", "a{transform-origin:left top 10px}"],
 			["the position is a shorthand's slot", "a{background:left top}"]
 		])("keeps it where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
@@ -2088,7 +2089,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{background-position:left 50%}", "a{background-position:left}"],
 			["a{background-position:0 center}", "a{background-position:0}"],
 			["a{object-position:25% 50%}", "a{object-position:25%}"],
-			["a{mask-position:3em center}", "a{mask-position:3em}"]
+			["a{mask-position:3em center}", "a{mask-position:3em}"],
+			["a{transform-origin:50% 50%}", "a{transform-origin:50%}"],
+			["a{transform-origin:10px center}", "a{transform-origin:10px}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});

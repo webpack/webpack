@@ -1216,6 +1216,35 @@ const collectPositionProperties = () => {
 	return out.sort();
 };
 
+// The five edge keywords a `<position>` names, and the classes an offset in one
+// can be.
+const POSITION_AXIS_KEYWORDS = ["bottom", "center", "left", "right", "top"];
+const POSITION_OFFSET_CLASSES = new Set(["length", "percentage"]);
+
+/**
+ * The properties whose position is spelled out rather than named, and which may
+ * carry a depth past it — `transform-origin` states both axes longhand and
+ * takes a z `<length>` after them. Told by everything the grammar accepts: the
+ * five edge keywords and an offset, nothing else. A third component keeps the
+ * collapse away from the depth.
+ * @returns {string[]} the property names, sorted
+ */
+const collectSpelledPositionProperties = () => {
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		if (typeof entry.syntax !== "string") continue;
+		const values = acceptedValues(entry.syntax);
+		if (
+			values.keywords.size === POSITION_AXIS_KEYWORDS.length &&
+			POSITION_AXIS_KEYWORDS.every((one) => values.keywords.has(one)) &&
+			[...values.classes].every((one) => POSITION_OFFSET_CLASSES.has(one))
+		) {
+			out.push(name);
+		}
+	}
+	return out.sort();
+};
+
 /**
  * Split a value definition on one top-level combinator, `[…]` / `<…>` / `(…)`
  * nesting aside. A top-level `|` while splitting on `||` means the definition is
@@ -3077,7 +3106,12 @@ const collectData = () => {
 	const repeatStyleKeywords = collectRepeatStyleKeywords();
 	const genericFontFamilies = collectGenericFontFamilies();
 	const displayShortForms = collectDisplayShortForms();
-	const positionProperties = collectPositionProperties();
+	const positionProperties = [
+		...new Set([
+			...collectPositionProperties(),
+			...collectSpelledPositionProperties()
+		])
+	].sort();
 	const [positionXKeywords, positionYKeywords] = collectPositionKeywordAxes();
 	const shorthandInitialKeywords = collectShorthandInitialKeywords();
 	const fontStretchPercentages = collectFontStretchPercentages();
