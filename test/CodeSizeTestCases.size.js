@@ -13,6 +13,7 @@ const webpack = require("..");
 const { DEFAULTS } = require("../lib/config/defaults");
 const prepareOptions = require("./helpers/prepareOptions");
 
+/** @typedef {import("..").AssetInfo} AssetInfo */
 /** @typedef {import("..").Compilation} Compilation */
 /** @typedef {import("..").Compiler} Compiler */
 /** @typedef {import("..").Configuration} Configuration */
@@ -125,15 +126,41 @@ const COMMENT_MARKER = "<!-- code-size-report -->";
 // Every table shows the same number of movers; the rest is in the uploaded report.
 const MAX_ROWS = 20;
 
-// A `[contenthash]` renames the asset on every content change; the report keys
-// on the normalized name so a size change reads as a change, not add + remove.
-// Hex only, which is `output.hashDigest`'s default: the other digests share an
-// alphabet with ordinary file names, and matching those would rename real
-// assets. A case that picks one (`hash/digest`) reports add + remove instead —
-// the same bytes, split over two rows.
+// The hashes webpack states it put in a filename, whatever `output.hashDigest`
+// spelled them in. Substituting these exact strings beats matching an alphabet:
+// base26/32/64url share theirs with ordinary file names.
+const HASH_INFO_KEYS = ["fullhash", "chunkhash", "modulehash", "contenthash"];
+
+// Fallback for a hash nothing recorded — one a loader embedded, or a case that
+// hashes a name itself. Hex only, since a broader alphabet renames real assets.
 const HASH_REGEXP = /[0-9a-f]{8,}/gi;
 
 const UNITS = ["B", "KiB", "MiB", "GiB"];
+
+/**
+ * A `[contenthash]` renames the asset on every content change, so the report
+ * keys on the normalized name — otherwise every size change reads as one asset
+ * removed and another added.
+ * @param {string} name emitted asset name
+ * @param {AssetInfo} info what webpack recorded about it
+ * @returns {string} the name with every hash replaced by `[hash]`
+ */
+const normalizeAssetName = (name, info) => {
+	/** @type {string[]} */
+	const hashes = [];
+	for (const key of HASH_INFO_KEYS) {
+		const value = info[key];
+		if (typeof value === "string") hashes.push(value);
+		else if (Array.isArray(value)) hashes.push(...value);
+	}
+	let normalized = name;
+	// Longest first: a truncated `[contenthash:8]` is a prefix of the full one,
+	// and replacing the short one first would leave the rest of it behind.
+	for (const hash of hashes.sort((a, b) => b.length - a.length)) {
+		if (hash) normalized = normalized.split(hash).join("[hash]");
+	}
+	return normalized.replace(HASH_REGEXP, "[hash]");
+};
 
 /**
  * @returns {Metrics} zeroed metrics
@@ -357,7 +384,7 @@ const measureCase = async ({ category, name }) => {
 				emitted.add(compilation);
 				for (const asset of compilation.getAssets()) {
 					const metrics = measureAsset(asset.source.buffer());
-					const name = `${prefix}${asset.name.replace(HASH_REGEXP, "[hash]")}`;
+					const name = `${prefix}${normalizeAssetName(asset.name, asset.info)}`;
 					// Two hashed assets can normalize to one name; report them as one.
 					const existing = result.assets[name];
 					result.assets[name] = existing
@@ -586,13 +613,13 @@ const formatRuntimeModules = (report, baseline) => {
 
 	/** @type {string[]} */
 	const lines = [
-		`**${rows.length} runtime module(s) ${
+		`<details><summary>${rows.length} runtime module(s) ${
 			baseline ? "changed size" : "emitted"
-		}**${
+		}${
 			rows.length > MAX_ROWS
-				? `, biggest ${MAX_ROWS} by ${baseline ? "change" : "total"}:`
-				: ":"
-		}`,
+				? `, biggest ${MAX_ROWS} by ${baseline ? "change" : "total"}`
+				: ""
+		}</summary>`,
 		"",
 		`| Runtime module | Total${
 			baseline ? " | Change" : ""
@@ -617,7 +644,7 @@ const formatRuntimeModules = (report, baseline) => {
 			} | | |`
 		);
 	}
-	lines.push("");
+	lines.push("", "</details>", "");
 
 	return lines;
 };
@@ -636,9 +663,9 @@ const formatBiggestAssets = (report) => {
 
 	/** @type {string[]} */
 	const lines = [
-		`**${assets.length} asset(s) emitted**${
-			assets.length > MAX_ROWS ? `, biggest ${MAX_ROWS} by raw size:` : ":"
-		}`,
+		`<details><summary>${assets.length} asset(s) emitted${
+			assets.length > MAX_ROWS ? `, biggest ${MAX_ROWS} by raw size` : ""
+		}</summary>`,
 		"",
 		`| Asset | Raw | ${COMPRESSED.map((metric) => METRIC_LABELS[metric]).join(
 			" | "
@@ -661,7 +688,7 @@ const formatBiggestAssets = (report) => {
 			).join("")} |`
 		);
 	}
-	lines.push("");
+	lines.push("", "</details>", "");
 
 	return lines;
 };
