@@ -60,7 +60,7 @@ Array [
   "/*! webpack: a pseudo-class \`:\` is not a condition separator */.t52 :hover{color:red}",
   "/*! webpack: a \`(…)\` inside a value is a calc sub-expression, not a condition */.t53{width:calc(10px - (100px/var(--x)))}",
   "/*! lightningcss: translate(10px) — translateX's second component defaults to 0 */.t54{transform:translate(10px)}",
-  "/*! lightningcss: translate(-100%) rotate(3deg) */.t55{transform:translate(-100%) rotate(3deg)}",
+  "/*! lightningcss: translate(-100%) rotate(3deg) */.t55{transform:translate(-100%)rotate(3deg)}",
   "/*! webpack: the argument may be any single component */.t56{transform:translate(3px)}",
   "/*! webpack: translateY has no one-argument equivalent, so it stays */.t57{transform:translateY(10px)}",
   "/*! webpack: a second component makes \`translateX\` invalid — converting it would

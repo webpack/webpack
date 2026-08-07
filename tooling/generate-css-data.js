@@ -1182,19 +1182,98 @@ const collectRepeatStyleKeywords = () => {
 	return lowerSorted(acceptedValues(pairing[1]).keywords);
 };
 
+// One alternative of a property's grammar that is a position, and one that is
+// any bare keyword beside it (`auto`, `normal`, `none`).
+const POSITION_ALTERNATIVE_REGEXP = /^<(?:bg-)?position>#?$/;
+const KEYWORD_ALTERNATIVE_REGEXP = /^[a-z-]+$/;
+
 /**
- * The properties whose value is a `<bg-position>`, where `center` is the `50%`
- * the axis defaults to anyway.
+ * The properties whose value *is* a position, so each edge keyword in one names
+ * the percentage that axis resolves to. Read off the top-level alternation
+ * rather than by reachability: `<position>` is reachable from any property
+ * taking an `<image>` (a gradient states one), where it is not the value.
  * @returns {string[]} the property names, sorted
  */
-const collectBackgroundPositionProperties = () => {
+const collectPositionProperties = () => {
 	const out = [];
 	for (const [name, entry] of Object.entries(properties)) {
 		if (typeof entry.syntax !== "string") continue;
-		const reachable = reachableProductions(entry.syntax);
-		// The longhand only: a shorthand's `center` sits among other components,
-		// where the three- and four-value forms read a keyword rather than a length.
-		if (reachable.has("bg-position") && !reachable.has("bg-layer")) {
+		const alternatives = entry.syntax.split("|").map((one) => one.trim());
+		if (!alternatives.some((one) => POSITION_ALTERNATIVE_REGEXP.test(one))) {
+			continue;
+		}
+		if (
+			!alternatives.every(
+				(one) =>
+					POSITION_ALTERNATIVE_REGEXP.test(one) ||
+					KEYWORD_ALTERNATIVE_REGEXP.test(one)
+			)
+		) {
+			continue;
+		}
+		out.push(name);
+	}
+	return out.sort();
+};
+
+/**
+ * The keywords each axis of a `<position>` accepts -> the percentage that
+ * keyword resolves to. The two axes are read off the grammar's own
+ * `[ … ] || [ … ]` alternative; only the percentages are stated.
+ * @returns {[string, string][][]} the x axis' entries, then the y axis'
+ */
+const collectPositionKeywordAxes = () => {
+	const entry = syntaxes.position;
+	if (entry === undefined) throw new Error("`position` is gone from mdn-data");
+	let tree = parseValueSyntax(entry.syntax);
+	while (tree.type === "group" || tree.type === "parens") tree = tree.body;
+	const branches = tree.type === "oneOf" ? tree.items : [tree];
+	const pairing = branches.find(
+		(one) => one.type === "anyOf" && one.items.length === 2
+	);
+	if (pairing === undefined || pairing.type !== "anyOf") {
+		throw new Error("`position` no longer states its two axes as `A || B`");
+	}
+	const axes = pairing.items.map((axis) => {
+		const body = axis.type === "group" ? axis.body : axis;
+		const items = body.type === "oneOf" ? body.items : [body];
+		return items.map((one) => {
+			if (one.type !== "keyword") {
+				throw new Error("a `position` axis is no longer a list of keywords");
+			}
+			return one.name;
+		});
+	});
+	const stated = new Map(SUPPLEMENT.positionKeywordPercentages);
+	const named = new Set();
+	for (const axis of axes) {
+		for (const name of axis) {
+			if (!stated.has(name)) {
+				throw new Error(`\`position\` gained the keyword \`${name}\``);
+			}
+			named.add(name);
+		}
+	}
+	for (const [name] of stated) {
+		if (!named.has(name)) {
+			throw new Error(`\`position\` no longer states \`${name}\``);
+		}
+	}
+	return axes.map((axis) =>
+		axis.sort().map((name) => [name, /** @type {string} */ (stated.get(name))])
+	);
+};
+
+/**
+ * The properties whose value is a `<transform-list>`, where one function
+ * follows another with no separator of its own — the `)` already parts them.
+ * @returns {string[]} the property names, sorted
+ */
+const collectTransformListProperties = () => {
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		if (typeof entry.syntax !== "string") continue;
+		if (reachableProductions(entry.syntax).has("transform-list")) {
 			out.push(name);
 		}
 	}
@@ -1914,7 +1993,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -1942,6 +2021,16 @@ const SUPPLEMENT = {
 	fontWeightNumbers: [
 		["normal", "400"],
 		["bold", "700"]
+	],
+	// CSS Backgrounds 3 §3.6 defines each edge keyword as that percentage of the
+	// axis, as prose — the grammar states which axis a keyword is, never what it
+	// resolves to. The axes themselves are read off `<position>`.
+	positionKeywordPercentages: [
+		["left", "0%"],
+		["center", "50%"],
+		["right", "100%"],
+		["top", "0%"],
+		["bottom", "100%"]
 	],
 	// Selectors 4 §3.3: engines must accept the one-colon spelling for the
 	// pseudo-elements CSS 1 and 2 introduced. Only these four — `::selection` and
@@ -2760,7 +2849,9 @@ const collectData = () => {
 	const repeatStyleKeywords = collectRepeatStyleKeywords();
 	const genericFontFamilies = collectGenericFontFamilies();
 	const displayShortForms = collectDisplayShortForms();
-	const backgroundPositionProperties = collectBackgroundPositionProperties();
+	const positionProperties = collectPositionProperties();
+	const [positionXKeywords, positionYKeywords] = collectPositionKeywordAxes();
+	const transformListProperties = collectTransformListProperties();
 	const shorterColorSpellings = collectShorterColorSpellings(colorNames);
 	const zeroAngleFunctions = collectZeroAngleFunctions();
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
@@ -2921,9 +3012,34 @@ ${displayShortForms
 // than a family called that, so a quoted family spelled like one keeps its quotes.
 const GENERIC_FONT_FAMILIES = ${setLiteral(genericFontFamilies)};
 
-// The properties whose value is a \`<bg-position>\`, where \`center\` is the \`50%\`
-// that axis defaults to.
-const BACKGROUND_POSITION_PROPERTIES = ${setLiteral(backgroundPositionProperties)};
+// The properties whose value is a position, where each edge keyword names the
+// percentage that axis resolves to.
+const POSITION_PROPERTIES = ${setLiteral(positionProperties)};
+
+// Each keyword one axis of a \`<position>\` accepts -> the percentage it resolves
+// to. A keyword both maps carry (\`center\`) names whichever axis is still free,
+// and every free axis is \`50%\` anyway.
+const POSITION_X_KEYWORDS = new Map([
+${positionXKeywords
+	.map(
+		([name, percentage]) =>
+			`\t[${JSON.stringify(name)}, ${JSON.stringify(percentage)}]`
+	)
+	.join(",\n")}
+]);
+
+const POSITION_Y_KEYWORDS = new Map([
+${positionYKeywords
+	.map(
+		([name, percentage]) =>
+			`\t[${JSON.stringify(name)}, ${JSON.stringify(percentage)}]`
+	)
+	.join(",\n")}
+]);
+
+// The properties whose value is a \`<transform-list>\`: one function follows
+// another with no separator, the \`)\` having already parted them.
+const TRANSFORM_LIST_PROPERTIES = ${setLiteral(transformListProperties)};
 
 // The keywords one \`<repeat-style>\` axis can be: a pair only collapses where
 // both halves are one of these.
@@ -3156,7 +3272,7 @@ module.exports.ANGLE_UNITS = ANGLE_UNITS;
 module.exports.ARC_COSINE_DEGREES = ARC_COSINE_DEGREES;
 module.exports.ARC_SINE_DEGREES = ARC_SINE_DEGREES;
 module.exports.ARC_TANGENT_DEGREES = ARC_TANGENT_DEGREES;
-module.exports.BACKGROUND_POSITION_PROPERTIES = BACKGROUND_POSITION_PROPERTIES;\nmodule.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
+module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
 module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
@@ -3186,13 +3302,13 @@ module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;
 module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;
 module.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
-module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;
+module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
-module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
+module.exports.TRANSFORM_LIST_PROPERTIES = TRANSFORM_LIST_PROPERTIES;\nmodule.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
 module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;
 module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;
