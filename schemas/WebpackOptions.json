@@ -3569,8 +3569,21 @@
           "type": "boolean"
         },
         "minimize": {
-          "description": "Enable minimizing the output. Uses optimization.minimizer.",
-          "type": "boolean"
+          "description": "Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures what a minimizer may do beyond the transforms that always apply.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "html": {
+                  "$ref": "#/definitions/OptimizationMinimizeHtml"
+                }
+              }
+            }
+          ]
         },
         "minimizer": {
           "description": "Minimizer(s) to use for minimizing the output.",
@@ -3677,6 +3690,19 @@
         }
       }
     },
+    "OptimizationMinimizeHtml": {
+      "description": "What the HTML minimizer may do beyond the transforms that always apply.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "collapseWhitespace": {
+          "description": "Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace is significant, and never removed entirely — dropping it would join two inline elements that render apart.",
+          "type": "boolean",
+          "added": "5.110.0"
+        }
+      },
+      "added": "5.110.0"
+    },
     "OptimizationNormalized": {
       "description": "Enables/Disables integrated optimizations.",
       "type": "object",
@@ -3748,8 +3774,21 @@
           "type": "boolean"
         },
         "minimize": {
-          "description": "Enable minimizing the output. Uses optimization.minimizer.",
-          "type": "boolean"
+          "description": "Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures what a minimizer may do beyond the transforms that always apply.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "html": {
+                  "$ref": "#/definitions/OptimizationMinimizeHtml"
+                }
+              }
+            }
+          ]
         },
         "minimizer": {
           "description": "Minimizer(s) to use for minimizing the output.",
