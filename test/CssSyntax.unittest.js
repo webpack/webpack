@@ -2081,12 +2081,58 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a position whose second value is the centre", () => {
+		it.each([
+			["a{background-position:50% 50%}", "a{background-position:50%}"],
+			["a{background-position:10px center}", "a{background-position:10px}"],
+			["a{background-position:left 50%}", "a{background-position:left}"],
+			["a{background-position:0 center}", "a{background-position:0}"],
+			["a{object-position:25% 50%}", "a{object-position:25%}"],
+			["a{mask-position:3em center}", "a{mask-position:3em}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// `top` is no x-position, so the pair is the order-free keyword syntax
+			// and half of it alone would be a value the engine drops.
+			[
+				"the first value is on the other axis",
+				"a{background-position:top 50%}"
+			],
+			["the second value is no centre", "a{background-position:10px 20px}"],
+			["both axes carry an offset", "a{background-position:left 1em top 50%}"],
+			["the property is no position", "a{background-repeat:round center}"],
+			["the position is a shorthand's slot", "a{background:10px center}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("a shorthand slot holding its own initial", () => {
 		it.each([
 			["a{transition:height .35s ease}", "a{transition:height.35s}"],
 			["a{transition:opacity 1s ease 2s}", "a{transition:opacity 1s 2s}"],
 			["a{transition:all 1s ease}", "a{transition:all 1s}"],
 			["a{transition:opacity 1s normal}", "a{transition:opacity 1s}"],
+			// A comma parts two layers, and each holds its own set of slots.
+			[
+				"a{transition:opacity 1s ease,color 1s ease}",
+				"a{transition:opacity 1s,color 1s}"
+			],
+			[
+				"a{transition:all .3s cubic-bezier(.4,0,.2,1),color .2s ease}",
+				"a{transition:all.3s cubic-bezier(.4,0,.2,1),color.2s}"
+			],
+			// Only the layer whose slots are unambiguous gives its keyword up.
+			[
+				"a{transition:opacity 1s ease,ease 1s ease}",
+				"a{transition:opacity 1s,ease 1s ease}"
+			],
+			[
+				"a{transition:1s ease color,2s opacity}",
+				"a{transition:color 1s,opacity 2s}"
+			],
 			["a{animation:x 1s ease}", "a{animation:x 1s}"],
 			["a{animation:x 2s ease normal running}", "a{animation:x 2s}"],
 			["a{border:2px none red}", "a{border:2px red}"],
@@ -2126,10 +2172,16 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a call fills the same slot", "a{transition:opacity 1s ease steps(4)}"],
 			["the same, on an animation", "a{animation:x 1s ease linear(0,1)}"],
 			["the value is the keyword alone", "a{border:none}"],
+			// Each layer keeps its own siblings, so the ambiguous one stays whole.
 			[
-				"a comma parts two layers",
-				"a{transition:opacity 1s ease,color 1s ease}"
+				"a layer's own sibling fills the slot",
+				"a{transition:ease 1s ease,ease 2s ease}"
 			],
+			// A string could carry the comma the layer split reads.
+			["a layer holds a string", 'a{transition:"a" 1s ease}'],
+			["a layer is empty", "a{transition:opacity 1s ease,,color 2s ease}"],
+			["the first layer is empty", "a{transition:,opacity 1s ease}"],
+			["the last layer is empty", "a{transition:opacity 1s ease,}"],
 			["the property is no shorthand", "a{border-style:none}"],
 			["the slot takes more than keywords", "a{border:medium solid red}"]
 		])("keeps it where %s", (_name, css) => {
