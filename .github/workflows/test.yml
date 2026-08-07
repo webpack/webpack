@@ -336,6 +336,9 @@ jobs:
       # threads work once jest-worker loads the Bun preload per thread. Apply that
       # patch here (Bun only) rather than via a repo-wide postinstall. The
       # jest-runner patch tolerates Bun's transient memoryUsage failures.
+      # test:base:bun also drops --workerIdleMemoryLimit: restarting a worker
+      # thread on it segfaults Bun, and the runner's heaps sit at the 512MB the
+      # other runtimes use, so it fired constantly.
       - if: matrix.runtime == 'bun'
         run: |
           git apply test/patches/jest-worker+30.4.1.patch
