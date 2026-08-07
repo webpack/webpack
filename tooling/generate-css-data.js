@@ -1216,6 +1216,37 @@ const collectPositionProperties = () => {
 	return out.sort();
 };
 
+// A shadow states its offsets as `<length>{MIN,MAX}`; MIN of them are the two
+// offsets every shadow needs.
+const SHADOW_LENGTHS_REGEXP = /<length>\{(\d+),(\d+)\}/;
+
+/**
+ * Each property whose value is a list of shadows -> how many lengths a shadow
+ * cannot go below. The grammar states the range itself (`<length>{2,4}` on
+ * `box-shadow`, `{2,3}` on `text-shadow`), so a trailing zero past the minimum
+ * is a value the notation already implies.
+ * @returns {[string, number][]} the entries, sorted by property
+ */
+const collectShadowProperties = () => {
+	/** @type {[string, number][]} */
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		if (typeof entry.syntax !== "string") continue;
+		let minimum = null;
+		for (const raw of references(entry.syntax)) {
+			const definition = definitions.get(raw);
+			if (definition === undefined) continue;
+			const range = SHADOW_LENGTHS_REGEXP.exec(definition);
+			if (range === null) continue;
+			// Two productions naming different ranges is no single shadow shape.
+			if (minimum !== null && minimum !== Number(range[1])) return [];
+			minimum = Number(range[1]);
+		}
+		if (minimum !== null) out.push([name, minimum]);
+	}
+	return out.sort(([a], [b]) => (a < b ? -1 : 1));
+};
+
 // The five edge keywords a `<position>` names, and the classes an offset in one
 // can be.
 const POSITION_AXIS_KEYWORDS = ["bottom", "center", "left", "right", "top"];
@@ -2196,6 +2227,13 @@ const mapLiteral = (entries) =>
 	`new Map([${entries.map(([key, value]) => `["${key}", "${value}"]`).join(", ")}])`;
 
 /**
+ * @param {[string, number][]} entries string-keyed, number-valued pairs
+ * @returns {string} the `Map` literal
+ */
+const countMapLiteral = (entries) =>
+	`new Map([${entries.map(([key, value]) => `["${key}", ${value}]`).join(", ")}])`;
+
+/**
  * @param {[number, number][]} entries number-keyed pairs
  * @returns {string} the `Map` literal
  */
@@ -3098,6 +3136,7 @@ const collectData = () => {
 	].sort();
 	const [positionXKeywords, positionYKeywords] = collectPositionKeywordAxes();
 	const shorthandInitialKeywords = collectShorthandInitialKeywords();
+	const shadowProperties = collectShadowProperties();
 	const fontStretchPercentages = collectFontStretchPercentages();
 	const shorterColorSpellings = collectShorterColorSpellings(colorNames);
 	const zeroAngleFunctions = collectZeroAngleFunctions();
@@ -3259,6 +3298,10 @@ ${displayShortForms
 // spelling its own slot takes: the slot's keywords, and each function it
 // accepts written \`name()\`. A sibling out of that set means the value fills the
 // slot twice, which is a declaration the engine drops.
+// Each property whose value is a list of shadows -> the count of lengths a
+// shadow cannot go below, past which a trailing zero is already implied.
+const SHADOW_PROPERTIES = ${countMapLiteral(shadowProperties)};
+
 const SHORTHAND_INITIAL_KEYWORDS = new Map([
 ${shorthandInitialKeywords
 	.map(
@@ -3570,7 +3613,7 @@ module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
-module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
+module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
