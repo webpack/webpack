@@ -2877,6 +2877,11 @@ export interface Environment {
 	 */
 	cssColorHexAlpha?: boolean;
 	/**
+	 * The environment supports two positions on one gradient color stop ('red 0% 50%').
+	 * @since 5.110.0
+	 */
+	cssGradientDoublePosition?: boolean;
+	/**
 	 * The environment supports the 'inset' shorthand property.
 	 * @since 5.110.0
 	 */

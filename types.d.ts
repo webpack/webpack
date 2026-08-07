@@ -5410,6 +5410,11 @@ declare interface CssEnvironment {
 	cssColorHexAlpha?: boolean;
 
 	/**
+	 * two positions on one gradient color stop (`red 0% 50%`) are available
+	 */
+	cssGradientDoublePosition?: boolean;
+
+	/**
 	 * the `inset` shorthand property is available
 	 */
 	cssInsetShorthand?: boolean;
@@ -7391,6 +7396,12 @@ declare interface Environment {
 	 * @since 5.110.0
 	 */
 	cssColorHexAlpha?: boolean;
+
+	/**
+	 * The environment supports two positions on one gradient color stop ('red 0% 50%').
+	 * @since 5.110.0
+	 */
+	cssGradientDoublePosition?: boolean;
 
 	/**
 	 * The environment supports the 'inset' shorthand property.

@@ -1340,6 +1340,37 @@ const RULE_HOLDING_BLOCKS = [
 ];
 
 /**
+ * The gradient functions, each with the last position its own stop list means:
+ * `<color-stop-length>` runs to `100%`, `<color-stop-angle>` to the same turn
+ * spelled either way. Read off `<gradient>`, so a seventh needs nothing here.
+ * @returns {[string, string[]][]} `[function, last-position spellings]`, sorted
+ */
+const collectGradientFunctions = () => {
+	const entry = syntaxes.gradient;
+	if (entry === undefined) {
+		throw new Error("`<gradient>` is gone from mdn-data");
+	}
+	/** @type {[string, string[]][]} */
+	const out = [];
+	for (const name of entry.syntax.match(/<([a-z-]+)\(\)>/g) || []) {
+		const bare = name.slice(1, -3);
+		const call = functions[`${bare}()`];
+		if (call === undefined || typeof call.syntax !== "string") {
+			throw new Error(`\`${bare}()\` is gone from mdn-data`);
+		}
+		// The stop list is reached through the `<x-gradient-syntax>` the call names.
+		const named = /<([a-z-]+)>/.exec(call.syntax);
+		const body =
+			named !== null && syntaxes[named[1]] !== undefined
+				? syntaxes[named[1]].syntax
+				: call.syntax;
+		const angular = body.includes("<angular-color-stop-list>");
+		out.push([bare, angular ? ["100%", "360deg", "1turn"] : ["100%"]]);
+	}
+	return out.sort(([a], [b]) => (a < b ? -1 : 1));
+};
+
+/**
  * The at-rules whose adjacent blocks merge into one: their block holds rules, and
  * their prelude states a condition rather than naming the one thing the block
  * belongs to (`@keyframes`, whose later block replaces the earlier).
@@ -3326,6 +3357,7 @@ const collectData = () => {
 	const shorthandInitialKeywords = collectShorthandInitialKeywords();
 	const shadowProperties = collectShadowProperties();
 	const mergeableAtRules = collectMergeableAtRules();
+	const gradientFunctions = collectGradientFunctions();
 	const fontStretchPercentages = collectFontStretchPercentages();
 	const filterFunctionOmitted = collectFilterFunctionOmitted();
 	const shorterColorSpellings = collectShorterColorSpellings(colorNames);
@@ -3517,6 +3549,17 @@ const FILTER_FUNCTION_OMITTED = ${mapLiteral(filterFunctionOmitted)};
 // The generic font families: an unquoted one of these names the generic rather
 // than a family called that, so a quoted family spelled like one keeps its quotes.
 const GENERIC_FONT_FAMILIES = ${setLiteral(genericFontFamilies)};
+
+// Each gradient function -> the positions its last color stop already means, so
+// writing one of them there says nothing (CSS Images 3 §3.4.3).
+const GRADIENT_LAST_POSITIONS = new Map([
+${gradientFunctions
+	.map(
+		([name, positions]) =>
+			`\t[${JSON.stringify(name)}, ${setLiteral(positions)}]`
+	)
+	.join(",\n")}
+]);
 
 // The properties whose value is a position, where each edge keyword names the
 // percentage that axis resolves to.
@@ -3797,7 +3840,7 @@ module.exports.FAMILY_SLOT_CLASSES = FAMILY_SLOT_CLASSES;
 module.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;
 module.exports.FILTER_FUNCTION_OMITTED = FILTER_FUNCTION_OMITTED;\nmodule.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;\nmodule.exports.FONT_STRETCH_PERCENTAGES = FONT_STRETCH_PERCENTAGES;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
-module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
+module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.GRADIENT_LAST_POSITIONS = GRADIENT_LAST_POSITIONS;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
 module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.LENGTH_ONLY_FUNCTIONS = LENGTH_ONLY_FUNCTIONS;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;

@@ -1151,6 +1151,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "cssGradientDoublePosition": {
+          "description": "The environment supports two positions on one gradient color stop ('red 0% 50%').",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "cssInsetShorthand": {
           "description": "The environment supports the 'inset' shorthand property.",
           "type": "boolean",

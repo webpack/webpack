@@ -2734,6 +2734,94 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a gradient's color stops", () => {
+		it.each([
+			// CSS Images 3 §3.4.3 puts the last stop at 100% when it has none.
+			[
+				"a{background:linear-gradient(red,blue 100%)}",
+				"a{background:linear-gradient(red,blue)}"
+			],
+			[
+				"a{background:linear-gradient(to right,red,blue 100%)}",
+				"a{background:linear-gradient(to right,red,blue)}"
+			],
+			// A conic gradient's own turn, spelled either way.
+			[
+				"a{background:conic-gradient(red,blue 360deg)}",
+				"a{background:conic-gradient(red,blue)}"
+			],
+			[
+				"a{background:conic-gradient(red,blue 1turn)}",
+				"a{background:conic-gradient(red,blue)}"
+			],
+			// CSS Images 4 §3.4: two positions on one stop are the two stops they
+			// would be written as.
+			[
+				"a{background:linear-gradient(red 0%,red 50%,blue)}",
+				"a{background:linear-gradient(red 0% 50%,blue)}"
+			],
+			[
+				"a{background:conic-gradient(from 0deg,red 0%,red 50%)}",
+				"a{background:conic-gradient(from 0deg,red 0% 50%)}"
+			],
+			[
+				"a{background:repeating-linear-gradient(red 0,red 10px,blue 10px,blue 20px)}",
+				"a{background:repeating-linear-gradient(red 0 10px,blue 10px 20px)}"
+			],
+			// The names match case-insensitively.
+			[
+				"a{background:linear-gradient(RED 0%,red 50%,blue)}",
+				"a{background:linear-gradient(RED 0% 50%,blue)}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it("keeps a two-position stop the target cannot read", () => {
+			expect(
+				minify("a{background:linear-gradient(red 0%,red 50%,blue)}", {
+					cssGradientDoublePosition: false
+				})
+			).toBe("a{background:linear-gradient(red 0%,red 50%,blue)}");
+		});
+
+		it.each([
+			// A color hint is a position alone, so it is no stop to fold with.
+			[
+				"a stop sits beside a color hint",
+				"a{background:linear-gradient(red 0%,30%,blue)}"
+			],
+			[
+				"the last stop already carries two positions",
+				"a{background:linear-gradient(red 50% 100%,blue)}"
+			],
+			[
+				"the last stop has no position",
+				"a{background:linear-gradient(red 0%,blue)}"
+			],
+			[
+				"the last position is not the implied one",
+				"a{background:linear-gradient(red,blue 90%)}"
+			],
+			// A turn is no position a linear gradient's stop list ever means.
+			[
+				"the position is an angle the gradient does not take",
+				"a{background:linear-gradient(red,blue 360deg)}"
+			],
+			[
+				"two adjacent stops name different colors",
+				"a{background:linear-gradient(red 0%,blue 50%,green)}"
+			],
+			[
+				"the gradient is prefixed",
+				"a{background:-webkit-linear-gradient(red 0%,red 50%)}"
+			],
+			["the call is no gradient", "a{background:image-set(url(a.png) 100%)}"]
+		])("keeps them where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("grid-template-areas", () => {
 		it("keeps the cell names and drops the whitespace parting the rows", () => {
 			expect(minify('a{grid-template-areas:"a  a" "b  b"}')).toBe(

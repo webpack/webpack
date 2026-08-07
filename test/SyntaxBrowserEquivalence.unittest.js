@@ -290,8 +290,10 @@ const installHelpers = () => {
 
 	/**
 	 * The one spelling of a value the spec gives several names: an easing keyword
-	 * is the curve it stands for, and `jump-start` names the step position `start`
-	 * does.
+	 * is the curve it stands for, `jump-start` names the step position `start`
+	 * does, and a gradient's last color stop is at the end of the gradient line
+	 * whether or not it says so (CSS Images 3 §3.4.3). A two-position stop needs
+	 * nothing here: the engine expands it into the two stops itself.
 	 * @param {string} value a value
 	 * @returns {string} the same value, named once
 	 */
@@ -303,7 +305,10 @@ const installHelpers = () => {
 		for (const [keyword, curve] of EASINGS) {
 			named = named.split(curve).join(keyword);
 		}
-		return named;
+		return named.replace(
+			/((?:repeating-)?(?:linear|radial|conic)-gradient\([^()]*(?:\([^()]*\)[^()]*)*)\s(?:100%|360deg)\)/gi,
+			"$1)"
+		);
 	};
 
 	/**

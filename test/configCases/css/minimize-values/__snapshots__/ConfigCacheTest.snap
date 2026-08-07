@@ -148,5 +148,11 @@ Array [
    5-digit hash would invalidate the shorthand and drop the width and style too */.t137{outline-width:3px;outline-style:dashed;outline-color:#12345}",
   "/*! webpack: declined: \`list-style-type\` takes any identifier, so no other value
    in the family is unambiguous — an image included */.t133{list-style-type:square;list-style-position:inside;list-style-image:url(data:image/gif;base64,R0lGODlhAQABAAAAACw=)}",
+  "/*! gradient: the last stop's position is where CSS Images 3's fix-up already puts it */.t72{background-image:linear-gradient(red,blue)}",
+  "/*! ...and a conic gradient's own turn, however it is spelled */.t72b{background-image:conic-gradient(red,blue)}",
+  "/*! gradient: two stops of one color are the one stop naming both positions */.t72c{background-image:linear-gradient(red 0% 50%,blue)}",
+  "/*! declined: a color hint is a position alone, so it is no stop to fold with */.t72d{background-image:linear-gradient(red 0%,30%,blue)}",
+  "/*! declined: a stop already carrying two positions is not the one value to drop */.t72e{background-image:linear-gradient(red 50% 100%,blue)}",
+  "/*! declined: a prefixed gradient is a different function with its own grammar */.t72f{background-image:-webkit-linear-gradient(red 0%,red 50%)}",
 ]
 `;

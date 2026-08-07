@@ -26,7 +26,7 @@ Array [
   "/*! colormin: should not mangle percentage based rgba values */.t22{color:#80808080}",
   "/*! colormin: should convert percentage based rgba values */.t23{color:#fff}",
   "/*! colormin: should handle errored cases */.t24{color:rgb(50%,23,54)}",
-  "/*! colormin: should add extra spaces when converting rgb */.t25{background:linear-gradient(#323232 0%,blue 100%)}",
+  "/*! colormin: should add extra spaces when converting rgb */.t25{background:linear-gradient(#323232 0%,blue)}",
   "/*! webpack: space-separated rgb() */.t26{color:#323232}",
   "/*! webpack: rgb() with a slash alpha */.t27{color:#00000080}",
   "/*! webpack: rgb() alpha written as 1 */.t28{color:red}",
