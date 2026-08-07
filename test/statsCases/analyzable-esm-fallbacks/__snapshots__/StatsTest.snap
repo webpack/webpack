@@ -53,7 +53,7 @@ fetch-priority:
 hmr:
   asset main.mjs X KiB [emitted] [javascript module] (name: main)
   asset async_js.mjs X bytes [emitted] [javascript module]
-  runtime modules X KiB 9 modules
+  runtime modules X KiB 11 modules
   cacheable modules X bytes
     ./index.js X bytes [built] [code generated]
     ./async.js X bytes [built] [code generated]
