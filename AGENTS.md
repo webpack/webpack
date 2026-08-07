@@ -207,7 +207,7 @@ Run targeted tests — `yarn test:base --testPathPatterns="<pattern>"` or `yarn 
 
 **Run only tests specific to your change — leave the broad suites to CI.** Pick the cases that cover the touched code (`--testPathPatterns` / `--testNamePattern`) instead of sweeping whole suites.
 
-> [!REQUIRED] > **Two kinds of change are exempt, because "the tests for my change" is the wrong frame for them.** Touch `schemas/**`, `lib/config/**`, or anything `yarn fix:special` generates, and the blast radius is the whole option surface, not the feature: run `yarn lint` and `yarn test:basic` in full before pushing. `basic` is also what gates the `integration` matrix in `.github/workflows/test.yml` (`integration: needs: basic`), so a red `basic` stops every integration upload and leaves the coverage report computing patch coverage from the unit suite alone — a failure that reads like a coverage problem but is not one.
+> [!REQUIRED] > **Two kinds of change widen the blast radius past "the tests for my change".** Touch `schemas/**`, `lib/config/**`, or anything `yarn fix:special` generates, and what moves is the whole option surface, not the feature. That does **not** mean sweeping the suites locally — push and let CI sweep them, then [read the failing job's log](#read-ci-rather-than-re-running-it). Locally, run only the cheap targeted stages: the `configCases/` your change touches, plus `yarn lint:code` and `yarn fix:special` (whose own output tells you whether a generated file is stale). `basic` gates the `integration` matrix in `.github/workflows/test.yml` (`integration: needs: basic`), so a red `basic` stops every integration upload and leaves the coverage report computing patch coverage from the unit suite alone — a failure that reads like a coverage problem but is not one.
 
 `yarn lint` is a `&&` chain, so the first stage that trips on sandbox drift hides every stage after it. When `lint:special` reports declarations "need to be updated" that `main` reports too, do not stop there — run the rest by hand (`lint:types`, `lint:types-test`, `lint:types-benchmark`, `lint:types-module-test`, `lint:types-hot`, `fmt:check`, `lint:spellcheck`). `lint:types-test` is the one that catches `tsc` errors in `test/`, and skipping it is how a red `lint` survives a "lint passed locally".
 
@@ -217,6 +217,14 @@ This is a hard rule, not a preference: a broad local sweep costs many minutes, a
 
 - **Never read a pass/fail verdict through a pipe.** `yarn test:base … | grep …` discards jest's exit code, so a red run reads as green. Check the exit status, or read the `Tests:` summary line directly.
 - **Never attribute a failure without a base run.** Before assuming a failing case is yours, re-run that exact case on the unmodified files. Most surprises are pre-existing or contention flakes.
+
+### Read CI rather than re-running it
+
+> [!REQUIRED]
+
+**When CI is red, read its log — do not reproduce the whole job locally.** The run already holds the answer, and re-running `yarn lint` or a whole suite to rediscover one line costs minutes and a great many tokens. Filter the run to its failing jobs (`gh run view <run-id> --json jobs --jq '.jobs[] | select(.conclusion=="failure")'`, or `list_workflow_jobs`), read that job's log (`gh run view --job <id> --log-failed`, or `get_job_logs` with `return_content` — its tail is mostly `Post job cleanup`, so ask for enough lines to clear that), then reproduce **only the case it names**: `yarn test:base --testPathPatterns="<file>"`, `yarn test:basic --testNamePattern="<category> <case>"`, or `npx eslint <file>`.
+
+Two traps: a step is not a job — `Run yarn lint` sits inside the `lint` job, and a step's id fetches the wrong log, so select the object with a `steps` array. And `yarn lint` stops at its first stage, so a CI failure in `lint:code` says nothing about the later ones, just as a local `lint:special` complaint `main` also makes says nothing about CI.
 
 ### Verifying a performance or memory change
 
@@ -413,10 +421,10 @@ Two things follow from that, and neither is an exception to it:
 
 Neither of those excuses a check you can run yourself. **A check that reproduces locally is never one you re-run and shrug at**: it runs the same command you can type, so a failure in it is a failure you introduced until a run on unmodified `main` proves otherwise. Fix it and push.
 
-Read the failing job's log rather than guessing (`get_job_logs`), reproduce it locally, fix the cause, and re-run the same command CI ran before pushing. Two failures recur often enough to name:
+Read the failing job's log rather than guessing — see [Read CI rather than re-running it](#read-ci-rather-than-re-running-it) for how to get to it in three calls — then reproduce **only the case it names**, fix the cause, and re-run that one case before pushing. Re-running the whole job locally to find what the log already says is the waste that section exists to stop. Two failures recur often enough to name:
 
 - **cspell** rejects a word — reword it (the codebase is American English, and [Naming](#naming) forbids abbreviations) or, for a genuine term, add it to `cspell.json`.
-- **A snapshot lives in more than one suite.** `ConfigTestCases` and `ConfigCacheTestCases` both snapshot `configCases/`, and `--testPathPatterns=ConfigTestCases` does **not** match `ConfigCacheTestCases`. Update snapshots with `yarn test:basic --testNamePattern="<case>" -u` (no path filter), then run `yarn test:basic` in full.
+- **A snapshot lives in more than one suite.** `ConfigTestCases` and `ConfigCacheTestCases` both snapshot `configCases/`, and `--testPathPatterns=ConfigTestCases` does **not** match `ConfigCacheTestCases`. Update snapshots with `yarn test:basic --testNamePattern="<case>" -u` (no path filter) — the name filter keeps it to that case in both suites, so there is no need to follow it with a full `test:basic`.
 
 A report that measures rather than tests — performance, memory, a preview build — still gets investigated, but it is answered with evidence, not with a reflex commit. Reproduce the claim first (see [Verifying a performance or memory change](#verifying-a-performance-or-memory-change)); a comparison against a base that never ran, or one drawn across different runner environments or a different set of co-running cases, is an artifact and usually says so in its own output. Reporting an artifact as an artifact is a green outcome — silently leaving it unexamined is not. Posting a reply to the bot needs permission ([Writing on GitHub — ask first](#writing-on-github--ask-first)).
 

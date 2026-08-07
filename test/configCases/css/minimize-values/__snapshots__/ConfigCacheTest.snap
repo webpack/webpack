@@ -134,7 +134,7 @@ Array [
   "/*! webpack: declined: \`auto\` is both an \`outline-style\` and an \`outline-color\` */.t122{outline-width:3px;outline-style:auto;outline-color:auto}",
   "/*! webpack: declined: a substitution could stand for any of the three */.t123{outline-width:3px;outline-style:dashed;outline-color:var(--c)}",
   "/*! webpack: declined: a CSS-wide keyword means something else in a shorthand */.t124{flex-direction:column;flex-wrap:inherit}",
-  "/*! webpack: the merge steps over what does not write the family */.t125{column-rule:medium groove rebeccapurple;color:red}",
+  "/*! webpack: the merge steps over what does not write the family */.t125{column-rule:medium groove #639;color:red}",
   "/*! webpack: declined: \`outline-offset\` is in the family and would be stepped over */.t126{outline-width:3px;outline-offset:1px;outline-style:dashed;outline-color:red}",
   "/*! webpack: four slots, and a percentage only the thickness takes */.t127{text-decoration:none solid #123 10%}",
   "/*! webpack: a system color is a color keyword like any other */.t128{text-decoration:line-through double CanvasText from-font}",

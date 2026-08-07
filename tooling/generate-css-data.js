@@ -1031,6 +1031,229 @@ const collectIntegerProperties = () => {
 	return out.sort();
 };
 
+/**
+ * Every production one grammar can reach, following both `<production>` and
+ * `<'property'>` references to a fixed point.
+ * @param {string} syntax a value definition
+ * @returns {Set<string>} the reachable production names (a property as `'name'`)
+ */
+const reachableProductions = (syntax) => {
+	const seen = new Set();
+	const queue = [syntax];
+	while (queue.length !== 0) {
+		const current = /** @type {string} */ (queue.pop());
+		for (const raw of references(current)) {
+			const isProperty = raw.startsWith("'") && raw.endsWith("'");
+			const name = isProperty ? raw.slice(1, -1) : raw;
+			if (seen.has(raw)) continue;
+			seen.add(raw);
+			const entry = properties[name];
+			const next = isProperty
+				? entry !== undefined && typeof entry.syntax === "string"
+					? entry.syntax
+					: undefined
+				: definitions.get(name);
+			if (next !== undefined) queue.push(next);
+		}
+	}
+	return seen;
+};
+
+// A grammar reaching one of these takes a color.
+const COLOR_PRODUCTIONS = new Set([
+	"color",
+	"named-color",
+	"absolute-color-base",
+	"absolute-color-function",
+	"system-color"
+]);
+
+// …and one reaching either of these takes a bare identifier that is not a color,
+// so a named color there may be the author's own name (`animation-name: red`).
+// `<dashed-ident>` is not one: it starts with `--`, which no color name does.
+const NAME_PRODUCTIONS = new Set(["custom-ident", "ident"]);
+
+// What `display`'s two-keyword form leaves out, which no dataset states — CSS
+// Display 3 §2: an omitted `<display-inside>` is `flow`, an omitted
+// `<display-outside>` is `block` save for `ruby`, whose own default is `inline`.
+const DISPLAY_DEFAULT_INSIDE = "flow";
+const DISPLAY_DEFAULT_OUTSIDE = "block";
+const DISPLAY_INLINE_DEFAULTED_INSIDES = new Set(["ruby"]);
+// …and the one legacy keyword its own name does not spell: §2.5 states
+// `inline-block` is the short form of `inline flow-root`.
+const DISPLAY_UNNAMED_LEGACY = new Map([["inline flow-root", "inline-block"]]);
+
+/**
+ * Each two-keyword `display` -> the single keyword naming the same box, worked
+ * out from the keyword lists the grammar states and the defaults above rather
+ * than listed: a `flow` inside is the default, a `block` outside is the default,
+ * and an `inline` one has a legacy keyword where `display-legacy` spells it.
+ * @returns {[string, string][]} the entries, sorted by the two-keyword form
+ */
+const collectDisplayShortForms = () => {
+	/** @type {(name: string) => string[]} */
+	const keywords = (name) =>
+		(definitions.get(name) || "")
+			.split("|")
+			.map((one) => one.trim())
+			.filter((one) => /^[a-z][a-z-]*$/.test(one));
+	const outsides = keywords("display-outside");
+	const insides = keywords("display-inside");
+	const legacy = new Set(keywords("display-legacy"));
+	/** @type {[string, string][]} */
+	const out = [];
+	for (const outside of outsides) {
+		for (const inside of insides) {
+			const pair = `${outside} ${inside}`;
+			const defaultOutside = DISPLAY_INLINE_DEFAULTED_INSIDES.has(inside)
+				? "inline"
+				: DISPLAY_DEFAULT_OUTSIDE;
+			let short = null;
+			if (inside === DISPLAY_DEFAULT_INSIDE) {
+				short = outside;
+			} else if (outside === defaultOutside) {
+				short = inside;
+			} else if (legacy.has(`${outside}-${inside}`)) {
+				short = `${outside}-${inside}`;
+			} else {
+				short = DISPLAY_UNNAMED_LEGACY.get(pair) || null;
+			}
+			if (short !== null && short.length < pair.length) out.push([pair, short]);
+		}
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * The generic font families, expanded out of the production naming them. An
+ * unquoted one of these is the generic rather than a family with that name, so
+ * a quoted family spelled like one keeps its quotes.
+ * @returns {string[]} the keywords, sorted
+ */
+const collectGenericFontFamilies = () => {
+	const names = new Set();
+	/** @type {(syntax: string, seen: Set<string>) => void} */
+	const walk = (syntax, seen) => {
+		for (const part of syntax.split("|")) {
+			const term = part.trim();
+			const reference = /^<([a-z-]+)>$/.exec(term);
+			if (reference === null) {
+				if (/^[a-z][a-z-]*$/.test(term)) names.add(term);
+				continue;
+			}
+			const next = definitions.get(reference[1]);
+			if (next !== undefined && !seen.has(reference[1])) {
+				walk(next, new Set(seen).add(reference[1]));
+			}
+		}
+	};
+	walk(definitions.get("generic-family") || "", new Set(["generic-family"]));
+	return [...names].sort();
+};
+
+/**
+ * The properties whose value is a `<repeat-style>`, where the one-value form
+ * repeats itself on both axes — so two equal keywords are what one already says.
+ * @returns {string[]} the property names, sorted
+ */
+const collectRepeatStyleProperties = () => {
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		if (typeof entry.syntax !== "string") continue;
+		if (reachableProductions(entry.syntax).has("repeat-style")) out.push(name);
+	}
+	return out.sort();
+};
+
+/**
+ * The keywords one `<repeat-style>` axis can be, so a pair is only collapsed
+ * where both halves really are that axis rather than some other slot of a
+ * shorthand the production merely sits in (`background: red red`).
+ * @returns {string[]} the keywords, sorted
+ */
+const collectRepeatStyleKeywords = () => {
+	const syntax = definitions.get("repeat-style") || "";
+	// Only the `{1,2}` group pairs: `repeat-x` / `repeat-y` beside it are the
+	// one-value spellings of a pair, and repeating one of those is not a value.
+	const pairing = /\[([^\]]*)\]\{1,2\}/.exec(syntax);
+	if (pairing === null) {
+		throw new Error("`repeat-style` no longer states a `{1,2}` group");
+	}
+	return lowerSorted(acceptedValues(pairing[1]).keywords);
+};
+
+/**
+ * The properties whose value is a `<bg-position>`, where `center` is the `50%`
+ * the axis defaults to anyway.
+ * @returns {string[]} the property names, sorted
+ */
+const collectBackgroundPositionProperties = () => {
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		if (typeof entry.syntax !== "string") continue;
+		const reachable = reachableProductions(entry.syntax);
+		// The longhand only: a shorthand's `center` sits among other components,
+		// where the three- and four-value forms read a keyword rather than a length.
+		if (reachable.has("bg-position") && !reachable.has("bg-layer")) {
+			out.push(name);
+		}
+	}
+	return out.sort();
+};
+
+/**
+ * Each property whose initial value is a keyword shorter than `initial` itself
+ * -> that keyword. `initial` computes to the initial value whatever the
+ * property, so the two are the same declaration and the shorter one is written.
+ * A shorthand states its initial as the list of its longhands rather than a
+ * value, which is what keeps one out of this table.
+ * @returns {[string, string][]} the entries, sorted by property
+ */
+const collectInitialValueKeywords = () => {
+	/** @type {[string, string][]} */
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		// `mdn-data`'s own types omit the field, which its data does carry.
+		const initial = /** @type {{ initial?: string | string[] }} */ (entry)
+			.initial;
+		if (typeof initial !== "string") continue;
+		if (!/^[a-z][a-z-]*$/.test(initial)) continue;
+		if (initial.length >= "initial".length) continue;
+		// `mdn-data` states an initial its own property does not accept for a few
+		// entries (`flood-opacity`'s reads `black`), and writing one back would
+		// swap a working declaration for one the engine drops. Only a keyword the
+		// property's own grammar names is the value `initial` computes to.
+		if (typeof entry.syntax !== "string") continue;
+		if (!acceptedValues(entry.syntax).keywords.has(initial)) continue;
+		out.push([name, initial]);
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * The properties whose grammar takes a color and never a bare identifier of the
+ * author's own, so a named color written in one is unambiguously that color and
+ * may be rewritten to whichever spelling is shortest. Under-approximate on
+ * purpose: naming one property too few only costs bytes, while naming one too
+ * many would rewrite an identifier that means something else.
+ * @returns {string[]} the property names, sorted
+ */
+const collectColorOnlyProperties = () => {
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		if (typeof entry.syntax !== "string") continue;
+		const reachable = reachableProductions(entry.syntax);
+		let color = false;
+		let named = false;
+		for (const production of reachable) {
+			if (COLOR_PRODUCTIONS.has(production)) color = true;
+			if (NAME_PRODUCTIONS.has(production)) named = true;
+		}
+		if (color && !named) out.push(name);
+	}
+	return out.sort();
+};
+
 // CSS Modules keyword tables. A `css/module` localizes the custom identifiers in
 // a handful of property values (`animation-name: spin` names a scoped
 // `@keyframes`), so the parser needs to know which idents in those values are
@@ -1504,6 +1727,34 @@ const collectNthPseudoFunctions = () => {
 	return names.sort();
 };
 
+// A production naming a selector: what a function taking one has in its grammar.
+const SELECTOR_PRODUCTION_REGEXP = /<[a-z-]*selector[a-z-]*>/;
+
+/**
+ * The functions whose argument is a selector, spotted by the selector
+ * production their own grammar names — inside one a `>` / `+` / `~` is a
+ * combinator, so the whitespace around it carries nothing. Both spellings are
+ * read: a pseudo-class from the selector table, and `selector()` from the
+ * syntax that defines `@supports`'s form of it.
+ * @returns {string[]} the function names, sorted
+ */
+const collectSelectorFunctions = () => {
+	const names = new Set();
+	for (const [name, entry] of Object.entries(selectors)) {
+		if (entry.status !== "standard") continue;
+		if (typeof entry.syntax !== "string") continue;
+		if (!SELECTOR_PRODUCTION_REGEXP.test(entry.syntax)) continue;
+		const fn = /^::?([a-z-]+)\(\)$/.exec(name);
+		if (fn !== null) names.add(fn[1]);
+	}
+	for (const [, syntax] of definitions) {
+		// `supports-selector-fn` is `selector( <complex-selector> )`.
+		const fn = /^([a-z-]+)\(\s*<[a-z-]*selector[a-z-]*>/.exec(syntax);
+		if (fn !== null) names.add(fn[1]);
+	}
+	return [...names].sort();
+};
+
 /**
  * The functions that substitute an arbitrary token sequence, spotted by the
  * `<declaration-value>` in their own syntax — that production _is_ "any token
@@ -1596,6 +1847,32 @@ const collectColorNames = () => {
 		}
 	}
 	return [...shortest].sort((a, b) => a[0] - b[0]);
+};
+
+/**
+ * The other side of the same table: each named color that its own hex — or a
+ * shorter name for the same value — beats, as name -> that shorter spelling.
+ * `collectColorNames` already says which value each name carries and which name
+ * wins a value, so this is that pair read back rather than a second list.
+ * @param {[number, string][]} colorNames the packed-value -> shortest-name entries
+ * @returns {[string, string][]} the entries, sorted by name
+ */
+const collectShorterColorSpellings = (colorNames) => {
+	const byValue = new Map(colorNames);
+	const spec = syntaxes["named-color"].syntax
+		.split("|")
+		.map((name) => name.trim());
+	/** @type {[string, string][]} */
+	const out = [];
+	for (const name of spec) {
+		const channels = colorName[name];
+		const [red, green, blue] = channels;
+		const packed = (red << 16) | (green << 8) | blue;
+		// Whichever the minifier would print for this value, hex or a name.
+		const winner = byValue.get(packed) || hex(channels);
+		if (winner.length < name.length) out.push([name, winner]);
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
 
 /**
@@ -2476,6 +2753,15 @@ const collectData = () => {
 	const mathFunctions = collectMathFunctions();
 	const substitutionFunctions = collectSubstitutionFunctions();
 	const nthPseudoFunctions = collectNthPseudoFunctions();
+	const selectorFunctions = collectSelectorFunctions();
+	const colorOnlyProperties = collectColorOnlyProperties();
+	const initialValueKeywords = collectInitialValueKeywords();
+	const repeatStyleProperties = collectRepeatStyleProperties();
+	const repeatStyleKeywords = collectRepeatStyleKeywords();
+	const genericFontFamilies = collectGenericFontFamilies();
+	const displayShortForms = collectDisplayShortForms();
+	const backgroundPositionProperties = collectBackgroundPositionProperties();
+	const shorterColorSpellings = collectShorterColorSpellings(colorNames);
 	const zeroAngleFunctions = collectZeroAngleFunctions();
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
 	const mathFunctionSumArguments = collectMathFunctionSumArguments(
@@ -2617,6 +2903,61 @@ const SUBSTITUTION_FUNCTIONS = ${setLiteral(substitutionFunctions)};
 // The pseudo-class functions whose argument is An+B, where \`2n+1\` is the
 // notation \`odd\` names in one byte less.
 const NTH_PSEUDO_FUNCTIONS = ${setLiteral(nthPseudoFunctions)};
+
+// The properties taking a color and never an identifier of the author's own, so
+// a named color written in one is that color and may be spelled the shortest way.
+const COLOR_ONLY_PROPERTIES = ${setLiteral(colorOnlyProperties)};
+
+// Each two-keyword \`display\` -> the single keyword naming the same box.
+const DISPLAY_SHORT_FORMS = new Map([
+${displayShortForms
+	.map(
+		([pair, short]) => `\t[${JSON.stringify(pair)}, ${JSON.stringify(short)}]`
+	)
+	.join(",\n")}
+]);
+
+// The generic font families: an unquoted one of these names the generic rather
+// than a family called that, so a quoted family spelled like one keeps its quotes.
+const GENERIC_FONT_FAMILIES = ${setLiteral(genericFontFamilies)};
+
+// The properties whose value is a \`<bg-position>\`, where \`center\` is the \`50%\`
+// that axis defaults to.
+const BACKGROUND_POSITION_PROPERTIES = ${setLiteral(backgroundPositionProperties)};
+
+// The keywords one \`<repeat-style>\` axis can be: a pair only collapses where
+// both halves are one of these.
+const REPEAT_STYLE_KEYWORDS = ${setLiteral(repeatStyleKeywords)};
+
+// The properties whose value is a \`<repeat-style>\`, where one value already
+// says what two equal ones do.
+const REPEAT_STYLE_PROPERTIES = ${setLiteral(repeatStyleProperties)};
+
+// Each property whose initial value is a keyword shorter than \`initial\` -> that
+// keyword, which is the same declaration written in fewer bytes.
+const INITIAL_VALUE_KEYWORDS = new Map([
+${initialValueKeywords
+	.map(
+		([name, initial]) =>
+			`\t[${JSON.stringify(name)}, ${JSON.stringify(initial)}]`
+	)
+	.join(",\n")}
+]);
+
+// Each named color a shorter spelling beats -> that spelling, so a name written
+// where a color is unambiguous prints as the shortest text for the same value.
+const COLOR_NAME_TO_SHORTEST = new Map([
+${shorterColorSpellings
+	.map(
+		([name, shortest]) =>
+			`\t[${JSON.stringify(name)}, ${JSON.stringify(shortest)}]`
+	)
+	.join(",\n")}
+]);
+
+// The functions whose argument is a selector, so a \`>\` / \`+\` / \`~\` inside one
+// is a combinator and needs no whitespace around it.
+const SELECTOR_FUNCTIONS = ${setLiteral(selectorFunctions)};
 
 // The functions every argument of which is an angle, so a zero one needs no
 // unit wherever it stands.
@@ -2815,17 +3156,17 @@ module.exports.ANGLE_UNITS = ANGLE_UNITS;
 module.exports.ARC_COSINE_DEGREES = ARC_COSINE_DEGREES;
 module.exports.ARC_SINE_DEGREES = ARC_SINE_DEGREES;
 module.exports.ARC_TANGENT_DEGREES = ARC_TANGENT_DEGREES;
-module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
+module.exports.BACKGROUND_POSITION_PROPERTIES = BACKGROUND_POSITION_PROPERTIES;\nmodule.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
 module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
-module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;
+module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;\nmodule.exports.COLOR_NAME_TO_SHORTEST = COLOR_NAME_TO_SHORTEST;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;
 module.exports.CSS_MODULES_KEYWORD_OPTIONS = CSS_MODULES_KEYWORD_OPTIONS;
 module.exports.CSS_WIDE_KEYWORDS = CSS_WIDE_KEYWORDS;
 module.exports.CUBIC_BEZIER_KEYWORDS = CUBIC_BEZIER_KEYWORDS;
-module.exports.DROPPABLE_WHEN_EMPTY_AT_RULES = DROPPABLE_WHEN_EMPTY_AT_RULES;
+module.exports.DISPLAY_SHORT_FORMS = DISPLAY_SHORT_FORMS;\nmodule.exports.DROPPABLE_WHEN_EMPTY_AT_RULES = DROPPABLE_WHEN_EMPTY_AT_RULES;
 module.exports.EIGHTH_TURN_COSINE = EIGHTH_TURN_COSINE;
 module.exports.EIGHTH_TURN_SINE = EIGHTH_TURN_SINE;
 module.exports.EIGHTH_TURN_TANGENT = EIGHTH_TURN_TANGENT;
@@ -2834,7 +3175,7 @@ module.exports.FAMILY_SLOT_CLASSES = FAMILY_SLOT_CLASSES;
 module.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;
 module.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
-module.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
+module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
 module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.LENGTH_ONLY_FUNCTIONS = LENGTH_ONLY_FUNCTIONS;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
@@ -2847,8 +3188,8 @@ module.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
-module.exports.RGB_TO_NAME = RGB_TO_NAME;
-module.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
+module.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
+module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;

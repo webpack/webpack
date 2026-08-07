@@ -2,7 +2,7 @@
 
 exports[`ConfigCacheTestCases css minimize-lightningcss-values minimize-lightningcss-values should compile 1`] = `
 Array [
-  "/*! test_color: .foo { color: yellow } */.foo{color:yellow}",
+  "/*! test_color: .foo { color: yellow } */.foo{color:#ff0}",
   "/*! test_color: .foo { color: rgb(255, 255, 0) } */.foo{color:#ff0}",
   "/*! test_color: .foo { color: rgba(255, 255, 0, 1) } */.foo{color:#ff0}",
   "/*! test_color: .foo { color: rgba(255, 255, 0, 0.8) } */.foo{color:#ff0c}",
