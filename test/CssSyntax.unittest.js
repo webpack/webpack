@@ -2214,31 +2214,25 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
-	describe("a shadow's trailing zero lengths", () => {
+	describe("a filter function's omitted argument", () => {
 		it.each([
-			[
-				"a{box-shadow:0 0 0 0 #22242626 inset}",
-				"a{box-shadow:0 0#22242626 inset}"
-			],
-			["a{box-shadow:-1px 0 0 0 #bababc}", "a{box-shadow:-1px 0#bababc}"],
-			["a{box-shadow:inset 0 0 0 0 red}", "a{box-shadow:inset 0 0 red}"],
-			["a{box-shadow:1px 2px 3px 0 red}", "a{box-shadow:1px 2px 3px red}"],
-			["a{text-shadow:1px 1px 0 red}", "a{text-shadow:1px 1px red}"],
-			[
-				"a{box-shadow:0 0 0 0 red,1px 1px 0 0 blue}",
-				"a{box-shadow:0 0 red,1px 1px blue}"
-			]
+			["a{filter:grayscale(1)}", "a{filter:grayscale()}"],
+			["a{filter:grayscale(100%)}", "a{filter:grayscale()}"],
+			["a{filter:invert(1)}", "a{filter:invert()}"],
+			["a{filter:blur(0)}", "a{filter:blur()}"],
+			["a{backdrop-filter:saturate(1)}", "a{backdrop-filter:saturate()}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
 
 		it.each([
-			// The two offsets are what the grammar makes mandatory.
-			["the two offsets are all there is", "a{box-shadow:0 0 red}"],
-			["a length past them is not zero", "a{box-shadow:0 0 0 1px red}"],
-			["the value is a keyword", "a{box-shadow:none}"],
-			["the property states no shadow", "a{stroke-dasharray:1 0 0}"],
-			["a layer holds a string", 'a{box-shadow:0 0 0 0 red,"a"}']
+			["the amount is not the omitted one", "a{filter:grayscale(0)}"],
+			["the same, as a percentage", "a{filter:grayscale(50%)}"],
+			[
+				"the function takes no omittable argument",
+				"a{filter:drop-shadow(0 0 1px red)}"
+			],
+			["a substitution stands there", "a{filter:grayscale(var(--x))}"]
 		])("keeps the value where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
@@ -2260,7 +2254,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{-webkit-transform:translateY(-14px) scale(.8)}",
 				"a{-webkit-transform:translateY(-14px)scale(.8)}"
 			],
-			["a{filter:brightness(0) invert(1)}", "a{filter:brightness(0)invert(1)}"],
+			["a{filter:brightness(0) invert(1)}", "a{filter:brightness(0)invert()}"],
 			[
 				"a{-webkit-filter:blur(2px) saturate(2)}",
 				"a{-webkit-filter:blur(2px)saturate(2)}"

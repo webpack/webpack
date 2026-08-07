@@ -1216,33 +1216,36 @@ const collectPositionProperties = () => {
 	return out.sort();
 };
 
-// A shadow states its offsets as `<length>{MIN,MAX}`; MIN of them are the two
-// offsets every shadow needs.
-const SHADOW_LENGTHS_REGEXP = /<length>\{(\d+),(\d+)\}/;
-
 /**
- * Each property whose value is a list of shadows -> how many lengths a shadow
- * cannot go below. The grammar states the range itself (`<length>{2,4}` on
- * `box-shadow`, `{2,3}` on `text-shadow`), so a trailing zero past the minimum
- * is a value the notation already implies.
- * @returns {[string, number][]} the entries, sorted by property
+ * Each `<filter-function>` whose argument the grammar marks optional -> the
+ * amount an omitted one means, so writing that amount says nothing. The set is
+ * read off `<filter-function>`; only the amounts are stated.
+ * @returns {[string, string][]} the entries, sorted by function
  */
-const collectShadowProperties = () => {
-	/** @type {[string, number][]} */
+const collectFilterFunctionOmitted = () => {
+	const list = definitions.get("filter-function");
+	if (list === undefined) {
+		throw new Error("`<filter-function>` is gone from mdn-data");
+	}
+	const stated = new Map(SUPPLEMENT.filterFunctionOmitted);
+	/** @type {[string, string][]} */
 	const out = [];
-	for (const [name, entry] of Object.entries(properties)) {
-		if (typeof entry.syntax !== "string") continue;
-		let minimum = null;
-		for (const raw of references(entry.syntax)) {
-			const definition = definitions.get(raw);
-			if (definition === undefined) continue;
-			const range = SHADOW_LENGTHS_REGEXP.exec(definition);
-			if (range === null) continue;
-			// Two productions naming different ranges is no single shadow shape.
-			if (minimum !== null && minimum !== Number(range[1])) return [];
-			minimum = Number(range[1]);
+	for (const raw of references(list)) {
+		const definition = definitions.get(raw);
+		if (definition === undefined) continue;
+		const name = raw.slice(0, -2);
+		// A `?` before the closing paren is what makes the argument omittable.
+		if (!/\?\s*\)\s*$/.test(definition)) continue;
+		const omitted = stated.get(name);
+		if (omitted === undefined) {
+			throw new Error(`\`${name}()\` gained an omittable argument`);
 		}
-		if (minimum !== null) out.push([name, minimum]);
+		out.push([name, omitted]);
+	}
+	for (const [name] of stated) {
+		if (!out.some(([one]) => one === name)) {
+			throw new Error(`\`${name}()\` no longer takes an omittable argument`);
+		}
 	}
 	return out.sort(([a], [b]) => (a < b ? -1 : 1));
 };
@@ -2227,13 +2230,6 @@ const mapLiteral = (entries) =>
 	`new Map([${entries.map(([key, value]) => `["${key}", "${value}"]`).join(", ")}])`;
 
 /**
- * @param {[string, number][]} entries string-keyed, number-valued pairs
- * @returns {string} the `Map` literal
- */
-const countMapLiteral = (entries) =>
-	`new Map([${entries.map(([key, value]) => `["${key}", ${value}]`).join(", ")}])`;
-
-/**
  * @param {[number, number][]} entries number-keyed pairs
  * @returns {string} the `Map` literal
  */
@@ -2258,7 +2254,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -2286,6 +2282,19 @@ const SUPPLEMENT = {
 	fontWeightNumbers: [
 		["normal", "400"],
 		["bold", "700"]
+	],
+	// Filter Effects 1 states, per function's prose, the amount an omitted
+	// argument means; the grammar only marks the argument optional.
+	filterFunctionOmitted: [
+		["blur", "0"],
+		["brightness", "1"],
+		["contrast", "1"],
+		["grayscale", "1"],
+		["hue-rotate", "0"],
+		["invert", "1"],
+		["opacity", "1"],
+		["saturate", "1"],
+		["sepia", "1"]
 	],
 	// CSS Fonts 4 §4.5 gives each width keyword as that percentage, in a prose
 	// table; the grammar names the keywords beside a `<percentage>` without
@@ -3136,8 +3145,8 @@ const collectData = () => {
 	].sort();
 	const [positionXKeywords, positionYKeywords] = collectPositionKeywordAxes();
 	const shorthandInitialKeywords = collectShorthandInitialKeywords();
-	const shadowProperties = collectShadowProperties();
 	const fontStretchPercentages = collectFontStretchPercentages();
+	const filterFunctionOmitted = collectFilterFunctionOmitted();
 	const shorterColorSpellings = collectShorterColorSpellings(colorNames);
 	const zeroAngleFunctions = collectZeroAngleFunctions();
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
@@ -3298,10 +3307,6 @@ ${displayShortForms
 // spelling its own slot takes: the slot's keywords, and each function it
 // accepts written \`name()\`. A sibling out of that set means the value fills the
 // slot twice, which is a declaration the engine drops.
-// Each property whose value is a list of shadows -> the count of lengths a
-// shadow cannot go below, past which a trailing zero is already implied.
-const SHADOW_PROPERTIES = ${countMapLiteral(shadowProperties)};
-
 const SHORTHAND_INITIAL_KEYWORDS = new Map([
 ${shorthandInitialKeywords
 	.map(
@@ -3319,6 +3324,10 @@ ${shorthandInitialKeywords
 // Each \`font-stretch\` keyword -> the percentage it names, which is the same
 // value in fewer bytes.
 const FONT_STRETCH_PERCENTAGES = ${mapLiteral(fontStretchPercentages)};
+
+// Each \`<filter-function>\` with an omittable argument -> the amount an omitted
+// one means, which is what writing that amount already says.
+const FILTER_FUNCTION_OMITTED = ${mapLiteral(filterFunctionOmitted)};
 
 // The generic font families: an unquoted one of these names the generic rather
 // than a family called that, so a quoted family spelled like one keeps its quotes.
@@ -3597,7 +3606,7 @@ module.exports.EIGHTH_TURN_TANGENT = EIGHTH_TURN_TANGENT;
 module.exports.FAMILY_LONGHANDS = FAMILY_LONGHANDS;
 module.exports.FAMILY_SLOT_CLASSES = FAMILY_SLOT_CLASSES;
 module.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;
-module.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;\nmodule.exports.FONT_STRETCH_PERCENTAGES = FONT_STRETCH_PERCENTAGES;
+module.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;\nmodule.exports.FILTER_FUNCTION_OMITTED = FILTER_FUNCTION_OMITTED;\nmodule.exports.FONT_STRETCH_PERCENTAGES = FONT_STRETCH_PERCENTAGES;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
 module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
 module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
@@ -3613,7 +3622,7 @@ module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
-module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
+module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
