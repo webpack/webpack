@@ -19,10 +19,9 @@ const prepareOptions = require("./helpers/prepareOptions");
 /** @typedef {import("..").Configuration} Configuration */
 /** @typedef {import("..").MultiCompiler} MultiCompiler */
 /** @typedef {import("..").MultiStats} MultiStats */
-/** @typedef {import("..").RuntimeModule} RuntimeModule */
 /** @typedef {import("..").Stats} Stats */
 
-/** @typedef {"runtime" | "raw" | "gzip" | "brotli" | "zstd"} Metric */
+/** @typedef {"raw" | "gzip" | "brotli" | "zstd"} Metric */
 /** @typedef {Record<Metric, number>} Metrics */
 
 /**
@@ -40,31 +39,7 @@ const prepareOptions = require("./helpers/prepareOptions");
  * @property {number} version report format version
  * @property {{ commit?: string, node: string, cases: number, assets: number, withoutOutput: number }} meta run metadata
  * @property {Metrics} totals summed over every case
- * @property {Record<string, RuntimeModuleTotals>} runtimeModules per runtime module, over every case
  * @property {Record<string, CaseResult>} cases result per `<category>/<case>`
- */
-
-/**
- * @typedef {object} RuntimeModuleSize
- * @property {number} bytes source bytes, summed when a case has several compilers
- * @property {number} largest source bytes of the biggest single emitted instance
- */
-
-/**
- * What a single runtime module costs across the whole suite — the view that
- * answers "which runtime grew", "what is the biggest thing we emit" and "is
- * this still emitted at all".
- * @typedef {object} RuntimeModuleTotals
- * @property {number} bytes source bytes summed over every case emitting it
- * @property {number} cases number of cases emitting it
- * @property {number} largest source bytes of the biggest single emitted instance
- */
-
-/**
- *
- * What `measureCase` hands back: a `CaseResult` plus the per-runtime-module
- * sizes, which are aggregated over the suite and not kept per case.
- * @typedef {CaseResult & { runtimeModules: Record<string, RuntimeModuleSize> }} MeasuredCase
  */
 
 /**
@@ -89,7 +64,7 @@ const outputBaseDir = path.join(__dirname, "js", "size");
 
 // Bumped whenever a compression setting or the report shape changes, so a stale
 // baseline is reported as incomparable instead of compared against silently.
-const REPORT_VERSION = 2;
+const REPORT_VERSION = 3;
 
 // The settings a CDN serves static assets with, so a delta here is a delta a
 // user downloads.
@@ -98,11 +73,11 @@ const BROTLI_QUALITY = 11;
 const ZSTD_LEVEL = 19;
 
 /**
- * `runtime` is the source webpack itself generates into the bundles (runtime
- * modules, uncompressed); the rest is what the emitted assets weigh on the wire.
+ * What the emitted assets weigh: raw is what the generator wrote, the rest is
+ * what a user downloads.
  * @type {Metric[]}
  */
-const METRICS = ["runtime", "raw", "gzip", "brotli", "zstd"];
+const METRICS = ["raw", "gzip", "brotli", "zstd"];
 
 /**
  * What an asset weighs once encoded — reported next to its raw size, since a
@@ -113,7 +88,6 @@ const COMPRESSED = ["gzip", "brotli", "zstd"];
 
 /** @type {Record<Metric, string>} */
 const METRIC_LABELS = {
-	runtime: "Runtime modules",
 	raw: "Raw",
 	gzip: `Gzip (${GZIP_LEVEL})`,
 	brotli: `Brotli (${BROTLI_QUALITY})`,
@@ -167,7 +141,6 @@ const normalizeAssetName = (name, info) => {
  * @returns {Metrics} zeroed metrics
  */
 const createMetrics = () => ({
-	runtime: 0,
 	raw: 0,
 	gzip: 0,
 	brotli: 0,
@@ -189,7 +162,6 @@ const addMetrics = (target, source) => {
  * @returns {Metrics} metrics of one asset
  */
 const measureAsset = (content) => ({
-	runtime: 0,
 	raw: content.length,
 	gzip: zlib.gzipSync(content, { level: GZIP_LEVEL }).length,
 	brotli: zlib.brotliCompressSync(content, {
@@ -257,37 +229,6 @@ const applyDefaults = (options, index, testDirectory, outputDirectory) => {
 };
 
 /**
- * @param {Compilation[]} compilations compilations
- * @returns {Record<string, RuntimeModuleSize>} per runtime module webpack generated
- */
-const measureRuntimeModules = (compilations) => {
-	/** @type {Record<string, RuntimeModuleSize>} */
-	const sizes = {};
-	for (const compilation of compilations) {
-		const { chunkGraph } = compilation;
-		/** @type {Set<RuntimeModule>} */
-		const seen = new Set();
-		for (const chunk of compilation.chunks) {
-			for (const module of chunkGraph.getChunkRuntimeModulesIterable(chunk)) {
-				// A runtime module can be attached to several chunks; count it once.
-				if (seen.has(module)) continue;
-				seen.add(module);
-				const name = module.name || module.identifier();
-				const size = module.size();
-				const entry = sizes[name];
-				if (entry) {
-					entry.bytes += size;
-					entry.largest = Math.max(entry.largest, size);
-				} else {
-					sizes[name] = { bytes: size, largest: size };
-				}
-			}
-		}
-	}
-	return sizes;
-};
-
-/**
  * @param {Compiler | MultiCompiler} compiler compiler to close
  * @returns {Promise<void>} resolves once closed, errors ignored
  */
@@ -301,7 +242,7 @@ const closeCompiler = (compiler) =>
 /**
  * Builds one config case and measures every asset it generated.
  * @param {Case} testCase case to measure
- * @returns {Promise<MeasuredCase>} measured metrics
+ * @returns {Promise<CaseResult>} measured metrics
  */
 const measureCase = async ({ category, name }) => {
 	const testDirectory = path.join(casesPath, category, name);
@@ -318,12 +259,10 @@ const measureCase = async ({ category, name }) => {
 	// Restored after the build so a case is measured as if built on its own.
 	const hashFunction = DEFAULTS.HASH_FUNCTION;
 
-	/** @type {MeasuredCase} */
+	/** @type {CaseResult} */
 	const result = {
 		metrics: createMetrics(),
 		assets: {},
-		/** @type {Record<string, RuntimeModuleSize>} */
-		runtimeModules: {},
 		errors: 0
 	};
 
@@ -357,8 +296,7 @@ const measureCase = async ({ category, name }) => {
 	/** @type {Compiler | MultiCompiler | undefined} */
 	let compiler;
 	// `emit` does not run for a compilation whose errors stopped it (production
-	// defaults `optimization.emitOnErrors` to false), and runtime modules it
-	// generated never reached an asset — they are not bytes anyone ships.
+	// defaults `optimization.emitOnErrors` to false), so it ships no bytes.
 	/** @type {Set<Compilation>} */
 	const emitted = new Set();
 	try {
@@ -419,19 +357,12 @@ const measureCase = async ({ category, name }) => {
 		for (const compilation of compilations) {
 			result.errors += compilation.errors.length;
 		}
-		result.runtimeModules = measureRuntimeModules(
-			compilations.filter((compilation) => emitted.has(compilation))
-		);
-		for (const { bytes } of Object.values(result.runtimeModules)) {
-			result.metrics.runtime += bytes;
-		}
 		if (emitted.size === 0) {
 			result.noOutput = `build: ${result.errors} error(s), nothing emitted`;
 		}
 	} catch (err) {
 		result.noOutput = `build: ${/** @type {Error} */ (err).message}`;
 		result.assets = {};
-		result.runtimeModules = {};
 		result.metrics = createMetrics();
 	} finally {
 		DEFAULTS.HASH_FUNCTION = hashFunction;
@@ -588,74 +519,13 @@ const assetMetrics = (report) => {
 };
 
 /**
- * The per-runtime-module view: what changed in the runtime, what the biggest
- * things we emit are, and what stopped being emitted at all.
- * @param {Report} report current report
- * @param {Report=} baseline baseline report
- * @returns {string[]} markdown lines
+ * Growth is red, a shrink green. No arrow emoji carries a color, so the disc
+ * says which way it went and the arrow says it in shape too.
+ * @param {number} delta byte delta
+ * @returns {string} marker for that direction
  */
-const formatRuntimeModules = (report, baseline) => {
-	const names = Object.keys(
-		baseline
-			? { ...baseline.runtimeModules, ...report.runtimeModules }
-			: report.runtimeModules
-	);
-	/** @type {RuntimeModuleTotals} */
-	const none = { bytes: 0, cases: 0, largest: 0 };
-	const rows = names
-		.map((name) => {
-			const now = report.runtimeModules[name] || none;
-			const before = baseline
-				? baseline.runtimeModules[name] || none
-				: undefined;
-			return { name, now, delta: before ? now.bytes - before.bytes : 0 };
-		})
-		.filter((row) => (baseline ? row.delta !== 0 : true))
-		.sort((a, b) =>
-			baseline
-				? Math.abs(b.delta) - Math.abs(a.delta)
-				: b.now.bytes - a.now.bytes
-		);
-
-	if (rows.length === 0) return ["No runtime module changed size.", ""];
-
-	/** @type {string[]} */
-	const lines = [
-		`<details><summary>${rows.length} runtime module(s) ${
-			baseline ? "changed size" : "emitted"
-		}${
-			rows.length > MAX_ROWS
-				? `, biggest ${MAX_ROWS} by ${baseline ? "change" : "total"}`
-				: ""
-		}</summary>`,
-		"",
-		`| Runtime module | Total${
-			baseline ? " | Change" : ""
-		} | In cases | Biggest emitted |`,
-		`| :-- | --: |${baseline ? " --: |" : ""} --: | --: |`
-	];
-	for (const { name, now, delta } of rows.slice(0, MAX_ROWS)) {
-		// `cases: 0` means the baseline emitted it and this run does not — dead
-		// runtime, or a case that stopped emitting.
-		lines.push(
-			`| \`${name}\` | ${formatBytes(now.bytes)}${
-				baseline ? ` | ${delta > 0 ? "🔺 +" : "🔻 "}${formatBytes(delta)}` : ""
-			} | ${now.cases}${now.cases === 0 ? " (gone)" : ""} | ${formatBytes(
-				now.largest
-			)} |`
-		);
-	}
-	if (rows.length > MAX_ROWS) {
-		lines.push(
-			`| … ${rows.length - MAX_ROWS} more, see the uploaded report |${
-				baseline ? " |" : ""
-			} | | |`
-		);
-	}
-	lines.push("", "</details>", "");
-
-	return lines;
-};
+const changeMarker = (delta) =>
+	delta > 0 ? "🔴 ↑" : delta < 0 ? "🟢 ↓" : "🔀";
 
 /**
  * With no baseline there is nothing to diff, so rank what the suite emits —
@@ -730,7 +600,6 @@ const formatMarkdown = (report, baseline) => {
 			"",
 			"No baseline report was found for `main`, so there is nothing to compare against yet.",
 			"",
-			...formatRuntimeModules(report),
 			...formatBiggestAssets(report)
 		);
 		return `${lines.join("\n")}\n`;
@@ -746,15 +615,6 @@ const formatMarkdown = (report, baseline) => {
 				sameMetrics
 			),
 			change: sumDelta(caseMetrics(baseline), caseMetrics(report), "raw")
-		},
-		{
-			label: "Runtime modules",
-			counts: countChanges(
-				baseline.runtimeModules,
-				report.runtimeModules,
-				(a, b) => a.bytes === b.bytes
-			),
-			change: sumDelta(baseline.runtimeModules, report.runtimeModules, "bytes")
 		},
 		{
 			label: "Assets",
@@ -788,7 +648,9 @@ const formatMarkdown = (report, baseline) => {
 			} | ${
 				change === 0
 					? "—"
-					: `${change > 0 ? "🔺 +" : "🔻 "}${formatBytes(change)}`
+					: `${changeMarker(change)} ${change > 0 ? "+" : ""}${formatBytes(
+							change
+						)}`
 			} |`
 		);
 	}
@@ -820,11 +682,7 @@ const formatMarkdown = (report, baseline) => {
 					? "➕"
 					: change.status === "removed"
 						? "➖"
-						: direction > 0
-							? "🔺"
-							: direction < 0
-								? "🔻"
-								: "🔀";
+						: changeMarker(direction);
 			const compressed = COMPRESSED.map((metric) =>
 				formatPercent(change.before[metric], change.after[metric])
 			).join(" | ");
@@ -872,7 +730,7 @@ const formatMarkdown = (report, baseline) => {
 		);
 	}
 
-	lines.push(...formatRuntimeModules(report, baseline), built);
+	lines.push(built);
 
 	return `${lines.join("\n")}\n`;
 };
@@ -993,24 +851,9 @@ const run = async () => {
 	// `1-use-*` case still consumes what its `0-create-*` sibling wrote, and a
 	// worker pool was measured to be worth about a third of the wall clock — not
 	// enough to buy the machinery.
-	/** @type {Record<string, RuntimeModuleTotals>} */
-	const runtimeModules = {};
-
 	for (const [index, testCase] of cases.entries()) {
 		try {
-			const { runtimeModules: perCase, ...result } =
-				await measureCase(testCase);
-			results[testCase.id] = result;
-			for (const [name, { bytes, largest }] of Object.entries(perCase)) {
-				const totals = runtimeModules[name];
-				if (totals) {
-					totals.bytes += bytes;
-					totals.cases++;
-					totals.largest = Math.max(totals.largest, largest);
-				} else {
-					runtimeModules[name] = { bytes, cases: 1, largest };
-				}
-			}
+			results[testCase.id] = await measureCase(testCase);
 		} catch (err) {
 			results[testCase.id] = {
 				metrics: createMetrics(),
@@ -1051,9 +894,6 @@ const run = async () => {
 			withoutOutput
 		},
 		totals,
-		runtimeModules: Object.fromEntries(
-			Object.entries(runtimeModules).sort((a, b) => b[1].bytes - a[1].bytes)
-		),
 		cases: sorted
 	};
 
