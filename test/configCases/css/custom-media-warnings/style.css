@@ -41,6 +41,30 @@
 	}
 }
 
+/* A reference inside a compound value has no resolution step of its own, so the
+   whole value is left alone rather than written out with the reference in it. */
+@custom-media --compound (--defined) and (min-width: 1px);
+@custom-media --negated not (--defined);
+@custom-media --segment (min-width: 1px), not (--defined);
+
+@media (--compound) {
+	.g {
+		color: red;
+	}
+}
+
+@media (--negated) {
+	.h {
+		color: red;
+	}
+}
+
+@media (--segment) {
+	.i {
+		color: red;
+	}
+}
+
 /* Malformed at-rules are simply dropped (no name / no colon / empty list). */
 @custom-media (max-width: 1px);
 @custom-selector heading h1, h2;

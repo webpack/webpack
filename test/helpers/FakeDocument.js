@@ -279,7 +279,13 @@ class FakeElement {
 		this._innerHTML =
 			value === undefined || value === null ? "" : String(value);
 		// Kept verbatim above (tests read the raw string back), and parsed into
-		// children here — the HMR head reconciliation walks them.
+		// children here — the HMR head reconciliation walks them. Parsing alone
+		// registers nothing document-wide: a container built by `createElement` is
+		// detached, so `getElementsByTagName` must not start finding what is in it.
+		for (const child of this._children) {
+			this._document._onElementRemoved(child);
+			child.parentNode = undefined;
+		}
 		this._children = [];
 		for (const { tag, attributes, text } of parseFragment(this._innerHTML)) {
 			const element = this._document.createElement(tag);
@@ -287,7 +293,8 @@ class FakeElement {
 				element.setAttribute(name, value);
 			}
 			element.textContent = text;
-			this._attach(element);
+			element.parentNode = this;
+			this._children.push(element);
 		}
 	}
 
@@ -350,10 +357,18 @@ class FakeElement {
 
 	/**
 	 * @param {FakeElement} node node to insert
+	 * @param {FakeElement=} reference child to insert before (appends without one)
 	 * @returns {void}
 	 */
-	insertBefore(node) {
-		this._attach(node);
+	insertBefore(node, reference) {
+		const index = reference ? this._children.indexOf(reference) : -1;
+		if (index === -1) {
+			this._attach(node);
+		} else {
+			this._document._onElementAttached(node);
+			this._children.splice(index, 0, node);
+			node.parentNode = this;
+		}
 		this._load(node);
 	}
 

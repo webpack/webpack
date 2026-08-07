@@ -9,5 +9,8 @@ module.exports = [
 	],
 	[
 		/Custom media query '--parenthesised-type' has a value that cannot be resolved/
-	]
+	],
+	[/Custom media query '--compound' has a value that cannot be resolved/],
+	[/Custom media query '--negated' has a value that cannot be resolved/],
+	[/Custom media query '--segment' has a value that cannot be resolved/]
 ];
