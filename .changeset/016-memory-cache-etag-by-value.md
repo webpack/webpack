@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Compare memory-cache etags by value, so a re-emitted asset still hits the persistent cache.
+Let a memory-cache etag mismatch fall through to the file cache instead of reporting a miss.
