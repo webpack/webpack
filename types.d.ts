@@ -5962,7 +5962,7 @@ declare interface CssProcessOptions {
 	convertLengthUnits?: boolean;
 
 	/**
-	 * walk and recycle a block's children as each finishes, so peak storage is the open path rather than the whole block (default false). Walk-only, and it changes what a streamed rule reports about its own block: the children reach the visitors instead of the body, so `A.declarations` / `A.childRules` read as an empty block, and they reach the visitors in source order rather than every declaration before every child rule. Each child still carries the sibling index the collected walk gives it, and a block too small to be worth streaming is walked collected
+	 * walk, print and recycle a block's children as each finishes, so peak storage is the open path rather than the whole block (default false). Printing streams too — the rule's `prelude{` goes out when the block opens and each child straight after it — and the output is byte for byte the one the collected printer produces. It changes what a streamed rule reports about its own block: the children reach the visitors instead of the body, so `A.declarations` / `A.childRules` read as an empty block, and they reach the visitors in source order rather than every declaration before every child rule. Each child still carries the sibling index the collected walk gives it, and a block too small to be worth streaming is walked collected
 	 */
 	streamBlocks?: boolean;
 }
@@ -21578,11 +21578,59 @@ declare class PrintContext<TPath, TNode> {
 	options: PrintOptions;
 
 	/**
+	 * Hold `text` back as the opener of a node being printed in pieces. Nothing
+	 * reaches the output until {@link flushPending}, so {@link dropPending} can
+	 * still take it back if the node turns out to be empty.
+	 */
+	pushPending(text: string): number;
+
+	/**
+	 * Emit every held-back opener, outermost first — something inside the
+	 * innermost one has content, so all of them do.
+	 */
+	flushPending(): void;
+
+	/**
+	 * Anchor the outermost held-back opener, applied when it is flushed. Openers
+	 * are flushed together, so only the outermost carries one.
+	 */
+	anchorPending(srcOffset?: number, srcLine?: number, srcCol?: number): void;
+	isPending(depth: number): boolean;
+
+	/**
+	 * Drop the innermost held-back opener — its node printed to nothing.
+	 */
+	dropPending(): void;
+	get mark(): number;
+
+	/**
+	 * Forget every node's printed text. A node printed in pieces does this once
+	 * each child is emitted, so the store never holds more than one of them —
+	 * which is also what keeps a recycled node id from reading as an earlier
+	 * node's text.
+	 */
+	dropStore(): void;
+
+	/**
+	 * Drop trailing `charCode`s from the end of the output at or after `from` —
+	 * the separator the piece before a terminator no longer needs. Walks back over
+	 * pieces emptied by {@link retract}, so it sees what the output reads as.
+	 */
+	dropTrailing(from: number, charCode: number): void;
+
+	/**
 	 * Run the node printer for `node` and store what it returns (the grammar calls
 	 * this once the node's visitors and children are done). `path` is on `node`.
 	 */
 	printNode(node: TNode, path: TPath): void;
 	get(node: TNode): string;
+
+	/**
+	 * Take back an already-emitted piece — the printer has since found that a
+	 * later one overrides it. Pieces after it keep their place, so this must not
+	 * be used on a piece something was anchored to (see {@link take}).
+	 */
+	retract(index: number): void;
 
 	/**
 	 * Emit one finished top-level node: first any kept comments that precede it,
@@ -21598,6 +21646,14 @@ declare class PrintContext<TPath, TNode> {
 		srcLine?: number,
 		srcCol?: number
 	): void;
+
+	/**
+	 * Tie whatever is emitted next to a source position: flush the kept comments
+	 * that precede it, then record the mapping. Split out of {@link take} for a
+	 * node printed in pieces, whose first piece is emitted well after the printer
+	 * for it began.
+	 */
+	anchor(srcOffset?: number, srcLine?: number, srcCol?: number): void;
 
 	/**
 	 * Queue a literal to carry through to the output at source offset `pos` — a
