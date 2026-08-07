@@ -15,6 +15,8 @@ permissions:
   contents: read
   # Reading the baseline report from the run that produced it on `main`.
   actions: read
+  # Posting the report as a pull request comment.
+  pull-requests: write
 
 jobs:
   code-size:
@@ -71,16 +73,50 @@ jobs:
           run-id: ${{ steps.baseline.outputs.run-id }}
           github-token: ${{ github.token }}
 
-      # `--summary` writes the comparison table to the job summary, so the size
-      # delta of a change is one click away from the PR's checks.
       - name: Measure generated code size
-        run: >
-          yarn test:size
-          --output code-size-report.json
-          --baseline baseline/code-size-report.json
-          --summary "$GITHUB_STEP_SUMMARY"
+        run: |
+          yarn test:size \
+            --output code-size-report.json \
+            --baseline baseline/code-size-report.json \
+            --summary code-size-report.md
+          cat code-size-report.md >> "$GITHUB_STEP_SUMMARY"
         env:
           CODE_SIZE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      # On the pull request itself, not only in the job summary — a size change
+      # nobody clicks through to see is a size change nobody sees. Updated in
+      # place on every push, so the thread keeps one comment. Skipped for forks,
+      # whose token cannot comment (the job summary still has the report).
+      - name: Comment the report on the pull request
+        if: >
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const body = require("fs").readFileSync("code-size-report.md", "utf8");
+            const marker = "<!-- code-size-report -->";
+            const { data: comments } = await github.rest.issues.listComments({
+              ...context.repo,
+              issue_number: context.issue.number,
+              per_page: 100
+            });
+            const previous = comments.find((comment) =>
+              comment.body.startsWith(marker)
+            );
+            if (previous) {
+              await github.rest.issues.updateComment({
+                ...context.repo,
+                comment_id: previous.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            }
 
       # Uploaded from `main` too — that upload is the next run's baseline.
       - name: Upload the report

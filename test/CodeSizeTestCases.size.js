@@ -111,6 +111,9 @@ const METRIC_LABELS = {
 	zstd: `Zstd (level ${ZSTD_LEVEL})`
 };
 
+// The workflow greps its own pull request comment by this, so it must not change.
+const COMMENT_MARKER = "<!-- code-size-report -->";
+
 const MAX_CASE_ROWS = 40;
 const MAX_ASSET_ROWS = 5;
 
@@ -467,18 +470,6 @@ const compareReports = (baseline, current) => {
 		);
 	};
 
-	/**
-	 * @param {Report} report report
-	 * @returns {Record<string, Metrics>} metrics per case
-	 */
-	const caseMetrics = (report) =>
-		Object.fromEntries(
-			Object.entries(report.cases).map(([name, result]) => [
-				name,
-				result.metrics
-			])
-		);
-
 	const changes = compare(caseMetrics(baseline), caseMetrics(current));
 	for (const change of changes) {
 		const before = baseline.cases[change.name];
@@ -492,6 +483,59 @@ const compareReports = (baseline, current) => {
 };
 
 const MAX_RUNTIME_ROWS = 25;
+
+/**
+ * Counts how an entry set moved between two runs — the "N changed, N new, N
+ * deleted, N unchanged" line, which says at a glance whether a change touched
+ * one case or all of them.
+ * @template T
+ * @param {Record<string, T>} before baseline entries
+ * @param {Record<string, T>} after current entries
+ * @param {(a: T, b: T) => boolean} equals value comparison
+ * @returns {{ changed: number, added: number, removed: number, unchanged: number }} counts
+ */
+const countChanges = (before, after, equals) => {
+	const counts = { changed: 0, added: 0, removed: 0, unchanged: 0 };
+	for (const name of new Set([...Object.keys(before), ...Object.keys(after)])) {
+		if (!(name in before)) counts.added++;
+		else if (!(name in after)) counts.removed++;
+		else if (equals(before[name], after[name])) counts.unchanged++;
+		else counts.changed++;
+	}
+	return counts;
+};
+
+/**
+ * @param {Metrics} a metrics
+ * @param {Metrics} b metrics
+ * @returns {boolean} true when every metric matches
+ */
+const sameMetrics = (a, b) =>
+	METRICS.every((metric) => a[metric] === b[metric]);
+
+/**
+ * @param {Report} report report
+ * @returns {Record<string, Metrics>} metrics per case
+ */
+const caseMetrics = (report) =>
+	Object.fromEntries(
+		Object.entries(report.cases).map(([name, result]) => [name, result.metrics])
+	);
+
+/**
+ * @param {Report} report report
+ * @returns {Record<string, Metrics>} metrics per `<case> <asset>`
+ */
+const assetMetrics = (report) => {
+	/** @type {Record<string, Metrics>} */
+	const assets = {};
+	for (const [name, result] of Object.entries(report.cases)) {
+		for (const [asset, metrics] of Object.entries(result.assets)) {
+			assets[`${name} ${asset}`] = metrics;
+		}
+	}
+	return assets;
+};
 
 /**
  * The per-runtime-module view: what changed in the runtime, what the biggest
@@ -557,14 +601,22 @@ const formatRuntimeModules = (report, baseline) => {
 const formatMarkdown = (report, baseline) => {
 	/** @type {string[]} */
 	const lines = [
+		// Lets the workflow find its own comment and update it in place instead of
+		// posting a new one on every push.
+		COMMENT_MARKER,
 		"## Generated code size",
-		"",
-		`Built \`test/configCases\` with the defaults a user gets: ${report.meta.cases} case(s), ${report.meta.assets} asset(s)${report.meta.withoutOutput > 0 ? `, ${report.meta.withoutOutput} emitted nothing` : ""}.`,
 		""
 	];
 
 	if (!baseline) {
-		lines.push("| Metric | Total |", "| :-- | --: |");
+		lines.push(
+			`Built \`test/configCases\` with the defaults a user gets: ${report.meta.cases} case(s), ${report.meta.assets} asset(s)${report.meta.withoutOutput > 0 ? `, ${report.meta.withoutOutput} emitted nothing` : ""}.`,
+			"",
+			"No baseline report was found for `main`, so there is nothing to compare against yet.",
+			"",
+			"| Metric | Total |",
+			"| :-- | --: |"
+		);
 		for (const metric of METRICS) {
 			lines.push(
 				`| ${METRIC_LABELS[metric]} | ${formatBytes(report.totals[metric])} |`
@@ -573,6 +625,40 @@ const formatMarkdown = (report, baseline) => {
 		lines.push("", ...formatRuntimeModules(report));
 		return `${lines.join("\n")}\n`;
 	}
+
+	const counts = {
+		Cases: countChanges(
+			caseMetrics(baseline),
+			caseMetrics(report),
+			sameMetrics
+		),
+		"Runtime modules": countChanges(
+			baseline.runtimeModules,
+			report.runtimeModules,
+			(a, b) => a.bytes === b.bytes
+		),
+		Assets: countChanges(
+			assetMetrics(baseline),
+			assetMetrics(report),
+			sameMetrics
+		)
+	};
+	const moved = METRICS.some(
+		(metric) => report.totals[metric] !== baseline.totals[metric]
+	);
+
+	lines.push(
+		`Merging this PR will **${moved ? "change" : "not change"}** the size of the code webpack generates.`,
+		"",
+		"| | Changed | New | Deleted | Unchanged |",
+		"| :-- | --: | --: | --: | --: |"
+	);
+	for (const [label, count] of Object.entries(counts)) {
+		lines.push(
+			`| ${label} | ${count.changed} | ${count.added} | ${count.removed} | ${count.unchanged} |`
+		);
+	}
+	lines.push("");
 
 	const short = (/** @type {Report} */ report) =>
 		report.meta.commit ? `\`${report.meta.commit.slice(0, 7)}\`` : "unknown";
