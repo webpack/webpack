@@ -122,7 +122,7 @@ const METRIC_LABELS = {
 // The workflow greps its own pull request comment by this, so it must not change.
 const COMMENT_MARKER = "<!-- code-size-report -->";
 
-const MAX_ASSET_ROWS = 30;
+const MAX_ASSET_ROWS = 20;
 
 // A `[contenthash]` renames the asset on every content change; the report keys
 // on the normalized name so a size change reads as a change, not add + remove.
@@ -511,6 +511,25 @@ const sameMetrics = (a, b) =>
 	METRICS.every((metric) => a[metric] === b[metric]);
 
 /**
+ * How much an entry set moved in total — the "and by how much" next to the
+ * counts, which a count alone does not say.
+ * @template {string} K
+ * @param {Record<string, Record<K, number>>} before baseline entries
+ * @param {Record<string, Record<K, number>>} after current entries
+ * @param {K} key the field to sum
+ * @returns {number} current minus baseline, over the union of both
+ */
+const sumDelta = (before, after, key) => {
+	let delta = 0;
+	for (const name of new Set([...Object.keys(before), ...Object.keys(after)])) {
+		delta +=
+			(after[name] ? after[name][key] : 0) -
+			(before[name] ? before[name][key] : 0);
+	}
+	return delta;
+};
+
+/**
  * @param {Report} report report
  * @returns {Record<string, Metrics>} metrics per case
  */
@@ -679,27 +698,41 @@ const formatMarkdown = (report, baseline) => {
 		return `${lines.join("\n")}\n`;
 	}
 
-	const counts = {
-		Cases: countChanges(
-			caseMetrics(baseline),
-			caseMetrics(report),
-			sameMetrics
-		),
-		"Runtime modules": countChanges(
-			baseline.runtimeModules,
-			report.runtimeModules,
-			(a, b) => a.bytes === b.bytes
-		),
-		Assets: countChanges(
-			assetMetrics(baseline),
-			assetMetrics(report),
-			sameMetrics
-		)
-	};
 	const changes = compareMetrics(assetMetrics(baseline), assetMetrics(report));
+	const rows = [
+		{
+			label: "Cases",
+			counts: countChanges(
+				caseMetrics(baseline),
+				caseMetrics(report),
+				sameMetrics
+			),
+			change: sumDelta(caseMetrics(baseline), caseMetrics(report), "raw")
+		},
+		{
+			label: "Runtime modules",
+			counts: countChanges(
+				baseline.runtimeModules,
+				report.runtimeModules,
+				(a, b) => a.bytes === b.bytes
+			),
+			change: sumDelta(baseline.runtimeModules, report.runtimeModules, "bytes")
+		},
+		{
+			label: "Assets",
+			counts: countChanges(
+				assetMetrics(baseline),
+				assetMetrics(report),
+				sameMetrics
+			),
+			change: sumDelta(assetMetrics(baseline), assetMetrics(report), "raw")
+		}
+	];
 	const short = (/** @type {Report} */ report) =>
 		report.meta.commit ? `\`${report.meta.commit.slice(0, 7)}\`` : "unknown";
 
+	// How many moved and by how much, then the biggest movers — before any
+	// collapsed section, so the whole verdict is readable without unfolding one.
 	lines.push(
 		`Comparing ${short(report)} against ${short(
 			baseline
@@ -707,15 +740,62 @@ const formatMarkdown = (report, baseline) => {
 			changes.length === 0 ? "not change" : "change"
 		}** the code webpack generates.`,
 		"",
-		"| | Changed | New | Deleted | Unchanged |",
-		"| :-- | --: | --: | --: | --: |"
+		"| | Changed | New | Deleted | Unchanged | Raw change |",
+		"| :-- | --: | --: | --: | --: | --: |"
 	);
-	for (const [label, count] of Object.entries(counts)) {
+	for (const { label, counts, change } of rows) {
 		lines.push(
-			`| ${label} | ${count.changed} | ${count.added} | ${count.removed} | ${count.unchanged} |`
+			`| ${label} | ${counts.changed} | ${counts.added} | ${counts.removed} | ${
+				counts.unchanged
+			} | ${
+				change === 0
+					? "—"
+					: `${change > 0 ? "🔺 +" : "🔻 "}${formatBytes(change)}`
+			} |`
 		);
 	}
 	lines.push("");
+
+	// The asset view: one row per emitted file, so a minifier change reads as the
+	// files it shrank rather than as one number over the whole suite. Raw is what
+	// the generator wrote; the rest is what each encoding makes of it.
+	if (changes.length > 0) {
+		lines.push(
+			`**${changes.length} asset(s) changed size**${
+				changes.length > MAX_ASSET_ROWS
+					? `, biggest ${MAX_ASSET_ROWS} by raw change:`
+					: ":"
+			}`,
+			"",
+			`| Asset | Raw (before → after) | ${COMPRESSED.map(
+				(metric) => METRIC_LABELS[metric]
+			).join(" | ")} |`,
+			`| :-- | --: |${COMPRESSED.map(() => " --: |").join("")}`
+		);
+		for (const change of changes.slice(0, MAX_ASSET_ROWS)) {
+			const raw = `${
+				change.status === "added" ? "—" : formatBytes(change.before.raw)
+			} → ${
+				change.status === "removed" ? "—" : formatBytes(change.after.raw)
+			} (${formatPercent(change.before.raw, change.after.raw)})`;
+			const compressed = COMPRESSED.map((metric) =>
+				formatPercent(change.before[metric], change.after[metric])
+			).join(" | ");
+			lines.push(`| \`${change.name}\` | ${raw} | ${compressed} |`);
+		}
+		if (changes.length > MAX_ASSET_ROWS) {
+			lines.push(
+				`| … ${
+					changes.length - MAX_ASSET_ROWS
+				} more asset(s), see the uploaded report |${COMPRESSED.map(
+					() => " |"
+				).join("")} |`
+			);
+		}
+		lines.push("");
+	} else {
+		lines.push("No asset changed size.", "");
+	}
 
 	// A case that stops emitting contributes no bytes, which would otherwise read
 	// as an improvement. Reported so the delta is explained, not as a failure.
@@ -737,45 +817,7 @@ const formatMarkdown = (report, baseline) => {
 		);
 	}
 
-	lines.push(...formatRuntimeModules(report, baseline));
-
-	if (changes.length === 0) {
-		lines.push(built, "", "No asset changed size.");
-		return `${lines.join("\n")}\n`;
-	}
-
-	// The asset view: one row per emitted file, so a minifier change reads as the
-	// files it shrank rather than as one number over the whole suite. Raw is what
-	// the generator wrote; the rest is what each encoding makes of it.
-	lines.push(
-		`<details open><summary>${changes.length} asset(s) changed size</summary>`,
-		"",
-		`| Asset | Raw (before → after) | ${COMPRESSED.map(
-			(metric) => METRIC_LABELS[metric]
-		).join(" | ")} |`,
-		`| :-- | --: |${COMPRESSED.map(() => " --: |").join("")}`
-	);
-	for (const change of changes.slice(0, MAX_ASSET_ROWS)) {
-		const raw = `${
-			change.status === "added" ? "—" : formatBytes(change.before.raw)
-		} → ${
-			change.status === "removed" ? "—" : formatBytes(change.after.raw)
-		} (${formatPercent(change.before.raw, change.after.raw)})`;
-		const compressed = COMPRESSED.map((metric) =>
-			formatPercent(change.before[metric], change.after[metric])
-		).join(" | ");
-		lines.push(`| \`${change.name}\` | ${raw} | ${compressed} |`);
-	}
-	if (changes.length > MAX_ASSET_ROWS) {
-		lines.push(
-			`| … ${
-				changes.length - MAX_ASSET_ROWS
-			} more asset(s), see the uploaded report |${COMPRESSED.map(
-				() => " |"
-			).join("")} |`
-		);
-	}
-	lines.push("", "</details>", "", built);
+	lines.push(...formatRuntimeModules(report, baseline), built);
 
 	return `${lines.join("\n")}\n`;
 };
