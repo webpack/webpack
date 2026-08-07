@@ -810,14 +810,21 @@ const formatMarkdown = (report, baseline) => {
 			`| :-: | :-- | --: | --: | --: |${COMPRESSED.map(() => " --: |").join("")}`
 		);
 		for (const change of changes.slice(0, MAX_ROWS)) {
+			// An edit can keep the raw length and still change how well it packs, so
+			// the arrow falls back to the encodings rather than calling that a shrink.
+			const direction =
+				change.delta.raw ||
+				COMPRESSED.reduce((sum, metric) => sum + change.delta[metric], 0);
 			const mark =
 				change.status === "added"
 					? "➕"
 					: change.status === "removed"
 						? "➖"
-						: change.delta.raw > 0
+						: direction > 0
 							? "🔺"
-							: "🔻";
+							: direction < 0
+								? "🔻"
+								: "🔀";
 			const compressed = COMPRESSED.map((metric) =>
 				formatPercent(change.before[metric], change.after[metric])
 			).join(" | ");
