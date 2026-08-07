@@ -1,0 +1,33 @@
+/* Every value and selector transform, made inside a nested rule rather than at
+   the top level. `SyntaxBrowserEquivalence` hands this file and its minified
+   form to Chromium, so each section is checked against the engine rather than
+   against what the printer happens to emit. */
+
+/*! join: adjacent nested rules printing the same block are the one rule they stand for */
+.a { .n1 { color: red } .n2 > .n3 { color: red } }
+/*! join: ...and `&` joins there, an engine that cannot read it losing the block either way */
+.b { &.n4 { top: 0 } &.n5 { top: 0 } }
+/*! join: ...including as a compound of its own */
+.c { & .n6 { top: 0 } & .n7 { top: 0 } }
+/*! declined: a nested rule of its own, whose `&` would become the joined list */
+.d { .n8 { top: 0; i { top: 1px } } .n9 { top: 0; i { top: 1px } } }
+/*! declined: a pseudo may be one the engine cannot parse */
+.e { .n10:hover { top: 0 } .n11:hover { top: 0 } }
+/*! values: a number, a time, a zero angle and a color all fold the same nested */
+.f { .n12 { transition-duration: 0.5s; transform: rotate(0deg); color: #ffffff; width: calc(2px + 3px) } }
+/*! shorthand: four sides merge into the one shorthand inside a nested rule */
+.g { .n13 { margin-top: 1px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px } }
+/*! shorthand: ...and a slot holding its own initial goes */
+.h { .n14 { transition: opacity 1s ease 0s } }
+/*! filter: an argument that is the amount an omitted one means says nothing */
+.i { .n15 { filter: blur(0px) grayscale(100%) } }
+/*! declaration: only the last of a set of identical ones can be read */
+.j { .n16 { color: red; color: red } }
+/*! declaration: ...whatever nested rule stands between them */
+.k { color: red; .n17 { top: 0 } color: red }
+/*! selector: the legacy one-colon spelling and an implied universal both go */
+.l { *:before { top: 0 } .n18::first-line { top: 0 } }
+/*! at-rule: a nested `@media` keeps its own block, and the rules in it join */
+.m { @media (min-width: 100px) { .n19 { top: 0 } .n20 { top: 0 } } }
+/*! empty: a nested rule that paints nothing is dropped, leaving its neighbours adjacent */
+.o { .n21 { top: 0 } .n22 {} .n23 { top: 0 } }

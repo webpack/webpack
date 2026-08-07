@@ -2277,6 +2277,27 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		])("keeps both rules where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
+
+		it.each([
+			["a{.x{top:0}.y{top:0}}", "a{.x,.y{top:0}}"],
+			["a{&.x{top:0}&.y{top:0}}", "a{&.x,&.y{top:0}}"],
+			["a{& .x{top:0}& .y{top:0}}", "a{& .x,& .y{top:0}}"],
+			["a{&{top:0}.y{top:0}}", "a{&,.y{top:0}}"]
+		])("joins nested rules: %s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// Only a rule nested in another: at the top level an engine that cannot
+			// read `&` still reads whatever it would be joined to.
+			["`&` stands at the top level", "&.x{top:0}&.y{top:0}"],
+			[
+				"a nested rule of its own would be re-parented",
+				"a{.x{top:0;i{top:1px}}.y{top:0;i{top:1px}}}"
+			]
+		])("keeps both rules where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
 	});
 
 	describe("a shadow's trailing zero lengths", () => {
