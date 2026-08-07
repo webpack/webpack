@@ -15,8 +15,13 @@ it("should emit the analyzable import under HMR and still apply updates", (done)
 
 			// Needles are built at runtime so they are not source string literals here.
 			const bundle = getFile("main.mjs");
-			expect(bundle).toContain(`${"__webpack_require__"}.ei(`);
+			const require_ = "__webpack_require__";
+			expect(bundle).toContain(`${require_}.ei(`);
 			expect(bundle).toContain('import("./async-module_js.mjs")');
+			// The hot runtime registers its handler on the map and force-loads through
+			// the others by bare chunk id, so both survive an all-analyzable graph.
+			expect(bundle).toContain(`${require_}.f = {}`);
+			expect(bundle).toContain(`${require_}.f.j =`);
 
 			NEXT(
 				update(done, true, () => {
