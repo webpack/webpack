@@ -336,13 +336,23 @@ const runTreeCase = (c) => {
 	return serialize(c.fragment && first !== 0 ? first : doc);
 };
 
+// The submodule as a whole is optional, so an absent checkout degrades to a
+// no-op. A checkout that is *present* but carries no tree-construction corpus is
+// a stale pin, not an opt-out — upstream moved these tests to WPT and deleting
+// them silently turned 1783 assertions into a green no-op. Fail instead.
+const hasSubmodule = fs.existsSync(path.join(testsDir, "tokenizer"));
 const hasTreeCorpus =
 	fs.existsSync(treeDir) && fs.readdirSync(treeDir).length > 0;
 
 describe("html5lib tree-construction", () => {
 	if (!hasTreeCorpus) {
-		it("submodule not initialized (run `git submodule update --init test/html5lib-tests`)", () => {
-			// No-op: the conformance data is an optional git submodule.
+		it("tree-construction corpus", () => {
+			if (hasSubmodule) {
+				throw new Error(
+					`No tree-construction corpus in ${testsDir}. The submodule is checked out, so this is a stale pin rather than an opt-out — pin it to a commit that still carries tree-construction/.`
+				);
+			}
+			// Not initialized: `git submodule update --init test/html5lib-tests`.
 		});
 
 		return;
