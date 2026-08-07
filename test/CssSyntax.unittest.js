@@ -2229,10 +2229,40 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["the amount is not the omitted one", "a{filter:grayscale(0)}"],
 			["the same, as a percentage", "a{filter:grayscale(50%)}"],
 			[
-				"the function takes no omittable argument",
+				"the function takes no optional argument",
 				"a{filter:drop-shadow(0 0 1px red)}"
 			],
 			["a substitution stands there", "a{filter:grayscale(var(--x))}"]
+		])("keeps the value where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a shadow's trailing zero lengths", () => {
+		it.each([
+			[
+				"a{box-shadow:0 0 0 0 #22242626 inset}",
+				"a{box-shadow:0 0#22242626 inset}"
+			],
+			["a{box-shadow:-1px 0 0 0 #bababc}", "a{box-shadow:-1px 0#bababc}"],
+			["a{box-shadow:inset 0 0 0 0 red}", "a{box-shadow:inset 0 0 red}"],
+			["a{box-shadow:1px 2px 3px 0 red}", "a{box-shadow:1px 2px 3px red}"],
+			["a{text-shadow:1px 1px 0 red}", "a{text-shadow:1px 1px red}"],
+			[
+				"a{box-shadow:0 0 0 0 red,1px 1px 0 0 blue}",
+				"a{box-shadow:0 0 red,1px 1px blue}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// The two offsets are what the grammar makes mandatory.
+			["the two offsets are all there is", "a{box-shadow:0 0 red}"],
+			["a length past them is not zero", "a{box-shadow:0 0 0 1px red}"],
+			["the value is a keyword", "a{box-shadow:none}"],
+			["the property states no shadow", "a{stroke-dasharray:1 0 0}"],
+			["a layer holds a string", 'a{box-shadow:0 0 0 0 red,"a"}']
 		])("keeps the value where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});

@@ -1216,6 +1216,37 @@ const collectPositionProperties = () => {
 	return out.sort();
 };
 
+// A shadow states its offsets as `<length>{MIN,MAX}`; MIN of them are the two
+// offsets every shadow needs.
+const SHADOW_LENGTHS_REGEXP = /<length>\{(\d+),(\d+)\}/;
+
+/**
+ * Each property whose value is a list of shadows -> how many lengths a shadow
+ * cannot go below. The grammar states the range itself (`<length>{2,4}` on
+ * `box-shadow`, `{2,3}` on `text-shadow`), so a trailing zero past the minimum
+ * is a value the notation already implies.
+ * @returns {[string, number][]} the entries, sorted by property
+ */
+const collectShadowProperties = () => {
+	/** @type {[string, number][]} */
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		if (typeof entry.syntax !== "string") continue;
+		let minimum = null;
+		for (const raw of references(entry.syntax)) {
+			const definition = definitions.get(raw);
+			if (definition === undefined) continue;
+			const range = SHADOW_LENGTHS_REGEXP.exec(definition);
+			if (range === null) continue;
+			// Two productions naming different ranges is no single shadow shape.
+			if (minimum !== null && minimum !== Number(range[1])) return [];
+			minimum = Number(range[1]);
+		}
+		if (minimum !== null) out.push([name, minimum]);
+	}
+	return out.sort(([a], [b]) => (a < b ? -1 : 1));
+};
+
 /**
  * Each `<filter-function>` whose argument the grammar marks optional -> the
  * amount an omitted one means, so writing that amount says nothing. The set is
@@ -1234,17 +1265,17 @@ const collectFilterFunctionOmitted = () => {
 		const definition = definitions.get(raw);
 		if (definition === undefined) continue;
 		const name = raw.slice(0, -2);
-		// A `?` before the closing paren is what makes the argument omittable.
+		// A `?` before the closing paren is what makes the argument optional.
 		if (!/\?\s*\)\s*$/.test(definition)) continue;
 		const omitted = stated.get(name);
 		if (omitted === undefined) {
-			throw new Error(`\`${name}()\` gained an omittable argument`);
+			throw new Error(`\`${name}()\` gained an optional argument`);
 		}
 		out.push([name, omitted]);
 	}
 	for (const [name] of stated) {
 		if (!out.some(([one]) => one === name)) {
-			throw new Error(`\`${name}()\` no longer takes an omittable argument`);
+			throw new Error(`\`${name}()\` no longer takes an optional argument`);
 		}
 	}
 	return out.sort(([a], [b]) => (a < b ? -1 : 1));
@@ -2230,6 +2261,13 @@ const mapLiteral = (entries) =>
 	`new Map([${entries.map(([key, value]) => `["${key}", "${value}"]`).join(", ")}])`;
 
 /**
+ * @param {[string, number][]} entries string-keyed, number-valued pairs
+ * @returns {string} the `Map` literal
+ */
+const countMapLiteral = (entries) =>
+	`new Map([${entries.map(([key, value]) => `["${key}", ${value}]`).join(", ")}])`;
+
+/**
  * @param {[number, number][]} entries number-keyed pairs
  * @returns {string} the `Map` literal
  */
@@ -3145,6 +3183,7 @@ const collectData = () => {
 	].sort();
 	const [positionXKeywords, positionYKeywords] = collectPositionKeywordAxes();
 	const shorthandInitialKeywords = collectShorthandInitialKeywords();
+	const shadowProperties = collectShadowProperties();
 	const fontStretchPercentages = collectFontStretchPercentages();
 	const filterFunctionOmitted = collectFilterFunctionOmitted();
 	const shorterColorSpellings = collectShorterColorSpellings(colorNames);
@@ -3303,6 +3342,10 @@ ${displayShortForms
 	.join(",\n")}
 ]);
 
+// Each property whose value is a list of shadows -> the count of lengths a
+// shadow cannot go below, past which a trailing zero is already implied.
+const SHADOW_PROPERTIES = ${countMapLiteral(shadowProperties)};
+
 // Each shorthand -> the keywords one of its values may drop, each with every
 // spelling its own slot takes: the slot's keywords, and each function it
 // accepts written \`name()\`. A sibling out of that set means the value fills the
@@ -3325,7 +3368,7 @@ ${shorthandInitialKeywords
 // value in fewer bytes.
 const FONT_STRETCH_PERCENTAGES = ${mapLiteral(fontStretchPercentages)};
 
-// Each \`<filter-function>\` with an omittable argument -> the amount an omitted
+// Each \`<filter-function>\` with an optional argument -> the amount an omitted
 // one means, which is what writing that amount already says.
 const FILTER_FUNCTION_OMITTED = ${mapLiteral(filterFunctionOmitted)};
 
@@ -3622,7 +3665,7 @@ module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
-module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
+module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
