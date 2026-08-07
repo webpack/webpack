@@ -79,5 +79,9 @@ Array [
   "/*! declined: \`top\` is no x-position, so half the pair alone is a value the engine drops */.t64c{background-position:top 50%}",
   "/*! transform-origin: the axes are spelled out rather than named, but still a position */.t65{transform-origin:50%100%}",
   "/*! declined: a third component is the z offset, which the collapse has no reading of */.t65b{transform-origin:left top 10px}",
+  "/*! calls: grammar matching skips whitespace, so a prefixed spelling collapses too */.t66{-webkit-transform:translateY(-14px)scale(.8)}",
+  "/*! calls: ...and so does any property whose components are all calls */.t66b{filter:brightness(0)invert(1)}",
+  "/*! calls: the same, on a track list */.t66c{grid-template-columns:repeat(2,1fr)minmax(0,1fr)}",
+  "/*! declined: a component that is no call still needs its separator */.t66d{background:linear-gradient(red,red) no-repeat}",
 ]
 `;

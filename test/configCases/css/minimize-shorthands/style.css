@@ -179,3 +179,11 @@
 .t65 { transform-origin: center bottom }
 /*! declined: a third component is the z offset, which the collapse has no reading of */
 .t65b { transform-origin: left top 10px }
+/*! calls: grammar matching skips whitespace, so a prefixed spelling collapses too */
+.t66 { -webkit-transform: translateY(-14px) scale(.8) }
+/*! calls: ...and so does any property whose components are all calls */
+.t66b { filter: brightness(0) invert(1) }
+/*! calls: the same, on a track list */
+.t66c { grid-template-columns: repeat(2, 1fr) minmax(0, 1fr) }
+/*! declined: a component that is no call still needs its separator */
+.t66d { background: linear-gradient(red, red) no-repeat }

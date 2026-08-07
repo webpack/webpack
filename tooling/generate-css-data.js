@@ -1508,22 +1508,6 @@ const collectPositionKeywordAxes = () => {
 };
 
 /**
- * The properties whose value is a `<transform-list>`, where one function
- * follows another with no separator of its own — the `)` already parts them.
- * @returns {string[]} the property names, sorted
- */
-const collectTransformListProperties = () => {
-	const out = [];
-	for (const [name, entry] of Object.entries(properties)) {
-		if (typeof entry.syntax !== "string") continue;
-		if (reachableProductions(entry.syntax).has("transform-list")) {
-			out.push(name);
-		}
-	}
-	return out.sort();
-};
-
-/**
  * Each property whose initial value is a keyword shorter than `initial` itself
  * -> that keyword. `initial` computes to the initial value whatever the
  * property, so the two are the same declaration and the shorter one is written.
@@ -3115,7 +3099,6 @@ const collectData = () => {
 	const [positionXKeywords, positionYKeywords] = collectPositionKeywordAxes();
 	const shorthandInitialKeywords = collectShorthandInitialKeywords();
 	const fontStretchPercentages = collectFontStretchPercentages();
-	const transformListProperties = collectTransformListProperties();
 	const shorterColorSpellings = collectShorterColorSpellings(colorNames);
 	const zeroAngleFunctions = collectZeroAngleFunctions();
 	const mathFunctionArity = collectMathFunctionArity(mathFunctions);
@@ -3322,10 +3305,6 @@ ${positionYKeywords
 	)
 	.join(",\n")}
 ]);
-
-// The properties whose value is a \`<transform-list>\`: one function follows
-// another with no separator, the \`)\` having already parted them.
-const TRANSFORM_LIST_PROPERTIES = ${setLiteral(transformListProperties)};
 
 // The keywords one \`<repeat-style>\` axis can be: a pair only collapses where
 // both halves are one of these.
@@ -3594,7 +3573,7 @@ module.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.RE
 module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
-module.exports.TRANSFORM_LIST_PROPERTIES = TRANSFORM_LIST_PROPERTIES;\nmodule.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
+module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
 module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;
 module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;

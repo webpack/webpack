@@ -116,7 +116,7 @@ Array [
   "/*! esbuild: @media junk(1, 2, 3) {div{color:red}} */@media junk(1,2,3){div{color:red}}",
   "/*! esbuild: @scope { div { color: red } } */@scope{div{color:red}}",
   "/*! esbuild: @scope (a, .b) to (c > *) { div { color: red } } */@scope (a,.b) to (c>*){div{color:red}}",
-  "/*! esbuild: @font-face { font-family: 'Open Sans'; src: url('OpenSans.woff') format('woff') } */@font-face{font-family:Open Sans;src:url(http://example.test/OpenSans.woff) format(\\"woff\\")}",
+  "/*! esbuild: @font-face { font-family: 'Open Sans'; src: url('OpenSans.woff') format('woff') } */@font-face{font-family:Open Sans;src:url(http://example.test/OpenSans.woff)format(\\"woff\\")}",
   "/*! esbuild: @page { margin: 1cm } */@page{margin:1cm}",
   "/*! esbuild: @page :first { margin: 1cm } */@page :first{margin:1cm}",
   "/*! esbuild: div { -ms-grid-columns: (1fr)[3] } */div{-ms-grid-columns:(1fr)[3]}",

@@ -2214,7 +2214,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
-	describe("a transform list's inter-function whitespace", () => {
+	describe("the whitespace between two calls", () => {
 		it.each([
 			[
 				"a{transform:scale(2) rotate(45deg)}",
@@ -2223,6 +2223,25 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[
 				"a{transform:scale(.85) translateY(-.5rem) rotate(45deg)}",
 				"a{transform:scale(.85)translateY(-.5rem)rotate(45deg)}"
+			],
+			// Grammar matching skips whitespace whatever the property, which is what
+			// reaches the prefixed spellings no dataset names.
+			[
+				"a{-webkit-transform:translateY(-14px) scale(.8)}",
+				"a{-webkit-transform:translateY(-14px)scale(.8)}"
+			],
+			["a{filter:brightness(0) invert(1)}", "a{filter:brightness(0)invert(1)}"],
+			[
+				"a{-webkit-filter:blur(2px) saturate(2)}",
+				"a{-webkit-filter:blur(2px)saturate(2)}"
+			],
+			[
+				"a{backdrop-filter:blur(2px) saturate(2)}",
+				"a{backdrop-filter:blur(2px)saturate(2)}"
+			],
+			[
+				"a{grid-template-columns:repeat(2,1fr) minmax(0,1fr)}",
+				"a{grid-template-columns:repeat(2,1fr)minmax(0,1fr)}"
 			]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
@@ -2230,7 +2249,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it.each([
 			["the value is a keyword", "a{transform:none}"],
-			["the property is no transform list", "a{background:red none}"]
+			["a component is no call", "a{background:red none}"],
+			["the same, past a call", "a{mask:url(a.svg) none}"],
+			["there is one component", "a{filter:blur(2px)}"]
 		])("keeps the value where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
