@@ -937,14 +937,75 @@ describe("printer output in real Chrome", () => {
 			.join(" >> ")} ${rule.text}`;
 
 	/**
+	 * Split a selector list on its own commas — not the ones inside `:is(…)`, an
+	 * attribute value or a string.
+	 * @param {string} list a selector list
+	 * @returns {string[]} its selectors
+	 */
+	const splitSelectorList = (list) => {
+		const out = [];
+		let depth = 0;
+		let quote = "";
+		let from = 0;
+		for (let i = 0; i < list.length; i++) {
+			const c = list[i];
+			// An escape carries its next code point whatever it is — `.\:\)` ends in
+			// a `)` that closes nothing.
+			if (c === "\\") {
+				i++;
+			} else if (quote !== "") {
+				if (c === quote) quote = "";
+			} else if (c === '"' || c === "'") {
+				quote = c;
+			} else if (c === "(" || c === "[") {
+				depth++;
+			} else if (c === ")" || c === "]") {
+				depth--;
+			} else if (c === "," && depth === 0) {
+				out.push(list.slice(from, i).trim());
+				from = i + 1;
+			}
+		}
+		out.push(list.slice(from).trim());
+		return out;
+	};
+
+	/**
+	 * One entry per selector. The printer joins adjacent rules that compute the
+	 * same style into a single selector list — the same rules in the same cascade
+	 * order, written shorter — so the comparison is made per selector rather than
+	 * per rule. A join of rules that do *not* match still fails: each selector
+	 * carries its own computed style, and the order is still compared.
+	 * @param {Rule[]} rules rules in cascade order
+	 * @returns {Rule[]} the same, one selector each
+	 */
+	const perSelector = (rules) =>
+		rules.flatMap((rule) => {
+			// `@import` and friends are compared as written, with no `label { … }`.
+			const at = rule.text.indexOf(" { ");
+			if (at === -1) return [rule];
+			const selectors = splitSelectorList(rule.text.slice(0, at));
+			if (selectors.length < 2) return [rule];
+			const block = rule.text.slice(at);
+			return selectors.map((one) => ({ chain: rule.chain, text: one + block }));
+		});
+
+	/**
 	 * @param {Rule[]} before the source's rules
 	 * @param {Rule[]} after the minified rules
 	 * @param {Map<string, string>} signatures what the engine answers per condition
 	 * @returns {string} why they differ, or "" when they do not
 	 */
 	const compareRules = (before, after, signatures) => {
-		const a = before.map((rule) => keyOf(rule, signatures));
-		const b = after.map((rule) => keyOf(rule, signatures));
+		// The same selector twice in a row, under the same conditions and computing
+		// the same style, is the one rule it resolves to — which is what joining
+		// them into a list leaves, the engine keeping a selector once per list.
+		const keys = (rules) =>
+			perSelector(rules)
+				.map((rule) => keyOf(rule, signatures))
+				.filter((key, i, all) => i === 0 || key !== all[i - 1]);
+		const a = keys(before);
+		const b = keys(after);
 		const shorter = Math.min(a.length, b.length);
 		const at = a.slice(0, shorter).findIndex((key, i) => key !== b[i]);
 		if (at !== -1) return `rule ${at}: ${a[at]} vs ${b[at]}`;

@@ -2246,6 +2246,39 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("adjacent rules printing the same block", () => {
+		it.each([
+			["a{color:red}b{color:red}", "a,b{color:red}"],
+			["a{color:red}b{color:red}c{color:red}", "a,b,c{color:red}"],
+			[".a[x=1]{top:0}.b>.c{top:0}", ".a[x=1],.b>.c{top:0}"],
+			["@media x{a{top:0}b{top:0}}", "@media x{a,b{top:0}}"],
+			["@keyframes k{0%{top:0}50%{top:0}}", "@keyframes k{0%,50%{top:0}}"],
+			// The rule between them prints nothing, so they end up adjacent.
+			["a{color:red}i{}b{color:red}", "a,b{color:red}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the blocks differ", "a{color:red}b{color:blue}"],
+			["a rule stands between them", "a{color:red}i{top:0}b{color:red}"],
+			// One selector the engine cannot parse invalidates the whole list.
+			["a pseudo may be one the engine drops", "a:hover{top:0}b:hover{top:0}"],
+			["...including a prefixed one", "a{top:0}::-moz-placeholder{top:0}"],
+			["...or a CSS modules one", "body{top:0}:local(.x){top:0}"],
+			["the parser passed a shape through", "a{top:0}. b{top:0}"],
+			// `:is(a,b)` takes the specificity of its most specific selector.
+			[
+				"a nested rule would be re-parented",
+				"a{top:0;& i{top:1px}}b{top:0;& i{top:1px}}"
+			],
+			["the selectors are the same", "a{color:red}a{color:red}"],
+			["a kept comment sits between them", "a{color:red}/*! c */b{color:red}"]
+		])("keeps both rules where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("a shadow's trailing zero lengths", () => {
 		it.each([
 			[

@@ -167,3 +167,8 @@
 * { color: red }
 /*! webpack: a namespaced universal is not redundant */
 svg|*, *|*.t72 { color: red }
+/*! webpack: adjacent rules printing the same block are the one rule they stand for */
+.t71 { color: red }
+.t72 > .t73 { color: red }
+/*! webpack: ...and a keyframe selector list is one too */
+@keyframes t74 { 0% { color: red } 50% { color: red } }

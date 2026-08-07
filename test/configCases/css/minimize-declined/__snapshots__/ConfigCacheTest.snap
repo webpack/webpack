@@ -22,7 +22,9 @@ Array [
   "/*! declined: a substitution can expand to the second component \`translateX\`
    rejects, so converting it would revive a dropped declaration (lightningcss: translate) */.t12{transform:translateX(var(--x))}",
   "/*! declined: a \`/*!\` banner is kept, as cssnano, csso and clean-css also do (lightningcss drops it) */.t13{color:red}",
-  "/*! declined: merging rules that share a block reorders the cascade (csso, cssnano) */.t14{color:red}.t15{color:red}",
+  "/*! declined: a rule between two that share a block, so joining them reorders the cascade (csso, cssnano) */.t14{color:red}.t14b{color:blue}.t15{color:red}",
+  "/*! declined: a pseudo may be one the engine cannot parse, which would invalidate the whole list */.t16:hover{color:red}.t17:hover{color:red}",
+  "/*! declined: a nested rule's \`&\` would become the list, and \`:is()\` takes its most specific selector */.t18{color:red;& i{color:blue}}.t19{color:red;& i{color:blue}}",
   "/*! declined: not identical, so the first is a fallback for an engine that cannot
    read the second — dropping it is how esbuild and lightningcss lose this pair
    (csso, cssnano and clean-css keep it too) */.t16{color:#fff;color:color(display-p3 1 1 1)}",
