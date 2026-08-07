@@ -1307,8 +1307,53 @@ const initialKeyword = (name, depth) => {
 };
 
 /**
+ * Every value a slot takes that a printed component can be spelled as: its
+ * keywords, and each function it accepts written `name()`. A function is what
+ * `acceptedValues` does not report — it walks into one rather than naming it —
+ * and a slot filled by one is filled just as much as by a keyword.
+ * @param {string} slot the slot's value definition
+ * @returns {Set<string>} the spellings, lowercased
+ */
+const slotSpellings = (slot) => {
+	const out = new Set();
+	for (const keyword of acceptedValues(slot).keywords) {
+		out.add(keyword.toLowerCase());
+	}
+	const seen = new Set();
+	/**
+	 * @param {string} source a value definition to walk
+	 * @returns {void}
+	 */
+	const expand = (source) => {
+		if (seen.has(source)) return;
+		seen.add(source);
+		let tree;
+		try {
+			tree = parseValueSyntax(source);
+		} catch (_err) {
+			return;
+		}
+		walkValueSyntax(tree, (node) => {
+			if (node.type === "function") {
+				out.add(`${node.name.toLowerCase()}()`);
+			} else if (node.type === "type" && syntaxes[node.name] !== undefined) {
+				expand(syntaxes[node.name].syntax);
+			} else if (
+				node.type === "property" &&
+				properties[node.name] !== undefined &&
+				typeof properties[node.name].syntax === "string"
+			) {
+				expand(/** @type {string} */ (properties[node.name].syntax));
+			}
+		});
+	};
+	expand(slot);
+	return out;
+};
+
+/**
  * Each shorthand -> the keywords a value of it may drop, and for each the other
- * keywords its slot takes. A slot holding what it already defaults to says
+ * spellings its slot takes. A slot holding what it already defaults to says
  * nothing, but only under three conditions, and every one of them is a rewrite
  * that turned a declaration the engine drops into one it accepts:
  * the keyword must be named by exactly one slot (`animation`'s `none` is both a
@@ -1333,6 +1378,7 @@ const collectShorthandInitialKeywords = () => {
 			const values = acceptedValues(slot);
 			return {
 				named: new Set([...values.keywords].map((one) => one.toLowerCase())),
+				spellings: slotSpellings(slot),
 				keywordsOnly: values.classes.size === 0
 			};
 		});
@@ -1350,7 +1396,7 @@ const collectShorthandInitialKeywords = () => {
 			if (!slot.keywordsOnly) continue;
 			if (slots[hits[0]].includes("/")) continue;
 			if (!SINGLE_TERM_SLOT_REGEXP.test(slots[hits[0]])) continue;
-			droppable.push([keyword, [...slot.named].sort()]);
+			droppable.push([keyword, [...slot.spellings].sort()]);
 		}
 		if (droppable.length !== 0) {
 			out.push([name, droppable.sort(([a], [b]) => (a < b ? -1 : 1))]);
@@ -3192,9 +3238,10 @@ ${displayShortForms
 	.join(",\n")}
 ]);
 
-// Each shorthand -> the keywords one of its values may drop, each with the rest
-// of the keywords its own slot takes. A sibling out of that set means the value
-// fills the slot twice, which is a declaration the engine drops.
+// Each shorthand -> the keywords one of its values may drop, each with every
+// spelling its own slot takes: the slot's keywords, and each function it
+// accepts written \`name()\`. A sibling out of that set means the value fills the
+// slot twice, which is a declaration the engine drops.
 const SHORTHAND_INITIAL_KEYWORDS = new Map([
 ${shorthandInitialKeywords
 	.map(

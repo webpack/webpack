@@ -2118,6 +2118,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// `mask: url(…) none` fills `<mask-reference>` twice and is a declaration
 			// the engine drops — unwriting the `none` would revive it.
 			["a sibling fills the same slot", "a{mask:url(a.svg) none}"],
+			// A function fills the easing slot as much as a keyword does.
+			["a call fills the same slot", "a{transition:opacity 1s ease steps(4)}"],
+			["the same, on an animation", "a{animation:x 1s ease linear(0,1)}"],
 			["the value is the keyword alone", "a{border:none}"],
 			[
 				"a comma parts two layers",
