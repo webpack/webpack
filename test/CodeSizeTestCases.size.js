@@ -478,7 +478,7 @@ const formatPercent = (before, after) => {
 	if (before === 0) return "new";
 	if (after === 0) return "gone";
 	const percent = ((after - before) / before) * 100;
-	return `${percent > 0 ? "🔺 +" : "🔻 "}${percent.toFixed(2)}%`;
+	return `${percent > 0 ? "+" : ""}${percent.toFixed(2)}%`;
 };
 
 /**
@@ -505,7 +505,14 @@ const compareMetrics = (before, after) => {
 			delta
 		});
 	}
-	return changes.sort((a, b) => Math.abs(b.delta.raw) - Math.abs(a.delta.raw));
+	// Bytes first, then share of the asset: a fixed addition moves every bundle by
+	// the same amount, and the small ones are the ones it actually costs.
+	return changes.sort(
+		(a, b) =>
+			Math.abs(b.delta.raw) - Math.abs(a.delta.raw) ||
+			Math.abs(b.delta.raw / (b.before.raw || 1)) -
+				Math.abs(a.delta.raw / (a.before.raw || 1))
+	);
 };
 
 /**
@@ -789,39 +796,51 @@ const formatMarkdown = (report, baseline) => {
 
 	// The asset view: one row per emitted file, so a minifier change reads as the
 	// files it shrank rather than as one number over the whole suite. Raw is what
-	// the generator wrote; the rest is what each encoding makes of it.
+	// the generator wrote; the rest is what each encoding makes of it — the byte
+	// delta is spelled out because the percentage of it varies with bundle size.
 	if (changes.length > 0) {
 		lines.push(
-			`**${changes.length} asset(s) changed size**${
-				changes.length > MAX_ROWS ? `, biggest ${MAX_ROWS} by raw change:` : ":"
-			}`,
+			`<details><summary>${changes.length} asset(s) changed size${
+				changes.length > MAX_ROWS ? `, biggest ${MAX_ROWS} by raw change` : ""
+			}</summary>`,
 			"",
-			`| Asset | Raw (before → after) | ${COMPRESSED.map(
+			`| | Asset | Before | After | Change | ${COMPRESSED.map(
 				(metric) => METRIC_LABELS[metric]
 			).join(" | ")} |`,
-			`| :-- | --: |${COMPRESSED.map(() => " --: |").join("")}`
+			`| :-: | :-- | --: | --: | --: |${COMPRESSED.map(() => " --: |").join("")}`
 		);
 		for (const change of changes.slice(0, MAX_ROWS)) {
-			const raw = `${
-				change.status === "added" ? "—" : formatBytes(change.before.raw)
-			} → ${
-				change.status === "removed" ? "—" : formatBytes(change.after.raw)
-			} (${formatPercent(change.before.raw, change.after.raw)})`;
+			const mark =
+				change.status === "added"
+					? "➕"
+					: change.status === "removed"
+						? "➖"
+						: change.delta.raw > 0
+							? "🔺"
+							: "🔻";
 			const compressed = COMPRESSED.map((metric) =>
 				formatPercent(change.before[metric], change.after[metric])
 			).join(" | ");
-			lines.push(`| \`${change.name}\` | ${raw} | ${compressed} |`);
+			lines.push(
+				`| ${mark} | \`${change.name}\` | ${
+					change.status === "added" ? "—" : formatBytes(change.before.raw)
+				} | ${
+					change.status === "removed" ? "—" : formatBytes(change.after.raw)
+				} | **${change.delta.raw > 0 ? "+" : ""}${formatBytes(
+					change.delta.raw
+				)}** (${formatPercent(change.before.raw, change.after.raw)}) | ${compressed} |`
+			);
 		}
 		if (changes.length > MAX_ROWS) {
 			lines.push(
-				`| … ${
+				`| | … ${
 					changes.length - MAX_ROWS
-				} more asset(s), see the uploaded report |${COMPRESSED.map(
+				} more asset(s), see the uploaded report | | | |${COMPRESSED.map(
 					() => " |"
-				).join("")} |`
+				).join("")}`
 			);
 		}
-		lines.push("");
+		lines.push("", "</details>", "");
 	} else {
 		lines.push("No asset changed size.", "");
 	}
