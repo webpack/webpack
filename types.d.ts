@@ -5960,6 +5960,11 @@ declare interface CssProcessOptions {
 	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
 	 */
 	convertLengthUnits?: boolean;
+
+	/**
+	 * walk and recycle a block's children as each finishes, so peak storage is the open path rather than the whole block (default false). Walk-only, and it changes what a streamed rule reports about its own block: the children reach the visitors instead of the body, so `A.declarations` / `A.childRules` read as an empty block, and they reach the visitors in source order rather than every declaration before every child rule. Each child still carries the sibling index the collected walk gives it, and a block too small to be worth streaming is walked collected
+	 */
+	streamBlocks?: boolean;
 }
 type DeclarationEstreeIndex =
 	FunctionDeclaration | VariableDeclaration | ClassDeclaration;
