@@ -1,3 +1,21 @@
+diff --git a/node_modules/jest-worker/build/index.js b/node_modules/jest-worker/build/index.js
+--- a/node_modules/jest-worker/build/index.js
++++ b/node_modules/jest-worker/build/index.js
+@@ -1345,7 +1345,13 @@
+       }
+       if (limit && this._childIdleMemoryUsage && this._childIdleMemoryUsage > limit) {
+         this.state = _types.WorkerStates.RESTARTING;
+-        this._worker.terminate();
++        // webpack: Bun segfaults when a worker thread is terminated from the
++        // parent, so ask the worker to end itself. No-op off Bun.
++        if (process.versions.bun) {
++          this._worker.postMessage([_types.CHILD_MESSAGE_END, false]);
++        } else {
++          this._worker.terminate();
++        }
+       }
+     }
+   }
 diff --git a/node_modules/jest-worker/build/threadChild.js b/node_modules/jest-worker/build/threadChild.js
 index e757511..4be460e 100644
 --- a/node_modules/jest-worker/build/threadChild.js
