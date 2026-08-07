@@ -21,33 +21,62 @@ function getPropertyValue(property) {
 /** @type {typeof import("../../lib/html/syntax") | undefined} */
 let htmlSyntax;
 
+// Serialized without a closing tag, so `outerHTML` can round-trip them.
+const VOID_ELEMENTS = new Set([
+	"area",
+	"base",
+	"br",
+	"col",
+	"embed",
+	"hr",
+	"img",
+	"input",
+	"link",
+	"meta",
+	"source",
+	"track",
+	"wbr"
+]);
+
 /**
- * The top-level elements of an HTML fragment, each with the source that spelled
- * it. Parsing goes through webpack's own HTML parser so this fake models no HTML
+ * The top-level elements of an HTML fragment, each with its attributes and text.
+ * Parsing goes through webpack's own HTML parser so this fake models no HTML
  * itself; a nested element is skipped by its range falling inside the last one
  * kept, and the implied `<html>` / `<head>` wrappers carry an empty range.
  * @param {string} html fragment source
- * @returns {{ tag: string, source: string }[]} the fragment's top-level elements
+ * @returns {{ tag: string, attributes: { name: string, value: string }[], text: string }[]} the fragment's top-level elements
  */
 const parseFragment = (html) => {
 	if (htmlSyntax === undefined) htmlSyntax = require("../../lib/html/syntax");
 	const { SourceProcessor, NodeType } = htmlSyntax;
-	/** @type {{ tag: string, source: string }[]} */
+	/** @type {{ tag: string, attributes: { name: string, value: string }[], text: string }[]} */
 	const elements = [];
 	let lastEnd = 0;
+	/** @type {{ tag: string, attributes: { name: string, value: string }[], text: string } | undefined} */
+	let open;
 	new SourceProcessor()
 		.use({
 			[NodeType.Element]: {
 				enter: (path) => {
-					const start = path.start();
 					const end = path.end();
-					if (end === 0 || start < lastEnd) return;
+					if (end === 0 || path.start() < lastEnd) return;
 					lastEnd = end;
-					elements.push({
+					open = {
 						tag: path.tagName(),
-						source: html.slice(start, end)
-					});
+						attributes: path.attributes().map((attribute) => ({
+							name: attribute.name,
+							value: attribute.value
+						})),
+						text: ""
+					};
+					elements.push(open);
+				},
+				exit: () => {
+					open = undefined;
 				}
+			},
+			[NodeType.Text]: (path) => {
+				if (open !== undefined) open.text += path.data();
 			}
 		})
 		.process(html, {});
@@ -224,8 +253,6 @@ class FakeElement {
 		this.sheet = type === "link" ? new FakeSheet(this, basePath) : undefined;
 		this._textContent = "";
 		this._innerHTML = "";
-		/** Source that spelled this element, when `innerHTML` parsed it into being. */
-		this._outerHTML = "";
 		/** @type {Map<string, EventHandler[]> | undefined} */
 		this._eventListeners = undefined;
 		/** @type {EventHandler | undefined} */
@@ -254,9 +281,12 @@ class FakeElement {
 		// Kept verbatim above (tests read the raw string back), and parsed into
 		// children here — the HMR head reconciliation walks them.
 		this._children = [];
-		for (const { tag, source } of parseFragment(this._innerHTML)) {
+		for (const { tag, attributes, text } of parseFragment(this._innerHTML)) {
 			const element = this._document.createElement(tag);
-			element._outerHTML = source;
+			for (const { name, value } of attributes) {
+				element.setAttribute(name, value);
+			}
+			element.textContent = text;
 			this._attach(element);
 		}
 	}
@@ -265,8 +295,21 @@ class FakeElement {
 		return this._children;
 	}
 
+	get attributes() {
+		return Object.keys(this._attributes).map((name) => ({
+			name,
+			value: this._attributes[name]
+		}));
+	}
+
 	get outerHTML() {
-		return this._outerHTML;
+		let html = `<${this._type}`;
+		for (const { name, value } of this.attributes) {
+			html += value === "" ? ` ${name}` : ` ${name}="${value}"`;
+		}
+		html += ">";
+		if (VOID_ELEMENTS.has(this._type)) return html;
+		return `${html}${this._textContent}</${this._type}>`;
 	}
 
 	/**
@@ -293,7 +336,11 @@ class FakeElement {
 			// Don't let this cosmetic load timer keep the worker's event loop alive
 			// past teardown (Deno's setTimeout returns a number, hence the guard).
 			if (typeof timer.unref === "function") timer.unref();
-		} else if (node._type === "script" && this._document.onScript) {
+		} else if (
+			node._type === "script" &&
+			node.src !== undefined &&
+			this._document.onScript
+		) {
 			Promise.resolve().then(() => {
 				/** @type {(src: string | undefined) => void} */
 				(this._document.onScript)(node.src);
@@ -338,11 +385,11 @@ class FakeElement {
 	 * @returns {void}
 	 */
 	setAttribute(name, value) {
-		if (this._type === "link" && name === "href") {
-			this.href = value;
-		} else {
-			this._attributes[name] = value;
-		}
+		// Recorded raw for `outerHTML`; `href` / `src` additionally go through their
+		// setters, which resolve the URL and no-op on the wrong element type.
+		this._attributes[name] = value;
+		if (name === "href") this.href = value;
+		else if (name === "src") this.src = value;
 	}
 
 	/**
