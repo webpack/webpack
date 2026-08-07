@@ -122,7 +122,8 @@ const METRIC_LABELS = {
 // The workflow greps its own pull request comment by this, so it must not change.
 const COMMENT_MARKER = "<!-- code-size-report -->";
 
-const MAX_ASSET_ROWS = 20;
+// Every table shows the same number of movers; the rest is in the uploaded report.
+const MAX_ROWS = 20;
 
 // A `[contenthash]` renames the asset on every content change; the report keys
 // on the normalized name so a size change reads as a change, not add + remove.
@@ -479,8 +480,6 @@ const compareMetrics = (before, after) => {
 	return changes.sort((a, b) => Math.abs(b.delta.raw) - Math.abs(a.delta.raw));
 };
 
-const MAX_RUNTIME_ROWS = 25;
-
 /**
  * Counts how an entry set moved between two runs — the "N changed, N new, N
  * deleted, N unchanged" line, which says at a glance whether a change touched
@@ -583,40 +582,42 @@ const formatRuntimeModules = (report, baseline) => {
 				: b.now.bytes - a.now.bytes
 		);
 
-	if (rows.length === 0) return ["No runtime module changed size."];
+	if (rows.length === 0) return ["No runtime module changed size.", ""];
 
 	/** @type {string[]} */
 	const lines = [
-		`<details><summary>${
-			baseline
-				? `${rows.length} runtime module(s) changed`
-				: `${rows.length} runtime module(s) emitted`
-		}</summary>`,
+		`**${rows.length} runtime module(s) ${
+			baseline ? "changed size" : "emitted"
+		}**${
+			rows.length > MAX_ROWS
+				? `, biggest ${MAX_ROWS} by ${baseline ? "change" : "total"}:`
+				: ":"
+		}`,
 		"",
 		`| Runtime module | Total${
 			baseline ? " | Change" : ""
 		} | In cases | Biggest emitted |`,
 		`| :-- | --: |${baseline ? " --: |" : ""} --: | --: |`
 	];
-	for (const { name, now, delta } of rows.slice(0, MAX_RUNTIME_ROWS)) {
+	for (const { name, now, delta } of rows.slice(0, MAX_ROWS)) {
 		// `cases: 0` means the baseline emitted it and this run does not — dead
 		// runtime, or a case that stopped emitting.
 		lines.push(
 			`| \`${name}\` | ${formatBytes(now.bytes)}${
-				baseline ? ` | ${delta > 0 ? "+" : ""}${formatBytes(delta)}` : ""
+				baseline ? ` | ${delta > 0 ? "🔺 +" : "🔻 "}${formatBytes(delta)}` : ""
 			} | ${now.cases}${now.cases === 0 ? " (gone)" : ""} | ${formatBytes(
 				now.largest
 			)} |`
 		);
 	}
-	if (rows.length > MAX_RUNTIME_ROWS) {
+	if (rows.length > MAX_ROWS) {
 		lines.push(
-			`| … ${rows.length - MAX_RUNTIME_ROWS} more, see the uploaded report |${
+			`| … ${rows.length - MAX_ROWS} more, see the uploaded report |${
 				baseline ? " |" : ""
 			} | | |`
 		);
 	}
-	lines.push("", "</details>", "");
+	lines.push("");
 
 	return lines;
 };
@@ -635,30 +636,32 @@ const formatBiggestAssets = (report) => {
 
 	/** @type {string[]} */
 	const lines = [
-		`<details><summary>${assets.length} asset(s) emitted, biggest first</summary>`,
+		`**${assets.length} asset(s) emitted**${
+			assets.length > MAX_ROWS ? `, biggest ${MAX_ROWS} by raw size:` : ":"
+		}`,
 		"",
 		`| Asset | Raw | ${COMPRESSED.map((metric) => METRIC_LABELS[metric]).join(
 			" | "
 		)} |`,
 		`| :-- | --: |${COMPRESSED.map(() => " --: |").join("")}`
 	];
-	for (const [name, metrics] of assets.slice(0, MAX_ASSET_ROWS)) {
+	for (const [name, metrics] of assets.slice(0, MAX_ROWS)) {
 		lines.push(
 			`| \`${name}\` | ${formatBytes(metrics.raw)} | ${COMPRESSED.map(
 				(metric) => formatBytes(metrics[metric])
 			).join(" | ")} |`
 		);
 	}
-	if (assets.length > MAX_ASSET_ROWS) {
+	if (assets.length > MAX_ROWS) {
 		lines.push(
 			`| … ${
-				assets.length - MAX_ASSET_ROWS
+				assets.length - MAX_ROWS
 			} more asset(s), see the uploaded report |${COMPRESSED.map(
 				() => " |"
 			).join("")} |`
 		);
 	}
-	lines.push("", "</details>", "");
+	lines.push("");
 
 	return lines;
 };
@@ -762,9 +765,7 @@ const formatMarkdown = (report, baseline) => {
 	if (changes.length > 0) {
 		lines.push(
 			`**${changes.length} asset(s) changed size**${
-				changes.length > MAX_ASSET_ROWS
-					? `, biggest ${MAX_ASSET_ROWS} by raw change:`
-					: ":"
+				changes.length > MAX_ROWS ? `, biggest ${MAX_ROWS} by raw change:` : ":"
 			}`,
 			"",
 			`| Asset | Raw (before → after) | ${COMPRESSED.map(
@@ -772,7 +773,7 @@ const formatMarkdown = (report, baseline) => {
 			).join(" | ")} |`,
 			`| :-- | --: |${COMPRESSED.map(() => " --: |").join("")}`
 		);
-		for (const change of changes.slice(0, MAX_ASSET_ROWS)) {
+		for (const change of changes.slice(0, MAX_ROWS)) {
 			const raw = `${
 				change.status === "added" ? "—" : formatBytes(change.before.raw)
 			} → ${
@@ -783,10 +784,10 @@ const formatMarkdown = (report, baseline) => {
 			).join(" | ");
 			lines.push(`| \`${change.name}\` | ${raw} | ${compressed} |`);
 		}
-		if (changes.length > MAX_ASSET_ROWS) {
+		if (changes.length > MAX_ROWS) {
 			lines.push(
 				`| … ${
-					changes.length - MAX_ASSET_ROWS
+					changes.length - MAX_ROWS
 				} more asset(s), see the uploaded report |${COMPRESSED.map(
 					() => " |"
 				).join("")} |`
