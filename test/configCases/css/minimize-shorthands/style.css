@@ -203,3 +203,7 @@
 .t69 { filter: grayscale(1) invert(100%) }
 /*! declined: the amount is not the omitted one */
 .t69b { filter: grayscale(50%) }
+/*! filter: ...whether or not the zero carries the unit its grammar drops */
+.t70 { filter: blur(0px) hue-rotate(0turn) }
+/*! declined: a percentage is no length, so the engine drops this either way */
+.t70b { filter: blur(0%) }

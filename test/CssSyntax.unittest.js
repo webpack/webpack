@@ -1966,7 +1966,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			["a{transform:rotate(0deg)}", "a{transform:rotate(0)}"],
 			["a{transform:skew(0deg,0deg)}", "a{transform:skew(0,0)}"],
-			["a{filter:hue-rotate(0turn)}", "a{filter:hue-rotate(0)}"]
+			// `hue-rotate` goes further still — see the omitted-argument tests.
+			["a{transform:rotate(0turn)}", "a{transform:rotate(0)}"]
 		])("drops the unit where the grammar names <zero>: %s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
@@ -2220,6 +2221,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{filter:grayscale(100%)}", "a{filter:grayscale()}"],
 			["a{filter:invert(1)}", "a{filter:invert()}"],
 			["a{filter:blur(0)}", "a{filter:blur()}"],
+			// The zero still carries the unit its own grammar drops.
+			["a{filter:blur(0px)}", "a{filter:blur()}"],
+			["a{filter:hue-rotate(0deg)}", "a{filter:hue-rotate()}"],
+			["a{filter:hue-rotate(0turn)}", "a{filter:hue-rotate()}"],
 			["a{backdrop-filter:saturate(1)}", "a{backdrop-filter:saturate()}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
@@ -2228,6 +2233,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			["the amount is not the omitted one", "a{filter:grayscale(0)}"],
 			["the same, as a percentage", "a{filter:grayscale(50%)}"],
+			// The engine drops both of these, so folding them would revive one.
+			["a percentage is no length", "a{filter:blur(0%)}"],
+			["an angle is no length either", "a{filter:blur(0deg)}"],
 			[
 				"the function takes no optional argument",
 				"a{filter:drop-shadow(0 0 1px red)}"

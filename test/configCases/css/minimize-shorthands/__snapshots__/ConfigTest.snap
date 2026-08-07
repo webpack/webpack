@@ -91,5 +91,7 @@ Array [
   "/*! declined: a lone word that spells a generic family keeps its quotes */.t68b{font-family:\\"Math\\"}",
   "/*! filter: an argument that is the amount an omitted one means says nothing */.t69{filter:grayscale()invert()}",
   "/*! declined: the amount is not the omitted one */.t69b{filter:grayscale(50%)}",
+  "/*! filter: ...whether or not the zero carries the unit its grammar drops */.t70{filter:blur()hue-rotate()}",
+  "/*! declined: a percentage is no length, so the engine drops this either way */.t70b{filter:blur(0%)}",
 ]
 `;
