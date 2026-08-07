@@ -21607,6 +21607,14 @@ declare class PrintContext<TPath, TNode> {
 	get(node: TNode): string;
 
 	/**
+	 * Append `text` as a piece of its own, so {@link retract} can still take it
+	 * back once a later sibling turns out to override it. Cuts the accumulating
+	 * tail off in front of it, so it is for the text that may actually be taken
+	 * back and not for output at large.
+	 */
+	emitRetractable(text: string): number;
+
+	/**
 	 * Take back an already-emitted piece — the printer has since found that a
 	 * later one overrides it. Pieces after it keep their place, so this must not
 	 * be used on a piece something was anchored to (see {@link take}).
