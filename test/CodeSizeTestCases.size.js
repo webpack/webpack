@@ -574,9 +574,10 @@ const formatBiggestAssets = (report) => {
 /**
  * @param {Report} report current report
  * @param {Report=} baseline baseline report
+ * @param {string=} noBaselineReason why there is nothing to compare against
  * @returns {string} markdown summary
  */
-const formatMarkdown = (report, baseline) => {
+const formatMarkdown = (report, baseline, noBaselineReason) => {
 	/** @type {string[]} */
 	const lines = [
 		// Lets the workflow find its own comment and update it in place instead of
@@ -598,7 +599,7 @@ const formatMarkdown = (report, baseline) => {
 		lines.push(
 			built,
 			"",
-			"No baseline report was found for `main`, so there is nothing to compare against yet.",
+			`${noBaselineReason}, so there is nothing to compare against yet.`,
 			"",
 			...formatBiggestAssets(report)
 		);
@@ -805,22 +806,22 @@ const discoverCases = (filter, negativeFilter) => {
 
 /**
  * @param {string} file path to a stored report
- * @returns {Report | undefined} the report, or nothing when it can't be compared
+ * @returns {{ report?: Report, reason?: string }} the report, or why it cannot be
+ * compared against — which the summary states, so a skipped comparison is not
+ * mistaken for a missing upload
  */
 const readBaseline = (file) => {
 	if (!fs.existsSync(file)) {
-		console.log(`No baseline report at ${file}, reporting this run only.`);
-		return undefined;
+		return { reason: "No baseline report was found for `main`" };
 	}
 	/** @type {Report} */
 	const report = JSON.parse(fs.readFileSync(file, "utf8"));
 	if (report.version !== REPORT_VERSION) {
-		console.log(
-			`Baseline report has format version ${report.version}, this run produces ${REPORT_VERSION} — skipping the comparison.`
-		);
-		return undefined;
+		return {
+			reason: `The baseline report for \`main\` is format version ${report.version} and this run produces ${REPORT_VERSION}`
+		};
 	}
-	return report;
+	return { report };
 };
 
 const run = async () => {
@@ -914,12 +915,10 @@ const run = async () => {
 	}
 	console.log(`\nReport written to ${path.relative(rootPath, outputFile)}`);
 
-	const summary = formatMarkdown(
-		report,
-		args.baseline
-			? readBaseline(path.resolve(rootPath, args.baseline))
-			: undefined
-	);
+	const baseline = args.baseline
+		? readBaseline(path.resolve(rootPath, args.baseline))
+		: { reason: "No baseline report was given" };
+	const summary = formatMarkdown(report, baseline.report, baseline.reason);
 	console.log(`\n${summary}`);
 	if (args.summary) {
 		fs.appendFileSync(path.resolve(rootPath, args.summary), summary);
