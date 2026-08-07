@@ -87,7 +87,7 @@ Array [
    drops whole, so the pair collapse refuses one exactly as a box does */.t76{margin-block-start:inherit;margin-block-end:1px}.t76a{margin-block-start:inherit;margin-block-end:inherit}",
   "/*! declined: ...and a substitution could expand to both values at once */.t77{margin-block-start:var(--x);margin-block-end:var(--x)}",
   "/*! lightningcss: (1200px<=width<=2000px) — an \`and\` of two one-sided ranges on
-   one feature is the interval it describes, whichever order they are written */@media (1200px<=width<=2000px){.t65a{color:red}}@media (1200px<=width<=2000px){.t65b{color:red}}",
+   one feature is the interval it describes, whichever order they are written */@media (1200px<=width<=2000px){.t65a{color:red}.t65b{color:red}}",
   "/*! declined: two comparisons the same way round are no interval */@media (width>=1200px) and (width>=1300px){.t65c{color:red}}",
   "/*! declined: \`or\` is not a conjunction */@media (width>=1200px) or (width<=2000px){.t65d{color:red}}",
   "/*! webpack: every range-type feature, and nested conditions */@media (resolution>=2dppx){.t67{color:red}}@media ((width>=1px) and (height<=2px)){.t68{color:red}}",

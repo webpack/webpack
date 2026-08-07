@@ -2288,6 +2288,31 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it.each([
+			["@media x{a{top:0}}@media x{b{top:0}}", "@media x{a{top:0}b{top:0}}"],
+			[
+				"@supports (a:b){i{t:0}}@supports (a:b){j{t:0}}",
+				"@supports (a:b){i{t:0}j{t:0}}"
+			],
+			["a{@media x{.p{t:0}}@media x{.q{t:0}}}", "a{@media x{.p{t:0}.q{t:0}}}"]
+		])("joins the blocks of one condition: %s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the conditions differ", "@media x{a{top:0}}@media y{b{top:0}}"],
+			// A later `@keyframes` of the same name replaces the earlier one.
+			[
+				"the prelude names what the block belongs to",
+				"@keyframes k{0%{top:0}}@keyframes k{50%{top:1px}}"
+			],
+			["a rule stands between them", "@media x{a{t:0}}i{c:d}@media x{b{t:0}}"],
+			// `@layer a{}` declares where the layer sits in the cascade.
+			["one block is empty", "@layer a{}@layer a{i{t:0}}"]
+		])("keeps both at-rules where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+
+		it.each([
 			// Only a rule nested in another: at the top level an engine that cannot
 			// read `&` still reads whatever it would be joined to.
 			["`&` stands at the top level", "&.x{top:0}&.y{top:0}"],

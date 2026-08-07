@@ -1247,6 +1247,41 @@ const collectShadowProperties = () => {
 	return out.sort(([a], [b]) => (a < b ? -1 : 1));
 };
 
+// The block productions that hold rules rather than declarations. An at-rule
+// whose block holds rules is one two adjacent blocks can be merged for.
+const RULE_HOLDING_BLOCKS = [
+	"<group-rule-body>",
+	"<block-contents>",
+	"<stylesheet>",
+	"<rule-list>",
+	"<qualified-rule-list>"
+];
+
+/**
+ * The at-rules whose adjacent blocks merge into one: their block holds rules, and
+ * their prelude states a condition rather than naming the one thing the block
+ * belongs to (`@keyframes`, whose later block replaces the earlier).
+ * @returns {string[]} the names without the `@`, sorted
+ */
+const collectMergeableAtRules = () => {
+	const replaced = new Set(SUPPLEMENT.replacedByNameAtRules);
+	const out = [];
+	for (const [name, entry] of Object.entries(atRules)) {
+		const syntax = entry.syntax;
+		if (typeof syntax !== "string") continue;
+		if (!RULE_HOLDING_BLOCKS.some((one) => syntax.includes(one))) continue;
+		const bare = name.slice(1);
+		if (!replaced.has(bare)) out.push(bare);
+	}
+	for (const one of replaced) {
+		const entry = atRules[`@${one}`];
+		if (entry === undefined) {
+			throw new Error(`\`@${one}\` is gone from mdn-data`);
+		}
+	}
+	return out.sort();
+};
+
 /**
  * Each `<filter-function>` whose argument the grammar marks optional -> the
  * amount an omitted one means, so writing that amount says nothing. The set is
@@ -2292,7 +2327,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -2469,6 +2504,11 @@ const SUPPLEMENT = {
 	// runs the animation, firing its events) and not `@layer` (an empty block
 	// declares the layer's cascade order).
 	droppableWhenEmptyAtRules: ["media", "supports", "container"],
+	// At-rules holding rules whose prelude names one thing rather than stating a
+	// condition, so a second block with the same prelude replaces the first
+	// instead of adding to it — merging two would change which one runs.
+	// `@layer` is not here: a layer's blocks do add to it.
+	replacedByNameAtRules: ["keyframes"],
 	// CSS Values 4 §6.2 and §8: the units fixed against each other. `units.json`
 	// names them but states neither their type nor the ratios. Counted in a base
 	// that makes every one an integer — 1/36576 inch, the smallest subdivision
@@ -3184,6 +3224,7 @@ const collectData = () => {
 	const [positionXKeywords, positionYKeywords] = collectPositionKeywordAxes();
 	const shorthandInitialKeywords = collectShorthandInitialKeywords();
 	const shadowProperties = collectShadowProperties();
+	const mergeableAtRules = collectMergeableAtRules();
 	const fontStretchPercentages = collectFontStretchPercentages();
 	const filterFunctionOmitted = collectFilterFunctionOmitted();
 	const shorterColorSpellings = collectShorterColorSpellings(colorNames);
@@ -3502,6 +3543,10 @@ const ZERO_UNIT_KEEPING_PROPERTIES = ${setLiteral(SUPPLEMENT.zeroUnitKeepingProp
 // At-rules whose empty block is inert, so dropping it changes nothing.
 const DROPPABLE_WHEN_EMPTY_AT_RULES = ${setLiteral(SUPPLEMENT.droppableWhenEmptyAtRules)};
 
+// At-rules whose block holds rules and whose prelude states a condition, so two
+// adjacent blocks with the same prelude are the one block they resolve to.
+const MERGEABLE_AT_RULES = ${setLiteral(mergeableAtRules)};
+
 // The math functions whose result steps with their arguments, so a value inside
 // one keeps the unit and the digits it was written with.
 const STEPPED_FUNCTIONS = ${setLiteral(steppedFunctions)};
@@ -3658,7 +3703,7 @@ module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
 module.exports.MATH_FUNCTION_ARITY = MATH_FUNCTION_ARITY;
 module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
 module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
-module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;
+module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;\nmodule.exports.MERGEABLE_AT_RULES = MERGEABLE_AT_RULES;
 module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;
 module.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;

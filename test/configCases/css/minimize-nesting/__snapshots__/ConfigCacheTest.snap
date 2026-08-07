@@ -16,5 +16,12 @@ Array [
   "/*! selector: the legacy one-colon spelling and an implied universal both go */.l{:before{top:0}.n18:first-line{top:0}}",
   "/*! at-rule: a nested \`@media\` keeps its own block, and the rules in it join */.m{@media (width>=100px){.n19,.n20{top:0}}}",
   "/*! empty: a nested rule that paints nothing is dropped, leaving its neighbours adjacent */.o{.n21,.n23{top:0}}",
+  "/*! at-rule: two adjacent blocks of the same condition are the one block it opens */@media (width>=200px){.p1{top:0}.p2{top:0}}",
+  "/*! at-rule: ...at any depth, and \`@supports\` the same way */.q{@supports (top:0){.q1{top:0}.q2{top:0}}}",
+  "/*! declined: the conditions differ, so the two blocks are not one */@media (width>=300px){.r1{top:0}}@media (width>=400px){.r2{top:0}}",
+  "/*! declined: a later \`@keyframes\` of the same name replaces the earlier, so the
+   two blocks are not one either */@keyframes s{0%{top:0}}@keyframes s{50%{top:1px}}",
+  "/*! at-rule: a rule nested in one, holding a nested rule of its own */@media (width>=500px){.t1{top:0;& .t2{top:1px}}}",
+  "/*! declined: a rule stands between the two blocks */@media (width>=600px){.u1{top:0}}.u2{top:0}@media (width>=600px){.u3{top:0}}",
 ]
 `;
