@@ -1977,9 +1977,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{background-repeat:no-repeat}"
 			],
 			["a{mask-repeat:round round}", "a{mask-repeat:round}"],
-			// `center` is the `50%` each axis defaults to.
-			["a{background-position:center center}", "a{background-position:50%}"],
-			["a{background-position:center}", "a{background-position:50%}"],
 			// `initial` computes to the initial value, which is often a shorter word.
 			["a{min-width:initial}", "a{min-width:auto}"],
 			["a{outline-width:initial}", "a{outline-width:medium}"]
@@ -2007,6 +2004,81 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			],
 			["the same, on the other opacity", "a{stop-opacity:initial}"]
 		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a position written as edge keywords", () => {
+		it.each([
+			["a{background-position:center}", "a{background-position:50%}"],
+			["a{background-position:center center}", "a{background-position:50%}"],
+			["a{background-position:left}", "a{background-position:0%}"],
+			["a{background-position:right}", "a{background-position:100%}"],
+			["a{background-position:left center}", "a{background-position:0%}"],
+			["a{background-position:left top}", "a{background-position:0%0%}"],
+			// `<position>`'s keyword pair is order-free, so both readings resolve.
+			["a{background-position:top left}", "a{background-position:0%0%}"],
+			["a{background-position:left bottom}", "a{background-position:0%100%}"],
+			[
+				"a{background-position:center bottom}",
+				"a{background-position:50%100%}"
+			],
+			[
+				"a{background-position:right bottom}",
+				"a{background-position:100%100%}"
+			],
+			["a{background-position:LEFT BOTTOM}", "a{background-position:0%100%}"],
+			["a{object-position:left top}", "a{object-position:0%0%}"],
+			["a{mask-position:left top}", "a{mask-position:0%0%}"],
+			["a{perspective-origin:left top}", "a{perspective-origin:0%0%}"],
+			["a{offset-anchor:left top}", "a{offset-anchor:0%0%}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// `top` is `50% 0%`, which the keyword already says in fewer bytes.
+			["the percentages are no shorter", "a{background-position:top}"],
+			["the same, on the other edge", "a{background-position:bottom}"],
+			// An offset beside a keyword is the 3/4-value syntax, where the keyword
+			// names the edge to measure from rather than a place on the axis.
+			["an offset follows a keyword", "a{background-position:left 10px}"],
+			[
+				"both axes carry an offset",
+				"a{background-position:left 10px top 20px}"
+			],
+			["a comma parts two layers", "a{background-position:left top,right top}"],
+			["the two keywords share an axis", "a{background-position:left right}"],
+			// `transform-origin` takes a z offset past the position, so its keywords
+			// are not the whole value and the table leaves it out.
+			[
+				"the position is only part of the value",
+				"a{transform-origin:left top}"
+			],
+			["the position is a shorthand's slot", "a{background:left top}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a transform list's inter-function whitespace", () => {
+		it.each([
+			[
+				"a{transform:scale(2) rotate(45deg)}",
+				"a{transform:scale(2)rotate(45deg)}"
+			],
+			[
+				"a{transform:scale(.85) translateY(-.5rem) rotate(45deg)}",
+				"a{transform:scale(.85)translateY(-.5rem)rotate(45deg)}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the value is a keyword", "a{transform:none}"],
+			["the property is no transform list", "a{background:red none}"]
+		])("keeps the value where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
 	});
