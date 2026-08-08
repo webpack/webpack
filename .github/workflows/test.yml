@@ -184,8 +184,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          # Pinned; revert to "latest" once https://github.com/nodejs/node/issues/63715 is resolved
-          node-version: "26.2.0"
+          node-version: latest
           cache: yarn
 
       - run: yarn --frozen-lockfile
