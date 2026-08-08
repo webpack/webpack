@@ -6908,9 +6908,6 @@ declare interface EffectUse {
 }
 type EffectUseType = "use" | "use-pre" | "use-post";
 declare class ElectronTargetPlugin {
-	/**
-	 * Creates an instance of ElectronTargetPlugin.
-	 */
 	constructor(
 		context?: "preload" | "main" | "renderer",
 		type?:
