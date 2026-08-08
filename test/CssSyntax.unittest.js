@@ -2314,6 +2314,26 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a comment parting two components", () => {
+		// The comment ends both tokens, so a rewritten value has to keep them apart.
+		it.each([
+			["a{margin:1px 1px/*c*/1px 1px}", "a{margin:1px}"],
+			["a{margin:1px/*c*/2px 1px 2px}", "a{margin:1px 2px}"],
+			["a{box-shadow:1px 1px/*c*/2px 0 red}", "a{box-shadow:1px 1px 2px red}"],
+			[
+				"a{transition:opacity/*c*/1s ease-in 2s}",
+				"a{transition:opacity 1s 2s ease-in}"
+			],
+			["a{background-position:left/*c*/top}", "a{background-position:0%0%}"],
+			[
+				"a{grid-template-columns:1fr/*c*/1fr}",
+				"a{grid-template-columns:1fr 1fr}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+	});
+
 	describe("a value holding a substitution", () => {
 		// The engine keeps such a value as the token stream it was written as until
 		// the substitution resolves, so every rewrite inside one is declined.
