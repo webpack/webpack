@@ -4324,6 +4324,251 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	});
 });
 
+describe("SourceProcessor — streamed walk recycling", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	// Every case here is sized past the streaming threshold (49152 nodes) so the
+	// walk actually enters an open element, flushes under it and recycles node
+	// ids — the paths a document walked in one pass at EOF never reaches. The
+	// repeat counts are per-shape because the threshold counts nodes, not
+	// repetitions: two/three-node shapes need `BIG`, a five-node row needs fewer.
+	const BIG = 40000;
+	const BIG_ROWS = 15000;
+
+	/**
+	 * @param {string} inner repeated markup
+	 * @param {number=} times repetitions (default `BIG`)
+	 * @returns {string} a document past the streaming threshold
+	 */
+	const bigBody = (inner, times = BIG) =>
+		`<!DOCTYPE html><html><body>${inner.repeat(times)}</body></html>`;
+
+	/**
+	 * @param {string} src source
+	 * @param {import("../lib/html/syntax").HtmlProcessOptions=} options options
+	 * @returns {string[]} `+tag` / `-tag` in visit order
+	 */
+	const walk = (src, options) => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/html/syntax").VisitorMap} */ ({
+					[NodeType.Element]: {
+						enter: (path) => log.push(`+${path.tagName()}`),
+						exit: (path) => log.push(`-${path.tagName()}`)
+					}
+				})
+			)
+			.process(src, options);
+		return log;
+	};
+
+	it("visits every element once across flush batches", () => {
+		const log = walk(bigBody("<p><b>x</b></p>"));
+		expect(log.filter((l) => l === "+p")).toHaveLength(BIG);
+		expect(log.filter((l) => l === "+b")).toHaveLength(BIG);
+		// enter/exit stay balanced, so nothing was visited twice or dropped
+		expect(log.filter((l) => l.startsWith("+"))).toHaveLength(
+			log.filter((l) => l.startsWith("-")).length
+		);
+	});
+
+	it("keeps parents around their children across a recycle", () => {
+		const log = walk(bigBody("<p><b>x</b></p>"));
+		const body = log.slice(log.indexOf("+body") + 1, log.lastIndexOf("-body"));
+		for (let i = 0; i < body.length; i += 4) {
+			expect(body.slice(i, i + 4)).toEqual(["+p", "+b", "-b", "-p"]);
+		}
+	});
+
+	it("honours skipChildren() on a streamed element", () => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/html/syntax").VisitorMap} */ ({
+					[NodeType.Element]: {
+						enter: (path) => {
+							log.push(`+${path.tagName()}`);
+							// `div` stays open while its subtree streams, so its skipped
+							// descendants are the ones the walk tracks without entering
+							if (path.tagName() === "div") path.skipChildren();
+						},
+						exit: (path) => log.push(`-${path.tagName()}`)
+					}
+				})
+			)
+			.process(
+				`<!DOCTYPE html><html><body><div>${"<p><b>x</b></p>".repeat(BIG)}</div></body></html>`
+			);
+		// the skipped element itself still exits; nothing below it is visited
+		expect(log.filter((l) => l === "+div")).toHaveLength(1);
+		expect(log.filter((l) => l === "-div")).toHaveLength(1);
+		expect(log.filter((l) => l.endsWith("p") || l.endsWith("b"))).toHaveLength(
+			0
+		);
+		// every exit pairs with an enter
+		const open = [];
+		for (const entry of log) {
+			if (entry.startsWith("+")) open.push(entry.slice(1));
+			else expect(open.pop()).toBe(entry.slice(1));
+		}
+		expect(open).toHaveLength(0);
+	});
+
+	it("merges adjacent text across a flush boundary", () => {
+		/** @type {string[]} */
+		const text = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/html/syntax").VisitorMap} */ ({
+					[NodeType.Text]: (path) => text.push(path.data())
+				})
+			)
+			// entity references split the tokenizer's text runs; the walk must not
+			// also split the node, so one text child stays one visit. The leading
+			// paragraphs are what push the parse past the streaming threshold, so
+			// the entity run at the tail is reached with the walk already streaming.
+			.process(
+				`<!DOCTYPE html><html><body>${"<p>x</p>".repeat(
+					BIG
+				)}<p id="tail">${"a&amp;b".repeat(2000)}</p></body></html>`
+			);
+		expect(text).toHaveLength(BIG + 1);
+		expect(text[text.length - 1]).toHaveLength(2000 * 3);
+	});
+
+	it("streams a document whose form element leaves the open stack", () => {
+		const log = walk(bigBody("<form><p>x</p></form>"));
+		expect(log.filter((l) => l === "+form")).toHaveLength(BIG);
+		expect(log.filter((l) => l === "-form")).toHaveLength(BIG);
+	});
+
+	it("does not re-visit an element the form end tag left open", () => {
+		// `</form>` removes the form from the *middle* of the open stack while the
+		// `div` inside it stays open, so nothing has finished. Reconciling against
+		// the open stack there closes and re-enters the live `div` — visits stay
+		// balanced, so only the visit count catches it.
+		const log = walk(
+			`<!DOCTYPE html><html><body><form>${"<p>x</p>".repeat(
+				BIG
+			)}<div></form><p>y</p></div></body></html>`
+		);
+		expect(log.filter((l) => l === "+div")).toHaveLength(1);
+		expect(log.filter((l) => l === "-div")).toHaveLength(1);
+		// the div nests inside the form in the tree, so it closes first
+		const divExit = log.lastIndexOf("-div");
+		expect(log.indexOf("-form")).toBeGreaterThan(divExit);
+	});
+
+	it("visits a form subtree the walk never entered before `</form>`", () => {
+		// Same mid-stack removal, but the bulk sits *before* the form, so the walk
+		// is streaming yet has never entered the form when `</form>` takes it off
+		// the stack. Keying the halt on "was it entered" loses the whole subtree.
+		const log = walk(
+			`<!DOCTYPE html><html><body>${"<p>x</p>".repeat(
+				BIG
+			)}<form><div></form><p>y</p></div></body></html>`
+		);
+		expect(log.slice(log.indexOf("+form"))).toEqual([
+			"+form",
+			"+div",
+			"+p",
+			"-p",
+			"-div",
+			"-form",
+			"-body",
+			"-html"
+		]);
+	});
+
+	it("streams tables, where flushing is held back", () => {
+		const log = walk(bigBody("<table><tr><td>a</td></tr></table>", BIG_ROWS));
+		expect(log.filter((l) => l === "+table")).toHaveLength(BIG_ROWS);
+		expect(log.filter((l) => l === "+td")).toHaveLength(BIG_ROWS);
+	});
+
+	it.each([
+		[
+			"below the threshold",
+			"<!DOCTYPE html><html><body><p>a</p></body></html>"
+		],
+		["past the threshold", bigBody("<p><b>x</b></p>")]
+	])("honours skipChildren() on the root, %s", (_label, src) => {
+		/** @type {string[]} */
+		const log = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/html/syntax").VisitorMap} */ ({
+					[NodeType.Document]: {
+						enter: (path) => {
+							log.push("+doc");
+							path.skipChildren();
+						},
+						exit: () => log.push("-doc")
+					},
+					[NodeType.Element]: {
+						enter: (path) => log.push(`+${path.tagName()}`),
+						exit: (path) => log.push(`-${path.tagName()}`)
+					}
+				})
+			)
+			.process(src);
+		// the root still closes; nothing beneath it is visited at all
+		expect(log).toEqual(["+doc", "-doc"]);
+	});
+});
+
+describe("SourceProcessor — streamed walk offsets", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	// `HtmlParser` folds a head element's `end` into its injection anchor at
+	// `enter` and consumes the anchor in the same visit, so a provisional `end`
+	// there would misplace injected tags. The streamed walk only starts once the
+	// parse reaches `in body`, which is what keeps every head element a
+	// completed subtree with a final `end` — assert that directly.
+	it("reports final end offsets for head elements", () => {
+		const SRC = [
+			"<!DOCTYPE html><html><head><title>t</title>",
+			'<script src="a.js"></script>',
+			"<style>.a{color:red}</style>",
+			'<link rel="stylesheet" href="a.css">',
+			"</head><body><p>x</p></body></html>"
+		].join("");
+		/** @type {[string, number, number][]} */
+		const seen = [];
+		new SourceProcessor()
+			.use(
+				/** @type {import("../lib/html/syntax").VisitorMap} */ ({
+					[NodeType.Element]: (path) => {
+						seen.push([path.tagName(), path.start(), path.end()]);
+					}
+				})
+			)
+			.process(SRC);
+		// A final `end` spans the element's own end tag; a provisional one would
+		// stop at the start tag's `>`.
+		const spans = new Map(
+			seen.map(([name, start, end]) => [name, SRC.slice(start, end)])
+		);
+		expect(spans.get("title")).toBe("<title>t</title>");
+		expect(spans.get("script")).toBe('<script src="a.js"></script>');
+		expect(spans.get("style")).toBe("<style>.a{color:red}</style>");
+		expect(spans.get("link")).toBe('<link rel="stylesheet" href="a.css">');
+		expect(seen.map((s) => s[0])).toEqual([
+			"html",
+			"head",
+			"title",
+			"script",
+			"style",
+			"link",
+			"body",
+			"p"
+		]);
+	});
+});
+
 describe("parseHtml — path accessor completeness", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
