@@ -837,6 +837,32 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		);
 	});
 
+	it("parts a selector's tokens with a comment rather than whitespace", () => {
+		// Whitespace between two of a selector's tokens is a descendant combinator,
+		// so the separator a fusing junction needs there is an empty comment: `a b`
+		// would match what `a/**/b` (two adjacent type selectors) never does.
+		expect(min("a/**/b{c:1}")).toBe("a/**/b{c:1}");
+		expect(min("@scope (div/**/span){a{c:1}}")).toBe(
+			"@scope (div/**/span){a{c:1}}"
+		);
+		// A comment the source spelled out where nothing would fuse still goes.
+		expect(min("a/**/ b{c:1}")).toBe("a b{c:1}");
+	});
+
+	it("keeps a custom property's value as the source wrote it", () => {
+		// The value is the text `getPropertyValue()` hands back, so the comment
+		// stays: dropping it would fuse the two tokens it parts.
+		expect(min("a{--x:1px/**/2px}")).toBe("a{--x:1px/**/2px}");
+		expect(min("a{--x:1px 1px/**/1px 1px}")).toBe("a{--x:1px 1px/**/1px 1px}");
+		// Leading and trailing whitespace is not part of it.
+		expect(min("a{--x: 1px 2px }")).toBe("a{--x:1px 2px}");
+		// A kept comment rides along in the value, so it is not also re-emitted
+		// before the next top-level node.
+		expect(min("a{--x:1px/*!c*/2px}b{c:1}")).toBe("a{--x:1px/*!c*/2px}b{c:1}");
+		// Outside one it still moves ahead of the rule that follows it.
+		expect(min("a{c:red/*!c*/}b{c:1}")).toBe("a{c:red}/*!c*/b{c:1}");
+	});
+
 	it("separates rewritten numbers that would fuse", () => {
 		// `1.0.5` is two numbers; normalized to `1` and `.5` they would join as the
 		// single number `1.5`.
@@ -2311,6 +2337,26 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["there is one component", "a{filter:blur(2px)}"]
 		])("keeps the value where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a comment parting two components", () => {
+		// The comment ends both tokens, so a rewritten value has to keep them apart.
+		it.each([
+			["a{margin:1px 1px/*c*/1px 1px}", "a{margin:1px}"],
+			["a{margin:1px/*c*/2px 1px 2px}", "a{margin:1px 2px}"],
+			["a{box-shadow:1px 1px/*c*/2px 0 red}", "a{box-shadow:1px 1px 2px red}"],
+			[
+				"a{transition:opacity/*c*/1s ease-in 2s}",
+				"a{transition:opacity 1s 2s ease-in}"
+			],
+			["a{background-position:left/*c*/top}", "a{background-position:0%0%}"],
+			[
+				"a{grid-template-columns:1fr/*c*/1fr}",
+				"a{grid-template-columns:1fr 1fr}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
 		});
 	});
 
