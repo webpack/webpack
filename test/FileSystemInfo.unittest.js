@@ -721,6 +721,25 @@ ${details(snapshot)}`)
 				done();
 			});
 		});
+
+		// #21636: an absolute target was joined onto the link's parent directory,
+		// so the snapshot pointed at a path that does not exist.
+		it("should invalidate the snapshot when a symlink with an absolute target changes", (done) => {
+			const fs = createFs();
+			const fsInfo = createFsInfo(fs);
+			fsInfo.createSnapshot(
+				Date.now() + 10000,
+				[],
+				["/path/context/sub"],
+				[],
+				{ hash: true },
+				(err, snapshot) => {
+					if (err) return done(err);
+					fs.writeFileSync("/path/folder/context/file.txt", "Changed");
+					expectSnapshotState(fs, snapshot, false, done);
+				}
+			);
+		});
 	});
 
 	describe("unsupported directory entries", () => {
