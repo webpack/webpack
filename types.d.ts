@@ -10181,6 +10181,11 @@ declare interface HtmlProcessOptions {
 	 * what the target can read, forwarded to the CSS minifier this runs over an inline `<style>` and every `style=""`
 	 */
 	environment?: CssEnvironment;
+
+	/**
+	 * minifies an inline `<script>` body — returning undefined keeps it as written. Printing is synchronous and every JS minifier is async, so the caller resolves the bodies first (see `htmlMinify`) and this looks them up
+	 */
+	minifyJs?: (code: string, isModule: boolean) => undefined | string;
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**

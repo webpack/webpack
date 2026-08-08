@@ -1165,6 +1165,29 @@ const PARSER_TABLES = [
 		"set",
 		"`<script>` bodies that are JSON: the two dedicated types plus any `+json` subtype (`application/ld+json`).",
 		["application/json", "importmap", "speculationrules"]
+	],
+	[
+		"JAVASCRIPT_SCRIPT_TYPES",
+		"set",
+		"MIME sniffing's JavaScript MIME type essence strings. A `<script>` whose type is one of these is a classic script the browser executes, so its body is JavaScript; an absent or empty type is too. The match is on the essence alone — `text/javascript; charset=utf-8` carries a parameter, which makes the element a data block rather than a script.",
+		[
+			"application/ecmascript",
+			"application/javascript",
+			"application/x-ecmascript",
+			"application/x-javascript",
+			"text/ecmascript",
+			"text/javascript",
+			"text/javascript1.0",
+			"text/javascript1.1",
+			"text/javascript1.2",
+			"text/javascript1.3",
+			"text/javascript1.4",
+			"text/javascript1.5",
+			"text/jscript",
+			"text/livescript",
+			"text/x-ecmascript",
+			"text/x-javascript"
+		]
 	]
 ];
 
