@@ -729,6 +729,60 @@ describe("MultiCompiler", () => {
 		});
 	});
 
+	it("should report a child as blocked only while it waits for its parent", (done) => {
+		const compiler = /** @type {import("../").MultiCompiler} */ (
+			webpack(
+				/** @type {import("../").MultiConfiguration} */ ([
+					{
+						name: "a",
+						mode: "development",
+						context: path.join(__dirname, "fixtures"),
+						entry: "./a.js"
+					},
+					{
+						name: "b",
+						mode: "development",
+						context: path.join(__dirname, "fixtures"),
+						entry: "./b.js",
+						dependencies: ["a"]
+					}
+				])
+			)
+		);
+		compiler.outputFileSystem = /** @type {import("../").OutputFileSystem} */ (
+			/** @type {unknown} */ (createFsFromVolume(new Volume()))
+		);
+		compiler.watchFileSystem =
+			/** @type {import("../lib/util/fs").WatchFileSystem} */ ({
+				watch: (_a, _b, _c, _d, _e, _f, _g) =>
+					/** @type {import("../lib/util/fs").Watcher} */ (
+						/** @type {unknown} */ (undefined)
+					)
+			});
+		/** @type {boolean | undefined} */
+		let blockedWhileParentBuilds;
+		compiler.compilers[0].hooks.done.tap("test", () => {
+			// `a` is done but has not handed `b` over yet, so `b` is still waiting.
+			if (blockedWhileParentBuilds === undefined) {
+				blockedWhileParentBuilds = /** @type {import("../lib/Watching")} */ (
+					/** @type {import("../").MultiWatching} */ (compiler.watching)
+						.watchings[1]
+				).blocked;
+			}
+		});
+		const watching = /** @type {import("../").MultiWatching} */ (
+			compiler.watch({}, (err) => {
+				if (err) return done(err);
+				expect(blockedWhileParentBuilds).toBe(true);
+				// Both have built, so neither waits on anything any more.
+				for (const child of watching.watchings) {
+					expect(child.blocked).toBe(false);
+				}
+				compiler.close(done);
+			})
+		);
+	});
+
 	it("should respect parallelism when using invalidate", (done) => {
 		const compiler = /** @type {import("../").MultiCompiler} */ (
 			webpack(
