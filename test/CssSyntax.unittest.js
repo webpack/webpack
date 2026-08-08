@@ -856,6 +856,11 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min("a{--x:1px 1px/**/1px 1px}")).toBe("a{--x:1px 1px/**/1px 1px}");
 		// Leading and trailing whitespace is not part of it.
 		expect(min("a{--x: 1px 2px }")).toBe("a{--x:1px 2px}");
+		// A kept comment rides along in the value, so it is not also re-emitted
+		// before the next top-level node.
+		expect(min("a{--x:1px/*!c*/2px}b{c:1}")).toBe("a{--x:1px/*!c*/2px}b{c:1}");
+		// Outside one it still moves ahead of the rule that follows it.
+		expect(min("a{c:red/*!c*/}b{c:1}")).toBe("a{c:red}/*!c*/b{c:1}");
 	});
 
 	it("separates rewritten numbers that would fuse", () => {
