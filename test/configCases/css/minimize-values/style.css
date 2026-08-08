@@ -330,3 +330,5 @@
 /*! webpack: a comment parts two components, so a rewrite keeps them apart */
 .t138 { margin: 1px 1px/*c*/1px 1px }
 .t139 { transition: opacity/*c*/1s ease-in 2s }
+/*! webpack: a custom property's value stays as written, comment included */
+.t140 { --t140: 1px 1px/*c*/1px 1px }
