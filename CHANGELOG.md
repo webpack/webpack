@@ -1,5 +1,97 @@
 # webpack
 
+## 5.110.0
+
+### Minor Changes
+
+- Wrap concatenated modules in lazy `__webpack_require__.cw` accessors and inline `require()`, keeping a wrapped body's names and side effects intact. (by [@hai-x](https://github.com/hai-x) in [#21519](https://github.com/webpack/webpack/pull/21519))
+
+- Add the `externalsPresets.nodeModules` preset with an `allowlist` option to externalize installed packages, replacing the `webpack-node-externals` plugin. (by [@alexander-akait](https://github.com/alexander-akait) in [#21569](https://github.com/webpack/webpack/pull/21569))
+
+- Resolve `@custom-media` values that are `true` / `false` or name another custom media. (by [@alexander-akait](https://github.com/alexander-akait) in [#21624](https://github.com/webpack/webpack/pull/21624))
+
+- Add the `__webpack_css_server_styles__` module variable to read the CSS collected while rendering without a DOM, and keep that CSS in the order the styles were applied. (by [@alexander-akait](https://github.com/alexander-akait) in [#21576](https://github.com/webpack/webpack/pull/21576))
+
+- Patch the HTML `<head>` in place on hot update instead of forcing a full reload. (by [@alexander-akait](https://github.com/alexander-akait) in [#21624](https://github.com/webpack/webpack/pull/21624))
+
+- Scope counter names in CSS modules; fix the `counter()` counter-style and `animation` timeline keywords. (by [@alexander-akait](https://github.com/alexander-akait) in [#21600](https://github.com/webpack/webpack/pull/21600))
+
+- Emit analyzable `fetch(new URL(..., import.meta.url))` for fetch-based WebAssembly under ESM output. (by [@alexander-akait](https://github.com/alexander-akait) in [#21518](https://github.com/webpack/webpack/pull/21518))
+
+- Widen analyzable ESM output and fix chunk and WebAssembly loading in ES module builds. (by [@alexander-akait](https://github.com/alexander-akait) in [#21626](https://github.com/webpack/webpack/pull/21626))
+
+- Support tree-shaking module.exports object literals. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#21543](https://github.com/webpack/webpack/pull/21543))
+
+- Add aggregated `shutdown` hook to `MultiCompiler`. (by [@bjohansebas](https://github.com/bjohansebas) in [#21578](https://github.com/webpack/webpack/pull/21578))
+
+- Report which compilers changed on the MultiCompiler `done` hook. (by [@bjohansebas](https://github.com/bjohansebas) in [#21580](https://github.com/webpack/webpack/pull/21580))
+
+- Add `[containedpath]`/`[containedfile]` placeholders, used for `[path]`/`[file]` of asset and html modules with `experiments.futureDefaults`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21592](https://github.com/webpack/webpack/pull/21592))
+
+- Support an object for an entry's `html` that overrides `output.html` per option. (by [@alexander-akait](https://github.com/alexander-akait) in [#21574](https://github.com/webpack/webpack/pull/21574))
+
+- Add `output.environment.cssColorHexAlpha`, `cssInsetShorthand` and `cssMediaQueryRange`, resolved from the target like the JavaScript abilities beside them, so CSS minification only reaches for a spelling the target can read. (by [@alexander-akait](https://github.com/alexander-akait) in [#21588](https://github.com/webpack/webpack/pull/21588))
+
+- Minify CSS and HTML further where the document is unchanged: CSS rounds a number to 6 significant digits, rewrites a time into the shorter of `ms` / `s`, folds `calc()` and every math function the spec's grammars name over constants whose result is exact, rounding what it prints the way an authored number is rounded, reducing `calc-size()`'s size in place, down to the sum of unlike units it reduces to, takes the parentheses off a folded negative where the property accepts one, drops a zero's unit inside a call whose every number is a length, converts every polar and Lab color function to hex where the engine agrees, merges four box longhands with unrelated declarations between them — sides or corners — the two a pair shorthand sets, and the slots of an order-free one where each value parses back into its own, collapses an `and` of two one-sided media-feature ranges into the interval it describes, writes `2n+1` as the `odd` it names, a zero-step An+B as the child it selects, a `from` keyframe as `0%`, each `unicode-range` in its shortest equal spelling and each named color in the shortest spelling of its value where the property takes no identifier of the author's own, writes a two-keyword `display` as the one keyword naming the same box, a transform and a linear gradient in their shorter equal form, the `font` shorthand's weight as the number naming it and each layer of a `transition` in the order its grammar lists the slots, unquotes a font family the quotes carry nothing for, rewrites a `<position>` written as edge keywords — including the properties spelling both axes out — and a `font-stretch` keyword into the percentages they resolve to, drops a `<position>`'s second value where it names the centre an omitted one already means, drops a shorthand slot holding the value it already defaults to, a shadow's trailing zero lengths and a filter function's argument that is the amount an omitted one means, collapses the values a property's own grammar already implies — two equal `<repeat-style>` keywords, an `initial` whose initial value is a shorter word and a `grid-template-areas` row's padding — drops the unit a zero angle does not need and the whitespace neither a combinator inside a selector function nor two calls in a value need, and keeps a `@supports` condition as written; HTML normalizes each attribute against the element it is on. (by [@alexander-akait](https://github.com/alexander-akait) in [#21588](https://github.com/webpack/webpack/pull/21588))
+
+- Report bindings named `eval`, `arguments` or reserved words in ES module output. (by [@alexander-akait](https://github.com/alexander-akait) in [#21567](https://github.com/webpack/webpack/pull/21567))
+
+- Safely minify CSS (with source maps) and HTML assets when `optimization.minimize` is enabled, unless a minimizer is already configured for them; CSS also collapses `{1,4}` box and `flex` shorthands, four box longhands into the shorthand they are, a `font-weight` keyword into its number, a CSS2 pseudo-element's redundant colon and the universal selector a compound implies, `translateX()`, a zero length's unit, an identical repeated declaration, an `hsl()` that converts without rounding, and the whitespace a math function's `*` and `/` do not need. (by [@alexander-akait](https://github.com/alexander-akait) in [#21491](https://github.com/webpack/webpack/pull/21491))
+
+- Minify HTML further where the parsed document is unchanged: drop redundant attribute quotes, whitespace nothing renders, escapes text does not need, tags the parser re-implies and casing it folds, and rewrite `style`, token lists, `srcset`, `sizes`, URL and integer attributes, viewport `content`, boolean attributes, inline `<style>` and a JSON `<script>` body through their own grammars. (by [@alexander-akait](https://github.com/alexander-akait) in [#21586](https://github.com/webpack/webpack/pull/21586))
+
+- Tree shake exports destructured from a `require()` binding. (by [@hai-x](https://github.com/hai-x) in [#21501](https://github.com/webpack/webpack/pull/21501))
+
+- Emit analyzable `new URL()` refs for async WebAssembly and keep them for prefetch/preload-hinted `new URL()`/`new Worker()` refs. (by [@alexander-akait](https://github.com/alexander-akait) in [#21604](https://github.com/webpack/webpack/pull/21604))
+
+- Warn on cross-kind CSS module export conflicts and let the class win. (by [@alexander-akait](https://github.com/alexander-akait) in [#21538](https://github.com/webpack/webpack/pull/21538))
+
+- Add `output.resourceHints.dedupe` to skip prefetch links for already preloaded/prefetched chunks. (by [@alexander-akait](https://github.com/alexander-akait) in [#21386](https://github.com/webpack/webpack/pull/21386))
+
+### Patch Changes
+
+- Let a memory-cache etag mismatch fall through to the file cache instead of reporting a miss. (by [@alexander-akait](https://github.com/alexander-akait) in [#21624](https://github.com/webpack/webpack/pull/21624))
+
+- Fix names, hidden devtools and cache reuse for CSS maps inlined into JS. (by [@alexander-akait](https://github.com/alexander-akait) in [#21558](https://github.com/webpack/webpack/pull/21558))
+
+- Keep a compound selector compound when a class name ends in a digit. (by [@alexander-akait](https://github.com/alexander-akait) in [#21608](https://github.com/webpack/webpack/pull/21608))
+
+- Parse `<![CDATA[` outside foreign content as a bogus comment and keep attributes a repeated `<html>`/`<body>` tag merges. (by [@alexander-akait](https://github.com/alexander-akait) in [#21608](https://github.com/webpack/webpack/pull/21608))
+
+- Fix `ReferenceError` from `import.meta.main` using the wrong module argument. (by [@hai-x](https://github.com/hai-x) in [#21620](https://github.com/webpack/webpack/pull/21620))
+
+- Terminate a CSS string or `url()` closed at EOF when printing, and register `ModuleDependencyError` as serializable. (by [@alexander-akait](https://github.com/alexander-akait) in [#21624](https://github.com/webpack/webpack/pull/21624))
+
+- Drop unused side-effect-free CommonJS require() calls. (by [@xiaoxiaojx](https://github.com/xiaoxiaojx) in [#21502](https://github.com/webpack/webpack/pull/21502))
+
+- Track exports usage of side-effect-free modules an active import() evaluates. (by [@hai-x](https://github.com/hai-x) in [#21623](https://github.com/webpack/webpack/pull/21623))
+
+- Respect `strictThisContextOnImports` for `require()` member calls. (by [@hai-x](https://github.com/hai-x) in [#21601](https://github.com/webpack/webpack/pull/21601))
+
+- Fix top-level `using` and `await using` declarations in modules. (by [@alexander-akait](https://github.com/alexander-akait) in [#21557](https://github.com/webpack/webpack/pull/21557))
+
+- Compute the common MultiCompiler `outputPath` by whole path segments. (by [@bjohansebas](https://github.com/bjohansebas) in [#21582](https://github.com/webpack/webpack/pull/21582))
+
+- Allow MultiCompiler to run again after a dependency validation failure. (by [@bjohansebas](https://github.com/bjohansebas) in [#21583](https://github.com/webpack/webpack/pull/21583))
+
+- Keep a nested bundle's runtime tables separate when bundling webpack output. (by [@alexander-akait](https://github.com/alexander-akait) in [#21568](https://github.com/webpack/webpack/pull/21568))
+
+- Fix namespace object reexports and string export names in module library output. (by [@alexander-akait](https://github.com/alexander-akait) in [#21589](https://github.com/webpack/webpack/pull/21589))
+
+- Fix HTML minification losing a character after a CR line ending, dropping a body's leading whitespace when its tag is implied, and the parser case-folding the non-ASCII characters of an element or attribute name. (by [@alexander-akait](https://github.com/alexander-akait) in [#21586](https://github.com/webpack/webpack/pull/21586))
+
+- Keep tree-shaken JSON arrays as arrays when a prototype property is read. (by [@hai-x](https://github.com/hai-x) in [#21599](https://github.com/webpack/webpack/pull/21599))
+
+- Generate every CSS and HTML lookup table into `lib/{css,html}/data.js`, the HTML ones distilled from the spec's IDL and the CSS ones now including the value-type facts read out of the value-definition grammars, leaving both `syntax.js` files algorithm only. (by [@alexander-akait](https://github.com/alexander-akait) in [#21588](https://github.com/webpack/webpack/pull/21588))
+
+- Release the compilation and file system caches retained after `compiler.close()`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21603](https://github.com/webpack/webpack/pull/21603))
+
+- Speed up CSS, HTML and JavaScript parsing and cut parser, graph and startup memory. (by [@alexander-akait](https://github.com/alexander-akait) in [#21562](https://github.com/webpack/webpack/pull/21562))
+
+- Speed up concatenated module renaming by walking the ast on node offsets. (by [@hai-x](https://github.com/hai-x) in [#21564](https://github.com/webpack/webpack/pull/21564))
+
+- Speed up dependency hot paths, module diagnostics and CommonJS export scanning. (by [@alexander-akait](https://github.com/alexander-akait) in [#21559](https://github.com/webpack/webpack/pull/21559))
+
 ## 5.109.2
 
 ### Patch Changes
