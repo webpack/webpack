@@ -979,11 +979,14 @@ describe("tokenize", () => {
 		});
 
 		// --- STATE_END_TAG_OPEN ---
-		it("eND_TAG_OPEN: `</>` is missing-end-tag-name (kept in text span for roundtrip)", () => {
-			// Per spec this is a parse error and no token is emitted. The walker
-			// preserves `</>` as part of the surrounding text span so roundtrip
-			// reconstruction is exact.
-			expect(walk("a</>b")).toEqual([["text", "a</>b"]]);
+		it("eND_TAG_OPEN: `</>` is missing-end-tag-name and emits nothing", () => {
+			// Per spec this is a parse error and no token is emitted, so it is
+			// dropped rather than left in the text span: a browser renders nothing
+			// for it, and keeping it turns into visible text once re-escaped.
+			expect(walk("a</>b")).toEqual([
+				["text", "a"],
+				["text", "b"]
+			]);
 		});
 
 		it("eND_TAG_OPEN: `</1foo>` becomes bogus comment", () => {
@@ -4609,8 +4612,7 @@ describe("tokenize — fused state transitions", () => {
 
 	it("missing end tag name", () => {
 		expect(walk("</>")).toEqual([
-			["error", "missing-end-tag-name", 2, 3, "warning"],
-			["text", "</>"]
+			["error", "missing-end-tag-name", 2, 3, "warning"]
 		]);
 	});
 
