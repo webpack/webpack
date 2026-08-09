@@ -327,3 +327,11 @@
 /*! webpack: declined: `list-style-type` takes any identifier, so no other value
    in the family is unambiguous — an image included */
 .t133 { list-style-type: square; list-style-position: inside; list-style-image: url("data:image/gif;base64,R0lGODlhAQABAAAAACw=") }
+/*! webpack: a comment parts two components, so a rewrite keeps them apart */
+.t138 { margin: 1px 1px/*c*/1px 1px }
+.t139 { transition: opacity/*c*/1s ease-in 2s }
+/*! webpack: a custom property's value stays as written, but a comment in it
+   minifies to the boundary it stands for */
+.t140 { --t140: 1px 1px/*c*/1px 1px }
+.t141 { --t141: 1px 1px/*!k*/1px 1px }
+.t142 { --t142: minmax(1px/*c*/2px, calc(3px/*c*/4px)) }
