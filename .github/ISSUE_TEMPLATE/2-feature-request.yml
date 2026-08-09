@@ -1,0 +1,69 @@
+name: Feature Request
+description: Suggest an idea for webpack
+type: Feature
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for requesting a feature!
+
+        Before submitting:
+        - Search existing issues to avoid duplicates
+        - Try the latest version
+        - For questions and help, use [discussions](https://github.com/webpack/webpack/discussions/new/choose) or [stackoverflow](https://stackoverflow.com/questions/ask?tags=webpack) — issues containing questions or support requests will be closed or moved to discussions.
+        - Read our [AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md)
+        ⚠️ **Important**: Issues containing vague information or bad use of AI will be closed.
+
+  - type: dropdown
+    id: ai
+    attributes:
+      label: Have you used AI?
+      description: If you have used AI tooling to generate the issue please state so.
+      options:
+        - "No"
+        - "Yes"
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part of webpack does this concern?
+      description: Optional; pick the closest match (or several).
+      multiple: true
+      options:
+        - "cache (persistent/filesystem cache)"
+        - "config (options, defaults, validation)"
+        - "css"
+        - "html"
+        - "loaders"
+        - "module-federation"
+        - "optimization (tree-shaking, splitChunks, concatenation)"
+        - "parser (JavaScript parsing, import/export analysis)"
+        - "resolving (aliases, exports maps)"
+        - "runtime (emitted runtime, chunk loading)"
+        - "sourcemaps"
+        - "types (types.d.ts)"
+        - "watch (watch mode, HMR)"
+        - "wasm"
+        - "build-perf (webpack's own speed/memory)"
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Proposal
+      description: Describe the feature proposal
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Feature Use Case
+      description: Describe the problem this feature would solve and how it would be used in practice
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context (error logs, workarounds, screenshots, etc.)

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions & Help
+    url: https://github.com/webpack/webpack/discussions/new/choose
+    about: Ask for help, ask questions, or start a discussion to get help from the community
+  - name: Report a security vulnerability
+    url: https://github.com/webpack/webpack/security/advisories/new
+    about: Report vulnerabilities privately via a security advisory — never in a public issue

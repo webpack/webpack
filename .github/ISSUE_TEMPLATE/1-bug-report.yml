@@ -1,0 +1,140 @@
+name: Bug Report
+description: Report incorrect behavior in webpack
+type: Bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug!
+
+        Before submitting:
+        - Search existing issues to avoid duplicates
+        - Try the latest version
+        - For questions and help, use [discussions](https://github.com/webpack/webpack/discussions/new/choose) or [stackoverflow](https://stackoverflow.com/questions/ask?tags=webpack) — issues containing questions or support requests will be closed or moved to discussions.
+        - Read our [AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md)
+        ⚠️ **Important**: Issues containing vague information or bad use of AI will be closed.
+
+  - type: dropdown
+    id: ai
+    attributes:
+      label: Have you used AI?
+      description: If you have used AI tooling to generate the issue please state so.
+      options:
+        - "No"
+        - "Yes"
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part of webpack is affected?
+      description: Pick the closest match (or several). This routes the issue to the right maintainer.
+      multiple: true
+      options:
+        - "not sure"
+        - "cache (persistent/filesystem cache)"
+        - "config (options, defaults, validation)"
+        - "css"
+        - "html"
+        - "loaders"
+        - "module-federation"
+        - "optimization (tree-shaking, splitChunks, concatenation)"
+        - "parser (JavaScript parsing, import/export analysis)"
+        - "resolving (aliases, exports maps)"
+        - "runtime (emitted runtime, chunk loading)"
+        - "sourcemaps"
+        - "types (types.d.ts)"
+        - "watch (watch mode, HMR)"
+        - "wasm"
+        - "build-perf (webpack's own speed/memory)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is
+      placeholder: When I do X, Y happens instead of Z
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Link to Minimal Reproduction and steps to reproduce
+      description: |
+        Please provide a minimal reproduction using:
+        - GitHub repository with minimal configuration
+        - Clear steps to reproduce the behavior
+
+        **If a minimal reproduction is difficult** (e.g., performance issues in large projects with thousands of files):
+        - Describe your project structure in detail
+        - Include your full configuration
+        - Provide specific metrics (build times, memory usage, file counts)
+      placeholder: |
+        https://github.com/user/repro
+
+        Steps:
+        1. Run 'npm install'
+        2. Run 'npm run build'
+        3. See error in console
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: |
+        Please run `npx webpack info` and paste the output here
+      render: shell
+      placeholder: |
+        System:
+          OS: macOS 14.0.0
+          CPU: (12) arm64 Apple M1
+          Memory: 16.00 GB
+        Binaries:
+          Node: 22.17.0
+          npm: 10.0.0
+        Packages:
+          webpack: 5.100.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: regression
+    attributes:
+      label: Is this a regression?
+      description: Did this work in a previous version?
+      options:
+        - "No"
+        - "Yes (please specify version below)"
+
+  - type: input
+    id: regression-version
+    attributes:
+      label: Last Working Version
+      description: If regression, which version worked?
+      placeholder: "v5.99.9"
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context about the problem (error logs, workarounds, screenshots, etc.)
