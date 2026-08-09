@@ -59,5 +59,16 @@ module.exports = [
 	// Reads what names the asset but is not a hash — the same answer both times.
 	base(5, (pathData) => `f-[name].${pathData.runtime}.mjs`, true),
 	// The placeholder form of the same, resolved rather than asked for.
-	base(6, "g-[name].[runtime].mjs", true)
+	base(6, "g-[name].[runtime].mjs", true),
+	// Asks which hashes the chunk carries, which is settled no earlier than their
+	// values are — so the answer is deferred just the same.
+	base(
+		7,
+		(pathData) =>
+			`h-[name].${Object.keys(
+				/** @type {Record<string, string>} */ (pathData.chunk.contentHash)
+			).join("-")}.mjs`,
+		true,
+		true
+	)
 ];
