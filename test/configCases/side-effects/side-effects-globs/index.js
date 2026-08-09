@@ -5,8 +5,9 @@ import "globs";
 import "single-star";
 
 // Each module in the fixture packages pushes its own name when it runs, so a
-// module dropped as side-effect-free is simply absent from the list.
-const evaluated = () => (globalThis.SIDE_EFFECTS || []).sort();
+// module dropped as side-effect-free is simply absent from the list. `global`
+// (not `globalThis`) because the emitted bundle also runs on Node.js 10.
+const evaluated = () => (global.SIDE_EFFECTS || []).sort();
 
 it("should read glob shapes out of a package.json sideEffects array", () => {
 	expect(evaluated()).toContain("globs/src/x/y/z");
@@ -32,4 +33,5 @@ it("should understand the boolean forms", () => {
 	expect(evaluated()).toContain("flag-true/a");
 	expect(evaluated()).not.toContain("flag-false/a");
 	expect(evaluated()).not.toContain("flag-false/index");
+	delete global.SIDE_EFFECTS;
 });
