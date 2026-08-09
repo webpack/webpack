@@ -137,7 +137,7 @@ Skipping any layer silently breaks the option. After editing schemas, run `yarn 
 
 > [!REQUIRED] > **Never hand-edit what `yarn fix:special` generates**, even when it also reformats files you did not touch. That churn means your local toolchain resolved differently from CI's — the fix is to commit only your own hunks, then **verify them against the generator** (re-run it and diff), never to hand-write what you think it would emit. A hand-written JSDoc block that omits the `@since` line the schema's `added` keyword produces, or a `types.d.ts` member the JSDoc implies, fails `lint` with `… need to be updated` and nothing else.
 
-**A nested minifier needs the same options as the outer one.** `lib/html/htmlMinify.js` runs the CSS minifier over an inline `<style>` and every `style=""`, so `output.environment` has to be handed to both — otherwise a `.css` asset and the same declaration inline disagree about what the target can read. Any future HTML-minifies-JS hook has the same obligation.
+**A nested minifier needs the same options as the outer one.** `lib/html/htmlMinify.js` runs the CSS minifier over an inline `<style>` and every `style=""`, and terser over an inline `<script>`, so `output.environment` and `terserOptions` have to be handed to both — otherwise a `.css` / `.js` asset and the same source inline disagree about what the target can read.
 
 **Schema documentation keywords** — option entries in the schemas support these annotation keywords, which become JSDoc tags in the generated declarations:
 

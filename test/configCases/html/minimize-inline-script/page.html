@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Inline script</title>
+	<script type="application/json">{ "keep" : "json" }</script>
+</head>
+<body>
+	<script>
+		var greeting = "hello";
+		var target = "world";
+		window.message = greeting + " " + target;
+	</script>
+	<script type="module">
+		const value = 40 + 2;
+		window.moduleValue = value;
+	</script>
+	<script type="text/template">
+		var notScript = 1;
+	</script>
+	<script>
+		window.closer = "<" + "/script>";
+	</script>
+</body>
+</html>
