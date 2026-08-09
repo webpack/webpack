@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Drop unused side-effect-free CommonJS require() calls.
+Drop unused side-effect-free CommonJS require() calls and reexports.
