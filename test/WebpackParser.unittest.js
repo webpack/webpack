@@ -2103,6 +2103,85 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		);
 	});
 
+	it("executes no acorn prototype code on the lazy path", () => {
+		// tripwire for the acorn-free direction: every method and accessor on
+		// acorn's prototype is counted while a feature-rich module parses lazily
+		const acorn = require("acorn");
+
+		const source = [
+			"#!/usr/bin/env node",
+			"import def, { a as b } from 'm'; import * as ns from 'n';",
+			"export const answer = 42; export default class Widget extends ns.Base {",
+			"\tstatic #count = 0; #label; static { Widget.#count = 0; }",
+			// eslint-disable-next-line no-template-curly-in-string
+			"\tconstructor() { super(); this.#label = `w${Widget.#count++}`; }",
+			"\tget label() { return this.#label; } async *walk([x = 1, ...rest] = []) {",
+			"\t\tlab: for (const item of rest) { if (item ?? x) { yield (await item) ** 2; continue lab; } }",
+			"\t}",
+			"}",
+			"export { answer as 'the answer' } ;",
+			"async function main() { const res = await ns.open?.(); do main(res); while (false); }",
+			"let { p, q: [r = /re?g/gu] = [] } = ns, s = 0b101 + 1_000n;",
+			"debugger;",
+			"await ns.ready;"
+		].join("\n");
+		const options = /** @type {import("acorn").Options} */ (
+			/** @type {unknown} */ ({
+				ecmaVersion: "latest",
+				sourceType: "module",
+				lazyNodes: true,
+				lazyComments: [],
+				allowHashBang: true,
+				allowReturnOutsideFunction: false
+			})
+		);
+		// warm the construction-shape cache before instrumenting
+		WebpackParser.parse(source, options);
+		const proto = /** @type {EXPECTED_ANY} */ (acorn.Parser.prototype);
+		/** @type {string[]} */
+		const hits = [];
+		/** @type {[string, PropertyDescriptor][]} */
+		const originals = [];
+		for (const name of Object.getOwnPropertyNames(proto)) {
+			if (name === "constructor") continue;
+			const descriptor =
+				/** @type {PropertyDescriptor} */
+				(Object.getOwnPropertyDescriptor(proto, name));
+			originals.push([name, descriptor]);
+			if (typeof descriptor.value === "function") {
+				const original = descriptor.value;
+				Object.defineProperty(proto, name, {
+					...descriptor,
+					/**
+					 * @param {...EXPECTED_ANY} args original arguments
+					 * @returns {EXPECTED_ANY} original result
+					 */
+					value(...args) {
+						hits.push(name);
+						return original.apply(this, args);
+					}
+				});
+			} else if (descriptor.get) {
+				const original = descriptor.get;
+				Object.defineProperty(proto, name, {
+					...descriptor,
+					get() {
+						hits.push(`get ${name}`);
+						return original.call(this);
+					}
+				});
+			}
+		}
+		try {
+			WebpackParser.parse(source, options);
+		} finally {
+			for (const [name, descriptor] of originals) {
+				Object.defineProperty(proto, name, descriptor);
+			}
+		}
+		expect(hits).toEqual([]);
+	});
+
 	it("builds fast- and slow-constructed parsers with one field layout", () => {
 		// tripwire for acorn upgrades: the fast construction path replicates
 		// acorn's constructor, so its own-key order and its normalized options
