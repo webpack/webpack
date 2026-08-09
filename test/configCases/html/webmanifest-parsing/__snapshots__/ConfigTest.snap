@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html webmanifest-parsing exported tests should rewrite icon URLs in a manifest with a BOM, unquoted keys and non-ASCII text 1`] = `
+"<BOM>{
+  name: \\"café\\",
+  icons: [
+    { src: \\"<hash>.png\\", sizes: \\"192x192\\" },
+    { src: \\"\\", sizes: \\"1x1\\" },
+    { src: \\"#only-fragment\\", sizes: \\"2x2\\" },
+    { src: \\"https://cdn.example.com/remote.png\\", sizes: \\"3x3\\" }
+  ],
+  src: \\"./icon-192.png\\"
+}
+"
+`;
