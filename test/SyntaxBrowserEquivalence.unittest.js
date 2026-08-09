@@ -135,7 +135,7 @@ const FILED_CSS_DEFECTS = new Map([
 
 /**
  * @typedef {{ kind: string, condition: string }} Condition
- * @typedef {{ chain: Condition[], text: string }} Rule
+ * @typedef {{ chain: Condition[], text: string, label?: string, list?: string[] }} Rule
  * @typedef {{ facets: Record<string, string[]>, styles: Rule[][] }} Facets
  */
 
@@ -295,8 +295,10 @@ const installHelpers = () => {
 
 	/**
 	 * The one spelling of a value the spec gives several names: an easing keyword
-	 * is the curve it stands for, and `jump-start` names the step position `start`
-	 * does.
+	 * is the curve it stands for, `jump-start` names the step position `start`
+	 * does, and a gradient's last color stop is at the end of the gradient line
+	 * whether or not it says so (CSS Images 3 §3.4.3). A two-position stop needs
+	 * nothing here: the engine expands it into the two stops itself.
 	 * @param {string} value a value
 	 * @returns {string} the same value, named once
 	 */
@@ -308,7 +310,12 @@ const installHelpers = () => {
 		for (const [keyword, curve] of EASINGS) {
 			named = named.split(curve).join(keyword);
 		}
-		return named;
+		// Anchored left: a prefixed gradient folds under its own rules, so
+		// canonicalizing one would hide a fold the printer must not make.
+		return named.replace(
+			/(^|[^\w-])((?:repeating-)?(?:linear|radial|conic)-gradient\([^()]*(?:\([^()]*\)[^()]*)*)\s(?:100%|360deg)\)/gi,
+			"$1$2)"
+		);
 	};
 
 	/**
@@ -319,7 +326,7 @@ const installHelpers = () => {
 	 * substitution is compared as parsed because `var(--a)` and `var(--b)` both
 	 * compute to nothing on a probe with no ancestor to resolve them.
 	 * @param {string} declaration the declaration block
-	 * @returns {string} its computed form
+	 * @returns {string[]} one entry per property it sets, unordered
 	 */
 	const computed = (declaration) => {
 		probe.style.cssText = "";
@@ -344,7 +351,7 @@ const installHelpers = () => {
 				: style.getPropertyValue(property);
 			out.push(`${property}${bang}:${painted(canonical(resolved))}`);
 		}
-		return out.sort().join(";");
+		return out;
 	};
 
 	/**
@@ -410,6 +417,36 @@ const installHelpers = () => {
 			// nothing to evaluate, so it stands as written.
 			return { kind, condition: prelude(rule) };
 		};
+		// `conditionText` is the one prelude the engine hands back verbatim, so a
+		// query's own insignificant whitespace has to be dropped here. Only inside
+		// `(` `)` and around `:`, where no two tokens can join — a `@scope` prelude
+		// or a nested selector spells a combinator with the same space.
+		const QUERY_KINDS = new Set(["container", "media", "supports"]);
+		/**
+		 * @param {Condition} condition a chain entry
+		 * @returns {string} it as the one spelling its equals share
+		 */
+		const conditionKey = ({ kind, condition }) =>
+			QUERY_KINDS.has(kind)
+				? condition
+						.replace(/\(\s+/g, "(")
+						.replace(/\s+\)/g, ")")
+						.replace(/\s*:\s*/g, ":")
+				: condition;
+		/**
+		 * Each grouping rule builds its own chain, so two adjacent blocks of one
+		 * condition hold equal chains that are not the same array.
+		 * @param {Condition[]} one a chain
+		 * @param {Condition[]} other another
+		 * @returns {boolean} whether they are the same conditions
+		 */
+		const sameChain = (one, other) =>
+			one.length === other.length &&
+			one.every(
+				(condition, at) =>
+					condition.kind === other[at].kind &&
+					conditionKey(condition) === conditionKey(other[at])
+			);
 		/**
 		 * @param {CSSRuleList} list rules to walk
 		 * @param {Condition[]} chain the enclosing at-rules
@@ -427,10 +464,30 @@ const installHelpers = () => {
 						/** @type {CSSStyleRule} */ (rule).selectorText ||
 						/** @type {CSSKeyframeRule} */ (rule).keyText ||
 						(rule.cssText.includes("{") ? prelude(rule) : "&");
-					out.push({
-						chain,
-						text: `${label} { ${computed(style.cssText)} }`
-					});
+					// The same selector twice in a row is the one rule the cascade reads,
+					// which is what joining their blocks leaves.
+					const previous = out[out.length - 1];
+					const list = computed(style.cssText);
+					if (
+						previous !== undefined &&
+						sameChain(previous.chain, chain) &&
+						previous.label === label
+					) {
+						// Concatenate rather than resolve: only an identical pair
+						// collapses, so no filed defect is hidden by the fold.
+						const both = [
+							...new Set([.../** @type {string[]} */ (previous.list), ...list])
+						];
+						previous.list = both;
+						previous.text = `${label} { ${[...both].sort().join(";")} }`;
+					} else {
+						out.push({
+							chain,
+							label,
+							list,
+							text: `${label} { ${[...list].sort().join(";")} }`
+						});
+					}
 				}
 				if (nested) {
 					walk(nested, [...chain, conditionOf(rule)]);
@@ -558,7 +615,7 @@ const installHelpers = () => {
 		const name = attribute.name;
 		const raw = attribute.value;
 		if (attribute.namespaceURI !== null) return raw;
-		if (name === "style") return computed(raw);
+		if (name === "style") return computed(raw).sort().join(";");
 		const property = reflectionOf(node, name);
 		const properties = /** @type {Record<string, unknown>} */ (
 			/** @type {unknown} */ (node)
@@ -926,6 +983,25 @@ describe("printer output in real Chrome", () => {
 		return signatures;
 	};
 
+	// A `data:` URL as serialized by the CSSOM: its metadata, then the payload.
+	const DATA_URL_REGEXP = /url\("(data:[^,"]*,)((?:[^"\\]|\\.)*)"\)/gi;
+
+	/**
+	 * Two spellings of one data URI are the same URL — the parser decodes the
+	 * payload's escapes before anything reads it, so `%3D` and `=` name the same
+	 * byte. Read both sides decoded so the difference is not a difference.
+	 * @param {string} text a rule's text
+	 * @returns {string} it, with every data URI's payload decoded
+	 */
+	const decodeDataUrls = (text) =>
+		text.replace(DATA_URL_REGEXP, (whole, metadata, payload) => {
+			try {
+				return `url("${metadata}${decodeURIComponent(payload)}")`;
+			} catch (_err) {
+				return whole;
+			}
+		});
+
 	/**
 	 * A rule as the conditions it really holds under and the style it really
 	 * computes to.
@@ -939,7 +1015,61 @@ describe("printer output in real Chrome", () => {
 				const answer = signatures.get(`${kind} ${condition}`);
 				return `@${kind}<${answer === undefined ? condition : answer}>`;
 			})
-			.join(" >> ")} ${rule.text}`;
+			.join(" >> ")} ${decodeDataUrls(rule.text)}`;
+
+	/**
+	 * Split a selector list on its own commas — not the ones inside `:is(…)`, an
+	 * attribute value or a string.
+	 * @param {string} list a selector list
+	 * @returns {string[]} its selectors
+	 */
+	const splitSelectorList = (list) => {
+		const out = [];
+		let depth = 0;
+		let quote = "";
+		let from = 0;
+		for (let i = 0; i < list.length; i++) {
+			const c = list[i];
+			// An escape carries its next code point whatever it is — `.\:\)` ends in
+			// a `)` that closes nothing.
+			if (c === "\\") {
+				i++;
+			} else if (quote !== "") {
+				if (c === quote) quote = "";
+			} else if (c === '"' || c === "'") {
+				quote = c;
+			} else if (c === "(" || c === "[") {
+				depth++;
+			} else if (c === ")" || c === "]") {
+				depth--;
+			} else if (c === "," && depth === 0) {
+				out.push(list.slice(from, i).trim());
+				from = i + 1;
+			}
+		}
+		out.push(list.slice(from).trim());
+		return out;
+	};
+
+	/**
+	 * One entry per selector. The printer joins adjacent rules that compute the
+	 * same style into a single selector list — the same rules in the same cascade
+	 * order, written shorter — so the comparison is made per selector rather than
+	 * per rule. A join of rules that do *not* match still fails: each selector
+	 * carries its own computed style, and the order is still compared.
+	 * @param {Rule[]} rules rules in cascade order
+	 * @returns {Rule[]} the same, one selector each
+	 */
+	const perSelector = (rules) =>
+		rules.flatMap((rule) => {
+			// `@import` and friends are compared as written, with no `label { … }`.
+			const at = rule.text.indexOf(" { ");
+			if (at === -1) return [rule];
+			const selectors = splitSelectorList(rule.text.slice(0, at));
+			if (selectors.length < 2) return [rule];
+			const block = rule.text.slice(at);
+			return selectors.map((one) => ({ chain: rule.chain, text: one + block }));
+		});
 
 	/**
 	 * @param {Rule[]} before the source's rules
@@ -948,8 +1078,18 @@ describe("printer output in real Chrome", () => {
 	 * @returns {string} why they differ, or "" when they do not
 	 */
 	const compareRules = (before, after, signatures) => {
-		const a = before.map((rule) => keyOf(rule, signatures));
-		const b = after.map((rule) => keyOf(rule, signatures));
+		// The same selector twice in a row computing the same style is the one rule
+		// it resolves to, which is what joining them into a list leaves.
+		/**
+		 * @param {Rule[]} rules rules in cascade order
+		 * @returns {string[]} their keys, an adjacent repeat collapsed
+		 */
+		const keys = (rules) =>
+			perSelector(rules)
+				.map((rule) => keyOf(rule, signatures))
+				.filter((key, i, all) => i === 0 || key !== all[i - 1]);
+		const a = keys(before);
+		const b = keys(after);
 		const shorter = Math.min(a.length, b.length);
 		const at = a.slice(0, shorter).findIndex((key, i) => key !== b[i]);
 		if (at !== -1) return `rule ${at}: ${a[at]} vs ${b[at]}`;

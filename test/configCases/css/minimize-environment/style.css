@@ -1,7 +1,8 @@
 /* The `output.environment` CSS entries decide which newer spellings the minifier
-   may reach for. This build sets all three false, so every case here keeps the
-   form an engine without CSS Color 4 hex alpha, Media Queries 4 range syntax or
-   the CSS Position 3 `inset` shorthand can read. */
+   may reach for. This build sets all four false, so every case here keeps the
+   form an engine without CSS Color 4 hex alpha, Media Queries 4 range syntax,
+   the CSS Position 3 `inset` shorthand or CSS Images 4's two-position color stop
+   can read. */
 
 /*! the keyword stays a keyword */
 .t01 { background-color: transparent }
@@ -31,3 +32,8 @@
 .t12 { margin-top: 1px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px }
 /*! ...and a source `inset` is the author's own, so it still collapses */
 .t13 { inset: 1px 1px 1px 1px }
+/*! a two-position color stop is CSS Images 4, so the two stops stay */
+.t14 { background-image: linear-gradient(red 0%, red 50%, blue) }
+/*! ...unlike the last stop's position, which CSS Images 3's own fix-up already
+   puts there */
+.t15 { background-image: linear-gradient(red, blue 100%) }

@@ -335,3 +335,54 @@
 .t140 { --t140: 1px 1px/*c*/1px 1px }
 .t141 { --t141: 1px 1px/*!k*/1px 1px }
 .t142 { --t142: minmax(1px/*c*/2px, calc(3px/*c*/4px)) }
+/*! gradient: the last stop's position is where CSS Images 3's fix-up already puts it */
+.t72 { background-image: linear-gradient(red, blue 100%) }
+/*! ...and a conic gradient's own turn, however it is spelled */
+.t72b { background-image: conic-gradient(red, blue 360deg) }
+/*! gradient: two stops of one color are the one stop naming both positions */
+.t72c { background-image: linear-gradient(red 0%, red 50%, blue) }
+/*! declined: a color hint is a position alone, so it is no stop to fold with */
+.t72d { background-image: linear-gradient(red 0%, 30%, blue) }
+/*! declined: a stop already carrying two positions is not the one value to drop */
+.t72e { background-image: linear-gradient(red 50% 100%, blue) }
+/*! declined: a prefixed gradient is a different function with its own grammar */
+.t72f { background-image: -webkit-linear-gradient(red 0%, red 50%) }
+
+/*! a rotation about one axis is the call naming it (CSS Transforms 2 §13.1) */
+.t73 { transform: rotateZ(37deg) }
+.t73a { transform: rotate3d(0, 0, 1, 37deg) }
+.t73b { transform: rotate3d(1, 0, 0, 37deg) }
+.t73c { transform: rotate3d(0, 1, 0, 37deg) }
+/*! declined: the engine normalizes the axis, so a negative one turns the angle */
+.t73d { transform: rotate3d(0, 0, -1, 37deg) }
+/*! declined: a vector naming no axis is no single rotation */
+.t73e { transform: rotate3d(1, 1, 0, 37deg) }
+
+/*! a size's omitted second value is `auto`, so writing it says nothing */
+.t74 { background-size: 1rem auto }
+.t74a { background-size: 50% auto, 2px auto }
+/*! declined: the omitted value is `auto`, not the first repeated */
+.t74b { background-size: 1rem 1rem }
+/*! declined: a substitution could make the `auto` a third value */
+.t74c { background-size: var(--w) auto }
+/*! one reduction uncovers the next, down to the shortest call */
+.t75 { transform: translate3d(-50%, 0, 0) }
+.t75a { transform: scale3d(1, 1, 1) }
+/*! declined: a z factor that scales keeps the 3D call */
+.t75b { transform: scale3d(2, 3, 4) }
+
+/*! a skew along x is the pair whose second component is the 0 it means */
+.t76 { transform: skewX(10deg) }
+/*! declined: a substitution could fill the second component */
+.t76a { transform: skewX(var(--a)) }
+/*! an alpha percentage is the number a hundredth of it names */
+.t77 { opacity: 100% }
+.t77a { opacity: 33.33% }
+.t77b { shape-image-threshold: 12.5% }
+/*! declined: the number is no shorter than the percentage */
+.t77c { opacity: 5% }
+/*! a ratio's denominator of 1 is the one an omitted denominator means */
+.t78 { aspect-ratio: 2 / 1 }
+.t78a { aspect-ratio: auto 3/1 }
+/*! declined: another denominator is another ratio */
+.t78b { aspect-ratio: 2/10 }

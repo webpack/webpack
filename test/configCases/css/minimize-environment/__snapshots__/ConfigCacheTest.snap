@@ -16,5 +16,8 @@ Array [
   "/*! the \`inset\` shorthand is newer than the four longhands it merges */.t11{top:1px;right:2px;bottom:1px;left:2px}",
   "/*! ...unlike \`margin\`, whose shorthand is as old as its longhands */.t12{margin:1px 2px}",
   "/*! ...and a source \`inset\` is the author's own, so it still collapses */.t13{inset:1px}",
+  "/*! a two-position color stop is CSS Images 4, so the two stops stay */.t14{background-image:linear-gradient(red 0%,red 50%,blue)}",
+  "/*! ...unlike the last stop's position, which CSS Images 3's own fix-up already
+   puts there */.t15{background-image:linear-gradient(red,blue)}",
 ]
 `;
