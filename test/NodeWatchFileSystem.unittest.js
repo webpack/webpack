@@ -94,6 +94,20 @@ describe("NodeWatchFileSystem", () => {
 		expect(c.watcherManager).not.toBe(a.watcherManager);
 	});
 
+	// The pool is keyed by value, so the entry must not stay attached to the
+	// caller's object. Values are unique to this case: the map is module state.
+	it("does not hand a later caller options mutated by an earlier one", () => {
+		const mutated = { aggregateTimeout: 4321, ignored: ["**/mutated"] };
+		watch(mutated);
+		mutated.aggregateTimeout = 5000;
+		mutated.ignored[0] = "**/other";
+
+		const later = watch({ aggregateTimeout: 4321, ignored: ["**/mutated"] });
+
+		expect(later.aggregateTimeout).toBe(4321);
+		expect(later.options.ignored).toEqual(["**/mutated"]);
+	});
+
 	it("leaves an unsupported ignored option to watchpack", () => {
 		expect(() =>
 			watch({
