@@ -758,15 +758,14 @@ describe("CssSyntax — SourceProcessor", () => {
 	});
 });
 
-describe("CssSyntax — streamBlocks", () => {
-	// Streaming only engages past `_STREAM_MIN_NODES` nodes in one block; `BIG`
-	// clears it comfortably and `SMALL` stays well under, so the two exercise the
-	// streamed and the collected path of the same code. The streamed-body test
-	// pins that `BIG` really does cross, so this stays honest if the threshold
-	// moves.
+describe("CssSyntax — block streaming", () => {
+	// A block streams once it holds more than `_STREAM_MIN_NODES` nodes; under
+	// that it is collected and walked in one batch, as it always was. `BIG` clears
+	// the threshold and `SMALL` stays well under, and every case below pins which
+	// of the two it is exercising, so none of them can quietly stop testing the
+	// streamed path if the threshold moves.
 	/** @type {(i: number) => string} */
-	const rule = (i) =>
-		`.c${i}>d${i}:hover{color:rgb(${i % 255},0,0);margin:1px}`;
+	const rule = (i) => `.c${i}>d${i}:hover{color:red;margin:1px}`;
 	/** @type {(n: number, f: (i: number) => string) => string} */
 	const repeat = (n, f) => {
 		let s = "";
@@ -777,13 +776,37 @@ describe("CssSyntax — streamBlocks", () => {
 	const SMALL = repeat(4, rule);
 
 	/**
+	 * Child rules the first rule of `type` reports: 0 means it streamed (its
+	 * children went to the visitors, not to its body), a positive count means it
+	 * was collected.
+	 * @param {string} src css source
+	 * @param {number=} type the node type to look at (default `AtRule`)
+	 * @returns {number | null} the count, or null if that rule has no block
+	 */
+	const childCount = (src, type = NodeType.AtRule) => {
+		/** @type {number | null} */
+		let count = null;
+		let seen = false;
+		new SourceProcessor()
+			.use({
+				[type]: (/** @type {import("../lib/css/syntax").CssPath} */ path) => {
+					if (seen) return;
+					seen = true;
+					const rules = path.childRules();
+					count = rules === null ? null : rules.length;
+				}
+			})
+			.process(src, { minimize: true });
+		return count;
+	};
+
+	/**
 	 * Every node the walk visits, as `type|index|start`, entering and exiting.
 	 * @param {string} src css source
-	 * @param {boolean} streamBlocks whether to stream nested blocks
 	 * @param {import("../lib/css/syntax").CssProcessOptions=} extra more options
 	 * @returns {string[]} the visit sequence
 	 */
-	const walk = (src, streamBlocks, extra) => {
+	const walk = (src, extra) => {
 		/** @type {string[]} */
 		const seq = [];
 		/** @type {import("../lib/css/syntax").VisitorMap} */
@@ -797,60 +820,88 @@ describe("CssSyntax — streamBlocks", () => {
 					seq.push(`-${name}|${path.index}|${path.start()}`)
 			};
 		}
-		new SourceProcessor().use(map).process(src, { ...extra, streamBlocks });
+		new SourceProcessor().use(map).process(src, extra);
 		return seq;
 	};
 
 	/**
 	 * @param {string} src css source
-	 * @param {import("../lib/css/syntax").CssProcessOptions=} extra more options
-	 * @returns {void}
+	 * @returns {string} its minified output
 	 */
-	const expectSameWalk = (src, extra) => {
-		expect(walk(src, true, extra)).toEqual(walk(src, false, extra));
-	};
+	const minify = (src) =>
+		new SourceProcessor().process(src, { minimize: true }).code;
 
-	it("visits a streamed block exactly as the collected walk does", () => {
-		expectSameWalk(`@media screen{${BIG}}`);
+	it("streams a block past the threshold and collects one under it", () => {
+		expect(childCount(`@media screen{${BIG}}`)).toBe(0);
+		expect(childCount(`@media screen{${SMALL}}`)).toBe(4);
 	});
 
-	it("visits nested streamed blocks outermost first", () => {
-		// The inner block crosses the threshold first, so the outer rule has to be
-		// entered on its way in — otherwise `@supports` would be entered before the
-		// `@media` holding it.
-		expectSameWalk(`@media screen{@supports (display:grid){${BIG}}}`);
+	it("enters a streamed rule before its children and exits after them", () => {
+		const seq = walk(`@media screen{${SMALL}}`, { recurseBlocks: true });
+		expect(seq[0]).toBe("+AtRule|0|0");
+		expect(seq[seq.length - 1]).toBe("-AtRule|0|0");
+		const streamed = walk(`@media screen{${BIG}}`);
+		expect(streamed[0]).toBe("+AtRule|0|0");
+		expect(streamed[streamed.length - 1]).toBe("-AtRule|0|0");
 	});
 
-	it("visits a streamed CSS-nesting block as the collected walk does", () => {
-		expectSameWalk(
-			`.root{color:red;${repeat(1800, (i) => `& .n${i}{color:red}`)}}`
-		);
-	});
-
-	it("leaves a block that never grows to the collected walk", () => {
-		expectSameWalk(`@media screen{${SMALL}}`);
-		expectSameWalk("a{color:red}@media x{b{color:blue}}@media y{}c{}");
-	});
-
-	it("falls back past the frame table's depth", () => {
-		const depth = 70;
-		expectSameWalk(
-			`${repeat(depth, (i) => `@media (min-width:${i}px){`)}${BIG}${repeat(
-				depth,
-				() => "}"
-			)}`
-		);
-	});
-
-	it("keeps a streamed block's children in source order", () => {
-		// The one visit-order difference streaming makes: the collected walk emits
-		// every declaration and only then every child rule, where a streamed block
-		// emits each child as it finishes. Both see the same children.
+	it("visits a streamed block's children in source order", () => {
+		// The collected walk emits every declaration and only then every child
+		// rule; a streamed block emits each child as it finishes, so declarations
+		// and child rules interleave the way the source has them.
 		const src = `@media screen{${repeat(1800, (i) => `p${i}:v${i};${rule(i)}`)}}`;
-		const starts = (/** @type {boolean} */ s) =>
-			walk(src, s).filter((e) => e.startsWith("+Declaration|"));
-		expect(starts(true)).not.toEqual(starts(false));
-		expect([...starts(true)].sort()).toEqual([...starts(false)].sort());
+		const kinds = walk(src)
+			.filter(
+				(e) => e.startsWith("+Declaration|") || e.startsWith("+QualifiedRule|")
+			)
+			.map((e) => e.slice(1, e.indexOf("|")));
+		// A declaration of the block, then a rule, then that rule's own two
+		// declarations — repeating, which only source order produces.
+		expect(kinds.slice(0, 8)).toEqual([
+			"Declaration",
+			"QualifiedRule",
+			"Declaration",
+			"Declaration",
+			"Declaration",
+			"QualifiedRule",
+			"Declaration",
+			"Declaration"
+		]);
+	});
+
+	it("indexes a streamed block's declarations and child rules apart", () => {
+		// The collected walk numbers the two lists independently (see `_walkRule`),
+		// so a streamed block has to as well — not one counter running across the
+		// merged source order.
+		const src = `@media screen{${repeat(1800, (i) => `p${i}:v${i};${rule(i)}`)}}`;
+		/** @type {string[]} */
+		const seen = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Declaration]: (
+					/** @type {import("../lib/css/syntax").CssPath} */ path
+				) => {
+					const parent = path.parent;
+					if (parent !== null && path.type(parent) === NodeType.AtRule) {
+						seen.push(`d${path.index}`);
+					}
+				},
+				[NodeType.QualifiedRule]: (
+					/** @type {import("../lib/css/syntax").CssPath} */ path
+				) => seen.push(`r${path.index}`)
+			})
+			.process(src, { minimize: true });
+		expect(seen.slice(0, 6)).toEqual(["d0", "r0", "d1", "r1", "d2", "r2"]);
+		expect(seen[seen.length - 1]).toBe("r1799");
+	});
+
+	it("enters nested streamed blocks outermost first", () => {
+		// The inner block crosses the threshold first, so the outer rule has to be
+		// entered on the way in — otherwise `@supports` would be entered before the
+		// `@media` holding it.
+		const seq = walk(`@media screen{@supports (display:grid){${BIG}}}`);
+		expect(seq[0]).toBe("+AtRule|0|0");
+		expect(seq.filter((e) => e.startsWith("+AtRule|"))[1]).toBe("+AtRule|0|14");
 	});
 
 	it("reads a streamed rule's body as an empty block, not as no block", () => {
@@ -869,12 +920,12 @@ describe("CssSyntax — streamBlocks", () => {
 						seen.push(rules === null ? null : rules.length);
 					}
 				})
-				.process(src, { streamBlocks: true });
+				.process(src, { minimize: true });
 			return seen;
 		};
 		// A streamed rule hands its children to the visitors instead of collecting
 		// them, so both lists read empty — but the block itself is still there,
-		// which `null` (the no-block at-rules) would deny.
+		// which `null` (the block-less at-rules) would deny.
 		expect(body(`@media screen{${BIG}}`)).toEqual([0, 0]);
 		expect(body(`@media screen{${SMALL}}`)).toEqual([0, 4]);
 		expect(body("@import url(x);")).toEqual([null, null]);
@@ -896,108 +947,46 @@ describe("CssSyntax — streamBlocks", () => {
 				.process(`@media screen{${BIG}}`, opts);
 			return n;
 		};
-		expect(children({ streamBlocks: true }, true)).toBe(0);
-		expect(children({ streamBlocks: true }, false)).toBe(1800);
-		expect(children({ streamBlocks: true, recurseBlocks: false }, false)).toBe(
-			0
-		);
+		expect(children({}, true)).toBe(0);
+		expect(children({}, false)).toBe(1800);
+		expect(children({ recurseBlocks: false }, false)).toBe(0);
 	});
 
-	/**
-	 * Child rules the first rule of type `type` reports while printing streamed:
-	 * 0 means it streamed (its children went to the visitors, not to its body), a
-	 * positive count means the block stayed under the threshold and was collected.
-	 * @param {string} src css source
-	 * @param {number=} type the node type to look at (default `AtRule`)
-	 * @returns {number | null} the count, or null if that rule has no block
-	 */
-	const streamedChildCount = (src, type = NodeType.AtRule) => {
-		/** @type {number | null} */
-		let count = null;
-		let seen = false;
-		new SourceProcessor()
-			.use({
-				[type]: (/** @type {import("../lib/css/syntax").CssPath} */ path) => {
-					if (seen) return;
-					seen = true;
-					const rules = path.childRules();
-					count = rules === null ? null : rules.length;
-				}
-			})
-			.process(src, { minimize: true, streamBlocks: true });
-		return count;
-	};
-
-	/**
-	 * Minify `src` both ways; the streamed output has to be the collected one
-	 * byte for byte, source map included.
-	 * @param {string} src css source
-	 * @returns {void}
-	 */
-	const expectSamePrint = (src) => {
-		const run = (/** @type {boolean} */ streamBlocks) =>
-			new SourceProcessor().process(src, {
-				minimize: true,
-				source: "in.css",
-				streamBlocks
-			});
-		const collected = run(false);
-		const streamed = run(true);
-		expect(streamed.code).toBe(collected.code);
-		expect(streamed.map).toEqual(collected.map);
-	};
-
-	it("prints a streamed block as the collected printer does", () => {
-		expectSamePrint(`@media screen{${SMALL}${BIG}}`);
-		expectSamePrint(`@media screen{@supports (display:grid){${BIG}}}`);
-		expectSamePrint(
-			`.root{color:red;${repeat(1800, (i) => `& .n${i}{color:red}`)}}`
+	it("prints a streamed block as the collected printer would", () => {
+		// The fixture is already minimal, so the whole output is known: opener,
+		// every child in source order, closer — and no `;` before the `}`.
+		expect(minify(`@media screen{${BIG}}`)).toBe(`@media screen{${BIG}}`);
+		expect(minify(`@media screen{@supports (display:grid){${BIG}}}`)).toBe(
+			`@media screen{@supports (display:grid){${BIG}}}`
 		);
-	});
-
-	it("streams while printing, not only while walking", () => {
-		// A collected block reports its children, a streamed one reports an empty
-		// block — which is how the cases here pin that they took the streamed path
-		// rather than passing because nothing streamed at all.
-		expect(streamedChildCount(`@media screen{${BIG}}`)).toBe(0);
-		expect(streamedChildCount(`@media screen{${SMALL}}`)).toBe(4);
+		const nesting = `.root{color:red;${repeat(1800, (i) => `& .n${i}{color:red}`)}}`;
+		expect(minify(nesting)).toBe(nesting);
 	});
 
 	it("drops a streamed block that prints to nothing", () => {
 		// The opener is held back until something inside prints, so a rule whose
 		// every child minifies away is still dropped whole at its `}`. An empty
-		// rule is only a few nodes, so it takes a lot of them to reach the
-		// threshold — `EMPTY` is sized to cross it, which the assertion below pins.
+		// rule is only a few nodes, so it takes a lot of them to cross.
 		const EMPTY = repeat(6000, (i) => `.e${i}{}`);
-		expect(streamedChildCount(`@media a{${EMPTY}}`)).toBe(0);
-		expectSamePrint(`@media a{${EMPTY}}`);
-		expectSamePrint(`@media a{${EMPTY}@media b{${EMPTY}}}`);
-		expect(
-			new SourceProcessor().process(`@media a{${EMPTY}}`, {
-				minimize: true,
-				streamBlocks: true
-			}).code
-		).toBe("");
+		expect(childCount(`@media a{${EMPTY}}`)).toBe(0);
+		expect(minify(`@media a{${EMPTY}}`)).toBe("");
+		expect(minify(`@media a{${EMPTY}@media b{${EMPTY}}}`)).toBe("");
+		expect(minify(`@media a{${EMPTY}.keep{color:red}}`)).toBe(
+			"@media a{.keep{color:red}}"
+		);
 		// A `@layer` block carries meaning even when empty, so it stays.
-		expect(
-			new SourceProcessor().process(`@layer a{${EMPTY}}`, {
-				minimize: true,
-				streamBlocks: true
-			}).code
-		).toBe("@layer a{}");
+		expect(minify(`@layer a{${EMPTY}}`)).toBe("@layer a{}");
 	});
 
 	it("keeps only the last of a streamed block's identical declarations", () => {
 		// Reached by taking the earlier one back out of the output, since a
 		// streamed block cannot look ahead for the later one. The duplicate is
-		// separated from its match by a child rule, so it is the whole block that
-		// has to agree with the collected printer, not a run of declarations.
-		const src = `.root{color:red;& .n{a:b}${repeat(3000, (i) => `& .m${i}{a:b}`)}color:red;}`;
-		expect(streamedChildCount(src, NodeType.QualifiedRule)).toBe(0);
-		expectSamePrint(src);
-		expectSamePrint(
-			`.root{${repeat(1800, (i) => `color:red;color:rgb(${i % 7},0,0);& .n${i}{a:b}color:red;`)}}`
-		);
+		// separated from its match by 3000 child rules, so this is the whole block
+		// agreeing, not a run of adjacent declarations.
+		const middle = repeat(3000, (i) => `& .m${i}{color:red}`);
+		const src = `.root{color:red;${middle}color:red;}`;
+		expect(childCount(src, NodeType.QualifiedRule)).toBe(0);
+		expect(minify(src)).toBe(`.root{${middle}color:red}`);
 	});
 
 	it("declines to stream a block a longhand family could still merge in", () => {
@@ -1019,21 +1008,17 @@ describe("CssSyntax — streamBlocks", () => {
 					declared = decls === null ? null : decls.length;
 				}
 			})
-			.process(src, { minimize: true, streamBlocks: true });
+			.process(src, { minimize: true });
 		// Collected, so it still reports every declaration it holds — a streamed
 		// block would report none, and the merge below would be lost with them.
 		expect(declared).toBe(20004);
-		expectSamePrint(src);
-		expect(
-			new SourceProcessor().process(src, {
-				minimize: true,
-				streamBlocks: true
-			}).code
-		).toContain("margin:1px 2px 3px 4px");
+		expect(minify(src)).toContain("margin:1px 2px 3px 4px");
 	});
 
-	it("keeps the kept comments and the source map of a streamed run", () => {
-		expectSamePrint(`/*! keep */@media a{${BIG}}/*! tail */`);
+	it("keeps the comments a streamed run carries through", () => {
+		expect(minify(`/*! keep */@media a{${BIG}}/*! tail */`)).toBe(
+			`/*! keep */@media a{${BIG}}/*! tail */`
+		);
 	});
 
 	it("leaves no state behind for the next parse", () => {
@@ -1045,19 +1030,17 @@ describe("CssSyntax — streamBlocks", () => {
 				if (++seen === throwAt) throw new Error("boom");
 			}
 		});
-		const plain = walk(src, false);
-		sp.process(`@media screen{${BIG}}`, { streamBlocks: true });
-		expect(walk(src, false)).toEqual(plain);
+		const plain = walk(src);
+		sp.process(`@media screen{${BIG}}`, {});
+		expect(walk(src)).toEqual(plain);
 		// Part-way through the streamed block, so the frame depth is unwound from
 		// inside the walk rather than at the closing `}`.
 		seen = 0;
 		throwAt = 500;
-		expect(() =>
-			sp.process(`@media screen{${BIG}}`, { streamBlocks: true })
-		).toThrow("boom");
+		expect(() => sp.process(`@media screen{${BIG}}`, {})).toThrow("boom");
 		throwAt = -1;
-		expect(walk(src, false)).toEqual(plain);
-		expect(walk(src, true)).toEqual(plain);
+		expect(walk(src)).toEqual(plain);
+		expect(minify(src)).toBe(src);
 	});
 });
 
