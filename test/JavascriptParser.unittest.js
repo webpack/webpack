@@ -1333,6 +1333,118 @@ describe("JavascriptParser", () => {
 			expect(ast.body[0].expression.right.type).toBe("ArrowFunctionExpression");
 		});
 
+		it("rejects `**` with a bare arrow left operand like acorn 8.18", () => {
+			expect(() => parse("x = () => {} ** 2")).toThrow(/Unexpected token/);
+			const ok = parse("x = (() => {}) ** 2").body[0].expression.right;
+			expect(ok.type).toBe("BinaryExpression");
+			expect(ok.operator).toBe("**");
+			expect(() => parse("x = -2 ** 2")).toThrow(/Unexpected token/);
+			// the type-based fallback probe (plugin overriding parseArrowExpression)
+			const Extended = WebpackParser.extend(
+				/** @type {EXPECTED_ANY} */ (
+					(/** @type {EXPECTED_ANY} */ P) =>
+						class extends P {
+							/**
+							 * @param {...EXPECTED_ANY} args acorn args
+							 * @returns {EXPECTED_ANY} arrow node
+							 */
+							parseArrowExpression(...args) {
+								return super.parseArrowExpression(...args);
+							}
+						}
+				)
+			);
+			expect(() => Extended.parse("x = () => {} ** 2", parseOptions)).toThrow(
+				/Unexpected token/
+			);
+		});
+
+		it("preserves LS/PS in cooked template chunks read by the cold reader", () => {
+			// the escape forces the cold reader; LS must survive while CR/LF cook
+			const value = parse("`a\\tb\u2028c\rd\ne`").body[0].expression.quasis[0]
+				.value;
+			expect(value.cooked).toBe("a\tb\u2028c\nd\ne");
+			expect(value.raw).toBe("a\\tb\u2028c\nd\ne");
+		});
+
+		it("serves repeated short literal raws from one cached string", () => {
+			const [first, second] = parse("x = 123456; y = 123456;").body;
+			expect(first.expression.right.raw).toBe("123456");
+			// identity: strings compare by value, so sharing is unobservable
+			// beyond the allocation it saves — pinned here to keep the cache wired
+			expect(second.expression.right.raw).toBe(first.expression.right.raw);
+			const long = parse("z = 'quite a long string literal';").body[0];
+			expect(long.expression.right.value).toBe("quite a long string literal");
+			const fraction = parse("w = 123456789.0123456;").body[0];
+			expect(fraction.expression.right.value).toBe(123456789.0123456);
+			expect(fraction.expression.right.raw).toBe("123456789.0123456");
+		});
+
+		it("still detects parameter clashes without the per-body clash record", () => {
+			// strict mode: multi-param duplicate must throw, 0/1-param must not
+			expect(() => parse("'use strict'; function f(a, a) {}")).toThrow(
+				/Argument name clash/
+			);
+			expect(() => parse("'use strict'; function f(a) {}")).not.toThrow();
+			// one destructuring param carries two names — the record path
+			expect(() => parse("function f({ a: x, b: x }) {}")).toThrow(
+				/Argument name clash/
+			);
+		});
+
+		it("delegates var declarations when a plugin overrides parseVarId", () => {
+			let calls = 0;
+			const Extended = WebpackParser.extend(
+				/** @type {EXPECTED_ANY} */ (
+					(/** @type {EXPECTED_ANY} */ P) =>
+						class extends P {
+							/**
+							 * @param {...EXPECTED_ANY} args acorn args
+							 * @returns {EXPECTED_ANY} declarator id
+							 */
+							parseVarId(...args) {
+								calls++;
+								return super.parseVarId(...args);
+							}
+						}
+				)
+			);
+			const ast = /** @type {EXPECTED_ANY} */ (
+				Extended.parse("var a = 1; for (let b = 0; b < 1; b++);", parseOptions)
+			);
+			expect(calls).toBe(2);
+			expect(ast.body[0].declarations[0].id.name).toBe("a");
+		});
+
+		it("keeps scope bindings isolated across pooled sibling scopes", () => {
+			// a pooled scope must not leak names or the simple-catch marker
+			expect(() =>
+				parse("{ let a; } { let a; } try {} catch (e) { var e; }")
+			).not.toThrow();
+			// block-level function declarations exercise the functions-set harvest
+			expect(() =>
+				parse("{ function g() {} } { let g; function h() {} }")
+			).not.toThrow();
+			expect(() => parse("{ let a; } { let b; let b; }")).toThrow(
+				/already been declared/
+			);
+			expect(() => parse("try {} catch (a) {} { let x; var x; }")).toThrow(
+				/already been declared/
+			);
+		});
+
+		it("keeps labels isolated across pooled function bodies", () => {
+			expect(() =>
+				parse(
+					"function f() { lab: for (;;) break lab; } function g() { lab: for (;;) break lab; }"
+				)
+			).not.toThrow();
+			// a stale pooled label must not make this break resolvable
+			expect(() =>
+				parse("function f() { lab: ; } function g() { break lab; }")
+			).toThrow(/Unsyntactic break/);
+		});
+
 		it("serves comment ranges lazily with a stable memo and writable slot", () => {
 			/** @type {EXPECTED_ANY[]} */
 			const comments = [];
