@@ -3697,6 +3697,20 @@ declare class Compilation {
 	}): void;
 
 	/**
+	 * Queues a runtime module whose implementation is loaded on demand, for
+	 * `_attachPendingRuntimeModules` to await and build once the requirement pass
+	 * is over. `runtimeRequirementInTree` is a sync hook, so a tap cannot await
+	 * the load itself; anything the tap reads off the requirement set must be
+	 * captured before queueing, since `create` runs later.
+	 */
+	addLazyRuntimeModule(
+		chunk: Chunk,
+		load: () => Promise<any>,
+		create: (loaded?: any) => RuntimeModule,
+		chunkGraph?: ChunkGraph
+	): void;
+
+	/**
 	 * Adds runtime module.
 	 */
 	addRuntimeModule(
@@ -18696,6 +18710,10 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		afterResolve: AsyncSeriesBailHook<[ResolveData], false | void>;
 		createModule: AsyncSeriesBailHook<[CreateData, ResolveData], void | Module>;
 		module: SyncWaterfallHook<[Module, CreateData, ResolveData], Module>;
+		/**
+		 * @since 5.110.0
+		 */
+		prepareModuleType: HookMap<AsyncSeriesHook<[]>>;
 		createParser: TypedHookMap<
 			Record<
 				"javascript/auto",
