@@ -2,13 +2,8 @@
 
 let INDEX = 0;
 
-// A hashed chunk name is settled long after the code referencing it is generated, so
-// the specifier is emitted as a stand-in and filled in once the hash exists. Whatever
-// the template holds, the name baked in has to be the one on disk.
-//
-// Rewriting a chunk after its own hash was taken leaves that hash stale, and
-// `RealContentHashPlugin` is what brings the two back in line — so without it the
-// runtime form is kept instead.
+// A hashed chunk name is emitted as a stand-in and filled in once the hash exists.
+// Without `realContentHash` nothing repairs the stale hash, so the runtime form stays.
 
 /**
  * @param {string} name prefix keeping the emitted files of each config apart

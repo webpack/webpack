@@ -1,11 +1,7 @@
 "use strict";
 
-// A function `chunkFilename` is called for the template it returns. Only what it
-// answers for this chunk is knowable during code generation, and no hash is — so a
-// plain answer bakes right away, and one that depends on a hash is left to the
-// deferred pass, which asks the function again once the hashes are settled. Where
-// nothing would correct the stale name that rewriting leaves behind, the runtime
-// form is kept instead.
+// A function `chunkFilename` bakes right away when its answer holds no hash, and is
+// asked again by the deferred pass when it does — or falls back if nothing corrects it.
 
 const webpack = require("../../../../");
 

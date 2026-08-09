@@ -4,6 +4,8 @@ import path from "path";
 // Referenced but never called: the binary would be loaded from the public path, and
 // what is under test is the URL webpack bakes for it.
 export const load = () => import(/* webpackChunkName: "lazy" */ "./lazy");
+export const loadSource = () =>
+	import(/* webpackChunkName: "lazySource" */ "./lazy-source");
 
 // Only the chunk holding the wasm module: the entry bundle carries this file's own
 // needles, which would satisfy the assertions on their own.

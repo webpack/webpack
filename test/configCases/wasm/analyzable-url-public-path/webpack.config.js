@@ -1,21 +1,21 @@
 "use strict";
 
-// A public path that is a complete URL bakes into the wasm binary's literal just as a
-// chunk-relative one does — `new URL(...)` ignores its base for an absolute specifier.
-// Only `fetch` loading may do that: `readFile` takes a `file:` URL alone, so a loader
-// reading from disk keeps addressing the binary relative to its chunk.
+// A public path that is a complete URL bakes into the wasm literal, but only under
+// `fetch` loading — `readFile` takes a `file:` URL alone, so it stays chunk-relative.
 
 const webpack = require("../../../../");
 
 const INSTANTIATE = `${"__webpack_require__"}.v(exports, `;
+const COMPILE = `${"__webpack_require__"}.vs(`;
 
 /**
  * @param {string} name prefix keeping the emitted files of each config apart
  * @param {NonNullable<import("../../../../").Configuration["output"]>["wasmLoading"]} wasmLoading how the binary is loaded
- * @param {string} wasmRef expected start of the baked URL
+ * @param {string} wasmChunk chunk holding the wasm module under test
+ * @param {string} wasmRef expected start of the baked url expression
  * @returns {import("../../../../").Configuration} configuration
  */
-const base = (name, wasmLoading, wasmRef) => ({
+const base = (name, wasmLoading, wasmChunk, wasmRef) => ({
 	target: "node",
 	mode: "development",
 	devtool: false,
@@ -25,7 +25,11 @@ const base = (name, wasmLoading, wasmRef) => ({
 		]
 	},
 	optimization: { chunkIds: "named", splitChunks: false },
-	experiments: { outputModule: true, asyncWebAssembly: true },
+	experiments: {
+		outputModule: true,
+		asyncWebAssembly: true,
+		sourceImport: true
+	},
 	output: {
 		module: true,
 		wasmLoading,
@@ -35,14 +39,26 @@ const base = (name, wasmLoading, wasmRef) => ({
 	},
 	plugins: [
 		new webpack.DefinePlugin({
-			__WASM_CHUNK__: JSON.stringify(`${name}-chunks/lazy.mjs`),
-			__WASM_REF__: JSON.stringify(INSTANTIATE + wasmRef)
+			__WASM_CHUNK__: JSON.stringify(`${name}-chunks/${wasmChunk}.mjs`),
+			__WASM_REF__: JSON.stringify(wasmRef)
 		})
 	]
 });
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
-	base("fetch", "fetch", 'new URL("https://example.com/assets/fetch-'),
-	base("node", "async-node", 'new URL("../node-')
+	base(
+		"fetch",
+		"fetch",
+		"lazy",
+		`${INSTANTIATE}new URL("https://example.com/assets/fetch-`
+	),
+	base("node", "async-node", "lazy", `${INSTANTIATE}new URL("../node-`),
+	// Source phase reaches the same url through `compileWasm` rather than `instantiateWasm`.
+	base(
+		"source",
+		"fetch",
+		"lazySource",
+		`${COMPILE}new URL("https://example.com/assets/source-`
+	)
 ];
