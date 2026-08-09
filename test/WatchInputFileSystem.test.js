@@ -6,6 +6,7 @@ const fs = require("graceful-fs");
 const { Volume, createFsFromVolume } = require("memfs");
 
 const webpack = require("..");
+const NodeWatchFileSystem = require("../lib/node/NodeWatchFileSystem");
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
 expectNoDeprecations();
@@ -25,7 +26,17 @@ describe("WatchInputFileSystem", () => {
 
 	afterEach((done) => {
 		setTimeout(() => {
-			fs.rmSync(fixturePath, { recursive: true, force: true });
+			// `fs.rmSync` needs Node.js 14.14, below the supported baseline
+			try {
+				fs.unlinkSync(filePath);
+			} catch (_err) {
+				// empty
+			}
+			try {
+				fs.rmdirSync(fixturePath);
+			} catch (_err) {
+				// empty
+			}
 			done();
 		}, 100); // cool down a bit
 	});
@@ -197,5 +208,32 @@ describe("WatchInputFileSystem", () => {
 				done
 			)
 		);
+	});
+
+	// Webpack only ever re-points the watcher it installed itself: plugins pair
+	// their own filesystem with their own watcher, and that pairing must hold.
+	it("leaves a user-supplied watchFileSystem alone", (done) => {
+		const compiler = /** @type {Compiler} */ (webpack(config));
+		useMemoryOutput(compiler);
+
+		const ownFileSystem = createInputFileSystem();
+		const ownWatchFileSystem = new NodeWatchFileSystem(ownFileSystem);
+		compiler.watchFileSystem = ownWatchFileSystem;
+		compiler.inputFileSystem = createInputFileSystem();
+
+		let finished = false;
+		const watching = compiler.watch(watchOptions, (err) => {
+			if (finished) return;
+			finished = true;
+			if (err) return done(err);
+			/** @type {Error | undefined} */
+			let error;
+			try {
+				expect(ownWatchFileSystem.inputFileSystem).toBe(ownFileSystem);
+			} catch (err2) {
+				error = /** @type {Error} */ (err2);
+			}
+			watching.close(() => done(error));
+		});
 	});
 });
