@@ -721,6 +721,48 @@ ${details(snapshot)}`)
 				done();
 			});
 		});
+
+		// #21636: an absolute target was joined onto the link's parent directory
+		// (`join("/path/context/sub", "/path/folder/context")`), so the snapshot
+		// tracked a path that does not exist and never went invalid.
+		it("should invalidate a snapshot when a file behind an absolute symlink target changes", (done) => {
+			const fs = createFs();
+			const fsInfo = createFsInfo(fs);
+			fsInfo.createSnapshot(
+				Date.now() + 10000,
+				[],
+				["/path/context/sub"],
+				[],
+				{ hash: true },
+				(err, snapshot) => {
+					if (err) return done(err);
+					fs.writeFileSync("/path/folder/context/file.txt", "Changed");
+					expectSnapshotState(fs, snapshot, false, done);
+				}
+			);
+		});
+
+		// #21636: a symlink target that is in the timestamp and the hash cache as
+		// `null` merges to `{}`, whose missing hash used to reach
+		// `hash.update(undefined)` and abort the build with a `TypeError`.
+		it("should not crash on a symlink whose target directory is missing", (done) => {
+			const fs = createFs();
+			fs.symlinkSync("/path/missing", "/path/context/sub/dangling", "dir");
+			const fsInfo = createFsInfo(fs);
+			fsInfo.getContextTimestamp("/path/missing", (err) => {
+				if (err) return done(err);
+				fsInfo.getContextHash("/path/missing", (err) => {
+					if (err) return done(err);
+					fsInfo.getContextTsh("/path/context/sub", (err, tsh) => {
+						if (err) return done(err);
+						expect(typeof (/** @type {{ hash: string }} */ (tsh).hash)).toBe(
+							"string"
+						);
+						done();
+					});
+				});
+			});
+		});
 	});
 
 	describe("unsupported directory entries", () => {
