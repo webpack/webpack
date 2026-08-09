@@ -1020,6 +1020,16 @@ describe("CssSyntax — block streaming", () => {
 		expect(minify(src)).toBe(`.root{${middle}color:red}`);
 	});
 
+	it("takes back only its own output when it drops the last `;`", () => {
+		// The `;` a `}` makes redundant is dropped by walking back over the pieces
+		// the block emitted, past the empty one a later duplicate took back. What
+		// stands before the block keeps its own separator.
+		const mid = repeat(3000, (i) => `& .m${i}{color:red}`);
+		const src = `.root{lead:1;${mid}dup:2;dup:2;}`;
+		expect(childCount(src, NodeType.QualifiedRule)).toBe(0);
+		expect(minify(src)).toBe(`.root{lead:1;${mid}dup:2}`);
+	});
+
 	it("declines to stream a block a longhand family could still merge in", () => {
 		// `_mergeBoxLonghands` needs every declaration at once, and only runs in a
 		// block with no child rule — so such a block is never streamed, however far

@@ -21596,7 +21596,14 @@ declare class PrintContext<TPath, TNode> {
 	 * Drop the innermost held-back opener — its node printed to nothing.
 	 */
 	dropPending(): void;
-	get mark(): number;
+
+	/**
+	 * Close off what has been emitted so far and return the index the next piece
+	 * will take. Cutting is the point: a caller bounding a later edit by this
+	 * (see {@link dropTrailing}) must not be able to reach output from before it,
+	 * which a mark taken while the tail was still open would sit in the middle of.
+	 */
+	markCut(): number;
 
 	/**
 	 * Forget every node's printed text. A node printed in pieces does this once
