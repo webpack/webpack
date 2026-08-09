@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("path");
-const EntryPlugin = require("../../../../lib/EntryPlugin");
+const { EntryPlugin } = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
