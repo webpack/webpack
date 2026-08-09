@@ -55,5 +55,9 @@ module.exports = [
 					.javascript
 			}.mjs`,
 		false
-	)
+	),
+	// Reads what names the asset but is not a hash — the same answer both times.
+	base(5, (pathData) => `f-[name].${pathData.runtime}.mjs`, true),
+	// The placeholder form of the same, resolved rather than asked for.
+	base(6, "g-[name].[runtime].mjs", true)
 ];
