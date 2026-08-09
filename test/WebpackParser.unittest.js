@@ -1894,7 +1894,6 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			 */
 			checkParams(node, allowDuplicates) {
 				calls++;
-				// @ts-expect-error acorn internal
 				return super.checkParams(node, allowDuplicates);
 			}
 		}
