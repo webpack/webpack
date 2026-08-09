@@ -721,6 +721,72 @@ ${details(snapshot)}`)
 				done();
 			});
 		});
+
+		// #21636: joining an absolute target onto the link's directory produced a
+		// path that does not exist, so the snapshot never went invalid.
+		it("should invalidate a snapshot when a file behind an absolute symlink target changes", (done) => {
+			const fs = createFs();
+			const fsInfo = createFsInfo(fs);
+			fsInfo.createSnapshot(
+				Date.now() + 10000,
+				[],
+				["/path/context/sub"],
+				[],
+				{ hash: true },
+				(err, snapshot) => {
+					if (err) return done(err);
+					fs.writeFileSync("/path/folder/context/file.txt", "Changed");
+					expectSnapshotState(fs, snapshot, false, done);
+				}
+			);
+		});
+
+		// #21636: a target read as `null` for both timestamp and hash merged to
+		// `{}`, whose missing hash reached `hash.update(undefined)`.
+		it("should not crash on a symlink whose target directory is missing", (done) => {
+			const fs = createFs();
+			fs.symlinkSync("/path/missing", "/path/context/sub/dangling", "dir");
+			const fsInfo = createFsInfo(fs);
+			fsInfo.getContextTimestamp("/path/missing", (err) => {
+				if (err) return done(err);
+				fsInfo.getContextHash("/path/missing", (err) => {
+					if (err) return done(err);
+					fsInfo.getContextTsh("/path/context/sub", (err, tsh) => {
+						if (err) return done(err);
+						expect(typeof (/** @type {{ hash: string }} */ (tsh).hash)).toBe(
+							"string"
+						);
+						done();
+					});
+				});
+			});
+		});
+
+		// #21636: the same `{}` is truthy, so a missing directory was snapshotted
+		// as existing and creating it no longer counted as a change.
+		it("should invalidate a snapshot when a missing directory is created", (done) => {
+			const fs = createFs();
+			const fsInfo = createFsInfo(fs);
+			fsInfo.getContextTimestamp("/path/missing", (err) => {
+				if (err) return done(err);
+				fsInfo.getContextHash("/path/missing", (err) => {
+					if (err) return done(err);
+					fsInfo.createSnapshot(
+						Date.now() + 10000,
+						[],
+						["/path/missing"],
+						[],
+						{ timestamp: true, hash: true },
+						(err, snapshot) => {
+							if (err) return done(err);
+							fs.mkdirSync("/path/missing", { recursive: true });
+							fs.writeFileSync("/path/missing/file.txt", "Hello World");
+							expectSnapshotState(fs, snapshot, false, done);
+						}
+					);
+				});
+			});
+		});
 	});
 
 	describe("unsupported directory entries", () => {
