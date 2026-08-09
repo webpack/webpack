@@ -21589,10 +21589,11 @@ declare class PrintContext<TPath, TNode> {
 	insert(pos: number, text: string): void;
 
 	/**
-	 * Drop the queued inserts sitting in `[start, end)` — a printer that wrote
-	 * that source range out verbatim already carries them, in place.
+	 * Take the queued inserts sitting in `[start, end)` — a printer that writes
+	 * that source range out itself places them, so the writer must not flush
+	 * them ahead of the next top-level node as well.
 	 */
-	dropInserts(start: number, end: number): void;
+	takeInserts(start: number, end: number): string;
 	sourceMap(options: SourceMapOptions): SourceMap;
 	result(): string;
 }

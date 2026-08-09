@@ -850,15 +850,24 @@ describe("CssSyntax — minify token-boundary safety", () => {
 	});
 
 	it("keeps a custom property's value as the source wrote it", () => {
-		// The value is the text `getPropertyValue()` hands back, so the comment
-		// stays: dropping it would fuse the two tokens it parts.
-		expect(min("a{--x:1px/**/2px}")).toBe("a{--x:1px/**/2px}");
-		expect(min("a{--x:1px 1px/**/1px 1px}")).toBe("a{--x:1px 1px/**/1px 1px}");
+		// The value is the text `getPropertyValue()` hands back, so it is not
+		// rewritten — but a dropped comment leaves the boundary it stood for, which
+		// is a space only where the tokens it parts would otherwise fuse.
+		expect(min("a{--x:1px/*c*/2px}")).toBe("a{--x:1px 2px}");
+		expect(min("a{--x:1px 1px/*c*/1px 1px}")).toBe("a{--x:1px 1px 1px 1px}");
+		expect(min("a{--x:1px /*c*/ 2px}")).toBe("a{--x:1px  2px}");
 		// Leading and trailing whitespace is not part of it.
 		expect(min("a{--x: 1px 2px }")).toBe("a{--x:1px 2px}");
-		// A kept comment rides along in the value, so it is not also re-emitted
-		// before the next top-level node.
+		// A `/*` inside a string is no comment.
+		expect(min('a{--x:"a/*c*/b"}')).toBe('a{--x:"a/*c*/b"}');
+		// A kept comment stays where it stood, so it is not also re-emitted before
+		// the next top-level node — and it parts the tokens itself.
 		expect(min("a{--x:1px/*!c*/2px}b{c:1}")).toBe("a{--x:1px/*!c*/2px}b{c:1}");
+		expect(min("a{--x:1px/*c*//*!k*/2px}")).toBe("a{--x:1px/*!k*/2px}");
+		// One rule's custom properties take their own, in the order they stand in.
+		expect(
+			min("/*!t*/a{--x:1px/*!k*/2px;--y:3px/*c*/4px;--z:5px/*!j*/6px}")
+		).toBe("/*!t*/a{--x:1px/*!k*/2px;--y:3px 4px;--z:5px/*!j*/6px}");
 		// Outside one it still moves ahead of the rule that follows it.
 		expect(min("a{c:red/*!c*/}b{c:1}")).toBe("a{c:red}/*!c*/b{c:1}");
 	});
