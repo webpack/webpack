@@ -108,6 +108,57 @@ describe("collectCjsRequireSpecifiers", () => {
 		});
 	}
 
+	// The scanner reads whatever is on disk, so it must terminate on source the
+	// ast reference cannot parse at all — asserted directly, not differentially.
+	describe("malformed source", () => {
+		/** @type {[string, string, string[]][]} */
+		const malformed = [
+			[
+				"regexp at the very start",
+				'/require\\("\\.\\/nope"\\)/;\nrequire("./a");',
+				["./a"]
+			],
+			[
+				"line comment before the call parens",
+				'require // c\n("./a");',
+				["./a"]
+			],
+			["unterminated line comment", 'require("./a"); // trailing', ["./a"]],
+			["unterminated line comment after require", "require // trailing", []],
+			["unterminated block comment after require", "require /* trailing", []],
+			["unterminated string", 'require("./a"); const s = "abc', ["./a"]],
+			[
+				"newline inside a string",
+				'require("./a"); const s = "ab\nc";',
+				["./a"]
+			],
+			["unterminated template", 'require("./a"); const s = `abc', ["./a"]],
+			["unterminated regexp", 'require("./a"); const r = /ab\nc;', ["./a"]],
+			["unterminated call", 'require("./a"); require("./b', ["./a"]],
+			["empty source", "", []],
+			// deliberate divergence: an escape in a specifier rejects the literal
+			// rather than growing a decoder, so the ast reference is not the oracle
+			[
+				"escape in the specifier",
+				'require("./a\\tb"); require("./c");',
+				["./c"]
+			],
+			[
+				"newline in the specifier",
+				'require("./a\nb"); require("./c");',
+				["./c"]
+			]
+		];
+
+		for (const [name, source, expected] of malformed) {
+			it(`should terminate on ${name}`, () => {
+				expect([...collectCjsRequireSpecifiers(source)].sort()).toEqual(
+					expected
+				);
+			});
+		}
+	});
+
 	it("should read webpack's own sources the same way as the ast", () => {
 		const fs = require("fs");
 		const path = require("path");
