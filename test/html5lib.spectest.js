@@ -483,6 +483,15 @@ const RCDATA_TAGS = new Set(["title", "textarea"]);
 const replaceNull = (value) => value.replace(/\0/g, "�");
 
 /**
+ * The spec folds only ASCII upper alpha in tag, attribute and DOCTYPE names,
+ * so `Ð` stays `Ð` where `String#toLowerCase` would make it `ð`.
+ * @param {string} value name as authored
+ * @returns {string} the name with A-Z folded
+ */
+const asciiLowerCase = (value) =>
+	value.replace(/[A-Z]/g, (c) => String.fromCharCode(c.charCodeAt(0) + 0x20));
+
+/**
  * Run one case and report its token stream in the html5lib format.
  * @param {string} input the case input, already CR-normalized
  * @param {string | undefined} context context element seeding the initial state
@@ -530,7 +539,9 @@ const runTokenizerCase = (input, context) => {
 		},
 		attribute(source, nameStart, nameEnd, valueStart, valueEnd, quoteType) {
 			if (attributes === null) attributes = {};
-			const name = replaceNull(source.slice(nameStart, nameEnd).toLowerCase());
+			const name = replaceNull(
+				asciiLowerCase(source.slice(nameStart, nameEnd))
+			);
 			// Per spec a repeated name keeps the first occurrence.
 			if (!(name in attributes)) {
 				attributes[name] =
@@ -544,7 +555,9 @@ const runTokenizerCase = (input, context) => {
 			return quoteType === QUOTE_NONE ? valueEnd : valueEnd + 1;
 		},
 		openTag(source, start, end, nameStart, nameEnd, selfClosing) {
-			const name = replaceNull(source.slice(nameStart, nameEnd).toLowerCase());
+			const name = replaceNull(
+				asciiLowerCase(source.slice(nameStart, nameEnd))
+			);
 			const token = ["StartTag", name, attributes || {}];
 			if (selfClosing) token.push(true);
 			tokens.push(token);
@@ -561,7 +574,7 @@ const runTokenizerCase = (input, context) => {
 		closeTag(source, start, end, nameStart, nameEnd) {
 			tokens.push([
 				"EndTag",
-				replaceNull(source.slice(nameStart, nameEnd).toLowerCase())
+				replaceNull(asciiLowerCase(source.slice(nameStart, nameEnd)))
 			]);
 			attributes = null;
 			lastTagSource = source.slice(start, end);
@@ -591,7 +604,7 @@ const runTokenizerCase = (input, context) => {
 				"DOCTYPE",
 				nameStart === -1
 					? null
-					: replaceNull(source.slice(nameStart, nameEnd).toLowerCase()),
+					: replaceNull(asciiLowerCase(source.slice(nameStart, nameEnd))),
 				publicStart === -1
 					? null
 					: replaceNull(source.slice(publicStart, publicEnd)),
