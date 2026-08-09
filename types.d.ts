@@ -29561,10 +29561,26 @@ declare namespace exports {
 			export let QUOTE_NONE: 0;
 			export let QUOTE_SINGLE: 2;
 			export let SVG_TAG_ADJUST: Record<string, string>;
+			export let baseTag: (
+				base:
+					| string
+					| {
+							/**
+							 * Value for the `href` attribute of the `<base>` element.
+							 */
+							href: string;
+							/**
+							 * Value for the `target` attribute of the `<base>` element (e.g. `"_blank"`).
+							 */
+							target?: string;
+					  }
+			) => string;
+			export let buildHeadTags: (opts: OutputHtmlOptions) => string;
 			export let decodeEntities: _functionSyntax;
 			export let escapeAttribute: (s: string) => string;
 			export let escapeText: (s: string) => string;
 			export let isAsciiWhitespace: (cc: number) => boolean;
+			export let metaTag: (name: string, content: string) => string;
 			export let parseCssUrls: (input: string) => [string, number, number][];
 			export let parseHtml: (
 				input: string,
