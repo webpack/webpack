@@ -872,6 +872,26 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min("a{c:red/*!c*/}b{c:1}")).toBe("a{c:red}/*!c*/b{c:1}");
 	});
 
+	it("minifies a comment nested in a custom property's value", () => {
+		// A function or block is no leaf, so the comments in one are the value's
+		// too — at any depth, and in a block of every shape.
+		expect(min("a{--x:foo(a/*c*/b)}")).toBe("a{--x:foo(a b)}");
+		expect(min("a{--x:foo(bar(a/*c*/b))}")).toBe("a{--x:foo(bar(a b))}");
+		expect(min("a{--x:[a/*c*/b]}")).toBe("a{--x:[a b]}");
+		expect(min("a{--x:{a:1/*c*/2}}")).toBe("a{--x:{a:1 2}}");
+		// Against the delimiters nothing fuses, so the comment simply goes.
+		expect(min("a{--x:foo(/*c*/a/*c*/)}")).toBe("a{--x:foo(a)}");
+		expect(min("a{--x:foo(1px/*c*/2px)/*c*/bar()}")).toBe(
+			"a{--x:foo(1px 2px)bar()}"
+		);
+		// Whitespace is a token of its own, so it is still written as it stands.
+		expect(min("a{--x:foo( /*c*/ a )}")).toBe("a{--x:foo(  a )}");
+		// A kept one is placed where it stood, at depth too.
+		expect(min("a{--x:foo(a/*!k*/b)}")).toBe("a{--x:foo(a/*!k*/b)}");
+		// A function closed at EOF has no `)` to write back.
+		expect(min("a{--x:foo(a/*c*/b")).toBe("a{--x:foo(a b}");
+	});
+
 	it("separates rewritten numbers that would fuse", () => {
 		// `1.0.5` is two numbers; normalized to `1` and `.5` they would join as the
 		// single number `1.5`.

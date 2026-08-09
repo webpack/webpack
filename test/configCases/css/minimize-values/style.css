@@ -334,3 +334,4 @@
    minifies to the boundary it stands for */
 .t140 { --t140: 1px 1px/*c*/1px 1px }
 .t141 { --t141: 1px 1px/*!k*/1px 1px }
+.t142 { --t142: minmax(1px/*c*/2px, calc(3px/*c*/4px)) }
