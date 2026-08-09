@@ -1,5 +1,6 @@
 "use strict";
 
+const RuntimeGlobals = require("../../../../lib/RuntimeGlobals");
 const RuntimeModule = require("../../../../lib/RuntimeModule");
 
 // Loaded through `addLazyRuntimeModule`, so it must reach the chunk's runtime.
@@ -12,7 +13,8 @@ class MarkerRuntimeModule extends RuntimeModule {
 	 * @returns {string} runtime code
 	 */
 	generate() {
-		return 'globalThis.__lazyRuntimeMarker = "attached";';
+		// the portable global: `globalThis` does not exist on the node baseline
+		return `${RuntimeGlobals.global}.__lazyRuntimeMarker = "attached";`;
 	}
 }
 
