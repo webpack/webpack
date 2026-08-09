@@ -189,10 +189,11 @@ webpack X.X.X compiled successfully
 
 ```
 asset index.js 776 bytes [emitted] [minimized] (name: index)
-asset index.html 714 bytes [emitted] [minimized] (auxiliary name: index)
-Entrypoint index 776 bytes (714 bytes) = index.js 1 auxiliary asset
+asset index.html 569 bytes [emitted] [minimized] (auxiliary name: index)
+asset __html_6d047296_0.css 40 bytes [emitted] [minimized] (name: __html_6d047296_0)
+Entrypoint index 776 bytes (569 bytes) = index.js 1 auxiliary asset
 Entrypoint __html_6d047296_1 =
-Entrypoint __html_6d047296_0 =
+Entrypoint __html_6d047296_0 40 bytes = __html_6d047296_0.css
 chunk (runtime: index) index.js (index) 47 bytes (css-text) 559 bytes (javascript) 549 bytes (html) [entry] [rendered]
   > ./src/index.html index
   dependent modules 47 bytes [dependent] 1 module
@@ -200,7 +201,7 @@ chunk (runtime: index) index.js (index) 47 bytes (css-text) 559 bytes (javascrip
     [exports: default]
     [no exports used]
     entry ./src/index.html index
-chunk (runtime: __html_6d047296_0) (__html_6d047296_0) 55 bytes (css) 0 bytes (runtime) [entry] [rendered]
+chunk (runtime: __html_6d047296_0) __html_6d047296_0.css (__html_6d047296_0) 55 bytes (css) 0 bytes (runtime) [entry] [rendered]
   > ./styles.css __html_6d047296_0
   runtime modules 0 bytes 1 module
   css ./src/styles.css 55 bytes [built] [code generated]
