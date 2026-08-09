@@ -357,12 +357,30 @@ const measureCase = async ({ category, name }) => {
 				? activeCompiler.compilers
 				: [activeCompiler];
 
+		// The row prefix is the config's `name`, but nothing makes that unique —
+		// `hash-length/output-filename` has three configs sharing one. Colliding
+		// prefixes overwrite each other below, which drops a runtime from the
+		// report entirely and makes the survivor look like a change whenever the
+		// compilers finish in a different order. Only a name that repeats takes an
+		// index, so every other row keeps the key the stored baseline knows.
+		/** @type {Map<string | number, number>} */
+		const nameCounts = new Map();
+		for (const [index, child] of compilers.entries()) {
+			const name = child.name || index;
+			nameCounts.set(name, (nameCounts.get(name) || 0) + 1);
+		}
 		// Measured on `emit`, per compiler: the output directory holds what the
 		// compilers of one case wrote over each other (and `compareBeforeEmit`
 		// skips a file another one already wrote), and once the build is over the
 		// asset sources have been replaced by `SizeOnlySource`.
 		for (const [index, child] of compilers.entries()) {
-			const prefix = compilers.length === 1 ? "" : `${child.name || index}/`;
+			const name = child.name || index;
+			const prefix =
+				compilers.length === 1
+					? ""
+					: nameCounts.get(name) > 1
+						? `${name}[${index}]/`
+						: `${name}/`;
 			child.hooks.emit.tap("CodeSizeMeasure", (compilation) => {
 				emitted.set(compilation, prefix);
 				for (const asset of compilation.getAssets()) {
