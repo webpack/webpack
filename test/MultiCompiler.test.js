@@ -465,6 +465,42 @@ describe("MultiCompiler", () => {
 		});
 	});
 
+	it("should allow watching again after a fatal error in a child compiler", (done) => {
+		const compiler = createMultiCompiler();
+		compiler.compilers[1].hooks.watchRun.tapAsync(
+			"MultiCompiler test",
+			(_compiler, callback) => {
+				callback(new Error("fatal child error"));
+			}
+		);
+		compiler.watch({}, (err) => {
+			expect(/** @type {Error} */ (err).message).toBe("fatal child error");
+			expect(compiler.running).toBe(false);
+			// A retry must report the real error again, not a ConcurrentCompilationError
+			compiler.watch({}, (err2) => {
+				expect(/** @type {Error} */ (err2).message).toBe("fatal child error");
+				compiler.close(done);
+			});
+		});
+	});
+
+	it("should close every child watching when the watch setup fails synchronously", (done) => {
+		const compiler = createMultiCompiler();
+		// A child already watching makes its setup fail synchronously
+		compiler.compilers[0].watch({}, () => {});
+		compiler.watch({}, (err) => {
+			expect(/** @type {Error} */ (err).message).toMatch(
+				/You ran Webpack twice/
+			);
+			// No child watching may leak, including ones created after the error
+			for (const child of compiler.compilers) {
+				expect(child.watching).toBeUndefined();
+			}
+			expect(compiler.running).toBe(false);
+			compiler.close(done);
+		});
+	});
+
 	it("should expose `watching` when dependency validation fails", (done) => {
 		const compiler = /** @type {import("../").MultiCompiler} */ (
 			webpack(
