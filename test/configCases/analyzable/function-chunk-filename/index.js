@@ -16,7 +16,15 @@ it("should bake the literal only when the name holds no hash", () => {
 
 	if (__ANALYZABLE__) {
 		expect(bundle).toContain(helper);
-		expect(bundle).toContain('import("./a-lazy/lazy.mjs")');
+		// Whatever the name holds, what is baked has to be a file on disk.
+		const specifier = /import\((?:\/\*[^*]*\*\/\s*)?"([^"]+)"\)/.exec(
+			bundle.slice(bundle.indexOf(helper))
+		);
+
+		expect(specifier).not.toBe(null);
+		expect(
+			fs.existsSync(path.join(__STATS__.children[0].outputPath, specifier[1]))
+		).toBe(true);
 	} else {
 		expect(bundle).not.toContain(helper);
 	}
