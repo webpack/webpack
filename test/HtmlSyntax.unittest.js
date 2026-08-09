@@ -5462,14 +5462,8 @@ describe("parseHtml — quirks and foreign-content arcs", () => {
 	});
 });
 
-// Insertion-mode coverage for the tree builder in `lib/html/syntax.js`.
-//
-// The html5lib tree-construction corpus already asserts these arcs, but it is
-// an optional git submodule that is skipped when absent — leaving the shipped
-// insertion modes covered only when someone checked it out. Each input below is
-// the smallest one from that corpus that reaches an arc nothing else here does,
-// re-asserted against a snapshot of the serialized tree so the whole tree is
-// reviewed as one diff rather than one hand-picked node.
+// Insertion-mode arcs the optional html5lib submodule covers only when present;
+// each case is the smallest corpus input reaching an arc nothing else here does.
 
 /**
  * @param {string} source HTML
@@ -5813,7 +5807,7 @@ const CASES = [
 		"svg desc"
 	],
 	[
-		"ignores a tbody start tag in a MathML thead fragment",
+		"ignores a tbody start tag inside MathML in a thead fragment",
 		"<math><thead><mo><tbody>",
 		"thead"
 	],
@@ -5844,7 +5838,7 @@ const CASES = [
 
 describe("parseHtml — insertion modes", () => {
 	for (const [name, source, fragmentContext] of CASES) {
-		it(`should ${name}`, () => {
+		it(name, () => {
 			expect(treeOf(source, fragmentContext)).toMatchSnapshot();
 		});
 	}

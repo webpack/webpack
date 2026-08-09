@@ -357,17 +357,15 @@ const measureCase = async ({ category, name }) => {
 				? activeCompiler.compilers
 				: [activeCompiler];
 
-		// The row prefix is the config's `name`, but nothing makes that unique —
-		// `hash-length/output-filename` has three configs sharing one. Colliding
-		// prefixes overwrite each other below, which drops a runtime from the
-		// report entirely and makes the survivor look like a change whenever the
-		// compilers finish in a different order. Only a name that repeats takes an
-		// index, so every other row keeps the key the stored baseline knows.
-		/** @type {Map<string | number, number>} */
-		const nameCounts = new Map();
+		// Nothing makes a config's `name` unique — `hash-length/output-filename`
+		// has three sharing one — and a colliding prefix drops a runtime row.
+		// Counted as rendered, so an unnamed config's index and a config named
+		// for that index count as the one prefix they both produce.
+		/** @type {Map<string, number>} */
+		const prefixCounts = new Map();
 		for (const [index, child] of compilers.entries()) {
-			const name = child.name || index;
-			nameCounts.set(name, (nameCounts.get(name) || 0) + 1);
+			const prefix = `${child.name || index}/`;
+			prefixCounts.set(prefix, (prefixCounts.get(prefix) || 0) + 1);
 		}
 		// Measured on `emit`, per compiler: the output directory holds what the
 		// compilers of one case wrote over each other (and `compareBeforeEmit`
@@ -378,7 +376,7 @@ const measureCase = async ({ category, name }) => {
 			const prefix =
 				compilers.length === 1
 					? ""
-					: /** @type {number} */ (nameCounts.get(name)) > 1
+					: /** @type {number} */ (prefixCounts.get(`${name}/`)) > 1
 						? `${name}[${index}]/`
 						: `${name}/`;
 			child.hooks.emit.tap("CodeSizeMeasure", (compilation) => {
