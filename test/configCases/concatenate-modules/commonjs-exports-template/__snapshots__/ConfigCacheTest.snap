@@ -1,0 +1,297 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases concatenate-modules commonjs-exports-template commonjs-exports-template should compile 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 2 modules ***!
+  \\\\******************************/
+
+// MODULE: ./cjs.js
+var cjs_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var __webpack_unused_export__;
+
+
+exports.used = \\"used\\";
+__webpack_unused_export__ = \\"unused\\";
+// a self-reference read: rewritten onto the exports object, like the write above
+exports.readBack = \`\${exports.used}!\`;
+
+});
+
+// MODULE: ./this-cjs.js
+var this_cjs_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+// \`this\` is the exports object at module top level, and stays untouched
+this.viaThis = \\"viaThis\\";
+exports.readThis = \`\${this.viaThis}!\`;
+
+});
+
+;// ./cjs.js
+cjs_namespaceFn();
+
+;// ./this-cjs.js
+this_cjs_namespaceFn();
+
+;// ./index.js
+
+
+
+it(\\"should keep used exports and self-references working\\", () => {
+	expect((cjs_namespaceFn().used)).toBe(\\"used\\");
+	expect((cjs_namespaceFn().readBack)).toBe(\\"used!\\");
+});
+
+it(\\"should keep a \`this\`-based self-reference working\\", () => {
+	expect((this_cjs_namespaceFn().readThis)).toBe(\\"viaThis!\\");
+});
+
+/******/ })()
+;"
+`;
+
+exports[`ConfigCacheTestCases concatenate-modules commonjs-exports-template commonjs-exports-template should compile 2`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 2 modules ***!
+  \\\\******************************/
+
+// MODULE: ./cjs.js
+var cjs_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var __webpack_unused_export__;
+
+
+exports.used = \\"used\\";
+__webpack_unused_export__ = \\"unused\\";
+// a self-reference read: rewritten onto the exports object, like the write above
+exports.readBack = \`\${exports.used}!\`;
+
+});
+
+// MODULE: ./this-cjs.js
+var this_cjs_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+// \`this\` is the exports object at module top level, and stays untouched
+this.viaThis = \\"viaThis\\";
+exports.readThis = \`\${this.viaThis}!\`;
+
+});
+
+;// ./cjs.js
+cjs_namespaceFn();
+
+;// ./this-cjs.js
+this_cjs_namespaceFn();
+
+;// ./index.js
+
+
+
+it(\\"should keep used exports and self-references working\\", () => {
+	expect((cjs_namespaceFn().used)).toBe(\\"used\\");
+	expect((cjs_namespaceFn().readBack)).toBe(\\"used!\\");
+});
+
+it(\\"should keep a \`this\`-based self-reference working\\", () => {
+	expect((this_cjs_namespaceFn().readThis)).toBe(\\"viaThis!\\");
+});
+
+/******/ })()
+;"
+`;
+
+exports[`ConfigCacheTestCases concatenate-modules commonjs-exports-template commonjs-exports-template should pre-compile to fill disk cache (1st) 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 2 modules ***!
+  \\\\******************************/
+
+// MODULE: ./cjs.js
+var cjs_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var __webpack_unused_export__;
+
+
+exports.used = \\"used\\";
+__webpack_unused_export__ = \\"unused\\";
+// a self-reference read: rewritten onto the exports object, like the write above
+exports.readBack = \`\${exports.used}!\`;
+
+});
+
+// MODULE: ./this-cjs.js
+var this_cjs_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+// \`this\` is the exports object at module top level, and stays untouched
+this.viaThis = \\"viaThis\\";
+exports.readThis = \`\${this.viaThis}!\`;
+
+});
+
+;// ./cjs.js
+cjs_namespaceFn();
+
+;// ./this-cjs.js
+this_cjs_namespaceFn();
+
+;// ./index.js
+
+
+
+it(\\"should keep used exports and self-references working\\", () => {
+	expect((cjs_namespaceFn().used)).toBe(\\"used\\");
+	expect((cjs_namespaceFn().readBack)).toBe(\\"used!\\");
+});
+
+it(\\"should keep a \`this\`-based self-reference working\\", () => {
+	expect((this_cjs_namespaceFn().readThis)).toBe(\\"viaThis!\\");
+});
+
+/******/ })()
+;"
+`;
+
+exports[`ConfigCacheTestCases concatenate-modules commonjs-exports-template commonjs-exports-template should pre-compile to fill disk cache (2nd) 1`] = `
+"/******/ (() => { // webpackBootstrap
+/******/ 	\\"use strict\\";
+/******/ 	// The require scope
+/******/ 	const __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/concatenation wrap */
+/******/ 	// wrap a concatenated module body as a lazy, memoized accessor; mod is
+/******/ 	// set before the body runs so re-entrant calls (require cycles) observe
+/******/ 	// the partial exports like Node.js
+/******/ 	__webpack_require__.cw = (body) => {
+/******/ 		var mod;
+/******/ 		return () => {
+/******/ 			if (body) {
+/******/ 				var fn = body;
+/******/ 				body = 0;
+/******/ 				mod = { exports: {} };
+/******/ 				fn.call(mod.exports, mod, mod.exports);
+/******/ 			}
+/******/ 			return mod.exports;
+/******/ 		};
+/******/ 	};
+/******/ 	
+/************************************************************************/
+/*!******************************!*\\\\
+  !*** ./index.js + 2 modules ***!
+  \\\\******************************/
+
+// MODULE: ./cjs.js
+var cjs_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+var __webpack_unused_export__;
+
+
+exports.used = \\"used\\";
+__webpack_unused_export__ = \\"unused\\";
+// a self-reference read: rewritten onto the exports object, like the write above
+exports.readBack = \`\${exports.used}!\`;
+
+});
+
+// MODULE: ./this-cjs.js
+var this_cjs_namespaceFn = /*#__PURE__*/__webpack_require__.cw(function(module, exports) {
+
+
+// \`this\` is the exports object at module top level, and stays untouched
+this.viaThis = \\"viaThis\\";
+exports.readThis = \`\${this.viaThis}!\`;
+
+});
+
+;// ./cjs.js
+cjs_namespaceFn();
+
+;// ./this-cjs.js
+this_cjs_namespaceFn();
+
+;// ./index.js
+
+
+
+it(\\"should keep used exports and self-references working\\", () => {
+	expect((cjs_namespaceFn().used)).toBe(\\"used\\");
+	expect((cjs_namespaceFn().readBack)).toBe(\\"used!\\");
+});
+
+it(\\"should keep a \`this\`-based self-reference working\\", () => {
+	expect((this_cjs_namespaceFn().readThis)).toBe(\\"viaThis!\\");
+});
+
+/******/ })()
+;"
+`;
