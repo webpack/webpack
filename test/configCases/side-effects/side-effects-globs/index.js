@@ -4,9 +4,8 @@ import "flag-true";
 import "globs";
 import "single-star";
 
-// Each module in the fixture packages pushes its own name when it runs, so a
-// module dropped as side-effect-free is simply absent from the list. `global`
-// (not `globalThis`) because the emitted bundle also runs on Node.js 10.
+// Each fixture module pushes its name when it runs, so a dropped one is absent.
+// `global`, not `globalThis`: the emitted bundle also runs on Node.js 10.
 const evaluated = () => (global.SIDE_EFFECTS || []).sort();
 
 it("should read glob shapes out of a package.json sideEffects array", () => {

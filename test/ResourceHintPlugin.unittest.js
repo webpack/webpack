@@ -1,9 +1,7 @@
 "use strict";
 
-// The rule matching and the hint precedence are covered by a real build in
-// `configCases/html/url-hints-rules`. Only the fallback below stays here: it is
-// returned for a `Compilation` the plugin never processed, which no build
-// produces (its `compilation` hook taps are copied into child compilers too).
+// Rules and precedence are covered by `configCases/html/url-hints-rules`.
+// No build reaches this fallback: the taps are copied into child compilers too.
 const ResourceHintPlugin = require("../lib/prefetch/ResourceHintPlugin");
 
 describe("ResourceHintPlugin.getCompilationResolver", () => {

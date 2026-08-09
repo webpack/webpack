@@ -1,9 +1,7 @@
 "use strict";
 
-// The URL extraction, the source ranges and the untouched-on-invalid-JSON
-// behaviour are covered by real builds in `configCases/html/webmanifest-icons`,
-// `webmanifest-build-http` and `webmanifest-parsing`. Only the guard below
-// stays here: nothing hands this parser a preparsed AST.
+// URL extraction, ranges and invalid JSON are covered by the `webmanifest-*`
+// config cases. Only this guard stays: nothing hands the parser a preparsed AST.
 const WebManifestParser = require("../lib/asset/WebManifestParser");
 
 describe("WebManifestParser", () => {

@@ -15,9 +15,8 @@ module.exports = {
 	},
 	plugins: [
 		/**
-		 * Drives `deleteAsset` / `renameAsset` over the lazily-built
-		 * asset -> chunks reverse index, including the paths where the index is
-		 * stale or does not know the file at all.
+		 * Drives `deleteAsset` / `renameAsset` over the lazily-built asset -> chunks
+		 * reverse index, including its stale and unknown-file paths.
 		 * @param {import("../../../../").Compiler} compiler compiler
 		 */
 		(compiler) => {

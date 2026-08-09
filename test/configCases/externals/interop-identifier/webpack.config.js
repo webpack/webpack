@@ -41,7 +41,15 @@ module.exports = {
 					if (externals.length !== 3) {
 						throw new Error(`expected 3 externals, got ${externals.length}`);
 					}
-					const [a, b] = externals;
+					// by interop, not by position: the hash check must compare the two
+					// interop variants rather than whichever two come first
+					const withInterop = (interop) => {
+						const found = externals.find(
+							(module) => module.interop === interop
+						);
+						if (!found) throw new Error(`no external with ${interop} interop`);
+						return found;
+					};
 					for (const module of externals) {
 						const identifier = module.identifier();
 						if (module.interop === undefined) {
@@ -72,7 +80,9 @@ module.exports = {
 							module,
 							[...chunkGraph.getModuleChunks(module)][0].runtime
 						);
-					if (hashOf(a) === hashOf(b)) {
+					if (
+						hashOf(withInterop("esModule")) === hashOf(withInterop("default"))
+					) {
 						throw new Error("interop must contribute to the module hash");
 					}
 				});
