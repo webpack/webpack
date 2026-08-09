@@ -963,6 +963,37 @@ describe("CssSyntax — block streaming", () => {
 		expect(minify(nesting)).toBe(nesting);
 	});
 
+	it("reads a streamed rule's prelude in terms of what encloses it", () => {
+		// `from` is the `0%` a keyframe selector means only inside `@keyframes`, so
+		// the opener has to be printed with the whole path bound, not just the rule.
+		const nested = repeat(3000, (i) => `& .x${i}{color:red}`);
+		expect(
+			childCount(`@keyframes k{from{${nested}}}`, NodeType.QualifiedRule)
+		).toBe(0);
+		expect(minify(`@keyframes k{from{${nested}}}`)).toBe(
+			`@keyframes k{0%{${nested}}}`
+		);
+		// `to` is already shorter than the `100%` it names, and a `.from` selector
+		// outside `@keyframes` is a class like any other.
+		expect(minify(`@keyframes k{to{${nested}}}`)).toBe(
+			`@keyframes k{to{${nested}}}`
+		);
+		expect(minify(`.from{${nested}}`)).toBe(`.from{${nested}}`);
+	});
+
+	it("falls back past the depth the frame table holds", () => {
+		// Deeper than `_STREAM_MAX_DEPTH`, where a block is materialized instead of
+		// streamed; the levels above it still stream, so the two have to meet.
+		// `@media m0` and not a feature query: a `(min-width:…)` prelude minifies to
+		// the range spelling, and the point here is the nesting, not the prelude.
+		const depth = 70;
+		const open = repeat(depth, (i) => `@media m${i}{`);
+		const close = repeat(depth, () => "}");
+		expect(minify(`${open}${BIG}${close}`)).toBe(`${open}${BIG}${close}`);
+		// The same nesting with nothing in it still collapses to nothing.
+		expect(minify(`${open}${close}`)).toBe("");
+	});
+
 	it("drops a streamed block that prints to nothing", () => {
 		// The opener is held back until something inside prints, so a rule whose
 		// every child minifies away is still dropped whole at its `}`. An empty
