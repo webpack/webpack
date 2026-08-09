@@ -6,7 +6,8 @@ it("should resolve an inlined chunk through the chunk hash when no content hash 
 		.readFileSync(path.resolve(__dirname, "main.html"))
 		.toString("utf-8");
 	// Every sentinel resolved: none is left in the emitted page.
-	expect(html).not.toMatch(/__WEBPACK_HTML_INLINE__/);
-	expect(html).toMatch(/<style>[\s\S]*color: ?red/);
-	expect(html).toMatch(/<script>/);
+	expect(html).not.toContain("__WEBPACK_HTML_INLINE__");
+	expect(html).toContain("<style>");
+	expect(html).toContain("body { color: red; }");
+	expect(html).toContain("<script>");
 });
