@@ -722,9 +722,8 @@ ${details(snapshot)}`)
 			});
 		});
 
-		// #21636: an absolute target was joined onto the link's parent directory
-		// (`join("/path/context/sub", "/path/folder/context")`), so the snapshot
-		// tracked a path that does not exist and never went invalid.
+		// #21636: joining an absolute target onto the link's directory produced a
+		// path that does not exist, so the snapshot never went invalid.
 		it("should invalidate a snapshot when a file behind an absolute symlink target changes", (done) => {
 			const fs = createFs();
 			const fsInfo = createFsInfo(fs);
@@ -742,9 +741,8 @@ ${details(snapshot)}`)
 			);
 		});
 
-		// #21636: a symlink target that is in the timestamp and the hash cache as
-		// `null` merges to `{}`, whose missing hash used to reach
-		// `hash.update(undefined)` and abort the build with a `TypeError`.
+		// #21636: a target cached as `null` twice merges to `{}`, whose missing
+		// hash used to reach `hash.update(undefined)` and abort the build.
 		it("should not crash on a symlink whose target directory is missing", (done) => {
 			const fs = createFs();
 			fs.symlinkSync("/path/missing", "/path/context/sub/dangling", "dir");
