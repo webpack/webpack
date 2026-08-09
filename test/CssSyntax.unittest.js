@@ -879,6 +879,7 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min("a{--x:foo(bar(a/*c*/b))}")).toBe("a{--x:foo(bar(a b))}");
 		expect(min("a{--x:[a/*c*/b]}")).toBe("a{--x:[a b]}");
 		expect(min("a{--x:{a:1/*c*/2}}")).toBe("a{--x:{a:1 2}}");
+		expect(min("a{--x:(a/*c*/b)}")).toBe("a{--x:(a b)}");
 		// Against the delimiters nothing fuses, so the comment simply goes.
 		expect(min("a{--x:foo(/*c*/a/*c*/)}")).toBe("a{--x:foo(a)}");
 		expect(min("a{--x:foo(1px/*c*/2px)/*c*/bar()}")).toBe(
