@@ -3,7 +3,7 @@
 // cspell:ignore apos notpre Elig reconsumes xyzabc zzzunknown codepoint DFFF ampx noncharacter FFFE
 // cspell:ignore selectedcontent mtext mglyph colgroups viewbox definitionurl
 // cspell:ignore scripty
-// cspell:ignore DOCTYPEÐ DOCTYPEİ
+// cspell:ignore DOCTYPEÐ DOCTYPEİ Silmaril
 
 const fs = require("fs");
 const path = require("path");
@@ -5149,5 +5149,313 @@ describe("token parts reported by the tokenizer", () => {
 		expect(commentsOf("<?foo-->")).toEqual(["?foo--"]);
 		expect(commentsOf("</-")).toEqual(["-"]);
 		expect(commentsOf("<![CDATA[foo]]>")).toEqual(["[CDATA[foo]]"]);
+	});
+});
+
+// The html5lib corpus reaches these arcs, but it is an optional git submodule
+// that is skipped when absent — so the shipped states it exercises need
+// coverage that runs unconditionally.
+describe("tokenize — content modes, CDATA and NUL arcs", () => {
+	const NUL = "\0";
+
+	/**
+	 * @param {string} source HTML
+	 * @param {import("../lib/html/syntax").HtmlTokenCallbacks=} extra extra callbacks
+	 * @returns {[string, ...EXPECTED_ANY[]][]} token stream
+	 */
+	const walk = (source, extra) => {
+		/** @type {[string, ...EXPECTED_ANY[]][]} */
+		const out = [];
+		tokenize(source, 0, {
+			openTag: (input, start, end, nameStart, nameEnd) => {
+				out.push(["open", input.slice(nameStart, nameEnd)]);
+				return end;
+			},
+			closeTag: (input, start, end, nameStart, nameEnd) => {
+				out.push(["close", input.slice(nameStart, nameEnd)]);
+				return end;
+			},
+			comment: (input, start, end) => {
+				out.push(["comment", input.slice(start, end)]);
+				return end;
+			},
+			text: (input, start, end) => {
+				out.push(["text", input.slice(start, end)]);
+				return end;
+			},
+			...extra
+		});
+		return out;
+	};
+
+	/**
+	 * @param {string} source HTML
+	 * @param {import("../lib/html/syntax").HtmlTokenCallbacks=} extra extra callbacks
+	 * @returns {{ code: string, slice: string, severity: string }[]} reported errors
+	 */
+	const errorsOf = (source, extra) => {
+		/** @type {{ code: string, slice: string, severity: string }[]} */
+		const errors = [];
+		tokenize(source, 0, {
+			parseError: (input, code, start, end, severity) => {
+				errors.push({ code, slice: input.slice(start, end), severity });
+			},
+			...extra
+		});
+		return errors;
+	};
+
+	it("seeds the content mode from `fragmentContext`", () => {
+		// A fragment parsed with `<title>` as its context element starts in
+		// RCDATA, so markup inside it is text until that element's end tag.
+		expect(walk("<b>x</b></title>after", { fragmentContext: "title" })).toEqual(
+			[
+				["text", "<b>x</b>"],
+				["close", "title"],
+				["text", "after"]
+			]
+		);
+		expect(walk("<b>x</b></style>after", { fragmentContext: "style" })).toEqual(
+			[
+				["text", "<b>x</b>"],
+				["close", "style"],
+				["text", "after"]
+			]
+		);
+		expect(
+			walk("<b>x</b></script>after", { fragmentContext: "script" })
+		).toEqual([
+			["text", "<b>x</b>"],
+			["close", "script"],
+			["text", "after"]
+		]);
+		// PLAINTEXT has no end tag at all.
+		expect(walk("<b>x</b>", { fragmentContext: "plaintext" })).toEqual([
+			["text", "<b>x</b>"]
+		]);
+		// A context element with no content mode of its own stays in data.
+		expect(walk("<b>x</b>", { fragmentContext: "td" })).toEqual([
+			["open", "b"],
+			["text", "x"],
+			["close", "b"]
+		]);
+	});
+
+	it("runs a content mode to EOF when no `<` follows", () => {
+		expect(walk("<title>abc")).toEqual([
+			["open", "title"],
+			["text", "abc"]
+		]);
+		expect(walk("<style>abc")).toEqual([
+			["open", "style"],
+			["text", "abc"]
+		]);
+		expect(walk("<script>abc")).toEqual([
+			["open", "script"],
+			["text", "abc"]
+		]);
+	});
+
+	describe("CDATA sections in foreign content", () => {
+		const foreign = { isForeign: () => true };
+
+		it("keeps a `]` that does not close the section", () => {
+			expect(walk("<svg><![CDATA[a]b]]c]]>t</svg>", foreign)).toEqual([
+				["open", "svg"],
+				["comment", "<![CDATA[a]b]]c]]>"],
+				["text", "t"],
+				["close", "svg"]
+			]);
+		});
+
+		it("closes on the last of a run of `]`", () => {
+			expect(walk("<svg><![CDATA[a]]]>t</svg>", foreign)).toEqual([
+				["open", "svg"],
+				["comment", "<![CDATA[a]]]>"],
+				["text", "t"],
+				["close", "svg"]
+			]);
+		});
+
+		it("reports eof-in-cdata and emits what was read", () => {
+			expect(walk("<svg><![CDATA[abc", foreign)).toEqual([
+				["open", "svg"],
+				["comment", "<![CDATA[abc"]
+			]);
+			expect(errorsOf("<svg><![CDATA[abc", foreign)).toEqual([
+				{ code: "eof-in-cdata", slice: "", severity: "error" }
+			]);
+		});
+	});
+
+	it("reports unexpected-null-character from each state that consumes one", () => {
+		/** @type {[string, string][]} */
+		const states = [
+			["attribute name", `<a b${NUL}c>`],
+			["double-quoted attribute value", `<a b="${NUL}">`],
+			["single-quoted attribute value", `<a b='${NUL}'>`],
+			["unquoted attribute value", `<a b=${NUL}>`],
+			["bogus comment", `<?${NUL}>`],
+			["script data escape start dash", `<script><!-${NUL}</script>`],
+			["script data escaped dash", `<script><!--x-${NUL}</script>`],
+			["script data escaped dash dash", `<script><!--${NUL}</script>`],
+			[
+				"script data double escaped",
+				`<script><!--<script>${NUL}</script></script>`
+			],
+			[
+				"script data double escaped dash",
+				`<script><!--<script>-${NUL}</script></script>`
+			],
+			[
+				"script data double escaped dash dash",
+				`<script><!--<script>--${NUL}</script></script>`
+			],
+			["plaintext", `<plaintext>${NUL}x`]
+		];
+		for (const [state, source] of states) {
+			const nulls = errorsOf(source).filter(
+				(error) => error.code === "unexpected-null-character"
+			);
+			expect([state, nulls]).toEqual([
+				state,
+				[{ code: "unexpected-null-character", slice: NUL, severity: "warning" }]
+			]);
+		}
+	});
+
+	it("scans a quoted attribute value again after a NUL before a reference", () => {
+		// The memoized NUL scan is behind `pos` once the reference is consumed,
+		// so the value states have to re-run it rather than stop at the old hit.
+		/** @type {string[]} */
+		const values = [];
+		walk(`<a b="${NUL}&amp;y" c='${NUL}&amp;y'>`, {
+			attribute: (
+				/** @type {string} */ input,
+				/** @type {number} */ nameStart,
+				/** @type {number} */ nameEnd,
+				/** @type {number} */ valueStart,
+				/** @type {number} */ valueEnd
+			) => {
+				values.push(input.slice(valueStart, valueEnd));
+				return valueEnd + 1;
+			}
+		});
+		expect(values).toEqual([`${NUL}&amp;y`, `${NUL}&amp;y`]);
+	});
+});
+
+describe("parseHtml — quirks and foreign-content arcs", () => {
+	// In quirks mode `<table>` does not close an open `<p>`.
+	/**
+	 * @param {string} doctype the doctype to test
+	 * @returns {boolean} whether the doctype selects quirks mode
+	 */
+	const isQuirks = (doctype) => {
+		const nodes = body(`${doctype}<p>x<table></table>`);
+		return nodes.length === 1 && nodes[0].tagName === "p";
+	};
+
+	it("selects quirks mode from the exact, prefix and system-id doctype lists", () => {
+		expect(isQuirks('<!DOCTYPE html PUBLIC "HTML">')).toBe(true);
+		expect(
+			isQuirks(
+				'<!DOCTYPE html PUBLIC "+//Silmaril//dtd html Pro v0r11 19970101//EN">'
+			)
+		).toBe(true);
+		expect(
+			isQuirks(
+				'<!DOCTYPE html SYSTEM "http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd">'
+			)
+		).toBe(true);
+		expect(isQuirks("<!DOCTYPE html>")).toBe(false);
+	});
+
+	it("treats MathML and SVG integration points as their own scopes", () => {
+		// `<mi>` is MathML-special, so `<p>` breaks all the way out of `<math>`.
+		expect(
+			body("<math><mi>a</mi><p>b</p></math>").map((n) => n.tagName)
+		).toEqual(["math", "p"]);
+		// `<desc>` is an SVG HTML-integration point, so `<p>` nests inside it.
+		const svg = body("<svg><desc><p>b</p></desc></svg>")[0];
+		expect(child(child(svg.children, "desc").children, "p")).toBeDefined();
+		// `<g>` is neither, so `<p>` breaks out again.
+		expect(body("<svg><g><p>b</p></g></svg>").map((n) => n.tagName)).toEqual([
+			"svg",
+			"p"
+		]);
+	});
+
+	it("only treats <annotation-xml> as an integration point for HTML encodings", () => {
+		/**
+		 * @param {string} attributes the element's attributes
+		 * @returns {boolean} whether `<p>` stayed inside the element
+		 */
+		const nestsHtml = (attributes) => {
+			const math = body(
+				`<math><annotation-xml${attributes}><p>b</p></annotation-xml></math>`
+			)[0];
+			return (
+				child(child(math.children, "annotation-xml").children, "p") !==
+				undefined
+			);
+		};
+		expect(nestsHtml(' encoding="text/html"')).toBe(true);
+		expect(nestsHtml(' encoding="APPLICATION/XHTML+XML"')).toBe(true);
+		expect(nestsHtml(' encoding="text/plain"')).toBe(false);
+		expect(nestsHtml("")).toBe(false);
+	});
+
+	it("stops an unmatched end tag at a special element in either foreign namespace", () => {
+		// "Any other end tag" walks the stack of open elements and gives up at the
+		// first special one — which can be a MathML or SVG element, not only HTML.
+		const math = body(
+			'<math><annotation-xml encoding="text/html"><b>x</foo>y</b></annotation-xml></math>'
+		)[0];
+		const b = child(child(math.children, "annotation-xml").children, "b");
+		expect(/** @type {MatText} */ (b.children[0]).data).toBe("xy");
+
+		const svg = body("<svg><desc><b>x</foo>y</b></desc></svg>")[0];
+		const svgB = child(child(svg.children, "desc").children, "b");
+		expect(/** @type {MatText} */ (svgB.children[0]).data).toBe("xy");
+	});
+
+	it("applies the Noah's Ark clause only to identical formatting elements", () => {
+		/**
+		 * @param {string} source source
+		 * @returns {number} how many formatting elements were reconstructed
+		 */
+		const reconstructed = (source) => {
+			let depth = 0;
+			/** @type {MatElement} */
+			let node = body(source)[1];
+			while (node !== undefined && node.tagName === "b") {
+				depth++;
+				node = /** @type {MatElement} */ (node.children[0]);
+			}
+			return depth;
+		};
+		// Four identical entries: the earliest is dropped from the list.
+		expect(reconstructed("<p><b x=1><b x=1><b x=1><b x=1>t</p>after")).toBe(3);
+		// A differing attribute count, and a differing value, both break the match.
+		expect(reconstructed("<p><b x=1><b x=1 y=2><b x=1><b x=1>t</p>after")).toBe(
+			4
+		);
+		expect(reconstructed("<p><b x=1><b x=2><b x=1><b x=1>t</p>after")).toBe(4);
+	});
+
+	it("grows the node columns past the initial estimate", () => {
+		// `len / 12` under-estimates a document of nothing but short start tags,
+		// so the doubling growth path has to carry the rest. Walk the refs
+		// directly — `materialize` recurses, and this tree is 5000 deep.
+		let node = parseHtmlRefs("<i>".repeat(5000));
+		let depth = 0;
+		for (;;) {
+			const children = A.children(node);
+			if (children.length === 0) break;
+			node = children[children.length - 1];
+			if (A.type(node) === NodeType.Element && A.tagName(node) === "i") depth++;
+		}
+		expect(depth).toBe(5000);
 	});
 });

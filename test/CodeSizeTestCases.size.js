@@ -378,7 +378,7 @@ const measureCase = async ({ category, name }) => {
 			const prefix =
 				compilers.length === 1
 					? ""
-					: nameCounts.get(name) > 1
+					: /** @type {number} */ (nameCounts.get(name)) > 1
 						? `${name}[${index}]/`
 						: `${name}/`;
 			child.hooks.emit.tap("CodeSizeMeasure", (compilation) => {
