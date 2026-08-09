@@ -1,7 +1,8 @@
 diff --git a/node_modules/jest-worker/build/index.js b/node_modules/jest-worker/build/index.js
+index a2fb689..e333058 100644
 --- a/node_modules/jest-worker/build/index.js
 +++ b/node_modules/jest-worker/build/index.js
-@@ -1345,7 +1345,13 @@
+@@ -1345,7 +1345,13 @@ class ExperimentalWorker extends _WorkerAbstract.default {
        }
        if (limit && this._childIdleMemoryUsage && this._childIdleMemoryUsage > limit) {
          this.state = _types.WorkerStates.RESTARTING;
@@ -17,7 +18,7 @@ diff --git a/node_modules/jest-worker/build/index.js b/node_modules/jest-worker/
      }
    }
 diff --git a/node_modules/jest-worker/build/threadChild.js b/node_modules/jest-worker/build/threadChild.js
-index e757511..4be460e 100644
+index e757511..55ec9be 100644
 --- a/node_modules/jest-worker/build/threadChild.js
 +++ b/node_modules/jest-worker/build/threadChild.js
 @@ -6,6 +6,13 @@
@@ -34,3 +35,16 @@ index e757511..4be460e 100644
  /******/ (() => { // webpackBootstrap
  /******/ 	"use strict";
  /******/ 	var __webpack_modules__ = ({
+@@ -309,6 +316,12 @@ function end() {
+ function exitProcess() {
+   // Clean up open handles so the worker ideally exits gracefully
+   _nodeWorker_threads().parentPort.removeListener('message', messageListener);
++  // webpack: on Bun the parent asks the worker to end rather than terminating
++  // it, so the thread has to leave for real — a handle it still holds would
++  // otherwise keep it alive and the pool would never replace it.
++  if (process.versions.bun) {
++    process.exit(0);
++  }
+ }
+ function execMethod(method, args) {
+   const main = require(file);

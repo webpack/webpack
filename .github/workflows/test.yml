@@ -337,7 +337,9 @@ jobs:
       # patch here (Bun only) rather than via a repo-wide postinstall. The
       # jest-runner patch tolerates Bun's transient memoryUsage failures. The
       # jest-worker patch also has a Bun worker end itself rather than be
-      # terminated from the parent, which segfaults Bun on an idle-memory restart.
+      # terminated from the parent, which segfaults Bun on an idle-memory restart
+      # — and exit once it has, since ending only drops its message listener and
+      # a worker still holding a handle would never be replaced.
       - if: matrix.runtime == 'bun'
         run: |
           git apply test/patches/jest-worker+30.4.1.patch
