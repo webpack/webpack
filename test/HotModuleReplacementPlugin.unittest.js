@@ -19,6 +19,20 @@ describe("HotModuleReplacementPlugin.getParserHooks", () => {
 		).not.toBe(hooks);
 	});
 
+	it("accepts a parser from another webpack copy", () => {
+		// same class name, different constructor identity — `instanceof` rejects it
+		class JavascriptParserOtherCopy {}
+		Object.defineProperty(JavascriptParserOtherCopy, "name", {
+			value: "JavascriptParser"
+		});
+		const parser = new JavascriptParserOtherCopy();
+
+		expect(parser instanceof JavascriptParser).toBe(false);
+		const hooks = getParserHooks(/** @type {EXPECTED_ANY} */ (parser));
+		expect(typeof hooks.hotAcceptCallback.tap).toBe("function");
+		expect(getParserHooks(/** @type {EXPECTED_ANY} */ (parser))).toBe(hooks);
+	});
+
 	it("rejects anything that is not a JavascriptParser", () => {
 		expect(() =>
 			HotModuleReplacementPlugin.getParserHooks(
