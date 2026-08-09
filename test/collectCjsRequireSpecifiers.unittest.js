@@ -97,7 +97,21 @@ describe("collectCjsRequireSpecifiers", () => {
 		[
 			"template specifier with substitution is not collected",
 			`require(\`./${OPEN}x}\`); require('./b');`
-		]
+		],
+		["escape in the specifier", 'require("./a\\tb"); require("./c");'],
+		["backslash in the specifier", 'require("..\\\\lib\\\\a");'],
+		["hex escape in the specifier", 'require("\\x2e/a");'],
+		["unicode escape in the specifier", 'require("\\u002E/a");'],
+		["code point escape in the specifier", 'require("\\u{2e}/a");'],
+		["octal escape in the specifier", 'require("\\56/a");'],
+		["out of range octal escape", 'require("\\777/a");'],
+		["non-octal digit escape in the specifier", 'require("\\8./a");'],
+		["quote escape in the specifier", 'require("./a\\"b"); require("./c");'],
+		["line continuation in the specifier", 'require("./a\\\nb");'],
+		["carriage return line continuation", 'require("./a\\\r\nb");'],
+		["bare carriage return line continuation", 'require("./a\\\rb");'],
+		["line separator line continuation", 'require("./a\\\u2028b");'],
+		["escape after the specifier", 'require("./a"); const s = "b\\tc";']
 	];
 
 	for (const [name, source] of cases) {
@@ -136,17 +150,50 @@ describe("collectCjsRequireSpecifiers", () => {
 			["unterminated regexp", 'require("./a"); const r = /ab\nc;', ["./a"]],
 			["unterminated call", 'require("./a"); require("./b', ["./a"]],
 			["empty source", "", []],
-			// deliberate divergence: an escape in a specifier rejects the literal
-			// rather than growing a decoder, so the ast reference is not the oracle
-			[
-				"escape in the specifier",
-				'require("./a\\tb"); require("./c");',
-				["./c"]
-			],
 			[
 				"newline in the specifier",
 				'require("./a\nb"); require("./c");',
 				["./c"]
+			],
+			[
+				"newline after an escape in the specifier",
+				'require("./a\\tb\nc"); require("./d");',
+				["./d"]
+			],
+			[
+				"invalid hex escape in the specifier",
+				'require("\\x2z/a"); require("./c");',
+				["./c"]
+			],
+			[
+				"invalid unicode escape in the specifier",
+				'require("\\u00zz/a"); require("./c");',
+				["./c"]
+			],
+			[
+				"backslash at the end of the specifier",
+				'require("./a"); require("./b\\',
+				["./a"]
+			],
+			[
+				"unterminated code point escape",
+				'require("\\u{2e/a"); require("./c");',
+				["./c"]
+			],
+			[
+				"empty code point escape",
+				'require("\\u{}/a"); require("./c");',
+				["./c"]
+			],
+			[
+				"out of range code point escape",
+				'require("\\u{110000}/a"); require("./c");',
+				["./c"]
+			],
+			[
+				"backslash at the end of source",
+				'require("./a"); const s = "b\\',
+				["./a"]
 			]
 		];
 
