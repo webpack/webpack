@@ -2103,9 +2103,86 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 		);
 	});
 
+	it("builds fast- and slow-constructed parsers with one field layout", () => {
+		// tripwire for acorn upgrades: the fast construction path replicates
+		// acorn's constructor, so its own-key order and its normalized options
+		// keys must match a super()-built instance and acorn's defaultOptions
+		const acorn = require("acorn");
+
+		const fast = /** @type {EXPECTED_ANY} */ (
+			new WebpackParser(lazyOptions, "let x = 1;")
+		);
+		const slowOptions = /** @type {import("acorn").Options} */ (
+			/** @type {unknown} */ (
+				// present-but-undefined checkPrivateFields fails the fast gate
+				{
+					.../** @type {EXPECTED_ANY} */ (lazyOptions),
+					checkPrivateFields: undefined
+				}
+			)
+		);
+		const slow = /** @type {EXPECTED_ANY} */ (
+			new WebpackParser(slowOptions, "let x = 1;")
+		);
+		expect(Object.keys(fast)).toEqual(Object.keys(slow));
+		expect(Object.keys(fast.options)).toEqual(
+			Object.keys(acorn.defaultOptions)
+		);
+		expect(JSON.stringify(WebpackParser.parse("let x = 1;", lazyOptions))).toBe(
+			JSON.stringify(WebpackParser.parse("let x = 1;", slowOptions))
+		);
+	});
+
+	it("keeps the class fast path off for plugins overriding element names", () => {
+		let calls = 0;
+		class Plugin extends WebpackParser {
+			/**
+			 * @param {import("acorn").Node} element class element node
+			 * @returns {void}
+			 */
+			parseClassElementName(element) {
+				calls++;
+				return super.parseClassElementName(element);
+			}
+		}
+		const code =
+			"class A extends B { constructor() { super(); } static #p = 1; get g() { return A.#p; } static {} }";
+		const ast = Plugin.parse(code, lazyOptions);
+		expect(calls).toBeGreaterThan(0);
+		expect(JSON.stringify(ast)).toBe(
+			JSON.stringify(WebpackParser.parse(code, lazyOptions))
+		);
+	});
+
+	it("keeps dynamic dispatch working through the owned module declarations", () => {
+		let calls = 0;
+		class Plugin extends WebpackParser {
+			/**
+			 * @returns {import("acorn").Node} import specifier
+			 */
+			parseImportSpecifier() {
+				calls++;
+				return super.parseImportSpecifier();
+			}
+		}
+		const moduleOptions = /** @type {import("acorn").Options} */ (
+			/** @type {unknown} */ ({
+				ecmaVersion: "latest",
+				sourceType: "module",
+				lazyNodes: true
+			})
+		);
+		const code = "import { a, b as c } from 'm'; export { c as d };";
+		const ast = /** @type {EXPECTED_ANY} */ (Plugin.parse(code, moduleOptions));
+		expect(calls).toBe(2);
+		expect(JSON.stringify(ast)).toBe(
+			JSON.stringify(WebpackParser.parse(code, moduleOptions))
+		);
+	});
+
 	describe("releaseParserCaches", () => {
 		const {
-			WebpackParser,
+			WebpackParser: CacheParser,
 			releaseParserCaches
 		} = require("../lib/javascript/syntax");
 
@@ -2122,9 +2199,9 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			"const value = 123; export function repeatedName(repeatedParameter) { return repeatedParameter + value + 0.5; }";
 
 		it("parses identically after the caches are released", () => {
-			const before = JSON.stringify(WebpackParser.parse(code, options));
+			const before = JSON.stringify(CacheParser.parse(code, options));
 			releaseParserCaches();
-			const after = JSON.stringify(WebpackParser.parse(code, options));
+			const after = JSON.stringify(CacheParser.parse(code, options));
 			expect(after).toBe(before);
 		});
 
@@ -2158,7 +2235,7 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			releaseParserCaches();
 			releaseParserCaches();
 			let count = 0;
-			for (const token of WebpackParser.tokenizer(code, {
+			for (const token of CacheParser.tokenizer(code, {
 				ecmaVersion: "latest",
 				sourceType: "module"
 			})) {
