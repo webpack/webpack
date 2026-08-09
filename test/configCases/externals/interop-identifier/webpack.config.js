@@ -43,6 +43,10 @@ module.exports = {
 					}
 					// by interop, not by position: the hash check must compare the two
 					// interop variants rather than whichever two come first
+					/**
+					 * @param {string} interop interop kind
+					 * @returns {import("../../../../").Module} the external declaring it
+					 */
 					const withInterop = (interop) => {
 						const found = externals.find(
 							(module) => module.interop === interop
