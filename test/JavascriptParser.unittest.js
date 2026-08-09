@@ -1445,6 +1445,46 @@ describe("JavascriptParser", () => {
 			).toThrow(/Unsyntactic break/);
 		});
 
+		it("appends to a `program` continuation node like acorn", () => {
+			const first = parse("a;");
+			const second = /** @type {EXPECTED_ANY} */ (
+				WebpackParser.parse(
+					"b;",
+					/** @type {import("acorn").Options} */ (
+						/** @type {unknown} */ ({
+							ecmaVersion: 2022,
+							lazyNodes: true,
+							program: first
+						})
+					)
+				)
+			);
+			expect(second).toBe(first);
+			expect(second.body).toHaveLength(2);
+		});
+
+		it("reports acorn's error for string names bound without `from`", () => {
+			/**
+			 * @param {string} source module source code
+			 * @returns {() => void} thunk parsing the source as a module
+			 */
+			const parseModule = (source) => () =>
+				WebpackParser.parse(
+					source,
+					/** @type {import("acorn").Options} */ (
+						/** @type {unknown} */ ({
+							ecmaVersion: "latest",
+							sourceType: "module",
+							lazyNodes: true
+						})
+					)
+				);
+			expect(parseModule('export { "x" };')).toThrow(
+				/A string literal cannot be used as an exported binding without `from`/
+			);
+			expect(parseModule('import { "x" } from "y";')).toThrow(/Binding rvalue/);
+		});
+
 		it("serves comment ranges lazily with a stable memo and writable slot", () => {
 			/** @type {EXPECTED_ANY[]} */
 			const comments = [];
