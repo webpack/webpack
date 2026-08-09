@@ -23,9 +23,9 @@ const requestAdditionalSeal = (compiler) => {
 			return true;
 		});
 		compilation.hooks.afterSeal.tap("AdditionalSealTest", () => {
-			const base =
-				/** @type {Set<import("../../../../lib/Module")> | undefined} */
-				(compilation._incrementalBaseModules);
+			const { _incrementalBaseModules: base } =
+				/** @type {{ _incrementalBaseModules?: Set<EXPECTED_ANY> }} */
+				(/** @type {unknown} */ (compilation));
 			if (base !== undefined && base.size !== endOfMakeCount) {
 				compilation.errors.push(
 					new Error(
