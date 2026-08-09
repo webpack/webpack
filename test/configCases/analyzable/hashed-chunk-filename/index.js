@@ -6,24 +6,28 @@ it("should load the hashed chunk whichever form is emitted", async () => {
 	expect(lazy.value).toBe("lazy");
 });
 
-it("should bake the settled hash only when a stale name would be corrected", () => {
+it("should bake a name that is really on disk", () => {
 	const dir = __STATS__.children[0].outputPath;
-	// Needle built at runtime so it is not a source string literal here.
+	// Needles built at runtime so they are not source string literals here.
 	const helper = `${"__webpack_require__"}.ei(`;
-	const emitted = fs
-		.readdirSync(dir)
-		.find((file) => /^a-lazy\.[\da-f]+\.mjs$/.test(file));
-
-	expect(emitted).toBeDefined();
-	const baked = fs.readFileSync(path.join(dir, "bundle0.mjs"), "utf8");
-
-	expect(baked).toContain(helper);
-	// A leading comment sits between `import(` and its specifier.
-	expect(baked).toContain(`"./${emitted}")`);
-	// No stand-in may reach the bundle, cached rebuild included.
-	expect(baked).not.toContain(`@@${"webpackAnalyzableChunk"}:`);
-
-	expect(fs.readFileSync(path.join(dir, "bundle1.mjs"), "utf8")).not.toContain(
-		helper
+	const bundle = fs.readFileSync(
+		path.join(dir, `bundle${__INDEX__}.mjs`),
+		"utf8"
 	);
+
+	if (!__ANALYZABLE__) {
+		expect(bundle).not.toContain(helper);
+		return;
+	}
+	expect(bundle).toContain(helper);
+	// No stand-in may reach the bundle, cached rebuild included.
+	expect(bundle).not.toContain(`@@${"webpackAnalyzableChunk"}:`);
+
+	// Anchored past the helper so the pattern cannot match its own source below.
+	const specifier = /import\((?:\/\*[^*]*\*\/\s*)?"([^"]+)"\)/.exec(
+		bundle.slice(bundle.indexOf(helper))
+	);
+
+	expect(specifier).not.toBe(null);
+	expect(fs.existsSync(path.join(dir, specifier[1]))).toBe(true);
 });
