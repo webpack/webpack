@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Support tree-shaking module.exports object literals.
+Tree-shake module.exports object literals and unused method requires.
