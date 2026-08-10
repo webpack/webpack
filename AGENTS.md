@@ -336,6 +336,32 @@ git -c user.name="<login>" -c user.email="<email>" commit -m "…"
 
 **Keep the commit description body compact:** lead with a short imperative subject, and add body paragraphs only when the change is complex enough to need them — then keep them tight. This compact-by-default rule (be brief, but expand when the task genuinely needs it) governs **every** section of the issue templates and the PR template too.
 
+### Before opening the PR — grow from current `main`
+
+> [!REQUIRED]
+
+**Open every PR from a branch that is not behind `main`, and keep it that way.** Immediately before opening one:
+
+```bash
+git fetch origin main
+git rev-list --count HEAD..origin/main   # 0 means current; anything else is stale
+```
+
+If the count is not `0`, **rebase** onto it before opening — never merge `main` in. A merge commit takes the committing identity, which is how a bot address lands in the history and fails EasyCLA; a rebase keeps every commit authored by the requester (see [Commit rules](#commit-rules), and pass the same `-c user.name` / `-c user.email` overrides to `git rebase`).
+
+```bash
+git -c user.name="<login>" -c user.email="<email>" rebase origin/main
+```
+
+**Then re-run the tests that cover your change.** A stale base is not only a merge-conflict risk: git rebases text, not meaning, so a change that lands on `main` while you work can pass the merge cleanly and still break your code — a renamed helper, a changed default, a fixture your case now shares. Only a run on the rebased tree says otherwise.
+
+This matters past the opening, too, because a stale base makes CI lie in both directions:
+
+- The `Code Size` and benchmark jobs compare against the report `main` last uploaded. Measure a tree containing commits your branch predates and their bytes are attributed to you — which is how a one-line diff gets reported as `+163 KiB` of somebody else's work.
+- A red check can belong to a defect already fixed on `main`, so the log names a failure your diff never caused.
+
+So when a PR sits long enough for `main` to move, rebase and push again rather than reading a comparison drawn across two different bases. `update_pull_request_branch` is fine when the repository is configured to rebase; otherwise do it locally with the command above.
+
 ### Pull request body
 
 > [!REQUIRED]
