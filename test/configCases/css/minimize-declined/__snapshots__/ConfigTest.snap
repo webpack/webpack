@@ -22,7 +22,9 @@ Array [
   "/*! declined: a substitution can expand to the second component \`translateX\`
    rejects, so converting it would revive a dropped declaration (lightningcss: translate) */.t12{transform:translateX(var(--x))}",
   "/*! declined: a \`/*!\` banner is kept, as cssnano, csso and clean-css also do (lightningcss drops it) */.t13{color:red}",
-  "/*! declined: merging rules that share a block reorders the cascade (csso, cssnano) */.t14{color:red}.t15{color:red}",
+  "/*! declined: a rule between two that share a block, so joining them reorders the cascade (csso, cssnano) */.t14{color:red}.t14b{color:blue}.t15{color:red}",
+  "/*! declined: a pseudo may be one the engine cannot parse, which would invalidate the whole list */.t16:hover{color:red}.t17:hover{color:red}",
+  "/*! declined: a nested rule's \`&\` would become the list, and \`:is()\` takes its most specific selector */.t18{color:red;& i{color:blue}}.t19{color:red;& i{color:blue}}",
   "/*! declined: not identical, so the first is a fallback for an engine that cannot
    read the second — dropping it is how esbuild and lightningcss lose this pair
    (csso, cssnano and clean-css keep it too) */.t16{color:#fff;color:color(display-p3 1 1 1)}",
@@ -40,6 +42,9 @@ Array [
   "/*! ...whatever stands between */.t22{background:blue;color:red}",
   "/*! ...and however the earlier one was spelled */.t23{color:red}",
   "/*! ...including a custom property */.t24{--x:1}",
+  "/*! declined: a nested rule parts the declarations around it into their own
+   rules, so the first is read at its own place rather than resolving to the
+   second — dropping it loses a rule the engine builds */.t24b{color:red;& i{top:0}color:red}",
   "/*! declined: the importance differs, so they are not the same declaration */.t25{color:red;color:red!important}",
   "/*! declined: a prefixed spelling is a different property */.t26{display:-webkit-flex;display:flex}",
   "/*! declined: a \`@supports\` condition is the declaration being tested, so
@@ -47,5 +52,8 @@ Array [
    \`#0000\` are not the ones that read \`rgba(0,0,0,0)\` (esbuild, clean-css and
    lightningcss leave it alone too; csso rewrites it) */@supports (color:rgba(0,0,0,0)){.t27{color:red}}",
   "/*! declined: ...at any nesting depth, and under \`not\` */@supports not ((color:rgb(0,0,0)) and (color:hsl(0,100%,50%))){.t28{color:red}}",
+  "/*! declined: the two blocks join, but the rules meeting at their seam print
+   different blocks — the seam pair is held to the same rules as any adjacency */@media (width>=500px){.t29{top:0}.t30{color:red}}",
+  "/*! declined: ...and a seam rule holding a nested rule would be re-parented */@media (width>=600px){.t31{top:0;& i{top:1px}}.t32{top:0;& i{top:1px}}}",
 ]
 `;

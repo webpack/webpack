@@ -29,13 +29,15 @@ const path = require("path");
 const colorName = require("color-name");
 /** @typedef {{ version: string }} PackageManifest */
 /** @typedef {{ [name: string]: { syntax: string } }} SyntaxTable */
+/** @typedef {{ [name: string]: { syntax?: string } }} PartialSyntaxTable */
+/** @typedef {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[] } }} PartialPropertyTable */
 /** @type {PackageManifest} */
 const colorNamePackage = require("color-name/package.json");
-/** @type {{ [name: string]: { syntax?: string } }} */
+/** @type {PartialSyntaxTable} */
 const atRules = require("mdn-data/css/at-rules.json");
 /** @type {SyntaxTable} */
 const functions = require("mdn-data/css/functions.json");
-/** @type {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[] } }} */
+/** @type {PartialPropertyTable} */
 const properties = require("mdn-data/css/properties.json");
 const selectors = require("mdn-data/css/selectors.json");
 /** @type {SyntaxTable} */
@@ -642,6 +644,89 @@ const acceptedValues = (syntax) => {
 };
 
 /**
+ * The spellings stated for a class no dataset writes out, or `null`.
+ * @param {string} name the class name
+ * @returns {string[] | null} the spellings, or `null` if none are stated
+ */
+const statedClassSpellings = (name) => {
+	for (const [one, spellings] of SUPPLEMENT.classSpellings) {
+		if (one === name) return spellings;
+	}
+	return null;
+};
+
+/**
+ * Whether a value definition offers only values a printed component is looked
+ * up by — a keyword, or a call named by its function. A class it reaches counts
+ * when it is spelled out in turn: `<image>` is (a `<url>`, or a gradient call),
+ * `<color>` is not (`#fff` is neither).
+ * @param {string} source the value-definition syntax
+ * @param {Set<string>} seen the class names already on this walk
+ * @returns {boolean} whether every value of it is spelled
+ */
+const isSpelledSyntax = (source, seen) => {
+	let tree;
+	try {
+		tree = parseValueSyntax(source);
+	} catch (_err) {
+		return false;
+	}
+	let spelled = true;
+	/**
+	 * @param {EXPECTED_ANY} node the node to walk
+	 * @returns {void}
+	 */
+	const walk = (node) => {
+		if (!spelled) return;
+		// A call's arguments are its own; the component is spelled by its name.
+		if (node.type === "keyword" || node.type === "function") return;
+		if (node.type === "type") {
+			if (seen.has(node.name)) return;
+			seen.add(node.name);
+			if (statedClassSpellings(node.name) !== null) return;
+			const entry = syntaxes[node.name];
+			if (entry === undefined || !isSpelledSyntax(entry.syntax, seen)) {
+				spelled = false;
+			}
+			return;
+		}
+		if (node.type === "property") {
+			spelled = false;
+			return;
+		}
+		if (node.items) for (const item of node.items) walk(item);
+		else if (node.body) walk(node.body);
+	};
+	walk(tree);
+	return spelled;
+};
+
+/**
+ * Whether every value of a class is one `slotSpellings` reports.
+ * @param {string} name the class name
+ * @returns {boolean} whether it is spelled out
+ */
+const isSpelledClass = (name) => {
+	if (statedClassSpellings(name) !== null) return true;
+	const entry = syntaxes[name];
+	return entry !== undefined && isSpelledSyntax(entry.syntax, new Set([name]));
+};
+
+/**
+ * A stated class is stated because no dataset writes it out; once one does, the
+ * derived spelling is the one to read.
+ * @param {SyntaxTable} syntaxTable the `syntaxes.json` to read
+ * @returns {void}
+ */
+const checkStatedClassSpellings = (syntaxTable) => {
+	for (const [name] of SUPPLEMENT.classSpellings) {
+		if (syntaxTable[name] !== undefined) {
+			throw new Error(`\`<${name}>\` is spelled out by mdn-data now`);
+		}
+	}
+};
+
+/**
  * CSS keywords are case-insensitive, so a table read back by a lowercased
  * lookup holds them lowercased — `currentColor` and `CanvasText` included.
  * @param {Set<string>} keywords the keywords as the grammar spells them
@@ -651,18 +736,45 @@ const lowerSorted = (keywords) =>
 	[...new Set([...keywords].map((keyword) => keyword.toLowerCase()))].sort();
 
 /**
+ * The one type a longhand's whole value is, followed through the `<'other'>`
+ * some longhands are stated as.
+ * @param {string} name the property name
+ * @param {number} depth the references followed so far
+ * @param {PartialPropertyTable} propertyTable the `properties.json` to read
+ * @returns {string | null} the type's name, or `null` when it is not one type
+ */
+const longhandType = (name, depth, propertyTable = properties) => {
+	const entry = propertyTable[name];
+	if (entry === undefined || typeof entry.syntax !== "string" || depth > 4) {
+		return null;
+	}
+	const syntax = entry.syntax.trim();
+	const referenced = /^<'([a-z-]+)'>$/.exec(syntax);
+	if (referenced !== null) {
+		return longhandType(referenced[1], depth + 1, propertyTable);
+	}
+	const type = /^<([a-z-]+)>$/.exec(syntax);
+	return type === null ? null : type[1];
+};
+
+/**
  * The shorthands written as an order-free `||` of their own longhands, each
  * appearing once: `outline`, `text-decoration`, … Merging those emits every
  * value in grammar order, which `||` accepts in any order, so the only question
  * is whether each value parses back into the longhand it was authored on — the
  * per-slot tables below are what answers it.
+ * @param {PartialPropertyTable} propertyTable the `properties.json` to read
+ * @param {string[]} verifiedShorthands the shorthands a merge may emit
  * @returns {[string, string[]][]} `[shorthand, longhands]` in grammar order
  */
-const collectFamilyLonghands = () => {
-	const verified = new Set(SUPPLEMENT.familyShorthands);
+const collectFamilyLonghands = (
+	propertyTable = properties,
+	verifiedShorthands = SUPPLEMENT.familyShorthands
+) => {
+	const verified = new Set(verifiedShorthands);
 	/** @type {[string, string[]][]} */
 	const out = [];
-	for (const [name, property] of Object.entries(properties)) {
+	for (const [name, property] of Object.entries(propertyTable)) {
 		if (!verified.has(name)) continue;
 		if (typeof property.syntax !== "string") continue;
 		const longhands = property.computed;
@@ -674,9 +786,16 @@ const collectFamilyLonghands = () => {
 			continue;
 		}
 		if (tree.type !== "anyOf") continue;
-		const slots = tree.items.map((item) =>
-			item.type === "property" ? item.name : null
-		);
+		const slots = tree.items.map((item) => {
+			if (item.type === "property") return item.name;
+			if (item.type !== "type") return null;
+			// A grammar naming its slots by type: the slot is the one longhand
+			// whose whole value is that type, through any `<'other'>`.
+			const named = longhands.filter(
+				(one) => longhandType(one, 0, propertyTable) === item.name
+			);
+			return named.length === 1 ? named[0] : null;
+		});
 		if (slots.includes(null)) continue;
 		if (slots.length !== longhands.length) continue;
 		if (
@@ -1032,6 +1151,38 @@ const collectIntegerProperties = () => {
 };
 
 /**
+ * The properties whose whole value is `<number> | <percentage>` reading the two
+ * as one quantity, a percentage being the number hundredfold. Only the whole
+ * value: a percentage beside a length means something else again.
+ * @param {PartialSyntaxTable} propertyTable the `properties.json` to read
+ * @param {SyntaxTable} syntaxTable the `syntaxes.json` to follow names through
+ * @returns {string[]} the property names, sorted
+ */
+const collectAlphaValueProperties = (
+	propertyTable = properties,
+	syntaxTable = syntaxes
+) => {
+	const out = [];
+	for (const [name, entry] of Object.entries(propertyTable)) {
+		let syntax = entry.syntax;
+		const seen = new Set();
+		// Named through a production of its own (`<alpha-value>`), so follow those
+		// to whatever states the alternation.
+		while (typeof syntax === "string") {
+			const named = /^<([a-z-]+)>$/.exec(syntax.trim());
+			if (named === null || seen.has(named[1])) break;
+			seen.add(named[1]);
+			const nested = syntaxTable[named[1]];
+			if (nested === undefined) break;
+			syntax = nested.syntax;
+		}
+		if (typeof syntax !== "string") continue;
+		if (/^<number>\s*\|\s*<percentage>$/.test(syntax.trim())) out.push(name);
+	}
+	return out.sort();
+};
+
+/**
  * Every production one grammar can reach, following both `<production>` and
  * `<'property'>` references to a fixed point.
  * @param {string} syntax a value definition
@@ -1057,6 +1208,20 @@ const reachableProductions = (syntax) => {
 		}
 	}
 	return seen;
+};
+
+/**
+ * The properties whose grammar reaches a `<ratio>`, whose second number is the
+ * `1` an omitted one already means.
+ * @returns {string[]} the property names, sorted
+ */
+const collectRatioProperties = () => {
+	const out = [];
+	for (const [name, entry] of Object.entries(properties)) {
+		if (typeof entry.syntax !== "string") continue;
+		if (reachableProductions(entry.syntax).has("ratio")) out.push(name);
+	}
+	return out.sort();
 };
 
 // A grammar reaching one of these takes a color.
@@ -1247,6 +1412,75 @@ const collectShadowProperties = () => {
 	return out.sort(([a], [b]) => (a < b ? -1 : 1));
 };
 
+// The block productions that hold rules rather than declarations. An at-rule
+// whose block holds rules is one two adjacent blocks can be merged for.
+const RULE_HOLDING_BLOCKS = [
+	"<group-rule-body>",
+	"<block-contents>",
+	"<stylesheet>",
+	"<rule-list>",
+	"<qualified-rule-list>"
+];
+
+/**
+ * The gradient functions, each with the last position its own stop list means:
+ * `<color-stop-length>` runs to `100%`, `<color-stop-angle>` to the same turn
+ * spelled either way. Read off `<gradient>`, so a seventh needs nothing here.
+ * @param {SyntaxTable} syntaxTable the `syntaxes.json` to read
+ * @param {PartialSyntaxTable} functionTable the `functions.json` to read
+ * @returns {[string, string[]][]} `[function, last-position spellings]`, sorted
+ */
+const collectGradientFunctions = (syntaxTable, functionTable) => {
+	const entry = syntaxTable.gradient;
+	if (entry === undefined) {
+		throw new Error("`<gradient>` is gone from mdn-data");
+	}
+	/** @type {[string, string[]][]} */
+	const out = [];
+	for (const name of entry.syntax.match(/<([a-z-]+)\(\)>/g) || []) {
+		const bare = name.slice(1, -3);
+		const call = functionTable[`${bare}()`];
+		if (call === undefined || typeof call.syntax !== "string") {
+			throw new Error(`\`${bare}()\` is gone from mdn-data`);
+		}
+		// The stop list is reached through the `<x-gradient-syntax>` the call names.
+		const named = /<([a-z-]+)>/.exec(call.syntax);
+		const body =
+			named !== null && syntaxTable[named[1]] !== undefined
+				? syntaxTable[named[1]].syntax
+				: call.syntax;
+		const angular = body.includes("<angular-color-stop-list>");
+		out.push([bare, angular ? ["100%", "360deg", "1turn"] : ["100%"]]);
+	}
+	return out.sort(([a], [b]) => (a < b ? -1 : 1));
+};
+
+/**
+ * The at-rules whose adjacent blocks merge into one: their block holds rules, and
+ * their prelude states a condition rather than naming the one thing the block
+ * belongs to (`@keyframes`, whose later block replaces the earlier).
+ * @param {PartialSyntaxTable} atRuleTable the `at-rules.json` to read
+ * @returns {string[]} the names without the `@`, sorted
+ */
+const collectMergeableAtRules = (atRuleTable) => {
+	const replaced = new Set(SUPPLEMENT.replacedByNameAtRules);
+	const out = [];
+	for (const [name, entry] of Object.entries(atRuleTable)) {
+		const syntax = entry.syntax;
+		if (typeof syntax !== "string") continue;
+		if (!RULE_HOLDING_BLOCKS.some((one) => syntax.includes(one))) continue;
+		const bare = name.slice(1);
+		if (!replaced.has(bare)) out.push(bare);
+	}
+	for (const one of replaced) {
+		const entry = atRuleTable[`@${one}`];
+		if (entry === undefined) {
+			throw new Error(`\`@${one}\` is gone from mdn-data`);
+		}
+	}
+	return out.sort();
+};
+
 /**
  * Each `<filter-function>` whose argument the grammar marks optional -> the
  * amount an omitted one means, so writing that amount says nothing. The set is
@@ -1363,18 +1597,27 @@ const enclosingGroupBody = (text) => {
 	return null;
 };
 
+// A layered shorthand names its last layer apart from the rest, that one
+// holding the slots the earlier layers do not — `background`'s color. A value
+// with no top-level comma is exactly that layer, which is the only shape the
+// printer folds.
+const FINAL_LAYER_REGEXP = /^<[a-z-]+>[#?*+]*\s*,\s*<([a-z-]+)>$/;
+
 /**
  * A shorthand's slots: the `||` its value is an order-free set of, reached
- * through the one named production a `<single-transition>#`-shaped grammar
- * states it as.
+ * through the one named production a `<single-transition>#`- or
+ * `<bg-layer># , <final-bg-layer>`-shaped grammar states it as.
  * @param {string} syntax the shorthand's value definition
  * @returns {string[] | null} the slots, or `null` when the value is not such a set
  */
 const shorthandSlots = (syntax) => {
 	let text = syntax.trim();
-	const named = /^<([a-z-]+)>[#?*+]?$/.exec(text);
-	if (named !== null && syntaxes[named[1]] !== undefined) {
-		text = syntaxes[named[1]].syntax.trim();
+	const named = /^<([a-z-]+)>[#?*+]*$/.exec(text);
+	const layered = named === null ? FINAL_LAYER_REGEXP.exec(text) : null;
+	const production =
+		named !== null ? named[1] : layered !== null ? layered[1] : null;
+	if (production !== null && syntaxes[production] !== undefined) {
+		text = syntaxes[production].syntax.trim();
 	}
 	const direct = splitTopLevelAnyOf(text);
 	if (direct !== null) return direct;
@@ -1428,8 +1671,12 @@ const slotSpellings = (slot) => {
 			return;
 		}
 		walkValueSyntax(tree, (node) => {
+			const statedSpellings =
+				node.type === "type" ? statedClassSpellings(node.name) : null;
 			if (node.type === "function") {
 				out.add(`${node.name.toLowerCase()}()`);
+			} else if (statedSpellings !== null) {
+				for (const one of statedSpellings) out.add(one);
 			} else if (node.type === "type" && syntaxes[node.name] !== undefined) {
 				expand(syntaxes[node.name].syntax);
 			} else if (
@@ -1451,10 +1698,11 @@ const slotSpellings = (slot) => {
  * nothing, but only under three conditions, and every one of them is a rewrite
  * that turned a declaration the engine drops into one it accepts:
  * the keyword must be named by exactly one slot (`animation`'s `none` is both a
- * name and a fill mode), that slot must take keywords and nothing else
- * (`mask: url(a.svg) none` fills one slot twice and is dropped, so removing the
- * `none` would revive it), and it must be a slot of its own rather than one
- * reached through a `/`.
+ * name and a fill mode), every value that slot takes must be one the spellings
+ * report (`mask: url(a.svg) none` fills one slot twice and is dropped, so
+ * removing the `none` would revive it — a `<color>` slot cannot be checked that
+ * way, `#fff` being no spelling), and it must be a slot of its own rather than
+ * one reached through a `/`.
  * @returns {[string, [string, string[]][]][]} the entries, sorted by property
  */
 const collectShorthandInitialKeywords = () => {
@@ -1473,7 +1721,7 @@ const collectShorthandInitialKeywords = () => {
 			return {
 				named: new Set([...values.keywords].map((one) => one.toLowerCase())),
 				spellings: slotSpellings(slot),
-				keywordsOnly: values.classes.size === 0
+				spelledOnly: [...values.classes].every(isSpelledClass)
 			};
 		});
 		/** @type {[string, string[]][]} */
@@ -1487,7 +1735,7 @@ const collectShorthandInitialKeywords = () => {
 			}
 			if (hits.length !== 1) continue;
 			const slot = accepted[hits[0]];
-			if (!slot.keywordsOnly) continue;
+			if (!slot.spelledOnly) continue;
 			if (slots[hits[0]].includes("/")) continue;
 			if (!SINGLE_TERM_SLOT_REGEXP.test(slots[hits[0]])) continue;
 			droppable.push([keyword, [...slot.spellings].sort()]);
@@ -2292,7 +2540,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -2391,7 +2639,13 @@ const SUPPLEMENT = {
 	// `outline-offset`, `text-decoration` keeps `text-decoration-skip-ink` and
 	// both `text-underline-*`, `text-emphasis` keeps `text-emphasis-position`.
 	// `caret` is the one candidate left out — it is far newer than `caret-color`.
+	// The four `border-<side>` shorthands reset their three longhands and nothing
+	// else, which is what keeps them here while `border` itself stays out.
 	familyShorthands: [
+		"border-bottom",
+		"border-left",
+		"border-right",
+		"border-top",
 		"column-rule",
 		"flex-flow",
 		"list-style",
@@ -2469,6 +2723,15 @@ const SUPPLEMENT = {
 	// runs the animation, firing its events) and not `@layer` (an empty block
 	// declares the layer's cascade order).
 	droppableWhenEmptyAtRules: ["media", "supports", "container"],
+	// At-rules holding rules whose prelude names one thing rather than stating a
+	// condition, so a second block with the same prelude replaces the first
+	// instead of adding to it — merging two would change which one runs.
+	// `@layer` is not here: a layer's blocks do add to it.
+	replacedByNameAtRules: ["keyframes"],
+	// CSS Values 4 §4.5.1: `<url> = <url()> | <src()>`. `syntaxes.json` has no
+	// `<url>` entry and `functions.json` neither call, so the one class whose
+	// every value is a call has to be stated for the walk to spell it.
+	classSpellings: [["url", ["url()", "src()"]]],
 	// CSS Values 4 §6.2 and §8: the units fixed against each other. `units.json`
 	// names them but states neither their type nor the ratios. Counted in a base
 	// that makes every one an integer — 1/36576 inch, the smallest subdivision
@@ -3182,8 +3445,11 @@ const collectData = () => {
 		])
 	].sort();
 	const [positionXKeywords, positionYKeywords] = collectPositionKeywordAxes();
+	checkStatedClassSpellings(syntaxes);
 	const shorthandInitialKeywords = collectShorthandInitialKeywords();
 	const shadowProperties = collectShadowProperties();
+	const mergeableAtRules = collectMergeableAtRules(atRules);
+	const gradientFunctions = collectGradientFunctions(syntaxes, functions);
 	const fontStretchPercentages = collectFontStretchPercentages();
 	const filterFunctionOmitted = collectFilterFunctionOmitted();
 	const shorterColorSpellings = collectShorterColorSpellings(colorNames);
@@ -3194,6 +3460,8 @@ const collectData = () => {
 		mathFunctionArity
 	);
 	const integerProperties = collectIntegerProperties();
+	const alphaValueProperties = collectAlphaValueProperties();
+	const ratioProperties = collectRatioProperties();
 	const cssModulesKeywords = collectCssModulesKeywords();
 	const negativeAcceptingProperties = collectNegativeAcceptingProperties();
 	const pairLonghands = collectPairLonghands();
@@ -3376,6 +3644,17 @@ const FILTER_FUNCTION_OMITTED = ${mapLiteral(filterFunctionOmitted)};
 // than a family called that, so a quoted family spelled like one keeps its quotes.
 const GENERIC_FONT_FAMILIES = ${setLiteral(genericFontFamilies)};
 
+// Each gradient function -> the positions its last color stop already means, so
+// writing one of them there says nothing (CSS Images 3 §3.4.3).
+const GRADIENT_LAST_POSITIONS = new Map([
+${gradientFunctions
+	.map(
+		([name, positions]) =>
+			`\t[${JSON.stringify(name)}, ${setLiteral(positions)}]`
+	)
+	.join(",\n")}
+]);
+
 // The properties whose value is a position, where each edge keyword names the
 // percentage that axis resolves to.
 const POSITION_PROPERTIES = ${setLiteral(positionProperties)};
@@ -3502,6 +3781,10 @@ const ZERO_UNIT_KEEPING_PROPERTIES = ${setLiteral(SUPPLEMENT.zeroUnitKeepingProp
 // At-rules whose empty block is inert, so dropping it changes nothing.
 const DROPPABLE_WHEN_EMPTY_AT_RULES = ${setLiteral(SUPPLEMENT.droppableWhenEmptyAtRules)};
 
+// At-rules whose block holds rules and whose prelude states a condition, so two
+// adjacent blocks with the same prelude are the one block they resolve to.
+const MERGEABLE_AT_RULES = ${setLiteral(mergeableAtRules)};
+
 // The math functions whose result steps with their arguments, so a value inside
 // one keeps the unit and the digits it was written with.
 const STEPPED_FUNCTIONS = ${setLiteral(steppedFunctions)};
@@ -3587,6 +3870,14 @@ ${SUPPLEMENT.mathFunctionFold
 // and one name too many costs only that rewrite.
 const INTEGER_PROPERTIES = ${setLiteral(integerProperties)};
 
+// The properties whose value is one \`<number> | <percentage>\`, where the
+// percentage is the number hundredfold and the two compute to the same thing.
+const ALPHA_VALUE_PROPERTIES = ${setLiteral(alphaValueProperties)};
+
+// The properties taking a \`<ratio>\`, whose second number of \`1\` is the one an
+// omitted denominator means.
+const RATIO_PROPERTIES = ${setLiteral(ratioProperties)};
+
 // The keywords of every property a \`css/module\` reads a scoped name out of,
 // each mapped to how many times it may be spelled before the next one is the
 // name (\`Infinity\` — never the name). Derived from each property's grammar.
@@ -3628,7 +3919,7 @@ ${colorNames
 ]);
 
 module.exports.ABSOLUTE_UNIT_SCALE = ABSOLUTE_UNIT_SCALE;
-module.exports.ANGLE_UNITS = ANGLE_UNITS;
+module.exports.ALPHA_VALUE_PROPERTIES = ALPHA_VALUE_PROPERTIES;\nmodule.exports.ANGLE_UNITS = ANGLE_UNITS;
 module.exports.ARC_COSINE_DEGREES = ARC_COSINE_DEGREES;
 module.exports.ARC_SINE_DEGREES = ARC_SINE_DEGREES;
 module.exports.ARC_TANGENT_DEGREES = ARC_TANGENT_DEGREES;
@@ -3651,20 +3942,20 @@ module.exports.FAMILY_SLOT_CLASSES = FAMILY_SLOT_CLASSES;
 module.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;
 module.exports.FILTER_FUNCTION_OMITTED = FILTER_FUNCTION_OMITTED;\nmodule.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;\nmodule.exports.FONT_STRETCH_PERCENTAGES = FONT_STRETCH_PERCENTAGES;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
-module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
+module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.GRADIENT_LAST_POSITIONS = GRADIENT_LAST_POSITIONS;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
 module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.LENGTH_ONLY_FUNCTIONS = LENGTH_ONLY_FUNCTIONS;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
 module.exports.MATH_FUNCTION_ARITY = MATH_FUNCTION_ARITY;
 module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
 module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
-module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;
+module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;\nmodule.exports.MERGEABLE_AT_RULES = MERGEABLE_AT_RULES;
 module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;
 module.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
-module.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
+module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
@@ -3715,6 +4006,16 @@ if (require.main === module) generate();
 module.exports.DATA_TARGET = TARGET;
 module.exports.acceptedValues = acceptedValues;
 module.exports.assertClassesArePrintable = assertClassesArePrintable;
+module.exports.checkStatedClassSpellings = checkStatedClassSpellings;
+module.exports.collectAlphaValueProperties = collectAlphaValueProperties;
 module.exports.collectData = collectData;
+module.exports.collectFamilyLonghands = collectFamilyLonghands;
+module.exports.collectGradientFunctions = collectGradientFunctions;
+module.exports.collectMergeableAtRules = collectMergeableAtRules;
+module.exports.collectRatioProperties = collectRatioProperties;
+module.exports.isSpelledSyntax = isSpelledSyntax;
+module.exports.longhandType = longhandType;
 module.exports.parseValueSyntax = parseValueSyntax;
+module.exports.shorthandSlots = shorthandSlots;
+module.exports.slotSpellings = slotSpellings;
 module.exports.walkValueSyntax = walkValueSyntax;

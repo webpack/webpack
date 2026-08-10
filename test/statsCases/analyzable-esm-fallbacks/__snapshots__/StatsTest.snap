@@ -41,15 +41,6 @@ bare-public-path:
     ./async.js X bytes [built] [code generated]
   bare-public-path (webpack x.x.x) compiled successfully in X ms
 
-public-path-override:
-  asset main.mjs X KiB [emitted] [javascript module] (name: main)
-  asset async_js.mjs X bytes [emitted] [javascript module]
-  runtime modules X KiB 7 modules
-  cacheable modules X bytes
-    ./index-public-path-override.js X bytes [built] [code generated]
-    ./async.js X bytes [built] [code generated]
-  public-path-override (webpack x.x.x) compiled successfully in X ms
-
 fetch-priority:
   asset main.mjs X KiB [emitted] [javascript module] (name: main)
   asset async_js.mjs X bytes [emitted] [javascript module]
@@ -58,6 +49,24 @@ fetch-priority:
     ./index-fetch-priority.js X bytes [built] [code generated]
     ./async.js X bytes [built] [code generated]
   fetch-priority (webpack x.x.x) compiled successfully in X ms
+
+hmr:
+  asset main.mjs X KiB [emitted] [javascript module] (name: main)
+  asset async_js.mjs X bytes [emitted] [javascript module]
+  runtime modules X KiB 11 modules
+  cacheable modules X bytes
+    ./index.js X bytes [built] [code generated]
+    ./async.js X bytes [built] [code generated]
+  hmr (webpack x.x.x) compiled successfully in X ms
+
+public-path-override:
+  asset main.mjs X KiB [emitted] [javascript module] (name: main)
+  asset async_js.mjs X bytes [emitted] [javascript module]
+  runtime modules X KiB 7 modules
+  cacheable modules X bytes
+    ./index-public-path-override.js X bytes [built] [code generated]
+    ./async.js X bytes [built] [code generated]
+  public-path-override (webpack x.x.x) compiled successfully in X ms
 
 content-hash:
   asset main.mjs X KiB [emitted] [javascript module] (name: main)
@@ -75,14 +84,5 @@ templated-public-path:
   cacheable modules X bytes
     ./index.js X bytes [built] [code generated]
     ./async.js X bytes [built] [code generated]
-  templated-public-path (webpack x.x.x) compiled successfully in X ms
-
-hmr:
-  asset main.mjs X KiB [emitted] [javascript module] (name: main)
-  asset async_js.mjs X bytes [emitted] [javascript module]
-  runtime modules X KiB 11 modules
-  cacheable modules X bytes
-    ./index.js X bytes [built] [code generated]
-    ./async.js X bytes [built] [code generated]
-  hmr (webpack x.x.x) compiled successfully in X ms"
+  templated-public-path (webpack x.x.x) compiled successfully in X ms"
 `;

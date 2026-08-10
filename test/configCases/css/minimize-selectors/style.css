@@ -170,3 +170,24 @@ svg|*, *|*.t72 { color: red }
 /*! webpack: whitespace between two type selectors is a descendant combinator,
    so the comment parting these stays as an empty one */
 a/*c*/b { color: red }
+/*! webpack: adjacent rules printing the same block are the one rule they stand for */
+.t71 { color: red }
+.t72 > .t73 { color: red }
+/*! webpack: ...and a keyframe selector list is one too */
+@keyframes t74 { 0% { color: red } 50% { color: red } }
+
+/*! webpack: the same selector twice is one rule */
+.t80 { color: red }
+.t80 { margin: 0 }
+/*! webpack: ...and two identical rules are the one that can be read */
+.t81 { color: red }
+.t81 { color: red }
+/*! declined: the earlier declaration of a property both set would be lost */
+.t82 { color: red }
+.t82 { color: blue }
+/*! declined: a shorthand holds every longhand its name prefixes */
+.t83 { background: red }
+.t83 { background-image: none }
+/*! declined: declarations after a nested rule are an implicit `&` rule */
+.t84 { color: red; &:hover { top: 0 } }
+.t84 { margin: 0 }

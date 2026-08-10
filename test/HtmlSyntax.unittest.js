@@ -3,7 +3,8 @@
 // cspell:ignore apos notpre Elig reconsumes xyzabc zzzunknown codepoint DFFF ampx noncharacter FFFE
 // cspell:ignore selectedcontent mtext mglyph colgroups viewbox definitionurl
 // cspell:ignore scripty
-// cspell:ignore DOCTYPEÐ DOCTYPEİ
+// cspell:ignore DOCTYPEÐ DOCTYPEİ Silmaril basefont bgsound framesets isindex
+// cspell:ignore malignmark menuitem noembed noframes optgroup reparent spacer
 
 const fs = require("fs");
 const path = require("path");
@@ -26,6 +27,7 @@ const {
 	parseSrcset,
 	tokenize
 } = require("../lib/html/syntax");
+const serializeHtmlTree = require("./helpers/serializeHtmlTree");
 
 describe("tokenize", () => {
 	const casesPath = path.resolve(__dirname, "./fixtures/html/parsing/cases");
@@ -5520,4 +5522,694 @@ describe("token parts reported by the tokenizer", () => {
 		expect(commentsOf("</-")).toEqual(["-"]);
 		expect(commentsOf("<![CDATA[foo]]>")).toEqual(["[CDATA[foo]]"]);
 	});
+});
+
+// The html5lib corpus reaches these arcs, but it is an optional git submodule
+// that is skipped when absent — so the shipped states it exercises need
+// coverage that runs unconditionally.
+describe("tokenize — content modes, CDATA and NUL arcs", () => {
+	const NUL = "\0";
+
+	/**
+	 * @param {string} source HTML
+	 * @param {import("../lib/html/syntax").HtmlTokenCallbacks=} extra extra callbacks
+	 * @returns {[string, ...EXPECTED_ANY[]][]} token stream
+	 */
+	const walk = (source, extra) => {
+		/** @type {[string, ...EXPECTED_ANY[]][]} */
+		const out = [];
+		tokenize(source, 0, {
+			openTag: (input, start, end, nameStart, nameEnd) => {
+				out.push(["open", input.slice(nameStart, nameEnd)]);
+				return end;
+			},
+			closeTag: (input, start, end, nameStart, nameEnd) => {
+				out.push(["close", input.slice(nameStart, nameEnd)]);
+				return end;
+			},
+			comment: (input, start, end) => {
+				out.push(["comment", input.slice(start, end)]);
+				return end;
+			},
+			text: (input, start, end) => {
+				out.push(["text", input.slice(start, end)]);
+				return end;
+			},
+			...extra
+		});
+		return out;
+	};
+
+	/**
+	 * @param {string} source HTML
+	 * @param {import("../lib/html/syntax").HtmlTokenCallbacks=} extra extra callbacks
+	 * @returns {{ code: string, slice: string, severity: string }[]} reported errors
+	 */
+	const errorsOf = (source, extra) => {
+		/** @type {{ code: string, slice: string, severity: string }[]} */
+		const errors = [];
+		tokenize(source, 0, {
+			parseError: (input, code, start, end, severity) => {
+				errors.push({ code, slice: input.slice(start, end), severity });
+			},
+			...extra
+		});
+		return errors;
+	};
+
+	it("seeds the content mode from `fragmentContext`", () => {
+		// A fragment parsed with `<title>` as its context element starts in
+		// RCDATA, so markup inside it is text until that element's end tag.
+		expect(walk("<b>x</b></title>after", { fragmentContext: "title" })).toEqual(
+			[
+				["text", "<b>x</b>"],
+				["close", "title"],
+				["text", "after"]
+			]
+		);
+		expect(walk("<b>x</b></style>after", { fragmentContext: "style" })).toEqual(
+			[
+				["text", "<b>x</b>"],
+				["close", "style"],
+				["text", "after"]
+			]
+		);
+		expect(
+			walk("<b>x</b></script>after", { fragmentContext: "script" })
+		).toEqual([
+			["text", "<b>x</b>"],
+			["close", "script"],
+			["text", "after"]
+		]);
+		// PLAINTEXT has no end tag at all.
+		expect(walk("<b>x</b>", { fragmentContext: "plaintext" })).toEqual([
+			["text", "<b>x</b>"]
+		]);
+		// A context element with no content mode of its own stays in data.
+		expect(walk("<b>x</b>", { fragmentContext: "td" })).toEqual([
+			["open", "b"],
+			["text", "x"],
+			["close", "b"]
+		]);
+	});
+
+	it("runs a content mode to EOF when no `<` follows", () => {
+		expect(walk("<title>abc")).toEqual([
+			["open", "title"],
+			["text", "abc"]
+		]);
+		expect(walk("<style>abc")).toEqual([
+			["open", "style"],
+			["text", "abc"]
+		]);
+		expect(walk("<script>abc")).toEqual([
+			["open", "script"],
+			["text", "abc"]
+		]);
+	});
+
+	describe("CDATA sections in foreign content", () => {
+		const foreign = { isForeign: () => true };
+
+		it("keeps a `]` that does not close the section", () => {
+			expect(walk("<svg><![CDATA[a]b]]c]]>t</svg>", foreign)).toEqual([
+				["open", "svg"],
+				["comment", "<![CDATA[a]b]]c]]>"],
+				["text", "t"],
+				["close", "svg"]
+			]);
+		});
+
+		it("closes on the last of a run of `]`", () => {
+			expect(walk("<svg><![CDATA[a]]]>t</svg>", foreign)).toEqual([
+				["open", "svg"],
+				["comment", "<![CDATA[a]]]>"],
+				["text", "t"],
+				["close", "svg"]
+			]);
+		});
+
+		it("reports eof-in-cdata and emits what was read", () => {
+			expect(walk("<svg><![CDATA[abc", foreign)).toEqual([
+				["open", "svg"],
+				["comment", "<![CDATA[abc"]
+			]);
+			expect(errorsOf("<svg><![CDATA[abc", foreign)).toEqual([
+				{ code: "eof-in-cdata", slice: "", severity: "error" }
+			]);
+		});
+	});
+
+	it("reports unexpected-null-character from each state that consumes one", () => {
+		/** @type {[string, string][]} */
+		const states = [
+			["attribute name", `<a b${NUL}c>`],
+			["double-quoted attribute value", `<a b="${NUL}">`],
+			["single-quoted attribute value", `<a b='${NUL}'>`],
+			["unquoted attribute value", `<a b=${NUL}>`],
+			["bogus comment", `<?${NUL}>`],
+			["script data escape start dash", `<script><!-${NUL}</script>`],
+			["script data escaped dash", `<script><!--x-${NUL}</script>`],
+			["script data escaped dash dash", `<script><!--${NUL}</script>`],
+			[
+				"script data double escaped",
+				`<script><!--<script>${NUL}</script></script>`
+			],
+			[
+				"script data double escaped dash",
+				`<script><!--<script>-${NUL}</script></script>`
+			],
+			[
+				"script data double escaped dash dash",
+				`<script><!--<script>--${NUL}</script></script>`
+			],
+			["plaintext", `<plaintext>${NUL}x`]
+		];
+		for (const [state, source] of states) {
+			const nulls = errorsOf(source).filter(
+				(error) => error.code === "unexpected-null-character"
+			);
+			expect([state, nulls]).toEqual([
+				state,
+				[{ code: "unexpected-null-character", slice: NUL, severity: "warning" }]
+			]);
+		}
+	});
+
+	it("scans a quoted attribute value again after a NUL before a reference", () => {
+		// The memoized NUL scan is behind `pos` once the reference is consumed,
+		// so the value states have to re-run it rather than stop at the old hit.
+		/** @type {string[]} */
+		const values = [];
+		walk(`<a b="${NUL}&amp;y" c='${NUL}&amp;y'>`, {
+			attribute: (
+				/** @type {string} */ input,
+				/** @type {number} */ nameStart,
+				/** @type {number} */ nameEnd,
+				/** @type {number} */ valueStart,
+				/** @type {number} */ valueEnd
+			) => {
+				values.push(input.slice(valueStart, valueEnd));
+				return valueEnd + 1;
+			}
+		});
+		expect(values).toEqual([`${NUL}&amp;y`, `${NUL}&amp;y`]);
+	});
+});
+
+describe("parseHtml — quirks and foreign-content arcs", () => {
+	// In quirks mode `<table>` does not close an open `<p>`.
+	/**
+	 * @param {string} doctype the doctype to test
+	 * @returns {boolean} whether the doctype selects quirks mode
+	 */
+	const isQuirks = (doctype) => {
+		const nodes = body(`${doctype}<p>x<table></table>`);
+		return nodes.length === 1 && nodes[0].tagName === "p";
+	};
+
+	it("selects quirks mode from the exact, prefix and system-id doctype lists", () => {
+		expect(isQuirks('<!DOCTYPE html PUBLIC "HTML">')).toBe(true);
+		expect(
+			isQuirks(
+				'<!DOCTYPE html PUBLIC "+//Silmaril//dtd html Pro v0r11 19970101//EN">'
+			)
+		).toBe(true);
+		expect(
+			isQuirks(
+				'<!DOCTYPE html SYSTEM "http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd">'
+			)
+		).toBe(true);
+		expect(isQuirks("<!DOCTYPE html>")).toBe(false);
+	});
+
+	it("treats MathML and SVG integration points as their own scopes", () => {
+		// `<mi>` is MathML-special, so `<p>` breaks all the way out of `<math>`.
+		expect(
+			body("<math><mi>a</mi><p>b</p></math>").map((n) => n.tagName)
+		).toEqual(["math", "p"]);
+		// `<desc>` is an SVG HTML-integration point, so `<p>` nests inside it.
+		const svg = body("<svg><desc><p>b</p></desc></svg>")[0];
+		expect(child(child(svg.children, "desc").children, "p")).toBeDefined();
+		// `<g>` is neither, so `<p>` breaks out again.
+		expect(body("<svg><g><p>b</p></g></svg>").map((n) => n.tagName)).toEqual([
+			"svg",
+			"p"
+		]);
+	});
+
+	it("only treats <annotation-xml> as an integration point for HTML encodings", () => {
+		/**
+		 * @param {string} attributes the element's attributes
+		 * @returns {boolean} whether `<p>` stayed inside the element
+		 */
+		const nestsHtml = (attributes) => {
+			const math = body(
+				`<math><annotation-xml${attributes}><p>b</p></annotation-xml></math>`
+			)[0];
+			return (
+				child(child(math.children, "annotation-xml").children, "p") !==
+				undefined
+			);
+		};
+		expect(nestsHtml(' encoding="text/html"')).toBe(true);
+		expect(nestsHtml(' encoding="APPLICATION/XHTML+XML"')).toBe(true);
+		expect(nestsHtml(' encoding="text/plain"')).toBe(false);
+		expect(nestsHtml("")).toBe(false);
+	});
+
+	it("stops an unmatched end tag at a special element in either foreign namespace", () => {
+		// "Any other end tag" walks the stack of open elements and gives up at the
+		// first special one — which can be a MathML or SVG element, not only HTML.
+		const math = body(
+			'<math><annotation-xml encoding="text/html"><b>x</foo>y</b></annotation-xml></math>'
+		)[0];
+		const b = child(child(math.children, "annotation-xml").children, "b");
+		expect(/** @type {MatText} */ (b.children[0]).data).toBe("xy");
+
+		const svg = body("<svg><desc><b>x</foo>y</b></desc></svg>")[0];
+		const svgB = child(child(svg.children, "desc").children, "b");
+		expect(/** @type {MatText} */ (svgB.children[0]).data).toBe("xy");
+	});
+
+	it("applies the Noah's Ark clause only to identical formatting elements", () => {
+		/**
+		 * @param {string} source source
+		 * @returns {number} how many formatting elements were reconstructed
+		 */
+		const reconstructed = (source) => {
+			let depth = 0;
+			/** @type {MatElement} */
+			let node = body(source)[1];
+			while (node !== undefined && node.tagName === "b") {
+				depth++;
+				node = /** @type {MatElement} */ (node.children[0]);
+			}
+			return depth;
+		};
+		// Four identical entries: the earliest is dropped from the list.
+		expect(reconstructed("<p><b x=1><b x=1><b x=1><b x=1>t</p>after")).toBe(3);
+		// A differing attribute count, and a differing value, both break the match.
+		expect(reconstructed("<p><b x=1><b x=1 y=2><b x=1><b x=1>t</p>after")).toBe(
+			4
+		);
+		expect(reconstructed("<p><b x=1><b x=2><b x=1><b x=1>t</p>after")).toBe(4);
+	});
+
+	it("grows the node columns past the initial estimate", () => {
+		// `len / 12` under-estimates a document of nothing but short start tags,
+		// so the doubling growth path has to carry the rest. Walk the refs
+		// directly — `materialize` recurses, and this tree is 5000 deep.
+		let node = parseHtmlRefs("<i>".repeat(5000));
+		let depth = 0;
+		for (;;) {
+			const children = A.children(node);
+			if (children.length === 0) break;
+			node = children[children.length - 1];
+			if (A.type(node) === NodeType.Element && A.tagName(node) === "i") depth++;
+		}
+		expect(depth).toBe(5000);
+	});
+});
+
+// Insertion-mode arcs the optional html5lib submodule covers only when present;
+// each case is the smallest corpus input reaching an arc nothing else here does.
+
+/**
+ * @param {string} source HTML
+ * @param {string=} fragmentContext context element for fragment parsing
+ * @returns {string} the serialized tree
+ */
+const treeOf = (source, fragmentContext) => {
+	const doc = parseHtmlRefs(source, 0, { fragmentContext });
+	// In fragment mode the tree is the children of the synthesized root.
+	const first = A.firstChild(doc);
+	return serializeHtmlTree(fragmentContext && first !== 0 ? first : doc);
+};
+
+/** @type {[string, string, (string | undefined)][]} */
+const CASES = [
+	[
+		"fosters an adoption-agency reparent out of a table",
+		"<!doctype html><table><td><table><i>a<div>b<b>c</i>d",
+		undefined
+	],
+	[
+		"ignores every end tag the in-table insertion mode has no arc for",
+		"<table><tr></strong></b></em></i></u></strike></s></blink></tt></pre></big></small></font></select></h1></h2></h3></h4></h5></h6></body></br></a></img></title></span></style></script></table></th></td></tr></frame></area></link></param></hr></input></col></base></meta></basefont></bgsound></embed></spacer></p></dd></dt></caption></colgroup></tbody></tfoot></thead></address></blockquote></center></dir></div></dl></fieldset></listing></menu></ol></ul></li></nobr></wbr></form></button></marquee></object></html></frameset></head></iframe></image></isindex></noembed></noframes></noscript></optgroup></option></plaintext></textarea>",
+		undefined
+	],
+	[
+		"nests framesets and switches to after-frameset",
+		"<frame></frame></frame><frameset><frame><frameset><frame></frameset><noframes></frameset><noframes>",
+		undefined
+	],
+	["closes a foreign element by its own end tag", "<g></path>X", "svg path"],
+	["opens a template with no body yet", "<head></head><template>", undefined],
+	[
+		"re-nests a badly nested table, font and anchor",
+		"<TABLE>\n<TR>\n<CENTER><CENTER><TD></TD></TR><TR>\n<FONT>\n<TABLE><tr></tr></TABLE>\n</P>\n<a></font><font></a>\nThis page contains an insanely badly-nested tag sequence.",
+		undefined
+	],
+	[
+		"parses a template fragment with a form in it",
+		'<template><form><input name="q"></form><div>second</div></template>',
+		"template"
+	],
+	[
+		"breaks a paragraph out of foreign content",
+		"<!doctype html><p><math></p>a",
+		undefined
+	],
+	[
+		"ignores a second form in a table",
+		"<!doctype html><table><form><form>",
+		undefined
+	],
+	["closes an implied tbody from a cell", "<table><td></tbody>A", undefined],
+	[
+		"ends a template inside a table body",
+		"<table><tbody><template></tbody></template>",
+		undefined
+	],
+	[
+		"pops a select and a template out of a cell",
+		"<body><table><tr><td><select><template>Foo</template><caption>A</table>",
+		undefined
+	],
+	[
+		"keeps an end tag inside a script fragment",
+		"<!-- inside </script> -->",
+		"script"
+	],
+	[
+		"foster-parents text out of a column group",
+		"<table><colgroup> foo</colgroup></table>",
+		undefined
+	],
+	[
+		"breaks out of MathML text integration points",
+		"<b></b><mglyph/><i></i><malignmark/><u></u><ms/>X",
+		"math ms"
+	],
+	[
+		"handles a break and a comment in head noscript",
+		"<head><noscript></br><!--foo--></noscript>",
+		undefined
+	],
+	[
+		"implies the end of a ruby base",
+		"<html><ruby>a<rb>b<rb></ruby></html>",
+		undefined
+	],
+	[
+		"appends a comment after the body to the html element",
+		"<!doctype html><html></p><!--foo-->",
+		undefined
+	],
+	[
+		"opens a column group inside a template",
+		"<body><template><col><colgroup>",
+		undefined
+	],
+	["reads a textarea fragment as text", "direct textarea content", "textarea"],
+	["ends a caption fragment", "</caption><div>", "caption"],
+	["ends a frameset fragment", "</frameset><frame>", "frameset"],
+	[
+		"foster-parents a formatting element out of a table",
+		"<table><a>1<td>2</td>3</table>",
+		undefined
+	],
+	[
+		"runs the adoption agency past its outer-loop limit",
+		"<div><a><b><div><div><div><div><div><div><div><div><div><div></a>",
+		undefined
+	],
+	[
+		"reconstructs nobr across a table and a marquee",
+		"<nobr><table><marquee></table><nobr>",
+		undefined
+	],
+	[
+		"ignores a doctype inside a column group",
+		"<table><colgroup><!DOCTYPE html></colgroup></table>",
+		undefined
+	],
+	[
+		"ignores a doctype in foreign content",
+		"<svg><!DOCTYPE html></svg>",
+		undefined
+	],
+	["parses a body start tag in an SVG desc fragment", "<body>X", "svg desc"],
+	[
+		"ignores a stray menuitem end tag",
+		"<!DOCTYPE html><head></menuitem>",
+		undefined
+	],
+	[
+		"ignores the end tags a cell has no arc for",
+		"<table><td></body></caption></col></colgroup></html>foo",
+		undefined
+	],
+	[
+		"ignores a template end tag with no template open",
+		"<div></template></div>",
+		undefined
+	],
+	[
+		"opens a row inside a template",
+		"<body><template><tr><div></div></tr></template>",
+		undefined
+	],
+	[
+		"merges html attributes across a template",
+		"<html a=b><template><div><html b=c><span></template>",
+		undefined
+	],
+	[
+		"leaves annotation-xml when its SVG child closes",
+		"<math><annotation-xml><svg></svg></annotation-xml><mi>",
+		undefined
+	],
+	[
+		"reads noframes text after the frameset closed",
+		"<!doctype html><frameset></frameset><noframes>abc",
+		undefined
+	],
+	[
+		"closes an optgroup when the next one opens",
+		"<!DOCTYPE html><select><optgroup><option><optgroup>",
+		undefined
+	],
+	[
+		"reopens a form once the table that held it closed",
+		"<!doctype html><table><form></table><form>",
+		undefined
+	],
+	[
+		"ignores a plaintext end tag in a plaintext fragment",
+		"</plaintext>",
+		"plaintext"
+	],
+	[
+		"ignores the end tags a table body has no arc for",
+		"<table><tbody></body></caption></col></colgroup></html></td></th></tr>",
+		undefined
+	],
+	["drops an input from a select fragment", "<input><option>", "select"],
+
+	// A stray DOCTYPE, a repeated `<html>` or a repeated `<head>`/`<body>` has
+	// its own arc in every insertion mode, and each one is a separate ignore.
+	[
+		"ignores a second doctype before html",
+		"<!DOCTYPE html><!DOCTYPE html>",
+		undefined
+	],
+	["ignores a doctype before head", "<html><!DOCTYPE html>", undefined],
+	[
+		"ignores a doctype in head",
+		"<html><head><!DOCTYPE html></head>",
+		undefined
+	],
+	[
+		"ignores a doctype after head",
+		"<html><head></head><!DOCTYPE html>",
+		undefined
+	],
+	[
+		"ignores a doctype after the body",
+		"<body></body><!DOCTYPE html>",
+		undefined
+	],
+	[
+		"ignores a doctype after after the body",
+		"<html><body></body></html><!DOCTYPE html>",
+		undefined
+	],
+	[
+		"merges a repeated html start tag before head",
+		"<!DOCTYPE html><html><html abc:def=gh><xyz:abc></xyz:abc>",
+		undefined
+	],
+	[
+		"merges a repeated html start tag in head",
+		"<!DOCTYPE html><head><html id=x>",
+		undefined
+	],
+	[
+		"merges a repeated html start tag after head",
+		"<!doctype html><html a=b><head></head><html c=d>",
+		undefined
+	],
+	[
+		"merges a repeated html start tag after the body",
+		'<!DOCTYPE html>X</body><html id="x">',
+		undefined
+	],
+	[
+		"merges a repeated html start tag in head noscript",
+		'<head><noscript><html class="foo"><!--foo--></noscript>',
+		undefined
+	],
+	[
+		"treats an html start tag in a column group as in-body",
+		"<table><colgroup><html></colgroup></table>",
+		undefined
+	],
+	[
+		"ignores a repeated head start tag after head",
+		"<html><head></head><template></template><head>",
+		undefined
+	],
+	[
+		"ignores a repeated head end tag in head",
+		"<!DOCTYPE html><HTML><META><HEAD></HEAD></HTML>",
+		undefined
+	],
+	[
+		"ignores a paragraph end tag after head",
+		"<!doctype html><head></head></p><!--foo-->",
+		undefined
+	],
+	[
+		"merges a repeated body start tag inside a template",
+		"<body a=b><template><div></div><body c=d><div></div></body></template></body>",
+		undefined
+	],
+	["ends the body from an html fragment", "<body></body></html>", "html"],
+
+	// NUL handling and text insertion.
+	["drops a NUL before a frameset", "<html>\0<frameset></frameset>", undefined],
+	[
+		"keeps a frameset out once text arrived",
+		"<html>a\0a<frameset></frameset>",
+		undefined
+	],
+	[
+		"foster-parents text between two formatting elements",
+		"<!doctype html>a<i>b<table>c<b>d</i>e</b>f",
+		undefined
+	],
+	[
+		"strips the newline a pre element starts with",
+		"<!DOCTYPE html><html><head></head><body><pre>\n</pre></body></html>",
+		undefined
+	],
+
+	// Table-related modes reached through a template or a fragment.
+	[
+		"ignores a table end tag inside a template",
+		"<body><template><thead></thead></table><tbody></tbody></template></body>",
+		undefined
+	],
+	[
+		"ignores a row end tag inside a template",
+		"<body><template><td></td></tr><td></td></template>",
+		undefined
+	],
+	[
+		"ignores a row end tag inside a template cell",
+		"<body><table><template><td></tr><div></template></table>",
+		undefined
+	],
+	[
+		"ignores a column group end tag inside a template",
+		"<body><template><col></colgroup>",
+		undefined
+	],
+	[
+		"ends a column group on text inside a template",
+		"<body><template><col>Hello",
+		undefined
+	],
+	[
+		"closes a cell on a mismatched th end tag",
+		"<table><tr><td></th>",
+		undefined
+	],
+	[
+		"ignores table-section end tags in a row fragment",
+		"</tbody></tfoot></thead><td>",
+		"tr"
+	],
+	[
+		"ignores a thead end tag in a table body",
+		"<table><tbody></thead>",
+		undefined
+	],
+	["opens an implied tbody in a table fragment", "<table><tr>", "table"],
+	[
+		"clears a table body context across nested tables",
+		"<a><table><td><a><table></table><a></tr><a></table><b>X</b>C<a>Y",
+		undefined
+	],
+	[
+		"runs thorough implied end tags for a template in a table",
+		"<table><thead><template><td></template></table>",
+		undefined
+	],
+
+	// Foreign content and scope boundaries.
+	["ignores a foreign end tag with no match", "</path>X", "svg path"],
+	[
+		"ignores a frameset start tag in an SVG desc fragment",
+		"<frameset>X",
+		"svg desc"
+	],
+	[
+		"ignores a tbody start tag inside MathML in a thead fragment",
+		"<math><thead><mo><tbody>",
+		"thead"
+	],
+	["closes a div across an SVG element", "<div><svg></div>a", undefined],
+	[
+		"treats a self-closed math element as foreign",
+		"<!doctype html><math/><foo>",
+		undefined
+	],
+
+	// Arcs the corpus does not reach at all.
+	[
+		"ignores a second form end tag inside a template",
+		"<template><form></form></form></template>",
+		undefined
+	],
+	[
+		"drops a table cell holding nothing but a NUL",
+		"<table>\0</table>",
+		undefined
+	],
+	[
+		"ignores a template end tag after head",
+		"<head></head></template>",
+		undefined
+	]
+];
+
+describe("parseHtml — insertion modes", () => {
+	for (const [name, source, fragmentContext] of CASES) {
+		it(name, () => {
+			expect(treeOf(source, fragmentContext)).toMatchSnapshot();
+		});
+	}
 });

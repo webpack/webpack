@@ -10961,6 +10961,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-css-gradient-double-position": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports two positions on one gradient color stop ('red 0% 50%').",
+        "multiple": false,
+        "path": "output.environment.cssGradientDoublePosition",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports two positions on one gradient color stop ('red 0% 50%').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-css-inset-shorthand": Object {
     "configs": Array [
       Object {

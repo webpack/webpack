@@ -25,15 +25,13 @@ const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
 const {
 	A,
-	NS_MATHML,
-	NS_SVG,
-	NodeType,
 	QUOTE_NONE,
 	decodeEntities,
 	parseHtml,
 	tokenize
 } = require("../lib/html/syntax");
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
+const serialize = require("./helpers/serializeHtmlTree");
 
 const testsDir = path.resolve(__dirname, "./html5lib-tests");
 
@@ -233,76 +231,8 @@ describe("html5lib-tests webpack build", () => {
 
 const treeDir = path.join(testsDir, "tree-construction");
 
-const NS_PREFIX = {
-	[NS_SVG]: "svg ",
-	[NS_MATHML]: "math "
-};
-
 /** @type {Set<string>} intentional, documented exceptions (currently none) */
 const KNOWN_DIVERGENCES = new Set();
-
-/**
- * Serialize an AST in the html5lib tree-construction format, reading the SoA
- * tree through the accessor `A`.
- * @param {import("../lib/html/syntax").HtmlNodeRef} root node whose children are serialized
- * @returns {string} serialized tree
- */
-const serialize = (root) => {
-	const lines = [];
-	/**
-	 * @param {import("../lib/html/syntax").HtmlNodeRef} node node
-	 * @param {number} depth depth
-	 */
-	const walk = (node, depth) => {
-		const indent = `| ${"  ".repeat(depth)}`;
-		const type = A.type(node);
-		if (type === NodeType.Doctype) {
-			let s = `<!DOCTYPE ${A.doctypeName(node) || ""}`;
-			const publicId = A.doctypePublicId(node);
-			const systemId = A.doctypeSystemId(node);
-			if (publicId !== null || systemId !== null) {
-				s += ` "${publicId || ""}" "${systemId || ""}"`;
-			}
-			lines.push(`${indent}${s}>`);
-			return;
-		}
-		if (type === NodeType.Comment) {
-			lines.push(`${indent}<!-- ${A.data(node)} -->`);
-			return;
-		}
-		if (type === NodeType.Text) {
-			lines.push(`${indent}"${A.data(node)}"`);
-			return;
-		}
-		const prefix = NS_PREFIX[A.namespace(node)] || "";
-		lines.push(`${indent}<${prefix}${A.tagName(node)}>`);
-		const attrs = [...A.attributes(node)].sort((a, b) => {
-			const an = a.serializedName || a.name;
-			const bn = b.serializedName || b.name;
-			return an < bn ? -1 : an > bn ? 1 : 0;
-		});
-		for (const a of attrs) {
-			lines.push(
-				`| ${"  ".repeat(depth + 1)}${
-					a.serializedName || a.name
-				}="${decodeEntities(a.value, true)}"`
-			);
-		}
-		const tc = A.templateContent(node);
-		if (tc !== 0) {
-			lines.push(`| ${"  ".repeat(depth + 1)}content`);
-			for (let c = A.firstChild(tc); c !== 0; c = A.nextSibling(c)) {
-				walk(c, depth + 2);
-			}
-			return;
-		}
-		for (let c = A.firstChild(node); c !== 0; c = A.nextSibling(c)) {
-			walk(c, depth + 1);
-		}
-	};
-	for (let c = A.firstChild(root); c !== 0; c = A.nextSibling(c)) walk(c, 0);
-	return lines.join("\n");
-};
 
 /**
  * Parse a html5lib `.dat` file into test cases.

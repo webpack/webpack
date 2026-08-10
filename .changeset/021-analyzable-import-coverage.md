@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Widen analyzable ESM output and fix chunk and WebAssembly loading in ES module builds.
+Widen analyzable ESM output to HMR, hashed and function chunk names, and wasm.
