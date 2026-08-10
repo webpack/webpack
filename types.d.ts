@@ -1869,6 +1869,7 @@ declare class ChunkGraph {
 	 */
 	constructor(moduleGraph: ModuleGraph, hashFunction?: HashFunction);
 	moduleGraph: ModuleGraph;
+	buildTimeExecution: boolean;
 
 	/**
 	 * Connects chunk and module.
@@ -28780,6 +28781,7 @@ declare interface WebpackRequire {
 	(id: string): any;
 	i?: ((options: ExecuteOptions) => void)[];
 	c?: Record<string, ExecuteModuleObject>;
+	p?: string;
 }
 declare interface WithId {
 	id: string | number;
