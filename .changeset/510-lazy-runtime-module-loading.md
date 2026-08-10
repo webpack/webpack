@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Load runtime modules, parsers, and generators only when a build uses them.
+Load runtime modules, parsers, generators and dependencies only when used.
