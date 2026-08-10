@@ -1,0 +1,7 @@
+/* Same prefix as the importer, bound to a different URI: concatenation cannot
+   keep both, so this records what a merged sheet looks like today. */
+@namespace vendor url(./other-ns.svg);
+
+.imported {
+	color: green;
+}

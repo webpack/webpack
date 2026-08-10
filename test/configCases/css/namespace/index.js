@@ -1,4 +1,5 @@
 import "./style.css";
+import * as scoped from "./style.module.css";
 
 const fs = __non_webpack_require__("fs");
 const path = __non_webpack_require__("path");
@@ -7,6 +8,10 @@ it("should compile with warning", done => {
 	const style = getComputedStyle(document.body);
 	expect(style.getPropertyValue("background")).toBe(" red");
 	done();
+});
+
+it("should scope a module that also declares a namespace", () => {
+	expect(scoped.local).toBe("_local");
 });
 
 it("should emit the namespace URIs unchanged", () => {

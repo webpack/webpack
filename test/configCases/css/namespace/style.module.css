@@ -1,0 +1,5 @@
+@namespace scoped url(./ns.svg);
+
+.local {
+	color: blue;
+}
