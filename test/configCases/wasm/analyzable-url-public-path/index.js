@@ -1,14 +1,12 @@
 import fs from "fs";
 import path from "path";
 
-// Referenced but never called: the binary would be loaded from the public path, and
-// what is under test is the URL webpack bakes for it.
+// Referenced but never called — the baked url is what is under test.
 export const load = () => import(/* webpackChunkName: "lazy" */ "./lazy");
 export const loadSource = () =>
 	import(/* webpackChunkName: "lazySource" */ "./lazy-source");
 
-// Only the chunk holding the wasm module: the entry bundle carries this file's own
-// needles, which would satisfy the assertions on their own.
+// Only the wasm chunk — this file's own needles would satisfy the assertions.
 const chunk = () =>
 	fs.readFileSync(
 		path.join(__STATS__.children[0].outputPath, __WASM_CHUNK__),
