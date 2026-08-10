@@ -6,18 +6,25 @@
 "use strict";
 
 // Compare webpack's own HTML minifier against the ecosystem's on real documents,
-// reporting size, speed and — the part a size table hides — whether the output
-// still parses to the same DOM.
+// reporting what the output weighs (raw and under the encodings a CDN serves),
+// what producing it costs (wall time, cpu time, peak memory) and — the part a
+// size table hides — whether the output still parses to the same DOM.
 //
 //   node tooling/compare-html-minifiers.js
+//
+// Each minifier × fixture cell runs in a fresh worker process (this script
+// re-invoked with `--measure <minifier>`, the document on stdin), so cpu and
+// peak RSS are attributable to that one tool instead of to whatever ran before
+// it in a shared process.
 //
 // The comparison packages are NOT webpack dependencies: they are installed into
 // `node_modules/.cache/html-minifier-comparison` on first run, so nothing here
 // reaches webpack's own dependency tree.
 
-const { execFileSync } = require("child_process");
+const { spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const { promisify } = require("util");
 const zlib = require("zlib");
 
 const htmlMinify = require("../lib/html/htmlMinify");
@@ -50,19 +57,49 @@ const log = (message) => {
 	process.stderr.write(`${message}\n`);
 };
 
-const setup = () => {
+/**
+ * @param {string} file a path
+ * @returns {Promise<boolean>} whether it exists
+ */
+const exists = (file) =>
+	fs.promises.access(file).then(
+		() => true,
+		() => false
+	);
+
+/**
+ * @param {string} command executable
+ * @param {string[]} args its arguments
+ * @param {object=} options spawn options
+ * @returns {Promise<void>} resolves when it exits cleanly
+ */
+const run = (command, args, options) =>
+	new Promise((resolve, reject) => {
+		const child = spawn(command, args, {
+			stdio: ["ignore", "inherit", "inherit"],
+			...options
+		});
+		child.on("error", reject);
+		child.on("close", (code) => {
+			if (code === 0) resolve();
+			else reject(new Error(`${command} exited with ${code}`));
+		});
+	});
+
+const setup = async () => {
 	const manifest = path.join(CACHE, "package.json");
 	// Reinstall when the package list changes, so an existing cache picks up
 	// newly added fixtures instead of failing on their missing files.
 	const installed =
-		fs.existsSync(MODULES) && fs.existsSync(manifest)
-			? JSON.parse(fs.readFileSync(manifest, "utf8")).comparisonPackages
+		(await exists(MODULES)) && (await exists(manifest))
+			? JSON.parse(await fs.promises.readFile(manifest, "utf8"))
+					.comparisonPackages
 			: undefined;
 	if (JSON.stringify(installed) === JSON.stringify(PACKAGES)) return;
 	log(`installing comparison packages into ${path.relative(ROOT, CACHE)} …`);
-	fs.mkdirSync(CACHE, { recursive: true });
-	if (!fs.existsSync(manifest)) {
-		fs.writeFileSync(
+	await fs.promises.mkdir(CACHE, { recursive: true });
+	if (!(await exists(manifest))) {
+		await fs.promises.writeFile(
 			manifest,
 			`${JSON.stringify(
 				{ name: "html-minifier-comparison", private: true },
@@ -71,14 +108,16 @@ const setup = () => {
 			)}\n`
 		);
 	}
-	execFileSync("npm", ["install", "--no-audit", "--no-fund", ...PACKAGES], {
-		cwd: CACHE,
-		stdio: "inherit"
+	await run("npm", ["install", "--no-audit", "--no-fund", ...PACKAGES], {
+		cwd: CACHE
 	});
 	// Recorded only after the install succeeded.
-	const written = JSON.parse(fs.readFileSync(manifest, "utf8"));
+	const written = JSON.parse(await fs.promises.readFile(manifest, "utf8"));
 	written.comparisonPackages = PACKAGES;
-	fs.writeFileSync(manifest, `${JSON.stringify(written, null, 2)}\n`);
+	await fs.promises.writeFile(
+		manifest,
+		`${JSON.stringify(written, null, 2)}\n`
+	);
 };
 
 /**
@@ -100,13 +139,6 @@ const load = (name) => require(path.join(MODULES, name));
  */
 /** @typedef {{ parse: (html: string) => Parse5Node }} Parse5 */
 
-/**
- * Two kinds of real HTML: an app shell (attribute- and `<meta>`-heavy, little
- * text) and a document (mostly text, with the `<pre>` blocks whose whitespace no
- * minifier may touch). The documents are rendered from Markdown by `marked`
- * rather than written here, so they are as messy as a real docs page.
- * @returns {[string, string][]} `[label, html]` for every fixture
- */
 // The third real shape: an app shell whose weight is inline critical CSS and
 // form markup. Neither installed fixture carries an inline `<style>`, a
 // `srcset` or a boolean attribute, so without this the comparison cannot see
@@ -166,7 +198,14 @@ ${css}
 </body>
 </html>`;
 
-const fixtures = () => {
+/**
+ * Two kinds of real HTML: an app shell (attribute- and `<meta>`-heavy, little
+ * text) and a document (mostly text, with the `<pre>` blocks whose whitespace no
+ * minifier may touch). The documents are rendered from Markdown by `marked`
+ * rather than written here, so they are as messy as a real docs page.
+ * @returns {Promise<[string, string][]>} `[label, html]` for every fixture
+ */
+const fixtures = async () => {
 	const { marked } = load("marked");
 	/** @type {[string, string][]} */
 	const out = [];
@@ -177,7 +216,7 @@ const fixtures = () => {
 		],
 		["Swagger UI 5", path.join(MODULES, "swagger-ui-dist/index.html")]
 	]) {
-		out.push([label, fs.readFileSync(file, "utf8")]);
+		out.push([label, await fs.promises.readFile(file, "utf8")]);
 	}
 	out.push(["App shell (inline critical CSS)", APP_SHELL]);
 	// Real framework stylesheets, classless through component-sized, inlined
@@ -190,63 +229,76 @@ const fixtures = () => {
 	]) {
 		out.push([
 			label,
-			inlineCssPage(label, fs.readFileSync(path.join(MODULES, file), "utf8"))
+			inlineCssPage(
+				label,
+				await fs.promises.readFile(path.join(MODULES, file), "utf8")
+			)
 		]);
 	}
 	for (const [label, file] of [
 		["webpack README (rendered)", path.join(ROOT, "README.md")],
 		["webpack CHANGELOG (rendered)", path.join(ROOT, "CHANGELOG.md")]
 	]) {
-		out.push([label, marked.parse(fs.readFileSync(file, "utf8"))]);
+		out.push([label, marked.parse(await fs.promises.readFile(file, "utf8"))]);
 	}
 	return out;
 };
 
-/**
- * @returns {[string, (html: string) => string | Promise<string>][]} `[label, minify]` for every minifier
- */
-const minifiers = () => {
-	const terser = load("html-minifier-terser");
-	const minifyHtml = load("@minify-html/node");
-	const htmlnano = load("htmlnano");
-	const swc = load("@swc/html");
-	return [
-		["webpack", (html) => htmlMinify({ "input.html": html }).code],
-		[
-			"html-minifier-terser",
-			(html) =>
+// Each entry is a factory so the measuring worker loads only the one tool it
+// measures — anything else would show up in that tool's peak RSS. The async API
+// is used wherever a tool offers one; minify-html only ships sync.
+/** @type {[string, () => (html: string) => string | Promise<string>][]} */
+const MINIFIERS = [
+	["webpack", () => (html) => htmlMinify({ "input.html": html }).code],
+	[
+		"html-minifier-terser",
+		() => {
+			const terser = load("html-minifier-terser");
+			return (html) =>
 				terser.minify(html, {
 					collapseWhitespace: true,
 					conservativeCollapse: true,
 					removeComments: true
-				})
-		],
-		[
-			"html-minifier-terser (aggressive)",
-			(html) =>
+				});
+		}
+	],
+	[
+		"html-minifier-terser (aggressive)",
+		() => {
+			const terser = load("html-minifier-terser");
+			return (html) =>
 				terser.minify(html, {
 					collapseBooleanAttributes: true,
 					collapseWhitespace: true,
 					removeAttributeQuotes: true,
 					removeComments: true,
 					removeRedundantAttributes: true
-				})
-		],
-		[
-			"minify-html",
-			(html) => minifyHtml.minify(Buffer.from(html), {}).toString()
-		],
-		[
-			"htmlnano",
-			async (html) =>
-				(await htmlnano.process(html, {}, htmlnano.presets.safe)).html
-		],
-		[
-			"@swc/html",
-			async (html) => (await swc.minify(Buffer.from(html), {})).code
-		]
-	];
-};
+				});
+		}
+	],
+	[
+		"minify-html",
+		() => {
+			const minifyHtml = load("@minify-html/node");
+			return (html) => minifyHtml.minify(Buffer.from(html), {}).toString();
+		}
+	],
+	[
+		"htmlnano",
+		() => {
+			const htmlnano = load("htmlnano");
+			return async (html) =>
+				(await htmlnano.process(html, {}, htmlnano.presets.safe)).html;
+		}
+	],
+	[
+		"@swc/html",
+		() => {
+			const swc = load("@swc/html");
+			return async (html) => (await swc.minify(Buffer.from(html), {})).code;
+		}
+	]
+];
 
 // Text these elements hold is data, not markup whitespace, so a minifier that
 // reflows it changes the rendered page.
@@ -349,54 +401,154 @@ const missing = (before, after, empty) => {
 	return out;
 };
 
+const gzip = promisify(zlib.gzip);
+const brotliCompress = promisify(zlib.brotliCompress);
+// Node < 22.15 has no zstd in zlib — the column reads "-" there.
+const zstdCompress =
+	typeof zlib.zstdCompress === "function"
+		? promisify(zlib.zstdCompress)
+		: undefined;
+
 /**
- * @param {number} bytes a byte count
- * @returns {string} the count in KB, one decimal
+ * @param {Buffer} buffer content
+ * @returns {Promise<number | undefined>} the zstd size, where zlib has zstd
  */
-const kb = (bytes) => `${(bytes / 1024).toFixed(1)} KB`;
+const zstdSize = async (buffer) => {
+	if (zstdCompress === undefined) return undefined;
+	return (
+		await zstdCompress(buffer, {
+			params: { [zlib.constants.ZSTD_c_compressionLevel]: 19 }
+		})
+	).length;
+};
+
+/** @typedef {{ raw: number, gzip: number, brotli: number, zstd: number | undefined }} Sizes */
+
+/**
+ * What the bytes weigh under the encodings a CDN serves — the same settings as
+ * `test/CodeSizeTestCases.size.js`, so numbers line up across the two reports.
+ * @param {Buffer} buffer content
+ * @returns {Promise<Sizes>} its size under each encoding
+ */
+const compress = async (buffer) => ({
+	raw: buffer.length,
+	gzip: (await gzip(buffer, { level: 9 })).length,
+	brotli: (
+		await brotliCompress(buffer, {
+			params: {
+				[zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+				[zlib.constants.BROTLI_PARAM_SIZE_HINT]: buffer.length
+			}
+		})
+	).length,
+	zstd: await zstdSize(buffer)
+});
+
+/**
+ * @param {number | undefined} bytes a byte count
+ * @returns {string} the count in KB, one decimal ("-" when unmeasurable)
+ */
+const kb = (bytes) =>
+	bytes === undefined ? "-" : `${(bytes / 1024).toFixed(1)} KB`;
+
+/** @typedef {{ code: string, wall: number, cpu: number, peak: number } | { error: string }} Measurement */
+
+/**
+ * Worker mode: run one minifier over the document on stdin and report the
+ * output with its cost. Wall and cpu are the best of three runs; peak is the
+ * process's `maxRSS` (KB), which deliberately includes loading the tool — that
+ * is part of what running it costs.
+ * @param {string} name a `MINIFIERS` entry's name
+ * @returns {Promise<void>} resolves after the report is written
+ */
+const measure = async (name) => {
+	const entry = MINIFIERS.find(([minifier]) => minifier === name);
+	if (entry === undefined) throw new Error(`unknown minifier ${name}`);
+	const chunks = [];
+	for await (const chunk of process.stdin) chunks.push(chunk);
+	const html = Buffer.concat(chunks).toString("utf8");
+	/** @type {Measurement} */
+	let report;
+	try {
+		const minify = entry[1]();
+		let code = "";
+		let wall = Infinity;
+		let cpu = Infinity;
+		for (let i = 0; i < 3; i++) {
+			const cpuStarted = process.cpuUsage();
+			const started = process.hrtime.bigint();
+			code = await minify(html);
+			wall = Math.min(wall, Number(process.hrtime.bigint() - started) / 1e6);
+			const used = process.cpuUsage(cpuStarted);
+			cpu = Math.min(cpu, (used.user + used.system) / 1e3);
+		}
+		report = { code, wall, cpu, peak: process.resourceUsage().maxRSS };
+	} catch (error) {
+		report = {
+			error: String(
+				error && /** @type {Error} */ (error).message
+					? /** @type {Error} */ (error).message
+					: error
+			).split("\n", 1)[0]
+		};
+	}
+	process.stdout.write(JSON.stringify(report));
+};
+
+/**
+ * @param {string} name a `MINIFIERS` entry's name
+ * @param {string} input the document
+ * @returns {Promise<Measurement>} the worker's report
+ */
+const measureInWorker = (name, input) =>
+	new Promise((resolve, reject) => {
+		const child = spawn(process.execPath, [__filename, "--measure", name], {
+			stdio: ["pipe", "pipe", "inherit"]
+		});
+		/** @type {Buffer[]} */
+		const chunks = [];
+		child.stdout.on("data", (chunk) => chunks.push(chunk));
+		child.on("error", reject);
+		child.on("close", (code) => {
+			if (code !== 0) {
+				reject(new Error(`measuring ${name} exited with ${code}`));
+				return;
+			}
+			resolve(JSON.parse(Buffer.concat(chunks).toString("utf8")));
+		});
+		child.stdin.end(input);
+	});
 
 const main = async () => {
-	setup();
+	await setup();
 	const parse5 = /** @type {Parse5} */ (load("parse5"));
-	for (const [label, html] of fixtures()) {
+	for (const [label, html] of await fixtures()) {
 		const before = fingerprint(parse5, html);
-		const gzipped = zlib.gzipSync(Buffer.from(html), { level: 9 }).length;
+		const input = await compress(Buffer.from(html));
 		process.stdout.write(
-			`\n${label} — ${kb(Buffer.byteLength(html))} (${kb(gzipped)} gzip), ${
-				before.elements.size
-			} tags\n`
+			`\n${label} — ${kb(input.raw)} (${kb(input.gzip)} gzip, ${kb(
+				input.brotli
+			)} brotli, ${kb(input.zstd)} zstd), ${before.elements.size} tags\n`
 		);
 		process.stdout.write(
 			`${"minifier".padEnd(34)}${"minified".padStart(10)}${"saved".padStart(
 				8
-			)}${"gzip".padStart(10)}${"saved".padStart(8)}${"ms".padStart(
-				7
+			)}${"gzip".padStart(9)}${"brotli".padStart(9)}${"zstd".padStart(
+				9
+			)}${"ms".padStart(6)}${"cpu".padStart(6)}${"peak".padStart(
+				8
 			)}   differs\n`
 		);
-		for (const [name, run] of minifiers()) {
-			let out = "";
-			let best = Infinity;
-			try {
-				for (let i = 0; i < 3; i++) {
-					const started = process.hrtime.bigint();
-					out = await run(html);
-					const took = Number(process.hrtime.bigint() - started) / 1e6;
-					if (took < best) best = took;
-				}
-			} catch (error) {
+		for (const [name] of MINIFIERS) {
+			const result = await measureInWorker(name, html);
+			if ("error" in result) {
 				// A tool rejecting the document outright is a comparison result too.
 				process.stdout.write(
-					`${name.padEnd(34)}   rejects it: ${
-						String(
-							error && /** @type {Error} */ (error).message
-								? /** @type {Error} */ (error).message
-								: error
-						).split("\n", 1)[0]
-					}\n`
+					`${name.padEnd(34)}   rejects it: ${result.error}\n`
 				);
 				continue;
 			}
-			const after = fingerprint(parse5, out);
+			const after = fingerprint(parse5, result.code);
 			const notes = [
 				...missing(before.elements, after.elements, before.empty).map(
 					(entry) => `<${entry}`
@@ -404,25 +556,27 @@ const main = async () => {
 				...missing(before.attributes, after.attributes, before.empty)
 			];
 			if (before.text !== after.text) notes.push("text");
-			const outGzip = zlib.gzipSync(Buffer.from(out), { level: 9 }).length;
+			const out = await compress(Buffer.from(result.code));
 			process.stdout.write(
 				`${
 					name.padEnd(34) +
-					kb(Buffer.byteLength(out)).padStart(10) +
-					`${(
-						100 -
-						(Buffer.byteLength(out) / Buffer.byteLength(html)) * 100
-					).toFixed(1)}%`.padStart(8) +
-					kb(outGzip).padStart(10) +
-					`${(100 - (outGzip / gzipped) * 100).toFixed(1)}%`.padStart(8) +
-					best.toFixed(0).padStart(7)
+					kb(out.raw).padStart(10) +
+					`${(100 - (out.raw / input.raw) * 100).toFixed(1)}%`.padStart(8) +
+					kb(out.gzip).padStart(9) +
+					kb(out.brotli).padStart(9) +
+					kb(out.zstd).padStart(9) +
+					result.wall.toFixed(0).padStart(6) +
+					result.cpu.toFixed(0).padStart(6) +
+					`${(result.peak / 1024).toFixed(0)} MB`.padStart(8)
 				}   ${notes.length === 0 ? "-" : notes.slice(0, 4).join(", ")}\n`
 			);
 		}
 	}
 };
 
-main().catch((error) => {
-	log(String(error && error.stack ? error.stack : error));
-	process.exitCode = 1;
-});
+(process.argv[2] === "--measure" ? measure(process.argv[3]) : main()).catch(
+	(error) => {
+		log(String(error && error.stack ? error.stack : error));
+		process.exitCode = 1;
+	}
+);

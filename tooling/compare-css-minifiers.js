@@ -6,18 +6,26 @@
 "use strict";
 
 // Compare webpack's own CSS minifier against the ecosystem's on real framework
-// stylesheets, reporting size, speed and — the part a size table hides — whether
-// the output still contains everything the input did.
+// stylesheets, reporting what the output weighs (raw and under the encodings a
+// CDN serves), what producing it costs (wall time, cpu time, peak memory) and —
+// the part a size table hides — whether it still contains everything the input
+// did.
 //
 //   node tooling/compare-css-minifiers.js
+//
+// Each minifier × fixture cell runs in a fresh worker process (this script
+// re-invoked with `--measure <minifier>`, the stylesheet on stdin), so cpu and
+// peak RSS are attributable to that one tool instead of to whatever ran before
+// it in a shared process.
 //
 // The comparison packages are NOT webpack dependencies: they are installed into
 // `node_modules/.cache/css-minifier-comparison` on first run, so nothing here
 // reaches webpack's own dependency tree.
 
-const { execFileSync } = require("child_process");
+const { spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const { promisify } = require("util");
 const zlib = require("zlib");
 
 const cssMinify = require("../lib/css/cssMinify");
@@ -86,19 +94,49 @@ const log = (message) => {
 	process.stderr.write(`${message}\n`);
 };
 
-const setup = () => {
+/**
+ * @param {string} file a path
+ * @returns {Promise<boolean>} whether it exists
+ */
+const exists = (file) =>
+	fs.promises.access(file).then(
+		() => true,
+		() => false
+	);
+
+/**
+ * @param {string} command executable
+ * @param {string[]} args its arguments
+ * @param {object=} options spawn options
+ * @returns {Promise<void>} resolves when it exits cleanly
+ */
+const run = (command, args, options) =>
+	new Promise((resolve, reject) => {
+		const child = spawn(command, args, {
+			stdio: ["ignore", "inherit", "inherit"],
+			...options
+		});
+		child.on("error", reject);
+		child.on("close", (code) => {
+			if (code === 0) resolve();
+			else reject(new Error(`${command} exited with ${code}`));
+		});
+	});
+
+const setup = async () => {
 	const manifest = path.join(CACHE, "package.json");
 	// Reinstall when the package list changes, so an existing cache picks up
 	// newly added fixtures instead of failing on their missing files.
 	const installed =
-		fs.existsSync(MODULES) && fs.existsSync(manifest)
-			? JSON.parse(fs.readFileSync(manifest, "utf8")).comparisonPackages
+		(await exists(MODULES)) && (await exists(manifest))
+			? JSON.parse(await fs.promises.readFile(manifest, "utf8"))
+					.comparisonPackages
 			: undefined;
 	if (JSON.stringify(installed) !== JSON.stringify(PACKAGES)) {
 		log(`installing comparison packages into ${path.relative(ROOT, CACHE)} …`);
-		fs.mkdirSync(CACHE, { recursive: true });
-		if (!fs.existsSync(manifest)) {
-			fs.writeFileSync(
+		await fs.promises.mkdir(CACHE, { recursive: true });
+		if (!(await exists(manifest))) {
+			await fs.promises.writeFile(
 				manifest,
 				`${JSON.stringify(
 					{ name: "css-minifier-comparison", private: true },
@@ -107,14 +145,16 @@ const setup = () => {
 				)}\n`
 			);
 		}
-		execFileSync("npm", ["install", "--no-audit", "--no-fund", ...PACKAGES], {
-			cwd: CACHE,
-			stdio: "inherit"
+		await run("npm", ["install", "--no-audit", "--no-fund", ...PACKAGES], {
+			cwd: CACHE
 		});
 		// Recorded only after the install succeeded.
-		const written = JSON.parse(fs.readFileSync(manifest, "utf8"));
+		const written = JSON.parse(await fs.promises.readFile(manifest, "utf8"));
 		written.comparisonPackages = PACKAGES;
-		fs.writeFileSync(manifest, `${JSON.stringify(written, null, 2)}\n`);
+		await fs.promises.writeFile(
+			manifest,
+			`${JSON.stringify(written, null, 2)}\n`
+		);
 	}
 	for (const [source, out] of [
 		[TAILWIND_APP, "tailwind-app.css"],
@@ -122,11 +162,11 @@ const setup = () => {
 		[TAILWIND_DAISYUI, "tailwind-daisyui.css"]
 	]) {
 		const target = path.join(CACHE, out);
-		if (fs.existsSync(target)) continue;
+		if (await exists(target)) continue;
 		log(`building ${out} …`);
 		const input = path.join(CACHE, `${out}.in`);
-		fs.writeFileSync(input, source);
-		execFileSync(
+		await fs.promises.writeFile(input, source);
+		await run(
 			process.execPath,
 			[
 				path.join(MODULES, "@tailwindcss/cli/dist/index.mjs"),
@@ -135,7 +175,7 @@ const setup = () => {
 				"-o",
 				target
 			],
-			{ cwd: CACHE, stdio: "inherit" }
+			{ cwd: CACHE }
 		);
 	}
 };
@@ -182,43 +222,69 @@ const fixtures = () => [
 	["Tailwind 4 + daisyUI 5", path.join(CACHE, "tailwind-daisyui.css")]
 ];
 
-/**
- * @returns {[string, (css: string) => string | Promise<string>][]} `[label, minify]` for every minifier
- */
-const minifiers = () => {
-	const postcss = load("postcss");
-	const cssnano = load("cssnano");
-	const lightningcss = load("lightningcss");
-	const csso = load("csso");
-	const CleanCSS = load("clean-css");
-	const esbuild = load("esbuild");
-	return [
-		["webpack", (css) => cssMinify({ "input.css": css }).code],
-		[
-			"esbuild",
-			(css) => esbuild.transformSync(css, { loader: "css", minify: true }).code
-		],
-		["csso", (css) => csso.minify(css).css],
-		["clean-css L1", (css) => new CleanCSS({ level: 1 }).minify(css).styles],
-		["clean-css L2", (css) => new CleanCSS({ level: 2 }).minify(css).styles],
-		[
-			"lightningcss",
-			(css) =>
+// Each entry is a factory so the measuring worker loads only the one tool it
+// measures — anything else would show up in that tool's peak RSS. The async API
+// is used wherever a tool offers one; csso and lightningcss only ship sync.
+/** @type {[string, () => (css: string) => string | Promise<string>][]} */
+const MINIFIERS = [
+	["webpack", () => (css) => cssMinify({ "input.css": css }).code],
+	[
+		"esbuild",
+		() => {
+			const esbuild = load("esbuild");
+			return async (css) =>
+				(await esbuild.transform(css, { loader: "css", minify: true })).code;
+		}
+	],
+	[
+		"csso",
+		() => {
+			const csso = load("csso");
+			return (css) => csso.minify(css).css;
+		}
+	],
+	[
+		"clean-css L1",
+		() => {
+			const CleanCSS = load("clean-css");
+			return async (css) =>
+				(await new CleanCSS({ level: 1, returnPromise: true }).minify(css))
+					.styles;
+		}
+	],
+	[
+		"clean-css L2",
+		() => {
+			const CleanCSS = load("clean-css");
+			return async (css) =>
+				(await new CleanCSS({ level: 2, returnPromise: true }).minify(css))
+					.styles;
+		}
+	],
+	[
+		"lightningcss",
+		() => {
+			const lightningcss = load("lightningcss");
+			return (css) =>
 				lightningcss
 					.transform({
 						filename: "input.css",
 						code: Buffer.from(css),
 						minify: true
 					})
-					.code.toString("utf8")
-		],
-		[
-			"cssnano",
-			async (css) =>
-				(await postcss([cssnano]).process(css, { from: undefined })).css
-		]
-	];
-};
+					.code.toString("utf8");
+		}
+	],
+	[
+		"cssnano",
+		() => {
+			const postcss = load("postcss");
+			const cssnano = load("cssnano");
+			return async (css) =>
+				(await postcss([cssnano]).process(css, { from: undefined })).css;
+		}
+	]
+];
 
 /**
  * Every class a stylesheet's selectors mention. Both layers are real parsers —
@@ -248,73 +314,173 @@ const classSelectors = (postcss, selectorParser, css) => {
 	return set;
 };
 
+const gzip = promisify(zlib.gzip);
+const brotliCompress = promisify(zlib.brotliCompress);
+// Node < 22.15 has no zstd in zlib — the column reads "-" there.
+const zstdCompress =
+	typeof zlib.zstdCompress === "function"
+		? promisify(zlib.zstdCompress)
+		: undefined;
+
 /**
- * @param {number} bytes a byte count
- * @returns {string} the count in KB, one decimal
+ * @param {Buffer} buffer content
+ * @returns {Promise<number | undefined>} the zstd size, where zlib has zstd
  */
-const kb = (bytes) => `${(bytes / 1024).toFixed(1)} KB`;
+const zstdSize = async (buffer) => {
+	if (zstdCompress === undefined) return undefined;
+	return (
+		await zstdCompress(buffer, {
+			params: { [zlib.constants.ZSTD_c_compressionLevel]: 19 }
+		})
+	).length;
+};
+
+/** @typedef {{ raw: number, gzip: number, brotli: number, zstd: number | undefined }} Sizes */
+
+/**
+ * What the bytes weigh under the encodings a CDN serves — the same settings as
+ * `test/CodeSizeTestCases.size.js`, so numbers line up across the two reports.
+ * @param {Buffer} buffer content
+ * @returns {Promise<Sizes>} its size under each encoding
+ */
+const compress = async (buffer) => ({
+	raw: buffer.length,
+	gzip: (await gzip(buffer, { level: 9 })).length,
+	brotli: (
+		await brotliCompress(buffer, {
+			params: {
+				[zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+				[zlib.constants.BROTLI_PARAM_SIZE_HINT]: buffer.length
+			}
+		})
+	).length,
+	zstd: await zstdSize(buffer)
+});
+
+/**
+ * @param {number | undefined} bytes a byte count
+ * @returns {string} the count in KB, one decimal ("-" when unmeasurable)
+ */
+const kb = (bytes) =>
+	bytes === undefined ? "-" : `${(bytes / 1024).toFixed(1)} KB`;
+
+/** @typedef {{ code: string, wall: number, cpu: number, peak: number } | { error: string }} Measurement */
+
+/**
+ * Worker mode: run one minifier over the stylesheet on stdin and report the
+ * output with its cost. Wall and cpu are the best of three runs; peak is the
+ * process's `maxRSS` (KB), which deliberately includes loading the tool — that
+ * is part of what running it costs. The one understatement is esbuild, whose
+ * service process works outside this process's accounting.
+ * @param {string} name a `MINIFIERS` entry's name
+ * @returns {Promise<void>} resolves after the report is written
+ */
+const measure = async (name) => {
+	const entry = MINIFIERS.find(([minifier]) => minifier === name);
+	if (entry === undefined) throw new Error(`unknown minifier ${name}`);
+	const chunks = [];
+	for await (const chunk of process.stdin) chunks.push(chunk);
+	const css = Buffer.concat(chunks).toString("utf8");
+	/** @type {Measurement} */
+	let report;
+	try {
+		const minify = entry[1]();
+		let code = "";
+		let wall = Infinity;
+		let cpu = Infinity;
+		for (let i = 0; i < 3; i++) {
+			const cpuStarted = process.cpuUsage();
+			const started = process.hrtime.bigint();
+			code = await minify(css);
+			wall = Math.min(wall, Number(process.hrtime.bigint() - started) / 1e6);
+			const used = process.cpuUsage(cpuStarted);
+			cpu = Math.min(cpu, (used.user + used.system) / 1e3);
+		}
+		report = { code, wall, cpu, peak: process.resourceUsage().maxRSS };
+	} catch (error) {
+		report = {
+			error: String(
+				error && /** @type {Error} */ (error).message
+					? /** @type {Error} */ (error).message
+					: error
+			).split("\n", 1)[0]
+		};
+	}
+	process.stdout.write(JSON.stringify(report));
+};
+
+/**
+ * @param {string} name a `MINIFIERS` entry's name
+ * @param {string} input the stylesheet
+ * @returns {Promise<Measurement>} the worker's report
+ */
+const measureInWorker = (name, input) =>
+	new Promise((resolve, reject) => {
+		const child = spawn(process.execPath, [__filename, "--measure", name], {
+			stdio: ["pipe", "pipe", "inherit"]
+		});
+		/** @type {Buffer[]} */
+		const chunks = [];
+		child.stdout.on("data", (chunk) => chunks.push(chunk));
+		child.on("error", reject);
+		child.on("close", (code) => {
+			if (code !== 0) {
+				reject(new Error(`measuring ${name} exited with ${code}`));
+				return;
+			}
+			resolve(JSON.parse(Buffer.concat(chunks).toString("utf8")));
+		});
+		child.stdin.end(input);
+	});
 
 const main = async () => {
-	setup();
+	await setup();
 	const postcss = load("postcss");
 	const selectorParser = load("postcss-selector-parser");
 	for (const [label, file] of fixtures()) {
 		// A trailing sourceMappingURL is a build artifact, not stylesheet content,
 		// and the minifiers disagree on keeping it.
-		const css = fs
-			.readFileSync(file, "utf8")
-			.replace(/\/\*#\s*sourceMappingURL=[^*]*\*\/\s*$/, "");
+		const css = (await fs.promises.readFile(file, "utf8")).replace(
+			/\/\*#\s*sourceMappingURL=[^*]*\*\/\s*$/,
+			""
+		);
 		const before = classSelectors(postcss, selectorParser, css);
-		const gzipped = zlib.gzipSync(Buffer.from(css), { level: 9 }).length;
+		const input = await compress(Buffer.from(css));
 		process.stdout.write(
-			`\n${label} — ${kb(Buffer.byteLength(css))} (${kb(gzipped)} gzip), ${
-				before.size
-			} classes\n`
+			`\n${label} — ${kb(input.raw)} (${kb(input.gzip)} gzip, ${kb(
+				input.brotli
+			)} brotli, ${kb(input.zstd)} zstd), ${before.size} classes\n`
 		);
 		process.stdout.write(
 			`${"minifier".padEnd(14)}${"minified".padStart(10)}${"saved".padStart(
 				8
-			)}${"gzip".padStart(10)}${"saved".padStart(8)}${"ms".padStart(
-				7
-			)}   lost\n`
+			)}${"gzip".padStart(9)}${"brotli".padStart(9)}${"zstd".padStart(
+				9
+			)}${"ms".padStart(6)}${"cpu".padStart(6)}${"peak".padStart(8)}   lost\n`
 		);
-		for (const [name, run] of minifiers()) {
-			let out = "";
-			let best = Infinity;
-			try {
-				for (let i = 0; i < 3; i++) {
-					const started = process.hrtime.bigint();
-					out = await run(css);
-					const took = Number(process.hrtime.bigint() - started) / 1e6;
-					if (took < best) best = took;
-				}
-			} catch (error) {
+		for (const [name] of MINIFIERS) {
+			const result = await measureInWorker(name, css);
+			if ("error" in result) {
 				// A tool rejecting the stylesheet outright is a comparison result too.
 				process.stdout.write(
-					`${name.padEnd(14)}   rejects it: ${
-						String(
-							error && /** @type {Error} */ (error).message
-								? /** @type {Error} */ (error).message
-								: error
-						).split("\n", 1)[0]
-					}\n`
+					`${name.padEnd(14)}   rejects it: ${result.error}\n`
 				);
 				continue;
 			}
-			const after = classSelectors(postcss, selectorParser, out);
+			const after = classSelectors(postcss, selectorParser, result.code);
 			const lost = [...before].filter((c) => !after.has(c));
-			const outGzip = zlib.gzipSync(Buffer.from(out), { level: 9 }).length;
+			const out = await compress(Buffer.from(result.code));
 			process.stdout.write(
 				`${
 					name.padEnd(14) +
-					kb(Buffer.byteLength(out)).padStart(10) +
-					`${(
-						100 -
-						(Buffer.byteLength(out) / Buffer.byteLength(css)) * 100
-					).toFixed(1)}%`.padStart(8) +
-					kb(outGzip).padStart(10) +
-					`${(100 - (outGzip / gzipped) * 100).toFixed(1)}%`.padStart(8) +
-					best.toFixed(0).padStart(7)
+					kb(out.raw).padStart(10) +
+					`${(100 - (out.raw / input.raw) * 100).toFixed(1)}%`.padStart(8) +
+					kb(out.gzip).padStart(9) +
+					kb(out.brotli).padStart(9) +
+					kb(out.zstd).padStart(9) +
+					result.wall.toFixed(0).padStart(6) +
+					result.cpu.toFixed(0).padStart(6) +
+					`${(result.peak / 1024).toFixed(0)} MB`.padStart(8)
 				}   ${
 					lost.length === 0
 						? "-"
@@ -325,7 +491,9 @@ const main = async () => {
 	}
 };
 
-main().catch((error) => {
-	log(String(error && error.stack ? error.stack : error));
-	process.exitCode = 1;
-});
+(process.argv[2] === "--measure" ? measure(process.argv[3]) : main()).catch(
+	(error) => {
+		log(String(error && error.stack ? error.stack : error));
+		process.exitCode = 1;
+	}
+);
