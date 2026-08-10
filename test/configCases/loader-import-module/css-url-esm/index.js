@@ -15,5 +15,6 @@ it("should honor the importModule publicPath override for wrapper-less assets", 
 
 it("should emit the analyzable url form for the same asset in the bundle", () => {
 	const url = new URL("./file.png", import.meta.url);
-	expect(url.pathname).toBe("/public/assets/file.png");
+	// On Windows a root-absolute specifier keeps the file: base's drive letter.
+	expect(url.pathname).toMatch(/^(\/[A-Za-z]:)?\/public\/assets\/file\.png$/);
 });
