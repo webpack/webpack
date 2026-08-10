@@ -3521,9 +3521,17 @@ const collectPrefixes = (compat) => {
 		const entries = Array.isArray(raw) ? raw : [raw];
 		let unprefixedFrom = null;
 		for (const entry of entries) {
-			if (entry.prefix) continue;
+			// An entry BCD later removed never established unprefixed support, and
+			// the earliest of the rest is the arrival — BCD's newest-first ordering
+			// is convention, not schema.
+			if (entry.prefix || entry.version_removed) continue;
 			const added = encodeVersion(entry.version_added);
-			if (added !== null) unprefixedFrom = added;
+			if (
+				added !== null &&
+				(unprefixedFrom === null || added < unprefixedFrom)
+			) {
+				unprefixedFrom = added;
+			}
 		}
 		const target = unprefixedFrom === null ? Infinity : unprefixedFrom;
 		for (const entry of entries) {

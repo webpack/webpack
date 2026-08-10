@@ -4406,7 +4406,16 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 		);
 	});
 
-	it("treats Safari Technology Preview as newest (no prefix)", () => {
+	it("prefixes a shorthand the box merge wrote onto a longhand's node", () => {
+		expect(
+			minify(
+				"a{border-top-left-radius:5px;border-top-right-radius:5px;border-bottom-right-radius:5px;border-bottom-left-radius:5px}",
+				["firefox 3.6"]
+			)
+		).toBe("a{-moz-border-radius:5px;border-radius:5px}");
+	});
+
+	it("treats Safari Technology Preview as newest but still finitely versioned", () => {
 		expect(minify("a{user-select:none}", ["safari TP"])).toBe(
 			"a{-webkit-user-select:none;user-select:none}"
 		);
