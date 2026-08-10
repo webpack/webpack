@@ -19738,30 +19738,32 @@ declare interface OptimizationMinimizeCss {
 declare interface OptimizationMinimizeHtml {}
 
 /**
- * What the JavaScript minimizer may do beyond its defaults. No additional options are supported yet.
+ * Options handed as-is to the JavaScript minimizer (terser-compatible). Defaults to `{ compress: { passes: 2 } }`.
  * @since 5.110.0
  */
-declare interface OptimizationMinimizeJavascript {}
+declare interface OptimizationMinimizeJavascript {
+	[index: string]: any;
+}
 
 /**
- * Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` excludes it from the built-in minimizer.
+ * Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` disables minimizing it.
  * @since 5.110.0
  */
 declare interface OptimizationMinimizeOptions {
 	/**
-	 * Minimize CSS assets: `false` excludes them from the built-in minimizer, an object configures what it may do beyond the transforms that always apply.
+	 * Minimize CSS assets: `false` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.
 	 */
-	css?: boolean | OptimizationMinimizeCss;
+	css?: false | OptimizationMinimizeCss;
 
 	/**
-	 * Minimize HTML assets: `false` excludes them from the built-in minimizer, an object configures what it may do beyond the transforms that always apply.
+	 * Minimize HTML assets: `false` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.
 	 */
-	html?: boolean | OptimizationMinimizeHtml;
+	html?: false | OptimizationMinimizeHtml;
 
 	/**
-	 * Minimize JavaScript assets: `false` excludes them from the built-in minimizer, an object configures what it may do beyond its defaults.
+	 * Minimize JavaScript assets: `false` disables it, an object is handed as-is to the JavaScript minimizer.
 	 */
-	javascript?: boolean | OptimizationMinimizeJavascript;
+	javascript?: false | OptimizationMinimizeJavascript;
 }
 
 /**
@@ -19825,9 +19827,9 @@ declare interface OptimizationNormalized {
 	mergeDuplicateChunks?: boolean;
 
 	/**
-	 * Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures the built-in minimizer per asset type.
+	 * Enable minimizing the output. Uses optimization.minimizer. An object configures the built-in minimizer per asset type.
 	 */
-	minimize?: boolean | OptimizationMinimizeOptions;
+	minimize?: false | OptimizationMinimizeOptions;
 
 	/**
 	 * Minimizer(s) to use for minimizing the output.
@@ -19955,7 +19957,7 @@ type OptimizationNormalizedWithDefaults = OptimizationNormalized & {
 	mangleWasmImports: NonNullable<undefined | boolean>;
 	portableRecords: NonNullable<undefined | boolean>;
 	realContentHash: NonNullable<undefined | boolean>;
-	minimize: NonNullable<undefined | boolean | OptimizationMinimizeOptions>;
+	minimize: NonNullable<undefined | false | OptimizationMinimizeOptions>;
 	minimizer: (
 		| ((this: Compiler, compiler: Compiler) => void)
 		| WebpackPluginInstance

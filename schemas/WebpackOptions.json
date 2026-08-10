@@ -3709,21 +3709,21 @@
       "added": "5.110.0"
     },
     "OptimizationMinimizeJavascript": {
-      "description": "What the JavaScript minimizer may do beyond its defaults. No additional options are supported yet.",
+      "description": "Options handed as-is to the JavaScript minimizer (terser-compatible). Defaults to `{ compress: { passes: 2 } }`.",
       "type": "object",
-      "additionalProperties": false,
+      "additionalProperties": true,
       "added": "5.110.0"
     },
     "OptimizationMinimizeOptions": {
-      "description": "Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` excludes it from the built-in minimizer.",
+      "description": "Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` disables minimizing it.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "css": {
-          "description": "Minimize CSS assets: `false` excludes them from the built-in minimizer, an object configures what it may do beyond the transforms that always apply.",
+          "description": "Minimize CSS assets: `false` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.",
           "anyOf": [
             {
-              "type": "boolean"
+              "enum": [false]
             },
             {
               "$ref": "#/definitions/OptimizationMinimizeCss"
@@ -3731,10 +3731,10 @@
           ]
         },
         "html": {
-          "description": "Minimize HTML assets: `false` excludes them from the built-in minimizer, an object configures what it may do beyond the transforms that always apply.",
+          "description": "Minimize HTML assets: `false` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.",
           "anyOf": [
             {
-              "type": "boolean"
+              "enum": [false]
             },
             {
               "$ref": "#/definitions/OptimizationMinimizeHtml"
@@ -3742,10 +3742,10 @@
           ]
         },
         "javascript": {
-          "description": "Minimize JavaScript assets: `false` excludes them from the built-in minimizer, an object configures what it may do beyond its defaults.",
+          "description": "Minimize JavaScript assets: `false` disables it, an object is handed as-is to the JavaScript minimizer.",
           "anyOf": [
             {
-              "type": "boolean"
+              "enum": [false]
             },
             {
               "$ref": "#/definitions/OptimizationMinimizeJavascript"
@@ -3826,10 +3826,10 @@
           "type": "boolean"
         },
         "minimize": {
-          "description": "Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures the built-in minimizer per asset type.",
+          "description": "Enable minimizing the output. Uses optimization.minimizer. An object configures the built-in minimizer per asset type.",
           "anyOf": [
             {
-              "type": "boolean"
+              "enum": [false]
             },
             {
               "$ref": "#/definitions/OptimizationMinimizeOptions"

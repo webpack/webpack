@@ -9933,13 +9933,16 @@ Object {
   "optimization-minimize-css": Object {
     "configs": Array [
       Object {
-        "description": "Minimize CSS assets: \`false\` excludes them from the built-in minimizer, an object configures what it may do beyond the transforms that always apply.",
+        "description": "Minimize CSS assets: \`false\` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.",
         "multiple": false,
         "path": "optimization.minimize.css",
-        "type": "boolean",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
       },
     ],
-    "description": "Minimize CSS assets: \`false\` excludes them from the built-in minimizer, an object configures what it may do beyond the transforms that always apply.",
+    "description": "Minimize CSS assets: \`false\` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -9959,26 +9962,32 @@ Object {
   "optimization-minimize-html": Object {
     "configs": Array [
       Object {
-        "description": "Minimize HTML assets: \`false\` excludes them from the built-in minimizer, an object configures what it may do beyond the transforms that always apply.",
+        "description": "Minimize HTML assets: \`false\` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.",
         "multiple": false,
         "path": "optimization.minimize.html",
-        "type": "boolean",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
       },
     ],
-    "description": "Minimize HTML assets: \`false\` excludes them from the built-in minimizer, an object configures what it may do beyond the transforms that always apply.",
+    "description": "Minimize HTML assets: \`false\` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.",
     "multiple": false,
     "simpleType": "boolean",
   },
   "optimization-minimize-javascript": Object {
     "configs": Array [
       Object {
-        "description": "Minimize JavaScript assets: \`false\` excludes them from the built-in minimizer, an object configures what it may do beyond its defaults.",
+        "description": "Minimize JavaScript assets: \`false\` disables it, an object is handed as-is to the JavaScript minimizer.",
         "multiple": false,
         "path": "optimization.minimize.javascript",
-        "type": "boolean",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
       },
     ],
-    "description": "Minimize JavaScript assets: \`false\` excludes them from the built-in minimizer, an object configures what it may do beyond its defaults.",
+    "description": "Minimize JavaScript assets: \`false\` disables it, an object is handed as-is to the JavaScript minimizer.",
     "multiple": false,
     "simpleType": "boolean",
   },

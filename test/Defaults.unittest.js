@@ -1224,7 +1224,15 @@ describe("snapshots", () => {
 		+     "mangleExports": true,
 		@@ ... @@
 		-     "minimize": false,
-		+     "minimize": true,
+		+     "minimize": Object {
+		+       "css": Object {},
+		+       "html": Object {},
+		+       "javascript": Object {
+		+         "compress": Object {
+		+           "passes": 2,
+		+         },
+		+       },
+		+     },
 		@@ ... @@
 		-     "moduleIds": "natural",
 		-     "nodeEnv": false,
@@ -1296,7 +1304,15 @@ describe("snapshots", () => {
 		+     "mangleExports": true,
 		@@ ... @@
 		-     "minimize": false,
-		+     "minimize": true,
+		+     "minimize": Object {
+		+       "css": Object {},
+		+       "html": Object {},
+		+       "javascript": Object {
+		+         "compress": Object {
+		+           "passes": 2,
+		+         },
+		+       },
+		+     },
 		@@ ... @@
 		-     "moduleIds": "natural",
 		-     "nodeEnv": false,

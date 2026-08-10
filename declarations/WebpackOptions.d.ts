@@ -2338,22 +2338,22 @@ export interface ConcatenateModulesOptions {
 	commonjs?: boolean;
 }
 /**
- * Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` excludes it from the built-in minimizer.
+ * Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` disables minimizing it.
  * @since 5.110.0
  */
 export interface OptimizationMinimizeOptions {
 	/**
-	 * Minimize CSS assets: `false` excludes them from the built-in minimizer, an object configures what it may do beyond the transforms that always apply.
+	 * Minimize CSS assets: `false` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.
 	 */
-	css?: boolean | OptimizationMinimizeCss;
+	css?: false | OptimizationMinimizeCss;
 	/**
-	 * Minimize HTML assets: `false` excludes them from the built-in minimizer, an object configures what it may do beyond the transforms that always apply.
+	 * Minimize HTML assets: `false` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.
 	 */
-	html?: boolean | OptimizationMinimizeHtml;
+	html?: false | OptimizationMinimizeHtml;
 	/**
-	 * Minimize JavaScript assets: `false` excludes them from the built-in minimizer, an object configures what it may do beyond its defaults.
+	 * Minimize JavaScript assets: `false` disables it, an object is handed as-is to the JavaScript minimizer.
 	 */
-	javascript?: boolean | OptimizationMinimizeJavascript;
+	javascript?: false | OptimizationMinimizeJavascript;
 }
 /**
  * What the CSS minimizer may do beyond the transforms that always apply. Applies wherever it runs: on `.css` assets and on the inline `<style>` / `style=""` the HTML minimizer hands it.
@@ -2372,10 +2372,12 @@ export interface OptimizationMinimizeCss {
  */
 export interface OptimizationMinimizeHtml {}
 /**
- * What the JavaScript minimizer may do beyond its defaults. No additional options are supported yet.
+ * Options handed as-is to the JavaScript minimizer (terser-compatible). Defaults to `{ compress: { passes: 2 } }`.
  * @since 5.110.0
  */
-export interface OptimizationMinimizeJavascript {}
+export interface OptimizationMinimizeJavascript {
+	[k: string]: any;
+}
 /**
  * Plugin instance.
  */
@@ -4468,9 +4470,9 @@ export interface OptimizationNormalized {
 	 */
 	mergeDuplicateChunks?: boolean;
 	/**
-	 * Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures the built-in minimizer per asset type.
+	 * Enable minimizing the output. Uses optimization.minimizer. An object configures the built-in minimizer per asset type.
 	 */
-	minimize?: boolean | OptimizationMinimizeOptions;
+	minimize?: false | OptimizationMinimizeOptions;
 	/**
 	 * Minimizer(s) to use for minimizing the output.
 	 */
