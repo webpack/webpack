@@ -5424,6 +5424,11 @@ declare interface CssEnvironment {
 	cssColorHexAlpha?: boolean;
 
 	/**
+	 * two positions on one gradient color stop (`red 0% 50%`) are available
+	 */
+	cssGradientDoublePosition?: boolean;
+
+	/**
 	 * the `inset` shorthand property is available
 	 */
 	cssInsetShorthand?: boolean;
@@ -7402,6 +7407,12 @@ declare interface Environment {
 	 * @since 5.110.0
 	 */
 	cssColorHexAlpha?: boolean;
+
+	/**
+	 * The environment supports two positions on one gradient color stop ('red 0% 50%').
+	 * @since 5.110.0
+	 */
+	cssGradientDoublePosition?: boolean;
 
 	/**
 	 * The environment supports the 'inset' shorthand property.
@@ -21672,7 +21683,8 @@ declare class PrintContext<TPath, TNode> {
 		node: TNode,
 		srcOffset?: number,
 		srcLine?: number,
-		srcCol?: number
+		srcCol?: number,
+		text?: string
 	): void;
 
 	/**
@@ -21682,6 +21694,21 @@ declare class PrintContext<TPath, TNode> {
 	 * for it began.
 	 */
 	anchor(srcOffset?: number, srcLine?: number, srcCol?: number): void;
+
+	/**
+	 * Whether a kept literal is queued to land before `pos`. A printer folding two
+	 * top-level nodes together asks first: the literal belongs between them, so
+	 * the fold would move it past what it was written above.
+	 */
+	hasInsertBefore(pos: number): boolean;
+
+	/**
+	 * Emit the kept literals landing before `pos`. A printer holding a node back
+	 * calls this at hold time, so what was written above it is still emitted
+	 * above it — and {@link hasInsertBefore} then answers about the gap to the
+	 * next node rather than the whole span since the last node taken.
+	 */
+	flushInsertsBefore(pos: number): void;
 
 	/**
 	 * Queue a literal to carry through to the output at source offset `pos` — a

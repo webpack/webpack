@@ -959,8 +959,16 @@ describe("CssSyntax — block streaming", () => {
 		expect(minify(`@media screen{@supports (display:grid){${BIG}}}`)).toBe(
 			`@media screen{@supports (display:grid){${BIG}}}`
 		);
-		const nesting = `.root{color:red;${repeat(1800, (i) => `& .n${i}{color:red}`)}}`;
-		expect(minify(nesting)).toBe(nesting);
+		// Children printing one block join into a selector list, so the streamed
+		// path has to reach the list a collected one does rather than the input.
+		/** @type {(n: number) => string} */
+		const nesting = (n) =>
+			`.root{color:red;${repeat(n, (i) => `& .n${i}{color:red}`)}}`;
+		/** @type {(n: number) => string} */
+		const joined = (n) =>
+			`.root{color:red;${Array.from({ length: n }, (_, i) => `& .n${i}`).join(",")}{color:red}}`;
+		expect(minify(nesting(4))).toBe(joined(4));
+		expect(minify(nesting(1800))).toBe(joined(1800));
 	});
 
 	it("reads a streamed rule's prelude in terms of what encloses it", () => {
@@ -1537,10 +1545,19 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		expect(min("a{FLEX:0 0 AUTO}")).toBe("a{FLEX:none}");
 	});
 
+	it("drops a `flex` shrink factor that is its own default", () => {
+		expect(min("a{flex:0 1 auto}")).toBe("a{flex:0 auto}");
+		expect(min("a{flex:1 1 0px}")).toBe("a{flex:1 0px}");
+		expect(min("a{flex:2 1 50%}")).toBe("a{flex:2 50%}");
+	});
+
 	it("keeps a `flex` value no keyword spells", () => {
 		// `flex:1` means `1 1 0%`, and a length `0` is not a percentage `0%`.
 		expect(min("a{flex:1 1 0}")).toBe("a{flex:1 1 0}");
 		expect(min("a{flex:1 1}")).toBe("a{flex:1 1}");
+		// A basis a factor could be read as: CSS Flexbox 1 §7.1.1 reads a unitless
+		// zero not preceded by two factors as a factor, so `1 1 0` is not `1 0`.
+		expect(min("a{flex:3 1 0}")).toBe("a{flex:3 1 0}");
 		// A prefixed property is a different property.
 		expect(min("a{-webkit-box-flex:0 0 auto}")).toBe(
 			"a{-webkit-box-flex:0 0 auto}"
@@ -2349,7 +2366,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			["a{transform:rotate(0deg)}", "a{transform:rotate(0)}"],
 			["a{transform:skew(0deg,0deg)}", "a{transform:skew(0,0)}"],
-			["a{filter:hue-rotate(0turn)}", "a{filter:hue-rotate(0)}"]
+			// `hue-rotate` goes further still — see the omitted-argument tests.
+			["a{transform:rotate(0turn)}", "a{transform:rotate(0)}"]
 		])("drops the unit where the grammar names <zero>: %s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
@@ -2362,7 +2380,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a slot of the call takes a number",
 				"a{transform:rotate3d(0deg,0,1,45deg)}"
 			],
-			["that call's own angle sits last", "a{transform:rotate3d(0,0,1,0deg)}"],
+			// A scaled axis names the same one but is not folded, so the angle still
+			// sits last here.
+			["that call's own angle sits last", "a{transform:rotate3d(0,0,2,0deg)}"],
 			["the function takes no <zero>", "a{transition-duration:0s}"],
 			["it is not a function argument", "a{width:0deg}"]
 		])("keeps the unit where %s", (_name, css) => {
@@ -2537,6 +2557,21 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{border-image:url(a.png)30%}"
 			],
 			["a{text-decoration:none solid red}", "a{text-decoration:red}"],
+			// A slot of keywords and calls — `<bg-image>` is `none` or an image
+			// function — is checked for a sibling like a keywords-only one.
+			["a{background:none #fff}", "a{background:#fff}"],
+			["a{background:#fff none}", "a{background:#fff}"],
+			["a{background:red scroll}", "a{background:red}"],
+			["a{background:red repeat}", "a{background:red}"],
+			["a{background:none red repeat scroll}", "a{background:red}"],
+			// `background-origin` and `background-clip` are two slots of one
+			// production, so neither of their initials is the one slot's own.
+			[
+				"a{background:padding-box border-box none}",
+				"a{background:padding-box border-box}"
+			],
+			["a{border-image:none 30}", "a{border-image:30}"],
+			["a{mask:none luminance}", "a{mask:luminance}"],
 			["a{TRANSITION:opacity 1s EASE}", "a{TRANSITION:opacity 1s}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
@@ -2569,7 +2604,23 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["the first layer is empty", "a{transition:,opacity 1s ease}"],
 			["the last layer is empty", "a{transition:opacity 1s ease,}"],
 			["the property is no shorthand", "a{border-style:none}"],
-			["the slot takes more than keywords", "a{border:medium solid red}"]
+			// `<line-width>` reaches `<length>`, which no spelling names, so a
+			// sibling filling that slot cannot be recognized.
+			[
+				"the slot takes a value no spelling names",
+				"a{border:medium solid red}"
+			],
+			// An image function fills `<bg-image>` as much as `none` does.
+			["a call fills the image slot", "a{background:none url(a.png)}"],
+			[
+				"the same, past a gradient",
+				"a{background:none linear-gradient(red,blue)}"
+			],
+			["a background is the keyword alone", "a{background:none}"],
+			["a background states two layers", "a{background:none,url(a.png)}"],
+			// A `/` reaches a slot through another's value, so the components are no
+			// longer this one flat list.
+			["a background states a size", "a{background:none 50%/cover}"]
 		])("keeps it where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
@@ -2603,6 +2654,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{filter:grayscale(100%)}", "a{filter:grayscale()}"],
 			["a{filter:invert(1)}", "a{filter:invert()}"],
 			["a{filter:blur(0)}", "a{filter:blur()}"],
+			// The zero still carries the unit its own grammar drops.
+			["a{filter:blur(0px)}", "a{filter:blur()}"],
+			["a{filter:hue-rotate(0deg)}", "a{filter:hue-rotate()}"],
+			["a{filter:hue-rotate(0turn)}", "a{filter:hue-rotate()}"],
 			["a{backdrop-filter:saturate(1)}", "a{backdrop-filter:saturate()}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
@@ -2611,12 +2666,177 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			["the amount is not the omitted one", "a{filter:grayscale(0)}"],
 			["the same, as a percentage", "a{filter:grayscale(50%)}"],
+			// The engine drops both of these, so folding them would revive one.
+			["a percentage is no length", "a{filter:blur(0%)}"],
+			["an angle is no length either", "a{filter:blur(0deg)}"],
 			[
 				"the function takes no optional argument",
 				"a{filter:drop-shadow(0 0 1px red)}"
 			],
 			["a substitution stands there", "a{filter:grayscale(var(--x))}"]
 		])("keeps the value where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("adjacent rules printing the same block", () => {
+		it.each([
+			["a{color:red}b{color:red}", "a,b{color:red}"],
+			["a{color:red}b{color:red}c{color:red}", "a,b,c{color:red}"],
+			[".a[x=1]{top:0}.b>.c{top:0}", ".a[x=1],.b>.c{top:0}"],
+			["@media x{a{top:0}b{top:0}}", "@media x{a,b{top:0}}"],
+			["@keyframes k{0%{top:0}50%{top:0}}", "@keyframes k{0%,50%{top:0}}"],
+			// The rule between them prints nothing, so they end up adjacent.
+			["a{color:red}i{}b{color:red}", "a,b{color:red}"],
+			// The same selector twice is one rule: its declarations are read in the
+			// order they were written either way.
+			["a{color:red}a{margin:0}", "a{color:red;margin:0}"],
+			[":root{--a:1}:root{--b:2}", ":root{--a:1;--b:2}"],
+			// The prelude does not change, so neither of the two shapes that keep a
+			// selector out of another's list keeps it out of this.
+			[
+				":local(.x){color:red}:local(.x){margin:0}",
+				":local(.x){color:red;margin:0}"
+			],
+			[
+				"a{color:red}a{&:hover{color:blue}}",
+				"a{color:red;&:hover{color:blue}}"
+			],
+			// Only the last of a set of identical declarations can be read.
+			["a{color:red}a{color:red}", "a{color:red}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the blocks differ", "a{color:red}b{color:blue}"],
+			["a rule stands between them", "a{color:red}i{top:0}b{color:red}"],
+			// One selector the engine cannot parse invalidates the whole list.
+			["a pseudo may be one the engine drops", "a:hover{top:0}b:hover{top:0}"],
+			["...including a prefixed one", "a{top:0}::-moz-placeholder{top:0}"],
+			["...or a CSS modules one", "body{top:0}:local(.x){top:0}"],
+			["the parser passed a shape through", "a{top:0}. b{top:0}"],
+			// `:is(a,b)` takes the specificity of its most specific selector.
+			[
+				"a nested rule would be re-parented",
+				"a{top:0;& i{top:1px}}b{top:0;& i{top:1px}}"
+			],
+			["a kept comment sits between them", "a{color:red}/*! c */b{color:red}"],
+			// The `s` modifier is one an engine may not read, and one selector it
+			// drops invalidates the whole list it was joined into.
+			["a matcher carries a modifier past `i`", "[a=b s]{top:0}[c]{top:0}"]
+		])("keeps both rules where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+
+		it.each([
+			// One block holds a property once, so the earlier declaration of a
+			// property both of them set would be the one it loses.
+			["they set the same property", "a{color:red}a{color:blue}"],
+			["...whatever its case", "a{color:red}a{COLOR:blue}"],
+			// A shorthand holds every longhand its name prefixes.
+			[
+				"one holds the other's longhand",
+				"a{background:red}a{background-image:none}"
+			],
+			["one is `all`", "a{all:initial}a{color:red}"],
+			// The declarations after it are the implicit `& {…}` the engine builds.
+			[
+				"the earlier block holds a rule",
+				"a{color:red;&:hover{top:0}}a{margin:0}"
+			]
+		])("keeps the same selector's two rules where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+
+		it.each([
+			["a{.x{top:0}.y{top:0}}", "a{.x,.y{top:0}}"],
+			["a{&.x{top:0}&.y{top:0}}", "a{&.x,&.y{top:0}}"],
+			["a{& .x{top:0}& .y{top:0}}", "a{& .x,& .y{top:0}}"],
+			["a{&{top:0}.y{top:0}}", "a{&,.y{top:0}}"]
+		])("joins nested rules: %s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// The two blocks' own rules come to stand beside each other, so the pair
+			// meeting at the seam is offered the same join.
+			["@media x{a{top:0}}@media x{b{top:0}}", "@media x{a,b{top:0}}"],
+			[
+				"@supports (a:b){i{t:0}}@supports (a:b){j{t:0}}",
+				"@supports (a:b){i,j{t:0}}"
+			],
+			["a{@media x{.p{t:0}}@media x{.q{t:0}}}", "a{@media x{.p,.q{t:0}}}"],
+			// Declarations join too, and the one that is no longer last drops the
+			// `;` its own `}` had made redundant.
+			["a{@media x{c:1}@media x{d:2}}", "a{@media x{c:1;d:2}}"],
+			[
+				"a{@media x{c:1}@media x{d:2}@media x{e:3}}",
+				"a{@media x{c:1;d:2;e:3}}"
+			],
+			[
+				"a{@media x{c:1}@media x{d:2}color:red}",
+				"a{@media x{c:1;d:2}color:red}"
+			],
+			// ...at every depth, an at-rule at the seam joining like any other rule.
+			[
+				"@media a{@media b{.x{t:0}}}@media a{@media b{.y{t:0}}}",
+				"@media a{@media b{.x,.y{t:0}}}"
+			],
+			// Only the pair at the seam is new; the rest of each block is joined.
+			[
+				"@media x{a{t:0}b{c:d}}@media x{i{c:d}j{t:1px}}",
+				"@media x{a{t:0}b,i{c:d}j{t:1px}}"
+			],
+			[
+				"@media x{a{t:0}}@media x{b{c:d}}@media x{i{c:d}}",
+				"@media x{a{t:0}b,i{c:d}}"
+			],
+			// The seam pair shares a selector, so the two blocks are one rule.
+			["@media x{a{t:0}}@media x{a{c:d}}", "@media x{a{t:0;c:d}}"]
+		])("joins the blocks of one condition: %s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// The seam pair is held to the same rules as any other adjacency.
+			[
+				"the seam rules print different blocks",
+				"@media x{a{t:0}}@media x{b{c:d}}",
+				"@media x{a{t:0}b{c:d}}"
+			],
+			[
+				"a seam rule holds a nested rule",
+				"@media x{a{t:0;& i{t:1px}}}@media x{b{t:0;& i{t:1px}}}",
+				"@media x{a{t:0;& i{t:1px}}b{t:0;& i{t:1px}}}"
+			]
+		])("joins the blocks but not the seam where %s", (_name, css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the conditions differ", "@media x{a{top:0}}@media y{b{top:0}}"],
+			// A later `@keyframes` of the same name replaces the earlier one.
+			[
+				"the prelude names what the block belongs to",
+				"@keyframes k{0%{top:0}}@keyframes k{50%{top:1px}}"
+			],
+			["a rule stands between them", "@media x{a{t:0}}i{c:d}@media x{b{t:0}}"],
+			// `@layer a{}` declares where the layer sits in the cascade.
+			["one block is empty", "@layer a{}@layer a{i{t:0}}"]
+		])("keeps both at-rules where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+
+		it.each([
+			// Only a rule nested in another: at the top level an engine that cannot
+			// read `&` still reads whatever it would be joined to.
+			["`&` stands at the top level", "&.x{top:0}&.y{top:0}"],
+			[
+				"a nested rule of its own would be re-parented",
+				"a{.x{top:0;i{top:1px}}.y{top:0;i{top:1px}}}"
+			]
+		])("keeps both nested rules where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
 	});
@@ -2689,7 +2909,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it.each([
 			["the value is a keyword", "a{transform:none}"],
-			["a component is no call", "a{background:red none}"],
+			["a component is no call", "a{background:red repeat-x}"],
 			["the same, past a call", "a{mask:url(a.svg) none}"],
 			["there is one component", "a{filter:blur(2px)}"]
 		])("keeps the value where %s", (_name, css) => {
@@ -2757,6 +2977,104 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a control code point stands there", 'a{background:url("a\tb.png")}']
 		])("keeps the quotes where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a data URI's percent-escapes", () => {
+		it.each([
+			[
+				'a{background:url("data:image/svg+xml,%3csvg%20fill=%27red%27%3e%3c/svg%3e")}',
+				"a{background:url(\"data:image/svg+xml,<svg fill='red'></svg>\")}"
+			],
+			[
+				'a{background:url("data:image/png;base64,AAA%3D")}',
+				"a{background:url(data:image/png;base64,AAA=)}"
+			],
+			// Decoding leaves a body the url-token spelling can carry.
+			[
+				'a{background:url("data:text/plain,a%2Cb")}',
+				"a{background:url(data:text/plain,a,b)}"
+			],
+			// A url written as a url-token decodes too, keeping only the bytes the
+			// token cannot carry — there are no quotes here to hold them.
+			[
+				"a{background:url(data:image/svg+xml,%3csvg%20fill=%27red%27%3e%3c/svg%3e)}",
+				"a{background:url(data:image/svg+xml,<svg%20fill=%27red%27></svg>)}"
+			],
+			[
+				"a{background:url(data:image/png;base64,AAA%3D)}",
+				"a{background:url(data:image/png;base64,AAA=)}"
+			],
+			// Each escape names one byte: `%C3%A9` is the two of `é`, and writing
+			// them apart would re-encode as four.
+			[
+				'a{background:url("data:image/svg+xml,%3Csvg%3E%C3%A9%3C/svg%3E")}',
+				"a{background:url(data:image/svg+xml,<svg>%C3%A9</svg>)}"
+			],
+			[
+				'a{background:url("data:text/plain,%7F%20a")}',
+				"a{background:url(data:text/plain,%7F\\ a)}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// An escape the url-token already carries is one this printer did not
+			// write, so its `\%` is not read as the start of a percent-escape.
+			["a url-token carries an escape", "a{background:url(data:t,a\\%20b%3c)}"],
+			["it is no data URI", "a{background:url(x.png?a=%26b)}"],
+			["it holds no escape at all", "a{background:url(data:t,ab)}"]
+		])("keeps a url-token as written where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+
+		it.each([
+			// Outside a data URI's payload an escape is structure, not content:
+			// `%26` in a query is a literal `&`, not a separator.
+			[
+				"it is a query's value",
+				'a{background:url("x.png?a=%26b")}',
+				"a{background:url(x.png?a=%26b)}"
+			],
+			[
+				"it is a path segment",
+				'a{background:url("a%2Fb.png")}',
+				"a{background:url(a%2Fb.png)}"
+			],
+			[
+				"it is the data URI's own metadata",
+				'a{background:url("data:x%2Fy,z")}',
+				"a{background:url(data:x%2Fy,z)}"
+			],
+			// `#` would start the fragment and `%` the next escape.
+			[
+				"the byte would start a fragment",
+				'a{background:url("data:t,a%23b")}',
+				"a{background:url(data:t,a%23b)}"
+			],
+			[
+				"the byte would start an escape",
+				'a{background:url("data:t,a%25b")}',
+				"a{background:url(data:t,a%25b)}"
+			],
+			[
+				"the byte is a control code point",
+				'a{background:url("data:t,a%00b")}',
+				"a{background:url(data:t,a%00b)}"
+			],
+			[
+				"the byte would end the string",
+				'a{background:url("data:t,a%22b")}',
+				"a{background:url(data:t,a%22b)}"
+			],
+			[
+				"the byte would extend the escape",
+				'a{background:url("data:t,a%5Cb")}',
+				"a{background:url(data:t,a%5Cb)}"
+			]
+		])("keeps them where %s", (_name, css, expected) => {
+			expect(minify(css)).toBe(expected);
 		});
 	});
 
@@ -2869,7 +3187,20 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{transform:translate3d(1px,2px,0)}",
 				"a{transform:translate(1px,2px)}"
 			],
-			["a{transform:scale(2,2)}", "a{transform:scale(2)}"]
+			["a{transform:scale(2,2)}", "a{transform:scale(2)}"],
+			// CSS Transforms 2 §13.1: a rotation about one axis is the call naming it.
+			["a{transform:rotateZ(37deg)}", "a{transform:rotate(37deg)}"],
+			["a{transform:rotate3d(0,0,1,37deg)}", "a{transform:rotate(37deg)}"],
+			["a{transform:rotate3d(1,0,0,37deg)}", "a{transform:rotateX(37deg)}"],
+			["a{transform:rotate3d(0,1,0,37deg)}", "a{transform:rotateY(37deg)}"],
+			// A z factor of 1 scales nothing along it, leaving the 2D scale.
+			["a{transform:scale3d(2,3,1)}", "a{transform:scale(2,3)}"],
+			// One reduction uncovers the next: the 2D call it leaves reduces too.
+			["a{transform:scale3d(1,1,1)}", "a{transform:scale(1)}"],
+			["a{transform:translate3d(-50%,0,0)}", "a{transform:translate(-50%)}"],
+			// `skewX(a)` is `skew(a)`: the second component defaults to 0.
+			["a{transform:skewX(10deg)}", "a{transform:skew(10deg)}"],
+			["a{transform:skewX(0)}", "a{transform:skew(0)}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
@@ -2878,7 +3209,86 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["no axis is zero", "a{transform:translate(1px,2px)}"],
 			["the factors differ", "a{transform:scale(2,3)}"],
 			// A substitution could expand to something the shorter call rejects.
-			["a substitution stands there", "a{transform:translate(var(--x),0)}"]
+			["a substitution stands there", "a{transform:translate(var(--x),0)}"],
+			// The engine normalizes the axis it is given: a scaled component still
+			// names the axis, but a negative one turns the rotation the other way.
+			["the axis is scaled", "a{transform:rotate3d(0,0,2,37deg)}"],
+			["the axis is negative", "a{transform:rotate3d(0,0,-1,37deg)}"],
+			["the vector names no axis", "a{transform:rotate3d(1,1,0,37deg)}"],
+			["the z factor scales", "a{transform:scale3d(2,3,4)}"],
+			["a substitution could fill the second", "a{transform:skewX(var(--a))}"],
+			["the skew is along y", "a{transform:skewY(10deg)}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a size whose second value is the one it defaults to", () => {
+		it.each([
+			["a{background-size:1rem auto}", "a{background-size:1rem}"],
+			["a{background-size:auto auto}", "a{background-size:auto}"],
+			["a{mask-size:3px auto}", "a{mask-size:3px}"],
+			// Each layer of the list drops its own.
+			["a{background-size:50% auto,2px auto}", "a{background-size:50%,2px}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// Unlike a box longhand, the omitted second value is `auto` rather than
+			// the first repeated, so two equal values are not one.
+			["the two values are equal", "a{background-size:1rem 1rem}"],
+			["the `auto` is the first", "a{background-size:auto 1rem}"],
+			["there is one value", "a{background-size:cover}"],
+			// Each of these stands alone, so the second value makes a declaration
+			// the engine drops — one a later declaration was written to beat.
+			["the first is `cover`", "a{background-size:cover auto}"],
+			["the first is `contain`", "a{background-size:contain auto}"],
+			["the first is a CSS-wide keyword", "a{background-size:initial auto}"],
+			// With `--x:1px 2px` the `auto` makes a third value, and the declaration
+			// the engine discards would become one it keeps.
+			["a substitution stands there", "a{background-size:var(--x) auto}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("an alpha value written as a percentage", () => {
+		it.each([
+			["a{opacity:100%}", "a{opacity:1}"],
+			["a{opacity:50%}", "a{opacity:.5}"],
+			["a{opacity:0%}", "a{opacity:0}"],
+			// The decimal point moves rather than dividing, so no digit is lost.
+			["a{opacity:33.33%}", "a{opacity:.3333}"],
+			["a{opacity:-50%}", "a{opacity:-.5}"],
+			["a{shape-image-threshold:12.5%}", "a{shape-image-threshold:.125}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the number is no shorter", "a{opacity:5%}"],
+			["a substitution stands there", "a{opacity:var(--x)}"],
+			["the percentage means something else", "a{width:100%}"]
+		])("keeps the percentage where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a ratio's denominator of one", () => {
+		it.each([
+			["a{aspect-ratio:2/1}", "a{aspect-ratio:2}"],
+			["a{aspect-ratio:2 / 1}", "a{aspect-ratio:2}"],
+			["a{aspect-ratio:auto 3/1}", "a{aspect-ratio:auto 3}"],
+			["a{aspect-ratio:1/1}", "a{aspect-ratio:1}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the denominator is another number", "a{aspect-ratio:2/10}"],
+			["a substitution stands there", "a{aspect-ratio:var(--x)/1}"],
+			["the property takes no ratio", "a{width:2/1}"]
 		])("keeps it where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
@@ -2917,6 +3327,99 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{background:linear-gradient(red,blue)}"
 			]
 		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a gradient's color stops", () => {
+		it.each([
+			// CSS Images 3 §3.4.3 puts the last stop at 100% when it has none.
+			[
+				"a{background:linear-gradient(red,blue 100%)}",
+				"a{background:linear-gradient(red,blue)}"
+			],
+			[
+				"a{background:linear-gradient(to right,red,blue 100%)}",
+				"a{background:linear-gradient(to right,red,blue)}"
+			],
+			// Both folds run: dropping the default direction must not cost the stop.
+			[
+				"a{background:linear-gradient(to bottom,red,blue 100%)}",
+				"a{background:linear-gradient(red,blue)}"
+			],
+			// A conic gradient's own turn, spelled either way.
+			[
+				"a{background:conic-gradient(red,blue 360deg)}",
+				"a{background:conic-gradient(red,blue)}"
+			],
+			[
+				"a{background:conic-gradient(red,blue 1turn)}",
+				"a{background:conic-gradient(red,blue)}"
+			],
+			// CSS Images 4 §3.4: two positions on one stop are the two stops they
+			// would be written as.
+			[
+				"a{background:linear-gradient(red 0%,red 50%,blue)}",
+				"a{background:linear-gradient(red 0% 50%,blue)}"
+			],
+			[
+				"a{background:conic-gradient(from 0deg,red 0%,red 50%)}",
+				"a{background:conic-gradient(from 0deg,red 0% 50%)}"
+			],
+			[
+				"a{background:repeating-linear-gradient(red 0,red 10px,blue 10px,blue 20px)}",
+				"a{background:repeating-linear-gradient(red 0 10px,blue 10px 20px)}"
+			],
+			// The names match case-insensitively.
+			[
+				"a{background:linear-gradient(RED 0%,red 50%,blue)}",
+				"a{background:linear-gradient(RED 0% 50%,blue)}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it("keeps a two-position stop the target cannot read", () => {
+			expect(
+				minify("a{background:linear-gradient(red 0%,red 50%,blue)}", {
+					cssGradientDoublePosition: false
+				})
+			).toBe("a{background:linear-gradient(red 0%,red 50%,blue)}");
+		});
+
+		it.each([
+			// A color hint is a position alone, so it is no stop to fold with.
+			[
+				"a stop sits beside a color hint",
+				"a{background:linear-gradient(red 0%,30%,blue)}"
+			],
+			[
+				"the last stop already carries two positions",
+				"a{background:linear-gradient(red 50% 100%,blue)}"
+			],
+			[
+				"the last stop has no position",
+				"a{background:linear-gradient(red 0%,blue)}"
+			],
+			[
+				"the last position is not the implied one",
+				"a{background:linear-gradient(red,blue 90%)}"
+			],
+			// A turn is no position a linear gradient's stop list ever means.
+			[
+				"the position is an angle the gradient does not take",
+				"a{background:linear-gradient(red,blue 360deg)}"
+			],
+			[
+				"two adjacent stops name different colors",
+				"a{background:linear-gradient(red 0%,blue 50%,green)}"
+			],
+			[
+				"the gradient is prefixed",
+				"a{background:-webkit-linear-gradient(red 0%,red 50%)}"
+			],
+			["the call is no gradient", "a{background:image-set(url(a.png) 100%)}"]
+		])("keeps them where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
 	});
@@ -3209,6 +3712,21 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("a{flex-direction:column;flex-wrap:wrap}")).toBe(
 				"a{flex-flow:column wrap}"
 			);
+			// A grammar naming its slots by type rather than by property.
+			expect(
+				minify(
+					"a{border-top-width:1px;border-top-style:solid;border-top-color:red}"
+				)
+			).toBe("a{border-top:1px solid red}");
+			expect(
+				minify(
+					"a{border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:red}"
+				)
+			).toBe("a{border-bottom:1px solid red}");
+			// `border` itself resets `border-image`, which its three longhands leave
+			// alone, so the four-sided family is no family of this merge.
+			const sided = "a{border-width:1px;border-style:solid;border-color:red}";
+			expect(minify(sided)).toBe(sided);
 			expect(minify("a{text-wrap-mode:nowrap;text-wrap-style:balance}")).toBe(
 				"a{text-wrap:nowrap balance}"
 			);

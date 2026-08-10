@@ -13,6 +13,7 @@ module.exports = {
 			  "bigIntLiteral": true,
 			  "const": true,
 			  "cssColorHexAlpha": true,
+			  "cssGradientDoublePosition": true,
 			  "cssInsetShorthand": true,
 			  "cssMediaQueryRange": true,
 			  "destructuring": true,

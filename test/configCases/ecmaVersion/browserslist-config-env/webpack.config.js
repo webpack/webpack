@@ -15,6 +15,7 @@ module.exports = {
 			  "bigIntLiteral": false,
 			  "const": false,
 			  "cssColorHexAlpha": false,
+			  "cssGradientDoublePosition": false,
 			  "cssInsetShorthand": false,
 			  "cssMediaQueryRange": false,
 			  "destructuring": false,

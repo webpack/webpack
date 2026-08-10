@@ -5,8 +5,18 @@ const {
 	DATA_TARGET,
 	acceptedValues,
 	assertClassesArePrintable,
+	checkStatedClassSpellings,
+	collectAlphaValueProperties,
 	collectData,
+	collectFamilyLonghands,
+	collectGradientFunctions,
+	collectMergeableAtRules,
+	collectRatioProperties,
+	isSpelledSyntax,
+	longhandType,
 	parseValueSyntax,
+	shorthandSlots,
+	slotSpellings,
 	walkValueSyntax
 } = require("../tooling/generate-css-data");
 
@@ -385,6 +395,333 @@ describe("CssValueSyntax", () => {
 					new Map([["rotate", { classes: new Set(["angle"]) }]])
 				)
 			).toThrow("rotate accepts <angle>, which the printer cannot classify");
+		});
+	});
+
+	describe("isSpelledSyntax", () => {
+		it("spells out a group's body through the multiplier over it", () => {
+			expect(isSpelledSyntax("[ red | blue ]?", new Set())).toBe(true);
+		});
+
+		it("stops at a class already on the walk", () => {
+			// `<color>` reaching itself must terminate rather than recurse, and says
+			// nothing new about the spelling when it does.
+			expect(isSpelledSyntax("<color>", new Set(["color"]))).toBe(true);
+		});
+
+		it("does not spell out a `<'property'>` reference", () => {
+			// What a property accepts is not a list of values this can write out.
+			expect(isSpelledSyntax("<'width'>", new Set())).toBe(false);
+		});
+
+		it("does not spell out a class a nested one does not", () => {
+			expect(isSpelledSyntax("red | [ <'width'> ]", new Set())).toBe(false);
+		});
+
+		it("spells out nothing it cannot parse", () => {
+			expect(isSpelledSyntax("<", new Set())).toBe(false);
+		});
+	});
+
+	describe("shorthandSlots", () => {
+		it("reads the slots out of a group enclosing the whole definition", () => {
+			expect(shorthandSlots("[ <'flex-grow'> || <'flex-shrink'> ]")).toEqual([
+				"<'flex-grow'>",
+				"<'flex-shrink'>"
+			]);
+		});
+
+		it("reads none out of brackets that enclose less than the whole", () => {
+			// The first `[` is not the one the last `]` closes, so the group is a term
+			// of the definition rather than the definition itself.
+			expect(shorthandSlots("[[a]")).toBeNull();
+		});
+	});
+
+	describe("slotSpellings", () => {
+		it("reports every spelling a property reference reaches", () => {
+			expect([...slotSpellings("<'visibility'>")]).toEqual([
+				"visible",
+				"hidden",
+				"collapse"
+			]);
+		});
+
+		it("reports none for a slot it cannot parse", () => {
+			expect([...slotSpellings("<")]).toEqual([]);
+		});
+	});
+
+	describe("collectAlphaValueProperties", () => {
+		it("names the properties whose whole value is that alternation", () => {
+			expect(collectAlphaValueProperties()).toEqual([
+				"opacity",
+				"shape-image-threshold"
+			]);
+		});
+
+		it("follows a name through to what states the alternation", () => {
+			expect(
+				collectAlphaValueProperties(
+					{ a: { syntax: "<one>" } },
+					{ one: { syntax: "<number> | <percentage>" } }
+				)
+			).toEqual(["a"]);
+		});
+
+		it("names none where the chain of names has no end", () => {
+			expect(
+				collectAlphaValueProperties(
+					{ a: { syntax: "<one>" }, b: { syntax: "<gone>" }, c: {} },
+					{ one: { syntax: "<one>" } }
+				)
+			).toEqual([]);
+		});
+	});
+
+	describe("collectRatioProperties", () => {
+		it("names the properties whose grammar reaches a `<ratio>`", () => {
+			expect(collectRatioProperties()).toEqual(["aspect-ratio"]);
+		});
+	});
+
+	describe("longhandType", () => {
+		it("reads the one type a longhand's whole value is", () => {
+			expect(longhandType("border-top-color", 0)).toBe("color");
+		});
+
+		it("follows the `<'other'>` a longhand is stated as", () => {
+			expect(
+				longhandType("a", 0, {
+					a: { syntax: "<'b'>" },
+					b: { syntax: "<color>" }
+				})
+			).toBe("color");
+		});
+
+		it("reads none for a name the table does not hold", () => {
+			expect(longhandType("gone", 0, {})).toBeNull();
+		});
+
+		it("reads none where the entry states no syntax", () => {
+			expect(longhandType("a", 0, { a: {} })).toBeNull();
+		});
+
+		it("reads none where the chain of references has no end", () => {
+			expect(longhandType("a", 0, { a: { syntax: "<'a'>" } })).toBeNull();
+		});
+
+		it("reads none where the value is more than one type", () => {
+			expect(
+				longhandType("a", 0, { a: { syntax: "red | <color>" } })
+			).toBeNull();
+		});
+	});
+
+	describe("collectFamilyLonghands", () => {
+		it("names each shorthand's slots in grammar order", () => {
+			expect(collectFamilyLonghands()).toEqual(
+				expect.arrayContaining([
+					[
+						"border-top",
+						["border-top-width", "border-top-style", "border-top-color"]
+					],
+					["outline", ["outline-width", "outline-style", "outline-color"]]
+				])
+			);
+		});
+
+		it("names them in one order whatever order the table states them in", () => {
+			expect(
+				collectFamilyLonghands(
+					{
+						b: {
+							syntax: "<'b-one'> || <'b-two'>",
+							computed: ["b-one", "b-two"]
+						},
+						a: {
+							syntax: "<'a-one'> || <'a-two'>",
+							computed: ["a-one", "a-two"]
+						}
+					},
+					["a", "b"]
+				)
+			).toEqual([
+				["a", ["a-one", "a-two"]],
+				["b", ["b-one", "b-two"]]
+			]);
+		});
+
+		it("names none where a slot is a keyword rather than a longhand", () => {
+			expect(
+				collectFamilyLonghands(
+					{ a: { syntax: "none || <length>", computed: ["a-one", "a-two"] } },
+					["a"]
+				)
+			).toEqual([]);
+		});
+
+		it("names none where a type names more than one of the longhands", () => {
+			expect(
+				collectFamilyLonghands(
+					{
+						a: { syntax: "<color> || <length>", computed: ["a-one", "a-two"] },
+						"a-one": { syntax: "<color>" },
+						"a-two": { syntax: "<color>" }
+					},
+					["a"]
+				)
+			).toEqual([]);
+		});
+
+		it("names none where the grammar reaches fewer slots than longhands", () => {
+			expect(
+				collectFamilyLonghands(
+					{
+						a: {
+							syntax: "<'a-one'> || <'a-two'>",
+							computed: ["a-one", "a-two", "a-three"]
+						}
+					},
+					["a"]
+				)
+			).toEqual([]);
+		});
+
+		it("names none where the grammar is not an order-free alternation", () => {
+			expect(
+				collectFamilyLonghands(
+					{
+						a: { syntax: "<'a-one'> <'a-two'>", computed: ["a-one", "a-two"] }
+					},
+					["a"]
+				)
+			).toEqual([]);
+		});
+
+		it("names none where the grammar cannot be parsed", () => {
+			expect(
+				collectFamilyLonghands(
+					{ a: { syntax: "<", computed: ["a-one", "a-two"] } },
+					["a"]
+				)
+			).toEqual([]);
+		});
+
+		it("names none where the entry states no syntax or no longhands", () => {
+			expect(
+				collectFamilyLonghands(
+					{
+						a: { computed: ["a-one", "a-two"] },
+						b: { syntax: "<'b-one'> || <'b-two'>" },
+						c: { syntax: "<'c-one'> || <'c-two'>", computed: ["c-one"] }
+					},
+					["a", "b", "c"]
+				)
+			).toEqual([]);
+		});
+
+		it("names none for a shorthand no verified list holds", () => {
+			expect(
+				collectFamilyLonghands(
+					{
+						a: {
+							syntax: "<'a-one'> || <'a-two'>",
+							computed: ["a-one", "a-two"]
+						}
+					},
+					[]
+				)
+			).toEqual([]);
+		});
+
+		it("names none where a slot is not one of the longhands", () => {
+			expect(
+				collectFamilyLonghands(
+					{
+						a: { syntax: "<'x'> || <'a-two'>", computed: ["a-one", "a-two"] }
+					},
+					["a"]
+				)
+			).toEqual([]);
+		});
+	});
+
+	describe("the guards on what those datasets still publish", () => {
+		it("accepts a `syntaxes.json` that states no class the SUPPLEMENT does", () => {
+			expect(() => checkStatedClassSpellings({})).not.toThrow();
+		});
+
+		it("rejects one that has grown an entry the SUPPLEMENT states", () => {
+			expect(() =>
+				checkStatedClassSpellings({ url: { syntax: "<url()> | <src()>" } })
+			).toThrow("`<url>` is spelled out by mdn-data now");
+		});
+
+		it("reads each gradient's last position off the stop list it names", () => {
+			expect(
+				collectGradientFunctions(
+					{
+						gradient: { syntax: "<conic-gradient()> | <linear-gradient()>" },
+						"conic-gradient-syntax": { syntax: "<angular-color-stop-list>" }
+					},
+					{
+						"conic-gradient()": { syntax: "<conic-gradient-syntax>" },
+						"linear-gradient()": { syntax: "<color-stop-list>" }
+					}
+				)
+			).toEqual([
+				["conic-gradient", ["100%", "360deg", "1turn"]],
+				["linear-gradient", ["100%"]]
+			]);
+		});
+
+		it("reads no function out of a `<gradient>` that names none", () => {
+			expect(
+				collectGradientFunctions({ gradient: { syntax: "none" } }, {})
+			).toEqual([]);
+		});
+
+		it("rejects a `syntaxes.json` without `<gradient>`", () => {
+			expect(() => collectGradientFunctions({}, {})).toThrow(
+				"`<gradient>` is gone from mdn-data"
+			);
+		});
+
+		it("rejects a `functions.json` missing a call `<gradient>` names", () => {
+			expect(() =>
+				collectGradientFunctions(
+					{ gradient: { syntax: "<linear-gradient()>" } },
+					{}
+				)
+			).toThrow("`linear-gradient()` is gone from mdn-data");
+		});
+
+		it("rejects one whose call is there with its syntax unwritten", () => {
+			expect(() =>
+				collectGradientFunctions(
+					{ gradient: { syntax: "<linear-gradient()>" } },
+					{ "linear-gradient()": {} }
+				)
+			).toThrow("`linear-gradient()` is gone from mdn-data");
+		});
+
+		it("skips an at-rule whose syntax the dataset leaves unwritten", () => {
+			expect(
+				collectMergeableAtRules({
+					"@font-face": {},
+					"@keyframes": {
+						syntax: "@keyframes <keyframes-name> { <rule-list> }"
+					},
+					"@media": { syntax: "@media <media-query-list> { <rule-list> }" }
+				})
+			).toEqual(["media"]);
+		});
+
+		it("rejects an `at-rules.json` without a rule replaced by name", () => {
+			expect(() => collectMergeableAtRules({})).toThrow(
+				"`@keyframes` is gone from mdn-data"
+			);
 		});
 	});
 
