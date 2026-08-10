@@ -1208,6 +1208,12 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		);
 		// A comment the source spelled out where nothing would fuse still goes.
 		expect(min("a/**/ b{c:1}")).toBe("a b{c:1}");
+		// CSS Syntax 3 §4.3.10: a `+` starts a number only before a digit, or
+		// before a `.` that itself has one — a class after it fuses with nothing.
+		expect(min(".a+.m{c:1}")).toBe(".a+.m{c:1}");
+		expect(min(".a + .m{c:1}")).toBe(".a+.m{c:1}");
+		expect(min(".a+/**/.m{c:1}")).toBe(".a+.m{c:1}");
+		expect(min(".a+.5m{c:1}")).toBe(".a+.5m{c:1}");
 	});
 
 	it("keeps a custom property's value as the source wrote it", () => {
@@ -3296,7 +3302,11 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// A nested rule's list is one too.
 			["a{& d,& c{top:0}}", "a{& c,& d{top:0}}"],
 			// Two rules reaching the same set are one rule once both are in order.
-			["a,b{color:red}b,a{top:0}", "a,b{color:red;top:0}"]
+			["a,b{color:red}b,a{top:0}", "a,b{color:red;top:0}"],
+			// A join can repeat what the other side already names — the repeat goes,
+			// but neither half is reordered across the seam.
+			[".b{x:1}.a{x:1}.b{x:1}", ".b,.a{x:1}"],
+			["z{color:red}a{color:red}", "z,a{color:red}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
