@@ -19,11 +19,14 @@ const { SourceProcessor } = cssSyntax;
 // (emitted so that it can be taken back, and taken back), and an opener held
 // back so an empty block can still be dropped.
 //
-// Every fixture runs twice: `walk` is what a build that is not minimizing pays
-// — parse and walk, no output — and `minify` is the same pass with the printer
-// on. No visitors are registered, so `walk` is the floor both share and the
-// difference is what printing and the map cost on that shape, which neither
-// number shows alone. Visitor cost itself is `css-parser-tailwind-unit`'s.
+// Every fixture runs in all three modes the processor has. `walk` is what a
+// build that is not printing pays — parse and walk, no output; `minify` and
+// `beautify` are the same pass with the printer on, the first applying the value
+// and shorthand transforms and the second only re-serializing. No visitors are
+// registered, so `walk` is the floor all three share: `minify - walk` is what
+// printing and the map cost on that shape and `minify - beautify` is what the
+// transforms cost on top of serializing. Visitor cost is
+// `css-parser-tailwind-unit`'s.
 
 // Real-world ~1.9 MiB minified stylesheet (Tailwind), shared with the
 // `css/large` configCase and the parser benchmark.
@@ -125,6 +128,15 @@ export default (bench) => {
 			`unit benchmark "css-printer-tailwind-unit", walk (${name})`,
 			() => {
 				new SourceProcessor().process(source);
+			}
+		);
+		bench.add(
+			`unit benchmark "css-printer-tailwind-unit", beautify (${name})`,
+			() => {
+				new SourceProcessor().process(source, {
+					mode: "beautify",
+					source: "in.css"
+				});
 			}
 		);
 		bench.add(
