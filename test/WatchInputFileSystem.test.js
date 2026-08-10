@@ -127,6 +127,20 @@ describe("WatchInputFileSystem", () => {
 		done
 	) => {
 		let builds = 0;
+		let finished = false;
+		/** @type {NodeJS.Timeout | undefined} */
+		let deadline;
+
+		/**
+		 * @param {Error=} error what to fail with, if anything
+		 * @returns {void}
+		 */
+		const finish = (error) => {
+			if (finished) return;
+			finished = true;
+			clearTimeout(/** @type {NodeJS.Timeout} */ (deadline));
+			getWatching().close(() => done(error));
+		};
 
 		return (err) => {
 			if (err) return done(err);
@@ -138,21 +152,18 @@ describe("WatchInputFileSystem", () => {
 						"module.exports = 'changed';",
 						"utf8",
 						(err2) => {
-							if (err2) done(err2);
+							if (err2) return finish(err2);
+							deadline = setTimeout(() => {
+								finish(new Error("the rebuild never picked the change up"));
+							}, 15000);
 						}
 					);
 				});
 				return;
 			}
-			if (builds > 2) return;
-			/** @type {Error | undefined} */
-			let error;
-			try {
-				expect(sawChange()).toBe(true);
-			} catch (err2) {
-				error = /** @type {Error} */ (err2);
-			}
-			getWatching().close(() => done(error));
+			// A MultiCompiler reports one cycle per child that rebuilt, so the
+			// change can arrive over more than one call — wait for all of them.
+			if (sawChange()) finish();
 		};
 	};
 
@@ -233,7 +244,7 @@ describe("WatchInputFileSystem", () => {
 			} catch (err2) {
 				error = /** @type {Error} */ (err2);
 			}
-			watching.close(() => done(error));
+			/** @type {Closable} */ (watching).close(() => done(error));
 		});
 	});
 });
