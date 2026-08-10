@@ -14,6 +14,12 @@ const { SourceProcessor } = htmlSyntax;
 // children's text and read back whole. Both paths are covered here, and so are
 // the tree shapes they cost differently on — the piecemeal path carries one
 // frame per open element, so fan-out and depth are separate axes.
+//
+// Every fixture runs twice: `walk` is what a build that is not minimizing pays
+// — parse and walk, no output — and `minify` is the same pass with the printer
+// on. No visitors are registered, so `walk` is the floor both share and the
+// difference is what printing costs on that shape, which neither number shows
+// alone. Visitor cost itself is `html-parser-document-unit`'s.
 
 // No large real-world HTML ships in the repo, so generate a deterministic
 // document mixing tree construction, entity references, comments, lists/tables
@@ -39,125 +45,114 @@ function makeHtml(blocks) {
 	}
 	return `${out}</body></html>`;
 }
-const HTML = makeHtml(2000);
 
-// Big table-body fragment (tr context seeds the tokenizer content mode).
-const FRAGMENT = '<td class="c">cell <b>one</b> &amp; two</td>'.repeat(6000);
-
-// One axis each. `TABLE` and `LISTS` are wide with a shallow repeating nest,
-// `FLAT` is one long sibling run at depth 1, `DEEP` is a narrow 20-deep spine —
-// together they separate the per-sibling cost from the per-frame one.
-const TABLE = (() => {
-	let s = "<table>";
-	for (let i = 0; i < 8000; i++) {
-		s += `<tr><td class=c${i}>cell ${i}</td><td>${i}</td></tr>`;
-	}
-	return `${s}</table>`;
-})();
-const FLAT = (() => {
-	let s = "";
-	for (let i = 0; i < 8000; i++) s += `<p class=c${i}>text ${i}</p>`;
-	return s;
-})();
-const LISTS = (() => {
-	let s = "";
-	for (let i = 0; i < 800; i++) {
-		s += `<ul id=u${i}>`;
-		for (let j = 0; j < 10; j++) s += `<li><a href=/p${j}>item ${j}</a></li>`;
-		s += "</ul>";
-	}
-	return s;
-})();
-const DEEP = (() => {
-	let s = "";
-	for (let i = 0; i < 800; i++) {
-		for (let j = 0; j < 20; j++) s += `<div class=l${j}>`;
-		s += `<span>leaf ${i}</span>`;
-		for (let j = 0; j < 20; j++) s += "</div>";
-	}
-	return s;
-})();
-
-// Elements that cannot print in pieces, so their subtrees are composed and read
-// back: a `<pre>` / `<textarea>` leading newline only survives re-parsing once
-// the children's text is in, and a `<template>` holds its children in a content
-// fragment rather than the child chain.
-const WHOLE = (() => {
-	let s = "";
-	for (let i = 0; i < 2000; i++) {
-		s += `<div><pre>\n\nkeep ${i}</pre><textarea>\n\nt ${i}</textarea><template><p>x${i}</p></template></div>`;
-	}
-	return s;
-})();
-
-// An omitted `<html>` / `<body>` start tag, held back until the first thing
-// inside it decides whether it materializes (it does here — the text is
-// whitespace the insertion modes would otherwise drop).
-const IMPLIED = (() => {
-	let s = "";
-	for (let i = 0; i < 4000; i++) s += `<p>t${i}<b>b${i}</b>`;
-	return ` ${s}`;
-})();
+// One axis each. `wide table` and `nested lists` are wide with a shallow
+// repeating nest, `flat siblings` is one long sibling run at depth 1, `deep
+// nesting` is a narrow 20-deep spine — together they separate the per-sibling
+// cost from the per-frame one.
+/** @type {[string, string, { fragmentContext?: string }][]} name, source, extra process options */
+const FIXTURES = [
+	["document", makeHtml(2000), {}],
+	// The context element seeds the tokenizer content mode.
+	[
+		"fragment, tr context",
+		'<td class="c">cell <b>one</b> &amp; two</td>'.repeat(6000),
+		{ fragmentContext: "tr" }
+	],
+	[
+		"wide table",
+		(() => {
+			let s = "<table>";
+			for (let i = 0; i < 8000; i++) {
+				s += `<tr><td class=c${i}>cell ${i}</td><td>${i}</td></tr>`;
+			}
+			return `${s}</table>`;
+		})(),
+		{}
+	],
+	[
+		"flat siblings",
+		(() => {
+			let s = "";
+			for (let i = 0; i < 8000; i++) s += `<p class=c${i}>text ${i}</p>`;
+			return s;
+		})(),
+		{}
+	],
+	[
+		"nested lists",
+		(() => {
+			let s = "";
+			for (let i = 0; i < 800; i++) {
+				s += `<ul id=u${i}>`;
+				for (let j = 0; j < 10; j++) {
+					s += `<li><a href=/p${j}>item ${j}</a></li>`;
+				}
+				s += "</ul>";
+			}
+			return s;
+		})(),
+		{}
+	],
+	[
+		"deep nesting",
+		(() => {
+			let s = "";
+			for (let i = 0; i < 800; i++) {
+				for (let j = 0; j < 20; j++) s += `<div class=l${j}>`;
+				s += `<span>leaf ${i}</span>`;
+				for (let j = 0; j < 20; j++) s += "</div>";
+			}
+			return s;
+		})(),
+		{}
+	],
+	// Elements that cannot print in pieces, so their subtrees are composed and
+	// read back: a `<pre>` / `<textarea>` leading newline only survives
+	// re-parsing once the children's text is in, and a `<template>` holds its
+	// children in a content fragment rather than the child chain.
+	[
+		"composed subtrees",
+		(() => {
+			let s = "";
+			for (let i = 0; i < 2000; i++) {
+				s += `<div><pre>\n\nkeep ${i}</pre><textarea>\n\nt ${i}</textarea><template><p>x${i}</p></template></div>`;
+			}
+			return s;
+		})(),
+		{}
+	],
+	// An omitted `<html>` / `<body>` start tag, held back until the first thing
+	// inside it decides whether it materializes (it does here — the text is
+	// whitespace the insertion modes would otherwise drop).
+	[
+		"implied start tags",
+		(() => {
+			let s = " ";
+			for (let i = 0; i < 4000; i++) s += `<p>t${i}<b>b${i}</b>`;
+			return s;
+		})(),
+		{}
+	]
+];
 
 /**
  * @param {import("tinybench").Bench} bench bench
  * @returns {void}
  */
 export default (bench) => {
-	// Whole-document minify — the entry `htmlMinify` drives.
-	bench.add(
-		'unit benchmark "html-printer-document-unit", minify (document)',
-		() => {
-			new SourceProcessor().process(HTML, { minimize: true });
-		}
-	);
-	bench.add(
-		'unit benchmark "html-printer-document-unit", minify (fragment, tr context)',
-		() => {
-			new SourceProcessor().process(FRAGMENT, {
-				minimize: true,
-				fragmentContext: "tr"
-			});
-		}
-	);
-
-	// Tree shapes: wide, flat, nested-wide, deep.
-	bench.add(
-		'unit benchmark "html-printer-document-unit", minify (wide table)',
-		() => {
-			new SourceProcessor().process(TABLE, { minimize: true });
-		}
-	);
-	bench.add(
-		'unit benchmark "html-printer-document-unit", minify (flat siblings)',
-		() => {
-			new SourceProcessor().process(FLAT, { minimize: true });
-		}
-	);
-	bench.add(
-		'unit benchmark "html-printer-document-unit", minify (nested lists)',
-		() => {
-			new SourceProcessor().process(LISTS, { minimize: true });
-		}
-	);
-	bench.add(
-		'unit benchmark "html-printer-document-unit", minify (deep nesting)',
-		() => {
-			new SourceProcessor().process(DEEP, { minimize: true });
-		}
-	);
-
-	// The two paths a node can take, isolated.
-	bench.add(
-		'unit benchmark "html-printer-document-unit", minify (composed subtrees)',
-		() => {
-			new SourceProcessor().process(WHOLE, { minimize: true });
-		}
-	);
-	bench.add(
-		'unit benchmark "html-printer-document-unit", minify (implied start tags)',
-		() => {
-			new SourceProcessor().process(IMPLIED, { minimize: true });
-		}
-	);
+	for (const [name, source, options] of FIXTURES) {
+		bench.add(
+			`unit benchmark "html-printer-document-unit", walk (${name})`,
+			() => {
+				new SourceProcessor().process(source, options);
+			}
+		);
+		bench.add(
+			`unit benchmark "html-printer-document-unit", minify (${name})`,
+			() => {
+				new SourceProcessor().process(source, { ...options, minimize: true });
+			}
+		);
+	}
 };
