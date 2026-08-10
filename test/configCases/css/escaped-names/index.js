@@ -45,3 +45,18 @@ it("should resolve an asset behind an escaped url()", () => {
 it("should emit the stylesheet", () => {
 	expect(css()).toMatchSnapshot();
 });
+
+it("should scope an escaped custom property with its use", () => {
+	// Chromium reads `\2d\2d x`, `\-\-x` and `--x` as the one property, so a
+	// scoped build has to rename the pair together.
+	for (const [rule, name] of [
+		["escaped-custom-property", "one"],
+		["escaped-custom-property-use", "two"],
+		["escaped-custom-property-both", "three"],
+		["escaped-custom-property-at-rule", "four"]
+	]) {
+		expect(styles[name]).toBe(`--_${name}`);
+		expect(valueOf(styles[rule], "color")).toBe(`var(${styles[name]})`);
+	}
+	expect(css()).toContain(`@property ${styles.four}`);
+});

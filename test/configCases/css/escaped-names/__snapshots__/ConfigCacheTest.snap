@@ -28,6 +28,27 @@ exports[`ConfigCacheTestCases css escaped-names exported tests should emit the s
 ._escaped-url-bare { background: url(071488c065143223c063.png) }
 ._plain-url { background: url(071488c065143223c063.png) }
 
+/* An escaped dash spells a custom property too, so the declaration and its
+   use have to scope to the same name or the variable comes out undefined. */
+._escaped-custom-property {
+	--_one: red;
+	color: var(--_one);
+}
+._escaped-custom-property-use {
+	--_two: blue;
+	color: var(--_two);
+}
+._escaped-custom-property-both {
+	--_three: green;
+	color: var(--_three);
+}
+@property --_four {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: rebeccapurple;
+}
+._escaped-custom-property-at-rule { color: var(--_four) }
+
 
 /*# sourceMappingURL=bundle0.css.map*/"
 `;

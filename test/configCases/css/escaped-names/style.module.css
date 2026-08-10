@@ -21,3 +21,24 @@
 .escaped-url-long { background: \000075rl(./img.png) }
 .escaped-url-bare { background: \url(./img.png) }
 .plain-url { background: url(./img.png) }
+
+/* An escaped dash spells a custom property too, so the declaration and its
+   use have to scope to the same name or the variable comes out undefined. */
+.escaped-custom-property {
+	\2d\2d one: red;
+	color: var(--one);
+}
+.escaped-custom-property-use {
+	--two: blue;
+	color: var(\2d\2d two);
+}
+.escaped-custom-property-both {
+	\-\-three: green;
+	color: var(\2d\2d three);
+}
+@property \2d\2d four {
+	syntax: "<color>";
+	inherits: false;
+	initial-value: rebeccapurple;
+}
+.escaped-custom-property-at-rule { color: var(--four) }
