@@ -389,11 +389,8 @@ const installHelpers = () => {
 			const brace = text.indexOf("{");
 			return (brace === -1 ? text : text.slice(0, brace)).trim();
 		};
-		// `An+B` is a microsyntax (CSS Syntax 3 §6) the engine only partly
-		// normalizes: it folds `even` / `odd` but hands `0n+3` and `2n-1` back as
-		// written. Each is read here as the sequence it selects, so a shorter
-		// spelling of the same one compares equal — which sequence it is still has
-		// to match. Selectors 4 §14 names four of them outright.
+		// The engine folds `even` / `odd` but hands `0n+3` back as written, so each
+		// An+B is read as the sequence it selects — which one it is still matters.
 		const NTH_CALL = /:(nth-(?:last-)?(?:child|of-type|col))\(([^)]*)\)/gi;
 		const AN_PLUS_B =
 			/^\s*(?:([+-]?)\s*(\d*)[nN]\s*(?:([+-])\s*(\d+))?|([+-]?)\s*(\d+))\s*$/;
@@ -406,10 +403,38 @@ const installHelpers = () => {
 		};
 		/**
 		 * @param {string} selector one selector
+		 * @returns {boolean[]} which indices are inside a string or an `[…]`
+		 */
+		const literalMask = (selector) => {
+			const mask = [];
+			let quote = "";
+			let brackets = 0;
+			for (let i = 0; i < selector.length; i++) {
+				const c = selector[i];
+				mask[i] = quote !== "" || brackets > 0;
+				if (c === "\\") {
+					mask[++i] = true;
+				} else if (quote !== "") {
+					if (c === quote) quote = "";
+				} else if (c === '"' || c === "'") {
+					quote = c;
+				} else if (c === "[") {
+					brackets++;
+				} else if (c === "]" && brackets > 0) {
+					brackets--;
+				}
+			}
+			return mask;
+		};
+		/**
+		 * @param {string} selector one selector
 		 * @returns {string} it, with every `An+B` written one way
 		 */
-		const oneSpelling = (selector) =>
-			selector.replace(NTH_CALL, (all, name, argument) => {
+		const oneSpelling = (selector) => {
+			const literal = literalMask(selector);
+			return selector.replace(NTH_CALL, (all, name, argument, offset) => {
+				// An attribute value or a string spelling one is text, not a selector.
+				if (literal[offset]) return all;
 				// `An+B of S` selects among S, which this does not read.
 				if (/\bof\b/i.test(argument)) return all;
 				const lower = argument.trim().toLowerCase();
@@ -431,6 +456,8 @@ const installHelpers = () => {
 					a = Number(`${parts[1]}${parts[2] === "" ? "1" : parts[2]}`);
 					b = parts[4] === undefined ? 0 : Number(`${parts[3]}${parts[4]}`);
 				}
+				// Past the safe range the arithmetic would name another sequence.
+				if (!Number.isSafeInteger(a) || !Number.isSafeInteger(b)) return all;
 				const named = FIRST_LAST[name.toLowerCase()];
 				if (a === 0) {
 					return b === 1 && named !== undefined
@@ -440,17 +467,15 @@ const installHelpers = () => {
 				// An index under 1 matches nothing, so a step forward starts at the
 				// first one that does; landing on the step itself is the bare `An`.
 				if (a > 0) {
-					while (b < 1) b += a;
+					if (b < 1) b = ((((b - 1) % a) + a) % a) + 1;
 					if (b === a) b = 0;
 				}
 				return `:${name}(${a}n${b === 0 ? "" : b > 0 ? `+${b}` : b})`;
 			});
+		};
 		/**
-		 * A selector list in one order, a repeat dropped — it is a set, so the
-		 * printer may write it any way round and two that differ only there are
-		 * the one rule. Splits on the list's own commas only; the splitter is
-		 * spelled out again here rather than shared because this whole function is
-		 * serialized into the page, where nothing outside it can be called.
+		 * A selector list in one order, a repeat dropped — it is a set. The splitter
+		 * is spelled out again because this function is serialized into the page.
 		 * @param {string} list a selector list
 		 * @returns {string} its canonical spelling
 		 */
@@ -510,7 +535,10 @@ const installHelpers = () => {
 				};
 			}
 			const selector = /** @type {CSSStyleRule} */ (rule).selectorText;
-			if (selector !== undefined) return { kind: "style", condition: selector };
+			// A nested rule holds under a selector list, which is a set like any other.
+			if (selector !== undefined) {
+				return { kind: "style", condition: selectorSet(selector) };
+			}
 			// A `@layer`, `@keyframes` or `@scope` prelude names or selects; there is
 			// nothing to evaluate, so it stands as written.
 			return { kind, condition: prelude(rule) };
@@ -1115,7 +1143,9 @@ describe("printer output in real Chrome", () => {
 				if (answer !== undefined) return `@${kind}<${answer}>`;
 				// A nested rule holds under its parent's selector list, which is a set
 				// like its own — the printer may have sorted it.
-				return `@${kind}<${kind === "style" ? sortedSelectorList(condition) : condition}>`;
+				return `@${kind}<${
+					kind === "style" ? sortedSelectorList(condition) : condition
+				}>`;
 			})
 			.join(" >> ")} ${decodeDataUrls(rule.text)}`;
 
@@ -1161,16 +1191,9 @@ describe("printer output in real Chrome", () => {
 	};
 
 	/**
-	 * One entry per selector. The printer joins adjacent rules that compute the
-	 * same style into a single selector list — the same rules in the same cascade
-	 * order, written shorter — so the comparison is made per selector rather than
-	 * per rule. A join of rules that do *not* match still fails: each selector
-	 * carries its own computed style, and the order between rules is still compared.
-	 *
-	 * Within one rule the selectors are compared as the set they are: they match
-	 * at their own specificity whatever order they are written in, so the printer
-	 * may sort a list and drop a repeat. Two distinct selectors never collapse,
-	 * so a genuinely lost one still fails.
+	 * One entry per selector, because the printer joins adjacent rules computing
+	 * the same style into one list. Each still carries its own computed style and
+	 * its place in the cascade, so a lost or reordered selector fails.
 	 * @param {Rule[]} rules rules in cascade order
 	 * @returns {Rule[]} the same, one selector each
 	 */
@@ -1216,9 +1239,8 @@ describe("printer output in real Chrome", () => {
 					signatures
 				)
 			}));
-			// A run of selectors reaching the same block under the same conditions is
-			// a set — which is the very thing that lets them be joined into one list
-			// — so it is compared as one, in one order, a repeat dropped.
+			// A run of selectors reaching one block under one condition is the set a
+			// join may write in any order, so it is compared in one order.
 			for (let from = 0; from < flat.length;) {
 				let to = from + 1;
 				while (to < flat.length && flat[to].group === flat[from].group) to++;

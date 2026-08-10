@@ -1440,6 +1440,13 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 		expect(min("a:nth-child(2n+4){b:c}")).toBe("a:nth-child(2n+4){b:c}");
 		// `An+B of S` selects among S, which no plain spelling names.
 		expect(min("a:nth-child(1 of .x){b:c}")).toBe("a:nth-child(1 of .x){b:c}");
+		// Past the safe integer range arithmetic would print a different selector.
+		expect(min("a:nth-child(2n-99999999999999999999){b:c}")).toBe(
+			"a:nth-child(2n-99999999999999999999){b:c}"
+		);
+		expect(min("a:nth-child(99999999999999999999){b:c}")).toBe(
+			"a:nth-child(99999999999999999999){b:c}"
+		);
 	});
 
 	it("still normalizes numbers in declaration values", () => {

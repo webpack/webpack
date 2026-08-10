@@ -894,7 +894,9 @@ const assertGrammarsParse = () => {
 			grammarOf(syntax);
 		} catch (err) {
 			throw new Error(
-				`${label} does not parse: ${/** @type {Error} */ (err).message}\n  ${syntax}`,
+				`${label} does not parse: ${
+					/** @type {Error} */ (err).message
+				}\n  ${syntax}`,
 				{ cause: err }
 			);
 		}
@@ -2337,12 +2339,16 @@ const collectZeroAngleFunctions = () => {
 const collectNthPseudoFunctions = () => {
 	const names = [];
 	for (const [name, entry] of Object.entries(selectors)) {
-		if (entry.status !== "standard") continue;
-		if (typeof entry.syntax !== "string") continue;
 		// The An+B pseudo-classes are exactly the ones whose grammar names it.
-		if (!entry.syntax.includes("<an+b>")) continue;
-		if (!name.startsWith(":") || !name.endsWith("()")) continue;
-		names.push(name.slice(1, -2));
+		if (
+			entry.status === "standard" &&
+			typeof entry.syntax === "string" &&
+			entry.syntax.includes("<an+b>") &&
+			name.startsWith(":") &&
+			name.endsWith("()")
+		) {
+			names.push(name.slice(1, -2));
+		}
 	}
 	return names.sort();
 };
@@ -2363,11 +2369,15 @@ const collectNthNamedEquivalents = () => {
 	const pairs = [];
 	for (const name of collectNthPseudoFunctions()) {
 		const end = NTH_END_REGEXP.exec(name);
-		if (end === null) continue;
-		const named = `${end[1] === undefined ? "first" : "last"}-${end[2]}`;
-		const entry = /** @type {PartialSelectorTable} */ (selectors)[`:${named}`];
-		if (entry === undefined || entry.status !== "standard") continue;
-		pairs.push([name, named]);
+		if (end !== null) {
+			const named = `${end[1] === undefined ? "first" : "last"}-${end[2]}`;
+			const entry = /** @type {PartialSelectorTable} */ (selectors)[
+				`:${named}`
+			];
+			if (entry !== undefined && entry.status === "standard") {
+				pairs.push([name, named]);
+			}
+		}
 	}
 	return pairs.sort(([one], [other]) => (one < other ? -1 : 1));
 };
@@ -2375,34 +2385,35 @@ const collectNthNamedEquivalents = () => {
 /**
  * Each property whose initial keyword may be dropped from a multi-component
  * value, as `property -> keyword`. The keyword comes from the property table,
- * and the entry is kept only where it really is the initial and really is one
- * alternative of a top-level `||` group — so a spec change drops it here.
+ * and it must really be the initial and really be one alternative of a top-level
+ * `||` group, so a spec moving either way fails generation rather than the page.
  * @returns {[string, string][]} `[property, keyword]`, sorted
  */
 const collectOmittableInitialKeywords = () => {
 	/** @type {[string, string][]} */
 	const out = [];
-	for (const name of SUPPLEMENT.omittableInitialKeywords) {
+	for (const name of [...SUPPLEMENT.omittableInitialKeywords].sort()) {
 		const property = properties[name];
-		if (property === undefined || typeof property.syntax !== "string") continue;
-		const initial = property.initial;
-		if (typeof initial !== "string") continue;
-		const tree = parseValueSyntax(property.syntax);
-		if (tree.type !== "anyOf") continue;
+		const initial = /** @type {string} */ (property.initial);
+		const syntax = /** @type {string} */ (property.syntax);
+		const tree = parseValueSyntax(syntax);
 		/**
-		 * @param {EXPECTED_ANY} node a syntax node
+		 * @param {SyntaxNode} node a syntax node
 		 * @returns {boolean} whether it spells exactly the initial keyword
 		 */
-		const isInitial = (node) => {
-			if (node.type === "keyword") return node.name === initial;
-			if (node.type === "group") return isInitial(node.body);
-			if (node.type === "oneOf") return node.items.some(isInitial);
-			return false;
-		};
-		if (!tree.items.some(isInitial)) continue;
+		const isInitial = (node) =>
+			node.type === "group"
+				? isInitial(node.body)
+				: node.type === "oneOf"
+					? node.items.some(isInitial)
+					: node.type === "keyword" && node.name === initial;
+		// The supplement states the keyword is droppable; mdn-data must still agree.
+		if (tree.type !== "anyOf" || !tree.items.some(isInitial)) {
+			throw new Error(`No omittable '${initial}' in '${name}': ${syntax}`);
+		}
 		out.push([name, initial]);
 	}
-	return out.sort(([one], [other]) => (one < other ? -1 : 1));
+	return out;
 };
 
 // A production naming a selector: what a function taking one has in its grammar.
@@ -2565,21 +2576,27 @@ const setLiteral = (names) =>
  * @returns {string} its `new Map([…])` literal — prettier wraps it on emit
  */
 const mapLiteral = (entries) =>
-	`new Map([${entries.map(([key, value]) => `["${key}", "${value}"]`).join(", ")}])`;
+	`new Map([${entries
+		.map(([key, value]) => `["${key}", "${value}"]`)
+		.join(", ")}])`;
 
 /**
  * @param {[string, number][]} entries string-keyed, number-valued pairs
  * @returns {string} the `Map` literal
  */
 const countMapLiteral = (entries) =>
-	`new Map([${entries.map(([key, value]) => `["${key}", ${value}]`).join(", ")}])`;
+	`new Map([${entries
+		.map(([key, value]) => `["${key}", ${value}]`)
+		.join(", ")}])`;
 
 /**
  * @param {[number, number][]} entries number-keyed pairs
  * @returns {string} the `Map` literal
  */
 const numberMapLiteral = (entries) =>
-	`new Map([${entries.map(([key, value]) => `[${key}, ${value}]`).join(", ")}])`;
+	`new Map([${entries
+		.map(([key, value]) => `[${key}, ${value}]`)
+		.join(", ")}])`;
 
 /**
  * A trig table as `eighth turn -> value`, the irrational eighths simply absent
@@ -3577,7 +3594,9 @@ const collectData = () => {
 */
 
 // GENERATED by tooling/generate-css-data.js — do not edit.
-// Sources: mdn-data ${mdnDataPackage.version}, color-name ${colorNamePackage.version}.
+// Sources: mdn-data ${mdnDataPackage.version}, color-name ${
+		colorNamePackage.version
+	}.
 
 "use strict";
 
@@ -3594,7 +3613,9 @@ ${SUPPLEMENT.mathPrimitives.map(([, body]) => body).join("\n\n")}
 // is copied from the opposite side. That makes a repeated value redundant:
 // \`margin:1px 1px 1px 1px\` is \`margin:1px\`. \`border-radius\` collapses each side
 // of its \`/\` independently.
-const BOX_SHORTHANDS = ${setLiteral([...boxShorthands, ...slashShorthands].sort())};
+const BOX_SHORTHANDS = ${setLiteral(
+		[...boxShorthands, ...slashShorthands].sort()
+	)};
 
 // The subset carrying a second box after a \`/\`, which collapses on its own.
 const SLASH_BOX_SHORTHANDS = ${setLiteral(slashShorthands)};
@@ -3874,10 +3895,14 @@ const COMPOUND_CONTINUATIONS = ${setLiteral(SUPPLEMENT.compoundContinuations)};
 
 // The properties whose zero length keeps its unit — the one place it is still
 // load-bearing.
-const ZERO_UNIT_KEEPING_PROPERTIES = ${setLiteral(SUPPLEMENT.zeroUnitKeepingProperties)};
+const ZERO_UNIT_KEEPING_PROPERTIES = ${setLiteral(
+		SUPPLEMENT.zeroUnitKeepingProperties
+	)};
 
 // At-rules whose empty block is inert, so dropping it changes nothing.
-const DROPPABLE_WHEN_EMPTY_AT_RULES = ${setLiteral(SUPPLEMENT.droppableWhenEmptyAtRules)};
+const DROPPABLE_WHEN_EMPTY_AT_RULES = ${setLiteral(
+		SUPPLEMENT.droppableWhenEmptyAtRules
+	)};
 
 // At-rules whose block holds rules and whose prelude states a condition, so two
 // adjacent blocks with the same prelude are the one block they resolve to.
@@ -3923,25 +3948,37 @@ const QUARTER_TURN_ANGLE = new Map([${SUPPLEMENT.quarterTurnAngle
 // where the value is irrational are absent — sine and cosine on the odd ones,
 // tangent on the asymptotes. Cosine is sine a quarter turn along.
 /** @type {Map<number, number>} */
-const EIGHTH_TURN_SINE = ${numberMapLiteral(eighthTurnEntries(SUPPLEMENT.eighthTurnSine))};
+const EIGHTH_TURN_SINE = ${numberMapLiteral(
+		eighthTurnEntries(SUPPLEMENT.eighthTurnSine)
+	)};
 
 /** @type {Map<number, number>} */
-const EIGHTH_TURN_COSINE = ${numberMapLiteral(eighthTurnEntries(eighthTurnCosine))};
+const EIGHTH_TURN_COSINE = ${numberMapLiteral(
+		eighthTurnEntries(eighthTurnCosine)
+	)};
 
 /** @type {Map<number, number>} */
-const EIGHTH_TURN_TANGENT = ${numberMapLiteral(eighthTurnEntries(SUPPLEMENT.eighthTurnTangent))};
+const EIGHTH_TURN_TANGENT = ${numberMapLiteral(
+		eighthTurnEntries(SUPPLEMENT.eighthTurnTangent)
+	)};
 
 // What each inverse trig function answers, as \`argument -> degrees\`, by
 // inverting the table above it over that function's principal branch. Every
 // other argument is transcendental and leaves the call written out.
 /** @type {Map<number, number>} */
-const ARC_SINE_DEGREES = ${numberMapLiteral(collectArcAngles(SUPPLEMENT.eighthTurnSine, -2, 2))};
+const ARC_SINE_DEGREES = ${numberMapLiteral(
+		collectArcAngles(SUPPLEMENT.eighthTurnSine, -2, 2)
+	)};
 
 /** @type {Map<number, number>} */
-const ARC_COSINE_DEGREES = ${numberMapLiteral(collectArcAngles(eighthTurnCosine, 0, 4))};
+const ARC_COSINE_DEGREES = ${numberMapLiteral(
+		collectArcAngles(eighthTurnCosine, 0, 4)
+	)};
 
 /** @type {Map<number, number>} */
-const ARC_TANGENT_DEGREES = ${numberMapLiteral(collectArcAngles(SUPPLEMENT.eighthTurnTangent, -1, 1))};
+const ARC_TANGENT_DEGREES = ${numberMapLiteral(
+		collectArcAngles(SUPPLEMENT.eighthTurnTangent, -1, 1)
+	)};
 
 // The reader that needs a table, built once here — \`mathPrimitives\` knows the
 // arithmetic of an eighth turn but not which units spell one.
@@ -3957,7 +3994,9 @@ const MATH_FUNCTION_FOLD = new Map([
 ${SUPPLEMENT.mathFunctionFold
 	.map(
 		([name, read, apply, result, table]) =>
-			`\t["${name}", { read: ${read}, apply: ${apply}, result: "${result}", table: ${table === null ? "null" : table} }]`
+			`\t["${name}", { read: ${read}, apply: ${apply}, result: "${result}", table: ${
+				table === null ? "null" : table
+			} }]`
 	)
 	.join(",\n")}
 ]);
@@ -3991,13 +4030,17 @@ ${cssModulesKeywords
 ]);
 
 // The parser option gating each of them.
-const CSS_MODULES_KEYWORD_OPTIONS = ${mapLiteral(cssModulesKeywords.map(([name, option]) => [name, option]))};
+const CSS_MODULES_KEYWORD_OPTIONS = ${mapLiteral(
+		cssModulesKeywords.map(([name, option]) => [name, option])
+	)};
 
 // The properties a negative value is valid on, so \`calc(-5px)\` may lose its
 // parentheses there. Read to permit a rewrite, which is the opposite of
 // \`INTEGER_PROPERTIES\` above: naming one property too many is a bug, naming one
 // too few only costs a rewrite.
-const NEGATIVE_ACCEPTING_PROPERTIES = ${setLiteral(negativeAcceptingProperties)};
+const NEGATIVE_ACCEPTING_PROPERTIES = ${setLiteral(
+		negativeAcceptingProperties
+	)};
 
 // The functions whose every numeric argument is a length, so a zero inside one
 // drops its unit the way a whole component's does. Read to permit a rewrite:
@@ -4063,7 +4106,24 @@ module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;
 `;
 
-	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${negativeAcceptingProperties.length} negative-accepting properties, ${lengthOnlyFunctions.length} length-only functions, ${pairLonghands.length} pair shorthands, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity, ${cssModulesKeywords.length} css modules scoped properties (${cssModulesKeywords.reduce((total, [, , table]) => total + table.length, 0)} keywords)`;
+	const summary = `${
+		boxShorthands.length + slashShorthands.length
+	} box shorthands (${slashShorthands.length} with a \`/\`), ${
+		colorFunctions.length
+	} color functions, ${substitutionFunctions.length} substitution functions, ${
+		colorNames.length
+	} color names, ${integerProperties.length} integer properties, ${
+		negativeAcceptingProperties.length
+	} negative-accepting properties, ${
+		lengthOnlyFunctions.length
+	} length-only functions, ${pairLonghands.length} pair shorthands, ${
+		mathFunctionArity.length
+	} of ${mathFunctions.length} math functions with a readable arity, ${
+		cssModulesKeywords.length
+	} css modules scoped properties (${cssModulesKeywords.reduce(
+		(total, [, , table]) => total + table.length,
+		0
+	)} keywords)`;
 	return { source, summary };
 };
 
