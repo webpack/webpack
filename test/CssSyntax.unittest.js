@@ -219,6 +219,32 @@ describe("CssSyntax — component values (tokenToNode)", () => {
 		expect(cv("@media").type).toBe(NodeType.AtKeyword);
 	});
 
+	it("reads every escaped spelling of `url(` as a url", () => {
+		/**
+		 * @param {string} s source
+		 * @returns {import("../lib/css/syntax").ComponentValue} parsed value
+		 */
+		const cv = (s) =>
+			/** @type {import("../lib/css/syntax").ComponentValue} */ (
+				parseAComponentValue(s)
+			);
+		// Longest spelling: each code point as `\` + 6 hex digits + CRLF.
+		for (const name of [
+			"url",
+			"URL",
+			"\\75 rl",
+			"\\000075rl",
+			"\\000075\\000072\\00006c",
+			"\\000075\n\\000072\n\\00006c\n",
+			"\\000075\r\n\\000072\r\n\\00006c\r\n"
+		]) {
+			expect(cv(`${name}(a.png)`).type).toBe(NodeType.Url);
+		}
+		expect(cv("\\000075\r\n\\000072\r\n\\00006d\r\n(a)").type).toBe(
+			NodeType.Function
+		);
+	});
+
 	it("decodes numeric token metadata", () => {
 		/**
 		 * @param {string} s source

@@ -353,6 +353,12 @@ If the count is not `0`, **rebase** onto it before opening — never merge `main
 git -c user.name="<login>" -c user.email="<email>" rebase origin/main
 ```
 
+The overrides set the **committer** of each replayed commit; `rebase` carries the original **author** through untouched, so they neither break a correct author nor repair a wrong one. EasyCLA reads the author, so check it afterwards — and if a commit is authored by anyone but the requester, rewrite it (`git rebase -x 'git commit --amend --no-edit --reset-author'`) rather than pushing and hoping:
+
+```bash
+git log --format='%h author=%an <%ae> committer=%cn <%ce>' origin/main..HEAD
+```
+
 **Then re-run the tests that cover your change.** A stale base is not only a merge-conflict risk: git rebases text, not meaning, so a change that lands on `main` while you work can pass the merge cleanly and still break your code — a renamed helper, a changed default, a fixture your case now shares. Only a run on the rebased tree says otherwise.
 
 This matters past the opening, too, because a stale base makes CI lie in both directions:
