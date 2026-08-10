@@ -9920,13 +9920,87 @@ Object {
   "optimization-minimize": Object {
     "configs": Array [
       Object {
-        "description": "Enable minimizing the output. Uses optimization.minimizer.",
+        "description": "Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures the built-in minimizer per asset type.",
         "multiple": false,
         "path": "optimization.minimize",
         "type": "boolean",
       },
     ],
-    "description": "Enable minimizing the output. Uses optimization.minimizer.",
+    "description": "Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures the built-in minimizer per asset type.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-css": Object {
+    "configs": Array [
+      Object {
+        "description": "Minimize CSS assets: \`false\` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.",
+        "multiple": false,
+        "path": "optimization.minimize.css",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Minimize CSS assets: \`false\` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-css-convert-length-units": Object {
+    "configs": Array [
+      Object {
+        "description": "Rewrite a length into a shorter unit it is exactly equal in (\`16px\` -> \`1pc\`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.",
+        "multiple": false,
+        "path": "optimization.minimize.css.convertLengthUnits",
+        "type": "boolean",
+      },
+    ],
+    "description": "Rewrite a length into a shorter unit it is exactly equal in (\`16px\` -> \`1pc\`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-html": Object {
+    "configs": Array [
+      Object {
+        "description": "Minimize HTML assets: \`false\` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.",
+        "multiple": false,
+        "path": "optimization.minimize.html",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Minimize HTML assets: \`false\` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-html-collapse-whitespace": Object {
+    "configs": Array [
+      Object {
+        "description": "Collapse each run of whitespace in text to a single space. Left alone inside \`pre\`, \`textarea\` and \`listing\`, where whitespace renders verbatim, and never removed entirely — dropping it would join two inline elements that render apart.",
+        "multiple": false,
+        "path": "optimization.minimize.html.collapseWhitespace",
+        "type": "boolean",
+      },
+    ],
+    "description": "Collapse each run of whitespace in text to a single space. Left alone inside \`pre\`, \`textarea\` and \`listing\`, where whitespace renders verbatim, and never removed entirely — dropping it would join two inline elements that render apart.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-javascript": Object {
+    "configs": Array [
+      Object {
+        "description": "Minimize JavaScript assets: \`false\` disables it, an object is handed as-is to the JavaScript minimizer.",
+        "multiple": false,
+        "path": "optimization.minimize.javascript",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Minimize JavaScript assets: \`false\` disables it, an object is handed as-is to the JavaScript minimizer.",
     "multiple": false,
     "simpleType": "boolean",
   },

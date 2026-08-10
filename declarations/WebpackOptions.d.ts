@@ -2270,9 +2270,9 @@ export interface Optimization {
 	 */
 	mergeDuplicateChunks?: boolean;
 	/**
-	 * Enable minimizing the output. Uses optimization.minimizer.
+	 * Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures the built-in minimizer per asset type.
 	 */
-	minimize?: boolean;
+	minimize?: boolean | OptimizationMinimizeOptions;
 	/**
 	 * Minimizer(s) to use for minimizing the output.
 	 */
@@ -2336,6 +2336,53 @@ export interface ConcatenateModulesOptions {
 	 * Also concatenate CommonJS modules with statically analyzable exports. Defaults to 'true'.
 	 */
 	commonjs?: boolean;
+}
+/**
+ * Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` disables minimizing it.
+ * @since 5.110.0
+ */
+export interface OptimizationMinimizeOptions {
+	/**
+	 * Minimize CSS assets: `false` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.
+	 */
+	css?: false | OptimizationMinimizeCss;
+	/**
+	 * Minimize HTML assets: `false` disables it, an object configures what the built-in minimizer may do beyond the transforms that always apply.
+	 */
+	html?: false | OptimizationMinimizeHtml;
+	/**
+	 * Minimize JavaScript assets: `false` disables it, an object is handed as-is to the JavaScript minimizer.
+	 */
+	javascript?: false | OptimizationMinimizeJavascript;
+}
+/**
+ * What the CSS minimizer may do beyond the transforms that always apply. Applies wherever it runs: on `.css` assets and on the inline `<style>` / `style=""` the HTML minimizer hands it.
+ * @since 5.110.0
+ */
+export interface OptimizationMinimizeCss {
+	/**
+	 * Rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.
+	 * @since 5.110.0
+	 */
+	convertLengthUnits?: boolean;
+}
+/**
+ * What the HTML minimizer may do beyond the transforms that always apply.
+ * @since 5.110.0
+ */
+export interface OptimizationMinimizeHtml {
+	/**
+	 * Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim, and never removed entirely — dropping it would join two inline elements that render apart.
+	 * @since 5.110.0
+	 */
+	collapseWhitespace?: boolean;
+}
+/**
+ * Options handed as-is to the JavaScript minimizer (terser-compatible). Defaults to `{ compress: { passes: 2 } }`.
+ * @since 5.110.0
+ */
+export interface OptimizationMinimizeJavascript {
+	[k: string]: any;
 }
 /**
  * Plugin instance.
@@ -4429,9 +4476,9 @@ export interface OptimizationNormalized {
 	 */
 	mergeDuplicateChunks?: boolean;
 	/**
-	 * Enable minimizing the output. Uses optimization.minimizer.
+	 * Enable minimizing the output. Uses optimization.minimizer. An object configures the built-in minimizer per asset type.
 	 */
-	minimize?: boolean;
+	minimize?: false | OptimizationMinimizeOptions;
 	/**
 	 * Minimizer(s) to use for minimizing the output.
 	 */

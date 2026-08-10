@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+	/* the same rewrite a `.css` asset gets: sixteen pixels are one pica */
+	.t01 { width: 16px }
+	/* ten millimeters are one centimeter */
+	.t02 { width: 10mm }
+	/* a length no other unit spells shorter keeps its own */
+	.t03 { width: 17px }
+</style>
+</head>
+<body>
+<p style="width: 16px">a style attribute is handed the same option</p>
+<p style="width: 17px">...and declines the same cases</p>
+</body>
+</html>
