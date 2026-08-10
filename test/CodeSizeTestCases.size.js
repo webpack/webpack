@@ -11,6 +11,7 @@ const path = require("path");
 const zlib = require("zlib");
 const webpack = require("..");
 const { DEFAULTS } = require("../lib/config/defaults");
+const codeSizeReportPrefixes = require("./helpers/codeSizeReportPrefixes");
 const prepareOptions = require("./helpers/prepareOptions");
 
 /** @typedef {import("..").AssetInfo} AssetInfo */
@@ -357,12 +358,15 @@ const measureCase = async ({ category, name }) => {
 				? activeCompiler.compilers
 				: [activeCompiler];
 
+		const prefixes = codeSizeReportPrefixes(
+			compilers.map((child) => child.name)
+		);
 		// Measured on `emit`, per compiler: the output directory holds what the
 		// compilers of one case wrote over each other (and `compareBeforeEmit`
 		// skips a file another one already wrote), and once the build is over the
 		// asset sources have been replaced by `SizeOnlySource`.
 		for (const [index, child] of compilers.entries()) {
-			const prefix = compilers.length === 1 ? "" : `${child.name || index}/`;
+			const prefix = prefixes[index];
 			child.hooks.emit.tap("CodeSizeMeasure", (compilation) => {
 				emitted.set(compilation, prefix);
 				for (const asset of compilation.getAssets()) {

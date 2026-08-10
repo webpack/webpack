@@ -7,9 +7,16 @@ coverage:
   status:
     project:
       default:
+        # Every suite that uploads a report, so the status matches the comment.
+        # Leaving the spec-conformance suites out made the status blind to the
+        # code they cover: a change to the CSS or HTML parser reads as a drop,
+        # because the suite that exercises it does not count toward the total.
         flags:
           - unit
           - integration
+          - css-parsing
+          - html5lib
+          - test262
         target: auto
     patch:
       default:
