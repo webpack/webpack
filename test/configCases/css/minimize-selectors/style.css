@@ -219,3 +219,12 @@ a/*c*/b { color: red }
 .t110:nth-child(-n+3) { color: red }
 /*! declined: `An+B of S` selects among S, which no plain spelling names */
 .t111:nth-child(1 of .t112) { color: red }
+/*! webpack: a selector function's argument is a selector, so the universal a
+   compound implies says nothing there either */
+.t113:not(*.t114) { color: red }
+.t115:is(*.t116, *.t117) { color: red }
+/*! declined: a lone universal is the selector, and a parted one is a combinator */
+.t118:not(*) { color: red }
+.t119:not(* .t120) { color: red }
+/*! declined: a namespaced universal is not redundant */
+.t121:not(*|*.t122) { color: red }

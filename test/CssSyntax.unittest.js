@@ -1417,6 +1417,21 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 		expect(min("a:nth-last-of-type(1){b:c}")).toBe("a:last-of-type{b:c}");
 	});
 
+	it("drops the implied universal inside a selector function", () => {
+		expect(min("a:not(*.g){b:c}")).toBe("a:not(.g){b:c}");
+		expect(min("a:is(*.g,*.h){b:c}")).toBe("a:is(.g,.h){b:c}");
+		expect(min("a:has(*.g){b:c}")).toBe("a:has(.g){b:c}");
+		// A lone universal is the selector, and a parted one is a combinator away.
+		expect(min("a:not(*){b:c}")).toBe("a:not(*){b:c}");
+		expect(min("a:not(* .g){b:c}")).toBe("a:not(* .g){b:c}");
+		// A namespaced universal is not redundant.
+		expect(min("a:not(*|*.g){b:c}")).toBe("a:not(*|*.g){b:c}");
+		// A `@supports` condition tests the syntax rather than applying it.
+		expect(min("@supports selector(*.a){b{c:d}}")).toBe(
+			"@supports selector(*.a){b{c:d}}"
+		);
+	});
+
 	it("keeps an An+B selector argument no shorter spelling reaches", () => {
 		// A backward step never sweeps past what it started on.
 		expect(min("a:nth-last-child(-n+3){b:c}")).toBe(
