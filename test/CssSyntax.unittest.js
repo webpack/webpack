@@ -3332,6 +3332,29 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a component spelling the property's own initial", () => {
+		it.each([
+			["a{grid-auto-flow:row dense}", "a{grid-auto-flow:dense}"],
+			["a{grid-auto-flow:dense row}", "a{grid-auto-flow:dense}"],
+			["a{grid-auto-flow:ROW dense}", "a{grid-auto-flow:dense}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// The other alternative of the group is not the initial.
+			["it is not the initial", "a{grid-auto-flow:column dense}"],
+			// Nothing else stands beside it, so it is the whole value.
+			["it stands alone", "a{grid-auto-flow:row}"],
+			// `aspect-ratio:auto <ratio>` is a ratio with a fallback, not the ratio.
+			["the keyword still says something", "a{aspect-ratio:auto 3}"],
+			// A substitution could expand to anything.
+			["a substitution stands there", "a{grid-auto-flow:var(--x) dense}"]
+		])("keeps the value where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("a selector list as the set it is", () => {
 		it.each([
 			["b,a{color:red}", "a,b{color:red}"],

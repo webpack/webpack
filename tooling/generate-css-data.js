@@ -30,7 +30,7 @@ const colorName = require("color-name");
 /** @typedef {{ version: string }} PackageManifest */
 /** @typedef {{ [name: string]: { syntax: string } }} SyntaxTable */
 /** @typedef {{ [name: string]: { syntax?: string } }} PartialSyntaxTable */
-/** @typedef {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[] } }} PartialPropertyTable */
+/** @typedef {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[], initial?: string | string[] } }} PartialPropertyTable */
 /** @typedef {{ [name: string]: { syntax?: string, status?: string } }} PartialSelectorTable */
 /** @type {PackageManifest} */
 const colorNamePackage = require("color-name/package.json");
@@ -2372,6 +2372,39 @@ const collectNthNamedEquivalents = () => {
 	return pairs.sort(([one], [other]) => (one < other ? -1 : 1));
 };
 
+/**
+ * Each property whose initial keyword may be dropped from a multi-component
+ * value, as `property -> keyword`. The keyword comes from the property table,
+ * and the entry is kept only where it really is the initial and really is one
+ * alternative of a top-level `||` group — so a spec change drops it here.
+ * @returns {[string, string][]} `[property, keyword]`, sorted
+ */
+const collectOmittableInitialKeywords = () => {
+	/** @type {[string, string][]} */
+	const out = [];
+	for (const name of SUPPLEMENT.omittableInitialKeywords) {
+		const property = properties[name];
+		if (property === undefined || typeof property.syntax !== "string") continue;
+		const initial = property.initial;
+		if (typeof initial !== "string") continue;
+		const tree = parseValueSyntax(property.syntax);
+		if (tree.type !== "anyOf") continue;
+		/**
+		 * @param {EXPECTED_ANY} node a syntax node
+		 * @returns {boolean} whether it spells exactly the initial keyword
+		 */
+		const isInitial = (node) => {
+			if (node.type === "keyword") return node.name === initial;
+			if (node.type === "group") return isInitial(node.body);
+			if (node.type === "oneOf") return node.items.some(isInitial);
+			return false;
+		};
+		if (!tree.items.some(isInitial)) continue;
+		out.push([name, initial]);
+	}
+	return out.sort(([one], [other]) => (one < other ? -1 : 1));
+};
+
 // A production naming a selector: what a function taking one has in its grammar.
 const SELECTOR_PRODUCTION_REGEXP = /<[a-z-]*selector[a-z-]*>/;
 
@@ -2566,7 +2599,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -2685,6 +2718,15 @@ const SUPPLEMENT = {
 		"text-emphasis",
 		"text-wrap"
 	],
+	// A keyword that is both the property's initial value and a whole alternative
+	// of one `||` group, where omitting the group leaves exactly that keyword — so
+	// writing it beside another component says nothing. Checked against headless
+	// Chromium: `grid-auto-flow:row dense` and `dense` compute alike, while
+	// `column dense` does not. Stated rather than derived because `mdn-data` does
+	// not say whether an omitted group falls back to the property's initial:
+	// `aspect-ratio`'s initial is `auto` too, but `auto 3/2` is a ratio with a
+	// fallback, not the ratio alone, so it is not here.
+	omittableInitialKeywords: ["grid-auto-flow"],
 	// Two longhands `mdn-data` maps to the wrong pair. Corrected from headless
 	// Chromium, which computes `corner-inline-start-shape` onto the two corners
 	// on the inline-start edge; the table gives it the block-start edge's pair,
@@ -3463,6 +3505,7 @@ const collectData = () => {
 	const substitutionFunctions = collectSubstitutionFunctions();
 	const nthPseudoFunctions = collectNthPseudoFunctions();
 	const nthNamedEquivalents = collectNthNamedEquivalents();
+	const omittableInitialKeywords = collectOmittableInitialKeywords();
 	const selectorFunctions = collectSelectorFunctions();
 	const colorOnlyProperties = collectColorOnlyProperties();
 	const initialValueKeywords = collectInitialValueKeywords();
@@ -3594,6 +3637,10 @@ const FAMILY_LONGHANDS = new Map([${familyLonghands
 // present before any shorthand can be written, and almost no block holds one,
 // which is what keeps the merge off the declarations it cannot serve.
 const MERGE_LONGHANDS = ${setLiteral(lowerSorted(mergeLonghands))};
+
+// The initial keyword each of these may drop when another component stands
+// beside it: omitting the group it belongs to leaves exactly that keyword.
+const OMITTABLE_INITIAL_KEYWORDS = ${mapLiteral(omittableInitialKeywords)};
 
 // What each of those longhands accepts as a whole value: the keywords it names,
 // and the value classes it reaches. A value acceptable to a second slot is what
@@ -4002,7 +4049,7 @@ module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
 module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
 module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;\nmodule.exports.MERGEABLE_AT_RULES = MERGEABLE_AT_RULES;\nmodule.exports.MERGE_LONGHANDS = MERGE_LONGHANDS;
 module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;
-module.exports.NTH_NAMED_EQUIVALENTS = NTH_NAMED_EQUIVALENTS;\nmodule.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;
+module.exports.NTH_NAMED_EQUIVALENTS = NTH_NAMED_EQUIVALENTS;\nmodule.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;\nmodule.exports.OMITTABLE_INITIAL_KEYWORDS = OMITTABLE_INITIAL_KEYWORDS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
@@ -4064,6 +4111,8 @@ module.exports.collectFamilyLonghands = collectFamilyLonghands;
 module.exports.collectGradientFunctions = collectGradientFunctions;
 module.exports.collectMergeableAtRules = collectMergeableAtRules;
 module.exports.collectNthNamedEquivalents = collectNthNamedEquivalents;
+module.exports.collectOmittableInitialKeywords =
+	collectOmittableInitialKeywords;
 module.exports.collectRatioProperties = collectRatioProperties;
 module.exports.isSpelledSyntax = isSpelledSyntax;
 module.exports.longhandType = longhandType;

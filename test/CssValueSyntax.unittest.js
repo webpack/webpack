@@ -12,6 +12,7 @@ const {
 	collectGradientFunctions,
 	collectMergeableAtRules,
 	collectNthNamedEquivalents,
+	collectOmittableInitialKeywords,
 	collectRatioProperties,
 	isSpelledSyntax,
 	longhandType,
@@ -487,6 +488,14 @@ describe("CssValueSyntax", () => {
 				["nth-last-child", "last-child"],
 				["nth-last-of-type", "last-of-type"],
 				["nth-of-type", "first-of-type"]
+			]);
+		});
+	});
+
+	describe("collectOmittableInitialKeywords", () => {
+		it("keeps only a stated keyword the property table agrees is its initial", () => {
+			expect(collectOmittableInitialKeywords()).toEqual([
+				["grid-auto-flow", "row"]
 			]);
 		});
 	});

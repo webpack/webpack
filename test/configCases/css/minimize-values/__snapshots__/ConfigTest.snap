@@ -175,5 +175,8 @@ Array [
   "/*! declined: ...but only then */.t96{transform:matrix3d(20,20,0,0,40,40,0,0,0,0,1,5,80,80,0,1)}",
   "/*! webpack: a 2D pair of 1 leaves the z scale alone */.t97{transform:scaleZ(1.5)}",
   "/*! webpack: a zero time keeps a unit, and \`s\` is the shorter one it can carry */.t98{transition-duration:0s}",
+  "/*! webpack: a component spelling the property's own initial says nothing beside
+   another — omitting its group leaves exactly that keyword */.t99{grid-auto-flow:dense}",
+  "/*! declined: the other alternative of the group is not the initial */.t99a{grid-auto-flow:column dense}",
 ]
 `;
