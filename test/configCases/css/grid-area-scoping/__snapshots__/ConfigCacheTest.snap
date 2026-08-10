@@ -41,6 +41,12 @@ exports[`ConfigCacheTestCases css grid-area-scoping exported tests should emit t
 	grid-template-areas: \\"_head-head .\\" \\"... _foot-foot\\";
 }
 
+/* Padding around a cell is not a cell of its own. */
+._padded-grid {
+	grid-template-areas: \\"  _pad-head-pad-head  \\";
+}
+._padded-head { grid-area: _pad-head-pad-head }
+
 ._shorthand-grid {
 	grid-template: \\"_nav-bar-nav-bar _main-area-main-area\\" 1fr / auto;
 }

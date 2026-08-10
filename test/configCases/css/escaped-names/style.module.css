@@ -10,6 +10,11 @@
 .escaped-property { \61 nimation-name: spin }
 .plain-property { animation-name: spin }
 
+/* An escape past the first character takes the hashed name probe rather than
+   the leading-`-`/`\` path, so that probe has to resolve it too. */
+.escaped-property-inner { anim\61 tion-name: spin }
+.escaped-unknown-property { co\6cor: red }
+
 /* Escaped at-rule name: still `@keyframes`, so the name still scopes. */
 @\6b eyframes slide {
 	to { translate: 1px }

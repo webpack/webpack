@@ -16,6 +16,11 @@ exports[`ConfigCacheTestCases css escaped-names exported tests should emit the s
 ._escaped-property { \\\\61 nimation-name: _spin }
 ._plain-property { animation-name: _spin }
 
+/* An escape past the first character takes the hashed name probe rather than
+   the leading-\`-\`/\`\\\\\` path, so that probe has to resolve it too. */
+._escaped-property-inner { anim\\\\61 tion-name: _spin }
+._escaped-unknown-property { co\\\\6cor: red }
+
 /* Escaped at-rule name: still \`@keyframes\`, so the name still scopes. */
 @\\\\6b eyframes _slide {
 	to { translate: 1px }

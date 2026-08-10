@@ -24,6 +24,12 @@ it("should scope the value of an escaped property name", () => {
 	expect(valueOf(styles["plain-property"], "animation-name")).toBe(
 		styles.spin
 	);
+	expect(valueOf(styles["escaped-property-inner"], "anim\\\\61 tion-name")).toBe(
+		styles.spin
+	);
+	// `co\6cor` is `color`, which scopes nothing — the probe has to resolve it
+	// and then miss, not hash the raw bytes and miss for the wrong reason.
+	expect(valueOf(styles["escaped-unknown-property"], "co\\\\6cor")).toBe("red");
 });
 
 it("should scope the name of an escaped at-rule", () => {

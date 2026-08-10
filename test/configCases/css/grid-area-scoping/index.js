@@ -15,10 +15,14 @@ const cellsOf = (rule) => {
 	const declared = new RegExp(
 		`\\.${rule}\\s*\\{[^}]*grid-template(?:-areas)?:\\s*([^;}]+)`
 	).exec(css());
-	return String(declared[1])
-		.match(/"[^"]*"/g)
-		.flatMap((row) => row.slice(1, -1).split(/\s+/))
-		.filter((cell) => cell && !/^\.+$/.test(cell));
+	const cells = [];
+	// No `flatMap` — this bundle also runs on the Node 10 CI job.
+	for (const row of String(declared[1]).match(/"[^"]*"/g)) {
+		for (const cell of row.slice(1, -1).split(/\s+/)) {
+			if (cell && !/^\.+$/.test(cell)) cells.push(cell);
+		}
+	}
+	return cells;
 };
 
 /**
@@ -65,6 +69,11 @@ it("should read an escape as part of the cell it opens", () => {
 it("should leave a null cell alone", () => {
 	expect(css()).toContain(`"${styles.head} ."`);
 	expect(css()).toContain(`"... ${styles.foot}"`);
+});
+
+it("should not read padding as a cell", () => {
+	expect(cellsOf(styles["padded-grid"])).toEqual([styles["pad-head"]]);
+	expect(gridAreaOf(styles["padded-head"])).toBe(styles["pad-head"]);
 });
 
 it("should bind an area named by the grid shorthand", () => {

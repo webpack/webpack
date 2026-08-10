@@ -35,6 +35,12 @@
 	grid-template-areas: "head ." "... foot";
 }
 
+/* Padding around a cell is not a cell of its own. */
+.padded-grid {
+	grid-template-areas: "  pad-head  ";
+}
+.padded-head { grid-area: pad-head }
+
 .shorthand-grid {
 	grid-template: "nav-bar main-area" 1fr / auto;
 }
