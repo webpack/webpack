@@ -2367,10 +2367,16 @@ export interface OptimizationMinimizeCss {
 	convertLengthUnits?: boolean;
 }
 /**
- * What the HTML minimizer may do beyond the transforms that always apply. No additional options are supported yet.
+ * What the HTML minimizer may do beyond the transforms that always apply.
  * @since 5.110.0
  */
-export interface OptimizationMinimizeHtml {}
+export interface OptimizationMinimizeHtml {
+	/**
+	 * Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim, and never removed entirely — dropping it would join two inline elements that render apart.
+	 * @since 5.110.0
+	 */
+	collapseWhitespace?: boolean;
+}
 /**
  * Options handed as-is to the JavaScript minimizer (terser-compatible). Defaults to `{ compress: { passes: 2 } }`.
  * @since 5.110.0

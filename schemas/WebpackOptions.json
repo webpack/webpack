@@ -3703,9 +3703,16 @@
       "added": "5.110.0"
     },
     "OptimizationMinimizeHtml": {
-      "description": "What the HTML minimizer may do beyond the transforms that always apply. No additional options are supported yet.",
+      "description": "What the HTML minimizer may do beyond the transforms that always apply.",
       "type": "object",
       "additionalProperties": false,
+      "properties": {
+        "collapseWhitespace": {
+          "description": "Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim, and never removed entirely — dropping it would join two inline elements that render apart.",
+          "type": "boolean",
+          "added": "5.110.0"
+        }
+      },
       "added": "5.110.0"
     },
     "OptimizationMinimizeJavascript": {

@@ -9975,6 +9975,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-html-collapse-whitespace": Object {
+    "configs": Array [
+      Object {
+        "description": "Collapse each run of whitespace in text to a single space. Left alone inside \`pre\`, \`textarea\` and \`listing\`, where whitespace renders verbatim, and never removed entirely — dropping it would join two inline elements that render apart.",
+        "multiple": false,
+        "path": "optimization.minimize.html.collapseWhitespace",
+        "type": "boolean",
+      },
+    ],
+    "description": "Collapse each run of whitespace in text to a single space. Left alone inside \`pre\`, \`textarea\` and \`listing\`, where whitespace renders verbatim, and never removed entirely — dropping it would join two inline elements that render apart.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-javascript": Object {
     "configs": Array [
       Object {
