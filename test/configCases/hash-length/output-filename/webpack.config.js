@@ -169,7 +169,7 @@ module.exports = [
 		}
 	},
 	{
-		name: "contenthash in webpack",
+		name: "contenthash in web",
 		entry: "./no-async",
 		output: {
 			filename: "bundle14.[contenthash].js",
@@ -183,7 +183,7 @@ module.exports = [
 		}
 	},
 	{
-		name: "contenthash in async-node with length",
+		name: "contenthash in web with length",
 		entry: "./no-async",
 		output: {
 			filename: "bundle15.[contenthash:7].js",
@@ -197,7 +197,7 @@ module.exports = [
 		}
 	},
 	{
-		name: "contenthash in webpack",
+		name: "contenthash in webworker",
 		entry: "./no-async",
 		output: {
 			filename: "bundle16.[contenthash].js",
@@ -211,7 +211,7 @@ module.exports = [
 		}
 	},
 	{
-		name: "contenthash in async-node with length",
+		name: "contenthash in webworker with length",
 		entry: "./no-async",
 		output: {
 			filename: "bundle17.[contenthash:7].js",
