@@ -27,7 +27,9 @@ const CACHE = path.join(ROOT, "node_modules/.cache/html-minifier-comparison");
 const MODULES = path.join(CACHE, "node_modules");
 
 const PACKAGES = [
+	"bootstrap@5",
 	"@minify-html/node@0.15",
+	"@picocss/pico@2",
 	"@swc/html@1",
 	"cssnano@7",
 	"html-minifier-terser@7",
@@ -37,7 +39,8 @@ const PACKAGES = [
 	"parse5@7",
 	"postcss@8",
 	"svgo@3",
-	"swagger-ui-dist@5"
+	"swagger-ui-dist@5",
+	"water.css@2"
 ];
 
 /**
@@ -48,17 +51,34 @@ const log = (message) => {
 };
 
 const setup = () => {
-	if (fs.existsSync(MODULES)) return;
+	const manifest = path.join(CACHE, "package.json");
+	// Reinstall when the package list changes, so an existing cache picks up
+	// newly added fixtures instead of failing on their missing files.
+	const installed =
+		fs.existsSync(MODULES) && fs.existsSync(manifest)
+			? JSON.parse(fs.readFileSync(manifest, "utf8")).comparisonPackages
+			: undefined;
+	if (JSON.stringify(installed) === JSON.stringify(PACKAGES)) return;
 	log(`installing comparison packages into ${path.relative(ROOT, CACHE)} …`);
 	fs.mkdirSync(CACHE, { recursive: true });
-	fs.writeFileSync(
-		path.join(CACHE, "package.json"),
-		`${JSON.stringify({ name: "html-minifier-comparison", private: true }, null, 2)}\n`
-	);
+	if (!fs.existsSync(manifest)) {
+		fs.writeFileSync(
+			manifest,
+			`${JSON.stringify(
+				{ name: "html-minifier-comparison", private: true },
+				null,
+				2
+			)}\n`
+		);
+	}
 	execFileSync("npm", ["install", "--no-audit", "--no-fund", ...PACKAGES], {
 		cwd: CACHE,
 		stdio: "inherit"
 	});
+	// Recorded only after the install succeeded.
+	const written = JSON.parse(fs.readFileSync(manifest, "utf8"));
+	written.comparisonPackages = PACKAGES;
+	fs.writeFileSync(manifest, `${JSON.stringify(written, null, 2)}\n`);
 };
 
 /**
@@ -119,6 +139,33 @@ const APP_SHELL = `<!DOCTYPE html>
 </body>
 </html>`;
 
+/**
+ * A page whose weight is a framework stylesheet inlined whole as critical CSS —
+ * the shape where an HTML minifier's nested CSS handling dominates the result.
+ * @param {string} title page title
+ * @param {string} css the framework stylesheet
+ * @returns {string} the document
+ */
+const inlineCssPage = (title, css) => `<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>${title}</title>
+	<style>
+${css}
+	</style>
+</head>
+<body>
+	<header><nav><a href="/">Home</a> <a href="/docs">Docs</a></nav><h1>${title}</h1></header>
+	<main>
+		<section><h2>Form</h2><form method="post"><label>Name <input type="text" required></label><button type="submit">Send</button></form></section>
+		<section><h2>Table</h2><table><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody><tr><td>a</td><td>1</td></tr></tbody></table></section>
+	</main>
+	<footer><small>&copy; example</small></footer>
+</body>
+</html>`;
+
 const fixtures = () => {
 	const { marked } = load("marked");
 	/** @type {[string, string][]} */
@@ -133,6 +180,19 @@ const fixtures = () => {
 		out.push([label, fs.readFileSync(file, "utf8")]);
 	}
 	out.push(["App shell (inline critical CSS)", APP_SHELL]);
+	// Real framework stylesheets, classless through component-sized, inlined
+	// whole: whether each tool minifies, passes through, or mangles a large
+	// `<style>` decides these pages.
+	for (const [label, file] of [
+		["Pico 2 classless (inlined)", "@picocss/pico/css/pico.classless.css"],
+		["Water.css 2 (inlined)", "water.css/out/water.css"],
+		["Bootstrap 5 (inlined)", "bootstrap/dist/css/bootstrap.css"]
+	]) {
+		out.push([
+			label,
+			inlineCssPage(label, fs.readFileSync(path.join(MODULES, file), "utf8"))
+		]);
+	}
 	for (const [label, file] of [
 		["webpack README (rendered)", path.join(ROOT, "README.md")],
 		["webpack CHANGELOG (rendered)", path.join(ROOT, "CHANGELOG.md")]
@@ -302,19 +362,39 @@ const main = async () => {
 		const before = fingerprint(parse5, html);
 		const gzipped = zlib.gzipSync(Buffer.from(html), { level: 9 }).length;
 		process.stdout.write(
-			`\n${label} — ${kb(Buffer.byteLength(html))} (${kb(gzipped)} gzip), ${before.elements.size} tags\n`
+			`\n${label} — ${kb(Buffer.byteLength(html))} (${kb(gzipped)} gzip), ${
+				before.elements.size
+			} tags\n`
 		);
 		process.stdout.write(
-			`${"minifier".padEnd(34)}${"minified".padStart(10)}${"saved".padStart(8)}${"gzip".padStart(10)}${"saved".padStart(8)}${"ms".padStart(7)}   differs\n`
+			`${"minifier".padEnd(34)}${"minified".padStart(10)}${"saved".padStart(
+				8
+			)}${"gzip".padStart(10)}${"saved".padStart(8)}${"ms".padStart(
+				7
+			)}   differs\n`
 		);
 		for (const [name, run] of minifiers()) {
 			let out = "";
 			let best = Infinity;
-			for (let i = 0; i < 3; i++) {
-				const started = process.hrtime.bigint();
-				out = await run(html);
-				const took = Number(process.hrtime.bigint() - started) / 1e6;
-				if (took < best) best = took;
+			try {
+				for (let i = 0; i < 3; i++) {
+					const started = process.hrtime.bigint();
+					out = await run(html);
+					const took = Number(process.hrtime.bigint() - started) / 1e6;
+					if (took < best) best = took;
+				}
+			} catch (error) {
+				// A tool rejecting the document outright is a comparison result too.
+				process.stdout.write(
+					`${name.padEnd(34)}   rejects it: ${
+						String(
+							error && /** @type {Error} */ (error).message
+								? /** @type {Error} */ (error).message
+								: error
+						).split("\n", 1)[0]
+					}\n`
+				);
+				continue;
 			}
 			const after = fingerprint(parse5, out);
 			const notes = [
@@ -329,9 +409,10 @@ const main = async () => {
 				`${
 					name.padEnd(34) +
 					kb(Buffer.byteLength(out)).padStart(10) +
-					`${(100 - (Buffer.byteLength(out) / Buffer.byteLength(html)) * 100).toFixed(1)}%`.padStart(
-						8
-					) +
+					`${(
+						100 -
+						(Buffer.byteLength(out) / Buffer.byteLength(html)) * 100
+					).toFixed(1)}%`.padStart(8) +
 					kb(outGzip).padStart(10) +
 					`${(100 - (outGzip / gzipped) * 100).toFixed(1)}%`.padStart(8) +
 					best.toFixed(0).padStart(7)
