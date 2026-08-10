@@ -4529,11 +4529,12 @@ describe("SourceProcessor — streamed walk recycling", () => {
 describe("SourceProcessor — streamed walk offsets", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
-	// `HtmlParser` folds a head element's `end` into its injection anchor at
-	// `enter` and consumes the anchor in the same visit, so a provisional `end`
-	// there would misplace injected tags. The streamed walk only starts once the
-	// parse reaches `in body`, which is what keeps every head element a
-	// completed subtree with a final `end` — assert that directly.
+	// `HtmlParser` builds its head-injection anchors during the walk, and what it
+	// reads decides what has to be final: `tagEnd()` for the still-open `<html>`
+	// / `<head>` (assigned when the element is inserted) and `end()` only for the
+	// head's completed children. The streamed walk reports a provisional `end` on
+	// an element it has entered but not closed, so those two reads are the
+	// contract — assert them directly, at both walk sizes.
 	it("reports final end offsets for head elements", () => {
 		const SRC = [
 			"<!DOCTYPE html><html><head><title>t</title>",
@@ -4572,6 +4573,68 @@ describe("SourceProcessor — streamed walk offsets", () => {
 			"body",
 			"p"
 		]);
+	});
+
+	it("reports a provisional end at enter and a final one at exit", () => {
+		// What the streamed walk does that the single pass at EOF cannot: enter an
+		// element before it closes. Its `end` is then provisional until `exit`.
+		// Below `_STREAM_MIN_NODES` the same markup is walked once at EOF, so the
+		// two reads agree — the contrast is what pins the streamed path.
+		/**
+		 * @param {number} rows how many children to wrap
+		 * @returns {[number, number]} the outer element's `end` at enter and at exit
+		 */
+		const ends = (rows) => {
+			const source = `<div id=outer>${"<p><b>x</b></p>".repeat(rows)}</div>`;
+			let atEnter = -1;
+			let atExit = -1;
+			new SourceProcessor()
+				.use(
+					/** @type {import("../lib/html/syntax").VisitorMap} */ ({
+						[NodeType.Element]: {
+							enter: (path) => {
+								if (path.tagName() === "div" && atEnter === -1) {
+									atEnter = path.end();
+								}
+							},
+							exit: (path) => {
+								if (path.tagName() === "div" && atExit === -1) {
+									atExit = path.end();
+								}
+							}
+						}
+					})
+				)
+				.process(source);
+			return [atEnter, atExit];
+		};
+
+		const [smallEnter, smallExit] = ends(10);
+		expect(smallEnter).toBe(smallExit);
+
+		const [bigEnter, bigExit] = ends(40000);
+		// Provisional: the start tag only, because `</div>` has not been seen yet.
+		expect(bigEnter).toBe("<div id=outer>".length);
+		// Final: the whole element, once the walk leaves it.
+		expect(bigExit).toBe(
+			`<div id=outer>${"<p><b>x</b></p>".repeat(40000)}</div>`.length
+		);
+	});
+
+	it("refuses a nested parse rather than taking the walk's state over", () => {
+		// One parse at a time: the walk's state is module-scoped, so a visitor that
+		// started another would take this one's over and release its columns.
+		expect(() =>
+			new SourceProcessor()
+				.use(
+					/** @type {import("../lib/html/syntax").VisitorMap} */ ({
+						[NodeType.Element]: () => {
+							new SourceProcessor().process("<b>nested</b>");
+						}
+					})
+				)
+				.process("<p>x</p>")
+		).toThrow(/already running/);
 	});
 });
 
