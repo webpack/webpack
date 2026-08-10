@@ -51,6 +51,9 @@ module.exports = [
 	base("hmr", { plugins: [new webpack.HotModuleReplacementPlugin()] }),
 	// Every case below must fall back with no `.ei` emitted.
 	base("public-path-override", { entry: "./index-public-path-override" }),
+	// The two hashed names below are deferrable in themselves; what stops them here is
+	// `optimization.realContentHash`, off by default in development — without it the
+	// rewritten chunk's own content hash would go stale.
 	base("content-hash", {
 		output: { chunkFilename: "[name].[contenthash].mjs" }
 	}),

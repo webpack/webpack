@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Widen analyzable ESM output to HMR, and to hashed chunk, function and wasm names.
+Widen analyzable ESM output to HMR, and to names built from hashes or functions.
