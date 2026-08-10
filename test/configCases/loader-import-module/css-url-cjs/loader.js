@@ -4,7 +4,7 @@
 exports.pitch = async function (remaining) {
 	const result = await this.importModule(
 		`${this.resourcePath}.webpack[javascript/auto]!=!${remaining}`,
-		{ baseUri: "webpack://app", ...this.getOptions() }
+		{ baseUri: "webpack://app" }
 	);
 	return result.default || result;
 };

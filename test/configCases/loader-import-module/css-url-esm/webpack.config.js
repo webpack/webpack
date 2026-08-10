@@ -28,9 +28,25 @@ module.exports = {
 				]
 			},
 			{
-				test: /stylesheet\.js$/,
-				use: "./loader",
-				type: "asset/source"
+				oneOf: [
+					{
+						test: /other-stylesheet\.js$/,
+						use: [
+							{
+								loader: "./loader",
+								options: {
+									publicPath: "/other/"
+								}
+							}
+						],
+						type: "asset/source"
+					},
+					{
+						test: /stylesheet\.js$/,
+						use: "./loader",
+						type: "asset/source"
+					}
+				]
 			}
 		]
 	}

@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fix `[object Object]` asset urls when executing modules at build time.
+Fix `[object Object]` asset urls and resource hint crashes in build-time executed modules.
