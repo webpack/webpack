@@ -1,0 +1,41 @@
+/* A cell name is whatever a `grid-area` can name: hyphens, digits, non-ASCII
+   and escapes all included. Each pair below must scope to the same ident or
+   the area stops binding. */
+.hyphen-grid {
+	grid-template-areas: "main-head side-bar";
+}
+.hyphen-head { grid-area: main-head }
+.hyphen-side { grid-area: side-bar }
+
+.digit-grid {
+	grid-template-areas: "a-1 a-2";
+}
+.digit-one { grid-area: a-1 }
+
+.unicode-grid {
+	grid-template-areas: "héad";
+}
+.unicode-head { grid-area: héad }
+
+/* `\68 ead` and `head` are the same ident; the trailing space closes the
+   escape and does not separate two cells. */
+.escaped-grid {
+	grid-template-areas: "\68 ead \66 oot";
+}
+.escaped-head { grid-area: head }
+.escaped-foot { grid-area: \66 oot }
+
+.escaped-long-grid {
+	grid-template-areas: "\000068ead";
+}
+.escaped-long-head { grid-area: head }
+
+/* A run of only `.` is a null cell and names nothing. */
+.null-cell-grid {
+	grid-template-areas: "head ." "... foot";
+}
+
+.shorthand-grid {
+	grid-template: "nav-bar main-area" 1fr / auto;
+}
+.shorthand-nav { grid-area: nav-bar }

@@ -1,0 +1,30 @@
+/* A keyword in a value position that also accepts a `<custom-ident>` must stay
+   global — scoping one renames something the UA defines. */
+.animation-keywords {
+	animation-name: none;
+	animation: 1s linear infinite alternate both running paused;
+}
+.animation-wide { animation-name: inherit }
+.grid-keywords {
+	grid-area: auto;
+	grid-row: auto / span 3;
+}
+.container-keywords { container-name: none }
+.view-transition-keywords { view-transition-name: none }
+.counter-keywords {
+	counter-reset: none;
+	counter-increment: none;
+}
+/* UA counters: `page`, `pages` and `list-item` are defined by the UA, so a
+   stylesheet naming one means that counter and not a scoped copy. */
+.counter-ua { counter-reset: page 1 list-item 2 }
+.list-style-keywords {
+	list-style-type: disc;
+	list-style: decimal;
+}
+/* A predefined counter style stays global; a local one is scoped. */
+@counter-style thumbs { system: extends decimal; suffix: " " }
+.counter-style-local { list-style: thumbs }
+.font-palette-keywords { font-palette: normal }
+.will-change-keywords { will-change: transform, opacity, auto }
+.transition-keywords { transition-property: all }
