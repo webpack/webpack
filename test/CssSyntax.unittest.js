@@ -3307,7 +3307,17 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{transform:translate3d(-50%,0,0)}", "a{transform:translate(-50%)}"],
 			// `skewX(a)` is `skew(a)`: the second component defaults to 0.
 			["a{transform:skewX(10deg)}", "a{transform:skew(10deg)}"],
-			["a{transform:skewX(0)}", "a{transform:skew(0)}"]
+			["a{transform:skewX(0)}", "a{transform:skew(0)}"],
+			// A factor of 1 scales nothing along its axis.
+			["a{transform:scale(1,-1)}", "a{transform:scaleY(-1)}"],
+			["a{transform:scale(-1,1)}", "a{transform:scaleX(-1)}"],
+			["a{transform:scale(1,.5)}", "a{transform:scaleY(.5)}"],
+			// A translation is a `<length-percentage>`, so a zero of either kind is
+			// the same no-op — a percentage resolves against the element's own size.
+			["a{transform:translate(100%,0%)}", "a{transform:translate(100%)}"],
+			["a{transform:translate(0%,-100%)}", "a{transform:translateY(-100%)}"],
+			["a{transform:translate(0.0%,5px)}", "a{transform:translateY(5px)}"],
+			["a{transform:translate(10px,0em)}", "a{transform:translate(10px)}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
@@ -3941,8 +3951,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("drops a zero's unit inside a call whose every number is a length", () => {
-			expect(minify("a{transform:translate(0px, 0em)}")).toBe(
-				"a{transform:translate(0,0)}"
+			// A `translate3d` this shape reduces no further, so only the unit moves.
+			expect(minify("a{transform:translate3d(0px, 1em, 2em)}")).toBe(
+				"a{transform:translate3d(0,1em,2em)}"
 			);
 			expect(minify("a{clip-path:inset(0px 1px 0em 2px)}")).toBe(
 				"a{clip-path:inset(0 1px 0 2px)}"
