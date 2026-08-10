@@ -9,7 +9,10 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Every push to `main` shares one group, so cancelling would leave the commits
+  # in a burst of merges with no uploaded report — and a pull request based on
+  # one of them with no baseline. Only a superseded pull request run is dropped.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -82,6 +85,9 @@ jobs:
           cat code-size-report.md >> "$GITHUB_STEP_SUMMARY"
         env:
           CODE_SIZE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+          # The `main` commit the checked-out merge ref carries, so the report can
+          # tell whether the baseline it found is that same commit.
+          CODE_SIZE_BASE_COMMIT: ${{ github.event.pull_request.base.sha }}
 
       # On the pull request itself, not only in the job summary — a size change
       # nobody clicks through to see is a size change nobody sees. Updated in

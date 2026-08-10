@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css namespace exported tests should emit the namespace URIs unchanged 1`] = `
+"/*!**************************!*\\\\
+  !*** css ./imported.css ***!
+  \\\\**************************/
+/* Same prefix as the importer, bound to a different URI: concatenation cannot
+   keep both, so this records what a merged sheet looks like today. */
+@namespace vendor url(./other-ns.svg);
+
+.imported {
+	color: green;
+}
+
+/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+
+@namespace svg url('http://www.w3.org/2000/svg');
+@namespace vendor url(./ns.svg);
+@namespace url(http://www.w3.org/1999/xhtml);
+@namespace data url(data:text/plain,ns);
+@namespace empty url();
+
+body {
+	background: red;
+}
+
+/*!******************************!*\\\\
+  !*** css ./style.module.css ***!
+  \\\\******************************/
+@namespace scoped url(./ns.svg);
+
+._local {
+	color: blue;
+}
+
+
+/*# sourceMappingURL=bundle0.css.map*/"
+`;

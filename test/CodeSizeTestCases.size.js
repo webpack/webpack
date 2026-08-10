@@ -11,6 +11,7 @@ const path = require("path");
 const zlib = require("zlib");
 const webpack = require("..");
 const { DEFAULTS } = require("../lib/config/defaults");
+const codeSizeBaselineDrift = require("./helpers/codeSizeBaselineDrift");
 const codeSizeReportPrefixes = require("./helpers/codeSizeReportPrefixes");
 const prepareOptions = require("./helpers/prepareOptions");
 
@@ -41,7 +42,7 @@ const prepareOptions = require("./helpers/prepareOptions");
 /**
  * @typedef {object} Report
  * @property {number} version report format version
- * @property {{ commit?: string, node: string, cases: number, assets: number, withoutOutput: number }} meta run metadata
+ * @property {{ commit?: string, base?: string, node: string, cases: number, assets: number, withoutOutput: number }} meta run metadata
  * @property {Metrics} totals summed over every case
  * @property {Record<string, CaseResult>} cases result per `<category>/<case>`
  */
@@ -780,16 +781,21 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 	];
 	const short = (/** @type {Report} */ report) =>
 		report.meta.commit ? `\`${report.meta.commit.slice(0, 7)}\`` : "unknown";
+	// A pull request is built from its merge ref, so name both halves of what
+	// was measured rather than the head alone.
+	const measured = report.meta.base
+		? `${short(report)} merged into \`${report.meta.base.slice(0, 7)}\``
+		: short(report);
+	const drift = codeSizeBaselineDrift(baseline.meta.commit, report.meta.base);
 
 	// How many moved and by how much, then the biggest movers — before any
 	// collapsed section, so the whole verdict is readable without unfolding one.
 	lines.push(
-		`Comparing ${short(report)} against ${short(
-			baseline
-		)}. Merging this PR will **${
+		`Comparing ${measured} against ${short(baseline)}. Merging this PR will **${
 			changes.length === 0 ? "not change" : "change"
 		}** the code webpack generates.`,
 		"",
+		...(drift ? [drift, ""] : []),
 		"| | Changed | New | Deleted | Unchanged | Raw change |",
 		"| :-- | --: | --: | --: | --: | --: |"
 	);
@@ -1041,6 +1047,7 @@ const run = async () => {
 		version: REPORT_VERSION,
 		meta: {
 			commit: process.env.CODE_SIZE_COMMIT || readCommit(),
+			base: process.env.CODE_SIZE_BASE_COMMIT || undefined,
 			node: process.version,
 			cases: cases.length,
 			assets,
