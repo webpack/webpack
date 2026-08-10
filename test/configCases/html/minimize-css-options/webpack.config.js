@@ -26,9 +26,8 @@ module.exports = {
 				convertLengthUnits: true
 			}
 		},
-		// `"..."` keeps the default minimizer, which is what hands
-		// `optimization.minimize.css` to `htmlMinify` — an inline `<style>` or
-		// `style=""` must not disagree with a `.css` asset about a length's unit.
+		// `"..."` keeps the default minimizer, which hands
+		// `optimization.minimize.css` to `htmlMinify` for the inline CSS too.
 		minimizer: ["..."]
 	},
 	experiments: {
