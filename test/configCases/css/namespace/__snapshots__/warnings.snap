@@ -3,5 +3,6 @@
 exports[`warnings 1`] = `
 Array [
   "'@namespace' is not supported in bundled CSS",
+  "'@namespace' is not supported in bundled CSS",
 ]
 `;

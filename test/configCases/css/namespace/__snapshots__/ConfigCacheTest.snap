@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css namespace exported tests should emit the namespace URIs unchanged 1`] = `
+"/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/
+@namespace svg url('http://www.w3.org/2000/svg');
+@namespace vendor url(./ns.svg);
+
+body {
+	background: red;
+}
+
+
+/*# sourceMappingURL=bundle0.css.map*/"
+`;
