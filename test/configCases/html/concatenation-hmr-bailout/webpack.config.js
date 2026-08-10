@@ -22,6 +22,9 @@ module.exports = {
 		concatenateModules: true
 	},
 	plugins: [new HotModuleReplacementPlugin()],
+	stats: {
+		optimizationBailout: true
+	},
 	experiments: {
 		html: true
 	}
