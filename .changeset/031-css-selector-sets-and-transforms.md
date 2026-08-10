@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Write a CSS selector list in one order without repeats, and reduce more transforms.
+Write CSS selector lists, An+B and more values in their shortest spelling.
