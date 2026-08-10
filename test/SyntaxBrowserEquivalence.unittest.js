@@ -448,7 +448,9 @@ const installHelpers = () => {
 		/**
 		 * A selector list in one order, a repeat dropped — it is a set, so the
 		 * printer may write it any way round and two that differ only there are
-		 * the one rule. Splits on the list's own commas only.
+		 * the one rule. Splits on the list's own commas only; the splitter is
+		 * spelled out again here rather than shared because this whole function is
+		 * serialized into the page, where nothing outside it can be called.
 		 * @param {string} list a selector list
 		 * @returns {string} its canonical spelling
 		 */

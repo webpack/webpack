@@ -31,6 +31,7 @@ const colorName = require("color-name");
 /** @typedef {{ [name: string]: { syntax: string } }} SyntaxTable */
 /** @typedef {{ [name: string]: { syntax?: string } }} PartialSyntaxTable */
 /** @typedef {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[] } }} PartialPropertyTable */
+/** @typedef {{ [name: string]: { syntax?: string, status?: string } }} PartialSelectorTable */
 /** @type {PackageManifest} */
 const colorNamePackage = require("color-name/package.json");
 /** @type {PartialSyntaxTable} */
@@ -2346,6 +2347,31 @@ const collectNthPseudoFunctions = () => {
 	return names.sort();
 };
 
+// An An+B pseudo-class counting from one end, and the end it counts from. The
+// pair a name is built out of, so the counterpart is spelled rather than listed.
+const NTH_END_REGEXP = /^nth-(last-)?(child|of-type)$/;
+
+/**
+ * The An+B pseudo-classes whose first or last element has a name of its own:
+ * `:nth-child(1)` is what `:first-child` selects. Both halves come from the
+ * selector table — the An+B ones by their grammar, the counterpart by the name
+ * the pair builds, kept only when the table has it as a selector too.
+ * @returns {[string, string][]} `[function, pseudo-class]`, sorted
+ */
+const collectNthNamedEquivalents = () => {
+	/** @type {[string, string][]} */
+	const pairs = [];
+	for (const name of collectNthPseudoFunctions()) {
+		const end = NTH_END_REGEXP.exec(name);
+		if (end === null) continue;
+		const named = `${end[1] === undefined ? "first" : "last"}-${end[2]}`;
+		const entry = /** @type {PartialSelectorTable} */ (selectors)[`:${named}`];
+		if (entry === undefined || entry.status !== "standard") continue;
+		pairs.push([name, named]);
+	}
+	return pairs.sort(([one], [other]) => (one < other ? -1 : 1));
+};
+
 // A production naming a selector: what a function taking one has in its grammar.
 const SELECTOR_PRODUCTION_REGEXP = /<[a-z-]*selector[a-z-]*>/;
 
@@ -3431,6 +3457,7 @@ const collectData = () => {
 	const mathFunctions = collectMathFunctions();
 	const substitutionFunctions = collectSubstitutionFunctions();
 	const nthPseudoFunctions = collectNthPseudoFunctions();
+	const nthNamedEquivalents = collectNthNamedEquivalents();
 	const selectorFunctions = collectSelectorFunctions();
 	const colorOnlyProperties = collectColorOnlyProperties();
 	const initialValueKeywords = collectInitialValueKeywords();
@@ -3611,6 +3638,10 @@ const SUBSTITUTION_FUNCTIONS = ${setLiteral(substitutionFunctions)};
 // The pseudo-class functions whose argument is An+B, where \`2n+1\` is the
 // notation \`odd\` names in one byte less.
 const NTH_PSEUDO_FUNCTIONS = ${setLiteral(nthPseudoFunctions)};
+
+// Each An+B pseudo-class whose one-element case has a name of its own:
+// \`:nth-child(1)\` is what \`:first-child\` selects, in fewer bytes.
+const NTH_NAMED_EQUIVALENTS = ${mapLiteral(nthNamedEquivalents)};
 
 // The properties taking a color and never an identifier of the author's own, so
 // a named color written in one is that color and may be spelled the shortest way.
@@ -3966,7 +3997,7 @@ module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
 module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
 module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;\nmodule.exports.MERGEABLE_AT_RULES = MERGEABLE_AT_RULES;\nmodule.exports.MERGE_LONGHANDS = MERGE_LONGHANDS;
 module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;
-module.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;
+module.exports.NTH_NAMED_EQUIVALENTS = NTH_NAMED_EQUIVALENTS;\nmodule.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
@@ -4027,6 +4058,7 @@ module.exports.collectData = collectData;
 module.exports.collectFamilyLonghands = collectFamilyLonghands;
 module.exports.collectGradientFunctions = collectGradientFunctions;
 module.exports.collectMergeableAtRules = collectMergeableAtRules;
+module.exports.collectNthNamedEquivalents = collectNthNamedEquivalents;
 module.exports.collectRatioProperties = collectRatioProperties;
 module.exports.isSpelledSyntax = isSpelledSyntax;
 module.exports.longhandType = longhandType;

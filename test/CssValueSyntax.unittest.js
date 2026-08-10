@@ -11,6 +11,7 @@ const {
 	collectFamilyLonghands,
 	collectGradientFunctions,
 	collectMergeableAtRules,
+	collectNthNamedEquivalents,
 	collectRatioProperties,
 	isSpelledSyntax,
 	longhandType,
@@ -476,6 +477,17 @@ describe("CssValueSyntax", () => {
 					{ one: { syntax: "<one>" } }
 				)
 			).toEqual([]);
+		});
+	});
+
+	describe("collectNthNamedEquivalents", () => {
+		it("pairs each An+B pseudo-class with the name its one-element case has", () => {
+			expect(collectNthNamedEquivalents()).toEqual([
+				["nth-child", "first-child"],
+				["nth-last-child", "last-child"],
+				["nth-last-of-type", "last-of-type"],
+				["nth-of-type", "first-of-type"]
+			]);
 		});
 	});
 
