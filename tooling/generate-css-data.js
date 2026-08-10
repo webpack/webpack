@@ -2667,6 +2667,11 @@ const SUPPLEMENT = {
 	// `caret` is the one candidate left out — it is far newer than `caret-color`.
 	// The four `border-<side>` shorthands reset their three longhands and nothing
 	// else, which is what keeps them here while `border` itself stays out.
+	// `transition` stays out for a second reason: it resets `transition-behavior`,
+	// which its longhands never name, and its per-item list makes one `normal` out
+	// of as many items as a merge wrote. `flex` is safe but not expressible here —
+	// its grammar is an ordered sequence, not the order-free one these slots come
+	// from — so it waits on a merge that can read that shape.
 	familyShorthands: [
 		"border-bottom",
 		"border-left",
