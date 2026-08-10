@@ -2270,9 +2270,9 @@ export interface Optimization {
 	 */
 	mergeDuplicateChunks?: boolean;
 	/**
-	 * Enable minimizing the output. Uses optimization.minimizer.
+	 * Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures the built-in minimizer per asset type.
 	 */
-	minimize?: boolean;
+	minimize?: boolean | OptimizationMinimizeOptions;
 	/**
 	 * Minimizer(s) to use for minimizing the output.
 	 */
@@ -2337,6 +2337,45 @@ export interface ConcatenateModulesOptions {
 	 */
 	commonjs?: boolean;
 }
+/**
+ * Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` excludes it from the built-in minimizer.
+ * @since 5.110.0
+ */
+export interface OptimizationMinimizeOptions {
+	/**
+	 * Minimize CSS assets: `false` excludes them from the built-in minimizer, an object configures what it may do beyond the transforms that always apply.
+	 */
+	css?: boolean | OptimizationMinimizeCss;
+	/**
+	 * Minimize HTML assets: `false` excludes them from the built-in minimizer, an object configures what it may do beyond the transforms that always apply.
+	 */
+	html?: boolean | OptimizationMinimizeHtml;
+	/**
+	 * Minimize JavaScript assets: `false` excludes them from the built-in minimizer, an object configures what it may do beyond its defaults.
+	 */
+	javascript?: boolean | OptimizationMinimizeJavascript;
+}
+/**
+ * What the CSS minimizer may do beyond the transforms that always apply. Applies wherever it runs: on `.css` assets and on the inline `<style>` / `style=""` the HTML minimizer hands it.
+ * @since 5.110.0
+ */
+export interface OptimizationMinimizeCss {
+	/**
+	 * Rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.
+	 * @since 5.110.0
+	 */
+	convertLengthUnits?: boolean;
+}
+/**
+ * What the HTML minimizer may do beyond the transforms that always apply. No additional options are supported yet.
+ * @since 5.110.0
+ */
+export interface OptimizationMinimizeHtml {}
+/**
+ * What the JavaScript minimizer may do beyond its defaults. No additional options are supported yet.
+ * @since 5.110.0
+ */
+export interface OptimizationMinimizeJavascript {}
 /**
  * Plugin instance.
  */
@@ -4429,9 +4468,9 @@ export interface OptimizationNormalized {
 	 */
 	mergeDuplicateChunks?: boolean;
 	/**
-	 * Enable minimizing the output. Uses optimization.minimizer.
+	 * Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures the built-in minimizer per asset type.
 	 */
-	minimize?: boolean;
+	minimize?: boolean | OptimizationMinimizeOptions;
 	/**
 	 * Minimizer(s) to use for minimizing the output.
 	 */

@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-convert-length-units minimize-convert-length-units should compile 1`] = `
+Array [
+  "/*! sixteen pixels are one pica */.t01{width:1pc}",
+  "/*! one hundred twenty pixels are ninety points */.t02{width:90pt}",
+  "/*! one hundred ninety-two pixels are two inches */.t03{width:2in}",
+  "/*! ten millimeters are one centimeter */.t04{width:1cm}",
+  "/*! a length no other unit spells shorter keeps its own */.t05{width:17px}",
+  "/*! a relative unit never converts: only the absolute ones are fixed ratios */.t06{width:16em}",
+]
+`;

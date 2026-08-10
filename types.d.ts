@@ -10203,6 +10203,11 @@ declare interface HtmlProcessOptions {
 	 * what the target can read, forwarded to the CSS minifier this runs over an inline `<style>` and every `style=""`
 	 */
 	environment?: CssEnvironment;
+
+	/**
+	 * forwarded to that CSS minifier with `environment`: a length may be rewritten into a shorter unit it exactly equals (default false)
+	 */
+	convertLengthUnits?: boolean;
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**
@@ -19625,9 +19630,9 @@ declare interface Optimization {
 	mergeDuplicateChunks?: boolean;
 
 	/**
-	 * Enable minimizing the output. Uses optimization.minimizer.
+	 * Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures the built-in minimizer per asset type.
 	 */
-	minimize?: boolean;
+	minimize?: boolean | OptimizationMinimizeOptions;
 
 	/**
 	 * Minimizer(s) to use for minimizing the output.
@@ -19715,6 +19720,51 @@ declare interface Optimization {
 }
 
 /**
+ * What the CSS minimizer may do beyond the transforms that always apply. Applies wherever it runs: on `.css` assets and on the inline `<style>` / `style=""` the HTML minimizer hands it.
+ * @since 5.110.0
+ */
+declare interface OptimizationMinimizeCss {
+	/**
+	 * Rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.
+	 * @since 5.110.0
+	 */
+	convertLengthUnits?: boolean;
+}
+
+/**
+ * What the HTML minimizer may do beyond the transforms that always apply. No additional options are supported yet.
+ * @since 5.110.0
+ */
+declare interface OptimizationMinimizeHtml {}
+
+/**
+ * What the JavaScript minimizer may do beyond its defaults. No additional options are supported yet.
+ * @since 5.110.0
+ */
+declare interface OptimizationMinimizeJavascript {}
+
+/**
+ * Enable minimizing the output, configured per asset type. An absent type is minimized with the defaults; `false` excludes it from the built-in minimizer.
+ * @since 5.110.0
+ */
+declare interface OptimizationMinimizeOptions {
+	/**
+	 * Minimize CSS assets: `false` excludes them from the built-in minimizer, an object configures what it may do beyond the transforms that always apply.
+	 */
+	css?: boolean | OptimizationMinimizeCss;
+
+	/**
+	 * Minimize HTML assets: `false` excludes them from the built-in minimizer, an object configures what it may do beyond the transforms that always apply.
+	 */
+	html?: boolean | OptimizationMinimizeHtml;
+
+	/**
+	 * Minimize JavaScript assets: `false` excludes them from the built-in minimizer, an object configures what it may do beyond its defaults.
+	 */
+	javascript?: boolean | OptimizationMinimizeJavascript;
+}
+
+/**
  * Enables/Disables integrated optimizations.
  */
 declare interface OptimizationNormalized {
@@ -19775,9 +19825,9 @@ declare interface OptimizationNormalized {
 	mergeDuplicateChunks?: boolean;
 
 	/**
-	 * Enable minimizing the output. Uses optimization.minimizer.
+	 * Enable minimizing the output. Uses optimization.minimizer. An object enables it and configures the built-in minimizer per asset type.
 	 */
-	minimize?: boolean;
+	minimize?: boolean | OptimizationMinimizeOptions;
 
 	/**
 	 * Minimizer(s) to use for minimizing the output.
@@ -19905,7 +19955,7 @@ type OptimizationNormalizedWithDefaults = OptimizationNormalized & {
 	mangleWasmImports: NonNullable<undefined | boolean>;
 	portableRecords: NonNullable<undefined | boolean>;
 	realContentHash: NonNullable<undefined | boolean>;
-	minimize: NonNullable<undefined | boolean>;
+	minimize: NonNullable<undefined | boolean | OptimizationMinimizeOptions>;
 	minimizer: (
 		| ((this: Compiler, compiler: Compiler) => void)
 		| WebpackPluginInstance
