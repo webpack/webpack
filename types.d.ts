@@ -21580,6 +21580,12 @@ declare class PrintContext<TPath, TNode> {
 	pushPending(text: string): number;
 
 	/**
+	 * Rewrite a held-back opener — an opener whose text depends on what turns out
+	 * to follow it can only be settled once something does.
+	 */
+	setPending(depth: number, text: string): void;
+
+	/**
 	 * Emit every held-back opener, outermost first — something inside the
 	 * innermost one has content, so all of them do.
 	 */
@@ -21606,6 +21612,12 @@ declare class PrintContext<TPath, TNode> {
 	markCut(): number;
 
 	/**
+	 * Append a piece of a node that is being printed in pieces. Nothing takes it
+	 * back, so it only extends the output.
+	 */
+	emitStreamed(text: string): void;
+
+	/**
 	 * Forget every node's printed text. A node printed in pieces does this once
 	 * each child is emitted, so the store never holds more than one of them —
 	 * which is also what keeps a recycled node id from reading as an earlier
@@ -21625,6 +21637,13 @@ declare class PrintContext<TPath, TNode> {
 	 * this once the node's visitors and children are done). `path` is on `node`.
 	 */
 	printNode(node: TNode, path: TPath): void;
+
+	/**
+	 * Print one node and hand its text straight back — for a node inside one being
+	 * printed in pieces, whose text is emitted as it is printed, so the store
+	 * would only ever be written and read once.
+	 */
+	printPiece(path: TPath): string;
 	get(node: TNode): string;
 
 	/**

@@ -5313,6 +5313,81 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 	});
 });
 
+describe("SourceProcessor — printing in pieces", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} source html source
+	 * @returns {string} minified serialization
+	 */
+	const minify = (source) =>
+		new SourceProcessor().process(source, { minimize: true }).code;
+
+	// Most of a document prints as `open tag + children + end tag`, so each piece
+	// goes out as the walk reaches it rather than being held for the parent to
+	// read back. These are the elements whose text is not that — printed whole, so
+	// the piecemeal path has to leave them alone — and the pieces that are only
+	// decidable once something inside has printed.
+
+	it("prints a long sibling chain a piece at a time", () => {
+		// The store is what this avoids: nothing but the node being printed is in
+		// it, so a wide document costs its output rather than a multiple of it.
+		const source = `<div id=a>${"<span>x</span>".repeat(200)}</div>`;
+		expect(minify(source)).toBe(source);
+	});
+
+	for (const name of ["pre", "textarea", "listing"]) {
+		it(`re-adds the leading newline <${name}> would lose on re-parsing`, () => {
+			// The parser eats one newline going in, so a value that starts with one
+			// needs a second — knowable only once the children are in, which is why
+			// this element prints whole.
+			expect(minify(`<div><${name}>\n\nkeep</${name}></div>`)).toBe(
+				`<div><${name}>\n\nkeep</${name}></div>`
+			);
+			expect(minify(`<div><${name}>x</${name}></div>`)).toBe(
+				`<div><${name}>x</${name}></div>`
+			);
+		});
+	}
+
+	it("drops an omitted tag that nothing printed inside", () => {
+		expect(minify("")).toBe("");
+		expect(minify("<html><body>")).toBe("<html><body></body></html>");
+		expect(minify("</body><!--c-->")).toBe("");
+	});
+
+	it("keeps the end tag of a `<tbody>` whose start tag is omitted", () => {
+		// Its start tag goes, its end tag stays — a `<caption>` after it would
+		// otherwise re-parse into the row group.
+		expect(minify("<table><tr><td>x</tbody><caption>c</caption></table>")).toBe(
+			"<table><tr><td>x</tbody><caption>c</table>"
+		);
+		expect(minify("<table><tbody><tr><td>x</table>")).toBe(
+			"<table><tr><td>x</table>"
+		);
+		expect(minify("<table><colgroup><col></colgroup><tr><td>y</table>")).toBe(
+			"<table><col><tr><td>y</table>"
+		);
+	});
+
+	it("keeps the end tag of a `/>` element that has children", () => {
+		// `/>` only closes the tag in foreign content; in HTML it is ignored, and
+		// whether the end tag is needed hangs on what ends up inside.
+		expect(minify("<div/>x</div>")).toBe("<div>x</div>");
+		expect(minify("<div/></div>")).toBe("<div>");
+		expect(minify("<svg><path/><circle/></svg>")).toBe(
+			"<svg><path/><circle/></svg>"
+		);
+	});
+
+	it("prints a `<template>`'s content fragment in its place", () => {
+		expect(minify("<div><template><p>a</p></template></div>")).toBe(
+			"<div><template><p>a</template></div>"
+		);
+		expect(minify("<template></template>")).toBe("<template></template>");
+	});
+});
+
 describe("token parts reported by the tokenizer", () => {
 	/**
 	 * @param {string} source HTML
