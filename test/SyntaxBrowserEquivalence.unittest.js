@@ -390,6 +390,38 @@ const installHelpers = () => {
 			return (brace === -1 ? text : text.slice(0, brace)).trim();
 		};
 		/**
+		 * A selector list in one order, a repeat dropped — it is a set, so the
+		 * printer may write it any way round and two that differ only there are
+		 * the one rule. Splits on the list's own commas only.
+		 * @param {string} list a selector list
+		 * @returns {string} its canonical spelling
+		 */
+		const selectorSet = (list) => {
+			const out = [];
+			let depth = 0;
+			let quote = "";
+			let from = 0;
+			for (let i = 0; i < list.length; i++) {
+				const c = list[i];
+				if (c === "\\") {
+					i++;
+				} else if (quote !== "") {
+					if (c === quote) quote = "";
+				} else if (c === '"' || c === "'") {
+					quote = c;
+				} else if (c === "(" || c === "[") {
+					depth++;
+				} else if (c === ")" || c === "]") {
+					depth--;
+				} else if (c === "," && depth === 0) {
+					out.push(list.slice(from, i).trim());
+					from = i + 1;
+				}
+			}
+			out.push(list.slice(from).trim());
+			return [...new Set(out)].sort().join(", ");
+		};
+		/**
 		 * A grouping rule as the kind of at-rule it is and the condition it holds
 		 * under, read through the API that normalizes it where one exists.
 		 * @param {CSSRule} rule a grouping rule
@@ -468,8 +500,9 @@ const installHelpers = () => {
 				// An empty rule renders nothing, so dropping it is safe.
 				if (style && style.length > 0) {
 					// A bare declaration block nested in a rule stands for `& { … }`.
+					const selector = /** @type {CSSStyleRule} */ (rule).selectorText;
 					const label =
-						/** @type {CSSStyleRule} */ (rule).selectorText ||
+						(selector ? selectorSet(selector) : selector) ||
 						/** @type {CSSKeyframeRule} */ (rule).keyText ||
 						(rule.cssText.includes("{") ? prelude(rule) : "&");
 					// The same selector twice in a row is the one rule the cascade reads,
@@ -1021,9 +1054,19 @@ describe("printer output in real Chrome", () => {
 		`${rule.chain
 			.map(({ kind, condition }) => {
 				const answer = signatures.get(`${kind} ${condition}`);
-				return `@${kind}<${answer === undefined ? condition : answer}>`;
+				if (answer !== undefined) return `@${kind}<${answer}>`;
+				// A nested rule holds under its parent's selector list, which is a set
+				// like its own — the printer may have sorted it.
+				return `@${kind}<${kind === "style" ? sortedSelectorList(condition) : condition}>`;
 			})
 			.join(" >> ")} ${decodeDataUrls(rule.text)}`;
+
+	/**
+	 * @param {string} list a selector list
+	 * @returns {string} it in one order, a repeat dropped
+	 */
+	const sortedSelectorList = (list) =>
+		[...new Set(splitSelectorList(list))].sort().join(", ");
 
 	/**
 	 * Split a selector list on its own commas — not the ones inside `:is(…)`, an
@@ -1064,7 +1107,12 @@ describe("printer output in real Chrome", () => {
 	 * same style into a single selector list — the same rules in the same cascade
 	 * order, written shorter — so the comparison is made per selector rather than
 	 * per rule. A join of rules that do *not* match still fails: each selector
-	 * carries its own computed style, and the order is still compared.
+	 * carries its own computed style, and the order between rules is still compared.
+	 *
+	 * Within one rule the selectors are compared as the set they are: they match
+	 * at their own specificity whatever order they are written in, so the printer
+	 * may sort a list and drop a repeat. Two distinct selectors never collapse,
+	 * so a genuinely lost one still fails.
 	 * @param {Rule[]} rules rules in cascade order
 	 * @returns {Rule[]} the same, one selector each
 	 */
@@ -1086,16 +1134,48 @@ describe("printer output in real Chrome", () => {
 	 * @returns {string} why they differ, or "" when they do not
 	 */
 	const compareRules = (before, after, signatures) => {
+		/**
+		 * @param {string} text a rule's `selector { … }`
+		 * @returns {string} the block alone, or the whole text when it has none
+		 */
+		const blockOf = (text) => {
+			const at = text.indexOf(" { ");
+			return at === -1 ? text : text.slice(at);
+		};
 		// The same selector twice in a row computing the same style is the one rule
 		// it resolves to, which is what joining them into a list leaves.
 		/**
 		 * @param {Rule[]} rules rules in cascade order
 		 * @returns {string[]} their keys, an adjacent repeat collapsed
 		 */
-		const keys = (rules) =>
-			perSelector(rules)
-				.map((rule) => keyOf(rule, signatures))
+		const keys = (rules) => {
+			const flat = perSelector(rules).map((rule) => ({
+				key: keyOf(rule, signatures),
+				// Everything but the selector: two entries sharing it are one rule's
+				// worth of cascade, whichever of them is written first.
+				group: keyOf(
+					{ chain: rule.chain, text: blockOf(rule.text) },
+					signatures
+				)
+			}));
+			// A run of selectors reaching the same block under the same conditions is
+			// a set — which is the very thing that lets them be joined into one list
+			// — so it is compared as one, in one order, a repeat dropped.
+			for (let from = 0; from < flat.length;) {
+				let to = from + 1;
+				while (to < flat.length && flat[to].group === flat[from].group) to++;
+				if (to - from > 1) {
+					const sorted = flat
+						.slice(from, to)
+						.sort((one, other) => (one.key < other.key ? -1 : 1));
+					for (let i = from; i < to; i++) flat[i] = sorted[i - from];
+				}
+				from = to;
+			}
+			return flat
+				.map(({ key }) => key)
 				.filter((key, i, all) => i === 0 || key !== all[i - 1]);
+		};
 		const a = keys(before);
 		const b = keys(after);
 		const shorter = Math.min(a.length, b.length);

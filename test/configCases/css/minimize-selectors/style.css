@@ -191,3 +191,14 @@ a/*c*/b { color: red }
 /*! declined: declarations after a nested rule are an implicit `&` rule */
 .t84 { color: red; &:hover { top: 0 } }
 .t84 { margin: 0 }
+
+/*! webpack: a selector list is a set, so one order lets equal lists compare */
+.t90b, .t90a { color: red }
+/*! webpack: ...and a repeat in it matches nothing the first did not */
+.t91, .t91, .t92 { color: red }
+/*! webpack: ...which is what lets two rules naming one set become one rule */
+.t93, .t94 { color: red }
+.t94, .t93 { margin: 0 }
+/*! declined: only the list's own commas split it */
+:is(.t96, .t95) .t97, .t98 { color: red }
+.t99[title="b,a"], .t99a { color: red }

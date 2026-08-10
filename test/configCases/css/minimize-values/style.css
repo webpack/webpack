@@ -25,7 +25,7 @@
 /*! convert-values: should strip the unit from zero lengths */
 .t09 { margin: 0em 0% 0px 0pc }
 /*! convert-values: ...inside a call whose every number is a length too */
-.t09a { transform: translate(0px, 0em) }
+.t09a { transform: translate3d(0px, 1em, 2em) }
 /*! convert-values: ...however deep the shape nests them */
 .t09b { clip-path: inset(0px 1px 0em 2px) }
 /*! declined: `scale()` takes a `<number>`, so `scale(0px)` is dropped where

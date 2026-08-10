@@ -11,7 +11,7 @@ Array [
    and costs as many bytes as it saves once compressed, so it is off by default
    (\`convertLengthUnits\`) — as it is in cssnano's default preset */.t06{width:16px}.t07{width:120px}.t08{width:192px}",
   "/*! convert-values: should strip the unit from zero lengths */.t09{margin:0 0% 0 0}",
-  "/*! convert-values: ...inside a call whose every number is a length too */.t09a{transform:translate(0,0)}",
+  "/*! convert-values: ...inside a call whose every number is a length too */.t09a{transform:translate3d(0,1em,2em)}",
   "/*! convert-values: ...however deep the shape nests them */.t09b{clip-path:inset(0 1px 0 2px)}",
   "/*! declined: \`scale()\` takes a \`<number>\`, so \`scale(0px)\` is dropped where
    \`scale(0)\` is a transform — the rewrite would revive the declaration */.t09c{transform:scale(0px)}",

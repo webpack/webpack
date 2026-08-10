@@ -3285,6 +3285,34 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a selector list as the set it is", () => {
+		it.each([
+			["b,a{color:red}", "a,b{color:red}"],
+			// A repeat matches nothing the first one did not.
+			["a,a,b{color:red}", "a,b{color:red}"],
+			[".a,.a{top:0}", ".a{top:0}"],
+			["h6,.h6,h5,.h5{top:0}", ".h5,.h6,h5,h6{top:0}"],
+			["@media print{z,a{top:0}}", "@media print{a,z{top:0}}"],
+			// A nested rule's list is one too.
+			["a{& d,& c{top:0}}", "a{& c,& d{top:0}}"],
+			// Two rules reaching the same set are one rule once both are in order.
+			["a,b{color:red}b,a{top:0}", "a,b{color:red;top:0}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// Only the list's own commas split it.
+			["the comma is inside `:is()`", ":is(b,a) c,d{top:0}"],
+			["the comma is inside an attribute value", 'a[title="x,y"],b{top:0}'],
+			["the list is already in order", "*,:after,:before{top:0}"],
+			// A keyframe selector list is printed by its own rule.
+			["it is a keyframe selector", "@keyframes k{50%,0%{top:0}}"]
+		])("keeps the list where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("a transform naming the same matrix", () => {
 		it.each([
 			["a{transform:translate(0,10px)}", "a{transform:translateY(10px)}"],
