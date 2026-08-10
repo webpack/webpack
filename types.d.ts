@@ -3697,6 +3697,20 @@ declare class Compilation {
 	}): void;
 
 	/**
+	 * Queues a runtime module whose implementation is loaded on demand, for
+	 * `_attachPendingRuntimeModules` to await and build once the requirement pass
+	 * is over. `runtimeRequirementInTree` is a sync hook, so a tap cannot await
+	 * the load itself; anything the tap reads off the requirement set must be
+	 * captured before queueing, since `create` runs later.
+	 */
+	addLazyRuntimeModule(
+		chunk: Chunk,
+		load: () => Promise<any>,
+		create: (loaded?: any) => RuntimeModule,
+		chunkGraph?: ChunkGraph
+	): void;
+
+	/**
 	 * Adds runtime module.
 	 */
 	addRuntimeModule(
@@ -18696,6 +18710,10 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		afterResolve: AsyncSeriesBailHook<[ResolveData], false | void>;
 		createModule: AsyncSeriesBailHook<[CreateData, ResolveData], void | Module>;
 		module: SyncWaterfallHook<[Module, CreateData, ResolveData], Module>;
+		/**
+		 * @since 5.110.0
+		 */
+		prepareModuleType: HookMap<AsyncSeriesHook<[]>>;
 		createParser: TypedHookMap<
 			Record<
 				"javascript/auto",
@@ -29543,10 +29561,26 @@ declare namespace exports {
 			export let QUOTE_NONE: 0;
 			export let QUOTE_SINGLE: 2;
 			export let SVG_TAG_ADJUST: Record<string, string>;
+			export let baseTag: (
+				base:
+					| string
+					| {
+							/**
+							 * Value for the `href` attribute of the `<base>` element.
+							 */
+							href: string;
+							/**
+							 * Value for the `target` attribute of the `<base>` element (e.g. `"_blank"`).
+							 */
+							target?: string;
+					  }
+			) => string;
+			export let buildHeadTags: (opts: OutputHtmlOptions) => string;
 			export let decodeEntities: _functionSyntax;
 			export let escapeAttribute: (s: string) => string;
 			export let escapeText: (s: string) => string;
 			export let isAsciiWhitespace: (cc: number) => boolean;
+			export let metaTag: (name: string, content: string) => string;
 			export let parseCssUrls: (input: string) => [string, number, number][];
 			export let parseHtml: (
 				input: string,
