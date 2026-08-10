@@ -1,8 +1,9 @@
 "use strict";
 
-// The size report's row keys. `CodeSizeTestCases.size.js` runs a full build on
-// require, so the key assignment is unit-tested through its helper.
+// The size report's row keys and baseline check. `CodeSizeTestCases.size.js`
+// runs a full build on require, so both are unit-tested through their helpers.
 
+const codeSizeBaselineDrift = require("./helpers/codeSizeBaselineDrift");
 const codeSizeReportPrefixes = require("./helpers/codeSizeReportPrefixes");
 
 describe("codeSizeReportPrefixes", () => {
@@ -54,5 +55,29 @@ describe("codeSizeReportPrefixes", () => {
 		const names = ["a", "a", "a[1]", "a[1]", "a[1][3]", undefined, "5", "a"];
 		const prefixes = codeSizeReportPrefixes(names);
 		expect(new Set(prefixes).size).toBe(names.length);
+	});
+});
+
+describe("codeSizeBaselineDrift", () => {
+	const base = "e3f177ca7e9c645718d1dbe95bf3c6f60563f6e8";
+	const older = "a0b6a75e1c0d3f4a5b6c7d8e9f0a1b2c3d4e5f60";
+
+	it("says nothing when the baseline is the measured base", () => {
+		expect(codeSizeBaselineDrift(base, base)).toBeUndefined();
+	});
+
+	it("says nothing when either commit is unknown", () => {
+		// A `main` push has no base, and a baseline predating `meta.commit` has no
+		// commit — neither is drift, so neither warns.
+		expect(codeSizeBaselineDrift(base, undefined)).toBeUndefined();
+		expect(codeSizeBaselineDrift(undefined, base)).toBeUndefined();
+		expect(codeSizeBaselineDrift(undefined, undefined)).toBeUndefined();
+	});
+
+	it("names both commits when they differ", () => {
+		const note = codeSizeBaselineDrift(older, base);
+		expect(note).toContain("a0b6a75");
+		expect(note).toContain("e3f177c");
+		expect(note).toContain("[!WARNING]");
 	});
 });
