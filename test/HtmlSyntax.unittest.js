@@ -3673,6 +3673,47 @@ describe("parseHtml — SourceProcessor", () => {
 	});
 });
 
+describe("SourceProcessor — collapseWhitespace", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization with text whitespace collapsed
+	 */
+	const collapse = (html) =>
+		new SourceProcessor().process(html, {
+			minimize: true,
+			collapseWhitespace: true
+		}).code;
+
+	it("collapses each run of whitespace to one space, never removing it", () => {
+		expect(collapse("<p>a   \t\n b</p>")).toBe("<p>a b");
+	});
+
+	it("prints a lone tab as the shorter single space", () => {
+		expect(collapse("<p>a\tb</p>")).toBe("<p>a b");
+	});
+
+	it("collapses a trailing run", () => {
+		expect(collapse("<p>a  b  </p>")).toBe("<p>a b ");
+	});
+
+	it("keeps already-collapsed text on the source passthrough", () => {
+		expect(collapse("<p>a b</p>")).toBe("<p>a b");
+	});
+
+	it("keeps whitespace verbatim under `pre`, at any depth", () => {
+		expect(collapse("<pre>a   b</pre>")).toBe("<pre>a   b</pre>");
+		expect(collapse("<pre><span>a   b</span></pre>")).toBe(
+			"<pre><span>a   b</span></pre>"
+		);
+	});
+
+	it("keeps text carrying a `<` on the passthrough path", () => {
+		expect(collapse("<p><%=   x   %></p>")).toBe("<p><%=   x   %>");
+	});
+});
+
 describe("parseHtml — insertion-mode edge cases", () => {
 	it("merges foster-parented text runs before a table", () => {
 		const nodes = body("<table>x<tr></tr>y</table>");
