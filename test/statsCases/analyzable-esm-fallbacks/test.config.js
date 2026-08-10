@@ -8,23 +8,18 @@ const HELPER = "__webpack_require__.ei";
 // Per case: which emitted entry to inspect and what to assert.
 // - "analyzable": the baseline — emits the `.ei` helper.
 // - "fallback": the whole build has no analyzable import, so no `.ei` is emitted at all.
-// - "callSiteFallback": the target chunk loads via runtime `.e(...)`; a nested import
-//   is still analyzable, so the `.ei` helper legitimately exists — proving the fallback
-//   itself adds no extra runtime.
 const CASES = {
 	analyzable: { file: "main.mjs", expect: "analyzable" },
 	"public-path-override": { file: "main.mjs", expect: "fallback" },
-	"fetch-priority": { file: "main.mjs", expect: "fallback" },
+	// `fetchPriority` is unsupported for ESM output, so it must not degrade the
+	// output — the analyzable form is still emitted (documented limitation).
+	"fetch-priority": { file: "main.mjs", expect: "analyzable" },
 	"content-hash": { file: "main.mjs", expect: "fallback" },
 	"templated-public-path": { file: "main.mjs", expect: "fallback" },
-	"bare-public-path": { file: "main.mjs", expect: "fallback" },
-	"shared-chunk": { file: "a.mjs", expect: "fallback" },
-	hmr: { file: "main.mjs", expect: "fallback" },
-	prefetch: {
-		file: "main.mjs",
-		expect: "callSiteFallback",
-		callSite: '__webpack_require__.e(/*! import() */ "mid_js")'
-	}
+	"bare-public-path": { file: "main.mjs", expect: "analyzable" },
+	"shared-chunk": { file: "a.mjs", expect: "analyzable" },
+	prefetch: { file: "main.mjs", expect: "analyzable" },
+	hmr: { file: "main.mjs", expect: "fallback" }
 };
 
 module.exports = {
@@ -48,8 +43,6 @@ module.exports = {
 			);
 			if (testCase.expect === "analyzable") {
 				expect(output).toContain(HELPER);
-			} else if (testCase.expect === "callSiteFallback") {
-				expect(output).toContain(testCase.callSite);
 			} else {
 				// A limitation must not emit extra runtime — the `.ei` helper stays out.
 				expect(output).not.toContain(HELPER);

@@ -1,13 +1,5 @@
 @custom-media --defined (max-width: 10em);
-@custom-media --always true;
 @custom-media --tvish screen;
-
-/* 'true'/'false' values are unsupported (the ecosystem disagrees on them). */
-@media (--always) {
-	.a {
-		color: red;
-	}
-}
 
 /* Unknown name — no definition anywhere in this file. */
 @media (--undefined-mq) {
@@ -23,10 +15,11 @@
 	}
 }
 
-/* A value that is itself a custom-media reference is not resolved. */
-@custom-media --nested (--defined);
+/* A definition cycle resolves to nothing, so the use stays as written. */
+@custom-media --loop (--loop-back);
+@custom-media --loop-back (--loop);
 
-@media (--nested) {
+@media (--loop) {
 	.d {
 		color: red;
 	}
@@ -35,6 +28,39 @@
 /* A media-type value can't be inlined in a non-leading position. */
 @media (min-width: 1px) and (--tvish) {
 	.e {
+		color: red;
+	}
+}
+
+/* A name standing for a media type is not a media-in-parens either. */
+@custom-media --parenthesised-type (--tvish);
+
+@media (--parenthesised-type) {
+	.f {
+		color: red;
+	}
+}
+
+/* A reference inside a compound value has no resolution step of its own, so the
+   whole value is left alone rather than written out with the reference in it. */
+@custom-media --compound (--defined) and (min-width: 1px);
+@custom-media --negated not (--defined);
+@custom-media --segment (min-width: 1px), not (--defined);
+
+@media (--compound) {
+	.g {
+		color: red;
+	}
+}
+
+@media (--negated) {
+	.h {
+		color: red;
+	}
+}
+
+@media (--segment) {
+	.i {
 		color: red;
 	}
 }

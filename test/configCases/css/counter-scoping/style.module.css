@@ -1,0 +1,71 @@
+@counter-style thumbs {
+	system: cyclic;
+	symbols: "\2022";
+	suffix: " ";
+}
+
+.list {
+	counter-reset: section 0 list-item 3;
+}
+
+.item {
+	counter-increment: section;
+}
+
+.item::before {
+	content: counter(section, decimal) ". ";
+}
+
+.styled::before {
+	content: counter(section, thumbs);
+}
+
+.nested::before {
+	content: counters(section, ".", thumbs);
+}
+
+.reversed {
+	counter-reset: reversed(section) page pages;
+}
+
+.setter {
+	counter-set: section 1;
+}
+
+.cleared {
+	counter-reset: none;
+}
+
+.dashed {
+	counter-reset: --dashedCounter;
+}
+
+.dashed::before {
+	content: counter(--dashedCounter);
+}
+
+.escaped {
+	counter-reset: global(globalCounter) local(localCounter);
+}
+
+.escaped::before {
+	content: counter(global(globalCounter)) counter(localCounter, global(globalStyle));
+}
+
+.target::before {
+	content: target-counter(url("#anchor"), section, thumbs);
+}
+
+.marker {
+	list-style-type: thumbs;
+}
+
+@value aliased: section;
+
+.valued {
+	counter-reset: aliased;
+}
+
+.valued::before {
+	content: counter(aliased);
+}

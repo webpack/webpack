@@ -4,6 +4,7 @@ const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 const ProfilingPlugin = require("../lib/debug/ProfilingPlugin");
+const launchChrome = require("./helpers/launchChrome");
 
 describe("Profiling Plugin", () => {
 	it("should persist the passed output path", () => {
@@ -55,129 +56,80 @@ describe("Profiling Plugin", () => {
 	});
 });
 
-// Optional dependency: the browser end-to-end check only runs where puppeteer-core
-// (and a Chrome it can launch) are present. puppeteer-core needs Node >= 18 and is
-// ESM-only since v25, so it is loaded lazily via dynamic import inside beforeAll;
-// it self-skips on Bun/Deno, old Node, or when no Chrome launches. See #17234.
-const globalScope = /** @type {{ Bun?: unknown, Deno?: unknown }} */ (
-	globalThis
-);
-const onBunOrDeno = Boolean(globalScope.Bun) || Boolean(globalScope.Deno);
-const nodeMajor = Number.parseInt(process.versions.node, 10);
-
 /**
  * @typedef {{ frame: string, parent?: string }} TraceFrame
  * @typedef {{ name: string, args: { data: { frames: TraceFrame[] } } }} TraceEvent
  */
 
 describe("ProfilingPlugin in real Chrome", () => {
-	/** @type {import("puppeteer-core").Browser | undefined} */
+	/** @type {import("puppeteer-core").Browser} */
 	let browser;
 
 	beforeAll(async () => {
-		if (onBunOrDeno || nodeMajor < 18) return;
-		/** @type {typeof import("puppeteer-core").default} */
-		let puppeteer;
-		try {
-			// require() of puppeteer-core throws under Jest since it is ESM-only (v25+).
-			puppeteer = (await import("puppeteer-core")).default;
-		} catch (_err) {
-			return;
-		}
-		try {
-			/** @type {import("puppeteer-core").LaunchOptions} */
-			const launchOptions = {
-				headless: true,
-				args: ["--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"]
-			};
-			// Use an explicit binary when provided, otherwise the installed Chrome.
-			if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-				launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
-			} else {
-				launchOptions.channel = "chrome";
-			}
-			browser = await puppeteer.launch(launchOptions);
-		} catch (_err) {
-			// No usable Chrome in this environment — the test self-skips below.
-			browser = undefined;
-		}
+		browser = await launchChrome();
 	}, 120000);
 
 	afterAll(async () => {
 		if (browser) await browser.close();
 	});
 
-	// Bun/Deno (no puppeteer Chrome) and Node < 18 are known here, so skip visibly;
-	// a Chrome that fails to launch on supported Node is only known in beforeAll.
-	const itChrome = onBunOrDeno || nodeMajor < 18 ? it.skip : it;
-	itChrome(
-		"should generate a trace Chrome DevTools can load (#17234)",
-		(done) => {
-			if (!browser) {
-				console.warn("Skipping: could not launch Chrome via puppeteer-core.");
-				return done();
-			}
+	it("should generate a trace Chrome DevTools can load (#17234)", (done) => {
+		// Narrowed handle so the type survives into the callbacks below.
+		const activeBrowser = browser;
 
-			// Narrowed handle so the type survives into the callbacks below.
-			const activeBrowser = browser;
+		const webpack = require("..");
 
-			const webpack = require("..");
+		const outputPath = path.join(__dirname, "js/profiling-chrome");
+		const eventsPath = path.join(outputPath, "events.json");
 
-			const outputPath = path.join(__dirname, "js/profiling-chrome");
-			const eventsPath = path.join(outputPath, "events.json");
-
-			rimraf(outputPath, () => {
-				const compiler = webpack({
-					context: __dirname,
-					entry: "./fixtures/a.js",
-					output: { path: path.join(outputPath, "dist") },
-					plugins: [
-						new webpack.debug.ProfilingPlugin({ outputPath: eventsPath })
-					]
-				});
-				compiler.run(async (err) => {
-					if (err) return done(err);
-					try {
-						/** @type {TraceEvent[]} */
-						const events = JSON.parse(fs.readFileSync(eventsPath, "utf8"));
-						const page = await activeBrowser.newPage();
-						// Run Chrome DevTools' trace bootstrap (MetaHandler) in the real
-						// browser: iterate the TracingStartedInBrowser frames and pick the
-						// parent-less main frame. A missing `frames` array threw
-						// "frames is not iterable" and the whole trace failed to load.
-						const result = await page.evaluate(
-							(/** @type {TraceEvent[]} */ evs) => {
-								const event = evs.find(
-									(e) => e && e.name === "TracingStartedInBrowser"
-								);
-								if (!event) return { ok: false, threw: null, mainFrame: null };
-								/** @type {string | null} */
-								let threw = null;
-								/** @type {string | null} */
-								let mainFrame = null;
-								try {
-									for (const frame of event.args.data.frames) {
-										if (!frame.parent) mainFrame = frame.frame;
-									}
-								} catch (err_) {
-									threw = err_ instanceof Error ? err_.message : String(err_);
-								}
-								return { ok: threw === null, threw, mainFrame };
-							},
-							events
-						);
-						await page.close();
-
-						expect(result.threw).toBeNull();
-						expect(result.ok).toBe(true);
-						expect(typeof result.mainFrame).toBe("string");
-						done();
-					} catch (err_) {
-						done(err_);
-					}
-				});
+		rimraf(outputPath, () => {
+			const compiler = webpack({
+				context: __dirname,
+				entry: "./fixtures/a.js",
+				output: { path: path.join(outputPath, "dist") },
+				plugins: [new webpack.debug.ProfilingPlugin({ outputPath: eventsPath })]
 			});
-		},
-		120000
-	);
+			compiler.run(async (err) => {
+				if (err) return done(err);
+				try {
+					/** @type {TraceEvent[]} */
+					const events = JSON.parse(fs.readFileSync(eventsPath, "utf8"));
+					const page = await activeBrowser.newPage();
+					// Run Chrome DevTools' trace bootstrap (MetaHandler) in the real
+					// browser: iterate the TracingStartedInBrowser frames and pick the
+					// parent-less main frame. A missing `frames` array threw
+					// "frames is not iterable" and the whole trace failed to load.
+					const result = await page.evaluate(
+						(/** @type {TraceEvent[]} */ evs) => {
+							const event = evs.find(
+								(e) => e && e.name === "TracingStartedInBrowser"
+							);
+							if (!event) return { ok: false, threw: null, mainFrame: null };
+							/** @type {string | null} */
+							let threw = null;
+							/** @type {string | null} */
+							let mainFrame = null;
+							try {
+								for (const frame of event.args.data.frames) {
+									if (!frame.parent) mainFrame = frame.frame;
+								}
+							} catch (err_) {
+								threw = err_ instanceof Error ? err_.message : String(err_);
+							}
+							return { ok: threw === null, threw, mainFrame };
+						},
+						events
+					);
+					await page.close();
+
+					expect(result.threw).toBeNull();
+					expect(result.ok).toBe(true);
+					expect(typeof result.mainFrame).toBe("string");
+					done();
+				} catch (err_) {
+					done(err_);
+				}
+			});
+		});
+	}, 120000);
 });

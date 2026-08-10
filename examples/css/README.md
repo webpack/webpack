@@ -599,7 +599,7 @@ body {
 ## production
 
 ```javascript
-@import url("https://fonts.googleapis.com/css?family=Open+Sans");.img{width:150px;height:150px;background:url(dist/89a353e9c515885abd8e.png)}body{background:green;font-family:"Open Sans"}body{background:red}:root{--QRIlVD:72px}.zI6JBT{font-size:var(--QRIlVD);color:darkblue}@media (min-width: 1024px){.zI6JBT{color:green}}@supports (display: grid){.zI6JBT{display:grid}}
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);.img{width:150px;height:150px;background:url(dist/89a353e9c515885abd8e.png)}body{background:green;font-family:Open Sans}body{background:red}:root{--QRIlVD:72px}.zI6JBT{font-size:var(--QRIlVD);color:#00008b}@media (width>=1024px){.zI6JBT{color:green}}@supports (display:grid){.zI6JBT{display:grid}}
 ```
 
 # dist/1.output.css
@@ -655,7 +655,8 @@ webpack's native CSS localizes more identifiers than any classic loader. For a
   `@counter-style` + `list-style` (`customIdents`), `@container` +
   `container-name` (`container`), `@function` names + calls (`function`),
   `view-transition-name`/`-group`/`-class` + `::view-transition-*()` pseudo
-  arguments (`customIdents`).
+  arguments (`customIdents`), counter names (`counter-reset`/`-increment`/`-set`
+  + `counter()` / `counters()` / `target-counter()`, `customIdents`).
 - **Auto (any `--foo` dashed ident, via `dashedIdents`, default `true`):** custom
   properties and `var(--foo)` incl. cross-file `var(--foo from "./x.css")` and
   `from global`; `@property` / `@font-palette-values` / `@color-profile` names;
@@ -707,11 +708,11 @@ webpack X.X.X compiled successfully
 assets by path *.js 3.26 KiB
   asset output.js 3.18 KiB [emitted] [minimized] (name: main)
   asset 822.output.js 85 bytes [emitted] [minimized]
-assets by path *.css 386 bytes
-  asset output.css 370 bytes [emitted] [minimized] (name: main)
+assets by path *.css 376 bytes
+  asset output.css 360 bytes [emitted] [minimized] (name: main)
   asset 822.output.css 16 bytes [emitted] [minimized]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-Entrypoint main 3.54 KiB (14.6 KiB) = output.js 3.18 KiB output.css 370 bytes 1 auxiliary asset
+Entrypoint main 3.53 KiB (14.6 KiB) = output.js 3.18 KiB output.css 360 bytes 1 auxiliary asset
 chunk (runtime: main) output.js, output.css (main) 509 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.63 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 8.63 KiB 8 modules

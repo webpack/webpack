@@ -5955,6 +5955,11 @@ declare interface CssProcessOptions {
 	 * what the target can read (the CSS entries of `output.environment`), so a spelling it would not understand is never reached for; only read while printing, and an absent entry means the modern spelling is available
 	 */
 	environment?: CssEnvironment;
+
+	/**
+	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
+	 */
+	convertLengthUnits?: boolean;
 }
 type DeclarationEstreeIndex =
 	FunctionDeclaration | VariableDeclaration | ClassDeclaration;
@@ -6903,9 +6908,6 @@ declare interface EffectUse {
 }
 type EffectUseType = "use" | "use-pre" | "use-post";
 declare class ElectronTargetPlugin {
-	/**
-	 * Creates an instance of ElectronTargetPlugin.
-	 */
 	constructor(
 		context?: "preload" | "main" | "renderer",
 		type?:
@@ -10378,8 +10380,25 @@ declare interface HtmlTokenCallbacks {
 		valueEnd: number,
 		quoteType: number
 	) => number;
-	comment?: (input: string, start: number, end: number) => number;
-	doctype?: (input: string, start: number, end: number) => number;
+	comment?: (
+		input: string,
+		start: number,
+		end: number,
+		dataStart: number,
+		dataEnd: number
+	) => number;
+	doctype?: (
+		input: string,
+		start: number,
+		end: number,
+		nameStart: number,
+		nameEnd: number,
+		publicStart: number,
+		publicEnd: number,
+		systemStart: number,
+		systemEnd: number,
+		forceQuirks: boolean
+	) => number;
 	parseError?: (
 		input: string,
 		code: string,
@@ -14647,6 +14666,11 @@ declare interface KnownJavascriptModuleBuildInfo {
 	 * using in APIPlugin
 	 */
 	needCreateRequire?: boolean;
+
+	/**
+	 * module reassigns `__webpack_public_path__` at runtime, using in APIPlugin
+	 */
+	usingPublicPathOverride?: boolean;
 
 	/**
 	 * names of locally declared functions known to be free of side effects
@@ -21549,11 +21573,74 @@ declare class PrintContext<TPath, TNode> {
 	options: PrintOptions;
 
 	/**
+	 * Hold `text` back as the opener of a node being printed in pieces. Nothing
+	 * reaches the output until {@link flushPending}, so {@link dropPending} can
+	 * still take it back if the node turns out to be empty.
+	 */
+	pushPending(text: string): number;
+
+	/**
+	 * Emit every held-back opener, outermost first — something inside the
+	 * innermost one has content, so all of them do.
+	 */
+	flushPending(): void;
+
+	/**
+	 * Anchor the outermost held-back opener, applied when it is flushed. Openers
+	 * are flushed together, so only the outermost carries one.
+	 */
+	anchorPending(srcOffset?: number, srcLine?: number, srcCol?: number): void;
+	isPending(depth: number): boolean;
+
+	/**
+	 * Drop the innermost held-back opener — its node printed to nothing.
+	 */
+	dropPending(): void;
+
+	/**
+	 * Close off what has been emitted so far and return the index the next piece
+	 * will take. Cutting is the point: a caller bounding a later edit by this
+	 * (see {@link dropTrailing}) must not be able to reach output from before it,
+	 * which a mark taken while the tail was still open would sit in the middle of.
+	 */
+	markCut(): number;
+
+	/**
+	 * Forget every node's printed text. A node printed in pieces does this once
+	 * each child is emitted, so the store never holds more than one of them —
+	 * which is also what keeps a recycled node id from reading as an earlier
+	 * node's text.
+	 */
+	dropStore(): void;
+
+	/**
+	 * Drop trailing `charCode`s from the end of the output at or after `from` —
+	 * the separator the piece before a terminator no longer needs. Walks back over
+	 * pieces emptied by {@link retract}, so it sees what the output reads as.
+	 */
+	dropTrailing(from: number, charCode: number): void;
+
+	/**
 	 * Run the node printer for `node` and store what it returns (the grammar calls
 	 * this once the node's visitors and children are done). `path` is on `node`.
 	 */
 	printNode(node: TNode, path: TPath): void;
 	get(node: TNode): string;
+
+	/**
+	 * Append `text` as a piece of its own, so {@link retract} can still take it
+	 * back once a later sibling turns out to override it. Cuts the accumulating
+	 * tail off in front of it, so it is for the text that may actually be taken
+	 * back and not for output at large.
+	 */
+	emitRetractable(text: string): number;
+
+	/**
+	 * Take back an already-emitted piece — the printer has since found that a
+	 * later one overrides it. Pieces after it keep their place, so this must not
+	 * be used on a piece something was anchored to (see {@link take}).
+	 */
+	retract(index: number): void;
 
 	/**
 	 * Emit one finished top-level node: first any kept comments that precede it,
@@ -21571,18 +21658,34 @@ declare class PrintContext<TPath, TNode> {
 	): void;
 
 	/**
+	 * Tie whatever is emitted next to a source position: flush the kept comments
+	 * that precede it, then record the mapping. Split out of {@link take} for a
+	 * node printed in pieces, whose first piece is emitted well after the printer
+	 * for it began.
+	 */
+	anchor(srcOffset?: number, srcLine?: number, srcCol?: number): void;
+
+	/**
 	 * Queue a literal to carry through to the output at source offset `pos` — a
 	 * comment the printer chose to keep (e.g. a `/*!` license banner). Calls
 	 * arrive in source order; each lands just before the first top-level node
 	 * starting after `pos` (or at the end, via {@link result}).
 	 */
 	insert(pos: number, text: string): void;
+
+	/**
+	 * Take the queued inserts sitting in `[start, end)` — a printer that writes
+	 * that source range out itself places them, so the writer must not flush
+	 * them ahead of the next top-level node as well.
+	 */
+	takeInserts(start: number, end: number): string;
 	sourceMap(options: SourceMapOptions): SourceMap;
 	result(): string;
 }
 declare interface PrintOptions {
 	mode: "minify" | "beautify";
 	environment?: Readonly<Record<string, boolean>>;
+	convertLengthUnits?: boolean;
 }
 declare interface PrintedElement {
 	element: string;
@@ -24300,6 +24403,8 @@ declare class RuntimeModule extends Module {
 
 	/**
 	 * Returns true, if the runtime module should get it's own scope.
+	 * When false, `generate()` must emit complete statements ending with `;`
+	 * so a following runtime IIFE is not parsed as a call (ASI).
 	 */
 	shouldIsolate(): boolean;
 
@@ -24477,6 +24582,13 @@ declare abstract class RuntimeTemplate {
 	 * global — the form other bundlers and webpack itself can statically follow.
 	 */
 	importMetaUrl(specifier: string): string;
+
+	/**
+	 * Whether async wasm binaries are referenced by a fully baked
+	 * `new URL("./<file>.wasm", import.meta.url)` at the module call site, rather than
+	 * by `supportsAnalyzableEsmUrl`'s runtime-built path under an `import.meta.url` base.
+	 */
+	supportsAnalyzableWasm(): boolean;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
 
@@ -26017,7 +26129,16 @@ declare class SourceProcessorSyntaxClass_2 extends SourceProcessorClass<
 		prelude(n?: NodeSyntax): ComponentValue[];
 		childCount(n?: NodeSyntax): number;
 		childAt(n: NodeSyntax, i: number): ComponentValue;
+		/**
+		 * A block big enough to stream hands its children to the visitors as each one
+		 * finishes rather than collecting them, so both lists read as an empty block
+		 * on it — `null`, which means no block at all, is still only for the `@…;`
+		 * forms. Read a block's children from the walk, not from here.
+		 */
 		declarations(n?: NodeSyntax): null | DeclarationSyntax[];
+		/**
+		 * Reads as an empty block on a streamed rule; see {@link declarations }.
+		 */
 		childRules(n?: NodeSyntax): null | RuleSyntax[];
 		blockStart(n?: NodeSyntax): number;
 		blockEnd(n?: NodeSyntax): number;
@@ -29091,7 +29212,16 @@ declare namespace exports {
 				prelude(n?: NodeSyntax): ComponentValue[];
 				childCount(n?: NodeSyntax): number;
 				childAt(n: NodeSyntax, i: number): ComponentValue;
+				/**
+				 * A block big enough to stream hands its children to the visitors as each one
+				 * finishes rather than collecting them, so both lists read as an empty block
+				 * on it — `null`, which means no block at all, is still only for the `@…;`
+				 * forms. Read a block's children from the walk, not from here.
+				 */
 				declarations(n?: NodeSyntax): null | DeclarationSyntax[];
+				/**
+				 * Reads as an empty block on a streamed rule; see {@link declarations }.
+				 */
 				childRules(n?: NodeSyntax): null | RuleSyntax[];
 				blockStart(n?: NodeSyntax): number;
 				blockEnd(n?: NodeSyntax): number;
@@ -29236,7 +29366,16 @@ declare namespace exports {
 					prelude(n?: NodeSyntax): ComponentValue[];
 					childCount(n?: NodeSyntax): number;
 					childAt(n: NodeSyntax, i: number): ComponentValue;
+					/**
+					 * A block big enough to stream hands its children to the visitors as each one
+					 * finishes rather than collecting them, so both lists read as an empty block
+					 * on it — `null`, which means no block at all, is still only for the `@…;`
+					 * forms. Read a block's children from the walk, not from here.
+					 */
 					declarations(n?: NodeSyntax): null | DeclarationSyntax[];
+					/**
+					 * Reads as an empty block on a streamed rule; see {@link declarations }.
+					 */
 					childRules(n?: NodeSyntax): null | RuleSyntax[];
 					blockStart(n?: NodeSyntax): number;
 					blockEnd(n?: NodeSyntax): number;
@@ -29277,7 +29416,16 @@ declare namespace exports {
 						prelude(n?: NodeSyntax): ComponentValue[];
 						childCount(n?: NodeSyntax): number;
 						childAt(n: NodeSyntax, i: number): ComponentValue;
+						/**
+						 * A block big enough to stream hands its children to the visitors as each one
+						 * finishes rather than collecting them, so both lists read as an empty block
+						 * on it — `null`, which means no block at all, is still only for the `@…;`
+						 * forms. Read a block's children from the walk, not from here.
+						 */
 						declarations(n?: NodeSyntax): null | DeclarationSyntax[];
+						/**
+						 * Reads as an empty block on a streamed rule; see {@link declarations }.
+						 */
 						childRules(n?: NodeSyntax): null | RuleSyntax[];
 						blockStart(n?: NodeSyntax): number;
 						blockEnd(n?: NodeSyntax): number;

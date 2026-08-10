@@ -15,7 +15,7 @@ Array [
   "/*! lightningcss: .test:where(.foo, .bar) */.test:where(.foo,.bar){color:red}",
   "/*! lightningcss: ::-webkit-slider-thumb:active */.custom-range::-webkit-slider-thumb:active{color:red}",
   "/*! lightningcss: :nth-child(2n) */:nth-child(2n){width:20px}",
-  "/*! lightningcss: :nth-child(2n+1) */:nth-child(2n+1){width:20px}",
+  "/*! lightningcss: :nth-child(2n+1) */:nth-child(odd){width:20px}",
   "/*! lightningcss: :nth-child(odd) */:nth-child(odd){width:20px}",
   "/*! lightningcss: :nth-child(1) */:nth-child(1){width:20px}",
   "/*! lightningcss: :nth-last-child(1) */:nth-last-child(1){width:20px}",
@@ -70,5 +70,7 @@ Array [
   "/*! webpack: parted from the compound it is a descendant combinator */* .t71{color:red}",
   "/*! webpack: ...and on its own it is the selector */*{color:red}",
   "/*! webpack: a namespaced universal is not redundant */svg|*,*|*.t72{color:red}",
+  "/*! webpack: whitespace between two type selectors is a descendant combinator,
+   so the comment parting these stays as an empty one */a/**/b{color:red}",
 ]
 `;

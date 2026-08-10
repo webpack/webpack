@@ -13,10 +13,9 @@ Array [
    alone, so the whole \`margin*\` prefix is blocked rather than trusted */.t07{margin-top:1px;margin-right:2px;margin-inline:9px;margin-bottom:1px;margin-left:2px}",
   "/*! declined: \`bolder\` and \`lighter\` are relative to the parent's weight, so they
    have no fixed number (lightningcss: bolder) */.t08{font-weight:bolder}",
-  "/*! declined: needs unit algebra (lightningcss: calc(1.5em + 3.75rem)) */.t09{width:calc(3rem + calc(1.5em + .75rem))}",
-  "/*! declined: observable through getComputedStyle().getPropertyValue(), the one
-   place a declaration's authored text survives, and no other minifier rewrites
-   it by default either — planned behind an option (lightningcss: .5rem) */.t10{--radius:0.5rem}",
+  "/*! declined: \`getPropertyValue()\` hands a custom property's value back as
+   written, so respelling it builds a different CSSOM from the same document —
+   what \`SyntaxBrowserEquivalence\` checks (lightningcss: .5rem) */.t10{--radius:0.5rem}",
   "/*! declined: ...including the unit (cssnano: .5s) */.t11{--duration:500ms}",
   "/*! declined: a \`*\` parted from the compound is a descendant combinator, not a
    redundant universal selector (every tool keeps this one) */* :before{color:red}",
@@ -28,7 +27,7 @@ Array [
    read the second — dropping it is how esbuild and lightningcss lose this pair
    (csso, cssnano and clean-css keep it too) */.t16{color:#fff;color:color(display-p3 1 1 1)}",
   "/*! declined: inside \`calc()\` a bare \`0\` is a \`<number>\`, so the expression stops
-   parsing (every tool keeps this one) */.t18{width:calc(0px + 1px)}",
+   parsing (every tool keeps this one) */.t18{width:1px}",
   "/*! declined: a channel landing on a \`.5\` boundary is the one place engines
    disagree — this one's blue is exactly 93.5 (cssnano: #40bf5e) */.t19{background:hsl(134,50%,50%)}",
   "/*! declined: the same, and the case esbuild and lightningcss answer differently

@@ -13,6 +13,7 @@
     "test/watchCases/**/*loader*.js",
     "test/configCases/**/*loader*.js",
     "test/hotCases/**/*loader*.js",
+    "test/*.size.js",
     "test/*.unittest.js",
     "test/*.basictest.js",
     "test/*.test.js",

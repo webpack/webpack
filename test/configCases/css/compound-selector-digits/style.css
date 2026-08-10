@@ -1,0 +1,25 @@
+.p1.c1 {
+	color: red;
+}
+
+div.parent1.child1 {
+	color: green;
+}
+
+:is(div.a1.b2) {
+	color: blue;
+}
+
+/*! a class name may end in a digit behind a hyphen too */
+.p-1.c-1 {
+	color: rebeccapurple;
+}
+
+/*! a real number does still take a following `.5` on, signed or not */
+.n {
+	margin: 1/**/.5px;
+}
+
+.n-signed {
+	margin: -1/**/.5px;
+}

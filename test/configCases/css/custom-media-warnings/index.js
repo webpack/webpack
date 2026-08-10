@@ -5,12 +5,16 @@ const path = __non_webpack_require__("path");
 
 it("should leave unresolvable @custom-media references untouched and warn", () => {
 	const css = fs.readFileSync(path.join(__dirname, "bundle0.css"), "utf-8");
-	// Unsupported / unknown / invalid / non-leading references stay as authored.
-	expect(css).toContain("(--always)");
+	// Unknown / invalid / cyclic / non-leading references stay as authored.
 	expect(css).toContain("(--undefined-mq)");
 	expect(css).toContain("(--defined: 1px)");
-	expect(css).toContain("(--nested)");
+	expect(css).toContain("(--loop)");
 	expect(css).toContain("(min-width: 1px) and (--tvish)");
+	expect(css).toContain("(--parenthesised-type)");
+	// A compound value keeps its reference rather than emitting it unresolved.
+	expect(css).toContain("(--compound)");
+	expect(css).toContain("(--negated)");
+	expect(css).toContain("(--segment)");
 	// The definitions themselves are still removed, malformed ones included.
 	expect(css).not.toContain("@custom-media");
 	expect(css).not.toContain("@custom-selector");

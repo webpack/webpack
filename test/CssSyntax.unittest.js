@@ -758,6 +758,333 @@ describe("CssSyntax — SourceProcessor", () => {
 	});
 });
 
+describe("CssSyntax — block streaming", () => {
+	// A block streams once it holds more than `_STREAM_MIN_NODES` nodes; under
+	// that it is collected and walked in one batch, as it always was. `BIG` clears
+	// the threshold and `SMALL` stays well under, and every case below pins which
+	// of the two it is exercising, so none of them can quietly stop testing the
+	// streamed path if the threshold moves.
+	/** @type {(i: number) => string} */
+	const rule = (i) => `.c${i}>d${i}:hover{color:red;margin:1px}`;
+	/** @type {(n: number, f: (i: number) => string) => string} */
+	const repeat = (n, f) => {
+		let s = "";
+		for (let i = 0; i < n; i++) s += f(i);
+		return s;
+	};
+	const BIG = repeat(1800, rule);
+	const SMALL = repeat(4, rule);
+
+	/**
+	 * Child rules the first rule of `type` reports: 0 means it streamed (its
+	 * children went to the visitors, not to its body), a positive count means it
+	 * was collected.
+	 * @param {string} src css source
+	 * @param {number=} type the node type to look at (default `AtRule`)
+	 * @returns {number | null} the count, or null if that rule has no block
+	 */
+	const childCount = (src, type = NodeType.AtRule) => {
+		/** @type {number | null} */
+		let count = null;
+		let seen = false;
+		new SourceProcessor()
+			.use({
+				[type]: (/** @type {import("../lib/css/syntax").CssPath} */ path) => {
+					if (seen) return;
+					seen = true;
+					const rules = path.childRules();
+					count = rules === null ? null : rules.length;
+				}
+			})
+			.process(src, { minimize: true });
+		return count;
+	};
+
+	/**
+	 * Every node the walk visits, as `type|index|start`, entering and exiting.
+	 * @param {string} src css source
+	 * @param {import("../lib/css/syntax").CssProcessOptions=} extra more options
+	 * @returns {string[]} the visit sequence
+	 */
+	const walk = (src, extra) => {
+		/** @type {string[]} */
+		const seq = [];
+		/** @type {import("../lib/css/syntax").VisitorMap} */
+		const map = {};
+		for (const name of Object.keys(NodeType)) {
+			const type = NodeType[/** @type {keyof typeof NodeType} */ (name)];
+			map[type] = {
+				enter: (/** @type {import("../lib/css/syntax").CssPath} */ path) =>
+					seq.push(`+${name}|${path.index}|${path.start()}`),
+				exit: (/** @type {import("../lib/css/syntax").CssPath} */ path) =>
+					seq.push(`-${name}|${path.index}|${path.start()}`)
+			};
+		}
+		new SourceProcessor().use(map).process(src, extra);
+		return seq;
+	};
+
+	/**
+	 * @param {string} src css source
+	 * @returns {string} its minified output
+	 */
+	const minify = (src) =>
+		new SourceProcessor().process(src, { minimize: true }).code;
+
+	it("streams a block past the threshold and collects one under it", () => {
+		expect(childCount(`@media screen{${BIG}}`)).toBe(0);
+		expect(childCount(`@media screen{${SMALL}}`)).toBe(4);
+	});
+
+	it("enters a streamed rule before its children and exits after them", () => {
+		const seq = walk(`@media screen{${SMALL}}`, { recurseBlocks: true });
+		expect(seq[0]).toBe("+AtRule|0|0");
+		expect(seq[seq.length - 1]).toBe("-AtRule|0|0");
+		const streamed = walk(`@media screen{${BIG}}`);
+		expect(streamed[0]).toBe("+AtRule|0|0");
+		expect(streamed[streamed.length - 1]).toBe("-AtRule|0|0");
+	});
+
+	it("visits a streamed block's children in source order", () => {
+		// The collected walk emits every declaration and only then every child
+		// rule; a streamed block emits each child as it finishes, so declarations
+		// and child rules interleave the way the source has them.
+		const src = `@media screen{${repeat(1800, (i) => `p${i}:v${i};${rule(i)}`)}}`;
+		const kinds = walk(src)
+			.filter(
+				(e) => e.startsWith("+Declaration|") || e.startsWith("+QualifiedRule|")
+			)
+			.map((e) => e.slice(1, e.indexOf("|")));
+		// A declaration of the block, then a rule, then that rule's own two
+		// declarations — repeating, which only source order produces.
+		expect(kinds.slice(0, 8)).toEqual([
+			"Declaration",
+			"QualifiedRule",
+			"Declaration",
+			"Declaration",
+			"Declaration",
+			"QualifiedRule",
+			"Declaration",
+			"Declaration"
+		]);
+	});
+
+	it("indexes a streamed block's declarations and child rules apart", () => {
+		// The collected walk numbers the two lists independently (see `_walkRule`),
+		// so a streamed block has to as well — not one counter running across the
+		// merged source order.
+		const src = `@media screen{${repeat(1800, (i) => `p${i}:v${i};${rule(i)}`)}}`;
+		/** @type {string[]} */
+		const seen = [];
+		new SourceProcessor()
+			.use({
+				[NodeType.Declaration]: (
+					/** @type {import("../lib/css/syntax").CssPath} */ path
+				) => {
+					const parent = path.parent;
+					if (parent !== null && path.type(parent) === NodeType.AtRule) {
+						seen.push(`d${path.index}`);
+					}
+				},
+				[NodeType.QualifiedRule]: (
+					/** @type {import("../lib/css/syntax").CssPath} */ path
+				) => seen.push(`r${path.index}`)
+			})
+			.process(src, { minimize: true });
+		expect(seen.slice(0, 6)).toEqual(["d0", "r0", "d1", "r1", "d2", "r2"]);
+		expect(seen[seen.length - 1]).toBe("r1799");
+	});
+
+	it("enters nested streamed blocks outermost first", () => {
+		// The inner block crosses the threshold first, so the outer rule has to be
+		// entered on the way in — otherwise `@supports` would be entered before the
+		// `@media` holding it.
+		const seq = walk(`@media screen{@supports (display:grid){${BIG}}}`);
+		expect(seq[0]).toBe("+AtRule|0|0");
+		expect(seq.filter((e) => e.startsWith("+AtRule|"))[1]).toBe("+AtRule|0|14");
+	});
+
+	it("reads a streamed rule's body as an empty block, not as no block", () => {
+		/** @type {(src: string) => unknown[]} */
+		const body = (src) => {
+			/** @type {unknown[]} */
+			const seen = [];
+			new SourceProcessor()
+				.use({
+					[NodeType.AtRule]: (
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => {
+						const decls = path.declarations();
+						const rules = path.childRules();
+						seen.push(decls === null ? null : decls.length);
+						seen.push(rules === null ? null : rules.length);
+					}
+				})
+				.process(src, { minimize: true });
+			return seen;
+		};
+		// A streamed rule hands its children to the visitors instead of collecting
+		// them, so both lists read empty — but the block itself is still there,
+		// which `null` (the block-less at-rules) would deny.
+		expect(body(`@media screen{${BIG}}`)).toEqual([0, 0]);
+		expect(body(`@media screen{${SMALL}}`)).toEqual([0, 4]);
+		expect(body("@import url(x);")).toEqual([null, null]);
+	});
+
+	it("honours skipChildren() and recurseBlocks on a streamed rule", () => {
+		/** @type {(opts: import("../lib/css/syntax").CssProcessOptions, skip: boolean) => number} */
+		const children = (opts, skip) => {
+			let n = 0;
+			new SourceProcessor()
+				.use({
+					[NodeType.AtRule]: (
+						/** @type {import("../lib/css/syntax").CssPath} */ path
+					) => {
+						if (skip) path.skipChildren();
+					},
+					[NodeType.QualifiedRule]: () => n++
+				})
+				.process(`@media screen{${BIG}}`, opts);
+			return n;
+		};
+		expect(children({}, true)).toBe(0);
+		expect(children({}, false)).toBe(1800);
+		expect(children({ recurseBlocks: false }, false)).toBe(0);
+	});
+
+	it("prints a streamed block as the collected printer would", () => {
+		// The fixture is already minimal, so the whole output is known: opener,
+		// every child in source order, closer — and no `;` before the `}`.
+		expect(minify(`@media screen{${BIG}}`)).toBe(`@media screen{${BIG}}`);
+		expect(minify(`@media screen{@supports (display:grid){${BIG}}}`)).toBe(
+			`@media screen{@supports (display:grid){${BIG}}}`
+		);
+		const nesting = `.root{color:red;${repeat(1800, (i) => `& .n${i}{color:red}`)}}`;
+		expect(minify(nesting)).toBe(nesting);
+	});
+
+	it("reads a streamed rule's prelude in terms of what encloses it", () => {
+		// `from` is the `0%` a keyframe selector means only inside `@keyframes`, so
+		// the opener has to be printed with the whole path bound, not just the rule.
+		const nested = repeat(3000, (i) => `& .x${i}{color:red}`);
+		expect(
+			childCount(`@keyframes k{from{${nested}}}`, NodeType.QualifiedRule)
+		).toBe(0);
+		expect(minify(`@keyframes k{from{${nested}}}`)).toBe(
+			`@keyframes k{0%{${nested}}}`
+		);
+		// `to` is already shorter than the `100%` it names, and a `.from` selector
+		// outside `@keyframes` is a class like any other.
+		expect(minify(`@keyframes k{to{${nested}}}`)).toBe(
+			`@keyframes k{to{${nested}}}`
+		);
+		expect(minify(`.from{${nested}}`)).toBe(`.from{${nested}}`);
+	});
+
+	it("falls back past the depth the frame table holds", () => {
+		// Deeper than `_STREAM_MAX_DEPTH`, where a block is materialized instead of
+		// streamed; the levels above it still stream, so the two have to meet.
+		// `@media m0` and not a feature query: a `(min-width:…)` prelude minifies to
+		// the range spelling, and the point here is the nesting, not the prelude.
+		const depth = 70;
+		const open = repeat(depth, (i) => `@media m${i}{`);
+		const close = repeat(depth, () => "}");
+		expect(minify(`${open}${BIG}${close}`)).toBe(`${open}${BIG}${close}`);
+		// The same nesting with nothing in it still collapses to nothing.
+		expect(minify(`${open}${close}`)).toBe("");
+	});
+
+	it("drops a streamed block that prints to nothing", () => {
+		// The opener is held back until something inside prints, so a rule whose
+		// every child minifies away is still dropped whole at its `}`. An empty
+		// rule is only a few nodes, so it takes a lot of them to cross.
+		const EMPTY = repeat(6000, (i) => `.e${i}{}`);
+		expect(childCount(`@media a{${EMPTY}}`)).toBe(0);
+		expect(minify(`@media a{${EMPTY}}`)).toBe("");
+		expect(minify(`@media a{${EMPTY}@media b{${EMPTY}}}`)).toBe("");
+		expect(minify(`@media a{${EMPTY}.keep{color:red}}`)).toBe(
+			"@media a{.keep{color:red}}"
+		);
+		// A `@layer` block carries meaning even when empty, so it stays.
+		expect(minify(`@layer a{${EMPTY}}`)).toBe("@layer a{}");
+	});
+
+	it("keeps only the last of a streamed block's identical declarations", () => {
+		// Reached by taking the earlier one back out of the output, since a
+		// streamed block cannot look ahead for the later one. The duplicate is
+		// separated from its match by 3000 child rules, so this is the whole block
+		// agreeing, not a run of adjacent declarations.
+		const middle = repeat(3000, (i) => `& .m${i}{color:red}`);
+		const src = `.root{color:red;${middle}color:red;}`;
+		expect(childCount(src, NodeType.QualifiedRule)).toBe(0);
+		expect(minify(src)).toBe(`.root{${middle}color:red}`);
+	});
+
+	it("takes back only its own output when it drops the last `;`", () => {
+		// The `;` a `}` makes redundant is dropped by walking back over the pieces
+		// the block emitted, past the empty one a later duplicate took back. What
+		// stands before the block keeps its own separator.
+		const mid = repeat(3000, (i) => `& .m${i}{color:red}`);
+		const src = `.root{lead:1;${mid}dup:2;dup:2;}`;
+		expect(childCount(src, NodeType.QualifiedRule)).toBe(0);
+		expect(minify(src)).toBe(`.root{lead:1;${mid}dup:2}`);
+	});
+
+	it("declines to stream a block a longhand family could still merge in", () => {
+		// `_mergeBoxLonghands` needs every declaration at once, and only runs in a
+		// block with no child rule — so such a block is never streamed, however far
+		// past the threshold it grows, and its four longhands still collapse.
+		const src = `.root{${repeat(20000, (i) => `--v${i}:${i};`)}margin-top:1px;margin-right:2px;margin-bottom:3px;margin-left:4px}`;
+		/** @type {number | null} */
+		let declared = null;
+		let seen = false;
+		new SourceProcessor()
+			.use({
+				[NodeType.QualifiedRule]: (
+					/** @type {import("../lib/css/syntax").CssPath} */ path
+				) => {
+					if (seen) return;
+					seen = true;
+					const decls = path.declarations();
+					declared = decls === null ? null : decls.length;
+				}
+			})
+			.process(src, { minimize: true });
+		// Collected, so it still reports every declaration it holds — a streamed
+		// block would report none, and the merge below would be lost with them.
+		expect(declared).toBe(20004);
+		expect(minify(src)).toContain("margin:1px 2px 3px 4px");
+	});
+
+	it("keeps the comments a streamed run carries through", () => {
+		expect(minify(`/*! keep */@media a{${BIG}}/*! tail */`)).toBe(
+			`/*! keep */@media a{${BIG}}/*! tail */`
+		);
+	});
+
+	it("leaves no state behind for the next parse", () => {
+		const src = "@media x{a{c:1}b{d:2}}";
+		let seen = 0;
+		let throwAt = -1;
+		const sp = new SourceProcessor().use({
+			[NodeType.QualifiedRule]: () => {
+				if (++seen === throwAt) throw new Error("boom");
+			}
+		});
+		const plain = walk(src);
+		sp.process(`@media screen{${BIG}}`, {});
+		expect(walk(src)).toEqual(plain);
+		// Part-way through the streamed block, so the frame depth is unwound from
+		// inside the walk rather than at the closing `}`.
+		seen = 0;
+		throwAt = 500;
+		expect(() => sp.process(`@media screen{${BIG}}`, {})).toThrow("boom");
+		throwAt = -1;
+		expect(walk(src)).toEqual(plain);
+		expect(minify(src)).toBe(src);
+	});
+});
+
 describe("CssSyntax — minify comment preservation", () => {
 	/**
 	 * @param {string} src css source
@@ -837,6 +1164,62 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		);
 	});
 
+	it("parts a selector's tokens with a comment rather than whitespace", () => {
+		// Whitespace between two of a selector's tokens is a descendant combinator,
+		// so the separator a fusing junction needs there is an empty comment: `a b`
+		// would match what `a/**/b` (two adjacent type selectors) never does.
+		expect(min("a/**/b{c:1}")).toBe("a/**/b{c:1}");
+		expect(min("@scope (div/**/span){a{c:1}}")).toBe(
+			"@scope (div/**/span){a{c:1}}"
+		);
+		// A comment the source spelled out where nothing would fuse still goes.
+		expect(min("a/**/ b{c:1}")).toBe("a b{c:1}");
+	});
+
+	it("keeps a custom property's value as the source wrote it", () => {
+		// The value is the text `getPropertyValue()` hands back, so it is not
+		// rewritten — but a dropped comment leaves the boundary it stood for, which
+		// is a space only where the tokens it parts would otherwise fuse.
+		expect(min("a{--x:1px/*c*/2px}")).toBe("a{--x:1px 2px}");
+		expect(min("a{--x:1px 1px/*c*/1px 1px}")).toBe("a{--x:1px 1px 1px 1px}");
+		expect(min("a{--x:1px /*c*/ 2px}")).toBe("a{--x:1px  2px}");
+		// Leading and trailing whitespace is not part of it.
+		expect(min("a{--x: 1px 2px }")).toBe("a{--x:1px 2px}");
+		// A `/*` inside a string is no comment.
+		expect(min('a{--x:"a/*c*/b"}')).toBe('a{--x:"a/*c*/b"}');
+		// A kept comment stays where it stood, so it is not also re-emitted before
+		// the next top-level node — and it parts the tokens itself.
+		expect(min("a{--x:1px/*!c*/2px}b{c:1}")).toBe("a{--x:1px/*!c*/2px}b{c:1}");
+		expect(min("a{--x:1px/*c*//*!k*/2px}")).toBe("a{--x:1px/*!k*/2px}");
+		// One rule's custom properties take their own, in the order they stand in.
+		expect(
+			min("/*!t*/a{--x:1px/*!k*/2px;--y:3px/*c*/4px;--z:5px/*!j*/6px}")
+		).toBe("/*!t*/a{--x:1px/*!k*/2px;--y:3px 4px;--z:5px/*!j*/6px}");
+		// Outside one it still moves ahead of the rule that follows it.
+		expect(min("a{c:red/*!c*/}b{c:1}")).toBe("a{c:red}/*!c*/b{c:1}");
+	});
+
+	it("minifies a comment nested in a custom property's value", () => {
+		// A function or block is no leaf, so the comments in one are the value's
+		// too — at any depth, and in a block of every shape.
+		expect(min("a{--x:foo(a/*c*/b)}")).toBe("a{--x:foo(a b)}");
+		expect(min("a{--x:foo(bar(a/*c*/b))}")).toBe("a{--x:foo(bar(a b))}");
+		expect(min("a{--x:[a/*c*/b]}")).toBe("a{--x:[a b]}");
+		expect(min("a{--x:{a:1/*c*/2}}")).toBe("a{--x:{a:1 2}}");
+		expect(min("a{--x:(a/*c*/b)}")).toBe("a{--x:(a b)}");
+		// Against the delimiters nothing fuses, so the comment simply goes.
+		expect(min("a{--x:foo(/*c*/a/*c*/)}")).toBe("a{--x:foo(a)}");
+		expect(min("a{--x:foo(1px/*c*/2px)/*c*/bar()}")).toBe(
+			"a{--x:foo(1px 2px)bar()}"
+		);
+		// Whitespace is a token of its own, so it is still written as it stands.
+		expect(min("a{--x:foo( /*c*/ a )}")).toBe("a{--x:foo(  a )}");
+		// A kept one is placed where it stood, at depth too.
+		expect(min("a{--x:foo(a/*!k*/b)}")).toBe("a{--x:foo(a/*!k*/b)}");
+		// A function closed at EOF has no `)` to write back.
+		expect(min("a{--x:foo(a/*c*/b")).toBe("a{--x:foo(a b}");
+	});
+
 	it("separates rewritten numbers that would fuse", () => {
 		// `1.0.5` is two numbers; normalized to `1` and `.5` they would join as the
 		// single number `1.5`.
@@ -871,19 +1254,27 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min(".a/**/.b{c:1}")).toBe(".a.b{c:1}");
 		expect(min(".a.b{c:1}")).toBe(".a.b{c:1}");
 		expect(min(".a>.b{c:1}")).toBe(".a>.b{c:1}");
-		expect(min("a{width:calc(1px + 2px)}")).toBe("a{width:calc(1px + 2px)}");
+		// The whitespace around a `+` is what makes it an operator (CSS Values 4
+		// §10.1) — `1em+2px` is not an expression. Two units that cannot be added
+		// here, so the folding leaves the spacing to be judged on its own.
+		expect(min("a{width:calc(1em + 2px)}")).toBe("a{width:calc(1em + 2px)}");
 	});
 
 	// An unterminated string only exists at EOF (a newline makes it a bad-string
 	// instead), and there the stylesheet ends too — so a build never reaches this,
 	// but `webpack.css.syntax` minifies whatever source it is handed.
 	it("keeps an attribute value the tokenizer closed at EOF", () => {
-		// `"bar` has no closing quote, so unquoting it would drop the `r`. An
-		// at-rule prelude still prints at EOF, unlike a qualified rule (§5.4.3).
-		expect(min('@unknown [foo="bar')).toBe('@unknown [foo="bar];');
-		expect(min("@unknown [foo='bar")).toBe("@unknown [foo='bar];");
+		// `"bar` has no closing quote, so unquoting it would drop the `r` — the
+		// quote is written back instead, which is what keeps the value `bar` once
+		// the prelude's own `];` follows it. An at-rule prelude still prints at
+		// EOF, unlike a qualified rule (§5.4.3).
+		expect(min('@unknown [foo="bar')).toBe('@unknown [foo="bar"];');
+		expect(min("@unknown [foo='bar")).toBe("@unknown [foo='bar'];");
 		// The escape swallows the final quote, so this one is unterminated too.
-		expect(min('@unknown [foo="bar\\"')).toBe('@unknown [foo="bar\\"];');
+		expect(min('@unknown [foo="bar\\"')).toBe('@unknown [foo="bar\\""];');
+		// A `\` left dangling at EOF contributes nothing, so it goes rather than
+		// escaping the quote written back after it.
+		expect(min('@unknown [foo="bar\\')).toBe('@unknown [foo="bar"];');
 		// A closed string still unquotes.
 		expect(min('@unknown [foo="bar"')).toBe("@unknown [foo=bar];");
 	});
@@ -964,7 +1355,8 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 		new SourceProcessor().process(src, { minimize: true }).code;
 
 	it("keeps An+B selector arguments verbatim (no sign stripping)", () => {
-		expect(min("a:nth-child(2n+1){b:c}")).toBe("a:nth-child(2n+1){b:c}");
+		// `odd` is the one An+B a keyword names in fewer bytes; the rest stay.
+		expect(min("a:nth-child(2n+1){b:c}")).toBe("a:nth-child(odd){b:c}");
 		expect(min("a:nth-last-child(-n+3){b:c}")).toBe(
 			"a:nth-last-child(-n+3){b:c}"
 		);
@@ -978,9 +1370,10 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 		expect(min("a{margin:0.50px 1.0px 0}")).toBe("a{margin:.5px 1px 0}");
 	});
 
-	it("keeps unicode-range values verbatim", () => {
+	it("keeps unicode-range values off the numeric path", () => {
+		// Shortened as the urange it is, never by the generic number printer.
 		expect(min("@font-face{unicode-range:U+0025-00FF}")).toBe(
-			"@font-face{unicode-range:U+0025-00FF}"
+			"@font-face{unicode-range:U+25-FF}"
 		);
 		expect(min("@font-face{unicode-range:u+4??}")).toBe(
 			"@font-face{unicode-range:u+4??}"
@@ -1094,8 +1487,9 @@ describe("CssSyntax — minify transforms, in-process", () => {
 	});
 
 	it("keeps url() quotes a url-token could not carry", () => {
+		// One code point is a byte shorter escaped; two are not.
 		expect(min('a{background:url("a b.png")}')).toBe(
-			'a{background:url("a b.png")}'
+			"a{background:url(a\\ b.png)}"
 		);
 		expect(min('a{background:url("a(b).png")}')).toBe(
 			'a{background:url("a(b).png")}'
@@ -1108,6 +1502,20 @@ describe("CssSyntax — minify transforms, in-process", () => {
 			'a{background:url("a\u0001b.png")}'
 		);
 		expect(min("a{background:url(a.png)}")).toBe("a{background:url(a.png)}");
+	});
+
+	it("closes a url() the tokenizer closed at EOF", () => {
+		// Without the `)`, the `}` the printer writes next lands inside the url.
+		expect(min("a{background:url(a.png")).toBe("a{background:url(a.png)}");
+		// §4.3.6 reads the dangling `\` as an escape and §4.3.7 ends one at EOF with
+		// U+FFFD, so the url keeps that code point rather than losing it.
+		expect(min("a{background:url(a.png\\")).toBe(
+			"a{background:url(a.png\uFFFD)}"
+		);
+		// An even run escapes itself and closes nothing.
+		expect(min("a{background:url(a.png\\\\")).toBe(
+			"a{background:url(a.png\\\\)}"
+		);
 	});
 
 	it("picks the string quote that needs the fewest escapes", () => {
@@ -1779,6 +2187,20 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		return /** @type {RegExpExecArray} */ (/^a\{x:([\s\S]*)\}$/.exec(out))[1];
 	};
 
+	/**
+	 * The same, with the length-unit rewrite on — off by default, so the cases
+	 * that are about which unit a length prints in have to ask for it.
+	 * @param {string} value a declaration value
+	 * @returns {string} the value as it is printed back
+	 */
+	const converted = (value) => {
+		const out = new SourceProcessor().process(`a{x:${value}}`, {
+			minimize: true,
+			convertLengthUnits: true
+		}).code;
+		return /** @type {RegExpExecArray} */ (/^a\{x:([\s\S]*)\}$/.exec(out))[1];
+	};
+
 	describe("polar and Lab colors", () => {
 		// Each conversion was checked against headless Chromium; these cases pin
 		// the arguments the converter refuses rather than guesses at.
@@ -1844,14 +2266,20 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			["33.33333333%", "33.3333%"],
 			["1.0000001px", "1px"],
+			["400ms", ".4s"],
+			[".005s", "5ms"]
+		])("rewrites %s", (input, expected) => {
+			expect(value(input)).toBe(expected);
+		});
+
+		it.each([
 			["16px", "1pc"],
 			["12pt", "1pc"],
 			["10mm", "1cm"],
-			["400ms", ".4s"],
-			[".005s", "5ms"],
 			["0.75pt", "1px"]
-		])("rewrites %s", (input, expected) => {
-			expect(value(input)).toBe(expected);
+		])("rewrites %s with convertLengthUnits", (input, expected) => {
+			expect(converted(input)).toBe(expected);
+			expect(value(input)).toBe(input.replace("0.75", ".75"));
 		});
 
 		it.each([
@@ -1874,12 +2302,786 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("leaves a `@supports` condition as written", () => {
-			expect(minify("@supports (width:16px){a{x:16px}}")).toBe(
-				"@supports (width:16px){a{x:1pc}}"
-			);
+			const out = new SourceProcessor().process(
+				"@supports (width:16px){a{x:16px}}",
+				{ minimize: true, convertLengthUnits: true }
+			).code;
+			expect(out).toBe("@supports (width:16px){a{x:1pc}}");
 			expect(minify("@supports (color:rgba(0,0,0,.5)){a{x:1px}}")).toBe(
 				"@supports (color:rgba(0,0,0,.5)){a{x:1px}}"
 			);
+		});
+	});
+
+	describe("unicode-range", () => {
+		/** @type {(value: string) => string} */
+		const range = (value) =>
+			minify(`@font-face{unicode-range:${value}}`).slice(25, -1);
+
+		it.each([
+			["leading zeros carry nothing", "U+0025-00FF", "U+25-FF"],
+			["a block is what `??` says", "U+1E00-1EFF", "U+1E??"],
+			["and the whole low block", "U+0000-00FF", "U+??"],
+			["zeros before a wildcard too", "U+00??", "U+??"],
+			["mixed case is kept", "U+1e00-1EFF", "U+1e??"]
+		])("%s: %s", (_name, input, expected) => {
+			expect(range(input)).toBe(expected);
+		});
+
+		it.each([
+			["the end is not F-aligned", "U+1E00-1EFE"],
+			["it is already shortest", "U+0-7F"],
+			["a single code point", "U+26"],
+			["a wildcard that carries a digit", "U+4??"],
+			["the full range", "U+0-10FFFF"],
+			["the value is no urange at all", "auto"],
+			["the token carries no digits", "U+"]
+		])("keeps it where %s", (_name, value) => {
+			expect(range(value)).toBe(value);
+		});
+
+		it("shortens each range of a list", () => {
+			expect(range("U+0000-00FF,U+1E00-1EFF")).toBe("U+??,U+1E??");
+		});
+	});
+
+	describe("a zero angle", () => {
+		it.each([
+			["a{transform:rotate(0deg)}", "a{transform:rotate(0)}"],
+			["a{transform:skew(0deg,0deg)}", "a{transform:skew(0,0)}"],
+			["a{filter:hue-rotate(0turn)}", "a{filter:hue-rotate(0)}"]
+		])("drops the unit where the grammar names <zero>: %s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the angle is not zero", "a{transform:rotate(90deg)}"],
+			// `rotate3d`'s first three arguments are numbers, so a `0deg` there is a
+			// declaration the engine drops — a unitless zero would revive it.
+			[
+				"a slot of the call takes a number",
+				"a{transform:rotate3d(0deg,0,1,45deg)}"
+			],
+			["that call's own angle sits last", "a{transform:rotate3d(0,0,1,0deg)}"],
+			["the function takes no <zero>", "a{transition-duration:0s}"],
+			["it is not a function argument", "a{width:0deg}"]
+		])("keeps the unit where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a value the property's own grammar already implies", () => {
+		it.each([
+			// One `<repeat-style>` value is what two equal ones say.
+			["a{background-repeat:repeat repeat}", "a{background-repeat:repeat}"],
+			[
+				"a{background-repeat:no-repeat no-repeat}",
+				"a{background-repeat:no-repeat}"
+			],
+			["a{mask-repeat:round round}", "a{mask-repeat:round}"],
+			// `initial` computes to the initial value, which is often a shorter word.
+			["a{min-width:initial}", "a{min-width:auto}"],
+			["a{outline-width:initial}", "a{outline-width:medium}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the two values differ", "a{background-repeat:repeat no-repeat}"],
+			["only one axis is centered", "a{background-position:center 10px}"],
+			["the initial value is no shorter", "a{color:initial}"],
+			["a shorthand states no value of its own", "a{margin:initial}"],
+			["it is a custom property's value", "a{--x:initial}"],
+			// The production also sits in shorthands, where a repeated value is some
+			// other slot — and `background: red red` is a declaration the engine
+			// drops, not one to make valid.
+			["the pair is not a repeat style", "a{background:red red}"],
+			["the pair is a shorthand's other slot", "a{mask:none none}"],
+			// `repeat-x` is the one-value spelling of a pair, so it never doubles.
+			["the keyword never pairs", "a{background-repeat:repeat-x repeat-x}"],
+			// `mdn-data` states `black` as this one's initial, which it cannot take.
+			[
+				"the stated initial is not a value it takes",
+				"a{flood-opacity:initial}"
+			],
+			["the same, on the other opacity", "a{stop-opacity:initial}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a position written as edge keywords", () => {
+		it.each([
+			["a{background-position:center}", "a{background-position:50%}"],
+			["a{background-position:center center}", "a{background-position:50%}"],
+			["a{background-position:left}", "a{background-position:0%}"],
+			["a{background-position:right}", "a{background-position:100%}"],
+			["a{background-position:left center}", "a{background-position:0%}"],
+			["a{background-position:left top}", "a{background-position:0%0%}"],
+			// `<position>`'s keyword pair is order-free, so both readings resolve.
+			["a{background-position:top left}", "a{background-position:0%0%}"],
+			["a{background-position:left bottom}", "a{background-position:0%100%}"],
+			[
+				"a{background-position:center bottom}",
+				"a{background-position:50%100%}"
+			],
+			[
+				"a{background-position:right bottom}",
+				"a{background-position:100%100%}"
+			],
+			["a{background-position:LEFT BOTTOM}", "a{background-position:0%100%}"],
+			["a{object-position:left top}", "a{object-position:0%0%}"],
+			["a{mask-position:left top}", "a{mask-position:0%0%}"],
+			["a{perspective-origin:left top}", "a{perspective-origin:0%0%}"],
+			// `transform-origin` spells its axes out rather than naming a position,
+			// and a depth only follows a third component.
+			["a{transform-origin:left top}", "a{transform-origin:0%0%}"],
+			["a{transform-origin:center bottom}", "a{transform-origin:50%100%}"],
+			["a{offset-anchor:left top}", "a{offset-anchor:0%0%}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// `top` is `50% 0%`, which the keyword already says in fewer bytes.
+			["the percentages are no shorter", "a{background-position:top}"],
+			["the same, on the other edge", "a{background-position:bottom}"],
+			// An offset beside a keyword is the 3/4-value syntax, where the keyword
+			// names the edge to measure from rather than a place on the axis.
+			["an offset follows a keyword", "a{background-position:left 10px}"],
+			[
+				"both axes carry an offset",
+				"a{background-position:left 10px top 20px}"
+			],
+			["a comma parts two layers", "a{background-position:left top,right top}"],
+			["the two keywords share an axis", "a{background-position:left right}"],
+			["the same, on the other axis", "a{background-position:top bottom}"],
+			// A third component is `transform-origin`'s z offset, which the two-value
+			// collapse has no reading of.
+			["a depth follows the position", "a{transform-origin:left top 10px}"],
+			["the position is a shorthand's slot", "a{background:left top}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a position whose second value is the centre", () => {
+		it.each([
+			["a{background-position:50% 50%}", "a{background-position:50%}"],
+			["a{background-position:10px center}", "a{background-position:10px}"],
+			["a{background-position:left 50%}", "a{background-position:left}"],
+			["a{background-position:0 center}", "a{background-position:0}"],
+			["a{object-position:25% 50%}", "a{object-position:25%}"],
+			["a{mask-position:3em center}", "a{mask-position:3em}"],
+			["a{transform-origin:50% 50%}", "a{transform-origin:50%}"],
+			["a{transform-origin:10px center}", "a{transform-origin:10px}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// `top` is no x-position, so the pair is the order-free keyword syntax
+			// and half of it alone would be a value the engine drops.
+			[
+				"the first value is on the other axis",
+				"a{background-position:top 50%}"
+			],
+			["the second value is no centre", "a{background-position:10px 20px}"],
+			["both axes carry an offset", "a{background-position:left 1em top 50%}"],
+			["the property is no position", "a{background-repeat:round center}"],
+			["the position is a shorthand's slot", "a{background:10px center}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a shorthand slot holding its own initial", () => {
+		it.each([
+			["a{transition:height .35s ease}", "a{transition:height.35s}"],
+			["a{transition:opacity 1s ease 2s}", "a{transition:opacity 1s 2s}"],
+			["a{transition:all 1s ease}", "a{transition:all 1s}"],
+			["a{transition:opacity 1s normal}", "a{transition:opacity 1s}"],
+			// A comma parts two layers, and each holds its own set of slots.
+			[
+				"a{transition:opacity 1s ease,color 1s ease}",
+				"a{transition:opacity 1s,color 1s}"
+			],
+			[
+				"a{transition:all .3s cubic-bezier(.4,0,.2,1),color .2s ease}",
+				"a{transition:all.3s cubic-bezier(.4,0,.2,1),color.2s}"
+			],
+			// Only the layer whose slots are unambiguous gives its keyword up.
+			[
+				"a{transition:opacity 1s ease,ease 1s ease}",
+				"a{transition:opacity 1s,ease 1s ease}"
+			],
+			[
+				"a{transition:1s ease color,2s opacity}",
+				"a{transition:color 1s,opacity 2s}"
+			],
+			["a{animation:x 1s ease}", "a{animation:x 1s}"],
+			["a{animation:x 2s ease normal running}", "a{animation:x 2s}"],
+			["a{border:2px none red}", "a{border:2px red}"],
+			["a{column-rule:medium none red}", "a{column-rule:medium red}"],
+			["a{outline:medium none}", "a{outline:medium}"],
+			["a{flex-flow:row wrap}", "a{flex-flow:wrap}"],
+			// Both slots hold their initial, so the shortest one says both — whichever
+			// order they were written in.
+			["a{flex-flow:row nowrap}", "a{flex-flow:row}"],
+			["a{flex-flow:nowrap row}", "a{flex-flow:row}"],
+			["a{border:none medium}", "a{border:medium}"],
+			["a{list-style:disc outside}", "a{list-style:disc}"],
+			["a{mask:url(a.svg) match-source add}", "a{mask:url(a.svg)}"],
+			[
+				"a{border-image:url(a.png) 30% stretch}",
+				"a{border-image:url(a.png)30%}"
+			],
+			["a{text-decoration:none solid red}", "a{text-decoration:red}"],
+			["a{TRANSITION:opacity 1s EASE}", "a{TRANSITION:opacity 1s}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			[
+				"the keyword is not the initial",
+				"a{transition:height .35s ease-in-out}"
+			],
+			// `none` is both an animation name and a fill mode, so which slot it
+			// fills is not a question the grammar answers.
+			["two slots name the keyword", "a{animation:x 1s none}"],
+			["the same, on a list style", "a{list-style:none}"],
+			// `mask: url(…) none` fills `<mask-reference>` twice and is a declaration
+			// the engine drops — removing the `none` would revive it.
+			["a sibling fills the same slot", "a{mask:url(a.svg) none}"],
+			// A function fills the easing slot as much as a keyword does.
+			["a call fills the same slot", "a{transition:opacity 1s ease steps(4)}"],
+			["the same, on an animation", "a{animation:x 1s ease linear(0,1)}"],
+			["the value is the keyword alone", "a{border:none}"],
+			// Each layer keeps its own siblings, so the ambiguous one stays whole.
+			[
+				"a layer's own sibling fills the slot",
+				"a{transition:ease 1s ease,ease 2s ease}"
+			],
+			// A string could carry the comma the layer split reads.
+			["a layer holds a string", 'a{transition:"a" 1s ease}'],
+			["a layer is empty", "a{transition:opacity 1s ease,,color 2s ease}"],
+			["the first layer is empty", "a{transition:,opacity 1s ease}"],
+			["the last layer is empty", "a{transition:opacity 1s ease,}"],
+			["the property is no shorthand", "a{border-style:none}"],
+			["the slot takes more than keywords", "a{border:medium solid red}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a font-stretch keyword", () => {
+		it.each([
+			["a{font-stretch:ultra-condensed}", "a{font-stretch:50%}"],
+			["a{font-stretch:condensed}", "a{font-stretch:75%}"],
+			["a{font-stretch:semi-condensed}", "a{font-stretch:87.5%}"],
+			["a{font-stretch:normal}", "a{font-stretch:100%}"],
+			["a{font-stretch:expanded}", "a{font-stretch:125%}"],
+			["a{font-stretch:ultra-expanded}", "a{font-stretch:200%}"],
+			["a{font-stretch:CONDENSED}", "a{font-stretch:75%}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the value is already a percentage", "a{font-stretch:75%}"],
+			["it is a custom property's value", "a{--x:condensed}"],
+			["the value holds a substitution", "a{font-stretch:var(--x,condensed)}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a filter function's omitted argument", () => {
+		it.each([
+			["a{filter:grayscale(1)}", "a{filter:grayscale()}"],
+			["a{filter:grayscale(100%)}", "a{filter:grayscale()}"],
+			["a{filter:invert(1)}", "a{filter:invert()}"],
+			["a{filter:blur(0)}", "a{filter:blur()}"],
+			["a{backdrop-filter:saturate(1)}", "a{backdrop-filter:saturate()}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the amount is not the omitted one", "a{filter:grayscale(0)}"],
+			["the same, as a percentage", "a{filter:grayscale(50%)}"],
+			[
+				"the function takes no optional argument",
+				"a{filter:drop-shadow(0 0 1px red)}"
+			],
+			["a substitution stands there", "a{filter:grayscale(var(--x))}"]
+		])("keeps the value where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a shadow's trailing zero lengths", () => {
+		it.each([
+			[
+				"a{box-shadow:0 0 0 0 #22242626 inset}",
+				"a{box-shadow:0 0#22242626 inset}"
+			],
+			["a{box-shadow:-1px 0 0 0 #bababc}", "a{box-shadow:-1px 0#bababc}"],
+			["a{box-shadow:inset 0 0 0 0 red}", "a{box-shadow:inset 0 0 red}"],
+			["a{box-shadow:1px 2px 3px 0 red}", "a{box-shadow:1px 2px 3px red}"],
+			["a{text-shadow:1px 1px 0 red}", "a{text-shadow:1px 1px red}"],
+			[
+				"a{box-shadow:0 0 0 0 red,1px 1px 0 0 blue}",
+				"a{box-shadow:0 0 red,1px 1px blue}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// The two offsets are what the grammar makes mandatory.
+			["the two offsets are all there is", "a{box-shadow:0 0 red}"],
+			["a length past them is not zero", "a{box-shadow:0 0 0 1px red}"],
+			["the value is a keyword", "a{box-shadow:none}"],
+			["the property states no shadow", "a{stroke-dasharray:1 0 0}"],
+			["a layer holds a string", 'a{box-shadow:0 0 0 0 red,"a"}'],
+			// A comma with nothing either side is a layer no shadow fills.
+			["a trailing comma parts an empty layer", "a{box-shadow:0 0 0 0 red,}"],
+			["a leading comma does the same", "a{box-shadow:,0 0 0 0 red}"]
+		])("keeps the value where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("the whitespace between two calls", () => {
+		it.each([
+			[
+				"a{transform:scale(2) rotate(45deg)}",
+				"a{transform:scale(2)rotate(45deg)}"
+			],
+			[
+				"a{transform:scale(.85) translateY(-.5rem) rotate(45deg)}",
+				"a{transform:scale(.85)translateY(-.5rem)rotate(45deg)}"
+			],
+			// Grammar matching skips whitespace whatever the property, which is what
+			// reaches the prefixed spellings no dataset names.
+			[
+				"a{-webkit-transform:translateY(-14px) scale(.8)}",
+				"a{-webkit-transform:translateY(-14px)scale(.8)}"
+			],
+			["a{filter:brightness(0) invert(1)}", "a{filter:brightness(0)invert()}"],
+			[
+				"a{-webkit-filter:blur(2px) saturate(2)}",
+				"a{-webkit-filter:blur(2px)saturate(2)}"
+			],
+			[
+				"a{backdrop-filter:blur(2px) saturate(2)}",
+				"a{backdrop-filter:blur(2px)saturate(2)}"
+			],
+			[
+				"a{grid-template-columns:repeat(2,1fr) minmax(0,1fr)}",
+				"a{grid-template-columns:repeat(2,1fr)minmax(0,1fr)}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the value is a keyword", "a{transform:none}"],
+			["a component is no call", "a{background:red none}"],
+			["the same, past a call", "a{mask:url(a.svg) none}"],
+			["there is one component", "a{filter:blur(2px)}"]
+		])("keeps the value where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a comment parting two components", () => {
+		// The comment ends both tokens, so a rewritten value has to keep them apart.
+		it.each([
+			["a{margin:1px 1px/*c*/1px 1px}", "a{margin:1px}"],
+			["a{margin:1px/*c*/2px 1px 2px}", "a{margin:1px 2px}"],
+			["a{box-shadow:1px 1px/*c*/2px 0 red}", "a{box-shadow:1px 1px 2px red}"],
+			[
+				"a{transition:opacity/*c*/1s ease-in 2s}",
+				"a{transition:opacity 1s 2s ease-in}"
+			],
+			["a{background-position:left/*c*/top}", "a{background-position:0%0%}"],
+			[
+				"a{grid-template-columns:1fr/*c*/1fr}",
+				"a{grid-template-columns:1fr 1fr}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+	});
+
+	describe("a value holding a substitution", () => {
+		// The engine keeps such a value as the token stream it was written as until
+		// the substitution resolves, so every rewrite inside one is declined.
+		it.each([
+			["a named color", "a{background-color:var(--a,var(--b,white))}"],
+			["a transform", "a{transform:var(--a) translate(0,10px)}"],
+			["a font family", 'a{font-family:var(--x),"Foo Bar"}'],
+			["a url()", 'a{background:var(--a) url("a b.png")}'],
+			["a repeated pair", "a{background-repeat:var(--x) var(--x)}"],
+			["a two-keyword display", "a{display:var(--x) flow}"],
+			["an `initial`", "a{min-width:var(--x,initial)}"],
+			["the font shorthand's weight", "a{font:bold var(--s1) Arial}"],
+			["a transition's slots", "a{transition:var(--p) 2s opacity}"],
+			["`transparent`", "a{color:var(--x,transparent)}"],
+			["a `translateX()`", "a{transform:var(--a) translateX(1px)}"],
+			["a zero angle", "a{transform:var(--a) rotate(0deg)}"]
+		])("keeps %s as written", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a url() whose quotes an escape replaces", () => {
+		it.each([
+			['a{background:url("a b.png")}', "a{background:url(a\\ b.png)}"],
+			['a{background:url("a(b.png")}', "a{background:url(a\\(b.png)}"],
+			['a{background:url("a)b.png")}', "a{background:url(a\\)b.png)}"],
+			["a{background:url('a b.png')}", "a{background:url(a\\ b.png)}"],
+			['a{background:url("a\'b.png")}', "a{background:url(a\\'b.png)}"],
+			['a{background:url("http://x/y z")}', "a{background:url(http://x/y\\ z)}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// Two escapes cost the two bytes the quotes did, so nothing is saved.
+			["two code points need escaping", 'a{background:url("a b c.png")}'],
+			// A control code point takes a hex escape, which is never shorter.
+			["a control code point stands there", 'a{background:url("a\tb.png")}']
+		])("keeps the quotes where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a two-keyword display naming one box", () => {
+		it.each([
+			["a{display:inline flow-root}", "a{display:inline-block}"],
+			["a{display:block flow}", "a{display:block}"],
+			// `<display-outside> || <display-inside>` is order-free.
+			["a{display:flow block}", "a{display:block}"],
+			["a{display:block table}", "a{display:table}"],
+			["a{display:inline flow}", "a{display:inline}"],
+			// `ruby` is the one inside whose own default outside is `inline`.
+			["a{display:inline ruby}", "a{display:ruby}"],
+			["a{display:run-in flow}", "a{display:run-in}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// `inline-table` is no shorter than the two keywords it stands for.
+			["the short form saves nothing", "a{display:inline table}"],
+			["it is already one keyword", "a{display:flex}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("the font shorthand's weight", () => {
+		it.each([
+			["a{font:bold 12px/1.5 Arial}", "a{font:700 12px/1.5 Arial}"],
+			["a{font:italic bold 12px Arial}", "a{font:italic 700 12px Arial}"],
+			["a{font:bold small Arial}", "a{font:700 small Arial}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// The family only ever follows the size, so this `bold` is a family name.
+			["no size follows it", "a{font:12px bold}"],
+			["there is no size at all", "a{font:bold}"]
+		])("keeps the word where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a transition written in slot order", () => {
+		it.each([
+			["a{transition:ease-in 2s opacity}", "a{transition:opacity 2s ease-in}"],
+			["a{transition:2s opacity}", "a{transition:opacity 2s}"],
+			// The first time is the duration and the second the delay, both kept.
+			["a{transition:2s 1s opacity}", "a{transition:opacity 2s 1s}"],
+			[
+				"a{transition:allow-discrete 2s opacity}",
+				"a{transition:opacity 2s allow-discrete}"
+			],
+			// The easing slot holds its own initial, so it goes before the reorder.
+			["a{transition:ease 2s}", "a{transition:2s}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["it is already in order", "a{transition:opacity 2s ease-in}"],
+			["a substitution stands there", "a{transition:var(--x) 2s}"],
+			["two layers are written", "a{transition:opacity 2s,color 3s}"],
+			["there is one component", "a{transition:none}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a font family the quotes carry nothing for", () => {
+		it.each([
+			[
+				'a{font-family:"Helvetica Neue",Arial}',
+				"a{font-family:Helvetica Neue,Arial}"
+			],
+			['a{font-family:"Arial"}', "a{font-family:Arial}"],
+			[
+				'a{font-family:"Foo Bar","sans-serif"}',
+				'a{font-family:Foo Bar,"sans-serif"}'
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// Unquoted, each of these would read as the grammar's own keyword.
+			["it is a generic family", 'a{font-family:"serif"}'],
+			["it is a CSS-wide keyword", 'a{font-family:"inherit"}'],
+			// …and each of these is text no identifier run could spell.
+			["a word starts with a digit", 'a{font-family:"1st Ave"}'],
+			["a word is no identifier", 'a{font-family:"a.b"}'],
+			["two spaces part its words", 'a{font-family:"My  Font"}'],
+			// The family slot of the shorthand is read among the other slots.
+			["it is the `font` shorthand", 'a{font:12px "Foo Bar"}'],
+			["the property takes a string", 'a{content:"Foo Bar"}'],
+			["it is a custom property's value", 'a{--x:"Foo Bar"}']
+		])("keeps the quotes where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a transform naming the same matrix", () => {
+		it.each([
+			["a{transform:translate(0,10px)}", "a{transform:translateY(10px)}"],
+			["a{transform:translate(10px,0)}", "a{transform:translate(10px)}"],
+			["a{transform:translate3d(0,0,5px)}", "a{transform:translateZ(5px)}"],
+			[
+				"a{transform:translate3d(1px,2px,0)}",
+				"a{transform:translate(1px,2px)}"
+			],
+			["a{transform:scale(2,2)}", "a{transform:scale(2)}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["no axis is zero", "a{transform:translate(1px,2px)}"],
+			["the factors differ", "a{transform:scale(2,3)}"],
+			// A substitution could expand to something the shorter call rejects.
+			["a substitution stands there", "a{transform:translate(var(--x),0)}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a linear gradient's default direction", () => {
+		it.each([
+			[
+				"a{background:linear-gradient(to bottom,#fff,#000)}",
+				"a{background:linear-gradient(#fff,#000)}"
+			],
+			[
+				"a{background:linear-gradient(180deg,red,blue)}",
+				"a{background:linear-gradient(red,blue)}"
+			],
+			[
+				"a{background:repeating-linear-gradient(to bottom,red,blue)}",
+				"a{background:repeating-linear-gradient(red,blue)}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			[
+				"the direction is not the default",
+				"a{background:linear-gradient(to right,#fff,#000)}"
+			],
+			// A prefixed gradient measures its angle the other way round.
+			[
+				"the gradient is prefixed",
+				"a{background:-webkit-linear-gradient(180deg,red,blue)}"
+			],
+			[
+				"there is no direction to drop",
+				"a{background:linear-gradient(red,blue)}"
+			]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("grid-template-areas", () => {
+		it("keeps the cell names and drops the whitespace parting the rows", () => {
+			expect(minify('a{grid-template-areas:"a  a" "b  b"}')).toBe(
+				'a{grid-template-areas:"a a""b b"}'
+			);
+		});
+
+		it("keeps the space two null cells need", () => {
+			// `..` is one null cell; `. .` is two, so the space between them counts.
+			expect(minify('a{grid-template-areas:". ." "b b"}')).toBe(
+				'a{grid-template-areas:". .""b b"}'
+			);
+		});
+
+		it("keeps a value that is not a row list", () => {
+			expect(minify("a{grid-template-areas:none}")).toBe(
+				"a{grid-template-areas:none}"
+			);
+		});
+	});
+
+	describe("An+B in its shortest notation", () => {
+		it.each([
+			[":nth-child(0n+3){color:red}", ":nth-child(3){color:red}"],
+			[":nth-child(0n-3){color:red}", ":nth-child(-3){color:red}"],
+			[":nth-child(-0n+3){color:red}", ":nth-child(3){color:red}"],
+			[":nth-last-child(0n+2){color:red}", ":nth-last-child(2){color:red}"],
+			[":nth-child(2n+1){color:red}", ":nth-child(odd){color:red}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			["the step is not zero", ":nth-child(2n+3){color:red}"],
+			["it is already a plain B", ":nth-child(3){color:red}"],
+			["an `of` clause follows it", ":nth-child(0n+3 of .a){color:red}"]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a named color the shortest spelling beats", () => {
+		it.each([
+			["a{color:white}", "a{color:#fff}"],
+			["a{color:lightgoldenrodyellow}", "a{color:#fafad2}"],
+			// Two names carry this value and neither beats the hex.
+			["a{color:magenta}", "a{color:#f0f}"],
+			["a{color:WHITE}", "a{color:#fff}"],
+			["a{border:1px solid white}", "a{border:1px solid #fff}"],
+			[
+				"a{box-shadow:0 0 1px lightgoldenrodyellow}",
+				"a{box-shadow:0 0 1px #fafad2}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// Already the shortest text for its value.
+			["it is its own shortest spelling", "a{color:red}"],
+			["a same-length hex ties it", "a{color:cyan}"],
+			// An identifier here may be the author's own name.
+			["the property names a keyframe", "a{animation-name:white}"],
+			["the property names a grid area", "a{grid-area:white}"],
+			["the property also takes an image", "a{background:white}"],
+			["it is a custom property's value", "a{--x:white}"],
+			[
+				"it is the syntax a condition tests",
+				"@supports (color:white){a{color:red}}"
+			]
+		])("keeps it where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("combinators inside a selector function", () => {
+		it.each([
+			[":where(.a > .b){color:red}", ":where(.a>.b){color:red}"],
+			[":is(.a > .b, .c ~ .d){color:red}", ":is(.a>.b,.c~.d){color:red}"],
+			[":not(.a + .b){color:red}", ":not(.a+.b){color:red}"],
+			[":has(.a > .b){color:red}", ":has(.a>.b){color:red}"],
+			[":nth-child(2n + 3){color:red}", ":nth-child(2n+3){color:red}"],
+			[
+				":nth-child(2n of .a > .b){color:red}",
+				":nth-child(2n of .a>.b){color:red}"
+			],
+			// The same trim reaches a selector wherever one is applied.
+			[
+				"@media (min-width:1px){:where(.a > .b){color:red}}",
+				"@media (width>=1px){:where(.a>.b){color:red}}"
+			],
+			[
+				"@layer x{:where(.a > .b){color:red}}",
+				"@layer x{:where(.a>.b){color:red}}"
+			],
+			[".x{&:where(.a > .b){color:red}}", ".x{&:where(.a>.b){color:red}}"]
+		])(
+			"drops the whitespace a combinator does not need: %s",
+			(css, expected) => {
+				expect(minify(css)).toBe(expected);
+			}
+		);
+
+		it("keeps the whitespace a math expression does need", () => {
+			// `+` and `-` are operators only with whitespace on both sides.
+			expect(minify("a{width:calc(1em + 2px)}")).toBe(
+				"a{width:calc(1em + 2px)}"
+			);
+		});
+
+		it("keeps a `@supports` condition as written", () => {
+			// The condition is the syntax being tested, and an engine hands it back
+			// verbatim — `selector(.a>.b)` builds a different CSSOM from `.a > .b`.
+			expect(minify("@supports selector(.a > .b){c{color:red}}")).toBe(
+				"@supports selector(.a > .b){c{color:red}}"
+			);
+			expect(minify("@supports selector(:is(.a > .b)){c{color:red}}")).toBe(
+				"@supports selector(:is(.a > .b)){c{color:red}}"
+			);
+		});
+
+		it("leaves a value function of the same name alone", () => {
+			// `element()` takes an id selector, but in a value there is no combinator
+			// to trim and the argument is a reference.
+			expect(minify("a{background:element(#a)}")).toBe(
+				"a{background:element(#a)}"
+			);
+		});
+	});
+
+	describe("keyframe selectors", () => {
+		// A `calc()` inside a math expression is what a parenthesis already says,
+		// but a declaration holding a substitution keeps its value as written, so
+		// dropping the keyword there builds a different CSSOM.
+		it("keeps a nested `calc()`", () => {
+			expect(minify("a{width:calc(1em + calc(var(--w)*2))}")).toBe(
+				"a{width:calc(1em + calc(var(--w)*2))}"
+			);
+		});
+
+		it("writes a `from` keyframe selector as the `0%` it names", () => {
+			expect(minify("@keyframes k{from{opacity:0}to{opacity:1}}")).toBe(
+				"@keyframes k{0%{opacity:0}to{opacity:1}}"
+			);
+			expect(minify("@-webkit-keyframes k{from,50%{opacity:0}}")).toBe(
+				"@-webkit-keyframes k{0%,50%{opacity:0}}"
+			);
+		});
+
+		it("leaves `from` alone where it is not a keyframe selector", () => {
+			expect(minify("@media print{a{from:1}}")).toBe("@media print{a{from:1}}");
+		});
+
+		// Only a comma at depth zero parts the list, so a `from` any of these
+		// enclose is not the selector the rewrite is looking for.
+		it.each([
+			["a group", "@keyframes k{:is(from,to),from{opacity:0}}"],
+			["an attribute value", '@keyframes k{[a=","],from{opacity:0}}'],
+			["an escape", String.raw`@keyframes k{fro\,m,from{opacity:0}}`]
+		])("splits the list past a comma %s holds", (_name, css) => {
+			expect(minify(css)).toBe(css.replace(",from{", ",0%{"));
 		});
 	});
 
@@ -1906,5 +3108,613 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css, { cssInsetShorthand: false })).toBe(css);
 			expect(minify(css)).toBe("a{inset:1px 2px}");
 		});
+
+		it("merges the four corners, matched by name rather than position", () => {
+			// `corner-shape` lists its longhands by row and `{1,4}` writes them
+			// clockwise, so a positional read would cross two of them over.
+			expect(
+				minify(
+					"a{border-top-left-radius:1px;border-top-right-radius:2px;border-bottom-right-radius:3px;border-bottom-left-radius:4px}"
+				)
+			).toBe("a{border-radius:1px 2px 3px 4px}");
+			expect(
+				minify(
+					"a{corner-top-left-shape:squircle;corner-top-right-shape:bevel;corner-bottom-right-shape:scoop;corner-bottom-left-shape:notch}"
+				)
+			).toBe("a{corner-shape:squircle bevel scoop notch}");
+		});
+
+		it("declines a corner carrying two radii, which needs the `/` form", () => {
+			const css =
+				"a{border-top-left-radius:1px 2px;border-top-right-radius:1px 2px;border-bottom-right-radius:1px 2px;border-bottom-left-radius:1px 2px}";
+			expect(minify(css)).toBe(css);
+		});
+
+		it("lets only the first of two shorthands claim a shared longhand", () => {
+			// `corner-top-shape` and `corner-left-shape` both set the top-left
+			// corner; the second landing on the first's blanked tail would drop it.
+			expect(
+				minify(
+					"a{corner-top-right-shape:notch;corner-top-left-shape:bevel;corner-bottom-left-shape:scoop}"
+				)
+			).toBe("a{corner-top-right-shape:notch;corner-left-shape:bevel scoop}");
+			expect(
+				minify(
+					"a{corner-end-start-shape:scoop;corner-start-start-shape:bevel;corner-start-end-shape:notch}"
+				)
+			).toBe(
+				"a{corner-end-start-shape:scoop;corner-block-start-shape:bevel notch}"
+			);
+		});
+	});
+
+	describe("pair and order-free shorthand merging", () => {
+		it("merges the two longhands a pair shorthand sets", () => {
+			expect(minify("a{margin-block-start:1px;margin-block-end:2px}")).toBe(
+				"a{margin-block:1px 2px}"
+			);
+			expect(minify("a{padding-inline-start:1px;padding-inline-end:1px}")).toBe(
+				"a{padding-inline:1px}"
+			);
+			expect(minify("a{row-gap:1px;column-gap:2px}")).toBe("a{gap:1px 2px}");
+		});
+
+		it("corrects the corner pair `mdn-data` misstates", () => {
+			// Chromium puts `corner-inline-start-shape` on the inline-start edge;
+			// the dataset gives it the block-start edge's pair.
+			expect(
+				minify("a{corner-start-start-shape:bevel;corner-end-start-shape:notch}")
+			).toBe("a{corner-inline-start-shape:bevel notch}");
+			expect(
+				minify("a{corner-start-start-shape:bevel;corner-start-end-shape:notch}")
+			).toBe("a{corner-block-start-shape:bevel notch}");
+		});
+
+		it("merges `overflow` only where it collapses to one value", () => {
+			expect(minify("a{overflow-x:hidden;overflow-y:hidden}")).toBe(
+				"a{overflow:hidden}"
+			);
+			const two = "a{overflow-x:hidden;overflow-y:scroll}";
+			expect(minify(two)).toBe(two);
+		});
+
+		it("declines `place-items`, newer than its longhands in every form", () => {
+			const css = "a{align-items:center;justify-items:center}";
+			expect(minify(css)).toBe(css);
+		});
+
+		it("refuses a pair the box collapse would refuse", () => {
+			// A CSS-wide keyword beside another value is a shorthand no engine
+			// accepts, and a `var()` may expand to both values at once.
+			const wide = "a{margin-block-start:inherit;margin-block-end:1px}";
+			expect(minify(wide)).toBe(wide);
+			const sub = "a{margin-block-start:var(--x);margin-block-end:var(--x)}";
+			expect(minify(sub)).toBe(sub);
+		});
+
+		it("merges an order-free shorthand's slots in grammar order", () => {
+			expect(
+				minify("a{outline-width:3px;outline-style:dashed;outline-color:red}")
+			).toBe("a{outline:3px dashed red}");
+			expect(
+				minify(
+					"a{column-rule-width:medium;column-rule-style:groove;column-rule-color:rebeccapurple}"
+				)
+			).toBe("a{column-rule:medium groove #639}");
+			expect(
+				minify(
+					"a{text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#123;text-decoration-thickness:10%}"
+				)
+			).toBe("a{text-decoration:none solid #123 10%}");
+			expect(minify("a{flex-direction:column;flex-wrap:wrap}")).toBe(
+				"a{flex-flow:column wrap}"
+			);
+			expect(minify("a{text-wrap-mode:nowrap;text-wrap-style:balance}")).toBe(
+				"a{text-wrap:nowrap balance}"
+			);
+			expect(minify('a{text-emphasis-style:"x";text-emphasis-color:red}')).toBe(
+				'a{text-emphasis:"x" red}'
+			);
+		});
+
+		it("classifies a zero length, a system color and a written unit", () => {
+			expect(
+				minify(
+					"a{outline-width:0;outline-style:none;outline-color:currentcolor}"
+				)
+			).toBe("a{outline:0 none currentcolor}");
+			expect(
+				minify(
+					"a{text-decoration-line:line-through;text-decoration-style:double;text-decoration-color:CanvasText;text-decoration-thickness:from-font}"
+				)
+			).toBe("a{text-decoration:line-through double CanvasText from-font}");
+		});
+
+		it.each([
+			// `auto` is both an `outline-style` and an `outline-color`.
+			["a{outline-width:3px;outline-style:auto;outline-color:auto}"],
+			// A substitution could stand for any slot.
+			["a{outline-width:3px;outline-style:dashed;outline-color:var(--c)}"],
+			// A CSS-wide keyword means something else in a shorthand.
+			["a{flex-direction:column;flex-wrap:inherit}"],
+			// No slot takes a length, so the declaration is invalid either way.
+			["a{flex-direction:3px;flex-wrap:wrap}"],
+			// A unit no slot's type carries is not classified at all.
+			["a{outline-width:2s;outline-style:dashed;outline-color:red}"],
+			// Only a zero number is a length without a unit.
+			["a{outline-width:3;outline-style:dashed;outline-color:red}"],
+			// `list-style-type` takes any identifier, so nothing else is unambiguous.
+			[
+				"a{list-style-type:square;list-style-position:inside;list-style-image:url(a.png)}"
+			]
+		])("declines %s", (css) => {
+			expect(minify(css)).toBe(css);
+		});
+
+		it("declines when a family member stands between the slots", () => {
+			const css =
+				"a{outline-width:3px;outline-offset:1px;outline-style:dashed;outline-color:red}";
+			expect(minify(css)).toBe(css);
+		});
+
+		it("steps over a property outside the family", () => {
+			expect(
+				minify(
+					"a{column-rule-width:medium;color:red;column-rule-style:groove;column-rule-color:rebeccapurple}"
+				)
+			).toBe("a{column-rule:medium groove #639;color:red}");
+		});
+
+		it("declines a hash that is no color, at the lengths CSS omits", () => {
+			// Only 3, 4, 6 and 8 digits are a hex color. Merging a 5- or 7-digit
+			// one would make the whole shorthand invalid, taking the width and
+			// style down with a color the engine was already dropping.
+			for (const hash of ["#12345", "#1234567"]) {
+				const css = `a{outline-width:3px;outline-style:dashed;outline-color:${hash}}`;
+				expect(minify(css)).toBe(css);
+			}
+			for (const hash of ["#123", "#1234", "#123456", "#12345678"]) {
+				expect(
+					minify(
+						`a{outline-width:3px;outline-style:dashed;outline-color:${hash}}`
+					)
+				).toBe(`a{outline:3px dashed ${hash}}`);
+			}
+		});
+
+		it("declines a value only another slot would take", () => {
+			// Invalid as written, and a merge must not rescue it into a shorthand
+			// the engine would read.
+			const css =
+				"a{list-style-type:url(a.png);list-style-position:inside;list-style-image:none}";
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("calc-size() and the length-only calls", () => {
+		it("reduces the size argument in place", () => {
+			expect(minify("a{width:calc-size(auto,1px + 2px)}")).toBe(
+				"a{width:calc-size(auto,3px)}"
+			);
+			// The outer call reduces around an already-reduced inner one.
+			expect(
+				minify("a{width:calc-size(calc-size(auto,1px + 2px),3px + 4px)}")
+			).toBe("a{width:calc-size(calc-size(auto,3px),7px)}");
+		});
+
+		it("declines when the argument is not constant", () => {
+			// `size` is the sized element's own value, so nothing folds.
+			const css = "a{width:calc-size(auto,size + 10px)}";
+			expect(minify(css)).toBe(css);
+		});
+
+		it("drops a zero's unit inside a call whose every number is a length", () => {
+			expect(minify("a{transform:translate(0px, 0em)}")).toBe(
+				"a{transform:translate(0,0)}"
+			);
+			expect(minify("a{clip-path:inset(0px 1px 0em 2px)}")).toBe(
+				"a{clip-path:inset(0 1px 0 2px)}"
+			);
+			// `scale()` takes a `<number>`, so `scale(0px)` is dropped where
+			// `scale(0)` is a transform — the rewrite would revive it.
+			const scale = "a{transform:scale(0px)}";
+			expect(minify(scale)).toBe(scale);
+		});
+	});
+
+	describe("media-feature range intervals", () => {
+		it("collapses an `and` of two one-sided ranges, either order", () => {
+			expect(
+				minify("@media (min-width:1200px) and (max-width:2000px){a{color:red}}")
+			).toBe("@media (1200px<=width<=2000px){a{color:red}}");
+			expect(
+				minify("@media (max-width:2000px) and (min-width:1200px){a{color:red}}")
+			).toBe("@media (1200px<=width<=2000px){a{color:red}}");
+		});
+
+		it("declines two comparisons the same way round", () => {
+			expect(
+				minify("@media (min-width:1200px) and (min-width:1300px){a{color:red}}")
+			).toBe("@media (width>=1200px) and (width>=1300px){a{color:red}}");
+		});
+	});
+
+	describe("calc folding", () => {
+		// A fold has to stay the value an engine would have computed, and a folded
+		// expression is no longer there to be recomputed — so every step that
+		// cannot be shown exact declines and leaves the expression written out.
+		it.each([
+			// Two units only layout can add.
+			["calc(100% - 10px)"],
+			["calc(1em + 2px)"],
+			["calc(1px + 1deg)"],
+			// A substitution could expand to anything.
+			["calc(var(--x) + 1px)"],
+			// Not arithmetic at all.
+			["calc(1px + auto)"],
+			["calc(1px +)"],
+			["calc()"],
+			// The grammar takes only a number on the right of a `/`, and a product
+			// needs one plain number for the result to keep the units it had.
+			["calc(2px*3px)"],
+			["calc(1px/0)"],
+			// Neither the sum nor the product is exact in a double.
+			["calc(.1px + .2px)"],
+			["calc(1px/7)"],
+			["calc(1e20px + 1px)"],
+			["calc(1e308px*1e10)"],
+			// Past the range the rounding covers, so every digit is kept — and all
+			// of them together are longer than the expression.
+			["calc(123456px/1.1)"],
+			// A math function whose meaning is not written yet, so the sum inside it
+			// folds but the call does not.
+			["sqrt(4px)"]
+		])("leaves %s alone", (expression) => {
+			expect(value(expression)).toBe(expression);
+		});
+
+		it.each([
+			// The fold prints a double back, so its result is rounded the way an
+			// authored number is — six significant digits.
+			["calc(3px/1.1)", "2.72727px"],
+			["calc(100%/3)", "33.3333%"],
+			["calc(1/3*1px)", ".333333px"],
+			["calc((6/10 - .375)*1em)", ".225em"],
+			["calc((6/14 - .375)*1em)", ".0535714em"],
+			// An angle keeps every digit: `rotate()` runs it through trig.
+			["calc(1turn/3)", "calc(1turn/3)"],
+			// Above the range the rounding covers the digits carry, so they stay.
+			["calc(1e4px + 1px)", "10001px"]
+		])("%s folds to %s", (expression, expected) => {
+			expect(value(expression)).toBe(expected);
+		});
+
+		it("folds through a parenthesized group and a nested calc()", () => {
+			expect(value("calc((1px + 2px)*3)")).toBe("9px");
+			expect(value("calc(calc(1px + 2px) + 3px)")).toBe("6px");
+		});
+
+		it("counts units fixed against each other in one term", () => {
+			expect(value("calc(1in + 1px)")).toBe("97px");
+			expect(value("calc(2.5cm + 5mm)")).toBe("3cm");
+		});
+
+		it("prints the term in whichever unit of its group spells it", () => {
+			// No `px` count equals these, so reaching the answer through the group's
+			// reference unit alone would leave every one of them written out.
+			expect(converted("calc(1cm + 1mm)")).toBe("11mm");
+			expect(converted("calc(1in + 1cm)")).toBe("3.54cm");
+			expect(converted("calc(4.5cm + 0cm)")).toBe("45mm");
+			// And a sum no unit of the group spells exactly still declines.
+			expect(value("calc(1px + 1cm)")).toBe("calc(1px + 1cm)");
+		});
+
+		it("keeps the parentheses on a negative the property refuses", () => {
+			// `width: -5px` is dropped where `width: calc(-5px)` clamps to 0.
+			expect(minify("a{width:calc(0px - 5px)}")).toBe("a{width:calc(-5px)}");
+			// `<line-width>` states no range, so nothing licenses the rewrite.
+			expect(minify("a{border-width:calc(0px - 5px)}")).toBe(
+				"a{border-width:calc(-5px)}"
+			);
+		});
+
+		it("takes them off one the property accepts", () => {
+			expect(minify("a{margin-left:calc(0px - 5px)}")).toBe(
+				"a{margin-left:-5px}"
+			);
+			// The shorthand defers wholly to those longhands, so it accepts one too.
+			expect(minify("a{margin:calc(0px - 5px)}")).toBe("a{margin:-5px}");
+		});
+
+		it("keeps them on a fraction only where the property takes an integer", () => {
+			// `z-index: calc(1.5)` computes to 2; `z-index: 1.5` is dropped.
+			expect(minify("a{z-index:calc(1.5)}")).toBe("a{z-index:calc(1.5)}");
+			expect(minify("a{opacity:calc(.5)}")).toBe("a{opacity:.5}");
+		});
+
+		it("prints a sum two units deep as the sum it reduced to", () => {
+			expect(value("calc((1em + 1px)*2)")).toBe("calc(2em + 2px)");
+			expect(value("calc(2*(1em + 1px))")).toBe("calc(2em + 2px)");
+			expect(value("calc((100% + 1px)/2)")).toBe("calc(50% + .5px)");
+			expect(value("calc(1px + 2em + 3px)")).toBe("calc(4px + 2em)");
+			// The terms keep the order they were first written, and a negative one
+			// is the subtraction it is.
+			expect(value("calc(1em - 2em + 1px)")).toBe("calc(-1em + 1px)");
+			expect(value("calc(1px - calc(1em + 1px))")).toBe("calc(0px - 1em)");
+		});
+
+		it("keeps a zero term of a sum two units deep", () => {
+			// Which units may be added to which is a type rule, so dropping the term
+			// would turn an expression the engine rejects into one it accepts.
+			expect(value("calc(1px + 1deg - 1deg)")).toBe("calc(1px + 0deg)");
+			expect(value("calc((1em + 1px)*0)")).toBe("calc(0em + 0px)");
+		});
+
+		it("keeps them on a unitless zero", () => {
+			// `calc(0)` is a number, so `width:calc(0)` is dropped and renders at
+			// `auto`; `width:0` is a length and renders at 0.
+			expect(minify("a{width:calc(0)}")).toBe("a{width:calc(0)}");
+			expect(minify("a{width:calc(1 - 1)}")).toBe("a{width:calc(0)}");
+			// A zero carrying a unit is a length either way.
+			expect(minify("a{width:calc(5px - 5px)}")).toBe("a{width:0}");
+		});
+
+		it("does not run inside a `@supports` condition or a custom property", () => {
+			const supports = "@supports (width:calc(1px + 2px)){a{color:red}}";
+			expect(minify(supports)).toBe(supports);
+			expect(minify("a{--gap:calc(1px + 2px)}")).toBe(
+				"a{--gap:calc(1px + 2px)}"
+			);
+		});
+	});
+
+	describe("min(), max(), clamp(), abs(), sign() and hypot()", () => {
+		it.each([
+			// A percentage basis can be negative, and which of two is smaller then
+			// depends on that sign — unlike scaling one, which is linear.
+			["min(50%,60%)"],
+			// Only layout knows which of these is smaller.
+			["min(1em,2px)"],
+			["min(100%,500px)"],
+			["min(var(--x),1px)"],
+			// The grammar says exactly three.
+			["clamp(1px,2px)"],
+			["clamp(1px,2px,3px,4px)"],
+			// `calc-size()` leads with a basis, so it has no arity to read — and it
+			// is now the only math function with no meaning written for it.
+			["calc-size(auto,size)"]
+		])("leaves %s alone", (expression) => {
+			expect(value(expression)).toBe(expression);
+		});
+
+		it("picks across however many arguments the grammar allows", () => {
+			expect(value("min(3px,2px,1px)")).toBe("1px");
+			expect(value("max(1px,2px,3px,4px,5px)")).toBe("5px");
+		});
+
+		it("compares units fixed against each other", () => {
+			expect(converted("min(1in,100px)")).toBe("6pc");
+			expect(value("max(1s,500ms)")).toBe("1s");
+		});
+
+		it("clamps, with the lower bound winning a contradictory pair", () => {
+			expect(value("clamp(1px,5px,3px)")).toBe("3px");
+			expect(value("clamp(4px,1px,9px)")).toBe("4px");
+		});
+
+		it("keeps the parentheses on a negative, as calc() does", () => {
+			expect(value("min(-5px,-2px)")).toBe("calc(-5px)");
+		});
+
+		it("drops a sign with abs(), whatever the unit scales by", () => {
+			// Every length unit scales by a positive factor, so the coefficient's
+			// sign is the value's even where the factor is not known here.
+			expect(value("abs(-5px)")).toBe("5px");
+			expect(value("abs(-1em)")).toBe("1em");
+		});
+
+		it("turns a sign() into the number it is", () => {
+			expect(minify("a{z-index:sign(5px)}")).toBe("a{z-index:1}");
+			// Zero keeps its parentheses too — see the unitless-zero case below.
+			expect(minify("a{z-index:sign(0px)}")).toBe("a{z-index:calc(0)}");
+			// `z-index` takes a negative, so the answer prints bare.
+			expect(minify("a{z-index:sign(-5px)}")).toBe("a{z-index:-1}");
+		});
+
+		it("takes hypot() only where the root is exact", () => {
+			expect(value("hypot(3px,4px)")).toBe("5px");
+			expect(value("hypot(6px,8px,0px)")).toBe("10px");
+			// Irrational for most inputs.
+			expect(value("hypot(1px,1px)")).toBe("hypot(1px,1px)");
+		});
+	});
+
+	describe("round(), mod() and rem()", () => {
+		it("rounds to a step, by each of the grammar's strategies", () => {
+			expect(value("round(5px,2px)")).toBe("6px");
+			expect(value("round(nearest,5.5px,1px)")).toBe("6px");
+			expect(value("round(up,4.5px,2px)")).toBe("6px");
+			expect(value("round(down,5.5px,2px)")).toBe("4px");
+			expect(value("round(to-zero,5.5px,2px)")).toBe("4px");
+			// `down` is the floor, so a negative goes further from zero, and
+			// `to-zero` truncates instead.
+			expect(value("round(down,-4.5px,2px)")).toBe("calc(-6px)");
+			expect(value("round(to-zero,-5.5px,2px)")).toBe("calc(-4px)");
+		});
+
+		it("splits mod() and rem() on whose sign the result takes", () => {
+			expect(value("mod(-7px,3px)")).toBe("2px");
+			expect(value("rem(-7px,3px)")).toBe("calc(-1px)");
+			expect(value("mod(7px,-3px)")).toBe("calc(-2px)");
+			expect(value("rem(7px,-3px)")).toBe("1px");
+		});
+
+		it.each([
+			// Exactly on a step is where engines part company: these are step
+			// functions, so an ulp in the engine's own conversion moves the answer a
+			// whole step. Chromium reads `round(down,10cm,2cm)` as `8cm` and
+			// `mod(10px,-2px)` as `-2px`, both a step off the exact answer.
+			["round(4px,2px)"],
+			["mod(10px,-2px)"],
+			["rem(10px,2px)"],
+			// A zero step is NaN, which engines render differently; a negative one
+			// is not reasoned about here.
+			["round(5px,0px)"],
+			["round(5px,-2px)"],
+			["mod(5px,0px)"],
+			// Two units only layout can compare.
+			["round(5em,2px)"],
+			["mod(50%,20%)"]
+		])("leaves %s alone", (expression) => {
+			expect(value(expression)).toBe(expression);
+		});
+
+		it("keeps that unit through a fold in the argument too", () => {
+			// A fold prints in whichever unit is shortest, which is the rewrite these
+			// arguments refuse: Chromium reads `round(down,4.5cm,1.5cm)` as 113.386px
+			// and `round(down,45mm,15mm)` as 170.079px.
+			expect(value("round(down,calc(4.5cm),calc(1.5cm))")).toBe(
+				"round(down,calc(4.5cm),calc(1.5cm))"
+			);
+			expect(value("round(down,min(4.5cm,9cm),1.5cm)")).toBe(
+				"round(down,min(4.5cm,9cm),1.5cm)"
+			);
+			// Including a stepped function inside a stepped function.
+			expect(value("round(down,round(down,10cm,3cm),1cm)")).toBe(
+				"round(down,round(down,10cm,3cm),1cm)"
+			);
+			// The function's own result is not an argument of one, so it still folds.
+			expect(value("round(5px,2px)")).toBe("6px");
+		});
+
+		it("keeps the unit a stepped argument was written with", () => {
+			// `4.5cm` and `45mm` are the same length, but not the same step:
+			// Chromium reads `round(down,4.5cm,1.5cm)` as `3cm` and the `mm`
+			// spelling as `4.5cm`, so the conversion that holds everywhere else is
+			// suppressed in here.
+			expect(value("round(down,4.5cm,1.5cm)")).toBe("round(down,4.5cm,1.5cm)");
+			// Outside one it still applies.
+			expect(converted("4.5cm")).toBe("45mm");
+		});
+	});
+
+	describe("sqrt(), pow(), log(), exp() and the trig functions", () => {
+		it.each([
+			// Irrational, so there is no value to write down.
+			["calc(sqrt(2)*1px)"],
+			["calc(pow(2,.5)*1px)"],
+			// `e` is not a double, which leaves only the powers of it this knows.
+			["calc(exp(1)*1px)"],
+			["calc(log(10)*1px)"],
+			// Not a whole power of the base.
+			["calc(log(9,2)*1px)"],
+			// Sine and cosine are irrational an odd eighth turn from zero, and
+			// tangent has an asymptote on the odd quarters.
+			["calc(sin(30deg)*1px)"],
+			["calc(sin(45deg)*1px)"],
+			["calc(cos(50grad)*1px)"],
+			["calc(tan(90deg)*1px)"],
+			// A radian is not a whole number of eighth turns except at zero.
+			["calc(sin(1)*1px)"],
+			["calc(cos(1rad)*1px)"],
+			// The inverse functions answer with an angle only at three arguments.
+			["asin(.5)"],
+			["atan2(1,2)"],
+			// Both zero is left to the engine.
+			["atan2(0,0)"]
+		])("leaves %s alone", (expression) => {
+			expect(value(expression)).toBe(expression);
+		});
+
+		it("takes a root or a power that multiplies back exactly", () => {
+			expect(value("calc(sqrt(4)*1px)")).toBe("2px");
+			expect(value("calc(sqrt(2.25)*1px)")).toBe("1.5px");
+			expect(value("calc(pow(2,3)*1px)")).toBe("8px");
+			expect(value("calc(pow(2,-2)*1px)")).toBe(".25px");
+			expect(value("calc(pow(2,0)*1px)")).toBe("1px");
+		});
+
+		it("takes a logarithm that lands on a whole power of its base", () => {
+			expect(value("calc(log(8,2)*1px)")).toBe("3px");
+			expect(value("calc(log(1,10)*1px)")).toBe("0");
+			expect(value("calc(exp(0)*1px)")).toBe("1px");
+		});
+
+		it("takes sine, cosine and tangent an eighth turn apart", () => {
+			expect(value("calc(cos(0)*1px)")).toBe("1px");
+			expect(value("calc(sin(90deg)*1px)")).toBe("1px");
+			expect(value("calc(sin(.25turn)*1px)")).toBe("1px");
+			expect(value("calc(cos(100grad)*1px)")).toBe("0");
+			expect(value("calc(cos(180deg)*1px)")).toBe("calc(-1px)");
+			expect(value("calc(tan(45deg)*1px)")).toBe("1px");
+			expect(value("calc(tan(180deg)*1px)")).toBe("0");
+		});
+
+		it("answers the inverse functions in degrees", () => {
+			expect(value("asin(1)")).toBe("90deg");
+			expect(value("acos(0)")).toBe("90deg");
+			expect(value("atan(1)")).toBe("45deg");
+			expect(value("atan2(1,1)")).toBe("45deg");
+			expect(value("atan2(0,-1)")).toBe("180deg");
+			// A ratio of two lengths is a number, so it answers the same way.
+			expect(value("atan2(1px,-1px)")).toBe("135deg");
+		});
+
+		it("prints a folded operand of an outer expression bare", () => {
+			// No property judges it in here, so a fraction or a zero needs no
+			// `calc()` of its own — which is what lets the outer fold go on.
+			expect(value("calc(sin(0)*1px)")).toBe("0");
+			expect(value("calc(1px*pow(2,3))")).toBe("8px");
+			expect(value("min(sqrt(4)*1px,3px)")).toBe("2px");
+		});
+	});
+});
+
+describe("CssSyntax — convertLengthUnits", () => {
+	/**
+	 * @param {string} value a `width` value
+	 * @param {boolean=} convertLengthUnits whether lengths may change unit
+	 * @returns {string} the minified value
+	 */
+	const width = (value, convertLengthUnits = false) =>
+		new SourceProcessor()
+			.process(`a{width:${value}}`, { minimize: true, convertLengthUnits })
+			.code.slice("a{width:".length, -1);
+
+	it("keeps a length in the unit it was written with by default", () => {
+		expect(width("16px")).toBe("16px");
+		expect(width("120px")).toBe("120px");
+		expect(width("192px")).toBe("192px");
+		expect(width("10mm")).toBe("10mm");
+	});
+
+	it("rewrites one into the shortest equal unit when asked", () => {
+		expect(width("16px", true)).toBe("1pc");
+		expect(width("120px", true)).toBe("90pt");
+		expect(width("192px", true)).toBe("2in");
+		expect(width("10mm", true)).toBe("1cm");
+	});
+
+	it("converts a time either way — only lengths are gated", () => {
+		const duration = (/** @type {string} */ value) =>
+			new SourceProcessor()
+				.process(`a{transition-duration:${value}}`, { minimize: true })
+				.code.slice("a{transition-duration:".length, -1);
+		expect(duration("500ms")).toBe(".5s");
+		expect(duration(".005s")).toBe("5ms");
+	});
+
+	it("still folds a sum into a unit the expression was written with", () => {
+		// The fold is the win here, not the unit: printing `11mm` introduces no
+		// unit the author did not write, where `1pc` for `16px` would.
+		expect(width("calc(1cm + 1mm)")).toBe("11mm");
+		expect(width("calc(2in - 1in)")).toBe("1in");
+		expect(width("calc(1px + 15px)")).toBe("16px");
+		expect(width("calc(1px + 15px)", true)).toBe("1pc");
+	});
+
+	it("declines a sum that reaches no written unit exactly", () => {
+		// `1cm` is not a whole number of `px`, and `px` is all the gate leaves.
+		expect(width("calc(1cm + 1px)")).toBe("calc(1cm + 1px)");
 	});
 });

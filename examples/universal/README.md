@@ -259,15 +259,23 @@ function platform() {
 /******/ 	// no external install chunk
 /******/ 	
 /******/ 	__webpack_require__.ei = (chunkId, importFn) => {
+/******/ 		let promises = [];
 /******/ 		let installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
-/******/ 		if(installedChunkData === 0) return Promise.resolve();
-/******/ 		if(installedChunkData) return installedChunkData[1];
-/******/ 		let promise = importFn().then(installChunk, (e) => {
-/******/ 			if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
-/******/ 			throw e;
-/******/ 		});
-/******/ 		promise = Promise.race([promise, new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))]);
-/******/ 		return (installedChunkData[1] = promise);
+/******/ 		if(installedChunkData !== 0) { // 0 means "already installed".
+/******/ 			// a Promise means "currently loading".
+/******/ 			if(installedChunkData) {
+/******/ 				promises.push(installedChunkData[1]);
+/******/ 			} else {
+/******/ 				let promise = importFn().then(installChunk, (e) => {
+/******/ 					if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
+/******/ 					throw e;
+/******/ 				});
+/******/ 				promise = Promise.race([promise, new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))]);
+/******/ 				promises.push((installedChunkData[1] = promise));
+/******/ 			}
+/******/ 		}
+/******/ 		// no other chunk loading handlers
+/******/ 		return Promise.all(promises);
 /******/ 	};
 /******/ 	
 /******/ 	// no on chunks loaded
@@ -356,11 +364,11 @@ function render(message) {
 ## Unoptimized
 
 ```
-asset output.mjs 7.71 KiB [emitted] [javascript module] (name: main)
+asset output.mjs 7.97 KiB [emitted] [javascript module] (name: main)
 asset render_js.mjs 1.02 KiB [emitted] [javascript module]
-chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.76 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.94 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.76 KiB 4 modules
+  runtime modules 2.94 KiB 4 modules
   dependent modules 562 bytes [dependent] 1 module
   ./example.js 629 bytes [built] [code generated]
     [no exports]

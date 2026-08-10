@@ -1,0 +1,29 @@
+name: Other
+description: Something that is neither a bug nor a feature request
+type: Task
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before submitting:
+        - Search existing issues to avoid duplicates
+        - For questions and help, use [discussions](https://github.com/webpack/webpack/discussions/new/choose) or [stackoverflow](https://stackoverflow.com/questions/ask?tags=webpack) — issues containing questions or support requests will be closed or moved to discussions.
+        - Read our [AI policy](https://github.com/webpack/governance/blob/main/AI_POLICY.md)
+        ⚠️ **Important**: Issues containing vague information or bad use of AI will be closed.
+
+  - type: dropdown
+    id: ai
+    attributes:
+      label: Have you used AI?
+      description: If you have used AI tooling to generate the issue please state so.
+      options:
+        - "No"
+        - "Yes"
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe what you encountered or what needs to happen
+    validations:
+      required: true

@@ -3,6 +3,7 @@
 // cspell:ignore apos notpre Elig reconsumes xyzabc zzzunknown codepoint DFFF ampx noncharacter FFFE
 // cspell:ignore selectedcontent mtext mglyph colgroups viewbox definitionurl
 // cspell:ignore scripty
+// cspell:ignore DOCTYPEÐ DOCTYPEİ
 
 const fs = require("fs");
 const path = require("path");
@@ -287,7 +288,36 @@ describe("tokenize", () => {
 				return end;
 			}
 		});
-		// CDATA content should NOT be parsed as tags
+		// `<![CDATA[` only opens a CDATA section when there is an adjusted current
+		// node outside the HTML namespace (§13.2.5.42). Without an `isForeign`
+		// callback there is none, so this is a bogus comment ending at the first
+		// `>` — as in a browser, which leaves the trailing `]]>` as text.
+		expect(results).toEqual([
+			["open", "div"],
+			["comment", "<![CDATA[<img src='x'>"],
+			["close", "div"]
+		]);
+	});
+
+	it("should handle CDATA sections in foreign content", () => {
+		/** @type {unknown[]} */
+		const results = [];
+		tokenize("<div><![CDATA[<img src='x'>]]></div>", 0, {
+			isForeign: () => true,
+			comment: (input, start, end) => {
+				results.push(["comment", input.slice(start, end)]);
+				return end;
+			},
+			openTag: (input, start, end, ns, ne) => {
+				results.push(["open", input.slice(ns, ne)]);
+				return end;
+			},
+			closeTag: (input, start, end, ns, ne) => {
+				results.push(["close", input.slice(ns, ne)]);
+				return end;
+			}
+		});
+		// In foreign content the section runs to `]]>` and its content is not tags.
 		expect(results).toEqual([
 			["open", "div"],
 			["comment", "<![CDATA[<img src='x'>]]>"],
@@ -950,11 +980,14 @@ describe("tokenize", () => {
 		});
 
 		// --- STATE_END_TAG_OPEN ---
-		it("eND_TAG_OPEN: `</>` is missing-end-tag-name (kept in text span for roundtrip)", () => {
-			// Per spec this is a parse error and no token is emitted. The walker
-			// preserves `</>` as part of the surrounding text span so roundtrip
-			// reconstruction is exact.
-			expect(walk("a</>b")).toEqual([["text", "a</>b"]]);
+		it("eND_TAG_OPEN: `</>` is missing-end-tag-name and emits nothing", () => {
+			// Per spec this is a parse error and no token is emitted, so it is
+			// dropped rather than left in the text span: a browser renders nothing
+			// for it, and keeping it turns into visible text once re-escaped.
+			expect(walk("a</>b")).toEqual([
+				["text", "a"],
+				["text", "b"]
+			]);
 		});
 
 		it("eND_TAG_OPEN: `</1foo>` becomes bogus comment", () => {
@@ -2656,10 +2689,15 @@ describe("tokenize", () => {
 			expect(comments).toEqual(["<!x"]);
 		});
 
-		it("reports eof-in-cdata as an error", () => {
+		it("reports an unclosed CDATA outside foreign content as a bogus comment", () => {
+			// No adjusted current node, so `<![CDATA[` is not a CDATA section but an
+			// incorrectly-opened comment (§13.2.5.42); `eof-in-cdata` is unreachable
+			// from here and is covered by the foreign-content path.
 			const errors = collectErrors("<![CDATA[unclosed");
+			// The bogus comment state emits its token at EOF without a further
+			// parse error, so this is the only one.
 			expect(errors).toEqual([
-				{ code: "eof-in-cdata", slice: "", severity: "error" }
+				{ code: "incorrectly-opened-comment", slice: "<!", severity: "warning" }
 			]);
 		});
 
@@ -4820,8 +4858,7 @@ describe("tokenize — fused state transitions", () => {
 
 	it("missing end tag name", () => {
 		expect(walk("</>")).toEqual([
-			["error", "missing-end-tag-name", 2, 3, "warning"],
-			["text", "</>"]
+			["error", "missing-end-tag-name", 2, 3, "warning"]
 		]);
 	});
 
@@ -5273,5 +5310,89 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 		it("leaves a CR inside a literal-text element alone", () => {
 			expect(minify("<script>a\r\nb</script>")).toBe("<script>a\nb</script>");
 		});
+	});
+});
+
+describe("token parts reported by the tokenizer", () => {
+	/**
+	 * @param {string} source HTML
+	 * @returns {{ name: (string | null), publicId: (string | null), systemId: (string | null) }} the parsed doctype
+	 */
+	const doctypeOf = (source) => {
+		for (const child of A.children(parseHtmlRefs(source))) {
+			if (A.type(child) === NodeType.Doctype) {
+				return {
+					name: A.doctypeName(child),
+					publicId: A.doctypePublicId(child),
+					systemId: A.doctypeSystemId(child)
+				};
+			}
+		}
+		throw new Error(`no doctype in ${JSON.stringify(source)}`);
+	};
+
+	/**
+	 * @param {string} source HTML
+	 * @returns {string[]} every comment's data, in document order
+	 */
+	const commentsOf = (source) => {
+		/** @type {string[]} */
+		const out = [];
+		/**
+		 * @param {import("../lib/html/syntax").HtmlNodeRef} node node
+		 */
+		const walk = (node) => {
+			if (A.type(node) === NodeType.Comment) out.push(A.data(node));
+			for (const child of A.children(node)) walk(child);
+		};
+		for (const child of A.children(parseHtmlRefs(source))) walk(child);
+		return out;
+	};
+
+	it("folds only ASCII upper alpha in a DOCTYPE name", () => {
+		// The name states lowercase ASCII upper alpha and append everything else
+		// unchanged, so `String#toLowerCase` is too eager here.
+		expect(doctypeOf("<!DOCTYPE HTML>").name).toBe("html");
+		expect(doctypeOf("<!DOCTYPEÐ>").name).toBe("Ð");
+		expect(doctypeOf("<!DOCTYPEİ>").name).toBe("İ");
+	});
+
+	it("keeps a DOCTYPE identifier that no closing quote terminates", () => {
+		expect(doctypeOf('<!DOCTYPE html PUBLIC "x')).toEqual({
+			name: "html",
+			publicId: "x",
+			systemId: null
+		});
+		expect(doctypeOf("<!DOCTYPE html SYSTEM 's")).toEqual({
+			name: "html",
+			publicId: null,
+			systemId: "s"
+		});
+		expect(doctypeOf('<!DOCTYPE html PUBLIC "p" ">x')).toEqual({
+			name: "html",
+			publicId: "p",
+			systemId: ""
+		});
+	});
+
+	it("treats U+000B as part of a DOCTYPE name, not whitespace", () => {
+		// Only tab / LF / FF / space are ASCII whitespace to the tokenizer.
+		expect(doctypeOf("<!DOCTYPE a\v>").name).toBe("a\v");
+	});
+
+	it("reports the comment data the comment states accumulated", () => {
+		// Each of these appends characters that are not the ones just consumed,
+		// so trimming delimiters off the token range gets them wrong.
+		expect(commentsOf("<!-")).toEqual(["-"]);
+		expect(commentsOf("<!-- >")).toEqual([" >"]);
+		expect(commentsOf("<!-- ->")).toEqual([" ->"]);
+		expect(commentsOf("<!----!")).toEqual([""]);
+		expect(commentsOf("<!----! >")).toEqual(["--! >"]);
+		expect(commentsOf("<!--a--->")).toEqual(["a-"]);
+		expect(commentsOf("<!--a<!--b-->")).toEqual(["a<!--b"]);
+		expect(commentsOf("<!-- <!--")).toEqual([" <!"]);
+		expect(commentsOf("<?foo-->")).toEqual(["?foo--"]);
+		expect(commentsOf("</-")).toEqual(["-"]);
+		expect(commentsOf("<![CDATA[foo]]>")).toEqual(["[CDATA[foo]]"]);
 	});
 });

@@ -1,0 +1,72 @@
+name: Build Performance / Memory
+description: webpack itself is slow or uses too much memory
+type: Bug
+labels: ["area: build-perf"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a performance problem!
+
+        Performance reports need numbers to be actionable. A reproduction is ideal;
+        where that is impractical (large private projects), precise metrics and a
+        profile let us investigate anyway.
+
+  - type: dropdown
+    id: ai
+    attributes:
+      label: Have you used AI?
+      description: If you have used AI tooling to generate the issue please state so.
+      options:
+        - "No"
+        - "Yes"
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is slow or memory-hungry?
+      description: Which build phase or scenario, and since when (version) if known
+      placeholder: "Incremental rebuilds take 40s since 5.108; they took 8s on 5.107"
+    validations:
+      required: true
+
+  - type: textarea
+    id: metrics
+    attributes:
+      label: Measurements
+      description: |
+        Concrete numbers: wall-clock times, peak memory, module/chunk counts.
+        `webpack --profile --json=stats.json` output, `node --cpu-prof`, or a heap
+        snapshot are the most useful evidence.
+      placeholder: |
+        - 12,400 modules, 87 chunks
+        - production build: 190s (was 95s)
+        - peak RSS: 6.2 GB
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction or project description
+      description: |
+        Link a reproduction if possible. Otherwise describe project scale
+        (file counts, loaders/plugins in use) and include your configuration.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: |
+        Please run `npx webpack info` and paste the output here
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Anything else (cache configuration, CI vs local, flame graphs, etc.)

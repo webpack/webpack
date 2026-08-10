@@ -335,7 +335,13 @@ jobs:
       # OOMs the runner on the full suite and Bun's child_process workers hang, but
       # threads work once jest-worker loads the Bun preload per thread. Apply that
       # patch here (Bun only) rather than via a repo-wide postinstall. The
-      # jest-runner patch tolerates Bun's transient memoryUsage failures.
+      # jest-runner patch tolerates Bun's transient memoryUsage failures. The
+      # jest-worker patch also has a Bun worker end itself rather than be
+      # terminated from the parent, which segfaults Bun on an idle-memory restart
+      # — and exit once it has, since ending only drops its message listener and
+      # a worker still holding a handle would never be replaced. That buys Bun a
+      # restart it would not otherwise survive, but not a run full of them, so the
+      # limit has to sit above what the suite actually uses (see test:base:bun).
       - if: matrix.runtime == 'bun'
         run: |
           git apply test/patches/jest-worker+30.4.1.patch

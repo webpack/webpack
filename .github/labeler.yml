@@ -1,0 +1,114 @@
+# Path -> "area:" label map consumed by .github/workflows/labeler.yml (actions/labeler).
+# Keep in sync with the area labels and the lib/ directory map in CLAUDE.md.
+
+"area: cache":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "lib/cache/**"
+          - "lib/serialization/**"
+
+"area: config":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "lib/config/**"
+          - "schemas/**"
+
+"area: css":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "lib/css/**"
+
+"area: html":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "lib/html/**"
+
+"area: loaders":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "lib/loaders/**"
+
+"area: module-federation":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "lib/container/**"
+          - "lib/sharing/**"
+
+"area: optimization":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "lib/optimize/**"
+          - "lib/ids/**"
+
+"area: parser":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "lib/javascript/**"
+          - "lib/dependencies/**"
+
+"area: resolving":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "lib/ResolverFactory.js"
+          - "lib/NormalModuleReplacementPlugin.js"
+
+"area: runtime":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "lib/runtime/**"
+          - "lib/web/**"
+          - "lib/webworker/**"
+          - "lib/node/**"
+          - "lib/esm/**"
+          - "lib/deno/**"
+          - "lib/electron/**"
+          - "lib/bun/**"
+          - "lib/RuntimeGlobals.js"
+          - "lib/RuntimeModule.js"
+
+"area: sourcemaps":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "lib/SourceMapDevToolPlugin.js"
+          - "lib/SourceMapDevToolModuleOptionsPlugin.js"
+          - "lib/EvalSourceMapDevToolPlugin.js"
+          - "lib/EvalDevToolModulePlugin.js"
+
+"area: types":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "types.d.ts"
+          - "declarations.d.ts"
+          - "declarations.test.d.ts"
+          - "module.d.ts"
+          - "declarations/**"
+
+"area: watch":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "lib/hmr/**"
+          - "hot/**"
+          - "lib/Watching.js"
+          - "lib/FileSystemInfo.js"
+          - "lib/hmr/LazyCompilationPlugin.js"
+
+"area: wasm":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "lib/wasm/**"
+          - "lib/wasm-async/**"
+          - "lib/wasm-sync/**"
+          - "assembly/**"
+
+"area: build-perf":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "test/benchmarkCases/**"
+          - ".github/workflows/benchmarks.yml"
+
+"area: tooling":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "tooling/**"
+          - "bin/**"
+          - "setup/**"

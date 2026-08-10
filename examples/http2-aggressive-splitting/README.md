@@ -66,13 +66,13 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset bafec8f2681f58cd907c.js 9.06 KiB [emitted] [immutable] [minimized] (name: main) 1 related asset
-asset 2337e8ce38f0cb9f3fa2.js 3.55 KiB [emitted] [immutable] [minimized] 1 related asset
-chunk (runtime: main) 2337e8ce38f0cb9f3fa2.js 7.83 KiB [rendered]
+asset 1a59c5516563b2f50708.js 9.06 KiB [emitted] [immutable] [minimized] (name: main) 1 related asset
+asset b97217b0dc9c3c05a590.js 3.55 KiB [emitted] [immutable] [minimized] 1 related asset
+chunk (runtime: main) b97217b0dc9c3c05a590.js 7.83 KiB [rendered]
   > react-dom ./example.js 2:0-22
   dependent modules 6.5 KiB [dependent] 1 module
   ../../node_modules/react-dom/index.js 1.33 KiB [built] [code generated]
-chunk (runtime: main) bafec8f2681f58cd907c.js (main) 17 KiB (javascript) 4.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) 1a59c5516563b2f50708.js (main) 17 KiB (javascript) 4.95 KiB (runtime) [entry] [rendered]
   > ./example main
   runtime modules 4.95 KiB 6 modules
   dependent modules 17 KiB [dependent] 2 modules

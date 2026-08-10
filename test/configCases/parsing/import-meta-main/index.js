@@ -1,4 +1,5 @@
 import { main } from "./module.js";
+import { bare, direct, destructured } from "./module.mjs";
 
 it("should handle import.meta.main", async () => {
 	expect(import.meta.main).toBe(true);
@@ -11,4 +12,10 @@ it("should handle import.meta.main", async () => {
 	expect(myMain).toBe(true);
 
 	expect(main).toBe(false);
+});
+
+it("should be false in a strict harmony module that is not the entry", () => {
+	expect(bare).toBe(false);
+	expect(direct).toBe(false);
+	expect(destructured).toBe(false);
 });

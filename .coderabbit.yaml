@@ -1,0 +1,259 @@
+# yaml-language-server: $schema=https://storage.googleapis.com/coderabbit_public_assets/schema.v2.json
+# CodeRabbit configuration for webpack/webpack.
+# Review style: chill + non-blocking. Labels: auto-applied from the taxonomy in .github/TRIAGE.md.
+
+language: "en-US"
+tone_instructions: >-
+  Be direct and technical. Skip praise and restatements of the diff. Flag only
+  findings you can justify from the code; when unsure, stay silent.
+early_access: true
+enable_free_tier: true
+
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: true
+  high_level_summary_placeholder: "@coderabbitai summary"
+  collapse_walkthrough: true
+  changed_files_summary: true
+  sequence_diagrams: false
+  estimate_code_review_effort: false
+  assess_linked_issues: true
+  related_issues: true
+  related_prs: true
+  poem: false
+  review_status: true
+  commit_status: false
+  fail_commit_status: false
+
+  suggested_labels: true
+  auto_apply_labels: true
+  labeling_instructions:
+    - label: "area: cache"
+      instructions: "Changes under lib/cache/ or lib/serialization/ (persistent/memory caching)."
+    - label: "area: config"
+      instructions: "Changes under lib/config/, schemas/, or declarations/ (options, defaults, validation)."
+    - label: "area: css"
+      instructions: "Changes under lib/css/."
+    - label: "area: html"
+      instructions: "Changes under lib/html/."
+    - label: "area: loaders"
+      instructions: "Changes under lib/loaders/ or to the loader API."
+    - label: "area: module-federation"
+      instructions: "Changes under lib/container/ or lib/sharing/."
+    - label: "area: optimization"
+      instructions: "Changes under lib/optimize/ or lib/ids/ (tree-shaking, splitChunks, concatenation, ids)."
+    - label: "area: parser"
+      instructions: "Changes under lib/javascript/ or lib/dependencies/ (parsing, dependency analysis)."
+    - label: "area: resolving"
+      instructions: "Module resolution behavior: aliases, exports/imports maps, ResolverFactory."
+    - label: "area: runtime"
+      instructions: "Emitted runtime or chunk loading: lib/runtime/ and per-target dirs (web, node, esm, webworker, deno, electron, bun)."
+    - label: "area: sourcemaps"
+      instructions: "devtool / source map generation plugins."
+    - label: "area: types"
+      instructions: "types.d.ts, hand-maintained declarations, or JSDoc type-only changes."
+    - label: "area: watch"
+      instructions: "Watching, HMR (lib/hmr/, hot/), FileSystemInfo, lazy compilation."
+    - label: "area: wasm"
+      instructions: "Changes under lib/wasm*/ or assembly/."
+    - label: "area: build-perf"
+      instructions: "Changes whose primary purpose is webpack's own build time or memory use."
+    - label: "area: tooling"
+      instructions: "Changes under tooling/, bin/, or setup/."
+    - label: "needs: tests"
+      instructions: "The PR changes runtime behavior in lib/ or hot/ but adds no test under test/."
+    - label: "breaking-change"
+      instructions: "The PR changes public API, defaults, or emitted output in a semver-major way, or its changeset says major."
+    - label: "regression"
+      instructions: "The PR fixes behavior that a linked issue says worked in a previous webpack release."
+
+  path_filters:
+    # Generated output - never review by hand (see CLAUDE.md "Do not touch")
+    - "!types.d.ts"
+    - "!declarations/**"
+    - "!schemas/**/*.check.js"
+    - "!schemas/**/*.check.d.ts"
+    - "!lib/css/data.js"
+    - "!lib/html/data.js"
+    - "!test/**/__snapshots__/**"
+    - "!yarn.lock"
+    - "!test/test262-cases/**"
+    - "!test/html5lib-tests/**"
+    - "!test/css-parsing-tests/**"
+
+  path_instructions:
+    - path: "lib/**"
+      instructions: >-
+        CommonJS only (module.exports/require; no import/export syntax). Types
+        are JSDoc @typedef annotations, never TypeScript syntax in .js files.
+        Must run on Node >= 10.13: flag optional chaining (?.), nullish
+        coalescing (??), and newer runtime APIs. Every instance field must be
+        initialized in the constructor (V8 shape stability); never `delete` an
+        instance field. Path-shape regexps and helpers must be imported from
+        lib/util/identifier.js, never re-declared locally. Comments must be at
+        most two short lines and add non-obvious information. Prefer specific
+        types over EXPECTED_ANY/unknown when a real type fits.
+    - path: "hot/**"
+      instructions: >-
+        Runtime code shipped to browsers; same Node >= 10.13 syntax baseline as
+        lib/, plus no Node-only APIs.
+    - path: "lib/runtime/**"
+      instructions: >-
+        Runtime templates are per-target. A change here usually needs matching
+        changes for the other targets (web/JSONP, esm, node, webworker, deno,
+        electron, bun, universal) and an integration case per affected target.
+    - path: "schemas/**"
+      instructions: >-
+        Schema edits must be followed by `yarn fix:special` regeneration in the
+        same PR (validators, declarations, types.d.ts). New options need
+        `"added": "<next-release-version>"`; experimental options need
+        `"experimental": true`. Pure $ref properties cannot carry annotations.
+    - path: "test/**"
+      instructions: >-
+        Prefer integration cases (configCases/, watchCases/, hotCases/, ...)
+        over unit tests. Bug fixes need a test that fails before the fix.
+        Snapshot printed output; use explicit expect() for behavior. New
+        configCases must pass ConfigCacheTestCases too - flag test.filter.js
+        files that only exclude the cache suite.
+    - path: "tooling/**"
+      instructions: >-
+        Generators must derive tables from published datasets (mdn-data,
+        color-name, vendored webref) rather than hand-typing name lists; a
+        SUPPLEMENT entry needs a stated reason it cannot be derived.
+    - path: ".changeset/**"
+      instructions: >-
+        One changeset per PR; single imperative sentence <= 80 chars, capitalized,
+        trailing period, no fix:/feat: prefix; patch/minor/major must match the
+        actual change; filename NNN-description.md with zero-padded ordering prefix.
+
+  abort_on_close: true
+  auto_review:
+    enabled: true
+    auto_incremental_review: true
+    drafts: false
+    base_branches: []
+    ignore_title_keywords: []
+    ignore_usernames: []
+
+  finishing_touches:
+    docstrings:
+      enabled: false
+    unit_tests:
+      enabled: false
+
+  pre_merge_checks:
+    docstrings:
+      mode: "off"
+    title:
+      mode: "warning"
+      requirements: >-
+        Conventional-commit form `type(scope): subject` with scope optional;
+        type is one of fix, feat, refactor, perf, test, chore, ci, build,
+        style, revert, docs and matches the branch prefix.
+    description:
+      mode: "warning"
+    issue_assessment:
+      mode: "warning"
+
+tools:
+  eslint:
+    enabled: true
+  actionlint:
+    enabled: true
+  gitleaks:
+    enabled: true
+  shellcheck:
+    enabled: true
+  yamllint:
+    enabled: true
+  # Prettier + cspell own Markdown/prose style in this repo (yarn fix / yarn lint)
+  markdownlint:
+    enabled: false
+  languagetool:
+    enabled: false
+  github-checks:
+    enabled: true
+    timeout_ms: 90000
+
+chat:
+  art: false
+  auto_reply: true
+
+knowledge_base:
+  opt_out: false
+  web_search:
+    enabled: true
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - "CLAUDE.md"
+      - "AGENTS.md"
+      - "TESTING_DOCS.md"
+      - "CONTRIBUTING.md"
+  learnings:
+    scope: "local"
+  issues:
+    scope: "local"
+  pull_requests:
+    scope: "local"
+
+code_generation:
+  docstrings:
+    language: "en-US"
+    path_instructions:
+      - path: "lib/**"
+        instructions: >-
+          JSDoc only, matching the existing style: typed @param/@returns using
+          import()-based types; no TypeScript syntax; keep prose to one line.
+
+issue_enrichment:
+  auto_enrich:
+    enabled: false
+  planning:
+    enabled: true
+    auto_planning:
+      enabled: false
+  labeling:
+    auto_apply_labels: true
+    labeling_instructions:
+      - label: "needs: reproduction"
+        instructions: >-
+          Bug report without a runnable minimal reproduction (repo link or exact
+          steps). A prose description alone is not a reproduction.
+      - label: "regression"
+        instructions: "The reporter states the behavior worked in a previous webpack version."
+      - label: "security"
+        instructions: "The report describes a potential vulnerability or security impact."
+      - label: "area: cache"
+        instructions: "Persistent/filesystem cache, pack files, serialization."
+      - label: "area: config"
+        instructions: "Options, defaults, schema validation errors."
+      - label: "area: css"
+        instructions: "CSS modules, experiments.css, CSS parsing or generation."
+      - label: "area: html"
+        instructions: "Experimental HTML support."
+      - label: "area: loaders"
+        instructions: "Loader execution, loader API, pitching."
+      - label: "area: module-federation"
+        instructions: "Module Federation: containers, remotes, shared modules."
+      - label: "area: optimization"
+        instructions: "Tree-shaking, usedExports, splitChunks, concatenation, module/chunk ids."
+      - label: "area: parser"
+        instructions: "JavaScript parsing, dependency detection, import/export analysis."
+      - label: "area: resolving"
+        instructions: "Module resolution, aliases, exports/imports maps, extensions."
+      - label: "area: runtime"
+        instructions: "Emitted runtime code, chunk loading, per-target output."
+      - label: "area: sourcemaps"
+        instructions: "devtool output, source map correctness."
+      - label: "area: types"
+        instructions: "types.d.ts or published type declarations."
+      - label: "area: watch"
+        instructions: "Watch mode, HMR, rebuild behavior, lazy compilation."
+      - label: "area: wasm"
+        instructions: "WebAssembly modules."
+      - label: "area: build-perf"
+        instructions: "webpack's own build time or memory consumption."
+      - label: "area: tooling"
+        instructions: "Repo tooling, codegen, CLI entry."

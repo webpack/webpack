@@ -1,0 +1,132 @@
+name: Code Size
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  # Reading the baseline report from the run that produced it on `main`.
+  actions: read
+  # Posting the report as a pull request comment.
+  pull-requests: write
+
+jobs:
+  code-size:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Use Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: lts/*
+          cache: yarn
+
+      - run: yarn --frozen-lockfile
+
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
+      # The report `main` last produced. Prefer the run for this PR's base commit
+      # and fall back to the newest successful one, so a PR opened against an
+      # older `main` is still compared against something.
+      - name: Find the baseline run
+        id: baseline
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          query="repos/$GITHUB_REPOSITORY/actions/workflows/code-size.yml/runs?branch=main&status=success&per_page=20"
+          # Any run of `main` that is not a pull request: a manually dispatched
+          # one is a baseline too, while a pull request whose head branch is
+          # itself named `main` is not. The API takes one `event` at a time, so
+          # the unwanted one is filtered out here rather than in the query.
+          pick='[.workflow_runs[] | select(.event != "pull_request")][0].id // empty'
+          run_id=""
+          # `|| true`: without a baseline the run still reports its own totals,
+          # so a query a fork's token may not answer must not fail the job.
+          if [ -n "$BASE_SHA" ]; then
+            run_id=$(gh api "$query&head_sha=$BASE_SHA" --jq "$pick" || true)
+          fi
+          if [ -z "$run_id" ]; then
+            run_id=$(gh api "$query" --jq "$pick" || true)
+          fi
+          echo "run-id=$run_id" >> "$GITHUB_OUTPUT"
+          echo "Baseline run: ${run_id:-none}"
+
+      - name: Download the baseline report
+        if: steps.baseline.outputs.run-id != ''
+        continue-on-error: true
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: code-size-report
+          path: baseline
+          run-id: ${{ steps.baseline.outputs.run-id }}
+          github-token: ${{ github.token }}
+
+      - name: Measure generated code size
+        run: |
+          yarn test:size \
+            --output code-size-report.json \
+            --baseline baseline/code-size-report.json \
+            --summary code-size-report.md
+          cat code-size-report.md >> "$GITHUB_STEP_SUMMARY"
+        env:
+          CODE_SIZE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      # On the pull request itself, not only in the job summary — a size change
+      # nobody clicks through to see is a size change nobody sees. Updated in
+      # place on every push, so the thread keeps one comment. Skipped for forks,
+      # whose token cannot comment (the job summary still has the report).
+      - name: Comment the report on the pull request
+        if: >
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const body = require("fs").readFileSync("code-size-report.md", "utf8");
+            const marker = "<!-- code-size-report -->";
+            const comments = await github.paginate(
+              github.rest.issues.listComments,
+              { ...context.repo, issue_number: context.issue.number, per_page: 100 }
+            );
+            // Only a comment this workflow itself wrote: anyone can post one
+            // carrying the marker, and overwriting it would let them edit the
+            // report afterwards and pass their own numbers off as CI's.
+            const previous = comments.find(
+              (comment) =>
+                comment.user.type === "Bot" &&
+                comment.user.login === "github-actions[bot]" &&
+                comment.body.startsWith(marker)
+            );
+            if (previous) {
+              await github.rest.issues.updateComment({
+                ...context.repo,
+                comment_id: previous.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            }
+
+      # Uploaded from `main` too — that upload is the next run's baseline.
+      - name: Upload the report
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: code-size-report
+          path: code-size-report.json
+          retention-days: 90

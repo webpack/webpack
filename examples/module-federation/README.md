@@ -2218,12 +2218,12 @@ mfe-c:
 
 ```
 app:
-  asset src_bootstrap_js.js 12.7 KiB [emitted] [minimized] 1 related asset
-  asset app.js 7.94 KiB [emitted] [minimized] (name: app)
+  asset src_bootstrap_js.js 12.8 KiB [emitted] [minimized] 1 related asset
+  asset app.js 8.05 KiB [emitted] [minimized] (name: app)
   asset node_modules_react_index_js.js 7.45 KiB [emitted] [minimized] 1 related asset
-  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.5 KiB (runtime) [entry] [rendered]
+  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.9 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
-    runtime modules 19.5 KiB 13 modules
+    runtime modules 19.9 KiB 14 modules
     built modules 672 bytes (javascript) 42 bytes (share-init) [built]
       ./src/index.js 588 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
@@ -2237,8 +2237,8 @@ app:
     ../../node_modules/react/index.js 186 bytes [built] [code generated]
   chunk (runtime: app) src_bootstrap_js.js 27.1 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [rendered]
     > ./bootstrap ./src/index.js 10:0-21
-    dependent modules 8.42 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [dependent] 8 modules
-    ./src/bootstrap.js + 11 modules 18.7 KiB [built] [code generated]
+    dependent modules 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [dependent] 4 modules
+    ./src/bootstrap.js + 15 modules 27.1 KiB [built] [code generated]
   chunk (runtime: app) 6 bytes (remote) 6 bytes (share-init)
     > mfe-c/Component2 ./src/App.js 8:49-75
     remote mfe-c/Component2 6 bytes (remote) 6 bytes (share-init) [built] [code generated]
@@ -2247,11 +2247,11 @@ app:
 mfe-b:
   asset vendors-node_modules_date-fns_index_js.js 70.3 KiB [emitted] [minimized] (id hint: vendors)
   asset node_modules_react_index_js.js 7.45 KiB [emitted] [minimized] 1 related asset
-  asset mfeBBB.js 6.45 KiB [emitted] [minimized] (name: mfeBBB)
-  asset src-b_Component_js.js 596 bytes [emitted] [minimized]
-  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.3 KiB (runtime) [entry] [rendered]
+  asset mfeBBB.js 6.56 KiB [emitted] [minimized] (name: mfeBBB)
+  asset src-b_Component_js.js 632 bytes [emitted] [minimized]
+  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.7 KiB (runtime) [entry] [rendered]
     > mfeBBB
-    runtime modules 16.3 KiB 10 modules
+    runtime modules 16.7 KiB 11 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
@@ -2263,8 +2263,8 @@ mfe-b:
     ../../node_modules/react/index.js 186 bytes [built] [code generated]
   chunk (runtime: mfeBBB) src-b_Component_js.js 1.44 KiB (javascript) 84 bytes (consume-shared) [rendered]
     > ./src-b/Component container entry ./Component
-    dependent modules 605 bytes (javascript) 84 bytes (consume-shared) [dependent] 4 modules
-    ./src-b/Component.js 869 bytes [built] [code generated]
+    dependent modules 84 bytes [dependent] 2 modules
+    ./src-b/Component.js + 2 modules 1.44 KiB [built] [code generated]
   chunk (runtime: mfeBBB) vendors-node_modules_date-fns_index_js.js (id hint: vendors) 523 KiB [rendered] reused as split chunk (cache group: defaultVendors)
     > consume shared module (default) date-fns@^4.4.0 (strict) (fallback: ../../node_modules/date-fns/index.js)
     > provide shared module (default) date-fns@4.4.0 = ../../node_modules/date-fns/index.js
