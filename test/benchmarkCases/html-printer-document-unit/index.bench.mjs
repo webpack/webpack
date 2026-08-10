@@ -15,11 +15,14 @@ const { SourceProcessor } = htmlSyntax;
 // the tree shapes they cost differently on — the piecemeal path carries one
 // frame per open element, so fan-out and depth are separate axes.
 //
-// Every fixture runs twice: `walk` is what a build that is not minimizing pays
-// — parse and walk, no output — and `minify` is the same pass with the printer
-// on. No visitors are registered, so `walk` is the floor both share and the
-// difference is what printing costs on that shape, which neither number shows
-// alone. Visitor cost itself is `html-parser-document-unit`'s.
+// Every fixture runs in all three modes the processor has. `walk` is what a
+// build that is not printing pays — parse and walk, no output; `minify` and
+// `beautify` are the same pass with the printer on, the first rewriting tags and
+// dropping what re-parses the same and the second only re-serializing. No
+// visitors are registered, so `walk` is the floor all three share: `minify -
+// walk` is what printing costs on that shape and `minify - beautify` is what the
+// rewrites cost on top of serializing. Visitor cost is
+// `html-parser-document-unit`'s.
 
 // No large real-world HTML ships in the repo, so generate a deterministic
 // document mixing tree construction, entity references, comments, lists/tables
@@ -146,6 +149,15 @@ export default (bench) => {
 			`unit benchmark "html-printer-document-unit", walk (${name})`,
 			() => {
 				new SourceProcessor().process(source, options);
+			}
+		);
+		bench.add(
+			`unit benchmark "html-printer-document-unit", beautify (${name})`,
+			() => {
+				new SourceProcessor().process(source, {
+					...options,
+					mode: "beautify"
+				});
 			}
 		);
 		bench.add(

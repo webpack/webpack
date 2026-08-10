@@ -5313,6 +5313,56 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 	});
 });
 
+describe("SourceProcessor — print modes", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} source html source
+	 * @param {import("../lib/util/SourceProcessor").PrintOptions["mode"]} mode print mode
+	 * @returns {string} its serialization
+	 */
+	const print = (source, mode) =>
+		new SourceProcessor().process(source, { mode }).code;
+
+	it("prints nothing unless output is asked for", () => {
+		expect(new SourceProcessor().process("<p>x</p>")).toBeUndefined();
+	});
+
+	it("reads `minimize: true` as the `minify` mode it is shorthand for", () => {
+		const source = '<div id=a class="x"><p>hi</p></div>';
+		expect(new SourceProcessor().process(source, { minimize: true }).code).toBe(
+			print(source, "minify")
+		);
+	});
+
+	it("beautifies by re-serializing rather than rewriting", () => {
+		// Ugly is allowed — nothing is re-indented — but the source's own attribute
+		// quoting, comments and end tags all have to come back.
+		const source =
+			'<!DOCTYPE html><div id=a class="x"><!-- c --><p>hi <b>there</b></p><ul><li>one<li>two</ul></div>';
+		expect(print(source, "beautify")).toBe(
+			'<!DOCTYPE html><div id=a class="x"><!-- c --><p>hi <b>there</b></p><ul><li>one</li><li>two</li></ul></div>'
+		);
+		expect(print(source, "minify")).toBe(
+			"<!doctype html><div id=a class=x><p>hi <b>there</b><ul><li>one<li>two</ul></div>"
+		);
+	});
+
+	it("beautifies to something that minifies back the same", () => {
+		for (const source of [
+			'<!DOCTYPE html><div id=a class="x"><!-- c --><p>hi</p></div>',
+			"<table><tr><td>x</table>",
+			"<div><pre>\n\nkeep</pre><template><p>t</p></template></div>",
+			"<svg><path/></svg><math><mi>x</mi></math>",
+			"<p><b>a<p>b"
+		]) {
+			expect(print(print(source, "beautify"), "minify")).toBe(
+				print(source, "minify")
+			);
+		}
+	});
+});
+
 describe("SourceProcessor — printing in pieces", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 

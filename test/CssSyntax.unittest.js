@@ -2166,6 +2166,76 @@ describe("CssSyntax — SourceProcessor without visitors", () => {
 	});
 });
 
+describe("CssSyntax — print modes", () => {
+	/**
+	 * @param {string} src css source
+	 * @param {import("../lib/util/SourceProcessor").PrintOptions["mode"]} mode print mode
+	 * @returns {string} its serialization
+	 */
+	const print = (src, mode) =>
+		new SourceProcessor().process(src, { mode }).code;
+
+	it("prints nothing unless output is asked for", () => {
+		expect(new SourceProcessor().process(".a{color:red}")).toBeUndefined();
+	});
+
+	it("reads `minimize: true` as the `minify` mode it is shorthand for", () => {
+		const src = ".a{color:#ff0000;margin:1px 2px 1px 2px}";
+		expect(new SourceProcessor().process(src, { minimize: true }).code).toBe(
+			print(src, "minify")
+		);
+	});
+
+	it("beautifies without the transforms minifying applies", () => {
+		// Ugly is allowed — unindented, and top-level items still run together —
+		// but nothing the author wrote may be rewritten.
+		expect(
+			print(
+				"@media screen{.a{color:#ff0000;margin:1px 2px 1px 2px}}",
+				"beautify"
+			)
+		).toBe(
+			"@media screen {\n.a {\ncolor: #ff0000;\nmargin: 1px 2px 1px 2px;\n}\n}"
+		);
+		expect(
+			print("@media screen{.a{color:#ff0000;margin:1px 2px 1px 2px}}", "minify")
+		).toBe("@media screen{.a{color:red;margin:1px 2px}}");
+	});
+
+	it("keeps the same comments in both modes", () => {
+		// A license banner survives minifying, so it has to survive beautifying —
+		// otherwise the two modes disagree about what the stylesheet says.
+		expect(print("/*!keep*/.a{color:red}/* drop */", "beautify")).toBe(
+			"/*!keep*/.a {\ncolor: red;\n}"
+		);
+		expect(print("/*!keep*/.a{color:red}/* drop */", "minify")).toBe(
+			"/*!keep*/.a{color:red}"
+		);
+	});
+
+	it("does not emit a custom property's kept comment twice", () => {
+		// The value prints straight from source, comments and all, so beautifying
+		// has to claim them the way minifying does or they land again before the
+		// next top-level rule.
+		expect(print(".a{--x:1px /*!k*/ 2px}.b{color:red}", "beautify")).toBe(
+			".a {\n--x: 1px /*!k*/ 2px;\n}.b {\ncolor: red;\n}"
+		);
+	});
+
+	it("beautifies to something that minifies back the same", () => {
+		for (const src of [
+			"/*!k*/.a{color:#ff0000}",
+			"@media screen{.a{margin:1px 2px 1px 2px}.b{color:red}}",
+			".a{--x:1px /*!k*/ 2px}.b{content:'y'}",
+			"@supports (a:b){.a{&:hover{color:red}}}",
+			".a{transition:all 500ms}@import url(x.css);"
+		]) {
+			const minified = print(src, "minify");
+			expect(print(print(src, "beautify"), "minify")).toBe(minified);
+		}
+	});
+});
+
 describe("CssSyntax minify — the value transforms' rejection paths", () => {
 	/** @typedef {import("../lib/css/syntax").CssEnvironment} CssEnvironment */
 

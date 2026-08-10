@@ -26005,22 +26005,27 @@ declare abstract class SourceProcessorClass<
 	): SourceProcessorClass<TPath, TNode, TProcessOptions>;
 
 	/**
-	 * Parse `input` once and fire the visitors in source order. With `minimize`
-	 * (and a printer supplied at construction) the same walk also prints — a
+	 * Parse `input` once and fire the visitors in source order. Asking for output
+	 * — `mode`, or `minimize: true` for the `"minify"` it is shorthand for — makes
+	 * the same walk print, given a printer supplied at construction: a
 	 * {@link PrintContext} is created, each node's printer fires into it as the node
 	 * finishes, and the result is returned as `{ code, map }`: the serialized output
 	 * and its input->output source map, always, independent of the pipeline's own
-	 * source-map setting (`source` / `content` name the map's input). Without
-	 * `minimize` it only walks and returns `undefined`. A single parse — printing
+	 * source-map setting (`source` / `content` name the map's input). Asking for
+	 * none of it only walks and returns `undefined`. A single parse — printing
 	 * never re-parses; all configuration is per-call.
 	 */
 	process(
 		input: string,
-		options: TProcessOptions & {
-			minimize: true;
-			source?: string;
-			content?: string;
-		}
+		options:
+			| (TProcessOptions & { minimize: true } & {
+					source?: string;
+					content?: string;
+			  })
+			| (TProcessOptions & { mode: "minify" | "beautify" } & {
+					source?: string;
+					content?: string;
+			  })
 	): { code: string; map: SourceMap };
 	process(input: string, options?: TProcessOptions): undefined;
 }
