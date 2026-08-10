@@ -2217,6 +2217,12 @@ describe("CssSyntax — print modes", () => {
 		expect(
 			print("@media screen{.a{color:#ff0000;margin:1px 2px 1px 2px}}", "minify")
 		).toBe("@media screen{.a{color:red;margin:1px 2px}}");
+		// A function's arguments keep the spacing they were written with, where
+		// minifying would both drop it and fold the color.
+		expect(print("a{color:rgb(1 , 2 , 3)}", "beautify")).toBe(
+			"a {\ncolor: rgb(1 , 2 , 3);\n}"
+		);
+		expect(print("a{color:rgb(1 , 2 , 3)}", "minify")).toBe("a{color:#010203}");
 	});
 
 	it("keeps the same comments in both modes", () => {
@@ -3607,6 +3613,13 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("a{width:calc(1em + 2px)}")).toBe(
 				"a{width:calc(1em + 2px)}"
 			);
+		});
+
+		it("drops an argument list that is only whitespace", () => {
+			// The one argument a function carries is a whitespace token, which
+			// separates nothing — so the parentheses close on nothing at all.
+			expect(minify("a{width:calc( )}")).toBe("a{width:calc()}");
+			expect(minify("a:not( ){top:0}")).toBe("a:not(){top:0}");
 		});
 
 		it("keeps a `@supports` condition as written", () => {
