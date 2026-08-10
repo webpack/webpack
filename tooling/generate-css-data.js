@@ -3467,6 +3467,15 @@ const collectData = () => {
 	const pairLonghands = collectPairLonghands();
 	const oneValuePairShorthands = collectOneValuePairShorthands(pairLonghands);
 	const familyLonghands = collectFamilyLonghands();
+
+	// Every longhand the three merge tables can consume, so the printer can ask
+	// one question of a block instead of walking all three tables.
+	const mergeLonghands = new Set();
+	for (const table of [boxLonghands, pairLonghands, familyLonghands]) {
+		for (const [, longhands] of table) {
+			for (const longhand of longhands) mergeLonghands.add(longhand);
+		}
+	}
 	const slotAccepts = new Map();
 	for (const [, longhands] of familyLonghands) {
 		for (const longhand of longhands) {
@@ -3547,6 +3556,12 @@ const ONE_VALUE_PAIR_SHORTHANDS = ${setLiteral(oneValuePairShorthands)};
 const FAMILY_LONGHANDS = new Map([${familyLonghands
 		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
 		.join(", ")}]);
+
+// Every longhand the three merge tables above can consume, so a block is asked
+// once whether it holds anything mergeable at all. Two of them have to be
+// present before any shorthand can be written, and almost no block holds one,
+// which is what keeps the merge off the declarations it cannot serve.
+const MERGE_LONGHANDS = ${setLiteral(lowerSorted(mergeLonghands))};
 
 // What each of those longhands accepts as a whole value: the keywords it names,
 // and the value classes it reaches. A value acceptable to a second slot is what
@@ -3949,7 +3964,7 @@ module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
 module.exports.MATH_FUNCTION_ARITY = MATH_FUNCTION_ARITY;
 module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
 module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
-module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;\nmodule.exports.MERGEABLE_AT_RULES = MERGEABLE_AT_RULES;
+module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;\nmodule.exports.MERGEABLE_AT_RULES = MERGEABLE_AT_RULES;\nmodule.exports.MERGE_LONGHANDS = MERGE_LONGHANDS;
 module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;
 module.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
