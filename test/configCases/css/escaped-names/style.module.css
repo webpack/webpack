@@ -1,0 +1,23 @@
+/* A CSS escape is resolved before a name is matched, so an escaped spelling
+   names the same thing as the plain one. Chromium reads every pair below as
+   the same declaration; a build that reads only one of them splits the pair
+   and the stylesheet stops working. */
+@keyframes spin {
+	to { rotate: 360deg }
+}
+
+/* Escaped property name: still `animation-name`, so the value still scopes. */
+.escaped-property { \61 nimation-name: spin }
+.plain-property { animation-name: spin }
+
+/* Escaped at-rule name: still `@keyframes`, so the name still scopes. */
+@\6b eyframes slide {
+	to { translate: 1px }
+}
+.escaped-at-rule { animation-name: slide }
+
+/* Escaped `url(`: still a url, so the asset still resolves. */
+.escaped-url { background: \75 rl(./img.png) }
+.escaped-url-long { background: \000075rl(./img.png) }
+.escaped-url-bare { background: \url(./img.png) }
+.plain-url { background: url(./img.png) }
