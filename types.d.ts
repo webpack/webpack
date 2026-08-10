@@ -24691,7 +24691,36 @@ declare abstract class RuntimeTemplate {
 	supportsDynamicImport(): boolean;
 	supportsEcmaScriptModuleSyntax(): boolean;
 	supportsModulePreload(): boolean;
+
+	/**
+	 * Analyzable output — a reference a foreign bundler can follow without running
+	 * webpack's runtime — comes in two forms, and what rules them out differs:
+	 * - a literal `import("./chunk.js")`, gated by `supportsAnalyzableImport`
+	 * - a literal `new URL(<file>, import.meta.url)`, gated by `supportsAnalyzableEsm`
+	 * Either way a name that is not settled during code generation may still be baked,
+	 * by reserving a stand-in the deferred pass fills in — see `canDeferAnalyzableName`.
+	 * What still forces the runtime form, and is not covered by any of the three:
+	 * a module federation module in the chunk, a chunk reachable at more than one
+	 * output depth under an `auto` public path, and a chunk with no id.
+	 */
 	supportsAnalyzableEsm(): boolean;
+
+	/**
+	 * Whether a chunk reference emitted into `originModule` may be a literal
+	 * `import("./chunk.js")` rather than a runtime `ensureChunk(id)` call.
+	 */
+	supportsAnalyzableImport(
+		originModule?: Module,
+		chunkGraph?: ChunkGraph
+	): boolean;
+
+	/**
+	 * Whether a name that code generation cannot settle may be reserved as a stand-in
+	 * and filled in once the hashes exist. Substituting rewrites a chunk after its own
+	 * content hash was taken, and `RealContentHashPlugin` is what brings the two back
+	 * in line — without it the name would go stale.
+	 */
+	canDeferAnalyzableName(template?: string): boolean;
 
 	/**
 	 * Whether an asset whose URL argument is only known at runtime (e.g. a wasm
