@@ -7,6 +7,9 @@ const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("..");
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
 
+// Not exported by name; it is the type `MultiCompiler.watching` carries.
+/** @typedef {NonNullable<import("../").MultiCompiler["watching"]>} MultiWatching */
+
 /**
  * @param {import("../").MultiCompilerOptions=} options options
  * @returns {import("../").MultiCompiler} compiler
@@ -764,13 +767,12 @@ describe("MultiCompiler", () => {
 		compiler.compilers[0].hooks.done.tap("test", () => {
 			// `a` is done but has not handed `b` over yet, so `b` is still waiting.
 			if (blockedWhileParentBuilds === undefined) {
-				blockedWhileParentBuilds = /** @type {import("../lib/Watching")} */ (
-					/** @type {import("../").MultiWatching} */ (compiler.watching)
-						.watchings[1]
-				).blocked;
+				blockedWhileParentBuilds = /** @type {MultiWatching} */ (
+					compiler.watching
+				).watchings[1].blocked;
 			}
 		});
-		const watching = /** @type {import("../").MultiWatching} */ (
+		const watching = /** @type {MultiWatching} */ (
 			compiler.watch({}, (err) => {
 				if (err) return done(err);
 				expect(blockedWhileParentBuilds).toBe(true);
