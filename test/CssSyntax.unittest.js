@@ -1394,15 +1394,37 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 	const min = (src) =>
 		new SourceProcessor().process(src, { minimize: true }).code;
 
-	it("keeps An+B selector arguments verbatim (no sign stripping)", () => {
-		// `odd` is the one An+B a keyword names in fewer bytes; the rest stay.
+	it("writes an An+B selector argument in its shortest spelling", () => {
+		// `odd` is the one An+B a keyword names in fewer bytes; `even` is not.
 		expect(min("a:nth-child(2n+1){b:c}")).toBe("a:nth-child(odd){b:c}");
+		expect(min("a:nth-child(even){b:c}")).toBe("a:nth-child(2n){b:c}");
+		// The microsyntax carries its own whitespace, signs and case.
+		expect(min("a:nth-child(2N + 1){b:c}")).toBe("a:nth-child(odd){b:c}");
+		expect(min("a:nth-child(+3){b:c}")).toBe("a:nth-child(3){b:c}");
+		expect(min("a:nth-child( 3 ){b:c}")).toBe("a:nth-child(3){b:c}");
+		// A step of zero selects the one child its B counts to.
+		expect(min("a:nth-child(0n+3){b:c}")).toBe("a:nth-child(3){b:c}");
+		// An index under 1 matches nothing, so a step forward starts at the first
+		// one that does — and landing on the step itself is the bare `An`.
+		expect(min("a:nth-of-type(2n-1){b:c}")).toBe("a:nth-of-type(odd){b:c}");
+		expect(min("a:nth-child(3n-2){b:c}")).toBe("a:nth-child(3n+1){b:c}");
+		expect(min("a:nth-child(2n+2){b:c}")).toBe("a:nth-child(2n){b:c}");
+		expect(min("a:nth-child(n-5){b:c}")).toBe("a:nth-child(n){b:c}");
+		// A step selecting exactly one child is the child that has its own name.
+		expect(min("a:nth-child(1){b:c}")).toBe("a:first-child{b:c}");
+		expect(min("a:nth-last-child(1){b:c}")).toBe("a:last-child{b:c}");
+		expect(min("a:nth-of-type(1){b:c}")).toBe("a:first-of-type{b:c}");
+		expect(min("a:nth-last-of-type(1){b:c}")).toBe("a:last-of-type{b:c}");
+	});
+
+	it("keeps an An+B selector argument no shorter spelling reaches", () => {
+		// A backward step never sweeps past what it started on.
 		expect(min("a:nth-last-child(-n+3){b:c}")).toBe(
 			"a:nth-last-child(-n+3){b:c}"
 		);
-		expect(min("a:nth-of-type(2n-1){b:c}")).toBe("a:nth-of-type(2n-1){b:c}");
-		expect(min("a:nth-child(+3){b:c}")).toBe("a:nth-child(+3){b:c}");
-		expect(min("a:nth-child(even){b:c}")).toBe("a:nth-child(even){b:c}");
+		expect(min("a:nth-child(2n+4){b:c}")).toBe("a:nth-child(2n+4){b:c}");
+		// `An+B of S` selects among S, which no plain spelling names.
+		expect(min("a:nth-child(1 of .x){b:c}")).toBe("a:nth-child(1 of .x){b:c}");
 	});
 
 	it("still normalizes numbers in declaration values", () => {
@@ -2392,7 +2414,11 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["33.33333333%", "33.3333%"],
 			["1.0000001px", "1px"],
 			["400ms", ".4s"],
-			[".005s", "5ms"]
+			[".005s", "5ms"],
+			// A zero time keeps a unit where a zero length drops one, so the shorter
+			// of the two it can carry is still worth reaching for.
+			["0ms", "0s"],
+			["-0ms", "0s"]
 		])("rewrites %s", (input, expected) => {
 			expect(value(input)).toBe(expected);
 		});
@@ -3343,6 +3369,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// One reduction uncovers the next: the 2D call it leaves reduces too.
 			["a{transform:scale3d(1,1,1)}", "a{transform:scale(1)}"],
 			["a{transform:translate3d(-50%,0,0)}", "a{transform:translate(-50%)}"],
+			// CSS Transforms 2 §12: a 3D matrix whose third row and column are the
+			// identity's is the 2D matrix of the six values it leaves.
+			[
+				"a{transform:matrix3d(20,20,0,0,40,40,0,0,0,0,1,0,80,80,0,1)}",
+				"a{transform:matrix(20,20,40,40,80,80)}"
+			],
+			// A 2D pair of 1 scales nothing there, leaving the z scale.
+			["a{transform:scale3d(1,1,1.5)}", "a{transform:scaleZ(1.5)}"],
 			// `skewX(a)` is `skew(a)`: the second component defaults to 0.
 			["a{transform:skewX(10deg)}", "a{transform:skew(10deg)}"],
 			["a{transform:skewX(0)}", "a{transform:skew(0)}"],
@@ -3363,8 +3397,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			["no axis is zero", "a{transform:translate(1px,2px)}"],
 			["the factors differ", "a{transform:scale(2,3)}"],
-			// A substitution could expand to something the shorter call rejects.
+			// A substitution could expand to something the shorter call rejects —
+			// `translate(var(--x),0)` with `--x:1px,2px` is dropped where
+			// `translate(var(--x))` applies, so reducing it revives a declaration.
 			["a substitution stands there", "a{transform:translate(var(--x),0)}"],
+			[
+				"the 3D matrix is not the identity there",
+				"a{transform:matrix3d(20,20,0,0,40,40,0,0,0,0,1,5,80,80,0,1)}"
+			],
 			// The engine normalizes the axis it is given: a scaled component still
 			// names the axis, but a negative one turns the rotation the other way.
 			["the axis is scaled", "a{transform:rotate3d(0,0,2,37deg)}"],

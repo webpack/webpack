@@ -34,13 +34,11 @@
 :nth-child(2n+1) { width: 20px }
 /*! lightningcss: :nth-child(odd) */
 :nth-child(odd) { width: 20px }
-/*! lightningcss: :nth-child(1) */
+/*! webpack: shorter than lightningcss, which keeps :nth-child(1) */
 :nth-child(1) { width: 20px }
-/*! lightningcss: :nth-last-child(1) */
+/*! webpack: ...and the other three the same way */
 :nth-last-child(1) { width: 20px }
-/*! lightningcss: :nth-of-type(1) */
 :nth-of-type(1) { width: 20px }
-/*! lightningcss: :nth-last-of-type(1) */
 :nth-last-of-type(1) { width: 20px }
 /*! lightningcss: :nth-child(even of li.important) */
 :nth-child(even of li.important) { width: 20px }
@@ -83,7 +81,7 @@
 :not(.e) .f { color: red }
 /*! webpack: a compound selector a dropped comment must not split */
 .g/**/.h { color: red }
-/*! webpack: An+B keeps its signs */
+/*! webpack: An+B carries its own sign, which says nothing */
 .i:nth-child(+3) { color: red }
 /*! webpack: a `[…]` in a value is a grid line-name list, not a matcher */
 .j { grid-template-columns: [full-start] 1fr [full-end] }
@@ -202,3 +200,22 @@ a/*c*/b { color: red }
 /*! declined: only the list's own commas split it */
 :is(.t96, .t95) .t97, .t98 { color: red }
 .t99[title="b,a"], .t99a { color: red }
+
+/*! webpack: `An+B` carries its own whitespace, signs and case */
+.t100:nth-child(2N + 1) { color: red }
+.t101:nth-child( +3 ) { color: red }
+.t102:nth-child(0n+3) { color: red }
+/*! webpack: ...an index under 1 matches nothing, so the step starts where it does */
+.t103:nth-child(2n-1) { color: red }
+.t104:nth-child(3n-2) { color: red }
+.t105:nth-child(2n+2) { color: red }
+/*! webpack: ...`even` is longer than the step it names, `odd` shorter */
+.t106:nth-child(even) { color: red }
+.t107:nth-child(odd) { color: red }
+/*! webpack: ...and a step selecting one child is the child that has a name */
+.t108:nth-child(1) { color: red }
+.t109:nth-last-of-type(1) { color: red }
+/*! declined: a backward step never sweeps past what it started on */
+.t110:nth-child(-n+3) { color: red }
+/*! declined: `An+B of S` selects among S, which no plain spelling names */
+.t111:nth-child(1 of .t112) { color: red }

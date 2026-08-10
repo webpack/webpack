@@ -389,6 +389,62 @@ const installHelpers = () => {
 			const brace = text.indexOf("{");
 			return (brace === -1 ? text : text.slice(0, brace)).trim();
 		};
+		// `An+B` is a microsyntax (CSS Syntax 3 §6) the engine only partly
+		// normalizes: it folds `even` / `odd` but hands `0n+3` and `2n-1` back as
+		// written. Each is read here as the sequence it selects, so a shorter
+		// spelling of the same one compares equal — which sequence it is still has
+		// to match. Selectors 4 §14 names four of them outright.
+		const NTH_CALL = /:(nth-(?:last-)?(?:child|of-type|col))\(([^)]*)\)/gi;
+		const AN_PLUS_B =
+			/^\s*(?:([+-]?)\s*(\d*)[nN]\s*(?:([+-])\s*(\d+))?|([+-]?)\s*(\d+))\s*$/;
+		/** @type {Record<string, string>} */
+		const FIRST_LAST = {
+			"nth-child": "first-child",
+			"nth-last-child": "last-child",
+			"nth-of-type": "first-of-type",
+			"nth-last-of-type": "last-of-type"
+		};
+		/**
+		 * @param {string} selector one selector
+		 * @returns {string} it, with every `An+B` written one way
+		 */
+		const oneSpelling = (selector) =>
+			selector.replace(NTH_CALL, (all, name, argument) => {
+				// `An+B of S` selects among S, which this does not read.
+				if (/\bof\b/i.test(argument)) return all;
+				const lower = argument.trim().toLowerCase();
+				const parts = AN_PLUS_B.exec(argument);
+				let a;
+				let b;
+				if (lower === "even") {
+					a = 2;
+					b = 0;
+				} else if (lower === "odd") {
+					a = 2;
+					b = 1;
+				} else if (parts === null) {
+					return all;
+				} else if (parts[6] !== undefined) {
+					a = 0;
+					b = Number(`${parts[5]}${parts[6]}`);
+				} else {
+					a = Number(`${parts[1]}${parts[2] === "" ? "1" : parts[2]}`);
+					b = parts[4] === undefined ? 0 : Number(`${parts[3]}${parts[4]}`);
+				}
+				const named = FIRST_LAST[name.toLowerCase()];
+				if (a === 0) {
+					return b === 1 && named !== undefined
+						? `:${named}`
+						: `:${name}(${b})`;
+				}
+				// An index under 1 matches nothing, so a step forward starts at the
+				// first one that does; landing on the step itself is the bare `An`.
+				if (a > 0) {
+					while (b < 1) b += a;
+					if (b === a) b = 0;
+				}
+				return `:${name}(${a}n${b === 0 ? "" : b > 0 ? `+${b}` : b})`;
+			});
 		/**
 		 * A selector list in one order, a repeat dropped — it is a set, so the
 		 * printer may write it any way round and two that differ only there are
@@ -419,7 +475,7 @@ const installHelpers = () => {
 				}
 			}
 			out.push(list.slice(from).trim());
-			return [...new Set(out)].sort().join(", ");
+			return [...new Set(out.map(oneSpelling))].sort().join(", ");
 		};
 		/**
 		 * A grouping rule as the kind of at-rule it is and the condition it holds

@@ -3,7 +3,7 @@
 exports[`ConfigTestCases css minimize-values minimize-values should compile 1`] = `
 Array [
   "/*! convert-values: should convert milliseconds to seconds */.t01{transition-duration:.5s}",
-  "/*! convert-values: should convert milliseconds to seconds (2) */.t02{animation:opacity 0ms 1s}",
+  "/*! convert-values: should convert milliseconds to seconds (2) */.t02{animation:opacity 0s 1s}",
   "/*! convert-values: should convert seconds to milliseconds */.t03{transition-duration:5ms}",
   "/*! convert-values: should convert values in custom properties */.t04{--my-variable:500ms}",
   "/*! convert-values: should strip the leading plus */.t05{width:14px}",
@@ -171,5 +171,9 @@ Array [
   "/*! declined: the number is no shorter than the percentage */.t77c{opacity:5%}",
   "/*! a ratio's denominator of 1 is the one an omitted denominator means */.t78{aspect-ratio:2}.t78a{aspect-ratio:auto 3}",
   "/*! declined: another denominator is another ratio */.t78b{aspect-ratio:2/10}",
+  "/*! webpack: a 3D matrix whose third row and column are the identity's is 2D */.t95{transform:matrix(20,20,40,40,80,80)}",
+  "/*! declined: ...but only then */.t96{transform:matrix3d(20,20,0,0,40,40,0,0,0,0,1,5,80,80,0,1)}",
+  "/*! webpack: a 2D pair of 1 leaves the z scale alone */.t97{transform:scaleZ(1.5)}",
+  "/*! webpack: a zero time keeps a unit, and \`s\` is the shorter one it can carry */.t98{transition-duration:0s}",
 ]
 `;
