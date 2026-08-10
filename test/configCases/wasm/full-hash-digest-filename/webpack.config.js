@@ -27,7 +27,7 @@ const base = (index, name, hashPart, inlined) => ({
 	output: {
 		module: true,
 		wasmLoading: "async-node",
-		chunkFilename: `${name}-chunks/[name].mjs`,
+		chunkFilename: `${name}-chunks/[name].[contenthash].mjs`,
 		webassemblyModuleFilename: `${name}.${hashPart}.[hash].module.wasm`,
 		publicPath: "auto"
 	},
@@ -44,6 +44,8 @@ const base = (index, name, hashPart, inlined) => ({
 module.exports = [
 	base(0, "digest", "[fullhash:base64safe]", true),
 	base(1, "digest-sliced", "[fullhash:base64safe:8]", true),
-	// A plain read still goes through the runtime helper.
+	// A plain read still goes through the runtime helper. Every config here names its
+	// javascript by content, which keeps the analyzable form from baking the name and
+	// leaves the runtime interpolation this case is about in place.
 	base(2, "plain", "[fullhash]", false)
 ];

@@ -49,15 +49,17 @@ module.exports = [
 	// Also analyzable: the hot require wraps `.ei` the same way it wraps `.e`, so an
 	// update still blocks on an in-flight chunk load.
 	base("hmr", { plugins: [new webpack.HotModuleReplacementPlugin()] }),
-	// Every case below must fall back with no `.ei` emitted.
-	base("public-path-override", { entry: "./index-public-path-override" }),
-	// The two hashed names below are deferrable in themselves; what stops them here is
-	// `optimization.realContentHash`, off by default in development — without it the
-	// rewritten chunk's own content hash would go stale.
-	base("content-hash", {
-		output: { chunkFilename: "[name].[contenthash].mjs" }
-	}),
+	// Also analyzable: the public path's hash is filled in by the deferred pass, and
+	// nothing here is named by its content, so rewriting a chunk invalidates no name.
 	base("templated-public-path", {
 		output: { publicPath: "/assets/[fullhash]/" }
+	}),
+	// Every case below must fall back with no `.ei` emitted.
+	base("public-path-override", { entry: "./index-public-path-override" }),
+	// Deferrable in itself; what stops it here is that the chunk is named by its own
+	// content while `optimization.realContentHash` is off, as it is by default in
+	// development — so the name it would be rewritten under has nothing to repair it.
+	base("content-hash", {
+		output: { chunkFilename: "[name].[contenthash].mjs" }
 	})
 ];

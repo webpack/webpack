@@ -15,7 +15,9 @@ const CASES = {
 	// output — the analyzable form is still emitted (documented limitation).
 	"fetch-priority": { file: "main.mjs", expect: "analyzable" },
 	"content-hash": { file: "main.mjs", expect: "fallback" },
-	"templated-public-path": { file: "main.mjs", expect: "fallback" },
+	// The public path's hash is filled in by the deferred pass, and no name here is
+	// built from content, so there is none for the rewrite to invalidate.
+	"templated-public-path": { file: "main.mjs", expect: "analyzable" },
 	"bare-public-path": { file: "main.mjs", expect: "analyzable" },
 	"shared-chunk": { file: "a.mjs", expect: "analyzable" },
 	prefetch: { file: "main.mjs", expect: "analyzable" },

@@ -11,10 +11,19 @@ const webpack = require("../../../../");
  * @param {string} hashPart the `[fullhash]` form under test
  * @param {boolean} baked whether the binary's url is expected to be a literal
  * @param {boolean} runs whether the binary can be loaded back
+ * @param {string=} chunkSuffix what follows the chunk's name in its filename
  * @param {boolean=} realContentHash whether the deferred pass may run at all
  * @returns {import("../../../../").Configuration} configuration
  */
-const base = (index, name, hashPart, baked, runs, realContentHash = true) => ({
+const base = (
+	index,
+	name,
+	hashPart,
+	baked,
+	runs,
+	chunkSuffix = "",
+	realContentHash = true
+) => ({
 	target: "node",
 	mode: "development",
 	devtool: false,
@@ -28,14 +37,14 @@ const base = (index, name, hashPart, baked, runs, realContentHash = true) => ({
 	output: {
 		module: true,
 		wasmLoading: "async-node",
-		chunkFilename: `${name}-chunks/[name].mjs`,
+		chunkFilename: `${name}-chunks/[name]${chunkSuffix}.mjs`,
 		webassemblyModuleFilename: `${name}.${hashPart}.[hash].module.wasm`,
 		publicPath: "auto"
 	},
 	plugins: [
 		new webpack.DefinePlugin({
 			__INDEX__: JSON.stringify(index),
-			__WASM_CHUNK__: JSON.stringify(`${name}-chunks/module_js.mjs`),
+			__CHUNK_DIR__: JSON.stringify(`${name}-chunks`),
 			__BAKED__: JSON.stringify(baked),
 			__RUNS__: JSON.stringify(runs)
 		})
@@ -52,6 +61,7 @@ module.exports = [
 	// only the fall back itself is asserted here.
 	base(2, "digest", "[fullhash:base64]", false, false),
 	// Substituting rewrites the chunk after its own content hash was taken, and
-	// `RealContentHashPlugin` is what brings the two back in line.
-	base(3, "no-repair", "[fullhash]", false, true, false)
+	// `RealContentHashPlugin` is what brings the two back in line. Without a content
+	// hash in the name there would be nothing to bring back in line, so it carries one.
+	base(3, "no-repair", "[fullhash]", false, true, ".[contenthash]", false)
 ];

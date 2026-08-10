@@ -50,7 +50,10 @@ module.exports = [
 	// A digest re-encodes the hash rather than reading it, which a stand-in cannot
 	// survive, so the whole specifier stays on the runtime form.
 	base(3, "digest", "[fullhash:base64]", false),
-	// Substituting rewrites the chunk after its own content hash was taken, and
-	// `RealContentHashPlugin` is what brings the two back in line.
-	base(4, "no-repair", "[fullhash]", false, "", false)
+	// No javascript here is named by its content, so rewriting one invalidates
+	// nothing and there is no repair to need.
+	base(4, "no-repair-hash-free", "[fullhash]", true, "", false),
+	// This one is: substituting rewrites the chunk after its own content hash was
+	// taken, and `RealContentHashPlugin` is what brings the two back in line.
+	base(5, "no-repair-hashed", "[fullhash]", false, ".[contenthash]", false)
 ];

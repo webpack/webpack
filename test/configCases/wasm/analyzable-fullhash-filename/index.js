@@ -6,8 +6,13 @@ import path from "path";
 export const load = () => import("./module");
 
 const outputPath = __STATS__.children[__INDEX__].outputPath;
-const chunk = () =>
-	fs.readFileSync(path.join(outputPath, __WASM_CHUNK__), "utf8");
+// Found rather than named: the chunk's filename may carry a content hash.
+const chunk = () => {
+	const dir = path.join(outputPath, __CHUNK_DIR__);
+	const file = fs.readdirSync(dir).find((name) => name.startsWith("module_js"));
+
+	return fs.readFileSync(path.join(dir, file), "utf8");
+};
 // Built here so an assertion never matches this file's own source.
 const byIdAndHash = `${"__webpack_require__"}.v(exports, module.id, "`;
 
