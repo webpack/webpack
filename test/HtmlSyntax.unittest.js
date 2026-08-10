@@ -5319,6 +5319,14 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 		it("leaves a `/` that is the last character of an unquoted value", () => {
 			expect(minify("<a href=x/>t</a>")).toBe("<a href=x/>t</a>");
 		});
+
+		it("folds the name of a tag that carries nothing else", () => {
+			expect(minify("<DIV>t</DIV>")).toBe("<div>t</div>");
+			// Foreign content keeps its source bytes, name included.
+			expect(minify("<svg><TITLE>t</TITLE></svg>")).toBe(
+				"<svg><TITLE>t</TITLE></svg>"
+			);
+		});
 	});
 
 	// Every other minify transform is covered end to end by
