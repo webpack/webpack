@@ -389,6 +389,121 @@ const installHelpers = () => {
 			const brace = text.indexOf("{");
 			return (brace === -1 ? text : text.slice(0, brace)).trim();
 		};
+		// The engine folds `even` / `odd` but hands `0n+3` back as written, so each
+		// An+B is read as the sequence it selects — which one it is still matters.
+		const NTH_CALL = /:(nth-(?:last-)?(?:child|of-type|col))\(([^)]*)\)/gi;
+		const AN_PLUS_B =
+			/^\s*(?:([+-]?)\s*(\d*)[nN]\s*(?:([+-])\s*(\d+))?|([+-]?)\s*(\d+))\s*$/;
+		/** @type {Record<string, string>} */
+		const FIRST_LAST = {
+			"nth-child": "first-child",
+			"nth-last-child": "last-child",
+			"nth-of-type": "first-of-type",
+			"nth-last-of-type": "last-of-type"
+		};
+		/**
+		 * @param {string} selector one selector
+		 * @returns {boolean[]} which indices are inside a string or an `[…]`
+		 */
+		const literalMask = (selector) => {
+			const mask = [];
+			let quote = "";
+			let brackets = 0;
+			for (let i = 0; i < selector.length; i++) {
+				const c = selector[i];
+				mask[i] = quote !== "" || brackets > 0;
+				if (c === "\\") {
+					mask[++i] = true;
+				} else if (quote !== "") {
+					if (c === quote) quote = "";
+				} else if (c === '"' || c === "'") {
+					quote = c;
+				} else if (c === "[") {
+					brackets++;
+				} else if (c === "]" && brackets > 0) {
+					brackets--;
+				}
+			}
+			return mask;
+		};
+		/**
+		 * @param {string} selector one selector
+		 * @returns {string} it, with every `An+B` written one way
+		 */
+		const oneSpelling = (selector) => {
+			const literal = literalMask(selector);
+			return selector.replace(NTH_CALL, (all, name, argument, offset) => {
+				// An attribute value or a string spelling one is text, not a selector.
+				if (literal[offset]) return all;
+				// `An+B of S` selects among S, which this does not read.
+				if (/\bof\b/i.test(argument)) return all;
+				const lower = argument.trim().toLowerCase();
+				const parts = AN_PLUS_B.exec(argument);
+				let a;
+				let b;
+				if (lower === "even") {
+					a = 2;
+					b = 0;
+				} else if (lower === "odd") {
+					a = 2;
+					b = 1;
+				} else if (parts === null) {
+					return all;
+				} else if (parts[6] !== undefined) {
+					a = 0;
+					b = Number(`${parts[5]}${parts[6]}`);
+				} else {
+					a = Number(`${parts[1]}${parts[2] === "" ? "1" : parts[2]}`);
+					b = parts[4] === undefined ? 0 : Number(`${parts[3]}${parts[4]}`);
+				}
+				// Past the safe range the arithmetic would name another sequence.
+				if (!Number.isSafeInteger(a) || !Number.isSafeInteger(b)) return all;
+				const named = FIRST_LAST[name.toLowerCase()];
+				if (a === 0) {
+					return b === 1 && named !== undefined
+						? `:${named}`
+						: `:${name}(${b})`;
+				}
+				// An index under 1 matches nothing, so a step forward starts at the
+				// first one that does; landing on the step itself is the bare `An`.
+				if (a > 0) {
+					if (b < 1) b = ((((b - 1) % a) + a) % a) + 1;
+					if (b === a) b = 0;
+				}
+				return `:${name}(${a}n${b === 0 ? "" : b > 0 ? `+${b}` : b})`;
+			});
+		};
+		/**
+		 * A selector list in one order, a repeat dropped — it is a set. The splitter
+		 * is spelled out again because this function is serialized into the page.
+		 * @param {string} list a selector list
+		 * @returns {string} its canonical spelling
+		 */
+		const selectorSet = (list) => {
+			const out = [];
+			let depth = 0;
+			let quote = "";
+			let from = 0;
+			for (let i = 0; i < list.length; i++) {
+				const c = list[i];
+				if (c === "\\") {
+					i++;
+				} else if (quote !== "") {
+					if (c === quote) quote = "";
+				} else if (c === '"' || c === "'") {
+					quote = c;
+				} else if (c === "(" || c === "[") {
+					depth++;
+				} else if (c === ")" || c === "]") {
+					depth--;
+				} else if (c === "," && depth === 0) {
+					out.push(list.slice(from, i).trim());
+					from = i + 1;
+				}
+			}
+			out.push(list.slice(from).trim());
+			return [...new Set(out.map(oneSpelling))].sort().join(", ");
+		};
 		/**
 		 * A grouping rule as the kind of at-rule it is and the condition it holds
 		 * under, read through the API that normalizes it where one exists.
@@ -420,7 +535,10 @@ const installHelpers = () => {
 				};
 			}
 			const selector = /** @type {CSSStyleRule} */ (rule).selectorText;
-			if (selector !== undefined) return { kind: "style", condition: selector };
+			// A nested rule holds under a selector list, which is a set like any other.
+			if (selector !== undefined) {
+				return { kind: "style", condition: selectorSet(selector) };
+			}
 			// A `@layer`, `@keyframes` or `@scope` prelude names or selects; there is
 			// nothing to evaluate, so it stands as written.
 			return { kind, condition: prelude(rule) };
@@ -468,8 +586,9 @@ const installHelpers = () => {
 				// An empty rule renders nothing, so dropping it is safe.
 				if (style && style.length > 0) {
 					// A bare declaration block nested in a rule stands for `& { … }`.
+					const selector = /** @type {CSSStyleRule} */ (rule).selectorText;
 					const label =
-						/** @type {CSSStyleRule} */ (rule).selectorText ||
+						(selector ? selectorSet(selector) : selector) ||
 						/** @type {CSSKeyframeRule} */ (rule).keyText ||
 						(rule.cssText.includes("{") ? prelude(rule) : "&");
 					// The same selector twice in a row is the one rule the cascade reads,
@@ -1021,9 +1140,21 @@ describe("printer output in real Chrome", () => {
 		`${rule.chain
 			.map(({ kind, condition }) => {
 				const answer = signatures.get(`${kind} ${condition}`);
-				return `@${kind}<${answer === undefined ? condition : answer}>`;
+				if (answer !== undefined) return `@${kind}<${answer}>`;
+				// A nested rule holds under its parent's selector list, which is a set
+				// like its own — the printer may have sorted it.
+				return `@${kind}<${
+					kind === "style" ? sortedSelectorList(condition) : condition
+				}>`;
 			})
 			.join(" >> ")} ${decodeDataUrls(rule.text)}`;
+
+	/**
+	 * @param {string} list a selector list
+	 * @returns {string} it in one order, a repeat dropped
+	 */
+	const sortedSelectorList = (list) =>
+		[...new Set(splitSelectorList(list))].sort().join(", ");
 
 	/**
 	 * Split a selector list on its own commas — not the ones inside `:is(…)`, an
@@ -1060,11 +1191,9 @@ describe("printer output in real Chrome", () => {
 	};
 
 	/**
-	 * One entry per selector. The printer joins adjacent rules that compute the
-	 * same style into a single selector list — the same rules in the same cascade
-	 * order, written shorter — so the comparison is made per selector rather than
-	 * per rule. A join of rules that do *not* match still fails: each selector
-	 * carries its own computed style, and the order is still compared.
+	 * One entry per selector, because the printer joins adjacent rules computing
+	 * the same style into one list. Each still carries its own computed style and
+	 * its place in the cascade, so a lost or reordered selector fails.
 	 * @param {Rule[]} rules rules in cascade order
 	 * @returns {Rule[]} the same, one selector each
 	 */
@@ -1086,16 +1215,47 @@ describe("printer output in real Chrome", () => {
 	 * @returns {string} why they differ, or "" when they do not
 	 */
 	const compareRules = (before, after, signatures) => {
+		/**
+		 * @param {string} text a rule's `selector { … }`
+		 * @returns {string} the block alone, or the whole text when it has none
+		 */
+		const blockOf = (text) => {
+			const at = text.indexOf(" { ");
+			return at === -1 ? text : text.slice(at);
+		};
 		// The same selector twice in a row computing the same style is the one rule
 		// it resolves to, which is what joining them into a list leaves.
 		/**
 		 * @param {Rule[]} rules rules in cascade order
 		 * @returns {string[]} their keys, an adjacent repeat collapsed
 		 */
-		const keys = (rules) =>
-			perSelector(rules)
-				.map((rule) => keyOf(rule, signatures))
+		const keys = (rules) => {
+			const flat = perSelector(rules).map((rule) => ({
+				key: keyOf(rule, signatures),
+				// Everything but the selector: two entries sharing it are one rule's
+				// worth of cascade, whichever of them is written first.
+				group: keyOf(
+					{ chain: rule.chain, text: blockOf(rule.text) },
+					signatures
+				)
+			}));
+			// A run of selectors reaching one block under one condition is the set a
+			// join may write in any order, so it is compared in one order.
+			for (let from = 0; from < flat.length;) {
+				let to = from + 1;
+				while (to < flat.length && flat[to].group === flat[from].group) to++;
+				if (to - from > 1) {
+					const sorted = flat
+						.slice(from, to)
+						.sort((one, other) => (one.key < other.key ? -1 : 1));
+					for (let i = from; i < to; i++) flat[i] = sorted[i - from];
+				}
+				from = to;
+			}
+			return flat
+				.map(({ key }) => key)
 				.filter((key, i, all) => i === 0 || key !== all[i - 1]);
+		};
 		const a = keys(before);
 		const b = keys(after);
 		const shorter = Math.min(a.length, b.length);

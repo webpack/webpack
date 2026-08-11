@@ -11,6 +11,8 @@ const {
 	collectFamilyLonghands,
 	collectGradientFunctions,
 	collectMergeableAtRules,
+	collectNthNamedEquivalents,
+	collectOmittableInitialKeywords,
 	collectRatioProperties,
 	isSpelledSyntax,
 	longhandType,
@@ -476,6 +478,33 @@ describe("CssValueSyntax", () => {
 					{ one: { syntax: "<one>" } }
 				)
 			).toEqual([]);
+		});
+	});
+
+	describe("collectNthNamedEquivalents", () => {
+		it("pairs each An+B pseudo-class with the name its one-element case has", () => {
+			expect(collectNthNamedEquivalents()).toEqual([
+				["nth-child", "first-child"],
+				["nth-last-child", "last-child"],
+				["nth-last-of-type", "last-of-type"],
+				["nth-of-type", "first-of-type"]
+			]);
+		});
+	});
+
+	describe("collectOmittableInitialKeywords", () => {
+		it("keeps only a stated keyword the property table agrees is its initial", () => {
+			expect(collectOmittableInitialKeywords()).toEqual([
+				["grid-auto-flow", "row"]
+			]);
+		});
+
+		it("refuses a keyword the grammar no longer offers beside another", () => {
+			expect(() =>
+				collectOmittableInitialKeywords(["a"], {
+					a: { initial: "row", syntax: "row | column" }
+				})
+			).toThrow("No omittable 'row' in 'a': row | column");
 		});
 	});
 

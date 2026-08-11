@@ -875,7 +875,10 @@ describe("CssSyntax — block streaming", () => {
 		// The collected walk emits every declaration and only then every child
 		// rule; a streamed block emits each child as it finishes, so declarations
 		// and child rules interleave the way the source has them.
-		const src = `@media screen{${repeat(1800, (i) => `p${i}:v${i};${rule(i)}`)}}`;
+		const src = `@media screen{${repeat(
+			1800,
+			(i) => `p${i}:v${i};${rule(i)}`
+		)}}`;
 		const kinds = walk(src)
 			.filter(
 				(e) => e.startsWith("+Declaration|") || e.startsWith("+QualifiedRule|")
@@ -899,7 +902,10 @@ describe("CssSyntax — block streaming", () => {
 		// The collected walk numbers the two lists independently (see `_walkRule`),
 		// so a streamed block has to as well — not one counter running across the
 		// merged source order.
-		const src = `@media screen{${repeat(1800, (i) => `p${i}:v${i};${rule(i)}`)}}`;
+		const src = `@media screen{${repeat(
+			1800,
+			(i) => `p${i}:v${i};${rule(i)}`
+		)}}`;
 		/** @type {string[]} */
 		const seen = [];
 		new SourceProcessor()
@@ -992,7 +998,9 @@ describe("CssSyntax — block streaming", () => {
 			`.root{color:red;${repeat(n, (i) => `& .n${i}{color:red}`)}}`;
 		/** @type {(n: number) => string} */
 		const joined = (n) =>
-			`.root{color:red;${Array.from({ length: n }, (_, i) => `& .n${i}`).join(",")}{color:red}}`;
+			`.root{color:red;${Array.from({ length: n }, (_, i) => `& .n${i}`).join(
+				","
+			)}{color:red}}`;
 		expect(minify(nesting(4))).toBe(joined(4));
 		expect(minify(nesting(1800))).toBe(joined(1800));
 	});
@@ -1068,7 +1076,10 @@ describe("CssSyntax — block streaming", () => {
 		// `_mergeBoxLonghands` needs every declaration at once, and only runs in a
 		// block with no child rule — so such a block is never streamed, however far
 		// past the threshold it grows, and its four longhands still collapse.
-		const src = `.root{${repeat(20000, (i) => `--v${i}:${i};`)}margin-top:1px;margin-right:2px;margin-bottom:3px;margin-left:4px}`;
+		const src = `.root{${repeat(
+			20000,
+			(i) => `--v${i}:${i};`
+		)}margin-top:1px;margin-right:2px;margin-bottom:3px;margin-left:4px}`;
 		/** @type {number | null} */
 		let declared = null;
 		let seen = false;
@@ -1208,6 +1219,12 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		);
 		// A comment the source spelled out where nothing would fuse still goes.
 		expect(min("a/**/ b{c:1}")).toBe("a b{c:1}");
+		// CSS Syntax 3 §4.3.10: a `+` starts a number only before a digit, or
+		// before a `.` that itself has one — a class after it fuses with nothing.
+		expect(min(".a+.m{c:1}")).toBe(".a+.m{c:1}");
+		expect(min(".a + .m{c:1}")).toBe(".a+.m{c:1}");
+		expect(min(".a+/**/.m{c:1}")).toBe(".a+.m{c:1}");
+		expect(min(".a+.5m{c:1}")).toBe(".a+.5m{c:1}");
 	});
 
 	it("keeps a custom property's value as the source wrote it", () => {
@@ -1388,15 +1405,59 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 	const min = (src) =>
 		new SourceProcessor().process(src, { minimize: true }).code;
 
-	it("keeps An+B selector arguments verbatim (no sign stripping)", () => {
-		// `odd` is the one An+B a keyword names in fewer bytes; the rest stay.
+	it("writes an An+B selector argument in its shortest spelling", () => {
+		// `odd` is the one An+B a keyword names in fewer bytes; `even` is not.
 		expect(min("a:nth-child(2n+1){b:c}")).toBe("a:nth-child(odd){b:c}");
+		expect(min("a:nth-child(even){b:c}")).toBe("a:nth-child(2n){b:c}");
+		// The microsyntax carries its own whitespace, signs and case.
+		expect(min("a:nth-child(2N + 1){b:c}")).toBe("a:nth-child(odd){b:c}");
+		expect(min("a:nth-child(+3){b:c}")).toBe("a:nth-child(3){b:c}");
+		expect(min("a:nth-child( 3 ){b:c}")).toBe("a:nth-child(3){b:c}");
+		// A step of zero selects the one child its B counts to.
+		expect(min("a:nth-child(0n+3){b:c}")).toBe("a:nth-child(3){b:c}");
+		// An index under 1 matches nothing, so a step forward starts at the first
+		// one that does — and landing on the step itself is the bare `An`.
+		expect(min("a:nth-of-type(2n-1){b:c}")).toBe("a:nth-of-type(odd){b:c}");
+		expect(min("a:nth-child(3n-2){b:c}")).toBe("a:nth-child(3n+1){b:c}");
+		expect(min("a:nth-child(2n+2){b:c}")).toBe("a:nth-child(2n){b:c}");
+		expect(min("a:nth-child(n-5){b:c}")).toBe("a:nth-child(n){b:c}");
+		// A step selecting exactly one child is the child that has its own name.
+		expect(min("a:nth-child(1){b:c}")).toBe("a:first-child{b:c}");
+		expect(min("a:nth-last-child(1){b:c}")).toBe("a:last-child{b:c}");
+		expect(min("a:nth-of-type(1){b:c}")).toBe("a:first-of-type{b:c}");
+		expect(min("a:nth-last-of-type(1){b:c}")).toBe("a:last-of-type{b:c}");
+	});
+
+	it("drops the implied universal inside a selector function", () => {
+		expect(min("a:not(*.g){b:c}")).toBe("a:not(.g){b:c}");
+		expect(min("a:is(*.g,*.h){b:c}")).toBe("a:is(.g,.h){b:c}");
+		expect(min("a:has(*.g){b:c}")).toBe("a:has(.g){b:c}");
+		// A lone universal is the selector, and a parted one is a combinator away.
+		expect(min("a:not(*){b:c}")).toBe("a:not(*){b:c}");
+		expect(min("a:not(* .g){b:c}")).toBe("a:not(* .g){b:c}");
+		// A namespaced universal is not redundant.
+		expect(min("a:not(*|*.g){b:c}")).toBe("a:not(*|*.g){b:c}");
+		// A `@supports` condition tests the syntax rather than applying it.
+		expect(min("@supports selector(*.a){b{c:d}}")).toBe(
+			"@supports selector(*.a){b{c:d}}"
+		);
+	});
+
+	it("keeps an An+B selector argument no shorter spelling reaches", () => {
+		// A backward step never sweeps past what it started on.
 		expect(min("a:nth-last-child(-n+3){b:c}")).toBe(
 			"a:nth-last-child(-n+3){b:c}"
 		);
-		expect(min("a:nth-of-type(2n-1){b:c}")).toBe("a:nth-of-type(2n-1){b:c}");
-		expect(min("a:nth-child(+3){b:c}")).toBe("a:nth-child(+3){b:c}");
-		expect(min("a:nth-child(even){b:c}")).toBe("a:nth-child(even){b:c}");
+		expect(min("a:nth-child(2n+4){b:c}")).toBe("a:nth-child(2n+4){b:c}");
+		// `An+B of S` selects among S, which no plain spelling names.
+		expect(min("a:nth-child(1 of .x){b:c}")).toBe("a:nth-child(1 of .x){b:c}");
+		// Past the safe integer range arithmetic would print a different selector.
+		expect(min("a:nth-child(2n-99999999999999999999){b:c}")).toBe(
+			"a:nth-child(2n-99999999999999999999){b:c}"
+		);
+		expect(min("a:nth-child(99999999999999999999){b:c}")).toBe(
+			"a:nth-child(99999999999999999999){b:c}"
+		);
 	});
 
 	it("still normalizes numbers in declaration values", () => {
@@ -2386,7 +2447,11 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["33.33333333%", "33.3333%"],
 			["1.0000001px", "1px"],
 			["400ms", ".4s"],
-			[".005s", "5ms"]
+			[".005s", "5ms"],
+			// A zero time keeps a unit where a zero length drops one, so the shorter
+			// of the two it can carry is still worth reaching for.
+			["0ms", "0s"],
+			["-0ms", "0s"]
 		])("rewrites %s", (input, expected) => {
 			expect(value(input)).toBe(expected);
 		});
@@ -3285,6 +3350,64 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a component spelling the property's own initial", () => {
+		it.each([
+			["a{grid-auto-flow:row dense}", "a{grid-auto-flow:dense}"],
+			["a{grid-auto-flow:dense row}", "a{grid-auto-flow:dense}"],
+			["a{grid-auto-flow:ROW dense}", "a{grid-auto-flow:dense}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// The other alternative of the group is not the initial.
+			["it is not the initial", "a{grid-auto-flow:column dense}"],
+			// Nothing else stands beside it, so it is the whole value.
+			["it stands alone", "a{grid-auto-flow:row}"],
+			// `aspect-ratio:auto <ratio>` is a ratio with a fallback, not the ratio.
+			["the keyword still says something", "a{aspect-ratio:auto 3}"],
+			// A substitution could expand to anything.
+			["a substitution stands there", "a{grid-auto-flow:var(--x) dense}"]
+		])("keeps the value where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a selector list as the set it is", () => {
+		it.each([
+			["b,a{color:red}", "a,b{color:red}"],
+			// A repeat matches nothing the first one did not.
+			["a,a,b{color:red}", "a,b{color:red}"],
+			[".a,.a{top:0}", ".a{top:0}"],
+			["h6,.h6,h5,.h5{top:0}", ".h5,.h6,h5,h6{top:0}"],
+			["@media print{z,a{top:0}}", "@media print{a,z{top:0}}"],
+			// A nested rule's list is one too.
+			["a{& d,& c{top:0}}", "a{& c,& d{top:0}}"],
+			// Two rules reaching the same set are one rule once both are in order.
+			["a,b{color:red}b,a{top:0}", "a,b{color:red;top:0}"],
+			["z{color:red}a{color:red}", "z,a{color:red}"]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// Only the list's own commas split it.
+			["the comma is inside `:is()`", ":is(b,a) c,d{top:0}"],
+			["the comma is inside an attribute value", 'a[title="x,y"],b{top:0}'],
+			["the list is already in order", "*,:after,:before{top:0}"],
+			// A keyframe selector list is printed by its own rule.
+			["it is a keyframe selector", "@keyframes k{50%,0%{top:0}}"]
+		])("keeps the list where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+
+		// A join concatenates: canonicalizing there would re-read the whole list
+		// once per rule joined, and no real stylesheet loses a byte to the repeat.
+		it("leaves a selector a join seam repeats", () => {
+			expect(minify(".b{x:1}.a{x:1}.b{x:1}")).toBe(".b,.a,.b{x:1}");
+		});
+	});
+
 	describe("a transform naming the same matrix", () => {
 		it.each([
 			["a{transform:translate(0,10px)}", "a{transform:translateY(10px)}"],
@@ -3305,9 +3428,27 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// One reduction uncovers the next: the 2D call it leaves reduces too.
 			["a{transform:scale3d(1,1,1)}", "a{transform:scale(1)}"],
 			["a{transform:translate3d(-50%,0,0)}", "a{transform:translate(-50%)}"],
+			// CSS Transforms 2 §12: a 3D matrix whose third row and column are the
+			// identity's is the 2D matrix of the six values it leaves.
+			[
+				"a{transform:matrix3d(20,20,0,0,40,40,0,0,0,0,1,0,80,80,0,1)}",
+				"a{transform:matrix(20,20,40,40,80,80)}"
+			],
+			// A 2D pair of 1 scales nothing there, leaving the z scale.
+			["a{transform:scale3d(1,1,1.5)}", "a{transform:scaleZ(1.5)}"],
 			// `skewX(a)` is `skew(a)`: the second component defaults to 0.
 			["a{transform:skewX(10deg)}", "a{transform:skew(10deg)}"],
-			["a{transform:skewX(0)}", "a{transform:skew(0)}"]
+			["a{transform:skewX(0)}", "a{transform:skew(0)}"],
+			// A factor of 1 scales nothing along its axis.
+			["a{transform:scale(1,-1)}", "a{transform:scaleY(-1)}"],
+			["a{transform:scale(-1,1)}", "a{transform:scaleX(-1)}"],
+			["a{transform:scale(1,.5)}", "a{transform:scaleY(.5)}"],
+			// A translation is a `<length-percentage>`, so a zero of either kind is
+			// the same no-op — a percentage resolves against the element's own size.
+			["a{transform:translate(100%,0%)}", "a{transform:translate(100%)}"],
+			["a{transform:translate(0%,-100%)}", "a{transform:translateY(-100%)}"],
+			["a{transform:translate(0.0%,5px)}", "a{transform:translateY(5px)}"],
+			["a{transform:translate(10px,0em)}", "a{transform:translate(10px)}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
@@ -3315,8 +3456,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it.each([
 			["no axis is zero", "a{transform:translate(1px,2px)}"],
 			["the factors differ", "a{transform:scale(2,3)}"],
-			// A substitution could expand to something the shorter call rejects.
+			// A substitution could expand to something the shorter call rejects —
+			// `translate(var(--x),0)` with `--x:1px,2px` is dropped where
+			// `translate(var(--x))` applies, so reducing it revives a declaration.
 			["a substitution stands there", "a{transform:translate(var(--x),0)}"],
+			[
+				"the 3D matrix is not the identity there",
+				"a{transform:matrix3d(20,20,0,0,40,40,0,0,0,0,1,5,80,80,0,1)}"
+			],
 			// The engine normalizes the axis it is given: a scaled component still
 			// names the axis, but a negative one turns the rotation the other way.
 			["the axis is scaled", "a{transform:rotate3d(0,0,2,37deg)}"],
@@ -3941,8 +4088,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it("drops a zero's unit inside a call whose every number is a length", () => {
-			expect(minify("a{transform:translate(0px, 0em)}")).toBe(
-				"a{transform:translate(0,0)}"
+			// A `translate3d` this shape reduces no further, so only the unit moves.
+			expect(minify("a{transform:translate3d(0px, 1em, 2em)}")).toBe(
+				"a{transform:translate3d(0,1em,2em)}"
 			);
 			expect(minify("a{clip-path:inset(0px 1px 0em 2px)}")).toBe(
 				"a{clip-path:inset(0 1px 0 2px)}"
