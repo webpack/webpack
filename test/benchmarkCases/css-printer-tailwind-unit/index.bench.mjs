@@ -143,7 +143,7 @@ export default (bench) => {
 			`unit benchmark "css-printer-tailwind-unit", minify (${name})`,
 			() => {
 				new SourceProcessor().process(source, {
-					minimize: true,
+					mode: "minify",
 					source: "in.css"
 				});
 			}

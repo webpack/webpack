@@ -822,7 +822,7 @@ describe("CssSyntax — block streaming", () => {
 					count = rules === null ? null : rules.length;
 				}
 			})
-			.process(src, { minimize: true });
+			.process(src, { mode: "minify" });
 		return count;
 	};
 
@@ -855,7 +855,7 @@ describe("CssSyntax — block streaming", () => {
 	 * @returns {string} its minified output
 	 */
 	const minify = (src) =>
-		new SourceProcessor().process(src, { minimize: true }).code;
+		new SourceProcessor().process(src, { mode: "minify" }).code;
 
 	it("streams a block past the threshold and collects one under it", () => {
 		expect(childCount(`@media screen{${BIG}}`)).toBe(0);
@@ -922,7 +922,7 @@ describe("CssSyntax — block streaming", () => {
 					/** @type {import("../lib/css/syntax").CssPath} */ path
 				) => seen.push(`r${path.index}`)
 			})
-			.process(src, { minimize: true });
+			.process(src, { mode: "minify" });
 		expect(seen.slice(0, 6)).toEqual(["d0", "r0", "d1", "r1", "d2", "r2"]);
 		expect(seen[seen.length - 1]).toBe("r1799");
 	});
@@ -952,7 +952,7 @@ describe("CssSyntax — block streaming", () => {
 						seen.push(rules === null ? null : rules.length);
 					}
 				})
-				.process(src, { minimize: true });
+				.process(src, { mode: "minify" });
 			return seen;
 		};
 		// A streamed rule hands its children to the visitors instead of collecting
@@ -1094,7 +1094,7 @@ describe("CssSyntax — block streaming", () => {
 					declared = decls === null ? null : decls.length;
 				}
 			})
-			.process(src, { minimize: true });
+			.process(src, { mode: "minify" });
 		// Collected, so it still reports every declaration it holds — a streamed
 		// block would report none, and the merge below would be lost with them.
 		expect(declared).toBe(20004);
@@ -1136,7 +1136,7 @@ describe("CssSyntax — minify comment preservation", () => {
 	 * @returns {string} the minified serialization
 	 */
 	const min = (src) =>
-		new SourceProcessor().process(src, { minimize: true }).code;
+		new SourceProcessor().process(src, { mode: "minify" }).code;
 
 	it("keeps `/*!` license comments and drops the rest", () => {
 		expect(min("/*! keep */\n/* drop */\na{color:red}")).toBe(
@@ -1173,7 +1173,7 @@ describe("CssSyntax — minify comment preservation", () => {
 					/** @type {import("../lib/css/syntax").CssPath} */ path
 				) => seen.push(path.source())
 			})
-			.process("/*! k */a{color:red}", { minimize: true });
+			.process("/*! k */a{color:red}", { mode: "minify" });
 		expect(out).toBe("/*! k */a{color:red}");
 		expect(seen).toEqual(["/*! k */"]);
 	});
@@ -1182,7 +1182,7 @@ describe("CssSyntax — minify comment preservation", () => {
 		// A prelude/type skip would drop selector or value nodes; printing must
 		// override it so the minified output stays complete.
 		const out = new SourceProcessor().process(".a .b{color:red}", {
-			minimize: true,
+			mode: "minify",
 			skip: {
 				selectorPrelude: true,
 				types: buildSkipSet([NodeType.Ident])
@@ -1198,7 +1198,7 @@ describe("CssSyntax — minify token-boundary safety", () => {
 	 * @returns {string} the minified serialization
 	 */
 	const min = (src) =>
-		new SourceProcessor().process(src, { minimize: true }).code;
+		new SourceProcessor().process(src, { mode: "minify" }).code;
 
 	it("separates tokens a dropped comment used to keep apart", () => {
 		// Without a separator these read back as one dimension and as one ident —
@@ -1351,7 +1351,7 @@ describe("CssSyntax — minify keeps input the grammar rejects", () => {
 	 * @returns {string} the minified serialization
 	 */
 	const min = (src) =>
-		new SourceProcessor().process(src, { minimize: true }).code;
+		new SourceProcessor().process(src, { mode: "minify" }).code;
 
 	it("keeps the sourceMappingURL pragma", () => {
 		// A `/*#` pragma is a link, not a comment — dropping it breaks the map of
@@ -1403,7 +1403,7 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 	 * @returns {string} the minified serialization
 	 */
 	const min = (src) =>
-		new SourceProcessor().process(src, { minimize: true }).code;
+		new SourceProcessor().process(src, { mode: "minify" }).code;
 
 	it("writes an An+B selector argument in its shortest spelling", () => {
 		// `odd` is the one An+B a keyword names in fewer bytes; `even` is not.
@@ -1527,7 +1527,7 @@ describe("CssSyntax — minify transforms, in-process", () => {
 	 * @returns {string} the minified serialization
 	 */
 	const min = (src) =>
-		new SourceProcessor().process(src, { minimize: true }).code;
+		new SourceProcessor().process(src, { mode: "minify" }).code;
 
 	/**
 	 * @param {string} value a `transition-timing-function` value
@@ -2283,13 +2283,6 @@ describe("CssSyntax — print modes", () => {
 		expect(new SourceProcessor().process(".a{color:red}")).toBeUndefined();
 	});
 
-	it("reads `minimize: true` as the `minify` mode it is shorthand for", () => {
-		const src = ".a{color:#ff0000;margin:1px 2px 1px 2px}";
-		expect(new SourceProcessor().process(src, { minimize: true }).code).toBe(
-			print(src, "minify")
-		);
-	});
-
 	it("beautifies without the transforms minifying applies", () => {
 		// Ugly is allowed — unindented, and top-level items still run together —
 		// but nothing the author wrote may be rewritten.
@@ -2355,7 +2348,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 	 * @returns {string} its minified serialization
 	 */
 	const minify = (css, environment) =>
-		new SourceProcessor().process(css, { minimize: true, environment }).code;
+		new SourceProcessor().process(css, { mode: "minify", environment }).code;
 
 	/**
 	 * @param {string} value a declaration value
@@ -2375,7 +2368,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 	 */
 	const converted = (value) => {
 		const out = new SourceProcessor().process(`a{x:${value}}`, {
-			minimize: true,
+			mode: "minify",
 			convertLengthUnits: true
 		}).code;
 		return /** @type {RegExpExecArray} */ (/^a\{x:([\s\S]*)\}$/.exec(out))[1];
@@ -2488,7 +2481,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		it("leaves a `@supports` condition as written", () => {
 			const out = new SourceProcessor().process(
 				"@supports (width:16px){a{x:16px}}",
-				{ minimize: true, convertLengthUnits: true }
+				{ mode: "minify", convertLengthUnits: true }
 			).code;
 			expect(out).toBe("@supports (width:16px){a{x:1pc}}");
 			expect(minify("@supports (color:rgba(0,0,0,.5)){a{x:1px}}")).toBe(
@@ -4458,7 +4451,7 @@ describe("CssSyntax — convertLengthUnits", () => {
 	 */
 	const width = (value, convertLengthUnits = false) =>
 		new SourceProcessor()
-			.process(`a{width:${value}}`, { minimize: true, convertLengthUnits })
+			.process(`a{width:${value}}`, { mode: "minify", convertLengthUnits })
 			.code.slice("a{width:".length, -1);
 
 	it("keeps a length in the unit it was written with by default", () => {
@@ -4478,7 +4471,7 @@ describe("CssSyntax — convertLengthUnits", () => {
 	it("converts a time either way — only lengths are gated", () => {
 		const duration = (/** @type {string} */ value) =>
 			new SourceProcessor()
-				.process(`a{transition-duration:${value}}`, { minimize: true })
+				.process(`a{transition-duration:${value}}`, { mode: "minify" })
 				.code.slice("a{transition-duration:".length, -1);
 		expect(duration("500ms")).toBe(".5s");
 		expect(duration(".005s")).toBe("5ms");

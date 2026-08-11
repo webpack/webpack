@@ -163,7 +163,7 @@ export default (bench) => {
 		bench.add(
 			`unit benchmark "html-printer-document-unit", minify (${name})`,
 			() => {
-				new SourceProcessor().process(source, { ...options, minimize: true });
+				new SourceProcessor().process(source, { ...options, mode: "minify" });
 			}
 		);
 	}

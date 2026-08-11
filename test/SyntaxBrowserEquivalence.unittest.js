@@ -93,13 +93,13 @@ const buildCorpora = () => {
 				".css",
 				(source) =>
 					/** @type {{ code: string }} */
-					(new CssSourceProcessor().process(source, { minimize: true })).code
+					(new CssSourceProcessor().process(source, { mode: "minify" })).code
 			);
 			htmlCorpus = await buildCorpus(
 				".html",
 				(source) =>
 					/** @type {{ code: string }} */
-					(new HtmlSourceProcessor().process(source, { minimize: true })).code
+					(new HtmlSourceProcessor().process(source, { mode: "minify" })).code
 			);
 		})();
 	}

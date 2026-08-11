@@ -26146,8 +26146,8 @@ declare abstract class SourceProcessorClass<
 
 	/**
 	 * Parse `input` once and fire the visitors in source order. Asking for output
-	 * — `mode`, or `minimize: true` for the `"minify"` it is shorthand for — makes
-	 * the same walk print, given a printer supplied at construction: a
+	 * — `mode`, the one thing that names it — makes the same walk print, given a
+	 * printer supplied at construction: a
 	 * {@link PrintContext} is created, each node's printer fires into it as the node
 	 * finishes, and the result is returned as `{ code, map }`: the serialized output
 	 * and its input->output source map, always, independent of the pipeline's own
@@ -26157,21 +26157,14 @@ declare abstract class SourceProcessorClass<
 	 */
 	process(
 		input: string,
-		options:
-			| (TProcessOptions & { minimize: true } & {
-					source: string;
-					content?: string;
-			  })
-			| (TProcessOptions & { mode: "minify" | "beautify" } & {
-					source: string;
-					content?: string;
-			  })
+		options: TProcessOptions & { mode: "minify" | "beautify" } & {
+			source: string;
+			content?: string;
+		}
 	): { code: string; map: SourceMap };
 	process(
 		input: string,
-		options:
-			| (TProcessOptions & { minimize: true })
-			| (TProcessOptions & { mode: "minify" | "beautify" })
+		options: TProcessOptions & { mode: "minify" | "beautify" }
 	): { code: string; map: undefined };
 	process(input: string, options?: TProcessOptions): undefined;
 }

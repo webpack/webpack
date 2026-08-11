@@ -317,7 +317,7 @@ const canonicalCss = (css) => {
 	try {
 		const { SourceProcessor } = require("../lib/css/syntax");
 
-		return new SourceProcessor().process(css, { minimize: true }).code;
+		return new SourceProcessor().process(css, { mode: "minify" }).code;
 	} catch (_err) {
 		return css;
 	}
