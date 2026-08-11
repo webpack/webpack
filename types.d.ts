@@ -24749,13 +24749,25 @@ declare abstract class RuntimeTemplate {
 	supportsAnalyzableWasm(chunkGraph?: ChunkGraph, module?: Module): boolean;
 
 	/**
-	 * Whether an entry `baseUri` decides where an asset URL points. It replaces the
-	 * output root the runtime resolves one against, and no literal read from its own
-	 * chunk shares that base — but only a public path that needs a base ever reaches
-	 * it, so an absolute one, `auto` included, is unaffected. Answered for the
-	 * compilation: a module reached from two entries is generated once.
+	 * Static literal specifier (already quoted) for the `new URL(<here>, import.meta.url)`
+	 * an asset reference bakes to, or `null` to keep the runtime form. Unlike a wasm
+	 * binary, the runtime resolves an asset url against `__webpack_require__.b` — the
+	 * output root, or an entry `baseUri` where one is set — so that base is settled here
+	 * before the rest of the name is.
 	 */
-	reportsEntryBaseUri(module?: Module): boolean;
+	getAnalyzableAssetUrl(
+		module: Module,
+		chunkGraph: ChunkGraph,
+		filename: string
+	): null | string;
+
+	/**
+	 * `output.publicPath` as the constant it will be, for code that would otherwise read
+	 * `__webpack_require__.p` for a value that never changes. `undefined` when only the
+	 * hash could say, or when a runtime reassigns `__webpack_public_path__` — then the
+	 * global is the only thing that knows.
+	 */
+	constantPublicPath(): undefined | string;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
 

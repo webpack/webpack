@@ -1,20 +1,25 @@
 import fs from "fs";
 import path from "path";
+import { url } from "./shared";
 
-export const url = new URL("./asset.txt", import.meta.url);
+const stats = __STATS__.children[__BAKED__ ? 0 : 1];
+const bundle = () =>
+	fs.readFileSync(path.join(stats.outputPath, __BUNDLE__), "utf8");
+// Needle built at runtime so it is not a source string literal here.
+const baked = `${"/* asset"} import */ "`;
 
 it("should resolve the asset against the entry's baseUri", () => {
-	expect(url.href).toBe("https://example.com/base/asset.txt");
+	expect(url.href).toBe(`${__BASE__}asset.txt`);
 });
 
-it("should keep the runtime form so the base is the one the runtime knows", () => {
-	const bundle = fs.readFileSync(
-		path.join(__STATS__.outputPath, "bundle0.mjs"),
-		"utf8"
-	);
-	// Needle built at runtime so it is not a source string literal here.
-	const baked = `${"/* asset"} import */ "`;
-
-	expect(bundle).not.toContain(baked);
-	expect(bundle).toContain(`${"__webpack_require__"}.b`);
-});
+if (__BAKED__) {
+	it("should settle the whole url here, base and all", () => {
+		expect(bundle()).toContain(`${baked}${__BASE__}asset.txt"`);
+		expect(bundle()).not.toContain(`${"__webpack_require__"}.b`);
+	});
+} else {
+	it("should keep the runtime form when the entries disagree on the base", () => {
+		expect(bundle()).not.toContain(baked);
+		expect(bundle()).toContain(`${"__webpack_require__"}.b`);
+	});
+}
