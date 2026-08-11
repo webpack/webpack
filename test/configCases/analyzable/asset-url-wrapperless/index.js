@@ -27,11 +27,17 @@ it("should emit no wrapper for an asset every consumer names itself", () => {
 			"utf8"
 		);
 
-	for (const source of [read("bundle0"), read("flat.")]) {
+	// Both depths, since only their own chunk can carry a wrapper for them.
+	const deep = fs.readFileSync(
+		path.join(dir, "nested", fs.readdirSync(path.join(dir, "nested"))[0]),
+		"utf8"
+	);
+	const inline = `/* asset import */ ${"__webpack_require__"}.p + "asset.txt"`;
+
+	for (const source of [read("bundle0"), read("flat."), deep]) {
 		expect(source).not.toContain(wrapper);
 	}
-	// The reference this one cannot bake concatenates the same thing inline instead.
-	expect(read("flat.")).toContain(
-		`/* asset import */ ${"__webpack_require__"}.p + "asset.txt"`
-	);
+	// Neither depth can bake, so each concatenates what the wrapper would have said.
+	expect(read("flat.")).toContain(inline);
+	expect(deep).toContain(inline);
 });

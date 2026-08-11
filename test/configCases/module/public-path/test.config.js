@@ -13,8 +13,7 @@ module.exports = {
 		}
 
 		// Only the absolute-URL configs need this: their specifier is rewritten to `./`
-		// before it gets here. An empty public path is baked behind the `../` path back
-		// to the output root, so it already reaches the chunk.
+		// before it gets here, while an empty one already reaches the chunk.
 		if (i === 10 || i === 11) {
 			if (/async/.test(module)) {
 				return `../${module}`;

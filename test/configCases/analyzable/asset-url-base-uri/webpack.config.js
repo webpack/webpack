@@ -1,21 +1,21 @@
 "use strict";
 
-// `baseUri` replaces the output root the runtime resolves an asset url against. Only a
-// public path that needs a base ever reaches it, hence the empty one here — and only
-// one base every entry agrees on settles the url, since the module is generated once.
+// `baseUri` replaces the output root an asset url resolves against, and only a public
+// path that needs a base ever reaches it — hence the empty one here. The module is
+// generated once, so only a base every entry agrees on can be settled into it.
 
 const webpack = require("../../../../");
 
 const BASE = "https://example.com/base/";
 
 /**
- * @param {string} filename the `output.filename` template
- * @param {string} read the emitted file `index.js` reads back
+ * @param {number} index position of this config, so `index.js` finds its own stats
+ * @param {string} prefix keeping the emitted files of each config apart
  * @param {import("../../../../").Configuration["entry"]} entry the entries under test
  * @param {boolean} baked whether the url is expected to be a literal
  * @returns {import("../../../../").Configuration} configuration
  */
-const base = (filename, read, entry, baked) => ({
+const base = (index, prefix, entry, baked) => ({
 	target: "node",
 	mode: "development",
 	devtool: false,
@@ -23,7 +23,7 @@ const base = (filename, read, entry, baked) => ({
 	experiments: { outputModule: true },
 	output: {
 		module: true,
-		filename,
+		filename: `${prefix}-[name].mjs`,
 		library: { type: "module" },
 		publicPath: "",
 		assetModuleFilename: "[name][ext]"
@@ -33,7 +33,8 @@ const base = (filename, read, entry, baked) => ({
 	},
 	plugins: [
 		new webpack.DefinePlugin({
-			__BUNDLE__: JSON.stringify(read),
+			__INDEX__: JSON.stringify(index),
+			__PREFIX__: JSON.stringify(prefix),
 			__BASE__: JSON.stringify(BASE),
 			__BAKED__: JSON.stringify(baked)
 		})
@@ -42,19 +43,24 @@ const base = (filename, read, entry, baked) => ({
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
+	base(0, "a", { main: { import: "./index.js", baseUri: BASE } }, true),
+	// Two bases leave the module they share none to bake against.
 	base(
-		"bundle0.mjs",
-		"bundle0.mjs",
-		{ main: { import: "./index.js", baseUri: BASE } },
-		true
-	),
-	// The shared module is generated once, so two bases leave it none to bake against.
-	base(
-		"[name].mjs",
-		"main.mjs",
+		1,
+		"b",
 		{
 			main: { import: "./index.js", baseUri: BASE },
 			other: { import: "./other.js", baseUri: "https://other.example.com/" }
+		},
+		false
+	),
+	// An entry that sets none disagrees just the same: it resolves against the root.
+	base(
+		2,
+		"c",
+		{
+			main: { import: "./index.js", baseUri: BASE },
+			other: { import: "./other.js" }
 		},
 		false
 	)

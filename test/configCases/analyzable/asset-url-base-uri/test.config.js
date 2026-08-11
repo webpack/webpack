@@ -2,6 +2,6 @@
 
 module.exports = {
 	findBundle(index) {
-		return index === 0 ? "./bundle0.mjs" : "./main.mjs";
+		return `./${["a", "b", "c"][index]}-main.mjs`;
 	}
 };

@@ -1,9 +1,7 @@
 "use strict";
 
-// The same asset reference, read from chunks at two depths, under every shape a public
-// path comes in. Both have to name the same file — the runtime resolves a public path
-// against the output root, so one that needs a base is walked back there first and one
-// that reaches the same place from any base is left alone.
+// The runtime resolves a public path against the output root, so one that needs a base
+// is walked back there first — read from chunks at two depths, under every shape.
 
 const webpack = require("../../../../");
 

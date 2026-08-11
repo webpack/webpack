@@ -1,8 +1,7 @@
 "use strict";
 
-// The `module.exports = .p + name` wrapper exists for javascript that reads the asset's
-// url out of the module. A `new URL()` reference names the file itself and reads none,
-// so the wrapper goes — but only once every javascript consumer is one of those.
+// The wrapper goes only once every javascript consumer is a `new URL()` that names
+// the file itself; anything reading the url out of the module still needs it.
 
 const webpack = require("../../../../");
 

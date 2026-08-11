@@ -7,5 +7,7 @@ export const lookalikes = {
 	wrongLength: "./@@webpackAnalyzableChunk:W1sibGl0ZXJhbCJdXQ@@",
 	unknownKind: "./@@webpackAnalyzableChunk:W1sibm9uc2Vuc2UiLCJ4Il1d@@",
 	wrongValueType: "./@@webpackAnalyzableChunk:W1sibGl0ZXJhbCIseyJhIjoxfV1d@@",
+	numericTemplate: "./@@webpackAnalyzableChunk:W1sidGVtcGxhdGUiLDBdXQ@@",
+	numericLiteral: "./@@webpackAnalyzableChunk:W1sibGl0ZXJhbCIsN11d@@",
 	unknownChunk: "./@@webpackAnalyzableChunk:W1siY2h1bmsiLCJuby1zdWNoLWNodW5rLWlkIl1d@@"
 };

@@ -1,8 +1,7 @@
 "use strict";
 
-// Two depths need a stand-in, and without `realContentHash` one may only be written
-// into an asset no template names by its own content. The entry is named that way and
-// the chunks holding the reference are not — and they are the ones rewritten.
+// A stand-in may only be written into an asset not named by its own content. Here the
+// entry is, and the chunks holding the reference — the ones rewritten — are not.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

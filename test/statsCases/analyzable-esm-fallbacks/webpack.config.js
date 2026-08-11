@@ -76,18 +76,15 @@ module.exports = [
 	}),
 	// Every case below must fall back with no `.ei` emitted.
 	base("public-path-override", { entry: "./index-public-path-override" }),
-	// Deferrable in itself; what stops it here is that the chunk the stand-in would be
-	// written into is named by its own content while `optimization.realContentHash` is
-	// off, as it is by default in development — so nothing repairs the name it is
-	// rewritten under. That chunk is the entry, which is where the reference sits.
+	// The entry the stand-in would land in is named by its own content, and with
+	// `realContentHash` off nothing repairs the name it is rewritten under.
 	base("content-hash", {
 		output: {
 			filename: "[name].[contenthash].mjs",
 			chunkFilename: "[name].[contenthash].mjs"
 		}
 	}),
-	// Two depths need a stand-in, and the chunks it would land in are named by their
-	// content — the referenced one is not, so the depth is what cannot be spelled.
+	// Two depths need a stand-in, and the chunks it would land in are content-named.
 	base("shared-depths", {
 		entry: "./index-depths",
 		plugins: [nameConsumersByContent(["flat", "nested/deep"])]

@@ -1,9 +1,7 @@
 "use strict";
 
-// Every javascript consumer of the asset is a `new URL()` that names it itself, so the
-// `module.exports = .p + name` wrapper is read by no one and is not emitted. The two
-// depths here cannot bake — the chunks they sit in are named by their own content —
-// and that reference concatenates what the wrapper would have, inline.
+// Nothing reads the wrapper, so it is not emitted — and the two depths here cannot
+// bake, so that reference concatenates what it would have said, inline.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

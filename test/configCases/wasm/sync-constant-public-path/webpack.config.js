@@ -1,8 +1,7 @@
 "use strict";
 
-// The binary's name is built at runtime from the module id either way, but the public
-// path in front of it is settled — so it is inlined instead of read from the global,
-// and the runtime module that would set that global is not emitted at all.
+// A settled public path is inlined instead of read from the global, so the runtime
+// module that would set it is not emitted at all.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

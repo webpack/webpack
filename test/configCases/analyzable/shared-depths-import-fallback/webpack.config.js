@@ -1,10 +1,7 @@
 "use strict";
 
-// Reserving a stand-in rewrites the asset it lands in after that asset's own content
-// hash was taken, so with `realContentHash` off a chunk named by its content can hold
-// none — and the two depths here need one, since no single `../` path reaches the
-// chunk from both. Only the chunks holding the reference are named that way, so the
-// referenced one is settled during code generation and the depth is what is missing.
+// Two depths need a stand-in, and with `realContentHash` off the chunks holding the
+// reference are named by their content, so none may be written into them.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
