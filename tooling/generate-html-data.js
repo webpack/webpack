@@ -381,7 +381,7 @@ const signed = [
 // test membership in, and the name maps foreign content is adjusted with. Spec
 // prose, so they are written out — no dataset states them. Sets rather than
 // arrays because the tree builder runs these tests per token on hot paths.
-/** @typedef {[string, "set" | "array" | "object", string, (string | [string, string])[]]} ParserTable a name, its literal kind, its doc line and its members */
+/** @typedef {[string, "set" | "array" | "object" | "byElement", string, (string | [string, string])[]]} ParserTable a name, its literal kind, its doc line and its members */
 /** @type {ParserTable[]} */
 const PARSER_TABLES = [
 	[
@@ -1184,8 +1184,8 @@ const PARSER_TABLES = [
 	],
 	[
 		"REDUNDANT_TYPE_ATTRIBUTES",
-		"object",
-		'`element attribute` -> the value that states the element\'s own default, for `removeRedundantAttributes: "smart"`. Only the markers no stylesheet selects on, unlike `input[type=text]`: `media` defaults to `all`, and a `<script charset>` matching the document encoding is obsolete and ignored. Matched ASCII-case-insensitively, unlike `@swc/html`, which lowercases `type` but not `media` / `charset`. `<script type>` is not here — its redundant values are `JAVASCRIPT_SCRIPT_TYPES` minus the empty and `module` spellings, which mean something.',
+		"byElement",
+		'element -> attribute -> the value that states the element\'s own default, for `removeRedundantAttributes: "smart"` (the default). Grouped by element so the printer gates on one lookup for an element no entry names, which is nearly every attribute it prints. Only the markers no stylesheet selects on, unlike `input[type=text]`: `media` defaults to `all`, and a `<script charset>` matching the document encoding is obsolete and ignored. Matched ASCII-case-insensitively, unlike `@swc/html`, which lowercases `type` but not `media` / `charset`. `<script type>` is not here — its redundant values are `JAVASCRIPT_SCRIPT_TYPES` minus the empty and `module` spellings, which mean something.',
 		[
 			["style type", "text/css"],
 			["link type", "text/css"],
@@ -1198,8 +1198,8 @@ const PARSER_TABLES = [
 	],
 	[
 		"REDUNDANT_DEFAULT_ATTRIBUTES",
-		"object",
-		'`element attribute` -> the value the element already defaults to, for `removeRedundantAttributes: "all"`. Dropping these is what makes the option unsafe: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching. Spec defaults, which the IDL does not state.',
+		"byElement",
+		'element -> attribute -> the value the element already defaults to, for `removeRedundantAttributes: "all"`, grouped like `REDUNDANT_TYPE_ATTRIBUTES`. Dropping these is what makes the option unsafe: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching. Spec defaults, which the IDL does not state.',
 		[
 			["input type", "text"],
 			["form method", "get"],
@@ -1265,6 +1265,45 @@ const setLiteral = (names) =>
 		: `new Set([${names.map((name) => `"${name}"`).join(", ")}])`;
 
 /**
+ * @param {string} key a property name
+ * @returns {string} it as written in an object literal
+ */
+const propertyKey = (key) => (/^[A-Za-z]\w*$/.test(key) ? key : `"${key}"`);
+
+/**
+ * Regroup `element attribute` -> value entries under the element name, so the
+ * reader gates on one lookup instead of building a key per attribute it sees.
+ * @param {[string, string][]} entries the flat entries
+ * @returns {string} the nested object literal
+ */
+const byElementLiteral = (entries) => {
+	/** @type {Map<string, [string, string][]>} */
+	const grouped = new Map();
+	for (const [key, mapped] of entries) {
+		const space = key.indexOf(" ");
+		const element = key.slice(0, space);
+		const existing = grouped.get(element);
+		const attribute = /** @type {[string, string]} */ ([
+			key.slice(space + 1),
+			mapped
+		]);
+		if (existing === undefined) grouped.set(element, [attribute]);
+		else existing.push(attribute);
+	}
+	const inner = [...grouped]
+		.map(
+			([element, attributes]) =>
+				`${propertyKey(element)}: Object.assign(Object.create(null), {${attributes
+					.map(
+						([attribute, mapped]) => `${propertyKey(attribute)}: "${mapped}"`
+					)
+					.join(", ")}})`
+		)
+		.join(", ");
+	return `Object.assign(Object.create(null), {${inner}})`;
+};
+
+/**
  * One `PARSER_TABLES` entry as its documented declaration. Name maps get a null
  * prototype, so a tag called `constructor` is a miss rather than a hit.
  * @param {ParserTable} table the entry
@@ -1274,20 +1313,21 @@ const parserTable = ([name, kind, doc, items]) => {
 	const value =
 		kind === "set"
 			? setLiteral(/** @type {string[]} */ (items))
-			: kind === "array"
-				? `[${items.map((item) => `"${item}"`).join(", ")}]`
-				: `Object.assign(Object.create(null), {${items
-						.map(
-							([key, mapped]) =>
-								`${/^[A-Za-z]\w*$/.test(key) ? key : `"${key}"`}: "${mapped}"`
-						)
-						.join(", ")}})`;
+			: kind === "byElement"
+				? byElementLiteral(/** @type {[string, string][]} */ (items))
+				: kind === "array"
+					? `[${items.map((item) => `"${item}"`).join(", ")}]`
+					: `Object.assign(Object.create(null), {${items
+							.map(([key, mapped]) => `${propertyKey(key)}: "${mapped}"`)
+							.join(", ")}})`;
 	const type =
 		kind === "set"
 			? "Set<string>"
-			: kind === "array"
-				? "string[]"
-				: "Record<string, string>";
+			: kind === "byElement"
+				? "Record<string, Record<string, string>>"
+				: kind === "array"
+					? "string[]"
+					: "Record<string, string>";
 	// The `charset` value is an attribute spelling, not a Node encoding id.
 	const encoded = value.includes('"utf-8"');
 	const open = encoded
