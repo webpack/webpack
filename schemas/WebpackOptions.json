@@ -3698,6 +3698,11 @@
           "description": "Rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.",
           "type": "boolean",
           "added": "5.110.0"
+        },
+        "dropOverriddenDeclarations": {
+          "description": "Drop a declaration a later one in the same block overrides, even when the two are spelled differently. Off by default because a differently-spelled pair is usually a fallback: `color: red; color: color(display-p3 1 0 0)` keeps the first for an engine that cannot read the second, and this drops it. An earlier `!important` declaration is never dropped for a later plain one, which does not override it.",
+          "type": "boolean",
+          "added": "5.110.0"
         }
       },
       "added": "5.110.0"

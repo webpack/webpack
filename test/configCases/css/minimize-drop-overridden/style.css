@@ -1,0 +1,15 @@
+/* A later declaration of the same property overrides the earlier one. */
+.a { color: red; color: blue }
+
+/* A fallback pair: dropping the first is exactly what this option opts into. */
+.b { color: red; color: color(display-p3 1 0 0) }
+
+/* A later plain declaration does NOT override an earlier `!important` one,
+   so the important declaration must survive. */
+.c { color: red !important; color: blue }
+
+/* Later `!important` does override an earlier one. */
+.d { color: red !important; color: blue !important }
+
+/* A nested rule parts the declarations around it. */
+.e { color: red; & span { color: teal } color: blue }

@@ -5980,6 +5980,11 @@ declare interface CssProcessOptions {
 	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
 	 */
 	convertLengthUnits?: boolean;
+
+	/**
+	 * drop a declaration a later one in the same block overrides even when spelled differently, which loses a fallback pair (default false)
+	 */
+	dropOverriddenDeclarations?: boolean;
 }
 type DeclarationEstreeIndex =
 	FunctionDeclaration | VariableDeclaration | ClassDeclaration;
@@ -10209,6 +10214,11 @@ declare interface HtmlProcessOptions {
 	 * forwarded to that CSS minifier with `environment`: a length may be rewritten into a shorter unit it exactly equals (default false)
 	 */
 	convertLengthUnits?: boolean;
+
+	/**
+	 * forwarded to that CSS minifier with `environment`, so an inline sheet is held to the same rules as a `.css` asset (default false)
+	 */
+	dropOverriddenDeclarations?: boolean;
 
 	/**
 	 * collapse each run of whitespace in text to a single space, except where an ancestor renders it verbatim (default false)
@@ -19735,6 +19745,12 @@ declare interface OptimizationMinimizeCss {
 	 * @since 5.110.0
 	 */
 	convertLengthUnits?: boolean;
+
+	/**
+	 * Drop a declaration a later one in the same block overrides, even when the two are spelled differently. Off by default because a differently-spelled pair is usually a fallback: `color: red; color: color(display-p3 1 0 0)` keeps the first for an engine that cannot read the second, and this drops it. An earlier `!important` declaration is never dropped for a later plain one, which does not override it.
+	 * @since 5.110.0
+	 */
+	dropOverriddenDeclarations?: boolean;
 }
 
 /**
@@ -21815,6 +21831,7 @@ declare interface PrintOptions {
 	environment?: Readonly<Record<string, boolean>>;
 	convertLengthUnits?: boolean;
 	collapseWhitespace?: boolean;
+	dropOverriddenDeclarations?: boolean;
 }
 declare interface PrintedElement {
 	element: string;

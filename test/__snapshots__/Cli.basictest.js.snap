@@ -9959,6 +9959,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-css-drop-overridden-declarations": Object {
+    "configs": Array [
+      Object {
+        "description": "Drop a declaration a later one in the same block overrides, even when the two are spelled differently. Off by default because a differently-spelled pair is usually a fallback: \`color: red; color: color(display-p3 1 0 0)\` keeps the first for an engine that cannot read the second, and this drops it. An earlier \`!important\` declaration is never dropped for a later plain one, which does not override it.",
+        "multiple": false,
+        "path": "optimization.minimize.css.dropOverriddenDeclarations",
+        "type": "boolean",
+      },
+    ],
+    "description": "Drop a declaration a later one in the same block overrides, even when the two are spelled differently. Off by default because a differently-spelled pair is usually a fallback: \`color: red; color: color(display-p3 1 0 0)\` keeps the first for an engine that cannot read the second, and this drops it. An earlier \`!important\` declaration is never dropped for a later plain one, which does not override it.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-html": Object {
     "configs": Array [
       Object {

@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-drop-overridden minimize-drop-overridden should compile 1`] = `
+"/*!***********************!*\\\\
+  !*** css ./style.css ***!
+  \\\\***********************/.a{color:blue}.b{color:color(display-p3 1 0 0)}.c{color:red!important;color:blue}.d{color:blue!important}.e{color:red;& span{color:teal}color:blue}"
+`;
