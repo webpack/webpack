@@ -90,7 +90,7 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/wasm/`, `lib/wasm-async/`, `lib/wasm-sync/` — WebAssembly module support.
 - `hot/` — Runtime code shipped to browsers for HMR (browser-side, not Node tooling).
 - `bin/` — `webpack` CLI entry point.
-- `tooling/` — Repo-internal scripts: build/codegen (runtime/wasm generators, hash-debug tool) invoked by `yarn fix:special`, plus standalone analysis tools such as `compare-css-minifiers.js` / `compare-html-minifiers.js` (`yarn benchmark:css-minifiers`, `yarn benchmark:html-minifiers`), which install the packages they compare against into `node_modules/.cache/` on first run rather than into webpack's dependencies.
+- `tooling/` — Repo-internal scripts: build/codegen (runtime/wasm generators, hash-debug tool) invoked by `yarn fix:special`, plus standalone analysis tools such as `compare-css-minifiers.js` / `compare-html-minifiers.js` (`yarn benchmark:css-minifiers`, `yarn benchmark:html-minifiers`). Those two need no arguments and no reading of their source: each runs webpack's CSS/HTML minifier and the ecosystem's over popular framework stylesheets and real documents, printing one table per fixture — output size raw and under gzip/brotli/zstd (the `test:size` settings), best-of-3 wall and cpu ms, peak RSS (each minifier × fixture measured in its own worker process, so the numbers are attributable), and whether the output lost classes / changed the DOM ("rejects it" rows mean the tool errored on that input). They install the packages they compare against into `node_modules/.cache/` on first run rather than into webpack's dependencies; expect the first run to install for a minute and every full run to take a few.
 - `assembly/` — WebAssembly source for the hash function.
 - `setup/` — One-time setup scripts.
 
@@ -239,6 +239,8 @@ A perf/memory claim needs evidence, and the cheap kinds are the trustworthy ones
 4. **Wall/CPU timing** — last resort. Interleave the arms in one process, report `n` and dispersion, and treat a difference smaller than the run-to-run spread as no result.
 
 `FILTER="<case-name>" yarn benchmark` drives the repo's own cases; `test/benchmarkCases/` is the fixture set.
+
+A claim about **webpack's CSS or HTML minifier versus the ecosystem's** (size, speed, memory, or safety) is already harnessed: run `yarn benchmark:css-minifiers` / `yarn benchmark:html-minifiers` and read the tables — see the `tooling/` entry in [Architecture](#architecture) for what they report — rather than hand-rolling a comparison.
 
 A claim about the **size of what webpack emits** is the counting kind, and `yarn test:size` is how it is counted: it builds every `configCases/` case with the defaults a user gets and reports the raw/gzip/brotli/zstd size of every asset, so a change to `lib/runtime/` or to a dependency template shows up as bytes on the wire. Compare two runs with `--baseline <report>`; the `Code Size` CI job does the same against the report `main` last uploaded and comments the diff on the pull request.
 
@@ -433,6 +435,17 @@ Required answer per section — **one sentence each is the target, two or three 
 
 After every `git push` of a new branch, check whether a PR was auto-created (webpack has this webhook). If so, `update_pull_request` to install the full template — the auto-created body never matches.
 
+### Watching a PR, and updating its branch — ask first
+
+> [!REQUIRED]
+
+Two things an agent reaches for by reflex are **not** defaults here, because webpack's maintainers usually land a PR through their own pipeline:
+
+- **Subscribing to a PR's activity** (`subscribe_pr_activity`), which keeps the session attached and wakes it on every check and review. Worth it when the requester wants the PR driven to green; wasted attention when they are about to merge it themselves. Offer it, name what it will do, and let them answer — then `unsubscribe_pr_activity` as soon as they say they are done.
+- **Rebasing, or merging the base branch into the PR branch.** A branch merely behind `main` is not a defect to fix, and doing it unasked rewrites history someone else's pipeline was about to handle, restarts every check, and can drop an approval. Do it when the requester asks, or when the PR is reported genuinely un-mergeable — and say which of the two applies before pushing.
+
+Pushing your own commits to your own branch stays free. What needs asking is anything that changes how the PR gets landed, or how long the session stays attached to it.
+
 ### Writing on GitHub — ask first
 
 > [!REQUIRED]
@@ -475,7 +488,7 @@ Once those suites are in, read the report; only then is a genuine patch gap wort
 
 Every webpack PR is reviewed automatically on the initial commit and on every subsequent push, by whichever automated reviewers the repository has enabled. You must always wait for them and address every comment from each. A finding from a bot is judged on the claim, never on the author: reproduce it before you decide.
 
-1. After `create_pull_request`, subscribe to the PR (`subscribe_pr_activity`) so a review wakes the session. Do **not** poll.
+1. After `create_pull_request`, ask whether to subscribe to the PR (`subscribe_pr_activity`) — see [Watching a PR, and updating its branch](#watching-a-pr-and-updating-its-branch--ask-first); it is not automatic. Once subscribed, a review wakes the session, so do **not** poll.
 2. When a review arrives, read every comment:
    - If correct, push a fix in a new commit — **including when the bug is one your own PR introduced**, which is the common case for a bot flagging a line you just wrote.
    - If wrong, draft the reply and ask the requester before posting it (see [Writing on GitHub — ask first](#writing-on-github--ask-first)) — never ignore silently.

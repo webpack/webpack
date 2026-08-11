@@ -209,6 +209,18 @@ export default defineConfig([
 		}
 	},
 	{
+		// The minifier comparisons run on a developer's or CI's modern Node.js,
+		// not on webpack's runtime baseline: they measure with post-10 APIs
+		// (fs.promises, zstd, resourceUsage).
+		files: [
+			"tooling/compare-css-minifiers.js",
+			"tooling/compare-html-minifiers.js"
+		],
+		rules: {
+			"n/no-unsupported-features/node-builtins": "off"
+		}
+	},
+	{
 		files: ["test/Compiler-filesystem-caching.test.js"],
 		languageOptions: {
 			ecmaVersion: 2022
