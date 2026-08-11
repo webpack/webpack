@@ -324,7 +324,7 @@ If the task harness pre-created a branch with a different prefix, rename it befo
 
 > [!REQUIRED]
 
-A task must leave **one** branch on `origin`: the one its PR is opened from. What accumulates here is never the PR head — GitHub deletes those on merge — but the refs no PR ever pointed at, which nothing can find afterwards: a squash merge leaves no ancestry, so a landed draft looks exactly like unmerged work.
+A task must leave **one** branch on `origin`: the one its PR is opened from. What accumulates here is usually not that ref — this repository deletes a merged PR's head automatically, unless a branch rule forbids it — but the refs no PR ever pointed at, which nothing can find afterwards: a squash merge leaves no ancestry, so a landed draft looks exactly like unmerged work.
 
 Three habits prevent that, and the fourth reports what they cannot:
 
