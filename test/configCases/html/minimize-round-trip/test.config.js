@@ -68,7 +68,7 @@ const canonicalValue = (tagName, name, value) => {
 	if (name === "style") {
 		try {
 			return new cssSyntax.SourceProcessor().process(`a{${value}}`, {
-				minimize: true
+				mode: "minify"
 			}).code;
 		} catch (_err) {
 			return value;

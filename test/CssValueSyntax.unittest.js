@@ -348,7 +348,7 @@ describe("CssValueSyntax", () => {
 			expect(Object.keys(folds).sort()).toEqual([...MATH_FUNCTION_FOLD.keys()]);
 			for (const [name, [input, expected]] of Object.entries(folds)) {
 				const { code } = new SourceProcessor().process(`a{${input}}`, {
-					minimize: true
+					mode: "minify"
 				});
 				expect(`${name}: ${code}`).toBe(`${name}: a{${expected}}`);
 			}

@@ -317,7 +317,7 @@ const canonicalCss = (css) => {
 	try {
 		const { SourceProcessor } = require("../lib/css/syntax");
 
-		return new SourceProcessor().process(css, { minimize: true }).code;
+		return new SourceProcessor().process(css, { mode: "minify" }).code;
 	} catch (_err) {
 		return css;
 	}
@@ -471,6 +471,19 @@ const measure = async (name) => {
 	let report;
 	try {
 		const minify = entry[1]();
+		// Half of these tools are native binaries, at full speed on their first
+		// call; the other half are JavaScript, which is still being compiled on it.
+		// Timing from cold reports the JavaScript ones' warm-up rather than their
+		// throughput — webpack's own minifier takes ~5x its steady-state time on
+		// the first call and settles by the sixth — and a build minifies many
+		// assets in one process, so steady state is what a user gets. Bounded by
+		// time as well as by count, so a slow tool on a large document is not
+		// multiplied while a fast one still reaches it.
+		const warmStarted = process.hrtime.bigint();
+		for (let i = 0; i < 8; i++) {
+			await minify(html);
+			if (Number(process.hrtime.bigint() - warmStarted) / 1e6 > 500) break;
+		}
 		let code = "";
 		let wall = Infinity;
 		let cpu = Infinity;

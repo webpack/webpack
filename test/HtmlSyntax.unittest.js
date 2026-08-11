@@ -3682,7 +3682,7 @@ describe("SourceProcessor — collapseWhitespace", () => {
 	 */
 	const collapse = (html) =>
 		new SourceProcessor().process(html, {
-			minimize: true,
+			mode: "minify",
 			collapseWhitespace: true
 		}).code;
 
@@ -5244,7 +5244,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 	 * @returns {string} minified serialization
 	 */
 	const minify = (source) =>
-		new SourceProcessor().process(source, { minimize: true }).code;
+		new SourceProcessor().process(source, { mode: "minify" }).code;
 
 	describe("cloned / reconstructed formatting elements", () => {
 		it("keeps the reconstructed <b> around text after an implied </p>", () => {
@@ -5442,13 +5442,6 @@ describe("SourceProcessor — print modes", () => {
 		expect(new SourceProcessor().process("<p>x</p>")).toBeUndefined();
 	});
 
-	it("reads `minimize: true` as the `minify` mode it is shorthand for", () => {
-		const source = '<div id=a class="x"><p>hi</p></div>';
-		expect(new SourceProcessor().process(source, { minimize: true }).code).toBe(
-			print(source, "minify")
-		);
-	});
-
 	it("beautifies by re-serializing rather than rewriting", () => {
 		// Ugly is allowed — nothing is re-indented — but the source's own attribute
 		// quoting, comments and end tags all have to come back.
@@ -5485,7 +5478,7 @@ describe("SourceProcessor — printing in pieces", () => {
 	 * @returns {string} minified serialization
 	 */
 	const minify = (source) =>
-		new SourceProcessor().process(source, { minimize: true }).code;
+		new SourceProcessor().process(source, { mode: "minify" }).code;
 
 	// Most of a document prints as `open tag + children + end tag`, so each piece
 	// goes out as the walk reaches it rather than being held for the parent to
