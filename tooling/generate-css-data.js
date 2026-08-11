@@ -1291,9 +1291,8 @@ const collectDisplayShortForms = () => {
 };
 
 /**
- * The bare keywords an alternation names, following `<production>` references
- * through. A `<function()>` alternative contributes nothing — only the spellings
- * that are a plain identifier are collected.
+ * The bare keywords an alternation names, followed through `<production>`
+ * references. A `<function()>` alternative contributes nothing.
  * @param {string[]} productions the productions to expand
  * @returns {string[]} the keywords, sorted
  */
@@ -2693,16 +2692,14 @@ const SUPPLEMENT = {
 	// drops a `flex` shorthand whose basis has none, and the shorthand carries
 	// one too.
 	zeroUnitKeepingProperties: ["flex", "flex-basis"],
-	// CSS Backgrounds 3 §3.9 and CSS Masking 1 §4.5: these two spell the omitted
-	// second value `auto`, not the first repeated as a box longhand's is. The
-	// grammar is `<bg-size>` either way, so only the prose separates them.
+	// CSS Backgrounds 3 §3.9 / CSS Masking 1 §4.5: these spell an omitted second
+	// value `auto`, not the first repeated. Their shared grammar cannot say so.
 	autoSecondValueProperties: ["background-size", "mask-size"],
-	// CSS Images 3 §3.1: with no `<side-or-corner>` and no angle a linear
-	// gradient runs top to bottom, which is what each of these spells. An
-	// equivalence between spellings, which no dataset states.
+	// CSS Images 3 §3.1: a directionless linear gradient runs top to bottom,
+	// which each of these spells. An equivalence no dataset states.
 	defaultGradientDirections: ["to bottom", "180deg", "0.5turn"],
 	// CSS Transforms 1 §11: a one-axis call is the pair whose other component is
-	// the 0 it already means. Names the pair spelling, which the grammar does not.
+	// the 0 it means. Names the pair spelling, which the grammar does not.
 	xAxisTransforms: [
 		["translatex", "translate"],
 		["skewx", "skew"]
