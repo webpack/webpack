@@ -21,9 +21,8 @@ const LANGUAGES = [
 ];
 
 describe("SourceProcessor", () => {
-	// `mode` is the one thing that names the output a caller wants, so a language
-	// that read anything else would part it from the others. The resolution lives
-	// in the shared processor; these say so in both languages it is bound to.
+	// `mode` is the only thing that names the output, and it resolves in the
+	// shared processor — so both languages bound to it must agree.
 	describe("mode", () => {
 		for (const [language, Processor, source] of LANGUAGES) {
 			describe(language, () => {
