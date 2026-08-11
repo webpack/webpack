@@ -1165,6 +1165,47 @@ const PARSER_TABLES = [
 		"set",
 		"`<script>` bodies that are JSON: the two dedicated types plus any `+json` subtype (`application/ld+json`).",
 		["application/json", "importmap", "speculationrules"]
+	],
+	[
+		"TEMPLATE_START_TAG_MODES",
+		"object",
+		'§13.2.6.4.18 "in template": the start tags that re-dispatch, each to the insertion mode it switches to. Named, not numbered — the numbering is the parser\'s own, so `syntax.js` binds these names to its constants.',
+		[
+			["caption", "IN_TABLE"],
+			["colgroup", "IN_TABLE"],
+			["tbody", "IN_TABLE"],
+			["tfoot", "IN_TABLE"],
+			["thead", "IN_TABLE"],
+			["col", "IN_COLUMN_GROUP"],
+			["tr", "IN_TABLE_BODY"],
+			["td", "IN_ROW"],
+			["th", "IN_ROW"]
+		]
+	],
+	[
+		"JAVASCRIPT_SCRIPT_TYPES",
+		"set",
+		"`<script>` `type` values that make the body executable JavaScript, per the spec's JavaScript MIME type essence list plus the empty and `module` spellings. Anything else is a data block, which must pass through as an asset rather than be bundled as an entry. The IDL says nothing about MIME essences, so this cannot be read out of webref.",
+		[
+			"",
+			"module",
+			"application/ecmascript",
+			"application/javascript",
+			"application/x-ecmascript",
+			"application/x-javascript",
+			"text/ecmascript",
+			"text/javascript",
+			"text/javascript1.0",
+			"text/javascript1.1",
+			"text/javascript1.2",
+			"text/javascript1.3",
+			"text/javascript1.4",
+			"text/javascript1.5",
+			"text/jscript",
+			"text/livescript",
+			"text/x-ecmascript",
+			"text/x-javascript"
+		]
 	]
 ];
 
@@ -1222,9 +1263,9 @@ const parserTable = ([name, kind, doc, items]) => {
 // The element and attribute names cspell does not know. Written twice on
 // purpose: the directive covers this file, the string is forwarded into the
 // generated one so it passes `lint:spellcheck` too.
-// cspell:ignore advasoft altglyph altglyphdef altglyphitem animatecolor animatemotion animatetransform arcrole aswedit attributename attributetype basefrequency baseprofile bgsound calcmode clippathunits diffuseconstant fedropshadow filterunits glyphref gradienttransform gradientunits hotjava hotmetal kernelmatrix kernelunitlength keypoints keysplines keytimes limitingconeangle markerheight markerwidth maskcontentunits maskunits metrius mtext numoctaves pathlength patterncontentunits patterntransform patternunits pointsatx pointsaty pointsatz preservealpha primitiveunits refx refy repeatcount repeatdur requiredextensions requiredfeatures silmaril softquad specularconstant specularexponent startoffset stddeviation stitchtiles surfacescale systemlanguage tablevalues targetx targety textlength viewbox viewtarget webtechs xchannelselector ychannelselector
+// cspell:ignore advasoft altglyph altglyphdef altglyphitem animatecolor animatemotion animatetransform arcrole aswedit attributename attributetype basefrequency baseprofile bgsound calcmode clippathunits diffuseconstant fedropshadow filterunits glyphref gradienttransform gradientunits hotjava hotmetal jscript kernelmatrix kernelunitlength keypoints keysplines keytimes limitingconeangle livescript markerheight markerwidth maskcontentunits maskunits metrius mtext numoctaves pathlength patterncontentunits patterntransform patternunits pointsatx pointsaty pointsatz preservealpha primitiveunits refx refy repeatcount repeatdur requiredextensions requiredfeatures silmaril softquad specularconstant specularexponent startoffset stddeviation stitchtiles surfacescale systemlanguage tablevalues targetx targety textlength viewbox viewtarget webtechs xchannelselector ychannelselector
 const CSPELL_IGNORE =
-	"advasoft altglyph altglyphdef altglyphitem animatecolor animatemotion animatetransform arcrole aswedit attributename attributetype basefrequency baseprofile bgsound calcmode clippathunits diffuseconstant fedropshadow filterunits glyphref gradienttransform gradientunits hotjava hotmetal kernelmatrix kernelunitlength keypoints keysplines keytimes limitingconeangle markerheight markerwidth maskcontentunits maskunits metrius mtext numoctaves pathlength patterncontentunits patterntransform patternunits pointsatx pointsaty pointsatz preservealpha primitiveunits refx refy repeatcount repeatdur requiredextensions requiredfeatures silmaril softquad specularconstant specularexponent startoffset stddeviation stitchtiles surfacescale systemlanguage tablevalues targetx targety textlength viewbox viewtarget webtechs xchannelselector ychannelselector";
+	"advasoft altglyph altglyphdef altglyphitem animatecolor animatemotion animatetransform arcrole aswedit attributename attributetype basefrequency baseprofile bgsound calcmode clippathunits diffuseconstant fedropshadow filterunits glyphref gradienttransform gradientunits hotjava hotmetal jscript kernelmatrix kernelunitlength keypoints keysplines keytimes limitingconeangle livescript markerheight markerwidth maskcontentunits maskunits metrius mtext numoctaves pathlength patterncontentunits patterntransform patternunits pointsatx pointsaty pointsatz preservealpha primitiveunits refx refy repeatcount repeatdur requiredextensions requiredfeatures silmaril softquad specularconstant specularexponent startoffset stddeviation stitchtiles surfacescale systemlanguage tablevalues targetx targety textlength viewbox viewtarget webtechs xchannelselector ychannelselector";
 
 const EXPORT_NAMES = [
 	"BOOLEAN_ATTRIBUTES",

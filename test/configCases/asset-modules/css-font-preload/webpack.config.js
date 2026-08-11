@@ -18,7 +18,7 @@ module.exports = {
 		},
 		rules: [
 			{
-				test: /\.(woff2?|png)$/,
+				test: /\.(woff2?|png)$|queryfont/,
 				type: "asset/resource"
 			}
 		]

@@ -442,4 +442,88 @@ describe("HtmlParser", () => {
 			expect(requests).not.toContain("./skip");
 		});
 	});
+
+	describe("script type routing", () => {
+		// Every executable spelling must reach the JS pipeline: one that is read as
+		// a data block instead is served to the browser unbundled, which then
+		// executes it. Driven per entry so a dropped or mistyped one fails here.
+		const { JAVASCRIPT_SCRIPT_TYPES } = require("../lib/html/data");
+
+		/**
+		 * @param {string} source html
+		 * @returns {EXPECTED_OBJECT[]} its inline-script dependencies
+		 */
+		const inlineScriptDeps = (source) => {
+			const { module, presentationalDependencies } = makeModule();
+			new HtmlParser({}).parse(source, makeState(module));
+			// A `type` the parser rewrites also emits a `ConstDependency`.
+			return presentationalDependencies.filter(
+				(dependency) => dependency instanceof HtmlInlineScriptDependency
+			);
+		};
+
+		// Pinned against the spec list, not read from the table: a dropped entry
+		// would otherwise just remove one generated case below and pass.
+		// cspell:ignore jscript livescript
+		it("should carry every JavaScript MIME essence the spec lists", () => {
+			expect([...JAVASCRIPT_SCRIPT_TYPES].sort()).toEqual([
+				"",
+				"application/ecmascript",
+				"application/javascript",
+				"application/x-ecmascript",
+				"application/x-javascript",
+				"module",
+				"text/ecmascript",
+				"text/javascript",
+				"text/javascript1.0",
+				"text/javascript1.1",
+				"text/javascript1.2",
+				"text/javascript1.3",
+				"text/javascript1.4",
+				"text/javascript1.5",
+				"text/jscript",
+				"text/livescript",
+				"text/x-ecmascript",
+				"text/x-javascript"
+			]);
+		});
+
+		for (const type of JAVASCRIPT_SCRIPT_TYPES) {
+			it(`should bundle a <script> typed ${JSON.stringify(type)}`, () => {
+				// Written out even when empty: an absent `type` takes its own branch.
+				const deps = inlineScriptDeps(
+					`<script type="${type}">var a = 1;</script>`
+				);
+				expect(deps).toHaveLength(1);
+			});
+		}
+
+		it("should bundle a <script> with no type attribute", () => {
+			expect(inlineScriptDeps("<script>var a = 1;</script>")).toHaveLength(1);
+		});
+
+		// The `type` is matched on its trimmed, lowercased essence.
+		for (const type of [" TEXT/JavaScript ", "TEXT/X-JAVASCRIPT"]) {
+			it(`should bundle a <script> typed ${JSON.stringify(type)}`, () => {
+				expect(
+					inlineScriptDeps(`<script type="${type}">var a = 1;</script>`)
+				).toHaveLength(1);
+			});
+		}
+
+		// A data block stays inline — bundling it would run data as code.
+		for (const type of [
+			"application/ld+json",
+			"importmap",
+			"speculationrules",
+			"application/wasm",
+			"text/plain"
+		]) {
+			it(`should leave a <script> typed ${JSON.stringify(type)} inline`, () => {
+				expect(
+					inlineScriptDeps(`<script type="${type}">{"a":1}</script>`)
+				).toHaveLength(0);
+			});
+		}
+	});
 });

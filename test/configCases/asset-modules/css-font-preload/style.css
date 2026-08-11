@@ -18,3 +18,10 @@
 	font-family: "B";
 	src: /* webpackAs: "fetch" */ url("./other.woff2") format("woff2");
 }
+
+/* The extension lives only in the query, so the resource names no font format
+   and gets `as="font"` with no `type`. */
+@font-face {
+	font-family: "C";
+	src: url(./queryfont?fallback=.woff2);
+}
