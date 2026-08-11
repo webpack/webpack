@@ -30,6 +30,12 @@ describe("SourceProcessor", () => {
 				it("walks without printing when none is asked for", () => {
 					expect(new Processor().process(source)).toBeUndefined();
 					expect(new Processor().process(source, {})).toBeUndefined();
+					// `minimize` used to be a second way to ask; `mode` is the only one.
+					expect(
+						new Processor().process(source, {
+							minimize: true
+						})
+					).toBeUndefined();
 				});
 
 				it("prints for each mode it names", () => {
@@ -51,15 +57,12 @@ describe("SourceProcessor", () => {
 					expect(minified.length).toBeLessThanOrEqual(beautified.length);
 				});
 
-				it("beautifies to something that still parses to the same output", () => {
-					// Re-printing what was already printed changes nothing more.
-					const once = new Processor().process(source, {
-						mode: "minify"
-					}).code;
-					const twice = new Processor().process(once, {
-						mode: "minify"
-					}).code;
-					expect(twice).toBe(once);
+				it("prints what it already printed unchanged, in either mode", () => {
+					for (const mode of ["minify", "beautify"]) {
+						const once = new Processor().process(source, { mode }).code;
+						const twice = new Processor().process(once, { mode }).code;
+						expect(twice).toBe(once);
+					}
 				});
 
 				it("carries no state between calls", () => {

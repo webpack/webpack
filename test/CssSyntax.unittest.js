@@ -1491,6 +1491,20 @@ describe("CssSyntax — minify value-safety edge cases", () => {
 		expect(min("a{color:rgb(100%,0%,0%)}")).toBe("a{color:red}");
 	});
 
+	it("parts an rgb()'s arguments on CSS whitespace and nothing else", () => {
+		// Only tab, line feed, form feed, carriage return and space part one.
+		// Anything else between two numbers leaves a declaration the engine
+		// ignores, and rewriting it to a color would activate it.
+		for (const code of [0x01, 0x0b, 0xa0, 0x2028]) {
+			const between = String.fromCharCode(code);
+			const css = `a{color:rgb(1${between}2 3 4)}`;
+			expect(min(css)).toBe(css);
+		}
+		for (const between of ["\t", "\n", "\f", "\r", " "]) {
+			expect(min(`a{color:rgb(1${between}2 3)}`)).toBe("a{color:#010203}");
+		}
+	});
+
 	it("keeps a hash inside a non-color function verbatim (id reference)", () => {
 		expect(min("a{background:-moz-element(#Abc)}")).toBe(
 			"a{background:-moz-element(#Abc)}"
