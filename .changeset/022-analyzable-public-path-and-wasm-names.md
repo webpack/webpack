@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Bake templated public paths and hashed wasm names into analyzable output.
+Bake templated public paths, hashed wasm names and concatenated origins into analyzable output.
