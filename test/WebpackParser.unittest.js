@@ -2126,6 +2126,32 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			expect(after).toBe(before);
 		});
 
+		it("is registered on the compiler's done and failed hooks", () => {
+			const { AsyncSeriesHook, SyncHook } = require("tapable");
+			const JavascriptModulesPlugin = require("../lib/javascript/JavascriptModulesPlugin");
+
+			// tap targets mirror lib/Compiler.js hook types
+			const compiler = {
+				hooks: {
+					done: new AsyncSeriesHook(["stats"]),
+					failed: new SyncHook(["error"]),
+					compilation: new SyncHook(["compilation", "params"])
+				}
+			};
+			new JavascriptModulesPlugin().apply(
+				/** @type {EXPECTED_ANY} */ (compiler)
+			);
+			// the plugin taps the exported function itself, so identity proves
+			// the release really runs on both lifecycle ends
+			expect(compiler.hooks.done.taps.map((tap) => tap.fn)).toContain(
+				releaseParserCaches
+			);
+			expect(compiler.hooks.failed.taps.map((tap) => tap.fn)).toContain(
+				releaseParserCaches
+			);
+			compiler.hooks.failed.call(new Error("test"));
+		});
+
 		it("is idempotent and keeps the tokenizer working", () => {
 			releaseParserCaches();
 			releaseParserCaches();
