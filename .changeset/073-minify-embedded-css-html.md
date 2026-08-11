@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Minify CSS and HTML embedded in JavaScript output.
+Add hooks to transform CSS and HTML that reach the bundle inside JavaScript.

@@ -75,7 +75,7 @@ describe("CSS embedded in JavaScript", () => {
 	});
 
 	// The codegen cache is keyed by `Generator.updateHash`, which runs before code
-	// generation and so cannot see what a tap returns — `embeddedCssHash` is how a
+	// generation and so cannot see what a tap returns — `cssInJavascriptHash` is how a
 	// tap reaches it. Without that, the second build replays the first's output.
 	it("re-generates when the tap appears or goes across a filesystem cache", async () => {
 		const minified = await build(true);

@@ -14,7 +14,7 @@ const PLUGIN_NAME = "SampleEmbeddedMinifyPlugin";
 
 /**
  * Stands in for `minimizer-webpack-plugin`, which owns the real taps: webpack
- * ships `renderEmbeddedCss` / `renderEmbeddedHtml` but taps neither, so this is
+ * ships `renderCssInJavascript` / `renderHtmlInJavascript` but taps neither, so this is
  * what exercises them. Kept in `test/` on purpose — nothing here should grow
  * into a second implementation of the minifier.
  */
@@ -46,16 +46,16 @@ class SampleEmbeddedMinifyPlugin {
 		compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {
 			if (css) {
 				const hooks = CssModulesPlugin.getCompilationHooks(compilation);
-				hooks.renderEmbeddedCss.tap(PLUGIN_NAME, (source, module) =>
+				hooks.renderCssInJavascript.tap(PLUGIN_NAME, (source, module) =>
 					minifyCss(source, module, minimizerOptions)
 				);
-				hooks.embeddedCssHash.tap(PLUGIN_NAME, (module, hash) => {
+				hooks.cssInJavascriptHash.tap(PLUGIN_NAME, (module, hash) => {
 					hash.update(key);
 				});
 			}
 			if (html) {
 				const hooks = HtmlModulesPlugin.getCompilationHooks(compilation);
-				hooks.renderEmbeddedHtml.tap(
+				hooks.renderHtmlInJavascript.tap(
 					PLUGIN_NAME,
 					(markup) =>
 						new htmlSyntax.SourceProcessor().process(markup, {
@@ -63,7 +63,7 @@ class SampleEmbeddedMinifyPlugin {
 							...minimizerOptions
 						}).code
 				);
-				hooks.embeddedHtmlHash.tap(PLUGIN_NAME, (module, hash) => {
+				hooks.htmlInJavascriptHash.tap(PLUGIN_NAME, (module, hash) => {
 					hash.update(key);
 				});
 			}
