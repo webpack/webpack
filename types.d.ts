@@ -26159,14 +26159,20 @@ declare abstract class SourceProcessorClass<
 		input: string,
 		options:
 			| (TProcessOptions & { minimize: true } & {
-					source?: string;
+					source: string;
 					content?: string;
 			  })
 			| (TProcessOptions & { mode: "minify" | "beautify" } & {
-					source?: string;
+					source: string;
 					content?: string;
 			  })
 	): { code: string; map: SourceMap };
+	process(
+		input: string,
+		options:
+			| (TProcessOptions & { minimize: true })
+			| (TProcessOptions & { mode: "minify" | "beautify" })
+	): { code: string; map: undefined };
 	process(input: string, options?: TProcessOptions): undefined;
 }
 
