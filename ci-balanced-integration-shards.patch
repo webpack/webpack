@@ -1,0 +1,144 @@
+From 408d8701fb1651a8ecfdcbf779a1de047a8d7f55 Mon Sep 17 00:00:00 2001
+From: avivkeller <38299977+avivkeller@users.noreply.github.com>
+Date: Tue, 11 Aug 2026 18:09:38 +0000
+Subject: [PATCH] ci: balance integration shards and runner usage
+
+---
+ .github/workflows/test.yml | 92 ++++++++++++++++++++++++--------------
+ 1 file changed, 58 insertions(+), 34 deletions(-)
+
+diff --git a/.github/workflows/test.yml b/.github/workflows/test.yml
+index d8d824548..8a6cb1233 100644
+--- a/.github/workflows/test.yml
++++ b/.github/workflows/test.yml
+@@ -355,39 +355,82 @@ jobs:
+       - run: yarn test:${{ matrix.runtime }} --ci
+ 
+   integration:
++    needs: basic
++    strategy:
++      fail-fast: false
++      matrix:
++        shard: [1/2, 2/2]
++    runs-on: ubuntu-latest
++    steps:
++      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
++
++      - name: Use Node.js 24.x
++        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
++        with:
++          node-version: 24.x
++          cache: yarn
++
++      - run: yarn --frozen-lockfile
++
++      - run: yarn link --frozen-lockfile || true
++
++      - run: yarn link webpack --frozen-lockfile
++
++      - name: Cache jest result
++        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
++        with:
++          path: .jest-cache
++          key: jest-integration-${{ matrix.shard }}-${{ runner.os }}-node-24.x-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
++          restore-keys: |
++            jest-integration-${{ matrix.shard }}-${{ runner.os }}-node-24.x-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
++            jest-integration-${{ matrix.shard }}-${{ runner.os }}-node-24.x-
++
++      - run: yarn cover:integration --ci --shard=${{ matrix.shard }} --cacheDirectory .jest-cache || yarn cover:integration --ci --shard=${{ matrix.shard }} --cacheDirectory .jest-cache -f
++
++      - run: yarn report:cover:merge
++
++      - name: Codecov
++        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
++        with:
++          files: ./coverage/coverage-nyc.json,./coverage/coverage-final.json
++          directory: ./coverage/
++          disable_search: true
++          flags: integration
++        env:
++          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
++
++  integration-compat:
+     needs: basic
+     strategy:
+       fail-fast: false
+       matrix:
+         os: [ubuntu-latest, windows-latest, macos-latest]
+         node-version: [10.x, 22.x, 24.x, 26.x]
+-        part: [a, b]
++        exclude:
++          # Covered by the sharded integration job above.
++          - os: ubuntu-latest
++            node-version: 24.x
+         include:
+           # Test with main branches of webpack dependencies
+           - os: ubuntu-latest
+             node-version: lts/*
+-            part: a
+-            use_main_branches: 1
+-          - os: ubuntu-latest
+-            node-version: lts/*
+-            part: b
+             use_main_branches: 1
+           # Test on old Node.js versions
+           - os: ubuntu-latest
+             node-version: 20.x
+-            part: a
++            test-script: test:integration:a
+           - os: ubuntu-latest
+             node-version: 18.x
+-            part: a
++            test-script: test:integration:a
+           - os: ubuntu-latest
+             node-version: 16.x
+-            part: a
++            test-script: test:integration:a
+           - os: ubuntu-latest
+             node-version: 14.x
+-            part: a
++            test-script: test:integration:a
+           - os: ubuntu-latest
+             node-version: 12.x
+-            part: a
++            test-script: test:integration:a
+     runs-on: ${{ matrix.os }}
+     steps:
+       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+@@ -452,30 +495,11 @@ jobs:
+         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+         with:
+           path: .jest-cache
+-          key: jest-integration-${{ runner.os }}-node-${{ matrix.node-version }}-${{ matrix.part }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
++          key: jest-integration-${{ runner.os }}-node-${{ matrix.node-version }}-${{ matrix.test-script || 'full' }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
+           restore-keys: |
+-            jest-integration-${{ runner.os }}-node-${{ matrix.node-version }}-${{ matrix.part }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
+-            jest-integration-${{ runner.os }}-node-${{ matrix.node-version }}-${{ matrix.part }}-
++            jest-integration-${{ runner.os }}-node-${{ matrix.node-version }}-${{ matrix.test-script || 'full' }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
++            jest-integration-${{ runner.os }}-node-${{ matrix.node-version }}-${{ matrix.test-script || 'full' }}-
+ 
+-      - run: yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
++      - run: yarn ${{ matrix.test-script || 'test:integration' }} --ci --cacheDirectory .jest-cache || yarn ${{ matrix.test-script || 'test:integration' }} --ci --cacheDirectory .jest-cache -f
+         env:
+           MAIN_BRANCHES: ${{ matrix.use_main_branches }}
+-        if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x' && matrix.node-version != '16.x' && matrix.node-version != '18.x' && matrix.node-version != '20.x'
+-
+-      # Don't run code coverage analysis on older versions of NodeJS, this will speed up our CI
+-      - run: yarn test:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn test:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
+-        if: matrix.node-version == '10.x' || matrix.node-version == '12.x' || matrix.node-version == '14.x' || matrix.node-version == '16.x' || matrix.node-version == '18.x' || matrix.node-version == '20.x'
+-
+-      - run: yarn report:cover:merge
+-        if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x' && matrix.node-version != '16.x' && matrix.node-version != '18.x' && matrix.node-version != '20.x'
+-
+-      - name: Codecov
+-        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+-        with:
+-          files: ./coverage/coverage-nyc.json,./coverage/coverage-final.json
+-          directory: ./coverage/
+-          disable_search: true
+-          flags: integration
+-        env:
+-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+-        if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x' && matrix.node-version != '16.x' && matrix.node-version != '18.x' && matrix.node-version != '20.x'
+-- 
+2.49.0
