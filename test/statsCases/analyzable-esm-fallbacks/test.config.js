@@ -32,7 +32,14 @@ const CASES = {
 	prefetch: { file: "main.mjs", expect: "analyzable" },
 	// The hot require wraps `.ei` like `.e`, so an update still blocks on a chunk
 	// load in flight and HMR does not force the runtime form.
-	hmr: { file: "main.mjs", expect: "analyzable" }
+	hmr: { file: "main.mjs", expect: "analyzable" },
+	// The entry reaches both copies from one depth, so only the chunk they share
+	// falls back — read that one rather than the entry.
+	"shared-depths": {
+		file: "flat.mjs",
+		expect: "fallback",
+		bailout: "chunks at different output depths"
+	}
 };
 
 module.exports = {

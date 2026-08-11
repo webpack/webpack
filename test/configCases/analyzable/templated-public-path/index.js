@@ -27,9 +27,17 @@ if (__BAKED__) {
 			/^([^/]+)\/(.+)$/
 		);
 
-		expect(hash).toBe(
-			__SLICE__ ? stats.hash.slice(0, __SLICE__) : stats.hash
-		);
+		if (__DIGEST__) {
+			// A digest re-encodes the hash, so decode it back to compare.
+			const hex = Buffer.from(
+				hash.replace(/-/g, "+").replace(/_/g, "/"),
+				"base64"
+			).toString("hex");
+
+			expect(hex.startsWith(stats.hash)).toBe(true);
+		} else {
+			expect(hash).toBe(__SLICE__ ? stats.hash.slice(0, __SLICE__) : stats.hash);
+		}
 		// The name in the specifier is the one that reached disk.
 		expect(fs.existsSync(path.join(stats.outputPath, file))).toBe(true);
 	});

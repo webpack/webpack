@@ -1,8 +1,8 @@
 "use strict";
 
-// The module holding `new Worker(new URL(...))` lives in chunks at two depths, so the
-// specifier can't be one relative literal. The filename still gets to be a literal
-// behind the runtime public path, instead of collapsing to a `.u(id)` lookup.
+// The module holding `new Worker(new URL(...))` lives in chunks at two depths, so no
+// one relative literal addresses the worker from both — each emitted asset gets its
+// own, filled in once the names exist.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

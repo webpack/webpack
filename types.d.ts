@@ -24700,8 +24700,7 @@ declare abstract class RuntimeTemplate {
 	 * Either way a name that is not settled during code generation may still be baked,
 	 * by reserving a stand-in the deferred pass fills in — see `canDeferAnalyzableName`.
 	 * What still forces the runtime form, and is not covered by any of the three:
-	 * a module federation module in the chunk, a chunk reachable at more than one
-	 * output depth under an `auto` public path, and a chunk with no id.
+	 * a module federation module in the chunk, and a chunk with no id.
 	 */
 	supportsAnalyzableEsm(chunkGraph?: ChunkGraph, module?: Module): boolean;
 
