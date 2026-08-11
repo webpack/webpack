@@ -2372,10 +2372,20 @@ export interface OptimizationMinimizeCss {
  */
 export interface OptimizationMinimizeHtml {
 	/**
+	 * Collapse a boolean attribute written in a canonical spelling (`disabled=""`, `disabled="disabled"`) to its bare name. The DOM reads the same value either way, but a script comparing `getAttribute()` byte-for-byte sees the shorter one.
+	 * @since 5.110.0
+	 */
+	collapseBooleanAttributes?: boolean;
+	/**
 	 * Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim, and never removed entirely — dropping it would join two inline elements that render apart.
 	 * @since 5.110.0
 	 */
 	collapseWhitespace?: boolean;
+	/**
+	 * Rewrite an attribute value into a shorter spelling of what it already parses to: a `srcset`'s whitespace, a `style` declaration list, a token list such as `class`, the viewport `content` list, a comma list, a url's surrounding whitespace and an integer's form. Each keeps what the DOM parses, so turn this off only when a script compares the raw attribute text.
+	 * @since 5.110.0
+	 */
+	rewriteAttributeValues?: boolean;
 }
 /**
  * Options handed as-is to the JavaScript minimizer (terser-compatible). Defaults to `{ compress: { passes: 2 } }`.

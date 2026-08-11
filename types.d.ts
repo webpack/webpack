@@ -10214,6 +10214,16 @@ declare interface HtmlProcessOptions {
 	 * collapse each run of whitespace in text to a single space, except where an ancestor renders it verbatim (default false)
 	 */
 	collapseWhitespace?: boolean;
+
+	/**
+	 * collapse a canonically-spelled boolean attribute to its bare name (default true)
+	 */
+	collapseBooleanAttributes?: boolean;
+
+	/**
+	 * rewrite an attribute value into a shorter spelling of what it already parses to (default true)
+	 */
+	rewriteAttributeValues?: boolean;
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**
@@ -19743,10 +19753,22 @@ declare interface OptimizationMinimizeCss {
  */
 declare interface OptimizationMinimizeHtml {
 	/**
+	 * Collapse a boolean attribute written in a canonical spelling (`disabled=""`, `disabled="disabled"`) to its bare name. The DOM reads the same value either way, but a script comparing `getAttribute()` byte-for-byte sees the shorter one.
+	 * @since 5.110.0
+	 */
+	collapseBooleanAttributes?: boolean;
+
+	/**
 	 * Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim, and never removed entirely — dropping it would join two inline elements that render apart.
 	 * @since 5.110.0
 	 */
 	collapseWhitespace?: boolean;
+
+	/**
+	 * Rewrite an attribute value into a shorter spelling of what it already parses to: a `srcset`'s whitespace, a `style` declaration list, a token list such as `class`, the viewport `content` list, a comma list, a url's surrounding whitespace and an integer's form. Each keeps what the DOM parses, so turn this off only when a script compares the raw attribute text.
+	 * @since 5.110.0
+	 */
+	rewriteAttributeValues?: boolean;
 }
 
 /**
@@ -21815,6 +21837,8 @@ declare interface PrintOptions {
 	environment?: Readonly<Record<string, boolean>>;
 	convertLengthUnits?: boolean;
 	collapseWhitespace?: boolean;
+	collapseBooleanAttributes?: boolean;
+	rewriteAttributeValues?: boolean;
 }
 declare interface PrintedElement {
 	element: string;
