@@ -43,12 +43,3 @@ it("should read the format off the path, not the query", () => {
 	expect(queried.as).toBe("font");
 	expect(queried.type).toBeUndefined();
 });
-
-it("should read the format off the path, not the query", () => {
-	// `queryfont?fallback=.woff2` is not a woff2 — a `type` here would tell the
-	// browser to expect a font format the file is not in.
-	const queried = findLink((l) => l.href.includes("queryfont"));
-	expect(queried).toBeDefined();
-	expect(queried.as).toBe("font");
-	expect(queried.type).toBeUndefined();
-});
