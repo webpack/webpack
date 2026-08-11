@@ -1,8 +1,7 @@
 "use strict";
 
-// The module holding the `import()` lives in chunks at two depths, so no single
-// relative literal addresses the target from both — and unlike `new URL(...)`, an
-// `import()` specifier can't be a runtime concatenation. It keeps the runtime form.
+// The module holding the `import()` sits at two depths, so the specifier is reserved
+// and each emitted asset gets its own `../` path once the names exist.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

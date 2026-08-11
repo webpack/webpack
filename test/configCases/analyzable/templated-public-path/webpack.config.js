@@ -36,7 +36,8 @@ const base = (
 		new webpack.DefinePlugin({
 			__INDEX__: JSON.stringify(index),
 			__BAKED__: JSON.stringify(baked),
-			__SLICE__: JSON.stringify(hashPart.includes(":8") ? 8 : 0)
+			__SLICE__: JSON.stringify(hashPart.includes(":8") ? 8 : 0),
+			__DIGEST__: JSON.stringify(hashPart.includes("base64safe"))
 		})
 	]
 });
@@ -47,9 +48,9 @@ module.exports = [
 	base(1, "sliced", "[fullhash:8]", true),
 	// Both halves of the name are deferred: the public path's hash and the chunk's own.
 	base(2, "hashed-chunk", "[fullhash]", true, ".[contenthash]"),
-	// A digest re-encodes the hash rather than reading it, which a stand-in cannot
-	// survive, so the whole specifier stays on the runtime form.
-	base(3, "digest", "[fullhash:base64]", false),
+	// A digest re-encodes the hash rather than reading it, so no stand-in can spell it:
+	// the deferred pass resolves the whole public path itself once the hash exists.
+	base(3, "digest", "[fullhash:base64safe]", true),
 	// No javascript here is named by its content, so rewriting one invalidates
 	// nothing and there is no repair to need.
 	base(4, "no-repair-hash-free", "[fullhash]", true, "", false),

@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-it("should load through the runtime form from chunks at different depths", async () => {
+it("should load through the analyzable form from chunks at different depths", async () => {
 	const flat = await import(/* webpackChunkName: "flat" */ "./flat");
 	expect((await flat.load()).value).toBe("lazy");
 	// Pull in the second, deeper copy so the module really sits at two depths.
@@ -9,12 +9,11 @@ it("should load through the runtime form from chunks at different depths", async
 	expect((await deep.load()).value).toBe("lazy");
 });
 
-it("should not bake a specifier that only holds at one depth", () => {
-	const source = fs.readFileSync(
-		path.join(__STATS__.outputPath, "flat.mjs"),
-		"utf8"
-	);
+it("should bake the specifier each depth needs", () => {
+	const read = (name) =>
+		fs.readFileSync(path.join(__STATS__.outputPath, name), "utf8");
 
-	expect(source).toContain(`${"__webpack_require__"}.e(`);
-	expect(source).not.toContain(`${"__webpack_require__"}.ei(`);
+	expect(read("flat.mjs")).toContain('"./lazy.mjs"');
+	expect(read("nested/deep.mjs")).toContain('"../lazy.mjs"');
+	expect(read("flat.mjs")).not.toContain(`${"__webpack_require__"}.e(`);
 });

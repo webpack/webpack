@@ -62,19 +62,19 @@ module.exports = [
 		]
 	}),
 	base({
-		// A non-`auto` public path keeps the runtime form: the node backends ignore
-		// `output.publicPath`, so it can't be baked into a shared literal.
+		// A relative public path does not stop the node backends: they read the binary
+		// relative to the chunk, which is what the baked literal addresses too.
 		output: { chunkFilename: "c-[name].mjs", publicPath: "./" },
-		plugins: [expectations("c-flat.mjs", "module.id, ")]
+		plugins: [expectations("c-flat.mjs", 'new URL("./')]
 	}),
 	base({
-		// Truncated `[hash:<n>]` on the runtime form: the helper slices the hash it is
-		// handed rather than reading a baked literal.
+		// Truncated `[hash:<n>]` is the module's own hash, which code generation already
+		// knows, so it is baked rather than sliced by the runtime helper.
 		output: {
 			chunkFilename: "d-[name].mjs",
 			publicPath: "./",
 			webassemblyModuleFilename: "[id].[hash:6].wasm"
 		},
-		plugins: [expectations("d-flat.mjs", "module.id, ")]
+		plugins: [expectations("d-flat.mjs", 'new URL("./')]
 	})
 ];

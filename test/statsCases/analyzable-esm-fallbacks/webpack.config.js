@@ -61,5 +61,11 @@ module.exports = [
 	// development — so the name it would be rewritten under has nothing to repair it.
 	base("content-hash", {
 		output: { chunkFilename: "[name].[contenthash].mjs" }
+	}),
+	// Two depths need a stand-in, and naming any emitted javascript by its content —
+	// worker chunks included — rules out the rewrite one needs.
+	base("shared-depths", {
+		entry: "./index-depths",
+		output: { workerChunkFilename: "[name].[contenthash].mjs" }
 	})
 ];
