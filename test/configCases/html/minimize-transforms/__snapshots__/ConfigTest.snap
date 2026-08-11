@@ -36,6 +36,10 @@ exports[`ConfigTestCases html minimize-transforms minimize-transforms should com
 	<div headingreset headingoffset=2 tabindex=-1>heading globals</div>
 	<table><tr><th id=h>h<td headers=\\"h h2\\" rowspan=2>headers is a token list</table>
 	<ol><li value=5>li value is signed</ol>
+	<input type=text><form method=post target=_top></form>
+	<div dir=rtl translate=no contenteditable=true>enumerated values fold</div>
+	<ol type=A><li>A and a are two keywords, so type stays</ol>
+	<a target=MyFrame href=x>a named target is not a keyword</a>
 	<img src=a.png hspace=4 vspace=0 longdesc=d.html lowsrc=l.png alt=\\"legacy img attributes\\">
 	<object codebase=c/ data=o.bin width=8 hspace=2></object>
 	<a href=trimmed.html>url ends trimmed</a>

@@ -389,7 +389,7 @@ const signed = [
 // test membership in, and the name maps foreign content is adjusted with. Spec
 // prose, so they are written out — no dataset states them. Sets rather than
 // arrays because the tree builder runs these tests per token on hot paths.
-/** @typedef {[string, "set" | "array" | "object" | "byElement", string, (string | [string, string])[]]} ParserTable a name, its literal kind, its doc line and its members */
+/** @typedef {[string, "set" | "array" | "object" | "byElement" | "byElementSet", string, (string | [string, string])[]]} ParserTable a name, its literal kind, its doc line and its members */
 /** @type {ParserTable[]} */
 const PARSER_TABLES = [
 	[
@@ -1190,6 +1190,82 @@ const PARSER_TABLES = [
 			["th", "IN_ROW"]
 		]
 	],
+	// The enumerated attributes, each with the keywords the spec gives it. Spec
+	// prose: nothing in the IDL marks an attribute as enumerated, and no dataset
+	// states a keyword set, so this is written out — but only a value that *is*
+	// one of the keywords is folded, which is what keeps a case-sensitive value
+	// nobody enumerated (`target="MyFrame"`, a custom `type`) exactly as written.
+	//
+	// `<ol type>` is deliberately absent: `a` and `A` are two different keywords
+	// there, so folding one into the other renumbers the list. `sizes` and
+	// `media` are absent because neither is enumerated at all.
+	[
+		"ENUMERATED_KEYWORDS",
+		"byElementSet",
+		"element -> attribute -> the keywords the spec enumerates for it, matched ASCII-case-insensitively. `*` holds the global attributes. Only a value already in the set is folded to lower case, so a spelling the spec does not enumerate keeps its case.",
+		[
+			["* autocapitalize", "none off on sentences words characters"],
+			["* contenteditable", "true false plaintext-only"],
+			["* dir", "ltr rtl auto"],
+			["* draggable", "true false"],
+			["* enterkeyhint", "enter done go next previous search send"],
+			["* hidden", "hidden until-found"],
+			["* inputmode", "none text tel url email numeric decimal search"],
+			["* popover", "auto manual hint"],
+			[
+				"* referrerpolicy",
+				"no-referrer no-referrer-when-downgrade same-origin origin strict-origin origin-when-cross-origin strict-origin-when-cross-origin unsafe-url"
+			],
+			["* spellcheck", "true false"],
+			["* translate", "yes no"],
+			["* writingsuggestions", "true false"],
+			["a target", "_blank _self _parent _top"],
+			["area shape", "circle circ default poly polygon rect rectangle"],
+			["area target", "_blank _self _parent _top"],
+			["base target", "_blank _self _parent _top"],
+			["audio crossorigin", "anonymous use-credentials"],
+			["audio preload", "none metadata auto"],
+			[
+				"button formenctype",
+				"application/x-www-form-urlencoded multipart/form-data text/plain"
+			],
+			["button formmethod", "get post dialog"],
+			["button formtarget", "_blank _self _parent _top"],
+			["button type", "submit reset button"],
+			["form autocomplete", "on off"],
+			[
+				"form enctype",
+				"application/x-www-form-urlencoded multipart/form-data text/plain"
+			],
+			["form method", "get post dialog"],
+			["form target", "_blank _self _parent _top"],
+			["iframe loading", "lazy eager"],
+			["img crossorigin", "anonymous use-credentials"],
+			["img decoding", "sync async auto"],
+			["img fetchpriority", "high low auto"],
+			["img loading", "lazy eager"],
+			[
+				"input formenctype",
+				"application/x-www-form-urlencoded multipart/form-data text/plain"
+			],
+			["input formmethod", "get post dialog"],
+			["input formtarget", "_blank _self _parent _top"],
+			[
+				"input type",
+				"hidden text search tel url email password date month week time datetime-local number range color checkbox radio file submit image reset button"
+			],
+			["link crossorigin", "anonymous use-credentials"],
+			["link fetchpriority", "high low auto"],
+			["script crossorigin", "anonymous use-credentials"],
+			["script fetchpriority", "high low auto"],
+			["td scope", "row col rowgroup colgroup"],
+			["textarea wrap", "soft hard"],
+			["th scope", "row col rowgroup colgroup"],
+			["track kind", "subtitles captions descriptions chapters metadata"],
+			["video crossorigin", "anonymous use-credentials"],
+			["video preload", "none metadata auto"]
+		]
+	],
 	// Elements `removeEmptyElements` keeps even with no children and no
 	// attributes, because that is their ordinary form rather than a leftover.
 	// The option's other guards are rules, not names: a void element is always
@@ -1366,9 +1442,10 @@ const propertyKey = (key) => (/^[A-Za-z]\w*$/.test(key) ? key : `"${key}"`);
  * Regroup `element attribute` -> value entries under the element name, so the
  * reader gates on one lookup instead of building a key per attribute it sees.
  * @param {[string, string][]} entries the flat entries
+ * @param {boolean=} asSet whether each value is a space-separated keyword set
  * @returns {string} the nested object literal
  */
-const byElementLiteral = (entries) => {
+const byElementLiteral = (entries, asSet = false) => {
 	/** @type {Map<string, [string, string][]>} */
 	const grouped = new Map();
 	for (const [key, mapped] of entries) {
@@ -1387,7 +1464,8 @@ const byElementLiteral = (entries) => {
 			([element, attributes]) =>
 				`${propertyKey(element)}: Object.assign(Object.create(null), {${attributes
 					.map(
-						([attribute, mapped]) => `${propertyKey(attribute)}: "${mapped}"`
+						([attribute, mapped]) =>
+							`${propertyKey(attribute)}: ${asSet ? setLiteral(mapped.split(" ")) : `"${mapped}"`}`
 					)
 					.join(", ")}})`
 		)
@@ -1405,8 +1483,11 @@ const parserTable = ([name, kind, doc, items]) => {
 	const value =
 		kind === "set"
 			? setLiteral(/** @type {string[]} */ (items))
-			: kind === "byElement"
-				? byElementLiteral(/** @type {[string, string][]} */ (items))
+			: kind === "byElement" || kind === "byElementSet"
+				? byElementLiteral(
+						/** @type {[string, string][]} */ (items),
+						kind === "byElementSet"
+					)
 				: kind === "array"
 					? `[${items.map((item) => `"${item}"`).join(", ")}]`
 					: `Object.assign(Object.create(null), {${items
@@ -1417,9 +1498,11 @@ const parserTable = ([name, kind, doc, items]) => {
 			? "Set<string>"
 			: kind === "byElement"
 				? "Record<string, Record<string, string>>"
-				: kind === "array"
-					? "string[]"
-					: "Record<string, string>";
+				: kind === "byElementSet"
+					? "Record<string, Record<string, Set<string>>>"
+					: kind === "array"
+						? "string[]"
+						: "Record<string, string>";
 	// The `charset` value is an attribute spelling, not a Node encoding id.
 	const encoded = value.includes('"utf-8"');
 	const open = encoded
@@ -1437,9 +1520,9 @@ const parserTable = ([name, kind, doc, items]) => {
 // The element and attribute names cspell does not know. Written twice on
 // purpose: the directive covers this file, the string is forwarded into the
 // generated one so it passes `lint:spellcheck` too.
-// cspell:ignore advasoft altglyph altglyphdef altglyphitem animatecolor animatemotion animatetransform arcrole aswedit attributename attributetype basefrequency baseprofile bgsound calcmode clippathunits diffuseconstant fedropshadow filterunits glyphref gradienttransform gradientunits hotjava hotmetal jscript kernelmatrix kernelunitlength keypoints keysplines keytimes limitingconeangle livescript markerheight markerwidth maskcontentunits maskunits metrius mtext numoctaves pathlength patterncontentunits patterntransform patternunits pointsatx pointsaty pointsatz preservealpha primitiveunits refx refy repeatcount repeatdur requiredextensions requiredfeatures silmaril softquad specularconstant specularexponent startoffset stddeviation stitchtiles surfacescale systemlanguage tablevalues targetx targety textlength viewbox viewtarget webtechs xchannelselector ychannelselector
+// cspell:ignore advasoft altglyph altglyphdef altglyphitem animatecolor animatemotion animatetransform arcrole aswedit attributename attributetype basefrequency baseprofile bgsound calcmode clippathunits contenteditable diffuseconstant enterkeyhint fedropshadow filterunits formenctype formmethod formtarget glyphref gradienttransform gradientunits hotjava hotmetal inputmode jscript kernelmatrix kernelunitlength keypoints keysplines keytimes limitingconeangle livescript markerheight markerwidth maskcontentunits maskunits metrius mtext numoctaves pathlength patterncontentunits patterntransform patternunits pointsatx pointsaty pointsatz preservealpha primitiveunits refx refy repeatcount repeatdur requiredextensions requiredfeatures silmaril softquad specularconstant specularexponent startoffset stddeviation stitchtiles surfacescale systemlanguage tablevalues targetx targety textlength viewbox viewtarget webtechs writingsuggestions xchannelselector ychannelselector
 const CSPELL_IGNORE =
-	"advasoft altglyph altglyphdef altglyphitem animatecolor animatemotion animatetransform arcrole aswedit attributename attributetype basefrequency baseprofile bgsound calcmode clippathunits diffuseconstant fedropshadow filterunits glyphref gradienttransform gradientunits hotjava hotmetal jscript kernelmatrix kernelunitlength keypoints keysplines keytimes limitingconeangle livescript markerheight markerwidth maskcontentunits maskunits metrius mtext numoctaves pathlength patterncontentunits patterntransform patternunits pointsatx pointsaty pointsatz preservealpha primitiveunits refx refy repeatcount repeatdur requiredextensions requiredfeatures silmaril softquad specularconstant specularexponent startoffset stddeviation stitchtiles surfacescale systemlanguage tablevalues targetx targety textlength viewbox viewtarget webtechs xchannelselector ychannelselector";
+	"advasoft altglyph altglyphdef altglyphitem animatecolor animatemotion animatetransform arcrole aswedit attributename attributetype basefrequency baseprofile bgsound calcmode clippathunits contenteditable diffuseconstant enterkeyhint fedropshadow filterunits formenctype formmethod formtarget glyphref gradienttransform gradientunits hotjava hotmetal inputmode jscript kernelmatrix kernelunitlength keypoints keysplines keytimes limitingconeangle livescript markerheight markerwidth maskcontentunits maskunits metrius mtext numoctaves pathlength patterncontentunits patterntransform patternunits pointsatx pointsaty pointsatz preservealpha primitiveunits refx refy repeatcount repeatdur requiredextensions requiredfeatures silmaril softquad specularconstant specularexponent startoffset stddeviation stitchtiles surfacescale systemlanguage tablevalues targetx targety textlength viewbox viewtarget webtechs writingsuggestions xchannelselector ychannelselector";
 
 const EXPORT_NAMES = [
 	"BOOLEAN_ATTRIBUTES",

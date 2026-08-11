@@ -2,6 +2,8 @@
 
 // cspell:ignore apos notpre Elig reconsumes xyzabc zzzunknown codepoint DFFF ampx noncharacter FFFE
 // cspell:ignore selectedcontent mtext mglyph colgroups viewbox definitionurl
+// cspell:ignore contenteditable enterkeyhint formenctype formmethod formtarget
+// cspell:ignore inputmode writingsuggestions
 // cspell:ignore scripty
 // cspell:ignore DOCTYPEÐ DOCTYPEİ Silmaril basefont bgsound framesets isindex
 // cspell:ignore malignmark menuitem noembed noframes optgroup reparent spacer
@@ -3763,6 +3765,118 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 			`<style>a{color:red}</style><style>${unreadable}</style>`
 		);
 		expect(tail).toContain("<style>a{color:red}</style><style>a{a{");
+	});
+});
+
+describe("SourceProcessor — enumerated attribute values", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+	const { ENUMERATED_KEYWORDS } = require("../lib/html/data");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { minimize: true }).code;
+
+	// Written out rather than read off the table: generating the expectation from
+	// the thing under test would pass just as happily with an entry deleted.
+	const EXPECTED = [
+		"* autocapitalize",
+		"* contenteditable",
+		"* dir",
+		"* draggable",
+		"* enterkeyhint",
+		"* hidden",
+		"* inputmode",
+		"* popover",
+		"* referrerpolicy",
+		"* spellcheck",
+		"* translate",
+		"* writingsuggestions",
+		"a target",
+		"area shape",
+		"area target",
+		"audio crossorigin",
+		"audio preload",
+		"base target",
+		"button formenctype",
+		"button formmethod",
+		"button formtarget",
+		"button type",
+		"form autocomplete",
+		"form enctype",
+		"form method",
+		"form target",
+		"iframe loading",
+		"img crossorigin",
+		"img decoding",
+		"img fetchpriority",
+		"img loading",
+		"input formenctype",
+		"input formmethod",
+		"input formtarget",
+		"input type",
+		"link crossorigin",
+		"link fetchpriority",
+		"script crossorigin",
+		"script fetchpriority",
+		"td scope",
+		"textarea wrap",
+		"th scope",
+		"track kind",
+		"video crossorigin",
+		"video preload"
+	];
+
+	it("enumerates exactly the attributes it claims to", () => {
+		/** @type {string[]} */
+		const actual = [];
+		for (const element of Object.keys(ENUMERATED_KEYWORDS)) {
+			for (const attribute of Object.keys(ENUMERATED_KEYWORDS[element])) {
+				actual.push(`${element} ${attribute}`);
+			}
+		}
+		expect(actual.sort()).toEqual(EXPECTED);
+	});
+
+	it("folds every keyword of every entry, and nothing else", () => {
+		for (const [element, attributes] of Object.entries(ENUMERATED_KEYWORDS)) {
+			// A global entry is exercised on a `<div>`, which owns none of its own.
+			const tag = element === "*" ? "div" : element;
+			// A cell outside a table is dropped by tree construction, so it needs
+			// somewhere to live before its attributes can be read back.
+			const open = tag === "td" || tag === "th" ? "<table><tr>" : "";
+			for (const [attribute, keywords] of Object.entries(attributes)) {
+				for (const keyword of keywords) {
+					const shouted = keyword.toUpperCase();
+					// Skip a keyword with no letters to shout — folding is a no-op.
+					if (shouted === keyword) continue;
+					const out = minify(`${open}<${tag} ${attribute}="${shouted}">`);
+					expect(`${element} ${attribute}=${shouted} -> ${out}`).toBe(
+						`${element} ${attribute}=${shouted} -> ${minify(
+							`${open}<${tag} ${attribute}="${keyword}">`
+						)}`
+					);
+				}
+				// A value the spec does not enumerate keeps its case exactly.
+				expect(minify(`${open}<${tag} ${attribute}="ZzCustomZz">`)).toContain(
+					"ZzCustomZz"
+				);
+			}
+		}
+	});
+
+	it("leaves a case-sensitive value alone", () => {
+		// `<ol type>` is two keywords that differ only in case, so it is not in
+		// the table at all; `id` / `class` are not enumerated.
+		expect(minify('<ol type="A"><li>x</ol>')).toContain("type=A");
+		expect(minify('<div id="MyId" class="MyClass">')).toContain(
+			"id=MyId class=MyClass"
+		);
+		expect(minify('<a target="MyFrame" href=x>l</a>')).toContain(
+			"target=MyFrame"
+		);
 	});
 });
 
