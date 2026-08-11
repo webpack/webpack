@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `optimization.minimize.html.removeRedundantAttributes`, `"none"` by default.
+Drop redundant HTML type markers by default; add `removeRedundantAttributes: "all"`.

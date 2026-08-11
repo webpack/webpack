@@ -1,11 +1,12 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ConfigCacheTestCases html minimize-redundant-attributes minimize-redundant-attributes should compile 1`] = `
-"<!doctype html><html><head><title>Redundant</title><style>a{color:red}</style><link rel=stylesheet href=x.css><link rel=stylesheet media=screen href=y.css><style media=all>b{color:blue}</style><script src=__html_cbe5b59d_0.js></script><script src=__html_cbe5b59d_1.js></script><script src=z.js></script><script charset=iso-8859-1 src=w.js></script><script src=__html_cbe5b59d_2.js></script><script type=application/ld+json>{\\"a\\":1}</script></head><body>
+"<!doctype html><html><head><title>Redundant</title><style>a{color:red}</style><style type=text/template>a { not css </style><link rel=stylesheet href=x.css><link rel=stylesheet media=screen href=y.css><link rel=preload as=font type=font/woff2 href=f.woff2><style media=all>b{color:blue}</style><script src=a.js></script><script src=b.js></script><script src=c.js></script><script src=z.js></script><script charset=iso-8859-1 src=w.js></script><script type=module src=m.js></script><script type=\\"\\" src=e.js></script><script type=application/ld+json>{\\"a\\":1}</script></head><body>
 <input type=text name=a>
-<form method=get><button type=submit>b</button></form>
-
-
+<input type=checkbox name=b>
+<form method=get enctype=application/x-www-form-urlencoded><button type=submit>b</button></form>
+<table><tr><td colspan=1>c<td colspan=2>d</table>
+<textarea wrap=soft></textarea>
 
 </body></html>"
 `;

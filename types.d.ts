@@ -10216,9 +10216,9 @@ declare interface HtmlProcessOptions {
 	collapseWhitespace?: boolean;
 
 	/**
-	 * drop an attribute whose value is the element's own default (default `"none"`)
+	 * drop an attribute whose value is the element's own default; `"all"` also drops the spec defaults a selector can match (default `"smart"`)
 	 */
-	removeRedundantAttributes?: "none" | "all" | "smart";
+	removeRedundantAttributes?: "all" | "smart";
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**
@@ -19754,10 +19754,10 @@ declare interface OptimizationMinimizeHtml {
 	collapseWhitespace?: boolean;
 
 	/**
-	 * Drop an attribute whose value is the one the element already defaults to. `"none"` (the default) keeps every attribute. `"smart"` drops only the type/language markers no stylesheet selects on (`<script type=text/javascript>`, `<style type=text/css>`, `<link type=text/css>`, `<script language=javascript>`). `"all"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which is unsafe: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.
+	 * Drop an attribute whose value is the one the element already defaults to. `"smart"` (the default) drops only the markers that change nothing a selector or script can observe — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>`, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — which is what
 	 * @since 5.110.0
 	 */
-	removeRedundantAttributes?: "none" | "all" | "smart";
+	removeRedundantAttributes?: "all" | "smart";
 }
 
 /**
@@ -21826,7 +21826,7 @@ declare interface PrintOptions {
 	environment?: Readonly<Record<string, boolean>>;
 	convertLengthUnits?: boolean;
 	collapseWhitespace?: boolean;
-	removeRedundantAttributes?: "none" | "all" | "smart";
+	removeRedundantAttributes?: "all" | "smart";
 }
 declare interface PrintedElement {
 	element: string;

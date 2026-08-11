@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ConfigTestCases html minimize-transforms minimize-transforms should compile 1`] = `
-"<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content=\\"width=device-width,initial-scale=1,viewport-fit=cover\\"><meta name=description content=\\"a,  b kept as written\\"><title>Transform corpus</title><style type=text/css>:root{--gap:8px}body{margin:0;color:red}.card{border-radius:4px;background:#fff}</style><style type=text/template>a { not css </style></head><body>
+"<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content=\\"width=device-width,initial-scale=1,viewport-fit=cover\\"><meta name=description content=\\"a,  b kept as written\\"><title>Transform corpus</title><style>:root{--gap:8px}body{margin:0;color:red}.card{border-radius:4px;background:#fff}</style><style type=text/template>a { not css </style></head><body>
 	
 	<!--[if IE]><p>conditional comment, kept</p><![endif]-->
 	<div class=\\"a b\\" id=upper>source casing folds</div>
