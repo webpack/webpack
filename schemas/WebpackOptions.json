@@ -3711,6 +3711,18 @@
           "description": "Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim, and never removed entirely — dropping it would join two inline elements that render apart.",
           "type": "boolean",
           "added": "5.110.0"
+        },
+        "tagOmission": {
+          "description": "Leave out the `<html>` / `<head>` / `<body>` tags §13.1.2.4 allows the parser to imply. `\"keep-head-and-body\"` drops only `<html>`, since a crawler matching on `<body>` with a regexp rather than a parser would not find one.",
+          "anyOf": [
+            {
+              "enum": ["keep-head-and-body"]
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "added": "5.110.0"
         }
       },
       "added": "5.110.0"

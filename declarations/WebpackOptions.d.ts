@@ -2376,6 +2376,11 @@ export interface OptimizationMinimizeHtml {
 	 * @since 5.110.0
 	 */
 	collapseWhitespace?: boolean;
+	/**
+	 * Leave out the `<html>` / `<head>` / `<body>` tags §13.1.2.4 allows the parser to imply. `"keep-head-and-body"` drops only `<html>`, since a crawler matching on `<body>` with a regexp rather than a parser would not find one.
+	 * @since 5.110.0
+	 */
+	tagOmission?: "keep-head-and-body" | boolean;
 }
 /**
  * Options handed as-is to the JavaScript minimizer (terser-compatible). Defaults to `{ compress: { passes: 2 } }`.

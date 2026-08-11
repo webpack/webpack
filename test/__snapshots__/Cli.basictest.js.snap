@@ -9988,6 +9988,28 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-html-tag-omission": Object {
+    "configs": Array [
+      Object {
+        "description": "Leave out the \`<html>\` / \`<head>\` / \`<body>\` tags §13.1.2.4 allows the parser to imply. \`\\"keep-head-and-body\\"\` drops only \`<html>\`, since a crawler matching on \`<body>\` with a regexp rather than a parser would not find one.",
+        "multiple": false,
+        "path": "optimization.minimize.html.tagOmission",
+        "type": "enum",
+        "values": Array [
+          "keep-head-and-body",
+        ],
+      },
+      Object {
+        "description": "Leave out the \`<html>\` / \`<head>\` / \`<body>\` tags §13.1.2.4 allows the parser to imply. \`\\"keep-head-and-body\\"\` drops only \`<html>\`, since a crawler matching on \`<body>\` with a regexp rather than a parser would not find one.",
+        "multiple": false,
+        "path": "optimization.minimize.html.tagOmission",
+        "type": "boolean",
+      },
+    ],
+    "description": "Leave out the \`<html>\` / \`<head>\` / \`<body>\` tags §13.1.2.4 allows the parser to imply. \`\\"keep-head-and-body\\"\` drops only \`<html>\`, since a crawler matching on \`<body>\` with a regexp rather than a parser would not find one.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "optimization-minimize-javascript": Object {
     "configs": Array [
       Object {
