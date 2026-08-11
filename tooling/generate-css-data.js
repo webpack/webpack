@@ -2717,11 +2717,8 @@ const SUPPLEMENT = {
 	// `caret` is the one candidate left out — it is far newer than `caret-color`.
 	// The four `border-<side>` shorthands reset their three longhands and nothing
 	// else, which is what keeps them here while `border` itself stays out.
-	// `transition` stays out for a second reason: it resets `transition-behavior`,
-	// which its longhands never name, and its per-item list makes one `normal` out
-	// of as many items as a merge wrote. `flex` is safe but not expressible here —
-	// its grammar is an ordered sequence, not the order-free one these slots come
-	// from — so it waits on a merge that can read that shape.
+	// `transition` also resets `transition-behavior` and folds a list to one item.
+	// `flex` is safe but its grammar is ordered, not the order-free shape here.
 	familyShorthands: [
 		"border-bottom",
 		"border-left",
@@ -2735,14 +2732,8 @@ const SUPPLEMENT = {
 		"text-emphasis",
 		"text-wrap"
 	],
-	// A keyword that is both the property's initial value and a whole alternative
-	// of one `||` group, where omitting the group leaves exactly that keyword — so
-	// writing it beside another component says nothing. Checked against headless
-	// Chromium: `grid-auto-flow:row dense` and `dense` compute alike, while
-	// `column dense` does not. Stated rather than derived because `mdn-data` does
-	// not say whether an omitted group falls back to the property's initial:
-	// `aspect-ratio`'s initial is `auto` too, but `auto 3/2` is a ratio with a
-	// fallback, not the ratio alone, so it is not here.
+	// Both the property's initial and a whole `||` group, so omitting the group
+	// leaves it — `mdn-data` states neither, and `aspect-ratio:auto 3/2` is not one.
 	omittableInitialKeywords: ["grid-auto-flow"],
 	// Two longhands `mdn-data` maps to the wrong pair. Corrected from headless
 	// Chromium, which computes `corner-inline-start-shape` onto the two corners
