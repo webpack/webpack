@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css escaped-names exported tests should emit the stylesheet 1`] = `
+"/*!******************************!*\\\\
+  !*** css ./style.module.css ***!
+  \\\\******************************/
+/* A CSS escape is resolved before a name is matched, so an escaped spelling
+   names the same thing as the plain one. Chromium reads every pair below as
+   the same declaration; a build that reads only one of them splits the pair
+   and the stylesheet stops working. */
+@keyframes _spin {
+	to { rotate: 360deg }
+}
+
+/* Escaped property name: still \`animation-name\`, so the value still scopes. */
+._escaped-property { \\\\61 nimation-name: _spin }
+._plain-property { animation-name: _spin }
+
+/* An escape past the first character takes the hashed name probe rather than
+   the leading-\`-\`/\`\\\\\` path, so that probe has to resolve it too. */
+._escaped-property-inner { anim\\\\61 tion-name: _spin }
+._escaped-unknown-property { co\\\\6cor: red }
+
+/* Escaped at-rule name: still \`@keyframes\`, so the name still scopes. */
+@\\\\6b eyframes _slide {
+	to { translate: 1px }
+}
+._escaped-at-rule { animation-name: _slide }
+
+/* Escaped \`url(\`: still a url, so the asset still resolves. */
+._escaped-url { background: url(071488c065143223c063.png) }
+._escaped-url-long { background: url(071488c065143223c063.png) }
+._escaped-url-bare { background: url(071488c065143223c063.png) }
+._plain-url { background: url(071488c065143223c063.png) }
+
+/* An escaped dash spells a custom property too, so the declaration and its
+   use have to scope to the same name or the variable comes out undefined. */
+._escaped-custom-property {
+	--_one: red;
+	color: var(--_one);
+}
+._escaped-custom-property-use {
+	--_two: blue;
+	color: var(--_two);
+}
+._escaped-custom-property-both {
+	--_three: green;
+	color: var(--_three);
+}
+@property --_four {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: rebeccapurple;
+}
+._escaped-custom-property-at-rule { color: var(--_four) }
+
+
+/*# sourceMappingURL=bundle0.css.map*/"
+`;

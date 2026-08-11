@@ -123,6 +123,14 @@ const FILED_CSS_DEFECTS = new Map([
 		"a bad-url token stops swallowing the rules after it"
 	],
 	[
+		// Not a printer defect: Chrome normalises an escaped custom property in a
+		// declaration name but echoes the authored spelling inside `var()`, so the
+		// shorter `\2d-two` the printer writes reads as different `cssText` from
+		// `\2d\2d two` while naming the one property — both compute the same value.
+		"test/configCases/css/escaped-names/style.module.css",
+		"Chrome echoes the authored escape spelling inside `var()`"
+	],
+	[
 		// Not a printer defect: Chrome drops `attr( name unit )` when a space sits
 		// before the `)` and the type is a bare unit — `attr( name unit)`,
 		// `attr(name  unit)`, `attr( name type(<length>) )` and `attr( name unit, )`

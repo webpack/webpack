@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css local-ident-keywords exported tests should emit the stylesheet 1`] = `
+"/*!******************************!*\\\\
+  !*** css ./style.module.css ***!
+  \\\\******************************/
+/* A keyword in a value position that also accepts a \`<custom-ident>\` must stay
+   global — scoping one renames something the UA defines. */
+._animation-keywords {
+	animation-name: none;
+	animation: 1s linear infinite alternate both running paused;
+}
+._animation-wide { animation-name: inherit }
+._grid-keywords {
+	grid-area: auto;
+	grid-row: auto / span 3;
+}
+._container-keywords { container-name: none }
+._view-transition-keywords { view-transition-name: none }
+._counter-keywords {
+	counter-reset: none;
+	counter-increment: none;
+}
+/* UA counters: \`page\`, \`pages\` and \`list-item\` are defined by the UA, so a
+   stylesheet naming one means that counter and not a scoped copy. */
+._counter-ua { counter-reset: page 1 list-item 2 }
+._list-style-keywords {
+	list-style-type: disc;
+	list-style: decimal;
+}
+/* A predefined counter style stays global; a local one is scoped. */
+@counter-style _thumbs { system: extends decimal; suffix: \\" \\" }
+._counter-style-local { list-style: _thumbs }
+._font-palette-keywords { font-palette: normal }
+._will-change-keywords { will-change: transform, opacity, auto }
+._transition-keywords { transition-property: all }
+
+
+/*# sourceMappingURL=bundle0.css.map*/"
+`;

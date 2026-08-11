@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css grid-area-scoping exported tests should emit the stylesheet 1`] = `
+"/*!******************************!*\\\\
+  !*** css ./style.module.css ***!
+  \\\\******************************/
+/* A cell name is whatever a \`grid-area\` can name: hyphens, digits, non-ASCII
+   and escapes all included. Each pair below must scope to the same ident or
+   the area stops binding. */
+._hyphen-grid {
+	grid-template-areas: \\"_main-head-main-head _side-bar-side-bar\\";
+}
+._hyphen-head { grid-area: _main-head-main-head }
+._hyphen-side { grid-area: _side-bar-side-bar }
+
+._digit-grid {
+	grid-template-areas: \\"_a-1-a-1 _a-2-a-2\\";
+}
+._digit-one { grid-area: _a-1-a-1 }
+
+._unicode-grid {
+	grid-template-areas: \\"_héad-héad\\";
+}
+._unicode-head { grid-area: _héad-héad }
+
+/* \`\\\\68 ead\` and \`head\` are the same ident; the trailing space closes the
+   escape and does not separate two cells. */
+._escaped-grid {
+	grid-template-areas: \\"_head-head _foot-foot\\";
+}
+._escaped-head { grid-area: _head-head }
+._escaped-foot { grid-area: _foot-foot }
+
+._escaped-long-grid {
+	grid-template-areas: \\"_head-head\\";
+}
+._escaped-long-head { grid-area: _head-head }
+
+/* A run of only \`.\` is a null cell and names nothing. */
+._null-cell-grid {
+	grid-template-areas: \\"_head-head .\\" \\"... _foot-foot\\";
+}
+
+/* Padding around a cell is not a cell of its own. */
+._padded-grid {
+	grid-template-areas: \\"  _pad-head-pad-head  \\";
+}
+._padded-head { grid-area: _pad-head-pad-head }
+
+._shorthand-grid {
+	grid-template: \\"_nav-bar-nav-bar _main-area-main-area\\" 1fr / auto;
+}
+._shorthand-nav { grid-area: _nav-bar-nav-bar }
+
+
+/*# sourceMappingURL=bundle0.css.map*/"
+`;

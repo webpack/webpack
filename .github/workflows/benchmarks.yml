@@ -9,7 +9,11 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Every push to `main` shares one group, so cancelling leaves that commit with
+  # no run for CodSpeed to compare against — it then falls back to an older
+  # `main`, attributing the commits in between to the pull request. Only a
+  # superseded pull request run is dropped.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read

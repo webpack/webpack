@@ -29589,6 +29589,7 @@ declare namespace exports {
 				pos: number,
 				out: MutableToken
 			) => undefined | MutableToken;
+			export let skipEscape: (input: string, pos: number) => number;
 			export let toLowerCaseIfNeeded: (s: string) => string;
 			export let unescapeIdentifier: MakeCacheableResult<string> & {
 				bindCache: BindCache<string>;

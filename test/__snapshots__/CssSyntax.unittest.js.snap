@@ -1986,20 +1986,8 @@ Array [
     ":",
   ],
   Array [
-    "function",
-    "\\\\url(",
-  ],
-  Array [
-    "identifier",
-    "te",
-  ],
-  Array [
-    "identifier",
-    "st",
-  ],
-  Array [
-    "right-parenthesis",
-    ")",
+    "bad-url-token",
+    "\\\\url(te st)",
   ],
   Array [
     "semicolon",
@@ -44343,56 +44331,9 @@ o very long title\\"",
     ":",
   ],
   Array [
-    "function",
-    "\\\\URL(",
-  ],
-  Array [
-    "identifier",
-    "https",
-  ],
-  Array [
-    "colon",
-    ":",
-  ],
-  Array [
-    "delim",
-    "/",
-  ],
-  Array [
-    "delim",
-    "/",
-  ],
-  Array [
-    "identifier",
-    "example",
-  ],
-  Array [
-    "delim",
-    ".",
-  ],
-  Array [
-    "identifier",
-    "com",
-  ],
-  Array [
-    "delim",
-    "/",
-  ],
-  Array [
-    "identifier",
-    "image",
-  ],
-  Array [
-    "delim",
-    ".",
-  ],
-  Array [
-    "identifier",
-    "png",
-  ],
-  Array [
-    "right-parenthesis",
-    ")",
+    "url",
+    "\\\\URL(https://example.com/image.png)",
+    "https://example.com/image.png",
   ],
   Array [
     "semicolon",
@@ -44843,56 +44784,9 @@ o very long title\\"",
     ":",
   ],
   Array [
-    "function",
-    "u\\\\rl(",
-  ],
-  Array [
-    "identifier",
-    "https",
-  ],
-  Array [
-    "colon",
-    ":",
-  ],
-  Array [
-    "delim",
-    "/",
-  ],
-  Array [
-    "delim",
-    "/",
-  ],
-  Array [
-    "identifier",
-    "example",
-  ],
-  Array [
-    "delim",
-    ".",
-  ],
-  Array [
-    "identifier",
-    "com",
-  ],
-  Array [
-    "delim",
-    "/",
-  ],
-  Array [
-    "identifier",
-    "image",
-  ],
-  Array [
-    "delim",
-    ".",
-  ],
-  Array [
-    "identifier",
-    "png",
-  ],
-  Array [
-    "right-parenthesis",
-    ")",
+    "url",
+    "u\\\\rl(   https://example.com/image.png   )",
+    "https://example.com/image.png",
   ],
   Array [
     "semicolon",
