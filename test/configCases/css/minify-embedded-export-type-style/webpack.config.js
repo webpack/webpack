@@ -1,5 +1,7 @@
 "use strict";
 
+const SampleEmbeddedMinifyPlugin = require("../../../helpers/SampleEmbeddedMinifyPlugin");
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	devtool: false,
@@ -7,7 +9,7 @@ module.exports = {
 	// for a DOM this test has none of.
 	target: ["web", "node"],
 	experiments: { css: true },
-	optimization: { minimize: { javascript: false } },
+	plugins: [new SampleEmbeddedMinifyPlugin()],
 	module: {
 		rules: [{ test: /\.css$/, type: "css", parser: { exportType: "style" } }]
 	}

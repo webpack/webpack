@@ -4,8 +4,7 @@
 module.exports = {
 	target: "web",
 	experiments: { css: true },
-	// `css: false` must reach embedded CSS too, not only `.css` assets.
-	optimization: { minimize: { javascript: false, css: false } },
+	// No tap: webpack itself never minifies embedded CSS, so the text is verbatim.
 	module: {
 		rules: [
 			{ test: /\.css$/, type: "css/auto", parser: { exportType: "text" } }

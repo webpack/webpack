@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ConfigTestCases css minify-embedded-disabled exported tests should leave embedded CSS alone when minimize.css is false 1`] = `
+exports[`ConfigTestCases css minify-embedded-disabled exported tests should leave embedded CSS alone when nothing taps the hook 1`] = `
 "/*!******************************************!*\\\\
   !*** css ./style.css (exportType: text) ***!
   \\\\******************************************/

@@ -1,8 +1,10 @@
 "use strict";
 
+const SampleEmbeddedMinifyPlugin = require("../../../helpers/SampleEmbeddedMinifyPlugin");
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "web",
 	experiments: { html: true },
-	optimization: { minimize: { javascript: false } }
+	plugins: [new SampleEmbeddedMinifyPlugin()]
 };

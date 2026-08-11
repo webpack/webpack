@@ -1,12 +1,13 @@
 "use strict";
 
+const SampleEmbeddedMinifyPlugin = require("../../../helpers/SampleEmbeddedMinifyPlugin");
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "web",
 	experiments: { css: true },
-	// `javascript: false` keeps the bundle readable; the CSS this asserts is
-	// embedded in it, so terser would only obscure the string under test.
-	optimization: { minimize: { javascript: false } },
+	// webpack ships the hook but taps nothing; this stands in for the minimizer.
+	plugins: [new SampleEmbeddedMinifyPlugin()],
 	module: {
 		rules: [
 			{ test: /\.css$/, type: "css/auto", parser: { exportType: "text" } }

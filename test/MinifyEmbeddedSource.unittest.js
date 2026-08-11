@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("../lib/index");
+const SampleEmbeddedMinifyPlugin = require("./helpers/SampleEmbeddedMinifyPlugin");
 
 /** @typedef {import("../lib/util/fs").OutputFileSystem} OutputFileSystem */
 
@@ -14,10 +15,10 @@ const context = path.join(testDirectory, "src");
 const cacheDirectory = path.join(testDirectory, "cache");
 
 /**
- * @param {false | object} css `optimization.minimize.css`
+ * @param {boolean} tap whether the sample minimizer taps the hook
  * @returns {Promise<string>} the CSS text the bundle embeds
  */
-const build = (css) =>
+const build = (tap) =>
 	new Promise((resolve, reject) => {
 		const compiler = webpack({
 			mode: "production",
@@ -25,7 +26,7 @@ const build = (css) =>
 			entry: "./index.js",
 			target: "web",
 			experiments: { css: true },
-			optimization: { minimize: { javascript: false, css } },
+			plugins: tap ? [new SampleEmbeddedMinifyPlugin({ html: false })] : [],
 			cache: { type: "filesystem", cacheDirectory },
 			module: {
 				rules: [
@@ -73,11 +74,11 @@ describe("CSS embedded in JavaScript", () => {
 		);
 	});
 
-	// The codegen cache is keyed by `Generator.updateHash`, which cannot see a
-	// hook's taps — so `embeddedCssHash` carries the minifier's options into it.
-	// Without that, the second build here replays the first's minified output.
-	it("re-generates when minimize.css changes across a filesystem cache", async () => {
-		const minified = await build({});
+	// The codegen cache is keyed by `Generator.updateHash`, which runs before code
+	// generation and so cannot see what a tap returns — `embeddedCssHash` is how a
+	// tap reaches it. Without that, the second build replays the first's output.
+	it("re-generates when the tap appears or goes across a filesystem cache", async () => {
+		const minified = await build(true);
 		expect(minified).toContain(".a{color:red}");
 
 		const plain = await build(false);
@@ -85,6 +86,6 @@ describe("CSS embedded in JavaScript", () => {
 		expect(plain).toContain("#ff0000");
 
 		// And back, so the first result is not merely the one that got cached.
-		expect(await build({})).toContain(".a{color:red}");
+		expect(await build(true)).toContain(".a{color:red}");
 	});
 });
