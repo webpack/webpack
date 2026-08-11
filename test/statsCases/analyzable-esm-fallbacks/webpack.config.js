@@ -32,10 +32,11 @@ const nameConsumersByContent = (names) => (compiler) => {
 const base = (name, extra = {}) => ({
 	name,
 	mode: "development",
-	devtool: false,
 	experiments: { outputModule: true },
 	entry: extra.entry || "./index",
 	plugins: extra.plugins,
+	devtool: extra.devtool === undefined ? false : extra.devtool,
+	module: extra.module,
 	output: {
 		module: true,
 		path: path.resolve(
@@ -90,5 +91,16 @@ module.exports = [
 	base("shared-depths", {
 		entry: "./index-depths",
 		plugins: [nameConsumersByContent(["flat", "nested/deep"])]
+	}),
+	// `import.meta` does not parse inside the `eval()` this devtool wraps a module in.
+	base("eval-devtool", {
+		entry: "./index-eval",
+		devtool: "eval",
+		module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] }
+	}),
+	// The worker runs its own chunk loader, which a native `import()` is not.
+	base("worker-chunk-loading", {
+		entry: "./index-worker",
+		output: { workerChunkLoading: "async-node" }
 	})
 ];

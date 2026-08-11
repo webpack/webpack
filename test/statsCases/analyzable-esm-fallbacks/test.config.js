@@ -38,6 +38,16 @@ const CASES = {
 		file: /^flat\./,
 		expect: "fallback",
 		bailout: "chunks at different output depths"
+	},
+	"eval-devtool": {
+		file: "main.mjs",
+		expect: "fallback",
+		bailout: "wraps the module in eval()"
+	},
+	"worker-chunk-loading": {
+		file: "main.mjs",
+		expect: "fallback",
+		bailout: 'not "import"'
 	}
 };
 
