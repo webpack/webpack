@@ -10,6 +10,11 @@ exports[`ConfigTestCases html minimize-tag-omission minimize-tag-omission should
 "
 `;
 
+exports[`ConfigTestCases html minimize-tag-omission minimize-tag-omission should compile: leading-space.html 1`] = `
+"<title>L</title><body> leading space
+"
+`;
+
 exports[`ConfigTestCases html minimize-tag-omission minimize-tag-omission should compile: page.html 1`] = `
 "<!doctype html><meta charset=utf-8><title>Catalog</title></head><p>page<ul><li>one<li>two</ul>
 

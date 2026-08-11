@@ -13,7 +13,8 @@ module.exports = {
 		for (const file of [
 			"page.html",
 			"kept-comment.html",
-			"head-content.html"
+			"head-content.html",
+			"leading-space.html"
 		]) {
 			expect(
 				fs.readFileSync(path.join(options.output.path, file), "utf8")
