@@ -490,13 +490,17 @@ describe("HtmlParser", () => {
 
 		for (const type of JAVASCRIPT_SCRIPT_TYPES) {
 			it(`should bundle a <script> typed ${JSON.stringify(type)}`, () => {
-				const attribute = type === "" ? "" : ` type="${type}"`;
+				// Written out even when empty: an absent `type` takes its own branch.
 				const deps = inlineScriptDeps(
-					`<script${attribute}>var a = 1;</script>`
+					`<script type="${type}">var a = 1;</script>`
 				);
 				expect(deps).toHaveLength(1);
 			});
 		}
+
+		it("should bundle a <script> with no type attribute", () => {
+			expect(inlineScriptDeps("<script>var a = 1;</script>")).toHaveLength(1);
+		});
 
 		// The `type` is matched on its trimmed, lowercased essence.
 		for (const type of [" TEXT/JavaScript ", "TEXT/X-JAVASCRIPT"]) {
