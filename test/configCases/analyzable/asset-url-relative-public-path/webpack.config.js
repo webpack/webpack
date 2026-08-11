@@ -9,11 +9,10 @@ const webpack = require("../../../../");
  * @param {number} index position of this config, so `index.js` finds its own stats
  * @param {string} dir subdirectory keeping the emitted chunks of each config apart
  * @param {string} publicPath the public path under test
- * @param {string} flat what the root-level chunk is expected to bake
- * @param {string} deep what the nested chunk is expected to bake
+ * @param {boolean=} digest whether the public path re-encodes the compilation hash
  * @returns {import("../../../../").Configuration} configuration
  */
-const base = (index, dir, publicPath, flat, deep) => ({
+const base = (index, dir, publicPath, digest = false) => ({
 	target: "node",
 	mode: "development",
 	devtool: false,
@@ -32,15 +31,17 @@ const base = (index, dir, publicPath, flat, deep) => ({
 		new webpack.DefinePlugin({
 			__INDEX__: JSON.stringify(index),
 			__DIR__: JSON.stringify(dir),
-			__FLAT__: JSON.stringify(flat),
-			__DEEP__: JSON.stringify(deep)
+			__DIGEST__: JSON.stringify(digest)
 		})
 	]
 });
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
-	base(0, "a", "./", "../asset.txt", "../../asset.txt"),
+	base(0, "a", "./"),
 	// An empty one names the output root just the same.
-	base(1, "b", "", "../asset.txt", "../../asset.txt")
+	base(1, "b", ""),
+	// A digest no stand-in can carry, so the deferred pass spells the whole template —
+	// behind the same `../` path. Nothing is emitted there, so it is not read back.
+	base(2, "c", "media/[fullhash:base64safe]/", true)
 ];

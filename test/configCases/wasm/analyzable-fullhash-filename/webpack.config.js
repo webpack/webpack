@@ -55,11 +55,9 @@ const base = (
 module.exports = [
 	base(0, "plain", "[fullhash]", true, true),
 	base(1, "sliced", "[fullhash:8]", true, true),
-	// A digest re-encodes the hash rather than reading it, which a stand-in cannot
-	// survive, so the name stays on the runtime form. That form drops the hash
-	// entirely (a bug of its own, and the reason this one is not loaded back), so
-	// only the fall back itself is asserted here.
-	base(2, "digest", "[fullhash:base64]", false, false),
+	// A digest re-encodes the hash rather than reading it, which no stand-in survives,
+	// so the whole name is handed to the deferred pass and spelled by `getPath` there.
+	base(2, "digest", "[fullhash:base64]", true, true),
 	// Substituting rewrites the chunk after its own content hash was taken, and
 	// `RealContentHashPlugin` is what brings the two back in line. Without a content
 	// hash in the name there would be nothing to bring back in line, so it carries one.

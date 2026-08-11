@@ -9,9 +9,10 @@ const webpack = require("../../../../");
  * @param {number} index position of this config, so `index.js` finds its own stats
  * @param {NonNullable<import("../../../../").Configuration["output"]>["publicPath"]} publicPath the public path under test
  * @param {boolean} baked whether the specifier is expected to be a literal
+ * @param {boolean=} hashed whether the value it bakes carries the compilation hash
  * @returns {import("../../../../").Configuration} configuration
  */
-const base = (index, publicPath, baked) => ({
+const base = (index, publicPath, baked, hashed = false) => ({
 	target: "node",
 	mode: "development",
 	devtool: false,
@@ -29,7 +30,8 @@ const base = (index, publicPath, baked) => ({
 	plugins: [
 		new webpack.DefinePlugin({
 			__INDEX__: JSON.stringify(index),
-			__BAKED__: JSON.stringify(baked)
+			__BAKED__: JSON.stringify(baked),
+			__HASHED__: JSON.stringify(hashed)
 		})
 	]
 });
@@ -43,8 +45,14 @@ module.exports = [
 		(pathData) => (pathData.hash ? "https://cdn.example.com/" : ""),
 		true
 	),
-	// This one moves with a hash code generation does not have yet.
-	base(2, (pathData) => `https://cdn.example.com/${pathData.hash}/`, false),
+	// This one moves with a hash code generation does not have yet, so the deferred
+	// pass calls it again once that hash exists.
+	base(
+		2,
+		(pathData) => `https://cdn.example.com/${pathData.hash}/`,
+		true,
+		true
+	),
 	// Probing must never fail a build the real naming call would have completed, so
 	// one that throws on the two stand-in hashes still builds and keeps its runtime.
 	base(

@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Bake analyzable asset `new URL` references per depth, hashed and function public paths.
+Bake analyzable references per depth, and behind hashed, digested and function public paths.

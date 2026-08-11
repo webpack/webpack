@@ -14,8 +14,13 @@ it("should keep the asset referenced", () => {
 
 if (__BAKED__) {
 	it("should bake the value the function returns", () => {
-		expect(bundle()).toContain(
-			'/* asset import */ "https://cdn.example.com/asset.txt"'
+		const specifier = bundle().match(
+			/asset import \*\/ "(https:\/\/cdn\.example\.com\/[^"]+)"/
+		);
+
+		expect(specifier).not.toBe(null);
+		expect(specifier[1]).toBe(
+			`https://cdn.example.com/${__HASHED__ ? `${stats.hash}/` : ""}asset.txt`
 		);
 		expect(bundle()).not.toContain(`${"__webpack_require__"}.b`);
 	});
