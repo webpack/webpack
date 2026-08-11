@@ -17,14 +17,17 @@ it("should run an ESM worker with a content-hashed chunk filename", async () => 
 	await worker.terminate();
 });
 
-it("should fall back to the runtime form when the chunk filename is hashed", () => {
+it("should bake a hashed worker chunk name the deferred pass fills in", () => {
 	const bundle = fs.readFileSync(
 		path.join(__STATS__.outputPath, "bundle0.mjs"),
 		"utf8"
 	);
-	const chunkFilename = `${"__webpack_require__"}.u`;
+	const specifier = new RegExp(`worker ${"import"} \\*/ "([^"]+)"`).exec(bundle);
 
-	// A hashed filename isn't known at code-gen time, so the runtime helper stays.
-	expect(bundle).toContain(chunkFilename);
-	expect(bundle).not.toContain(`/* worker ${"import"} */ "./worker`);
+	expect(specifier).not.toBe(null);
+	expect(fs.existsSync(path.join(__STATS__.outputPath, specifier[1]))).toBe(
+		true
+	);
+	// The name is settled, so nothing looks it up by chunk id any more.
+	expect(bundle).not.toContain(`${"__webpack_require__"}.u`);
 });

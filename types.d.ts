@@ -24720,7 +24720,7 @@ declare abstract class RuntimeTemplate {
 	 * back in line, or no emitted javascript may be named by its content in the first
 	 * place — with a name like `[name].js` there is nothing to go stale.
 	 */
-	canDeferAnalyzableName(): boolean;
+	canDeferAnalyzableName(chunks?: Iterable<Chunk>): boolean;
 
 	/**
 	 * Whether an asset whose URL argument is only known at runtime (e.g. a wasm

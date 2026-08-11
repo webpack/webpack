@@ -1,7 +1,8 @@
 "use strict";
 
-// Without `realContentHash` nothing repairs a rewritten name, so no stand-in may be
-// reserved and two depths keep the runtime public path before a literal filename.
+// Two depths need a stand-in, and without `realContentHash` one may only be written
+// into an asset no template names by its own content. The entry is named that way and
+// the chunks holding the reference are not — and they are the ones rewritten.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

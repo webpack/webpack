@@ -16,12 +16,11 @@ it("should run a worker referenced from chunks at different depths", async () =>
 	await import(/* webpackChunkName: "nested/deep" */ "./deep");
 });
 
-it("should keep the worker filename a literal behind the runtime public path", () => {
-	const source = fs.readFileSync(
-		path.join(__STATS__.outputPath, "flat.mjs"),
-		"utf8"
-	);
+it("should bake the specifier each depth needs", () => {
+	const read = (name) =>
+		fs.readFileSync(path.join(__STATS__.outputPath, name), "utf8");
 
-	expect(source).toContain(`${"__webpack_require__"}.p + "worker_js.mjs"`);
-	expect(source).not.toContain(`${"__webpack_require__"}.u`);
+	expect(read("flat.mjs")).toContain('"./worker_js.mjs"');
+	expect(read("nested/deep.mjs")).toContain('"../worker_js.mjs"');
+	expect(read("flat.mjs")).not.toContain(`${"__webpack_require__"}.p + "worker`);
 });

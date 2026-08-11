@@ -10,6 +10,24 @@ const webpack = require("../../../");
  * @param {import("../../../").Configuration} extra per-case overrides
  * @returns {import("../../../").Configuration} configuration
  */
+/**
+ * Names the given chunks by their own content, which `output` alone cannot do for
+ * some chunks and not others.
+ * @param {string[]} names chunk names to rename
+ * @returns {import("../../../").WebpackPluginFunction} the plugin
+ */
+const nameConsumersByContent = (names) => (compiler) => {
+	compiler.hooks.compilation.tap("NameConsumersByContent", (compilation) => {
+		compilation.hooks.afterChunks.tap("NameConsumersByContent", (chunks) => {
+			for (const chunk of chunks) {
+				if (chunk.name !== null && names.includes(chunk.name)) {
+					chunk.filenameTemplate = "[name].[contenthash].mjs";
+				}
+			}
+		});
+	});
+};
+
 const base = (name, extra = {}) => ({
 	name,
 	mode: "development",
@@ -56,16 +74,20 @@ module.exports = [
 	}),
 	// Every case below must fall back with no `.ei` emitted.
 	base("public-path-override", { entry: "./index-public-path-override" }),
-	// Deferrable in itself; what stops it here is that the chunk is named by its own
-	// content while `optimization.realContentHash` is off, as it is by default in
-	// development — so the name it would be rewritten under has nothing to repair it.
+	// Deferrable in itself; what stops it here is that the chunk the stand-in would be
+	// written into is named by its own content while `optimization.realContentHash` is
+	// off, as it is by default in development — so nothing repairs the name it is
+	// rewritten under. That chunk is the entry, which is where the reference sits.
 	base("content-hash", {
-		output: { chunkFilename: "[name].[contenthash].mjs" }
+		output: {
+			filename: "[name].[contenthash].mjs",
+			chunkFilename: "[name].[contenthash].mjs"
+		}
 	}),
-	// Two depths need a stand-in, and naming any emitted javascript by its content —
-	// the entry here, not the chunks themselves — rules out the rewrite one needs.
+	// Two depths need a stand-in, and the chunks it would land in are named by their
+	// content — the referenced one is not, so the depth is what cannot be spelled.
 	base("shared-depths", {
 		entry: "./index-depths",
-		output: { filename: "[name].[contenthash].mjs" }
+		plugins: [nameConsumersByContent(["flat", "nested/deep"])]
 	})
 ];
