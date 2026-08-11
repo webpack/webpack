@@ -1190,6 +1190,75 @@ const PARSER_TABLES = [
 			["th", "IN_ROW"]
 		]
 	],
+	// §15 "Rendering" gives these a non-inline default display, so whitespace at
+	// their edge sits outside every line box and renders as nothing. Spec prose
+	// — the rendering section is a stylesheet written out in the text, and no
+	// dataset states it — and only the default matters here: a page restyling
+	// `div { display: inline }` is why `collapseWhitespace: "smart"` is opt-in.
+	[
+		"BLOCK_LEVEL_ELEMENTS",
+		"set",
+		'Elements §15 gives a non-inline default display. Whitespace against one of their edges renders as nothing, which is what `collapseWhitespace: "smart"` drops. Author CSS can still make one inline, so the mode is opt-in.',
+		[
+			"address",
+			"article",
+			"aside",
+			"blockquote",
+			"body",
+			"caption",
+			"center",
+			"col",
+			"colgroup",
+			"dd",
+			"details",
+			"dialog",
+			"dir",
+			"div",
+			"dl",
+			"dt",
+			"fieldset",
+			"figcaption",
+			"figure",
+			"footer",
+			"form",
+			"frameset",
+			"h1",
+			"h2",
+			"h3",
+			"h4",
+			"h5",
+			"h6",
+			"header",
+			"hgroup",
+			"hr",
+			"html",
+			"legend",
+			"li",
+			"listing",
+			"main",
+			"marquee",
+			"menu",
+			"nav",
+			"ol",
+			"optgroup",
+			"option",
+			"p",
+			"plaintext",
+			"pre",
+			"search",
+			"section",
+			"summary",
+			"table",
+			"tbody",
+			"td",
+			"tfoot",
+			"th",
+			"thead",
+			"tr",
+			"ul",
+			"xmp"
+		]
+	],
 	// The enumerated attributes, each with the keywords the spec gives it. Spec
 	// prose: nothing in the IDL marks an attribute as enumerated, and no dataset
 	// states a keyword set, so this is written out — but only a value that *is*
@@ -1399,6 +1468,27 @@ const PARSER_TABLES = [
 // reading the table the parser itself uses. `<noscript>` is not in it because
 // "in head" only takes it while scripting is disabled, which is how a document
 // is parsed here.
+// Derived: a void element that belongs in the head carries everything it does
+// in its attributes, so one with none does nothing at all. `removeEmptyElements`
+// may drop these even though the void guard otherwise keeps every void element.
+const EMPTY_METADATA_ELEMENTS = /** @type {string[]} */ (
+	/** @type {ParserTable} */
+	(
+		/** @type {ParserTable[]} */ (PARSER_TABLES).find(
+			([name]) => name === "HEAD_ELEMENTS"
+		)
+	)[3]
+).filter((name) =>
+	/** @type {string[]} */ (
+		/** @type {ParserTable} */
+		(
+			/** @type {ParserTable[]} */ (PARSER_TABLES).find(
+				([name2]) => name2 === "VOID"
+			)
+		)[3]
+	).includes(name)
+);
+
 const BODY_START_TAG_BLOCKERS = [
 	.../** @type {string[]} */ (
 		/** @type {ParserTable} */
@@ -1529,6 +1619,7 @@ const EXPORT_NAMES = [
 	"COMMA_LIST_ATTRIBUTES",
 	"INTEGER_ATTRIBUTES",
 	"BODY_START_TAG_BLOCKERS",
+	"EMPTY_METADATA_ELEMENTS",
 	"OPTIONAL_END_TAG_AT_END",
 	"OPTIONAL_END_TAG_FOLLOWERS",
 	"OPTIONAL_END_TAG_UNLESS_COMMENT",
@@ -1602,6 +1693,14 @@ const OPTIONAL_END_TAG_AT_END = ${setLiteral(OPTIONAL_END_TAG_AT_END)};
 const OPTIONAL_END_TAG_UNLESS_COMMENT = ${setLiteral(
 	OPTIONAL_END_TAG_UNLESS_COMMENT
 )};
+
+/**
+ * A void element that belongs in the head: with no attributes it states nothing,
+ * so \`removeEmptyElements\` may drop it even though every other void element is
+ * kept. Derived as the head elements that are also void.
+ * @type {Set<string>}
+ */
+const EMPTY_METADATA_ELEMENTS = ${setLiteral(EMPTY_METADATA_ELEMENTS)};
 
 /**
  * §13.1.2.4: a \`<body>\` start tag may not be omitted in front of one of these,

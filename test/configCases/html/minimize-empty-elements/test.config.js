@@ -41,6 +41,10 @@ module.exports = {
 		// Emptiness is read off the source tree in one pass, so the parent that
 		// only became empty here is not itself dropped.
 		expect(page).toContain("<div></div>");
+		// A void element that belongs in the head states nothing without
+		// attributes, unlike every other void element.
+		expect(page).not.toContain("<meta><link><base>");
+		expect(page).toContain("<meta charset=utf-8><link rel=preload href=x.css>");
 		// A whitespace text node is a child.
 		expect(page).toContain("<div> </div>");
 	}

@@ -3708,8 +3708,33 @@
       "additionalProperties": false,
       "properties": {
         "collapseWhitespace": {
-          "description": "Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim, and never removed entirely — dropping it would join two inline elements that render apart.",
+          "description": "Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim. `true` (or `\"conservative\"`) never removes whitespace entirely — dropping it would join two inline elements that render apart. `\"smart\"` also drops the whitespace that sits against a block element's edge, where no line box reaches it. `\"all\"` drops the whitespace at every text node's edges, which does change how adjacent inline elements render.",
+          "anyOf": [
+            { "type": "boolean" },
+            { "enum": ["conservative", "smart", "all"] }
+          ],
+          "added": "5.110.0"
+        },
+        "minifyConditionalComments": {
+          "description": "Minify the markup inside a downlevel-hidden conditional comment (`<!--[if IE]> … <![endif]-->`). Off by default: only IE9 and older ever read one, so for every other browser it is bytes spent on a branch that never runs. The bodies are collected in a walk of their own and spliced in by exact source text, so a `<!--[if` written inside a script is never touched.",
           "type": "boolean",
+          "added": "5.110.0"
+        },
+        "minifyConditionalComments": {
+          "description": "Minify the markup inside a downlevel-hidden conditional comment (`<!--[if IE]> … <![endif]-->`). Off by default: the body is minified on its own, so a context-sensitive decision inside it — which end tags are optional, where a table cell may sit — is taken as though it started a document rather than where the comment sits. Only browsers older than IE10 read these at all.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "preserveComments": {
+          "description": "Patterns naming comments to keep, on top of the ones minifying always keeps (downlevel conditional comments, server-side includes and template directives). A string is read as a regular expression source and matched against the comment's text.",
+          "type": "array",
+          "items": {
+            "description": "A pattern matched against a comment's text.",
+            "anyOf": [
+              { "type": "string" },
+              { "instanceof": "RegExp", "tsType": "RegExp" }
+            ]
+          },
           "added": "5.110.0"
         },
         "removeEmptyAttributes": {

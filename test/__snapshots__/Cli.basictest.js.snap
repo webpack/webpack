@@ -9978,13 +9978,69 @@ Object {
   "optimization-minimize-html-collapse-whitespace": Object {
     "configs": Array [
       Object {
-        "description": "Collapse each run of whitespace in text to a single space. Left alone inside \`pre\`, \`textarea\` and \`listing\`, where whitespace renders verbatim, and never removed entirely — dropping it would join two inline elements that render apart.",
+        "description": "Collapse each run of whitespace in text to a single space. Left alone inside \`pre\`, \`textarea\` and \`listing\`, where whitespace renders verbatim. \`true\` (or \`\\"conservative\\"\`) never removes whitespace entirely — dropping it would join two inline elements that render apart. \`\\"smart\\"\` also drops the whitespace that sits against a block element's edge, where no line box reaches it. \`\\"all\\"\` drops the whitespace at every text node's edges, which does change how adjacent inline elements render.",
         "multiple": false,
         "path": "optimization.minimize.html.collapseWhitespace",
         "type": "boolean",
       },
+      Object {
+        "description": "Collapse each run of whitespace in text to a single space. Left alone inside \`pre\`, \`textarea\` and \`listing\`, where whitespace renders verbatim. \`true\` (or \`\\"conservative\\"\`) never removes whitespace entirely — dropping it would join two inline elements that render apart. \`\\"smart\\"\` also drops the whitespace that sits against a block element's edge, where no line box reaches it. \`\\"all\\"\` drops the whitespace at every text node's edges, which does change how adjacent inline elements render.",
+        "multiple": false,
+        "path": "optimization.minimize.html.collapseWhitespace",
+        "type": "enum",
+        "values": Array [
+          "conservative",
+          "smart",
+          "all",
+        ],
+      },
     ],
-    "description": "Collapse each run of whitespace in text to a single space. Left alone inside \`pre\`, \`textarea\` and \`listing\`, where whitespace renders verbatim, and never removed entirely — dropping it would join two inline elements that render apart.",
+    "description": "Collapse each run of whitespace in text to a single space. Left alone inside \`pre\`, \`textarea\` and \`listing\`, where whitespace renders verbatim. \`true\` (or \`\\"conservative\\"\`) never removes whitespace entirely — dropping it would join two inline elements that render apart. \`\\"smart\\"\` also drops the whitespace that sits against a block element's edge, where no line box reaches it. \`\\"all\\"\` drops the whitespace at every text node's edges, which does change how adjacent inline elements render.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "optimization-minimize-html-minify-conditional-comments": Object {
+    "configs": Array [
+      Object {
+        "description": "Minify the markup inside a downlevel-hidden conditional comment (\`<!--[if IE]> … <![endif]-->\`). Off by default: the body is minified on its own, so a context-sensitive decision inside it — which end tags are optional, where a table cell may sit — is taken as though it started a document rather than where the comment sits. Only browsers older than IE10 read these at all.",
+        "multiple": false,
+        "path": "optimization.minimize.html.minifyConditionalComments",
+        "type": "boolean",
+      },
+    ],
+    "description": "Minify the markup inside a downlevel-hidden conditional comment (\`<!--[if IE]> … <![endif]-->\`). Off by default: the body is minified on its own, so a context-sensitive decision inside it — which end tags are optional, where a table cell may sit — is taken as though it started a document rather than where the comment sits. Only browsers older than IE10 read these at all.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-html-preserve-comments": Object {
+    "configs": Array [
+      Object {
+        "description": "A pattern matched against a comment's text.",
+        "multiple": true,
+        "path": "optimization.minimize.html.preserveComments[]",
+        "type": "string",
+      },
+      Object {
+        "description": "A pattern matched against a comment's text.",
+        "multiple": true,
+        "path": "optimization.minimize.html.preserveComments[]",
+        "type": "RegExp",
+      },
+    ],
+    "description": "A pattern matched against a comment's text.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "optimization-minimize-html-preserve-comments-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'optimization.minimize.html.preserveComments' configuration. Patterns naming comments to keep, on top of the ones minifying always keeps (downlevel conditional comments, server-side includes and template directives). A string is read as a regular expression source and matched against the comment's text.",
+        "multiple": false,
+        "path": "optimization.minimize.html.preserveComments",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'optimization.minimize.html.preserveComments' configuration. Patterns naming comments to keep, on top of the ones minifying always keeps (downlevel conditional comments, server-side includes and template directives). A string is read as a regular expression source and matched against the comment's text.",
     "multiple": false,
     "simpleType": "boolean",
   },

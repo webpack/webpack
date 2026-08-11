@@ -3768,6 +3768,80 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	});
 });
 
+describe("SourceProcessor — collapseWhitespace modes", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @param {boolean | string} mode the mode
+	 * @returns {string} the minified serialization
+	 */
+	const collapse = (html, mode) =>
+		new SourceProcessor().process(html, {
+			minimize: true,
+			collapseWhitespace: mode
+		}).code;
+
+	const PAGE = "<body><div>  a   b  </div>\n  <div> c </div><span> d </span>";
+
+	it("reads `true` as `conservative`, which never removes whitespace", () => {
+		expect(collapse(PAGE, true)).toBe(collapse(PAGE, "conservative"));
+		expect(collapse(PAGE, "conservative")).toBe(
+			"<div> a b </div> <div> c </div><span> d </span>"
+		);
+	});
+
+	it("drops what sits against a block edge in `smart`", () => {
+		// Inside and after a `<div>` no line box reaches the whitespace; the
+		// `<span>`'s own spaces render, so they stay.
+		expect(collapse(PAGE, "smart")).toBe(
+			"<div>a b</div><div>c</div><span> d </span>"
+		);
+	});
+
+	it("drops every text node's edges in `all`", () => {
+		expect(collapse(PAGE, "all")).toBe(
+			"<div>a b</div><div>c</div><span>d</span>"
+		);
+	});
+
+	it("leaves whitespace verbatim where it renders, in every mode", () => {
+		for (const mode of [true, "conservative", "smart", "all"]) {
+			expect(collapse("<pre>  a   b  </pre>", mode)).toBe(
+				"<pre>  a   b  </pre>"
+			);
+		}
+	});
+});
+
+describe("SourceProcessor — preserveComments", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @param {(string | RegExp)[]=} preserveComments patterns to keep
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html, preserveComments) =>
+		new SourceProcessor().process(html, { minimize: true, preserveComments })
+			.code;
+
+	it("keeps a comment a pattern names, and drops the rest", () => {
+		const html = "<div><!-- @license MIT --><!-- chatter --></div>";
+		expect(minify(html)).toBe("<div></div>");
+		expect(minify(html, ["@license"])).toBe("<div><!-- @license MIT --></div>");
+		expect(minify(html, [/^\s*@license/])).toBe(
+			"<div><!-- @license MIT --></div>"
+		);
+	});
+
+	it("still keeps what minifying always keeps", () => {
+		expect(
+			minify("<div><!--[if IE]>a<![endif]--></div>", ["nothing"])
+		).toContain("[if IE]");
+	});
+});
+
 describe("SourceProcessor — enumerated attribute values", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 	const { ENUMERATED_KEYWORDS } = require("../lib/html/data");
