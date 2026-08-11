@@ -31,8 +31,8 @@ it("should bundle inline <script> bodies as entry chunks and rewrite their tags 
 	expect(pageContent).not.toContain('console.log("<b>hello</b>")');
 	expect(pageContent).not.toContain("__inlineModuleSum");
 
-	// Four executable inline scripts (3 classic + 1 module) → four chunk urls.
-	expect(scriptChunkUrls).toHaveLength(4);
+	// Five executable inline scripts (4 classic + 1 module) → five chunk urls.
+	expect(scriptChunkUrls).toHaveLength(5);
 
 	// Non-JS `<script type>` blocks (importmap, JSON-LD) pass through
 	// unchanged — their bodies stay inline.
@@ -58,7 +58,7 @@ it("should auto-upgrade classic inline <script> to type=module when output.modul
 			/<script[^>]*\bsrc="(__html_[^"]+)"[^>]*\btype="module"/g
 		)
 	].map((m) => m[1]);
-	expect(new Set(moduleTaggedSrcs).size).toBe(4);
+	expect(new Set(moduleTaggedSrcs).size).toBe(5);
 });
 
 it("should bundle each classic inline <script> body into its own chunk", () => {
@@ -103,4 +103,12 @@ it("should emit ES-module chunks for classic inline <script> too when output.mod
 		expect(chunk).not.toContain("// webpackBootstrap");
 		expect(chunk).not.toContain("module.exports =");
 	}
+});
+
+it("should bundle a script typed with a legacy JavaScript MIME essence", () => {
+	// `text/x-javascript` is a JavaScript MIME type, so the browser executes it —
+	// treating it as a data block would leave the body unbundled and unrewritten.
+	const chunk = readChunk(scriptChunkUrls[4]);
+	expect(chunk).toContain("__legacyTyped");
+	expect(pageContent).not.toContain("__legacyTyped");
 });

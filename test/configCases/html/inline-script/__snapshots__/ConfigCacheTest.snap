@@ -33,6 +33,8 @@ exports[`ConfigCacheTestCases html inline-script exported tests should bundle in
 <body>
 <p>Hi</p>
 <script src=\\"__html_cbe5b59d_3.chunk.js\\" type=\\"module\\"></script>
+<!-- A legacy JavaScript MIME essence: still executable JS, so still bundled. -->
+<script src=\\"__html_cbe5b59d_4.chunk.js\\" type=\\"module\\"></script>
 </body>
 </html>
 "
