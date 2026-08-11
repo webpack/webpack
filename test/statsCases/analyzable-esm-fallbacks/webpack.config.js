@@ -4,13 +4,6 @@ const path = require("path");
 const webpack = require("../../../");
 
 /**
- * One analyzable-ESM build. `name` is both the output subdir and the label; `extra`
- * overrides entry/output/plugins to trigger a single analyzable-import limitation.
- * @param {string} name case name
- * @param {import("../../../").Configuration} extra per-case overrides
- * @returns {import("../../../").Configuration} configuration
- */
-/**
  * Names the given chunks by their own content, which `output` alone cannot do for
  * some chunks and not others.
  * @param {string[]} names chunk names to rename
@@ -20,7 +13,8 @@ const nameConsumersByContent = (names) => (compiler) => {
 	compiler.hooks.compilation.tap("NameConsumersByContent", (compilation) => {
 		compilation.hooks.afterChunks.tap("NameConsumersByContent", (chunks) => {
 			for (const chunk of chunks) {
-				if (chunk.name !== null && names.includes(chunk.name)) {
+				const chunkName = chunk.name;
+				if (typeof chunkName === "string" && names.includes(chunkName)) {
 					chunk.filenameTemplate = "[name].[contenthash].mjs";
 				}
 			}
@@ -28,6 +22,13 @@ const nameConsumersByContent = (names) => (compiler) => {
 	});
 };
 
+/**
+ * One analyzable-ESM build. `name` is both the output subdir and the label; `extra`
+ * overrides entry/output/plugins to trigger a single analyzable-import limitation.
+ * @param {string} name case name
+ * @param {import("../../../").Configuration} extra per-case overrides
+ * @returns {import("../../../").Configuration} configuration
+ */
 const base = (name, extra = {}) => ({
 	name,
 	mode: "development",
