@@ -22,7 +22,7 @@ const PLUGIN_NAME = "SampleEmbeddedMinifyPlugin";
  * @typedef {object} SampleEmbeddedMinifyPluginOptions
  * @property {boolean=} css tap the CSS hook
  * @property {boolean=} html tap the HTML hook
- * @property {object=} minimizerOptions options handed to the serializer
+ * @property {EXPECTED_OBJECT=} minimizerOptions options handed to the serializer
  */
 
 class SampleEmbeddedMinifyPlugin {
@@ -49,7 +49,7 @@ class SampleEmbeddedMinifyPlugin {
 				hooks.renderEmbeddedCss.tap(PLUGIN_NAME, (source, module) =>
 					minifyCss(source, module, minimizerOptions)
 				);
-				hooks.embeddedCssHash.tap(PLUGIN_NAME, (hash) => {
+				hooks.embeddedCssHash.tap(PLUGIN_NAME, (module, hash) => {
 					hash.update(key);
 				});
 			}
@@ -63,7 +63,7 @@ class SampleEmbeddedMinifyPlugin {
 							...minimizerOptions
 						}).code
 				);
-				hooks.embeddedHtmlHash.tap(PLUGIN_NAME, (hash) => {
+				hooks.embeddedHtmlHash.tap(PLUGIN_NAME, (module, hash) => {
 					hash.update(key);
 				});
 			}
@@ -74,7 +74,7 @@ class SampleEmbeddedMinifyPlugin {
 /**
  * @param {Source} source the stylesheet about to become a JS string literal
  * @param {Module} module the module it belongs to
- * @param {object} options serializer options
+ * @param {EXPECTED_OBJECT} options serializer options
  * @returns {Source} the minified source, or the original when nothing changed
  */
 const minifyCss = (source, module, options) => {

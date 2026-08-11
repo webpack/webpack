@@ -5751,7 +5751,7 @@ declare class CssModulesPlugin {
 			 * Called while hashing a module whose CSS is embedded in JavaScript; a `renderEmbeddedCss` tap must write whatever it varies on into the hash, or the codegen cache replays output from before its options changed.
 			 * @since 5.110.0
 			 */
-			embeddedCssHash: SyncHook<[Hash, Module]>;
+			embeddedCssHash: SyncHook<[Module, Hash]>;
 		}
 	): Source;
 
@@ -5790,7 +5790,7 @@ declare class CssModulesPlugin {
 			 * Called while hashing a module whose CSS is embedded in JavaScript; a `renderEmbeddedCss` tap must write whatever it varies on into the hash, or the codegen cache replays output from before its options changed.
 			 * @since 5.110.0
 			 */
-			embeddedCssHash: SyncHook<[Hash, Module]>;
+			embeddedCssHash: SyncHook<[Module, Hash]>;
 		}
 	): null | Source;
 
@@ -5835,7 +5835,7 @@ declare class CssModulesPlugin {
 		 * Called while hashing a module whose CSS is embedded in JavaScript; a `renderEmbeddedCss` tap must write whatever it varies on into the hash, or the codegen cache replays output from before its options changed.
 		 * @since 5.110.0
 		 */
-		embeddedCssHash: SyncHook<[Hash, Module]>;
+		embeddedCssHash: SyncHook<[Module, Hash]>;
 	};
 }
 declare abstract class CssParser extends ParserClass {
@@ -10112,7 +10112,7 @@ declare class HtmlModulesPlugin {
 		 * Called while hashing a module whose HTML is embedded in JavaScript; a `renderEmbeddedHtml` tap must write whatever it varies on into the hash, or the codegen cache replays output from before its options changed.
 		 * @since 5.110.0
 		 */
-		embeddedHtmlHash: SyncHook<[Hash, Module]>;
+		embeddedHtmlHash: SyncHook<[Module, Hash]>;
 	};
 }
 declare interface HtmlMutableTag {
