@@ -2109,13 +2109,15 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			releaseParserCaches
 		} = require("../lib/javascript/syntax");
 
-		const options = {
-			ecmaVersion: "latest",
-			sourceType: "module",
-			lazyNodes: true,
-			locations: false,
-			ranges: false
-		};
+		const options = /** @type {import("acorn").Options} */ (
+			/** @type {unknown} */ ({
+				ecmaVersion: "latest",
+				sourceType: "module",
+				lazyNodes: true,
+				locations: false,
+				ranges: false
+			})
+		);
 		const code =
 			"const value = 123; export function repeatedName(repeatedParameter) { return repeatedParameter + value + 0.5; }";
 
