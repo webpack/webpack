@@ -1165,6 +1165,35 @@ const PARSER_TABLES = [
 		"set",
 		"`<script>` bodies that are JSON: the two dedicated types plus any `+json` subtype (`application/ld+json`).",
 		["application/json", "importmap", "speculationrules"]
+	],
+	[
+		"TEMPLATE_START_TAG_MODES",
+		"object",
+		'§13.2.6.4.18 "in template": the start tags that re-dispatch, each to the insertion mode it switches to. Named, not numbered — the numbering is the parser\'s own, so `syntax.js` binds these names to its constants.',
+		[
+			["caption", "IN_TABLE"],
+			["colgroup", "IN_TABLE"],
+			["tbody", "IN_TABLE"],
+			["tfoot", "IN_TABLE"],
+			["thead", "IN_TABLE"],
+			["col", "IN_COLUMN_GROUP"],
+			["tr", "IN_TABLE_BODY"],
+			["td", "IN_ROW"],
+			["th", "IN_ROW"]
+		]
+	],
+	[
+		"JAVASCRIPT_SCRIPT_TYPES",
+		"set",
+		"`<script>` `type` values that make the body executable JavaScript, per the spec's JavaScript MIME type essence list plus the empty and `module` spellings. Anything else is a data block, which must pass through as an asset rather than be bundled as an entry. The IDL says nothing about MIME essences, so this cannot be read out of webref.",
+		[
+			"",
+			"module",
+			"text/javascript",
+			"application/javascript",
+			"text/ecmascript",
+			"application/ecmascript"
+		]
 	]
 ];
 

@@ -1291,12 +1291,13 @@ const collectDisplayShortForms = () => {
 };
 
 /**
- * The generic font families, expanded out of the production naming them. An
- * unquoted one of these is the generic rather than a family with that name, so
- * a quoted family spelled like one keeps its quotes.
+ * The bare keywords an alternation names, following `<production>` references
+ * through. A `<function()>` alternative contributes nothing — only the spellings
+ * that are a plain identifier are collected.
+ * @param {string[]} productions the productions to expand
  * @returns {string[]} the keywords, sorted
  */
-const collectGenericFontFamilies = () => {
+const collectAlternationKeywords = (productions) => {
 	const names = new Set();
 	/** @type {(syntax: string, seen: Set<string>) => void} */
 	const walk = (syntax, seen) => {
@@ -1313,7 +1314,9 @@ const collectGenericFontFamilies = () => {
 			}
 		}
 	};
-	walk(definitions.get("generic-family") || "", new Set(["generic-family"]));
+	for (const production of productions) {
+		walk(definitions.get(production) || "", new Set([production]));
+	}
 	return [...names].sort();
 };
 
@@ -2613,7 +2616,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -2690,6 +2693,20 @@ const SUPPLEMENT = {
 	// drops a `flex` shorthand whose basis has none, and the shorthand carries
 	// one too.
 	zeroUnitKeepingProperties: ["flex", "flex-basis"],
+	// CSS Backgrounds 3 §3.9 and CSS Masking 1 §4.5: these two spell the omitted
+	// second value `auto`, not the first repeated as a box longhand's is. The
+	// grammar is `<bg-size>` either way, so only the prose separates them.
+	autoSecondValueProperties: ["background-size", "mask-size"],
+	// CSS Images 3 §3.1: with no `<side-or-corner>` and no angle a linear
+	// gradient runs top to bottom, which is what each of these spells. An
+	// equivalence between spellings, which no dataset states.
+	defaultGradientDirections: ["to bottom", "180deg", "0.5turn"],
+	// CSS Transforms 1 §11: a one-axis call is the pair whose other component is
+	// the 0 it already means. Names the pair spelling, which the grammar does not.
+	xAxisTransforms: [
+		["translatex", "translate"],
+		["skewx", "skew"]
+	],
 	// Pair shorthands materially newer than the longhands they merge, so a target
 	// reading the longhands may not read the shorthand — and the merge would lose
 	// both declarations rather than one. `overflow-x`/`-y` and `align-items` are
@@ -3516,7 +3533,25 @@ const collectData = () => {
 	const initialValueKeywords = collectInitialValueKeywords();
 	const repeatStyleProperties = collectRepeatStyleProperties();
 	const repeatStyleKeywords = collectRepeatStyleKeywords();
-	const genericFontFamilies = collectGenericFontFamilies();
+	// An unquoted generic is the generic rather than a family with that name, so
+	// a quoted family spelled like one keeps its quotes.
+	const genericFontFamilies = collectAlternationKeywords(["generic-family"]);
+	// The `font` size slot, and the two slots of a `transition` that are spelled
+	// as a keyword rather than a time or a function.
+	const fontSizeKeywords = collectAlternationKeywords([
+		"absolute-size",
+		"relative-size"
+	]);
+	const easingKeywords = collectAlternationKeywords(["easing-function"]);
+	// Every gradient function whose flow a `<side-or-corner>`/angle states, so
+	// the direction it already runs in can be dropped.
+	const linearGradientFunctions = [...definitions.keys()]
+		.filter((name) => /^(?:repeating-)?linear-gradient\(\)$/.test(name))
+		.map((name) => name.slice(0, -2))
+		.sort();
+	const transitionBehaviors = collectAlternationKeywords([
+		"transition-behavior-value"
+	]);
 	const displayShortForms = collectDisplayShortForms();
 	const positionProperties = [
 		...new Set([
@@ -3746,6 +3781,30 @@ const FILTER_FUNCTION_OMITTED = ${mapLiteral(filterFunctionOmitted)};
 // The generic font families: an unquoted one of these names the generic rather
 // than a family called that, so a quoted family spelled like one keeps its quotes.
 const GENERIC_FONT_FAMILIES = ${setLiteral(genericFontFamilies)};
+
+// The \`font\` size slot's keywords: \`<absolute-size>\` and \`<relative-size>\`.
+const FONT_SIZE_KEYWORDS = ${setLiteral(fontSizeKeywords)};
+
+// The \`<easing-function>\` spellings that are a keyword rather than a function.
+const EASING_KEYWORDS = ${setLiteral(easingKeywords)};
+
+// What \`transition-behavior\` accepts, the slot of a \`transition\` that is
+// neither a time, an easing nor the property name.
+const TRANSITION_BEHAVIORS = ${setLiteral(transitionBehaviors)};
+
+// The linear gradients, whose flow a \`<side-or-corner>\` or angle states.
+const LINEAR_GRADIENTS = ${setLiteral(linearGradientFunctions)};
+
+// A size whose omitted second value is \`auto\`, not the first repeated.
+const AUTO_SECOND_VALUE_PROPERTIES = ${setLiteral(SUPPLEMENT.autoSecondValueProperties)};
+
+// The direction each unprefixed linear gradient already starts from. A
+// \`-webkit-\` one measures its angle the other way, so it keeps what it says.
+const DEFAULT_GRADIENT_DIRECTIONS = ${setLiteral(SUPPLEMENT.defaultGradientDirections)};
+
+// A transform along x only -> the pair spelling whose second component is the
+// 0 the one-axis call already means.
+const X_AXIS_TRANSFORMS = ${mapLiteral(SUPPLEMENT.xAxisTransforms)};
 
 // Each gradient function -> the positions its last color stop already means, so
 // writing one of them there says nothing (CSS Images 3 §3.4.3).
@@ -4026,6 +4085,7 @@ module.exports.ALPHA_VALUE_PROPERTIES = ALPHA_VALUE_PROPERTIES;\nmodule.exports.
 module.exports.ARC_COSINE_DEGREES = ARC_COSINE_DEGREES;
 module.exports.ARC_SINE_DEGREES = ARC_SINE_DEGREES;
 module.exports.ARC_TANGENT_DEGREES = ARC_TANGENT_DEGREES;
+module.exports.AUTO_SECOND_VALUE_PROPERTIES = AUTO_SECOND_VALUE_PROPERTIES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
@@ -4035,19 +4095,21 @@ module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;
 module.exports.CSS_MODULES_KEYWORD_OPTIONS = CSS_MODULES_KEYWORD_OPTIONS;
 module.exports.CSS_WIDE_KEYWORDS = CSS_WIDE_KEYWORDS;
-module.exports.CUBIC_BEZIER_KEYWORDS = CUBIC_BEZIER_KEYWORDS;
+module.exports.CUBIC_BEZIER_KEYWORDS = CUBIC_BEZIER_KEYWORDS;\nmodule.exports.DEFAULT_GRADIENT_DIRECTIONS = DEFAULT_GRADIENT_DIRECTIONS;
 module.exports.DISPLAY_SHORT_FORMS = DISPLAY_SHORT_FORMS;\nmodule.exports.DROPPABLE_WHEN_EMPTY_AT_RULES = DROPPABLE_WHEN_EMPTY_AT_RULES;
+module.exports.EASING_KEYWORDS = EASING_KEYWORDS;
 module.exports.EIGHTH_TURN_COSINE = EIGHTH_TURN_COSINE;
 module.exports.EIGHTH_TURN_SINE = EIGHTH_TURN_SINE;
 module.exports.EIGHTH_TURN_TANGENT = EIGHTH_TURN_TANGENT;
 module.exports.FAMILY_LONGHANDS = FAMILY_LONGHANDS;
 module.exports.FAMILY_SLOT_CLASSES = FAMILY_SLOT_CLASSES;
 module.exports.FAMILY_SLOT_KEYWORDS = FAMILY_SLOT_KEYWORDS;
-module.exports.FILTER_FUNCTION_OMITTED = FILTER_FUNCTION_OMITTED;\nmodule.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;\nmodule.exports.FONT_STRETCH_PERCENTAGES = FONT_STRETCH_PERCENTAGES;
+module.exports.FILTER_FUNCTION_OMITTED = FILTER_FUNCTION_OMITTED;\nmodule.exports.FLEX_KEYWORDS = FLEX_KEYWORDS;\nmodule.exports.FONT_SIZE_KEYWORDS = FONT_SIZE_KEYWORDS;\nmodule.exports.FONT_STRETCH_PERCENTAGES = FONT_STRETCH_PERCENTAGES;
 module.exports.FONT_WEIGHT_NUMBERS = FONT_WEIGHT_NUMBERS;
 module.exports.GENERIC_FONT_FAMILIES = GENERIC_FONT_FAMILIES;\nmodule.exports.GRADIENT_LAST_POSITIONS = GRADIENT_LAST_POSITIONS;\nmodule.exports.INITIAL_VALUE_KEYWORDS = INITIAL_VALUE_KEYWORDS;\nmodule.exports.INTEGER_PROPERTIES = INTEGER_PROPERTIES;
 module.exports.LEGACY_PSEUDO_ELEMENTS = LEGACY_PSEUDO_ELEMENTS;
 module.exports.LENGTH_ONLY_FUNCTIONS = LENGTH_ONLY_FUNCTIONS;
+module.exports.LINEAR_GRADIENTS = LINEAR_GRADIENTS;
 module.exports.MATH_FUNCTIONS = MATH_FUNCTIONS;
 module.exports.MATH_FUNCTION_ARITY = MATH_FUNCTION_ARITY;
 module.exports.MATH_FUNCTION_FOLD = MATH_FUNCTION_FOLD;
@@ -4061,9 +4123,9 @@ module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
-module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;
+module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
-module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;
+module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
 module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;
 `;
