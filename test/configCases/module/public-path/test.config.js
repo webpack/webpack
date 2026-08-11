@@ -12,7 +12,10 @@ module.exports = {
 			return `./${module}`;
 		}
 
-		if (i === 6 || i === 7 || i === 10 || i === 11) {
+		// Only the absolute-URL configs need this: their specifier is rewritten to `./`
+		// before it gets here. An empty public path is baked behind the `../` path back
+		// to the output root, so it already reaches the chunk.
+		if (i === 10 || i === 11) {
 			if (/async/.test(module)) {
 				return `../${module}`;
 			}

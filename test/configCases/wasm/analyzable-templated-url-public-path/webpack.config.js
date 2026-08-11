@@ -10,7 +10,7 @@ const webpack = require("../../../../");
  * @param {string} name prefix keeping the emitted files of each config apart
  * @param {string} hashPart the `[fullhash]` form under test
  * @param {boolean} digest whether that form re-encodes the hash
- * @param {{ baked?: boolean, chunkSuffix?: string, workerChunkFilename?: string, realContentHash?: boolean }=} extra per-case overrides
+ * @param {{ baked?: boolean, chunkSuffix?: string, workerChunkFilename?: string, realContentHash?: boolean, publicPath?: NonNullable<import("../../../../").Configuration["output"]>["publicPath"] }=} extra per-case overrides
  * @returns {import("../../../../").Configuration} configuration
  */
 const base = (index, name, hashPart, digest, extra = {}) => ({
@@ -34,13 +34,14 @@ const base = (index, name, hashPart, digest, extra = {}) => ({
 		chunkFilename: `${name}-chunks/[name]${extra.chunkSuffix || ""}.mjs`,
 		workerChunkFilename: extra.workerChunkFilename,
 		webassemblyModuleFilename: `${name}-[id].wasm`,
-		publicPath: `https://example.com/${hashPart}/`
+		publicPath: extra.publicPath || `https://example.com/${hashPart}/`
 	},
 	plugins: [
 		new webpack.DefinePlugin({
 			__INDEX__: JSON.stringify(index),
 			__CHUNK_DIR__: JSON.stringify(`${name}-chunks`),
 			__DIGEST__: JSON.stringify(digest),
+			__HASH_FREE__: JSON.stringify(extra.publicPath !== undefined),
 			__BAKED__: JSON.stringify(extra.baked !== false)
 		})
 	]
@@ -63,5 +64,10 @@ module.exports = [
 		baked: false,
 		realContentHash: false,
 		chunkSuffix: ".[contenthash]"
+	}),
+	// A function is called for its value, so one that answers with an absolute URL is
+	// as bakeable as the same URL written out.
+	base(5, "function", "[fullhash]", false, {
+		publicPath: () => "https://example.com/fn/"
 	})
 ];

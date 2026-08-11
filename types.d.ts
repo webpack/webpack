@@ -24747,6 +24747,15 @@ declare abstract class RuntimeTemplate {
 	 * by `supportsAnalyzableEsmUrl`'s runtime-built path under an `import.meta.url` base.
 	 */
 	supportsAnalyzableWasm(chunkGraph?: ChunkGraph, module?: Module): boolean;
+
+	/**
+	 * Whether an entry `baseUri` decides where an asset URL points. It replaces the
+	 * output root the runtime resolves one against, and no literal read from its own
+	 * chunk shares that base — but only a public path that needs a base ever reaches
+	 * it, so an absolute one, `auto` included, is unaffected. Answered for the
+	 * compilation: a module reached from two entries is generated once.
+	 */
+	reportsEntryBaseUri(module?: Module): boolean;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
 

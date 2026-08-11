@@ -19,7 +19,9 @@ if (__BAKED__) {
 		const url = chunk().match(/new URL\("https:\/\/example\.com\/([^/]+)\//);
 
 		expect(url).not.toBe(null);
-		if (__DIGEST__) {
+		if (__HASH_FREE__) {
+			expect(url[1]).toBe("fn");
+		} else if (__DIGEST__) {
 			// A digest re-encodes the hash, so decode it back to compare.
 			const hex = Buffer.from(
 				url[1].replace(/-/g, "+").replace(/_/g, "/"),
