@@ -10210,6 +10210,11 @@ declare interface HtmlProcessOptions {
 	convertLengthUnits?: boolean;
 
 	/**
+	 * drop the `<html>` / `<head>` / `<body>` tags §13.1.2.4 allows; `"keep-head-and-body"` drops only `<html>` (default false)
+	 */
+	tagOmission?: boolean | "keep-head-and-body";
+
+	/**
 	 * collapse each run of whitespace in text to a single space, except where an ancestor renders it verbatim (default false)
 	 */
 	collapseWhitespace?: boolean;
@@ -19746,6 +19751,12 @@ declare interface OptimizationMinimizeHtml {
 	 * @since 5.110.0
 	 */
 	collapseWhitespace?: boolean;
+
+	/**
+	 * Leave out the `<html>` / `<head>` / `<body>` tags §13.1.2.4 allows the parser to imply. `"keep-head-and-body"` drops only `<html>`, since a crawler matching on `<body>` with a regexp rather than a parser would not find one.
+	 * @since 5.110.0
+	 */
+	tagOmission?: boolean | "keep-head-and-body";
 }
 
 /**
@@ -21814,6 +21825,7 @@ declare interface PrintOptions {
 	environment?: Readonly<Record<string, boolean>>;
 	convertLengthUnits?: boolean;
 	collapseWhitespace?: boolean;
+	tagOmission?: boolean | "keep-head-and-body";
 }
 declare interface PrintedElement {
 	element: string;

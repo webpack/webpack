@@ -291,6 +291,15 @@ const P_KEEPS_END_TAG_IN = [
 	"video"
 ];
 
+const BODY_START_KEPT_BEFORE = [
+	"link",
+	"meta",
+	"noscript",
+	"script",
+	"style",
+	"template"
+];
+
 const SRCSET_ATTRIBUTES = ["srcset", "imagesrcset"];
 
 const COMMA_LIST_ATTRIBUTES = ["accept", "coords", "sizes"];
@@ -1230,6 +1239,7 @@ const EXPORT_NAMES = [
 	"BOOLEAN_ATTRIBUTES",
 	"COMMA_LIST_ATTRIBUTES",
 	"INTEGER_ATTRIBUTES",
+	"BODY_START_KEPT_BEFORE",
 	"OPTIONAL_END_TAG_AT_END",
 	"OPTIONAL_END_TAG_FOLLOWERS",
 	"OPTIONAL_END_TAG_UNLESS_TRAILING_NODE",
@@ -1292,6 +1302,13 @@ const OPTIONAL_END_TAG_UNLESS_TRAILING_NODE = ${setLiteral(
  * @type {Set<string>}
  */
 const OPTIONAL_END_TAG_AT_END = ${setLiteral(OPTIONAL_END_TAG_AT_END)};
+
+/**
+ * Elements that keep a \`<body>\` start tag when the body opens with one: the
+ * parser reads them as head content and moves them out of the body.
+ * @type {Set<string>}
+ */
+const BODY_START_KEPT_BEFORE = ${setLiteral(BODY_START_KEPT_BEFORE)};
 
 /**
  * §13.1.2.4: a trailing \`</p>\` stays inside these, whose content model would

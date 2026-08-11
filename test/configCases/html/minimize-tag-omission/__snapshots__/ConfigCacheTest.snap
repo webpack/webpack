@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html minimize-tag-omission minimize-tag-omission should compile: head-content.html 1`] = `
+"<html lang=en><title>H</title><body><noscript>n</noscript><p>after</p>
+"
+`;
+
+exports[`ConfigCacheTestCases html minimize-tag-omission minimize-tag-omission should compile: kept-comment.html 1`] = `
+"<title>K</title><body><!--#include file=\\"a.html\\"--><p>ssi</p>
+"
+`;
+
+exports[`ConfigCacheTestCases html minimize-tag-omission minimize-tag-omission should compile: page.html 1`] = `
+"<!doctype html><meta charset=utf-8><title>Catalog</title></head><p>page<ul><li>one<li>two</ul>
+
+"
+`;
