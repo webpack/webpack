@@ -498,6 +498,14 @@ describe("CssValueSyntax", () => {
 				["grid-auto-flow", "row"]
 			]);
 		});
+
+		it("refuses a keyword the grammar no longer offers beside another", () => {
+			expect(() =>
+				collectOmittableInitialKeywords(["a"], {
+					a: { initial: "row", syntax: "row | column" }
+				})
+			).toThrow("No omittable 'row' in 'a': row | column");
+		});
 	});
 
 	describe("collectRatioProperties", () => {
