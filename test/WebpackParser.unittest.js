@@ -2102,4 +2102,41 @@ describe("WebpackParser acorn-override fast-path gates", () => {
 			/Private field '#missing' must be declared in an enclosing class/
 		);
 	});
+
+	describe("releaseParserCaches", () => {
+		const {
+			WebpackParser,
+			releaseParserCaches
+		} = require("../lib/javascript/syntax");
+
+		const options = {
+			ecmaVersion: "latest",
+			sourceType: "module",
+			lazyNodes: true,
+			locations: false,
+			ranges: false
+		};
+		const code =
+			"const value = 123; export function repeatedName(repeatedParameter) { return repeatedParameter + value + 0.5; }";
+
+		it("parses identically after the caches are released", () => {
+			const before = JSON.stringify(WebpackParser.parse(code, options));
+			releaseParserCaches();
+			const after = JSON.stringify(WebpackParser.parse(code, options));
+			expect(after).toBe(before);
+		});
+
+		it("is idempotent and keeps the tokenizer working", () => {
+			releaseParserCaches();
+			releaseParserCaches();
+			let count = 0;
+			for (const token of WebpackParser.tokenizer(code, {
+				ecmaVersion: "latest",
+				sourceType: "module"
+			})) {
+				if (token) count++;
+			}
+			expect(count).toBeGreaterThan(10);
+		});
+	});
 });
