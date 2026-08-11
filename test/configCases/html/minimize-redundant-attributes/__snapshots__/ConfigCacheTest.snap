@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ConfigCacheTestCases html minimize-redundant-attributes minimize-redundant-attributes should compile 1`] = `
-"<!doctype html><html><head><title>Redundant</title><style>a{color:red}</style><link rel=stylesheet href=x.css><script src=__html_cbe5b59d_0.js></script><script src=__html_cbe5b59d_1.js></script><script src=__html_cbe5b59d_2.js></script><script type=application/ld+json>{\\"a\\":1}</script></head><body>
+"<!doctype html><html><head><title>Redundant</title><style>a{color:red}</style><link rel=stylesheet href=x.css><link rel=stylesheet media=screen href=y.css><style media=all>b{color:blue}</style><script src=__html_cbe5b59d_0.js></script><script src=__html_cbe5b59d_1.js></script><script src=z.js></script><script charset=iso-8859-1 src=w.js></script><script src=__html_cbe5b59d_2.js></script><script type=application/ld+json>{\\"a\\":1}</script></head><body>
 <input type=text name=a>
 <form method=get><button type=submit>b</button></form>
 

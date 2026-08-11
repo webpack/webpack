@@ -1185,11 +1185,15 @@ const PARSER_TABLES = [
 	[
 		"REDUNDANT_TYPE_ATTRIBUTES",
 		"object",
-		'`element attribute` -> the value that states the element\'s own default, for `removeRedundantAttributes: "smart"`. Only the type/language markers: no stylesheet selects on them, unlike `input[type=text]`. `<script type>` is not here — its redundant values are `JAVASCRIPT_SCRIPT_TYPES` minus the empty and `module` spellings, which mean something.',
+		'`element attribute` -> the value that states the element\'s own default, for `removeRedundantAttributes: "smart"`. Only the markers no stylesheet selects on, unlike `input[type=text]`: `media` defaults to `all`, and a `<script charset>` matching the document encoding is obsolete and ignored. Matched ASCII-case-insensitively, unlike `@swc/html`, which lowercases `type` but not `media` / `charset`. `<script type>` is not here — its redundant values are `JAVASCRIPT_SCRIPT_TYPES` minus the empty and `module` spellings, which mean something.',
 		[
 			["style type", "text/css"],
 			["link type", "text/css"],
-			["script language", "javascript"]
+			["link media", "all"],
+			["script language", "javascript"],
+			// The attribute value the spec spells, not a Node encoding identifier.
+			// eslint-disable-next-line unicorn/text-encoding-identifier-case
+			["script charset", "utf-8"]
 		]
 	],
 	[
@@ -1284,7 +1288,15 @@ const parserTable = ([name, kind, doc, items]) => {
 			: kind === "array"
 				? "string[]"
 				: "Record<string, string>";
-	return `/**\n * ${doc}\n * @type {${type}}\n */\nconst ${name} = ${value};\n`;
+	// The `charset` value is an attribute spelling, not a Node encoding id.
+	const encoded = value.includes('"utf-8"');
+	const open = encoded
+		? "/* eslint-disable unicorn/text-encoding-identifier-case */\n"
+		: "";
+	const close = encoded
+		? "/* eslint-enable unicorn/text-encoding-identifier-case */\n"
+		: "";
+	return `/**\n * ${doc}\n * @type {${type}}\n */\n${open}const ${name} = ${value};\n${close}`;
 };
 
 // The §13.1.2.4 optional-tag conditions and the value grammars below are prose
