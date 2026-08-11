@@ -2376,6 +2376,11 @@ export interface OptimizationMinimizeHtml {
 	 * @since 5.110.0
 	 */
 	collapseWhitespace?: boolean;
+	/**
+	 * Drop an attribute whose value is the one the element already defaults to. `"none"` (the default) keeps every attribute. `"smart"` drops only the type/language markers no stylesheet selects on (`<script type=text/javascript>`, `<style type=text/css>`, `<link type=text/css>`, `<script language=javascript>`). `"all"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which is unsafe: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.
+	 * @since 5.110.0
+	 */
+	removeRedundantAttributes?: "none" | "smart" | "all";
 }
 /**
  * Options handed as-is to the JavaScript minimizer (terser-compatible). Defaults to `{ compress: { passes: 2 } }`.

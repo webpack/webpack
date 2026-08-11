@@ -10214,6 +10214,11 @@ declare interface HtmlProcessOptions {
 	 * collapse each run of whitespace in text to a single space, except where an ancestor renders it verbatim (default false)
 	 */
 	collapseWhitespace?: boolean;
+
+	/**
+	 * drop an attribute whose value is the element's own default (default `"none"`)
+	 */
+	removeRedundantAttributes?: "none" | "all" | "smart";
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**
@@ -19747,6 +19752,12 @@ declare interface OptimizationMinimizeHtml {
 	 * @since 5.110.0
 	 */
 	collapseWhitespace?: boolean;
+
+	/**
+	 * Drop an attribute whose value is the one the element already defaults to. `"none"` (the default) keeps every attribute. `"smart"` drops only the type/language markers no stylesheet selects on (`<script type=text/javascript>`, `<style type=text/css>`, `<link type=text/css>`, `<script language=javascript>`). `"all"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which is unsafe: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.
+	 * @since 5.110.0
+	 */
+	removeRedundantAttributes?: "none" | "all" | "smart";
 }
 
 /**
@@ -21815,6 +21826,7 @@ declare interface PrintOptions {
 	environment?: Readonly<Record<string, boolean>>;
 	convertLengthUnits?: boolean;
 	collapseWhitespace?: boolean;
+	removeRedundantAttributes?: "none" | "all" | "smart";
 }
 declare interface PrintedElement {
 	element: string;

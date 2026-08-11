@@ -1183,6 +1183,36 @@ const PARSER_TABLES = [
 		]
 	],
 	[
+		"REDUNDANT_TYPE_ATTRIBUTES",
+		"object",
+		'`element attribute` -> the value that states the element\'s own default, for `removeRedundantAttributes: "smart"`. Only the type/language markers: no stylesheet selects on them, unlike `input[type=text]`. `<script type>` is not here — its redundant values are `JAVASCRIPT_SCRIPT_TYPES` minus the empty and `module` spellings, which mean something.',
+		[
+			["style type", "text/css"],
+			["link type", "text/css"],
+			["script language", "javascript"]
+		]
+	],
+	[
+		"REDUNDANT_DEFAULT_ATTRIBUTES",
+		"object",
+		'`element attribute` -> the value the element already defaults to, for `removeRedundantAttributes: "all"`. Dropping these is what makes the option unsafe: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching. Spec defaults, which the IDL does not state.',
+		[
+			["input type", "text"],
+			["form method", "get"],
+			["form enctype", "application/x-www-form-urlencoded"],
+			["button type", "submit"],
+			["area shape", "rect"],
+			["textarea wrap", "soft"],
+			["track kind", "subtitles"],
+			["col span", "1"],
+			["colgroup span", "1"],
+			["td colspan", "1"],
+			["td rowspan", "1"],
+			["th colspan", "1"],
+			["th rowspan", "1"]
+		]
+	],
+	[
 		"JAVASCRIPT_SCRIPT_TYPES",
 		"set",
 		"`<script>` `type` values that make the body executable JavaScript, per the spec's JavaScript MIME type essence list plus the empty and `module` spellings. Anything else is a data block, which must pass through as an asset rather than be bundled as an entry. The IDL says nothing about MIME essences, so this cannot be read out of webref.",
