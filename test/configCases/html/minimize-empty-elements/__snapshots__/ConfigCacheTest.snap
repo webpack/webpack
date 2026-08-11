@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases html minimize-empty-elements minimize-empty-elements should compile 1`] = `
+"<!doctype html><html><head><title>Empty elements</title></head><body>
+<p>kept: has text</p>
+<div id=mount></div><div class=spacer></div>
+<script src=x.js></script>
+<canvas></canvas><slot></slot><template></template><textarea></textarea><progress></progress><meter></meter><output></output><dialog></dialog>
+<table><tr><td><td>a</table>
+<br><img src=x.png><input>
+<svg></svg>
+<div></div>
+<div> </div>
+
+
+</body></html>"
+`;

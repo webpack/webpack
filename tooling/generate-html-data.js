@@ -1182,6 +1182,46 @@ const PARSER_TABLES = [
 			["th", "IN_ROW"]
 		]
 	],
+	// Elements `removeEmptyElements` keeps even with no children and no
+	// attributes, because that is their ordinary form rather than a leftover.
+	// The option's other guards are rules, not names: a void element is always
+	// childless, a foreign one is not ours to judge, and an element carrying any
+	// attribute at all was written for a reason (which is what covers
+	// `<script src>`, `<iframe src>`, `<div id=mount>` and `<div class=spacer>`,
+	// each of which html-minifier-terser drops).
+	[
+		"EMPTY_ELEMENT_KEPT",
+		"set",
+		"Elements `removeEmptyElements` never drops: with no children and no attributes each is still doing its job, so an empty one is not a leftover.",
+		[
+			// Drawn into by script, and found by tag name.
+			"canvas",
+			// Filled and opened by script.
+			"dialog",
+			// A gauge reads its value off an attribute; bare, it is still a gauge.
+			"meter",
+			// Form-associated and written to by script.
+			"output",
+			"progress",
+			// The default slot, which is exactly the one with no name.
+			"slot",
+			// Its children hang off a content fragment, not off it.
+			"template",
+			// Empty is a valid value, and its own end tag is what delimits it.
+			"textarea",
+			// Table shape: dropping a cell or a row shifts every one after it.
+			"caption",
+			"col",
+			"colgroup",
+			"table",
+			"tbody",
+			"td",
+			"tfoot",
+			"th",
+			"thead",
+			"tr"
+		]
+	],
 	// Global attributes whose empty value is the state the spec gives their
 	// absence, so `removeEmptyAttributes` may drop them. Deliberately short:
 	// `title=""` and `lang=""` look like members and are not, because the spec

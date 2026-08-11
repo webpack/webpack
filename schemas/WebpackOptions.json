@@ -3717,6 +3717,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "removeEmptyElements": {
+          "description": "Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (`canvas`, `slot`, `template`, `textarea`, `progress`, `meter`, `output`, `dialog`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a `::before`, and the minifier cannot see the stylesheet. Emptiness is read off the source tree in one pass, so an element left empty only because its child was dropped is not itself dropped.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "removeRedundantAttributes": {
           "description": "Drop an attribute whose value is the one the element already defaults to. `\"smart\"` (the default) drops only the markers that change nothing a selector or script can observe — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>`, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — which is what @swc/html does by default. `\"all\"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which is unsafe: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.",
           "enum": ["smart", "all"],
