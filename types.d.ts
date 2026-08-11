@@ -10216,6 +10216,11 @@ declare interface HtmlProcessOptions {
 	collapseWhitespace?: boolean;
 
 	/**
+	 * drop `class` / `id` / `style` / `dir` when empty, which the spec reads as their absence (default false)
+	 */
+	removeEmptyAttributes?: boolean;
+
+	/**
 	 * drop an attribute whose value is the element's own default; `"all"` also drops the spec defaults a selector can match (default `"smart"`)
 	 */
 	removeRedundantAttributes?: "all" | "smart";
@@ -19754,6 +19759,12 @@ declare interface OptimizationMinimizeHtml {
 	collapseWhitespace?: boolean;
 
 	/**
+	 * Drop `class`, `id`, `style` and `dir` when their value is empty or only whitespace, which is the state the spec also gives their absence. Off by default: an attribute selector matches on presence, so `[class]` stops matching. `title` and `lang` are never dropped even when empty — the spec gives an empty value of either a meaning absence does not have.
+	 * @since 5.110.0
+	 */
+	removeEmptyAttributes?: boolean;
+
+	/**
 	 * Drop an attribute whose value is the one the element already defaults to. `"smart"` (the default) drops only the markers that change nothing a selector or script can observe — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>`, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — which is what
 	 * @since 5.110.0
 	 */
@@ -21826,6 +21837,7 @@ declare interface PrintOptions {
 	environment?: Readonly<Record<string, boolean>>;
 	convertLengthUnits?: boolean;
 	collapseWhitespace?: boolean;
+	removeEmptyAttributes?: boolean;
 	removeRedundantAttributes?: "all" | "smart";
 }
 declare interface PrintedElement {

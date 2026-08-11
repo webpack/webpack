@@ -3714,6 +3714,58 @@ describe("SourceProcessor — collapseWhitespace", () => {
 	});
 });
 
+// The two conditions that decline a fold cannot be reached through a build:
+// webpack's CSS pipeline resolves an `@import` away long before the HTML
+// minifier sees the sheet, and the minifier only refuses text that overflows
+// its own parser. The rest of the transform is covered by the
+// `configCases/html/minimize-merge-styles` case.
+describe("SourceProcessor — merging adjacent <style>", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { minimize: true }).code;
+
+	it("folds a run into one element", () => {
+		expect(
+			minify("<style>a{color:red}</style><style>b{color:#00f}</style>")
+		).toBe("<style>a{color:red}b{color:#00f}</style>");
+	});
+
+	it("declines a sheet whose `@import` would stop applying", () => {
+		// `@import` is only honored at the top of a sheet, so appending this one
+		// to the sheet before it silently drops the import.
+		const html =
+			"<style>a{color:red}</style><style>@import url(x.css);b{color:#00f}</style>";
+		expect(minify(html)).toBe(html);
+	});
+
+	it("still absorbs into a sheet whose own `@import` leads", () => {
+		expect(
+			minify(
+				"<style>@import url(x.css);a{color:red}</style><style>b{color:#00f}</style>"
+			)
+		).toBe("<style>@import url(x.css);a{color:red}b{color:#00f}</style>");
+	});
+
+	it("declines a sheet the CSS minifier could not read", () => {
+		// Deep enough to overflow the CSS parser's stack. Text it never parsed may
+		// be unterminated, and appending to that makes the next sheet part of it.
+		const unreadable = "a{".repeat(20000);
+		const head = minify(
+			`<style>${unreadable}</style><style>b{color:#00f}</style>`
+		);
+		expect(head).toContain("</style><style>b{color:#00f}</style>");
+		const tail = minify(
+			`<style>a{color:red}</style><style>${unreadable}</style>`
+		);
+		expect(tail).toContain("<style>a{color:red}</style><style>a{a{");
+	});
+});
+
 describe("parseHtml — insertion-mode edge cases", () => {
 	it("merges foster-parented text runs before a table", () => {
 		const nodes = body("<table>x<tr></tr>y</table>");

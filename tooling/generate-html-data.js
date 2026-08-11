@@ -1182,6 +1182,31 @@ const PARSER_TABLES = [
 			["th", "IN_ROW"]
 		]
 	],
+	// Global attributes whose empty value is the state the spec gives their
+	// absence, so `removeEmptyAttributes` may drop them. Deliberately short:
+	// `title=""` and `lang=""` look like members and are not, because the spec
+	// gives each of them a meaning absence does not have — an empty `title` says
+	// the element has no advisory information, overriding an ancestor's, and an
+	// empty `lang` says the language is unknown rather than inherited. Every
+	// other minifier drops both. `href` / `src` / `action` are out for the same
+	// reason: an empty URL resolves to the document's own address, which is not
+	// what no URL at all does.
+	[
+		"EMPTY_REMOVABLE_ATTRIBUTES",
+		"set",
+		"Attributes `removeEmptyAttributes` may drop when their value is empty or all whitespace: the spec gives each the same state empty and absent. Only a presence selector (`[class]`) can tell, which is what keeps the option off by default.",
+		[
+			// No classes either way; `classList` is empty and nothing matches.
+			"class",
+			// `dir` is enumerated, and both its invalid and missing value defaults
+			// are the same undefined state.
+			"dir",
+			// No id either way: `getElementById("")` matches nothing.
+			"id",
+			// An empty declaration list contributes nothing to the cascade.
+			"style"
+		]
+	],
 	[
 		"REDUNDANT_TYPE_ATTRIBUTES",
 		"byElement",

@@ -9988,6 +9988,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-html-remove-empty-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Drop \`class\`, \`id\`, \`style\` and \`dir\` when their value is empty or only whitespace, which is the state the spec also gives their absence. Off by default: an attribute selector matches on presence, so \`[class]\` stops matching. \`title\` and \`lang\` are never dropped even when empty — the spec gives an empty value of either a meaning absence does not have.",
+        "multiple": false,
+        "path": "optimization.minimize.html.removeEmptyAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Drop \`class\`, \`id\`, \`style\` and \`dir\` when their value is empty or only whitespace, which is the state the spec also gives their absence. Off by default: an attribute selector matches on presence, so \`[class]\` stops matching. \`title\` and \`lang\` are never dropped even when empty — the spec gives an empty value of either a meaning absence does not have.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-html-remove-redundant-attributes": Object {
     "configs": Array [
       Object {
