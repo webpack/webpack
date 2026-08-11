@@ -2386,6 +2386,16 @@ export interface OptimizationMinimizeHtml {
 	 * @since 5.110.0
 	 */
 	removeRedundantAttributes?: "smart" | "all";
+	/**
+	 * Print an element's attributes in name order. Nothing in HTML reads attribute order, so this only makes the same markup compress better across pages. Off by default: a script reading `element.attributes` back, or a snapshot of the emitted HTML, sees the new order.
+	 * @since 5.110.0
+	 */
+	sortAttributes?: boolean;
+	/**
+	 * Print a `class` list in token order. Nothing in CSS reads token order, so this only makes the same markup compress better across pages. Off by default: a script reading `className` back sees the new order. Other token lists are left alone — `ping` is the order its requests go out in.
+	 * @since 5.110.0
+	 */
+	sortClassNames?: boolean;
 }
 /**
  * Options handed as-is to the JavaScript minimizer (terser-compatible). Defaults to `{ compress: { passes: 2 } }`.

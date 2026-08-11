@@ -10018,6 +10018,32 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-minimize-html-sort-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Print an element's attributes in name order. Nothing in HTML reads attribute order, so this only makes the same markup compress better across pages. Off by default: a script reading \`element.attributes\` back, or a snapshot of the emitted HTML, sees the new order.",
+        "multiple": false,
+        "path": "optimization.minimize.html.sortAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Print an element's attributes in name order. Nothing in HTML reads attribute order, so this only makes the same markup compress better across pages. Off by default: a script reading \`element.attributes\` back, or a snapshot of the emitted HTML, sees the new order.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-html-sort-class-names": Object {
+    "configs": Array [
+      Object {
+        "description": "Print a \`class\` list in token order. Nothing in CSS reads token order, so this only makes the same markup compress better across pages. Off by default: a script reading \`className\` back sees the new order. Other token lists are left alone — \`ping\` is the order its requests go out in.",
+        "multiple": false,
+        "path": "optimization.minimize.html.sortClassNames",
+        "type": "boolean",
+      },
+    ],
+    "description": "Print a \`class\` list in token order. Nothing in CSS reads token order, so this only makes the same markup compress better across pages. Off by default: a script reading \`className\` back sees the new order. Other token lists are left alone — \`ping\` is the order its requests go out in.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-javascript": Object {
     "configs": Array [
       Object {

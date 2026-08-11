@@ -3766,6 +3766,87 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	});
 });
 
+describe("SourceProcessor — sortAttributes / sortClassNames", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @param {object=} options extra print options
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html, options) =>
+		new SourceProcessor().process(html, { minimize: true, ...options }).code;
+
+	// `serializeHtmlTree` sorts attributes, so attribute order cannot hide in it;
+	// `class` is a set the option reorders on purpose, so sort it here too.
+	/**
+	 * @param {string} html markup
+	 * @returns {string} its DOM, spelled so neither order can show through
+	 */
+	const canonical = (html) =>
+		serializeHtmlTree(parseHtmlRefs(html)).replace(
+			/^(\|\s*class=")([^"]*)(")$/gm,
+			(_m, open, value, close) =>
+				open + value.split(" ").sort().join(" ") + close
+		);
+
+	// Attribute and class order vary per element: that is the repetition the
+	// options exist to create.
+	const PAGE = `<!doctype html><html lang=en><head><meta charset=utf-8><title>t</title></head><body>${[
+		'<div class="c b a" data-z="1" id="n1" hidden>',
+		'<div id="n2" hidden class="a c b" data-z="1">',
+		'<div data-z="1" class="b c a" hidden id="n3">'
+	].join(
+		"<span class=x>t</span></div>"
+	)}<span class=x>t</span></div><svg viewBox="0 0 1 1"><rect zz="1" aa="2"/></svg><table><tr><td colspan=2>c</table><a href="/x" ping="/p1 /p2">l</a></body></html>`;
+
+	it("sorts an element's attributes by name", () => {
+		expect(
+			minify('<div zz="1" aa="2" mm="3">x</div>', { sortAttributes: true })
+		).toBe("<div aa=2 mm=3 zz=1>x</div>");
+	});
+
+	it("sorts a class list, and only `class`", () => {
+		expect(
+			minify('<div class="zz aa mm">x</div>', { sortClassNames: true })
+		).toBe('<div class="aa mm zz">x</div>');
+		// `ping` is the order the requests go out in.
+		expect(minify('<a ping="/z /a">l</a>', { sortClassNames: true })).toBe(
+			'<a ping="/z /a">l</a>'
+		);
+	});
+
+	it("leaves foreign content alone, where a name is not case-folded", () => {
+		expect(
+			minify('<svg><rect zz="1" aa="2"/></svg>', { sortAttributes: true })
+		).toContain("zz=1 aa=2");
+	});
+
+	it("keeps the DOM identical, whichever is on", () => {
+		const expected = canonical(minify(PAGE));
+		// A check against an empty serialization would pass no matter what.
+		expect(expected.split("\n").length).toBeGreaterThan(20);
+		for (const options of [
+			{ sortAttributes: true },
+			{ sortClassNames: true },
+			{ sortAttributes: true, sortClassNames: true }
+		]) {
+			expect(canonical(minify(PAGE, options))).toBe(expected);
+		}
+	});
+
+	it("reorders rather than rewrites: the byte count is unchanged", () => {
+		const base = minify(PAGE);
+		for (const options of [
+			{ sortAttributes: true },
+			{ sortClassNames: true },
+			{ sortAttributes: true, sortClassNames: true }
+		]) {
+			expect(minify(PAGE, options)).toHaveLength(base.length);
+		}
+	});
+});
+
 describe("parseHtml — insertion-mode edge cases", () => {
 	it("merges foster-parented text runs before a table", () => {
 		const nodes = body("<table>x<tr></tr>y</table>");
