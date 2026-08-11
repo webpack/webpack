@@ -23,5 +23,9 @@ module.exports = {
 		expect(page).toContain("<textarea wrap=soft>");
 		// `media=all` is only in the table for `<link>`, matching @swc/html.
 		expect(page).toContain("<style media=all>");
+		// A marker goes whether or not the source quoted its value.
+		expect(page).toContain("<style>c{color:red}</style>");
+		expect(page).toContain("<link rel=stylesheet href=u.css>");
+		expect(page).toContain("<script src=u.js></script>");
 	}
 };

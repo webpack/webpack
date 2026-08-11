@@ -2387,7 +2387,7 @@ export interface OptimizationMinimizeHtml {
 	 */
 	removeEmptyElements?: boolean;
 	/**
-	 * Drop an attribute whose value is the one the element already defaults to. `"smart"` (the default) drops only the markers that change nothing a selector or script can observe — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>`, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — which is what @swc/html does by default. `"all"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which is unsafe: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.
+	 * Drop an attribute whose value is the one the element already defaults to. `"smart"` (the default) drops only the markers that change nothing a selector or script can observe — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>`, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — which is what `@swc/html` does by default. `"all"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which is unsafe: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.
 	 * @since 5.110.0
 	 */
 	removeRedundantAttributes?: "smart" | "all";

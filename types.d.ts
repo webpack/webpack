@@ -10221,6 +10221,21 @@ declare interface HtmlProcessOptions {
 	removeEmptyAttributes?: boolean;
 
 	/**
+	 * drop an element with no children and no attributes, unless its bare form is meaningful (default false)
+	 */
+	removeEmptyElements?: boolean;
+
+	/**
+	 * print an element's attributes in name order, which nothing in HTML reads (default false)
+	 */
+	sortAttributes?: boolean;
+
+	/**
+	 * print a `class` list in token order, which nothing in CSS reads (default false)
+	 */
+	sortClassNames?: boolean;
+
+	/**
 	 * drop an attribute whose value is the element's own default; `"all"` also drops the spec defaults a selector can match (default `"smart"`)
 	 */
 	removeRedundantAttributes?: "all" | "smart";
@@ -19765,10 +19780,28 @@ declare interface OptimizationMinimizeHtml {
 	removeEmptyAttributes?: boolean;
 
 	/**
-	 * Drop an attribute whose value is the one the element already defaults to. `"smart"` (the default) drops only the markers that change nothing a selector or script can observe — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>`, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — which is what
+	 * Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (`canvas`, `slot`, `template`, `textarea`, `progress`, `meter`, `output`, `dialog`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a `::before`, and the minifier cannot see the stylesheet. Emptiness is read off the source tree in one pass, so an element left empty only because its child was dropped is not itself dropped.
+	 * @since 5.110.0
+	 */
+	removeEmptyElements?: boolean;
+
+	/**
+	 * Drop an attribute whose value is the one the element already defaults to. `"smart"` (the default) drops only the markers that change nothing a selector or script can observe — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>`, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — which is what `@swc/html` does by default. `"all"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which is unsafe: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.
 	 * @since 5.110.0
 	 */
 	removeRedundantAttributes?: "all" | "smart";
+
+	/**
+	 * Print an element's attributes in name order. Nothing in HTML reads attribute order, so this only makes the same markup compress better across pages. Off by default: a script reading `element.attributes` back, or a snapshot of the emitted HTML, sees the new order.
+	 * @since 5.110.0
+	 */
+	sortAttributes?: boolean;
+
+	/**
+	 * Print a `class` list in token order. Nothing in CSS reads token order, so this only makes the same markup compress better across pages. Off by default: a script reading `className` back sees the new order. Other token lists are left alone — `ping` is the order its requests go out in.
+	 * @since 5.110.0
+	 */
+	sortClassNames?: boolean;
 }
 
 /**
@@ -21838,7 +21871,10 @@ declare interface PrintOptions {
 	convertLengthUnits?: boolean;
 	collapseWhitespace?: boolean;
 	removeEmptyAttributes?: boolean;
+	removeEmptyElements?: boolean;
 	removeRedundantAttributes?: "all" | "smart";
+	sortAttributes?: boolean;
+	sortClassNames?: boolean;
 }
 declare interface PrintedElement {
 	element: string;
