@@ -320,6 +320,19 @@ Do **not** use `claude/`, `claude-code/`, `bot/`, `ai/`, or any tool/agent ident
 
 If the task harness pre-created a branch with a different prefix, rename it before the first push: `git branch -m <new-name>`.
 
+### One ref per task — report the leftovers
+
+> [!REQUIRED]
+
+A task must leave **one** branch on `origin`: the one its PR is opened from. What accumulates here is never the PR head — GitHub deletes those on merge — but the refs no PR ever pointed at, which nothing can find afterwards: a squash merge leaves no ancestry, so a landed draft looks exactly like unmerged work.
+
+Three habits prevent that, and the fourth reports what they cannot:
+
+- **Rename before the _first_ push.** `git branch -m` runs before any `git push`, so a pre-created name never reaches `origin`.
+- **Do not rename a branch already pushed.** Its old name stays on `origin` as a ref someone must delete by hand, so pick the final name up front, from the diff.
+- **Never reuse a branch whose PR merged.** Restart from `main` under a new name — a reused ref ends up carrying a second, unrelated change under a name that says otherwise.
+- **Name every ref you leave behind.** Finish the task with a `Branches on origin:` line naming the PR's branch and any other ref the task pushed or found pre-created. Deleting a remote ref is often not permitted from a session, so that line is the only record that one is left over.
+
 ### Commit rules
 
 > [!REQUIRED]
