@@ -264,7 +264,9 @@ const OPTIONAL_END_TAG_FOLLOWERS = [
 	["p", "p"]
 ];
 
-const OPTIONAL_END_TAG_UNLESS_TRAILING_NODE = ["caption", "colgroup"];
+// §13.1.2.4 gives `</head>` the same condition as these two: omit unless what
+// follows is ASCII whitespace or a comment.
+const OPTIONAL_END_TAG_UNLESS_TRAILING_NODE = ["caption", "colgroup", "head"];
 
 const OPTIONAL_END_TAG_AT_END = [
 	"li",
@@ -280,6 +282,12 @@ const OPTIONAL_END_TAG_AT_END = [
 	"th",
 	"p"
 ];
+
+// §13.1.2.4, the three wrappers. Their start tags each have their own
+// condition (see `_canOmitStructuralTags`); their end tags may be omitted
+// unless a comment follows — except `</head>`, which whitespace also blocks and
+// which therefore rides on `OPTIONAL_END_TAG_UNLESS_TRAILING_NODE`.
+const OPTIONAL_END_TAG_UNLESS_COMMENT = ["body", "html"];
 
 const P_KEEPS_END_TAG_IN = [
 	"a",
@@ -1308,6 +1316,25 @@ const PARSER_TABLES = [
 	]
 ];
 
+// Derived, not listed: a `<body>` start tag may not be omitted in front of an
+// element the "in head" insertion mode consumes, because the parser would put
+// it in the head instead. §13.1.2.4 names only five of them, which is narrower
+// than what that mode actually takes — `<title>` and `<noscript>` are caught by
+// reading the table the parser itself uses. `<noscript>` is not in it because
+// "in head" only takes it while scripting is disabled, which is how a document
+// is parsed here.
+const BODY_START_TAG_BLOCKERS = [
+	.../** @type {string[]} */ (
+		/** @type {ParserTable} */
+		(
+			/** @type {ParserTable[]} */ (PARSER_TABLES).find(
+				([name]) => name === "HEAD_ELEMENTS"
+			)
+		)[3]
+	),
+	"noscript"
+].sort();
+
 /**
  * @param {[string, string[] | null][]} entries the table
  * @returns {string} its `new Map([...])` literal
@@ -1418,8 +1445,10 @@ const EXPORT_NAMES = [
 	"BOOLEAN_ATTRIBUTES",
 	"COMMA_LIST_ATTRIBUTES",
 	"INTEGER_ATTRIBUTES",
+	"BODY_START_TAG_BLOCKERS",
 	"OPTIONAL_END_TAG_AT_END",
 	"OPTIONAL_END_TAG_FOLLOWERS",
+	"OPTIONAL_END_TAG_UNLESS_COMMENT",
 	"OPTIONAL_END_TAG_UNLESS_TRAILING_NODE",
 	"P_FOLLOWED_BY",
 	"P_KEEPS_END_TAG_IN",
@@ -1480,6 +1509,23 @@ const OPTIONAL_END_TAG_UNLESS_TRAILING_NODE = ${setLiteral(
  * @type {Set<string>}
  */
 const OPTIONAL_END_TAG_AT_END = ${setLiteral(OPTIONAL_END_TAG_AT_END)};
+
+/**
+ * §13.1.2.4: these end tags may be omitted unless a comment follows. \`</head>\`
+ * is not here — whitespace blocks it too, which is
+ * \`OPTIONAL_END_TAG_UNLESS_TRAILING_NODE\`'s rule.
+ * @type {Set<string>}
+ */
+const OPTIONAL_END_TAG_UNLESS_COMMENT = ${setLiteral(
+	OPTIONAL_END_TAG_UNLESS_COMMENT
+)};
+
+/**
+ * §13.1.2.4: a \`<body>\` start tag may not be omitted in front of one of these,
+ * because the parser would still be filling the head when it read it.
+ * @type {Set<string>}
+ */
+const BODY_START_TAG_BLOCKERS = ${setLiteral(BODY_START_TAG_BLOCKERS)};
 
 /**
  * §13.1.2.4: a trailing \`</p>\` stays inside these, whose content model would

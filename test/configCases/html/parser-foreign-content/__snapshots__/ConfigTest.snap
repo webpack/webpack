@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ConfigTestCases html parser-foreign-content parser-foreign-content should compile 1`] = `
-"<!doctype html><html><body>
+"<!doctype html><body>
 	<svg>a]b</svg>
 	<svg>c]</svg>
 	<svg>d]]e</svg>
 	<svg><circle/></svg><p></p>after-p
 	<div><svg><g>after-end-tag</g></svg></div>
 	<svg>unterminated
-</svg></body></html>"
+</svg>"
 `;

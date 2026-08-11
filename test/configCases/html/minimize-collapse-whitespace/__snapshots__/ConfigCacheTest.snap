@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ConfigCacheTestCases html minimize-collapse-whitespace minimize-collapse-whitespace should compile 1`] = `
-"<!doctype html><html lang=en><head><title>Collapse test</title></head><body> <p>Hello <b>world</b> & friends</p> <pre>  kept
-   verbatim</pre> <pre><span>also     kept</span></pre> <textarea>  kept  too  </textarea> <p><%=   template   %></p> <p>one tab</p> <p>already spaced</p> <svg><text>foreign text</text></svg> </body></html>"
+"<!doctype html><html lang=en><title>Collapse test</title><body> <p>Hello <b>world</b> & friends</p> <pre>  kept
+   verbatim</pre> <pre><span>also     kept</span></pre> <textarea>  kept  too  </textarea> <p><%=   template   %></p> <p>one tab</p> <p>already spaced</p> <svg><text>foreign text</text></svg> "
 `;

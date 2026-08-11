@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ConfigTestCases html minimize-empty-attributes minimize-empty-attributes should compile 1`] = `
-"<!doctype html><html><head><title>Empty attributes</title></head><body>
+"<!doctype html><title>Empty attributes</title><body>
 <div>dropped</div>
 <div id=&#x20;>whitespace is empty too, a reference is not</div>
 <div>valueless is the empty value</div>
@@ -10,5 +10,5 @@ exports[`ConfigTestCases html minimize-empty-attributes minimize-empty-attribute
 <div class=a id=b style=color:red dir=rtl>kept: carries a value</div>
 
 
-</body></html>"
+"
 `;
