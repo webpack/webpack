@@ -2243,6 +2243,12 @@ describe("CssSyntax — print modes", () => {
 		expect(
 			print("@media screen{.a{color:#ff0000;margin:1px 2px 1px 2px}}", "minify")
 		).toBe("@media screen{.a{color:red;margin:1px 2px}}");
+		// A function's arguments keep the spacing they were written with, where
+		// minifying would both drop it and fold the color.
+		expect(print("a{color:rgb(1 , 2 , 3)}", "beautify")).toBe(
+			"a {\ncolor: rgb(1 , 2 , 3);\n}"
+		);
+		expect(print("a{color:rgb(1 , 2 , 3)}", "minify")).toBe("a{color:#010203}");
 	});
 
 	it("keeps the same comments in both modes", () => {
@@ -2780,6 +2786,10 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a{color:red}b{color:red}", "a,b{color:red}"],
 			["a{color:red}b{color:red}c{color:red}", "a,b,c{color:red}"],
 			[".a[x=1]{top:0}.b>.c{top:0}", ".a[x=1],.b>.c{top:0}"],
+			// A `:` an ident escapes, and one an attribute's string holds, both sit
+			// in a selector every engine parses — only a pseudo keeps a rule out.
+			[".sm\\:flex{top:0}.b{top:0}", ".sm\\:flex,.b{top:0}"],
+			['[href="a:b"]{top:0}.b{top:0}', '[href="a:b"],.b{top:0}'],
 			["@media x{a{top:0}b{top:0}}", "@media x{a,b{top:0}}"],
 			["@keyframes k{0%{top:0}50%{top:0}}", "@keyframes k{0%,50%{top:0}}"],
 			// The rule between them prints nothing, so they end up adjacent.
@@ -2809,6 +2819,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a rule stands between them", "a{color:red}i{top:0}b{color:red}"],
 			// One selector the engine cannot parse invalidates the whole list.
 			["a pseudo may be one the engine drops", "a:hover{top:0}b:hover{top:0}"],
+			["...even beside an attribute selector", "[a=b]:hover{top:0}.b{top:0}"],
 			["...including a prefixed one", "a{top:0}::-moz-placeholder{top:0}"],
 			["...or a CSS modules one", "body{top:0}:local(.x){top:0}"],
 			["the parser passed a shape through", "a{top:0}. b{top:0}"],
@@ -3628,6 +3639,13 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify("a{width:calc(1em + 2px)}")).toBe(
 				"a{width:calc(1em + 2px)}"
 			);
+		});
+
+		it("drops an argument list that is only whitespace", () => {
+			// The one argument a function carries is a whitespace token, which
+			// separates nothing — so the parentheses close on nothing at all.
+			expect(minify("a{width:calc( )}")).toBe("a{width:calc()}");
+			expect(minify("a:not( ){top:0}")).toBe("a:not(){top:0}");
 		});
 
 		it("keeps a `@supports` condition as written", () => {
