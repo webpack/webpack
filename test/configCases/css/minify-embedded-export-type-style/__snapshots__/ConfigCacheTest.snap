@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minify-embedded-export-type-style exported tests should minify CSS the inject runtime embeds in JS 1`] = `
+"/*!*******************************************!*\\\\
+  !*** css ./style.css (exportType: style) ***!
+  \\\\*******************************************/.a{color:red;margin:10px}"
+`;
