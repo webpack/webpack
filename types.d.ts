@@ -24691,7 +24691,37 @@ declare abstract class RuntimeTemplate {
 	supportsDynamicImport(): boolean;
 	supportsEcmaScriptModuleSyntax(): boolean;
 	supportsModulePreload(): boolean;
-	supportsAnalyzableEsm(): boolean;
+
+	/**
+	 * Analyzable output — a reference a foreign bundler can follow without running
+	 * webpack's runtime — comes in two forms, and what rules them out differs:
+	 * - a literal `import("./chunk.js")`, gated by `supportsAnalyzableImport`
+	 * - a literal `new URL(<file>, import.meta.url)`, gated by `supportsAnalyzableEsm`
+	 * Either way a name that is not settled during code generation may still be baked,
+	 * by reserving a stand-in the deferred pass fills in — see `canDeferAnalyzableName`.
+	 * What still forces the runtime form, and is not covered by any of the three:
+	 * a module federation module in the chunk, a chunk reachable at more than one
+	 * output depth under an `auto` public path, and a chunk with no id.
+	 */
+	supportsAnalyzableEsm(chunkGraph?: ChunkGraph, module?: Module): boolean;
+
+	/**
+	 * Whether a chunk reference emitted into `originModule` may be a literal
+	 * `import("./chunk.js")` rather than a runtime `ensureChunk(id)` call.
+	 */
+	supportsAnalyzableImport(
+		chunkGraph: ChunkGraph,
+		originModule: Module
+	): boolean;
+
+	/**
+	 * Whether a name that code generation cannot settle may be reserved as a stand-in
+	 * and filled in once the hashes exist. Substituting rewrites a chunk after its own
+	 * content hash was taken, so either `RealContentHashPlugin` has to bring the two
+	 * back in line, or no emitted javascript may be named by its content in the first
+	 * place — with a name like `[name].js` there is nothing to go stale.
+	 */
+	canDeferAnalyzableName(template?: string): boolean;
 
 	/**
 	 * Whether an asset whose URL argument is only known at runtime (e.g. a wasm
@@ -24702,7 +24732,7 @@ declare abstract class RuntimeTemplate {
 	 * Callers that can bake the public path into a static literal specifier should
 	 * use `_getAnalyzableChunkSpecifier` instead, which also handles a fixed path.
 	 */
-	supportsAnalyzableEsmUrl(): boolean;
+	supportsAnalyzableEsmUrl(chunkGraph?: ChunkGraph, module?: Module): boolean;
 
 	/**
 	 * Builds the analyzable `new URL(specifier, import.meta.url)` expression the ESM
@@ -24717,7 +24747,7 @@ declare abstract class RuntimeTemplate {
 	 * `new URL("./<file>.wasm", import.meta.url)` at the module call site, rather than
 	 * by `supportsAnalyzableEsmUrl`'s runtime-built path under an `import.meta.url` base.
 	 */
-	supportsAnalyzableWasm(): boolean;
+	supportsAnalyzableWasm(chunkGraph?: ChunkGraph, module?: Module): boolean;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
 
