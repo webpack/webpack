@@ -1,8 +1,7 @@
 "use strict";
 
-// The module holding `new Worker(new URL(...))` lives in chunks at two depths, so no
-// one relative literal addresses the worker from both — each emitted asset gets its
-// own, filled in once the names exist.
+// The module holding `new Worker(new URL(...))` sits at two depths, so each emitted
+// asset gets its own relative literal once the names exist.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

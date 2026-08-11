@@ -6,9 +6,8 @@ const path = require("path");
 const HELPER = "__webpack_require__.ei";
 const BAILOUT = "Analyzable ESM bailout:";
 
-// Per case: which emitted entry to inspect and what to assert.
-// - "analyzable": the baseline — emits the `.ei` helper.
-// - "fallback": the whole build has no analyzable import, so no `.ei` is emitted at all.
+// Per case: which emitted file to inspect, and whether it emits the `.ei` helper
+// ("analyzable") or keeps the runtime form and names its reason ("fallback").
 const CASES = {
 	analyzable: { file: "main.mjs", expect: "analyzable" },
 	"public-path-override": {

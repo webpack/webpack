@@ -1,8 +1,7 @@
 "use strict";
 
-// The module holding the `import()` lives in chunks at two depths, so no one relative
-// literal addresses the target from both — the specifier is reserved instead and each
-// emitted asset gets its own `../` path once the names exist.
+// The module holding the `import()` sits at two depths, so the specifier is reserved
+// and each emitted asset gets its own `../` path once the names exist.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
