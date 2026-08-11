@@ -4,17 +4,26 @@ const fs = require("fs");
 const path = require("path");
 
 const HELPER = "__webpack_require__.ei";
+const BAILOUT = "Analyzable ESM bailout:";
 
 // Per case: which emitted entry to inspect and what to assert.
 // - "analyzable": the baseline — emits the `.ei` helper.
 // - "fallback": the whole build has no analyzable import, so no `.ei` is emitted at all.
 const CASES = {
 	analyzable: { file: "main.mjs", expect: "analyzable" },
-	"public-path-override": { file: "main.mjs", expect: "fallback" },
+	"public-path-override": {
+		file: "main.mjs",
+		expect: "fallback",
+		bailout: "__webpack_public_path__ is reassigned"
+	},
 	// `fetchPriority` is unsupported for ESM output, so it must not degrade the
 	// output — the analyzable form is still emitted (documented limitation).
 	"fetch-priority": { file: "main.mjs", expect: "analyzable" },
-	"content-hash": { file: "main.mjs", expect: "fallback" },
+	"content-hash": {
+		file: "main.mjs",
+		expect: "fallback",
+		bailout: "optimization.realContentHash"
+	},
 	// The public path's hash is filled in by the deferred pass, and no name here is
 	// built from content, so there is none for the rewrite to invalidate.
 	"templated-public-path": { file: "main.mjs", expect: "analyzable" },
@@ -45,11 +54,25 @@ module.exports = {
 				),
 				"utf8"
 			);
+			// A bailout is recorded exactly when the runtime form is kept, so a limitation
+			// that is later lifted fails here until its reason is dropped too.
+			const bailouts = [];
+			for (const module of child.toJson({
+				all: false,
+				modules: true,
+				optimizationBailout: true
+			}).modules || []) {
+				for (const bailout of module.optimizationBailout || []) {
+					if (bailout.startsWith(BAILOUT)) bailouts.push(bailout);
+				}
+			}
 			if (testCase.expect === "analyzable") {
 				expect(output).toContain(HELPER);
+				expect(bailouts).toEqual([]);
 			} else {
 				// A limitation must not emit extra runtime — the `.ei` helper stays out.
 				expect(output).not.toContain(HELPER);
+				expect(bailouts.join("\n")).toContain(testCase.bailout);
 			}
 		}
 	}
