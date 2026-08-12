@@ -24700,10 +24700,9 @@ declare abstract class RuntimeTemplate {
 	 * - `"url"` — a literal `new URL(<file>, import.meta.url)`
 	 * - `"wasm"` — the same, fully baked for a wasm binary the runtime would name
 	 * - `"wasm-relative"` — a wasm path built at runtime under an `import.meta.url` base
-	 * A name code generation cannot settle may still be baked, by reserving a stand-in
-	 * the deferred pass fills in. What no form here covers, because only the reference
-	 * itself can tell: a chunk with no id, and one this compilation emits no javascript
-	 * for. Every no is recorded on `module` through `_analyzableBailout`.
+	 * A name code generation cannot settle may still be baked, through a stand-in the
+	 * deferred pass fills in. Not covered here, because only the reference can tell: a
+	 * chunk with no id, and one this compilation emits no javascript for.
 	 */
 	supportsAnalyzable(
 		form: AnalyzableForm,
