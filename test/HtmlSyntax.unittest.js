@@ -3818,6 +3818,14 @@ describe("SourceProcessor — collapseWhitespace modes", () => {
 		);
 	});
 
+	it("keeps an end tag whose whitespace an ancestor renders verbatim", () => {
+		for (const mode of /** @type {("smart" | "all")[]} */ (["smart", "all"])) {
+			expect(collapse("<pre><p>a</p>\n<p>b</p></pre>", mode)).toBe(
+				"<pre><p>a</p>\n<p>b</pre>"
+			);
+		}
+	});
+
 	it("drops every text node's edges in `all`", () => {
 		expect(collapse(PAGE, "all")).toBe(
 			"<body><div>a b</div><div>c</div><span>d</span></body>"
