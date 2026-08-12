@@ -2,6 +2,8 @@
 
 // cspell:ignore apos notpre Elig reconsumes xyzabc zzzunknown codepoint DFFF ampx noncharacter FFFE
 // cspell:ignore selectedcontent mtext mglyph colgroups viewbox definitionurl
+// cspell:ignore contenteditable enterkeyhint formenctype formmethod formtarget
+// cspell:ignore inputmode writingsuggestions
 // cspell:ignore scripty
 // cspell:ignore DOCTYPEÐ DOCTYPEİ Silmaril basefont bgsound framesets isindex
 // cspell:ignore malignmark menuitem noembed noframes optgroup reparent spacer
@@ -3714,6 +3716,374 @@ describe("SourceProcessor — collapseWhitespace", () => {
 	});
 });
 
+// The two conditions that decline a fold cannot be reached through a build:
+// webpack's CSS pipeline resolves an `@import` away long before the HTML
+// minifier sees the sheet, and the minifier only refuses text that overflows
+// its own parser. The rest of the transform is covered by the
+// `configCases/html/minimize-merge-styles` case.
+describe("SourceProcessor — merging adjacent <style>", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { mode: "minify", mergeStyles: true })
+			.code;
+
+	it("folds a run into one element", () => {
+		expect(
+			minify("<style>a{color:red}</style><style>b{color:#00f}</style>")
+		).toBe("<style>a{color:red}b{color:#00f}</style>");
+	});
+
+	it("keeps every element, minified, unless asked to fold", () => {
+		const html =
+			"<style>a {color: red}</style><style>b {color: #0000ff}</style>";
+		expect(new SourceProcessor().process(html, { mode: "minify" }).code).toBe(
+			"<style>a{color:red}</style><style>b{color:#00f}</style>"
+		);
+	});
+
+	it("declines a sheet whose `@import` would stop applying", () => {
+		// `@import` is only honored at the top of a sheet, so appending this one
+		// to the sheet before it silently drops the import.
+		const html =
+			"<style>a{color:red}</style><style>@import url(x.css);b{color:#00f}</style>";
+		expect(minify(html)).toBe(html);
+	});
+
+	it("still absorbs into a sheet whose own `@import` leads", () => {
+		expect(
+			minify(
+				"<style>@import url(x.css);a{color:red}</style><style>b{color:#00f}</style>"
+			)
+		).toBe("<style>@import url(x.css);a{color:red}b{color:#00f}</style>");
+	});
+
+	it("declines a sheet the CSS minifier could not read", () => {
+		// Deep enough to overflow the CSS parser's stack. Text it never parsed may
+		// be unterminated, and appending to that makes the next sheet part of it.
+		const unreadable = "a{".repeat(20000);
+		const head = minify(
+			`<style>${unreadable}</style><style>b{color:#00f}</style>`
+		);
+		expect(head).toContain("</style><style>b{color:#00f}</style>");
+		const tail = minify(
+			`<style>a{color:red}</style><style>${unreadable}</style>`
+		);
+		expect(tail).toContain("<style>a{color:red}</style><style>a{a{");
+	});
+});
+
+describe("SourceProcessor — collapseWhitespace modes", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @param {boolean | "conservative" | "smart" | "all"} mode the mode
+	 * @returns {string} the minified serialization
+	 */
+	const collapse = (html, mode) =>
+		new SourceProcessor().process(html, {
+			mode: "minify",
+			collapseWhitespace: mode
+		}).code;
+
+	const PAGE = "<body><div>  a   b  </div>\n  <div> c </div><span> d </span>";
+
+	it("reads `true` as `conservative`, which never removes whitespace", () => {
+		expect(collapse(PAGE, true)).toBe(collapse(PAGE, "conservative"));
+		expect(collapse(PAGE, "conservative")).toBe(
+			"<body><div> a b </div> <div> c </div><span> d </span></body>"
+		);
+	});
+
+	it("drops what sits against a block edge in `smart`", () => {
+		// Inside and after a `<div>` no line box reaches the whitespace; the
+		// `<span>`'s own spaces render, so they stay.
+		expect(collapse(PAGE, "smart")).toBe(
+			"<body><div>a b</div><div>c</div><span> d </span></body>"
+		);
+	});
+
+	it("drops every text node's edges in `all`", () => {
+		expect(collapse(PAGE, "all")).toBe(
+			"<body><div>a b</div><div>c</div><span>d</span></body>"
+		);
+	});
+
+	it("leaves whitespace verbatim where it renders, in every mode", () => {
+		for (const mode of /** @type {(boolean | "conservative" | "smart" | "all")[]} */ ([
+			true,
+			"conservative",
+			"smart",
+			"all"
+		])) {
+			expect(collapse("<pre>  a   b  </pre>", mode)).toBe(
+				"<pre>  a   b  </pre>"
+			);
+		}
+	});
+});
+
+describe("SourceProcessor — preserveComments", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @param {(string | RegExp)[]=} preserveComments patterns to keep
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html, preserveComments) =>
+		new SourceProcessor().process(html, { mode: "minify", preserveComments })
+			.code;
+
+	it("keeps a comment a pattern names, and drops the rest", () => {
+		const html = "<div><!-- @license MIT --><!-- chatter --></div>";
+		expect(minify(html)).toBe("<div></div>");
+		expect(minify(html, ["@license"])).toBe("<div><!-- @license MIT --></div>");
+		expect(minify(html, [/^\s*@license/])).toBe(
+			"<div><!-- @license MIT --></div>"
+		);
+	});
+
+	it("still keeps what minifying always keeps", () => {
+		expect(
+			minify("<div><!--[if IE]>a<![endif]--></div>", ["nothing"])
+		).toContain("[if IE]");
+	});
+});
+
+describe("SourceProcessor — enumerated attribute values", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+	const { ENUMERATED_KEYWORDS } = require("../lib/html/data");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { mode: "minify" }).code;
+
+	// Written out rather than read off the table: generating the expectation from
+	// the thing under test would pass just as happily with an entry deleted.
+	const EXPECTED = [
+		"* autocapitalize",
+		"* contenteditable",
+		"* dir",
+		"* draggable",
+		"* enterkeyhint",
+		"* hidden",
+		"* inputmode",
+		"* popover",
+		"* referrerpolicy",
+		"* spellcheck",
+		"* translate",
+		"* writingsuggestions",
+		"audio crossorigin",
+		"audio preload",
+		"button formenctype",
+		"button formmethod",
+		"button type",
+		"form autocomplete",
+		"form enctype",
+		"form method",
+		"iframe loading",
+		"img crossorigin",
+		"img decoding",
+		"img fetchpriority",
+		"img loading",
+		"input formenctype",
+		"input formmethod",
+		"input type",
+		"link crossorigin",
+		"link fetchpriority",
+		"script crossorigin",
+		"script fetchpriority",
+		"td scope",
+		"th scope",
+		"track kind",
+		"video crossorigin",
+		"video preload"
+	];
+
+	it("enumerates exactly the attributes it claims to", () => {
+		/** @type {string[]} */
+		const actual = [];
+		for (const element of Object.keys(ENUMERATED_KEYWORDS)) {
+			for (const attribute of Object.keys(ENUMERATED_KEYWORDS[element])) {
+				actual.push(`${element} ${attribute}`);
+			}
+		}
+		expect(actual.sort()).toEqual(EXPECTED);
+	});
+
+	it("folds every keyword of every entry, and nothing else", () => {
+		for (const [element, attributes] of Object.entries(ENUMERATED_KEYWORDS)) {
+			// A global entry is exercised on a `<div>`, which owns none of its own.
+			const tag = element === "*" ? "div" : element;
+			// A cell outside a table is dropped by tree construction, so it needs
+			// somewhere to live before its attributes can be read back.
+			const open = tag === "td" || tag === "th" ? "<table><tr>" : "";
+			for (const [attribute, keywords] of Object.entries(attributes)) {
+				for (const keyword of keywords) {
+					const shouted = keyword.toUpperCase();
+					// Skip a keyword with no letters to shout — folding is a no-op.
+					if (shouted === keyword) continue;
+					const out = minify(`${open}<${tag} ${attribute}="${shouted}">`);
+					expect(`${element} ${attribute}=${shouted} -> ${out}`).toBe(
+						`${element} ${attribute}=${shouted} -> ${minify(
+							`${open}<${tag} ${attribute}="${keyword}">`
+						)}`
+					);
+				}
+				// A value the spec does not enumerate keeps its case exactly.
+				expect(minify(`${open}<${tag} ${attribute}="ZzCustomZz">`)).toContain(
+					"ZzCustomZz"
+				);
+			}
+		}
+	});
+
+	it("leaves a case-sensitive value alone", () => {
+		// `<ol type>` is two keywords that differ only in case, so it is not in
+		// the table at all; `id` / `class` are not enumerated.
+		expect(minify('<ol type="A"><li>x</ol>')).toContain("type=A");
+		expect(minify('<div id="MyId" class="MyClass">')).toContain(
+			"id=MyId class=MyClass"
+		);
+	});
+
+	it("leaves a keyword the engine reflects verbatim alone", () => {
+		// `target` / `formtarget`, `<area shape>` and `<textarea wrap>` are
+		// enumerated, but their IDL members reflect what was written rather than
+		// the canonical keyword, so a script reading one back would see the fold.
+		expect(minify('<a target="_TOP" href=x>l</a>')).toContain("target=_TOP");
+		expect(minify('<form target="_BLANK">')).toContain("target=_BLANK");
+		expect(minify('<button formtarget="_SELF">b</button>')).toContain(
+			"formtarget=_SELF"
+		);
+		expect(minify('<map><area shape="RECT"></map>')).toContain("shape=RECT");
+		expect(minify('<textarea wrap="SOFT"></textarea>')).toContain("wrap=SOFT");
+	});
+});
+
+describe("SourceProcessor — token list values", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { mode: "minify" }).code;
+
+	it("collapses the separators of every list", () => {
+		expect(minify('<div class="a \n b">x</div>')).toContain('class="a b"');
+		expect(minify('<a href=x ping="/p1 \n /p2">l</a>')).toContain(
+			'ping="/p1 /p2"'
+		);
+	});
+
+	it("drops a repeated token only where the DOM folds it away", () => {
+		// `class` / `rel` reflect a `DOMTokenList`, which is an ordered set.
+		expect(minify('<div class="a b a">x</div>')).toContain('class="a b"');
+		expect(minify('<link rel="preload preload" href=x>')).toContain(
+			"rel=preload"
+		);
+		// `ping` is read back as written and sends one request per token; the
+		// other two reflect no token list either.
+		expect(minify('<a href=x ping="/p /p">l</a>')).toContain('ping="/p /p"');
+		expect(minify('<table><tr><td headers="h h">c</table>')).toContain(
+			'headers="h h"'
+		);
+		expect(minify('<div accesskey="k k">x</div>')).toContain('accesskey="k k"');
+	});
+});
+
+describe("SourceProcessor — sortAttributes / sortClassNames", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @param {object=} options extra print options
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html, options) =>
+		new SourceProcessor().process(html, { mode: "minify", ...options }).code;
+
+	// `serializeHtmlTree` sorts attributes, so attribute order cannot hide in it;
+	// `class` is a set the option reorders on purpose, so sort it here too.
+	/**
+	 * @param {string} html markup
+	 * @returns {string} its DOM, spelled so neither order can show through
+	 */
+	const canonical = (html) =>
+		serializeHtmlTree(parseHtmlRefs(html)).replace(
+			/^(\|\s*class=")([^"]*)(")$/gm,
+			(_m, open, value, close) =>
+				open + value.split(" ").sort().join(" ") + close
+		);
+
+	// Attribute and class order vary per element: that is the repetition the
+	// options exist to create.
+	const PAGE = `<!doctype html><html lang=en><head><meta charset=utf-8><title>t</title></head><body>${[
+		'<div class="c b a" data-z="1" id="n1" hidden>',
+		'<div id="n2" hidden class="a c b" data-z="1">',
+		'<div data-z="1" class="b c a" hidden id="n3">'
+	].join(
+		"<span class=x>t</span></div>"
+	)}<span class=x>t</span></div><svg viewBox="0 0 1 1"><rect zz="1" aa="2"/></svg><table><tr><td colspan=2>c</table><a href="/x" ping="/p1 /p2">l</a></body></html>`;
+
+	it("sorts an element's attributes by name", () => {
+		expect(
+			minify('<div zz="1" aa="2" mm="3">x</div>', { sortAttributes: true })
+		).toBe("<div aa=2 mm=3 zz=1>x</div>");
+	});
+
+	it("sorts a class list, and only `class`", () => {
+		expect(
+			minify('<div class="zz aa mm">x</div>', { sortClassNames: true })
+		).toBe('<div class="aa mm zz">x</div>');
+		// `ping` is the order the requests go out in.
+		expect(minify('<a ping="/z /a">l</a>', { sortClassNames: true })).toBe(
+			'<a ping="/z /a">l</a>'
+		);
+	});
+
+	it("leaves foreign content alone, where a name is not case-folded", () => {
+		expect(
+			minify('<svg><rect zz="1" aa="2"/></svg>', { sortAttributes: true })
+		).toContain("zz=1 aa=2");
+	});
+
+	it("keeps the DOM identical, whichever is on", () => {
+		const expected = canonical(minify(PAGE));
+		// A check against an empty serialization would pass no matter what.
+		expect(expected.split("\n").length).toBeGreaterThan(20);
+		for (const options of [
+			{ sortAttributes: true },
+			{ sortClassNames: true },
+			{ sortAttributes: true, sortClassNames: true }
+		]) {
+			expect(canonical(minify(PAGE, options))).toBe(expected);
+		}
+	});
+
+	it("reorders rather than rewrites: the byte count is unchanged", () => {
+		const base = minify(PAGE);
+		for (const options of [
+			{ sortAttributes: true },
+			{ sortClassNames: true },
+			{ sortAttributes: true, sortClassNames: true }
+		]) {
+			expect(minify(PAGE, options)).toHaveLength(base.length);
+		}
+	});
+});
+
 describe("parseHtml — insertion-mode edge cases", () => {
 	it("merges foster-parented text runs before a table", () => {
 		const nodes = body("<table>x<tr></tr>y</table>");
@@ -4447,7 +4817,9 @@ describe("SourceProcessor — streamed walk recycling", () => {
 				})
 			)
 			.process(
-				`<!DOCTYPE html><html><body><div>${"<p><b>x</b></p>".repeat(BIG)}</div></body></html>`
+				`<!DOCTYPE html><html><body><div>${"<p><b>x</b></p>".repeat(
+					BIG
+				)}</div></body></html>`
 			);
 		// the skipped element itself still exits; nothing below it is visited
 		expect(log.filter((l) => l === "+div")).toHaveLength(1);
@@ -5503,6 +5875,26 @@ describe("SourceProcessor — printing in pieces", () => {
 			);
 			expect(minify(`<div><${name}>x</${name}></div>`)).toBe(
 				`<div><${name}>x</${name}></div>`
+			);
+		});
+
+		it(`swallows a newline only in the token right after <${name}>`, () => {
+			// §13.2.6.4.7 ignores the newline only if it is *the next token*, so an
+			// end tag, a comment or a doctype in between ends the offer — the
+			// newline after them belongs to the document and renders.
+			expect(minify(`<div><${name}></${name}>\nafter</div>`)).toBe(
+				`<div><${name}></${name}>\nafter</div>`
+			);
+			// `<textarea>` is RCDATA, so nothing but text can come between.
+			if (name === "textarea") return;
+			expect(minify(`<div><${name}><!--c-->\nkeep</${name}></div>`)).toBe(
+				`<div><${name}>\n\nkeep</${name}></div>`
+			);
+			expect(
+				minify(`<div><${name}><!DOCTYPE html>\nkeep</${name}></div>`)
+			).toBe(`<div><${name}>\n\nkeep</${name}></div>`);
+			expect(minify(`<${name}><span></span>\nkeep</${name}>`)).toBe(
+				`<${name}><span></span>\nkeep</${name}>`
 			);
 		});
 	}

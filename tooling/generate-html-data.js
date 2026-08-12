@@ -332,7 +332,11 @@ const SUPPLEMENT = {
 		itemtype: null,
 		part: null,
 		ping: ["a", "area"]
-	}
+	},
+	// Also reflected as a `DOMTokenList`, but by a member the extraction cannot
+	// see: `classList` and `part` belong to DOM's `Element`, and the microdata
+	// three carry `[PutForwards]` rather than a `Reflect` marker.
+	domTokenList: ["class", "itemprop", "itemref", "itemtype", "part"]
 };
 
 /**
@@ -373,6 +377,16 @@ const booleans = merge(reflect.boolean, SUPPLEMENT.boolean, "boolean");
 const urls = merge(reflect.url, SUPPLEMENT.url, "url");
 const integers = merge(reflect.integer, SUPPLEMENT.integer, "integer");
 const tokenLists = merge(reflect.tokenList, SUPPLEMENT.tokenList, "tokenList");
+// Derived: the lists a repeated token may be dropped from are the ones the DOM
+// itself folds, which is exactly the `DOMTokenList` reflections.
+const domTokenLists = [
+	...new Set([...Object.keys(reflect.tokenList), ...SUPPLEMENT.domTokenList])
+].sort();
+for (const name of domTokenLists) {
+	if (!tokenLists.some(([listName]) => listName === name)) {
+		throw new Error(`domTokenList.${name} is not a token list at all`);
+	}
+}
 const signed = [
 	...new Set([...reflect.signedInteger, ...SUPPLEMENT.signedInteger])
 ].sort();
@@ -381,7 +395,7 @@ const signed = [
 // test membership in, and the name maps foreign content is adjusted with. Spec
 // prose, so they are written out — no dataset states them. Sets rather than
 // arrays because the tree builder runs these tests per token on hot paths.
-/** @typedef {[string, "set" | "array" | "object", string, (string | [string, string])[]]} ParserTable a name, its literal kind, its doc line and its members */
+/** @typedef {[string, "set" | "array" | "object" | "byElement" | "byElementSet", string, (string | [string, string])[]]} ParserTable a name, its literal kind, its doc line and its members */
 /** @type {ParserTable[]} */
 const PARSER_TABLES = [
 	[
@@ -1182,6 +1196,247 @@ const PARSER_TABLES = [
 			["th", "IN_ROW"]
 		]
 	],
+	// §15 "Rendering" gives these a non-inline default display, so whitespace at
+	// their edge sits outside every line box and renders as nothing. Spec prose
+	// — the rendering section is a stylesheet written out in the text, and no
+	// dataset states it — and only the default matters here: a page restyling
+	// `div { display: inline }` is why `collapseWhitespace: "smart"` is opt-in.
+	[
+		"BLOCK_LEVEL_ELEMENTS",
+		"set",
+		'Elements §15 gives a non-inline default display. Whitespace against one of their edges renders as nothing, which is what `collapseWhitespace: "smart"` drops. Author CSS can still make one inline, so the mode is opt-in.',
+		[
+			"address",
+			"article",
+			"aside",
+			"blockquote",
+			"body",
+			"caption",
+			"center",
+			"col",
+			"colgroup",
+			"dd",
+			"details",
+			"dialog",
+			"dir",
+			"div",
+			"dl",
+			"dt",
+			"fieldset",
+			"figcaption",
+			"figure",
+			"footer",
+			"form",
+			"frameset",
+			"h1",
+			"h2",
+			"h3",
+			"h4",
+			"h5",
+			"h6",
+			"header",
+			"hgroup",
+			"hr",
+			"html",
+			"legend",
+			"li",
+			"listing",
+			"main",
+			"marquee",
+			"menu",
+			"nav",
+			"ol",
+			"optgroup",
+			"option",
+			"p",
+			"plaintext",
+			"pre",
+			"search",
+			"section",
+			"summary",
+			"table",
+			"tbody",
+			"td",
+			"tfoot",
+			"th",
+			"thead",
+			"tr",
+			"ul",
+			"xmp"
+		]
+	],
+	// The enumerated attributes, each with the keywords the spec gives it. Spec
+	// prose: nothing in the IDL marks an attribute as enumerated, and no dataset
+	// states a keyword set, so this is written out — but only a value that *is*
+	// one of the keywords is folded, which is what keeps a case-sensitive value
+	// nobody enumerated (`target="MyFrame"`, a custom `type`) exactly as written.
+	//
+	// `<ol type>` is deliberately absent: `a` and `A` are two different keywords
+	// there, so folding one into the other renumbers the list. `sizes` and
+	// `media` are absent because neither is enumerated at all.
+	//
+	// So are `target` / `formtarget`, `<area shape>` and `<textarea wrap>`: their
+	// IDL members reflect the value verbatim rather than "limited to only known
+	// values", so the engine hands a script back the case it was written in and
+	// folding it is a change something can read.
+	[
+		"ENUMERATED_KEYWORDS",
+		"byElementSet",
+		"element -> attribute -> the keywords the spec enumerates for it, matched ASCII-case-insensitively. `*` holds the global attributes. Only a value already in the set is folded to lower case, so a spelling the spec does not enumerate keeps its case.",
+		[
+			["* autocapitalize", "none off on sentences words characters"],
+			["* contenteditable", "true false plaintext-only"],
+			["* dir", "ltr rtl auto"],
+			["* draggable", "true false"],
+			["* enterkeyhint", "enter done go next previous search send"],
+			["* hidden", "hidden until-found"],
+			["* inputmode", "none text tel url email numeric decimal search"],
+			["* popover", "auto manual hint"],
+			[
+				"* referrerpolicy",
+				"no-referrer no-referrer-when-downgrade same-origin origin strict-origin origin-when-cross-origin strict-origin-when-cross-origin unsafe-url"
+			],
+			["* spellcheck", "true false"],
+			["* translate", "yes no"],
+			["* writingsuggestions", "true false"],
+			["audio crossorigin", "anonymous use-credentials"],
+			["audio preload", "none metadata auto"],
+			[
+				"button formenctype",
+				"application/x-www-form-urlencoded multipart/form-data text/plain"
+			],
+			["button formmethod", "get post dialog"],
+			["button type", "submit reset button"],
+			["form autocomplete", "on off"],
+			[
+				"form enctype",
+				"application/x-www-form-urlencoded multipart/form-data text/plain"
+			],
+			["form method", "get post dialog"],
+			["iframe loading", "lazy eager"],
+			["img crossorigin", "anonymous use-credentials"],
+			["img decoding", "sync async auto"],
+			["img fetchpriority", "high low auto"],
+			["img loading", "lazy eager"],
+			[
+				"input formenctype",
+				"application/x-www-form-urlencoded multipart/form-data text/plain"
+			],
+			["input formmethod", "get post dialog"],
+			[
+				"input type",
+				"hidden text search tel url email password date month week time datetime-local number range color checkbox radio file submit image reset button"
+			],
+			["link crossorigin", "anonymous use-credentials"],
+			["link fetchpriority", "high low auto"],
+			["script crossorigin", "anonymous use-credentials"],
+			["script fetchpriority", "high low auto"],
+			["td scope", "row col rowgroup colgroup"],
+			["th scope", "row col rowgroup colgroup"],
+			["track kind", "subtitles captions descriptions chapters metadata"],
+			["video crossorigin", "anonymous use-credentials"],
+			["video preload", "none metadata auto"]
+		]
+	],
+	// Elements `removeEmptyElements` keeps even with no children and no
+	// attributes, because that is their ordinary form rather than a leftover.
+	// The option's other guards are rules, not names: a void element is always
+	// childless, a foreign one is not ours to judge, and an element carrying any
+	// attribute at all was written for a reason (which is what covers
+	// `<script src>`, `<iframe src>`, `<div id=mount>` and `<div class=spacer>`,
+	// each of which html-minifier-terser drops).
+	[
+		"EMPTY_ELEMENT_KEPT",
+		"set",
+		"Elements `removeEmptyElements` never drops: with no children and no attributes each is still doing its job, so an empty one is not a leftover.",
+		[
+			// Drawn into by script, and found by tag name.
+			"canvas",
+			// Filled and opened by script.
+			"dialog",
+			// A gauge reads its value off an attribute; bare, it is still a gauge.
+			"meter",
+			// Form-associated and written to by script.
+			"output",
+			"progress",
+			// The default slot, which is exactly the one with no name.
+			"slot",
+			// Its children hang off a content fragment, not off it.
+			"template",
+			// Empty is a valid value, and its own end tag is what delimits it.
+			"textarea",
+			// Table shape: dropping a cell or a row shifts every one after it.
+			"caption",
+			"col",
+			"colgroup",
+			"table",
+			"tbody",
+			"td",
+			"tfoot",
+			"th",
+			"thead",
+			"tr"
+		]
+	],
+	// Global attributes whose empty value is the state the spec gives their
+	// absence, so `removeEmptyAttributes` may drop them. Deliberately short:
+	// `title=""` and `lang=""` look like members and are not, because the spec
+	// gives each of them a meaning absence does not have — an empty `title` says
+	// the element has no advisory information, overriding an ancestor's, and an
+	// empty `lang` says the language is unknown rather than inherited. Every
+	// other minifier drops both. `href` / `src` / `action` are out for the same
+	// reason: an empty URL resolves to the document's own address, which is not
+	// what no URL at all does.
+	[
+		"EMPTY_REMOVABLE_ATTRIBUTES",
+		"set",
+		"Attributes `removeEmptyAttributes` may drop when their value is empty or all whitespace: the spec gives each the same state empty and absent. Only a presence selector (`[class]`) can tell, which is what keeps the option off by default.",
+		[
+			// No classes either way; `classList` is empty and nothing matches.
+			"class",
+			// `dir` is enumerated, and both its invalid and missing value defaults
+			// are the same undefined state.
+			"dir",
+			// No id either way: `getElementById("")` matches nothing.
+			"id",
+			// An empty declaration list contributes nothing to the cascade.
+			"style"
+		]
+	],
+	[
+		"REDUNDANT_TYPE_ATTRIBUTES",
+		"byElement",
+		'element -> attribute -> the value that states the element\'s own default, for `removeRedundantAttributes: "smart"` (the default). Grouped by element so the printer gates on one lookup for an element no entry names, which is nearly every attribute it prints. Only markers on elements that render nothing, so no rule that styles the page stops applying — unlike `input[type=text]`, which is why that tier is separate. A `querySelector` naming one of these can still tell it went. `media` defaults to `all`, and a `<script charset>` matching the document encoding is obsolete and ignored. Matched ASCII-case-insensitively, unlike `@swc/html`, which lowercases `type` but not `media` / `charset`. `<script type>` is not here — its redundant values are `JAVASCRIPT_SCRIPT_TYPES` minus the empty and `module` spellings, which mean something.',
+		[
+			["style type", "text/css"],
+			["link type", "text/css"],
+			["link media", "all"],
+			["script language", "javascript"],
+			// The attribute value the spec spells, not a Node encoding identifier.
+			// eslint-disable-next-line unicorn/text-encoding-identifier-case
+			["script charset", "utf-8"]
+		]
+	],
+	[
+		"REDUNDANT_DEFAULT_ATTRIBUTES",
+		"byElement",
+		'element -> attribute -> the value the element already defaults to, for `removeRedundantAttributes: "all"`, grouped like `REDUNDANT_TYPE_ATTRIBUTES`. Dropping these is what makes the option unsafe: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching. Spec defaults, which the IDL does not state.',
+		[
+			["input type", "text"],
+			["form method", "get"],
+			["form enctype", "application/x-www-form-urlencoded"],
+			["button type", "submit"],
+			["area shape", "rect"],
+			["textarea wrap", "soft"],
+			["track kind", "subtitles"],
+			["col span", "1"],
+			["colgroup span", "1"],
+			["td colspan", "1"],
+			["td rowspan", "1"],
+			["th colspan", "1"],
+			["th rowspan", "1"]
+		]
+	],
 	[
 		"JAVASCRIPT_SCRIPT_TYPES",
 		"set",
@@ -1209,6 +1464,63 @@ const PARSER_TABLES = [
 	]
 ];
 
+// Derived: just the names in `ENUMERATED_KEYWORDS`, so the printer can rule an
+// attribute out with one lookup instead of two — nearly every attribute it sees
+// enumerates nothing.
+const ENUMERATED_ATTRIBUTE_NAMES = [
+	...new Set(
+		/** @type {[string, string][]} */
+		(
+			/** @type {ParserTable} */
+			(
+				/** @type {ParserTable[]} */ (PARSER_TABLES).find(
+					([name]) => name === "ENUMERATED_KEYWORDS"
+				)
+			)[3]
+		).map(([key]) => key.slice(key.indexOf(" ") + 1))
+	)
+].sort();
+
+// Derived: every attribute name any value rewrite can act on. The printer asks
+// this one question first, and the great majority of attributes on a page — a
+// `data-*`, an `id`, an `aria-*`, a `role` — are answered with a single miss
+// instead of walking each table in turn.
+const REWRITABLE_ATTRIBUTE_NAMES = [
+	...new Set([
+		...SRCSET_ATTRIBUTES,
+		...COMMA_LIST_ATTRIBUTES,
+		...urls.map(([name]) => name),
+		...integers.map(([name]) => name),
+		...tokenLists.map(([name]) => name),
+		...ENUMERATED_ATTRIBUTE_NAMES,
+		// Handled by name rather than by table: a `style` declaration list, and
+		// a `<meta name=viewport>` `content`.
+		"style",
+		"content"
+	])
+].sort();
+
+// Derived: a void element that belongs in the head carries everything it does
+// in its attributes, so one with none does nothing at all. `removeEmptyElements`
+// may drop these even though the void guard otherwise keeps every void element.
+const EMPTY_METADATA_ELEMENTS = /** @type {string[]} */ (
+	/** @type {ParserTable} */
+	(
+		/** @type {ParserTable[]} */ (PARSER_TABLES).find(
+			([name]) => name === "HEAD_ELEMENTS"
+		)
+	)[3]
+).filter((name) =>
+	/** @type {string[]} */ (
+		/** @type {ParserTable} */
+		(
+			/** @type {ParserTable[]} */ (PARSER_TABLES).find(
+				([name2]) => name2 === "VOID"
+			)
+		)[3]
+	).includes(name)
+);
+
 /**
  * @param {[string, string[] | null][]} entries the table
  * @returns {string} its `new Map([...])` literal
@@ -1231,6 +1543,51 @@ const setLiteral = (names) =>
 		: `new Set([${names.map((name) => `"${name}"`).join(", ")}])`;
 
 /**
+ * @param {string} key a property name
+ * @returns {string} it as written in an object literal
+ */
+const propertyKey = (key) => (/^[A-Za-z]\w*$/.test(key) ? key : `"${key}"`);
+
+/**
+ * Regroup `element attribute` -> value entries under the element name, so the
+ * reader gates on one lookup instead of building a key per attribute it sees.
+ * @param {[string, string][]} entries the flat entries
+ * @param {boolean=} asSet whether each value is a space-separated keyword set
+ * @returns {string} the nested object literal
+ */
+const byElementLiteral = (entries, asSet = false) => {
+	/** @type {Map<string, [string, string][]>} */
+	const grouped = new Map();
+	for (const [key, mapped] of entries) {
+		const space = key.indexOf(" ");
+		const element = key.slice(0, space);
+		const existing = grouped.get(element);
+		const attribute = /** @type {[string, string]} */ ([
+			key.slice(space + 1),
+			mapped
+		]);
+		if (existing === undefined) grouped.set(element, [attribute]);
+		else existing.push(attribute);
+	}
+	const inner = [...grouped]
+		.map(
+			([element, attributes]) =>
+				`${propertyKey(
+					element
+				)}: Object.assign(Object.create(null), {${attributes
+					.map(
+						([attribute, mapped]) =>
+							`${propertyKey(attribute)}: ${
+								asSet ? setLiteral(mapped.split(" ")) : `"${mapped}"`
+							}`
+					)
+					.join(", ")}})`
+		)
+		.join(", ");
+	return `Object.assign(Object.create(null), {${inner}})`;
+};
+
+/**
  * One `PARSER_TABLES` entry as its documented declaration. Name maps get a null
  * prototype, so a tag called `constructor` is a miss rather than a hit.
  * @param {ParserTable} table the entry
@@ -1240,21 +1597,35 @@ const parserTable = ([name, kind, doc, items]) => {
 	const value =
 		kind === "set"
 			? setLiteral(/** @type {string[]} */ (items))
-			: kind === "array"
-				? `[${items.map((item) => `"${item}"`).join(", ")}]`
-				: `Object.assign(Object.create(null), {${items
-						.map(
-							([key, mapped]) =>
-								`${/^[A-Za-z]\w*$/.test(key) ? key : `"${key}"`}: "${mapped}"`
-						)
-						.join(", ")}})`;
+			: kind === "byElement" || kind === "byElementSet"
+				? byElementLiteral(
+						/** @type {[string, string][]} */ (items),
+						kind === "byElementSet"
+					)
+				: kind === "array"
+					? `[${items.map((item) => `"${item}"`).join(", ")}]`
+					: `Object.assign(Object.create(null), {${items
+							.map(([key, mapped]) => `${propertyKey(key)}: "${mapped}"`)
+							.join(", ")}})`;
 	const type =
 		kind === "set"
 			? "Set<string>"
-			: kind === "array"
-				? "string[]"
-				: "Record<string, string>";
-	return `/**\n * ${doc}\n * @type {${type}}\n */\nconst ${name} = ${value};\n`;
+			: kind === "byElement"
+				? "Record<string, Record<string, string>>"
+				: kind === "byElementSet"
+					? "Record<string, Record<string, Set<string>>>"
+					: kind === "array"
+						? "string[]"
+						: "Record<string, string>";
+	// The `charset` value is an attribute spelling, not a Node encoding id.
+	const encoded = value.includes('"utf-8"');
+	const open = encoded
+		? "/* eslint-disable unicorn/text-encoding-identifier-case */\n"
+		: "";
+	const close = encoded
+		? "/* eslint-enable unicorn/text-encoding-identifier-case */\n"
+		: "";
+	return `/**\n * ${doc}\n * @type {${type}}\n */\n${open}const ${name} = ${value};\n${close}`;
 };
 
 // The §13.1.2.4 optional-tag conditions and the value grammars below are prose
@@ -1263,14 +1634,18 @@ const parserTable = ([name, kind, doc, items]) => {
 // The element and attribute names cspell does not know. Written twice on
 // purpose: the directive covers this file, the string is forwarded into the
 // generated one so it passes `lint:spellcheck` too.
-// cspell:ignore advasoft altglyph altglyphdef altglyphitem animatecolor animatemotion animatetransform arcrole aswedit attributename attributetype basefrequency baseprofile bgsound calcmode clippathunits diffuseconstant fedropshadow filterunits glyphref gradienttransform gradientunits hotjava hotmetal jscript kernelmatrix kernelunitlength keypoints keysplines keytimes limitingconeangle livescript markerheight markerwidth maskcontentunits maskunits metrius mtext numoctaves pathlength patterncontentunits patterntransform patternunits pointsatx pointsaty pointsatz preservealpha primitiveunits refx refy repeatcount repeatdur requiredextensions requiredfeatures silmaril softquad specularconstant specularexponent startoffset stddeviation stitchtiles surfacescale systemlanguage tablevalues targetx targety textlength viewbox viewtarget webtechs xchannelselector ychannelselector
+// cspell:ignore advasoft altglyph altglyphdef altglyphitem animatecolor animatemotion animatetransform arcrole aswedit attributename attributetype basefrequency baseprofile bgsound calcmode clippathunits contenteditable diffuseconstant enterkeyhint fedropshadow filterunits formenctype formmethod formtarget glyphref gradienttransform gradientunits hotjava hotmetal inputmode jscript kernelmatrix kernelunitlength keypoints keysplines keytimes limitingconeangle livescript markerheight markerwidth maskcontentunits maskunits metrius mtext numoctaves pathlength patterncontentunits patterntransform patternunits pointsatx pointsaty pointsatz preservealpha primitiveunits refx refy repeatcount repeatdur requiredextensions requiredfeatures silmaril softquad specularconstant specularexponent startoffset stddeviation stitchtiles surfacescale systemlanguage tablevalues targetx targety textlength viewbox viewtarget webtechs writingsuggestions xchannelselector ychannelselector
 const CSPELL_IGNORE =
-	"advasoft altglyph altglyphdef altglyphitem animatecolor animatemotion animatetransform arcrole aswedit attributename attributetype basefrequency baseprofile bgsound calcmode clippathunits diffuseconstant fedropshadow filterunits glyphref gradienttransform gradientunits hotjava hotmetal jscript kernelmatrix kernelunitlength keypoints keysplines keytimes limitingconeangle livescript markerheight markerwidth maskcontentunits maskunits metrius mtext numoctaves pathlength patterncontentunits patterntransform patternunits pointsatx pointsaty pointsatz preservealpha primitiveunits refx refy repeatcount repeatdur requiredextensions requiredfeatures silmaril softquad specularconstant specularexponent startoffset stddeviation stitchtiles surfacescale systemlanguage tablevalues targetx targety textlength viewbox viewtarget webtechs xchannelselector ychannelselector";
+	"advasoft altglyph altglyphdef altglyphitem animatecolor animatemotion animatetransform arcrole aswedit attributename attributetype basefrequency baseprofile bgsound calcmode clippathunits contenteditable diffuseconstant enterkeyhint fedropshadow filterunits formenctype formmethod formtarget glyphref gradienttransform gradientunits hotjava hotmetal inputmode jscript kernelmatrix kernelunitlength keypoints keysplines keytimes limitingconeangle livescript markerheight markerwidth maskcontentunits maskunits metrius mtext numoctaves pathlength patterncontentunits patterntransform patternunits pointsatx pointsaty pointsatz preservealpha primitiveunits refx refy repeatcount repeatdur requiredextensions requiredfeatures silmaril softquad specularconstant specularexponent startoffset stddeviation stitchtiles surfacescale systemlanguage tablevalues targetx targety textlength viewbox viewtarget webtechs writingsuggestions xchannelselector ychannelselector";
 
 const EXPORT_NAMES = [
 	"BOOLEAN_ATTRIBUTES",
 	"COMMA_LIST_ATTRIBUTES",
+	"DOM_TOKEN_LIST_ATTRIBUTES",
 	"INTEGER_ATTRIBUTES",
+	"EMPTY_METADATA_ELEMENTS",
+	"ENUMERATED_ATTRIBUTE_NAMES",
+	"REWRITABLE_ATTRIBUTES",
 	"OPTIONAL_END_TAG_AT_END",
 	"OPTIONAL_END_TAG_FOLLOWERS",
 	"OPTIONAL_END_TAG_UNLESS_TRAILING_NODE",
@@ -1335,6 +1710,29 @@ const OPTIONAL_END_TAG_UNLESS_TRAILING_NODE = ${setLiteral(
 const OPTIONAL_END_TAG_AT_END = ${setLiteral(OPTIONAL_END_TAG_AT_END)};
 
 /**
+ * Every attribute name a value rewrite can act on. One miss here rules an
+ * attribute out of the whole chain, which is what most of them are.
+ * @type {Set<string>}
+ */
+const REWRITABLE_ATTRIBUTES = ${setLiteral(REWRITABLE_ATTRIBUTE_NAMES)};
+
+/**
+ * Every name \`ENUMERATED_KEYWORDS\` scopes, whatever the element. One miss here
+ * rules an attribute out, which is what keeps the enumerated fold off the cost
+ * of every attribute that enumerates nothing.
+ * @type {Set<string>}
+ */
+const ENUMERATED_ATTRIBUTE_NAMES = ${setLiteral(ENUMERATED_ATTRIBUTE_NAMES)};
+
+/**
+ * A void element that belongs in the head: with no attributes it states nothing,
+ * so \`removeEmptyElements\` may drop it even though every other void element is
+ * kept. Derived as the head elements that are also void.
+ * @type {Set<string>}
+ */
+const EMPTY_METADATA_ELEMENTS = ${setLiteral(EMPTY_METADATA_ELEMENTS)};
+
+/**
  * §13.1.2.4: a trailing \`</p>\` stays inside these, whose content model would
  * otherwise absorb what follows.
  * @type {Set<string>}
@@ -1364,6 +1762,15 @@ const SRCSET_ATTRIBUTES = ${setLiteral(SRCSET_ATTRIBUTES)};
  * @type {Map<string, Set<string> | null>}
  */
 const TOKEN_LIST_ATTRIBUTES = ${mapLiteral(tokenLists)};
+
+/**
+ * The token lists reflected as a \`DOMTokenList\`, which is an ordered *set* — a
+ * repeated token was never a second token, so dropping it changes nothing the
+ * DOM reads. The rest are read back as written, and \`ping\` sends one request
+ * per token, so a repeat there is not the printer's to drop.
+ * @type {Set<string>}
+ */
+const DOM_TOKEN_LIST_ATTRIBUTES = ${setLiteral(domTokenLists)};
 
 /**
  * Attributes parsed as a URL, mapped to the elements they are one on. The URL

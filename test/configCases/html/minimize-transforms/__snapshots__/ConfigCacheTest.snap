@@ -31,11 +31,15 @@ exports[`ConfigCacheTestCases html minimize-transforms minimize-transforms shoul
 	<label for=\\"a  b\\">for keeps its spaces: an id may contain one</label>
 	<output for=\\"a b\\">for is a token list here</output>
 	<link rel=stylesheet sizes=\\"16x16 32x32\\" href=s.css>
-	<link rel=preload as=script blocking=\\"render render\\" href=p.js>
+	<link rel=preload as=script blocking=render href=p.js>
 	<div part=\\"a b\\" itemscope itemtype=https://schema.org/Thing>globals</div>
 	<div headingreset headingoffset=2 tabindex=-1>heading globals</div>
 	<table><tr><th id=h>h<td headers=\\"h h2\\" rowspan=2>headers is a token list</table>
 	<ol><li value=5>li value is signed</ol>
+	<input type=text><form method=post target=_TOP></form>
+	<div dir=rtl translate=no contenteditable=true>enumerated values fold</div>
+	<ol type=A><li>A and a are two keywords, so type stays</ol>
+	<a target=MyFrame href=x>a named target is not a keyword</a>
 	<img src=a.png hspace=4 vspace=0 longdesc=d.html lowsrc=l.png alt=\\"legacy img attributes\\">
 	<object codebase=c/ data=o.bin width=8 hspace=2></object>
 	<a href=trimmed.html>url ends trimmed</a>

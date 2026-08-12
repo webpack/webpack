@@ -5936,6 +5936,17 @@ declare interface CssParserOptions {
 	 */
 	urlHints?: UrlHintRule[];
 }
+declare interface CssPrintOptions {
+	/**
+	 * what the target can read (the CSS entries of `output.environment`), so a spelling it would not understand is never reached for; only read while printing, and an absent entry means the modern spelling is available
+	 */
+	environment?: CssEnvironment;
+
+	/**
+	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
+	 */
+	convertLengthUnits?: boolean;
+}
 declare interface CssProcessOptions {
 	/**
 	 * shared loc converter (default a fresh one over the input)
@@ -10185,6 +10196,19 @@ declare interface HtmlParserOptions {
 	 */
 	urlHints?: UrlHintRule[];
 }
+type HtmlPrintOptions = Pick<
+	CssProcessOptions,
+	"environment" | "convertLengthUnits"
+> & {
+	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
+	mergeStyles?: boolean;
+	removeEmptyAttributes?: boolean;
+	removeEmptyElements?: boolean;
+	preserveComments?: (string | RegExp)[];
+	removeRedundantAttributes?: boolean | "all" | "smart";
+	sortAttributes?: boolean;
+	sortClassNames?: boolean;
+};
 declare interface HtmlProcessOptions {
 	/**
 	 * context element tag name for fragment parsing (see `parseHtml`); the HTML analog of the CSS parser's `as` parse-mode option
@@ -10202,19 +10226,54 @@ declare interface HtmlProcessOptions {
 	minimize?: boolean;
 
 	/**
-	 * what the target can read, forwarded to the CSS minifier this runs over an inline `<style>` and every `style=""`
+	 * CSS's, not HTML's: handed to the CSS minifier that runs over an inline `<style>` and every `style=""`, so the inline copy of a declaration agrees with the `.css` asset
 	 */
 	environment?: CssEnvironment;
 
 	/**
-	 * forwarded to that CSS minifier with `environment`: a length may be rewritten into a shorter unit it exactly equals (default false)
+	 * CSS's too, handed over with `environment` (see `HtmlPrintOptions`)
 	 */
 	convertLengthUnits?: boolean;
 
 	/**
-	 * collapse each run of whitespace in text to a single space, except where an ancestor renders it verbatim (default false)
+	 * collapse each run of whitespace in text to a single space, except where an ancestor renders it verbatim; `"smart"` also drops what sits against a block edge and `"all"` drops every edge (default false)
 	 */
-	collapseWhitespace?: boolean;
+	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
+
+	/**
+	 * drop `class` / `id` / `style` / `dir` when empty, which the spec reads as their absence (default false)
+	 */
+	removeEmptyAttributes?: boolean;
+
+	/**
+	 * drop an element with no children and no attributes, unless its bare form is meaningful (default false)
+	 */
+	removeEmptyElements?: boolean;
+
+	/**
+	 * patterns naming comments to keep, on top of the ones minifying always keeps
+	 */
+	preserveComments?: (string | RegExp)[];
+
+	/**
+	 * print a run of adjacent `<style>` elements as one sheet, which removes elements (default false)
+	 */
+	mergeStyles?: boolean;
+
+	/**
+	 * print an element's attributes in name order, which nothing in HTML reads (default false)
+	 */
+	sortAttributes?: boolean;
+
+	/**
+	 * print a `class` list in token order, which nothing in CSS reads (default false)
+	 */
+	sortClassNames?: boolean;
+
+	/**
+	 * drop an attribute whose value is the element's own default; `true` is `"smart"`, and `"all"` also drops the spec defaults a selector can match (default false)
+	 */
+	removeRedundantAttributes?: boolean | "all" | "smart";
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**
@@ -18368,8 +18427,8 @@ declare interface NodeOptions {
 	 */
 	global?: boolean | "warn";
 }
-declare interface NodePrinter<TPath, TNode> {
-	(path: TPath, writer: PrintContext<TPath, TNode>): string;
+declare interface NodePrinter<TPath, TNode, TPrintOptions = object> {
+	(path: TPath, writer: PrintContext<TPath, TNode, TPrintOptions>): string;
 }
 declare class NodeSourcePlugin {
 	constructor();
@@ -19744,10 +19803,58 @@ declare interface OptimizationMinimizeCss {
  */
 declare interface OptimizationMinimizeHtml {
 	/**
-	 * Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim, and never removed entirely — dropping it would join two inline elements that render apart.
+	 * Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim. `true` (or `"conservative"`) never removes whitespace entirely — dropping it would join two inline elements that render apart. `"smart"` also drops the whitespace that sits against a block element's edge, where no line box reaches it. `"all"` drops the whitespace at every text node's edges, which does change how adjacent inline elements render.
 	 * @since 5.110.0
 	 */
-	collapseWhitespace?: boolean;
+	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
+
+	/**
+	 * Print a run of adjacent `<style>` elements as one sheet. Off by default: it removes elements, so `document.styleSheets`, a `style:nth-child()` selector and `querySelectorAll("style").length` all read a different document. A sheet the CSS minifier does not accept is never folded — appending to one that may be unterminated would make the next sheet part of its last rule — and neither is one led by `@import` / `@charset` / `@namespace`, which apply only at the top of a sheet.
+	 * @since 5.110.0
+	 */
+	mergeStyles?: boolean;
+
+	/**
+	 * Minify the markup inside a downlevel-hidden conditional comment (`<!--[if IE]> … <![endif]-->`). Off by default: the body is minified on its own, so a context-sensitive decision inside it — which end tags are optional, where a table cell may sit — is taken as though it started a document rather than where the comment sits. Only browsers older than IE10 read these at all.
+	 * @since 5.110.0
+	 */
+	minifyConditionalComments?: boolean;
+
+	/**
+	 * Patterns naming comments to keep, on top of the ones minifying always keeps (downlevel conditional comments, server-side includes and template directives). A string is read as a regular expression source and matched against the comment's text.
+	 * @since 5.110.0
+	 */
+	preserveComments?: (string | RegExp)[];
+
+	/**
+	 * Drop `class`, `id`, `style` and `dir` when their value is empty or only whitespace, which is the state the spec also gives their absence. Off by default: an attribute selector matches on presence, so `[class]` stops matching. `title` and `lang` are never dropped even when empty — the spec gives an empty value of either a meaning absence does not have.
+	 * @since 5.110.0
+	 */
+	removeEmptyAttributes?: boolean;
+
+	/**
+	 * Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (`canvas`, `slot`, `template`, `textarea`, `progress`, `meter`, `output`, `dialog`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a `::before`, and the minifier cannot see the stylesheet. Emptiness is read off the source tree in one pass, so an element left empty only because its child was dropped is not itself dropped.
+	 * @since 5.110.0
+	 */
+	removeEmptyElements?: boolean;
+
+	/**
+	 * Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one `getAttribute` and every attribute selector read differently, whichever tier dropped it. `true` (or `"smart"`) drops only markers on elements that render nothing — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>`, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — so no rule that styles the page stops applying, which is what `@swc/html` does by default. `"all"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.
+	 * @since 5.110.0
+	 */
+	removeRedundantAttributes?: boolean | "all" | "smart";
+
+	/**
+	 * Print an element's attributes in name order. Nothing in HTML reads attribute order, so this only makes the same markup compress better across pages. Off by default: a script reading `element.attributes` back, or a snapshot of the emitted HTML, sees the new order.
+	 * @since 5.110.0
+	 */
+	sortAttributes?: boolean;
+
+	/**
+	 * Print a `class` list in token order. Nothing in CSS reads token order, so this only makes the same markup compress better across pages. Off by default: a script reading `className` back sees the new order. Other token lists are left alone — `ping` is the order its requests go out in.
+	 * @since 5.110.0
+	 */
+	sortClassNames?: boolean;
 }
 
 /**
@@ -21662,9 +21769,12 @@ declare interface PreparsedAst {
  * it) possible. `take` flushes a finished top-level node into the output and drops
  * the map, so a streaming grammar never holds more than one top-level subtree.
  */
-declare class PrintContext<TPath, TNode> {
-	constructor(options: PrintOptions, printer: NodePrinter<TPath, TNode>);
-	options: PrintOptions;
+declare class PrintContext<TPath, TNode, TPrintOptions = object> {
+	constructor(
+		options: PrintOptions & TPrintOptions,
+		printer: NodePrinter<TPath, TNode, TPrintOptions>
+	);
+	options: PrintOptions & TPrintOptions;
 
 	/**
 	 * Hold `text` back as the opener of a node being printed in pieces. Nothing
@@ -21813,9 +21923,6 @@ declare class PrintContext<TPath, TNode> {
 }
 declare interface PrintOptions {
 	mode: "minify" | "beautify";
-	environment?: Readonly<Record<string, boolean>>;
-	convertLengthUnits?: boolean;
-	collapseWhitespace?: boolean;
 }
 declare interface PrintedElement {
 	element: string;
@@ -26135,7 +26242,8 @@ declare interface SourcePosition {
 declare abstract class SourceProcessorClass<
 	TPath,
 	TNode,
-	TProcessOptions = object
+	TProcessOptions = object,
+	TPrintOptions = object
 > {
 	/**
 	 * Register a Babel-style visitor map; calls accumulate per node type.
@@ -26143,7 +26251,7 @@ declare abstract class SourceProcessorClass<
 	 */
 	use(
 		map: VisitorMap<TPath>
-	): SourceProcessorClass<TPath, TNode, TProcessOptions>;
+	): SourceProcessorClass<TPath, TNode, TProcessOptions, TPrintOptions>;
 
 	/**
 	 * Parse `input` once and fire the visitors in source order. Asking for output
@@ -29599,7 +29707,8 @@ declare namespace exports {
 						setEnd(n: NodeSyntax, v: number): void;
 						setBlockEnd(n: NodeSyntax, v: number): void;
 					},
-					NodeSyntax
+					NodeSyntax,
+					CssPrintOptions
 				>
 			) => string;
 			export let rangeEquals: (
@@ -29870,7 +29979,8 @@ declare namespace exports {
 						parentOf(n?: number): number;
 						children(n?: number): number[];
 					},
-					number
+					number,
+					HtmlPrintOptions
 				>
 			) => string;
 			export let tokenize: (

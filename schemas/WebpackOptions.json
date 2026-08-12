@@ -3708,7 +3708,73 @@
       "additionalProperties": false,
       "properties": {
         "collapseWhitespace": {
-          "description": "Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim, and never removed entirely — dropping it would join two inline elements that render apart.",
+          "description": "Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim. `true` (or `\"conservative\"`) never removes whitespace entirely — dropping it would join two inline elements that render apart. `\"smart\"` also drops the whitespace that sits against a block element's edge, where no line box reaches it. `\"all\"` drops the whitespace at every text node's edges, which does change how adjacent inline elements render.",
+          "anyOf": [
+            {
+              "enum": ["conservative", "smart", "all"]
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "added": "5.110.0"
+        },
+        "mergeStyles": {
+          "description": "Print a run of adjacent `<style>` elements as one sheet. Off by default: it removes elements, so `document.styleSheets`, a `style:nth-child()` selector and `querySelectorAll(\"style\").length` all read a different document. A sheet the CSS minifier does not accept is never folded — appending to one that may be unterminated would make the next sheet part of its last rule — and neither is one led by `@import` / `@charset` / `@namespace`, which apply only at the top of a sheet.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "minifyConditionalComments": {
+          "description": "Minify the markup inside a downlevel-hidden conditional comment (`<!--[if IE]> … <![endif]-->`). Off by default: the body is minified on its own, so a context-sensitive decision inside it — which end tags are optional, where a table cell may sit — is taken as though it started a document rather than where the comment sits. Only browsers older than IE10 read these at all.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "preserveComments": {
+          "description": "Patterns naming comments to keep, on top of the ones minifying always keeps (downlevel conditional comments, server-side includes and template directives). A string is read as a regular expression source and matched against the comment's text.",
+          "type": "array",
+          "items": {
+            "description": "A pattern matched against a comment's text.",
+            "anyOf": [
+              {
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "added": "5.110.0"
+        },
+        "removeEmptyAttributes": {
+          "description": "Drop `class`, `id`, `style` and `dir` when their value is empty or only whitespace, which is the state the spec also gives their absence. Off by default: an attribute selector matches on presence, so `[class]` stops matching. `title` and `lang` are never dropped even when empty — the spec gives an empty value of either a meaning absence does not have.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "removeEmptyElements": {
+          "description": "Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (`canvas`, `slot`, `template`, `textarea`, `progress`, `meter`, `output`, `dialog`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a `::before`, and the minifier cannot see the stylesheet. Emptiness is read off the source tree in one pass, so an element left empty only because its child was dropped is not itself dropped.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "removeRedundantAttributes": {
+          "description": "Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one `getAttribute` and every attribute selector read differently, whichever tier dropped it. `true` (or `\"smart\"`) drops only markers on elements that render nothing — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>`, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — so no rule that styles the page stops applying, which is what `@swc/html` does by default. `\"all\"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.",
+          "anyOf": [
+            {
+              "enum": ["smart", "all"]
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "added": "5.110.0"
+        },
+        "sortAttributes": {
+          "description": "Print an element's attributes in name order. Nothing in HTML reads attribute order, so this only makes the same markup compress better across pages. Off by default: a script reading `element.attributes` back, or a snapshot of the emitted HTML, sees the new order.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "sortClassNames": {
+          "description": "Print a `class` list in token order. Nothing in CSS reads token order, so this only makes the same markup compress better across pages. Off by default: a script reading `className` back sees the new order. Other token lists are left alone — `ping` is the order its requests go out in.",
           "type": "boolean",
           "added": "5.110.0"
         }
