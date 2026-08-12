@@ -178,69 +178,69 @@
 
 - Restore missing `internalSerializables` entries (webpack/lib/Module and cold filesystem cache). (by [@alexander-akait](https://github.com/alexander-akait) in [#21391](https://github.com/webpack/webpack/pull/21391))
 
-- Fix watch rebuild crash when context symlink targets lack `timestampHash`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Fix watch rebuild crash when context symlink targets lack `timestampHash`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21381](https://github.com/webpack/webpack/pull/21381))
 
-- Fix lazy compilation backend leaking idle module entries and hanging on exit. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Fix lazy compilation backend leaking idle module entries and hanging on exit. (by [@alexander-akait](https://github.com/alexander-akait) in [#21468](https://github.com/webpack/webpack/pull/21468))
 
-- Stop logging benign ECONNRESET client errors from the lazy compilation server. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Stop logging benign ECONNRESET client errors from the lazy compilation server. (by [@alexander-akait](https://github.com/alexander-akait) in [#21406](https://github.com/webpack/webpack/pull/21406))
 
-- Accept compilations from another webpack copy in `getCompilationHooks` again. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Accept compilations from another webpack copy in `getCompilationHooks` again. (by [@alexander-akait](https://github.com/alexander-akait) in [#21407](https://github.com/webpack/webpack/pull/21407))
 
-- Fix `output.html` injection edge cases: escaping, head detection, duplicate meta tags, resource-hint/entry-tag retention with `inject: false`, and stylesheet placement. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Fix `output.html` injection edge cases: escaping, head detection, duplicate meta tags, resource-hint/entry-tag retention with `inject: false`, and stylesheet placement. (by [@alexander-akait](https://github.com/alexander-akait) in [#21416](https://github.com/webpack/webpack/pull/21416))
 
-- Ignore a `<base>` inside an inert `<template>` when resolving HTML URLs. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Ignore a `<base>` inside an inert `<template>` when resolving HTML URLs. (by [@alexander-akait](https://github.com/alexander-akait) in [#21441](https://github.com/webpack/webpack/pull/21441))
 
-- Bust an HTML page's `[contenthash]` when its inlined chunk content changes. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Bust an HTML page's `[contenthash]` when its inlined chunk content changes. (by [@alexander-akait](https://github.com/alexander-akait) in [#21441](https://github.com/webpack/webpack/pull/21441))
 
-- Fix a dangling stylesheet `<link>` for a JS-only chunk in an HTML entry. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Fix a dangling stylesheet `<link>` for a JS-only chunk in an HTML entry. (by [@alexander-akait](https://github.com/alexander-akait) in [#21441](https://github.com/webpack/webpack/pull/21441))
 
-- Fix a malformed HTML magic comment leaking a pending `webpackInline` directive onto the next element. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Fix a malformed HTML magic comment leaking a pending `webpackInline` directive onto the next element. (by [@alexander-akait](https://github.com/alexander-akait) in [#21406](https://github.com/webpack/webpack/pull/21406))
 
-- Fix off-by-one dropping the last character of an unterminated `url(...)` at end-of-input. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Fix off-by-one dropping the last character of an unterminated `url(...)` at end-of-input. (by [@alexander-akait](https://github.com/alexander-akait) in [#21406](https://github.com/webpack/webpack/pull/21406))
 
-- Consume the trailing whitespace of a CSS hex escape when unescaping identifiers. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Consume the trailing whitespace of a CSS hex escape when unescaping identifiers. (by [@alexander-akait](https://github.com/alexander-akait) in [#21366](https://github.com/webpack/webpack/pull/21366))
 
-- Fix `[fullhash]` in `output.webassemblyModuleFilename` by dropping a stray brace and requesting the `getFullHash` runtime module. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Fix `[fullhash]` in `output.webassemblyModuleFilename` by dropping a stray brace and requesting the `getFullHash` runtime module. (by [@alexander-akait](https://github.com/alexander-akait) in [#21406](https://github.com/webpack/webpack/pull/21406))
 
-- Fix duplicated errors/warnings in stats output when detail-less entries exceed `errorsSpace`/`warningsSpace`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Fix duplicated errors/warnings in stats output when detail-less entries exceed `errorsSpace`/`warningsSpace`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21406](https://github.com/webpack/webpack/pull/21406))
 
 - Improve module parse errors with a babel-style code frame and the module type. (by [@alexander-akait](https://github.com/alexander-akait) in [#21485](https://github.com/webpack/webpack/pull/21485))
 
-- Fix `formatSize` rendering sizes of 1 TiB or larger as "undefined". (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Fix `formatSize` rendering sizes of 1 TiB or larger as "undefined". (by [@alexander-akait](https://github.com/alexander-akait) in [#21366](https://github.com/webpack/webpack/pull/21366))
 
-- Skip the anonymous default export `.name` fix-up when `name` is non-configurable, instead of throwing on pre-ES2015 engines. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Skip the anonymous default export `.name` fix-up when `name` is non-configurable, instead of throwing on pre-ES2015 engines. (by [@alexander-akait](https://github.com/alexander-akait) in [#21370](https://github.com/webpack/webpack/pull/21370))
 
-- Escape `?` and `#` in context module regexp identifiers so source map names are not truncated. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Escape `?` and `#` in context module regexp identifiers so source map names are not truncated. (by [@alexander-akait](https://github.com/alexander-akait) in [#21422](https://github.com/webpack/webpack/pull/21422))
 
-- Resolve directory requests to their index module in scoped `DllReferencePlugin`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Resolve directory requests to their index module in scoped `DllReferencePlugin`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21437](https://github.com/webpack/webpack/pull/21437))
 
-- Skip the `hasSymbol` check in the async module runtime when `environment.symbol` is set. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Skip the `hasSymbol` check in the async module runtime when `environment.symbol` is set. (by [@alexander-akait](https://github.com/alexander-akait) in [#21423](https://github.com/webpack/webpack/pull/21423))
 
-- Use a shared `__webpack_require__.cjs` helper for wrapped CommonJS modules. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Use a shared `__webpack_require__.cjs` helper for wrapped CommonJS modules. (by [@alexander-akait](https://github.com/alexander-akait) in [#21464](https://github.com/webpack/webpack/pull/21464))
 
-- Derive ASI positions from source text instead of acorn's `onInsertedSemicolon`, so custom parsers need not collect semicolons. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Derive ASI positions from source text instead of acorn's `onInsertedSemicolon`, so custom parsers need not collect semicolons. (by [@alexander-akait](https://github.com/alexander-akait) in [#21453](https://github.com/webpack/webpack/pull/21453))
 
-- Avoid a second full parse for `auto` source type by downgrading module to script in place on a top-level return. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Avoid a second full parse for `auto` source type by downgrading module to script in place on a top-level return. (by [@alexander-akait](https://github.com/alexander-akait) in [#21455](https://github.com/webpack/webpack/pull/21455))
 
-- Fix exponential-time side-effects analysis on cyclic module graphs by memoizing cycle-free results via Tarjan lowlink. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Fix exponential-time side-effects analysis on cyclic module graphs by memoizing cycle-free results via Tarjan lowlink. (by [@alexander-akait](https://github.com/alexander-akait) in [#21373](https://github.com/webpack/webpack/pull/21373))
 
-- Speed up JavaScript parsing and AST walking and reduce parser memory usage. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Speed up JavaScript parsing and AST walking and reduce parser memory usage. (by [@alexander-akait](https://github.com/alexander-akait) in [#21373](https://github.com/webpack/webpack/pull/21373))
 
-- Speed up CSS and HTML parsing and code generation and reduce parser memory usage. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Speed up CSS and HTML parsing and code generation and reduce parser memory usage. (by [@alexander-akait](https://github.com/alexander-akait) in [#21332](https://github.com/webpack/webpack/pull/21332))
 
-- Speed up snapshot creation and reduce its memory usage. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Speed up snapshot creation and reduce its memory usage. (by [@alexander-akait](https://github.com/alexander-akait) in [#21401](https://github.com/webpack/webpack/pull/21401))
 
-- Reduce allocations in JS codegen, concatenation, queues and parser setup. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Reduce allocations in JS codegen, concatenation, queues and parser setup. (by [@alexander-akait](https://github.com/alexander-akait) in [#21341](https://github.com/webpack/webpack/pull/21341))
 
-- Speed up stats generation on large builds by reusing the item context across array items. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Speed up stats generation on large builds by reusing the item context across array items. (by [@alexander-akait](https://github.com/alexander-akait) in [#21425](https://github.com/webpack/webpack/pull/21425))
 
-- Memoize loader resolution per compilation to avoid re-resolving the same loader for every matching module. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Memoize loader resolution per compilation to avoid re-resolving the same loader for every matching module. (by [@alexander-akait](https://github.com/alexander-akait) in [#21435](https://github.com/webpack/webpack/pull/21435))
 
-- Reuse and harden webpack's shared resource parser in the loader runner. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Reuse and harden webpack's shared resource parser in the loader runner. (by [@alexander-akait](https://github.com/alexander-akait) in [#21392](https://github.com/webpack/webpack/pull/21392))
 
-- Update webpack-sources to 3.5.1 and enhanced-resolve to 5.24.2 to cut peak memory. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Update webpack-sources to 3.5.1 and enhanced-resolve to 5.24.2 to cut peak memory. (by [@alexander-akait](https://github.com/alexander-akait) in [#21344](https://github.com/webpack/webpack/pull/21344))
 
-- Inline the loader-runner package into core. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Inline the loader-runner package into core. (by [@alexander-akait](https://github.com/alexander-akait) in [#21249](https://github.com/webpack/webpack/pull/21249))
 
 - Fix context hash crash on unsupported directory entries like FIFOs and sockets. (by [@hai-x](https://github.com/hai-x) in [#21484](https://github.com/webpack/webpack/pull/21484))
 
