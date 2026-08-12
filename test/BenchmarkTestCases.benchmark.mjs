@@ -3,6 +3,7 @@ import fs from "fs/promises";
 import os from "os";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
+import v8 from "v8";
 import { getCodspeedRunnerMode, getV8Flags } from "@codspeed/core";
 import { Worker } from "jest-worker";
 import { simpleGit } from "simple-git";
@@ -579,6 +580,8 @@ class BenchmarkRunner {
 	 * @returns {Promise<void>}
 	 */
 	async run() {
+		logMeasurementEnvironment();
+
 		const baselines = await this.initialize();
 		const benchmarks = await this.discoverBenchmarks();
 
@@ -617,6 +620,29 @@ class BenchmarkRunner {
 			? this.runInMainThread(benchmarkTasks)
 			: this.runInWorkers(benchmarkTasks));
 	}
+}
+
+/**
+ * Log what a measurement is comparable against. CodSpeed compares a benchmark
+ * with a run recorded on another machine, so a whole shard moving at once is
+ * usually one of these having changed rather than the diff.
+ * @returns {void}
+ */
+function logMeasurementEnvironment() {
+	const newSpace = v8
+		.getHeapSpaceStatistics()
+		.find((space) => space.space_name === "new_space");
+
+	console.log("=== Measurement environment ===");
+	console.log({
+		node: process.version,
+		v8: process.versions.v8,
+		runnerMode: getCodspeedRunnerMode(),
+		cpu: `${os.cpus()[0].model} x${os.cpus().length}`,
+		totalMemory: `${(os.totalmem() / 1024 ** 3).toFixed(2)} GB`,
+		newSpace: `${((newSpace ? newSpace.space_size : 0) / 1024 ** 2).toFixed(0)} MiB`,
+		heapLimit: `${(v8.getHeapStatistics().heap_size_limit / 1024 ** 2).toFixed(0)} MiB`
+	});
 }
 
 /**

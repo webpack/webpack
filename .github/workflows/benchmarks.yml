@@ -25,7 +25,7 @@ jobs:
       fail-fast: false
       matrix:
         shard: [1/4, 2/4, 3/4, 4/4]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       issues: write
       pull-requests: write
@@ -38,7 +38,10 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: lts/*
+          # Pinned, not `lts/*`: CodSpeed compares this run against one recorded
+          # days ago, and a Node patch moves memory peaks and instruction counts
+          # on unchanged code. Bumping it re-baselines every benchmark at once.
+          node-version: 24.19.0
           cache: yarn
 
       - run: yarn --frozen-lockfile
@@ -47,11 +50,14 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
-      - name: Check Memory Status
-        run: >
+      # The runner's CPU model still varies between runs; a whole shard moving at
+      # once is that, not the diff. Recorded here so the log can say which.
+      - name: Check Runner Environment
+        run: |
+          ldd --version | head -1
           node -e 'const os=require("os");
           const toGb=b=>(b/1024**3).toFixed(2)+" GB";
-          console.log(`--- Memory Status ---\nTotal: ${toGb(os.totalmem())}\nFree:  ${toGb(os.freemem())}\nUsed:  ${toGb(os.totalmem()-os.freemem())}`)'
+          console.log(`--- Runner ---\nNode:  ${process.version} (V8 ${process.versions.v8})\nCPU:   ${os.cpus()[0].model} x${os.cpus().length}\nTotal: ${toGb(os.totalmem())}\nFree:  ${toGb(os.freemem())}\nUsed:  ${toGb(os.totalmem()-os.freemem())}`)'
 
       - name: Run benchmarks
         uses: CodSpeedHQ/action@4296e51e7041e24dadb86d1d6e8b9320d223dbe8 # v5.0.3
@@ -70,7 +76,7 @@ jobs:
       fail-fast: false
       matrix:
         shard: [1/4, 2/4, 3/4, 4/4]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       issues: write
       pull-requests: write
@@ -83,7 +89,10 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: lts/*
+          # Pinned, not `lts/*`: CodSpeed compares this run against one recorded
+          # days ago, and a Node patch moves memory peaks and instruction counts
+          # on unchanged code. Bumping it re-baselines every benchmark at once.
+          node-version: 24.19.0
           cache: yarn
 
       - run: yarn --frozen-lockfile
@@ -92,11 +101,14 @@ jobs:
 
       - run: yarn link webpack --frozen-lockfile
 
-      - name: Check Memory Status
-        run: >
+      # The runner's CPU model still varies between runs; a whole shard moving at
+      # once is that, not the diff. Recorded here so the log can say which.
+      - name: Check Runner Environment
+        run: |
+          ldd --version | head -1
           node -e 'const os=require("os");
           const toGb=b=>(b/1024**3).toFixed(2)+" GB";
-          console.log(`--- Memory Status ---\nTotal: ${toGb(os.totalmem())}\nFree:  ${toGb(os.freemem())}\nUsed:  ${toGb(os.totalmem()-os.freemem())}`)'
+          console.log(`--- Runner ---\nNode:  ${process.version} (V8 ${process.versions.v8})\nCPU:   ${os.cpus()[0].model} x${os.cpus().length}\nTotal: ${toGb(os.totalmem())}\nFree:  ${toGb(os.freemem())}\nUsed:  ${toGb(os.totalmem()-os.freemem())}`)'
 
       - name: Run memory benchmarks
         uses: CodSpeedHQ/action@4296e51e7041e24dadb86d1d6e8b9320d223dbe8 # v5.0.3
