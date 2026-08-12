@@ -4050,6 +4050,68 @@ describe("SourceProcessor — enumerated attribute values", () => {
 	});
 });
 
+describe("SourceProcessor — optional end tags read the output", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @param {object=} options extra print options
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html, options) =>
+		new SourceProcessor().process(html, { mode: "minify", ...options }).code;
+
+	const LIST = "<ul>\n<li><p>a</p>\n</li>\n<li><p>b</p>\n</li>\n</ul>";
+
+	it("reads past whitespace the collapse tier deletes", () => {
+		// The `\n` after each `</p>` is content in the tree and nothing in the
+		// output, so the tag it was keeping alive goes with it.
+		expect(minify(LIST, { collapseWhitespace: "smart" })).toBe(
+			"<ul><li><p>a<li><p>b</ul>"
+		);
+		expect(minify(LIST, { collapseWhitespace: "all" })).toBe(
+			"<ul><li><p>a<li><p>b</ul>"
+		);
+	});
+
+	it("keeps the tag when that whitespace is printed", () => {
+		// `"conservative"` prints one space, and off prints it verbatim; either
+		// way something stands between the tag and the parent's end.
+		expect(minify(LIST, { collapseWhitespace: "conservative" })).toBe(
+			"<ul> <li><p>a</p> </li> <li><p>b</p> </li> </ul>"
+		);
+		expect(minify(LIST)).toBe(LIST);
+	});
+
+	it("keeps the tag when an ancestor renders the whitespace verbatim", () => {
+		// The `\n` still prints, so the `</li>` in front of it stays; only the
+		// last one goes, on the rule that its parent's end follows it.
+		expect(
+			minify("<pre><ul><li>a</li>\n<li>b</li></ul></pre>", {
+				collapseWhitespace: "all"
+			})
+		).toBe("<pre><ul><li>a</li>\n<li>b</ul></pre>");
+	});
+
+	it("reads past a comment minifying drops", () => {
+		expect(minify("<ul><li>a</li><!--c--><li>b</li></ul>")).toBe(
+			"<ul><li>a<li>b</ul>"
+		);
+	});
+
+	it("keeps the tag for a comment minifying keeps", () => {
+		expect(
+			minify("<ul><li>a</li><!--keep--><li>b</li></ul>", {
+				preserveComments: ["keep"]
+			})
+		).toBe("<ul><li>a</li><!--keep--><li>b</ul>");
+	});
+
+	it("still keeps a tag before printed text", () => {
+		expect(minify("<ul><li>a</li>tail</ul>")).toBe("<ul><li>a</li>tail</ul>");
+	});
+});
+
 describe("SourceProcessor — tagOmission", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
