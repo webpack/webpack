@@ -3729,12 +3729,21 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	 * @returns {string} the minified serialization
 	 */
 	const minify = (html) =>
-		new SourceProcessor().process(html, { mode: "minify" }).code;
+		new SourceProcessor().process(html, { mode: "minify", mergeStyles: true })
+			.code;
 
 	it("folds a run into one element", () => {
 		expect(
 			minify("<style>a{color:red}</style><style>b{color:#00f}</style>")
 		).toBe("<style>a{color:red}b{color:#00f}</style>");
+	});
+
+	it("keeps every element, minified, unless asked to fold", () => {
+		const html =
+			"<style>a {color: red}</style><style>b {color: #0000ff}</style>";
+		expect(new SourceProcessor().process(html, { mode: "minify" }).code).toBe(
+			"<style>a{color:red}</style><style>b{color:#00f}</style>"
+		);
 	});
 
 	it("declines a sheet whose `@import` would stop applying", () => {
@@ -3873,20 +3882,14 @@ describe("SourceProcessor — enumerated attribute values", () => {
 		"* spellcheck",
 		"* translate",
 		"* writingsuggestions",
-		"a target",
-		"area shape",
-		"area target",
 		"audio crossorigin",
 		"audio preload",
-		"base target",
 		"button formenctype",
 		"button formmethod",
-		"button formtarget",
 		"button type",
 		"form autocomplete",
 		"form enctype",
 		"form method",
-		"form target",
 		"iframe loading",
 		"img crossorigin",
 		"img decoding",
@@ -3894,14 +3897,12 @@ describe("SourceProcessor — enumerated attribute values", () => {
 		"img loading",
 		"input formenctype",
 		"input formmethod",
-		"input formtarget",
 		"input type",
 		"link crossorigin",
 		"link fetchpriority",
 		"script crossorigin",
 		"script fetchpriority",
 		"td scope",
-		"textarea wrap",
 		"th scope",
 		"track kind",
 		"video crossorigin",
@@ -3953,9 +3954,52 @@ describe("SourceProcessor — enumerated attribute values", () => {
 		expect(minify('<div id="MyId" class="MyClass">')).toContain(
 			"id=MyId class=MyClass"
 		);
-		expect(minify('<a target="MyFrame" href=x>l</a>')).toContain(
-			"target=MyFrame"
+	});
+
+	it("leaves a keyword the engine reflects verbatim alone", () => {
+		// `target` / `formtarget`, `<area shape>` and `<textarea wrap>` are
+		// enumerated, but their IDL members reflect what was written rather than
+		// the canonical keyword, so a script reading one back would see the fold.
+		expect(minify('<a target="_TOP" href=x>l</a>')).toContain("target=_TOP");
+		expect(minify('<form target="_BLANK">')).toContain("target=_BLANK");
+		expect(minify('<button formtarget="_SELF">b</button>')).toContain(
+			"formtarget=_SELF"
 		);
+		expect(minify('<map><area shape="RECT"></map>')).toContain("shape=RECT");
+		expect(minify('<textarea wrap="SOFT"></textarea>')).toContain("wrap=SOFT");
+	});
+});
+
+describe("SourceProcessor — token list values", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { mode: "minify" }).code;
+
+	it("collapses the separators of every list", () => {
+		expect(minify('<div class="a \n b">x</div>')).toContain('class="a b"');
+		expect(minify('<a href=x ping="/p1 \n /p2">l</a>')).toContain(
+			'ping="/p1 /p2"'
+		);
+	});
+
+	it("drops a repeated token only where the DOM folds it away", () => {
+		// `class` / `rel` reflect a `DOMTokenList`, which is an ordered set.
+		expect(minify('<div class="a b a">x</div>')).toContain('class="a b"');
+		expect(minify('<link rel="preload preload" href=x>')).toContain(
+			"rel=preload"
+		);
+		// `ping` is read back as written and sends one request per token; the
+		// other two reflect no token list either.
+		expect(minify('<a href=x ping="/p /p">l</a>')).toContain('ping="/p /p"');
+		expect(minify('<table><tr><td headers="h h">c</table>')).toContain(
+			'headers="h h"'
+		);
+		expect(minify('<div accesskey="k k">x</div>')).toContain('accesskey="k k"');
 	});
 });
 
@@ -4773,7 +4817,9 @@ describe("SourceProcessor — streamed walk recycling", () => {
 				})
 			)
 			.process(
-				`<!DOCTYPE html><html><body><div>${"<p><b>x</b></p>".repeat(BIG)}</div></body></html>`
+				`<!DOCTYPE html><html><body><div>${"<p><b>x</b></p>".repeat(
+					BIG
+				)}</div></body></html>`
 			);
 		// the skipped element itself still exits; nothing below it is visited
 		expect(log.filter((l) => l === "+div")).toHaveLength(1);
@@ -5829,6 +5875,26 @@ describe("SourceProcessor — printing in pieces", () => {
 			);
 			expect(minify(`<div><${name}>x</${name}></div>`)).toBe(
 				`<div><${name}>x</${name}></div>`
+			);
+		});
+
+		it(`swallows a newline only in the token right after <${name}>`, () => {
+			// §13.2.6.4.7 ignores the newline only if it is *the next token*, so an
+			// end tag, a comment or a doctype in between ends the offer — the
+			// newline after them belongs to the document and renders.
+			expect(minify(`<div><${name}></${name}>\nafter</div>`)).toBe(
+				`<div><${name}></${name}>\nafter</div>`
+			);
+			// `<textarea>` is RCDATA, so nothing but text can come between.
+			if (name === "textarea") return;
+			expect(minify(`<div><${name}><!--c-->\nkeep</${name}></div>`)).toBe(
+				`<div><${name}>\n\nkeep</${name}></div>`
+			);
+			expect(
+				minify(`<div><${name}><!DOCTYPE html>\nkeep</${name}></div>`)
+			).toBe(`<div><${name}>\n\nkeep</${name}></div>`);
+			expect(minify(`<${name}><span></span>\nkeep</${name}>`)).toBe(
+				`<${name}><span></span>\nkeep</${name}>`
 			);
 		});
 	}

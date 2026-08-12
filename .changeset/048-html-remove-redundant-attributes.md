@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Fold an enumerated attribute value to lower case, fold adjacent `<style>` into one, drop repeated `class` tokens, and add `optimization.minimize.html` options `collapseWhitespace: "smart" | "all"`, `minifyConditionalComments`, `preserveComments`, `removeEmptyAttributes`, `removeEmptyElements`, `sortAttributes`, `sortClassNames` and `removeRedundantAttributes: "all"`.
+Fold an enumerated attribute value to lower case, drop a repeated `class` token, keep the newline after an empty `<pre>` / `<textarea>`, and add the `optimization.minimize.html` options `collapseWhitespace`, `mergeStyles`, `minifyConditionalComments`, `preserveComments`, `removeEmptyAttributes`, `removeEmptyElements`, `removeRedundantAttributes`, `sortAttributes` and `sortClassNames`.

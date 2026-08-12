@@ -10200,10 +10200,11 @@ type HtmlPrintOptions = Pick<
 	"environment" | "convertLengthUnits"
 > & {
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
+	mergeStyles?: boolean;
 	removeEmptyAttributes?: boolean;
 	removeEmptyElements?: boolean;
 	preserveComments?: (string | RegExp)[];
-	removeRedundantAttributes?: "all" | "smart";
+	removeRedundantAttributes?: boolean | "all" | "smart";
 	sortAttributes?: boolean;
 	sortClassNames?: boolean;
 };
@@ -10254,6 +10255,11 @@ declare interface HtmlProcessOptions {
 	preserveComments?: (string | RegExp)[];
 
 	/**
+	 * print a run of adjacent `<style>` elements as one sheet, which removes elements (default false)
+	 */
+	mergeStyles?: boolean;
+
+	/**
 	 * print an element's attributes in name order, which nothing in HTML reads (default false)
 	 */
 	sortAttributes?: boolean;
@@ -10264,9 +10270,9 @@ declare interface HtmlProcessOptions {
 	sortClassNames?: boolean;
 
 	/**
-	 * drop an attribute whose value is the element's own default; `"all"` also drops the spec defaults a selector can match (default `"smart"`)
+	 * drop an attribute whose value is the element's own default; `true` is `"smart"`, and `"all"` also drops the spec defaults a selector can match (default false)
 	 */
-	removeRedundantAttributes?: "all" | "smart";
+	removeRedundantAttributes?: boolean | "all" | "smart";
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**
@@ -19802,6 +19808,12 @@ declare interface OptimizationMinimizeHtml {
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 
 	/**
+	 * Print a run of adjacent `<style>` elements as one sheet. Off by default: it removes elements, so `document.styleSheets`, a `style:nth-child()` selector and `querySelectorAll("style").length` all read a different document. A sheet the CSS minifier does not accept is never folded — appending to one that may be unterminated would make the next sheet part of its last rule — and neither is one led by `@import` / `@charset` / `@namespace`, which apply only at the top of a sheet.
+	 * @since 5.110.0
+	 */
+	mergeStyles?: boolean;
+
+	/**
 	 * Minify the markup inside a downlevel-hidden conditional comment (`<!--[if IE]> … <![endif]-->`). Off by default: the body is minified on its own, so a context-sensitive decision inside it — which end tags are optional, where a table cell may sit — is taken as though it started a document rather than where the comment sits. Only browsers older than IE10 read these at all.
 	 * @since 5.110.0
 	 */
@@ -19826,10 +19838,10 @@ declare interface OptimizationMinimizeHtml {
 	removeEmptyElements?: boolean;
 
 	/**
-	 * Drop an attribute whose value is the one the element already defaults to. `"smart"` (the default) drops only markers on elements that render nothing — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>`, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — so no rule that styles the page stops applying, which is what `@swc/html` does by default. A `querySelector` naming one of those attributes can still tell the difference; what separates the tier from `"all"` is that an ordinary style rule cannot. `"all"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which is unsafe: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.
+	 * Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one `getAttribute` and every attribute selector read differently, whichever tier dropped it. `true` (or `"smart"`) drops only markers on elements that render nothing — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>`, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — so no rule that styles the page stops applying, which is what `@swc/html` does by default. `"all"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.
 	 * @since 5.110.0
 	 */
-	removeRedundantAttributes?: "all" | "smart";
+	removeRedundantAttributes?: boolean | "all" | "smart";
 
 	/**
 	 * Print an element's attributes in name order. Nothing in HTML reads attribute order, so this only makes the same markup compress better across pages. Off by default: a script reading `element.attributes` back, or a snapshot of the emitted HTML, sees the new order.

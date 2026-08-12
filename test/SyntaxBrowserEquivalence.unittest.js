@@ -3,6 +3,7 @@
 const fs = require("fs/promises");
 const path = require("path");
 const { SourceProcessor: CssSourceProcessor } = require("../lib/css/syntax");
+const { ENUMERATED_KEYWORDS } = require("../lib/html/data");
 const { SourceProcessor: HtmlSourceProcessor } = require("../lib/html/syntax");
 const launchChrome = require("./helpers/launchChrome");
 
@@ -783,6 +784,11 @@ const installHelpers = () => {
 				.filter(Boolean)
 				.join(",");
 		}
+		// Last: what the engine itself reads the attribute as. An ordinary
+		// reflection hands the raw value straight back, so this changes nothing;
+		// one "limited to only known values" hands back its canonical keyword,
+		// which is the whole of what folding an enumerated value can alter.
+		if (typeof reflected === "string") return reflected;
 		return raw;
 	};
 
@@ -1329,6 +1335,83 @@ describe("printer output in real Chrome", () => {
 		// rendered text, the comments, the doctype, and the CSS, JSON and script
 		// bodies carried inside it — must survive minification unchanged.
 		expect(differences).toEqual([]);
+	}, 600000);
+
+	it("should only fold enumerated values the engine folds too", async () => {
+		// The printer lower-cases a value in `ENUMERATED_KEYWORDS`. That is
+		// unobservable exactly where the IDL member is "limited to only known
+		// values", so it hands back one spelling whichever was written — which no
+		// dataset states, and `target` / `<textarea wrap>` reflect verbatim. The
+		// corpus only covers the entries a fixture happens to carry; this covers
+		// every one of them.
+		/** @type {Record<string, Record<string, string[]>>} */
+		const table = {};
+		for (const [element, attributes] of Object.entries(ENUMERATED_KEYWORDS)) {
+			table[element] = {};
+			for (const [attribute, keywords] of Object.entries(attributes)) {
+				table[element][attribute] = [...keywords];
+			}
+		}
+		const unfolded = await page.evaluate((cases) => {
+			/**
+			 * @param {string} element tag name
+			 * @param {string} attribute attribute name
+			 * @param {string} value the value to set
+			 * @returns {[string | undefined, unknown]} the IDL member and what it reads back
+			 */
+			const readBack = (element, attribute, value) => {
+				const node = document.createElement(element);
+				node.setAttribute(attribute, value);
+				document.body.append(node);
+				/** @type {string | undefined} */
+				let property;
+				for (
+					let proto = Object.getPrototypeOf(node);
+					proto !== null && property === undefined;
+					proto = Object.getPrototypeOf(proto)
+				) {
+					for (const name of Object.getOwnPropertyNames(proto)) {
+						if (name.toLowerCase() === attribute) {
+							property = name;
+							break;
+						}
+					}
+				}
+				const reflected =
+					property === undefined
+						? undefined
+						: /** @type {Record<string, unknown>} */ (
+								/** @type {unknown} */ (node)
+							)[property];
+				node.remove();
+				return [property, reflected];
+			};
+			/** @type {string[]} */
+			const out = [];
+			for (const [element, attributes] of Object.entries(cases)) {
+				for (const [attribute, keywords] of Object.entries(attributes)) {
+					for (const keyword of keywords) {
+						// A keyword with no lower case to fold cannot be respelled.
+						if (keyword === keyword.toUpperCase()) continue;
+						// A global attribute is read on an element that reflects it; one
+						// no element does (`referrerpolicy` on a `<div>`) is inert there.
+						const on = element === "*" ? "a" : element;
+						const [property, folded] = readBack(on, attribute, keyword);
+						if (property === undefined) continue;
+						const [, written] = readBack(on, attribute, keyword.toUpperCase());
+						if (written !== folded) {
+							out.push(
+								`${element} ${attribute}=${keyword}: ${JSON.stringify(
+									written
+								)} vs ${JSON.stringify(folded)}`
+							);
+						}
+					}
+				}
+			}
+			return out;
+		}, table);
+		expect(unfolded).toEqual([]);
 	}, 600000);
 
 	it("should build the same CSSOM from a stylesheet and its minified form", async () => {

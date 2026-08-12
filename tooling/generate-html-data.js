@@ -332,7 +332,11 @@ const SUPPLEMENT = {
 		itemtype: null,
 		part: null,
 		ping: ["a", "area"]
-	}
+	},
+	// Also reflected as a `DOMTokenList`, but by a member the extraction cannot
+	// see: `classList` and `part` belong to DOM's `Element`, and the microdata
+	// three carry `[PutForwards]` rather than a `Reflect` marker.
+	domTokenList: ["class", "itemprop", "itemref", "itemtype", "part"]
 };
 
 /**
@@ -373,6 +377,16 @@ const booleans = merge(reflect.boolean, SUPPLEMENT.boolean, "boolean");
 const urls = merge(reflect.url, SUPPLEMENT.url, "url");
 const integers = merge(reflect.integer, SUPPLEMENT.integer, "integer");
 const tokenLists = merge(reflect.tokenList, SUPPLEMENT.tokenList, "tokenList");
+// Derived: the lists a repeated token may be dropped from are the ones the DOM
+// itself folds, which is exactly the `DOMTokenList` reflections.
+const domTokenLists = [
+	...new Set([...Object.keys(reflect.tokenList), ...SUPPLEMENT.domTokenList])
+].sort();
+for (const name of domTokenLists) {
+	if (!tokenLists.some(([listName]) => listName === name)) {
+		throw new Error(`domTokenList.${name} is not a token list at all`);
+	}
+}
 const signed = [
 	...new Set([...reflect.signedInteger, ...SUPPLEMENT.signedInteger])
 ].sort();
@@ -1260,6 +1274,11 @@ const PARSER_TABLES = [
 	// `<ol type>` is deliberately absent: `a` and `A` are two different keywords
 	// there, so folding one into the other renumbers the list. `sizes` and
 	// `media` are absent because neither is enumerated at all.
+	//
+	// So are `target` / `formtarget`, `<area shape>` and `<textarea wrap>`: their
+	// IDL members reflect the value verbatim rather than "limited to only known
+	// values", so the engine hands a script back the case it was written in and
+	// folding it is a change something can read.
 	[
 		"ENUMERATED_KEYWORDS",
 		"byElementSet",
@@ -1280,10 +1299,6 @@ const PARSER_TABLES = [
 			["* spellcheck", "true false"],
 			["* translate", "yes no"],
 			["* writingsuggestions", "true false"],
-			["a target", "_blank _self _parent _top"],
-			["area shape", "circle circ default poly polygon rect rectangle"],
-			["area target", "_blank _self _parent _top"],
-			["base target", "_blank _self _parent _top"],
 			["audio crossorigin", "anonymous use-credentials"],
 			["audio preload", "none metadata auto"],
 			[
@@ -1291,7 +1306,6 @@ const PARSER_TABLES = [
 				"application/x-www-form-urlencoded multipart/form-data text/plain"
 			],
 			["button formmethod", "get post dialog"],
-			["button formtarget", "_blank _self _parent _top"],
 			["button type", "submit reset button"],
 			["form autocomplete", "on off"],
 			[
@@ -1299,7 +1313,6 @@ const PARSER_TABLES = [
 				"application/x-www-form-urlencoded multipart/form-data text/plain"
 			],
 			["form method", "get post dialog"],
-			["form target", "_blank _self _parent _top"],
 			["iframe loading", "lazy eager"],
 			["img crossorigin", "anonymous use-credentials"],
 			["img decoding", "sync async auto"],
@@ -1310,7 +1323,6 @@ const PARSER_TABLES = [
 				"application/x-www-form-urlencoded multipart/form-data text/plain"
 			],
 			["input formmethod", "get post dialog"],
-			["input formtarget", "_blank _self _parent _top"],
 			[
 				"input type",
 				"hidden text search tel url email password date month week time datetime-local number range color checkbox radio file submit image reset button"
@@ -1320,7 +1332,6 @@ const PARSER_TABLES = [
 			["script crossorigin", "anonymous use-credentials"],
 			["script fetchpriority", "high low auto"],
 			["td scope", "row col rowgroup colgroup"],
-			["textarea wrap", "soft hard"],
 			["th scope", "row col rowgroup colgroup"],
 			["track kind", "subtitles captions descriptions chapters metadata"],
 			["video crossorigin", "anonymous use-credentials"],
@@ -1561,10 +1572,14 @@ const byElementLiteral = (entries, asSet = false) => {
 	const inner = [...grouped]
 		.map(
 			([element, attributes]) =>
-				`${propertyKey(element)}: Object.assign(Object.create(null), {${attributes
+				`${propertyKey(
+					element
+				)}: Object.assign(Object.create(null), {${attributes
 					.map(
 						([attribute, mapped]) =>
-							`${propertyKey(attribute)}: ${asSet ? setLiteral(mapped.split(" ")) : `"${mapped}"`}`
+							`${propertyKey(attribute)}: ${
+								asSet ? setLiteral(mapped.split(" ")) : `"${mapped}"`
+							}`
 					)
 					.join(", ")}})`
 		)
@@ -1626,6 +1641,7 @@ const CSPELL_IGNORE =
 const EXPORT_NAMES = [
 	"BOOLEAN_ATTRIBUTES",
 	"COMMA_LIST_ATTRIBUTES",
+	"DOM_TOKEN_LIST_ATTRIBUTES",
 	"INTEGER_ATTRIBUTES",
 	"EMPTY_METADATA_ELEMENTS",
 	"ENUMERATED_ATTRIBUTE_NAMES",
@@ -1746,6 +1762,15 @@ const SRCSET_ATTRIBUTES = ${setLiteral(SRCSET_ATTRIBUTES)};
  * @type {Map<string, Set<string> | null>}
  */
 const TOKEN_LIST_ATTRIBUTES = ${mapLiteral(tokenLists)};
+
+/**
+ * The token lists reflected as a \`DOMTokenList\`, which is an ordered *set* — a
+ * repeated token was never a second token, so dropping it changes nothing the
+ * DOM reads. The rest are read back as written, and \`ping\` sends one request
+ * per token, so a repeat there is not the printer's to drop.
+ * @type {Set<string>}
+ */
+const DOM_TOKEN_LIST_ATTRIBUTES = ${setLiteral(domTokenLists)};
 
 /**
  * Attributes parsed as a URL, mapped to the elements they are one on. The URL

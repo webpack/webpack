@@ -9,7 +9,9 @@ module.exports = {
 		generator: { html: { extract: true } },
 		parser: { html: { sources: false } }
 	},
-	// No `removeRedundantAttributes` — `"smart"` is the default.
-	optimization: { minimize: { html: {} }, minimizer: ["..."] },
+	optimization: {
+		minimize: { html: { removeRedundantAttributes: true } },
+		minimizer: ["..."]
+	},
 	experiments: { html: true }
 };

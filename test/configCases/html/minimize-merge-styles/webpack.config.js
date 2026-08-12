@@ -9,6 +9,9 @@ module.exports = {
 		generator: { html: { extract: true } },
 		parser: { html: { sources: false } }
 	},
-	optimization: { minimize: { html: {} }, minimizer: ["..."] },
+	optimization: {
+		minimize: { html: { mergeStyles: true } },
+		minimizer: ["..."]
+	},
 	experiments: { html: true }
 };

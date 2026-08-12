@@ -8,5 +8,6 @@ exports[`ConfigCacheTestCases html minimize-redundant-attributes minimize-redund
 <table><tr><td colspan=1>c<td colspan=2>d</table>
 <textarea wrap=soft></textarea>
 
+
 </body></html>"
 `;
