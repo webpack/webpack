@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ConfigCacheTestCases html minimize-end-tag-in-formatting minimize-end-tag-in-formatting should compile 1`] = `
-"<!doctype html><html><body>
+"<!doctype html><body>
 	<b><p>paragraph</p></b>tail
 	<em><li>item</li></em>rest
 	<div><p>kept anyway</div>
 	<b><span>not special</span></b>after
 
 
-</body></html>"
+</body>"
 `;

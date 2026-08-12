@@ -4050,6 +4050,47 @@ describe("SourceProcessor — enumerated attribute values", () => {
 	});
 });
 
+describe("SourceProcessor — tagOmission", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	const PAGE =
+		"<!doctype html><html><head><title>t</title></head><body><ul><li>a</li></ul></body></html>";
+
+	/**
+	 * @param {(boolean | "keep-head-and-body")=} tagOmission the mode
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (tagOmission) =>
+		new SourceProcessor().process(PAGE, { mode: "minify", tagOmission }).code;
+
+	it("leaves out only <html> by default", () => {
+		expect(minify()).toBe(
+			"<!doctype html><head><title>t</title></head><body><ul><li>a</ul></body>"
+		);
+		expect(minify("keep-head-and-body")).toBe(minify());
+	});
+
+	it("leaves out all three when asked", () => {
+		expect(minify(true)).toBe("<!doctype html><title>t</title><ul><li>a</ul>");
+	});
+
+	it("keeps all three when off, and the other optional tags still go", () => {
+		// Every optional tag but these three is dropped whatever the option says:
+		// nothing can observe that, and only these three are what a consumer
+		// reading the page with a regexp looks for.
+		expect(minify(false)).toBe(
+			"<!doctype html><html><head><title>t</title></head><body><ul><li>a</ul></body></html>"
+		);
+	});
+
+	it("keeps a <html> that carries an attribute", () => {
+		expect(
+			new SourceProcessor().process("<html lang=en><body>x", { mode: "minify" })
+				.code
+		).toBe("<html lang=en><body>x</body>");
+	});
+});
+
 describe("SourceProcessor — token list values", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
@@ -5626,10 +5667,10 @@ describe("htmlMinify — assets webpack only passes through", () => {
 		// `<?php … ?>` is a bogus comment per §13.2.5.42, so the inert-comment rule
 		// would delete the whole directive from a copied template.
 		expect(min("<?php echo $t; ?>\n<html><body><p>a</p></body></html>")).toBe(
-			"<?php echo $t; ?><html><body><p>a</body></html>"
+			"<?php echo $t; ?><body><p>a</body>"
 		);
 		expect(min("<html><body><!-- inert --><p>a</p></body></html>")).toBe(
-			"<html><body><p>a</body></html>"
+			"<body><p>a</body>"
 		);
 	});
 
@@ -5720,9 +5761,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 				minify(
 					"<!DOCTYPE html><html><head></head><body><p><b>a<p>b</body></html>"
 				)
-			).toBe(
-				"<!doctype html><html><head></head><body><p><b>a</b><p><b>b</b></body></html>"
-			);
+			).toBe("<!doctype html><head></head><body><p><b>a</b><p><b>b</b></body>");
 		});
 
 		it("escapes a quote-holding cloned attribute value safely", () => {
@@ -5981,7 +6020,7 @@ describe("SourceProcessor — printing in pieces", () => {
 
 	it("drops an omitted tag that nothing printed inside", () => {
 		expect(minify("")).toBe("");
-		expect(minify("<html><body>")).toBe("<html><body></body></html>");
+		expect(minify("<html><body>")).toBe("<body></body>");
 		expect(minify("</body><!--c-->")).toBe("");
 	});
 

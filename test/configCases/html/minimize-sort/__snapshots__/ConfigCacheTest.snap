@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ConfigCacheTestCases html minimize-sort minimize-sort should compile 1`] = `
-"<!doctype html><html><head><title>Sort</title></head><body>
+"<!doctype html><head><title>Sort</title></head><body>
 <div aa=2 class=\\"aa mm zz\\" mm=3 zz=1>attributes and class both sort</div>
 <div class=\\"a b\\">duplicates go, whichever order</div>
 <a href=/x ping=\\"/z /a\\">ping keeps its request order</a>
@@ -9,5 +9,5 @@ exports[`ConfigCacheTestCases html minimize-sort minimize-sort should compile 1`
 <div data-only=1>one attribute needs no order</div>
 
 
-</body></html>"
+</body>"
 `;

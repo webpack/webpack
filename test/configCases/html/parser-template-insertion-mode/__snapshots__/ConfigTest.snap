@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ConfigTestCases html parser-template-insertion-mode parser-template-insertion-mode should compile 1`] = `
-"<!doctype html><html><body>
+"<!doctype html><body>
 	<table>
 		<caption><template>in-caption</template></caption>
 		<tr><td><template><p>in-cell</template></tr>
 	</table>
 
 
-</body></html>"
+</body>"
 `;

@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `optimization.minimize.html.tagOmission` to leave out the implied `<html>` / `<head>` / `<body>` tags.
+Leave out the implied `<html>` tags when minifying, and add `optimization.minimize.html.tagOmission` to keep them or to leave out `<head>` and `<body>` as well.
