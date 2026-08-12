@@ -3773,7 +3773,7 @@ describe("SourceProcessor — collapseWhitespace modes", () => {
 
 	/**
 	 * @param {string} html input markup
-	 * @param {boolean | string} mode the mode
+	 * @param {boolean | "conservative" | "smart" | "all"} mode the mode
 	 * @returns {string} the minified serialization
 	 */
 	const collapse = (html, mode) =>
@@ -3806,7 +3806,12 @@ describe("SourceProcessor — collapseWhitespace modes", () => {
 	});
 
 	it("leaves whitespace verbatim where it renders, in every mode", () => {
-		for (const mode of [true, "conservative", "smart", "all"]) {
+		for (const mode of /** @type {(boolean | "conservative" | "smart" | "all")[]} */ ([
+			true,
+			"conservative",
+			"smart",
+			"all"
+		])) {
 			expect(collapse("<pre>  a   b  </pre>", mode)).toBe(
 				"<pre>  a   b  </pre>"
 			);
@@ -4042,6 +4047,7 @@ describe("SourceProcessor — omitting <html> / <head> / <body>", () => {
 			"<body class=k><p>x</p></body>",
 			"<body><table><tr><td>c</td></tr></table></body>"
 		];
+		/** @type {((head: string, body: string) => string)[]} */
 		const WRAPPERS = [
 			(head, body) => `<!DOCTYPE html><html>${head}${body}</html>`,
 			(head, body) => `<!DOCTYPE html><html lang=en>${head}${body}</html>`,
