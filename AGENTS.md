@@ -198,7 +198,11 @@ For directory structure, naming, and how to run a single case, see [TESTING_DOCS
 
 **For bug fixes, always write the test case first.** Run the test to confirm it fails, then make the code change and re-run. For new features, tests can be written alongside or after.
 
-**Prefer integration tests over unit tests.** Cover behavior with an integration case (`configCases/`, `watchCases/`, `hotCases/`, `statsCases/`, …) that drives a real `webpack()` build whenever the behavior can be exercised that way — they catch real-world regressions a mocked unit test misses. Reach for a `*.unittest.js` only for pure helpers/utilities that a build can't naturally reach.
+> [!REQUIRED]
+>
+> **Prefer integration tests over unit tests.** Cover behavior with an integration case (`configCases/`, `watchCases/`, `hotCases/`, `statsCases/`, …) that drives a real `webpack()` build whenever the behavior can be exercised that way — they catch real-world regressions a mocked unit test misses. Reach for a `*.unittest.js` only for pure helpers/utilities that a build can't naturally reach.
+>
+> **The test is mechanical, not a judgement call: if the file calls `webpack()`, it is an integration test and does not belong in `*.unittest.js`** — whatever it is named. Wanting something the `configCases/` harness does not hand you (several builds, two configs, a shared cache, a plugin applied by hand) is not the exception; it is the usual reason the rule gets broken. A case may set `cache`, `plugins` and anything else in its own `webpack.config.js`, `ConfigCacheTestCases` already re-runs every case three times over a filesystem cache, and `watchCases/` already drives a sequence of builds. Reach for those first, and if none of them can express the behavior, say so and leave it uncovered rather than smuggling a build into the unit suite.
 
 **Snapshot printed code; assert everything else.** When what a test checks _is_ generated output — emitted bundles, minified CSS / HTML, serialized ASTs, stats text — use `toMatchSnapshot()` rather than hand-written `expect(...).toBe(...)` on fragments of it. A hand-written expectation over printed code pins one substring and silently ignores every other byte the printer emits, so a regression next to it passes; a snapshot shows the whole diff and is reviewed as one. The reverse holds for everything that is not printed output — behavior, invariants, equivalences, error paths — where an explicit `expect` states the contract and a snapshot only records whatever happened to be true.
 
