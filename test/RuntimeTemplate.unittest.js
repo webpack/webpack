@@ -288,6 +288,11 @@ describe("RuntimeTemplate.supportsAnalyzable", () => {
 		);
 
 	/** Places the module in no chunk, so no runtime reassigns the public path. */
+	/** Stands for the module the reference is emitted into; no field is read. */
+	const module = /** @type {import("../lib/Module")} */ (
+		/** @type {unknown} */ ({})
+	);
+
 	const chunkGraph = /** @type {import("../lib/ChunkGraph")} */ (
 		/** @type {unknown} */ ({ getModuleChunksIterable: () => [] })
 	);
@@ -299,9 +304,9 @@ describe("RuntimeTemplate.supportsAnalyzable", () => {
 		const doesNot = create(false);
 
 		expect({
-			readsImport: reads.supportsAnalyzable("import", chunkGraph, {}),
+			readsImport: reads.supportsAnalyzable("import", chunkGraph, module),
 			readsUrl: reads.supportsAnalyzable("url"),
-			doesNotImport: doesNot.supportsAnalyzable("import", chunkGraph, {}),
+			doesNotImport: doesNot.supportsAnalyzable("import", chunkGraph, module),
 			doesNotUrl: doesNot.supportsAnalyzable("url")
 		}).toEqual({
 			readsImport: true,
