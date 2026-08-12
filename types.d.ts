@@ -5935,6 +5935,17 @@ declare interface CssParserOptions {
 	 */
 	urlHints?: UrlHintRule[];
 }
+declare interface CssPrintOptions {
+	/**
+	 * what the target can read (the CSS entries of `output.environment`), so a spelling it would not understand is never reached for; only read while printing, and an absent entry means the modern spelling is available
+	 */
+	environment?: CssEnvironment;
+
+	/**
+	 * rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`); off by default because it earns nothing once the asset is compressed, and only read while printing. A time is always rewritten
+	 */
+	convertLengthUnits?: boolean;
+}
 declare interface CssProcessOptions {
 	/**
 	 * shared loc converter (default a fresh one over the input)
@@ -10184,6 +10195,18 @@ declare interface HtmlParserOptions {
 	 */
 	urlHints?: UrlHintRule[];
 }
+type HtmlPrintOptions = Pick<
+	CssProcessOptions,
+	"environment" | "convertLengthUnits"
+> & {
+	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
+	removeEmptyAttributes?: boolean;
+	removeEmptyElements?: boolean;
+	preserveComments?: (string | RegExp)[];
+	removeRedundantAttributes?: "all" | "smart";
+	sortAttributes?: boolean;
+	sortClassNames?: boolean;
+};
 declare interface HtmlProcessOptions {
 	/**
 	 * context element tag name for fragment parsing (see `parseHtml`); the HTML analog of the CSS parser's `as` parse-mode option
@@ -10201,12 +10224,12 @@ declare interface HtmlProcessOptions {
 	minimize?: boolean;
 
 	/**
-	 * what the target can read, forwarded to the CSS minifier this runs over an inline `<style>` and every `style=""`
+	 * CSS's, not HTML's: handed to the CSS minifier that runs over an inline `<style>` and every `style=""`, so the inline copy of a declaration agrees with the `.css` asset
 	 */
 	environment?: CssEnvironment;
 
 	/**
-	 * forwarded to that CSS minifier with `environment`: a length may be rewritten into a shorter unit it exactly equals (default false)
+	 * CSS's too, handed over with `environment` (see `HtmlPrintOptions`)
 	 */
 	convertLengthUnits?: boolean;
 
@@ -18397,8 +18420,8 @@ declare interface NodeOptions {
 	 */
 	global?: boolean | "warn";
 }
-declare interface NodePrinter<TPath, TNode> {
-	(path: TPath, writer: PrintContext<TPath, TNode>): string;
+declare interface NodePrinter<TPath, TNode, TPrintOptions = object> {
+	(path: TPath, writer: PrintContext<TPath, TNode, TPrintOptions>): string;
 }
 declare class NodeSourcePlugin {
 	constructor();
@@ -21733,9 +21756,12 @@ declare interface PreparsedAst {
  * it) possible. `take` flushes a finished top-level node into the output and drops
  * the map, so a streaming grammar never holds more than one top-level subtree.
  */
-declare class PrintContext<TPath, TNode> {
-	constructor(options: PrintOptions, printer: NodePrinter<TPath, TNode>);
-	options: PrintOptions;
+declare class PrintContext<TPath, TNode, TPrintOptions = object> {
+	constructor(
+		options: PrintOptions & TPrintOptions,
+		printer: NodePrinter<TPath, TNode, TPrintOptions>
+	);
+	options: PrintOptions & TPrintOptions;
 
 	/**
 	 * Hold `text` back as the opener of a node being printed in pieces. Nothing
@@ -21884,15 +21910,6 @@ declare class PrintContext<TPath, TNode> {
 }
 declare interface PrintOptions {
 	mode: "minify" | "beautify";
-	environment?: Readonly<Record<string, boolean>>;
-	convertLengthUnits?: boolean;
-	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
-	removeEmptyAttributes?: boolean;
-	removeEmptyElements?: boolean;
-	preserveComments?: (string | RegExp)[];
-	removeRedundantAttributes?: "all" | "smart";
-	sortAttributes?: boolean;
-	sortClassNames?: boolean;
 }
 declare interface PrintedElement {
 	element: string;
@@ -26211,7 +26228,8 @@ declare interface SourcePosition {
 declare abstract class SourceProcessorClass<
 	TPath,
 	TNode,
-	TProcessOptions = object
+	TProcessOptions = object,
+	TPrintOptions = object
 > {
 	/**
 	 * Register a Babel-style visitor map; calls accumulate per node type.
@@ -26219,7 +26237,7 @@ declare abstract class SourceProcessorClass<
 	 */
 	use(
 		map: VisitorMap<TPath>
-	): SourceProcessorClass<TPath, TNode, TProcessOptions>;
+	): SourceProcessorClass<TPath, TNode, TProcessOptions, TPrintOptions>;
 
 	/**
 	 * Parse `input` once and fire the visitors in source order. Asking for output
@@ -29675,7 +29693,8 @@ declare namespace exports {
 						setEnd(n: NodeSyntax, v: number): void;
 						setBlockEnd(n: NodeSyntax, v: number): void;
 					},
-					NodeSyntax
+					NodeSyntax,
+					CssPrintOptions
 				>
 			) => string;
 			export let rangeEquals: (
@@ -29946,7 +29965,8 @@ declare namespace exports {
 						parentOf(n?: number): number;
 						children(n?: number): number[];
 					},
-					number
+					number,
+					HtmlPrintOptions
 				>
 			) => string;
 			export let tokenize: (
