@@ -1468,6 +1468,43 @@ const PARSER_TABLES = [
 // reading the table the parser itself uses. `<noscript>` is not in it because
 // "in head" only takes it while scripting is disabled, which is how a document
 // is parsed here.
+
+// Derived: just the names in `ENUMERATED_KEYWORDS`, so the printer can rule an
+// attribute out with one lookup instead of two — nearly every attribute it sees
+// enumerates nothing.
+const ENUMERATED_ATTRIBUTE_NAMES = [
+	...new Set(
+		/** @type {[string, string][]} */
+		(
+			/** @type {ParserTable} */
+			(
+				/** @type {ParserTable[]} */ (PARSER_TABLES).find(
+					([name]) => name === "ENUMERATED_KEYWORDS"
+				)
+			)[3]
+		).map(([key]) => key.slice(key.indexOf(" ") + 1))
+	)
+].sort();
+
+// Derived: every attribute name any value rewrite can act on. The printer asks
+// this one question first, and the great majority of attributes on a page — a
+// `data-*`, an `id`, an `aria-*`, a `role` — are answered with a single miss
+// instead of walking each table in turn.
+const REWRITABLE_ATTRIBUTE_NAMES = [
+	...new Set([
+		...SRCSET_ATTRIBUTES,
+		...COMMA_LIST_ATTRIBUTES,
+		...urls.map(([name]) => name),
+		...integers.map(([name]) => name),
+		...tokenLists.map(([name]) => name),
+		...ENUMERATED_ATTRIBUTE_NAMES,
+		// Handled by name rather than by table: a `style` declaration list, and
+		// a `<meta name=viewport>` `content`.
+		"style",
+		"content"
+	])
+].sort();
+
 // Derived: a void element that belongs in the head carries everything it does
 // in its attributes, so one with none does nothing at all. `removeEmptyElements`
 // may drop these even though the void guard otherwise keeps every void element.
@@ -1620,6 +1657,8 @@ const EXPORT_NAMES = [
 	"INTEGER_ATTRIBUTES",
 	"BODY_START_TAG_BLOCKERS",
 	"EMPTY_METADATA_ELEMENTS",
+	"ENUMERATED_ATTRIBUTE_NAMES",
+	"REWRITABLE_ATTRIBUTES",
 	"OPTIONAL_END_TAG_AT_END",
 	"OPTIONAL_END_TAG_FOLLOWERS",
 	"OPTIONAL_END_TAG_UNLESS_COMMENT",
@@ -1693,6 +1732,21 @@ const OPTIONAL_END_TAG_AT_END = ${setLiteral(OPTIONAL_END_TAG_AT_END)};
 const OPTIONAL_END_TAG_UNLESS_COMMENT = ${setLiteral(
 	OPTIONAL_END_TAG_UNLESS_COMMENT
 )};
+
+/**
+ * Every attribute name a value rewrite can act on. One miss here rules an
+ * attribute out of the whole chain, which is what most of them are.
+ * @type {Set<string>}
+ */
+const REWRITABLE_ATTRIBUTES = ${setLiteral(REWRITABLE_ATTRIBUTE_NAMES)};
+
+/**
+ * Every name \`ENUMERATED_KEYWORDS\` scopes, whatever the element. One miss here
+ * rules an attribute out, which is what keeps the enumerated fold off the cost
+ * of every attribute that enumerates nothing.
+ * @type {Set<string>}
+ */
+const ENUMERATED_ATTRIBUTE_NAMES = ${setLiteral(ENUMERATED_ATTRIBUTE_NAMES)};
 
 /**
  * A void element that belongs in the head: with no attributes it states nothing,
