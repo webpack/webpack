@@ -33,11 +33,13 @@ const CASES = {
 	// load in flight and HMR does not force the runtime form.
 	hmr: { file: "main.mjs", expect: "analyzable" },
 	// The entry reaches both copies from one depth, so only the chunk they share
-	// falls back — read that one rather than the entry.
+	// falls back — read that one rather than the entry. Two depths are carried by a
+	// per-asset stand-in; what blocks it here is that content-named chunks leave none
+	// to write into.
 	"shared-depths": {
 		file: /^flat\./,
 		expect: "fallback",
-		bailout: "chunks at different output depths"
+		bailout: "needs optimization.realContentHash"
 	},
 	"eval-devtool": {
 		file: "main.mjs",

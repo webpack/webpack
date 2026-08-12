@@ -12,18 +12,15 @@ it("should resolve the asset against the entry's baseUri", () => {
 	expect(url.href).toBe(`${__BASE__}asset.txt`);
 });
 
-if (__BAKED__) {
-	it("should settle the whole url here, base and all", () => {
-		expect(read("main")).toContain(`${baked}${__BASE__}asset.txt"`);
-		expect(read("main")).not.toContain(`${"__webpack_require__"}.b`);
-	});
-} else {
-	it("should keep the runtime form when the entries disagree on the base", () => {
-		// Read the other entry too: this one's own base is the one that would be baked,
-		// so only the entry that disagrees shows a wrong literal.
-		for (const source of [read("main"), read("other")]) {
-			expect(source).not.toContain(baked);
-			expect(source).toContain(`${"__webpack_require__"}.b`);
-		}
+for (const [name, entryBase] of Object.entries(__BASES__)) {
+	it(`should settle ${name}'s own url rather than read it from the runtime`, () => {
+		const source = read(name);
+		expect(source).not.toContain(`${"__webpack_require__"}.b`);
+		expect(source).toContain(
+			// One resolving against the output root keeps the relative name it already has.
+			entryBase === null
+				? `${baked}./asset.txt"`
+				: `${baked}${entryBase}asset.txt"`
+		);
 	});
 }

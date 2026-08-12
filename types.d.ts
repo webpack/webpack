@@ -24728,8 +24728,18 @@ declare abstract class RuntimeTemplate {
 	getAnalyzableAssetUrl(
 		module: Module,
 		chunkGraph: ChunkGraph,
-		filename: string
+		filename: string,
+		runtime: RuntimeSpec
 	): null | string;
+
+	/**
+	 * The `baseUri` the entries this code runs under agree on, which replaces the output
+	 * root an asset url resolves against. Asked per runtime, because that is what the
+	 * module is generated for: two entries with different bases each get their own
+	 * source. `undefined` when none of them sets one, `null` when they disagree — an
+	 * entry that omits it disagrees with one that sets it.
+	 */
+	entryBaseUri(runtime: RuntimeSpec): undefined | null | string;
 
 	/**
 	 * `output.publicPath` as the constant it will be, for code that would otherwise read
