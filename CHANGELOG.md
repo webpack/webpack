@@ -66,23 +66,23 @@
 
 ### Minor Changes
 
-- Default `experiments.typescript` to `"auto"`, enabling built-in TypeScript support on Node.js >= 22.6 when no TypeScript loader is registered. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Default `experiments.typescript` to `"auto"`, enabling built-in TypeScript support on Node.js >= 22.6 when no TypeScript loader is registered. (by [@alexander-akait](https://github.com/alexander-akait) in [#21398](https://github.com/webpack/webpack/pull/21398))
 
-- Default `experiments.css`, `experiments.html` and `experiments.asyncWebAssembly` to `"auto"`, enabling built-in support unless a loader is registered for those files; modules with inline or hook-injected loaders (e.g. html-webpack-plugin templates) keep being parsed as JavaScript. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Default `experiments.css`, `experiments.html` and `experiments.asyncWebAssembly` to `"auto"`, enabling built-in support unless a loader is registered for those files; modules with inline or hook-injected loaders (e.g. html-webpack-plugin templates) keep being parsed as JavaScript. (by [@alexander-akait](https://github.com/alexander-akait) in [#21365](https://github.com/webpack/webpack/pull/21365))
 
-- Add `output.resourceHints` to emit resource hints (`preload`/`prefetch`/`modulepreload`/`preconnect`), on by default for ESM output, plus `module.parser.<type>.urlHints`, `css.fontPreload` and `javascript.dynamicImportCssPreload`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Add `output.resourceHints` to emit resource hints (`preload`/`prefetch`/`modulepreload`/`preconnect`), on by default for ESM output, plus `module.parser.<type>.urlHints`, `css.fontPreload` and `javascript.dynamicImportCssPreload`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21408](https://github.com/webpack/webpack/pull/21408))
 
-- Add built-in build progress via `infrastructureLogging.progress`, plus `estimatedTime`, `phaseTimings`, progress bar `width` and `progressBar: "auto"` on `ProgressPlugin`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Add built-in build progress via `infrastructureLogging.progress`, plus `estimatedTime`, `phaseTimings`, progress bar `width` and `progressBar: "auto"` on `ProgressPlugin`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21352](https://github.com/webpack/webpack/pull/21352))
 
-- Concatenate CommonJS modules with statically analyzable exports; opt out via `optimization.concatenateModules: { commonjs: false }`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Concatenate CommonJS modules with statically analyzable exports; opt out via `optimization.concatenateModules: { commonjs: false }`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21417](https://github.com/webpack/webpack/pull/21417))
 
-- Wrap "weird" CommonJS modules into module concatenation instead of bailing out. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Wrap "weird" CommonJS modules into module concatenation instead of bailing out. (by [@alexander-akait](https://github.com/alexander-akait) in [#21436](https://github.com/webpack/webpack/pull/21436))
 
-- Add `output.html.inline` (`true | "script" | "style"`) and the `webpackInline` magic comment to inline chunk content into HTML. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Add `output.html.inline` (`true | "script" | "style"`) and the `webpackInline` magic comment to inline chunk content into HTML. (by [@alexander-akait](https://github.com/alexander-akait) in [#21260](https://github.com/webpack/webpack/pull/21260))
 
-- Add `output.html.inject` to control where chunk tags are injected. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Add `output.html.inject` to control where chunk tags are injected. (by [@alexander-akait](https://github.com/alexander-akait) in [#21383](https://github.com/webpack/webpack/pull/21383))
 
-- Add `output.html.title`, `output.html.meta` and `output.html.base` options for head generation. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Add `output.html.title`, `output.html.meta` and `output.html.base` options for head generation. (by [@alexander-akait](https://github.com/alexander-akait) in [#21394](https://github.com/webpack/webpack/pull/21394))
 
 - Support per-icon link attributes (`sizes`, `media`, `color`, `type`, `crossorigin`) and arrays in `output.html.favicon`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21487](https://github.com/webpack/webpack/pull/21487))
 
@@ -94,59 +94,59 @@
 
 - Add the `output.html` `transformTags` compilation hook to mutate, remove, or move (between `<head>` and `<body>`) a page's existing `<script>`/`<link>`/`<style>`/`<meta>` tags. (by [@alexander-akait](https://github.com/alexander-akait) in [#21487](https://github.com/webpack/webpack/pull/21487))
 
-- Extend the HTML pipeline with `html` link sources (bundled as their own emitted page) and `rel="preload"`/`"prefetch"` links bundled as chunks. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Extend the HTML pipeline with `html` link sources (bundled as their own emitted page) and `rel="preload"`/`"prefetch"` links bundled as chunks. (by [@alexander-akait](https://github.com/alexander-akait) in [#21346](https://github.com/webpack/webpack/pull/21346))
 
-- Recognize more asset-bearing HTML sources: the `twitter:player:stream` meta, legacy SVG references, and Web App Manifest `icons`/`screenshots`/`shortcuts` URLs. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Recognize more asset-bearing HTML sources: the `twitter:player:stream` meta, legacy SVG references, and Web App Manifest `icons`/`screenshots`/`shortcuts` URLs. (by [@alexander-akait](https://github.com/alexander-akait) in [#21355](https://github.com/webpack/webpack/pull/21355))
 
-- Add `module.parser.html.as` to parse HTML as a document or an element fragment. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Add `module.parser.html.as` to parse HTML as a document or an element fragment. (by [@alexander-akait](https://github.com/alexander-akait) in [#21441](https://github.com/webpack/webpack/pull/21441))
 
-- Allow disabling a built-in HTML parser source via `type: false` in `sources`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Allow disabling a built-in HTML parser source via `type: false` in `sources`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21441](https://github.com/webpack/webpack/pull/21441))
 
-- Export `webpack.html.HtmlModulesPlugin` with `transformHtml`/`htmlEmitted` compilation hooks. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Export `webpack.html.HtmlModulesPlugin` with `transformHtml`/`htmlEmitted` compilation hooks. (by [@alexander-akait](https://github.com/alexander-akait) in [#21487](https://github.com/webpack/webpack/pull/21487))
 
-- Resolve `@custom-media` (including media-type values) and `@custom-selector` in native CSS. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Resolve `@custom-media` (including media-type values) and `@custom-selector` in native CSS. (by [@alexander-akait](https://github.com/alexander-akait) in [#21442](https://github.com/webpack/webpack/pull/21442))
 
 - Scope `view-transition-name`/`-group`/`-class` names and `::view-transition-*()` pseudo references in CSS modules under `customIdents`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21486](https://github.com/webpack/webpack/pull/21486))
 
-- Add `import.meta.glob` support, with a `caseSensitive` option and consistent hidden/`node_modules` matching. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Add `import.meta.glob` support, with a `caseSensitive` option and consistent hidden/`node_modules` matching. (by [@alexander-akait](https://github.com/alexander-akait) in [#21385](https://github.com/webpack/webpack/pull/21385))
 
-- Resolve `import.meta.resolve("./asset")` to the emitted asset URL via the `importMeta.resolve` parser option. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Resolve `import.meta.resolve("./asset")` to the emitted asset URL via the `importMeta.resolve` parser option. (by [@alexander-akait](https://github.com/alexander-akait) in [#21415](https://github.com/webpack/webpack/pull/21415))
 
-- Add `import.meta.env` defaults: `MODE`, `DEV`, `PROD`, `SSR` and `BASE_URL`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Add `import.meta.env` defaults: `MODE`, `DEV`, `PROD`, `SSR` and `BASE_URL`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21440](https://github.com/webpack/webpack/pull/21440))
 
-- Add fine-grained `import.meta` parser options. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Add fine-grained `import.meta` parser options. (by [@alexander-akait](https://github.com/alexander-akait) in [#21327](https://github.com/webpack/webpack/pull/21327))
 
-- Deprecate the `importMetaContext` parser option in favor of `importMeta.webpackContext`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Deprecate the `importMetaContext` parser option in favor of `importMeta.webpackContext`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21360](https://github.com/webpack/webpack/pull/21360))
 
-- Emit analyzable `new URL(…, import.meta.url)`, worker/worklet URL and `import()` references with literal specifiers for ESM module output. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Emit analyzable `new URL(…, import.meta.url)`, worker/worklet URL and `import()` references with literal specifiers for ESM module output. (by [@alexander-akait](https://github.com/alexander-akait) in [#21194](https://github.com/webpack/webpack/pull/21194))
 
-- Compile async modules to generators for targets without async/await. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Compile async modules to generators for targets without async/await. (by [@alexander-akait](https://github.com/alexander-akait) in [#21410](https://github.com/webpack/webpack/pull/21410))
 
-- Evaluate and validate the second argument of dynamic `import(specifier, options)`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Evaluate and validate the second argument of dynamic `import(specifier, options)`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21446))
 
-- Add `module.parser.javascript.worklet` to bundle Worklet `addModule()` entries. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Add `module.parser.javascript.worklet` to bundle Worklet `addModule()` entries. (by [@alexander-akait](https://github.com/alexander-akait) in [#21384](https://github.com/webpack/webpack/pull/21384))
 
-- Add `?raw`, `?url`, `?inline` and `?no-inline` asset query suffixes under `experiments.futureDefaults`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Add `?raw`, `?url`, `?inline` and `?no-inline` asset query suffixes under `experiments.futureDefaults`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21379](https://github.com/webpack/webpack/pull/21379))
 
-- Add an `interop` (`"default" | "esModule"`) hint for object externals to control default-export interop. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Add an `interop` (`"default" | "esModule"`) hint for object externals to control default-export interop. (by [@alexander-akait](https://github.com/alexander-akait) in [#21371](https://github.com/webpack/webpack/pull/21371))
 
-- Add an `amd-async` externals type that loads AMD externals without an AMD library wrapper. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Add an `amd-async` externals type that loads AMD externals without an AMD library wrapper. (by [@alexander-akait](https://github.com/alexander-akait) in [#21340](https://github.com/webpack/webpack/pull/21340))
 
-- Support `cache.compression: "zstd"` for the filesystem cache. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Support `cache.compression: "zstd"` for the filesystem cache. (by [@alexander-akait](https://github.com/alexander-akait) in [#21438](https://github.com/webpack/webpack/pull/21438))
 
-- Warn on strict-mode-only syntax and semantic hazards in ES module output, configurable via the `strictModeViolations` parser option. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Warn on strict-mode-only syntax and semantic hazards in ES module output, configurable via the `strictModeViolations` parser option. (by [@alexander-akait](https://github.com/alexander-akait) in [#21387](https://github.com/webpack/webpack/pull/21387))
 
-- Support parsers without location APIs: locations derive from node offsets and AST nodes no longer carry `loc`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Support parsers without location APIs: locations derive from node offsets and AST nodes no longer carry `loc`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21451](https://github.com/webpack/webpack/pull/21451))
 
-- Attach the original DOM event to `ChunkLoadError` and `ScriptExternalLoadError` as `error.event`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Attach the original DOM event to `ChunkLoadError` and `ScriptExternalLoadError` as `error.event`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21388](https://github.com/webpack/webpack/pull/21388))
 
-- Add `output.wasmStreamingFallback` for wasm fallback on a wrong MIME type. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Add `output.wasmStreamingFallback` for wasm fallback on a wrong MIME type. (by [@alexander-akait](https://github.com/alexander-akait) in [#21299](https://github.com/webpack/webpack/pull/21299))
 
-- Show why a module was marked as not cacheable in stats output. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Show why a module was marked as not cacheable in stats output. (by [@alexander-akait](https://github.com/alexander-akait) in [#21403](https://github.com/webpack/webpack/pull/21403))
 
-- Expose the active `MultiWatching` on `MultiCompiler.watching`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Expose the active `MultiWatching` on `MultiCompiler.watching`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21469](https://github.com/webpack/webpack/pull/21469))
 
-- Resolve git merge conflicts when parsing the build-http lockfile. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Resolve git merge conflicts when parsing the build-http lockfile. (by [@alexander-akait](https://github.com/alexander-akait) in [#21397](https://github.com/webpack/webpack/pull/21397))
 
 ### Patch Changes
 
