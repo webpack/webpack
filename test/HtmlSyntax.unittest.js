@@ -3808,6 +3808,16 @@ describe("SourceProcessor — collapseWhitespace modes", () => {
 		);
 	});
 
+	it("lets an end tag go with the whitespace that was keeping it", () => {
+		// The `</li>` is only there because a text node sat between the items.
+		expect(
+			collapse("<ul>\n<li>a</li>\n<li>b</li>\n</ul>", "conservative")
+		).toBe("<ul> <li>a</li> <li>b</li> </ul>");
+		expect(collapse("<ul>\n<li>a</li>\n<li>b</li>\n</ul>", "smart")).toBe(
+			"<ul><li>a<li>b</ul>"
+		);
+	});
+
 	it("drops every text node's edges in `all`", () => {
 		expect(collapse(PAGE, "all")).toBe(
 			"<body><div>a b</div><div>c</div><span>d</span></body>"
