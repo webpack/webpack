@@ -9,5 +9,5 @@ exports[`ConfigTestCases html minimize-redundant-attributes minimize-redundant-a
 <textarea wrap=soft></textarea>
 
 
-</body>"
+</body></html>"
 `;

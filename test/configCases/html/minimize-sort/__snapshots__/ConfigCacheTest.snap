@@ -9,5 +9,5 @@ exports[`ConfigCacheTestCases html minimize-sort minimize-sort should compile 1`
 <div data-only=1>one attribute needs no order</div>
 
 
-</body>"
+</body></html>"
 `;

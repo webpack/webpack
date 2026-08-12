@@ -9,5 +9,5 @@ exports[`ConfigCacheTestCases html minimize-redundant-attributes-all minimize-re
 <textarea></textarea>
 
 
-</body>"
+</body></html>"
 `;

@@ -8,5 +8,5 @@ exports[`ConfigCacheTestCases html minimize-end-tag-in-formatting minimize-end-t
 	<b><span>not special</span></b>after
 
 
-</body>"
+</body></html>"
 `;

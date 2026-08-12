@@ -94,5 +94,5 @@ exports[`ConfigTestCases html minimize-transforms minimize-transforms should com
 	<p>café and   decode to the character itself</p>
 
 
-</body>"
+</body></html>"
 `;

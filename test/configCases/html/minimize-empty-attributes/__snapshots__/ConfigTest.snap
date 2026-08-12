@@ -10,5 +10,5 @@ exports[`ConfigTestCases html minimize-empty-attributes minimize-empty-attribute
 <div class=a id=b style=color:red dir=rtl>kept: carries a value</div>
 
 
-</body>"
+</body></html>"
 `;

@@ -83,7 +83,7 @@ let htmlCorpus;
 /** @type {Fixture[]} */
 let htmlCorpusTagOmission;
 /** @type {Fixture[]} */
-let htmlCorpusKeepHeadAndBody;
+let htmlCorpusSmartTags;
 /** @type {Promise<void> | undefined} */
 let building;
 
@@ -119,14 +119,14 @@ const buildCorpora = () => {
 						})
 					).code
 			);
-			htmlCorpusKeepHeadAndBody = await buildCorpus(
+			htmlCorpusSmartTags = await buildCorpus(
 				".html",
 				(source) =>
 					/** @type {{ code: string }} */
 					(
 						new HtmlSourceProcessor().process(source, {
 							mode: "minify",
-							tagOmission: "keep-head-and-body"
+							tagOmission: "smart"
 						})
 					).code
 			);
@@ -1367,7 +1367,7 @@ describe("printer output in real Chrome", () => {
 
 	it.each([
 		["true", () => htmlCorpusTagOmission],
-		["keep-head-and-body", () => htmlCorpusKeepHeadAndBody]
+		["smart", () => htmlCorpusSmartTags]
 	])(
 		"should build the same DOM with tagOmission %s",
 		async (_mode, corpus) => {

@@ -6,5 +6,5 @@ exports[`ConfigTestCases html minimize-environment minimize-environment should c
 <p style=top:1px;right:2px;bottom:1px;left:2px>...for every gate</p>
 
 
-</body>"
+</body></html>"
 `;

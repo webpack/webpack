@@ -8,5 +8,5 @@ exports[`ConfigCacheTestCases html parser-foreign-content parser-foreign-content
 	<svg><circle/></svg><p></p>after-p
 	<div><svg><g>after-end-tag</g></svg></div>
 	<svg>unterminated
-</svg></body>"
+</svg></body></html>"
 `;

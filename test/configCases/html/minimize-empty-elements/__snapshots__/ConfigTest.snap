@@ -14,5 +14,5 @@ exports[`ConfigTestCases html minimize-empty-elements minimize-empty-elements sh
 <div> </div>
 
 
-</body>"
+</body></html>"
 `;

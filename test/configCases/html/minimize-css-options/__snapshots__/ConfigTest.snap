@@ -6,5 +6,5 @@ exports[`ConfigTestCases html minimize-css-options minimize-css-options should c
 <p style=width:17px>...and declines the same cases</p>
 
 
-</body>"
+</body></html>"
 `;

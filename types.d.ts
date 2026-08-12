@@ -10208,7 +10208,7 @@ type HtmlPrintOptions = Pick<
 	removeRedundantAttributes?: boolean | "all" | "smart";
 	sortAttributes?: boolean;
 	sortClassNames?: boolean;
-	tagOmission?: boolean | "keep-head-and-body";
+	tagOmission?: boolean | "all" | "smart";
 };
 declare interface HtmlProcessOptions {
 	/**
@@ -10277,9 +10277,9 @@ declare interface HtmlProcessOptions {
 	removeRedundantAttributes?: boolean | "all" | "smart";
 
 	/**
-	 * leave out the `<html>` / `<head>` / `<body>` tags §13.1.2.4 lets the parser imply; `false` keeps all three and `true` drops all three (default `"keep-head-and-body"`, which drops only `<html>`)
+	 * how much of the `<html>` / `<head>` / `<body>` shell §13.1.2.4 lets the parser imply may be left out: `"smart"` leaves out only the `<html>` start tag, `true` (or `"all"`) all six, `false` none (default `"smart"`)
 	 */
-	tagOmission?: boolean | "keep-head-and-body";
+	tagOmission?: boolean | "all" | "smart";
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**
@@ -19863,10 +19863,10 @@ declare interface OptimizationMinimizeHtml {
 	sortClassNames?: boolean;
 
 	/**
-	 * Which of the `<html>` / `<head>` / `<body>` tags §13.1.2.4 lets the parser imply may be left out. Every other optional tag goes unconditionally — nothing can observe that — but these three are what a consumer reading the page with a regexp rather than a parser looks for. `"keep-head-and-body"`, the default, leaves out only `<html>`, which is omittable only when it carries no attribute at all, so a `<html lang=en>` keeps its tag anyway. `true` leaves out all three, which is where a crawler matching on `<body>` stops finding one; `false` keeps all three. A tag also stays wherever the spec keeps it: an attribute to carry, a comment minifying does not drop, whitespace opening the element, or a `meta` / `noscript` / `link` / `script` / `style` / `template` element opening the body.
+	 * How much of the `<html>` / `<head>` / `<body>` shell §13.1.2.4 lets the parser imply may be left out. Every other optional tag goes unconditionally — nothing can observe that — but these six are what a consumer reading the page with a regexp rather than a parser looks for. `"smart"`, the default, leaves out the one such a reader never matches: the `<html>` start tag, which is omittable only when it carries no attribute at all, so the `<html lang=en>` anyone greps for keeps its tag anyway. `</html>` stays with it, since a truncation check reads a page as complete by finding one. `true` (or `"all"`) leaves out all six, which is where a crawler matching on `<body>` stops finding one; `false` leaves out none. A tag also stays wherever the spec keeps it: an attribute to carry, a comment minifying does not drop, whitespace opening the element, or a `meta` / `noscript` / `link` / `script` / `style` / `template` element opening the body.
 	 * @since 5.110.0
 	 */
-	tagOmission?: boolean | "keep-head-and-body";
+	tagOmission?: boolean | "all" | "smart";
 }
 
 /**
