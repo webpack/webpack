@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add hooks to transform CSS and HTML that reach the bundle inside JavaScript.
+Add `renderEmbeddedSource` to transform source one language embeds in another.

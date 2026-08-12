@@ -1,9 +1,8 @@
 "use strict";
 
 const { RawSource, SourceMapSource } = require("webpack-sources");
-const CssModulesPlugin = require("../../lib/css/CssModulesPlugin");
+const { CSS_TYPE, HTML_TYPE } = require("../../lib/ModuleSourceTypeConstants");
 const cssSyntax = require("../../lib/css/syntax");
-const HtmlModulesPlugin = require("../../lib/html/HtmlModulesPlugin");
 const htmlSyntax = require("../../lib/html/syntax");
 
 /** @typedef {import("../../lib/Compiler")} Compiler */
@@ -44,29 +43,30 @@ class SampleEmbeddedMinifyPlugin {
 		const key = JSON.stringify(minimizerOptions);
 
 		compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {
-			if (css) {
-				const hooks = CssModulesPlugin.getCompilationHooks(compilation);
-				hooks.renderCssInJavascript.tap(PLUGIN_NAME, (source, module) =>
-					minifyCss(source, module, minimizerOptions)
-				);
-				hooks.cssInJavascriptHash.tap(PLUGIN_NAME, (module, hash) => {
-					hash.update(key);
-				});
-			}
-			if (html) {
-				const hooks = HtmlModulesPlugin.getCompilationHooks(compilation);
-				hooks.renderHtmlInJavascript.tap(
-					PLUGIN_NAME,
-					(markup) =>
-						new htmlSyntax.SourceProcessor().process(markup, {
-							mode: "minify",
-							...minimizerOptions
-						}).code
-				);
-				hooks.htmlInJavascriptHash.tap(PLUGIN_NAME, (module, hash) => {
-					hash.update(key);
-				});
-			}
+			// One tap for every language pair — `info.type` says which arrived. This
+			// is what `minimizer-webpack-plugin` is expected to do, dispatching by
+			// type the way it already dispatches assets by filename.
+			compilation.hooks.renderEmbeddedSource.tap(
+				PLUGIN_NAME,
+				(source, { type, module }) => {
+					if (type === CSS_TYPE) {
+						return css ? minifyCss(source, module, minimizerOptions) : source;
+					}
+					if (type === HTML_TYPE && html) {
+						const markup = source.source();
+						return new RawSource(
+							new htmlSyntax.SourceProcessor().process(
+								typeof markup === "string" ? markup : markup.toString("utf8"),
+								{ mode: "minify", ...minimizerOptions }
+							).code
+						);
+					}
+					return source;
+				}
+			);
+			compilation.hooks.embeddedSourceHash.tap(PLUGIN_NAME, (module, hash) => {
+				hash.update(key);
+			});
 		});
 	}
 }

@@ -3380,6 +3380,27 @@ declare class Compilation {
 			[RenderManifestEntry[], RenderManifestOptions],
 			RenderManifestEntry[]
 		>;
+		/**
+		 * Called with source written in one language that a module emits inside
+		 * another — CSS or HTML reaching the bundle as a JavaScript string
+		 * literal today — before it is embedded; return the (possibly
+		 * transformed) source, e.g. a minified one. `info.type` says which
+		 * language it is, so one tap serves every pair; no asset carries this
+		 * source, so an asset-level minimizer cannot reach it.
+		 * @since 5.110.0
+		 */
+		renderEmbeddedSource: SyncWaterfallHook<
+			[Source, EmbeddedSourceInfo],
+			Source
+		>;
+		/**
+		 * Called while hashing a module that embeds such a source. Module hashes
+		 * are taken before code generation, so a `renderEmbeddedSource` tap must
+		 * write whatever it varies on into the hash, or the codegen cache
+		 * replays output from before its options changed.
+		 * @since 5.110.0
+		 */
+		embeddedSourceHash: SyncHook<[Module, Hash]>;
 		fullHash: SyncHook<[Hash]>;
 		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 		moduleAsset: SyncHook<[Module, string]>;
@@ -5742,16 +5763,6 @@ declare class CssModulesPlugin {
 				[Chunk, Module[], Compilation],
 				undefined | void | Module[]
 			>;
-			/**
-			 * Called with the stylesheet an `exportType` other than `"link"` embeds into JavaScript, before it becomes a string literal; return the (possibly transformed) `Source` — e.g. a minified one. Only this text reaches the bundle, so no `.css` asset carries it and no asset-level minimizer can see it.
-			 * @since 5.110.0
-			 */
-			renderCssInJavascript: SyncWaterfallHook<[Source, Module], Source>;
-			/**
-			 * Called while hashing a module whose CSS is embedded in JavaScript; a `renderCssInJavascript` tap must write whatever it varies on into the hash, or the codegen cache replays output from before its options changed.
-			 * @since 5.110.0
-			 */
-			cssInJavascriptHash: SyncHook<[Module, Hash]>;
 		}
 	): Source;
 
@@ -5781,16 +5792,6 @@ declare class CssModulesPlugin {
 				[Chunk, Module[], Compilation],
 				undefined | void | Module[]
 			>;
-			/**
-			 * Called with the stylesheet an `exportType` other than `"link"` embeds into JavaScript, before it becomes a string literal; return the (possibly transformed) `Source` — e.g. a minified one. Only this text reaches the bundle, so no `.css` asset carries it and no asset-level minimizer can see it.
-			 * @since 5.110.0
-			 */
-			renderCssInJavascript: SyncWaterfallHook<[Source, Module], Source>;
-			/**
-			 * Called while hashing a module whose CSS is embedded in JavaScript; a `renderCssInJavascript` tap must write whatever it varies on into the hash, or the codegen cache replays output from before its options changed.
-			 * @since 5.110.0
-			 */
-			cssInJavascriptHash: SyncHook<[Module, Hash]>;
 		}
 	): null | Source;
 
@@ -5826,16 +5827,6 @@ declare class CssModulesPlugin {
 			[Chunk, Module[], Compilation],
 			undefined | void | Module[]
 		>;
-		/**
-		 * Called with the stylesheet an `exportType` other than `"link"` embeds into JavaScript, before it becomes a string literal; return the (possibly transformed) `Source` — e.g. a minified one. Only this text reaches the bundle, so no `.css` asset carries it and no asset-level minimizer can see it.
-		 * @since 5.110.0
-		 */
-		renderCssInJavascript: SyncWaterfallHook<[Source, Module], Source>;
-		/**
-		 * Called while hashing a module whose CSS is embedded in JavaScript; a `renderCssInJavascript` tap must write whatever it varies on into the hash, or the codegen cache replays output from before its options changed.
-		 * @since 5.110.0
-		 */
-		cssInJavascriptHash: SyncHook<[Module, Hash]>;
 	};
 }
 declare abstract class CssParser extends ParserClass {
@@ -6995,6 +6986,22 @@ declare class ElectronTargetPlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface EmbeddedSourceInfo {
+	/**
+	 * the embedded source's type, e.g. `"css"` / `"html"`
+	 */
+	type: string;
+
+	/**
+	 * the type of the source it is embedded in, e.g. `"javascript"`
+	 */
+	hostType: string;
+
+	/**
+	 * the module being generated
+	 */
+	module: Module;
 }
 
 /**
@@ -10103,16 +10110,6 @@ declare class HtmlModulesPlugin {
 		 * @since 5.109.0
 		 */
 		htmlEmitted: AsyncSeriesHook<[HtmlEmittedContext]>;
-		/**
-		 * Called with the markup a module imported from JavaScript embeds into it, before it becomes a string literal; return the (possibly transformed) HTML — e.g. a minified one. Sync because module generation is: `transformHtml` is the async equivalent for an emitted `.html` page, which this text never becomes.
-		 * @since 5.110.0
-		 */
-		renderHtmlInJavascript: SyncWaterfallHook<[string, Module], string>;
-		/**
-		 * Called while hashing a module whose HTML is embedded in JavaScript; a `renderHtmlInJavascript` tap must write whatever it varies on into the hash, or the codegen cache replays output from before its options changed.
-		 * @since 5.110.0
-		 */
-		htmlInJavascriptHash: SyncHook<[Module, Hash]>;
 	};
 }
 declare interface HtmlMutableTag {
