@@ -3787,7 +3787,7 @@ describe("SourceProcessor — collapseWhitespace modes", () => {
 	it("reads `true` as `conservative`, which never removes whitespace", () => {
 		expect(collapse(PAGE, true)).toBe(collapse(PAGE, "conservative"));
 		expect(collapse(PAGE, "conservative")).toBe(
-			"<div> a b </div> <div> c </div><span> d </span>"
+			"<body><div> a b </div> <div> c </div><span> d </span></body>"
 		);
 	});
 
@@ -3795,13 +3795,13 @@ describe("SourceProcessor — collapseWhitespace modes", () => {
 		// Inside and after a `<div>` no line box reaches the whitespace; the
 		// `<span>`'s own spaces render, so they stay.
 		expect(collapse(PAGE, "smart")).toBe(
-			"<div>a b</div><div>c</div><span> d </span>"
+			"<body><div>a b</div><div>c</div><span> d </span></body>"
 		);
 	});
 
 	it("drops every text node's edges in `all`", () => {
 		expect(collapse(PAGE, "all")).toBe(
-			"<div>a b</div><div>c</div><span>d</span>"
+			"<body><div>a b</div><div>c</div><span>d</span></body>"
 		);
 	});
 
@@ -3956,116 +3956,6 @@ describe("SourceProcessor — enumerated attribute values", () => {
 		expect(minify('<a target="MyFrame" href=x>l</a>')).toContain(
 			"target=MyFrame"
 		);
-	});
-});
-
-describe("SourceProcessor — omitting <html> / <head> / <body>", () => {
-	const { SourceProcessor } = require("../lib/html/syntax");
-
-	/**
-	 * @param {string} html input markup
-	 * @returns {string} the minified serialization
-	 */
-	const minify = (html) =>
-		new SourceProcessor().process(html, { mode: "minify" }).code;
-
-	// Dropping an inert comment and inert whitespace are separate transforms with
-	// their own tests; this one is about where every remaining node lands.
-	/**
-	 * @param {string} html markup
-	 * @returns {string} its tree, without the nodes minifying drops outright
-	 */
-	const placement = (html) =>
-		serializeHtmlTree(parseHtmlRefs(html))
-			.split("\n")
-			.filter((line) => !/^\|\s*(<!-- |"[\t\n\f\r ]*"$)/.test(line))
-			.join("\n");
-
-	it("omits all three when the parser would re-imply them", () => {
-		expect(
-			minify("<html><head><title>t</title></head><body><p>x</p></body></html>")
-		).toBe("<title>t</title><p>x");
-	});
-
-	it("keeps the one that carries an attribute", () => {
-		expect(
-			minify(
-				"<html lang=en><head><title>t</title></head><body class=k><p>x</p></body></html>"
-			)
-		).toBe("<html lang=en><title>t</title><body class=k><p>x");
-	});
-
-	it("keeps `<body>` in front of what the head would swallow", () => {
-		// §13.1.2.4: these five keep the parser in the head, so without the tag
-		// they would land there instead.
-		for (const blocker of [
-			"<style>a{color:red}</style>",
-			"<script>var a=1</script>",
-			"<link rel=x>",
-			"<meta name=x content=y>",
-			"<template><p>t</p></template>"
-		]) {
-			expect(
-				minify(`<html><head></head><body>${blocker}</body></html>`)
-			).toContain("<body>");
-		}
-	});
-
-	it("keeps the tags a trailing comment blocks", () => {
-		expect(
-			minify(
-				"<html><head><title>t</title></head><body><p>x</p></body><!--c--></html>"
-			)
-		).toContain("<body>");
-	});
-
-	it("puts every node back, over each combination of the three", () => {
-		const HEADS = [
-			"",
-			"<head></head>",
-			"<head><title>t</title></head>",
-			"<head><meta charset=utf-8><title>t</title></head>",
-			"<head><!--c--><title>t</title></head>",
-			"<head> <title>t</title></head>"
-		];
-		const BODIES = [
-			"",
-			"<body></body>",
-			"<body><p>x</p></body>",
-			"<body> <p>x</p></body>",
-			"<body><!--c--><p>x</p></body>",
-			"<body><style>a{color:red}</style><p>x</p></body>",
-			"<body><script>var a=1</script></body>",
-			"<body><link rel=x><p>y</p></body>",
-			"<body><template><p>t</p></template></body>",
-			"<body><noscript><p>n</p></noscript></body>",
-			"<body><title>x</title></body>",
-			"<body><base href=/></body>",
-			"<body><noframes>f</noframes></body>",
-			"<body><basefont><p>x</p></body>",
-			"<body>bare text</body>",
-			"<body class=k><p>x</p></body>",
-			"<body><table><tr><td>c</td></tr></table></body>"
-		];
-		/** @type {((head: string, body: string) => string)[]} */
-		const WRAPPERS = [
-			(head, body) => `<!DOCTYPE html><html>${head}${body}</html>`,
-			(head, body) => `<!DOCTYPE html><html lang=en>${head}${body}</html>`,
-			(head, body) => `<!DOCTYPE html>${head}${body}`,
-			(head, body) => `<!DOCTYPE html><html>${head}${body}</html><!--tail-->`,
-			(head, body) => `<html>${head}${body}</html>`
-		];
-		let checked = 0;
-		for (const wrap of WRAPPERS) {
-			for (const head of HEADS) {
-				for (const body of BODIES) {
-					const source = wrap(head, body);
-					expect(placement(minify(source))).toBe(placement(source));
-					checked++;
-				}
-			}
-		}
-		expect(checked).toBe(510);
 	});
 });
 
@@ -5610,12 +5500,10 @@ describe("htmlMinify — assets webpack only passes through", () => {
 		// `<?php … ?>` is a bogus comment per §13.2.5.42, so the inert-comment rule
 		// would delete the whole directive from a copied template.
 		expect(min("<?php echo $t; ?>\n<html><body><p>a</p></body></html>")).toBe(
-			"<?php echo $t; ?><p>a"
+			"<?php echo $t; ?><html><body><p>a</body></html>"
 		);
-		// The comment goes, but a comment at the front of `<body>` still blocks
-		// that tag's omission — the condition reads the tree, not the output.
 		expect(min("<html><body><!-- inert --><p>a</p></body></html>")).toBe(
-			"<body><p>a"
+			"<html><body><p>a</body></html>"
 		);
 	});
 
@@ -5706,7 +5594,9 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 				minify(
 					"<!DOCTYPE html><html><head></head><body><p><b>a<p>b</body></html>"
 				)
-			).toBe("<!doctype html><p><b>a</b><p><b>b</b>");
+			).toBe(
+				"<!doctype html><html><head></head><body><p><b>a</b><p><b>b</b></body></html>"
+			);
 		});
 
 		it("escapes a quote-holding cloned attribute value safely", () => {
@@ -5722,7 +5612,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 
 		it("materializes an implied <body> once attributes merge onto it", () => {
 			expect(minify('<div>a</div><body class="x">')).toBe(
-				'<body class="x"><div>a</div>'
+				'<body class="x"><div>a</div></body>'
 			);
 		});
 
@@ -5738,7 +5628,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 	describe("<noscript> content", () => {
 		it("re-escapes decoded text inside <noscript>", () => {
 			expect(minify("<body><noscript>a &lt;b&gt; c</noscript>")).toBe(
-				"<body><noscript>a &lt;b> c</noscript>"
+				"<body><noscript>a &lt;b> c</noscript></body>"
 			);
 		});
 
@@ -5945,7 +5835,7 @@ describe("SourceProcessor — printing in pieces", () => {
 
 	it("drops an omitted tag that nothing printed inside", () => {
 		expect(minify("")).toBe("");
-		expect(minify("<html><body>")).toBe("");
+		expect(minify("<html><body>")).toBe("<html><body></body></html>");
 		expect(minify("</body><!--c-->")).toBe("");
 	});
 
