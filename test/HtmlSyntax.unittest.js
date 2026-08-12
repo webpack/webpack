@@ -3729,7 +3729,7 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	 * @returns {string} the minified serialization
 	 */
 	const minify = (html) =>
-		new SourceProcessor().process(html, { minimize: true }).code;
+		new SourceProcessor().process(html, { mode: "minify" }).code;
 
 	it("folds a run into one element", () => {
 		expect(
@@ -3778,7 +3778,7 @@ describe("SourceProcessor — collapseWhitespace modes", () => {
 	 */
 	const collapse = (html, mode) =>
 		new SourceProcessor().process(html, {
-			minimize: true,
+			mode: "minify",
 			collapseWhitespace: mode
 		}).code;
 
@@ -3823,7 +3823,7 @@ describe("SourceProcessor — preserveComments", () => {
 	 * @returns {string} the minified serialization
 	 */
 	const minify = (html, preserveComments) =>
-		new SourceProcessor().process(html, { minimize: true, preserveComments })
+		new SourceProcessor().process(html, { mode: "minify", preserveComments })
 			.code;
 
 	it("keeps a comment a pattern names, and drops the rest", () => {
@@ -3851,7 +3851,7 @@ describe("SourceProcessor — enumerated attribute values", () => {
 	 * @returns {string} the minified serialization
 	 */
 	const minify = (html) =>
-		new SourceProcessor().process(html, { minimize: true }).code;
+		new SourceProcessor().process(html, { mode: "minify" }).code;
 
 	// Written out rather than read off the table: generating the expectation from
 	// the thing under test would pass just as happily with an entry deleted.
@@ -3962,7 +3962,7 @@ describe("SourceProcessor — omitting <html> / <head> / <body>", () => {
 	 * @returns {string} the minified serialization
 	 */
 	const minify = (html) =>
-		new SourceProcessor().process(html, { minimize: true }).code;
+		new SourceProcessor().process(html, { mode: "minify" }).code;
 
 	// Dropping an inert comment and inert whitespace are separate transforms with
 	// their own tests; this one is about where every remaining node lands.
@@ -4072,7 +4072,7 @@ describe("SourceProcessor — sortAttributes / sortClassNames", () => {
 	 * @returns {string} the minified serialization
 	 */
 	const minify = (html, options) =>
-		new SourceProcessor().process(html, { minimize: true, ...options }).code;
+		new SourceProcessor().process(html, { mode: "minify", ...options }).code;
 
 	// `serializeHtmlTree` sorts attributes, so attribute order cannot hide in it;
 	// `class` is a set the option reorders on purpose, so sort it here too.

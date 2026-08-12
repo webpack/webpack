@@ -2375,7 +2375,7 @@ export interface OptimizationMinimizeHtml {
 	 * Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim. `true` (or `"conservative"`) never removes whitespace entirely — dropping it would join two inline elements that render apart. `"smart"` also drops the whitespace that sits against a block element's edge, where no line box reaches it. `"all"` drops the whitespace at every text node's edges, which does change how adjacent inline elements render.
 	 * @since 5.110.0
 	 */
-	collapseWhitespace?: boolean | ("conservative" | "smart" | "all");
+	collapseWhitespace?: ("conservative" | "smart" | "all") | boolean;
 	/**
 	 * Minify the markup inside a downlevel-hidden conditional comment (`<!--[if IE]> … <![endif]-->`). Off by default: the body is minified on its own, so a context-sensitive decision inside it — which end tags are optional, where a table cell may sit — is taken as though it started a document rather than where the comment sits. Only browsers older than IE10 read these at all.
 	 * @since 5.110.0
@@ -2385,7 +2385,7 @@ export interface OptimizationMinimizeHtml {
 	 * Patterns naming comments to keep, on top of the ones minifying always keeps (downlevel conditional comments, server-side includes and template directives). A string is read as a regular expression source and matched against the comment's text.
 	 * @since 5.110.0
 	 */
-	preserveComments?: (string | RegExp)[];
+	preserveComments?: (RegExp | string)[];
 	/**
 	 * Drop `class`, `id`, `style` and `dir` when their value is empty or only whitespace, which is the state the spec also gives their absence. Off by default: an attribute selector matches on presence, so `[class]` stops matching. `title` and `lang` are never dropped even when empty — the spec gives an empty value of either a meaning absence does not have.
 	 * @since 5.110.0
