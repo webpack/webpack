@@ -13,8 +13,8 @@ const PLUGIN_NAME = "SampleEmbeddedMinifyPlugin";
 
 /**
  * Stands in for `minimizer-webpack-plugin`, which owns the real taps: webpack
- * ships `renderCssInJavascript` / `renderHtmlInJavascript` but taps neither, so this is
- * what exercises them. Kept in `test/` on purpose — nothing here should grow
+ * ships `renderEmbeddedSource` but taps it nowhere, so this is what
+ * exercises it. Kept in `test/` on purpose — nothing here should grow
  * into a second implementation of the minifier.
  */
 /**
