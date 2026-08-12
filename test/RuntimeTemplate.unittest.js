@@ -257,3 +257,57 @@ describe("RuntimeTemplate.assignOr", () => {
 		);
 	});
 });
+
+describe("RuntimeTemplate.supportsAnalyzable", () => {
+	/**
+	 * @param {boolean} environmentModule whether the target reads ESM syntax
+	 * @returns {RuntimeTemplate} runtime template
+	 */
+	const create = (environmentModule) =>
+		new RuntimeTemplate(
+			/** @type {import("../lib/Compilation")} */ (
+				/** @type {unknown} */ ({
+					options: { devtool: false },
+					chunks: [],
+					modules: [],
+					moduleGraph: { getOptimizationBailout: () => [] }
+				})
+			),
+			/** @type {OutputOptions} */ (
+				/** @type {unknown} */ ({
+					module: true,
+					chunkFormat: "module",
+					importFunctionName: "import",
+					publicPath: "auto",
+					globalObject: "self",
+					hashDigestLength: 20,
+					environment: { module: environmentModule }
+				})
+			),
+			new RequestShortener(__dirname)
+		);
+
+	/** Places the module in no chunk, so no runtime reassigns the public path. */
+	const chunkGraph = /** @type {import("../lib/ChunkGraph")} */ (
+		/** @type {unknown} */ ({ getModuleChunksIterable: () => [] })
+	);
+
+	// A chunk `import()` is emitted by the module chunk loader whatever the target
+	// reads; `import.meta` in a url is syntax the target has to read itself.
+	it("should ask for ESM syntax only where the reference spells it", () => {
+		const reads = create(true);
+		const doesNot = create(false);
+
+		expect({
+			readsImport: reads.supportsAnalyzable("import", chunkGraph, {}),
+			readsUrl: reads.supportsAnalyzable("url"),
+			doesNotImport: doesNot.supportsAnalyzable("import", chunkGraph, {}),
+			doesNotUrl: doesNot.supportsAnalyzable("url")
+		}).toEqual({
+			readsImport: true,
+			readsUrl: true,
+			doesNotImport: true,
+			doesNotUrl: false
+		});
+	});
+});
