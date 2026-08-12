@@ -25252,6 +25252,17 @@ declare abstract class RuntimeTemplate {
 	}): string;
 
 	/**
+	 * Static `new URL(<file>, import.meta.url)` for the binary emitted for an async wasm
+	 * module. Only called when `supportsAnalyzable("wasm")` holds.
+	 */
+	getAnalyzableWasmUrl(
+		module: Module,
+		chunkGraph: ChunkGraph,
+		runtime: RuntimeSpec,
+		runtimeRequirements: Set<string>
+	): string;
+
+	/**
 	 * Async module factory.
 	 */
 	asyncModuleFactory(__0: {
