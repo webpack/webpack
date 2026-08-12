@@ -1,16 +1,18 @@
 "use strict";
 
-// Three html5lib conformance suites over the optional `test/html5lib-tests`
-// submodule; when it is absent each degrades to a single no-op test.
+// Three HTML conformance suites over optional submodules — `test/html5lib-tests`
+// for 1 and 3, `test/wpt` for 2; when one is absent its suite degrades to a
+// single no-op test.
 //
 // 1. "html5lib-tests webpack build" — compiles every tokenizer input as a
 //    webpack HTML entry (development + production) to confirm the full
 //    pipeline handles the corpus without throwing an internal exception.
 //    (Mirrors cssParsing-webpack.spectest.js; URL extraction is off so
 //    nothing needs to resolve — the point is no crash on malformed input.)
-// 2. "html5lib tree-construction" — compares parseHtml's serialized tree
-//    to the expected html5lib tree for every tree-construction case (only the
-//    scripting-enabled cases, which webpack does not run, are skipped).
+// 2. "wpt tree-construction" — compares parseHtml's serialized tree to the
+//    expected one for every tree-construction case (only the scripting-enabled
+//    cases, which webpack does not run, are skipped). WPT owns this corpus
+//    since html5lib-tests dropped it in 224991e.
 // 3. "html5lib tokenizer" — compares the token stream `tokenize` reports to
 //    the expected one, for every tokenizer case in an initial state the public
 //    API can express (the rest are registered as skipped, with the reason).
@@ -229,7 +231,9 @@ describe("html5lib-tests webpack build", () => {
 // 2. tree-construction (parseHtml conformance)
 // ---------------------------------------------------------------------------
 
-const treeDir = path.join(testsDir, "tree-construction");
+// `html/syntax/parsing/resources` in WPT, whose `.dat` files keep html5lib's
+// format — the same corpus html5lib-tests carried until 224991e.
+const treeDir = path.resolve(__dirname, "./wpt/html/syntax/parsing/resources");
 
 /** @type {Set<string>} intentional, documented exceptions (currently none) */
 const KNOWN_DIVERGENCES = new Set();
@@ -315,23 +319,13 @@ const runTreeCase = (c) => {
 	return serialize(c.fragment && first !== 0 ? first : doc);
 };
 
-// The submodule as a whole is optional, so an absent checkout degrades to a
-// no-op. A checkout that is *present* but carries no tree-construction corpus is
-// a stale pin, not an opt-out — upstream moved these tests to WPT and deleting
-// them silently turned 1783 assertions into a green no-op. Fail instead.
-const hasSubmodule = fs.existsSync(path.join(testsDir, "tokenizer"));
 const hasTreeCorpus =
 	fs.existsSync(treeDir) && fs.readdirSync(treeDir).length > 0;
 
-describe("html5lib tree-construction", () => {
+describe("wpt tree-construction", () => {
 	if (!hasTreeCorpus) {
-		it("tree-construction corpus", () => {
-			if (hasSubmodule) {
-				throw new Error(
-					`No tree-construction corpus in ${testsDir}. The submodule is checked out, so this is a stale pin rather than an opt-out — pin it to a commit that still carries tree-construction/.`
-				);
-			}
-			// Not initialized: `git submodule update --init test/html5lib-tests`.
+		it("submodule not initialized (run `git submodule update --init --depth 1 test/wpt`)", () => {
+			// No-op: the conformance data is an optional git submodule.
 		});
 
 		return;

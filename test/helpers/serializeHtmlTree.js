@@ -46,6 +46,10 @@ const serializeHtmlTree = (root) => {
 			lines.push(`${indent}<!-- ${A.data(node)} -->`);
 			return;
 		}
+		if (type === NodeType.ProcessingInstruction) {
+			lines.push(`${indent}<?${A.piTarget(node)} ${A.data(node)}?>`);
+			return;
+		}
 		if (type === NodeType.Text) {
 			lines.push(`${indent}"${A.data(node)}"`);
 			return;

@@ -178,8 +178,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          submodules: true
+
+      - name: Check out the test262 corpus
+        run: git submodule update --init --depth 1 test/test262-cases
 
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -225,8 +226,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          submodules: true
+
+      # WPT is 161k files, so only this job checks it out, and only one commit
+      # deep — it carries the tree-construction corpus html5lib-tests dropped.
+      - name: Check out the html5lib and WPT corpora
+        run: git submodule update --init --depth 1 test/html5lib-tests test/wpt
 
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -263,8 +267,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          submodules: true
+
+      - name: Check out the css-parsing corpus
+        run: git submodule update --init --depth 1 test/css-parsing-tests
 
       - name: Use Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0

@@ -25,6 +25,7 @@ export default defineConfig([
 		"!test/runner/*.js",
 		"test/js/**/*.*",
 		"test/test262-cases/**/*.*",
+		"test/wpt/**/*.*",
 
 		// TODO fix me
 		// This is not exactly typescript
