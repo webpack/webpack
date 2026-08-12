@@ -150,33 +150,33 @@
 
 ### Patch Changes
 
-- Fix broken HMR with `output.module` and non-`import` chunk loading by emitting a plain-JSON hot-update manifest. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Fix broken HMR with `output.module` and non-`import` chunk loading by emitting a plain-JSON hot-update manifest. (by [@alexander-akait](https://github.com/alexander-akait) in [#21460](https://github.com/webpack/webpack/pull/21460))
 
-- Fix unused CSS module exports leaking into the JS wrapper. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Fix unused CSS module exports leaking into the JS wrapper. (by [@alexander-akait](https://github.com/alexander-akait) in [#21301](https://github.com/webpack/webpack/pull/21301))
 
-- Fix deferred import evaluation: re-throw cached errors, guard forcing a still-evaluating module, keep re-exported deferred namespaces identical, and evaluate initial-chunk deferred context imports lazily. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Fix deferred import evaluation: re-throw cached errors, guard forcing a still-evaluating module, keep re-exported deferred namespaces identical, and evaluate initial-chunk deferred context imports lazily. (by [@alexander-akait](https://github.com/alexander-akait) in [#21446](https://github.com/webpack/webpack/pull/21446))
 
-- Keep ESM live bindings for a module library's entry exports, including when the runtime is emitted as a separate chunk. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Keep ESM live bindings for a module library's entry exports, including when the runtime is emitted as a separate chunk. (by [@alexander-akait](https://github.com/alexander-akait) in [#21349](https://github.com/webpack/webpack/pull/21349))
 
-- Fix SplitChunks merging undersized modules into the wrong result group. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Fix SplitChunks merging undersized modules into the wrong result group. (by [@alexander-akait](https://github.com/alexander-akait) in [#21356](https://github.com/webpack/webpack/pull/21356))
 
-- Fix named id assignment reusing an already-used numbered suffix, which could produce duplicate module/chunk ids. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Fix named id assignment reusing an already-used numbered suffix, which could produce duplicate module/chunk ids. (by [@alexander-akait](https://github.com/alexander-akait) in [#21406](https://github.com/webpack/webpack/pull/21406))
 
-- Fix inlined non-binary asset modules with `encoding: false` emitting "undefined" instead of their content. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Fix inlined non-binary asset modules with `encoding: false` emitting "undefined" instead of their content. (by [@alexander-akait](https://github.com/alexander-akait) in [#21406](https://github.com/webpack/webpack/pull/21406))
 
-- Decode non-base64 data URIs as UTF-8 so multi-byte characters are preserved. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Decode non-base64 data URIs as UTF-8 so multi-byte characters are preserved. (by [@alexander-akait](https://github.com/alexander-akait) in [#21366](https://github.com/webpack/webpack/pull/21366))
 
-- Keep required JSON data intact when a prototype method (e.g. `arr.includes()`) is called on it. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Keep required JSON data intact when a prototype method (e.g. `arr.includes()`) is called on it. (by [@alexander-akait](https://github.com/alexander-akait) in [#21433](https://github.com/webpack/webpack/pull/21433))
 
-- Recognize modern RegExp flags (`d`, `s`, `u`, `v`) when statically evaluating `new RegExp(...)`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Recognize modern RegExp flags (`d`, `s`, `u`, `v`) when statically evaluating `new RegExp(...)`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21366](https://github.com/webpack/webpack/pull/21366))
 
-- Merge object-form and dotted DefinePlugin definitions so `import.meta.env`/`process.env` are consistent across direct, whole-object and destructured access. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Merge object-form and dotted DefinePlugin definitions so `import.meta.env`/`process.env` are consistent across direct, whole-object and destructured access. (by [@alexander-akait](https://github.com/alexander-akait) in [#21419](https://github.com/webpack/webpack/pull/21419))
 
-- Emit an error when an object external has no entry for the used externals type. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Emit an error when an object external has no entry for the used externals type. (by [@alexander-akait](https://github.com/alexander-akait) in [#21340](https://github.com/webpack/webpack/pull/21340))
 
-- Fix a persistent cache restore crash when a content section starts exactly on a content-buffer boundary. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Fix a persistent cache restore crash when a content section starts exactly on a content-buffer boundary. (by [@alexander-akait](https://github.com/alexander-akait) in [#21406](https://github.com/webpack/webpack/pull/21406))
 
-- Restore missing `internalSerializables` entries (webpack/lib/Module and cold filesystem cache). (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
+- Restore missing `internalSerializables` entries (webpack/lib/Module and cold filesystem cache). (by [@alexander-akait](https://github.com/alexander-akait) in [#21391](https://github.com/webpack/webpack/pull/21391))
 
 - Fix watch rebuild crash when context symlink targets lack `timestampHash`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21477))
 
