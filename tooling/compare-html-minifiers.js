@@ -7,15 +7,15 @@
 
 // Compare webpack's own HTML minifier against the ecosystem's on real documents,
 // reporting what the output weighs (raw and under the encodings a CDN serves),
-// what producing it costs (wall time, cpu time, peak memory) and — the part a
-// size table hides — whether the output still parses to the same DOM.
+// what producing it costs (wall time, cpu time, the memory it adds) and — the
+// part a size table hides — whether the output still parses to the same DOM.
 //
 //   node tooling/compare-html-minifiers.js
 //
 // Each minifier × fixture cell runs in a fresh worker process (this script
 // re-invoked with `--measure <minifier>`, the document on stdin), so cpu and
-// peak RSS are attributable to that one tool instead of to whatever ran before
-// it in a shared process.
+// memory are attributable to that one tool instead of to whatever ran before it
+// in a shared process.
 //
 // The comparison packages are NOT webpack dependencies: they are installed into
 // `node_modules/.cache/html-minifier-comparison` on first run, so nothing here
@@ -249,17 +249,30 @@ const fixtures = async () => {
 // is used wherever a tool offers one; minify-html only ships sync.
 /** @type {[string, () => (html: string) => string | Promise<string>][]} */
 const MINIFIERS = [
+	// Two rows per tool: what a user gets by writing nothing, and everything the
+	// tool will do when asked. The gap between them is the point — several of
+	// these ship a default that minifies almost nothing.
 	["webpack", () => (html) => htmlMinify({ "input.html": html }).code],
+	[
+		"webpack (aggressive)",
+		() => (html) =>
+			htmlMinify({ "input.html": html }, undefined, {
+				collapseWhitespace: "all",
+				mergeStyles: true,
+				minifyConditionalComments: true,
+				removeEmptyAttributes: true,
+				removeEmptyElements: true,
+				removeRedundantAttributes: "all",
+				sortAttributes: true,
+				sortClassNames: true,
+				tagOmission: true
+			}).code
+	],
 	[
 		"html-minifier-terser",
 		() => {
 			const terser = load("html-minifier-terser");
-			return (html) =>
-				terser.minify(html, {
-					collapseWhitespace: true,
-					conservativeCollapse: true,
-					removeComments: true
-				});
+			return (html) => terser.minify(html, {});
 		}
 	],
 	[
@@ -270,9 +283,17 @@ const MINIFIERS = [
 				terser.minify(html, {
 					collapseBooleanAttributes: true,
 					collapseWhitespace: true,
+					decodeEntities: true,
+					minifyCSS: true,
+					minifyJS: true,
 					removeAttributeQuotes: true,
 					removeComments: true,
-					removeRedundantAttributes: true
+					removeEmptyAttributes: true,
+					removeOptionalTags: true,
+					removeRedundantAttributes: true,
+					sortAttributes: true,
+					sortClassName: true,
+					useShortDoctype: true
 				});
 		}
 	],
@@ -284,6 +305,24 @@ const MINIFIERS = [
 		}
 	],
 	[
+		"minify-html (aggressive)",
+		() => {
+			const minifyHtml = load("@minify-html/node");
+			return (html) =>
+				minifyHtml
+					.minify(Buffer.from(html), {
+						// minify-html names its options in snake case.
+						/* eslint-disable camelcase */
+						minify_css: true,
+						minify_js: true,
+						remove_bangs: true,
+						remove_processing_instructions: true
+						/* eslint-enable camelcase */
+					})
+					.toString();
+		}
+	],
+	[
 		"htmlnano",
 		() => {
 			const htmlnano = load("htmlnano");
@@ -292,10 +331,41 @@ const MINIFIERS = [
 		}
 	],
 	[
+		"htmlnano (aggressive)",
+		() => {
+			const htmlnano = load("htmlnano");
+			return async (html) =>
+				(await htmlnano.process(html, {}, htmlnano.presets.max)).html;
+		}
+	],
+	[
 		"@swc/html",
 		() => {
 			const swc = load("@swc/html");
 			return async (html) => (await swc.minify(Buffer.from(html), {})).code;
+		}
+	],
+	[
+		"@swc/html (aggressive)",
+		() => {
+			const swc = load("@swc/html");
+			return async (html) =>
+				(
+					await swc.minify(Buffer.from(html), {
+						collapseWhitespaces: "all",
+						minifyCss: true,
+						minifyJs: true,
+						normalizeAttributes: true,
+						quotes: false,
+						removeComments: true,
+						removeEmptyAttributes: true,
+						removeEmptyMetadataElements: true,
+						removeRedundantAttributes: "all",
+						sortAttributes: true,
+						sortSpaceSeparatedAttributeValues: true,
+						tagOmission: true
+					})
+				).code;
 		}
 	]
 ];
@@ -310,6 +380,12 @@ const VERBATIM_TEXT = new Set(["pre", "textarea", "script", "style"]);
  * canonicalized through webpack's CSS minifier instead, which compares what the
  * sheet means. That leaves a CSS-level mistake to webpack's own CSS suites —
  * this tool is checking the HTML around it.
+ *
+ * To a fixed point, not once: one pass is not idempotent (a selector list the
+ * source spelled `p,hgroup` prints sorted only on the second pass), so
+ * canonicalizing an authored sheet once and an already-minified one once lands
+ * them on different spellings and every tool that touches CSS reads as losing
+ * text. Two passes settle every sheet here; the third is the guard.
  * @param {string} css a `<style>` body
  * @returns {string} its canonical form
  */
@@ -317,7 +393,14 @@ const canonicalCss = (css) => {
 	try {
 		const { SourceProcessor } = require("../lib/css/syntax");
 
-		return new SourceProcessor().process(css, { mode: "minify" }).code;
+		const processor = new SourceProcessor();
+		let out = css;
+		for (let i = 0; i < 3; i++) {
+			const next = processor.process(out, { mode: "minify" }).code;
+			if (next === out) break;
+			out = next;
+		}
+		return out;
 	} catch (_err) {
 		return css;
 	}
@@ -455,9 +538,12 @@ const kb = (bytes) =>
 
 /**
  * Worker mode: run one minifier over the document on stdin and report the
- * output with its cost. Wall and cpu are the best of three runs; peak is the
- * process's `maxRSS` (KB), which deliberately includes loading the tool — that
- * is part of what running it costs.
+ * output with its cost. Wall and cpu are the best of three runs; memory is the
+ * `maxRSS` (KB) the tool added over this process's own floor, which
+ * deliberately includes loading it — that is part of what running it costs.
+ * Over the floor rather than absolute: the kernel bills a spawned child the
+ * pre-exec copy of its parent, so `maxRSS` starts wherever the runner happened
+ * to be and an absolute reading reports the runner, not the tool.
  * @param {string} name a `MINIFIERS` entry's name
  * @returns {Promise<void>} resolves after the report is written
  */
@@ -467,6 +553,9 @@ const measure = async (name) => {
 	const chunks = [];
 	for await (const chunk of process.stdin) chunks.push(chunk);
 	const html = Buffer.concat(chunks).toString("utf8");
+	// Read before the tool is loaded: everything above this is the inherited
+	// floor plus the document itself, neither of which the tool is charged for.
+	const floor = process.resourceUsage().maxRSS;
 	/** @type {Measurement} */
 	let report;
 	try {
@@ -495,7 +584,12 @@ const measure = async (name) => {
 			const used = process.cpuUsage(cpuStarted);
 			cpu = Math.min(cpu, (used.user + used.system) / 1e3);
 		}
-		report = { code, wall, cpu, peak: process.resourceUsage().maxRSS };
+		report = {
+			code,
+			wall,
+			cpu,
+			peak: Math.max(0, process.resourceUsage().maxRSS - floor)
+		};
 	} catch (error) {
 		report = {
 			error: String(
@@ -515,9 +609,22 @@ const measure = async (name) => {
  */
 const measureInWorker = (name, input) =>
 	new Promise((resolve, reject) => {
-		const child = spawn(process.execPath, [__filename, "--measure", name], {
-			stdio: ["pipe", "pipe", "inherit"]
-		});
+		// Through a stub rather than directly: the kernel bills a child the
+		// pre-exec copy of its parent, and this runner holds every fixture and a
+		// parse5 tree, so a direct spawn hands the worker a `maxRSS` floor high
+		// enough to swallow what the tool then adds. The stub is a bare node.
+		const child = spawn(
+			process.execPath,
+			[
+				"-e",
+				"require('child_process').spawn(process.execPath,[process.argv[1],'--measure',process.argv[2]],{stdio:'inherit'}).on('close',(c)=>process.exit(c))",
+				__filename,
+				name
+			],
+			{
+				stdio: ["pipe", "pipe", "inherit"]
+			}
+		);
 		/** @type {Buffer[]} */
 		const chunks = [];
 		child.stdout.on("data", (chunk) => chunks.push(chunk));
@@ -548,9 +655,7 @@ const main = async () => {
 				8
 			)}${"gzip".padStart(9)}${"brotli".padStart(9)}${"zstd".padStart(
 				9
-			)}${"ms".padStart(6)}${"cpu".padStart(6)}${"peak".padStart(
-				8
-			)}   differs\n`
+			)}${"ms".padStart(6)}${"cpu".padStart(6)}${"mem".padStart(8)}   differs\n`
 		);
 		for (const [name] of MINIFIERS) {
 			const result = await measureInWorker(name, html);
