@@ -2416,6 +2416,11 @@ export interface OptimizationMinimizeHtml {
 	 * @since 5.110.0
 	 */
 	sortClassNames?: boolean;
+	/**
+	 * Leave out the `<html>` / `<head>` / `<body>` tags §13.1.2.4 lets the parser imply. Off by default: the DOM is identical either way, but a consumer that reads the page with a regexp rather than a parser — the crawler class — finds no `<body>` in it. `"keep-head-and-body"` leaves out only `<html>`, which keeps that consumer working. A tag stays wherever the spec keeps it: an attribute to carry, a comment minifying does not drop, whitespace opening the element, or a `meta` / `noscript` / `link` / `script` / `style` / `template` element opening the body.
+	 * @since 5.110.0
+	 */
+	tagOmission?: "keep-head-and-body" | boolean;
 }
 /**
  * Options handed as-is to the JavaScript minimizer (terser-compatible). Defaults to `{ compress: { passes: 2 } }`.

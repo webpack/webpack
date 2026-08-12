@@ -80,6 +80,10 @@ const buildCorpus = async (extension, minify) => {
 let cssCorpus;
 /** @type {Fixture[]} */
 let htmlCorpus;
+/** @type {Fixture[]} */
+let htmlCorpusTagOmission;
+/** @type {Fixture[]} */
+let htmlCorpusKeepHeadAndBody;
 /** @type {Promise<void> | undefined} */
 let building;
 
@@ -101,6 +105,30 @@ const buildCorpora = () => {
 				(source) =>
 					/** @type {{ code: string }} */
 					(new HtmlSourceProcessor().process(source, { mode: "minify" })).code
+			);
+			// `tagOmission` leaves out a tag the parser puts back, so it is the one
+			// option whose whole claim is that the DOM does not notice.
+			htmlCorpusTagOmission = await buildCorpus(
+				".html",
+				(source) =>
+					/** @type {{ code: string }} */
+					(
+						new HtmlSourceProcessor().process(source, {
+							mode: "minify",
+							tagOmission: true
+						})
+					).code
+			);
+			htmlCorpusKeepHeadAndBody = await buildCorpus(
+				".html",
+				(source) =>
+					/** @type {{ code: string }} */
+					(
+						new HtmlSourceProcessor().process(source, {
+							mode: "minify",
+							tagOmission: "keep-head-and-body"
+						})
+					).code
 			);
 		})();
 	}
@@ -1336,6 +1364,55 @@ describe("printer output in real Chrome", () => {
 		// bodies carried inside it — must survive minification unchanged.
 		expect(differences).toEqual([]);
 	}, 600000);
+
+	it.each([
+		["true", () => htmlCorpusTagOmission],
+		["keep-head-and-body", () => htmlCorpusKeepHeadAndBody]
+	])(
+		"should build the same DOM with tagOmission %s",
+		async (_mode, corpus) => {
+			const collected = await page.evaluate((cases) => {
+				const { htmlFacets } = /** @type {{ __eq: PageHelpers }} */ (
+					/** @type {unknown} */ (window)
+				).__eq;
+				return cases.map((one) => ({
+					name: one.name,
+					before: htmlFacets(one.raw).facets,
+					after: htmlFacets(one.min).facets
+				}));
+			}, corpus());
+			/** @type {{ name: string, why: string }[]} */
+			const differences = [];
+			for (const { name, before, after } of collected) {
+				for (const facet of Object.keys(before)) {
+					// A comment the minifier drops is dropped whatever the option says,
+					// and the default-mode test above already holds it to that.
+					if (facet === "comments") continue;
+					const a = before[facet];
+					const b = after[facet];
+					if (a.length !== b.length) {
+						differences.push({
+							name,
+							why: `${facet}: ${a.length} vs ${b.length}`
+						});
+						break;
+					}
+					const at = a.findIndex((entry, i) => entry !== b[i]);
+					if (at !== -1) {
+						differences.push({
+							name,
+							why: `${facet} ${at}: ${a[at]} vs ${b[at]}`
+						});
+						break;
+					}
+				}
+			}
+			// The tags this leaves out are the ones the parser puts back, so the tree
+			// it builds — and every element's depth in it — must be untouched.
+			expect(differences).toEqual([]);
+		},
+		600000
+	);
 
 	it("should only fold enumerated values the engine folds too", async () => {
 		// The printer lower-cases a value in `ENUMERATED_KEYWORDS`. That is

@@ -3777,6 +3777,18 @@
           "description": "Print a `class` list in token order. Nothing in CSS reads token order, so this only makes the same markup compress better across pages. Off by default: a script reading `className` back sees the new order. Other token lists are left alone — `ping` is the order its requests go out in.",
           "type": "boolean",
           "added": "5.110.0"
+        },
+        "tagOmission": {
+          "description": "Leave out the `<html>` / `<head>` / `<body>` tags §13.1.2.4 lets the parser imply. Off by default: the DOM is identical either way, but a consumer that reads the page with a regexp rather than a parser — the crawler class — finds no `<body>` in it. `\"keep-head-and-body\"` leaves out only `<html>`, which keeps that consumer working. A tag stays wherever the spec keeps it: an attribute to carry, a comment minifying does not drop, whitespace opening the element, or a `meta` / `noscript` / `link` / `script` / `style` / `template` element opening the body.",
+          "anyOf": [
+            {
+              "enum": ["keep-head-and-body"]
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "added": "5.110.0"
         }
       },
       "added": "5.110.0"
