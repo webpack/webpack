@@ -12,7 +12,9 @@ module.exports = {
 			return `./${module}`;
 		}
 
-		if (i === 6 || i === 7 || i === 10 || i === 11) {
+		// Only the absolute-URL configs need this: their specifier is rewritten to `./`
+		// before it gets here, while an empty one already reaches the chunk.
+		if (i === 10 || i === 11) {
 			if (/async/.test(module)) {
 				return `../${module}`;
 			}

@@ -10,10 +10,10 @@ it("should load through the runtime form from chunks at different depths", async
 });
 
 it("should not bake a specifier no depth-independent name can carry", () => {
-	const source = fs.readFileSync(
-		path.join(__STATS__.outputPath, "flat.mjs"),
-		"utf8"
-	);
+	// Found rather than named: these chunks carry a content hash.
+	const dir = __STATS__.outputPath;
+	const name = fs.readdirSync(dir).find((file) => file.startsWith("flat."));
+	const source = fs.readFileSync(path.join(dir, name), "utf8");
 
 	expect(source).toContain(`${"__webpack_require__"}.e(`);
 	expect(source).not.toContain(`${"__webpack_require__"}.ei(`);

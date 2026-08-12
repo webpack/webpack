@@ -1,7 +1,7 @@
 "use strict";
 
-// Without `realContentHash` nothing repairs a rewritten name, so no stand-in may be
-// reserved and two depths keep the runtime public path before a literal filename.
+// A stand-in may only be written into an asset not named by its own content. Here the
+// entry is, and the chunks holding the reference — the ones rewritten — are not.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

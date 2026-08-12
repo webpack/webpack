@@ -11,8 +11,8 @@ module.exports = {
 	output: {
 		module: true,
 		publicPath: "auto",
-		// A digest-suffixed content hash is unknown during code generation, so the
-		// analyzable literal can't be baked — this must fall back, not throw.
+		// The name is reserved and filled in once the hash exists; the entry it lands
+		// in is not named by its own content, so the rewrite invalidates nothing.
 		chunkFilename: "[name].[contenthash:base64:8].mjs"
 	}
 };

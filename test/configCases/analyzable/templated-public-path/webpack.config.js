@@ -54,7 +54,7 @@ module.exports = [
 	// No javascript here is named by its content, so rewriting one invalidates
 	// nothing and there is no repair to need.
 	base(4, "no-repair-hash-free", "[fullhash]", true, "", false),
-	// This one is: substituting rewrites the chunk after its own content hash was
-	// taken, and `RealContentHashPlugin` is what brings the two back in line.
-	base(5, "no-repair-hashed", "[fullhash]", false, ".[contenthash]", false)
+	// Nor is it here: what the rewrite would invalidate is the name of the chunk the
+	// stand-in lands in, and that is the entry, which no template names by its content.
+	base(5, "no-repair-hashed", "[fullhash]", true, ".[contenthash]", false)
 ];

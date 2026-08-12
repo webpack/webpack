@@ -9,13 +9,24 @@ it("should load a chunk whose filename uses a digest-suffixed content hash", asy
 	expect(value).toBe(42);
 });
 
-it("should fall back to the runtime form for a hashed chunk filename", () => {
+it("should bake a hashed chunk name the deferred pass fills in", () => {
 	const bundle = fs.readFileSync(
 		path.join(__STATS__.outputPath, "bundle0.mjs"),
 		"utf8"
 	);
-	// The content hash isn't known at code generation, so the analyzable literal
-	// can't be baked — the runtime `ensureChunk` form is kept instead of `.ei`.
-	expect(bundle).toContain(`${"__webpack_require__"}.e(`);
-	expect(bundle).not.toContain(`${"__webpack_require__"}.ei(`);
+	// Needle built at runtime so it is not a source string literal here.
+	const helper = `${"__webpack_require__"}.ei(`;
+
+	expect(bundle).toContain(helper);
+	expect(bundle).not.toContain(`${"__webpack_require__"}.e(`);
+	// No stand-in may reach the bundle, and what is baked has to be on disk.
+	expect(bundle).not.toContain(`@@${"webpackAnalyzableChunk"}:`);
+	const specifier = /import\((?:\/\*[^*]*\*\/\s*)?"([^"]+)"\)/.exec(
+		bundle.slice(bundle.indexOf(helper))
+	);
+
+	expect(specifier).not.toBe(null);
+	expect(
+		fs.existsSync(path.join(__STATS__.outputPath, specifier[1]))
+	).toBe(true);
 });

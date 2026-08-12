@@ -1,7 +1,7 @@
 "use strict";
 
-// Reserving a stand-in rewrites the asset after its content hash was taken, so with
-// `realContentHash` off and javascript named by content nothing repairs it.
+// Two depths need a stand-in, and with `realContentHash` off the chunks holding the
+// reference are named by their content, so none may be written into them.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -11,7 +11,6 @@ module.exports = {
 	experiments: { outputModule: true },
 	output: {
 		module: true,
-		filename: "main.[contenthash].mjs",
 		chunkFilename: "[name].mjs",
 		publicPath: "auto"
 	},
@@ -19,5 +18,24 @@ module.exports = {
 		chunkIds: "named",
 		splitChunks: false,
 		realContentHash: false
-	}
+	},
+	plugins: [
+		(compiler) => {
+			compiler.hooks.compilation.tap(
+				"NameConsumersByContent",
+				(compilation) => {
+					compilation.hooks.afterChunks.tap(
+						"NameConsumersByContent",
+						(chunks) => {
+							for (const chunk of chunks) {
+								if (chunk.name === "flat" || chunk.name === "nested/deep") {
+									chunk.filenameTemplate = "[name].[contenthash].mjs";
+								}
+							}
+						}
+					);
+				}
+			);
+		}
+	]
 };

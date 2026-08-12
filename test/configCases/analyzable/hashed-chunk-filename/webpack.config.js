@@ -3,7 +3,8 @@
 let INDEX = 0;
 
 // A hashed chunk name is emitted as a stand-in and filled in once the hash exists.
-// Without `realContentHash` nothing repairs the stale hash, so the runtime form stays.
+// What the rewrite could invalidate is the name of the chunk the stand-in lands in —
+// the entry here, which no template names by its content — not the one referenced.
 
 /**
  * @param {string} name prefix keeping the emitted files of each config apart
@@ -25,7 +26,7 @@ const base = (name, chunkFilename, realContentHash = true) => ({
 	plugins: [
 		new (require("../../../../").DefinePlugin)({
 			__INDEX__: JSON.stringify(INDEX++),
-			__ANALYZABLE__: JSON.stringify(realContentHash)
+			__ANALYZABLE__: JSON.stringify(true)
 		})
 	],
 	output: {
@@ -44,6 +45,7 @@ module.exports = [
 	// `[runtime]` is only filled in when the runtime is handed to the path as well.
 	base("e", "[name].[runtime].[contenthash].mjs"),
 	base("f", "nested/dir/[name].[contenthash].mjs"),
-	// No correction for a stale name, so the runtime form is kept.
+	// The referenced chunk is named by its content and nothing repairs a stale name,
+	// but the entry the stand-in is written into is not, so there is none to repair.
 	base("g", "[name].[contenthash].mjs", false)
 ];

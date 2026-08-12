@@ -6,6 +6,6 @@ module.exports = {
 	findBundle(index, options) {
 		return fs
 			.readdirSync(options.output.path)
-			.filter((name) => /^main\..+\.mjs$/.test(name));
+			.filter((name) => /^bundle0\.mjs$/.test(name));
 	}
 };

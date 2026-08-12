@@ -356,6 +356,7 @@ declare interface AllCodeGenerationSchemas {
 	 */
 	"share-init": [{ shareScope: string; initStage: number; init: string }];
 }
+type AnalyzableForm = "import" | "url" | "wasm" | "wasm-relative";
 type AnyLoaderContext = NormalModuleLoaderContext<any> &
 	LoaderRunnerLoaderContext<any> &
 	LoaderPluginLoaderContext &
@@ -24693,45 +24694,21 @@ declare abstract class RuntimeTemplate {
 	supportsModulePreload(): boolean;
 
 	/**
-	 * Analyzable output — a reference a foreign bundler can follow without running
-	 * webpack's runtime — comes in two forms, and what rules them out differs:
-	 * - a literal `import("./chunk.js")`, gated by `supportsAnalyzableImport`
-	 * - a literal `new URL(<file>, import.meta.url)`, gated by `supportsAnalyzableEsm`
-	 * Either way a name that is not settled during code generation may still be baked,
-	 * by reserving a stand-in the deferred pass fills in — see `canDeferAnalyzableName`.
-	 * What still forces the runtime form, and is not covered by any of the three:
-	 * a module federation module in the chunk, and a chunk with no id.
+	 * Whether a reference a foreign bundler can follow without running webpack's runtime
+	 * may be emitted — the one question every caller asks, in the form it is asking for:
+	 * - `"import"` — a literal `import("./chunk.js")` in place of `ensureChunk(id)`
+	 * - `"url"` — a literal `new URL(<file>, import.meta.url)`
+	 * - `"wasm"` — the same, fully baked for a wasm binary the runtime would name
+	 * - `"wasm-relative"` — a wasm path built at runtime under an `import.meta.url` base
+	 * A name code generation cannot settle may still be baked, through a stand-in the
+	 * deferred pass fills in. Not covered here, because only the reference can tell: a
+	 * chunk with no id, and one this compilation emits no javascript for.
 	 */
-	supportsAnalyzableEsm(chunkGraph?: ChunkGraph, module?: Module): boolean;
-
-	/**
-	 * Whether a chunk reference emitted into `originModule` may be a literal
-	 * `import("./chunk.js")` rather than a runtime `ensureChunk(id)` call.
-	 */
-	supportsAnalyzableImport(
-		chunkGraph: ChunkGraph,
-		originModule: Module
+	supportsAnalyzable(
+		form: AnalyzableForm,
+		chunkGraph?: ChunkGraph,
+		module?: Module
 	): boolean;
-
-	/**
-	 * Whether a name that code generation cannot settle may be reserved as a stand-in
-	 * and filled in once the hashes exist. Substituting rewrites a chunk after its own
-	 * content hash was taken, so either `RealContentHashPlugin` has to bring the two
-	 * back in line, or no emitted javascript may be named by its content in the first
-	 * place — with a name like `[name].js` there is nothing to go stale.
-	 */
-	canDeferAnalyzableName(template?: string): boolean;
-
-	/**
-	 * Whether an asset whose URL argument is only known at runtime (e.g. a wasm
-	 * binary path built from `wasmModuleId`) may be referenced with the analyzable
-	 * chunk-relative `new URL(path, import.meta.url)` form. Requires ESM output
-	 * (`supportsAnalyzableEsm`) and an `auto` public path — only then is the bare
-	 * relative URL equivalent to the runtime `__webpack_require__.p + path` form.
-	 * Callers that can bake the public path into a static literal specifier should
-	 * use `_getAnalyzableChunkSpecifier` instead, which also handles a fixed path.
-	 */
-	supportsAnalyzableEsmUrl(chunkGraph?: ChunkGraph, module?: Module): boolean;
 
 	/**
 	 * Builds the analyzable `new URL(specifier, import.meta.url)` expression the ESM
@@ -24742,11 +24719,25 @@ declare abstract class RuntimeTemplate {
 	importMetaUrl(specifier: string): string;
 
 	/**
-	 * Whether async wasm binaries are referenced by a fully baked
-	 * `new URL("./<file>.wasm", import.meta.url)` at the module call site, rather than
-	 * by `supportsAnalyzableEsmUrl`'s runtime-built path under an `import.meta.url` base.
+	 * Static literal specifier (already quoted) for the `new URL(<here>, import.meta.url)`
+	 * an asset reference bakes to, or `null` to keep the runtime form. Unlike a wasm
+	 * binary, the runtime resolves an asset url against `__webpack_require__.b` — the
+	 * output root, or an entry `baseUri` where one is set — so that base is settled here
+	 * before the rest of the name is.
 	 */
-	supportsAnalyzableWasm(chunkGraph?: ChunkGraph, module?: Module): boolean;
+	getAnalyzableAssetUrl(
+		module: Module,
+		chunkGraph: ChunkGraph,
+		filename: string
+	): null | string;
+
+	/**
+	 * `output.publicPath` as the constant it will be, for code that would otherwise read
+	 * `__webpack_require__.p` for a value that never changes. `undefined` when only the
+	 * hash could say, or when a runtime reassigns `__webpack_public_path__` — then the
+	 * global is the only thing that knows.
+	 */
+	constantPublicPath(): undefined | string;
 	supportTemplateLiteral(): boolean;
 	supportNodePrefixForCoreModules(): boolean;
 
@@ -25259,6 +25250,17 @@ declare abstract class RuntimeTemplate {
 		 */
 		originModule?: Module;
 	}): string;
+
+	/**
+	 * Static `new URL(<file>, import.meta.url)` for the binary emitted for an async wasm
+	 * module. Only called when `supportsAnalyzable("wasm")` holds.
+	 */
+	getAnalyzableWasmUrl(
+		module: Module,
+		chunkGraph: ChunkGraph,
+		runtime: RuntimeSpec,
+		runtimeRequirements: Set<string>
+	): string;
 
 	/**
 	 * Async module factory.

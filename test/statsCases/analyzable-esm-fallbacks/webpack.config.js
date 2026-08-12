@@ -4,6 +4,25 @@ const path = require("path");
 const webpack = require("../../../");
 
 /**
+ * Names the given chunks by their own content, which `output` alone cannot do for
+ * some chunks and not others.
+ * @param {string[]} names chunk names to rename
+ * @returns {import("../../../").WebpackPluginFunction} the plugin
+ */
+const nameConsumersByContent = (names) => (compiler) => {
+	compiler.hooks.compilation.tap("NameConsumersByContent", (compilation) => {
+		compilation.hooks.afterChunks.tap("NameConsumersByContent", (chunks) => {
+			for (const chunk of chunks) {
+				const chunkName = chunk.name;
+				if (typeof chunkName === "string" && names.includes(chunkName)) {
+					chunk.filenameTemplate = "[name].[contenthash].mjs";
+				}
+			}
+		});
+	});
+};
+
+/**
  * One analyzable-ESM build. `name` is both the output subdir and the label; `extra`
  * overrides entry/output/plugins to trigger a single analyzable-import limitation.
  * @param {string} name case name
@@ -13,10 +32,11 @@ const webpack = require("../../../");
 const base = (name, extra = {}) => ({
 	name,
 	mode: "development",
-	devtool: false,
 	experiments: { outputModule: true },
 	entry: extra.entry || "./index",
 	plugins: extra.plugins,
+	devtool: extra.devtool === undefined ? false : extra.devtool,
+	module: extra.module,
 	output: {
 		module: true,
 		path: path.resolve(
@@ -56,16 +76,28 @@ module.exports = [
 	}),
 	// Every case below must fall back with no `.ei` emitted.
 	base("public-path-override", { entry: "./index-public-path-override" }),
-	// Deferrable in itself; what stops it here is that the chunk is named by its own
-	// content while `optimization.realContentHash` is off, as it is by default in
-	// development — so the name it would be rewritten under has nothing to repair it.
+	// The entry the stand-in would land in is named by its own content, and with
+	// `realContentHash` off nothing repairs the name it is rewritten under.
 	base("content-hash", {
-		output: { chunkFilename: "[name].[contenthash].mjs" }
+		output: {
+			filename: "[name].[contenthash].mjs",
+			chunkFilename: "[name].[contenthash].mjs"
+		}
 	}),
-	// Two depths need a stand-in, and naming any emitted javascript by its content —
-	// worker chunks included — rules out the rewrite one needs.
+	// Two depths need a stand-in, and the chunks it would land in are content-named.
 	base("shared-depths", {
 		entry: "./index-depths",
-		output: { workerChunkFilename: "[name].[contenthash].mjs" }
+		plugins: [nameConsumersByContent(["flat", "nested/deep"])]
+	}),
+	// `import.meta` does not parse inside the `eval()` this devtool wraps a module in.
+	base("eval-devtool", {
+		entry: "./index-eval",
+		devtool: "eval",
+		module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] }
+	}),
+	// The worker runs its own chunk loader, which a native `import()` is not.
+	base("worker-chunk-loading", {
+		entry: "./index-worker",
+		output: { workerChunkLoading: "async-node" }
 	})
 ];

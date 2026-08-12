@@ -1,7 +1,8 @@
 "use strict";
 
 // A function `chunkFilename` bakes right away when its answer holds no hash, and is
-// asked again by the deferred pass when it does — or falls back if nothing corrects it.
+// asked again by the deferred pass when it does. `realContentHash` is beside the point
+// here: the entry the stand-in lands in is not named by its own content either way.
 
 const webpack = require("../../../../");
 
@@ -32,7 +33,7 @@ module.exports = [
 	// Returns a plain template — the same answer whatever the hashes are.
 	base(0, (pathData) => `a-${pathData.chunk.name}/[name].mjs`, true),
 	// Returns a template carrying a hash placeholder.
-	base(1, () => "b-[name].[contenthash].mjs", false),
+	base(1, () => "b-[name].[contenthash].mjs", true),
 	// The same template, deferred: the pass asks again once the hash is settled.
 	base(2, () => "d-[name].[contenthash].mjs", true, true),
 	// Builds the name from a hash itself, and is asked again the same way.
@@ -46,7 +47,7 @@ module.exports = [
 		true,
 		true
 	),
-	// Builds the name from a hash itself, so nothing is left to test for.
+	// Builds the name from a hash itself, and is asked again the same way.
 	base(
 		4,
 		(pathData) =>
@@ -54,7 +55,7 @@ module.exports = [
 				/** @type {Record<string, string>} */ (pathData.chunk.contentHash)
 					.javascript
 			}.mjs`,
-		false
+		true
 	),
 	// Reads what names the asset but is not a hash — the same answer both times.
 	base(5, (pathData) => `f-[name].${pathData.runtime}.mjs`, true),

@@ -19,7 +19,7 @@ const CASES = {
 	// output — the analyzable form is still emitted (documented limitation).
 	"fetch-priority": { file: "main.mjs", expect: "analyzable" },
 	"content-hash": {
-		file: "main.mjs",
+		file: /^main\./,
 		expect: "fallback",
 		bailout: "optimization.realContentHash"
 	},
@@ -35,9 +35,19 @@ const CASES = {
 	// The entry reaches both copies from one depth, so only the chunk they share
 	// falls back — read that one rather than the entry.
 	"shared-depths": {
-		file: "flat.mjs",
+		file: /^flat\./,
 		expect: "fallback",
 		bailout: "chunks at different output depths"
+	},
+	"eval-devtool": {
+		file: "main.mjs",
+		expect: "fallback",
+		bailout: "wraps the module in eval()"
+	},
+	"worker-chunk-loading": {
+		file: "main.mjs",
+		expect: "fallback",
+		bailout: 'not "import"'
 	}
 };
 
@@ -53,13 +63,17 @@ module.exports = {
 			const { compilation } = child;
 			const name = /** @type {string} */ (compilation.name);
 			const testCase = CASES[name];
-			const output = fs.readFileSync(
-				path.join(
-					/** @type {string} */ (compilation.outputOptions.path),
-					testCase.file
-				),
-				"utf8"
-			);
+			const outputPath = /** @type {string} */ (compilation.outputOptions.path);
+			// Found rather than named where the chunk carries a content hash.
+			const file =
+				typeof testCase.file === "string"
+					? testCase.file
+					: /** @type {string} */ (
+							fs
+								.readdirSync(outputPath)
+								.find((name) => testCase.file.test(name))
+						);
+			const output = fs.readFileSync(path.join(outputPath, file), "utf8");
 			// A bailout is recorded exactly when the runtime form is kept, so a limitation
 			// that is later lifted fails here until its reason is dropped too.
 			const bailouts = [];
