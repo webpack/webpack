@@ -122,7 +122,7 @@
 
 - Compile async modules to generators for targets without async/await. (by [@alexander-akait](https://github.com/alexander-akait) in [#21410](https://github.com/webpack/webpack/pull/21410))
 
-- Evaluate and validate the second argument of dynamic `import(specifier, options)`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21477](https://github.com/webpack/webpack/pull/21446))
+- Evaluate and validate the second argument of dynamic `import(specifier, options)`. (by [@alexander-akait](https://github.com/alexander-akait) in [#21446](https://github.com/webpack/webpack/pull/21446))
 
 - Add `module.parser.javascript.worklet` to bundle Worklet `addModule()` entries. (by [@alexander-akait](https://github.com/alexander-akait) in [#21384](https://github.com/webpack/webpack/pull/21384))
 
