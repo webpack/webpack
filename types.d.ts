@@ -3389,7 +3389,7 @@ declare class Compilation {
 		 * source, so an asset-level minimizer cannot reach it.
 		 * @since 5.110.0
 		 */
-		renderEmbeddedSource: SyncWaterfallHook<
+		renderEmbeddedSource: AsyncSeriesWaterfallHook<
 			[Source, EmbeddedSourceInfo],
 			Source
 		>;

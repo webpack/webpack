@@ -43,12 +43,14 @@ class SampleEmbeddedMinifyPlugin {
 		const key = JSON.stringify(minimizerOptions);
 
 		compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {
-			// One tap for every language pair — `info.type` says which arrived. This
-			// is what `minimizer-webpack-plugin` is expected to do, dispatching by
-			// type the way it already dispatches assets by filename.
-			compilation.hooks.renderEmbeddedSource.tap(
+			// One tap for every language pair — `info.type` says which arrived, the
+			// way `minimizer-webpack-plugin` already dispatches assets by filename.
+			// Async on purpose: a real minifier may only be loadable that way.
+			compilation.hooks.renderEmbeddedSource.tapPromise(
 				PLUGIN_NAME,
-				(source, { type, module }) => {
+				async (source, { type, module }) => {
+					// Nothing here needs awaiting; the await is what proves webpack waits.
+					await Promise.resolve();
 					if (type === CSS_TYPE) {
 						return css ? minifyCss(source, module, minimizerOptions) : source;
 					}
