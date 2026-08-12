@@ -10251,6 +10251,14 @@ declare interface HtmlProcessOptions {
 	 * collapse each run of whitespace in text to a single space, except where an ancestor renders it verbatim (default false)
 	 */
 	collapseWhitespace?: boolean;
+
+	/**
+	 * renders each nested body this document embeds — an inline `<style>`, every `style=""` (handed over as a whole stylesheet), and a `<script>` holding JSON or JavaScript. Replaces the built-in CSS and JSON minifiers, and is the only way inline JavaScript is reached at all. Synchronous, so an async minifier is run in a walk-only pass first and looked up here
+	 */
+	renderEmbeddedSource?: (
+		source: string,
+		info: { type: string; hostType: string }
+	) => string;
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**
@@ -21852,6 +21860,10 @@ declare interface PrintOptions {
 	environment?: Readonly<Record<string, boolean>>;
 	convertLengthUnits?: boolean;
 	collapseWhitespace?: boolean;
+	renderEmbeddedSource?: (
+		source: string,
+		info: { type: string; hostType: string }
+	) => string;
 }
 declare interface PrintedElement {
 	element: string;

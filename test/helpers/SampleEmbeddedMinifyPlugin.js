@@ -7,6 +7,7 @@ const htmlSyntax = require("../../lib/html/syntax");
 
 /** @typedef {import("../../lib/Compiler")} Compiler */
 /** @typedef {import("../../lib/Module")} Module */
+/** @typedef {import("../../lib/util/SourceProcessor").EmbeddedSourceRenderer} EmbeddedSourceRenderer */
 /** @typedef {import("webpack-sources").Source} Source */
 
 const PLUGIN_NAME = "SampleEmbeddedMinifyPlugin";
@@ -22,14 +23,20 @@ const PLUGIN_NAME = "SampleEmbeddedMinifyPlugin";
  * @property {boolean=} css tap the CSS hook
  * @property {boolean=} html tap the HTML hook
  * @property {EXPECTED_OBJECT=} minimizerOptions options handed to the serializer
+ * @property {EmbeddedSourceRenderer=} renderEmbeddedSource renderer for what the HTML itself embeds — an inline `<style>` / `<script>`
  */
 
 class SampleEmbeddedMinifyPlugin {
 	/**
 	 * @param {SampleEmbeddedMinifyPluginOptions=} options options
 	 */
-	constructor({ css = true, html = true, minimizerOptions = {} } = {}) {
-		this.options = { css, html, minimizerOptions };
+	constructor({
+		css = true,
+		html = true,
+		minimizerOptions = {},
+		renderEmbeddedSource
+	} = {}) {
+		this.options = { css, html, minimizerOptions, renderEmbeddedSource };
 	}
 
 	/**
@@ -37,7 +44,7 @@ class SampleEmbeddedMinifyPlugin {
 	 * @returns {void}
 	 */
 	apply(compiler) {
-		const { css, html, minimizerOptions } = this.options;
+		const { css, html, minimizerOptions, renderEmbeddedSource } = this.options;
 		// Whatever a tap varies on has to reach the codegen cache key: module
 		// hashes are taken before code generation, so the hook's own output cannot.
 		const key = JSON.stringify(minimizerOptions);
@@ -59,7 +66,13 @@ class SampleEmbeddedMinifyPlugin {
 						return new RawSource(
 							new htmlSyntax.SourceProcessor().process(
 								typeof markup === "string" ? markup : markup.toString("utf8"),
-								{ mode: "minify", ...minimizerOptions }
+								{
+									mode: "minify",
+									// What the document itself embeds. Absent, the serializer
+									// falls back to its own CSS and JSON minifiers.
+									renderEmbeddedSource,
+									...minimizerOptions
+								}
 							).code
 						);
 					}
