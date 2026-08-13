@@ -31,6 +31,12 @@ module.exports = {
 		get twin() {
 			return track("twin", {});
 		},
+		get "legacy-map-ext"() {
+			return track("legacy-map-ext", {});
+		},
+		get "not-a-target"() {
+			return track("not-a-target", {});
+		},
 		get "required-used-ext"() {
 			return track("required-used-ext", { used: "used" });
 		},

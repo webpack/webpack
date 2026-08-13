@@ -26,6 +26,11 @@ module.exports = {
 				sideEffects: true
 			},
 			"default-ext": "default-ext",
+			// a target map holding an `external` key is not the options form
+			"legacy-map-ext": {
+				commonjs: "legacy-map-ext",
+				external: "not-a-target"
+			},
 			"required-used-ext": {
 				external: "required-used-ext",
 				sideEffects: false
@@ -64,14 +69,36 @@ module.exports = {
 		(compiler) => {
 			compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {
 				compilation.hooks.afterSeal.tapPromise(PLUGIN_NAME, async () => {
+					// the twins share a target, so only their identifiers keep them apart
+					const twins = [...compilation.modules].filter(
+						(module) =>
+							module instanceof ExternalModule &&
+							(module.userRequest === "twin-free-ext" ||
+								module.userRequest === "twin-ext")
+					);
+					expect(
+						twins.map((module) => [
+							/** @type {ExternalModule} */ (module).userRequest,
+							/** @type {ExternalModule} */ (module).sideEffects,
+							/** @type {ExternalModule} */ (module).identifier()
+						])
+					).toEqual([
+						[
+							"twin-free-ext",
+							false,
+							'external commonjs "twin"|sideEffects=false'
+						],
+						["twin-ext", undefined, 'external commonjs "twin"']
+					]);
 					for (const module of compilation.modules) {
 						if (!(module instanceof ExternalModule)) continue;
 						// the options form is unwrapped, it never reaches the request
+						// (`external` may be a target map key, `sideEffects` never is)
 						const request = module.request;
 						if (
 							typeof request === "object" &&
 							!Array.isArray(request) &&
-							("external" in request || "sideEffects" in request)
+							"sideEffects" in request
 						) {
 							throw new Error(
 								`the options form leaked into the request ${JSON.stringify(

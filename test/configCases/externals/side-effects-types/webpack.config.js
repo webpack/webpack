@@ -21,8 +21,8 @@ module.exports = {
 	externals: {
 		"var-free": free("var RECORD('var-free')"),
 		"var-keep": "var RECORD('var-keep')",
-		"assign-free": free("assign globalThis['assign-free']"),
-		"assign-keep": "assign globalThis['assign-keep']",
+		"assign-free": free("assign RECORD('assign-free')"),
+		"assign-keep": "assign RECORD('assign-keep')",
 		"this-free": free("this this-free"),
 		"this-keep": "this this-keep",
 		"global-free": free("global global-free"),

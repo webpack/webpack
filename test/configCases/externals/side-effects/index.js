@@ -3,6 +3,7 @@ import "function-form-ext";
 import "twin-free-ext";
 import "twin-ext";
 import "default-ext";
+import "legacy-map-ext";
 import "with-side-effects-ext";
 import { unusedExport } from "unused-export-ext";
 import { used } from "used-ext";
@@ -40,4 +41,9 @@ it("should require externals which may have side effects", () => {
 
 it("should keep externals with the same target but a different side effects state apart", () => {
 	expect(REQUIRED).toContain("twin");
+});
+
+it("should read a target map holding an `external` key as a target map", () => {
+	expect(REQUIRED).toContain("legacy-map-ext");
+	expect(REQUIRED).not.toContain("not-a-target");
 });

@@ -25,9 +25,14 @@ import "module-import-keep";
 
 // an external is in the output when it ended up in a chunk
 const included = (name) => {
-	const externals = __STATS__.modules
-		.flatMap((module) => [module, ...(module.modules || [])])
-		.filter((module) => module.identifier.startsWith("external "));
+	const all = [];
+	for (const module of __STATS__.modules) {
+		all.push(module);
+		if (module.modules) all.push(...module.modules);
+	}
+	const externals = all.filter((module) =>
+		module.identifier.startsWith("external ")
+	);
 	const external = externals.find(
 		(module) =>
 			module.identifier.includes(`"${name}"`) ||
@@ -67,6 +72,7 @@ it("should keep an external of every external type which may have side effects",
 // the types whose evaluation is observable at runtime
 const EVALUATING_TYPES = [
 	"var",
+	"assign",
 	"promise",
 	"import",
 	"module-import",

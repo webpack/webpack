@@ -6,10 +6,8 @@ const { ExternalModule } = require("../../");
 
 const PLUGIN_NAME = "assertIncludedExternals";
 
-// Asserts which externals the output still references: an external dropped as
-// side-effect-free stays in the module graph but ends up in no chunk. Needs
-// `optimization.concatenateModules: false`, an external folded into a
-// concatenated module is in the output without being in a chunk itself.
+// A dropped external stays in the graph but reaches no chunk. Needs
+// `optimization.concatenateModules: false`, which would hide it in the entry.
 /**
  * @param {Record<string, boolean>} expected whether the external ends up in a chunk, by user request
  * @returns {(compiler: Compiler) => void} plugin
