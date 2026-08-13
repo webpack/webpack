@@ -5,21 +5,10 @@
 
 "use strict";
 
-// Compare webpack's own HTML minifier against the ecosystem's on real documents,
-// reporting what the output weighs (raw and under the encodings a CDN serves),
-// what producing it costs (wall time, cpu time, the memory it adds) and — the
-// part a size table hides — whether the output still parses to the same DOM.
-//
-//   node tooling/compare-html-minifiers.js
-//
-// Each minifier × fixture cell runs in a fresh worker process (this script
-// re-invoked with `--measure <minifier>`, the document on stdin), so cpu and
-// memory are attributable to that one tool instead of to whatever ran before it
-// in a shared process.
-//
-// The comparison packages are NOT webpack dependencies: they are installed into
-// `node_modules/.cache/html-minifier-comparison` on first run, so nothing here
-// reaches webpack's own dependency tree.
+// `node tooling/compare-html-minifiers.js` — size, cost and DOM safety against
+// the ecosystem's HTML minifiers, each cell in its own worker so cpu and memory
+// are attributable. The packages compared against install into
+// `node_modules/.cache/`, never webpack's dependency tree.
 
 const { spawn } = require("child_process");
 const fs = require("fs");
@@ -249,9 +238,7 @@ const fixtures = async () => {
 // is used wherever a tool offers one; minify-html only ships sync.
 /** @type {[string, () => (html: string) => string | Promise<string>][]} */
 const MINIFIERS = [
-	// Two rows per tool: what a user gets by writing nothing, and everything the
-	// tool will do when asked. The gap between them is the point — several of
-	// these ship a default that minifies almost nothing.
+	// Two rows per tool: its defaults, and everything it will do when asked.
 	["webpack", () => (html) => htmlMinify({ "input.html": html }).code],
 	[
 		"webpack (aggressive)",
@@ -381,11 +368,8 @@ const VERBATIM_TEXT = new Set(["pre", "textarea", "script", "style"]);
  * sheet means. That leaves a CSS-level mistake to webpack's own CSS suites —
  * this tool is checking the HTML around it.
  *
- * To a fixed point, not once: one pass is not idempotent (a selector list the
- * source spelled `p,hgroup` prints sorted only on the second pass), so
- * canonicalizing an authored sheet once and an already-minified one once lands
- * them on different spellings and every tool that touches CSS reads as losing
- * text. Two passes settle every sheet here; the third is the guard.
+ * To a fixed point: one pass is not idempotent, so canonicalizing an authored
+ * sheet and an already-minified one once lands them on different spellings.
  * @param {string} css a `<style>` body
  * @returns {string} its canonical form
  */
@@ -537,13 +521,9 @@ const kb = (bytes) =>
 /** @typedef {{ code: string, wall: number, cpu: number, peak: number } | { error: string }} Measurement */
 
 /**
- * Worker mode: run one minifier over the document on stdin and report the
- * output with its cost. Wall and cpu are the best of three runs; memory is the
- * `maxRSS` (KB) the tool added over this process's own floor, which
- * deliberately includes loading it — that is part of what running it costs.
- * Over the floor rather than absolute: the kernel bills a spawned child the
- * pre-exec copy of its parent, so `maxRSS` starts wherever the runner happened
- * to be and an absolute reading reports the runner, not the tool.
+ * Worker mode: run one minifier over stdin, reporting best-of-three wall and cpu
+ * and the `maxRSS` (KB) it added over this process's floor — absolute would
+ * report the runner, since the kernel bills a child its parent's pre-exec copy.
  * @param {string} name a `MINIFIERS` entry's name
  * @returns {Promise<void>} resolves after the report is written
  */
@@ -609,10 +589,8 @@ const measure = async (name) => {
  */
 const measureInWorker = (name, input) =>
 	new Promise((resolve, reject) => {
-		// Through a stub rather than directly: the kernel bills a child the
-		// pre-exec copy of its parent, and this runner holds every fixture and a
-		// parse5 tree, so a direct spawn hands the worker a `maxRSS` floor high
-		// enough to swallow what the tool then adds. The stub is a bare node.
+		// Through a bare-node stub: spawned directly, the worker inherits this
+		// runner's fixtures and parse5 tree as its `maxRSS` floor.
 		const child = spawn(
 			process.execPath,
 			[

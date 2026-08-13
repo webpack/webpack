@@ -7,9 +7,10 @@ exports[`ConfigCacheTestCases html minimize-empty-attributes minimize-empty-attr
 <div>valueless is the empty value</div>
 <div title lang>kept: an empty value means something the spec does not give absence</div>
 <div>dropped: an empty token list is no tokens</div>
+<a href=x>dropped: on the element that carries them</a>
+<table><tr><td>dropped: here too</table>
 <iframe sandbox src=x.html></iframe>
-<div>dropped: an empty handler body does nothing</div>
-<div once onunload data-on>kept: neither is an event handler here</div>
+<div onclick onmouseover>kept: an empty handler still reads back as one</div>
 <div data-x aria-label role>kept: not in the table</div>
 <div class=a id=b style=color:red dir=rtl>kept: carries a value</div>
 

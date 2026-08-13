@@ -4110,6 +4110,18 @@ describe("SourceProcessor — optional end tags read the output", () => {
 	it("still keeps a tag before printed text", () => {
 		expect(minify("<ul><li>a</li>tail</ul>")).toBe("<ul><li>a</li>tail</ul>");
 	});
+
+	it("scans both ways past whitespace the tier drops", () => {
+		// Skipping it forward but not back drops `</thead>` and the implied
+		// `<tbody>` together, and the rows re-parse into the head.
+		const table = "<table><thead><tr><th>h</thead>\n<tbody><tr><td>d</table>";
+		expect(minify(table, { collapseWhitespace: "all" })).toBe(
+			"<table><thead><tr><th>h<tbody><tr><td>d</table>"
+		);
+		expect(minify(table)).toBe(
+			"<table><thead><tr><th>h</thead>\n<tr><td>d</table>"
+		);
+	});
 });
 
 describe("SourceProcessor — an empty value is the bare name", () => {

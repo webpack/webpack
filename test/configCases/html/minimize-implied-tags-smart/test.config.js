@@ -4,10 +4,8 @@ const fs = require("fs");
 const path = require("path");
 
 module.exports = {
-	findBundle(_i, options) {
-		return fs.readdirSync(options.output.path).includes("main.js")
-			? ["./main.js"]
-			: undefined;
+	findBundle() {
+		return ["./main.js"];
 	},
 	afterExecute(options) {
 		expect(

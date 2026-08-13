@@ -3,7 +3,10 @@
 const fs = require("fs/promises");
 const path = require("path");
 const { SourceProcessor: CssSourceProcessor } = require("../lib/css/syntax");
-const { ENUMERATED_KEYWORDS } = require("../lib/html/data");
+const {
+	EMPTY_REMOVABLE_ATTRIBUTES,
+	ENUMERATED_KEYWORDS
+} = require("../lib/html/data");
 const { SourceProcessor: HtmlSourceProcessor } = require("../lib/html/syntax");
 const launchChrome = require("./helpers/launchChrome");
 
@@ -100,36 +103,27 @@ const buildCorpora = () => {
 					/** @type {{ code: string }} */
 					(new CssSourceProcessor().process(source, { mode: "minify" })).code
 			);
-			htmlCorpus = await buildCorpus(
-				".html",
-				(source) =>
-					/** @type {{ code: string }} */
-					(new HtmlSourceProcessor().process(source, { mode: "minify" })).code
-			);
+			// Read once, minified three ways: only the print options differ.
+			const htmlSources = await buildCorpus(".html", (source) => source);
+			/**
+			 * @param {object} options extra print options
+			 * @returns {Fixture[]} the corpus, minified with them
+			 */
+			const htmlVariant = (options) =>
+				htmlSources.map((one) => ({
+					...one,
+					min: /** @type {{ code: string }} */ (
+						new HtmlSourceProcessor().process(one.raw, {
+							mode: "minify",
+							...options
+						})
+					).code
+				}));
+			htmlCorpus = htmlVariant({});
 			// `removeImpliedTags` leaves out a tag the parser puts back, so it is
 			// the one option whose whole claim is that the DOM does not notice.
-			htmlCorpusAllImpliedTags = await buildCorpus(
-				".html",
-				(source) =>
-					/** @type {{ code: string }} */
-					(
-						new HtmlSourceProcessor().process(source, {
-							mode: "minify",
-							removeImpliedTags: true
-						})
-					).code
-			);
-			htmlCorpusSmartTags = await buildCorpus(
-				".html",
-				(source) =>
-					/** @type {{ code: string }} */
-					(
-						new HtmlSourceProcessor().process(source, {
-							mode: "minify",
-							removeImpliedTags: "smart"
-						})
-					).code
-			);
+			htmlCorpusAllImpliedTags = htmlVariant({ removeImpliedTags: true });
+			htmlCorpusSmartTags = htmlVariant({ removeImpliedTags: "smart" });
 		})();
 	}
 	return building;
@@ -1489,6 +1483,62 @@ describe("printer output in real Chrome", () => {
 			return out;
 		}, table);
 		expect(unfolded).toEqual([]);
+	}, 600000);
+
+	it("should only drop an empty attribute the engine reads back as absent", async () => {
+		// `removeEmptyAttributes` drops each of these when its value is empty. That
+		// is unobservable only where the IDL member reads the same as with no
+		// attribute at all — which is why an event handler is not in the table:
+		// an empty body still compiles, so it reads back a function, not null.
+		const observable = await page.evaluate(
+			(names) => {
+				/**
+				 * @param {string} attribute the attribute name
+				 * @param {boolean} set whether to give it the empty value
+				 * @returns {[string | undefined, unknown]} the IDL member and its value
+				 */
+				const readBack = (attribute, set) => {
+					// `<a>` reflects the widest set of them; the rest read as undefined
+					// here and are skipped rather than guessed at.
+					const node = document.createElement("a");
+					if (set) node.setAttribute(attribute, "");
+					document.body.append(node);
+					/** @type {string | undefined} */
+					let property;
+					for (
+						let proto = Object.getPrototypeOf(node);
+						proto !== null && property === undefined;
+						proto = Object.getPrototypeOf(proto)
+					) {
+						for (const name of Object.getOwnPropertyNames(proto)) {
+							if (name.toLowerCase() === attribute) {
+								property = name;
+								break;
+							}
+						}
+					}
+					const reflected =
+						property === undefined
+							? undefined
+							: /** @type {Record<string, unknown>} */ (
+									/** @type {unknown} */ (node)
+								)[property];
+					node.remove();
+					return [property, String(reflected)];
+				};
+				/** @type {string[]} */
+				const out = [];
+				for (const name of names) {
+					const [property, empty] = readBack(name, true);
+					if (property === undefined) continue;
+					const [, absent] = readBack(name, false);
+					if (empty !== absent) out.push(`${name}: ${empty} vs ${absent}`);
+				}
+				return out;
+			},
+			[...EMPTY_REMOVABLE_ATTRIBUTES]
+		);
+		expect(observable).toEqual([]);
 	}, 600000);
 
 	it("should build the same CSSOM from a stylesheet and its minified form", async () => {

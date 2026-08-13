@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Fold an enumerated attribute value to lower case, drop a repeated token from a list the DOM reads as a set, keep the newline after an empty `<pre>` / `<textarea>`, and add the `optimization.minimize.html` options `collapseWhitespace`, `mergeStyles`, `minifyConditionalComments`, `preserveComments`, `removeEmptyAttributes` (which drops an empty token list and an empty event handler too), `removeEmptyElements`, `removeRedundantAttributes`, `sortAttributes` and `sortTokenLists`.
+Minify HTML further: leave out the implied `<html>` tag and any optional end tag nothing prints behind, print an empty attribute value bare, drop an empty attribute and a run of nested empty elements, fold an enumerated value to lower case, and add the `optimization.minimize.html` options `collapseWhitespace`, `mergeStyles`, `minifyConditionalComments`, `preserveComments`, `removeEmptyAttributes`, `removeEmptyElements`, `removeImpliedTags`, `removeRedundantAttributes`, `sortAttributes` and `sortTokenLists`.
