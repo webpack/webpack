@@ -226,6 +226,8 @@
     "rowspan",
     "xrrggbb",
     "lightningcss",
+    "khtml",
+    "prefixable",
     "lintunit",
     "libuv",
     "loadername",

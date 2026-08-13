@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-vendor-prefixes minimize-vendor-prefixes should compile 1`] = `
+Array [
+  "/*! chrome 40 and firefox 40 read \`user-select\` only prefixed, and Safari has no
+   unprefixed form, so \`-webkit-\` and \`-moz-\` are added before it */.t01{-webkit-user-select:none;-moz-user-select:none;user-select:none}",
+  "/*! same for \`appearance\` */.t02{-webkit-appearance:none;-moz-appearance:none;appearance:none}",
+  "/*! all three read \`border-radius\` unprefixed, so the source \`-webkit-\` one is
+   dead weight and is dropped */.t03{border-radius:5px}",
+  "/*! prefixes the source already carries are not doubled */.t04{-webkit-user-select:none;-moz-user-select:none;user-select:none}",
+  "/*! a property no browser ever prefixed is untouched */.t05{color:red}",
+  "/*! an at-rule gets a prefixed copy the old targets need, before the original */@-webkit-keyframes spin{to{opacity:1}}@keyframes spin{to{opacity:1}}",
+  "/*! a pseudo-element too, keeping the source colons */.t06::-webkit-input-placeholder{color:#999}.t06::-moz-placeholder{color:#999}.t06::placeholder{color:#999}",
+]
+`;
