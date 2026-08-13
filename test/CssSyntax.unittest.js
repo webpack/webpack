@@ -4901,6 +4901,17 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 		);
 	});
 
+	it("splits a copy whose selectors take different spellings", () => {
+		// `::-webkit-input-placeholder` is Chrome 6 and `:-webkit-full-screen` is
+		// Chrome 15: a list of the two is nothing at all to Chrome 6 through 14,
+		// which drops a list whole over one selector it cannot parse.
+		expect(
+			minify("input::placeholder,:fullscreen{color:red}", ["chrome 40"])
+		).toBe(
+			"input::-webkit-input-placeholder{color:red}:-webkit-full-screen{color:red}:fullscreen,input::placeholder{color:red}"
+		);
+	});
+
 	it("drops a prefixed list its unprefixed twin follows", () => {
 		expect(
 			minify(
