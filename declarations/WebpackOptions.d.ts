@@ -2412,7 +2412,7 @@ export interface OptimizationMinimizeHtml {
 	 */
 	removeRedundantAttributes?: ("smart" | "all") | boolean;
 	/**
-	 * Print an element's attributes in name order. Nothing in HTML reads attribute order, so this only makes the same markup compress better across pages. Off by default: a script reading `element.attributes` back, or a snapshot of the emitted HTML, sees the new order.
+	 * Print an element's attributes in a fixed order: the document's commonest attribute names first, ties by name. Nothing in HTML reads attribute order, so this only makes the same markup compress better across pages — the run of attributes two elements share becomes the same run of bytes. Off by default: a script reading `element.attributes` back, or a snapshot of the emitted HTML, sees the new order.
 	 * @since 5.110.0
 	 */
 	sortAttributes?: boolean;

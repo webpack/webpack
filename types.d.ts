@@ -10242,7 +10242,7 @@ declare interface HtmlProcessOptions {
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 
 	/**
-	 * drop `class` / `id` / `style` / `dir` when empty, which the spec reads as their absence (default false)
+	 * drop an attribute whose empty value leaves it in the state its absence gives (default false)
 	 */
 	removeEmptyAttributes?: boolean;
 
@@ -10262,7 +10262,7 @@ declare interface HtmlProcessOptions {
 	mergeStyles?: boolean;
 
 	/**
-	 * print an element's attributes in name order, which nothing in HTML reads (default false)
+	 * print an element's attributes commonest name first, ties by name, which nothing in HTML reads (default false)
 	 */
 	sortAttributes?: boolean;
 
@@ -19857,7 +19857,7 @@ declare interface OptimizationMinimizeHtml {
 	removeRedundantAttributes?: boolean | "all" | "smart";
 
 	/**
-	 * Print an element's attributes in name order. Nothing in HTML reads attribute order, so this only makes the same markup compress better across pages. Off by default: a script reading `element.attributes` back, or a snapshot of the emitted HTML, sees the new order.
+	 * Print an element's attributes in a fixed order: the document's commonest attribute names first, ties by name. Nothing in HTML reads attribute order, so this only makes the same markup compress better across pages — the run of attributes two elements share becomes the same run of bytes. Off by default: a script reading `element.attributes` back, or a snapshot of the emitted HTML, sees the new order.
 	 * @since 5.110.0
 	 */
 	sortAttributes?: boolean;
