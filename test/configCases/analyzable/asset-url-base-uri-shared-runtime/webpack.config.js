@@ -1,9 +1,7 @@
 "use strict";
 
-// The shared chunk's runtime spans both entries, and they disagree about the base —
-// so the module in it must keep the runtime form even though entry `b` alone would
-// bake a base-less literal. Both answers have to reach the module hash, or one
-// code-generation job serves both runtimes and the wrong one wins.
+// The shared chunk's runtime spans entries that disagree about the base, so both
+// answers must reach the module hash or one code-generation job serves both.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

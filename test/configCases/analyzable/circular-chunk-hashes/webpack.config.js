@@ -1,8 +1,7 @@
 "use strict";
 
-// Two chunks that name each other cannot both take their name from their content —
-// each hash would feed the other. Baking either literal makes RealContentHashPlugin
-// throw `Circular hash dependency`, so the reference stays in the runtime form.
+// Two chunks naming each other cannot both be content-named — each hash feeds the
+// other, so baking either makes RealContentHashPlugin throw.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

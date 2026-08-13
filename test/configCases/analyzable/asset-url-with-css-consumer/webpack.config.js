@@ -1,8 +1,7 @@
 "use strict";
 
-// A css consumer drops the javascript wrapper and supplies an `asset-url` value built
-// from a placeholder only css and html assets are rendered with. Reaching javascript
-// it would never resolve, so the literal has to come from the name instead.
+// A css consumer leaves an `asset-url` value built from a placeholder only css and
+// html are rendered with, so the javascript literal comes from the name instead.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

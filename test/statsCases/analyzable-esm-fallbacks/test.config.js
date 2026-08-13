@@ -32,10 +32,8 @@ const CASES = {
 	// The hot require wraps `.ei` like `.e`, so an update still blocks on a chunk
 	// load in flight and HMR does not force the runtime form.
 	hmr: { file: "main.mjs", expect: "analyzable" },
-	// The entry reaches both copies from one depth, so only the chunk they share
-	// falls back — read that one rather than the entry. Two depths are carried by a
-	// per-asset stand-in; what blocks it here is that content-named chunks leave none
-	// to write into.
+	// Only the chunk both copies share falls back, and not for its depth: a per-asset
+	// stand-in carries that. Content-named chunks leave none to write into.
 	"shared-depths": {
 		file: /^flat\./,
 		expect: "fallback",
