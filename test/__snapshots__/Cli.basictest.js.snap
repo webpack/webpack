@@ -8915,6 +8915,44 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-description-relative-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Match the path of the module relative to the directory of the description file (usually package.json), i.e. './lib/button.js'. Always uses forward slashes.",
+        "multiple": true,
+        "path": "module.rules[].descriptionRelativePath",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Match the path of the module relative to the directory of the description file (usually package.json), i.e. './lib/button.js'. Always uses forward slashes.",
+        "multiple": true,
+        "path": "module.rules[].descriptionRelativePath",
+        "type": "string",
+      },
+    ],
+    "description": "Match the path of the module relative to the directory of the description file (usually package.json), i.e. './lib/button.js'. Always uses forward slashes.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-description-relative-path-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].descriptionRelativePath.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].descriptionRelativePath.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-enforce": Object {
     "configs": Array [
       Object {

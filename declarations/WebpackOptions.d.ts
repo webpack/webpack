@@ -1909,6 +1909,11 @@ export interface RuleSetRule {
 		[k: string]: RuleSetConditionOrConditions;
 	};
 	/**
+	 * Match the path of the module relative to the directory of the description file (usually package.json), i.e. './lib/button.js'. Always uses forward slashes.
+	 * @since 5.110.0
+	 */
+	descriptionRelativePath?: RuleSetConditionOrConditions;
+	/**
 	 * Enforce this rule as pre or post step.
 	 */
 	enforce?: "pre" | "post";

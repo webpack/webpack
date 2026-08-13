@@ -6925,6 +6925,7 @@ declare interface EffectData {
 	mimetype?: string;
 	dependency: string;
 	descriptionData?: JsonObjectTypes;
+	descriptionRelativePath?: string;
 	compiler?: string;
 	issuer: string;
 	issuerLayer: string;
@@ -24278,6 +24279,17 @@ declare interface RuleSetRule {
 	 * Match values of properties in the description file (usually package.json).
 	 */
 	descriptionData?: { [index: string]: RuleSetConditionOrConditions };
+
+	/**
+	 * Match the path of the module relative to the directory of the description file (usually package.json), i.e. './lib/button.js'. Always uses forward slashes.
+	 * @since 5.110.0
+	 */
+	descriptionRelativePath?:
+		| string
+		| RegExp
+		| ((value: string) => boolean)
+		| RuleSetLogicalConditions
+		| RuleSetCondition[];
 
 	/**
 	 * Enforce this rule as pre or post step.
