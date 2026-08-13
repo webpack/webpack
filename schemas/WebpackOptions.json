@@ -6103,6 +6103,15 @@
             "$ref": "#/definitions/RuleSetConditionOrConditions"
           }
         },
+        "descriptionRelativePath": {
+          "description": "Match the path of the module relative to the directory of the description file (usually package.json), i.e. './lib/button.js'. Always uses forward slashes.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionOrConditions"
+            }
+          ],
+          "added": "5.110.0"
+        },
         "enforce": {
           "description": "Enforce this rule as pre or post step.",
           "enum": ["pre", "post"]
