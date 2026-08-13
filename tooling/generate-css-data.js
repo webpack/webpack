@@ -76,9 +76,8 @@ const REPEAT_RANGE = /^\d+(,\s*\d*)?$/;
 // syntax, and there is nothing in the notation it could mean.
 const FOOTNOTE = /†/g;
 
-// A few entries write the bounds outside the type they annotate
-// (`path-length: none | <length> [0,∞]`), which is the same thing as
-// `<length [0,∞]>`; no group is ever a pair of bare bounds.
+// A few entries write the bounds outside the type (`<length> [0,∞]`), meaning
+// what `<length [0,∞]>` does; no group is ever a bare pair of bounds.
 const OUTSIDE_RANGE =
 	/^\s*\[\s*(-?(?:\d*\.?\d+[a-z%]*|∞))\s*,\s*(-?(?:\d*\.?\d+[a-z%]*|∞))\s*\]/;
 
