@@ -11,5 +11,11 @@ Array [
   "/*! a property no browser ever prefixed is untouched */.t05{color:red}",
   "/*! an at-rule gets a prefixed copy the old targets need, before the original */@-webkit-keyframes spin{to{opacity:1}}@keyframes spin{to{opacity:1}}",
   "/*! a pseudo-element too, keeping the source colons */.t06::-webkit-input-placeholder{color:#999}.t06::-moz-placeholder{color:#999}.t06::placeholder{color:#999}",
+  "/*! a selector list carries the copy for the selectors that need it, one
+   spelling per copy — an engine drops a whole list over one selector it cannot
+   parse */input.t07::-webkit-input-placeholder,textarea.t07::-webkit-input-placeholder{color:#999}input.t07::-moz-placeholder,textarea.t07::-moz-placeholder{color:#999}input.t07::placeholder,textarea.t07::placeholder{color:#999}",
+  "/*! a nested at-rule is prefixed against its own scope */@media screen{@-webkit-keyframes nested{to{opacity:1}}@keyframes nested{to{opacity:1}}.t08::-webkit-input-placeholder{color:#999}.t08::-moz-placeholder{color:#999}.t08::placeholder{color:#999}}",
+  "/*! a prefixed rule no target needs is dropped once its unprefixed twin turns
+   up, however far off that is — only IE ever read \`:-ms-fullscreen\` */.t09{color:red}:fullscreen{color:#999}",
 ]
 `;

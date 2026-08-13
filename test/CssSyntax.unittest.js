@@ -4693,10 +4693,12 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 		);
 	});
 
-	it("leaves a nested at-rule alone — its scope has no top-level twin", () => {
+	it("prefixes a nested at-rule against its own scope", () => {
 		expect(
 			minify("@media screen{@keyframes s{to{opacity:1}}}", ["chrome 40"])
-		).toBe("@media screen{@keyframes s{to{opacity:1}}}");
+		).toBe(
+			"@media screen{@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}}"
+		);
 	});
 
 	it("does not suppress a scoped copy from a top-level prefixed rule", () => {
@@ -4706,7 +4708,27 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 				["chrome 40"]
 			)
 		).toBe(
-			"@-webkit-keyframes s{to{opacity:1}}@media screen{@keyframes s{to{opacity:.3}}}"
+			"@-webkit-keyframes s{to{opacity:1}}@media screen{@-webkit-keyframes s{to{opacity:.3}}@keyframes s{to{opacity:.3}}}"
+		);
+	});
+
+	it("pairs a nested prefixed rule with the twin in its own scope", () => {
+		expect(
+			minify(
+				"@media screen{@keyframes s{to{opacity:1}}@-webkit-keyframes s{to{opacity:1}}}",
+				["chrome 130"]
+			)
+		).toBe("@media screen{@keyframes s{to{opacity:1}}}");
+	});
+
+	it("keeps a nested prefixed rule its twin follows — only a top-level rule is still a piece of its own", () => {
+		expect(
+			minify(
+				"@media screen{@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}}",
+				["chrome 130"]
+			)
+		).toBe(
+			"@media screen{@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}}"
 		);
 	});
 
@@ -4761,9 +4783,40 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 		).toBe("::placeholder{color:red}");
 	});
 
-	it("leaves a selector list alone — prefixing one would drop the whole list", () => {
+	it("copies only the selectors of a list that carry the pseudo", () => {
 		expect(minify(".a::placeholder,.b{color:red}", ["chrome 40"])).toBe(
-			".a::placeholder,.b{color:red}"
+			".a::-webkit-input-placeholder{color:red}.a::placeholder,.b{color:red}"
+		);
+	});
+
+	it("keeps a copy's own list together, one spelling at a time", () => {
+		expect(
+			minify("input::placeholder,textarea::placeholder{color:red}", [
+				"chrome 40",
+				"firefox 40"
+			])
+		).toBe(
+			"input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{color:red}input::-moz-placeholder,textarea::-moz-placeholder{color:red}input::placeholder,textarea::placeholder{color:red}"
+		);
+	});
+
+	it("drops a prefixed list its unprefixed twin follows", () => {
+		expect(
+			minify(
+				"input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{color:red}input::placeholder,textarea::placeholder{color:red}",
+				["chrome 130"]
+			)
+		).toBe("input::placeholder,textarea::placeholder{color:red}");
+	});
+
+	it("leaves a list mixing two engines' spellings alone", () => {
+		expect(
+			minify(
+				"input::-webkit-input-placeholder,textarea::-moz-placeholder{color:red}",
+				["chrome 130"]
+			)
+		).toBe(
+			"input::-webkit-input-placeholder,textarea::-moz-placeholder{color:red}"
 		);
 	});
 
@@ -4801,10 +4854,18 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 		);
 	});
 
-	it("leaves a nested rule alone — its scope has no top-level twin", () => {
+	it("prefixes a nested rule against its own scope", () => {
 		expect(
 			minify("@media screen{::placeholder{color:red}}", ["chrome 40"])
-		).toBe("@media screen{::placeholder{color:red}}");
+		).toBe(
+			"@media screen{::-webkit-input-placeholder{color:red}::placeholder{color:red}}"
+		);
+	});
+
+	it("prefixes a rule nested under another", () => {
+		expect(minify("a{&::placeholder{color:red}}", ["chrome 40"])).toBe(
+			"a{&::-webkit-input-placeholder{color:red}&::placeholder{color:red}}"
+		);
 	});
 
 	it("does nothing without a target list", () => {
@@ -4962,15 +5023,22 @@ describe("CssSyntax minify — vendor prefixes (a twin written first)", () => {
 		);
 	});
 
-	it("keeps one a rule stands between — the lookahead is the rule the writer holds", () => {
+	it("drops one its twin follows from further off", () => {
 		expect(
 			minify(
 				"@-webkit-keyframes s{to{opacity:1}}a{color:red}@keyframes s{to{opacity:1}}",
 				["chrome 130"]
 			)
-		).toBe(
-			"@-webkit-keyframes s{to{opacity:1}}a{color:red}@keyframes s{to{opacity:1}}"
-		);
+		).toBe("a{color:red}@keyframes s{to{opacity:1}}");
+	});
+
+	it("drops each of a run of prefixed at-rules its twins follow", () => {
+		expect(
+			minify(
+				"@-webkit-keyframes a{to{opacity:1}}@-webkit-keyframes b{to{opacity:0}}@keyframes a{to{opacity:1}}@keyframes b{to{opacity:0}}",
+				["chrome 130"]
+			)
+		).toBe("@keyframes a{to{opacity:1}}@keyframes b{to{opacity:0}}");
 	});
 
 	it("keeps a kept comment that stood between them", () => {

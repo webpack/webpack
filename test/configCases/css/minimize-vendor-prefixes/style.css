@@ -17,3 +17,17 @@
 @keyframes spin { to { opacity: 1 } }
 /*! a pseudo-element too, keeping the source colons */
 .t06::placeholder { color: #999 }
+/*! a selector list carries the copy for the selectors that need it, one
+   spelling per copy — an engine drops a whole list over one selector it cannot
+   parse */
+input.t07::placeholder, textarea.t07::placeholder { color: #999 }
+/*! a nested at-rule is prefixed against its own scope */
+@media screen {
+	@keyframes nested { to { opacity: 1 } }
+	.t08::placeholder { color: #999 }
+}
+/*! a prefixed rule no target needs is dropped once its unprefixed twin turns
+   up, however far off that is — only IE ever read `:-ms-fullscreen` */
+:-ms-fullscreen { color: #999 }
+.t09 { color: red }
+:fullscreen { color: #999 }
