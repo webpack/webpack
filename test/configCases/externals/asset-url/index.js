@@ -5,10 +5,12 @@ const path = __non_webpack_require__("path");
 
 const jsAsset = new URL("js-asset", import.meta.url);
 const jsAssetUrl = new URL("js-asset-url", import.meta.url);
+const jsCssUrl = new URL("js-css-url", import.meta.url);
 
 it("should resolve an asset external from javascript, whichever type it is", () => {
 	expect(jsAsset.toString()).toBe("https://example.test/js-asset.png");
 	expect(jsAssetUrl.toString()).toBe("https://example.test/js-asset-url.png");
+	expect(jsCssUrl.toString()).toBe("https://example.test/js-css-url.png");
 });
 
 it("should keep an asset external in the stylesheet, whichever type it is", () => {
@@ -20,4 +22,5 @@ it("should keep an asset external in the stylesheet, whichever type it is", () =
 
 	expect(css).toContain("url(https://example.test/css-asset.png)");
 	expect(css).toContain("url(https://example.test/css-asset-url.png)");
+	expect(css).toContain("url(https://example.test/css-css-url.png)");
 });

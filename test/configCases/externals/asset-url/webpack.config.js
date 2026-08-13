@@ -9,8 +9,10 @@ const PLUGIN_NAME = "AssertAssetExternalSourceTypesPlugin";
 const EXPECTED_SOURCE_TYPES = {
 	"css-asset": ["asset-url"],
 	"css-asset-url": ["asset-url"],
+	"css-css-url": ["asset-url"],
 	"js-asset": ["javascript"],
-	"js-asset-url": ["javascript"]
+	"js-asset-url": ["javascript"],
+	"js-css-url": ["javascript"]
 };
 
 /** @type {import("../../../../").Configuration} */
@@ -25,8 +27,11 @@ module.exports = {
 	externals: {
 		"css-asset": "asset https://example.test/css-asset.png",
 		"css-asset-url": "asset-url https://example.test/css-asset-url.png",
+		// TODO webpack 6 remove, `css-url` is the old spelling of `asset-url`
+		"css-css-url": "css-url https://example.test/css-css-url.png",
 		"js-asset": "asset https://example.test/js-asset.png",
-		"js-asset-url": "asset-url https://example.test/js-asset-url.png"
+		"js-asset-url": "asset-url https://example.test/js-asset-url.png",
+		"js-css-url": "css-url https://example.test/js-css-url.png"
 	},
 	plugins: [
 		/**

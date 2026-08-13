@@ -1,4 +1,5 @@
 body {
 	background: url("css-asset");
 	border-image: url("css-asset-url");
+	mask-image: url("css-css-url");
 }
