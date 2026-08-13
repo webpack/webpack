@@ -15,7 +15,9 @@ it("should match with a negated condition", function () {
 });
 
 it("should be unset when a match resource is used", function () {
-	expect(require("./virtual.js!=!fake-package/lib/button.js")).toBe("button");
+	expect(require("./virtual.js!=!fake-package/lib/button.js")).toBe(
+		"virtual undefined"
+	);
 });
 
 it("should be relative to the package the module itself belongs to", function () {

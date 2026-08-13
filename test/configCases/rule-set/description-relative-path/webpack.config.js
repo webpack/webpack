@@ -34,6 +34,13 @@ module.exports = {
 					loader: "./loader",
 					options: { value: `self ${data.descriptionRelativePath}` }
 				})
+			},
+			{
+				test: /virtual\.js$/,
+				use: (data) => ({
+					loader: "./loader",
+					options: { value: `virtual ${String(data.descriptionRelativePath)}` }
+				})
 			}
 		]
 	}
