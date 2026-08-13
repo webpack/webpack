@@ -9,9 +9,10 @@ const webpack = require("../../../../");
  * @param {number} index position of this config, so `index.js` finds its own bundle
  * @param {boolean} wrapper whether the asset module is expected to keep its wrapper
  * @param {import("../../../../").Configuration} extra per-case overrides
+ * @param {boolean=} inline whether the call site is expected to name the file itself
  * @returns {import("../../../../").Configuration} configuration
  */
-const base = (index, wrapper, extra = {}) => ({
+const base = (index, wrapper, extra = {}, inline = false) => ({
 	target: "node",
 	mode: "development",
 	devtool: false,
@@ -30,7 +31,8 @@ const base = (index, wrapper, extra = {}) => ({
 	plugins: [
 		new webpack.DefinePlugin({
 			__INDEX__: JSON.stringify(index),
-			__WRAPPER__: JSON.stringify(wrapper)
+			__WRAPPER__: JSON.stringify(wrapper),
+			__INLINE__: JSON.stringify(inline)
 		})
 	]
 });
@@ -45,6 +47,7 @@ module.exports = [
 	base(2, true, {
 		module: { parser: { javascript: { url: "relative" } } }
 	}),
-	// A reassigned public path is only knowable at runtime, so is the wrapper's value.
-	base(3, true, { entry: "./index-override.js" })
+	// A reassigned public path rules the literal out, but the call site concatenates
+	// the runtime one itself — going through the wrapper to do it adds nothing.
+	base(3, false, { entry: "./index-override.js" }, true)
 ];

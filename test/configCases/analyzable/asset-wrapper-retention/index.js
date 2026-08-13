@@ -25,3 +25,10 @@ if (__WRAPPER__) {
 		expect(hasWrapper()).toBe(false);
 	});
 }
+
+if (__INLINE__) {
+	it("should concatenate the runtime public path at the call site", () => {
+		const inlined = `${"__webpack_require__"}.p + ${JSON.stringify("asset.txt")}`;
+		expect(bundle().includes(inlined)).toBe(true);
+	});
+}

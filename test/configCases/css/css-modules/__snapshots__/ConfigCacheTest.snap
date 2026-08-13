@@ -8336,7 +8336,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 Object {
   "UsedClassName": "_7t7sag",
   "VARS": "--vZ1yis ZREh1J undefined BOGpjq",
-  "__webpack_modules__": 3,
+  "__webpack_modules__": 2,
   "animation": "I7H8FK",
   "animationName": "bvLAsC",
   "class": "Vx2ADA",
@@ -11146,7 +11146,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 Object {
   "UsedClassName": "_7t7sag",
   "VARS": "--vZ1yis ZREh1J undefined BOGpjq",
-  "__webpack_modules__": 3,
+  "__webpack_modules__": 2,
   "animation": "I7H8FK",
   "animationName": "bvLAsC",
   "class": "Vx2ADA",

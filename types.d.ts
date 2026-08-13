@@ -356,7 +356,8 @@ declare interface AllCodeGenerationSchemas {
 	 */
 	"share-init": [{ shareScope: string; initStage: number; init: string }];
 }
-type AnalyzableForm = "import" | "url" | "wasm" | "wasm-relative";
+type AnalyzableForm =
+	"import" | "url" | "url-inline" | "wasm" | "wasm-relative";
 type AnyLoaderContext = NormalModuleLoaderContext<any> &
 	LoaderRunnerLoaderContext<any> &
 	LoaderPluginLoaderContext &
@@ -24857,8 +24858,12 @@ declare abstract class RuntimeTemplate {
 	 * may be emitted — the one question every caller asks, in the form it is asking for:
 	 * - `"import"` — a literal `import("./chunk.js")` in place of `ensureChunk(id)`
 	 * - `"url"` — a literal `new URL(<file>, import.meta.url)`
+	 * - `"url-inline"` — whether such a reference names the file at the call site
 	 * - `"wasm"` — the same, fully baked for a wasm binary the runtime would name
 	 * - `"wasm-relative"` — a wasm path built at runtime under an `import.meta.url` base
+	 * `"url-inline"` differs from `"url"` only in taking the `.p + <file>` fallback as
+	 * an answer too — both name the file where it is used rather than through the
+	 * asset's javascript wrapper, which is what decides whether that wrapper is emitted.
 	 * A name code generation cannot settle may still be baked, through a stand-in the
 	 * deferred pass fills in. Not covered here, because only the reference can tell: a
 	 * chunk with no id, and one this compilation emits no javascript for.
