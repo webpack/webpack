@@ -1,8 +1,7 @@
 "use strict";
 
 // Three HTML conformance suites over optional submodules — `test/html5lib-tests`
-// for 1 and 3, `test/wpt` for 2; when one is absent its suite degrades to a
-// single no-op test.
+// for 1 and 3, `test/wpt` for 2; an absent one degrades its suite to a no-op.
 //
 // 1. "html5lib-tests webpack build" — compiles every tokenizer input as a
 //    webpack HTML entry (development + production) to confirm the full
@@ -11,8 +10,7 @@
 //    nothing needs to resolve — the point is no crash on malformed input.)
 // 2. "wpt tree-construction" — compares parseHtml's serialized tree to the
 //    expected one for every tree-construction case (only the scripting-enabled
-//    cases, which webpack does not run, are skipped). WPT owns this corpus
-//    since html5lib-tests dropped it in 224991e.
+//    cases, which webpack does not run, are skipped).
 // 3. "html5lib tokenizer" — compares the token stream `tokenize` reports to
 //    the expected one, for every tokenizer case in an initial state the public
 //    API can express (the rest are registered as skipped, with the reason).
@@ -231,8 +229,7 @@ describe("html5lib-tests webpack build", () => {
 // 2. tree-construction (parseHtml conformance)
 // ---------------------------------------------------------------------------
 
-// `html/syntax/parsing/resources` in WPT, whose `.dat` files keep html5lib's
-// format — the same corpus html5lib-tests carried until 224991e.
+// The corpus html5lib-tests carried until 224991e, in html5lib's `.dat` format.
 const treeDir = path.resolve(__dirname, "./wpt/html/syntax/parsing/resources");
 
 /** @type {Set<string>} intentional, documented exceptions (currently none) */
