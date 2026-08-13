@@ -38,9 +38,9 @@ module.exports = {
 		// Void elements are childless by definition; foreign content is not ours.
 		expect(page).toContain("<br><img src=x.png><input>");
 		expect(page).toContain("<svg></svg>");
-		// Emptiness is read off the source tree in one pass, so the parent that
-		// only became empty here is not itself dropped.
-		expect(page).toContain("<div></div>");
+		// Emptiness is read off the output, so the parent left empty by its
+		// child going goes too — and nothing of that pair is printed.
+		expect(page).not.toContain("<div></div>");
 		// A void element that belongs in the head states nothing without
 		// attributes, unlike every other void element.
 		expect(page).not.toContain("<meta><link><base>");

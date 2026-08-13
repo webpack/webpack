@@ -4112,6 +4112,79 @@ describe("SourceProcessor — optional end tags read the output", () => {
 	});
 });
 
+describe("SourceProcessor — an empty value is the bare name", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { mode: "minify" }).code;
+
+	it("prints any empty value as the name alone", () => {
+		expect(minify('<div title="" lang="" data-x=\'\'>x</div>')).toBe(
+			"<div title lang data-x>x</div>"
+		);
+		expect(minify('<iframe sandbox=""></iframe>')).toBe(
+			"<iframe sandbox></iframe>"
+		);
+	});
+
+	it("does it in foreign content too", () => {
+		// The tokenizer's after-attribute-name state reads the `/` as the tag's,
+		// not as part of the name, so a self-closing tag needs nothing extra.
+		expect(minify('<svg><rect x=""/></svg>')).toBe("<svg><rect x/></svg>");
+		expect(minify('<math><mi x=""></mi></math>')).toBe(
+			"<math><mi x></mi></math>"
+		);
+	});
+
+	it("leaves a value a reference only decodes to empty", () => {
+		// Read raw: what a reference decodes to is not the printer's business.
+		expect(minify('<div title="&#x20;">x</div>')).toContain("title=&#x20;");
+	});
+});
+
+describe("SourceProcessor — removeEmptyElements reads the output", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @param {object=} options extra print options
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html, options) =>
+		new SourceProcessor().process(html, {
+			mode: "minify",
+			removeEmptyElements: true,
+			...options
+		}).code;
+
+	it("drops a run of nested empties together", () => {
+		expect(minify("<div><div><div></div></div></div>")).toBe("");
+		expect(minify("<div><span></span></div><p><em></em></p>")).toBe("");
+	});
+
+	it("drops one left empty by a comment going", () => {
+		expect(minify("<div><!--c--></div>")).toBe("");
+	});
+
+	it("keeps one whose child still prints", () => {
+		expect(minify("<div><canvas></canvas></div>")).toBe(
+			"<div><canvas></canvas></div>"
+		);
+		expect(minify("<div><span>x</span></div>")).toBe(
+			"<div><span>x</span></div>"
+		);
+	});
+
+	it("follows the collapse tier for a whitespace child", () => {
+		expect(minify("<div> </div>")).toBe("<div> </div>");
+		expect(minify("<div> </div>", { collapseWhitespace: "all" })).toBe("");
+	});
+});
+
 describe("SourceProcessor — removeImpliedTags", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 

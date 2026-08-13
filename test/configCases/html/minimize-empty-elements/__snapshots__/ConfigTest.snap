@@ -10,7 +10,7 @@ exports[`ConfigTestCases html minimize-empty-elements minimize-empty-elements sh
 <table><tr><td><td>a</table>
 <br><img src=x.png><input>
 <svg></svg>
-<div></div>
+
 <div> </div>
 
 
