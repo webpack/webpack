@@ -10083,6 +10083,29 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-html-remove-implied-tags": Object {
+    "configs": Array [
+      Object {
+        "description": "How much of the \`<html>\` / \`<head>\` / \`<body>\` shell §13.1.2.4 lets the parser imply may be left out. Every other optional tag goes unconditionally — nothing can observe that — but these six are what a consumer reading the page with a regexp rather than a parser looks for. \`\\"smart\\"\`, the default, leaves out the one such a reader never matches: the \`<html>\` start tag, which is omittable only when it carries no attribute at all, so the \`<html lang=en>\` anyone greps for keeps its tag anyway. \`</html>\` stays with it, since a truncation check reads a page as complete by finding one. \`true\` (or \`\\"all\\"\`) leaves out all six, which is where a crawler matching on \`<body>\` stops finding one; \`false\` leaves out none. A tag also stays wherever the spec keeps it: an attribute to carry, a comment minifying does not drop, whitespace opening the element, or a \`meta\` / \`noscript\` / \`link\` / \`script\` / \`style\` / \`template\` element opening the body.",
+        "multiple": false,
+        "path": "optimization.minimize.html.removeImpliedTags",
+        "type": "enum",
+        "values": Array [
+          "smart",
+          "all",
+        ],
+      },
+      Object {
+        "description": "How much of the \`<html>\` / \`<head>\` / \`<body>\` shell §13.1.2.4 lets the parser imply may be left out. Every other optional tag goes unconditionally — nothing can observe that — but these six are what a consumer reading the page with a regexp rather than a parser looks for. \`\\"smart\\"\`, the default, leaves out the one such a reader never matches: the \`<html>\` start tag, which is omittable only when it carries no attribute at all, so the \`<html lang=en>\` anyone greps for keeps its tag anyway. \`</html>\` stays with it, since a truncation check reads a page as complete by finding one. \`true\` (or \`\\"all\\"\`) leaves out all six, which is where a crawler matching on \`<body>\` stops finding one; \`false\` leaves out none. A tag also stays wherever the spec keeps it: an attribute to carry, a comment minifying does not drop, whitespace opening the element, or a \`meta\` / \`noscript\` / \`link\` / \`script\` / \`style\` / \`template\` element opening the body.",
+        "multiple": false,
+        "path": "optimization.minimize.html.removeImpliedTags",
+        "type": "boolean",
+      },
+    ],
+    "description": "How much of the \`<html>\` / \`<head>\` / \`<body>\` shell §13.1.2.4 lets the parser imply may be left out. Every other optional tag goes unconditionally — nothing can observe that — but these six are what a consumer reading the page with a regexp rather than a parser looks for. \`\\"smart\\"\`, the default, leaves out the one such a reader never matches: the \`<html>\` start tag, which is omittable only when it carries no attribute at all, so the \`<html lang=en>\` anyone greps for keeps its tag anyway. \`</html>\` stays with it, since a truncation check reads a page as complete by finding one. \`true\` (or \`\\"all\\"\`) leaves out all six, which is where a crawler matching on \`<body>\` stops finding one; \`false\` leaves out none. A tag also stays wherever the spec keeps it: an attribute to carry, a comment minifying does not drop, whitespace opening the element, or a \`meta\` / \`noscript\` / \`link\` / \`script\` / \`style\` / \`template\` element opening the body.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "optimization-minimize-html-remove-redundant-attributes": Object {
     "configs": Array [
       Object {
@@ -10119,41 +10142,18 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "optimization-minimize-html-sort-class-names": Object {
+  "optimization-minimize-html-sort-token-lists": Object {
     "configs": Array [
       Object {
-        "description": "Print a \`class\` list in token order. Nothing in CSS reads token order, so this only makes the same markup compress better across pages. Off by default: a script reading \`className\` back sees the new order. Other token lists are left alone — \`ping\` is the order its requests go out in.",
+        "description": "Print every space-separated token list the DOM reads as a set — \`class\`, \`rel\`, \`part\`, \`sandbox\`, \`blocking\`, \`itemprop\` / \`itemref\` / \`itemtype\`, \`<output for>\` and \`<link sizes>\` — in token order. Nothing matching those reads order, so this only makes the same markup compress better across pages. Off by default: a script reading \`className\` or \`rel\` back sees the new order. The lists the DOM does not read as a set are left alone whatever this says — \`ping\` is the order its requests go out in and \`accesskey\` the order its keys are tried.",
         "multiple": false,
-        "path": "optimization.minimize.html.sortClassNames",
+        "path": "optimization.minimize.html.sortTokenLists",
         "type": "boolean",
       },
     ],
-    "description": "Print a \`class\` list in token order. Nothing in CSS reads token order, so this only makes the same markup compress better across pages. Off by default: a script reading \`className\` back sees the new order. Other token lists are left alone — \`ping\` is the order its requests go out in.",
+    "description": "Print every space-separated token list the DOM reads as a set — \`class\`, \`rel\`, \`part\`, \`sandbox\`, \`blocking\`, \`itemprop\` / \`itemref\` / \`itemtype\`, \`<output for>\` and \`<link sizes>\` — in token order. Nothing matching those reads order, so this only makes the same markup compress better across pages. Off by default: a script reading \`className\` or \`rel\` back sees the new order. The lists the DOM does not read as a set are left alone whatever this says — \`ping\` is the order its requests go out in and \`accesskey\` the order its keys are tried.",
     "multiple": false,
     "simpleType": "boolean",
-  },
-  "optimization-minimize-html-tag-omission": Object {
-    "configs": Array [
-      Object {
-        "description": "How much of the \`<html>\` / \`<head>\` / \`<body>\` shell §13.1.2.4 lets the parser imply may be left out. Every other optional tag goes unconditionally — nothing can observe that — but these six are what a consumer reading the page with a regexp rather than a parser looks for. \`\\"smart\\"\`, the default, leaves out the one such a reader never matches: the \`<html>\` start tag, which is omittable only when it carries no attribute at all, so the \`<html lang=en>\` anyone greps for keeps its tag anyway. \`</html>\` stays with it, since a truncation check reads a page as complete by finding one. \`true\` (or \`\\"all\\"\`) leaves out all six, which is where a crawler matching on \`<body>\` stops finding one; \`false\` leaves out none. A tag also stays wherever the spec keeps it: an attribute to carry, a comment minifying does not drop, whitespace opening the element, or a \`meta\` / \`noscript\` / \`link\` / \`script\` / \`style\` / \`template\` element opening the body.",
-        "multiple": false,
-        "path": "optimization.minimize.html.tagOmission",
-        "type": "enum",
-        "values": Array [
-          "smart",
-          "all",
-        ],
-      },
-      Object {
-        "description": "How much of the \`<html>\` / \`<head>\` / \`<body>\` shell §13.1.2.4 lets the parser imply may be left out. Every other optional tag goes unconditionally — nothing can observe that — but these six are what a consumer reading the page with a regexp rather than a parser looks for. \`\\"smart\\"\`, the default, leaves out the one such a reader never matches: the \`<html>\` start tag, which is omittable only when it carries no attribute at all, so the \`<html lang=en>\` anyone greps for keeps its tag anyway. \`</html>\` stays with it, since a truncation check reads a page as complete by finding one. \`true\` (or \`\\"all\\"\`) leaves out all six, which is where a crawler matching on \`<body>\` stops finding one; \`false\` leaves out none. A tag also stays wherever the spec keeps it: an attribute to carry, a comment minifying does not drop, whitespace opening the element, or a \`meta\` / \`noscript\` / \`link\` / \`script\` / \`style\` / \`template\` element opening the body.",
-        "multiple": false,
-        "path": "optimization.minimize.html.tagOmission",
-        "type": "boolean",
-      },
-    ],
-    "description": "How much of the \`<html>\` / \`<head>\` / \`<body>\` shell §13.1.2.4 lets the parser imply may be left out. Every other optional tag goes unconditionally — nothing can observe that — but these six are what a consumer reading the page with a regexp rather than a parser looks for. \`\\"smart\\"\`, the default, leaves out the one such a reader never matches: the \`<html>\` start tag, which is omittable only when it carries no attribute at all, so the \`<html lang=en>\` anyone greps for keeps its tag anyway. \`</html>\` stays with it, since a truncation check reads a page as complete by finding one. \`true\` (or \`\\"all\\"\`) leaves out all six, which is where a crawler matching on \`<body>\` stops finding one; \`false\` leaves out none. A tag also stays wherever the spec keeps it: an attribute to carry, a comment minifying does not drop, whitespace opening the element, or a \`meta\` / \`noscript\` / \`link\` / \`script\` / \`style\` / \`template\` element opening the body.",
-    "multiple": false,
-    "simpleType": "string",
   },
   "optimization-minimize-javascript": Object {
     "configs": Array [

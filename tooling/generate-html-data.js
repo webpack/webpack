@@ -1509,6 +1509,25 @@ const REWRITABLE_ATTRIBUTE_NAMES = [
 	])
 ].sort();
 
+// Derived: an empty token list is no tokens, which is exactly the state absence
+// gives — so every token-list attribute joins the hand-reasoned globals above.
+// `sandbox` is the one that cannot: its empty list is the most restrictive state
+// an `<iframe>` has, and absence is the least.
+const emptyRemovable = /** @type {string[]} */ (
+	/** @type {ParserTable} */
+	(
+		/** @type {ParserTable[]} */ (PARSER_TABLES).find(
+			([name]) => name === "EMPTY_REMOVABLE_ATTRIBUTES"
+		)
+	)[3]
+);
+for (const [name] of tokenLists) {
+	if (name !== "sandbox" && !emptyRemovable.includes(name)) {
+		emptyRemovable.push(name);
+	}
+}
+emptyRemovable.sort();
+
 // Derived: a void element that belongs in the head carries everything it does
 // in its attributes, so one with none does nothing at all. `removeEmptyElements`
 // may drop these even though the void guard otherwise keeps every void element.

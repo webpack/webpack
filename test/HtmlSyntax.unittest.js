@@ -4112,18 +4112,19 @@ describe("SourceProcessor — optional end tags read the output", () => {
 	});
 });
 
-describe("SourceProcessor — tagOmission", () => {
+describe("SourceProcessor — removeImpliedTags", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
 	const PAGE =
 		"<!doctype html><html><head><title>t</title></head><body><ul><li>a</li></ul></body></html>";
 
 	/**
-	 * @param {(boolean | "smart" | "all")=} tagOmission the mode
+	 * @param {(boolean | "smart" | "all")=} removeImpliedTags the mode
 	 * @returns {string} the minified serialization
 	 */
-	const minify = (tagOmission) =>
-		new SourceProcessor().process(PAGE, { mode: "minify", tagOmission }).code;
+	const minify = (removeImpliedTags) =>
+		new SourceProcessor().process(PAGE, { mode: "minify", removeImpliedTags })
+			.code;
 
 	it("leaves out only the <html> start tag by default", () => {
 		// `</html>` stays with it: a reader checking the page downloaded whole
@@ -4195,7 +4196,7 @@ describe("SourceProcessor — token list values", () => {
 	});
 });
 
-describe("SourceProcessor — sortAttributes / sortClassNames", () => {
+describe("SourceProcessor — sortAttributes / sortTokenLists", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
 	/**
@@ -4237,10 +4238,10 @@ describe("SourceProcessor — sortAttributes / sortClassNames", () => {
 
 	it("sorts a class list, and only `class`", () => {
 		expect(
-			minify('<div class="zz aa mm">x</div>', { sortClassNames: true })
+			minify('<div class="zz aa mm">x</div>', { sortTokenLists: true })
 		).toBe('<div class="aa mm zz">x</div>');
 		// `ping` is the order the requests go out in.
-		expect(minify('<a ping="/z /a">l</a>', { sortClassNames: true })).toBe(
+		expect(minify('<a ping="/z /a">l</a>', { sortTokenLists: true })).toBe(
 			'<a ping="/z /a">l</a>'
 		);
 	});
@@ -4257,8 +4258,8 @@ describe("SourceProcessor — sortAttributes / sortClassNames", () => {
 		expect(expected.split("\n").length).toBeGreaterThan(20);
 		for (const options of [
 			{ sortAttributes: true },
-			{ sortClassNames: true },
-			{ sortAttributes: true, sortClassNames: true }
+			{ sortTokenLists: true },
+			{ sortAttributes: true, sortTokenLists: true }
 		]) {
 			expect(canonical(minify(PAGE, options))).toBe(expected);
 		}
@@ -4268,8 +4269,8 @@ describe("SourceProcessor — sortAttributes / sortClassNames", () => {
 		const base = minify(PAGE);
 		for (const options of [
 			{ sortAttributes: true },
-			{ sortClassNames: true },
-			{ sortAttributes: true, sortClassNames: true }
+			{ sortTokenLists: true },
+			{ sortAttributes: true, sortTokenLists: true }
 		]) {
 			expect(minify(PAGE, options)).toHaveLength(base.length);
 		}

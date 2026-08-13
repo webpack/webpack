@@ -15,7 +15,9 @@ module.exports = {
 		);
 		expect(page).toMatchSnapshot();
 
-		expect(page).toContain('<div aa=2 class="aa mm zz" mm=3 zz=1>');
+		// Commonest names first — `aa`, `class` and `zz` occur twice in this page
+		// and `mm` once — with name order breaking the tie.
+		expect(page).toContain('<div aa=2 class="aa mm zz" zz=1 mm=3>');
 		expect(page).toContain('<div class="a b">');
 		// `ping` is a token list too, but it is the order the requests go out in.
 		expect(page).toContain('<a href=/x ping="/z /a">');

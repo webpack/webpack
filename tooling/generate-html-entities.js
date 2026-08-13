@@ -127,7 +127,9 @@ const renderRegion = (map) =>
 // look like a matched named character reference.
 // prettier-ignore
 // cspell:disable-next-line
-const HTML_ENTITIES = /** @type {Readonly<Record<string, string>>} */ (Object.freeze(Object.assign(Object.create(null), ${JSON.stringify(map)})));
+const HTML_ENTITIES = /** @type {Readonly<Record<string, string>>} */ (Object.freeze(Object.assign(Object.create(null), ${JSON.stringify(
+		map
+	)})));
 // #endregion
 `;
 
@@ -163,7 +165,9 @@ const HTML_ENTITIES = /** @type {Readonly<Record<string, string>>} */ (Object.fr
 		if (doWrite) {
 			fs.writeFileSync(TARGET_PATH, newContent);
 			console.error(
-				`${path.relative(process.cwd(), TARGET_PATH)} updated (${Object.keys(entities).length} entities)`
+				`${path.relative(process.cwd(), TARGET_PATH)} updated (${
+					Object.keys(entities).length
+				} entities)`
 			);
 		} else {
 			console.error(

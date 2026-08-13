@@ -264,8 +264,8 @@ const MINIFIERS = [
 				removeEmptyElements: true,
 				removeRedundantAttributes: "all",
 				sortAttributes: true,
-				sortClassNames: true,
-				tagOmission: true
+				sortTokenLists: true,
+				removeImpliedTags: true
 			}).code
 	],
 	[

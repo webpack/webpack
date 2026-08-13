@@ -2402,6 +2402,11 @@ export interface OptimizationMinimizeHtml {
 	 */
 	removeEmptyElements?: boolean;
 	/**
+	 * How much of the `<html>` / `<head>` / `<body>` shell §13.1.2.4 lets the parser imply may be left out. Every other optional tag goes unconditionally — nothing can observe that — but these six are what a consumer reading the page with a regexp rather than a parser looks for. `"smart"`, the default, leaves out the one such a reader never matches: the `<html>` start tag, which is omittable only when it carries no attribute at all, so the `<html lang=en>` anyone greps for keeps its tag anyway. `</html>` stays with it, since a truncation check reads a page as complete by finding one. `true` (or `"all"`) leaves out all six, which is where a crawler matching on `<body>` stops finding one; `false` leaves out none. A tag also stays wherever the spec keeps it: an attribute to carry, a comment minifying does not drop, whitespace opening the element, or a `meta` / `noscript` / `link` / `script` / `style` / `template` element opening the body.
+	 * @since 5.110.0
+	 */
+	removeImpliedTags?: ("smart" | "all") | boolean;
+	/**
 	 * Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one `getAttribute` and every attribute selector read differently, whichever tier dropped it. `true` (or `"smart"`) drops only markers on elements that render nothing — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>`, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — so no rule that styles the page stops applying, which is what `@swc/html` does by default. `"all"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.
 	 * @since 5.110.0
 	 */
@@ -2412,15 +2417,10 @@ export interface OptimizationMinimizeHtml {
 	 */
 	sortAttributes?: boolean;
 	/**
-	 * Print a `class` list in token order. Nothing in CSS reads token order, so this only makes the same markup compress better across pages. Off by default: a script reading `className` back sees the new order. Other token lists are left alone — `ping` is the order its requests go out in.
+	 * Print every space-separated token list the DOM reads as a set — `class`, `rel`, `part`, `sandbox`, `blocking`, `itemprop` / `itemref` / `itemtype`, `<output for>` and `<link sizes>` — in token order. Nothing matching those reads order, so this only makes the same markup compress better across pages. Off by default: a script reading `className` or `rel` back sees the new order. The lists the DOM does not read as a set are left alone whatever this says — `ping` is the order its requests go out in and `accesskey` the order its keys are tried.
 	 * @since 5.110.0
 	 */
-	sortClassNames?: boolean;
-	/**
-	 * How much of the `<html>` / `<head>` / `<body>` shell §13.1.2.4 lets the parser imply may be left out. Every other optional tag goes unconditionally — nothing can observe that — but these six are what a consumer reading the page with a regexp rather than a parser looks for. `"smart"`, the default, leaves out the one such a reader never matches: the `<html>` start tag, which is omittable only when it carries no attribute at all, so the `<html lang=en>` anyone greps for keeps its tag anyway. `</html>` stays with it, since a truncation check reads a page as complete by finding one. `true` (or `"all"`) leaves out all six, which is where a crawler matching on `<body>` stops finding one; `false` leaves out none. A tag also stays wherever the spec keeps it: an attribute to carry, a comment minifying does not drop, whitespace opening the element, or a `meta` / `noscript` / `link` / `script` / `style` / `template` element opening the body.
-	 * @since 5.110.0
-	 */
-	tagOmission?: ("smart" | "all") | boolean;
+	sortTokenLists?: boolean;
 }
 /**
  * Options handed as-is to the JavaScript minimizer (terser-compatible). Defaults to `{ compress: { passes: 2 } }`.

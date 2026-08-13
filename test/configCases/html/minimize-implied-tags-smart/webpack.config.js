@@ -11,7 +11,7 @@ module.exports = {
 		rules: [{ test: /\.html$/, type: "html" }]
 	},
 	optimization: {
-		minimize: { html: { tagOmission: "smart" } },
+		minimize: { html: { removeImpliedTags: "smart" } },
 		minimizer: ["..."]
 	},
 	experiments: { html: true }

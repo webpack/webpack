@@ -81,7 +81,7 @@ let cssCorpus;
 /** @type {Fixture[]} */
 let htmlCorpus;
 /** @type {Fixture[]} */
-let htmlCorpusTagOmission;
+let htmlCorpusAllImpliedTags;
 /** @type {Fixture[]} */
 let htmlCorpusSmartTags;
 /** @type {Promise<void> | undefined} */
@@ -106,16 +106,16 @@ const buildCorpora = () => {
 					/** @type {{ code: string }} */
 					(new HtmlSourceProcessor().process(source, { mode: "minify" })).code
 			);
-			// `tagOmission` leaves out a tag the parser puts back, so it is the one
-			// option whose whole claim is that the DOM does not notice.
-			htmlCorpusTagOmission = await buildCorpus(
+			// `removeImpliedTags` leaves out a tag the parser puts back, so it is
+			// the one option whose whole claim is that the DOM does not notice.
+			htmlCorpusAllImpliedTags = await buildCorpus(
 				".html",
 				(source) =>
 					/** @type {{ code: string }} */
 					(
 						new HtmlSourceProcessor().process(source, {
 							mode: "minify",
-							tagOmission: true
+							removeImpliedTags: true
 						})
 					).code
 			);
@@ -126,7 +126,7 @@ const buildCorpora = () => {
 					(
 						new HtmlSourceProcessor().process(source, {
 							mode: "minify",
-							tagOmission: "smart"
+							removeImpliedTags: "smart"
 						})
 					).code
 			);
@@ -1366,10 +1366,10 @@ describe("printer output in real Chrome", () => {
 	}, 600000);
 
 	it.each([
-		["true", () => htmlCorpusTagOmission],
+		["true", () => htmlCorpusAllImpliedTags],
 		["smart", () => htmlCorpusSmartTags]
 	])(
-		"should build the same DOM with tagOmission %s",
+		"should build the same DOM with removeImpliedTags %s",
 		async (_mode, corpus) => {
 			const collected = await page.evaluate((cases) => {
 				const { htmlFacets } = /** @type {{ __eq: PageHelpers }} */ (
