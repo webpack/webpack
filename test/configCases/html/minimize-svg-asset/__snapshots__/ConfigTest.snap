@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html minimize-svg-asset minimize-svg-asset should compile 1`] = `"<svg xmlns=\\"http://www.w3.org/2000/svg\\" viewBox=\\"0 0 10 10\\"><rect x=\\"1\\" y=\\"2\\" width=\\"3\\" fill=\\"#ff0000\\" class=\\"\\"/><text>tom &amp; jerry, 1 &lt; 2</text><style>text{fill:red}</style><script><![CDATA[if (0 < 1) {}]]></script><foreignObject><p xmlns=\\"http://www.w3.org/1999/xhtml\\">a</p><p xmlns=\\"http://www.w3.org/1999/xhtml\\">b</p></foreignObject></svg>"`;

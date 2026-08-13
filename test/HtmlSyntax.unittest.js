@@ -8807,3 +8807,56 @@ describe("SourceProcessor — reusing work across a print", () => {
 		expect(second).toBe(first);
 	});
 });
+
+describe("SourceProcessor — xml", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} markup input markup
+	 * @param {boolean} xml whether to print XML
+	 * @returns {string} the minified serialization
+	 */
+	const print = (markup, xml) =>
+		new SourceProcessor().process(markup, { mode: "minify", xml }).code;
+
+	it("quotes every attribute value and keeps every attribute's own", () => {
+		const svg =
+			'<svg xmlns="http://www.w3.org/2000/svg"><rect fill="red" class=""/></svg>';
+		expect(print(svg, false)).toBe(
+			"<svg xmlns=http://www.w3.org/2000/svg><rect fill=red class/></svg>"
+		);
+		expect(print(svg, true)).toBe(svg);
+	});
+
+	it("escapes every ampersand, not only the ones opening a reference", () => {
+		expect(print("<svg><text>a &amp; b &s c</text></svg>", true)).toBe(
+			"<svg><text>a &amp; b &amp;s c</text></svg>"
+		);
+	});
+
+	it("escapes the `>` that would close a CDATA section", () => {
+		expect(print("<svg><text>a ]]&gt; b</text></svg>", true)).toBe(
+			"<svg><text>a ]]&gt; b</text></svg>"
+		);
+	});
+
+	it("puts a script or style body back in a CDATA section when it needs one", () => {
+		expect(
+			print("<svg><script><![CDATA[if(a<b){}]]></script></svg>", true)
+		).toBe("<svg><script><![CDATA[if(a<b){}]]></script></svg>");
+		expect(print("<svg><script>var a=1</script></svg>", true)).toBe(
+			"<svg><script>var a=1</script></svg>"
+		);
+	});
+
+	it("keeps the end tags XML has no way to imply", () => {
+		const svg = "<svg><foreignObject><p>a</p><p>b</p></foreignObject></svg>";
+		expect(print(svg, true)).toBe(svg);
+	});
+
+	it("closes a void element, which XML gives no end tag", () => {
+		expect(print("<svg><foreignObject><br/></foreignObject></svg>", true)).toBe(
+			"<svg><foreignObject><br/></foreignObject></svg>"
+		);
+	});
+});
