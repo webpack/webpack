@@ -108,7 +108,8 @@ __WEBPACK_EXTERNAL_MODULE_externals1_v__;
 /******/ let __webpack_exports__ = __webpack_require__(\\"./entry.js\\");
 /******/ const __webpack_exports__entry1 = __webpack_exports__.entry1;
 /******/ const __webpack_exports__entry2 = __webpack_exports__.entry2;
-/******/ export { __webpack_exports__entry1 as entry1, __webpack_exports__entry2 as entry2, __webpack_exports__ as default };
+/******/ export { __webpack_exports__entry1 as entry1, __webpack_exports__entry2 as entry2 };
+/******/ export default __webpack_exports__;
 /******/ 
 "
 `;
@@ -221,7 +222,8 @@ __WEBPACK_EXTERNAL_MODULE_externals1_v__;
 /******/ let __webpack_exports__ = __webpack_require__(\\"./entry.js\\");
 /******/ const __webpack_exports__entry1 = __webpack_exports__.entry1;
 /******/ const __webpack_exports__entry2 = __webpack_exports__.entry2;
-/******/ export { __webpack_exports__entry1 as entry1, __webpack_exports__entry2 as entry2, __webpack_exports__ as default };
+/******/ export { __webpack_exports__entry1 as entry1, __webpack_exports__entry2 as entry2 };
+/******/ export default __webpack_exports__;
 /******/ 
 "
 `;
@@ -334,7 +336,8 @@ __WEBPACK_EXTERNAL_MODULE_externals1_v__;
 /******/ let __webpack_exports__ = __webpack_require__(\\"./entry.js\\");
 /******/ const __webpack_exports__entry1 = __webpack_exports__.entry1;
 /******/ const __webpack_exports__entry2 = __webpack_exports__.entry2;
-/******/ export { __webpack_exports__entry1 as entry1, __webpack_exports__entry2 as entry2, __webpack_exports__ as default };
+/******/ export { __webpack_exports__entry1 as entry1, __webpack_exports__entry2 as entry2 };
+/******/ export default __webpack_exports__;
 /******/ 
 "
 `;
@@ -447,7 +450,8 @@ __WEBPACK_EXTERNAL_MODULE_externals1_v__;
 /******/ let __webpack_exports__ = __webpack_require__(\\"./entry.js\\");
 /******/ const __webpack_exports__entry1 = __webpack_exports__.entry1;
 /******/ const __webpack_exports__entry2 = __webpack_exports__.entry2;
-/******/ export { __webpack_exports__entry1 as entry1, __webpack_exports__entry2 as entry2, __webpack_exports__ as default };
+/******/ export { __webpack_exports__entry1 as entry1, __webpack_exports__entry2 as entry2 };
+/******/ export default __webpack_exports__;
 /******/ 
 "
 `;
