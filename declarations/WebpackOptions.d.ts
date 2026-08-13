@@ -2392,7 +2392,7 @@ export interface OptimizationMinimizeHtml {
 	 */
 	preserveComments?: (RegExp | string)[];
 	/**
-	 * Drop `class`, `id`, `style` and `dir` when their value is empty or only whitespace, which is the state the spec also gives their absence. Off by default: an attribute selector matches on presence, so `[class]` stops matching. `title` and `lang` are never dropped even when empty — the spec gives an empty value of either a meaning absence does not have.
+	 * Drop an attribute whose empty or all-whitespace value leaves it in the state its absence gives: `class`, `id`, `style`, `dir`, `for`, `accesskey`, `itemprop`, `itemref`, `itemtype`, and every attribute reflecting a token list (`rel`, `ping`, `headers`, `part`, `sizes`, `blocking`) — an empty list is no tokens. Off by default: an attribute selector matches on presence, so `[class]` stops matching. Never dropped: `title` and `lang`, whose empty value means what absence does not; `sandbox`, whose empty list is the most restrictive state an `<iframe>` has; and an event handler, whose empty body still compiles to a function where absence reads null.
 	 * @since 5.110.0
 	 */
 	removeEmptyAttributes?: boolean;
