@@ -4649,7 +4649,7 @@ describe("CssSyntax minify — vendor prefixes (values)", () => {
 
 	it("adds the spellings a target needs for a keyword value", () => {
 		expect(minify("a{width:max-content}", ["chrome 40", "firefox 40"])).toBe(
-			"a{width:-webkit-max-content;width:-moz-max-content;width:max-content}"
+			"a{width:-moz-max-content;width:-webkit-max-content;width:max-content}"
 		);
 	});
 
@@ -4692,6 +4692,26 @@ describe("CssSyntax minify — vendor prefixes (values)", () => {
 	it("leaves a value that is not the keyword alone", () => {
 		expect(minify("a{width:calc(1px + 1em)}", ["chrome 40"])).toBe(
 			"a{width:calc(1px + 1em)}"
+		);
+	});
+
+	it("carries a spelling across the properties of one value grammar", () => {
+		// BCD files `-webkit-max-content` under `width` and not under `height`,
+		// which is the same value read by the same parser — as `block-size` is
+		// `<'width'>` itself.
+		expect(minify("a{height:max-content}", ["chrome 40"])).toBe(
+			"a{height:-webkit-max-content;height:max-content}"
+		);
+		expect(minify("a{block-size:max-content}", ["firefox 50"])).toBe(
+			"a{block-size:-moz-max-content;block-size:max-content}"
+		);
+	});
+
+	it("does not take a spelling that stands for another keyword", () => {
+		// `-webkit-fill-available` is WebKit's `stretch`, which BCD files under
+		// `fit-content` as well; it would fill the container rather than shrink.
+		expect(minify("a{width:fit-content}", ["chrome 40"])).toBe(
+			"a{width:-webkit-fit-content;width:fit-content}"
 		);
 	});
 

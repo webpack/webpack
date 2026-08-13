@@ -3808,9 +3808,20 @@ const PROPERTY_SPELLING_EXCLUSIONS = new Map([
 	["order", ["-ms-"]]
 ]);
 
+// A vendor spelling BCD files under a keyword it does not spell, by keyword —
+// the grammar it belongs to decides these, not the property. Each carries why.
+const VALUE_SPELLING_EXCLUSIONS = new Map([
+	// `-webkit-fill-available` is WebKit's `stretch`, which fills the container;
+	// `fit-content` shrinks to the content. BCD files it under both, and taking it
+	// for `fit-content` lays the box out the other way round rather than the same
+	// way under an older name. Neither autoprefixer nor lightningcss reaches for
+	// it there either.
+	["fit-content", ["-webkit-fill-available"]]
+]);
+
 // A value whose vendor spelling is not the same value spelled another way, which
 // no dataset states — each carries why. Everything else is read from BCD.
-const VALUE_SPELLING_EXCLUSIONS = new Map([
+const VALUE_KEYWORD_EXCLUSIONS = new Map([
 	// IE's `-ms-grid` is the 2011 grid, whose tracks and placement are their own
 	// prefixed properties: a copy of the declaration alone lays the box out by a
 	// different algorithm rather than the same one under an older name. It is why
@@ -3828,48 +3839,110 @@ const VALUE_SPELLING_EXCLUSIONS = new Map([
  * @returns {[string, [string, [string, [string, number, number][]][]][]][]} the table, sorted
  */
 const collectPrefixedValues = () => {
-	/** @type {[string, [string, [string, [string, number, number][]][]][]][]} */
-	const table = [];
+	// What each property accepts, and what BCD records for those of its values
+	// some engine spelled its own way.
+	/** @type {Map<string, { keywords: string[], values: Map<string, [string, [string, number, number][]][]> }>} */
+	const read = new Map();
 	for (const [property, node] of Object.entries(bcd.css.properties)) {
 		if (property.startsWith("__")) continue;
 		const entry = /** @type {PartialPropertyTable} */ (properties)[property];
 		if (!entry || !entry.syntax) continue;
-		const excluded = VALUE_SPELLING_EXCLUSIONS.get(property);
+		const keywords = lowerSorted(acceptedValues(entry.syntax).keywords);
+		if (keywords.length === 0) continue;
 		// The engines whose prefix the property itself already carries: BCD files
 		// "IE read this value under `-ms-touch-action`" on the value as well, and a
 		// copy spelling the value instead of the property says nothing an engine
-		// reads.
+		// reads. Dropped here rather than at the end, so what the property's own
+		// spelling stands for cannot travel to the rest of its grammar.
 		const propertyEngines = new Set(
 			(collectPrefixes(node.__compat, property, false) || []).map(
 				([spelling]) =>
 					/** @type {RegExpExecArray} */ (/^(-[a-z]+-)/.exec(spelling))[1]
 			)
 		);
-		/** @type {[string, [string, [string, number, number][]][]][]} */
-		const values = [];
-		/** @type {Set<string> | null} */
-		let keywords = null;
+		/** @type {Map<string, [string, [string, number, number][]][]>} */
+		const values = new Map();
 		for (const [value, sub] of Object.entries(node)) {
 			if (value === "__compat") continue;
 			const compat = /** @type {BcdNode} */ (sub).__compat;
 			if (!compat) continue;
-			if (keywords === null) {
-				keywords = new Set(lowerSorted(acceptedValues(entry.syntax).keywords));
-			}
 			const keyword = value.toLowerCase();
-			if (!keywords.has(keyword)) continue;
-			if (excluded !== undefined && excluded.includes(keyword)) continue;
+			if (!keywords.includes(keyword)) continue;
 			const spellings = (collectPrefixes(compat, value, true) || []).filter(
 				([spelling]) =>
 					!propertyEngines.has(
 						/** @type {RegExpExecArray} */ (/^(-[a-z]+-)/.exec(spelling))[1]
 					)
 			);
+			if (spellings.length !== 0) values.set(keyword, spellings);
+		}
+		read.set(property, { keywords, values });
+	}
+	// Properties accepting exactly the same keywords are one value grammar —
+	// `block-size` is `<'width'>` and `height` expands to what `width` does — so a
+	// spelling one of them records is the grammar's, not that property's. BCD
+	// files `-webkit-max-content` under `width` and not under `height`, which is
+	// the same value read by the same parser.
+	/** @type {Map<string, Map<string, Map<string, Map<string, [number, number]>>>>} */
+	const shared = new Map();
+	for (const [, { keywords, values }] of read) {
+		const grammar = keywords.join(" ");
+		let byKeyword = shared.get(grammar);
+		if (byKeyword === undefined) {
+			byKeyword = new Map();
+			shared.set(grammar, byKeyword);
+		}
+		for (const [keyword, spellings] of values) {
+			let bySpelling = byKeyword.get(keyword);
+			if (bySpelling === undefined) {
+				bySpelling = new Map();
+				byKeyword.set(keyword, bySpelling);
+			}
+			for (const [spelling, windows] of spellings) {
+				let browsers = bySpelling.get(spelling);
+				if (browsers === undefined) {
+					browsers = new Map();
+					bySpelling.set(spelling, browsers);
+				}
+				for (const [browser, from, to] of windows) {
+					const existing = browsers.get(browser);
+					browsers.set(
+						browser,
+						existing === undefined
+							? [from, to]
+							: [Math.min(existing[0], from), Math.max(existing[1], to)]
+					);
+				}
+			}
+		}
+	}
+	/** @type {[string, [string, [string, [string, number, number][]][]][]][]} */
+	const table = [];
+	for (const [property, { keywords }] of read) {
+		const byKeyword =
+			/** @type {Map<string, Map<string, Map<string, [number, number]>>>} */ (
+				shared.get(keywords.join(" "))
+			);
+		const excluded = VALUE_KEYWORD_EXCLUSIONS.get(property);
+		/** @type {[string, [string, [string, number, number][]][]][]} */
+		const values = [];
+		for (const keyword of keywords) {
+			const bySpelling = byKeyword.get(keyword);
+			if (bySpelling === undefined) continue;
+			if (excluded !== undefined && excluded.includes(keyword)) continue;
+			const wrong = VALUE_SPELLING_EXCLUSIONS.get(keyword);
+			/** @type {[string, [string, number, number][]][]} */
+			const spellings = [];
+			for (const [spelling, browsers] of bySpelling) {
+				if (wrong !== undefined && wrong.includes(spelling)) continue;
+				spellings.push([
+					spelling,
+					[...browsers].map(([browser, [from, to]]) => [browser, from, to])
+				]);
+			}
 			if (spellings.length !== 0) values.push([keyword, spellings]);
 		}
-		if (values.length !== 0) {
-			table.push([property, values.sort((a, b) => (a[0] < b[0] ? -1 : 1))]);
-		}
+		if (values.length !== 0) table.push([property, values]);
 	}
 	return table.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };

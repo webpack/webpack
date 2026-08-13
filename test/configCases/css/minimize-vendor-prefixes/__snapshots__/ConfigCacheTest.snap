@@ -17,7 +17,7 @@ Array [
   "/*! a nested at-rule is prefixed against its own scope */@media screen{@-webkit-keyframes nested{to{opacity:1}}@keyframes nested{to{opacity:1}}.t08::-webkit-input-placeholder{color:#999}.t08::-moz-placeholder{color:#999}.t08::placeholder{color:#999}}",
   "/*! a prefixed rule no target needs is dropped once its unprefixed twin turns
    up, however far off that is — only IE ever read \`:-ms-fullscreen\` */.t09{color:red}:-webkit-full-screen{color:#999}:-moz-full-screen{color:#999}:fullscreen{color:#999}",
-  "/*! a value an engine spells its own way carries copies like a property does */.t10{width:-webkit-max-content;width:-moz-max-content;width:max-content}",
+  "/*! a value an engine spells its own way carries copies like a property does */.t10{width:-moz-max-content;width:-webkit-max-content;width:max-content}",
   "/*! and a value spelling no target needs is dropped, like a property's */.t11{display:flex}",
 ]
 `;
