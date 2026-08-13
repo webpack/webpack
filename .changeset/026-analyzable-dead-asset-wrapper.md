@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Drop the asset module wrapper and chunk handlers that nothing reads.
+Stop emitting runtime helpers, chunk state and module wrappers that nothing reads.

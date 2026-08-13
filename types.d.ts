@@ -11475,6 +11475,15 @@ declare class JavascriptModulesPlugin {
 				string | void
 			>;
 			/**
+			 * Offers a module's rendered export-definition call to a consumer that can place
+			 * it better — a library whose entry exports the same bindings natively takes it
+			 * over and emits it only where the module is wrapped. Return true to take it.
+			 */
+			onDemandExportsGeneration: SyncBailHook<
+				[Module, RuntimeSpec, string, boolean],
+				boolean | void
+			>;
+			/**
 			 * @since 5.22.0
 			 */
 			embedInRuntimeBailout: SyncBailHook<
@@ -11555,6 +11564,15 @@ declare class JavascriptModulesPlugin {
 				string | void
 			>;
 			/**
+			 * Offers a module's rendered export-definition call to a consumer that can place
+			 * it better — a library whose entry exports the same bindings natively takes it
+			 * over and emits it only where the module is wrapped. Return true to take it.
+			 */
+			onDemandExportsGeneration: SyncBailHook<
+				[Module, RuntimeSpec, string, boolean],
+				boolean | void
+			>;
+			/**
 			 * @since 5.22.0
 			 */
 			embedInRuntimeBailout: SyncBailHook<
@@ -11633,6 +11651,15 @@ declare class JavascriptModulesPlugin {
 			inlineInRuntimeBailout: SyncBailHook<
 				[Module, Partial<RenderBootstrapContext>],
 				string | void
+			>;
+			/**
+			 * Offers a module's rendered export-definition call to a consumer that can place
+			 * it better — a library whose entry exports the same bindings natively takes it
+			 * over and emits it only where the module is wrapped. Return true to take it.
+			 */
+			onDemandExportsGeneration: SyncBailHook<
+				[Module, RuntimeSpec, string, boolean],
+				boolean | void
 			>;
 			/**
 			 * @since 5.22.0
@@ -11717,6 +11744,15 @@ declare class JavascriptModulesPlugin {
 				string | void
 			>;
 			/**
+			 * Offers a module's rendered export-definition call to a consumer that can place
+			 * it better — a library whose entry exports the same bindings natively takes it
+			 * over and emits it only where the module is wrapped. Return true to take it.
+			 */
+			onDemandExportsGeneration: SyncBailHook<
+				[Module, RuntimeSpec, string, boolean],
+				boolean | void
+			>;
+			/**
 			 * @since 5.22.0
 			 */
 			embedInRuntimeBailout: SyncBailHook<
@@ -11795,6 +11831,15 @@ declare class JavascriptModulesPlugin {
 			inlineInRuntimeBailout: SyncBailHook<
 				[Module, Partial<RenderBootstrapContext>],
 				string | void
+			>;
+			/**
+			 * Offers a module's rendered export-definition call to a consumer that can place
+			 * it better — a library whose entry exports the same bindings natively takes it
+			 * over and emits it only where the module is wrapped. Return true to take it.
+			 */
+			onDemandExportsGeneration: SyncBailHook<
+				[Module, RuntimeSpec, string, boolean],
+				boolean | void
 			>;
 			/**
 			 * @since 5.22.0
@@ -11877,6 +11922,15 @@ declare class JavascriptModulesPlugin {
 				string | void
 			>;
 			/**
+			 * Offers a module's rendered export-definition call to a consumer that can place
+			 * it better — a library whose entry exports the same bindings natively takes it
+			 * over and emits it only where the module is wrapped. Return true to take it.
+			 */
+			onDemandExportsGeneration: SyncBailHook<
+				[Module, RuntimeSpec, string, boolean],
+				boolean | void
+			>;
+			/**
 			 * @since 5.22.0
 			 */
 			embedInRuntimeBailout: SyncBailHook<
@@ -11954,6 +12008,15 @@ declare class JavascriptModulesPlugin {
 		inlineInRuntimeBailout: SyncBailHook<
 			[Module, Partial<RenderBootstrapContext>],
 			string | void
+		>;
+		/**
+		 * Offers a module's rendered export-definition call to a consumer that can place
+		 * it better — a library whose entry exports the same bindings natively takes it
+		 * over and emits it only where the module is wrapped. Return true to take it.
+		 */
+		onDemandExportsGeneration: SyncBailHook<
+			[Module, RuntimeSpec, string, boolean],
+			boolean | void
 		>;
 		/**
 		 * @since 5.22.0
@@ -14699,6 +14762,11 @@ declare interface KnownBuildMeta {
 	 * using in ModuleLibraryPlugin
 	 */
 	exportsSourceByRuntime?: Map<string, string>;
+
+	/**
+	 * export definitions `ModuleLibraryPlugin` took over, re-emitted only where the module is wrapped
+	 */
+	exportsBindingSourceByRuntime?: Map<string, string>;
 }
 declare interface KnownConcatenatedModuleBuildInfo {
 	fileDependencies?: LazySet<string>;
