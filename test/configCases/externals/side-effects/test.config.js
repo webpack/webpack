@@ -30,6 +30,21 @@ module.exports = {
 		},
 		get twin() {
 			return track("twin", {});
+		},
+		get "required-used-ext"() {
+			return track("required-used-ext", { used: "used" });
+		},
+		get "required-unused-ext"() {
+			return track("required-unused-ext", { unused: "unused" });
+		},
+		get "required-free-ext"() {
+			return track("required-free-ext", {});
+		},
+		get "reexport-used-ext"() {
+			return track("reexport-used-ext", { used: "used" });
+		},
+		get "reexport-unused-ext"() {
+			return track("reexport-unused-ext", { unused: "unused" });
 		}
 	},
 	moduleScope(scope) {

@@ -26,6 +26,26 @@ module.exports = {
 				sideEffects: true
 			},
 			"default-ext": "default-ext",
+			"required-used-ext": {
+				external: "required-used-ext",
+				sideEffects: false
+			},
+			"required-unused-ext": {
+				external: "required-unused-ext",
+				sideEffects: false
+			},
+			"required-free-ext": {
+				external: "required-free-ext",
+				sideEffects: false
+			},
+			"reexport-used-ext": {
+				external: "reexport-used-ext",
+				sideEffects: false
+			},
+			"reexport-unused-ext": {
+				external: "reexport-unused-ext",
+				sideEffects: false
+			},
 			// same target as `twin-ext`, so only `sideEffects` tells the two apart
 			"twin-free-ext": { external: "commonjs twin", sideEffects: false },
 			"twin-ext": "commonjs twin"
