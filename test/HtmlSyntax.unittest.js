@@ -4234,6 +4234,37 @@ describe("SourceProcessor — removeImpliedTags", () => {
 			"<p>a"
 		);
 	});
+
+	/**
+	 * @param {string} html markup
+	 * @returns {string} the minified serialization, every optional tag dropped
+	 */
+	const minifyAll = (html) =>
+		new SourceProcessor().process(html, {
+			mode: "minify",
+			removeImpliedTags: "all"
+		}).code;
+
+	it("keeps the tag whitespace behind it would re-parse into", () => {
+		// A space opening the body lands in the head without `<body>`, and one
+		// behind `</head>` in the body without it.
+		expect(
+			minifyAll("<html><head><title>t</title></head><body> text</body></html>")
+		).toBe("<title>t</title><body> text");
+		expect(
+			minifyAll("<html><head><title>t</title></head> <body>x</body></html>")
+		).toBe("<title>t</title></head>x");
+	});
+
+	it("looks past a comment it is about to drop", () => {
+		expect(
+			minifyAll("<html><head><title>t</title></head><!--c--><body>x</body>")
+		).toBe("<title>t</title>x");
+		// One it keeps stays behind the tag, so the tag stays too.
+		expect(
+			minifyAll("<html><head><title>t</title></head><!--[if IE]>i<![endif]-->x")
+		).toBe("<title>t</title></head><!--[if IE]>i<![endif]-->x");
+	});
 });
 
 describe("SourceProcessor — token list values", () => {
