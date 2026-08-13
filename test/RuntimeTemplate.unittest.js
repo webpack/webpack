@@ -260,7 +260,6 @@ describe("RuntimeTemplate.assignOr", () => {
 
 describe("RuntimeTemplate.supportsAnalyzable", () => {
 	/** @typedef {import("../lib/ChunkGraph")} ChunkGraph */
-	/** @typedef {import("../lib/Chunk")} Chunk */
 	/** @typedef {import("../lib/Compilation")} Compilation */
 	/** @typedef {import("../lib/Module")} Module */
 
@@ -271,16 +270,15 @@ describe("RuntimeTemplate.supportsAnalyzable", () => {
 	 * @param {object} options overrides
 	 * @param {Record<string, EXPECTED_ANY>=} options.output `output` overrides
 	 * @param {(string | false)=} options.devtool the configured devtool
-	 * @param {EXPECTED_ANY[]=} options.chunks the compilation's chunks
 	 * @param {string[]=} options.bailouts collects the recorded bailout reasons
 	 * @returns {RuntimeTemplate} runtime template
 	 */
-	const create = ({ output, devtool = false, chunks = [], bailouts = [] }) =>
+	const create = ({ output, devtool = false, bailouts = [] }) =>
 		new RuntimeTemplate(
 			/** @type {Compilation} */ (
 				/** @type {unknown} */ ({
 					options: { devtool, optimization: { realContentHash: true } },
-					chunks,
+					chunks: [],
 					modules: [],
 					moduleGraph: { getOptimizationBailout: () => bailouts }
 				})
