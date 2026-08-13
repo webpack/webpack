@@ -76,6 +76,79 @@ const createBrokenFs = (code) => ({
 	}
 });
 
+/**
+ * An ordinary POSIX file system: ENOENT when the parent is missing, EEXIST for
+ * a directory that is already there, success otherwise.
+ * @returns {FakeFs} the file system
+ */
+const createWorkingFs = () => {
+	const dirs = new Set(["/"]);
+	/** @type {string[]} */
+	const created = [];
+	/**
+	 * @param {string} p the directory to create
+	 * @returns {NodeJS.ErrnoException | undefined} the reported error, if any
+	 */
+	const mkdir = (p) => {
+		const parent = p.slice(0, p.lastIndexOf("/")) || "/";
+		if (!dirs.has(parent)) return createError("ENOENT", p);
+		if (dirs.has(p)) return createError("EEXIST", p);
+		dirs.add(p);
+		created.push(p);
+		return undefined;
+	};
+	return {
+		created,
+		mkdir: (p, callback) => {
+			const err = mkdir(p);
+			process.nextTick(() => callback(err));
+		},
+		mkdirSync: (p) => {
+			const err = mkdir(p);
+			if (err) throw err;
+		}
+	};
+};
+
+/**
+ * A file system on which the first mkdir of a directory whose parent exists
+ * succeeds and a second one fails with `code` — so the retry that follows the
+ * ENOENT recursion is the call that fails.
+ * @param {string} code the code the retry fails with
+ * @returns {FakeFs} the file system
+ */
+const createRetryFs = (code) => {
+	const dirs = new Set(["/"]);
+	/** @type {string[]} */
+	const created = [];
+	const attempted = new Set();
+	/**
+	 * @param {string} p the directory to create
+	 * @returns {NodeJS.ErrnoException | undefined} the reported error, if any
+	 */
+	const mkdir = (p) => {
+		const seen = attempted.has(p);
+		attempted.add(p);
+		const parent = p.slice(0, p.lastIndexOf("/")) || "/";
+		if (!dirs.has(parent)) return createError("ENOENT", p);
+		if (seen) return createError(code, p);
+		dirs.add(p);
+		created.push(p);
+		return undefined;
+	};
+	return {
+		created,
+		mkdir: (p, callback) => {
+			const err = mkdir(p);
+			process.nextTick(() => callback(err));
+		},
+		mkdirSync: (p) => {
+			const err = mkdir(p);
+			if (err) throw err;
+		}
+	};
+};
+
 /** @type {[string, (fs: FakeFs, p: string) => Promise<void>][]} */
 const IMPLEMENTATIONS = [
 	[
@@ -106,6 +179,14 @@ const IMPLEMENTATIONS = [
 describe("util/fs", () => {
 	for (const [name, run] of IMPLEMENTATIONS) {
 		describe(name, () => {
+			it("creates every missing directory of the path", async () => {
+				const fs = createWorkingFs();
+
+				await run(fs, "/a/b/c");
+
+				expect(fs.created).toEqual(["/a", "/a/b", "/a/b/c"]);
+			});
+
 			for (const code of ["EEXIST", "EISDIR"]) {
 				it(`creates every missing directory when mkdir reports ${code} instead of success`, async () => {
 					const fs = createFs(code);
@@ -128,6 +209,15 @@ describe("util/fs", () => {
 				await expect(
 					run(createBrokenFs("EACCES"), "/a/b")
 				).rejects.toMatchObject({ code: "EACCES" });
+			});
+
+			it("propagates an error from the retry after the recursion", async () => {
+				const fs = createRetryFs("EACCES");
+
+				await expect(run(fs, "/a/b")).rejects.toMatchObject({
+					code: "EACCES"
+				});
+				expect(fs.created).toEqual(["/a"]);
 			});
 
 			it("propagates ENOENT when not even the root can be created", async () => {
