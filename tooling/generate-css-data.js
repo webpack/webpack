@@ -76,6 +76,11 @@ const REPEAT_RANGE = /^\d+(,\s*\d*)?$/;
 // syntax, and there is nothing in the notation it could mean.
 const FOOTNOTE = /†/g;
 
+// A few entries write the bounds outside the type (`<length> [0,∞]`), meaning
+// what `<length [0,∞]>` does; no group is ever a bare pair of bounds.
+const OUTSIDE_RANGE =
+	/^\s*\[\s*(-?(?:\d*\.?\d+[a-z%]*|∞))\s*,\s*(-?(?:\d*\.?\d+[a-z%]*|∞))\s*\]/;
+
 /**
  * One value definition, parsed.
  */
@@ -315,7 +320,7 @@ class ValueSyntaxParser {
 	}
 
 	/**
-	 * `<length>`, `<length [0,∞]>`, `<'margin-top'>`.
+	 * `<length>`, `<length [0,∞]>`, `<length> [0,∞]`, `<'margin-top'>`.
 	 * @returns {TypeNode | PropertyNode} the reference
 	 */
 	_parseTypeReference() {
@@ -328,7 +333,17 @@ class ValueSyntaxParser {
 		}
 		const bracket = inner.indexOf("[");
 		if (bracket === -1) {
-			return { type: "type", name: inner, min: null, max: null };
+			const outside = OUTSIDE_RANGE.exec(this.source.slice(this.pos));
+			if (outside === null) {
+				return { type: "type", name: inner, min: null, max: null };
+			}
+			this.pos += outside[0].length;
+			return {
+				type: "type",
+				name: inner,
+				min: parseBound(outside[1]),
+				max: parseBound(outside[2])
+			};
 		}
 		const name = inner.slice(0, bracket).trim();
 		const range = inner.slice(bracket + 1, inner.lastIndexOf("]")).split(",");
