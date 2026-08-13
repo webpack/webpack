@@ -1,6 +1,7 @@
 "use strict";
 
-const { resolve } = require("../lib/config/browserslistTargetHandler");
+const path = require("path");
+const { load, resolve } = require("../lib/config/browserslistTargetHandler");
 
 describe("browserslist target", () => {
 	const tests = [
@@ -121,4 +122,28 @@ describe("browserslist target", () => {
 			expect(resolve(test)).toMatchSnapshot();
 		});
 	}
+
+	describe("load", () => {
+		const context = path.join(
+			__dirname,
+			"configCases",
+			"css",
+			"minimize-vendor-prefixes"
+		);
+
+		it("reads the config once for a target, and hands the same list back", () => {
+			const first = load(null, context);
+			expect(first).toEqual(["chrome 40", "firefox 40", "safari 17.0"]);
+			// The same list, not an equal one: several callers ask for one target —
+			// the default-target probe, its properties, the CSS minifier's browsers —
+			// and the minifier reads the identity to skip re-parsing the selection.
+			expect(load(null, context)).toBe(first);
+		});
+
+		it("keeps a query apart from the config it sits beside", () => {
+			expect(load("last 1 chrome version", context)).not.toBe(
+				load(null, context)
+			);
+		});
+	});
 });
