@@ -3,7 +3,7 @@
 exports[`StatsTestCases worker-public-path should print correct stats for worker-public-path 1`] = `
 "asset main-XXXXXXXXXXXXXXXXXXXX.js X KiB [emitted] [immutable] (name: main)
 asset 447-XXXXXXXXXXXXXXXXXXXX.js X bytes [emitted] [immutable]
-runtime modules X KiB 5 modules
+runtime modules X KiB 4 modules
 cacheable modules X bytes
   ./index.js X bytes [built] [code generated]
   ./worker.js X bytes [built] [code generated]
