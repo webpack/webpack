@@ -4183,6 +4183,27 @@ describe("SourceProcessor — removeEmptyElements reads the output", () => {
 		expect(minify("<div> </div>")).toBe("<div> </div>");
 		expect(minify("<div> </div>", { collapseWhitespace: "all" })).toBe("");
 	});
+
+	it("keeps one whose whitespace is data rather than layout", () => {
+		// A literal-text body is written as it is meant to be read, so whitespace
+		// there leaves the element non-empty at every tier.
+		for (const name of ["style", "script", "iframe", "noframes"]) {
+			const html = `<div><${name}> </${name}></div>`;
+			expect(minify(html, { collapseWhitespace: "all" })).toBe(html);
+		}
+		expect(
+			minify("<div><pre>  </pre></div>", { collapseWhitespace: "all" })
+		).toBe("<div><pre>  </pre></div>");
+	});
+
+	it("keeps foreign content, whose whitespace it cannot read", () => {
+		expect(minify("<div><svg> </svg></div>")).toBe("<div><svg> </svg></div>");
+	});
+
+	it("drops a head holding nothing but whitespace", () => {
+		// Nothing renders what sits directly in `<head>`, whatever the tier says.
+		expect(minify("<head> </head><body>x")).toBe("<body>x</body>");
+	});
 });
 
 describe("SourceProcessor — removeImpliedTags", () => {
