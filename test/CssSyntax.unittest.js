@@ -4886,7 +4886,9 @@ describe("CssSyntax minify — vendor prefixes (joined rules)", () => {
 			minify("@media screen{user-select:none}@media screen{color:red}", [
 				"chrome 40"
 			])
-		).toBe("@media screen{-webkit-user-select:none;user-select:none;color:red}");
+		).toBe(
+			"@media screen{-webkit-user-select:none;user-select:none;color:red}"
+		);
 	});
 
 	it("does not bring back a prefix it dropped when two at-rules join", () => {
