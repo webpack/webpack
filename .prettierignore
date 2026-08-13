@@ -20,6 +20,7 @@ test/**/*.*
 !test/benchmarkCases/**/*.mjs
 test/js/**/*.*
 test/test262-cases/**/*.*
+test/wpt/**
 
 # Ignore some folders
 benchmark/

@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html parser-processing-instructions parser-processing-instructions should compile 1`] = `
+"<!doctype html><html><body>
+	<?instruction?>
+	<?instruction data and more?>
+	<?instruction ? still data?>
+	<?instruction terminated by gt>
+	<?xml version=\\"1.0\\"?>
+	<?1st-place?>
+
+
+</body></html>"
+`;

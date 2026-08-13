@@ -26343,6 +26343,7 @@ declare class SourceProcessorSyntaxClass_1 extends SourceProcessorClass<
 		contentEnd(n?: number): number;
 		templateContent(n?: number): number;
 		data(n?: number): string;
+		piTarget(n?: number): string;
 		doctypeName(n?: number): string;
 		doctypePublicId(_n?: number): null | string;
 		doctypeSystemId(_n?: number): null | string;
@@ -29795,6 +29796,7 @@ declare namespace exports {
 				contentEnd(n?: number): number;
 				templateContent(n?: number): number;
 				data(n?: number): string;
+				piTarget(n?: number): string;
 				doctypeName(n?: number): string;
 				doctypePublicId(_n?: number): null | string;
 				doctypeSystemId(_n?: number): null | string;
@@ -29813,6 +29815,7 @@ declare namespace exports {
 				export let Text: 4;
 				export let Comment: 5;
 				export let Doctype: 6;
+				export let ProcessingInstruction: 7;
 			}
 			export let QUOTE_DOUBLE: 1;
 			export let QUOTE_NONE: 0;
@@ -29906,6 +29909,7 @@ declare namespace exports {
 					contentEnd(n?: number): number;
 					templateContent(n?: number): number;
 					data(n?: number): string;
+					piTarget(n?: number): string;
 					doctypeName(n?: number): string;
 					doctypePublicId(_n?: number): null | string;
 					doctypeSystemId(_n?: number): null | string;
@@ -29971,6 +29975,7 @@ declare namespace exports {
 						contentEnd(n?: number): number;
 						templateContent(n?: number): number;
 						data(n?: number): string;
+						piTarget(n?: number): string;
 						doctypeName(n?: number): string;
 						doctypePublicId(_n?: number): null | string;
 						doctypeSystemId(_n?: number): null | string;

@@ -519,6 +519,7 @@
     "tooling/html-entities.json",
     "tooling/html-reflect.json",
     "test/test262-cases/**",
+    "test/wpt/**",
     "**/*.svg",
     "*.log",
     "**/*.wasm",

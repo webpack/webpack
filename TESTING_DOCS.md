@@ -76,7 +76,12 @@ This document explains the structure of the `test/` directory in the Webpack pro
 - **Purpose**: WHATWG html5lib-tests tokenizer conformance cases for `lib/html/syntax`.
 - **Usage**: Git submodule — initialize with `git submodule update --init test/html5lib-tests`. Test runner: `test/html5lib-webpack.spectest.js` (`yarn test:html5lib`) compiles every input as a webpack HTML entry to confirm the full pipeline handles it without crashing.
 
-### 12c. `css-parsing-tests/`
+### 12c. `wpt/`
+
+- **Purpose**: web-platform-tests; `html/syntax/parsing/resources/*.dat` is the HTML tree-construction conformance corpus for `parseHtml` (html5lib-tests dropped its copy in `224991e`).
+- **Usage**: Git submodule — initialize with `git submodule update --init --depth 1 test/wpt` (the repository is ~161k files, so keep it shallow). Test runner: `test/html5lib.spectest.js` (`yarn test:html5lib`), which also reads `test/html5lib-tests` — initialize both to run the whole suite.
+
+### 12d. `css-parsing-tests/`
 
 - **Purpose**: CSS Syntax Level 3 conformance corpus for `lib/css/syntax`.
 - **Usage**: Git submodule — initialize with `git submodule update --init test/css-parsing-tests`. Test runner: `test/cssParsing-webpack.spectest.js` (`yarn test:css-parsing`) compiles every input as a webpack CSS entry to confirm the full pipeline handles it without crashing.
@@ -156,19 +161,20 @@ yarn test
 
 **Choose test command based on modified directory:**
 
-| Modified directory/file   | Command                                                                                       |
-| ------------------------- | --------------------------------------------------------------------------------------------- |
-| `test/*.unittest.js`      | `yarn test:base --testPathPatterns="<filename>"`                                              |
-| `test/cases/`             | `yarn test:basic`                                                                             |
-| `test/configCases/`       | `yarn test:basic --testPathPatterns="ConfigTestCases"`                                        |
-| `test/statsCases/`        | `yarn test:basic --testPathPatterns="StatsTestCases"`                                         |
-| `test/watchCases/`        | `yarn test:base --testPathPatterns="WatchTestCases"`                                          |
-| `test/hotCases/`          | `yarn test:base --testPathPatterns="HotTestCases"`                                            |
-| `test/benchmarkCases/`    | `FILTER="<case-name>" yarn benchmark`                                                         |
-| `lib/runtime/`            | `yarn test:size` (size of the generated code; `--filter "<category>/"` narrows it)            |
-| `test/test262-cases/`     | `yarn test:test262` (requires `git submodule update --init test/test262-cases` first)         |
-| `test/html5lib-tests/`    | `yarn test:html5lib` (requires `git submodule update --init test/html5lib-tests` first)       |
-| `test/css-parsing-tests/` | `yarn test:css-parsing` (requires `git submodule update --init test/css-parsing-tests` first) |
+| Modified directory/file   | Command                                                                                                    |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `test/*.unittest.js`      | `yarn test:base --testPathPatterns="<filename>"`                                                           |
+| `test/cases/`             | `yarn test:basic`                                                                                          |
+| `test/configCases/`       | `yarn test:basic --testPathPatterns="ConfigTestCases"`                                                     |
+| `test/statsCases/`        | `yarn test:basic --testPathPatterns="StatsTestCases"`                                                      |
+| `test/watchCases/`        | `yarn test:base --testPathPatterns="WatchTestCases"`                                                       |
+| `test/hotCases/`          | `yarn test:base --testPathPatterns="HotTestCases"`                                                         |
+| `test/benchmarkCases/`    | `FILTER="<case-name>" yarn benchmark`                                                                      |
+| `lib/runtime/`            | `yarn test:size` (size of the generated code; `--filter "<category>/"` narrows it)                         |
+| `test/test262-cases/`     | `yarn test:test262` (requires `git submodule update --init test/test262-cases` first)                      |
+| `test/html5lib-tests/`    | `yarn test:html5lib` (requires `git submodule update --init test/html5lib-tests` first)                    |
+| `test/wpt/`               | `yarn test:html5lib` (requires `git submodule update --init --depth 1 test/html5lib-tests test/wpt` first) |
+| `test/css-parsing-tests/` | `yarn test:css-parsing` (requires `git submodule update --init test/css-parsing-tests` first)              |
 
 **Running a single test case** with `--testNamePattern`. The test name format is `<category> <case-name>` (e.g., `css basic`, `asset url`):
 

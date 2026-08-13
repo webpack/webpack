@@ -7,3 +7,6 @@
 [submodule "test/css-parsing-tests"]
 	path = test/css-parsing-tests
 	url = https://github.com/CourtBouillon/css-parsing-tests.git
+[submodule "test/wpt"]
+	path = test/wpt
+	url = https://github.com/web-platform-tests/wpt.git

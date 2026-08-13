@@ -2977,10 +2977,11 @@ describe("tokenize", () => {
  */
 /** @typedef {{ type: typeof NodeType.Text | typeof NodeType.Comment, data: string, start: number, end: number }} MatText */
 /** @typedef {MatText} MatComment */
+/** @typedef {{ type: typeof NodeType.ProcessingInstruction, target: string, data: string, start: number, end: number }} MatProcessingInstruction */
 /** @typedef {{ type: typeof NodeType.Doctype, name: string, publicId: string | null, systemId: string | null, start: number, end: number }} MatDoctype */
 /** @typedef {{ type: typeof NodeType.Document, children: MatNode[] }} MatDocument */
 /** @typedef {{ type: typeof NodeType.DocumentFragment, children: MatNode[] }} MatFragment */
-/** @typedef {MatElement | MatText | MatComment | MatDoctype} MatNode */
+/** @typedef {MatElement | MatText | MatComment | MatDoctype | MatProcessingInstruction} MatNode */
 
 // `parseHtml` returns integer refs into reused module-level columns, valid
 // only until the next parse; materialize each tree eagerly (reading every
@@ -3016,6 +3017,14 @@ const materialize = (ref) => {
 						: undefined
 			};
 		}
+		case NodeType.ProcessingInstruction:
+			return {
+				type,
+				target: A.piTarget(ref),
+				data: A.data(ref),
+				start: A.start(ref),
+				end: A.end(ref)
+			};
 		case NodeType.Doctype:
 			return {
 				type,
@@ -3307,11 +3316,82 @@ describe("parseHtml", () => {
 
 	it("should treat bogus comments as comments", () => {
 		// A leading bogus comment is inserted into the document before <html>.
-		const ast = parseHtml("<?bogus comment>");
+		// `1bogus` is no processing instruction target, so the `<?` stays bogus.
+		const ast = parseHtml("<?1bogus comment>");
 		expect(ast.children[0].type).toBe(NodeType.Comment);
 		expect(/** @type {MatComment} */ (ast.children[0]).data).toBe(
-			"?bogus comment"
+			"?1bogus comment"
 		);
+	});
+
+	// WPT owns the tree-construction corpus for these
+	// (`html/syntax/parsing/resources/processing-instructions.dat`), and it is
+	// not carried here, so its cases are mirrored below.
+	it("should parse a bogus comment with a valid target as a processing instruction", () => {
+		/**
+		 * @param {string} source HTML
+		 * @returns {MatProcessingInstruction} the leading processing instruction
+		 */
+		const pi = (source) => {
+			const node = parseHtml(source).children[0];
+			expect(node.type).toBe(NodeType.ProcessingInstruction);
+			return /** @type {MatProcessingInstruction} */ (node);
+		};
+		expect(pi("<?target data?>")).toMatchObject({
+			target: "target",
+			data: "data"
+		});
+		// `>` closes one as well, and `_`, digits and `-` are target characters.
+		expect(pi("<?_t-1 data>")).toMatchObject({ target: "_t-1", data: "data" });
+		// A `?` is data unless the `>` follows it, and the target may end on one.
+		expect(pi("<?t a?b?>")).toMatchObject({ target: "t", data: "a?b" });
+		expect(pi("<?t ? ?>")).toMatchObject({ target: "t", data: "? " });
+		expect(pi("<?t?>")).toMatchObject({ target: "t", data: "" });
+		expect(pi("<?t \u0000?>")).toMatchObject({ target: "t", data: "\uFFFD" });
+	});
+
+	it("should insert a processing instruction where a comment would go", () => {
+		const head = /** @type {MatElement} */ (
+			/** @type {MatElement} */ (parseHtml("<head><?t 1?>").children[0])
+				.children[0]
+		);
+		expect(head.children[0].type).toBe(NodeType.ProcessingInstruction);
+		const body = /** @type {MatElement} */ (
+			/** @type {MatElement} */ (parseHtml("<body><?t 1?><span>").children[0])
+				.children[1]
+		);
+		expect(body.children[0].type).toBe(NodeType.ProcessingInstruction);
+		expect(body.children[1].type).toBe(NodeType.Element);
+	});
+
+	it("should keep a reserved or malformed target a bogus comment", () => {
+		for (const source of [
+			"<?xml version?>",
+			"<?XML-stylesheet href?>",
+			"<?1st?>",
+			"<?t$x?>",
+			"<?>"
+		]) {
+			expect(parseHtml(source).children[0].type).toBe(NodeType.Comment);
+		}
+		// Reserved targets are judged before EOF, so this one stays a comment.
+		expect(parseHtml("<?xml version").children[0].type).toBe(NodeType.Comment);
+	});
+
+	it("should drop a processing instruction cut short by EOF", () => {
+		// Every state EOF can land in: open, target, after target, data.
+		for (const source of [
+			"<body>x<?",
+			"<body>x<?t",
+			"<body>x<?t ",
+			"<body>x<?t data"
+		]) {
+			const body = /** @type {MatElement} */ (
+				/** @type {MatElement} */ (parseHtml(source).children[0]).children[1]
+			);
+			expect(body.children).toHaveLength(1);
+			expect(body.children[0].type).toBe(NodeType.Text);
+		}
 	});
 
 	it("should parse raw-text elements without decoding entities", () => {
@@ -6015,7 +6095,8 @@ describe("token parts reported by the tokenizer", () => {
 		expect(commentsOf("<!--a--->")).toEqual(["a-"]);
 		expect(commentsOf("<!--a<!--b-->")).toEqual(["a<!--b"]);
 		expect(commentsOf("<!-- <!--")).toEqual([" <!"]);
-		expect(commentsOf("<?foo-->")).toEqual(["?foo--"]);
+		// `-foo--` is no processing instruction target, so this stays a comment.
+		expect(commentsOf("<?-foo-->")).toEqual(["?-foo--"]);
 		expect(commentsOf("</-")).toEqual(["-"]);
 		expect(commentsOf("<![CDATA[foo]]>")).toEqual(["[CDATA[foo]]"]);
 	});
