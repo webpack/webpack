@@ -4824,7 +4824,7 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 			environment: browsers ? { browsers } : undefined
 		}).code;
 
-	it("keeps a prefix when the selection names a browser the tables cannot resolve", () => {
+	it("reads IE Mobile through IE's windows — the same engine on the same version line", () => {
 		expect(
 			minify("a{-ms-user-select:none;user-select:none}", [
 				"chrome 130",
@@ -4833,16 +4833,25 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 		).toBe("a{-ms-user-select:none;user-select:none}");
 	});
 
+	it("skips a browser no dataset covers, as lightningcss's target mapping does", () => {
+		expect(
+			minify("a{-webkit-border-radius:5px;border-radius:5px}", [
+				"chrome 130",
+				"bb 10"
+			])
+		).toBe("a{border-radius:5px}");
+	});
+
 	it("still adds for the browsers it does resolve", () => {
 		expect(minify("a{user-select:none}", ["chrome 40", "op_mini all"])).toBe(
 			"a{-webkit-user-select:none;user-select:none}"
 		);
 	});
 
-	it("keeps a prefix when a selected version does not parse", () => {
+	it("leaves prefixes alone when nothing in the selection resolves", () => {
 		expect(
 			minify("a{-webkit-border-radius:5px;border-radius:5px}", [
-				"chrome 130",
+				"op_mini all",
 				"chrome"
 			])
 		).toBe("a{-webkit-border-radius:5px;border-radius:5px}");
@@ -4908,5 +4917,77 @@ describe("CssSyntax minify — vendor prefixes (joined rules)", () => {
 		).toBe(
 			"@media screen{a{-webkit-user-select:none;user-select:none}b{color:red}}"
 		);
+	});
+});
+
+describe("CssSyntax minify — vendor prefixes (a twin written first)", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {string[]=} browsers the browserslist selection
+	 * @returns {string} its minified serialization
+	 */
+	const minify = (css, browsers) =>
+		new SourceProcessor().process(css, {
+			mode: "minify",
+			environment: browsers ? { browsers } : undefined
+		}).code;
+
+	it("drops a prefixed at-rule its unprefixed twin follows", () => {
+		expect(
+			minify("@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}", [
+				"chrome 130"
+			])
+		).toBe("@keyframes s{to{opacity:1}}");
+	});
+
+	it("drops a prefixed rule its unprefixed twin follows", () => {
+		expect(
+			minify("::-webkit-input-placeholder{color:red}::placeholder{color:red}", [
+				"chrome 130"
+			])
+		).toBe("::placeholder{color:red}");
+	});
+
+	it("keeps it where a target still needs the prefix", () => {
+		expect(
+			minify("@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}", [
+				"chrome 40"
+			])
+		).toBe("@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}");
+	});
+
+	it("keeps a prefixed at-rule with no unprefixed twin at all", () => {
+		expect(minify("@-webkit-keyframes s{to{opacity:1}}", ["chrome 130"])).toBe(
+			"@-webkit-keyframes s{to{opacity:1}}"
+		);
+	});
+
+	it("keeps one a rule stands between — the lookahead is the rule the writer holds", () => {
+		expect(
+			minify(
+				"@-webkit-keyframes s{to{opacity:1}}a{color:red}@keyframes s{to{opacity:1}}",
+				["chrome 130"]
+			)
+		).toBe(
+			"@-webkit-keyframes s{to{opacity:1}}a{color:red}@keyframes s{to{opacity:1}}"
+		);
+	});
+
+	it("keeps a kept comment that stood between them", () => {
+		expect(
+			minify(
+				"@-webkit-keyframes s{to{opacity:1}}/*! banner */@keyframes s{to{opacity:1}}",
+				["chrome 130"]
+			)
+		).toBe("/*! banner */@keyframes s{to{opacity:1}}");
+	});
+
+	it("leaves a joined run alone", () => {
+		expect(
+			minify(
+				"@media screen{a{color:red}}@media screen{b{color:red}}@keyframes s{to{opacity:1}}",
+				["chrome 130"]
+			)
+		).toBe("@media screen{a,b{color:red}}@keyframes s{to{opacity:1}}");
 	});
 });

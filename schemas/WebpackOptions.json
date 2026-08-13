@@ -3734,7 +3734,7 @@
           "added": "5.110.0"
         },
         "vendorPrefixes": {
-          "description": "Maintain vendor prefixes for the `browserslist` target: add the `-webkit-` / `-moz-` / `-ms-` spelling of a property, at-rule or pseudo-selector that a selected browser still needs, and drop one none of them does. On by default, and only in effect for a `browserslist` target — any other target names no browsers to prefix for. A prefix is dropped only where every selected browser is one the prefix tables cover, so a selection naming a browser they do not (`op_mini`, `and_uc`, `ie_mob`, …) still gains prefixes but loses none.",
+          "description": "Maintain vendor prefixes for the `browserslist` target: add the `-webkit-` / `-moz-` / `-ms-` spelling of a property, at-rule or pseudo-selector that a selected browser still needs, and drop one none of them does. On by default, and only in effect for a `browserslist` target — any other target names no browsers to prefix for. A browserslist name no compat dataset covers (`op_mini`, `and_uc`, `and_qq`, `baidu`, `kaios`, `bb`) is skipped, and a selection of nothing but those prefixes for no one.",
           "type": "boolean",
           "added": "5.110.0"
         }

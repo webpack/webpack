@@ -3556,23 +3556,28 @@ const assertClassesArePrintable = (slots) => {
 	}
 };
 
-// BCD browser id -> browserslist name. BCD-only engines (oculus, deno, bun,
-// nodejs) have no browserslist query, so a prefix they alone would need can
-// never be selected — those ids are absent and their entries drop out.
+// BCD browser id -> the browserslist names it answers for. BCD-only engines
+// (oculus, deno, bun, nodejs) have no browserslist query, so a prefix they alone
+// would need can never be selected — those ids are absent and their entries drop
+// out. `ie_mob` is Windows Phone's Trident on the desktop version line (IE Mobile
+// 11 is Trident 7, as IE 11 is), which is why it reads IE's windows; BCD tracks
+// no separate id for it. Everything else browserslist can select and no dataset
+// covers (`op_mini`, `and_uc`, `and_qq`, `baidu`, `kaios`, `bb`) is absent here
+// and skipped, which is what lightningcss's own target mapping does.
 const BCD_TO_BROWSERSLIST = new Map([
-	["chrome", "chrome"],
-	["chrome_android", "and_chr"],
-	["edge", "edge"],
-	["firefox", "firefox"],
-	["firefox_android", "and_ff"],
-	["ie", "ie"],
-	["opera", "opera"],
-	["opera_android", "op_mob"],
-	["safari", "safari"],
-	["safari_ios", "ios_saf"],
-	["samsunginternet_android", "samsung"],
-	["webview_android", "android"],
-	["webview_ios", "ios_saf"]
+	["chrome", ["chrome"]],
+	["chrome_android", ["and_chr"]],
+	["edge", ["edge"]],
+	["firefox", ["firefox"]],
+	["firefox_android", ["and_ff"]],
+	["ie", ["ie", "ie_mob"]],
+	["opera", ["opera"]],
+	["opera_android", ["op_mob"]],
+	["safari", ["safari"]],
+	["safari_ios", ["ios_saf"]],
+	["samsunginternet_android", ["samsung"]],
+	["webview_android", ["android"]],
+	["webview_ios", ["ios_saf"]]
 ]);
 
 // The prefix a browser's engine actually uses, so an obsolete cross-engine one
@@ -3604,7 +3609,7 @@ const prefixBrowsers = [
 	...new Set(
 		[...BCD_TO_BROWSERSLIST]
 			.filter(([bcdBrowser]) => BROWSER_PREFIXES.has(bcdBrowser))
-			.map(([, browser]) => browser)
+			.flatMap(([, names]) => names)
 	)
 ].sort();
 
@@ -3641,8 +3646,8 @@ const collectPrefixes = (compat) => {
 	/** @type {Map<string, Map<string, [number, number]>>} */
 	const byPrefix = new Map();
 	for (const [bcdBrowser, raw] of Object.entries(compat.support)) {
-		const browser = BCD_TO_BROWSERSLIST.get(bcdBrowser);
-		if (browser === undefined) continue;
+		const names = BCD_TO_BROWSERSLIST.get(bcdBrowser);
+		if (names === undefined) continue;
 		const allowed = BROWSER_PREFIXES.get(bcdBrowser);
 		if (allowed === undefined) continue;
 		const entries = Array.isArray(raw) ? raw : [raw];
@@ -3683,13 +3688,18 @@ const collectPrefixes = (compat) => {
 			}
 			// `safari_ios` and `webview_ios` both fold onto `ios_saf`; keep the
 			// widest window (earliest prefix start, latest unprefixed arrival).
-			const existing = browsers.get(browser);
-			browsers.set(
-				browser,
-				existing === undefined
-					? [prefixedFrom, target]
-					: [Math.min(existing[0], prefixedFrom), Math.max(existing[1], target)]
-			);
+			for (const browser of names) {
+				const existing = browsers.get(browser);
+				browsers.set(
+					browser,
+					existing === undefined
+						? [prefixedFrom, target]
+						: [
+								Math.min(existing[0], prefixedFrom),
+								Math.max(existing[1], target)
+							]
+				);
+			}
 		}
 	}
 	if (byPrefix.size === 0) return null;
