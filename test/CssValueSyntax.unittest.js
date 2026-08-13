@@ -102,6 +102,14 @@ describe("CssValueSyntax", () => {
 			["<length [0,∞]>", "<length [0,Infinity]>"],
 			["<time [0s,∞]>", "<time [0,Infinity]>"],
 			["<number [-∞,1]>", "<number [-Infinity,1]>"],
+			// `mdn-data` writes a few of those bounds outside the type.
+			["<length> [0,∞]", "<length [0,Infinity]>"],
+			["<time> [0s,∞]", "<time [0,Infinity]>"],
+			// A group of its own is still a group, however it follows a type.
+			[
+				"<length-percentage> [ <length-percentage> <length>? ]?",
+				"seq(<length-percentage> mult[0,1]([seq(<length-percentage> mult[0,1](<length>))]))"
+			],
 			["<'margin-top'>", "<'margin-top'>"],
 			// A type name may itself end in `()`.
 			["<calc-size()>", "<calc-size()>"],
