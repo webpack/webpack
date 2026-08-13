@@ -4617,7 +4617,8 @@ declare interface Configuration {
 						| string
 						| boolean
 						| string[]
-						| (ExternalItemValueObjectKnown & ExternalItemValueObjectUnknown)
+						| ExternalItemValueObject
+						| ExternalItemValueWithOptions
 				) => void
 		  ) => void)
 		| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)
@@ -8414,7 +8415,8 @@ type ExternalItem =
 					| string
 					| boolean
 					| string[]
-					| (ExternalItemValueObjectKnown & ExternalItemValueObjectUnknown)
+					| ExternalItemValueObject
+					| ExternalItemValueWithOptions
 			) => void
 	  ) => void)
 	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>);
@@ -8427,7 +8429,8 @@ type ExternalItemFunction =
 					| string
 					| boolean
 					| string[]
-					| (ExternalItemValueObjectKnown & ExternalItemValueObjectUnknown)
+					| ExternalItemValueObject
+					| ExternalItemValueWithOptions
 			) => void
 	  ) => void)
 	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>);
@@ -8492,7 +8495,10 @@ type ExternalItemValue =
 	| string
 	| boolean
 	| string[]
-	| (ExternalItemValueObjectKnown & ExternalItemValueObjectUnknown);
+	| ExternalItemValueObject
+	| ExternalItemValueWithOptions;
+type ExternalItemValueObject = ExternalItemValueObjectKnown &
+	ExternalItemValueObjectUnknown;
 
 /**
  * The target of the external with a type, optionally with an 'interop' hint describing how its exports interoperate with ES module imports.
@@ -8511,6 +8517,25 @@ declare interface ExternalItemValueObjectKnown {
 declare interface ExternalItemValueObjectUnknown {
 	[index: string]: string | string[];
 }
+type ExternalItemValueTarget =
+	string | boolean | string[] | ExternalItemValueObject;
+
+/**
+ * The target of the external together with options describing how webpack should treat it.
+ * @since 5.110.0
+ */
+declare interface ExternalItemValueWithOptions {
+	/**
+	 * The target of the external.
+	 */
+	external: ExternalItemValueTarget;
+
+	/**
+	 * Whether importing the external has side effects (like the `sideEffects` flag in a package.json). `false` allows webpack to drop the external when none of its exports are used. Defaults to `true`, as webpack can't analyze an external.
+	 * @since 5.110.0
+	 */
+	sideEffects?: boolean;
+}
 declare class ExternalModule extends Module {
 	/**
 	 * Creates an instance of ExternalModule.
@@ -8521,7 +8546,8 @@ declare class ExternalModule extends Module {
 		userRequest: string,
 		dependencyMeta?:
 			ImportDependencyMeta | CssImportDependencyMeta | AssetDependencyMeta,
-		interop?: "default" | "esModule"
+		interop?: "default" | "esModule",
+		sideEffects?: boolean
 	);
 	request: ExternalModuleRequest;
 	externalType: ExternalsType;
@@ -8529,6 +8555,7 @@ declare class ExternalModule extends Module {
 	dependencyMeta?:
 		ImportDependencyMeta | CssImportDependencyMeta | AssetDependencyMeta;
 	interop?: "default" | "esModule";
+	sideEffects?: boolean;
 
 	/**
 	 * restore unsafe cache data
@@ -8666,7 +8693,8 @@ type Externals =
 					| string
 					| boolean
 					| string[]
-					| (ExternalItemValueObjectKnown & ExternalItemValueObjectUnknown)
+					| ExternalItemValueObject
+					| ExternalItemValueWithOptions
 			) => void
 	  ) => void)
 	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)
@@ -30291,7 +30319,8 @@ declare namespace exports {
 				| string
 				| boolean
 				| string[]
-				| (ExternalItemValueObjectKnown & ExternalItemValueObjectUnknown)
+				| ExternalItemValueObject
+				| ExternalItemValueWithOptions
 		) => void
 	) => void;
 	export type ExternalItemFunctionDataGetResolve = (
