@@ -1490,7 +1490,7 @@ export interface LibraryOptions {
 	umdNamedDefine?: UmdNamedDefine;
 }
 /**
- * Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.
+ * Set explicit comments for `commonjs`, `commonjs2`, `amd`, `sapUiDefine`, and `root`.
  */
 export interface LibraryCustomUmdCommentObject {
 	/**
@@ -1509,6 +1509,10 @@ export interface LibraryCustomUmdCommentObject {
 	 * Set comment for `root` (global variable) section in UMD.
 	 */
 	root?: string;
+	/**
+	 * Set comment for `sapUiDefine` (sap.ui.define) section in UMD.
+	 */
+	sapUiDefine?: string;
 }
 /**
  * Description object for all UMD variants of the library name.

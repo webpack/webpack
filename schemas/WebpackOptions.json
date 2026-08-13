@@ -3026,7 +3026,7 @@
       ]
     },
     "LibraryCustomUmdCommentObject": {
-      "description": "Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.",
+      "description": "Set explicit comments for `commonjs`, `commonjs2`, `amd`, `sapUiDefine`, and `root`.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -3044,6 +3044,10 @@
         },
         "root": {
           "description": "Set comment for `root` (global variable) section in UMD.",
+          "type": "string"
+        },
+        "sapUiDefine": {
+          "description": "Set comment for `sapUiDefine` (sap.ui.define) section in UMD.",
           "type": "string"
         }
       }
