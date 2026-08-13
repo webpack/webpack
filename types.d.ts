@@ -10246,6 +10246,7 @@ type HtmlPrintOptions = Pick<
 	sortAttributes?: boolean;
 	sortTokenLists?: boolean;
 	removeImpliedTags?: boolean | "all" | "smart";
+	xml?: boolean;
 };
 declare interface HtmlProcessOptions {
 	/**
@@ -10322,6 +10323,11 @@ declare interface HtmlProcessOptions {
 	 * how much of the `<html>` / `<head>` / `<body>` shell §13.1.2.4 lets the parser imply may be left out: `"smart"` leaves out only the `<html>` start tag, `true` (or `"all"`) all six, `false` none (default `"smart"`)
 	 */
 	removeImpliedTags?: boolean | "all" | "smart";
+
+	/**
+	 * print XML rather than HTML, for a standalone `.svg`: quotes stay on, no tag is left out, every `&` is escaped and a `<script>` / `<style>` body is not raw text (default false)
+	 */
+	xml?: boolean;
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**

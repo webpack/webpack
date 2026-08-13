@@ -7659,3 +7659,114 @@ describe("parseHtml — insertion modes", () => {
 		});
 	}
 });
+
+describe("SourceProcessor — xml", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} markup input markup
+	 * @param {boolean} xml whether to print XML
+	 * @returns {string} the minified serialization
+	 */
+	const print = (markup, xml) =>
+		new SourceProcessor().process(markup, { mode: "minify", xml }).code;
+
+	it("quotes every attribute value and keeps every attribute's own", () => {
+		const svg =
+			'<svg xmlns="http://www.w3.org/2000/svg"><rect fill="red" class=""/></svg>';
+		expect(print(svg, false)).toBe(
+			"<svg xmlns=http://www.w3.org/2000/svg><rect fill=red class/></svg>"
+		);
+		expect(print(svg, true)).toBe(svg);
+	});
+
+	it("escapes every ampersand, not only the ones opening a reference", () => {
+		expect(print("<svg><text>a &amp; b &s c</text></svg>", true)).toBe(
+			"<svg><text>a &amp; b &amp;s c</text></svg>"
+		);
+	});
+
+	it("escapes the `>` that would close a CDATA section", () => {
+		expect(print("<svg><text>a ]]&gt; b</text></svg>", true)).toBe(
+			"<svg><text>a ]]&gt; b</text></svg>"
+		);
+	});
+
+	it("puts a script or style body back in a CDATA section when it needs one", () => {
+		expect(
+			print("<svg><script><![CDATA[if(a<b){}]]></script></svg>", true)
+		).toBe("<svg><script><![CDATA[if(a<b){}]]></script></svg>");
+		expect(print("<svg><script>var a=1</script></svg>", true)).toBe(
+			"<svg><script>var a=1</script></svg>"
+		);
+	});
+
+	it("keeps the end tags XML has no way to imply", () => {
+		const svg = "<svg><foreignObject><p>a</p><p>b</p></foreignObject></svg>";
+		expect(print(svg, true)).toBe(svg);
+	});
+
+	it("closes a void element, which XML gives no end tag", () => {
+		expect(print("<svg><foreignObject><br/></foreignObject></svg>", true)).toBe(
+			"<svg><foreignObject><br/></foreignObject></svg>"
+		);
+	});
+});
+
+describe("SourceProcessor — svg path data", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} d the path data
+	 * @returns {string} what the printer wrote it back as
+	 */
+	const path = (d) => {
+		const svg = `<svg xmlns="http://www.w3.org/2000/svg"><path d="${d}"/></svg>`;
+		const out = new SourceProcessor().process(svg, {
+			mode: "minify",
+			xml: true
+		}).code;
+		const written = /<path d="([^"]*)"/.exec(out);
+		return written === null ? out : written[1];
+	};
+
+	it("drops the separators the grammar does not need", () => {
+		expect(path("M 10 10 L 20 20 Z")).toBe("M10 10 20 20Z");
+		expect(path("M1 1 H 5 V 6 h 1 v 2")).toBe("M1 1H5V6h1v2");
+	});
+
+	it("implies a repeated command, and a moveto's repeat is a lineto", () => {
+		expect(path("M1 1 L2 2 L3 3 M4 4 L5 5")).toBe("M1 1 2 2 3 3M4 4 5 5");
+		expect(path("M1 1 M2 2")).toBe("M1 1M2 2");
+		expect(path("M1 1 m2 2")).toBe("M1 1m2 2");
+	});
+
+	it("re-spells a number without changing its value", () => {
+		expect(path("M0.5 0.5 L-0.5 -0.5")).toBe("M.5.5-.5-.5");
+		expect(path("M 1.500 2.0 L 3. 4")).toBe("M1.5 2 3 4");
+		expect(path("M+1 +2")).toBe("M1 2");
+		expect(path("M1E3 1e+03")).toBe("M1e3 1e3");
+		expect(path("M00.10 -0.0")).toBe("M.1 0");
+	});
+
+	it("packs an arc's flags, which are one character each", () => {
+		expect(path("M1 1 A 5 5 0 0 1 10 10")).toBe("M1 1A5 5 0 0110 10");
+		expect(path("M1 1 A5 5 0 1 1 2 2 5 5 0 0 0 3 3")).toBe(
+			"M1 1A5 5 0 112 2 5 5 0 003 3"
+		);
+	});
+
+	it("leaves alone what is not path data", () => {
+		expect(path("not a path")).toBe("not a path");
+		expect(path("L1 1")).toBe("L1 1");
+		expect(path("M1 1A5 5 0 2 1 2 2")).toBe("M1 1A5 5 0 2 1 2 2");
+	});
+
+	it("rewrites `d` only on an svg `path`", () => {
+		const html =
+			'<!DOCTYPE html><body><p d="M 1 1 L 2 2">x</p><svg xmlns="http://www.w3.org/2000/svg"><path d="M 1 1 L 2 2"/></svg>';
+		const out = new SourceProcessor().process(html, { mode: "minify" }).code;
+		expect(out).toContain('<p d="M 1 1 L 2 2">');
+		expect(out).toContain('<path d="M1 1 2 2"/>');
+	});
+});

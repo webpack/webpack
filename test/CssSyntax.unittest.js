@@ -6214,3 +6214,64 @@ describe("CssSyntax minify — vendor prefixes (a twin written first)", () => {
 		).toBe("@media screen{a,b{color:red}}@keyframes s{to{opacity:1}}");
 	});
 });
+describe("SourceProcessor — svg in a data url", () => {
+	const { SourceProcessor } = require("../lib/css/syntax");
+
+	/**
+	 * @param {string} url the whole url, quotes excluded
+	 * @param {string=} quote the quote it is written inside
+	 * @returns {string} the printed `url()`
+	 */
+	const background = (url, quote = '"') =>
+		new SourceProcessor()
+			.process(`a{background:url(${quote}${url}${quote})}`, { mode: "minify" })
+			.code.slice("a{background:".length, -1);
+
+	const SVG =
+		"<svg xmlns='http://www.w3.org/2000/svg'>  <path   d='M 1 1 L 2 2'  />  </svg>";
+
+	it("minifies the svg the payload carries", () => {
+		expect(background(`data:image/svg+xml,${encodeURIComponent(SVG)}`)).toBe(
+			"url(\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><path d=%22M1 1 2 2%22/></svg>\")"
+		);
+	});
+
+	it("delimits with whichever quote the svg spends less on escaping", () => {
+		const doubled = SVG.replace(/'/g, '"');
+		expect(
+			background(`data:image/svg+xml,${encodeURIComponent(doubled)}`)
+		).toBe(
+			'url(\'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"><path d="M1 1 2 2"/></svg>\')'
+		);
+	});
+
+	it("re-encodes a base64 payload as base64", () => {
+		const encoded = Buffer.from(SVG, "utf8").toString("base64");
+		const out = background(`data:image/svg+xml;base64,${encoded}`);
+		const body = String(/;base64,([^"')]*)/.exec(out))
+			.split(",")
+			.pop();
+		expect(Buffer.from(String(body), "base64").toString("utf8")).toBe(
+			"<svg xmlns='http://www.w3.org/2000/svg'><path d=\"M1 1 2 2\"/></svg>"
+		);
+	});
+
+	it("leaves a payload it is not the minifier for", () => {
+		expect(background("data:image/png;base64,iVBORw0KGgo=")).toBe(
+			"url(data:image/png;base64,iVBORw0KGgo=)"
+		);
+	});
+
+	it("leaves a payload it cannot decode", () => {
+		expect(background("data:image/svg+xml,%FF%FE")).toBe(
+			"url(data:image/svg+xml,%FF%FE)"
+		);
+	});
+
+	it("keeps a payload minifying does not shorten", () => {
+		const already = "<svg xmlns='http://www.w3.org/2000/svg'/>";
+		expect(background(`data:image/svg+xml,${already}`)).toBe(
+			`url("data:image/svg+xml,${already}")`
+		);
+	});
+});
