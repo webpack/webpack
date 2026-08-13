@@ -7,10 +7,11 @@ module.exports = {
 	output: { filename: "[name].js", pathinfo: false },
 	module: {
 		generator: { html: { extract: true } },
-		parser: { html: { sources: false } }
+		parser: { html: { sources: false } },
+		rules: [{ test: /\.html$/, type: "html" }]
 	},
 	optimization: {
-		minimize: { html: { sortAttributes: true, sortTokenLists: true } },
+		minimize: { html: { removeImpliedTags: "smart" } },
 		minimizer: ["..."]
 	},
 	experiments: { html: true }

@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ConfigCacheTestCases html parser-foster-parenting parser-foster-parenting should compile 1`] = `
-"<!doctype html><html><body>
+"<!doctype html><body>
 	<b>before</b><b>after</b>tail<table><tr><td>cell</table>
 	one<b>two</b>three<table><tr><td>x</table>
 

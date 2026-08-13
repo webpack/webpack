@@ -165,13 +165,23 @@ const distill = (idl, elements) => {
 			}
 		}
 	}
+	/**
+	 * @param {{ [attribute: string]: string[] | null }} table one group
+	 * @returns {{ [attribute: string]: string[] | null }} it, by name
+	 */
+	const byName = (table) => {
+		/** @type {{ [attribute: string]: string[] | null }} */
+		const sorted = {};
+		for (const name of Object.keys(table).sort()) sorted[name] = table[name];
+		return sorted;
+	};
 	return {
 		source: { idl: IDL_URL, elements: ELEMENTS_URL },
-		boolean: out.boolean,
-		url: out.url,
-		integer: out.integer,
+		boolean: byName(out.boolean),
+		url: byName(out.url),
+		integer: byName(out.integer),
 		signedInteger: [...signed].filter((a) => !nonNegative.has(a)).sort(),
-		tokenList: out.tokenList
+		tokenList: byName(out.tokenList)
 	};
 };
 
@@ -291,6 +301,15 @@ const P_KEEPS_END_TAG_IN = [
 	"video"
 ];
 
+const BODY_START_KEPT_BEFORE = [
+	"link",
+	"meta",
+	"noscript",
+	"script",
+	"style",
+	"template"
+];
+
 const SRCSET_ATTRIBUTES = ["srcset", "imagesrcset"];
 
 const COMMA_LIST_ATTRIBUTES = ["accept", "coords", "sizes"];
@@ -371,7 +390,13 @@ const merge = (derived, supplement, group) => {
 };
 
 const reflect = fetchSource
-	? { boolean: {}, url: {}, integer: {}, tokenList: {}, signedInteger: [] }
+	? {
+			boolean: {},
+			url: {},
+			integer: {},
+			tokenList: {},
+			signedInteger: []
+		}
 	: JSON.parse(fs.readFileSync(REFLECT_PATH, "utf8"));
 const booleans = merge(reflect.boolean, SUPPLEMENT.boolean, "boolean");
 const urls = merge(reflect.url, SUPPLEMENT.url, "url");
@@ -1390,7 +1415,7 @@ const PARSER_TABLES = [
 	[
 		"EMPTY_REMOVABLE_ATTRIBUTES",
 		"set",
-		"Attributes `removeEmptyAttributes` may drop when their value is empty or all whitespace: the spec gives each the same state empty and absent. Only a presence selector (`[class]`) can tell, which is what keeps the option off by default.",
+		"Attributes `removeEmptyAttributes` may drop when their value is empty or all whitespace: the spec gives each the same state empty and absent. Four hand-reasoned globals, plus every token-list attribute (no tokens is what absence gives) and every §8.1.7.2.1 event handler (an empty handler body does nothing). `sandbox` is the token list held back — its empty list is the most restrictive state an `<iframe>` has. Only a presence selector (`[class]`) or a script reading the attribute back can tell, which is what keeps the option off by default.",
 		[
 			// No classes either way; `classList` is empty and nothing matches.
 			"class",
@@ -1499,6 +1524,25 @@ const REWRITABLE_ATTRIBUTE_NAMES = [
 		"content"
 	])
 ].sort();
+
+// Derived: an empty token list is no tokens, which is what absence gives —
+// except `sandbox`, whose empty list is the most restrictive state there is.
+const emptyRemovable = /** @type {string[]} */ (
+	/** @type {ParserTable} */
+	(
+		/** @type {ParserTable[]} */ (PARSER_TABLES).find(
+			([name]) => name === "EMPTY_REMOVABLE_ATTRIBUTES"
+		)
+	)[3]
+);
+for (const [name] of tokenLists) {
+	if (name !== "sandbox" && !emptyRemovable.includes(name)) {
+		emptyRemovable.push(name);
+	}
+}
+// Event handlers stay: an empty body still compiles, so the IDL member reads
+// back a function where absence reads null.
+emptyRemovable.sort();
 
 // Derived: a void element that belongs in the head carries everything it does
 // in its attributes, so one with none does nothing at all. `removeEmptyElements`
@@ -1643,6 +1687,7 @@ const EXPORT_NAMES = [
 	"COMMA_LIST_ATTRIBUTES",
 	"DOM_TOKEN_LIST_ATTRIBUTES",
 	"INTEGER_ATTRIBUTES",
+	"BODY_START_KEPT_BEFORE",
 	"EMPTY_METADATA_ELEMENTS",
 	"ENUMERATED_ATTRIBUTE_NAMES",
 	"REWRITABLE_ATTRIBUTES",
@@ -1731,6 +1776,14 @@ const ENUMERATED_ATTRIBUTE_NAMES = ${setLiteral(ENUMERATED_ATTRIBUTE_NAMES)};
  * @type {Set<string>}
  */
 const EMPTY_METADATA_ELEMENTS = ${setLiteral(EMPTY_METADATA_ELEMENTS)};
+
+/**
+ * §13.1.2.4: the elements that keep a \`<body>\` start tag when the body opens
+ * with one — the parser reads them as head content and would move them out of
+ * the body once the tag goes.
+ * @type {Set<string>}
+ */
+const BODY_START_KEPT_BEFORE = ${setLiteral(BODY_START_KEPT_BEFORE)};
 
 /**
  * §13.1.2.4: a trailing \`</p>\` stays inside these, whose content model would

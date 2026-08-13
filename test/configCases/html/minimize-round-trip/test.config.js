@@ -123,7 +123,11 @@ const tree = (html) => {
 					.attributes()
 					.map(
 						(attribute) =>
-							`${attribute.name}=${canonicalValue(tagName, attribute.name, attribute.value)}`
+							`${attribute.name}=${canonicalValue(
+								tagName,
+								attribute.name,
+								attribute.value
+							)}`
 					)
 					.sort()
 					.join(" ");

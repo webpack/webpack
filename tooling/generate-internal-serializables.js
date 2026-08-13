@@ -267,7 +267,10 @@ if (require.main === module) {
 			console.error(`wrote ${path.relative(ROOT, TARGET)}`);
 		} else {
 			console.error(
-				`${path.relative(ROOT, TARGET)} is outdated. Run: yarn fix:serializables`
+				`${path.relative(
+					ROOT,
+					TARGET
+				)} is outdated. Run: yarn fix:serializables`
 			);
 			process.exitCode = 1;
 		}

@@ -4050,6 +4050,256 @@ describe("SourceProcessor — enumerated attribute values", () => {
 	});
 });
 
+describe("SourceProcessor — optional end tags read the output", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @param {object=} options extra print options
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html, options) =>
+		new SourceProcessor().process(html, { mode: "minify", ...options }).code;
+
+	const LIST = "<ul>\n<li><p>a</p>\n</li>\n<li><p>b</p>\n</li>\n</ul>";
+
+	it("reads past whitespace the collapse tier deletes", () => {
+		// The `\n` after each `</p>` is content in the tree and nothing in the
+		// output, so the tag it was keeping alive goes with it.
+		expect(minify(LIST, { collapseWhitespace: "smart" })).toBe(
+			"<ul><li><p>a<li><p>b</ul>"
+		);
+		expect(minify(LIST, { collapseWhitespace: "all" })).toBe(
+			"<ul><li><p>a<li><p>b</ul>"
+		);
+	});
+
+	it("keeps the tag when that whitespace is printed", () => {
+		// `"conservative"` prints one space, and off prints it verbatim; either
+		// way something stands between the tag and the parent's end.
+		expect(minify(LIST, { collapseWhitespace: "conservative" })).toBe(
+			"<ul> <li><p>a</p> </li> <li><p>b</p> </li> </ul>"
+		);
+		expect(minify(LIST)).toBe(LIST);
+	});
+
+	it("keeps the tag when an ancestor renders the whitespace verbatim", () => {
+		// The `\n` still prints, so the `</li>` in front of it stays; only the
+		// last one goes, on the rule that its parent's end follows it.
+		expect(
+			minify("<pre><ul><li>a</li>\n<li>b</li></ul></pre>", {
+				collapseWhitespace: "all"
+			})
+		).toBe("<pre><ul><li>a</li>\n<li>b</ul></pre>");
+	});
+
+	it("reads past a comment minifying drops", () => {
+		expect(minify("<ul><li>a</li><!--c--><li>b</li></ul>")).toBe(
+			"<ul><li>a<li>b</ul>"
+		);
+	});
+
+	it("keeps the tag for a comment minifying keeps", () => {
+		expect(
+			minify("<ul><li>a</li><!--keep--><li>b</li></ul>", {
+				preserveComments: ["keep"]
+			})
+		).toBe("<ul><li>a</li><!--keep--><li>b</ul>");
+	});
+
+	it("still keeps a tag before printed text", () => {
+		expect(minify("<ul><li>a</li>tail</ul>")).toBe("<ul><li>a</li>tail</ul>");
+	});
+
+	it("scans both ways past whitespace the tier drops", () => {
+		// Skipping it forward but not back drops `</thead>` and the implied
+		// `<tbody>` together, and the rows re-parse into the head.
+		const table = "<table><thead><tr><th>h</thead>\n<tbody><tr><td>d</table>";
+		expect(minify(table, { collapseWhitespace: "all" })).toBe(
+			"<table><thead><tr><th>h<tbody><tr><td>d</table>"
+		);
+		expect(minify(table)).toBe(
+			"<table><thead><tr><th>h</thead>\n<tr><td>d</table>"
+		);
+	});
+});
+
+describe("SourceProcessor — an empty value is the bare name", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { mode: "minify" }).code;
+
+	it("prints any empty value as the name alone", () => {
+		expect(minify('<div title="" lang="" data-x=\'\'>x</div>')).toBe(
+			"<div title lang data-x>x</div>"
+		);
+		expect(minify('<iframe sandbox=""></iframe>')).toBe(
+			"<iframe sandbox></iframe>"
+		);
+	});
+
+	it("does it in foreign content too", () => {
+		// The tokenizer's after-attribute-name state reads the `/` as the tag's,
+		// not as part of the name, so a self-closing tag needs nothing extra.
+		expect(minify('<svg><rect x=""/></svg>')).toBe("<svg><rect x/></svg>");
+		expect(minify('<math><mi x=""></mi></math>')).toBe(
+			"<math><mi x></mi></math>"
+		);
+	});
+
+	it("leaves a value a reference only decodes to empty", () => {
+		// Read raw: what a reference decodes to is not the printer's business.
+		expect(minify('<div title="&#x20;">x</div>')).toContain("title=&#x20;");
+	});
+});
+
+describe("SourceProcessor — removeEmptyElements reads the output", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @param {object=} options extra print options
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html, options) =>
+		new SourceProcessor().process(html, {
+			mode: "minify",
+			removeEmptyElements: true,
+			...options
+		}).code;
+
+	it("drops a run of nested empties together", () => {
+		expect(minify("<div><div><div></div></div></div>")).toBe("");
+		expect(minify("<div><span></span></div><p><em></em></p>")).toBe("");
+	});
+
+	it("drops one left empty by a comment going", () => {
+		expect(minify("<div><!--c--></div>")).toBe("");
+	});
+
+	it("keeps one whose child still prints", () => {
+		expect(minify("<div><canvas></canvas></div>")).toBe(
+			"<div><canvas></canvas></div>"
+		);
+		expect(minify("<div><span>x</span></div>")).toBe(
+			"<div><span>x</span></div>"
+		);
+	});
+
+	it("follows the collapse tier for a whitespace child", () => {
+		expect(minify("<div> </div>")).toBe("<div> </div>");
+		expect(minify("<div> </div>", { collapseWhitespace: "all" })).toBe("");
+	});
+
+	it("keeps one whose whitespace is data rather than layout", () => {
+		// A literal-text body is written as it is meant to be read, so whitespace
+		// there leaves the element non-empty at every tier.
+		for (const name of ["style", "script", "iframe", "noframes"]) {
+			const html = `<div><${name}> </${name}></div>`;
+			expect(minify(html, { collapseWhitespace: "all" })).toBe(html);
+		}
+		expect(
+			minify("<div><pre>  </pre></div>", { collapseWhitespace: "all" })
+		).toBe("<div><pre>  </pre></div>");
+	});
+
+	it("keeps foreign content, whose whitespace it cannot read", () => {
+		expect(minify("<div><svg> </svg></div>")).toBe("<div><svg> </svg></div>");
+	});
+
+	it("drops a head holding nothing but whitespace", () => {
+		// Nothing renders what sits directly in `<head>`, whatever the tier says.
+		expect(minify("<head> </head><body>x")).toBe("<body>x</body>");
+	});
+});
+
+describe("SourceProcessor — removeImpliedTags", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	const PAGE =
+		"<!doctype html><html><head><title>t</title></head><body><ul><li>a</li></ul></body></html>";
+
+	/**
+	 * @param {(boolean | "smart" | "all")=} removeImpliedTags the mode
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (removeImpliedTags) =>
+		new SourceProcessor().process(PAGE, { mode: "minify", removeImpliedTags })
+			.code;
+
+	it("leaves out only the <html> start tag by default", () => {
+		// `</html>` stays with it: a reader checking the page downloaded whole
+		// looks for one, and only the start tag is what nothing matches on.
+		expect(minify()).toBe(
+			"<!doctype html><head><title>t</title></head><body><ul><li>a</ul></body></html>"
+		);
+		expect(minify("smart")).toBe(minify());
+	});
+
+	it("leaves out all six when asked", () => {
+		expect(minify(true)).toBe("<!doctype html><title>t</title><ul><li>a</ul>");
+		expect(minify("all")).toBe(minify(true));
+	});
+
+	it("keeps all three when off, and the other optional tags still go", () => {
+		// Every optional tag but these three is dropped whatever the option says:
+		// nothing can observe that, and only these three are what a consumer
+		// reading the page with a regexp looks for.
+		expect(minify(false)).toBe(
+			"<!doctype html><html><head><title>t</title></head><body><ul><li>a</ul></body></html>"
+		);
+	});
+
+	it("keeps a <html> that carries an attribute", () => {
+		expect(
+			new SourceProcessor().process("<html lang=en><body>x", { mode: "minify" })
+				.code
+		).toBe("<html lang=en><body>x</body></html>");
+	});
+
+	it("invents no </html> for a source that spelled no <html>", () => {
+		expect(new SourceProcessor().process("<p>a", { mode: "minify" }).code).toBe(
+			"<p>a"
+		);
+	});
+
+	/**
+	 * @param {string} html markup
+	 * @returns {string} the minified serialization, every optional tag dropped
+	 */
+	const minifyAll = (html) =>
+		new SourceProcessor().process(html, {
+			mode: "minify",
+			removeImpliedTags: "all"
+		}).code;
+
+	it("keeps the tag whitespace behind it would re-parse into", () => {
+		// A space opening the body lands in the head without `<body>`, and one
+		// behind `</head>` in the body without it.
+		expect(
+			minifyAll("<html><head><title>t</title></head><body> text</body></html>")
+		).toBe("<title>t</title><body> text");
+		expect(
+			minifyAll("<html><head><title>t</title></head> <body>x</body></html>")
+		).toBe("<title>t</title></head>x");
+	});
+
+	it("looks past a comment it is about to drop", () => {
+		expect(
+			minifyAll("<html><head><title>t</title></head><!--c--><body>x</body>")
+		).toBe("<title>t</title>x");
+		// One it keeps stays behind the tag, so the tag stays too.
+		expect(
+			minifyAll("<html><head><title>t</title></head><!--[if IE]>i<![endif]-->x")
+		).toBe("<title>t</title></head><!--[if IE]>i<![endif]-->x");
+	});
+});
+
 describe("SourceProcessor — token list values", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
@@ -4083,7 +4333,7 @@ describe("SourceProcessor — token list values", () => {
 	});
 });
 
-describe("SourceProcessor — sortAttributes / sortClassNames", () => {
+describe("SourceProcessor — sortAttributes / sortTokenLists", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
 	/**
@@ -4125,10 +4375,10 @@ describe("SourceProcessor — sortAttributes / sortClassNames", () => {
 
 	it("sorts a class list, and only `class`", () => {
 		expect(
-			minify('<div class="zz aa mm">x</div>', { sortClassNames: true })
+			minify('<div class="zz aa mm">x</div>', { sortTokenLists: true })
 		).toBe('<div class="aa mm zz">x</div>');
 		// `ping` is the order the requests go out in.
-		expect(minify('<a ping="/z /a">l</a>', { sortClassNames: true })).toBe(
+		expect(minify('<a ping="/z /a">l</a>', { sortTokenLists: true })).toBe(
 			'<a ping="/z /a">l</a>'
 		);
 	});
@@ -4145,8 +4395,8 @@ describe("SourceProcessor — sortAttributes / sortClassNames", () => {
 		expect(expected.split("\n").length).toBeGreaterThan(20);
 		for (const options of [
 			{ sortAttributes: true },
-			{ sortClassNames: true },
-			{ sortAttributes: true, sortClassNames: true }
+			{ sortTokenLists: true },
+			{ sortAttributes: true, sortTokenLists: true }
 		]) {
 			expect(canonical(minify(PAGE, options))).toBe(expected);
 		}
@@ -4156,8 +4406,8 @@ describe("SourceProcessor — sortAttributes / sortClassNames", () => {
 		const base = minify(PAGE);
 		for (const options of [
 			{ sortAttributes: true },
-			{ sortClassNames: true },
-			{ sortAttributes: true, sortClassNames: true }
+			{ sortTokenLists: true },
+			{ sortAttributes: true, sortTokenLists: true }
 		]) {
 			expect(minify(PAGE, options)).toHaveLength(base.length);
 		}
@@ -5626,10 +5876,10 @@ describe("htmlMinify — assets webpack only passes through", () => {
 		// `<?php … ?>` is a bogus comment per §13.2.5.42, so the inert-comment rule
 		// would delete the whole directive from a copied template.
 		expect(min("<?php echo $t; ?>\n<html><body><p>a</p></body></html>")).toBe(
-			"<?php echo $t; ?><html><body><p>a</body></html>"
+			"<?php echo $t; ?><body><p>a</body></html>"
 		);
 		expect(min("<html><body><!-- inert --><p>a</p></body></html>")).toBe(
-			"<html><body><p>a</body></html>"
+			"<body><p>a</body></html>"
 		);
 	});
 
@@ -5721,7 +5971,7 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 					"<!DOCTYPE html><html><head></head><body><p><b>a<p>b</body></html>"
 				)
 			).toBe(
-				"<!doctype html><html><head></head><body><p><b>a</b><p><b>b</b></body></html>"
+				"<!doctype html><head></head><body><p><b>a</b><p><b>b</b></body></html>"
 			);
 		});
 
@@ -5981,7 +6231,7 @@ describe("SourceProcessor — printing in pieces", () => {
 
 	it("drops an omitted tag that nothing printed inside", () => {
 		expect(minify("")).toBe("");
-		expect(minify("<html><body>")).toBe("<html><body></body></html>");
+		expect(minify("<html><body>")).toBe("<body></body></html>");
 		expect(minify("</body><!--c-->")).toBe("");
 	});
 

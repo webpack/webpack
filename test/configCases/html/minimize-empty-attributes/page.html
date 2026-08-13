@@ -8,6 +8,11 @@
 <div class="  " id="&#x20;">whitespace is empty too, a reference is not</div>
 <div class>valueless is the empty value</div>
 <div title="" lang="">kept: an empty value means something the spec does not give absence</div>
+<div part="">dropped: an empty token list is no tokens</div>
+<a href="x" rel="" ping="">dropped: on the element that carries them</a>
+<table><tr><td headers="">dropped: here too</table>
+<iframe sandbox="" src="x.html"></iframe>
+<div onclick="" onmouseover="">kept: an empty handler still reads back as one</div>
 <div data-x="" aria-label="" role="">kept: not in the table</div>
 <div class="a" id="b" style="color:red" dir="rtl">kept: carries a value</div>
 </body>

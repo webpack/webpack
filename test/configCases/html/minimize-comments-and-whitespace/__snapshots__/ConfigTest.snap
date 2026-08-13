@@ -1,3 +1,3 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ConfigTestCases html minimize-comments-and-whitespace minimize-comments-and-whitespace should compile 1`] = `"<!doctype html><html><head><title>Comments and whitespace</title></head><body><div>a b</div><div>c</div> <span> d </span><span> e </span> <!-- @license MIT: kept by pattern -->  <!--[if IE 8]><p class=a>ie<![endif]--><pre>  verbatim   here  </pre></body></html>"`;
+exports[`ConfigTestCases html minimize-comments-and-whitespace minimize-comments-and-whitespace should compile 1`] = `"<!doctype html><head><title>Comments and whitespace</title></head><body><div>a b</div><div>c</div> <span> d </span><span> e </span> <!-- @license MIT: kept by pattern -->  <!--[if IE 8]><p class=a>ie<![endif]--><pre>  verbatim   here  </pre></body></html>"`;

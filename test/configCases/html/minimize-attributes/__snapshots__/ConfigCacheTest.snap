@@ -9,7 +9,7 @@ exports[`ConfigCacheTestCases html minimize-attributes minimize-attributes shoul
 	<a href=# title=foo#bar>x</a>
 	<a href=http://example.test/ title=blah>trailing slash</a>
 	<a title=blah href=http://example.test/>trailing slash, last</a>
-	<a href=http://example.test/ title=\\"\\">empty value</a>
+	<a href=http://example.test/ title>empty value</a>
 	<p class=foo|bar:baz>no quotes needed</p>
 	<p onclick=x>event handler</p>
 	<link href=\\"<?php echo 'http://foo/' ?>\\">
@@ -19,7 +19,7 @@ b\\">newline in a value</p>
 	<p data-dq=a&quot;b>double quote in a value</p>
 	<p data-sq='a\\"b'>the other quote wins</p>
 	<p data-amp=a?b&c data-ref=a&amp;b>raw value bytes</p>
-	<input type=text value=\\"\\" disabled checked>
+	<input type=text value disabled checked>
 	<div class=a id=b>collapsed attribute whitespace</div>
 	<div>no attributes</div>
 	<br>

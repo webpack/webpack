@@ -10207,7 +10207,8 @@ type HtmlPrintOptions = Pick<
 	preserveComments?: (string | RegExp)[];
 	removeRedundantAttributes?: boolean | "all" | "smart";
 	sortAttributes?: boolean;
-	sortClassNames?: boolean;
+	sortTokenLists?: boolean;
+	removeImpliedTags?: boolean | "all" | "smart";
 };
 declare interface HtmlProcessOptions {
 	/**
@@ -10241,7 +10242,7 @@ declare interface HtmlProcessOptions {
 	collapseWhitespace?: boolean | "all" | "conservative" | "smart";
 
 	/**
-	 * drop `class` / `id` / `style` / `dir` when empty, which the spec reads as their absence (default false)
+	 * drop an attribute whose empty value leaves it in the state its absence gives (default false)
 	 */
 	removeEmptyAttributes?: boolean;
 
@@ -10261,19 +10262,24 @@ declare interface HtmlProcessOptions {
 	mergeStyles?: boolean;
 
 	/**
-	 * print an element's attributes in name order, which nothing in HTML reads (default false)
+	 * print an element's attributes commonest name first, ties by name, which nothing in HTML reads (default false)
 	 */
 	sortAttributes?: boolean;
 
 	/**
-	 * print a `class` list in token order, which nothing in CSS reads (default false)
+	 * print every token list the DOM reads as a set (`class`, `rel`, `part`, …) in token order (default false)
 	 */
-	sortClassNames?: boolean;
+	sortTokenLists?: boolean;
 
 	/**
 	 * drop an attribute whose value is the element's own default; `true` is `"smart"`, and `"all"` also drops the spec defaults a selector can match (default false)
 	 */
 	removeRedundantAttributes?: boolean | "all" | "smart";
+
+	/**
+	 * how much of the `<html>` / `<head>` / `<body>` shell §13.1.2.4 lets the parser imply may be left out: `"smart"` leaves out only the `<html>` start tag, `true` (or `"all"`) all six, `false` none (default `"smart"`)
+	 */
+	removeImpliedTags?: boolean | "all" | "smart";
 }
 declare interface HtmlResourceHintHtmlEntryDependency {
 	/**
@@ -19827,16 +19833,22 @@ declare interface OptimizationMinimizeHtml {
 	preserveComments?: (string | RegExp)[];
 
 	/**
-	 * Drop `class`, `id`, `style` and `dir` when their value is empty or only whitespace, which is the state the spec also gives their absence. Off by default: an attribute selector matches on presence, so `[class]` stops matching. `title` and `lang` are never dropped even when empty — the spec gives an empty value of either a meaning absence does not have.
+	 * Drop an attribute whose empty or all-whitespace value leaves it in the state its absence gives: `class`, `id`, `style`, `dir`, `for`, `accesskey`, `itemprop`, `itemref`, `itemtype`, and every attribute reflecting a token list (`rel`, `ping`, `headers`, `part`, `sizes`, `blocking`) — an empty list is no tokens. Off by default: an attribute selector matches on presence, so `[class]` stops matching. Never dropped: `title` and `lang`, whose empty value means what absence does not; `sandbox`, whose empty list is the most restrictive state an `<iframe>` has; and an event handler, whose empty body still compiles to a function where absence reads null.
 	 * @since 5.110.0
 	 */
 	removeEmptyAttributes?: boolean;
 
 	/**
-	 * Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (`canvas`, `slot`, `template`, `textarea`, `progress`, `meter`, `output`, `dialog`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a `::before`, and the minifier cannot see the stylesheet. Emptiness is read off the source tree in one pass, so an element left empty only because its child was dropped is not itself dropped.
+	 * Drop an element that has no children and no attributes. Kept anyway when its bare form is still doing a job (`canvas`, `slot`, `template`, `textarea`, `progress`, `meter`, `output`, `dialog`, and the table structure), when it is a void element, or when it is foreign content. Off by default: CSS can give an empty element a size or a `::before`, and the minifier cannot see the stylesheet. Emptiness is read off the output rather than the source, so a run of nested empties goes together and an element left empty only by a dropped comment or by whitespace `collapseWhitespace` deletes goes with them.
 	 * @since 5.110.0
 	 */
 	removeEmptyElements?: boolean;
+
+	/**
+	 * How much of the `<html>` / `<head>` / `<body>` shell §13.1.2.4 lets the parser imply may be left out. Every other optional tag goes unconditionally — nothing can observe that — but these six are what a consumer reading the page with a regexp rather than a parser looks for. `"smart"`, the default, leaves out the one such a reader never matches: the `<html>` start tag, which is omittable only when it carries no attribute at all, so the `<html lang=en>` anyone greps for keeps its tag anyway. `</html>` stays with it, since a truncation check reads a page as complete by finding one. `true` (or `"all"`) leaves out all six, which is where a crawler matching on `<body>` stops finding one; `false` leaves out none. A tag also stays wherever the spec keeps it: an attribute to carry, a comment minifying does not drop, whitespace opening the element, or a `meta` / `noscript` / `link` / `script` / `style` / `template` element opening the body.
+	 * @since 5.110.0
+	 */
+	removeImpliedTags?: boolean | "all" | "smart";
 
 	/**
 	 * Drop an attribute whose value is the one the element already defaults to. Off by default: an attribute a page no longer carries is one `getAttribute` and every attribute selector read differently, whichever tier dropped it. `true` (or `"smart"`) drops only markers on elements that render nothing — `<script type=text/javascript>`, `<script language=javascript>`, `<script charset=utf-8>`, `<style type=text/css>`, `<link type=text/css>`, `<link media=all>` — so no rule that styles the page stops applying, which is what `@swc/html` does by default. `"all"` also drops spec defaults such as `<input type=text>` and `<form method=get>`, which reaches further still: an attribute selector matches the content attribute, not the reflected default, so `input[type=text]` stops matching.
@@ -19845,16 +19857,16 @@ declare interface OptimizationMinimizeHtml {
 	removeRedundantAttributes?: boolean | "all" | "smart";
 
 	/**
-	 * Print an element's attributes in name order. Nothing in HTML reads attribute order, so this only makes the same markup compress better across pages. Off by default: a script reading `element.attributes` back, or a snapshot of the emitted HTML, sees the new order.
+	 * Print an element's attributes in a fixed order: the document's commonest attribute names first, ties by name. Nothing in HTML reads attribute order, so this only makes the same markup compress better across pages — the run of attributes two elements share becomes the same run of bytes. Off by default: a script reading `element.attributes` back, or a snapshot of the emitted HTML, sees the new order.
 	 * @since 5.110.0
 	 */
 	sortAttributes?: boolean;
 
 	/**
-	 * Print a `class` list in token order. Nothing in CSS reads token order, so this only makes the same markup compress better across pages. Off by default: a script reading `className` back sees the new order. Other token lists are left alone — `ping` is the order its requests go out in.
+	 * Print every space-separated token list the DOM reads as a set — `class`, `rel`, `part`, `sandbox`, `blocking`, `itemprop` / `itemref` / `itemtype`, `<output for>` and `<link sizes>` — in token order. Nothing matching those reads order, so this only makes the same markup compress better across pages. Off by default: a script reading `className` or `rel` back sees the new order. The lists the DOM does not read as a set are left alone whatever this says — `ping` is the order its requests go out in and `accesskey` the order its keys are tried.
 	 * @since 5.110.0
 	 */
-	sortClassNames?: boolean;
+	sortTokenLists?: boolean;
 }
 
 /**
