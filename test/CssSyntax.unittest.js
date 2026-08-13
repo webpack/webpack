@@ -4635,6 +4635,75 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 	});
 });
 
+describe("CssSyntax minify — vendor prefixes (values)", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {string[]=} browsers the browserslist selection
+	 * @returns {string} its minified serialization
+	 */
+	const minify = (css, browsers) =>
+		new SourceProcessor().process(css, {
+			mode: "minify",
+			environment: browsers ? { browsers } : undefined
+		}).code;
+
+	it("adds the spellings a target needs for a keyword value", () => {
+		expect(minify("a{width:max-content}", ["chrome 40", "firefox 40"])).toBe(
+			"a{width:-webkit-max-content;width:-moz-max-content;width:max-content}"
+		);
+	});
+
+	it("spells a value an engine renamed rather than prefixed", () => {
+		expect(minify("a{display:flex}", ["ie 10"])).toBe(
+			"a{display:-ms-flexbox;display:flex}"
+		);
+	});
+
+	it("carries `!important` onto the copy", () => {
+		expect(minify("a{position:sticky!important}", ["safari 9"])).toBe(
+			"a{position:-webkit-sticky!important;position:sticky!important}"
+		);
+	});
+
+	it("drops a value spelling no target needs", () => {
+		expect(minify("a{display:-ms-flexbox;display:flex}", ["chrome 130"])).toBe(
+			"a{display:flex}"
+		);
+	});
+
+	it("keeps one a target still needs", () => {
+		expect(minify("a{display:-ms-flexbox;display:flex}", ["ie 10"])).toBe(
+			"a{display:-ms-flexbox;display:flex}"
+		);
+	});
+
+	it("keeps a lone value spelling — nothing else writes the property", () => {
+		expect(minify("a{display:-ms-flexbox}", ["chrome 130"])).toBe(
+			"a{display:-ms-flexbox}"
+		);
+	});
+
+	it("does not double a spelling the source already carries", () => {
+		expect(
+			minify("a{width:-webkit-max-content;width:max-content}", ["chrome 40"])
+		).toBe("a{width:-webkit-max-content;width:max-content}");
+	});
+
+	it("leaves a value that is not the keyword alone", () => {
+		expect(minify("a{width:calc(1px + 1em)}", ["chrome 40"])).toBe(
+			"a{width:calc(1px + 1em)}"
+		);
+	});
+
+	it("leaves a keyword of a property no engine spelled its own way", () => {
+		expect(minify("a{float:left}", ["chrome 40"])).toBe("a{float:left}");
+	});
+
+	it("does nothing without a target list", () => {
+		expect(minify("a{width:max-content}")).toBe("a{width:max-content}");
+	});
+});
+
 describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 	/**
 	 * @param {string} css a stylesheet
@@ -4849,8 +4918,26 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 	});
 
 	it("leaves a pseudo inside a functional selector untouched", () => {
-		expect(minify(":is(:autofill){color:red}", ["chrome 40"])).toBe(
-			":is(:autofill){color:red}"
+		expect(minify(":not(:autofill){color:red}", ["chrome 40"])).toBe(
+			":not(:autofill){color:red}"
+		);
+	});
+
+	it("spells a pseudo its engines renamed rather than prefixed", () => {
+		expect(minify(":is(a,b) c{color:red}", ["chrome 40", "firefox 40"])).toBe(
+			":-webkit-any(a,b) c{color:red}:-moz-any(a,b) c{color:red}:is(a,b) c{color:red}"
+		);
+	});
+
+	it("drops a renamed pseudo no target needs", () => {
+		expect(
+			minify(":-webkit-any(a,b){color:red}:is(a,b){color:red}", ["chrome 130"])
+		).toBe(":is(a,b){color:red}");
+	});
+
+	it("spells `:fullscreen` for each engine that renamed it", () => {
+		expect(minify(":fullscreen{color:red}", ["chrome 40", "firefox 40"])).toBe(
+			":-webkit-full-screen{color:red}:-moz-full-screen{color:red}:fullscreen{color:red}"
 		);
 	});
 

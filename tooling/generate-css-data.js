@@ -37,7 +37,7 @@ const colorName = require("color-name");
 /** @typedef {{ [name: string]: { syntax?: string } }} PartialSyntaxTable */
 /** @typedef {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[], initial?: string | string[] } }} PartialPropertyTable */
 /** @typedef {{ [name: string]: { syntax?: string, status?: string } }} PartialSelectorTable */
-/** @typedef {{ version_added?: string | boolean | null, version_removed?: string | boolean | null, prefix?: string, flags?: EXPECTED_ANY[] }} BcdSupport */
+/** @typedef {{ version_added?: string | boolean | null, version_removed?: string | boolean | null, prefix?: string, alternative_name?: string, flags?: EXPECTED_ANY[] }} BcdSupport */
 /** @typedef {{ support: { [browser: string]: BcdSupport | BcdSupport[] } }} BcdCompat */
 /** @typedef {{ __compat?: BcdCompat }} BcdNode */
 const bcdVersion = bcd.__meta.version;
@@ -3632,16 +3632,27 @@ const encodeVersion = (version) => {
 	return parsedMajor * 100000 + (Number.parseInt(minor, 10) || 0);
 };
 
-// One construct's prefixes as `prefix -> [browserslistName, prefixedFrom,
-// unprefixedFrom][]`: a target browser at version V needs the prefix exactly
-// when `prefixedFrom <= V < unprefixedFrom`. A browser whose unprefixed form
-// never arrived carries `Infinity`, so it always needs the prefix (Safari and
-// `-webkit-user-select`); one whose windows are all empty is dropped.
+// A vendor spelling BCD states as an alternative name rather than a prefix, with
+// its decoration stripped: `":-webkit-any()"` -> `-webkit-any`. The same engine
+// filter applies, so a rename that is not a vendor's (`:matches()`, `:after`) is
+// not one of these.
+const ALTERNATIVE_DECORATION = /^:{1,2}|\(\)$/g;
+
+// One construct's vendor spellings as `spelling -> [browserslistName, from,
+// to][]`: a target browser at version V needs the spelling exactly when
+// `from <= V < to`. A browser whose unprefixed form never arrived carries
+// `Infinity`, so it always needs it (Safari and `-webkit-user-select`); one
+// whose windows are all empty is dropped. A spelling is the name with the
+// engine's prefix on it, or — where `alternatives` is on, which is the axes
+// whose legacy spelling is a rename rather than a prefix — the vendor name BCD
+// states instead (`:is()` was `:-webkit-any()`, never `:-webkit-is()`).
 /**
  * @param {BcdCompat | undefined} compat the construct's `__compat` block
- * @returns {[string, [string, number, number][]][] | null} `[prefix, [browser, from, to][]][]`, or null
+ * @param {string} name the construct's unprefixed name
+ * @param {boolean} alternatives whether a vendor rename counts as a spelling
+ * @returns {[string, [string, number, number][]][] | null} `[spelling, [browser, from, to][]][]`, or null
  */
-const collectPrefixes = (compat) => {
+const collectPrefixes = (compat, name, alternatives) => {
 	if (!compat || !compat.support) return null;
 	/** @type {Map<string, Map<string, [number, number]>>} */
 	const byPrefix = new Map();
@@ -3654,10 +3665,17 @@ const collectPrefixes = (compat) => {
 		let unprefixedFrom = null;
 		for (const entry of entries) {
 			// An entry BCD later removed never established unprefixed support, one
-			// behind a flag is not support a page can rely on, and the earliest of
-			// the rest is the arrival — BCD's newest-first ordering is convention,
-			// not schema.
-			if (entry.prefix || entry.version_removed || entry.flags) continue;
+			// behind a flag is not support a page can rely on, one spelled another
+			// way is not the unprefixed spelling at all, and the earliest of the rest
+			// is the arrival — BCD's newest-first ordering is convention, not schema.
+			if (
+				entry.prefix ||
+				entry.alternative_name ||
+				entry.version_removed ||
+				entry.flags
+			) {
+				continue;
+			}
 			const added = encodeVersion(entry.version_added);
 			if (
 				added !== null &&
@@ -3668,23 +3686,24 @@ const collectPrefixes = (compat) => {
 		}
 		const target = unprefixedFrom === null ? Infinity : unprefixedFrom;
 		for (const entry of entries) {
+			if (entry.flags) continue;
 			// A selector prefix is compound (`-webkit-input-` on `::placeholder`), so
 			// match the engine's prefix at the start rather than whole — that still
 			// drops an obsolete cross-engine one (`-khtml-` on `user-select`).
-			const entryPrefix = entry.prefix;
-			if (
-				!entryPrefix ||
-				entry.flags ||
-				!allowed.some((p) => entryPrefix.startsWith(p))
-			) {
+			const spelling = entry.prefix
+				? entry.prefix + name
+				: alternatives && entry.alternative_name
+					? entry.alternative_name.replace(ALTERNATIVE_DECORATION, "")
+					: null;
+			if (spelling === null || !allowed.some((p) => spelling.startsWith(p))) {
 				continue;
 			}
 			const prefixedFrom = encodeVersion(entry.version_added);
 			if (prefixedFrom === null || prefixedFrom >= target) continue;
-			let browsers = byPrefix.get(entryPrefix);
+			let browsers = byPrefix.get(spelling);
 			if (browsers === undefined) {
 				browsers = new Map();
-				byPrefix.set(entryPrefix, browsers);
+				byPrefix.set(spelling, browsers);
 			}
 			// `safari_ios` and `webview_ios` both fold onto `ios_saf`; keep the
 			// widest window (earliest prefix start, latest unprefixed arrival).
@@ -3705,14 +3724,14 @@ const collectPrefixes = (compat) => {
 	if (byPrefix.size === 0) return null;
 	/** @type {[string, [string, number, number][]][]} */
 	const out = [];
-	for (const [prefix, browsers] of byPrefix) {
+	for (const [spelling, browsers] of byPrefix) {
 		/** @type {[string, number, number][]} */
 		const list = [...browsers].map(([browser, [from, to]]) => [
 			browser,
 			from,
 			to
 		]);
-		out.push([prefix, list]);
+		out.push([spelling, list]);
 	}
 	return out;
 };
@@ -3723,18 +3742,118 @@ const collectPrefixes = (compat) => {
 // standard one.
 /**
  * @param {{ [name: string]: BcdNode }} group a BCD axis (`css.properties`, `css.selectors`, `css["at-rules"]`)
+ * @param {boolean=} alternatives whether a vendor rename counts as a spelling
  * @returns {[string, [string, [string, number, number][]][]][]} the axis table, sorted
  */
-const collectPrefixTable = (group) => {
+const collectPrefixTable = (group, alternatives = false) => {
 	/** @type {[string, [string, [string, number, number][]][]][]} */
 	const table = [];
 	for (const [name, node] of Object.entries(group)) {
 		if (name.startsWith("__")) continue;
-		const prefixes = collectPrefixes(node.__compat);
+		const prefixes = collectPrefixes(node.__compat, name, alternatives);
 		if (prefixes !== null) table.push([name, prefixes]);
+	}
+	if (!alternatives) return table.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+	// A spelling two names claim cannot be right for both, and the one whose own
+	// prefix makes it is the one that means it: BCD gives `:-moz-placeholder` to
+	// `::placeholder` as its prefix and to `:placeholder-shown` as a rename, and
+	// only the first is what an old engine did with it.
+	/** @type {Map<string, number>} */
+	const claims = new Map();
+	for (const [, spellings] of table) {
+		for (const [spelling] of spellings) {
+			claims.set(spelling, (claims.get(spelling) || 0) + 1);
+		}
+	}
+	/** @type {[string, [string, [string, number, number][]][]][]} */
+	const kept = [];
+	for (const [name, spellings] of table) {
+		const own = spellings.filter(
+			([spelling]) =>
+				/** @type {number} */ (claims.get(spelling)) === 1 ||
+				spelling.endsWith(name)
+		);
+		if (own.length !== 0) kept.push([name, own]);
+	}
+	return kept.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+// A value whose vendor spelling is not the same value spelled another way, which
+// no dataset states — each carries why. Everything else is read from BCD.
+const VALUE_SPELLING_EXCLUSIONS = new Map([
+	// IE's `-ms-grid` is the 2011 grid, whose tracks and placement are their own
+	// prefixed properties: a copy of the declaration alone lays the box out by a
+	// different algorithm rather than the same one under an older name. It is why
+	// autoprefixer keeps IE grid behind an option of its own.
+	["display", ["grid", "inline-grid"]]
+]);
+
+/**
+ * The vendor spellings of a property's own keyword values, as `property ->
+ * keyword -> [spelling, [browser, from, to][]][]`. A BCD sub-feature is read
+ * only where the property's value-definition syntax names that keyword itself,
+ * which is what tells a value (`display.flex`) from a context BCD files the same
+ * way (`align-self.grid_context`) and from a function whose arguments the older
+ * spelling did not take the same way (`background-image.image-set`).
+ * @returns {[string, [string, [string, [string, number, number][]][]][]][]} the table, sorted
+ */
+const collectPrefixedValues = () => {
+	/** @type {[string, [string, [string, [string, number, number][]][]][]][]} */
+	const table = [];
+	for (const [property, node] of Object.entries(bcd.css.properties)) {
+		if (property.startsWith("__")) continue;
+		const entry = /** @type {PartialPropertyTable} */ (properties)[property];
+		if (!entry || !entry.syntax) continue;
+		const excluded = VALUE_SPELLING_EXCLUSIONS.get(property);
+		// The engines whose prefix the property itself already carries: BCD files
+		// "IE read this value under `-ms-touch-action`" on the value as well, and a
+		// copy spelling the value instead of the property says nothing an engine
+		// reads.
+		const propertyEngines = new Set(
+			(collectPrefixes(node.__compat, property, false) || []).map(
+				([spelling]) =>
+					/** @type {RegExpExecArray} */ (/^(-[a-z]+-)/.exec(spelling))[1]
+			)
+		);
+		/** @type {[string, [string, [string, number, number][]][]][]} */
+		const values = [];
+		/** @type {Set<string> | null} */
+		let keywords = null;
+		for (const [value, sub] of Object.entries(node)) {
+			if (value === "__compat") continue;
+			const compat = /** @type {BcdNode} */ (sub).__compat;
+			if (!compat) continue;
+			if (keywords === null) {
+				keywords = new Set(lowerSorted(acceptedValues(entry.syntax).keywords));
+			}
+			const keyword = value.toLowerCase();
+			if (!keywords.has(keyword)) continue;
+			if (excluded !== undefined && excluded.includes(keyword)) continue;
+			const spellings = (collectPrefixes(compat, value, true) || []).filter(
+				([spelling]) =>
+					!propertyEngines.has(
+						/** @type {RegExpExecArray} */ (/^(-[a-z]+-)/.exec(spelling))[1]
+					)
+			);
+			if (spellings.length !== 0) values.push([keyword, spellings]);
+		}
+		if (values.length !== 0) {
+			table.push([property, values.sort((a, b) => (a[0] < b[0] ? -1 : 1))]);
+		}
 	}
 	return table.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
+
+/**
+ * A value table's `new Map([…])` literal: `property -> keyword -> [spelling,
+ * [browser, from, to][]][]`.
+ * @param {[string, [string, [string, [string, number, number][]][]][]][]} table the value table
+ * @returns {string} its `new Map([…])` literal
+ */
+const prefixedValueLiteral = (table) =>
+	`new Map([${table
+		.map(([property, values]) => `["${property}", ${prefixLiteral(values)}]`)
+		.join(", ")}])`;
 
 /**
  * Read every table out of the datasets and build the file they belong in.
@@ -3839,8 +3958,9 @@ const collectData = () => {
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
 	const prefixedProperties = collectPrefixTable(bcd.css.properties);
-	const prefixedSelectors = collectPrefixTable(bcd.css.selectors);
+	const prefixedSelectors = collectPrefixTable(bcd.css.selectors, true);
 	const prefixedAtRules = collectPrefixTable(bcd.css["at-rules"]);
+	const prefixedValues = collectPrefixedValues();
 	const steppedFunctions = SUPPLEMENT.mathFunctionFold
 		.filter(([, , , , , stepped]) => stepped)
 		.map(([name]) => name);
@@ -4356,6 +4476,14 @@ const PREFIXED_SELECTORS = ${prefixLiteral(prefixedSelectors)};
 /** @type {Map<string, [string, [string, number, number][]][]>} */
 const PREFIXED_AT_RULES = ${prefixLiteral(prefixedAtRules)};
 
+// The vendor spellings of a property's own keyword values, as \`property ->
+// keyword -> [spelling, [browserslistBrowser, from, to][]][]\` — \`display:flex\`
+// was \`display:-webkit-flex\`, and \`width:max-content\` \`width:-moz-max-content\`.
+// Only keywords the property's syntax names are here, so a function whose older
+// spelling read its arguments differently is not.
+/** @type {Map<string, Map<string, [string, [string, number, number][]][]>>} */
+const PREFIXED_VALUES = ${prefixedValueLiteral(prefixedValues)};
+
 // The browserslist names the three tables above carry windows for. A selection
 // naming one they do not is a browser whose needs nothing here states, so a
 // prefix is still added for the browsers that do need it but none is dropped.
@@ -4404,6 +4532,7 @@ module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.POSITION_PROPERT
 module.exports.PREFIXED_AT_RULES = PREFIXED_AT_RULES;
 module.exports.PREFIXED_PROPERTIES = PREFIXED_PROPERTIES;
 module.exports.PREFIXED_SELECTORS = PREFIXED_SELECTORS;
+module.exports.PREFIXED_VALUES = PREFIXED_VALUES;
 module.exports.PREFIX_BROWSERS = PREFIX_BROWSERS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
@@ -4416,7 +4545,7 @@ module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;
 `;
 
-	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${negativeAcceptingProperties.length} negative-accepting properties, ${lengthOnlyFunctions.length} length-only functions, ${pairLonghands.length} pair shorthands, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity, ${cssModulesKeywords.length} css modules scoped properties (${cssModulesKeywords.reduce((total, [, , table]) => total + table.length, 0)} keywords), ${prefixedProperties.length} prefixed properties, ${prefixedSelectors.length} prefixed selectors, ${prefixedAtRules.length} prefixed at-rules over ${prefixBrowsers.length} browsers`;
+	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${negativeAcceptingProperties.length} negative-accepting properties, ${lengthOnlyFunctions.length} length-only functions, ${pairLonghands.length} pair shorthands, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity, ${cssModulesKeywords.length} css modules scoped properties (${cssModulesKeywords.reduce((total, [, , table]) => total + table.length, 0)} keywords), ${prefixedProperties.length} prefixed properties, ${prefixedSelectors.length} prefixed selectors, ${prefixedAtRules.length} prefixed at-rules and ${prefixedValues.reduce((total, [, values]) => total + values.length, 0)} prefixed values over ${prefixBrowsers.length} browsers`;
 	return { source, summary };
 };
 
