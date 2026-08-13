@@ -43,7 +43,7 @@ All commands are defined in `package.json` `scripts`.
 
 Never invoke `yarn jest`/`npx jest` directly: the required `--experimental-vm-modules` node flag lives only in the `test:base` wrapper, and bare jest crashes ESM/test262 suites. See [TESTING_DOCS.md](TESTING_DOCS.md) for how to run a single case.
 
-**CI must come back green in full** — see [After opening the PR](#after-opening-the-pr--every-check-ends-green); the jobs are defined in `.github/workflows/`, which is the list to read rather than one memorized here. Two of them behave unlike the rest and are worth knowing about: the benchmark job's memory mode is sensitive to fixture size and to which cases share its process, and the Bun job runs under `--smol` and surfaces OOMs the Node suites don't. Watch both when touching hot paths or large test fixtures.
+**CI must come back green in full** — see [After opening the PR](#after-opening-the-pr--every-check-ends-green); the jobs are defined in `.github/workflows/`, which is the list to read rather than one memorized here. Two of them behave unlike the rest and are worth knowing about: the benchmark job's memory mode is sensitive to fixture size, and measures each case in its own process because a peak otherwise reads the heap earlier cases grew, and the Bun job runs under `--smol` and surfaces OOMs the Node suites don't. Watch both when touching hot paths or large test fixtures.
 
 ## Architecture
 

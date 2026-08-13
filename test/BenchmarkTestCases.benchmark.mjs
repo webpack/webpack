@@ -481,33 +481,6 @@ class BenchmarkRunner {
 	}
 
 	/**
-	 * Run the whole shard in one shared bench in the main process. Used for
-	 * CodSpeed memory mode: a single `Bench` with one global prime pass and one
-	 * setup/teardown, exactly like the pre-parallel harness, so allocation counts
-	 * stay stable and comparable (per-benchmark benches shifted them by 2-4x).
-	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
-	 * @returns {Promise<void>}
-	 */
-	async runInMainThread(benchmarkTasks) {
-		console.log(
-			`\nRunning ${benchmarkTasks.length} benchmark task(s) in a single process (memory mode)\n`
-		);
-
-		const { runAll } = await import("./harness/benchmark/benchmark.worker.mjs");
-
-		// Any task error aborts the run (bench `throws: true`), matching the
-		// pre-parallel harness where one failure failed the whole shard.
-		const result = await runAll({
-			tasks: benchmarkTasks,
-			casesPath: this.casesPath,
-			baseOutputPath: this.baseOutputPath,
-			callingFile
-		});
-
-		this.processResults([result]);
-	}
-
-	/**
 	 * Run benchmark tasks across a pool of worker processes.
 	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
 	 * @returns {Promise<void>}
@@ -519,12 +492,18 @@ class BenchmarkRunner {
 				: os.cpus().length;
 		const cpuWorkers = Math.max(1, cpuCount - 1);
 
-		// Simulation is the only Valgrind mode here (memory mode runs in-process);
-		// its shadow memory is only freed on process exit.
-		const underValgrind = getCodspeedRunnerMode() === "simulation";
+		const runnerMode = getCodspeedRunnerMode();
+		// Simulation is the only Valgrind mode here; its shadow memory is only
+		// freed on process exit.
+		const underValgrind = runnerMode === "simulation";
+		// A memory-mode peak counts allocator bytes the measured region asks the
+		// OS for, so it reads whatever heap the tasks before it left grown: the
+		// same build measures ~2x lower after three of them, and noisier with
+		// each. One task per fresh process is what makes a peak its own.
+		const measureInFreshProcess = underValgrind || runnerMode === "memory";
 
 		// Bound the pool by RAM, not just cores: a Valgrind build peaks near 11 GiB,
-		// so 16 GiB fits one worker; bigger runners auto-scale. memory mode never gets here.
+		// so 16 GiB fits one worker; bigger runners auto-scale.
 		const totalGiB = os.totalmem() / 1024 ** 3;
 		const reserveGiB = 3;
 		const perWorkerGiB = underValgrind ? 11 : 1.5;
@@ -533,7 +512,10 @@ class BenchmarkRunner {
 			Math.floor((totalGiB - reserveGiB) / perWorkerGiB)
 		);
 
-		const numWorkers = Math.min(cpuWorkers, memWorkers);
+		// Memory mode is not CPU-bound and its tasks must not overlap: a peak is
+		// read against this machine's allocator, which co-running builds move.
+		const numWorkers =
+			runnerMode === "memory" ? 1 : Math.min(cpuWorkers, memWorkers);
 
 		const workerPool = /** @type {BenchmarkWorker} */ (
 			new Worker(
@@ -541,10 +523,11 @@ class BenchmarkRunner {
 				{
 					exposedMethods: ["run"],
 					numWorkers,
-					// Valgrind memory accumulates across builds and frees only on exit, so
-					// recycle the worker after each task (`0` = always restart) to cap peak
-					// at one build's footprint; otherwise a shard OOMs mid-run (exit 143).
-					idleMemoryLimit: underValgrind ? 0 : undefined,
+					// `0` = always restart, so each task gets a fresh process. Valgrind
+					// needs it because its shadow memory frees only on exit and a shard
+					// would OOM mid-run (exit 143); memory mode needs it so a peak does
+					// not read the heap an earlier task grew.
+					idleMemoryLimit: measureInFreshProcess ? 0 : undefined,
 					// Forward the V8 flags CodSpeed needs (seeds, --no-opt, …) so the
 					// child processes measure under the same deterministic conditions.
 					forkOptions: { silent: false, execArgv: getV8Flags() }
@@ -616,9 +599,7 @@ class BenchmarkRunner {
 
 		await this.prepareBenchmarkTasks(benchmarkTasks);
 
-		await (getCodspeedRunnerMode() === "memory"
-			? this.runInMainThread(benchmarkTasks)
-			: this.runInWorkers(benchmarkTasks));
+		await this.runInWorkers(benchmarkTasks);
 	}
 }
 
