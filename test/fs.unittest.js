@@ -26,10 +26,8 @@ const createError = (code, p) => {
 };
 
 /**
- * A file system whose mkdir never reports success: a directory whose parent is
- * missing gets ENOENT, every other one gets `existingCode` — what memfs/BSD do
- * for an existing directory such as the root "/" (#10544), and what a
- * concurrent creation looks like on the retry after the recursion.
+ * A file system whose mkdir never reports success: ENOENT when the parent is
+ * missing, `existingCode` otherwise — as memfs/BSD do for the root "/" (#10544).
  * @param {string} existingCode the code reported instead of success
  * @returns {FakeFs} the file system
  */
@@ -111,9 +109,8 @@ const createWorkingFs = () => {
 };
 
 /**
- * A file system on which the first mkdir of a directory whose parent exists
- * succeeds and a second one fails with `code` — so the retry that follows the
- * ENOENT recursion is the call that fails.
+ * A file system where the first mkdir of a directory succeeds and a second
+ * fails with `code`, so the retry after the ENOENT recursion is what fails.
  * @param {string} code the code the retry fails with
  * @returns {FakeFs} the file system
  */
