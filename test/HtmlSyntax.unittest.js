@@ -4279,14 +4279,21 @@ describe("SourceProcessor — removeImpliedTags", () => {
 		}).code;
 
 	it("keeps the tag whitespace behind it would re-parse into", () => {
-		// A space opening the body lands in the head without `<body>`, and one
-		// behind `</head>` in the body without it.
+		// A space opening the body lands in the head without `<body>`.
 		expect(
 			minifyAll("<html><head><title>t</title></head><body> text</body></html>")
 		).toBe("<title>t</title><body> text");
+	});
+
+	it("drops a shell tag over whitespace that prints nothing", () => {
+		// Whitespace inside `<head>`, or behind `</head>`, sits outside every
+		// block formatting context, so no tier prints it and no tag guards it.
+		expect(
+			minifyAll("<html><head>\n<title>t</title>\n</head><body>x</body></html>")
+		).toBe("<title>t</title>x");
 		expect(
 			minifyAll("<html><head><title>t</title></head> <body>x</body></html>")
-		).toBe("<title>t</title></head>x");
+		).toBe("<title>t</title>x");
 	});
 
 	it("looks past a comment it is about to drop", () => {
