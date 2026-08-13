@@ -4307,6 +4307,46 @@ describe("SourceProcessor — removeImpliedTags", () => {
 	});
 });
 
+describe("SourceProcessor — attribute quote spelling", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html a document
+	 * @returns {string} its minified form
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { mode: "minify" }).code;
+
+	it("swaps the delimiter so escaped quotes can stand literal", () => {
+		expect(minify('<img alt="say &quot;hi&quot; to &quot;them&quot;">')).toBe(
+			'<img alt=\'say "hi" to "them"\'>'
+		);
+		expect(minify('<div data-c="{&quot;a&quot;:1}">')).toBe(
+			"<div data-c='{\"a\":1}'></div>"
+		);
+	});
+
+	it("keeps every other reference the value spells", () => {
+		// `&amp;quot;` is the text `&quot;`, not a quote, so it stays escaped —
+		// and `&nbsp;` / `&#10;` still need a reference under either delimiter.
+		expect(minify('<img alt="&amp;quot; literal &quot;q&quot;">')).toBe(
+			"<img alt='&amp;quot; literal \"q\"'>"
+		);
+		expect(minify('<img alt="nb&nbsp;sp &quot;q&quot;">')).toBe(
+			"<img alt='nb&nbsp;sp \"q\"'>"
+		);
+		expect(minify('<img alt="line&#10;br &quot;q&quot;">')).toBe(
+			"<img alt='line&#10;br \"q\"'>"
+		);
+	});
+
+	it("leaves a value carrying both kinds alone", () => {
+		expect(minify('<img alt="it&#39;s &quot;x&quot;">')).toBe(
+			'<img alt="it&#39;s &quot;x&quot;">'
+		);
+	});
+});
+
 describe("SourceProcessor — token list values", () => {
 	const { SourceProcessor } = require("../lib/html/syntax");
 
