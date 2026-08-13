@@ -10,4 +10,6 @@ it("should not bake one entry's base into a chunk the other also loads", async (
 	);
 	// `other` sets no base, so a literal built from this entry's would be wrong there.
 	expect(source).not.toContain("https://example.com/base/");
+	// Without this the check above would pass just as well on an empty chunk.
+	expect(source).toContain("asset.txt");
 });

@@ -1,8 +1,7 @@
 "use strict";
 
-// The public path only the deferred pass can spell resolves to text opening with the
-// compilation hash, which reads as a scheme when it starts with a letter — so the base
-// has to be applied after the fill, exactly as the runtime applies it.
+// A deferred public path opening with the hash reads as a scheme once filled, so
+// the base has to be applied after the fill, exactly as the runtime applies it.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
