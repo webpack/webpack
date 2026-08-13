@@ -37,7 +37,7 @@ const colorName = require("color-name");
 /** @typedef {{ [name: string]: { syntax?: string } }} PartialSyntaxTable */
 /** @typedef {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[], initial?: string | string[] } }} PartialPropertyTable */
 /** @typedef {{ [name: string]: { syntax?: string, status?: string } }} PartialSelectorTable */
-/** @typedef {{ version_added?: string | boolean | null, version_removed?: string | boolean | null, prefix?: string, alternative_name?: string, flags?: EXPECTED_ANY[] }} BcdSupport */
+/** @typedef {{ version_added?: string | boolean | null, version_removed?: string | boolean | null, prefix?: string, alternative_name?: string, partial_implementation?: boolean, flags?: EXPECTED_ANY[] }} BcdSupport */
 /** @typedef {{ support: { [browser: string]: BcdSupport | BcdSupport[] } }} BcdCompat */
 /** @typedef {{ __compat?: BcdCompat }} BcdNode */
 const bcdVersion = bcd.__meta.version;
@@ -3664,10 +3664,14 @@ const collectPrefixes = (compat, name, alternatives) => {
 		const entries = Array.isArray(raw) ? raw : [raw];
 		let unprefixedFrom = null;
 		for (const entry of entries) {
-			// An entry BCD later removed never established unprefixed support, one
-			// behind a flag is not support a page can rely on, one spelled another
-			// way is not the unprefixed spelling at all, and the earliest of the rest
-			// is the arrival — BCD's newest-first ordering is convention, not schema.
+			// An entry BCD later removed never established unprefixed support — the
+			// one it ends may be a partial implementation the next refines, but
+			// reading a partial one as support is what would drop a spelling an
+			// engine still needs (`-webkit-mask`, against a `mask` Chrome has
+			// partially had since 1). One behind a flag is not support a page can
+			// rely on, one spelled another way is not the unprefixed spelling at
+			// all, and the earliest of the rest is the arrival — BCD's newest-first
+			// ordering is convention, not schema.
 			if (
 				entry.prefix ||
 				entry.alternative_name ||
@@ -3700,6 +3704,14 @@ const collectPrefixes = (compat, name, alternatives) => {
 			}
 			const prefixedFrom = encodeVersion(entry.version_added);
 			if (prefixedFrom === null || prefixedFrom >= target) continue;
+			// A spelling the engine itself dropped ends there rather than where the
+			// unprefixed one arrived: `-moz-outline` went in Firefox 3.6, six years
+			// before the property it stood for was complete.
+			const spellingRemoved = encodeVersion(entry.version_removed);
+			const until =
+				spellingRemoved !== null && spellingRemoved < target
+					? spellingRemoved
+					: target;
 			let browsers = byPrefix.get(spelling);
 			if (browsers === undefined) {
 				browsers = new Map();
@@ -3712,10 +3724,10 @@ const collectPrefixes = (compat, name, alternatives) => {
 				browsers.set(
 					browser,
 					existing === undefined
-						? [prefixedFrom, target]
+						? [prefixedFrom, until]
 						: [
 								Math.min(existing[0], prefixedFrom),
-								Math.max(existing[1], target)
+								Math.max(existing[1], until)
 							]
 				);
 			}
@@ -3750,8 +3762,16 @@ const collectPrefixTable = (group, alternatives = false) => {
 	const table = [];
 	for (const [name, node] of Object.entries(group)) {
 		if (name.startsWith("__")) continue;
-		const prefixes = collectPrefixes(node.__compat, name, alternatives);
-		if (prefixes !== null) table.push([name, prefixes]);
+		const spellings = collectPrefixes(node.__compat, name, alternatives);
+		if (spellings === null) continue;
+		const excluded = PROPERTY_SPELLING_EXCLUSIONS.get(name);
+		const kept =
+			excluded === undefined
+				? spellings
+				: spellings.filter(
+						([spelling]) => !excluded.some((p) => spelling.startsWith(p))
+					);
+		if (kept.length !== 0) table.push([name, kept]);
 	}
 	if (!alternatives) return table.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 	// A spelling two names claim cannot be right for both, and the one whose own
@@ -3777,6 +3797,16 @@ const collectPrefixTable = (group, alternatives = false) => {
 	}
 	return kept.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
+
+// A property spelling BCD records that no engine ever read. Everything else is
+// read from BCD; each entry here carries why it cannot be.
+const PROPERTY_SPELLING_EXCLUSIONS = new Map([
+	// IE 10's flexbox renamed its properties rather than prefixing them, and
+	// `order` was `-ms-flex-order` — which takes the same values, but under a name
+	// BCD files as a prefix on `order`. `-ms-order` was never read by anything, so
+	// the rename is the only spelling, and a rename is not derivable from a prefix.
+	["order", ["-ms-"]]
+]);
 
 // A value whose vendor spelling is not the same value spelled another way, which
 // no dataset states — each carries why. Everything else is read from BCD.

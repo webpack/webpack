@@ -4704,6 +4704,38 @@ describe("CssSyntax minify — vendor prefixes (values)", () => {
 	});
 });
 
+describe("CssSyntax minify — vendor prefixes (spellings an engine dropped)", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {string[]} browsers the browserslist selection
+	 * @returns {string} its minified serialization
+	 */
+	const minify = (css, browsers) =>
+		new SourceProcessor().process(css, {
+			mode: "minify",
+			environment: { browsers }
+		}).code;
+
+	it("stops at the version the engine dropped the spelling, not at the unprefixed one", () => {
+		// `-moz-outline` went in Firefox 3.6; the property it stood for is filed as
+		// complete only from 88, which is not where the spelling stopped working.
+		expect(minify("a{outline:none}", ["firefox 40"])).toBe("a{outline:none}");
+		expect(minify("a{outline:none}", ["firefox 3"])).toBe(
+			"a{-moz-outline:none;outline:none}"
+		);
+	});
+
+	it("drops a prefix an engine switch took away", () => {
+		// Presto read `-o-transform`; the Blink Opera that followed at 15 never did.
+		expect(minify("a{transform:none}", ["opera 20"])).toBe(
+			"a{-webkit-transform:none;transform:none}"
+		);
+		expect(minify("a{transform:none}", ["opera 12.1"])).toBe(
+			"a{-o-transform:none;transform:none}"
+		);
+	});
+});
+
 describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 	/**
 	 * @param {string} css a stylesheet
