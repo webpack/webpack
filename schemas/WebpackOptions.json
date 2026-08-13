@@ -3732,6 +3732,11 @@
           "description": "Rewrite a length into a shorter unit it is exactly equal in (`16px` -> `1pc`). Off by default: the authored unit is lost, and once the asset is compressed the rewrite rarely earns anything.",
           "type": "boolean",
           "added": "5.110.0"
+        },
+        "vendorPrefixes": {
+          "description": "Maintain vendor prefixes for the `browserslist` target: add the `-webkit-` / `-moz-` / `-ms-` spelling of a property, at-rule or pseudo-selector that a selected browser still needs, and drop one none of them does. On by default, and only in effect for a `browserslist` target — any other target names no browsers to prefix for. A prefix is dropped only where every selected browser is one the prefix tables cover, so a selection naming a browser they do not (`op_mini`, `and_uc`, `ie_mob`, …) still gains prefixes but loses none.",
+          "type": "boolean",
+          "added": "5.110.0"
         }
       },
       "added": "5.110.0"

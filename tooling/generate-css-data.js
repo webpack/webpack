@@ -37,7 +37,7 @@ const colorName = require("color-name");
 /** @typedef {{ [name: string]: { syntax?: string } }} PartialSyntaxTable */
 /** @typedef {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[], initial?: string | string[] } }} PartialPropertyTable */
 /** @typedef {{ [name: string]: { syntax?: string, status?: string } }} PartialSelectorTable */
-/** @typedef {{ version_added?: string | boolean | null, version_removed?: string | boolean | null, prefix?: string }} BcdSupport */
+/** @typedef {{ version_added?: string | boolean | null, version_removed?: string | boolean | null, prefix?: string, flags?: EXPECTED_ANY[] }} BcdSupport */
 /** @typedef {{ support: { [browser: string]: BcdSupport | BcdSupport[] } }} BcdCompat */
 /** @typedef {{ __compat?: BcdCompat }} BcdNode */
 const bcdVersion = bcd.__meta.version;
@@ -3596,6 +3596,18 @@ const BROWSER_PREFIXES = new Map([
 	["ie", ["-ms-"]]
 ]);
 
+// The browserslist names the tables above can answer for: every BCD id that maps
+// to one and has an engine prefix. A selection naming anything else — `op_mini`,
+// `and_uc`, `ie_mob`, a browser BCD does not track — hides what that browser
+// needs, which the minifier reads as "removal is not sound here".
+const prefixBrowsers = [
+	...new Set(
+		[...BCD_TO_BROWSERSLIST]
+			.filter(([bcdBrowser]) => BROWSER_PREFIXES.has(bcdBrowser))
+			.map(([, browser]) => browser)
+	)
+].sort();
+
 // A BCD version to one comparable integer `major * 100000 + minor`, so the
 // runtime orders versions with a plain `<` and never a float compare (`15.10`
 // must sort above `15.4`). `true` (since forever) is 0; `≤n` is that n; a
@@ -3636,10 +3648,11 @@ const collectPrefixes = (compat) => {
 		const entries = Array.isArray(raw) ? raw : [raw];
 		let unprefixedFrom = null;
 		for (const entry of entries) {
-			// An entry BCD later removed never established unprefixed support, and
-			// the earliest of the rest is the arrival — BCD's newest-first ordering
-			// is convention, not schema.
-			if (entry.prefix || entry.version_removed) continue;
+			// An entry BCD later removed never established unprefixed support, one
+			// behind a flag is not support a page can rely on, and the earliest of
+			// the rest is the arrival — BCD's newest-first ordering is convention,
+			// not schema.
+			if (entry.prefix || entry.version_removed || entry.flags) continue;
 			const added = encodeVersion(entry.version_added);
 			if (
 				added !== null &&
@@ -3654,7 +3667,11 @@ const collectPrefixes = (compat) => {
 			// match the engine's prefix at the start rather than whole — that still
 			// drops an obsolete cross-engine one (`-khtml-` on `user-select`).
 			const entryPrefix = entry.prefix;
-			if (!entryPrefix || !allowed.some((p) => entryPrefix.startsWith(p))) {
+			if (
+				!entryPrefix ||
+				entry.flags ||
+				!allowed.some((p) => entryPrefix.startsWith(p))
+			) {
 				continue;
 			}
 			const prefixedFrom = encodeVersion(entry.version_added);
@@ -4329,6 +4346,12 @@ const PREFIXED_SELECTORS = ${prefixLiteral(prefixedSelectors)};
 /** @type {Map<string, [string, [string, number, number][]][]>} */
 const PREFIXED_AT_RULES = ${prefixLiteral(prefixedAtRules)};
 
+// The browserslist names the three tables above carry windows for. A selection
+// naming one they do not is a browser whose needs nothing here states, so a
+// prefix is still added for the browsers that do need it but none is dropped.
+/** @type {Set<string>} */
+const PREFIX_BROWSERS = new Set([${prefixBrowsers.map((browser) => `"${browser}"`).join(", ")}]);
+
 module.exports.ABSOLUTE_UNIT_SCALE = ABSOLUTE_UNIT_SCALE;
 module.exports.ALPHA_VALUE_PROPERTIES = ALPHA_VALUE_PROPERTIES;\nmodule.exports.ANGLE_UNITS = ANGLE_UNITS;
 module.exports.ARC_COSINE_DEGREES = ARC_COSINE_DEGREES;
@@ -4371,6 +4394,7 @@ module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.POSITION_PROPERT
 module.exports.PREFIXED_AT_RULES = PREFIXED_AT_RULES;
 module.exports.PREFIXED_PROPERTIES = PREFIXED_PROPERTIES;
 module.exports.PREFIXED_SELECTORS = PREFIXED_SELECTORS;
+module.exports.PREFIX_BROWSERS = PREFIX_BROWSERS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
@@ -4382,7 +4406,7 @@ module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;
 `;
 
-	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${negativeAcceptingProperties.length} negative-accepting properties, ${lengthOnlyFunctions.length} length-only functions, ${pairLonghands.length} pair shorthands, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity, ${cssModulesKeywords.length} css modules scoped properties (${cssModulesKeywords.reduce((total, [, , table]) => total + table.length, 0)} keywords), ${prefixedProperties.length} prefixed properties, ${prefixedSelectors.length} prefixed selectors, ${prefixedAtRules.length} prefixed at-rules`;
+	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${negativeAcceptingProperties.length} negative-accepting properties, ${lengthOnlyFunctions.length} length-only functions, ${pairLonghands.length} pair shorthands, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity, ${cssModulesKeywords.length} css modules scoped properties (${cssModulesKeywords.reduce((total, [, , table]) => total + table.length, 0)} keywords), ${prefixedProperties.length} prefixed properties, ${prefixedSelectors.length} prefixed selectors, ${prefixedAtRules.length} prefixed at-rules over ${prefixBrowsers.length} browsers`;
 	return { source, summary };
 };
 

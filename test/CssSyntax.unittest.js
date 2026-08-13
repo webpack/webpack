@@ -4811,3 +4811,100 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 		expect(minify("::placeholder{color:red}")).toBe("::placeholder{color:red}");
 	});
 });
+
+describe("CssSyntax minify — vendor prefixes (target selection)", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {string[]=} browsers the browserslist selection
+	 * @returns {string} its minified serialization
+	 */
+	const minify = (css, browsers) =>
+		new SourceProcessor().process(css, {
+			mode: "minify",
+			environment: browsers ? { browsers } : undefined
+		}).code;
+
+	it("keeps a prefix when the selection names a browser the tables cannot resolve", () => {
+		expect(
+			minify("a{-ms-user-select:none;user-select:none}", [
+				"chrome 130",
+				"ie_mob 11"
+			])
+		).toBe("a{-ms-user-select:none;user-select:none}");
+	});
+
+	it("still adds for the browsers it does resolve", () => {
+		expect(minify("a{user-select:none}", ["chrome 40", "op_mini all"])).toBe(
+			"a{-webkit-user-select:none;user-select:none}"
+		);
+	});
+
+	it("keeps a prefix when a selected version does not parse", () => {
+		expect(
+			minify("a{-webkit-border-radius:5px;border-radius:5px}", [
+				"chrome 130",
+				"chrome"
+			])
+		).toBe("a{-webkit-border-radius:5px;border-radius:5px}");
+	});
+
+	it("leaves prefixes alone for an empty selection", () => {
+		expect(minify("a{-webkit-border-radius:5px;border-radius:5px}", [])).toBe(
+			"a{-webkit-border-radius:5px;border-radius:5px}"
+		);
+	});
+
+	it("reads every selected version of one browser, not just the oldest", () => {
+		// Chrome 130 is past `user-select`'s unprefixed arrival and 40 is inside its
+		// prefix window: an interval is not answered by the selection's low end.
+		expect(minify("a{user-select:none}", ["chrome 130", "chrome 40"])).toBe(
+			"a{-webkit-user-select:none;user-select:none}"
+		);
+	});
+
+	it("takes the low end of a version range", () => {
+		expect(minify("a{user-select:none}", ["ios_saf 15.0-15.1"])).toBe(
+			"a{-webkit-user-select:none;user-select:none}"
+		);
+	});
+});
+
+describe("CssSyntax minify — vendor prefixes (joined rules)", () => {
+	/**
+	 * @param {string} css a stylesheet
+	 * @param {string[]=} browsers the browserslist selection
+	 * @returns {string} its minified serialization
+	 */
+	const minify = (css, browsers) =>
+		new SourceProcessor().process(css, {
+			mode: "minify",
+			environment: browsers ? { browsers } : undefined
+		}).code;
+
+	it("keeps the prefixes it added when two at-rules join", () => {
+		expect(
+			minify("@media screen{user-select:none}@media screen{color:red}", [
+				"chrome 40"
+			])
+		).toBe("@media screen{-webkit-user-select:none;user-select:none;color:red}");
+	});
+
+	it("does not bring back a prefix it dropped when two at-rules join", () => {
+		expect(
+			minify(
+				"@media screen{-webkit-border-radius:5px;border-radius:5px}@media screen{color:red}",
+				["chrome 130"]
+			)
+		).toBe("@media screen{border-radius:5px;color:red}");
+	});
+
+	it("joins the rules inside two blocks with their own prefixes", () => {
+		expect(
+			minify("@media screen{a{user-select:none}}@media screen{b{color:red}}", [
+				"chrome 40"
+			])
+		).toBe(
+			"@media screen{a{-webkit-user-select:none;user-select:none}b{color:red}}"
+		);
+	});
+});

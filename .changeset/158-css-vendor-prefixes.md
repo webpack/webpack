@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add and drop CSS vendor prefixes when minifying for a browserslist target.
+Add and drop CSS vendor prefixes for a browserslist target (`vendorPrefixes`).
