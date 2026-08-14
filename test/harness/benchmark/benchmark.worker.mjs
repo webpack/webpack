@@ -66,6 +66,12 @@ const codspeedRunnerMode = getCodspeedRunnerMode();
 const RUNTIME_BUNDLE_FILENAME = "bundle.js";
 // `run()` input. Opaque to the compiler, so the workload can't be constant-folded.
 const RUNTIME_SEED = 7;
+// Rebuilds per measured sample. One rebuild allocates so little that a single
+// discrete difference inside it — a cache slot filled, a GC threshold crossed —
+// swings the sample by ~14% run to run; averaging over several brings it to
+// ~1%. Only memory mode needs it: simulation counts instructions and is already
+// deterministic, so repeating there would just make the longest job 5x longer.
+const REBUILDS_PER_SAMPLE = codspeedRunnerMode === "memory" ? 5 : 1;
 
 /** @type {string} */
 let baseOutputPath;
@@ -893,57 +899,62 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 		}
 	};
 
+	/**
+	 * @returns {Promise<void>} resolves once the edit has been rebuilt
+	 */
+	const rebuildOnce = async () => {
+		/** @type {((value?: void) => void)} */
+		let resolve;
+		/** @type {((err: Error | null) => void)} */
+		let reject;
+
+		const promise = new Promise((res, rej) => {
+			resolve = res;
+			reject = rej;
+		});
+
+		next = (err, stats) => {
+			if (err || !stats) {
+				reject(err);
+				return;
+			}
+
+			if (stats.hasWarnings() || stats.hasErrors()) {
+				reject(new Error(stats.toString()));
+				return;
+			}
+
+			// Construct and print stats to be more accurate with real life projects
+			stats.toString();
+			resolve();
+		};
+
+		await new Promise(
+			/**
+			 * @param {(value?: void) => void} resolve resolve
+			 * @param {(err: Error) => void} reject reject
+			 */
+			(resolve, reject) => {
+				writeFile(entry, nextEntryContent(), (err) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve();
+				});
+			}
+		);
+
+		await promise;
+	};
+
 	bench.add(
 		taskName,
 		async () => {
-			/** @type {((value?: void) => void)} */
-			let resolve;
-			/** @type {((err: Error | null) => void)} */
-			let reject;
-
-			const promise = new Promise((res, rej) => {
-				resolve = res;
-				reject = rej;
-			});
-
-			next = (err, stats) => {
-				if (err || !stats) {
-					reject(err);
-					return;
-				}
-
-				if (stats.hasWarnings() || stats.hasErrors()) {
-					reject(new Error(stats.toString()));
-					return;
-				}
-
-				// Construct and print stats to be more accurate with real life projects
-				stats.toString();
-				resolve();
-			};
-
-			await new Promise(
-				/**
-				 * @param {(value?: void) => void} resolve resolve
-				 * @param {(err: Error) => void} reject reject
-				 */
-				(resolve, reject) => {
-					writeFile(
-						entry,
-						nextEntryContent(),
-						(err) => {
-							if (err) {
-								reject(err);
-								return;
-							}
-
-							resolve();
-						}
-					);
-				}
-			);
-
-			await promise;
+			for (let i = 0; i < REBUILDS_PER_SAMPLE; i++) {
+				await rebuildOnce();
+			}
 		},
 		{
 			beforeEach(mode) {
