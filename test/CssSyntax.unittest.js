@@ -6268,6 +6268,32 @@ describe("SourceProcessor — svg in a data url", () => {
 		);
 	});
 
+	it("keeps the fragment out of the payload it escapes", () => {
+		expect(background(`data:image/svg+xml,${encodeURIComponent(SVG)}#g`)).toBe(
+			"url(\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><path d=%22M1 1 2 2%22/></svg>#g\")"
+		);
+	});
+
+	it("leaves a base64 payload `Buffer.from` would silently rewrite", () => {
+		expect(background("data:image/svg+xml;base64,%%%%")).toBe(
+			"url(data:image/svg+xml;base64,%%%%)"
+		);
+		expect(background("data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=====")).toBe(
+			"url(data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=====)"
+		);
+	});
+
+	it("declines rather than re-entering itself for a nested sheet", () => {
+		const styled =
+			"<svg xmlns='http://www.w3.org/2000/svg'><style>.a{fill:  red ;}</style></svg>";
+		const out = new SourceProcessor().process(
+			`a{background:url("data:image/svg+xml,${encodeURIComponent(styled)}")}b{color:#ff0000}`,
+			{ mode: "minify" }
+		).code;
+		expect(out).toContain("<style>.a{fill:  red ;}</style>");
+		expect(out.endsWith("b{color:red}")).toBe(true);
+	});
+
 	it("keeps a payload minifying does not shorten", () => {
 		const already = "<svg xmlns='http://www.w3.org/2000/svg'/>";
 		expect(background(`data:image/svg+xml,${already}`)).toBe(

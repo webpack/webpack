@@ -7770,3 +7770,82 @@ describe("SourceProcessor — svg path data", () => {
 		expect(out).toContain('<path d="M1 1 2 2"/>');
 	});
 });
+
+describe("SourceProcessor — what xml requires", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} markup input markup
+	 * @param {object=} options extra print options
+	 * @returns {string} the minified serialization
+	 */
+	const xml = (markup, options) =>
+		new SourceProcessor().process(markup, {
+			mode: "minify",
+			xml: true,
+			...options
+		}).code;
+
+	const SVG = '<svg xmlns="http://www.w3.org/2000/svg">';
+
+	it("spells the doctype the way XML reads it", () => {
+		expect(
+			xml(`<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "s.dtd">${SVG}</svg>`)
+		).toBe(
+			`<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "s.dtd">${SVG}</svg>`
+		);
+		expect(
+			new SourceProcessor().process("<!DOCTYPE HTML><p>x", { mode: "minify" })
+				.code
+		).toBe("<!doctype html><p>x");
+	});
+
+	it("splits the section a `]]>` in the body would close", () => {
+		expect(
+			xml(`${SVG}<script type="application/json">{"a":"]]>"}</script></svg>`)
+		).toBe(
+			`${SVG}<script type="application/json"><![CDATA[{"a":"]]]]><![CDATA[>"}]]></script></svg>`
+		);
+	});
+
+	it("keeps a start tag XML has no way to imply", () => {
+		const table = "<table><tbody><tr><td>a</td></tr></tbody></table>";
+		expect(xml(`${SVG}<foreignObject>${table}</foreignObject></svg>`)).toBe(
+			`${SVG}<foreignObject>${table}</foreignObject></svg>`
+		);
+	});
+
+	it("reads `xml:space` as the way SVG asks for verbatim text", () => {
+		const collapse = { collapseWhitespace: "all" };
+		expect(
+			xml(`${SVG}<text xml:space="preserve">a   b</text></svg>`, collapse)
+		).toBe(`${SVG}<text xml:space="preserve">a   b</text></svg>`);
+		expect(
+			xml(`${SVG}<text xml:space="default">a   b</text></svg>`, collapse)
+		).toBe(`${SVG}<text xml:space="default">a b</text></svg>`);
+		expect(xml(`${SVG}<text>a   b</text></svg>`, collapse)).toBe(
+			`${SVG}<text>a b</text></svg>`
+		);
+	});
+
+	it("inherits `xml:space` from the nearest ancestor stating one", () => {
+		const collapse = { collapseWhitespace: "all" };
+		const outer =
+			'<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve">';
+		expect(xml(`${outer}<g><text>a   b</text></g></svg>`, collapse)).toBe(
+			`${outer}<g><text>a   b</text></g></svg>`
+		);
+		expect(
+			xml(`${outer}<text xml:space="default">a   b</text></svg>`, collapse)
+		).toBe(`${outer}<text xml:space="default">a b</text></svg>`);
+	});
+
+	it("honours `xml:space` on an svg inside an html document too", () => {
+		expect(
+			new SourceProcessor().process(
+				`<!DOCTYPE html><body>${SVG}<text xml:space="preserve">a   b</text></svg>`,
+				{ mode: "minify", collapseWhitespace: "all" }
+			).code
+		).toContain("<text xml:space=preserve>a   b</text>");
+	});
+});
