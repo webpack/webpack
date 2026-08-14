@@ -3585,6 +3585,10 @@ const BCD_TO_BROWSERSLIST = new Map([
 // no removal version) is never carried and so never added. Edge and Opera list
 // both their old and Chromium prefixes; the version windows sort out which
 // applies. A browser absent here contributes no prefixes.
+// The engine prefixes in play at all. A spelling carrying none of them is no
+// engine's — `-khtml-`, which died with KHTML — and is never reached for.
+const ENGINE_PREFIXES = ["-webkit-", "-moz-", "-ms-", "-o-"];
+
 const BROWSER_PREFIXES = new Map([
 	["chrome", ["-webkit-"]],
 	["chrome_android", ["-webkit-"]],
@@ -3689,21 +3693,35 @@ const collectPrefixes = (compat, name, alternatives) => {
 			}
 		}
 		const target = unprefixedFrom === null ? Infinity : unprefixedFrom;
+		// Every spelling that covers this browser's gap, before deciding which of
+		// them it may be told about.
+		/** @type {[BcdSupport, string, number][]} */
+		const covering = [];
 		for (const entry of entries) {
 			if (entry.flags) continue;
-			// A selector prefix is compound (`-webkit-input-` on `::placeholder`), so
-			// match the engine's prefix at the start rather than whole — that still
-			// drops an obsolete cross-engine one (`-khtml-` on `user-select`).
 			const spelling = entry.prefix
 				? entry.prefix + name
 				: alternatives && entry.alternative_name
 					? entry.alternative_name.replace(ALTERNATIVE_DECORATION, "")
 					: null;
-			if (spelling === null || !allowed.some((p) => spelling.startsWith(p))) {
-				continue;
-			}
+			if (spelling === null) continue;
 			const prefixedFrom = encodeVersion(entry.version_added);
 			if (prefixedFrom === null || prefixedFrom >= target) continue;
+			covering.push([entry, spelling, prefixedFrom]);
+		}
+		// Its own engine's prefix — or, where nothing of its own covers the gap,
+		// whichever engine's does: Firefox reads `-webkit-line-clamp` and no
+		// `line-clamp` of any spelling, so `-moz-` alone leaves it unprefixed.
+		// A selector prefix is compound (`-webkit-input-` on `::placeholder`), so
+		// match at the start rather than whole — that still drops an obsolete
+		// cross-engine one (`-khtml-` on `user-select`), which is no engine's here.
+		const reachable = covering.some(([, spelling]) =>
+			allowed.some((prefix) => spelling.startsWith(prefix))
+		)
+			? allowed
+			: ENGINE_PREFIXES;
+		for (const [entry, spelling, prefixedFrom] of covering) {
+			if (!reachable.some((prefix) => spelling.startsWith(prefix))) continue;
 			// A spelling the engine itself dropped ends there rather than where the
 			// unprefixed one arrived: `-moz-outline` went in Firefox 3.6, six years
 			// before the property it stood for was complete.

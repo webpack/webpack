@@ -4697,6 +4697,27 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 		);
 	});
 
+	it("reaches for another engine's prefix where a browser has none of its own", () => {
+		// Firefox reads `-webkit-line-clamp` and no `line-clamp` of any spelling, so
+		// `-moz-` alone would leave it unprefixed — and drop the one that works.
+		expect(minify("a{line-clamp:2}", ["firefox 130"])).toBe(
+			"a{-webkit-line-clamp:2;line-clamp:2}"
+		);
+		expect(
+			minify("a{-webkit-line-clamp:2;line-clamp:2}", ["firefox 130"])
+		).toBe("a{-webkit-line-clamp:2;line-clamp:2}");
+		// Before Firefox read it at all, there is nothing to write.
+		expect(minify("a{line-clamp:2}", ["firefox 67"])).toBe("a{line-clamp:2}");
+	});
+
+	it("keeps to a browser's own prefix where that covers it", () => {
+		// Firefox 49 took `-webkit-user-select` as well, but `-moz-user-select`
+		// already covers every version it needs, so the alias is not written.
+		expect(minify("a{user-select:none}", ["firefox 50"])).toBe(
+			"a{-moz-user-select:none;user-select:none}"
+		);
+	});
+
 	it("drops a dead rename, which no prefix can be stripped off", () => {
 		expect(
 			minify("a{-webkit-margin-start:1px;margin-inline-start:1px}", [
