@@ -4,6 +4,6 @@ it("should let a worker entry use top-level this as its global scope", async () 
 	const result = await new Promise(resolve => {
 		worker.onmessage = event => resolve(event.data);
 	});
-	expect(result).toBe("got hello");
+	expect(result).toBe("got hello:defined");
 	await worker.terminate();
 });
