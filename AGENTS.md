@@ -559,7 +559,7 @@ These files are produced by `yarn fix:special` and must not be edited by hand:
 - `schemas/**/*.check.{js,d.ts}` — precompiled schema validators.
 - Generated runtime code under `lib/` (driven by `tooling/generate-runtime-code.js`).
 - `lib/css/data.js` — every table the CSS minifier looks a name up in, and the arithmetic its math-function descriptors bind to: derived from `mdn-data` + `color-name` (box shorthands, color-argument and math functions, named colors) plus the generator's `SUPPLEMENT` of spec-prose tables and math primitives, by `tooling/generate-css-data.js` — which also holds the value-definition-syntax parser those grammars are read with, and runs the generation only as the entry point so its tests can require it.
-- `lib/html/data.js` — every table the HTML parser and minifier look a name up in: the reflected-attribute tables distilled from webref's HTML IDL (vendored as `tooling/html-reflect.json`), plus the generator's `SUPPLEMENT` and `PARSER_TABLES` of §13.2 tree-construction vocabulary, by `tooling/generate-html-data.js`.
+- `lib/html/data.js` — every table the HTML parser and minifier look a name up in: the reflected-attribute tables distilled from webref's HTML IDL (vendored as `tooling/html-reflect.json`), the SVG presentation attributes read out of `mdn-data`'s property groups, plus the generator's `SUPPLEMENT` and `PARSER_TABLES` of §13.2 tree-construction vocabulary, by `tooling/generate-html-data.js`.
 
 Both `syntax.js` files are algorithm only — a new lookup table belongs in the matching generator, not next to the code that reads it.
 
