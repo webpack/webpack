@@ -185,6 +185,18 @@ Spell names out in full — functions, variables, parameters, properties. Prefer
 
 The only exceptions are (1) established abbreviations webpack already uses pervasively (`ast`, `ns` for namespace, `id`, `url`, `css`, `js`, `dir`, `env`, `fs`) or spec-defined ones (`afe` for the HTML spec's "active formatting elements"), and (2) throwaway loop indices (`i`, `j`, `k`). When an abbreviation isn't already common in the codebase or the relevant spec, write the full word.
 
+### Search for an existing implementation before writing a new one
+
+> [!REQUIRED]
+
+**One implementation per job, everywhere in the repository.** Before writing a helper, a regexp, a fixture generator, or any block that "runs a build", "walks the module graph", "generates a project", search for one that already does it. Grep for the concept — and for the names it would plausibly carry — under the places it would live: `lib/util/` for general helpers, `test/harness/` for test and benchmark plumbing, `tooling/` for repo scripts, and the subsystem directory itself. Read what you find before concluding it does not fit.
+
+When something close exists, **use it**. When it is wrong, missing a case, or awkward for your caller, **fix or extend it in place** — widen a parameter, add an option, split it in two — and update its existing callers in the same commit. A second copy beside the first is what this section exists to prevent: the two drift, and the repository ends up holding two answers to one question with no rule for which is current.
+
+Two copies are acceptable only as a migration you intend to finish: a subsystem that supersedes an older one may run beside it for a while. Name the code it replaces in the PR and state when it goes away. Without that, it is duplication, not a migration.
+
+[Path regexps and helpers live in one file](#path-regexps-and-helpers-live-in-one-file) is this rule written out for the case that recurs most.
+
 ### Path regexps and helpers live in one file
 
 > [!REQUIRED]
