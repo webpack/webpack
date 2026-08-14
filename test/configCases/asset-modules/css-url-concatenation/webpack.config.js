@@ -1,8 +1,7 @@
 "use strict";
 
-// Concatenation absorbs the css module into the javascript one that imported it, so
-// the asset's only consumer now looks like javascript — but it is still a css url(),
-// and a javascript wrapper built for it would sit in the bundle with no reader.
+// Concatenation makes the asset's only consumer look like javascript, but it is still
+// a css url(), so a wrapper built for it would sit in the bundle with no reader.
 
 const fs = require("fs");
 const path = require("path");

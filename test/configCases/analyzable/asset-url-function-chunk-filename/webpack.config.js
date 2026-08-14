@@ -1,8 +1,7 @@
 "use strict";
 
-// A stand-in is filled after the chunks it lands in are named, so it is ruled out by a
-// name that moves with its own content. A filename function is asked which of the two
-// it is, the same way the chunk specifier asks — not assumed to be the worse one.
+// A stand-in is filled after its chunks are named, so a content-derived name rules it
+// out — a filename function is asked which it is, not assumed to be the worse one.
 
 const webpack = require("../../../../");
 

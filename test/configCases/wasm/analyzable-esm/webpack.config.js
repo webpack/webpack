@@ -68,9 +68,8 @@ module.exports = [
 	}),
 	base({
 		// The wasm module is duplicated into chunks of different depths, so no single
-		// literal works — the specifier is reserved and each chunk gets its own `../`
-		// path once the names exist. A function names these chunks, and it is asked
-		// whether its answer moves with a hash rather than assumed to.
+		// literal works: the specifier is reserved and each chunk gets its own `../` path
+		// once named, and the naming function is asked whether its answer moves.
 		output: {
 			chunkFilename: (pathData) =>
 				pathData.chunk.name === "deep" ? "b-deep/[name].mjs" : "b-[name].mjs"

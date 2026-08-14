@@ -1,8 +1,7 @@
 "use strict";
 
-// A `new URL(…, import.meta.url)` pulls in the chunk loader for `__webpack_require__.b`
-// alone. Nothing installs a chunk there, so the chunk table and the two helpers that
-// walk it have no reader.
+// A `new URL(…, import.meta.url)` pulls in the chunk loader for `.b` alone, and
+// nothing installs a chunk there — so the table and its two helpers have no reader.
 
 const fs = require("fs");
 const path = require("path");

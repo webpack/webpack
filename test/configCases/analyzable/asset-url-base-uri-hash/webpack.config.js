@@ -1,10 +1,7 @@
 "use strict";
 
-// `baseUri` is hashed into the module because two entries with different bases bake
-// different code. Where no baked url can read the base — an `auto` or base-independent
-// public path, or a reference that keeps the runtime form — the code is the same under
-// every base, so the hash has to be too: otherwise setting `baseUri` changes every
-// `[contenthash]` and throws away the code generation cache for nothing.
+// `baseUri` is hashed only where a baked url actually reads it; elsewhere the code is
+// the same under every base, so hashing it would throw away every `[contenthash]`.
 
 const BASE = "https://example.com/base/";
 
@@ -41,6 +38,7 @@ const recordModuleHash = (key) =>
  * @returns {import("../../../../").Configuration} configuration
  */
 const base = (name, index, withBase, publicPath, relative = false) => ({
+	name: `${name}:${withBase ? "base" : "none"}`,
 	target: "node",
 	mode: "development",
 	devtool: false,
@@ -78,8 +76,19 @@ module.exports = [
 	base("reads-base", 7, true, "./"),
 	{
 		...base("report", 8, false, "auto"),
+		// Compilers run concurrently, so name every pair above as a dependency —
+		// otherwise this one can report before they have recorded their hashes.
+		dependencies: [
+			"auto:none",
+			"auto:base",
+			"root:none",
+			"root:base",
+			"relative:none",
+			"relative:base",
+			"reads-base:none",
+			"reads-base:base"
+		],
 		plugins: [
-			// The configs run in order, so by here every pair above has reported.
 			function apply() {
 				this.hooks.done.tap("testcase", () => {
 					for (const name of ["auto", "root", "relative", "reads-base"]) {

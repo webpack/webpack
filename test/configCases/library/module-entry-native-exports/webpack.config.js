@@ -1,9 +1,7 @@
 "use strict";
 
-// A `module` library exports its entry's top-level declarations natively, so the
-// definitions written into the exports object are read by nobody — and neither is
-// `__webpack_require__.d` nor the `.o` it calls. An entry the runtime still has to
-// wrap keeps them, because there the object is what the export is read from.
+// A `module` library exports top-level declarations natively, so the exports object
+// and `.d`/`.o` have no reader; a wrapped entry keeps them, being read from it.
 
 /**
  * @param {string} assetName emitted entry asset to assert on
