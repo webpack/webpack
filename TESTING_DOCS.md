@@ -25,6 +25,7 @@ This document explains the structure of the `test/` directory in the Webpack pro
 
 - **Purpose**: Non-comparative, CodSpeed-integrated benchmarks: `unit/` for webpack internals, `e2e/` for full builds, `lib/` for the harness itself.
 - **Usage**: `yarn benchmark:unit`, `yarn benchmark:e2e` or `yarn benchmark:suite`; see [test/benchmark/README.md](test/benchmark/README.md).
+- **Kept working by**: `test/Benchmarks.unittest.js`, which runs every `unit/` suite once (`--smoke`) as part of `yarn test:unit`, and the `yarn benchmark:e2e --smoke` step in the `unit` CI job. Measurement itself only runs on schedule or behind a label, so without these a suite broken by a `lib/` change would stay unnoticed until then.
 
 ### 3. `cases/`
 

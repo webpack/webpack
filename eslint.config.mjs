@@ -234,7 +234,11 @@ export default defineConfig([
 		}
 	},
 	{
-		files: ["test/Compiler-filesystem-caching.test.js"],
+		files: [
+			"test/Compiler-filesystem-caching.test.js",
+			// dynamic import: the benchmark harness it drives is ESM
+			"test/Benchmarks.unittest.js"
+		],
 		languageOptions: {
 			ecmaVersion: 2022
 		}

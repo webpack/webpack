@@ -20,7 +20,9 @@ test/benchmark/unit/javascript/JavascriptParser.bench.mjs
 ```
 
 The default suite name must also match that path:
-`unit/javascript/JavascriptParser`. The runner validates both conventions.
+`unit/javascript/JavascriptParser`. `test/Benchmarks.unittest.js` validates both
+conventions and smoke-runs every unit suite, so a suite that stops working
+against `lib/` fails the unit tests rather than the next scheduled run.
 A suite may exercise inseparable dependencies, but its measured operation
 should primarily belong to the named core file.
 
