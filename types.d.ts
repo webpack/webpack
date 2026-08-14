@@ -24811,6 +24811,12 @@ declare abstract class RuntimeTemplate {
 	globalObject: string;
 	contentHashReplacement: string;
 	isIIFE(): boolean;
+
+	/**
+	 * Whether the global object expression reads the `this` binding, which only
+	 * refers to the global object outside of strict mode.
+	 */
+	globalObjectUsesThis(): boolean;
 	isModule(): boolean;
 	isNeutralPlatform(): boolean;
 
