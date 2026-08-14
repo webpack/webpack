@@ -29905,7 +29905,11 @@ declare namespace exports {
 			) => string;
 			export let buildHeadTags: (opts: OutputHtmlOptions) => string;
 			export let decodeEntities: _functionSyntax;
-			export let escapeAttribute: (s: string, delimiter?: number) => string;
+			export let escapeAttribute: (
+				s: string,
+				delimiter?: number,
+				minimal?: boolean
+			) => string;
 			export let escapeText: (s: string) => string;
 			export let isAsciiWhitespace: (cc: number) => boolean;
 			export let metaTag: (name: string, content: string) => string;

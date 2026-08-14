@@ -13,7 +13,7 @@ exports[`ConfigTestCases html minimize-attributes minimize-attributes should com
 	<p class=foo|bar:baz>no quotes needed</p>
 	<p onclick=x>event handler</p>
 	<link href=\\"<?php echo 'http://foo/' ?>\\">
-	<p data-gt=\\"a>b\\" data-eq=\\"a=b\\" data-lt=a&lt;b data-tick=\\"a\`b\\">must stay quoted</p>
+	<p data-gt=\\"a>b\\" data-eq=\\"a=b\\" data-lt=\\"a<b\\" data-tick=\\"a\`b\\">must stay quoted</p>
 	<p data-nl=\\"a
 b\\">newline in a value</p>
 	<p data-dq='a\\"b'>double quote in a value</p>

@@ -4354,10 +4354,30 @@ describe("SourceProcessor — attribute quote spelling", () => {
 		);
 	});
 
-	it("leaves a value carrying both kinds alone", () => {
+	it("escapes only the delimiter when a value carries both kinds", () => {
+		// One of them has to be escaped, so the cheaper delimiter is the one that
+		// leaves the more frequent quote standing literal.
 		expect(minify('<img alt="it&#39;s &quot;x&quot;">')).toBe(
-			'<img alt="it&#39;s &quot;x&quot;">'
+			"<img alt='it&#39;s \"x\"'>"
 		);
+		// Two of each: escaping the apostrophes is the shorter of the two.
+		expect(minify('<img alt="&#39;a&#39; &quot;b&quot;">')).toBe(
+			"<img alt='&#39;a&#39; \"b\"'>"
+		);
+	});
+
+	it("writes a reference the parser cannot read back as one", () => {
+		// `<` and `>` mean nothing inside a quoted value, and an `&` no reference
+		// can start after it is data — but one that could start a reference stays.
+		expect(minify('<p title="&lt;b&gt;bold&lt;/b&gt;">t</p>')).toBe(
+			'<p title="<b>bold</b>">t'
+		);
+		expect(minify('<p title="a &amp; b">t</p>')).toBe('<p title="a & b">t');
+		expect(minify('<a href="?a=1&amp;b=2">t</a>')).toBe(
+			'<a href="?a=1&amp;b=2">t</a>'
+		);
+		// A bare value ends at `>`, so there the reference has to stay.
+		expect(minify("<p title=a&gt;b>t</p>")).toBe("<p title=a&gt;b>t");
 	});
 });
 
