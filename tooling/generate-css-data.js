@@ -3942,11 +3942,66 @@ const PREFIX_SUPPLEMENT = new Map([
 	// `-ms-flex-pack`, `-ms-flex-line-pack` and `-ms-flex-item-align` also
 	// rename their keywords (`flex-start` is `start`, `space-around` is
 	// `distribute`), which is a value rewrite and not a spelling.
-	["order", [["-ms-flex-order", [["ie", "10", "11"]]]]],
-	["flex-shrink", [["-ms-flex-negative", [["ie", "10", "11"]]]]],
-	["flex-basis", [["-ms-flex-preferred-size", [["ie", "10", "11"]]]]],
-	["flex-wrap", [["-ms-flex-wrap", [["ie", "10", "11"]]]]],
-	["flex-flow", [["-ms-flex-flow", [["ie", "10", "11"]]]]],
+	[
+		"order",
+		[
+			[
+				"-ms-flex-order",
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				]
+			]
+		]
+	],
+	[
+		"flex-shrink",
+		[
+			[
+				"-ms-flex-negative",
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				]
+			]
+		]
+	],
+	[
+		"flex-basis",
+		[
+			[
+				"-ms-flex-preferred-size",
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				]
+			]
+		]
+	],
+	[
+		"flex-wrap",
+		[
+			[
+				"-ms-flex-wrap",
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				]
+			]
+		]
+	],
+	[
+		"flex-flow",
+		[
+			[
+				"-ms-flex-flow",
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				]
+			]
+		]
+	],
 	// The four the 2012 draft also renamed the keywords of, each map being that
 	// property's whole grammar there. Only `writing-mode` is left out of the
 	// renames: IE reads `horizontal-tb` as `lr-tb` or `rl-tb` depending on the
@@ -3956,7 +4011,10 @@ const PREFIX_SUPPLEMENT = new Map([
 		[
 			[
 				"-ms-flex-align",
-				[["ie", "10", "11"]],
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				],
 				[
 					["flex-start", "start"],
 					["flex-end", "end"],
@@ -3972,7 +4030,10 @@ const PREFIX_SUPPLEMENT = new Map([
 		[
 			[
 				"-ms-flex-item-align",
-				[["ie", "10", "11"]],
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				],
 				[
 					["auto", "auto"],
 					["flex-start", "start"],
@@ -3989,7 +4050,10 @@ const PREFIX_SUPPLEMENT = new Map([
 		[
 			[
 				"-ms-flex-pack",
-				[["ie", "10", "11"]],
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				],
 				[
 					["flex-start", "start"],
 					["flex-end", "end"],
@@ -4021,6 +4085,34 @@ const PREFIX_SUPPLEMENT = new Map([
 		]
 	],
 	["text-overflow", [["-o-text-overflow", [["op_mob", "10", "12.1"]]]]],
+	// Presto shipped `object-fit` as its own extension well before the spec, and
+	// caniuse dates the prefixed form a year earlier than BCD does, on desktop and
+	// mobile alike. `background-size` went plain at 10.5, not at 10.
+	[
+		"object-fit",
+		[
+			[
+				"-o-object-fit",
+				[
+					["opera", "10.6", "15"],
+					["op_mob", "11", "14"]
+				]
+			]
+		]
+	],
+	[
+		"object-position",
+		[
+			[
+				"-o-object-position",
+				[
+					["opera", "10.6", "15"],
+					["op_mob", "11", "14"]
+				]
+			]
+		]
+	],
+	["background-size", [["-o-background-size", [["opera", "9.5", "10.2"]]]]],
 	// `text-size-adjust`, which BCD misses at both ends. IE Mobile is the one
 	// browser it does not track, so that reads desktop IE's windows — right for
 	// the same engine on the same version line, but caniuse has the property
@@ -4044,7 +4136,10 @@ const PREFIX_SUPPLEMENT = new Map([
 		[
 			[
 				"-ms-flex-line-pack",
-				[["ie", "10", "11"]],
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				],
 				[
 					["flex-start", "start"],
 					["flex-end", "end"],

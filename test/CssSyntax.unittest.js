@@ -5243,6 +5243,20 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 		).toBe("a{text-size-adjust:100%}");
 	});
 
+	it("reads IE Mobile through the same Trident as desktop IE", () => {
+		// IE Mobile 10 is Trident 6, so it needs the 2012 flexbox renames exactly as
+		// IE 10 does; 11 is Trident 7 and needs none of them.
+		expect(minify("a{order:1;align-items:center}", ["ie_mob 10"])).toBe(
+			"a{-ms-flex-order:1;order:1;-ms-flex-align:center;align-items:center}"
+		);
+		expect(minify("a{order:1;align-items:center}", ["ie_mob 11"])).toBe(
+			"a{order:1;align-items:center}"
+		);
+		expect(minify("a{-ms-flex-order:1;order:1}", ["ie_mob 10"])).toBe(
+			"a{-ms-flex-order:1;order:1}"
+		);
+	});
+
 	it("keeps Presto prefixed where caniuse tracks it version by version", () => {
 		// BCD dates Opera's unprefixed `border-image` at 11; caniuse, which is the
 		// only dataset following Presto version by version, marks every version
@@ -5264,6 +5278,20 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 		);
 		expect(minify("a{text-overflow:ellipsis}", ["opera 11"])).toBe(
 			"a{text-overflow:ellipsis}"
+		);
+		// Presto shipped `object-fit` as its own extension a year before BCD dates
+		// the prefixed form, and `background-size` went plain at 10.5, not at 10.
+		expect(minify("a{object-fit:cover}", ["opera 10.6"])).toBe(
+			"a{-o-object-fit:cover;object-fit:cover}"
+		);
+		expect(minify("a{object-fit:cover}", ["opera 10.5"])).toBe(
+			"a{object-fit:cover}"
+		);
+		expect(minify("a{background-size:cover}", ["opera 10.0-10.1"])).toBe(
+			"a{-o-background-size:cover;background-size:cover}"
+		);
+		expect(minify("a{background-size:cover}", ["opera 10.5"])).toBe(
+			"a{background-size:cover}"
 		);
 	});
 
