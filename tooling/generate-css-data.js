@@ -4000,6 +4000,27 @@ const PREFIX_SUPPLEMENT = new Map([
 			]
 		]
 	],
+	// Presto, where BCD dates the unprefixed arrival earlier than caniuse — the
+	// only dataset that tracks Opera and Opera Mobile version by version, and the
+	// one autoprefixer reads. `border-image` it marks prefixed on every Presto
+	// version that has it at all (`a x` from 11 through 12.1, on both), so Presto
+	// never shipped it unprefixed and BCD's `opera: 11` cannot be right; the
+	// windows end where the engine did. `text-overflow` desktop dropped the
+	// prefix at 11 exactly as BCD says, but Opera Mobile kept needing it through
+	// 12 and only went plain at 12.1.
+	[
+		"border-image",
+		[
+			[
+				"-o-border-image",
+				[
+					["opera", "10.5", "15"],
+					["op_mob", "11", "14"]
+				]
+			]
+		]
+	],
+	["text-overflow", [["-o-text-overflow", [["op_mob", "10", "12.1"]]]]],
 	// `text-size-adjust`, which BCD misses at both ends. IE Mobile is the one
 	// browser it does not track, so that reads desktop IE's windows — right for
 	// the same engine on the same version line, but caniuse has the property

@@ -5243,6 +5243,30 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 		).toBe("a{text-size-adjust:100%}");
 	});
 
+	it("keeps Presto prefixed where caniuse tracks it version by version", () => {
+		// BCD dates Opera's unprefixed `border-image` at 11; caniuse, which is the
+		// only dataset following Presto version by version, marks every version
+		// that has it at all as needing the prefix.
+		expect(minify("a{border-image:url(x) 30}", ["opera 12.1"])).toBe(
+			"a{-o-border-image:url(x) 30;border-image:url(x) 30}"
+		);
+		expect(
+			minify("a{-o-border-image:url(x) 30;border-image:url(x) 30}", [
+				"opera 12.1"
+			])
+		).toBe("a{-o-border-image:url(x) 30;border-image:url(x) 30}");
+		// Opera Mobile kept `text-overflow` prefixed four versions past desktop.
+		expect(minify("a{text-overflow:ellipsis}", ["op_mob 12"])).toBe(
+			"a{-o-text-overflow:ellipsis;text-overflow:ellipsis}"
+		);
+		expect(minify("a{text-overflow:ellipsis}", ["op_mob 12.1"])).toBe(
+			"a{text-overflow:ellipsis}"
+		);
+		expect(minify("a{text-overflow:ellipsis}", ["opera 11"])).toBe(
+			"a{text-overflow:ellipsis}"
+		);
+	});
+
 	it("writes the spelling Gecko parses where BCD records only whether it has an effect", () => {
 		// Gecko carries `-moz-text-size-adjust` as a real longhand and no
 		// unprefixed spelling at all, so a Firefox target losing the `-moz-` one is
