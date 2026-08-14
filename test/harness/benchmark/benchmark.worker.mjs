@@ -906,15 +906,18 @@ const resolveWatchEntryPath = (entry) => {
 };
 
 /**
- * Append a no-op change that keeps the entry parseable (JS statement or HTML comment).
+ * Append a change that keeps the entry parseable (JS statement or HTML comment).
+ * The marker alternates so consecutive writes differ, since identical bytes leave
+ * webpack's snapshot heuristics to decide whether to rebuild at all.
  * @param {string} entryPath entry file path
  * @param {string} originalContent original file contents
+ * @param {number} iteration rebuild counter
  * @returns {string} mutated contents
  */
-const mutateWatchEntryContent = (entryPath, originalContent) =>
+const mutateWatchEntryContent = (entryPath, originalContent, iteration) =>
 	/\.html$/i.test(entryPath)
-		? `${originalContent}<!-- watch test -->`
-		: `${originalContent};console.log('watch test')`;
+		? `${originalContent}<!-- watch test ${iteration % 2} -->`
+		: `${originalContent};console.log('watch test ${iteration % 2}')`;
 
 /**
  * @param {object} params params
@@ -932,6 +935,8 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 
 	const entry = resolveWatchEntryPath(config.entry);
 	const originalEntryContent = await fs.readFile(entry, "utf8");
+
+	let iteration = 0;
 
 	/** @type {Watching | undefined} */
 	let watching;
@@ -985,7 +990,11 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 				(resolve, reject) => {
 					writeFile(
 						entry,
-						mutateWatchEntryContent(entry, originalEntryContent),
+							mutateWatchEntryContent(
+								entry,
+								originalEntryContent,
+								iteration++
+							),
 						(err) => {
 							if (err) {
 								reject(err);
@@ -1057,7 +1066,7 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 					(resolve, reject) => {
 						writeFile(
 							entry,
-							`${originalEntryContent};console.log('watch test')`,
+							mutateWatchEntryContent(entry, originalEntryContent, iteration++),
 							(err) => {
 								if (err) {
 									reject(err);
