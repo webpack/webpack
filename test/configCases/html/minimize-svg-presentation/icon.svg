@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">
+  <rect x="1" y="2" width="3" height="4" fill="#ff0000" stroke="#ABCDEF" stroke-width="0.50"/>
+  <circle r="2" fill="currentColor" opacity="1.0" transform="translate(1 2)"/>
+  <stop offset="0.50" stop-color="#ffffff" stop-opacity="0.500"/>
+</svg>

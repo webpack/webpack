@@ -28,6 +28,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const cssProperties = require("mdn-data/css/properties.json");
 const prettier = require("prettier");
 
 const TARGET = path.resolve(__dirname, "../lib/html/data.js");
@@ -496,8 +497,73 @@ const IMPLIED_END_TAG_ELEMENTS = [
 	"rtc"
 ];
 
+// SVG 2 §11.1: the CSS properties SVG also takes as attributes. `mdn-data` marks
+// the SVG-only ones; the ones SVG shares with CSS it knows only as CSS.
+const SVG_PRESENTATION_SHARED = [
+	"color",
+	"cursor",
+	"direction",
+	"display",
+	"font-family",
+	"font-size",
+	"font-size-adjust",
+	"font-stretch",
+	"font-style",
+	"font-variant",
+	"font-weight",
+	"image-rendering",
+	"letter-spacing",
+	"opacity",
+	"overflow",
+	"pointer-events",
+	"text-decoration",
+	"text-overflow",
+	"unicode-bidi",
+	"white-space",
+	"word-spacing",
+	"writing-mode"
+];
+
+// SVG spells these as attributes with a grammar CSS does not share: a unitless
+// number is user units, and `<stop offset>` is not the motion-path shorthand.
+const NOT_SVG_PRESENTATION = new Set([
+	"cx",
+	"cy",
+	"d",
+	"height",
+	"offset",
+	"r",
+	"rx",
+	"ry",
+	"transform",
+	"width",
+	"x",
+	"y"
+]);
+
+const svgPresentation = [
+	...new Set([
+		...Object.entries(cssProperties)
+			.filter(
+				([, property]) =>
+					property.groups.includes("Scalable Vector Graphics") ||
+					/SVG/.test(property.appliesto)
+			)
+			.map(([name]) => name),
+		...SVG_PRESENTATION_SHARED
+	])
+]
+	.filter((name) => !NOT_SVG_PRESENTATION.has(name))
+	.sort();
+
 /** @type {ParserTable[]} */
 const PARSER_TABLES = [
+	[
+		"SVG_PRESENTATION",
+		"set",
+		"SVG 2 §11.1: the CSS properties SVG also accepts as attributes, so an attribute value minifies as the CSS value it is.",
+		svgPresentation
+	],
 	[
 		"VOID",
 		"set",

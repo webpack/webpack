@@ -8997,3 +8997,100 @@ describe("SourceProcessor — what xml requires", () => {
 		).toContain("<text xml:space=preserve>a   b</text>");
 	});
 });
+
+describe("SourceProcessor — svg presentation attributes", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} attributes the `<rect>`'s attributes
+	 * @returns {string} what the printer wrote them back as
+	 */
+	const rect = (attributes) => {
+		const out = new SourceProcessor().process(
+			`<svg xmlns="http://www.w3.org/2000/svg"><rect ${attributes}/></svg>`,
+			{ mode: "minify", xml: true }
+		).code;
+		return String(/<rect ([^/]*)\//.exec(out))
+			.split(",")[1]
+			.trim();
+	};
+
+	it("minifies the value as the css value it is", () => {
+		expect(rect('fill="#ff0000" stroke="#ABCDEF" stroke-width="0.50"')).toBe(
+			'fill="red" stroke="#abcdef" stroke-width=".5"'
+		);
+		expect(rect('opacity="1.0" stop-color="#ffffff"')).toBe(
+			'opacity="1" stop-color="#fff"'
+		);
+	});
+
+	it("keeps a value the css grammar does not reach", () => {
+		expect(rect('fill="currentColor" stroke="context-stroke"')).toBe(
+			'fill="currentColor" stroke="context-stroke"'
+		);
+		expect(rect('fill="url(#g)" clip-path="url(#c)"')).toBe(
+			'fill="url(#g)" clip-path="url(#c)"'
+		);
+		expect(rect('fill="none" fill-opacity="inherit"')).toBe(
+			'fill="none" fill-opacity="inherit"'
+		);
+	});
+
+	it("keeps a value a `;` would make a second declaration of", () => {
+		// `red;;` is no valid paint, so the attribute is ignored and the fill is
+		// black — writing it back as `red` would paint the shape.
+		expect(rect('fill="red;;"')).toBe('fill="red;;"');
+		expect(rect('fill="green;fill:red"')).toBe('fill="green;fill:red"');
+	});
+
+	it("keeps an empty value, which is no declaration at all", () => {
+		expect(rect('fill="" stroke="  "')).toBe('fill="" stroke="  "');
+	});
+
+	it("keeps a value the minifier answers nothing for", () => {
+		/**
+		 * @param {string} attributes the `<rect>`'s attributes
+		 * @returns {string} the whole serialization
+		 */
+		const svg = (attributes) =>
+			new SourceProcessor().process(
+				`<svg xmlns="http://www.w3.org/2000/svg"><rect ${attributes}/></svg>`,
+				{ mode: "minify", xml: true }
+			).code;
+		expect(svg('fill="/*x*/"')).toContain('<rect fill="/*x*/"/>');
+		expect(svg('fill="a{b}"')).toContain('<rect fill="a{b}"/>');
+	});
+
+	it("leaves the attributes svg spells with its own grammar", () => {
+		// A unitless number is user units, which css reads as an invalid length.
+		expect(rect('x="5" y="5" width="10" height="10" rx="2"')).toBe(
+			'x="5" y="5" width="10" height="10" rx="2"'
+		);
+		expect(rect('transform="translate(10 20)"')).toBe(
+			'transform="translate(10 20)"'
+		);
+	});
+
+	it("leaves an attribute css names for something else", () => {
+		// `<stop offset>` is a number, not the motion-path shorthand.
+		const out = new SourceProcessor().process(
+			'<svg xmlns="http://www.w3.org/2000/svg"><stop offset="0.50" stop-color="#ffffff"/></svg>',
+			{ mode: "minify", xml: true }
+		).code;
+		expect(out).toContain('<stop offset="0.50" stop-color="#fff"/>');
+	});
+
+	it("rewrites only in the svg namespace", () => {
+		const out = new SourceProcessor().process(
+			'<!DOCTYPE html><body><p fill="#ff0000">x</p><svg xmlns="http://www.w3.org/2000/svg"><rect fill="#ff0000"/></svg>',
+			{ mode: "minify" }
+		).code;
+		expect(out).toContain("<p fill=#ff0000>");
+		expect(out).toContain("<rect fill=red />");
+	});
+
+	it("leaves a value carrying a character reference uncompressed", () => {
+		// The reference decodes, but the value is not read as a css value.
+		expect(rect('fill="&#x23;ff0000"')).toBe('fill="#ff0000"');
+	});
+});

@@ -11,9 +11,7 @@ module.exports = {
 		);
 		expect(svg).toMatchSnapshot();
 
-		expect(svg).toContain(
-			'<rect x="1" y="2" width="3" fill="#ff0000" class=""/>'
-		);
+		expect(svg).toContain('<rect x="1" y="2" width="3" fill="red" class=""/>');
 		expect(svg).toContain("<p ");
 		expect(svg).toContain("</p><p ");
 		expect(svg).toContain("tom &amp; jerry, 1 &lt; 2");
