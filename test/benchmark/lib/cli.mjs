@@ -62,14 +62,18 @@ for await (const file of fs.glob(
 
 const files = found.sort().filter((_, i) => i % shardCount === shardIndex - 1);
 
+const list = values.list;
+
 const summary = await runSuites(
 	files.map((file) => path.join(benchmarkRoot, file)),
-	{ filter, negativeFilter, smoke, maxRme }
+	{ filter, negativeFilter, smoke, list, maxRme }
 );
 
-console.log(
-	`\n${summary.results.length} benchmark(s) completed, ${summary.failures.length} failed`
-);
+if (!list) {
+	console.log(
+		`\n${summary.results.length} benchmark(s) completed, ${summary.failures.length} failed`
+	);
+}
 
 if (summary.failures.length > 0) {
 	for (const failure of summary.failures) {

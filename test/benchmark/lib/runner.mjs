@@ -9,6 +9,7 @@ import { Bench, hrtimeNow } from "tinybench";
  * @property {RegExp=} filter only run benchmarks whose id matches
  * @property {RegExp=} negativeFilter skip benchmarks whose id matches
  * @property {boolean=} smoke run every benchmark exactly once, to validate not measure
+ * @property {boolean=} list print the selected benchmark ids instead of running them
  * @property {number=} maxRme relative margin of error warning threshold
  */
 
@@ -162,6 +163,13 @@ export async function runSuites(files, options) {
 			return true;
 		});
 		if (benches.length === 0) continue;
+
+		if (options.list) {
+			for (const definition of benches) {
+				console.log(`${suite.name}/${definition.name}`);
+			}
+			continue;
+		}
 
 		console.log(`\n${suite.name}`);
 		try {
