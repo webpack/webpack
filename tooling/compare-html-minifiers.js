@@ -390,9 +390,9 @@ const canonicalCss = (css) => {
 	}
 };
 
-// Stands for a run of whitespace nothing else in the fingerprint records. Not a
-// character any document contributes, so it can never collide with real text.
-const WHITESPACE_RUN = "\u0001ws";
+// Stands for a run of whitespace nothing else records. Not a string: every
+// control character survives parsing, so a string marker could be real text.
+const WHITESPACE_RUN = null;
 
 /**
  * A DOM fingerprint: every element with its attributes, plus the text, walked
@@ -415,7 +415,7 @@ const fingerprint = (parse5, html) => {
 	const empty = new Set();
 	/** @type {Set<string>} */
 	const filled = new Set();
-	/** @type {string[]} */
+	/** @type {(string | null)[]} */
 	const text = [];
 	/**
 	 * @param {Parse5Node} node a parse5 node
