@@ -8860,3 +8860,140 @@ describe("SourceProcessor — xml", () => {
 		);
 	});
 });
+
+describe("SourceProcessor — svg path data", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} d the path data
+	 * @returns {string} what the printer wrote it back as
+	 */
+	const path = (d) => {
+		const svg = `<svg xmlns="http://www.w3.org/2000/svg"><path d="${d}"/></svg>`;
+		const out = new SourceProcessor().process(svg, {
+			mode: "minify",
+			xml: true
+		}).code;
+		const written = /<path d="([^"]*)"/.exec(out);
+		return written === null ? out : written[1];
+	};
+
+	it("drops the separators the grammar does not need", () => {
+		expect(path("M 10 10 L 20 20 Z")).toBe("M10 10 20 20Z");
+		expect(path("M1 1 H 5 V 6 h 1 v 2")).toBe("M1 1H5V6h1v2");
+	});
+
+	it("implies a repeated command, and a moveto's repeat is a lineto", () => {
+		expect(path("M1 1 L2 2 L3 3 M4 4 L5 5")).toBe("M1 1 2 2 3 3M4 4 5 5");
+		expect(path("M1 1 M2 2")).toBe("M1 1M2 2");
+		expect(path("M1 1 m2 2")).toBe("M1 1m2 2");
+	});
+
+	it("re-spells a number without changing its value", () => {
+		expect(path("M0.5 0.5 L-0.5 -0.5")).toBe("M.5.5-.5-.5");
+		expect(path("M 1.500 2.0 L 3. 4")).toBe("M1.5 2 3 4");
+		expect(path("M+1 +2")).toBe("M1 2");
+		expect(path("M1E3 1e+03")).toBe("M1e3 1e3");
+		expect(path("M00.10 -0.0")).toBe("M.1 0");
+	});
+
+	it("packs an arc's flags, which are one character each", () => {
+		expect(path("M1 1 A 5 5 0 0 1 10 10")).toBe("M1 1A5 5 0 0110 10");
+		expect(path("M1 1 A5 5 0 1 1 2 2 5 5 0 0 0 3 3")).toBe(
+			"M1 1A5 5 0 112 2 5 5 0 003 3"
+		);
+	});
+
+	it("leaves alone what is not path data", () => {
+		expect(path("not a path")).toBe("not a path");
+		expect(path("L1 1")).toBe("L1 1");
+		expect(path("M1 1A5 5 0 2 1 2 2")).toBe("M1 1A5 5 0 2 1 2 2");
+	});
+
+	it("rewrites `d` only on an svg `path`", () => {
+		const html =
+			'<!DOCTYPE html><body><p d="M 1 1 L 2 2">x</p><svg xmlns="http://www.w3.org/2000/svg"><path d="M 1 1 L 2 2"/></svg>';
+		const out = new SourceProcessor().process(html, { mode: "minify" }).code;
+		expect(out).toContain('<p d="M 1 1 L 2 2">');
+		expect(out).toContain('<path d="M1 1 2 2"/>');
+	});
+});
+
+describe("SourceProcessor — what xml requires", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} markup input markup
+	 * @param {object=} options extra print options
+	 * @returns {string} the minified serialization
+	 */
+	const xml = (markup, options) =>
+		new SourceProcessor().process(markup, {
+			mode: "minify",
+			xml: true,
+			...options
+		}).code;
+
+	const SVG = '<svg xmlns="http://www.w3.org/2000/svg">';
+
+	it("spells the doctype the way XML reads it", () => {
+		expect(
+			xml(`<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "s.dtd">${SVG}</svg>`)
+		).toBe(
+			`<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "s.dtd">${SVG}</svg>`
+		);
+		expect(
+			new SourceProcessor().process("<!DOCTYPE HTML><p>x", { mode: "minify" })
+				.code
+		).toBe("<!doctype html><p>x");
+	});
+
+	it("splits the section a `]]>` in the body would close", () => {
+		expect(
+			xml(`${SVG}<script type="application/json">{"a":"]]>"}</script></svg>`)
+		).toBe(
+			`${SVG}<script type="application/json"><![CDATA[{"a":"]]]]><![CDATA[>"}]]></script></svg>`
+		);
+	});
+
+	it("keeps a start tag XML has no way to imply", () => {
+		const table = "<table><tbody><tr><td>a</td></tr></tbody></table>";
+		expect(xml(`${SVG}<foreignObject>${table}</foreignObject></svg>`)).toBe(
+			`${SVG}<foreignObject>${table}</foreignObject></svg>`
+		);
+	});
+
+	it("reads `xml:space` as the way SVG asks for verbatim text", () => {
+		const collapse = { collapseWhitespace: "all" };
+		expect(
+			xml(`${SVG}<text xml:space="preserve">a   b</text></svg>`, collapse)
+		).toBe(`${SVG}<text xml:space="preserve">a   b</text></svg>`);
+		expect(
+			xml(`${SVG}<text xml:space="default">a   b</text></svg>`, collapse)
+		).toBe(`${SVG}<text xml:space="default">a b</text></svg>`);
+		expect(xml(`${SVG}<text>a   b</text></svg>`, collapse)).toBe(
+			`${SVG}<text>a b</text></svg>`
+		);
+	});
+
+	it("inherits `xml:space` from the nearest ancestor stating one", () => {
+		const collapse = { collapseWhitespace: "all" };
+		const outer =
+			'<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve">';
+		expect(xml(`${outer}<g><text>a   b</text></g></svg>`, collapse)).toBe(
+			`${outer}<g><text>a   b</text></g></svg>`
+		);
+		expect(
+			xml(`${outer}<text xml:space="default">a   b</text></svg>`, collapse)
+		).toBe(`${outer}<text xml:space="default">a b</text></svg>`);
+	});
+
+	it("honours `xml:space` on an svg inside an html document too", () => {
+		expect(
+			new SourceProcessor().process(
+				`<!DOCTYPE html><body>${SVG}<text xml:space="preserve">a   b</text></svg>`,
+				{ mode: "minify", collapseWhitespace: "all" }
+			).code
+		).toContain("<text xml:space=preserve>a   b</text>");
+	});
+});
