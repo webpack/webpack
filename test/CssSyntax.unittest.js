@@ -4745,6 +4745,21 @@ describe("CssSyntax minify — vendor prefixes (spellings an engine dropped)", (
 		);
 	});
 
+	it("carries a prefix BCD does not record but the engine read", () => {
+		// Multi-column went unprefixed together — Chrome 50, Firefox 52, Safari 9 —
+		// and BCD dates `-webkit-columns` at the version the unprefixed form
+		// arrived, 46 versions after Chrome first read it.
+		expect(minify("a{column-gap:10px}", ["chrome 40"])).toBe(
+			"a{-webkit-column-gap:10px;column-gap:10px}"
+		);
+		expect(minify("a{columns:2}", ["chrome 40"])).toBe(
+			"a{-webkit-columns:2;columns:2}"
+		);
+		expect(minify("a{column-gap:10px;columns:2}", ["chrome 130"])).toBe(
+			"a{column-gap:10px;columns:2}"
+		);
+	});
+
 	it("drops a prefix an engine switch took away", () => {
 		// Presto read `-o-transform`; the Blink Opera that followed at 15 never did.
 		expect(minify("a{transform:none}", ["opera 20"])).toBe(

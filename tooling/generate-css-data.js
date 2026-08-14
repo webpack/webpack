@@ -3755,9 +3755,14 @@ const collectPrefixes = (compat, name, alternatives) => {
 /**
  * @param {{ [name: string]: BcdNode }} group a BCD axis (`css.properties`, `css.selectors`, `css["at-rules"]`)
  * @param {boolean=} alternatives whether a vendor rename counts as a spelling
+ * @param {boolean=} supplement whether the stated prefixes belong to this axis
  * @returns {[string, [string, [string, number, number][]][]][]} the axis table, sorted
  */
-const collectPrefixTable = (group, alternatives = false) => {
+const collectPrefixTable = (
+	group,
+	alternatives = false,
+	supplement = false
+) => {
 	/** @type {[string, [string, [string, number, number][]][]][]} */
 	const table = [];
 	for (const [name, node] of Object.entries(group)) {
@@ -3773,6 +3778,7 @@ const collectPrefixTable = (group, alternatives = false) => {
 					);
 		if (kept.length !== 0) table.push([name, kept]);
 	}
+	if (supplement) applyPrefixSupplement(table);
 	if (!alternatives) return table.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 	// A spelling two names claim cannot be right for both, and the one whose own
 	// prefix makes it is the one that means it: BCD gives `:-moz-placeholder` to
@@ -3796,6 +3802,160 @@ const collectPrefixTable = (group, alternatives = false) => {
 		if (own.length !== 0) kept.push([name, own]);
 	}
 	return kept.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+// Prefixes BCD records nowhere, though the spelling is real and was needed: a
+// current Blink still parses each of these, and caniuse — through autoprefixer's
+// table, which is where these versions come from — says which versions had to
+// have it. Every window here is closed history: the last browser that needed any
+// of them shipped in 2017, so nothing about them can move again. Checked against
+// BCD as the file is built, so an entry it catches up on fails generation rather
+// than sitting here unread.
+const PREFIX_SUPPLEMENT = new Map([
+	[
+		// Multi-column's own gap, prefixed until the module went unprefixed — Chrome
+		// 50, Firefox 52, Safari 9. The `column-gap` of a flex or grid container is
+		// a different feature, which no engine ever prefixed, and no browser needing
+		// this one laid out either.
+		"column-gap",
+		[
+			[
+				"-webkit-",
+				[
+					["chrome", "4", "50"],
+					["safari", "3.1", "9"],
+					["ios_saf", "3.2", "9"],
+					["opera", "15", "37"],
+					// caniuse tracks the old WebViews and the current one, nothing
+					// between, so 5 stands for "any of the old ones".
+					["android", "2.1", "5"],
+					["samsung", "4", "5"]
+				]
+			],
+			["-moz-", [["firefox", "2", "52"]]]
+		]
+	],
+	// CSS Shapes, which WebKit shipped prefixed from Safari 7.1 and unprefixed at
+	// 10.1. BCD has the `-webkit-` entry for `shape-margin` alone.
+	[
+		// Multi-column's shorthand and its `column-span`, unprefixed with the rest
+		// of multi-column layout. BCD dates their `-webkit-` at the version the unprefixed form
+		// arrived, which is 46 versions after Chrome first read it. Only WebKit's,
+		// which a current Blink still parses: caniuse marks the whole feature
+		// prefixed for Firefox, which never read `-moz-column-span` at all.
+		"columns",
+		[
+			[
+				"-webkit-",
+				[
+					["chrome", "4", "50"],
+					["safari", "3.1", "9"],
+					["ios_saf", "3.2", "9"],
+					["opera", "15", "37"],
+					["android", "2.1", "5"],
+					["samsung", "4", "5"]
+				]
+			]
+		]
+	],
+	[
+		"column-span",
+		[
+			[
+				"-webkit-",
+				[
+					["chrome", "4", "50"],
+					["safari", "3.1", "9"],
+					["ios_saf", "3.2", "9"],
+					["opera", "15", "37"],
+					["android", "2.1", "5"],
+					["samsung", "4", "5"]
+				]
+			]
+		]
+	],
+	[
+		"shape-outside",
+		[
+			[
+				"-webkit-",
+				[
+					["safari", "7.1", "10.1"],
+					["ios_saf", "8", "10.3"]
+				]
+			]
+		]
+	],
+	[
+		"shape-margin",
+		[
+			[
+				"-webkit-",
+				[
+					["safari", "7.1", "10.1"],
+					["ios_saf", "8", "10.3"]
+				]
+			]
+		]
+	],
+	[
+		"shape-image-threshold",
+		[
+			[
+				"-webkit-",
+				[
+					["safari", "7.1", "10.1"],
+					["ios_saf", "8", "10.3"]
+				]
+			]
+		]
+	]
+]);
+
+/**
+ * Fold the stated windows into an axis table, widening what BCD records rather
+ * than replacing it. An entry BCD has caught up on entirely — every browser of
+ * it already covered — fails generation rather than sitting here unread.
+ * @param {[string, [string, [string, number, number][]][]][]} table the axis table so far
+ * @returns {void}
+ */
+const applyPrefixSupplement = (table) => {
+	for (const [name, stated] of PREFIX_SUPPLEMENT) {
+		let entry = table.find(([known]) => known === name);
+		if (entry === undefined) {
+			entry = [name, []];
+			table.push(entry);
+		}
+		let widened = false;
+		for (const [prefix, windows] of stated) {
+			const spelling = prefix + name;
+			let spellingEntry = entry[1].find(([known]) => known === spelling);
+			if (spellingEntry === undefined) {
+				spellingEntry = [spelling, []];
+				entry[1].push(spellingEntry);
+			}
+			for (const [browser, from, to] of windows) {
+				const start = /** @type {number} */ (encodeVersion(from));
+				const end = /** @type {number} */ (encodeVersion(to));
+				const known = spellingEntry[1].find(
+					([browsers]) => browsers === browser
+				);
+				if (known === undefined) {
+					spellingEntry[1].push([browser, start, end]);
+					widened = true;
+					continue;
+				}
+				if (known[1] > start || known[2] < end) widened = true;
+				known[1] = Math.min(known[1], start);
+				known[2] = Math.max(known[2], end);
+			}
+		}
+		if (!widened) {
+			throw new Error(
+				`BCD now covers every window stated for \`${name}\`, so its PREFIX_SUPPLEMENT entry is no longer needed — drop it.`
+			);
+		}
+	}
 };
 
 // A property spelling BCD records that no engine ever read. Everything else is
@@ -4060,7 +4220,11 @@ const collectData = () => {
 	const lengthOnlyFunctions = collectLengthOnlyFunctions();
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
-	const prefixedProperties = collectPrefixTable(bcd.css.properties);
+	const prefixedProperties = collectPrefixTable(
+		bcd.css.properties,
+		false,
+		true
+	);
 	const prefixedSelectors = collectPrefixTable(bcd.css.selectors, true);
 	const prefixedAtRules = collectPrefixTable(bcd.css["at-rules"]);
 	const prefixedValues = collectPrefixedValues();
