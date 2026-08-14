@@ -19938,7 +19938,7 @@ declare interface OptimizationMinimizeHtml {
 	preserveComments?: (string | RegExp)[];
 
 	/**
-	 * Drop an attribute whose empty or all-whitespace value leaves it in the state its absence gives: `class`, `id`, `style`, `dir`, `for`, `accesskey`, `itemprop`, `itemref`, `itemtype`, and every attribute reflecting a token list (`rel`, `ping`, `headers`, `part`, `sizes`, `blocking`) — an empty list is no tokens. Off by default: an attribute selector matches on presence, so `[class]` stops matching. Never dropped: `title` and `lang`, whose empty value means what absence does not; `sandbox`, whose empty list is the most restrictive state an `<iframe>` has; and an event handler, whose empty body still compiles to a function where absence reads null.
+	 * Drop an attribute whose empty or all-whitespace value leaves it in the state its absence gives: the globals `class`, `id`, `style`, `dir`, `accesskey`, `itemprop`, `itemref`, `itemtype` and `part`, and every attribute reflecting a token list on the elements the spec defines it for — `rel` on `<a>`, `<area>`, `<form>` and `<link>`, `ping` on `<a>` and `<area>`, `headers` on `<td>` and `<th>`, `blocking` on `<link>`, `<script>` and `<style>`, `sizes` on `<link>`, `for` on `<output>` — where an empty list is no tokens. Anywhere else that spelling is an author attribute whose meaning is a script's, so `<x-foo rel="">` and `<label for="">` keep it. Off by default: an attribute selector matches on presence, so `[class]` stops matching. Never dropped: `title` and `lang`, whose empty value means what absence does not; `sandbox`, whose empty list is the most restrictive state an `<iframe>` has; and an event handler, whose empty body still compiles to a function where absence reads null.
 	 * @since 5.110.0
 	 */
 	removeEmptyAttributes?: boolean;
@@ -29995,7 +29995,11 @@ declare namespace exports {
 			) => string;
 			export let buildHeadTags: (opts: OutputHtmlOptions) => string;
 			export let decodeEntities: _functionSyntax;
-			export let escapeAttribute: (s: string) => string;
+			export let escapeAttribute: (
+				s: string,
+				delimiter?: number,
+				minimal?: boolean
+			) => string;
 			export let escapeText: (s: string) => string;
 			export let isAsciiWhitespace: (cc: number) => boolean;
 			export let metaTag: (name: string, content: string) => string;

@@ -2934,6 +2934,20 @@ describe("tokenize", () => {
 			expect(escapeAttribute("&")).toBe("&amp;");
 			expect(escapeAttribute("")).toBe("");
 		});
+
+		it("should escape only the delimiting quote", () => {
+			// Whichever quote writes the value is escaped and the other stands
+			// literal, which is what makes `alt='say "hi"'` legal.
+			const apostrophe = "'".charCodeAt(0);
+			expect(escapeAttribute("a\"b'c")).toBe("a&quot;b'c");
+			expect(escapeAttribute("a\"b'c", apostrophe)).toBe('a"b&#39;c');
+			expect(escapeAttribute("a&b c\nd\re", apostrophe)).toBe(
+				"a&amp;b&nbsp;c&#10;d&#13;e"
+			);
+			// The fast path has to test the delimiter it was given, not `"`.
+			expect(escapeAttribute('say "hi"', apostrophe)).toBe('say "hi"');
+			expect(escapeAttribute("plain", apostrophe)).toBe("plain");
+		});
 	});
 
 	describe("escapeText", () => {
@@ -4279,14 +4293,21 @@ describe("SourceProcessor — removeImpliedTags", () => {
 		}).code;
 
 	it("keeps the tag whitespace behind it would re-parse into", () => {
-		// A space opening the body lands in the head without `<body>`, and one
-		// behind `</head>` in the body without it.
+		// A space opening the body lands in the head without `<body>`.
 		expect(
 			minifyAll("<html><head><title>t</title></head><body> text</body></html>")
 		).toBe("<title>t</title><body> text");
+	});
+
+	it("drops a shell tag over whitespace that prints nothing", () => {
+		// Whitespace inside `<head>`, or behind `</head>`, sits outside every
+		// block formatting context, so no tier prints it and no tag guards it.
+		expect(
+			minifyAll("<html><head>\n<title>t</title>\n</head><body>x</body></html>")
+		).toBe("<title>t</title>x");
 		expect(
 			minifyAll("<html><head><title>t</title></head> <body>x</body></html>")
-		).toBe("<title>t</title></head>x");
+		).toBe("<title>t</title>x");
 	});
 
 	it("looks past a comment it is about to drop", () => {
@@ -4297,6 +4318,66 @@ describe("SourceProcessor — removeImpliedTags", () => {
 		expect(
 			minifyAll("<html><head><title>t</title></head><!--[if IE]>i<![endif]-->x")
 		).toBe("<title>t</title></head><!--[if IE]>i<![endif]-->x");
+	});
+});
+
+describe("SourceProcessor — attribute quote spelling", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html a document
+	 * @returns {string} its minified form
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { mode: "minify" }).code;
+
+	it("swaps the delimiter so escaped quotes can stand literal", () => {
+		expect(minify('<img alt="say &quot;hi&quot; to &quot;them&quot;">')).toBe(
+			'<img alt=\'say "hi" to "them"\'>'
+		);
+		expect(minify('<div data-c="{&quot;a&quot;:1}">')).toBe(
+			"<div data-c='{\"a\":1}'></div>"
+		);
+	});
+
+	it("keeps every other reference the value spells", () => {
+		// `&amp;quot;` is the text `&quot;`, not a quote, so it stays escaped —
+		// and `&nbsp;` / `&#10;` still need a reference under either delimiter.
+		expect(minify('<img alt="&amp;quot; literal &quot;q&quot;">')).toBe(
+			"<img alt='&amp;quot; literal \"q\"'>"
+		);
+		expect(minify('<img alt="nb&nbsp;sp &quot;q&quot;">')).toBe(
+			"<img alt='nb&nbsp;sp \"q\"'>"
+		);
+		expect(minify('<img alt="line&#10;br &quot;q&quot;">')).toBe(
+			"<img alt='line&#10;br \"q\"'>"
+		);
+	});
+
+	it("escapes only the delimiter when a value carries both kinds", () => {
+		// One of them has to be escaped, so the cheaper delimiter is the one that
+		// leaves the more frequent quote standing literal.
+		expect(minify('<img alt="it&#39;s &quot;x&quot;">')).toBe(
+			"<img alt='it&#39;s \"x\"'>"
+		);
+		// Two of each: escaping the apostrophes is the shorter of the two.
+		expect(minify('<img alt="&#39;a&#39; &quot;b&quot;">')).toBe(
+			"<img alt='&#39;a&#39; \"b\"'>"
+		);
+	});
+
+	it("writes a reference the parser cannot read back as one", () => {
+		// `<` and `>` mean nothing inside a quoted value, and an `&` no reference
+		// can start after it is data — but one that could start a reference stays.
+		expect(minify('<p title="&lt;b&gt;bold&lt;/b&gt;">t</p>')).toBe(
+			'<p title="<b>bold</b>">t'
+		);
+		expect(minify('<p title="a &amp; b">t</p>')).toBe('<p title="a & b">t');
+		expect(minify('<a href="?a=1&amp;b=2">t</a>')).toBe(
+			'<a href="?a=1&amp;b=2">t</a>'
+		);
+		// A bare value ends at `>`, so there the reference has to stay.
+		expect(minify("<p title=a&gt;b>t</p>")).toBe("<p title=a&gt;b>t");
 	});
 });
 

@@ -9,6 +9,10 @@ exports[`ConfigTestCases html minimize-empty-attributes minimize-empty-attribute
 <div>dropped: an empty token list is no tokens</div>
 <a href=x>dropped: on the element that carries them</a>
 <table><tr><td>dropped: here too</table>
+<x-foo rel ping headers blocking sizes>kept: none of these are the spec's here</x-foo>
+<div rel for>kept: an author attribute, whatever a script reads back</div>
+<label for>kept: one id on a label, and an id may be empty</label>
+<output>dropped: a token list on this one</output>
 <iframe sandbox src=x.html></iframe>
 <div onclick onmouseover>kept: an empty handler still reads back as one</div>
 <div data-x aria-label role>kept: not in the table</div>

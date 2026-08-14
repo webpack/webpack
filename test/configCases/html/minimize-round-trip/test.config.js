@@ -15,6 +15,7 @@ const {
 const {
 	NodeType,
 	SourceProcessor,
+	decodeEntities,
 	parseSrcset
 } = require("../../../../lib/html/syntax");
 
@@ -53,10 +54,13 @@ const appliesTo = (on, tagName) =>
  * bytes without changing the meaning does not read as a difference.
  * @param {string} tagName lowercased element name
  * @param {string} name attribute name
- * @param {string} value attribute value
+ * @param {string} rawValue attribute value, as the source spells it
  * @returns {string} its canonical form
  */
-const canonicalValue = (tagName, name, value) => {
+const canonicalValue = (tagName, name, rawValue) => {
+	// `attributes()` reports the source bytes, so the references have to go
+	// before anything below reads the value the parser actually builds.
+	const value = decodeEntities(rawValue, true);
 	if (appliesTo(BOOLEAN_ATTRIBUTES.get(name), tagName)) return "<boolean>";
 	if (appliesTo(TOKEN_LIST_ATTRIBUTES.get(name), tagName)) {
 		// The ordered set parser splits on ASCII whitespace and drops the empties.

@@ -31,6 +31,14 @@ module.exports = {
 			"<a href=x>dropped: on the element that carries them"
 		);
 		expect(page).toContain("<td>dropped: here too");
+		// Off the elements the spec defines them for, the same spellings are
+		// author attributes whose meaning is a script's, so nothing is dropped.
+		expect(page).toContain(
+			"<x-foo rel ping headers blocking sizes>kept: none of these"
+		);
+		expect(page).toContain("<div rel for>kept: an author attribute");
+		expect(page).toContain("<label for>kept: one id on a label");
+		expect(page).toContain("<output>dropped: a token list on this one");
 		// Except `sandbox`: its empty list is the most restrictive state there is,
 		// and absence is the least.
 		expect(page).toContain("<iframe sandbox src=x.html>");

@@ -390,6 +390,10 @@ const canonicalCss = (css) => {
 	}
 };
 
+// Stands for a run of whitespace nothing else records. Not a string: every
+// control character survives parsing, so a string marker could be real text.
+const WHITESPACE_RUN = null;
+
 /**
  * A DOM fingerprint: every element with its attributes, plus the text, walked
  * out of a real HTML parser rather than matched with a regex. Whitespace runs in
@@ -411,7 +415,7 @@ const fingerprint = (parse5, html) => {
 	const empty = new Set();
 	/** @type {Set<string>} */
 	const filled = new Set();
-	/** @type {string[]} */
+	/** @type {(string | null)[]} */
 	const text = [];
 	/**
 	 * @param {Parse5Node} node a parse5 node
@@ -427,7 +431,17 @@ const fingerprint = (parse5, html) => {
 				return;
 			}
 			const value = verbatim ? raw : raw.replace(/\s+/g, " ").trim();
-			if (value.length !== 0) text.push(value);
+			if (value.length !== 0) {
+				text.push(value);
+				return;
+			}
+			// A whitespace-only node between two inline boxes renders as a space,
+			// so losing it is a difference — but never under `<head>` / `<html>`,
+			// where nothing renders it. Recorded as a run, not a count: dropping a
+			// comment merges the nodes either side, which is no loss at all.
+			if (!verbatim && parent !== "head" && parent !== "html") {
+				text.push(WHITESPACE_RUN);
+			}
 			return;
 		}
 		if (node.tagName !== undefined) {
@@ -448,7 +462,18 @@ const fingerprint = (parse5, html) => {
 	};
 	walk(parse5.parse(html), false, undefined);
 	for (const key of filled) empty.delete(key);
-	return { elements, attributes, empty, text: text.join(" ") };
+	// Adjacent runs fold into one, so a dropped comment between two whitespace
+	// nodes reads as the single run both sides really have.
+	return {
+		elements,
+		attributes,
+		empty,
+		text: text
+			.filter(
+				(part, i) => part !== WHITESPACE_RUN || text[i - 1] !== WHITESPACE_RUN
+			)
+			.join(" ")
+	};
 };
 
 /**

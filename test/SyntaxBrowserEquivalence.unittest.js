@@ -837,7 +837,19 @@ const installHelpers = () => {
 	 * @returns {string} its rendered text
 	 */
 	const renderedTextOf = (root) => {
-		const clone = /** @type {ParentNode & Node} */ (root.cloneNode(true));
+		// A `ShadowRoot` cannot be cloned, so its children are moved into a
+		// fragment that can be — the text below is the same either way.
+		const clone = /** @type {ParentNode & Node} */ (
+			root.nodeType === Node.DOCUMENT_FRAGMENT_NODE && "host" in root
+				? (() => {
+						const fragment = document.createDocumentFragment();
+						for (const child of root.childNodes) {
+							fragment.append(child.cloneNode(true));
+						}
+						return fragment;
+					})()
+				: root.cloneNode(true)
+		);
 		for (const el of clone.querySelectorAll("script,style")) el.remove();
 		return clone.textContent || "";
 	};
@@ -851,14 +863,24 @@ const installHelpers = () => {
 	 * @returns {Facets} its facets
 	 */
 	const htmlFacets = (html) => {
-		const doc = new DOMParser().parseFromString(html, "text/html");
+		// `parseHTMLUnsafe` attaches a declarative shadow root where `DOMParser`
+		// leaves an inert `<template>`, so the tree below is the one a page gets.
+		const attached =
+			typeof Document.parseHTMLUnsafe === "function"
+				? Document.parseHTMLUnsafe(html)
+				: null;
+		const doc =
+			attached === null
+				? new DOMParser().parseFromString(html, "text/html")
+				: attached;
 		/** @type {Record<string, string[]>} */
 		const facets = {
 			elements: [],
 			ownText: [],
 			comments: [],
 			scripts: [],
-			templates: []
+			templates: [],
+			shadows: []
 		};
 		/** @type {Rule[][]} */
 		const styles = [];
@@ -917,10 +939,30 @@ const installHelpers = () => {
 					facets.templates.push(renderedTextOf(content));
 					collect(content, depth + 1, true);
 				}
+				// An open shadow root renders and is script-reachable, so it is held
+				// to the same standard as the light tree. A closed one is reachable
+				// from neither, and the round-trip case compares it as a template.
+				if (element.shadowRoot !== null) {
+					facets.shadows.push(renderedTextOf(element.shadowRoot));
+					collect(element.shadowRoot, depth + 1, inPage);
+				}
 				collect(element, depth + 1, inPage);
 			}
 		};
 		collect(doc, 0, false);
+		// `shadowRoot` never hands back a closed root, so its content is read off
+		// a second, inert parse — where it is still the `<template>` it was
+		// written as. Without this, attaching the root hides what is inside it.
+		if (attached !== null) {
+			const inert = new DOMParser().parseFromString(html, "text/html");
+			for (const closed of inert.querySelectorAll(
+				'template[shadowrootmode="closed" i]'
+			)) {
+				const content = /** @type {HTMLTemplateElement} */ (closed).content;
+				facets.shadows.push(renderedTextOf(content));
+				collect(content, 0, true);
+			}
+		}
 		const doctype = doc.doctype;
 		// Quirks mode changes layout, so the doctype has to survive as one.
 		facets.document = [
@@ -1490,54 +1532,63 @@ describe("printer output in real Chrome", () => {
 		// is unobservable only where the IDL member reads the same as with no
 		// attribute at all — which is why an event handler is not in the table:
 		// an empty body still compiles, so it reads back a function, not null.
-		const observable = await page.evaluate(
-			(names) => {
-				/**
-				 * @param {string} attribute the attribute name
-				 * @param {boolean} set whether to give it the empty value
-				 * @returns {[string | undefined, unknown]} the IDL member and its value
-				 */
-				const readBack = (attribute, set) => {
-					// `<a>` reflects the widest set of them; the rest read as undefined
-					// here and are skipped rather than guessed at.
-					const node = document.createElement("a");
-					if (set) node.setAttribute(attribute, "");
-					document.body.append(node);
-					/** @type {string | undefined} */
-					let property;
-					for (
-						let proto = Object.getPrototypeOf(node);
-						proto !== null && property === undefined;
-						proto = Object.getPrototypeOf(proto)
-					) {
-						for (const name of Object.getOwnPropertyNames(proto)) {
-							if (name.toLowerCase() === attribute) {
-								property = name;
-								break;
-							}
+		// A global is read on `<a>`, as every one of them was before the table
+		// carried a scope; a scoped one on each element it names.
+		/** @type {[string, string[]][]} */
+		const probes = [];
+		for (const [name, on] of EMPTY_REMOVABLE_ATTRIBUTES) {
+			probes.push([name, on === null ? ["a"] : [...on]]);
+		}
+		const observable = await page.evaluate((pairs) => {
+			/**
+			 * @param {string} tagName the element to read it on
+			 * @param {string} attribute the attribute name
+			 * @param {boolean} set whether to give it the empty value
+			 * @returns {[string | undefined, unknown]} the IDL member and its value
+			 */
+			const readBack = (tagName, attribute, set) => {
+				// Read on an element the spec defines it for, so a scoped attribute
+				// is probed where it means something rather than skipped as unknown.
+				const node = document.createElement(tagName);
+				if (set) node.setAttribute(attribute, "");
+				document.body.append(node);
+				/** @type {string | undefined} */
+				let property;
+				for (
+					let proto = Object.getPrototypeOf(node);
+					proto !== null && property === undefined;
+					proto = Object.getPrototypeOf(proto)
+				) {
+					for (const name of Object.getOwnPropertyNames(proto)) {
+						if (name.toLowerCase() === attribute) {
+							property = name;
+							break;
 						}
 					}
-					const reflected =
-						property === undefined
-							? undefined
-							: /** @type {Record<string, unknown>} */ (
-									/** @type {unknown} */ (node)
-								)[property];
-					node.remove();
-					return [property, String(reflected)];
-				};
-				/** @type {string[]} */
-				const out = [];
-				for (const name of names) {
-					const [property, empty] = readBack(name, true);
-					if (property === undefined) continue;
-					const [, absent] = readBack(name, false);
-					if (empty !== absent) out.push(`${name}: ${empty} vs ${absent}`);
 				}
-				return out;
-			},
-			[...EMPTY_REMOVABLE_ATTRIBUTES]
-		);
+				const reflected =
+					property === undefined
+						? undefined
+						: /** @type {Record<string, unknown>} */ (
+								/** @type {unknown} */ (node)
+							)[property];
+				node.remove();
+				return [property, String(reflected)];
+			};
+			/** @type {string[]} */
+			const out = [];
+			for (const [name, elements] of pairs) {
+				for (const tagName of elements) {
+					const [property, empty] = readBack(tagName, name, true);
+					if (property === undefined) continue;
+					const [, absent] = readBack(tagName, name, false);
+					if (empty !== absent) {
+						out.push(`${tagName}[${name}]: ${empty} vs ${absent}`);
+					}
+				}
+			}
+			return out;
+		}, probes);
 		expect(observable).toEqual([]);
 	}, 600000);
 
