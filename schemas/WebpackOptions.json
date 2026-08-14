@@ -1602,8 +1602,50 @@
       "enum": ["default", "esModule"],
       "added": "5.109.0"
     },
+    "ExternalItemSideEffects": {
+      "description": "Whether importing the external has side effects (like the `sideEffects` flag in a package.json). `false` allows webpack to drop the external when none of its exports are used. Defaults to `true`, as webpack can't analyze an external.",
+      "type": "boolean",
+      "added": "5.110.0"
+    },
     "ExternalItemValue": {
       "description": "The dependency used for the external.",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ExternalItemValueTarget"
+        },
+        {
+          "$ref": "#/definitions/ExternalItemValueWithOptions"
+        }
+      ]
+    },
+    "ExternalItemValueObject": {
+      "description": "The target of the external with a type, optionally with an 'interop' hint describing how its exports interoperate with ES module imports.",
+      "type": "object",
+      "additionalProperties": {
+        "description": "The target of the external for a specific external type.",
+        "anyOf": [
+          {
+            "type": "array",
+            "items": {
+              "description": "A part of the target of the external.",
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "description": "The target of the external.",
+            "type": "string"
+          }
+        ]
+      },
+      "properties": {
+        "interop": {
+          "$ref": "#/definitions/ExternalItemInterop"
+        }
+      }
+    },
+    "ExternalItemValueTarget": {
+      "description": "The target of the external.",
       "anyOf": [
         {
           "type": "array",
@@ -1622,32 +1664,24 @@
           "type": "string"
         },
         {
-          "description": "The target of the external with a type, optionally with an 'interop' hint describing how its exports interoperate with ES module imports.",
-          "type": "object",
-          "additionalProperties": {
-            "description": "The target of the external for a specific external type.",
-            "anyOf": [
-              {
-                "type": "array",
-                "items": {
-                  "description": "A part of the target of the external.",
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              {
-                "description": "The target of the external.",
-                "type": "string"
-              }
-            ]
-          },
-          "properties": {
-            "interop": {
-              "$ref": "#/definitions/ExternalItemInterop"
-            }
-          }
+          "$ref": "#/definitions/ExternalItemValueObject"
         }
       ]
+    },
+    "ExternalItemValueWithOptions": {
+      "description": "The target of the external together with options describing how webpack should treat it.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "external": {
+          "$ref": "#/definitions/ExternalItemValueTarget"
+        },
+        "sideEffects": {
+          "$ref": "#/definitions/ExternalItemSideEffects"
+        }
+      },
+      "required": ["external"],
+      "added": "5.110.0"
     },
     "Externals": {
       "description": "Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.",

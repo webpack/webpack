@@ -1,0 +1,8 @@
+@import "free-css-import";
+@import "keep-css-import";
+
+body {
+	background: url("free-css-url");
+	border-image: url("free-css-url-alias");
+	color: red;
+}

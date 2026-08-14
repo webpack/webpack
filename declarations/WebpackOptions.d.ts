@@ -958,13 +958,25 @@ export type EntryNormalized = EntryDynamicNormalized | EntryStaticNormalized;
  */
 export type ExternalItemInterop = "default" | "esModule";
 /**
+ * Whether importing the external has side effects (like the `sideEffects` flag in a package.json). `false` allows webpack to drop the external when none of its exports are used. Defaults to `true`, as webpack can't analyze an external.
+ * @since 5.110.0
+ */
+export type ExternalItemSideEffects = boolean;
+/**
  * The dependency used for the external.
  */
 export type ExternalItemValue =
-	| string[]
-	| boolean
-	| string
-	| (ExternalItemValueObjectKnown & ExternalItemValueObjectUnknown);
+	ExternalItemValueTarget | ExternalItemValueWithOptions;
+/**
+ * The target of the external.
+ */
+export type ExternalItemValueTarget =
+	string[] | boolean | string | ExternalItemValueObject;
+/**
+ * The target of the external with a type, optionally with an 'interop' hint describing how its exports interoperate with ES module imports.
+ */
+export type ExternalItemValueObject = ExternalItemValueObjectKnown &
+	ExternalItemValueObjectUnknown;
 /**
  * Configure how the HTML source is parsed: `"document"` (the default) parses a full page; any other value is the tag name of the context element to parse the source as that element's inner HTML (a fragment) — e.g. `"template"` for a neutral fragment, or `"tbody"` so context-sensitive tags like a bare `<tr>`/`<td>` are kept instead of dropped.
  * @since 5.109.0
@@ -4143,6 +4155,21 @@ export interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	typescript?: "auto" | boolean;
+}
+/**
+ * The target of the external together with options describing how webpack should treat it.
+ * @since 5.110.0
+ */
+export interface ExternalItemValueWithOptions {
+	/**
+	 * The target of the external.
+	 */
+	external: ExternalItemValueTarget;
+	/**
+	 * Whether importing the external has side effects (like the `sideEffects` flag in a package.json). `false` allows webpack to drop the external when none of its exports are used. Defaults to `true`, as webpack can't analyze an external.
+	 * @since 5.110.0
+	 */
+	sideEffects?: ExternalItemSideEffects;
 }
 /**
  * Generator options for html modules.
