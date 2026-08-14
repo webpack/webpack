@@ -3811,6 +3811,7 @@ const collectPrefixTable = (
 // of them shipped in 2017, so nothing about them can move again. Checked against
 // BCD as the file is built, so an entry it catches up on fails generation rather
 // than sitting here unread.
+/** @type {Map<string, [string, [string, string, string][]][]>} */
 const PREFIX_SUPPLEMENT = new Map([
 	[
 		// Multi-column's own gap, prefixed until the module went unprefixed — Chrome
@@ -3820,7 +3821,7 @@ const PREFIX_SUPPLEMENT = new Map([
 		"column-gap",
 		[
 			[
-				"-webkit-",
+				"-webkit-column-gap",
 				[
 					["chrome", "4", "50"],
 					["safari", "3.1", "9"],
@@ -3832,7 +3833,7 @@ const PREFIX_SUPPLEMENT = new Map([
 					["samsung", "4", "5"]
 				]
 			],
-			["-moz-", [["firefox", "2", "52"]]]
+			["-moz-column-gap", [["firefox", "2", "52"]]]
 		]
 	],
 	// CSS Shapes, which WebKit shipped prefixed from Safari 7.1 and unprefixed at
@@ -3846,7 +3847,7 @@ const PREFIX_SUPPLEMENT = new Map([
 		"columns",
 		[
 			[
-				"-webkit-",
+				"-webkit-columns",
 				[
 					["chrome", "4", "50"],
 					["safari", "3.1", "9"],
@@ -3862,7 +3863,7 @@ const PREFIX_SUPPLEMENT = new Map([
 		"column-span",
 		[
 			[
-				"-webkit-",
+				"-webkit-column-span",
 				[
 					["chrome", "4", "50"],
 					["safari", "3.1", "9"],
@@ -3878,7 +3879,7 @@ const PREFIX_SUPPLEMENT = new Map([
 		"shape-outside",
 		[
 			[
-				"-webkit-",
+				"-webkit-shape-outside",
 				[
 					["safari", "7.1", "10.1"],
 					["ios_saf", "8", "10.3"]
@@ -3890,7 +3891,7 @@ const PREFIX_SUPPLEMENT = new Map([
 		"shape-margin",
 		[
 			[
-				"-webkit-",
+				"-webkit-shape-margin",
 				[
 					["safari", "7.1", "10.1"],
 					["ios_saf", "8", "10.3"]
@@ -3902,14 +3903,28 @@ const PREFIX_SUPPLEMENT = new Map([
 		"shape-image-threshold",
 		[
 			[
-				"-webkit-",
+				"-webkit-shape-image-threshold",
 				[
 					["safari", "7.1", "10.1"],
 					["ios_saf", "8", "10.3"]
 				]
 			]
 		]
-	]
+	],
+	// IE 10's flexbox, the 2012 draft: it renamed the properties rather than
+	// prefixing them, and BCD records the renames unevenly — `-ms-flex-positive`
+	// as an `alternative_name`, `-ms-flex-order` as a `-ms-` prefix on `order`
+	// (a spelling nothing ever read), and the rest not at all, some as plain
+	// unprefixed support at 10 the engine did not have. Only the four whose
+	// values IE 10 reads unchanged are stated: `-ms-flex-align`,
+	// `-ms-flex-pack`, `-ms-flex-line-pack` and `-ms-flex-item-align` also
+	// rename their keywords (`flex-start` is `start`, `space-around` is
+	// `distribute`), which is a value rewrite and not a spelling.
+	["order", [["-ms-flex-order", [["ie", "10", "11"]]]]],
+	["flex-shrink", [["-ms-flex-negative", [["ie", "10", "11"]]]]],
+	["flex-basis", [["-ms-flex-preferred-size", [["ie", "10", "11"]]]]],
+	["flex-wrap", [["-ms-flex-wrap", [["ie", "10", "11"]]]]],
+	["flex-flow", [["-ms-flex-flow", [["ie", "10", "11"]]]]]
 ]);
 
 /**
@@ -3927,8 +3942,14 @@ const applyPrefixSupplement = (table) => {
 			table.push(entry);
 		}
 		let widened = false;
-		for (const [prefix, windows] of stated) {
-			const spelling = prefix + name;
+		for (const [spelling, windows] of stated) {
+			// Stated in full rather than as a prefix: an engine's legacy spelling is as
+			// often a rename (`-ms-flex-order` for `order`) as a prefix on the name.
+			if (spelling === name || !spelling.startsWith("-")) {
+				throw new Error(
+					`\`${spelling}\` stated for \`${name}\` is not a vendor spelling.`
+				);
+			}
 			let spellingEntry = entry[1].find(([known]) => known === spelling);
 			if (spellingEntry === undefined) {
 				spellingEntry = [spelling, []];
@@ -3958,14 +3979,22 @@ const applyPrefixSupplement = (table) => {
 	}
 };
 
-// A property spelling BCD records that no engine ever read. Everything else is
-// read from BCD; each entry here carries why it cannot be.
+// A property spelling BCD records that no engine ever read, or that reads other
+// values than the property it stands for. Everything else is read from BCD; each
+// entry here carries why it cannot be.
 const PROPERTY_SPELLING_EXCLUSIONS = new Map([
-	// IE 10's flexbox renamed its properties rather than prefixing them, and
-	// `order` was `-ms-flex-order` — which takes the same values, but under a name
-	// BCD files as a prefix on `order`. `-ms-order` was never read by anything, so
-	// the rename is the only spelling, and a rename is not derivable from a prefix.
-	["order", ["-ms-"]]
+	// `-ms-order` was never read by anything: IE 10 spelled it `-ms-flex-order`,
+	// which `PREFIX_SUPPLEMENT` states.
+	["order", ["-ms-order"]],
+	// WebKit's and Gecko's font smoothing are a different property under a
+	// similar name: `font-smooth` takes `never`/`always`/a size, while
+	// `-webkit-font-smoothing` takes `antialiased`/`subpixel-antialiased` and
+	// `-moz-osx-font-smoothing` takes `grayscale`. Nothing carries over.
+	["font-smooth", ["-webkit-font-smoothing", "-moz-osx-font-smoothing"]],
+	// `-webkit-text-combine` reads `horizontal` where the standard property reads
+	// `all`, so the rename alone writes a value it cannot parse. IE's
+	// `-ms-text-combine-horizontal` does take the standard keywords.
+	["text-combine-upright", ["-webkit-text-combine"]]
 ]);
 
 // A vendor spelling BCD files under a keyword it does not spell, by keyword —
@@ -4220,11 +4249,7 @@ const collectData = () => {
 	const lengthOnlyFunctions = collectLengthOnlyFunctions();
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
-	const prefixedProperties = collectPrefixTable(
-		bcd.css.properties,
-		false,
-		true
-	);
+	const prefixedProperties = collectPrefixTable(bcd.css.properties, true, true);
 	const prefixedSelectors = collectPrefixTable(bcd.css.selectors, true);
 	const prefixedAtRules = collectPrefixTable(bcd.css["at-rules"]);
 	const prefixedValues = collectPrefixedValues();

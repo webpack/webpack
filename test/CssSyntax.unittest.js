@@ -4633,6 +4633,49 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 			"@media screen{a{-webkit-user-select:none;user-select:none}}"
 		);
 	});
+
+	it("writes the vendor rename an engine read instead of a prefix", () => {
+		expect(
+			minify("a{margin-inline-start:1px;padding-inline-end:2px}", [
+				"chrome 40",
+				"firefox 40"
+			])
+		).toBe(
+			"a{-webkit-margin-start:1px;-moz-margin-start:1px;margin-inline-start:1px;-webkit-padding-end:2px;-moz-padding-end:2px;padding-inline-end:2px}"
+		);
+		expect(minify("a{block-size:1px}", ["chrome 40"])).toBe(
+			"a{-webkit-logical-height:1px;block-size:1px}"
+		);
+		expect(minify("a{mask-border:url(x) 30}", ["safari 9"])).toBe(
+			"a{-webkit-mask-box-image:url(x) 30;mask-border:url(x) 30}"
+		);
+	});
+
+	it("writes IE 10's flexbox renames, which take the same values", () => {
+		expect(
+			minify(
+				"a{order:1;flex-grow:2;flex-shrink:3;flex-basis:4px;flex-wrap:nowrap}",
+				["ie 10"]
+			)
+		).toBe(
+			"a{-ms-flex-order:1;order:1;-ms-flex-positive:2;flex-grow:2;-ms-flex-negative:3;flex-shrink:3;-ms-flex-preferred-size:4px;flex-basis:4px;-ms-flex-wrap:nowrap;flex-wrap:nowrap}"
+		);
+	});
+
+	it("writes none of IE 10's flexbox renames that rename their keywords too", () => {
+		expect(
+			minify("a{align-items:flex-start;justify-content:center}", ["ie 10"])
+		).toBe("a{align-items:flex-start;justify-content:center}");
+	});
+
+	it("writes no rename that reads other values than the property it stands for", () => {
+		expect(
+			minify("a{font-smooth:always}", ["chrome 40", "firefox 40", "safari 9"])
+		).toBe("a{font-smooth:always}");
+		expect(minify("a{text-combine-upright:all}", ["ie 11", "safari 9"])).toBe(
+			"a{-ms-text-combine-horizontal:all;text-combine-upright:all}"
+		);
+	});
 });
 
 describe("CssSyntax minify — vendor prefixes (values)", () => {
