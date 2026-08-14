@@ -317,16 +317,16 @@ export function createBuildScenarios(options) {
 	return [
 		createBuildBench({
 			case: caseName,
-			config: () => ({ ...resolveConfig(config), mode: "development" }),
+			config: () => ({ ...resolveConfig(config), mode: "development" })
 		}),
 		createBuildBench({
 			case: caseName,
-			config: () => ({ ...resolveConfig(config), mode: "production" }),
+			config: () => ({ ...resolveConfig(config), mode: "production" })
 		}),
 		createWatchRebuildBench({
 			case: caseName,
 			entryFile,
-			config: () => ({ ...resolveConfig(config), mode: "development" }),
+			config: () => ({ ...resolveConfig(config), mode: "development" })
 		})
 	];
 }

@@ -43,7 +43,9 @@ const [shardIndex, shardCount] = toShard(
 );
 
 // Warn about noisy wall-time results.
-const maxRme = Number.parseFloat(values["max-rme"] ?? process.env.MAX_RME ?? "15");
+const maxRme = Number.parseFloat(
+	values["max-rme"] ?? process.env.MAX_RME ?? "15"
+);
 
 /** @type {string[]} */
 const found = [];

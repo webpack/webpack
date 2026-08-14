@@ -90,9 +90,8 @@ export default {
 		{
 			name: "serialize 60000 numeric values",
 			fn() {
-				sink =
-					/** @type {Buffer[]} */ (middleware.serialize(numericData, {}))
-						.length;
+				sink = /** @type {Buffer[]} */ (middleware.serialize(numericData, {}))
+					.length;
 			}
 		},
 		{
@@ -116,8 +115,8 @@ export default {
 		{
 			name: "serialize 10000 mixed values",
 			fn() {
-				sink =
-					/** @type {Buffer[]} */ (middleware.serialize(mixedData, {})).length;
+				sink = /** @type {Buffer[]} */ (middleware.serialize(mixedData, {}))
+					.length;
 			}
 		},
 		{

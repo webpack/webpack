@@ -111,7 +111,7 @@ export function generateCssSource(rules, asModule = false) {
 		}
 		declarations.push(
 			`\tcolor: ${CSS_COLORS[i % CSS_COLORS.length]};`,
-			"\tbackground: url(\"data:image/gif;base64,R0lGODlhAQABAAAAACw=\") no-repeat;",
+			'\tbackground: url("data:image/gif;base64,R0lGODlhAQABAAAAACw=") no-repeat;',
 			"\tmax-width: calc(100% - var(--spacing) * 2);"
 		);
 		parts.push(`${selector} {\n${declarations.join("\n")}\n}`);
@@ -131,11 +131,11 @@ export function generateCssSource(rules, asModule = false) {
 export function generateHtmlSource(sections) {
 	const parts = [
 		"<!DOCTYPE html>",
-		"<html lang=\"en\">",
+		'<html lang="en">',
 		"<head>",
-		"<meta charset=\"utf-8\">",
+		'<meta charset="utf-8">',
 		"<title>Benchmark fixture</title>",
-		"<link rel=\"stylesheet\" href=\"./styles.css\">",
+		'<link rel="stylesheet" href="./styles.css">',
 		"</head>",
 		"<body>"
 	];
@@ -156,6 +156,6 @@ export function generateHtmlSource(sections) {
 			"</section>"
 		);
 	}
-	parts.push("<script>console.log(\"end\");</script>", "</body>", "</html>");
+	parts.push('<script>console.log("end");</script>', "</body>", "</html>");
 	return parts.join("\n");
 }

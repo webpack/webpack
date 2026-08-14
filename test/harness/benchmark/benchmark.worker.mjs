@@ -772,7 +772,13 @@ async function sampleHeapPeak(fn) {
  * @param {string} testDirectory test directory
  * @returns {Configuration} built configuration
  */
-function buildConfiguration(test, baseline, realConfig, scenario, testDirectory) {
+function buildConfiguration(
+	test,
+	baseline,
+	realConfig,
+	scenario,
+	testDirectory
+) {
 	const { watch, ...rest } = scenario;
 	const config = structuredClone({ ...realConfig, ...rest });
 
@@ -1379,7 +1385,9 @@ export async function runAll({
 	baseOutputPath: baseOutputPathArg,
 	callingFile
 }) {
-	console.log(`Process ${process.pid}: running ${tasks.length} task(s) in one bench`);
+	console.log(
+		`Process ${process.pid}: running ${tasks.length} task(s) in one bench`
+	);
 
 	baseOutputPath = baseOutputPathArg;
 	rootCallingFile = callingFile;

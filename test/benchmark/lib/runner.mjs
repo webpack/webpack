@@ -150,7 +150,9 @@ export async function runSuites(files, options) {
 
 	for (const file of files) {
 		/** @type {Suite} */
-		const suite = await import(pathToFileURL(file).toString()).then(x => x.default ?? x);
+		const suite = await import(pathToFileURL(file).toString()).then(
+			(x) => x.default ?? x
+		);
 		const benches = suite.benches.filter((bench) => {
 			const id = `${suite.name}/${bench.name}`;
 			if (options.filter && !options.filter.test(id)) return false;
@@ -187,9 +189,7 @@ export async function runSuites(files, options) {
 						});
 					} catch (err) {
 						failures.push({ id, error: /** @type {Error} */ (err) });
-						console.error(
-							`  ✖ ${id}: ${/** @type {Error} */ (err).stack}`
-						);
+						console.error(`  ✖ ${id}: ${/** @type {Error} */ (err).stack}`);
 					}
 					await drainHeap();
 				}

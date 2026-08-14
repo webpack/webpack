@@ -73,10 +73,9 @@ export default {
 		{
 			name: "deserialize flat module metadata",
 			async fn() {
-				const value =
-					/** @type {Record<string, unknown>} */ (
-						await buffersSerializer.deserialize(flatSerialized, {})
-					);
+				const value = /** @type {Record<string, unknown>} */ (
+					await buffersSerializer.deserialize(flatSerialized, {})
+				);
 				sink = Object.keys(value).length;
 			}
 		},
@@ -89,10 +88,9 @@ export default {
 		{
 			name: "deserialize shared module graph",
 			async fn() {
-				const value =
-					/** @type {{ modules: unknown[] }} */ (
-						await buffersSerializer.deserialize(graphSerialized, {})
-					);
+				const value = /** @type {{ modules: unknown[] }} */ (
+					await buffersSerializer.deserialize(graphSerialized, {})
+				);
 				sink = value.modules.length;
 			}
 		}
