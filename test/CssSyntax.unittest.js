@@ -4662,10 +4662,50 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 		);
 	});
 
-	it("writes none of IE 10's flexbox renames that rename their keywords too", () => {
+	it("carries the keywords a rename read in place of the standard ones", () => {
 		expect(
-			minify("a{align-items:flex-start;justify-content:center}", ["ie 10"])
-		).toBe("a{align-items:flex-start;justify-content:center}");
+			minify(
+				"a{align-items:flex-start;align-self:flex-end;justify-content:space-around;align-content:space-between}",
+				["ie 10"]
+			)
+		).toBe(
+			"a{-ms-flex-align:start;align-items:flex-start;-ms-flex-item-align:end;align-self:flex-end;-ms-flex-pack:distribute;justify-content:space-around;-ms-flex-line-pack:justify;align-content:space-between}"
+		);
+	});
+
+	it("keeps `!important` on the copy a keyword map rewrote", () => {
+		expect(minify("a{align-items:center!important}", ["ie 10"])).toBe(
+			"a{-ms-flex-align:center!important;align-items:center!important}"
+		);
+	});
+
+	it("writes no copy for a value the renamed property cannot read", () => {
+		expect(minify("a{align-items:normal}", ["ie 10"])).toBe(
+			"a{align-items:normal}"
+		);
+		expect(minify("a{justify-content:var(--x)}", ["ie 10"])).toBe(
+			"a{justify-content:var(--x)}"
+		);
+	});
+
+	it("carries a CSS-wide keyword through a keyword map untouched", () => {
+		expect(minify("a{align-items:inherit}", ["ie 10"])).toBe(
+			"a{-ms-flex-align:inherit;align-items:inherit}"
+		);
+		expect(minify("a{justify-content:unset!important}", ["ie 10"])).toBe(
+			"a{-ms-flex-pack:unset!important;justify-content:unset!important}"
+		);
+	});
+
+	it("drops a dead rename, which no prefix can be stripped off", () => {
+		expect(
+			minify("a{-webkit-margin-start:1px;margin-inline-start:1px}", [
+				"chrome 130"
+			])
+		).toBe("a{margin-inline-start:1px}");
+		expect(
+			minify("a{-ms-flex-align:start;align-items:flex-start}", ["chrome 130"])
+		).toBe("a{align-items:flex-start}");
 	});
 
 	it("writes no rename that reads other values than the property it stands for", () => {

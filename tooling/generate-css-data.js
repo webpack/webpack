@@ -3811,7 +3811,11 @@ const collectPrefixTable = (
 // of them shipped in 2017, so nothing about them can move again. Checked against
 // BCD as the file is built, so an entry it catches up on fails generation rather
 // than sitting here unread.
-/** @type {Map<string, [string, [string, string, string][]][]>} */
+// A stated spelling may also carry the keywords the older property read in place
+// of the standard ones, as `[standard, legacy][]`. Where it does, the map is the
+// legacy property's whole grammar: a value naming anything else is one that
+// property cannot read, so no copy is written for it at all.
+/** @type {Map<string, [string, [string, string, string][], [string, string][]?][]>} */
 const PREFIX_SUPPLEMENT = new Map([
 	[
 		// Multi-column's own gap, prefixed until the module went unprefixed — Chrome
@@ -3924,8 +3928,95 @@ const PREFIX_SUPPLEMENT = new Map([
 	["flex-shrink", [["-ms-flex-negative", [["ie", "10", "11"]]]]],
 	["flex-basis", [["-ms-flex-preferred-size", [["ie", "10", "11"]]]]],
 	["flex-wrap", [["-ms-flex-wrap", [["ie", "10", "11"]]]]],
-	["flex-flow", [["-ms-flex-flow", [["ie", "10", "11"]]]]]
+	["flex-flow", [["-ms-flex-flow", [["ie", "10", "11"]]]]],
+	// The four the 2012 draft also renamed the keywords of, each map being that
+	// property's whole grammar there. Only `writing-mode` is left out of the
+	// renames: IE reads `horizontal-tb` as `lr-tb` or `rl-tb` depending on the
+	// element's `direction`, which the declaration alone does not say.
+	[
+		"align-items",
+		[
+			[
+				"-ms-flex-align",
+				[["ie", "10", "11"]],
+				[
+					["flex-start", "start"],
+					["flex-end", "end"],
+					["center", "center"],
+					["baseline", "baseline"],
+					["stretch", "stretch"]
+				]
+			]
+		]
+	],
+	[
+		"align-self",
+		[
+			[
+				"-ms-flex-item-align",
+				[["ie", "10", "11"]],
+				[
+					["auto", "auto"],
+					["flex-start", "start"],
+					["flex-end", "end"],
+					["center", "center"],
+					["baseline", "baseline"],
+					["stretch", "stretch"]
+				]
+			]
+		]
+	],
+	[
+		"justify-content",
+		[
+			[
+				"-ms-flex-pack",
+				[["ie", "10", "11"]],
+				[
+					["flex-start", "start"],
+					["flex-end", "end"],
+					["center", "center"],
+					["space-between", "justify"],
+					["space-around", "distribute"]
+				]
+			]
+		]
+	],
+	[
+		"align-content",
+		[
+			[
+				"-ms-flex-line-pack",
+				[["ie", "10", "11"]],
+				[
+					["flex-start", "start"],
+					["flex-end", "end"],
+					["center", "center"],
+					["space-between", "justify"],
+					["space-around", "distribute"],
+					["stretch", "stretch"]
+				]
+			]
+		]
+	]
 ]);
+
+/**
+ * The keyword maps the stated spellings carry, as `spelling -> standard ->
+ * legacy`. Built from `PREFIX_SUPPLEMENT` itself, so a map can only exist for a
+ * spelling that table writes.
+ * @returns {[string, [string, string][]][]} `[spelling, [standard, legacy][]][]`
+ */
+const collectPrefixSpellingKeywords = () => {
+	/** @type {[string, [string, string][]][]} */
+	const out = [];
+	for (const [, stated] of PREFIX_SUPPLEMENT) {
+		for (const [spelling, , keywords] of stated) {
+			if (keywords !== undefined) out.push([spelling, keywords]);
+		}
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
 
 /**
  * Fold the stated windows into an axis table, widening what BCD records rather
@@ -4250,6 +4341,7 @@ const collectData = () => {
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
 	const prefixedProperties = collectPrefixTable(bcd.css.properties, true, true);
+	const prefixSpellingKeywords = collectPrefixSpellingKeywords();
 	const prefixedSelectors = collectPrefixTable(bcd.css.selectors, true);
 	const prefixedAtRules = collectPrefixTable(bcd.css["at-rules"]);
 	const prefixedValues = collectPrefixedValues();
@@ -4776,6 +4868,23 @@ const PREFIXED_AT_RULES = ${prefixLiteral(prefixedAtRules)};
 /** @type {Map<string, Map<string, [string, [string, number, number][]][]>>} */
 const PREFIXED_VALUES = ${prefixedValueLiteral(prefixedValues)};
 
+// The keywords a vendor spelling reads in place of the standard ones, as
+// \`spelling -> standard -> legacy\` — IE 10's \`-ms-flex-pack\` reads
+// \`space-around\` as \`distribute\`. Each map is the older property's whole
+// grammar, so a value naming anything it does not is one that property cannot
+// read and no copy is written.
+/** @type {Map<string, Map<string, string>>} */
+const PREFIXED_SPELLING_KEYWORDS = new Map([
+${prefixSpellingKeywords
+	.map(
+		([spelling, keywords]) =>
+			`\t["${spelling}", new Map([${keywords
+				.map(([standard, legacy]) => `["${standard}", "${legacy}"]`)
+				.join(", ")}])]`
+	)
+	.join(",\n")}
+]);
+
 // The browserslist names the three tables above carry windows for. A selection
 // naming one they do not is a browser whose needs nothing here states, so a
 // prefix is still added for the browsers that do need it but none is dropped.
@@ -4824,6 +4933,7 @@ module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.POSITION_PROPERT
 module.exports.PREFIXED_AT_RULES = PREFIXED_AT_RULES;
 module.exports.PREFIXED_PROPERTIES = PREFIXED_PROPERTIES;
 module.exports.PREFIXED_SELECTORS = PREFIXED_SELECTORS;
+module.exports.PREFIXED_SPELLING_KEYWORDS = PREFIXED_SPELLING_KEYWORDS;
 module.exports.PREFIXED_VALUES = PREFIXED_VALUES;
 module.exports.PREFIX_BROWSERS = PREFIX_BROWSERS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;

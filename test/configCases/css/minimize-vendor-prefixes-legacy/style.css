@@ -1,0 +1,16 @@
+/* IE 10 read the 2012 flexbox draft, which renamed the properties rather than
+   prefixing them — and renamed the keywords of four of them with it. */
+
+/*! a rename whose values IE 10 reads unchanged */
+.t01 { order: 1; flex-grow: 2; flex-shrink: 3; flex-basis: 4px }
+/*! and one whose keywords it renamed too */
+.t02 { align-items: flex-start; justify-content: space-around }
+/*! a CSS-wide keyword is every property's, so it carries through the map */
+.t03 { align-content: inherit }
+/*! a value the renamed property cannot read gets no copy at all */
+.t04 { align-self: safe center }
+/*! the rename IE 10 spelled `-ms-flex-order`, never `-ms-order` */
+.t05 { order: 2 }
+/*! a prefixed spelling no target needs is dropped once its twin turns up, and
+   a rename is stripped by name rather than by pulling a prefix off it */
+.t06 { -webkit-user-select: none; user-select: none }
