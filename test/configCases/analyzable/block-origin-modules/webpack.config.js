@@ -1,7 +1,7 @@
 "use strict";
 
-// `require.ensure` names no origin module for its block, so there is nothing a baked
-// specifier could be relative to and the runtime form stays.
+// `require.ensure`, an AMD `require([...])` and a lazy-once context all load a chunk
+// through a block that names no module of its own — the module holding the block does.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
