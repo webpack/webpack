@@ -2934,6 +2934,20 @@ describe("tokenize", () => {
 			expect(escapeAttribute("&")).toBe("&amp;");
 			expect(escapeAttribute("")).toBe("");
 		});
+
+		it("should escape only the delimiting quote", () => {
+			// Whichever quote writes the value is escaped and the other stands
+			// literal, which is what makes `alt='say "hi"'` legal.
+			const apostrophe = "'".charCodeAt(0);
+			expect(escapeAttribute("a\"b'c")).toBe("a&quot;b'c");
+			expect(escapeAttribute("a\"b'c", apostrophe)).toBe('a"b&#39;c');
+			expect(escapeAttribute("a&b c\nd\re", apostrophe)).toBe(
+				"a&amp;b&nbsp;c&#10;d&#13;e"
+			);
+			// The fast path has to test the delimiter it was given, not `"`.
+			expect(escapeAttribute('say "hi"', apostrophe)).toBe('say "hi"');
+			expect(escapeAttribute("plain", apostrophe)).toBe("plain");
+		});
 	});
 
 	describe("escapeText", () => {
