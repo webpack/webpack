@@ -420,7 +420,7 @@ const signed = [
 // test membership in, and the name maps foreign content is adjusted with. Spec
 // prose, so they are written out — no dataset states them. Sets rather than
 // arrays because the tree builder runs these tests per token on hot paths.
-/** @typedef {[string, "set" | "array" | "object" | "byElement" | "byElementSet", string, (string | [string, string])[]]} ParserTable a name, its literal kind, its doc line and its members */
+/** @typedef {[string, "set" | "array" | "object" | "map" | "byElement" | "byElementSet", string, (string | [string, string] | [string, string[] | null])[]]} ParserTable a name, its literal kind, its doc line and its members */
 /** @type {ParserTable[]} */
 const PARSER_TABLES = [
 	[
@@ -1414,18 +1414,18 @@ const PARSER_TABLES = [
 	// what no URL at all does.
 	[
 		"EMPTY_REMOVABLE_ATTRIBUTES",
-		"set",
-		"Attributes `removeEmptyAttributes` may drop when their value is empty or all whitespace: the spec gives each the same state empty and absent. Four hand-reasoned globals, plus every token-list attribute (no tokens is what absence gives) and every §8.1.7.2.1 event handler (an empty handler body does nothing). `sandbox` is the token list held back — its empty list is the most restrictive state an `<iframe>` has. Only a presence selector (`[class]`) or a script reading the attribute back can tell, which is what keeps the option off by default.",
+		"map",
+		'Attributes `removeEmptyAttributes` may drop when their value is empty or all whitespace, mapped to the elements they mean that on (`null` = a global attribute): the spec gives each the same state empty and absent. Four hand-reasoned globals, plus every token-list attribute (no tokens is what absence gives). The element matters — on any element the spec does not define it for, `rel` or `headers` is an ordinary author attribute a script reads back, so `<x-foo rel="">` keeps it. `sandbox` is the token list held back: its empty list is the most restrictive state an `<iframe>` has. Only a presence selector (`[class]`) or a script reading the attribute back can tell, which is what keeps the option off by default.',
 		[
 			// No classes either way; `classList` is empty and nothing matches.
-			"class",
+			["class", null],
 			// `dir` is enumerated, and both its invalid and missing value defaults
 			// are the same undefined state.
-			"dir",
+			["dir", null],
 			// No id either way: `getElementById("")` matches nothing.
-			"id",
+			["id", null],
 			// An empty declaration list contributes nothing to the cascade.
-			"style"
+			["style", null]
 		]
 	],
 	[
@@ -1527,7 +1527,7 @@ const REWRITABLE_ATTRIBUTE_NAMES = [
 
 // Derived: an empty token list is no tokens, which is what absence gives —
 // except `sandbox`, whose empty list is the most restrictive state there is.
-const emptyRemovable = /** @type {string[]} */ (
+const emptyRemovable = /** @type {[string, string[] | null][]} */ (
 	/** @type {ParserTable} */
 	(
 		/** @type {ParserTable[]} */ (PARSER_TABLES).find(
@@ -1535,14 +1535,21 @@ const emptyRemovable = /** @type {string[]} */ (
 		)
 	)[3]
 );
-for (const [name] of tokenLists) {
-	if (name !== "sandbox" && !emptyRemovable.includes(name)) {
-		emptyRemovable.push(name);
+// Carrying the scope, not just the name: off the elements the list is defined
+// for, the same spelling is an author attribute that means whatever a script
+// reads back. A hand-reasoned global already covers every element, so it wins.
+for (const [name, on] of tokenLists) {
+	if (
+		name === "sandbox" ||
+		emptyRemovable.some(([listed]) => listed === name)
+	) {
+		continue;
 	}
+	emptyRemovable.push([name, on]);
 }
 // Event handlers stay: an empty body still compiles, so the IDL member reads
 // back a function where absence reads null.
-emptyRemovable.sort();
+emptyRemovable.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 
 // Derived: a void element that belongs in the head carries everything it does
 // in its attributes, so one with none does nothing at all. `removeEmptyElements`
@@ -1641,26 +1648,32 @@ const parserTable = ([name, kind, doc, items]) => {
 	const value =
 		kind === "set"
 			? setLiteral(/** @type {string[]} */ (items))
-			: kind === "byElement" || kind === "byElementSet"
-				? byElementLiteral(
-						/** @type {[string, string][]} */ (items),
-						kind === "byElementSet"
-					)
-				: kind === "array"
-					? `[${items.map((item) => `"${item}"`).join(", ")}]`
-					: `Object.assign(Object.create(null), {${items
-							.map(([key, mapped]) => `${propertyKey(key)}: "${mapped}"`)
-							.join(", ")}})`;
+			: kind === "map"
+				? mapLiteral(/** @type {[string, string[] | null][]} */ (items))
+				: kind === "byElement" || kind === "byElementSet"
+					? byElementLiteral(
+							/** @type {[string, string][]} */ (items),
+							kind === "byElementSet"
+						)
+					: kind === "array"
+						? `[${items.map((item) => `"${item}"`).join(", ")}]`
+						: `Object.assign(Object.create(null), {${
+								/** @type {[string, string][]} */ (items)
+									.map(([key, mapped]) => `${propertyKey(key)}: "${mapped}"`)
+									.join(", ")
+							}})`;
 	const type =
 		kind === "set"
 			? "Set<string>"
-			: kind === "byElement"
-				? "Record<string, Record<string, string>>"
-				: kind === "byElementSet"
-					? "Record<string, Record<string, Set<string>>>"
-					: kind === "array"
-						? "string[]"
-						: "Record<string, string>";
+			: kind === "map"
+				? "Map<string, Set<string> | null>"
+				: kind === "byElement"
+					? "Record<string, Record<string, string>>"
+					: kind === "byElementSet"
+						? "Record<string, Record<string, Set<string>>>"
+						: kind === "array"
+							? "string[]"
+							: "Record<string, string>";
 	// The `charset` value is an attribute spelling, not a Node encoding id.
 	const encoded = value.includes('"utf-8"');
 	const open = encoded

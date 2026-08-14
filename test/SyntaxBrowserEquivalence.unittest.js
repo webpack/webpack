@@ -1490,54 +1490,63 @@ describe("printer output in real Chrome", () => {
 		// is unobservable only where the IDL member reads the same as with no
 		// attribute at all — which is why an event handler is not in the table:
 		// an empty body still compiles, so it reads back a function, not null.
-		const observable = await page.evaluate(
-			(names) => {
-				/**
-				 * @param {string} attribute the attribute name
-				 * @param {boolean} set whether to give it the empty value
-				 * @returns {[string | undefined, unknown]} the IDL member and its value
-				 */
-				const readBack = (attribute, set) => {
-					// `<a>` reflects the widest set of them; the rest read as undefined
-					// here and are skipped rather than guessed at.
-					const node = document.createElement("a");
-					if (set) node.setAttribute(attribute, "");
-					document.body.append(node);
-					/** @type {string | undefined} */
-					let property;
-					for (
-						let proto = Object.getPrototypeOf(node);
-						proto !== null && property === undefined;
-						proto = Object.getPrototypeOf(proto)
-					) {
-						for (const name of Object.getOwnPropertyNames(proto)) {
-							if (name.toLowerCase() === attribute) {
-								property = name;
-								break;
-							}
+		// A global is read on `<a>`, as every one of them was before the table
+		// carried a scope; a scoped one on each element it names.
+		/** @type {[string, string[]][]} */
+		const probes = [];
+		for (const [name, on] of EMPTY_REMOVABLE_ATTRIBUTES) {
+			probes.push([name, on === null ? ["a"] : [...on]]);
+		}
+		const observable = await page.evaluate((pairs) => {
+			/**
+			 * @param {string} tagName the element to read it on
+			 * @param {string} attribute the attribute name
+			 * @param {boolean} set whether to give it the empty value
+			 * @returns {[string | undefined, unknown]} the IDL member and its value
+			 */
+			const readBack = (tagName, attribute, set) => {
+				// Read on an element the spec defines it for, so a scoped attribute
+				// is probed where it means something rather than skipped as unknown.
+				const node = document.createElement(tagName);
+				if (set) node.setAttribute(attribute, "");
+				document.body.append(node);
+				/** @type {string | undefined} */
+				let property;
+				for (
+					let proto = Object.getPrototypeOf(node);
+					proto !== null && property === undefined;
+					proto = Object.getPrototypeOf(proto)
+				) {
+					for (const name of Object.getOwnPropertyNames(proto)) {
+						if (name.toLowerCase() === attribute) {
+							property = name;
+							break;
 						}
 					}
-					const reflected =
-						property === undefined
-							? undefined
-							: /** @type {Record<string, unknown>} */ (
-									/** @type {unknown} */ (node)
-								)[property];
-					node.remove();
-					return [property, String(reflected)];
-				};
-				/** @type {string[]} */
-				const out = [];
-				for (const name of names) {
-					const [property, empty] = readBack(name, true);
-					if (property === undefined) continue;
-					const [, absent] = readBack(name, false);
-					if (empty !== absent) out.push(`${name}: ${empty} vs ${absent}`);
 				}
-				return out;
-			},
-			[...EMPTY_REMOVABLE_ATTRIBUTES]
-		);
+				const reflected =
+					property === undefined
+						? undefined
+						: /** @type {Record<string, unknown>} */ (
+								/** @type {unknown} */ (node)
+							)[property];
+				node.remove();
+				return [property, String(reflected)];
+			};
+			/** @type {string[]} */
+			const out = [];
+			for (const [name, elements] of pairs) {
+				for (const tagName of elements) {
+					const [property, empty] = readBack(tagName, name, true);
+					if (property === undefined) continue;
+					const [, absent] = readBack(tagName, name, false);
+					if (empty !== absent) {
+						out.push(`${tagName}[${name}]: ${empty} vs ${absent}`);
+					}
+				}
+			}
+			return out;
+		}, probes);
 		expect(observable).toEqual([]);
 	}, 600000);
 
