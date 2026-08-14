@@ -6184,6 +6184,13 @@ declare class Dependency {
 	get category(): string;
 
 	/**
+	 * Returns the source type this dependency reads from the module it references:
+	 * `javascript` for anything going through the module wrapper, `asset-url` for a
+	 * bare url embedded into non-javascript output (css, html, a manifest).
+	 */
+	get referencedSourceType(): string;
+
+	/**
 	 * Returns location.
 	 */
 	loc: DependencyLocation;
