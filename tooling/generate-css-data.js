@@ -3822,18 +3822,18 @@ const collectPrefixTable = (
 	return kept.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
 
-// Prefixes BCD records nowhere, though the spelling is real and was needed.
-// Where the engine that read it still ships, a current one still parses the
-// spelling; where it does not, caniuse records it — and that is also where these
-// versions come from, through autoprefixer's table. Every window here is closed
-// history: the last browser that needed any of them shipped in 2017, so nothing
-// about them can move again. Checked against BCD as the file is built, so an
-// entry it catches up on fails generation rather than sitting here unread.
+// Prefixes BCD records nowhere, though the spelling is real and needed. Where
+// the engine that read it still ships, a current one still parses the spelling —
+// Gecko's own property database is where an open-ended window comes from; where
+// it does not, caniuse records it, through autoprefixer's table, and that window
+// is closed history which cannot move again. Checked against BCD as the file is
+// built, so an entry it catches up on fails generation rather than sitting here
+// unread.
 // A stated spelling may also carry the keywords the older property read in place
 // of the standard ones, as `[standard, legacy][]`. Where it does, the map is the
 // legacy property's whole grammar: a value naming anything else is one that
 // property cannot read, so no copy is written for it at all.
-/** @type {Map<string, [string, [string, string, string][], [string, string][]?][]>} */
+/** @type {Map<string, [string, [string, string, string | number][], [string, string][]?][]>} */
 const PREFIX_SUPPLEMENT = new Map([
 	[
 		// Multi-column's own gap, prefixed until the module went unprefixed — Chrome
@@ -4000,12 +4000,24 @@ const PREFIX_SUPPLEMENT = new Map([
 			]
 		]
 	],
-	// IE Mobile is the one browser BCD does not track, so it reads desktop IE's
-	// windows — the same engine on the same version line, and right wherever the
-	// two shipped the same feature. `text-size-adjust` is where they did not:
-	// caniuse has it prefixed on IE Mobile 10 and 11 and absent from desktop IE
-	// altogether, so nothing derives it. 11 is IE Mobile's last release.
-	["text-size-adjust", [["-ms-text-size-adjust", [["ie_mob", "10", "12"]]]]],
+	// `text-size-adjust`, which BCD misses at both ends. IE Mobile is the one
+	// browser it does not track, so that reads desktop IE's windows — right for
+	// the same engine on the same version line, but caniuse has the property
+	// prefixed on IE Mobile 10 and 11 and absent from desktop IE altogether, and
+	// 11 is IE Mobile's last release. And BCD calls desktop Firefox unsupported,
+	// which is a statement about effect: Gecko's property database carries
+	// `-moz-text-size-adjust` as a real longhand, ungated, with
+	// `-webkit-text-size-adjust` aliased onto it and no unprefixed spelling at
+	// all — so a Firefox target losing the `-moz-` one is left with a declaration
+	// Gecko cannot parse. Desktop shares Android's style system, and so its
+	// version.
+	[
+		"text-size-adjust",
+		[
+			["-ms-text-size-adjust", [["ie_mob", "10", "12"]]],
+			["-moz-text-size-adjust", [["firefox", "14", Infinity]]]
+		]
+	],
 	[
 		"align-content",
 		[
@@ -4072,7 +4084,11 @@ const applyPrefixSupplement = (table) => {
 			}
 			for (const [browser, from, to] of windows) {
 				const start = /** @type {number} */ (encodeVersion(from));
-				const end = /** @type {number} */ (encodeVersion(to));
+				// `Infinity` where the engine still has no unprefixed spelling.
+				const end =
+					typeof to === "number"
+						? to
+						: /** @type {number} */ (encodeVersion(to));
 				const known = spellingEntry[1].find(
 					([browsers]) => browsers === browser
 				);

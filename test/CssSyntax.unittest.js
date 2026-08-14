@@ -5243,6 +5243,25 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 		).toBe("a{text-size-adjust:100%}");
 	});
 
+	it("writes the spelling Gecko parses where BCD records only whether it has an effect", () => {
+		// Gecko carries `-moz-text-size-adjust` as a real longhand and no
+		// unprefixed spelling at all, so a Firefox target losing the `-moz-` one is
+		// left with a declaration it cannot parse. BCD calls desktop Firefox
+		// unsupported, which is about effect rather than about parsing.
+		expect(minify("a{text-size-adjust:none}", ["firefox 130"])).toBe(
+			"a{-moz-text-size-adjust:none;text-size-adjust:none}"
+		);
+		expect(
+			minify("a{-moz-text-size-adjust:none;text-size-adjust:none}", [
+				"firefox 130"
+			])
+		).toBe("a{-moz-text-size-adjust:none;text-size-adjust:none}");
+		// Before Gecko carried it, there is nothing to write.
+		expect(minify("a{text-size-adjust:none}", ["firefox 13"])).toBe(
+			"a{text-size-adjust:none}"
+		);
+	});
+
 	it("writes the spelling BCD records for old Edge, not the one its browser-wide default implies", () => {
 		// caniuse marks every EdgeHTML version `-ms-`, so autoprefixer and
 		// lightningcss both write `-ms-text-size-adjust`; BCD records the spelling
