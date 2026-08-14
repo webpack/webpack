@@ -24951,6 +24951,16 @@ declare abstract class RuntimeTemplate {
 	importMetaUrl(specifier: string): string;
 
 	/**
+	 * Whether a baked asset url resolves against the entry `baseUri` at all. A public
+	 * path that reaches the same place from any base never reads `.b` — and `auto`
+	 * resolves to an absolute url too — while output with no baked form has nothing to
+	 * resolve. Where this is false, what `baseUri` is set to cannot reach the generated
+	 * code, so it must not reach the module hash either: `URLDependency.updateHash`
+	 * asks this before contributing one.
+	 */
+	analyzableUrlReadsBaseUri(): boolean;
+
+	/**
 	 * Static literal specifier (already quoted) for the `new URL(<here>, import.meta.url)`
 	 * an asset reference bakes to, or `null` to keep the runtime form. Unlike a wasm
 	 * binary, the runtime resolves an asset url against `__webpack_require__.b` — the
