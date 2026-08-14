@@ -181,6 +181,19 @@ The only exceptions are (1) established abbreviations webpack already uses perva
 
 Before writing any regexp that matches a path shape, read the top of `lib/util/identifier.js` and its `module.exports` block. If the regexp you need is defined there but not exported, **export it and import it** rather than copying it. Only define a new one locally when nothing there fits — and then keep it next to the single function that uses it.
 
+### Don't enumerate module or source types
+
+> [!REQUIRED]
+
+A list of module types, source types or dependency types written into `lib/` claims those are the only ones there will ever be. It is wrong the day one is added, and nothing fails — the new type silently takes whichever branch the list forgot. Ask instead:
+
+- **Ask the object.** `module.getSourceTypes()`, `chunkGraph.getModuleSourceTypes(module)` and `moduleGraph.getParentModule(dependency)` answer for whatever exists, a plugin's own types included. `getParentModule` is the one worth knowing: concatenation re-points an incoming connection at the javascript module that absorbed the one holding the reference, so `connection.originModule.type` reads `javascript` for a css `url()` or an html `src`, while the module the dependency belongs to still reads `css` or `html`.
+- **Match the class, not its name.** `dependency instanceof URLDependency` says what `dependency.type === "new URL()"` only approximates, and it survives a rename.
+
+**A feature flag is that same list in disguise.** Gating on `options.experiments.<x>` to mean "which types can exist here" is the harder version of the mistake to spot, because it reads like configuration rather than an enumeration — and it goes stale the same way.
+
+When a branch genuinely has to name types, **write it so an unknown type takes the safe side**. Name the one special case and let everything else fall to the general answer (`typePrefixEquals(type, JAVASCRIPT_TYPE)` … `else` reads the asset url), or list what provably needs nothing and treat the rest as needing it (`TYPES_WITHOUT_CHUNK_HANDLER`). A list whose `else` branch does nothing is the shape to avoid.
+
 ### Source file headers
 
 Every source file under `lib/` (and `hot/`, `tooling/`) opens with the MIT license header. When adding a **new** file, set the `Author` line to its actual author (`Author <Name> @<github-handle>`) — don't copy another file's author line.
