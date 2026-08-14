@@ -3822,13 +3822,13 @@ const collectPrefixTable = (
 	return kept.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
 
-// Prefixes BCD records nowhere, though the spelling is real and was needed: a
-// current Blink still parses each of these, and caniuse — through autoprefixer's
-// table, which is where these versions come from — says which versions had to
-// have it. Every window here is closed history: the last browser that needed any
-// of them shipped in 2017, so nothing about them can move again. Checked against
-// BCD as the file is built, so an entry it catches up on fails generation rather
-// than sitting here unread.
+// Prefixes BCD records nowhere, though the spelling is real and was needed.
+// Where the engine that read it still ships, a current one still parses the
+// spelling; where it does not, caniuse records it — and that is also where these
+// versions come from, through autoprefixer's table. Every window here is closed
+// history: the last browser that needed any of them shipped in 2017, so nothing
+// about them can move again. Checked against BCD as the file is built, so an
+// entry it catches up on fails generation rather than sitting here unread.
 // A stated spelling may also carry the keywords the older property read in place
 // of the standard ones, as `[standard, legacy][]`. Where it does, the map is the
 // legacy property's whole grammar: a value naming anything else is one that
@@ -4000,6 +4000,12 @@ const PREFIX_SUPPLEMENT = new Map([
 			]
 		]
 	],
+	// IE Mobile is the one browser BCD does not track, so it reads desktop IE's
+	// windows — the same engine on the same version line, and right wherever the
+	// two shipped the same feature. `text-size-adjust` is where they did not:
+	// caniuse has it prefixed on IE Mobile 10 and 11 and absent from desktop IE
+	// altogether, so nothing derives it. 11 is IE Mobile's last release.
+	["text-size-adjust", [["-ms-text-size-adjust", [["ie_mob", "10", "12"]]]]],
 	[
 		"align-content",
 		[

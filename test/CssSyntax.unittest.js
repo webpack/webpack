@@ -5210,6 +5210,35 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 		).toBe("a{-ms-user-select:none;user-select:none}");
 	});
 
+	it("reads IE Mobile apart from IE where the two shipped different features", () => {
+		// `text-size-adjust` is prefixed on IE Mobile and absent from desktop IE,
+		// which BCD cannot say because it does not track IE Mobile at all.
+		expect(minify("a{text-size-adjust:100%}", ["ie_mob 11"])).toBe(
+			"a{-ms-text-size-adjust:100%;text-size-adjust:100%}"
+		);
+		expect(minify("a{text-size-adjust:100%}", ["ie 11"])).toBe(
+			"a{text-size-adjust:100%}"
+		);
+		expect(
+			minify("a{-ms-text-size-adjust:100%;text-size-adjust:100%}", [
+				"ie_mob 11"
+			])
+		).toBe("a{-ms-text-size-adjust:100%;text-size-adjust:100%}");
+		expect(
+			minify("a{-ms-text-size-adjust:100%;text-size-adjust:100%}", ["ie 11"])
+		).toBe("a{text-size-adjust:100%}");
+	});
+
+	it("writes the spelling BCD records for old Edge, not the one its browser-wide default implies", () => {
+		// caniuse marks every EdgeHTML version `-ms-`, so autoprefixer and
+		// lightningcss both write `-ms-text-size-adjust`; BCD records the spelling
+		// per feature, and desktop IE — where an `-ms-` one would come from — never
+		// had the property at all.
+		expect(minify("a{text-size-adjust:100%}", ["edge 15"])).toBe(
+			"a{-webkit-text-size-adjust:100%;text-size-adjust:100%}"
+		);
+	});
+
 	it("skips a browser no dataset covers, as lightningcss's target mapping does", () => {
 		expect(
 			minify("a{-webkit-border-radius:5px;border-radius:5px}", [
