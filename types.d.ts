@@ -356,7 +356,8 @@ declare interface AllCodeGenerationSchemas {
 	 */
 	"share-init": [{ shareScope: string; initStage: number; init: string }];
 }
-type AnalyzableForm = "import" | "url" | "wasm" | "wasm-relative";
+type AnalyzableForm =
+	"import" | "url" | "url-inline" | "wasm" | "wasm-relative";
 type AnyLoaderContext = NormalModuleLoaderContext<any> &
 	LoaderRunnerLoaderContext<any> &
 	LoaderPluginLoaderContext &
@@ -6183,6 +6184,13 @@ declare class Dependency {
 	get category(): string;
 
 	/**
+	 * Returns the source type this dependency reads from the module it references:
+	 * `javascript` for anything going through the module wrapper, `asset-url` for a
+	 * bare url embedded into non-javascript output (css, html, a manifest).
+	 */
+	get referencedSourceType(): string;
+
+	/**
 	 * Returns location.
 	 */
 	loc: DependencyLocation;
@@ -11474,6 +11482,15 @@ declare class JavascriptModulesPlugin {
 				string | void
 			>;
 			/**
+			 * Offers a module's rendered export-definition call to a consumer that can place
+			 * it better — a library whose entry exports the same bindings natively takes it
+			 * over and emits it only where the module is wrapped. Return true to take it.
+			 */
+			onDemandExportsGeneration: SyncBailHook<
+				[Module, RuntimeSpec, string, boolean],
+				boolean | void
+			>;
+			/**
 			 * @since 5.22.0
 			 */
 			embedInRuntimeBailout: SyncBailHook<
@@ -11554,6 +11571,15 @@ declare class JavascriptModulesPlugin {
 				string | void
 			>;
 			/**
+			 * Offers a module's rendered export-definition call to a consumer that can place
+			 * it better — a library whose entry exports the same bindings natively takes it
+			 * over and emits it only where the module is wrapped. Return true to take it.
+			 */
+			onDemandExportsGeneration: SyncBailHook<
+				[Module, RuntimeSpec, string, boolean],
+				boolean | void
+			>;
+			/**
 			 * @since 5.22.0
 			 */
 			embedInRuntimeBailout: SyncBailHook<
@@ -11632,6 +11658,15 @@ declare class JavascriptModulesPlugin {
 			inlineInRuntimeBailout: SyncBailHook<
 				[Module, Partial<RenderBootstrapContext>],
 				string | void
+			>;
+			/**
+			 * Offers a module's rendered export-definition call to a consumer that can place
+			 * it better — a library whose entry exports the same bindings natively takes it
+			 * over and emits it only where the module is wrapped. Return true to take it.
+			 */
+			onDemandExportsGeneration: SyncBailHook<
+				[Module, RuntimeSpec, string, boolean],
+				boolean | void
 			>;
 			/**
 			 * @since 5.22.0
@@ -11716,6 +11751,15 @@ declare class JavascriptModulesPlugin {
 				string | void
 			>;
 			/**
+			 * Offers a module's rendered export-definition call to a consumer that can place
+			 * it better — a library whose entry exports the same bindings natively takes it
+			 * over and emits it only where the module is wrapped. Return true to take it.
+			 */
+			onDemandExportsGeneration: SyncBailHook<
+				[Module, RuntimeSpec, string, boolean],
+				boolean | void
+			>;
+			/**
 			 * @since 5.22.0
 			 */
 			embedInRuntimeBailout: SyncBailHook<
@@ -11794,6 +11838,15 @@ declare class JavascriptModulesPlugin {
 			inlineInRuntimeBailout: SyncBailHook<
 				[Module, Partial<RenderBootstrapContext>],
 				string | void
+			>;
+			/**
+			 * Offers a module's rendered export-definition call to a consumer that can place
+			 * it better — a library whose entry exports the same bindings natively takes it
+			 * over and emits it only where the module is wrapped. Return true to take it.
+			 */
+			onDemandExportsGeneration: SyncBailHook<
+				[Module, RuntimeSpec, string, boolean],
+				boolean | void
 			>;
 			/**
 			 * @since 5.22.0
@@ -11876,6 +11929,15 @@ declare class JavascriptModulesPlugin {
 				string | void
 			>;
 			/**
+			 * Offers a module's rendered export-definition call to a consumer that can place
+			 * it better — a library whose entry exports the same bindings natively takes it
+			 * over and emits it only where the module is wrapped. Return true to take it.
+			 */
+			onDemandExportsGeneration: SyncBailHook<
+				[Module, RuntimeSpec, string, boolean],
+				boolean | void
+			>;
+			/**
 			 * @since 5.22.0
 			 */
 			embedInRuntimeBailout: SyncBailHook<
@@ -11953,6 +12015,15 @@ declare class JavascriptModulesPlugin {
 		inlineInRuntimeBailout: SyncBailHook<
 			[Module, Partial<RenderBootstrapContext>],
 			string | void
+		>;
+		/**
+		 * Offers a module's rendered export-definition call to a consumer that can place
+		 * it better — a library whose entry exports the same bindings natively takes it
+		 * over and emits it only where the module is wrapped. Return true to take it.
+		 */
+		onDemandExportsGeneration: SyncBailHook<
+			[Module, RuntimeSpec, string, boolean],
+			boolean | void
 		>;
 		/**
 		 * @since 5.22.0
@@ -14698,6 +14769,11 @@ declare interface KnownBuildMeta {
 	 * using in ModuleLibraryPlugin
 	 */
 	exportsSourceByRuntime?: Map<string, string>;
+
+	/**
+	 * export definitions `ModuleLibraryPlugin` took over, re-emitted only where the module is wrapped
+	 */
+	exportsBindingSourceByRuntime?: Map<string, string>;
 }
 declare interface KnownConcatenatedModuleBuildInfo {
 	fileDependencies?: LazySet<string>;
@@ -24863,8 +24939,12 @@ declare abstract class RuntimeTemplate {
 	 * may be emitted — the one question every caller asks, in the form it is asking for:
 	 * - `"import"` — a literal `import("./chunk.js")` in place of `ensureChunk(id)`
 	 * - `"url"` — a literal `new URL(<file>, import.meta.url)`
+	 * - `"url-inline"` — whether such a reference names the file at the call site
 	 * - `"wasm"` — the same, fully baked for a wasm binary the runtime would name
 	 * - `"wasm-relative"` — a wasm path built at runtime under an `import.meta.url` base
+	 * `"url-inline"` differs from `"url"` only in taking the `.p + <file>` fallback as
+	 * an answer too — both name the file where it is used rather than through the
+	 * asset's javascript wrapper, which is what decides whether that wrapper is emitted.
 	 * A name code generation cannot settle may still be baked, through a stand-in the
 	 * deferred pass fills in. Not covered here, because only the reference can tell: a
 	 * chunk with no id, and one this compilation emits no javascript for.
@@ -24882,6 +24962,16 @@ declare abstract class RuntimeTemplate {
 	 * global — the form other bundlers and webpack itself can statically follow.
 	 */
 	importMetaUrl(specifier: string): string;
+
+	/**
+	 * Whether a baked asset url resolves against the entry `baseUri` at all. A public
+	 * path that reaches the same place from any base never reads `.b` — and `auto`
+	 * resolves to an absolute url too — while output with no baked form has nothing to
+	 * resolve. Where this is false, what `baseUri` is set to cannot reach the generated
+	 * code, so it must not reach the module hash either: `URLDependency.updateHash`
+	 * asks this before contributing one.
+	 */
+	analyzableUrlReadsBaseUri(): boolean;
 
 	/**
 	 * Static literal specifier (already quoted) for the `new URL(<here>, import.meta.url)`

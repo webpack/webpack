@@ -20,6 +20,22 @@ const expectations = (chunkFile, wasmRef) =>
 	});
 
 /**
+ * Asserts from the build rather than from `index.js`, which is bundled — a needle
+ * there would end up in the very output the size report reads.
+ * @param {string} chunkFile emitted file to read
+ * @param {string} needle what it has to contain
+ * @returns {(this: import("../../../../").Compiler) => void} plugin
+ */
+const assertChunk = (chunkFile, needle) =>
+	function apply() {
+		this.hooks.compilation.tap("testcase", (compilation) => {
+			compilation.hooks.afterProcessAssets.tap("testcase", (assets) => {
+				expect(String(assets[chunkFile].source())).toContain(needle);
+			});
+		});
+	};
+
+/**
  * @param {Partial<import("../../../../").Configuration>} config config
  * @returns {import("../../../../").Configuration} configuration
  */
@@ -52,13 +68,16 @@ module.exports = [
 	}),
 	base({
 		// The wasm module is duplicated into chunks of different depths, so no single
-		// literal works and the public path expression is used instead.
+		// literal works: the specifier is reserved and each chunk gets its own `../` path
+		// once named, and the naming function is asked whether its answer moves.
 		output: {
 			chunkFilename: (pathData) =>
 				pathData.chunk.name === "deep" ? "b-deep/[name].mjs" : "b-[name].mjs"
 		},
 		plugins: [
-			expectations("b-flat.mjs", `new URL(${"__webpack_require__"}.p + "`)
+			expectations("b-flat.mjs", 'new URL("./'),
+			// The same binary, one directory further down.
+			assertChunk("b-deep/deep.mjs", 'new URL("../')
 		]
 	}),
 	base({
