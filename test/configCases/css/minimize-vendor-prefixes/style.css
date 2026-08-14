@@ -31,6 +31,13 @@ input.t07::placeholder, textarea.t07::placeholder { color: #999 }
 :-ms-fullscreen { color: #999 }
 .t09 { color: red }
 :fullscreen { color: #999 }
+/*! a nested prefixed rule is dropped by a twin later in its own block, just as
+   a top-level one is */
+@media print {
+	:-ms-fullscreen { color: #999 }
+	.t12 { color: red }
+	:fullscreen { color: #999 }
+}
 /*! a value an engine spells its own way carries copies like a property does */
 .t10 { width: max-content }
 /*! and a value spelling no target needs is dropped, like a property's */

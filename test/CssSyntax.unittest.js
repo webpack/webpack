@@ -4857,14 +4857,32 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 		).toBe("@media screen{@keyframes s{to{opacity:1}}}");
 	});
 
-	it("keeps a nested prefixed rule its twin follows — only a top-level rule is still a piece of its own", () => {
+	it("drops a nested prefixed rule its twin follows", () => {
 		expect(
 			minify(
 				"@media screen{@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}}",
 				["chrome 130"]
 			)
+		).toBe("@media screen{@keyframes s{to{opacity:1}}}");
+	});
+
+	it("drops a nested prefixed rule whatever stands between it and its twin", () => {
+		expect(
+			minify(
+				"@media screen{@-webkit-keyframes s{to{opacity:1}}a{color:red}@keyframes s{to{opacity:1}}}",
+				["chrome 130"]
+			)
+		).toBe("@media screen{a{color:red}@keyframes s{to{opacity:1}}}");
+	});
+
+	it("keeps a nested prefixed rule whose twin sits in another block", () => {
+		expect(
+			minify(
+				"@media screen{@-webkit-keyframes s{to{opacity:1}}}@keyframes s{to{opacity:1}}",
+				["chrome 130"]
+			)
 		).toBe(
-			"@media screen{@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}}"
+			"@media screen{@-webkit-keyframes s{to{opacity:1}}}@keyframes s{to{opacity:1}}"
 		);
 	});
 
@@ -5030,6 +5048,35 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 	it("prefixes a rule nested under another", () => {
 		expect(minify("a{&::placeholder{color:red}}", ["chrome 40"])).toBe(
 			"a{&::-webkit-input-placeholder{color:red}&::placeholder{color:red}}"
+		);
+	});
+
+	it("drops a nested prefixed rule its twin follows", () => {
+		expect(
+			minify(
+				"@media screen{::-webkit-input-placeholder{color:red}::placeholder{color:red}}",
+				["chrome 130"]
+			)
+		).toBe("@media screen{::placeholder{color:red}}");
+	});
+
+	it("drops a nested prefixed rule whatever stands between it and its twin", () => {
+		expect(
+			minify(
+				"@media screen{::-webkit-input-placeholder{color:red}a{color:red}::placeholder{color:red}}",
+				["chrome 130"]
+			)
+		).toBe("@media screen{a{color:red}::placeholder{color:red}}");
+	});
+
+	it("keeps a nested prefixed rule a target still needs beside its twin, unjoined", () => {
+		expect(
+			minify(
+				"@media screen{::-webkit-input-placeholder{color:red}::placeholder{color:red}}",
+				["chrome 40"]
+			)
+		).toBe(
+			"@media screen{::-webkit-input-placeholder{color:red}::placeholder{color:red}}"
 		);
 	});
 
