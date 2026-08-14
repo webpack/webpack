@@ -837,7 +837,19 @@ const installHelpers = () => {
 	 * @returns {string} its rendered text
 	 */
 	const renderedTextOf = (root) => {
-		const clone = /** @type {ParentNode & Node} */ (root.cloneNode(true));
+		// A `ShadowRoot` cannot be cloned, so its children are moved into a
+		// fragment that can be — the text below is the same either way.
+		const clone = /** @type {ParentNode & Node} */ (
+			root.nodeType === Node.DOCUMENT_FRAGMENT_NODE && "host" in root
+				? (() => {
+						const fragment = document.createDocumentFragment();
+						for (const child of root.childNodes) {
+							fragment.append(child.cloneNode(true));
+						}
+						return fragment;
+					})()
+				: root.cloneNode(true)
+		);
 		for (const el of clone.querySelectorAll("script,style")) el.remove();
 		return clone.textContent || "";
 	};
@@ -851,14 +863,20 @@ const installHelpers = () => {
 	 * @returns {Facets} its facets
 	 */
 	const htmlFacets = (html) => {
-		const doc = new DOMParser().parseFromString(html, "text/html");
+		// `parseHTMLUnsafe` attaches a declarative shadow root where `DOMParser`
+		// leaves an inert `<template>`, so the tree below is the one a page gets.
+		const doc =
+			typeof Document.parseHTMLUnsafe === "function"
+				? Document.parseHTMLUnsafe(html)
+				: new DOMParser().parseFromString(html, "text/html");
 		/** @type {Record<string, string[]>} */
 		const facets = {
 			elements: [],
 			ownText: [],
 			comments: [],
 			scripts: [],
-			templates: []
+			templates: [],
+			shadows: []
 		};
 		/** @type {Rule[][]} */
 		const styles = [];
@@ -916,6 +934,13 @@ const installHelpers = () => {
 					const content = /** @type {HTMLTemplateElement} */ (element).content;
 					facets.templates.push(renderedTextOf(content));
 					collect(content, depth + 1, true);
+				}
+				// An open shadow root renders and is script-reachable, so it is held
+				// to the same standard as the light tree. A closed one is reachable
+				// from neither, and the round-trip case compares it as a template.
+				if (element.shadowRoot !== null) {
+					facets.shadows.push(renderedTextOf(element.shadowRoot));
+					collect(element.shadowRoot, depth + 1, inPage);
 				}
 				collect(element, depth + 1, inPage);
 			}
