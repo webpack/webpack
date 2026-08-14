@@ -484,10 +484,11 @@ class BenchmarkRunner {
 	}
 
 	/**
-	 * Run the whole shard in one shared bench in the main process. Used for
-	 * CodSpeed memory mode: a single `Bench` with one global prime pass and one
-	 * setup/teardown, exactly like the pre-parallel harness, so allocation counts
-	 * stay stable and comparable (per-benchmark benches shifted them by 2-4x).
+	 * Run the given tasks in one shared bench in the main process. Used for
+	 * CodSpeed memory mode's full builds: a single `Bench` with one global prime
+	 * pass and one setup/teardown, exactly like the pre-parallel harness, so
+	 * allocation counts stay stable and comparable (per-benchmark benches shifted
+	 * them by 2-4x).
 	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
 	 * @returns {Promise<void>}
 	 */
@@ -513,21 +514,22 @@ class BenchmarkRunner {
 	/**
 	 * Run benchmark tasks across a pool of worker processes.
 	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
+	 * @param {boolean=} oneTaskPerProcess measure each task in a fresh process
 	 * @returns {Promise<void>}
 	 */
-	async runInWorkers(benchmarkTasks) {
+	async runInWorkers(benchmarkTasks, oneTaskPerProcess) {
 		const cpuCount =
 			typeof os.availableParallelism === "function"
 				? os.availableParallelism()
 				: os.cpus().length;
 		const cpuWorkers = Math.max(1, cpuCount - 1);
 
-		// Simulation is the only Valgrind mode here (memory mode runs in-process);
-		// its shadow memory is only freed on process exit.
+		// Simulation is the only Valgrind mode here; its shadow memory is only
+		// freed on process exit.
 		const underValgrind = getCodspeedRunnerMode() === "simulation";
 
 		// Bound the pool by RAM, not just cores: a Valgrind build peaks near 11 GiB,
-		// so 16 GiB fits one worker; bigger runners auto-scale. memory mode never gets here.
+		// so 16 GiB fits one worker; bigger runners auto-scale.
 		const totalGiB = os.totalmem() / 1024 ** 3;
 		const reserveGiB = 3;
 		const perWorkerGiB = underValgrind ? 11 : 1.5;
@@ -536,7 +538,9 @@ class BenchmarkRunner {
 			Math.floor((totalGiB - reserveGiB) / perWorkerGiB)
 		);
 
-		const numWorkers = Math.min(cpuWorkers, memWorkers);
+		// Isolated tasks must not share a process with each other either, so the
+		// pool is a single worker that restarts between tasks.
+		const numWorkers = oneTaskPerProcess ? 1 : Math.min(cpuWorkers, memWorkers);
 
 		const workerPool = /** @type {BenchmarkWorker} */ (
 			new Worker(
@@ -547,7 +551,7 @@ class BenchmarkRunner {
 					// Valgrind memory accumulates across builds and frees only on exit, so
 					// recycle the worker after each task (`0` = always restart) to cap peak
 					// at one build's footprint; otherwise a shard OOMs mid-run (exit 143).
-					idleMemoryLimit: underValgrind ? 0 : undefined,
+					idleMemoryLimit: underValgrind || oneTaskPerProcess ? 0 : undefined,
 					// Forward the V8 flags CodSpeed needs (seeds, --no-opt, …) so the
 					// child processes measure under the same deterministic conditions.
 					forkOptions: { silent: false, execArgv: getV8Flags() }
@@ -617,9 +621,21 @@ class BenchmarkRunner {
 
 		await this.prepareBenchmarkTasks(benchmarkTasks);
 
-		await (getCodspeedRunnerMode() === "memory"
-			? this.runInMainThread(benchmarkTasks)
-			: this.runInWorkers(benchmarkTasks));
+		if (getCodspeedRunnerMode() !== "memory") {
+			await this.runInWorkers(benchmarkTasks);
+			return;
+		}
+
+		// A rebuild allocates ~2-3 MiB inside the measured region while sitting in
+		// a 45+ MiB heap, so it reads every difference in that heap as tens of
+		// percent; a process each keeps its baseline identical run to run. Full
+		// builds allocate enough to stay within ~3% of a repeat and keep the
+		// shared process, so their history stays comparable.
+		const rebuildTasks = benchmarkTasks.filter((task) => task.scenario?.watch);
+		const buildTasks = benchmarkTasks.filter((task) => !task.scenario?.watch);
+
+		if (buildTasks.length > 0) await this.runInMainThread(buildTasks);
+		if (rebuildTasks.length > 0) await this.runInWorkers(rebuildTasks, true);
 	}
 }
 

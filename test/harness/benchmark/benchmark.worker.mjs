@@ -869,6 +869,15 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 	const entry = path.resolve(/** @type {string} */ (config.entry));
 	const originalEntryContent = await fs.readFile(entry, "utf8");
 
+	// Alternate the appended digit so every iteration is a real content change of
+	// identical length. Rewriting the same bytes left it to webpack's snapshot
+	// heuristics whether anything had changed, so a rebuild measured either a
+	// full or a short-circuited build — the same benchmark then reported ~20%
+	// apart across runs with nothing altered.
+	let iteration = 0;
+	const nextEntryContent = () =>
+		`${originalEntryContent};console.log('watch test ${iteration++ % 2}')`;
+
 	/** @type {Watching | undefined} */
 	let watching;
 	/** @type {(err: Error | null, stats?: Stats) => void} */
@@ -921,7 +930,7 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 				(resolve, reject) => {
 					writeFile(
 						entry,
-						`${originalEntryContent};console.log('watch test')`,
+						nextEntryContent(),
 						(err) => {
 							if (err) {
 								reject(err);
@@ -993,7 +1002,7 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 					(resolve, reject) => {
 						writeFile(
 							entry,
-							`${originalEntryContent};console.log('watch test')`,
+							nextEntryContent(),
 							(err) => {
 								if (err) {
 									reject(err);
