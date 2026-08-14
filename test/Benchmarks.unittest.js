@@ -89,9 +89,11 @@ const importDefault = async (file) => {
 
 describe("Benchmarks", () => {
 	const unitFiles = findBenchmarkFiles(path.join(benchmarkRoot, "unit"));
+	const e2eFiles = findBenchmarkFiles(path.join(benchmarkRoot, "e2e"));
 
 	it("should discover the benchmark suites", () => {
 		expect(unitFiles).not.toHaveLength(0);
+		expect(e2eFiles).not.toHaveLength(0);
 	});
 
 	// the scheduled run is the only one that measures everything, and its shard
@@ -105,21 +107,23 @@ describe("Benchmarks", () => {
 			expect(selection.run).toBe(true);
 			expect(selection.filter).toBe("");
 
-			const shards = selection.matrix.include
-				.filter((entry) => entry.dir === "unit")
-				.map((entry) => entry.shard);
-			expect(shards).not.toHaveLength(0);
+			for (const dir of ["unit", "e2e"]) {
+				const shards = selection.matrix.include
+					.filter((entry) => entry.dir === dir)
+					.map((entry) => entry.shard);
+				expect(shards).not.toHaveLength(0);
 
-			const sharded = shards
-				.flatMap((shard) => listBenchmarks(["--dir", "unit", "--shard", shard]))
-				.sort();
-			// equality, so a benchmark cannot be dropped or measured twice
-			expect(sharded).toEqual(listBenchmarks(["--dir", "unit"]));
+				const sharded = shards
+					.flatMap((shard) => listBenchmarks(["--dir", dir, "--shard", shard]))
+					.sort();
+				// equality, so a benchmark cannot be dropped or measured twice
+				expect(sharded).toEqual(listBenchmarks(["--dir", dir]));
+			}
 		},
 		120000
 	);
 
-	for (const file of unitFiles) {
+	for (const file of [...unitFiles, ...e2eFiles]) {
 		const id = suiteIdOf(file);
 
 		itNode(`should name suite ${id} after its location`, async () => {
@@ -130,6 +134,10 @@ describe("Benchmarks", () => {
 				suite.benches.length
 			);
 		});
+	}
+
+	for (const file of unitFiles) {
+		const id = suiteIdOf(file);
 
 		it(`should keep ${id} mirroring a core file`, () => {
 			const core = path.join(
