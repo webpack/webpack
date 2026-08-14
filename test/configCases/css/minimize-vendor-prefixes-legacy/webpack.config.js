@@ -2,10 +2,8 @@
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	// A browserslist target so the default minimizer wiring resolves its browser
-	// list and hands it to `cssMinify` — the whole option flow, not the
-	// serializer alone. Exact versions in `.browserslistrc` keep the snapshot
-	// stable as caniuse updates.
+	// A browserslist target, so the whole option flow runs rather than the
+	// serializer alone. Exact versions keep the snapshot stable as caniuse moves.
 	target: "browserslist",
 	mode: "production",
 	output: {

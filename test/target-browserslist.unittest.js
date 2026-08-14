@@ -134,9 +134,8 @@ describe("browserslist target", () => {
 		it("reads the config once for a target, and hands the same list back", () => {
 			const first = load(null, context);
 			expect(first).toEqual(["chrome 40", "firefox 40", "safari 17.0"]);
-			// The same list, not an equal one: several callers ask for one target —
-			// the default-target probe, its properties, the CSS minifier's browsers —
-			// and the minifier reads the identity to skip re-parsing the selection.
+			// The same list, not an equal one — the minifier reads the identity to
+			// skip re-parsing a selection it has already seen.
 			expect(load(null, context)).toBe(first);
 		});
 

@@ -45,6 +45,17 @@ const {
 	readToken
 } = require("../lib/css/syntax");
 
+/**
+ * @param {string} css a stylesheet
+ * @param {string[]=} browsers the browserslist selection to target
+ * @returns {string} its minified serialization
+ */
+const minifyFor = (css, browsers) =>
+	new SourceProcessor().process(css, {
+		mode: "minify",
+		environment: browsers ? { browsers } : undefined
+	}).code;
+
 // Snapshot uses the spec-style kebab-case names for multi-word token types;
 // the tokenizer emits numeric `TT_*` values. Map between them so the existing
 // snapshot files stay valid.
@@ -4507,107 +4518,96 @@ describe("CssSyntax — convertLengthUnits", () => {
 });
 
 describe("CssSyntax minify — vendor prefixes (properties)", () => {
-	/**
-	 * @param {string} css a stylesheet
-	 * @param {string[]=} browsers the browserslist selection
-	 * @returns {string} its minified serialization
-	 */
-	const minify = (css, browsers) =>
-		new SourceProcessor().process(css, {
-			mode: "minify",
-			environment: browsers ? { browsers } : undefined
-		}).code;
-
 	it("adds the prefix a browser below the unprefixed version needs", () => {
-		expect(minify("a{user-select:none}", ["chrome 40"])).toBe(
+		expect(minifyFor("a{user-select:none}", ["chrome 40"])).toBe(
 			"a{-webkit-user-select:none;user-select:none}"
 		);
 	});
 
 	it("adds `-moz-` for Firefox and `-ms-` for IE from their own engine", () => {
-		expect(minify("a{user-select:none}", ["firefox 40"])).toBe(
+		expect(minifyFor("a{user-select:none}", ["firefox 40"])).toBe(
 			"a{-moz-user-select:none;user-select:none}"
 		);
-		expect(minify("a{user-select:none}", ["ie 11"])).toBe(
+		expect(minifyFor("a{user-select:none}", ["ie 11"])).toBe(
 			"a{-ms-user-select:none;user-select:none}"
 		);
 	});
 
 	it("adds every prefix the mixed selection needs, once each", () => {
-		expect(minify("a{user-select:none}", ["chrome 40", "firefox 40"])).toBe(
+		expect(minifyFor("a{user-select:none}", ["chrome 40", "firefox 40"])).toBe(
 			"a{-webkit-user-select:none;-moz-user-select:none;user-select:none}"
 		);
 	});
 
 	it("leaves a declaration alone when the target reads it unprefixed", () => {
-		expect(minify("a{user-select:none}", ["chrome 120"])).toBe(
+		expect(minifyFor("a{user-select:none}", ["chrome 120"])).toBe(
 			"a{user-select:none}"
 		);
 	});
 
 	it("never doubles a prefix the source already carries", () => {
 		expect(
-			minify("a{-webkit-user-select:none;user-select:none}", ["chrome 40"])
+			minifyFor("a{-webkit-user-select:none;user-select:none}", ["chrome 40"])
 		).toBe("a{-webkit-user-select:none;user-select:none}");
 	});
 
 	it("drops a prefixed declaration no target needs, unprefixed sibling present", () => {
 		expect(
-			minify("a{-webkit-user-select:none;user-select:none}", ["chrome 120"])
+			minifyFor("a{-webkit-user-select:none;user-select:none}", ["chrome 120"])
 		).toBe("a{user-select:none}");
 	});
 
 	it("keeps a prefix a target still needs (Safari never unprefixed it)", () => {
 		expect(
-			minify("a{-webkit-user-select:none;user-select:none}", ["safari 17"])
+			minifyFor("a{-webkit-user-select:none;user-select:none}", ["safari 17"])
 		).toBe("a{-webkit-user-select:none;user-select:none}");
 	});
 
 	it("keeps a prefixed-only declaration — it is the only thing that paints", () => {
-		expect(minify("a{-webkit-user-select:none}", ["chrome 120"])).toBe(
+		expect(minifyFor("a{-webkit-user-select:none}", ["chrome 120"])).toBe(
 			"a{-webkit-user-select:none}"
 		);
 	});
 
 	it("never carries an obsolete cross-engine prefix (`-khtml-` for Safari)", () => {
-		expect(minify("a{user-select:none}", ["safari 17"])).not.toContain(
-			"-khtml-"
+		expect(minifyFor("a{user-select:none}", ["safari 17"])).toBe(
+			"a{-webkit-user-select:none;user-select:none}"
 		);
 	});
 
 	it("does nothing without a target list", () => {
-		expect(minify("a{user-select:none}")).toBe("a{user-select:none}");
+		expect(minifyFor("a{user-select:none}")).toBe("a{user-select:none}");
 	});
 
 	it("does nothing for a property no browser ever prefixed", () => {
-		expect(minify("a{color:red}", ["chrome 40"])).toBe("a{color:red}");
+		expect(minifyFor("a{color:red}", ["chrome 40"])).toBe("a{color:red}");
 	});
 
 	it("drops another engine's prefix a chrome-only target never reads", () => {
 		expect(
-			minify("a{-moz-user-select:none;user-select:none}", ["chrome 120"])
+			minifyFor("a{-moz-user-select:none;user-select:none}", ["chrome 120"])
 		).toBe("a{user-select:none}");
 	});
 
 	it("reads a browser version's minor part, not just the major", () => {
 		// `appearance` loses its prefix in Safari at 15.4; 15.3 still needs `-webkit-`.
-		expect(minify("a{appearance:none}", ["safari 15.3"])).toBe(
+		expect(minifyFor("a{appearance:none}", ["safari 15.3"])).toBe(
 			"a{-webkit-appearance:none;appearance:none}"
 		);
-		expect(minify("a{appearance:none}", ["safari 15.4"])).toBe(
+		expect(minifyFor("a{appearance:none}", ["safari 15.4"])).toBe(
 			"a{appearance:none}"
 		);
 	});
 
 	it("reads a version range by its low end", () => {
-		expect(minify("a{appearance:none}", ["ios_saf 15.2-15.3"])).toBe(
+		expect(minifyFor("a{appearance:none}", ["ios_saf 15.2-15.3"])).toBe(
 			"a{-webkit-appearance:none;appearance:none}"
 		);
 	});
 
 	it("prefixes a shorthand the box merge wrote onto a longhand's node", () => {
 		expect(
-			minify(
+			minifyFor(
 				"a{border-top-left-radius:5px;border-top-right-radius:5px;border-bottom-right-radius:5px;border-bottom-left-radius:5px}",
 				["firefox 3.6"]
 			)
@@ -4615,45 +4615,45 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 	});
 
 	it("treats Safari Technology Preview as newest but still finitely versioned", () => {
-		expect(minify("a{user-select:none}", ["safari TP"])).toBe(
+		expect(minifyFor("a{user-select:none}", ["safari TP"])).toBe(
 			"a{-webkit-user-select:none;user-select:none}"
 		);
 	});
 
 	it("adds the prefix on both of two rules using it (decision memoized)", () => {
 		expect(
-			minify("a{user-select:none}b{user-select:auto}", ["chrome 40"])
+			minifyFor("a{user-select:none}b{user-select:auto}", ["chrome 40"])
 		).toBe(
 			"a{-webkit-user-select:none;user-select:none}b{-webkit-user-select:auto;user-select:auto}"
 		);
 	});
 
 	it("keeps prefixing correct through a nested rule", () => {
-		expect(minify("@media screen{a{user-select:none}}", ["chrome 40"])).toBe(
+		expect(minifyFor("@media screen{a{user-select:none}}", ["chrome 40"])).toBe(
 			"@media screen{a{-webkit-user-select:none;user-select:none}}"
 		);
 	});
 
 	it("writes the vendor rename an engine read instead of a prefix", () => {
 		expect(
-			minify("a{margin-inline-start:1px;padding-inline-end:2px}", [
+			minifyFor("a{margin-inline-start:1px;padding-inline-end:2px}", [
 				"chrome 40",
 				"firefox 40"
 			])
 		).toBe(
 			"a{-webkit-margin-start:1px;-moz-margin-start:1px;margin-inline-start:1px;-webkit-padding-end:2px;-moz-padding-end:2px;padding-inline-end:2px}"
 		);
-		expect(minify("a{block-size:1px}", ["chrome 40"])).toBe(
+		expect(minifyFor("a{block-size:1px}", ["chrome 40"])).toBe(
 			"a{-webkit-logical-height:1px;block-size:1px}"
 		);
-		expect(minify("a{mask-border:url(x) 30}", ["safari 9"])).toBe(
+		expect(minifyFor("a{mask-border:url(x) 30}", ["safari 9"])).toBe(
 			"a{-webkit-mask-box-image:url(x) 30;mask-border:url(x) 30}"
 		);
 	});
 
 	it("writes IE 10's flexbox renames, which take the same values", () => {
 		expect(
-			minify(
+			minifyFor(
 				"a{order:1;flex-grow:2;flex-shrink:3;flex-basis:4px;flex-wrap:nowrap}",
 				["ie 10"]
 			)
@@ -4664,7 +4664,7 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 
 	it("carries the keywords a rename read in place of the standard ones", () => {
 		expect(
-			minify(
+			minifyFor(
 				"a{align-items:flex-start;align-self:flex-end;justify-content:space-around;align-content:space-between}",
 				["ie 10"]
 			)
@@ -4674,25 +4674,25 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 	});
 
 	it("keeps `!important` on the copy a keyword map rewrote", () => {
-		expect(minify("a{align-items:center!important}", ["ie 10"])).toBe(
+		expect(minifyFor("a{align-items:center!important}", ["ie 10"])).toBe(
 			"a{-ms-flex-align:center!important;align-items:center!important}"
 		);
 	});
 
 	it("writes no copy for a value the renamed property cannot read", () => {
-		expect(minify("a{align-items:normal}", ["ie 10"])).toBe(
+		expect(minifyFor("a{align-items:normal}", ["ie 10"])).toBe(
 			"a{align-items:normal}"
 		);
-		expect(minify("a{justify-content:var(--x)}", ["ie 10"])).toBe(
+		expect(minifyFor("a{justify-content:var(--x)}", ["ie 10"])).toBe(
 			"a{justify-content:var(--x)}"
 		);
 	});
 
 	it("carries a CSS-wide keyword through a keyword map untouched", () => {
-		expect(minify("a{align-items:inherit}", ["ie 10"])).toBe(
+		expect(minifyFor("a{align-items:inherit}", ["ie 10"])).toBe(
 			"a{-ms-flex-align:inherit;align-items:inherit}"
 		);
-		expect(minify("a{justify-content:unset!important}", ["ie 10"])).toBe(
+		expect(minifyFor("a{justify-content:unset!important}", ["ie 10"])).toBe(
 			"a{-ms-flex-pack:unset!important;justify-content:unset!important}"
 		);
 	});
@@ -4700,101 +4700,98 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 	it("reaches for another engine's prefix where a browser has none of its own", () => {
 		// Firefox reads `-webkit-line-clamp` and no `line-clamp` of any spelling, so
 		// `-moz-` alone would leave it unprefixed — and drop the one that works.
-		expect(minify("a{line-clamp:2}", ["firefox 130"])).toBe(
+		expect(minifyFor("a{line-clamp:2}", ["firefox 130"])).toBe(
 			"a{-webkit-line-clamp:2;line-clamp:2}"
 		);
 		expect(
-			minify("a{-webkit-line-clamp:2;line-clamp:2}", ["firefox 130"])
+			minifyFor("a{-webkit-line-clamp:2;line-clamp:2}", ["firefox 130"])
 		).toBe("a{-webkit-line-clamp:2;line-clamp:2}");
 		// Before Firefox read it at all, there is nothing to write.
-		expect(minify("a{line-clamp:2}", ["firefox 67"])).toBe("a{line-clamp:2}");
+		expect(minifyFor("a{line-clamp:2}", ["firefox 67"])).toBe(
+			"a{line-clamp:2}"
+		);
 	});
 
 	it("keeps to a browser's own prefix where that covers it", () => {
 		// Firefox 49 took `-webkit-user-select` as well, but `-moz-user-select`
 		// already covers every version it needs, so the alias is not written.
-		expect(minify("a{user-select:none}", ["firefox 50"])).toBe(
+		expect(minifyFor("a{user-select:none}", ["firefox 50"])).toBe(
 			"a{-moz-user-select:none;user-select:none}"
 		);
 	});
 
 	it("drops a dead rename, which no prefix can be stripped off", () => {
 		expect(
-			minify("a{-webkit-margin-start:1px;margin-inline-start:1px}", [
+			minifyFor("a{-webkit-margin-start:1px;margin-inline-start:1px}", [
 				"chrome 130"
 			])
 		).toBe("a{margin-inline-start:1px}");
 		expect(
-			minify("a{-ms-flex-align:start;align-items:flex-start}", ["chrome 130"])
+			minifyFor("a{-ms-flex-align:start;align-items:flex-start}", [
+				"chrome 130"
+			])
 		).toBe("a{align-items:flex-start}");
 	});
 
 	it("writes no rename that reads other values than the property it stands for", () => {
 		expect(
-			minify("a{font-smooth:always}", ["chrome 40", "firefox 40", "safari 9"])
+			minifyFor("a{font-smooth:always}", [
+				"chrome 40",
+				"firefox 40",
+				"safari 9"
+			])
 		).toBe("a{font-smooth:always}");
-		expect(minify("a{text-combine-upright:all}", ["ie 11", "safari 9"])).toBe(
-			"a{-ms-text-combine-horizontal:all;text-combine-upright:all}"
-		);
+		expect(
+			minifyFor("a{text-combine-upright:all}", ["ie 11", "safari 9"])
+		).toBe("a{-ms-text-combine-horizontal:all;text-combine-upright:all}");
 	});
 });
 
 describe("CssSyntax minify — vendor prefixes (values)", () => {
-	/**
-	 * @param {string} css a stylesheet
-	 * @param {string[]=} browsers the browserslist selection
-	 * @returns {string} its minified serialization
-	 */
-	const minify = (css, browsers) =>
-		new SourceProcessor().process(css, {
-			mode: "minify",
-			environment: browsers ? { browsers } : undefined
-		}).code;
-
 	it("adds the spellings a target needs for a keyword value", () => {
-		expect(minify("a{width:max-content}", ["chrome 40", "firefox 40"])).toBe(
+		expect(minifyFor("a{width:max-content}", ["chrome 40", "firefox 40"])).toBe(
 			"a{width:-moz-max-content;width:-webkit-max-content;width:max-content}"
 		);
 	});
 
 	it("spells a value an engine renamed rather than prefixed", () => {
-		expect(minify("a{display:flex}", ["ie 10"])).toBe(
+		expect(minifyFor("a{display:flex}", ["ie 10"])).toBe(
 			"a{display:-ms-flexbox;display:flex}"
 		);
 	});
 
 	it("carries `!important` onto the copy", () => {
-		expect(minify("a{position:sticky!important}", ["safari 9"])).toBe(
+		expect(minifyFor("a{position:sticky!important}", ["safari 9"])).toBe(
 			"a{position:-webkit-sticky!important;position:sticky!important}"
 		);
 	});
 
 	it("drops a value spelling no target needs", () => {
-		expect(minify("a{display:-ms-flexbox;display:flex}", ["chrome 130"])).toBe(
-			"a{display:flex}"
-		);
+		expect(
+			minifyFor("a{display:-ms-flexbox;display:flex}", ["chrome 130"])
+		).toBe("a{display:flex}");
 	});
 
 	it("keeps one a target still needs", () => {
-		expect(minify("a{display:-ms-flexbox;display:flex}", ["ie 10"])).toBe(
+		expect(minifyFor("a{display:-ms-flexbox;display:flex}", ["ie 10"])).toBe(
 			"a{display:-ms-flexbox;display:flex}"
 		);
 	});
 
 	it("keeps a lone value spelling — nothing else writes the property", () => {
-		expect(minify("a{display:-ms-flexbox}", ["chrome 130"])).toBe(
+		expect(minifyFor("a{display:-ms-flexbox}", ["chrome 130"])).toBe(
 			"a{display:-ms-flexbox}"
 		);
 	});
 
 	it("does not double a spelling the source already carries", () => {
 		expect(
-			minify("a{width:-webkit-max-content;width:max-content}", ["chrome 40"])
+			minifyFor("a{width:-webkit-max-content;width:max-content}", ["chrome 40"])
 		).toBe("a{width:-webkit-max-content;width:max-content}");
 	});
 
 	it("leaves a value that is not the keyword alone", () => {
-		expect(minify("a{width:calc(1px + 1em)}", ["chrome 40"])).toBe(
+		expect(minifyFor("a{width:calc(1px + 1em)}", ["chrome 40"])).toBe(
 			"a{width:calc(1px + 1em)}"
 		);
 	});
@@ -4803,10 +4800,10 @@ describe("CssSyntax minify — vendor prefixes (values)", () => {
 		// BCD files `-webkit-max-content` under `width` and not under `height`,
 		// which is the same value read by the same parser — as `block-size` is
 		// `<'width'>` itself.
-		expect(minify("a{height:max-content}", ["chrome 40"])).toBe(
+		expect(minifyFor("a{height:max-content}", ["chrome 40"])).toBe(
 			"a{height:-webkit-max-content;height:max-content}"
 		);
-		expect(minify("a{block-size:max-content}", ["firefox 50"])).toBe(
+		expect(minifyFor("a{block-size:max-content}", ["firefox 50"])).toBe(
 			"a{block-size:-moz-max-content;block-size:max-content}"
 		);
 	});
@@ -4814,13 +4811,13 @@ describe("CssSyntax minify — vendor prefixes (values)", () => {
 	it("does not take a spelling that stands for another keyword", () => {
 		// `-webkit-fill-available` is WebKit's `stretch`, which BCD files under
 		// `fit-content` as well; it would fill the container rather than shrink.
-		expect(minify("a{width:fit-content}", ["chrome 40"])).toBe(
+		expect(minifyFor("a{width:fit-content}", ["chrome 40"])).toBe(
 			"a{width:-webkit-fit-content;width:fit-content}"
 		);
 	});
 
 	it("leaves a keyword of a property no engine spelled its own way", () => {
-		expect(minify("a{float:left}", ["chrome 40"])).toBe("a{float:left}");
+		expect(minifyFor("a{float:left}", ["chrome 40"])).toBe("a{float:left}");
 	});
 
 	it("keeps a vendor spelling that outlived its window and changed meaning", () => {
@@ -4829,36 +4826,29 @@ describe("CssSyntax minify — vendor prefixes (values)", () => {
 		// one for the other moves the box, so neither is written for the other.
 		const target = ["chrome 130", "firefox 130", "safari 18"];
 		expect(
-			minify("a{text-align:center;text-align:-webkit-center}", target)
+			minifyFor("a{text-align:center;text-align:-webkit-center}", target)
 		).toBe("a{text-align:center;text-align:-webkit-center}");
 		expect(
-			minify("a{text-align:-webkit-center;text-align:center}", target)
+			minifyFor("a{text-align:-webkit-center;text-align:center}", target)
 		).toBe("a{text-align:-webkit-center;text-align:center}");
-		expect(minify("a{text-align:center}", target)).toBe("a{text-align:center}");
+		expect(minifyFor("a{text-align:center}", target)).toBe(
+			"a{text-align:center}"
+		);
 	});
 
 	it("does nothing without a target list", () => {
-		expect(minify("a{width:max-content}")).toBe("a{width:max-content}");
+		expect(minifyFor("a{width:max-content}")).toBe("a{width:max-content}");
 	});
 });
 
 describe("CssSyntax minify — vendor prefixes (spellings an engine dropped)", () => {
-	/**
-	 * @param {string} css a stylesheet
-	 * @param {string[]} browsers the browserslist selection
-	 * @returns {string} its minified serialization
-	 */
-	const minify = (css, browsers) =>
-		new SourceProcessor().process(css, {
-			mode: "minify",
-			environment: { browsers }
-		}).code;
-
 	it("stops at the version the engine dropped the spelling, not at the unprefixed one", () => {
 		// `-moz-outline` went in Firefox 3.6; the property it stood for is filed as
 		// complete only from 88, which is not where the spelling stopped working.
-		expect(minify("a{outline:none}", ["firefox 40"])).toBe("a{outline:none}");
-		expect(minify("a{outline:none}", ["firefox 3"])).toBe(
+		expect(minifyFor("a{outline:none}", ["firefox 40"])).toBe(
+			"a{outline:none}"
+		);
+		expect(minifyFor("a{outline:none}", ["firefox 3"])).toBe(
 			"a{-moz-outline:none;outline:none}"
 		);
 	});
@@ -4867,79 +4857,71 @@ describe("CssSyntax minify — vendor prefixes (spellings an engine dropped)", (
 		// Multi-column went unprefixed together — Chrome 50, Firefox 52, Safari 9 —
 		// and BCD dates `-webkit-columns` at the version the unprefixed form
 		// arrived, 46 versions after Chrome first read it.
-		expect(minify("a{column-gap:10px}", ["chrome 40"])).toBe(
+		expect(minifyFor("a{column-gap:10px}", ["chrome 40"])).toBe(
 			"a{-webkit-column-gap:10px;column-gap:10px}"
 		);
-		expect(minify("a{columns:2}", ["chrome 40"])).toBe(
+		expect(minifyFor("a{columns:2}", ["chrome 40"])).toBe(
 			"a{-webkit-columns:2;columns:2}"
 		);
-		expect(minify("a{column-gap:10px;columns:2}", ["chrome 130"])).toBe(
+		expect(minifyFor("a{column-gap:10px;columns:2}", ["chrome 130"])).toBe(
 			"a{column-gap:10px;columns:2}"
 		);
 	});
 
 	it("drops a prefix an engine switch took away", () => {
 		// Presto read `-o-transform`; the Blink Opera that followed at 15 never did.
-		expect(minify("a{transform:none}", ["opera 20"])).toBe(
+		expect(minifyFor("a{transform:none}", ["opera 20"])).toBe(
 			"a{-webkit-transform:none;transform:none}"
 		);
-		expect(minify("a{transform:none}", ["opera 12.1"])).toBe(
+		expect(minifyFor("a{transform:none}", ["opera 12.1"])).toBe(
 			"a{-o-transform:none;transform:none}"
 		);
 	});
 });
 
 describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
-	/**
-	 * @param {string} css a stylesheet
-	 * @param {string[]=} browsers the browserslist selection
-	 * @returns {string} its minified serialization
-	 */
-	const minify = (css, browsers) =>
-		new SourceProcessor().process(css, {
-			mode: "minify",
-			environment: browsers ? { browsers } : undefined
-		}).code;
-
 	it("prepends a prefixed copy an old target needs", () => {
-		expect(minify("@keyframes s{to{opacity:1}}", ["chrome 40"])).toBe(
+		expect(minifyFor("@keyframes s{to{opacity:1}}", ["chrome 40"])).toBe(
 			"@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}"
 		);
 	});
 
 	it("leaves it alone when the target reads it unprefixed", () => {
-		expect(minify("@keyframes s{to{opacity:1}}", ["chrome 120"])).toBe(
+		expect(minifyFor("@keyframes s{to{opacity:1}}", ["chrome 120"])).toBe(
 			"@keyframes s{to{opacity:1}}"
 		);
 	});
 
 	it("does not double a prefixed copy the source already has", () => {
 		expect(
-			minify("@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}", [
-				"chrome 40"
-			])
+			minifyFor(
+				"@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}",
+				["chrome 40"]
+			)
 		).toBe("@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}");
 	});
 
 	it("drops a prefixed at-rule no target needs after its unprefixed twin", () => {
 		expect(
-			minify("@keyframes s{to{opacity:1}}@-webkit-keyframes s{to{opacity:1}}", [
-				"chrome 120"
-			])
+			minifyFor(
+				"@keyframes s{to{opacity:1}}@-webkit-keyframes s{to{opacity:1}}",
+				["chrome 120"]
+			)
 		).toBe("@keyframes s{to{opacity:1}}");
 	});
 
 	it("pairs a cased `@Keyframes` with its prefixed twin (case-insensitive)", () => {
 		expect(
-			minify("@-webkit-keyframes s{to{opacity:1}}@Keyframes s{to{opacity:1}}", [
-				"chrome 40"
-			])
+			minifyFor(
+				"@-webkit-keyframes s{to{opacity:1}}@Keyframes s{to{opacity:1}}",
+				["chrome 40"]
+			)
 		).toBe("@-webkit-keyframes s{to{opacity:1}}@Keyframes s{to{opacity:1}}");
 	});
 
 	it("gives each same-named at-rule its own copy, so the last still wins", () => {
 		expect(
-			minify("@keyframes s{to{opacity:1}}@keyframes s{to{opacity:.5}}", [
+			minifyFor("@keyframes s{to{opacity:1}}@keyframes s{to{opacity:.5}}", [
 				"chrome 40"
 			])
 		).toBe(
@@ -4949,7 +4931,7 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 
 	it("prefixes a nested at-rule against its own scope", () => {
 		expect(
-			minify("@media screen{@keyframes s{to{opacity:1}}}", ["chrome 40"])
+			minifyFor("@media screen{@keyframes s{to{opacity:1}}}", ["chrome 40"])
 		).toBe(
 			"@media screen{@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}}"
 		);
@@ -4957,7 +4939,7 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 
 	it("does not suppress a scoped copy from a top-level prefixed rule", () => {
 		expect(
-			minify(
+			minifyFor(
 				"@-webkit-keyframes s{to{opacity:1}}@media screen{@keyframes s{to{opacity:.3}}}",
 				["chrome 40"]
 			)
@@ -4968,7 +4950,7 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 
 	it("pairs a nested prefixed rule with the twin in its own scope", () => {
 		expect(
-			minify(
+			minifyFor(
 				"@media screen{@keyframes s{to{opacity:1}}@-webkit-keyframes s{to{opacity:1}}}",
 				["chrome 130"]
 			)
@@ -4977,7 +4959,7 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 
 	it("drops a nested prefixed rule its twin follows", () => {
 		expect(
-			minify(
+			minifyFor(
 				"@media screen{@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}}",
 				["chrome 130"]
 			)
@@ -4986,7 +4968,7 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 
 	it("drops a nested prefixed rule whatever stands between it and its twin", () => {
 		expect(
-			minify(
+			minifyFor(
 				"@media screen{@-webkit-keyframes s{to{opacity:1}}a{color:red}@keyframes s{to{opacity:1}}}",
 				["chrome 130"]
 			)
@@ -4995,7 +4977,7 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 
 	it("keeps a nested prefixed rule whose twin sits in another block", () => {
 		expect(
-			minify(
+			minifyFor(
 				"@media screen{@-webkit-keyframes s{to{opacity:1}}}@keyframes s{to{opacity:1}}",
 				["chrome 130"]
 			)
@@ -5005,65 +4987,55 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 	});
 
 	it("does nothing without a target list", () => {
-		expect(minify("@keyframes s{to{opacity:1}}")).toBe(
+		expect(minifyFor("@keyframes s{to{opacity:1}}")).toBe(
 			"@keyframes s{to{opacity:1}}"
 		);
 	});
 });
 
 describe("CssSyntax minify — vendor prefixes (selectors)", () => {
-	/**
-	 * @param {string} css a stylesheet
-	 * @param {string[]=} browsers the browserslist selection
-	 * @returns {string} its minified serialization
-	 */
-	const minify = (css, browsers) =>
-		new SourceProcessor().process(css, {
-			mode: "minify",
-			environment: browsers ? { browsers } : undefined
-		}).code;
-
 	it("prepends the engine spelling a target needs, keeping the source colons", () => {
-		expect(minify("::placeholder{color:red}", ["chrome 40"])).toBe(
+		expect(minifyFor("::placeholder{color:red}", ["chrome 40"])).toBe(
 			"::-webkit-input-placeholder{color:red}::placeholder{color:red}"
 		);
 	});
 
 	it("prefixes a pseudo behind a compound selector", () => {
-		expect(minify("input::placeholder{color:red}", ["chrome 40"])).toBe(
+		expect(minifyFor("input::placeholder{color:red}", ["chrome 40"])).toBe(
 			"input::-webkit-input-placeholder{color:red}input::placeholder{color:red}"
 		);
 	});
 
 	it("adds `-moz-` for `::selection` on Firefox", () => {
-		expect(minify("::selection{color:red}", ["firefox 40"])).toBe(
+		expect(minifyFor("::selection{color:red}", ["firefox 40"])).toBe(
 			"::-moz-selection{color:red}::selection{color:red}"
 		);
 	});
 
 	it("leaves a pseudo alone when the target reads it unprefixed", () => {
-		expect(minify("::placeholder{color:red}", ["chrome 120"])).toBe(
+		expect(minifyFor("::placeholder{color:red}", ["chrome 120"])).toBe(
 			"::placeholder{color:red}"
 		);
 	});
 
 	it("drops a prefixed pseudo no target needs after its unprefixed twin", () => {
 		expect(
-			minify("::placeholder{color:red}::-webkit-input-placeholder{color:red}", [
-				"chrome 120"
-			])
+			minifyFor(
+				"::placeholder{color:red}::-webkit-input-placeholder{color:red}",
+				["chrome 120"]
+			)
 		).toBe("::placeholder{color:red}");
 	});
 
 	it("copies only the selectors of a list that carry the pseudo", () => {
-		expect(minify(".a::placeholder,.b{color:red}", ["chrome 40"])).toBe(
+		expect(minifyFor(".a::placeholder,.b{color:red}", ["chrome 40"])).toBe(
 			".a::-webkit-input-placeholder{color:red}.a::placeholder,.b{color:red}"
 		);
 	});
 
 	it("keeps a copy's own list together, one spelling at a time", () => {
 		expect(
-			minify("input::placeholder,textarea::placeholder{color:red}", [
+			minifyFor("input::placeholder,textarea::placeholder{color:red}", [
 				"chrome 40",
 				"firefox 40"
 			])
@@ -5077,7 +5049,7 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 		// Chrome 15: a list of the two is nothing at all to Chrome 6 through 14,
 		// which drops a list whole over one selector it cannot parse.
 		expect(
-			minify("input::placeholder,:fullscreen{color:red}", ["chrome 40"])
+			minifyFor("input::placeholder,:fullscreen{color:red}", ["chrome 40"])
 		).toBe(
 			"input::-webkit-input-placeholder{color:red}:-webkit-full-screen{color:red}:fullscreen,input::placeholder{color:red}"
 		);
@@ -5085,7 +5057,7 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 
 	it("drops a prefixed list its unprefixed twin follows", () => {
 		expect(
-			minify(
+			minifyFor(
 				"input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{color:red}input::placeholder,textarea::placeholder{color:red}",
 				["chrome 130"]
 			)
@@ -5094,7 +5066,7 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 
 	it("leaves a list mixing two engines' spellings alone", () => {
 		expect(
-			minify(
+			minifyFor(
 				"input::-webkit-input-placeholder,textarea::-moz-placeholder{color:red}",
 				["chrome 130"]
 			)
@@ -5105,73 +5077,81 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 
 	it("gives each same-pseudo rule its own copy, so the last still wins", () => {
 		expect(
-			minify("::placeholder{color:red}::placeholder{color:blue}", ["chrome 40"])
+			minifyFor("::placeholder{color:red}::placeholder{color:blue}", [
+				"chrome 40"
+			])
 		).toBe(
 			"::-webkit-input-placeholder{color:red}::placeholder{color:red}::-webkit-input-placeholder{color:blue}::placeholder{color:blue}"
 		);
 	});
 
 	it("matches a pseudo name case-insensitively", () => {
-		expect(minify("::PLACEHOLDER{color:red}", ["chrome 40"])).toBe(
+		expect(minifyFor("::PLACEHOLDER{color:red}", ["chrome 40"])).toBe(
 			"::-webkit-input-placeholder{color:red}::PLACEHOLDER{color:red}"
 		);
 	});
 
 	it("prefixes a functional pseudo, carrying its argument", () => {
-		expect(minify(":dir(rtl){color:red}", ["firefox 40"])).toBe(
+		expect(minifyFor(":dir(rtl){color:red}", ["firefox 40"])).toBe(
 			":-moz-dir(rtl){color:red}:dir(rtl){color:red}"
 		);
 	});
 
 	it("keeps two functional pseudos with different arguments distinct", () => {
 		expect(
-			minify(":dir(rtl){color:red}:dir(ltr){color:blue}", ["firefox 40"])
+			minifyFor(":dir(rtl){color:red}:dir(ltr){color:blue}", ["firefox 40"])
 		).toBe(
 			":-moz-dir(rtl){color:red}:dir(rtl){color:red}:-moz-dir(ltr){color:blue}:dir(ltr){color:blue}"
 		);
 	});
 
 	it("leaves a pseudo inside a functional selector untouched", () => {
-		expect(minify(":not(:autofill){color:red}", ["chrome 40"])).toBe(
+		expect(minifyFor(":not(:autofill){color:red}", ["chrome 40"])).toBe(
 			":not(:autofill){color:red}"
 		);
 	});
 
 	it("spells a pseudo its engines renamed rather than prefixed", () => {
-		expect(minify(":is(a,b) c{color:red}", ["chrome 40", "firefox 40"])).toBe(
+		expect(
+			minifyFor(":is(a,b) c{color:red}", ["chrome 40", "firefox 40"])
+		).toBe(
 			":-webkit-any(a,b) c{color:red}:-moz-any(a,b) c{color:red}:is(a,b) c{color:red}"
 		);
 	});
 
 	it("drops a renamed pseudo no target needs", () => {
 		expect(
-			minify(":-webkit-any(a,b){color:red}:is(a,b){color:red}", ["chrome 130"])
+			minifyFor(":-webkit-any(a,b){color:red}:is(a,b){color:red}", [
+				"chrome 130"
+			])
 		).toBe(":is(a,b){color:red}");
 	});
 
 	it("spells `:fullscreen` for each engine that renamed it", () => {
-		expect(minify(":fullscreen{color:red}", ["chrome 40", "firefox 40"])).toBe(
+		expect(
+			minifyFor(":fullscreen{color:red}", ["chrome 40", "firefox 40"])
+		).toBe(
 			":-webkit-full-screen{color:red}:-moz-full-screen{color:red}:fullscreen{color:red}"
 		);
 	});
 
 	it("prefixes a nested rule against its own scope", () => {
 		expect(
-			minify("@media screen{::placeholder{color:red}}", ["chrome 40"])
+			minifyFor("@media screen{::placeholder{color:red}}", ["chrome 40"])
 		).toBe(
 			"@media screen{::-webkit-input-placeholder{color:red}::placeholder{color:red}}"
 		);
 	});
 
 	it("prefixes a rule nested under another", () => {
-		expect(minify("a{&::placeholder{color:red}}", ["chrome 40"])).toBe(
+		expect(minifyFor("a{&::placeholder{color:red}}", ["chrome 40"])).toBe(
 			"a{&::-webkit-input-placeholder{color:red}&::placeholder{color:red}}"
 		);
 	});
 
 	it("drops a nested prefixed rule its twin follows", () => {
 		expect(
-			minify(
+			minifyFor(
 				"@media screen{::-webkit-input-placeholder{color:red}::placeholder{color:red}}",
 				["chrome 130"]
 			)
@@ -5180,7 +5160,7 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 
 	it("drops a nested prefixed rule whatever stands between it and its twin", () => {
 		expect(
-			minify(
+			minifyFor(
 				"@media screen{::-webkit-input-placeholder{color:red}a{color:red}::placeholder{color:red}}",
 				["chrome 130"]
 			)
@@ -5189,7 +5169,7 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 
 	it("keeps a nested prefixed rule a target still needs beside its twin, unjoined", () => {
 		expect(
-			minify(
+			minifyFor(
 				"@media screen{::-webkit-input-placeholder{color:red}::placeholder{color:red}}",
 				["chrome 40"]
 			)
@@ -5199,25 +5179,16 @@ describe("CssSyntax minify — vendor prefixes (selectors)", () => {
 	});
 
 	it("does nothing without a target list", () => {
-		expect(minify("::placeholder{color:red}")).toBe("::placeholder{color:red}");
+		expect(minifyFor("::placeholder{color:red}")).toBe(
+			"::placeholder{color:red}"
+		);
 	});
 });
 
 describe("CssSyntax minify — vendor prefixes (target selection)", () => {
-	/**
-	 * @param {string} css a stylesheet
-	 * @param {string[]=} browsers the browserslist selection
-	 * @returns {string} its minified serialization
-	 */
-	const minify = (css, browsers) =>
-		new SourceProcessor().process(css, {
-			mode: "minify",
-			environment: browsers ? { browsers } : undefined
-		}).code;
-
 	it("reads IE Mobile through IE's windows — the same engine on the same version line", () => {
 		expect(
-			minify("a{-ms-user-select:none;user-select:none}", [
+			minifyFor("a{-ms-user-select:none;user-select:none}", [
 				"chrome 130",
 				"ie_mob 11"
 			])
@@ -5227,32 +5198,32 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 	it("reads IE Mobile apart from IE where the two shipped different features", () => {
 		// `text-size-adjust` is prefixed on IE Mobile and absent from desktop IE,
 		// which BCD cannot say because it does not track IE Mobile at all.
-		expect(minify("a{text-size-adjust:100%}", ["ie_mob 11"])).toBe(
+		expect(minifyFor("a{text-size-adjust:100%}", ["ie_mob 11"])).toBe(
 			"a{-ms-text-size-adjust:100%;text-size-adjust:100%}"
 		);
-		expect(minify("a{text-size-adjust:100%}", ["ie 11"])).toBe(
+		expect(minifyFor("a{text-size-adjust:100%}", ["ie 11"])).toBe(
 			"a{text-size-adjust:100%}"
 		);
 		expect(
-			minify("a{-ms-text-size-adjust:100%;text-size-adjust:100%}", [
+			minifyFor("a{-ms-text-size-adjust:100%;text-size-adjust:100%}", [
 				"ie_mob 11"
 			])
 		).toBe("a{-ms-text-size-adjust:100%;text-size-adjust:100%}");
 		expect(
-			minify("a{-ms-text-size-adjust:100%;text-size-adjust:100%}", ["ie 11"])
+			minifyFor("a{-ms-text-size-adjust:100%;text-size-adjust:100%}", ["ie 11"])
 		).toBe("a{text-size-adjust:100%}");
 	});
 
 	it("reads IE Mobile through the same Trident as desktop IE", () => {
 		// IE Mobile 10 is Trident 6, so it needs the 2012 flexbox renames exactly as
 		// IE 10 does; 11 is Trident 7 and needs none of them.
-		expect(minify("a{order:1;align-items:center}", ["ie_mob 10"])).toBe(
+		expect(minifyFor("a{order:1;align-items:center}", ["ie_mob 10"])).toBe(
 			"a{-ms-flex-order:1;order:1;-ms-flex-align:center;align-items:center}"
 		);
-		expect(minify("a{order:1;align-items:center}", ["ie_mob 11"])).toBe(
+		expect(minifyFor("a{order:1;align-items:center}", ["ie_mob 11"])).toBe(
 			"a{order:1;align-items:center}"
 		);
-		expect(minify("a{-ms-flex-order:1;order:1}", ["ie_mob 10"])).toBe(
+		expect(minifyFor("a{-ms-flex-order:1;order:1}", ["ie_mob 10"])).toBe(
 			"a{-ms-flex-order:1;order:1}"
 		);
 	});
@@ -5261,36 +5232,36 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 		// BCD dates Opera's unprefixed `border-image` at 11; caniuse, which is the
 		// only dataset following Presto version by version, marks every version
 		// that has it at all as needing the prefix.
-		expect(minify("a{border-image:url(x) 30}", ["opera 12.1"])).toBe(
+		expect(minifyFor("a{border-image:url(x) 30}", ["opera 12.1"])).toBe(
 			"a{-o-border-image:url(x) 30;border-image:url(x) 30}"
 		);
 		expect(
-			minify("a{-o-border-image:url(x) 30;border-image:url(x) 30}", [
+			minifyFor("a{-o-border-image:url(x) 30;border-image:url(x) 30}", [
 				"opera 12.1"
 			])
 		).toBe("a{-o-border-image:url(x) 30;border-image:url(x) 30}");
 		// Opera Mobile kept `text-overflow` prefixed four versions past desktop.
-		expect(minify("a{text-overflow:ellipsis}", ["op_mob 12"])).toBe(
+		expect(minifyFor("a{text-overflow:ellipsis}", ["op_mob 12"])).toBe(
 			"a{-o-text-overflow:ellipsis;text-overflow:ellipsis}"
 		);
-		expect(minify("a{text-overflow:ellipsis}", ["op_mob 12.1"])).toBe(
+		expect(minifyFor("a{text-overflow:ellipsis}", ["op_mob 12.1"])).toBe(
 			"a{text-overflow:ellipsis}"
 		);
-		expect(minify("a{text-overflow:ellipsis}", ["opera 11"])).toBe(
+		expect(minifyFor("a{text-overflow:ellipsis}", ["opera 11"])).toBe(
 			"a{text-overflow:ellipsis}"
 		);
 		// Presto shipped `object-fit` as its own extension a year before BCD dates
 		// the prefixed form, and `background-size` went plain at 10.5, not at 10.
-		expect(minify("a{object-fit:cover}", ["opera 10.6"])).toBe(
+		expect(minifyFor("a{object-fit:cover}", ["opera 10.6"])).toBe(
 			"a{-o-object-fit:cover;object-fit:cover}"
 		);
-		expect(minify("a{object-fit:cover}", ["opera 10.5"])).toBe(
+		expect(minifyFor("a{object-fit:cover}", ["opera 10.5"])).toBe(
 			"a{object-fit:cover}"
 		);
-		expect(minify("a{background-size:cover}", ["opera 10.0-10.1"])).toBe(
+		expect(minifyFor("a{background-size:cover}", ["opera 10.0-10.1"])).toBe(
 			"a{-o-background-size:cover;background-size:cover}"
 		);
-		expect(minify("a{background-size:cover}", ["opera 10.5"])).toBe(
+		expect(minifyFor("a{background-size:cover}", ["opera 10.5"])).toBe(
 			"a{background-size:cover}"
 		);
 	});
@@ -5300,16 +5271,16 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 		// unprefixed spelling at all, so a Firefox target losing the `-moz-` one is
 		// left with a declaration it cannot parse. BCD calls desktop Firefox
 		// unsupported, which is about effect rather than about parsing.
-		expect(minify("a{text-size-adjust:none}", ["firefox 130"])).toBe(
+		expect(minifyFor("a{text-size-adjust:none}", ["firefox 130"])).toBe(
 			"a{-moz-text-size-adjust:none;text-size-adjust:none}"
 		);
 		expect(
-			minify("a{-moz-text-size-adjust:none;text-size-adjust:none}", [
+			minifyFor("a{-moz-text-size-adjust:none;text-size-adjust:none}", [
 				"firefox 130"
 			])
 		).toBe("a{-moz-text-size-adjust:none;text-size-adjust:none}");
 		// Before Gecko carried it, there is nothing to write.
-		expect(minify("a{text-size-adjust:none}", ["firefox 13"])).toBe(
+		expect(minifyFor("a{text-size-adjust:none}", ["firefox 13"])).toBe(
 			"a{text-size-adjust:none}"
 		);
 	});
@@ -5319,14 +5290,14 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 		// lightningcss both write `-ms-text-size-adjust`; BCD records the spelling
 		// per feature, and desktop IE — where an `-ms-` one would come from — never
 		// had the property at all.
-		expect(minify("a{text-size-adjust:100%}", ["edge 15"])).toBe(
+		expect(minifyFor("a{text-size-adjust:100%}", ["edge 15"])).toBe(
 			"a{-webkit-text-size-adjust:100%;text-size-adjust:100%}"
 		);
 	});
 
 	it("skips a browser no dataset covers, as lightningcss's target mapping does", () => {
 		expect(
-			minify("a{-webkit-border-radius:5px;border-radius:5px}", [
+			minifyFor("a{-webkit-border-radius:5px;border-radius:5px}", [
 				"chrome 130",
 				"bb 10"
 			])
@@ -5334,14 +5305,14 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 	});
 
 	it("still adds for the browsers it does resolve", () => {
-		expect(minify("a{user-select:none}", ["chrome 40", "op_mini all"])).toBe(
+		expect(minifyFor("a{user-select:none}", ["chrome 40", "op_mini all"])).toBe(
 			"a{-webkit-user-select:none;user-select:none}"
 		);
 	});
 
 	it("leaves prefixes alone when nothing in the selection resolves", () => {
 		expect(
-			minify("a{-webkit-border-radius:5px;border-radius:5px}", [
+			minifyFor("a{-webkit-border-radius:5px;border-radius:5px}", [
 				"op_mini all",
 				"chrome"
 			])
@@ -5349,62 +5320,53 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 	});
 
 	it("leaves prefixes alone for an empty selection", () => {
-		expect(minify("a{-webkit-border-radius:5px;border-radius:5px}", [])).toBe(
-			"a{-webkit-border-radius:5px;border-radius:5px}"
-		);
+		expect(
+			minifyFor("a{-webkit-border-radius:5px;border-radius:5px}", [])
+		).toBe("a{-webkit-border-radius:5px;border-radius:5px}");
 	});
 
 	it("reads every selected version of one browser, not just the oldest", () => {
 		// Chrome 130 is past `user-select`'s unprefixed arrival and 40 is inside its
 		// prefix window: an interval is not answered by the selection's low end.
-		expect(minify("a{user-select:none}", ["chrome 130", "chrome 40"])).toBe(
+		expect(minifyFor("a{user-select:none}", ["chrome 130", "chrome 40"])).toBe(
 			"a{-webkit-user-select:none;user-select:none}"
 		);
 	});
 
 	it("takes the low end of a version range", () => {
-		expect(minify("a{user-select:none}", ["ios_saf 15.0-15.1"])).toBe(
+		expect(minifyFor("a{user-select:none}", ["ios_saf 15.0-15.1"])).toBe(
 			"a{-webkit-user-select:none;user-select:none}"
 		);
 	});
 });
 
 describe("CssSyntax minify — vendor prefixes (joined rules)", () => {
-	/**
-	 * @param {string} css a stylesheet
-	 * @param {string[]=} browsers the browserslist selection
-	 * @returns {string} its minified serialization
-	 */
-	const minify = (css, browsers) =>
-		new SourceProcessor().process(css, {
-			mode: "minify",
-			environment: browsers ? { browsers } : undefined
-		}).code;
-
 	it("keeps the prefixes it added when two at-rules join", () => {
 		expect(
-			minify("@media screen{user-select:none}@media screen{color:red}", [
-				"chrome 40"
-			])
+			minifyFor(
+				"@media screen{a{user-select:none}}@media screen{b{color:red}}",
+				["chrome 40"]
+			)
 		).toBe(
-			"@media screen{-webkit-user-select:none;user-select:none;color:red}"
+			"@media screen{a{-webkit-user-select:none;user-select:none}b{color:red}}"
 		);
 	});
 
 	it("does not bring back a prefix it dropped when two at-rules join", () => {
 		expect(
-			minify(
-				"@media screen{-webkit-border-radius:5px;border-radius:5px}@media screen{color:red}",
+			minifyFor(
+				"@media screen{a{-webkit-border-radius:5px;border-radius:5px}}@media screen{b{color:red}}",
 				["chrome 130"]
 			)
-		).toBe("@media screen{border-radius:5px;color:red}");
+		).toBe("@media screen{a{border-radius:5px}b{color:red}}");
 	});
 
 	it("joins the rules inside two blocks with their own prefixes", () => {
 		expect(
-			minify("@media screen{a{user-select:none}}@media screen{b{color:red}}", [
-				"chrome 40"
-			])
+			minifyFor(
+				"@media screen{a{user-select:none}}@media screen{b{color:red}}",
+				["chrome 40"]
+			)
 		).toBe(
 			"@media screen{a{-webkit-user-select:none;user-select:none}b{color:red}}"
 		);
@@ -5412,50 +5374,42 @@ describe("CssSyntax minify — vendor prefixes (joined rules)", () => {
 });
 
 describe("CssSyntax minify — vendor prefixes (a twin written first)", () => {
-	/**
-	 * @param {string} css a stylesheet
-	 * @param {string[]=} browsers the browserslist selection
-	 * @returns {string} its minified serialization
-	 */
-	const minify = (css, browsers) =>
-		new SourceProcessor().process(css, {
-			mode: "minify",
-			environment: browsers ? { browsers } : undefined
-		}).code;
-
 	it("drops a prefixed at-rule its unprefixed twin follows", () => {
 		expect(
-			minify("@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}", [
-				"chrome 130"
-			])
+			minifyFor(
+				"@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}",
+				["chrome 130"]
+			)
 		).toBe("@keyframes s{to{opacity:1}}");
 	});
 
 	it("drops a prefixed rule its unprefixed twin follows", () => {
 		expect(
-			minify("::-webkit-input-placeholder{color:red}::placeholder{color:red}", [
-				"chrome 130"
-			])
+			minifyFor(
+				"::-webkit-input-placeholder{color:red}::placeholder{color:red}",
+				["chrome 130"]
+			)
 		).toBe("::placeholder{color:red}");
 	});
 
 	it("keeps it where a target still needs the prefix", () => {
 		expect(
-			minify("@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}", [
-				"chrome 40"
-			])
+			minifyFor(
+				"@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}",
+				["chrome 40"]
+			)
 		).toBe("@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}");
 	});
 
 	it("keeps a prefixed at-rule with no unprefixed twin at all", () => {
-		expect(minify("@-webkit-keyframes s{to{opacity:1}}", ["chrome 130"])).toBe(
-			"@-webkit-keyframes s{to{opacity:1}}"
-		);
+		expect(
+			minifyFor("@-webkit-keyframes s{to{opacity:1}}", ["chrome 130"])
+		).toBe("@-webkit-keyframes s{to{opacity:1}}");
 	});
 
 	it("drops one its twin follows from further off", () => {
 		expect(
-			minify(
+			minifyFor(
 				"@-webkit-keyframes s{to{opacity:1}}a{color:red}@keyframes s{to{opacity:1}}",
 				["chrome 130"]
 			)
@@ -5464,7 +5418,7 @@ describe("CssSyntax minify — vendor prefixes (a twin written first)", () => {
 
 	it("drops each of a run of prefixed at-rules its twins follow", () => {
 		expect(
-			minify(
+			minifyFor(
 				"@-webkit-keyframes a{to{opacity:1}}@-webkit-keyframes b{to{opacity:0}}@keyframes a{to{opacity:1}}@keyframes b{to{opacity:0}}",
 				["chrome 130"]
 			)
@@ -5473,7 +5427,7 @@ describe("CssSyntax minify — vendor prefixes (a twin written first)", () => {
 
 	it("keeps a kept comment that stood between them", () => {
 		expect(
-			minify(
+			minifyFor(
 				"@-webkit-keyframes s{to{opacity:1}}/*! banner */@keyframes s{to{opacity:1}}",
 				["chrome 130"]
 			)
@@ -5482,7 +5436,7 @@ describe("CssSyntax minify — vendor prefixes (a twin written first)", () => {
 
 	it("leaves a joined run alone", () => {
 		expect(
-			minify(
+			minifyFor(
 				"@media screen{a{color:red}}@media screen{b{color:red}}@keyframes s{to{opacity:1}}",
 				["chrome 130"]
 			)

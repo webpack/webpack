@@ -3858,8 +3858,6 @@ const PREFIX_SUPPLEMENT = new Map([
 			["-moz-column-gap", [["firefox", "2", "52"]]]
 		]
 	],
-	// CSS Shapes, which WebKit shipped prefixed from Safari 7.1 and unprefixed at
-	// 10.1. BCD has the `-webkit-` entry for `shape-margin` alone.
 	[
 		// Multi-column's shorthand and its `column-span`, unprefixed with the rest
 		// of multi-column layout. BCD dates their `-webkit-` at the version the unprefixed form
@@ -3897,6 +3895,8 @@ const PREFIX_SUPPLEMENT = new Map([
 			]
 		]
 	],
+	// CSS Shapes, which WebKit shipped prefixed from Safari 7.1 and unprefixed at
+	// 10.1. BCD has the `-webkit-` entry for `shape-margin` alone.
 	[
 		"shape-outside",
 		[
@@ -4119,7 +4119,7 @@ const PREFIX_SUPPLEMENT = new Map([
 	// prefixed on IE Mobile 10 and 11 and absent from desktop IE altogether, and
 	// 11 is IE Mobile's last release. And BCD calls desktop Firefox unsupported,
 	// which is a statement about effect: Gecko's property database carries
-	// `-moz-text-size-adjust` as a real longhand, ungated, with
+	// `-moz-text-size-adjust` as a real longhand no preference gates, with
 	// `-webkit-text-size-adjust` aliased onto it and no unprefixed spelling at
 	// all — so a Firefox target losing the `-moz-` one is left with a declaration
 	// Gecko cannot parse. Desktop shares Android's style system, and so its
