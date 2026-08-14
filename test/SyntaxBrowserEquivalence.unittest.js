@@ -865,10 +865,14 @@ const installHelpers = () => {
 	const htmlFacets = (html) => {
 		// `parseHTMLUnsafe` attaches a declarative shadow root where `DOMParser`
 		// leaves an inert `<template>`, so the tree below is the one a page gets.
-		const doc =
+		const attached =
 			typeof Document.parseHTMLUnsafe === "function"
 				? Document.parseHTMLUnsafe(html)
-				: new DOMParser().parseFromString(html, "text/html");
+				: null;
+		const doc =
+			attached === null
+				? new DOMParser().parseFromString(html, "text/html")
+				: attached;
 		/** @type {Record<string, string[]>} */
 		const facets = {
 			elements: [],
@@ -946,6 +950,19 @@ const installHelpers = () => {
 			}
 		};
 		collect(doc, 0, false);
+		// `shadowRoot` never hands back a closed root, so its content is read off
+		// a second, inert parse — where it is still the `<template>` it was
+		// written as. Without this, attaching the root hides what is inside it.
+		if (attached !== null) {
+			const inert = new DOMParser().parseFromString(html, "text/html");
+			for (const closed of inert.querySelectorAll(
+				'template[shadowrootmode="closed" i]'
+			)) {
+				const content = /** @type {HTMLTemplateElement} */ (closed).content;
+				facets.shadows.push(renderedTextOf(content));
+				collect(content, 0, true);
+			}
+		}
 		const doctype = doc.doctype;
 		// Quirks mode changes layout, so the doctype has to survive as one.
 		facets.document = [
