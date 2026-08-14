@@ -4120,7 +4120,15 @@ const VALUE_SPELLING_EXCLUSIONS = new Map([
 	// for `fit-content` lays the box out the other way round rather than the same
 	// way under an older name. Neither autoprefixer nor lightningcss reaches for
 	// it there either.
-	["fit-content", ["-webkit-fill-available"]]
+	["fit-content", ["-webkit-fill-available"]],
+	// `text-align`'s `-webkit-` spellings outlived the versions BCD files them
+	// under and no longer mean the same thing: a current Blink parses `center` and
+	// `-webkit-center` both, and computes them differently — `-webkit-center`
+	// centers block-level children, `center` only inline content. Taking one for
+	// the other moves the box.
+	["center", ["-webkit-center"]],
+	["left", ["-webkit-left"]],
+	["right", ["-webkit-right"]]
 ]);
 
 // A value whose vendor spelling is not the same value spelled another way, which

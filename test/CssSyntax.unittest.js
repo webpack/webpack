@@ -4823,6 +4823,20 @@ describe("CssSyntax minify — vendor prefixes (values)", () => {
 		expect(minify("a{float:left}", ["chrome 40"])).toBe("a{float:left}");
 	});
 
+	it("keeps a vendor spelling that outlived its window and changed meaning", () => {
+		// A current Blink parses `center` and `-webkit-center` both and computes
+		// them differently — `-webkit-center` centers block-level children. Taking
+		// one for the other moves the box, so neither is written for the other.
+		const target = ["chrome 130", "firefox 130", "safari 18"];
+		expect(
+			minify("a{text-align:center;text-align:-webkit-center}", target)
+		).toBe("a{text-align:center;text-align:-webkit-center}");
+		expect(
+			minify("a{text-align:-webkit-center;text-align:center}", target)
+		).toBe("a{text-align:-webkit-center;text-align:center}");
+		expect(minify("a{text-align:center}", target)).toBe("a{text-align:center}");
+	});
+
 	it("does nothing without a target list", () => {
 		expect(minify("a{width:max-content}")).toBe("a{width:max-content}");
 	});
