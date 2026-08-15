@@ -13410,6 +13410,19 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "performance-unused-rules": Object {
+    "configs": Array [
+      Object {
+        "description": "Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.",
+        "multiple": false,
+        "path": "performance.unusedRules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "profile": Object {
     "configs": Array [
       Object {
