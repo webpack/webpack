@@ -22,9 +22,16 @@ const assertBundle = (assetName, assert) =>
  * @param {string} entry entry module
  * @param {(source: string) => void} assert what the emitted bundle must look like
  * @param {("production" | "development")=} mode which mode to build in
+ * @param {boolean=} avoidEntryIife whether the entry may be inlined without an IIFE
  * @returns {import("../../../../").Configuration} config
  */
-const variant = (name, entry, assert, mode = "production") => ({
+const variant = (
+	name,
+	entry,
+	assert,
+	mode = "production",
+	avoidEntryIife = undefined
+) => ({
 	mode,
 	devtool: false,
 	entry,
@@ -35,7 +42,7 @@ const variant = (name, entry, assert, mode = "production") => ({
 		module: true,
 		library: { type: "module" }
 	},
-	optimization: { concatenateModules: false, minimize: false },
+	optimization: { concatenateModules: false, minimize: false, avoidEntryIife },
 	experiments: { outputModule: true },
 	plugins: [assertBundle(`${name}.mjs`, assert)]
 });
@@ -92,5 +99,19 @@ module.exports = [
 			expect(source).toContain(defineMarkNamespace);
 		},
 		"development"
+	),
+	// Inlined past the sibling, so the entry's own definitions go — but the sibling
+	// still marks its namespace, and that helper has to stay behind for it.
+	variant(
+		"sibling-inlined-dev",
+		"./with-sibling.js",
+		(source) => {
+			expect(source).not.toContain(define);
+			expect(source).not.toContain(defineGetters);
+			expect(source).toContain(markNamespace);
+			expect(source).toContain(defineMarkNamespace);
+		},
+		"development",
+		true
 	)
 ];
