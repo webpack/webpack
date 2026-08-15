@@ -2132,6 +2132,107 @@ describe("tokenize", () => {
 				"d"
 			]);
 		});
+
+		// --- attribute spellings (§13.2.5.33-.37) ---
+		// Every way an attribute can be written, from the plain `name="value"`
+		// to the ones that reach a state of their own.
+		describe("attribute spellings", () => {
+			it("reads the common shape", () => {
+				expect(walk('<div a="1" b="2">')).toEqual([
+					["attr", "a", "1", QUOTE_DOUBLE],
+					["attr", "b", "2", QUOTE_DOUBLE],
+					["open", "div", false]
+				]);
+				expect(roundtrip('<div a="1" b="2">')).toBe('<div a="1" b="2">');
+			});
+
+			it("reads a single-quoted value", () => {
+				expect(walk("<div a='1' b='2'>")).toEqual([
+					["attr", "a", "1", QUOTE_SINGLE],
+					["attr", "b", "2", QUOTE_SINGLE],
+					["open", "div", false]
+				]);
+				expect(roundtrip("<div a='1'>")).toBe("<div a='1'>");
+			});
+
+			it("reads whitespace around `=`", () => {
+				expect(walk('<div a = "1">')).toEqual([
+					["attr", "a", "1", QUOTE_DOUBLE],
+					["open", "div", false]
+				]);
+				expect(walk("<div a= '1'>")).toEqual([
+					["attr", "a", "1", QUOTE_SINGLE],
+					["open", "div", false]
+				]);
+				expect(roundtrip('<div a = "1">')).toBe('<div a = "1">');
+			});
+
+			it("reads an unquoted value", () => {
+				expect(walk("<div a=1 b=2>")).toEqual([
+					["attr", "a", "1", QUOTE_NONE],
+					["attr", "b", "2", QUOTE_NONE],
+					["open", "div", false]
+				]);
+				expect(roundtrip("<div a=1>")).toBe("<div a=1>");
+			});
+
+			it("an empty quoted value stops the scan on the closing quote", () => {
+				expect(walk("<div a=\"\" b=''>")).toEqual([
+					["attr", "a", "", QUOTE_DOUBLE],
+					["attr", "b", "", QUOTE_SINGLE],
+					["open", "div", false]
+				]);
+			});
+
+			it("reads a reference inside the value", () => {
+				expect(walk("<div a=\"x&amp;y\" b='x&amp;y'>")).toEqual([
+					["attr", "a", "x&amp;y", QUOTE_DOUBLE],
+					["attr", "b", "x&amp;y", QUOTE_SINGLE],
+					["open", "div", false]
+				]);
+				// A leading `&` keeps the scan at the opening quote.
+				expect(walk('<div a="&amp;">')).toEqual([
+					["attr", "a", "&amp;", QUOTE_DOUBLE],
+					["open", "div", false]
+				]);
+			});
+
+			it("reads a NUL inside the value", () => {
+				expect(walk("<div a=\"x\0y\" b='x\0y'>")).toEqual([
+					["attr", "a", "x\0y", QUOTE_DOUBLE],
+					["attr", "b", "x\0y", QUOTE_SINGLE],
+					["open", "div", false]
+				]);
+			});
+
+			it("an unterminated value is recovered by the EOF handler", () => {
+				// No closing quote in the rest of the input, so the scan clamps to
+				// the end and the EOF handler emits what it has.
+				expect(walk('<div a="1')).toEqual([
+					["attr", "a", "1", QUOTE_DOUBLE],
+					["open", "div", false]
+				]);
+				expect(walk("<div a='1")).toEqual([
+					["attr", "a", "1", QUOTE_SINGLE],
+					["open", "div", false]
+				]);
+				expect(walk("<div a=")).toEqual([
+					["attr", "a", null, QUOTE_NONE],
+					["open", "div", false]
+				]);
+				expect(walk("<div a")).toEqual([
+					["attr", "a", null, QUOTE_NONE],
+					["open", "div", false]
+				]);
+			});
+
+			it("reads an error character in the name", () => {
+				expect(walk('<div a"b="1">')).toEqual([
+					["attr", 'a"b', "1", QUOTE_DOUBLE],
+					["open", "div", false]
+				]);
+			});
+		});
 	});
 
 	describe("parseError callback", () => {
@@ -4170,6 +4271,18 @@ describe("SourceProcessor — an empty value is the bare name", () => {
 		// Read raw: what a reference decodes to is not the printer's business.
 		expect(minify('<div title="&#x20;">x</div>')).toContain("title=&#x20;");
 	});
+
+	it("prints a boolean attribute repeating its own name as the name", () => {
+		expect(minify('<input disabled="disabled" checked="CHECKED">')).toBe(
+			"<input disabled checked>"
+		);
+	});
+
+	it("keeps a same-length value that is not the name", () => {
+		// `_isBooleanAttribute` is asked before the fold, so a value only as long
+		// as the name still has to be compared against it.
+		expect(minify('<input checked="chicken">')).toBe("<input checked=chicken>");
+	});
 });
 
 describe("SourceProcessor — removeEmptyElements reads the output", () => {
@@ -4396,6 +4509,14 @@ describe("SourceProcessor — token list values", () => {
 		expect(minify('<a href=x ping="/p1 \n /p2">l</a>')).toContain(
 			'ping="/p1 /p2"'
 		);
+	});
+
+	it("trims a list whose separators are otherwise already collapsed", () => {
+		// Padding at either end is all the rewriting these need — the scan that
+		// decides whether a list is already collapsed has to see it.
+		expect(minify('<div class="a b ">x</div>')).toContain('class="a b"');
+		expect(minify('<div class=" a b">x</div>')).toContain('class="a b"');
+		expect(minify('<div class="ab ">x</div>')).toContain("class=ab");
 	});
 
 	it("drops a repeated token only where the DOM folds it away", () => {
