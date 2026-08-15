@@ -4310,6 +4310,39 @@ const PREFIX_SUPPLEMENT = new Map([
 			["-moz-text-size-adjust", [["firefox", "14", Infinity]]]
 		]
 	],
+	// WebKit named the ruby side and the vertical orientation after the box rather
+	// than the flow, and kept those names on the prefixed properties: a Chromium 41,
+	// 80 and 141 alike read `-webkit-ruby-position: before` and no `over`, and
+	// `-webkit-text-orientation: vertical-right` and no `mixed`. BCD records the
+	// windows and no dataset records the renaming, so the copy went out spelled the
+	// standard way and no engine could read it.
+	[
+		"ruby-position",
+		[
+			[
+				"-webkit-ruby-position",
+				[],
+				[
+					["over", "before"],
+					["under", "after"]
+				]
+			]
+		]
+	],
+	[
+		"text-orientation",
+		[
+			[
+				"-webkit-text-orientation",
+				[],
+				[
+					["mixed", "vertical-right"],
+					["upright", "upright"],
+					["sideways", "sideways"]
+				]
+			]
+		]
+	],
 	// BCD dates WebKit's unprefixed `font-kerning` at Safari 9, caniuse a release
 	// later on desktop and three years later on iOS. The feature is this one
 	// property, so the usual feature-wider-than-property explanation cannot
@@ -4361,7 +4394,10 @@ const applyPrefixSupplement = (table) => {
 			table.push(entry);
 		}
 		let widened = false;
-		for (const [spelling, windows] of stated) {
+		for (const [spelling, windows, keywords] of stated) {
+			// An entry may state the keywords a legacy spelling reads rather than a
+			// window, where BCD has the window and no dataset has the renaming.
+			if (keywords !== undefined) widened = true;
 			// Stated in full rather than as a prefix: an engine's legacy spelling is as
 			// often a rename (`-ms-flex-order` for `order`) as a prefix on the name.
 			if (spelling === name || !spelling.startsWith("-")) {
@@ -4463,6 +4499,41 @@ const VALUE_KEYWORD_EXCLUSIONS = new Map([
  * spelling did not take the same way (`background-image.image-set`).
  * @returns {[string, [string, [string, [string, number, number][]][]][]][]} the table, sorted
  */
+// A value one engine shipped as a family, of which BCD records the prefix for
+// part. Keyed by keyword, so generation fails if the keyword turns out to be read
+// by more than one value grammar and a stated window cannot say which.
+/** @type {Map<string, [string, [string, string, string][]][]>} */
+const VALUE_PREFIX_SUPPLEMENT = new Map([
+	// Blink shipped bidi isolation as one family, and a Chromium 41 parses
+	// `-webkit-isolate-override` and `-webkit-plaintext` while parsing neither
+	// plain name. BCD keeps the `-webkit-` window for `isolate` alone, so the
+	// other two read as needing nothing and lose their only spelling.
+	[
+		"isolate-override",
+		[
+			[
+				"-webkit-isolate-override",
+				[
+					["chrome", "16", "48"],
+					["opera", "15", "35"]
+				]
+			]
+		]
+	],
+	[
+		"plaintext",
+		[
+			[
+				"-webkit-plaintext",
+				[
+					["chrome", "16", "48"],
+					["opera", "15", "35"]
+				]
+			]
+		]
+	]
+]);
+
 const collectPrefixedValues = () => {
 	// What each property accepts, and what BCD records for those of its values
 	// some engine spelled its own way.
@@ -4539,6 +4610,48 @@ const collectPrefixedValues = () => {
 					);
 				}
 			}
+		}
+	}
+	for (const [keyword, stated] of VALUE_PREFIX_SUPPLEMENT) {
+		const grammars = [...shared].filter(([, byKeyword]) =>
+			byKeyword.has(keyword)
+		);
+		if (grammars.length !== 1) {
+			throw new Error(
+				`\`${keyword}\` is read by ${grammars.length} value grammars, so a stated window cannot say which one it belongs to.`
+			);
+		}
+		const bySpelling =
+			/** @type {Map<string, Map<string, [number, number]>>} */ (
+				grammars[0][1].get(keyword)
+			);
+		let widened = false;
+		for (const [spelling, windows] of stated) {
+			let browsers = bySpelling.get(spelling);
+			if (browsers === undefined) {
+				browsers = new Map();
+				bySpelling.set(spelling, browsers);
+			}
+			for (const [browser, from, to] of windows) {
+				const start = /** @type {number} */ (encodeVersion(from));
+				const end = /** @type {number} */ (encodeVersion(to));
+				const known = browsers.get(browser);
+				if (known === undefined) {
+					browsers.set(browser, [start, end]);
+					widened = true;
+					continue;
+				}
+				if (known[0] > start || known[1] < end) widened = true;
+				browsers.set(browser, [
+					Math.min(known[0], start),
+					Math.max(known[1], end)
+				]);
+			}
+		}
+		if (!widened) {
+			throw new Error(
+				`BCD now covers every window stated for the value \`${keyword}\`, so its VALUE_PREFIX_SUPPLEMENT entry is no longer needed — drop it.`
+			);
 		}
 	}
 	/** @type {[string, [string, [string, [string, number, number][]][]][]][]} */
