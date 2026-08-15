@@ -21898,6 +21898,7 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 		printer: NodePrinter<TPath, TNode, TPrintOptions>
 	);
 	options: PrintOptions & TPrintOptions;
+	mapWanted: boolean;
 
 	/**
 	 * Hold `text` back as the opener of a node being printed in pieces. Nothing

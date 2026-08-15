@@ -4315,6 +4315,13 @@ describe("SourceProcessor — removeEmptyElements reads the output", () => {
 		expect(minify("<div><!--c--></div>")).toBe("");
 	});
 
+	it("keeps one that spells an attribute, whatever it holds", () => {
+		expect(minify("<div><span></span><span id=k></span></div>")).toBe(
+			"<div><span id=k></span></div>"
+		);
+		expect(minify("<div class=x></div>")).toBe("<div class=x></div>");
+	});
+
 	it("keeps one whose child still prints", () => {
 		expect(minify("<div><canvas></canvas></div>")).toBe(
 			"<div><canvas></canvas></div>"
@@ -4588,6 +4595,23 @@ describe("SourceProcessor — sortAttributes / sortTokenLists", () => {
 		// `ping` is the order the requests go out in.
 		expect(minify('<a ping="/z /a">l</a>', { sortTokenLists: true })).toBe(
 			'<a ping="/z /a">l</a>'
+		);
+	});
+
+	it("sorts a token that is another's prefix before it", () => {
+		expect(
+			minify('<div class="btn-sm btn btn-lg">x</div>', {
+				sortTokenLists: true
+			})
+		).toBe('<div class="btn btn-lg btn-sm">x</div>');
+	});
+
+	it("drops a set's repeats, ordered or not", () => {
+		expect(
+			minify('<div class="b a b a c">x</div>', { sortTokenLists: true })
+		).toBe('<div class="a b c">x</div>');
+		expect(minify('<div class="b a b a c">x</div>')).toBe(
+			'<div class="b a c">x</div>'
 		);
 	});
 
