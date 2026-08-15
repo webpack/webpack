@@ -593,11 +593,8 @@ class BenchmarkRunner {
 
 		await this.prepareBenchmarkTasks(benchmarkTasks);
 
-		// Memory mode measures a task against the heap it runs in, so sharing a
-		// process makes every result depend on which other benchmarks the shard
-		// happens to hold — adding one moved untouched ones by tens of percent.
-		// A process each is the only composition-independent answer, and memory
-		// shards are minutes long, so the extra process startup is affordable.
+		// A memory result depends on the heap its process holds, so shard
+		// composition moved untouched benchmarks by tens of percent.
 		await this.runInWorkers(
 			benchmarkTasks,
 			getCodspeedRunnerMode() === "memory"

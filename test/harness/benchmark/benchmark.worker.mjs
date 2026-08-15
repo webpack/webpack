@@ -66,11 +66,8 @@ const codspeedRunnerMode = getCodspeedRunnerMode();
 const RUNTIME_BUNDLE_FILENAME = "bundle.js";
 // `run()` input. Opaque to the compiler, so the workload can't be constant-folded.
 const RUNTIME_SEED = 7;
-// Rebuilds per measured sample. One rebuild allocates so little that a single
-// discrete difference inside it — a cache slot filled, a GC threshold crossed —
-// swings the sample by ~14% run to run; averaging over several brings it to
-// ~1%. Only memory mode needs it: simulation counts instructions and is already
-// deterministic, so repeating there would just make the longest job 5x longer.
+// One rebuild allocates so little that a single GC or cache difference swings a
+// memory sample ~14%; averaging 5 brings it to ~1%. Simulation is exact already.
 const REBUILDS_PER_SAMPLE = codspeedRunnerMode === "memory" ? 5 : 1;
 
 /** @type {string} */
@@ -876,10 +873,7 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 	const originalEntryContent = await fs.readFile(entry, "utf8");
 
 	// Alternate the appended digit so every iteration is a real content change of
-	// identical length. Rewriting the same bytes left it to webpack's snapshot
-	// heuristics whether anything had changed, so a rebuild measured either a
-	// full or a short-circuited build — the same benchmark then reported ~20%
-	// apart across runs with nothing altered.
+	// identical length — rewriting the same bytes short-circuited some rebuilds.
 	let iteration = 0;
 	const nextEntryContent = () =>
 		`${originalEntryContent};console.log('watch test ${iteration++ % 2}')`;
@@ -900,36 +894,40 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 	};
 
 	/**
+	 * Installs the watch callback for the next rebuild.
+	 * @returns {Promise<void>} settles when that rebuild has finished
+	 */
+	const nextRebuild = () =>
+		new Promise(
+			/**
+			 * @param {(value?: void) => void} resolve resolve
+			 * @param {(err: Error) => void} reject reject
+			 */
+			(resolve, reject) => {
+				next = (err, stats) => {
+					if (err || !stats) {
+						reject(err || new Error(`No stats for "${taskName}" rebuild.`));
+						return;
+					}
+
+					if (stats.hasWarnings() || stats.hasErrors()) {
+						reject(new Error(stats.toString()));
+						return;
+					}
+
+					// Construct and print stats to be more accurate with real life projects
+					stats.toString();
+					resolve();
+				};
+			}
+		);
+
+	/**
 	 * @returns {Promise<void>} resolves once the edit has been rebuilt
 	 */
 	const rebuildOnce = async () => {
-		/** @type {((value?: void) => void)} */
-		let resolve;
-		/** @type {((err: Error | null) => void)} */
-		let reject;
-
-		const promise = new Promise((res, rej) => {
-			resolve = res;
-			reject = rej;
-		});
-
-		next = (err, stats) => {
-			if (err || !stats) {
-				reject(err);
-				return;
-			}
-
-			if (stats.hasWarnings() || stats.hasErrors()) {
-				reject(new Error(stats.toString()));
-				return;
-			}
-
-			// Construct and print stats to be more accurate with real life projects
-			stats.toString();
-			resolve();
-		};
-
-		await new Promise(
+		const rebuilt = nextRebuild();
+		const written = new Promise(
 			/**
 			 * @param {(value?: void) => void} resolve resolve
 			 * @param {(err: Error) => void} reject reject
@@ -946,7 +944,8 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 			}
 		);
 
-		await promise;
+		// Awaited together so a failed write does not leave the rebuild unhandled
+		await Promise.all([written, rebuilt]);
 	};
 
 	bench.add(
@@ -967,31 +966,7 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 				/** @type {Task} */
 				(this).collectBy = collectBy;
 
-				/** @type {((value?: void) => void)} */
-				let resolve;
-				/** @type {((err: Error | null) => void)} */
-				let reject;
-
-				const promise = new Promise((res, rej) => {
-					resolve = res;
-					reject = rej;
-				});
-
-				next = (err, stats) => {
-					if (err || !stats) {
-						reject(err);
-						return;
-					}
-
-					if (stats.hasWarnings() || stats.hasErrors()) {
-						reject(new Error(stats.toString()));
-						return;
-					}
-
-					// Construct and print stats to be more accurate with real life projects
-					stats.toString();
-					resolve();
-				};
+				const firstBuild = nextRebuild();
 
 				if (GENERATE_PROFILE) {
 					await withProfiling(
@@ -1026,7 +1001,7 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 					}
 				);
 
-				await promise;
+				await firstBuild;
 			},
 			async afterAll() {
 				// Close watching
