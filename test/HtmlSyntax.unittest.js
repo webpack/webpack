@@ -2132,6 +2132,107 @@ describe("tokenize", () => {
 				"d"
 			]);
 		});
+
+		// --- attribute spellings (§13.2.5.33-.37) ---
+		// Every way an attribute can be written, from the plain `name="value"`
+		// to the ones that reach a state of their own.
+		describe("attribute spellings", () => {
+			it("reads the common shape", () => {
+				expect(walk('<div a="1" b="2">')).toEqual([
+					["attr", "a", "1", QUOTE_DOUBLE],
+					["attr", "b", "2", QUOTE_DOUBLE],
+					["open", "div", false]
+				]);
+				expect(roundtrip('<div a="1" b="2">')).toBe('<div a="1" b="2">');
+			});
+
+			it("reads a single-quoted value", () => {
+				expect(walk("<div a='1' b='2'>")).toEqual([
+					["attr", "a", "1", QUOTE_SINGLE],
+					["attr", "b", "2", QUOTE_SINGLE],
+					["open", "div", false]
+				]);
+				expect(roundtrip("<div a='1'>")).toBe("<div a='1'>");
+			});
+
+			it("reads whitespace around `=`", () => {
+				expect(walk('<div a = "1">')).toEqual([
+					["attr", "a", "1", QUOTE_DOUBLE],
+					["open", "div", false]
+				]);
+				expect(walk("<div a= '1'>")).toEqual([
+					["attr", "a", "1", QUOTE_SINGLE],
+					["open", "div", false]
+				]);
+				expect(roundtrip('<div a = "1">')).toBe('<div a = "1">');
+			});
+
+			it("reads an unquoted value", () => {
+				expect(walk("<div a=1 b=2>")).toEqual([
+					["attr", "a", "1", QUOTE_NONE],
+					["attr", "b", "2", QUOTE_NONE],
+					["open", "div", false]
+				]);
+				expect(roundtrip("<div a=1>")).toBe("<div a=1>");
+			});
+
+			it("an empty quoted value stops the scan on the closing quote", () => {
+				expect(walk("<div a=\"\" b=''>")).toEqual([
+					["attr", "a", "", QUOTE_DOUBLE],
+					["attr", "b", "", QUOTE_SINGLE],
+					["open", "div", false]
+				]);
+			});
+
+			it("reads a reference inside the value", () => {
+				expect(walk("<div a=\"x&amp;y\" b='x&amp;y'>")).toEqual([
+					["attr", "a", "x&amp;y", QUOTE_DOUBLE],
+					["attr", "b", "x&amp;y", QUOTE_SINGLE],
+					["open", "div", false]
+				]);
+				// A leading `&` keeps the scan at the opening quote.
+				expect(walk('<div a="&amp;">')).toEqual([
+					["attr", "a", "&amp;", QUOTE_DOUBLE],
+					["open", "div", false]
+				]);
+			});
+
+			it("reads a NUL inside the value", () => {
+				expect(walk("<div a=\"x\0y\" b='x\0y'>")).toEqual([
+					["attr", "a", "x\0y", QUOTE_DOUBLE],
+					["attr", "b", "x\0y", QUOTE_SINGLE],
+					["open", "div", false]
+				]);
+			});
+
+			it("an unterminated value is recovered by the EOF handler", () => {
+				// No closing quote in the rest of the input, so the scan clamps to
+				// the end and the EOF handler emits what it has.
+				expect(walk('<div a="1')).toEqual([
+					["attr", "a", "1", QUOTE_DOUBLE],
+					["open", "div", false]
+				]);
+				expect(walk("<div a='1")).toEqual([
+					["attr", "a", "1", QUOTE_SINGLE],
+					["open", "div", false]
+				]);
+				expect(walk("<div a=")).toEqual([
+					["attr", "a", null, QUOTE_NONE],
+					["open", "div", false]
+				]);
+				expect(walk("<div a")).toEqual([
+					["attr", "a", null, QUOTE_NONE],
+					["open", "div", false]
+				]);
+			});
+
+			it("reads an error character in the name", () => {
+				expect(walk('<div a"b="1">')).toEqual([
+					["attr", 'a"b', "1", QUOTE_DOUBLE],
+					["open", "div", false]
+				]);
+			});
+		});
 	});
 
 	describe("parseError callback", () => {
