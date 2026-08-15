@@ -4458,7 +4458,11 @@ const PROPERTY_SPELLING_EXCLUSIONS = new Map([
 	// spelling it shipped is the rename `-webkit-max-logical-width`, which
 	// `PREFIX_SUPPLEMENT` states with the rest of that family. No engine's property
 	// list has ever carried this one.
-	["max-inline-size", ["-webkit-max-inline-size"]]
+	["max-inline-size", ["-webkit-max-inline-size"]],
+	// BCD dates a `-webkit-` longhand on the old Android WebView, but the WebKit
+	// fork that WebView ran carries the `-webkit-border-image` shorthand and no
+	// longhand of it, and no other engine's property list has ever had this name.
+	["border-image-slice", ["-webkit-border-image-slice"]]
 ]);
 
 // A vendor spelling BCD files under a keyword it does not spell, by keyword —
