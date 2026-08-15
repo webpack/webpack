@@ -11144,6 +11144,28 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-html-collapse-boolean-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Write a boolean attribute as the bare name its presence already means. The DOM reads \`checked\` from the attribute being there, never from its value, so \`checked=\\"checked\\"\` and \`checked=\\"\\"\` are the same element — but \`getAttribute\` still hands back what was written, so a script comparing that string sees the rewrite. \`true\`, the default, only rewrites the two spellings the spec itself canonicalizes: the empty value and the attribute's own name. \`\\"all\\"\` rewrites any value, including the \`checked=\\"false\\"\` that already means checked. \`false\` leaves every one as written.",
+        "multiple": false,
+        "path": "optimization.minimize.html.collapseBooleanAttributes",
+        "type": "enum",
+        "values": Array [
+          "all",
+        ],
+      },
+      Object {
+        "description": "Write a boolean attribute as the bare name its presence already means. The DOM reads \`checked\` from the attribute being there, never from its value, so \`checked=\\"checked\\"\` and \`checked=\\"\\"\` are the same element — but \`getAttribute\` still hands back what was written, so a script comparing that string sees the rewrite. \`true\`, the default, only rewrites the two spellings the spec itself canonicalizes: the empty value and the attribute's own name. \`\\"all\\"\` rewrites any value, including the \`checked=\\"false\\"\` that already means checked. \`false\` leaves every one as written.",
+        "multiple": false,
+        "path": "optimization.minimize.html.collapseBooleanAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write a boolean attribute as the bare name its presence already means. The DOM reads \`checked\` from the attribute being there, never from its value, so \`checked=\\"checked\\"\` and \`checked=\\"\\"\` are the same element — but \`getAttribute\` still hands back what was written, so a script comparing that string sees the rewrite. \`true\`, the default, only rewrites the two spellings the spec itself canonicalizes: the empty value and the attribute's own name. \`\\"all\\"\` rewrites any value, including the \`checked=\\"false\\"\` that already means checked. \`false\` leaves every one as written.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "optimization-minimize-html-collapse-whitespace": Object {
     "configs": Array [
       Object {
@@ -11194,6 +11216,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-minimize-html-minify-style-attribute": Object {
+    "configs": Array [
+      Object {
+        "description": "Minify a \`style\` attribute's declaration list with webpack's CSS minifier, the way an inline \`<style>\` is (default true). What the element computes is unchanged; \`getAttribute(\\"style\\")\` and \`style.cssText\` are not.",
+        "multiple": false,
+        "path": "optimization.minimize.html.minifyStyleAttribute",
+        "type": "boolean",
+      },
+    ],
+    "description": "Minify a \`style\` attribute's declaration list with webpack's CSS minifier, the way an inline \`<style>\` is (default true). What the element computes is unchanged; \`getAttribute(\\"style\\")\` and \`style.cssText\` are not.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-html-normalize-attribute-values": Object {
+    "configs": Array [
+      Object {
+        "description": "Rewrite an attribute value into the shortest spelling its own grammar reads the same way: the whitespace in a \`srcset\` or a \`class\`, the keyword case of an enumerated value, a \`<meta name=viewport>\` \`content\` list, a URL's surrounding whitespace. Every one keeps what the DOM parses and changes what \`getAttribute\` hands back, so a consumer comparing those bytes turns this off (default true).",
+        "multiple": false,
+        "path": "optimization.minimize.html.normalizeAttributeValues",
+        "type": "boolean",
+      },
+    ],
+    "description": "Rewrite an attribute value into the shortest spelling its own grammar reads the same way: the whitespace in a \`srcset\` or a \`class\`, the keyword case of an enumerated value, a \`<meta name=viewport>\` \`content\` list, a URL's surrounding whitespace. Every one keeps what the DOM parses and changes what \`getAttribute\` hands back, so a consumer comparing those bytes turns this off (default true).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-minimize-html-preserve-comments": Object {
     "configs": Array [
       Object {
@@ -11223,6 +11271,19 @@ Object {
       },
     ],
     "description": "Clear all items provided in 'optimization.minimize.html.preserveComments' configuration. Patterns naming comments to keep, on top of the ones minifying always keeps (downlevel conditional comments, server-side includes and template directives). A string is read as a regular expression source and matched against the comment's text.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-minimize-html-remove-attribute-quotes": Object {
+    "configs": Array [
+      Object {
+        "description": "Drop the quotes around an attribute value the HTML tokenizer reads the same way unquoted (default true). Nothing in the DOM can observe it, but a consumer reading the page with a regexp rather than a parser matches on \`class=\\"x\\"\` and stops finding it.",
+        "multiple": false,
+        "path": "optimization.minimize.html.removeAttributeQuotes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Drop the quotes around an attribute value the HTML tokenizer reads the same way unquoted (default true). Nothing in the DOM can observe it, but a consumer reading the page with a regexp rather than a parser matches on \`class=\\"x\\"\` and stops finding it.",
     "multiple": false,
     "simpleType": "boolean",
   },

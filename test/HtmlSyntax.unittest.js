@@ -7840,3 +7840,114 @@ describe("SourceProcessor — re-serializing keeps the tree", () => {
 		).toBe("<nobr><table><b><colgroup><nobr>");
 	});
 });
+
+describe("SourceProcessor — attribute rewrites as options", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} body the document body
+	 * @param {object=} options extra print options
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (body, options) =>
+		new SourceProcessor().process(`<!DOCTYPE html><body>${body}`, {
+			mode: "minify",
+			...options
+		}).code;
+
+	it("collapses a boolean attribute the spec canonicalizes, by default", () => {
+		expect(minify('<input checked="checked" disabled="">')).toContain(
+			"<input checked disabled>"
+		);
+		expect(
+			minify('<input checked="checked">', { collapseBooleanAttributes: false })
+		).toContain("<input checked=checked>");
+	});
+
+	it("collapses any value at `all`, and the empty one at every tier", () => {
+		expect(
+			minify('<input checked="false">', { collapseBooleanAttributes: "all" })
+		).toContain("<input checked>");
+		expect(minify('<input checked="false">')).toContain(
+			"<input checked=false>"
+		);
+		// The tokenizer reads `x` and `x=""` as the same attribute, so the bare
+		// name is not the option's to keep.
+		expect(
+			minify('<input checked="">', { collapseBooleanAttributes: false })
+		).toContain("<input checked>");
+	});
+
+	it("collapses only where the attribute is a boolean one", () => {
+		expect(
+			minify('<p contenteditable="contenteditable">x</p>', {
+				collapseBooleanAttributes: "all"
+			})
+		).toContain("<p contenteditable=contenteditable>");
+	});
+
+	it("normalizes a value into its own grammar's shortest spelling", () => {
+		const body =
+			'<p class="  b   a  " dir="RTL">x</p><img srcset="a.png   1x" alt=a>';
+		expect(minify(body)).toContain('class="b a" dir=rtl');
+		expect(minify(body)).toContain('srcset="a.png 1x"');
+		const off = minify(body, { normalizeAttributeValues: false });
+		expect(off).toContain('class="  b   a  " dir=RTL');
+		expect(off).toContain('srcset="a.png   1x"');
+	});
+
+	it("leaves the style attribute to its own option", () => {
+		const body = '<p class="  b  a " style="color:  #ff0000 ;">x</p>';
+		expect(minify(body, { normalizeAttributeValues: false })).toContain(
+			'class="  b  a " style=color:red'
+		);
+		expect(minify(body, { minifyStyleAttribute: false })).toContain(
+			'class="b a" style="color:  #ff0000 ;"'
+		);
+	});
+
+	it("keeps the quotes the tokenizer does not need, when asked", () => {
+		expect(minify('<p id="q" class="a">x</p>')).toContain("<p id=q class=a>");
+		expect(
+			minify('<p id="q" class="a">x</p>', { removeAttributeQuotes: false })
+		).toContain('<p id="q" class="a">');
+	});
+
+	it("keeps them through the respelling a reference would otherwise go bare in", () => {
+		expect(minify('<p title="&#x72;ed">x</p>')).toContain("<p title=red>");
+		expect(
+			minify('<p title="&#x72;ed">x</p>', { removeAttributeQuotes: false })
+		).toContain('<p title="red">');
+	});
+
+	it("sorts a token list asked for on its own, normalization off", () => {
+		const body = '<p class="b a c" id="q">x</p>';
+		expect(
+			minify(body, { sortTokenLists: true, normalizeAttributeValues: false })
+		).toContain('class="a b c"');
+		expect(minify(body, { normalizeAttributeValues: false })).toContain(
+			'class="b a c"'
+		);
+		// `ping` is the order its requests go out in, so it is no set to sort.
+		expect(
+			minify('<a ping="  b   a ">x</a>', {
+				sortTokenLists: true,
+				normalizeAttributeValues: false
+			})
+		).toContain('ping="  b   a "');
+	});
+
+	it("keeps a value the source left unquoted unquoted", () => {
+		expect(minify("<p id=q>x</p>", { removeAttributeQuotes: false })).toContain(
+			"<p id=q>"
+		);
+	});
+
+	it("rewrites nothing in foreign content, whatever the options say", () => {
+		const svg =
+			'<svg xmlns="http://www.w3.org/2000/svg"><rect class="  a  b "/></svg>';
+		expect(minify(svg, { collapseBooleanAttributes: "all" })).toContain(
+			'class="  a  b "'
+		);
+	});
+});
