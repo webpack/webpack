@@ -155,6 +155,19 @@ The two config layers differ: **`normalization.js`** canonicalizes the user-supp
 
 **Adding a runtime requirement:** declare the symbol in `lib/RuntimeGlobals.js`, emit its code with a `RuntimeModule` subclass, and inject it by tapping `runtimeRequirementInTree`/`additionalTreeRuntimeRequirements` on `compilation.hooks` (the `…InModule` variants for per-module needs).
 
+### Diagnostics and hints
+
+> [!REQUIRED]
+
+A new hint reuses the reporting webpack already has instead of inventing its own.
+
+- **Severity comes from `performance.hints`, never from the hint's own option.** `SizeLimitsPlugin` and `DuplicatePackagesPlugin` both end in `hints === "error" ? compilation.errors : compilation.warnings`. A hint that hardcodes `compilation.warnings.push` cannot be escalated to an error and diverges the moment a shared level option lands.
+- **A hint option is therefore a `boolean`** (`performance.duplicatePackages`, `performance.unusedRules`) — never a `"warn" | "error"` enum of its own. A boolean can gain levels later without a breaking change; an enum cannot lose them.
+- **It lives under `performance`**, beside its siblings, even when it inspects something else (`module.rules`, duplicate packages). `module.*` and `optimization.*` options change how the build runs; a hint changes nothing and only reports — and a dead rule or a duplicated package is itself a build-time cost.
+- **`hints` defaults to `production ? "warning" : false`** (`lib/config/defaults.js`), so opening a hint with `if (!hints) return;` — as `DuplicatePackagesPlugin` does — makes its option silently inert in development. Choose deliberately whether the new hint is production-only or should still report with `hints: false`, and say which in the PR.
+
+**Whether a diagnostic needs `makeSerializable` follows from where it is created.** Anything reachable from a module — `ModuleError`, `ModuleWarning`, `ModuleBuildError`, and the rest of `lib/errors/` — is serialized with the module graph and must register. A hint constructed after seal/emit and pushed straight onto `compilation.warnings` never enters the pack, which is why nothing in `lib/performance/` registers a serializer. Guessing wrong is silent in both directions: a missing serializer surfaces only as `Pack got invalid because of write to:` under `ConfigCacheTestCases`, so a new diagnostic needs a case in that suite rather than an assumption.
+
 ## Code conventions
 
 ### Source language: CommonJS + JSDoc
