@@ -14,7 +14,9 @@ it("should emit no resource-hint <link> in <head> with resourceHints: none", () 
 });
 
 it("should not emit the JS startup asset-hint runtime", () => {
-	// No preload/prefetch helper calls injected into any chunk.
+	// No preload/prefetch helper calls injected into any chunk, and with nothing
+	// left to call them the helpers themselves must not ship either.
 	const runtime = read("runtime.js");
 	expect(runtime).not.toMatch(/\.(PA|LA)\(/);
+	expect(runtime).not.toMatch(/webpack\/runtime\/asset (prefetch|preload)/);
 });
