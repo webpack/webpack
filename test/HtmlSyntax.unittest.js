@@ -4237,6 +4237,12 @@ describe("SourceProcessor — optional end tags read the output", () => {
 			"<table><thead><tr><th>h</thead>\n<tr><td>d</table>"
 		);
 	});
+
+	it("omits </p> before <li>", () => {
+		// <p> end tag can be omitted before <li> per §13.1.2.4
+		expect(minify("<p>one<li>two")).toBe("<p>one</p><li>two</li>");
+		expect(minify("<p>one</p><li>two")).toBe("<p>one</p><li>two</li>");
+	});
 });
 
 describe("SourceProcessor — an empty value is the bare name", () => {
