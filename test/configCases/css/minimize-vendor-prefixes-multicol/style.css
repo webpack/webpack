@@ -1,0 +1,9 @@
+/* Firefox 51 is the last release whose parser knows multi-column by its `-moz-`
+   spelling alone: the standard names arrive together in 52. */
+
+/*! the whole module keeps its prefix, `column-width` with the rest */
+.t01 { column-width: 12em; column-count: 3; column-gap: 1em }
+/*! including the longhands and the shorthand */
+.t02 { column-rule: 1px solid red; column-fill: balance; columns: 2 }
+/*! a property Gecko 51 already reads unprefixed keeps no copy */
+.t03 { text-align-last: center; hyphens: auto }

@@ -3880,6 +3880,22 @@ const PREFIX_SUPPLEMENT = new Map([
 		]
 	],
 	[
+		// Multi-column's own width, standard from Firefox 50 by BCD alone. Gecko's
+		// property database spells it `-moz-column-width` through 51 and gains the
+		// standard name in 52 with the rest of the module, so dropping the prefix
+		// leaves 50 and 51 a declaration Gecko cannot parse.
+		"column-width",
+		[
+			[
+				"-moz-column-width",
+				[
+					["firefox", "1.5", "52"],
+					["and_ff", "4", "52"]
+				]
+			]
+		]
+	],
+	[
 		"column-span",
 		[
 			[
