@@ -26,5 +26,10 @@ Entrypoints:
       main.js
 </CLR>
 
-webpack x.x.x compiled with <CLR=31,BOLD>2 errors</CLR> in X ms"
+<CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>webpack performance recommendations: 
+The runtime is part of the initial chunk of main. It describes every other chunk, so a change anywhere in the build rewrites these assets and clients download them again.
+Set 'optimization.runtimeChunk' to emit the runtime as its own chunk.
+For more info visit https://webpack.js.org/configuration/optimization/#optimizationruntimechunk</CLR>
+
+webpack x.x.x compiled with <CLR=31,BOLD>3 errors</CLR> in X ms"
 `;
