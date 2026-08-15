@@ -13353,6 +13353,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-duplicate-packages": Object {
+    "configs": Array [
+      Object {
+        "description": "Report packages which are included more than once, in different versions or as multiple copies of the same version (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.duplicatePackages",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report packages which are included more than once, in different versions or as multiple copies of the same version (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-hints": Object {
     "configs": Array [
       Object {

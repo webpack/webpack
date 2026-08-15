@@ -5331,6 +5331,11 @@
           "instanceof": "Function",
           "tsType": "import('../lib/performance/SizeLimitsPlugin').AssetFilter"
         },
+        "duplicatePackages": {
+          "description": "Report packages which are included more than once, in different versions or as multiple copies of the same version (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "hints": {
           "description": "Sets the format of the hints: warnings, errors or nothing at all.",
           "enum": [false, "warning", "error"]

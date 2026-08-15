@@ -1264,6 +1264,7 @@ describe("snapshots", () => {
 		@@ ... @@
 		-   "performance": false,
 		+   "performance": Object {
+		+     "duplicatePackages": false,
 		+     "hints": "warning",
 		+     "maxAssetSize": 250000,
 		+     "maxEntrypointSize": 250000,
@@ -1344,6 +1345,7 @@ describe("snapshots", () => {
 		@@ ... @@
 		-   "performance": false,
 		+   "performance": Object {
+		+     "duplicatePackages": false,
 		+     "hints": "warning",
 		+     "maxAssetSize": 250000,
 		+     "maxEntrypointSize": 250000,
