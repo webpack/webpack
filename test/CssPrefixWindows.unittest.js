@@ -176,8 +176,12 @@ describe("CSS prefix windows", () => {
 		]);
 	});
 
+	// Counted rather than merely non-empty: a window discarded for a reason
+	// neither bucket accounts for has to land in one of these totals, and only an
+	// exact figure turns that into a failure. They move when the compat data does,
+	// and the diff is then the list of windows to re-read.
 	it("discards the rest for a reason that is not an engine change", () => {
-		expect(discarded.sameVersion).toBeGreaterThan(0);
-		expect(discarded.foreignAlias).toBeGreaterThan(0);
+		expect(discarded.sameVersion).toBe(127);
+		expect(discarded.foreignAlias).toBe(113);
 	});
 });
