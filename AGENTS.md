@@ -65,7 +65,7 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/dependencies/` — `Dependency` classes and their templates (HarmonyImport, CommonJsRequire, RequireContext, …).
   - `lib/dll/` — DllPlugin / DllReferencePlugin.
   - `lib/deno/`, `lib/electron/`, `lib/node/`, `lib/web/`, `lib/webworker/` — Target-specific runtime templates and externals presets.
-  - `lib/errors/` — Error class hierarchy.
+  - `lib/errors/` — Error and warning class hierarchy.
   - `lib/esm/` — ESM-specific output (e.g. `import.meta`).
   - `lib/hmr/` — Hot Module Replacement plugins.
   - `lib/html/` — Experimental HTML support.
@@ -159,14 +159,11 @@ The two config layers differ: **`normalization.js`** canonicalizes the user-supp
 
 > [!REQUIRED]
 
-A new hint reuses the reporting webpack already has instead of inventing its own.
+**Error and warning classes live in `lib/errors/`**, whatever raises them — the plugin that pushes one stays where it belongs, but the class itself goes there.
 
-- **Severity comes from `performance.hints`, never from the hint's own option.** `SizeLimitsPlugin` and `DuplicatePackagesPlugin` both end in `hints === "error" ? compilation.errors : compilation.warnings`. A hint that hardcodes `compilation.warnings.push` cannot be escalated to an error and diverges the moment a shared level option lands.
-- **A hint option is therefore a `boolean`** (`performance.duplicatePackages`, `performance.unusedRules`) — never a `"warn" | "error"` enum of its own. A boolean can gain levels later without a breaking change; an enum cannot lose them.
-- **It lives under `performance`**, beside its siblings, even when it inspects something else (`module.rules`, duplicate packages). `module.*` and `optimization.*` options change how the build runs; a hint changes nothing and only reports — and a dead rule or a duplicated package is itself a build-time cost.
-- **`hints` defaults to `production ? "warning" : false`** (`lib/config/defaults.js`), so opening a hint with `if (!hints) return;` — as `DuplicatePackagesPlugin` does — makes its option silently inert in development. Choose deliberately whether the new hint is production-only or should still report with `hints: false`, and say which in the PR.
+A hint reuses the reporting webpack already has rather than inventing its own: `SizeLimitsPlugin` and `DuplicatePackagesPlugin` both end in `hints === "error" ? compilation.errors : compilation.warnings`, so a hint that hardcodes one of the two cannot be escalated. Prefer an option that says _whether_ to run the check and leave the severity to `performance.hints`.
 
-**Whether a diagnostic needs `makeSerializable` follows from where it is created.** Anything reachable from a module — `ModuleError`, `ModuleWarning`, `ModuleBuildError`, and the rest of `lib/errors/` — is serialized with the module graph and must register. A hint constructed after seal/emit and pushed straight onto `compilation.warnings` never enters the pack, which is why nothing in `lib/performance/` registers a serializer. Guessing wrong is silent in both directions: a missing serializer surfaces only as `Pack got invalid because of write to:` under `ConfigCacheTestCases`, so a new diagnostic needs a case in that suite rather than an assumption.
+**Whether a diagnostic needs `makeSerializable` follows from where it is created.** Anything reachable from a module — `ModuleError`, `ModuleWarning`, `ModuleBuildError` — is serialized with the module graph and must register. One built after seal and pushed onto `compilation.warnings` never enters the pack, which is why nothing in `lib/performance/` registers a serializer. Guessing wrong is silent: it surfaces only as `Pack got invalid because of write to:` under `ConfigCacheTestCases`, so cover a new diagnostic there rather than assuming.
 
 ## Code conventions
 
