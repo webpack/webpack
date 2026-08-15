@@ -10300,6 +10300,10 @@ type HtmlPrintOptions = Pick<
 	sortAttributes?: boolean;
 	sortTokenLists?: boolean;
 	removeImpliedTags?: boolean | "all" | "smart";
+	collapseBooleanAttributes?: boolean | "all";
+	normalizeAttributeValues?: boolean;
+	minifyStyleAttribute?: boolean;
+	removeAttributeQuotes?: boolean;
 };
 declare interface HtmlProcessOptions {
 	/**
@@ -10366,6 +10370,26 @@ declare interface HtmlProcessOptions {
 	 * drop an attribute whose value is the element's own default; `true` is `"smart"`, and `"all"` also drops the spec defaults a selector can match (default false)
 	 */
 	removeRedundantAttributes?: boolean | "all" | "smart";
+
+	/**
+	 * write a boolean attribute as the bare name its presence already means; `true` only the spellings the spec canonicalizes, `"all"` any value (default true)
+	 */
+	collapseBooleanAttributes?: boolean | "all";
+
+	/**
+	 * rewrite a value into the shortest spelling its own grammar reads the same way — a `srcset`'s or `class`'s whitespace, an enumerated keyword's case, a viewport `content` list, a URL's surrounding whitespace (default true)
+	 */
+	normalizeAttributeValues?: boolean;
+
+	/**
+	 * minify a `style` attribute's declaration list, the way an inline `<style>` is (default true)
+	 */
+	minifyStyleAttribute?: boolean;
+
+	/**
+	 * drop the quotes around a value the tokenizer reads the same way unquoted (default true)
+	 */
+	removeAttributeQuotes?: boolean;
 
 	/**
 	 * how much of the `<html>` / `<head>` / `<body>` shell §13.1.2.4 lets the parser imply may be left out: `"smart"` leaves out only the `<html>` start tag, `true` (or `"all"`) all six, `false` none (default `"smart"`)
@@ -19989,6 +20013,12 @@ declare interface OptimizationMinimizeCss {
  */
 declare interface OptimizationMinimizeHtml {
 	/**
+	 * Write a boolean attribute as the bare name its presence already means. The DOM reads `checked` from the attribute being there, never from its value, so `checked="checked"` and `checked=""` are the same element — but `getAttribute` still hands back what was written, so a script comparing that string sees the rewrite. `true`, the default, only rewrites the two spellings the spec itself canonicalizes: the empty value and the attribute's own name. `"all"` rewrites any value, including the `checked="false"` that already means checked. `false` leaves every one as written.
+	 * @since 5.110.0
+	 */
+	collapseBooleanAttributes?: boolean | "all";
+
+	/**
 	 * Collapse each run of whitespace in text to a single space. Left alone inside `pre`, `textarea` and `listing`, where whitespace renders verbatim. `true` (or `"conservative"`) never removes whitespace entirely — dropping it would join two inline elements that render apart. `"smart"` also drops the whitespace that sits against a block element's edge, where no line box reaches it. `"all"` drops the whitespace at every text node's edges, which does change how adjacent inline elements render.
 	 * @since 5.110.0
 	 */
@@ -20007,10 +20037,28 @@ declare interface OptimizationMinimizeHtml {
 	minifyConditionalComments?: boolean;
 
 	/**
+	 * Minify a `style` attribute's declaration list with webpack's CSS minifier, the way an inline `<style>` is (default true). What the element computes is unchanged; `getAttribute("style")` and `style.cssText` are not.
+	 * @since 5.110.0
+	 */
+	minifyStyleAttribute?: boolean;
+
+	/**
+	 * Rewrite an attribute value into the shortest spelling its own grammar reads the same way: the whitespace in a `srcset` or a `class`, the keyword case of an enumerated value, a `<meta name=viewport>` `content` list, a URL's surrounding whitespace. Every one keeps what the DOM parses and changes what `getAttribute` hands back, so a consumer comparing those bytes turns this off (default true).
+	 * @since 5.110.0
+	 */
+	normalizeAttributeValues?: boolean;
+
+	/**
 	 * Patterns naming comments to keep, on top of the ones minifying always keeps (downlevel conditional comments, server-side includes and template directives). A string is read as a regular expression source and matched against the comment's text.
 	 * @since 5.110.0
 	 */
 	preserveComments?: (string | RegExp)[];
+
+	/**
+	 * Drop the quotes around an attribute value the HTML tokenizer reads the same way unquoted (default true). Nothing in the DOM can observe it, but a consumer reading the page with a regexp rather than a parser matches on `class="x"` and stops finding it.
+	 * @since 5.110.0
+	 */
+	removeAttributeQuotes?: boolean;
 
 	/**
 	 * Drop an attribute whose empty or all-whitespace value leaves it in the state its absence gives: the globals `class`, `id`, `style`, `dir`, `accesskey`, `itemprop`, `itemref`, `itemtype` and `part`, and every attribute reflecting a token list on the elements the spec defines it for — `rel` on `<a>`, `<area>`, `<form>` and `<link>`, `ping` on `<a>` and `<area>`, `headers` on `<td>` and `<th>`, `blocking` on `<link>`, `<script>` and `<style>`, `sizes` on `<link>`, `for` on `<output>` — where an empty list is no tokens. Anywhere else that spelling is an author attribute whose meaning is a script's, so `<x-foo rel="">` and `<label for="">` keep it. Off by default: an attribute selector matches on presence, so `[class]` stops matching. Never dropped: `title` and `lang`, whose empty value means what absence does not; `sandbox`, whose empty list is the most restrictive state an `<iframe>` has; and an event handler, whose empty body still compiles to a function where absence reads null.
