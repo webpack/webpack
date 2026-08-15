@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Bake analyzable ESM and wasm references per depth and digest; report fallbacks.
+Bake analyzable ESM and wasm references per depth, digest and runtime; report fallbacks.

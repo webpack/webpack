@@ -25000,7 +25000,8 @@ declare abstract class RuntimeTemplate {
 	supportsAnalyzable(
 		form: AnalyzableForm,
 		chunkGraph?: ChunkGraph,
-		module?: Module
+		module?: Module,
+		runtime?: RuntimeSpec
 	): boolean;
 
 	/**
