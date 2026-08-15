@@ -3833,6 +3833,19 @@ const collectPrefixTable = (
 // of the standard ones, as `[standard, legacy][]`. Where it does, the map is the
 // legacy property's whole grammar: a value naming anything else is one that
 // property cannot read, so no copy is written for it at all.
+// The windows BCD keeps for `inline-size`, shared by the whole logical-size family.
+/** @type {[string, string, string | number][]} */
+const LOGICAL_SIZE_WINDOWS = [
+	["chrome", "8", "57"],
+	["and_chr", "18", "57"],
+	["opera", "15", "44"],
+	["op_mob", "14", "43"],
+	["safari", "5.1", "12.1"],
+	["ios_saf", "5", "12.2"],
+	["samsung", "1", "7"],
+	["android", "4.4", "57"]
+];
+
 /** @type {Map<string, [string, [string, string, string | number][], [string, string][]?][]>} */
 const PREFIX_SUPPLEMENT = new Map([
 	[
@@ -3895,6 +3908,17 @@ const PREFIX_SUPPLEMENT = new Map([
 			]
 		]
 	],
+	// WebKit's logical sizing, named after the physical axis rather than the logical
+	// one. BCD records the pair `inline-size` / `block-size` as the renames they are
+	// and files the other four as a prefix on the standard name, which no engine's
+	// property list has ever carried. The six move as one: every WebKit and Blink
+	// release carrying `-webkit-logical-width` carries all six, and BCD dates the
+	// standard names of all six alike on every browser it records — so each takes
+	// the windows of the rename BCD does keep.
+	["min-inline-size", [["-webkit-min-logical-width", LOGICAL_SIZE_WINDOWS]]],
+	["max-inline-size", [["-webkit-max-logical-width", LOGICAL_SIZE_WINDOWS]]],
+	["min-block-size", [["-webkit-min-logical-height", LOGICAL_SIZE_WINDOWS]]],
+	["max-block-size", [["-webkit-max-logical-height", LOGICAL_SIZE_WINDOWS]]],
 	[
 		"column-span",
 		[
@@ -4274,7 +4298,12 @@ const PROPERTY_SPELLING_EXCLUSIONS = new Map([
 	// `-webkit-text-combine` reads `horizontal` where the standard property reads
 	// `all`, so the rename alone writes a value it cannot parse. IE's
 	// `-ms-text-combine-horizontal` does take the standard keywords.
-	["text-combine-upright", ["-webkit-text-combine"]]
+	["text-combine-upright", ["-webkit-text-combine"]],
+	// BCD files WebKit's logical sizing as a prefix on the standard name, but the
+	// spelling it shipped is the rename `-webkit-max-logical-width`, which
+	// `PREFIX_SUPPLEMENT` states with the rest of that family. No engine's property
+	// list has ever carried this one.
+	["max-inline-size", ["-webkit-max-inline-size"]]
 ]);
 
 // A vendor spelling BCD files under a keyword it does not spell, by keyword —

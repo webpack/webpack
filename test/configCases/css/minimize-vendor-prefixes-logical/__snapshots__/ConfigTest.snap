@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-vendor-prefixes-logical minimize-vendor-prefixes-logical should compile 1`] = `
+Array [
+  "/*! the two renames BCD records */.t01{-webkit-logical-width:20em;inline-size:20em;-webkit-logical-height:10em;block-size:10em}",
+  "/*! the four it files as a prefix on the standard name, which nothing parsed */.t02{-webkit-min-logical-width:1em;min-inline-size:1em;-webkit-max-logical-width:30em;max-inline-size:30em}",
+  "/*! the block axis reads the physical height, the same way round */.t03{-webkit-min-logical-height:2em;min-block-size:2em;-webkit-max-logical-height:40em;max-block-size:40em}",
+]
+`;
