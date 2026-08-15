@@ -7,5 +7,8 @@ const path = require("path");
 // there is no failing request for a casing hint to be attached to. The repo
 // always has a lower-case 'package.json'; the upper-cased name only exists
 // where case is ignored.
+/**
+ * @returns {boolean} true when the file system tells two casings apart
+ */
 module.exports = () =>
 	!fs.existsSync(path.resolve(__dirname, "../../PACKAGE.JSON"));
