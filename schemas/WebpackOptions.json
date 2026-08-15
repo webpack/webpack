@@ -3395,11 +3395,6 @@
             }
           ]
         },
-        "unusedRules": {
-          "description": "Report rules in 'module.rules' that never matched a module. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.",
-          "type": "boolean",
-          "added": "5.110.0"
-        },
         "wrappedContextCritical": {
           "description": "Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.",
           "type": "boolean",
@@ -3462,11 +3457,6 @@
               "tsType": "import('../lib/Compilation').UnsafeCachePredicate"
             }
           ]
-        },
-        "unusedRules": {
-          "description": "Report rules in 'module.rules' that never matched a module. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.",
-          "type": "boolean",
-          "added": "5.110.0"
         }
       },
       "required": ["defaultRules", "generator", "parser", "rules"]
@@ -5357,6 +5347,11 @@
         "maxEntrypointSize": {
           "description": "Total size of an entry point (in bytes).",
           "type": "number"
+        },
+        "unusedRules": {
+          "description": "Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.",
+          "type": "boolean",
+          "added": "5.110.0"
         }
       }
     },

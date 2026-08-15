@@ -1881,11 +1881,6 @@ export interface ModuleOptions {
 	 */
 	unsafeCache?: boolean | import("../lib/Compilation").UnsafeCachePredicate;
 	/**
-	 * Report rules in 'module.rules' that never matched a module. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.
-	 * @since 5.110.0
-	 */
-	unusedRules?: boolean;
-	/**
 	 * @deprecated
 	 * Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.
 	 */
@@ -3245,6 +3240,11 @@ export interface PerformanceOptions {
 	 * Total size of an entry point (in bytes).
 	 */
 	maxEntrypointSize?: number;
+	/**
+	 * Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.
+	 * @since 5.110.0
+	 */
+	unusedRules?: boolean;
 }
 /**
  * Options affecting how file system snapshots are created and validated.
@@ -4512,11 +4512,6 @@ export interface ModuleOptionsNormalized {
 	 * Cache the resolving of module requests.
 	 */
 	unsafeCache?: boolean | import("../lib/Compilation").UnsafeCachePredicate;
-	/**
-	 * Report rules in 'module.rules' that never matched a module. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.
-	 * @since 5.110.0
-	 */
-	unusedRules?: boolean;
 }
 /**
  * Enables/Disables integrated optimizations.
