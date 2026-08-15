@@ -66,9 +66,9 @@ const codspeedRunnerMode = getCodspeedRunnerMode();
 const RUNTIME_BUNDLE_FILENAME = "bundle.js";
 // `run()` input. Opaque to the compiler, so the workload can't be constant-folded.
 const RUNTIME_SEED = 7;
-// One rebuild allocates so little that a single GC or cache difference swings a
-// memory sample ~14%; averaging 5 brings it to ~1%. Simulation is exact already.
-const REBUILDS_PER_SAMPLE = codspeedRunnerMode === "memory" ? 5 : 1;
+// Temporarily 1 to separate the rebuild-count multiplier from process isolation
+// in the CodSpeed report; restore to 5 once the residual is attributed.
+const REBUILDS_PER_SAMPLE = 1;
 
 /** @type {string} */
 let baseOutputPath;
