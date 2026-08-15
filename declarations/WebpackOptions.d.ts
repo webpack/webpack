@@ -1884,7 +1884,7 @@ export interface ModuleOptions {
 	 * Report rules in 'module.rules' that never matched a module. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.
 	 * @since 5.110.0
 	 */
-	unusedRules?: false | "warn" | "error";
+	unusedRules?: boolean;
 	/**
 	 * @deprecated
 	 * Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.
@@ -4516,7 +4516,7 @@ export interface ModuleOptionsNormalized {
 	 * Report rules in 'module.rules' that never matched a module. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.
 	 * @since 5.110.0
 	 */
-	unusedRules?: false | "warn" | "error";
+	unusedRules?: boolean;
 }
 /**
  * Enables/Disables integrated optimizations.
