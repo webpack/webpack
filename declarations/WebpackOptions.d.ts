@@ -3224,6 +3224,11 @@ export interface PerformanceOptions {
 	 */
 	assetFilter?: import("../lib/performance/SizeLimitsPlugin").AssetFilter;
 	/**
+	 * Report packages which are included more than once, in different versions or as multiple copies of the same version (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	duplicatePackages?: boolean;
+	/**
 	 * Sets the format of the hints: warnings, errors or nothing at all.
 	 */
 	hints?: false | "warning" | "error";
