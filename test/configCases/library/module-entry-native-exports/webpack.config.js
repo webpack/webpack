@@ -43,6 +43,7 @@ const variant = (name, entry, assert, mode = "production") => ({
 // Built here so the assertions don't self-match this file's source.
 const define = `${"__webpack_require__"}.d(`;
 const requireScope = `${"__webpack_require__"}`;
+const defineGetters = `${"__webpack_require__"}.d =`;
 const markNamespace = `${"__webpack_require__"}.r(`;
 const defineMarkNamespace = `${"__webpack_require__"}.r =`;
 
@@ -74,6 +75,19 @@ module.exports = [
 		(source) => {
 			// Read back off the exports object here, so the marker stays — and whatever
 			// calls it must also be defined.
+			expect(source).toContain(markNamespace);
+			expect(source).toContain(defineMarkNamespace);
+		},
+		"development"
+	),
+	// A sibling module in the chunk wraps the entry in an IIFE, which re-emits the
+	// taken-over exports source — so the helpers it calls must survive.
+	variant(
+		"sibling-dev",
+		"./with-sibling.js",
+		(source) => {
+			expect(source).toContain(define);
+			expect(source).toContain(defineGetters);
 			expect(source).toContain(markNamespace);
 			expect(source).toContain(defineMarkNamespace);
 		},
