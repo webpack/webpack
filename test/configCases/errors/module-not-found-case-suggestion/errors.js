@@ -58,6 +58,9 @@ module.exports = [
 		/Did you mean '\.\/subDir\/nested\.js#top'\?/,
 		/'\.\/subDir\/nested\.js' exists and differs/
 	],
+	[
+		/Can't resolve '\.\/subdir\/nothing-like-this-at-all\.js'(?![\s\S]*Did you mean)/
+	],
 	[/Can't resolve '\.\/no-such-file-at-all\.js'(?![\s\S]*Did you mean)/],
 	[/Can't resolve '\.\/no-such-directory\/button\.js'(?![\s\S]*Did you mean)/],
 	[/Can't resolve 'no-such-package-anywhere'(?![\s\S]*Did you mean)/]

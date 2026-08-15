@@ -91,6 +91,27 @@ describe("util/findCaseMismatch", () => {
 			});
 		});
 
+		it("gives up when the walk reaches the file system root", (done) => {
+			// memfs always has a readable '/', so only a file system that reads
+			// nothing at all lets the walk run out of parents
+			const fs = /** @type {InputFileSystem} */ (
+				/** @type {unknown} */ ({
+					/**
+					 * @param {string} directory directory
+					 * @param {(err: Error) => void} callback callback
+					 * @returns {void}
+					 */
+					readdir(directory, callback) {
+						callback(new Error(`ENOENT: ${directory}`));
+					}
+				})
+			);
+			findCaseMismatch(fs, "/app/src/filename.js", (mismatch) => {
+				expect(mismatch).toBeUndefined();
+				done();
+			});
+		});
+
 		it("bounds the walk on a very deep path", (done) => {
 			const fs = createFileSystem({ "/app/file.js": "" });
 			const deep = `/${"a/".repeat(25)}filename.js`;
