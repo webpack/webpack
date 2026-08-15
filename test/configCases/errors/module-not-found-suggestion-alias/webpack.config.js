@@ -19,7 +19,18 @@ module.exports = {
 				onlyModule: true
 			},
 			// Tells the resolver to ignore the request, so it names no path
-			{ name: "ignored", alias: false }
+			{ name: "ignored", alias: false },
+			// More targets than a failed request is looked under, so the last one
+			// is never reached
+			{
+				name: "many",
+				alias: [
+					...Array.from({ length: 15 }, (_, i) =>
+						path.resolve(__dirname, `nope-${i}`)
+					),
+					source
+				]
+			}
 		]
 	}
 };

@@ -10,5 +10,8 @@ it("should follow aliases to the directory the resolver looked in", function () 
 		require("only/button.js");
 		// An ignored request resolves to an empty module, so nothing is wrong
 		require("ignored/whatever.js");
+		// The target holding 'Button.js' sits past the bound on how many paths
+		// one failed request is looked under
+		require("many/button.js");
 	}
 });

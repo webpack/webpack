@@ -22,5 +22,7 @@ module.exports = [
 		/'Button\.js' exists in that directory and differs from the request only in casing/
 	],
 	// The alias never applied, so there is no directory to look in
-	[/Can't resolve 'only\/button\.js'(?![\s\S]*Did you mean)/]
+	[/Can't resolve 'only\/button\.js'(?![\s\S]*Did you mean)/],
+	// The bound stopped the search before the target that would have answered
+	[/Can't resolve 'many\/button\.js'(?![\s\S]*Did you mean)/]
 ];
