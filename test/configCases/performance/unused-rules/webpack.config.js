@@ -16,6 +16,19 @@ module.exports = {
 			{
 				test: /\.never-matches$/,
 				loader: "./loader"
+			},
+			// Each of these is unused too, and names itself a different way.
+			{
+				include: "/never/matches/this/path",
+				loader: "./loader"
+			},
+			{
+				resourceQuery: "?never-matches",
+				loader: "./loader"
+			},
+			{
+				resourceQuery: "?never-matches-either",
+				type: "asset/source"
 			}
 		]
 	}
