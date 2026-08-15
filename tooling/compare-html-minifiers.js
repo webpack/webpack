@@ -160,10 +160,8 @@ const APP_SHELL = `<!DOCTYPE html>
 </body>
 </html>`;
 
-// The fourth real shape: component markup from a class-per-utility framework.
-// Every other fixture spells at most one class per element and leaves no element
-// empty, so without this the comparison cannot see what a minifier does with a
-// token list or with the empty wrappers a component library emits.
+// Component markup from a class-per-utility framework: the only fixture with
+// long token lists and the empty wrappers a component library emits.
 const COMPONENT_CARD = `		<div class="card bg-base-100 shadow-md rounded-lg">
 			<div class="card-body flex flex-col gap-4">
 				<h2 class="card-title text-lg font-bold truncate">Item %N%</h2>
@@ -183,9 +181,8 @@ const COMPONENT_CARD = `		<div class="card bg-base-100 shadow-md rounded-lg">
 		</div>
 `;
 
-// The utility classes a card varies by, so the page carries thousands of
-// distinct token lists rather than one repeated: a fixture whose lists all match
-// measures a cache the real page would miss.
+// The classes a card varies by, so the page carries thousands of distinct token
+// lists: a fixture whose lists all match measures a cache a real page misses.
 const COMPONENT_UTILITIES = [
 	["p-2", "p-4", "p-6", "px-3", "py-2", "m-0", "mt-2", "mb-4"],
 	["text-xs", "text-sm", "text-base", "text-lg", "text-xl"],
@@ -197,8 +194,7 @@ const COMPONENT_UTILITIES = [
 
 /**
  * Rotate a token list and mix in utilities picked by `by`, so the same component
- * reaches the page written differently each time — which is what a real page
- * looks like, and what decides whether ordering one wins a compressor anything.
+ * reaches the page written differently each time, as a real page's do.
  * @param {string} list a space-separated token list
  * @param {number} by which variation to emit
  * @returns {string} the varied list
