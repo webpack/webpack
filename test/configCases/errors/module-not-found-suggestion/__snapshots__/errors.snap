@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`errors 1`] = `
+Array [
+  "Module not found: Error: Can't resolve './Componet.js' in '<TEST_DIR>'
+Did you mean './Component.js'?
+'Component.js' is the closest name in that directory. It differs from the request by 1 character, ignoring case and file extension.",
+  "Module not found: Error: Can't resolve './Componet' in '<TEST_DIR>'
+Did you mean './Component.js'?
+'Component.js' is the closest name in that directory. It differs from the request by 1 character, ignoring case and file extension.",
+  "Module not found: Error: Can't resolve './utlis' in '<TEST_DIR>'
+Did you mean './utils.js'?
+'utils.js' is the closest name in that directory. It differs from the request by 1 character, ignoring case and file extension.",
+  "Module not found: Error: Can't resolve './tranlsatoins.js' in '<TEST_DIR>'
+Did you mean './translations.js'?
+'translations.js' is the closest name in that directory. It differs from the request by 2 characters, ignoring case and file extension.",
+  "Module not found: Error: Can't resolve './bundel' in '<TEST_DIR>'
+Did you mean './bundle.min.js'?
+'bundle.min.js' is the closest name in that directory. It differs from the request by 1 character, ignoring case and file extension.",
+  "Module not found: Error: Can't resolve './nothing-like-this-here.js' in '<TEST_DIR>'",
+  "Module not found: Error: Can't resolve './no-such-directory/Componet.js' in '<TEST_DIR>'",
+  "Module not found: Error: Can't resolve './directory-without-index' in '<TEST_DIR>'",
+  "Module not found: Error: Can't resolve '/definitely-not-a-file-in-the-filesystem-root.js' in '<TEST_DIR>'",
+]
+`;
