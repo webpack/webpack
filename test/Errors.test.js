@@ -321,7 +321,7 @@ describe("Errors", () => {
 			  "errors": Array [
 			    Object {
 			      "loc": "2:0-17",
-			      "message": "Module not found: Error: Can't resolve './FILE' in '<cwd>/test/fixtures/errors'",
+			      "message": "Module not found: Error: Can't resolve './FILE' in '<cwd>/test/fixtures/errors'\\nDid you mean './file.js'?\\n'file.js' exists in that directory and differs from the request only in casing. Case-sensitive filesystems (most Linux ones) fail to resolve it, even when the same build succeeds on a case-insensitive one.",
 			      "moduleId": "./case-sensitive.js",
 			      "moduleIdentifier": "<cwd>/test/fixtures/errors/case-sensitive.js",
 			      "moduleName": "./case-sensitive.js",
