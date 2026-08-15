@@ -122,5 +122,42 @@ describe("util/findCaseMismatch", () => {
 				applyCaseCorrections("@/nested.js", [["subdir", "subDir"]])
 			).toBeUndefined();
 		});
+
+		it("rewrites each occurrence of a repeated name in path order", () => {
+			expect(
+				applyCaseCorrections("./lib/lib/lib.js", [
+					["lib", "Lib"],
+					["lib", "LIB"],
+					["lib.js", "Lib.js"]
+				])
+			).toBe("./Lib/LIB/Lib.js");
+		});
+
+		it("leaves a module request without a leading dot alone otherwise", () => {
+			expect(
+				applyCaseCorrections("case-package/lib/deep.js", [
+					["Lib", "lib"],
+					["Deep.js", "deep.js"]
+				])
+			).toBeUndefined();
+		});
+
+		it("rewrites a scoped package name", () => {
+			expect(applyCaseCorrections("@Scope/pkg", [["@Scope", "@scope"]])).toBe(
+				"@scope/pkg"
+			);
+		});
+
+		it("returns the request unchanged when there is nothing to correct", () => {
+			expect(applyCaseCorrections("./a.js", [])).toBe("./a.js");
+		});
+
+		it("does not offer a prefix that is already correctly cased", () => {
+			// The request ends with 'sub', a prefix of 'subdir' that 'subDir' spells
+			// the same way, so rewriting it would hand back the request unchanged
+			expect(
+				applyCaseCorrections("@/sub", [["subdir", "subDir"]])
+			).toBeUndefined();
+		});
 	});
 });
