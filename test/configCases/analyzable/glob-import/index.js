@@ -21,4 +21,7 @@ it("should bake the import for every glob match", () => {
 	// One per match, and none of them left on the runtime form.
 	expect(bundle.split(`${"__webpack_require__"}.ei(`)).toHaveLength(3);
 	expect(bundle).not.toContain(`${"__webpack_require__"}.e(`);
+	// Nothing calls them once every match is baked, so they must not ship either.
+	expect(bundle).not.toContain(`${"__webpack_require__"}.e =`);
+	expect(bundle).not.toContain(`${"__webpack_require__"}.u =`);
 });
