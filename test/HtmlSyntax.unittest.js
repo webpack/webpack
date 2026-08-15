@@ -4271,6 +4271,18 @@ describe("SourceProcessor — an empty value is the bare name", () => {
 		// Read raw: what a reference decodes to is not the printer's business.
 		expect(minify('<div title="&#x20;">x</div>')).toContain("title=&#x20;");
 	});
+
+	it("prints a boolean attribute repeating its own name as the name", () => {
+		expect(minify('<input disabled="disabled" checked="CHECKED">')).toBe(
+			"<input disabled checked>"
+		);
+	});
+
+	it("keeps a same-length value that is not the name", () => {
+		// `_isBooleanAttribute` is asked before the fold, so a value only as long
+		// as the name still has to be compared against it.
+		expect(minify('<input checked="chicken">')).toBe("<input checked=chicken>");
+	});
 });
 
 describe("SourceProcessor — removeEmptyElements reads the output", () => {
@@ -4497,6 +4509,14 @@ describe("SourceProcessor — token list values", () => {
 		expect(minify('<a href=x ping="/p1 \n /p2">l</a>')).toContain(
 			'ping="/p1 /p2"'
 		);
+	});
+
+	it("trims a list whose separators are otherwise already collapsed", () => {
+		// Padding at either end is all the rewriting these need — the scan that
+		// decides whether a list is already collapsed has to see it.
+		expect(minify('<div class="a b ">x</div>')).toContain('class="a b"');
+		expect(minify('<div class=" a b">x</div>')).toContain('class="a b"');
+		expect(minify('<div class="ab ">x</div>')).toContain("class=ab");
 	});
 
 	it("drops a repeated token only where the DOM folds it away", () => {
