@@ -3580,15 +3580,15 @@ const BCD_TO_BROWSERSLIST = new Map([
 	["webview_ios", ["ios_saf"]]
 ]);
 
+// The engine prefixes in play at all. A spelling carrying none of them is no
+// engine's — `-khtml-`, which died with KHTML — and is never reached for.
+const ENGINE_PREFIXES = ["-webkit-", "-moz-", "-ms-", "-o-"];
+
 // The prefix a browser's engine actually uses, so an obsolete cross-engine one
 // BCD still lists (Safari keeps `-khtml-user-select` from its KHTML days, with
 // no removal version) is never carried and so never added. Edge and Opera list
 // both their old and Chromium prefixes; the version windows sort out which
 // applies. A browser absent here contributes no prefixes.
-// The engine prefixes in play at all. A spelling carrying none of them is no
-// engine's — `-khtml-`, which died with KHTML — and is never reached for.
-const ENGINE_PREFIXES = ["-webkit-", "-moz-", "-ms-", "-o-"];
-
 const BROWSER_PREFIXES = new Map([
 	["chrome", ["-webkit-"]],
 	["chrome_android", ["-webkit-"]],
@@ -3606,9 +3606,9 @@ const BROWSER_PREFIXES = new Map([
 ]);
 
 // The browserslist names the tables above can answer for: every BCD id that maps
-// to one and has an engine prefix. A selection naming anything else — `op_mini`,
-// `and_uc`, `ie_mob`, a browser BCD does not track — hides what that browser
-// needs, which the minifier reads as "removal is not sound here".
+// to one and has an engine prefix, `ie_mob` among them, reading the same Trident
+// as desktop IE. A selection naming anything else — `op_mini`, `and_uc`,
+// `and_qq`, `baidu`, `kaios`, `bb` — states nothing and is skipped.
 const prefixBrowsers = [
 	...new Set(
 		[...BCD_TO_BROWSERSLIST]
@@ -3937,7 +3937,7 @@ const PREFIX_SUPPLEMENT = new Map([
 	// prefixing them, and BCD records the renames unevenly — `-ms-flex-positive`
 	// as an `alternative_name`, `-ms-flex-order` as a `-ms-` prefix on `order`
 	// (a spelling nothing ever read), and the rest not at all, some as plain
-	// unprefixed support at 10 the engine did not have. Only the four whose
+	// unprefixed support at 10 the engine did not have. Only the five whose
 	// values IE 10 reads unchanged are stated: `-ms-flex-align`,
 	// `-ms-flex-pack`, `-ms-flex-line-pack` and `-ms-flex-item-align` also
 	// rename their keywords (`flex-start` is `start`, `space-around` is
@@ -4064,6 +4064,26 @@ const PREFIX_SUPPLEMENT = new Map([
 			]
 		]
 	],
+	[
+		"align-content",
+		[
+			[
+				"-ms-flex-line-pack",
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				],
+				[
+					["flex-start", "start"],
+					["flex-end", "end"],
+					["center", "center"],
+					["space-between", "justify"],
+					["space-around", "distribute"],
+					["stretch", "stretch"]
+				]
+			]
+		]
+	],
 	// Presto, where BCD dates the unprefixed arrival earlier than caniuse — the
 	// only dataset that tracks Opera and Opera Mobile version by version, and the
 	// one autoprefixer reads. `border-image` it marks prefixed on every Presto
@@ -4144,26 +4164,6 @@ const PREFIX_SUPPLEMENT = new Map([
 				[
 					["safari", "6", "9.1"],
 					["ios_saf", "6", "12"]
-				]
-			]
-		]
-	],
-	[
-		"align-content",
-		[
-			[
-				"-ms-flex-line-pack",
-				[
-					["ie", "10", "11"],
-					["ie_mob", "10", "11"]
-				],
-				[
-					["flex-start", "start"],
-					["flex-end", "end"],
-					["center", "center"],
-					["space-between", "justify"],
-					["space-around", "distribute"],
-					["stretch", "stretch"]
 				]
 			]
 		]
@@ -5066,9 +5066,9 @@ ${prefixSpellingKeywords
 	.join(",\n")}
 ]);
 
-// The browserslist names the three tables above carry windows for. A selection
-// naming one they do not is a browser whose needs nothing here states, so a
-// prefix is still added for the browsers that do need it but none is dropped.
+// The browserslist names the three tables above carry windows for. One they do
+// not name is skipped, so prefixes are added and dropped for the rest of the
+// selection alone; a selection of only those turns prefixing off entirely.
 /** @type {Set<string>} */
 const PREFIX_BROWSERS = new Set([${prefixBrowsers.map((browser) => `"${browser}"`).join(", ")}]);
 
