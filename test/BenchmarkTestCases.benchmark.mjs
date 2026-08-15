@@ -484,34 +484,6 @@ class BenchmarkRunner {
 	}
 
 	/**
-	 * Run the given tasks in one shared bench in the main process. Used for
-	 * CodSpeed memory mode's full builds: a single `Bench` with one global prime
-	 * pass and one setup/teardown, exactly like the pre-parallel harness, so
-	 * allocation counts stay stable and comparable (per-benchmark benches shifted
-	 * them by 2-4x).
-	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
-	 * @returns {Promise<void>}
-	 */
-	async runInMainThread(benchmarkTasks) {
-		console.log(
-			`\nRunning ${benchmarkTasks.length} benchmark task(s) in a single process (memory mode)\n`
-		);
-
-		const { runAll } = await import("./harness/benchmark/benchmark.worker.mjs");
-
-		// Any task error aborts the run (bench `throws: true`), matching the
-		// pre-parallel harness where one failure failed the whole shard.
-		const result = await runAll({
-			tasks: benchmarkTasks,
-			casesPath: this.casesPath,
-			baseOutputPath: this.baseOutputPath,
-			callingFile
-		});
-
-		this.processResults([result]);
-	}
-
-	/**
 	 * Run benchmark tasks across a pool of worker processes.
 	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
 	 * @param {boolean=} oneTaskPerProcess measure each task in a fresh process
@@ -621,21 +593,15 @@ class BenchmarkRunner {
 
 		await this.prepareBenchmarkTasks(benchmarkTasks);
 
-		if (getCodspeedRunnerMode() !== "memory") {
-			await this.runInWorkers(benchmarkTasks);
-			return;
-		}
-
-		// A rebuild allocates ~2-3 MiB inside the measured region while sitting in
-		// a 45+ MiB heap, so it reads every difference in that heap as tens of
-		// percent; a process each keeps its baseline identical run to run. Full
-		// builds allocate enough to stay within ~3% of a repeat and keep the
-		// shared process, so their history stays comparable.
-		const rebuildTasks = benchmarkTasks.filter((task) => task.scenario?.watch);
-		const buildTasks = benchmarkTasks.filter((task) => !task.scenario?.watch);
-
-		if (buildTasks.length > 0) await this.runInMainThread(buildTasks);
-		if (rebuildTasks.length > 0) await this.runInWorkers(rebuildTasks, true);
+		// Memory mode measures a task against the heap it runs in, so sharing a
+		// process makes every result depend on which other benchmarks the shard
+		// happens to hold — adding one moved untouched ones by tens of percent.
+		// A process each is the only composition-independent answer, and memory
+		// shards are minutes long, so the extra process startup is affordable.
+		await this.runInWorkers(
+			benchmarkTasks,
+			getCodspeedRunnerMode() === "memory"
+		);
 	}
 }
 
