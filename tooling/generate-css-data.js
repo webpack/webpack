@@ -3797,6 +3797,7 @@ const collectPrefixTable = (
 		if (kept.length !== 0) table.push([name, kept]);
 	}
 	if (supplement) applyPrefixSupplement(table);
+	applyEngineSwitch(table);
 	if (!alternatives) return table.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 	// A spelling two names claim cannot be right for both, and the one whose own
 	// prefix makes it is the one that means it: BCD gives `:-moz-placeholder` to
@@ -3833,6 +3834,124 @@ const collectPrefixTable = (
 // of the standard ones, as `[standard, legacy][]`. Where it does, the map is the
 // legacy property's whole grammar: a value naming anything else is one that
 // property cannot read, so no copy is written for it at all.
+// A browser whose version line changed engine mid-way reads, from that version
+// on, whatever the new engine reads. BCD records the change as a prefixed window
+// opening after the unprefixed one, which the rule above drops as an alias added
+// for compatibility — right for Gecko taking `-webkit-transform` in Firefox 49,
+// wrong here, where the earlier unprefixed support belonged to another engine.
+const ENGINE_SWITCH = new Map([
+	["opera", { bcd: "opera", base: "chrome", from: 15 }],
+	["op_mob", { bcd: "opera_android", base: "chrome", from: 14 }]
+]);
+
+/**
+ * Where the base browser's versions land on the derived browser's own line,
+ * learned from BCD: every feature both date unprefixed after the change is one
+ * observation of the same engine release under two numbers.
+ * @param {string} bcdName the derived browser's BCD id
+ * @param {string} baseName the base browser's BCD id
+ * @param {number} from the derived browser's first version on the new engine
+ * @returns {(version: number) => number} base version -> derived version
+ */
+const engineVersionLine = (bcdName, baseName, from) => {
+	/** @type {(support: BcdSupport | BcdSupport[] | undefined) => number | null} */
+	const unprefixed = (support) => {
+		const list = Array.isArray(support) ? support : support ? [support] : [];
+		// The same reading of "arrived unprefixed" the window rule above uses.
+		const entry = list.find(
+			(one) =>
+				!one.prefix &&
+				!one.alternative_name &&
+				!one.version_removed &&
+				!one.flags
+		);
+		return entry ? encodeVersion(entry.version_added) : null;
+	};
+	/**
+	 * @param {{ [key: string]: EXPECTED_ANY }} node a BCD subtree
+	 * @returns {Generator<BcdCompat>} every `__compat` block under it
+	 */
+	function* walk(node) {
+		for (const [key, value] of Object.entries(node)) {
+			if (key === "__compat") yield /** @type {BcdCompat} */ (value);
+			else if (value && typeof value === "object") yield* walk(value);
+		}
+	}
+	/** @type {Map<number, number>} */
+	const earliest = new Map();
+	const floor = encodeVersion(String(from));
+	for (const compat of walk(bcd.css)) {
+		const base = unprefixed(compat.support[baseName]);
+		const derived = unprefixed(compat.support[bcdName]);
+		// Only what both engines gained after the change speaks to the alignment.
+		if (
+			base === null ||
+			derived === null ||
+			derived < /** @type {number} */ (floor)
+		) {
+			continue;
+		}
+		const known = earliest.get(base);
+		if (known === undefined || derived < known) earliest.set(base, derived);
+	}
+	// A feature landing in base `b` and derived `d` says `d` already carries `b`,
+	// so it bounds every base version at or below it: the answer for `b` is the
+	// earliest derived release seen against any base version from `b` on.
+	const points = [...earliest].sort((a, b) => a[0] - b[0]);
+	let running = Infinity;
+	for (let i = points.length - 1; i >= 0; i--) {
+		running = Math.min(running, points[i][1]);
+		points[i][1] = running;
+	}
+	return (version) => {
+		if (version === Infinity) return Infinity;
+		for (const [base, derived] of points) {
+			if (base >= version) {
+				return Math.max(derived, /** @type {number} */ (floor));
+			}
+		}
+		return Infinity;
+	};
+};
+
+/**
+ * Give every spelling the base browser needs the window it needs on a derived
+ * browser's own line. Widens, like the supplement — a window BCD already records
+ * is never narrowed by the alignment.
+ * @param {[string, [string, [string, number, number][]][]][]} table the axis table so far
+ * @returns {void}
+ */
+const applyEngineSwitch = (table) => {
+	const lines = new Map(
+		[...ENGINE_SWITCH].map(([browser, { bcd: bcdName, base, from }]) => [
+			browser,
+			{
+				base,
+				from: encodeVersion(String(from)),
+				at: engineVersionLine(bcdName, base, from)
+			}
+		])
+	);
+	for (const [, spellings] of table) {
+		for (const [, windows] of spellings) {
+			for (const [browser, { base, from, at }] of lines) {
+				const baseWindow = windows.find(([known]) => known === base);
+				if (baseWindow === undefined) continue;
+				const start = Math.max(/** @type {number} */ (from), at(baseWindow[1]));
+				const end = at(baseWindow[2]);
+				if (end <= start) continue;
+				const known = windows.find(([one]) => one === browser);
+				if (known === undefined) {
+					windows.push([browser, start, end]);
+				} else {
+					known[1] = Math.min(known[1], start);
+					known[2] = Math.max(known[2], end);
+				}
+			}
+		}
+	}
+};
+
 // The windows BCD keeps for `inline-size`, shared by the whole logical-size family.
 /** @type {[string, string, string | number][]} */
 const LOGICAL_SIZE_WINDOWS = [
