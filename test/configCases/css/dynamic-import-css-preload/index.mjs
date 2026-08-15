@@ -25,3 +25,10 @@ it("should preload a nested dynamic-import chunk's CSS as style, not its JS", ()
 
 	return promise;
 });
+
+it("should not ship the preload fan-out function nothing calls", () => {
+	// The trigger reaches the CSS handler by name, so only the handlers object
+	// is needed — `__webpack_require__.G` would have no call site.
+	expect(__webpack_require__.H).toBeDefined();
+	expect(__webpack_require__.G).toBeUndefined();
+});
