@@ -22,3 +22,4 @@
 .eslintcache
 .cspellcache
 package-lock.json
+/events.json
