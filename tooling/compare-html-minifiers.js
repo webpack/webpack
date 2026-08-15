@@ -183,18 +183,38 @@ const COMPONENT_CARD = `		<div class="card bg-base-100 shadow-md rounded-lg">
 		</div>
 `;
 
+// The utility classes a card varies by, so the page carries thousands of
+// distinct token lists rather than one repeated: a fixture whose lists all match
+// measures a cache the real page would miss.
+const COMPONENT_UTILITIES = [
+	["p-2", "p-4", "p-6", "px-3", "py-2", "m-0", "mt-2", "mb-4"],
+	["text-xs", "text-sm", "text-base", "text-lg", "text-xl"],
+	["text-gray-500", "text-slate-700", "text-blue-600", "text-red-500"],
+	["rounded", "rounded-md", "rounded-lg", "rounded-xl"],
+	["shadow-none", "shadow-sm", "shadow", "shadow-lg"],
+	["w-full", "w-auto", "max-w-md", "max-w-2xl"]
+];
+
 /**
- * Rotate a token list, so the same set of classes reaches the page written in a
- * different order — which is what hand-written markup does, and the only thing
- * sorting one can win back for a compressor.
+ * Rotate a token list and mix in utilities picked by `by`, so the same component
+ * reaches the page written differently each time — which is what a real page
+ * looks like, and what decides whether ordering one wins a compressor anything.
  * @param {string} list a space-separated token list
- * @param {number} by how far to rotate it
- * @returns {string} the rotated list
+ * @param {number} by which variation to emit
+ * @returns {string} the varied list
  */
-const rotateTokens = (list, by) => {
+const varyTokens = (list, by) => {
 	const tokens = list.split(" ");
 	const at = by % tokens.length;
-	return [...tokens.slice(at), ...tokens.slice(0, at)].join(" ");
+	const rotated = [...tokens.slice(at), ...tokens.slice(0, at)];
+	for (let i = 0; i < COMPONENT_UTILITIES.length; i++) {
+		const bucket = COMPONENT_UTILITIES[i];
+		// A different stride per bucket, so the combinations do not fall into step.
+		if ((by >> i) % 3 === 0) {
+			rotated.push(bucket[(by * (i + 2)) % bucket.length]);
+		}
+	}
+	return rotated.join(" ");
 };
 
 /**
@@ -208,7 +228,7 @@ const componentPage = (count) => {
 	for (let i = 0; i < count; i++) {
 		cards += COMPONENT_CARD.replace(/%N%/g, `${i}`).replace(
 			/class="([^"]*)"/g,
-			(_, list) => `class="${rotateTokens(list, i)}"`
+			(_, list) => `class="${varyTokens(list, i)}"`
 		);
 	}
 	return `<!DOCTYPE html>
