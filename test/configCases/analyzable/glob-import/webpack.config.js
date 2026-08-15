@@ -1,7 +1,7 @@
 "use strict";
 
-// `require.ensure` names no origin module for its block, so there is nothing a baked
-// specifier could be relative to and the runtime form stays.
+// `import.meta.glob` loads each match through the context module's own blocks, which
+// name no module of their own — the context module holding them does.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

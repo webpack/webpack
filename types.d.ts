@@ -25553,6 +25553,10 @@ declare abstract class RuntimeTemplate {
 		 * request string used originally
 		 */
 		request?: string;
+		/**
+		 * the module the factory is emitted into
+		 */
+		originModule?: Module;
 	}): string;
 
 	/**
