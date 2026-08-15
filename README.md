@@ -86,7 +86,7 @@ Check out webpack's quick [**Get Started**](https://webpack.js.org/guides/gettin
 
 ### Browser Compatibility
 
-Webpack supports all browsers that are [ES5-compliant](https://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
+Webpack supports all browsers that are [ES5-compliant](https://kangax.github.io/compat-table/) (IE8 and below are not supported).
 Webpack also needs `Promise` for `import()` and `require.ensure()`. If you want to support older browsers, you will need to [load a polyfill](https://webpack.js.org/guides/shimming/) before using these expressions.
 
 ## Concepts
