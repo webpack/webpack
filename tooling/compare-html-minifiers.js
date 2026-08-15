@@ -160,6 +160,94 @@ const APP_SHELL = `<!DOCTYPE html>
 </body>
 </html>`;
 
+// Component markup from a class-per-utility framework: the only fixture with
+// long token lists and the empty wrappers a component library emits.
+const COMPONENT_CARD = `		<div class="card bg-base-100 shadow-md rounded-lg">
+			<div class="card-body flex flex-col gap-4">
+				<h2 class="card-title text-lg font-bold truncate">Item %N%</h2>
+				<div class="divider my-2"></div>
+				<p class="text-sm text-gray-600 leading-6">Description for item %N%.</p>
+				<span class="badge badge-primary badge-sm"></span>
+				<div class="card-actions justify-between items-center">
+					<button class="btn btn-primary btn-sm" type="button">Open</button>
+					<button class="btn btn-ghost btn-sm" type="button" disabled="disabled">Wait</button>
+					<a class="link link-hover text-blue-600 underline" href="/item/%N%">Details</a>
+				</div>
+				<label class="form-control w-full max-w-2xl">
+					<span class="label-text text-sm"></span>
+					<input class="input input-bordered w-full" type="text" name="q%N%" placeholder="Search">
+				</label>
+			</div>
+		</div>
+`;
+
+// The classes a card varies by, so the page carries thousands of distinct token
+// lists: a fixture whose lists all match measures a cache a real page misses.
+const COMPONENT_UTILITIES = [
+	["p-2", "p-4", "p-6", "px-3", "py-2", "m-0", "mt-2", "mb-4"],
+	["text-xs", "text-sm", "text-base", "text-lg", "text-xl"],
+	["text-gray-500", "text-slate-700", "text-blue-600", "text-red-500"],
+	["rounded", "rounded-md", "rounded-lg", "rounded-xl"],
+	["shadow-none", "shadow-sm", "shadow", "shadow-lg"],
+	["w-full", "w-auto", "max-w-md", "max-w-2xl"]
+];
+
+/**
+ * Rotate a token list and mix in utilities picked by `by`, so the same component
+ * reaches the page written differently each time, as a real page's do.
+ * @param {string} list a space-separated token list
+ * @param {number} by which variation to emit
+ * @returns {string} the varied list
+ */
+const varyTokens = (list, by) => {
+	const tokens = list.split(" ");
+	const at = by % tokens.length;
+	const rotated = [...tokens.slice(at), ...tokens.slice(0, at)];
+	for (let i = 0; i < COMPONENT_UTILITIES.length; i++) {
+		const bucket = COMPONENT_UTILITIES[i];
+		// A different stride per bucket, so the combinations do not fall into step.
+		if ((by >> i) % 3 === 0) {
+			rotated.push(bucket[(by * (i + 2)) % bucket.length]);
+		}
+	}
+	return rotated.join(" ");
+};
+
+/**
+ * A component-library page: many elements, several classes on each, and the
+ * empty wrappers such libraries emit.
+ * @param {number} count how many cards to lay out
+ * @returns {string} the document
+ */
+const componentPage = (count) => {
+	let cards = "";
+	for (let i = 0; i < count; i++) {
+		cards += COMPONENT_CARD.replace(/%N%/g, `${i}`).replace(
+			/class="([^"]*)"/g,
+			(_, list) => `class="${varyTokens(list, i)}"`
+		);
+	}
+	return `<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Components</title>
+</head>
+<body class="min-h-screen bg-base-200">
+	<nav class="navbar bg-base-100 shadow sticky top-0 z-10">
+		<div class="navbar-start flex items-center gap-2"><a class="btn btn-ghost text-2xl" href="/">App</a></div>
+		<div class="navbar-center hidden md:flex"><ul class="menu menu-horizontal gap-1"><li><a class="link" href="/a">A</a></li><li><a class="link" href="/b">B</a></li></ul></div>
+		<div class="navbar-end"></div>
+	</nav>
+	<main class="grid grid-cols-3 gap-4 p-8">
+${cards}	</main>
+	<footer class="footer p-8 bg-neutral text-neutral-content"><span class="text-sm"></span></footer>
+	<script src="app.js" type="text/javascript"></script>
+</body>
+</html>`;
+};
+
 /**
  * A page whose weight is a framework stylesheet inlined whole as critical CSS —
  * the shape where an HTML minifier's nested CSS handling dominates the result.
@@ -208,6 +296,7 @@ const fixtures = async () => {
 		out.push([label, await fs.promises.readFile(file, "utf8")]);
 	}
 	out.push(["App shell (inline critical CSS)", APP_SHELL]);
+	out.push(["Component library page", componentPage(400)]);
 	// Real framework stylesheets, classless through component-sized, inlined
 	// whole: whether each tool minifies, passes through, or mangles a large
 	// `<style>` decides these pages.
