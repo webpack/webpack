@@ -52,5 +52,7 @@ export interface VirtualModule {
 	 * Optional version function or value for cache invalidation.
 	 */
 	version?:
-		true | string | import("../../../lib/schemes/VirtualUrlPlugin").VersionFn;
+		| true
+		| string
+		| import("../../../lib/schemes/VirtualUrlPlugin").VersionFn;
 }

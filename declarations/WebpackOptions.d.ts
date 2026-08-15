@@ -24,7 +24,9 @@ export type CacheOptions = true | CacheOptionsNormalized;
  * Cache generated modules and chunks to improve performance for multiple incremental builds.
  */
 export type CacheOptionsNormalized =
-	false | MemoryCacheOptions | FileCacheOptions;
+	| false
+	| MemoryCacheOptions
+	| FileCacheOptions;
 /**
  * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
  */
@@ -88,7 +90,8 @@ export type ChunkLoading = false | ChunkLoadingType;
  * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
  */
 export type ChunkLoadingType =
-	("jsonp" | "import-scripts" | "require" | "async-node" | "import") | string;
+	| ("jsonp" | "import-scripts" | "require" | "async-node" | "import")
+	| string;
 /**
  * Specifies the filename of the output file on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
  */
@@ -189,7 +192,8 @@ export type PublicPath = "auto" | RawPublicPath;
  * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
  */
 export type RawPublicPath =
-	string | import("../lib/TemplatedPathPlugin").TemplatePathFn;
+	| string
+	| import("../lib/TemplatedPathPlugin").TemplatePathFn;
 /**
  * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
  */
@@ -214,7 +218,9 @@ export type HttpUriAllowedUris = HttpUriOptionsAllowedUris;
  * List of allowed URIs (resp. the beginning of them).
  */
 export type HttpUriOptionsAllowedUris = (
-	RegExp | string | import("../lib/schemes/HttpUriPlugin").AllowedUriFn
+	| RegExp
+	| string
+	| import("../lib/schemes/HttpUriPlugin").AllowedUriFn
 )[];
 /**
  * Extend configuration from another configuration (only works when using webpack-cli).
@@ -240,7 +246,8 @@ export type ExternalItem =
  * The function is called on each dependency.
  */
 export type ExternalItemFunction =
-	ExternalItemFunctionCallback | ExternalItemFunctionPromise;
+	| ExternalItemFunctionCallback
+	| ExternalItemFunctionPromise;
 /**
  * The function is called on each dependency (`function(context, request, callback(err, result))`).
  */
@@ -343,7 +350,8 @@ export type RuleSetConditions = RuleSetCondition[];
  * One or multiple rule conditions matching an absolute path.
  */
 export type RuleSetConditionOrConditionsAbsolute =
-	RuleSetConditionAbsolute | RuleSetConditionsAbsolute;
+	| RuleSetConditionAbsolute
+	| RuleSetConditionsAbsolute;
 /**
  * A condition matcher matching an absolute path.
  */
@@ -412,7 +420,9 @@ export type ResolvePluginInstance =
  * A list of descriptions of loaders applied.
  */
 export type RuleSetUse =
-	(Falsy | RuleSetUseItem)[] | RuleSetUseFunction | RuleSetUseItem;
+	| (Falsy | RuleSetUseItem)[]
+	| RuleSetUseFunction
+	| RuleSetUseItem;
 /**
  * A description of an applied loader.
  */
@@ -523,7 +533,8 @@ export type ChunkFilename = FilenameTemplate;
  * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).
  */
 export type ChunkFormat =
-	("array-push" | "commonjs" | "module" | false) | string;
+	| ("array-push" | "commonjs" | "module" | false)
+	| string;
 /**
  * Number of milliseconds before chunk request expires.
  */
@@ -801,7 +812,8 @@ export type AssetFilterItemTypes =
  * Filtering warnings.
  */
 export type WarningFilterTypes =
-	WarningFilterItemTypes[] | WarningFilterItemTypes;
+	| WarningFilterItemTypes[]
+	| WarningFilterItemTypes;
 /**
  * Filtering value, regexp or function.
  */
@@ -825,7 +837,8 @@ export type Watch = boolean;
  * The options for data url generator.
  */
 export type AssetGeneratorDataUrl =
-	AssetGeneratorDataUrlOptions | AssetGeneratorDataUrlFunction;
+	| AssetGeneratorDataUrlOptions
+	| AssetGeneratorDataUrlFunction;
 /**
  * Function that executes for module and should return an DataUrl string. It can have a string as 'ident' property which contributes to the module hash.
  */
@@ -966,12 +979,16 @@ export type ExternalItemSideEffects = boolean;
  * The dependency used for the external.
  */
 export type ExternalItemValue =
-	ExternalItemValueTarget | ExternalItemValueWithOptions;
+	| ExternalItemValueTarget
+	| ExternalItemValueWithOptions;
 /**
  * The target of the external.
  */
 export type ExternalItemValueTarget =
-	string[] | boolean | string | ExternalItemValueObject;
+	| string[]
+	| boolean
+	| string
+	| ExternalItemValueObject;
 /**
  * The target of the external with a type, optionally with an 'interop' hint describing how its exports interoperate with ES module imports.
  */
@@ -1008,7 +1025,8 @@ export type OptimizationRuntimeChunkNormalized =
  * Add additional plugins to the compiler.
  */
 export type PluginsNormalized = (
-	WebpackPluginInstance | WebpackPluginFunction
+	| WebpackPluginInstance
+	| WebpackPluginFunction
 )[];
 
 /**
@@ -2231,7 +2249,12 @@ export interface NodeOptions {
 	 * Include a polyfill for the '__filename' variable.
 	 */
 	__filename?:
-		false | true | "warn-mock" | "mock" | "node-module" | "eval-only";
+		| false
+		| true
+		| "warn-mock"
+		| "mock"
+		| "node-module"
+		| "eval-only";
 	/**
 	 * Include a polyfill for the 'global' variable.
 	 */
@@ -2253,7 +2276,12 @@ export interface Optimization {
 	 * Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
 	chunkIds?:
-		"natural" | "named" | "deterministic" | "size" | "total-size" | false;
+		| "natural"
+		| "named"
+		| "deterministic"
+		| "size"
+		| "total-size"
+		| false;
 	/**
 	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer. An options object implies 'true'.
 	 */
@@ -2680,7 +2708,9 @@ export interface OptimizationSplitChunksCacheGroup {
 	 * Assign modules to a cache group by module name.
 	 */
 	test?:
-		RegExp | string | import("../lib/optimize/SplitChunksPlugin").CheckTestFn;
+		| RegExp
+		| string
+		| import("../lib/optimize/SplitChunksPlugin").CheckTestFn;
 	/**
 	 * Assign modules to a cache group by module type.
 	 */
@@ -4529,7 +4559,12 @@ export interface OptimizationNormalized {
 	 * Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
 	chunkIds?:
-		"natural" | "named" | "deterministic" | "size" | "total-size" | false;
+		| "natural"
+		| "named"
+		| "deterministic"
+		| "size"
+		| "total-size"
+		| false;
 	/**
 	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer. An options object implies 'true'.
 	 */
