@@ -5214,6 +5214,29 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 		).toBe("a{text-size-adjust:100%}");
 	});
 
+	it("holds a WebKit prefix to the later of two dated boundaries", () => {
+		// caniuse dates unprefixed `font-kerning` a release after BCD on desktop and
+		// three years after it on iOS; the feature is this one property, so the gap
+		// is a disagreement rather than a wider feature.
+		expect(minifyFor("a{font-kerning:normal}", ["safari 9"])).toBe(
+			"a{-webkit-font-kerning:normal;font-kerning:normal}"
+		);
+		expect(minifyFor("a{font-kerning:normal}", ["safari 9.1"])).toBe(
+			"a{font-kerning:normal}"
+		);
+		expect(minifyFor("a{font-kerning:normal}", ["ios_saf 11.3"])).toBe(
+			"a{-webkit-font-kerning:normal;font-kerning:normal}"
+		);
+		expect(minifyFor("a{font-kerning:normal}", ["ios_saf 12.0"])).toBe(
+			"a{font-kerning:normal}"
+		);
+		expect(
+			minifyFor("a{-webkit-font-kerning:normal;font-kerning:normal}", [
+				"safari 18"
+			])
+		).toBe("a{font-kerning:normal}");
+	});
+
 	it("reads IE Mobile through the same Trident as desktop IE", () => {
 		// IE Mobile 10 is Trident 6, so it needs the 2012 flexbox renames exactly as
 		// IE 10 does; 11 is Trident 7 and needs none of them.

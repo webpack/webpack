@@ -4131,6 +4131,23 @@ const PREFIX_SUPPLEMENT = new Map([
 			["-moz-text-size-adjust", [["firefox", "14", Infinity]]]
 		]
 	],
+	// BCD dates WebKit's unprefixed `font-kerning` at Safari 9, caniuse a release
+	// later on desktop and three years later on iOS. The feature is this one
+	// property, so the usual feature-wider-than-property explanation cannot
+	// account for the gap, and a current WebKit still carries the alias — so the
+	// later boundary is the one a target of that age is served by.
+	[
+		"font-kerning",
+		[
+			[
+				"-webkit-font-kerning",
+				[
+					["safari", "6", "9.1"],
+					["ios_saf", "6", "12"]
+				]
+			]
+		]
+	],
 	[
 		"align-content",
 		[
