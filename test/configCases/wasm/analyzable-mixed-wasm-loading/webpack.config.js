@@ -53,10 +53,26 @@ const base = (index, name, second, nodeRef) => ({
 	]
 });
 
+/**
+ * Two entries reaching ONE async chunk, so its runtime is a set of keys -- the shape
+ * the group lookup answers key by key. Neither fetches, so no chunk cuts the scan.
+ * @param {number} index position of this config, so an entry finds its own stats
+ * @param {string} name output prefix keeping the emitted files of each config apart
+ * @returns {import("../../../../").Configuration} configuration
+ */
+const multi = (index, name) => ({
+	...base(index, name, "./web-entry.js", 'new URL("./'),
+	entry: {
+		[`${name}-a`]: { import: "./multi-a-entry.js", wasmLoading: "async-node" },
+		[`${name}-b`]: { import: "./multi-b-entry.js", wasmLoading: "async-node" }
+	}
+});
+
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	// A binary each: the runtimes are told apart, so only the fetching one bails.
 	base(0, "split", "./web-entry.js", 'new URL("./'),
 	// One binary between them: neither runtime can be answered on its own.
-	base(1, "shared", "./shared-entry.js", "module.id, ")
+	base(1, "shared", "./shared-entry.js", "module.id, "),
+	multi(2, "multi")
 ];
