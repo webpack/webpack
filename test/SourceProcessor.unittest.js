@@ -131,6 +131,28 @@ describe("SourceProcessor", () => {
 				});
 			});
 		}
+
+		// A prefixed rule an unprefixed twin makes dead weight is taken back after
+		// it was written, so the mapping anchored to it has to go with it.
+		it("css anchors nothing at a rule the prefix pass took back", () => {
+			const ask = {
+				mode: /** @type {"minify"} */ ("minify"),
+				source: "in.css",
+				environment: { browsers: ["chrome 120"] }
+			};
+			const dropped = new CssSourceProcessor().process(
+				"@-webkit-keyframes a{from{opacity:0}}\n@keyframes a{from{opacity:0}}\n",
+				ask
+			);
+			// The same stylesheet with the twin never written, so the surviving rule
+			// stands on the same source line: both must map alike.
+			const alone = new CssSourceProcessor().process(
+				"\n@keyframes a{from{opacity:0}}\n",
+				ask
+			);
+			expect(dropped.code).toBe(alone.code);
+			expect(dropped.map.mappings).toBe(alone.map.mappings);
+		});
 	});
 
 	describe("visitors", () => {

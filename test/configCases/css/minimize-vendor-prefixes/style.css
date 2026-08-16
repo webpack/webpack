@@ -38,6 +38,17 @@ input.t07::placeholder, textarea.t07::placeholder { color: #999 }
 	.t12 { color: red }
 	:fullscreen { color: #999 }
 }
+/*! an adjacent twin takes its prefixed rule back where it stands, rather than
+   waiting for the block to be assembled — at the top level, after a rule the
+   printer is still holding */
+.t14 { color: red }
+:-ms-fullscreen { color: #999 }
+:fullscreen { color: #999 }
+/*! and the same adjacent pair nested in a block */
+@media all {
+	:-ms-fullscreen { color: #999 }
+	:fullscreen { color: #999 }
+}
 /*! a legacy spelling an engine read as a rename rather than a prefix */
 .t13 { margin-inline-start: 1px }
 /*! a value an engine spells its own way carries copies like a property does */
