@@ -45,10 +45,25 @@ import { Bench, hrtimeNow } from "tinybench";
 /** @typedef {TinybenchStatistics & ResultExtra} Result */
 
 /**
+ * @typedef {object} HeapSample
+ * @property {number} peak peak live bytes during the workload
+ * @property {number} marginal peak minus the GC-settled baseline
+ */
+
+/**
+ * @typedef {object} HeapUsage
+ * @property {string} uri task URI
+ * @property {number} peak median peak live bytes
+ * @property {number} marginal median marginal live bytes
+ * @property {number} samples samples behind the medians
+ */
+
+/**
  * @typedef {object} BenchmarkResult
  * @property {string} benchmark benchmark name
  * @property {string} scenario scenario name
  * @property {Result[]} results per-task results
+ * @property {HeapUsage[]} heapUsages per-task heap usage (memory mode only)
  */
 
 /**
@@ -69,6 +84,11 @@ const RUNTIME_SEED = 7;
 // One rebuild allocates so little that a single GC or cache difference swings a
 // memory sample ~14%; averaging 5 brings it to ~1%. Simulation is exact already.
 const REBUILDS_PER_SAMPLE = codspeedRunnerMode === "memory" ? 5 : 1;
+// Heap samples kept per task; one more is taken and discarded as first-touch.
+const HEAP_SAMPLES = 3;
+
+/** @type {HeapUsage[]} */
+const heapUsages = [];
 
 /** @type {string} */
 let baseOutputPath;
@@ -571,13 +591,14 @@ const withCodSpeed = async (bench) => {
 			if (!meta) return;
 			await meta.options?.beforeAll?.call(task, "warmup");
 			try {
-				const { peak, marginal } = await sampleHeapPeak(() =>
-					iterationAsync(task, task.name)
-				);
-				const uri = getTaskUri(bench, task.name, callingFile);
-				console.log(
-					`[Memory] ${uri} peakHeapUsed=${formatBytes(peak)} marginal=${formatBytes(marginal)}`
-				);
+				/** @type {HeapSample[]} */
+				const samples = [];
+				for (let i = 0; i < HEAP_SAMPLES + 1; i++) {
+					samples.push(
+						await sampleHeapPeak(() => iterationAsync(task, task.name))
+					);
+				}
+				recordHeapUsage(getTaskUri(bench, task.name, callingFile), samples);
 			} finally {
 				await meta.options?.afterAll?.call(task, "warmup");
 			}
@@ -593,7 +614,12 @@ const withCodSpeed = async (bench) => {
 			if (!meta) return;
 			meta.options?.beforeAll?.call(task, "warmup");
 			try {
-				iteration(task, task.name);
+				/** @type {HeapSample[]} */
+				const samples = [];
+				for (let i = 0; i < HEAP_SAMPLES + 1; i++) {
+					samples.push(sampleHeapPeakSync(() => iteration(task, task.name)));
+				}
+				recordHeapUsage(getTaskUri(bench, task.name, callingFile), samples);
 			} finally {
 				meta.options?.afterAll?.call(task, "warmup");
 			}
@@ -751,7 +777,7 @@ function formatBytes(bytes) {
  * prime pass so it can't pollute the measured region. `heapUsed` not `rss`: the
  * shared process never returns arena pages, so `rss` isn't per-task comparable.
  * @param {() => Promise<unknown>} fn compile to measure
- * @returns {Promise<{ peak: number, marginal: number }>} peak and marginal live bytes
+ * @returns {Promise<HeapSample>} peak and marginal live bytes
  */
 async function sampleHeapPeak(fn) {
 	global.gc?.();
@@ -770,6 +796,51 @@ async function sampleHeapPeak(fn) {
 	const end = process.memoryUsage().heapUsed;
 	if (end > peak) peak = end;
 	return { peak, marginal: peak - baseline };
+}
+
+/**
+ * Sync counterpart of `sampleHeapPeak`. No timer can fire during a synchronous
+ * workload, so peak is the end reading.
+ * @param {() => unknown} fn workload to measure
+ * @returns {HeapSample} peak and marginal live bytes
+ */
+function sampleHeapPeakSync(fn) {
+	global.gc?.();
+	const baseline = process.memoryUsage().heapUsed;
+	fn();
+	const peak = process.memoryUsage().heapUsed;
+	return { peak, marginal: peak - baseline };
+}
+
+/**
+ * @param {number[]} values values
+ * @returns {number} median
+ */
+function median(values) {
+	const sorted = [...values].sort((a, b) => a - b);
+	const middle = sorted.length >> 1;
+	return sorted.length % 2 === 0
+		? (sorted[middle - 1] + sorted[middle]) / 2
+		: sorted[middle];
+}
+
+/**
+ * Record one task's heap usage, dropping the first sample: a fresh process pays
+ * first-touch (module loads, lazy tables) that later iterations do not, measured
+ * at ~2x the steady state.
+ * @param {string} uri task URI
+ * @param {HeapSample[]} samples samples, first one discarded
+ * @returns {void}
+ */
+function recordHeapUsage(uri, samples) {
+	const measured = samples.slice(1);
+	const peak = median(measured.map((sample) => sample.peak));
+	const marginal = median(measured.map((sample) => sample.marginal));
+
+	heapUsages.push({ uri, peak, marginal, samples: measured.length });
+	console.log(
+		`[Memory] ${uri} peakHeapUsed=${formatBytes(peak)} marginal=${formatBytes(marginal)}`
+	);
 }
 
 /**
@@ -1357,7 +1428,8 @@ export async function run({
 	return {
 		benchmark: task.benchmark,
 		scenario: task.scenario ? task.scenario.name : "unit",
-		results
+		results,
+		heapUsages
 	};
 }
 

@@ -1,4 +1,4 @@
-import { constants } from "fs";
+import { constants, mkdirSync, readFileSync, writeFileSync } from "fs";
 import fs from "fs/promises";
 import os from "os";
 import path from "path";
@@ -10,6 +10,7 @@ import { simpleGit } from "simple-git";
 /**
  * @import {
  * 	BenchmarkResult,
+ * 	HeapUsage,
  * 	Result,
  * 	BenchmarkWorkerMethods
  * } from "./harness/benchmark/benchmark.worker.mjs"
@@ -179,6 +180,24 @@ async function getBaselineRevs() {
 			rev: base
 		}
 	];
+}
+
+/**
+ * @param {number} bytes bytes
+ * @returns {string} formatted size
+ */
+function formatBytes(bytes) {
+	return `${(bytes / 1024 ** 2).toFixed(2)} MiB`;
+}
+
+/**
+ * @param {number} value value
+ * @param {number} before previous value
+ * @returns {string} signed percentage change
+ */
+function formatPercentage(value, before) {
+	const change = (value / before) * 100 - 100;
+	return `${change >= 0 ? "+" : ""}${change.toFixed(1)}%`;
 }
 
 /**
@@ -453,6 +472,53 @@ class BenchmarkRunner {
 	}
 
 	/**
+	 * Write and print the heap-usage report. This is the harness's own metric —
+	 * GC-settled live bytes for one build or rebuild — so a row reads as memory a
+	 * user would see, unlike an allocation count whose scale depends on how warm
+	 * the measuring process already was. `MEMORY_BASELINE` diffs against a
+	 * previous report, the way `test:size` compares asset sizes.
+	 * @param {BenchmarkResult[]} benchmarkResults benchmark results
+	 * @returns {void}
+	 */
+	reportHeapUsage(benchmarkResults) {
+		/** @type {HeapUsage[]} */
+		const entries = benchmarkResults
+			.flatMap((result) => result.heapUsages || [])
+			.sort((a, b) => b.peak - a.peak);
+
+		if (entries.length === 0) return;
+
+		const reportPath = path.join(this.baseOutputPath, "memory-report.json");
+
+		mkdirSync(this.baseOutputPath, { recursive: true });
+		writeFileSync(reportPath, `${JSON.stringify({ entries }, null, 2)}\n`);
+
+		/** @type {Map<string, HeapUsage>} */
+		const baseline = new Map();
+		const baselinePath = process.env.MEMORY_BASELINE;
+
+		if (baselinePath) {
+			const previous = JSON.parse(readFileSync(baselinePath, "utf8"));
+			for (const entry of previous.entries) baseline.set(entry.uri, entry);
+		}
+
+		console.log(`\nHeap usage (median of ${entries[0].samples} samples)`);
+
+		for (const entry of entries) {
+			const before = baseline.get(entry.uri);
+			const delta = before
+				? ` (was ${formatBytes(before.peak)}, ${formatPercentage(entry.peak, before.peak)})`
+				: "";
+
+			console.log(
+				`  ${formatBytes(entry.peak).padStart(10)} peak  ${formatBytes(entry.marginal).padStart(10)} marginal  ${entry.uri}${delta}`
+			);
+		}
+
+		console.log(`\nReport written to ${reportPath}`);
+	}
+
+	/**
 	 * Aggregate settled task results and throw if any task failed.
 	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
 	 * @param {PromiseSettledResult<BenchmarkResult>[]} settledResults settled results
@@ -474,6 +540,10 @@ class BenchmarkRunner {
 
 		if (benchmarkResults.length > 0) {
 			this.processResults(benchmarkResults);
+		}
+
+		if (failedTasks.length === 0 && getCodspeedRunnerMode() === "memory") {
+			this.reportHeapUsage(benchmarkResults);
 		}
 
 		if (failedTasks.length > 0) {
