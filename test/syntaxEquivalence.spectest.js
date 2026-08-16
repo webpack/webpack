@@ -533,53 +533,38 @@ describe("printer output in real Chrome", () => {
 				// resolves them to says whether the printer changed the meaning.
 				const computed = getComputedStyle(probe);
 				/**
+				 * The longhands a value sets and what the engine computes for each. One
+				 * assignment per form: the style recalculation is the expensive part, and
+				 * anchor positioning makes one cost orders more than the rest.
 				 * @param {string} property the property name
 				 * @param {string} value the value to set
-				 * @returns {string[]} the longhands it set, none when it did not parse
+				 * @returns {string} each longhand it sets, with what it computes to
 				 */
-				const apply = (property, value) => {
+				const readBack = (property, value) => {
 					probe.style.cssText = "";
 					probe.style.cssText = `${property}:${value}`;
 					/** @type {string[]} */
-					const set = [];
+					const names = [];
 					for (let at = 0; at < probe.style.length; at++) {
-						set.push(probe.style.item(at));
+						names.push(probe.style.item(at));
 					}
-					return set;
-				};
-				/**
-				 * @param {string} property the property name
-				 * @param {string} value the value to set
-				 * @param {string[]} names the longhands to read
-				 * @returns {string} what the engine computes for each
-				 */
-				const readBack = (property, value, names) => {
-					apply(property, value);
-					// Separated: run together, a difference that shifts across a
-					// property boundary ("ab"+"c" against "a"+"bc") reads as equal.
+					names.sort();
+					// Separated: run together, a difference that shifts across a property
+					// boundary ("ab"+"c" against "a"+"bc") reads as equal.
 					let out = "";
 					for (const name of names) {
-						out += `${computed.getPropertyValue(name)}\u0000`;
+						out += `${name}:${computed.getPropertyValue(name)}\u0000`;
 					}
 					return out;
 				};
 				const out = [];
 				for (const one of each) {
 					if (one.min === "") continue;
-					// Only the longhands one of the two forms sets: every other property
-					// computes the same whatever was written, and reading all ~340 of them
-					// per value is what made this the corpus's slowest pass. A form that
-					// sets nothing still differs from one that sets something, since the
-					// other's longhands then read back unset.
-					const names = [
-						...new Set([
-							...apply(one.property, one.raw),
-							...apply(one.property, one.min)
-						])
-					];
+					// Each form read against its own longhands, the name included: a form
+					// that sets a property the other does not — an invalid value the
+					// printer brought to life — differs by that name alone.
 					if (
-						readBack(one.property, one.raw, names) !==
-						readBack(one.property, one.min, names)
+						readBack(one.property, one.raw) !== readBack(one.property, one.min)
 					) {
 						out.push({ name: one.name, key: one.key });
 					}
