@@ -106,7 +106,7 @@ const FILED_CONFIG_CSS_DEFECTS = new Map([
 const FILED_WPT_HTML_DEFECTS = new Map([
 	[
 		"test/wpt/html/syntax/parsing/misnested-form-in-template.html",
-		"a `<form>` misnested inside a `<template>` loses text the parser moved out of it"
+		"not a printer defect: the form pointer is not set inside a `<template>`, which this test asserts and Chromium has not implemented — webpack prints the tree wpt expects"
 	],
 	// Not yet traced to a cause: Chromium builds a different CSSOM from the
 	// minified page for each of these, all of them `@scope` / `@layer` cascade
@@ -126,16 +126,7 @@ const FILED_WPT_HTML_DEFECTS = new Map([
 ]);
 
 // The same, for what webpack's own parser sees over the whole corpus.
-const FILED_WPT_TREE_DEFECTS = new Map([
-	[
-		"test/wpt/html/semantics/forms/the-select-element/customizable-select/nested-select-crash.html",
-		"a dropped `</option>` moves the following option's text into the one before it"
-	],
-	[
-		"test/wpt/html/semantics/forms/the-select-element/customizable-select/selectedcontent-in-option-crash.html",
-		"a dropped `</option>` re-parents `<selectedcontent>` and splits the `<option>`"
-	]
-]);
+const FILED_WPT_TREE_DEFECTS = new Map();
 
 // Declarations Chromium computes a different style from once printed, keyed by
 // the value as written. A printer defect unless the reason says otherwise.
