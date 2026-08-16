@@ -1,24 +1,10 @@
 "use strict";
 
-// Both printers held to what an engine makes of their output, over both corpora:
-// `configCases`, which is webpack's own fixtures, and `test/wpt`, which is the
-// web's. Everything the two share lives in `helpers/syntaxEquivalence` — the
-// helpers installed into the page and the comparisons built on them — so a
-// document from either corpus goes through one path, and an inline `<style>` is
-// held to exactly the same standard as a `.css` file.
-//
-// Nothing here is snapshotted: the assertion is the equivalence itself, and the
-// printers' output is snapshotted by the suites that test printing. Nothing is
-// compared as text where the engine can be asked instead — an attribute value
-// through its IDL reflection, a declaration through its computed style, an
-// at-rule condition through what it answers at every size that could tell two
-// apart. The one thing an engine cannot answer for is syntax it does not
-// implement: a property Chromium drops is absent from both spellings.
-//
-// A third tier needs no engine at all and so runs over the whole wpt corpus
-// rather than a subset of it: webpack's own parser is a DOM oracle, because the
-// tree-construction suite in html5lib.spectest.js holds it to that same corpus's
-// expected trees.
+// Both printers held to what an engine makes of their output, over `configCases`
+// and `test/wpt` alike, through the one path in `helpers/syntaxEquivalence`.
+// Nothing is compared as text where the engine can be asked instead. A third
+// tier needs no engine and so reads the whole corpus: webpack's own parser is a
+// DOM oracle, held to that corpus's expected trees by html5lib.spectest.js.
 
 const path = require("path");
 const { SourceProcessor: CssSourceProcessor } = require("../lib/css/syntax");
@@ -562,31 +548,10 @@ describe("printer output in real Chrome", () => {
 			 * @returns {[string | undefined, unknown]} the IDL member and what it reads back
 			 */
 			const readBack = (element, attribute, value) => {
-				const node = document.createElement(element);
-				node.setAttribute(attribute, value);
-				document.body.append(node);
-				/** @type {string | undefined} */
-				let property;
-				for (
-					let proto = Object.getPrototypeOf(node);
-					proto !== null && property === undefined;
-					proto = Object.getPrototypeOf(proto)
-				) {
-					for (const name of Object.getOwnPropertyNames(proto)) {
-						if (name.toLowerCase() === attribute) {
-							property = name;
-							break;
-						}
-					}
-				}
-				const reflected =
-					property === undefined
-						? undefined
-						: /** @type {Record<string, unknown>} */ (
-								/** @type {unknown} */ (node)
-							)[property];
-				node.remove();
-				return [property, reflected];
+				const { probeReflection } = /** @type {{ __eq: PageHelpers }} */ (
+					/** @type {unknown} */ (window)
+				).__eq;
+				return probeReflection(element, attribute, value);
 			};
 			/** @type {string[]} */
 			const out = [];
@@ -636,32 +601,14 @@ describe("printer output in real Chrome", () => {
 			 * @returns {[string | undefined, unknown]} the IDL member and its value
 			 */
 			const readBack = (tagName, attribute, set) => {
-				// Read on an element the spec defines it for, so a scoped attribute
-				// is probed where it means something rather than skipped as unknown.
-				const node = document.createElement(tagName);
-				if (set) node.setAttribute(attribute, "");
-				document.body.append(node);
-				/** @type {string | undefined} */
-				let property;
-				for (
-					let proto = Object.getPrototypeOf(node);
-					proto !== null && property === undefined;
-					proto = Object.getPrototypeOf(proto)
-				) {
-					for (const name of Object.getOwnPropertyNames(proto)) {
-						if (name.toLowerCase() === attribute) {
-							property = name;
-							break;
-						}
-					}
-				}
-				const reflected =
-					property === undefined
-						? undefined
-						: /** @type {Record<string, unknown>} */ (
-								/** @type {unknown} */ (node)
-							)[property];
-				node.remove();
+				const { probeReflection } = /** @type {{ __eq: PageHelpers }} */ (
+					/** @type {unknown} */ (window)
+				).__eq;
+				const [property, reflected] = probeReflection(
+					tagName,
+					attribute,
+					set ? "" : null
+				);
 				return [property, String(reflected)];
 			};
 			/** @type {string[]} */
@@ -798,33 +745,16 @@ const whatMoved = (before, after) => {
 // One test per spec area rather than per document — 49k test names report
 // nothing a failing list does not, and the list shows every document at once.
 describe("wpt tree stability", () => {
-	const files = hasCorpus() ? fullCorpus() : [];
-	const groups = [
-		...new Set(
-			files.map((file) => nameOf(file).split("/").slice(2, 4).join("/"))
-		)
-	];
-	/** @type {Map<string, { name: string, why: string }[]>} */
+	/** @type {Map<string, string[]>} the corpus, by wpt spec area */
 	const byGroup = new Map();
-	/** @type {string[]} */
-	const diverging = [];
-
-	beforeAll(() => {
-		for (const file of files) {
-			const name = nameOf(file);
-			const group = name.split("/").slice(2, 4).join("/");
-			if (!byGroup.has(group)) byGroup.set(group, []);
-			const source = readDocument(file);
-			if (source === null) continue;
-			const why = whatMoved(domShapeOf(source), domShapeOf(minifyHtml(source)));
-			if (why === "") continue;
-			diverging.push(name);
-			if (!FILED_WPT_TREE_DEFECTS.has(name)) {
-				/** @type {{ name: string, why: string }[]} */
-				(byGroup.get(group)).push({ name, why });
-			}
-		}
-	}, 1800000);
+	for (const file of hasCorpus() ? fullCorpus() : []) {
+		const group = nameOf(file).split("/").slice(2, 4).join("/");
+		const files = byGroup.get(group);
+		if (files === undefined) byGroup.set(group, [file]);
+		else files.push(file);
+	}
+	/** @type {Set<string>} every document that moved, filled as the groups run */
+	const diverging = new Set();
 
 	if (!hasCorpus()) {
 		it("submodule not initialized (run `git submodule update --init --depth 1 test/wpt`)", () => {
@@ -835,20 +765,36 @@ describe("wpt tree stability", () => {
 	}
 
 	it("has a corpus", () => {
-		expect(files.length).toBeGreaterThan(1000);
+		expect([...byGroup.values()].flat().length).toBeGreaterThan(1000);
 	});
 
-	for (const group of groups) {
+	// One test per spec area rather than per document: 49k test names report
+	// nothing a failing list does not. Each area does its own parsing, so a slow
+	// one is named by its own timing rather than hidden in a corpus-wide pass.
+	for (const [group, files] of byGroup) {
 		it(`should build the same tree from ${group} and its minified form`, () => {
-			expect(byGroup.get(group) || []).toEqual([]);
-		});
+			/** @type {{ name: string, why: string }[]} */
+			const differences = [];
+			for (const file of files) {
+				const source = readDocument(file);
+				if (source === null) continue;
+				const why = whatMoved(
+					domShapeOf(source),
+					domShapeOf(minifyHtml(source))
+				);
+				if (why === "") continue;
+				const name = nameOf(file);
+				diverging.add(name);
+				if (!FILED_WPT_TREE_DEFECTS.has(name)) differences.push({ name, why });
+			}
+			expect(differences).toEqual([]);
+		}, 600000);
 	}
 
+	// Runs last, so every group has reported what moved.
 	it("should still diverge on every filed defect", () => {
 		expect(
-			[...FILED_WPT_TREE_DEFECTS.keys()].filter(
-				(name) => !diverging.includes(name)
-			)
+			[...FILED_WPT_TREE_DEFECTS.keys()].filter((name) => !diverging.has(name))
 		).toEqual([]);
 	});
 });

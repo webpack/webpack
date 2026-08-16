@@ -11,6 +11,9 @@ const path = require("path");
 
 /** @typedef {{ name: string, raw: string, min: string }} Fixture */
 
+// How many viewport sizes any one condition set is sampled at.
+const MAX_SAMPLED_SIZES = 64;
+
 /**
  * Every fixture of one extension under a directory.
  * @param {string} dir directory to walk
@@ -74,6 +77,7 @@ const buildCorpus = async (dir, extension, minify) => {
  * @property {(html: string) => Facets} htmlFacets everything a page's DOM is made of
  * @property {(conditions: string[], sizes: number[]) => string[]} containerSignatures which sizes each container query holds at
  * @property {(conditions: string[]) => string[]} supportsSignatures whether each support condition holds
+ * @property {(tagName: string, attribute: string, value: string | null) => [string | undefined, unknown]} probeReflection the IDL member an attribute reflects, and its value
  */
 
 /**
@@ -923,12 +927,50 @@ const installHelpers = () => {
 	const supportsSignatures = (conditions) =>
 		conditions.map((condition) => (CSS.supports(condition) ? "1" : "0"));
 
+	/**
+	 * The IDL member an attribute reflects, and what it reads back. Probed on an
+	 * element the spec defines the attribute for, so a scoped one is read where
+	 * it means something rather than skipped as unknown.
+	 * @param {string} tagName the element to probe on
+	 * @param {string} attribute the attribute name
+	 * @param {string | null} value the value to set, or null to leave it absent
+	 * @returns {[string | undefined, unknown]} the IDL member and its value
+	 */
+	const probeReflection = (tagName, attribute, value) => {
+		const node = document.createElement(tagName);
+		if (value !== null) node.setAttribute(attribute, value);
+		document.body.append(node);
+		/** @type {string | undefined} */
+		let property;
+		for (
+			let proto = Object.getPrototypeOf(node);
+			proto !== null && property === undefined;
+			proto = Object.getPrototypeOf(proto)
+		) {
+			for (const name of Object.getOwnPropertyNames(proto)) {
+				if (name.toLowerCase() === attribute) {
+					property = name;
+					break;
+				}
+			}
+		}
+		const reflected =
+			property === undefined
+				? undefined
+				: /** @type {Record<string, unknown>} */ (
+						/** @type {unknown} */ (node)
+					)[property];
+		node.remove();
+		return [property, reflected];
+	};
+
 	/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window)).__eq =
 		{
 			cssRules,
 			htmlFacets,
 			containerSignatures,
-			supportsSignatures
+			supportsSignatures,
+			probeReflection
 		};
 };
 
@@ -964,8 +1006,10 @@ const conditionSignatures = async (page, groups) => {
 		for (const condition of conditions) {
 			for (const [number] of condition.matchAll(/\d+(?:\.\d+)?/g)) {
 				const value = Math.round(Number(number));
-				if (value > 0 && value < 10000) {
-					// Clamped: a viewport of width 0 is not a sample point.
+				// Bounded: each size costs two round trips per condition, and past a
+				// point the trips cost more than the separation they buy. Clamped: a
+				// viewport of width 0 is not a sample point.
+				if (value > 0 && value < 10000 && edges.size < MAX_SAMPLED_SIZES) {
 					edges
 						.add(Math.max(1, value - 1))
 						.add(value)

@@ -1,28 +1,22 @@
 "use strict";
 
-// Discovery for the `test/wpt` corpus, shared by the engine-free conformance
-// suite and the browser-equivalence suite so both read one corpus the same way.
-// An absent submodule yields empty lists; each suite decides what to do with that.
+// Discovery for the `test/wpt` corpus, read one way by every tier. An absent
+// submodule yields empty lists.
 
 const fs = require("fs");
 const path = require("path");
 
 const WPT = path.resolve(__dirname, "../wpt");
 
-// Documents parsed as XML rather than HTML. webpack implements the HTML spec's
-// tree construction, so an XHTML tree legitimately differs — they are not ours.
+// Parsed as XML, not HTML, so their trees legitimately differ from ours.
 const XML_EXTENSIONS = new Set([".xht", ".xhtml", ".xml", ".svg"]);
 
-// The subset handed to a real browser. Every document goes through the
-// engine-free tier; Chrome is asked about a focused sample instead, because
-// reading a page's facets and the CSSOM of every stylesheet in it costs far more
-// per document than parsing it does — the syntax tests, and the cascade and
-// color tests, whose documents carry the inline `<style>` and `style=""` an
-// engine has to agree about.
+// The sample handed to a real browser: reading a page's facets and the CSSOM
+// inside it costs far more per document than parsing it, so Chrome reads these
+// while the engine-free tier reads everything.
 const BROWSER_SUBSET = ["html/syntax", "css/css-cascade", "css/css-color"];
 
-// Every directory the engine-free suite reads — the whole HTML corpus, `css/`
-// included, since a CSS test is an HTML document too.
+// Everything the engine-free tier reads; a CSS test is an HTML document too.
 const FULL_SUBSET = [
 	"html",
 	"css",
@@ -136,9 +130,7 @@ const nameOf = (file) =>
 	path.relative(path.join(__dirname, "../.."), file).replace(/\\/g, "/");
 
 // A `test_valid_value` / `test_invalid_value` call whose arguments are all plain
-// string literals: no interpolation, no escapes, no line breaks. The corpus also
-// builds calls in loops and from templates, which carry no literal to read — 819
-// of the 1267 parsing files have at least one that does.
+// string literals; the corpus also builds calls in loops, which carry no literal.
 const VALUE_CALL =
 	/\btest_(valid|invalid)_value\(\s*(["'`])((?:(?!\2)[^\\\n])*)\2\s*,\s*(["'`])((?:(?!\4)[^\\\n])*)\4\s*(?:,\s*(["'`])((?:(?!\6)[^\\\n])*)\6\s*)?\)/g;
 

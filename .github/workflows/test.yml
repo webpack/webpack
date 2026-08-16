@@ -269,6 +269,9 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # This job runs repository-controlled scripts, and the corpus is public.
+          persist-credentials: false
 
       # Held to both corpora: webpack's own fixtures and the web's. WPT is 161k
       # files, so it is checked out one commit deep.
