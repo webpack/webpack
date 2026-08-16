@@ -13,14 +13,24 @@ const WPT = path.resolve(__dirname, "../wpt");
 // tree construction, so an XHTML tree legitimately differs — they are not ours.
 const XML_EXTENSIONS = new Set([".xht", ".xhtml", ".xml", ".svg"]);
 
-// The subset handed to a real browser. The whole corpus goes through the
-// engine-free suite; Chrome gets the two directories whose subject *is* parsing —
-// the syntax tests and the deliberately malformed conformance-checker pages.
-const BROWSER_SUBSET = ["html/syntax", "conformance-checkers/html"];
+// The subset handed to a real browser: the directories whose subject *is*
+// parsing — the syntax tests, the deliberately malformed conformance-checker
+// pages, and the CSS parsing tests, whose documents carry the inline `<style>`
+// and `style=""` an engine has to agree about.
+const BROWSER_SUBSET = [
+	"html/syntax",
+	"conformance-checkers/html",
+	"css/css-cascade",
+	"css/css-color",
+	"css/css-values",
+	"css/selectors"
+];
 
-// Every directory the engine-free suite reads.
+// Every directory the engine-free suite reads — the whole HTML corpus, `css/`
+// included, since a CSS test is an HTML document too.
 const FULL_SUBSET = [
 	"html",
+	"css",
 	"conformance-checkers/html",
 	"conformance-checkers/html-aria",
 	"dom/nodes"
@@ -94,6 +104,18 @@ const fullCorpus = () => htmlFiles(FULL_SUBSET);
 const browserCorpus = () => htmlFiles(BROWSER_SUBSET);
 
 /**
+ * Standalone stylesheets — the `.css` a page links rather than inlines, which is
+ * the only shape the inline ones cannot stand in for (`@charset`, `@import`).
+ * @returns {string[]} sorted absolute paths
+ */
+const cssCorpus = () => {
+	/** @type {string[]} */
+	const files = [];
+	walk(WPT, ".css", files);
+	return files.sort();
+};
+
+/**
  * @param {string} file absolute path
  * @returns {string} its path relative to the repository root, with `/` separators
  */
@@ -160,6 +182,7 @@ const cssDeclarations = () => {
 module.exports = {
 	WPT,
 	browserCorpus,
+	cssCorpus,
 	cssDeclarations,
 	fullCorpus,
 	hasCorpus,
