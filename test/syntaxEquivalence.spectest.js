@@ -50,6 +50,10 @@ const CONFIG_CASES = path.join(__dirname, "configCases");
 // How many documents go to the page at once — the wpt corpus is far larger than
 // one `evaluate` argument should carry.
 const BATCH = 150;
+// What one spec area gets, and what one batch's CDP call gets with it. Anchor
+// positioning resolves every declaration against a layout, so on a browser that
+// implements it one area needs minutes where the rest need seconds.
+const AREA_TIMEOUT = 900000;
 
 // Documents and stylesheets the printers are known to get wrong, per corpus.
 // Each is a filed defect, not a tolerated one; every comparison matches its set
@@ -310,7 +314,7 @@ describe("printer output in real Chrome", () => {
 
 	beforeAll(async () => {
 		await buildCorpora();
-		browser = await launchChrome({ protocolTimeout: 300000 });
+		browser = await launchChrome({ protocolTimeout: AREA_TIMEOUT });
 	}, 300000);
 
 	// A page of its own per test: a tier that leaves thousands of parsed documents
@@ -579,9 +583,13 @@ describe("printer output in real Chrome", () => {
 		});
 	}
 	for (const [area, cases] of declarationsByArea) {
-		it(`should compute the same style from a value in ${area} and its minified form`, async () => {
-			for (const one of await compareValues(cases)) movedValues.add(one.key);
-		}, 300000);
+		it(
+			`should compute the same style from a value in ${area} and its minified form`,
+			async () => {
+				for (const one of await compareValues(cases)) movedValues.add(one.key);
+			},
+			AREA_TIMEOUT
+		);
 	}
 
 	// Runs last, so every area has reported what moved. Includes the values the
