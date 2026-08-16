@@ -5052,6 +5052,13 @@ type ContextDependencyOptions = ContextOptions & { request: string };
 declare abstract class ContextElementDependency extends ModuleDependency {
 	referencedExports?: null | string[][];
 	attributes?: ImportAttributes;
+
+	/**
+	 * The request as the user wrote it, e.g. `#configs/file.mjs` for the element
+	 * `./file.mjs` of a `#configs` context. `request` is relative to the resolved
+	 * context directory instead, which no longer resembles what was written.
+	 */
+	get originalRequest(): string;
 }
 declare class ContextExclusionPlugin {
 	/**
@@ -5122,6 +5129,10 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 }
 type ContextModuleOptions = ContextOptions & ContextModuleOptionsExtras;
 declare interface ContextModuleOptionsExtras {
+	/**
+	 * the request of the context as written by the user, before it was resolved
+	 */
+	request?: string;
 	resource: string | false | string[];
 	resourceQuery?: string;
 	resourceFragment?: string;
@@ -8494,6 +8505,11 @@ declare interface ExternalItemFunctionData {
 	 * the request as written by the user in the require/import expression/statement
 	 */
 	request: string;
+
+	/**
+	 * same as `request`, except for an element of a context module (a request containing an expression), where it is the request as written by the user instead of the one relative to the resolved context directory
+	 */
+	originalRequest: string;
 }
 
 /**

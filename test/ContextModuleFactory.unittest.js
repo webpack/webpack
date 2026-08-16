@@ -306,5 +306,88 @@ describe("ContextModuleFactory", () => {
 				}
 			);
 		});
+
+		it("should provide the request as written by the user as original request", (done) => {
+			memfs = createFsFromVolume(
+				Volume.fromJSON({ "/configs/a.js": "", "/configs/nested/b.js": "" })
+			);
+			factory.resolveDependencies(
+				/** @type {InputFileSystem} */ (/** @type {unknown} */ (memfs)),
+				/** @type {ContextModuleOptions} */ (
+					/** @type {unknown} */ ({
+						resource: "/configs",
+						request: "#configs",
+						resourceQuery: "",
+						resourceFragment: "",
+						recursive: true,
+						regExp: /\.js$/
+					})
+				),
+				(err, res) => {
+					expect(err).toBeFalsy();
+					expect(
+						/** @type {NonNullable<typeof res>} */ (res)
+							.map((r) => r.originalRequest)
+							.sort()
+					).toEqual(["#configs/a.js", "#configs/nested/b.js"]);
+					done();
+				}
+			);
+		});
+
+		it("should not repeat query and fragment in the original request", (done) => {
+			memfs = createFsFromVolume(Volume.fromJSON({ "/configs/a.js": "" }));
+			factory.resolveDependencies(
+				/** @type {InputFileSystem} */ (/** @type {unknown} */ (memfs)),
+				/** @type {ContextModuleOptions} */ (
+					/** @type {unknown} */ ({
+						resource: "/configs",
+						request: "./configs?query#hash",
+						resourceQuery: "?query",
+						resourceFragment: "#hash",
+						recursive: true,
+						regExp: /\.js/
+					})
+				),
+				(err, res) => {
+					expect(err).toBeFalsy();
+					expect(
+						/** @type {NonNullable<typeof res>} */ (res).map(
+							(r) => r.originalRequest
+						)
+					).toEqual(["./configs/a.js?query#hash"]);
+					done();
+				}
+			);
+		});
+
+		it("should keep an alternative request that is not relative", (done) => {
+			memfs = createFsFromVolume(Volume.fromJSON({ "/configs/a.js": "" }));
+			factory.hooks.alternativeRequests.tap("Test", (items) =>
+				items.map(({ context }) => ({ context, request: "package/a.js" }))
+			);
+			factory.resolveDependencies(
+				/** @type {InputFileSystem} */ (/** @type {unknown} */ (memfs)),
+				/** @type {ContextModuleOptions} */ (
+					/** @type {unknown} */ ({
+						resource: "/configs",
+						request: "#configs",
+						resourceQuery: "",
+						resourceFragment: "",
+						recursive: true,
+						regExp: /\.js$/
+					})
+				),
+				(err, res) => {
+					expect(err).toBeFalsy();
+					expect(
+						/** @type {NonNullable<typeof res>} */ (res).map(
+							(r) => r.originalRequest
+						)
+					).toEqual(["package/a.js"]);
+					done();
+				}
+			);
+		});
 	});
 });
