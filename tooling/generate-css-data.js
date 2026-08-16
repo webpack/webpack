@@ -4303,10 +4303,22 @@ const PREFIX_SUPPLEMENT = new Map([
 	// all — so a Firefox target losing the `-moz-` one is left with a declaration
 	// Gecko cannot parse. Desktop shares Android's style system, and so its
 	// version.
+	// EdgeHTML gets both spellings, because the two datasets name different ones
+	// and neither states why: BCD records `-webkit-` per feature, while caniuse
+	// only marks the version prefixed and resolves the spelling from a
+	// browser-wide `-ms-` default it applies to every feature. No engine is
+	// reachable to settle it, and the pair costs one declaration where a wrong
+	// single one costs the property.
 	[
 		"text-size-adjust",
 		[
-			["-ms-text-size-adjust", [["ie_mob", "10", "12"]]],
+			[
+				"-ms-text-size-adjust",
+				[
+					["ie_mob", "10", "12"],
+					["edge", "12", "19"]
+				]
+			],
 			["-moz-text-size-adjust", [["firefox", "14", Infinity]]]
 		]
 	],

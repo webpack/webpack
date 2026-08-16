@@ -5308,14 +5308,23 @@ describe("CssSyntax minify — vendor prefixes (target selection)", () => {
 		);
 	});
 
-	it("writes the spelling BCD records for old Edge, not the one its browser-wide default implies", () => {
-		// caniuse marks every EdgeHTML version `-ms-`, so autoprefixer and
-		// lightningcss both write `-ms-text-size-adjust`; BCD records the spelling
-		// per feature, and desktop IE — where an `-ms-` one would come from — never
-		// had the property at all.
+	it("writes both spellings for old Edge, which the two datasets disagree over", () => {
+		// BCD records `-webkit-` for the feature; caniuse marks the version prefixed
+		// and resolves the name from a browser-wide `-ms-` default, which is what
+		// autoprefixer and lightningcss write. Neither says why, so both go out.
 		expect(minifyFor("a{text-size-adjust:100%}", ["edge 15"])).toBe(
-			"a{-webkit-text-size-adjust:100%;text-size-adjust:100%}"
+			"a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;text-size-adjust:100%}"
 		);
+		// Chromium-era Edge reads the unprefixed one, so neither is written.
+		expect(minifyFor("a{text-size-adjust:100%}", ["edge 79"])).toBe(
+			"a{text-size-adjust:100%}"
+		);
+		// And a source carrying the `-ms-` one loses it once no target needs it.
+		expect(
+			minifyFor("a{-ms-text-size-adjust:100%;text-size-adjust:100%}", [
+				"edge 79"
+			])
+		).toBe("a{text-size-adjust:100%}");
 	});
 
 	it("skips a browser no dataset covers, as lightningcss's target mapping does", () => {
