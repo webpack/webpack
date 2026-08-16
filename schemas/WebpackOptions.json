@@ -5342,8 +5342,8 @@
           "added": "5.110.0"
         },
         "hints": {
-          "description": "Sets the format of the hints: warnings, errors or nothing at all.",
-          "enum": [false, "warning", "error"]
+          "description": "Sets the format of the hints: warnings, errors, stats-only or nothing at all.",
+          "enum": [false, "warning", "error", "stats"]
         },
         "maxAssetSize": {
           "description": "File size limit (in bytes) when exceeded, that webpack will provide performance hints.",
@@ -6912,6 +6912,16 @@
         "hash": {
           "description": "Add the hash of the compilation.",
           "type": "boolean"
+        },
+        "hints": {
+          "description": "Add performance hints reported with 'performance.hints: \"stats\"'.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "hintsCount": {
+          "description": "Add the number of performance hints.",
+          "type": "boolean",
+          "added": "5.110.0"
         },
         "ids": {
           "description": "Add ids.",

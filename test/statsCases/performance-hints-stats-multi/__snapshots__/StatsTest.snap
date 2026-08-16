@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases performance-hints-stats-multi should print correct stats for performance-hints-stats-multi 1`] = `
+"first:
+  HINT in webpack rule recommendations: 
+  The following rule was never applied to a module: module.rules[0] (test: /\\\\.never-matches$/).
+  A rule that matches nothing is usually a typo in 'test', 'include' or 'exclude', or a leftover from a removed file type. Plugins add rules as well, so a rule listed here may come from a plugin rather than from your configuration.
+  For more info visit https://webpack.js.org/configuration/module/#modulerules
+
+second:
+  HINT in webpack rule recommendations: 
+  The following rule was never applied to a module: module.rules[0] (test: /\\\\.never-matches$/).
+  A rule that matches nothing is usually a typo in 'test', 'include' or 'exclude', or a leftover from a removed file type. Plugins add rules as well, so a rule listed here may come from a plugin rather than from your configuration.
+  For more info visit https://webpack.js.org/configuration/module/#modulerules"
+`;

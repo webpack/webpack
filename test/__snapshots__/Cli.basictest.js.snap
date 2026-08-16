@@ -13382,7 +13382,7 @@ Object {
   "performance-hints": Object {
     "configs": Array [
       Object {
-        "description": "Sets the format of the hints: warnings, errors or nothing at all.",
+        "description": "Sets the format of the hints: warnings, errors, stats-only or nothing at all.",
         "multiple": false,
         "path": "performance.hints",
         "type": "enum",
@@ -13390,10 +13390,11 @@ Object {
           false,
           "warning",
           "error",
+          "stats",
         ],
       },
     ],
-    "description": "Sets the format of the hints: warnings, errors or nothing at all.",
+    "description": "Sets the format of the hints: warnings, errors, stats-only or nothing at all.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -15893,6 +15894,32 @@ Object {
     "multiple": true,
     "simpleType": "boolean",
   },
+  "stats-children-hints": Object {
+    "configs": Array [
+      Object {
+        "description": "Add performance hints reported with 'performance.hints: \\"stats\\"'.",
+        "multiple": true,
+        "path": "stats.children[].hints",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add performance hints reported with 'performance.hints: \\"stats\\"'.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "stats-children-hints-count": Object {
+    "configs": Array [
+      Object {
+        "description": "Add the number of performance hints.",
+        "multiple": true,
+        "path": "stats.children[].hintsCount",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add the number of performance hints.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
   "stats-children-ids": Object {
     "configs": Array [
       Object {
@@ -17077,6 +17104,32 @@ Object {
       },
     ],
     "description": "Add the hash of the compilation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-hints": Object {
+    "configs": Array [
+      Object {
+        "description": "Add performance hints reported with 'performance.hints: \\"stats\\"'.",
+        "multiple": false,
+        "path": "stats.hints",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add performance hints reported with 'performance.hints: \\"stats\\"'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-hints-count": Object {
+    "configs": Array [
+      Object {
+        "description": "Add the number of performance hints.",
+        "multiple": false,
+        "path": "stats.hintsCount",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add the number of performance hints.",
     "multiple": false,
     "simpleType": "boolean",
   },

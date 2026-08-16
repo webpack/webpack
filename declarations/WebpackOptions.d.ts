@@ -3234,9 +3234,9 @@ export interface PerformanceOptions {
 	 */
 	duplicatePackages?: boolean;
 	/**
-	 * Sets the format of the hints: warnings, errors or nothing at all.
+	 * Sets the format of the hints: warnings, errors, stats-only or nothing at all.
 	 */
-	hints?: false | "warning" | "error";
+	hints?: false | "warning" | "error" | "stats";
 	/**
 	 * File size limit (in bytes) when exceeded, that webpack will provide performance hints.
 	 */
@@ -3562,6 +3562,16 @@ export interface StatsOptions {
 	 * Add the hash of the compilation.
 	 */
 	hash?: boolean;
+	/**
+	 * Add performance hints reported with 'performance.hints: "stats"'.
+	 * @since 5.110.0
+	 */
+	hints?: boolean;
+	/**
+	 * Add the number of performance hints.
+	 * @since 5.110.0
+	 */
+	hintsCount?: boolean;
 	/**
 	 * Add ids.
 	 */
