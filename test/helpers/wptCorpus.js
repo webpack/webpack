@@ -92,23 +92,41 @@ const readDocument = (file) => {
 /** @returns {boolean} whether the submodule is checked out */
 const hasCorpus = () => fs.existsSync(path.join(WPT, "html"));
 
+/** @type {Map<string, string[]>} the corpus does not change during a run */
+const walked = new Map();
+
+/**
+ * @param {string} key which corpus
+ * @param {() => string[]} build the walk
+ * @returns {string[]} sorted absolute paths
+ */
+const once = (key, build) => {
+	let files = walked.get(key);
+	if (files === undefined) {
+		files = build();
+		walked.set(key, files);
+	}
+	return files;
+};
+
 /** @returns {string[]} sorted absolute paths for the engine-free suite */
-const fullCorpus = () => htmlFiles(FULL_SUBSET);
+const fullCorpus = () => once("full", () => htmlFiles(FULL_SUBSET));
 
 /** @returns {string[]} sorted absolute paths for the browser suite */
-const browserCorpus = () => htmlFiles(BROWSER_SUBSET);
+const browserCorpus = () => once("browser", () => htmlFiles(BROWSER_SUBSET));
 
 /**
  * Standalone stylesheets — the `.css` a page links rather than inlines, which is
  * the only shape the inline ones cannot stand in for (`@charset`, `@import`).
  * @returns {string[]} sorted absolute paths
  */
-const cssCorpus = () => {
-	/** @type {string[]} */
-	const files = [];
-	walk(WPT, ".css", files);
-	return files.sort();
-};
+const cssCorpus = () =>
+	once("css", () => {
+		/** @type {string[]} */
+		const files = [];
+		walk(WPT, ".css", files);
+		return files.sort();
+	});
 
 /**
  * @param {string} file absolute path
@@ -148,7 +166,8 @@ const cssDeclarations = () => {
 	/** @type {Set<string>} */
 	const seen = new Set();
 	for (const file of files) {
-		const text = fs.readFileSync(file, "utf8");
+		const text = readDocument(file);
+		if (text === null) continue;
 		if (
 			!text.includes("test_valid_value") &&
 			!text.includes("test_invalid_value")

@@ -66,11 +66,8 @@ const CONFIG_CASES = path.join(__dirname, "configCases");
 const BATCH = 150;
 
 // Documents and stylesheets the printers are known to get wrong, per corpus.
-// Each entry is a filed defect, not a tolerated one; every comparison below
-// matches its set exactly, so an entry outlives its defect by one run.
-// Stylesheets the printer is known to get wrong. Each entry is a filed defect,
-// not a tolerated one, and carries what the engine sees; the comparison below
-// matches this set exactly, so an entry outlives its defect by exactly one run.
+// Each is a filed defect, not a tolerated one; every comparison matches its set
+// exactly, so an entry outlives its defect by one run.
 const FILED_CONFIG_CSS_DEFECTS = new Map([
 	[
 		"test/configCases/css/minimize-strings/style.css",
@@ -409,6 +406,13 @@ describe("printer output in real Chrome", () => {
 
 	const describeCorpus = (at, label) => {
 		describe(label, () => {
+			if (at === 1 && !hasCorpus()) {
+				it("submodule not initialized (run `git submodule update --init --depth 1 test/wpt`)", () => {
+					// No-op: the conformance corpus is an optional git submodule.
+				});
+
+				return;
+			}
 			/** @returns {Corpus | undefined} the corpus, once built */
 			const corpus = () => corpora[at];
 
@@ -508,8 +512,12 @@ describe("printer output in real Chrome", () => {
 				const readBack = (property, value) => {
 					probe.style.cssText = "";
 					probe.style.cssText = `${property}:${value}`;
+					// Separated: run together, a difference that shifts across a
+					// property boundary ("ab"+"c" against "a"+"bc") reads as equal.
 					let out = "";
-					for (const name of names) out += computed.getPropertyValue(name);
+					for (const name of names) {
+						out += `${computed.getPropertyValue(name)}\u0000`;
+					}
 					return out;
 				};
 				const out = [];

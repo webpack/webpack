@@ -965,8 +965,9 @@ const conditionSignatures = async (page, groups) => {
 			for (const [number] of condition.matchAll(/\d+(?:\.\d+)?/g)) {
 				const value = Math.round(Number(number));
 				if (value > 0 && value < 10000) {
+					// Clamped: a viewport of width 0 is not a sample point.
 					edges
-						.add(value - 1)
+						.add(Math.max(1, value - 1))
 						.add(value)
 						.add(value + 1);
 				}
