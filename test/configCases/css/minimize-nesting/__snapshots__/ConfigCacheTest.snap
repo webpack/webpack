@@ -3,6 +3,9 @@
 exports[`ConfigCacheTestCases css minimize-nesting minimize-nesting should compile 1`] = `
 Array [
   "/*! join: adjacent nested rules printing the same block are the one rule they stand for */.a{.n1,.n2>.n3{color:red}}",
+  "/*! join: ...and one further back, where nothing between them writes what the
+   block they share does */.a2{.n1a,.n1c{color:blue}.n1b{top:0}}",
+  "/*! declined: a rule between them writing the same property would win where it lost */.a3{.n1d{color:green}.n1e{color:gray}.n1f{color:green}}",
   "/*! join: ...and \`&\` joins there, an engine that cannot read it losing the block either way */.b{&.n4,&.n5{top:0}}",
   "/*! join: ...including as a compound of its own */.c{& .n6,& .n7{top:0}}",
   "/*! declined: a nested rule of its own, whose \`&\` would become the joined list */.d{.n8{top:0;i{top:1px}}.n9{top:0;i{top:1px}}}",

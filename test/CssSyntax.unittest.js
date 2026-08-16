@@ -2930,7 +2930,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
-	describe("adjacent rules printing the same block", () => {
+	describe("sibling rules printing the same block", () => {
 		it.each([
 			["a{color:red}b{color:red}", "a,b{color:red}"],
 			["a{color:red}b{color:red}c{color:red}", "a,b,c{color:red}"],
@@ -2958,14 +2958,68 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{color:red;&:hover{color:blue}}"
 			],
 			// Only the last of a set of identical declarations can be read.
-			["a{color:red}a{color:red}", "a{color:red}"]
+			["a{color:red}a{color:red}", "a{color:red}"],
+			// A rule between them writing none of the block's properties is read
+			// the same wherever the join puts the two around it.
+			["a{color:red}i{top:0}b{color:red}", "a,b{color:red}i{top:0}"],
+			[
+				"a{color:red}i{margin-top:0}b{color:red}",
+				"a,b{color:red}i{margin-top:0}"
+			],
+			[
+				"a{color:red}@media x{i{top:0}}b{color:red}",
+				"a,b{color:red}@media x{i{top:0}}"
+			],
+			// ...as many rules back as the two stand apart
+			[
+				"a{color:red}i{top:0}b{color:red}u{left:0}s{color:red}",
+				"a,b,s{color:red}i{top:0}u{left:0}"
+			],
+			// ...and inside a block, where the printer holds every child at once
+			[
+				"@media x{a{color:red}i{top:0}b{color:red}}",
+				"@media x{a,b{color:red}i{top:0}}"
+			]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
 
 		it.each([
 			["the blocks differ", "a{color:red}b{color:blue}"],
-			["a rule stands between them", "a{color:red}i{top:0}b{color:red}"],
+			// The join reads the block where the earlier rule stands, so a rule
+			// between them writing the same property would win where it lost.
+			[
+				"a rule between them writes the same property",
+				"a{color:red}i{color:blue}b{color:red}"
+			],
+			[
+				"...or a shorthand holding it",
+				"a{margin-top:0}i{margin:1px}b{margin-top:0}"
+			],
+			[
+				"...or one inside an at-rule",
+				"a{color:red}@media x{i{color:blue}}b{color:red}"
+			],
+			[
+				"...or one inside a block",
+				"@media x{a{color:red}i{color:blue}b{color:red}}"
+			],
+			// `mdn-data` says which longhands a shorthand resets, so a name that is
+			// no prefix of the other is still read as the same property.
+			[
+				"...under a name its own is no prefix of",
+				"a{top:0}i{inset:1px}b{top:0}"
+			],
+			["...`gap` over `row-gap`", "a{row-gap:0}i{gap:1px}b{row-gap:0}"],
+			[
+				"...`place-items` over `align-items`",
+				"a{align-items:center}i{place-items:end}b{align-items:center}"
+			],
+			[
+				"...`font` over `line-height`",
+				"a{line-height:1}i{font:12px/2 x}b{line-height:1}"
+			],
+			["...and `all` over everything", "a{color:red}i{all:unset}b{color:red}"],
 			// One selector the engine cannot parse invalidates the whole list.
 			["a pseudo may be one the engine drops", "a:hover{top:0}b:hover{top:0}"],
 			["...even beside an attribute selector", "[a=b]:hover{top:0}.b{top:0}"],

@@ -571,6 +571,52 @@ const collectPairLonghands = () => {
 };
 
 /**
+ * The longhands a shorthand resets that its own name is no prefix of — `inset`
+ * sets `top`, `gap` sets `row-gap`, `font` sets `line-height`. Transitive, and
+ * the prefixed ones are left out: `border-top-width` is already read as part of
+ * `border` by the name alone, so only what the name cannot say is stated here.
+ * What answers "would moving this declaration past that one change which wins".
+ * @returns {[string, string[]][]} `[property, longhands]`, sorted
+ */
+const collectResetLonghands = () => {
+	/**
+	 * @param {string} name a property
+	 * @param {Set<string>} into the longhands reached so far
+	 * @returns {void}
+	 */
+	const reach = (name, into) => {
+		const property = properties[name];
+		if (property === undefined || !Array.isArray(property.computed)) return;
+		for (const longhand of property.computed) {
+			if (into.has(longhand)) continue;
+			into.add(longhand);
+			reach(longhand, into);
+		}
+	};
+	/** @type {[string, string[]][]} */
+	const out = [];
+	for (const [name, property] of Object.entries(properties)) {
+		if (property.status !== "standard") continue;
+		if (!Array.isArray(property.computed) || property.computed.length < 2) {
+			continue;
+		}
+		/** @type {Set<string>} */
+		const reached = new Set();
+		reach(name, reached);
+		const rest = [...reached]
+			.filter(
+				(longhand) =>
+					longhand !== name &&
+					!longhand.startsWith(`${name}-`) &&
+					!name.startsWith(`${longhand}-`)
+			)
+			.sort();
+		if (rest.length !== 0) out.push([name, rest]);
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
  * The shorthands that set their longhands positionally with a `/` between them:
  * `<X> [ / <X> ]{0,n}` over the `n + 1` names `computed` lists, in that order.
  * The grid-placement three are the whole set today. Every slot is written: an
@@ -4862,6 +4908,7 @@ const collectData = () => {
 	const oneValuePairShorthands = collectOneValuePairShorthands(pairLonghands);
 	const familyLonghands = collectFamilyLonghands();
 	const slashLonghands = collectSlashLonghands();
+	const resetLonghands = collectResetLonghands();
 
 	// Every longhand the three merge tables can consume, so the printer can ask
 	// one question of a block instead of walking all three tables.
@@ -4965,6 +5012,13 @@ const PLACE_SHORTHANDS = ${setLiteral(SUPPLEMENT.placeShorthands)};
 // question is whether each parses back into the longhand it was authored on.
 // prettier-ignore
 const FAMILY_LONGHANDS = new Map([${familyLonghands
+		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
+		.join(", ")}]);
+
+// The longhands a shorthand resets that its own name is no prefix of, so two
+// declarations are read as writing the same property whichever way they are
+// spelled: \`inset\` sets \`top\`, \`gap\` sets \`row-gap\`, \`font\` sets \`line-height\`.
+const RESET_LONGHANDS = new Map([${resetLonghands
 		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
 		.join(", ")}]);
 
@@ -5499,7 +5553,7 @@ module.exports.PREFIXED_SPELLING_KEYWORDS = PREFIXED_SPELLING_KEYWORDS;
 module.exports.PREFIXED_VALUES = PREFIXED_VALUES;
 module.exports.PREFIX_BROWSERS = PREFIX_BROWSERS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
-module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
+module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RESET_LONGHANDS = RESET_LONGHANDS;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;

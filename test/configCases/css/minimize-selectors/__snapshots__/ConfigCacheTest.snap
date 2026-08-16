@@ -72,6 +72,12 @@ Array [
    so the comment parting these stays as an empty one */a/**/b{color:red}",
   "/*! webpack: adjacent rules printing the same block are the one rule they stand for */.t71,.t72>.t73{color:red}",
   "/*! webpack: ...and a keyframe selector list is one too */@keyframes t74{0%,50%{color:red}}",
+  "/*! webpack: ...and a rule further back is one with it too, where nothing
+   between them writes what the block they share does */.t75,.t77{color:blue}.t76{top:0}",
+  "/*! declined: the join reads that block where the earlier rule stands, so a rule
+   between them writing the same property would win where it lost */.t78{color:green}.t79a{color:gray}.t79b{color:green}",
+  "/*! declined: ...whatever it calls that property — \`inset\` writes \`top\`, which
+   the name alone does not say */.t79c{top:0}.t79d{inset:1px}.t79e{top:0}",
   "/*! webpack: the same selector twice is one rule */.t80{color:red;margin:0}",
   "/*! webpack: ...and two identical rules are the one that can be read */.t81{color:red}",
   "/*! declined: the earlier declaration of a property both set would be lost */.t82{color:red}.t82{color:blue}",

@@ -5,6 +5,11 @@
 
 /*! join: adjacent nested rules printing the same block are the one rule they stand for */
 .a { .n1 { color: red } .n2 > .n3 { color: red } }
+/*! join: ...and one further back, where nothing between them writes what the
+   block they share does */
+.a2 { .n1a { color: blue } .n1b { top: 0 } .n1c { color: blue } }
+/*! declined: a rule between them writing the same property would win where it lost */
+.a3 { .n1d { color: green } .n1e { color: gray } .n1f { color: green } }
 /*! join: ...and `&` joins there, an engine that cannot read it losing the block either way */
 .b { &.n4 { top: 0 } &.n5 { top: 0 } }
 /*! join: ...including as a compound of its own */
