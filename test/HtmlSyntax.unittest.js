@@ -7878,6 +7878,49 @@ describe("SourceProcessor — attribute rewrites as options", () => {
 		).toContain("<input checked>");
 	});
 
+	it("collapses across the elements each boolean attribute belongs to", () => {
+		for (const [element, name] of [
+			["input", "checked"],
+			["input", "disabled"],
+			["script", "async"],
+			["script", "defer"],
+			["option", "selected"],
+			["select", "multiple"],
+			["details", "open"],
+			["ol", "reversed"],
+			["iframe", "allowfullscreen"],
+			["video", "muted"],
+			["form", "novalidate"]
+		]) {
+			expect(minify(`<${element} ${name}="${name}"></${element}>`)).toContain(
+				`<${element} ${name}>`
+			);
+		}
+	});
+
+	it("leaves an attribute that is not boolean on that element", () => {
+		// `hidden` is enumerated in the living standard (`until-found`), so it is
+		// not one of these either.
+		for (const [element, name] of [
+			["p", "checked"],
+			["div", "open"],
+			["span", "selected"],
+			["p", "hidden"]
+		]) {
+			expect(minify(`<${element} ${name}="${name}">x</${element}>`)).toContain(
+				`${name}=${name}`
+			);
+		}
+	});
+
+	it("keeps the quotes a value cannot go without", () => {
+		for (const value of ["a b", "a=b", "a<b", "a>b", "a`b", "a'b"]) {
+			expect(minify(`<p id="${value}">x</p>`)).toContain(`id="${value}"`);
+		}
+		expect(minify('<p id="a/b">x</p>')).toContain("id=a/b");
+		expect(minify('<p id="a&quot;b">x</p>')).toContain("id='a\"b'");
+	});
+
 	it("collapses only where the attribute is a boolean one", () => {
 		expect(
 			minify('<p contenteditable="contenteditable">x</p>', {
@@ -7894,6 +7937,36 @@ describe("SourceProcessor — attribute rewrites as options", () => {
 		const off = minify(body, { normalizeAttributeValues: false });
 		expect(off).toContain('class="  b   a  " dir=RTL');
 		expect(off).toContain('srcset="a.png   1x"');
+	});
+
+	it("reaches every family the rewrite covers, not only the obvious ones", () => {
+		/** @type {[string, string, string][]} */
+		const families = [
+			['<p dir="RTL">x</p>', "dir=rtl", "dir=RTL"],
+			[
+				'<img srcset="a.png   1x" alt=a>',
+				'srcset="a.png 1x"',
+				'srcset="a.png   1x"'
+			],
+			['<p class="  b   a ">x</p>', 'class="b a"', 'class="  b   a "'],
+			[
+				'<meta name=viewport content="width=device-width,  initial-scale=1">',
+				'content="width=device-width,initial-scale=1"',
+				'content="width=device-width,  initial-scale=1"'
+			],
+			[
+				'<a ping="  a.php ,  b.php  ">x</a>',
+				'ping="a.php , b.php"',
+				'ping="  a.php ,  b.php  "'
+			],
+			['<a href="  /a  ">x</a>', "href=/a", 'href="  /a  "'],
+			['<ol start="  007  "><li>x</ol>', "start=7", 'start="  007  "'],
+			['<img width="  100  " src=a alt=a>', "width=100", 'width="  100  "']
+		];
+		for (const [body, on, off] of families) {
+			expect(minify(body)).toContain(on);
+			expect(minify(body, { normalizeAttributeValues: false })).toContain(off);
+		}
 	});
 
 	it("leaves the style attribute to its own option", () => {
