@@ -48,6 +48,28 @@ const CASES = {
 		file: "main.mjs",
 		expect: "fallback",
 		bailout: 'not "import"'
+	},
+	"chunk-format": {
+		file: "main.mjs",
+		expect: "fallback",
+		bailout: "output.chunkFormat is"
+	},
+	"import-function-name": {
+		file: "main.mjs",
+		expect: "fallback",
+		bailout: "output.importFunctionName is"
+	},
+	// Only the url forms need `import.meta`, so the chunk `import()` still bakes and
+	// the helper stays — the fallback is the asset url alone.
+	"environment-module": {
+		file: "main.mjs",
+		expect: "url-fallback",
+		bailout: "output.environment.module is false"
+	},
+	"base-uri": {
+		file: "main.mjs",
+		expect: "url-fallback",
+		bailout: "which is not absolute"
 	}
 };
 
@@ -89,6 +111,11 @@ module.exports = {
 			if (testCase.expect === "analyzable") {
 				expect(output).toContain(HELPER);
 				expect(bailouts).toEqual([]);
+			} else if (testCase.expect === "url-fallback") {
+				// A limitation that stops only the url forms leaves the chunk `import()`
+				// baked, so the helper is still the right thing to find.
+				expect(output).toContain(HELPER);
+				expect(bailouts.join("\n")).toContain(testCase.bailout);
 			} else {
 				// A limitation must not emit extra runtime — the `.ei` helper stays out.
 				expect(output).not.toContain(HELPER);

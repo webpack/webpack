@@ -99,5 +99,24 @@ module.exports = [
 	base("worker-chunk-loading", {
 		entry: "./index-worker",
 		output: { workerChunkLoading: "async-node" }
+	}),
+	// Chunks are not read through a native `import()` at all under this format.
+	base("chunk-format", { output: { chunkFormat: "array-push" } }),
+	// The call site is whatever this names, which is not a native `import()`.
+	base("import-function-name", {
+		output: { importFunctionName: "__import__" }
+	}),
+	// The target does not read `import.meta`, so only the url forms fall back — the
+	// chunk `import()` is emitted by the module chunk loader either way.
+	base("environment-module", {
+		entry: "./index-asset",
+		module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
+		output: { environment: { module: false, dynamicImport: true } }
+	}),
+	// A relative base has no base of its own for an asset url to resolve against.
+	base("base-uri", {
+		entry: { main: { import: "./index-asset", baseUri: "not-a-url" } },
+		module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
+		output: { publicPath: "./" }
 	})
 ];
