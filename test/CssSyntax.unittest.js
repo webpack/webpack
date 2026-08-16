@@ -1598,6 +1598,14 @@ describe("CssSyntax — minify transforms, in-process", () => {
 		expect(transform("translate3d(0,0,0)")).toBe("translateZ(0)");
 	});
 
+	// A `translate3d()`'s z is a `<length>`, so a percentage makes the whole
+	// declaration invalid — shortening it away would revive what the engine drops.
+	it("keeps a translate3d whose z offset is a percentage", () => {
+		expect(transform("translate3d(1px,2px,0%)")).toBe(
+			"translate3d(1px,2px,0%)"
+		);
+	});
+
 	it("keeps a call the reduction does not name a shorter one for", () => {
 		// The axis a 3D matrix would have to leave at the identity is not.
 		expect(transform("matrix3d(1,0,0,0,0,1,0,0,0,0,2,0,4,5,0,1)")).toBe(
