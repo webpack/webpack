@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases performance-duplicate-modules should print correct stats for performance-duplicate-modules 1`] = `
+"HINT in duplicate modules: copies of the same module across chunks add X bytes:
+  ./shared-big.js (in 2 chunks, X bytes extra)
+  ./shared.js (in 2 chunks, X bytes extra)
+A module reached from several chunks is emitted into each of them unless a shared chunk holds it. 'optimization.splitChunks' can pull it into one.
+For more info visit https://webpack.js.org/plugins/split-chunks-plugin/"
+`;

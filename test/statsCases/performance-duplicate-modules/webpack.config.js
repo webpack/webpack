@@ -6,12 +6,10 @@ module.exports = {
 	entry: "./index",
 	performance: {
 		hints: "stats",
-		uncacheableModules: true
+		duplicateModules: true
 	},
-	module: {
-		rules: [
-			{ test: /[\\/](?:a|b)\.js$/, use: require.resolve("./no-cache-loader") }
-		]
+	optimization: {
+		splitChunks: false
 	},
 	stats: {
 		all: false,
