@@ -742,13 +742,13 @@ however you need.
 
 ```
 auto:
-  asset runtime.a4154a99.js 6.7 KiB [emitted] [immutable] [javascript module] (name: runtime)
-  asset home.6d8d52f7.js 1.31 KiB [emitted] [immutable] [javascript module] (name: home)
-  asset __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
+  asset runtime.095bd620.js 6.46 KiB [emitted] [immutable] [javascript module] (name: runtime)
+  asset __html_9b425bba_0.16bc9d20.chunk.js 1.39 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
+  asset home.76b561ad.js 1.31 KiB [emitted] [immutable] [javascript module] (name: home)
   asset src_routes_settings_js.2107bc69.chunk.js 943 bytes [emitted] [immutable] [javascript module]
-  asset home.6a0b13a2.html 237 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 8.01 KiB (237 bytes) = runtime.a4154a99.js 6.7 KiB home.6d8d52f7.js 1.31 KiB 1 auxiliary asset
-  Entrypoint __html_9b425bba_0 7.96 KiB = runtime.a4154a99.js 6.7 KiB __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB
+  asset home.27f86033.html 237 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 7.77 KiB (237 bytes) = runtime.095bd620.js 6.46 KiB home.76b561ad.js 1.31 KiB 1 auxiliary asset
+  Entrypoint __html_9b425bba_0 7.85 KiB = runtime.095bd620.js 6.46 KiB __html_9b425bba_0.16bc9d20.chunk.js 1.39 KiB
   runtime modules 3.66 KiB 8 modules
   cacheable modules 470 bytes (javascript) 98 bytes (html)
     data:text/html,<!doctype html><html><head><script src="./src/routes/home.js"></script></head><bod...(truncated) 108 bytes (javascript) 98 bytes (html) [built] [code generated]
@@ -765,13 +765,13 @@ auto:
   auto (webpack X.X.X) compiled successfully
 
 prefetch:
-  asset runtime.a4154a99.js 6.7 KiB [emitted] [immutable] [javascript module] (name: runtime)
-  asset home.6d8d52f7.js 1.31 KiB [emitted] [immutable] [javascript module] (name: home)
-  asset __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
+  asset runtime.095bd620.js 6.46 KiB [emitted] [immutable] [javascript module] (name: runtime)
+  asset __html_9b425bba_0.16bc9d20.chunk.js 1.39 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
+  asset home.76b561ad.js 1.31 KiB [emitted] [immutable] [javascript module] (name: home)
   asset src_routes_settings_js.2107bc69.chunk.js 943 bytes [emitted] [immutable] [javascript module]
-  asset home.51200da9.html 232 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 8 KiB (232 bytes) = runtime.a4154a99.js 6.7 KiB home.6d8d52f7.js 1.31 KiB 1 auxiliary asset
-  Entrypoint __html_9b425bba_0 7.96 KiB = runtime.a4154a99.js 6.7 KiB __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB
+  asset home.efa9cdaf.html 232 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 7.77 KiB (232 bytes) = runtime.095bd620.js 6.46 KiB home.76b561ad.js 1.31 KiB 1 auxiliary asset
+  Entrypoint __html_9b425bba_0 7.85 KiB = runtime.095bd620.js 6.46 KiB __html_9b425bba_0.16bc9d20.chunk.js 1.39 KiB
   runtime modules 3.66 KiB 8 modules
   cacheable modules 470 bytes (javascript) 98 bytes (html)
     data:text/html,<!doctype html><html><head><script src="./src/routes/home.js"></script></head><bod...(truncated) 108 bytes (javascript) 98 bytes (html) [built] [code generated]
@@ -788,15 +788,15 @@ prefetch:
   prefetch (webpack X.X.X) compiled successfully
 
 custom-array:
-  asset runtime.0211bee8.js 6.7 KiB [emitted] [immutable] [javascript module] (name: runtime)
-  asset home.31bcb9fe.js 1.7 KiB [emitted] [immutable] [javascript module] (name: home)
-  asset __html_9b425bba_0.3c97e6b8.chunk.js 1.25 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
-  asset settings.3988ca2b.js 1.23 KiB [emitted] [immutable] [javascript module] (name: settings)
+  asset runtime.5a33aecc.js 6.46 KiB [emitted] [immutable] [javascript module] (name: runtime)
+  asset home.630f4e41.js 1.7 KiB [emitted] [immutable] [javascript module] (name: home)
+  asset __html_9b425bba_0.260dc75f.chunk.js 1.37 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
+  asset settings.4dcf442e.js 1.23 KiB [emitted] [immutable] [javascript module] (name: settings)
   asset src_routes_settings_js.94a93042.chunk.js 961 bytes [emitted] [immutable] [javascript module]
-  asset home.17b8ead9.html 604 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 8.4 KiB (604 bytes) = runtime.0211bee8.js 6.7 KiB home.31bcb9fe.js 1.7 KiB 1 auxiliary asset
-  Entrypoint settings 7.93 KiB = runtime.0211bee8.js 6.7 KiB settings.3988ca2b.js 1.23 KiB
-  Entrypoint __html_9b425bba_0 7.94 KiB = runtime.0211bee8.js 6.7 KiB __html_9b425bba_0.3c97e6b8.chunk.js 1.25 KiB
+  asset home.c1d4feba.html 604 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 8.16 KiB (604 bytes) = runtime.5a33aecc.js 6.46 KiB home.630f4e41.js 1.7 KiB 1 auxiliary asset
+  Entrypoint settings 7.69 KiB = runtime.5a33aecc.js 6.46 KiB settings.4dcf442e.js 1.23 KiB
+  Entrypoint __html_9b425bba_0 7.83 KiB = runtime.5a33aecc.js 6.46 KiB __html_9b425bba_0.260dc75f.chunk.js 1.37 KiB
   runtime modules 3.66 KiB 8 modules
   cacheable modules 470 bytes (javascript) 98 bytes (html)
     data:text/html,<!doctype html><html><head><script src="./src/routes/home.js"></script></head><bod...(truncated) 108 bytes (javascript) 98 bytes (html) [built] [code generated]
@@ -814,13 +814,13 @@ custom-array:
   custom-array (webpack X.X.X) compiled successfully
 
 callback:
-  asset runtime.a4154a99.js 6.7 KiB [emitted] [immutable] [javascript module] (name: runtime)
-  asset home.6d8d52f7.js 1.42 KiB [emitted] [immutable] [javascript module] (name: home)
-  asset __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
+  asset runtime.095bd620.js 6.46 KiB [emitted] [immutable] [javascript module] (name: runtime)
+  asset home.76b561ad.js 1.42 KiB [emitted] [immutable] [javascript module] (name: home)
+  asset __html_9b425bba_0.16bc9d20.chunk.js 1.39 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
   asset src_routes_settings_js.2107bc69.chunk.js 943 bytes [emitted] [immutable] [javascript module]
-  asset home.c5cd1660.html 339 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 8.12 KiB (339 bytes) = runtime.a4154a99.js 6.7 KiB home.6d8d52f7.js 1.42 KiB 1 auxiliary asset
-  Entrypoint __html_9b425bba_0 7.96 KiB = runtime.a4154a99.js 6.7 KiB __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB
+  asset home.97829a2a.html 339 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 7.88 KiB (339 bytes) = runtime.095bd620.js 6.46 KiB home.76b561ad.js 1.42 KiB 1 auxiliary asset
+  Entrypoint __html_9b425bba_0 7.85 KiB = runtime.095bd620.js 6.46 KiB __html_9b425bba_0.16bc9d20.chunk.js 1.39 KiB
   runtime modules 3.66 KiB 8 modules
   cacheable modules 470 bytes (javascript) 98 bytes (html)
     data:text/html,<!doctype html><html><head><script src="./src/routes/home.js"></script></head><bod...(truncated) 108 bytes (javascript) 98 bytes (html) [built] [code generated]
@@ -843,30 +843,30 @@ url-hints:
       asset assets/thumb.31d6cfe0.png 0 bytes [emitted] [immutable] [from: src/thumb.png] (auxiliary name: __html_545c7cf9_0)
     asset assets/banner.31d6cfe0.jpg 0 bytes [emitted] [immutable] [from: src/hero/banner.jpg] (auxiliary name: __html_545c7cf9_0)
     asset assets/inter.31d6cfe0.woff2 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff2] (auxiliary name: __html_545c7cf9_0)
-  assets by path *.js 10.1 KiB
-    asset runtime.0428e0d3.js 4.95 KiB [emitted] [immutable] [javascript module] (name: runtime)
-    asset __html_545c7cf9_0.34832faf.chunk.js 3.39 KiB [emitted] [immutable] [javascript module] (name: __html_545c7cf9_0)
-    asset home.e89aa7f6.js 1.73 KiB [emitted] [immutable] [javascript module] (name: home)
-  asset home.91b13b03.html 595 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 6.68 KiB (595 bytes) = runtime.0428e0d3.js 4.95 KiB home.e89aa7f6.js 1.73 KiB 1 auxiliary asset
-  Entrypoint __html_545c7cf9_0 8.34 KiB = runtime.0428e0d3.js 4.95 KiB __html_545c7cf9_0.34832faf.chunk.js 3.39 KiB 4 auxiliary assets
-  runtime modules 2.37 KiB 7 modules
-  cacheable modules 4 bytes (asset) 1.04 KiB (javascript) 110 bytes (html)
-    asset modules 4 bytes (asset) 168 bytes (javascript)
-      modules by path ./src/*.png 2 bytes (asset) 84 bytes (javascript)
-        ./src/thumb.png 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+  assets by path *.js 8.31 KiB
+    asset runtime.bcab8112.js 4.79 KiB [emitted] [immutable] [javascript module] (name: runtime)
+    asset __html_545c7cf9_0.7f643399.chunk.js 1.79 KiB [emitted] [immutable] [javascript module] (name: __html_545c7cf9_0)
+    asset home.675ea631.js 1.73 KiB [emitted] [immutable] [javascript module] (name: home)
+  asset home.d623ca89.html 595 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 6.52 KiB (595 bytes) = runtime.bcab8112.js 4.79 KiB home.675ea631.js 1.73 KiB 1 auxiliary asset
+  Entrypoint __html_545c7cf9_0 6.58 KiB = runtime.bcab8112.js 4.79 KiB __html_545c7cf9_0.7f643399.chunk.js 1.79 KiB 4 auxiliary assets
+  runtime modules 2.34 KiB 5 modules
+  cacheable modules 4 bytes (asset) 898 bytes (javascript) 110 bytes (html)
+    asset modules 4 bytes
+      modules by path ./src/*.png 2 bytes
+        ./src/thumb.png 1 bytes [built] [code generated]
           [no exports]
           [used exports unknown]
           new URL() ../thumb.png ./src/routes/home-with-assets.js 8:14-54
-        ./src/icon.png 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+        ./src/icon.png 1 bytes [built] [code generated]
           [no exports]
           [used exports unknown]
           new URL() ../icon.png ./src/routes/home-with-assets.js 11:21-14:1
-      ./src/fonts/inter.woff2 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+      ./src/fonts/inter.woff2 1 bytes [built] [code generated]
         [no exports]
         [used exports unknown]
         new URL() ../fonts/inter.woff2 ./src/routes/home-with-assets.js 6:13-61
-      ./src/hero/banner.jpg 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+      ./src/hero/banner.jpg 1 bytes [built] [code generated]
         [no exports]
         [used exports unknown]
         new URL() ../hero/banner.jpg ./src/routes/home-with-assets.js 7:13-59
@@ -886,30 +886,30 @@ url-hints-scoped:
       asset assets/thumb.31d6cfe0.png 0 bytes [emitted] [immutable] [from: src/thumb.png] (auxiliary name: __html_545c7cf9_0)
     asset assets/banner.31d6cfe0.jpg 0 bytes [emitted] [immutable] [from: src/hero/banner.jpg] (auxiliary name: __html_545c7cf9_0)
     asset assets/inter.31d6cfe0.woff2 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff2] (auxiliary name: __html_545c7cf9_0)
-  assets by path *.js 9.82 KiB
-    asset runtime.0428e0d3.js 4.95 KiB [emitted] [immutable] [javascript module] (name: runtime)
-    asset __html_545c7cf9_0.34832faf.chunk.js 3.39 KiB [emitted] [immutable] [javascript module] (name: __html_545c7cf9_0)
-    asset home.e89aa7f6.js 1.49 KiB [emitted] [immutable] [javascript module] (name: home)
-  asset home.27242e89.html 366 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 6.43 KiB (366 bytes) = runtime.0428e0d3.js 4.95 KiB home.e89aa7f6.js 1.49 KiB 1 auxiliary asset
-  Entrypoint __html_545c7cf9_0 8.34 KiB = runtime.0428e0d3.js 4.95 KiB __html_545c7cf9_0.34832faf.chunk.js 3.39 KiB 4 auxiliary assets
-  runtime modules 2.37 KiB 7 modules
-  cacheable modules 4 bytes (asset) 1.04 KiB (javascript) 110 bytes (html)
-    asset modules 4 bytes (asset) 168 bytes (javascript)
-      modules by path ./src/*.png 2 bytes (asset) 84 bytes (javascript)
-        ./src/thumb.png 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+  assets by path *.js 8.07 KiB
+    asset runtime.bcab8112.js 4.79 KiB [emitted] [immutable] [javascript module] (name: runtime)
+    asset __html_545c7cf9_0.7f643399.chunk.js 1.79 KiB [emitted] [immutable] [javascript module] (name: __html_545c7cf9_0)
+    asset home.675ea631.js 1.49 KiB [emitted] [immutable] [javascript module] (name: home)
+  asset home.a36502ae.html 366 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 6.27 KiB (366 bytes) = runtime.bcab8112.js 4.79 KiB home.675ea631.js 1.49 KiB 1 auxiliary asset
+  Entrypoint __html_545c7cf9_0 6.58 KiB = runtime.bcab8112.js 4.79 KiB __html_545c7cf9_0.7f643399.chunk.js 1.79 KiB 4 auxiliary assets
+  runtime modules 2.34 KiB 5 modules
+  cacheable modules 4 bytes (asset) 898 bytes (javascript) 110 bytes (html)
+    asset modules 4 bytes
+      modules by path ./src/*.png 2 bytes
+        ./src/thumb.png 1 bytes [built] [code generated]
           [no exports]
           [used exports unknown]
           new URL() ../thumb.png ./src/routes/home-with-assets.js 8:14-54
-        ./src/icon.png 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+        ./src/icon.png 1 bytes [built] [code generated]
           [no exports]
           [used exports unknown]
           new URL() ../icon.png ./src/routes/home-with-assets.js 11:21-14:1
-      ./src/fonts/inter.woff2 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+      ./src/fonts/inter.woff2 1 bytes [built] [code generated]
         [no exports]
         [used exports unknown]
         new URL() ../fonts/inter.woff2 ./src/routes/home-with-assets.js 6:13-61
-      ./src/hero/banner.jpg 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+      ./src/hero/banner.jpg 1 bytes [built] [code generated]
         [no exports]
         [used exports unknown]
         new URL() ../hero/banner.jpg ./src/routes/home-with-assets.js 7:13-59
@@ -931,35 +931,35 @@ ssr:
       asset assets/icon.31d6cfe0.png 0 bytes [emitted] [immutable] [from: src/icon.png] (auxiliary name: home)
       asset assets/thumb.31d6cfe0.png 0 bytes [emitted] [immutable] [from: src/thumb.png] (auxiliary name: home)
     asset assets/inter.31d6cfe0.woff2 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff2] (auxiliary name: home)
-  assets by path *.js 9.37 KiB
-    asset runtime.d0e8e650.js 4.14 KiB [emitted] [immutable] [javascript module] (name: runtime)
-    asset home.27a0472f.js 4.05 KiB [emitted] [immutable] [javascript module] (name: home)
-    asset product.0b6623b2.js 1.19 KiB [emitted] [immutable] [javascript module] (name: product)
+  assets by path *.js 7.37 KiB
+    asset runtime.0b7748ae.js 3.98 KiB [emitted] [immutable] [javascript module] (name: runtime)
+    asset home.e5ed84dc.js 2.6 KiB [emitted] [immutable] [javascript module] (name: home)
+    asset product.b6c57825.js 808 bytes [emitted] [immutable] [javascript module] (name: product)
   asset ssr-hints.json 699 bytes [emitted]
-  Entrypoint home 8.18 KiB = runtime.d0e8e650.js 4.14 KiB home.27a0472f.js 4.05 KiB 4 auxiliary assets
-  Entrypoint product 5.32 KiB = runtime.d0e8e650.js 4.14 KiB product.0b6623b2.js 1.19 KiB 1 auxiliary asset
-  runtime modules 2.35 KiB 6 modules
-  cacheable modules 5 bytes (asset) 1.07 KiB (javascript)
-    asset modules 5 bytes (asset) 210 bytes (javascript)
-      modules by path ./src/hero/*.jpg 2 bytes (asset) 84 bytes (javascript)
-        ./src/hero/banner.jpg 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+  Entrypoint home 6.58 KiB = runtime.0b7748ae.js 3.98 KiB home.e5ed84dc.js 2.6 KiB 4 auxiliary assets
+  Entrypoint product 4.77 KiB = runtime.0b7748ae.js 3.98 KiB product.b6c57825.js 808 bytes 1 auxiliary asset
+  runtime modules 2.36 KiB 5 modules
+  cacheable modules 5 bytes (asset) 881 bytes (javascript)
+    asset modules 5 bytes
+      modules by path ./src/hero/*.jpg 2 bytes
+        ./src/hero/banner.jpg 1 bytes [built] [code generated]
           [no exports]
           [used exports unknown]
           new URL() ../hero/banner.jpg ./src/routes/home-with-assets.js 7:13-59
-        ./src/hero/product.jpg 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+        ./src/hero/product.jpg 1 bytes [built] [code generated]
           [no exports]
           [used exports unknown]
           new URL() ../hero/product.jpg ./src/routes/product.js 1:16-63
-      modules by path ./src/*.png 2 bytes (asset) 84 bytes (javascript)
-        ./src/thumb.png 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+      modules by path ./src/*.png 2 bytes
+        ./src/thumb.png 1 bytes [built] [code generated]
           [no exports]
           [used exports unknown]
           new URL() ../thumb.png ./src/routes/home-with-assets.js 8:14-54
-        ./src/icon.png 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+        ./src/icon.png 1 bytes [built] [code generated]
           [no exports]
           [used exports unknown]
           new URL() ../icon.png ./src/routes/home-with-assets.js 11:21-14:1
-      ./src/fonts/inter.woff2 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+      ./src/fonts/inter.woff2 1 bytes [built] [code generated]
         [no exports]
         [used exports unknown]
         new URL() ../fonts/inter.woff2 ./src/routes/home-with-assets.js 6:13-61
@@ -973,18 +973,18 @@ ssr:
   ssr (webpack X.X.X) compiled successfully
 
 font-preload:
-  assets by path *.js 7.24 KiB
-    asset runtime.ffe2a219.js 4.53 KiB [emitted] [immutable] [javascript module] (name: runtime)
-    asset home.86c41536.js 1.5 KiB [emitted] [immutable] [javascript module] (name: home)
-    asset __html_d6cdf5c7_0.184f91d7.chunk.js 1.21 KiB [emitted] [immutable] [javascript module] (name: __html_d6cdf5c7_0)
+  assets by path *.js 6.12 KiB
+    asset runtime.ae983c31.js 3.53 KiB [emitted] [immutable] [javascript module] (name: runtime)
+    asset home.6ced6157.js 1.5 KiB [emitted] [immutable] [javascript module] (name: home)
+    asset __html_d6cdf5c7_0.cc66bc3f.chunk.js 1.1 KiB [emitted] [immutable] [javascript module] (name: __html_d6cdf5c7_0)
   assets by path assets/ 0 bytes
     asset assets/inter.31d6cfe0.woff 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff] (auxiliary name: __html_d6cdf5c7_0)
     asset assets/inter.31d6cfe0.woff2 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff2] (auxiliary name: __html_d6cdf5c7_0)
-  asset home.a7a56b53.html 386 bytes [emitted] [immutable] (auxiliary name: home)
+  asset home.a7f26a8d.html 386 bytes [emitted] [immutable] (auxiliary name: home)
   asset __html_d6cdf5c7_0.cc28d3e3.css 315 bytes [emitted] [immutable] (name: __html_d6cdf5c7_0)
-  Entrypoint home 6.03 KiB (386 bytes) = runtime.ffe2a219.js 4.53 KiB home.86c41536.js 1.5 KiB 1 auxiliary asset
-  Entrypoint __html_d6cdf5c7_0 6.05 KiB = runtime.ffe2a219.js 4.53 KiB __html_d6cdf5c7_0.184f91d7.chunk.js 1.21 KiB __html_d6cdf5c7_0.cc28d3e3.css 315 bytes 2 auxiliary assets
-  runtime modules 2.07 KiB 8 modules
+  Entrypoint home 5.03 KiB (386 bytes) = runtime.ae983c31.js 3.53 KiB home.6ced6157.js 1.5 KiB 1 auxiliary asset
+  Entrypoint __html_d6cdf5c7_0 4.94 KiB = runtime.ae983c31.js 3.53 KiB __html_d6cdf5c7_0.cc66bc3f.chunk.js 1.1 KiB __html_d6cdf5c7_0.cc28d3e3.css 315 bytes 2 auxiliary assets
+  runtime modules 1.5 KiB 5 modules
   cacheable modules 322 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url) 107 bytes (html) 181 bytes (css)
     modules by path ./src/ 205 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url)
       ./src/routes/home-with-css.js 205 bytes [built] [code generated]
@@ -1010,13 +1010,13 @@ font-preload:
   font-preload (webpack X.X.X) compiled successfully
 
 none:
-  asset runtime.a4154a99.js 6.7 KiB [emitted] [immutable] [javascript module] (name: runtime)
-  asset __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
-  asset home.6d8d52f7.js 1.26 KiB [emitted] [immutable] [javascript module] (name: home)
+  asset runtime.095bd620.js 6.46 KiB [emitted] [immutable] [javascript module] (name: runtime)
+  asset __html_9b425bba_0.16bc9d20.chunk.js 1.39 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
+  asset home.76b561ad.js 1.26 KiB [emitted] [immutable] [javascript module] (name: home)
   asset src_routes_settings_js.2107bc69.chunk.js 943 bytes [emitted] [immutable] [javascript module]
-  asset home.a96deb30.html 184 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 7.95 KiB (184 bytes) = runtime.a4154a99.js 6.7 KiB home.6d8d52f7.js 1.26 KiB 1 auxiliary asset
-  Entrypoint __html_9b425bba_0 7.96 KiB = runtime.a4154a99.js 6.7 KiB __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB
+  asset home.cc6796a3.html 184 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 7.71 KiB (184 bytes) = runtime.095bd620.js 6.46 KiB home.76b561ad.js 1.26 KiB 1 auxiliary asset
+  Entrypoint __html_9b425bba_0 7.85 KiB = runtime.095bd620.js 6.46 KiB __html_9b425bba_0.16bc9d20.chunk.js 1.39 KiB
   runtime modules 3.66 KiB 8 modules
   cacheable modules 470 bytes (javascript) 98 bytes (html)
     data:text/html,<!doctype html><html><head><script src="./src/routes/home.js"></script></head><bod...(truncated) 108 bytes (javascript) 98 bytes (html) [built] [code generated]
@@ -1039,30 +1039,30 @@ url-hints-global:
       asset assets/thumb.31d6cfe0.png 0 bytes [emitted] [immutable] [from: src/thumb.png] (auxiliary name: __html_545c7cf9_0)
     asset assets/banner.31d6cfe0.jpg 0 bytes [emitted] [immutable] [from: src/hero/banner.jpg] (auxiliary name: __html_545c7cf9_0)
     asset assets/inter.31d6cfe0.woff2 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff2] (auxiliary name: __html_545c7cf9_0)
-  assets by path *.js 10 KiB
-    asset runtime.0428e0d3.js 4.95 KiB [emitted] [immutable] [javascript module] (name: runtime)
-    asset __html_545c7cf9_0.34832faf.chunk.js 3.39 KiB [emitted] [immutable] [javascript module] (name: __html_545c7cf9_0)
-    asset home.e89aa7f6.js 1.71 KiB [emitted] [immutable] [javascript module] (name: home)
-  asset home.001b1beb.html 577 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 6.66 KiB (577 bytes) = runtime.0428e0d3.js 4.95 KiB home.e89aa7f6.js 1.71 KiB 1 auxiliary asset
-  Entrypoint __html_545c7cf9_0 8.34 KiB = runtime.0428e0d3.js 4.95 KiB __html_545c7cf9_0.34832faf.chunk.js 3.39 KiB 4 auxiliary assets
-  runtime modules 2.37 KiB 7 modules
-  cacheable modules 4 bytes (asset) 1.04 KiB (javascript) 110 bytes (html)
-    asset modules 4 bytes (asset) 168 bytes (javascript)
-      modules by path ./src/*.png 2 bytes (asset) 84 bytes (javascript)
-        ./src/thumb.png 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+  assets by path *.js 8.29 KiB
+    asset runtime.bcab8112.js 4.79 KiB [emitted] [immutable] [javascript module] (name: runtime)
+    asset __html_545c7cf9_0.7f643399.chunk.js 1.79 KiB [emitted] [immutable] [javascript module] (name: __html_545c7cf9_0)
+    asset home.675ea631.js 1.71 KiB [emitted] [immutable] [javascript module] (name: home)
+  asset home.64f4464f.html 577 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 6.5 KiB (577 bytes) = runtime.bcab8112.js 4.79 KiB home.675ea631.js 1.71 KiB 1 auxiliary asset
+  Entrypoint __html_545c7cf9_0 6.58 KiB = runtime.bcab8112.js 4.79 KiB __html_545c7cf9_0.7f643399.chunk.js 1.79 KiB 4 auxiliary assets
+  runtime modules 2.34 KiB 5 modules
+  cacheable modules 4 bytes (asset) 898 bytes (javascript) 110 bytes (html)
+    asset modules 4 bytes
+      modules by path ./src/*.png 2 bytes
+        ./src/thumb.png 1 bytes [built] [code generated]
           [no exports]
           [used exports unknown]
           new URL() ../thumb.png ./src/routes/home-with-assets.js 8:14-54
-        ./src/icon.png 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+        ./src/icon.png 1 bytes [built] [code generated]
           [no exports]
           [used exports unknown]
           new URL() ../icon.png ./src/routes/home-with-assets.js 11:21-14:1
-      ./src/fonts/inter.woff2 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+      ./src/fonts/inter.woff2 1 bytes [built] [code generated]
         [no exports]
         [used exports unknown]
         new URL() ../fonts/inter.woff2 ./src/routes/home-with-assets.js 6:13-61
-      ./src/hero/banner.jpg 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+      ./src/hero/banner.jpg 1 bytes [built] [code generated]
         [no exports]
         [used exports unknown]
         new URL() ../hero/banner.jpg ./src/routes/home-with-assets.js 7:13-59
@@ -1076,20 +1076,20 @@ url-hints-global:
   url-hints-global (webpack X.X.X) compiled successfully
 
 async-css-preload:
-  assets by path *.js 18 KiB
-    asset runtime.86ed35f7.js 13.4 KiB [emitted] [immutable] [javascript module] (name: runtime)
-    asset home.5b5cf1a7.js 1.33 KiB [emitted] [immutable] [javascript module] (name: home)
-    asset __html_f953a09c_0.14374736.chunk.js 1.22 KiB [emitted] [immutable] [javascript module] (name: __html_f953a09c_0)
-    asset mid.abf213d5.chunk.js 1.14 KiB [emitted] [immutable] [javascript module] (name: mid)
+  assets by path *.js 17.9 KiB
+    asset runtime.49cbc37a.js 13.1 KiB [emitted] [immutable] [javascript module] (name: runtime)
+    asset __html_f953a09c_0.7662977b.chunk.js 1.35 KiB [emitted] [immutable] [javascript module] (name: __html_f953a09c_0)
+    asset home.f4f9aefd.js 1.33 KiB [emitted] [immutable] [javascript module] (name: home)
+    asset mid.abf213d5.chunk.js 1.26 KiB [emitted] [immutable] [javascript module] (name: mid)
     asset styled-route.89138c94.chunk.js 934 bytes [emitted] [immutable] [javascript module] (name: styled-route)
   assets by chunk 0 bytes (auxiliary name: styled-route)
     asset 31d6cfe0d16ae931b73c.woff 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff] (auxiliary name: styled-route)
     asset 31d6cfe0d16ae931b73c.woff2 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff2] (auxiliary name: styled-route)
   asset styled-route.84a7fce8.chunk.css 313 bytes [emitted] [immutable] (name: styled-route)
-  asset home.098c8950.html 237 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 14.8 KiB (237 bytes) = runtime.86ed35f7.js 13.4 KiB home.5b5cf1a7.js 1.33 KiB 1 auxiliary asset
-  Entrypoint __html_f953a09c_0 14.7 KiB = runtime.86ed35f7.js 13.4 KiB __html_f953a09c_0.14374736.chunk.js 1.22 KiB
-  runtime modules 8.52 KiB 13 modules
+  asset home.574e6beb.html 237 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 14.4 KiB (237 bytes) = runtime.49cbc37a.js 13.1 KiB home.f4f9aefd.js 1.33 KiB 1 auxiliary asset
+  Entrypoint __html_f953a09c_0 14.4 KiB = runtime.49cbc37a.js 13.1 KiB __html_f953a09c_0.7662977b.chunk.js 1.35 KiB
+  runtime modules 8.53 KiB 13 modules
   cacheable modules 574 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url) 104 bytes (html) 181 bytes (css)
     modules by path ./src/ 460 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url)
       javascript modules 460 bytes
@@ -1124,13 +1124,13 @@ async-css-preload:
   async-css-preload (webpack X.X.X) compiled successfully
 
 auto-preconnect:
-  asset runtime.a4154a99.js 6.7 KiB [emitted] [immutable] [javascript module] (name: runtime)
-  asset home.6d8d52f7.js 1.39 KiB [emitted] [immutable] [javascript module] (name: home)
-  asset __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
+  asset runtime.095bd620.js 6.46 KiB [emitted] [immutable] [javascript module] (name: runtime)
+  asset __html_9b425bba_0.16bc9d20.chunk.js 1.39 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
+  asset home.76b561ad.js 1.39 KiB [emitted] [immutable] [javascript module] (name: home)
   asset src_routes_settings_js.2107bc69.chunk.js 943 bytes [emitted] [immutable] [javascript module]
-  asset home.b77f75b7.html 309 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 8.08 KiB (309 bytes) = runtime.a4154a99.js 6.7 KiB home.6d8d52f7.js 1.39 KiB 1 auxiliary asset
-  Entrypoint __html_9b425bba_0 7.96 KiB = runtime.a4154a99.js 6.7 KiB __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB
+  asset home.2df93fa7.html 309 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 7.85 KiB (309 bytes) = runtime.095bd620.js 6.46 KiB home.76b561ad.js 1.39 KiB 1 auxiliary asset
+  Entrypoint __html_9b425bba_0 7.85 KiB = runtime.095bd620.js 6.46 KiB __html_9b425bba_0.16bc9d20.chunk.js 1.39 KiB
   runtime modules 3.66 KiB 8 modules
   cacheable modules 470 bytes (javascript) 98 bytes (html)
     data:text/html,<!doctype html><html><head><script src="./src/routes/home.js"></script></head><bod...(truncated) 108 bytes (javascript) 98 bytes (html) [built] [code generated]
@@ -1153,31 +1153,31 @@ object-form:
       asset assets/thumb.31d6cfe0.png 0 bytes [emitted] [immutable] [from: src/thumb.png] (auxiliary name: __html_545c7cf9_0)
     asset assets/banner.31d6cfe0.jpg 0 bytes [emitted] [immutable] [from: src/hero/banner.jpg] (auxiliary name: __html_545c7cf9_0)
     asset assets/inter.31d6cfe0.woff2 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff2] (auxiliary name: __html_545c7cf9_0)
-  assets by path *.js 9.97 KiB
-    asset runtime.87fc0bb3.js 4.26 KiB [emitted] [immutable] [javascript module] (name: runtime)
-    asset __html_545c7cf9_0.4a6474cf.chunk.js 3.37 KiB [emitted] [immutable] [javascript module] (name: __html_545c7cf9_0)
-    asset home.8518ca20.js 2.34 KiB [emitted] [immutable] [javascript module] (name: home)
-  asset home.9538f127.html 1.18 KiB [emitted] [immutable] (auxiliary name: home)
+  assets by path *.js 8.22 KiB
+    asset runtime.c5e4ab07.js 4.1 KiB [emitted] [immutable] [javascript module] (name: runtime)
+    asset home.6f7fd622.js 2.34 KiB [emitted] [immutable] [javascript module] (name: home)
+    asset __html_545c7cf9_0.3cad6695.chunk.js 1.77 KiB [emitted] [immutable] [javascript module] (name: __html_545c7cf9_0)
+  asset home.f9f8c5e9.html 1.18 KiB [emitted] [immutable] (auxiliary name: home)
   asset ssr-hints.json 673 bytes [emitted]
-  Entrypoint home 6.6 KiB (1.18 KiB) = runtime.87fc0bb3.js 4.26 KiB home.8518ca20.js 2.34 KiB 1 auxiliary asset
-  Entrypoint __html_545c7cf9_0 7.63 KiB = runtime.87fc0bb3.js 4.26 KiB __html_545c7cf9_0.4a6474cf.chunk.js 3.37 KiB 4 auxiliary assets
-  runtime modules 1.93 KiB 6 modules
-  cacheable modules 4 bytes (asset) 1.04 KiB (javascript) 110 bytes (html)
-    asset modules 4 bytes (asset) 168 bytes (javascript)
-      modules by path ./src/*.png 2 bytes (asset) 84 bytes (javascript)
-        ./src/thumb.png 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+  Entrypoint home 6.45 KiB (1.18 KiB) = runtime.c5e4ab07.js 4.1 KiB home.6f7fd622.js 2.34 KiB 1 auxiliary asset
+  Entrypoint __html_545c7cf9_0 5.88 KiB = runtime.c5e4ab07.js 4.1 KiB __html_545c7cf9_0.3cad6695.chunk.js 1.77 KiB 4 auxiliary assets
+  runtime modules 1.9 KiB 4 modules
+  cacheable modules 4 bytes (asset) 898 bytes (javascript) 110 bytes (html)
+    asset modules 4 bytes
+      modules by path ./src/*.png 2 bytes
+        ./src/thumb.png 1 bytes [built] [code generated]
           [no exports]
           [used exports unknown]
           new URL() ../thumb.png ./src/routes/home-with-assets.js 8:14-54
-        ./src/icon.png 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+        ./src/icon.png 1 bytes [built] [code generated]
           [no exports]
           [used exports unknown]
           new URL() ../icon.png ./src/routes/home-with-assets.js 11:21-14:1
-      ./src/fonts/inter.woff2 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+      ./src/fonts/inter.woff2 1 bytes [built] [code generated]
         [no exports]
         [used exports unknown]
         new URL() ../fonts/inter.woff2 ./src/routes/home-with-assets.js 6:13-61
-      ./src/hero/banner.jpg 1 bytes (asset) 42 bytes (javascript) [built] [code generated]
+      ./src/hero/banner.jpg 1 bytes [built] [code generated]
         [no exports]
         [used exports unknown]
         new URL() ../hero/banner.jpg ./src/routes/home-with-assets.js 7:13-59
@@ -1191,13 +1191,13 @@ object-form:
   object-form (webpack X.X.X) compiled successfully
 
 csp-no-polyfill:
-  asset runtime.34e66c4f.js 11 KiB [emitted] [immutable] [javascript module] (name: runtime)
+  asset runtime.eb48bc4a.js 10.8 KiB [emitted] [immutable] [javascript module] (name: runtime)
   asset home.88328dd2.js 1.17 KiB [emitted] [immutable] [javascript module] (name: home)
   asset __html_9b425bba_0.7fa16e80.chunk.js 1.09 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
   asset src_routes_settings_js.c8a41bd7.chunk.js 866 bytes [emitted] [immutable] [javascript module]
-  asset home.c76a1b84.html 237 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 12.2 KiB (237 bytes) = runtime.34e66c4f.js 11 KiB home.88328dd2.js 1.17 KiB 1 auxiliary asset
-  Entrypoint __html_9b425bba_0 12.1 KiB = runtime.34e66c4f.js 11 KiB __html_9b425bba_0.7fa16e80.chunk.js 1.09 KiB
+  asset home.0dc78a53.html 237 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 11.9 KiB (237 bytes) = runtime.eb48bc4a.js 10.8 KiB home.88328dd2.js 1.17 KiB 1 auxiliary asset
+  Entrypoint __html_9b425bba_0 11.9 KiB = runtime.eb48bc4a.js 10.8 KiB __html_9b425bba_0.7fa16e80.chunk.js 1.09 KiB
   runtime modules 6.99 KiB 9 modules
   cacheable modules 470 bytes (javascript) 98 bytes (html)
     data:text/html,<!doctype html><html><head><script src="./src/routes/home.js"></script></head><bod...(truncated) 108 bytes (javascript) 98 bytes (html) [built] [code generated]
@@ -1214,19 +1214,19 @@ csp-no-polyfill:
   csp-no-polyfill (webpack X.X.X) compiled successfully
 
 async-js-css-preload:
-  assets by path *.js 18.6 KiB
-    asset runtime.b157f8b1.js 14 KiB [emitted] [immutable] [javascript module] (name: runtime)
-    asset home.b596a374.js 1.33 KiB [emitted] [immutable] [javascript module] (name: home)
-    asset __html_f953a09c_0.c1556bc8.chunk.js 1.22 KiB [emitted] [immutable] [javascript module] (name: __html_f953a09c_0)
-    asset mid.8851ee6b.chunk.js 1.14 KiB [emitted] [immutable] [javascript module] (name: mid)
+  assets by path *.js 18.5 KiB
+    asset runtime.94ac7672.js 13.6 KiB [emitted] [immutable] [javascript module] (name: runtime)
+    asset __html_f953a09c_0.a4986e4a.chunk.js 1.35 KiB [emitted] [immutable] [javascript module] (name: __html_f953a09c_0)
+    asset home.9cf79381.js 1.33 KiB [emitted] [immutable] [javascript module] (name: home)
+    asset mid.8851ee6b.chunk.js 1.26 KiB [emitted] [immutable] [javascript module] (name: mid)
     asset styled-route.89138c94.chunk.js 934 bytes [emitted] [immutable] [javascript module] (name: styled-route)
   assets by chunk 0 bytes (auxiliary name: styled-route)
     asset 31d6cfe0d16ae931b73c.woff 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff] (auxiliary name: styled-route)
     asset 31d6cfe0d16ae931b73c.woff2 0 bytes [emitted] [immutable] [from: src/fonts/inter.woff2] (auxiliary name: styled-route)
   asset styled-route.84a7fce8.chunk.css 313 bytes [emitted] [immutable] (name: styled-route)
-  asset home.783c7765.html 237 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 15.3 KiB (237 bytes) = runtime.b157f8b1.js 14 KiB home.b596a374.js 1.33 KiB 1 auxiliary asset
-  Entrypoint __html_f953a09c_0 15.2 KiB = runtime.b157f8b1.js 14 KiB __html_f953a09c_0.c1556bc8.chunk.js 1.22 KiB
+  asset home.663100cb.html 237 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 15 KiB (237 bytes) = runtime.94ac7672.js 13.6 KiB home.9cf79381.js 1.33 KiB 1 auxiliary asset
+  Entrypoint __html_f953a09c_0 15 KiB = runtime.94ac7672.js 13.6 KiB __html_f953a09c_0.a4986e4a.chunk.js 1.35 KiB
   runtime modules 8.96 KiB 13 modules
   cacheable modules 574 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url) 104 bytes (html) 181 bytes (css)
     modules by path ./src/ 460 bytes (javascript) 2 bytes (asset) 84 bytes (asset-url)
@@ -1262,13 +1262,13 @@ async-js-css-preload:
   async-js-css-preload (webpack X.X.X) compiled successfully
 
 esm-default:
-  asset runtime.a4154a99.js 6.7 KiB [emitted] [immutable] [javascript module] (name: runtime)
-  asset home.6d8d52f7.js 1.31 KiB [emitted] [immutable] [javascript module] (name: home)
-  asset __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
+  asset runtime.095bd620.js 6.46 KiB [emitted] [immutable] [javascript module] (name: runtime)
+  asset __html_9b425bba_0.16bc9d20.chunk.js 1.39 KiB [emitted] [immutable] [javascript module] (name: __html_9b425bba_0)
+  asset home.76b561ad.js 1.31 KiB [emitted] [immutable] [javascript module] (name: home)
   asset src_routes_settings_js.2107bc69.chunk.js 943 bytes [emitted] [immutable] [javascript module]
-  asset home.6a0b13a2.html 237 bytes [emitted] [immutable] (auxiliary name: home)
-  Entrypoint home 8.01 KiB (237 bytes) = runtime.a4154a99.js 6.7 KiB home.6d8d52f7.js 1.31 KiB 1 auxiliary asset
-  Entrypoint __html_9b425bba_0 7.96 KiB = runtime.a4154a99.js 6.7 KiB __html_9b425bba_0.2e2af83c.chunk.js 1.26 KiB
+  asset home.27f86033.html 237 bytes [emitted] [immutable] (auxiliary name: home)
+  Entrypoint home 7.77 KiB (237 bytes) = runtime.095bd620.js 6.46 KiB home.76b561ad.js 1.31 KiB 1 auxiliary asset
+  Entrypoint __html_9b425bba_0 7.85 KiB = runtime.095bd620.js 6.46 KiB __html_9b425bba_0.16bc9d20.chunk.js 1.39 KiB
   runtime modules 3.66 KiB 8 modules
   cacheable modules 470 bytes (javascript) 98 bytes (html)
     data:text/html,<!doctype html><html><head><script src="./src/routes/home.js"></script></head><bod...(truncated) 108 bytes (javascript) 98 bytes (html) [built] [code generated]

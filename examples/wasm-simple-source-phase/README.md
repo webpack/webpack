@@ -326,47 +326,41 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter/value functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			if(Array.isArray(definition)) {
-/******/ 				var i = 0;
-/******/ 				while(i < definition.length) {
-/******/ 					var key = definition[i++];
-/******/ 					var binding = definition[i++];
-/******/ 					if(!__webpack_require__.o(exports, key)) {
-/******/ 						if(binding === 0) {
-/******/ 							Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 						} else {
-/******/ 							Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 						}
-/******/ 					} else if(binding === 0) { i++; }
-/******/ 				}
-/******/ 			} else {
-/******/ 				for(var key in definition) {
-/******/ 					if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 	// define getter/value functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		if(Array.isArray(definition)) {
+/******/ 			var i = 0;
+/******/ 			while(i < definition.length) {
+/******/ 				var key = definition[i++];
+/******/ 				var binding = definition[i++];
+/******/ 				if(!__webpack_require__.o(exports, key)) {
+/******/ 					if(binding === 0) {
+/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
+/******/ 					} else {
+/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
 /******/ 					}
+/******/ 				} else if(binding === 0) { i++; }
+/******/ 			}
+/******/ 		} else {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
-/******/ 		};
-/******/ 	})();
+/******/ 		}
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = (exports) => {
+/******/ 		if(Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/wasm compile */
 /******/ 	(() => {
@@ -396,9 +390,7 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
-/******/ 	(() => {
-/******/ 		__webpack_require__.p = "dist/";
-/******/ 	})();
+/******/ 	__webpack_require__.p = "dist/";
 /******/ 	
 /************************************************************************/
 ```
@@ -421,7 +413,7 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 ## Unoptimized
 
 ```
-asset output.js 14.7 KiB [emitted] (name: main)
+asset output.js 14.5 KiB [emitted] (name: main)
 asset 690d0ef01c3f29042287.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset f215af0bd9b5ea85aee7.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 0bb22d2508a3f5746503.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)

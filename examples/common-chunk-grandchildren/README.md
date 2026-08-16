@@ -147,31 +147,25 @@ module.exports = config;
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/ensure chunk */
-/******/ 	(() => {
-/******/ 		__webpack_require__.f = {};
-/******/ 		// This file contains only the entry chunk.
-/******/ 		// The chunk loading function for additional chunks
-/******/ 		__webpack_require__.e = (chunkId) => {
-/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 				__webpack_require__.f[key](chunkId, promises);
-/******/ 				return promises;
-/******/ 			}, []));
-/******/ 		};
-/******/ 	})();
+/******/ 	__webpack_require__.f = {};
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = (chunkId) => {
+/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
+/******/ 			__webpack_require__.f[key](chunkId, promises);
+/******/ 			return promises;
+/******/ 		}, []));
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
-/******/ 	(() => {
-/******/ 		// This function allow to reference async chunks
-/******/ 		__webpack_require__.u = (chunkId) => {
-/******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + ".output.js";
-/******/ 		};
-/******/ 	})();
+/******/ 	// This function allow to reference async chunks
+/******/ 	__webpack_require__.u = (chunkId) => {
+/******/ 		// return url for filenames based on template
+/******/ 		return "" + chunkId + ".output.js";
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
@@ -219,9 +213,7 @@ module.exports = config;
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
-/******/ 	(() => {
-/******/ 		__webpack_require__.p = "dist/";
-/******/ 	})();
+/******/ 	__webpack_require__.p = "dist/";
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
@@ -453,14 +445,14 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 9.09 KiB [emitted] (name: main)
+asset output.js 8.94 KiB [emitted] (name: main)
 asset pageB_js.output.js 760 bytes [emitted]
 asset pageA_js.output.js 565 bytes [emitted]
 asset pageC_js.output.js 547 bytes [emitted]
 asset reusableComponent_js.output.js 441 bytes [emitted]
-chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.95 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.94 KiB 6 modules
+  runtime modules 4.95 KiB 6 modules
   ./example.js 220 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -501,9 +493,9 @@ asset pageB_js.output.js 228 bytes [emitted] [minimized]
 asset reusableComponent_js.output.js 141 bytes [emitted] [minimized]
 asset pageC_js.output.js 138 bytes [emitted] [minimized]
 asset pageA_js.output.js 137 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.95 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.94 KiB 6 modules
+  runtime modules 4.95 KiB 6 modules
   ./example.js 220 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main

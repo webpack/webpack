@@ -196,31 +196,25 @@ __webpack_require__.e(/*! AMD require */ "shared_js").then(function() { var __WE
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/ensure chunk */
-/******/ 	(() => {
-/******/ 		__webpack_require__.f = {};
-/******/ 		// This file contains only the entry chunk.
-/******/ 		// The chunk loading function for additional chunks
-/******/ 		__webpack_require__.e = (chunkId) => {
-/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 				__webpack_require__.f[key](chunkId, promises);
-/******/ 				return promises;
-/******/ 			}, []));
-/******/ 		};
-/******/ 	})();
+/******/ 	__webpack_require__.f = {};
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = (chunkId) => {
+/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
+/******/ 			__webpack_require__.f[key](chunkId, promises);
+/******/ 			return promises;
+/******/ 		}, []));
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
-/******/ 	(() => {
-/******/ 		// This function allow to reference async chunks
-/******/ 		__webpack_require__.u = (chunkId) => {
-/******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + ".js";
-/******/ 		};
-/******/ 	})();
+/******/ 	// This function allow to reference async chunks
+/******/ 	__webpack_require__.u = (chunkId) => {
+/******/ 		// return url for filenames based on template
+/******/ 		return "" + chunkId + ".js";
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
@@ -268,9 +262,7 @@ __webpack_require__.e(/*! AMD require */ "shared_js").then(function() { var __WE
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
-/******/ 	(() => {
-/******/ 		__webpack_require__.p = "dist/";
-/******/ 	})();
+/******/ 	__webpack_require__.p = "dist/";
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
@@ -470,31 +462,25 @@ __webpack_require__.e(/*! require.ensure */ "shared_js").then((function(require)
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/ensure chunk */
-/******/ 	(() => {
-/******/ 		__webpack_require__.f = {};
-/******/ 		// This file contains only the entry chunk.
-/******/ 		// The chunk loading function for additional chunks
-/******/ 		__webpack_require__.e = (chunkId) => {
-/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 				__webpack_require__.f[key](chunkId, promises);
-/******/ 				return promises;
-/******/ 			}, []));
-/******/ 		};
-/******/ 	})();
+/******/ 	__webpack_require__.f = {};
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = (chunkId) => {
+/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
+/******/ 			__webpack_require__.f[key](chunkId, promises);
+/******/ 			return promises;
+/******/ 		}, []));
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
-/******/ 	(() => {
-/******/ 		// This function allow to reference async chunks
-/******/ 		__webpack_require__.u = (chunkId) => {
-/******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + ".js";
-/******/ 		};
-/******/ 	})();
+/******/ 	// This function allow to reference async chunks
+/******/ 	__webpack_require__.u = (chunkId) => {
+/******/ 		// return url for filenames based on template
+/******/ 		return "" + chunkId + ".js";
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
@@ -542,9 +528,7 @@ __webpack_require__.e(/*! require.ensure */ "shared_js").then((function(require)
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
-/******/ 	(() => {
-/******/ 		__webpack_require__.p = "dist/";
-/******/ 	})();
+/******/ 	__webpack_require__.p = "dist/";
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
@@ -683,12 +667,12 @@ module.exports = function(msg) {
 ## Unoptimized
 
 ```
-asset pageA.js 10.7 KiB [emitted] (name: pageA)
-asset pageB.js 10.6 KiB [emitted] (name: pageB)
+asset pageA.js 10.6 KiB [emitted] (name: pageA)
+asset pageB.js 10.5 KiB [emitted] (name: pageB)
 asset shared_js.js 503 bytes [emitted]
 asset commons.js 370 bytes [emitted] (name: commons) (id hint: commons)
-Entrypoint pageA 11.1 KiB = commons.js 370 bytes pageA.js 10.7 KiB
-Entrypoint pageB 11 KiB = commons.js 370 bytes pageB.js 10.6 KiB
+Entrypoint pageA 10.9 KiB = commons.js 370 bytes pageA.js 10.6 KiB
+Entrypoint pageB 10.9 KiB = commons.js 370 bytes pageB.js 10.5 KiB
 chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
   > ./pageA pageA
   > ./pageB pageB

@@ -142,9 +142,7 @@ module.exports = function() {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
 /******/ 	
 /************************************************************************/
 ```
@@ -175,11 +173,11 @@ console.log(getTemplate("b"));
 ## Unoptimized
 
 ```
-asset output.js 3.78 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 603 bytes (javascript) 88 bytes (runtime) [entry] [rendered]
+asset output.js 3.75 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 603 bytes (javascript) 89 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 457 bytes [dependent] 4 modules
-  runtime modules 88 bytes 1 module
+  runtime modules 89 bytes 1 module
   ./example.js 146 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -190,10 +188,10 @@ webpack X.X.X compiled successfully
 
 ```
 asset output.js 830 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 603 bytes (javascript) 88 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 603 bytes (javascript) 89 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 457 bytes [dependent] 4 modules
-  runtime modules 88 bytes 1 module
+  runtime modules 89 bytes 1 module
   ./example.js 146 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main

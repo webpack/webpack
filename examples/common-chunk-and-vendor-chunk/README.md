@@ -254,9 +254,7 @@ module.exports = "utility1";
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
@@ -420,9 +418,7 @@ module.exports = "pageB";
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
@@ -584,9 +580,7 @@ module.exports = "pageC";
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
@@ -666,13 +660,13 @@ module.exports = "pageC";
 assets by chunk 744 bytes (id hint: commons)
   asset commons-utility2_js.js 372 bytes [emitted] (id hint: commons)
   asset commons-utility3_js.js 372 bytes [emitted] (id hint: commons)
-asset pageA.js 6.09 KiB [emitted] (name: pageA)
-asset pageB.js 5.8 KiB [emitted] (name: pageB)
-asset pageC.js 5.74 KiB [emitted] (name: pageC)
+asset pageA.js 6.05 KiB [emitted] (name: pageA)
+asset pageB.js 5.77 KiB [emitted] (name: pageB)
+asset pageC.js 5.71 KiB [emitted] (name: pageC)
 asset vendor.js 713 bytes [emitted] (name: vendor) (id hint: vendor)
-Entrypoint pageA 7.15 KiB = vendor.js 713 bytes commons-utility2_js.js 372 bytes pageA.js 6.09 KiB
-Entrypoint pageB 7.23 KiB = vendor.js 713 bytes commons-utility2_js.js 372 bytes commons-utility3_js.js 372 bytes pageB.js 5.8 KiB
-Entrypoint pageC 6.47 KiB = commons-utility2_js.js 372 bytes commons-utility3_js.js 372 bytes pageC.js 5.74 KiB
+Entrypoint pageA 7.11 KiB = vendor.js 713 bytes commons-utility2_js.js 372 bytes pageA.js 6.05 KiB
+Entrypoint pageB 7.19 KiB = vendor.js 713 bytes commons-utility2_js.js 372 bytes commons-utility3_js.js 372 bytes pageB.js 5.77 KiB
+Entrypoint pageC 6.43 KiB = commons-utility2_js.js 372 bytes commons-utility3_js.js 372 bytes pageC.js 5.71 KiB
 chunk (runtime: pageA, pageB, pageC) commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
   > ./pageA pageA
   > ./pageB pageB

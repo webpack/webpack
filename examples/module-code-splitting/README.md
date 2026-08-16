@@ -79,47 +79,41 @@ export function reset() {
 /******/ 
 /************************************************************************/
 /******/ /* webpack/runtime/define property getters */
-/******/ (() => {
-/******/ 	// define getter/value functions for harmony exports
-/******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		if(Array.isArray(definition)) {
-/******/ 			var i = 0;
-/******/ 			while(i < definition.length) {
-/******/ 				var key = definition[i++];
-/******/ 				var binding = definition[i++];
-/******/ 				if(!__webpack_require__.o(exports, key)) {
-/******/ 					if(binding === 0) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 					} else {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 					}
-/******/ 				} else if(binding === 0) { i++; }
-/******/ 			}
-/******/ 		} else {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ // define getter/value functions for harmony exports
+/******/ __webpack_require__.d = (exports, definition) => {
+/******/ 	if(Array.isArray(definition)) {
+/******/ 		var i = 0;
+/******/ 		while(i < definition.length) {
+/******/ 			var key = definition[i++];
+/******/ 			var binding = definition[i++];
+/******/ 			if(!__webpack_require__.o(exports, key)) {
+/******/ 				if(binding === 0) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
+/******/ 				} else {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: binding });
 /******/ 				}
+/******/ 			} else if(binding === 0) { i++; }
+/******/ 		}
+/******/ 	} else {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
-/******/ 	};
-/******/ })();
+/******/ 	}
+/******/ };
 /******/ 
 /******/ /* webpack/runtime/hasOwnProperty shorthand */
-/******/ (() => {
-/******/ 	__webpack_require__.o = (obj, prop) => (Object.hasOwn(obj, prop))
-/******/ })();
+/******/ __webpack_require__.o = (obj, prop) => (Object.hasOwn(obj, prop));
 /******/ 
 /******/ /* webpack/runtime/make namespace object */
-/******/ (() => {
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/ })();
+/******/ // define __esModule on exports
+/******/ __webpack_require__.r = (exports) => {
+/******/ 	if(Symbol.toStringTag) {
+/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 	}
+/******/ 	Object.defineProperty(exports, '__esModule', { value: true });
+/******/ };
 /******/ 
 /******/ /* webpack/runtime/import chunk loading */
 /******/ (() => {
@@ -232,7 +226,7 @@ var e={};const t={};function r(o){const n=t[o];if(void 0!==n)return n.exports;co
 ## Unoptimized
 
 ```
-asset output.js 6.26 KiB [emitted] [javascript module] (name: main)
+asset output.js 6.14 KiB [emitted] [javascript module] (name: main)
 asset 1.output.js 1.34 KiB [emitted] [javascript module]
 chunk (runtime: main) output.js (main) 420 bytes (javascript) 2.92 KiB (runtime) [entry] [rendered]
   > ./example.js main

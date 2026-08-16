@@ -176,47 +176,41 @@ function platform() {
 /******/ 
 /************************************************************************/
 /******/ /* webpack/runtime/define property getters */
-/******/ (() => {
-/******/ 	// define getter/value functions for harmony exports
-/******/ 	__webpack_require__.d = (exports, definition) => {
-/******/ 		if(Array.isArray(definition)) {
-/******/ 			var i = 0;
-/******/ 			while(i < definition.length) {
-/******/ 				var key = definition[i++];
-/******/ 				var binding = definition[i++];
-/******/ 				if(!__webpack_require__.o(exports, key)) {
-/******/ 					if(binding === 0) {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
-/******/ 					} else {
-/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: binding });
-/******/ 					}
-/******/ 				} else if(binding === 0) { i++; }
-/******/ 			}
-/******/ 		} else {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ // define getter/value functions for harmony exports
+/******/ __webpack_require__.d = (exports, definition) => {
+/******/ 	if(Array.isArray(definition)) {
+/******/ 		var i = 0;
+/******/ 		while(i < definition.length) {
+/******/ 			var key = definition[i++];
+/******/ 			var binding = definition[i++];
+/******/ 			if(!__webpack_require__.o(exports, key)) {
+/******/ 				if(binding === 0) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
+/******/ 				} else {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: binding });
 /******/ 				}
+/******/ 			} else if(binding === 0) { i++; }
+/******/ 		}
+/******/ 	} else {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
-/******/ 	};
-/******/ })();
+/******/ 	}
+/******/ };
 /******/ 
 /******/ /* webpack/runtime/hasOwnProperty shorthand */
-/******/ (() => {
-/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ })();
+/******/ __webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
 /******/ 
 /******/ /* webpack/runtime/make namespace object */
-/******/ (() => {
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = (exports) => {
-/******/ 		if(Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/ })();
+/******/ // define __esModule on exports
+/******/ __webpack_require__.r = (exports) => {
+/******/ 	if(Symbol.toStringTag) {
+/******/ 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 	}
+/******/ 	Object.defineProperty(exports, '__esModule', { value: true });
+/******/ };
 /******/ 
 /******/ /* webpack/runtime/import chunk loading */
 /******/ (() => {
@@ -364,7 +358,7 @@ function render(message) {
 ## Unoptimized
 
 ```
-asset output.mjs 7.97 KiB [emitted] [javascript module] (name: main)
+asset output.mjs 7.84 KiB [emitted] [javascript module] (name: main)
 asset render_js.mjs 1.02 KiB [emitted] [javascript module]
 chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.94 KiB (runtime) [entry] [rendered]
   > ./example.js main
@@ -386,11 +380,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.mjs 1.33 KiB [emitted] [javascript module] [minimized] (name: main)
+asset output.mjs 1.27 KiB [emitted] [javascript module] [minimized] (name: main)
 asset render_js.mjs 250 bytes [emitted] [javascript module] [minimized]
-chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 3.28 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.71 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.28 KiB 5 modules
+  runtime modules 2.71 KiB 3 modules
   ./example.js + 1 modules 1.16 KiB [built] [code generated]
     [no exports]
     [no exports used]

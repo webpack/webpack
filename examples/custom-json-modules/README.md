@@ -113,6 +113,7 @@ module.exports = config;
   !*** ./data.toml ***!
   \*******************/
 /*! default exports */
+/*! export default [not provided] [no usage info] [missing usage info prevents renaming] */
 /*! export owner [provided] [no usage info] [missing usage info prevents renaming] */
 /*!   export bio [provided] [no usage info] [missing usage info prevents renaming] */
 /*!   export dob [provided] [no usage info] [missing usage info prevents renaming] */
@@ -133,6 +134,7 @@ module.exports = /*#__PURE__*/JSON.parse('{"title":"TOML Example","owner":{"name
   !*** ./data.yaml ***!
   \*******************/
 /*! default exports */
+/*! export default [not provided] [no usage info] [missing usage info prevents renaming] */
 /*! export owner [provided] [no usage info] [missing usage info prevents renaming] */
 /*!   export bio [provided] [no usage info] [missing usage info prevents renaming] */
 /*!   export dob [provided] [no usage info] [missing usage info prevents renaming] */
@@ -153,6 +155,7 @@ module.exports = /*#__PURE__*/JSON.parse('{"title":"YAML Example","owner":{"name
   !*** ./data.json5 ***!
   \********************/
 /*! default exports */
+/*! export default [not provided] [no usage info] [missing usage info prevents renaming] */
 /*! export owner [provided] [no usage info] [missing usage info prevents renaming] */
 /*!   export bio [provided] [no usage info] [missing usage info prevents renaming] */
 /*!   export dob [provided] [no usage info] [missing usage info prevents renaming] */
@@ -200,15 +203,13 @@ module.exports = /*#__PURE__*/JSON.parse('{"title":"JSON5 Example","owner":{"nam
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = (exports) => {
+/******/ 		if(Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
 /******/ 	
 /************************************************************************/
 ```
@@ -252,7 +253,7 @@ document.querySelector('#app').innerHTML = [_data_toml__WEBPACK_IMPORTED_MODULE_
 ## webpack output
 
 ```
-asset output.js 5.88 KiB [emitted] (name: main)
+asset output.js 6.11 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 919 bytes (javascript) 241 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 565 bytes [dependent] 3 modules

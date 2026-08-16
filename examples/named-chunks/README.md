@@ -76,31 +76,25 @@ require.ensure(["b"], function(require) {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/ensure chunk */
-/******/ 	(() => {
-/******/ 		__webpack_require__.f = {};
-/******/ 		// This file contains only the entry chunk.
-/******/ 		// The chunk loading function for additional chunks
-/******/ 		__webpack_require__.e = (chunkId) => {
-/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 				__webpack_require__.f[key](chunkId, promises);
-/******/ 				return promises;
-/******/ 			}, []));
-/******/ 		};
-/******/ 	})();
+/******/ 	__webpack_require__.f = {};
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = (chunkId) => {
+/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
+/******/ 			__webpack_require__.f[key](chunkId, promises);
+/******/ 			return promises;
+/******/ 		}, []));
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
-/******/ 	(() => {
-/******/ 		// This function allow to reference async chunks
-/******/ 		__webpack_require__.u = (chunkId) => {
-/******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + ".output.js";
-/******/ 		};
-/******/ 	})();
+/******/ 	// This function allow to reference async chunks
+/******/ 	__webpack_require__.u = (chunkId) => {
+/******/ 		// return url for filenames based on template
+/******/ 		return "" + chunkId + ".output.js";
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
@@ -148,9 +142,7 @@ require.ensure(["b"], function(require) {
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
-/******/ 	(() => {
-/******/ 		__webpack_require__.p = "dist/";
-/******/ 	})();
+/******/ 	__webpack_require__.p = "dist/";
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
@@ -362,12 +354,12 @@ __webpack_require__.e(/*! require.ensure */ "node_modules_b_js-node_modules_d_js
 ## Unoptimized
 
 ```
-asset output.js 9.86 KiB [emitted] (name: main)
+asset output.js 9.71 KiB [emitted] (name: main)
 asset my own chunk.output.js 746 bytes [emitted] (name: my own chunk)
 asset node_modules_b_js-node_modules_d_js.output.js 562 bytes [emitted]
-chunk (runtime: main) output.js (main) 432 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 432 bytes (javascript) 4.95 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.94 KiB 6 modules
+  runtime modules 4.95 KiB 6 modules
   dependent modules 11 bytes [dependent] 1 module
   ./example.js 421 bytes [built] [code generated]
     [used exports unknown]
@@ -408,9 +400,9 @@ webpack X.X.X compiled successfully
 asset output.js 1.97 KiB [emitted] [minimized] (name: main)
 asset my own chunk.output.js 131 bytes [emitted] [minimized] (name: my own chunk)
 asset node_modules_b_js-node_modules_d_js.output.js 108 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 432 bytes (javascript) 4.94 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 432 bytes (javascript) 4.95 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.94 KiB 6 modules
+  runtime modules 4.95 KiB 6 modules
   dependent modules 11 bytes [dependent] 1 module
   ./example.js 421 bytes [built] [code generated]
     [no exports used]
