@@ -53,13 +53,9 @@ const base = (index, name, second, nodeRef) => ({
 	]
 });
 
-/**
- * Two entries reaching ONE async chunk, so its runtime is a set of keys -- the shape
- * the group lookup answers key by key. Neither fetches, so no chunk cuts the scan.
- * @param {number} index position of this config, so an entry finds its own stats
- * @param {string} name output prefix keeping the emitted files of each config apart
- * @returns {import("../../../../").Configuration} configuration
- */
+// Two entries reaching ONE async chunk, so its runtime is a set of keys -- the shape
+// the group lookup answers key by key. Neither fetches, so no chunk cuts the scan.
+/** @type {(index: number, name: string) => import("../../../../").Configuration} */
 const multi = (index, name) => ({
 	...base(index, name, "./web-entry.js", 'new URL("./'),
 	entry: {
