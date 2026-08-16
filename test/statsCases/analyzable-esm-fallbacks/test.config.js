@@ -59,16 +59,22 @@ const CASES = {
 		expect: "fallback",
 		bailout: "output.importFunctionName is"
 	},
-	// Only the url forms need `import.meta`, so the chunk `import()` still bakes and
-	// the helper stays — the fallback is the asset url alone.
+	// Only the url forms need `import.meta`, so the chunk `import()` still bakes.
 	"environment-module": {
 		file: "main.mjs",
-		expect: "url-fallback",
+		expect: "partial",
 		bailout: "output.environment.module is false"
+	},
+	// Only the pair that names each other falls back; the entry's own imports still
+	// bake, so the helper stays and the reason is what marks the limitation.
+	circular: {
+		file: "main.mjs",
+		expect: "partial",
+		bailout: "name each other"
 	},
 	"base-uri": {
 		file: "main.mjs",
-		expect: "url-fallback",
+		expect: "partial",
 		bailout: "which is not absolute"
 	}
 };
@@ -111,8 +117,8 @@ module.exports = {
 			if (testCase.expect === "analyzable") {
 				expect(output).toContain(HELPER);
 				expect(bailouts).toEqual([]);
-			} else if (testCase.expect === "url-fallback") {
-				// A limitation that stops only the url forms leaves the chunk `import()`
+			} else if (testCase.expect === "partial") {
+				// A limitation that stops some references and not others leaves the rest
 				// baked, so the helper is still the right thing to find.
 				expect(output).toContain(HELPER);
 				expect(bailouts.join("\n")).toContain(testCase.bailout);

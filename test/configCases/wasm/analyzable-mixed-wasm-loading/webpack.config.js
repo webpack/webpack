@@ -5,7 +5,8 @@
 // so it is the only one that has to keep the runtime form — the `readFile` entry
 // resolves the binary against the chunk it is read from, exactly as a baked literal
 // does, and must still bake one. Unless the two share a binary: it is generated once
-// for both, so neither loader can be told the other's shape.
+// for both, so neither loader can be told the other's shape — and only those two, a
+// runtime reaching neither still answers on its own.
 
 const webpack = require("../../../../");
 
@@ -25,7 +26,12 @@ const base = (index, name, second, nodeRef) => ({
 	devtool: false,
 	entry: {
 		[`${name}-node`]: { import: "./node-entry.js", wasmLoading: "async-node" },
-		[`${name}-web`]: { import: second, wasmLoading: "fetch" }
+		[`${name}-web`]: { import: second, wasmLoading: "fetch" },
+		// Shares no binary with either, so the sharing pair says nothing about it.
+		[`${name}-alone`]: {
+			import: "./alone-entry.js",
+			wasmLoading: "async-node"
+		}
 	},
 	module: {
 		rules: [
@@ -46,6 +52,7 @@ const base = (index, name, second, nodeRef) => ({
 			__INDEX__: JSON.stringify(index),
 			__NAME__: JSON.stringify(name),
 			__NODE_REF__: JSON.stringify(INSTANTIATE + nodeRef),
+			__BAKED__: JSON.stringify(`${INSTANTIATE}new URL("./`),
 			__RUNTIME_FORM__: JSON.stringify(`${INSTANTIATE}module.id, `)
 		})
 	]

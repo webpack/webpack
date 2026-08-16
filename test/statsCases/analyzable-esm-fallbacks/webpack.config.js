@@ -113,6 +113,11 @@ module.exports = [
 		module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
 		output: { environment: { module: false, dynamicImport: true } }
 	}),
+	// Two chunks that reference each other cannot both be named by their content.
+	base("circular", {
+		entry: "./index-cycle",
+		output: { chunkFilename: "[name].[contenthash].mjs" }
+	}),
 	// A relative base has no base of its own for an asset url to resolve against.
 	base("base-uri", {
 		entry: { main: { import: "./index-asset", baseUri: "not-a-url" } },
