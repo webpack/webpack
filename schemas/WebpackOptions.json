@@ -6918,6 +6918,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "hintsCount": {
+          "description": "Add the number of performance hints.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "ids": {
           "description": "Add ids.",
           "type": "boolean"

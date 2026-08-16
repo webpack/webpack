@@ -15105,6 +15105,7 @@ declare interface KnownStatsCompilation {
 	warnings?: StatsError[];
 	warningsCount?: number;
 	hints?: StatsError[];
+	hintsCount?: number;
 	children?: StatsCompilation[];
 	logging?: Record<string, StatsLogging>;
 	filteredWarningDetailsCount?: number;
@@ -27599,6 +27600,12 @@ declare interface StatsOptions {
 	hints?: boolean;
 
 	/**
+	 * Add the number of performance hints.
+	 * @since 5.110.0
+	 */
+	hintsCount?: boolean;
+
+	/**
 	 * Add ids.
 	 */
 	ids?: boolean;
@@ -30291,6 +30298,7 @@ declare namespace exports {
 			export let compareChunksNatural: (
 				chunkGraph: ChunkGraph
 			) => Comparator<Chunk>;
+			export let compareErrors: Comparator<Error>;
 			export let compareIds: (
 				a: string | number,
 				b: string | number

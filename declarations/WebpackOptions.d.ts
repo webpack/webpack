@@ -3568,6 +3568,11 @@ export interface StatsOptions {
 	 */
 	hints?: boolean;
 	/**
+	 * Add the number of performance hints.
+	 * @since 5.110.0
+	 */
+	hintsCount?: boolean;
+	/**
 	 * Add ids.
 	 */
 	ids?: boolean;

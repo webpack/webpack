@@ -15907,6 +15907,19 @@ Object {
     "multiple": true,
     "simpleType": "boolean",
   },
+  "stats-children-hints-count": Object {
+    "configs": Array [
+      Object {
+        "description": "Add the number of performance hints.",
+        "multiple": true,
+        "path": "stats.children[].hintsCount",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add the number of performance hints.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
   "stats-children-ids": Object {
     "configs": Array [
       Object {
@@ -17104,6 +17117,19 @@ Object {
       },
     ],
     "description": "Add performance hints reported with 'performance.hints: \\"stats\\"'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-hints-count": Object {
+    "configs": Array [
+      Object {
+        "description": "Add the number of performance hints.",
+        "multiple": false,
+        "path": "stats.hintsCount",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add the number of performance hints.",
     "multiple": false,
     "simpleType": "boolean",
   },
