@@ -108,6 +108,16 @@ const FILED_WPT_HTML_DEFECTS = new Map([
 	]
 ]);
 
+const FILED_WPT_CSS_DEFECTS = new Map([
+	[
+		// The same defect as `font-family:"Lucida" Grande` below, reached from a
+		// stylesheet: a quoted family beside a bare identifier matches no family
+		// list, and unquoting it makes the engine read one name where it read none.
+		"test/wpt/tools/wave/export/css/result.css",
+		"unquoting a string makes an invalid family list parse"
+	]
+]);
+
 // The same, for what webpack's own parser sees over the whole corpus.
 const FILED_WPT_TREE_DEFECTS = new Map();
 
@@ -260,7 +270,7 @@ const buildCorpora = () => {
 				htmlSmartTags: variant(wptHtml, { removeImpliedTags: "smart" }),
 				css: wptCss,
 				filedHtml: FILED_WPT_HTML_DEFECTS,
-				filedCss: new Map()
+				filedCss: FILED_WPT_CSS_DEFECTS
 			});
 		})();
 	}
@@ -285,6 +295,11 @@ const inBatches = async (page, items, evaluate) => {
 	return out;
 };
 
+// The corpus is an optional submodule, so a tier that cannot run reports that
+// rather than reporting green.
+const NO_CORPUS =
+	"wpt submodule not initialized (run `git submodule update --init --depth 1 test/wpt`)";
+
 expectNoDeprecations();
 
 describe("printer output in real Chrome", () => {
@@ -296,12 +311,21 @@ describe("printer output in real Chrome", () => {
 	beforeAll(async () => {
 		await buildCorpora();
 		browser = await launchChrome({ protocolTimeout: 300000 });
+	}, 300000);
+
+	// A page of its own per test: a tier that leaves thousands of parsed documents
+	// behind must not be what makes the next one time out.
+	beforeEach(async () => {
 		page = await browser.newPage();
 		await page.setContent(
 			"<!doctype html><html><head></head><body></body></html>"
 		);
 		await page.evaluate(installHelpers);
 	}, 300000);
+
+	afterEach(async () => {
+		if (page) await page.close();
+	});
 
 	afterAll(async () => {
 		if (browser) await browser.close();
@@ -390,11 +414,28 @@ describe("printer output in real Chrome", () => {
 		return differences;
 	};
 
+	/**
+	 * @param {string} name test name
+	 * @param {() => Promise<void>} fn the test
+	 * @param {number} timeout how long it may take, in ms
+	 */
+	const itWithCorpus = (name, fn, timeout) => {
+		if (hasCorpus()) {
+			it(name, fn, timeout);
+
+			return;
+		}
+
+		it(NO_CORPUS, () => {
+			// No-op: the corpus is an optional git submodule.
+		});
+	};
+
 	const describeCorpus = (at, label) => {
 		describe(label, () => {
 			if (at === 1 && !hasCorpus()) {
-				it("submodule not initialized (run `git submodule update --init --depth 1 test/wpt`)", () => {
-					// No-op: the conformance corpus is an optional git submodule.
+				it(NO_CORPUS, () => {
+					// No-op: the corpus is an optional git submodule.
 				});
 
 				return;
@@ -477,53 +518,87 @@ describe("printer output in real Chrome", () => {
 	describeCorpus(0, "configCases");
 	describeCorpus(1, "wpt");
 
-	it("should compute the same style from a value and its minified form", async () => {
-		if (!hasCorpus()) return;
-		const cases = cssDeclarations().map(({ property, value, name }) => ({
-			name,
-			property,
-			key: `${property}:${value}`,
-			raw: value,
-			min: minifyDeclaration(property, value)
-		}));
-		const differences = await inBatches(page, cases, (batch) =>
-			page.evaluate((each) => {
-				const probe = document.createElement("div");
-				document.body.append(probe);
-				// The whole computed style, not `cssText`: `left bottom` and `0% 100%`
-				// are one declaration the CSSOM serializes two ways, and only what the
-				// engine resolves them to says whether the printer changed the meaning.
-				const computed = getComputedStyle(probe);
-				const names = [...computed];
-				const readBack = (property, value) => {
-					probe.style.cssText = "";
-					probe.style.cssText = `${property}:${value}`;
-					// Separated: run together, a difference that shifts across a
-					// property boundary ("ab"+"c" against "a"+"bc") reads as equal.
-					let out = "";
-					for (const name of names) {
-						out += `${computed.getPropertyValue(name)}\u0000`;
+	itWithCorpus(
+		"should compute the same style from a value and its minified form",
+		async () => {
+			const cases = cssDeclarations().map(({ property, value, name }) => ({
+				name,
+				property,
+				key: `${property}:${value}`,
+				raw: value,
+				min: minifyDeclaration(property, value)
+			}));
+			const differences = await inBatches(page, cases, (batch) =>
+				page.evaluate((each) => {
+					const probe = document.createElement("div");
+					document.body.append(probe);
+					// Computed values, not `cssText`: `left bottom` and `0% 100%` are one
+					// declaration the CSSOM serializes two ways, and only what the engine
+					// resolves them to says whether the printer changed the meaning.
+					const computed = getComputedStyle(probe);
+					/**
+					 * @param {string} property the property name
+					 * @param {string} value the value to set
+					 * @returns {string[]} the longhands it set, none when it did not parse
+					 */
+					const apply = (property, value) => {
+						probe.style.cssText = "";
+						probe.style.cssText = `${property}:${value}`;
+						/** @type {string[]} */
+						const set = [];
+						for (let at = 0; at < probe.style.length; at++) {
+							set.push(probe.style.item(at));
+						}
+						return set;
+					};
+					/**
+					 * @param {string} property the property name
+					 * @param {string} value the value to set
+					 * @param {string[]} names the longhands to read
+					 * @returns {string} what the engine computes for each
+					 */
+					const readBack = (property, value, names) => {
+						apply(property, value);
+						// Separated: run together, a difference that shifts across a
+						// property boundary ("ab"+"c" against "a"+"bc") reads as equal.
+						let out = "";
+						for (const name of names) {
+							out += `${computed.getPropertyValue(name)}\u0000`;
+						}
+						return out;
+					};
+					const out = [];
+					for (const one of each) {
+						if (one.min === "") continue;
+						// Only the longhands one of the two forms sets: every other property
+						// computes the same whatever was written, and reading all ~340 of them
+						// per value is what made this the corpus's slowest pass. A form that
+						// sets nothing still differs from one that sets something, since the
+						// other's longhands then read back unset.
+						const names = [
+							...new Set([
+								...apply(one.property, one.raw),
+								...apply(one.property, one.min)
+							])
+						];
+						if (
+							readBack(one.property, one.raw, names) !==
+							readBack(one.property, one.min, names)
+						) {
+							out.push({ name: one.name, key: one.key });
+						}
 					}
 					return out;
-				};
-				const out = [];
-				for (const one of each) {
-					if (one.min === "") continue;
-					if (
-						readBack(one.property, one.raw) !== readBack(one.property, one.min)
-					) {
-						out.push({ name: one.name, key: one.key });
-					}
-				}
-				return out;
-			}, batch)
-		);
-		// Includes the values the spec rejects: an invalid declaration moves
-		// nothing, so one whose printed form does is one the printer brought to life.
-		expect([...new Set(differences.map((one) => one.key))].sort()).toEqual(
-			[...FILED_WPT_VALUE_DEFECTS.keys()].sort()
-		);
-	}, 900000);
+				}, batch)
+			);
+			// Includes the values the spec rejects: an invalid declaration moves
+			// nothing, so one whose printed form does is one the printer brought to life.
+			expect([...new Set(differences.map((one) => one.key))].sort()).toEqual(
+				[...FILED_WPT_VALUE_DEFECTS.keys()].sort()
+			);
+		},
+		900000
+	);
 
 	it("should only fold enumerated values the engine folds too", async () => {
 		// The printer lower-cases a value in `ENUMERATED_KEYWORDS`. That is
@@ -734,7 +809,9 @@ const whatMoved = (before, after) => {
 		if (a.length !== b.length) return `${facet}: ${a.length} vs ${b.length}`;
 		const at = a.findIndex((entry, i) => entry !== b[i]);
 		if (at !== -1) {
-			return `${facet} ${at}: ${JSON.stringify(a[at])} vs ${JSON.stringify(b[at])}`;
+			return `${facet} ${at}: ${JSON.stringify(a[at])} vs ${JSON.stringify(
+				b[at]
+			)}`;
 		}
 	}
 	return "";
@@ -757,8 +834,8 @@ describe("wpt tree stability", () => {
 	const diverging = new Set();
 
 	if (!hasCorpus()) {
-		it("submodule not initialized (run `git submodule update --init --depth 1 test/wpt`)", () => {
-			// No-op: the conformance corpus is an optional git submodule.
+		it(NO_CORPUS, () => {
+			// No-op: the corpus is an optional git submodule.
 		});
 
 		return;
