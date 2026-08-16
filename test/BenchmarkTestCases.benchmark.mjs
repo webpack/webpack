@@ -1,4 +1,4 @@
-import { constants, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { constants } from "fs";
 import fs from "fs/promises";
 import os from "os";
 import path from "path";
@@ -478,9 +478,9 @@ class BenchmarkRunner {
 	 * the measuring process already was. `MEMORY_BASELINE` diffs against a
 	 * previous report, the way `test:size` compares asset sizes.
 	 * @param {BenchmarkResult[]} benchmarkResults benchmark results
-	 * @returns {void}
+	 * @returns {Promise<void>}
 	 */
-	reportHeapUsage(benchmarkResults) {
+	async reportHeapUsage(benchmarkResults) {
 		/** @type {HeapUsage[]} */
 		const entries = benchmarkResults
 			.flatMap((result) => result.heapUsages || [])
@@ -490,15 +490,15 @@ class BenchmarkRunner {
 
 		const reportPath = path.join(this.baseOutputPath, "memory-report.json");
 
-		mkdirSync(this.baseOutputPath, { recursive: true });
-		writeFileSync(reportPath, `${JSON.stringify({ entries }, null, 2)}\n`);
+		await fs.mkdir(this.baseOutputPath, { recursive: true });
+		await fs.writeFile(reportPath, `${JSON.stringify({ entries }, null, 2)}\n`);
 
 		/** @type {Map<string, HeapUsage>} */
 		const baseline = new Map();
 		const baselinePath = process.env.MEMORY_BASELINE;
 
 		if (baselinePath) {
-			const previous = JSON.parse(readFileSync(baselinePath, "utf8"));
+			const previous = JSON.parse(await fs.readFile(baselinePath, "utf8"));
 			for (const entry of previous.entries) baseline.set(entry.uri, entry);
 		}
 
@@ -522,9 +522,9 @@ class BenchmarkRunner {
 	 * Aggregate settled task results and throw if any task failed.
 	 * @param {BenchmarkTask[]} benchmarkTasks benchmark tasks
 	 * @param {PromiseSettledResult<BenchmarkResult>[]} settledResults settled results
-	 * @returns {void}
+	 * @returns {Promise<void>}
 	 */
-	finalizeResults(benchmarkTasks, settledResults) {
+	async finalizeResults(benchmarkTasks, settledResults) {
 		/** @type {BenchmarkResult[]} */
 		const benchmarkResults = [];
 		/** @type {string[]} */
@@ -543,7 +543,7 @@ class BenchmarkRunner {
 		}
 
 		if (failedTasks.length === 0 && getCodspeedRunnerMode() === "memory") {
-			this.reportHeapUsage(benchmarkResults);
+			await this.reportHeapUsage(benchmarkResults);
 		}
 
 		if (failedTasks.length > 0) {
@@ -618,7 +618,7 @@ class BenchmarkRunner {
 				)
 			);
 
-			this.finalizeResults(benchmarkTasks, settledResults);
+			await this.finalizeResults(benchmarkTasks, settledResults);
 		} finally {
 			await workerPool.end();
 		}
