@@ -1082,16 +1082,21 @@ async function addWatchBench({ bench, taskName, collectBy, webpack, config }) {
 					 * @param {(err: Error) => void} reject reject
 					 */
 					(resolve, reject) => {
-						if (watching) {
-							watching.close((closeErr) => {
-								if (closeErr) {
-									reject(closeErr);
-									return;
-								}
-
-								resolve();
-							});
+						// No watcher means `runWatch` failed; resolving here lets the
+						// entry file be restored instead of hanging on a dead promise.
+						if (!watching) {
+							resolve();
+							return;
 						}
+
+						watching.close((closeErr) => {
+							if (closeErr) {
+								reject(closeErr);
+								return;
+							}
+
+							resolve();
+						});
 					}
 				);
 
