@@ -13437,6 +13437,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-uncacheable-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Report modules that are not cacheable, which are rebuilt on every build even when the cache is warm.",
+        "multiple": false,
+        "path": "performance.uncacheableModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report modules that are not cacheable, which are rebuilt on every build even when the cache is warm.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-unused-rules": Object {
     "configs": Array [
       Object {

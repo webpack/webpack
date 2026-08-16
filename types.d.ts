@@ -21773,6 +21773,12 @@ declare interface PerformanceOptions {
 	osDependentRules?: boolean;
 
 	/**
+	 * Report modules that are not cacheable, which are rebuilt on every build even when the cache is warm.
+	 * @since 5.110.0
+	 */
+	uncacheableModules?: boolean;
+
+	/**
 	 * Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.
 	 * @since 5.110.0
 	 */

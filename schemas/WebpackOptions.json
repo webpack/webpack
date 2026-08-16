@@ -5358,6 +5358,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "uncacheableModules": {
+          "description": "Report modules that are not cacheable, which are rebuilt on every build even when the cache is warm.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "unusedRules": {
           "description": "Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.",
           "type": "boolean",

@@ -13,7 +13,9 @@ Entrypoint <CLR=BOLD>sec</CLR> <CLR=33,BOLD>[big]</CLR> X KiB = <CLR=32,BOLD>sec
 This can impact web performance.
 Assets: 
   main.js (X KiB)
-  sec.js (X KiB)</CLR>
+    Largest modules: ./a.js (X KiB), ./index.js (X bytes)
+  sec.js (X KiB)
+    Largest modules: ./a.js (X KiB), ./index2.js (X bytes)</CLR>
 
 <CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (X KiB). This can impact web performance.
 Entrypoints:
