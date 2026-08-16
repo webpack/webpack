@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Report inner-graph and AMD bailouts in `optimizationBailout`.
+Report inner-graph, AMD and bare `module` bailouts in `optimizationBailout`.
