@@ -13,18 +13,13 @@ const WPT = path.resolve(__dirname, "../wpt");
 // tree construction, so an XHTML tree legitimately differs — they are not ours.
 const XML_EXTENSIONS = new Set([".xht", ".xhtml", ".xml", ".svg"]);
 
-// The subset handed to a real browser: the directories whose subject *is*
-// parsing — the syntax tests, the deliberately malformed conformance-checker
-// pages, and the CSS parsing tests, whose documents carry the inline `<style>`
-// and `style=""` an engine has to agree about.
-const BROWSER_SUBSET = [
-	"html/syntax",
-	"conformance-checkers/html",
-	"css/css-cascade",
-	"css/css-color",
-	"css/css-values",
-	"css/selectors"
-];
+// The subset handed to a real browser. Every document goes through the
+// engine-free tier; Chrome is asked about a focused sample instead, because
+// reading a page's facets and the CSSOM of every stylesheet in it costs far more
+// per document than parsing it does — the syntax tests, and the cascade and
+// color tests, whose documents carry the inline `<style>` and `style=""` an
+// engine has to agree about.
+const BROWSER_SUBSET = ["html/syntax", "css/css-cascade", "css/css-color"];
 
 // Every directory the engine-free suite reads — the whole HTML corpus, `css/`
 // included, since a CSS test is an HTML document too.

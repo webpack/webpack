@@ -53,7 +53,7 @@ const buildCorpus = async (dir, extension, minify) => {
 			const raw = await fs.readFile(file, "utf8");
 			return {
 				name: path
-					.relative(path.join(__dirname, ".."), file)
+					.relative(path.join(__dirname, "../.."), file)
 					.replace(/\\/g, "/"),
 				raw,
 				min: minify(raw)

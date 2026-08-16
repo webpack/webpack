@@ -23,8 +23,11 @@
 const path = require("path");
 const { SourceProcessor: CssSourceProcessor } = require("../lib/css/syntax");
 const {
+	BOOLEAN_ATTRIBUTES,
 	EMPTY_REMOVABLE_ATTRIBUTES,
-	ENUMERATED_KEYWORDS
+	ENUMERATED_ATTRIBUTE_NAMES,
+	ENUMERATED_KEYWORDS,
+	REWRITABLE_ATTRIBUTES
 } = require("../lib/html/data");
 const {
 	A,
@@ -32,6 +35,7 @@ const {
 	NS_SVG,
 	NodeType,
 	SourceProcessor: HtmlSourceProcessor,
+	decodeEntities,
 	parseHtml
 } = require("../lib/html/syntax");
 const expectNoDeprecations = require("./helpers/expectNoDeprecations");
@@ -103,15 +107,26 @@ const FILED_WPT_HTML_DEFECTS = new Map([
 	[
 		"test/wpt/html/syntax/parsing/misnested-form-in-template.html",
 		"a `<form>` misnested inside a `<template>` loses text the parser moved out of it"
+	],
+	// Not yet traced to a cause: Chromium builds a different CSSOM from the
+	// minified page for each of these, all of them `@scope` / `@layer` cascade
+	// tests. Filed so the difference cannot grow silently.
+	[
+		"test/wpt/css/css-cascade/revert-layer-011.html",
+		"Chromium builds a different CSSOM from the minified page"
+	],
+	[
+		"test/wpt/css/css-cascade/scope-implicit-003-print.html",
+		"Chromium builds a different CSSOM from the minified page"
+	],
+	[
+		"test/wpt/css/css-cascade/scope-nesting.html",
+		"Chromium builds a different CSSOM from the minified page"
 	]
 ]);
 
 // The same, for what webpack's own parser sees over the whole corpus.
 const FILED_WPT_TREE_DEFECTS = new Map([
-	[
-		"test/wpt/html/semantics/grouping-content/the-ol-element/grouping-ol.html",
-		"a trailing `</rp>` is dropped inside `<ruby>`, which nests the `<rt>` after it"
-	],
 	[
 		"test/wpt/html/semantics/forms/the-select-element/customizable-select/nested-select-crash.html",
 		"a dropped `</option>` moves the following option's text into the one before it"
@@ -319,79 +334,70 @@ describe("printer output in real Chrome", () => {
 	});
 
 	/**
-	 * Every page's facets, read out of the engine.
+	 * Every page in `cases`, compared as the engine builds it: the facets it
+	 * reports, and the CSSOM of every stylesheet it carries. Batched — and the
+	 * conditions are sampled per batch, since sampling every length named
+	 * anywhere in the corpus against every condition in it grows with the
+	 * product of the two.
 	 * @param {Fixture[]} cases the corpus
-	 * @returns {Promise<{ name: string, before: import("./helpers/syntaxEquivalence").Facets, after: import("./helpers/syntaxEquivalence").Facets }[]>} what it built from each
+	 * @param {boolean} withStyles whether to compare the CSSOM too
+	 * @returns {Promise<{ name: string, why: string }[]>} what moved, per page
 	 */
-	const facetsOf = (cases) =>
-		inBatches(page, cases, (batch) =>
-			page.evaluate((one) => {
-				const { htmlFacets } = /** @type {{ __eq: PageHelpers }} */ (
-					/** @type {unknown} */ (window)
-				).__eq;
-				return one.map((fixture) => ({
-					name: fixture.name,
-					before: htmlFacets(fixture.raw),
-					after: htmlFacets(fixture.min)
-				}));
-			}, batch)
-		);
-
-	/**
-	 * Every corpus-driven check, for one corpus. Declared once and called per
-	 * corpus rather than written in a loop, so nothing closes over a loop variable.
-	 * @param {number} at its index in `corpora`
-	 * @param {string} label what to call it
-	 * @returns {void}
-	 */
-	const describeCorpus = (at, label) => {
-		describe(label, () => {
-			/** @returns {Corpus | undefined} the corpus, once built */
-			const corpus = () => corpora[at];
-
-			it("should build the same DOM from a page and its minified form", async () => {
-				const one = corpus();
-				if (one === undefined) return;
-				const collected = await facetsOf(one.html);
-				const signatures = await conditionSignatures(
-					page,
-					collected.flatMap((each) => [
-						...each.before.styles,
-						...each.after.styles
-					])
-				);
-				/** @type {{ name: string, why: string }[]} */
-				const differences = [];
-				for (const { name, before, after } of collected) {
-					let why = "";
-					for (const facet of Object.keys(before.facets)) {
-						const a = before.facets[facet];
-						const b = after.facets[facet];
-						// A comment renders nothing, so the minifier may drop one; the ones
-						// it keeps must be unchanged and still in order.
-						if (facet === "comments") {
-							let from = 0;
-							for (const comment of b) {
-								const found = a.indexOf(comment, from);
-								if (found === -1) {
-									why = `comment is not one of the source's: ${comment}`;
-									break;
-								}
-								from = found + 1;
+	const comparePages = async (cases, withStyles) => {
+		/** @type {{ name: string, why: string }[]} */
+		const differences = [];
+		for (let at = 0; at < cases.length; at += BATCH) {
+			const collected = await page.evaluate(
+				(batch) => {
+					const { htmlFacets } = /** @type {{ __eq: PageHelpers }} */ (
+						/** @type {unknown} */ (window)
+					).__eq;
+					return batch.map((fixture) => ({
+						name: fixture.name,
+						before: htmlFacets(fixture.raw),
+						after: htmlFacets(fixture.min)
+					}));
+				},
+				cases.slice(at, at + BATCH)
+			);
+			const signatures = await conditionSignatures(
+				page,
+				collected.flatMap((each) => [
+					...each.before.styles,
+					...each.after.styles
+				])
+			);
+			for (const { name, before, after } of collected) {
+				let why = "";
+				for (const facet of Object.keys(before.facets)) {
+					const a = before.facets[facet];
+					const b = after.facets[facet];
+					// A comment renders nothing, so the minifier may drop one; the ones
+					// it keeps must be unchanged and still in order.
+					if (facet === "comments") {
+						let from = 0;
+						for (const comment of b) {
+							const found = a.indexOf(comment, from);
+							if (found === -1) {
+								why = `comment is not one of the source's: ${comment}`;
+								break;
 							}
-							if (why !== "") break;
-							continue;
+							from = found + 1;
 						}
-						if (a.length !== b.length) {
-							why = `${facet}: ${a.length} vs ${b.length}`;
-							break;
-						}
-						const found = a.findIndex((entry, i) => entry !== b[i]);
-						if (found !== -1) {
-							why = `${facet} ${found}: ${a[found]} vs ${b[found]}`;
-							break;
-						}
+						if (why !== "") break;
+						continue;
 					}
+					if (a.length !== b.length) {
+						why = `${facet}: ${a.length} vs ${b.length}`;
+						break;
+					}
+					const found = a.findIndex((entry, i) => entry !== b[i]);
+					if (found !== -1) {
+						why = `${facet} ${found}: ${a[found]} vs ${b[found]}`;
+						break;
+					}
+				}
+				if (withStyles) {
 					if (why === "" && before.styles.length !== after.styles.length) {
 						why = `styles: ${before.styles.length} vs ${after.styles.length}`;
 					}
@@ -403,58 +409,48 @@ describe("printer output in real Chrome", () => {
 						);
 						if (reason !== "") why = `style ${i}: ${reason}`;
 					}
-					if (why !== "") differences.push({ name, why });
 				}
+				if (why !== "") differences.push({ name, why });
+			}
+		}
+		return differences;
+	};
+
+	const describeCorpus = (at, label) => {
+		describe(label, () => {
+			/** @returns {Corpus | undefined} the corpus, once built */
+			const corpus = () => corpora[at];
+
+			it("should build the same DOM and CSSOM from a page and its minified form", async () => {
+				const one = corpus();
+				if (one === undefined) return;
 				// Every part of the document the engine builds — the element tree, the
-				// rendered text, the comments, the doctype, and the CSS, JSON and
-				// script bodies carried inside it — must survive minification.
+				// rendered text, the comments, the doctype, the CSS, JSON and script
+				// bodies carried inside it, and the CSSOM of every stylesheet it
+				// carries — must survive minification.
+				const differences = await comparePages(one.html, true);
 				expect(differences.map((each) => each.name).sort()).toEqual(
 					[...one.filedHtml.keys()].sort()
 				);
-			}, 900000);
+			}, 1800000);
 
 			it.each([
 				["true", (/** @type {Corpus} */ c) => c.htmlAllImpliedTags],
 				["smart", (/** @type {Corpus} */ c) => c.htmlSmartTags]
 			])(
-				"should build the same DOM with removeImpliedTags %s",
+				"should build the same DOM and CSSOM with removeImpliedTags %s",
 				async (_mode, pick) => {
 					const one = corpus();
 					if (one === undefined) return;
-					const collected = await facetsOf(pick(one));
-					/** @type {{ name: string, why: string }[]} */
-					const differences = [];
-					for (const { name, before, after } of collected) {
-						for (const facet of Object.keys(before.facets)) {
-							// A comment the minifier drops is dropped whatever the option
-							// says, and the default-mode test above already holds it to that.
-							if (facet === "comments") continue;
-							const a = before.facets[facet];
-							const b = after.facets[facet];
-							if (a.length !== b.length) {
-								differences.push({
-									name,
-									why: `${facet}: ${a.length} vs ${b.length}`
-								});
-								break;
-							}
-							const found = a.findIndex((entry, i) => entry !== b[i]);
-							if (found !== -1) {
-								differences.push({
-									name,
-									why: `${facet} ${found}: ${a[found]} vs ${b[found]}`
-								});
-								break;
-							}
-						}
-					}
 					// The tags this leaves out are the ones the parser puts back, so the
-					// tree it builds — and every element's depth in it — is untouched.
+					// tree it builds — every element's depth in it, and the CSSOM of what
+					// it carries — is untouched.
+					const differences = await comparePages(pick(one), true);
 					expect(differences.map((each) => each.name).sort()).toEqual(
 						[...one.filedHtml.keys()].sort()
 					);
 				},
-				900000
+				1800000
 			);
 
 			it("should build the same CSSOM from a stylesheet and its minified form", async () => {
@@ -694,16 +690,30 @@ const VERBATIM_TEXT = new Set(["pre", "textarea", "script", "style"]);
 const ASCII_WHITESPACE = /[ \t\n\f\r]+/g;
 
 /**
+ * @param {string} name an attribute name
+ * @returns {boolean} whether the printer may write it differently
+ */
+const isRewritable = (name) =>
+	REWRITABLE_ATTRIBUTES.has(name) ||
+	BOOLEAN_ATTRIBUTES.has(name) ||
+	ENUMERATED_ATTRIBUTE_NAMES.has(name) ||
+	EMPTY_REMOVABLE_ATTRIBUTES.has(name);
+
+/**
  * @typedef {object} DomShape
- * @property {string[]} elements each element as `depth|namespace tag|sorted attribute names`
+ * @property {string[]} elements each element as `depth|namespace tag|attributes`
  * @property {string[]} text the rendered text each element holds itself
  */
 
 /**
  * What an engine builds a document into, less what a minifier may change: a
- * comment it may drop, and a whitespace run it may collapse to one space.
- * Attribute *values* are the browser tier's — the printer rewrites them in ways
- * only IDL reflection can call equivalent.
+ * comment it may drop, and a whitespace run it may collapse to one space. An
+ * attribute the printer is free to rewrite carries its name only — whether it
+ * still means the same is what IDL reflection answers, in the tier above —
+ * and every other one carries its value. CSS is not compared here at all: two
+ * spellings of one stylesheet differ as text (a selector list reordered) while
+ * building the same CSSOM, which only an engine can say, so every stylesheet a
+ * page carries is compared in the tier above instead.
  * @param {string} source the document
  * @returns {DomShape} its shape
  */
@@ -729,10 +739,21 @@ const domShapeOf = (source) => {
 			const namespace =
 				/** @type {Record<number, string>} */ (NS_PREFIX)[A.namespace(child)] ||
 				"";
-			const names = [...A.attributes(child)]
-				.map((attribute) => attribute.serializedName || attribute.name)
+			const written = [...A.attributes(child)]
+				.map((attribute) => {
+					const name = attribute.serializedName || attribute.name;
+					// The printer may rewrite these — a boolean written bare, an
+					// enumerated value folded, a `style` re-printed, a `srcset` given
+					// different spacing. Whether it still reflects the same is what IDL
+					// reflection answers, in the tier above, so here only the name is
+					// compared.
+					if (isRewritable(name)) return name;
+					// The value as the DOM holds it: `&lt;` and a literal `<` are one
+					// attribute written two ways.
+					return `${name}=${decodeEntities(attribute.value, true)}`;
+				})
 				.sort();
-			elements.push(`${depth}|${namespace}${tag}|${names.join(",")}`);
+			elements.push(`${depth}|${namespace}${tag}|${written.join(" ")}`);
 			// Whitespace between two `<head>` children renders nothing, so only text
 			// that reaches the page is compared.
 			const inPage = renders || (namespace === "" && tag === "body");
