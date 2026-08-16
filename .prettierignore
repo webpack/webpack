@@ -18,12 +18,15 @@ test/**/*.*
 !test/helpers/*.*
 !test/harness/**/*.*
 !test/benchmarkCases/**/*.mjs
+!test/benchmark/**/*.mjs
+!test/benchmark/**/*.md
 test/js/**/*.*
 test/test262-cases/**/*.*
 test/wpt/**
 
 # Ignore some folders
-benchmark/
+# anchored: an unanchored `benchmark/` also swallows test/benchmark/
+/benchmark/
 coverage/
 
 # Ignore generated files

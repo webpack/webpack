@@ -20,6 +20,8 @@ export default defineConfig([
 		"!test/**/infrastructure-log.js",
 		"!test/helpers/*.*",
 		"!test/benchmarkCases/**/*.mjs",
+		"!test/benchmark/**/*.mjs",
+		"test/benchmark/**/generated/**",
 		"!test/harness/benchmark/**/*.mjs",
 		"!test/_helpers/**/*.mjs",
 		"!test/runner/*.js",
@@ -200,6 +202,7 @@ export default defineConfig([
 			"test/harness/benchmark/**/*.mjs",
 			"test/benchmarkCases/**/webpack.config.mjs",
 			"test/benchmarkCases/**/options.mjs",
+			"test/benchmark/**/*.mjs",
 			"test/benchmarkCases/**/index.bench.mjs"
 		],
 		languageOptions: {
@@ -222,7 +225,20 @@ export default defineConfig([
 		}
 	},
 	{
-		files: ["test/Compiler-filesystem-caching.test.js"],
+		files: ["test/benchmark/**/*.mjs"],
+		rules: {
+			// Benchmarks run on current Node.js, not the package's engines range
+			"n/no-unsupported-features/es-builtins": "off",
+			"n/no-unsupported-features/es-syntax": "off",
+			"n/no-unsupported-features/node-builtins": "off"
+		}
+	},
+	{
+		files: [
+			"test/Compiler-filesystem-caching.test.js",
+			// dynamic import: the benchmark harness it drives is ESM
+			"test/Benchmarks.unittest.js"
+		],
 		languageOptions: {
 			ecmaVersion: 2022
 		}
