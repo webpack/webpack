@@ -6214,6 +6214,7 @@ describe("CssSyntax minify — vendor prefixes (a twin written first)", () => {
 		).toBe("@media screen{a,b{color:red}}@keyframes s{to{opacity:1}}");
 	});
 });
+
 describe("SourceProcessor — svg in a data url", () => {
 	const { SourceProcessor } = require("../lib/css/syntax");
 
