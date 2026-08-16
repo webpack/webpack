@@ -15,6 +15,10 @@ module.exports = {
 			{ test: /\.js$/, include: /src\\components/ },
 			// Reported through `oneOf`.
 			{ oneOf: [{ test: /fixtures\/data\.js$/ }] },
+			// Reported through nested `rules`, and through an array condition.
+			{ rules: [{ test: [/generated\/data\.js$/] }] },
+			// Not a rule at all.
+			false,
 			// Portable: the character class accepts both.
 			{ test: /\.js$/, exclude: /node_modules[\\/]right-pad/ },
 			// Portable: an alternation covering both.

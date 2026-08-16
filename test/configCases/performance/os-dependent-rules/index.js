@@ -12,11 +12,13 @@ it("should report only the conditions that hardcode a separator", () => {
 	expect(message).toMatch(
 		/module\.rules\[2\]\.oneOf\[0\]\.test .* only matches '\/' paths/
 	);
+	expect(message).toMatch(
+		/module\.rules\[3\]\.rules\[0\]\.test .* only matches '\/' paths/
+	);
 	// A portable or separator-free condition must not be named.
-	expect(message).not.toMatch(/rules\[3\]/);
-	expect(message).not.toMatch(/rules\[4\]/);
-	expect(message).not.toMatch(/rules\[5\]/);
-	expect(message).not.toMatch(/rules\[6\]/);
+	for (const index of [5, 6, 7, 8]) {
+		expect(message).not.toMatch(new RegExp(`module\\.rules\\[${index}\\]`));
+	}
 	expect(__STATS__.warnings).toHaveLength(0);
 	expect(__STATS__.errors).toHaveLength(0);
 });
