@@ -65,9 +65,9 @@ module.exports = config;
 ## Unoptimized
 
 ```
-asset pageA.bundle.js 8.86 KiB [emitted] (name: pageA)
-asset pageB.bundle.js 8.86 KiB [emitted] (name: pageB)
-asset pageC.bundle.js 8.86 KiB [emitted] (name: pageC)
+asset pageA.bundle.js 8.71 KiB [emitted] (name: pageA)
+asset pageB.bundle.js 8.71 KiB [emitted] (name: pageB)
+asset pageC.bundle.js 8.71 KiB [emitted] (name: pageC)
 asset 531.chunk.js 6.28 KiB [emitted]
 asset 78.chunk.js 581 bytes [emitted]
 chunk (runtime: pageC) 78.chunk.js 42 bytes [rendered]

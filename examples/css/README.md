@@ -166,6 +166,7 @@ module.exports = config;
   !*** css ./style.module.css ***!
   \******************************/
 /*! default exports */
+/*! export default [not provided] [no usage info] [missing usage info prevents renaming] */
 /*! export large [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export main [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
@@ -216,40 +217,32 @@ __webpack_require__.r(module.exports = {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/ensure chunk */
-/******/ 	(() => {
-/******/ 		__webpack_require__.f = {};
-/******/ 		// This file contains only the entry chunk.
-/******/ 		// The chunk loading function for additional chunks
-/******/ 		__webpack_require__.e = (chunkId) => {
-/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 				__webpack_require__.f[key](chunkId, promises);
-/******/ 				return promises;
-/******/ 			}, []));
-/******/ 		};
-/******/ 	})();
+/******/ 	__webpack_require__.f = {};
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = (chunkId) => {
+/******/ 		return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
+/******/ 			__webpack_require__.f[key](chunkId, promises);
+/******/ 			return promises;
+/******/ 		}, []));
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get css chunk filename */
-/******/ 	(() => {
-/******/ 		// This function allow to reference async chunks
-/******/ 		__webpack_require__.k = (chunkId) => {
-/******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + ".output.css";
-/******/ 		};
-/******/ 	})();
+/******/ 	// This function allow to reference async chunks
+/******/ 	__webpack_require__.k = (chunkId) => {
+/******/ 		// return url for filenames based on template
+/******/ 		return "" + chunkId + ".output.css";
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
-/******/ 	(() => {
-/******/ 		// This function allow to reference async chunks
-/******/ 		__webpack_require__.u = (chunkId) => {
-/******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + ".output.js";
-/******/ 		};
-/******/ 	})();
+/******/ 	// This function allow to reference async chunks
+/******/ 	__webpack_require__.u = (chunkId) => {
+/******/ 		// return url for filenames based on template
+/******/ 		return "" + chunkId + ".output.js";
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop));
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
@@ -297,20 +290,16 @@ __webpack_require__.r(module.exports = {
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = (exports) => {
+/******/ 		if(Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
-/******/ 	(() => {
-/******/ 		__webpack_require__.p = "dist/";
-/******/ 	})();
+/******/ 	__webpack_require__.p = "dist/";
 /******/ 	
 /******/ 	/* webpack/runtime/css loading */
 /******/ 	(() => {
@@ -677,14 +666,14 @@ app, so scoping would break them): `@layer` and `@page` names,
 ## Unoptimized
 
 ```
-assets by path *.js 15.6 KiB
-  asset output.js 15.3 KiB [emitted] (name: main)
+assets by path *.js 15.4 KiB
+  asset output.js 15.1 KiB [emitted] (name: main)
   asset 1.output.js 332 bytes [emitted]
 assets by path *.css 1.16 KiB
   asset output.css 1.04 KiB [emitted] (name: main)
   asset 1.output.css 125 bytes [emitted]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-Entrypoint main 16.3 KiB (14.6 KiB) = output.js 15.3 KiB output.css 1.04 KiB 1 auxiliary asset
+Entrypoint main 16.2 KiB (14.6 KiB) = output.js 15.1 KiB output.css 1.04 KiB 1 auxiliary asset
 chunk (runtime: main) output.js, output.css (main) 259 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.87 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 8.87 KiB 9 modules
@@ -705,18 +694,18 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-assets by path *.js 3.26 KiB
-  asset output.js 3.18 KiB [emitted] [minimized] (name: main)
+assets by path *.js 3.21 KiB
+  asset output.js 3.13 KiB [emitted] [minimized] (name: main)
   asset 822.output.js 85 bytes [emitted] [minimized]
 assets by path *.css 376 bytes
   asset output.css 360 bytes [emitted] [minimized] (name: main)
   asset 822.output.css 16 bytes [emitted] [minimized]
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-Entrypoint main 3.53 KiB (14.6 KiB) = output.js 3.18 KiB output.css 360 bytes 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 509 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.63 KiB (runtime) [entry] [rendered]
+Entrypoint main 3.48 KiB (14.6 KiB) = output.js 3.13 KiB output.css 360 bytes 1 auxiliary asset
+chunk (runtime: main) output.js, output.css (main) 467 bytes (javascript) 14.6 KiB (asset) 42 bytes (asset-url) 454 bytes (css) 42 bytes (css-import) 8.64 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 8.63 KiB 8 modules
-  dependent modules 14.6 KiB (asset) 42 bytes (javascript) 42 bytes (asset-url) 79 bytes (css) 42 bytes (css-import) [dependent] 3 modules
+  runtime modules 8.64 KiB 8 modules
+  dependent modules 14.6 KiB (asset) 42 bytes (asset-url) 79 bytes (css) 42 bytes (css-import) [dependent] 3 modules
   built modules 467 bytes (javascript) 375 bytes (css) [built]
     ./example.js + 5 modules 408 bytes [not cacheable] [built] [code generated]
       [no exports]
