@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Stop emitting unread runtime helpers, chunk loaders, state, and module wrappers.
+Stop emitting uncalled runtime helpers, chunk loaders, resource hints, state and wrappers.

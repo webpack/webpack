@@ -6,6 +6,8 @@
  * `__webpack_exports__`. Covers both lookup sources for `topLevelDeclarations`:
  * concatenated entries read it from the code generation data, non-concatenated
  * ones from `module.buildInfo` (the guarded fallback, where `data` is undefined).
+ * Such an entry reads nothing off `__webpack_exports__`, so it must also ship no
+ * runtime helpers — including the `__esModule` marker on either generator path.
  * @param {string} assetName emitted entry asset to assert on
  * @param {string} binding exported binding expected to stay live
  * @returns {(this: import("../../../../").Compiler) => void} plugin
@@ -17,6 +19,7 @@ const assertLiveBindings = (assetName, binding) =>
 				const source = assets[assetName].source();
 				expect(source).not.toMatch(/const __webpack_exports__\w+ =/);
 				expect(source).toMatch(new RegExp(`export \\{[^}]*\\b${binding}\\b`));
+				expect(source).not.toMatch(/__webpack_require__/);
 			});
 		});
 	};
