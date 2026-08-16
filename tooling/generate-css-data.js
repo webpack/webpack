@@ -565,13 +565,48 @@ const collectPairLonghands = () => {
 		const key = longhands.join(" ");
 		claims.set(key, (claims.get(key) || 0) + 1);
 	}
-	const newer = new Set(SUPPLEMENT.newerPairShorthands);
 	return out
-		.filter(
-			([name, longhands]) =>
-				claims.get(longhands.join(" ")) === 1 && !newer.has(name)
-		)
+		.filter(([, longhands]) => claims.get(longhands.join(" ")) === 1)
 		.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * The shorthands that set their longhands positionally with a `/` between them:
+ * `<X> [ / <X> ]{0,n}` over the `n + 1` names `computed` lists, in that order.
+ * The grid-placement three are the whole set today. Every slot is written: an
+ * omitted one means "the first slot where that is a `<custom-ident>`, else
+ * `auto`", not "the same value", so omitting is only ever right for an ident.
+ * @returns {[string, string[]][]} `[shorthand, longhands]`, sorted
+ */
+const collectSlashLonghands = () => {
+	/** @type {[string, string[]][]} */
+	const out = [];
+	for (const [name, property] of Object.entries(properties)) {
+		if (property.status !== "standard") continue;
+		if (typeof property.syntax !== "string") continue;
+		const longhands = property.computed;
+		if (!Array.isArray(longhands) || longhands.length < 2) continue;
+		let tree;
+		try {
+			tree = grammarOf(property.syntax);
+		} catch (_err) {
+			continue;
+		}
+		if (tree.type !== "sequence" || tree.items.length !== 2) continue;
+		const [first, rest] = tree.items;
+		if (first.type !== "type" || rest.type !== "multiplier") continue;
+		if (rest.comma || rest.min !== 0) continue;
+		if (rest.max !== longhands.length - 1) continue;
+		const body = rest.body.type === "group" ? rest.body.body : rest.body;
+		if (body.type !== "sequence" || body.items.length !== 2) continue;
+		const [slash, repeated] = body.items;
+		if (slash.type !== "literal" || slash.value !== "/") continue;
+		// The same production on both sides, so every slot takes the same values
+		// and the order `computed` states is the order they are written in.
+		if (repeated.type !== "type" || repeated.name !== first.name) continue;
+		out.push([name, longhands]);
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
 
 /**
@@ -2669,7 +2704,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], overridableUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -2758,13 +2793,11 @@ const SUPPLEMENT = {
 		["translatex", "translate"],
 		["skewx", "skew"]
 	],
-	// Pair shorthands materially newer than the longhands they merge, so a target
-	// reading the longhands may not read the shorthand — and the merge would lose
-	// both declarations rather than one. `overflow-x`/`-y` and `align-items` are
-	// as old as CSS 2 / flexbox, while two-value `overflow` and `place-items` are
-	// 2018-era. `output.environment` states this for `inset` alone, so the rest
-	// are named here.
-	newerPairShorthands: ["place-content", "place-items", "place-self"],
+	// The pair shorthands `output.environment.cssPlaceShorthand` gates: newer than
+	// the longhands they merge, so a target reading `align-items` may not read
+	// `place-items` and the merge would lose both declarations rather than one.
+	// `mdn-data` states no version, so the set is named rather than derived.
+	placeShorthands: ["place-content", "place-items", "place-self"],
 	// Pair shorthands whose *two-value* form is the newer one, so the merge is
 	// safe only where it collapses to a single value: `overflow: hidden` is CSS
 	// 2.1 and reads everywhere `overflow-x` does, while `overflow: hidden scroll`
@@ -2903,6 +2936,45 @@ const SUPPLEMENT = {
 	// argument through trig, which amplifies a truncated digit into a different
 	// computed matrix (measured in headless Chromium).
 	angleUnits: ["deg", "grad", "rad", "turn"],
+	// The units old enough that a declaration using one is never a fallback for
+	// an engine that cannot read a newer sibling — which is what lets a later
+	// declaration supersede an earlier one. CSS 2.1 through CSS Values 3, plus
+	// `fr`, as old as the grid properties that are the only place it is legal.
+	// Left out on purpose: the container-query units, the font-relative units
+	// newer than `ch` (`cap`, `ic`, `lh`, `rlh`, `rex`, `rch`, `ric`), the
+	// small/large/dynamic viewport units, and `x` for `dppx` — a declaration
+	// spelled in one of those is exactly the fallback pair worth keeping.
+	// `mdn-data`'s units carry no version, so no dataset states this.
+	overridableUnits: [
+		"%",
+		"ch",
+		"cm",
+		"deg",
+		"dpcm",
+		"dpi",
+		"dppx",
+		"em",
+		"ex",
+		"fr",
+		"grad",
+		"hz",
+		"in",
+		"khz",
+		"mm",
+		"ms",
+		"pc",
+		"pt",
+		"px",
+		"q",
+		"rad",
+		"rem",
+		"s",
+		"turn",
+		"vh",
+		"vmax",
+		"vmin",
+		"vw"
+	],
 	// CSS Values 4 §8.1: a quarter turn, in each unit that spells it exactly.
 	// The trig functions are only folded on these, so the table is what says
 	// where. `rad` has no entry — a quarter turn is π/2 of them, which no double
@@ -4789,11 +4861,17 @@ const collectData = () => {
 	const pairLonghands = collectPairLonghands();
 	const oneValuePairShorthands = collectOneValuePairShorthands(pairLonghands);
 	const familyLonghands = collectFamilyLonghands();
+	const slashLonghands = collectSlashLonghands();
 
 	// Every longhand the three merge tables can consume, so the printer can ask
 	// one question of a block instead of walking all three tables.
 	const mergeLonghands = new Set();
-	for (const table of [boxLonghands, pairLonghands, familyLonghands]) {
+	for (const table of [
+		boxLonghands,
+		pairLonghands,
+		familyLonghands,
+		slashLonghands
+	]) {
 		for (const [, longhands] of table) {
 			for (const longhand of longhands) mergeLonghands.add(longhand);
 		}
@@ -4878,11 +4956,19 @@ const PAIR_LONGHANDS = new Map([${pairLonghands
 // collapsing to one value may emit it.
 const ONE_VALUE_PAIR_SHORTHANDS = ${setLiteral(oneValuePairShorthands)};
 
+// The pair shorthands \`output.environment.cssPlaceShorthand\` gates, newer than
+// the longhands they merge.
+const PLACE_SHORTHANDS = ${setLiteral(SUPPLEMENT.placeShorthands)};
+
 // The shorthands written as an order-free \`||\` of their own longhands, each
 // appearing once, in grammar order. A merge emits every value, so the only
 // question is whether each parses back into the longhand it was authored on.
 // prettier-ignore
 const FAMILY_LONGHANDS = new Map([${familyLonghands
+		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
+		.join(", ")}]);
+
+const SLASH_LONGHANDS = new Map([${slashLonghands
 		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
 		.join(", ")}]);
 
@@ -5197,6 +5283,8 @@ const UNIT_CONVERSION_TARGETS = ${setLiteral(SUPPLEMENT.unitConversionTargets)};
 // trig, which turns a truncated digit into a different computed matrix.
 const ANGLE_UNITS = ${setLiteral(SUPPLEMENT.angleUnits)};
 
+const OVERRIDABLE_UNITS = ${setLiteral(SUPPLEMENT.overridableUnits)};
+
 // A quarter turn in each unit that spells it exactly (CSS Values 4 §8.1), as
 // \`unit -> the count\`. The trig functions are folded only where their argument
 // is a whole number of these, which is where sine and cosine are rational.
@@ -5402,8 +5490,8 @@ module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
 module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;\nmodule.exports.MERGEABLE_AT_RULES = MERGEABLE_AT_RULES;\nmodule.exports.MERGE_LONGHANDS = MERGE_LONGHANDS;
 module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;
 module.exports.NTH_NAMED_EQUIVALENTS = NTH_NAMED_EQUIVALENTS;\nmodule.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;\nmodule.exports.OMITTABLE_INITIAL_KEYWORDS = OMITTABLE_INITIAL_KEYWORDS;
-module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
-module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
+module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;\nmodule.exports.OVERRIDABLE_UNITS = OVERRIDABLE_UNITS;
+module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.PLACE_SHORTHANDS = PLACE_SHORTHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
 module.exports.PREFIXED_AT_RULES = PREFIXED_AT_RULES;
 module.exports.PREFIXED_PROPERTIES = PREFIXED_PROPERTIES;
 module.exports.PREFIXED_SELECTORS = PREFIXED_SELECTORS;
@@ -5412,7 +5500,7 @@ module.exports.PREFIXED_VALUES = PREFIXED_VALUES;
 module.exports.PREFIX_BROWSERS = PREFIX_BROWSERS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
-module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
+module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;

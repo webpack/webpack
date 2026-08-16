@@ -16,6 +16,7 @@ module.exports = {
 			  "cssGradientDoublePosition": true,
 			  "cssInsetShorthand": true,
 			  "cssMediaQueryRange": true,
+			  "cssPlaceShorthand": true,
 			  "destructuring": true,
 			  "document": false,
 			  "dynamicImport": true,

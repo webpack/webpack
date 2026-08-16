@@ -12,7 +12,8 @@ module.exports = {
 			cssColorHexAlpha: false,
 			cssGradientDoublePosition: false,
 			cssInsetShorthand: false,
-			cssMediaQueryRange: false
+			cssMediaQueryRange: false,
+			cssPlaceShorthand: false
 		}
 	},
 	optimization: {

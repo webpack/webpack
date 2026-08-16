@@ -48,12 +48,13 @@ const {
 /**
  * @param {string} css a stylesheet
  * @param {string[]=} browsers the browserslist selection to target
+ * @param {import("../lib/css/syntax").CssEnvironment=} abilities the CSS abilities the target reads
  * @returns {string} its minified serialization
  */
-const minifyFor = (css, browsers) =>
+const minifyFor = (css, browsers, abilities) =>
 	new SourceProcessor().process(css, {
 		mode: "minify",
-		environment: browsers ? { browsers } : undefined
+		environment: browsers ? { ...abilities, browsers } : abilities
 	}).code;
 
 // Snapshot uses the spec-style kebab-case names for multi-word token types;
@@ -4025,9 +4026,32 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(two)).toBe(two);
 		});
 
-		it("declines `place-items`, newer than its longhands in every form", () => {
-			const css = "a{align-items:center;justify-items:center}";
+		it("declines the `place-*` pairs a target cannot read", () => {
+			const off = { cssPlaceShorthand: false };
+			const items = "a{align-items:center;justify-items:center}";
+			expect(minifyFor(items, undefined, off)).toBe(items);
+			const self = "a{align-self:center;justify-self:end}";
+			expect(minifyFor(self, undefined, off)).toBe(self);
+			const content = "a{align-content:center;justify-content:end}";
+			expect(minifyFor(content, undefined, off)).toBe(content);
+			// The same block is merged where the target reads the shorthand.
+			expect(minify(items)).toBe("a{place-items:center}");
+			expect(minify(self)).toBe("a{place-self:center end}");
+			expect(minify(content)).toBe("a{place-content:center end}");
+		});
+
+		it("declines `place-content` over a baseline, which it would not copy", () => {
+			// CSS Box Alignment 3 §place-content: an omitted second value defaults
+			// to `start` after a `<baseline-position>` rather than repeating it.
+			const css = "a{align-content:baseline;justify-content:baseline}";
 			expect(minify(css)).toBe(css);
+			// The pairs that do copy are unaffected.
+			expect(minify("a{align-items:baseline;justify-items:baseline}")).toBe(
+				"a{place-items:baseline}"
+			);
+			expect(minify("a{align-content:center;justify-content:end}")).toBe(
+				"a{place-content:center end}"
+			);
 		});
 
 		it("refuses a pair the box collapse would refuse", () => {
@@ -4731,7 +4755,10 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 		expect(
 			minifyFor(
 				"a{align-items:flex-start;align-self:flex-end;justify-content:space-around;align-content:space-between}",
-				["ie 10"]
+				["ie 10"],
+				// An engine needing the `-ms-flex-*` aliases reads no `place-*`, which
+				// is what the merge would write over the pair the aliases sit on.
+				{ cssPlaceShorthand: false }
 			)
 		).toBe(
 			"a{-ms-flex-align:start;align-items:flex-start;-ms-flex-item-align:end;align-self:flex-end;-ms-flex-pack:distribute;justify-content:space-around;-ms-flex-line-pack:justify;align-content:space-between}"

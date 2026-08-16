@@ -12,7 +12,8 @@ module.exports = {
 		environment: {
 			cssColorHexAlpha: false,
 			cssInsetShorthand: false,
-			cssMediaQueryRange: false
+			cssMediaQueryRange: false,
+			cssPlaceShorthand: false
 		}
 	},
 	module: {

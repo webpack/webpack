@@ -1,8 +1,8 @@
 /* The `output.environment` CSS entries decide which newer spellings the minifier
    may reach for. This build sets all four false, so every case here keeps the
    form an engine without CSS Color 4 hex alpha, Media Queries 4 range syntax,
-   the CSS Position 3 `inset` shorthand or CSS Images 4's two-position color stop
-   can read. */
+   the CSS Position 3 `inset` shorthand, CSS Box Alignment 3's `place-*` or CSS
+   Images 4's two-position color stop can read. */
 
 /*! the keyword stays a keyword */
 .t01 { background-color: transparent }
@@ -37,3 +37,11 @@
 /*! ...unlike the last stop's position, which CSS Images 3's own fix-up already
    puts there */
 .t15 { background-image: linear-gradient(red, blue 100%) }
+/*! the `place-*` shorthands are newer than the pairs they merge */
+.t16 { align-items: center; justify-items: end }
+.t17 { align-self: center; justify-self: center }
+.t18 { align-content: center; justify-content: end }
+/*! ...unlike `gap`, whose shorthand is as old as its longhands */
+.t19 { row-gap: 1px; column-gap: 2px }
+/*! ...and a source `place-items` is the author's own, so it stays */
+.t20 { place-items: center end }
