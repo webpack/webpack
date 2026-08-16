@@ -13,7 +13,6 @@ it("should name the largest modules inside an oversized asset", () => {
 	// The dominant module must come first, ahead of the tiny one.
 	const largest = /Largest modules: ([^\n]*)/.exec(message)[1];
 	expect(largest.indexOf("big.js")).toBeGreaterThan(-1);
-	expect(largest.indexOf("big.js")).toBeLessThan(
-		largest.indexOf("small.js") === -1 ? Infinity : largest.indexOf("small.js")
-	);
+	expect(largest.indexOf("small.js")).toBeGreaterThan(-1);
+	expect(largest.indexOf("big.js")).toBeLessThan(largest.indexOf("small.js"));
 });

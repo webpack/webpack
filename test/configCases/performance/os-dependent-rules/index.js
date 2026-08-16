@@ -16,6 +16,7 @@ it("should report only the conditions that hardcode a separator", () => {
 	expect(message).not.toMatch(/rules\[3\]/);
 	expect(message).not.toMatch(/rules\[4\]/);
 	expect(message).not.toMatch(/rules\[5\]/);
+	expect(message).not.toMatch(/rules\[6\]/);
 	expect(__STATS__.warnings).toHaveLength(0);
 	expect(__STATS__.errors).toHaveLength(0);
 });

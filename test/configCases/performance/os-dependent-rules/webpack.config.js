@@ -18,7 +18,9 @@ module.exports = {
 			// Portable: the character class accepts both.
 			{ test: /\.js$/, exclude: /node_modules[\\/]right-pad/ },
 			// Portable: an alternation covering both.
-			{ test: /\.js$/, exclude: /vendor\/one|vendor\\\\two/ },
+			{ test: /\.js$/, exclude: /vendor\/one|vendor\\two/ },
+			// Portable: negated, so the separator says what is excluded.
+			{ test: /\.js$/, exclude: { not: /node_modules\\cached/ } },
 			// No separator at all.
 			{ test: /\.never-matches$/ }
 		]
