@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases optimization-bailout-analysis should print correct stats for optimization-bailout-analysis 1`] = `
+"runtime modules X KiB 3 modules
+./index.js X bytes [built] [code generated]
+  Dependency (harmony side effect evaluation) with side effects at 1:0-34
+./eval-module.js X bytes [built] [code generated]
+  Inner graph bailout: eval()
+  Statement (ExpressionStatement) with side effects in source code at 1:0-26
+./amd-module.js X bytes [built] [code generated]
+  AMD bailout: define() prevents static exports analysis
+  Statement (ExpressionStatement) with side effects in source code at 1:0-3:3"
+`;
