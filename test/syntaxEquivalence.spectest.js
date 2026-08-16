@@ -414,23 +414,6 @@ describe("printer output in real Chrome", () => {
 		return differences;
 	};
 
-	/**
-	 * @param {string} name test name
-	 * @param {() => Promise<void>} fn the test
-	 * @param {number} timeout how long it may take, in ms
-	 */
-	const itWithCorpus = (name, fn, timeout) => {
-		if (hasCorpus()) {
-			it(name, fn, timeout);
-
-			return;
-		}
-
-		it(NO_CORPUS, () => {
-			// No-op: the corpus is an optional git submodule.
-		});
-	};
-
 	const describeCorpus = (at, label) => {
 		describe(label, () => {
 			if (at === 1 && !hasCorpus()) {
@@ -518,87 +501,114 @@ describe("printer output in real Chrome", () => {
 	describeCorpus(0, "configCases");
 	describeCorpus(1, "wpt");
 
-	itWithCorpus(
-		"should compute the same style from a value and its minified form",
-		async () => {
-			const cases = cssDeclarations().map(({ property, value, name }) => ({
-				name,
-				property,
-				key: `${property}:${value}`,
-				raw: value,
-				min: minifyDeclaration(property, value)
-			}));
-			const differences = await inBatches(page, cases, (batch) =>
-				page.evaluate((each) => {
-					const probe = document.createElement("div");
-					document.body.append(probe);
-					// Computed values, not `cssText`: `left bottom` and `0% 100%` are one
-					// declaration the CSSOM serializes two ways, and only what the engine
-					// resolves them to says whether the printer changed the meaning.
-					const computed = getComputedStyle(probe);
-					/**
-					 * @param {string} property the property name
-					 * @param {string} value the value to set
-					 * @returns {string[]} the longhands it set, none when it did not parse
-					 */
-					const apply = (property, value) => {
-						probe.style.cssText = "";
-						probe.style.cssText = `${property}:${value}`;
-						/** @type {string[]} */
-						const set = [];
-						for (let at = 0; at < probe.style.length; at++) {
-							set.push(probe.style.item(at));
-						}
-						return set;
-					};
-					/**
-					 * @param {string} property the property name
-					 * @param {string} value the value to set
-					 * @param {string[]} names the longhands to read
-					 * @returns {string} what the engine computes for each
-					 */
-					const readBack = (property, value, names) => {
-						apply(property, value);
-						// Separated: run together, a difference that shifts across a
-						// property boundary ("ab"+"c" against "a"+"bc") reads as equal.
-						let out = "";
-						for (const name of names) {
-							out += `${computed.getPropertyValue(name)}\u0000`;
-						}
-						return out;
-					};
-					const out = [];
-					for (const one of each) {
-						if (one.min === "") continue;
-						// Only the longhands one of the two forms sets: every other property
-						// computes the same whatever was written, and reading all ~340 of them
-						// per value is what made this the corpus's slowest pass. A form that
-						// sets nothing still differs from one that sets something, since the
-						// other's longhands then read back unset.
-						const names = [
-							...new Set([
-								...apply(one.property, one.raw),
-								...apply(one.property, one.min)
-							])
-						];
-						if (
-							readBack(one.property, one.raw, names) !==
-							readBack(one.property, one.min, names)
-						) {
-							out.push({ name: one.name, key: one.key });
-						}
+	// One test per wpt spec area rather than one for all 8,785 declarations: an
+	// area that is slow or hangs then names itself instead of the whole tier.
+	/** @type {Map<string, { name: string, property: string, key: string, raw: string, min: string }[]>} */
+	const declarationsByArea = new Map();
+	for (const { property, value, name } of hasCorpus()
+		? cssDeclarations()
+		: []) {
+		const area = name.split("/").slice(2, 4).join("/");
+		const one = {
+			name,
+			property,
+			key: `${property}:${value}`,
+			raw: value,
+			min: minifyDeclaration(property, value)
+		};
+		const group = declarationsByArea.get(area);
+		if (group === undefined) declarationsByArea.set(area, [one]);
+		else group.push(one);
+	}
+	/** @type {Set<string>} every value that moved, filled as the areas run */
+	const movedValues = new Set();
+
+	const compareValues = (cases) =>
+		inBatches(page, cases, (batch) =>
+			page.evaluate((each) => {
+				const probe = document.createElement("div");
+				document.body.append(probe);
+				// Computed values, not `cssText`: `left bottom` and `0% 100%` are one
+				// declaration the CSSOM serializes two ways, and only what the engine
+				// resolves them to says whether the printer changed the meaning.
+				const computed = getComputedStyle(probe);
+				/**
+				 * @param {string} property the property name
+				 * @param {string} value the value to set
+				 * @returns {string[]} the longhands it set, none when it did not parse
+				 */
+				const apply = (property, value) => {
+					probe.style.cssText = "";
+					probe.style.cssText = `${property}:${value}`;
+					/** @type {string[]} */
+					const set = [];
+					for (let at = 0; at < probe.style.length; at++) {
+						set.push(probe.style.item(at));
+					}
+					return set;
+				};
+				/**
+				 * @param {string} property the property name
+				 * @param {string} value the value to set
+				 * @param {string[]} names the longhands to read
+				 * @returns {string} what the engine computes for each
+				 */
+				const readBack = (property, value, names) => {
+					apply(property, value);
+					// Separated: run together, a difference that shifts across a
+					// property boundary ("ab"+"c" against "a"+"bc") reads as equal.
+					let out = "";
+					for (const name of names) {
+						out += `${computed.getPropertyValue(name)}\u0000`;
 					}
 					return out;
-				}, batch)
-			);
-			// Includes the values the spec rejects: an invalid declaration moves
-			// nothing, so one whose printed form does is one the printer brought to life.
-			expect([...new Set(differences.map((one) => one.key))].sort()).toEqual(
+				};
+				const out = [];
+				for (const one of each) {
+					if (one.min === "") continue;
+					// Only the longhands one of the two forms sets: every other property
+					// computes the same whatever was written, and reading all ~340 of them
+					// per value is what made this the corpus's slowest pass. A form that
+					// sets nothing still differs from one that sets something, since the
+					// other's longhands then read back unset.
+					const names = [
+						...new Set([
+							...apply(one.property, one.raw),
+							...apply(one.property, one.min)
+						])
+					];
+					if (
+						readBack(one.property, one.raw, names) !==
+						readBack(one.property, one.min, names)
+					) {
+						out.push({ name: one.name, key: one.key });
+					}
+				}
+				return out;
+			}, batch)
+		);
+
+	if (!hasCorpus()) {
+		it(NO_CORPUS, () => {
+			// No-op: the corpus is an optional git submodule.
+		});
+	}
+	for (const [area, cases] of declarationsByArea) {
+		it(`should compute the same style from a value in ${area} and its minified form`, async () => {
+			for (const one of await compareValues(cases)) movedValues.add(one.key);
+		}, 300000);
+	}
+
+	// Runs last, so every area has reported what moved. Includes the values the
+	// spec rejects: an invalid declaration moves nothing, so one whose printed
+	// form does is one the printer brought to life.
+	if (declarationsByArea.size > 0) {
+		it("should still diverge on every filed value defect", () => {
+			expect([...movedValues].sort()).toEqual(
 				[...FILED_WPT_VALUE_DEFECTS.keys()].sort()
 			);
-		},
-		900000
-	);
+		});
+	}
 
 	it("should only fold enumerated values the engine folds too", async () => {
 		// The printer lower-cases a value in `ENUMERATED_KEYWORDS`. That is
