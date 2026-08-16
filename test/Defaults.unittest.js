@@ -1268,6 +1268,7 @@ describe("snapshots", () => {
 		+     "hints": "warning",
 		+     "maxAssetSize": 250000,
 		+     "maxEntrypointSize": 250000,
+		+     "unusedRules": false,
 		+   },
 		@@ ... @@
 		+       "hash": true,
@@ -1349,6 +1350,7 @@ describe("snapshots", () => {
 		+     "hints": "warning",
 		+     "maxAssetSize": 250000,
 		+     "maxEntrypointSize": 250000,
+		+     "unusedRules": false,
 		+   },
 		@@ ... @@
 		+       "hash": true,

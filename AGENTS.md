@@ -65,7 +65,7 @@ The directory listings below are the canonical map of the repository. **Whenever
   - `lib/dependencies/` — `Dependency` classes and their templates (HarmonyImport, CommonJsRequire, RequireContext, …).
   - `lib/dll/` — DllPlugin / DllReferencePlugin.
   - `lib/deno/`, `lib/electron/`, `lib/node/`, `lib/web/`, `lib/webworker/` — Target-specific runtime templates and externals presets.
-  - `lib/errors/` — Error class hierarchy.
+  - `lib/errors/` — Error and warning class hierarchy.
   - `lib/esm/` — ESM-specific output (e.g. `import.meta`).
   - `lib/hmr/` — Hot Module Replacement plugins.
   - `lib/html/` — Experimental HTML support.
@@ -154,6 +154,16 @@ The two config layers differ: **`normalization.js`** canonicalizes the user-supp
 **Finding a hook:** hook definitions live on the class that owns them — compiler-wide hooks in `lib/Compiler.js`, per-`Compilation` hooks in `lib/Compilation.js`; tap them with a unique plugin-name string.
 
 **Adding a runtime requirement:** declare the symbol in `lib/RuntimeGlobals.js`, emit its code with a `RuntimeModule` subclass, and inject it by tapping `runtimeRequirementInTree`/`additionalTreeRuntimeRequirements` on `compilation.hooks` (the `…InModule` variants for per-module needs).
+
+### Diagnostics and hints
+
+> [!REQUIRED]
+
+**Error and warning classes live in `lib/errors/`**, whatever raises them — the plugin that pushes one stays where it belongs, but the class itself goes there.
+
+A hint reuses the reporting webpack already has rather than inventing its own: `SizeLimitsPlugin` and `DuplicatePackagesPlugin` both end in `hints === "error" ? compilation.errors : compilation.warnings`, so a hint that hardcodes one of the two cannot be escalated. Prefer an option that says _whether_ to run the check and leave the severity to `performance.hints`.
+
+**Whether a diagnostic needs `makeSerializable` follows from where it is created.** Anything reachable from a module — `ModuleError`, `ModuleWarning`, `ModuleBuildError` — is serialized with the module graph and must register. One built after seal and pushed onto `compilation.warnings` never enters the pack, which is why nothing in `lib/performance/` registers a serializer. Guessing wrong is silent: it surfaces only as `Pack got invalid because of write to:` under `ConfigCacheTestCases`, so cover a new diagnostic there rather than assuming.
 
 ## Code conventions
 

@@ -4066,6 +4066,15 @@ declare interface CompiledAliasOptions {
 	 */
 	useBuckets: boolean;
 }
+declare interface CompiledRule {
+	path: string;
+	raw: RuleSetRule;
+	used: boolean;
+	conditions: RuleCondition[];
+	effects: (EffectUse | EffectBasic | ((effectData: EffectData) => Effect[]))[];
+	rules?: CompiledRule[];
+	oneOf?: CompiledRule[];
+}
 declare class Compiler {
 	/**
 	 * Creates an instance of Compiler.
@@ -21742,6 +21751,12 @@ declare interface PerformanceOptions {
 	 * Total size of an entry point (in bytes).
 	 */
 	maxEntrypointSize?: number;
+
+	/**
+	 * Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.
+	 * @since 5.110.0
+	 */
+	unusedRules?: boolean;
 }
 declare interface PitchLoaderDefinitionFunction<
 	OptionsType = {},
@@ -24276,6 +24291,27 @@ declare interface RestoreProvidedDataExports {
 	exportsInfo?: RestoreProvidedData;
 }
 type RuleAlias = string | RegExp | ((str: string) => boolean);
+declare interface RuleCondition {
+	property: string | string[];
+	matchWhenEmpty: boolean;
+	fn: (
+		value: EffectData[
+			| "compiler"
+			| "dependency"
+			| "resource"
+			| "scheme"
+			| "realResource"
+			| "resourceQuery"
+			| "resourceFragment"
+			| "attributes"
+			| "mimetype"
+			| "descriptionData"
+			| "descriptionRelativePath"
+			| "issuer"
+			| "issuerLayer"
+			| "phase"]
+	) => boolean;
+}
 declare interface RuleSet {
 	/**
 	 * map of references in the rule set (may grow over time)
@@ -24286,6 +24322,11 @@ declare interface RuleSet {
 	 * execute the rule set
 	 */
 	exec: (effectData: EffectData) => Effect[];
+
+	/**
+	 * the rules that never matched, outermost first
+	 */
+	unusedRules: () => CompiledRule[];
 }
 type RuleSetCondition =
 	| string

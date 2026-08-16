@@ -5347,6 +5347,11 @@
         "maxEntrypointSize": {
           "description": "Total size of an entry point (in bytes).",
           "type": "number"
+        },
+        "unusedRules": {
+          "description": "Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.",
+          "type": "boolean",
+          "added": "5.110.0"
         }
       }
     },
