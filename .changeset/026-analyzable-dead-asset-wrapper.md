@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Stop emitting runtime helpers, chunk loaders, hints and wrappers nothing calls.
+Stop emitting runtime helpers nothing calls; load css chunks that only `@import`.
