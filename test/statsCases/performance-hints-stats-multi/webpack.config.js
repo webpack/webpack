@@ -1,10 +1,6 @@
 "use strict";
 
-/**
- * Both compilers report a hint, so the aggregated stats must carry each one
- * tagged with the compiler it came from.
- * @type {import("../../../").Configuration[]}
- */
+/** @type {import("../../../").Configuration[]} */
 module.exports = ["first", "second"].map((name) => ({
 	name,
 	entry: "./index",

@@ -2,9 +2,7 @@
 
 module.exports = {
 	/**
-	 * Drives `MultiStats.toJson`, which the printed output above does not reach.
-	 * @param {import("../../../").MultiStats} stats the stats
-	 * @returns {void}
+	 * @param {import("../../../").MultiStats} stats stats
 	 */
 	validate(stats) {
 		const json = stats.toJson({ all: false, hints: true, hintsCount: true });
