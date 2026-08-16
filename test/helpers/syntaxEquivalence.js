@@ -940,20 +940,7 @@ const installHelpers = () => {
 		const node = document.createElement(tagName);
 		if (value !== null) node.setAttribute(attribute, value);
 		document.body.append(node);
-		/** @type {string | undefined} */
-		let property;
-		for (
-			let proto = Object.getPrototypeOf(node);
-			proto !== null && property === undefined;
-			proto = Object.getPrototypeOf(proto)
-		) {
-			for (const name of Object.getOwnPropertyNames(proto)) {
-				if (name.toLowerCase() === attribute) {
-					property = name;
-					break;
-				}
-			}
-		}
+		const property = reflectionOf(node, attribute);
 		const reflected =
 			property === undefined
 				? undefined
@@ -1009,7 +996,8 @@ const conditionSignatures = async (page, groups) => {
 				// Bounded: each size costs two round trips per condition, and past a
 				// point the trips cost more than the separation they buy. Clamped: a
 				// viewport of width 0 is not a sample point.
-				if (value > 0 && value < 10000 && edges.size < MAX_SAMPLED_SIZES) {
+				// Room for the whole triplet, so the cap is never stepped over.
+				if (value > 0 && value < 10000 && edges.size <= MAX_SAMPLED_SIZES - 3) {
 					edges
 						.add(Math.max(1, value - 1))
 						.add(value)

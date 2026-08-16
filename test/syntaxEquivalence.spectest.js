@@ -620,13 +620,20 @@ describe("printer output in real Chrome", () => {
 			 * @param {string} element tag name
 			 * @param {string} attribute attribute name
 			 * @param {string} value the value to set
-			 * @returns {[string | undefined, unknown]} the IDL member and what it reads back
+			 * @returns {[string | undefined, string]} the IDL member and what it reads back
 			 */
 			const readBack = (element, attribute, value) => {
 				const { probeReflection } = /** @type {{ __eq: PageHelpers }} */ (
 					/** @type {unknown} */ (window)
 				).__eq;
-				return probeReflection(element, attribute, value);
+				const [property, reflected] = probeReflection(
+					element,
+					attribute,
+					value
+				);
+				// By value: a token list reflects as a fresh object per probe, so two
+				// spellings of one value would never compare equal as themselves.
+				return [property, String(reflected)];
 			};
 			/** @type {string[]} */
 			const out = [];
