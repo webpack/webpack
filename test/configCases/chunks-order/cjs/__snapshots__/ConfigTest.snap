@@ -39,7 +39,7 @@ it(\\"The dependOn chunk must be loaded before the common chunk.\\", () => {
 // load runtime
 var __webpack_require__ = require(\\"./runtime~nested-shared.js\\");
 __webpack_require__.C(exports);
-var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+var __webpack_exec__ = (moduleId) => (__webpack_require__(moduleId))
 var __webpack_exports__ = __webpack_require__.X(0, [\\"shared\\",\\"nested-shared\\",\\"commons-dependency_js\\"], () => (__webpack_exec__(552)));
 const __webpack_export_target__ = exports;
 for(var __webpack_i__ in __webpack_exports__) __webpack_export_target__[__webpack_i__] = __webpack_exports__[__webpack_i__];

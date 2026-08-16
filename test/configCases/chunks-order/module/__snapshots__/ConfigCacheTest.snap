@@ -33,7 +33,7 @@ it(\\"The dependOn chunk must be loaded before the common chunk.\\", async () =>
 
 // load runtime
 import { __webpack_require__ } from \\"./runtime~nested-shared.mjs\\";
-var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+var __webpack_exec__ = (moduleId) => (__webpack_require__(moduleId))
 
 import * as __webpack_chunk_1__ from \\"./shared.mjs\\";
 __webpack_require__.C(__webpack_chunk_1__);
