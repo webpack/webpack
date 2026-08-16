@@ -1,9 +1,7 @@
 "use strict";
 
-// What the css loading runtime module needs is asked for only where it renders: it
-// emits nothing without chunk loading or hmr, and its loading branch needs a chunk
-// actually emitted as css -- which a node target has none of, stylesheets being
-// javascript modules there.
+// The css loading runtime module renders nothing without chunk loading or hmr, and its
+// loading branch needs a chunk emitted as css -- which a node target has none of.
 
 /**
  * @param {string} name output sub-directory

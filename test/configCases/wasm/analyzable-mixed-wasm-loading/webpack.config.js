@@ -1,12 +1,7 @@
 "use strict";
 
-// Two entries of ONE compilation loading wasm differently, under a public path that is
-// neither `auto` nor an absolute URL. `fetch` is the only loader such a path reaches,
-// so it is the only one that has to keep the runtime form — the `readFile` entry
-// resolves the binary against the chunk it is read from, exactly as a baked literal
-// does, and must still bake one. Unless the two share a binary: it is generated once
-// for both, so neither loader can be told the other's shape — and only those two, a
-// runtime reaching neither still answers on its own.
+// Two entries loading wasm differently under a non-`auto` public path: only `fetch`
+// keeps the runtime form, unless the two share a binary and neither can be told apart.
 
 const webpack = require("../../../../");
 

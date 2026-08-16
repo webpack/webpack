@@ -1,9 +1,7 @@
 "use strict";
 
-// Assigning `__webpack_public_path__` writes the slot; it does not read the value the
-// `publicPath` runtime module computes, and that module is what auto-detection costs.
-// So it ships only where something reads `__webpack_require__.p` back — in this entry
-// or in any other module of the runtime.
+// Assigning `__webpack_public_path__` writes the slot without reading the value the
+// `publicPath` module computes, so that module ships only where something reads it back.
 
 const webpack = require("../../../../");
 
