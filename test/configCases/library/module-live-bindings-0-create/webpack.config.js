@@ -3,16 +3,23 @@
 /**
  * Asserts the emitted entry keeps live ESM bindings (direct top-level
  * declarations) instead of snapshotting them through `__webpack_exports__`.
+ * Reading nothing off `__webpack_exports__` also means the export helpers have no
+ * call site — including where a separate runtime chunk is what carries them.
  * @param {string} assetName emitted entry asset to assert on
+ * @param {string} runtimeAsset asset the runtime modules land in
  * @returns {(this: import("../../../../").Compiler) => void} plugin
  */
-const assertLiveBindings = (assetName) =>
+const assertLiveBindings = (assetName, runtimeAsset) =>
 	function apply() {
 		this.hooks.compilation.tap("testcase", (compilation) => {
 			compilation.hooks.afterProcessAssets.tap("testcase", (assets) => {
 				const source = assets[assetName].source();
 				expect(source).not.toMatch(/const __webpack_exports__\w+ =/);
 				expect(source).toMatch(/export \{[^}]*\bmutLet\b/);
+				const runtime = assets[runtimeAsset].source();
+				expect(runtime).not.toMatch(
+					/webpack\/runtime\/(define property getters|make namespace object)/
+				);
 			});
 		});
 	};
@@ -36,7 +43,12 @@ const variant = (name, entryAsset, mode, runtimeChunk) => ({
 	},
 	optimization: { concatenateModules: true, runtimeChunk, minimize: false },
 	experiments: { outputModule: true },
-	plugins: [assertLiveBindings(`${name}/${entryAsset}`)]
+	plugins: [
+		assertLiveBindings(
+			`${name}/${entryAsset}`,
+			runtimeChunk ? `${name}/runtime.mjs` : `${name}/${entryAsset}`
+		)
+	]
 });
 
 /** @type {import("../../../../").Configuration[]} */
