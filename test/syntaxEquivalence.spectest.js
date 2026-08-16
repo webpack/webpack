@@ -563,10 +563,11 @@ describe("printer output in real Chrome", () => {
 				};
 				const out = [];
 				for (const one of each) {
-					if (one.min === "") continue;
 					// Each form read against its own longhands, the name included: a form
 					// that sets a property the other does not — an invalid value the
-					// printer brought to life — differs by that name alone.
+					// printer brought to life, or a valid one it erased — differs by
+					// that name alone. An erased declaration is read as the empty form
+					// rather than skipped, so the engine says whether it mattered.
 					if (
 						readBack(one.property, one.raw) !== readBack(one.property, one.min)
 					) {
