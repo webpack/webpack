@@ -1564,6 +1564,71 @@ describe("CssSyntax — minify transforms, in-process", () => {
 			-1
 		);
 
+	/**
+	 * @param {string} value a `transform` value
+	 * @returns {string} the minified value
+	 */
+	const transform = (value) =>
+		min(`a{transform:${value}}`).slice("a{transform:".length, -1);
+
+	// One input per entry in the reduction table, so a binding that stops firing
+	// fails here rather than quietly declining to shorten anything.
+	it("reduces each transform function that names a shorter one", () => {
+		expect(transform("translate(5px,0)")).toBe("translate(5px)");
+		expect(transform("translate(0,5px)")).toBe("translateY(5px)");
+		expect(transform("translate3d(0,0,4px)")).toBe("translateZ(4px)");
+		expect(transform("translate3d(1px,2px,0)")).toBe("translate(1px,2px)");
+		expect(transform("scale(2,2)")).toBe("scale(2)");
+		expect(transform("scale(2,1)")).toBe("scaleX(2)");
+		expect(transform("scale(1,2)")).toBe("scaleY(2)");
+		expect(transform("scale3d(2,3,1)")).toBe("scale(2,3)");
+		expect(transform("scale3d(1,1,4)")).toBe("scaleZ(4)");
+		expect(transform("rotateZ(45deg)")).toBe("rotate(45deg)");
+		expect(transform("rotate3d(1,0,0,45deg)")).toBe("rotateX(45deg)");
+		expect(transform("rotate3d(0,1,0,45deg)")).toBe("rotateY(45deg)");
+		expect(transform("rotate3d(0,0,1,45deg)")).toBe("rotate(45deg)");
+		expect(transform("matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,4,5,0,1)")).toBe(
+			"matrix(1,0,0,1,4,5)"
+		);
+	});
+
+	// One reduction uncovers the next, which is the loop's whole reason to exist.
+	it("keeps reducing while each result names a shorter one still", () => {
+		expect(transform("scale3d(1,1,1)")).toBe("scale(1)");
+		expect(transform("translate3d(0,0,0)")).toBe("translateZ(0)");
+	});
+
+	// A `translate3d()`'s z is a `<length>`, so a percentage makes the whole
+	// declaration invalid — shortening it away would revive what the engine drops.
+	it("keeps a translate3d whose z offset is a percentage", () => {
+		expect(transform("translate3d(1px,2px,0%)")).toBe(
+			"translate3d(1px,2px,0%)"
+		);
+	});
+
+	it("keeps a call the reduction does not name a shorter one for", () => {
+		// The axis a 3D matrix would have to leave at the identity is not.
+		expect(transform("matrix3d(1,0,0,0,0,1,0,0,0,0,2,0,4,5,0,1)")).toBe(
+			"matrix3d(1,0,0,0,0,1,0,0,0,0,2,0,4,5,0,1)"
+		);
+		expect(transform("matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,4,5,0,2)")).toBe(
+			"matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,4,5,0,2)"
+		);
+		// A component count no reduction is stated for.
+		expect(transform("translate(1px,2px,3px)")).toBe("translate(1px,2px,3px)");
+		expect(transform("translate3d(0,0)")).toBe("translate3d(0,0)");
+		expect(transform("scale3d(1,2)")).toBe("scale3d(1,2)");
+		expect(transform("rotateZ(1deg,2deg)")).toBe("rotateZ(1deg,2deg)");
+		expect(transform("rotate3d(0,0,1)")).toBe("rotate3d(0,0,1)");
+		expect(transform("matrix3d(1,0,0,1)")).toBe("matrix3d(1,0,0,1)");
+		// An axis none of the three spellings names.
+		expect(transform("rotate3d(1,1,0,45deg)")).toBe("rotate3d(1,1,0,45deg)");
+		// A function outside the table keeps whatever it was written as.
+		expect(transform("var(--t)")).toBe("var(--t)");
+		// An empty component is malformed, and a reduction would spell it away.
+		expect(transform("translate(,)")).toBe("translate(,)");
+	});
+
 	it("rewrites cubic-bezier() to the keyword naming the same curve", () => {
 		expect(easing("cubic-bezier(0,0,1,1)")).toBe("linear");
 		expect(easing("cubic-bezier(.25,.1,.25,1)")).toBe("ease");
