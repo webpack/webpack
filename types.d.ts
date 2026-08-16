@@ -3465,6 +3465,7 @@ declare class Compilation {
 	assetsInfo: Map<string, AssetInfo>;
 	errors: Error[];
 	warnings: Error[];
+	hints: Error[];
 	children: Compilation[];
 	logging: Map<string, LogEntry[]>;
 	dependencyFactories: Map<DependencyConstructor, ModuleFactory>;
@@ -15103,6 +15104,7 @@ declare interface KnownStatsCompilation {
 	errorsCount?: number;
 	warnings?: StatsError[];
 	warningsCount?: number;
+	hints?: StatsError[];
 	children?: StatsCompilation[];
 	logging?: Record<string, StatsLogging>;
 	filteredWarningDetailsCount?: number;
@@ -21749,9 +21751,9 @@ declare interface PerformanceOptions {
 	duplicatePackages?: boolean;
 
 	/**
-	 * Sets the format of the hints: warnings, errors or nothing at all.
+	 * Sets the format of the hints: warnings, errors, stats-only or nothing at all.
 	 */
-	hints?: false | "error" | "warning";
+	hints?: false | "error" | "stats" | "warning";
 
 	/**
 	 * File size limit (in bytes) when exceeded, that webpack will provide performance hints.
@@ -27589,6 +27591,12 @@ declare interface StatsOptions {
 	 * Add the hash of the compilation.
 	 */
 	hash?: boolean;
+
+	/**
+	 * Add performance hints reported with 'performance.hints: "stats"'.
+	 * @since 5.110.0
+	 */
+	hints?: boolean;
 
 	/**
 	 * Add ids.
