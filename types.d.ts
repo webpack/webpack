@@ -21767,6 +21767,12 @@ declare interface PerformanceOptions {
 	maxEntrypointSize?: number;
 
 	/**
+	 * Report conditions in 'module.rules' that hardcode a path separator, so they only match on one operating system.
+	 * @since 5.110.0
+	 */
+	osDependentRules?: boolean;
+
+	/**
 	 * Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.
 	 * @since 5.110.0
 	 */

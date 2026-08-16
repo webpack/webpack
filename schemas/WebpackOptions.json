@@ -5353,6 +5353,11 @@
           "description": "Total size of an entry point (in bytes).",
           "type": "number"
         },
+        "osDependentRules": {
+          "description": "Report conditions in 'module.rules' that hardcode a path separator, so they only match on one operating system.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "unusedRules": {
           "description": "Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.",
           "type": "boolean",

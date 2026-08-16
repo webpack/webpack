@@ -13424,6 +13424,19 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "performance-os-dependent-rules": Object {
+    "configs": Array [
+      Object {
+        "description": "Report conditions in 'module.rules' that hardcode a path separator, so they only match on one operating system.",
+        "multiple": false,
+        "path": "performance.osDependentRules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report conditions in 'module.rules' that hardcode a path separator, so they only match on one operating system.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-unused-rules": Object {
     "configs": Array [
       Object {
