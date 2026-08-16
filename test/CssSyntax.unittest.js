@@ -1020,7 +1020,9 @@ describe("CssSyntax — block streaming", () => {
 	it("reads a streamed rule's prelude in terms of what encloses it", () => {
 		// `from` is the `0%` a keyframe selector means only inside `@keyframes`, so
 		// the opener has to be printed with the whole path bound, not just the rule.
-		const nested = repeat(3000, (i) => `& .x${i}{color:red}`);
+		// A block of its own per rule, so the sibling join has nothing to gather
+		// here and what is pinned is the prelude, not the merge.
+		const nested = repeat(3000, (i) => `& .x${i}{top:${i + 1}px}`);
 		expect(
 			childCount(`@keyframes k{from{${nested}}}`, NodeType.QualifiedRule)
 		).toBe(0);
@@ -1068,7 +1070,7 @@ describe("CssSyntax — block streaming", () => {
 		// streamed block cannot look ahead for the later one. The duplicate is
 		// separated from its match by 3000 child rules, so this is the whole block
 		// agreeing, not a run of adjacent declarations.
-		const middle = repeat(3000, (i) => `& .m${i}{color:red}`);
+		const middle = repeat(3000, (i) => `& .m${i}{top:${i + 1}px}`);
 		const src = `.root{color:red;${middle}color:red;}`;
 		expect(childCount(src, NodeType.QualifiedRule)).toBe(0);
 		expect(minify(src)).toBe(`.root{${middle}color:red}`);
@@ -1078,10 +1080,31 @@ describe("CssSyntax — block streaming", () => {
 		// The `;` a `}` makes redundant is dropped by walking back over the pieces
 		// the block emitted, past the empty one a later duplicate took back. What
 		// stands before the block keeps its own separator.
-		const mid = repeat(3000, (i) => `& .m${i}{color:red}`);
+		const mid = repeat(3000, (i) => `& .m${i}{top:${i + 1}px}`);
 		const src = `.root{lead:1;${mid}dup:2;dup:2;}`;
 		expect(childCount(src, NodeType.QualifiedRule)).toBe(0);
 		expect(minify(src)).toBe(`.root{lead:1;${mid}dup:2}`);
+	});
+
+	it("joins the rules of a block too big to collect", () => {
+		// A streamed block writes its children out as they finish, so the merge a
+		// collected block runs over all of them at once cannot: it holds a window
+		// of them back instead, and the rules in it join like any other siblings.
+		const src = `@media all{${repeat(1800, rule)}.j1{left:0}.pad{top:1px}.j2{left:0}.j3{width:0}.j3{height:0}}`;
+		expect(childCount(src)).toBe(0);
+		const out = minify(src);
+		expect(out).toContain(".j1,.j2{left:0}");
+		expect(out).toContain(".j3{width:0;height:0}");
+		// ...and the rule between them is still read where it was written.
+		expect(out).toContain(".pad{top:1px}");
+	});
+
+	it("keeps a streamed block's rules apart where the cascade reads them", () => {
+		// The same barrier the collected merge reads: a rule between the two
+		// writing what their shared block does would win where it lost.
+		const src = `@media all{${repeat(1800, rule)}.k1{left:0}.mid{left:9px}.k2{left:0}}`;
+		expect(childCount(src)).toBe(0);
+		expect(minify(src)).toContain(".k1{left:0}.mid{left:9px}.k2{left:0}");
 	});
 
 	it("declines to stream a block a longhand family could still merge in", () => {
@@ -2940,6 +2963,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[".sm\\:flex{top:0}.b{top:0}", ".sm\\:flex,.b{top:0}"],
 			['[href="a:b"]{top:0}.b{top:0}', '[href="a:b"],.b{top:0}'],
 			["@media x{a{top:0}b{top:0}}", "@media x{a,b{top:0}}"],
+			// A named layer is one layer however many blocks open it.
+			["@layer x{a{top:0}}@layer x{b{top:0}}", "@layer x{a,b{top:0}}"],
 			["@keyframes k{0%{top:0}50%{top:0}}", "@keyframes k{0%,50%{top:0}}"],
 			// The rule between them prints nothing, so they end up adjacent.
 			["a{color:red}i{}b{color:red}", "a,b{color:red}"],
@@ -3034,7 +3059,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a kept comment sits between them", "a{color:red}/*! c */b{color:red}"],
 			// The `s` modifier is one an engine may not read, and one selector it
 			// drops invalidates the whole list it was joined into.
-			["a matcher carries a modifier past `i`", "[a=b s]{top:0}[c]{top:0}"]
+			["a matcher carries a modifier past `i`", "[a=b s]{top:0}[c]{top:0}"],
+			// CSS Cascade 5 §6.4.1: every `@layer {` opens a layer of its own, and a
+			// later layer beats an earlier one whatever the selectors say — joining
+			// the two would hand the block back to specificity.
+			[
+				"each anonymous layer is a layer of its own",
+				"@layer{#i{color:blue}}@layer{.c{color:red}}"
+			]
 		])("keeps both rules where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
@@ -3072,6 +3104,16 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// The two blocks' own rules come to stand beside each other, so the pair
 			// meeting at the seam is offered the same join.
 			["@media x{a{top:0}}@media x{b{top:0}}", "@media x{a,b{top:0}}"],
+			// ...and one further back, where nothing between them writes what its
+			// own rules do — a named layer only where nothing in the same layer does.
+			[
+				"@media x{a{top:0}}i{left:0}@media x{b{top:0}}",
+				"@media x{a,b{top:0}}i{left:0}"
+			],
+			[
+				"@layer n{a{top:0}}i{top:9px}@layer n{b{top:0}}",
+				"@layer n{a,b{top:0}}i{top:9px}"
+			],
 			[
 				"@supports (a:b){i{t:0}}@supports (a:b){j{t:0}}",
 				"@supports (a:b){i,j{t:0}}"
@@ -3131,7 +3173,23 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"the prelude names what the block belongs to",
 				"@keyframes k{0%{top:0}}@keyframes k{50%{top:1px}}"
 			],
-			["a rule stands between them", "@media x{a{t:0}}i{c:d}@media x{b{t:0}}"],
+			// The block moves back to where the condition was first opened, so a
+			// rule between them writing what it does would win where it lost.
+			[
+				"a rule between them writes the same property",
+				"@media x{a{top:0}}i{top:9px}@media x{b{top:0}}"
+			],
+			// A layer with no name is a layer of its own, so two of them are never
+			// one block however they are written.
+			[
+				"the layer they open has no name",
+				"@layer{#i{color:blue}}@layer{.c{color:red}}"
+			],
+			// Its own rules would move past a block of the layer they are in.
+			[
+				"a block of the same layer stands between them",
+				"@layer a{x{top:0}}@layer b{@layer a{y{top:0}}}@layer a{z{left:0}}"
+			],
 			// `@layer a{}` declares where the layer sits in the cascade.
 			["one block is empty", "@layer a{}@layer a{i{t:0}}"]
 		])("keeps both at-rules where %s", (_name, css) => {
