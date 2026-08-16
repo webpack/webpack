@@ -291,14 +291,69 @@ const OPTIONAL_END_TAG_AT_END = [
 	"p"
 ];
 
-const P_KEEPS_END_TAG_IN = [
-	"a",
-	"audio",
-	"del",
-	"ins",
-	"map",
-	"noscript",
-	"video"
+// Cannot be derived: §13.2.6.4.7 states per end tag whether it generates implied
+// end tags, as prose on each rule rather than as a list any dataset carries, and
+// the table modes close a `p` through their own rules on top of it. Confirmed
+// element by element against a real engine. §13.1.2.4 names the complement
+// (a, audio, del, ins, map, noscript, video), which reads as closed and is not:
+// every other non-special parent — `canvas`, `span`, every custom element —
+// keeps an open `p` open too, because "any other end tag" ignores its own token
+// once a special element sits above it.
+const P_ENDS_ON_PARENT_END_TAG = [
+	"address",
+	"applet",
+	"article",
+	"aside",
+	"blockquote",
+	"body",
+	"button",
+	"caption",
+	"center",
+	"colgroup",
+	"dd",
+	"details",
+	"dialog",
+	"dir",
+	"div",
+	"dl",
+	"dt",
+	"fieldset",
+	"figcaption",
+	"figure",
+	"footer",
+	"form",
+	"h1",
+	"h2",
+	"h3",
+	"h4",
+	"h5",
+	"h6",
+	"head",
+	"header",
+	"hgroup",
+	"html",
+	"li",
+	"listing",
+	"main",
+	"marquee",
+	"menu",
+	"nav",
+	"object",
+	"ol",
+	"pre",
+	"search",
+	"section",
+	"select",
+	"summary",
+	"table",
+	"tbody",
+	"td",
+	"template",
+	"tfoot",
+	"th",
+	"thead",
+	"tr",
+	"ul"
 ];
 
 const BODY_START_KEPT_BEFORE = [
@@ -1708,7 +1763,7 @@ const EXPORT_NAMES = [
 	"OPTIONAL_END_TAG_FOLLOWERS",
 	"OPTIONAL_END_TAG_UNLESS_TRAILING_NODE",
 	"P_FOLLOWED_BY",
-	"P_KEEPS_END_TAG_IN",
+	"P_ENDS_ON_PARENT_END_TAG",
 	"SIGNED_INTEGER_ATTRIBUTES",
 	"SRCSET_ATTRIBUTES",
 	"TOKEN_LIST_ATTRIBUTES",
@@ -1799,11 +1854,14 @@ const EMPTY_METADATA_ELEMENTS = ${setLiteral(EMPTY_METADATA_ELEMENTS)};
 const BODY_START_KEPT_BEFORE = ${setLiteral(BODY_START_KEPT_BEFORE)};
 
 /**
- * §13.1.2.4: a trailing \`</p>\` stays inside these, whose content model would
- * otherwise absorb what follows.
+ * Parents whose own end tag generates implied end tags, so a trailing \`</p>\`
+ * inside one is closed by it and can be left out (§13.2.6.4.7). Listed rather
+ * than excluded: an end tag not named here is "any other end tag", which a
+ * special element on the stack makes the parser ignore — so anything unknown,
+ * a custom element included, keeps its \`</p>\`.
  * @type {Set<string>}
  */
-const P_KEEPS_END_TAG_IN = ${setLiteral(P_KEEPS_END_TAG_IN)};
+const P_ENDS_ON_PARENT_END_TAG = ${setLiteral(P_ENDS_ON_PARENT_END_TAG)};
 
 /**
  * §2.4.2 boolean attributes, mapped to the elements each one is boolean *on*

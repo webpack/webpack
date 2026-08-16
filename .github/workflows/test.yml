@@ -255,6 +255,11 @@ jobs:
 
       - run: yarn cover:html5lib --ci --cacheDirectory .jest-cache
 
+      # The corpus this job already checked out, held to the printers: every
+      # document's DOM must survive minification, in webpack's parser and in the
+      # runner's Chrome.
+      - run: yarn cover:wpt --ci --cacheDirectory .jest-cache
+
       - name: Codecov
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:

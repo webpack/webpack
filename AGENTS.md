@@ -34,6 +34,7 @@ All commands are defined in `package.json` `scripts`.
 | `yarn test:unit`                                                     | Run all `*.unittest.js`.                                                                                        |
 | `yarn test:integration`                                              | Run the integration suites (`basictest`/`longtest`/`test`).                                                     |
 | `yarn test:test262` / `yarn test:html5lib` / `yarn test:css-parsing` | Spec-conformance suites.                                                                                        |
+| `yarn test:wpt`                                                      | Holds the HTML/CSS printers to the wpt corpus (DOM and CSSOM, engine-free and in Chrome).                       |
 | `yarn test:base -u`                                                  | Update snapshots (eyeball the diff first).                                                                      |
 | `yarn test:size`                                                     | Size of the generated code over all `configCases/` (per asset, plus runtime module counts per runtime).         |
 | `yarn cover:unit`                                                    | Unit-test coverage.                                                                                             |
