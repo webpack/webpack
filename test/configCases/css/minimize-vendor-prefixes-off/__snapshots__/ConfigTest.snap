@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-vendor-prefixes-off minimize-vendor-prefixes-off should compile 1`] = `
+Array [
+  "/*! nothing is added for the old targets */.t01{user-select:none}",
+  "/*! and a prefix the targets no longer need is not dropped */.t02{-webkit-border-radius:5px;border-radius:5px}",
+  "/*! an at-rule keeps to itself */@keyframes spin{to{opacity:1}}",
+  "/*! and so does a pseudo-element */.t03::placeholder{color:#999}",
+]
+`;

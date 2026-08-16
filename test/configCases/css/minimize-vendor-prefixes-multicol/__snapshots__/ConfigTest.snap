@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-vendor-prefixes-multicol minimize-vendor-prefixes-multicol should compile 1`] = `
+Array [
+  "/*! the whole module keeps its prefix, \`column-width\` with the rest */.t01{-moz-column-width:12em;column-width:12em;-moz-column-count:3;column-count:3;-moz-column-gap:1em;column-gap:1em}",
+  "/*! including the longhands and the shorthand */.t02{-moz-column-rule:1px solid red;column-rule:1px solid red;-moz-column-fill:balance;column-fill:balance;-moz-columns:2;columns:2}",
+  "/*! a property Gecko 51 already reads unprefixed keeps no copy */.t03{text-align-last:center;hyphens:auto}",
+]
+`;

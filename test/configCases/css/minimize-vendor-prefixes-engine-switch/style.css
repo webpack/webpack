@@ -1,0 +1,9 @@
+/* Opera 15 is Chromium 28: from there its version line reads what Blink reads,
+   whatever its own Presto releases understood before it. */
+
+/*! Chromium still needed the flexbox prefix at 28, so this line does too */
+.t01 { display: flex; flex-grow: 2; align-self: center }
+/*! and at 28 it no longer needed the transition one, which Presto 12.1 read */
+.t02 { transition: opacity 1s }
+/*! a window that outlives the switch by years keeps the prefix */
+.t03 { column-width: 12em; appearance: none }

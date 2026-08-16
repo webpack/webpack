@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-vendor-prefixes-engine-switch minimize-vendor-prefixes-engine-switch should compile 1`] = `
+Array [
+  "/*! Chromium still needed the flexbox prefix at 28, so this line does too */.t01{display:-webkit-flex;display:flex;-webkit-flex-grow:2;flex-grow:2;-webkit-align-self:center;align-self:center}",
+  "/*! and at 28 it no longer needed the transition one, which Presto 12.1 read */.t02{transition:opacity 1s}",
+  "/*! a window that outlives the switch by years keeps the prefix */.t03{-webkit-column-width:12em;column-width:12em;-webkit-appearance:none;appearance:none}",
+]
+`;

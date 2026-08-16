@@ -26,12 +26,22 @@
 
 const fs = require("fs");
 const path = require("path");
+const bcd =
+	/** @type {{ css: { properties: { [name: string]: BcdNode }, selectors: { [name: string]: BcdNode }, "at-rules": { [name: string]: BcdNode }, types: { [name: string]: BcdNode } }, __meta: { version: string } }} */ (
+		/** @type {unknown} */ (require("@mdn/browser-compat-data"))
+	);
 const colorName = require("color-name");
+
 /** @typedef {{ version: string }} PackageManifest */
 /** @typedef {{ [name: string]: { syntax: string } }} SyntaxTable */
 /** @typedef {{ [name: string]: { syntax?: string } }} PartialSyntaxTable */
 /** @typedef {{ [name: string]: { syntax?: string, status?: string, computed?: string | string[], initial?: string | string[] } }} PartialPropertyTable */
 /** @typedef {{ [name: string]: { syntax?: string, status?: string } }} PartialSelectorTable */
+/** @typedef {{ version_added?: string | boolean | null, version_removed?: string | boolean | null, prefix?: string, alternative_name?: string, partial_implementation?: boolean, flags?: EXPECTED_ANY[] }} BcdSupport */
+/** @typedef {{ support: { [browser: string]: BcdSupport | BcdSupport[] } }} BcdCompat */
+/** @typedef {{ __compat?: BcdCompat }} BcdNode */
+const bcdVersion = bcd.__meta.version;
+
 /** @type {PackageManifest} */
 const colorNamePackage = require("color-name/package.json");
 /** @type {PartialSyntaxTable} */
@@ -2612,6 +2622,27 @@ const countMapLiteral = (entries) =>
 		.join(", ")}])`;
 
 /**
+ * A prefix table's `new Map([…])` literal: `name -> [prefix, [browser, from,
+ * to][]][]`. `Infinity` prints as a bare identifier the runtime reads back.
+ * @param {[string, [string, [string, number, number][]][]][]} table the axis table
+ * @returns {string} its `new Map([…])` literal — prettier wraps it on emit
+ */
+const prefixLiteral = (table) =>
+	`new Map([${table
+		.map(([name, prefixes]) => {
+			const body = prefixes
+				.map(([prefix, browsers]) => {
+					const list = browsers
+						.map(([browser, from, to]) => `["${browser}", ${from}, ${to}]`)
+						.join(", ");
+					return `["${prefix}", [${list}]]`;
+				})
+				.join(", ");
+			return `["${name}", [${body}]]`;
+		})
+		.join(", ")}])`;
+
+/**
  * @param {[number, number][]} entries number-keyed pairs
  * @returns {string} the `Map` literal
  */
@@ -3525,6 +3556,1162 @@ const assertClassesArePrintable = (slots) => {
 	}
 };
 
+// BCD browser id -> the browserslist names it answers for. BCD-only engines
+// (oculus, deno, bun, nodejs) have no browserslist query, so a prefix they alone
+// would need can never be selected — those ids are absent and their entries drop
+// out. `ie_mob` is Windows Phone's Trident on the desktop version line (IE Mobile
+// 11 is Trident 7, as IE 11 is), which is why it reads IE's windows; BCD tracks
+// no separate id for it. Everything else browserslist can select and no dataset
+// covers (`op_mini`, `and_uc`, `and_qq`, `baidu`, `kaios`, `bb`) is absent here
+// and skipped, which is what lightningcss's own target mapping does.
+const BCD_TO_BROWSERSLIST = new Map([
+	["chrome", ["chrome"]],
+	["chrome_android", ["and_chr"]],
+	["edge", ["edge"]],
+	["firefox", ["firefox"]],
+	["firefox_android", ["and_ff"]],
+	["ie", ["ie", "ie_mob"]],
+	["opera", ["opera"]],
+	["opera_android", ["op_mob"]],
+	["safari", ["safari"]],
+	["safari_ios", ["ios_saf"]],
+	["samsunginternet_android", ["samsung"]],
+	["webview_android", ["android"]],
+	["webview_ios", ["ios_saf"]]
+]);
+
+// The engine prefixes in play at all. A spelling carrying none of them is no
+// engine's — `-khtml-`, which died with KHTML — and is never reached for.
+const ENGINE_PREFIXES = ["-webkit-", "-moz-", "-ms-", "-o-"];
+
+// The prefix a browser's engine actually uses, so an obsolete cross-engine one
+// BCD still lists (Safari keeps `-khtml-user-select` from its KHTML days, with
+// no removal version) is never carried and so never added. Edge and Opera list
+// both their old and Chromium prefixes; the version windows sort out which
+// applies. A browser absent here contributes no prefixes.
+const BROWSER_PREFIXES = new Map([
+	["chrome", ["-webkit-"]],
+	["chrome_android", ["-webkit-"]],
+	["safari", ["-webkit-"]],
+	["safari_ios", ["-webkit-"]],
+	["samsunginternet_android", ["-webkit-"]],
+	["webview_android", ["-webkit-"]],
+	["webview_ios", ["-webkit-"]],
+	["edge", ["-webkit-", "-ms-"]],
+	["opera", ["-webkit-", "-o-"]],
+	["opera_android", ["-webkit-", "-o-"]],
+	["firefox", ["-moz-"]],
+	["firefox_android", ["-moz-"]],
+	["ie", ["-ms-"]]
+]);
+
+// The browserslist names the tables above can answer for: every BCD id that maps
+// to one and has an engine prefix, `ie_mob` among them, reading the same Trident
+// as desktop IE. A selection naming anything else — `op_mini`, `and_uc`,
+// `and_qq`, `baidu`, `kaios`, `bb` — states nothing and is skipped.
+const prefixBrowsers = [
+	...new Set(
+		[...BCD_TO_BROWSERSLIST]
+			.filter(([bcdBrowser]) => BROWSER_PREFIXES.has(bcdBrowser))
+			.flatMap(([, names]) => names)
+	)
+].sort();
+
+// A BCD version to one comparable integer `major * 100000 + minor`, so the
+// runtime orders versions with a plain `<` and never a float compare (`15.10`
+// must sort above `15.4`). `true` (since forever) is 0; `≤n` is that n; a
+// version that never arrived (`false` / `null`) is null.
+/**
+ * @param {string | boolean | null | undefined} version a BCD `version_added` / `version_removed`
+ * @returns {number | null} the encoded version, or null when it never applied
+ */
+const encodeVersion = (version) => {
+	if (version === true) return 0;
+	if (version === false || version === null || version === undefined) {
+		return null;
+	}
+	const [major, minor] = String(version).replace(/^≤/, "").split(".");
+	const parsedMajor = Number.parseInt(major, 10);
+	if (Number.isNaN(parsedMajor)) return null;
+	return parsedMajor * 100000 + (Number.parseInt(minor, 10) || 0);
+};
+
+// A vendor spelling BCD states as an alternative name rather than a prefix, with
+// its decoration stripped: `":-webkit-any()"` -> `-webkit-any`. The same engine
+// filter applies, so a rename that is not a vendor's (`:matches()`, `:after`) is
+// not one of these.
+const ALTERNATIVE_DECORATION = /^:{1,2}|\(\)$/g;
+
+// One construct's vendor spellings as `spelling -> [browserslistName, from,
+// to][]`: a target browser at version V needs the spelling exactly when
+// `from <= V < to`. A browser whose unprefixed form never arrived carries
+// `Infinity`, so it always needs it (Safari and `-webkit-user-select`); one
+// whose windows are all empty is dropped. A spelling is the name with the
+// engine's prefix on it, or — where `alternatives` is on, which is the axes
+// whose legacy spelling is a rename rather than a prefix — the vendor name BCD
+// states instead (`:is()` was `:-webkit-any()`, never `:-webkit-is()`).
+/**
+ * @param {BcdCompat | undefined} compat the construct's `__compat` block
+ * @param {string} name the construct's unprefixed name
+ * @param {boolean} alternatives whether a vendor rename counts as a spelling
+ * @returns {[string, [string, number, number][]][] | null} `[spelling, [browser, from, to][]][]`, or null
+ */
+const collectPrefixes = (compat, name, alternatives) => {
+	if (!compat || !compat.support) return null;
+	/** @type {Map<string, Map<string, [number, number]>>} */
+	const byPrefix = new Map();
+	for (const [bcdBrowser, raw] of Object.entries(compat.support)) {
+		const names = BCD_TO_BROWSERSLIST.get(bcdBrowser);
+		if (names === undefined) continue;
+		const allowed = BROWSER_PREFIXES.get(bcdBrowser);
+		if (allowed === undefined) continue;
+		const entries = Array.isArray(raw) ? raw : [raw];
+		let unprefixedFrom = null;
+		for (const entry of entries) {
+			// An entry BCD later removed never established unprefixed support — the
+			// one it ends may be a partial implementation the next refines, but
+			// reading a partial one as support is what would drop a spelling an
+			// engine still needs (`-webkit-mask`, against a `mask` Chrome has
+			// partially had since 1). One behind a flag is not support a page can
+			// rely on, one spelled another way is not the unprefixed spelling at
+			// all, and the earliest of the rest is the arrival — BCD's newest-first
+			// ordering is convention, not schema.
+			if (
+				entry.prefix ||
+				entry.alternative_name ||
+				entry.version_removed ||
+				entry.flags
+			) {
+				continue;
+			}
+			const added = encodeVersion(entry.version_added);
+			if (
+				added !== null &&
+				(unprefixedFrom === null || added < unprefixedFrom)
+			) {
+				unprefixedFrom = added;
+			}
+		}
+		const target = unprefixedFrom === null ? Infinity : unprefixedFrom;
+		// Every spelling that covers this browser's gap, before deciding which of
+		// them it may be told about.
+		/** @type {[BcdSupport, string, number][]} */
+		const covering = [];
+		for (const entry of entries) {
+			if (entry.flags) continue;
+			const spelling = entry.prefix
+				? entry.prefix + name
+				: alternatives && entry.alternative_name
+					? entry.alternative_name.replace(ALTERNATIVE_DECORATION, "")
+					: null;
+			if (spelling === null) continue;
+			const prefixedFrom = encodeVersion(entry.version_added);
+			if (prefixedFrom === null || prefixedFrom >= target) continue;
+			covering.push([entry, spelling, prefixedFrom]);
+		}
+		// Its own engine's prefix — or, where nothing of its own covers the gap,
+		// whichever engine's does: Firefox reads `-webkit-line-clamp` and no
+		// `line-clamp` of any spelling, so `-moz-` alone leaves it unprefixed.
+		// A selector prefix is compound (`-webkit-input-` on `::placeholder`), so
+		// match at the start rather than whole — that still drops an obsolete
+		// cross-engine one (`-khtml-` on `user-select`), which is no engine's here.
+		const reachable = covering.some(([, spelling]) =>
+			allowed.some((prefix) => spelling.startsWith(prefix))
+		)
+			? allowed
+			: ENGINE_PREFIXES;
+		for (const [entry, spelling, prefixedFrom] of covering) {
+			if (!reachable.some((prefix) => spelling.startsWith(prefix))) continue;
+			// A spelling the engine itself dropped ends there rather than where the
+			// unprefixed one arrived: `-moz-outline` went in Firefox 3.6, six years
+			// before the property it stood for was complete.
+			const spellingRemoved = encodeVersion(entry.version_removed);
+			const until =
+				spellingRemoved !== null && spellingRemoved < target
+					? spellingRemoved
+					: target;
+			let browsers = byPrefix.get(spelling);
+			if (browsers === undefined) {
+				browsers = new Map();
+				byPrefix.set(spelling, browsers);
+			}
+			// `safari_ios` and `webview_ios` both fold onto `ios_saf`; keep the
+			// widest window (earliest prefix start, latest unprefixed arrival).
+			for (const browser of names) {
+				const existing = browsers.get(browser);
+				browsers.set(
+					browser,
+					existing === undefined
+						? [prefixedFrom, until]
+						: [
+								Math.min(existing[0], prefixedFrom),
+								Math.max(existing[1], until)
+							]
+				);
+			}
+		}
+	}
+	if (byPrefix.size === 0) return null;
+	/** @type {[string, [string, number, number][]][]} */
+	const out = [];
+	for (const [spelling, browsers] of byPrefix) {
+		/** @type {[string, number, number][]} */
+		const list = [...browsers].map(([browser, [from, to]]) => [
+			browser,
+			from,
+			to
+		]);
+		out.push([spelling, list]);
+	}
+	return out;
+};
+
+// The prefixed constructs the minifier looks up, one table per axis it meets a
+// prefix on: a property name, a selector, an at-rule. Standard entries only — a
+// construct BCD marks non-standard is a vendor's own, not a spelling of a
+// standard one.
+/**
+ * @param {{ [name: string]: BcdNode }} group a BCD axis (`css.properties`, `css.selectors`, `css["at-rules"]`)
+ * @param {boolean=} alternatives whether a vendor rename counts as a spelling
+ * @param {boolean=} supplement whether the stated prefixes belong to this axis
+ * @returns {[string, [string, [string, number, number][]][]][]} the axis table, sorted
+ */
+const collectPrefixTable = (
+	group,
+	alternatives = false,
+	supplement = false
+) => {
+	/** @type {[string, [string, [string, number, number][]][]][]} */
+	const table = [];
+	for (const [name, node] of Object.entries(group)) {
+		if (name.startsWith("__")) continue;
+		const spellings = collectPrefixes(node.__compat, name, alternatives);
+		if (spellings === null) continue;
+		const excluded = PROPERTY_SPELLING_EXCLUSIONS.get(name);
+		const kept =
+			excluded === undefined
+				? spellings
+				: spellings.filter(
+						([spelling]) => !excluded.some((p) => spelling.startsWith(p))
+					);
+		if (kept.length !== 0) table.push([name, kept]);
+	}
+	if (supplement) applyPrefixSupplement(table);
+	applyEngineSwitch(table);
+	if (!alternatives) return table.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+	// A spelling two names claim cannot be right for both, and the one whose own
+	// prefix makes it is the one that means it: BCD gives `:-moz-placeholder` to
+	// `::placeholder` as its prefix and to `:placeholder-shown` as a rename, and
+	// only the first is what an old engine did with it.
+	/** @type {Map<string, number>} */
+	const claims = new Map();
+	for (const [, spellings] of table) {
+		for (const [spelling] of spellings) {
+			claims.set(spelling, (claims.get(spelling) || 0) + 1);
+		}
+	}
+	/** @type {[string, [string, [string, number, number][]][]][]} */
+	const kept = [];
+	for (const [name, spellings] of table) {
+		const own = spellings.filter(
+			([spelling]) =>
+				/** @type {number} */ (claims.get(spelling)) === 1 ||
+				spelling.endsWith(name)
+		);
+		if (own.length !== 0) kept.push([name, own]);
+	}
+	return kept.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+// Prefixes BCD records nowhere, though the spelling is real and needed. Where
+// the engine that read it still ships, a current one still parses the spelling —
+// Gecko's own property database is where an open-ended window comes from; where
+// it does not, caniuse records it, through autoprefixer's table, and that window
+// is closed history which cannot move again. Checked against BCD as the file is
+// built, so an entry it catches up on fails generation rather than sitting here
+// unread.
+// A stated spelling may also carry the keywords the older property read in place
+// of the standard ones, as `[standard, legacy][]`. Where it does, the map is the
+// legacy property's whole grammar: a value naming anything else is one that
+// property cannot read, so no copy is written for it at all.
+// A browser whose version line changed engine mid-way reads, from that version
+// on, whatever the new engine reads. BCD records the change as a prefixed window
+// opening after the unprefixed one, which the rule above drops as an alias added
+// for compatibility — right for Gecko taking `-webkit-transform` in Firefox 49,
+// wrong here, where the earlier unprefixed support belonged to another engine.
+const ENGINE_SWITCH = new Map([
+	["opera", { bcd: "opera", base: "chrome", from: 15 }],
+	["op_mob", { bcd: "opera_android", base: "chrome", from: 14 }]
+]);
+
+/**
+ * Where the base browser's versions land on the derived browser's own line,
+ * learned from BCD: every feature both date unprefixed after the change is one
+ * observation of the same engine release under two numbers.
+ * @param {string} bcdName the derived browser's BCD id
+ * @param {string} baseName the base browser's BCD id
+ * @param {number} from the derived browser's first version on the new engine
+ * @returns {(version: number) => number} base version -> derived version
+ */
+const engineVersionLine = (bcdName, baseName, from) => {
+	/** @type {(support: BcdSupport | BcdSupport[] | undefined) => number | null} */
+	const unprefixed = (support) => {
+		const list = Array.isArray(support) ? support : support ? [support] : [];
+		// The same reading of "arrived unprefixed" the window rule above uses.
+		const entry = list.find(
+			(one) =>
+				!one.prefix &&
+				!one.alternative_name &&
+				!one.version_removed &&
+				!one.flags
+		);
+		return entry ? encodeVersion(entry.version_added) : null;
+	};
+	/**
+	 * @param {{ [key: string]: EXPECTED_ANY }} node a BCD subtree
+	 * @returns {Generator<BcdCompat>} every `__compat` block under it
+	 */
+	function* walk(node) {
+		for (const [key, value] of Object.entries(node)) {
+			if (key === "__compat") yield /** @type {BcdCompat} */ (value);
+			else if (value && typeof value === "object") yield* walk(value);
+		}
+	}
+	/** @type {Map<number, number>} */
+	const earliest = new Map();
+	const floor = encodeVersion(String(from));
+	for (const compat of walk(bcd.css)) {
+		const base = unprefixed(compat.support[baseName]);
+		const derived = unprefixed(compat.support[bcdName]);
+		// Only what both engines gained after the change speaks to the alignment.
+		if (
+			base === null ||
+			derived === null ||
+			derived < /** @type {number} */ (floor)
+		) {
+			continue;
+		}
+		const known = earliest.get(base);
+		if (known === undefined || derived < known) earliest.set(base, derived);
+	}
+	// A feature landing in base `b` and derived `d` says `d` already carries `b`,
+	// so it bounds every base version at or below it: the answer for `b` is the
+	// earliest derived release seen against any base version from `b` on.
+	const points = [...earliest].sort((a, b) => a[0] - b[0]);
+	let running = Infinity;
+	for (let i = points.length - 1; i >= 0; i--) {
+		running = Math.min(running, points[i][1]);
+		points[i][1] = running;
+	}
+	return (version) => {
+		if (version === Infinity) return Infinity;
+		for (const [base, derived] of points) {
+			if (base >= version) {
+				return Math.max(derived, /** @type {number} */ (floor));
+			}
+		}
+		return Infinity;
+	};
+};
+
+/**
+ * Give every spelling the base browser needs the window it needs on a derived
+ * browser's own line. Widens, like the supplement — a window BCD already records
+ * is never narrowed by the alignment.
+ * @param {[string, [string, [string, number, number][]][]][]} table the axis table so far
+ * @returns {void}
+ */
+const applyEngineSwitch = (table) => {
+	const lines = new Map(
+		[...ENGINE_SWITCH].map(([browser, { bcd: bcdName, base, from }]) => [
+			browser,
+			{
+				base,
+				from: encodeVersion(String(from)),
+				at: engineVersionLine(bcdName, base, from)
+			}
+		])
+	);
+	for (const [, spellings] of table) {
+		for (const [, windows] of spellings) {
+			for (const [browser, { base, from, at }] of lines) {
+				const baseWindow = windows.find(([known]) => known === base);
+				if (baseWindow === undefined) continue;
+				const start = Math.max(/** @type {number} */ (from), at(baseWindow[1]));
+				const end = at(baseWindow[2]);
+				if (end <= start) continue;
+				const known = windows.find(([one]) => one === browser);
+				if (known === undefined) {
+					windows.push([browser, start, end]);
+				} else {
+					known[1] = Math.min(known[1], start);
+					known[2] = Math.max(known[2], end);
+				}
+			}
+		}
+	}
+};
+
+// The windows BCD keeps for `inline-size`, shared by the whole logical-size family.
+/** @type {[string, string, string | number][]} */
+const LOGICAL_SIZE_WINDOWS = [
+	["chrome", "8", "57"],
+	["and_chr", "18", "57"],
+	["opera", "15", "44"],
+	["op_mob", "14", "43"],
+	["safari", "5.1", "12.1"],
+	["ios_saf", "5", "12.2"],
+	["samsung", "1", "7"],
+	["android", "4.4", "57"]
+];
+
+/** @type {Map<string, [string, [string, string, string | number][], [string, string][]?][]>} */
+const PREFIX_SUPPLEMENT = new Map([
+	[
+		// Multi-column's own gap, prefixed until the module went unprefixed — Chrome
+		// 50, Firefox 52, Safari 9. The `column-gap` of a flex or grid container is
+		// a different feature, which no engine ever prefixed, and no browser needing
+		// this one laid out either.
+		"column-gap",
+		[
+			[
+				"-webkit-column-gap",
+				[
+					["chrome", "4", "50"],
+					["safari", "3.1", "9"],
+					["ios_saf", "3.2", "9"],
+					["opera", "15", "37"],
+					// caniuse tracks the old WebViews and the current one, nothing
+					// between, so 5 stands for "any of the old ones".
+					["android", "2.1", "5"],
+					["samsung", "4", "5"]
+				]
+			],
+			["-moz-column-gap", [["firefox", "2", "52"]]]
+		]
+	],
+	[
+		// Multi-column's shorthand and its `column-span`, unprefixed with the rest
+		// of multi-column layout. BCD dates their `-webkit-` at the version the unprefixed form
+		// arrived, which is 46 versions after Chrome first read it. Only WebKit's,
+		// which a current Blink still parses: caniuse marks the whole feature
+		// prefixed for Firefox, which never read `-moz-column-span` at all.
+		"columns",
+		[
+			[
+				"-webkit-columns",
+				[
+					["chrome", "4", "50"],
+					["safari", "3.1", "9"],
+					["ios_saf", "3.2", "9"],
+					["opera", "15", "37"],
+					["android", "2.1", "5"],
+					["samsung", "4", "5"]
+				]
+			]
+		]
+	],
+	[
+		// Multi-column's own width, standard from Firefox 50 by BCD alone. Gecko's
+		// property database spells it `-moz-column-width` through 51 and gains the
+		// standard name in 52 with the rest of the module, so dropping the prefix
+		// leaves 50 and 51 a declaration Gecko cannot parse.
+		"column-width",
+		[
+			[
+				"-moz-column-width",
+				[
+					["firefox", "1.5", "52"],
+					["and_ff", "4", "52"]
+				]
+			]
+		]
+	],
+	// WebKit's logical sizing, named after the physical axis rather than the logical
+	// one. BCD records the pair `inline-size` / `block-size` as the renames they are
+	// and files the other four as a prefix on the standard name, which no engine's
+	// property list has ever carried. The six move as one: every WebKit and Blink
+	// release carrying `-webkit-logical-width` carries all six, and BCD dates the
+	// standard names of all six alike on every browser it records — so each takes
+	// the windows of the rename BCD does keep.
+	["min-inline-size", [["-webkit-min-logical-width", LOGICAL_SIZE_WINDOWS]]],
+	["max-inline-size", [["-webkit-max-logical-width", LOGICAL_SIZE_WINDOWS]]],
+	["min-block-size", [["-webkit-min-logical-height", LOGICAL_SIZE_WINDOWS]]],
+	["max-block-size", [["-webkit-max-logical-height", LOGICAL_SIZE_WINDOWS]]],
+	[
+		"column-span",
+		[
+			[
+				"-webkit-column-span",
+				[
+					["chrome", "4", "50"],
+					["safari", "3.1", "9"],
+					["ios_saf", "3.2", "9"],
+					["opera", "15", "37"],
+					["android", "2.1", "5"],
+					["samsung", "4", "5"]
+				]
+			]
+		]
+	],
+	// CSS Shapes, which WebKit shipped prefixed from Safari 7.1 and unprefixed at
+	// 10.1. BCD has the `-webkit-` entry for `shape-margin` alone.
+	[
+		"shape-outside",
+		[
+			[
+				"-webkit-shape-outside",
+				[
+					["safari", "7.1", "10.1"],
+					["ios_saf", "8", "10.3"]
+				]
+			]
+		]
+	],
+	[
+		"shape-margin",
+		[
+			[
+				"-webkit-shape-margin",
+				[
+					["safari", "7.1", "10.1"],
+					["ios_saf", "8", "10.3"]
+				]
+			]
+		]
+	],
+	[
+		"shape-image-threshold",
+		[
+			[
+				"-webkit-shape-image-threshold",
+				[
+					["safari", "7.1", "10.1"],
+					["ios_saf", "8", "10.3"]
+				]
+			]
+		]
+	],
+	// IE 10's flexbox, the 2012 draft: it renamed the properties rather than
+	// prefixing them, and BCD records the renames unevenly — `-ms-flex-positive`
+	// as an `alternative_name`, `-ms-flex-order` as a `-ms-` prefix on `order`
+	// (a spelling nothing ever read), and the rest not at all, some as plain
+	// unprefixed support at 10 the engine did not have. Only the five whose
+	// values IE 10 reads unchanged are stated: `-ms-flex-align`,
+	// `-ms-flex-pack`, `-ms-flex-line-pack` and `-ms-flex-item-align` also
+	// rename their keywords (`flex-start` is `start`, `space-around` is
+	// `distribute`), which is a value rewrite and not a spelling.
+	[
+		"order",
+		[
+			[
+				"-ms-flex-order",
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				]
+			]
+		]
+	],
+	[
+		"flex-shrink",
+		[
+			[
+				"-ms-flex-negative",
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				]
+			]
+		]
+	],
+	[
+		"flex-basis",
+		[
+			[
+				"-ms-flex-preferred-size",
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				]
+			]
+		]
+	],
+	[
+		"flex-wrap",
+		[
+			[
+				"-ms-flex-wrap",
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				]
+			]
+		]
+	],
+	[
+		"flex-flow",
+		[
+			[
+				"-ms-flex-flow",
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				]
+			]
+		]
+	],
+	// The four the 2012 draft also renamed the keywords of, each map being that
+	// property's whole grammar there. Only `writing-mode` is left out of the
+	// renames: IE reads `horizontal-tb` as `lr-tb` or `rl-tb` depending on the
+	// element's `direction`, which the declaration alone does not say.
+	[
+		"align-items",
+		[
+			[
+				"-ms-flex-align",
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				],
+				[
+					["flex-start", "start"],
+					["flex-end", "end"],
+					["center", "center"],
+					["baseline", "baseline"],
+					["stretch", "stretch"]
+				]
+			]
+		]
+	],
+	[
+		"align-self",
+		[
+			[
+				"-ms-flex-item-align",
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				],
+				[
+					["auto", "auto"],
+					["flex-start", "start"],
+					["flex-end", "end"],
+					["center", "center"],
+					["baseline", "baseline"],
+					["stretch", "stretch"]
+				]
+			]
+		]
+	],
+	[
+		"justify-content",
+		[
+			[
+				"-ms-flex-pack",
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				],
+				[
+					["flex-start", "start"],
+					["flex-end", "end"],
+					["center", "center"],
+					["space-between", "justify"],
+					["space-around", "distribute"]
+				]
+			]
+		]
+	],
+	[
+		"align-content",
+		[
+			[
+				"-ms-flex-line-pack",
+				[
+					["ie", "10", "11"],
+					["ie_mob", "10", "11"]
+				],
+				[
+					["flex-start", "start"],
+					["flex-end", "end"],
+					["center", "center"],
+					["space-between", "justify"],
+					["space-around", "distribute"],
+					["stretch", "stretch"]
+				]
+			]
+		]
+	],
+	// Presto, where BCD dates the unprefixed arrival earlier than caniuse — the
+	// only dataset that tracks Opera and Opera Mobile version by version, and the
+	// one autoprefixer reads. `border-image` it marks prefixed on every Presto
+	// version that has it at all (`a x` from 11 through 12.1, on both), so Presto
+	// never shipped it unprefixed and BCD's `opera: 11` cannot be right; the
+	// windows end where the engine did. `text-overflow` desktop dropped the
+	// prefix at 11 exactly as BCD says, but Opera Mobile kept needing it through
+	// 12 and only went plain at 12.1.
+	[
+		"border-image",
+		[
+			[
+				"-o-border-image",
+				[
+					["opera", "10.5", "15"],
+					["op_mob", "11", "14"]
+				]
+			]
+		]
+	],
+	["text-overflow", [["-o-text-overflow", [["op_mob", "10", "12.1"]]]]],
+	// Presto shipped `object-fit` as its own extension well before the spec, and
+	// caniuse dates the prefixed form a year earlier than BCD does, on desktop and
+	// mobile alike. `background-size` went plain at 10.5, not at 10.
+	[
+		"object-fit",
+		[
+			[
+				"-o-object-fit",
+				[
+					["opera", "10.6", "15"],
+					["op_mob", "11", "14"]
+				]
+			]
+		]
+	],
+	[
+		"object-position",
+		[
+			[
+				"-o-object-position",
+				[
+					["opera", "10.6", "15"],
+					["op_mob", "11", "14"]
+				]
+			]
+		]
+	],
+	["background-size", [["-o-background-size", [["opera", "9.5", "10.2"]]]]],
+	// `text-size-adjust`, which BCD misses at both ends. IE Mobile is the one
+	// browser it does not track, so that reads desktop IE's windows — right for
+	// the same engine on the same version line, but caniuse has the property
+	// prefixed on IE Mobile 10 and 11 and absent from desktop IE altogether, and
+	// 11 is IE Mobile's last release. And BCD calls desktop Firefox unsupported,
+	// which is a statement about effect: Gecko's property database carries
+	// `-moz-text-size-adjust` as a real longhand no preference gates, with
+	// `-webkit-text-size-adjust` aliased onto it and no unprefixed spelling at
+	// all — so a Firefox target losing the `-moz-` one is left with a declaration
+	// Gecko cannot parse. Desktop shares Android's style system, and so its
+	// version.
+	// EdgeHTML gets both spellings, because the two datasets name different ones
+	// and neither states why: BCD records `-webkit-` per feature, while caniuse
+	// only marks the version prefixed and resolves the spelling from a
+	// browser-wide `-ms-` default it applies to every feature. No engine is
+	// reachable to settle it, and the pair costs one declaration where a wrong
+	// single one costs the property.
+	[
+		"text-size-adjust",
+		[
+			[
+				"-ms-text-size-adjust",
+				[
+					["ie_mob", "10", "12"],
+					["edge", "12", "19"]
+				]
+			],
+			["-moz-text-size-adjust", [["firefox", "14", Infinity]]]
+		]
+	],
+	// WebKit named the ruby side and the vertical orientation after the box rather
+	// than the flow, and kept those names on the prefixed properties: a Chromium 41,
+	// 80 and 141 alike read `-webkit-ruby-position: before` and no `over`, and
+	// `-webkit-text-orientation: vertical-right` and no `mixed`. BCD records the
+	// windows and no dataset records the renaming, so the copy went out spelled the
+	// standard way and no engine could read it.
+	[
+		"ruby-position",
+		[
+			[
+				"-webkit-ruby-position",
+				[],
+				[
+					["over", "before"],
+					["under", "after"]
+				]
+			]
+		]
+	],
+	[
+		"text-orientation",
+		[
+			[
+				"-webkit-text-orientation",
+				[],
+				[
+					["mixed", "vertical-right"],
+					["upright", "upright"],
+					["sideways", "sideways"]
+				]
+			]
+		]
+	],
+	// BCD dates WebKit's unprefixed `font-kerning` at Safari 9, caniuse a release
+	// later on desktop and three years later on iOS. The feature is this one
+	// property, so the usual feature-wider-than-property explanation cannot
+	// account for the gap, and a current WebKit still carries the alias — so the
+	// later boundary is the one a target of that age is served by.
+	[
+		"font-kerning",
+		[
+			[
+				"-webkit-font-kerning",
+				[
+					["safari", "6", "9.1"],
+					["ios_saf", "6", "12"]
+				]
+			]
+		]
+	]
+]);
+
+/**
+ * The keyword maps the stated spellings carry, as `spelling -> standard ->
+ * legacy`. Built from `PREFIX_SUPPLEMENT` itself, so a map can only exist for a
+ * spelling that table writes.
+ * @returns {[string, [string, string][]][]} `[spelling, [standard, legacy][]][]`
+ */
+const collectPrefixSpellingKeywords = () => {
+	/** @type {[string, [string, string][]][]} */
+	const out = [];
+	for (const [, stated] of PREFIX_SUPPLEMENT) {
+		for (const [spelling, , keywords] of stated) {
+			if (keywords !== undefined) out.push([spelling, keywords]);
+		}
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * Fold the stated windows into an axis table, widening what BCD records rather
+ * than replacing it. An entry BCD has caught up on entirely — every browser of
+ * it already covered — fails generation rather than sitting here unread.
+ * @param {[string, [string, [string, number, number][]][]][]} table the axis table so far
+ * @returns {void}
+ */
+const applyPrefixSupplement = (table) => {
+	for (const [name, stated] of PREFIX_SUPPLEMENT) {
+		let entry = table.find(([known]) => known === name);
+		if (entry === undefined) {
+			entry = [name, []];
+			table.push(entry);
+		}
+		let widened = false;
+		for (const [spelling, windows, keywords] of stated) {
+			// An entry may state the keywords a legacy spelling reads rather than a
+			// window, where BCD has the window and no dataset has the renaming.
+			if (keywords !== undefined) widened = true;
+			// Stated in full rather than as a prefix: an engine's legacy spelling is as
+			// often a rename (`-ms-flex-order` for `order`) as a prefix on the name.
+			if (spelling === name || !spelling.startsWith("-")) {
+				throw new Error(
+					`\`${spelling}\` stated for \`${name}\` is not a vendor spelling.`
+				);
+			}
+			let spellingEntry = entry[1].find(([known]) => known === spelling);
+			if (spellingEntry === undefined) {
+				spellingEntry = [spelling, []];
+				entry[1].push(spellingEntry);
+			}
+			for (const [browser, from, to] of windows) {
+				const start = /** @type {number} */ (encodeVersion(from));
+				// `Infinity` where the engine still has no unprefixed spelling.
+				const end =
+					typeof to === "number"
+						? to
+						: /** @type {number} */ (encodeVersion(to));
+				const known = spellingEntry[1].find(
+					([browsers]) => browsers === browser
+				);
+				if (known === undefined) {
+					spellingEntry[1].push([browser, start, end]);
+					widened = true;
+					continue;
+				}
+				if (known[1] > start || known[2] < end) widened = true;
+				known[1] = Math.min(known[1], start);
+				known[2] = Math.max(known[2], end);
+			}
+		}
+		if (!widened) {
+			throw new Error(
+				`BCD now covers every window stated for \`${name}\`, so its PREFIX_SUPPLEMENT entry is no longer needed — drop it.`
+			);
+		}
+	}
+};
+
+// A property spelling BCD records that no engine ever read, or that reads other
+// values than the property it stands for. Everything else is read from BCD; each
+// entry here carries why it cannot be.
+const PROPERTY_SPELLING_EXCLUSIONS = new Map([
+	// `-ms-order` was never read by anything: IE 10 spelled it `-ms-flex-order`,
+	// which `PREFIX_SUPPLEMENT` states.
+	["order", ["-ms-order"]],
+	// WebKit's and Gecko's font smoothing are a different property under a
+	// similar name: `font-smooth` takes `never`/`always`/a size, while
+	// `-webkit-font-smoothing` takes `antialiased`/`subpixel-antialiased` and
+	// `-moz-osx-font-smoothing` takes `grayscale`. Nothing carries over.
+	["font-smooth", ["-webkit-font-smoothing", "-moz-osx-font-smoothing"]],
+	// `-webkit-text-combine` reads `horizontal` where the standard property reads
+	// `all`, so the rename alone writes a value it cannot parse. IE's
+	// `-ms-text-combine-horizontal` does take the standard keywords.
+	["text-combine-upright", ["-webkit-text-combine"]],
+	// BCD files WebKit's logical sizing as a prefix on the standard name, but the
+	// spelling it shipped is the rename `-webkit-max-logical-width`, which
+	// `PREFIX_SUPPLEMENT` states with the rest of that family. No engine's property
+	// list has ever carried this one.
+	["max-inline-size", ["-webkit-max-inline-size"]],
+	// BCD dates a `-webkit-` longhand on the old Android WebView, but the WebKit
+	// fork that WebView ran carries the `-webkit-border-image` shorthand and no
+	// longhand of it, and no other engine's property list has ever had this name.
+	["border-image-slice", ["-webkit-border-image-slice"]]
+]);
+
+// A vendor spelling BCD files under a keyword it does not spell, by keyword —
+// the grammar it belongs to decides these, not the property. Each carries why.
+const VALUE_SPELLING_EXCLUSIONS = new Map([
+	// `-webkit-fill-available` is WebKit's `stretch`, which fills the container;
+	// `fit-content` shrinks to the content. BCD files it under both, and taking it
+	// for `fit-content` lays the box out the other way round rather than the same
+	// way under an older name. Neither autoprefixer nor lightningcss reaches for
+	// it there either.
+	["fit-content", ["-webkit-fill-available"]],
+	// `text-align`'s `-webkit-` spellings outlived the versions BCD files them
+	// under and no longer mean the same thing: a current Blink parses `center` and
+	// `-webkit-center` both, and computes them differently — `-webkit-center`
+	// centers block-level children, `center` only inline content. Taking one for
+	// the other moves the box.
+	["center", ["-webkit-center"]],
+	["left", ["-webkit-left"]],
+	["right", ["-webkit-right"]]
+]);
+
+// A value whose vendor spelling is not the same value spelled another way, which
+// no dataset states — each carries why. Everything else is read from BCD.
+const VALUE_KEYWORD_EXCLUSIONS = new Map([
+	// IE's `-ms-grid` is the 2011 grid, whose tracks and placement are their own
+	// prefixed properties: a copy of the declaration alone lays the box out by a
+	// different algorithm rather than the same one under an older name. It is why
+	// autoprefixer keeps IE grid behind an option of its own.
+	["display", ["grid", "inline-grid"]]
+]);
+
+/**
+ * The vendor spellings of a property's own keyword values, as `property ->
+ * keyword -> [spelling, [browser, from, to][]][]`. A BCD sub-feature is read
+ * only where the property's value-definition syntax names that keyword itself,
+ * which is what tells a value (`display.flex`) from a context BCD files the same
+ * way (`align-self.grid_context`) and from a function whose arguments the older
+ * spelling did not take the same way (`background-image.image-set`).
+ * @returns {[string, [string, [string, [string, number, number][]][]][]][]} the table, sorted
+ */
+// A value one engine shipped as a family, of which BCD records the prefix for
+// part. Keyed by keyword, so generation fails if the keyword turns out to be read
+// by more than one value grammar and a stated window cannot say which.
+/** @type {Map<string, [string, [string, string, string][]][]>} */
+const VALUE_PREFIX_SUPPLEMENT = new Map([
+	// Blink shipped bidi isolation as one family, and a Chromium 41 parses
+	// `-webkit-isolate-override` and `-webkit-plaintext` while parsing neither
+	// plain name. BCD keeps the `-webkit-` window for `isolate` alone, so the
+	// other two read as needing nothing and lose their only spelling.
+	[
+		"isolate-override",
+		[
+			[
+				"-webkit-isolate-override",
+				[
+					["chrome", "16", "48"],
+					["opera", "15", "35"]
+				]
+			]
+		]
+	],
+	[
+		"plaintext",
+		[
+			[
+				"-webkit-plaintext",
+				[
+					["chrome", "16", "48"],
+					["opera", "15", "35"]
+				]
+			]
+		]
+	]
+]);
+
+const collectPrefixedValues = () => {
+	// What each property accepts, and what BCD records for those of its values
+	// some engine spelled its own way.
+	/** @type {Map<string, { keywords: string[], values: Map<string, [string, [string, number, number][]][]> }>} */
+	const read = new Map();
+	for (const [property, node] of Object.entries(bcd.css.properties)) {
+		if (property.startsWith("__")) continue;
+		const entry = /** @type {PartialPropertyTable} */ (properties)[property];
+		if (!entry || !entry.syntax) continue;
+		const keywords = lowerSorted(acceptedValues(entry.syntax).keywords);
+		if (keywords.length === 0) continue;
+		// The engines whose prefix the property itself already carries: BCD files
+		// "IE read this value under `-ms-touch-action`" on the value as well, and a
+		// copy spelling the value instead of the property says nothing an engine
+		// reads. Dropped here rather than at the end, so what the property's own
+		// spelling stands for cannot travel to the rest of its grammar.
+		const propertyEngines = new Set(
+			(collectPrefixes(node.__compat, property, false) || []).map(
+				([spelling]) =>
+					/** @type {RegExpExecArray} */ (/^(-[a-z]+-)/.exec(spelling))[1]
+			)
+		);
+		/** @type {Map<string, [string, [string, number, number][]][]>} */
+		const values = new Map();
+		for (const [value, sub] of Object.entries(node)) {
+			if (value === "__compat") continue;
+			const compat = /** @type {BcdNode} */ (sub).__compat;
+			if (!compat) continue;
+			const keyword = value.toLowerCase();
+			if (!keywords.includes(keyword)) continue;
+			const spellings = (collectPrefixes(compat, value, true) || []).filter(
+				([spelling]) =>
+					!propertyEngines.has(
+						/** @type {RegExpExecArray} */ (/^(-[a-z]+-)/.exec(spelling))[1]
+					)
+			);
+			if (spellings.length !== 0) values.set(keyword, spellings);
+		}
+		read.set(property, { keywords, values });
+	}
+	// Properties accepting exactly the same keywords are one value grammar —
+	// `block-size` is `<'width'>` and `height` expands to what `width` does — so a
+	// spelling one of them records is the grammar's, not that property's. BCD
+	// files `-webkit-max-content` under `width` and not under `height`, which is
+	// the same value read by the same parser.
+	/** @type {Map<string, Map<string, Map<string, Map<string, [number, number]>>>>} */
+	const shared = new Map();
+	for (const [, { keywords, values }] of read) {
+		const grammar = keywords.join(" ");
+		let byKeyword = shared.get(grammar);
+		if (byKeyword === undefined) {
+			byKeyword = new Map();
+			shared.set(grammar, byKeyword);
+		}
+		for (const [keyword, spellings] of values) {
+			let bySpelling = byKeyword.get(keyword);
+			if (bySpelling === undefined) {
+				bySpelling = new Map();
+				byKeyword.set(keyword, bySpelling);
+			}
+			for (const [spelling, windows] of spellings) {
+				let browsers = bySpelling.get(spelling);
+				if (browsers === undefined) {
+					browsers = new Map();
+					bySpelling.set(spelling, browsers);
+				}
+				for (const [browser, from, to] of windows) {
+					const existing = browsers.get(browser);
+					browsers.set(
+						browser,
+						existing === undefined
+							? [from, to]
+							: [Math.min(existing[0], from), Math.max(existing[1], to)]
+					);
+				}
+			}
+		}
+	}
+	for (const [keyword, stated] of VALUE_PREFIX_SUPPLEMENT) {
+		const grammars = [...shared].filter(([, byKeyword]) =>
+			byKeyword.has(keyword)
+		);
+		if (grammars.length !== 1) {
+			throw new Error(
+				`\`${keyword}\` is read by ${grammars.length} value grammars, so a stated window cannot say which one it belongs to.`
+			);
+		}
+		const bySpelling =
+			/** @type {Map<string, Map<string, [number, number]>>} */ (
+				grammars[0][1].get(keyword)
+			);
+		let widened = false;
+		for (const [spelling, windows] of stated) {
+			let browsers = bySpelling.get(spelling);
+			if (browsers === undefined) {
+				browsers = new Map();
+				bySpelling.set(spelling, browsers);
+			}
+			for (const [browser, from, to] of windows) {
+				const start = /** @type {number} */ (encodeVersion(from));
+				const end = /** @type {number} */ (encodeVersion(to));
+				const known = browsers.get(browser);
+				if (known === undefined) {
+					browsers.set(browser, [start, end]);
+					widened = true;
+					continue;
+				}
+				if (known[0] > start || known[1] < end) widened = true;
+				browsers.set(browser, [
+					Math.min(known[0], start),
+					Math.max(known[1], end)
+				]);
+			}
+		}
+		if (!widened) {
+			throw new Error(
+				`BCD now covers every window stated for the value \`${keyword}\`, so its VALUE_PREFIX_SUPPLEMENT entry is no longer needed — drop it.`
+			);
+		}
+	}
+	/** @type {[string, [string, [string, [string, number, number][]][]][]][]} */
+	const table = [];
+	for (const [property, { keywords }] of read) {
+		const byKeyword =
+			/** @type {Map<string, Map<string, Map<string, [number, number]>>>} */ (
+				shared.get(keywords.join(" "))
+			);
+		const excluded = VALUE_KEYWORD_EXCLUSIONS.get(property);
+		/** @type {[string, [string, [string, number, number][]][]][]} */
+		const values = [];
+		for (const keyword of keywords) {
+			const bySpelling = byKeyword.get(keyword);
+			if (bySpelling === undefined) continue;
+			if (excluded !== undefined && excluded.includes(keyword)) continue;
+			const wrong = VALUE_SPELLING_EXCLUSIONS.get(keyword);
+			/** @type {[string, [string, number, number][]][]} */
+			const spellings = [];
+			for (const [spelling, browsers] of bySpelling) {
+				if (wrong !== undefined && wrong.includes(spelling)) continue;
+				spellings.push([
+					spelling,
+					[...browsers].map(([browser, [from, to]]) => [browser, from, to])
+				]);
+			}
+			if (spellings.length !== 0) values.push([keyword, spellings]);
+		}
+		if (values.length !== 0) table.push([property, values]);
+	}
+	return table.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * A value table's `new Map([…])` literal: `property -> keyword -> [spelling,
+ * [browser, from, to][]][]`.
+ * @param {[string, [string, [string, [string, number, number][]][]][]][]} table the value table
+ * @returns {string} its `new Map([…])` literal
+ */
+const prefixedValueLiteral = (table) =>
+	`new Map([${table
+		.map(([property, values]) => `["${property}", ${prefixLiteral(values)}]`)
+		.join(", ")}])`;
+
 /**
  * Read every table out of the datasets and build the file they belong in.
  * Separate from writing it, so a test can assert the checked-in
@@ -3627,6 +4814,11 @@ const collectData = () => {
 	const lengthOnlyFunctions = collectLengthOnlyFunctions();
 	const unitGroupBase = collectUnitGroupBase();
 	const eighthTurnCosine = collectEighthTurnCosine();
+	const prefixedProperties = collectPrefixTable(bcd.css.properties, true, true);
+	const prefixSpellingKeywords = collectPrefixSpellingKeywords();
+	const prefixedSelectors = collectPrefixTable(bcd.css.selectors, true);
+	const prefixedAtRules = collectPrefixTable(bcd.css["at-rules"]);
+	const prefixedValues = collectPrefixedValues();
 	const steppedFunctions = SUPPLEMENT.mathFunctionFold
 		.filter(([, , , , , stepped]) => stepped)
 		.map(([name]) => name);
@@ -3637,9 +4829,7 @@ const collectData = () => {
 */
 
 // GENERATED by tooling/generate-css-data.js — do not edit.
-// Sources: mdn-data ${mdnDataPackage.version}, color-name ${
-		colorNamePackage.version
-	}.
+// Sources: mdn-data ${mdnDataPackage.version}, color-name ${colorNamePackage.version}, @mdn/browser-compat-data ${bcdVersion}.
 
 "use strict";
 
@@ -4130,6 +5320,51 @@ ${colorNames
 	.join(",\n")}
 ]);
 
+// Prefixed constructs the minifier reads back, one table per axis, as \`name ->
+// [prefix, [browserslistBrowser, prefixedFrom, unprefixedFrom][]][]\`. Versions
+// are \`major * 100000 + minor\`; a target browser at version V needs the prefix
+// when \`prefixedFrom <= V < unprefixedFrom\` (\`Infinity\` = never unprefixed).
+// Non-standard-only constructs are absent.
+/** @type {Map<string, [string, [string, number, number][]][]>} */
+const PREFIXED_PROPERTIES = ${prefixLiteral(prefixedProperties)};
+
+/** @type {Map<string, [string, [string, number, number][]][]>} */
+const PREFIXED_SELECTORS = ${prefixLiteral(prefixedSelectors)};
+
+/** @type {Map<string, [string, [string, number, number][]][]>} */
+const PREFIXED_AT_RULES = ${prefixLiteral(prefixedAtRules)};
+
+// The vendor spellings of a property's own keyword values, as \`property ->
+// keyword -> [spelling, [browserslistBrowser, from, to][]][]\` — \`display:flex\`
+// was \`display:-webkit-flex\`, and \`width:max-content\` \`width:-moz-max-content\`.
+// Only keywords the property's syntax names are here, so a function whose older
+// spelling read its arguments differently is not.
+/** @type {Map<string, Map<string, [string, [string, number, number][]][]>>} */
+const PREFIXED_VALUES = ${prefixedValueLiteral(prefixedValues)};
+
+// The keywords a vendor spelling reads in place of the standard ones, as
+// \`spelling -> standard -> legacy\` — IE 10's \`-ms-flex-pack\` reads
+// \`space-around\` as \`distribute\`. Each map is the older property's whole
+// grammar, so a value naming anything it does not is one that property cannot
+// read and no copy is written.
+/** @type {Map<string, Map<string, string>>} */
+const PREFIXED_SPELLING_KEYWORDS = new Map([
+${prefixSpellingKeywords
+	.map(
+		([spelling, keywords]) =>
+			`\t["${spelling}", new Map([${keywords
+				.map(([standard, legacy]) => `["${standard}", "${legacy}"]`)
+				.join(", ")}])]`
+	)
+	.join(",\n")}
+]);
+
+// The browserslist names the three tables above carry windows for. One they do
+// not name is skipped, so prefixes are added and dropped for the rest of the
+// selection alone; a selection of only those turns prefixing off entirely.
+/** @type {Set<string>} */
+const PREFIX_BROWSERS = new Set([${prefixBrowsers.map((browser) => `"${browser}"`).join(", ")}]);
+
 module.exports.ABSOLUTE_UNIT_SCALE = ABSOLUTE_UNIT_SCALE;
 module.exports.ALPHA_VALUE_PROPERTIES = ALPHA_VALUE_PROPERTIES;\nmodule.exports.ANGLE_UNITS = ANGLE_UNITS;
 module.exports.ARC_COSINE_DEGREES = ARC_COSINE_DEGREES;
@@ -4169,6 +5404,12 @@ module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;
 module.exports.NTH_NAMED_EQUIVALENTS = NTH_NAMED_EQUIVALENTS;\nmodule.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;\nmodule.exports.OMITTABLE_INITIAL_KEYWORDS = OMITTABLE_INITIAL_KEYWORDS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
+module.exports.PREFIXED_AT_RULES = PREFIXED_AT_RULES;
+module.exports.PREFIXED_PROPERTIES = PREFIXED_PROPERTIES;
+module.exports.PREFIXED_SELECTORS = PREFIXED_SELECTORS;
+module.exports.PREFIXED_SPELLING_KEYWORDS = PREFIXED_SPELLING_KEYWORDS;
+module.exports.PREFIXED_VALUES = PREFIXED_VALUES;
+module.exports.PREFIX_BROWSERS = PREFIX_BROWSERS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
@@ -4180,24 +5421,7 @@ module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;
 `;
 
-	const summary = `${
-		boxShorthands.length + slashShorthands.length
-	} box shorthands (${slashShorthands.length} with a \`/\`), ${
-		colorFunctions.length
-	} color functions, ${substitutionFunctions.length} substitution functions, ${
-		colorNames.length
-	} color names, ${integerProperties.length} integer properties, ${
-		negativeAcceptingProperties.length
-	} negative-accepting properties, ${
-		lengthOnlyFunctions.length
-	} length-only functions, ${pairLonghands.length} pair shorthands, ${
-		mathFunctionArity.length
-	} of ${mathFunctions.length} math functions with a readable arity, ${
-		cssModulesKeywords.length
-	} css modules scoped properties (${cssModulesKeywords.reduce(
-		(total, [, , table]) => total + table.length,
-		0
-	)} keywords)`;
+	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${negativeAcceptingProperties.length} negative-accepting properties, ${lengthOnlyFunctions.length} length-only functions, ${pairLonghands.length} pair shorthands, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity, ${cssModulesKeywords.length} css modules scoped properties (${cssModulesKeywords.reduce((total, [, , table]) => total + table.length, 0)} keywords), ${prefixedProperties.length} prefixed properties, ${prefixedSelectors.length} prefixed selectors, ${prefixedAtRules.length} prefixed at-rules and ${prefixedValues.reduce((total, [, values]) => total + values.length, 0)} prefixed values over ${prefixBrowsers.length} browsers`;
 	return { source, summary };
 };
 

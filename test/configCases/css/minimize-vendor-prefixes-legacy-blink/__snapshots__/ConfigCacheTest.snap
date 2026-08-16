@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css minimize-vendor-prefixes-legacy-blink minimize-vendor-prefixes-legacy-blink should compile 1`] = `
+Array [
+  "/*! \`over\` and \`under\` are \`before\` and \`after\` under the prefixed name */.t01{-webkit-ruby-position:after;ruby-position:under}",
+  "/*! a value the prefixed property cannot read gets no copy at all */.t02{ruby-position:inter-character}",
+  "/*! \`mixed\` is \`vertical-right\`, while \`upright\` carries over unchanged */.t03{-webkit-text-orientation:vertical-right;text-orientation:mixed}.t04{-webkit-text-orientation:upright;text-orientation:upright}",
+  "/*! Blink read all three of these prefixed; BCD records only \`isolate\` */.t05{unicode-bidi:-webkit-isolate;unicode-bidi:isolate}.t06{unicode-bidi:-webkit-isolate-override;unicode-bidi:isolate-override}.t07{unicode-bidi:-webkit-plaintext;unicode-bidi:plaintext}",
+]
+`;

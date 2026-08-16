@@ -5450,6 +5450,11 @@ declare interface CssEnvironment {
 	 * media query range syntax (`(width >= 600px)`) is available
 	 */
 	cssMediaQueryRange?: boolean;
+
+	/**
+	 * the browserslist selection (`["chrome 100", "safari 15"]`), so vendor prefixes are added / dropped for exactly these browsers; absent leaves prefixes untouched
+	 */
+	browsers?: string[];
 }
 declare abstract class CssGenerator extends Generator {
 	options: CssModuleGeneratorOptions;
@@ -19915,6 +19920,12 @@ declare interface OptimizationMinimizeCss {
 	 * @since 5.110.0
 	 */
 	convertLengthUnits?: boolean;
+
+	/**
+	 * Maintain vendor prefixes for the `browserslist` target: add the `-webkit-` / `-moz-` / `-ms-` spelling of a property, at-rule or pseudo-selector that a selected browser still needs, and drop one none of them does. On by default, and only in effect for a `browserslist` target — any other target names no browsers to prefix for. A browserslist name no compat dataset covers (`op_mini`, `and_uc`, `and_qq`, `baidu`, `kaios`, `bb`) is skipped, and a selection of nothing but those prefixes for no one.
+	 * @since 5.110.0
+	 */
+	vendorPrefixes?: boolean;
 }
 
 /**
@@ -21999,10 +22010,26 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 
 	/**
 	 * Take back an already-emitted piece — the printer has since found that a
-	 * later one overrides it. Pieces after it keep their place, so this must not
-	 * be used on a piece something was anchored to (see {@link take}).
+	 * later one overrides it. Pieces after it keep their place. A piece emitted by
+	 * {@link takeRetractable} takes the mapping anchored to it back as well; any
+	 * other anchor into the piece would be left pointing at what follows it, so
+	 * this must not be used on one (see {@link take}).
 	 */
 	retract(index: number): void;
+
+	/**
+	 * {@link take} for a top-level node a later sibling may still make dead — the
+	 * unprefixed twin of a vendor-prefixed rule, which can stand anywhere after
+	 * it. The node is emitted as a piece of its own, with its mapping recorded
+	 * against that piece, so {@link retract} takes both back.
+	 */
+	takeRetractable(
+		node: TNode,
+		srcOffset?: number,
+		srcLine?: number,
+		srcCol?: number,
+		text?: string
+	): number;
 
 	/**
 	 * Emit one finished top-level node: first any kept comments that precede it,

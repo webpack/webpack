@@ -1,0 +1,57 @@
+/* The browserslist target (chrome 40, firefox 40, safari 17) decides which
+   vendor prefixes the minifier adds and drops. */
+
+/*! chrome 40 and firefox 40 read `user-select` only prefixed, and Safari has no
+   unprefixed form, so `-webkit-` and `-moz-` are added before it */
+.t01 { user-select: none }
+/*! same for `appearance` */
+.t02 { appearance: none }
+/*! all three read `border-radius` unprefixed, so the source `-webkit-` one is
+   dead weight and is dropped */
+.t03 { -webkit-border-radius: 5px; border-radius: 5px }
+/*! prefixes the source already carries are not doubled */
+.t04 { -webkit-user-select: none; -moz-user-select: none; user-select: none }
+/*! a property no browser ever prefixed is untouched */
+.t05 { color: red }
+/*! an at-rule gets a prefixed copy the old targets need, before the original */
+@keyframes spin { to { opacity: 1 } }
+/*! a pseudo-element too, keeping the source colons */
+.t06::placeholder { color: #999 }
+/*! a selector list carries the copy for the selectors that need it, one
+   spelling per copy — an engine drops a whole list over one selector it cannot
+   parse */
+input.t07::placeholder, textarea.t07::placeholder { color: #999 }
+/*! a nested at-rule is prefixed against its own scope */
+@media screen {
+	@keyframes nested { to { opacity: 1 } }
+	.t08::placeholder { color: #999 }
+}
+/*! a prefixed rule no target needs is dropped once its unprefixed twin turns
+   up, however far off that is — only IE ever read `:-ms-fullscreen` */
+:-ms-fullscreen { color: #999 }
+.t09 { color: red }
+:fullscreen { color: #999 }
+/*! a nested prefixed rule is dropped by a twin later in its own block, just as
+   a top-level one is */
+@media print {
+	:-ms-fullscreen { color: #999 }
+	.t12 { color: red }
+	:fullscreen { color: #999 }
+}
+/*! an adjacent twin takes its prefixed rule back where it stands, rather than
+   waiting for the block to be assembled — at the top level, after a rule the
+   printer is still holding */
+.t14 { color: red }
+:-ms-fullscreen { color: #999 }
+:fullscreen { color: #999 }
+/*! and the same adjacent pair nested in a block */
+@media all {
+	:-ms-fullscreen { color: #999 }
+	:fullscreen { color: #999 }
+}
+/*! a legacy spelling an engine read as a rename rather than a prefix */
+.t13 { margin-inline-start: 1px }
+/*! a value an engine spells its own way carries copies like a property does */
+.t10 { width: max-content }
+/*! and a value spelling no target needs is dropped, like a property's */
+.t11 { display: -ms-flexbox; display: flex }

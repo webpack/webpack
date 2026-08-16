@@ -2382,6 +2382,11 @@ export interface OptimizationMinimizeCss {
 	 * @since 5.110.0
 	 */
 	convertLengthUnits?: boolean;
+	/**
+	 * Maintain vendor prefixes for the `browserslist` target: add the `-webkit-` / `-moz-` / `-ms-` spelling of a property, at-rule or pseudo-selector that a selected browser still needs, and drop one none of them does. On by default, and only in effect for a `browserslist` target — any other target names no browsers to prefix for. A browserslist name no compat dataset covers (`op_mini`, `and_uc`, `and_qq`, `baidu`, `kaios`, `bb`) is skipped, and a selection of nothing but those prefixes for no one.
+	 * @since 5.110.0
+	 */
+	vendorPrefixes?: boolean;
 }
 /**
  * What the HTML minimizer may do beyond the transforms that always apply.
