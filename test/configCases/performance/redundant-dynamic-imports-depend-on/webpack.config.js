@@ -14,6 +14,6 @@ module.exports = {
 	},
 	performance: {
 		hints: "warning",
-		unsplitDynamicImports: true
+		redundantDynamicImports: true
 	}
 };

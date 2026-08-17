@@ -4,7 +4,7 @@
 module.exports = {
 	mode: "development",
 	performance: {
-		hints: "error",
-		unsplitDynamicImports: true
+		hints: "warning",
+		redundantDynamicImports: true
 	}
 };

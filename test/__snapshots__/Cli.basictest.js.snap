@@ -13489,16 +13489,16 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "performance-unsplit-dynamic-imports": Object {
+  "performance-redundant-dynamic-imports": Object {
     "configs": Array [
       Object {
-        "description": "Report 'import()' calls whose module is already in the initial chunk, so they split nothing.",
+        "description": "Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing.",
         "multiple": false,
-        "path": "performance.unsplitDynamicImports",
+        "path": "performance.redundantDynamicImports",
         "type": "boolean",
       },
     ],
-    "description": "Report 'import()' calls whose module is already in the initial chunk, so they split nothing.",
+    "description": "Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing.",
     "multiple": false,
     "simpleType": "boolean",
   },

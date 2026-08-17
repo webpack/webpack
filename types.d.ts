@@ -21802,10 +21802,10 @@ declare interface PerformanceOptions {
 	osDependentRules?: boolean;
 
 	/**
-	 * Report 'import()' calls whose module is already in the initial chunk, so they split nothing.
+	 * Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing.
 	 * @since 5.110.0
 	 */
-	unsplitDynamicImports?: boolean;
+	redundantDynamicImports?: boolean;
 
 	/**
 	 * Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.

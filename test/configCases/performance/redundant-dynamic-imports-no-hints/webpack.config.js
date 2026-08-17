@@ -7,6 +7,6 @@ module.exports = {
 	mode: "development",
 	performance: {
 		hints: false,
-		unsplitDynamicImports: true
+		redundantDynamicImports: true
 	}
 };

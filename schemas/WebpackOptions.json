@@ -5378,8 +5378,8 @@
           "type": "boolean",
           "added": "5.110.0"
         },
-        "unsplitDynamicImports": {
-          "description": "Report 'import()' calls whose module is already in the initial chunk, so they split nothing.",
+        "redundantDynamicImports": {
+          "description": "Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing.",
           "type": "boolean",
           "added": "5.110.0"
         },

@@ -17,6 +17,6 @@ module.exports = {
 	},
 	performance: {
 		hints: "stats",
-		unsplitDynamicImports: true
+		redundantDynamicImports: true
 	}
 };

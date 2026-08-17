@@ -1274,7 +1274,7 @@ describe("snapshots", () => {
 		+     "maxAssetSize": 250000,
 		+     "maxEntrypointSize": 250000,
 		+     "osDependentRules": false,
-		+     "unsplitDynamicImports": false,
+		+     "redundantDynamicImports": false,
 		+     "unusedRules": false,
 		+   },
 		@@ ... @@
@@ -1361,7 +1361,7 @@ describe("snapshots", () => {
 		+     "maxAssetSize": 250000,
 		+     "maxEntrypointSize": 250000,
 		+     "osDependentRules": false,
-		+     "unsplitDynamicImports": false,
+		+     "redundantDynamicImports": false,
 		+     "unusedRules": false,
 		+   },
 		@@ ... @@
