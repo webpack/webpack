@@ -20,6 +20,27 @@ const m = /** @borrowMut */ a; // exclusive view of `a`
 A marker may also sit on the whole statement — `/** @move */ const b = a;` — or
 on a call argument — `consume(/** @move */ a)`.
 
+**Markers share a JSDoc block with anything else**, so a cast and a marker can
+be written together, and a tag may be on its own line:
+
+```js
+const b = /** @type {Foo} @move */ (a);
+const c = /** @type {Foo} */ (/** @move */ a);
+
+/**
+ * @type {Foo}
+ * @move
+ */
+const d = a;
+```
+
+The first form needs care and gets it: ESTree drops grouping parens, so that
+comment sits before a token that is not in the tree. The rule steps out through
+grouping parens to find it, and stops at a `(` that opens a call or a parameter
+list — a comment on `/** @move */ f(a)` marks the call, never `a`.
+
+A marker must be a **tag**: `@move` counts, `docs@move` in prose does not.
+
 ## What it checks
 
 | Message                   | Meaning                                                                |
@@ -55,20 +76,22 @@ use(a.x); // `m` is dead by here
 
 ## Options
 
+Every option is named after what the calls in it **do**.
+
 ```js
 "ironclad/ownership": ["error", {
 	// Treat `const b = a` as a move. Off by default — see "Measured" below.
-	implicitMove: false,
-	// Calls that consume every argument. Empty by default: this is a policy,
+	treatAssignmentAsMove: false,
+	// These calls consume every argument. Empty by default: that is a policy,
 	// not a fact about the language.
-	moveOnCall: [],
-	// Calls with a transfer list — `f(x, [buf])` or `f(x, { transfer: [buf] })`.
-	// Only what reaches the list is detached.
-	transferringCalls: ["postMessage", "structuredClone"],
-	// Methods that consume the object they are called on.
+	consumesArguments: [],
+	// These calls detach what reaches their transfer list — `f(x, [buf])` or
+	// `f(x, { transfer: [buf] })`. Nothing else about the call moves.
+	detachesTransferList: ["postMessage", "structuredClone"],
+	// These methods consume the object they are called on.
 	consumesReceiver: ["HTMLCanvasElement#transferControlToOffscreen"],
-	// Methods that lock their receiver, mapped to the method that unlocks it.
-	locksReceiver: {
+	// These methods lock their receiver until the method they map to.
+	locksReceiverUntil: {
 		"ReadableStream#getReader": "releaseLock",
 		"WritableStream#getWriter": "releaseLock"
 	}
@@ -133,19 +156,19 @@ and the rule moves whole variables — partial moves have to come first.
 
 666 files, 235k lines, ESLint 9:
 
-| Configuration        | Findings | Lint time (parse + scope + rule) |
-| -------------------- | -------- | -------------------------------- |
-| no rules (baseline)  | —        | 4.4 s                            |
-| defaults             | **0**    | 5.4 s (+22%)                     |
-| `implicitMove: true` | **2872** | 5.6 s                            |
+| Configuration           | Findings | Lint time (parse + scope + rule) |
+| ----------------------- | -------- | -------------------------------- |
+| no rules (baseline)     | —        | 4.4 s                            |
+| defaults                | **0**    | 5.4 s (+22%)                     |
+| `treatAssignmentAsMove` | **2872** | 5.6 s                            |
 
 Two results worth keeping:
 
 - With markers and the platform table, the rule is silent on a large real
   codebase — the design goal, since a linter that cries wolf gets switched off.
-  The scan is also how the `locksReceiver` prototype-chain bug was found: every
-  `x.toString()` was being read as a lock, for 127 findings.
-- `implicitMove` produces ~2.9k findings on code that is entirely correct. JS
+  The scan is also how the `locksReceiverUntil` prototype-chain bug was found:
+  every `x.toString()` was being read as a lock, for 127 findings.
+- `treatAssignmentAsMove` produces ~2.9k findings on correct code. JS
   passes references by design; assignment is not a move, and no heuristic
   rescues that. It stays opt-in and off.
 

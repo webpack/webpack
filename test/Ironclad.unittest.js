@@ -21,7 +21,7 @@ const withTypes = (types) => ({
 describe("ironclad/ownership", () => {
 	ruleTester.run("ownership", rule, {
 		valid: [
-			// No marker, no opinion: `implicitMove` is opt-in.
+			// No marker, no opinion: `treatAssignmentAsMove` is opt-in.
 			"const a = { x: 1 };\nconst b = a;\nuse(a);",
 			// Reads before the move are fine.
 			"const a = { x: 1 };\nuse(a);\nconst b = /** @move */ a;",
@@ -70,8 +70,8 @@ describe("ironclad/ownership", () => {
 				"\tbreak;",
 				"}"
 			].join("\n"),
-			// Inherited method names are not locks — `locksReceiver.toString` must
-			// not resolve through Object.prototype.
+			// Inherited method names are not locks — `locksReceiverUntil.toString`
+			// must not resolve through Object.prototype.
 			[
 				"const code = getSource();",
 				"const text = code.toString();",
@@ -152,6 +152,15 @@ describe("ironclad/ownership", () => {
 				].join("\n"),
 				languageOptions: withTypes({ count: "number" })
 			},
+			// A leading comment on a call is the call's, not its arguments'.
+			"const a = { x: 1 };\n/** @move */ f(a);\nuse(a);",
+			// `@move` has to be a tag, not a substring of prose.
+			[
+				"const a = { x: 1 };",
+				"/** see docs@move for details */",
+				"const b = a;",
+				"use(a);"
+			].join("\n"),
 			// A borrow assigned into an inner scope does not outlive the owner.
 			[
 				"function run() {",
@@ -232,6 +241,39 @@ describe("ironclad/ownership", () => {
 					"} while (cond);"
 				].join("\n"),
 				errors: [{ messageId: "moveInLoop" }]
+			},
+			{
+				// A type cast and a marker share one JSDoc block. ESTree drops the
+				// grouping parens, so the comment sits before a token that is not in
+				// the tree.
+				code: [
+					"const a = { x: 1 };",
+					"const b = /** @type {Foo} @move */ (a);",
+					"use(a);"
+				].join("\n"),
+				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// The same cast shape with the marker inside the parens.
+				code: [
+					"const a = { x: 1 };",
+					"const b = /** @type {Foo} */ (/** @move */ a);",
+					"use(a);"
+				].join("\n"),
+				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// A marker on its own tag line of a multi-line JSDoc block.
+				code: [
+					"const a = { x: 1 };",
+					"/**",
+					" * @type {Foo}",
+					" * @move",
+					" */",
+					"const b = a;",
+					"use(a);"
+				].join("\n"),
+				errors: [{ messageId: "useAfterMove" }]
 			},
 			{
 				// A closure created after the move captures a value that is gone.
@@ -360,7 +402,7 @@ describe("ironclad/ownership", () => {
 			},
 			{
 				code: "const a = { x: 1 };\nconst b = a;\nuse(a);",
-				options: [{ implicitMove: true }],
+				options: [{ treatAssignmentAsMove: true }],
 				errors: [{ messageId: "useAfterMove" }]
 			},
 			{

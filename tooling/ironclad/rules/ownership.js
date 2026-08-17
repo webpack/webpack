@@ -55,8 +55,25 @@
  * @property {(node: Node) => import("typescript").Type} [getTypeAtLocation] type of a node
  */
 
-// `borrowMut` first: `@borrow` would otherwise match its prefix.
-const MARKER_REGEXP = /@(borrowMut|borrow|move)\b/;
+// A JSDoc tag, so `@move` counts and `docs@move` does not. `borrowMut` comes
+// first because `@borrow` would otherwise match its prefix.
+const MARKER_REGEXP = /(?:^|[\s*])@(borrowMut|borrow|move)\b/;
+
+// Tokens a grouping paren may follow. A `(` after anything else opens a call
+// or a parameter list, whose leading comment belongs to that, not to us.
+const GROUPING_PREFIXES = new Set([
+	"(",
+	",",
+	"=",
+	"=>",
+	"[",
+	":",
+	"?",
+	"return",
+	"typeof",
+	"await",
+	"yield"
+]);
 
 const LOOP_TYPES = new Set([
 	"DoWhileStatement",
@@ -218,11 +235,14 @@ const rule = {
 			{
 				type: "object",
 				properties: {
-					implicitMove: { type: "boolean" },
-					moveOnCall: { type: "array", items: { type: "string" } },
-					transferringCalls: { type: "array", items: { type: "string" } },
+					treatAssignmentAsMove: { type: "boolean" },
+					consumesArguments: { type: "array", items: { type: "string" } },
+					detachesTransferList: {
+						type: "array",
+						items: { type: "string" }
+					},
 					consumesReceiver: { type: "array", items: { type: "string" } },
-					locksReceiver: {
+					locksReceiverUntil: {
 						type: "object",
 						additionalProperties: { type: "string" }
 					}
@@ -252,13 +272,15 @@ const rule = {
 	create(context) {
 		const sourceCode = context.sourceCode;
 		const options = context.options[0] || {};
-		const moveOnCall = new Set(
-			/** @type {string[]} */ (options.moveOnCall) || []
+		// Calls that consume every argument. Empty by default: that is a policy,
+		// not a fact about the language.
+		const consumesArguments = new Set(
+			/** @type {string[]} */ (options.consumesArguments) || []
 		);
-		// Only what reaches a transfer list is detached — `postMessage(value)`
-		// structured-clones, it does not detach.
-		const transferringCalls = new Set(
-			/** @type {string[]} */ (options.transferringCalls) || [
+		// Calls that detach what reaches their transfer list. `postMessage(value)`
+		// on its own structured-clones, it does not detach.
+		const detachesTransferList = new Set(
+			/** @type {string[]} */ (options.detachesTransferList) || [
 				"postMessage",
 				"structuredClone"
 			]
@@ -269,15 +291,15 @@ const rule = {
 			]
 		);
 		// Method that locks its receiver, mapped to the method that unlocks it.
-		// A Map, not an object: `locksReceiver.toString` would otherwise inherit
-		// from Object.prototype and make every `x.toString()` a lock.
+		// Read as a Map, not an object: `lockOptions.toString` would otherwise
+		// inherit from Object.prototype and make every `x.toString()` a lock.
 		const lockOptions = /** @type {Record<string, string>} */ (
-			options.locksReceiver
+			options.locksReceiverUntil
 		) || {
 			"ReadableStream#getReader": "releaseLock",
 			"WritableStream#getWriter": "releaseLock"
 		};
-		const locksReceiver = parseReceiverEntries(Object.keys(lockOptions));
+		const locksReceiverUntil = parseReceiverEntries(Object.keys(lockOptions));
 		/** @type {Map<string, string>} */
 		const releaseOf = new Map();
 		for (const [entry, release] of Object.entries(lockOptions)) {
@@ -287,7 +309,7 @@ const rule = {
 				release
 			);
 		}
-		const implicitMove = options.implicitMove === true;
+		const treatAssignmentAsMove = options.treatAssignmentAsMove === true;
 
 		// Type information narrows the tables below when it is there, and nothing
 		// depends on it being there: a bare `"getReader"` entry still matches by
@@ -389,14 +411,24 @@ const rule = {
 		 * @returns {string | null} marker name
 		 */
 		const markerBefore = (node) => {
-			const comments = sourceCode.getCommentsBefore(
-				/** @type {Parameters<SourceCode["getCommentsBefore"]>[0]} */ (node)
-			);
-			for (let i = comments.length - 1; i >= 0; i--) {
-				const match = MARKER_REGEXP.exec(comments[i].value);
-				if (match) return match[1];
+			/** @type {Parameters<SourceCode["getCommentsBefore"]>[0]} */
+			let target = /** @type {EXPECTED_ANY} */ (node);
+			for (;;) {
+				const comments = sourceCode.getCommentsBefore(target);
+				for (let i = comments.length - 1; i >= 0; i--) {
+					const match = MARKER_REGEXP.exec(comments[i].value);
+					if (match) return match[1];
+				}
+				// ESTree drops grouping parens, so `/** @type {T} @move *\/ (a)` puts
+				// the comment before a `(` that is not in the tree — step over it.
+				const before = sourceCode.getTokenBefore(target);
+				if (!before || before.value !== "(") return null;
+				const beforeParen = sourceCode.getTokenBefore(before);
+				if (beforeParen && !GROUPING_PREFIXES.has(beforeParen.value)) {
+					return null;
+				}
+				target = before;
 			}
-			return null;
 		};
 
 		/**
@@ -639,8 +671,8 @@ const rule = {
 			}
 			const name = calleeName(parent);
 			if (!name) return null;
-			if (moveOnCall.has(name)) return parent;
-			return transferred && transferringCalls.has(name) ? parent : null;
+			if (consumesArguments.has(name)) return parent;
+			return transferred && detachesTransferList.has(name) ? parent : null;
 		};
 
 		/**
@@ -648,7 +680,7 @@ const rule = {
 		 * @returns {boolean} true when a bare `let b = a` should move
 		 */
 		const isImplicitMove = (node) => {
-			if (!implicitMove) return false;
+			if (!treatAssignmentAsMove) return false;
 			const parent = parentOf(node);
 			if (!parent) return false;
 			return (
@@ -752,8 +784,10 @@ const rule = {
 				if (!owner || !reference.isRead()) continue;
 				const receiver = receiverCall(node);
 				if (!receiver) continue;
-				if (!locksReceiver.has(receiver.name)) continue;
-				if (!receiverMatches(node, locksReceiver.get(receiver.name) || null)) {
+				if (!locksReceiverUntil.has(receiver.name)) continue;
+				if (
+					!receiverMatches(node, locksReceiverUntil.get(receiver.name) || null)
+				) {
 					continue;
 				}
 				const release = releaseOf.get(receiver.name);
