@@ -51,9 +51,11 @@ const CONFIG_CASES = path.join(__dirname, "configCases");
 // one `evaluate` argument should carry.
 const BATCH = 150;
 // What one file of declarations gets, and what one batch's CDP call gets with
-// it. A file is a handful of values and runs in milliseconds; the budget is for
-// the one that does not, so it fails by name instead of hanging the tier.
-const FILE_TIMEOUT = 900000;
+// it. A file is a handful of values and the whole tier runs in milliseconds, so
+// this is three orders above what any file needs: generous enough never to fail
+// a slow runner, small enough that every file which hangs is named in one run
+// rather than one per quarter hour.
+const FILE_TIMEOUT = 30000;
 
 // Documents and stylesheets the printers are known to get wrong, per corpus.
 // Each is a filed defect, not a tolerated one; every comparison matches its set
