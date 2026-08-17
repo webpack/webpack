@@ -56,6 +56,9 @@ const BATCH = 150;
 // a slow runner, small enough that every file which hangs is named in one run
 // rather than one per quarter hour.
 const FILE_TIMEOUT = 30000;
+// Below it, so a file that hangs is failed here rather than by jest — which is
+// what lets the page be replaced before the next file runs.
+const FILE_BUDGET = 20000;
 
 // Documents and stylesheets the printers are known to get wrong, per corpus.
 // Each is a filed defect, not a tolerated one; every comparison matches its set
@@ -597,6 +600,33 @@ describe("printer output in real Chrome", () => {
 			}, batch)
 		);
 
+	/**
+	 * One file's declarations, on a page the next file can still use. A value
+	 * that hangs leaves the renderer mid-recalculation, so the page is replaced
+	 * rather than reused — without that, one bad file times out every file
+	 * behind it and the run ends on the job's budget with nothing named.
+	 * @param {{ name: string, property: string, key: string, raw: string, min: string }[]} cases the file's declarations
+	 * @returns {Promise<{ name: string, key: string }[]>} what moved
+	 */
+	const compareFile = async (cases) => {
+		/** @type {NodeJS.Timeout} */
+		let expiry;
+		const expired = new Promise((resolve, reject) => {
+			expiry = setTimeout(() => {
+				reject(new Error(`gave up on ${cases[0].name} after ${FILE_BUDGET}ms`));
+			}, FILE_BUDGET);
+		});
+		try {
+			return await Promise.race([compareValues(cases), expired]);
+		} catch (err) {
+			await probePage.close().catch(() => {});
+			probePage = await freshPage();
+			throw err;
+		} finally {
+			clearTimeout(expiry);
+		}
+	};
+
 	if (!hasCorpus()) {
 		it(NO_CORPUS, () => {
 			// No-op: the corpus is an optional git submodule.
@@ -606,7 +636,7 @@ describe("printer output in real Chrome", () => {
 		it(
 			`should compute the same style from a value in ${name} and its minified form`,
 			async () => {
-				for (const one of await compareValues(cases)) {
+				for (const one of await compareFile(cases)) {
 					movedValues.add(one.key);
 				}
 			},
