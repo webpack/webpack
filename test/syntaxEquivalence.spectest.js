@@ -50,10 +50,10 @@ const CONFIG_CASES = path.join(__dirname, "configCases");
 // How many documents go to the page at once — the wpt corpus is far larger than
 // one `evaluate` argument should carry.
 const BATCH = 150;
-// What one spec area gets, and what one batch's CDP call gets with it. Anchor
-// positioning resolves every declaration against a layout, so on a browser that
-// implements it one area needs minutes where the rest need seconds.
-const AREA_TIMEOUT = 900000;
+// What one file of declarations gets, and what one batch's CDP call gets with
+// it. A file is a handful of values and runs in milliseconds; the budget is for
+// the one that does not, so it fails by name instead of hanging the tier.
+const FILE_TIMEOUT = 900000;
 
 // Documents and stylesheets the printers are known to get wrong, per corpus.
 // Each is a filed defect, not a tolerated one; every comparison matches its set
@@ -124,18 +124,6 @@ const FILED_WPT_CSS_DEFECTS = new Map([
 
 // The same, for what webpack's own parser sees over the whole corpus.
 const FILED_WPT_TREE_DEFECTS = new Map();
-
-// Spec areas compared by sample rather than whole, with the reason the whole
-// does not fit. Not a tolerated gap: the sample still fails on a divergence,
-// and the test name carries how many of the area's values ran.
-const FILED_SLOW_VALUE_AREAS = new Map([
-	[
-		"css/css-anchor-position",
-		"each value resolves against a layout, so a browser implementing anchor positioning spends seconds per declaration — the area needs over 900s of recalculation in CI's Chrome"
-	]
-]);
-// Enough to reach every file of a sampled area, few enough to stay in budget.
-const AREA_SAMPLE = 40;
 
 // Declarations Chromium computes a different style from once printed, keyed by
 // the value as written. A printer defect unless the reason says otherwise.
@@ -324,26 +312,30 @@ describe("printer output in real Chrome", () => {
 	/** @type {import("puppeteer-core").Page} */
 	let page;
 
-	beforeAll(async () => {
-		await buildCorpora();
-		browser = await launchChrome({ protocolTimeout: AREA_TIMEOUT });
-	}, 300000);
+	/** @type {import("puppeteer-core").Page} the page the probing tiers share */
+	let probePage;
 
-	// A page of its own per test: a tier that leaves thousands of parsed documents
-	// behind must not be what makes the next one time out.
-	beforeEach(async () => {
-		page = await browser.newPage();
-		await page.setContent(
+	/** @returns {Promise<import("puppeteer-core").Page>} a page with the helpers */
+	const freshPage = async () => {
+		const opened = await browser.newPage();
+		await opened.setContent(
 			"<!doctype html><html><head></head><body></body></html>"
 		);
-		await page.evaluate(installHelpers);
+		await opened.evaluate(installHelpers);
+		return opened;
+	};
+
+	beforeAll(async () => {
+		await buildCorpora();
+		browser = await launchChrome({ protocolTimeout: FILE_TIMEOUT });
+		// The probing tiers set a property on one element and read it back, leaving
+		// nothing behind, so they share a page — at 58ms to open one and 1ms to
+		// call into it, a page per test would cost more than the tests do.
+		probePage = await freshPage();
 	}, 300000);
 
-	afterEach(async () => {
-		if (page) await page.close();
-	});
-
 	afterAll(async () => {
+		if (probePage) await probePage.close();
 		if (browser) await browser.close();
 	});
 
@@ -432,6 +424,16 @@ describe("printer output in real Chrome", () => {
 
 	const describeCorpus = (at, label) => {
 		describe(label, () => {
+			// A page of its own per test: a tier that leaves thousands of parsed
+			// documents behind must not be what makes the next one time out.
+			beforeEach(async () => {
+				page = await freshPage();
+			}, 300000);
+
+			afterEach(async () => {
+				if (page) await page.close();
+			});
+
 			if (at === 1 && !hasCorpus()) {
 				it(NO_CORPUS, () => {
 					// No-op: the corpus is an optional git submodule.
@@ -517,14 +519,15 @@ describe("printer output in real Chrome", () => {
 	describeCorpus(0, "configCases");
 	describeCorpus(1, "wpt");
 
-	// One test per wpt spec area rather than one for all 8,785 declarations: an
-	// area that is slow or hangs then names itself instead of the whole tier.
+	// One test per wpt file rather than one for all 8,785 declarations: a file
+	// that is slow or hangs then names itself, and the file is what a defect is
+	// read from. Per spec area would be cheaper still and says too little — one
+	// area timing out named 233 declarations at once and blamed all of them.
 	/** @type {Map<string, { name: string, property: string, key: string, raw: string, min: string }[]>} */
-	const declarationsByArea = new Map();
+	const declarationsByFile = new Map();
 	for (const { property, value, name } of hasCorpus()
 		? cssDeclarations()
 		: []) {
-		const area = name.split("/").slice(2, 4).join("/");
 		const one = {
 			name,
 			property,
@@ -532,33 +535,16 @@ describe("printer output in real Chrome", () => {
 			raw: value,
 			min: minifyDeclaration(property, value)
 		};
-		const group = declarationsByArea.get(area);
-		if (group === undefined) declarationsByArea.set(area, [one]);
+		const group = declarationsByFile.get(name);
+		if (group === undefined) declarationsByFile.set(name, [one]);
 		else group.push(one);
 	}
-	/** @type {Set<string>} every value that moved, filled as the areas run */
+	/** @type {Set<string>} every value that moved, filled as the files run */
 	const movedValues = new Set();
 
-	/**
-	 * An area is compared whole unless it is filed as slow, and then by a sample
-	 * spread over its files rather than its first few — one file's values are
-	 * alike, so the first N would cover one file and call the area done.
-	 * @param {string} area the wpt spec area
-	 * @param {T[]} cases its declarations
-	 * @returns {T[]} what to compare
-	 * @template T
-	 */
-	const sampleOf = (area, cases) => {
-		if (!FILED_SLOW_VALUE_AREAS.has(area) || cases.length <= AREA_SAMPLE) {
-			return cases;
-		}
-		const step = Math.ceil(cases.length / AREA_SAMPLE);
-		return cases.filter((_, at) => at % step === 0);
-	};
-
 	const compareValues = (cases) =>
-		inBatches(page, cases, (batch) =>
-			page.evaluate((each) => {
+		inBatches(probePage, cases, (batch) =>
+			probePage.evaluate((each) => {
 				const probe = document.createElement("div");
 				document.body.append(probe);
 				// Computed values, not `cssText`: `left bottom` and `0% 100%` are one
@@ -603,6 +589,8 @@ describe("printer output in real Chrome", () => {
 						out.push({ name: one.name, key: one.key });
 					}
 				}
+				// The page is shared, so what this tier appends it takes back out.
+				probe.remove();
 				return out;
 			}, batch)
 		);
@@ -612,28 +600,22 @@ describe("printer output in real Chrome", () => {
 			// No-op: the corpus is an optional git submodule.
 		});
 	}
-	for (const [area, cases] of declarationsByArea) {
-		const sampled = sampleOf(area, cases);
-		const of =
-			sampled.length < cases.length
-				? ` (${sampled.length} of ${cases.length})`
-				: "";
-
+	for (const [name, cases] of declarationsByFile) {
 		it(
-			`should compute the same style from a value in ${area}${of} and its minified form`,
+			`should compute the same style from a value in ${name} and its minified form`,
 			async () => {
-				for (const one of await compareValues(sampled)) {
+				for (const one of await compareValues(cases)) {
 					movedValues.add(one.key);
 				}
 			},
-			AREA_TIMEOUT
+			FILE_TIMEOUT
 		);
 	}
 
-	// Runs last, so every area has reported what moved. Includes the values the
+	// Runs last, so every file has reported what moved. Includes the values the
 	// spec rejects: an invalid declaration moves nothing, so one whose printed
 	// form does is one the printer brought to life.
-	if (declarationsByArea.size > 0) {
+	if (declarationsByFile.size > 0) {
 		it("should still diverge on every filed value defect", () => {
 			expect([...movedValues].sort()).toEqual(
 				[...FILED_WPT_VALUE_DEFECTS.keys()].sort()
@@ -656,7 +638,7 @@ describe("printer output in real Chrome", () => {
 				table[element][attribute] = [...keywords];
 			}
 		}
-		const unfolded = await page.evaluate((cases) => {
+		const unfolded = await probePage.evaluate((cases) => {
 			/**
 			 * @param {string} element tag name
 			 * @param {string} attribute attribute name
@@ -716,7 +698,7 @@ describe("printer output in real Chrome", () => {
 		for (const [name, on] of EMPTY_REMOVABLE_ATTRIBUTES) {
 			probes.push([name, on === null ? ["a"] : [...on]]);
 		}
-		const observable = await page.evaluate((pairs) => {
+		const observable = await probePage.evaluate((pairs) => {
 			/**
 			 * @param {string} tagName the element to read it on
 			 * @param {string} attribute the attribute name
