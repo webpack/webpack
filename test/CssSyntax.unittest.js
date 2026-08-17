@@ -1090,6 +1090,7 @@ describe("CssSyntax — block streaming", () => {
 		// A streamed block writes its children out as they finish, so the merge a
 		// collected block runs over all of them at once cannot: it holds a window
 		// of them back instead, and the rules in it join like any other siblings.
+		// The padding stays under `_JOIN_SAMPLE`, so the window is still offering.
 		const src = `@media all{${repeat(1800, rule)}.j1{left:0}.pad{top:1px}.j2{left:0}.j3{width:0}.j3{height:0}}`;
 		expect(childCount(src)).toBe(0);
 		const out = minify(src);
@@ -1101,7 +1102,8 @@ describe("CssSyntax — block streaming", () => {
 
 	it("keeps a streamed block's rules apart where the cascade reads them", () => {
 		// The same barrier the collected merge reads: a rule between the two
-		// writing what their shared block does would win where it lost.
+		// writing what their shared block does would win where it lost. The padding
+		// stays under `_JOIN_SAMPLE`, so the window is still offering.
 		const src = `@media all{${repeat(1800, rule)}.k1{left:0}.mid{left:9px}.k2{left:0}}`;
 		expect(childCount(src)).toBe(0);
 		expect(minify(src)).toContain(".k1{left:0}.mid{left:9px}.k2{left:0}");
@@ -2973,6 +2975,17 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[
 				"a{animation:spin 1s;animation:spin 1s,-webkit-spin 1s}",
 				"a{animation:spin 1s,-webkit-spin 1s}"
+			],
+			// A comma inside a call parts that call's arguments, not the list's items.
+			[
+				"a{transition:a cubic-bezier(.1,0,1,1);transition:a cubic-bezier(.1,0,1,1),-webkit-a cubic-bezier(.1,0,1,1)}",
+				"a{transition:a cubic-bezier(.1,0,1,1),-webkit-a cubic-bezier(.1,0,1,1)}"
+			],
+			// ...nor does one inside a string, escapes and all — the quote the printer
+			// swapped to drop the escape is on both sides, so they still match.
+			[
+				'a{font-family:-webkit-a,"x\\",y";font-family:a,-webkit-a,"x\\",y"}',
+				"a{font-family:a,-webkit-a,'x\",y'}"
 			]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
@@ -3264,6 +3277,28 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			]
 		])("keeps both nested rules where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
+		});
+
+		it("prints the whole sheet after a parse threw mid-eviction", () => {
+			// The window holding top-level rules is one per process, so a parse that
+			// threw once it was over budget — its front already written out — leaves a
+			// read cursor the next parse would otherwise start from, dropping that
+			// many rules from its output.
+			let src = "";
+			for (let i = 0; i < 3000; i++) src += `.dropped${i}{left:${i}px}`;
+			let seen = 0;
+			expect(() =>
+				new SourceProcessor()
+					.use({
+						[NodeType.QualifiedRule]: () => {
+							if (++seen === 2500) throw new Error("thrown mid-parse");
+						}
+					})
+					.process(src, { mode: "minify" })
+			).toThrow("thrown mid-parse");
+			expect(minify("a{top:0}b{top:1px}c{top:2px}")).toBe(
+				"a{top:0}b{top:1px}c{top:2px}"
+			);
 		});
 	});
 
@@ -4233,6 +4268,22 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(sub)).toBe(sub);
 		});
 
+		it("refuses a slash shorthand the same two ways a box refuses", () => {
+			// A `var()` may expand across the `/` into another slot, and a CSS-wide
+			// keyword beside another value is a shorthand the engine drops whole.
+			expect(
+				minify(
+					"a{grid-row-start:1;grid-column-start:2;grid-row-end:3;grid-column-end:4}"
+				)
+			).toBe("a{grid-area:1/2/3/4}");
+			const sub =
+				"a{grid-row-start:1;grid-column-start:2;grid-row-end:var(--x);grid-column-end:4}";
+			expect(minify(sub)).toBe(sub);
+			const wide =
+				"a{grid-row-start:inherit;grid-column-start:2;grid-row-end:3;grid-column-end:4}";
+			expect(minify(wide)).toBe(wide);
+		});
+
 		it("merges an order-free shorthand's slots in grammar order", () => {
 			expect(
 				minify("a{outline-width:3px;outline-style:dashed;outline-color:red}")
@@ -4927,7 +4978,9 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 				"a{align-items:flex-start;align-self:flex-end;justify-content:space-around;align-content:space-between}",
 				["ie 10"],
 				// An engine needing the `-ms-flex-*` aliases reads no `place-*`, which
-				// is what the merge would write over the pair the aliases sit on.
+				// is what the merge would write over the pair the aliases sit on. Set
+				// by hand: this path passes `browsers` straight to the printer, so the
+				// browserslist-to-abilities resolution never runs.
 				{ cssPlaceShorthand: false }
 			)
 		).toBe(

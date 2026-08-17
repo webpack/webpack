@@ -22086,9 +22086,8 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	): void;
 
 	/**
-	 * {@link take} for text a printer held back past its node — a rule waiting to
-	 * see whether a later one joins it, whose node has since been recycled. The
-	 * store is dropped when the text is held rather than here.
+	 * {@link take} for text held back past its node, which has since been recycled.
+	 * The store was dropped when the text was held rather than here.
 	 */
 	takeText(
 		text: string,

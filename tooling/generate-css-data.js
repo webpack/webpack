@@ -571,13 +571,9 @@ const collectPairLonghands = () => {
 };
 
 /**
- * The properties whose comma-separated items take a `<custom-ident>`, so a name
- * an engine does not know is still one it parses. That is what makes a later
- * declaration of one able to supersede an earlier: it cannot be the unreadable
- * half of a fallback pair, whatever vendor spelling stands in the item.
- *
- * Read off the grammar rather than listed: a comma multiplier whose body reaches
- * `<custom-ident>`, following the `<syntax>` references on the way.
+ * The properties whose comma-separated items take a `<custom-ident>`: any vendor
+ * spelling still parses, so such a declaration is never a fallback's dead half.
+ * Read off the grammar — a comma multiplier whose body reaches `<custom-ident>`.
  * @returns {string[]} the property names, sorted
  */
 const collectCustomIdentListProperties = () => {
@@ -647,10 +643,8 @@ const collectCustomIdentListProperties = () => {
 
 /**
  * The longhands a shorthand resets that its own name is no prefix of — `inset`
- * sets `top`, `gap` sets `row-gap`, `font` sets `line-height`. Transitive, and
- * the prefixed ones are left out: `border-top-width` is already read as part of
- * `border` by the name alone, so only what the name cannot say is stated here.
- * What answers "would moving this declaration past that one change which wins".
+ * sets `top`, `font` sets `line-height`. Transitive; the name-covered ones are
+ * left out. Answers whether moving a declaration past another changes the winner.
  * @returns {[string, string[]][]} `[property, longhands]`, sorted
  */
 const collectResetLonghands = () => {
@@ -694,9 +688,8 @@ const collectResetLonghands = () => {
 /**
  * The shorthands that set their longhands positionally with a `/` between them:
  * `<X> [ / <X> ]{0,n}` over the `n + 1` names `computed` lists, in that order.
- * The grid-placement three are the whole set today. Every slot is written: an
- * omitted one means "the first slot where that is a `<custom-ident>`, else
- * `auto`", not "the same value", so omitting is only ever right for an ident.
+ * An omitted slot copies the first only when that is a `<custom-ident>`, else
+ * takes `auto` — so dropping one is right for an ident and wrong for anything else.
  * @returns {[string, string[]][]} `[shorthand, longhands]`, sorted
  */
 const collectSlashLonghands = () => {
