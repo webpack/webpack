@@ -104,7 +104,7 @@ describe("readToken", () => {
 			const results = [];
 			// Drive the lexer core directly: a fresh `out` per call collects the
 			// raw token list (comments included); `readToken` returns undefined at EOF.
-			for (let pos = 0; ; ) {
+			for (let pos = 0; ;) {
 				const t = readToken(
 					code,
 					pos,
@@ -140,7 +140,7 @@ describe("readToken", () => {
  */
 const tokenRoundtrip = (input) => {
 	let out = "";
-	for (let pos = 0; ; ) {
+	for (let pos = 0; ;) {
 		const t = readToken(
 			input,
 			pos,
@@ -2944,9 +2944,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 	describe("a later declaration of a property already written", () => {
 		it.each([
-			// A value spelled differently is a fallback for an engine that cannot read
-			// the later one, and nothing here can say which engines read a bare name:
-			// it may be invalid, in which case every engine reads the earlier one...
+			// A differently spelled value is a fallback, and a bare name says nothing
+			// about which engines read it: it may be invalid...
 			"a{color:red;color:not-a-color}",
 			// ...or newer than the value before it, in which case an older one does:
 			// `canvas` is a CSS Color 4 system color.
@@ -2960,11 +2959,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 	describe("a comma list a later declaration writes again", () => {
 		it.each([
-			// A tool adding prefixes writes the prefixed item beside the plain one,
-			// which leaves
-			// the declarations it wrote on the way there unreadable: the item slot
-			// takes a `<custom-ident>`, so an engine knowing neither spelling still
-			// parses the value and has nothing to fall back to.
+			// The item slot takes a `<custom-ident>`, so an engine knowing neither
+			// spelling still parses the value and has nothing to fall back to.
 			[
 				"a{transition:box-shadow .25s;transition:box-shadow .25s,-webkit-box-shadow .25s}",
 				"a{transition:box-shadow .25s,-webkit-box-shadow .25s}"
@@ -3088,9 +3084,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// The `s` modifier is one an engine may not read, and one selector it
 			// drops invalidates the whole list it was joined into.
 			["a matcher carries a modifier past `i`", "[a=b s]{top:0}[c]{top:0}"],
-			// CSS Cascade 5 §6.4.1: every `@layer {` opens a layer of its own, and a
-			// later layer beats an earlier one whatever the selectors say — joining
-			// the two would hand the block back to specificity.
+			// CSS Cascade 5 §6.4.1: every `@layer {` opens a layer of its own, and the
+			// later one wins whatever the selectors say.
 			[
 				"each anonymous layer is a layer of its own",
 				"@layer{#i{color:blue}}@layer{.c{color:red}}"
@@ -4183,9 +4178,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it.each([
-			// `left` / `right` are `justify-*`'s alone, so the `align-*` half is
-			// invalid where it stands and the shorthand is invalid whole — writing it
-			// would lose the declaration the engine did read.
+			// `left` / `right` are `justify-*`'s alone, so the shorthand is invalid
+			// whole where the `justify-*` declaration alone was read.
 			"a{align-items:left;justify-items:left}",
 			"a{align-items:RIGHT;justify-items:RIGHT}",
 			"a{align-self:left;justify-self:left}",
@@ -4924,10 +4918,8 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 			minifyFor(
 				"a{align-items:flex-start;align-self:flex-end;justify-content:space-around;align-content:space-between}",
 				["ie 10"],
-				// An engine needing the `-ms-flex-*` aliases reads no `place-*`, which
-				// is what the merge would write over the pair the aliases sit on. Set
-				// by hand: this path passes `browsers` straight to the printer, so the
-				// browserslist-to-abilities resolution never runs.
+				// Set by hand: this path passes `browsers` straight to the printer, so
+				// the browserslist-to-abilities resolution never runs.
 				{ cssPlaceShorthand: false }
 			)
 		).toBe(

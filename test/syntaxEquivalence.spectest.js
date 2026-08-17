@@ -492,9 +492,8 @@ describe("printer output in real Chrome", () => {
 	const expected = (filed, name) => (filed.has(name) ? [name] : []);
 
 	/**
-	 * The differences as the assertion names them: the file alone where a defect
-	 * is filed against it, and the reason alongside where none is — a log naming
-	 * only the file cannot be read without running the corpus again.
+	 * The differences as the assertion names them, one with no filed defect
+	 * carrying its reason: a log of files alone needs a second run to read.
 	 * @param {{ name: string, why: string }[]} differences what differed
 	 * @param {Map<string, string>} filed the tier's filed defects
 	 * @returns {string[]} the names, each unexpected one carrying its reason

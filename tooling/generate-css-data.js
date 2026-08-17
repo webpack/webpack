@@ -571,9 +571,8 @@ const collectPairLonghands = () => {
 };
 
 /**
- * The properties whose comma-separated items take a `<custom-ident>`: any vendor
- * spelling still parses, so such a declaration is never a fallback's dead half.
- * Read off the grammar — a comma multiplier whose body reaches `<custom-ident>`.
+ * The properties whose comma-separated items take a `<custom-ident>`, so any
+ * vendor spelling parses: a comma multiplier whose body reaches one.
  * @returns {string[]} the property names, sorted
  */
 const collectCustomIdentListProperties = () => {
@@ -2462,7 +2461,7 @@ const reachesColor = (name, seen) => {
  */
 const collectNegativeAcceptingProperties = () => {
 	const accepting = new Set(SUPPLEMENT.negativeAcceptingProperties);
-	for (let changed = true; changed; ) {
+	for (let changed = true; changed;) {
 		changed = false;
 		for (const [name, entry] of Object.entries(properties)) {
 			if (accepting.has(name) || typeof entry.syntax !== "string") continue;
@@ -2634,8 +2633,8 @@ const collectOmittableInitialKeywords = (
 			node.type === "group"
 				? isInitial(node.body)
 				: node.type === "oneOf"
-				? node.items.some(isInitial)
-				: node.type === "keyword" && node.name === initial;
+					? node.items.some(isInitial)
+					: node.type === "keyword" && node.name === initial;
 		// The supplement states the keyword is droppable; mdn-data must still agree.
 		if (tree.type !== "anyOf" || !tree.items.some(isInitial)) {
 			throw new Error(`No omittable '${initial}' in '${name}': ${syntax}`);
@@ -3897,8 +3896,8 @@ const collectPrefixes = (compat, name, alternatives) => {
 			const spelling = entry.prefix
 				? entry.prefix + name
 				: alternatives && entry.alternative_name
-				? entry.alternative_name.replace(ALTERNATIVE_DECORATION, "")
-				: null;
+					? entry.alternative_name.replace(ALTERNATIVE_DECORATION, "")
+					: null;
 			if (spelling === null) continue;
 			const prefixedFrom = encodeVersion(entry.version_added);
 			if (prefixedFrom === null || prefixedFrom >= target) continue;
@@ -3941,7 +3940,7 @@ const collectPrefixes = (compat, name, alternatives) => {
 						: [
 								Math.min(existing[0], prefixedFrom),
 								Math.max(existing[1], until)
-						  ]
+							]
 				);
 			}
 		}
@@ -3988,7 +3987,7 @@ const collectPrefixTable = (
 				? spellings
 				: spellings.filter(
 						([spelling]) => !excluded.some((p) => spelling.startsWith(p))
-				  );
+					);
 		if (kept.length !== 0) table.push([name, kept]);
 	}
 	if (supplement) applyPrefixSupplement(table);
