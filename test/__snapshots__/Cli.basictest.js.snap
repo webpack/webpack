@@ -13489,6 +13489,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-unsplit-dynamic-imports": Object {
+    "configs": Array [
+      Object {
+        "description": "Report 'import()' calls whose module is already in the initial chunk, so they split nothing.",
+        "multiple": false,
+        "path": "performance.unsplitDynamicImports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report 'import()' calls whose module is already in the initial chunk, so they split nothing.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-unused-rules": Object {
     "configs": Array [
       Object {
