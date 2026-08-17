@@ -1,7 +1,5 @@
-/* Values where a rewrite decides whether the declaration parses at all. Each
-   was found by the wpt DOM/CSSOM tier: the printer normalized a value the
-   engine had rejected into one it accepts, or the other way round. Verified in
-   headless Chrome — the comment states what the engine does with each. */
+/* Values where a rewrite decides whether the declaration parses. Found by the
+   wpt DOM/CSSOM tier, each verified in headless Chrome. */
 
 /*! invalid: a quoted family beside a bare identifier matches no family list */
 .a { font-family: "Lucida" Grande, sans-serif }

@@ -131,9 +131,7 @@ const FILED_WPT_TREE_DEFECTS = new Map();
 const FILED_WPT_VALUE_DEFECTS = new Map([
 	[
 		// `calc()` is clamped at computed-value time and a literal is not, so
-		// `oblique calc(100deg)` computes `oblique 90deg` while `oblique 100deg` is
-		// out of `<angle [-90deg,90deg]>` and drops the declaration. Folding one to
-		// the other therefore turns a working declaration off.
+		// `oblique calc(100deg)` computes `90deg` where `oblique 100deg` is dropped.
 		"font-style:oblique calc(100deg)",
 		"folding a clamped `calc()` to its literal leaves an out-of-range value"
 	],

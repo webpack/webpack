@@ -1437,12 +1437,8 @@ const valueLevelNumericTypes = (syntax, propertyTable = properties) => {
 };
 
 /**
- * The properties where dropping a zero length's unit changes what it is.
- * `0px` is a `<dimension>` token and `0` a `<number>` one, so the rewrite is
- * safe only where the grammar offers no `<number>` beside the `<length>` for
- * the bare zero to bind to instead — `tab-size:0` is zero characters where
- * `tab-size:0px` is zero width. Derived, so a property the specs give a second
- * reading tomorrow is covered without anyone noticing it.
+ * The properties whose grammar offers a `<number>` beside the `<length>`, so a
+ * zero losing its unit binds to the other reading (`tab-size:0` is characters).
  * @param {PartialSyntaxTable} propertyTable the `properties.json` to read
  * @returns {string[]} the property names, sorted
  */
@@ -3042,18 +3038,11 @@ const SUPPLEMENT = {
 	// What may follow the `*` a compound selector implies: another simple
 	// selector in the same compound. Selector syntax, not a value grammar.
 	compoundContinuations: [":", ".", "#", "["],
-	// The two a zero's unit is load-bearing in that no grammar says so — every
-	// property whose own syntax offers a bare number beside the length is
-	// derived instead (`collectZeroUnitAmbiguousProperties`). IE 11 drops a
-	// `flex` shorthand whose basis has no unit, and `flex-basis` carries the
-	// same. Chrome rejects `overflow-clip-margin:0` outright, unitless zero
-	// being a length the spec does allow.
+	// Not derivable, no grammar says the unit matters here: IE 11 drops a unitless
+	// `flex-basis`, and Chrome rejects `overflow-clip-margin:0` the spec allows.
 	zeroUnitKeepingProperties: ["flex-basis", "overflow-clip-margin"],
-	// Where an engine rejects a `calc()` the spec allows, so folding one to the
-	// plain value it equals would switch a declaration the engine threw away back
-	// on. Chrome takes no `calc()` at all in `overflow-clip-margin` — the same
-	// property whose bare `0` it also refuses. Not derivable: a grammar naming
-	// `<length>` says `calc()` is valid there.
+	// Not derivable, a grammar naming `<length>` says `calc()` is valid there:
+	// Chrome takes no `calc()` in `overflow-clip-margin`, as it takes no bare `0`.
 	calcRejectingProperties: ["overflow-clip-margin"],
 	// CSS Backgrounds 3 §3.9 / CSS Masking 1 §4.5: these spell an omitted second
 	// value `auto`, not the first repeated. Their shared grammar cannot say so.
