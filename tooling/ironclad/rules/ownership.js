@@ -166,7 +166,13 @@ const rule = {
 				type: "object",
 				properties: {
 					implicitMove: { type: "boolean" },
-					moveOnCall: { type: "array", items: { type: "string" } }
+					moveOnCall: { type: "array", items: { type: "string" } },
+					transferringCalls: { type: "array", items: { type: "string" } },
+					consumesReceiver: { type: "array", items: { type: "string" } },
+					locksReceiver: {
+						type: "object",
+						additionalProperties: { type: "string" }
+					}
 				},
 				additionalProperties: false
 			}
@@ -194,7 +200,31 @@ const rule = {
 		const sourceCode = context.sourceCode;
 		const options = context.options[0] || {};
 		const moveOnCall = new Set(
-			/** @type {string[]} */ (options.moveOnCall) || ["postMessage"]
+			/** @type {string[]} */ (options.moveOnCall) || []
+		);
+		// Only what reaches a transfer list is detached — `postMessage(value)`
+		// structured-clones, it does not detach.
+		const transferringCalls = new Set(
+			/** @type {string[]} */ (options.transferringCalls) || [
+				"postMessage",
+				"structuredClone"
+			]
+		);
+		const consumesReceiver = new Set(
+			/** @type {string[]} */ (options.consumesReceiver) || [
+				"transferControlToOffscreen"
+			]
+		);
+		// Method that locks its receiver, mapped to the method that unlocks it.
+		// A Map, not an object: `locksReceiver.toString` would otherwise inherit
+		// from Object.prototype and make every `x.toString()` a lock.
+		const locksReceiver = new Map(
+			Object.entries(
+				/** @type {Record<string, string>} */ (options.locksReceiver) || {
+					getReader: "releaseLock",
+					getWriter: "releaseLock"
+				}
+			)
 		);
 		const implicitMove = options.implicitMove === true;
 
@@ -213,6 +243,12 @@ const rule = {
 		const segmentMoves = new Map();
 		/** @type {CodePathSegment[]} */
 		const segmentStack = [];
+		/** @type {{ node: Node, name: string, segment: CodePathSegment }[]} */
+		const pendingLoopMoves = [];
+		/** @type {Map<string, string>} */
+		const segmentPath = new Map();
+		/** @type {string[]} */
+		const codePathStack = [];
 
 		/**
 		 * @param {Node} node node to look above
@@ -304,16 +340,40 @@ const rule = {
 		};
 
 		/**
+		 * @returns {CodePathSegment | null} innermost reachable segment
+		 */
+		const currentSegment = () => {
+			for (let i = segmentStack.length - 1; i >= 0; i--) {
+				if (segmentStack[i].reachable) return segmentStack[i];
+			}
+			return null;
+		};
+
+		/**
 		 * @returns {Map<Variable, MoveInfo> | null} move state of the innermost
 		 * reachable segment
 		 */
 		const currentMoves = () => {
-			for (let i = segmentStack.length - 1; i >= 0; i--) {
-				const segment = segmentStack[i];
-				if (!segment.reachable) continue;
-				return segmentMoves.get(segment.id) || null;
+			const segment = currentSegment();
+			return segment ? segmentMoves.get(segment.id) || null : null;
+		};
+
+		/**
+		 * @param {CodePathSegment} segment segment to start from
+		 * @returns {boolean} true when control can return to `segment`
+		 */
+		const canReachAgain = (segment) => {
+			/** @type {Set<string>} */
+			const seen = new Set();
+			const queue = segment.nextSegments.slice();
+			while (queue.length > 0) {
+				const next = /** @type {CodePathSegment} */ (queue.pop());
+				if (next === segment) return true;
+				if (seen.has(next.id) || !next.reachable) continue;
+				seen.add(next.id);
+				for (const following of next.nextSegments) queue.push(following);
 			}
-			return null;
+			return false;
 		};
 
 		/**
@@ -343,18 +403,73 @@ const rule = {
 		};
 
 		/**
-		 * Calls listed in `moveOnCall` consume their arguments — `postMessage`
-		 * detaches everything in its transfer list, so the value really is gone.
-		 * @param {Identifier} node identifier in argument position
+		 * @param {CallExpression} call call to name
+		 * @returns {string | null} the called function or method name
+		 */
+		const calleeName = (call) => {
+			const callee = call.callee;
+			if (callee.type === "Identifier") return callee.name;
+			if (
+				callee.type === "MemberExpression" &&
+				!callee.computed &&
+				callee.property.type === "Identifier"
+			) {
+				return callee.property.name;
+			}
+			return null;
+		};
+
+		/**
+		 * `stream.getReader()`, `canvas.transferControlToOffscreen()` — the call
+		 * acts on the object it is called on rather than on an argument.
+		 * @param {Identifier} node identifier to test
+		 * @returns {{ call: CallExpression, name: string } | null} the call
+		 */
+		const receiverCall = (node) => {
+			const member = parentOf(/** @type {Node} */ (node));
+			if (
+				!member ||
+				member.type !== "MemberExpression" ||
+				member.object !== node ||
+				member.computed ||
+				member.property.type !== "Identifier"
+			) {
+				return null;
+			}
+			const call = parentOf(member);
+			if (!call || call.type !== "CallExpression" || call.callee !== member) {
+				return null;
+			}
+			return { call, name: member.property.name };
+		};
+
+		/**
+		 * A value is consumed when every argument of the call is consumed, when it
+		 * reaches a transfer list, or when the call consumes its receiver.
+		 * @param {Identifier} node identifier to test
 		 * @returns {CallExpression | null} the consuming call
 		 */
 		const consumingCall = (node) => {
+			const receiver = receiverCall(node);
+			if (receiver && consumesReceiver.has(receiver.name)) return receiver.call;
+
 			let argument = /** @type {Node} */ (node);
 			let parent = parentOf(argument);
-			// `postMessage(value, [value])` — the transfer list counts too.
+			let transferred = false;
+			// `postMessage(value, [buffer])` and `structuredClone(value, {
+			// transfer: [buffer] })` both detach what the array holds.
 			if (parent && parent.type === "ArrayExpression") {
 				argument = parent;
 				parent = parentOf(argument);
+				transferred = true;
+				if (parent && parent.type === "Property" && parent.value === argument) {
+					transferred =
+						parent.key.type === "Identifier"
+							? parent.key.name === "transfer"
+							: false;
+					argument = /** @type {Node} */ (parentOf(parent));
+					parent = parentOf(argument);
+				}
 			}
 			if (
 				!parent ||
@@ -365,18 +480,10 @@ const rule = {
 			) {
 				return null;
 			}
-			const callee = parent.callee;
-			/** @type {string | null} */
-			let name = null;
-			if (callee.type === "Identifier") name = callee.name;
-			else if (
-				callee.type === "MemberExpression" &&
-				!callee.computed &&
-				callee.property.type === "Identifier"
-			) {
-				name = callee.property.name;
-			}
-			return name && moveOnCall.has(name) ? parent : null;
+			const name = calleeName(parent);
+			if (!name) return null;
+			if (moveOnCall.has(name)) return parent;
+			return transferred && transferringCalls.has(name) ? parent : null;
 		};
 
 		/**
@@ -408,6 +515,17 @@ const rule = {
 					position >= borrow.start &&
 					position <= borrow.end
 			);
+		};
+
+		/**
+		 * @param {Borrow} borrow borrow to register
+		 * @returns {void}
+		 */
+		const addBorrow = (borrow) => {
+			const list = borrowsByOwner.get(borrow.owner);
+			if (list) list.push(borrow);
+			else borrowsByOwner.set(borrow.owner, [borrow]);
+			borrowByNode.set(borrow.node, borrow);
 		};
 
 		// Borrows are collected up front: the live range of a borrow ends at the
@@ -459,10 +577,54 @@ const rule = {
 					start: /** @type {Range} */ (node.range)[0],
 					end
 				};
-				const list = borrowsByOwner.get(owner);
-				if (list) list.push(borrow);
-				else borrowsByOwner.set(owner, [borrow]);
-				borrowByNode.set(node, borrow);
+				addBorrow(borrow);
+			}
+			collectLocks();
+		};
+
+		/**
+		 * `stream.getReader()` locks the stream until `releaseLock()` — an
+		 * exclusive borrow the platform enforces at runtime, so it needs no
+		 * marker. Unlike a marker borrow it is lexical, not ended by last use:
+		 * an unreleased lock is still held.
+		 * @returns {void}
+		 */
+		const collectLocks = () => {
+			for (const [node, reference] of referenceOf) {
+				const owner = reference.resolved;
+				if (!owner || !reference.isRead()) continue;
+				const receiver = receiverCall(node);
+				if (!receiver) continue;
+				const release = locksReceiver.get(receiver.name);
+				if (!release) continue;
+				const declarator = parentOf(receiver.call);
+				const declared =
+					declarator && declarator.type === "VariableDeclarator"
+						? sourceCode.getDeclaredVariables(declarator)
+						: [];
+				const holder = declared.length === 1 ? declared[0] : null;
+				let end = /** @type {Range} */ (
+					owner.scope.variableScope.block.range
+				)[1];
+				if (holder) {
+					for (const holderReference of holder.references) {
+						const released = receiverCall(
+							/** @type {Identifier} */ (holderReference.identifier)
+						);
+						if (released && released.name === release) {
+							end = /** @type {Range} */ (released.call.range)[1];
+							break;
+						}
+					}
+				}
+				addBorrow({
+					kind: "borrowMut",
+					owner,
+					holder,
+					node,
+					start: /** @type {Range} */ (node.range)[0],
+					end
+				});
 			}
 		};
 
@@ -535,10 +697,13 @@ const rule = {
 				});
 			}
 			// A move inside a loop of something declared outside it is a use after
-			// move on the second iteration, whatever the branch structure says.
+			// move on the next iteration — but only if the move can be reached
+			// twice. `break` right after it means it cannot, so the verdict waits
+			// until the segment graph is complete.
 			const declaration =
 				variable.defs.length > 0 ? variable.defs[0].name : null;
-			if (declaration) {
+			const segment = currentSegment();
+			if (declaration && segment) {
 				for (
 					let above = parentOf(/** @type {Node} */ (node));
 					above;
@@ -548,10 +713,10 @@ const rule = {
 					const range = /** @type {Range} */ (above.range);
 					const declarationRange = /** @type {Range} */ (declaration.range);
 					if (declarationRange[0] < range[0]) {
-						context.report({
-							node: /** @type {never} */ (node),
-							messageId: "moveInLoop",
-							data: { name: variable.name }
+						pendingLoopMoves.push({
+							node: /** @type {Node} */ (node),
+							name: variable.name,
+							segment
 						});
 					}
 					break;
@@ -599,15 +764,37 @@ const rule = {
 					}
 				}
 				segmentMoves.set(segment.id, state);
+				segmentPath.set(segment.id, codePathStack[codePathStack.length - 1]);
 				segmentStack.push(segment);
 			},
 
 			onCodePathSegmentEnd(segment) {
 				const index = segmentStack.lastIndexOf(segment);
 				if (index !== -1) segmentStack.splice(index, 1);
+				// `finally` is the one shape where a segment of the same code path
+				// stays open around another: the continuation segment starts before
+				// the finally body, so it is not listed as a successor and has to be
+				// updated by hand.
+				const path = segmentPath.get(segment.id);
+				const state = segmentMoves.get(segment.id);
+				if (!state) return;
+				for (let i = segmentStack.length - 1; i >= 0; i--) {
+					const open = segmentStack[i];
+					if (segmentPath.get(open.id) !== path) continue;
+					const target = segmentMoves.get(open.id);
+					if (target) {
+						for (const [variable, info] of state) target.set(variable, info);
+					}
+					break;
+				}
+			},
+
+			onCodePathStart(codePath) {
+				codePathStack.push(codePath.id);
 			},
 
 			onCodePathEnd(codePath, node) {
+				codePathStack.pop();
 				// An immediately invoked function runs inline, so what it moved is
 				// moved for the caller too.
 				if (!FUNCTION_TYPES.has(node.type) || !isImmediatelyInvoked(node)) {
@@ -708,6 +895,14 @@ const rule = {
 
 			"Program:exit"() {
 				reportEscapingBorrows();
+				for (const pending of pendingLoopMoves) {
+					if (!canReachAgain(pending.segment)) continue;
+					context.report({
+						node: /** @type {never} */ (pending.node),
+						messageId: "moveInLoop",
+						data: { name: pending.name }
+					});
+				}
 			}
 		};
 	}

@@ -59,11 +59,45 @@ use(a.x); // `m` is dead by here
 "ironclad/ownership": ["error", {
 	// Treat `const b = a` as a move. Off by default — see "Measured" below.
 	implicitMove: false,
-	// Calls that consume their arguments. `postMessage` really does detach
-	// everything in its transfer list, so this needs no annotation.
-	moveOnCall: ["postMessage"]
+	// Calls that consume every argument. Empty by default: this is a policy,
+	// not a fact about the language.
+	moveOnCall: [],
+	// Calls with a transfer list — `f(x, [buf])` or `f(x, { transfer: [buf] })`.
+	// Only what reaches the list is detached.
+	transferringCalls: ["postMessage", "structuredClone"],
+	// Methods that consume the object they are called on.
+	consumesReceiver: ["transferControlToOffscreen"],
+	// Methods that lock their receiver, mapped to the method that unlocks it.
+	locksReceiver: { getReader: "releaseLock", getWriter: "releaseLock" }
 }]
 ```
+
+## The platform table
+
+The last three options are why the rule finds things without any marker: the web
+platform already ships genuine move and exclusive-borrow semantics, and every one
+of them throws at runtime when violated.
+
+```js
+worker.postMessage(value, [buffer]);
+use(buffer.byteLength); // useAfterMove — the buffer is detached
+
+const offscreen = canvas.transferControlToOffscreen();
+canvas.getContext("2d"); // useAfterMove — the canvas is consumed
+
+const reader = stream.getReader();
+stream.cancel(); // useWhileMutablyBorrowed — the stream is locked
+```
+
+Note what is _not_ in the table: `postMessage(value)` without a transfer list
+structured-clones its argument, so it is not a move. Reading a `Response` body
+(`res.json()` after `res.text()`) belongs here too, but `json` and `text` are
+names any object may have — that entry needs type information before it can be
+a default. Add it through `consumesReceiver` if your codebase can afford it.
+
+A lock is deliberately **lexical**, unlike a marker borrow: an unreleased lock
+is still held, so it runs to the end of the owner's scope rather than to the
+reader's last use.
 
 ## Measured on `lib/`
 
@@ -73,12 +107,14 @@ use(a.x); // `m` is dead by here
 | -------------------- | -------- | -------------------------------- |
 | no rules (baseline)  | —        | 4.4 s                            |
 | defaults             | **0**    | 5.4 s (+22%)                     |
-| `implicitMove: true` | **2868** | 5.4 s                            |
+| `implicitMove: true` | **2872** | 5.6 s                            |
 
 Two results worth keeping:
 
-- With markers only, the rule is silent on a large real codebase — the design
-  goal, since a linter that cries wolf gets switched off.
+- With markers and the platform table, the rule is silent on a large real
+  codebase — the design goal, since a linter that cries wolf gets switched off.
+  The scan is also how the `locksReceiver` prototype-chain bug was found: every
+  `x.toString()` was being read as a lock, for 127 findings.
 - `implicitMove` produces ~2.9k findings on code that is entirely correct. JS
   passes references by design; assignment is not a move, and no heuristic
   rescues that. It stays opt-in and off.
@@ -94,8 +130,11 @@ Two results worth keeping:
   closure escapes, which is the aliasing problem above.
 - Destructuring (`const { x } = data`) counts as a read, not a partial move —
   the Rust reading would fire on nearly every real file.
-- Loop back-edges are not iterated to a fixed point; `moveInLoop` catches the case
-  syntactically instead.
+- Loop back-edges are not iterated to a fixed point. `moveInLoop` instead asks
+  whether the move's segment can be reached again, so `break` and `return` out
+  of the loop are not reported.
+- The platform table matches method names, not types. A `getReader` on something
+  that is not a stream is a false positive; narrow the option if that happens.
 - Whether a value is a primitive is inferred from its initializer. Real type
   information would replace that heuristic.
 
