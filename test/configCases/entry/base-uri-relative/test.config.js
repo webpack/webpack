@@ -1,7 +1,15 @@
 "use strict";
 
+const BUNDLES = [
+	"./bundle0.mjs",
+	"./cjs.js",
+	"./proto.mjs",
+	"./empty.mjs",
+	"./runtime.mjs"
+];
+
 module.exports = {
 	findBundle(index) {
-		return index === 0 ? "./bundle0.mjs" : "./cjs.js";
+		return BUNDLES[index];
 	}
 };
