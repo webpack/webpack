@@ -1100,6 +1100,16 @@ describe("CssSyntax — block streaming", () => {
 		expect(out).toContain(".pad{top:1px}");
 	});
 
+	it("writes a streamed block's children straight through when beautifying", () => {
+		// Beautifying rewrites nothing, so a streamed block holds no window back
+		// and each child goes out as it finishes.
+		const out = new SourceProcessor().process(
+			`@media all{${BIG}.z1{left:0}.z2{left:0}}`,
+			{ mode: "beautify" }
+		).code;
+		expect(out).toContain(".z1 {\nleft: 0;\n}\n.z2 {\nleft: 0;\n}");
+	});
+
 	it("keeps a streamed block's rules apart where the cascade reads them", () => {
 		// The same barrier the collected merge reads: a rule between the two
 		// writing what their shared block does would win where it lost. The padding
@@ -2955,6 +2965,17 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a later declaration's unit", () => {
+		it("supersedes only over a unit the property's own engines read", () => {
+			// A unit newer than the property is what a fallback pair is written in:
+			// the engine that cannot read it is the one the earlier declaration is
+			// there for. `mdn-data` carries no version per unit, so the set is stated.
+			const newer = "a{width:100vw;width:100dvw}";
+			expect(minify(newer)).toBe(newer);
+			expect(minify("a{width:100vw;width:50%}")).toBe("a{width:50%}");
+		});
+	});
+
 	describe("a comma list a later declaration writes again", () => {
 		it.each([
 			// A tool adding prefixes writes the prefixed item beside the plain one,
@@ -3018,6 +3039,12 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[
 				"the earlier one is `!important`",
 				"a{transition:opacity 1s!important;transition:opacity 1s,-webkit-opacity 1s}"
+			],
+			// The later one writes fewer items than the earlier, so it cannot be
+			// writing all of them again.
+			[
+				"the later one is the shorter list",
+				"a{transition:a 1s,b 2s,c 3s;transition:-webkit-a 1s}"
 			]
 		])("declines where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
@@ -3235,6 +3262,48 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			]
 		])("joins the blocks but not the seam where %s", (_name, css, expected) => {
 			expect(minify(css)).toBe(expected);
+		});
+
+		// Nested in a collected block, where the merge sees every sibling at once
+		// rather than holding a window of them back.
+		it.each([
+			[
+				"nothing between writes what the block's own rules do",
+				"@supports (top:0){@media a{i{top:0}}@media b{j{left:0}}@media a{k{right:0}}}",
+				"@supports (top:0){@media a{i{top:0}k{right:0}}@media b{j{left:0}}}"
+			],
+			[
+				"the gap opens no layer this one could be",
+				"@supports (top:0){@layer p{i{top:0}}@media b{j{left:0}}@layer p{k{right:0}}}",
+				"@supports (top:0){@layer p{i{top:0}k{right:0}}@media b{j{left:0}}}"
+			],
+			[
+				"the gap writes more properties, none of them this one's",
+				"@supports (top:0){@media a{i{top:0}}@media b{j{left:0;bottom:0}}@media a{k{right:0}}}",
+				"@supports (top:0){@media a{i{top:0}k{right:0}}@media b{j{left:0;bottom:0}}}"
+			],
+			// A string is not read for what it spells: this one says `right:0`, which
+			// is exactly what the block being moved back writes.
+			[
+				"the gap only names the property inside a string",
+				'@supports (top:0){@media a{i{top:0}}@media b{j{content:"x{right:0}"}}@media a{k{right:0}}}',
+				'@supports (top:0){@media a{i{top:0}k{right:0}}@media b{j{content:"x{right:0}"}}}'
+			]
+		])("joins two nested at-rules across a gap where %s", (_name, css, out) => {
+			expect(minify(css)).toBe(out);
+		});
+
+		it.each([
+			[
+				"a nested rule between them writes the same property",
+				"@supports (top:0){@media a{i{top:0}}@media b{j{top:1px}}@media a{k{top:0}}}"
+			],
+			[
+				"a block of the same layer is nested in the gap",
+				"@supports (top:0){@layer p{i{top:0}}@layer q{@layer p{j{t:0}}}@layer p{k{right:0}}}"
+			]
+		])("keeps two nested at-rules apart where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
 		});
 
 		it.each([
