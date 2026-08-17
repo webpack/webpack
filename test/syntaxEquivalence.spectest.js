@@ -121,15 +121,7 @@ const FILED_WPT_HTML_DEFECTS = new Map([
 	]
 ]);
 
-const FILED_WPT_CSS_DEFECTS = new Map([
-	[
-		// The same defect as `font-family:"Lucida" Grande` below, reached from a
-		// stylesheet: a quoted family beside a bare identifier matches no family
-		// list, and unquoting it makes the engine read one name where it read none.
-		"test/wpt/tools/wave/export/css/result.css",
-		"unquoting a string makes an invalid family list parse"
-	]
-]);
+const FILED_WPT_CSS_DEFECTS = new Map();
 
 // The same, for what webpack's own parser sees over the whole corpus.
 const FILED_WPT_TREE_DEFECTS = new Map();
@@ -138,26 +130,10 @@ const FILED_WPT_TREE_DEFECTS = new Map();
 // the value as written. A printer defect unless the reason says otherwise.
 const FILED_WPT_VALUE_DEFECTS = new Map([
 	[
-		'font-family:"Lucida" Grande, sans-serif',
-		"unquoting a string makes an invalid family list parse"
-	],
-	["grid-row:1.0", "printing `1.0` as `1` makes an invalid <integer> parse"],
-	[
-		"grid-auto-flow:row dense column",
-		"dropping `row` makes an invalid value parse"
-	],
-	["tab-size:0px", "dropping the unit turns a <length> into a <number>"],
-	[
-		"overflow-clip-margin:0px content-box",
-		"dropping the unit changes what the engine computes"
-	],
-	[
-		"overflow-clip-margin:calc(100px - 50px)",
-		"not a printer defect: Chromium echoes the authored `calc()` in the computed value"
-	],
-	[
+		// `calc()` is clamped at computed-value time and a literal is not, so
+		// `oblique calc(100deg)` computes `90deg` where `oblique 100deg` is dropped.
 		"font-style:oblique calc(100deg)",
-		"not a printer defect: Chromium echoes the authored `calc()` in the computed value"
+		"folding a clamped `calc()` to its literal leaves an out-of-range value"
 	],
 	[
 		"animation-timing-function:steps(1, jump-start)",
