@@ -262,6 +262,52 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  syntax-equivalence:
+    needs: basic
+    runs-on: ubuntu-latest
+    # Bounded: a hung Chromium would otherwise hold a runner for the 6h default.
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # This job runs repository-controlled scripts, and the corpus is public.
+          persist-credentials: false
+
+      # Held to both corpora: webpack's own fixtures and the web's. WPT is 161k
+      # files, so it is checked out one commit deep.
+      - name: Check out the WPT corpus
+        run: git submodule update --init --depth 1 test/wpt
+
+      - name: Use Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: lts/*
+          cache: yarn
+
+      - run: yarn --frozen-lockfile
+
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
+      - name: Cache jest result
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .jest-cache
+          key: jest-syntax-equivalence-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-${{ github.sha }}
+          restore-keys: |
+            jest-syntax-equivalence-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
+            jest-syntax-equivalence-${{ runner.os }}-
+
+      - run: yarn cover:syntax-equivalence --ci --cacheDirectory .jest-cache
+
+      - name: Codecov
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          flags: syntax-equivalence
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   css-parsing:
     needs: basic
     runs-on: ubuntu-latest

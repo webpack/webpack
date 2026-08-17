@@ -176,6 +176,16 @@ export default defineConfig([
 		}
 	},
 	{
+		// The equivalence helpers are installed into the page, so they run in the
+		// browser rather than in Node.
+		files: ["test/helpers/syntaxEquivalence.js"],
+		languageOptions: {
+			globals: {
+				...globals.browser
+			}
+		}
+	},
+	{
 		files: ["test/helpers/**/*.{js,cjs,mjs}"],
 		languageOptions: {
 			globals: {

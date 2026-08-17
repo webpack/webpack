@@ -3750,6 +3750,47 @@ describe("parseHtml", () => {
 		expect(/** @type {MatElement} */ (fragment.children[0]).tagName).toBe("p");
 	});
 
+	it("mirrors nothing written inside the <option> itself", () => {
+		const select = body(
+			"<select><button><selectedcontent></button><option>x<selectedcontent>"
+		)[0];
+		// The option is what mirroring reads, so a `<selectedcontent>` written
+		// there stays as authored while the button's takes the clone.
+		const inner = child(
+			child(select.children, "option").children,
+			"selectedcontent"
+		);
+		expect(inner.children).toHaveLength(0);
+		const mirrored = child(
+			child(select.children, "button").children,
+			"selectedcontent"
+		);
+		expect(/** @type {MatText} */ (mirrored.children[0]).data).toBe("x");
+		expect(/** @type {MatElement} */ (mirrored.children[1]).tagName).toBe(
+			"selectedcontent"
+		);
+	});
+
+	it("mirrors a <select> carried into the clone", () => {
+		const select = body(
+			"<select><button><selectedcontent></button><option><template><select><button><selectedcontent></button><option>n</select></template>"
+		)[0];
+		const fragment = /** @type {MatFragment} */ (
+			/** @type {MatElement} */ (
+				child(child(select.children, "button").children, "selectedcontent")
+					.children[0]
+			).templateContent
+		);
+		const cloned = /** @type {MatElement} */ (fragment.children[0]);
+		const mirrored = child(
+			child(cloned.children, "button").children,
+			"selectedcontent"
+		);
+		// The clone is a select of its own, so its `<selectedcontent>` mirrors
+		// there even though the one it was copied from did not.
+		expect(/** @type {MatText} */ (mirrored.children[0]).data).toBe("n");
+	});
+
 	it("should mirror the last selected <option> into <selectedcontent>", () => {
 		const select = body(
 			"<select><button><selectedcontent></button><option>A<option selected>B"
@@ -6490,6 +6531,53 @@ describe("SourceProcessor — printing in pieces", () => {
 			"<div><template><p>a</template></div>"
 		);
 		expect(minify("<template></template>")).toBe("<template></template>");
+	});
+
+	it("drops a last child's end tag only when the parent's puts it back", () => {
+		// "Any other end tag" walks past what is not special, so `</select>` closes
+		// an `<optgroup>` / `<option>` however the parent is spelled.
+		expect(
+			minify("<select><optgroup><option>a</option></optgroup></select>")
+		).toBe("<select><optgroup><option>a</select>");
+		expect(minify("<ruby><rt>a</rt></ruby>")).toBe("<ruby><rt>a</ruby>");
+		// A special one blocks that walk, so it needs a parent whose end tag
+		// generates implied end tags.
+		expect(minify("<div><p>x</p></div>")).toBe("<div><p>x</div>");
+		expect(minify("<canvas><p>x</p></canvas>")).toBe(
+			"<canvas><p>x</p></canvas>"
+		);
+		expect(minify("<my-el><p>x</p></my-el>")).toBe("<my-el><p>x</p></my-el>");
+		// `</template>` closes what is open in the content fragment.
+		expect(minify("<div><template><p>x</p></template></div>")).toBe(
+			"<div><template><p>x</template></div>"
+		);
+	});
+
+	it("drops a ruby segment's end tag only inside a `ruby`", () => {
+		expect(minify("<ruby><rt>a</rt><rt>b</rt></ruby>")).toBe(
+			"<ruby><rt>a<rt>b</ruby>"
+		);
+		// Without one the follower's start tag closes nothing, so this one would
+		// go on to hold it.
+		expect(minify("<div><rt>a</rt><rt>b</rt></div>")).toBe(
+			"<div><rt>a</rt><rt>b</div>"
+		);
+		// A scope marker between the two ends the search, whether it is an element
+		// `ruby` cannot reach past or a content fragment above it.
+		expect(
+			minify("<ruby><table><tr><td><rt>a</rt><rt>b</rt></table></ruby>")
+		).toBe("<ruby><table><tr><td><rt>a</rt><rt>b</table></ruby>");
+		expect(
+			minify("<ruby><template><rt>a</rt><rt>b</rt></template></ruby>")
+		).toBe("<ruby><template><rt>a</rt><rt>b</template></ruby>");
+		// So does leaving HTML: the `ruby` above is in another namespace's subtree.
+		expect(
+			minify(
+				"<ruby><svg><foreignObject><rt>a</rt><rt>b</rt></foreignObject></svg></ruby>"
+			)
+		).toBe(
+			"<ruby><svg><foreignObject><rt>a</rt><rt>b</rt></foreignObject></svg></ruby>"
+		);
 	});
 });
 

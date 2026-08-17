@@ -1,168 +1,65 @@
 "use strict";
 
-const fs = require("fs/promises");
+// The machinery both equivalence suites share: the helpers installed into the
+// page (an engine is the only thing that can say two spellings mean the same),
+// and the comparisons built on what they report. Nothing here knows which
+// corpus it is reading — `configCases` and `test/wpt` go through one path, so
+// an inline `<style>` is held to exactly the same standard as a `.css` file.
+
+const fs = require("fs");
 const path = require("path");
-const { SourceProcessor: CssSourceProcessor } = require("../lib/css/syntax");
-const {
-	EMPTY_REMOVABLE_ATTRIBUTES,
-	ENUMERATED_KEYWORDS
-} = require("../lib/html/data");
-const { SourceProcessor: HtmlSourceProcessor } = require("../lib/html/syntax");
-const launchChrome = require("./helpers/launchChrome");
-
-// The minifiers claim their rewrites are equivalent *to the engine*, which only
-// an engine can confirm: every `configCases` stylesheet and page is minified and
-// both spellings are handed to Chromium, which must build the same document and
-// compute the same style from each. Nothing here is snapshotted — the assertion
-// is the equivalence itself, and the printers' output is snapshotted by the
-// suites that test printing.
-//
-// Nothing is compared as text where the engine can be asked instead: an
-// attribute value is read back through its IDL reflection, a declaration through
-// its computed style, and an at-rule condition through what it answers at every
-// viewport and container size that could tell two conditions apart. The one
-// thing an engine cannot answer for is syntax it does not implement — a property
-// Chromium drops is absent from both stylesheets, so "computes the same style"
-// is undefined for it. Everything else is compared.
-
-const CONFIG_CASES = path.join(__dirname, "configCases");
 
 /** @typedef {{ name: string, raw: string, min: string }} Fixture */
 
+// How many viewport sizes any one condition set is sampled at.
+const MAX_SAMPLED_SIZES = 64;
+
 /**
- * Every fixture of one extension under a directory.
+ * Every fixture of one extension under a directory. Synchronous: jest needs one
+ * test name per fixture while it collects, which is before it can await.
  * @param {string} dir directory to walk
  * @param {string} extension file extension including the dot
- * @returns {Promise<string[]>} sorted fixture paths
+ * @returns {string[]} sorted fixture paths
  */
-const collectFixtures = async (dir, extension) => {
+const collectFixtures = (dir, extension) => {
 	/** @type {string[]} */
 	const files = [];
 	/**
 	 * @param {string} current directory to read
-	 * @returns {Promise<void>} when the subtree has been read
+	 * @returns {void}
 	 */
-	const walk = async (current) => {
-		const entries = await fs.readdir(current, { withFileTypes: true });
-		await Promise.all(
-			entries.map(async (entry) => {
-				const full = path.join(current, entry.name);
-				if (entry.isDirectory()) await walk(full);
-				else if (entry.name.endsWith(extension)) files.push(full);
-			})
-		);
+	const walk = (current) => {
+		for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+			const full = path.join(current, entry.name);
+			if (entry.isDirectory()) walk(full);
+			else if (entry.name.endsWith(extension)) files.push(full);
+		}
 	};
-	await walk(dir);
+	walk(dir);
 	return files.sort();
 };
 
 /**
  * Load fixtures and minify each one on its own — concatenating first would let a
  * deliberately malformed page corrupt every fixture after it.
+ * @param {string} dir directory to read
  * @param {string} extension file extension including the dot
  * @param {(source: string) => string} minify the printer to run
- * @returns {Promise<Fixture[]>} the corpus
+ * @returns {Fixture[]} the corpus
  */
-const buildCorpus = async (extension, minify) => {
-	const files = await collectFixtures(CONFIG_CASES, extension);
-	return Promise.all(
-		files.map(async (file) => {
-			const raw = await fs.readFile(file, "utf8");
-			return {
-				name: path
-					.relative(path.join(__dirname, ".."), file)
-					.replace(/\\/g, "/"),
-				raw,
-				min: minify(raw)
-			};
-		})
-	);
+const buildCorpus = (dir, extension, minify) => {
+	const files = collectFixtures(dir, extension);
+	return files.map((file) => {
+		const raw = fs.readFileSync(file, "utf8");
+		return {
+			name: path
+				.relative(path.join(__dirname, "../.."), file)
+				.replace(/\\/g, "/"),
+			raw,
+			min: minify(raw)
+		};
+	});
 };
-
-/** @type {Fixture[]} */
-let cssCorpus;
-/** @type {Fixture[]} */
-let htmlCorpus;
-/** @type {Fixture[]} */
-let htmlCorpusAllImpliedTags;
-/** @type {Fixture[]} */
-let htmlCorpusSmartTags;
-/** @type {Promise<void> | undefined} */
-let building;
-
-/**
- * Build both corpora once, however many suites ask for them.
- * @returns {Promise<void>} when both are ready
- */
-const buildCorpora = () => {
-	if (building === undefined) {
-		building = (async () => {
-			cssCorpus = await buildCorpus(
-				".css",
-				(source) =>
-					/** @type {{ code: string }} */
-					(new CssSourceProcessor().process(source, { mode: "minify" })).code
-			);
-			// Read once, minified three ways: only the print options differ.
-			const htmlSources = await buildCorpus(".html", (source) => source);
-			/**
-			 * @param {object} options extra print options
-			 * @returns {Fixture[]} the corpus, minified with them
-			 */
-			const htmlVariant = (options) =>
-				htmlSources.map((one) => ({
-					...one,
-					min: /** @type {{ code: string }} */ (
-						new HtmlSourceProcessor().process(one.raw, {
-							mode: "minify",
-							...options
-						})
-					).code
-				}));
-			htmlCorpus = htmlVariant({});
-			// `removeImpliedTags` leaves out a tag the parser puts back, so it is
-			// the one option whose whole claim is that the DOM does not notice.
-			htmlCorpusAllImpliedTags = htmlVariant({ removeImpliedTags: true });
-			htmlCorpusSmartTags = htmlVariant({ removeImpliedTags: "smart" });
-		})();
-	}
-	return building;
-};
-
-// Stylesheets the printer is known to get wrong. Each entry is a filed defect,
-// not a tolerated one, and carries what the engine sees; the comparison below
-// matches this set exactly, so an entry outlives its defect by exactly one run.
-const FILED_CSS_DEFECTS = new Map([
-	[
-		"test/configCases/css/minimize-strings/style.css",
-		"a bad-string stops swallowing the rules after it"
-	],
-	[
-		"test/configCases/css/minimize-urls/style.css",
-		"a bad-url stops swallowing the rules after it"
-	],
-	[
-		"test/configCases/css/parsing/cases/bad-url-token.css",
-		"a bad-url token stops swallowing the rules after it"
-	],
-	[
-		// Not a printer defect: Chrome normalises an escaped custom property in a
-		// declaration name but echoes the authored spelling inside `var()`, so the
-		// shorter `\2d-two` the printer writes reads as different `cssText` from
-		// `\2d\2d two` while naming the one property — both compute the same value.
-		"test/configCases/css/escaped-names/style.module.css",
-		"Chrome echoes the authored escape spelling inside `var()`"
-	],
-	[
-		// Not a printer defect: Chrome drops `attr( name unit )` when a space sits
-		// before the `)` and the type is a bare unit — `attr( name unit)`,
-		// `attr(name  unit)`, `attr( name type(<length>) )` and `attr( name unit, )`
-		// all parse. Trimming that space is right, and leaves the minified sheet
-		// applying a declaration the engine threw away in the original.
-		"test/configCases/css/minimize-lightningcss-values/style.css",
-		"Chrome parses `attr( name unit )` and its trimmed form differently"
-	]
-]);
 
 /**
  * @typedef {{ kind: string, condition: string }} Condition
@@ -176,6 +73,7 @@ const FILED_CSS_DEFECTS = new Map([
  * @property {(html: string) => Facets} htmlFacets everything a page's DOM is made of
  * @property {(conditions: string[], sizes: number[]) => string[]} containerSignatures which sizes each container query holds at
  * @property {(conditions: string[]) => string[]} supportsSignatures whether each support condition holds
+ * @property {(tagName: string, attribute: string, value: string | null) => [string | undefined, unknown]} probeReflection the IDL member an attribute reflects, and its value
  */
 
 /**
@@ -1025,119 +923,151 @@ const installHelpers = () => {
 	const supportsSignatures = (conditions) =>
 		conditions.map((condition) => (CSS.supports(condition) ? "1" : "0"));
 
+	/**
+	 * The IDL member an attribute reflects, and what it reads back. Probed on an
+	 * element the spec defines the attribute for, so a scoped one is read where
+	 * it means something rather than skipped as unknown.
+	 * @param {string} tagName the element to probe on
+	 * @param {string} attribute the attribute name
+	 * @param {string | null} value the value to set, or null to leave it absent
+	 * @returns {[string | undefined, unknown]} the IDL member and its value
+	 */
+	const probeReflection = (tagName, attribute, value) => {
+		const node = document.createElement(tagName);
+		if (value !== null) node.setAttribute(attribute, value);
+		document.body.append(node);
+		const property = reflectionOf(node, attribute);
+		const reflected =
+			property === undefined
+				? undefined
+				: /** @type {Record<string, unknown>} */ (
+						/** @type {unknown} */ (node)
+					)[property];
+		node.remove();
+		return [property, reflected];
+	};
+
 	/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window)).__eq =
 		{
 			cssRules,
 			htmlFacets,
 			containerSignatures,
-			supportsSignatures
+			supportsSignatures,
+			probeReflection
 		};
 };
 
-describe("printer output in real Chrome", () => {
-	/** @type {import("puppeteer-core").Browser} */
-	let browser;
-	/** @type {import("puppeteer-core").Page} */
-	let page;
+/**
+ * What the engine makes of every at-rule condition in a set of rules. A
+ * condition is not compared as text: `(min-width: 200px)` and
+ * `(width >= 200px)` are one query written two ways, and the spec says so, so
+ * the engine is asked instead — a media query at every viewport that could
+ * tell two of them apart, a container query at every container size, a
+ * support condition outright. Two conditions that answer alike everywhere are
+ * the same condition.
+ * @param {import("puppeteer-core").Page} page the page to ask
+ * @param {Rule[][]} groups every rule list to be compared
+ * @returns {Promise<Map<string, string>>} condition to what the engine answers
+ */
+const conditionSignatures = async (page, groups) => {
+	/** @type {Map<string, Set<string>>} */
+	const byKind = new Map();
+	for (const rules of groups) {
+		for (const rule of rules) {
+			for (const { kind, condition } of rule.chain) {
+				if (!byKind.has(kind)) byKind.set(kind, new Set());
+				/** @type {Set<string>} */ (byKind.get(kind)).add(condition);
+			}
+		}
+	}
+	/** @type {Map<string, string>} */
+	const signatures = new Map();
+	// Sample either side of every length any condition names, so a threshold
+	// that moved by one pixel separates them.
+	const edges = new Set([1, 200, 400, 600, 800, 1024]);
+	for (const conditions of byKind.values()) {
+		for (const condition of conditions) {
+			for (const [number] of condition.matchAll(/\d+(?:\.\d+)?/g)) {
+				const value = Math.round(Number(number));
+				// Bounded: each size costs two round trips per condition, and past a
+				// point the trips cost more than the separation they buy. Clamped: a
+				// viewport of width 0 is not a sample point.
+				// Room for the whole triplet, so the cap is never stepped over.
+				if (value > 0 && value < 10000 && edges.size <= MAX_SAMPLED_SIZES - 3) {
+					edges
+						.add(Math.max(1, value - 1))
+						.add(value)
+						.add(value + 1);
+				}
+			}
+		}
+	}
+	const sizes = [...edges].sort((a, b) => a - b);
 
-	beforeAll(async () => {
-		await buildCorpora();
-		// The whole corpus is compared in one call per language.
-		browser = await launchChrome({ protocolTimeout: 300000 });
-		page = await browser.newPage();
-		await page.setContent(
-			"<!doctype html><html><head></head><body></body></html>"
+	const supports = [...(byKind.get("supports") || [])];
+	if (supports.length > 0) {
+		const answers = await page.evaluate(
+			(conditions) =>
+				/** @type {{ __eq: PageHelpers }} */ (
+					/** @type {unknown} */ (window)
+				).__eq.supportsSignatures(conditions),
+			supports
 		);
-		await page.evaluate(installHelpers);
-	}, 300000);
-
-	afterAll(async () => {
-		if (browser) await browser.close();
-	});
-
-	/**
-	 * What the engine makes of every at-rule condition in a set of rules. A
-	 * condition is not compared as text: `(min-width: 200px)` and
-	 * `(width >= 200px)` are one query written two ways, and the spec says so, so
-	 * the engine is asked instead — a media query at every viewport that could
-	 * tell two of them apart, a container query at every container size, a
-	 * support condition outright. Two conditions that answer alike everywhere are
-	 * the same condition.
-	 * @param {Rule[][]} groups every rule list to be compared
-	 * @returns {Promise<Map<string, string>>} condition to what the engine answers
-	 */
-	const conditionSignatures = async (groups) => {
-		/** @type {Map<string, Set<string>>} */
-		const byKind = new Map();
-		for (const rules of groups) {
-			for (const rule of rules) {
-				for (const { kind, condition } of rule.chain) {
-					if (!byKind.has(kind)) byKind.set(kind, new Set());
-					/** @type {Set<string>} */ (byKind.get(kind)).add(condition);
-				}
-			}
+		for (const [i, condition] of supports.entries()) {
+			signatures.set(`supports ${condition}`, answers[i]);
 		}
-		/** @type {Map<string, string>} */
-		const signatures = new Map();
-		// Sample either side of every length any condition names, so a threshold
-		// that moved by one pixel separates them.
-		const edges = new Set([1, 200, 400, 600, 800, 1024]);
-		for (const conditions of byKind.values()) {
-			for (const condition of conditions) {
-				for (const [number] of condition.matchAll(/\d+(?:\.\d+)?/g)) {
-					const value = Math.round(Number(number));
-					if (value > 0 && value < 10000) {
-						edges
-							.add(value - 1)
-							.add(value)
-							.add(value + 1);
-					}
-				}
-			}
-		}
-		const sizes = [...edges].sort((a, b) => a - b);
+	}
 
-		const supports = [...(byKind.get("supports") || [])];
-		if (supports.length > 0) {
+	const containers = [...(byKind.get("container") || [])];
+	if (containers.length > 0) {
+		const answers = await page.evaluate(
+			(conditions, at) =>
+				/** @type {{ __eq: PageHelpers }} */ (
+					/** @type {unknown} */ (window)
+				).__eq.containerSignatures(conditions, at),
+			containers,
+			sizes
+		);
+		for (const [i, condition] of containers.entries()) {
+			signatures.set(`container ${condition}`, answers[i]);
+		}
+	}
+
+	const media = [...(byKind.get("media") || [])];
+	if (media.length > 0) {
+		/** @type {string[]} */
+		const bits = media.map(() => "");
+		/** @type {{ width: number, height: number }[]} */
+		const viewports = [];
+		for (const size of sizes) {
+			viewports.push({ width: size, height: 600 });
+			viewports.push({ width: 600, height: size });
+		}
+		for (const viewport of viewports) {
+			await page.setViewport(viewport);
 			const answers = await page.evaluate(
 				(conditions) =>
-					/** @type {{ __eq: PageHelpers }} */ (
-						/** @type {unknown} */ (window)
-					).__eq.supportsSignatures(conditions),
-				supports
+					conditions.map((condition) =>
+						matchMedia(condition).matches ? "1" : "0"
+					),
+				media
 			);
-			for (const [i, condition] of supports.entries()) {
-				signatures.set(`supports ${condition}`, answers[i]);
-			}
+			for (const [i, bit] of answers.entries()) bits[i] += bit;
 		}
-
-		const containers = [...(byKind.get("container") || [])];
-		if (containers.length > 0) {
-			const answers = await page.evaluate(
-				(conditions, at) =>
-					/** @type {{ __eq: PageHelpers }} */ (
-						/** @type {unknown} */ (window)
-					).__eq.containerSignatures(conditions, at),
-				containers,
-				sizes
-			);
-			for (const [i, condition] of containers.entries()) {
-				signatures.set(`container ${condition}`, answers[i]);
-			}
-		}
-
-		const media = [...(byKind.get("media") || [])];
-		if (media.length > 0) {
-			/** @type {string[]} */
-			const bits = media.map(() => "");
-			/** @type {{ width: number, height: number }[]} */
-			const viewports = [];
-			for (const size of sizes) {
-				viewports.push({ width: size, height: 600 });
-				viewports.push({ width: 600, height: size });
-			}
-			for (const viewport of viewports) {
-				await page.setViewport(viewport);
+		// Dimensions no viewport can vary: the media type and the user's stated
+		// preferences.
+		await page.setViewport({ width: 800, height: 600 });
+		/** @type {import("puppeteer-core").MediaFeature[][]} */
+		const featureSets = [
+			[{ name: "prefers-color-scheme", value: "dark" }],
+			[{ name: "prefers-color-scheme", value: "light" }],
+			[{ name: "prefers-reduced-motion", value: "reduce" }],
+			[{ name: "color-gamut", value: "p3" }]
+		];
+		for (const type of ["screen", "print"]) {
+			for (const features of [[], ...featureSets]) {
+				await page.emulateMediaType(type);
+				await page.emulateMediaFeatures(features);
 				const answers = await page.evaluate(
 					(conditions) =>
 						conditions.map((condition) =>
@@ -1147,482 +1077,173 @@ describe("printer output in real Chrome", () => {
 				);
 				for (const [i, bit] of answers.entries()) bits[i] += bit;
 			}
-			// Dimensions no viewport can vary: the media type and the user's stated
-			// preferences.
-			await page.setViewport({ width: 800, height: 600 });
-			/** @type {import("puppeteer-core").MediaFeature[][]} */
-			const featureSets = [
-				[{ name: "prefers-color-scheme", value: "dark" }],
-				[{ name: "prefers-color-scheme", value: "light" }],
-				[{ name: "prefers-reduced-motion", value: "reduce" }],
-				[{ name: "color-gamut", value: "p3" }]
-			];
-			for (const type of ["screen", "print"]) {
-				for (const features of [[], ...featureSets]) {
-					await page.emulateMediaType(type);
-					await page.emulateMediaFeatures(features);
-					const answers = await page.evaluate(
-						(conditions) =>
-							conditions.map((condition) =>
-								matchMedia(condition).matches ? "1" : "0"
-							),
-						media
-					);
-					for (const [i, bit] of answers.entries()) bits[i] += bit;
-				}
-			}
-			await page.emulateMediaType(undefined);
-			await page.emulateMediaFeatures([]);
-			for (const [i, condition] of media.entries()) {
-				signatures.set(`media ${condition}`, bits[i]);
-			}
 		}
-		return signatures;
-	};
-
-	// A `data:` URL as serialized by the CSSOM: its metadata, then the payload.
-	const DATA_URL_REGEXP = /url\("(data:[^,"]*,)((?:[^"\\]|\\.)*)"\)/gi;
-
-	/**
-	 * Two spellings of one data URI are the same URL — the parser decodes the
-	 * payload's escapes before anything reads it, so `%3D` and `=` name the same
-	 * byte. Read both sides decoded so the difference is not a difference.
-	 * @param {string} text a rule's text
-	 * @returns {string} it, with every data URI's payload decoded
-	 */
-	const decodeDataUrls = (text) =>
-		text.replace(DATA_URL_REGEXP, (whole, metadata, payload) => {
-			try {
-				return `url("${metadata}${decodeURIComponent(payload)}")`;
-			} catch (_err) {
-				return whole;
-			}
-		});
-
-	/**
-	 * A rule as the conditions it really holds under and the style it really
-	 * computes to.
-	 * @param {Rule} rule a rule
-	 * @param {Map<string, string>} signatures what the engine answers per condition
-	 * @returns {string} its key
-	 */
-	const keyOf = (rule, signatures) =>
-		`${rule.chain
-			.map(({ kind, condition }) => {
-				const answer = signatures.get(`${kind} ${condition}`);
-				if (answer !== undefined) return `@${kind}<${answer}>`;
-				// A nested rule holds under its parent's selector list, which is a set
-				// like its own — the printer may have sorted it.
-				return `@${kind}<${
-					kind === "style" ? sortedSelectorList(condition) : condition
-				}>`;
-			})
-			.join(" >> ")} ${decodeDataUrls(rule.text)}`;
-
-	/**
-	 * @param {string} list a selector list
-	 * @returns {string} it in one order, a repeat dropped
-	 */
-	const sortedSelectorList = (list) =>
-		[...new Set(splitSelectorList(list))].sort().join(", ");
-
-	/**
-	 * Split a selector list on its own commas — not the ones inside `:is(…)`, an
-	 * attribute value or a string.
-	 * @param {string} list a selector list
-	 * @returns {string[]} its selectors
-	 */
-	const splitSelectorList = (list) => {
-		const out = [];
-		let depth = 0;
-		let quote = "";
-		let from = 0;
-		for (let i = 0; i < list.length; i++) {
-			const c = list[i];
-			// An escape carries its next code point whatever it is — `.\:\)` ends in
-			// a `)` that closes nothing.
-			if (c === "\\") {
-				i++;
-			} else if (quote !== "") {
-				if (c === quote) quote = "";
-			} else if (c === '"' || c === "'") {
-				quote = c;
-			} else if (c === "(" || c === "[") {
-				depth++;
-			} else if (c === ")" || c === "]") {
-				depth--;
-			} else if (c === "," && depth === 0) {
-				out.push(list.slice(from, i).trim());
-				from = i + 1;
-			}
+		await page.emulateMediaType(undefined);
+		await page.emulateMediaFeatures([]);
+		for (const [i, condition] of media.entries()) {
+			signatures.set(`media ${condition}`, bits[i]);
 		}
-		out.push(list.slice(from).trim());
-		return out;
-	};
+	}
+	return signatures;
+};
 
+// A `data:` URL as serialized by the CSSOM: its metadata, then the payload.
+const DATA_URL_REGEXP = /url\("(data:[^,"]*,)((?:[^"\\]|\\.)*)"\)/gi;
+
+/**
+ * Two spellings of one data URI are the same URL — the parser decodes the
+ * payload's escapes before anything reads it, so `%3D` and `=` name the same
+ * byte. Read both sides decoded so the difference is not a difference.
+ * @param {string} text a rule's text
+ * @returns {string} it, with every data URI's payload decoded
+ */
+const decodeDataUrls = (text) =>
+	text.replace(DATA_URL_REGEXP, (whole, metadata, payload) => {
+		try {
+			return `url("${metadata}${decodeURIComponent(payload)}")`;
+		} catch (_err) {
+			return whole;
+		}
+	});
+
+/**
+ * A rule as the conditions it really holds under and the style it really
+ * computes to.
+ * @param {Rule} rule a rule
+ * @param {Map<string, string>} signatures what the engine answers per condition
+ * @returns {string} its key
+ */
+const keyOf = (rule, signatures) =>
+	`${rule.chain
+		.map(({ kind, condition }) => {
+			const answer = signatures.get(`${kind} ${condition}`);
+			if (answer !== undefined) return `@${kind}<${answer}>`;
+			// A nested rule holds under its parent's selector list, which is a set
+			// like its own — the printer may have sorted it.
+			return `@${kind}<${
+				kind === "style" ? sortedSelectorList(condition) : condition
+			}>`;
+		})
+		.join(" >> ")} ${decodeDataUrls(rule.text)}`;
+
+/**
+ * @param {string} list a selector list
+ * @returns {string} it in one order, a repeat dropped
+ */
+const sortedSelectorList = (list) =>
+	[...new Set(splitSelectorList(list))].sort().join(", ");
+
+/**
+ * Split a selector list on its own commas — not the ones inside `:is(…)`, an
+ * attribute value or a string.
+ * @param {string} list a selector list
+ * @returns {string[]} its selectors
+ */
+const splitSelectorList = (list) => {
+	const out = [];
+	let depth = 0;
+	let quote = "";
+	let from = 0;
+	for (let i = 0; i < list.length; i++) {
+		const c = list[i];
+		// An escape carries its next code point whatever it is — `.\:\)` ends in
+		// a `)` that closes nothing.
+		if (c === "\\") {
+			i++;
+		} else if (quote !== "") {
+			if (c === quote) quote = "";
+		} else if (c === '"' || c === "'") {
+			quote = c;
+		} else if (c === "(" || c === "[") {
+			depth++;
+		} else if (c === ")" || c === "]") {
+			depth--;
+		} else if (c === "," && depth === 0) {
+			out.push(list.slice(from, i).trim());
+			from = i + 1;
+		}
+	}
+	out.push(list.slice(from).trim());
+	return out;
+};
+
+/**
+ * One entry per selector, because the printer joins adjacent rules computing
+ * the same style into one list. Each still carries its own computed style and
+ * its place in the cascade, so a lost or reordered selector fails.
+ * @param {Rule[]} rules rules in cascade order
+ * @returns {Rule[]} the same, one selector each
+ */
+const perSelector = (rules) =>
+	rules.flatMap((rule) => {
+		// `@import` and friends are compared as written, with no `label { … }`.
+		const at = rule.text.indexOf(" { ");
+		if (at === -1) return [rule];
+		const selectors = splitSelectorList(rule.text.slice(0, at));
+		if (selectors.length < 2) return [rule];
+		const block = rule.text.slice(at);
+		return selectors.map((one) => ({ chain: rule.chain, text: one + block }));
+	});
+
+/**
+ * @param {Rule[]} before the source's rules
+ * @param {Rule[]} after the minified rules
+ * @param {Map<string, string>} signatures what the engine answers per condition
+ * @returns {string} why they differ, or "" when they do not
+ */
+const compareRules = (before, after, signatures) => {
 	/**
-	 * One entry per selector, because the printer joins adjacent rules computing
-	 * the same style into one list. Each still carries its own computed style and
-	 * its place in the cascade, so a lost or reordered selector fails.
+	 * @param {string} text a rule's `selector { … }`
+	 * @returns {string} the block alone, or the whole text when it has none
+	 */
+	const blockOf = (text) => {
+		const at = text.indexOf(" { ");
+		return at === -1 ? text : text.slice(at);
+	};
+	// The same selector twice in a row computing the same style is the one rule
+	// it resolves to, which is what joining them into a list leaves.
+	/**
 	 * @param {Rule[]} rules rules in cascade order
-	 * @returns {Rule[]} the same, one selector each
+	 * @returns {string[]} their keys, an adjacent repeat collapsed
 	 */
-	const perSelector = (rules) =>
-		rules.flatMap((rule) => {
-			// `@import` and friends are compared as written, with no `label { … }`.
-			const at = rule.text.indexOf(" { ");
-			if (at === -1) return [rule];
-			const selectors = splitSelectorList(rule.text.slice(0, at));
-			if (selectors.length < 2) return [rule];
-			const block = rule.text.slice(at);
-			return selectors.map((one) => ({ chain: rule.chain, text: one + block }));
-		});
-
-	/**
-	 * @param {Rule[]} before the source's rules
-	 * @param {Rule[]} after the minified rules
-	 * @param {Map<string, string>} signatures what the engine answers per condition
-	 * @returns {string} why they differ, or "" when they do not
-	 */
-	const compareRules = (before, after, signatures) => {
-		/**
-		 * @param {string} text a rule's `selector { … }`
-		 * @returns {string} the block alone, or the whole text when it has none
-		 */
-		const blockOf = (text) => {
-			const at = text.indexOf(" { ");
-			return at === -1 ? text : text.slice(at);
-		};
-		// The same selector twice in a row computing the same style is the one rule
-		// it resolves to, which is what joining them into a list leaves.
-		/**
-		 * @param {Rule[]} rules rules in cascade order
-		 * @returns {string[]} their keys, an adjacent repeat collapsed
-		 */
-		const keys = (rules) => {
-			const flat = perSelector(rules).map((rule) => ({
-				key: keyOf(rule, signatures),
-				// Everything but the selector: two entries sharing it are one rule's
-				// worth of cascade, whichever of them is written first.
-				group: keyOf(
-					{ chain: rule.chain, text: blockOf(rule.text) },
-					signatures
-				)
-			}));
-			// A run of selectors reaching one block under one condition is the set a
-			// join may write in any order, so it is compared in one order.
-			for (let from = 0; from < flat.length;) {
-				let to = from + 1;
-				while (to < flat.length && flat[to].group === flat[from].group) to++;
-				if (to - from > 1) {
-					const sorted = flat
-						.slice(from, to)
-						.sort((one, other) => (one.key < other.key ? -1 : 1));
-					for (let i = from; i < to; i++) flat[i] = sorted[i - from];
-				}
-				from = to;
+	const keys = (rules) => {
+		const flat = perSelector(rules).map((rule) => ({
+			key: keyOf(rule, signatures),
+			// Everything but the selector: two entries sharing it are one rule's
+			// worth of cascade, whichever of them is written first.
+			group: keyOf({ chain: rule.chain, text: blockOf(rule.text) }, signatures)
+		}));
+		// A run of selectors reaching one block under one condition is the set a
+		// join may write in any order, so it is compared in one order.
+		for (let from = 0; from < flat.length;) {
+			let to = from + 1;
+			while (to < flat.length && flat[to].group === flat[from].group) to++;
+			if (to - from > 1) {
+				const sorted = flat
+					.slice(from, to)
+					.sort((one, other) => (one.key < other.key ? -1 : 1));
+				for (let i = from; i < to; i++) flat[i] = sorted[i - from];
 			}
-			return flat
-				.map(({ key }) => key)
-				.filter((key, i, all) => i === 0 || key !== all[i - 1]);
-		};
-		const a = keys(before);
-		const b = keys(after);
-		const shorter = Math.min(a.length, b.length);
-		const at = a.slice(0, shorter).findIndex((key, i) => key !== b[i]);
-		if (at !== -1) return `rule ${at}: ${a[at]} vs ${b[at]}`;
-		if (a.length > b.length) return `rule dropped: ${a[shorter]}`;
-		if (b.length > a.length) return `rule added: ${b[shorter]}`;
-		return "";
+			from = to;
+		}
+		return flat
+			.map(({ key }) => key)
+			.filter((key, i, all) => i === 0 || key !== all[i - 1]);
 	};
+	const a = keys(before);
+	const b = keys(after);
+	const shorter = Math.min(a.length, b.length);
+	const at = a.slice(0, shorter).findIndex((key, i) => key !== b[i]);
+	if (at !== -1) return `rule ${at}: ${a[at]} vs ${b[at]}`;
+	if (a.length > b.length) return `rule dropped: ${a[shorter]}`;
+	if (b.length > a.length) return `rule added: ${b[shorter]}`;
+	return "";
+};
 
-	it("should build the same DOM from a page and its minified form", async () => {
-		const collected = await page.evaluate((cases) => {
-			const { htmlFacets } = /** @type {{ __eq: PageHelpers }} */ (
-				/** @type {unknown} */ (window)
-			).__eq;
-			return cases.map((one) => ({
-				name: one.name,
-				before: htmlFacets(one.raw),
-				after: htmlFacets(one.min)
-			}));
-		}, htmlCorpus);
-		const signatures = await conditionSignatures(
-			collected.flatMap((one) => [...one.before.styles, ...one.after.styles])
-		);
-		/** @type {{ name: string, why: string }[]} */
-		const differences = [];
-		for (const { name, before, after } of collected) {
-			let why = "";
-			for (const facet of Object.keys(before.facets)) {
-				const a = before.facets[facet];
-				const b = after.facets[facet];
-				// A comment renders nothing, so the minifier may drop one; the ones it
-				// keeps must be unchanged and still in order.
-				if (facet === "comments") {
-					let from = 0;
-					for (const comment of b) {
-						const at = a.indexOf(comment, from);
-						if (at === -1) {
-							why = `comment is not one of the source's: ${comment}`;
-							break;
-						}
-						from = at + 1;
-					}
-					if (why !== "") break;
-					continue;
-				}
-				if (a.length !== b.length) {
-					why = `${facet}: ${a.length} vs ${b.length}`;
-					break;
-				}
-				const at = a.findIndex((entry, i) => entry !== b[i]);
-				if (at !== -1) {
-					why = `${facet} ${at}: ${a[at]} vs ${b[at]}`;
-					break;
-				}
-			}
-			if (why === "" && before.styles.length !== after.styles.length) {
-				why = `styles: ${before.styles.length} vs ${after.styles.length}`;
-			}
-			for (let i = 0; why === "" && i < before.styles.length; i++) {
-				const reason = compareRules(
-					before.styles[i],
-					after.styles[i],
-					signatures
-				);
-				if (reason !== "") why = `style ${i}: ${reason}`;
-			}
-			if (why !== "") differences.push({ name, why });
-		}
-		// Every part of the document the engine builds — the element tree, the
-		// rendered text, the comments, the doctype, and the CSS, JSON and script
-		// bodies carried inside it — must survive minification unchanged.
-		expect(differences).toEqual([]);
-	}, 600000);
-
-	it.each([
-		["true", () => htmlCorpusAllImpliedTags],
-		["smart", () => htmlCorpusSmartTags]
-	])(
-		"should build the same DOM with removeImpliedTags %s",
-		async (_mode, corpus) => {
-			const collected = await page.evaluate((cases) => {
-				const { htmlFacets } = /** @type {{ __eq: PageHelpers }} */ (
-					/** @type {unknown} */ (window)
-				).__eq;
-				return cases.map((one) => ({
-					name: one.name,
-					before: htmlFacets(one.raw).facets,
-					after: htmlFacets(one.min).facets
-				}));
-			}, corpus());
-			/** @type {{ name: string, why: string }[]} */
-			const differences = [];
-			for (const { name, before, after } of collected) {
-				for (const facet of Object.keys(before)) {
-					// A comment the minifier drops is dropped whatever the option says,
-					// and the default-mode test above already holds it to that.
-					if (facet === "comments") continue;
-					const a = before[facet];
-					const b = after[facet];
-					if (a.length !== b.length) {
-						differences.push({
-							name,
-							why: `${facet}: ${a.length} vs ${b.length}`
-						});
-						break;
-					}
-					const at = a.findIndex((entry, i) => entry !== b[i]);
-					if (at !== -1) {
-						differences.push({
-							name,
-							why: `${facet} ${at}: ${a[at]} vs ${b[at]}`
-						});
-						break;
-					}
-				}
-			}
-			// The tags this leaves out are the ones the parser puts back, so the tree
-			// it builds — and every element's depth in it — must be untouched.
-			expect(differences).toEqual([]);
-		},
-		600000
-	);
-
-	it("should only fold enumerated values the engine folds too", async () => {
-		// The printer lower-cases a value in `ENUMERATED_KEYWORDS`. That is
-		// unobservable exactly where the IDL member is "limited to only known
-		// values", so it hands back one spelling whichever was written — which no
-		// dataset states, and `target` / `<textarea wrap>` reflect verbatim. The
-		// corpus only covers the entries a fixture happens to carry; this covers
-		// every one of them.
-		/** @type {Record<string, Record<string, string[]>>} */
-		const table = {};
-		for (const [element, attributes] of Object.entries(ENUMERATED_KEYWORDS)) {
-			table[element] = {};
-			for (const [attribute, keywords] of Object.entries(attributes)) {
-				table[element][attribute] = [...keywords];
-			}
-		}
-		const unfolded = await page.evaluate((cases) => {
-			/**
-			 * @param {string} element tag name
-			 * @param {string} attribute attribute name
-			 * @param {string} value the value to set
-			 * @returns {[string | undefined, unknown]} the IDL member and what it reads back
-			 */
-			const readBack = (element, attribute, value) => {
-				const node = document.createElement(element);
-				node.setAttribute(attribute, value);
-				document.body.append(node);
-				/** @type {string | undefined} */
-				let property;
-				for (
-					let proto = Object.getPrototypeOf(node);
-					proto !== null && property === undefined;
-					proto = Object.getPrototypeOf(proto)
-				) {
-					for (const name of Object.getOwnPropertyNames(proto)) {
-						if (name.toLowerCase() === attribute) {
-							property = name;
-							break;
-						}
-					}
-				}
-				const reflected =
-					property === undefined
-						? undefined
-						: /** @type {Record<string, unknown>} */ (
-								/** @type {unknown} */ (node)
-							)[property];
-				node.remove();
-				return [property, reflected];
-			};
-			/** @type {string[]} */
-			const out = [];
-			for (const [element, attributes] of Object.entries(cases)) {
-				for (const [attribute, keywords] of Object.entries(attributes)) {
-					for (const keyword of keywords) {
-						// A keyword with no lower case to fold cannot be respelled.
-						if (keyword === keyword.toUpperCase()) continue;
-						// A global attribute is read on an element that reflects it; one
-						// no element does (`referrerpolicy` on a `<div>`) is inert there.
-						const on = element === "*" ? "a" : element;
-						const [property, folded] = readBack(on, attribute, keyword);
-						if (property === undefined) continue;
-						const [, written] = readBack(on, attribute, keyword.toUpperCase());
-						if (written !== folded) {
-							out.push(
-								`${element} ${attribute}=${keyword}: ${JSON.stringify(
-									written
-								)} vs ${JSON.stringify(folded)}`
-							);
-						}
-					}
-				}
-			}
-			return out;
-		}, table);
-		expect(unfolded).toEqual([]);
-	}, 600000);
-
-	it("should only drop an empty attribute the engine reads back as absent", async () => {
-		// `removeEmptyAttributes` drops each of these when its value is empty. That
-		// is unobservable only where the IDL member reads the same as with no
-		// attribute at all — which is why an event handler is not in the table:
-		// an empty body still compiles, so it reads back a function, not null.
-		// A global is read on `<a>`, as every one of them was before the table
-		// carried a scope; a scoped one on each element it names.
-		/** @type {[string, string[]][]} */
-		const probes = [];
-		for (const [name, on] of EMPTY_REMOVABLE_ATTRIBUTES) {
-			probes.push([name, on === null ? ["a"] : [...on]]);
-		}
-		const observable = await page.evaluate((pairs) => {
-			/**
-			 * @param {string} tagName the element to read it on
-			 * @param {string} attribute the attribute name
-			 * @param {boolean} set whether to give it the empty value
-			 * @returns {[string | undefined, unknown]} the IDL member and its value
-			 */
-			const readBack = (tagName, attribute, set) => {
-				// Read on an element the spec defines it for, so a scoped attribute
-				// is probed where it means something rather than skipped as unknown.
-				const node = document.createElement(tagName);
-				if (set) node.setAttribute(attribute, "");
-				document.body.append(node);
-				/** @type {string | undefined} */
-				let property;
-				for (
-					let proto = Object.getPrototypeOf(node);
-					proto !== null && property === undefined;
-					proto = Object.getPrototypeOf(proto)
-				) {
-					for (const name of Object.getOwnPropertyNames(proto)) {
-						if (name.toLowerCase() === attribute) {
-							property = name;
-							break;
-						}
-					}
-				}
-				const reflected =
-					property === undefined
-						? undefined
-						: /** @type {Record<string, unknown>} */ (
-								/** @type {unknown} */ (node)
-							)[property];
-				node.remove();
-				return [property, String(reflected)];
-			};
-			/** @type {string[]} */
-			const out = [];
-			for (const [name, elements] of pairs) {
-				for (const tagName of elements) {
-					const [property, empty] = readBack(tagName, name, true);
-					if (property === undefined) continue;
-					const [, absent] = readBack(tagName, name, false);
-					if (empty !== absent) {
-						out.push(`${tagName}[${name}]: ${empty} vs ${absent}`);
-					}
-				}
-			}
-			return out;
-		}, probes);
-		expect(observable).toEqual([]);
-	}, 600000);
-
-	it("should build the same CSSOM from a stylesheet and its minified form", async () => {
-		const collected = await page.evaluate((cases) => {
-			const { cssRules } = /** @type {{ __eq: PageHelpers }} */ (
-				/** @type {unknown} */ (window)
-			).__eq;
-			return cases.map((one) => ({
-				name: one.name,
-				before: cssRules(one.raw),
-				after: cssRules(one.min)
-			}));
-		}, cssCorpus);
-		const signatures = await conditionSignatures(
-			collected.flatMap((one) => [one.before || [], one.after || []])
-		);
-		/** @type {{ name: string, why: string }[]} */
-		const differences = [];
-		for (const { name, before, after } of collected) {
-			if (before === null || after === null) {
-				differences.push({ name, why: "stylesheet did not parse" });
-				continue;
-			}
-			const why = compareRules(before, after, signatures);
-			if (why !== "") differences.push({ name, why });
-		}
-		// The same rules, in the same cascade order, under conditions the engine
-		// answers alike, each computing to the same style — except where the
-		// printer is known to be wrong and the defect is filed. The comparison is
-		// exact in both directions: a new difference fails, and so does a filed one
-		// that has been fixed, which is what takes its entry back out of here.
-		expect(differences.map((one) => one.name).sort()).toEqual(
-			[...FILED_CSS_DEFECTS.keys()].sort()
-		);
-	}, 600000);
-});
+module.exports = {
+	buildCorpus,
+	collectFixtures,
+	compareRules,
+	conditionSignatures,
+	installHelpers
+};

@@ -66,10 +66,11 @@
     "test:integration:b": "yarn test:base --testMatch \"<rootDir>/test/*.longtest.js\"",
     "test:test262": "yarn test:base --testMatch \"<rootDir>/test/test262.spectest.js\"",
     "test:html5lib": "yarn test:base --testMatch \"<rootDir>/test/html5lib.spectest.js\"",
+    "test:syntax-equivalence": "yarn test:base --testMatch \"<rootDir>/test/syntaxEquivalence.spectest.js\"",
     "test:css-parsing": "yarn test:base --testMatch \"<rootDir>/test/cssParsing-webpack.spectest.js\"",
-    "test:deno": "yarn test:base:deno --reporters default --reporters \"<rootDir>/test/runtimeCrashReporter.js\" --testMatch \"<rootDir>/test/*.{basictest,longtest,test,unittest}.js\" --testPathIgnorePatterns \"/node_modules/\" \"(ProfilingPlugin[.]unittest|SyntaxBrowserEquivalence|WebpackDevServer)\"",
+    "test:deno": "yarn test:base:deno --reporters default --reporters \"<rootDir>/test/runtimeCrashReporter.js\" --testMatch \"<rootDir>/test/*.{basictest,longtest,test,unittest}.js\" --testPathIgnorePatterns \"/node_modules/\" \"(ProfilingPlugin[.]unittest|WebpackDevServer)\"",
     "test:base:deno": "deno --allow-read --allow-env --allow-sys --allow-ffi --allow-write --allow-run --allow-net --import-map=test/deno-import-map.json --v8-flags='--max-old-space-size=4096' ./node_modules/jest-cli/bin/jest.js --workerIdleMemoryLimit=512MB --logHeapUsage",
-    "test:bun": "yarn test:base:bun --reporters default --reporters \"<rootDir>/test/runtimeCrashReporter.js\" --testMatch \"<rootDir>/test/*.{basictest,longtest,test,unittest}.js\" --testPathIgnorePatterns \"/node_modules/\" \"(ProfilingPlugin[.]unittest|SyntaxBrowserEquivalence|WebpackDevServer)\"",
+    "test:bun": "yarn test:base:bun --reporters default --reporters \"<rootDir>/test/runtimeCrashReporter.js\" --testMatch \"<rootDir>/test/*.{basictest,longtest,test,unittest}.js\" --testPathIgnorePatterns \"/node_modules/\" \"(ProfilingPlugin[.]unittest|WebpackDevServer)\"",
     "test:base:bun": "bun --bun --smol --preload ./test/bun-preload.js ./node_modules/jest-cli/bin/jest.js --workerThreads --workerIdleMemoryLimit=2048MB --logHeapUsage",
     "test:update-snapshots": "yarn test:base -u",
     "test:size": "node --max-old-space-size=4096 ./test/CodeSizeTestCases.size.js",
@@ -88,6 +89,7 @@
     "cover:integration:b": "yarn cover:base --testMatch \"<rootDir>/test/*.longtest.js\" --coverage",
     "cover:test262": "yarn cover:base --testMatch \"<rootDir>/test/test262.spectest.js\" --coverage",
     "cover:html5lib": "yarn cover:base --testMatch \"<rootDir>/test/html5lib.spectest.js\" --coverage",
+    "cover:syntax-equivalence": "yarn cover:base --testMatch \"<rootDir>/test/syntaxEquivalence.spectest.js\" --coverage",
     "cover:css-parsing": "yarn cover:base --testMatch \"<rootDir>/test/cssParsing-webpack.spectest.js\" --coverage"
   },
   "lint-staged": {
