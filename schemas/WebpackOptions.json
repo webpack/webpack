@@ -5341,6 +5341,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "circularDependencies": {
+          "description": "Report groups of modules that import each other synchronously.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "duplicateModules": {
           "description": "Report modules emitted into more than one chunk, and the bytes the extra copies cost.",
           "type": "boolean",
