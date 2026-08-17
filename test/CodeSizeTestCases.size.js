@@ -57,6 +57,23 @@ const prepareOptions = require("./helpers/prepareOptions");
  */
 
 /**
+ * @typedef {object} RuntimeChange
+ * @property {string} name `<case> <runtime>`
+ * @property {"added" | "removed" | "changed"} status change kind
+ * @property {number} before how many runtime modules it carried
+ * @property {number} after how many it carries now
+ * @property {string[]} added runtime modules it gained
+ * @property {string[]} removed runtime modules it lost
+ */
+
+/**
+ * @typedef {object} SplitDelta
+ * @property {number} changed bytes moved by entries present in both runs
+ * @property {number} introduced bytes brought in by new entries, less the ones
+ * a deleted entry took away
+ */
+
+/**
  * @typedef {object} Case
  * @property {string} category case category
  * @property {string} name case name
@@ -102,7 +119,9 @@ const METRIC_LABELS = {
 // The workflow greps its own pull request comment by this, so it must not change.
 const COMMENT_MARKER = "<!-- code-size-report -->";
 
-// Every table shows the same number of movers; the rest is in the uploaded report.
+// Every table shows the same number of movers; the rest is in the uploaded
+// report. Each table gets its own budget, so a pull request adding test cases
+// cannot push the assets it changed out of the report with the ones it added.
 const MAX_ROWS = 20;
 
 // The hashes webpack states it put in a filename, whatever `output.hashDigest`
@@ -453,6 +472,12 @@ const formatBytes = (bytes) => {
 };
 
 /**
+ * @param {number} bytes bytes
+ * @returns {string} human readable size, signed
+ */
+const formatDelta = (bytes) => `${bytes > 0 ? "+" : ""}${formatBytes(bytes)}`;
+
+/**
  * @param {number} before baseline bytes
  * @param {number} after current bytes
  * @returns {string} signed percentage, or a word when there is nothing to divide by
@@ -464,6 +489,24 @@ const formatPercent = (before, after) => {
 	const percent = ((after - before) / before) * 100;
 	return `${percent > 0 ? "+" : ""}${percent.toFixed(2)}%`;
 };
+
+/**
+ * Growth is red, a shrink green. No arrow emoji carries a color, so the disc
+ * says which way it went and the arrow says it in shape too.
+ * @param {number} delta byte delta
+ * @returns {string} marker for that direction
+ */
+const changeMarker = (delta) =>
+	delta > 0 ? "🔴 ↑" : delta < 0 ? "🟢 ↓" : "🔀";
+
+/**
+ * @param {string[]} parts sentence fragments
+ * @returns {string} them read as a list
+ */
+const joinList = (parts) =>
+	parts.length < 2
+		? parts.join("")
+		: `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}`;
 
 /**
  * @param {Record<string, Metrics>} before baseline entries
@@ -530,19 +573,22 @@ const sameMetrics = (a, b) =>
 
 /**
  * How much an entry set moved in total — the "and by how much" next to the
- * counts, which a count alone does not say.
+ * counts, which a count alone does not say. Split by whether the entry exists in
+ * both runs: adding a test case brings whole bundles with it, and summed into
+ * one number those bytes bury the few a change to `lib/` moved.
  * @template {string} K
  * @param {Record<string, Record<K, number>>} before baseline entries
  * @param {Record<string, Record<K, number>>} after current entries
  * @param {K} key the field to sum
- * @returns {number} current minus baseline, over the union of both
+ * @returns {SplitDelta} current minus baseline, over the union of both
  */
-const sumDelta = (before, after, key) => {
-	let delta = 0;
+const splitDelta = (before, after, key) => {
+	const delta = { changed: 0, introduced: 0 };
 	for (const name of new Set([...Object.keys(before), ...Object.keys(after)])) {
-		delta +=
-			(after[name] ? after[name][key] : 0) -
-			(before[name] ? before[name][key] : 0);
+		const from = before[name] ? before[name][key] : 0;
+		const to = after[name] ? after[name][key] : 0;
+		if (name in before && name in after) delta.changed += to - from;
+		else delta.introduced += to - from;
 	}
 	return delta;
 };
@@ -572,15 +618,6 @@ const assetMetrics = (report) => {
 };
 
 /**
- * Growth is red, a shrink green. No arrow emoji carries a color, so the disc
- * says which way it went and the arrow says it in shape too.
- * @param {number} delta byte delta
- * @returns {string} marker for that direction
- */
-const changeMarker = (delta) =>
-	delta > 0 ? "🔴 ↑" : delta < 0 ? "🟢 ↓" : "🔀";
-
-/**
  * @param {Report} report report
  * @returns {Record<string, string[]>} runtime module names per `<case> <runtime>`
  */
@@ -596,17 +633,12 @@ const runtimeModules = (report) => {
 };
 
 /**
- * How many runtime modules each runtime carries, and which ones came or went.
- * A count is what a change to `lib/runtime/` moves deterministically, and the
- * names say what moved — the bytes are already in the asset table.
- * @param {Report} report current report
- * @param {Report} baseline baseline report
- * @returns {string[]} markdown lines
+ * @param {Record<string, string[]>} before baseline runtimes
+ * @param {Record<string, string[]>} after current runtimes
+ * @returns {RuntimeChange[]} runtimes whose module set moved, most moved first
  */
-const formatRuntimes = (report, baseline) => {
-	const before = runtimeModules(baseline);
-	const after = runtimeModules(report);
-	const rows = [...new Set([...Object.keys(before), ...Object.keys(after)])]
+const compareRuntimes = (before, after) =>
+	[...new Set([...Object.keys(before), ...Object.keys(after)])]
 		.map((name) => {
 			const was = before[name] || [];
 			const now = after[name] || [];
@@ -614,8 +646,9 @@ const formatRuntimes = (report, baseline) => {
 			const nowSet = new Set(now);
 			return {
 				name,
-				gone: !(name in after),
-				fresh: !(name in before),
+				status: /** @type {RuntimeChange["status"]} */ (
+					name in before ? (name in after ? "changed" : "removed") : "added"
+				),
 				before: was.length,
 				after: now.length,
 				added: now.filter((entry) => !wasSet.has(entry)),
@@ -630,40 +663,205 @@ const formatRuntimes = (report, baseline) => {
 					(a.added.length + a.removed.length) || a.name.localeCompare(b.name)
 		);
 
+/**
+ * One collapsible section per table, so every table carries its own row budget
+ * and its own count rather than competing for one.
+ * @param {object} section section to render
+ * @param {string} section.summary what the section holds
+ * @param {string[]} section.header the header row and its alignment row
+ * @param {string[]} section.rows body rows, already rendered
+ * @param {number} section.columns how many columns the table has
+ * @param {number=} section.noteColumn column the truncation note goes in
+ * @param {boolean=} section.open whether it renders unfolded
+ * @returns {string[]} markdown lines
+ */
+const formatSection = ({
+	summary,
+	header,
+	rows,
+	columns,
+	noteColumn = 0,
+	open = false
+}) => {
+	/** @type {string[]} */
+	const lines = [
+		`<details${open ? " open" : ""}><summary>${summary}</summary>`,
+		"",
+		...header,
+		...rows.slice(0, MAX_ROWS)
+	];
+	if (rows.length > MAX_ROWS) {
+		const cells = Array.from({ length: columns }, () => "");
+		cells[noteColumn] =
+			`… ${rows.length - MAX_ROWS} more, see the uploaded report`;
+		lines.push(`| ${cells.join(" | ")} |`);
+	}
+	lines.push("", "</details>", "");
+	return lines;
+};
+
+/**
+ * The assets a change moved: they exist in both runs, so before and after are
+ * comparable and the delta is the number the report exists for. Unfolded, and
+ * kept clear of the assets a new test case brought in — a whole new bundle
+ * outweighs every real change, which is what used to bury them.
+ * @param {Change[]} changes changed assets, largest raw delta first
+ * @returns {string[]} markdown lines
+ */
+const formatChangedAssets = (changes) => {
+	if (changes.length === 0) return [];
+
+	// Raw is what the generator wrote; the rest is what each encoding makes of it
+	// — the byte delta is spelled out because the percentage of it varies with
+	// bundle size.
+	const rows = changes.map((change) => {
+		// An edit can keep the raw length and still change how well it packs, so
+		// the arrow falls back to the encodings rather than calling that a shrink.
+		const direction =
+			change.delta.raw ||
+			COMPRESSED.reduce((sum, metric) => sum + change.delta[metric], 0);
+		const compressed = COMPRESSED.map((metric) =>
+			formatPercent(change.before[metric], change.after[metric])
+		).join(" | ");
+		return `| ${changeMarker(direction)} | \`${change.name}\` | ${formatBytes(
+			change.before.raw
+		)} | ${formatBytes(change.after.raw)} | **${formatDelta(
+			change.delta.raw
+		)}** (${formatPercent(change.before.raw, change.after.raw)}) | ${compressed} |`;
+	});
+
+	return formatSection({
+		summary: `${changes.length} asset(s) changed size${
+			changes.length > MAX_ROWS ? `, biggest ${MAX_ROWS} by raw change` : ""
+		}`,
+		header: [
+			`| | Asset | Before | After | Change | ${COMPRESSED.map(
+				(metric) => METRIC_LABELS[metric]
+			).join(" | ")} |`,
+			`| :-: | :-- | --: | --: | --: |${COMPRESSED.map(() => " --: |").join("")}`
+		],
+		rows,
+		columns: 5 + COMPRESSED.length,
+		noteColumn: 1,
+		open: true
+	});
+};
+
+/**
+ * The assets one run has and the other does not — what a pull request adding or
+ * deleting test cases produces. Their size is a size, never a delta: there is
+ * nothing to compare it against, so it is reported apart and folded away.
+ * @param {Change[]} changes added or removed assets
+ * @param {"added" | "removed"} status which of the two
+ * @returns {string[]} markdown lines
+ */
+const formatIntroducedAssets = (changes, status) => {
+	if (changes.length === 0) return [];
+
+	const added = status === "added";
+	const metricsOf = (/** @type {Change} */ change) =>
+		added ? change.after : change.before;
+	const rows = [...changes]
+		.sort((a, b) => metricsOf(b).raw - metricsOf(a).raw)
+		.map((change) => {
+			const metrics = metricsOf(change);
+			return `| ${added ? "➕" : "➖"} | \`${change.name}\` | ${formatBytes(
+				metrics.raw
+			)} | ${COMPRESSED.map((metric) => formatBytes(metrics[metric])).join(
+				" | "
+			)} |`;
+		});
+
+	return formatSection({
+		summary: `${changes.length} asset(s) ${
+			added ? "this pull request adds" : "this pull request no longer emits"
+		}${changes.length > MAX_ROWS ? `, biggest ${MAX_ROWS} by raw size` : ""}`,
+		header: [
+			`| | Asset | ${METRICS.map((metric) => METRIC_LABELS[metric]).join(" | ")} |`,
+			`| :-: | :-- |${METRICS.map(() => " --: |").join("")}`
+		],
+		rows,
+		columns: 2 + METRICS.length,
+		noteColumn: 1
+	});
+};
+
+/**
+ * How many runtime modules each runtime carries, and which ones came or went.
+ * A count is what a change to `lib/runtime/` moves deterministically, and the
+ * names say what moved — the bytes are already in the asset table. Split the
+ * same way the assets are: a runtime a new case brought in gained nothing.
+ * @param {Report} report current report
+ * @param {Report} baseline baseline report
+ * @returns {string[]} markdown lines
+ */
+const formatRuntimes = (report, baseline) => {
+	const rows = compareRuntimes(
+		runtimeModules(baseline),
+		runtimeModules(report)
+	);
+	const changed = rows.filter((row) => row.status === "changed");
+	const introduced = rows.filter((row) => row.status !== "changed");
+
 	if (rows.length === 0) {
 		return ["No runtime gained or lost a runtime module.", ""];
 	}
 
-	/** @type {string[]} */
-	const lines = [
-		`<details><summary>${rows.length} runtime(s) changed which runtime modules they carry${
-			rows.length > MAX_ROWS ? `, biggest ${MAX_ROWS} by number moved` : ""
-		}</summary>`,
-		"",
-		"| | Runtime | Modules | Added | Removed |",
-		"| :-: | :-- | --: | :-- | :-- |"
-	];
 	const list = (/** @type {string[]} */ names) =>
 		names.length === 0 ? "—" : names.map((name) => `\`${name}\``).join(", ");
-	for (const row of rows.slice(0, MAX_ROWS)) {
+
+	/** @type {string[]} */
+	const lines = [];
+	if (changed.length > 0) {
 		lines.push(
-			`| ${
-				row.fresh
-					? "➕"
-					: row.gone
-						? "➖"
-						: changeMarker(row.after - row.before)
-			} | \`${row.name}\` | ${row.gone ? "— (gone)" : row.before === row.after ? row.after : `${row.before} → ${row.after}`} | ${list(
-				row.added
-			)} | ${list(row.removed)} |`
+			...formatSection({
+				summary: `${
+					changed.length
+				} runtime(s) changed which runtime modules they carry${
+					changed.length > MAX_ROWS
+						? `, biggest ${MAX_ROWS} by number moved`
+						: ""
+				}`,
+				header: [
+					"| | Runtime | Modules | Added | Removed |",
+					"| :-: | :-- | --: | :-- | :-- |"
+				],
+				rows: changed.map(
+					(row) =>
+						`| ${changeMarker(row.after - row.before)} | \`${row.name}\` | ${
+							row.before === row.after
+								? row.after
+								: `${row.before} → ${row.after}`
+						} | ${list(row.added)} | ${list(row.removed)} |`
+				),
+				columns: 5,
+				noteColumn: 1,
+				open: true
+			})
+		);
+	} else {
+		lines.push(
+			"No runtime that both runs build changed which runtime modules it carries.",
+			""
 		);
 	}
-	if (rows.length > MAX_ROWS) {
+
+	if (introduced.length > 0) {
 		lines.push(
-			`| | … ${rows.length - MAX_ROWS} more runtime(s), see the uploaded report | | | |`
+			...formatSection({
+				summary: `${introduced.length} runtime(s) this pull request adds or no longer builds`,
+				header: ["| | Runtime | Modules |", "| :-: | :-- | --: |"],
+				rows: introduced.map(
+					(row) =>
+						`| ${row.status === "added" ? "➕" : "➖"} | \`${row.name}\` | ${
+							row.status === "added" ? row.after : `${row.before} (gone)`
+						} |`
+				),
+				columns: 3,
+				noteColumn: 1
+			})
 		);
 	}
-	lines.push("", "</details>", "");
 
 	return lines;
 };
@@ -680,36 +878,43 @@ const formatBiggestAssets = (report) => {
 	);
 	if (assets.length === 0) return [];
 
-	/** @type {string[]} */
-	const lines = [
-		`<details><summary>${assets.length} asset(s) emitted${
+	return formatSection({
+		summary: `${assets.length} asset(s) emitted${
 			assets.length > MAX_ROWS ? `, biggest ${MAX_ROWS} by raw size` : ""
-		}</summary>`,
-		"",
-		`| Asset | Raw | ${COMPRESSED.map((metric) => METRIC_LABELS[metric]).join(
-			" | "
-		)} |`,
-		`| :-- | --: |${COMPRESSED.map(() => " --: |").join("")}`
-	];
-	for (const [name, metrics] of assets.slice(0, MAX_ROWS)) {
-		lines.push(
-			`| \`${name}\` | ${formatBytes(metrics.raw)} | ${COMPRESSED.map(
-				(metric) => formatBytes(metrics[metric])
-			).join(" | ")} |`
-		);
-	}
-	if (assets.length > MAX_ROWS) {
-		lines.push(
-			`| … ${
-				assets.length - MAX_ROWS
-			} more asset(s), see the uploaded report |${COMPRESSED.map(
-				() => " |"
-			).join("")} |`
-		);
-	}
-	lines.push("", "</details>", "");
+		}`,
+		header: [
+			`| Asset | ${METRICS.map((metric) => METRIC_LABELS[metric]).join(" | ")} |`,
+			`| :-- |${METRICS.map(() => " --: |").join("")}`
+		],
+		rows: assets.map(
+			([name, metrics]) =>
+				`| \`${name}\` | ${METRICS.map((metric) =>
+					formatBytes(metrics[metric])
+				).join(" | ")} |`
+		),
+		columns: 1 + METRICS.length
+	});
+};
 
-	return lines;
+/**
+ * The verdict sentence: what a reviewer reads before anything else, so it says
+ * how much of the report below is a change and how much of it is new.
+ * @param {Change[]} changed assets present in both runs whose size moved
+ * @param {Change[]} added assets only this run emits
+ * @param {Change[]} removed assets only the baseline emitted
+ * @returns {string} one sentence
+ */
+const formatVerdict = (changed, added, removed) => {
+	/** @type {string[]} */
+	const parts = [];
+	if (changed.length > 0) {
+		parts.push(`**changes the size of ${changed.length} asset(s)**`);
+	}
+	if (added.length > 0) parts.push(`adds ${added.length} new asset(s)`);
+	if (removed.length > 0) parts.push(`deletes ${removed.length} asset(s)`);
+	return parts.length === 0
+		? "Merging this pull request will **not change** the code webpack generates."
+		: `Merging this pull request ${joinList(parts)}.`;
 };
 
 /**
@@ -748,6 +953,10 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 	}
 
 	const changes = compareMetrics(assetMetrics(baseline), assetMetrics(report));
+	const changed = changes.filter((change) => change.status === "changed");
+	const added = changes.filter((change) => change.status === "added");
+	const removed = changes.filter((change) => change.status === "removed");
+
 	const rows = [
 		{
 			label: "Cases",
@@ -756,7 +965,7 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 				caseMetrics(report),
 				sameMetrics
 			),
-			change: sumDelta(caseMetrics(baseline), caseMetrics(report), "raw")
+			change: splitDelta(caseMetrics(baseline), caseMetrics(report), "raw")
 		},
 		{
 			label: "Assets",
@@ -765,18 +974,18 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 				assetMetrics(report),
 				sameMetrics
 			),
-			change: sumDelta(assetMetrics(baseline), assetMetrics(report), "raw")
+			change: splitDelta(assetMetrics(baseline), assetMetrics(report), "raw")
 		},
 		{
 			// A runtime carries no bytes of its own — its modules land in the assets
-			// above — so this row counts runtimes and leaves the byte column empty.
+			// above — so this row counts runtimes and leaves the byte columns empty.
 			label: "Runtimes",
 			counts: countChanges(
 				runtimeModules(baseline),
 				runtimeModules(report),
 				(a, b) => a.length === b.length && a.every((name, i) => name === b[i])
 			),
-			change: 0
+			change: { changed: 0, introduced: 0 }
 		}
 	];
 	const short = (/** @type {Report} */ report) =>
@@ -791,81 +1000,50 @@ const formatMarkdown = (report, baseline, noBaselineReason) => {
 	// How many moved and by how much, then the biggest movers — before any
 	// collapsed section, so the whole verdict is readable without unfolding one.
 	lines.push(
-		`Comparing ${measured} against ${short(baseline)}. Merging this PR will **${
-			changes.length === 0 ? "not change" : "change"
-		}** the code webpack generates.`,
+		`Comparing ${measured} against ${short(baseline)}. ${formatVerdict(
+			changed,
+			added,
+			removed
+		)}`,
 		"",
 		...(drift ? [drift, ""] : []),
-		"| | Changed | New | Deleted | Unchanged | Raw change |",
-		"| :-- | --: | --: | --: | --: | --: |"
+		"| | Changed | New | Deleted | Unchanged | Raw change | Raw new/gone |",
+		"| :-- | --: | --: | --: | --: | --: | --: |"
 	);
 	for (const { label, counts, change } of rows) {
 		lines.push(
 			`| ${label} | ${counts.changed} | ${counts.added} | ${counts.removed} | ${
 				counts.unchanged
 			} | ${
-				change === 0
+				change.changed === 0
 					? "—"
-					: `${changeMarker(change)} ${change > 0 ? "+" : ""}${formatBytes(
-							change
-						)}`
-			} |`
+					: `${changeMarker(change.changed)} ${formatDelta(change.changed)}`
+			} | ${change.introduced === 0 ? "—" : formatDelta(change.introduced)} |`
 		);
 	}
-	lines.push("");
+	lines.push(
+		"",
+		"`Raw change` is what this pull request moved in assets both runs emit. Bytes an added or deleted case brings with it are counted apart, under `Raw new/gone`.",
+		""
+	);
 
 	// The asset view: one row per emitted file, so a minifier change reads as the
-	// files it shrank rather than as one number over the whole suite. Raw is what
-	// the generator wrote; the rest is what each encoding makes of it — the byte
-	// delta is spelled out because the percentage of it varies with bundle size.
-	if (changes.length > 0) {
-		lines.push(
-			`<details><summary>${changes.length} asset(s) changed size${
-				changes.length > MAX_ROWS ? `, biggest ${MAX_ROWS} by raw change` : ""
-			}</summary>`,
-			"",
-			`| | Asset | Before | After | Change | ${COMPRESSED.map(
-				(metric) => METRIC_LABELS[metric]
-			).join(" | ")} |`,
-			`| :-: | :-- | --: | --: | --: |${COMPRESSED.map(() => " --: |").join("")}`
-		);
-		for (const change of changes.slice(0, MAX_ROWS)) {
-			// An edit can keep the raw length and still change how well it packs, so
-			// the arrow falls back to the encodings rather than calling that a shrink.
-			const direction =
-				change.delta.raw ||
-				COMPRESSED.reduce((sum, metric) => sum + change.delta[metric], 0);
-			const mark =
-				change.status === "added"
-					? "➕"
-					: change.status === "removed"
-						? "➖"
-						: changeMarker(direction);
-			const compressed = COMPRESSED.map((metric) =>
-				formatPercent(change.before[metric], change.after[metric])
-			).join(" | ");
-			lines.push(
-				`| ${mark} | \`${change.name}\` | ${
-					change.status === "added" ? "—" : formatBytes(change.before.raw)
-				} | ${
-					change.status === "removed" ? "—" : formatBytes(change.after.raw)
-				} | **${change.delta.raw > 0 ? "+" : ""}${formatBytes(
-					change.delta.raw
-				)}** (${formatPercent(change.before.raw, change.after.raw)}) | ${compressed} |`
-			);
-		}
-		if (changes.length > MAX_ROWS) {
-			lines.push(
-				`| | … ${
-					changes.length - MAX_ROWS
-				} more asset(s), see the uploaded report | | | |${COMPRESSED.map(
-					() => " |"
-				).join("")}`
-			);
-		}
-		lines.push("", "</details>", "");
-	} else {
+	// files it shrank rather than as one number over the whole suite. Changed
+	// first and unfolded; new and deleted after it, folded away.
+	if (changes.length === 0) {
 		lines.push("No asset changed size.", "");
+	} else {
+		if (changed.length === 0) {
+			lines.push(
+				"No asset that both runs emit changed size — everything below is new or deleted.",
+				""
+			);
+		}
+		lines.push(
+			...formatChangedAssets(changed),
+			...formatIntroducedAssets(added, "added"),
+			...formatIntroducedAssets(removed, "removed")
+		);
 	}
 
 	// A case that stops emitting contributes no bytes, which would otherwise read
