@@ -594,11 +594,7 @@ const collectCustomIdentListProperties = () => {
 				const referenced = syntaxes[node.name];
 				if (referenced === undefined || seen.has(node.name)) return false;
 				seen.add(node.name);
-				try {
-					return reachesCustomIdent(parseValueSyntax(referenced.syntax), seen);
-				} catch (_err) {
-					return false;
-				}
+				return reachesCustomIdent(grammarOf(referenced.syntax), seen);
 			}
 			case "oneOf":
 			case "anyOf":
@@ -623,12 +619,7 @@ const collectCustomIdentListProperties = () => {
 	for (const [name, property] of Object.entries(properties)) {
 		if (property.status !== "standard") continue;
 		if (typeof property.syntax !== "string") continue;
-		let tree;
-		try {
-			tree = grammarOf(property.syntax);
-		} catch (_err) {
-			continue;
-		}
+		const tree = grammarOf(property.syntax);
 		let listed = false;
 		walkValueSyntax(tree, (node) => {
 			if (listed) return;
@@ -655,12 +646,7 @@ const collectSlashLonghands = () => {
 		if (typeof property.syntax !== "string") continue;
 		const longhands = property.computed;
 		if (!Array.isArray(longhands) || longhands.length < 2) continue;
-		let tree;
-		try {
-			tree = grammarOf(property.syntax);
-		} catch (_err) {
-			continue;
-		}
+		const tree = grammarOf(property.syntax);
 		if (tree.type !== "sequence" || tree.items.length !== 2) continue;
 		const [first, rest] = tree.items;
 		if (first.type !== "type" || rest.type !== "multiplier") continue;
