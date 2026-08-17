@@ -39,12 +39,14 @@ Array [
 b\\"}",
   "/*! webpack: a custom property's value is opaque, quotes included */.t29{--quoted:'kept'}",
   "/*! webpack: a string in an at-rule prelude normalizes too */@supports (content:\\"x\\"){.t30{color:red}}",
-  "/*! webpack: an EOF escape swallowing the final quote leaves the string alone */.t32:after{content:\\"x\\\\\\"}",
+  "/*! webpack: an EOF escape swallowing the final quote leaves the string alone */.t32:after{content:\\"x\\\\\\"
+}",
 ]
 `;
 
 exports[`ConfigTestCases css minimize-strings minimize-strings should compile 2`] = `
 Array [
-  "/*! webpack: a string the tokenizer closes at EOF keeps its one quote */.t31:after{content:\\"unterminated}",
+  "/*! webpack: a string the tokenizer closes at EOF keeps its one quote */.t31:after{content:\\"unterminated
+}",
 ]
 `;

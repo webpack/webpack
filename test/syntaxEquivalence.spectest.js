@@ -69,18 +69,6 @@ const VALUE_BUDGET = 2000;
 // exactly, so an entry outlives its defect by one run.
 const FILED_CONFIG_CSS_DEFECTS = new Map([
 	[
-		"test/configCases/css/minimize-strings/style.css",
-		"a bad-string stops swallowing the rules after it"
-	],
-	[
-		"test/configCases/css/minimize-urls/style.css",
-		"a bad-url stops swallowing the rules after it"
-	],
-	[
-		"test/configCases/css/parsing/cases/bad-url-token.css",
-		"a bad-url token stops swallowing the rules after it"
-	],
-	[
 		// Not a printer defect: Chrome computes the same style, but the comparison
 		// collapses adjacent repeats and so reads a dropped one as a reordering.
 		"test/configCases/css/css-modules/style.module.css",

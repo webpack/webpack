@@ -30,6 +30,7 @@ Array [
   "/*! declined: the data: URI's own metadata is not payload — outside it an escape
    is structure, and there webpack's own url normalization has already decoded it */.t25{background:url(data:image/svg%2Bxml,x)}",
   "/*! declined: \`#\` would start the fragment and \`%\` the next escape */.t26{background:url(data:text/plain,a%23b%25c)}",
-  "/*! webpack: a url() whose string the tokenizer never closed is passed through */.t21{background:url(\\")}",
+  "/*! webpack: a url() whose string the tokenizer never closed is passed through */.t21{background:url(\\"
+)}",
 ]
 `;
