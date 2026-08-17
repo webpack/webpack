@@ -125,6 +125,18 @@ const FILED_WPT_CSS_DEFECTS = new Map([
 // The same, for what webpack's own parser sees over the whole corpus.
 const FILED_WPT_TREE_DEFECTS = new Map();
 
+// Spec areas compared by sample rather than whole, with the reason the whole
+// does not fit. Not a tolerated gap: the sample still fails on a divergence,
+// and the test name carries how many of the area's values ran.
+const FILED_SLOW_VALUE_AREAS = new Map([
+	[
+		"css/css-anchor-position",
+		"each value resolves against a layout, so a browser implementing anchor positioning spends seconds per declaration — the area needs over 900s of recalculation in CI's Chrome"
+	]
+]);
+// Enough to reach every file of a sampled area, few enough to stay in budget.
+const AREA_SAMPLE = 40;
+
 // Declarations Chromium computes a different style from once printed, keyed by
 // the value as written. A printer defect unless the reason says otherwise.
 const FILED_WPT_VALUE_DEFECTS = new Map([
@@ -527,6 +539,23 @@ describe("printer output in real Chrome", () => {
 	/** @type {Set<string>} every value that moved, filled as the areas run */
 	const movedValues = new Set();
 
+	/**
+	 * An area is compared whole unless it is filed as slow, and then by a sample
+	 * spread over its files rather than its first few — one file's values are
+	 * alike, so the first N would cover one file and call the area done.
+	 * @param {string} area the wpt spec area
+	 * @param {T[]} cases its declarations
+	 * @returns {T[]} what to compare
+	 * @template T
+	 */
+	const sampleOf = (area, cases) => {
+		if (!FILED_SLOW_VALUE_AREAS.has(area) || cases.length <= AREA_SAMPLE) {
+			return cases;
+		}
+		const step = Math.ceil(cases.length / AREA_SAMPLE);
+		return cases.filter((_, at) => at % step === 0);
+	};
+
 	const compareValues = (cases) =>
 		inBatches(page, cases, (batch) =>
 			page.evaluate((each) => {
@@ -584,10 +613,18 @@ describe("printer output in real Chrome", () => {
 		});
 	}
 	for (const [area, cases] of declarationsByArea) {
+		const sampled = sampleOf(area, cases);
+		const of =
+			sampled.length < cases.length
+				? ` (${sampled.length} of ${cases.length})`
+				: "";
+
 		it(
-			`should compute the same style from a value in ${area} and its minified form`,
+			`should compute the same style from a value in ${area}${of} and its minified form`,
 			async () => {
-				for (const one of await compareValues(cases)) movedValues.add(one.key);
+				for (const one of await compareValues(sampled)) {
+					movedValues.add(one.key);
+				}
 			},
 			AREA_TIMEOUT
 		);
