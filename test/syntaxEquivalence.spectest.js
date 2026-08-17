@@ -537,12 +537,19 @@ describe("printer output in real Chrome", () => {
 	for (const { property, value, name } of hasCorpus()
 		? cssDeclarations()
 		: []) {
+		const min = minifyDeclaration(property, value);
+		// A value the printer copied out is compared against itself, which the
+		// engine answers the same way twice by construction. Three quarters of
+		// the corpus is that, and reading one back is not free: the one value
+		// that hangs Chrome is invalid CSS the printer never touched.
+		if (min === value) continue;
+
 		const one = {
 			name,
 			property,
 			key: `${property}:${value}`,
 			raw: value,
-			min: minifyDeclaration(property, value)
+			min
 		};
 		const group = declarationsByFile.get(name);
 		if (group === undefined) declarationsByFile.set(name, [one]);
