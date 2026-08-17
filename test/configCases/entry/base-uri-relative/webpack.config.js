@@ -94,5 +94,15 @@ module.exports = [
 		expect: "/app/",
 		chunkLoading: false,
 		entryFile: "./base-uri.js"
+	}),
+	// An opaque scheme is a base of its own, so it reaches the runtime verbatim rather
+	// than being read as a path beside the chunk.
+	base({
+		index: 5,
+		name: "opaque",
+		esm: true,
+		baseUri: "data:text/plain,webpack",
+		expect: "data:text/plain,webpack",
+		entryFile: "./base-uri.js"
 	})
 ];

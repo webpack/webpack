@@ -5,7 +5,8 @@ const BUNDLES = [
 	"./cjs.js",
 	"./proto.mjs",
 	"./empty.mjs",
-	"./runtime.mjs"
+	"./runtime.mjs",
+	"./opaque.mjs"
 ];
 
 module.exports = {

@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Resolve a relative entry `baseUri` against the chunk and bake one direction of a chunk-hash cycle.
+Resolve relative entry `baseUri` values and bake one side of a hash cycle.
