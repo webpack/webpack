@@ -118,7 +118,8 @@ module.exports = [
 		entry: "./index-cycle",
 		output: { chunkFilename: "[name].[contenthash].mjs" }
 	}),
-	// A relative base has no base of its own for an asset url to resolve against.
+	// Also analyzable: a relative base is read against the chunk, so it is spelled in
+	// the literal instead of being a base the url resolves against.
 	base("base-uri", {
 		entry: { main: { import: "./index-asset", baseUri: "not-a-url" } },
 		module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
