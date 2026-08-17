@@ -173,9 +173,10 @@
 .t74 { align-items: center; justify-items: start }
 /*! ...collapsing to one value where the pair agrees */
 .t74a { align-items: center; justify-items: center }
-/*! declined: `place-content` is the one pair that does not copy an omitted
-   second value after a baseline — it defaults to `start` */
+/*! declined: a keyword only one half of the pair takes makes the shorthand
+   invalid whole — `left` is `justify-items`' alone, `baseline` `align-content`'s */
 .t74b { align-content: baseline; justify-content: baseline }
+.t74c { align-items: left; justify-items: left }
 /*! declined: a declaration between them writing the same family would be
    stepped over by the merge */
 .t75 { margin-block-start: 1px; margin: 0; margin-block-end: 2px }

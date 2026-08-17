@@ -81,34 +81,12 @@
    rules, so the first is read at its own place rather than resolving to the
    second — dropping it loses a rule the engine builds */
 .t24b { color: red; & i { top: 0 } color: red }
-/*! webpack: a later `!important` beats an earlier plain one, whatever it says */
+/*! declined: the importance differs, so they are not the same declaration */
 .t25 { color: red; color: red !important }
-/*! declined: ...and the earlier one wins the other way round */
-.t25a { color: red !important; color: red }
-/*! merge-longhand: a later declaration an engine cannot fail to read overrides
-   the earlier one whatever it says, not only an identical one */
-.t25b { color: blue; color: red }
-/*! ...over as many as stand before it */
-.t25c { color: red; color: blue; color: green }
-/*! ...and over a whole family the shorthand resets */
-.t25d { background: blue border-box; background: red }
-/*! declined: a function is what a fallback pair is written in — the engine that
-   cannot read it is the one the earlier declaration is there for */
-.t25e { color: red; color: oklch(.5 .1 200) }
-/*! declined: ...as is a `var()`, which may resolve to nothing at all */
-.t25f { width: 10px; width: var(--w) }
-/*! declined: ...and a unit newer than the longhands' own vocabulary */
-.t25g { width: 100px; width: 100dvh }
-/*! merge-longhand: ...but one every engine reading the property reads too */
-.t25h { width: 100px; width: 50% }
-/*! declined: a vendor spelling earlier is a fallback for exactly the engine
-   that cannot read the plain one beside it */
-.t25i { display: -ms-grid; display: grid }
-/*! declined: ...and one later is a value the plain-spelled engine ignores */
-.t25j { display: grid; display: -ms-grid }
-/*! declined: a custom property's value is a token stream, so what an engine
-   makes of it is not knowable from its spelling */
-.t25k { --x: 1; --x: 2 }
+/*! declined: a value spelled differently is a fallback for an engine that cannot
+   read the later one, and a bare name says nothing about which engines do — it
+   may be invalid, or newer than the value it stands after */
+.t25b { color: red; color: canvastext }
 /*! merge-longhand: a tool adding prefixes writes the prefixed item beside the
    plain one, which leaves what it wrote on the way there unreadable — the item
    slot takes a `<custom-ident>`, so an engine knowing neither spelling still

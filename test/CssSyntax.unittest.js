@@ -104,7 +104,7 @@ describe("readToken", () => {
 			const results = [];
 			// Drive the lexer core directly: a fresh `out` per call collects the
 			// raw token list (comments included); `readToken` returns undefined at EOF.
-			for (let pos = 0; ;) {
+			for (let pos = 0; ; ) {
 				const t = readToken(
 					code,
 					pos,
@@ -140,7 +140,7 @@ describe("readToken", () => {
  */
 const tokenRoundtrip = (input) => {
 	let out = "";
-	for (let pos = 0; ;) {
+	for (let pos = 0; ; ) {
 		const t = readToken(
 			input,
 			pos,
@@ -1086,37 +1086,14 @@ describe("CssSyntax — block streaming", () => {
 		expect(minify(src)).toBe(`.root{lead:1;${mid}dup:2}`);
 	});
 
-	it("joins the rules of a block too big to collect", () => {
-		// A streamed block writes its children out as they finish, so the merge a
-		// collected block runs over all of them at once cannot: it holds a window
-		// of them back instead, and the rules in it join like any other siblings.
-		// The padding stays under `_JOIN_SAMPLE`, so the window is still offering.
-		const src = `@media all{${repeat(1800, rule)}.j1{left:0}.pad{top:1px}.j2{left:0}.j3{width:0}.j3{height:0}}`;
-		expect(childCount(src)).toBe(0);
-		const out = minify(src);
-		expect(out).toContain(".j1,.j2{left:0}");
-		expect(out).toContain(".j3{width:0;height:0}");
-		// ...and the rule between them is still read where it was written.
-		expect(out).toContain(".pad{top:1px}");
-	});
-
 	it("writes a streamed block's children straight through when beautifying", () => {
-		// Beautifying rewrites nothing, so a streamed block holds no window back
-		// and each child goes out as it finishes.
+		// A streamed block emits each child as it finishes rather than collecting
+		// them, so the order it writes them in is the order they were parsed.
 		const out = new SourceProcessor().process(
 			`@media all{${BIG}.z1{left:0}.z2{left:0}}`,
 			{ mode: "beautify" }
 		).code;
 		expect(out).toContain(".z1 {\nleft: 0;\n}\n.z2 {\nleft: 0;\n}");
-	});
-
-	it("keeps a streamed block's rules apart where the cascade reads them", () => {
-		// The same barrier the collected merge reads: a rule between the two
-		// writing what their shared block does would win where it lost. The padding
-		// stays under `_JOIN_SAMPLE`, so the window is still offering.
-		const src = `@media all{${repeat(1800, rule)}.k1{left:0}.mid{left:9px}.k2{left:0}}`;
-		expect(childCount(src)).toBe(0);
-		expect(minify(src)).toContain(".k1{left:0}.mid{left:9px}.k2{left:0}");
 	});
 
 	it("declines to stream a block a longhand family could still merge in", () => {
@@ -2965,14 +2942,19 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
-	describe("a later declaration's unit", () => {
-		it("supersedes only over a unit the property's own engines read", () => {
-			// A unit newer than the property is what a fallback pair is written in:
-			// the engine that cannot read it is the one the earlier declaration is
-			// there for. `mdn-data` carries no version per unit, so the set is stated.
-			const newer = "a{width:100vw;width:100dvw}";
-			expect(minify(newer)).toBe(newer);
-			expect(minify("a{width:100vw;width:50%}")).toBe("a{width:50%}");
+	describe("a later declaration of a property already written", () => {
+		it.each([
+			// A value spelled differently is a fallback for an engine that cannot read
+			// the later one, and nothing here can say which engines read a bare name:
+			// it may be invalid, in which case every engine reads the earlier one...
+			"a{color:red;color:not-a-color}",
+			// ...or newer than the value before it, in which case an older one does:
+			// `canvas` is a CSS Color 4 system color.
+			"a{color:red;color:canvas}",
+			// A unit newer than the property is the same pair spelled with a number.
+			"a{width:100vw;width:100dvw}"
+		])("keeps both where they are spelled differently: %s", (css) => {
+			expect(minify(css)).toBe(css);
 		});
 	});
 
@@ -3081,68 +3063,16 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"a{color:red;&:hover{color:blue}}"
 			],
 			// Only the last of a set of identical declarations can be read.
-			["a{color:red}a{color:red}", "a{color:red}"],
-			// A rule between them writing none of the block's properties is read
-			// the same wherever the join puts the two around it.
-			["a{color:red}i{top:0}b{color:red}", "a,b{color:red}i{top:0}"],
-			[
-				"a{color:red}i{margin-top:0}b{color:red}",
-				"a,b{color:red}i{margin-top:0}"
-			],
-			[
-				"a{color:red}@media x{i{top:0}}b{color:red}",
-				"a,b{color:red}@media x{i{top:0}}"
-			],
-			// ...as many rules back as the two stand apart
-			[
-				"a{color:red}i{top:0}b{color:red}u{left:0}s{color:red}",
-				"a,b,s{color:red}i{top:0}u{left:0}"
-			],
-			// ...and inside a block, where the printer holds every child at once
-			[
-				"@media x{a{color:red}i{top:0}b{color:red}}",
-				"@media x{a,b{color:red}i{top:0}}"
-			]
+			["a{color:red}a{color:red}", "a{color:red}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
 		});
 
 		it.each([
 			["the blocks differ", "a{color:red}b{color:blue}"],
-			// The join reads the block where the earlier rule stands, so a rule
-			// between them writing the same property would win where it lost.
-			[
-				"a rule between them writes the same property",
-				"a{color:red}i{color:blue}b{color:red}"
-			],
-			[
-				"...or a shorthand holding it",
-				"a{margin-top:0}i{margin:1px}b{margin-top:0}"
-			],
-			[
-				"...or one inside an at-rule",
-				"a{color:red}@media x{i{color:blue}}b{color:red}"
-			],
-			[
-				"...or one inside a block",
-				"@media x{a{color:red}i{color:blue}b{color:red}}"
-			],
-			// `mdn-data` says which longhands a shorthand resets, so a name that is
-			// no prefix of the other is still read as the same property.
-			[
-				"...under a name its own is no prefix of",
-				"a{top:0}i{inset:1px}b{top:0}"
-			],
-			["...`gap` over `row-gap`", "a{row-gap:0}i{gap:1px}b{row-gap:0}"],
-			[
-				"...`place-items` over `align-items`",
-				"a{align-items:center}i{place-items:end}b{align-items:center}"
-			],
-			[
-				"...`font` over `line-height`",
-				"a{line-height:1}i{font:12px/2 x}b{line-height:1}"
-			],
-			["...and `all` over everything", "a{color:red}i{all:unset}b{color:red}"],
+			// Nothing stands between two rules a join puts together, so a rule that
+			// does keeps them apart whatever it writes.
+			["a rule stands between them", "a{color:red}i{margin-top:0}b{color:red}"],
 			// One selector the engine cannot parse invalidates the whole list.
 			["a pseudo may be one the engine drops", "a:hover{top:0}b:hover{top:0}"],
 			["...even beside an attribute selector", "[a=b]:hover{top:0}.b{top:0}"],
@@ -3202,16 +3132,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// The two blocks' own rules come to stand beside each other, so the pair
 			// meeting at the seam is offered the same join.
 			["@media x{a{top:0}}@media x{b{top:0}}", "@media x{a,b{top:0}}"],
-			// ...and one further back, where nothing between them writes what its
-			// own rules do — a named layer only where nothing in the same layer does.
-			[
-				"@media x{a{top:0}}i{left:0}@media x{b{top:0}}",
-				"@media x{a,b{top:0}}i{left:0}"
-			],
-			[
-				"@layer n{a{top:0}}i{top:9px}@layer n{b{top:0}}",
-				"@layer n{a,b{top:0}}i{top:9px}"
-			],
 			[
 				"@supports (a:b){i{t:0}}@supports (a:b){j{t:0}}",
 				"@supports (a:b){i,j{t:0}}"
@@ -3264,48 +3184,6 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe(expected);
 		});
 
-		// Nested in a collected block, where the merge sees every sibling at once
-		// rather than holding a window of them back.
-		it.each([
-			[
-				"nothing between writes what the block's own rules do",
-				"@supports (top:0){@media a{i{top:0}}@media b{j{left:0}}@media a{k{right:0}}}",
-				"@supports (top:0){@media a{i{top:0}k{right:0}}@media b{j{left:0}}}"
-			],
-			[
-				"the gap opens no layer this one could be",
-				"@supports (top:0){@layer p{i{top:0}}@media b{j{left:0}}@layer p{k{right:0}}}",
-				"@supports (top:0){@layer p{i{top:0}k{right:0}}@media b{j{left:0}}}"
-			],
-			[
-				"the gap writes more properties, none of them this one's",
-				"@supports (top:0){@media a{i{top:0}}@media b{j{left:0;bottom:0}}@media a{k{right:0}}}",
-				"@supports (top:0){@media a{i{top:0}k{right:0}}@media b{j{left:0;bottom:0}}}"
-			],
-			// A string is not read for what it spells: this one says `right:0`, which
-			// is exactly what the block being moved back writes.
-			[
-				"the gap only names the property inside a string",
-				'@supports (top:0){@media a{i{top:0}}@media b{j{content:"x{right:0}"}}@media a{k{right:0}}}',
-				'@supports (top:0){@media a{i{top:0}k{right:0}}@media b{j{content:"x{right:0}"}}}'
-			]
-		])("joins two nested at-rules across a gap where %s", (_name, css, out) => {
-			expect(minify(css)).toBe(out);
-		});
-
-		it.each([
-			[
-				"a nested rule between them writes the same property",
-				"@supports (top:0){@media a{i{top:0}}@media b{j{top:1px}}@media a{k{top:0}}}"
-			],
-			[
-				"a block of the same layer is nested in the gap",
-				"@supports (top:0){@layer p{i{top:0}}@layer q{@layer p{j{t:0}}}@layer p{k{right:0}}}"
-			]
-		])("keeps two nested at-rules apart where %s", (_name, css) => {
-			expect(minify(css)).toBe(css);
-		});
-
 		it.each([
 			["the conditions differ", "@media x{a{top:0}}@media y{b{top:0}}"],
 			// A later `@keyframes` of the same name replaces the earlier one.
@@ -3313,22 +3191,16 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"the prelude names what the block belongs to",
 				"@keyframes k{0%{top:0}}@keyframes k{50%{top:1px}}"
 			],
-			// The block moves back to where the condition was first opened, so a
-			// rule between them writing what it does would win where it lost.
+			// Nothing stands between two at-rules a join puts together.
 			[
-				"a rule between them writes the same property",
-				"@media x{a{top:0}}i{top:9px}@media x{b{top:0}}"
+				"a rule stands between them",
+				"@media x{a{top:0}}i{left:0}@media x{b{top:0}}"
 			],
 			// A layer with no name is a layer of its own, so two of them are never
 			// one block however they are written.
 			[
 				"the layer they open has no name",
 				"@layer{#i{color:blue}}@layer{.c{color:red}}"
-			],
-			// Its own rules would move past a block of the layer they are in.
-			[
-				"a block of the same layer stands between them",
-				"@layer a{x{top:0}}@layer b{@layer a{y{top:0}}}@layer a{z{left:0}}"
 			],
 			// `@layer a{}` declares where the layer sits in the cascade.
 			["one block is empty", "@layer a{}@layer a{i{t:0}}"]
@@ -3348,22 +3220,18 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(css)).toBe(css);
 		});
 
-		it("prints the whole sheet after a parse threw mid-eviction", () => {
-			// The window holding top-level rules is one per process, so a parse that
-			// threw once it was over budget — its front already written out — leaves a
-			// read cursor the next parse would otherwise start from, dropping that
-			// many rules from its output.
-			let src = "";
-			for (let i = 0; i < 3000; i++) src += `.dropped${i}{left:${i}px}`;
+		it("prints the whole sheet after a parse threw mid-print", () => {
+			// The rule held back for a join is one per process, so a parse that threw
+			// while holding one must not leave it for the next parse to write out.
 			let seen = 0;
 			expect(() =>
 				new SourceProcessor()
 					.use({
 						[NodeType.QualifiedRule]: () => {
-							if (++seen === 2500) throw new Error("thrown mid-parse");
+							if (++seen === 2) throw new Error("thrown mid-parse");
 						}
 					})
-					.process(src, { mode: "minify" })
+					.process(".held{left:0}.threw{left:0}", { mode: "minify" })
 			).toThrow("thrown mid-parse");
 			expect(minify("a{top:0}b{top:1px}c{top:2px}")).toBe(
 				"a{top:0}b{top:1px}c{top:2px}"
@@ -4314,12 +4182,22 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(content)).toBe("a{place-content:center end}");
 		});
 
-		it("declines `place-content` over a baseline, which it would not copy", () => {
-			// CSS Box Alignment 3 §place-content: an omitted second value defaults
-			// to `start` after a `<baseline-position>` rather than repeating it.
-			const css = "a{align-content:baseline;justify-content:baseline}";
+		it.each([
+			// `left` / `right` are `justify-*`'s alone, so the `align-*` half is
+			// invalid where it stands and the shorthand is invalid whole — writing it
+			// would lose the declaration the engine did read.
+			"a{align-items:left;justify-items:left}",
+			"a{align-items:RIGHT;justify-items:RIGHT}",
+			"a{align-self:left;justify-self:left}",
+			"a{align-content:right;justify-content:right}",
+			// ...and a `<baseline-position>` is `align-content`'s alone, the other way
+			// round: `justify-content` does not take one.
+			"a{align-content:baseline;justify-content:baseline}"
+		])("declines a pair over a keyword only one half takes: %s", (css) => {
 			expect(minify(css)).toBe(css);
-			// The pairs that do copy are unaffected.
+		});
+
+		it("merges a pair over a keyword both halves take", () => {
 			expect(minify("a{align-items:baseline;justify-items:baseline}")).toBe(
 				"a{place-items:baseline}"
 			);

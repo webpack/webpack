@@ -642,50 +642,6 @@ const collectCustomIdentListProperties = () => {
 };
 
 /**
- * The longhands a shorthand resets that its own name is no prefix of — `inset`
- * sets `top`, `font` sets `line-height`. Transitive; the name-covered ones are
- * left out. Answers whether moving a declaration past another changes the winner.
- * @returns {[string, string[]][]} `[property, longhands]`, sorted
- */
-const collectResetLonghands = () => {
-	/**
-	 * @param {string} name a property
-	 * @param {Set<string>} into the longhands reached so far
-	 * @returns {void}
-	 */
-	const reach = (name, into) => {
-		const property = properties[name];
-		if (property === undefined || !Array.isArray(property.computed)) return;
-		for (const longhand of property.computed) {
-			if (into.has(longhand)) continue;
-			into.add(longhand);
-			reach(longhand, into);
-		}
-	};
-	/** @type {[string, string[]][]} */
-	const out = [];
-	for (const [name, property] of Object.entries(properties)) {
-		if (property.status !== "standard") continue;
-		if (!Array.isArray(property.computed) || property.computed.length < 2) {
-			continue;
-		}
-		/** @type {Set<string>} */
-		const reached = new Set();
-		reach(name, reached);
-		const rest = [...reached]
-			.filter(
-				(longhand) =>
-					longhand !== name &&
-					!longhand.startsWith(`${name}-`) &&
-					!name.startsWith(`${longhand}-`)
-			)
-			.sort();
-		if (rest.length !== 0) out.push([name, rest]);
-	}
-	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
-};
-
-/**
  * The shorthands that set their longhands positionally with a `/` between them:
  * `<X> [ / <X> ]{0,n}` over the `n + 1` names `computed` lists, in that order.
  * An omitted slot copies the first only when that is a `<custom-ident>`, else
@@ -732,6 +688,98 @@ const collectSlashLonghands = () => {
 const collectOneValuePairShorthands = (pairs) => {
 	const named = new Set(SUPPLEMENT.oneValuePairShorthands);
 	return pairs.map(([name]) => name).filter((name) => named.has(name));
+};
+
+/**
+ * The keywords a shorthand's longhands disagree on — one accepts it, another does
+ * not — so writing the value into every slot at once turns a declaration the
+ * engine kept into a shorthand it drops whole. `justify-items` takes `left` and
+ * `align-items` does not, which is what makes `place-items:left` unreadable.
+ * Read off the two grammars, keyword by keyword.
+ * @param {[string, string[]][][]} tables the shorthand-to-longhands tables to read
+ * @returns {[string, string[]][]} `[shorthand, keywords]`, sorted, empty ones out
+ */
+const collectUnsharedLonghandKeywords = (tables) => {
+	/**
+	 * Every bare keyword a grammar accepts, references followed.
+	 * @param {string} name a property
+	 * @returns {Set<string> | null} its keywords, or null when it has no grammar
+	 */
+	const keywordsOf = (name) => {
+		const property = properties[name];
+		if (property === undefined || typeof property.syntax !== "string") {
+			return null;
+		}
+		/** @type {Set<string>} */
+		const out = new Set();
+		/**
+		 * @param {EXPECTED_ANY} node a value-syntax node
+		 * @param {Set<string>} seen the references already followed
+		 * @returns {void}
+		 */
+		const collect = (node, seen) => {
+			if (node.type === "keyword") {
+				out.add(node.name.toLowerCase());
+				return;
+			}
+			// `<'border-top-color'>` is a `property` node: how one longhand of a
+			// family states that it takes whatever another of them does.
+			if (node.type === "type" || node.type === "property") {
+				const referenced =
+					node.type === "property"
+						? properties[node.name]
+						: syntaxes[node.name];
+				if (referenced === undefined || seen.has(node.name)) return;
+				if (typeof referenced.syntax !== "string") return;
+				seen.add(node.name);
+				collect(parseValueSyntax(referenced.syntax), seen);
+				return;
+			}
+			switch (node.type) {
+				case "oneOf":
+				case "anyOf":
+				case "allOf":
+				case "sequence":
+					for (const item of node.items) collect(item, seen);
+					break;
+				case "group":
+				case "parens":
+				case "multiplier":
+					collect(node.body, seen);
+					break;
+				case "function":
+					if (node.body !== null) collect(node.body, seen);
+					break;
+				default:
+					break;
+			}
+		};
+		collect(parseValueSyntax(property.syntax), new Set());
+		return out;
+	};
+	/** @type {[string, string[]][]} */
+	const out = [];
+	for (const table of tables) {
+		for (const [shorthand, longhands] of table) {
+			const sets = longhands.map(keywordsOf);
+			if (sets.includes(null)) continue;
+			/** @type {Set<string>} */
+			const unshared = new Set();
+			for (const set of /** @type {Set<string>[]} */ (sets)) {
+				for (const keyword of set) {
+					if (
+						sets.some(
+							(other) => !(/** @type {Set<string>} */ (other).has(keyword))
+						)
+					) {
+						unshared.add(keyword);
+					}
+				}
+			}
+			if (unshared.size !== 0) out.push([shorthand, [...unshared].sort()]);
+		}
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
 
 // The value types a grammar walk stops at rather than expands: what a minifier
@@ -2414,7 +2462,7 @@ const reachesColor = (name, seen) => {
  */
 const collectNegativeAcceptingProperties = () => {
 	const accepting = new Set(SUPPLEMENT.negativeAcceptingProperties);
-	for (let changed = true; changed;) {
+	for (let changed = true; changed; ) {
 		changed = false;
 		for (const [name, entry] of Object.entries(properties)) {
 			if (accepting.has(name) || typeof entry.syntax !== "string") continue;
@@ -2586,8 +2634,8 @@ const collectOmittableInitialKeywords = (
 			node.type === "group"
 				? isInitial(node.body)
 				: node.type === "oneOf"
-					? node.items.some(isInitial)
-					: node.type === "keyword" && node.name === initial;
+				? node.items.some(isInitial)
+				: node.type === "keyword" && node.name === initial;
 		// The supplement states the keyword is droppable; mdn-data must still agree.
 		if (tree.type !== "anyOf" || !tree.items.some(isInitial)) {
 			throw new Error(`No omittable '${initial}' in '${name}': ${syntax}`);
@@ -2818,7 +2866,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], overridableUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -3050,45 +3098,6 @@ const SUPPLEMENT = {
 	// argument through trig, which amplifies a truncated digit into a different
 	// computed matrix (measured in headless Chromium).
 	angleUnits: ["deg", "grad", "rad", "turn"],
-	// The units old enough that a declaration using one is never a fallback for
-	// an engine that cannot read a newer sibling — which is what lets a later
-	// declaration supersede an earlier one. CSS 2.1 through CSS Values 3, plus
-	// `fr`, as old as the grid properties that are the only place it is legal.
-	// Left out on purpose: the container-query units, the font-relative units
-	// newer than `ch` (`cap`, `ic`, `lh`, `rlh`, `rex`, `rch`, `ric`), the
-	// small/large/dynamic viewport units, and `x` for `dppx` — a declaration
-	// spelled in one of those is exactly the fallback pair worth keeping.
-	// `mdn-data`'s units carry no version, so no dataset states this.
-	overridableUnits: [
-		"%",
-		"ch",
-		"cm",
-		"deg",
-		"dpcm",
-		"dpi",
-		"dppx",
-		"em",
-		"ex",
-		"fr",
-		"grad",
-		"hz",
-		"in",
-		"khz",
-		"mm",
-		"ms",
-		"pc",
-		"pt",
-		"px",
-		"q",
-		"rad",
-		"rem",
-		"s",
-		"turn",
-		"vh",
-		"vmax",
-		"vmin",
-		"vw"
-	],
 	// CSS Values 4 §8.1: a quarter turn, in each unit that spells it exactly.
 	// The trig functions are only folded on these, so the table is what says
 	// where. `rad` has no entry — a quarter turn is π/2 of them, which no double
@@ -3888,8 +3897,8 @@ const collectPrefixes = (compat, name, alternatives) => {
 			const spelling = entry.prefix
 				? entry.prefix + name
 				: alternatives && entry.alternative_name
-					? entry.alternative_name.replace(ALTERNATIVE_DECORATION, "")
-					: null;
+				? entry.alternative_name.replace(ALTERNATIVE_DECORATION, "")
+				: null;
 			if (spelling === null) continue;
 			const prefixedFrom = encodeVersion(entry.version_added);
 			if (prefixedFrom === null || prefixedFrom >= target) continue;
@@ -3932,7 +3941,7 @@ const collectPrefixes = (compat, name, alternatives) => {
 						: [
 								Math.min(existing[0], prefixedFrom),
 								Math.max(existing[1], until)
-							]
+						  ]
 				);
 			}
 		}
@@ -3979,7 +3988,7 @@ const collectPrefixTable = (
 				? spellings
 				: spellings.filter(
 						([spelling]) => !excluded.some((p) => spelling.startsWith(p))
-					);
+				  );
 		if (kept.length !== 0) table.push([name, kept]);
 	}
 	if (supplement) applyPrefixSupplement(table);
@@ -4976,8 +4985,11 @@ const collectData = () => {
 	const oneValuePairShorthands = collectOneValuePairShorthands(pairLonghands);
 	const familyLonghands = collectFamilyLonghands();
 	const slashLonghands = collectSlashLonghands();
-	const resetLonghands = collectResetLonghands();
 	const customIdentListProperties = collectCustomIdentListProperties();
+	const unsharedLonghandKeywords = collectUnsharedLonghandKeywords([
+		boxLonghands,
+		pairLonghands
+	]);
 
 	// Every longhand the three merge tables can consume, so the printer can ask
 	// one question of a block instead of walking all three tables.
@@ -5023,7 +5035,9 @@ const collectData = () => {
 */
 
 // GENERATED by tooling/generate-css-data.js — do not edit.
-// Sources: mdn-data ${mdnDataPackage.version}, color-name ${colorNamePackage.version}, @mdn/browser-compat-data ${bcdVersion}.
+// Sources: mdn-data ${mdnDataPackage.version}, color-name ${
+		colorNamePackage.version
+	}, @mdn/browser-compat-data ${bcdVersion}.
 
 "use strict";
 
@@ -5076,6 +5090,13 @@ const ONE_VALUE_PAIR_SHORTHANDS = ${setLiteral(oneValuePairShorthands)};
 // the longhands they merge.
 const PLACE_SHORTHANDS = ${setLiteral(SUPPLEMENT.placeShorthands)};
 
+// The keywords a shorthand's longhands disagree on, so a merge writing one into
+// every slot would turn a declaration the engine kept into a shorthand it drops:
+// \`justify-items\` takes \`left\` and \`align-items\` does not.
+const UNSHARED_LONGHAND_KEYWORDS = new Map([${unsharedLonghandKeywords
+		.map(([name, keywords]) => `["${name}", ${setLiteral(keywords)}]`)
+		.join(", ")}]);
+
 // The shorthands written as an order-free \`||\` of their own longhands, each
 // appearing once, in grammar order. A merge emits every value, so the only
 // question is whether each parses back into the longhand it was authored on.
@@ -5088,13 +5109,6 @@ const FAMILY_LONGHANDS = new Map([${familyLonghands
 // vendor spelling is a name the engine parses rather than one it may drop — so a
 // later declaration listing an earlier one's items cannot be its fallback.
 const CUSTOM_IDENT_LIST_PROPERTIES = ${setLiteral(customIdentListProperties)};
-
-// The longhands a shorthand resets that its own name is no prefix of, so two
-// declarations are read as writing the same property whichever way they are
-// spelled: \`inset\` sets \`top\`, \`gap\` sets \`row-gap\`, \`font\` sets \`line-height\`.
-const RESET_LONGHANDS = new Map([${resetLonghands
-		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
-		.join(", ")}]);
 
 const SLASH_LONGHANDS = new Map([${slashLonghands
 		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
@@ -5411,8 +5425,6 @@ const UNIT_CONVERSION_TARGETS = ${setLiteral(SUPPLEMENT.unitConversionTargets)};
 // trig, which turns a truncated digit into a different computed matrix.
 const ANGLE_UNITS = ${setLiteral(SUPPLEMENT.angleUnits)};
 
-const OVERRIDABLE_UNITS = ${setLiteral(SUPPLEMENT.overridableUnits)};
-
 // A quarter turn in each unit that spells it exactly (CSS Values 4 §8.1), as
 // \`unit -> the count\`. The trig functions are folded only where their argument
 // is a whole number of these, which is where sine and cosine are rational.
@@ -5579,7 +5591,9 @@ ${prefixSpellingKeywords
 // not name is skipped, so prefixes are added and dropped for the rest of the
 // selection alone; a selection of only those turns prefixing off entirely.
 /** @type {Set<string>} */
-const PREFIX_BROWSERS = new Set([${prefixBrowsers.map((browser) => `"${browser}"`).join(", ")}]);
+const PREFIX_BROWSERS = new Set([${prefixBrowsers
+		.map((browser) => `"${browser}"`)
+		.join(", ")}]);
 
 module.exports.ABSOLUTE_UNIT_SCALE = ABSOLUTE_UNIT_SCALE;
 module.exports.ALPHA_VALUE_PROPERTIES = ALPHA_VALUE_PROPERTIES;\nmodule.exports.ANGLE_UNITS = ANGLE_UNITS;
@@ -5618,7 +5632,7 @@ module.exports.MATH_FUNCTION_KEYWORDS = MATH_FUNCTION_KEYWORDS;
 module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;\nmodule.exports.MERGEABLE_AT_RULES = MERGEABLE_AT_RULES;\nmodule.exports.MERGE_LONGHANDS = MERGE_LONGHANDS;
 module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;
 module.exports.NTH_NAMED_EQUIVALENTS = NTH_NAMED_EQUIVALENTS;\nmodule.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;\nmodule.exports.OMITTABLE_INITIAL_KEYWORDS = OMITTABLE_INITIAL_KEYWORDS;
-module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;\nmodule.exports.OVERRIDABLE_UNITS = OVERRIDABLE_UNITS;
+module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
 module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.PLACE_SHORTHANDS = PLACE_SHORTHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
 module.exports.PREFIXED_AT_RULES = PREFIXED_AT_RULES;
 module.exports.PREFIXED_PROPERTIES = PREFIXED_PROPERTIES;
@@ -5627,17 +5641,41 @@ module.exports.PREFIXED_SPELLING_KEYWORDS = PREFIXED_SPELLING_KEYWORDS;
 module.exports.PREFIXED_VALUES = PREFIXED_VALUES;
 module.exports.PREFIX_BROWSERS = PREFIX_BROWSERS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
-module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RESET_LONGHANDS = RESET_LONGHANDS;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
+module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
 module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
-module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
+module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.UNSHARED_LONGHAND_KEYWORDS = UNSHARED_LONGHAND_KEYWORDS;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
 module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;
 `;
 
-	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${negativeAcceptingProperties.length} negative-accepting properties, ${lengthOnlyFunctions.length} length-only functions, ${pairLonghands.length} pair shorthands, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity, ${cssModulesKeywords.length} css modules scoped properties (${cssModulesKeywords.reduce((total, [, , table]) => total + table.length, 0)} keywords), ${prefixedProperties.length} prefixed properties, ${prefixedSelectors.length} prefixed selectors, ${prefixedAtRules.length} prefixed at-rules and ${prefixedValues.reduce((total, [, values]) => total + values.length, 0)} prefixed values over ${prefixBrowsers.length} browsers`;
+	const summary = `${
+		boxShorthands.length + slashShorthands.length
+	} box shorthands (${slashShorthands.length} with a \`/\`), ${
+		colorFunctions.length
+	} color functions, ${substitutionFunctions.length} substitution functions, ${
+		colorNames.length
+	} color names, ${integerProperties.length} integer properties, ${
+		negativeAcceptingProperties.length
+	} negative-accepting properties, ${
+		lengthOnlyFunctions.length
+	} length-only functions, ${pairLonghands.length} pair shorthands, ${
+		mathFunctionArity.length
+	} of ${mathFunctions.length} math functions with a readable arity, ${
+		cssModulesKeywords.length
+	} css modules scoped properties (${cssModulesKeywords.reduce(
+		(total, [, , table]) => total + table.length,
+		0
+	)} keywords), ${prefixedProperties.length} prefixed properties, ${
+		prefixedSelectors.length
+	} prefixed selectors, ${
+		prefixedAtRules.length
+	} prefixed at-rules and ${prefixedValues.reduce(
+		(total, [, values]) => total + values.length,
+		0
+	)} prefixed values over ${prefixBrowsers.length} browsers`;
 	return { source, summary };
 };
 

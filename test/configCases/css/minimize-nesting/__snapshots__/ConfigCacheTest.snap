@@ -3,9 +3,6 @@
 exports[`ConfigCacheTestCases css minimize-nesting minimize-nesting should compile 1`] = `
 Array [
   "/*! join: adjacent nested rules printing the same block are the one rule they stand for */.a{.n1,.n2>.n3{color:red}}",
-  "/*! join: ...and one further back, where nothing between them writes what the
-   block they share does */.a2{.n1a,.n1c{color:blue}.n1b{top:0}}",
-  "/*! declined: a rule between them writing the same property would win where it lost */.a3{.n1d{color:green}.n1e{color:gray}.n1f{color:green}}",
   "/*! join: ...and \`&\` joins there, an engine that cannot read it losing the block either way */.b{&.n4,&.n5{top:0}}",
   "/*! join: ...including as a compound of its own */.c{& .n6,& .n7{top:0}}",
   "/*! declined: a nested rule of its own, whose \`&\` would become the joined list */.d{.n8{top:0;i{top:1px}}.n9{top:0;i{top:1px}}}",
@@ -23,11 +20,8 @@ Array [
    whose own rules then meet at the seam and join like any other pair */@media (width>=200px){.p1,.p2{top:0}}",
   "/*! at-rule: ...and where both name one selector, the seam joins its blocks too */@media (width>=250px){.p3{top:0;left:0}}",
   "/*! at-rule: ...at any depth, and \`@supports\` the same way */.q{@supports (top:0){.q1,.q2{top:0}}}",
-  "/*! at-rule: ...and two blocks of one named layer are one layer however far
-   apart they stand, since a rule in another layer wins or loses on the layer */@layer s1{.s1a,.s1b{top:0}}.s1mid{left:0}",
   "/*! declined: CSS Cascade 5 §6.4.1 opens a layer of its own per \`@layer {\`, so a
    later one beats an earlier whatever the selectors say */@layer{#s2a{color:red}}@layer{.s2b{color:blue}}",
-  "/*! declined: a same-name layer between them is read by document order */@layer s3{.s3a{top:0}}@layer s3.inner{@layer s3{.s3mid{top:0}}}@layer s3{.s3b{left:0}}",
   "/*! declined: the conditions differ, so the two blocks are not one */@media (width>=300px){.r1{top:0}}@media (width>=400px){.r2{top:0}}",
   "/*! declined: a later \`@keyframes\` of the same name replaces the earlier, so the
    two blocks are not one either */@keyframes s{0%{top:0}}@keyframes s{50%{top:1px}}",

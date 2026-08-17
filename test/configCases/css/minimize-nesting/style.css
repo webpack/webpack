@@ -5,11 +5,6 @@
 
 /*! join: adjacent nested rules printing the same block are the one rule they stand for */
 .a { .n1 { color: red } .n2 > .n3 { color: red } }
-/*! join: ...and one further back, where nothing between them writes what the
-   block they share does */
-.a2 { .n1a { color: blue } .n1b { top: 0 } .n1c { color: blue } }
-/*! declined: a rule between them writing the same property would win where it lost */
-.a3 { .n1d { color: green } .n1e { color: gray } .n1f { color: green } }
 /*! join: ...and `&` joins there, an engine that cannot read it losing the block either way */
 .b { &.n4 { top: 0 } &.n5 { top: 0 } }
 /*! join: ...including as a compound of its own */
@@ -45,19 +40,10 @@
 @media (min-width: 250px) { .p3 { left: 0 } }
 /*! at-rule: ...at any depth, and `@supports` the same way */
 .q { @supports (top: 0) { .q1 { top: 0 } } @supports (top: 0) { .q2 { top: 0 } } }
-/*! at-rule: ...and two blocks of one named layer are one layer however far
-   apart they stand, since a rule in another layer wins or loses on the layer */
-@layer s1 { .s1a { top: 0 } }
-.s1mid { left: 0 }
-@layer s1 { .s1b { top: 0 } }
 /*! declined: CSS Cascade 5 §6.4.1 opens a layer of its own per `@layer {`, so a
    later one beats an earlier whatever the selectors say */
 @layer { #s2a { color: red } }
 @layer { .s2b { color: blue } }
-/*! declined: a same-name layer between them is read by document order */
-@layer s3 { .s3a { top: 0 } }
-@layer s3.inner { @layer s3 { .s3mid { top: 0 } } }
-@layer s3 { .s3b { left: 0 } }
 /*! declined: the conditions differ, so the two blocks are not one */
 @media (min-width: 300px) { .r1 { top: 0 } }
 @media (min-width: 400px) { .r2 { top: 0 } }

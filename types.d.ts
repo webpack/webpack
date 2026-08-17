@@ -22086,17 +22086,6 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	): void;
 
 	/**
-	 * {@link take} for text held back past its node, which has since been recycled.
-	 * The store was dropped when the text was held rather than here.
-	 */
-	takeText(
-		text: string,
-		srcOffset?: number,
-		srcLine?: number,
-		srcCol?: number
-	): void;
-
-	/**
 	 * Tie whatever is emitted next to a source position: flush the kept comments
 	 * that precede it, then record the mapping. Split out of {@link take} for a
 	 * node printed in pieces, whose first piece is emitted well after the printer
