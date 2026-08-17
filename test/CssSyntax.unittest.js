@@ -1176,6 +1176,23 @@ describe("CssSyntax — minify comment preservation", () => {
 		expect(min("/* just a note */a{x:1}")).toBe("a{x:1}");
 	});
 
+	it.each([
+		// An `@import` is not a rule a join may hold back, so it is written straight
+		// through — with whatever comment stood before it still ahead of it.
+		['/*! a */@import "x.css";a{top:0}', '/*! a */@import "x.css";a{top:0}'],
+		// ...including where a rule held back for a join goes out first.
+		[
+			'a{color:red}b{color:red}/*! c */@import "x.css";',
+			'a,b{color:red}/*! c */@import "x.css";'
+		],
+		['/*! h */@charset "utf-8";a{top:0}', '/*! h */@charset "utf-8";a{top:0}']
+	])(
+		"writes a kept comment ahead of the rule it stood before: %s",
+		(src, out) => {
+			expect(min(src)).toBe(out);
+		}
+	);
+
 	it("emits a kept comment after the last rule (trailing flush)", () => {
 		expect(min("a{color:red}/*! end */")).toBe("a{color:red}/*! end */");
 	});
