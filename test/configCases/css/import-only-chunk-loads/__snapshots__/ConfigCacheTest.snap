@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css import-only-chunk-loads exported tests should cover a chunk whose only css is an external import 1`] = `"/******/ 					if(\\"main\\" != chunkId) {"`;

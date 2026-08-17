@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigCacheTestCases css import-only-no-css-module exported tests should load a stylesheet no css module produced 1`] = `"/******/ 					if(\\"lazy_js\\" == chunkId) {"`;

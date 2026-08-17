@@ -1,11 +1,7 @@
 "use strict";
 
-// Two entries of ONE compilation loading wasm differently, under a public path that is
-// neither `auto` nor an absolute URL. `fetch` is the only loader such a path reaches,
-// so it is the only one that has to keep the runtime form — the `readFile` entry
-// resolves the binary against the chunk it is read from, exactly as a baked literal
-// does, and must still bake one. Unless the two share a binary: it is generated once
-// for both, so neither loader can be told the other's shape.
+// Two entries loading wasm differently under a non-`auto` public path: only `fetch`
+// keeps the runtime form, unless the two share a binary and neither can be told apart.
 
 const webpack = require("../../../../");
 
@@ -25,7 +21,12 @@ const base = (index, name, second, nodeRef) => ({
 	devtool: false,
 	entry: {
 		[`${name}-node`]: { import: "./node-entry.js", wasmLoading: "async-node" },
-		[`${name}-web`]: { import: second, wasmLoading: "fetch" }
+		[`${name}-web`]: { import: second, wasmLoading: "fetch" },
+		// Shares no binary with either, so the sharing pair says nothing about it.
+		[`${name}-alone`]: {
+			import: "./alone-entry.js",
+			wasmLoading: "async-node"
+		}
 	},
 	module: {
 		rules: [
@@ -46,9 +47,21 @@ const base = (index, name, second, nodeRef) => ({
 			__INDEX__: JSON.stringify(index),
 			__NAME__: JSON.stringify(name),
 			__NODE_REF__: JSON.stringify(INSTANTIATE + nodeRef),
+			__BAKED__: JSON.stringify(`${INSTANTIATE}new URL("./`),
 			__RUNTIME_FORM__: JSON.stringify(`${INSTANTIATE}module.id, `)
 		})
 	]
+});
+
+// Two entries reaching ONE async chunk, so its runtime is a set of keys -- the shape
+// the group lookup answers key by key. Neither fetches, so no chunk cuts the scan.
+/** @type {(index: number, name: string) => import("../../../../").Configuration} */
+const multi = (index, name) => ({
+	...base(index, name, "./web-entry.js", 'new URL("./'),
+	entry: {
+		[`${name}-a`]: { import: "./multi-a-entry.js", wasmLoading: "async-node" },
+		[`${name}-b`]: { import: "./multi-b-entry.js", wasmLoading: "async-node" }
+	}
 });
 
 /** @type {import("../../../../").Configuration[]} */
@@ -56,5 +69,6 @@ module.exports = [
 	// A binary each: the runtimes are told apart, so only the fetching one bails.
 	base(0, "split", "./web-entry.js", 'new URL("./'),
 	// One binary between them: neither runtime can be answered on its own.
-	base(1, "shared", "./shared-entry.js", "module.id, ")
+	base(1, "shared", "./shared-entry.js", "module.id, "),
+	multi(2, "multi")
 ];
