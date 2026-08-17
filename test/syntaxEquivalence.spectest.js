@@ -55,10 +55,14 @@ const BATCH = 150;
 // this is three orders above what any file needs: generous enough never to fail
 // a slow runner, small enough that every file which hangs is named in one run
 // rather than one per quarter hour.
-const FILE_TIMEOUT = 30000;
+// Enough for a file that gives up to then read its values one at a time.
+const FILE_TIMEOUT = 180000;
 // Below it, so a file that hangs is failed here rather than by jest — which is
 // what lets the page be replaced before the next file runs.
 const FILE_BUDGET = 20000;
+// One value on the retry that follows, where naming it is the whole point. A
+// declaration costs a millisecond, so this is three orders above what it needs.
+const VALUE_BUDGET = 2000;
 
 // Documents and stylesheets the printers are known to get wrong, per corpus.
 // Each is a filed defect, not a tolerated one; every comparison matches its set
@@ -601,20 +605,21 @@ describe("printer output in real Chrome", () => {
 		);
 
 	/**
-	 * One file's declarations, on a page the next file can still use. A value
-	 * that hangs leaves the renderer mid-recalculation, so the page is replaced
-	 * rather than reused — without that, one bad file times out every file
-	 * behind it and the run ends on the job's budget with nothing named.
-	 * @param {{ name: string, property: string, key: string, raw: string, min: string }[]} cases the file's declarations
+	 * Declarations read within a budget, on a page the next read can still use.
+	 * A value that hangs leaves the renderer mid-recalculation, so the page is
+	 * replaced rather than reused — without that, one bad read times out every
+	 * read behind it and the run ends on the job's budget with nothing named.
+	 * @param {{ name: string, property: string, key: string, raw: string, min: string }[]} cases the declarations to read
+	 * @param {number} budget milliseconds to allow
 	 * @returns {Promise<{ name: string, key: string }[]>} what moved
 	 */
-	const compareFile = async (cases) => {
+	const compareWithin = async (cases, budget) => {
 		/** @type {NodeJS.Timeout} */
 		let expiry;
 		const expired = new Promise((resolve, reject) => {
 			expiry = setTimeout(() => {
-				reject(new Error(`gave up on ${cases[0].name} after ${FILE_BUDGET}ms`));
-			}, FILE_BUDGET);
+				reject(new Error(`gave up after ${budget}ms`));
+			}, budget);
 		});
 		try {
 			return await Promise.race([compareValues(cases), expired]);
@@ -624,6 +629,40 @@ describe("printer output in real Chrome", () => {
 			throw err;
 		} finally {
 			clearTimeout(expiry);
+		}
+	};
+
+	/**
+	 * One file's declarations, named individually when the file gives up. The
+	 * file is what a defect is read from, but the value is what one is filed
+	 * against, so a hang is retried one declaration at a time rather than
+	 * leaving the whole file as the only thing the run can point at.
+	 * @param {{ name: string, property: string, key: string, raw: string, min: string }[]} cases the file's declarations
+	 * @returns {Promise<{ name: string, key: string }[]>} what moved
+	 */
+	const compareFile = async (cases) => {
+		try {
+			return await compareWithin(cases, FILE_BUDGET);
+		} catch (err) {
+			if (cases.length === 1) throw err;
+			/** @type {{ name: string, key: string }[]} */
+			const moved = [];
+			/** @type {string[]} */
+			const hung = [];
+			for (const one of cases) {
+				try {
+					moved.push(...(await compareWithin([one], VALUE_BUDGET)));
+				} catch (_) {
+					hung.push(JSON.stringify(one.raw));
+				}
+			}
+			// Nothing hung on its own: the file is merely slow read in one go,
+			// which the values it just reported already covered.
+			if (hung.length === 0) return moved;
+			throw new Error(
+				`gave up on ${cases[0].property} in ${cases[0].name} at ${hung.join(", ")}`,
+				{ cause: err }
+			);
 		}
 	};
 
