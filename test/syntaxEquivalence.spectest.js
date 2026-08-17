@@ -534,9 +534,12 @@ describe("printer output in real Chrome", () => {
 	// area timing out named 233 declarations at once and blamed all of them.
 	/** @type {Map<string, { name: string, property: string, key: string, raw: string, min: string }[]>} */
 	const declarationsByFile = new Map();
+	/** @type {number} every declaration the corpus holds, compared or not */
+	let declarationsRead = 0;
 	for (const { property, value, name } of hasCorpus()
 		? cssDeclarations()
 		: []) {
+		declarationsRead++;
 		const min = minifyDeclaration(property, value);
 		// A value the printer copied out is compared against itself, which the
 		// engine answers the same way twice by construction. Three quarters of
@@ -677,7 +680,22 @@ describe("printer output in real Chrome", () => {
 		it(NO_CORPUS, () => {
 			// No-op: the corpus is an optional git submodule.
 		});
+	} else {
+		// The tier compares what the printer rewrites, so a printer that rewrote
+		// nothing would leave it with no work and still pass. Bounds well under
+		// today's 8,785 read and 2,198 compared, to fail on that rather than on
+		// the corpus growing or the printer touching a few values more or less.
+		it("should have a corpus the printer rewrites a share of", () => {
+			expect(declarationsRead).toBeGreaterThan(5000);
+			expect(
+				[...declarationsByFile.values()].reduce(
+					(count, cases) => count + cases.length,
+					0
+				)
+			).toBeGreaterThan(1000);
+		});
 	}
+
 	for (const [name, cases] of declarationsByFile) {
 		it(
 			`should compute the same style from a value in ${name} and its minified form`,
