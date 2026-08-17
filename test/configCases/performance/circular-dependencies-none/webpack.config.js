@@ -1,8 +1,7 @@
 "use strict";
 
-// Each module points back at the entry, but none of the edges forces it to be
-// evaluated: `import()` defers, `__webpack_is_included__` never loads, and a
-// CommonJS module reading its own `module.exports` points at itself.
+// Every back-edge here is async, weak or a self-reference, so none of them
+// forces the entry to be evaluated again.
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
