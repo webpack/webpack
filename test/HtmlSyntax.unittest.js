@@ -4030,9 +4030,12 @@ describe("SourceProcessor — JSON <script> bodies", () => {
 	 */
 	const minifyBody = (type, body) => {
 		const out = minify(`<script type="${type}">${body}</script>`);
-		const match = /<script[^>]*>([\s\S]*)<\/script>/.exec(out);
-		if (match === null) throw new Error(`no <script> in ${out}`);
-		return match[1];
+		// Sliced, not matched: the wrapper is known, and none of the types below
+		// carries a `>`, so the first one ends the open tag.
+		const start = out.indexOf(">") + 1;
+		const end = out.lastIndexOf("</script>");
+		if (start === 0 || end === -1) throw new Error(`no <script> in ${out}`);
+		return out.slice(start, end);
 	};
 
 	it.each([
@@ -4075,9 +4078,8 @@ describe("SourceProcessor — JSON <script> bodies", () => {
 		);
 	});
 
-	// A minifier that re-serializes the body unescapes `\u003c`, so a string
-	// carrying `</script>` closes the element early and the rest of it becomes
-	// markup — the swc `minifyJson` vulnerability. Copying keeps the escape.
+	// Re-serializing unescapes `\u003c`, so `</script>` closes the element early
+	// — the swc `minifyJson` vulnerability. Copying keeps the escape.
 	it.each(["application/json", "application/ld+json"])(
 		"keeps an escaped `</script>` escaped in %s",
 		(type) => {
