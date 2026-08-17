@@ -5,6 +5,11 @@ type EXPECTED_OBJECT = object;
 declare module "*.json";
 declare module "rimraf";
 
+// ESLint's own parser, reached directly by tooling/ironclad's test parser.
+declare module "espree" {
+	export function parse(code: string, options: object): object;
+}
+
 declare module "color-name" {
 	const colors: { [name: string]: [number, number, number] };
 	export = colors;

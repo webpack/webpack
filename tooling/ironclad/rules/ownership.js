@@ -47,6 +47,14 @@
  * @property {number} end offset after which the value is gone
  */
 
+/**
+ * The slice of typescript-eslint's parser services this rule uses. Absent
+ * without type-aware linting, which is a supported configuration.
+ * @typedef {object} TypeServices
+ * @property {{ getTypeChecker(): import("typescript").TypeChecker }} [program] type program
+ * @property {(node: Node) => import("typescript").Type} [getTypeAtLocation] type of a node
+ */
+
 // `borrowMut` first: `@borrow` would otherwise match its prefix.
 const MARKER_REGEXP = /@(borrowMut|borrow|move)\b/;
 
@@ -64,7 +72,8 @@ const FUNCTION_TYPES = new Set([
 	"FunctionExpression"
 ]);
 
-// Inits that produce a primitive, which is copied rather than moved.
+// Inits that produce a primitive, which is copied rather than moved. Only a
+// fallback: with type information the type itself answers this.
 const COPY_INIT_TYPES = new Set([
 	"BinaryExpression",
 	"Literal",
@@ -72,6 +81,26 @@ const COPY_INIT_TYPES = new Set([
 	"UnaryExpression",
 	"UpdateExpression"
 ]);
+
+/** @type {typeof import("typescript") | null} */
+let typescript = null;
+let typescriptLoaded = false;
+
+/**
+ * TypeScript is present whenever type-aware linting is, and absent otherwise —
+ * the rule works either way, so the require is optional.
+ * @returns {typeof import("typescript") | null} the TypeScript module
+ */
+const loadTypeScript = () => {
+	if (typescriptLoaded) return typescript;
+	typescriptLoaded = true;
+	try {
+		typescript = require("typescript");
+	} catch (_err) {
+		typescript = null;
+	}
+	return typescript;
+};
 
 /**
  * Builds a child to parent map, so the rule can look upwards from any node
@@ -137,6 +166,30 @@ const isInnerScope = (inner, outer) => {
 		if (scope === outer) return true;
 	}
 	return false;
+};
+
+/**
+ * Splits `"ReadableStream#getReader"` into the method and the receiver type it
+ * applies to. A bare `"getReader"` applies to any receiver.
+ * @param {string[]} entries configured entries
+ * @returns {Map<string, string[] | null>} method to accepted type names
+ */
+const parseReceiverEntries = (entries) => {
+	/** @type {Map<string, string[] | null>} */
+	const result = new Map();
+	for (const entry of entries) {
+		const separator = entry.indexOf("#");
+		const method = separator === -1 ? entry : entry.slice(separator + 1);
+		const typeName = separator === -1 ? null : entry.slice(0, separator);
+		if (!result.has(method)) {
+			result.set(method, typeName === null ? null : [typeName]);
+			continue;
+		}
+		const existing = result.get(method);
+		if (existing && typeName !== null) existing.push(typeName);
+		else result.set(method, null);
+	}
+	return result;
 };
 
 /**
@@ -210,23 +263,57 @@ const rule = {
 				"structuredClone"
 			]
 		);
-		const consumesReceiver = new Set(
+		const consumesReceiver = parseReceiverEntries(
 			/** @type {string[]} */ (options.consumesReceiver) || [
-				"transferControlToOffscreen"
+				"HTMLCanvasElement#transferControlToOffscreen"
 			]
 		);
 		// Method that locks its receiver, mapped to the method that unlocks it.
 		// A Map, not an object: `locksReceiver.toString` would otherwise inherit
 		// from Object.prototype and make every `x.toString()` a lock.
-		const locksReceiver = new Map(
-			Object.entries(
-				/** @type {Record<string, string>} */ (options.locksReceiver) || {
-					getReader: "releaseLock",
-					getWriter: "releaseLock"
-				}
-			)
-		);
+		const lockOptions = /** @type {Record<string, string>} */ (
+			options.locksReceiver
+		) || {
+			"ReadableStream#getReader": "releaseLock",
+			"WritableStream#getWriter": "releaseLock"
+		};
+		const locksReceiver = parseReceiverEntries(Object.keys(lockOptions));
+		/** @type {Map<string, string>} */
+		const releaseOf = new Map();
+		for (const [entry, release] of Object.entries(lockOptions)) {
+			const separator = entry.indexOf("#");
+			releaseOf.set(
+				separator === -1 ? entry : entry.slice(separator + 1),
+				release
+			);
+		}
 		const implicitMove = options.implicitMove === true;
+
+		// Type information narrows the tables below when it is there, and nothing
+		// depends on it being there: a bare `"getReader"` entry still matches by
+		// name alone.
+		const services = /** @type {TypeServices | undefined} */ (
+			/** @type {unknown} */ (sourceCode.parserServices)
+		);
+		const getTypeAtLocation =
+			services && services.program && services.getTypeAtLocation
+				? services.getTypeAtLocation
+				: null;
+		const typeChecker =
+			getTypeAtLocation && services && services.program
+				? services.program.getTypeChecker()
+				: null;
+		const ts = typeChecker ? loadTypeScript() : null;
+		const copyTypeMask = ts
+			? ts.TypeFlags.StringLike |
+				ts.TypeFlags.NumberLike |
+				ts.TypeFlags.BooleanLike |
+				ts.TypeFlags.BigIntLike |
+				ts.TypeFlags.ESSymbolLike |
+				ts.TypeFlags.Void |
+				ts.TypeFlags.Undefined |
+				ts.TypeFlags.Null
+			: 0;
 
 		const parents = buildParents(sourceCode);
 		const referenceOf = collectReferences(
@@ -403,6 +490,70 @@ const rule = {
 		};
 
 		/**
+		 * @param {Node} node node to type
+		 * @returns {import("typescript").Type | null} its type
+		 */
+		const typeAt = (node) => {
+			if (!getTypeAtLocation || !typeChecker) return null;
+			try {
+				return getTypeAtLocation(node);
+			} catch (_err) {
+				// A node the parser never mapped to TypeScript — treat as unknown.
+				return null;
+			}
+		};
+
+		/**
+		 * @param {import("typescript").Type} type type to name
+		 * @returns {Set<string>} the type's own name and every base type name
+		 */
+		const typeNames = (type) => {
+			/** @type {Set<string>} */
+			const names = new Set();
+			/** @type {import("typescript").Type[]} */
+			const queue = type.isUnion() ? type.types.slice() : [type];
+			while (queue.length > 0) {
+				const current = /** @type {import("typescript").Type} */ (queue.pop());
+				const symbol = current.getSymbol();
+				if (symbol) {
+					if (names.has(symbol.getName())) continue;
+					names.add(symbol.getName());
+				}
+				if (current.isClassOrInterface() && typeChecker) {
+					for (const base of typeChecker.getBaseTypes(current))
+						queue.push(base);
+				}
+			}
+			return names;
+		};
+
+		/**
+		 * @param {Identifier} node receiver identifier
+		 * @param {string[] | null} accepted type names the entry is limited to
+		 * @returns {boolean} true when the entry applies to this receiver
+		 */
+		const receiverMatches = (node, accepted) => {
+			if (accepted === null) return true;
+			const type = typeAt(/** @type {Node} */ (node));
+			// Without types the name alone decides, as it did before.
+			if (!type) return true;
+			const names = typeNames(type);
+			return accepted.some((name) => names.has(name));
+		};
+
+		/**
+		 * @param {Identifier} node identifier to test
+		 * @param {Variable} variable its variable
+		 * @returns {boolean} true when the value is copied rather than moved
+		 */
+		const isCopyValue = (node, variable) => {
+			const type = typeAt(/** @type {Node} */ (node));
+			if (!type) return isCopyVariable(variable);
+			const parts = type.isUnion() ? type.types : [type];
+			return parts.every((part) => (part.flags & copyTypeMask) !== 0);
+		};
+
+		/**
 		 * @param {CallExpression} call call to name
 		 * @returns {string | null} the called function or method name
 		 */
@@ -451,7 +602,13 @@ const rule = {
 		 */
 		const consumingCall = (node) => {
 			const receiver = receiverCall(node);
-			if (receiver && consumesReceiver.has(receiver.name)) return receiver.call;
+			if (
+				receiver &&
+				consumesReceiver.has(receiver.name) &&
+				receiverMatches(node, consumesReceiver.get(receiver.name) || null)
+			) {
+				return receiver.call;
+			}
 
 			let argument = /** @type {Node} */ (node);
 			let parent = parentOf(argument);
@@ -595,7 +752,11 @@ const rule = {
 				if (!owner || !reference.isRead()) continue;
 				const receiver = receiverCall(node);
 				if (!receiver) continue;
-				const release = locksReceiver.get(receiver.name);
+				if (!locksReceiver.has(receiver.name)) continue;
+				if (!receiverMatches(node, locksReceiver.get(receiver.name) || null)) {
+					continue;
+				}
+				const release = releaseOf.get(receiver.name);
 				if (!release) continue;
 				const declarator = parentOf(receiver.call);
 				const declared =
@@ -872,7 +1033,12 @@ const rule = {
 					}
 				}
 
-				if (!reference.isRead() || isCopyVariable(variable)) return;
+				if (
+					!reference.isRead() ||
+					isCopyValue(/** @type {Identifier} */ (node), variable)
+				) {
+					return;
+				}
 				const marker = markerFor(/** @type {Identifier} */ (node));
 				if (marker === "move") {
 					const parent = parentOf(node);

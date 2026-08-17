@@ -66,11 +66,19 @@ use(a.x); // `m` is dead by here
 	// Only what reaches the list is detached.
 	transferringCalls: ["postMessage", "structuredClone"],
 	// Methods that consume the object they are called on.
-	consumesReceiver: ["transferControlToOffscreen"],
+	consumesReceiver: ["HTMLCanvasElement#transferControlToOffscreen"],
 	// Methods that lock their receiver, mapped to the method that unlocks it.
-	locksReceiver: { getReader: "releaseLock", getWriter: "releaseLock" }
+	locksReceiver: {
+		"ReadableStream#getReader": "releaseLock",
+		"WritableStream#getWriter": "releaseLock"
+	}
 }]
 ```
+
+`Type#method` means: match the method name, and — **only if type information is
+available** — also require the receiver to be that type or a subtype of it. A
+bare `method` matches by name alone. So one entry covers both setups, and the
+same config gets stricter the moment types are switched on.
 
 ## The platform table
 
@@ -90,14 +98,36 @@ stream.cancel(); // useWhileMutablyBorrowed — the stream is locked
 ```
 
 Note what is _not_ in the table: `postMessage(value)` without a transfer list
-structured-clones its argument, so it is not a move. Reading a `Response` body
-(`res.json()` after `res.text()`) belongs here too, but `json` and `text` are
-names any object may have — that entry needs type information before it can be
-a default. Add it through `consumesReceiver` if your codebase can afford it.
+structured-clones its argument, so it is not a move.
 
 A lock is deliberately **lexical**, unlike a marker borrow: an unreleased lock
 is still held, so it runs to the end of the owner's scope rather than to the
 reader's last use.
+
+## With type information
+
+The rule reads typescript-eslint's `parserServices` when they are there, and
+works unchanged when they are not. Types are used for two things:
+
+- **Narrowing the platform table.** A `getReader()` on something that is not a
+  `ReadableStream` stops being a finding.
+- **Deciding what is copied.** Whether a value is a primitive comes from its
+  type instead of from the shape of its initializer.
+
+Measured on a fixture with a real `ReadableStream`, an `HTMLCanvasElement` and
+a look-alike object exposing its own `getReader()`:
+
+|                       | findings                                       |
+| --------------------- | ---------------------------------------------- |
+| without type services | 3 — including the look-alike, a false positive |
+| with type services    | 2 — the look-alike is correctly ignored        |
+
+Type-aware tests run against `testTypeParser.js` rather than a TypeScript
+program, so the suite needs no extra dependency.
+
+What types do **not** yet unlock is `Response` body consumption (`res.json()`
+after `res.text()`). Consuming a body invalidates `res.body`, not `res.status`,
+and the rule moves whole variables — partial moves have to come first.
 
 ## Measured on `lib/`
 
@@ -133,10 +163,12 @@ Two results worth keeping:
 - Loop back-edges are not iterated to a fixed point. `moveInLoop` instead asks
   whether the move's segment can be reached again, so `break` and `return` out
   of the loop are not reported.
-- The platform table matches method names, not types. A `getReader` on something
-  that is not a stream is a false positive; narrow the option if that happens.
-- Whether a value is a primitive is inferred from its initializer. Real type
-  information would replace that heuristic.
+- Without type information the platform table matches method names alone, so a
+  `getReader` on something that is not a stream is a false positive.
+- Moves are whole-variable. There are no partial moves, so a call that
+  invalidates one member of an object cannot be modelled.
+- Whether a value is a primitive falls back to its initializer's shape when no
+  type information is available.
 
 ## Running it
 

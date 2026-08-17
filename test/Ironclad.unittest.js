@@ -2,9 +2,20 @@
 
 const { RuleTester } = require("eslint");
 const rule = require("../tooling/ironclad/rules/ownership");
+const testTypeParser = require("../tooling/ironclad/testTypeParser");
 
 const ruleTester = new RuleTester({
 	languageOptions: { ecmaVersion: 2022, sourceType: "commonjs" }
+});
+
+/**
+ * @param {Record<string, string>} types declared type per identifier name
+ * @returns {import("eslint").Linter.LanguageOptions} language options driving
+ * the rule's type-aware path
+ */
+const withTypes = (types) => ({
+	parser: testTypeParser,
+	parserOptions: { ecmaVersion: 2022, sourceType: "script", types }
 });
 
 describe("ironclad/ownership", () => {
@@ -121,6 +132,26 @@ describe("ironclad/ownership", () => {
 				"setTimeout(() => use(a));",
 				"const b = /** @move */ a;"
 			].join("\n"),
+			{
+				// Types narrow the platform table: this `getReader` is not a stream's,
+				// so it takes no lock.
+				code: [
+					"const notAStream = makeThing();",
+					"const reader = notAStream.getReader();",
+					"notAStream.read();",
+					"use(reader);"
+				].join("\n"),
+				languageOptions: withTypes({ notAStream: "Thing" })
+			},
+			{
+				// A transfer list of primitives moves nothing.
+				code: [
+					"const count = compute();",
+					"worker.postMessage(payload, [count]);",
+					"use(count);"
+				].join("\n"),
+				languageOptions: withTypes({ count: "number" })
+			},
 			// A borrow assigned into an inner scope does not outlive the owner.
 			[
 				"function run() {",
@@ -330,6 +361,38 @@ describe("ironclad/ownership", () => {
 			{
 				code: "const a = { x: 1 };\nconst b = a;\nuse(a);",
 				options: [{ implicitMove: true }],
+				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// The receiver's type matches through its base types.
+				code: [
+					"const res = getResponse();",
+					"const body = res.consume();",
+					"use(res);"
+				].join("\n"),
+				options: [{ consumesReceiver: ["Body#consume"] }],
+				languageOptions: withTypes({ res: "Response:Body" }),
+				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// A real stream still locks with types in play.
+				code: [
+					"const stream = response.body;",
+					"const reader = stream.getReader();",
+					"stream.cancel();",
+					"use(reader);"
+				].join("\n"),
+				languageOptions: withTypes({ stream: "ReadableStream" }),
+				errors: [{ messageId: "useWhileMutablyBorrowed" }]
+			},
+			{
+				// Objects are still moved when the type says they are not primitive.
+				code: [
+					"const payload = build();",
+					"worker.postMessage(message, [payload]);",
+					"use(payload);"
+				].join("\n"),
+				languageOptions: withTypes({ payload: "Uint8Array" }),
 				errors: [{ messageId: "useAfterMove" }]
 			}
 		]
