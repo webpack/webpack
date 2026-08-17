@@ -72,11 +72,9 @@ const CASES = {
 		expect: "partial",
 		bailout: "name each other"
 	},
-	"base-uri": {
-		file: "main.mjs",
-		expect: "partial",
-		bailout: "which is not absolute"
-	}
+	// A relative base is read against the chunk at runtime, so the literal spells it
+	// there rather than resolving against it — no base of its own is needed.
+	"base-uri": { file: "main.mjs", expect: "analyzable" }
 };
 
 module.exports = {

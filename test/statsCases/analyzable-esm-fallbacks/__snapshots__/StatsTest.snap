@@ -165,7 +165,7 @@ base-uri:
   asset main.mjs X KiB [emitted] [javascript module] (name: main)
   asset async_js.mjs X bytes [emitted] [javascript module]
   asset XXXXXXXXXXXXXXXXXXXX.txt X bytes [emitted] [immutable] [from: asset.txt] (auxiliary name: main)
-  runtime modules X KiB 5 modules
+  runtime modules X KiB 4 modules
   cacheable modules X bytes (javascript) X bytes (asset)
     ./index-asset.js X bytes [built] [code generated]
     ./asset.txt X bytes [built] [code generated]
