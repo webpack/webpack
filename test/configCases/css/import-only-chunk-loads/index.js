@@ -10,7 +10,7 @@ it("should cover a chunk whose only css is an external import", () => {
 
 	expect(
 		fs.readFileSync(path.join(outputPath, "lazy_js.css"), "utf-8")
-	).toContain("@import");
+	).toContain('@import url("./ext.css");');
 
 	const source = fs.readFileSync(path.join(outputPath, "bundle0.js"), "utf-8");
 	const condition = source

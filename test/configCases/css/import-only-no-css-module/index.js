@@ -10,7 +10,7 @@ it("should load a stylesheet no css module produced", () => {
 
 	expect(
 		fs.readFileSync(path.join(outputPath, "lazy_js.css"), "utf-8")
-	).toContain("@import");
+	).toContain('@import url("./ext.css");');
 
 	const source = fs.readFileSync(path.join(outputPath, "bundle0.js"), "utf-8");
 	const runtime = `webpack/runtime/css ${"loading"}`;
