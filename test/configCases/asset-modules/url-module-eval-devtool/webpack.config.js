@@ -1,10 +1,9 @@
 "use strict";
 
 // An `eval` devtool disables the analyzable literal (`import.meta` is a syntax error
-// inside `eval`), so the `new URL()` call site keeps the runtime form and the asset's
-// JS wrapper must be kept with it. Regression test: the wrapper-drop decision used to
-// look only at `output.module` and dropped it here, leaving the call site requiring a
-// module that no longer existed.
+// inside `eval`), so the `new URL()` call site spells the runtime public path itself.
+// Regression test: the wrapper-drop decision and the call site have to reach the same
+// answer, or the call site requires a module that was never emitted.
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
