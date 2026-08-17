@@ -44,6 +44,28 @@ describe("ironclad/ownership", () => {
 				"const buffer = new ArrayBuffer(8);",
 				"worker.postMessage(buffer, [buffer]);"
 			].join("\n"),
+			// An immediately invoked function runs once, so moving from inside it
+			// is an ordinary move.
+			[
+				"const a = { x: 1 };",
+				"(() => {",
+				"\tconsume(/** @move */ a);",
+				"})();"
+			].join("\n"),
+			// The closure owns what it declares.
+			[
+				"items.forEach(() => {",
+				"\tconst a = { x: 1 };",
+				"\tconsume(/** @move */ a);",
+				"});"
+			].join("\n"),
+			// Known false negative, pinned: the closure is written before the move
+			// but runs after it. Source order cannot see that.
+			[
+				"const a = { x: 1 };",
+				"setTimeout(() => use(a));",
+				"const b = /** @move */ a;"
+			].join("\n"),
 			// A borrow assigned into an inner scope does not outlive the owner.
 			[
 				"function run() {",
@@ -77,6 +99,36 @@ describe("ironclad/ownership", () => {
 					"}"
 				].join("\n"),
 				errors: [{ messageId: "moveInLoop" }]
+			},
+			{
+				// A closure created after the move captures a value that is gone.
+				code: [
+					"const a = { x: 1 };",
+					"const b = /** @move */ a;",
+					"setTimeout(() => use(a));"
+				].join("\n"),
+				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// The callback may run any number of times.
+				code: [
+					"const a = { x: 1 };",
+					"items.forEach(() => {",
+					"\tconsume(/** @move */ a);",
+					"});"
+				].join("\n"),
+				errors: [{ messageId: "moveInClosure" }]
+			},
+			{
+				// What an immediately invoked function moves stays moved outside it.
+				code: [
+					"const a = { x: 1 };",
+					"(() => {",
+					"\tconsume(/** @move */ a);",
+					"})();",
+					"use(a);"
+				].join("\n"),
+				errors: [{ messageId: "useAfterMove" }]
 			},
 			{
 				code: [

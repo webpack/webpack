@@ -26,6 +26,7 @@ on a call argument — `consume(/** @move */ a)`.
 | ------------------------- | ---------------------------------------------------------------------- |
 | `useAfterMove`            | the value was moved and is read again                                  |
 | `moveInLoop`              | a variable declared outside the loop is moved inside it                |
+| `moveInClosure`           | a captured variable is moved inside a function that may run repeatedly |
 | `moveWhileBorrowed`       | moved while a borrow is still live                                     |
 | `useWhileMutablyBorrowed` | the owner is touched while a `@borrowMut` view is live                 |
 | `mutationWhileShared`     | the owner is mutated while a `@borrow` view is live                    |
@@ -34,6 +35,14 @@ on a call argument — `consume(/** @move */ a)`.
 
 Branches are handled through ESLint's code-path events: a value moved in one arm
 of an `if` is still usable in the other, and moved after the merge point.
+
+**Closures are not a blind spot.** A nested function starts a code path of its
+own, so its state is seeded from the point the function is written — a callback
+reading something already moved is caught. Moving a captured variable from
+inside a callback is `moveInClosure`, for the same reason as `moveInLoop`: the
+callback may run more than once. An immediately invoked function is the
+exception — it runs once, in place, so what it moves is moved for its caller
+too.
 
 Borrows are **non-lexical** — a borrow dies at the last reference to the
 variable holding it, not at the end of the block, so this is accepted:
@@ -64,22 +73,25 @@ use(a.x); // `m` is dead by here
 | -------------------- | -------- | -------------------------------- |
 | no rules (baseline)  | —        | 4.4 s                            |
 | defaults             | **0**    | 5.4 s (+22%)                     |
-| `implicitMove: true` | **2462** | 5.4 s                            |
+| `implicitMove: true` | **2868** | 5.4 s                            |
 
 Two results worth keeping:
 
 - With markers only, the rule is silent on a large real codebase — the design
   goal, since a linter that cries wolf gets switched off.
-- `implicitMove` produces ~2.5k findings on code that is entirely correct. JS
+- `implicitMove` produces ~2.9k findings on code that is entirely correct. JS
   passes references by design; assignment is not a move, and no heuristic
   rescues that. It stays opt-in and off.
 
 ## Known limits
 
-- Single file, single function. Nothing is tracked across module boundaries.
-- Aliasing is not tracked: once a value reaches `arr.push(a)`, `o.child = a` or
-  a closure, the rule loses it. Unsound by construction, deliberately biased to
-  false negatives.
+- Single file. Nothing is tracked across module boundaries.
+- Aliasing is not tracked: once a value reaches `arr.push(a)` or `o.child = a`,
+  the rule loses it. Unsound by construction, deliberately biased to false
+  negatives.
+- Closure state is seeded in source order, so a callback written _before_ the
+  move but running _after_ it is not caught. Fixing that needs to know when the
+  closure escapes, which is the aliasing problem above.
 - Destructuring (`const { x } = data`) counts as a read, not a partial move —
   the Rust reading would fire on nearly every real file.
 - Loop back-edges are not iterated to a fixed point; `moveInLoop` catches the case

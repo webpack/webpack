@@ -58,6 +58,12 @@ const LOOP_TYPES = new Set([
 	"WhileStatement"
 ]);
 
+const FUNCTION_TYPES = new Set([
+	"ArrowFunctionExpression",
+	"FunctionDeclaration",
+	"FunctionExpression"
+]);
+
 // Inits that produce a primitive, which is copied rather than moved.
 const COPY_INIT_TYPES = new Set([
 	"BinaryExpression",
@@ -170,6 +176,8 @@ const rule = {
 				"`{{name}}` was moved on line {{line}} and cannot be used afterwards.",
 			moveInLoop:
 				"`{{name}}` is declared outside this loop, so moving it here uses it after move on the next iteration.",
+			moveInClosure:
+				"`{{name}}` is declared outside this function, so moving it here moves it again on every call.",
 			moveWhileBorrowed:
 				"`{{name}}` cannot be moved while a {{kind}} borrow created on line {{line}} is still live.",
 			useWhileMutablyBorrowed:
@@ -211,6 +219,47 @@ const rule = {
 		 * @returns {Node | undefined} parent node
 		 */
 		const parentOf = (node) => parents.get(node);
+
+		/**
+		 * An immediately invoked function runs exactly once, in place, so it does
+		 * not turn a move into a repeatable one.
+		 * @param {Node} node function node
+		 * @returns {boolean} true when the function is called where it is written
+		 */
+		const isImmediatelyInvoked = (node) => {
+			let current = node;
+			let parent = parentOf(current);
+			// `(async () => {})()`, `void (function () {})()`, `await (…)()`.
+			while (
+				parent &&
+				(parent.type === "AwaitExpression" ||
+					(parent.type === "UnaryExpression" && parent.operator === "void"))
+			) {
+				current = parent;
+				parent = parentOf(current);
+			}
+			return Boolean(
+				parent && parent.type === "CallExpression" && parent.callee === node
+			);
+		};
+
+		/**
+		 * @param {Node} node node to start from
+		 * @param {Node} boundary node to stop at
+		 * @returns {Node[]} function nodes between `node` and `boundary`
+		 */
+		const functionsBetween = (node, boundary) => {
+			/** @type {Node[]} */
+			const result = [];
+			for (
+				let above = parentOf(node);
+				above && above !== boundary;
+				above = parentOf(above)
+			) {
+				if (FUNCTION_TYPES.has(above.type)) result.push(above);
+			}
+			return result;
+		};
 
 		/**
 		 * @param {Node} node node the marker would precede
@@ -508,6 +557,19 @@ const rule = {
 					break;
 				}
 			}
+			// A closure over the owner may run any number of times, so moving from
+			// inside one is the same defect as moving inside a loop.
+			const crossed = functionsBetween(
+				/** @type {Node} */ (node),
+				variable.scope.variableScope.block
+			).filter((fn) => !isImmediatelyInvoked(fn));
+			if (crossed.length > 0) {
+				context.report({
+					node: /** @type {never} */ (node),
+					messageId: "moveInClosure",
+					data: { name: variable.name }
+				});
+			}
 			const state = currentMoves();
 			if (!state) return;
 			state.set(variable, {
@@ -527,6 +589,15 @@ const rule = {
 					for (const [variable, info] of previousState)
 						state.set(variable, info);
 				}
+				// A nested function starts a code path of its own with no incoming
+				// segment. Seed it from where the function is written, so a closure
+				// reading something already moved is caught.
+				if (segment.prevSegments.length === 0) {
+					const enclosing = currentMoves();
+					if (enclosing) {
+						for (const [variable, info] of enclosing) state.set(variable, info);
+					}
+				}
 				segmentMoves.set(segment.id, state);
 				segmentStack.push(segment);
 			},
@@ -534,6 +605,21 @@ const rule = {
 			onCodePathSegmentEnd(segment) {
 				const index = segmentStack.lastIndexOf(segment);
 				if (index !== -1) segmentStack.splice(index, 1);
+			},
+
+			onCodePathEnd(codePath, node) {
+				// An immediately invoked function runs inline, so what it moved is
+				// moved for the caller too.
+				if (!FUNCTION_TYPES.has(node.type) || !isImmediatelyInvoked(node)) {
+					return;
+				}
+				const enclosing = currentMoves();
+				if (!enclosing) return;
+				for (const final of codePath.finalSegments) {
+					const state = segmentMoves.get(final.id);
+					if (!state) continue;
+					for (const [variable, info] of state) enclosing.set(variable, info);
+				}
 			},
 
 			Identifier(node) {
