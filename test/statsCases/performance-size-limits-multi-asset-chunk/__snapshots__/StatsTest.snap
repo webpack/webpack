@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases performance-size-limits-multi-asset-chunk should print correct stats for performance-size-limits-multi-asset-chunk 1`] = `
+"HINT in asset size limit: The following asset(s) exceed the recommended size limit (X bytes).
+This can impact web performance.
+Assets: 
+  main.js (X KiB)
+  main.css (X KiB)
+
+HINT in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (X bytes). This can impact web performance.
+Entrypoints:
+  main (X KiB)
+      main.js
+      main.css
+
+HINT in webpack performance recommendations: 
+You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+For more info visit https://webpack.js.org/guides/code-splitting/"
+`;

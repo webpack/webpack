@@ -5336,6 +5336,16 @@
           "instanceof": "Function",
           "tsType": "import('../lib/performance/SizeLimitsPlugin').AssetFilter"
         },
+        "cacheEffectiveness": {
+          "description": "Report how much of the module graph the cache reused, and the modules that can never be reused.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "duplicateModules": {
+          "description": "Report modules emitted into more than one chunk, and the bytes the extra copies cost.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "duplicatePackages": {
           "description": "Report packages which are included more than once, in different versions or as multiple copies of the same version (requires 'hints' to be enabled).",
           "type": "boolean",
@@ -5352,6 +5362,11 @@
         "maxEntrypointSize": {
           "description": "Total size of an entry point (in bytes).",
           "type": "number"
+        },
+        "osDependentRules": {
+          "description": "Report conditions in 'module.rules' that hardcode a path separator, so they only match on one operating system.",
+          "type": "boolean",
+          "added": "5.110.0"
         },
         "unusedRules": {
           "description": "Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.",

@@ -1264,10 +1264,13 @@ describe("snapshots", () => {
 		@@ ... @@
 		-   "performance": false,
 		+   "performance": Object {
+		+     "cacheEffectiveness": false,
+		+     "duplicateModules": false,
 		+     "duplicatePackages": false,
 		+     "hints": "warning",
 		+     "maxAssetSize": 250000,
 		+     "maxEntrypointSize": 250000,
+		+     "osDependentRules": false,
 		+     "unusedRules": false,
 		+   },
 		@@ ... @@
@@ -1346,10 +1349,13 @@ describe("snapshots", () => {
 		@@ ... @@
 		-   "performance": false,
 		+   "performance": Object {
+		+     "cacheEffectiveness": false,
+		+     "duplicateModules": false,
 		+     "duplicatePackages": false,
 		+     "hints": "warning",
 		+     "maxAssetSize": 250000,
 		+     "maxEntrypointSize": 250000,
+		+     "osDependentRules": false,
 		+     "unusedRules": false,
 		+   },
 		@@ ... @@

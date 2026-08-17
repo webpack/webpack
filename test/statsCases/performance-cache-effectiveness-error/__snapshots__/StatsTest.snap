@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases performance-cache-effectiveness-error should print correct stats for performance-cache-effectiveness-error 1`] = `
+"ERROR in module caching: 1 module is not cacheable, so it rebuilds on every build: Xdir/performance-cache-effectiveness-error/no-cache-loader.js (1 module).
+A loader calling 'this.cacheable(false)', or a value that changes every build, prevents reuse. Stats list the modules individually as '[not cacheable]'.
+For more info visit https://webpack.js.org/configuration/cache/
+"
+`;

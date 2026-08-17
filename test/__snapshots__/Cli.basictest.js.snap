@@ -13366,6 +13366,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-cache-effectiveness": Object {
+    "configs": Array [
+      Object {
+        "description": "Report how much of the module graph the cache reused, and the modules that can never be reused.",
+        "multiple": false,
+        "path": "performance.cacheEffectiveness",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report how much of the module graph the cache reused, and the modules that can never be reused.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "performance-duplicate-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Report modules emitted into more than one chunk, and the bytes the extra copies cost.",
+        "multiple": false,
+        "path": "performance.duplicateModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report modules emitted into more than one chunk, and the bytes the extra copies cost.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-duplicate-packages": Object {
     "configs": Array [
       Object {
@@ -13423,6 +13449,19 @@ Object {
     "description": "Total size of an entry point (in bytes).",
     "multiple": false,
     "simpleType": "number",
+  },
+  "performance-os-dependent-rules": Object {
+    "configs": Array [
+      Object {
+        "description": "Report conditions in 'module.rules' that hardcode a path separator, so they only match on one operating system.",
+        "multiple": false,
+        "path": "performance.osDependentRules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report conditions in 'module.rules' that hardcode a path separator, so they only match on one operating system.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "performance-unused-rules": Object {
     "configs": Array [

@@ -17,7 +17,8 @@ cacheable modules X KiB
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (X KiB).
 This can impact web performance.
 Assets: 
-  main.js (X KiB)</CLR>
+  main.js (X KiB)
+    Largest modules: ./a.js (X KiB), webpack/runtime/jsonp chunk loading (X KiB), webpack/runtime/load script (X KiB)</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (X KiB). This can impact web performance.
 Entrypoints:

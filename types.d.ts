@@ -21746,6 +21746,18 @@ declare interface PerformanceOptions {
 	assetFilter?: (name: string, source: Source, assetInfo: AssetInfo) => boolean;
 
 	/**
+	 * Report how much of the module graph the cache reused, and the modules that can never be reused.
+	 * @since 5.110.0
+	 */
+	cacheEffectiveness?: boolean;
+
+	/**
+	 * Report modules emitted into more than one chunk, and the bytes the extra copies cost.
+	 * @since 5.110.0
+	 */
+	duplicateModules?: boolean;
+
+	/**
 	 * Report packages which are included more than once, in different versions or as multiple copies of the same version (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
@@ -21765,6 +21777,12 @@ declare interface PerformanceOptions {
 	 * Total size of an entry point (in bytes).
 	 */
 	maxEntrypointSize?: number;
+
+	/**
+	 * Report conditions in 'module.rules' that hardcode a path separator, so they only match on one operating system.
+	 * @since 5.110.0
+	 */
+	osDependentRules?: boolean;
 
 	/**
 	 * Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.
