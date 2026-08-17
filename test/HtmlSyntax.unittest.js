@@ -1,6 +1,6 @@
 "use strict";
 
-// cspell:ignore apos notpre Elig reconsumes xyzabc zzzunknown codepoint DFFF ampx noncharacter FFFE
+// cspell:ignore apos notpre Elig reconsumes xyzabc zzzunknown codepoint DFFF ampx noncharacter FFFE scrip
 // cspell:ignore selectedcontent mtext mglyph colgroups viewbox definitionurl
 // cspell:ignore contenteditable enterkeyhint formenctype formmethod formtarget
 // cspell:ignore inputmode writingsuggestions
@@ -4010,6 +4010,104 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 			`<style>a{color:red}</style><style>${unreadable}</style>`
 		);
 		expect(tail).toContain("<style>a{color:red}</style><style>a{a{");
+	});
+});
+
+describe("SourceProcessor — JSON <script> bodies", () => {
+	const { SourceProcessor } = require("../lib/html/syntax");
+
+	/**
+	 * @param {string} html input markup
+	 * @returns {string} the minified serialization
+	 */
+	const minify = (html) =>
+		new SourceProcessor().process(html, { mode: "minify" }).code;
+
+	/**
+	 * @param {string} type the `<script type>` value
+	 * @param {string} body the raw body
+	 * @returns {string} the minified body
+	 */
+	const minifyBody = (type, body) => {
+		const out = minify(`<script type="${type}">${body}</script>`);
+		const match = /<script[^>]*>([\s\S]*)<\/script>/.exec(out);
+		if (match === null) throw new Error(`no <script> in ${out}`);
+		return match[1];
+	};
+
+	it.each([
+		"application/json",
+		"application/ld+json",
+		"importmap",
+		"speculationrules",
+		"application/vnd.api+json"
+	])("strips the whitespace between the tokens of %s", (type) => {
+		expect(minifyBody(type, '{ "a" : [ 1 , 2 ] }')).toBe('{"a":[1,2]}');
+	});
+
+	it("reads the type case- and whitespace-insensitively", () => {
+		expect(minifyBody(" APPLICATION/LD+JSON ", '{ "a" : 1 }')).toBe('{"a":1}');
+	});
+
+	it("leaves a body that is not JSON alone", () => {
+		expect(minifyBody("application/json", "{{ t }}")).toBe("{{ t }}");
+		expect(minifyBody("application/json", "  ")).toBe("  ");
+	});
+
+	it("leaves a type that is not JSON alone", () => {
+		expect(minifyBody("text/template", '{ "a" : 1 }')).toBe('{ "a" : 1 }');
+	});
+
+	it("copies every literal byte for byte", () => {
+		// Re-serializing would round the number through a double, drop the
+		// duplicate key and rewrite the escape.
+		expect(
+			minifyBody(
+				"application/json",
+				'{ "n" : 1e400 , "s" : "a\\u0041" , "d" : 1 , "d" : 2 }'
+			)
+		).toBe('{"n":1e400,"s":"a\\u0041","d":1,"d":2}');
+	});
+
+	it("keeps the whitespace inside a string", () => {
+		expect(minifyBody("application/json", '{ "a" : " x " }')).toBe(
+			'{"a":" x "}'
+		);
+	});
+
+	// A minifier that re-serializes the body unescapes `\u003c`, so a string
+	// carrying `</script>` closes the element early and the rest of it becomes
+	// markup — the swc `minifyJson` vulnerability. Copying keeps the escape.
+	it.each(["application/json", "application/ld+json"])(
+		"keeps an escaped `</script>` escaped in %s",
+		(type) => {
+			for (const escape of ['"\\u003c/script\\u003e"', '"<\\/script>"']) {
+				const body = minifyBody(type, `{ "a" : ${escape} }`);
+				expect(body).toBe(`{"a":${escape}}`);
+				expect(body).not.toMatch(/<\/script/i);
+			}
+		}
+	);
+
+	it("cannot splice a `<script` across a string boundary", () => {
+		// Only whitespace *outside* a string is removed, and `<` never appears
+		// there — the closing quote always breaks the run.
+		expect(minifyBody("application/json", '[ "<!--<scrip" , true ]')).toBe(
+			'["<!--<scrip",true]'
+		);
+	});
+
+	it("keeps a literal `</script>` the double-escaped state carried through", () => {
+		// `<!--` then `<script` puts the tokenizer in script-data-double-escaped,
+		// where `</script>` no longer closes — so the parser hands one through.
+		const out = minify(
+			'<script type="application/ld+json">{ "a" : "<!--<script>" , "b" : "</script>" }</script>'
+		);
+		expect(out).toBe(
+			'<script type=application/ld+json>{"a":"<!--<script>","b":"</script>"}</script>'
+		);
+		// Re-parsing must reach the same DOM, or the run moved the close.
+		expect(minify(out)).toBe(out);
 	});
 });
 
