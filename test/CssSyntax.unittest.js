@@ -2953,6 +2953,64 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a comma list a later declaration writes again", () => {
+		it.each([
+			// A tool adding prefixes writes the prefixed item beside the plain one,
+			// which leaves
+			// the declarations it wrote on the way there unreadable: the item slot
+			// takes a `<custom-ident>`, so an engine knowing neither spelling still
+			// parses the value and has nothing to fall back to.
+			[
+				"a{transition:box-shadow .25s;transition:box-shadow .25s,-webkit-box-shadow .25s}",
+				"a{transition:box-shadow .25s,-webkit-box-shadow .25s}"
+			],
+			// ...whichever spelling the earlier one wrote
+			[
+				"a{transition:-webkit-box-shadow .25s;transition:box-shadow .25s,-webkit-box-shadow .25s}",
+				"a{transition:box-shadow .25s,-webkit-box-shadow .25s}"
+			],
+			// ...and for a keyframes name, which is a `<custom-ident>` too
+			[
+				"a{animation:spin 1s;animation:spin 1s,-webkit-spin 1s}",
+				"a{animation:spin 1s,-webkit-spin 1s}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// `-webkit-ease` is no `<easing-function>`, so that declaration is one an
+			// engine drops — which is what the earlier one is there for.
+			[
+				"the item slot takes no `<custom-ident>`",
+				"a{transition-timing-function:ease;transition-timing-function:ease,-webkit-ease}"
+			],
+			// A `<custom-ident>` reached inside a function's arguments is that
+			// function's, and a function is a thing an engine may not know.
+			[
+				"the added item is a call",
+				"a{background-image:linear-gradient(red,blue);background-image:linear-gradient(red,blue),-webkit-linear-gradient(red,blue)}"
+			],
+			// Nothing says the added item parses wherever the kept ones do.
+			[
+				"the added item is not one of the earlier ones respelled",
+				"a{transition:opacity 1s;transition:opacity 1s,-webkit-transform 1s}"
+			],
+			// The earlier one is not written again at all.
+			[
+				"an item of the earlier one is missing",
+				"a{transition:opacity 1s,width 1s;transition:opacity 1s,-webkit-opacity 1s}"
+			],
+			// An `!important` earlier one wins whatever the later writes.
+			[
+				"the earlier one is `!important`",
+				"a{transition:opacity 1s!important;transition:opacity 1s,-webkit-opacity 1s}"
+			]
+		])("declines where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("sibling rules printing the same block", () => {
 		it.each([
 			["a{color:red}b{color:red}", "a,b{color:red}"],

@@ -571,6 +571,81 @@ const collectPairLonghands = () => {
 };
 
 /**
+ * The properties whose comma-separated items take a `<custom-ident>`, so a name
+ * an engine does not know is still one it parses. That is what makes a later
+ * declaration of one able to supersede an earlier: it cannot be the unreadable
+ * half of a fallback pair, whatever vendor spelling stands in the item.
+ *
+ * Read off the grammar rather than listed: a comma multiplier whose body reaches
+ * `<custom-ident>`, following the `<syntax>` references on the way.
+ * @returns {string[]} the property names, sorted
+ */
+const collectCustomIdentListProperties = () => {
+	/**
+	 * Whether an item may be written as a bare `<custom-ident>`. Its own walk
+	 * rather than `walkValueSyntax`: a `<custom-ident>` inside a function's
+	 * arguments is that function's, not a name the item itself may be spelled as,
+	 * and reading it as one would let a `-webkit-` *function* pass for a name.
+	 * @param {EXPECTED_ANY} node a value-syntax node
+	 * @param {Set<string>} seen the references already followed
+	 * @returns {boolean} whether the item itself may be a `<custom-ident>`
+	 */
+	const reachesCustomIdent = (node, seen) => {
+		switch (node.type) {
+			case "type": {
+				if (node.name === "custom-ident" || node.name === "dashed-ident") {
+					return true;
+				}
+				const referenced = syntaxes[node.name];
+				if (referenced === undefined || seen.has(node.name)) return false;
+				seen.add(node.name);
+				try {
+					return reachesCustomIdent(parseValueSyntax(referenced.syntax), seen);
+				} catch (_err) {
+					return false;
+				}
+			}
+			case "oneOf":
+			case "anyOf":
+			case "allOf":
+			case "sequence":
+				return node.items.some(
+					/** @type {(item: EXPECTED_ANY) => boolean} */
+					((item) => reachesCustomIdent(item, seen))
+				);
+			case "group":
+			case "parens":
+			case "multiplier":
+				return reachesCustomIdent(node.body, seen);
+			// A function's arguments are its own, and a property reference reaches
+			// whatever that property does — neither is this item's name slot.
+			default:
+				return false;
+		}
+	};
+	/** @type {string[]} */
+	const out = [];
+	for (const [name, property] of Object.entries(properties)) {
+		if (property.status !== "standard") continue;
+		if (typeof property.syntax !== "string") continue;
+		let tree;
+		try {
+			tree = grammarOf(property.syntax);
+		} catch (_err) {
+			continue;
+		}
+		let listed = false;
+		walkValueSyntax(tree, (node) => {
+			if (listed) return;
+			if (node.type !== "multiplier" || node.comma !== true) return;
+			if (reachesCustomIdent(node.body, new Set())) listed = true;
+		});
+		if (listed) out.push(name);
+	}
+	return out.sort();
+};
+
+/**
  * The longhands a shorthand resets that its own name is no prefix of — `inset`
  * sets `top`, `gap` sets `row-gap`, `font` sets `line-height`. Transitive, and
  * the prefixed ones are left out: `border-top-width` is already read as part of
@@ -4909,6 +4984,7 @@ const collectData = () => {
 	const familyLonghands = collectFamilyLonghands();
 	const slashLonghands = collectSlashLonghands();
 	const resetLonghands = collectResetLonghands();
+	const customIdentListProperties = collectCustomIdentListProperties();
 
 	// Every longhand the three merge tables can consume, so the printer can ask
 	// one question of a block instead of walking all three tables.
@@ -5014,6 +5090,11 @@ const PLACE_SHORTHANDS = ${setLiteral(SUPPLEMENT.placeShorthands)};
 const FAMILY_LONGHANDS = new Map([${familyLonghands
 		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
 		.join(", ")}]);
+
+// The properties whose comma-separated items take a \`<custom-ident>\`, where a
+// vendor spelling is a name the engine parses rather than one it may drop — so a
+// later declaration listing an earlier one's items cannot be its fallback.
+const CUSTOM_IDENT_LIST_PROPERTIES = ${setLiteral(customIdentListProperties)};
 
 // The longhands a shorthand resets that its own name is no prefix of, so two
 // declarations are read as writing the same property whichever way they are
@@ -5522,7 +5603,7 @@ module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;
 module.exports.CSS_MODULES_KEYWORD_OPTIONS = CSS_MODULES_KEYWORD_OPTIONS;
 module.exports.CSS_WIDE_KEYWORDS = CSS_WIDE_KEYWORDS;
-module.exports.CUBIC_BEZIER_KEYWORDS = CUBIC_BEZIER_KEYWORDS;\nmodule.exports.DEFAULT_GRADIENT_DIRECTIONS = DEFAULT_GRADIENT_DIRECTIONS;
+module.exports.CUBIC_BEZIER_KEYWORDS = CUBIC_BEZIER_KEYWORDS;\nmodule.exports.CUSTOM_IDENT_LIST_PROPERTIES = CUSTOM_IDENT_LIST_PROPERTIES;\nmodule.exports.DEFAULT_GRADIENT_DIRECTIONS = DEFAULT_GRADIENT_DIRECTIONS;
 module.exports.DISPLAY_SHORT_FORMS = DISPLAY_SHORT_FORMS;\nmodule.exports.DROPPABLE_WHEN_EMPTY_AT_RULES = DROPPABLE_WHEN_EMPTY_AT_RULES;
 module.exports.EASING_KEYWORDS = EASING_KEYWORDS;
 module.exports.EIGHTH_TURN_COSINE = EIGHTH_TURN_COSINE;
