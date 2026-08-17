@@ -1,3 +1,4 @@
-import { shared } from "./shared";
+import { shared as z } from "./zebra";
+import { shared as a } from "./alpha";
 
-export default shared;
+export default z + a;
