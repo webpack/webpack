@@ -6,7 +6,7 @@
 // corpus it is reading — `configCases` and `test/wpt` go through one path, so
 // an inline `<style>` is held to exactly the same standard as a `.css` file.
 
-const fs = require("fs/promises");
+const fs = require("fs");
 const path = require("path");
 
 /** @typedef {{ name: string, raw: string, min: string }} Fixture */
@@ -15,29 +15,27 @@ const path = require("path");
 const MAX_SAMPLED_SIZES = 64;
 
 /**
- * Every fixture of one extension under a directory.
+ * Every fixture of one extension under a directory. Synchronous: jest needs one
+ * test name per fixture while it collects, which is before it can await.
  * @param {string} dir directory to walk
  * @param {string} extension file extension including the dot
- * @returns {Promise<string[]>} sorted fixture paths
+ * @returns {string[]} sorted fixture paths
  */
-const collectFixtures = async (dir, extension) => {
+const collectFixtures = (dir, extension) => {
 	/** @type {string[]} */
 	const files = [];
 	/**
 	 * @param {string} current directory to read
-	 * @returns {Promise<void>} when the subtree has been read
+	 * @returns {void}
 	 */
-	const walk = async (current) => {
-		const entries = await fs.readdir(current, { withFileTypes: true });
-		await Promise.all(
-			entries.map(async (entry) => {
-				const full = path.join(current, entry.name);
-				if (entry.isDirectory()) await walk(full);
-				else if (entry.name.endsWith(extension)) files.push(full);
-			})
-		);
+	const walk = (current) => {
+		for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+			const full = path.join(current, entry.name);
+			if (entry.isDirectory()) walk(full);
+			else if (entry.name.endsWith(extension)) files.push(full);
+		}
 	};
-	await walk(dir);
+	walk(dir);
 	return files.sort();
 };
 
@@ -47,22 +45,20 @@ const collectFixtures = async (dir, extension) => {
  * @param {string} dir directory to read
  * @param {string} extension file extension including the dot
  * @param {(source: string) => string} minify the printer to run
- * @returns {Promise<Fixture[]>} the corpus
+ * @returns {Fixture[]} the corpus
  */
-const buildCorpus = async (dir, extension, minify) => {
-	const files = await collectFixtures(dir, extension);
-	return Promise.all(
-		files.map(async (file) => {
-			const raw = await fs.readFile(file, "utf8");
-			return {
-				name: path
-					.relative(path.join(__dirname, "../.."), file)
-					.replace(/\\/g, "/"),
-				raw,
-				min: minify(raw)
-			};
-		})
-	);
+const buildCorpus = (dir, extension, minify) => {
+	const files = collectFixtures(dir, extension);
+	return files.map((file) => {
+		const raw = fs.readFileSync(file, "utf8");
+		return {
+			name: path
+				.relative(path.join(__dirname, "../.."), file)
+				.replace(/\\/g, "/"),
+			raw,
+			min: minify(raw)
+		};
+	});
 };
 
 /**

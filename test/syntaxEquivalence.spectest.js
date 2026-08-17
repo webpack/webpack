@@ -50,18 +50,18 @@ const CONFIG_CASES = path.join(__dirname, "configCases");
 // How many documents go to the page at once — the wpt corpus is far larger than
 // one `evaluate` argument should carry.
 const BATCH = 150;
-// What one file of declarations gets, and what one batch's CDP call gets with
-// it. A file is a handful of values and the whole tier runs in milliseconds, so
-// this is three orders above what any file needs: generous enough never to fail
-// a slow runner, small enough that every file which hangs is named in one run
-// rather than one per quarter hour.
-// Enough for a file that gives up to then read its values one at a time.
+// Documents one page parses before it is replaced. Each stays in memory until
+// the page goes, and a page costs 58ms — so this trades one page per few
+// hundred files against a renderer holding the whole corpus.
+const PAGE_DOCUMENTS = 500;
+// What one file gets, and what one batch's CDP call gets with it. A file is
+// compared in milliseconds, so this is orders above what any needs: generous
+// enough never to fail a slow runner, small enough that every file which hangs
+// is named in one run rather than one per quarter hour.
 const FILE_TIMEOUT = 180000;
-// Below it, so a file that hangs is failed here rather than by jest — which is
-// what lets the page be replaced before the next file runs.
-const FILE_BUDGET = 20000;
-// One value on the retry that follows, where naming it is the whole point. A
-// declaration costs a millisecond, so this is three orders above what it needs.
+// One declaration, bounded here rather than by jest — which is what lets the
+// page be replaced before the next one runs. A declaration costs a
+// millisecond, so this is three orders above what it needs.
 const VALUE_BUDGET = 2000;
 
 // Documents and stylesheets the printers are known to get wrong, per corpus.
@@ -222,11 +222,6 @@ const minifyDeclaration = (property, value) => {
  * @property {Map<string, string>} filedCss its filed stylesheet defects
  */
 
-/** @type {Corpus[]} */
-let corpora;
-/** @type {Promise<void> | undefined} */
-let building;
-
 /**
  * @param {Fixture[]} sources pages, read once
  * @param {object} options extra print options
@@ -236,59 +231,55 @@ const variant = (sources, options) =>
 	sources.map((one) => ({ ...one, min: minifyHtml(one.raw, options) }));
 
 /**
- * Build every corpus once, however many suites ask for them.
- * @returns {Promise<void>} when they are ready
+ * Every corpus, built while jest collects — one test per fixture means the
+ * names are needed before anything can be awaited.
+ * @returns {Corpus[]} the corpora, `wpt` last and only when it is checked out
  */
 const buildCorpora = () => {
-	if (building === undefined) {
-		building = (async () => {
-			const configHtml = await buildCorpus(
-				CONFIG_CASES,
-				".html",
-				(source) => source
-			);
-			const configCss = await buildCorpus(CONFIG_CASES, ".css", minifyCss);
-			corpora = [
-				{
-					label: "configCases",
-					html: variant(configHtml, {}),
-					// `removeImpliedTags` leaves out a tag the parser puts back, so it is
-					// the one option whose whole claim is that the DOM does not notice.
-					htmlAllImpliedTags: variant(configHtml, { removeImpliedTags: true }),
-					htmlSmartTags: variant(configHtml, { removeImpliedTags: "smart" }),
-					css: configCss,
-					filedHtml: new Map(),
-					filedCss: FILED_CONFIG_CSS_DEFECTS
-				}
-			];
-			if (!hasCorpus()) return;
-			/** @type {Fixture[]} */
-			const wptHtml = [];
-			for (const file of browserCorpus()) {
-				const raw = readDocument(file);
-				if (raw !== null) wptHtml.push({ name: nameOf(file), raw, min: raw });
-			}
-			/** @type {Fixture[]} */
-			const wptCss = [];
-			for (const file of wptCssCorpus()) {
-				const raw = readDocument(file);
-				if (raw !== null) {
-					wptCss.push({ name: nameOf(file), raw, min: minifyCss(raw) });
-				}
-			}
-			corpora.push({
-				label: "wpt",
-				html: variant(wptHtml, {}),
-				htmlAllImpliedTags: variant(wptHtml, { removeImpliedTags: true }),
-				htmlSmartTags: variant(wptHtml, { removeImpliedTags: "smart" }),
-				css: wptCss,
-				filedHtml: FILED_WPT_HTML_DEFECTS,
-				filedCss: FILED_WPT_CSS_DEFECTS
-			});
-		})();
+	const configHtml = buildCorpus(CONFIG_CASES, ".html", (source) => source);
+	const configCss = buildCorpus(CONFIG_CASES, ".css", minifyCss);
+	/** @type {Corpus[]} */
+	const built = [
+		{
+			label: "configCases",
+			html: variant(configHtml, {}),
+			// `removeImpliedTags` leaves out a tag the parser puts back, so it is
+			// the one option whose whole claim is that the DOM does not notice.
+			htmlAllImpliedTags: variant(configHtml, { removeImpliedTags: true }),
+			htmlSmartTags: variant(configHtml, { removeImpliedTags: "smart" }),
+			css: configCss,
+			filedHtml: new Map(),
+			filedCss: FILED_CONFIG_CSS_DEFECTS
+		}
+	];
+	if (!hasCorpus()) return built;
+	/** @type {Fixture[]} */
+	const wptHtml = [];
+	for (const file of browserCorpus()) {
+		const raw = readDocument(file);
+		if (raw !== null) wptHtml.push({ name: nameOf(file), raw, min: raw });
 	}
-	return building;
+	/** @type {Fixture[]} */
+	const wptCss = [];
+	for (const file of wptCssCorpus()) {
+		const raw = readDocument(file);
+		if (raw !== null) {
+			wptCss.push({ name: nameOf(file), raw, min: minifyCss(raw) });
+		}
+	}
+	built.push({
+		label: "wpt",
+		html: variant(wptHtml, {}),
+		htmlAllImpliedTags: variant(wptHtml, { removeImpliedTags: true }),
+		htmlSmartTags: variant(wptHtml, { removeImpliedTags: "smart" }),
+		css: wptCss,
+		filedHtml: FILED_WPT_HTML_DEFECTS,
+		filedCss: FILED_WPT_CSS_DEFECTS
+	});
+	return built;
 };
+
+const corpora = buildCorpora();
 
 /**
  * Run `evaluate` over `items` in batches the page can hold.
@@ -318,8 +309,10 @@ expectNoDeprecations();
 describe("printer output in real Chrome", () => {
 	/** @type {import("puppeteer-core").Browser} */
 	let browser;
-	/** @type {import("puppeteer-core").Page} */
+	/** @type {import("puppeteer-core").Page | undefined} the corpus tiers' page */
 	let page;
+	/** @type {number} documents the current page has been asked to parse */
+	let parsed = 0;
 
 	/** @type {import("puppeteer-core").Page} the page the probing tiers share */
 	let probePage;
@@ -334,8 +327,25 @@ describe("printer output in real Chrome", () => {
 		return opened;
 	};
 
+	/**
+	 * The corpus tiers' page, replaced once it holds enough. Every document it
+	 * parses stays in memory until it goes, and one page per test would cost more
+	 * than the tests do: opening one takes 58ms, comparing one document takes far
+	 * less.
+	 * @param {number} documents how many it is about to parse
+	 * @returns {Promise<import("puppeteer-core").Page>} the page to compare on
+	 */
+	const pageFor = async (documents) => {
+		if (page === undefined || parsed + documents > PAGE_DOCUMENTS) {
+			if (page !== undefined) await page.close();
+			page = await freshPage();
+			parsed = 0;
+		}
+		parsed += documents;
+		return page;
+	};
+
 	beforeAll(async () => {
-		await buildCorpora();
 		browser = await launchChrome({ protocolTimeout: FILE_TIMEOUT });
 		// The probing tiers set a property on one element and read it back, leaving
 		// nothing behind, so they share a page — at 58ms to open one and 1ms to
@@ -344,6 +354,7 @@ describe("printer output in real Chrome", () => {
 	}, 300000);
 
 	afterAll(async () => {
+		if (page) await page.close();
 		if (probePage) await probePage.close();
 		if (browser) await browser.close();
 	});
@@ -359,10 +370,13 @@ describe("printer output in real Chrome", () => {
 	 * @returns {Promise<{ name: string, why: string }[]>} what moved, per page
 	 */
 	const comparePages = async (cases, withStyles) => {
+		// Both forms of every page, so the page is replaced before it holds more
+		// documents than one should.
+		const active = await pageFor(cases.length * 2);
 		/** @type {{ name: string, why: string }[]} */
 		const differences = [];
 		for (let at = 0; at < cases.length; at += BATCH) {
-			const collected = await page.evaluate(
+			const collected = await active.evaluate(
 				(batch) => {
 					const { htmlFacets } = /** @type {{ __eq: PageHelpers }} */ (
 						/** @type {unknown} */ (window)
@@ -376,7 +390,7 @@ describe("printer output in real Chrome", () => {
 				cases.slice(at, at + BATCH)
 			);
 			const signatures = await conditionSignatures(
-				page,
+				active,
 				collected.flatMap((each) => [
 					...each.before.styles,
 					...each.after.styles
@@ -431,18 +445,54 @@ describe("printer output in real Chrome", () => {
 		return differences;
 	};
 
+	/**
+	 * Every stylesheet in `cases`, compared as the engine parses it.
+	 * @param {Fixture[]} cases the corpus
+	 * @returns {Promise<{ name: string, why: string }[]>} what moved, per sheet
+	 */
+	const compareStylesheets = async (cases) => {
+		const active = await pageFor(cases.length * 2);
+		const collected = await inBatches(active, cases, (batch) =>
+			active.evaluate((sheets) => {
+				const { cssRules } = /** @type {{ __eq: PageHelpers }} */ (
+					/** @type {unknown} */ (window)
+				).__eq;
+				return sheets.map((each) => ({
+					name: each.name,
+					before: cssRules(each.raw),
+					after: cssRules(each.min)
+				}));
+			}, batch)
+		);
+		const signatures = await conditionSignatures(
+			active,
+			collected.flatMap((each) => [each.before || [], each.after || []])
+		);
+		/** @type {{ name: string, why: string }[]} */
+		const differences = [];
+		for (const { name, before, after } of collected) {
+			if (before === null || after === null) {
+				differences.push({ name, why: "stylesheet did not parse" });
+				continue;
+			}
+			const why = compareRules(before, after, signatures);
+			if (why !== "") differences.push({ name, why });
+		}
+		return differences;
+	};
+
+	/**
+	 * What a fixture is expected to differ on: the file itself when a defect is
+	 * filed against it, nothing otherwise. Filed both ways, so a defect that has
+	 * been fixed fails too — which is what takes its entry back out.
+	 * @param {Map<string, string>} filed the tier's filed defects
+	 * @param {string} name the fixture
+	 * @returns {string[]} what `differences` must name
+	 */
+	const expected = (filed, name) => (filed.has(name) ? [name] : []);
+
 	const describeCorpus = (at, label) => {
 		describe(label, () => {
-			// A page of its own per test: a tier that leaves thousands of parsed
-			// documents behind must not be what makes the next one time out.
-			beforeEach(async () => {
-				page = await freshPage();
-			}, 300000);
-
-			afterEach(async () => {
-				if (page) await page.close();
-			});
-
 			if (at === 1 && !hasCorpus()) {
 				it(NO_CORPUS, () => {
 					// No-op: the corpus is an optional git submodule.
@@ -450,21 +500,26 @@ describe("printer output in real Chrome", () => {
 
 				return;
 			}
-			/** @returns {Corpus | undefined} the corpus, once built */
-			const corpus = () => corpora[at];
+			const one = corpora[at];
 
-			it("should build the same DOM and CSSOM from a page and its minified form", async () => {
-				const one = corpus();
-				if (one === undefined) return;
-				// Every part of the document the engine builds — the element tree, the
-				// rendered text, the comments, the doctype, the CSS, JSON and script
-				// bodies carried inside it, and the CSSOM of every stylesheet it
-				// carries — must survive minification.
-				const differences = await comparePages(one.html, true);
-				expect(differences.map((each) => each.name).sort()).toEqual(
-					[...one.filedHtml.keys()].sort()
+			// One test per page, not per corpus: the file is what a defect is filed
+			// against, so a failure names it without anything having to narrow it
+			// down. Every part of the document the engine builds — the element tree,
+			// the rendered text, the comments, the doctype, the CSS, JSON and script
+			// bodies carried inside it, and the CSSOM of every stylesheet it carries
+			// — must survive minification.
+			for (const fixture of one.html) {
+				it(
+					`should build the same DOM and CSSOM from ${fixture.name}`,
+					async () => {
+						const differences = await comparePages([fixture], true);
+						expect(differences.map((each) => each.name)).toEqual(
+							expected(one.filedHtml, fixture.name)
+						);
+					},
+					FILE_TIMEOUT
 				);
-			}, 1800000);
+			}
 
 			it.each([
 				["true", (/** @type {Corpus} */ c) => c.htmlAllImpliedTags],
@@ -472,11 +527,10 @@ describe("printer output in real Chrome", () => {
 			])(
 				"should build the same DOM and CSSOM with removeImpliedTags %s",
 				async (_mode, pick) => {
-					const one = corpus();
-					if (one === undefined) return;
 					// The tags this leaves out are the ones the parser puts back, so the
 					// tree it builds — every element's depth in it, and the CSSOM of what
-					// it carries — is untouched.
+					// it carries — is untouched. Grouped: what these vary is the option,
+					// not the file, and the tier above already names the file.
 					const differences = await comparePages(pick(one), true);
 					expect(differences.map((each) => each.name).sort()).toEqual(
 						[...one.filedHtml.keys()].sort()
@@ -485,55 +539,41 @@ describe("printer output in real Chrome", () => {
 				1800000
 			);
 
-			it("should build the same CSSOM from a stylesheet and its minified form", async () => {
-				const one = corpus();
-				if (one === undefined) return;
-				const collected = await inBatches(page, one.css, (batch) =>
-					page.evaluate((cases) => {
-						const { cssRules } = /** @type {{ __eq: PageHelpers }} */ (
-							/** @type {unknown} */ (window)
-						).__eq;
-						return cases.map((each) => ({
-							name: each.name,
-							before: cssRules(each.raw),
-							after: cssRules(each.min)
-						}));
-					}, batch)
+			// The same rules, in the same cascade order, under conditions the engine
+			// answers alike, each computing to the same style.
+			for (const fixture of one.css) {
+				it(
+					`should build the same CSSOM from ${fixture.name}`,
+					async () => {
+						const differences = await compareStylesheets([fixture]);
+						expect(differences.map((each) => each.name)).toEqual(
+							expected(one.filedCss, fixture.name)
+						);
+					},
+					FILE_TIMEOUT
 				);
-				const signatures = await conditionSignatures(
-					page,
-					collected.flatMap((each) => [each.before || [], each.after || []])
-				);
-				/** @type {{ name: string, why: string }[]} */
-				const differences = [];
-				for (const { name, before, after } of collected) {
-					if (before === null || after === null) {
-						differences.push({ name, why: "stylesheet did not parse" });
-						continue;
-					}
-					const why = compareRules(before, after, signatures);
-					if (why !== "") differences.push({ name, why });
-				}
-				// The same rules, in the same cascade order, under conditions the engine
-				// answers alike, each computing to the same style. The comparison is
-				// exact in both directions: a new difference fails, and so does a filed
-				// one that has been fixed, which is what takes its entry back out.
-				expect(differences.map((each) => each.name).sort()).toEqual(
-					[...one.filedCss.keys()].sort()
-				);
-			}, 900000);
+			}
+
+			// A defect filed against a file no longer in the corpus is one nothing
+			// would report, since the test that carried it is gone with the file.
+			it("should file every defect against a fixture that is still there", () => {
+				const html = new Set(one.html.map((each) => each.name));
+				const css = new Set(one.css.map((each) => each.name));
+				expect([
+					...[...one.filedHtml.keys()].filter((name) => !html.has(name)),
+					...[...one.filedCss.keys()].filter((name) => !css.has(name))
+				]).toEqual([]);
+			});
 		});
 	};
 
 	describeCorpus(0, "configCases");
 	describeCorpus(1, "wpt");
 
-	// One test per wpt file rather than one for all 8,785 declarations: a file
-	// that is slow or hangs then names itself, and the file is what a defect is
-	// read from. Per spec area would be cheaper still and says too little — one
-	// area timing out named 233 declarations at once and blamed all of them.
-	/** @type {Map<string, { name: string, property: string, key: string, raw: string, min: string }[]>} */
-	const declarationsByFile = new Map();
+	// One test per declaration, not per file: the value is what a defect is filed
+	// against, so the run names it without anything having to narrow it down.
+	/** @type {{ name: string, property: string, key: string, raw: string, min: string }[]} */
+	const declarations = [];
 	/** @type {number} every declaration the corpus holds, compared or not */
 	let declarationsRead = 0;
 	for (const { property, value, name } of hasCorpus()
@@ -547,16 +587,13 @@ describe("printer output in real Chrome", () => {
 		// that hangs Chrome is invalid CSS the printer never touched.
 		if (min === value) continue;
 
-		const one = {
+		declarations.push({
 			name,
 			property,
 			key: `${property}:${value}`,
 			raw: value,
 			min
-		};
-		const group = declarationsByFile.get(name);
-		if (group === undefined) declarationsByFile.set(name, [one]);
-		else group.push(one);
+		});
 	}
 	/** @type {Set<string>} every value that moved, filled as the files run */
 	const movedValues = new Set();
@@ -642,40 +679,6 @@ describe("printer output in real Chrome", () => {
 		}
 	};
 
-	/**
-	 * One file's declarations, named individually when the file gives up. The
-	 * file is what a defect is read from, but the value is what one is filed
-	 * against, so a hang is retried one declaration at a time rather than
-	 * leaving the whole file as the only thing the run can point at.
-	 * @param {{ name: string, property: string, key: string, raw: string, min: string }[]} cases the file's declarations
-	 * @returns {Promise<{ name: string, key: string }[]>} what moved
-	 */
-	const compareFile = async (cases) => {
-		try {
-			return await compareWithin(cases, FILE_BUDGET);
-		} catch (err) {
-			if (cases.length === 1) throw err;
-			/** @type {{ name: string, key: string }[]} */
-			const moved = [];
-			/** @type {string[]} */
-			const hung = [];
-			for (const one of cases) {
-				try {
-					moved.push(...(await compareWithin([one], VALUE_BUDGET)));
-				} catch (_) {
-					hung.push(JSON.stringify(one.raw));
-				}
-			}
-			// Nothing hung on its own: the file is merely slow read in one go,
-			// which the values it just reported already covered.
-			if (hung.length === 0) return moved;
-			throw new Error(
-				`gave up on ${cases[0].property} in ${cases[0].name} at ${hung.join(", ")}`,
-				{ cause: err }
-			);
-		}
-	};
-
 	if (!hasCorpus()) {
 		it(NO_CORPUS, () => {
 			// No-op: the corpus is an optional git submodule.
@@ -687,31 +690,26 @@ describe("printer output in real Chrome", () => {
 		// the corpus growing or the printer touching a few values more or less.
 		it("should have a corpus the printer rewrites a share of", () => {
 			expect(declarationsRead).toBeGreaterThan(5000);
-			expect(
-				[...declarationsByFile.values()].reduce(
-					(count, cases) => count + cases.length,
-					0
-				)
-			).toBeGreaterThan(1000);
+			expect(declarations.length).toBeGreaterThan(1000);
 		});
 	}
 
-	for (const [name, cases] of declarationsByFile) {
+	for (const one of declarations) {
 		it(
-			`should compute the same style from a value in ${name} and its minified form`,
+			`should compute the same style from ${one.property}: ${one.raw} in ${one.name}`,
 			async () => {
-				for (const one of await compareFile(cases)) {
-					movedValues.add(one.key);
+				for (const moved of await compareWithin([one], VALUE_BUDGET)) {
+					movedValues.add(moved.key);
 				}
 			},
 			FILE_TIMEOUT
 		);
 	}
 
-	// Runs last, so every file has reported what moved. Includes the values the
-	// spec rejects: an invalid declaration moves nothing, so one whose printed
-	// form does is one the printer brought to life.
-	if (declarationsByFile.size > 0) {
+	// Runs last, so every value has reported. Includes the values the spec
+	// rejects: an invalid declaration moves nothing, so one whose printed form
+	// does is one the printer brought to life.
+	if (declarations.length > 0) {
 		it("should still diverge on every filed value defect", () => {
 			expect([...movedValues].sort()).toEqual(
 				[...FILED_WPT_VALUE_DEFECTS.keys()].sort()
