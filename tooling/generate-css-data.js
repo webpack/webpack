@@ -1365,6 +1365,102 @@ const collectIntegerProperties = () => {
 };
 
 /**
+ * The numeric types a value may itself be, following `<production>` and
+ * `<'property'>` references but stopping at a function — a `<number>` inside
+ * `rgb()` or a gradient is that function's argument, not something the value
+ * could have been written as.
+ * @param {string} syntax a value definition
+ * @param {PartialSyntaxTable} propertyTable where a `<'property'>` is read
+ * @returns {Set<string>} the numeric type names reachable at the value's level
+ */
+const valueLevelNumericTypes = (syntax, propertyTable = properties) => {
+	/** @type {Set<string>} */
+	const found = new Set();
+	/** @type {Set<string>} */
+	const seen = new Set();
+	/**
+	 * @param {SyntaxNode} node the node to read
+	 * @returns {void}
+	 */
+	const walk = (node) => {
+		switch (node.type) {
+			case "oneOf":
+			case "anyOf":
+			case "allOf":
+			case "sequence":
+				for (const item of node.items) walk(item);
+				return;
+			case "group":
+			case "parens":
+			case "multiplier":
+				walk(node.body);
+				return;
+			// Deliberately not entered: what a function takes is not what the
+			// property takes.
+			case "function":
+				return;
+			case "property": {
+				const nested = propertyTable[node.name];
+				if (
+					nested !== undefined &&
+					typeof nested.syntax === "string" &&
+					!seen.has(`'${node.name}`)
+				) {
+					seen.add(`'${node.name}`);
+					walk(grammarOf(nested.syntax));
+				}
+				return;
+			}
+			case "type": {
+				if (NUMERIC_TYPES.has(node.name)) {
+					found.add(node.name);
+					return;
+				}
+				if (node.name === "length-percentage") {
+					found.add("length");
+					found.add("percentage");
+					return;
+				}
+				const nested = definitions.get(node.name);
+				if (nested !== undefined && !seen.has(node.name)) {
+					seen.add(node.name);
+					walk(grammarOf(nested));
+				}
+				break;
+			}
+			default:
+				break;
+		}
+	};
+	walk(grammarOf(syntax));
+	return found;
+};
+
+/**
+ * The properties where dropping a zero length's unit changes what it is.
+ * `0px` is a `<dimension>` token and `0` a `<number>` one, so the rewrite is
+ * safe only where the grammar offers no `<number>` beside the `<length>` for
+ * the bare zero to bind to instead — `tab-size:0` is zero characters where
+ * `tab-size:0px` is zero width. Derived, so a property the specs give a second
+ * reading tomorrow is covered without anyone noticing it.
+ * @param {PartialSyntaxTable} propertyTable the `properties.json` to read
+ * @returns {string[]} the property names, sorted
+ */
+const collectZeroUnitAmbiguousProperties = (propertyTable = properties) => {
+	const out = [];
+	for (const [name, entry] of Object.entries(propertyTable)) {
+		if (typeof entry.syntax !== "string") continue;
+		const kinds = valueLevelNumericTypes(entry.syntax, propertyTable);
+		// `<integer>` spells the same token an `<integer>`-only grammar takes, so
+		// `tab-size:0` binds to it exactly as `line-height:0` binds to `<number>`.
+		if (kinds.has("length") && (kinds.has("number") || kinds.has("integer"))) {
+			out.push(name);
+		}
+	}
+	return out.sort();
+};
+
+/**
  * The properties whose whole value is `<number> | <percentage>` reading the two
  * as one quantity, a percentage being the number hundredfold. Only the whole
  * value: a percentage beside a length means something else again.
@@ -2597,18 +2693,20 @@ const collectNthNamedEquivalents = () => {
 
 /**
  * Each property whose initial keyword may be dropped from a multi-component
- * value, as `property -> keyword`. The keyword comes from the property table,
- * and it must really be the initial and really be one alternative of a top-level
- * `||` group, so a spec moving either way fails generation rather than the page.
+ * value, as `property -> [keyword, slot]`. The keyword comes from the property
+ * table, and it must really be the initial and really be one alternative of a
+ * top-level `||` group, so a spec moving either way fails generation rather than
+ * the page. `slot` is every keyword that group offers — the alternatives the
+ * keyword is chosen among, which a value may name only once.
  * @param {string[]} names the properties stated to have one
  * @param {PartialPropertyTable} propertyTable where their grammars are read
- * @returns {[string, string][]} `[property, keyword]`, sorted
+ * @returns {[string, [string, string[]]][]} `[property, [keyword, slot]]`, sorted
  */
 const collectOmittableInitialKeywords = (
 	names = SUPPLEMENT.omittableInitialKeywords,
 	propertyTable = properties
 ) => {
-	/** @type {[string, string][]} */
+	/** @type {[string, [string, string[]]][]} */
 	const out = [];
 	for (const name of [...names].sort()) {
 		const property = propertyTable[name];
@@ -2625,11 +2723,27 @@ const collectOmittableInitialKeywords = (
 				: node.type === "oneOf"
 					? node.items.some(isInitial)
 					: node.type === "keyword" && node.name === initial;
+		/**
+		 * @param {SyntaxNode} node the group the keyword was found in
+		 * @returns {string[]} every keyword it offers
+		 */
+		const keywords = (node) => {
+			/** @type {string[]} */
+			const found = [];
+			walkValueSyntax(node, (each) => {
+				if (each.type === "keyword") found.push(each.name);
+			});
+			return found;
+		};
+		const group =
+			tree.type === "anyOf"
+				? tree.items.find((item) => isInitial(item))
+				: undefined;
 		// The supplement states the keyword is droppable; mdn-data must still agree.
-		if (tree.type !== "anyOf" || !tree.items.some(isInitial)) {
+		if (group === undefined) {
 			throw new Error(`No omittable '${initial}' in '${name}': ${syntax}`);
 		}
-		out.push([name, initial]);
+		out.push([name, [initial, keywords(group).sort()]]);
 	}
 	return out;
 };
@@ -2855,7 +2969,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -2928,10 +3042,19 @@ const SUPPLEMENT = {
 	// What may follow the `*` a compound selector implies: another simple
 	// selector in the same compound. Selector syntax, not a value grammar.
 	compoundContinuations: [":", ".", "#", "["],
-	// `flex-basis` is the one place a zero's unit is still load-bearing: IE 11
-	// drops a `flex` shorthand whose basis has none, and the shorthand carries
-	// one too.
-	zeroUnitKeepingProperties: ["flex", "flex-basis"],
+	// The two a zero's unit is load-bearing in that no grammar says so — every
+	// property whose own syntax offers a bare number beside the length is
+	// derived instead (`collectZeroUnitAmbiguousProperties`). IE 11 drops a
+	// `flex` shorthand whose basis has no unit, and `flex-basis` carries the
+	// same. Chrome rejects `overflow-clip-margin:0` outright, unitless zero
+	// being a length the spec does allow.
+	zeroUnitKeepingProperties: ["flex-basis", "overflow-clip-margin"],
+	// Where an engine rejects a `calc()` the spec allows, so folding one to the
+	// plain value it equals would switch a declaration the engine threw away back
+	// on. Chrome takes no `calc()` at all in `overflow-clip-margin` — the same
+	// property whose bare `0` it also refuses. Not derivable: a grammar naming
+	// `<length>` says `calc()` is valid there.
+	calcRejectingProperties: ["overflow-clip-margin"],
 	// CSS Backgrounds 3 §3.9 / CSS Masking 1 §4.5: these spell an omitted second
 	// value `auto`, not the first repeated. Their shared grammar cannot say so.
 	autoSecondValueProperties: ["background-size", "mask-size"],
@@ -4966,6 +5089,12 @@ const collectData = () => {
 		mathFunctionArity
 	);
 	const integerProperties = collectIntegerProperties();
+	const zeroUnitKeepingProperties = [
+		...new Set([
+			...SUPPLEMENT.zeroUnitKeepingProperties,
+			...collectZeroUnitAmbiguousProperties()
+		])
+	].sort();
 	const alphaValueProperties = collectAlphaValueProperties();
 	const ratioProperties = collectRatioProperties();
 	const cssModulesKeywords = collectCssModulesKeywords();
@@ -5110,8 +5239,18 @@ const SLASH_LONGHANDS = new Map([${slashLonghands
 const MERGE_LONGHANDS = ${setLiteral(lowerSorted(mergeLonghands))};
 
 // The initial keyword each of these may drop when another component stands
-// beside it: omitting the group it belongs to leaves exactly that keyword.
-const OMITTABLE_INITIAL_KEYWORDS = ${mapLiteral(omittableInitialKeywords)};
+// beside it: omitting the group it belongs to leaves exactly that keyword. The
+// second half is every keyword that group offers — a value naming two of them
+// (\`grid-auto-flow:row dense column\`) fills the slot twice and is invalid, so
+// dropping the initial there would print a value the author never wrote.
+/** @type {Map<string, [string, string[]]>} */
+// prettier-ignore
+const OMITTABLE_INITIAL_KEYWORDS = new Map([${omittableInitialKeywords
+		.map(
+			([name, [keyword, slot]]) =>
+				`["${name}", ["${keyword}", ${JSON.stringify(slot)}]]`
+		)
+		.join(", ")}]);
 
 // What each of those longhands accepts as a whole value: the keywords it names,
 // and the value classes it reaches. A value acceptable to a second slot is what
@@ -5371,10 +5510,15 @@ const LEGACY_PSEUDO_ELEMENTS = ${setLiteral(SUPPLEMENT.legacyPseudoElements)};
 // combinator instead, and \`|\` makes the \`*\` a namespace's, not a redundant one.
 const COMPOUND_CONTINUATIONS = ${setLiteral(SUPPLEMENT.compoundContinuations)};
 
-// The properties whose zero length keeps its unit — the one place it is still
-// load-bearing.
-const ZERO_UNIT_KEEPING_PROPERTIES = ${setLiteral(
-		SUPPLEMENT.zeroUnitKeepingProperties
+// The properties whose zero length keeps its unit: those whose own grammar
+// offers a bare number beside the length, so the unit is what picks the
+// reading, and the two an engine reads its own way.
+const ZERO_UNIT_KEEPING_PROPERTIES = ${setLiteral(zeroUnitKeepingProperties)};
+
+// The properties an engine takes no \`calc()\` in, so one stays as written
+// rather than folding to the value it equals.
+const CALC_REJECTING_PROPERTIES = ${setLiteral(
+		SUPPLEMENT.calcRejectingProperties
 	)};
 
 // At-rules whose empty block is inert, so dropping it changes nothing.
@@ -5593,7 +5737,7 @@ module.exports.AUTO_SECOND_VALUE_PROPERTIES = AUTO_SECOND_VALUE_PROPERTIES;
 module.exports.BOX_FAMILY_PREFIX = BOX_FAMILY_PREFIX;
 module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
-module.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
+module.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
 module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;\nmodule.exports.COLOR_NAME_TO_SHORTEST = COLOR_NAME_TO_SHORTEST;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;
 module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;
@@ -5717,6 +5861,8 @@ module.exports.collectOmittableInitialKeywords =
 module.exports.collectRatioProperties = collectRatioProperties;
 module.exports.collectUnsharedLonghandKeywords =
 	collectUnsharedLonghandKeywords;
+module.exports.collectZeroUnitAmbiguousProperties =
+	collectZeroUnitAmbiguousProperties;
 module.exports.isSpelledSyntax = isSpelledSyntax;
 module.exports.longhandType = longhandType;
 module.exports.parseValueSyntax = parseValueSyntax;

@@ -1,0 +1,34 @@
+/* Values where a rewrite decides whether the declaration parses at all. Each
+   was found by the wpt DOM/CSSOM tier: the printer normalized a value the
+   engine had rejected into one it accepts, or the other way round. Verified in
+   headless Chrome — the comment states what the engine does with each. */
+
+/*! invalid: a quoted family beside a bare identifier matches no family list */
+.a { font-family: "Lucida" Grande, sans-serif }
+/*! valid: a lone string is a family, so unquoting it stays one */
+.b { font-family: "Lucida Grande", sans-serif }
+
+/*! invalid: `<integer>` takes no fraction, so this computes `auto` */
+.c { grid-row: 1.0 }
+/*! valid: the fraction is the value, not a spelling of an integer */
+.d { opacity: 1.0 }
+
+/*! invalid: `row` and `column` are one slot, so naming both drops the value */
+.e { grid-auto-flow: row dense column }
+/*! valid: `row` is the initial value and says nothing beside `dense` */
+.f { grid-auto-flow: row dense }
+
+/*! `tab-size` reads a bare number as characters, so the unit is the value */
+.g { tab-size: 0px }
+/*! valid either way: a bare `0` is the length every other property accepts */
+.h { margin: 0px }
+
+/*! Chrome rejects the unitless zero here that the spec allows */
+.i { overflow-clip-margin: 0px content-box }
+
+/*! a bare number here is a multiple of the border width, not a length */
+.j { border-image-outset: 0px }
+/*! the same, and neither was found by a test — the grammar says both */
+.k { border-image-width: 0px }
+/*! `flex:0` is grow=0,basis=0%; `flex:0px` is grow=1,basis=0px */
+.l { flex: 0px }

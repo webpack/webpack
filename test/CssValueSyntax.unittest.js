@@ -15,6 +15,7 @@ const {
 	collectOmittableInitialKeywords,
 	collectRatioProperties,
 	collectUnsharedLonghandKeywords,
+	collectZeroUnitAmbiguousProperties,
 	isSpelledSyntax,
 	longhandType,
 	parseValueSyntax,
@@ -504,8 +505,16 @@ describe("CssValueSyntax", () => {
 	describe("collectOmittableInitialKeywords", () => {
 		it("keeps only a stated keyword the property table agrees is its initial", () => {
 			expect(collectOmittableInitialKeywords()).toEqual([
-				["grid-auto-flow", "row"]
+				["grid-auto-flow", ["row", ["column", "row"]]]
 			]);
+		});
+
+		it("reads the whole slot the keyword is chosen among", () => {
+			expect(
+				collectOmittableInitialKeywords(["a"], {
+					a: { initial: "row", syntax: "[ row | column | page ] || dense" }
+				})
+			).toEqual([["a", ["row", ["column", "page", "row"]]]]);
 		});
 
 		it("refuses a keyword the grammar no longer offers beside another", () => {
@@ -514,6 +523,34 @@ describe("CssValueSyntax", () => {
 					a: { initial: "row", syntax: "row | column" }
 				})
 			).toThrow("No omittable 'row' in 'a': row | column");
+		});
+	});
+
+	describe("collectZeroUnitAmbiguousProperties", () => {
+		it("names a property offering a bare number beside the length", () => {
+			expect(collectZeroUnitAmbiguousProperties()).toContain("tab-size");
+			expect(collectZeroUnitAmbiguousProperties()).toContain("line-height");
+			expect(collectZeroUnitAmbiguousProperties()).toContain(
+				"border-image-outset"
+			);
+		});
+
+		it("reads only the value's own level, not what a function takes", () => {
+			// `width` reaches `<number>` through the gradients `<image>` offers, and
+			// none of them is something `width` could have been written as.
+			expect(collectZeroUnitAmbiguousProperties()).not.toContain("width");
+			expect(collectZeroUnitAmbiguousProperties()).not.toContain("margin");
+		});
+
+		it("follows a shorthand into the longhand that states the pair", () => {
+			expect(
+				collectZeroUnitAmbiguousProperties({
+					a: { syntax: "<'b'>" },
+					b: { syntax: "<number> | <length>" },
+					c: { syntax: "<length>" },
+					d: { syntax: "steps(<number>) | <length>" }
+				})
+			).toEqual(["a", "b"]);
 		});
 	});
 
