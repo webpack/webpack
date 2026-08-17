@@ -491,6 +491,18 @@ describe("printer output in real Chrome", () => {
 	 */
 	const expected = (filed, name) => (filed.has(name) ? [name] : []);
 
+	/**
+	 * The differences as the assertion names them, one with no filed defect
+	 * carrying its reason: a log of files alone needs a second run to read.
+	 * @param {{ name: string, why: string }[]} differences what differed
+	 * @param {Map<string, string>} filed the tier's filed defects
+	 * @returns {string[]} the names, each unexpected one carrying its reason
+	 */
+	const named = (differences, filed) =>
+		differences.map((each) =>
+			filed.has(each.name) ? each.name : `${each.name}: ${each.why}`
+		);
+
 	const describeCorpus = (at, label) => {
 		describe(label, () => {
 			if (at === 1 && !hasCorpus()) {
@@ -513,7 +525,7 @@ describe("printer output in real Chrome", () => {
 					`should build the same DOM and CSSOM from ${fixture.name}`,
 					async () => {
 						const differences = await comparePages([fixture], true);
-						expect(differences.map((each) => each.name)).toEqual(
+						expect(named(differences, one.filedHtml)).toEqual(
 							expected(one.filedHtml, fixture.name)
 						);
 					},
@@ -546,7 +558,7 @@ describe("printer output in real Chrome", () => {
 					`should build the same CSSOM from ${fixture.name}`,
 					async () => {
 						const differences = await compareStylesheets([fixture]);
-						expect(differences.map((each) => each.name)).toEqual(
+						expect(named(differences, one.filedCss)).toEqual(
 							expected(one.filedCss, fixture.name)
 						);
 					},

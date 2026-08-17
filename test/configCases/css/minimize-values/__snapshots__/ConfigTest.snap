@@ -79,8 +79,11 @@ Array [
   "/*! declined: two-value \`overflow\` is far newer than \`overflow-x\`/\`-y\`, so the
    merge would lose both declarations on a target that reads only the longhands */.t73{overflow-x:hidden;overflow-y:scroll}",
   "/*! webpack: ...but one-value \`overflow\` is CSS 2.1, as old as the longhands */.t73a{overflow:hidden}",
-  "/*! declined: \`place-items\` is newer than \`align-items\` in every form */.t74{align-items:center;justify-items:start}",
-  "/*! declined: ...so an equal pair is no safer */.t74a{align-items:center;justify-items:center}",
+  "/*! merge-longhand: \`place-items\` is newer than \`align-items\`, so it is written
+   only where the target reads it — see the \`minimize-environment\` case */.t74{place-items:center start}",
+  "/*! ...collapsing to one value where the pair agrees */.t74a{place-items:center}",
+  "/*! declined: a keyword only one half of the pair takes makes the shorthand
+   invalid whole — \`left\` is \`justify-items\`' alone, \`baseline\` \`align-content\`'s */.t74b{align-content:baseline;justify-content:baseline}.t74c{align-items:left;justify-items:left}",
   "/*! declined: a declaration between them writing the same family would be
    stepped over by the merge */.t75{margin-block-start:1px;margin:0;margin-block-end:2px}",
   "/*! declined: a CSS-wide keyword beside another value is a shorthand the engine

@@ -1166,6 +1166,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "cssPlaceShorthand": {
+          "description": "The environment supports the 'place-content', 'place-items' and 'place-self' shorthand properties.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "destructuring": {
           "description": "The environment supports destructuring ('{ a, b } = obj').",
           "type": "boolean"

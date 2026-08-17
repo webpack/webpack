@@ -565,13 +565,103 @@ const collectPairLonghands = () => {
 		const key = longhands.join(" ");
 		claims.set(key, (claims.get(key) || 0) + 1);
 	}
-	const newer = new Set(SUPPLEMENT.newerPairShorthands);
 	return out
-		.filter(
-			([name, longhands]) =>
-				claims.get(longhands.join(" ")) === 1 && !newer.has(name)
-		)
+		.filter(([, longhands]) => claims.get(longhands.join(" ")) === 1)
 		.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+};
+
+/**
+ * The properties whose comma-separated items take a `<custom-ident>`, so any
+ * vendor spelling parses: a comma multiplier whose body reaches one.
+ * @returns {string[]} the property names, sorted
+ */
+const collectCustomIdentListProperties = () => {
+	/**
+	 * Whether an item may be written as a bare `<custom-ident>`. Its own walk
+	 * rather than `walkValueSyntax`: a `<custom-ident>` inside a function's
+	 * arguments is that function's, not a name the item itself may be spelled as,
+	 * and reading it as one would let a `-webkit-` *function* pass for a name.
+	 * @param {EXPECTED_ANY} node a value-syntax node
+	 * @param {Set<string>} seen the references already followed
+	 * @returns {boolean} whether the item itself may be a `<custom-ident>`
+	 */
+	const reachesCustomIdent = (node, seen) => {
+		switch (node.type) {
+			case "type": {
+				if (node.name === "custom-ident" || node.name === "dashed-ident") {
+					return true;
+				}
+				const referenced = syntaxes[node.name];
+				if (referenced === undefined || seen.has(node.name)) return false;
+				seen.add(node.name);
+				return reachesCustomIdent(grammarOf(referenced.syntax), seen);
+			}
+			case "oneOf":
+			case "anyOf":
+			case "allOf":
+			case "sequence":
+				return node.items.some(
+					/** @type {(item: EXPECTED_ANY) => boolean} */
+					((item) => reachesCustomIdent(item, seen))
+				);
+			case "group":
+			case "parens":
+			case "multiplier":
+				return reachesCustomIdent(node.body, seen);
+			// A function's arguments are its own, and a property reference reaches
+			// whatever that property does — neither is this item's name slot.
+			default:
+				return false;
+		}
+	};
+	/** @type {string[]} */
+	const out = [];
+	for (const [name, property] of Object.entries(properties)) {
+		if (property.status !== "standard") continue;
+		if (typeof property.syntax !== "string") continue;
+		const tree = grammarOf(property.syntax);
+		let listed = false;
+		walkValueSyntax(tree, (node) => {
+			if (listed) return;
+			if (node.type !== "multiplier" || node.comma !== true) return;
+			if (reachesCustomIdent(node.body, new Set())) listed = true;
+		});
+		if (listed) out.push(name);
+	}
+	return out.sort();
+};
+
+/**
+ * The shorthands that set their longhands positionally with a `/` between them:
+ * `<X> [ / <X> ]{0,n}` over the `n + 1` names `computed` lists, in that order.
+ * An omitted slot copies the first only when that is a `<custom-ident>`, else
+ * takes `auto` — so dropping one is right for an ident and wrong for anything else.
+ * @returns {[string, string[]][]} `[shorthand, longhands]`, sorted
+ */
+const collectSlashLonghands = () => {
+	/** @type {[string, string[]][]} */
+	const out = [];
+	for (const [name, property] of Object.entries(properties)) {
+		if (property.status !== "standard") continue;
+		if (typeof property.syntax !== "string") continue;
+		const longhands = property.computed;
+		if (!Array.isArray(longhands) || longhands.length < 2) continue;
+		const tree = grammarOf(property.syntax);
+		if (tree.type !== "sequence" || tree.items.length !== 2) continue;
+		const [first, rest] = tree.items;
+		if (first.type !== "type" || rest.type !== "multiplier") continue;
+		if (rest.comma || rest.min !== 0) continue;
+		if (rest.max !== longhands.length - 1) continue;
+		const body = rest.body.type === "group" ? rest.body.body : rest.body;
+		if (body.type !== "sequence" || body.items.length !== 2) continue;
+		const [slash, repeated] = body.items;
+		if (slash.type !== "literal" || slash.value !== "/") continue;
+		// The same production on both sides, so every slot takes the same values
+		// and the order `computed` states is the order they are written in.
+		if (repeated.type !== "type" || repeated.name !== first.name) continue;
+		out.push([name, longhands]);
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
 
 /**
@@ -583,6 +673,102 @@ const collectPairLonghands = () => {
 const collectOneValuePairShorthands = (pairs) => {
 	const named = new Set(SUPPLEMENT.oneValuePairShorthands);
 	return pairs.map(([name]) => name).filter((name) => named.has(name));
+};
+
+/**
+ * A dataset entry's value definition, or null where it states none.
+ * @param {EXPECTED_ANY} entry a `properties` or `syntaxes` entry
+ * @returns {string | null} its grammar
+ */
+const grammarText = (entry) =>
+	entry !== undefined && typeof entry.syntax === "string" ? entry.syntax : null;
+
+/**
+ * The keywords a shorthand's longhands disagree on — one accepts it, another does
+ * not — so writing the value into every slot at once turns a declaration the
+ * engine kept into a shorthand it drops whole. `justify-items` takes `left` and
+ * `align-items` does not, which is what makes `place-items:left` unreadable.
+ * Read off the two grammars, keyword by keyword.
+ * @param {[string, string[]][][]} tables the shorthand-to-longhands tables to read
+ * @returns {[string, string[]][]} `[shorthand, keywords]`, sorted, empty ones out
+ */
+const collectUnsharedLonghandKeywords = (tables) => {
+	/**
+	 * Every bare keyword a grammar accepts, references followed.
+	 * @param {string} name a property
+	 * @returns {Set<string> | null} its keywords, or null when it has no grammar
+	 */
+	const keywordsOf = (name) => {
+		const own = grammarText(properties[name]);
+		if (own === null) return null;
+		/** @type {Set<string>} */
+		const out = new Set();
+		/**
+		 * @param {EXPECTED_ANY} node a value-syntax node
+		 * @param {Set<string>} seen the references already followed
+		 * @returns {void}
+		 */
+		const collect = (node, seen) => {
+			if (node.type === "keyword") {
+				out.add(node.name.toLowerCase());
+				return;
+			}
+			// `<'border-top-color'>` is a `property` node: how one longhand of a
+			// family states that it takes whatever another of them does.
+			if (node.type === "type" || node.type === "property") {
+				const referenced = grammarText(
+					node.type === "property" ? properties[node.name] : syntaxes[node.name]
+				);
+				if (referenced === null || seen.has(node.name)) return;
+				seen.add(node.name);
+				collect(parseValueSyntax(referenced), seen);
+				return;
+			}
+			switch (node.type) {
+				case "oneOf":
+				case "anyOf":
+				case "allOf":
+				case "sequence":
+					for (const item of node.items) collect(item, seen);
+					break;
+				case "group":
+				case "parens":
+				case "multiplier":
+					collect(node.body, seen);
+					break;
+				case "function":
+					if (node.body !== null) collect(node.body, seen);
+					break;
+				default:
+					break;
+			}
+		};
+		collect(parseValueSyntax(own), new Set());
+		return out;
+	};
+	/** @type {[string, string[]][]} */
+	const out = [];
+	for (const table of tables) {
+		for (const [shorthand, longhands] of table) {
+			const sets = longhands.map(keywordsOf);
+			if (sets.includes(null)) continue;
+			/** @type {Set<string>} */
+			const unshared = new Set();
+			for (const set of /** @type {Set<string>[]} */ (sets)) {
+				for (const keyword of set) {
+					if (
+						sets.some(
+							(other) => !(/** @type {Set<string>} */ (other).has(keyword))
+						)
+					) {
+						unshared.add(keyword);
+					}
+				}
+			}
+			if (unshared.size !== 0) out.push([shorthand, [...unshared].sort()]);
+		}
+	}
+	return out.sort((a, b) => (a[0] < b[0] ? -1 : 1));
 };
 
 // The value types a grammar walk stops at rather than expands: what a minifier
@@ -2669,7 +2855,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], newerPairShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -2758,13 +2944,11 @@ const SUPPLEMENT = {
 		["translatex", "translate"],
 		["skewx", "skew"]
 	],
-	// Pair shorthands materially newer than the longhands they merge, so a target
-	// reading the longhands may not read the shorthand — and the merge would lose
-	// both declarations rather than one. `overflow-x`/`-y` and `align-items` are
-	// as old as CSS 2 / flexbox, while two-value `overflow` and `place-items` are
-	// 2018-era. `output.environment` states this for `inset` alone, so the rest
-	// are named here.
-	newerPairShorthands: ["place-content", "place-items", "place-self"],
+	// The pair shorthands `output.environment.cssPlaceShorthand` gates: newer than
+	// the longhands they merge, so a target reading `align-items` may not read
+	// `place-items` and the merge would lose both declarations rather than one.
+	// `mdn-data` states no version, so the set is named rather than derived.
+	placeShorthands: ["place-content", "place-items", "place-self"],
 	// Pair shorthands whose *two-value* form is the newer one, so the merge is
 	// safe only where it collapses to a single value: `overflow: hidden` is CSS
 	// 2.1 and reads everywhere `overflow-x` does, while `overflow: hidden scroll`
@@ -4789,11 +4973,22 @@ const collectData = () => {
 	const pairLonghands = collectPairLonghands();
 	const oneValuePairShorthands = collectOneValuePairShorthands(pairLonghands);
 	const familyLonghands = collectFamilyLonghands();
+	const slashLonghands = collectSlashLonghands();
+	const customIdentListProperties = collectCustomIdentListProperties();
+	const unsharedLonghandKeywords = collectUnsharedLonghandKeywords([
+		boxLonghands,
+		pairLonghands
+	]);
 
 	// Every longhand the three merge tables can consume, so the printer can ask
 	// one question of a block instead of walking all three tables.
 	const mergeLonghands = new Set();
-	for (const table of [boxLonghands, pairLonghands, familyLonghands]) {
+	for (const table of [
+		boxLonghands,
+		pairLonghands,
+		familyLonghands,
+		slashLonghands
+	]) {
 		for (const [, longhands] of table) {
 			for (const longhand of longhands) mergeLonghands.add(longhand);
 		}
@@ -4829,7 +5024,9 @@ const collectData = () => {
 */
 
 // GENERATED by tooling/generate-css-data.js — do not edit.
-// Sources: mdn-data ${mdnDataPackage.version}, color-name ${colorNamePackage.version}, @mdn/browser-compat-data ${bcdVersion}.
+// Sources: mdn-data ${mdnDataPackage.version}, color-name ${
+		colorNamePackage.version
+	}, @mdn/browser-compat-data ${bcdVersion}.
 
 "use strict";
 
@@ -4878,11 +5075,31 @@ const PAIR_LONGHANDS = new Map([${pairLonghands
 // collapsing to one value may emit it.
 const ONE_VALUE_PAIR_SHORTHANDS = ${setLiteral(oneValuePairShorthands)};
 
+// The pair shorthands \`output.environment.cssPlaceShorthand\` gates, newer than
+// the longhands they merge.
+const PLACE_SHORTHANDS = ${setLiteral(SUPPLEMENT.placeShorthands)};
+
+// The keywords a shorthand's longhands disagree on, so a merge writing one into
+// every slot would turn a declaration the engine kept into a shorthand it drops:
+// \`justify-items\` takes \`left\` and \`align-items\` does not.
+const UNSHARED_LONGHAND_KEYWORDS = new Map([${unsharedLonghandKeywords
+		.map(([name, keywords]) => `["${name}", ${setLiteral(keywords)}]`)
+		.join(", ")}]);
+
 // The shorthands written as an order-free \`||\` of their own longhands, each
 // appearing once, in grammar order. A merge emits every value, so the only
 // question is whether each parses back into the longhand it was authored on.
 // prettier-ignore
 const FAMILY_LONGHANDS = new Map([${familyLonghands
+		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
+		.join(", ")}]);
+
+// The properties whose comma-separated items take a \`<custom-ident>\`, where a
+// vendor spelling is a name the engine parses rather than one it may drop — so a
+// later declaration listing an earlier one's items cannot be its fallback.
+const CUSTOM_IDENT_LIST_PROPERTIES = ${setLiteral(customIdentListProperties)};
+
+const SLASH_LONGHANDS = new Map([${slashLonghands
 		.map(([name, longhands]) => `["${name}", ${JSON.stringify(longhands)}]`)
 		.join(", ")}]);
 
@@ -5363,7 +5580,9 @@ ${prefixSpellingKeywords
 // not name is skipped, so prefixes are added and dropped for the rest of the
 // selection alone; a selection of only those turns prefixing off entirely.
 /** @type {Set<string>} */
-const PREFIX_BROWSERS = new Set([${prefixBrowsers.map((browser) => `"${browser}"`).join(", ")}]);
+const PREFIX_BROWSERS = new Set([${prefixBrowsers
+		.map((browser) => `"${browser}"`)
+		.join(", ")}]);
 
 module.exports.ABSOLUTE_UNIT_SCALE = ABSOLUTE_UNIT_SCALE;
 module.exports.ALPHA_VALUE_PROPERTIES = ALPHA_VALUE_PROPERTIES;\nmodule.exports.ANGLE_UNITS = ANGLE_UNITS;
@@ -5380,7 +5599,7 @@ module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
 module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;
 module.exports.CSS_MODULES_KEYWORD_OPTIONS = CSS_MODULES_KEYWORD_OPTIONS;
 module.exports.CSS_WIDE_KEYWORDS = CSS_WIDE_KEYWORDS;
-module.exports.CUBIC_BEZIER_KEYWORDS = CUBIC_BEZIER_KEYWORDS;\nmodule.exports.DEFAULT_GRADIENT_DIRECTIONS = DEFAULT_GRADIENT_DIRECTIONS;
+module.exports.CUBIC_BEZIER_KEYWORDS = CUBIC_BEZIER_KEYWORDS;\nmodule.exports.CUSTOM_IDENT_LIST_PROPERTIES = CUSTOM_IDENT_LIST_PROPERTIES;\nmodule.exports.DEFAULT_GRADIENT_DIRECTIONS = DEFAULT_GRADIENT_DIRECTIONS;
 module.exports.DISPLAY_SHORT_FORMS = DISPLAY_SHORT_FORMS;\nmodule.exports.DROPPABLE_WHEN_EMPTY_AT_RULES = DROPPABLE_WHEN_EMPTY_AT_RULES;
 module.exports.EASING_KEYWORDS = EASING_KEYWORDS;
 module.exports.EIGHTH_TURN_COSINE = EIGHTH_TURN_COSINE;
@@ -5403,7 +5622,7 @@ module.exports.MATH_FUNCTION_SUM_ARGUMENTS = MATH_FUNCTION_SUM_ARGUMENTS;\nmodul
 module.exports.NEGATIVE_ACCEPTING_PROPERTIES = NEGATIVE_ACCEPTING_PROPERTIES;
 module.exports.NTH_NAMED_EQUIVALENTS = NTH_NAMED_EQUIVALENTS;\nmodule.exports.NTH_PSEUDO_FUNCTIONS = NTH_PSEUDO_FUNCTIONS;\nmodule.exports.OMITTABLE_INITIAL_KEYWORDS = OMITTABLE_INITIAL_KEYWORDS;
 module.exports.ONE_VALUE_PAIR_SHORTHANDS = ONE_VALUE_PAIR_SHORTHANDS;
-module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
+module.exports.PAIR_LONGHANDS = PAIR_LONGHANDS;\nmodule.exports.PLACE_SHORTHANDS = PLACE_SHORTHANDS;\nmodule.exports.POSITION_PROPERTIES = POSITION_PROPERTIES;\nmodule.exports.POSITION_X_KEYWORDS = POSITION_X_KEYWORDS;\nmodule.exports.POSITION_Y_KEYWORDS = POSITION_Y_KEYWORDS;
 module.exports.PREFIXED_AT_RULES = PREFIXED_AT_RULES;
 module.exports.PREFIXED_PROPERTIES = PREFIXED_PROPERTIES;
 module.exports.PREFIXED_SELECTORS = PREFIXED_SELECTORS;
@@ -5412,16 +5631,40 @@ module.exports.PREFIXED_VALUES = PREFIXED_VALUES;
 module.exports.PREFIX_BROWSERS = PREFIX_BROWSERS;
 module.exports.QUARTER_TURN_ANGLE = QUARTER_TURN_ANGLE;
 module.exports.RATIO_PROPERTIES = RATIO_PROPERTIES;\nmodule.exports.REPEAT_STYLE_KEYWORDS = REPEAT_STYLE_KEYWORDS;\nmodule.exports.REPEAT_STYLE_PROPERTIES = REPEAT_STYLE_PROPERTIES;\nmodule.exports.RGB_TO_NAME = RGB_TO_NAME;
-module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;
+module.exports.SELECTOR_FUNCTIONS = SELECTOR_FUNCTIONS;\nmodule.exports.SHADOW_PROPERTIES = SHADOW_PROPERTIES;\nmodule.exports.SHORTHAND_INITIAL_KEYWORDS = SHORTHAND_INITIAL_KEYWORDS;\nmodule.exports.SLASH_BOX_SHORTHANDS = SLASH_BOX_SHORTHANDS;\nmodule.exports.SLASH_LONGHANDS = SLASH_LONGHANDS;
 module.exports.STEPPED_FUNCTIONS = STEPPED_FUNCTIONS;
 module.exports.SUBSTITUTION_FUNCTIONS = SUBSTITUTION_FUNCTIONS;\nmodule.exports.TRANSITION_BEHAVIORS = TRANSITION_BEHAVIORS;
 module.exports.UNIT_CONVERSION_TARGETS = UNIT_CONVERSION_TARGETS;
-module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
+module.exports.UNIT_GROUP_BASE = UNIT_GROUP_BASE;\nmodule.exports.UNSHARED_LONGHAND_KEYWORDS = UNSHARED_LONGHAND_KEYWORDS;\nmodule.exports.X_AXIS_TRANSFORMS = X_AXIS_TRANSFORMS;
 module.exports.ZERO_ANGLE_FUNCTIONS = ZERO_ANGLE_FUNCTIONS;
 module.exports.ZERO_UNIT_KEEPING_PROPERTIES = ZERO_UNIT_KEEPING_PROPERTIES;\n// The exact arithmetic the printer's own evaluator needs. Sorted after the\n// tables: \`import/order\` orders exports by case, uppercase first.\nmodule.exports.exactAdd = exactAdd;\nmodule.exports.exactDivide = exactDivide;\nmodule.exports.exactMultiply = exactMultiply;
 `;
 
-	const summary = `${boxShorthands.length + slashShorthands.length} box shorthands (${slashShorthands.length} with a \`/\`), ${colorFunctions.length} color functions, ${substitutionFunctions.length} substitution functions, ${colorNames.length} color names, ${integerProperties.length} integer properties, ${negativeAcceptingProperties.length} negative-accepting properties, ${lengthOnlyFunctions.length} length-only functions, ${pairLonghands.length} pair shorthands, ${mathFunctionArity.length} of ${mathFunctions.length} math functions with a readable arity, ${cssModulesKeywords.length} css modules scoped properties (${cssModulesKeywords.reduce((total, [, , table]) => total + table.length, 0)} keywords), ${prefixedProperties.length} prefixed properties, ${prefixedSelectors.length} prefixed selectors, ${prefixedAtRules.length} prefixed at-rules and ${prefixedValues.reduce((total, [, values]) => total + values.length, 0)} prefixed values over ${prefixBrowsers.length} browsers`;
+	const summary = `${
+		boxShorthands.length + slashShorthands.length
+	} box shorthands (${slashShorthands.length} with a \`/\`), ${
+		colorFunctions.length
+	} color functions, ${substitutionFunctions.length} substitution functions, ${
+		colorNames.length
+	} color names, ${integerProperties.length} integer properties, ${
+		negativeAcceptingProperties.length
+	} negative-accepting properties, ${
+		lengthOnlyFunctions.length
+	} length-only functions, ${pairLonghands.length} pair shorthands, ${
+		mathFunctionArity.length
+	} of ${mathFunctions.length} math functions with a readable arity, ${
+		cssModulesKeywords.length
+	} css modules scoped properties (${cssModulesKeywords.reduce(
+		(total, [, , table]) => total + table.length,
+		0
+	)} keywords), ${prefixedProperties.length} prefixed properties, ${
+		prefixedSelectors.length
+	} prefixed selectors, ${
+		prefixedAtRules.length
+	} prefixed at-rules and ${prefixedValues.reduce(
+		(total, [, values]) => total + values.length,
+		0
+	)} prefixed values over ${prefixBrowsers.length} browsers`;
 	return { source, summary };
 };
 
@@ -5472,6 +5715,8 @@ module.exports.collectNthNamedEquivalents = collectNthNamedEquivalents;
 module.exports.collectOmittableInitialKeywords =
 	collectOmittableInitialKeywords;
 module.exports.collectRatioProperties = collectRatioProperties;
+module.exports.collectUnsharedLonghandKeywords =
+	collectUnsharedLonghandKeywords;
 module.exports.isSpelledSyntax = isSpelledSyntax;
 module.exports.longhandType = longhandType;
 module.exports.parseValueSyntax = parseValueSyntax;

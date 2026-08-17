@@ -58,7 +58,8 @@ Array [
   "/*! declined: a substitution could expand to more than one component */.t54{margin-top:var(--x);margin-right:2px;margin-bottom:1px;margin-left:2px}",
   "/*! declined: a CSS-wide keyword is only valid as the whole value */.t55{margin-top:inherit;margin-right:inherit;margin-bottom:inherit;margin-left:inherit}",
   "/*! declined: a longhand holding two components is already invalid */.t56{margin-top:1px 2px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
-  "/*! declined: a repeated longhand makes the cascade decide, not the order */.t57{margin-top:1px;margin-top:3px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
+  "/*! declined: a repeated longhand makes the cascade decide, not the order — the
+   dead first write goes, but the merge already read the family as repeated */.t57{margin-top:1px;margin-top:3px;margin-right:2px;margin-bottom:1px;margin-left:2px}",
   "/*! declined: something between the four writes the same family, so the merge would move it */.t57b{margin-top:1px;margin-inline-start:9px;margin-right:2px;margin-bottom:3px;margin-left:4px}",
   "/*! declined: ...and a vendor prefix does not hide that — Chromium reads \`-webkit-margin-start\` */.t57c{margin-top:1px;-webkit-margin-start:9px;margin-right:2px;margin-bottom:3px;margin-left:4px}",
   "/*! merge-longhand: an unrelated property between them is free to move */.t57d{margin:1px 2px 3px 4px;color:red}",
@@ -103,5 +104,12 @@ Array [
   "/*! webpack: a side's three longhands are the shorthand naming them */.t90{border-top:1px solid red}.t91{border-bottom:1px solid red}",
   "/*! declined: \`border\` resets \`border-image\`, which its longhands leave alone */.t92{border-width:1px;border-style:solid;border-color:red}",
   "/*! declined: a substitution could expand to more than the slot takes */.t93{border-top-width:var(--w);border-top-style:solid;border-top-color:red}",
+  "/*! webpack: the four grid-placement longhands are \`grid-area\`, \`/\`-separated in
+   the order it writes them */.t94{grid-area:1/2/3/4}",
+  "/*! ...and each axis' pair is its own shorthand */.t95{grid-row:1/3}.t96{grid-column:a/a}",
+  "/*! declined: a longhand holding two components is a slot the \`/\` form cannot
+   tell apart from the next one */.t97{grid-row-start:span 2;grid-column-start:2;grid-row-end:3;grid-column-end:4}",
+  "/*! declined: a substitution could expand across the \`/\` into another slot */.t98{grid-row-start:1;grid-column-start:2;grid-row-end:3;grid-column-end:var(--x)}",
+  "/*! declined: a CSS-wide keyword beside another value is a shorthand no engine reads */.t99{grid-row-start:inherit;grid-column-start:inherit;grid-row-end:inherit;grid-column-end:inherit}",
 ]
 `;

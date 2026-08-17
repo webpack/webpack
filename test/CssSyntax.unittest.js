@@ -48,12 +48,13 @@ const {
 /**
  * @param {string} css a stylesheet
  * @param {string[]=} browsers the browserslist selection to target
+ * @param {import("../lib/css/syntax").CssEnvironment=} abilities the CSS abilities the target reads
  * @returns {string} its minified serialization
  */
-const minifyFor = (css, browsers) =>
+const minifyFor = (css, browsers, abilities) =>
 	new SourceProcessor().process(css, {
 		mode: "minify",
-		environment: browsers ? { browsers } : undefined
+		environment: browsers ? { ...abilities, browsers } : abilities
 	}).code;
 
 // Snapshot uses the spec-style kebab-case names for multi-word token types;
@@ -1019,7 +1020,9 @@ describe("CssSyntax — block streaming", () => {
 	it("reads a streamed rule's prelude in terms of what encloses it", () => {
 		// `from` is the `0%` a keyframe selector means only inside `@keyframes`, so
 		// the opener has to be printed with the whole path bound, not just the rule.
-		const nested = repeat(3000, (i) => `& .x${i}{color:red}`);
+		// A block of its own per rule, so the sibling join has nothing to gather
+		// here and what is pinned is the prelude, not the merge.
+		const nested = repeat(3000, (i) => `& .x${i}{top:${i + 1}px}`);
 		expect(
 			childCount(`@keyframes k{from{${nested}}}`, NodeType.QualifiedRule)
 		).toBe(0);
@@ -1067,7 +1070,7 @@ describe("CssSyntax — block streaming", () => {
 		// streamed block cannot look ahead for the later one. The duplicate is
 		// separated from its match by 3000 child rules, so this is the whole block
 		// agreeing, not a run of adjacent declarations.
-		const middle = repeat(3000, (i) => `& .m${i}{color:red}`);
+		const middle = repeat(3000, (i) => `& .m${i}{top:${i + 1}px}`);
 		const src = `.root{color:red;${middle}color:red;}`;
 		expect(childCount(src, NodeType.QualifiedRule)).toBe(0);
 		expect(minify(src)).toBe(`.root{${middle}color:red}`);
@@ -1077,10 +1080,20 @@ describe("CssSyntax — block streaming", () => {
 		// The `;` a `}` makes redundant is dropped by walking back over the pieces
 		// the block emitted, past the empty one a later duplicate took back. What
 		// stands before the block keeps its own separator.
-		const mid = repeat(3000, (i) => `& .m${i}{color:red}`);
+		const mid = repeat(3000, (i) => `& .m${i}{top:${i + 1}px}`);
 		const src = `.root{lead:1;${mid}dup:2;dup:2;}`;
 		expect(childCount(src, NodeType.QualifiedRule)).toBe(0);
 		expect(minify(src)).toBe(`.root{lead:1;${mid}dup:2}`);
+	});
+
+	it("writes a streamed block's children straight through when beautifying", () => {
+		// A streamed block emits each child as it finishes rather than collecting
+		// them, so the order it writes them in is the order they were parsed.
+		const out = new SourceProcessor().process(
+			`@media all{${BIG}.z1{left:0}.z2{left:0}}`,
+			{ mode: "beautify" }
+		).code;
+		expect(out).toContain(".z1 {\nleft: 0;\n}\n.z2 {\nleft: 0;\n}");
 	});
 
 	it("declines to stream a block a longhand family could still merge in", () => {
@@ -1162,6 +1175,23 @@ describe("CssSyntax — minify comment preservation", () => {
 		// A plain annotation-free comment is still dropped.
 		expect(min("/* just a note */a{x:1}")).toBe("a{x:1}");
 	});
+
+	it.each([
+		// An `@import` is not a rule a join may hold back, so it is written straight
+		// through — with whatever comment stood before it still ahead of it.
+		['/*! a */@import "x.css";a{top:0}', '/*! a */@import "x.css";a{top:0}'],
+		// ...including where a rule held back for a join goes out first.
+		[
+			'a{color:red}b{color:red}/*! c */@import "x.css";',
+			'a,b{color:red}/*! c */@import "x.css";'
+		],
+		['/*! h */@charset "utf-8";a{top:0}', '/*! h */@charset "utf-8";a{top:0}']
+	])(
+		"writes a kept comment ahead of the rule it stood before: %s",
+		(src, out) => {
+			expect(min(src)).toBe(out);
+		}
+	);
 
 	it("emits a kept comment after the last rule (trailing flush)", () => {
 		expect(min("a{color:red}/*! end */")).toBe("a{color:red}/*! end */");
@@ -2929,7 +2959,94 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
-	describe("adjacent rules printing the same block", () => {
+	describe("a later declaration of a property already written", () => {
+		it.each([
+			// A differently spelled value is a fallback, and a bare name says nothing
+			// about which engines read it: it may be invalid...
+			"a{color:red;color:not-a-color}",
+			// ...or newer than the value before it, in which case an older one does:
+			// `canvas` is a CSS Color 4 system color.
+			"a{color:red;color:canvas}",
+			// A unit newer than the property is the same pair spelled with a number.
+			"a{width:100vw;width:100dvw}"
+		])("keeps both where they are spelled differently: %s", (css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a comma list a later declaration writes again", () => {
+		it.each([
+			// The item slot takes a `<custom-ident>`, so an engine knowing neither
+			// spelling still parses the value and has nothing to fall back to.
+			[
+				"a{transition:box-shadow .25s;transition:box-shadow .25s,-webkit-box-shadow .25s}",
+				"a{transition:box-shadow .25s,-webkit-box-shadow .25s}"
+			],
+			// ...whichever spelling the earlier one wrote
+			[
+				"a{transition:-webkit-box-shadow .25s;transition:box-shadow .25s,-webkit-box-shadow .25s}",
+				"a{transition:box-shadow .25s,-webkit-box-shadow .25s}"
+			],
+			// ...and for a keyframes name, which is a `<custom-ident>` too
+			[
+				"a{animation:spin 1s;animation:spin 1s,-webkit-spin 1s}",
+				"a{animation:spin 1s,-webkit-spin 1s}"
+			],
+			// A comma inside a call parts that call's arguments, not the list's items.
+			[
+				"a{transition:a cubic-bezier(.1,0,1,1);transition:a cubic-bezier(.1,0,1,1),-webkit-a cubic-bezier(.1,0,1,1)}",
+				"a{transition:a cubic-bezier(.1,0,1,1),-webkit-a cubic-bezier(.1,0,1,1)}"
+			],
+			// ...nor does one inside a string, escapes and all — the quote the printer
+			// swapped to drop the escape is on both sides, so they still match.
+			[
+				'a{font-family:-webkit-a,"x\\",y";font-family:a,-webkit-a,"x\\",y"}',
+				"a{font-family:a,-webkit-a,'x\",y'}"
+			]
+		])("%s", (css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// `-webkit-ease` is no `<easing-function>`, so that declaration is one an
+			// engine drops — which is what the earlier one is there for.
+			[
+				"the item slot takes no `<custom-ident>`",
+				"a{transition-timing-function:ease;transition-timing-function:ease,-webkit-ease}"
+			],
+			// A `<custom-ident>` reached inside a function's arguments is that
+			// function's, and a function is a thing an engine may not know.
+			[
+				"the added item is a call",
+				"a{background-image:linear-gradient(red,blue);background-image:linear-gradient(red,blue),-webkit-linear-gradient(red,blue)}"
+			],
+			// Nothing says the added item parses wherever the kept ones do.
+			[
+				"the added item is not one of the earlier ones respelled",
+				"a{transition:opacity 1s;transition:opacity 1s,-webkit-transform 1s}"
+			],
+			// The earlier one is not written again at all.
+			[
+				"an item of the earlier one is missing",
+				"a{transition:opacity 1s,width 1s;transition:opacity 1s,-webkit-opacity 1s}"
+			],
+			// An `!important` earlier one wins whatever the later writes.
+			[
+				"the earlier one is `!important`",
+				"a{transition:opacity 1s!important;transition:opacity 1s,-webkit-opacity 1s}"
+			],
+			// The later one writes fewer items than the earlier, so it cannot be
+			// writing all of them again.
+			[
+				"the later one is the shorter list",
+				"a{transition:a 1s,b 2s,c 3s;transition:-webkit-a 1s}"
+			]
+		])("declines where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("sibling rules printing the same block", () => {
 		it.each([
 			["a{color:red}b{color:red}", "a,b{color:red}"],
 			["a{color:red}b{color:red}c{color:red}", "a,b,c{color:red}"],
@@ -2939,6 +3056,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[".sm\\:flex{top:0}.b{top:0}", ".sm\\:flex,.b{top:0}"],
 			['[href="a:b"]{top:0}.b{top:0}', '[href="a:b"],.b{top:0}'],
 			["@media x{a{top:0}b{top:0}}", "@media x{a,b{top:0}}"],
+			// A named layer is one layer however many blocks open it.
+			["@layer x{a{top:0}}@layer x{b{top:0}}", "@layer x{a,b{top:0}}"],
 			["@keyframes k{0%{top:0}50%{top:0}}", "@keyframes k{0%,50%{top:0}}"],
 			// The rule between them prints nothing, so they end up adjacent.
 			["a{color:red}i{}b{color:red}", "a,b{color:red}"],
@@ -2964,7 +3083,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 
 		it.each([
 			["the blocks differ", "a{color:red}b{color:blue}"],
-			["a rule stands between them", "a{color:red}i{top:0}b{color:red}"],
+			// Nothing stands between two rules a join puts together, so a rule that
+			// does keeps them apart whatever it writes.
+			["a rule stands between them", "a{color:red}i{margin-top:0}b{color:red}"],
 			// One selector the engine cannot parse invalidates the whole list.
 			["a pseudo may be one the engine drops", "a:hover{top:0}b:hover{top:0}"],
 			["...even beside an attribute selector", "[a=b]:hover{top:0}.b{top:0}"],
@@ -2979,7 +3100,13 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a kept comment sits between them", "a{color:red}/*! c */b{color:red}"],
 			// The `s` modifier is one an engine may not read, and one selector it
 			// drops invalidates the whole list it was joined into.
-			["a matcher carries a modifier past `i`", "[a=b s]{top:0}[c]{top:0}"]
+			["a matcher carries a modifier past `i`", "[a=b s]{top:0}[c]{top:0}"],
+			// CSS Cascade 5 §6.4.1: every `@layer {` opens a layer of its own, and the
+			// later one wins whatever the selectors say.
+			[
+				"each anonymous layer is a layer of its own",
+				"@layer{#i{color:blue}}@layer{.c{color:red}}"
+			]
 		])("keeps both rules where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
@@ -3076,7 +3203,17 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				"the prelude names what the block belongs to",
 				"@keyframes k{0%{top:0}}@keyframes k{50%{top:1px}}"
 			],
-			["a rule stands between them", "@media x{a{t:0}}i{c:d}@media x{b{t:0}}"],
+			// Nothing stands between two at-rules a join puts together.
+			[
+				"a rule stands between them",
+				"@media x{a{top:0}}i{left:0}@media x{b{top:0}}"
+			],
+			// A layer with no name is a layer of its own, so two of them are never
+			// one block however they are written.
+			[
+				"the layer they open has no name",
+				"@layer{#i{color:blue}}@layer{.c{color:red}}"
+			],
 			// `@layer a{}` declares where the layer sits in the cascade.
 			["one block is empty", "@layer a{}@layer a{i{t:0}}"]
 		])("keeps both at-rules where %s", (_name, css) => {
@@ -3093,6 +3230,24 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			]
 		])("keeps both nested rules where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
+		});
+
+		it("prints the whole sheet after a parse threw mid-print", () => {
+			// The rule held back for a join is one per process, so a parse that threw
+			// while holding one must not leave it for the next parse to write out.
+			let seen = 0;
+			expect(() =>
+				new SourceProcessor()
+					.use({
+						[NodeType.QualifiedRule]: () => {
+							if (++seen === 2) throw new Error("thrown mid-parse");
+						}
+					})
+					.process(".held{left:0}.threw{left:0}", { mode: "minify" })
+			).toThrow("thrown mid-parse");
+			expect(minify("a{top:0}b{top:1px}c{top:2px}")).toBe(
+				"a{top:0}b{top:1px}c{top:2px}"
+			);
 		});
 	});
 
@@ -4025,9 +4180,41 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(two)).toBe(two);
 		});
 
-		it("declines `place-items`, newer than its longhands in every form", () => {
-			const css = "a{align-items:center;justify-items:center}";
+		it("declines the `place-*` pairs a target cannot read", () => {
+			const off = { cssPlaceShorthand: false };
+			const items = "a{align-items:center;justify-items:center}";
+			expect(minifyFor(items, undefined, off)).toBe(items);
+			const self = "a{align-self:center;justify-self:end}";
+			expect(minifyFor(self, undefined, off)).toBe(self);
+			const content = "a{align-content:center;justify-content:end}";
+			expect(minifyFor(content, undefined, off)).toBe(content);
+			// The same block is merged where the target reads the shorthand.
+			expect(minify(items)).toBe("a{place-items:center}");
+			expect(minify(self)).toBe("a{place-self:center end}");
+			expect(minify(content)).toBe("a{place-content:center end}");
+		});
+
+		it.each([
+			// `left` / `right` are `justify-*`'s alone, so the shorthand is invalid
+			// whole where the `justify-*` declaration alone was read.
+			"a{align-items:left;justify-items:left}",
+			"a{align-items:RIGHT;justify-items:RIGHT}",
+			"a{align-self:left;justify-self:left}",
+			"a{align-content:right;justify-content:right}",
+			// ...and a `<baseline-position>` is `align-content`'s alone, the other way
+			// round: `justify-content` does not take one.
+			"a{align-content:baseline;justify-content:baseline}"
+		])("declines a pair over a keyword only one half takes: %s", (css) => {
 			expect(minify(css)).toBe(css);
+		});
+
+		it("merges a pair over a keyword both halves take", () => {
+			expect(minify("a{align-items:baseline;justify-items:baseline}")).toBe(
+				"a{place-items:baseline}"
+			);
+			expect(minify("a{align-content:center;justify-content:end}")).toBe(
+				"a{place-content:center end}"
+			);
 		});
 
 		it("refuses a pair the box collapse would refuse", () => {
@@ -4037,6 +4224,22 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(minify(wide)).toBe(wide);
 			const sub = "a{margin-block-start:var(--x);margin-block-end:var(--x)}";
 			expect(minify(sub)).toBe(sub);
+		});
+
+		it("refuses a slash shorthand the same two ways a box refuses", () => {
+			// A `var()` may expand across the `/` into another slot, and a CSS-wide
+			// keyword beside another value is a shorthand the engine drops whole.
+			expect(
+				minify(
+					"a{grid-row-start:1;grid-column-start:2;grid-row-end:3;grid-column-end:4}"
+				)
+			).toBe("a{grid-area:1/2/3/4}");
+			const sub =
+				"a{grid-row-start:1;grid-column-start:2;grid-row-end:var(--x);grid-column-end:4}";
+			expect(minify(sub)).toBe(sub);
+			const wide =
+				"a{grid-row-start:inherit;grid-column-start:2;grid-row-end:3;grid-column-end:4}";
+			expect(minify(wide)).toBe(wide);
 		});
 
 		it("merges an order-free shorthand's slots in grammar order", () => {
@@ -4731,7 +4934,10 @@ describe("CssSyntax minify — vendor prefixes (properties)", () => {
 		expect(
 			minifyFor(
 				"a{align-items:flex-start;align-self:flex-end;justify-content:space-around;align-content:space-between}",
-				["ie 10"]
+				["ie 10"],
+				// Set by hand: this path passes `browsers` straight to the printer, so
+				// the browserslist-to-abilities resolution never runs.
+				{ cssPlaceShorthand: false }
 			)
 		).toBe(
 			"a{-ms-flex-align:start;align-items:flex-start;-ms-flex-item-align:end;align-self:flex-end;-ms-flex-pack:distribute;justify-content:space-around;-ms-flex-line-pack:justify;align-content:space-between}"

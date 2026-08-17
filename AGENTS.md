@@ -133,6 +133,7 @@ The directory listings below are the canonical map of the repository. **Whenever
    - `test/__snapshots__/Cli.basictest.js.snap` — the CLI flags are derived from the schema, so every new property adds one.
    - `test/configCases/ecmaVersion/browserslist*/webpack.config.js` — these carry an **inline** snapshot of the resolved `output.environment`, so an entry there must be added to nine config files.
    - `test/__snapshots__/target-browserslist.unittest.js.snap` — same, per browserslist query.
+   - `test/Defaults.unittest.js` — its **inline** snapshots carry the whole resolved config twice over, once for the base defaults and once per browserslist fixture, so an `output.environment` property adds a line to each. It runs in the `unit` flag, which no `configCases` or `basic` run reaches.
    - `test/Validation.test.js` — its **inline** snapshots quote the "these properties are valid" list, so a new property under `module.rules` changes one. It runs in the `integration` matrix, not `basic`.
 
 Skipping any layer silently breaks the option. After editing schemas, run `yarn fix:special` so `lib/` code can reference the updated types. If you added or modified options, consider updating `examples/` and run `yarn build:examples` to verify.

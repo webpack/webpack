@@ -3006,6 +3006,11 @@ export interface Environment {
 	 */
 	cssMediaQueryRange?: boolean;
 	/**
+	 * The environment supports the 'place-content', 'place-items' and 'place-self' shorthand properties.
+	 * @since 5.110.0
+	 */
+	cssPlaceShorthand?: boolean;
+	/**
 	 * The environment supports destructuring ('{ a, b } = obj').
 	 */
 	destructuring?: boolean;

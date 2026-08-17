@@ -5453,6 +5453,11 @@ declare interface CssEnvironment {
 	cssMediaQueryRange?: boolean;
 
 	/**
+	 * the `place-content` / `place-items` / `place-self` shorthand properties are available
+	 */
+	cssPlaceShorthand?: boolean;
+
+	/**
 	 * the browserslist selection (`["chrome 100", "safari 15"]`), so vendor prefixes are added / dropped for exactly these browsers; absent leaves prefixes untouched
 	 */
 	browsers?: string[];
@@ -7463,6 +7468,12 @@ declare interface Environment {
 	 * @since 5.110.0
 	 */
 	cssMediaQueryRange?: boolean;
+
+	/**
+	 * The environment supports the 'place-content', 'place-items' and 'place-self' shorthand properties.
+	 * @since 5.110.0
+	 */
+	cssPlaceShorthand?: boolean;
 
 	/**
 	 * The environment supports destructuring ('{ a, b } = obj').

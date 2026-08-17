@@ -14,6 +14,7 @@ const {
 	collectNthNamedEquivalents,
 	collectOmittableInitialKeywords,
 	collectRatioProperties,
+	collectUnsharedLonghandKeywords,
 	isSpelledSyntax,
 	longhandType,
 	parseValueSyntax,
@@ -552,6 +553,43 @@ describe("CssValueSyntax", () => {
 			expect(
 				longhandType("a", 0, { a: { syntax: "red | <color>" } })
 			).toBeNull();
+		});
+	});
+
+	describe("collectUnsharedLonghandKeywords", () => {
+		it("names the keywords only one half of a pair takes", () => {
+			// `left` / `right` are `justify-*`'s alone and `<baseline-position>` is
+			// `align-content`'s, so a shorthand carrying one is invalid whole.
+			expect(
+				collectUnsharedLonghandKeywords([
+					[
+						["place-items", ["align-items", "justify-items"]],
+						["place-content", ["align-content", "justify-content"]]
+					]
+				])
+			).toEqual([
+				["place-content", ["baseline", "first", "last", "left", "right"]],
+				["place-items", ["left", "legacy", "right"]]
+			]);
+		});
+
+		it("leaves out a family whose longhands agree", () => {
+			expect(
+				collectUnsharedLonghandKeywords([
+					[["overflow", ["overflow-x", "overflow-y"]]]
+				])
+			).toEqual([]);
+		});
+
+		it("skips a shorthand whose longhand states no grammar", () => {
+			// The tables are derived, so a name `mdn-data` has no grammar for is one
+			// nothing can be said about — the shorthand goes unguarded rather than
+			// being read as disagreeing on every keyword.
+			expect(
+				collectUnsharedLonghandKeywords([
+					[["place-items", ["align-items", "no-such-property"]]]
+				])
+			).toEqual([]);
 		});
 	});
 

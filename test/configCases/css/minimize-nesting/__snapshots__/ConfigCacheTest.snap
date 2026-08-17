@@ -20,6 +20,8 @@ Array [
    whose own rules then meet at the seam and join like any other pair */@media (width>=200px){.p1,.p2{top:0}}",
   "/*! at-rule: ...and where both name one selector, the seam joins its blocks too */@media (width>=250px){.p3{top:0;left:0}}",
   "/*! at-rule: ...at any depth, and \`@supports\` the same way */.q{@supports (top:0){.q1,.q2{top:0}}}",
+  "/*! declined: CSS Cascade 5 §6.4.1 opens a layer of its own per \`@layer {\`, so a
+   later one beats an earlier whatever the selectors say */@layer{#s2a{color:red}}@layer{.s2b{color:blue}}",
   "/*! declined: the conditions differ, so the two blocks are not one */@media (width>=300px){.r1{top:0}}@media (width>=400px){.r2{top:0}}",
   "/*! declined: a later \`@keyframes\` of the same name replaces the earlier, so the
    two blocks are not one either */@keyframes s{0%{top:0}}@keyframes s{50%{top:1px}}",

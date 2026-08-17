@@ -11292,6 +11292,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-css-place-shorthand": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports the 'place-content', 'place-items' and 'place-self' shorthand properties.",
+        "multiple": false,
+        "path": "output.environment.cssPlaceShorthand",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports the 'place-content', 'place-items' and 'place-self' shorthand properties.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-destructuring": Object {
     "configs": Array [
       Object {

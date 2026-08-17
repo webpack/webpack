@@ -40,6 +40,10 @@
 @media (min-width: 250px) { .p3 { left: 0 } }
 /*! at-rule: ...at any depth, and `@supports` the same way */
 .q { @supports (top: 0) { .q1 { top: 0 } } @supports (top: 0) { .q2 { top: 0 } } }
+/*! declined: CSS Cascade 5 §6.4.1 opens a layer of its own per `@layer {`, so a
+   later one beats an earlier whatever the selectors say */
+@layer { #s2a { color: red } }
+@layer { .s2b { color: blue } }
 /*! declined: the conditions differ, so the two blocks are not one */
 @media (min-width: 300px) { .r1 { top: 0 } }
 @media (min-width: 400px) { .r2 { top: 0 } }
