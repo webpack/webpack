@@ -1265,6 +1265,7 @@ describe("snapshots", () => {
 		-   "performance": false,
 		+   "performance": Object {
 		+     "cacheEffectiveness": false,
+		+     "circularDependencies": false,
 		+     "duplicateModules": false,
 		+     "duplicatePackages": false,
 		+     "hints": "warning",
@@ -1350,6 +1351,7 @@ describe("snapshots", () => {
 		-   "performance": false,
 		+   "performance": Object {
 		+     "cacheEffectiveness": false,
+		+     "circularDependencies": false,
 		+     "duplicateModules": false,
 		+     "duplicatePackages": false,
 		+     "hints": "warning",

@@ -13379,6 +13379,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-circular-dependencies": Object {
+    "configs": Array [
+      Object {
+        "description": "Report groups of modules that import each other synchronously.",
+        "multiple": false,
+        "path": "performance.circularDependencies",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report groups of modules that import each other synchronously.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-duplicate-modules": Object {
     "configs": Array [
       Object {

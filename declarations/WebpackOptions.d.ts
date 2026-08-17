@@ -3234,6 +3234,11 @@ export interface PerformanceOptions {
 	 */
 	cacheEffectiveness?: boolean;
 	/**
+	 * Report groups of modules that import each other synchronously.
+	 * @since 5.110.0
+	 */
+	circularDependencies?: boolean;
+	/**
 	 * Report modules emitted into more than one chunk, and the bytes the extra copies cost.
 	 * @since 5.110.0
 	 */
