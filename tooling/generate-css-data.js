@@ -690,6 +690,14 @@ const collectOneValuePairShorthands = (pairs) => {
 };
 
 /**
+ * A dataset entry's value definition, or null where it states none.
+ * @param {EXPECTED_ANY} entry a `properties` or `syntaxes` entry
+ * @returns {string | null} its grammar
+ */
+const grammarText = (entry) =>
+	entry !== undefined && typeof entry.syntax === "string" ? entry.syntax : null;
+
+/**
  * The keywords a shorthand's longhands disagree on — one accepts it, another does
  * not — so writing the value into every slot at once turns a declaration the
  * engine kept into a shorthand it drops whole. `justify-items` takes `left` and
@@ -705,10 +713,8 @@ const collectUnsharedLonghandKeywords = (tables) => {
 	 * @returns {Set<string> | null} its keywords, or null when it has no grammar
 	 */
 	const keywordsOf = (name) => {
-		const property = properties[name];
-		if (property === undefined || typeof property.syntax !== "string") {
-			return null;
-		}
+		const own = grammarText(properties[name]);
+		if (own === null) return null;
 		/** @type {Set<string>} */
 		const out = new Set();
 		/**
@@ -724,14 +730,12 @@ const collectUnsharedLonghandKeywords = (tables) => {
 			// `<'border-top-color'>` is a `property` node: how one longhand of a
 			// family states that it takes whatever another of them does.
 			if (node.type === "type" || node.type === "property") {
-				const referenced =
-					node.type === "property"
-						? properties[node.name]
-						: syntaxes[node.name];
-				if (referenced === undefined || seen.has(node.name)) return;
-				if (typeof referenced.syntax !== "string") return;
+				const referenced = grammarText(
+					node.type === "property" ? properties[node.name] : syntaxes[node.name]
+				);
+				if (referenced === null || seen.has(node.name)) return;
 				seen.add(node.name);
-				collect(parseValueSyntax(referenced.syntax), seen);
+				collect(parseValueSyntax(referenced), seen);
 				return;
 			}
 			switch (node.type) {
@@ -753,7 +757,7 @@ const collectUnsharedLonghandKeywords = (tables) => {
 					break;
 			}
 		};
-		collect(parseValueSyntax(property.syntax), new Set());
+		collect(parseValueSyntax(own), new Set());
 		return out;
 	};
 	/** @type {[string, string[]][]} */
@@ -5725,6 +5729,8 @@ module.exports.collectNthNamedEquivalents = collectNthNamedEquivalents;
 module.exports.collectOmittableInitialKeywords =
 	collectOmittableInitialKeywords;
 module.exports.collectRatioProperties = collectRatioProperties;
+module.exports.collectUnsharedLonghandKeywords =
+	collectUnsharedLonghandKeywords;
 module.exports.isSpelledSyntax = isSpelledSyntax;
 module.exports.longhandType = longhandType;
 module.exports.parseValueSyntax = parseValueSyntax;
