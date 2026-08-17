@@ -32,3 +32,10 @@
 .k { border-image-width: 0px }
 /*! `flex:0` is grow=0,basis=0%; `flex:0px` is grow=1,basis=0px */
 .l { flex: 0px }
+
+/*! a negative zero keeps its fraction too, and still drops the leading zero */
+.m { grid-row: -0.0 }
+/*! the shared slot is the second entry here, not the first */
+.n { font-family: serif, "My Font" Extra }
+/*! a lone string in a later slot still unquotes */
+.o { font-family: serif, "My Font", monospace }
