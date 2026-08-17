@@ -289,19 +289,6 @@ describe("StatsTestCases", () => {
 						// Jest v27: at Object.<anonymous>.module.exports
 						// Jest v30: at Object.module.exports
 						.replace(/Object\.<anonymous>\./g, "Object.");
-					actual = actual.replace(
-						/(HINT in module caching:[^\n]*? on every build: )([^\n]+?)(\.)/g,
-						(_, prefix, value, suffix) => {
-							const reasons = value.split(", ");
-							const tail = reasons[reasons.length - 1];
-							const hasTail = /^and \d+ other reason/.test(tail);
-							const sortable = hasTail ? reasons.slice(0, -1) : reasons;
-							sortable.sort();
-							return `${prefix}${[...sortable, ...(hasTail ? [tail] : [])].join(
-								", "
-							)}${suffix}`;
-						}
-					);
 					// Normalize logger trace frames across engines: V8 emits one
 					// "at fn (file:line:col)" frame, while JSC (Bun) emits extra
 					// internal frames, omits the function name, and reports different
