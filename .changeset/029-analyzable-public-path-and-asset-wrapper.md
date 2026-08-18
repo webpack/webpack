@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Fix the public path an analyzable url carries, and widen where one is baked.
+Fix analyzable url public paths, and bake more of them, wasm included.

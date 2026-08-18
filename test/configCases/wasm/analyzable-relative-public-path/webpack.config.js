@@ -14,9 +14,19 @@ const INSTANTIATE = `${"__webpack_require__"}.v(exports, `;
  * @param {string} wasmRef expected start of the binary's reference
  * @param {boolean} runs whether the harness can load the binary that way
  * @param {string} publicPath the relative public path under test
+ * @param {string=} chunkDir directory the chunk is emitted under, so the path back to
+ * the output root is more than the `./` a flat name gives
  * @returns {import("../../../../").Configuration} configuration
  */
-const base = (index, name, wasmLoading, wasmRef, runs, publicPath) => ({
+const base = (
+	index,
+	name,
+	wasmLoading,
+	wasmRef,
+	runs,
+	publicPath,
+	chunkDir = ""
+) => ({
 	target: "node",
 	mode: "development",
 	devtool: false,
@@ -30,14 +40,14 @@ const base = (index, name, wasmLoading, wasmRef, runs, publicPath) => ({
 	output: {
 		module: true,
 		wasmLoading,
-		chunkFilename: `${name}-[name].mjs`,
+		chunkFilename: `${chunkDir}${name}-[name].mjs`,
 		webassemblyModuleFilename: `${name}-[id].wasm`,
 		publicPath
 	},
 	plugins: [
 		new webpack.DefinePlugin({
 			__INDEX__: JSON.stringify(index),
-			__CHUNK__: JSON.stringify(`${name}-lazy.mjs`),
+			__CHUNK__: JSON.stringify(`${chunkDir}${name}-lazy.mjs`),
 			__WASM_REF__: JSON.stringify(INSTANTIATE + wasmRef),
 			__RUNS__: JSON.stringify(runs)
 		})
@@ -54,7 +64,9 @@ module.exports = [
 	// A chunk-relative public path resolves the same way the harness does, so this one
 	// runs the binary the baked url points at.
 	base(2, "run", "async-node", 'new URL("./', true, "./"),
-	// `fetch` reads a relative public path against the document, which no literal
-	// anchored at the chunk can spell, so this one keeps the runtime form.
-	base(3, "relative", "fetch", "module.id, ", false, "./")
+	// The chunk was itself fetched through the public path, so climbing out of it lands
+	// back on the document the runtime form reads against.
+	base(3, "relative", "fetch", 'new URL("./', false, "./"),
+	// The same one directory down, so the `../` climb is exercised, not a flat `./`.
+	base(4, "deep", "fetch", 'new URL("../deep-', false, "dist/", "nested/")
 ];

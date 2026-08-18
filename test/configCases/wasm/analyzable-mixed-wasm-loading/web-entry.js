@@ -4,7 +4,7 @@ import path from "path";
 // Never awaited: `fetch` cannot reach a relative public path from the test harness.
 export const load = () => import(/* webpackChunkName: "web-lazy" */ "./web-lazy");
 
-it("should keep the runtime form for the runtime that fetches the binary", () => {
+it("should bake the binary of a runtime that only fetches", () => {
 	const source = fs.readFileSync(
 		path.join(
 			__STATS__.children[__INDEX__].outputPath,
@@ -13,5 +13,5 @@ it("should keep the runtime form for the runtime that fetches the binary", () =>
 		"utf8"
 	);
 
-	expect(source).toContain(__RUNTIME_FORM__);
+	expect(source).toContain(__BAKED__);
 });
