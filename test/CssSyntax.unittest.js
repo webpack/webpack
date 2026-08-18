@@ -1435,6 +1435,10 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min("@media a\\")).toBe("@media a\uFFFD;");
 		// §4.3.5 instead inside a string, where it names nothing at all.
 		expect(min('a{content:"x\\')).toBe('a{content:"x"}');
+		// The input ran out inside the string, so the engine closed it there: the
+		// `}` written after it is the end of the rule, not more of the string.
+		expect(min('a{--x:"foo\\')).toBe('a{--x:"foo"}');
+		expect(min("a{--x:'foo\\")).toBe("a{--x:'foo'}");
 		// A url token the input ran out of mid-escape holds a value its text no
 		// longer spells, and the engine writes that value back closed — so the `}`
 		// after it is not read as part of the url.
