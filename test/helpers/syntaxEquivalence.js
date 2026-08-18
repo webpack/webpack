@@ -553,17 +553,27 @@ const installHelpers = () => {
 				if (style && style.length > 0) {
 					// A bare declaration block nested in a rule stands for `& { … }`.
 					const selector = /** @type {CSSStyleRule} */ (rule).selectorText;
-					const label =
+					let label =
 						(selector ? selectorSet(selector) : selector) ||
 						/** @type {CSSKeyframeRule} */ (rule).keyText ||
 						(rule.cssText.includes("{") ? prelude(rule) : "&");
+					// `&` alone is the rule it sits in, so the block is read as that
+					// rule's own — which is what it becomes once an empty rule ahead of
+					// it stops splitting the two apart. Only under a style rule: under
+					// an at-rule the declarations cannot fold into the parent either.
+					let held = chain;
+					const inner = chain[chain.length - 1];
+					if (label === "&" && inner !== undefined && inner.kind === "style") {
+						label = inner.condition;
+						held = chain.slice(0, -1);
+					}
 					// The same selector twice in a row is the one rule the cascade reads,
 					// which is what joining their blocks leaves.
 					const previous = out[out.length - 1];
 					const list = computed(style.cssText);
 					if (
 						previous !== undefined &&
-						sameChain(previous.chain, chain) &&
+						sameChain(previous.chain, held) &&
 						previous.label === label
 					) {
 						// Concatenate rather than resolve: only an identical pair
@@ -575,7 +585,7 @@ const installHelpers = () => {
 						previous.text = `${label} { ${[...both].sort().join(";")} }`;
 					} else {
 						out.push({
-							chain,
+							chain: held,
 							label,
 							list,
 							text: `${label} { ${[...list].sort().join(";")} }`

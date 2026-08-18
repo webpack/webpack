@@ -80,16 +80,6 @@ const FILED_WPT_HTML_DEFECTS = new Map([
 	[
 		"test/wpt/html/syntax/parsing/misnested-form-in-template.html",
 		"not a printer defect: the form pointer is not set inside a `<template>`, which this test asserts and Chromium has not implemented — webpack prints the tree wpt expects"
-	],
-	[
-		// Not a printer defect: declarations that follow a nested rule are their
-		// own `CSSNestedDeclarations` rule, so dropping an empty one before them
-		// — `.unused {}` here — folds them back into the parent. Nothing can sit
-		// between the two, so the cascade order and the computed style are the
-		// ones the source had; only the rule count a script would read differs,
-		// and keeping the empty rule to preserve it costs bytes for no rendering.
-		"test/wpt/css/css-cascade/scope-nesting.html",
-		"dropping an empty nested rule folds the declarations after it into the parent"
 	]
 ]);
 

@@ -64,3 +64,8 @@
 /*! declined: the whitespace between two conditions is the author's */
 @supports (top:0) and (left:0) { .z2 { top: 0 } }
 @supports (top:0)and (left:0) { .z2 { left: 0 } }
+/*! nested declarations: dropping an empty rule ahead of them leaves them the
+   parent's own, which is what `&` alone already named */
+.v { .n24 {} top: 0 }
+/*! declined: a rule between the two keeps the declarations a rule of their own */
+.w { .n25 { top: 1px } top: 0 }
