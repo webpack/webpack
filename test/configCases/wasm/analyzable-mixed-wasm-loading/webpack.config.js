@@ -64,6 +64,17 @@ const multi = (index, name) => ({
 	}
 });
 
+// The same shared chunk, but every entry fetches under a public path needing a base:
+// the group answers key by key, and each key has to say the climb is knowable.
+/** @type {(index: number, name: string) => import("../../../../").Configuration} */
+const multiFetch = (index, name) => ({
+	...base(index, name, "./web-entry.js", 'new URL("./'),
+	entry: {
+		[`${name}-a`]: { import: "./multi-fetch-a-entry.js", wasmLoading: "fetch" },
+		[`${name}-b`]: { import: "./multi-fetch-b-entry.js", wasmLoading: "fetch" }
+	}
+});
+
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	// A binary each: the runtimes are told apart, so both bake the url their own
@@ -71,5 +82,6 @@ module.exports = [
 	base(0, "split", "./web-entry.js", 'new URL("./'),
 	// One binary between them: neither runtime can be answered on its own.
 	base(1, "shared", "./shared-entry.js", "module.id, "),
-	multi(2, "multi")
+	multi(2, "multi"),
+	multiFetch(3, "multi-fetch")
 ];
