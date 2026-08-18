@@ -27,6 +27,61 @@ A marker on a **member** moves that field alone, the way Rust reads
 const rules = /** @move */ config.rules; // only `config.rules` is gone
 ```
 
+## Contracts on signatures
+
+Rust states ownership once, at the signature — `fn consume(s: String)` against
+`fn read(s: &String)` — and every call site is then checked against it with no
+annotation of its own. Marking a **parameter** does the same here:
+
+```js
+function consume(/** @move */ config) {
+	return config.mode;
+}
+
+const options = load();
+consume(options);
+use(options); // useAfterMove — `consume` took ownership
+```
+
+The block form names the parameter, which suits a codebase that already writes
+its types in JSDoc:
+
+```js
+/**
+ * @param {Config} config the config
+ * @move config
+ * @borrowMut stats
+ */
+function apply(config, stats) {}
+```
+
+`@borrow` and `@borrowMut` on a parameter borrow the argument **for the
+duration of the call**, so the exclusivity rule reaches across arguments:
+
+```js
+function update(/** @borrowMut */ stats, extra) {}
+
+update(counters, counters); // useWhileMutablyBorrowed
+```
+
+`@move this` on a method is Rust's `fn into_inner(self)` — the call consumes
+the receiver:
+
+```js
+class Session {
+	/** @move this */
+	close() {}
+}
+
+session.close();
+session.ping(); // useAfterMove
+```
+
+Contracts are found on function declarations, on functions and arrows stored
+in a variable, and on methods. A method has no resolvable receiver, so it is
+matched by name and only when that name carries one contract in the file; two
+declarations of the same method name disable it rather than guess.
+
 **Markers share a JSDoc block with anything else**, so a cast and a marker can
 be written together, and a tag may be on its own line:
 
@@ -279,7 +334,8 @@ than its move checking.
 
 ## Known limits
 
-- Single file. Nothing is tracked across module boundaries.
+- Single file. Nothing is tracked across module boundaries, so a contract on an
+  imported function is invisible; only callees declared in the same file apply.
 - Aliasing is not tracked: once a value reaches `arr.push(a)` or `o.child = a`,
   the rule loses it. Unsound by construction, deliberately biased to false
   negatives.

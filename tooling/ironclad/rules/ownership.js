@@ -54,6 +54,14 @@
 /** @typedef {Map<string | null, MoveInfo>} MovesByMember */
 
 /**
+ * What a function declares about the values handed to it, the way a Rust
+ * signature does: `fn consume(s: String)` against `fn read(s: &String)`.
+ * @typedef {object} Contract
+ * @property {Map<number, string>} parameters marker per parameter position
+ * @property {string | null} receiver marker applied to `this`
+ */
+
+/**
  * The slice of typescript-eslint's parser services this rule uses. Absent
  * without type-aware linting, which is a supported configuration.
  * @typedef {object} TypeServices
@@ -64,6 +72,10 @@
 // A JSDoc tag, so `@move` counts and `docs@move` does not. `borrowMut` comes
 // first because `@borrow` would otherwise match its prefix.
 const MARKER_REGEXP = /(?:^|[\s*])@(borrowMut|borrow|move)\b/;
+
+// `@move config` in a function's JSDoc, naming the parameter it applies to.
+const NAMED_MARKER_REGEXP =
+	/(?:^|[\s*])@(borrowMut|borrow|move)\s+([A-Za-z_$][\w$]*)/g;
 
 // Tokens a grouping paren may follow. A `(` after anything else opens a call
 // or a parameter list, whose leading comment belongs to that, not to us.
@@ -802,6 +814,51 @@ const rule = {
 		};
 
 		/**
+		 * Rust states ownership at the signature, so the call site needs no
+		 * marker: the contract of the callee decides what happens to each
+		 * argument.
+		 * @param {Identifier} node identifier in argument or receiver position
+		 * @returns {{ marker: string, call: CallExpression } | null} what the
+		 * callee declares about this value
+		 */
+		const declaredByCallee = (node) => {
+			const parent = parentOf(/** @type {Node} */ (node));
+			if (!parent) return null;
+
+			// `obj.method()` where the method declares `@move this`.
+			const receiver = receiverCall(node);
+			if (receiver) {
+				const contract = contractByMethodName.get(receiver.name);
+				if (contract && contract.receiver) {
+					return { marker: contract.receiver, call: receiver.call };
+				}
+			}
+
+			if (parent.type !== "CallExpression") return null;
+			const index = parent.arguments.indexOf(
+				/** @type {import("estree").Expression} */ (/** @type {Node} */ (node))
+			);
+			if (index === -1) return null;
+			const callee = parent.callee;
+			/** @type {Contract | null | undefined} */
+			let contract = null;
+			if (callee.type === "Identifier") {
+				const reference = referenceOf.get(callee);
+				const resolved = reference && reference.resolved;
+				contract = resolved ? contractByFunction.get(resolved) : null;
+			} else if (
+				callee.type === "MemberExpression" &&
+				!callee.computed &&
+				callee.property.type === "Identifier"
+			) {
+				contract = contractByMethodName.get(callee.property.name);
+			}
+			if (!contract) return null;
+			const marker = contract.parameters.get(index);
+			return marker ? { marker, call: parent } : null;
+		};
+
+		/**
 		 * @param {Identifier} node identifier being consumed
 		 * @returns {boolean} true when a bare `let b = a` should move
 		 */
@@ -895,6 +952,30 @@ const rule = {
 				addBorrow(borrow);
 			}
 			collectLocks();
+			collectDeclaredBorrows();
+		};
+
+		/**
+		 * A parameter declared `@borrow` or `@borrowMut` borrows its argument for
+		 * the duration of the call, so passing the same value twice, or passing it
+		 * while it is already borrowed, is a conflict.
+		 * @returns {void}
+		 */
+		const collectDeclaredBorrows = () => {
+			for (const [node, reference] of referenceOf) {
+				const owner = reference.resolved;
+				if (!owner || !reference.isRead() || borrowByNode.has(node)) continue;
+				const declared = declaredByCallee(node);
+				if (!declared || declared.marker === "move") continue;
+				addBorrow({
+					kind: /** @type {"borrow" | "borrowMut"} */ (declared.marker),
+					owner,
+					holder: null,
+					node,
+					start: /** @type {Range} */ (node.range)[0],
+					end: /** @type {Range} */ (declared.call.range)[1]
+				});
+			}
 		};
 
 		/**
@@ -995,6 +1076,128 @@ const rule = {
 			}
 		};
 
+		/**
+		 * A function's own JSDoc block sits before the declaration, or before the
+		 * statement, property or class member that carries it.
+		 * @param {Node} node function node
+		 * @returns {Node} node whose leading comment documents it
+		 */
+		const documentedNode = (node) => {
+			let current = node;
+			for (let above = parentOf(current); above; above = parentOf(current)) {
+				if (
+					above.type === "VariableDeclarator" ||
+					above.type === "VariableDeclaration" ||
+					above.type === "Property" ||
+					above.type === "MethodDefinition" ||
+					above.type === "PropertyDefinition" ||
+					above.type === "ExportNamedDeclaration" ||
+					above.type === "ExportDefaultDeclaration"
+				) {
+					current = above;
+					continue;
+				}
+				break;
+			}
+			return current;
+		};
+
+		/**
+		 * @param {Node} node function node
+		 * @returns {Contract | null} what the function declares about its inputs
+		 */
+		const contractOf = (node) => {
+			const parameters = /** @type {import("estree").Function} */ (node).params;
+			/** @type {Map<number, string>} */
+			const byPosition = new Map();
+			/** @type {Map<string, number>} */
+			const positionOfName = new Map();
+			for (const [index, parameter] of parameters.entries()) {
+				if (parameter.type !== "Identifier") continue;
+				positionOfName.set(parameter.name, index);
+				const marker = markerBefore(parameter);
+				if (marker) byPosition.set(index, marker);
+			}
+			/** @type {string | null} */
+			let receiver = null;
+			// The block form names the parameter: `@move config`, `@move this`.
+			for (const comment of sourceCode.getCommentsBefore(
+				/** @type {Parameters<SourceCode["getCommentsBefore"]>[0]} */ (
+					documentedNode(node)
+				)
+			)) {
+				NAMED_MARKER_REGEXP.lastIndex = 0;
+				let match;
+				while ((match = NAMED_MARKER_REGEXP.exec(comment.value)) !== null) {
+					const [, marker, name] = match;
+					if (name === "this") receiver = marker;
+					else if (positionOfName.has(name)) {
+						byPosition.set(
+							/** @type {number} */ (positionOfName.get(name)),
+							marker
+						);
+					}
+				}
+			}
+			if (byPosition.size === 0 && receiver === null) return null;
+			return { parameters: byPosition, receiver };
+		};
+
+		/** @type {Map<Variable, Contract>} */
+		const contractByFunction = new Map();
+		/** @type {Map<string, Contract | null>} */
+		const contractByMethodName = new Map();
+
+		/**
+		 * @returns {void}
+		 */
+		const collectContracts = () => {
+			for (const node of parents.keys()) {
+				if (!FUNCTION_TYPES.has(node.type)) continue;
+				const contract = contractOf(node);
+				if (!contract) continue;
+				const id =
+					node.type === "FunctionDeclaration" ||
+					node.type === "FunctionExpression"
+						? node.id
+						: null;
+				if (id) {
+					// `function consume(a) {}` declares `consume` and its parameters
+					// alike, so keep only the function's own name.
+					for (const variable of sourceCode.getDeclaredVariables(node)) {
+						if (variable.name === id.name) {
+							contractByFunction.set(variable, contract);
+						}
+					}
+				}
+				const holder = parentOf(node);
+				if (holder && holder.type === "VariableDeclarator") {
+					const declared = sourceCode.getDeclaredVariables(holder);
+					if (declared.length === 1) {
+						contractByFunction.set(declared[0], contract);
+					}
+				}
+				// A method is reached through a receiver whose declaration this rule
+				// cannot see, so it is matched by name — and only when the name is
+				// unambiguous within the file.
+				if (
+					holder &&
+					(holder.type === "MethodDefinition" ||
+						holder.type === "Property" ||
+						holder.type === "PropertyDefinition") &&
+					!holder.computed &&
+					holder.key.type === "Identifier"
+				) {
+					const name = holder.key.name;
+					contractByMethodName.set(
+						name,
+						contractByMethodName.has(name) ? null : contract
+					);
+				}
+			}
+		};
+
+		collectContracts();
 		collectBorrows();
 
 		/**
@@ -1250,6 +1453,17 @@ const rule = {
 						variable,
 						blame,
 						member,
+						true
+					);
+					return;
+				}
+				const declared = declaredByCallee(/** @type {Identifier} */ (node));
+				if (declared && declared.marker === "move") {
+					recordMove(
+						/** @type {Identifier} */ (node),
+						variable,
+						declared.call,
+						null,
 						true
 					);
 					return;

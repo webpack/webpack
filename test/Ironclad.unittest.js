@@ -207,6 +207,33 @@ describe("ironclad/ownership", () => {
 				"const { rules } = data;",
 				"apply(data, rules);"
 			].join("\n"),
+			// A parameter declared `@borrow` only reads its argument.
+			[
+				"function read(/** @borrow */ config) {",
+				"\treturn config.mode;",
+				"}",
+				"const options = load();",
+				"read(options);",
+				"use(options);"
+			].join("\n"),
+			// A mutable borrow that ends with the call leaves the value usable.
+			[
+				"function update(/** @borrowMut */ stats) {",
+				"\tstats.n++;",
+				"}",
+				"const counters = load();",
+				"update(counters);",
+				"report(counters.n);"
+			].join("\n"),
+			// An unmarked signature declares nothing.
+			[
+				"function read(config) {",
+				"\treturn config.mode;",
+				"}",
+				"const options = load();",
+				"read(options);",
+				"use(options);"
+			].join("\n"),
 			// A borrow assigned into an inner scope does not outlive the owner.
 			[
 				"function run() {",
@@ -318,6 +345,72 @@ describe("ironclad/ownership", () => {
 					" */",
 					"const b = a;",
 					"use(a);"
+				].join("\n"),
+				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// Rust states ownership at the signature; the call site needs no
+				// marker of its own.
+				code: [
+					"function consume(/** @move */ config) {",
+					"\treturn config.mode;",
+					"}",
+					"const options = load();",
+					"consume(options);",
+					"use(options);"
+				].join("\n"),
+				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// The block form names the parameter it applies to.
+				code: [
+					"/**",
+					" * @param {Config} config the config",
+					" * @move config",
+					" */",
+					"function consume(config) {",
+					"\treturn config.mode;",
+					"}",
+					"const options = load();",
+					"consume(options);",
+					"use(options);"
+				].join("\n"),
+				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// A contract on an arrow stored in a variable counts too.
+				code: [
+					"const consume = (/** @move */ buffer) => send(buffer);",
+					"const data = alloc();",
+					"consume(data);",
+					"use(data);"
+				].join("\n"),
+				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// An exclusive borrow excludes the same value in the same call.
+				code: [
+					"function update(/** @borrowMut */ stats, extra) {",
+					"\tstats.n++;",
+					"\treturn extra;",
+					"}",
+					"const counters = load();",
+					"update(counters, counters);"
+				].join("\n"),
+				errors: [{ messageId: "useWhileMutablyBorrowed" }]
+			},
+			{
+				// `@move this` is Rust's `fn into_inner(self)`.
+				code: [
+					"class Session {",
+					"\t/** @move this */",
+					"\tclose() {",
+					"\t\tthis.open = false;",
+					"\t}",
+					"}",
+					"const session = new Session();",
+					"session.close();",
+					"session.ping();"
 				].join("\n"),
 				errors: [{ messageId: "useAfterMove" }]
 			},
