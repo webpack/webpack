@@ -21819,6 +21819,12 @@ declare interface PerformanceOptions {
 	redundantDynamicImports?: boolean;
 
 	/**
+	 * Report modules bundled although nothing uses what they export, pulled in by a re-export.
+	 * @since 5.110.0
+	 */
+	unusedReexports?: boolean;
+
+	/**
 	 * Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.
 	 * @since 5.110.0
 	 */

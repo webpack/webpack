@@ -13528,6 +13528,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-unused-reexports": Object {
+    "configs": Array [
+      Object {
+        "description": "Report modules bundled although nothing uses what they export, pulled in by a re-export.",
+        "multiple": false,
+        "path": "performance.unusedReexports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report modules bundled although nothing uses what they export, pulled in by a re-export.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-unused-rules": Object {
     "configs": Array [
       Object {

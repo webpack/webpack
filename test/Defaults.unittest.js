@@ -1275,6 +1275,7 @@ describe("snapshots", () => {
 		+     "maxEntrypointSize": 250000,
 		+     "osDependentRules": false,
 		+     "redundantDynamicImports": false,
+		+     "unusedReexports": false,
 		+     "unusedRules": false,
 		+   },
 		@@ ... @@
@@ -1362,6 +1363,7 @@ describe("snapshots", () => {
 		+     "maxEntrypointSize": 250000,
 		+     "osDependentRules": false,
 		+     "redundantDynamicImports": false,
+		+     "unusedReexports": false,
 		+     "unusedRules": false,
 		+   },
 		@@ ... @@
