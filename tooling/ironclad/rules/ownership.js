@@ -63,6 +63,8 @@
  * @property {number[]} returnSources parameter positions (or RECEIVER_SOURCE)
  * the returned borrow lives as long as; empty when it cannot be told
  * @property {Set<number>} staticInputs positions whose borrow must be `'static`
+ * @property {Set<number>} onceInputs callback positions invoked at most once,
+ * which is the difference between Rust's `Fn` and `FnOnce`
  * @property {Node | null} node the function itself, or null when the contract
  * was read out of another module
  */
@@ -78,11 +80,11 @@
 
 // A JSDoc tag, so `@move` counts and `docs@move` does not. `borrowMut` comes
 // first because `@borrow` would otherwise match its prefix.
-const MARKER_REGEXP = /(?:^|[\s*])@(borrowMut|borrow|move)\b/;
+const MARKER_REGEXP = /(?:^|[\s*])@(borrowMut|borrow|move|once)\b/;
 
 // `@move config` in a function's JSDoc, naming the parameter it applies to.
 const NAMED_MARKER_REGEXP =
-	/(?:^|[\s*])@(borrowMut|borrow|move)[ \t]+([A-Za-z_$][\w$]*)(?:[ \t]+('?[A-Za-z_$][\w$]*))?/g;
+	/(?:^|[\s*])@(borrowMut|borrow|move|once)[ \t]+([A-Za-z_$][\w$]*)(?:[ \t]+('?[A-Za-z_$][\w$]*))?/g;
 
 // Rust's `'static`: a borrow that outlives the program, so nothing local may
 // satisfy it.
@@ -298,6 +300,7 @@ const rule = {
 						additionalProperties: { type: "string" }
 					},
 					treatDestructuringAsPartialMove: { type: "boolean" },
+					callsOnce: { type: "array", items: { type: "string" } },
 					locksReceiverUntil: {
 						type: "object",
 						additionalProperties: { type: "string" }
@@ -373,6 +376,17 @@ const rule = {
 				release
 			);
 		}
+		// Calls that invoke their callback at most once, so a move inside it does
+		// not repeat.
+		const callsOnce = new Set(
+			/** @type {string[]} */ (options.callsOnce) || [
+				"nextTick",
+				"queueMicrotask",
+				"requestAnimationFrame",
+				"setImmediate",
+				"setTimeout"
+			]
+		);
 		const treatAssignmentAsMove = options.treatAssignmentAsMove === true;
 		const treatDestructuringAsPartialMove =
 			options.treatDestructuringAsPartialMove === true;
@@ -932,7 +946,7 @@ const rule = {
 		 * this file
 		 */
 		const contractOfCall = (call) => {
-			const callee = call.callee;
+			const callee = /** @type {import("estree").Expression} */ (call.callee);
 			if (callee.type === "Identifier") {
 				const reference = referenceOf.get(callee);
 				const resolved = reference && reference.resolved;
@@ -995,7 +1009,9 @@ const rule = {
 				}
 			}
 
-			if (parent.type !== "CallExpression") return null;
+			if (parent.type !== "CallExpression" && parent.type !== "NewExpression") {
+				return null;
+			}
 			const index = parent.arguments.indexOf(
 				/** @type {import("estree").Expression} */ (/** @type {Node} */ (node))
 			);
@@ -1234,6 +1250,21 @@ const rule = {
 						} else if (
 							parent.type === "AssignmentExpression" &&
 							parent.right === identifier &&
+							parent.left.type === "MemberExpression" &&
+							parent.left.object.type === "ThisExpression"
+						) {
+							// `this.field = view` keeps the borrow for as long as the
+							// instance. A parameter is the struct case and is fine; a
+							// local dies with the method.
+							const definition = borrow.owner.defs[0];
+							escapes = Boolean(
+								definition &&
+								definition.type !== "Parameter" &&
+								ownerScope.variableScope.block.type !== "Program"
+							);
+						} else if (
+							parent.type === "AssignmentExpression" &&
+							parent.right === identifier &&
 							parent.left.type === "Identifier"
 						) {
 							const target = referenceOf.get(parent.left);
@@ -1302,7 +1333,13 @@ const rule = {
 			node
 		) => {
 			/** @type {Map<number, string>} */
-			const byPosition = new Map(inlineMarkers);
+			const byPosition = new Map();
+			/** @type {Set<number>} */
+			const onceInputs = new Set();
+			for (const [position, marker] of inlineMarkers) {
+				if (marker === "once") onceInputs.add(position);
+				else byPosition.set(position, marker);
+			}
 			/** @type {Map<string, number>} */
 			const positionOfName = new Map();
 			for (const [index, name] of parameterNames.entries()) {
@@ -1334,12 +1371,21 @@ const rule = {
 					if (lifetime === STATIC_LIFETIME) staticInputs.add(RECEIVER_SOURCE);
 				} else if (positionOfName.has(name)) {
 					const position = /** @type {number} */ (positionOfName.get(name));
+					if (marker === "once") {
+						onceInputs.add(position);
+						continue;
+					}
 					byPosition.set(position, marker);
 					if (lifetime) lifetimeOfPosition.set(position, lifetime);
 					if (lifetime === STATIC_LIFETIME) staticInputs.add(position);
 				}
 			}
-			if (byPosition.size === 0 && receiver === null && returns === null) {
+			if (
+				byPosition.size === 0 &&
+				onceInputs.size === 0 &&
+				receiver === null &&
+				returns === null
+			) {
 				return null;
 			}
 			/** @type {number[]} */
@@ -1378,8 +1424,33 @@ const rule = {
 				returns,
 				returnSources,
 				staticInputs,
+				onceInputs,
 				node
 			};
+		};
+
+		/**
+		 * Rust's `FnOnce`: a callback the callee promises to invoke at most once
+		 * cannot repeat what it moves, so it is not a `moveInClosure`.
+		 * @param {Node} fn function passed as an argument
+		 * @returns {boolean} true when it is called at most once
+		 */
+		const isCalledOnce = (fn) => {
+			const parent = parentOf(fn);
+			if (
+				!parent ||
+				(parent.type !== "CallExpression" && parent.type !== "NewExpression")
+			) {
+				return false;
+			}
+			const index = parent.arguments.indexOf(
+				/** @type {import("estree").Expression} */ (fn)
+			);
+			if (index === -1) return false;
+			const name = calleeName(/** @type {CallExpression} */ (parent));
+			if (name && callsOnce.has(name)) return true;
+			const contract = contractOfCall(/** @type {CallExpression} */ (parent));
+			return Boolean(contract && contract.onceInputs.has(index));
 		};
 
 		/**
@@ -1447,6 +1518,23 @@ const rule = {
 					}
 				}
 				const holder = parentOf(node);
+				// `struct Parser<'a>` is spelled as a contract on the constructor,
+				// so `new Parser(x)` has to find it through the class's own name.
+				if (
+					holder &&
+					holder.type === "MethodDefinition" &&
+					holder.kind === "constructor"
+				) {
+					const body = parentOf(holder);
+					const classNode = body && parentOf(body);
+					if (classNode) {
+						for (const variable of sourceCode.getDeclaredVariables(
+							/** @type {import("estree").ClassDeclaration} */ (classNode)
+						)) {
+							contractByFunction.set(variable, contract);
+						}
+					}
+				}
 				if (holder && holder.type === "VariableDeclarator") {
 					const declared = sourceCode.getDeclaredVariables(holder);
 					if (declared.length === 1) {
@@ -1549,7 +1637,7 @@ const rule = {
 			const crossed = functionsBetween(
 				/** @type {Node} */ (node),
 				variable.scope.variableScope.block
-			).filter((fn) => !isImmediatelyInvoked(fn));
+			).filter((fn) => !isImmediatelyInvoked(fn) && !isCalledOnce(fn));
 			if (crossed.length > 0) {
 				context.report({
 					node: /** @type {never} */ (node),
@@ -1814,7 +1902,11 @@ const rule = {
 				}
 			},
 
-			CallExpression(node) {
+			/**
+			 * @param {CallExpression | import("estree").NewExpression} node call
+			 * @returns {void}
+			 */
+			"CallExpression, NewExpression"(node) {
 				const contract = contractOfCall(
 					/** @type {CallExpression} */ (/** @type {unknown} */ (node))
 				);

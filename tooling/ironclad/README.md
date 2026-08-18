@@ -179,6 +179,57 @@ in a variable, and on methods. A method has no resolvable receiver, so it is
 matched by name and only when that name carries one contract in the file; two
 declarations of the same method name disable it rather than guess.
 
+### Structs that hold a borrow
+
+`struct Parser<'a> { input: &'a str }` is a constructor contract: the instance
+carries the lifetime, so the source stays borrowed for as long as the instance
+is alive.
+
+```js
+class Parser {
+	/**
+	 * @borrow input 'a
+	 * @borrow return 'a
+	 */
+	constructor(input) {
+		this.input = input;
+	}
+}
+
+const parser = new Parser(source);
+source.mutated = 1; // mutationWhileShared — `parser` points into it
+use(parser);
+```
+
+`@move input` on the constructor is the owning version, and then the source is
+gone after `new`. A borrow of something **local** stored on `this` is
+`borrowEscapes`, because the instance outlives it:
+
+```js
+class Cache {
+	fill() {
+		const table = build();
+		this.view = /** @borrow */ table; // borrowEscapes — `table` dies here
+	}
+}
+```
+
+### Callbacks: `Fn` against `FnOnce`
+
+Moving a captured value inside a callback is `moveInClosure`, because a
+callback may run any number of times. `@once` is the promise that it does not:
+
+```js
+/** @once callback */
+function defer(callback) {}
+
+defer(() => close(/** @move */ session)); // fine — runs at most once
+items.forEach(() => close(/** @move */ session)); // moveInClosure
+```
+
+`setTimeout`, `setImmediate`, `queueMicrotask`, `requestAnimationFrame` and
+`nextTick` are in the default `callsOnce` list.
+
 ### Across modules
 
 With type-aware linting a contract is read from wherever the callee is
@@ -314,6 +365,15 @@ Every option is named after what the calls in it **do**.
 	// Treat `const { x } = data` as moving `data.x`. Off by default — Rust
 	// reads it that way, JavaScript does not. See "Measured" below.
 	treatDestructuringAsPartialMove: false,
+	// These calls invoke their callback at most once, so a move inside it does
+	// not repeat.
+	callsOnce: [
+		"nextTick",
+		"queueMicrotask",
+		"requestAnimationFrame",
+		"setImmediate",
+		"setTimeout"
+	],
 	// These methods consume the whole object they are called on.
 	consumesReceiver: [],
 	// These methods consume one named member of their receiver, leaving the

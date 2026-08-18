@@ -349,6 +349,58 @@ describe("ironclad/ownership", () => {
 					"use(options);"
 				].join("\n")
 			},
+			// The struct's borrow ends when the instance holding it dies.
+			[
+				"class Parser {",
+				"\t/**",
+				"\t * @borrow input 'a",
+				"\t * @borrow return 'a",
+				"\t */",
+				"\tconstructor(input) {",
+				"\t\tthis.input = input;",
+				"\t}",
+				"}",
+				"const source = load();",
+				"const parser = new Parser(source);",
+				"use(parser);",
+				"source.mutated = 1;"
+			].join("\n"),
+			// A callback the callee promises to run once cannot repeat its move.
+			[
+				"/** @once callback */",
+				"function defer(callback) {}",
+				"const session = open();",
+				"defer(() => {",
+				"\tclose(/** @move */ session);",
+				"});"
+			].join("\n"),
+			// `setTimeout` is in the default `callsOnce` list.
+			[
+				"const session = open();",
+				"setTimeout(() => {",
+				"\tclose(/** @move */ session);",
+				"});"
+			].join("\n"),
+			// `@once` marks how the callback is called, it does not borrow it.
+			[
+				"function defer(/** @once */ callback) {}",
+				"const cb = makeCallback();",
+				"defer(cb);",
+				"use(cb);"
+			].join("\n"),
+			// A field initialized from a parameter is the struct case, not a leak.
+			[
+				"class Parser {",
+				"\t/**",
+				"\t * @borrow input 'a",
+				"\t * @borrow return 'a",
+				"\t */",
+				"\tconstructor(input) {",
+				"\t\tconst view = /** @borrow */ input;",
+				"\t\tthis.view = view;",
+				"\t}",
+				"}"
+			].join("\n"),
 			// A borrow assigned into an inner scope does not outlive the owner.
 			[
 				"function run() {",
@@ -696,6 +748,65 @@ describe("ironclad/ownership", () => {
 				].join("\n"),
 				languageOptions: withModules({ "lib.js": LIBRARY }),
 				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// `struct Parser<'a> { input: &'a str }` — the instance carries the
+				// borrow, so its owner stays locked while the instance is alive.
+				code: [
+					"class Parser {",
+					"\t/**",
+					"\t * @borrow input 'a",
+					"\t * @borrow return 'a",
+					"\t */",
+					"\tconstructor(input) {",
+					"\t\tthis.input = input;",
+					"\t}",
+					"}",
+					"const source = load();",
+					"const parser = new Parser(source);",
+					"source.mutated = 1;",
+					"use(parser);"
+				].join("\n"),
+				errors: [{ messageId: "mutationWhileShared" }]
+			},
+			{
+				// A constructor may take ownership instead.
+				code: [
+					"class Owner {",
+					"\t/** @move input */",
+					"\tconstructor(input) {",
+					"\t\tthis.input = input;",
+					"\t}",
+					"}",
+					"const source = load();",
+					"const owner = new Owner(source);",
+					"use(source);"
+				].join("\n"),
+				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// Without `@once` a callback may run any number of times, which is
+				// the difference between `Fn` and `FnOnce`.
+				code: [
+					"const session = open();",
+					"items.forEach(() => {",
+					"\tclose(/** @move */ session);",
+					"});"
+				].join("\n"),
+				errors: [{ messageId: "moveInClosure" }]
+			},
+			{
+				// An instance that keeps a borrow of a local outlives it.
+				code: [
+					"class Cache {",
+					"\tfill() {",
+					"\t\tconst table = build();",
+					"\t\tconst view = /** @borrow */ table;",
+					"\t\tthis.view = view;",
+					"\t}",
+					"}"
+				].join("\n"),
+				errors: [{ messageId: "borrowEscapes" }]
 			},
 			{
 				// A closure created after the move captures a value that is gone.
