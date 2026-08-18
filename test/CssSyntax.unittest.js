@@ -1435,6 +1435,10 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min("@media a\\")).toBe("@media a\uFFFD;");
 		// §4.3.5 instead inside a string, where it names nothing at all.
 		expect(min('a{content:"x\\')).toBe('a{content:"x"}');
+		// A url token the input ran out of mid-escape holds a value its text no
+		// longer spells, and the engine writes that value back closed — so the `}`
+		// after it is not read as part of the url.
+		expect(min("a{--x:url(foo\\")).toBe("a{--x:url(foo\uFFFD)}");
 		// A `\\` with a character after it is an escape like any other, and an
 		// even run is a pair of escaped backslashes.
 		expect(min("a{--x:foo\\\\")).toBe("a{--x:foo\\\\}");
