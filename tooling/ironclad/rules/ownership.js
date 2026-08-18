@@ -63,7 +63,8 @@
  * @property {number[]} returnSources parameter positions (or RECEIVER_SOURCE)
  * the returned borrow lives as long as; empty when it cannot be told
  * @property {Set<number>} staticInputs positions whose borrow must be `'static`
- * @property {Node} node the function itself, for reporting
+ * @property {Node | null} node the function itself, or null when the contract
+ * was read out of another module
  */
 
 /**
@@ -72,6 +73,7 @@
  * @typedef {object} TypeServices
  * @property {{ getTypeChecker(): import("typescript").TypeChecker }} [program] type program
  * @property {(node: Node) => import("typescript").Type} [getTypeAtLocation] type of a node
+ * @property {(node: Node) => import("typescript").Symbol | undefined} [getSymbolAtLocation] symbol of a node
  */
 
 // A JSDoc tag, so `@move` counts and `docs@move` does not. `borrowMut` comes
@@ -832,6 +834,98 @@ const rule = {
 			return members.length > 0 ? { members, blame: parent } : null;
 		};
 
+		/** @type {Map<import("typescript").Node, Contract | null>} */
+		const foreignContracts = new Map();
+
+		/**
+		 * A contract in another module is still a contract. typescript-eslint
+		 * hands over the whole program, so the callee's declaration — and the
+		 * JSDoc on it — can be read wherever it lives.
+		 * @param {Node} callee callee node
+		 * @returns {Contract | null} the contract declared where the callee is
+		 */
+		const foreignContractOf = (callee) => {
+			if (!services || !typeChecker || !ts) return null;
+			const getSymbol = services.getSymbolAtLocation;
+			if (!getSymbol) return null;
+			let symbol;
+			try {
+				symbol = getSymbol(callee);
+			} catch (_err) {
+				return null;
+			}
+			if (!symbol) return null;
+			if (symbol.flags & ts.SymbolFlags.Alias) {
+				symbol = typeChecker.getAliasedSymbol(symbol);
+			}
+			for (const declaration of symbol.getDeclarations() || []) {
+				if (foreignContracts.has(declaration)) {
+					const cached = foreignContracts.get(declaration);
+					if (cached) return cached;
+					continue;
+				}
+				const contract = contractFromTypeScript(declaration);
+				foreignContracts.set(declaration, contract);
+				if (contract) return contract;
+			}
+			return null;
+		};
+
+		/**
+		 * @param {import("typescript").Declaration} declaration declaration to read
+		 * @returns {Contract | null} what it declares about its inputs
+		 */
+		const contractFromTypeScript = (declaration) => {
+			const compiler = /** @type {typeof import("typescript")} */ (ts);
+			let signature = /** @type {EXPECTED_ANY} */ (declaration);
+			// `const consume = (a) => {}` documents the declaration, not the arrow.
+			if (signature.initializer && signature.initializer.parameters) {
+				signature = signature.initializer;
+			}
+			if (!signature.parameters) return null;
+			const sourceFile = declaration.getSourceFile();
+			const text = sourceFile.text;
+			/** @type {(string | null)[]} */
+			const parameterNames = [];
+			/** @type {Map<number, string>} */
+			const inlineMarkers = new Map();
+			for (const [index, parameter] of signature.parameters.entries()) {
+				const name =
+					parameter.name &&
+					parameter.name.kind === compiler.SyntaxKind.Identifier
+						? parameter.name.text
+						: null;
+				parameterNames.push(name);
+				// The trivia before the parameter, read raw: TypeScript counts a
+				// comment right after `(` as trailing the paren, not leading the
+				// parameter, so getLeadingCommentRanges misses `(/** @move *\/ a)`.
+				const match = MARKER_REGEXP.exec(
+					text.slice(parameter.pos, parameter.getStart(sourceFile))
+				);
+				if (match) inlineMarkers.set(index, match[1]);
+			}
+			/** @type {[string, string, string | undefined][]} */
+			const declarations = [];
+			for (const tag of compiler.getJSDocTags(declaration)) {
+				const marker = tag.tagName.text;
+				if (
+					marker !== "move" &&
+					marker !== "borrow" &&
+					marker !== "borrowMut"
+				) {
+					continue;
+				}
+				const comment =
+					typeof tag.comment === "string"
+						? tag.comment
+						: (tag.comment || []).map((part) => part.text || "").join("");
+				const parts = comment.trim().split(/\s+/);
+				if (parts.length === 0 || parts[0] === "") continue;
+				declarations.push([marker, parts[0], parts[1]]);
+			}
+			return buildContract(parameterNames, inlineMarkers, declarations, null);
+		};
+
 		/**
 		 * @param {CallExpression} call call to resolve
 		 * @returns {Contract | null} the callee's contract, when it is declared in
@@ -842,16 +936,17 @@ const rule = {
 			if (callee.type === "Identifier") {
 				const reference = referenceOf.get(callee);
 				const resolved = reference && reference.resolved;
-				return (resolved && contractByFunction.get(resolved)) || null;
-			}
-			if (
+				const local = resolved && contractByFunction.get(resolved);
+				if (local) return local;
+			} else if (
 				callee.type === "MemberExpression" &&
 				!callee.computed &&
 				callee.property.type === "Identifier"
 			) {
-				return contractByMethodName.get(callee.property.name) || null;
+				const local = contractByMethodName.get(callee.property.name);
+				if (local) return local;
 			}
-			return null;
+			return foreignContractOf(/** @type {Node} */ (callee));
 		};
 
 		/**
@@ -1190,17 +1285,28 @@ const rule = {
 		 * @param {Node} node function node
 		 * @returns {Contract | null} what the function declares about its inputs
 		 */
-		const contractOf = (node) => {
-			const parameters = /** @type {import("estree").Function} */ (node).params;
+		/**
+		 * Builds a contract from what a signature says, whichever syntax tree it
+		 * was read out of — this file's or another module's.
+		 * @param {(string | null)[]} parameterNames name per parameter position
+		 * @param {Map<number, string>} inlineMarkers markers written on parameters
+		 * @param {[string, string, string | undefined][]} declarations marker,
+		 * target and optional source or lifetime, from the doc block
+		 * @param {Node | null} node the function, when it is in this file
+		 * @returns {Contract | null} the contract, or null when nothing is declared
+		 */
+		const buildContract = (
+			parameterNames,
+			inlineMarkers,
+			declarations,
+			node
+		) => {
 			/** @type {Map<number, string>} */
-			const byPosition = new Map();
+			const byPosition = new Map(inlineMarkers);
 			/** @type {Map<string, number>} */
 			const positionOfName = new Map();
-			for (const [index, parameter] of parameters.entries()) {
-				if (parameter.type !== "Identifier") continue;
-				positionOfName.set(parameter.name, index);
-				const marker = markerBefore(parameter);
-				if (marker) byPosition.set(index, marker);
+			for (const [index, name] of parameterNames.entries()) {
+				if (name !== null) positionOfName.set(name, index);
 			}
 			/** @type {string | null} */
 			let receiver = null;
@@ -1214,34 +1320,23 @@ const rule = {
 			const staticInputs = new Set();
 			/** @type {string | null} */
 			let receiverLifetime = null;
-			// The block form names what it applies to: `@move config`,
-			// `@move this`, `@borrow return`, `@borrow return config`.
-			for (const comment of sourceCode.getCommentsBefore(
-				/** @type {Parameters<SourceCode["getCommentsBefore"]>[0]} */ (
-					documentedNode(node)
-				)
-			)) {
-				NAMED_MARKER_REGEXP.lastIndex = 0;
-				let match;
-				while ((match = NAMED_MARKER_REGEXP.exec(comment.value)) !== null) {
-					const [, marker, name, source] = match;
-					const lifetime = source && source.charAt(0) === "'" ? source : null;
-					if (name === "return") {
-						returns = marker;
-						if (lifetime) returnSourceName = lifetime;
-						else if (source && positionOfName.has(source)) {
-							returnSourceName = source;
-						} else if (source === "this") returnSourceName = "this";
-					} else if (name === "this") {
-						receiver = marker;
-						receiverLifetime = lifetime;
-						if (lifetime === STATIC_LIFETIME) staticInputs.add(RECEIVER_SOURCE);
-					} else if (positionOfName.has(name)) {
-						const position = /** @type {number} */ (positionOfName.get(name));
-						byPosition.set(position, marker);
-						if (lifetime) lifetimeOfPosition.set(position, lifetime);
-						if (lifetime === STATIC_LIFETIME) staticInputs.add(position);
-					}
+			for (const [marker, name, source] of declarations) {
+				const lifetime = source && source.charAt(0) === "'" ? source : null;
+				if (name === "return") {
+					returns = marker;
+					if (lifetime) returnSourceName = lifetime;
+					else if (source && positionOfName.has(source)) {
+						returnSourceName = source;
+					} else if (source === "this") returnSourceName = "this";
+				} else if (name === "this") {
+					receiver = marker;
+					receiverLifetime = lifetime;
+					if (lifetime === STATIC_LIFETIME) staticInputs.add(RECEIVER_SOURCE);
+				} else if (positionOfName.has(name)) {
+					const position = /** @type {number} */ (positionOfName.get(name));
+					byPosition.set(position, marker);
+					if (lifetime) lifetimeOfPosition.set(position, lifetime);
+					if (lifetime === STATIC_LIFETIME) staticInputs.add(position);
 				}
 			}
 			if (byPosition.size === 0 && receiver === null && returns === null) {
@@ -1285,6 +1380,43 @@ const rule = {
 				staticInputs,
 				node
 			};
+		};
+
+		/**
+		 * @param {Node} node function node
+		 * @returns {Contract | null} what the function declares about its inputs
+		 */
+		const contractOf = (node) => {
+			const parameters = /** @type {import("estree").Function} */ (node).params;
+			/** @type {(string | null)[]} */
+			const parameterNames = [];
+			/** @type {Map<number, string>} */
+			const inlineMarkers = new Map();
+			for (const [index, parameter] of parameters.entries()) {
+				if (parameter.type !== "Identifier") {
+					parameterNames.push(null);
+					continue;
+				}
+				parameterNames.push(parameter.name);
+				const marker = markerBefore(parameter);
+				if (marker) inlineMarkers.set(index, marker);
+			}
+			/** @type {[string, string, string | undefined][]} */
+			const declarations = [];
+			// The block form names what it applies to: `@move config`,
+			// `@move this`, `@borrow return`, `@borrow return config`.
+			for (const comment of sourceCode.getCommentsBefore(
+				/** @type {Parameters<SourceCode["getCommentsBefore"]>[0]} */ (
+					documentedNode(node)
+				)
+			)) {
+				NAMED_MARKER_REGEXP.lastIndex = 0;
+				let match;
+				while ((match = NAMED_MARKER_REGEXP.exec(comment.value)) !== null) {
+					declarations.push([match[1], match[2], match[3]]);
+				}
+			}
+			return buildContract(parameterNames, inlineMarkers, declarations, node);
 		};
 
 		/** @type {Map<Variable, Contract>} */
@@ -1354,6 +1486,7 @@ const rule = {
 			)
 		])) {
 			if (
+				contract.node !== null &&
 				contract.returns !== null &&
 				contract.returns !== "move" &&
 				contract.returnSources.length === 0

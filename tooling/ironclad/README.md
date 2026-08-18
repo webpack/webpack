@@ -179,6 +179,36 @@ in a variable, and on methods. A method has no resolvable receiver, so it is
 matched by name and only when that name carries one contract in the file; two
 declarations of the same method name disable it rather than guess.
 
+### Across modules
+
+With type-aware linting a contract is read from wherever the callee is
+**declared**, not only from the file being linted:
+
+```js
+// lib.js
+/**
+ * @param {Config} config the config
+ * @move config
+ */
+function consume(config) {}
+
+// main.js
+const { consume } = require("./lib.js");
+consume(options);
+use(options); // useAfterMove — read out of lib.js
+```
+
+typescript-eslint hands the rule the whole `ts.Program`, so the callee's symbol
+resolves to its declaration in another file and the JSDoc on it is read there.
+Everything above travels: `@move`, borrows, named lifetimes, `'static` and
+`@move return`. Without type services there is no program to consult and only
+same-file contracts apply, which is the same degradation as the platform
+tables.
+
+This is worth spelling out because it was expected to need more: the isolated
+file problem is usually answered with "write a TypeScript language service
+plugin instead". No plugin is needed — the program is already there.
+
 **Markers share a JSDoc block with anything else**, so a cast and a marker can
 be written together, and a tag may be on its own line:
 
@@ -434,8 +464,9 @@ than its move checking.
 
 ## Known limits
 
-- Single file. Nothing is tracked across module boundaries, so a contract on an
-  imported function is invisible; only callees declared in the same file apply.
+- Values are tracked within a single file. Contracts cross module boundaries
+  when type services are available, but the move and borrow state of a value
+  never leaves the file it lives in.
 - Aliasing is not tracked: once a value reaches `arr.push(a)` or `o.child = a`,
   the rule loses it. Unsound by construction, deliberately biased to false
   negatives.

@@ -18,6 +18,39 @@ const withTypes = (types) => ({
 	parserOptions: { ecmaVersion: 2022, sourceType: "script", types }
 });
 
+/**
+ * @param {Record<string, string>} modules other modules, by file name
+ * @returns {import("eslint").Linter.LanguageOptions} language options with a
+ * real TypeScript program behind them
+ */
+const withModules = (modules) => ({
+	parser: testTypeParser,
+	parserOptions: { ecmaVersion: 2022, sourceType: "script", modules }
+});
+
+const LIBRARY = [
+	"/**",
+	" * @param {object} config the config",
+	" * @move config",
+	" */",
+	"function consume(config) {",
+	"\treturn config;",
+	"}",
+	"/**",
+	" * @param {object} config the config",
+	" * @borrow config",
+	" * @borrow return",
+	" */",
+	"function rulesOf(config) {",
+	"\treturn config.rules;",
+	"}",
+	"/** @move return */",
+	"function acquire() {",
+	"\treturn {};",
+	"}",
+	"const send = (/** @move */ payload) => payload;"
+].join("\n");
+
 describe("ironclad/ownership", () => {
 	ruleTester.run("ownership", rule, {
 		valid: [
@@ -297,6 +330,25 @@ describe("ironclad/ownership", () => {
 				"const shared = makeHandler();",
 				"addListener(shared);"
 			].join("\n"),
+			{
+				// The imported borrow ends at the result's last use, as any other.
+				code: [
+					"const options = { rules: [] };",
+					"const rules = rulesOf(options);",
+					"use(rules);",
+					"options.mode = 2;"
+				].join("\n"),
+				languageOptions: withModules({ "lib.js": LIBRARY })
+			},
+			{
+				// Without type services there is no program to read, so an imported
+				// contract simply does not apply.
+				code: [
+					"const options = { mode: 1 };",
+					"consume(options);",
+					"use(options);"
+				].join("\n")
+			},
 			// A borrow assigned into an inner scope does not outlive the owner.
 			[
 				"function run() {",
@@ -603,6 +655,47 @@ describe("ironclad/ownership", () => {
 					"}"
 				].join("\n"),
 				errors: [{ messageId: "borrowMustBeStatic" }]
+			},
+			{
+				// A contract in another module is still a contract: typescript-eslint
+				// hands over the whole program, so the callee's JSDoc can be read
+				// wherever it lives.
+				code: [
+					"const options = { mode: 1 };",
+					"consume(options);",
+					"use(options);"
+				].join("\n"),
+				languageOptions: withModules({ "lib.js": LIBRARY }),
+				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// An imported `@borrow return` carries its lifetime across the module
+				// boundary too.
+				code: [
+					"const options = { rules: [] };",
+					"const rules = rulesOf(options);",
+					"options.mode = 2;",
+					"use(rules);"
+				].join("\n"),
+				languageOptions: withModules({ "lib.js": LIBRARY }),
+				errors: [{ messageId: "mutationWhileShared" }]
+			},
+			{
+				// `#[must_use]` reaches across modules as well.
+				code: "acquire();",
+				languageOptions: withModules({ "lib.js": LIBRARY }),
+				errors: [{ messageId: "resultIgnored" }]
+			},
+			{
+				// An inline marker on an imported arrow's parameter counts, which
+				// needs the parameter's raw trivia rather than its leading comments.
+				code: [
+					"const payload = { n: 1 };",
+					"send(payload);",
+					"use(payload);"
+				].join("\n"),
+				languageOptions: withModules({ "lib.js": LIBRARY }),
+				errors: [{ messageId: "useAfterMove" }]
 			},
 			{
 				// A closure created after the move captures a value that is gone.
