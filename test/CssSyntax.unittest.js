@@ -2974,6 +2974,33 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a transition duration of zero", () => {
+		it.each([
+			["a{transition:visibility 0s}", "a{transition:visibility}"],
+			["a{transition:visibility 0ms}", "a{transition:visibility}"],
+			[
+				"a{transition:visibility 0s,color 0s}",
+				"a{transition:visibility,color}"
+			],
+			[
+				"a{-webkit-transition:visibility 0s}",
+				"a{-webkit-transition:visibility}"
+			]
+		])("drops it: %s", (css, out) => {
+			expect(minify(css)).toBe(out);
+		});
+
+		it.each([
+			// The second `<time>` is the delay: dropping the duration would hand the
+			// delay's value to it.
+			"a{transition:visibility 0s 2s}",
+			// Nothing would be left to say it about.
+			"a{transition:0s}"
+		])("keeps it: %s", (css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("a vendor spelling of a property it minifies", () => {
 		it.each([
 			[
