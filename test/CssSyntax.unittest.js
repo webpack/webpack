@@ -3029,6 +3029,47 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a rule an identical later sibling makes dead", () => {
+		it("drops the earlier of two, whatever stands between", () => {
+			expect(minify("@media all{a{color:red}b{color:blue}a{color:red}}")).toBe(
+				"@media all{b{color:blue}a{color:red}}"
+			);
+		});
+
+		it("drops it across a streamed block, written straight out", () => {
+			let filler = "";
+			for (let i = 0; i < 4000; i++) filler += `.f${i}{color:red}`;
+			const out = minify(`@media all{.a{top:0}${filler}.a{top:0}}`);
+			expect(out.match(/\.a\{top:0\}/g)).toHaveLength(1);
+			// The surviving copy is the last one: an earlier one would be read where
+			// the later is, which is what a rule between them can override.
+			expect(out.endsWith(".a{top:0}}")).toBe(true);
+		});
+
+		it("keeps the one between, which says what neither of them does", () => {
+			expect(minify("@media all{a{color:red}a{color:blue}a{color:red}}")).toBe(
+				"@media all{a{color:blue}a{color:red}}"
+			);
+		});
+
+		it.each([
+			// `@import` and `@namespace` are read only ahead of the rules they
+			// precede, so where they stand is what they say.
+			'@media all{@import"a.css";b{top:0}@import"a.css"}',
+			"@media all{@namespace x url(u);b{top:0}@namespace x url(u)}"
+		])("keeps both: %s", (css) => {
+			expect(minify(css)).toBe(css);
+		});
+
+		it("leaves a layer to the merge, which gathers it rather than dropping it", () => {
+			expect(
+				minify(
+					"@media all{@layer x{a{top:0}}@layer y{b{top:1px}}@layer x{a{top:0}}}"
+				)
+			).toBe("@media all{@layer x{a{top:0}a{top:0}}@layer y{b{top:1px}}}");
+		});
+	});
+
 	describe("a named layer block a later sibling opens again", () => {
 		it("gathers them, since both are the one layer", () => {
 			expect(
