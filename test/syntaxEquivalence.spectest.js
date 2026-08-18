@@ -73,23 +73,6 @@ const FILED_CONFIG_CSS_DEFECTS = new Map([
 		// collapses adjacent repeats and so reads a dropped one as a reordering.
 		"test/configCases/css/css-modules/style.module.css",
 		"the comparison reads a dropped repeat as a reordering"
-	],
-	[
-		// Not a printer defect: Chrome normalises an escaped custom property in a
-		// declaration name but echoes the authored spelling inside `var()`, so the
-		// shorter `\2d-two` the printer writes reads as different `cssText` from
-		// `\2d\2d two` while naming the one property — both compute the same value.
-		"test/configCases/css/escaped-names/style.module.css",
-		"Chrome echoes the authored escape spelling inside `var()`"
-	],
-	[
-		// Not a printer defect: Chrome drops `attr( name unit )` when a space sits
-		// before the `)` and the type is a bare unit — `attr( name unit)`,
-		// `attr(name  unit)`, `attr( name type(<length>) )` and `attr( name unit, )`
-		// all parse. Trimming that space is right, and leaves the minified sheet
-		// applying a declaration the engine threw away in the original.
-		"test/configCases/css/minimize-lightningcss-values/style.css",
-		"Chrome parses `attr( name unit )` and its trimmed form differently"
 	]
 ]);
 
@@ -99,11 +82,12 @@ const FILED_WPT_HTML_DEFECTS = new Map([
 		"not a printer defect: the form pointer is not set inside a `<template>`, which this test asserts and Chromium has not implemented — webpack prints the tree wpt expects"
 	],
 	[
-		// Declarations that follow a nested rule are their own
-		// `CSSNestedDeclarations` rule, so dropping an empty one before them —
-		// `.unused {}` here — folds them back into the parent. One rule fewer,
-		// the same computed style; needs the emitter to know a declaration
-		// follows, which it prints too early to see.
+		// Not a printer defect: declarations that follow a nested rule are their
+		// own `CSSNestedDeclarations` rule, so dropping an empty one before them
+		// — `.unused {}` here — folds them back into the parent. Nothing can sit
+		// between the two, so the cascade order and the computed style are the
+		// ones the source had; only the rule count a script would read differs,
+		// and keeping the empty rule to preserve it costs bytes for no rendering.
 		"test/wpt/css/css-cascade/scope-nesting.html",
 		"dropping an empty nested rule folds the declarations after it into the parent"
 	]
@@ -116,30 +100,7 @@ const FILED_WPT_TREE_DEFECTS = new Map();
 
 // Declarations Chromium computes a different style from once printed, keyed by
 // the value as written. A printer defect unless the reason says otherwise.
-const FILED_WPT_VALUE_DEFECTS = new Map([
-	[
-		// `calc()` is clamped at computed-value time and a literal is not, so
-		// `oblique calc(100deg)` computes `90deg` where `oblique 100deg` is dropped.
-		"font-style:oblique calc(100deg)",
-		"folding a clamped `calc()` to its literal leaves an out-of-range value"
-	],
-	[
-		"animation-timing-function:steps(1, jump-start)",
-		"not a printer defect: `step-start` is its own spelling, computed back verbatim"
-	],
-	[
-		"animation-timing-function:steps(2, jump-start)",
-		"not a printer defect: `start` and `jump-start` are one function, computed back verbatim"
-	],
-	[
-		"transition-timing-function:steps(2, jump-start)",
-		"not a printer defect: `start` and `jump-start` are one function, computed back verbatim"
-	],
-	[
-		"list-style:disc radial-gradient(circle, #006, #00a 90%, #0000af 100%,white 100%) inside",
-		"not a printer defect: an implied last stop is computed back as written"
-	]
-]);
+const FILED_WPT_VALUE_DEFECTS = new Map();
 
 /**
  * @param {string} source HTML
@@ -595,6 +556,9 @@ describe("printer output in real Chrome", () => {
 	const compareValues = (cases) =>
 		inBatches(probePage, cases, (batch) =>
 			probePage.evaluate((each) => {
+				const { canonical } = /** @type {{ __eq: PageHelpers }} */ (
+					/** @type {unknown} */ (window)
+				).__eq;
 				const probe = document.createElement("div");
 				document.body.append(probe);
 				// Computed values, not `cssText`: `left bottom` and `0% 100%` are one
@@ -622,7 +586,13 @@ describe("printer output in real Chrome", () => {
 					// boundary ("ab"+"c" against "a"+"bc") reads as equal.
 					let out = "";
 					for (const name of names) {
-						out += `${name}:${computed.getPropertyValue(name)}\u0000`;
+						// Under the one name the spec gives the value: the engine echoes
+						// the spelling it was handed — `jump-start` beside `start`, a
+						// gradient's implied last stop beside a written one — so without
+						// this the tier reads a synonym as a change of meaning.
+						out += `${name}:${canonical(
+							computed.getPropertyValue(name)
+						)}\u0000`;
 					}
 					return out;
 				};

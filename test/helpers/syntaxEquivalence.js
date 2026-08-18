@@ -74,6 +74,7 @@ const buildCorpus = (dir, extension, minify) => {
  * @property {(conditions: string[], sizes: number[]) => string[]} containerSignatures which sizes each container query holds at
  * @property {(conditions: string[]) => string[]} supportsSignatures whether each support condition holds
  * @property {(tagName: string, attribute: string, value: string | null) => [string | undefined, unknown]} probeReflection the IDL member an attribute reflects, and its value
+ * @property {(value: string) => string} canonical a value under the one name the spec gives it
  */
 
 /**
@@ -135,6 +136,32 @@ const installHelpers = () => {
 	};
 
 	/**
+	 * The escape starting at `text[at]` — a backslash — decoded, with the index
+	 * just past it. A hex escape takes up to six digits and swallows one
+	 * whitespace after them; anything else names the next character itself.
+	 * @param {string} text the text being read
+	 * @param {number} at the index of the backslash
+	 * @returns {[string, number]} the character it names, and where it ends
+	 */
+	const readEscape = (text, at) => {
+		const hex = /^[\da-f]{1,6}/i.exec(text.slice(at + 1, at + 7));
+		if (hex === null) {
+			const next = text[at + 1];
+			return next === undefined ? ["\uFFFD", at + 1] : [next, at + 2];
+		}
+		let end = at + 1 + hex[0].length;
+		if (/[\t\n\f\r ]/.test(text[end])) end++;
+		const code = Number.parseInt(hex[0], 16);
+		const named =
+			code === 0 || code > 0x10ffff ? "\uFFFD" : String.fromCodePoint(code);
+		return [named, end];
+	};
+
+	// A character an escape can be dropped from without the value reading
+	// differently — everything a name is spelled out of.
+	const BARE_ESCAPED = /[\w\u00A0-\uFFFF-]/;
+
+	/**
 	 * A value spelled one way, for the values that have to be compared as written
 	 * rather than as computed. CSS does not need the whitespace around a `,`, a
 	 * bracket, a `*` or a `/`, and a string means the same in either quote —
@@ -155,6 +182,21 @@ const installHelpers = () => {
 				const end = text.indexOf("*/", at + 2);
 				at = end === -1 ? text.length : end + 1;
 				if (!out.endsWith(" ")) out += " ";
+				continue;
+			}
+			// A CSS escape is resolved before a name is matched, so `\2d-two` and
+			// `\2d\2d two` are the one identifier — decoded here, and written back
+			// escaped in a single spelling where the character it names would
+			// otherwise read as punctuation.
+			if (ch === "\\") {
+				const [named, end] = readEscape(text, at);
+				at = end - 1;
+				const code = /** @type {number} */ (named.codePointAt(0));
+				const written = BARE_ESCAPED.test(named)
+					? named
+					: `\\${code.toString(16).padStart(6, "0")}`;
+				if (quote === "") out += written;
+				else string += named;
 				continue;
 			}
 			if (quote !== "") {
@@ -970,7 +1012,8 @@ const installHelpers = () => {
 			htmlFacets,
 			containerSignatures,
 			supportsSignatures,
-			probeReflection
+			probeReflection,
+			canonical
 		};
 };
 

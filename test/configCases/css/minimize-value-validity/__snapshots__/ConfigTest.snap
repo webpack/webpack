@@ -17,5 +17,13 @@ Array [
   "/*! a negative zero keeps its fraction too, and still drops the leading zero */.m{grid-row:-.0}",
   "/*! the shared slot is the second entry here, not the first */.n{font-family:serif,\\"My Font\\" Extra}",
   "/*! a lone string in a later slot still unquotes */.o{font-family:serif,My Font,monospace}@property --len{syntax:\\"<length>\\";initial-value:0px;inherits:false}@property --tint{syntax:\\"<color>\\";initial-value:#ff0000;inherits:false}.property-descriptors{width:var(--len);color:var(--tint);margin:0;background:red}",
+  "/*! a literal past \`oblique\`'s ±90deg is rejected where the \`calc()\` is clamped */.p{font-style:oblique calc(100deg)}",
+  "/*! the same in the other direction */.q{font-style:oblique calc(-95deg)}",
+  "/*! Chrome takes \`100grad\` off though it is the \`90deg\` the range allows */.r{font-style:oblique calc(100grad)}",
+  "/*! and takes \`2rad\` at face value though it clamps the same \`calc()\` to 90deg */.s{font-style:oblique calc(2rad)}",
+  "/*! inside the range there is nothing to clamp, so the \`calc()\` still folds */.t{font-style:oblique 45deg}",
+  "/*! and nothing bounds a rotation, so the same angle folds there */.u{rotate:100deg}",
+  "/*! Chrome drops \`attr( name unit )\` and parses \`attr(name unit)\` */.v{width:attr(data-foo % )}",
+  "/*! a fallback parses either way, and the space costs one byte to keep */.w{width:attr(data-foo %,1px )}",
 ]
 `;
