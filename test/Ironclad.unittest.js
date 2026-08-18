@@ -161,6 +161,52 @@ describe("ironclad/ownership", () => {
 				"const b = a;",
 				"use(a);"
 			].join("\n"),
+			{
+				// A consumed member leaves the rest of the object alone.
+				code: [
+					"const res = getResponse();",
+					"const data = res.json();",
+					"report(res.status, res.headers, data);"
+				].join("\n"),
+				options: [{ consumesReceiverMember: { "Body#json": "body" } }]
+			},
+			{
+				// Passing the response on is fine: consuming the body does not
+				// consume the response.
+				code: [
+					"const res = getResponse();",
+					"const data = res.json();",
+					"log(res, data);"
+				].join("\n"),
+				options: [{ consumesReceiverMember: { "Body#json": "body" } }]
+			},
+			// A sibling field is untouched by a marker on one member.
+			[
+				"const data = load();",
+				"const rules = /** @move */ data.rules;",
+				"apply(data.plugins, rules);"
+			].join("\n"),
+			// Generic method names are not consuming calls by default.
+			[
+				"const callbacks = makeCallbacks();",
+				"render(() => callbacks.text(input));",
+				"use(callbacks.text);"
+			].join("\n"),
+			{
+				// An untouched field survives the partial move of its sibling.
+				code: [
+					"const data = load();",
+					"const { rules } = data;",
+					"apply(data.plugins, rules);"
+				].join("\n"),
+				options: [{ treatDestructuringAsPartialMove: true }]
+			},
+			// Destructuring is a plain read unless asked otherwise.
+			[
+				"const data = load();",
+				"const { rules } = data;",
+				"apply(data, rules);"
+			].join("\n"),
 			// A borrow assigned into an inner scope does not outlive the owner.
 			[
 				"function run() {",
@@ -372,13 +418,82 @@ describe("ironclad/ownership", () => {
 				errors: [{ messageId: "useAfterMove" }]
 			},
 			{
-				// The canvas is consumed by the call, not passed to it.
+				// Transferring control kills the canvas's rendering context, not the
+				// element, so it is the `getContext` member that is consumed.
 				code: [
 					"const canvas = document.createElement('canvas');",
 					"const offscreen = canvas.transferControlToOffscreen();",
 					"canvas.getContext('2d');"
 				].join("\n"),
-				errors: [{ messageId: "useAfterMove" }]
+				errors: [{ messageId: "useAfterPartialMove" }]
+			},
+			{
+				// Both methods consume the body, so the second one is a use after
+				// move even though it is spelled differently.
+				code: [
+					"const res = getResponse();",
+					"const data = res.json();",
+					"const text = res.text();",
+					"use(data, text);"
+				].join("\n"),
+				options: [
+					{
+						consumesReceiverMember: { "Body#json": "body", "Body#text": "body" }
+					}
+				],
+				errors: [{ messageId: "useAfterPartialMove" }]
+			},
+			{
+				// Reading `.body` directly is the same member.
+				code: [
+					"const res = getResponse();",
+					"const data = res.json();",
+					"use(res.body, data);"
+				].join("\n"),
+				options: [
+					{
+						consumesReceiverMember: { "Body#json": "body", "Body#text": "body" }
+					}
+				],
+				errors: [{ messageId: "useAfterPartialMove" }]
+			},
+			{
+				// A marker on a member moves the field, not the object.
+				code: [
+					"const data = load();",
+					"const rules = /** @move */ data.rules;",
+					"apply(data.rules, rules);"
+				].join("\n"),
+				errors: [{ messageId: "useAfterPartialMove" }]
+			},
+			{
+				// Rust forbids the whole value after a field is moved out of it.
+				code: [
+					"const data = load();",
+					"const rules = /** @move */ data.rules;",
+					"apply(data, rules);"
+				].join("\n"),
+				errors: [{ messageId: "wholeUseAfterPartialMove" }]
+			},
+			{
+				// A destructured field is moved out of the object.
+				code: [
+					"const data = load();",
+					"const { rules } = data;",
+					"apply(data.rules, rules);"
+				].join("\n"),
+				options: [{ treatDestructuringAsPartialMove: true }],
+				errors: [{ messageId: "useAfterPartialMove" }]
+			},
+			{
+				// Rust forbids using the whole value after a partial move.
+				code: [
+					"const data = load();",
+					"const { rules } = data;",
+					"apply(data, rules);"
+				].join("\n"),
+				options: [{ treatDestructuringAsPartialMove: true }],
+				errors: [{ messageId: "wholeUseAfterPartialMove" }]
 			},
 			{
 				// A second reader on a locked stream throws at runtime.

@@ -45,7 +45,13 @@
  * @typedef {object} MoveInfo
  * @property {Node} node node blamed for the move
  * @property {number} end offset after which the value is gone
+ * @property {string | null} member property moved, or null for the whole value
+ * @property {boolean} blocksWholeUse whether the whole value also becomes
+ * unusable — true for a Rust-style partial move, false when a call merely
+ * invalidates one facet of an object that stays valid otherwise
  */
+
+/** @typedef {Map<string | null, MoveInfo>} MovesByMember */
 
 /**
  * The slice of typescript-eslint's parser services this rule uses. Absent
@@ -210,6 +216,24 @@ const parseReceiverEntries = (entries) => {
 };
 
 /**
+ * Unions `source` into `target`: a member moved on any incoming path is moved
+ * at the merge point. Inner maps are copied, never aliased.
+ * @param {Map<Variable, MovesByMember>} target state to merge into
+ * @param {Map<Variable, MovesByMember>} source state to merge from
+ * @returns {void}
+ */
+const mergeMoves = (target, source) => {
+	for (const [variable, byMember] of source) {
+		let existing = target.get(variable);
+		if (!existing) {
+			existing = new Map();
+			target.set(variable, existing);
+		}
+		for (const [member, info] of byMember) existing.set(member, info);
+	}
+};
+
+/**
  * @param {Variable} variable variable to inspect
  * @returns {boolean} true when every definition initializes it to a primitive
  */
@@ -242,6 +266,11 @@ const rule = {
 						items: { type: "string" }
 					},
 					consumesReceiver: { type: "array", items: { type: "string" } },
+					consumesReceiverMember: {
+						type: "object",
+						additionalProperties: { type: "string" }
+					},
+					treatDestructuringAsPartialMove: { type: "boolean" },
 					locksReceiverUntil: {
 						type: "object",
 						additionalProperties: { type: "string" }
@@ -253,6 +282,10 @@ const rule = {
 		messages: {
 			useAfterMove:
 				"`{{name}}` was moved on line {{line}} and cannot be used afterwards.",
+			useAfterPartialMove:
+				"`{{name}}.{{member}}` was moved on line {{line}} and cannot be used afterwards.",
+			wholeUseAfterPartialMove:
+				"`{{name}}` cannot be used as a whole: `{{name}}.{{member}}` was moved on line {{line}}.",
 			moveInLoop:
 				"`{{name}}` is declared outside this loop, so moving it here uses it after move on the next iteration.",
 			moveInClosure:
@@ -286,9 +319,7 @@ const rule = {
 			]
 		);
 		const consumesReceiver = parseReceiverEntries(
-			/** @type {string[]} */ (options.consumesReceiver) || [
-				"HTMLCanvasElement#transferControlToOffscreen"
-			]
+			/** @type {string[]} */ (options.consumesReceiver) || []
 		);
 		// Method that locks its receiver, mapped to the method that unlocks it.
 		// Read as a Map, not an object: `lockOptions.toString` would otherwise
@@ -310,6 +341,29 @@ const rule = {
 			);
 		}
 		const treatAssignmentAsMove = options.treatAssignmentAsMove === true;
+		const treatDestructuringAsPartialMove =
+			options.treatDestructuringAsPartialMove === true;
+		// Methods that consume one member of their receiver: the object stays
+		// valid, that member does not. Every method consuming the same member
+		// invalidates the others, which is what makes `res.text()` after
+		// `res.json()` a finding while `res.status` stays fine. Only the
+		// unambiguous entry is on by default — `json`/`text`/`blob` are names any
+		// object may have, so they need type-aware linting to be safe.
+		const memberOptions = /** @type {Record<string, string>} */ (
+			options.consumesReceiverMember
+		) || { "HTMLCanvasElement#transferControlToOffscreen": "getContext" };
+		const consumesReceiverMember = parseReceiverEntries(
+			Object.keys(memberOptions)
+		);
+		/** @type {Map<string, string>} */
+		const memberConsumedBy = new Map();
+		for (const [entry, member] of Object.entries(memberOptions)) {
+			const separator = entry.indexOf("#");
+			memberConsumedBy.set(
+				separator === -1 ? entry : entry.slice(separator + 1),
+				member
+			);
+		}
 
 		// Type information narrows the tables below when it is there, and nothing
 		// depends on it being there: a bare `"getReader"` entry still matches by
@@ -348,7 +402,7 @@ const rule = {
 		const borrowsByOwner = new Map();
 		/** @type {Map<Identifier, Borrow>} */
 		const borrowByNode = new Map();
-		/** @type {Map<string, Map<Variable, MoveInfo>>} */
+		/** @type {Map<string, Map<Variable, MovesByMember>>} */
 		const segmentMoves = new Map();
 		/** @type {CodePathSegment[]} */
 		const segmentStack = [];
@@ -469,8 +523,8 @@ const rule = {
 		};
 
 		/**
-		 * @returns {Map<Variable, MoveInfo> | null} move state of the innermost
-		 * reachable segment
+		 * @returns {Map<Variable, MovesByMember> | null} move state of the
+		 * innermost reachable segment
 		 */
 		const currentMoves = () => {
 			const segment = currentSegment();
@@ -586,6 +640,24 @@ const rule = {
 		};
 
 		/**
+		 * Which member of `node` a use reads. `null` means the whole value,
+		 * `undefined` means a computed access whose member cannot be named.
+		 * Method names are normalized to the member they consume, so `res.text()`
+		 * and `res.json()` both resolve to `body`.
+		 * @param {Identifier} node identifier being used
+		 * @returns {string | null | undefined} the member touched
+		 */
+		const memberTouched = (node) => {
+			const parent = parentOf(/** @type {Node} */ (node));
+			if (!parent || parent.type !== "MemberExpression") return null;
+			if (parent.object !== node) return null;
+			if (parent.computed) return undefined;
+			if (parent.property.type !== "Identifier") return undefined;
+			const name = parent.property.name;
+			return memberConsumedBy.get(name) || name;
+		};
+
+		/**
 		 * @param {CallExpression} call call to name
 		 * @returns {string | null} the called function or method name
 		 */
@@ -673,6 +745,60 @@ const rule = {
 			if (!name) return null;
 			if (consumesArguments.has(name)) return parent;
 			return transferred && detachesTransferList.has(name) ? parent : null;
+		};
+
+		/**
+		 * `res.json()` consumes the response body but leaves the response usable.
+		 * @param {Identifier} node receiver identifier
+		 * @returns {{ call: CallExpression, member: string } | null} the call
+		 */
+		const consumedReceiverMember = (node) => {
+			const receiver = receiverCall(node);
+			if (!receiver || !consumesReceiverMember.has(receiver.name)) return null;
+			if (
+				!receiverMatches(
+					node,
+					consumesReceiverMember.get(receiver.name) || null
+				)
+			) {
+				return null;
+			}
+			const member = memberConsumedBy.get(receiver.name);
+			return member ? { call: receiver.call, member } : null;
+		};
+
+		/**
+		 * `const { x, y } = data` moves the fields it names, the way Rust reads a
+		 * destructuring pattern. A rest element is skipped: what it takes cannot
+		 * be named.
+		 * @param {Identifier} node identifier on the right of the pattern
+		 * @returns {{ members: string[], blame: Node } | null} moved fields
+		 */
+		const destructuredMembers = (node) => {
+			if (!treatDestructuringAsPartialMove) return null;
+			const parent = parentOf(/** @type {Node} */ (node));
+			if (
+				!parent ||
+				parent.type !== "VariableDeclarator" ||
+				parent.init !== node ||
+				parent.id.type !== "ObjectPattern"
+			) {
+				return null;
+			}
+			/** @type {string[]} */
+			const members = [];
+			for (const property of parent.id.properties) {
+				if (property.type !== "Property" || property.computed) continue;
+				if (property.key.type === "Identifier") {
+					members.push(property.key.name);
+				} else if (
+					property.key.type === "Literal" &&
+					typeof property.key.value === "string"
+				) {
+					members.push(property.key.value);
+				}
+			}
+			return members.length > 0 ? { members, blame: parent } : null;
 		};
 
 		/**
@@ -875,9 +1001,11 @@ const rule = {
 		 * @param {Identifier} node identifier that triggers the move
 		 * @param {Variable} variable variable being moved
 		 * @param {Node} blame node reported as the move site
+		 * @param {string | null} member member moved, or null for the whole value
+		 * @param {boolean} blocksWholeUse whether the whole value dies with it
 		 * @returns {void}
 		 */
-		const recordMove = (node, variable, blame) => {
+		const recordMove = (node, variable, blame, member, blocksWholeUse) => {
 			const position = /** @type {Range} */ (node.range)[0];
 			const live = liveBorrows(variable, position, borrowByNode.get(node));
 			if (live.length > 0) {
@@ -932,31 +1060,35 @@ const rule = {
 			}
 			const state = currentMoves();
 			if (!state) return;
-			state.set(variable, {
+			let byMember = state.get(variable);
+			if (!byMember) {
+				byMember = new Map();
+				state.set(variable, byMember);
+			}
+			byMember.set(member, {
 				node: blame,
-				end: /** @type {Range} */ (blame.range)[1]
+				end: /** @type {Range} */ (blame.range)[1],
+				member,
+				blocksWholeUse
 			});
 		};
 
 		return {
 			onCodePathSegmentStart(segment) {
-				/** @type {Map<Variable, MoveInfo>} */
+				/** @type {Map<Variable, MovesByMember>} */
 				const state = new Map();
 				// Moved in any incoming branch means moved at the merge point.
 				for (const previous of segment.prevSegments) {
 					const previousState = segmentMoves.get(previous.id);
 					if (!previousState) continue;
-					for (const [variable, info] of previousState)
-						state.set(variable, info);
+					mergeMoves(state, previousState);
 				}
 				// A nested function starts a code path of its own with no incoming
 				// segment. Seed it from where the function is written, so a closure
 				// reading something already moved is caught.
 				if (segment.prevSegments.length === 0) {
 					const enclosing = currentMoves();
-					if (enclosing) {
-						for (const [variable, info] of enclosing) state.set(variable, info);
-					}
+					if (enclosing) mergeMoves(state, enclosing);
 				}
 				segmentMoves.set(segment.id, state);
 				segmentPath.set(segment.id, codePathStack[codePathStack.length - 1]);
@@ -977,9 +1109,7 @@ const rule = {
 					const open = segmentStack[i];
 					if (segmentPath.get(open.id) !== path) continue;
 					const target = segmentMoves.get(open.id);
-					if (target) {
-						for (const [variable, info] of state) target.set(variable, info);
-					}
+					if (target) mergeMoves(target, state);
 					break;
 				}
 			},
@@ -999,8 +1129,7 @@ const rule = {
 				if (!enclosing) return;
 				for (const final of codePath.finalSegments) {
 					const state = segmentMoves.get(final.id);
-					if (!state) continue;
-					for (const [variable, info] of state) enclosing.set(variable, info);
+					if (state) mergeMoves(enclosing, state);
 				}
 			},
 
@@ -1013,17 +1142,52 @@ const rule = {
 				const position = /** @type {Range} */ (node.range)[0];
 
 				const state = currentMoves();
-				const moved = state ? state.get(variable) : undefined;
-				if (moved && position > moved.end) {
-					context.report({
-						node,
-						messageId: "useAfterMove",
-						data: {
-							name: variable.name,
-							line: lineOf(/** @type {Node} */ (moved.node))
+				const byMember = state ? state.get(variable) : undefined;
+				if (byMember) {
+					const whole = byMember.get(null);
+					if (whole && position > whole.end) {
+						context.report({
+							node,
+							messageId: "useAfterMove",
+							data: {
+								name: variable.name,
+								line: lineOf(/** @type {Node} */ (whole.node))
+							}
+						});
+						return;
+					}
+					const touched = memberTouched(/** @type {Identifier} */ (node));
+					if (touched === null) {
+						// A whole-value use is only blocked by a real partial move; a
+						// consumed facet leaves the object itself usable.
+						for (const info of byMember.values()) {
+							if (!info.blocksWholeUse || position <= info.end) continue;
+							context.report({
+								node,
+								messageId: "wholeUseAfterPartialMove",
+								data: {
+									name: variable.name,
+									member: /** @type {string} */ (info.member),
+									line: lineOf(/** @type {Node} */ (info.node))
+								}
+							});
+							return;
 						}
-					});
-					return;
+					} else if (touched !== undefined) {
+						const info = byMember.get(touched);
+						if (info && position > info.end) {
+							context.report({
+								node,
+								messageId: "useAfterPartialMove",
+								data: {
+									name: variable.name,
+									member: touched,
+									line: lineOf(/** @type {Node} */ (info.node))
+								}
+							});
+							return;
+						}
+					}
 				}
 
 				const created = borrowByNode.get(/** @type {Identifier} */ (node));
@@ -1076,20 +1240,67 @@ const rule = {
 				const marker = markerFor(/** @type {Identifier} */ (node));
 				if (marker === "move") {
 					const parent = parentOf(node);
+					// `/** @move *\/ data.x` moves the field, not the object.
+					const marked = memberTouched(/** @type {Identifier} */ (node));
+					const member = typeof marked === "string" ? marked : null;
+					const blame =
+						parent && parent.type === "VariableDeclarator" ? parent : node;
 					recordMove(
 						/** @type {Identifier} */ (node),
 						variable,
-						parent && parent.type === "VariableDeclarator" ? parent : node
+						blame,
+						member,
+						true
+					);
+					return;
+				}
+				const consumedMember = consumedReceiverMember(
+					/** @type {Identifier} */ (node)
+				);
+				if (consumedMember) {
+					recordMove(
+						/** @type {Identifier} */ (node),
+						variable,
+						consumedMember.call,
+						consumedMember.member,
+						false
 					);
 					return;
 				}
 				const call = consumingCall(/** @type {Identifier} */ (node));
 				if (call) {
-					recordMove(/** @type {Identifier} */ (node), variable, call);
+					recordMove(
+						/** @type {Identifier} */ (node),
+						variable,
+						call,
+						null,
+						true
+					);
+					return;
+				}
+				const destructured = destructuredMembers(
+					/** @type {Identifier} */ (node)
+				);
+				if (destructured) {
+					for (const member of destructured.members) {
+						recordMove(
+							/** @type {Identifier} */ (node),
+							variable,
+							destructured.blame,
+							member,
+							true
+						);
+					}
 					return;
 				}
 				if (isImplicitMove(/** @type {Identifier} */ (node))) {
-					recordMove(/** @type {Identifier} */ (node), variable, node);
+					recordMove(
+						/** @type {Identifier} */ (node),
+						variable,
+						node,
+						null,
+						true
+					);
 				}
 			},
 
