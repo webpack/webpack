@@ -1,7 +1,8 @@
 "use strict";
 
-// Two entries loading wasm differently under a non-`auto` public path: only `fetch`
-// keeps the runtime form, unless the two share a binary and neither can be told apart.
+// Two entries loading wasm differently under a non-`auto` public path: each bakes the
+// url its own loader reads, unless the two share a binary and neither can be told
+// apart — one literal cannot be both what `readFile` and what `fetch` resolve.
 
 const webpack = require("../../../../");
 
@@ -66,7 +67,8 @@ const multi = (index, name) => ({
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
-	// A binary each: the runtimes are told apart, so only the fetching one bails.
+	// A binary each: the runtimes are told apart, so both bake the url their own
+	// loader reads.
 	base(0, "split", "./web-entry.js", 'new URL("./'),
 	// One binary between them: neither runtime can be answered on its own.
 	base(1, "shared", "./shared-entry.js", "module.id, "),
