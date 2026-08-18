@@ -2590,6 +2590,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-css-auto-url-hints-exclude-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/auto.urlHints[].exclude.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-css-auto-url-hints-exclude-not": Object {
     "configs": Array [
       Object {
@@ -2606,6 +2619,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-css-auto-url-hints-exclude-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/auto.urlHints[].exclude.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -2647,6 +2673,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-css-auto-url-hints-include-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/auto.urlHints[].include.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-css-auto-url-hints-include-not": Object {
     "configs": Array [
       Object {
@@ -2663,6 +2702,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-css-auto-url-hints-include-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/auto.urlHints[].include.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -2737,6 +2789,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-css-auto-url-hints-test-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/auto.urlHints[].test.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-css-auto-url-hints-test-not": Object {
     "configs": Array [
       Object {
@@ -2753,6 +2818,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-css-auto-url-hints-test-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/auto.urlHints[].test.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3051,6 +3129,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-css-global-url-hints-exclude-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/global.urlHints[].exclude.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-css-global-url-hints-exclude-not": Object {
     "configs": Array [
       Object {
@@ -3067,6 +3158,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-css-global-url-hints-exclude-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/global.urlHints[].exclude.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3108,6 +3212,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-css-global-url-hints-include-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/global.urlHints[].include.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-css-global-url-hints-include-not": Object {
     "configs": Array [
       Object {
@@ -3124,6 +3241,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-css-global-url-hints-include-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/global.urlHints[].include.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3198,6 +3328,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-css-global-url-hints-test-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/global.urlHints[].test.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-css-global-url-hints-test-not": Object {
     "configs": Array [
       Object {
@@ -3214,6 +3357,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-css-global-url-hints-test-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/global.urlHints[].test.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3480,6 +3636,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-css-module-url-hints-exclude-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/module.urlHints[].exclude.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-css-module-url-hints-exclude-not": Object {
     "configs": Array [
       Object {
@@ -3496,6 +3665,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-css-module-url-hints-exclude-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/module.urlHints[].exclude.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3537,6 +3719,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-css-module-url-hints-include-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/module.urlHints[].include.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-css-module-url-hints-include-not": Object {
     "configs": Array [
       Object {
@@ -3553,6 +3748,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-css-module-url-hints-include-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/module.urlHints[].include.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3627,6 +3835,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-css-module-url-hints-test-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/module.urlHints[].test.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-css-module-url-hints-test-not": Object {
     "configs": Array [
       Object {
@@ -3643,6 +3864,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-css-module-url-hints-test-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css/module.urlHints[].test.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3717,6 +3951,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-css-url-hints-exclude-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css.urlHints[].exclude.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-css-url-hints-exclude-not": Object {
     "configs": Array [
       Object {
@@ -3733,6 +3980,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-css-url-hints-exclude-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css.urlHints[].exclude.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3774,6 +4034,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-css-url-hints-include-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css.urlHints[].include.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-css-url-hints-include-not": Object {
     "configs": Array [
       Object {
@@ -3790,6 +4063,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-css-url-hints-include-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css.urlHints[].include.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3864,6 +4150,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-css-url-hints-test-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css.urlHints[].test.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-css-url-hints-test-not": Object {
     "configs": Array [
       Object {
@@ -3880,6 +4179,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-css-url-hints-test-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.css.urlHints[].test.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -4045,6 +4357,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-html-url-hints-exclude-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.html.urlHints[].exclude.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-html-url-hints-exclude-not": Object {
     "configs": Array [
       Object {
@@ -4061,6 +4386,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-html-url-hints-exclude-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.html.urlHints[].exclude.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -4102,6 +4440,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-html-url-hints-include-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.html.urlHints[].include.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-html-url-hints-include-not": Object {
     "configs": Array [
       Object {
@@ -4118,6 +4469,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-html-url-hints-include-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.html.urlHints[].include.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -4192,6 +4556,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-html-url-hints-test-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.html.urlHints[].test.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-html-url-hints-test-not": Object {
     "configs": Array [
       Object {
@@ -4208,6 +4585,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-html-url-hints-test-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.html.urlHints[].test.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -5120,6 +5510,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-javascript-auto-url-hints-exclude-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/auto.urlHints[].exclude.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-javascript-auto-url-hints-exclude-not": Object {
     "configs": Array [
       Object {
@@ -5136,6 +5539,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-auto-url-hints-exclude-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/auto.urlHints[].exclude.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -5177,6 +5593,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-javascript-auto-url-hints-include-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/auto.urlHints[].include.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-javascript-auto-url-hints-include-not": Object {
     "configs": Array [
       Object {
@@ -5193,6 +5622,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-auto-url-hints-include-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/auto.urlHints[].include.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -5267,6 +5709,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-javascript-auto-url-hints-test-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/auto.urlHints[].test.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-javascript-auto-url-hints-test-not": Object {
     "configs": Array [
       Object {
@@ -5283,6 +5738,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-auto-url-hints-test-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/auto.urlHints[].test.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -6441,6 +6909,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-javascript-dynamic-url-hints-exclude-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/dynamic.urlHints[].exclude.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-url-hints-exclude-not": Object {
     "configs": Array [
       Object {
@@ -6457,6 +6938,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-url-hints-exclude-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/dynamic.urlHints[].exclude.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -6498,6 +6992,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-javascript-dynamic-url-hints-include-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/dynamic.urlHints[].include.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-url-hints-include-not": Object {
     "configs": Array [
       Object {
@@ -6514,6 +7021,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-url-hints-include-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/dynamic.urlHints[].include.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -6588,6 +7108,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-javascript-dynamic-url-hints-test-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/dynamic.urlHints[].test.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-url-hints-test-not": Object {
     "configs": Array [
       Object {
@@ -6604,6 +7137,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-url-hints-test-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/dynamic.urlHints[].test.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -7590,6 +8136,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-javascript-esm-url-hints-exclude-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/esm.urlHints[].exclude.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-javascript-esm-url-hints-exclude-not": Object {
     "configs": Array [
       Object {
@@ -7606,6 +8165,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-url-hints-exclude-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/esm.urlHints[].exclude.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -7647,6 +8219,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-javascript-esm-url-hints-include-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/esm.urlHints[].include.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-javascript-esm-url-hints-include-not": Object {
     "configs": Array [
       Object {
@@ -7663,6 +8248,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-url-hints-include-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/esm.urlHints[].include.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -7737,6 +8335,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-javascript-esm-url-hints-test-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/esm.urlHints[].test.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-javascript-esm-url-hints-test-not": Object {
     "configs": Array [
       Object {
@@ -7753,6 +8364,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-url-hints-test-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript/esm.urlHints[].test.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -8531,6 +9155,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-javascript-url-hints-exclude-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript.urlHints[].exclude.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-javascript-url-hints-exclude-not": Object {
     "configs": Array [
       Object {
@@ -8547,6 +9184,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-url-hints-exclude-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript.urlHints[].exclude.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -8588,6 +9238,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-javascript-url-hints-include-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript.urlHints[].include.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-javascript-url-hints-include-not": Object {
     "configs": Array [
       Object {
@@ -8604,6 +9267,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-url-hints-include-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript.urlHints[].include.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -8678,6 +9354,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-parser-javascript-url-hints-test-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript.urlHints[].test.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-parser-javascript-url-hints-test-not": Object {
     "configs": Array [
       Object {
@@ -8694,6 +9383,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-url-hints-test-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.parser.javascript.urlHints[].test.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -8858,6 +9560,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-compiler-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].compiler.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-compiler-not": Object {
     "configs": Array [
       Object {
@@ -8874,6 +9589,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-compiler-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].compiler.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -8896,6 +9624,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-dependency-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].dependency.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-dependency-not": Object {
     "configs": Array [
       Object {
@@ -8912,6 +9653,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-dependency-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].dependency.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -8934,6 +9688,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-description-relative-path-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].descriptionRelativePath.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-description-relative-path-not": Object {
     "configs": Array [
       Object {
@@ -8950,6 +9717,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-description-relative-path-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].descriptionRelativePath.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -8989,6 +9769,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-exclude-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].exclude.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-exclude-not": Object {
     "configs": Array [
       Object {
@@ -9005,6 +9798,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-exclude-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].exclude.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -9040,6 +9846,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-include-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].include.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-include-not": Object {
     "configs": Array [
       Object {
@@ -9056,6 +9875,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-include-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].include.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -9078,6 +9910,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-issuer-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].issuer.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-issuer-layer": Object {
     "configs": Array [
       Object {
@@ -9094,6 +9939,19 @@ Object {
       },
     ],
     "description": "Match layer of the issuer of this module (The module pointing to this module).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-issuer-layer-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].issuerLayer.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -9116,6 +9974,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-issuer-layer-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].issuerLayer.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-issuer-not": Object {
     "configs": Array [
       Object {
@@ -9132,6 +10003,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-issuer-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].issuer.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -9180,6 +10064,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-mimetype-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].mimetype.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-mimetype-not": Object {
     "configs": Array [
       Object {
@@ -9196,6 +10093,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-mimetype-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].mimetype.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -9218,6 +10128,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-phase-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].phase.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-phase-not": Object {
     "configs": Array [
       Object {
@@ -9234,6 +10157,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-phase-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].phase.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -9256,6 +10192,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-real-resource-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].realResource.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-real-resource-not": Object {
     "configs": Array [
       Object {
@@ -9272,6 +10221,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-real-resource-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].realResource.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -9326,6 +10288,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-resource-fragment-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].resourceFragment.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-resource-fragment-not": Object {
     "configs": Array [
       Object {
@@ -9342,6 +10317,32 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-resource-fragment-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].resourceFragment.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-resource-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].resource.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -9364,6 +10365,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-resource-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].resource.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-resource-query": Object {
     "configs": Array [
       Object {
@@ -9380,6 +10394,19 @@ Object {
       },
     ],
     "description": "Match the resource query of the module.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-resource-query-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].resourceQuery.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -9402,6 +10429,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-resource-query-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].resourceQuery.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-scheme": Object {
     "configs": Array [
       Object {
@@ -9421,6 +10461,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-scheme-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].scheme.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-scheme-not": Object {
     "configs": Array [
       Object {
@@ -9437,6 +10490,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-scheme-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].scheme.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -9472,6 +10538,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-test-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].test.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-test-not": Object {
     "configs": Array [
       Object {
@@ -9488,6 +10567,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-test-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "module.rules[].test.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -12898,6 +13990,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "output-resource-hints-url-hints-exclude-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].exclude.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "output-resource-hints-url-hints-exclude-not": Object {
     "configs": Array [
       Object {
@@ -12914,6 +14019,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-url-hints-exclude-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].exclude.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -12955,6 +14073,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "output-resource-hints-url-hints-include-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].include.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "output-resource-hints-url-hints-include-not": Object {
     "configs": Array [
       Object {
@@ -12971,6 +14102,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-url-hints-include-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].include.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -13045,6 +14189,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "output-resource-hints-url-hints-test-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].test.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "output-resource-hints-url-hints-test-not": Object {
     "configs": Array [
       Object {
@@ -13061,6 +14218,19 @@ Object {
       },
     ],
     "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-resource-hints-url-hints-test-not-glob": Object {
+    "configs": Array [
+      Object {
+        "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
+        "multiple": true,
+        "path": "output.resourceHints.urlHints[].test.not.glob",
+        "type": "string",
+      },
+    ],
+    "description": "A glob pattern matched against a path, using \`/\` as path separator on every OS.",
     "multiple": true,
     "simpleType": "string",
   },

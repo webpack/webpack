@@ -24530,13 +24530,19 @@ type RuleSetConditionOrConditions =
 type RuleSetLoaderOptions = string | { [index: string]: any };
 
 /**
- * Logic operators used in a condition matcher.
+ * Logic operators and glob patterns used in a condition matcher.
  */
 declare interface RuleSetLogicalConditions {
 	/**
 	 * Logical AND.
 	 */
 	and?: RuleSetCondition[];
+
+	/**
+	 * Match a glob pattern against the value. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
+	 * @since 5.110.0
+	 */
+	glob?: string | string[];
 
 	/**
 	 * Logical NOT.
@@ -24555,13 +24561,19 @@ declare interface RuleSetLogicalConditions {
 }
 
 /**
- * Logic operators used in a condition matcher.
+ * Logic operators and glob patterns used in a condition matcher.
  */
 declare interface RuleSetLogicalConditionsAbsolute {
 	/**
 	 * Logical AND.
 	 */
 	and?: RuleSetConditionAbsolute[];
+
+	/**
+	 * Match a glob pattern against the value. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
+	 * @since 5.110.0
+	 */
+	glob?: string | string[];
 
 	/**
 	 * Logical NOT.

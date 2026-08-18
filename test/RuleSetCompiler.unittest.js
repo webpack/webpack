@@ -62,6 +62,14 @@ describe("RuleSetCompiler.hasRuleForResource", () => {
 		);
 	});
 
+	it("detects a filename-scoped glob via the extension probe", () => {
+		expect(has([{ test: { glob: "**/*.module.css" }, use: ["x"] }])).toBe(true);
+		expect(
+			has([{ test: { glob: ["**/*.js", "**/*.module.css"] }, use: ["x"] }])
+		).toBe(true);
+		expect(has([{ test: { glob: "**/*.scss" }, use: ["x"] }])).toBe(false);
+	});
+
 	it("recurses into oneOf and nested rules", () => {
 		expect(
 			has([
@@ -93,5 +101,78 @@ describe("RuleSetCompiler.hasRuleForResource", () => {
 			true
 		);
 		expect(has([{ test: /\.css$/, use: ["x"] }], "/file.wasm")).toBe(false);
+	});
+});
+
+describe("RuleSetCompiler glob conditions", () => {
+	const compiler = new RuleSetCompiler([]);
+
+	/**
+	 * @param {EXPECTED_ANY} condition condition (may be intentionally malformed)
+	 * @returns {(value: string) => boolean} matcher
+	 */
+	const compile = (condition) => {
+		const { fn } = compiler.compileCondition("test", condition);
+		return /** @type {(value: string) => boolean} */ (fn);
+	};
+
+	it("matches the same paths on every OS", () => {
+		const match = compile({ glob: "src/**/*.js" });
+		expect(match("/project/src/a/b.js")).toBe(true);
+		expect(match("C:\\project\\src\\a\\b.js")).toBe(true);
+		expect(match("/project/lib/a.js")).toBe(false);
+	});
+
+	it("matches a relative pattern at any depth", () => {
+		expect(compile({ glob: "*.css" })("/a/b/c.css")).toBe(true);
+		expect(compile({ glob: "./src/**" })("/a/src/b.js")).toBe(true);
+		expect(compile({ glob: "**/*.css" })("/a.css")).toBe(true);
+	});
+
+	it("anchors an absolute pattern", () => {
+		const match = compile({ glob: "/project/src/**" });
+		expect(match("/project/src/a.js")).toBe(true);
+		expect(match("/other/project/src/a.js")).toBe(false);
+		expect(compile({ glob: "C:/project/**" })("C:\\project\\a.js")).toBe(true);
+	});
+
+	it("supports braces, classes and a list of patterns", () => {
+		expect(compile({ glob: "**/*.{js,ts}" })("/a/b.ts")).toBe(true);
+		expect(compile({ glob: "**/[*].js" })("/a/*.js")).toBe(true);
+		const match = compile({ glob: ["**/*.js", "**/*.css"] });
+		expect(match("/a/b.css")).toBe(true);
+		expect(match("/a/b.wasm")).toBe(false);
+	});
+
+	it("combines with the logical operators", () => {
+		const match = compile({
+			and: [{ glob: "**/*.js" }, { not: { glob: "**/node_modules/**" } }]
+		});
+		expect(match("/a/src/b.js")).toBe(true);
+		expect(match("/a/node_modules/b/c.js")).toBe(false);
+	});
+
+	it("does not match a non-string value", () => {
+		expect(
+			compiler.compileCondition("test", { glob: "**/*.js" }).fn(undefined)
+		).toBe(false);
+	});
+
+	it("does not match when empty", () => {
+		expect(
+			compiler.compileCondition("test", { glob: "**/*.js" }).matchWhenEmpty
+		).toBe(false);
+	});
+
+	it("throws for an empty, invalid or non-string pattern", () => {
+		expect(() => compile({ glob: "" })).toThrow(
+			"Expected condition, but got empty thing"
+		);
+		expect(() => compile({ glob: "**/[z-a].js" })).toThrow(
+			"Invalid glob pattern"
+		);
+		expect(() => compile({ glob: [/\.js$/] })).toThrow(
+			"Unexpected object when glob pattern was expected"
+		);
 	});
 });
