@@ -91,5 +91,8 @@ Array [
    compound implies says nothing there either */.t113:not(.t114){color:red}.t115:is(.t116,.t117){color:red}",
   "/*! declined: a lone universal is the selector, and a parted one is a combinator */.t118:not(*){color:red}.t119:not(* .t120){color:red}",
   "/*! declined: a namespaced universal is not redundant */.t121:not(*|*.t122){color:red}",
+  "/*! declined: a featureless element matches no universal selector, so the \`*\`
+   before \`:host\` is what keeps the rule from matching (CSS Scoping 1 §3.1) */*:host{color:red}*:host(.t123){color:red}*:host-context(.t124){color:red}",
+  "/*! ...and a pseudo-element of that name is not one of them */::host{color:red}",
 ]
 `;

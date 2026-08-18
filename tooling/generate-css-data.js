@@ -2965,7 +2965,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -3038,6 +3038,12 @@ const SUPPLEMENT = {
 	// What may follow the `*` a compound selector implies: another simple
 	// selector in the same compound. Selector syntax, not a value grammar.
 	compoundContinuations: [":", ".", "#", "["],
+	// The pseudo-classes that select a featureless element, which matches no type
+	// or universal selector (CSS Scoping 1 §3.1) — so the `*` a compound implies
+	// before one is not redundant, it is what stops the selector matching.
+	// `mdn-data` states each selector's syntax and says nothing about this.
+	// Measured in headless Chromium: `:host` matches, `*:host` does not.
+	featurelessPseudoClasses: ["host", "host-context"],
 	// Not derivable, no grammar says the unit matters here: IE 11 drops a unitless
 	// `flex-basis`, and Chrome rejects `overflow-clip-margin:0` the spec allows.
 	zeroUnitKeepingProperties: ["flex-basis", "overflow-clip-margin"],
@@ -5504,6 +5510,13 @@ const LEGACY_PSEUDO_ELEMENTS = ${setLiteral(SUPPLEMENT.legacyPseudoElements)};
 // combinator instead, and \`|\` makes the \`*\` a namespace's, not a redundant one.
 const COMPOUND_CONTINUATIONS = ${setLiteral(SUPPLEMENT.compoundContinuations)};
 
+// The pseudo-classes selecting a featureless element, which matches no type or
+// universal selector — so an implied \`*\` before one is what makes the selector
+// match nothing, and dropping it would bring the rule to life.
+const FEATURELESS_PSEUDO_CLASSES = ${setLiteral(
+		SUPPLEMENT.featurelessPseudoClasses
+	)};
+
 // The properties whose zero length keeps its unit: those whose own grammar
 // offers a bare number beside the length, so the unit is what picks the
 // reading, and the two an engine reads its own way.
@@ -5740,7 +5753,7 @@ module.exports.BOX_LONGHANDS = BOX_LONGHANDS;
 module.exports.BOX_SHORTHANDS = BOX_SHORTHANDS;
 module.exports.CALC_REJECTING_PROPERTIES = CALC_REJECTING_PROPERTIES;\nmodule.exports.CLAMPED_VALUE_RANGES = CLAMPED_VALUE_RANGES;\nmodule.exports.COLOR_ARGUMENT_FUNCTIONS = COLOR_ARGUMENT_FUNCTIONS;
 module.exports.COLOR_KEYWORDS = COLOR_KEYWORDS;\nmodule.exports.COLOR_NAME_TO_SHORTEST = COLOR_NAME_TO_SHORTEST;\nmodule.exports.COLOR_ONLY_PROPERTIES = COLOR_ONLY_PROPERTIES;
-module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;
+module.exports.COMPOUND_CONTINUATIONS = COMPOUND_CONTINUATIONS;\nmodule.exports.FEATURELESS_PSEUDO_CLASSES = FEATURELESS_PSEUDO_CLASSES;
 module.exports.CSS_MODULES_KEYWORDS = CSS_MODULES_KEYWORDS;
 module.exports.CSS_MODULES_KEYWORD_OPTIONS = CSS_MODULES_KEYWORD_OPTIONS;
 module.exports.CSS_WIDE_KEYWORDS = CSS_WIDE_KEYWORDS;

@@ -15,6 +15,11 @@ module.exports = {
 			"utf8"
 		);
 
+		// A CR the tokenizer would rewrite to LF: it stays a character reference,
+		// so the text re-parses to the character the source named.
+		expect(html).toContain("A&#13;B");
+		expect(html).not.toContain("A\rB");
+
 		// Inert comments are dropped; behavior-bearing conditional comments stay.
 		expect(html).not.toContain("drop this comment");
 		expect(html).toContain("<!--[if IE]><p>ie only</p><![endif]-->");

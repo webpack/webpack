@@ -16,5 +16,7 @@
    text
 </pre>
 	<table><tr><td>a<td>b</table>
+	<!-- a CR the parser rewrites to LF unless it stays a character reference -->
+	<p>A&#x0D;B</p>
 </body>
 </html>
