@@ -103,7 +103,26 @@ const PATTERNS = [
 	"?/?/?.js",
 	"C:/a/**/*.js",
 	"C:\\a\\**\\*.js",
-	"/a/b\\c/*.js"
+	"/a/b\\c/*.js",
+	"**/!(a).js",
+	"**/x!(a).js",
+	"**/!(a|b)*.js",
+	"**/!(*.d).ts",
+	"**/+(a|b).js",
+	"**/+(a|b)/!(c).js",
+	"**/*(ab).js",
+	"**/*(a|b|c).js",
+	"**/?(a|b)c.js",
+	"**/?(x)y?(z).js",
+	"**/@(a|b)c.js",
+	"**/@(a|b)*.js",
+	"**/@(a|b)/*.js",
+	"**/@(a|).js",
+	"**/*(a).b",
+	"**/+([a-c]|z).js",
+	"**/+(a.js",
+	"**/!(a.js",
+	"**/x[?(]y.js"
 ];
 
 const PATHS = [
@@ -173,7 +192,26 @@ const PATHS = [
 	"/A/x/y.JS",
 	"/a/b\\c/d.js",
 	"C:/a/b/c.js",
-	"C:\\a\\b\\c.js"
+	"C:\\a\\b\\c.js",
+	"x/a.js",
+	"x/ab.js",
+	"x/aa.js",
+	"x/abab.js",
+	"x/b.js",
+	"x/bc.js",
+	"x/c.js",
+	"x/ac.js",
+	"x/xa.js",
+	"x/xab.js",
+	"x/xb.js",
+	"x/xyz.js",
+	"x/y.js",
+	"x/.js",
+	"x/a.d.ts",
+	"x/e.ts",
+	"x/a/c.js",
+	"x/a/d.js",
+	"x/a/y.js"
 ];
 
 describe("globUtils", () => {
@@ -648,6 +686,23 @@ describe("globUtils", () => {
 				}
 			}
 			expect(mismatches).toEqual([]);
+		});
+
+		it("supports extended globs", () => {
+			expect(createMatcher("**/+(a|b).js")("x/ab.js")).toBe(true);
+			expect(createMatcher("**/@(a|b).js")("x/ab.js")).toBe(false);
+			expect(createMatcher("**/?(a)b.js")("x/b.js")).toBe(true);
+			expect(createMatcher("**/*(ab).js")("x/abab.js")).toBe(true);
+			expect(createMatcher("**/!(a).js")("x/ab.js")).toBe(true);
+			expect(createMatcher("**/!(a).js")("x/a.js")).toBe(false);
+		});
+
+		it("does not let a `!(…)` group match an empty path segment", () => {
+			// the one place `path.matchesGlob` disagrees: it matches `/a` here,
+			// while its own `@(a|)` does not, so a segment stays non-empty
+			expect(createMatcher("!(x)/a")("/a")).toBe(false);
+			expect(path.posix.matchesGlob("/a", "**/!(x)/a")).toBe(true);
+			expect(path.posix.matchesGlob("/a", "**/@(a|)/a")).toBe(false);
 		});
 
 		it("reads a `\\` in the pattern as a separator on every platform", () => {
