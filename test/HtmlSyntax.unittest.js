@@ -7711,6 +7711,42 @@ describe("SourceProcessor — xml", () => {
 			"<svg><foreignObject><br/></foreignObject></svg>"
 		);
 	});
+
+	it("spells an element with no children as an empty-element tag", () => {
+		expect(print('<svg><path d="M0 0"></path></svg>', true)).toBe(
+			'<svg><path d="M0 0"/></svg>'
+		);
+		expect(print("<svg><g></g></svg>", true)).toBe("<svg><g/></svg>");
+		expect(print("<svg><linearGradient></linearGradient></svg>", true)).toBe(
+			"<svg><linearGradient/></svg>"
+		);
+		expect(print("<svg><script></script><style></style></svg>", true)).toBe(
+			"<svg><script/><style/></svg>"
+		);
+	});
+
+	it("leaves an element that carries anything at all", () => {
+		expect(print("<svg><text>a</text></svg>", true)).toBe(
+			"<svg><text>a</text></svg>"
+		);
+		expect(print("<svg><g> </g></svg>", true)).toBe("<svg><g> </g></svg>");
+		expect(print('<svg><g><path d="M0 0"/></g></svg>', true)).toBe(
+			'<svg><g><path d="M0 0"/></g></svg>'
+		);
+	});
+
+	it("keeps a `<template>`, whose children hang off a content fragment", () => {
+		expect(print("<template><p>a</p></template>", true)).toBe(
+			"<template><p>a</p></template>"
+		);
+	});
+
+	it("spells an empty element the HTML way when printing HTML", () => {
+		expect(print('<svg><path d="M0 0"></path></svg>', false)).toBe(
+			'<svg><path d="M0 0"></path></svg>'
+		);
+		expect(print("<p></p><span></span>", false)).toBe("<p></p><span></span>");
+	});
 });
 
 describe("SourceProcessor — svg path data", () => {
@@ -7801,7 +7837,7 @@ describe("SourceProcessor — what xml requires", () => {
 		expect(
 			xml(`<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "s.dtd">${SVG}</svg>`)
 		).toBe(
-			`<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "s.dtd">${SVG}</svg>`
+			`<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "s.dtd">${SVG.slice(0, -1)}/>`
 		);
 		expect(
 			new SourceProcessor().process("<!DOCTYPE HTML><p>x", { mode: "minify" })
