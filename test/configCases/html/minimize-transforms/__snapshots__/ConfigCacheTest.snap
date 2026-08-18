@@ -9,6 +9,9 @@ exports[`ConfigCacheTestCases html minimize-transforms minimize-transforms shoul
 	<div style='content:\\"}\\"'>a brace inside a string is not one in the list</div>
 	<div style=--custom:{a:b}>nor is a balanced pair</div>
 	<div style=background:red;};background:limegreen>declines: a bare \`}\` is part of a bad declaration, and what follows it still applies</div>
+	<div style=\\"top:anchor-size(--a1 width\\">declines: what the value leaves open would swallow the wrapper's own brace</div>
+	<div style=box-shadow:var(--t,10px>declines: the same, unclosed in a fallback</div>
+	<div style=\\"content:'a\\">declines: the same, unclosed in a string</div>
 	<p>optional end tags</p>
 	
 	<table>
