@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `performance.circularDependencies` to report synchronous module cycles.
+Add `performance.circularDependencies` using the export-inlining cycle scan.
