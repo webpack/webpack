@@ -1647,6 +1647,7 @@ describe("snapshots", () => {
 		+       ],
 		+       "type": "var",
 		+       "umdNamedDefine": undefined,
+		+       "umdSapUiDefine": undefined,
 		+     },
 		@@ ... @@
 		-     "uniqueName": "webpack",
@@ -1695,6 +1696,7 @@ describe("snapshots", () => {
 			+       ],
 			+       "type": "var",
 			+       "umdNamedDefine": undefined,
+			+       "umdSapUiDefine": undefined,
 			+     },
 			@@ ... @@
 			-     "uniqueName": "webpack",
@@ -1747,6 +1749,7 @@ describe("snapshots", () => {
 			+       ],
 			+       "type": "var",
 			+       "umdNamedDefine": undefined,
+			+       "umdSapUiDefine": undefined,
 			+     },
 			@@ ... @@
 			-     "uniqueName": "webpack",
@@ -1802,6 +1805,7 @@ describe("snapshots", () => {
 			+       },
 			+       "type": "var",
 			+       "umdNamedDefine": undefined,
+			+       "umdSapUiDefine": undefined,
 			+     },
 			@@ ... @@
 			-     "uniqueName": "webpack",
@@ -1858,6 +1862,7 @@ describe("snapshots", () => {
 			+       },
 			+       "type": "var",
 			+       "umdNamedDefine": undefined,
+			+       "umdSapUiDefine": undefined,
 			+     },
 			@@ ... @@
 			-     "uniqueName": "webpack",

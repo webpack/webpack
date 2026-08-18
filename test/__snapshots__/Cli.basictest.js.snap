@@ -12132,6 +12132,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-library-auxiliary-comment-sap-ui-define": Object {
+    "configs": Array [
+      Object {
+        "description": "Set comment for \`sapUiDefine\` (SAPUI5/OpenUI5 module loader) section in UMD.",
+        "multiple": false,
+        "path": "output.library.auxiliaryComment.sapUiDefine",
+        "type": "string",
+      },
+    ],
+    "description": "Set comment for \`sapUiDefine\` (SAPUI5/OpenUI5 module loader) section in UMD.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-library-commonjs": Object {
     "configs": Array [
       Object {
@@ -12337,6 +12350,19 @@ Object {
       },
     ],
     "description": "If \`output.libraryTarget\` is set to umd and \`output.library\` is set, setting this to true will name the AMD module.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-library-umd-sap-ui-define": Object {
+    "configs": Array [
+      Object {
+        "description": "If \`output.libraryTarget\` is set to umd, setting this to true will add a branch for the SAPUI5/OpenUI5 module loader (\`sap.ui.define\`) to the UMD wrapper.",
+        "multiple": false,
+        "path": "output.library.umdSapUiDefine",
+        "type": "boolean",
+      },
+    ],
+    "description": "If \`output.libraryTarget\` is set to umd, setting this to true will add a branch for the SAPUI5/OpenUI5 module loader (\`sap.ui.define\`) to the UMD wrapper.",
     "multiple": false,
     "simpleType": "boolean",
   },
