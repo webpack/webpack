@@ -3,6 +3,7 @@
 const path = require("path");
 const {
 	commonGlobBaseDir,
+	createPathGlobMatcher,
 	extractGlobBaseDir,
 	globMatchWithExplicitDot,
 	globMatchWithOptions,
@@ -17,6 +18,163 @@ const {
 } = require("../lib/util/globUtils");
 
 const defaultOptions = {};
+
+/**
+ * The two rules `createPathGlobMatcher` applies before matching.
+ * @param {string} pattern glob pattern
+ * @returns {string} pattern as `path.matchesGlob` reads it
+ */
+const effectivePattern = (pattern) => {
+	let effective = pattern.replace(/\\/g, "/");
+	while (effective.startsWith("./")) effective = effective.slice(2);
+	if (!/^(?:[a-z]:)?\//i.test(effective) && !effective.startsWith("**/")) {
+		effective = `**/${effective}`;
+	}
+	return effective;
+};
+
+const PATTERNS = [
+	"**/*.css",
+	"*.css",
+	"src/**/*.js",
+	"**/node_modules/**",
+	"a/b/c.js",
+	"**/*.{js,ts}",
+	"[abc].js",
+	"[!a]*.js",
+	"?.js",
+	"a/*/c.js",
+	"**",
+	"**/*",
+	"a**b",
+	"*.[jt]s",
+	"src/*",
+	"src/**",
+	"src/**/",
+	"**/*.test.js",
+	"{a,b}/c.js",
+	"a/{b,c}/*.js",
+	"*",
+	"**/.*",
+	".*",
+	"**/*.*",
+	"a?c",
+	"[a-c]*.js",
+	"[!a-c]*.js",
+	"**/a/**/b.js",
+	"a/**",
+	"a/**/**",
+	"*/*",
+	"x[*].js",
+	"**/[[]a].js",
+	"***",
+	"**/**",
+	"**/**/*.js",
+	"/a/**",
+	"/a/**/",
+	"/a/b/*.js",
+	"/**/*.js",
+	"/**",
+	"/*",
+	"/a/*",
+	"/a/**/*",
+	"/a/*/*/d.js",
+	"/a/**/b/*.{js,mjs}",
+	"/a/.*/b.js",
+	"/a/[!.]*/b.js",
+	"/a/b?c/*.js",
+	"/a/b.js",
+	"/a/b.js/",
+	"/a/{b,c}",
+	"/a/[]].js",
+	"/a/[!]].js",
+	"/a/x{1,2}y/*.js",
+	"/a/**/.hidden/*",
+	"/a/./b.js",
+	"/A/**/*.JS",
+	"**/{a,{b,c}}/*.js",
+	"**/*[0-9].js",
+	"**/[^a]b.js",
+	"**/*?.js",
+	"**/@scope/**",
+	"**/.pnpm/**",
+	".cache/**",
+	"{,a}/b.js",
+	"?/?/?.js",
+	"C:/a/**/*.js",
+	"C:\\a\\**\\*.js",
+	"/a/b\\c/*.js"
+];
+
+const PATHS = [
+	"",
+	"a",
+	"ab",
+	"abc",
+	"aXXb",
+	"a*b",
+	"a.js",
+	"b.js",
+	"ab.js",
+	"a.ts",
+	"c.js",
+	"abc.js",
+	"x*.js",
+	"[a].js",
+	"a.css",
+	"A.CSS",
+	"a/b",
+	"a/b/",
+	"a/b.css",
+	"a/b/c.css",
+	"a/b/c.js",
+	"a/b/b.js",
+	"a/x/b.js",
+	"a/b/c/",
+	"a/.b/c.js",
+	"a//b.css",
+	"a/node_modules/x.js",
+	"node_modules/x/y.js",
+	".hidden",
+	".hidden/a.js",
+	".cache/a.js",
+	"src/",
+	"src/a.js",
+	"src/a/b.js",
+	"src/a/b/c.js",
+	"/",
+	"/a",
+	"/a/",
+	"/a.css",
+	"/a/b",
+	"/a/b/",
+	"/a/b.css",
+	"/a/b.js",
+	"/a/b.js/",
+	"/a/.b",
+	"/.a/b",
+	"/a/b1.js",
+	"/a/bb.js",
+	"/a/].js",
+	"/a/x1y/b.js",
+	"/a/bxc/d.js",
+	"/a/b/c.js",
+	"/a/b/c/d.js",
+	"/a/b/c/d/e/f.js",
+	"/a/x/b/c.mjs",
+	"/a/.x/b.js",
+	"/a/b/.hidden/x.js",
+	"/a//b/c.js",
+	"/a/node_modules/b/c.js",
+	"/a/.pnpm/x/y.js",
+	"/a/@scope/x/y.js",
+	"/.cache/a.js",
+	"/src/a.js",
+	"/A/x/y.JS",
+	"/a/b\\c/d.js",
+	"C:/a/b/c.js",
+	"C:\\a\\b\\c.js"
+];
 
 describe("globUtils", () => {
 	describe("extractGlobBaseDir", () => {
@@ -449,6 +607,70 @@ describe("globUtils", () => {
 			expect(resolvedAtFactory.map((pattern) => pattern.absoluteBase)).toEqual(
 				resolvedAtParse.map((pattern) => pattern.absoluteBase)
 			);
+		});
+	});
+
+	// `path.matchesGlob` is Node.js >= 22.5
+	const describeMatchesGlob =
+		typeof path.matchesGlob === "function" ? describe : describe.skip;
+
+	/**
+	 * @param {string} pattern glob pattern
+	 * @returns {(str: string) => boolean} matcher
+	 */
+	const createMatcher = (pattern) => {
+		const match = createPathGlobMatcher(pattern);
+		if (match === null) throw new Error(`${pattern} did not compile`);
+		return match;
+	};
+
+	describeMatchesGlob("createPathGlobMatcher", () => {
+		it("matches every pattern the way path.matchesGlob does", () => {
+			/** @type {string[]} */
+			const mismatches = [];
+			for (const pattern of PATTERNS) {
+				const match = createMatcher(pattern);
+				for (const testedPath of PATHS) {
+					// `\` is a separator here, which is how `path.win32` reads it
+					const platform = testedPath.includes("\\") ? path.win32 : path.posix;
+					const expected = platform.matchesGlob(
+						testedPath,
+						effectivePattern(pattern)
+					);
+					const actual = match(testedPath);
+					if (actual !== expected) {
+						mismatches.push(
+							`${JSON.stringify(pattern)} vs ${JSON.stringify(
+								testedPath
+							)}: expected ${expected}, got ${actual}`
+						);
+					}
+				}
+			}
+			expect(mismatches).toEqual([]);
+		});
+
+		it("reads a `\\` in the pattern as a separator on every platform", () => {
+			const match = createMatcher("/a\\b\\**\\*.js");
+			expect(match("/a/b/c/d.js")).toBe(true);
+			expect(match("/a/b/d.js")).toBe(true);
+			expect(path.win32.matchesGlob("\\a\\b\\c\\d.js", "/a/b/**/*.js")).toBe(
+				true
+			);
+		});
+
+		it("matches a relative pattern at any depth", () => {
+			const match = createMatcher("src/**/*.js");
+			expect(match("/project/src/a/b.js")).toBe(true);
+			expect(match("src/a.js")).toBe(true);
+			// the same pattern is anchored for `path.matchesGlob`
+			expect(path.posix.matchesGlob("/project/src/a/b.js", "src/**/*.js")).toBe(
+				false
+			);
+		});
+
+		it("returns null for an un-compilable pattern", () => {
+			expect(createPathGlobMatcher("**/[z-a].js")).toBeNull();
 		});
 	});
 });

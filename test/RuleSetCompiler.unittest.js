@@ -144,6 +144,11 @@ describe("RuleSetCompiler glob conditions", () => {
 		expect(match("/a/b.wasm")).toBe(false);
 	});
 
+	it("does not let `*` or `**` cross a dot directory", () => {
+		expect(compile({ glob: "**/*.js" })("/a/.cache/b.js")).toBe(false);
+		expect(compile({ glob: "**/.cache/**" })("/a/.cache/b.js")).toBe(true);
+	});
+
 	it("combines with the logical operators", () => {
 		const match = compile({
 			and: [{ glob: "**/*.js" }, { not: { glob: "**/node_modules/**" } }]
