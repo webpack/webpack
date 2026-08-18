@@ -9,10 +9,12 @@ const bundle = () =>
 // reads the runtime public path, or bakes the url where analyzable output can.
 const runtimeWrapper = `${"module"}.exports = ${"__webpack_require__"}.p + `;
 const bakedWrapper = `${"module"}.exports = new URL(`;
-// An `eval` devtool hands the module body to `eval` as a string, so its quotes are
-// escaped in the file the needle is looked for in.
+// An `eval` devtool hands the module body to `eval` as a JSON string, so the needle
+// is looked for as that spells it too — by the same function, rather than by a rule
+// of our own that would have to know every escape.
+const escaped = (needle) => JSON.stringify(needle).slice(1, -1);
 const bundleHas = (needle) =>
-	bundle().includes(needle) || bundle().includes(needle.replace(/"/g, '\\"'));
+	bundle().includes(needle) || bundle().includes(escaped(needle));
 const hasWrapper = () => bundleHas(runtimeWrapper) || bundleHas(bakedWrapper);
 
 it("should point at the asset whatever the module exposes", () => {
