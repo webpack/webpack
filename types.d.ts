@@ -17027,6 +17027,8 @@ declare class ModuleConcatenationPlugin {
 	 * Applies the plugin by registering its hooks on the compiler.
 	 */
 	apply(compiler: Compiler): void;
+	static BAILOUT_PREFIX: "ModuleConcatenation bailout: ";
+	static REJECTED_PREFIX: "Cannot concat with ";
 }
 declare class ModuleDependency extends Dependency {
 	/**
@@ -21792,6 +21794,12 @@ declare interface PerformanceOptions {
 	duplicatePackages?: boolean;
 
 	/**
+	 * Report modules whose exports cannot be read statically, which stops anything importing them from being tree-shaken (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	dynamicExports?: boolean;
+
+	/**
 	 * Sets the format of the hints: warnings, errors, stats-only or nothing at all.
 	 */
 	hints?: false | "error" | "stats" | "warning";
@@ -21807,6 +21815,12 @@ declare interface PerformanceOptions {
 	maxEntrypointSize?: number;
 
 	/**
+	 * Report packages that keep unused code in the bundle because their package.json does not declare 'sideEffects' (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	missingSideEffects?: boolean;
+
+	/**
 	 * Report conditions in 'module.rules' that hardcode a path separator, so they only match on one operating system.
 	 * @since 5.110.0
 	 */
@@ -21817,6 +21831,12 @@ declare interface PerformanceOptions {
 	 * @since 5.110.0
 	 */
 	redundantDynamicImports?: boolean;
+
+	/**
+	 * Report modules that could not be merged into their importer's scope, and why (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	scopeHoistingBailouts?: boolean;
 
 	/**
 	 * Report modules bundled although nothing uses what they export, pulled in by a re-export.
