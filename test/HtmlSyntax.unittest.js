@@ -7741,6 +7741,15 @@ describe("SourceProcessor — svg path data", () => {
 		expect(path("M1 1 m2 2")).toBe("M1 1m2 2");
 	});
 
+	it("hands back a number already as short as it goes", () => {
+		expect(path("M300 .1L565 150v299.9")).toBe("M300 .1 565 150v299.9");
+		expect(path("M0 0")).toBe("M0 0");
+		expect(path("M1e3 1")).toBe("M1e3 1");
+		expect(path("M1. 2.")).toBe("M1 2");
+		expect(path("M.0 .5")).toBe("M0 .5");
+		expect(path("M1.0 2.00 3.000 4.0")).toBe("M1 2 3 4");
+	});
+
 	it("re-spells a number without changing its value", () => {
 		expect(path("M0.5 0.5 L-0.5 -0.5")).toBe("M.5.5-.5-.5");
 		expect(path("M 1.500 2.0 L 3. 4")).toBe("M1.5 2 3 4");
