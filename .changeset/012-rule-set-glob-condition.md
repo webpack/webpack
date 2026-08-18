@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add the `glob` module rule condition matching paths OS-independently.
+Add OS-independent `glob` matching to module rules.

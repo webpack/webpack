@@ -345,7 +345,7 @@ export type RuleSetCondition =
  */
 export type RuleSetConditions = RuleSetCondition[];
 /**
- * A glob pattern matched against a path, using `/` as path separator on every OS.
+ * A glob pattern matched against a path, using `/` as path separator on every OS; a `!` prefix excludes what it matches.
  */
 export type RuleSetGlob = string;
 /**
@@ -1966,6 +1966,11 @@ export interface RuleSetRule {
 		[k: string]: any;
 	};
 	/**
+	 * Match the module resource against glob patterns, `!` in front of a pattern excludes it. Combines with `test`, `include` and `exclude`.
+	 * @since 5.110.0
+	 */
+	glob?: RuleSetGlob | RuleSetGlobs;
+	/**
 	 * Shortcut for resource.include.
 	 */
 	include?: RuleSetConditionOrConditionsAbsolute;
@@ -2067,7 +2072,7 @@ export interface RuleSetLogicalConditions {
 	 */
 	and?: RuleSetConditions;
 	/**
-	 * Match a glob pattern against the value. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
+	 * Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
 	 * @since 5.110.0
 	 */
 	glob?: RuleSetGlob | RuleSetGlobs;
@@ -2089,7 +2094,7 @@ export interface RuleSetLogicalConditionsAbsolute {
 	 */
 	and?: RuleSetConditionsAbsolute;
 	/**
-	 * Match a glob pattern against the value. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
+	 * Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
 	 * @since 5.110.0
 	 */
 	glob?: RuleSetGlob | RuleSetGlobs;

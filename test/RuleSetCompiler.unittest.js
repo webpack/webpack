@@ -70,6 +70,14 @@ describe("RuleSetCompiler.hasRuleForResource", () => {
 		expect(has([{ test: { glob: "**/*.scss" }, use: ["x"] }])).toBe(false);
 	});
 
+	it("matches a rule-level glob", () => {
+		expect(has([{ glob: "**/*.css", use: ["x"] }])).toBe(true);
+		expect(has([{ glob: ["**/*.js", "**/*.css"], use: ["x"] }])).toBe(true);
+		expect(has([{ glob: "**/*.module.css", use: ["x"] }])).toBe(true);
+		expect(has([{ glob: "**/*.scss", use: ["x"] }])).toBe(false);
+		expect(has([{ glob: "**/*.css" }])).toBe(false);
+	});
+
 	it("recurses into oneOf and nested rules", () => {
 		expect(
 			has([
@@ -157,6 +165,18 @@ describe("RuleSetCompiler glob conditions", () => {
 		expect(match("/a/node_modules/b/c.js")).toBe(false);
 	});
 
+	it("subtracts what a `!` pattern matches", () => {
+		const match = compile({ glob: ["**/*.js", "!**/*.test.js"] });
+		expect(match("/a/b.js")).toBe(true);
+		expect(match("/a/b.test.js")).toBe(false);
+	});
+
+	it("subtracts from everything when every pattern is negated", () => {
+		const match = compile({ glob: "!**/node_modules/**" });
+		expect(match("/a/b.js")).toBe(true);
+		expect(match("/a/node_modules/b.js")).toBe(false);
+	});
+
 	it("does not match a non-string value", () => {
 		expect(
 			compiler.compileCondition("test", { glob: "**/*.js" }).fn(undefined)
@@ -178,6 +198,9 @@ describe("RuleSetCompiler glob conditions", () => {
 		);
 		expect(() => compile({ glob: [/\.js$/] })).toThrow(
 			"Unexpected object when glob pattern was expected"
+		);
+		expect(() => compile({ glob: [] })).toThrow(
+			"Expected glob pattern, but got empty list"
 		);
 	});
 });

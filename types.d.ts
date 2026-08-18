@@ -24539,7 +24539,7 @@ declare interface RuleSetLogicalConditions {
 	and?: RuleSetCondition[];
 
 	/**
-	 * Match a glob pattern against the value. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
+	 * Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
 	 * @since 5.110.0
 	 */
 	glob?: string | string[];
@@ -24570,7 +24570,7 @@ declare interface RuleSetLogicalConditionsAbsolute {
 	and?: RuleSetConditionAbsolute[];
 
 	/**
-	 * Match a glob pattern against the value. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
+	 * Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
 	 * @since 5.110.0
 	 */
 	glob?: string | string[];
@@ -24660,6 +24660,12 @@ declare interface RuleSetRule {
 	 * The options for the module generator.
 	 */
 	generator?: { [index: string]: any };
+
+	/**
+	 * Match the module resource against glob patterns, `!` in front of a pattern excludes it. Combines with `test`, `include` and `exclude`.
+	 * @since 5.110.0
+	 */
+	glob?: string | string[];
 
 	/**
 	 * Shortcut for resource.include.
