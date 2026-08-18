@@ -301,6 +301,10 @@ const rule = {
 					},
 					treatDestructuringAsPartialMove: { type: "boolean" },
 					callsOnce: { type: "array", items: { type: "string" } },
+					retainsUntilReleased: {
+						type: "object",
+						additionalProperties: { type: "string" }
+					},
 					locksReceiverUntil: {
 						type: "object",
 						additionalProperties: { type: "string" }
@@ -328,6 +332,8 @@ const rule = {
 				"`{{name}}` cannot be mutated while the shared borrow created on line {{line}} is still live.",
 			conflictingBorrow:
 				"cannot take a {{kind}} borrow of `{{name}}` while a {{otherKind}} borrow created on line {{line}} is still live.",
+			resourceNeverReleased:
+				"`{{name}}` keeps running until it is released, and the handle needed to release it is discarded here.",
 			resultIgnored:
 				"this call hands back ownership of its result, so the result cannot be discarded.",
 			borrowMustBeStatic:
@@ -386,6 +392,15 @@ const rule = {
 				"setImmediate",
 				"setTimeout"
 			]
+		);
+		// Calls that keep something alive until it is released, mapped to where
+		// the handle for releasing it lives: `"result"`, or an argument index.
+		const retainsUntilReleased = new Map(
+			Object.entries(
+				/** @type {Record<string, string>} */ (
+					options.retainsUntilReleased
+				) || { addEventListener: "1", setInterval: "result" }
+			)
 		);
 		const treatAssignmentAsMove = options.treatAssignmentAsMove === true;
 		const treatDestructuringAsPartialMove =
@@ -891,7 +906,10 @@ const rule = {
 		 */
 		const contractFromTypeScript = (declaration) => {
 			const compiler = /** @type {typeof import("typescript")} */ (ts);
-			let signature = /** @type {EXPECTED_ANY} */ (declaration);
+			let signature =
+				/** @type {import("typescript").SignatureDeclaration & { initializer?: import("typescript").SignatureDeclaration }} */ (
+					/** @type {unknown} */ (declaration)
+				);
 			// `const consume = (a) => {}` documents the declaration, not the arrow.
 			if (signature.initializer && signature.initializer.parameters) {
 				signature = signature.initializer;
@@ -1022,6 +1040,37 @@ const rule = {
 			return marker
 				? { marker, call: parent, contract, position: index }
 				: null;
+		};
+
+		/**
+		 * @param {CallExpression} call acquiring call
+		 * @param {string} handle `"result"`, or the index of the argument the
+		 * release call has to be given
+		 * @returns {boolean} true when nothing can ever release it
+		 */
+		const isHandleDiscarded = (call, handle) => {
+			// At the top level the resource lives as long as the program does, so
+			// nothing is lost by never releasing it — that is the `'static` case.
+			// Acquiring inside a function is what leaks, because it repeats.
+			const scope = sourceCode.getScope(/** @type {Node} */ (call));
+			if (scope.variableScope.block.type === "Program") return false;
+			if (handle === "result") {
+				const parent = parentOf(/** @type {Node} */ (call));
+				if (!parent) return false;
+				if (parent.type === "ExpressionStatement") return true;
+				if (parent.type !== "VariableDeclarator" || parent.init !== call) {
+					// It flows somewhere this rule cannot follow; assume it is kept.
+					return false;
+				}
+				const holder = resultHolder(call);
+				return Boolean(
+					holder && holder.references.every((each) => !each.isRead())
+				);
+			}
+			const argument = call.arguments[Number(handle)];
+			// A listener written inline has no name to pass to the removing call,
+			// so it can never be removed.
+			return Boolean(argument && FUNCTION_TYPES.has(argument.type));
 		};
 
 		/**
@@ -1907,11 +1956,23 @@ const rule = {
 			 * @returns {void}
 			 */
 			"CallExpression, NewExpression"(node) {
-				const contract = contractOfCall(
-					/** @type {CallExpression} */ (/** @type {unknown} */ (node))
+				const call = /** @type {CallExpression} */ (
+					/** @type {unknown} */ (node)
 				);
-				if (!contract || contract.returns !== "move") return;
 				const parent = parentOf(/** @type {Node} */ (node));
+				const name = calleeName(call);
+				const handle = name ? retainsUntilReleased.get(name) : undefined;
+				// "Never released" is not decidable, but "can never be released" is:
+				// the handle the release call needs is gone.
+				if (handle !== undefined && isHandleDiscarded(call, handle)) {
+					context.report({
+						node,
+						messageId: "resourceNeverReleased",
+						data: { name: /** @type {string} */ (name) }
+					});
+				}
+				const contract = contractOfCall(call);
+				if (!contract || contract.returns !== "move") return;
 				if (parent && parent.type === "ExpressionStatement") {
 					context.report({ node, messageId: "resultIgnored" });
 				}

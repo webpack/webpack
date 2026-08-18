@@ -401,6 +401,29 @@ describe("ironclad/ownership", () => {
 				"\t}",
 				"}"
 			].join("\n"),
+			// A handle that is kept can still be released.
+			[
+				"function start() {",
+				"\tconst timer = setInterval(() => poll(), 1000);",
+				"\tclearInterval(timer);",
+				"}"
+			].join("\n"),
+			// The handle goes somewhere this rule cannot follow, so it is assumed
+			// to be kept.
+			[
+				"function start() {",
+				"\tthis.timer = setInterval(() => poll(), 1000);",
+				"}"
+			].join("\n"),
+			// A named listener can be handed to `removeEventListener` later.
+			[
+				"function mount() {",
+				"\ttarget.addEventListener('click', onClick);",
+				"}"
+			].join("\n"),
+			// At the top level the resource lives as long as the program, which is
+			// the `'static` case rather than a leak.
+			"setInterval(() => poll(), 1000);",
 			// A borrow assigned into an inner scope does not outlive the owner.
 			[
 				"function run() {",
@@ -807,6 +830,33 @@ describe("ironclad/ownership", () => {
 					"}"
 				].join("\n"),
 				errors: [{ messageId: "borrowEscapes" }]
+			},
+			{
+				// Nothing can ever clear this interval: the id is thrown away.
+				code: [
+					"function start() {",
+					"\tsetInterval(() => poll(), 1000);",
+					"}"
+				].join("\n"),
+				errors: [{ messageId: "resourceNeverReleased" }]
+			},
+			{
+				// Storing the id and never reading it is the same thing.
+				code: [
+					"function start() {",
+					"\tconst timer = setInterval(() => poll(), 1000);",
+					"}"
+				].join("\n"),
+				errors: [{ messageId: "resourceNeverReleased" }]
+			},
+			{
+				// An inline listener has no name to pass to `removeEventListener`.
+				code: [
+					"function mount() {",
+					"\ttarget.addEventListener('click', () => handle());",
+					"}"
+				].join("\n"),
+				errors: [{ messageId: "resourceNeverReleased" }]
 			},
 			{
 				// A closure created after the move captures a value that is gone.

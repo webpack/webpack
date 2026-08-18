@@ -230,6 +230,40 @@ items.forEach(() => close(/** @move */ session)); // moveInClosure
 `setTimeout`, `setImmediate`, `queueMicrotask`, `requestAnimationFrame` and
 `nextTick` are in the default `callsOnce` list.
 
+### Resources that can never be released
+
+`setInterval` and `addEventListener` keep something alive until a matching
+release call. Whether one ever happens is not decidable from one file — but
+whether it _could_ is:
+
+```js
+function start() {
+	setInterval(() => poll(), 1000); // resourceNeverReleased — no id to clear
+}
+
+function mount() {
+	target.addEventListener("click", () => handle()); // no name to remove
+}
+```
+
+Neither can ever be released: the id is thrown away, and an inline
+listener has no name to hand to `removeEventListener`. Keeping the handle is
+enough to satisfy the rule — it does not insist the release actually happens,
+because that would be a guess:
+
+```js
+function start() {
+	const timer = setInterval(() => poll(), 1000);
+	this.timer = timer; // fine — something can still clear it
+}
+```
+
+A top-level acquire is never reported: it lives as long as the program, which
+is the `'static` case rather than a leak. Only acquiring inside a function
+repeats. `retainsUntilReleased` maps each call to where its handle lives —
+`"result"` or an argument index — and defaults to
+`{ addEventListener: "1", setInterval: "result" }`.
+
 ### Across modules
 
 With type-aware linting a contract is read from wherever the callee is
@@ -298,6 +332,7 @@ A marker must be a **tag**: `@move` counts, `docs@move` in prose does not.
 | `resultIgnored`            | a result that carries ownership is discarded                           |
 | `unnameableReturnLifetime` | a returned borrow does not say which input it borrows from             |
 | `borrowMustBeStatic`       | a `'static` parameter was handed something that dies first             |
+| `resourceNeverReleased`    | the handle needed to release a resource is discarded                   |
 
 Branches are handled through ESLint's code-path events: a value moved in one arm
 of an `if` is still usable in the other, and moved after the merge point.
@@ -365,6 +400,9 @@ Every option is named after what the calls in it **do**.
 	// Treat `const { x } = data` as moving `data.x`. Off by default — Rust
 	// reads it that way, JavaScript does not. See "Measured" below.
 	treatDestructuringAsPartialMove: false,
+	// These calls keep something alive until released, mapped to where the
+	// handle for releasing it lives: "result", or an argument index.
+	retainsUntilReleased: { addEventListener: "1", setInterval: "result" },
 	// These calls invoke their callback at most once, so a move inside it does
 	// not repeat.
 	callsOnce: [
