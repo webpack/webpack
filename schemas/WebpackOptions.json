@@ -5378,6 +5378,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "redundantDynamicImports": {
+          "description": "Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "unusedRules": {
           "description": "Report rules in 'module.rules' that never matched a module, which cost condition evaluation on every build. Note that plugins may add rules too, so a reported rule is not necessarily one you wrote.",
           "type": "boolean",

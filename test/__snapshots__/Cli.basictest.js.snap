@@ -13489,6 +13489,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-redundant-dynamic-imports": Object {
+    "configs": Array [
+      Object {
+        "description": "Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing.",
+        "multiple": false,
+        "path": "performance.redundantDynamicImports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-unused-rules": Object {
     "configs": Array [
       Object {
