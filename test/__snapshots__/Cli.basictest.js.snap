@@ -13567,6 +13567,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-unused-defines": Object {
+    "configs": Array [
+      Object {
+        "description": "Report keys defined by 'DefinePlugin' that no module ever referenced, which cost a parser hook per module and invalidate the build when their value changes.",
+        "multiple": false,
+        "path": "performance.unusedDefines",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report keys defined by 'DefinePlugin' that no module ever referenced, which cost a parser hook per module and invalidate the build when their value changes.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "performance-unused-externals": Object {
+    "configs": Array [
+      Object {
+        "description": "Report requests listed in 'externals' that no module ever imported, which usually means the request is misspelled and the real one got bundled instead.",
+        "multiple": false,
+        "path": "performance.unusedExternals",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report requests listed in 'externals' that no module ever imported, which usually means the request is misspelled and the real one got bundled instead.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-unused-reexports": Object {
     "configs": Array [
       Object {
