@@ -64,11 +64,9 @@ module.exports = [
 	// A chunk-relative public path resolves the same way the harness does, so this one
 	// runs the binary the baked url points at.
 	base(2, "run", "async-node", 'new URL("./', true, "./"),
-	// `fetch` reads a relative public path against the document, and the chunk holding
-	// the reference was itself fetched through that path — so climbing out of the chunk
-	// lands back on the document and the literal spells the same place.
+	// The chunk was itself fetched through the public path, so climbing out of it lands
+	// back on the document the runtime form reads against.
 	base(3, "relative", "fetch", 'new URL("./', false, "./"),
-	// The same, with the chunk a directory down and the public path a directory deep:
-	// the climb is what the `../` has to get right, which a flat `./` would hide.
+	// The same one directory down, so the `../` climb is exercised, not a flat `./`.
 	base(4, "deep", "fetch", 'new URL("../deep-', false, "dist/", "nested/")
 ];

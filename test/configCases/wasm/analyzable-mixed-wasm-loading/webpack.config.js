@@ -1,8 +1,7 @@
 "use strict";
 
 // Two entries loading wasm differently under a non-`auto` public path: each bakes the
-// url its own loader reads, unless the two share a binary and neither can be told
-// apart — one literal cannot be both what `readFile` and what `fetch` resolve.
+// url its own loader reads, unless a shared binary leaves one literal serving both.
 
 const webpack = require("../../../../");
 
