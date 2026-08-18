@@ -2974,6 +2974,34 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a vendor spelling of a property it minifies", () => {
+		it.each([
+			[
+				"-webkit-transition:background-color .25s ease",
+				"-webkit-transition:background-color.25s"
+			],
+			["-webkit-animation:fade 3s ease", "-webkit-animation:fade 3s"],
+			[
+				"-webkit-transform-origin:center bottom",
+				"-webkit-transform-origin:50%100%"
+			],
+			[
+				"-webkit-box-shadow:0 1px 5px 0 rgba(0,0,0,0.2)",
+				"-webkit-box-shadow:0 1px 5px#0003"
+			]
+		])("minifies it the way the property it spells is: %s", (css, out) => {
+			expect(minify(`a{${css}}`)).toBe(`a{${out}}`);
+		});
+
+		it("reads the spelling off the prefix table, not off the `-`", () => {
+			// `-webkit-appearance` is its own property, not a spelling of one whose
+			// value rules could stand in for it.
+			expect(minify("a{-webkit-appearance:none}")).toBe(
+				"a{-webkit-appearance:none}"
+			);
+		});
+	});
+
 	describe("a named layer block a later sibling opens again", () => {
 		it("gathers them, since both are the one layer", () => {
 			expect(
