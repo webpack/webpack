@@ -234,6 +234,29 @@ describe("ironclad/ownership", () => {
 				"read(options);",
 				"use(options);"
 			].join("\n"),
+			// A returned borrow dies with its holder, like any other.
+			[
+				"/**",
+				" * @borrowMut table",
+				" * @borrowMut return",
+				" */",
+				"function entryOf(table) {",
+				"\treturn table.head;",
+				"}",
+				"const store = load();",
+				"const entry = entryOf(store);",
+				"use(entry);",
+				"store.size = 0;"
+			].join("\n"),
+			// A result that is stored is not a discarded result.
+			[
+				"/** @move return */",
+				"function acquire() {",
+				"\treturn alloc();",
+				"}",
+				"const handle = acquire();",
+				"use(handle);"
+			].join("\n"),
 			// A borrow assigned into an inner scope does not outlive the owner.
 			[
 				"function run() {",
@@ -413,6 +436,87 @@ describe("ironclad/ownership", () => {
 					"session.ping();"
 				].join("\n"),
 				errors: [{ messageId: "useAfterMove" }]
+			},
+			{
+				// `@borrow return` carries the input's lifetime out of the call, so
+				// the owner stays borrowed while the result is alive.
+				code: [
+					"/**",
+					" * @borrow config",
+					" * @borrow return",
+					" */",
+					"function rulesOf(config) {",
+					"\treturn config.rules;",
+					"}",
+					"const options = load();",
+					"const rules = rulesOf(options);",
+					"options.mode = 'none';",
+					"use(rules);"
+				].join("\n"),
+				errors: [{ messageId: "mutationWhileShared" }]
+			},
+			{
+				// An exclusive borrow returned from a method locks its receiver.
+				code: [
+					"class Store {",
+					"\t/**",
+					"\t * @borrowMut this",
+					"\t * @borrowMut return",
+					"\t */",
+					"\tslot() {",
+					"\t\treturn this.head;",
+					"\t}",
+					"}",
+					"const store = new Store();",
+					"const slot = store.slot();",
+					"report(store.size);",
+					"use(slot);"
+				].join("\n"),
+				errors: [{ messageId: "useWhileMutablyBorrowed" }]
+			},
+			{
+				// Rust's elision needs exactly one borrowed input to work from.
+				code: [
+					"/**",
+					" * @borrow a",
+					" * @borrow b",
+					" * @borrow return",
+					" */",
+					"function pick(a, b) {",
+					"\treturn a;",
+					"}"
+				].join("\n"),
+				errors: [{ messageId: "unnameableReturnLifetime" }]
+			},
+			{
+				// Naming the source resolves what elision cannot.
+				code: [
+					"/**",
+					" * @borrow a",
+					" * @borrow b",
+					" * @borrow return a",
+					" */",
+					"function pick(a, b) {",
+					"\treturn a;",
+					"}",
+					"const first = load();",
+					"const second = load();",
+					"const got = pick(first, second);",
+					"first.mutated = 1;",
+					"use(got);"
+				].join("\n"),
+				errors: [{ messageId: "mutationWhileShared" }]
+			},
+			{
+				// Handing back ownership and dropping it on the floor.
+				code: [
+					"/** @move return */",
+					"function acquire() {",
+					"\treturn alloc();",
+					"}",
+					"acquire();"
+				].join("\n"),
+				errors: [{ messageId: "resultIgnored" }]
 			},
 			{
 				// A closure created after the move captures a value that is gone.

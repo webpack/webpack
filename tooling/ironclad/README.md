@@ -77,6 +77,51 @@ session.close();
 session.ping(); // useAfterMove
 ```
 
+### Returning a borrow
+
+`@borrow return` says the result carries a borrow of one of the inputs, the way
+`fn first(v: &Vec<T>) -> &T` does. The owner then stays borrowed for as long as
+the result is alive, not just for the call:
+
+```js
+/**
+ * @borrow config
+ * @borrow return
+ */
+function rulesOf(config) {
+	return config.rules;
+}
+
+const rules = rulesOf(options);
+options.mode = "none"; // mutationWhileShared — `rules` still points into it
+use(rules);
+```
+
+Which input it borrows from follows Rust's elision rule: with exactly one
+borrowed input, the output borrows from that one. With several, say which —
+the rule reports `unnameableReturnLifetime` rather than guessing:
+
+```js
+/**
+ * @borrow a
+ * @borrow b
+ * @borrow return a
+ */
+function pick(a, b) {}
+```
+
+`@borrow this` works as the source too, which is `fn iter(&self) -> Iter<'_>`.
+
+`@move return` is the other direction — the function hands ownership out, so
+discarding the result is `resultIgnored`, Rust's `#[must_use]`:
+
+```js
+/** @move return */
+function acquire() {}
+
+acquire(); // resultIgnored
+```
+
 Contracts are found on function declarations, on functions and arrows stored
 in a variable, and on methods. A method has no resolvable receiver, so it is
 matched by name and only when that name carries one contract in the file; two
@@ -117,6 +162,8 @@ A marker must be a **tag**: `@move` counts, `docs@move` in prose does not.
 | `mutationWhileShared`      | the owner is mutated while a `@borrow` view is live                    |
 | `conflictingBorrow`        | a second borrow conflicts with a live one (`&mut` excludes everything) |
 | `borrowEscapes`            | a borrow is stored somewhere that outlives the owner                   |
+| `resultIgnored`            | a result that carries ownership is discarded                           |
+| `unnameableReturnLifetime` | a returned borrow does not say which input it borrows from             |
 
 Branches are handled through ESLint's code-path events: a value moved in one arm
 of an `if` is still usable in the other, and moved after the merge point.

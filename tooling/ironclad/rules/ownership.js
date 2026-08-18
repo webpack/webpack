@@ -59,6 +59,10 @@
  * @typedef {object} Contract
  * @property {Map<number, string>} parameters marker per parameter position
  * @property {string | null} receiver marker applied to `this`
+ * @property {string | null} returns marker applied to the returned value
+ * @property {number | null} returnSource parameter position the returned
+ * borrow lives as long as, or RECEIVER_SOURCE, or null when it cannot be told
+ * @property {Node} node the function itself, for reporting
  */
 
 /**
@@ -75,7 +79,11 @@ const MARKER_REGEXP = /(?:^|[\s*])@(borrowMut|borrow|move)\b/;
 
 // `@move config` in a function's JSDoc, naming the parameter it applies to.
 const NAMED_MARKER_REGEXP =
-	/(?:^|[\s*])@(borrowMut|borrow|move)\s+([A-Za-z_$][\w$]*)/g;
+	/(?:^|[\s*])@(borrowMut|borrow|move)[ \t]+([A-Za-z_$][\w$]*)(?:[ \t]+([A-Za-z_$][\w$]*))?/g;
+
+// The lifetime of a returned borrow comes from the receiver rather than from a
+// parameter position.
+const RECEIVER_SOURCE = -1;
 
 // Tokens a grouping paren may follow. A `(` after anything else opens a call
 // or a parameter list, whose leading comment belongs to that, not to us.
@@ -310,6 +318,10 @@ const rule = {
 				"`{{name}}` cannot be mutated while the shared borrow created on line {{line}} is still live.",
 			conflictingBorrow:
 				"cannot take a {{kind}} borrow of `{{name}}` while a {{otherKind}} borrow created on line {{line}} is still live.",
+			resultIgnored:
+				"this call hands back ownership of its result, so the result cannot be discarded.",
+			unnameableReturnLifetime:
+				"cannot tell what the returned borrow borrows from: name it, as in `@borrow return config`.",
 			borrowEscapes:
 				"borrow of `{{name}}` outlives it: `{{name}}` dies with this scope."
 		}
@@ -814,12 +826,54 @@ const rule = {
 		};
 
 		/**
+		 * @param {CallExpression} call call to resolve
+		 * @returns {Contract | null} the callee's contract, when it is declared in
+		 * this file
+		 */
+		const contractOfCall = (call) => {
+			const callee = call.callee;
+			if (callee.type === "Identifier") {
+				const reference = referenceOf.get(callee);
+				const resolved = reference && reference.resolved;
+				return (resolved && contractByFunction.get(resolved)) || null;
+			}
+			if (
+				callee.type === "MemberExpression" &&
+				!callee.computed &&
+				callee.property.type === "Identifier"
+			) {
+				return contractByMethodName.get(callee.property.name) || null;
+			}
+			return null;
+		};
+
+		/**
+		 * The variable a call's result is stored in, which is what a returned
+		 * borrow is held by.
+		 * @param {CallExpression} call call whose result is stored
+		 * @returns {Variable | null} the holder
+		 */
+		const resultHolder = (call) => {
+			let current = /** @type {Node} */ (call);
+			let parent = parentOf(current);
+			// `const r = await f(x)` holds the borrow just the same.
+			while (parent && parent.type === "AwaitExpression") {
+				current = parent;
+				parent = parentOf(current);
+			}
+			if (!parent || parent.type !== "VariableDeclarator") return null;
+			if (parent.init !== current) return null;
+			const declared = sourceCode.getDeclaredVariables(parent);
+			return declared.length === 1 ? declared[0] : null;
+		};
+
+		/**
 		 * Rust states ownership at the signature, so the call site needs no
 		 * marker: the contract of the callee decides what happens to each
 		 * argument.
 		 * @param {Identifier} node identifier in argument or receiver position
-		 * @returns {{ marker: string, call: CallExpression } | null} what the
-		 * callee declares about this value
+		 * @returns {{ marker: string, call: CallExpression, contract: Contract,
+		 * position: number } | null} what the callee declares about this value
 		 */
 		const declaredByCallee = (node) => {
 			const parent = parentOf(/** @type {Node} */ (node));
@@ -830,7 +884,12 @@ const rule = {
 			if (receiver) {
 				const contract = contractByMethodName.get(receiver.name);
 				if (contract && contract.receiver) {
-					return { marker: contract.receiver, call: receiver.call };
+					return {
+						marker: contract.receiver,
+						call: receiver.call,
+						contract,
+						position: RECEIVER_SOURCE
+					};
 				}
 			}
 
@@ -839,23 +898,12 @@ const rule = {
 				/** @type {import("estree").Expression} */ (/** @type {Node} */ (node))
 			);
 			if (index === -1) return null;
-			const callee = parent.callee;
-			/** @type {Contract | null | undefined} */
-			let contract = null;
-			if (callee.type === "Identifier") {
-				const reference = referenceOf.get(callee);
-				const resolved = reference && reference.resolved;
-				contract = resolved ? contractByFunction.get(resolved) : null;
-			} else if (
-				callee.type === "MemberExpression" &&
-				!callee.computed &&
-				callee.property.type === "Identifier"
-			) {
-				contract = contractByMethodName.get(callee.property.name);
-			}
+			const contract = contractOfCall(parent);
 			if (!contract) return null;
 			const marker = contract.parameters.get(index);
-			return marker ? { marker, call: parent } : null;
+			return marker
+				? { marker, call: parent, contract, position: index }
+				: null;
 		};
 
 		/**
@@ -967,13 +1015,34 @@ const rule = {
 				if (!owner || !reference.isRead() || borrowByNode.has(node)) continue;
 				const declared = declaredByCallee(node);
 				if (!declared || declared.marker === "move") continue;
+				let end = /** @type {Range} */ (declared.call.range)[1];
+				/** @type {Variable | null} */
+				let holder = null;
+				// `@borrow return` means the output carries the input's lifetime, so
+				// the borrow lives as long as whatever holds the result.
+				const { contract } = declared;
+				if (
+					contract.returns !== null &&
+					contract.returns !== "move" &&
+					contract.returnSource === declared.position
+				) {
+					holder = resultHolder(declared.call);
+					if (holder) {
+						for (const holderReference of holder.references) {
+							const range = /** @type {Range} */ (
+								holderReference.identifier.range
+							);
+							if (range[1] > end) end = range[1];
+						}
+					}
+				}
 				addBorrow({
 					kind: /** @type {"borrow" | "borrowMut"} */ (declared.marker),
 					owner,
-					holder: null,
+					holder,
 					node,
 					start: /** @type {Range} */ (node.range)[0],
-					end: /** @type {Range} */ (declared.call.range)[1]
+					end
 				});
 			}
 		};
@@ -1120,7 +1189,12 @@ const rule = {
 			}
 			/** @type {string | null} */
 			let receiver = null;
-			// The block form names the parameter: `@move config`, `@move this`.
+			/** @type {string | null} */
+			let returns = null;
+			/** @type {string | null} */
+			let returnSourceName = null;
+			// The block form names what it applies to: `@move config`,
+			// `@move this`, `@borrow return`, `@borrow return config`.
 			for (const comment of sourceCode.getCommentsBefore(
 				/** @type {Parameters<SourceCode["getCommentsBefore"]>[0]} */ (
 					documentedNode(node)
@@ -1129,8 +1203,12 @@ const rule = {
 				NAMED_MARKER_REGEXP.lastIndex = 0;
 				let match;
 				while ((match = NAMED_MARKER_REGEXP.exec(comment.value)) !== null) {
-					const [, marker, name] = match;
-					if (name === "this") receiver = marker;
+					const [, marker, name, source] = match;
+					if (name === "return") {
+						returns = marker;
+						if (source && positionOfName.has(source)) returnSourceName = source;
+						else if (source === "this") returnSourceName = "this";
+					} else if (name === "this") receiver = marker;
 					else if (positionOfName.has(name)) {
 						byPosition.set(
 							/** @type {number} */ (positionOfName.get(name)),
@@ -1139,8 +1217,36 @@ const rule = {
 					}
 				}
 			}
-			if (byPosition.size === 0 && receiver === null) return null;
-			return { parameters: byPosition, receiver };
+			if (byPosition.size === 0 && receiver === null && returns === null) {
+				return null;
+			}
+			/** @type {number | null} */
+			let returnSource = null;
+			if (returns !== null && returns !== "move") {
+				if (returnSourceName === "this") returnSource = RECEIVER_SOURCE;
+				else if (returnSourceName !== null) {
+					returnSource = /** @type {number} */ (
+						positionOfName.get(returnSourceName)
+					);
+				} else {
+					// Rust's elision: with exactly one borrowed input the output
+					// borrows from it, and anything else needs saying explicitly.
+					const candidates = [...byPosition]
+						.filter(([, marker]) => marker !== "move")
+						.map(([index]) => index);
+					if (receiver !== null && receiver !== "move") {
+						candidates.push(RECEIVER_SOURCE);
+					}
+					returnSource = candidates.length === 1 ? candidates[0] : null;
+				}
+			}
+			return {
+				parameters: byPosition,
+				receiver,
+				returns,
+				returnSource,
+				node
+			};
 		};
 
 		/** @type {Map<Variable, Contract>} */
@@ -1197,7 +1303,24 @@ const rule = {
 			}
 		};
 
+		/** @type {Node[]} */
+		const unnameableReturnBorrows = [];
+
 		collectContracts();
+		for (const contract of new Set([
+			...contractByFunction.values(),
+			.../** @type {Contract[]} */ (
+				[...contractByMethodName.values()].filter(Boolean)
+			)
+		])) {
+			if (
+				contract.returns !== null &&
+				contract.returns !== "move" &&
+				contract.returnSource === null
+			) {
+				unnameableReturnBorrows.push(contract.node);
+			}
+		}
 		collectBorrows();
 
 		/**
@@ -1518,7 +1641,24 @@ const rule = {
 				}
 			},
 
+			CallExpression(node) {
+				const contract = contractOfCall(
+					/** @type {CallExpression} */ (/** @type {unknown} */ (node))
+				);
+				if (!contract || contract.returns !== "move") return;
+				const parent = parentOf(/** @type {Node} */ (node));
+				if (parent && parent.type === "ExpressionStatement") {
+					context.report({ node, messageId: "resultIgnored" });
+				}
+			},
+
 			"Program:exit"() {
+				for (const node of unnameableReturnBorrows) {
+					context.report({
+						node: /** @type {never} */ (node),
+						messageId: "unnameableReturnLifetime"
+					});
+				}
 				reportEscapingBorrows();
 				for (const pending of pendingLoopMoves) {
 					if (!canReachAgain(pending.segment)) continue;
