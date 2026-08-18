@@ -23,6 +23,12 @@
 	<div style="top:anchor-size(--a1 width">declines: what the value leaves open would swallow the wrapper's own brace</div>
 	<div style="box-shadow:var(--t,10px">declines: the same, unclosed in a fallback</div>
 	<div style="content:'a">declines: the same, unclosed in a string</div>
+	<!-- a value spelling the wrapper is read back as the value it is -->
+	<div style="content:'a{color:red}'">wrapper-shaped string</div>
+	<div style="--wrapper-shaped:a{color:red}">wrapper-shaped custom property</div>
+	<!-- a kept comment is hoisted out of the rule, so there is no body to read
+	     back and the attribute stays as written -->
+	<div style="/*! keep */color:red">declines: hoisted comment</div>
 	<p>optional end tags</p>
 	<!-- the parser implies the second row, but its `</tr>` is the source's and
 	     load-bearing: without it the whitespace after it moves into the row -->

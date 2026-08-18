@@ -12,6 +12,11 @@ exports[`ConfigCacheTestCases html minimize-transforms minimize-transforms shoul
 	<div style=\\"top:anchor-size(--a1 width\\">declines: what the value leaves open would swallow the wrapper's own brace</div>
 	<div style=box-shadow:var(--t,10px>declines: the same, unclosed in a fallback</div>
 	<div style=\\"content:'a\\">declines: the same, unclosed in a string</div>
+	
+	<div style='content:\\"a{color:red}\\"'>wrapper-shaped string</div>
+	<div style=--wrapper-shaped:a{color:red}>wrapper-shaped custom property</div>
+	
+	<div style=\\"/*! keep */color:red\\">declines: hoisted comment</div>
 	<p>optional end tags</p>
 	
 	<table>
