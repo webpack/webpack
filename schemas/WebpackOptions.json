@@ -5369,6 +5369,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "dynamicExports": {
+          "description": "Report modules whose exports cannot be read statically, which stops anything importing them from being tree-shaken (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "hints": {
           "description": "Sets the format of the hints: warnings, errors, stats-only or nothing at all.",
           "enum": [false, "warning", "error", "stats"]
@@ -5381,6 +5386,11 @@
           "description": "Total size of an entry point (in bytes).",
           "type": "number"
         },
+        "missingSideEffects": {
+          "description": "Report packages that keep unused code in the bundle because their package.json does not declare 'sideEffects' (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "osDependentRules": {
           "description": "Report conditions in 'module.rules' that hardcode a path separator, so they only match on one operating system.",
           "type": "boolean",
@@ -5388,6 +5398,11 @@
         },
         "redundantDynamicImports": {
           "description": "Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "scopeHoistingBailouts": {
+          "description": "Report modules that could not be merged into their importer's scope, and why (requires 'hints' to be enabled).",
           "type": "boolean",
           "added": "5.110.0"
         },
