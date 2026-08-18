@@ -48,10 +48,13 @@ const base = (index, name, wasmLoading, wasmRef, runs, publicPath) => ({
 module.exports = [
 	// Not loaded: the harness cannot resolve an `import()` of a `/assets/` specifier.
 	base(0, "node", "async-node", 'new URL("./', false, "/assets/"),
-	// The public path reaches this one, and a relative one means something different
-	// against the chunk than against the document, so the runtime form stays.
-	base(1, "fetch", "fetch", "module.id, ", false, "/assets/"),
+	// The public path reaches this one, and one rooted at the origin names the same
+	// place from the chunk as from the document, so it is spelled out.
+	base(1, "fetch", "fetch", 'new URL("/assets/', false, "/assets/"),
 	// A chunk-relative public path resolves the same way the harness does, so this one
 	// runs the binary the baked url points at.
-	base(2, "run", "async-node", 'new URL("./', true, "./")
+	base(2, "run", "async-node", 'new URL("./', true, "./"),
+	// `fetch` reads a relative public path against the document, which no literal
+	// anchored at the chunk can spell, so this one keeps the runtime form.
+	base(3, "relative", "fetch", "module.id, ", false, "./")
 ];
