@@ -5344,23 +5344,28 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "all": {
+          "description": "Fallback value for the performance checks that are not set individually (has precedence over local webpack defaults). Does not apply to 'hints', 'maxAssetSize' or 'maxEntrypointSize'.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "assetFilter": {
           "description": "Filter function to select assets that are checked.",
           "instanceof": "Function",
           "tsType": "import('../lib/performance/SizeLimitsPlugin').AssetFilter"
         },
         "cacheEffectiveness": {
-          "description": "Report how much of the module graph the cache reused, and the modules that can never be reused.",
+          "description": "Report how much of the module graph the cache reused, and the modules that can never be reused (requires 'hints' to be enabled).",
           "type": "boolean",
           "added": "5.110.0"
         },
         "circularDependencies": {
-          "description": "Report groups of modules that import each other synchronously.",
+          "description": "Report groups of modules that import each other synchronously (requires 'hints' to be enabled).",
           "type": "boolean",
           "added": "5.110.0"
         },
         "duplicateModules": {
-          "description": "Report modules emitted into more than one chunk, and the bytes the extra copies cost.",
+          "description": "Report modules emitted into more than one chunk, and the bytes the extra copies cost (requires 'hints' to be enabled).",
           "type": "boolean",
           "added": "5.110.0"
         },
@@ -5387,12 +5392,12 @@
           "added": "5.110.0"
         },
         "redundantDynamicImports": {
-          "description": "Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing.",
+          "description": "Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing (requires 'hints' to be enabled).",
           "type": "boolean",
           "added": "5.110.0"
         },
         "unusedReexports": {
-          "description": "Report modules bundled although nothing uses what they export, pulled in by a re-export.",
+          "description": "Report modules bundled although nothing uses what they export, pulled in by a re-export (requires 'hints' to be enabled).",
           "type": "boolean",
           "added": "5.110.0"
         },
