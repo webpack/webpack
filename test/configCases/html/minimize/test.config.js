@@ -20,6 +20,13 @@ module.exports = {
 		expect(html).toContain("A&#13;B");
 		expect(html).not.toContain("A\rB");
 
+		// A style attribute is a declaration list: a `}` in it does not end a rule,
+		// so it is left as written rather than cut short at it.
+		expect(html).toContain("style=background:red;};background:limegreen>");
+		// One inside a string is not a `}` in the list, so the value still minifies
+		// — the repeated declaration after it goes.
+		expect(html).toContain("style='content:\"}\";color:red'>");
+
 		// `<selectedcontent>` is filled from the selected option by the engine, so
 		// the mirror is not markup to write back — an engine reading the output
 		// would mirror it a second time.

@@ -6,8 +6,9 @@ exports[`ConfigTestCases html minimize-transforms minimize-transforms should com
 	<!--[if IE]><p>conditional comment, kept</p><![endif]-->
 	<div class=\\"a b\\" id=upper>source casing folds</div>
 	<div class=trimmed style=color:red;padding:0>token list and declarations</div>
-	<div style=\\"content: '}'\\">declines: escapes the wrapper</div>
-	<div style=\\"--custom: {a:b}\\">declines: custom property braces</div>
+	<div style='content:\\"}\\"'>a brace inside a string is not one in the list</div>
+	<div style=--custom:{a:b}>nor is a balanced pair</div>
+	<div style=background:red;};background:limegreen>declines: a bare \`}\` is part of a bad declaration, and what follows it still applies</div>
 	<p>optional end tags</p>
 	<ul><li>one<li>two</ul>
 	<dl><dt>a<dd>b<dt>c</dt></dl>

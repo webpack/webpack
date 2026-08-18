@@ -17,8 +17,9 @@
 	<!--[if IE]><p>conditional comment, kept</p><![endif]-->
 	<DIV CLASS="a    b" ID="upper">source casing folds</DIV>
 	<div class="  trimmed  " style="color: #ff0000;  padding: 0 0 0 0">token list and declarations</div>
-	<div style="content: '}'">declines: escapes the wrapper</div>
-	<div style="--custom: {a:b}">declines: custom property braces</div>
+	<div style="content: '}'">a brace inside a string is not one in the list</div>
+	<div style="--custom: {a:b}">nor is a balanced pair</div>
+	<div style="background:red;};background:limegreen">declines: a bare `}` is part of a bad declaration, and what follows it still applies</div>
 	<p>optional end tags</p>
 	<ul><li>one</li><li>two</li></ul>
 	<dl><dt>a</dt><dd>b</dd><dt>c</dt></dl>
