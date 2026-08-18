@@ -21,6 +21,13 @@
 	<div style="--custom: {a:b}">nor is a balanced pair</div>
 	<div style="background:red;};background:limegreen">declines: a bare `}` is part of a bad declaration, and what follows it still applies</div>
 	<p>optional end tags</p>
+	<!-- the parser implies the second row, but its `</tr>` is the source's and
+	     load-bearing: without it the whitespace after it moves into the row -->
+	<table>
+		<tr><td>a</td></tr>
+			<td>b</td>
+		</tr>
+	</table>
 	<ul><li>one</li><li>two</li></ul>
 	<dl><dt>a</dt><dd>b</dd><dt>c</dt></dl>
 	<table><tbody><tr><td>a</td><td>b</td></tr><tr><td>c</td></tr></tbody></table>

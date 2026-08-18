@@ -10,6 +10,12 @@ exports[`ConfigTestCases html minimize-transforms minimize-transforms should com
 	<div style=--custom:{a:b}>nor is a balanced pair</div>
 	<div style=background:red;};background:limegreen>declines: a bare \`}\` is part of a bad declaration, and what follows it still applies</div>
 	<p>optional end tags</p>
+	
+	<table>
+		<tr><td>a</tr>
+			<td>b</td>
+		</tr>
+	</table>
 	<ul><li>one<li>two</ul>
 	<dl><dt>a<dd>b<dt>c</dt></dl>
 	<table><tr><td>a<td>b<tr><td>c</table>
