@@ -1,5 +1,8 @@
 "use strict";
 
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
 const RuleSetCompiler = require("../lib/rules/RuleSetCompiler");
 
 describe("RuleSetCompiler.hasRuleForResource", () => {
@@ -202,5 +205,98 @@ describe("RuleSetCompiler glob conditions", () => {
 		expect(() => compile({ glob: [] })).toThrow(
 			"Expected glob pattern, but got empty list"
 		);
+	});
+});
+
+describe("RuleSetCompiler glob conditions against fs.globSync", () => {
+	// `fs.globSync` is Node.js >= 22
+	const itGlobSync = typeof fs.globSync === "function" ? it : it.skip;
+
+	const FILES = [
+		"h.js",
+		"h.css",
+		"src/a.js",
+		"src/b.test.js",
+		"src/nested/c.js",
+		"src/nested/deep/d.js",
+		"src/.cache/e.js",
+		"src/styles/f.module.css",
+		"src/styles/g.css",
+		"vendor/i.js",
+		"node_modules/x/j.js",
+		"node_modules/.pnpm/k.js",
+		".hidden/l.js",
+		"pages/[slug].tsx",
+		"a b/m.js"
+	];
+
+	// every pattern is written the way `fs.globSync` reads it, so both sides
+	// get the same string
+	const CASES = [
+		["**/*.js"],
+		["**/*.js", "!**/*.test.js"],
+		["**/*.js", "!**/node_modules/**", "!**/vendor/**"],
+		["**/src/**/*.js"],
+		["**/src/**/*.{css,js}", "!**/*.module.css"],
+		["**/*.css", "**/*.tsx"],
+		["**/*", "!**/*.js"],
+		["**/.pnpm/**"],
+		["**/[[]slug].tsx"],
+		["**/a b/*.js"],
+		["**"],
+		["**/src/**", "!**/src/nested/**"],
+		["**/deep/*.js", "!**/d.js"]
+	];
+
+	/** @type {string} */
+	let directory;
+
+	beforeAll(() => {
+		directory = fs.mkdtempSync(path.join(os.tmpdir(), "webpack-glob-"));
+		for (const file of FILES) {
+			fs.mkdirSync(path.join(directory, path.dirname(file)), {
+				recursive: true
+			});
+			fs.writeFileSync(path.join(directory, file), "");
+		}
+	});
+
+	afterAll(() => {
+		fs.rmSync(directory, { recursive: true, force: true });
+	});
+
+	/**
+	 * @param {string[]} patterns glob patterns
+	 * @returns {string[]} the files `fs.globSync` selects, sorted
+	 */
+	const globSyncFiles = (patterns) =>
+		fs
+			.globSync(patterns, { cwd: directory })
+			.filter((entry) => fs.statSync(path.join(directory, entry)).isFile())
+			.map((entry) => entry.replace(/\\/g, "/"))
+			.sort();
+
+	itGlobSync("selects the files fs.globSync selects", () => {
+		const compiler = new RuleSetCompiler([]);
+		for (const patterns of CASES) {
+			const { fn } = compiler.compileCondition("test", { glob: patterns });
+			const actual = FILES.filter((file) =>
+				/** @type {(value: string) => boolean} */ (fn)(file)
+			).sort();
+			// what a `!` pattern subtracts, `fs.glob`'s own `exclude` option
+			// subtracts as well
+			const excluded = new Set(
+				globSyncFiles(
+					patterns.filter((p) => p.startsWith("!")).map((p) => p.slice(1))
+				)
+			);
+			const expected = globSyncFiles(
+				patterns.filter((p) => !p.startsWith("!"))
+			).filter((file) => !excluded.has(file));
+			expect({ patterns, files: actual }).toEqual({
+				patterns,
+				files: expected
+			});
+		}
 	});
 });
