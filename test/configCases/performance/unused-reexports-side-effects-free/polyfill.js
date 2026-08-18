@@ -1,3 +1,3 @@
-globalThis.__polyfilled = true;
+global.__polyfilled = true;
 
 export const version = 1;

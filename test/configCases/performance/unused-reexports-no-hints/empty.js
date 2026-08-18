@@ -1,1 +1,1 @@
-globalThis.__empty = true;
+global.__empty = true;
