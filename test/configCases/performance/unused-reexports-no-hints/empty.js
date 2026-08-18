@@ -1,0 +1,1 @@
+globalThis.__empty = true;
