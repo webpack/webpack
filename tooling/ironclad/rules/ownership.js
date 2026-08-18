@@ -60,8 +60,9 @@
  * @property {Map<number, string>} parameters marker per parameter position
  * @property {string | null} receiver marker applied to `this`
  * @property {string | null} returns marker applied to the returned value
- * @property {number | null} returnSource parameter position the returned
- * borrow lives as long as, or RECEIVER_SOURCE, or null when it cannot be told
+ * @property {number[]} returnSources parameter positions (or RECEIVER_SOURCE)
+ * the returned borrow lives as long as; empty when it cannot be told
+ * @property {Set<number>} staticInputs positions whose borrow must be `'static`
  * @property {Node} node the function itself, for reporting
  */
 
@@ -79,7 +80,11 @@ const MARKER_REGEXP = /(?:^|[\s*])@(borrowMut|borrow|move)\b/;
 
 // `@move config` in a function's JSDoc, naming the parameter it applies to.
 const NAMED_MARKER_REGEXP =
-	/(?:^|[\s*])@(borrowMut|borrow|move)[ \t]+([A-Za-z_$][\w$]*)(?:[ \t]+([A-Za-z_$][\w$]*))?/g;
+	/(?:^|[\s*])@(borrowMut|borrow|move)[ \t]+([A-Za-z_$][\w$]*)(?:[ \t]+('?[A-Za-z_$][\w$]*))?/g;
+
+// Rust's `'static`: a borrow that outlives the program, so nothing local may
+// satisfy it.
+const STATIC_LIFETIME = "'static";
 
 // The lifetime of a returned borrow comes from the receiver rather than from a
 // parameter position.
@@ -320,6 +325,8 @@ const rule = {
 				"cannot take a {{kind}} borrow of `{{name}}` while a {{otherKind}} borrow created on line {{line}} is still live.",
 			resultIgnored:
 				"this call hands back ownership of its result, so the result cannot be discarded.",
+			borrowMustBeStatic:
+				"`{{name}}` does not live long enough: this parameter needs a borrow that outlives the program.",
 			unnameableReturnLifetime:
 				"cannot tell what the returned borrow borrows from: name it, as in `@borrow return config`.",
 			borrowEscapes:
@@ -1015,6 +1022,14 @@ const rule = {
 				if (!owner || !reference.isRead() || borrowByNode.has(node)) continue;
 				const declared = declaredByCallee(node);
 				if (!declared || declared.marker === "move") continue;
+				// `'static` outlives the program, so only something declared at the
+				// top level can be borrowed for it.
+				if (
+					declared.contract.staticInputs.has(declared.position) &&
+					owner.scope.variableScope.block.type !== "Program"
+				) {
+					staticViolations.push({ node, name: owner.name });
+				}
 				let end = /** @type {Range} */ (declared.call.range)[1];
 				/** @type {Variable | null} */
 				let holder = null;
@@ -1024,7 +1039,7 @@ const rule = {
 				if (
 					contract.returns !== null &&
 					contract.returns !== "move" &&
-					contract.returnSource === declared.position
+					contract.returnSources.includes(declared.position)
 				) {
 					holder = resultHolder(declared.call);
 					if (holder) {
@@ -1193,6 +1208,12 @@ const rule = {
 			let returns = null;
 			/** @type {string | null} */
 			let returnSourceName = null;
+			/** @type {Map<number, string>} */
+			const lifetimeOfPosition = new Map();
+			/** @type {Set<number>} */
+			const staticInputs = new Set();
+			/** @type {string | null} */
+			let receiverLifetime = null;
 			// The block form names what it applies to: `@move config`,
 			// `@move this`, `@borrow return`, `@borrow return config`.
 			for (const comment of sourceCode.getCommentsBefore(
@@ -1204,30 +1225,46 @@ const rule = {
 				let match;
 				while ((match = NAMED_MARKER_REGEXP.exec(comment.value)) !== null) {
 					const [, marker, name, source] = match;
+					const lifetime = source && source.charAt(0) === "'" ? source : null;
 					if (name === "return") {
 						returns = marker;
-						if (source && positionOfName.has(source)) returnSourceName = source;
-						else if (source === "this") returnSourceName = "this";
-					} else if (name === "this") receiver = marker;
-					else if (positionOfName.has(name)) {
-						byPosition.set(
-							/** @type {number} */ (positionOfName.get(name)),
-							marker
-						);
+						if (lifetime) returnSourceName = lifetime;
+						else if (source && positionOfName.has(source)) {
+							returnSourceName = source;
+						} else if (source === "this") returnSourceName = "this";
+					} else if (name === "this") {
+						receiver = marker;
+						receiverLifetime = lifetime;
+						if (lifetime === STATIC_LIFETIME) staticInputs.add(RECEIVER_SOURCE);
+					} else if (positionOfName.has(name)) {
+						const position = /** @type {number} */ (positionOfName.get(name));
+						byPosition.set(position, marker);
+						if (lifetime) lifetimeOfPosition.set(position, lifetime);
+						if (lifetime === STATIC_LIFETIME) staticInputs.add(position);
 					}
 				}
 			}
 			if (byPosition.size === 0 && receiver === null && returns === null) {
 				return null;
 			}
-			/** @type {number | null} */
-			let returnSource = null;
+			/** @type {number[]} */
+			let returnSources = [];
 			if (returns !== null && returns !== "move") {
-				if (returnSourceName === "this") returnSource = RECEIVER_SOURCE;
-				else if (returnSourceName !== null) {
-					returnSource = /** @type {number} */ (
-						positionOfName.get(returnSourceName)
-					);
+				if (returnSourceName !== null && returnSourceName.charAt(0) === "'") {
+					// A named lifetime may tie the output to several inputs at once,
+					// which is `fn longest<'a>(x: &'a str, y: &'a str) -> &'a str`.
+					for (const [position, lifetime] of lifetimeOfPosition) {
+						if (lifetime === returnSourceName) returnSources.push(position);
+					}
+					if (receiverLifetime === returnSourceName) {
+						returnSources.push(RECEIVER_SOURCE);
+					}
+				} else if (returnSourceName === "this") {
+					returnSources = [RECEIVER_SOURCE];
+				} else if (returnSourceName !== null) {
+					returnSources = [
+						/** @type {number} */ (positionOfName.get(returnSourceName))
+					];
 				} else {
 					// Rust's elision: with exactly one borrowed input the output
 					// borrows from it, and anything else needs saying explicitly.
@@ -1237,14 +1274,15 @@ const rule = {
 					if (receiver !== null && receiver !== "move") {
 						candidates.push(RECEIVER_SOURCE);
 					}
-					returnSource = candidates.length === 1 ? candidates[0] : null;
+					returnSources = candidates.length === 1 ? candidates : [];
 				}
 			}
 			return {
 				parameters: byPosition,
 				receiver,
 				returns,
-				returnSource,
+				returnSources,
+				staticInputs,
 				node
 			};
 		};
@@ -1305,6 +1343,8 @@ const rule = {
 
 		/** @type {Node[]} */
 		const unnameableReturnBorrows = [];
+		/** @type {{ node: Identifier, name: string }[]} */
+		const staticViolations = [];
 
 		collectContracts();
 		for (const contract of new Set([
@@ -1316,7 +1356,7 @@ const rule = {
 			if (
 				contract.returns !== null &&
 				contract.returns !== "move" &&
-				contract.returnSource === null
+				contract.returnSources.length === 0
 			) {
 				unnameableReturnBorrows.push(contract.node);
 			}
@@ -1653,6 +1693,13 @@ const rule = {
 			},
 
 			"Program:exit"() {
+				for (const violation of staticViolations) {
+					context.report({
+						node: /** @type {never} */ (violation.node),
+						messageId: "borrowMustBeStatic",
+						data: { name: violation.name }
+					});
+				}
 				for (const node of unnameableReturnBorrows) {
 					context.report({
 						node: /** @type {never} */ (node),

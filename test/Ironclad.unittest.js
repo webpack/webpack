@@ -257,6 +257,46 @@ describe("ironclad/ownership", () => {
 				"const handle = acquire();",
 				"use(handle);"
 			].join("\n"),
+			// Both inputs are free once the result they share is dead.
+			[
+				"/**",
+				" * @borrow x 'a",
+				" * @borrow y 'a",
+				" * @borrow return 'a",
+				" */",
+				"function longest(x, y) {",
+				"\treturn x;",
+				"}",
+				"const first = load();",
+				"const second = load();",
+				"const best = longest(first, second);",
+				"use(best);",
+				"first.mutated = 1;",
+				"second.mutated = 1;"
+			].join("\n"),
+			// A distinct lifetime is not tied to the result.
+			[
+				"/**",
+				" * @borrow x 'a",
+				" * @borrow y 'b",
+				" * @borrow return 'a",
+				" */",
+				"function pick(x, y) {",
+				"\treturn x;",
+				"}",
+				"const first = load();",
+				"const second = load();",
+				"const got = pick(first, second);",
+				"second.mutated = 1;",
+				"use(got);"
+			].join("\n"),
+			// Something declared at the top level lives long enough for `'static`.
+			[
+				"/** @borrow handler 'static */",
+				"function addListener(handler) {}",
+				"const shared = makeHandler();",
+				"addListener(shared);"
+			].join("\n"),
 			// A borrow assigned into an inner scope does not outlive the owner.
 			[
 				"function run() {",
@@ -517,6 +557,52 @@ describe("ironclad/ownership", () => {
 					"acquire();"
 				].join("\n"),
 				errors: [{ messageId: "resultIgnored" }]
+			},
+			{
+				// `fn longest<'a>(x: &'a str, y: &'a str) -> &'a str` — one lifetime
+				// ties the result to both inputs, so either is locked.
+				code: [
+					"/**",
+					" * @borrow x 'a",
+					" * @borrow y 'a",
+					" * @borrow return 'a",
+					" */",
+					"function longest(x, y) {",
+					"\treturn x;",
+					"}",
+					"const first = load();",
+					"const second = load();",
+					"const best = longest(first, second);",
+					"second.mutated = 1;",
+					"use(best);"
+				].join("\n"),
+				errors: [{ messageId: "mutationWhileShared" }]
+			},
+			{
+				// A lifetime the signature never declares names nothing.
+				code: [
+					"/**",
+					" * @borrow x 'a",
+					" * @borrow y 'a",
+					" * @borrow return 'c",
+					" */",
+					"function pick(x, y) {",
+					"\treturn x;",
+					"}"
+				].join("\n"),
+				errors: [{ messageId: "unnameableReturnLifetime" }]
+			},
+			{
+				// `'static` outlives the program, and a local does not.
+				code: [
+					"/** @borrow handler 'static */",
+					"function addListener(handler) {}",
+					"function setup() {",
+					"\tconst local = makeHandler();",
+					"\taddListener(local);",
+					"}"
+				].join("\n"),
+				errors: [{ messageId: "borrowMustBeStatic" }]
 			},
 			{
 				// A closure created after the move captures a value that is gone.

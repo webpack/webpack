@@ -112,6 +112,58 @@ function pick(a, b) {}
 
 `@borrow this` works as the source too, which is `fn iter(&self) -> Iter<'_>`.
 
+### Named lifetimes
+
+Naming a single parameter cannot say that a result borrows from **several**
+inputs, which is Rust's own headline example. A lifetime name can:
+
+```js
+/**
+ * @borrow x 'a
+ * @borrow y 'a
+ * @borrow return 'a
+ */
+function longest(x, y) {
+	return x.length > y.length ? x : y;
+}
+```
+
+`fn longest<'a>(x: &'a str, y: &'a str) -> &'a str` — the result may point into
+either argument, so **both** stay borrowed while it is alive, and both are free
+once it dies. Distinct names keep them apart, exactly as `<'a, 'b>` does:
+
+```js
+/**
+ * @borrow x 'a
+ * @borrow y 'b
+ * @borrow return 'a
+ */
+function pick(x, y) {
+	return x;
+}
+
+pick(first, second);
+second.mutated = 1; // fine — `'b` is not what the result carries
+```
+
+A lifetime the signature never declares is `unnameableReturnLifetime`, the way
+Rust rejects an undeclared `'c`.
+
+### `'static`
+
+`'static` is a borrow that outlives the program, so nothing local can satisfy
+it — which is also how you say "this value is going to be retained":
+
+```js
+/** @borrow handler 'static */
+function addListener(handler) {}
+
+function setup() {
+	const local = makeHandler();
+	addListener(local); // borrowMustBeStatic — `local` dies with `setup`
+}
+```
+
 `@move return` is the other direction — the function hands ownership out, so
 discarding the result is `resultIgnored`, Rust's `#[must_use]`:
 
@@ -164,6 +216,7 @@ A marker must be a **tag**: `@move` counts, `docs@move` in prose does not.
 | `borrowEscapes`            | a borrow is stored somewhere that outlives the owner                   |
 | `resultIgnored`            | a result that carries ownership is discarded                           |
 | `unnameableReturnLifetime` | a returned borrow does not say which input it borrows from             |
+| `borrowMustBeStatic`       | a `'static` parameter was handed something that dies first             |
 
 Branches are handled through ESLint's code-path events: a value moved in one arm
 of an `if` is still usable in the other, and moved after the merge point.
