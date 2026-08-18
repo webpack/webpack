@@ -2974,6 +2974,23 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a named layer block a later sibling opens again", () => {
+		it("gathers them, since both are the one layer", () => {
+			expect(
+				minify(
+					"@media all{@layer x{a{color:red}}@layer y{b{color:blue}}@layer x{c{color:lime}}}"
+				)
+			).toBe(
+				"@media all{@layer x{a{color:red}c{color:lime}}@layer y{b{color:blue}}}"
+			);
+		});
+
+		it("opens each anonymous layer of its own", () => {
+			const css = "@media all{@layer{a{color:red}}@layer{a{color:red}}}";
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("a comma list a later declaration writes again", () => {
 		it.each([
 			// The item slot takes a `<custom-ident>`, so an engine knowing neither
