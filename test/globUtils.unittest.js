@@ -122,7 +122,14 @@ const PATTERNS = [
 	"**/+([a-c]|z).js",
 	"**/+(a.js",
 	"**/!(a.js",
-	"**/x[?(]y.js"
+	"**/x[?(]y.js",
+	"!(x)/a",
+	"*(a)/b",
+	"?(a)/b",
+	"@(a|)/a",
+	"+(a|)/b",
+	"a/!(x)",
+	"**/a?c/x.js"
 ];
 
 const PATHS = [
@@ -211,7 +218,13 @@ const PATHS = [
 	"x/e.ts",
 	"x/a/c.js",
 	"x/a/d.js",
-	"x/a/y.js"
+	"x/a/y.js",
+	"/b",
+	"a/",
+	"b/a",
+	"a/c/x.js",
+	"x/bb.js",
+	"x/].js"
 ];
 
 describe("globUtils", () => {
@@ -697,12 +710,35 @@ describe("globUtils", () => {
 			expect(createMatcher("**/!(a).js")("x/a.js")).toBe(false);
 		});
 
-		it("does not let a `!(…)` group match an empty path segment", () => {
-			// the one place `path.matchesGlob` disagrees: it matches `/a` here,
-			// while its own `@(a|)` does not, so a segment stays non-empty
-			expect(createMatcher("!(x)/a")("/a")).toBe(false);
-			expect(path.posix.matchesGlob("/a", "**/!(x)/a")).toBe(true);
-			expect(path.posix.matchesGlob("/a", "**/@(a|)/a")).toBe(false);
+		it("lets a group that quantifies match an empty path segment", () => {
+			// `!(…)`, `*(…)` and `?(…)` match nothing, so they match an empty
+			// segment; `@(a|)` and a bare `*` do not
+			expect(createMatcher("!(x)/a")("/a")).toBe(true);
+			expect(createMatcher("*(a)/b")("/b")).toBe(true);
+			expect(createMatcher("?(a)/b")("/b")).toBe(true);
+			expect(createMatcher("a/!(x)")("a/")).toBe(true);
+			expect(createMatcher("@(a|)/a")("/a")).toBe(false);
+			expect(createMatcher("*/a")("/a")).toBe(false);
+		});
+
+		// each expectation below was checked against POSIX `fnmatch(3)` with
+		// FNM_PATHNAME | FNM_PERIOD | FNM_EXTMATCH
+		it("follows the POSIX reading of classes, `?` and extended globs", () => {
+			// a `!`/`^` class is negated, a leading `]` is a member
+			expect(createMatcher("**/[!a]b.js")("x/bb.js")).toBe(true);
+			expect(createMatcher("**/[!a]b.js")("x/ab.js")).toBe(false);
+			expect(createMatcher("**/[^a]b.js")("x/bb.js")).toBe(true);
+			expect(createMatcher("**/[]].js")("x/].js")).toBe(true);
+			// `?` is one character, never a separator
+			expect(createMatcher("**/a?c/x.js")("a/c/x.js")).toBe(false);
+			// `!(a)` is "not exactly a", so it matches `ab`
+			expect(createMatcher("**/!(a).js")("x/ab.js")).toBe(true);
+			expect(createMatcher("**/!(a).js")("x/a.js")).toBe(false);
+			// a dot segment needs a literal dot in the pattern, unless a group
+			// that matched nothing put one there
+			expect(createMatcher("**/x/*/y.js")("x/.d/y.js")).toBe(false);
+			expect(createMatcher("**/x/.*/y.js")("x/.d/y.js")).toBe(true);
+			expect(createMatcher("**/*(a).b")("x/.b")).toBe(true);
 		});
 
 		it("reads a `\\` in the pattern as a separator on every platform", () => {
