@@ -1,0 +1,6 @@
+<!doctype html>
+<title>declarative shadow root</title>
+<!-- The parser attaches this shadow root to the `div` and takes the template
+     out of the tree; webpack keeps it, so the `</a>` below reconstructs the
+     formatting element around one child more than the engine has. -->
+<a href="#x"><div><template shadowrootmode=open><slot></slot></template></a>
