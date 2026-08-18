@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Add `performance.scopeHoistingBailouts`, `performance.dynamicExports` and `performance.missingSideEffects` to report why optimizations were skipped.
+Add performance hints reporting why webpack skipped an optimization.
