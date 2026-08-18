@@ -3267,16 +3267,21 @@ export interface TrustedTypes {
  */
 export interface PerformanceOptions {
 	/**
+	 * Fallback value for the performance checks that are not set individually (has precedence over local webpack defaults). Does not apply to 'hints', 'maxAssetSize' or 'maxEntrypointSize'.
+	 * @since 5.110.0
+	 */
+	all?: boolean;
+	/**
 	 * Filter function to select assets that are checked.
 	 */
 	assetFilter?: import("../lib/performance/SizeLimitsPlugin").AssetFilter;
 	/**
-	 * Report how much of the module graph the cache reused, and the modules that can never be reused.
+	 * Report how much of the module graph the cache reused, and the modules that can never be reused (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
 	cacheEffectiveness?: boolean;
 	/**
-	 * Report groups of modules that import each other synchronously.
+	 * Report groups of modules that import each other synchronously (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
 	circularDependencies?: boolean;
@@ -3286,7 +3291,7 @@ export interface PerformanceOptions {
 	 */
 	conflictingResourceHints?: boolean;
 	/**
-	 * Report modules emitted into more than one chunk, and the bytes the extra copies cost.
+	 * Report modules emitted into more than one chunk, and the bytes the extra copies cost (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
 	duplicateModules?: boolean;
@@ -3328,7 +3333,7 @@ export interface PerformanceOptions {
 	 */
 	osDependentRules?: boolean;
 	/**
-	 * Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing.
+	 * Report 'import()' calls whose module is already loaded where the call runs, so they defer nothing (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
 	redundantDynamicImports?: boolean;
@@ -3363,7 +3368,7 @@ export interface PerformanceOptions {
 	 */
 	unusedExternals?: boolean;
 	/**
-	 * Report modules bundled although nothing uses what they export, pulled in by a re-export.
+	 * Report modules bundled although nothing uses what they export, pulled in by a re-export (requires 'hints' to be enabled).
 	 * @since 5.110.0
 	 */
 	unusedReexports?: boolean;
