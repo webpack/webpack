@@ -37,3 +37,26 @@
 .n { font-family: serif, "My Font" Extra }
 /*! a lone string in a later slot still unquotes */
 .o { font-family: serif, "My Font", monospace }
+
+/* An `@property` descriptor is read against the `syntax` beside it, which
+   webpack does not interpret — so its value is as opaque as a custom
+   property's. `0` is not the `0px` a registered `<length>` was given. */
+@property --len {
+	syntax: "<length>";
+	initial-value: 0px;
+	inherits: false;
+}
+
+@property --tint {
+	syntax: "<color>";
+	initial-value: #ff0000;
+	inherits: false;
+}
+
+.property-descriptors {
+	width: var(--len);
+	color: var(--tint);
+	/* the same values outside `@property` still shorten */
+	margin: 0px;
+	background: #ff0000;
+}

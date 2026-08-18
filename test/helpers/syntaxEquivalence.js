@@ -83,6 +83,7 @@ const buildCorpus = (dir, extension, minify) => {
  */
 const installHelpers = () => {
 	const NS_HTML = "http://www.w3.org/1999/xhtml";
+	const NS_SVG = "http://www.w3.org/2000/svg";
 	const probe = document.createElement("div");
 	const canvas = document.createElement("canvas");
 	canvas.width = 1;
@@ -804,8 +805,16 @@ const installHelpers = () => {
 				if (node.nodeType !== Node.ELEMENT_NODE) continue;
 				const element = /** @type {Element} */ (node);
 				facets.elements.push(shapeOf(element, depth));
+				// SVG carries `<style>` and `<script>` too, and an engine reads both
+				// the same way — so their bodies are data there as well, not the page
+				// text a minified stylesheet would look like a change to.
+				const local = element.localName;
 				const name =
-					element.namespaceURI === NS_HTML ? element.localName : null;
+					element.namespaceURI === NS_HTML ||
+					(element.namespaceURI === NS_SVG &&
+						(local === "style" || local === "script"))
+						? local
+						: null;
 				// The text this element holds itself, so text moved to a neighbor
 				// cannot hide in the document-wide concatenation. Only where it
 				// reaches the page: whitespace between two `<head>` children, or

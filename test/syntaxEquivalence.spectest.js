@@ -98,20 +98,14 @@ const FILED_WPT_HTML_DEFECTS = new Map([
 		"test/wpt/html/syntax/parsing/misnested-form-in-template.html",
 		"not a printer defect: the form pointer is not set inside a `<template>`, which this test asserts and Chromium has not implemented — webpack prints the tree wpt expects"
 	],
-	// Not yet traced to a cause: Chromium builds a different CSSOM from the
-	// minified page for each of these, all of them `@scope` / `@layer` cascade
-	// tests. Filed so the difference cannot grow silently.
 	[
-		"test/wpt/css/css-cascade/revert-layer-011.html",
-		"Chromium builds a different CSSOM from the minified page"
-	],
-	[
-		"test/wpt/css/css-cascade/scope-implicit-003-print.html",
-		"Chromium builds a different CSSOM from the minified page"
-	],
-	[
+		// Declarations that follow a nested rule are their own
+		// `CSSNestedDeclarations` rule, so dropping an empty one before them —
+		// `.unused {}` here — folds them back into the parent. One rule fewer,
+		// the same computed style; needs the emitter to know a declaration
+		// follows, which it prints too early to see.
 		"test/wpt/css/css-cascade/scope-nesting.html",
-		"Chromium builds a different CSSOM from the minified page"
+		"dropping an empty nested rule folds the declarations after it into the parent"
 	]
 ]);
 
