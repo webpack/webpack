@@ -5,9 +5,9 @@ const path = require("path");
 /** @typedef {import("../../").Compiler} Compiler */
 /** @typedef {import("../../").Module} Module */
 
-// Asserts buildInfo.isCircular (set by CircularModulesPlugin in production mode)
-// matches the expected set of basename. Reads after optimizeModules, before
-// concatenation, so original NormalModules are still present.
+// Asserts buildInfo.isCircular (set by CircularModulesPlugin) matches the
+// expected set of basename. Reads after optimizeModules, before concatenation,
+// so original NormalModules are still present.
 /**
  * @param {Iterable<string>} expectedCircular expected circular module basename
  * @returns {(compiler: Compiler) => void} plugin
