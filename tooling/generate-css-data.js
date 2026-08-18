@@ -2965,7 +2965,7 @@ const eighthTurnEntries = (values) => {
 // Spec prose no dataset states: an equivalence between two spellings, or a
 // judgement about what a construct still does. Each carries the reason it has to
 // be written out rather than derived.
-/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
+/** @type {{ cssWideKeywords: string[], cubicBezierKeywords: [string, string][], flexKeywords: [string, string][], fontWeightNumbers: [string, string][], fontStretchPercentages: [string, string][], filterFunctionOmitted: [string, string][], positionKeywordPercentages: [string, string][], legacyPseudoElements: string[], compoundContinuations: string[], featurelessPseudoClasses: string[], unmergeableSlotKeywords: [string, string][], zeroUnitKeepingProperties: string[], calcRejectingProperties: string[], clampedValueRanges: [string, string, number, number][], autoSecondValueProperties: string[], defaultGradientDirections: string[], xAxisTransforms: [string, string][], negativeAcceptingProperties: string[], placeShorthands: string[], oneValuePairShorthands: string[], familyShorthands: string[], omittableInitialKeywords: string[], pairLonghandOverrides: [string, string[]][], droppableWhenEmptyAtRules: string[], replacedByNameAtRules: string[], classSpellings: [string, string[]][], absoluteUnitScale: [string, string, number][], unitConversionTargets: string[], angleUnits: string[], quarterTurnAngle: [string, number][], eighthTurnSine: (number | null)[], eighthTurnTangent: (number | null)[], mathFunctionFold: [string, string, string, string, string | null, boolean][], mathPrimitives: [string, string][], predefinedCounterStyles: string[], predefinedCounterNames: string[], cssModulesKeywordSupplement: [string, string, number][] }} */
 
 const SUPPLEMENT = {
 	// CSS Values 4's list. `mdn-data` has no `css-wide-keyword` production.
@@ -3047,6 +3047,13 @@ const SUPPLEMENT = {
 	// Not derivable, no grammar says the unit matters here: IE 11 drops a unitless
 	// `flex-basis`, and Chrome rejects `overflow-clip-margin:0` the spec allows.
 	zeroUnitKeepingProperties: ["flex-basis", "overflow-clip-margin"],
+	// A merge is all-or-nothing: a shorthand carrying one value the engine cannot
+	// read is dropped whole, taking the sibling longhands with it, where the
+	// longhand alone would only have lost itself. So a keyword the grammar states
+	// but no engine reads must not be merged. `mdn-data` states the grammar and
+	// no dataset states what ships. Measured over all 119 family slot keywords in
+	// headless Chromium: this is the only one it rejects that the printer merges.
+	unmergeableSlotKeywords: [["flex-wrap", "balance"]],
 	// Not derivable, a grammar naming `<length>` says `calc()` is valid there:
 	// Chrome takes no `calc()` in `overflow-clip-margin`, as it takes no bare `0`.
 	calcRejectingProperties: ["overflow-clip-margin"],
@@ -5128,6 +5135,16 @@ const collectData = () => {
 			slotAccepts.set(
 				longhand,
 				acceptedValues(/** @type {string} */ (properties[longhand].syntax))
+			);
+		}
+	}
+	// A keyword the shorthand would carry into a declaration the engine drops
+	// whole is taken back out, so the merge declines rather than writing one.
+	for (const [longhand, keyword] of SUPPLEMENT.unmergeableSlotKeywords) {
+		const slot = slotAccepts.get(longhand);
+		if (slot === undefined || !slot.keywords.delete(keyword)) {
+			throw new Error(
+				`unmergeableSlotKeywords: ${longhand} does not accept ${keyword}`
 			);
 		}
 	}

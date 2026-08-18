@@ -20,6 +20,11 @@ module.exports = {
 		expect(html).toContain("A&#13;B");
 		expect(html).not.toContain("A\rB");
 
+		// `<selectedcontent>` is filled from the selected option by the engine, so
+		// the mirror is not markup to write back — an engine reading the output
+		// would mirror it a second time.
+		expect(html).toContain("<selectedcontent></selectedcontent>");
+
 		// Inert comments are dropped; behavior-bearing conditional comments stay.
 		expect(html).not.toContain("drop this comment");
 		expect(html).toContain("<!--[if IE]><p>ie only</p><![endif]-->");

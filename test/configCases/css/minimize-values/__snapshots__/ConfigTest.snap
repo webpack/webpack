@@ -193,5 +193,8 @@ Array [
   "/*! webpack: a component spelling the property's own initial says nothing beside
    another — omitting its group leaves exactly that keyword */.t99{grid-auto-flow:dense}",
   "/*! declined: the other alternative of the group is not the initial */.t99a{grid-auto-flow:column dense}",
+  "/*! declined: no engine reads \`balance\`, and a shorthand carrying one value the
+   engine cannot read is dropped whole — taking \`flex-direction\` with it */.flex-balance{display:flex;flex-direction:column;flex-wrap:balance}",
+  "/*! the same pair merges where both values are ones an engine reads */.flex-wrap{display:flex;flex-flow:column wrap}",
 ]
 `;

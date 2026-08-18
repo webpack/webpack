@@ -426,3 +426,9 @@
 .t99 { grid-auto-flow: row dense }
 /*! declined: the other alternative of the group is not the initial */
 .t99a { grid-auto-flow: column dense }
+
+/*! declined: no engine reads `balance`, and a shorthand carrying one value the
+   engine cannot read is dropped whole — taking `flex-direction` with it */
+.flex-balance { display: flex; flex-direction: column; flex-wrap: balance }
+/*! the same pair merges where both values are ones an engine reads */
+.flex-wrap { display: flex; flex-direction: column; flex-wrap: wrap }

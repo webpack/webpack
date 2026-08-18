@@ -1407,6 +1407,40 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min('@unknown [foo="bar"')).toBe("@unknown [foo=bar];");
 	});
 
+	it("keeps an empty rule a `@namespace` after it is made inert by", () => {
+		// CSS Namespaces 3 §3.1: a rule the engine keeps ends the run a
+		// `@namespace` may stand in. Dropping that rule would carry the dead
+		// `@namespace` back to the head, where the engine honours it.
+		expect(min('@supports (color:red){}@namespace y "u";a{color:red}')).toBe(
+			'@supports (color:red){}@namespace y "u";a{color:red}'
+		);
+		expect(min('.x{}@namespace y "u";a{color:red}')).toBe(
+			'.x{}@namespace y "u";a{color:red}'
+		);
+		// An unknown at-rule is thrown away, so it is not what ended the run — the
+		// `@supports` after it is, and it has to stay for that reason too.
+		expect(
+			min('@totally-unknown;@supports (color:red){}@namespace y "u";a{b:1}')
+		).toBe('@totally-unknown;@supports (color:red){}@namespace y "u";a{b:1}');
+		// Past the first rule every engine keeps, an empty one drops as before.
+		expect(min("a{color:red}.b{}@media all{}")).toBe("a{color:red}");
+	});
+
+	it("writes the replacement character an escape at EOF names", () => {
+		// §4.3.7: an escape the input ran out of is U+FFFD. Written back as the
+		// `\\` it was, it would escape the `}` the printer closes the rule with —
+		// so the value would read as `foo}` rather than `foo\uFFFD`.
+		expect(min("a{--x:foo\\")).toBe("a{--x:foo\uFFFD}");
+		expect(min("a{color:foo\\")).toBe("a{color:foo\uFFFD}");
+		expect(min("@media a\\")).toBe("@media a\uFFFD;");
+		// §4.3.5 instead inside a string, where it names nothing at all.
+		expect(min('a{content:"x\\')).toBe('a{content:"x"}');
+		// A `\\` with a character after it is an escape like any other, and an
+		// even run is a pair of escaped backslashes.
+		expect(min("a{--x:foo\\\\")).toBe("a{--x:foo\\\\}");
+		expect(min("a{--x:foo\\}")).toBe("a{--x:foo\\}}");
+	});
+
 	it("consumes a CRLF pair as one escape terminator", () => {
 		// The tokenizer takes CRLF as a single terminator, so dropping only the CR
 		// would leave a raw newline inside the identifier — `.A\nbc`, which is two
