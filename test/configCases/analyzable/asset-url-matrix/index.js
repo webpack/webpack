@@ -4,12 +4,16 @@ import path from "path";
 // Referenced so both chunks exist; the baked specifier is what is under test.
 const flat = () => import(/* webpackChunkName: "flat" */ "./flat");
 const deep = () => import(/* webpackChunkName: "nested/deep" */ "./deep");
+// The entry is loaded by the host rather than through the public path, so this one
+// spells it where a chunk webpack loaded is already inside it.
+export const own = new URL("./asset.txt", import.meta.url);
 
 const stats = __STATS__.children[__INDEX__];
-const specifier = (name) =>
+const read = (...parts) =>
 	fs
-		.readFileSync(path.join(stats.outputPath, __DIR__, name), "utf8")
+		.readFileSync(path.join(stats.outputPath, ...parts), "utf8")
 		.match(/asset import \*\/ "([^"]+)"/)[1];
+const specifier = (name) => read(__DIR__, name);
 
 it("should keep both chunks referenced", () => {
 	expect(typeof flat).toBe("function");
@@ -19,4 +23,8 @@ it("should keep both chunks referenced", () => {
 it("should bake what each depth needs", () => {
 	expect(specifier("flat.mjs")).toBe(__ROOT__);
 	expect(specifier("nested/deep.mjs")).toBe(__DEEP__);
+});
+
+it("should spell the public path in the chunk the host loads", () => {
+	expect(read(`bundle${__INDEX__}.mjs`)).toBe(__OWN__);
 });

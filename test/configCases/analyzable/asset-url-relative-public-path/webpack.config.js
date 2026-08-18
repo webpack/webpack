@@ -42,6 +42,6 @@ module.exports = [
 	// An empty one names the output root just the same.
 	base(1, "b", ""),
 	// A digest no stand-in can carry, so the deferred pass spells the whole template —
-	// behind the same `../` path. Nothing is emitted there, so it is not read back.
+	// in the entry alone, since the chunks webpack loaded already sit inside it.
 	base(2, "c", "media/[fullhash:base64safe]/", true)
 ];

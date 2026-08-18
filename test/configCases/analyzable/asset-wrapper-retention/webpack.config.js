@@ -15,7 +15,7 @@ const webpack = require("../../../../");
 const base = (index, wrapper, extra = {}, inline = false) => ({
 	target: "node",
 	mode: "development",
-	devtool: false,
+	devtool: extra.devtool !== undefined ? extra.devtool : false,
 	entry: extra.entry || "./index.js",
 	experiments: { outputModule: true },
 	output: {
@@ -49,5 +49,8 @@ module.exports = [
 	}),
 	// A reassigned public path rules the literal out, but the call site concatenates
 	// the runtime one itself — going through the wrapper to do it adds nothing.
-	base(3, false, { entry: "./index-override.js" }, true)
+	base(3, false, { entry: "./index-override.js" }, true),
+	// An `eval` devtool rules the literal out the same way, and leaves the same
+	// concatenation — `import.meta` is what does not parse there, not `.p`.
+	base(4, false, { devtool: "eval" }, true)
 ];
