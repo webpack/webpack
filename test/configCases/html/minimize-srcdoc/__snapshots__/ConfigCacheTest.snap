@@ -10,8 +10,11 @@ exports[`ConfigCacheTestCases html minimize-srcdoc minimize-srcdoc should compil
 <iframe id=entities srcdoc=\\"<p>a & b &amp;lt; c\\"></iframe>
 <iframe id=quote-in-body srcdoc=\\"<p title=q>quoted\\"></iframe>
 <iframe id=upper srcdoc=\\"<em>up</em>\\"></iframe>
+<iframe id=bare srcdoc=\\"<p>bare\\" title=after></iframe>
 <iframe id=empty srcdoc></iframe>
 <iframe id=none src=child.html></iframe>
+<div id=not-an-iframe srcdoc=\\"<!-- kept --><p   >div</p>\\"></div>
+<svg><iframe id=foreign srcdoc=\\"<!-- kept --><p   >svg</p>\\"></iframe></svg>
 <p>the word srcdoc in text is not an attribute</p>
 
 

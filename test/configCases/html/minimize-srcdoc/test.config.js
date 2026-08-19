@@ -36,9 +36,18 @@ module.exports = {
 		// reference needs none, and renders as itself either way.
 		expect(page).toContain('srcdoc="<p>a & b &amp;lt; c"');
 
+		// A document cannot sit in an unquoted value — a space or a `>` would end
+		// the attribute, taking the one after it with it — so it gains quotes.
+		expect(page).toContain('<iframe id=bare srcdoc="<p>bare" title=after>');
+
 		// Nothing to minify, and nothing invented.
 		expect(page).toContain("<iframe id=empty srcdoc>");
 		expect(page).toContain("<iframe id=none src=child.html>");
 		expect(page).toContain("the word srcdoc in text is not an attribute");
+
+		// The attribute belongs to an HTML `<iframe>`. On anything else the name
+		// means nothing, so the value is left as the string it is.
+		expect(page).toContain("<!-- kept --><p   >div</p>");
+		expect(page).toContain("<!-- kept --><p   >svg</p>");
 	}
 };
