@@ -81,9 +81,8 @@ const FILED_CONFIG_CSS_DEFECTS = new Map([
 		"a bad-url token stops swallowing the rules after it"
 	],
 	[
-		// Not a printer defect: dropping a rule an identical later one makes dead
-		// leaves Chrome computing the same style, but the comparison collapses
-		// adjacent repeats on both sides and so reads the removal as a reordering.
+		// Not a printer defect: Chrome computes the same style, but the comparison
+		// collapses adjacent repeats and so reads a dropped one as a reordering.
 		"test/configCases/css/css-modules/style.module.css",
 		"the comparison reads a dropped repeat as a reordering"
 	],
