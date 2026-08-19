@@ -472,8 +472,34 @@ describe("CssSyntax — parser entry points", () => {
 		).toBe("--x");
 	});
 
-	it("parseADeclaration rejects a non-custom declaration with a {}-block value", () => {
-		expect(parseADeclaration("color: { a: b }")).toBeUndefined();
+	it("parseADeclaration reads a lone {}-block as a whole value", () => {
+		// §5.4.6 step 8 rejects a `{}` block only when the value holds another
+		// non-whitespace token beside it — a block standing alone is the value.
+		// Measured in headless Chromium: `.a{color:{a:b}}` is a declaration the
+		// grammar then throws out, not a nested rule (`cssRules` stays empty),
+		// while `.a{a:hover{color:red}}` is one.
+		const decl = parseADeclaration("color: { a: b }");
+		expect(decl).toBeDefined();
+		expect(
+			/** @type {import("../lib/css/syntax").Declaration} */ (decl).name
+		).toBe("color");
+		// Anything beside the block sends it back to the nested-rule reading.
+		expect(parseADeclaration("color: { a: b } c")).toBeUndefined();
+		expect(parseADeclaration("color: { a: b } { c: d }")).toBeUndefined();
+	});
+
+	it("keeps the declaration after a lone {}-block", () => {
+		// Read as a rule, the block's `}` ends it and the `;` after it goes, so
+		// the declaration behind it fuses onto the block and both are lost.
+		const { decls, rules } = parseABlocksContents(
+			"color: { a: b }; background: red"
+		);
+		expect(rules).toHaveLength(0);
+		expect(
+			decls.map(
+				(d) => /** @type {import("../lib/css/syntax").Declaration} */ (d).name
+			)
+		).toEqual(["color", "background"]);
 	});
 
 	it("parseAStylesheet builds nested rules and a full range", () => {
