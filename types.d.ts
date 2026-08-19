@@ -6105,11 +6105,13 @@ declare class DefinePlugin {
 	};
 	static VALUE_DEP_MAIN: "webpack/DefinePlugin_hash";
 	static VALUE_DEP_PREFIX: "webpack/DefinePlugin ";
+	static getDeclaredKeys: (compilation: Compilation) => undefined | Set<string>;
 	static getMergedDefinitionNode: (
 		compilation: Compilation,
 		key: string
 	) => MergedDefinitionNode;
 	static getRuntimeRequirements: (code: string) => undefined | string[];
+	static markInternal: (plugin: DefinePlugin) => DefinePlugin;
 	static stringifyMergedDefinition: (
 		compilation: Compilation,
 		parser: JavascriptParser,
@@ -21837,6 +21839,18 @@ declare interface PerformanceOptions {
 	 * @since 5.110.0
 	 */
 	scopeHoistingBailouts?: boolean;
+
+	/**
+	 * Report keys defined by 'DefinePlugin' that no module ever referenced, which cost a parser hook per module and invalidate the build when their value changes.
+	 * @since 5.110.0
+	 */
+	unusedDefines?: boolean;
+
+	/**
+	 * Report requests listed in 'externals' that no module ever imported, which usually means the request is misspelled and the real one got bundled instead.
+	 * @since 5.110.0
+	 */
+	unusedExternals?: boolean;
 
 	/**
 	 * Report modules bundled although nothing uses what they export, pulled in by a re-export.
