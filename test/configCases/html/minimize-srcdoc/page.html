@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Srcdoc</title>
+</head>
+<body>
+<iframe id="basic" srcdoc="&lt;!-- dropped --&gt;&lt;p    class=&quot;a&quot;&gt;hi&lt;/p&gt;"></iframe>
+<iframe id="single" srcdoc='&lt;!-- dropped --&gt;&lt;b   &gt;bold&lt;/b&gt;'></iframe>
+<iframe id="nested" srcdoc="&lt;!-- dropped --&gt;&lt;iframe srcdoc=&quot;&amp;lt;!-- dropped --&amp;gt;&amp;lt;i   &amp;gt;deep&amp;lt;/i&amp;gt;&quot;&gt;&lt;/iframe&gt;"></iframe>
+<iframe id="style" srcdoc="&lt;style&gt;  .a  {  color : #ff0000  }  &lt;/style&gt;&lt;p class=a&gt;styled&lt;/p&gt;"></iframe>
+<iframe id="doctype" srcdoc="&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body&gt;&lt;p   &gt;whole&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;"></iframe>
+<iframe id="entities" srcdoc="&lt;p&gt;a &amp;amp; b &amp;lt; c&lt;/p&gt;"></iframe>
+<iframe id="quote-in-body" srcdoc="&lt;p title=&quot;q&quot;   &gt;quoted&lt;/p&gt;"></iframe>
+<iframe id="upper" SRCDOC="&lt;!-- dropped --&gt;&lt;em   &gt;up&lt;/em&gt;"></iframe>
+<iframe id="empty" srcdoc=""></iframe>
+<iframe id="none" src="child.html"></iframe>
+<p>the word srcdoc in text is not an attribute</p>
+</body>
+</html>

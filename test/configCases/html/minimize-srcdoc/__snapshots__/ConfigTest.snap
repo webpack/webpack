@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html minimize-srcdoc minimize-srcdoc should compile 1`] = `
+"<!doctype html><head><title>Srcdoc</title></head><body>
+<iframe id=basic srcdoc=\\"<p class=a>hi\\"></iframe>
+<iframe id=single srcdoc='<b>bold</b>'></iframe>
+<iframe id=nested srcdoc='<iframe srcdoc=\\"<i>deep</i>\\"></iframe>'></iframe>
+<iframe id=style srcdoc=\\"<style>.a{color:red}</style><p class=a>styled\\"></iframe>
+<iframe id=doctype srcdoc=\\"<!doctype html><body><p>whole</body></html>\\"></iframe>
+<iframe id=entities srcdoc=\\"<p>a & b &amp;lt; c\\"></iframe>
+<iframe id=quote-in-body srcdoc=\\"<p title=q>quoted\\"></iframe>
+<iframe id=upper srcdoc=\\"<em>up</em>\\"></iframe>
+<iframe id=empty srcdoc></iframe>
+<iframe id=none src=child.html></iframe>
+<p>the word srcdoc in text is not an attribute</p>
+
+
+</body></html>"
+`;
