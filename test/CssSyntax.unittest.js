@@ -3120,10 +3120,37 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 
 		it.each([
+			// A block writing only into its own layer reaches nothing the one
+			// between them writes, so the two never contend.
+			[
+				"a block for a layer under it stands between them",
+				"@layer a.b{.x{top:0}}@layer a.b.c{.y{top:0}}@layer a.b{.z{top:0}}",
+				"@layer a.b{.x{top:0}.z{top:0}}@layer a.b.c{.y{top:0}}"
+			],
+			[
+				"a block for the layer above it stands between them",
+				"@layer a.b{.x{top:0}}@layer a{.y{top:0}}@layer a.b{.z{top:0}}",
+				"@layer a.b{.x{top:0}.z{top:0}}@layer a{.y{top:0}}"
+			]
+		])("gathers where %s", (_name, css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
 			// A layer with no name is a layer of its own.
 			[
 				"neither is named",
 				"@media all{@layer{a{color:red}}@layer{a{color:red}}}"
+			],
+			// `@layer a.b` writes where `@layer a{@layer b{…}}` writes, so the one
+			// between them is that same layer under its other spelling.
+			[
+				"the one between opens that layer the other way",
+				"@layer base.support{.a{top:0}}@layer base{@layer support{.b{top:1px}}}@layer base.support{.c{top:2px}}"
+			],
+			[
+				"the two spell it nested and the one between does not",
+				"@layer base{@layer support{.a{top:0}}}@layer base.support{.b{top:1px}}@layer base{@layer support{.c{top:2px}}}"
 			],
 			// Reached the other way round, the block between them is that same layer,
 			// and the order within a layer is one the cascade reads.
