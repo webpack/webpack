@@ -12,8 +12,11 @@
 <iframe id="entities" srcdoc="&lt;p&gt;a &amp;amp; b &amp;lt; c&lt;/p&gt;"></iframe>
 <iframe id="quote-in-body" srcdoc="&lt;p title=&quot;q&quot;   &gt;quoted&lt;/p&gt;"></iframe>
 <iframe id="upper" SRCDOC="&lt;!-- dropped --&gt;&lt;em   &gt;up&lt;/em&gt;"></iframe>
+<iframe id="bare" srcdoc=&lt;!--dropped--&gt;&lt;p&gt;bare&lt;/p&gt; title="after"></iframe>
 <iframe id="empty" srcdoc=""></iframe>
 <iframe id="none" src="child.html"></iframe>
+<div id="not-an-iframe" srcdoc="&lt;!-- kept --&gt;&lt;p   &gt;div&lt;/p&gt;"></div>
+<svg><iframe id="foreign" srcdoc="&lt;!-- kept --&gt;&lt;p   &gt;svg&lt;/p&gt;"></iframe></svg>
 <p>the word srcdoc in text is not an attribute</p>
 </body>
 </html>
