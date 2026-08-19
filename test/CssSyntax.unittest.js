@@ -2974,6 +2974,210 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		});
 	});
 
+	describe("a transition duration of zero", () => {
+		it.each([
+			["a{transition:visibility 0s}", "a{transition:visibility}"],
+			["a{transition:visibility 0ms}", "a{transition:visibility}"],
+			[
+				"a{transition:visibility 0s,color 0s}",
+				"a{transition:visibility,color}"
+			],
+			[
+				"a{-webkit-transition:visibility 0s}",
+				"a{-webkit-transition:visibility}"
+			]
+		])("drops it: %s", (css, out) => {
+			expect(minify(css)).toBe(out);
+		});
+
+		it.each([
+			// The second `<time>` is the delay: dropping the duration would hand the
+			// delay's value to it.
+			"a{transition:visibility 0s 2s}",
+			// Nothing would be left to say it about.
+			"a{transition:0s}"
+		])("keeps it: %s", (css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
+	describe("a vendor spelling of a property it minifies", () => {
+		it.each([
+			[
+				"-webkit-transition:background-color .25s ease",
+				"-webkit-transition:background-color.25s"
+			],
+			["-webkit-animation:fade 3s ease", "-webkit-animation:fade 3s"],
+			[
+				"-webkit-transform-origin:center bottom",
+				"-webkit-transform-origin:50%100%"
+			],
+			[
+				"-webkit-box-shadow:0 1px 5px 0 rgba(0,0,0,0.2)",
+				"-webkit-box-shadow:0 1px 5px#0003"
+			]
+		])("minifies it the way the property it spells is: %s", (css, out) => {
+			expect(minify(`a{${css}}`)).toBe(`a{${out}}`);
+		});
+
+		it("reads the spelling off the prefix table, not off the `-`", () => {
+			// `-webkit-appearance` is its own property, not a spelling of one whose
+			// value rules could stand in for it.
+			expect(minify("a{-webkit-appearance:none}")).toBe(
+				"a{-webkit-appearance:none}"
+			);
+		});
+	});
+
+	describe("a rule an identical later sibling makes dead", () => {
+		it("drops the earlier of two, whatever stands between", () => {
+			expect(minify("@media all{a{color:red}b{color:blue}a{color:red}}")).toBe(
+				"@media all{b{color:blue}a{color:red}}"
+			);
+		});
+
+		it("drops it across a streamed block, written straight out", () => {
+			let filler = "";
+			for (let i = 0; i < 4000; i++) filler += `.f${i}{color:red}`;
+			const out = minify(`@media all{.a{top:0}${filler}.a{top:0}}`);
+			expect(out.match(/\.a\{top:0\}/g)).toHaveLength(1);
+			// The surviving copy is the last one: an earlier one would be read where
+			// the later is, which is what a rule between them can override.
+			expect(out.endsWith(".a{top:0}}")).toBe(true);
+		});
+
+		it("keeps the one between, which says what neither of them does", () => {
+			expect(minify("@media all{a{color:red}a{color:blue}a{color:red}}")).toBe(
+				"@media all{a{color:blue}a{color:red}}"
+			);
+		});
+
+		it.each([
+			// `@import` and `@namespace` are read only ahead of the rules they
+			// precede, so where they stand is what they say.
+			'@media all{@import"a.css";b{top:0}@import"a.css"}',
+			"@media all{@namespace x url(u);b{top:0}@namespace x url(u)}"
+		])("keeps both: %s", (css) => {
+			expect(minify(css)).toBe(css);
+		});
+
+		it("leaves a layer to the merge, which gathers it rather than dropping it", () => {
+			expect(
+				minify(
+					"@media all{@layer x{a{top:0}}@layer y{b{top:1px}}@layer x{a{top:0}}}"
+				)
+			).toBe("@media all{@layer x{a{top:0}a{top:0}}@layer y{b{top:1px}}}");
+		});
+	});
+
+	describe("a named layer block a later sibling opens again", () => {
+		it("gathers them, since both are the one layer", () => {
+			expect(
+				minify(
+					"@media all{@layer x{a{color:red}}@layer y{b{color:blue}}@layer x{c{color:lime}}}"
+				)
+			).toBe(
+				"@media all{@layer x{a{color:red}c{color:lime}}@layer y{b{color:blue}}}"
+			);
+		});
+
+		it("gathers the stylesheet's own children as well", () => {
+			expect(
+				minify(
+					"@layer x{a{color:red}}@layer y{b{color:blue}}@layer x{c{color:lime}}"
+				)
+			).toBe("@layer x{a{color:red}c{color:lime}}@layer y{b{color:blue}}");
+		});
+
+		it("gathers into a block a join already grew", () => {
+			expect(
+				minify("@layer x{a{top:0}}@layer x{b{top:0}}@layer x{c{left:0}}")
+			).toBe("@layer x{a,b{top:0}c{left:0}}");
+		});
+
+		it("gathers into one whose own block is empty", () => {
+			// Gathering keeps the layer where the empty block put it in the cascade.
+			expect(minify("@layer a{}@layer a{i{t:0}}")).toBe("@layer a{i{t:0}}");
+		});
+
+		it("gathers past enough nodes to stream the block", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:0}`;
+			const out = minify(
+				`@media all{@layer x{a{color:red}}${filler}@layer x{c{color:lime}}}`
+			);
+			expect(
+				out.startsWith("@media all{@layer x{a{color:red}c{color:lime}}")
+			).toBe(true);
+			expect(out.endsWith(`${filler}}`)).toBe(true);
+		});
+
+		it("gathers past enough nodes to stream, but not past that layer again", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:0}`;
+			const css = `@media all{@layer x{a{color:red}}${filler}.y{@layer x{b{top:0}}}@layer x{c{color:lime}}}`;
+			expect(minify(css)).toBe(css);
+		});
+
+		it.each([
+			// A block writing only into its own layer reaches nothing the one
+			// between them writes, so the two never contend.
+			[
+				"a block for a layer under it stands between them",
+				"@layer a.b{.x{top:0}}@layer a.b.c{.y{top:0}}@layer a.b{.z{top:0}}",
+				"@layer a.b{.x{top:0}.z{top:0}}@layer a.b.c{.y{top:0}}"
+			],
+			[
+				"a block for the layer above it stands between them",
+				"@layer a.b{.x{top:0}}@layer a{.y{top:0}}@layer a.b{.z{top:0}}",
+				"@layer a.b{.x{top:0}.z{top:0}}@layer a{.y{top:0}}"
+			]
+		])("gathers where %s", (_name, css, expected) => {
+			expect(minify(css)).toBe(expected);
+		});
+
+		it.each([
+			// A layer with no name is a layer of its own.
+			[
+				"neither is named",
+				"@media all{@layer{a{color:red}}@layer{a{color:red}}}"
+			],
+			// `@layer a.b` writes where `@layer a{@layer b{…}}` writes, so the one
+			// between them is that same layer under its other spelling.
+			[
+				"the one between opens that layer the other way",
+				"@layer base.support{.a{top:0}}@layer base{@layer support{.b{top:1px}}}@layer base.support{.c{top:2px}}"
+			],
+			[
+				"the two spell it nested and the one between does not",
+				"@layer base{@layer support{.a{top:0}}}@layer base.support{.b{top:1px}}@layer base{@layer support{.c{top:2px}}}"
+			],
+			// Reached the other way round, the block between them is that same layer,
+			// and the order within a layer is one the cascade reads.
+			[
+				"a rule between them opens that layer again",
+				"@layer a{i{top:0}}.x{@layer a{j{top:0}}}@layer a{k{top:0}}"
+			],
+			[
+				"a rule inside the block between them opens it again",
+				"@media all{@layer a{i{top:0}}.x{@layer a{j{top:0}}}@layer a{k{top:0}}}"
+			],
+			// A kept comment was written above what follows it, so nothing moves back
+			// over one.
+			[
+				"a kept comment stands between them",
+				"@layer a{i{top:0}}/*! keep */@layer a{j{top:0}}"
+			],
+			// `@layer a.b` is not `@layer a`.
+			[
+				"one names a layer nested in the other",
+				"@layer a{i{top:0}}@layer a.b{j{top:0}}"
+			]
+		])("keeps both where %s", (_name, css) => {
+			expect(minify(css)).toBe(css);
+		});
+	});
+
 	describe("a comma list a later declaration writes again", () => {
 		it.each([
 			// The item slot takes a `<custom-ident>`, so an engine knowing neither
@@ -3213,9 +3417,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[
 				"the layer they open has no name",
 				"@layer{#i{color:blue}}@layer{.c{color:red}}"
-			],
-			// `@layer a{}` declares where the layer sits in the cascade.
-			["one block is empty", "@layer a{}@layer a{i{t:0}}"]
+			]
 		])("keeps both at-rules where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
@@ -5179,6 +5381,15 @@ describe("CssSyntax minify — vendor prefixes (at-rules)", () => {
 				["chrome 120"]
 			)
 		).toBe("@keyframes s{to{opacity:1}}");
+	});
+
+	it("drops it from behind a rule held back for a join", () => {
+		expect(
+			minifyFor(
+				"i{top:0}@-webkit-keyframes s{to{opacity:1}}@keyframes s{to{opacity:1}}",
+				["chrome 120"]
+			)
+		).toBe("i{top:0}@keyframes s{to{opacity:1}}");
 	});
 
 	it("pairs a cased `@Keyframes` with its prefixed twin (case-insensitive)", () => {

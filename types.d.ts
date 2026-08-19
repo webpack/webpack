@@ -22113,6 +22113,15 @@ declare class PrintContext<TPath, TNode, TPrintOptions = object> {
 	retract(index: number): void;
 
 	/**
+	 * Fold `text` into an already-emitted piece, in front of the character it ends
+	 * with — a later sibling whose body belongs inside that piece, as a repeated
+	 * named `@layer` block's does. Mappings are piece-relative and this only grows
+	 * the piece past everything already anchored in it, so they keep their
+	 * positions; the folded text carries none of its own.
+	 */
+	foldIntoRetractable(index: number, text: string): void;
+
+	/**
 	 * {@link take} for a top-level node a later sibling may still make dead — the
 	 * unprefixed twin of a vendor-prefixed rule, which can stand anywhere after
 	 * it. The node is emitted as a piece of its own, with its mapping recorded

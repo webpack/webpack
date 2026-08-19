@@ -538,7 +538,13 @@ const installHelpers = () => {
 					}
 				}
 				if (nested) {
-					walk(nested, [...chain, conditionOf(rule)]);
+					const inner = conditionOf(rule);
+					// A layer block says where its layer is read even when it holds
+					// nothing, so it is what fixes that layer's place (see `byLayer`).
+					if (inner.kind === "layer") {
+						out.push({ chain: [...chain, inner], text: "" });
+					}
+					walk(nested, [...chain, inner]);
 				} else if (!style) {
 					// `@import`, `@namespace` and `@property` neither declare nor group,
 					// so they are compared as written.
@@ -1185,6 +1191,9 @@ const perSelector = (rules) =>
 		return selectors.map((one) => ({ chain: rule.chain, text: one + block }));
 	});
 
+// An `@layer a, b;` statement, which names layers without holding any rule.
+const LAYER_STATEMENT_RE = /^@layer\s+([^{;]+);$/i;
+
 /**
  * @param {Rule[]} before the source's rules
  * @param {Rule[]} after the minified rules
@@ -1200,6 +1209,45 @@ const compareRules = (before, after, signatures) => {
 		const at = text.indexOf(" { ");
 		return at === -1 ? text : text.slice(at);
 	};
+	/**
+	 * Read the rules layer by layer, each layer where it is first named. A named
+	 * layer's blocks are one layer however far apart they stand, and what lies
+	 * between them is in another layer or in none — ordered against them by the
+	 * cascade rather than by where it sits, so only the order within a layer is
+	 * one the cascade can see. An anonymous `@layer` is a layer of its own, so
+	 * each block of one keeps its place.
+	 * @param {Rule[]} rules rules in cascade order
+	 * @returns {Rule[]} the same rules, gathered by layer
+	 */
+	const byLayer = (rules) => {
+		/** @type {Map<string, Rule[]>} */
+		const layers = new Map();
+		let anonymous = 0;
+		// An `@layer a, b;` statement is what names those layers first, whatever
+		// order their blocks then stand in, so it opens their buckets.
+		for (const rule of rules) {
+			const statement = LAYER_STATEMENT_RE.exec(rule.text);
+			if (statement === null) continue;
+			const outer = rule.chain
+				.filter((each) => each.kind === "layer")
+				.map((each) => each.condition);
+			for (const name of statement[1].split(",")) {
+				const key = [...outer, `@layer ${name.trim()}`].join(" ");
+				if (!layers.has(key)) layers.set(key, []);
+			}
+		}
+		for (const rule of rules) {
+			const chain = rule.chain.filter((each) => each.kind === "layer");
+			const key = chain.some((each) => each.condition.trim() === "@layer")
+				? ` ${anonymous++}`
+				: chain.map((each) => each.condition).join(" ");
+			const layer = layers.get(key);
+			if (layer === undefined) layers.set(key, [rule]);
+			else layer.push(rule);
+		}
+		// The place-holding entry a layer block left behind has done its work.
+		return [...layers.values()].flat().filter((rule) => rule.text !== "");
+	};
 	// The same selector twice in a row computing the same style is the one rule
 	// it resolves to, which is what joining them into a list leaves.
 	/**
@@ -1207,7 +1255,7 @@ const compareRules = (before, after, signatures) => {
 	 * @returns {string[]} their keys, an adjacent repeat collapsed
 	 */
 	const keys = (rules) => {
-		const flat = perSelector(rules).map((rule) => ({
+		const flat = perSelector(byLayer(rules)).map((rule) => ({
 			key: keyOf(rule, signatures),
 			// Everything but the selector: two entries sharing it are one rule's
 			// worth of cascade, whichever of them is written first.

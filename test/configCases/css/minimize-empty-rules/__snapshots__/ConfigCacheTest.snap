@@ -14,7 +14,7 @@ Array [
   "/*! discard-empty: should remove empty media queries */",
   "/*! discard-empty: should not be responsible for removing comments */",
   "/*! discard-empty: should preserve empty custom properties */.t03{--tw-shadow:;--something-else:}",
-  "/*! discard-empty: should preserve empty layers */@layer a{}@layer b{}@layer b{.t04{color:red}}@layer a{.t05{color:green}}",
+  "/*! discard-empty: should preserve empty layers */@layer a{.t05{color:green}}@layer b{.t04{color:red}}",
   "/*! webpack: an empty @keyframes still runs the animation, so it is kept */@keyframes t06{}",
   "/*! webpack: an empty keyframe contributes nothing, so it is dropped */@keyframes t07{to{opacity:1}}",
   "/*! webpack: every keyframe empty leaves the keyframes rule behind */@keyframes t08{}",

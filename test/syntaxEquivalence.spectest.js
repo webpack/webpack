@@ -81,6 +81,12 @@ const FILED_CONFIG_CSS_DEFECTS = new Map([
 		"a bad-url token stops swallowing the rules after it"
 	],
 	[
+		// Not a printer defect: Chrome computes the same style, but the comparison
+		// collapses adjacent repeats and so reads a dropped one as a reordering.
+		"test/configCases/css/css-modules/style.module.css",
+		"the comparison reads a dropped repeat as a reordering"
+	],
+	[
 		// Not a printer defect: Chrome normalises an escaped custom property in a
 		// declaration name but echoes the authored spelling inside `var()`, so the
 		// shorter `\2d-two` the printer writes reads as different `cssText` from
@@ -541,6 +547,24 @@ describe("printer output in real Chrome", () => {
 					FILE_TIMEOUT
 				);
 			}
+
+			// The rules are read layer by layer, and an `@layer` statement is what
+			// fixes those layers' order — so the same blocks written the other way
+			// round under one are the same sheet, wherever each block stands.
+			it(
+				"should read blocks under one layer statement in its order",
+				async () => {
+					const differences = await compareStylesheets([
+						{
+							name: "layer-statement",
+							raw: "@layer reset,components;@layer components{.x{color:blue}}@layer reset{.x{color:red}}",
+							min: "@layer reset,components;@layer reset{.x{color:red}}@layer components{.x{color:blue}}"
+						}
+					]);
+					expect(differences).toEqual([]);
+				},
+				FILE_TIMEOUT
+			);
 
 			// A defect filed against a file no longer in the corpus is one nothing
 			// would report, since the test that carried it is gone with the file.
