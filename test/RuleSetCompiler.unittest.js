@@ -1,7 +1,5 @@
 "use strict";
 
-const fs = require("fs");
-const os = require("os");
 const path = require("path");
 const RuleSetCompiler = require("../lib/rules/RuleSetCompiler");
 
@@ -208,11 +206,11 @@ describe("RuleSetCompiler glob conditions", () => {
 	});
 });
 
-describe("RuleSetCompiler glob conditions against fs.globSync", () => {
-	// `fs.globSync` is Node.js >= 22
-	const itGlobSync = typeof fs.globSync === "function" ? it : it.skip;
+describe("RuleSetCompiler glob conditions against path.matchesGlob", () => {
+	// `path.matchesGlob` is Node.js >= 22.5
+	const itMatchesGlob = typeof path.matchesGlob === "function" ? it : it.skip;
 
-	const FILES = [
+	const PATHS = [
 		"h.js",
 		"h.css",
 		"src/a.js",
@@ -227,11 +225,13 @@ describe("RuleSetCompiler glob conditions against fs.globSync", () => {
 		"node_modules/.pnpm/k.js",
 		".hidden/l.js",
 		"pages/[slug].tsx",
-		"a b/m.js"
+		"a b/m.js",
+		"src/ab.js",
+		"src/].js"
 	];
 
-	// every pattern is written the way `fs.globSync` reads it, so both sides
-	// get the same string
+	// every pattern is written the way `path.matchesGlob` reads it, so both
+	// sides get the same string
 	const CASES = [
 		["**/*.js"],
 		["**/*.js", "!**/*.test.js"],
@@ -245,58 +245,42 @@ describe("RuleSetCompiler glob conditions against fs.globSync", () => {
 		["**/a b/*.js"],
 		["**"],
 		["**/src/**", "!**/src/nested/**"],
-		["**/deep/*.js", "!**/d.js"]
+		["**/deep/*.js", "!**/d.js"],
+		["**/[!a]*.js"],
+		["**/!(a)*.js"],
+		["**/*.js", "!**/src/*.js"]
 	];
 
-	/** @type {string} */
-	let directory;
-
-	beforeAll(() => {
-		directory = fs.mkdtempSync(path.join(os.tmpdir(), "webpack-glob-"));
-		for (const file of FILES) {
-			fs.mkdirSync(path.join(directory, path.dirname(file)), {
-				recursive: true
-			});
-			fs.writeFileSync(path.join(directory, file), "");
+	itMatchesGlob(
+		"selects what the patterns match minus what `!` subtracts",
+		() => {
+			const compiler = new RuleSetCompiler([]);
+			for (const patterns of CASES) {
+				const { fn } = compiler.compileCondition("test", { glob: patterns });
+				const actual = PATHS.filter((testedPath) =>
+					/** @type {(value: string) => boolean} */ (fn)(testedPath)
+				);
+				/**
+				 * @param {string} pattern glob pattern
+				 * @param {string} testedPath path
+				 * @returns {boolean} matches
+				 */
+				const matches = (pattern, testedPath) =>
+					path.matchesGlob(testedPath, pattern);
+				const expected = PATHS.filter(
+					(testedPath) =>
+						patterns
+							.filter((pattern) => !pattern.startsWith("!"))
+							.some((pattern) => matches(pattern, testedPath)) &&
+						!patterns
+							.filter((pattern) => pattern.startsWith("!"))
+							.some((pattern) => matches(pattern.slice(1), testedPath))
+				);
+				expect({ patterns, paths: actual }).toEqual({
+					patterns,
+					paths: expected
+				});
+			}
 		}
-	});
-
-	afterAll(() => {
-		fs.rmSync(directory, { recursive: true, force: true });
-	});
-
-	/**
-	 * @param {string[]} patterns glob patterns
-	 * @returns {string[]} the files `fs.globSync` selects, sorted
-	 */
-	const globSyncFiles = (patterns) =>
-		fs
-			.globSync(patterns, { cwd: directory })
-			.filter((entry) => fs.statSync(path.join(directory, entry)).isFile())
-			.map((entry) => entry.replace(/\\/g, "/"))
-			.sort();
-
-	itGlobSync("selects the files fs.globSync selects", () => {
-		const compiler = new RuleSetCompiler([]);
-		for (const patterns of CASES) {
-			const { fn } = compiler.compileCondition("test", { glob: patterns });
-			const actual = FILES.filter((file) =>
-				/** @type {(value: string) => boolean} */ (fn)(file)
-			).sort();
-			// what a `!` pattern subtracts, `fs.glob`'s own `exclude` option
-			// subtracts as well
-			const excluded = new Set(
-				globSyncFiles(
-					patterns.filter((p) => p.startsWith("!")).map((p) => p.slice(1))
-				)
-			);
-			const expected = globSyncFiles(
-				patterns.filter((p) => !p.startsWith("!"))
-			).filter((file) => !excluded.has(file));
-			expect({ patterns, files: actual }).toEqual({
-				patterns,
-				files: expected
-			});
-		}
-	});
+	);
 });
