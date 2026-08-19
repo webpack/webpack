@@ -549,6 +549,24 @@ describe("printer output in real Chrome", () => {
 				);
 			}
 
+			// The rules are read layer by layer, and an `@layer` statement is what
+			// fixes those layers' order — so the same blocks written the other way
+			// round under one are the same sheet, wherever each block stands.
+			it(
+				"should read blocks under one layer statement in its order",
+				async () => {
+					const differences = await compareStylesheets([
+						{
+							name: "layer-statement",
+							raw: "@layer reset,components;@layer components{.x{color:blue}}@layer reset{.x{color:red}}",
+							min: "@layer reset,components;@layer reset{.x{color:red}}@layer components{.x{color:blue}}"
+						}
+					]);
+					expect(differences).toEqual([]);
+				},
+				FILE_TIMEOUT
+			);
+
 			// A defect filed against a file no longer in the corpus is one nothing
 			// would report, since the test that carried it is gone with the file.
 			it("should file every defect against a fixture that is still there", () => {

@@ -1191,6 +1191,9 @@ const perSelector = (rules) =>
 		return selectors.map((one) => ({ chain: rule.chain, text: one + block }));
 	});
 
+// An `@layer a, b;` statement, which names layers without holding any rule.
+const LAYER_STATEMENT_RE = /^@layer\s+([^{;]+);$/i;
+
 /**
  * @param {Rule[]} before the source's rules
  * @param {Rule[]} after the minified rules
@@ -1220,6 +1223,19 @@ const compareRules = (before, after, signatures) => {
 		/** @type {Map<string, Rule[]>} */
 		const layers = new Map();
 		let anonymous = 0;
+		// An `@layer a, b;` statement is what names those layers first, whatever
+		// order their blocks then stand in, so it opens their buckets.
+		for (const rule of rules) {
+			const statement = LAYER_STATEMENT_RE.exec(rule.text);
+			if (statement === null) continue;
+			const outer = rule.chain
+				.filter((each) => each.kind === "layer")
+				.map((each) => each.condition);
+			for (const name of statement[1].split(",")) {
+				const key = [...outer, `@layer ${name.trim()}`].join(" ");
+				if (!layers.has(key)) layers.set(key, []);
+			}
+		}
 		for (const rule of rules) {
 			const chain = rule.chain.filter((each) => each.kind === "layer");
 			const key = chain.some((each) => each.condition.trim() === "@layer")
