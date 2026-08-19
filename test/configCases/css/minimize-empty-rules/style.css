@@ -28,6 +28,8 @@ h1{}h2{}h4{}h5,h6{}
 @layer b {}
 @layer b { .t04 { color: red } }
 @layer a { .t05 { color: green } }
+/* Gathered into the empty blocks that fixed the two layers' order, which the
+   output still reads in. */
 
 /* Cases beyond the upstream suite, covering what webpack's own printer decides. */
 

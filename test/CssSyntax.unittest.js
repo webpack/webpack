@@ -3081,8 +3081,72 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			);
 		});
 
-		it("opens each anonymous layer of its own", () => {
-			const css = "@media all{@layer{a{color:red}}@layer{a{color:red}}}";
+		it("gathers the stylesheet's own children as well", () => {
+			expect(
+				minify(
+					"@layer x{a{color:red}}@layer y{b{color:blue}}@layer x{c{color:lime}}"
+				)
+			).toBe("@layer x{a{color:red}c{color:lime}}@layer y{b{color:blue}}");
+		});
+
+		it("gathers into a block a join already grew", () => {
+			expect(
+				minify("@layer x{a{top:0}}@layer x{b{top:0}}@layer x{c{left:0}}")
+			).toBe("@layer x{a,b{top:0}c{left:0}}");
+		});
+
+		it("gathers into one whose own block is empty", () => {
+			// Gathering keeps the layer where the empty block put it in the cascade.
+			expect(minify("@layer a{}@layer a{i{t:0}}")).toBe("@layer a{i{t:0}}");
+		});
+
+		it("gathers past enough nodes to stream the block", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:0}`;
+			const out = minify(
+				`@media all{@layer x{a{color:red}}${filler}@layer x{c{color:lime}}}`
+			);
+			expect(
+				out.startsWith("@media all{@layer x{a{color:red}c{color:lime}}")
+			).toBe(true);
+			expect(out.endsWith(`${filler}}`)).toBe(true);
+		});
+
+		it("gathers past enough nodes to stream, but not past that layer again", () => {
+			let filler = "";
+			for (let i = 0; i < 17000; i++) filler += `.f${i}{top:0}`;
+			const css = `@media all{@layer x{a{color:red}}${filler}.y{@layer x{b{top:0}}}@layer x{c{color:lime}}}`;
+			expect(minify(css)).toBe(css);
+		});
+
+		it.each([
+			// A layer with no name is a layer of its own.
+			[
+				"neither is named",
+				"@media all{@layer{a{color:red}}@layer{a{color:red}}}"
+			],
+			// Reached the other way round, the block between them is that same layer,
+			// and the order within a layer is one the cascade reads.
+			[
+				"a rule between them opens that layer again",
+				"@layer a{i{top:0}}.x{@layer a{j{top:0}}}@layer a{k{top:0}}"
+			],
+			[
+				"a rule inside the block between them opens it again",
+				"@media all{@layer a{i{top:0}}.x{@layer a{j{top:0}}}@layer a{k{top:0}}}"
+			],
+			// A kept comment was written above what follows it, so nothing moves back
+			// over one.
+			[
+				"a kept comment stands between them",
+				"@layer a{i{top:0}}/*! keep */@layer a{j{top:0}}"
+			],
+			// `@layer a.b` is not `@layer a`.
+			[
+				"one names a layer nested in the other",
+				"@layer a{i{top:0}}@layer a.b{j{top:0}}"
+			]
+		])("keeps both where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});
 	});
@@ -3326,9 +3390,7 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[
 				"the layer they open has no name",
 				"@layer{#i{color:blue}}@layer{.c{color:red}}"
-			],
-			// `@layer a{}` declares where the layer sits in the cascade.
-			["one block is empty", "@layer a{}@layer a{i{t:0}}"]
+			]
 		])("keeps both at-rules where %s", (_name, css) => {
 			expect(minify(css)).toBe(css);
 		});

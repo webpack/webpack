@@ -81,17 +81,9 @@ const FILED_CONFIG_CSS_DEFECTS = new Map([
 		"a bad-url token stops swallowing the rules after it"
 	],
 	[
-		// Not a printer defect: the printer drops a rule an identical later rule
-		// makes dead — both compute the same style for the same selector under the
-		// same condition, so only the last is ever read, and every CSS minifier
-		// does this. What the comparison cannot express is the removal itself: it
-		// collapses adjacent repeats on both sides, so the source loses its pair
-		// where the output lost one copy, and the two lists come out the same
-		// length with everything after sitting a place apart — read as a
-		// reordering. Verified equivalent the way the suite exists to verify:
-		// a computed style read off 48 elements in real Chrome is identical for
-		// both sheets, and the printed text keeps every surviving rule in the
-		// order it was written.
+		// Not a printer defect: dropping a rule an identical later one makes dead
+		// leaves Chrome computing the same style, but the comparison collapses
+		// adjacent repeats on both sides and so reads the removal as a reordering.
 		"test/configCases/css/css-modules/style.module.css",
 		"the comparison reads a dropped repeat as a reordering"
 	],

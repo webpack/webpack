@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Minify CSS values, shorthands, adjacent rules, repeated rules, named layer blocks and vendor spellings further.
+Minify CSS values, shorthands, rules, named layers and vendor spellings further.
