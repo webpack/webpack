@@ -67,14 +67,7 @@ const VALUE_BUDGET = 2000;
 // Documents and stylesheets the printers are known to get wrong, per corpus.
 // Each is a filed defect, not a tolerated one; every comparison matches its set
 // exactly, so an entry outlives its defect by one run.
-const FILED_CONFIG_CSS_DEFECTS = new Map([
-	[
-		// Not a printer defect: Chrome computes the same style, but the comparison
-		// collapses adjacent repeats and so reads a dropped one as a reordering.
-		"test/configCases/css/css-modules/style.module.css",
-		"the comparison reads a dropped repeat as a reordering"
-	]
-]);
+const FILED_CONFIG_CSS_DEFECTS = new Map();
 
 const FILED_CONFIG_HTML_DEFECTS = new Map([
 	[
