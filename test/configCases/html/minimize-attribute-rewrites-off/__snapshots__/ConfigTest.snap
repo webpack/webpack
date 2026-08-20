@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases html minimize-attribute-rewrites-off minimize-attribute-rewrites-off should compile 1`] = `
+"<!doctype html><head><title>Attribute rewrites</title><meta name=\\"viewport\\" content=\\"width=device-width,  initial-scale=1\\"></head><body>
+<input checked=\\"checked\\" disabled id=\\"q\\">
+<p class=\\"  b   a  \\" style=\\"color:  #ff0000 ;\\" dir=\\"RTL\\">x</p>
+<img srcset=\\"a.png 1x,   b.png 2x\\" alt=\\"a\\">
+
+
+</body></html>"
+`;
