@@ -13431,6 +13431,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "performance-conflicting-resource-hints": Object {
+    "configs": Array [
+      Object {
+        "description": "Report chunks asked for as both prefetch and preload from the same place, where the two directives contradict each other.",
+        "multiple": false,
+        "path": "performance.conflictingResourceHints",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report chunks asked for as both prefetch and preload from the same place, where the two directives contradict each other.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "performance-duplicate-modules": Object {
     "configs": Array [
       Object {
@@ -13467,6 +13480,19 @@ Object {
       },
     ],
     "description": "Report modules whose exports cannot be read statically, which stops anything importing them from being tree-shaken (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "performance-entrypoint-overlap": Object {
+    "configs": Array [
+      Object {
+        "description": "Report modules shipped by more than one entrypoint, which every page that loads them downloads again (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.entrypointOverlap",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report modules shipped by more than one entrypoint, which every page that loads them downloads again (requires 'hints' to be enabled).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -13564,6 +13590,32 @@ Object {
       },
     ],
     "description": "Report modules that could not be merged into their importer's scope, and why (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "performance-split-chunks-capped": Object {
+    "configs": Array [
+      Object {
+        "description": "Report splits 'optimization.splitChunks' refused because 'maxInitialRequests' or 'maxAsyncRequests' was already reached (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.splitChunksCapped",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report splits 'optimization.splitChunks' refused because 'maxInitialRequests' or 'maxAsyncRequests' was already reached (requires 'hints' to be enabled).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "performance-unsplit-vendors": Object {
+    "configs": Array [
+      Object {
+        "description": "Report initial chunks that mix 'node_modules' code with application code, so every application change re-downloads the dependencies too (requires 'hints' to be enabled).",
+        "multiple": false,
+        "path": "performance.unsplitVendors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Report initial chunks that mix 'node_modules' code with application code, so every application change re-downloads the dependencies too (requires 'hints' to be enabled).",
     "multiple": false,
     "simpleType": "boolean",
   },

@@ -5359,6 +5359,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "conflictingResourceHints": {
+          "description": "Report chunks asked for as both prefetch and preload from the same place, where the two directives contradict each other.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "duplicateModules": {
           "description": "Report modules emitted into more than one chunk, and the bytes the extra copies cost.",
           "type": "boolean",
@@ -5371,6 +5376,11 @@
         },
         "dynamicExports": {
           "description": "Report modules whose exports cannot be read statically, which stops anything importing them from being tree-shaken (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "entrypointOverlap": {
+          "description": "Report modules shipped by more than one entrypoint, which every page that loads them downloads again (requires 'hints' to be enabled).",
           "type": "boolean",
           "added": "5.110.0"
         },
@@ -5403,6 +5413,16 @@
         },
         "scopeHoistingBailouts": {
           "description": "Report modules that could not be merged into their importer's scope, and why (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "splitChunksCapped": {
+          "description": "Report splits 'optimization.splitChunks' refused because 'maxInitialRequests' or 'maxAsyncRequests' was already reached (requires 'hints' to be enabled).",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
+        "unsplitVendors": {
+          "description": "Report initial chunks that mix 'node_modules' code with application code, so every application change re-downloads the dependencies too (requires 'hints' to be enabled).",
           "type": "boolean",
           "added": "5.110.0"
         },
