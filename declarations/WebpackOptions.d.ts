@@ -887,7 +887,8 @@ export type CssParserDashedIdents = boolean;
 /**
  * Configure how CSS content is exported as default.
  */
-export type CssParserExportType = "link" | "text" | "css-style-sheet" | "style";
+export type CssParserExportType =
+	"link" | "text" | "css-style-sheet" | "style" | "url";
 /**
  * Auto-emit `<link rel="preload" as="font">` for the primary `src` URL of each `@font-face` reachable from an HTML entry's initial CSS. Only the first URL per `@font-face` is preloaded (preloading every format would double-download). Off by default; `parser.css.urlHints` rules and per-URL magic comments still override the seeded defaults. Set `output.crossOriginLoading` so the preload matches the font's CORS fetch.
  * @since 5.109.0
