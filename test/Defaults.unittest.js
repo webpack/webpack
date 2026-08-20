@@ -35,6 +35,15 @@ afterAll(() => {
 const quoteMeta = (str) => str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
 
 const cwd = process.cwd();
+// `process.chdir` throws in a worker thread, which is where jest runs on Bun
+const canChangeDirectory = (() => {
+	try {
+		process.chdir(cwd);
+		return true;
+	} catch (_err) {
+		return false;
+	}
+})();
 const cwdRegExp = new RegExp(
 	`${quoteMeta(cwd)}((?:\\\\)?(?:[a-zA-Z.\\-_]+\\\\)*)`,
 	"g"
@@ -1168,14 +1177,16 @@ describe("snapshots", () => {
 	 * @param {string} name name
 	 * @param {Configuration} options options
 	 * @param {(result1: ExceptResult, result2: ExceptResult) => void} fn expect result
-	 * @param {() => void=} before before
-	 * @param {() => void=} after after
+	 * @param {string=} directory cwd to resolve the defaults against
 	 */
-	const test = (name, options, fn, before, after) => {
-		it(`should generate the correct defaults from ${name}`, () => {
+	const test = (name, options, fn, directory) => {
+		// a case that moves the cwd cannot run where `process.chdir` throws
+		const itInDirectory = directory && !canChangeDirectory ? it.skip : it;
+
+		itInDirectory(`should generate the correct defaults from ${name}`, () => {
 			if (!("mode" in options)) options.mode = "none";
 			try {
-				if (before) before();
+				if (directory) process.chdir(directory);
 				const result = getDefaultConfig(options);
 
 				const diff = stripVTControlCharacters(
@@ -1185,7 +1196,7 @@ describe("snapshots", () => {
 
 				fn(expect(new Diff(diff)), expect(result));
 			} finally {
-				if (after) after();
+				if (directory) process.chdir(cwd);
 			}
 		});
 	};
@@ -4532,12 +4543,7 @@ describe("snapshots", () => {
 			-     "cache": false,
 			+     "cache": true,
 		`),
-		() => {
-			process.chdir(path.resolve(__dirname, "fixtures"));
-		},
-		() => {
-			process.chdir(cwd);
-		}
+		path.resolve(__dirname, "fixtures")
 	);
 
 	test(
