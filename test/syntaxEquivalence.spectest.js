@@ -331,8 +331,12 @@ describe("printer output in real Chrome", () => {
 						why = `${facet}: ${a.length} vs ${b.length}`;
 						break;
 					}
-					const found = a.findIndex(
-						(entry, i) => !numericallyEqual(entry, b[i])
+					// Only an element's own shape carries a number the printer rounds —
+					// a `style` attribute's computed lengths. Text, scripts, templates
+					// and shadow content are compared exactly, as they are written.
+					const rounded = facet === "elements";
+					const found = a.findIndex((entry, i) =>
+						rounded ? !numericallyEqual(entry, b[i]) : entry !== b[i]
 					);
 					if (found !== -1) {
 						why = `${facet} ${found}: ${a[found]} vs ${b[found]}`;

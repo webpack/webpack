@@ -307,10 +307,6 @@ const installHelpers = () => {
 			/#[\da-f]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\([^()]*\)/gi,
 			(color) => painted(color)
 		);
-		// A named color is the same color spelled a second way, and `painted`
-		// hands back anything that is not one — so every bare identifier is asked
-		// rather than matched against a list the page would have to carry.
-		out = out.replace(/[a-z][\w-]*/gi, (word) => painted(word));
 		return (
 			out
 				// Nothing fuses with a comma or a block's delimiters, so the whitespace
@@ -1411,6 +1407,12 @@ const numericallyEqual = (one, other) => {
 		const a = Number(oneNumbers[at]);
 		const b = Number(otherNumbers[at]);
 		if (!Number.isFinite(a) || !Number.isFinite(b)) return false;
+		// The rounding this tolerance stands for never moves a number it writes
+		// back as an integer, so a pair of those has to match exactly.
+		if (Number.isInteger(a) && Number.isInteger(b)) {
+			if (a !== b) return false;
+			continue;
+		}
 		const scale = Math.max(Math.abs(a), Math.abs(b), 1);
 		if (Math.abs(a - b) > scale * NUMERIC_TOLERANCE) return false;
 	}
