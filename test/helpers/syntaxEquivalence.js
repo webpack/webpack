@@ -152,10 +152,70 @@ const installHelpers = () => {
 		let end = at + 1 + hex[0].length;
 		if (/[\t\n\f\r ]/.test(text[end])) end++;
 		const code = Number.parseInt(hex[0], 16);
+		// §4.3.7: zero, a surrogate and anything past the maximum all name U+FFFD.
 		const named =
-			code === 0 || code > 0x10ffff ? "\uFFFD" : String.fromCodePoint(code);
+			code === 0 || code > 0x10ffff || (code >= 0xd800 && code <= 0xdfff)
+				? "\uFFFD"
+				: String.fromCodePoint(code);
 		return [named, end];
 	};
+
+	// cspell:ignore rlh cqmin cqmax vmin vmax dvmin dvmax lvmin lvmax svmin svmax
+	// Every length unit CSS Values 4 states, longest first so `vmin` is not read
+	// as `vm` — a zero is the same zero in any of them.
+	const LENGTH_UNITS = [
+		"cqmin",
+		"cqmax",
+		"svmin",
+		"svmax",
+		"lvmin",
+		"lvmax",
+		"dvmin",
+		"dvmax",
+		"vmin",
+		"vmax",
+		"rlh",
+		"rem",
+		"rex",
+		"rch",
+		"ric",
+		"svw",
+		"svh",
+		"svi",
+		"svb",
+		"lvw",
+		"lvh",
+		"lvi",
+		"lvb",
+		"dvw",
+		"dvh",
+		"dvi",
+		"dvb",
+		"cqw",
+		"cqh",
+		"cqi",
+		"cqb",
+		"px",
+		"cm",
+		"mm",
+		"in",
+		"pt",
+		"pc",
+		"em",
+		"ex",
+		"ch",
+		"ic",
+		"lh",
+		"vw",
+		"vh",
+		"vi",
+		"vb",
+		"q"
+	];
+	const ZERO_LENGTH_RE = new RegExp(
+		`(^|[^\\w.#%-])0(?:\\.0*)?(?:${LENGTH_UNITS.join("|")})\\b`,
+		"gi"
+	);
 
 	// A character an escape can be dropped from without the value reading
 	// differently — everything a name is spelled out of.
@@ -270,10 +330,7 @@ const installHelpers = () => {
 				.replace(/(^|[^\w.%-])0*(\.\d)/g, "$10$2")
 				// A zero length is the same zero however it is spelled, and a value
 				// held as written is the one place the printer's `0px` → `0` shows.
-				.replace(
-					/(^|[^\w.#%-])0(?:\.0*)?(?:px|em|rem|q|in|pt|pc|cm|mm)\b/gi,
-					"$10"
-				)
+				.replace(ZERO_LENGTH_RE, "$10")
 				.trim()
 		);
 	};

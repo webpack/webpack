@@ -2791,6 +2791,18 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			// 3px against 1.5px at `zoom:2`).
 			["a{outline-width:initial}", "a{outline-width:initial}"],
 			["a{text-align:initial}", "a{text-align:start}"],
+			// The source carries its own comments, so the queued copy is claimed
+			// rather than flushed again after the rule.
+			[
+				"@container style(--a: /*! keep */ b){.a{color:red}}",
+				"@container style(--a: /*! keep */ b){.a{color:red}}"
+			],
+			// Only decoding tells this at-keyword from `@namespace`, so the empty
+			// rule the prologue needs is kept either way.
+			[
+				".e{}@name\\73pace url(x);.a{color:red}",
+				".e{}@name\\73pace url(x);.a{color:red}"
+			],
 			["a{font-size:initial}", "a{font-size:initial}"]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
