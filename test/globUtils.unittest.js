@@ -129,7 +129,12 @@ const PATTERNS = [
 	"@(a|)/a",
 	"+(a|)/b",
 	"a/!(x)",
-	"**/a?c/x.js"
+	"**/a?c/x.js",
+	"/a/./b.js",
+	"**/a/../b.js",
+	"**/./*.js",
+	"**/../b.js",
+	"a//b.js"
 ];
 
 const PATHS = [
@@ -224,7 +229,15 @@ const PATHS = [
 	"b/a",
 	"a/c/x.js",
 	"x/bb.js",
-	"x/].js"
+	"x/].js",
+	"/a/./b.js",
+	"/a/../a/b.js",
+	"/a/x/../b.js",
+	"/a/b/..",
+	"a/b//",
+	"//a/b",
+	"/a/b.js//",
+	"./a.js"
 ];
 
 describe("globUtils", () => {
@@ -699,6 +712,16 @@ describe("globUtils", () => {
 				}
 			}
 			expect(mismatches).toEqual([]);
+		});
+
+		it("normalizes `.`, `..` and repeated separators on both sides", () => {
+			expect(createMatcher("/a/b.js")("/a/./b.js")).toBe(true);
+			expect(createMatcher("/a/./b.js")("/a/./b.js")).toBe(true);
+			expect(createMatcher("/a/b.js")("/a/../a/b.js")).toBe(true);
+			expect(createMatcher("**/a/../b.js")("/b.js")).toBe(true);
+			expect(createMatcher("**/a/b/c.js")("/a//b/c.js")).toBe(true);
+			// `**/..` cannot be resolved away
+			expect(createMatcher("**/../b.js")("/a/b.js")).toBe(false);
 		});
 
 		it("supports extended globs", () => {
