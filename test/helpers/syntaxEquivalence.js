@@ -237,6 +237,10 @@ const installHelpers = () => {
 			/#[\da-f]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\([^()]*\)/gi,
 			(color) => painted(color)
 		);
+		// A named color is the same color spelled a second way, and `painted`
+		// hands back anything that is not one — so every bare identifier is asked
+		// rather than matched against a list the page would have to carry.
+		out = out.replace(/[a-z][\w-]*/gi, (word) => painted(word));
 		return (
 			out
 				// Nothing fuses with a comma or a block's delimiters, so the whitespace

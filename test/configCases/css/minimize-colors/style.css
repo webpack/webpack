@@ -121,6 +121,8 @@
    color converted through sRGB maps back into it as a different point */
 .g01 { background-image: linear-gradient(90deg in lch, red, lch(50 20 30)) }
 .g02 { background-image: linear-gradient(in oklch, red, oklch(0.7 0.1 200)) }
-/*! without a space the stops interpolate in sRGB, where the fold is what the
-   engine does anyway */
+/*! declined without a space too: a stop outside sRGB is handed back as written
+   rather than computed, so converting one moves what the CSSOM reports */
 .g03 { background-image: linear-gradient(90deg, red, lch(50 20 30)) }
+/*! the legacy sRGB forms all compute to `rgb(…)` however they are spelled */
+.g04 { background-image: linear-gradient(90deg, red, rgb(1, 2, 3)) }
