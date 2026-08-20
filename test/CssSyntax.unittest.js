@@ -3496,6 +3496,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[
 				"a{box-shadow:0 0 0 0 red,1px 1px 0 0 blue}",
 				"a{box-shadow:0 0 red,1px 1px blue}"
+			],
+			// The components are as authored, so a zero is as often `0px` as `0` —
+			// the zero-unit drop only prints later.
+			["a{box-shadow:0px 0px 0px 0px red}", "a{box-shadow:0 0 red}"],
+			["a{box-shadow:1px 1px 0em 0rem red}", "a{box-shadow:1px 1px red}"],
+			[
+				"a{box-shadow:0px 0px 0px 1px red inset,0px 0em 0px 0px blue inset}",
+				"a{box-shadow:0 0 0 1px red inset,0 0 blue inset}"
 			]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
@@ -3507,6 +3515,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a length past them is not zero", "a{box-shadow:0 0 0 1px red}"],
 			["the value is a keyword", "a{box-shadow:none}"],
 			["the property states no shadow", "a{stroke-dasharray:1 0 0}"],
+			// `0%` is a percentage, which a shadow's `<length>` slots do not take.
+			["a percentage is no zero length", "a{box-shadow:1px 1px 0% 0% red}"],
 			["a layer holds a string", 'a{box-shadow:0 0 0 0 red,"a"}'],
 			// A comma with nothing either side is a layer no shadow fills.
 			["a trailing comma parts an empty layer", "a{box-shadow:0 0 0 0 red,}"],

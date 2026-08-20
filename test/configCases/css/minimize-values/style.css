@@ -350,6 +350,10 @@
 .t144 { --t144: foo( 1px , 2px ) , [ bar ] }
 /*! webpack: declined: a string is one token, whatever stands inside it */
 .t145 { --t145: "a  b"   "c ,  d" }
+/*! webpack: a shadow's trailing zero says nothing, in whatever unit it is written */
+.t146 { box-shadow: 0px 0px 0px 1px red inset, 0px 0em 0px 0px blue inset }
+/*! webpack: declined: `0%` is a percentage, which a shadow's slots do not take */
+.t147 { box-shadow: 1px 1px 0% 0% red }
 /*! gradient: the last stop's position is where CSS Images 3's fix-up already puts it */
 .t72 { background-image: linear-gradient(red, blue 100%) }
 /*! ...and a conic gradient's own turn, however it is spelled */

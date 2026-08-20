@@ -159,6 +159,8 @@ Array [
   "/*! webpack: ...so a run of whitespace is one space, and none at all where a
    comma or a block edge already parts the two */.t143{--t143:1px 2px}.t144{--t144:foo(1px,2px),[bar]}",
   "/*! webpack: declined: a string is one token, whatever stands inside it */.t145{--t145:\\"a  b\\" \\"c ,  d\\"}",
+  "/*! webpack: a shadow's trailing zero says nothing, in whatever unit it is written */.t146{box-shadow:0 0 0 1px red inset,0 0 blue inset}",
+  "/*! webpack: declined: \`0%\` is a percentage, which a shadow's slots do not take */.t147{box-shadow:1px 1px 0% 0% red}",
   "/*! gradient: the last stop's position is where CSS Images 3's fix-up already puts it */.t72{background-image:linear-gradient(red,blue)}",
   "/*! ...and a conic gradient's own turn, however it is spelled */.t72b{background-image:conic-gradient(red,blue)}",
   "/*! gradient: two stops of one color are the one stop naming both positions */.t72c{background-image:linear-gradient(red 0% 50%,blue)}",
