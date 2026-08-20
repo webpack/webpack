@@ -160,7 +160,7 @@ const installHelpers = () => {
 		return [named, end];
 	};
 
-	// cspell:ignore rlh cqmin cqmax vmin vmax dvmin dvmax lvmin lvmax svmin svmax
+	// cspell:ignore rlh rcap cqmin cqmax vmin vmax dvmin dvmax lvmin lvmax svmin svmax
 	// Every length unit CSS Values 4 states, longest first so `vmin` is not read
 	// as `vm` — a zero is the same zero in any of them.
 	const LENGTH_UNITS = [
@@ -172,8 +172,10 @@ const installHelpers = () => {
 		"lvmax",
 		"dvmin",
 		"dvmax",
+		"rcap",
 		"vmin",
 		"vmax",
+		"cap",
 		"rlh",
 		"rem",
 		"rex",

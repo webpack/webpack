@@ -23,6 +23,10 @@
 	<div style="top:anchor-size(--a1 width">declines: what the value leaves open would swallow the wrapper's own brace</div>
 	<div style="box-shadow:var(--t,10px">declines: the same, unclosed in a fallback</div>
 	<div style="content:'a">declines: the same, unclosed in a string</div>
+	<div style="width:calc(1px + 2px)">a closed pair leaves nothing open</div>
+	<div style="content:'\'';color:red">an escape inside a string is not its end</div>
+	<div style="--escaped:\7d ">an escape outside one is not a brace either</div>
+	<div style="--ran-out:\">the escape the value ran out of</div>
 	<!-- a value spelling the wrapper is read back as the value it is -->
 	<div style="content:'a{color:red}'">wrapper-shaped string</div>
 	<div style="--wrapper-shaped:a{color:red}">wrapper-shaped custom property</div>

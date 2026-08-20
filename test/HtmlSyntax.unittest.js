@@ -6375,6 +6375,15 @@ describe("SourceProcessor — minify serialization edge cases", () => {
 	const minify = (source) =>
 		new SourceProcessor().process(source, { mode: "minify" }).code;
 
+	describe("style attributes the css minifier cannot read", () => {
+		it("keeps one the css parser runs out of stack on", () => {
+			// Balanced, so nothing is left open for the wrapper to lose — the parser
+			// still recurses per block, and the value has to come back as written.
+			const deep = `--x:${"(".repeat(20000)}${")".repeat(20000)}`;
+			expect(minify(`<p style="${deep}">x</p>`)).toContain(deep);
+		});
+	});
+
 	describe("cloned / reconstructed formatting elements", () => {
 		it("keeps the reconstructed <b> around text after an implied </p>", () => {
 			expect(minify("<p><b>a<p>b")).toBe("<p><b>a</b><p><b>b</b>");
@@ -6582,6 +6591,16 @@ describe("SourceProcessor — print modes", () => {
 		expect(print(source, "minify")).toBe(
 			"<!doctype html><div id=a class=x><p>hi <b>there</b><ul><li>one<li>two</ul></div>"
 		);
+	});
+
+	it("escapes text to the letter of \u00A713.3 outside minification", () => {
+		// A bare `>` is only ever a character, so minification keeps it; the CR is
+		// a reference either way, since a literal one would be read back as LF.
+		const source = "<p>a &amp; b &lt; c &gt; d &#13; e</p>";
+		expect(print(source, "beautify")).toBe(
+			"<p>a &amp; b &lt; c &gt; d &#13; e</p>"
+		);
+		expect(print(source, "minify")).toBe("<p>a & b &lt; c > d &#13; e");
 	});
 
 	it("beautifies to something that minifies back the same", () => {

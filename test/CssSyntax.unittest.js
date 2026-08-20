@@ -909,6 +909,20 @@ describe("CssSyntax — block streaming", () => {
 		expect(streamed[streamed.length - 1]).toBe("-AtRule|0|0");
 	});
 
+	it("keeps a descriptor opaque in a streamed body", () => {
+		// The block outlives the call that entered its rule, so `@property` /
+		// `@function` state is restored per frame rather than around one walk.
+		const value = "rgb(255,0,0)0.50px";
+		expect(minify(`@function --f(){${BIG}result:${value}}`)).toContain(
+			`result:${value}`
+		);
+		expect(
+			minify(
+				`@property --x{syntax:"*";inherits:false;${BIG}initial-value:${value}}`
+			)
+		).toContain(`initial-value:${value}`);
+	});
+
 	it("visits a streamed block's children in source order", () => {
 		// The collected walk emits every declaration and only then every child
 		// rule; a streamed block emits each child as it finishes, so declarations

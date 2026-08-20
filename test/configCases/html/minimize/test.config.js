@@ -27,9 +27,8 @@ module.exports = {
 		// — the repeated declaration after it goes.
 		expect(html).toContain("style='content:\"}\";color:red'>");
 
-		// `<selectedcontent>` is filled from the selected option by the engine, so
-		// the mirror is not markup to write back — an engine reading the output
-		// would mirror it a second time.
+		// The engine fills `<selectedcontent>` from the selected option, so writing
+		// the mirror back would have it mirrored a second time.
 		expect(html).toContain("<selectedcontent></selectedcontent>");
 
 		// Inert comments are dropped; behavior-bearing conditional comments stay.

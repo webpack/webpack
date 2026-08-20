@@ -1,6 +1,5 @@
 <!doctype html>
 <title>declarative shadow root</title>
-<!-- The parser attaches this shadow root to the `div`, so the `</a>` below
-     reconstructs its formatting element around what is left rather than
-     around the template too. -->
+<!-- The shadow root attaches to the `div`, so the `</a>` reconstructs its
+     formatting element around what is left rather than around the template. -->
 <a href="#x"><div><template shadowrootmode=open><slot></slot></template></a>
