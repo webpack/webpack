@@ -49,6 +49,8 @@ const PARENT_SEGMENT_REGEXP = /(?:^|\/)\.\.(?:\/|$)/;
 //            prefix instead and reject it
 //   `!(@(a))` still a negation — minimatch, and so `path.matchesGlob`, matches
 //            every name once a group nests inside the alternatives
+//   `{a,[b,c]}` two alternatives, since a `,` in a class is a member — as
+//            `braces` and picomatch read it, where bash and minimatch split it
 //   `*`      never an empty segment, and `a/**` is not `a` itself
 //   case     always sensitive — `path.matchesGlob` reads it off the host, so it
 //            ignores case on macOS and Windows
@@ -355,6 +357,25 @@ describe("globUtils", () => {
 			expect(globMatchWithOptions("./a?c", "./a/c", defaultOptions)).toBe(
 				false
 			);
+		});
+
+		// A `,` inside a character class is a member, not a separator, so the
+		// alternatives of `{a,[b,c]}` are `a` and `[b,c]`. That is what `braces`,
+		// and so micromatch, picomatch and fast-glob, read — `import.meta.glob`
+		// and `require.context` patterns are written against those. bash expands
+		// braces textually before globbing, and minimatch (so `path.matchesGlob`)
+		// follows it, splitting the class into `[b` and `c]`.
+		it("keeps a `,` inside a character class out of the brace split", () => {
+			for (const str of ["a", "b", "c", ","]) {
+				expect(
+					globMatchWithOptions("{a,[b,c]}.js", `${str}.js`, defaultOptions)
+				).toBe(true);
+			}
+			for (const str of ["[b", "c]"]) {
+				expect(
+					globMatchWithOptions("{a,[b,c]}.js", `${str}.js`, defaultOptions)
+				).toBe(false);
+			}
 		});
 
 		it("expands nested brace alternatives", () => {
@@ -816,6 +837,8 @@ describe("globUtils", () => {
 			expect(createMatcher("**/@([]|]|c).js")("x/|.js")).toBe(true);
 			expect(createMatcher("**/@([]|]|c).js")("x/c.js")).toBe(true);
 			expect(createMatcher("**/{a,[],]b}.js")("x/]b.js")).toBe(true);
+			expect(createMatcher("**/{a,[],]b}.js")("x/,b.js")).toBe(true);
+			expect(createMatcher("**/{a,[b,c]}.js")("x/,.js")).toBe(true);
 			// `?` is one character, never a separator
 			expect(createMatcher("**/a?c/x.js")("a/c/x.js")).toBe(false);
 			// `!(a)` is "not exactly a", so it matches `ab`
