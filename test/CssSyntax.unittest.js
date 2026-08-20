@@ -1268,13 +1268,13 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min(".a+.5m{c:1}")).toBe(".a+.5m{c:1}");
 	});
 
-	it("keeps a custom property's value as the source wrote it", () => {
-		// The value is the text `getPropertyValue()` hands back, so it is not
-		// rewritten — but a dropped comment leaves the boundary it stood for, which
-		// is a space only where the tokens it parts would otherwise fuse.
+	it("keeps a custom property's tokens as the source wrote them", () => {
+		// The value is the text `getPropertyValue()` hands back, so no token in it
+		// is rewritten — but a dropped comment leaves the boundary it stood for,
+		// which is a space only where the tokens it parts would otherwise fuse.
 		expect(min("a{--x:1px/*c*/2px}")).toBe("a{--x:1px 2px}");
 		expect(min("a{--x:1px 1px/*c*/1px 1px}")).toBe("a{--x:1px 1px 1px 1px}");
-		expect(min("a{--x:1px /*c*/ 2px}")).toBe("a{--x:1px  2px}");
+		expect(min("a{--x:1px /*c*/ 2px}")).toBe("a{--x:1px 2px}");
 		// Leading and trailing whitespace is not part of it.
 		expect(min("a{--x: 1px 2px }")).toBe("a{--x:1px 2px}");
 		// A `/*` inside a string is no comment.
@@ -1304,12 +1304,42 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min("a{--x:foo(1px/*c*/2px)/*c*/bar()}")).toBe(
 			"a{--x:foo(1px 2px)bar()}"
 		);
-		// Whitespace is a token of its own, so it is still written as it stands.
-		expect(min("a{--x:foo( /*c*/ a )}")).toBe("a{--x:foo(  a )}");
+		// Whitespace and a dropped comment are one boundary, not three.
+		expect(min("a{--x:foo( /*c*/ a )}")).toBe("a{--x:foo(a)}");
 		// A kept one is placed where it stood, at depth too.
 		expect(min("a{--x:foo(a/*!k*/b)}")).toBe("a{--x:foo(a/*!k*/b)}");
 		// A function closed at EOF has no `)` to write back.
 		expect(min("a{--x:foo(a/*c*/b")).toBe("a{--x:foo(a b}");
+	});
+
+	it("minifies the whitespace between a custom property's tokens", () => {
+		// Whitespace between two tokens says only that they are two, so a run of it
+		// is the one space they need and a substitution reads the same stream.
+		expect(min("a{--x:1px    2px}")).toBe("a{--x:1px 2px}");
+		expect(min("a{--x:1px\n\t2px}")).toBe("a{--x:1px 2px}");
+		// Nothing fuses with a comma, so the boundaries either side of one go.
+		expect(min("a{--x:1px , 2px ,3px}")).toBe("a{--x:1px,2px,3px}");
+		expect(min("a{--x: , a}")).toBe("a{--x:,a}");
+		expect(min("a{--x:a , }")).toBe("a{--x:a,}");
+		// Nor with a block's delimiters, at any depth and in a block of every shape.
+		expect(min("a{--x:foo( 1 ,  2 )}")).toBe("a{--x:foo(1,2)}");
+		expect(min("a{--x:[ a  b ]}")).toBe("a{--x:[a b]}");
+		expect(min("a{--x:{ a:1 }}")).toBe("a{--x:{a:1}}");
+		expect(min("a{--x:( a ( b ) )}")).toBe("a{--x:(a (b))}");
+		// A string or a url is one token, written back whole.
+		expect(min('a{--x:"a  b"  c}')).toBe('a{--x:"a  b" c}');
+		expect(min("a{--x:url( a  b )}")).toBe("a{--x:url( a  b )}");
+		// `calc()`'s `+` is an operator only with whitespace either side, and a
+		// collapsed run is still whitespace.
+		expect(min("a{--x:calc( 1px  +  2px )}")).toBe("a{--x:calc(1px + 2px)}");
+		// A kept comment takes the boundary it stood in with it.
+		expect(min("a{--x:1px  /*!k*/  2px}")).toBe("a{--x:1px /*!k*/ 2px}");
+		expect(min("a{--x:foo(  /*!k*/  a)}")).toBe("a{--x:foo(/*!k*/ a)}");
+		// The last boundary parts the value from a `)` it cannot fuse with, so only
+		// a kept comment in it is left to print.
+		expect(min("a{--x:foo(a  /*!k*/)}")).toBe("a{--x:foo(a /*!k*/)}");
+		expect(min("a{--x:foo(a/*!k*/)}")).toBe("a{--x:foo(a/*!k*/)}");
+		expect(min("a{--x:foo(a  /*c*/)}")).toBe("a{--x:foo(a)}");
 	});
 
 	it("separates rewritten numbers that would fuse", () => {

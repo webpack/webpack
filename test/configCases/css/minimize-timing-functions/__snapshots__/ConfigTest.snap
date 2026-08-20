@@ -40,7 +40,7 @@ Array [
   "/*! timing: in the -webkit-animation shorthand */.t36{-webkit-animation:fade 3s}",
   "/*! timing: in the transition shorthand */.t37{transition:color 3s step-start}",
   "/*! timing: broken syntax */",
-  "/*! webpack: a custom property's easing function is opaque */.t39{--easing:cubic-bezier(0.25, 0.1, 0.25, 1)}",
+  "/*! webpack: a custom property's easing function is opaque, bar its spacing */.t39{--easing:cubic-bezier(0.25,0.1,0.25,1)}",
   "/*! webpack: a signed argument still resolves to the keyword */.t40{animation-timing-function:ease-in-out}",
   "/*! webpack: a non-integer step count keeps the function */.t41{animation-timing-function:steps(1.5,end)}",
 ]
