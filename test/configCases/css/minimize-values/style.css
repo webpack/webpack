@@ -348,8 +348,8 @@
    comma or a block edge already parts the two */
 .t143 { --t143:  1px    2px  }
 .t144 { --t144: foo( 1px , 2px ) , [ bar ] }
-/*! webpack: ...on either side of a block delimiter too, bar `(`, which an
-   identifier in front of turns into a function token */
+/*! webpack: ...on either side of a block delimiter, except `(`, which forms a
+   function token after an identifier */
 .t144a { --t144a: a [b] c (d) }
 /*! webpack: declined: a string is one token, whatever stands inside it */
 .t145 { --t145: "a  b"   "c ,  d" }
