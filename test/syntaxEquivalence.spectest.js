@@ -70,17 +70,7 @@ const VALUE_BUDGET = 2000;
 // exactly, so an entry outlives its defect by one run.
 const FILED_CONFIG_CSS_DEFECTS = new Map();
 
-const FILED_CONFIG_HTML_DEFECTS = new Map([
-	[
-		// §13.2.6.4: a `<template>` carrying `shadowrootmode` becomes its parent's
-		// shadow root and is taken out of the tree, so the `</a>` after it
-		// reconstructs the formatting element around one child fewer. webpack
-		// models neither, because the tree it builds is also what it serializes:
-		// a template removed from the tree is a template missing from the output.
-		"test/configCases/html/declarative-shadow-root/page.html",
-		"a declarative shadow root is not taken out of the tree, so what follows it is built around one child more"
-	]
-]);
+const FILED_CONFIG_HTML_DEFECTS = new Map();
 
 const FILED_WPT_HTML_DEFECTS = new Map([
 	[

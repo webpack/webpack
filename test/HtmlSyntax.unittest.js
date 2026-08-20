@@ -3574,6 +3574,65 @@ describe("parseHtml", () => {
 			expect(/** @type {MatText} */ (nodes[1].children[0]).data).toBe("3");
 		});
 
+		// A formatting end tag the list cannot answer for is read as any other end
+		// tag would be, rather than dropped. The marker a `<select>` leaves behind
+		// outlives the select, so the `<em>` around one is on the far side of it;
+		// Noah's Ark drops the earliest `<b>` while leaving it open.
+		it.each([
+			[
+				"a marker stands between them",
+				"<em><select></select></em><x>",
+				["em", "x"]
+			],
+			[
+				"a second select closed it",
+				"<em><select><select></select></em><x>",
+				["em", "x"]
+			],
+			["an input closed it", "<em><select><input></em><x>", ["em", "x"]],
+			[
+				"Noah's Ark dropped it",
+				"<b><b><b><b></b></b></b><i></b><x>",
+				["b", "i"]
+			]
+		])(
+			"reads a formatting end tag as any other when %s",
+			(_name, src, shape) => {
+				expect(body(src).map((n) => n.tagName)).toEqual(shape);
+			}
+		);
+
+		// A `<template shadowrootmode>` is its parent's shadow root, which the
+		// engine takes out of the tree — so it is not a child the algorithm may
+		// carry into the formatting element it reconstructs around the rest. It
+		// only attaches where `attachShadow()` would: a host it accepts by name,
+		// a mode it knows, and none attached already.
+		it.each([
+			[
+				"attaches to its host",
+				"<a href=#x><div><template shadowrootmode=open><slot></slot></template></a>",
+				["template", "a"]
+			],
+			[
+				"cannot attach to that host",
+				"<a href=#x><li><template shadowrootmode=open><slot></slot></template></a>",
+				["a"]
+			],
+			[
+				"names no mode it knows",
+				"<a href=#x><div><template shadowrootmode=bogus><slot></slot></template></a>",
+				["a"]
+			],
+			[
+				"is the second on one host",
+				"<a href=#x><div><template shadowrootmode=open></template><template shadowrootmode=open></template></a>",
+				["template", "a"]
+			]
+		])("leaves a declarative shadow root where it %s", (_name, src, shape) => {
+			const nodes = body(src);
+			expect(nodes[1].children.map((n) => n.tagName)).toEqual(shape);
+		});
+
 		it("should apply Noah's Ark limit of three formatting elements", () => {
 			const nodes = body("<b><b><b><b></b></b></b></b>");
 			expect(nodes).toHaveLength(1);
