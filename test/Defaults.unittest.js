@@ -110,7 +110,8 @@ const getDefaultConfig = (config) => {
 		/** @type {EXPECTED_ANY} */ (config)
 	);
 	applyWebpackOptionsDefaults(/** @type {EXPECTED_ANY} */ (normalized));
-	process.chdir(cwd);
+	// `process.chdir` throws in a worker thread, where the cwd cannot have moved
+	if (process.cwd() !== cwd) process.chdir(cwd);
 	return /** @type {WebpackOptionsNormalized} */ (normalized);
 };
 

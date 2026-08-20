@@ -1,6 +1,7 @@
 "use strict";
 
 const { DefinePlugin } = require("../../../../");
+const supportsTraceEvents = require("../../../helpers/supportsTraceEvents");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -20,7 +21,8 @@ module.exports = {
 		new DefinePlugin({
 			NODE_VERSION: JSON.stringify(
 				process.versions.node.split(".").map(Number)[0]
-			)
+			),
+			TRACE_EVENTS: JSON.stringify(supportsTraceEvents())
 		})
 	]
 };

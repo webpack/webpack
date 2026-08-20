@@ -41,7 +41,6 @@ it("should load node builtins via dynamic import", async () => {
 	const sys = await load(import("sys"));
 	const timers = await load(import("timers"));
 	const tls = await load(import("tls"));
-	const traceEvents = await load(import("trace_events"));
 	const tty = await load(import("tty"));
 	const url = await load(import("url"));
 	const util = await load(import("util"));
@@ -82,7 +81,6 @@ it("should load node builtins via dynamic import", async () => {
 		sys,
 		timers,
 		tls,
-		trace_events: traceEvents,
 		tty,
 		url,
 		util,
@@ -92,6 +90,11 @@ it("should load node builtins via dynamic import", async () => {
 	};
 
 	const baseBuiltinCount = Object.keys(builtinImports).length;
+
+	// Unavailable off the main thread, on Node as well as Bun
+	const traceEvents = TRACE_EVENTS
+		? await load(import("trace_events"))
+		: undefined;
 
 	const diagnosticsChannel =
 		NODE_VERSION >= 14 ? await load(import("diagnostics_channel")) : undefined;
@@ -127,6 +130,7 @@ it("should load node builtins via dynamic import", async () => {
 		NODE_VERSION >= 14 ? await load(import("fs/promises")) : undefined;
 
 	const optionalBuiltins = [
+		["trace_events", traceEvents],
 		["diagnostics_channel", diagnosticsChannel],
 		["readline/promises", readlinePromises],
 		["stream/consumers", streamConsumers],
@@ -291,7 +295,9 @@ it("should load node builtins via dynamic import", async () => {
 	});
 
 	expect(typeof tls.createServer).toBe("function");
-	expect(typeof traceEvents.getEnabledCategories).toBe("function");
+	expectIfAvailable(traceEvents, (traceEvents) => {
+		expect(typeof traceEvents.getEnabledCategories).toBe("function");
+	});
 	expect(typeof tty.isatty).toBe("function");
 
 	const parsed = url.parse("http://example.com/path");
