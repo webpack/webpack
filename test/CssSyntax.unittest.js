@@ -1097,9 +1097,9 @@ describe("CssSyntax — block streaming", () => {
 	});
 
 	it("declines to stream a block a longhand family could still merge in", () => {
-		// `_mergeBoxLonghands` needs every declaration at once, and only runs in a
-		// block with no child rule — so such a block is never streamed, however far
-		// past the threshold it grows, and its four longhands still collapse.
+		// `_mergeBoxLonghands` needs every declaration at once, so a block holding
+		// no child rule is never streamed, however far past the threshold it grows,
+		// and its four longhands still collapse.
 		const src = `.root{${repeat(
 			20000,
 			(i) => `--v${i}:${i};`
@@ -4335,6 +4335,40 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		])("declines across %s", (_name, between) => {
 			const css = `a{margin-top:1px;${between};margin-right:2px;margin-bottom:1px;margin-left:2px}`;
 			expect(minify(css)).toBe(css);
+		});
+
+		it("steps over a child rule standing outside the family", () => {
+			// A nested rule is no declaration, so it is not in the adjacency scan —
+			// but only one *between* the longhands is one the merge moves.
+			expect(
+				minify(
+					"a{margin-top:1px;margin-right:2px;margin-bottom:1px;margin-left:2px;&:hover{color:red}}"
+				)
+			).toBe("a{margin:1px 2px;&:hover{color:red}}");
+			expect(
+				minify(
+					"a{@supports (color:red){color:red}margin-inline-start:1px;margin-inline-end:2px}"
+				)
+			).toBe("a{@supports (color:red){color:red}margin-inline:1px 2px}");
+		});
+
+		it("declines across a child rule, which may write the family itself", () => {
+			// What the rule sets is not read here, so every one of them blocks: a
+			// nested `@supports` re-declaring a longhand is the common shape.
+			const supports =
+				"a{margin-inline-start:1px;@supports (color:red){margin-inline-start:9px}margin-inline-end:2px}";
+			expect(minify(supports)).toBe(supports);
+			const nested =
+				"a{margin-top:1px;margin-right:2px;&:hover{color:red}margin-bottom:1px;margin-left:2px}";
+			expect(minify(nested)).toBe(nested);
+			// One family blocked leaves the other free.
+			expect(
+				minify(
+					"a{margin-top:1px;margin-right:2px;margin-bottom:1px;margin-left:2px;padding-top:1px;&:hover{x:1}padding-right:2px;padding-bottom:1px;padding-left:2px}"
+				)
+			).toBe(
+				"a{margin:1px 2px;padding-top:1px;&:hover{x:1}padding-right:2px;padding-bottom:1px;padding-left:2px}"
+			);
 		});
 
 		it("declines `inset` when the target cannot read the shorthand", () => {

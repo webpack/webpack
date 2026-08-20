@@ -276,6 +276,10 @@
 .t105 { border-top-color: red; border: 1px solid; border-right-color: red; border-bottom-color: red; border-left-color: red }
 /*! webpack: ...but an unrelated property between them does not */
 .t106 { border-top-color: red; color: red; border-right-color: red; border-bottom-color: red; border-left-color: red }
+/*! webpack: a child rule outside the family is nothing the merge steps over */
+.t106a { margin-top: 1px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px; &:hover { color: red } }
+/*! webpack: declined: one between them may write the family itself */
+.t106b { margin-top: 1px; margin-right: 2px; @supports (color: red) { margin-top: 9px } margin-bottom: 1px; margin-left: 2px }
 /*! webpack: the four corners merge too, clockwise from the top left */
 .t107 { border-top-left-radius: 1px; border-top-right-radius: 2px; border-bottom-right-radius: 3px; border-bottom-left-radius: 4px }
 /*! webpack: declined: a corner set to two radii needs the shorthand's `/` form */
