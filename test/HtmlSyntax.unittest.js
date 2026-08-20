@@ -4620,6 +4620,18 @@ describe("SourceProcessor — removeImpliedTags", () => {
 		).toBe("<!doctype html><body> <p>x");
 	});
 
+	it("materializes an implied tag whose content opens in the head", () => {
+		// A start tag `inBody` ignores still closed `<head>` on the way there, so
+		// what follows it belongs to `<body>`; dropping the tag too would send it
+		// back to the head the insertion modes had already left (§13.2.6.4.6).
+		expect(
+			new SourceProcessor().process("<tr><style>a{color:red}</style>", {
+				mode: "minify",
+				removeImpliedTags: true
+			}).code
+		).toBe("<body><style>a{color:red}</style>");
+	});
+
 	it("keeps a <html> that carries an attribute", () => {
 		expect(
 			new SourceProcessor().process("<html lang=en><body>x", { mode: "minify" })
@@ -5584,6 +5596,24 @@ describe("SourceProcessor — streamed walk recycling", () => {
 		for (let i = 0; i < body.length; i += 4) {
 			expect(body.slice(i, i + 4)).toEqual(["+p", "+b", "-b", "-p"]);
 		}
+	});
+
+	it("materializes a streamed implied tag as the walked one does", () => {
+		// The streamed path decides this where the node is known, the walked one on
+		// the first piece emitted, so the two have to agree on the same document.
+		const opening = "<tr><style>a{color:red}</style>";
+		/**
+		 * @param {string} src source
+		 * @returns {string} the minified document
+		 */
+		const minify = (src) =>
+			new SourceProcessor().process(src, {
+				mode: "minify",
+				removeImpliedTags: true
+			}).code;
+		const walked = minify(`${opening}<p>x</p>`);
+		const streamed = minify(`${opening}${"<p>x</p>".repeat(BIG)}`);
+		expect(streamed.slice(0, walked.length)).toBe(walked);
 	});
 
 	it("honours skipChildren() on a streamed element", () => {
