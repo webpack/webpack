@@ -10,6 +10,7 @@ exports[`ConfigTestCases html minimize-srcdoc minimize-srcdoc should compile 1`]
 <iframe id=entities srcdoc=\\"<p>a & b &amp;lt; c\\"></iframe>
 <iframe id=quote-in-body srcdoc=\\"<p title=q>quoted\\"></iframe>
 <iframe id=upper srcdoc=\\"<em>up</em>\\"></iframe>
+<iframe id=conditional srcdoc=\\"<!--[if IE]><p class=ie>downlevel<![endif]-->\\"></iframe>
 <iframe id=bare srcdoc=\\"<p>bare\\" title=after></iframe>
 <iframe id=empty srcdoc></iframe>
 <iframe id=none src=child.html></iframe>
