@@ -143,6 +143,9 @@ const installHelpers = () => {
 	 * @param {number} at the index of the backslash
 	 * @returns {[string, number]} the character it names, and where it ends
 	 */
+	// The three code points CSS Syntax §3.3 calls a newline, `\r\n` included.
+	const NEWLINE = /[\n\r\f]/;
+
 	const readEscape = (text, at) => {
 		const hex = /^[\da-f]{1,6}/i.exec(text.slice(at + 1, at + 7));
 		if (hex === null) {
@@ -253,6 +256,13 @@ const installHelpers = () => {
 			// escaped in a single spelling where the character it names would
 			// otherwise read as punctuation.
 			if (ch === "\\") {
+				// §4.3.4: a `\` before a newline continues the string's line — the pair
+				// names nothing, unlike every other escape.
+				if (quote !== "" && NEWLINE.test(text[at + 1] || "")) {
+					if (text[at + 1] === "\r" && text[at + 2] === "\n") at++;
+					at++;
+					continue;
+				}
 				const [named, end] = readEscape(text, at);
 				// §4.3.4: a `\` a string runs out after names nothing, unlike the
 				// U+FFFD the same escape names anywhere else.
