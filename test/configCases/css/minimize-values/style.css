@@ -239,7 +239,7 @@
 .t88 { color: rgba(255, 0, 0, .2) }
 /*! webpack: ...collapsing to 4 digits when every pair repeats */
 .t89 { color: rgba(255, 0, 0, .8) }
-/*! webpack: a custom property's value is respelled like any other */
+/*! webpack: a custom property's tokens are never respelled, only spaced anew */
 .t90 { --width: 16px; --alpha: rgba(0, 0, 0, .5); --round: 33.33333333% }
 
 /* The polar and Lab color functions, each conversion read back from a canvas in
@@ -276,6 +276,10 @@
 .t105 { border-top-color: red; border: 1px solid; border-right-color: red; border-bottom-color: red; border-left-color: red }
 /*! webpack: ...but an unrelated property between them does not */
 .t106 { border-top-color: red; color: red; border-right-color: red; border-bottom-color: red; border-left-color: red }
+/*! webpack: a child rule outside the family is nothing the merge steps over */
+.t106a { margin-top: 1px; margin-right: 2px; margin-bottom: 1px; margin-left: 2px; &:hover { color: red } }
+/*! webpack: declined: one between them may write the family itself */
+.t106b { margin-top: 1px; margin-right: 2px; @supports (color: red) { margin-top: 9px } margin-bottom: 1px; margin-left: 2px }
 /*! webpack: the four corners merge too, clockwise from the top left */
 .t107 { border-top-left-radius: 1px; border-top-right-radius: 2px; border-bottom-right-radius: 3px; border-bottom-left-radius: 4px }
 /*! webpack: declined: a corner set to two radii needs the shorthand's `/` form */
@@ -335,11 +339,29 @@
 /*! webpack: a comment parts two components, so a rewrite keeps them apart */
 .t138 { margin: 1px 1px/*c*/1px 1px }
 .t139 { transition: opacity/*c*/1s ease-in 2s }
-/*! webpack: a custom property's value stays as written, but a comment in it
-   minifies to the boundary it stands for */
+/*! webpack: a custom property's tokens stay as written, but what stands between
+   two of them minifies to the boundary it is */
 .t140 { --t140: 1px 1px/*c*/1px 1px }
 .t141 { --t141: 1px 1px/*!k*/1px 1px }
 .t142 { --t142: minmax(1px/*c*/2px, calc(3px/*c*/4px)) }
+/*! webpack: ...so a run of whitespace is one space, and none at all where a
+   comma or a block edge already parts the two */
+.t143 { --t143:  1px    2px  }
+.t144 { --t144: foo( 1px , 2px ) , [ bar ] }
+/*! webpack: ...on either side of a block delimiter, except `(`, which forms a
+   function token after an identifier */
+.t144a { --t144a: a [b] c (d) }
+/*! webpack: declined: a string is one token, whatever stands inside it */
+.t145 { --t145: "a  b"   "c ,  d" }
+/*! webpack: a shadow's trailing zero says nothing, in whatever unit it is written */
+.t146 { box-shadow: 0px 0px 0px 1px red inset, 0px 0em 0px 0px blue inset }
+/*! webpack: declined: `0%` is a percentage, which a shadow's slots do not take */
+.t147 { box-shadow: 1px 1px 0% 0% red }
+/*! webpack: declined: writing the character a hex escape names is value-identical,
+   but it trades a repetitive ASCII alphabet for 3-byte UTF-8 runs — 6420 raw bytes
+   saved against 593 gzip bytes lost over 19 framework stylesheets */
+.t148 { content: "\f00d" }
+.t149 { content: "\2014" }
 /*! gradient: the last stop's position is where CSS Images 3's fix-up already puts it */
 .t72 { background-image: linear-gradient(red, blue 100%) }
 /*! ...and a conic gradient's own turn, however it is spelled */

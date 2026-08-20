@@ -1097,9 +1097,8 @@ describe("CssSyntax — block streaming", () => {
 	});
 
 	it("declines to stream a block a longhand family could still merge in", () => {
-		// `_mergeBoxLonghands` needs every declaration at once, and only runs in a
-		// block with no child rule — so such a block is never streamed, however far
-		// past the threshold it grows, and its four longhands still collapse.
+		// The merge needs every declaration at once, so a block holding no child
+		// rule is never streamed however far past the threshold it grows.
 		const src = `.root{${repeat(
 			20000,
 			(i) => `--v${i}:${i};`
@@ -1268,13 +1267,12 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min(".a+.5m{c:1}")).toBe(".a+.5m{c:1}");
 	});
 
-	it("keeps a custom property's value as the source wrote it", () => {
-		// The value is the text `getPropertyValue()` hands back, so it is not
-		// rewritten — but a dropped comment leaves the boundary it stood for, which
-		// is a space only where the tokens it parts would otherwise fuse.
+	it("keeps a custom property's tokens as the source wrote them", () => {
+		// No token is rewritten; a dropped comment leaves the boundary it stood
+		// for, a space only where the tokens it parts would fuse.
 		expect(min("a{--x:1px/*c*/2px}")).toBe("a{--x:1px 2px}");
 		expect(min("a{--x:1px 1px/*c*/1px 1px}")).toBe("a{--x:1px 1px 1px 1px}");
-		expect(min("a{--x:1px /*c*/ 2px}")).toBe("a{--x:1px  2px}");
+		expect(min("a{--x:1px /*c*/ 2px}")).toBe("a{--x:1px 2px}");
 		// Leading and trailing whitespace is not part of it.
 		expect(min("a{--x: 1px 2px }")).toBe("a{--x:1px 2px}");
 		// A `/*` inside a string is no comment.
@@ -1304,12 +1302,50 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min("a{--x:foo(1px/*c*/2px)/*c*/bar()}")).toBe(
 			"a{--x:foo(1px 2px)bar()}"
 		);
-		// Whitespace is a token of its own, so it is still written as it stands.
-		expect(min("a{--x:foo( /*c*/ a )}")).toBe("a{--x:foo(  a )}");
+		// Whitespace and a dropped comment are one boundary, not three.
+		expect(min("a{--x:foo( /*c*/ a )}")).toBe("a{--x:foo(a)}");
 		// A kept one is placed where it stood, at depth too.
 		expect(min("a{--x:foo(a/*!k*/b)}")).toBe("a{--x:foo(a/*!k*/b)}");
 		// A function closed at EOF has no `)` to write back.
 		expect(min("a{--x:foo(a/*c*/b")).toBe("a{--x:foo(a b}");
+	});
+
+	it("minifies the whitespace between a custom property's tokens", () => {
+		// Whitespace between two tokens says only that they are two, so a run of it
+		// is the one space they need and a substitution reads the same stream.
+		expect(min("a{--x:1px    2px}")).toBe("a{--x:1px 2px}");
+		expect(min("a{--x:1px\n\t2px}")).toBe("a{--x:1px 2px}");
+		// Nothing fuses with a comma, so the boundaries either side of one go.
+		expect(min("a{--x:1px , 2px ,3px}")).toBe("a{--x:1px,2px,3px}");
+		expect(min("a{--x: , a}")).toBe("a{--x:,a}");
+		expect(min("a{--x:a , }")).toBe("a{--x:a,}");
+		// Nor with a block's delimiters, on either side of one.
+		expect(min("a{--x:a [b] c}")).toBe("a{--x:a[b]c}");
+		expect(min("a{--x:a {b} c}")).toBe("a{--x:a{b}c}");
+		expect(min("a{--x:(a) b}")).toBe("a{--x:(a)b}");
+		expect(min("a{--x:url(a) b}")).toBe("a{--x:url(a)b}");
+		// `(` is the exception: an ident in front of it makes a function token.
+		expect(min("a{--x:a (b)}")).toBe("a{--x:a (b)}");
+		expect(min("a{--x:a/*c*/(b)}")).toBe("a{--x:a (b)}");
+		// Nor with a block's delimiters, at any depth and in a block of every shape.
+		expect(min("a{--x:foo( 1 ,  2 )}")).toBe("a{--x:foo(1,2)}");
+		expect(min("a{--x:[ a  b ]}")).toBe("a{--x:[a b]}");
+		expect(min("a{--x:{ a:1 }}")).toBe("a{--x:{a:1}}");
+		expect(min("a{--x:( a ( b ) )}")).toBe("a{--x:(a (b))}");
+		// A string or a url is one token, written back whole.
+		expect(min('a{--x:"a  b"  c}')).toBe('a{--x:"a  b" c}');
+		expect(min("a{--x:url( a  b )}")).toBe("a{--x:url( a  b )}");
+		// `calc()`'s `+` is an operator only with whitespace either side, and a
+		// collapsed run is still whitespace.
+		expect(min("a{--x:calc( 1px  +  2px )}")).toBe("a{--x:calc(1px + 2px)}");
+		// A kept comment takes the boundary it stood in with it.
+		expect(min("a{--x:1px  /*!k*/  2px}")).toBe("a{--x:1px /*!k*/ 2px}");
+		expect(min("a{--x:foo(  /*!k*/  a)}")).toBe("a{--x:foo(/*!k*/ a)}");
+		// The last boundary parts the value from a `)` it cannot fuse with, so only
+		// a kept comment in it is left to print.
+		expect(min("a{--x:foo(a  /*!k*/)}")).toBe("a{--x:foo(a /*!k*/)}");
+		expect(min("a{--x:foo(a/*!k*/)}")).toBe("a{--x:foo(a/*!k*/)}");
+		expect(min("a{--x:foo(a  /*c*/)}")).toBe("a{--x:foo(a)}");
 	});
 
 	it("separates rewritten numbers that would fuse", () => {
@@ -3466,6 +3502,14 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			[
 				"a{box-shadow:0 0 0 0 red,1px 1px 0 0 blue}",
 				"a{box-shadow:0 0 red,1px 1px blue}"
+			],
+			// The components are as authored, so a zero is as often `0px` as `0` —
+			// the zero-unit drop only prints later.
+			["a{box-shadow:0px 0px 0px 0px red}", "a{box-shadow:0 0 red}"],
+			["a{box-shadow:1px 1px 0em 0rem red}", "a{box-shadow:1px 1px red}"],
+			[
+				"a{box-shadow:0px 0px 0px 1px red inset,0px 0em 0px 0px blue inset}",
+				"a{box-shadow:0 0 0 1px red inset,0 0 blue inset}"
 			]
 		])("%s", (css, expected) => {
 			expect(minify(css)).toBe(expected);
@@ -3477,6 +3521,8 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			["a length past them is not zero", "a{box-shadow:0 0 0 1px red}"],
 			["the value is a keyword", "a{box-shadow:none}"],
 			["the property states no shadow", "a{stroke-dasharray:1 0 0}"],
+			// `0%` is a percentage, which a shadow's `<length>` slots do not take.
+			["a percentage is no zero length", "a{box-shadow:1px 1px 0% 0% red}"],
 			["a layer holds a string", 'a{box-shadow:0 0 0 0 red,"a"}'],
 			// A comma with nothing either side is a layer no shadow fills.
 			["a trailing comma parts an empty layer", "a{box-shadow:0 0 0 0 red,}"],
@@ -4305,6 +4351,40 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 		])("declines across %s", (_name, between) => {
 			const css = `a{margin-top:1px;${between};margin-right:2px;margin-bottom:1px;margin-left:2px}`;
 			expect(minify(css)).toBe(css);
+		});
+
+		it("steps over a child rule standing outside the family", () => {
+			// A nested rule is no declaration, so it is not in the adjacency scan —
+			// but only one *between* the longhands is one the merge moves.
+			expect(
+				minify(
+					"a{margin-top:1px;margin-right:2px;margin-bottom:1px;margin-left:2px;&:hover{color:red}}"
+				)
+			).toBe("a{margin:1px 2px;&:hover{color:red}}");
+			expect(
+				minify(
+					"a{@supports (color:red){color:red}margin-inline-start:1px;margin-inline-end:2px}"
+				)
+			).toBe("a{@supports (color:red){color:red}margin-inline:1px 2px}");
+		});
+
+		it("declines across a child rule, which may write the family itself", () => {
+			// What the rule sets is not read here, so every one of them blocks: a
+			// nested `@supports` re-declaring a longhand is the common shape.
+			const supports =
+				"a{margin-inline-start:1px;@supports (color:red){margin-inline-start:9px}margin-inline-end:2px}";
+			expect(minify(supports)).toBe(supports);
+			const nested =
+				"a{margin-top:1px;margin-right:2px;&:hover{color:red}margin-bottom:1px;margin-left:2px}";
+			expect(minify(nested)).toBe(nested);
+			// One family blocked leaves the other free.
+			expect(
+				minify(
+					"a{margin-top:1px;margin-right:2px;margin-bottom:1px;margin-left:2px;padding-top:1px;&:hover{x:1}padding-right:2px;padding-bottom:1px;padding-left:2px}"
+				)
+			).toBe(
+				"a{margin:1px 2px;padding-top:1px;&:hover{x:1}padding-right:2px;padding-bottom:1px;padding-left:2px}"
+			);
 		});
 
 		it("declines `inset` when the target cannot read the shorthand", () => {

@@ -193,7 +193,9 @@ const installHelpers = () => {
 		);
 		return (
 			out
-				.replace(/ ?([,()*/]) ?/g, "$1")
+				// Nothing fuses with a comma or a block's delimiters, so the whitespace
+				// beside one says only what the delimiter already does.
+				.replace(/ ?([,()[\]{}*/]) ?/g, "$1")
 				// `.25` and `0.25` are one number, and an absolute unit converts to px,
 				// degrees or seconds exactly — the spec fixes every ratio.
 				.replace(

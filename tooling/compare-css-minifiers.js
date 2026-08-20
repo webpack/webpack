@@ -464,10 +464,11 @@ const main = async () => {
 				input.brotli
 			)} brotli, ${kb(input.zstd)} zstd), ${before.size} classes\n`
 		);
+		// `saved` reads off gzip — what a user downloads — with raw the tiebreak.
 		process.stdout.write(
-			`${"minifier".padEnd(14)}${"minified".padStart(10)}${"saved".padStart(
-				8
-			)}${"gzip".padStart(9)}${"brotli".padStart(9)}${"zstd".padStart(
+			`${"minifier".padEnd(14)}${"minified".padStart(10)}${"gzip".padStart(
+				9
+			)}${"saved".padStart(8)}${"brotli".padStart(9)}${"zstd".padStart(
 				9
 			)}${"ms".padStart(6)}${"cpu".padStart(6)}${"peak".padStart(8)}   lost\n`
 		);
@@ -487,8 +488,8 @@ const main = async () => {
 				`${
 					name.padEnd(14) +
 					kb(out.raw).padStart(10) +
-					`${(100 - (out.raw / input.raw) * 100).toFixed(1)}%`.padStart(8) +
 					kb(out.gzip).padStart(9) +
+					`${(100 - (out.gzip / input.gzip) * 100).toFixed(1)}%`.padStart(8) +
 					kb(out.brotli).padStart(9) +
 					kb(out.zstd).padStart(9) +
 					result.wall.toFixed(0).padStart(6) +

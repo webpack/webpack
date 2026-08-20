@@ -111,7 +111,7 @@ Array [
   "/*! webpack: a media feature is evaluated, not tested, so it converts */@media (width>=1200px){.t86{color:red}}",
   "/*! webpack: an alpha is the byte the engine already quantizes it to */.t87{color:#00000080}.t88{color:#f003}",
   "/*! webpack: ...collapsing to 4 digits when every pair repeats */.t89{color:#f00c}",
-  "/*! webpack: a custom property's value is respelled like any other */.t90{--width:16px;--alpha:rgba(0, 0, 0, .5);--round:33.33333333%}",
+  "/*! webpack: a custom property's tokens are never respelled, only spaced anew */.t90{--width:16px;--alpha:rgba(0,0,0,.5);--round:33.33333333%}",
   "/*! webpack: hwb() converts like hsl() */.t91{color:#000}",
   "/*! webpack: declined: a channel exactly on a \`.5\` boundary */.t92{color:hwb(194 0% 0%)}",
   "/*! webpack: lab(), lch(), oklab() and oklch() reach sRGB */.t93{color:#fff}.t94{color:#bf5700}.t95{color:#752d15}.t96{color:#fff}.t97{color:#40b1b7}",
@@ -124,6 +124,8 @@ Array [
   "/*! webpack: declined: \`all\` writes everything */.t104{margin-top:1px;all:unset;margin-right:2px;margin-bottom:1px;margin-left:2px}",
   "/*! webpack: declined: \`border\` writes every border-color longhand */.t105{border-top-color:red;border:1px solid;border-right-color:red;border-bottom-color:red;border-left-color:red}",
   "/*! webpack: ...but an unrelated property between them does not */.t106{border-color:red;color:red}",
+  "/*! webpack: a child rule outside the family is nothing the merge steps over */.t106a{margin:1px 2px;&:hover{color:red}}",
+  "/*! webpack: declined: one between them may write the family itself */.t106b{margin-top:1px;margin-right:2px;@supports (color:red){margin-top:9px}margin-bottom:1px;margin-left:2px}",
   "/*! webpack: the four corners merge too, clockwise from the top left */.t107{border-radius:1px 2px 3px 4px}",
   "/*! webpack: declined: a corner set to two radii needs the shorthand's \`/\` form */.t108{border-top-left-radius:1px 2px;border-top-right-radius:1px 2px;border-bottom-right-radius:1px 2px;border-bottom-left-radius:1px 2px}",
   "/*! webpack: declined: a logical corner writes the same corners */.t109{border-top-left-radius:1px;border-start-start-radius:9px;border-top-right-radius:2px;border-bottom-right-radius:3px;border-bottom-left-radius:4px}",
@@ -152,8 +154,18 @@ Array [
   "/*! webpack: declined: \`list-style-type\` takes any identifier, so no other value
    in the family is unambiguous — an image included */.t133{list-style-type:square;list-style-position:inside;list-style-image:url(data:image/gif;base64,R0lGODlhAQABAAAAACw=)}",
   "/*! webpack: a comment parts two components, so a rewrite keeps them apart */.t138{margin:1px}.t139{transition:opacity 1s 2s ease-in}",
-  "/*! webpack: a custom property's value stays as written, but a comment in it
-   minifies to the boundary it stands for */.t140{--t140:1px 1px 1px 1px}.t141{--t141:1px 1px/*!k*/1px 1px}.t142{--t142:minmax(1px 2px, calc(3px 4px))}",
+  "/*! webpack: a custom property's tokens stay as written, but what stands between
+   two of them minifies to the boundary it is */.t140{--t140:1px 1px 1px 1px}.t141{--t141:1px 1px/*!k*/1px 1px}.t142{--t142:minmax(1px 2px,calc(3px 4px))}",
+  "/*! webpack: ...so a run of whitespace is one space, and none at all where a
+   comma or a block edge already parts the two */.t143{--t143:1px 2px}.t144{--t144:foo(1px,2px),[bar]}",
+  "/*! webpack: ...on either side of a block delimiter, except \`(\`, which forms a
+   function token after an identifier */.t144a{--t144a:a[b]c (d)}",
+  "/*! webpack: declined: a string is one token, whatever stands inside it */.t145{--t145:\\"a  b\\" \\"c ,  d\\"}",
+  "/*! webpack: a shadow's trailing zero says nothing, in whatever unit it is written */.t146{box-shadow:0 0 0 1px red inset,0 0 blue inset}",
+  "/*! webpack: declined: \`0%\` is a percentage, which a shadow's slots do not take */.t147{box-shadow:1px 1px 0% 0% red}",
+  "/*! webpack: declined: writing the character a hex escape names is value-identical,
+   but it trades a repetitive ASCII alphabet for 3-byte UTF-8 runs — 6420 raw bytes
+   saved against 593 gzip bytes lost over 19 framework stylesheets */.t148{content:\\"\\\\f00d\\"}.t149{content:\\"\\\\2014\\"}",
   "/*! gradient: the last stop's position is where CSS Images 3's fix-up already puts it */.t72{background-image:linear-gradient(red,blue)}",
   "/*! ...and a conic gradient's own turn, however it is spelled */.t72b{background-image:conic-gradient(red,blue)}",
   "/*! gradient: two stops of one color are the one stop naming both positions */.t72c{background-image:linear-gradient(red 0% 50%,blue)}",
