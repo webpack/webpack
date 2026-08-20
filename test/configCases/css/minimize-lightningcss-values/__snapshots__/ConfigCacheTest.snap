@@ -81,7 +81,7 @@ Array [
   "/*! test_custom_properties: .foo { transition: var(--foo, 20px), var(--bar, 40px); } */.foo{transition:var(--foo,20px),var(--bar,40px)}",
   "/*! test_custom_properties: .foo { background: var(--color) var(--image); } */.foo{background:var(--color) var(--image)}",
   "/*! test_custom_properties: .foo { color: var(--color, rgb(255, 255, 0)); } */.foo{color:var(--color,#ff0)}",
-  "/*! test_custom_properties: .foo { color: var(--color, #ffff00); } */.foo{color:var(--color,#ffff00)}",
+  "/*! test_custom_properties: .foo { color: var(--color, #ffff00); } */.foo{color:var(--color,#ff0)}",
   "/*! test_custom_properties: .foo { color: var(--color, rgb(var(--red), var(--green), 0)); } */.foo{color:var(--color,rgb(var(--red),var(--green),0))}",
   "/*! test_custom_properties: .foo { --test: .5s; } */.foo{--test:.5s}",
   "/*! test_custom_properties: .foo { --theme-sizes-1\\\\/12: 2 } */.foo{--theme-sizes-1\\\\/12:2}",

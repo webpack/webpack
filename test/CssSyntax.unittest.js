@@ -1352,9 +1352,15 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(rewritten("a{--x:max(1px,0.0625rem)}")).toBe(
 			"a{--x:max(1px,.0625rem)}"
 		);
-		// A substitution keeps its colors, as any other value's does.
-		expect(rewritten("a{--x:var(--y,#ffffff)}")).toBe(
-			"a{--x:var(--y,#ffffff)}"
+		// A substitution's fallback is the property's value, so its colors shorten
+		// as any other value's do — but a hash a worklet or an unknown function
+		// reads is not known to be one.
+		expect(rewritten("a{--x:var(--y,#ffffff)}")).toBe("a{--x:var(--y,#fff)}");
+		expect(rewritten("a{--x:paint(w,#ffffff)}")).toBe(
+			"a{--x:paint(w,#ffffff)}"
+		);
+		expect(rewritten("a{--x:some-fn(#ffffff)}")).toBe(
+			"a{--x:some-fn(#ffffff)}"
 		);
 		// The empty value a `var()` fallback reads is still not a dropped one.
 		expect(rewritten("a{--x:}")).toBe("a{--x:}");
@@ -2725,6 +2731,22 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 			expect(value("#11223344")).toBe("#1234");
 			expect(value("#ffffffaa")).toBe("#fffa");
 			expect(value("#fff0")).toBe("#fff0");
+		});
+
+		it("shortens a color in a substitution's fallback", () => {
+			// The fallback is the property's value, not the function's own
+			// argument, so a hash there is as much a color as one written in place.
+			expect(value("var(--a,#ffffff)")).toBe("var(--a,#fff)");
+			expect(value("var(--a,#ffffffff)")).toBe("var(--a,#fff)");
+			expect(value("env(--a,#ffffff)")).toBe("env(--a,#fff)");
+			expect(value("var(--a,var(--b,#ffffff))")).toBe("var(--a,var(--b,#fff))");
+			// `paint()`'s arguments reach a worklet instead, and a function nothing
+			// names is not known to take a color at all.
+			expect(value("paint(w,#ffffff)")).toBe("paint(w,#ffffff)");
+			expect(value("some-fn(#ffffff)")).toBe("some-fn(#ffffff)");
+			expect(value("--my-fn(#ffffff)")).toBe("--my-fn(#ffffff)");
+			// A `url()` fragment is an id reference, never a color.
+			expect(value("url(#gradient)")).toBe("url(#gradient)");
 		});
 	});
 
