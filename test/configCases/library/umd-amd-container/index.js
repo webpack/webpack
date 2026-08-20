@@ -20,17 +20,16 @@ const runInContext = (sandbox) => {
 	return sandbox;
 };
 
-it("should emit the sap.ui.define branch when output.library.umdSapUiDefine is set", () => {
+it("should emit a define branch guarding every step of the container path", () => {
 	expect(wrapper()).toContain(
 		"else if(typeof sap !== 'undefined' && sap.ui && typeof sap.ui.define === 'function')"
 	);
 	expect(wrapper()).toContain(
 		'sap.ui.define("MyLibrary", ["my/external"], factory)'
 	);
-	expect(wrapper()).toContain("//SAPUI5 module loader");
 });
 
-it("should export via sap.ui.define when the SAPUI5 module loader is present", () => {
+it("should export via the container when its loader is present", () => {
 	let name;
 	let dependencies;
 	let factory;
@@ -51,8 +50,13 @@ it("should export via sap.ui.define when the SAPUI5 module loader is present", (
 	expect(sandbox.MyLibrary).toBe(undefined);
 });
 
-it("should export to the global when the SAPUI5 module loader is absent", () => {
+it("should export to the global when the container is absent", () => {
 	const sandbox = runInContext({ MyExternal: external });
+	expect(sandbox.MyLibrary.answer).toBe(42);
+});
+
+it("should export to the global when the container path is incomplete", () => {
+	const sandbox = runInContext({ MyExternal: external, sap: {} });
 	expect(sandbox.MyLibrary.answer).toBe(42);
 });
 

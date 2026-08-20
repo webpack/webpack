@@ -1680,8 +1680,8 @@ describe("snapshots", () => {
 		+         "awesome",
 		+       ],
 		+       "type": "var",
+		+       "umdAmdContainer": undefined,
 		+       "umdNamedDefine": undefined,
-		+       "umdSapUiDefine": undefined,
 		+     },
 		@@ ... @@
 		-     "uniqueName": "webpack",
@@ -1729,8 +1729,8 @@ describe("snapshots", () => {
 			+         "[name]",
 			+       ],
 			+       "type": "var",
+			+       "umdAmdContainer": undefined,
 			+       "umdNamedDefine": undefined,
-			+       "umdSapUiDefine": undefined,
 			+     },
 			@@ ... @@
 			-     "uniqueName": "webpack",
@@ -1782,8 +1782,8 @@ describe("snapshots", () => {
 			+         "lib",
 			+       ],
 			+       "type": "var",
+			+       "umdAmdContainer": undefined,
 			+       "umdNamedDefine": undefined,
-			+       "umdSapUiDefine": undefined,
 			+     },
 			@@ ... @@
 			-     "uniqueName": "webpack",
@@ -1838,8 +1838,8 @@ describe("snapshots", () => {
 			+         ],
 			+       },
 			+       "type": "var",
+			+       "umdAmdContainer": undefined,
 			+       "umdNamedDefine": undefined,
-			+       "umdSapUiDefine": undefined,
 			+     },
 			@@ ... @@
 			-     "uniqueName": "webpack",
@@ -1895,8 +1895,8 @@ describe("snapshots", () => {
 			+         ],
 			+       },
 			+       "type": "var",
+			+       "umdAmdContainer": undefined,
 			+       "umdNamedDefine": undefined,
-			+       "umdSapUiDefine": undefined,
 			+     },
 			@@ ... @@
 			-     "uniqueName": "webpack",

@@ -7,10 +7,7 @@ module.exports = {
 			name: "MyLibrary",
 			type: "umd",
 			umdNamedDefine: true,
-			umdSapUiDefine: true,
-			auxiliaryComment: {
-				sapUiDefine: "SAPUI5 module loader"
-			}
+			umdAmdContainer: "sap.ui"
 		}
 	},
 	externals: {

@@ -15674,7 +15674,7 @@ declare interface LibraryContext<T> {
 }
 
 /**
- * Set explicit comments for `commonjs`, `commonjs2`, `amd`, `sapUiDefine` and `root`.
+ * Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.
  */
 declare interface LibraryCustomUmdCommentObject {
 	/**
@@ -15696,12 +15696,6 @@ declare interface LibraryCustomUmdCommentObject {
 	 * Set comment for `root` (global variable) section in UMD.
 	 */
 	root?: string;
-
-	/**
-	 * Set comment for `sapUiDefine` (SAPUI5/OpenUI5 module loader) section in UMD.
-	 * @since 5.110.0
-	 */
-	sapUiDefine?: string;
 }
 
 /**
@@ -15756,14 +15750,14 @@ declare interface LibraryOptions {
 	type: string;
 
 	/**
+	 * Add a branch to the UMD wrapper for an AMD-style loader exposing `define` on a container object, given as a dot-separated path, after the `define.amd` branch.
+	 */
+	umdAmdContainer?: string;
+
+	/**
 	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
 	 */
 	umdNamedDefine?: boolean;
-
-	/**
-	 * If `output.libraryTarget` is set to umd, setting this to true will add a branch for the SAPUI5/OpenUI5 module loader (`sap.ui.define`) to the UMD wrapper.
-	 */
-	umdSapUiDefine?: boolean;
 }
 declare class LibraryTemplatePlugin {
 	/**
