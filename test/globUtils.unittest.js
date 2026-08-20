@@ -715,9 +715,13 @@ describe("globUtils", () => {
 		});
 	});
 
-	// `path.matchesGlob` is Node.js >= 22.5
-	const describeMatchesGlob =
-		typeof path.matchesGlob === "function" ? describe : describe.skip;
+	// `path.matchesGlob` is Node.js >= 22.5, and Bun ships its own engine under
+	// that name — 629 of the pairs below disagree with it, mostly over the dot
+	// rule — so the parity claimed here is with Node's.
+	const itAlignsWithNode =
+		typeof path.matchesGlob === "function" && !process.versions.bun
+			? it
+			: it.skip;
 
 	/**
 	 * @param {string} pattern glob pattern
@@ -729,37 +733,51 @@ describe("globUtils", () => {
 		return match;
 	};
 
-	describeMatchesGlob("createPathGlobMatcher", () => {
-		it("matches every pattern the way path.matchesGlob does", () => {
-			/** @type {string[]} */
-			const mismatches = [];
-			for (const pattern of PATTERNS) {
-				const match = createMatcher(pattern);
-				for (const testedPath of PATHS) {
-					// `..` is the one construct we read differently, above
-					if (
-						PARENT_SEGMENT_REGEXP.test(pattern) ||
-						PARENT_SEGMENT_REGEXP.test(testedPath)
-					) {
-						continue;
-					}
-					// `\` is a separator here, which is how `path.win32` reads it
-					const platform = testedPath.includes("\\") ? path.win32 : path.posix;
-					const expected = platform.matchesGlob(
-						testedPath,
-						effectivePattern(pattern)
-					);
-					const actual = match(testedPath);
-					if (actual !== expected) {
-						mismatches.push(
-							`${JSON.stringify(pattern)} vs ${JSON.stringify(
-								testedPath
-							)}: expected ${expected}, got ${actual}`
+	describe("createPathGlobMatcher", () => {
+		itAlignsWithNode(
+			"matches every pattern the way path.matchesGlob does",
+			() => {
+				/** @type {string[]} */
+				const mismatches = [];
+				for (const pattern of PATTERNS) {
+					const match = createMatcher(pattern);
+					for (const testedPath of PATHS) {
+						// `..` is the one construct we read differently, above
+						if (
+							PARENT_SEGMENT_REGEXP.test(pattern) ||
+							PARENT_SEGMENT_REGEXP.test(testedPath)
+						) {
+							continue;
+						}
+						// `\` is a separator here, which is how `path.win32` reads it
+						const platform = testedPath.includes("\\")
+							? path.win32
+							: path.posix;
+						const expected = platform.matchesGlob(
+							testedPath,
+							effectivePattern(pattern)
 						);
+						const actual = match(testedPath);
+						if (actual !== expected) {
+							mismatches.push(
+								`${JSON.stringify(pattern)} vs ${JSON.stringify(
+									testedPath
+								)}: expected ${expected}, got ${actual}`
+							);
+						}
 					}
 				}
+				expect(mismatches).toEqual([]);
 			}
-			expect(mismatches).toEqual([]);
+		);
+
+		itAlignsWithNode("shows the answers this matcher does not follow", () => {
+			// `..` resolved, `./.` collapsed to the context dir, and a `!(…)` that
+			// stops negating once a group nests in it — the divergences listed above
+			expect(path.posix.matchesGlob("/a/../a/b.js", "/a/b.js")).toBe(true);
+			expect(path.posix.matchesGlob("./.", ".")).toBe(true);
+			expect(path.posix.matchesGlob("x/b.js", "**/!(a|@(b|c)).js")).toBe(true);
+			expect(path.posix.matchesGlob("x/a.js", "**/!(@(a|b)).js")).toBe(true);
 		});
 
 		it("matches case-sensitively whatever the host is", () => {
@@ -777,7 +795,6 @@ describe("globUtils", () => {
 			// a path of nothing but `.` segments is the context directory
 			expect(createMatcher(".")("./")).toBe(true);
 			expect(createMatcher(".")("./.")).toBe(true);
-			expect(path.posix.matchesGlob("./.", ".")).toBe(true);
 		});
 
 		it("matches a `..` segment literally, where path.matchesGlob resolves it", () => {
@@ -786,7 +803,6 @@ describe("globUtils", () => {
 			// caller did not name
 			expect(createMatcher("/a/b.js")("/a/../a/b.js")).toBe(false);
 			expect(createMatcher("**/a/../b.js")("/b.js")).toBe(false);
-			expect(path.posix.matchesGlob("/a/../a/b.js", "/a/b.js")).toBe(true);
 			// what the pattern says is still what it matches
 			expect(createMatcher("/a/../a/b.js")("/a/../a/b.js")).toBe(true);
 		});
@@ -810,8 +826,6 @@ describe("globUtils", () => {
 			expect(createMatcher("**/!(a|@(b|c)).js")("x/d.js")).toBe(true);
 			expect(createMatcher("**/!(a|@(b|c)).js")("x/b.js")).toBe(false);
 			expect(createMatcher("**/!(@(a|b)).js")("x/a.js")).toBe(false);
-			expect(path.posix.matchesGlob("x/b.js", "**/!(a|@(b|c)).js")).toBe(true);
-			expect(path.posix.matchesGlob("x/a.js", "**/!(@(a|b)).js")).toBe(true);
 		});
 
 		it("lets a group that quantifies match an empty path segment", () => {

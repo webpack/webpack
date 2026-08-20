@@ -215,8 +215,12 @@ describe("RuleSetCompiler glob conditions", () => {
 });
 
 describe("RuleSetCompiler glob conditions against path.matchesGlob", () => {
-	// `path.matchesGlob` is Node.js >= 22.5
-	const itMatchesGlob = typeof path.matchesGlob === "function" ? it : it.skip;
+	// `path.matchesGlob` is Node.js >= 22.5, and Bun ships its own engine under
+	// that name — the parity claimed here is with Node's
+	const itMatchesGlob =
+		typeof path.matchesGlob === "function" && !process.versions.bun
+			? it
+			: it.skip;
 
 	const PATHS = [
 		"h.js",
