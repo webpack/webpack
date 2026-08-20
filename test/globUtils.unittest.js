@@ -35,6 +35,10 @@ const effectivePattern = (pattern) => {
 
 const PARENT_SEGMENT_REGEXP = /(?:^|\/)\.\.(?:\/|$)/;
 
+// `path.matchesGlob` takes its case sensitivity from the host — it ignores case
+// on macOS and Windows — so every pattern and path below stays lowercase and the
+// comparison answers the same everywhere. Case is covered on its own above.
+
 const PATTERNS = [
 	"**/*.css",
 	"*.css",
@@ -93,7 +97,6 @@ const PATTERNS = [
 	"/a/x{1,2}y/*.js",
 	"/a/**/.hidden/*",
 	"/a/./b.js",
-	"/A/**/*.JS",
 	"**/{a,{b,c}}/*.js",
 	"**/*[0-9].js",
 	"**/[^a]b.js",
@@ -155,7 +158,6 @@ const PATHS = [
 	"x*.js",
 	"[a].js",
 	"a.css",
-	"A.CSS",
 	"a/b",
 	"a/b/",
 	"a/b.css",
@@ -203,7 +205,6 @@ const PATHS = [
 	"/a/@scope/x/y.js",
 	"/.cache/a.js",
 	"/src/a.js",
-	"/A/x/y.JS",
 	"/a/b\\c/d.js",
 	"C:/a/b/c.js",
 	"C:\\a\\b\\c.js",
@@ -721,6 +722,13 @@ describe("globUtils", () => {
 				}
 			}
 			expect(mismatches).toEqual([]);
+		});
+
+		it("matches case-sensitively whatever the host is", () => {
+			expect(createMatcher("**/*.css")("a/b.css")).toBe(true);
+			expect(createMatcher("**/*.css")("a/B.CSS")).toBe(false);
+			expect(createMatcher("**/*.CSS")("a/b.css")).toBe(false);
+			expect(createMatcher("/a/**")("/A/b.js")).toBe(false);
 		});
 
 		it("drops the `.` and empty segments of both sides", () => {
