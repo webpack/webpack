@@ -5426,6 +5426,11 @@
           "type": "boolean",
           "added": "5.110.0"
         },
+        "unusedAliases": {
+          "description": "Report 'resolve.alias' entries that no request matched.",
+          "type": "boolean",
+          "added": "5.110.0"
+        },
         "unusedDefines": {
           "description": "Report keys defined by 'DefinePlugin' that no module ever referenced, which cost a parser hook per module and invalidate the build when their value changes.",
           "type": "boolean",
