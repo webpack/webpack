@@ -10,7 +10,9 @@ module.exports = {
 		parser: { html: { sources: false } }
 	},
 	optimization: {
-		minimize: { html: { minifySrcdoc: true } },
+		minimize: {
+			html: { minifySrcdoc: true, minifyConditionalComments: true }
+		},
 		minimizer: ["..."]
 	},
 	experiments: { html: true }

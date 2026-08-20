@@ -36,6 +36,12 @@ module.exports = {
 		// reference needs none, and renders as itself either way.
 		expect(page).toContain('srcdoc="<p>a & b &amp;lt; c"');
 
+		// Both nested languages reach a srcdoc: a conditional comment in there is
+		// minified as one, not left as the text of an attribute.
+		expect(page).toContain(
+			'srcdoc="<!--[if IE]><p class=ie>downlevel<![endif]-->"'
+		);
+
 		// A document cannot sit in an unquoted value — a space or a `>` would end
 		// the attribute, taking the one after it with it — so it gains quotes.
 		expect(page).toContain('<iframe id=bare srcdoc="<p>bare" title=after>');
