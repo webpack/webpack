@@ -1321,12 +1321,6 @@ const perSelector = (rules) =>
 // An `@layer a, b;` statement, which names layers without holding any rule.
 const LAYER_STATEMENT_RE = /^@layer\s+([^{;]+);$/i;
 
-/**
- * @param {Rule[]} before the source's rules
- * @param {Rule[]} after the minified rules
- * @param {Map<string, string>} signatures what the engine answers per condition
- * @returns {string} why they differ, or "" when they do not
- */
 // One number wherever it stands in a value.
 const NUMBER_RUN = /-?\d*\.?\d+(?:e[+-]?\d+)?/gi;
 
@@ -1366,6 +1360,12 @@ const numericallyEqual = (one, other) => {
 	return true;
 };
 
+/**
+ * @param {Rule[]} before the source's rules
+ * @param {Rule[]} after the minified rules
+ * @param {Map<string, string>} signatures what the engine answers per condition
+ * @returns {string} why they differ, or "" when they do not
+ */
 const compareRules = (before, after, signatures) => {
 	/**
 	 * @param {string} text a rule's `selector { … }`

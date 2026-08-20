@@ -3630,7 +3630,8 @@ describe("parseHtml", () => {
 			]
 		])("leaves a declarative shadow root where it %s", (_name, src, shape) => {
 			const nodes = body(src);
-			expect(nodes[1].children.map((n) => n.tagName)).toEqual(shape);
+			const inner = /** @type {MatElement[]} */ (nodes[1].children);
+			expect(inner.map((n) => n.tagName)).toEqual(shape);
 		});
 
 		it("should apply Noah's Ark limit of three formatting elements", () => {
