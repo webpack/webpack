@@ -3258,6 +3258,11 @@ export interface PerformanceOptions {
 	 */
 	circularDependencies?: boolean;
 	/**
+	 * Report chunks asked for as both prefetch and preload from the same place, where the two directives contradict each other.
+	 * @since 5.110.0
+	 */
+	conflictingResourceHints?: boolean;
+	/**
 	 * Report modules emitted into more than one chunk, and the bytes the extra copies cost.
 	 * @since 5.110.0
 	 */
@@ -3272,6 +3277,11 @@ export interface PerformanceOptions {
 	 * @since 5.110.0
 	 */
 	dynamicExports?: boolean;
+	/**
+	 * Report modules shipped by more than one entrypoint, which every page that loads them downloads again (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	entrypointOverlap?: boolean;
 	/**
 	 * Sets the format of the hints: warnings, errors, stats-only or nothing at all.
 	 */
@@ -3304,6 +3314,16 @@ export interface PerformanceOptions {
 	 * @since 5.110.0
 	 */
 	scopeHoistingBailouts?: boolean;
+	/**
+	 * Report splits 'optimization.splitChunks' refused because 'maxInitialRequests' or 'maxAsyncRequests' was already reached (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	splitChunksCapped?: boolean;
+	/**
+	 * Report initial chunks that mix 'node_modules' code with application code, so every application change re-downloads the dependencies too (requires 'hints' to be enabled).
+	 * @since 5.110.0
+	 */
+	unsplitVendors?: boolean;
 	/**
 	 * Report keys defined by 'DefinePlugin' that no module ever referenced, which cost a parser hook per module and invalidate the build when their value changes.
 	 * @since 5.110.0
