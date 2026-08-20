@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ConfigTestCases css minimize-rewrite-custom-properties minimize-rewrite-custom-properties should compile 1`] = `
+Array [
+  "/*! a six-digit hex shortens to three */.t01{--a:#fff}",
+  "/*! an eight-digit hex shortens to four */.t02{--b:#fff0}",
+  "/*! a leading zero goes */.t03{--c:.5rem}",
+  "/*! a color function becomes the hex it names */.t04{--d:#00000026}",
+  "/*! every layer of a multi-value list is reached */.t05{--e:0px 0px 0px 2px #fffc}",
+  "/*! and so is a token nested in a function */.t06{--f:max(1px,.0625rem)}",
+  "/*! a color inside a substitution is still left as authored */.t07{--g:var(--a,#ffffff)}",
+  "/*! the empty value a var() fallback reads survives */.t08{--h:}",
+  "/*! a kept comment still stands between two tokens */.t09{--i:1px ",
+  "/*! kept */ 2px}",
+  "/*! a normal declaration is unaffected by the option either way */.t10{color:#fff}",
+]
+`;

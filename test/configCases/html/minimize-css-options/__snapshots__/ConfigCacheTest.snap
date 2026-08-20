@@ -1,9 +1,10 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ConfigCacheTestCases html minimize-css-options minimize-css-options should compile 1`] = `
-"<!doctype html><html lang=en><head><style>.t01{width:1pc}.t02{width:1cm}.t03{width:17px}</style></head><body>
+"<!doctype html><html lang=en><head><style>.t01{width:1pc}.t02{width:1cm}.t03{width:17px}.t04{--a:#fff}</style></head><body>
 <p style=width:1pc>a style attribute is handed the same option</p>
 <p style=width:17px>...and declines the same cases</p>
+<p style=--a:#fff>...and rewrites a custom property the same way</p>
 
 
 </body></html>"

@@ -1,0 +1,23 @@
+/* `optimization.minimize.css.rewriteCustomProperties` lets a custom property's
+   value be shortened like any other value's — off by default, on here. */
+
+/*! a six-digit hex shortens to three */
+.t01 { --a: #ffffff }
+/*! an eight-digit hex shortens to four */
+.t02 { --b: #ffffff00 }
+/*! a leading zero goes */
+.t03 { --c: 0.5rem }
+/*! a color function becomes the hex it names */
+.t04 { --d: rgba(0, 0, 0, 0.15) }
+/*! every layer of a multi-value list is reached */
+.t05 { --e: 0px 0px 0px 2px #ffffffcc }
+/*! and so is a token nested in a function */
+.t06 { --f: max(1px, 0.0625rem) }
+/*! a color inside a substitution is still left as authored */
+.t07 { --g: var(--a, #ffffff) }
+/*! the empty value a var() fallback reads survives */
+.t08 { --h: }
+/*! a kept comment still stands between two tokens */
+.t09 { --i: 1px  /*! kept */  2px }
+/*! a normal declaration is unaffected by the option either way */
+.t10 { color: #ffffff }

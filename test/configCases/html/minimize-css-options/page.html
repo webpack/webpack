@@ -8,10 +8,13 @@
 	.t02 { width: 10mm }
 	/* a length no other unit spells shorter keeps its own */
 	.t03 { width: 17px }
+	/* a custom property is rewritten here as it is in a `.css` asset */
+	.t04 { --a: #ffffff }
 </style>
 </head>
 <body>
 <p style="width: 16px">a style attribute is handed the same option</p>
 <p style="width: 17px">...and declines the same cases</p>
+<p style="--a: #ffffff">...and rewrites a custom property the same way</p>
 </body>
 </html>

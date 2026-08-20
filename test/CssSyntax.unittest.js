@@ -1329,6 +1329,43 @@ describe("CssSyntax — minify token-boundary safety", () => {
 		expect(min("a{c:red/*!c*/}b{c:1}")).toBe("a{c:red}/*!c*/b{c:1}");
 	});
 
+	it("rewrites a custom property's tokens when the option asks", () => {
+		/**
+		 * @param {string} css a stylesheet
+		 * @returns {string} its minified serialization, custom properties rewritten
+		 */
+		const rewritten = (css) =>
+			new SourceProcessor().process(css, {
+				mode: "minify",
+				rewriteCustomProperties: true
+			}).code;
+
+		// Each transform the other minifiers apply inside a `--*` value.
+		expect(rewritten("a{--x:#ffffff}")).toBe("a{--x:#fff}");
+		expect(rewritten("a{--x:#ffffff00}")).toBe("a{--x:#fff0}");
+		expect(rewritten("a{--x:0.5rem}")).toBe("a{--x:.5rem}");
+		expect(rewritten("a{--x:rgba(0,0,0,0.15)}")).toBe("a{--x:#00000026}");
+		// At every layer of a list, and at depth inside a function.
+		expect(rewritten("a{--x:0px 0px 0px 2px #ffffffcc}")).toBe(
+			"a{--x:0px 0px 0px 2px #fffc}"
+		);
+		expect(rewritten("a{--x:max(1px,0.0625rem)}")).toBe(
+			"a{--x:max(1px,.0625rem)}"
+		);
+		// A substitution keeps its colors, as any other value's does.
+		expect(rewritten("a{--x:var(--y,#ffffff)}")).toBe(
+			"a{--x:var(--y,#ffffff)}"
+		);
+		// The empty value a `var()` fallback reads is still not a dropped one.
+		expect(rewritten("a{--x:}")).toBe("a{--x:}");
+		// The boundaries the option does not touch still print as they did.
+		expect(rewritten("a{--x:1px/*c*/2px}")).toBe("a{--x:1px 2px}");
+		expect(rewritten("a{--x:1px/*!k*/2px}")).toBe("a{--x:1px/*!k*/2px}");
+		// Off, every one of them is written back as authored.
+		expect(min("a{--x:#ffffff}")).toBe("a{--x:#ffffff}");
+		expect(min("a{--x:rgba(0,0,0,0.15)}")).toBe("a{--x:rgba(0,0,0,0.15)}");
+	});
+
 	it("minifies a comment nested in a custom property's value", () => {
 		// A function or block is no leaf, so the comments in one are the value's
 		// too — at any depth, and in a block of every shape.
